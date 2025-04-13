@@ -3,13 +3,15 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { doc, getDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../../firebase';
 import Badge from 'react-bootstrap/Badge';
-import '../../style/lieuDetails.css'; // Nouveau fichier CSS pour les styles
+import '../../style/lieuDetails.css';
 
 const LieuDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [lieu, setLieu] = useState(null);
+  const [programmateur, setProgrammateur] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [loadingProgrammateur, setLoadingProgrammateur] = useState(false);
 
   useEffect(() => {
     const fetchLieu = async () => {
@@ -17,10 +19,16 @@ const LieuDetails = () => {
       try {
         const lieuDoc = await getDoc(doc(db, 'lieux', id));
         if (lieuDoc.exists()) {
-          setLieu({
+          const lieuData = {
             id: lieuDoc.id,
             ...lieuDoc.data()
-          });
+          };
+          setLieu(lieuData);
+          
+          // Si un programmateur est associé, on le charge
+          if (lieuData.programmateurId) {
+            fetchProgrammateur(lieuData.programmateurId);
+          }
         } else {
           console.error('Lieu non trouvé');
           navigate('/lieux');
@@ -34,6 +42,23 @@ const LieuDetails = () => {
 
     fetchLieu();
   }, [id, navigate]);
+
+  const fetchProgrammateur = async (programmateurId) => {
+    setLoadingProgrammateur(true);
+    try {
+      const programmateurDoc = await getDoc(doc(db, 'programmateurs', programmateurId));
+      if (programmateurDoc.exists()) {
+        setProgrammateur({
+          id: programmateurDoc.id,
+          ...programmateurDoc.data()
+        });
+      }
+    } catch (error) {
+      console.error('Erreur lors de la récupération du programmateur:', error);
+    } finally {
+      setLoadingProgrammateur(false);
+    }
+  };
 
   const handleDelete = async () => {
     if (window.confirm('Êtes-vous sûr de vouloir supprimer ce lieu ?')) {
@@ -169,11 +194,84 @@ const LieuDetails = () => {
             </div>
           </div>
 
+          {/* Carte pour le programmateur */}
+          {lieu.programmateurId && (
+            <div className="detail-card">
+              <div className="card-header">
+                <i className="bi bi-person-badge"></i>
+                <h3>Programmateur</h3>
+              </div>
+              <div className="card-body">
+                {loadingProgrammateur ? (
+                  <div className="text-center py-3">
+                    <div className="spinner-border spinner-border-sm text-primary" role="status">
+                      <span className="visually-hidden">Chargement du programmateur...</span>
+                    </div>
+                  </div>
+                ) : programmateur ? (
+                  <>
+                    <div className="info-row">
+                      <div className="info-label">
+                        <i className="bi bi-person text-primary"></i>
+                        Nom
+                      </div>
+                      <div className="info-value highlight">{programmateur.nom}</div>
+                    </div>
+                    
+                    {programmateur.structure && (
+                      <div className="info-row">
+                        <div className="info-label">
+                          <i className="bi bi-building text-primary"></i>
+                          Structure
+                        </div>
+                        <div className="info-value">{programmateur.structure}</div>
+                      </div>
+                    )}
+                    
+                    {programmateur.telephone && (
+                      <div className="info-row">
+                        <div className="info-label">
+                          <i className="bi bi-telephone text-primary"></i>
+                          Téléphone
+                        </div>
+                        <div className="info-value">
+                          <a href={`tel:${programmateur.telephone}`} className="contact-link">
+                            {programmateur.telephone}
+                          </a>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {programmateur.email && (
+                      <div className="info-row">
+                        <div className="info-label">
+                          <i className="bi bi-envelope text-primary"></i>
+                          Email
+                        </div>
+                        <div className="info-value">
+                          <a href={`mailto:${programmateur.email}`} className="contact-link">
+                            {programmateur.email}
+                          </a>
+                        </div>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="alert alert-warning">
+                    <i className="bi bi-exclamation-triangle me-2"></i>
+                    Le programmateur associé (ID: {lieu.programmateurId}) n'a pas pu être chargé ou n'existe plus.
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Carte pour les contacts du lieu (conservée si nécessaire) */}
           {lieu.contact && (lieu.contact.nom || lieu.contact.telephone || lieu.contact.email) && (
             <div className="detail-card">
               <div className="card-header">
                 <i className="bi bi-person-lines-fill"></i>
-                <h3>Contact</h3>
+                <h3>Contact du lieu</h3>
               </div>
               <div className="card-body">
                 {lieu.contact.nom && (
@@ -268,6 +366,20 @@ const LieuDetails = () => {
                     <div className="summary-label">Type</div>
                     <div className="summary-value">
                       <TypeBadge type={lieu.type} />
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {lieu.programmateurId && programmateur && (
+                <div className="summary-item">
+                  <div className="summary-icon">
+                    <i className="bi bi-person-badge"></i>
+                  </div>
+                  <div className="summary-details">
+                    <div className="summary-label">Programmateur</div>
+                    <div className="summary-value">
+                      {programmateur.nom}
                     </div>
                   </div>
                 </div>

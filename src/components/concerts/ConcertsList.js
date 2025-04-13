@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { db } from '../../firebase';
-import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { formatDate } from '../../utils/dateUtils';
 
-function ConcertsList() {
+const ConcertsList = () => {
   const [concerts, setConcerts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -11,20 +11,18 @@ function ConcertsList() {
   useEffect(() => {
     const fetchConcerts = async () => {
       try {
-        const q = query(collection(db, 'concerts'), orderBy('date', 'desc'));
-        const querySnapshot = await getDocs(q);
+        const querySnapshot = await db.collection('concerts').orderBy('date', 'desc').get();
         
         const concertsData = querySnapshot.docs.map(doc => ({
           id: doc.id,
-          ...doc.data(),
-          date: doc.data().date // Garder la date au format ISO pour le tri
+          ...doc.data()
         }));
         
         setConcerts(concertsData);
         setLoading(false);
-      } catch (err) {
-        console.error("Erreur lors du chargement des concerts:", err);
-        setError("Impossible de charger les concerts. Veuillez réessayer plus tard.");
+      } catch (error) {
+        console.error('Erreur lors du chargement des concerts:', error);
+        setError('Impossible de charger les concerts. Veuillez réessayer plus tard.');
         setLoading(false);
       }
     };
@@ -32,66 +30,29 @@ function ConcertsList() {
     fetchConcerts();
   }, []);
 
-  // Formater la date pour l'affichage
-  const formatDate = (dateString) => {
-    const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
-    return new Date(dateString).toLocaleDateString('fr-FR', options);
-  };
-
-  // Formater le statut pour l'affichage
-  const getStatusLabel = (status) => {
-    switch (status) {
-      case 'option':
-        return 'Option';
-      case 'confirme':
-        return 'Confirmé';
-      case 'annule':
-        return 'Annulé';
-      default:
-        return status;
-    }
-  };
-
-  // Obtenir la classe CSS pour le statut
-  const getStatusClass = (status) => {
-    switch (status) {
-      case 'option':
-        return 'status-option';
-      case 'confirme':
-        return 'status-confirmed';
-      case 'annule':
-        return 'status-cancelled';
-      default:
-        return '';
-    }
-  };
-
   if (loading) {
-    return <div className="loading">Chargement des concerts...</div>;
+    return <div className="text-center mt-5"><div className="spinner-border" role="status"></div></div>;
   }
 
   if (error) {
-    return <div className="error-message">{error}</div>;
+    return <div className="alert alert-danger mt-3">{error}</div>;
+  }
+
+  if (concerts.length === 0) {
+    return (
+      <div className="text-center mt-4">
+        <p>Aucun concert n'a été créé pour le moment.</p>
+        <Link to="/concerts/nouveau" className="btn btn-primary">
+          Créer votre premier concert
+        </Link>
+      </div>
+    );
   }
 
   return (
-    <div className="concerts-list">
-      <div className="list-header">
-        <h2>Liste des concerts</h2>
-        <Link to="/concerts/nouveau" className="btn-primary">
-          <span>+</span> Nouveau concert
-        </Link>
-      </div>
-
-      {concerts.length === 0 ? (
-        <div className="empty-list">
-          <p>Aucun concert n'a été créé pour le moment.</p>
-          <Link to="/concerts/nouveau" className="btn-primary">
-            Créer votre premier concert
-          </Link>
-        </div>
-      ) : (
-        <table className="data-table">
+    <div className="mt-4">
+      <div className="table-responsive">
+        <table className="table table-striped">
           <thead>
             <tr>
               <th>Date</th>
@@ -106,26 +67,50 @@ function ConcertsList() {
             {concerts.map(concert => (
               <tr key={concert.id}>
                 <td>{formatDate(concert.date)}</td>
-                <td>{concert.lieuNom || 'Non spécifié'}</td>
-                <td>{concert.programmateurNom || 'Non spécifié'}</td>
+                <td>{concert.lieuNom}</td>
+                <td>{concert.programmateurNom}</td>
                 <td>{concert.montant} €</td>
                 <td>
-                  <span className={`status-badge ${getStatusClass(concert.statut)}`}>
-                    {getStatusLabel(concert.statut)}
+                  <span className={`badge ${getStatusBadgeClass(concert.statut)}`}>
+                    {concert.statut}
                   </span>
                 </td>
                 <td>
-                  <Link to={`/concerts/${concert.id}`} className="btn-action">
-                    Détails
-                  </Link>
+                  <div className="btn-group">
+                    <Link to={`/concerts/${concert.id}`} className="btn btn-sm btn-outline-primary">
+                      Détails
+                    </Link>
+                    <Link to={`/concerts/${concert.id}/edit`} className="btn btn-sm btn-outline-secondary">
+                      Modifier
+                    </Link>
+                    <Link to={`/concerts/${concert.id}/form`} className="btn btn-sm btn-outline-info">
+                      Formulaire
+                    </Link>
+                  </div>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-      )}
+      </div>
     </div>
   );
-}
+};
+
+// Fonction utilitaire pour obtenir la classe de badge en fonction du statut
+const getStatusBadgeClass = (statut) => {
+  switch (statut) {
+    case 'Confirmé':
+      return 'bg-success';
+    case 'En attente':
+      return 'bg-warning text-dark';
+    case 'Annulé':
+      return 'bg-danger';
+    case 'Terminé':
+      return 'bg-secondary';
+    default:
+      return 'bg-light text-dark';
+  }
+};
 
 export default ConcertsList;

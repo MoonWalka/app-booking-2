@@ -8,7 +8,7 @@ import { mockFirestore } from "./mockStorage";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: "app-booking-26571.firebaseapp.com",
   projectId: "app-booking-26571",
   storageBucket: "app-booking-26571.firebasestorage.app",

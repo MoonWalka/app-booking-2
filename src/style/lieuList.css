@@ -1,3 +1,16 @@
+/* Override Bootstrap styles */
+.lieux-container * {
+    all: revert;
+  }
+  
+  /* Puis vos styles */
+  .lieux-container {
+    padding: 1.5rem;
+    background: #fff;
+    /* etc. */
+  }
+/*debut du code */
+
 /* LieuxList.css */
 .lieux-container {
     padding: 1.5rem;

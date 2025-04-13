@@ -16,8 +16,8 @@ const ProgrammateurForm = ({ id }) => {
     const fetchProgrammateur = async () => {
       if (id && id !== 'nouveau') {
         try {
-          const docRef = db.collection('programmateurs').doc(id);
-          const doc = await docRef.get();
+          const docRef = doc(db, 'programmateurs', id);
+          const snap = await getDoc(docRef); //modif par chat gpt
           
           if (doc.exists) {
             setFormData(doc.data());
@@ -45,7 +45,7 @@ const ProgrammateurForm = ({ id }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-
+  
     try {
       // Validation des champs obligatoires
       if (!formData.nom) {
@@ -53,20 +53,24 @@ const ProgrammateurForm = ({ id }) => {
         setIsSubmitting(false);
         return;
       }
-
-      const progId = id && id !== 'nouveau' ? id : db.collection('programmateurs').doc().id;
-      
+  
+      // 🔧 À MODIFIER : création de l'ID via la nouvelle syntaxe modulaire
+      const progId = id && id !== 'nouveau'
+        ? id
+        : doc(collection(db, 'programmateurs')).id;
+  
       const progData = {
         ...formData,
         updatedAt: new Date().toISOString()
       };
-
+  
       if (!id || id === 'nouveau') {
         progData.createdAt = new Date().toISOString();
       }
-
-      await db.collection('programmateurs').doc(progId).set(progData, { merge: true });
-      
+  
+      // 🔧 À MODIFIER : écriture du document avec setDoc et doc()
+      await setDoc(doc(db, 'programmateurs', progId), progData, { merge: true });
+  
       navigate('/programmateurs');
     } catch (error) {
       console.error('Erreur lors de l\'enregistrement du programmateur:', error);

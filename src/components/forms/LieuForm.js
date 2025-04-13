@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { collection, doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, doc, getDoc, setDoc, serverTimestamp, query, where, getDocs, orderBy, limit } from 'firebase/firestore';
 import { db } from '../../firebase';
-import '../../style/lieuForm.css'; // Nouveau fichier CSS pour les styles du formulaire
+import '../../style/lieuForm.css';
 
 const LieuForm = () => {
   const { id } = useParams();
@@ -15,14 +15,24 @@ const LieuForm = () => {
     ville: '',
     pays: 'France',
     capacite: '',
-    type: '', // Ajout du champ type pour correspondre à la liste
+    type: '',
     contact: {
       nom: '',
       telephone: '',
       email: ''
-    }
+    },
+    programmateurId: null,
+    programmateurNom: null
   });
-
+  
+  // États pour la recherche de programmateurs
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [selectedProgrammateur, setSelectedProgrammateur] = useState(null);
+  const searchTimeoutRef = useRef(null);
+  const dropdownRef = useRef(null);
+  
   useEffect(() => {
     const fetchLieu = async () => {
       if (id && id !== 'nouveau') {
@@ -30,7 +40,23 @@ const LieuForm = () => {
         try {
           const lieuDoc = await getDoc(doc(db, 'lieux', id));
           if (lieuDoc.exists()) {
-            setLieu(lieuDoc.data());
+            const lieuData = lieuDoc.data();
+            setLieu(lieuData);
+            
+            // Si un programmateur est associé, le récupérer
+            if (lieuData.programmateurId) {
+              try {
+                const programmateurDoc = await getDoc(doc(db, 'programmateurs', lieuData.programmateurId));
+                if (programmateurDoc.exists()) {
+                  setSelectedProgrammateur({
+                    id: programmateurDoc.id,
+                    ...programmateurDoc.data()
+                  });
+                }
+              } catch (error) {
+                console.error('Erreur lors de la récupération du programmateur:', error);
+              }
+            }
           } else {
             console.error('Lieu non trouvé');
             navigate('/lieux');
@@ -45,6 +71,102 @@ const LieuForm = () => {
 
     fetchLieu();
   }, [id, navigate]);
+
+  // Effet pour gérer la recherche de programmateurs
+  useEffect(() => {
+    // Nettoyer le timeout précédent si une nouvelle recherche est lancée
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+    
+    // N'effectuer la recherche que si le terme a au moins 2 caractères
+    if (searchTerm.length >= 2) {
+      setIsSearching(true);
+      
+      // Ajouter un délai pour éviter trop de requêtes
+      searchTimeoutRef.current = setTimeout(() => {
+        searchProgrammateurs(searchTerm);
+      }, 300);
+    } else {
+      setSearchResults([]);
+      setIsSearching(false);
+    }
+    
+    // Nettoyage du timeout à la destruction du composant
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, [searchTerm]);
+  
+  // Gestionnaire de clic extérieur pour fermer la liste déroulante
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setSearchResults([]);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  // Fonction pour rechercher des programmateurs dans Firebase
+  const searchProgrammateurs = async (term) => {
+    try {
+      // Créer une requête pour chercher les programmateurs dont le nom contient le terme
+      const q = query(
+        collection(db, 'programmateurs'),
+        where('nom', '>=', term),
+        where('nom', '<=', term + '\uf8ff'),
+        orderBy('nom'),
+        limit(5)
+      );
+      
+      const querySnapshot = await getDocs(q);
+      const results = [];
+      
+      querySnapshot.forEach((doc) => {
+        results.push({
+          id: doc.id,
+          ...doc.data()
+        });
+      });
+      
+      setSearchResults(results);
+    } catch (error) {
+      console.error('Erreur lors de la recherche de programmateurs:', error);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  // Fonction pour sélectionner un programmateur
+  const handleSelectProgrammateur = (programmateur) => {
+    setSelectedProgrammateur(programmateur);
+    setSearchTerm('');
+    setSearchResults([]);
+    
+    // Mettre à jour le lieu avec le programmateur sélectionné (juste l'ID et le nom)
+    setLieu(prev => ({
+      ...prev,
+      programmateurId: programmateur.id,
+      programmateurNom: programmateur.nom
+    }));
+  };
+  
+  // Fonction pour supprimer le programmateur sélectionné
+  const handleRemoveProgrammateur = () => {
+    setSelectedProgrammateur(null);
+    setLieu(prev => ({
+      ...prev,
+      programmateurId: null,
+      programmateurNom: null
+    }));
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -115,6 +237,7 @@ const LieuForm = () => {
       </div>
 
       <form onSubmit={handleSubmit} className="modern-form">
+        {/* Première carte - Informations principales */}
         <div className="form-card">
           <div className="card-header">
             <i className="bi bi-building"></i>
@@ -169,6 +292,7 @@ const LieuForm = () => {
           </div>
         </div>
 
+        {/* Deuxième carte - Adresse */}
         <div className="form-card">
           <div className="card-header">
             <i className="bi bi-geo-alt"></i>
@@ -237,6 +361,106 @@ const LieuForm = () => {
           </div>
         </div>
 
+        {/* Nouvelle carte - Programmateur */}
+        <div className="form-card">
+          <div className="card-header">
+            <i className="bi bi-person-badge"></i>
+            <h3>Programmateur</h3>
+          </div>
+          <div className="card-body">
+            <div className="form-group">
+              <label className="form-label">Associer un programmateur</label>
+              
+              {!selectedProgrammateur ? (
+                <div className="programmateur-search-container" ref={dropdownRef}>
+                  <div className="input-group">
+                    <span className="input-group-text"><i className="bi bi-search"></i></span>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Rechercher un programmateur par nom..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                  </div>
+                  
+                  {isSearching && (
+                    <div className="dropdown-menu show w-100">
+                      <div className="dropdown-item text-center">
+                        <div className="spinner-border spinner-border-sm text-primary" role="status">
+                          <span className="visually-hidden">Recherche en cours...</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {searchResults.length > 0 && (
+                    <div className="dropdown-menu show w-100">
+                      {searchResults.map(prog => (
+                        <div 
+                          key={prog.id} 
+                          className="dropdown-item programmateur-item"
+                          onClick={() => handleSelectProgrammateur(prog)}
+                        >
+                          <div className="programmateur-name">{prog.nom}</div>
+                          <div className="programmateur-details">
+                            {prog.structure && <span className="programmateur-structure">{prog.structure}</span>}
+                            {prog.email && <span className="programmateur-email">{prog.email}</span>}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  
+                  {searchTerm.length >= 2 && searchResults.length === 0 && !isSearching && (
+                    <div className="dropdown-menu show w-100">
+                      <div className="dropdown-item text-center text-muted">
+                        Aucun programmateur trouvé
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="selected-programmateur">
+                  <div className="programmateur-card">
+                    <div className="programmateur-info">
+                      <span className="programmateur-name">{selectedProgrammateur.nom}</span>
+                      {selectedProgrammateur.structure && (
+                        <span className="programmateur-structure">{selectedProgrammateur.structure}</span>
+                      )}
+                      <div className="programmateur-contacts">
+                        {selectedProgrammateur.email && (
+                          <span className="programmateur-contact-item">
+                            <i className="bi bi-envelope"></i> {selectedProgrammateur.email}
+                          </span>
+                        )}
+                        {selectedProgrammateur.telephone && (
+                          <span className="programmateur-contact-item">
+                            <i className="bi bi-telephone"></i> {selectedProgrammateur.telephone}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <button 
+                      type="button" 
+                      className="btn btn-sm btn-outline-danger" 
+                      onClick={handleRemoveProgrammateur}
+                      aria-label="Supprimer ce programmateur"
+                    >
+                      <i className="bi bi-x-lg"></i>
+                    </button>
+                  </div>
+                </div>
+              )}
+              
+              <small className="form-text text-muted">
+                Tapez au moins 2 caractères pour rechercher un programmateur par nom.
+              </small>
+            </div>
+          </div>
+        </div>
+
+        {/* Carte - Informations de contact */}
         <div className="form-card">
           <div className="card-header">
             <i className="bi bi-person-lines-fill"></i>

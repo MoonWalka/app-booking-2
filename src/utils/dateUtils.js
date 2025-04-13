@@ -9,16 +9,25 @@
  */
 export const formatDate = (date) => {
   if (!date) return '';
-  
-  const d = typeof date === 'string' ? new Date(date) : date;
-  
+
+  let d = null;
+
+  // Tenter de convertir si c'est une chaîne, sinon laisser tel quel
+  if (typeof date === 'string') {
+    d = new Date(date);
+  } else if (date instanceof Date) {
+    d = date;
+  } else {
+    return '';
+  }
+
   // Vérifier si la date est valide
   if (isNaN(d.getTime())) return '';
-  
+
   const year = d.getFullYear();
   const month = String(d.getMonth() + 1).padStart(2, '0');
   const day = String(d.getDate()).padStart(2, '0');
-  
+
   return `${year}-${month}-${day}`;
 };
 

@@ -138,6 +138,7 @@ const LieuxList = () => {
           )}
         </div>
       ) : (
+        <div className="container">
         <div className="table-responsive modern-table-container">
           <table className="table table-striped modern-table">
             <thead>
@@ -186,6 +187,7 @@ const LieuxList = () => {
               ))}
             </tbody>
           </table>
+        </div>
         </div>
       )}
     </div>

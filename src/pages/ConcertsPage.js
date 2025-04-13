@@ -1,46 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
+import ConcertsList from '../components/concerts/ConcertsList';
+import ConcertForm from '../components/concerts/ConcertForm';
 
 const ConcertsPage = () => {
+  const [showForm, setShowForm] = useState(false);
+
+  const handleAddConcert = () => {
+    setShowForm(true);
+  };
+
+  const handleCancelForm = () => {
+    setShowForm(false);
+  };
+
+  const handleSubmitForm = (formData) => {
+    console.log('Nouveau concert:', formData);
+    setShowForm(false);
+    // Ici, vous ajouteriez normalement le concert à votre base de données
+  };
+
   return (
-    <div className="concerts-container">
-      <h1>Gestion des Concerts</h1>
-      <div className="concerts-content">
-        <div className="concerts-filters">
-          <h3>Filtres</h3>
-          <div className="filter-group">
-            <label>Statut:</label>
-            <select disabled>
-              <option>Tous</option>
-              <option>Contact établi</option>
-              <option>Pré-accord</option>
-              <option>Contrat signé</option>
-              <option>Acompte facturé</option>
-              <option>Solde facturé</option>
-            </select>
-          </div>
-          <div className="filter-group">
-            <label>Période:</label>
-            <select disabled>
-              <option>Tous</option>
-              <option>À venir</option>
-              <option>Passés</option>
-              <option>Ce mois</option>
-              <option>Ce trimestre</option>
-            </select>
-          </div>
-        </div>
-        
-        <div className="concerts-list">
-          <p className="construction-message">
-            La liste des concerts est en cours de construction. Cette fonctionnalité sera implémentée prochainement.
-          </p>
-          <div className="placeholder-list">
-            <div className="placeholder-item">Concert exemple #1 - En attente</div>
-            <div className="placeholder-item">Concert exemple #2 - Confirmé</div>
-            <div className="placeholder-item">Concert exemple #3 - Annulé</div>
-          </div>
-        </div>
-      </div>
+    <div className="concerts-page">
+      {showForm ? (
+        <ConcertForm 
+          onCancel={handleCancelForm} 
+          onSubmit={handleSubmitForm} 
+        />
+      ) : (
+        <ConcertsList onAddConcert={handleAddConcert} />
+      )}
     </div>
   );
 };

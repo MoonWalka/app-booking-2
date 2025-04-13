@@ -2,6 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 import { mockFirestore } from "./mockStorage";
 
 // Your web app's Firebase configuration
@@ -20,11 +21,17 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
+// Initialiser l'authentification Firebase
+export const auth = getAuth(app);
+
 // Utiliser mockFirestore en développement, Firestore en production
 const isEmulator = window.location.hostname === 'localhost' || 
                    window.location.hostname === '127.0.0.1';
 
 console.log('Running in ' + (isEmulator ? 'emulator' : 'production') + ' mode. Do not use with production credentials.');
+
+// Variable pour contourner l'authentification en développement
+export const BYPASS_AUTH = process.env.REACT_APP_BYPASS_AUTH === 'true';
 
 // Exporter db qui sera utilisé par tous les composants
 export const db = isEmulator ? mockFirestore : getFirestore(app);

@@ -48,6 +48,14 @@ const LieuxList = () => {
     }
   }, [typeFilter, lieux]);
 
+  // Fonction pour calculer le nombre de lieux par type
+  const getTypeCount = (type) => {
+    if (type === 'tous') {
+      return lieux.length;
+    }
+    return lieux.filter(lieu => lieu.type.toLowerCase() === type.toLowerCase()).length;
+  };
+
   const handleDelete = async (id) => {
     if (window.confirm('Êtes-vous sûr de vouloir supprimer ce lieu ?')) {
       try {
@@ -133,6 +141,40 @@ const LieuxList = () => {
             <option value="non spécifié">Non spécifié</option>
           </select>
         </div>
+      </div>
+
+      {/* Ajout des filtres rapides avec badge de comptage */}
+      <div className="filter-tags">
+        <span 
+          className={`filter-tag filter-tag-tous ${typeFilter === 'tous' ? 'active' : ''}`} 
+          onClick={() => setTypeFilter('tous')}
+        >
+          Tous <Badge bg="light" text="dark" pill>{getTypeCount('tous')}</Badge>
+        </span>
+        <span 
+          className={`filter-tag filter-tag-bar ${typeFilter === 'bar' ? 'active' : ''}`} 
+          onClick={() => setTypeFilter('bar')}
+        >
+          Bar <Badge bg="light" text="dark" pill>{getTypeCount('bar')}</Badge>
+        </span>
+        <span 
+          className={`filter-tag filter-tag-festival ${typeFilter === 'festival' ? 'active' : ''}`} 
+          onClick={() => setTypeFilter('festival')}
+        >
+          Festival <Badge bg="light" text="dark" pill>{getTypeCount('festival')}</Badge>
+        </span>
+        <span 
+          className={`filter-tag filter-tag-salle ${typeFilter === 'salle' ? 'active' : ''}`} 
+          onClick={() => setTypeFilter('salle')}
+        >
+          Salle <Badge bg="light" text="dark" pill>{getTypeCount('salle')}</Badge>
+        </span>
+        <span 
+          className={`filter-tag filter-tag-plateau ${typeFilter === 'plateau' ? 'active' : ''}`} 
+          onClick={() => setTypeFilter('plateau')}
+        >
+          Plateau <Badge bg="light" text="dark" pill>{getTypeCount('plateau')}</Badge>
+        </span>
       </div>
 
       {filteredLieux.length === 0 ? (

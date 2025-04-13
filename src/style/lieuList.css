@@ -1,4 +1,3 @@
-
 /* LieuxList.css */
 .lieux-container {
     padding: 1.5rem;
@@ -6,54 +5,54 @@
     border-radius: 0.5rem;
     box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
     transition: all 0.3s ease;
-  }
+}
   
-  .header-container {
+.header-container {
     border-bottom: 2px solid #f0f0f0;
     padding-bottom: 1rem;
-  }
+}
   
-  .modern-title {
+.modern-title {
     font-weight: 600;
     color: #344767;
     margin: 0;
     font-size: 1.5rem;
-  }
+}
   
-  .modern-add-btn {
+.modern-add-btn {
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
     font-weight: 500;
     box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
     transition: all 0.2s;
-  }
+}
   
-  .modern-add-btn:hover {
+.modern-add-btn:hover {
     transform: translateY(-1px);
     box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
-  }
+}
   
-  .modern-alert {
+.modern-alert {
     border-radius: 0.5rem;
     border-left: 4px solid #0dcaf0;
     background-color: rgba(13, 202, 240, 0.1);
-  }
+}
   
-  .modern-table-container {
+.modern-table-container {
     border-radius: 0.5rem;
     overflow: hidden;
     box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
-  }
+}
   
-  .modern-table {
+.modern-table {
     margin-bottom: 0;
-  }
+}
   
-  .modern-table thead {
+.modern-table thead {
     background-color: #f8f9fa;
-  }
+}
   
-  .modern-table thead th {
+.modern-table thead th {
     border-bottom: none;
     color: #344767;
     font-weight: 600;
@@ -61,21 +60,21 @@
     font-size: 0.75rem;
     letter-spacing: 0.05rem;
     padding: 0.75rem 1rem;
-  }
+}
   
-  .modern-table tbody tr {
+.modern-table tbody tr {
     transition: all 0.2s;
-  }
+}
   
-  .modern-table tbody tr:hover {
+.modern-table tbody tr:hover {
     background-color: rgba(233, 236, 239, 0.5);
-  }
+}
   
-  .table-row-animate {
+.table-row-animate {
     animation: fadeIn 0.5s ease-in-out;
-  }
+}
   
-  .modern-btn {
+.modern-btn {
     width: 2rem;
     height: 2rem;
     display: inline-flex;
@@ -85,36 +84,36 @@
     margin-right: 0.25rem;
     padding: 0;
     transition: all 0.2s;
-  }
+}
   
-  .modern-btn:hover {
+.modern-btn:hover {
     background-color: #eaeaea;
-  }
+}
   
-  .modern-btn i {
+.modern-btn i {
     font-size: 0.875rem;
-  }
+}
   
-  .action-buttons .btn-light:first-child:hover {
+.action-buttons .btn-light:first-child:hover {
     color: #3b7ddd;
-  }
+}
   
-  .action-buttons .btn-light:nth-child(2):hover {
+.action-buttons .btn-light:nth-child(2):hover {
     color: #ffc107;
-  }
+}
   
-  .action-buttons .btn-light:last-child:hover {
+.action-buttons .btn-light:last-child:hover {
     color: #dc3545;
-  }
+}
   
-  .loading-spinner {
+.loading-spinner {
     font-size: 1rem;
     color: #6c757d;
     position: relative;
     padding-top: 3rem;
-  }
+}
   
-  .loading-spinner:before {
+.loading-spinner:before {
     content: "";
     display: block;
     width: 2rem;
@@ -127,9 +126,9 @@
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-  }
+}
   
-  .filters-bar {
+.filters-bar {
     background-color: #f8f9fa;
     padding: 0.75rem 1rem;
     border-radius: 0.5rem;
@@ -138,62 +137,151 @@
     justify-content: space-between;
     flex-wrap: wrap;
     box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
-  }
+}
   
-  .filter-label {
+.filter-label {
     font-weight: 500;
     color: #344767;
     margin-bottom: 0;
-  }
+}
   
-  .type-select {
+.type-select {
     max-width: 15rem;
     border-radius: 0.375rem;
     border-color: #dee2e6;
     font-size: 0.875rem;
     padding: 0.375rem 2rem 0.375rem 0.75rem;
     background-position: right 0.75rem center;
-  }
+}
   
-  .type-badge {
+.type-badge {
     padding: 0.35em 0.65em;
     font-size: 0.75em;
     font-weight: 600;
     border-radius: 0.25rem;
     text-transform: capitalize;
-  }
+}
+
+/* Nouveaux styles pour les filtres rapides */
+.filter-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.filter-tag {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 8px 15px;
+    border-radius: 50px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.filter-tag:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.filter-tag.active {
+    font-weight: 600;
+}
+
+.filter-tag .badge {
+    margin-left: 8px;
+    font-size: 0.7em;
+    padding: 5px 8px;
+    border-radius: 20px;
+}
+
+/* Styles spécifiques pour chaque type */
+.filter-tag-tous {
+    border: 1px solid #6c757d;
+}
+.filter-tag-tous.active {
+    background-color: #6c757d;
+    color: white;
+}
+
+.filter-tag-bar {
+    border: 1px solid #0dcaf0;
+}
+.filter-tag-bar.active {
+    background-color: #0dcaf0;
+    color: white;
+}
+
+.filter-tag-festival {
+    border: 1px solid #dc3545;
+}
+.filter-tag-festival.active {
+    background-color: #dc3545;
+    color: white;
+}
+
+.filter-tag-salle {
+    border: 1px solid #198754;
+}
+.filter-tag-salle.active {
+    background-color: #198754;
+    color: white;
+}
+
+.filter-tag-plateau {
+    border: 1px solid #ffc107;
+}
+.filter-tag-plateau.active {
+    background-color: #ffc107;
+    color: white;
+}
   
-  @keyframes fadeIn {
+@keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
-  }
+}
   
-  @keyframes spin {
+@keyframes spin {
     to { transform: translateX(-50%) rotate(360deg); }
-  }
+}
   
-  @media (max-width: 768px) {
+@media (max-width: 768px) {
     .header-container {
-      flex-direction: column;
-      align-items: flex-start;
+        flex-direction: column;
+        align-items: flex-start;
     }
     
     .modern-add-btn {
-      margin-top: 1rem;
-      width: 100%;
+        margin-top: 1rem;
+        width: 100%;
     }
     
     .filters-bar {
-      flex-direction: column;
-      align-items: flex-start;
+        flex-direction: column;
+        align-items: flex-start;
     }
     
     .filters-bar > div {
-      margin-bottom: 0.5rem;
-      width: 100%;
+        margin-bottom: 0.5rem;
+        width: 100%;
     }
     
     .type-select {
-      max-width: 100%;
+        max-width: 100%;
     }
-  }
+
+    .filter-tags {
+        justify-content: flex-start;
+        gap: 8px;
+        margin-top: 15px;
+    }
+
+    .filter-tag {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+}

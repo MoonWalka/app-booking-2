@@ -1,36 +1,21 @@
 import React, { useState } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import ConcertsList from '../components/concerts/ConcertsList';
 import ConcertForm from '../components/concerts/ConcertForm';
+import ConcertDetails from '../components/concerts/ConcertDetails';
 
-const ConcertsPage = () => {
-  const [showForm, setShowForm] = useState(false);
-
-  const handleAddConcert = () => {
-    setShowForm(true);
-  };
-
-  const handleCancelForm = () => {
-    setShowForm(false);
-  };
-
-  const handleSubmitForm = (formData) => {
-    console.log('Nouveau concert:', formData);
-    setShowForm(false);
-    // Ici, vous ajouteriez normalement le concert à votre base de données
-  };
-
+function ConcertsPage() {
+  const navigate = useNavigate();
+  
   return (
     <div className="concerts-page">
-      {showForm ? (
-        <ConcertForm 
-          onCancel={handleCancelForm} 
-          onSubmit={handleSubmitForm} 
-        />
-      ) : (
-        <ConcertsList onAddConcert={handleAddConcert} />
-      )}
+      <Routes>
+        <Route path="/" element={<ConcertsList />} />
+        <Route path="/nouveau" element={<ConcertForm />} />
+        <Route path="/:id" element={<ConcertDetails />} />
+      </Routes>
     </div>
   );
-};
+}
 
 export default ConcertsPage;

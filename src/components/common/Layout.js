@@ -1,82 +1,79 @@
-// src/components/common/Layout.js
 import React from 'react';
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
-const Layout = () => {
-  const { currentUser } = useAuth();
+function Layout({ children }) {
   const location = useLocation();
-
-  // Vérification sécurisée de l'existence de currentUser avant d'accéder à ses propriétés
-  const userName = currentUser ? currentUser.name : 'Utilisateur';
+  const { currentUser } = useAuth();
   
-  // Log sécurisé placé à l'intérieur du composant
-  console.log("Layout - currentUser:", currentUser);
-
-  const isActive = (path) => {
-    return location.pathname === path;
-  };
-
+  // Vérifier si nous sommes sur une page de formulaire externe
+  const isFormPage = location.pathname.includes('/formulaire/');
+  
   return (
     <div className="app-container">
-      <aside className="sidebar">
+      <div className="sidebar">
         <div className="sidebar-header">
-          <Link to="/" className="logo">
-            <span className="logo-text">Label Musical</span>
-          </Link>
-          <div className="sidebar-subtitle">Gestion des concerts et artistes</div>
+          <h2>Label Musical</h2>
+          <p>Gestion des concerts et artistes</p>
         </div>
         
-        <nav className="sidebar-nav">
-          <Link to="/" className={`nav-item ${isActive('/') ? 'active' : ''}`}>
-            <span className="nav-icon">📊</span>
-            Tableau de bord
-          </Link>
-          <Link to="/concerts" className={`nav-item ${isActive('/concerts') ? 'active' : ''}`}>
-            <span className="nav-icon">🎵</span>
-            Concerts
-          </Link>
-          <Link to="/programmateurs" className={`nav-item ${isActive('/programmateurs') ? 'active' : ''}`}>
-            <span className="nav-icon">👥</span>
-            Programmateurs
-          </Link>
-          <Link to="/lieux" className={`nav-item ${isActive('/lieux') ? 'active' : ''}`}>
-            <span className="nav-icon">📍</span>
-            Lieux
-          </Link>
-          <Link to="/contrats" className={`nav-item ${isActive('/contrats') ? 'active' : ''}`}>
-            <span className="nav-icon">📄</span>
-            Contrats
-          </Link>
-        </nav>
-      </aside>
+        {!isFormPage && currentUser && (
+          <nav className="sidebar-nav">
+            <Link to="/" className={location.pathname === '/' ? 'active' : ''}>
+              <span role="img" aria-label="dashboard">📊</span> Tableau de bord
+            </Link>
+            <Link to="/concerts" className={location.pathname.includes('/concerts') ? 'active' : ''}>
+              <span role="img" aria-label="concerts">🎵</span> Concerts
+            </Link>
+            <Link to="/programmateurs" className={location.pathname.includes('/programmateurs') ? 'active' : ''}>
+              <span role="img" aria-label="programmers">👥</span> Programmateurs
+            </Link>
+            <Link to="/lieux" className={location.pathname.includes('/lieux') ? 'active' : ''}>
+              <span role="img" aria-label="venues">📍</span> Lieux
+            </Link>
+            <Link to="/contrats" className={location.pathname.includes('/contrats') ? 'active' : ''}>
+              <span role="img" aria-label="contracts">📄</span> Contrats
+            </Link>
+          </nav>
+        )}
+        
+        {isFormPage && (
+          <nav className="sidebar-nav">
+            <Link to="/">
+              <span role="img" aria-label="dashboard">📊</span> Tableau de bord
+            </Link>
+            <Link to="/concerts">
+              <span role="img" aria-label="concerts">🎵</span> Concerts
+            </Link>
+            <Link to="/programmateurs">
+              <span role="img" aria-label="programmers">👥</span> Programmateurs
+            </Link>
+            <Link to="/lieux">
+              <span role="img" aria-label="venues">📍</span> Lieux
+            </Link>
+            <Link to="/contrats">
+              <span role="img" aria-label="contracts">📄</span> Contrats
+            </Link>
+          </nav>
+        )}
+      </div>
       
       <div className="main-content">
         <header className="main-header">
-          <div className="page-title">
-            {location.pathname === '/' && 'Tableau de bord'}
-            {location.pathname === '/concerts' && 'Gestion des concerts'}
-            {location.pathname === '/programmateurs' && 'Gestion des programmateurs'}
-            {location.pathname === '/lieux' && 'Gestion des lieux'}
-            {location.pathname === '/contrats' && 'Gestion des contrats'}
-          </div>
-          
-          <div className="user-menu">
-            {/* Utilisation sécurisée de currentUser */}
-            <span className="user-name">{userName}</span>
-          </div>
+          <h1>Gestion des concerts</h1>
+          {currentUser && (
+            <div className="user-info">
+              Utilisateur Test
+            </div>
+          )}
         </header>
         
-        <main className="main-container">
-          <Outlet />
+        <main>
+          {children}
         </main>
-        
-        <footer className="app-footer">
-          <p>&copy; {new Date().getFullYear()} App Booking - Tous droits réservés</p>
-        </footer>
       </div>
     </div>
   );
-};
+}
 
 export default Layout;

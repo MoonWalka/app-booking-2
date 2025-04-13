@@ -1,15 +1,16 @@
 import React from 'react';
 
-const LieuxPage = () => {
+function LieuxPage() {
   return (
     <div className="lieux-page">
-      <h2>Gestion des Lieux</h2>
-      
-      <div className="info-panel">
-        <p>Cette page est en construction. La gestion des lieux sera implémentée prochainement.</p>
+      <h2>Lieux</h2>
+      <div className="page-under-construction">
+        <div className="construction-icon">🚧</div>
+        <h3>Page en construction</h3>
+        <p>Cette fonctionnalité sera disponible prochainement.</p>
       </div>
     </div>
   );
-};
+}
 
 export default LieuxPage;

@@ -1,15 +1,16 @@
 import React from 'react';
 
-const ProgrammateursPage = () => {
+function ProgrammateursPage() {
   return (
     <div className="programmateurs-page">
-      <h2>Gestion des Programmateurs</h2>
-      
-      <div className="info-panel">
-        <p>Cette page est en construction. La gestion des programmateurs sera implémentée prochainement.</p>
+      <h2>Programmateurs</h2>
+      <div className="page-under-construction">
+        <div className="construction-icon">🚧</div>
+        <h3>Page en construction</h3>
+        <p>Cette fonctionnalité sera disponible prochainement.</p>
       </div>
     </div>
   );
-};
+}
 
 export default ProgrammateursPage;

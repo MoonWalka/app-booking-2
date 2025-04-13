@@ -1,248 +1,299 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { db } from '../../firebase';
+import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
 
-const ConcertForm = ({ onCancel, onSubmit }) => {
+function ConcertForm() {
   const navigate = useNavigate();
+  const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     date: '',
-    lieu: '',
-    programmateur: '',
     montant: '',
-    statut: 'Contact établi'
+    statut: 'option',
+    lieuId: '',
+    lieuNom: '',
+    programmateurId: '',
+    programmateurNom: ''
   });
-  const [step, setStep] = useState(1);
   const [errors, setErrors] = useState({});
-  
-  // Effet pour déboguer les changements de formData
+  const [lieux, setLieux] = useState([]);
+  const [programmateurs, setProgrammateurs] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  // Charger les lieux et programmateurs existants
   useEffect(() => {
-    console.log('État actuel du formulaire:', formData);
+    const fetchData = async () => {
+      try {
+        // Charger les lieux
+        const lieuxSnapshot = await getDocs(collection(db, 'lieux'));
+        const lieuxData = lieuxSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setLieux([
+          { id: 'new', nom: '+ Créer un nouveau lieu' },
+          ...lieuxData
+        ]);
+
+        // Charger les programmateurs
+        const programmateursSnapshot = await getDocs(collection(db, 'programmateurs'));
+        const programmateursData = programmateursSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setProgrammateurs([
+          { id: 'new', nom: '+ Créer un nouveau programmateur' },
+          ...programmateursData
+        ]);
+      } catch (error) {
+        console.error("Erreur lors du chargement des données:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Surveiller les changements dans formData pour mettre à jour les erreurs
+  useEffect(() => {
+    validateForm();
   }, [formData]);
+
+  const validateForm = () => {
+    const newErrors = {};
+    
+    // Validation étape 1
+    if (step === 1) {
+      if (!formData.date) newErrors.date = "La date est requise";
+      if (!formData.montant) newErrors.montant = "Le montant est requis";
+      if (!formData.statut) newErrors.statut = "Le statut est requis";
+    }
+    
+    // Validation étape 2
+    if (step === 2) {
+      if (!formData.lieuId) newErrors.lieuId = "Le lieu est requis";
+    }
+    
+    // Validation étape 3
+    if (step === 3) {
+      if (!formData.programmateurId) newErrors.programmateurId = "Le programmateur est requis";
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(`Modification de ${name} avec la valeur: ${value}`);
     
-    // Mise à jour de l'état avec la nouvelle valeur
-    setFormData(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
-    
-    // Effacer l'erreur pour ce champ si elle existe
-    if (errors[name]) {
-      setErrors(prevErrors => ({
-        ...prevErrors,
-        [name]: null
-      }));
+    if (name === 'lieuId') {
+      const selectedLieu = lieux.find(lieu => lieu.id === value);
+      setFormData({
+        ...formData,
+        lieuId: value,
+        lieuNom: selectedLieu ? selectedLieu.nom : ''
+      });
+    } else if (name === 'programmateurId') {
+      const selectedProgrammateur = programmateurs.find(prog => prog.id === value);
+      setFormData({
+        ...formData,
+        programmateurId: value,
+        programmateurNom: selectedProgrammateur ? selectedProgrammateur.nom : ''
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value
+      });
     }
   };
 
-  const validateStep1 = () => {
-    const newErrors = {};
-    if (!formData.date) newErrors.date = 'La date est requise';
-    if (!formData.montant) newErrors.montant = 'Le montant est requis';
-    if (!formData.statut) newErrors.statut = 'Le statut est requis';
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const validateStep2 = () => {
-    const newErrors = {};
-    if (!formData.lieu) newErrors.lieu = 'Le lieu est requis';
-    
-    setErrors(newErrors);
-    console.log('Validation étape 2:', newErrors, formData.lieu);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const validateStep3 = () => {
-    const newErrors = {};
-    if (!formData.programmateur) newErrors.programmateur = 'Le programmateur est requis';
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleNextStep = () => {
-    if (step === 1 && validateStep1()) {
-      setStep(2);
-    } else if (step === 2 && validateStep2()) {
-      setStep(3);
+  const nextStep = () => {
+    if (validateForm()) {
+      setStep(step + 1);
     }
   };
 
-  const handlePrevStep = () => {
-    if (step > 1) {
-      setStep(step - 1);
-    }
+  const prevStep = () => {
+    setStep(step - 1);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (step === 3 && validateStep3()) {
-      // Simuler l'enregistrement du concert
-      console.log('Concert créé:', formData);
+    
+    if (!validateForm()) {
+      return;
+    }
+    
+    setLoading(true);
+    
+    try {
+      // Ajouter le concert à Firestore
+      const concertRef = await addDoc(collection(db, 'concerts'), {
+        date: formData.date,
+        montant: parseFloat(formData.montant),
+        statut: formData.statut,
+        lieuId: formData.lieuId,
+        lieuNom: formData.lieuNom,
+        programmateurId: formData.programmateurId,
+        programmateurNom: formData.programmateurNom,
+        createdAt: new Date(),
+        formulaireEnvoye: false
+      });
       
-      // Afficher un message de succès
-      alert('Concert créé avec succès! Un formulaire a été envoyé au programmateur.');
-      
-      // Rediriger vers la liste des concerts
-      navigate('/concerts');
+      // Rediriger vers la page de détails du concert
+      navigate(`/concerts/${concertRef.id}`);
+    } catch (error) {
+      console.error("Erreur lors de la création du concert:", error);
+      setErrors({ submit: "Erreur lors de la création du concert. Veuillez réessayer." });
+    } finally {
+      setLoading(false);
     }
   };
+
+  // Rendu de l'étape 1 : Informations de base
+  const renderStep1 = () => (
+    <div className="form-step">
+      <h3>Informations de base</h3>
+      
+      <div className="form-group">
+        <label htmlFor="date">Date du concert *</label>
+        <input
+          type="date"
+          id="date"
+          name="date"
+          value={formData.date}
+          onChange={handleChange}
+          className={errors.date ? 'error' : ''}
+        />
+        {errors.date && <div className="error-message">{errors.date}</div>}
+      </div>
+      
+      <div className="form-group">
+        <label htmlFor="montant">Montant (€) *</label>
+        <input
+          type="number"
+          id="montant"
+          name="montant"
+          value={formData.montant}
+          onChange={handleChange}
+          className={errors.montant ? 'error' : ''}
+        />
+        {errors.montant && <div className="error-message">{errors.montant}</div>}
+      </div>
+      
+      <div className="form-group">
+        <label htmlFor="statut">Statut *</label>
+        <select
+          id="statut"
+          name="statut"
+          value={formData.statut}
+          onChange={handleChange}
+          className={errors.statut ? 'error' : ''}
+        >
+          <option value="option">Option</option>
+          <option value="confirme">Confirmé</option>
+          <option value="annule">Annulé</option>
+        </select>
+        {errors.statut && <div className="error-message">{errors.statut}</div>}
+      </div>
+      
+      <div className="form-actions">
+        <button type="button" onClick={nextStep} className="btn-primary">
+          Suivant
+        </button>
+      </div>
+    </div>
+  );
+
+  // Rendu de l'étape 2 : Choix du lieu
+  const renderStep2 = () => (
+    <div className="form-step">
+      <h3>Lieu du concert</h3>
+      
+      <div className="form-group">
+        <label htmlFor="lieuId">Sélectionner un lieu *</label>
+        <select
+          id="lieuId"
+          name="lieuId"
+          value={formData.lieuId}
+          onChange={handleChange}
+          className={errors.lieuId ? 'error' : ''}
+        >
+          <option value="">Sélectionner</option>
+          {lieux.map(lieu => (
+            <option key={lieu.id} value={lieu.id}>
+              {lieu.nom}
+            </option>
+          ))}
+        </select>
+        {errors.lieuId && <div className="error-message">{errors.lieuId}</div>}
+      </div>
+      
+      <div className="form-actions">
+        <button type="button" onClick={prevStep} className="btn-secondary">
+          Précédent
+        </button>
+        <button type="button" onClick={nextStep} className="btn-primary">
+          Suivant
+        </button>
+      </div>
+    </div>
+  );
+
+  // Rendu de l'étape 3 : Choix du programmateur
+  const renderStep3 = () => (
+    <div className="form-step">
+      <h3>Programmateur</h3>
+      
+      <div className="form-group">
+        <label htmlFor="programmateurId">Sélectionner un programmateur *</label>
+        <select
+          id="programmateurId"
+          name="programmateurId"
+          value={formData.programmateurId}
+          onChange={handleChange}
+          className={errors.programmateurId ? 'error' : ''}
+        >
+          <option value="">Sélectionner</option>
+          {programmateurs.map(programmateur => (
+            <option key={programmateur.id} value={programmateur.id}>
+              {programmateur.nom}
+            </option>
+          ))}
+        </select>
+        {errors.programmateurId && <div className="error-message">{errors.programmateurId}</div>}
+      </div>
+      
+      <div className="form-actions">
+        <button type="button" onClick={prevStep} className="btn-secondary">
+          Précédent
+        </button>
+        <button type="submit" className="btn-primary" disabled={loading}>
+          {loading ? 'Création en cours...' : 'Créer le concert'}
+        </button>
+      </div>
+    </div>
+  );
 
   return (
     <div className="concert-form-container">
-      <h2>Création d'un concert - Étape {step}/3</h2>
+      <h2>Création d'un nouveau concert</h2>
+      
+      <div className="form-progress">
+        <div className={`progress-step ${step >= 1 ? 'active' : ''}`}>1. Informations</div>
+        <div className={`progress-step ${step >= 2 ? 'active' : ''}`}>2. Lieu</div>
+        <div className={`progress-step ${step >= 3 ? 'active' : ''}`}>3. Programmateur</div>
+      </div>
+      
+      {errors.submit && <div className="error-message global">{errors.submit}</div>}
       
       <form onSubmit={handleSubmit}>
-        {step === 1 && (
-          <div className="form-step">
-            <h3>Informations de base</h3>
-            
-            <div className="form-group">
-              <label>Date du concert:</label>
-              <input 
-                type="date" 
-                name="date" 
-                value={formData.date} 
-                onChange={handleChange}
-                className={errors.date ? 'error' : ''}
-              />
-              {errors.date && <span className="error-message">{errors.date}</span>}
-            </div>
-            
-            <div className="form-group">
-              <label>Montant (€):</label>
-              <input 
-                type="number" 
-                name="montant" 
-                value={formData.montant} 
-                onChange={handleChange}
-                className={errors.montant ? 'error' : ''}
-              />
-              {errors.montant && <span className="error-message">{errors.montant}</span>}
-            </div>
-            
-            <div className="form-group">
-              <label>Statut:</label>
-              <select 
-                name="statut" 
-                value={formData.statut} 
-                onChange={handleChange}
-                className={errors.statut ? 'error' : ''}
-              >
-                <option value="Contact établi">Contact établi</option>
-                <option value="Pré-accord">Pré-accord</option>
-                <option value="Contrat signé">Contrat signé</option>
-                <option value="Acompte facturé">Acompte facturé</option>
-                <option value="Solde facturé">Solde facturé</option>
-              </select>
-              {errors.statut && <span className="error-message">{errors.statut}</span>}
-            </div>
-          </div>
-        )}
-        
-        {step === 2 && (
-          <div className="form-step">
-            <h3>Choix du lieu</h3>
-            
-            <div className="form-group">
-              <label>Lieu:</label>
-              <select 
-                name="lieu" 
-                value={formData.lieu} 
-                onChange={handleChange}
-                className={errors.lieu ? 'error' : ''}
-              >
-                <option value="">Sélectionner un lieu</option>
-                <option value="Salle de Concert Exemple #1">Salle de Concert Exemple #1</option>
-                <option value="Théâtre Exemple #2">Théâtre Exemple #2</option>
-                <option value="nouveau">+ Créer un nouveau lieu</option>
-              </select>
-              {errors.lieu && <span className="error-message">{errors.lieu}</span>}
-            </div>
-            
-            {formData.lieu === 'nouveau' && (
-              <div className="form-group">
-                <label>Nom du nouveau lieu:</label>
-                <input 
-                  type="text" 
-                  name="nouveauLieu" 
-                  onChange={(e) => setFormData({...formData, lieu: e.target.value})}
-                />
-              </div>
-            )}
-          </div>
-        )}
-        
-        {step === 3 && (
-          <div className="form-step">
-            <h3>Choix du programmateur</h3>
-            
-            <div className="form-group">
-              <label>Programmateur:</label>
-              <select 
-                name="programmateur" 
-                value={formData.programmateur} 
-                onChange={handleChange}
-                className={errors.programmateur ? 'error' : ''}
-              >
-                <option value="">Sélectionner un programmateur</option>
-                <option value="Programmateur Exemple #1">Programmateur Exemple #1</option>
-                <option value="Programmateur Exemple #2">Programmateur Exemple #2</option>
-                <option value="nouveau">+ Créer un nouveau programmateur</option>
-              </select>
-              {errors.programmateur && <span className="error-message">{errors.programmateur}</span>}
-            </div>
-            
-            {formData.programmateur === 'nouveau' && (
-              <div className="form-group">
-                <label>Nom du nouveau programmateur:</label>
-                <input 
-                  type="text" 
-                  name="nouveauProgrammateur" 
-                  onChange={(e) => setFormData({...formData, programmateur: e.target.value})}
-                />
-              </div>
-            )}
-            
-            <div className="form-summary">
-              <h4>Résumé du concert</h4>
-              <p><strong>Date:</strong> {formData.date}</p>
-              <p><strong>Lieu:</strong> {formData.lieu}</p>
-              <p><strong>Programmateur:</strong> {formData.programmateur}</p>
-              <p><strong>Montant:</strong> {formData.montant} €</p>
-              <p><strong>Statut:</strong> {formData.statut}</p>
-            </div>
-          </div>
-        )}
-        
-        <div className="form-actions">
-          <button type="button" onClick={onCancel} className="btn-cancel">
-            Annuler
-          </button>
-          
-          {step > 1 && (
-            <button type="button" onClick={handlePrevStep} className="btn-prev">
-              Précédent
-            </button>
-          )}
-          
-          {step < 3 ? (
-            <button type="button" onClick={handleNextStep} className="btn-next">
-              Suivant
-            </button>
-          ) : (
-            <button type="submit" className="btn-submit">
-              Créer le concert
-            </button>
-          )}
-        </div>
+        {step === 1 && renderStep1()}
+        {step === 2 && renderStep2()}
+        {step === 3 && renderStep3()}
       </form>
     </div>
   );
-};
+}
 
 export default ConcertForm;

@@ -1,15 +1,16 @@
 import React from 'react';
 
-const ContratsPage = () => {
+function ContratsPage() {
   return (
     <div className="contrats-page">
-      <h2>Gestion des Contrats</h2>
-      
-      <div className="info-panel">
-        <p>Cette page est en construction. La génération et la gestion des contrats seront implémentées prochainement.</p>
+      <h2>Contrats</h2>
+      <div className="page-under-construction">
+        <div className="construction-icon">🚧</div>
+        <h3>Page en construction</h3>
+        <p>Cette fonctionnalité sera disponible prochainement.</p>
       </div>
     </div>
   );
-};
+}
 
 export default ContratsPage;

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { db } from '../../firebase';
 import { formatDate } from '../../utils/dateUtils';
+import { collection, query, orderBy, getDocs } from 'firebase/firestore';
 
 const ConcertsList = () => {
   const [concerts, setConcerts] = useState([]);
@@ -9,23 +10,26 @@ const ConcertsList = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchConcerts = async () => {
-      try {
-        const querySnapshot = await db.collection('concerts').orderBy('date', 'desc').get();
-        
-        const concertsData = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
-        
-        setConcerts(concertsData);
-        setLoading(false);
-      } catch (error) {
-        console.error('Erreur lors du chargement des concerts:', error);
-        setError('Impossible de charger les concerts. Veuillez réessayer plus tard.');
-        setLoading(false);
-      }
-    };
+
+const fetchConcerts = async () => {
+  try {
+    const concertsRef = collection(db, 'concerts');
+    const q = query(concertsRef, orderBy('date', 'desc'));
+    const querySnapshot = await getDocs(q);
+
+    const concertsData = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+
+    setConcerts(concertsData);
+    setLoading(false);
+  } catch (error) {
+    console.error('Erreur lors du chargement des concerts:', error);
+    setError('Impossible de charger les concerts. Veuillez réessayer plus tard.');
+    setLoading(false);
+  }
+};
 
     fetchConcerts();
   }, []);

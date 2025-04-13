@@ -5,7 +5,8 @@ import { db } from '../../firebase';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import Badge from 'react-bootstrap/Badge';
-import '../style/lieuList.css'; // Nouveau fichier CSS pour les styles personnalisés
+//import '../../style/lieuList.css'; // Nouveau fichier CSS pour les styles personnalisés
+import 'src/style/lieuList.css';
 
 const LieuxList = () => {
   const [lieux, setLieux] = useState([]);

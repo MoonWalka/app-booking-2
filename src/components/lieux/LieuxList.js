@@ -77,21 +77,28 @@ const LieuxList = () => {
                   <td>{lieu.ville}</td>
                   <td>{lieu.capacite || '-'}</td>
                   <td>
-                    <div className="btn-group">
-                      <Link to={`/lieux/${lieu.id}`} className="btn btn-sm btn-outline-primary">
-                        Détails
-                      </Link>
-                      <Link to={`/lieux/edit/${lieu.id}`} className="btn btn-sm btn-outline-secondary">
-                        Modifier
-                      </Link>
-                      <button
-                        onClick={() => handleDelete(lieu.id)}
-                        className="btn btn-sm btn-outline-danger"
-                      >
-                        Supprimer
-                      </button>
-                    </div>
-                  </td>
+  <div className="btn-group action-buttons">
+    <ActionButton 
+      to={`/lieux/${lieu.id}`} 
+      tooltip="Voir les détails" 
+      icon={<i className="bi bi-eye" />} 
+      variant="light"
+    />
+    <ActionButton 
+      to={`/lieux/edit/${lieu.id}`} 
+      tooltip="Modifier le lieu" 
+      icon={<i className="bi bi-pencil" />} 
+      variant="light"
+    />
+    <ActionButton 
+      tooltip="Supprimer le lieu" 
+      icon={<i className="bi bi-trash" />} 
+      variant="light" 
+      onClick={() => handleDelete(lieu.id)}
+    />
+  </div>
+</td>
+
                 </tr>
               ))}
             </tbody>

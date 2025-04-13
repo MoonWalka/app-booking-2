@@ -1,0 +1,30 @@
+/* Styles pour les boutons d'action */
+.action-buttons {
+    display: flex;
+    gap: 5px;
+  }
+  
+  .btn-icon {
+    width: 36px;
+    height: 36px;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+  }
+  
+  .btn-icon:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .btn-light {
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+  }
+  
+  .btn-light:hover {
+    background-color: #e9ecef;
+  }

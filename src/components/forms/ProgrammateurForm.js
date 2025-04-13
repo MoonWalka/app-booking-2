@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../../firebase';
+import {
+  doc,
+  getDoc,
+  setDoc,
+  collection
+} from 'firebase/firestore';
 
 const ProgrammateurForm = ({ id }) => {
   const navigate = useNavigate();

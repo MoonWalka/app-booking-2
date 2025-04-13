@@ -144,41 +144,102 @@ const ProgrammateurForm = () => {
     };
   }, []);
 
-  // Fonction pour rechercher des concerts dans Firebase
+  // Fonction pour rechercher des concerts dans Firebase - AMÉLIORÉE
   const searchConcerts = async (term) => {
     try {
-      // Note: Ajustez cette partie selon votre structure réelle de collection de concerts
-      const q = query(
-        collection(db, 'concerts'),
-        where('titre', '>=', term),
-        where('titre', '<=', term + '\uf8ff'),
+      setIsSearching(true);
+      const termLower = term.toLowerCase();
+      const concertsRef = collection(db, 'concerts');
+      
+      // Créer plusieurs requêtes pour rechercher dans différents champs
+      // Nous ne pouvons pas faire OR directement dans Firestore, donc nous devons
+      // exécuter plusieurs requêtes et fusionner les résultats
+      
+      // 1. Recherche par titre
+      const titreQuery = query(
+        concertsRef,
         orderBy('titre'),
-        limit(5)
+        limit(20)
       );
       
-      const querySnapshot = await getDocs(q);
-      const results = [];
+      // 2. Recherche par lieu
+      const lieuQuery = query(
+        concertsRef,
+        orderBy('lieuNom'),
+        limit(20)
+      );
       
-      querySnapshot.forEach((doc) => {
-        const concertData = doc.data();
+      // 3. Recherche par programmateur
+      const progQuery = query(
+        concertsRef,
+        orderBy('programmateurNom'),
+        limit(20)
+      );
+      
+      // Exécuter toutes les requêtes en parallèle
+      const [titreSnap, lieuSnap, progSnap] = await Promise.all([
+        getDocs(titreQuery),
+        getDocs(lieuQuery),
+        getDocs(progQuery)
+      ]);
+      
+      // Collecter tous les résultats uniques
+      const allResults = new Map(); // Utiliser une Map pour dédupliquer par ID
+      
+      // Fonction pour ajouter des résultats à la Map s'ils correspondent au terme de recherche
+      const addMatchingResults = (snapshot, fieldFilter) => {
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          // Ne vérifier que si le document n'a pas encore été ajouté ou si fieldFilter est true
+          if (!allResults.has(doc.id) && fieldFilter(data)) {
+            allResults.set(doc.id, {
+              id: doc.id,
+              ...data
+            });
+          }
+        });
+      };
+      
+      // Ajouter les résultats qui correspondent au terme de recherche
+      addMatchingResults(titreSnap, data => 
+        data.titre && data.titre.toLowerCase().includes(termLower)
+      );
+      
+      addMatchingResults(lieuSnap, data => 
+        data.lieuNom && data.lieuNom.toLowerCase().includes(termLower)
+      );
+      
+      addMatchingResults(progSnap, data => 
+        data.programmateurNom && data.programmateurNom.toLowerCase().includes(termLower)
+      );
+      
+      // Convertir la Map en array et filtrer les concerts déjà associés
+      const filteredResults = Array.from(allResults.values())
+        .filter(concert => !formData.concertsAssocies.some(
+          existingConcert => existingConcert.id === concert.id
+        ));
+      
+      // Trier les résultats par pertinence et date
+      const sortedResults = filteredResults.sort((a, b) => {
+        // Priorité 1: Titre correspond exactement
+        if (a.titre?.toLowerCase() === termLower && b.titre?.toLowerCase() !== termLower) return -1;
+        if (b.titre?.toLowerCase() === termLower && a.titre?.toLowerCase() !== termLower) return 1;
         
-        // Vérifier si le concert est déjà associé
-        const isAlreadyAssociated = formData.concertsAssocies.some(
-          concert => concert.id === doc.id
-        );
+        // Priorité 2: Titre commence par le terme
+        if (a.titre?.toLowerCase().startsWith(termLower) && !b.titre?.toLowerCase().startsWith(termLower)) return -1;
+        if (b.titre?.toLowerCase().startsWith(termLower) && !a.titre?.toLowerCase().startsWith(termLower)) return 1;
         
-        if (!isAlreadyAssociated) {
-          results.push({
-            id: doc.id,
-            ...concertData,
-            isAlreadyAssociated
-          });
-        }
+        // Priorité 3: Date (plus récent d'abord)
+        const dateA = a.date?.seconds || 0;
+        const dateB = b.date?.seconds || 0;
+        return dateB - dateA;
       });
       
-      setSearchResults(results);
+      // Limiter le nombre de résultats pour l'affichage
+      setSearchResults(sortedResults.slice(0, 10));
     } catch (error) {
       console.error('Erreur lors de la recherche de concerts:', error);
+      setSearchResults([]);
     } finally {
       setIsSearching(false);
     }
@@ -349,6 +410,19 @@ const ProgrammateurForm = () => {
     }
   };
 
+  // Fonction pour obtenir le libellé du statut
+  const getStatusLabel = (statut) => {
+    switch (statut) {
+      case 'contact': return 'Contact établi';
+      case 'preaccord': return 'Pré-accord';
+      case 'contrat': return 'Contrat signé';
+      case 'acompte': return 'Acompte facturé';
+      case 'solde': return 'Solde facturé';
+      case 'annule': return 'Annulé';
+      default: return statut || 'Non défini';
+    }
+  };
+  
   return (
     <div className="programmateur-form-container">
       <div className="form-header-container">
@@ -605,7 +679,7 @@ const ProgrammateurForm = () => {
                 <input
                   type="text"
                   className="form-control"
-                  placeholder="Rechercher un concert par titre..."
+                  placeholder="Rechercher un concert par titre, lieu ou programmateur..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -639,11 +713,40 @@ const ProgrammateurForm = () => {
                       onClick={() => handleAssociateConcert(concert)}
                     >
                       <div className="d-flex justify-content-between align-items-center">
-                        <div>
-                          <div className="concert-title">{concert.titre}</div>
+                        <div className="concert-search-info">
+                          <div className="concert-title">
+                            {concert.titre || "Sans titre"}
+                            {concert.statut && (
+                              <span className={`concert-status status-${concert.statut}`}>
+                                {getStatusLabel(concert.statut)}
+                              </span>
+                            )}
+                          </div>
                           <div className="concert-details">
-                            {concert.date && <span className="concert-date">{formatDate(concert.date)}</span>}
-                            {concert.lieu && <span className="concert-lieu">{concert.lieu}</span>}
+                            {concert.date && (
+                              <span className="concert-date">
+                                <i className="bi bi-calendar-event"></i>
+                                {formatDate(concert.date)}
+                              </span>
+                            )}
+                            {concert.lieuNom && (
+                              <span className="concert-lieu">
+                                <i className="bi bi-geo-alt"></i>
+                                {concert.lieuNom}
+                              </span>
+                            )}
+                            {concert.programmateurNom && (
+                              <span className="concert-prog">
+                                <i className="bi bi-person"></i>
+                                {concert.programmateurNom}
+                              </span>
+                            )}
+                            {concert.montant && (
+                              <span className="concert-montant">
+                                <i className="bi bi-currency-euro"></i>
+                                {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(concert.montant)}
+                              </span>
+                            )}
                           </div>
                         </div>
                         <button 
@@ -671,7 +774,7 @@ const ProgrammateurForm = () => {
               )}
               
               <small className="form-text text-muted mt-2">
-                Tapez au moins 2 caractères pour rechercher un concert par titre.
+                Tapez au moins 2 caractères pour rechercher un concert par titre, lieu ou programmateur.
               </small>
             </div>
 
@@ -692,6 +795,11 @@ const ProgrammateurForm = () => {
                           <h5 className="concert-name">
                             <i className="bi bi-music-note me-2"></i>
                             {concert.titre}
+                            {concert.statut && (
+                              <span className={`concert-status status-${concert.statut}`}>
+                                {getStatusLabel(concert.statut)}
+                              </span>
+                            )}
                           </h5>
                           <div className="concert-details">
                             {concert.date && (
@@ -700,10 +808,16 @@ const ProgrammateurForm = () => {
                                 {formatDate(concert.date)}
                               </span>
                             )}
-                            {concert.lieu && (
+                            {concert.lieuNom && (
                               <span className="concert-detail">
                                 <i className="bi bi-geo-alt"></i>
-                                {concert.lieu}
+                                {concert.lieuNom}
+                              </span>
+                            )}
+                            {concert.montant && (
+                              <span className="concert-detail">
+                                <i className="bi bi-currency-euro"></i>
+                                {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(concert.montant)}
                               </span>
                             )}
                           </div>

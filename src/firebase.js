@@ -1,29 +1,30 @@
-import { initializeApp } from 'firebase/app';
-import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
-import { getAuth, connectAuthEmulator } from 'firebase/auth';
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import { getFirestore } from "firebase/firestore";
+import { mockFirestore } from "./mockStorage";
 
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyDqoNt9vPZ5LvRxhZr8WBzaRlrT9ZmCv3A",
-  authDomain: "app-booking-demo.firebaseapp.com",
-  projectId: "app-booking-demo",
-  storageBucket: "app-booking-demo.appspot.com",
-  messagingSenderId: "583694241535",
-  appId: "1:583694241535:web:a8e2b9b2e2b9b2e2b9b2e2"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: "app-booking-26571.firebaseapp.com",
+  projectId: "app-booking-26571",
+  storageBucket: "app-booking-26571.firebasestorage.app",
+  messagingSenderId: "985724562753",
+  appId: "1:985724562753:web:146bd6983fd016cb9a85c0",
+  measurementId: "G-RL3N09C0WM"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
+const analytics = getAnalytics(app);
 
-// Utiliser les émulateurs Firebase en développement
-if (process.env.NODE_ENV === 'development' || window.location.hostname === 'localhost') {
-  // Initialiser les émulateurs Firebase
-  connectFirestoreEmulator(db, 'localhost', 8080);
-  connectAuthEmulator(auth, 'http://localhost:9099');
-  console.log('Utilisation des émulateurs Firebase');
-}
+// Utiliser mockFirestore en développement, Firestore en production
+const isEmulator = window.location.hostname === 'localhost' || 
+                   window.location.hostname === '127.0.0.1';
 
-// Forcer le mode bypass en développement
-const BYPASS_AUTH = process.env.NODE_ENV === 'development' ? true : (process.env.REACT_APP_BYPASS_AUTH === 'true');
+console.log('Running in ' + (isEmulator ? 'emulator' : 'production') + ' mode. Do not use with production credentials.');
 
-export { db, auth, BYPASS_AUTH };
+// Exporter db qui sera utilisé par tous les composants
+export const db = isEmulator ? mockFirestore : getFirestore(app);

@@ -547,3 +547,97 @@ label {
     grid-template-columns: 1fr;
   }
 }
+/* Styles pour l'interface isolée du formulaire */
+.form-isolated-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f5f7fa;
+}
+
+.form-header {
+  background-color: var(--secondary-color);
+  color: white;
+  padding: 15px 30px;
+  text-align: center;
+}
+
+.form-logo h2 {
+  margin: 0;
+}
+
+.form-content {
+  flex: 1;
+  padding: 30px;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.form-footer {
+  background-color: var(--secondary-color);
+  color: white;
+  padding: 15px;
+  text-align: center;
+  font-size: 12px;
+}
+
+.form-security-notice {
+  margin-top: 30px;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: var(--border-radius);
+  text-align: center;
+  font-size: 12px;
+  color: #7f8c8d;
+}
+
+.form-error {
+  text-align: center;
+  padding: 50px 20px;
+}
+
+.error-icon {
+  font-size: 64px;
+  color: var(--danger-color);
+  margin-bottom: 20px;
+}
+
+.error-help {
+  margin-top: 20px;
+  font-style: italic;
+}
+/* Styles pour les avertissements d'expiration */
+.form-expired-warning {
+  margin-top: 15px;
+  padding: 10px;
+  background-color: #fff3cd;
+  border-radius: var(--border-radius);
+  color: #856404;
+}
+
+.btn-warning {
+  background-color: #f39c12;
+  color: white;
+}
+
+.btn-warning:hover {
+  background-color: #e67e22;
+}
+
+/* Styles pour les informations de soumission */
+.form-submitted-info, .form-validated-info {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #d4edda;
+  border-radius: var(--border-radius);
+  color: #155724;
+}
+
+/* Styles pour les liens de formulaire */
+.form-link-container {
+  margin-top: 20px;
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: var(--border-radius);
+}

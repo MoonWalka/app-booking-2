@@ -1,16 +1,21 @@
 import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import LieuxList from '../components/lieux/LieuxList';
+import LieuDetails from '../components/lieux/LieuDetails';
+import LieuForm from '../components/forms/LieuForm';
 
-function LieuxPage() {
+const LieuxPage = () => {
   return (
-    <div className="lieux-page">
-      <h2>Lieux</h2>
-      <div className="page-under-construction">
-        <div className="construction-icon">🚧</div>
-        <h3>Page en construction</h3>
-        <p>Cette fonctionnalité sera disponible prochainement.</p>
-      </div>
+    <div>
+      <h1>Lieux</h1>
+      <Routes>
+        <Route path="/" element={<LieuxList />} />
+        <Route path="/nouveau" element={<LieuForm />} />
+        <Route path="/edit/:id" element={<LieuForm />} />
+        <Route path="/:id" element={<LieuDetails />} />
+      </Routes>
     </div>
   );
-}
+};
 
 export default LieuxPage;

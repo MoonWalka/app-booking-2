@@ -1,3 +1,4 @@
+import '../../style/lieuList.css'; // Nouveau fichier CSS pour les styles personnalisés
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { collection, getDocs, query, orderBy, deleteDoc, doc } from 'firebase/firestore';
@@ -6,7 +7,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import Badge from 'react-bootstrap/Badge';
 //import '../../style/lieuList.css'; // Nouveau fichier CSS pour les styles personnalisés
-import 'src/style/lieuList.css';
+
 
 const LieuxList = () => {
   const [lieux, setLieux] = useState([]);

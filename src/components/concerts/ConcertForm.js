@@ -78,9 +78,6 @@ const ConcertForm = ({ concert }) => {
   
     fetchData();
   }, [concert?.id]);
-    
-    fetchData();
-  }, [concert?.id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

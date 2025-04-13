@@ -2,6 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../../firebase';
 import LieuForm from '../forms/LieuForm';
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+  updateDoc
+} from 'firebase/firestore';
 
 const ConcertForm = ({ concert }) => {
   const navigate = useNavigate();
@@ -29,25 +37,28 @@ const ConcertForm = ({ concert }) => {
     const fetchData = async () => {
       try {
         // Récupérer les lieux
-        const lieuxSnapshot = await db.collection('lieux').get();
+        const lieuxRef = collection(db, 'lieux');
+        const lieuxSnapshot = await getDocs(lieuxRef);
         const lieuxData = lieuxSnapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data()
         }));
         setLieux(lieuxData);
-        
+  
         // Récupérer les programmateurs
-        const programmateursSnapshot = await db.collection('programmateurs').get();
+        const progsRef = collection(db, 'programmateurs');
+        const programmateursSnapshot = await getDocs(progsRef);
         const programmateursData = programmateursSnapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data()
         }));
         setProgrammateurs(programmateursData);
-        
+  
         // Si c'est une modification, récupérer les détails du concert
         if (concert?.id) {
-          const concertDoc = await db.collection('concerts').doc(concert.id).get();
-          if (concertDoc.exists) {
+          const concertRef = doc(db, 'concerts', concert.id);
+          const concertDoc = await getDoc(concertRef);
+          if (concertDoc.exists()) {
             const concertData = concertDoc.data();
             setFormData({
               ...concertData,
@@ -64,6 +75,9 @@ const ConcertForm = ({ concert }) => {
         console.error('Erreur lors de la récupération des données:', error);
       }
     };
+  
+    fetchData();
+  }, [concert?.id]);
     
     fetchData();
   }, [concert?.id]);
@@ -114,12 +128,13 @@ const ConcertForm = ({ concert }) => {
 
   const handleCreateLieu = async () => {
     try {
-      // Créer un document vide pour obtenir un ID
-      const newLieuRef = await db.collection('lieux').add({
+      // Créer un document vide avec un ID généré
+      const newLieuRef = doc(collection(db, 'lieux'));
+      await setDoc(newLieuRef, {
         nom: 'Nouveau lieu',
         createdAt: new Date().toISOString()
       });
-      
+  
       setNewLieu({ id: newLieuRef.id });
       setShowLieuForm(true);
     } catch (error) {
@@ -131,7 +146,7 @@ const ConcertForm = ({ concert }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-
+  
     try {
       // Vérifier que les champs obligatoires sont remplis
       if (!formData.date || !formData.montant || !formData.lieuId) {
@@ -139,19 +154,18 @@ const ConcertForm = ({ concert }) => {
         setIsSubmitting(false);
         return;
       }
-
+  
       // Correction du format de date - s'assurer que la date est au format YYYY-MM-DD
       let correctedDate = formData.date;
-      // Si la date est au format MM/DD/YYYY ou similaire, la convertir
       if (formData.date.includes('/')) {
         const dateParts = formData.date.split('/');
         if (dateParts.length === 3) {
           correctedDate = `${dateParts[2]}-${dateParts[0].padStart(2, '0')}-${dateParts[1].padStart(2, '0')}`;
         }
       }
-      
+  
       console.log('Date corrigée:', correctedDate);
-
+  
       const concertData = {
         date: correctedDate,
         montant: formData.montant,
@@ -166,16 +180,17 @@ const ConcertForm = ({ concert }) => {
         notes: formData.notes,
         updatedAt: new Date().toISOString()
       };
-
+  
       if (concert?.id) {
         // Mise à jour d'un concert existant
-        await db.collection('concerts').doc(concert.id).update(concertData);
+        await updateDoc(doc(db, 'concerts', concert.id), concertData);
       } else {
         // Création d'un nouveau concert
         concertData.createdAt = new Date().toISOString();
-        await db.collection('concerts').add(concertData);
+        const newConcertRef = doc(collection(db, 'concerts'));
+        await setDoc(newConcertRef, concertData);
       }
-
+  
       navigate('/concerts');
     } catch (error) {
       console.error('Erreur lors de l\'enregistrement du concert:', error);

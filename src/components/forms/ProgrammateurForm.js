@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { db } from '../../firebase';
 import {
@@ -6,9 +6,17 @@ import {
   getDoc,
   setDoc,
   collection,
+  query,
+  where,
+  getDocs,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+  orderBy,
+  limit,
   serverTimestamp
 } from 'firebase/firestore';
-import '../../style/programmateurForm.css'; // Nouveau fichier CSS
+import '../../style/programmateurForm.css';
 
 const ProgrammateurForm = () => {
   const { id } = useParams();
@@ -33,14 +41,16 @@ const ProgrammateurForm = () => {
       siret: '',
       tva: ''
     },
-    lieu: {
-      nom: '',
-      adresse: '',
-      codePostal: '',
-      ville: '',
-      pays: 'France'
-    }
+    // Remplacer 'lieu' par 'concertsAssociés'
+    concertsAssocies: []
   });
+
+  // États pour la recherche et la gestion des concerts
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const searchTimeoutRef = useRef(null);
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     const fetchProgrammateur = async () => {
@@ -56,8 +66,8 @@ const ProgrammateurForm = () => {
             const data = snap.data();
             const adaptedData = {
               contact: {
-                nom: data.nom || '',
-                prenom: data.prenom || '',
+                nom: data.nom?.split(' ')[0] || '', // Tentative de séparer nom/prénom
+                prenom: data.prenom || (data.nom?.includes(' ') ? data.nom.split(' ').slice(1).join(' ') : ''),
                 fonction: data.fonction || '',
                 email: data.email || '',
                 telephone: data.telephone || ''
@@ -72,15 +82,15 @@ const ProgrammateurForm = () => {
                 siret: data.siret || '',
                 tva: data.tva || ''
               },
-              lieu: {
-                nom: data.lieuNom || '',
-                adresse: data.lieuAdresse || '',
-                codePostal: data.lieuCodePostal || '',
-                ville: data.lieuVille || '',
-                pays: data.lieuPays || 'France'
-              }
+              concertsAssocies: data.concertsAssocies || []
             };
+            
             setFormData(adaptedData);
+            
+            // Récupérer les détails des concerts associés si nécessaire
+            if (adaptedData.concertsAssocies && adaptedData.concertsAssocies.length > 0) {
+              await fetchConcertsDetails(adaptedData.concertsAssocies);
+            }
           } else {
             console.error('Aucun programmateur trouvé avec cet ID');
             navigate('/programmateurs');
@@ -95,6 +105,133 @@ const ProgrammateurForm = () => {
 
     fetchProgrammateur();
   }, [id, navigate]);
+
+  // Effet pour gérer la recherche de concerts
+  useEffect(() => {
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+    
+    if (searchTerm.length >= 2) {
+      setIsSearching(true);
+      
+      searchTimeoutRef.current = setTimeout(() => {
+        searchConcerts(searchTerm);
+      }, 300);
+    } else {
+      setSearchResults([]);
+      setIsSearching(false);
+    }
+    
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, [searchTerm]);
+  
+  // Gestionnaire de clic extérieur pour fermer la liste déroulante
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setSearchResults([]);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  // Fonction pour rechercher des concerts dans Firebase
+  const searchConcerts = async (term) => {
+    try {
+      // Note: Ajustez cette partie selon votre structure réelle de collection de concerts
+      const q = query(
+        collection(db, 'concerts'),
+        where('titre', '>=', term),
+        where('titre', '<=', term + '\uf8ff'),
+        orderBy('titre'),
+        limit(5)
+      );
+      
+      const querySnapshot = await getDocs(q);
+      const results = [];
+      
+      querySnapshot.forEach((doc) => {
+        const concertData = doc.data();
+        
+        // Vérifier si le concert est déjà associé
+        const isAlreadyAssociated = formData.concertsAssocies.some(
+          concert => concert.id === doc.id
+        );
+        
+        if (!isAlreadyAssociated) {
+          results.push({
+            id: doc.id,
+            ...concertData,
+            isAlreadyAssociated
+          });
+        }
+      });
+      
+      setSearchResults(results);
+    } catch (error) {
+      console.error('Erreur lors de la recherche de concerts:', error);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  // Fonction pour récupérer les détails complets des concerts associés
+  const fetchConcertsDetails = async (concertIds) => {
+    try {
+      const concertsDetails = [];
+      
+      for (const concertItem of concertIds) {
+        // Si nous avons juste l'ID, récupérer les détails complets
+        if (typeof concertItem === 'string') {
+          const concertDoc = await getDoc(doc(db, 'concerts', concertItem));
+          if (concertDoc.exists()) {
+            concertsDetails.push({
+              id: concertDoc.id,
+              ...concertDoc.data()
+            });
+          }
+        } else {
+          // Si nous avons déjà un objet avec des détails, l'utiliser tel quel
+          concertsDetails.push(concertItem);
+        }
+      }
+      
+      setFormData(prev => ({
+        ...prev,
+        concertsAssocies: concertsDetails
+      }));
+    } catch (error) {
+      console.error('Erreur lors de la récupération des détails des concerts:', error);
+    }
+  };
+
+  // Fonction pour associer un concert au programmateur
+  const handleAssociateConcert = (concert) => {
+    setFormData(prev => ({
+      ...prev,
+      concertsAssocies: [...prev.concertsAssocies, concert]
+    }));
+    
+    setSearchTerm('');
+    setSearchResults([]);
+  };
+  
+  // Fonction pour dissocier un concert du programmateur
+  const handleRemoveConcert = (concertId) => {
+    setFormData(prev => ({
+      ...prev,
+      concertsAssocies: prev.concertsAssocies.filter(c => c.id !== concertId)
+    }));
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -147,10 +284,15 @@ const ProgrammateurForm = () => {
           acc[`structure${key.charAt(0).toUpperCase() + key.slice(1)}`] = formData.structure[key];
           return acc;
         }, {}),
-        ...Object.keys(formData.lieu).reduce((acc, key) => {
-          acc[`lieu${key.charAt(0).toUpperCase() + key.slice(1)}`] = formData.lieu[key];
-          return acc;
-        }, {}),
+        
+        // Traiter les concerts associés
+        // Ne stocker que les ID et les titres des concerts pour éviter de dupliquer trop de données
+        concertsAssocies: formData.concertsAssocies.map(concert => ({
+          id: concert.id,
+          titre: concert.titre,
+          date: concert.date,
+          lieu: concert.lieu
+        })),
         
         // Timestamps
         updatedAt: serverTimestamp()
@@ -161,6 +303,18 @@ const ProgrammateurForm = () => {
       }
   
       await setDoc(doc(db, 'programmateurs', progId), flattenedData, { merge: true });
+      
+      // Mise à jour réciproque : ajouter le programmateur à chaque concert
+      for (const concert of formData.concertsAssocies) {
+        const concertRef = doc(db, 'concerts', concert.id);
+        await updateDoc(concertRef, {
+          programmateurs: arrayUnion({
+            id: progId,
+            nom: flattenedData.nom
+          })
+        });
+      }
+      
       navigate('/programmateurs');
     } catch (error) {
       console.error('Erreur lors de l\'enregistrement du programmateur:', error);
@@ -177,6 +331,23 @@ const ProgrammateurForm = () => {
   if (loading) {
     return <div className="text-center my-5 loading-spinner">Chargement du programmateur...</div>;
   }
+  
+  // Formatage de la date pour l'affichage
+  const formatDate = (dateString) => {
+    if (!dateString) return 'Date non spécifiée';
+    
+    // Si c'est un timestamp Firestore
+    if (dateString.seconds) {
+      return new Date(dateString.seconds * 1000).toLocaleDateString('fr-FR');
+    }
+    
+    // Si c'est une chaîne de date standard
+    try {
+      return new Date(dateString).toLocaleDateString('fr-FR');
+    } catch (e) {
+      return dateString;
+    }
+  };
 
   return (
     <div className="programmateur-form-container">
@@ -419,81 +590,142 @@ const ProgrammateurForm = () => {
           </div>
         </div>
 
-        {/* Section Lieu du concert */}
+        {/* NOUVELLE SECTION: Concerts associés */}
         <div className="form-card">
           <div className="card-header">
-            <i className="bi bi-geo-alt"></i>
-            <h3>Lieu du concert</h3>
+            <i className="bi bi-music-note-list"></i>
+            <h3>Concerts associés</h3>
           </div>
           <div className="card-body">
-            <div className="form-group">
-              <label htmlFor="lieu.nom" className="form-label">Nom du lieu</label>
-              <input
-                type="text"
-                className="form-control"
-                id="lieu.nom"
-                name="lieu.nom"
-                value={formData.lieu.nom}
-                onChange={handleChange}
-                placeholder="Ex: Salle des fêtes municipale"
-              />
+            {/* Barre de recherche pour ajouter un concert */}
+            <div className="concert-search-container mb-4" ref={dropdownRef}>
+              <label className="form-label">Associer un concert</label>
+              <div className="input-group">
+                <span className="input-group-text"><i className="bi bi-search"></i></span>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Rechercher un concert par titre..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                {searchTerm && (
+                  <button 
+                    className="btn btn-outline-secondary clear-search" 
+                    onClick={() => setSearchTerm('')}
+                    type="button"
+                  >
+                    <i className="bi bi-x-lg"></i>
+                  </button>
+                )}
+              </div>
+              
+              {isSearching && (
+                <div className="dropdown-menu show w-100">
+                  <div className="dropdown-item text-center">
+                    <div className="spinner-border spinner-border-sm text-primary" role="status">
+                      <span className="visually-hidden">Recherche en cours...</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {searchResults.length > 0 && (
+                <div className="dropdown-menu show w-100">
+                  {searchResults.map(concert => (
+                    <div 
+                      key={concert.id} 
+                      className="dropdown-item concert-item"
+                      onClick={() => handleAssociateConcert(concert)}
+                    >
+                      <div className="d-flex justify-content-between align-items-center">
+                        <div>
+                          <div className="concert-title">{concert.titre}</div>
+                          <div className="concert-details">
+                            {concert.date && <span className="concert-date">{formatDate(concert.date)}</span>}
+                            {concert.lieu && <span className="concert-lieu">{concert.lieu}</span>}
+                          </div>
+                        </div>
+                        <button 
+                          type="button" 
+                          className="btn btn-sm btn-outline-primary"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAssociateConcert(concert);
+                          }}
+                        >
+                          <i className="bi bi-plus-lg"></i> Associer
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              
+              {searchTerm.length >= 2 && searchResults.length === 0 && !isSearching && (
+                <div className="dropdown-menu show w-100">
+                  <div className="dropdown-item text-center text-muted">
+                    Aucun concert trouvé
+                  </div>
+                </div>
+              )}
+              
+              <small className="form-text text-muted mt-2">
+                Tapez au moins 2 caractères pour rechercher un concert par titre.
+              </small>
             </div>
 
-            <div className="form-group">
-              <label htmlFor="lieu.adresse" className="form-label">Adresse</label>
-              <input
-                type="text"
-                className="form-control"
-                id="lieu.adresse"
-                name="lieu.adresse"
-                value={formData.lieu.adresse}
-                onChange={handleChange}
-                placeholder="Numéro et nom de rue"
-              />
-            </div>
-
-            <div className="row">
-              <div className="col-md-4">
-                <div className="form-group">
-                  <label htmlFor="lieu.codePostal" className="form-label">Code postal</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="lieu.codePostal"
-                    name="lieu.codePostal"
-                    value={formData.lieu.codePostal}
-                    onChange={handleChange}
-                    placeholder="Ex: 75001"
-                  />
+            {/* Liste des concerts associés */}
+            <div className="associated-concerts">
+              <h4 className="mb-3 concerts-title">
+                {formData.concertsAssocies.length > 0 
+                  ? `Concerts associés (${formData.concertsAssocies.length})` 
+                  : 'Aucun concert associé'}
+              </h4>
+              
+              {formData.concertsAssocies.length > 0 ? (
+                <div className="concert-list">
+                  {formData.concertsAssocies.map(concert => (
+                    <div key={concert.id} className="concert-card">
+                      <div className="concert-card-body">
+                        <div className="concert-info">
+                          <h5 className="concert-name">
+                            <i className="bi bi-music-note me-2"></i>
+                            {concert.titre}
+                          </h5>
+                          <div className="concert-details">
+                            {concert.date && (
+                              <span className="concert-detail">
+                                <i className="bi bi-calendar-event"></i>
+                                {formatDate(concert.date)}
+                              </span>
+                            )}
+                            {concert.lieu && (
+                              <span className="concert-detail">
+                                <i className="bi bi-geo-alt"></i>
+                                {concert.lieu}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <button 
+                          type="button" 
+                          className="btn btn-sm btn-outline-danger" 
+                          onClick={() => handleRemoveConcert(concert.id)}
+                          aria-label="Retirer ce concert"
+                        >
+                          <i className="bi bi-x-lg"></i>
+                        </button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              </div>
-              <div className="col-md-5">
-                <div className="form-group">
-                  <label htmlFor="lieu.ville" className="form-label">Ville</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="lieu.ville"
-                    name="lieu.ville"
-                    value={formData.lieu.ville}
-                    onChange={handleChange}
-                    placeholder="Ex: Paris"
-                  />
+              ) : (
+                <div className="alert alert-info">
+                  <i className="bi bi-info-circle me-2"></i>
+                  Aucun concert n'est associé à ce programmateur. Utilisez la barre de recherche ci-dessus pour associer des concerts.
                 </div>
-              </div>
-              <div className="col-md-3">
-                <div className="form-group">
-                  <label htmlFor="lieu.pays" className="form-label">Pays</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="lieu.pays"
-                    name="lieu.pays"
-                    value={formData.lieu.pays}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
+              )}
             </div>
           </div>
         </div>

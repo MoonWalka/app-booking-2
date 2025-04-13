@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { collection, getDocs, query, orderBy, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../../firebase';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 
 const LieuxList = () => {
   const [lieux, setLieux] = useState([]);
@@ -40,10 +42,26 @@ const LieuxList = () => {
     }
   };
 
+// Composant pour les boutons d'action avec tooltip
+const ActionButton = ({ id, to, tooltip, icon, variant, onClick }) => (
+  <OverlayTrigger
+    placement="top"
+    overlay={<Tooltip>{tooltip}</Tooltip>}
+  >
+    {to ? (
+      <Link to={to} className={`btn btn-${variant} btn-icon`}>
+        {icon}
+      </Link>
+    ) : (
+      <button onClick={onClick} className={`btn btn-${variant} btn-icon`}>
+        {icon}
+      </button>
+    )}
+  </OverlayTrigger>
+);
   if (loading) {
     return <div className="text-center my-5">Chargement des lieux...</div>;
   }
-
   return (
     <div>
       <div className="d-flex justify-content-between align-items-center mb-4">

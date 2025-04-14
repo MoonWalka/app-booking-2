@@ -21,27 +21,32 @@ function PrivateRoute({ children }) {
   return currentUser ? children : <Navigate to="/login" />;
 }
 
-// Composant pour les routes de formulaire (publiques mais isolées)
-function FormRoute({ children }) {
-  return children;
+// Composant pour l'isolation complète du formulaire public
+function IsolatedFormLayout({ children }) {
+  return (
+    <div className="form-public-container">
+      {children}
+    </div>
+  );
 }
 
 function App() {
   return (
     <AuthProvider>
       <Router>
-        <Layout>
-          <Routes>
-            {/* Routes publiques isolées pour les formulaires */}
-            <Route 
-              path="/formulaire/:concertId/:token" 
-              element={
-                <FormRoute>
-                  <FormResponsePage />
-                </FormRoute>
-              } 
-            />
-            
+        <Routes>
+          {/* Routes publiques isolées pour les formulaires - COMPLÈTEMENT EN DEHORS DU LAYOUT */}
+          <Route 
+            path="/formulaire/:concertId/:token" 
+            element={
+              <IsolatedFormLayout>
+                <FormResponsePage />
+              </IsolatedFormLayout>
+            } 
+          />
+          
+          {/* Toutes les autres routes avec le Layout normal */}
+          <Route element={<Layout />}>
             {/* Routes privées */}
             <Route path="/" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
             <Route path="/concerts/*" element={<PrivateRoute><ConcertsPage /></PrivateRoute>} />
@@ -52,8 +57,8 @@ function App() {
             
             {/* Redirection par défaut */}
             <Route path="*" element={<Navigate to="/" />} />
-          </Routes>
-        </Layout>
+          </Route>
+        </Routes>
       </Router>
     </AuthProvider>
   );

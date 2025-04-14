@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { db } from '../../firebase';
 import {
   collection,
@@ -17,8 +17,11 @@ import {
 import '../../style/programmateurForm.css';
 import '../../style/formPublic.css'; // Ajout du CSS pour le formulaire public
 
-const ProgrammateurForm = ({ id, token, concertId, formLinkId, onSubmitSuccess }) => {
+
+const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) => {
   const navigate = useNavigate();
+  const params = useParams();
+  const id = params.id;
   const [loading, setLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
@@ -48,6 +51,7 @@ const ProgrammateurForm = ({ id, token, concertId, formLinkId, onSubmitSuccess }
   const isPublicFormMode = Boolean(token && concertId && formLinkId);
 
   useEffect(() => {
+    console.log("ProgrammateurForm - ID depuis params:", id);
     const fetchProgrammateur = async () => {
       if (id && id !== 'nouveau') {
         setLoading(true);

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../../firebase';
 import { doc, getDoc, updateDoc, collection, query, where, getDocs, Timestamp } from 'firebase/firestore';
-import ProgrammateurForm from '../programmateurs/ProgrammateurForm';
+import ProgrammateurForm from '.ProgrammateurForm.js';
 
 function FormValidationInterface() {
   const { id } = useParams(); // Ici, id est l'ID du concert

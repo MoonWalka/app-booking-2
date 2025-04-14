@@ -1,28 +1,24 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { db } from '../../firebase';
 import {
+  collection,
   doc,
   getDoc,
   setDoc,
-  collection,
-  query,
-  where,
-  getDocs,
   updateDoc,
+  addDoc,
   arrayUnion,
-  arrayRemove,
-  orderBy,
-  limit,
   serverTimestamp
 } from 'firebase/firestore';
 import '../../style/programmateurForm.css';
+import '../../style/formPublic.css'; // Ajout du CSS pour le formulaire public
 
-const ProgrammateurForm = () => {
-  const { id } = useParams();
+const ProgrammateurForm = ({ id, token, concertId, formLinkId, onSubmitSuccess }) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState(null);
   const [formData, setFormData] = useState({
     contact: {
       nom: '',
@@ -41,16 +37,11 @@ const ProgrammateurForm = () => {
       siret: '',
       tva: ''
     },
-    // Remplacer 'lieu' par 'concertsAssociés'
     concertsAssocies: []
   });
 
-  // États pour la recherche et la gestion des concerts
-  const [searchTerm, setSearchTerm] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-  const [isSearching, setIsSearching] = useState(false);
-  const searchTimeoutRef = useRef(null);
-  const dropdownRef = useRef(null);
+  // Déterminer si nous sommes en mode formulaire public ou en mode édition standard
+  const isPublicFormMode = Boolean(token && concertId && formLinkId);
 
   useEffect(() => {
     const fetchProgrammateur = async () => {
@@ -61,12 +52,10 @@ const ProgrammateurForm = () => {
           const snap = await getDoc(docRef);
           
           if (snap.exists()) {
-            // Si le document existe mais n'a pas la structure actuelle,
-            // adapter les données existantes à la nouvelle structure
             const data = snap.data();
             const adaptedData = {
               contact: {
-                nom: data.nom?.split(' ')[0] || '', // Tentative de séparer nom/prénom
+                nom: data.nom?.split(' ')[0] || '',
                 prenom: data.prenom || (data.nom?.includes(' ') ? data.nom.split(' ').slice(1).join(' ') : ''),
                 fonction: data.fonction || '',
                 email: data.email || '',
@@ -86,17 +75,58 @@ const ProgrammateurForm = () => {
             };
             
             setFormData(adaptedData);
-            
-            // Récupérer les détails des concerts associés si nécessaire
-            if (adaptedData.concertsAssocies && adaptedData.concertsAssocies.length > 0) {
-              await fetchConcertsDetails(adaptedData.concertsAssocies);
-            }
           } else {
             console.error('Aucun programmateur trouvé avec cet ID');
-            navigate('/programmateurs');
+            // Ne pas naviguer en mode formulaire public
+            if (!isPublicFormMode) {
+              navigate('/programmateurs');
+            }
           }
         } catch (error) {
           console.error('Erreur lors de la récupération du programmateur:', error);
+          setError('Une erreur est survenue lors de la récupération des données.');
+        } finally {
+          setLoading(false);
+        }
+      } else if (isPublicFormMode) {
+        // En mode formulaire public, pré-remplir avec les infos du concert si possible
+        setLoading(true);
+        try {
+          // Récupérer le concert et voir s'il a un programmateur associé
+          const concertDoc = await getDoc(doc(db, 'concerts', concertId));
+          if (concertDoc.exists()) {
+            const concertData = concertDoc.data();
+            if (concertData.programmateurId) {
+              // Le concert a déjà un programmateur associé, récupérer ses informations
+              const progDoc = await getDoc(doc(db, 'programmateurs', concertData.programmateurId));
+              if (progDoc.exists()) {
+                const progData = progDoc.data();
+                // Pré-remplir le formulaire avec les données existantes
+                setFormData({
+                  contact: {
+                    nom: progData.nom?.split(' ')[0] || '',
+                    prenom: progData.prenom || (progData.nom?.includes(' ') ? progData.nom.split(' ').slice(1).join(' ') : ''),
+                    fonction: progData.fonction || '',
+                    email: progData.email || '',
+                    telephone: progData.telephone || ''
+                  },
+                  structure: {
+                    raisonSociale: progData.structure || '',
+                    type: progData.structureType || '',
+                    adresse: progData.structureAdresse || '',
+                    codePostal: progData.structureCodePostal || '',
+                    ville: progData.structureVille || '',
+                    pays: progData.structurePays || 'France',
+                    siret: progData.siret || '',
+                    tva: progData.tva || ''
+                  },
+                  concertsAssocies: progData.concertsAssocies || []
+                });
+              }
+            }
+          }
+        } catch (error) {
+          console.error('Erreur lors de la récupération des données:', error);
         } finally {
           setLoading(false);
         }
@@ -104,195 +134,7 @@ const ProgrammateurForm = () => {
     };
 
     fetchProgrammateur();
-  }, [id, navigate]);
-
-  // Effet pour gérer la recherche de concerts
-  useEffect(() => {
-    if (searchTimeoutRef.current) {
-      clearTimeout(searchTimeoutRef.current);
-    }
-    
-    if (searchTerm.length >= 2) {
-      setIsSearching(true);
-      
-      searchTimeoutRef.current = setTimeout(() => {
-        searchConcerts(searchTerm);
-      }, 300);
-    } else {
-      setSearchResults([]);
-      setIsSearching(false);
-    }
-    
-    return () => {
-      if (searchTimeoutRef.current) {
-        clearTimeout(searchTimeoutRef.current);
-      }
-    };
-  }, [searchTerm]);
-  
-  // Gestionnaire de clic extérieur pour fermer la liste déroulante
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setSearchResults([]);
-      }
-    };
-    
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  // Fonction pour rechercher des concerts dans Firebase - AMÉLIORÉE
-  const searchConcerts = async (term) => {
-    try {
-      setIsSearching(true);
-      const termLower = term.toLowerCase();
-      const concertsRef = collection(db, 'concerts');
-      
-      // Créer plusieurs requêtes pour rechercher dans différents champs
-      // Nous ne pouvons pas faire OR directement dans Firestore, donc nous devons
-      // exécuter plusieurs requêtes et fusionner les résultats
-      
-      // 1. Recherche par titre
-      const titreQuery = query(
-        concertsRef,
-        orderBy('titre'),
-        limit(20)
-      );
-      
-      // 2. Recherche par lieu
-      const lieuQuery = query(
-        concertsRef,
-        orderBy('lieuNom'),
-        limit(20)
-      );
-      
-      // 3. Recherche par programmateur
-      const progQuery = query(
-        concertsRef,
-        orderBy('programmateurNom'),
-        limit(20)
-      );
-      
-      // Exécuter toutes les requêtes en parallèle
-      const [titreSnap, lieuSnap, progSnap] = await Promise.all([
-        getDocs(titreQuery),
-        getDocs(lieuQuery),
-        getDocs(progQuery)
-      ]);
-      
-      // Collecter tous les résultats uniques
-      const allResults = new Map(); // Utiliser une Map pour dédupliquer par ID
-      
-      // Fonction pour ajouter des résultats à la Map s'ils correspondent au terme de recherche
-      const addMatchingResults = (snapshot, fieldFilter) => {
-        snapshot.forEach(doc => {
-          const data = doc.data();
-          // Ne vérifier que si le document n'a pas encore été ajouté ou si fieldFilter est true
-          if (!allResults.has(doc.id) && fieldFilter(data)) {
-            allResults.set(doc.id, {
-              id: doc.id,
-              ...data
-            });
-          }
-        });
-      };
-      
-      // Ajouter les résultats qui correspondent au terme de recherche
-      addMatchingResults(titreSnap, data => 
-        data.titre && data.titre.toLowerCase().includes(termLower)
-      );
-      
-      addMatchingResults(lieuSnap, data => 
-        data.lieuNom && data.lieuNom.toLowerCase().includes(termLower)
-      );
-      
-      addMatchingResults(progSnap, data => 
-        data.programmateurNom && data.programmateurNom.toLowerCase().includes(termLower)
-      );
-      
-      // Convertir la Map en array et filtrer les concerts déjà associés
-      const filteredResults = Array.from(allResults.values())
-        .filter(concert => !formData.concertsAssocies.some(
-          existingConcert => existingConcert.id === concert.id
-        ));
-      
-      // Trier les résultats par pertinence et date
-      const sortedResults = filteredResults.sort((a, b) => {
-        // Priorité 1: Titre correspond exactement
-        if (a.titre?.toLowerCase() === termLower && b.titre?.toLowerCase() !== termLower) return -1;
-        if (b.titre?.toLowerCase() === termLower && a.titre?.toLowerCase() !== termLower) return 1;
-        
-        // Priorité 2: Titre commence par le terme
-        if (a.titre?.toLowerCase().startsWith(termLower) && !b.titre?.toLowerCase().startsWith(termLower)) return -1;
-        if (b.titre?.toLowerCase().startsWith(termLower) && !a.titre?.toLowerCase().startsWith(termLower)) return 1;
-        
-        // Priorité 3: Date (plus récent d'abord)
-        const dateA = a.date?.seconds || 0;
-        const dateB = b.date?.seconds || 0;
-        return dateB - dateA;
-      });
-      
-      // Limiter le nombre de résultats pour l'affichage
-      setSearchResults(sortedResults.slice(0, 10));
-    } catch (error) {
-      console.error('Erreur lors de la recherche de concerts:', error);
-      setSearchResults([]);
-    } finally {
-      setIsSearching(false);
-    }
-  };
-
-  // Fonction pour récupérer les détails complets des concerts associés
-  const fetchConcertsDetails = async (concertIds) => {
-    try {
-      const concertsDetails = [];
-      
-      for (const concertItem of concertIds) {
-        // Si nous avons juste l'ID, récupérer les détails complets
-        if (typeof concertItem === 'string') {
-          const concertDoc = await getDoc(doc(db, 'concerts', concertItem));
-          if (concertDoc.exists()) {
-            concertsDetails.push({
-              id: concertDoc.id,
-              ...concertDoc.data()
-            });
-          }
-        } else {
-          // Si nous avons déjà un objet avec des détails, l'utiliser tel quel
-          concertsDetails.push(concertItem);
-        }
-      }
-      
-      setFormData(prev => ({
-        ...prev,
-        concertsAssocies: concertsDetails
-      }));
-    } catch (error) {
-      console.error('Erreur lors de la récupération des détails des concerts:', error);
-    }
-  };
-
-  // Fonction pour associer un concert au programmateur
-  const handleAssociateConcert = (concert) => {
-    setFormData(prev => ({
-      ...prev,
-      concertsAssocies: [...prev.concertsAssocies, concert]
-    }));
-    
-    setSearchTerm('');
-    setSearchResults([]);
-  };
-  
-  // Fonction pour dissocier un concert du programmateur
-  const handleRemoveConcert = (concertId) => {
-    setFormData(prev => ({
-      ...prev,
-      concertsAssocies: prev.concertsAssocies.filter(c => c.id !== concertId)
-    }));
-  };
+  }, [id, concertId, navigate, isPublicFormMode]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -318,6 +160,7 @@ const ProgrammateurForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setError(null);
   
     try {
       // Validation des champs obligatoires
@@ -327,11 +170,12 @@ const ProgrammateurForm = () => {
         return;
       }
   
+      // 1. Créer ou mettre à jour le programmateur
       const progId = id && id !== 'nouveau'
         ? id
         : doc(collection(db, 'programmateurs')).id;
   
-      // Préparer les données en aplatissant la structure pour la compatibilité avec l'affichage liste
+      // Préparer les données du programmateur
       const flattenedData = {
         // Champs principaux pour l'affichage dans la liste
         nom: `${formData.contact.nom} ${formData.contact.prenom}`.trim(),
@@ -346,101 +190,153 @@ const ProgrammateurForm = () => {
           return acc;
         }, {}),
         
-        // Traiter les concerts associés
-        // Ne stocker que les ID et les titres des concerts pour éviter de dupliquer trop de données
-        concertsAssocies: formData.concertsAssocies.map(concert => ({
-          id: concert.id,
-          titre: concert.titre,
-          date: concert.date,
-          lieu: concert.lieu
-        })),
+        // Conserver les concerts associés existants
+        concertsAssocies: formData.concertsAssocies,
         
         // Timestamps
         updatedAt: serverTimestamp()
       };
   
+      // Ajouter createdAt si c'est un nouveau programmateur
       if (!id || id === 'nouveau') {
         flattenedData.createdAt = serverTimestamp();
       }
   
+      // Enregistrer le programmateur
       await setDoc(doc(db, 'programmateurs', progId), flattenedData, { merge: true });
+      console.log('Programmateur enregistré avec ID:', progId);
       
-      // Mise à jour réciproque : ajouter le programmateur à chaque concert
-      for (const concert of formData.concertsAssocies) {
-        const concertRef = doc(db, 'concerts', concert.id);
-        await updateDoc(concertRef, {
-          programmateurs: arrayUnion({
-            id: progId,
-            nom: flattenedData.nom
-          })
+      // 2. Traitement spécifique au mode formulaire public
+      if (isPublicFormMode) {
+        console.log('Mode formulaire public, concertId:', concertId, 'formLinkId:', formLinkId);
+        
+        // Créer une soumission dans formSubmissions
+        const submissionData = {
+          concertId,
+          formLinkId,
+          programmId: progId,
+          data: {
+            ...formData.contact,
+            ...formData.structure
+          },
+          submittedAt: serverTimestamp(),
+          status: 'pending' // en attente de validation
+        };
+        
+        const submissionRef = await addDoc(collection(db, 'formSubmissions'), submissionData);
+        console.log('Soumission créée avec ID:', submissionRef.id);
+        
+        // Marquer le lien comme complété
+        await updateDoc(doc(db, 'formLinks', formLinkId), {
+          completed: true,
+          completedAt: serverTimestamp()
         });
+        console.log('Lien marqué comme complété');
+        
+        // Mettre à jour le concert avec l'ID de la soumission et le programmateur
+        await updateDoc(doc(db, 'concerts', concertId), {
+          formSubmissionId: submissionRef.id,
+          programmateurId: progId,
+          programmateurNom: flattenedData.nom,
+          updatedAt: serverTimestamp()
+        });
+        console.log('Concert mis à jour avec la soumission et le programmateur');
+        
+        // Associer le concert au programmateur s'il n'est pas déjà associé
+        if (!formData.concertsAssocies.some(c => c.id === concertId)) {
+          try {
+            // Récupérer les informations du concert pour l'association
+            const concertDoc = await getDoc(doc(db, 'concerts', concertId));
+            if (concertDoc.exists()) {
+              const concertData = concertDoc.data();
+              
+              const concertInfo = {
+                id: concertId,
+                titre: concertData.titre || 'Sans titre',
+                date: concertData.date || null,
+                lieu: concertData.lieuNom || null
+              };
+              
+              // Mettre à jour le programmateur avec ce concert associé
+              await updateDoc(doc(db, 'programmateurs', progId), {
+                concertsAssocies: arrayUnion(concertInfo)
+              });
+              console.log('Concert associé au programmateur:', concertInfo);
+            }
+          } catch (error) {
+            console.error('Erreur lors de l\'association du concert:', error);
+            // Ne pas bloquer le processus si cette étape échoue
+          }
+        }
+        
+        // Appeler le callback de succès si fourni
+        if (onSubmitSuccess) {
+          console.log('Appel du callback onSubmitSuccess');
+          onSubmitSuccess();
+        }
+      } 
+      // 3. Traitement spécifique au mode édition standard
+      else {
+        console.log('Mode édition standard');
+        
+        // Mise à jour réciproque : ajouter le programmateur à chaque concert
+        for (const concert of formData.concertsAssocies) {
+          const concertRef = doc(db, 'concerts', concert.id);
+          await updateDoc(concertRef, {
+            programmateurs: arrayUnion({
+              id: progId,
+              nom: flattenedData.nom
+            })
+          });
+          console.log('Programmateur associé au concert:', concert.id);
+        }
+        
+        // Rediriger vers la liste des programmateurs
+        navigate('/programmateurs');
       }
-      
-      navigate('/programmateurs');
     } catch (error) {
-      console.error('Erreur lors de l\'enregistrement du programmateur:', error);
-      alert('Une erreur est survenue lors de l\'enregistrement du programmateur.');
+      console.error('Erreur lors de l\'enregistrement:', error);
+      setError('Une erreur est survenue lors de l\'enregistrement. Veuillez réessayer.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleCancel = () => {
-    navigate('/programmateurs');
-  };
-
   if (loading) {
-    return <div className="text-center my-5 loading-spinner">Chargement du programmateur...</div>;
+    return <div className="text-center my-5 loading-spinner">Chargement des données...</div>;
   }
-  
-  // Formatage de la date pour l'affichage
-  const formatDate = (dateString) => {
-    if (!dateString) return 'Date non spécifiée';
-    
-    // Si c'est un timestamp Firestore
-    if (dateString.seconds) {
-      return new Date(dateString.seconds * 1000).toLocaleDateString('fr-FR');
-    }
-    
-    // Si c'est une chaîne de date standard
-    try {
-      return new Date(dateString).toLocaleDateString('fr-FR');
-    } catch (e) {
-      return dateString;
-    }
-  };
 
-  // Fonction pour obtenir le libellé du statut
-  const getStatusLabel = (statut) => {
-    switch (statut) {
-      case 'contact': return 'Contact établi';
-      case 'preaccord': return 'Pré-accord';
-      case 'contrat': return 'Contrat signé';
-      case 'acompte': return 'Acompte facturé';
-      case 'solde': return 'Solde facturé';
-      case 'annule': return 'Annulé';
-      default: return statut || 'Non défini';
-    }
-  };
-  
+  // Déterminer les classes CSS à utiliser selon le mode
+  const containerClass = isPublicFormMode ? 'form-public-container' : 'programmateur-form-container';
+  const formClass = isPublicFormMode ? 'form-public' : 'modern-form';
+
   return (
-    <div className="programmateur-form-container">
-      <div className="form-header-container">
-        <h2 className="modern-title">
-          {id && id !== 'nouveau' ? 'Modifier le programmateur' : 'Ajouter un programmateur'}
-        </h2>
-        <div className="breadcrumb-container">
-          <span className="breadcrumb-item" onClick={() => navigate('/programmateurs')}>Programmateurs</span>
-          <i className="bi bi-chevron-right"></i>
-          <span className="breadcrumb-item active">
-            {id && id !== 'nouveau' ? formData.contact.nom || 'Édition' : 'Nouveau'}
-          </span>
+    <div className={containerClass}>
+      {!isPublicFormMode && (
+        <div className="form-header-container">
+          <h2 className="modern-title">
+            {id && id !== 'nouveau' ? 'Modifier le programmateur' : 'Ajouter un programmateur'}
+          </h2>
+          <div className="breadcrumb-container">
+            <span className="breadcrumb-item" onClick={() => navigate('/programmateurs')}>Programmateurs</span>
+            <i className="bi bi-chevron-right"></i>
+            <span className="breadcrumb-item active">
+              {id && id !== 'nouveau' ? formData.contact.nom || 'Édition' : 'Nouveau'}
+            </span>
+          </div>
         </div>
-      </div>
+      )}
 
-      <form onSubmit={handleSubmit} className="modern-form">
+      {error && (
+        <div className="alert alert-danger mb-4">
+          <i className="bi bi-exclamation-triangle-fill me-2"></i>
+          {error}
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className={formClass}>
         {/* Section Informations du contact */}
-        <div className="form-card">
+        <div className={isPublicFormMode ? "form-section" : "form-card"}>
           <div className="card-header">
             <i className="bi bi-person-vcard"></i>
             <h3>Informations du contact</h3>
@@ -532,7 +428,7 @@ const ProgrammateurForm = () => {
         </div>
 
         {/* Section Structure juridique */}
-        <div className="form-card">
+        <div className={isPublicFormMode ? "form-section" : "form-card"}>
           <div className="card-header">
             <i className="bi bi-building"></i>
             <h3>Structure juridique</h3>
@@ -664,214 +560,119 @@ const ProgrammateurForm = () => {
           </div>
         </div>
 
-        {/* NOUVELLE SECTION: Concerts associés */}
-        <div className="form-card">
-          <div className="card-header">
-            <i className="bi bi-music-note-list"></i>
-            <h3>Concerts associés</h3>
-          </div>
-          <div className="card-body">
-            {/* Barre de recherche pour ajouter un concert */}
-            <div className="concert-search-container mb-4" ref={dropdownRef}>
-              <label className="form-label">Associer un concert</label>
-              <div className="input-group">
-                <span className="input-group-text"><i className="bi bi-search"></i></span>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Rechercher un concert par titre, lieu ou programmateur..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-                {searchTerm && (
-                  <button 
-                    className="btn btn-outline-secondary clear-search" 
-                    onClick={() => setSearchTerm('')}
-                    type="button"
-                  >
-                    <i className="bi bi-x-lg"></i>
-                  </button>
+        {/* Section Concerts associés - visible uniquement en mode édition standard */}
+        {!isPublicFormMode && (
+          <div className="form-card">
+            <div className="card-header">
+              <i className="bi bi-music-note-list"></i>
+              <h3>Concerts associés</h3>
+            </div>
+            <div className="card-body">
+              <div className="associated-concerts">
+                <h4 className="mb-3 concerts-title">
+                  {formData.concertsAssocies.length > 0 
+                    ? `Concerts associés (${formData.concertsAssocies.length})` 
+                    : 'Aucun concert associé'}
+                </h4>
+                
+                {formData.concertsAssocies.length > 0 ? (
+                  <div className="concert-list">
+                    {formData.concertsAssocies.map(concert => (
+                      <div key={concert.id} className="concert-card">
+                        <div className="concert-card-body">
+                          <div className="concert-info">
+                            <h5 className="concert-name">
+                              <i className="bi bi-music-note me-2"></i>
+                              {concert.titre}
+                            </h5>
+                            <div className="concert-details">
+                              {concert.date && (
+                                <span className="concert-detail">
+                                  <i className="bi bi-calendar-event"></i>
+                                  {typeof concert.date === 'object' && concert.date.seconds
+                                    ? new Date(concert.date.seconds * 1000).toLocaleDateString('fr-FR')
+                                    : concert.date}
+                                </span>
+                              )}
+                              {concert.lieu && (
+                                <span className="concert-detail">
+                                  <i className="bi bi-geo-alt"></i>
+                                  {concert.lieu}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="alert alert-info">
+                    <i className="bi bi-info-circle me-2"></i>
+                    Aucun concert n'est associé à ce programmateur.
+                  </div>
                 )}
               </div>
-              
-              {isSearching && (
-                <div className="dropdown-menu show w-100">
-                  <div className="dropdown-item text-center">
-                    <div className="spinner-border spinner-border-sm text-primary" role="status">
-                      <span className="visually-hidden">Recherche en cours...</span>
-                    </div>
-                  </div>
-                </div>
-              )}
-              
-              {searchResults.length > 0 && (
-                <div className="dropdown-menu show w-100">
-                  {searchResults.map(concert => (
-                    <div 
-                      key={concert.id} 
-                      className="dropdown-item concert-item"
-                      onClick={() => handleAssociateConcert(concert)}
-                    >
-                      <div className="d-flex justify-content-between align-items-center">
-                        <div className="concert-search-info">
-                          <div className="concert-title">
-                            {concert.titre || "Sans titre"}
-                            {concert.statut && (
-                              <span className={`concert-status status-${concert.statut}`}>
-                                {getStatusLabel(concert.statut)}
-                              </span>
-                            )}
-                          </div>
-                          <div className="concert-details">
-                            {concert.date && (
-                              <span className="concert-date">
-                                <i className="bi bi-calendar-event"></i>
-                                {formatDate(concert.date)}
-                              </span>
-                            )}
-                            {concert.lieuNom && (
-                              <span className="concert-lieu">
-                                <i className="bi bi-geo-alt"></i>
-                                {concert.lieuNom}
-                              </span>
-                            )}
-                            {concert.programmateurNom && (
-                              <span className="concert-prog">
-                                <i className="bi bi-person"></i>
-                                {concert.programmateurNom}
-                              </span>
-                            )}
-                            {concert.montant && (
-                              <span className="concert-montant">
-                                <i className="bi bi-currency-euro"></i>
-                                {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(concert.montant)}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                        <button 
-                          type="button" 
-                          className="btn btn-sm btn-outline-primary"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleAssociateConcert(concert);
-                          }}
-                        >
-                          <i className="bi bi-plus-lg"></i> Associer
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-              
-              {searchTerm.length >= 2 && searchResults.length === 0 && !isSearching && (
-                <div className="dropdown-menu show w-100">
-                  <div className="dropdown-item text-center text-muted">
-                    Aucun concert trouvé
-                  </div>
-                </div>
-              )}
-              
-              <small className="form-text text-muted mt-2">
-                Tapez au moins 2 caractères pour rechercher un concert par titre, lieu ou programmateur.
-              </small>
-            </div>
-
-            {/* Liste des concerts associés */}
-            <div className="associated-concerts">
-              <h4 className="mb-3 concerts-title">
-                {formData.concertsAssocies.length > 0 
-                  ? `Concerts associés (${formData.concertsAssocies.length})` 
-                  : 'Aucun concert associé'}
-              </h4>
-              
-              {formData.concertsAssocies.length > 0 ? (
-                <div className="concert-list">
-                  {formData.concertsAssocies.map(concert => (
-                    <div key={concert.id} className="concert-card">
-                      <div className="concert-card-body">
-                        <div className="concert-info">
-                          <h5 className="concert-name">
-                            <i className="bi bi-music-note me-2"></i>
-                            {concert.titre}
-                            {concert.statut && (
-                              <span className={`concert-status status-${concert.statut}`}>
-                                {getStatusLabel(concert.statut)}
-                              </span>
-                            )}
-                          </h5>
-                          <div className="concert-details">
-                            {concert.date && (
-                              <span className="concert-detail">
-                                <i className="bi bi-calendar-event"></i>
-                                {formatDate(concert.date)}
-                              </span>
-                            )}
-                            {concert.lieuNom && (
-                              <span className="concert-detail">
-                                <i className="bi bi-geo-alt"></i>
-                                {concert.lieuNom}
-                              </span>
-                            )}
-                            {concert.montant && (
-                              <span className="concert-detail">
-                                <i className="bi bi-currency-euro"></i>
-                                {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(concert.montant)}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                        <button 
-                          type="button" 
-                          className="btn btn-sm btn-outline-danger" 
-                          onClick={() => handleRemoveConcert(concert.id)}
-                          aria-label="Retirer ce concert"
-                        >
-                          <i className="bi bi-x-lg"></i>
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="alert alert-info">
-                  <i className="bi bi-info-circle me-2"></i>
-                  Aucun concert n'est associé à ce programmateur. Utilisez la barre de recherche ci-dessus pour associer des concerts.
-                </div>
-              )}
             </div>
           </div>
-        </div>
+        )}
 
-        <div className="form-actions">
-          <button
-            type="button"
-            className="btn btn-outline-secondary"
-            onClick={handleCancel}
-            disabled={isSubmitting}
-          >
-            <i className="bi bi-x-circle me-2"></i>
-            Annuler
-          </button>
+        {/* Message d'information et consentement RGPD - visible uniquement en mode formulaire public */}
+        {isPublicFormMode && (
+          <div className="form-section">
+            <div className="card-body">
+              <div className="alert alert-info mb-4">
+                <i className="bi bi-info-circle me-2"></i>
+                <p className="mb-0">
+                  Les informations recueillies sur ce formulaire sont enregistrées dans un fichier informatisé 
+                  à des fins de gestion des concerts. Conformément à la loi « informatique et libertés », 
+                  vous pouvez exercer votre droit d'accès aux données vous concernant et les faire rectifier.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className={isPublicFormMode ? "form-actions text-center" : "form-actions"}>
+          {!isPublicFormMode && (
+            <button
+              type="button"
+              className="btn btn-outline-secondary"
+              onClick={() => navigate('/programmateurs')}
+              disabled={isSubmitting}
+            >
+              <i className="bi bi-x-circle me-2"></i>
+              Annuler
+            </button>
+          )}
           <button
             type="submit"
-            className="btn btn-primary"
+            className={isPublicFormMode ? "btn-submit-public btn-lg" : "btn btn-primary"}
             disabled={isSubmitting}
           >
             {isSubmitting ? (
               <>
                 <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                Enregistrement...
+                {isPublicFormMode ? 'Envoi en cours...' : 'Enregistrement...'}
               </>
             ) : (
               <>
                 <i className="bi bi-check-circle me-2"></i>
-                {id && id !== 'nouveau' ? 'Enregistrer les modifications' : 'Créer le programmateur'}
+                {isPublicFormMode 
+                  ? 'Envoyer mes informations' 
+                  : (id && id !== 'nouveau' ? 'Enregistrer les modifications' : 'Créer le programmateur')}
               </>
             )}
           </button>
         </div>
+
+        {isPublicFormMode && (
+          <div className="form-footer mt-4">
+            <p className="text-muted text-center small">
+              © {new Date().getFullYear()} - Vos informations resteront confidentielles et ne seront utilisées que dans le cadre de la relation contractuelle.
+            </p>
+          </div>
+        )}
       </form>
     </div>
   );

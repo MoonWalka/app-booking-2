@@ -137,41 +137,108 @@ function FormValidationInterface() {
         console.log("Soumission trouvée:", formDocData);
         setFormData(formDocData);
         
-        // 4. Si un programmateur est associé, récupérer les données existantes
-        if (formDocData.programmId) {
-          const progDoc = await getDoc(doc(db, 'programmateurs', formDocData.programmId));
-          if (progDoc.exists()) {
-            const programmateurData = progDoc.data();
-            setProgrammateur(programmateurData);
-            
-            // 5. Initialiser les valeurs finales UNIQUEMENT avec les valeurs EXISTANTES
-            // et PAS avec les valeurs du formulaire
-            const initialValues = {};
-            
-            // Traiter les champs contact
-            contactFields.forEach(field => {
-              initialValues[`contact.${field.id}`] = programmateurData[field.id] || '';
-            });
-            
-            // Traiter les champs structure
-            structureFields.forEach(field => {
-              if (field.id === 'raisonSociale') {
-                initialValues[`structure.${field.id}`] = programmateurData.structure || '';
-              } else if (['type', 'adresse', 'codePostal', 'ville', 'pays'].includes(field.id)) {
-                initialValues[`structure.${field.id}`] = programmateurData[`structure${field.id.charAt(0).toUpperCase() + field.id.slice(1)}`] || '';
-              } else {
-                initialValues[`structure.${field.id}`] = programmateurData[field.id] || '';
-              }
-            });
-            
-            // 6. Si la soumission a déjà été validée, utiliser les champs validés existants
-            if (formDocData.status === 'validated' && formDocData.validatedFields) {
-              setValidatedFields(formDocData.validatedFields);
-              setValidated(true);
+        // MODIFICATION: Utiliser directement les données stockées dans la soumission
+        if (formDocData.programmateurData) {
+          // Si la soumission contient une copie complète des données du programmateur
+          setProgrammateur(formDocData.programmateurData);
+          
+          // 5. Initialiser les valeurs finales avec les données de la soumission
+          const initialValues = {};
+          
+          // Extraire les données de contact à partir de programmateurData
+          contactFields.forEach(field => {
+            initialValues[`contact.${field.id}`] = formDocData.programmateurData[field.id] || '';
+          });
+          
+          // Extraire les données de structure à partir de programmateurData
+          structureFields.forEach(field => {
+            if (field.id === 'raisonSociale') {
+              initialValues[`structure.${field.id}`] = formDocData.programmateurData.structure || '';
+            } else if (['type', 'adresse', 'codePostal', 'ville', 'pays'].includes(field.id)) {
+              initialValues[`structure.${field.id}`] = formDocData.programmateurData[`structure${field.id.charAt(0).toUpperCase() + field.id.slice(1)}`] || '';
             } else {
-              // Sinon, initialiser les champs validés avec les valeurs existantes
-              setValidatedFields(initialValues);
+              initialValues[`structure.${field.id}`] = formDocData.programmateurData[field.id] || '';
             }
+          });
+          
+          // 6. Si la soumission a déjà été validée, utiliser les champs validés existants
+          if (formDocData.status === 'validated' && formDocData.validatedFields) {
+            setValidatedFields(formDocData.validatedFields);
+            setValidated(true);
+          } else {
+            // Sinon, initialiser les champs validés avec les valeurs de la soumission
+            setValidatedFields(initialValues);
+          }
+        } 
+        // Compatibilité avec l'ancien format - utiliser data si programmateurData n'existe pas
+        else if (formDocData.data) {
+          // Construire un objet programmateur compatible à partir des données de la soumission
+          const programmateurFromData = {
+            nom: `${formDocData.data.nom || ''} ${formDocData.data.prenom || ''}`.trim(),
+            ...formDocData.data
+          };
+          
+          setProgrammateur(programmateurFromData);
+          
+          // Initialiser les valeurs avec les données disponibles
+          const initialValues = {};
+          
+          // Traiter les champs contact
+          contactFields.forEach(field => {
+            initialValues[`contact.${field.id}`] = formDocData.data[field.id] || '';
+          });
+          
+          // Traiter les champs structure
+          structureFields.forEach(field => {
+            initialValues[`structure.${field.id}`] = formDocData.data[field.id] || '';
+          });
+          
+          // Si la soumission a déjà été validée
+          if (formDocData.status === 'validated' && formDocData.validatedFields) {
+            setValidatedFields(formDocData.validatedFields);
+            setValidated(true);
+          } else {
+            setValidatedFields(initialValues);
+          }
+        }
+        // Si ni programmateurData ni data n'existe, mais qu'il y a un programmateur associé
+        else if (formDocData.programmId) {
+          console.log("Aucune donnée complète dans la soumission, recherche du programmateur associé");
+          // Récupérer les données du programmateur comme fallback
+          try {
+            const progDoc = await getDoc(doc(db, 'programmateurs', formDocData.programmId));
+            if (progDoc.exists()) {
+              const programmateurData = progDoc.data();
+              setProgrammateur(programmateurData);
+              
+              // Initialiser les valeurs finales
+              const initialValues = {};
+              
+              // Traiter les champs contact
+              contactFields.forEach(field => {
+                initialValues[`contact.${field.id}`] = programmateurData[field.id] || '';
+              });
+              
+              // Traiter les champs structure
+              structureFields.forEach(field => {
+                if (field.id === 'raisonSociale') {
+                  initialValues[`structure.${field.id}`] = programmateurData.structure || '';
+                } else if (['type', 'adresse', 'codePostal', 'ville', 'pays'].includes(field.id)) {
+                  initialValues[`structure.${field.id}`] = programmateurData[`structure${field.id.charAt(0).toUpperCase() + field.id.slice(1)}`] || '';
+                } else {
+                  initialValues[`structure.${field.id}`] = programmateurData[field.id] || '';
+                }
+              });
+              
+              if (formDocData.status === 'validated' && formDocData.validatedFields) {
+                setValidatedFields(formDocData.validatedFields);
+                setValidated(true);
+              } else {
+                setValidatedFields(initialValues);
+              }
+            }
+          } catch (error) {
+            console.error("Erreur lors de la récupération du programmateur:", error);
           }
         }
       } else {
@@ -191,28 +258,7 @@ function FormValidationInterface() {
     fetchData();
   }, [id]);
 
-  // Gérer la validation d'un champ spécifique
-  const handleValidateField = (fieldCategory, fieldName, value) => {
-    // Créer un objet qui représente le chemin complet du champ
-    // Par exemple: programmateur.nom, structure.raisonSociale, etc.
-    const fieldPath = `${fieldCategory}.${fieldName}`;
-    
-    // Mettre à jour l'état local des champs validés
-    setValidatedFields(prev => ({
-      ...prev,
-      [fieldPath]: value
-    }));
-  };
-
-  // Copier la valeur du formulaire vers la valeur finale
-  const copyFormValueToFinal = (fieldPath, formValue) => {
-    setValidatedFields(prev => ({
-      ...prev,
-      [fieldPath]: formValue
-    }));
-  };
-
-  // Valider le formulaire complet
+  // Modifier la fonction validateForm pour mettre à jour également le document programmateur
   const validateForm = async () => {
     if (!formId) return;
     
@@ -292,6 +338,29 @@ function FormValidationInterface() {
       setError("Impossible de valider le formulaire. Veuillez réessayer plus tard.");
       setValidationInProgress(false);
     }
+  };
+
+  // Le reste du code reste inchangé
+  
+  // Gérer la validation d'un champ spécifique
+  const handleValidateField = (fieldCategory, fieldName, value) => {
+    // Créer un objet qui représente le chemin complet du champ
+    // Par exemple: programmateur.nom, structure.raisonSociale, etc.
+    const fieldPath = `${fieldCategory}.${fieldName}`;
+    
+    // Mettre à jour l'état local des champs validés
+    setValidatedFields(prev => ({
+      ...prev,
+      [fieldPath]: value
+    }));
+  };
+
+  // Copier la valeur du formulaire vers la valeur finale
+  const copyFormValueToFinal = (fieldPath, formValue) => {
+    setValidatedFields(prev => ({
+      ...prev,
+      [fieldPath]: formValue
+    }));
   };
 
   // Formater la date pour l'affichage
@@ -461,7 +530,11 @@ function FormValidationInterface() {
                 {contactFields.map(field => {
                   const fieldPath = `contact.${field.id}`;
                   const existingValue = programmateur ? programmateur[field.id] || '' : '';
-                  const formValue = formData.data?.[field.id] || '';
+                  
+                  // MODIFICATION: Utiliser les données de programmateurData ou de data si disponibles
+                  const formValue = formData.programmateurData 
+                    ? formData.programmateurData[field.id] || '' 
+                    : (formData.data ? formData.data[field.id] || '' : '');
                   
                   return (
                     <tr key={field.id}>
@@ -516,19 +589,40 @@ function FormValidationInterface() {
                 {structureFields.map(field => {
                   const fieldPath = `structure.${field.id}`;
                   let existingValue = '';
+                  let formValue = '';
                   
                   // Obtenir la valeur existante selon le type de champ
                   if (programmateur) {
                     if (field.id === 'raisonSociale') {
                       existingValue = programmateur.structure || '';
+                      
+                      // MODIFICATION: Utiliser programmateurData si disponible
+                      if (formData.programmateurData) {
+                        formValue = formData.programmateurData.structure || '';
+                      } else if (formData.data) {
+                        formValue = formData.data[field.id] || '';
+                      }
                     } else if (['type', 'adresse', 'codePostal', 'ville', 'pays'].includes(field.id)) {
-                      existingValue = programmateur[`structure${field.id.charAt(0).toUpperCase() + field.id.slice(1)}`] || '';
+                      const fieldKey = `structure${field.id.charAt(0).toUpperCase() + field.id.slice(1)}`;
+                      existingValue = programmateur[fieldKey] || '';
+                      
+                      // MODIFICATION: Utiliser programmateurData si disponible
+                      if (formData.programmateurData) {
+                        formValue = formData.programmateurData[fieldKey] || '';
+                      } else if (formData.data) {
+                        formValue = formData.data[field.id] || '';
+                      }
                     } else {
                       existingValue = programmateur[field.id] || '';
+                      
+                      // MODIFICATION: Utiliser programmateurData si disponible
+                      if (formData.programmateurData) {
+                        formValue = formData.programmateurData[field.id] || '';
+                      } else if (formData.data) {
+                        formValue = formData.data[field.id] || '';
+                      }
                     }
                   }
-                  
-                  const formValue = formData.data?.[field.id] || '';
                   
                   return (
                     <tr key={field.id}>

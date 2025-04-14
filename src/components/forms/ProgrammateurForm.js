@@ -305,11 +305,16 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
       if (isPublicFormMode) {
         console.log('Mode formulaire public, concertId:', concertId, 'formLinkId:', formLinkId);
         
-        // Créer une soumission dans formSubmissions
+        // MODIFICATION: Créer une soumission dans formSubmissions avec une copie complète des données
         const submissionData = {
           concertId,
           formLinkId,
           programmId: progId,
+          // Stocker une copie complète des données du programmateur
+          programmateurData: {
+            ...flattenedData
+          },
+          // Conserver également les données structurées pour compatibilité
           data: {
             ...safeFormData.contact,
             ...safeFormData.structure

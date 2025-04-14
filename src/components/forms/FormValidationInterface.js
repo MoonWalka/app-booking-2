@@ -18,11 +18,14 @@ function FormValidationInterface() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        console.log("Recherche de formulaire pour le concert:", id);
+        
         // 1. D'abord, récupérer les données du concert
         const concertRef = doc(db, 'concerts', id);
         const concertDoc = await getDoc(concertRef);
         
         if (!concertDoc.exists()) {
+          console.error("Concert non trouvé:", id);
           setError("Ce concert n'existe pas.");
           setLoading(false);
           return;
@@ -33,49 +36,78 @@ function FormValidationInterface() {
           ...concertDoc.data()
         };
         
+        console.log("Concert trouvé:", concertData);
         setConcert(concertData);
         
-        // 2. Chercher le formulaire associé au concert
-        let formDocId = null;
+        // 2. Chercher la soumission de formulaire associée au concert
+        let formSubmissionId = null;
         
-        // Si le concert a déjà un formId associé
-        if (concertData.formId) {
-          formDocId = concertData.formId;
+        // Si le concert a déjà un formSubmissionId associé
+        if (concertData.formSubmissionId) {
+          console.log("FormSubmissionId trouvé dans le concert:", concertData.formSubmissionId);
+          formSubmissionId = concertData.formSubmissionId;
         } else {
-          // Sinon, chercher dans la collection formulaires par concertId
-          const formsQuery = query(
-            collection(db, 'formulaires'), 
+          console.log("Recherche dans formSubmissions par concertId");
+          // Chercher dans la collection formSubmissions
+          const submissionsQuery = query(
+            collection(db, 'formSubmissions'), 
             where('concertId', '==', id)
           );
           
-          const formsSnapshot = await getDocs(formsQuery);
+          const submissionsSnapshot = await getDocs(submissionsQuery);
           
-          if (formsSnapshot.empty) {
-            setError("Aucun formulaire n'a été soumis pour ce concert.");
+          if (submissionsSnapshot.empty) {
+            console.log("Aucune soumission trouvée, recherche dans formLinks");
+            // Si aucune soumission, vérifier si un lien a été généré
+            const linksQuery = query(
+              collection(db, 'formLinks'), 
+              where('concertId', '==', id)
+            );
+            
+            const linksSnapshot = await getDocs(linksQuery);
+            
+            if (linksSnapshot.empty) {
+              console.error("Aucun formulaire trouvé pour ce concert");
+              setError("Aucun formulaire n'a été soumis pour ce concert.");
+              setLoading(false);
+              return;
+            }
+            
+            console.log("Lien trouvé, mais aucune soumission");
+            setError("Un lien de formulaire a été généré mais le programmateur n'a pas encore soumis de réponse.");
             setLoading(false);
             return;
           }
           
-          // Prendre le formulaire le plus récent
-          const forms = formsSnapshot.docs.map(doc => ({
+          // Prendre la soumission la plus récente
+          const submissions = submissionsSnapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data()
           }));
           
-          // Trier par date de création (du plus récent au plus ancien)
-          forms.sort((a, b) => {
-            const dateA = a.dateCreation?.toDate() || new Date(0);
-            const dateB = b.dateCreation?.toDate() || new Date(0);
+          console.log("Soumissions trouvées:", submissions.length);
+          
+          // Trier par date de soumission (du plus récent au plus ancien)
+          submissions.sort((a, b) => {
+            const dateA = a.submittedAt?.toDate() || a.createdAt?.toDate() || new Date(0);
+            const dateB = b.submittedAt?.toDate() || b.createdAt?.toDate() || new Date(0);
             return dateB - dateA;
           });
           
-          formDocId = forms[0].id;
+          formSubmissionId = submissions[0].id;
+          
+          // Mettre à jour le concert avec l'ID de la soumission
+          await updateDoc(doc(db, 'concerts', id), {
+            formSubmissionId: formSubmissionId
+          });
+          
+          console.log("FormSubmissionId sélectionné:", formSubmissionId);
         }
         
-        setFormId(formDocId);
+        setFormId(formSubmissionId);
         
-        // 3. Récupérer les données du formulaire
-        const formDoc = await getDoc(doc(db, 'formulaires', formDocId));
+        // 3. Récupérer les données de la soumission
+        const formDoc = await getDoc(doc(db, 'formSubmissions', formSubmissionId));
         
         if (formDoc.exists()) {
           const formDocData = {
@@ -83,20 +115,22 @@ function FormValidationInterface() {
             ...formDoc.data()
           };
           
+          console.log("Soumission trouvée:", formDocData);
           setFormData(formDocData);
           
-          // Si le formulaire a déjà des champs validés, les charger
+          // Si la soumission a déjà des champs validés, les charger
           if (formDocData.validatedFields) {
             setValidatedFields(formDocData.validatedFields);
           }
         } else {
-          setError("Le formulaire associé n'a pas été trouvé.");
+          console.error("Soumission non trouvée avec ID:", formSubmissionId);
+          setError("La soumission de formulaire n'a pas été trouvée.");
         }
         
         setLoading(false);
       } catch (err) {
         console.error("Erreur lors du chargement des données:", err);
-        setError("Impossible de charger les données du formulaire.");
+        setError(`Impossible de charger les données du formulaire: ${err.message}`);
         setLoading(false);
       }
     };
@@ -124,10 +158,10 @@ function FormValidationInterface() {
     try {
       setValidationInProgress(true);
       
-      // 1. Mettre à jour le statut du formulaire
-      await updateDoc(doc(db, 'formulaires', formId), {
-        statut: 'valide',
-        dateValidation: new Date(),
+      // 1. Mettre à jour le statut de la soumission
+      await updateDoc(doc(db, 'formSubmissions', formId), {
+        status: 'validated',
+        validatedAt: new Date(),
         validatedFields: validatedFields
       });
       
@@ -153,7 +187,7 @@ function FormValidationInterface() {
       
       // Ajouter des informations de formulaire validé
       concertUpdates.formValidated = true;
-      concertUpdates.formId = formId;
+      concertUpdates.formSubmissionId = formId;
       concertUpdates.formValidatedAt = new Date();
       
       await updateDoc(doc(db, 'concerts', id), concertUpdates);
@@ -210,9 +244,9 @@ function FormValidationInterface() {
         </div>
         <button 
           className="btn btn-primary mt-3" 
-          onClick={() => navigate('/concerts')}
+          onClick={() => navigate(`/concerts/${id}`)}
         >
-          Retour à la liste des concerts
+          Retour à la fiche concert
         </button>
       </div>
     );
@@ -227,16 +261,16 @@ function FormValidationInterface() {
         </div>
         <button 
           className="btn btn-primary mt-3" 
-          onClick={() => navigate('/concerts')}
+          onClick={() => navigate(`/concerts/${id}`)}
         >
-          Retour à la liste des concerts
+          Retour à la fiche concert
         </button>
       </div>
     );
   }
 
   // Vérifier si le formulaire a déjà été validé
-  const isAlreadyValidated = formData.statut === 'valide';
+  const isAlreadyValidated = formData.status === 'validated';
 
   return (
     <div className="form-validation container mt-4">
@@ -322,7 +356,7 @@ function FormValidationInterface() {
             </div>
             <div className="card-body">
               <div className="row g-3">
-                {formData.reponses && (
+                {formData.data && (
                   <>
                     <div className="col-md-6">
                       <div className="card h-100">
@@ -330,11 +364,11 @@ function FormValidationInterface() {
                           <div className="d-flex justify-content-between align-items-start">
                             <div>
                               <h5 className="card-title">Nom</h5>
-                              <p className="card-text">{formData.reponses.nom || 'Non spécifié'}</p>
+                              <p className="card-text">{formData.data.nom || 'Non spécifié'}</p>
                             </div>
                             <button 
                               className={`btn ${validatedFields['programmateur.nom'] ? 'btn-success' : 'btn-outline-success'}`}
-                              onClick={() => handleValidateField('programmateur', 'nom', formData.reponses.nom)}
+                              onClick={() => handleValidateField('programmateur', 'nom', formData.data.nom)}
                               disabled={!!validatedFields['programmateur.nom']}
                             >
                               {validatedFields['programmateur.nom'] ? (
@@ -357,11 +391,11 @@ function FormValidationInterface() {
                           <div className="d-flex justify-content-between align-items-start">
                             <div>
                               <h5 className="card-title">Prénom</h5>
-                              <p className="card-text">{formData.reponses.prenom || 'Non spécifié'}</p>
+                              <p className="card-text">{formData.data.prenom || 'Non spécifié'}</p>
                             </div>
                             <button 
                               className={`btn ${validatedFields['programmateur.prenom'] ? 'btn-success' : 'btn-outline-success'}`}
-                              onClick={() => handleValidateField('programmateur', 'prenom', formData.reponses.prenom)}
+                              onClick={() => handleValidateField('programmateur', 'prenom', formData.data.prenom)}
                               disabled={!!validatedFields['programmateur.prenom']}
                             >
                               {validatedFields['programmateur.prenom'] ? (
@@ -384,11 +418,11 @@ function FormValidationInterface() {
                           <div className="d-flex justify-content-between align-items-start">
                             <div>
                               <h5 className="card-title">Fonction</h5>
-                              <p className="card-text">{formData.reponses.fonction || 'Non spécifiée'}</p>
+                              <p className="card-text">{formData.data.fonction || 'Non spécifiée'}</p>
                             </div>
                             <button 
                               className={`btn ${validatedFields['programmateur.fonction'] ? 'btn-success' : 'btn-outline-success'}`}
-                              onClick={() => handleValidateField('programmateur', 'fonction', formData.reponses.fonction)}
+                              onClick={() => handleValidateField('programmateur', 'fonction', formData.data.fonction)}
                               disabled={!!validatedFields['programmateur.fonction']}
                             >
                               {validatedFields['programmateur.fonction'] ? (
@@ -411,11 +445,11 @@ function FormValidationInterface() {
                           <div className="d-flex justify-content-between align-items-start">
                             <div>
                               <h5 className="card-title">Email</h5>
-                              <p className="card-text">{formData.reponses.email || 'Non spécifié'}</p>
+                              <p className="card-text">{formData.data.email || 'Non spécifié'}</p>
                             </div>
                             <button 
                               className={`btn ${validatedFields['programmateur.email'] ? 'btn-success' : 'btn-outline-success'}`}
-                              onClick={() => handleValidateField('programmateur', 'email', formData.reponses.email)}
+                              onClick={() => handleValidateField('programmateur', 'email', formData.data.email)}
                               disabled={!!validatedFields['programmateur.email']}
                             >
                               {validatedFields['programmateur.email'] ? (
@@ -438,11 +472,11 @@ function FormValidationInterface() {
                           <div className="d-flex justify-content-between align-items-start">
                             <div>
                               <h5 className="card-title">Téléphone</h5>
-                              <p className="card-text">{formData.reponses.telephone || 'Non spécifié'}</p>
+                              <p className="card-text">{formData.data.telephone || 'Non spécifié'}</p>
                             </div>
                             <button 
                               className={`btn ${validatedFields['programmateur.telephone'] ? 'btn-success' : 'btn-outline-success'}`}
-                              onClick={() => handleValidateField('programmateur', 'telephone', formData.reponses.telephone)}
+                              onClick={() => handleValidateField('programmateur', 'telephone', formData.data.telephone)}
                               disabled={!!validatedFields['programmateur.telephone']}
                             >
                               {validatedFields['programmateur.telephone'] ? (
@@ -470,7 +504,7 @@ function FormValidationInterface() {
             </div>
             <div className="card-body">
               <div className="row g-3">
-                {formData.reponses && (
+                {formData.data && (
                   <>
                     <div className="col-md-6">
                       <div className="card h-100">
@@ -478,11 +512,11 @@ function FormValidationInterface() {
                           <div className="d-flex justify-content-between align-items-start">
                             <div>
                               <h5 className="card-title">Raison sociale</h5>
-                              <p className="card-text">{formData.reponses.raisonSociale || 'Non spécifiée'}</p>
+                              <p className="card-text">{formData.data.raisonSociale || 'Non spécifiée'}</p>
                             </div>
                             <button 
                               className={`btn ${validatedFields['structure.raisonSociale'] ? 'btn-success' : 'btn-outline-success'}`}
-                              onClick={() => handleValidateField('structure', 'raisonSociale', formData.reponses.raisonSociale)}
+                              onClick={() => handleValidateField('structure', 'raisonSociale', formData.data.raisonSociale)}
                               disabled={!!validatedFields['structure.raisonSociale']}
                             >
                               {validatedFields['structure.raisonSociale'] ? (
@@ -505,11 +539,11 @@ function FormValidationInterface() {
                           <div className="d-flex justify-content-between align-items-start">
                             <div>
                               <h5 className="card-title">Type de structure</h5>
-                              <p className="card-text">{formData.reponses.typeStructure || 'Non spécifié'}</p>
+                              <p className="card-text">{formData.data.typeStructure || 'Non spécifié'}</p>
                             </div>
                             <button 
                               className={`btn ${validatedFields['structure.typeStructure'] ? 'btn-success' : 'btn-outline-success'}`}
-                              onClick={() => handleValidateField('structure', 'typeStructure', formData.reponses.typeStructure)}
+                              onClick={() => handleValidateField('structure', 'typeStructure', formData.data.typeStructure)}
                               disabled={!!validatedFields['structure.typeStructure']}
                             >
                               {validatedFields['structure.typeStructure'] ? (
@@ -532,11 +566,11 @@ function FormValidationInterface() {
                           <div className="d-flex justify-content-between align-items-start">
                             <div>
                               <h5 className="card-title">Adresse</h5>
-                              <p className="card-text">{formData.reponses.adresse || 'Non spécifiée'}</p>
+                              <p className="card-text">{formData.data.adresse || 'Non spécifiée'}</p>
                             </div>
                             <button 
                               className={`btn ${validatedFields['structure.adresse'] ? 'btn-success' : 'btn-outline-success'}`}
-                              onClick={() => handleValidateField('structure', 'adresse', formData.reponses.adresse)}
+                              onClick={() => handleValidateField('structure', 'adresse', formData.data.adresse)}
                               disabled={!!validatedFields['structure.adresse']}
                             >
                               {validatedFields['structure.adresse'] ? (
@@ -559,11 +593,11 @@ function FormValidationInterface() {
                           <div className="d-flex justify-content-between align-items-start">
                             <div>
                               <h5 className="card-title">Code postal</h5>
-                              <p className="card-text">{formData.reponses.codePostal || 'Non spécifié'}</p>
+                              <p className="card-text">{formData.data.codePostal || 'Non spécifié'}</p>
                             </div>
                             <button 
                               className={`btn ${validatedFields['structure.codePostal'] ? 'btn-success' : 'btn-outline-success'}`}
-                              onClick={() => handleValidateField('structure', 'codePostal', formData.reponses.codePostal)}
+                              onClick={() => handleValidateField('structure', 'codePostal', formData.data.codePostal)}
                               disabled={!!validatedFields['structure.codePostal']}
                             >
                               {validatedFields['structure.codePostal'] ? (
@@ -586,11 +620,11 @@ function FormValidationInterface() {
                           <div className="d-flex justify-content-between align-items-start">
                             <div>
                               <h5 className="card-title">Ville</h5>
-                              <p className="card-text">{formData.reponses.ville || 'Non spécifiée'}</p>
+                              <p className="card-text">{formData.data.ville || 'Non spécifiée'}</p>
                             </div>
                             <button 
                               className={`btn ${validatedFields['structure.ville'] ? 'btn-success' : 'btn-outline-success'}`}
-                              onClick={() => handleValidateField('structure', 'ville', formData.reponses.ville)}
+                              onClick={() => handleValidateField('structure', 'ville', formData.data.ville)}
                               disabled={!!validatedFields['structure.ville']}
                             >
                               {validatedFields['structure.ville'] ? (
@@ -613,11 +647,11 @@ function FormValidationInterface() {
                           <div className="d-flex justify-content-between align-items-start">
                             <div>
                               <h5 className="card-title">SIRET</h5>
-                              <p className="card-text">{formData.reponses.siret || 'Non spécifié'}</p>
+                              <p className="card-text">{formData.data.siret || 'Non spécifié'}</p>
                             </div>
                             <button 
                               className={`btn ${validatedFields['structure.siret'] ? 'btn-success' : 'btn-outline-success'}`}
-                              onClick={() => handleValidateField('structure', 'siret', formData.reponses.siret)}
+                              onClick={() => handleValidateField('structure', 'siret', formData.data.siret)}
                               disabled={!!validatedFields['structure.siret']}
                             >
                               {validatedFields['structure.siret'] ? (

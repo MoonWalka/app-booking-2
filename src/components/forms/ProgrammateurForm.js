@@ -296,7 +296,101 @@ const ProgrammateurForm = ({ id, token, concertId, formLinkId, onSubmitSuccess }
       await setDoc(doc(db, 'programmateurs', progId), flattenedData, { merge: true });
       console.log('Programmateur enregistré avec ID:', progId);
       
-      // Le reste de votre code (traitement spécifique au mode, etc.)
+      // 7. Traitement spécifique au mode formulaire public
+      if (isPublicFormMode) {
+        console.log('Mode formulaire public, concertId:', concertId, 'formLinkId:', formLinkId);
+        
+        // Créer une soumission dans formSubmissions
+        const submissionData = {
+          concertId,
+          formLinkId,
+          programmId: progId,
+          data: {
+            ...safeFormData.contact,
+            ...safeFormData.structure
+          },
+          submittedAt: serverTimestamp(),
+          status: 'pending' // en attente de validation
+        };
+        
+        const submissionRef = await addDoc(collection(db, 'formSubmissions'), submissionData);
+        console.log('Soumission créée avec ID:', submissionRef.id);
+        
+        // Marquer le lien comme complété
+        await updateDoc(doc(db, 'formLinks', formLinkId), {
+          completed: true,
+          completedAt: serverTimestamp()
+        });
+        console.log('Lien marqué comme complété');
+        
+        // Mettre à jour le concert avec l'ID de la soumission et le programmateur
+        await updateDoc(doc(db, 'concerts', concertId), {
+          formSubmissionId: submissionRef.id,
+          programmateurId: progId,
+          programmateurNom: flattenedData.nom,
+          updatedAt: serverTimestamp()
+        });
+        console.log('Concert mis à jour avec la soumission et le programmateur');
+        
+        // Appeler le callback de succès si fourni
+        if (onSubmitSuccess) {
+          console.log('Appel du callback onSubmitSuccess');
+          onSubmitSuccess();
+        } else {
+          // Afficher un message de succès si pas de callback
+          setFormData({
+            contact: {
+              nom: '',
+              prenom: '',
+              fonction: '',
+              email: '',
+              telephone: ''
+            },
+            structure: {
+              raisonSociale: '',
+              type: '',
+              adresse: '',
+              codePostal: '',
+              ville: '',
+              pays: 'France',
+              siret: '',
+              tva: ''
+            },
+            concertsAssocies: []
+          });
+          
+          // Remplacer le formulaire par un message de succès
+          return (
+            <div className="form-success-container text-center">
+              <div className="success-icon">
+                <i className="bi bi-check-circle-fill text-success" style={{ fontSize: '4rem' }}></i>
+              </div>
+              <h2 className="mt-4">Merci pour votre soumission!</h2>
+              <p className="lead">Vos informations ont été enregistrées avec succès.</p>
+              <p>Vous pouvez maintenant fermer cette page.</p>
+            </div>
+          );
+        }
+      } 
+      // 8. Traitement spécifique au mode édition standard
+      else {
+        console.log('Mode édition standard');
+        
+        // Mise à jour réciproque : ajouter le programmateur à chaque concert
+        for (const concert of concertsAssocies) {
+          const concertRef = doc(db, 'concerts', concert.id);
+          await updateDoc(concertRef, {
+            programmateurs: arrayUnion({
+              id: progId,
+              nom: flattenedData.nom
+            })
+          });
+          console.log('Programmateur associé au concert:', concert.id);
+        }
+        
+        // Rediriger vers la liste des programmateurs
+        navigate('/programmateurs');
+      }
     } catch (error) {
       console.error('Erreur lors de l\'enregistrement:', error);
       setError('Une erreur est survenue lors de l\'enregistrement. Veuillez réessayer.');
@@ -304,6 +398,7 @@ const ProgrammateurForm = ({ id, token, concertId, formLinkId, onSubmitSuccess }
       setIsSubmitting(false);
     }
   };
+  
   
 
   if (loading) {

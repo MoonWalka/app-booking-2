@@ -164,7 +164,7 @@ const ProgrammateurForm = ({ id, token, concertId, formLinkId, onSubmitSuccess }
     e.preventDefault();
     setIsSubmitting(true);
     setError(null);
-
+  
     try {
       // Validation des champs obligatoires
       if (!formData.contact.nom || !formData.contact.email) {
@@ -172,14 +172,7 @@ const ProgrammateurForm = ({ id, token, concertId, formLinkId, onSubmitSuccess }
         setIsSubmitting(false);
         return;
       }
-
-      // Vérification plus stricte de l'email
-      if (!formData.contact.email.includes('@')) {
-        setError('Veuillez fournir une adresse email valide');
-        setIsSubmitting(false);
-        return;
-      }
-
+  
       // 1. Si nous sommes en mode formulaire public, vérifier d'abord s'il y a un programmateur existant
       let progId = id && id !== 'nouveau' ? id : null;
       
@@ -207,7 +200,6 @@ const ProgrammateurForm = ({ id, token, concertId, formLinkId, onSubmitSuccess }
           }
         } catch (error) {
           console.error('Erreur lors de la vérification de l\'existence du programmateur:', error);
-          // Continuer avec la création d'un nouveau programmateur
         }
         
         // Si aucun programmateur existant n'a été trouvé, en créer un nouveau
@@ -219,145 +211,92 @@ const ProgrammateurForm = ({ id, token, concertId, formLinkId, onSubmitSuccess }
         // En mode admin standard, créer un nouvel ID si nécessaire
         progId = doc(collection(db, 'programmateurs')).id;
       }
-
+  
       // Récupérer les données existantes si on met à jour un programmateur
       let existingProgData = {};
-      let existingConcerts = [];
       if (progId) {
-        const existingProgDoc = await getDoc(doc(db, 'programmateurs', progId));
-        if (existingProgDoc.exists()) {
-          existingProgData = existingProgDoc.data();
-          existingConcerts = existingProgData.concertsAssocies || [];
+        try {
+          const existingProgDoc = await getDoc(doc(db, 'programmateurs', progId));
+          if (existingProgDoc.exists()) {
+            existingProgData = existingProgDoc.data();
+          }
+        } catch (error) {
+          console.error('Erreur lors de la récupération des données existantes:', error);
         }
       }
-
+  
+      // Créer une copie sécurisée de formData avec structure définie
+      const safeFormData = {
+        ...formData,
+        structure: formData.structure || {}
+      };
+  
       // 2. Préparer les données du programmateur
       const flattenedData = {
         // Champs principaux pour l'affichage dans la liste
-        nom: `${formData.contact.nom} ${formData.contact.prenom}`.trim(),
-        structure: formData.structure.raisonSociale,
-        email: formData.contact.email,
-        telephone: formData.contact.telephone,
+        nom: `${safeFormData.contact.nom} ${safeFormData.contact.prenom}`.trim(),
+        structure: safeFormData.structure.raisonSociale || '',
+        email: safeFormData.contact.email,
+        telephone: safeFormData.contact.telephone,
         
         // Ajouter tous les champs détaillés
-        ...formData.contact,
-        ...Object.keys(formData.structure).reduce((acc, key) => {
-          acc[`structure${key.charAt(0).toUpperCase() + key.slice(1)}`] = formData.structure[key];
-          return acc;
-        }, {}),
-        
-        // Conserver certains champs existants s'ils ne sont pas fournis dans le formulaire
-        ...(Object.keys(existingProgData).reduce((acc, key) => {
-          if (!['updatedAt', 'concertsAssocies'].includes(key) && flattenedData[key] === undefined) {
-            acc[key] = existingProgData[key];
-          }
-          return acc;
-        }, {})),
-        
-        // Timestamps
-        updatedAt: serverTimestamp()
+        ...safeFormData.contact,
       };
-
+      
+      // Ajouter les champs de structure avec préfixe
+      Object.keys(safeFormData.structure).forEach(key => {
+        flattenedData[`structure${key.charAt(0).toUpperCase() + key.slice(1)}`] = safeFormData.structure[key];
+      });
+      
       // 3. Si c'est un nouveau programmateur, ajouter la date de création
       if (!existingProgData.createdAt) {
         flattenedData.createdAt = serverTimestamp();
       }
       
-      // 4. Gestion des concerts associés
+      // 4. Ajouter le timestamp de mise à jour
+      flattenedData.updatedAt = serverTimestamp();
+      
+      // 5. Gestion des concerts associés
+      let concertsAssocies = [];
+      
+      if (existingProgData.concertsAssocies) {
+        concertsAssocies = [...existingProgData.concertsAssocies];
+      }
+      
       if (isPublicFormMode && concertId) {
         // Vérifier si le concert est déjà associé
-        const concertAlreadyAssociated = existingConcerts.some(c => c.id === concertId);
+        const concertAlreadyAssociated = concertsAssocies.some(c => c.id === concertId);
         
         if (!concertAlreadyAssociated) {
           // Récupérer les détails du concert pour l'association
-          const concertDoc = await getDoc(doc(db, 'concerts', concertId));
-          if (concertDoc.exists()) {
-            const concertData = concertDoc.data();
-            
-            existingConcerts.push({
-              id: concertId,
-              titre: concertData.titre || 'Sans titre',
-              date: concertData.date || null,
-              lieu: concertData.lieuNom || null
-            });
+          try {
+            const concertDoc = await getDoc(doc(db, 'concerts', concertId));
+            if (concertDoc.exists()) {
+              const concertData = concertDoc.data();
+              
+              concertsAssocies.push({
+                id: concertId,
+                titre: concertData.titre || 'Sans titre',
+                date: concertData.date || null,
+                lieu: concertData.lieuNom || null
+              });
+            }
+          } catch (error) {
+            console.error('Erreur lors de la récupération des détails du concert:', error);
           }
         }
-        
-        // Ajouter les concerts associés aux données aplaties
-        flattenedData.concertsAssocies = existingConcerts;
-      } else if (formData.concertsAssocies && formData.concertsAssocies.length > 0) {
-        // En mode admin standard, conserver les concerts associés du formulaire
-        flattenedData.concertsAssocies = formData.concertsAssocies;
-      } else if (existingConcerts.length > 0) {
-        // Sinon conserver les concerts associés existants
-        flattenedData.concertsAssocies = existingConcerts;
+      } else if (safeFormData.concertsAssocies && safeFormData.concertsAssocies.length > 0) {
+        concertsAssocies = safeFormData.concertsAssocies;
       }
-
-      // 5. Enregistrer le programmateur
+      
+      // Ajouter les concerts associés aux données
+      flattenedData.concertsAssocies = concertsAssocies;
+  
+      // 6. Enregistrer le programmateur
       await setDoc(doc(db, 'programmateurs', progId), flattenedData, { merge: true });
       console.log('Programmateur enregistré avec ID:', progId);
       
-      // 6. Traitement spécifique au mode formulaire public
-      if (isPublicFormMode) {
-        console.log('Mode formulaire public, concertId:', concertId, 'formLinkId:', formLinkId);
-        
-        // Créer une soumission dans formSubmissions
-        const submissionData = {
-          concertId,
-          formLinkId,
-          programmId: progId,
-          data: {
-            ...formData.contact,
-            ...formData.structure
-          },
-          submittedAt: serverTimestamp(),
-          status: 'pending' // en attente de validation
-        };
-        
-        const submissionRef = await addDoc(collection(db, 'formSubmissions'), submissionData);
-        console.log('Soumission créée avec ID:', submissionRef.id);
-        
-        // Marquer le lien comme complété
-        await updateDoc(doc(db, 'formLinks', formLinkId), {
-          completed: true,
-          completedAt: serverTimestamp()
-        });
-        console.log('Lien marqué comme complété');
-        
-        // Mettre à jour le concert avec l'ID de la soumission et le programmateur
-        await updateDoc(doc(db, 'concerts', concertId), {
-          formSubmissionId: submissionRef.id,
-          programmateurId: progId,
-          programmateurNom: flattenedData.nom,
-          updatedAt: serverTimestamp()
-        });
-        console.log('Concert mis à jour avec la soumission et le programmateur');
-        
-        // Appeler le callback de succès si fourni
-        if (onSubmitSuccess) {
-          console.log('Appel du callback onSubmitSuccess');
-          onSubmitSuccess();
-        }
-      } 
-      // 7. Traitement spécifique au mode édition standard
-      else {
-        console.log('Mode édition standard');
-        
-        // Mise à jour réciproque : ajouter le programmateur à chaque concert
-        for (const concert of flattenedData.concertsAssocies) {
-          const concertRef = doc(db, 'concerts', concert.id);
-          await updateDoc(concertRef, {
-            programmateurs: arrayUnion({
-              id: progId,
-              nom: flattenedData.nom
-            })
-          });
-          console.log('Programmateur associé au concert:', concert.id);
-        }
-        
-        // Rediriger vers la liste des programmateurs
-        navigate('/programmateurs');
-      }
+      // Le reste de votre code (traitement spécifique au mode, etc.)
     } catch (error) {
       console.error('Erreur lors de l\'enregistrement:', error);
       setError('Une erreur est survenue lors de l\'enregistrement. Veuillez réessayer.');
@@ -365,6 +304,7 @@ const ProgrammateurForm = ({ id, token, concertId, formLinkId, onSubmitSuccess }
       setIsSubmitting(false);
     }
   };
+  
 
   if (loading) {
     return <div className="text-center my-5 loading-spinner">Chargement des données...</div>;

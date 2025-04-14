@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { db } from '../../firebase';
 import { formatDate } from '../../utils/dateUtils';
-import { collection, query, orderBy, getDocs } from 'firebase/firestore';
+import { collection, query, orderBy, getDocs, where } from 'firebase/firestore';
 import Badge from 'react-bootstrap/Badge';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
-import '../../style/concertsList.css'; // Nouveau fichier CSS à créer
+import '../../style/concertsList.css';
 
 const ConcertsList = () => {
   const navigate = useNavigate();
@@ -16,10 +16,12 @@ const ConcertsList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredConcerts, setFilteredConcerts] = useState([]);
   const [statusFilter, setStatusFilter] = useState('tous');
+  const [concertsWithForms, setConcertsWithForms] = useState([]);
 
   useEffect(() => {
-    const fetchConcerts = async () => {
+    const fetchConcertsAndForms = async () => {
       try {
+        // Récupérer les concerts
         const concertsRef = collection(db, 'concerts');
         const q = query(concertsRef, orderBy('date', 'desc'));
         const querySnapshot = await getDocs(q);
@@ -31,15 +33,32 @@ const ConcertsList = () => {
 
         setConcerts(concertsData);
         setFilteredConcerts(concertsData);
+
+        // Récupérer les ID des concerts qui ont des formulaires associés
+        const formsRef = collection(db, 'formulaires');
+        const formsSnapshot = await getDocs(formsRef);
+        
+        // Créer un Set pour stocker les IDs des concerts avec formulaires
+        const concertsWithFormsSet = new Set();
+        
+        formsSnapshot.forEach(doc => {
+          const formData = doc.data();
+          if (formData.concertId) {
+            concertsWithFormsSet.add(formData.concertId);
+          }
+        });
+        
+        setConcertsWithForms(Array.from(concertsWithFormsSet));
+        
         setLoading(false);
       } catch (error) {
-        console.error('Erreur lors du chargement des concerts:', error);
+        console.error('Erreur lors du chargement des données:', error);
         setError('Impossible de charger les concerts. Veuillez réessayer plus tard.');
         setLoading(false);
       }
     };
 
-    fetchConcerts();
+    fetchConcertsAndForms();
   }, []);
 
   // Effet pour filtrer les concerts par recherche et statut
@@ -188,6 +207,12 @@ const ConcertsList = () => {
     );
   };
 
+  // Fonction pour vérifier si un concert a un formulaire associé
+  const hasForm = (concertId) => {
+    return concertsWithForms.includes(concertId) || 
+           concerts.find(c => c.id === concertId)?.formId !== undefined;
+  };
+
   if (loading) {
     return <div className="text-center my-5 loading-spinner">Chargement des concerts...</div>;
   }
@@ -331,12 +356,22 @@ const ConcertsList = () => {
                         icon={<i className="bi bi-pencil"></i>} 
                         variant="light"
                       />
-                      <ActionButton 
-                        to={`/concerts/${concert.id}/form`} 
-                        tooltip="Voir le formulaire" 
-                        icon={<i className="bi bi-file-text"></i>} 
-                        variant="light"
-                      />
+                      {hasForm(concert.id) && (
+                        <ActionButton 
+                          to={`/concerts/${concert.id}/form`} 
+                          tooltip="Voir le formulaire" 
+                          icon={<i className="bi bi-file-text"></i>} 
+                          variant="light"
+                        />
+                      )}
+                      {!hasForm(concert.id) && concert.programmateurId && (
+                        <ActionButton 
+                          tooltip="Envoyer formulaire" 
+                          icon={<i className="bi bi-envelope"></i>} 
+                          variant="light"
+                          onClick={() => navigate(`/concerts/${concert.id}?openFormGenerator=true`)}
+                        />
+                      )}
                     </div>
                   </td>
                 </tr>

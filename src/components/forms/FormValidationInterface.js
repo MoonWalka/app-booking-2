@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../../firebase';
-import { doc, getDoc, updateDoc, collection, query, where, getDocs } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, collection, query, where, getDocs, Timestamp } from 'firebase/firestore';
+import ProgrammateurForm from '../programmateurs/ProgrammateurForm';
 
 function FormValidationInterface() {
   const { id } = useParams(); // Ici, id est l'ID du concert
@@ -14,127 +15,128 @@ function FormValidationInterface() {
   const [validated, setValidated] = useState(false);
   const [validationInProgress, setValidationInProgress] = useState(false);
   const [validatedFields, setValidatedFields] = useState({});
+  const [editMode, setEditMode] = useState(false); // Nouvel état pour le mode d'édition
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        console.log("Recherche de formulaire pour le concert:", id);
+  const fetchData = async () => {
+    try {
+      console.log("Recherche de formulaire pour le concert:", id);
+      
+      // 1. D'abord, récupérer les données du concert
+      const concertRef = doc(db, 'concerts', id);
+      const concertDoc = await getDoc(concertRef);
+      
+      if (!concertDoc.exists()) {
+        console.error("Concert non trouvé:", id);
+        setError("Ce concert n'existe pas.");
+        setLoading(false);
+        return;
+      }
+      
+      const concertData = {
+        id: concertDoc.id,
+        ...concertDoc.data()
+      };
+      
+      console.log("Concert trouvé:", concertData);
+      setConcert(concertData);
+      
+      // 2. Chercher la soumission de formulaire associée au concert
+      let formSubmissionId = null;
+      
+      // Si le concert a déjà un formSubmissionId associé
+      if (concertData.formSubmissionId) {
+        console.log("FormSubmissionId trouvé dans le concert:", concertData.formSubmissionId);
+        formSubmissionId = concertData.formSubmissionId;
+      } else {
+        console.log("Recherche dans formSubmissions par concertId");
+        // Chercher dans la collection formSubmissions
+        const submissionsQuery = query(
+          collection(db, 'formSubmissions'), 
+          where('concertId', '==', id)
+        );
         
-        // 1. D'abord, récupérer les données du concert
-        const concertRef = doc(db, 'concerts', id);
-        const concertDoc = await getDoc(concertRef);
+        const submissionsSnapshot = await getDocs(submissionsQuery);
         
-        if (!concertDoc.exists()) {
-          console.error("Concert non trouvé:", id);
-          setError("Ce concert n'existe pas.");
-          setLoading(false);
-          return;
-        }
-        
-        const concertData = {
-          id: concertDoc.id,
-          ...concertDoc.data()
-        };
-        
-        console.log("Concert trouvé:", concertData);
-        setConcert(concertData);
-        
-        // 2. Chercher la soumission de formulaire associée au concert
-        let formSubmissionId = null;
-        
-        // Si le concert a déjà un formSubmissionId associé
-        if (concertData.formSubmissionId) {
-          console.log("FormSubmissionId trouvé dans le concert:", concertData.formSubmissionId);
-          formSubmissionId = concertData.formSubmissionId;
-        } else {
-          console.log("Recherche dans formSubmissions par concertId");
-          // Chercher dans la collection formSubmissions
-          const submissionsQuery = query(
-            collection(db, 'formSubmissions'), 
+        if (submissionsSnapshot.empty) {
+          console.log("Aucune soumission trouvée, recherche dans formLinks");
+          // Si aucune soumission, vérifier si un lien a été généré
+          const linksQuery = query(
+            collection(db, 'formLinks'), 
             where('concertId', '==', id)
           );
           
-          const submissionsSnapshot = await getDocs(submissionsQuery);
+          const linksSnapshot = await getDocs(linksQuery);
           
-          if (submissionsSnapshot.empty) {
-            console.log("Aucune soumission trouvée, recherche dans formLinks");
-            // Si aucune soumission, vérifier si un lien a été généré
-            const linksQuery = query(
-              collection(db, 'formLinks'), 
-              where('concertId', '==', id)
-            );
-            
-            const linksSnapshot = await getDocs(linksQuery);
-            
-            if (linksSnapshot.empty) {
-              console.error("Aucun formulaire trouvé pour ce concert");
-              setError("Aucun formulaire n'a été soumis pour ce concert.");
-              setLoading(false);
-              return;
-            }
-            
-            console.log("Lien trouvé, mais aucune soumission");
-            setError("Un lien de formulaire a été généré mais le programmateur n'a pas encore soumis de réponse.");
+          if (linksSnapshot.empty) {
+            console.error("Aucun formulaire trouvé pour ce concert");
+            setError("Aucun formulaire n'a été soumis pour ce concert.");
             setLoading(false);
             return;
           }
           
-          // Prendre la soumission la plus récente
-          const submissions = submissionsSnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-          }));
-          
-          console.log("Soumissions trouvées:", submissions.length);
-          
-          // Trier par date de soumission (du plus récent au plus ancien)
-          submissions.sort((a, b) => {
-            const dateA = a.submittedAt?.toDate() || a.createdAt?.toDate() || new Date(0);
-            const dateB = b.submittedAt?.toDate() || b.createdAt?.toDate() || new Date(0);
-            return dateB - dateA;
-          });
-          
-          formSubmissionId = submissions[0].id;
-          
-          // Mettre à jour le concert avec l'ID de la soumission
-          await updateDoc(doc(db, 'concerts', id), {
-            formSubmissionId: formSubmissionId
-          });
-          
-          console.log("FormSubmissionId sélectionné:", formSubmissionId);
+          console.log("Lien trouvé, mais aucune soumission");
+          setError("Un lien de formulaire a été généré mais le programmateur n'a pas encore soumis de réponse.");
+          setLoading(false);
+          return;
         }
         
-        setFormId(formSubmissionId);
+        // Prendre la soumission la plus récente
+        const submissions = submissionsSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
         
-        // 3. Récupérer les données de la soumission
-        const formDoc = await getDoc(doc(db, 'formSubmissions', formSubmissionId));
+        console.log("Soumissions trouvées:", submissions.length);
         
-        if (formDoc.exists()) {
-          const formDocData = {
-            id: formDoc.id,
-            ...formDoc.data()
-          };
-          
-          console.log("Soumission trouvée:", formDocData);
-          setFormData(formDocData);
-          
-          // Si la soumission a déjà des champs validés, les charger
-          if (formDocData.validatedFields) {
-            setValidatedFields(formDocData.validatedFields);
-          }
-        } else {
-          console.error("Soumission non trouvée avec ID:", formSubmissionId);
-          setError("La soumission de formulaire n'a pas été trouvée.");
-        }
+        // Trier par date de soumission (du plus récent au plus ancien)
+        submissions.sort((a, b) => {
+          const dateA = a.submittedAt?.toDate() || a.createdAt?.toDate() || new Date(0);
+          const dateB = b.submittedAt?.toDate() || b.createdAt?.toDate() || new Date(0);
+          return dateB - dateA;
+        });
         
-        setLoading(false);
-      } catch (err) {
-        console.error("Erreur lors du chargement des données:", err);
-        setError(`Impossible de charger les données du formulaire: ${err.message}`);
-        setLoading(false);
+        formSubmissionId = submissions[0].id;
+        
+        // Mettre à jour le concert avec l'ID de la soumission
+        await updateDoc(doc(db, 'concerts', id), {
+          formSubmissionId: formSubmissionId
+        });
+        
+        console.log("FormSubmissionId sélectionné:", formSubmissionId);
       }
-    };
+      
+      setFormId(formSubmissionId);
+      
+      // 3. Récupérer les données de la soumission
+      const formDoc = await getDoc(doc(db, 'formSubmissions', formSubmissionId));
+      
+      if (formDoc.exists()) {
+        const formDocData = {
+          id: formDoc.id,
+          ...formDoc.data()
+        };
+        
+        console.log("Soumission trouvée:", formDocData);
+        setFormData(formDocData);
+        
+        // Si la soumission a déjà des champs validés, les charger
+        if (formDocData.validatedFields) {
+          setValidatedFields(formDocData.validatedFields);
+        }
+      } else {
+        console.error("Soumission non trouvée avec ID:", formSubmissionId);
+        setError("La soumission de formulaire n'a pas été trouvée.");
+      }
+      
+      setLoading(false);
+    } catch (err) {
+      console.error("Erreur lors du chargement des données:", err);
+      setError(`Impossible de charger les données du formulaire: ${err.message}`);
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
   }, [id]);
 
@@ -224,6 +226,12 @@ function FormValidationInterface() {
     return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(value);
   };
 
+  const handleEditSuccess = () => {
+    // Fonction appelée après édition réussie du programmateur
+    setEditMode(false);
+    fetchData(); // Recharger les données
+  };
+
   if (loading) {
     return (
       <div className="loading-container text-center my-5">
@@ -277,20 +285,62 @@ function FormValidationInterface() {
       <div className="row mb-4">
         <div className="col-12">
           <div className="d-flex justify-content-between align-items-center">
-            <h2 className="mb-0">Validation du formulaire</h2>
-            <button 
-              className="btn btn-outline-secondary"
-              onClick={() => navigate(`/concerts/${id}`)}
-            >
-              <i className="bi bi-arrow-left me-2"></i>
-              Retour au concert
-            </button>
+            <h2 className="mb-0">
+              {editMode 
+                ? 'Modification des informations du programmateur' 
+                : 'Validation du formulaire'}
+            </h2>
+            <div className="d-flex">
+              <button 
+                className="btn btn-outline-secondary me-2"
+                onClick={() => navigate(`/concerts/${id}`)}
+              >
+                <i className="bi bi-arrow-left me-2"></i>
+                Retour au concert
+              </button>
+              
+              {/* Bouton pour basculer entre validation et édition */}
+              {!validated && !isAlreadyValidated && (
+                <button 
+                  className={`btn ${editMode ? 'btn-outline-primary' : 'btn-primary'}`}
+                  onClick={() => setEditMode(!editMode)}
+                >
+                  <i className={`bi ${editMode ? 'bi-eye' : 'bi-pencil-square'} me-2`}></i>
+                  {editMode ? 'Revenir à la validation' : 'Modifier les informations'}
+                </button>
+              )}
+            </div>
           </div>
           <hr />
         </div>
       </div>
 
-      {(isAlreadyValidated || validated) ? (
+      {/* Mode édition */}
+      {editMode ? (
+        <div className="edit-mode">
+          <div className="alert alert-info mb-4">
+            <div className="d-flex">
+              <i className="bi bi-info-circle-fill me-3" style={{ fontSize: '1.5rem' }}></i>
+              <div>
+                <h4 className="alert-heading">Mode édition</h4>
+                <p className="mb-0">
+                  Vous pouvez modifier directement les informations soumises par le programmateur. 
+                  Ces modifications seront enregistrées et vous pourrez ensuite valider les champs.
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          {/* Utilisation du composant ProgrammateurForm pour l'édition */}
+          {formData && formData.programmId && (
+            <ProgrammateurForm 
+              id={formData.programmId}
+              onSubmitSuccess={handleEditSuccess}
+            />
+          )}
+        </div>
+      ) : (isAlreadyValidated || validated) ? (
+        /* Affichage du message de succès si validé */
         <div className="validation-success card border-success mb-4">
           <div className="card-body text-center">
             <div className="success-icon">
@@ -298,15 +348,28 @@ function FormValidationInterface() {
             </div>
             <h3 className="mt-3">Formulaire validé avec succès</h3>
             <p className="text-muted">Les informations validées ont été intégrées à la fiche du concert.</p>
-            <button 
-              className="btn btn-primary mt-3" 
-              onClick={() => navigate(`/concerts/${id}`)}
-            >
-              Retourner à la fiche du concert
-            </button>
+            <div className="mt-3">
+              <button 
+                className="btn btn-primary me-2" 
+                onClick={() => navigate(`/concerts/${id}`)}
+              >
+                <i className="bi bi-arrow-left me-2"></i>
+                Retourner à la fiche du concert
+              </button>
+              
+              {/* Ajouter un bouton pour modifier les informations même après validation */}
+              <button 
+                className="btn btn-outline-primary" 
+                onClick={() => setEditMode(true)}
+              >
+                <i className="bi bi-pencil-square me-2"></i>
+                Modifier les informations
+              </button>
+            </div>
           </div>
         </div>
       ) : (
+        /* Mode validation normal */
         <>
           <div className="alert alert-info mb-4">
             <div className="d-flex">
@@ -539,14 +602,14 @@ function FormValidationInterface() {
                           <div className="d-flex justify-content-between align-items-start">
                             <div>
                               <h5 className="card-title">Type de structure</h5>
-                              <p className="card-text">{formData.data.typeStructure || 'Non spécifié'}</p>
+                              <p className="card-text">{formData.data.type || 'Non spécifié'}</p>
                             </div>
                             <button 
-                              className={`btn ${validatedFields['structure.typeStructure'] ? 'btn-success' : 'btn-outline-success'}`}
-                              onClick={() => handleValidateField('structure', 'typeStructure', formData.data.typeStructure)}
-                              disabled={!!validatedFields['structure.typeStructure']}
+                              className={`btn ${validatedFields['structure.type'] ? 'btn-success' : 'btn-outline-success'}`}
+                              onClick={() => handleValidateField('structure', 'type', formData.data.type)}
+                              disabled={!!validatedFields['structure.type']}
                             >
-                              {validatedFields['structure.typeStructure'] ? (
+                              {validatedFields['structure.type'] ? (
                                 <>
                                   <i className="bi bi-check-circle-fill me-2"></i>
                                   Validé
@@ -679,7 +742,7 @@ function FormValidationInterface() {
               className="btn btn-lg btn-primary"
               disabled={validationInProgress || Object.keys(validatedFields).length === 0}
             >
-              {validationInProgress ? (
+                            {validationInProgress ? (
                 <>
                   <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                   Validation en cours...

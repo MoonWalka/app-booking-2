@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import { doc, getDoc, deleteDoc, collection, getDocs, query, where, addDoc } from 'firebase/firestore';
+import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
+import { doc, getDoc, deleteDoc, updateDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../firebase';
 import FormGenerator from '../forms/FormGenerator';
 
 const ConcertDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const [concert, setConcert] = useState(null);
   const [lieu, setLieu] = useState(null);
   const [programmateur, setProgrammateur] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showFormGenerator, setShowFormGenerator] = useState(false);
+  const [formData, setFormData] = useState(null);
 
   useEffect(() => {
     const fetchConcert = async () => {
@@ -46,6 +48,41 @@ const ConcertDetails = () => {
               });
             }
           }
+          
+          // Vérifier si un formulaire existe déjà pour ce concert
+          if (concertData.formId) {
+            try {
+              const formDoc = await getDoc(doc(db, 'formulaires', concertData.formId));
+              if (formDoc.exists()) {
+                setFormData({
+                  id: formDoc.id,
+                  ...formDoc.data()
+                });
+              }
+            } catch (error) {
+              console.error('Erreur lors de la récupération du formulaire:', error);
+            }
+          } else {
+            // Si pas de formId, chercher dans la collection formulaires
+            const formsQuery = query(
+              collection(db, 'formulaires'), 
+              where('concertId', '==', id)
+            );
+            const formsSnapshot = await getDocs(formsQuery);
+            
+            if (!formsSnapshot.empty) {
+              const formDoc = formsSnapshot.docs[0];
+              setFormData({
+                id: formDoc.id,
+                ...formDoc.data()
+              });
+              
+              // Mettre à jour le concert avec l'ID du formulaire
+              await updateDoc(doc(db, 'concerts', id), {
+                formId: formDoc.id
+              });
+            }
+          }
         } else {
           console.error('Concert non trouvé');
           navigate('/concerts');
@@ -58,7 +95,15 @@ const ConcertDetails = () => {
     };
 
     fetchConcert();
-  }, [id, navigate]);
+    
+    // Vérifier si on doit afficher le générateur de formulaire
+    const queryParams = new URLSearchParams(location.search);
+    const shouldOpenFormGenerator = queryParams.get('openFormGenerator') === 'true';
+    
+    if (shouldOpenFormGenerator) {
+      setShowFormGenerator(true);
+    }
+  }, [id, navigate, location.search]);
 
   const handleDelete = async () => {
     if (window.confirm('Êtes-vous sûr de vouloir supprimer ce concert ?')) {
@@ -72,8 +117,52 @@ const ConcertDetails = () => {
     }
   };
 
-  const handleFormGenerated = (formId, formUrl) => {
+  const handleFormGenerated = async (formId, formUrl) => {
     console.log('Formulaire généré:', formId, formUrl);
+    
+    // Mettre à jour le concert avec l'ID du formulaire
+    try {
+      await updateDoc(doc(db, 'concerts', id), {
+        formId: formId
+      });
+      
+      // Recharger les données du formulaire
+      const formDoc = await getDoc(doc(db, 'formulaires', formId));
+      if (formDoc.exists()) {
+        setFormData({
+          id: formDoc.id,
+          ...formDoc.data()
+        });
+      }
+      
+      // Masquer le générateur de formulaire
+      setShowFormGenerator(false);
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour du concert:', error);
+    }
+  };
+
+  // Formater la date pour l'affichage
+  const formatDate = (dateValue) => {
+    if (!dateValue) return 'Date non spécifiée';
+    
+    // Si c'est un timestamp Firestore
+    if (dateValue.seconds) {
+      return new Date(dateValue.seconds * 1000).toLocaleDateString('fr-FR');
+    }
+    
+    // Si c'est une chaîne de date
+    try {
+      return new Date(dateValue).toLocaleDateString('fr-FR');
+    } catch (e) {
+      return dateValue;
+    }
+  };
+
+  // Formater le montant
+  const formatMontant = (montant) => {
+    if (!montant) return '0,00 €';
+    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(montant);
   };
 
   if (loading) {
@@ -87,12 +176,12 @@ const ConcertDetails = () => {
   return (
     <div>
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2>Concert du {concert.date}</h2>
+        <h2>Concert du {formatDate(concert.date)}</h2>
         <div>
           <Link to="/concerts" className="btn btn-outline-secondary me-2">
             Retour à la liste
           </Link>
-          <Link to={`/concerts/edit/${id}`} className="btn btn-outline-primary me-2">
+          <Link to={`/concerts/${id}/edit`} className="btn btn-outline-primary me-2">
             Modifier
           </Link>
           <button onClick={handleDelete} className="btn btn-outline-danger">
@@ -108,11 +197,11 @@ const ConcertDetails = () => {
         <div className="card-body">
           <div className="row mb-3">
             <div className="col-md-3 fw-bold">Date:</div>
-            <div className="col-md-9">{concert.date}</div>
+            <div className="col-md-9">{formatDate(concert.date)}</div>
           </div>
           <div className="row mb-3">
             <div className="col-md-3 fw-bold">Montant:</div>
-            <div className="col-md-9">{concert.montant} €</div>
+            <div className="col-md-9">{formatMontant(concert.montant)}</div>
           </div>
           <div className="row mb-3">
             <div className="col-md-3 fw-bold">Statut:</div>
@@ -120,9 +209,9 @@ const ConcertDetails = () => {
               <span className={`badge ${
                 concert.statut === 'confirmé' ? 'bg-success' :
                 concert.statut === 'option' ? 'bg-warning' :
-                'bg-danger'
+                'bg-secondary'
               }`}>
-                {concert.statut}
+                {concert.statut || 'Non défini'}
               </span>
             </div>
           </div>
@@ -144,7 +233,9 @@ const ConcertDetails = () => {
             </div>
             <div className="row mb-3">
               <div className="col-md-3 fw-bold">Adresse:</div>
-              <div className="col-md-9">{lieu.adresse}, {lieu.codePostal} {lieu.ville}</div>
+              <div className="col-md-9">
+                {lieu.adresse}, {lieu.codePostal} {lieu.ville}
+              </div>
             </div>
             <div className="row mb-3">
               <div className="col-md-3 fw-bold">Capacité:</div>
@@ -154,46 +245,102 @@ const ConcertDetails = () => {
         </div>
       )}
 
-      {programmateur ? (
-        <div className="card mb-4">
-          <div className="card-header d-flex justify-content-between align-items-center">
-            <h3>Programmateur</h3>
+      <div className="card mb-4">
+        <div className="card-header d-flex justify-content-between align-items-center">
+          <h3>Programmateur</h3>
+          {programmateur && (
             <Link to={`/programmateurs/${programmateur.id}`} className="btn btn-sm btn-outline-primary">
               Voir détails
             </Link>
-          </div>
-          <div className="card-body">
-            <div className="row mb-3">
-              <div className="col-md-3 fw-bold">Nom:</div>
-              <div className="col-md-9">{programmateur.nom}</div>
-            </div>
-            {programmateur.structure && (
-              <div className="row mb-3">
-                <div className="col-md-3 fw-bold">Structure:</div>
-                <div className="col-md-9">{programmateur.structure}</div>
-              </div>
-            )}
-            {programmateur.email && (
-              <div className="row mb-3">
-                <div className="col-md-3 fw-bold">Email:</div>
-                <div className="col-md-9">{programmateur.email}</div>
-              </div>
-            )}
-            {programmateur.telephone && (
-              <div className="row mb-3">
-                <div className="col-md-3 fw-bold">Téléphone:</div>
-                <div className="col-md-9">{programmateur.telephone}</div>
-              </div>
-            )}
-          </div>
+          )}
         </div>
-      ) : (
-        <FormGenerator
-          concertId={id}
-          programmateurId={concert.programmateurId}
-          onFormGenerated={handleFormGenerated}
-        />
-      )}
+        <div className="card-body">
+          {programmateur ? (
+            <>
+              <div className="row mb-3">
+                <div className="col-md-3 fw-bold">Nom:</div>
+                <div className="col-md-9">{programmateur.nom}</div>
+              </div>
+              {programmateur.structure && (
+                <div className="row mb-3">
+                  <div className="col-md-3 fw-bold">Structure:</div>
+                  <div className="col-md-9">{programmateur.structure}</div>
+                </div>
+              )}
+              {programmateur.email && (
+                <div className="row mb-3">
+                  <div className="col-md-3 fw-bold">Email:</div>
+                  <div className="col-md-9">{programmateur.email}</div>
+                </div>
+              )}
+              {programmateur.telephone && (
+                <div className="row mb-3">
+                  <div className="col-md-3 fw-bold">Téléphone:</div>
+                  <div className="col-md-9">{programmateur.telephone}</div>
+                </div>
+              )}
+              
+              {/* Section pour le formulaire */}
+              <div className="row mt-4">
+                <div className="col-12">
+                  {formData ? (
+                    <div className="alert alert-info">
+                      <div className="d-flex justify-content-between align-items-center">
+                        <div>
+                          <i className="bi bi-info-circle me-2"></i>
+                          Un formulaire a été envoyé au programmateur 
+                          {formData.dateCreation && (
+                            <span> le {formatDate(formData.dateCreation)}</span>
+                          )}
+                        </div>
+                        <div>
+                          {formData.statut === 'valide' ? (
+                            <span className="badge bg-success me-2">Validé</span>
+                          ) : (
+                            <Link to={`/concerts/${id}/form`} className="btn btn-sm btn-primary">
+                              {formData.reponses ? 'Voir les réponses' : 'Voir le formulaire'}
+                            </Link>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ) : showFormGenerator ? (
+                    <div className="p-3 border rounded">
+                      <div className="d-flex justify-content-between align-items-center mb-3">
+                        <h4 className="mb-0">Envoyer un formulaire au programmateur</h4>
+                        <button
+                          className="btn btn-sm btn-outline-secondary"
+                          onClick={() => setShowFormGenerator(false)}
+                        >
+                          <i className="bi bi-x-lg"></i>
+                        </button>
+                      </div>
+                      <FormGenerator
+                        concertId={id}
+                        programmateurId={concert.programmateurId}
+                        onFormGenerated={handleFormGenerated}
+                      />
+                    </div>
+                  ) : (
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => setShowFormGenerator(true)}
+                    >
+                      <i className="bi bi-envelope me-2"></i>
+                      Envoyer un formulaire au programmateur
+                    </button>
+                  )}
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="alert alert-warning">
+              <i className="bi bi-exclamation-triangle me-2"></i>
+              Aucun programmateur n'est associé à ce concert.
+            </div>
+          )}
+        </div>
+      </div>
 
       {concert.notes && (
         <div className="card">

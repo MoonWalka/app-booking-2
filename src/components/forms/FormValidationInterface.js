@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../../firebase';
 import { doc, getDoc, updateDoc, collection, query, where, getDocs, Timestamp } from 'firebase/firestore';
-import ProgrammateurForm from './ProgrammateurForm.js';
 
 function FormValidationInterface() {
   const { id } = useParams(); // Ici, id est l'ID du concert
@@ -15,7 +14,7 @@ function FormValidationInterface() {
   const [validated, setValidated] = useState(false);
   const [validationInProgress, setValidationInProgress] = useState(false);
   const [validatedFields, setValidatedFields] = useState({});
-  const [editMode, setEditMode] = useState(false); // Nouvel état pour le mode d'édition
+  const [showValidationForm, setShowValidationForm] = useState(true); // État pour contrôler l'affichage du formulaire
 
   const fetchData = async () => {
     try {
@@ -119,6 +118,14 @@ function FormValidationInterface() {
         console.log("Soumission trouvée:", formDocData);
         setFormData(formDocData);
         
+        // Si la soumission a déjà un statut validé, initialiser l'état validé
+        if (formDocData.status === 'validated') {
+          setValidated(true);
+          
+          // Par défaut, cacher la forme de validation si déjà validé
+          setShowValidationForm(false);
+        }
+        
         // Si la soumission a déjà des champs validés, les charger
         if (formDocData.validatedFields) {
           setValidatedFields(formDocData.validatedFields);
@@ -196,6 +203,8 @@ function FormValidationInterface() {
       
       setValidated(true);
       setValidationInProgress(false);
+      // Ne pas masquer le formulaire après validation
+      // setShowValidationForm(false);
     } catch (err) {
       console.error("Erreur lors de la validation du formulaire:", err);
       setError("Impossible de valider le formulaire. Veuillez réessayer plus tard.");
@@ -224,12 +233,6 @@ function FormValidationInterface() {
   const formatCurrency = (value) => {
     if (!value) return '0,00 €';
     return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(value);
-  };
-
-  const handleEditSuccess = () => {
-    // Fonction appelée après édition réussie du programmateur
-    setEditMode(false);
-    fetchData(); // Recharger les données
   };
 
   if (loading) {
@@ -286,9 +289,7 @@ function FormValidationInterface() {
         <div className="col-12">
           <div className="d-flex justify-content-between align-items-center">
             <h2 className="mb-0">
-              {editMode 
-                ? 'Modification des informations du programmateur' 
-                : 'Validation du formulaire'}
+              {isAlreadyValidated || validated ? 'Informations soumises par le programmateur' : 'Validation du formulaire'}
             </h2>
             <div className="d-flex">
               <button 
@@ -299,14 +300,14 @@ function FormValidationInterface() {
                 Retour au concert
               </button>
               
-              {/* Bouton pour basculer entre validation et édition */}
-              {!validated && !isAlreadyValidated && (
+              {/* Bouton pour afficher/masquer le formulaire quand il est déjà validé */}
+              {(isAlreadyValidated || validated) && !showValidationForm && (
                 <button 
-                  className={`btn ${editMode ? 'btn-outline-primary' : 'btn-primary'}`}
-                  onClick={() => setEditMode(!editMode)}
+                  className="btn btn-primary"
+                  onClick={() => setShowValidationForm(true)}
                 >
-                  <i className={`bi ${editMode ? 'bi-eye' : 'bi-pencil-square'} me-2`}></i>
-                  {editMode ? 'Revenir à la validation' : 'Modifier les informations'}
+                  <i className="bi bi-eye me-2"></i>
+                  Voir le formulaire soumis
                 </button>
               )}
             </div>
@@ -315,32 +316,8 @@ function FormValidationInterface() {
         </div>
       </div>
 
-      {/* Mode édition */}
-      {editMode ? (
-        <div className="edit-mode">
-          <div className="alert alert-info mb-4">
-            <div className="d-flex">
-              <i className="bi bi-info-circle-fill me-3" style={{ fontSize: '1.5rem' }}></i>
-              <div>
-                <h4 className="alert-heading">Mode édition</h4>
-                <p className="mb-0">
-                  Vous pouvez modifier directement les informations soumises par le programmateur. 
-                  Ces modifications seront enregistrées et vous pourrez ensuite valider les champs.
-                </p>
-              </div>
-            </div>
-          </div>
-          
-          {/* Utilisation du composant ProgrammateurForm pour l'édition */}
-          {formData && formData.programmId && (
-            <ProgrammateurForm 
-              id={formData.programmId}
-              onSubmitSuccess={handleEditSuccess}
-            />
-          )}
-        </div>
-      ) : (isAlreadyValidated || validated) ? (
-        /* Affichage du message de succès si validé */
+      {/* Message de succès si validé */}
+      {(isAlreadyValidated || validated) && (
         <div className="validation-success card border-success mb-4">
           <div className="card-body text-center">
             <div className="success-icon">
@@ -348,38 +325,41 @@ function FormValidationInterface() {
             </div>
             <h3 className="mt-3">Formulaire validé avec succès</h3>
             <p className="text-muted">Les informations validées ont été intégrées à la fiche du concert.</p>
-            <div className="mt-3">
+            
+            {/* Bouton pour afficher/masquer le formulaire */}
+            {!showValidationForm ? (
               <button 
-                className="btn btn-primary me-2" 
-                onClick={() => navigate(`/concerts/${id}`)}
+                className="btn btn-primary mt-3" 
+                onClick={() => setShowValidationForm(true)}
               >
-                <i className="bi bi-arrow-left me-2"></i>
-                Retourner à la fiche du concert
+                <i className="bi bi-eye me-2"></i>
+                Voir les informations soumises
               </button>
-              
-              {/* Ajouter un bouton pour modifier les informations même après validation */}
+            ) : (
               <button 
-                className="btn btn-outline-primary" 
-                onClick={() => setEditMode(true)}
+                className="btn btn-outline-primary mt-3" 
+                onClick={() => setShowValidationForm(false)}
               >
-                <i className="bi bi-pencil-square me-2"></i>
-                Modifier les informations
+                <i className="bi bi-eye-slash me-2"></i>
+                Masquer les informations
               </button>
-            </div>
+            )}
           </div>
         </div>
-      ) : (
-        /* Mode validation normal */
+      )}
+
+      {/* Afficher le formulaire si showValidationForm est true */}
+      {showValidationForm && (
         <>
           <div className="alert alert-info mb-4">
             <div className="d-flex">
               <i className="bi bi-info-circle-fill me-3" style={{ fontSize: '1.5rem' }}></i>
               <div>
-                <h4 className="alert-heading">Instructions</h4>
+                <h4 className="alert-heading">Informations soumises par le programmateur</h4>
                 <p className="mb-0">
-                  Vérifiez les informations ci-dessous soumises par le programmateur. 
-                  Pour chaque champ, vous pouvez cliquer sur le bouton "Valider" pour confirmer l'information 
-                  et l'intégrer à la fiche du concert.
+                  {isAlreadyValidated || validated 
+                    ? "Ces informations ont été validées et intégrées à la fiche du concert."
+                    : "Vérifiez les informations ci-dessous et validez les champs que vous souhaitez intégrer à la fiche du concert."}
                 </p>
               </div>
             </div>
@@ -432,7 +412,7 @@ function FormValidationInterface() {
                             <button 
                               className={`btn ${validatedFields['programmateur.nom'] ? 'btn-success' : 'btn-outline-success'}`}
                               onClick={() => handleValidateField('programmateur', 'nom', formData.data.nom)}
-                              disabled={!!validatedFields['programmateur.nom']}
+                              disabled={isAlreadyValidated && !!validatedFields['programmateur.nom']}
                             >
                               {validatedFields['programmateur.nom'] ? (
                                 <>
@@ -459,7 +439,7 @@ function FormValidationInterface() {
                             <button 
                               className={`btn ${validatedFields['programmateur.prenom'] ? 'btn-success' : 'btn-outline-success'}`}
                               onClick={() => handleValidateField('programmateur', 'prenom', formData.data.prenom)}
-                              disabled={!!validatedFields['programmateur.prenom']}
+                              disabled={isAlreadyValidated && !!validatedFields['programmateur.prenom']}
                             >
                               {validatedFields['programmateur.prenom'] ? (
                                 <>
@@ -486,7 +466,7 @@ function FormValidationInterface() {
                             <button 
                               className={`btn ${validatedFields['programmateur.fonction'] ? 'btn-success' : 'btn-outline-success'}`}
                               onClick={() => handleValidateField('programmateur', 'fonction', formData.data.fonction)}
-                              disabled={!!validatedFields['programmateur.fonction']}
+                              disabled={isAlreadyValidated && !!validatedFields['programmateur.fonction']}
                             >
                               {validatedFields['programmateur.fonction'] ? (
                                 <>
@@ -513,7 +493,7 @@ function FormValidationInterface() {
                             <button 
                               className={`btn ${validatedFields['programmateur.email'] ? 'btn-success' : 'btn-outline-success'}`}
                               onClick={() => handleValidateField('programmateur', 'email', formData.data.email)}
-                              disabled={!!validatedFields['programmateur.email']}
+                              disabled={isAlreadyValidated && !!validatedFields['programmateur.email']}
                             >
                               {validatedFields['programmateur.email'] ? (
                                 <>
@@ -540,7 +520,7 @@ function FormValidationInterface() {
                             <button 
                               className={`btn ${validatedFields['programmateur.telephone'] ? 'btn-success' : 'btn-outline-success'}`}
                               onClick={() => handleValidateField('programmateur', 'telephone', formData.data.telephone)}
-                              disabled={!!validatedFields['programmateur.telephone']}
+                              disabled={isAlreadyValidated && !!validatedFields['programmateur.telephone']}
                             >
                               {validatedFields['programmateur.telephone'] ? (
                                 <>
@@ -580,7 +560,7 @@ function FormValidationInterface() {
                             <button 
                               className={`btn ${validatedFields['structure.raisonSociale'] ? 'btn-success' : 'btn-outline-success'}`}
                               onClick={() => handleValidateField('structure', 'raisonSociale', formData.data.raisonSociale)}
-                              disabled={!!validatedFields['structure.raisonSociale']}
+                              disabled={isAlreadyValidated && !!validatedFields['structure.raisonSociale']}
                             >
                               {validatedFields['structure.raisonSociale'] ? (
                                 <>
@@ -607,7 +587,7 @@ function FormValidationInterface() {
                             <button 
                               className={`btn ${validatedFields['structure.type'] ? 'btn-success' : 'btn-outline-success'}`}
                               onClick={() => handleValidateField('structure', 'type', formData.data.type)}
-                              disabled={!!validatedFields['structure.type']}
+                              disabled={isAlreadyValidated && !!validatedFields['structure.type']}
                             >
                               {validatedFields['structure.type'] ? (
                                 <>
@@ -634,7 +614,7 @@ function FormValidationInterface() {
                             <button 
                               className={`btn ${validatedFields['structure.adresse'] ? 'btn-success' : 'btn-outline-success'}`}
                               onClick={() => handleValidateField('structure', 'adresse', formData.data.adresse)}
-                              disabled={!!validatedFields['structure.adresse']}
+                              disabled={isAlreadyValidated && !!validatedFields['structure.adresse']}
                             >
                               {validatedFields['structure.adresse'] ? (
                                 <>
@@ -661,7 +641,7 @@ function FormValidationInterface() {
                             <button 
                               className={`btn ${validatedFields['structure.codePostal'] ? 'btn-success' : 'btn-outline-success'}`}
                               onClick={() => handleValidateField('structure', 'codePostal', formData.data.codePostal)}
-                              disabled={!!validatedFields['structure.codePostal']}
+                              disabled={isAlreadyValidated && !!validatedFields['structure.codePostal']}
                             >
                               {validatedFields['structure.codePostal'] ? (
                                 <>
@@ -688,7 +668,7 @@ function FormValidationInterface() {
                             <button 
                               className={`btn ${validatedFields['structure.ville'] ? 'btn-success' : 'btn-outline-success'}`}
                               onClick={() => handleValidateField('structure', 'ville', formData.data.ville)}
-                              disabled={!!validatedFields['structure.ville']}
+                              disabled={isAlreadyValidated && !!validatedFields['structure.ville']}
                             >
                               {validatedFields['structure.ville'] ? (
                                 <>
@@ -715,7 +695,7 @@ function FormValidationInterface() {
                             <button 
                               className={`btn ${validatedFields['structure.siret'] ? 'btn-success' : 'btn-outline-success'}`}
                               onClick={() => handleValidateField('structure', 'siret', formData.data.siret)}
-                              disabled={!!validatedFields['structure.siret']}
+                              disabled={isAlreadyValidated && !!validatedFields['structure.siret']}
                             >
                               {validatedFields['structure.siret'] ? (
                                 <>
@@ -736,25 +716,28 @@ function FormValidationInterface() {
             </div>
           </div>
 
-          <div className="d-flex justify-content-center mt-4 mb-5">
-            <button 
-              onClick={validateForm} 
-              className="btn btn-lg btn-primary"
-              disabled={validationInProgress || Object.keys(validatedFields).length === 0}
-            >
-                            {validationInProgress ? (
-                <>
-                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                  Validation en cours...
-                </>
-              ) : (
-                <>
-                  <i className="bi bi-check-circle me-2"></i>
-                  Valider le formulaire et enregistrer les modifications
-                </>
-              )}
-            </button>
-          </div>
+          {/* Bouton de validation final - seulement visible si pas encore validé */}
+          {!isAlreadyValidated && !validated && (
+            <div className="d-flex justify-content-center mt-4 mb-5">
+              <button 
+                onClick={validateForm} 
+                className="btn btn-lg btn-primary"
+                disabled={validationInProgress || Object.keys(validatedFields).length === 0}
+              >
+                {validationInProgress ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Validation en cours...
+                  </>
+                ) : (
+                  <>
+                    <i className="bi bi-check-circle me-2"></i>
+                    Valider le formulaire et enregistrer les modifications
+                  </>
+                )}
+                            </button>
+            </div>
+          )}
         </>
       )}
     </div>

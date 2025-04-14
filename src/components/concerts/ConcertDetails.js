@@ -14,6 +14,7 @@ const ConcertDetails = () => {
   const [loading, setLoading] = useState(true);
   const [showFormGenerator, setShowFormGenerator] = useState(false);
   const [formData, setFormData] = useState(null);
+  const [generatedFormLink, setGeneratedFormLink] = useState(null);
 
   useEffect(() => {
     const fetchConcert = async () => {
@@ -120,6 +121,9 @@ const ConcertDetails = () => {
   const handleFormGenerated = async (formId, formUrl) => {
     console.log('Formulaire généré:', formId, formUrl);
     
+    // Stocker le lien généré
+    setGeneratedFormLink(formUrl);
+    
     // Mettre à jour le concert avec l'ID du formulaire
     try {
       await updateDoc(doc(db, 'concerts', id), {
@@ -135,11 +139,22 @@ const ConcertDetails = () => {
         });
       }
       
-      // Masquer le générateur de formulaire
-      setShowFormGenerator(false);
+      // NE PAS masquer le générateur de formulaire
+      // setShowFormGenerator(false);
     } catch (error) {
       console.error('Erreur lors de la mise à jour du concert:', error);
     }
+  };
+
+  // Fonction pour copier le lien dans le presse-papiers
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text)
+      .then(() => {
+        alert('Lien copié dans le presse-papiers !');
+      })
+      .catch(err => {
+        console.error('Erreur lors de la copie dans le presse-papiers:', err);
+      });
   };
 
   // Formater la date pour l'affichage
@@ -283,7 +298,7 @@ const ConcertDetails = () => {
               {/* Section pour le formulaire */}
               <div className="row mt-4">
                 <div className="col-12">
-                  {formData ? (
+                  {formData && !showFormGenerator ? (
                     <div className="alert alert-info">
                       <div className="d-flex justify-content-between align-items-center">
                         <div>
@@ -304,22 +319,75 @@ const ConcertDetails = () => {
                         </div>
                       </div>
                     </div>
-                  ) : showFormGenerator ? (
-                    <div className="p-3 border rounded">
+                  ) : null}
+
+                  {(showFormGenerator || generatedFormLink) ? (
+                    <div className="p-3 border rounded mb-3">
                       <div className="d-flex justify-content-between align-items-center mb-3">
-                        <h4 className="mb-0">Envoyer un formulaire au programmateur</h4>
+                        <h4 className="mb-0">
+                          {generatedFormLink ? 'Formulaire généré avec succès' : 'Envoyer un formulaire au programmateur'}
+                        </h4>
                         <button
                           className="btn btn-sm btn-outline-secondary"
-                          onClick={() => setShowFormGenerator(false)}
+                          onClick={() => {
+                            setShowFormGenerator(false);
+                            setGeneratedFormLink(null);
+                          }}
                         >
                           <i className="bi bi-x-lg"></i>
                         </button>
                       </div>
-                      <FormGenerator
-                        concertId={id}
-                        programmateurId={concert.programmateurId}
-                        onFormGenerated={handleFormGenerated}
-                      />
+                      
+                      {generatedFormLink ? (
+                        <div>
+                          <p>Voici le lien du formulaire à envoyer au programmateur :</p>
+                          <div className="input-group mb-3">
+                            <input
+                              type="text"
+                              className="form-control"
+                              value={generatedFormLink}
+                              readOnly
+                            />
+                            <button
+                              className="btn btn-outline-primary"
+                              type="button"
+                              onClick={() => copyToClipboard(generatedFormLink)}
+                            >
+                              <i className="bi bi-clipboard me-1"></i> Copier
+                            </button>
+                          </div>
+                          <p className="text-muted">
+                            Ce lien est valable pendant 30 jours. Une fois que le programmateur aura rempli le formulaire, 
+                            vous pourrez valider les informations depuis la fiche du concert.
+                          </p>
+                          <div className="d-flex justify-content-between mt-3">
+                            <button
+                              className="btn btn-outline-secondary"
+                              onClick={() => {
+                                setShowFormGenerator(false);
+                                setGeneratedFormLink(null);
+                              }}
+                            >
+                              Fermer
+                            </button>
+                            <button
+                              className="btn btn-primary"
+                              onClick={() => {
+                                setGeneratedFormLink(null);
+                                setShowFormGenerator(true);
+                              }}
+                            >
+                              Générer un nouveau lien
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <FormGenerator
+                          concertId={id}
+                          programmateurId={concert.programmateurId}
+                          onFormGenerated={handleFormGenerated}
+                        />
+                      )}
                     </div>
                   ) : (
                     <button
@@ -327,7 +395,7 @@ const ConcertDetails = () => {
                       onClick={() => setShowFormGenerator(true)}
                     >
                       <i className="bi bi-envelope me-2"></i>
-                      Envoyer un formulaire au programmateur
+                      {formData ? 'Générer un nouveau formulaire' : 'Envoyer un formulaire au programmateur'}
                     </button>
                   )}
                 </div>

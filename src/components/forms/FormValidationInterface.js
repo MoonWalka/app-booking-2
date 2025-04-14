@@ -13,8 +13,8 @@ function FormValidationInterface() {
   const [error, setError] = useState(null);
   const [validated, setValidated] = useState(false);
   const [validationInProgress, setValidationInProgress] = useState(false);
-  const [existingProgrammateur, setExistingProgrammateur] = useState(null);
-  const [finalValues, setFinalValues] = useState({});
+  const [validatedFields, setValidatedFields] = useState({});
+  const [programmateur, setProgrammateur] = useState(null);
   
   // Liste des champs à comparer et valider
   const contactFields = [
@@ -137,44 +137,42 @@ function FormValidationInterface() {
         console.log("Soumission trouvée:", formDocData);
         setFormData(formDocData);
         
-        // Si un programmateur est associé, récupérer les données existantes
+        // 4. Si un programmateur est associé, récupérer les données existantes
         if (formDocData.programmId) {
-          try {
-            const programmDoc = await getDoc(doc(db, 'programmateurs', formDocData.programmId));
-            if (programmDoc.exists()) {
-              const progData = programmDoc.data();
-              setExistingProgrammateur(progData);
-              
-              // Initialiser les valeurs finales avec les valeurs EXISTANTES, mais PAS avec les valeurs du formulaire
-              // Cette modification est cruciale pour votre besoin
-              const initialFinalValues = {};
-              
-              // Traiter les champs contact - initialiser avec les valeurs existantes seulement
-              contactFields.forEach(field => {
-                initialFinalValues[`contact.${field.id}`] = progData[field.id] || '';
-              });
-              
-              // Traiter les champs structure - initialiser avec les valeurs existantes seulement
-              structureFields.forEach(field => {
-                if (field.id === 'raisonSociale') {
-                  initialFinalValues[`structure.${field.id}`] = progData.structure || '';
-                } else if (['type', 'adresse', 'codePostal', 'ville', 'pays'].includes(field.id)) {
-                  initialFinalValues[`structure.${field.id}`] = progData[`structure${field.id.charAt(0).toUpperCase() + field.id.slice(1)}`] || '';
-                } else {
-                  initialFinalValues[`structure.${field.id}`] = progData[field.id] || '';
-                }
-              });
-              
-              setFinalValues(initialFinalValues);
+          const progDoc = await getDoc(doc(db, 'programmateurs', formDocData.programmId));
+          if (progDoc.exists()) {
+            const programmateurData = progDoc.data();
+            setProgrammateur(programmateurData);
+            
+            // 5. Initialiser les valeurs finales UNIQUEMENT avec les valeurs EXISTANTES
+            // et PAS avec les valeurs du formulaire
+            const initialValues = {};
+            
+            // Traiter les champs contact
+            contactFields.forEach(field => {
+              initialValues[`contact.${field.id}`] = programmateurData[field.id] || '';
+            });
+            
+            // Traiter les champs structure
+            structureFields.forEach(field => {
+              if (field.id === 'raisonSociale') {
+                initialValues[`structure.${field.id}`] = programmateurData.structure || '';
+              } else if (['type', 'adresse', 'codePostal', 'ville', 'pays'].includes(field.id)) {
+                initialValues[`structure.${field.id}`] = programmateurData[`structure${field.id.charAt(0).toUpperCase() + field.id.slice(1)}`] || '';
+              } else {
+                initialValues[`structure.${field.id}`] = programmateurData[field.id] || '';
+              }
+            });
+            
+            // 6. Si la soumission a déjà été validée, utiliser les champs validés existants
+            if (formDocData.status === 'validated' && formDocData.validatedFields) {
+              setValidatedFields(formDocData.validatedFields);
+              setValidated(true);
+            } else {
+              // Sinon, initialiser les champs validés avec les valeurs existantes
+              setValidatedFields(initialValues);
             }
-          } catch (error) {
-            console.error("Erreur lors de la récupération du programmateur:", error);
           }
-        }
-        
-        // Si la soumission a déjà un statut validé, initialiser l'état validé
-        if (formDocData.status === 'validated') {
-          setValidated(true);
         }
       } else {
         console.error("Soumission non trouvée avec ID:", formSubmissionId);
@@ -193,9 +191,14 @@ function FormValidationInterface() {
     fetchData();
   }, [id]);
 
-  // Mettre à jour une valeur finale
-  const handleFinalValueChange = (fieldPath, value) => {
-    setFinalValues(prev => ({
+  // Gérer la validation d'un champ spécifique
+  const handleValidateField = (fieldCategory, fieldName, value) => {
+    // Créer un objet qui représente le chemin complet du champ
+    // Par exemple: programmateur.nom, structure.raisonSociale, etc.
+    const fieldPath = `${fieldCategory}.${fieldName}`;
+    
+    // Mettre à jour l'état local des champs validés
+    setValidatedFields(prev => ({
       ...prev,
       [fieldPath]: value
     }));
@@ -203,60 +206,84 @@ function FormValidationInterface() {
 
   // Copier la valeur du formulaire vers la valeur finale
   const copyFormValueToFinal = (fieldPath, formValue) => {
-    handleFinalValueChange(fieldPath, formValue);
+    setValidatedFields(prev => ({
+      ...prev,
+      [fieldPath]: formValue
+    }));
   };
 
   // Valider le formulaire complet
   const validateForm = async () => {
-    if (!formId || !formData?.programmId) return;
+    if (!formId) return;
     
     try {
       setValidationInProgress(true);
       
-      // 1. Préparer les données à mettre à jour pour le programmateur
-      const programmUpdateData = {};
-      
-      // Traiter les champs contact
-      contactFields.forEach(field => {
-        const fieldPath = `contact.${field.id}`;
-        if (finalValues[fieldPath] !== undefined) {
-          programmUpdateData[field.id] = finalValues[fieldPath];
-        }
-      });
-      
-      // Traiter les champs structure
-      structureFields.forEach(field => {
-        const fieldPath = `structure.${field.id}`;
-        if (finalValues[fieldPath] !== undefined) {
-          if (field.id === 'raisonSociale') {
-            programmUpdateData.structure = finalValues[fieldPath];
-          } else if (['type', 'adresse', 'codePostal', 'ville', 'pays'].includes(field.id)) {
-            programmUpdateData[`structure${field.id.charAt(0).toUpperCase() + field.id.slice(1)}`] = finalValues[fieldPath];
-          } else {
-            programmUpdateData[field.id] = finalValues[fieldPath];
-          }
-        }
-      });
-      
-      // Ajouter timestamp de mise à jour
-      programmUpdateData.updatedAt = Timestamp.now();
-      
-      // 2. Mettre à jour le programmateur
-      await updateDoc(doc(db, 'programmateurs', formData.programmId), programmUpdateData);
-      console.log("Programmateur mis à jour avec les valeurs validées:", programmUpdateData);
-      
-      // 3. Mettre à jour le statut de la soumission
+      // 1. Mettre à jour le statut de la soumission
       await updateDoc(doc(db, 'formSubmissions', formId), {
         status: 'validated',
-        validatedAt: Timestamp.now(),
-        validatedFields: finalValues
+        validatedAt: new Date(),
+        validatedFields: validatedFields
       });
       
-      // 4. Mettre à jour le concert pour indiquer que le formulaire a été validé
-      await updateDoc(doc(db, 'concerts', id), {
-        formValidated: true,
-        formValidatedAt: Timestamp.now()
+      // 2. Mettre à jour les données du concert avec les champs validés
+      // Transformer les champs validés pour qu'ils correspondent à la structure du concert
+      const concertUpdates = {};
+      
+      // Pour chaque champ validé, créer la mise à jour correspondante
+      Object.entries(validatedFields).forEach(([fieldPath, value]) => {
+        const [category, field] = fieldPath.split('.');
+        
+        if (category === 'programmateur') {
+          // Exemple: programmateur.nom => programmateurNom
+          concertUpdates[`programmateur${field.charAt(0).toUpperCase() + field.slice(1)}`] = value;
+        } else if (category === 'structure') {
+          // Exemple: structure.raisonSociale => structureRaisonSociale
+          concertUpdates[`structure${field.charAt(0).toUpperCase() + field.slice(1)}`] = value;
+        } else {
+          // Autres champs
+          concertUpdates[field] = value;
+        }
       });
+      
+      // Ajouter des informations de formulaire validé
+      concertUpdates.formValidated = true;
+      concertUpdates.formSubmissionId = formId;
+      concertUpdates.formValidatedAt = new Date();
+      
+      await updateDoc(doc(db, 'concerts', id), concertUpdates);
+      
+      // 3. Si un programmateur est associé, mettre à jour ses informations
+      if (formData.programmId) {
+        const programmUpdateData = {};
+        
+        // Traiter les champs contact
+        contactFields.forEach(field => {
+          const fieldPath = `contact.${field.id}`;
+          if (validatedFields[fieldPath] !== undefined) {
+            programmUpdateData[field.id] = validatedFields[fieldPath];
+          }
+        });
+        
+        // Traiter les champs structure
+        structureFields.forEach(field => {
+          const fieldPath = `structure.${field.id}`;
+          if (validatedFields[fieldPath] !== undefined) {
+            if (field.id === 'raisonSociale') {
+              programmUpdateData.structure = validatedFields[fieldPath];
+            } else if (['type', 'adresse', 'codePostal', 'ville', 'pays'].includes(field.id)) {
+              programmUpdateData[`structure${field.id.charAt(0).toUpperCase() + field.id.slice(1)}`] = validatedFields[fieldPath];
+            } else {
+              programmUpdateData[field.id] = validatedFields[fieldPath];
+            }
+          }
+        });
+        
+        // Ajouter timestamp de mise à jour
+        programmUpdateData.updatedAt = Timestamp.now();
+        
+        await updateDoc(doc(db, 'programmateurs', formData.programmId), programmUpdateData);
+      }
       
       setValidated(true);
       setValidationInProgress(false);
@@ -433,7 +460,7 @@ function FormValidationInterface() {
               <tbody>
                 {contactFields.map(field => {
                   const fieldPath = `contact.${field.id}`;
-                  const existingValue = existingProgrammateur ? existingProgrammateur[field.id] || '' : '';
+                  const existingValue = programmateur ? programmateur[field.id] || '' : '';
                   const formValue = formData.data?.[field.id] || '';
                   
                   return (
@@ -455,8 +482,8 @@ function FormValidationInterface() {
                         <input
                           type="text"
                           className="form-control"
-                          value={finalValues[fieldPath] || ''}
-                          onChange={(e) => handleFinalValueChange(fieldPath, e.target.value)}
+                          value={validatedFields[fieldPath] || ''}
+                          onChange={(e) => handleValidateField(fieldPath, field.id, e.target.value)}
                           disabled={isAlreadyValidated}
                         />
                       </td>
@@ -491,13 +518,13 @@ function FormValidationInterface() {
                   let existingValue = '';
                   
                   // Obtenir la valeur existante selon le type de champ
-                  if (existingProgrammateur) {
+                  if (programmateur) {
                     if (field.id === 'raisonSociale') {
-                      existingValue = existingProgrammateur.structure || '';
+                      existingValue = programmateur.structure || '';
                     } else if (['type', 'adresse', 'codePostal', 'ville', 'pays'].includes(field.id)) {
-                      existingValue = existingProgrammateur[`structure${field.id.charAt(0).toUpperCase() + field.id.slice(1)}`] || '';
+                      existingValue = programmateur[`structure${field.id.charAt(0).toUpperCase() + field.id.slice(1)}`] || '';
                     } else {
-                      existingValue = existingProgrammateur[field.id] || '';
+                      existingValue = programmateur[field.id] || '';
                     }
                   }
                   
@@ -522,8 +549,8 @@ function FormValidationInterface() {
                         <input
                           type="text"
                           className="form-control"
-                          value={finalValues[fieldPath] || ''}
-                          onChange={(e) => handleFinalValueChange(fieldPath, e.target.value)}
+                          value={validatedFields[fieldPath] || ''}
+                          onChange={(e) => handleValidateField(fieldPath, field.id, e.target.value)}
                           disabled={isAlreadyValidated}
                         />
                       </td>

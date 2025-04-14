@@ -18,8 +18,8 @@ const FormGenerator = ({ concertId, programmateurId, onFormGenerated }) => {
       const expiryDate = new Date();
       expiryDate.setDate(expiryDate.getDate() + 30);
       
-      // Créer un document dans la collection forms
-      const formRef = await addDoc(collection(db, 'forms'), {
+      // Créer un document dans la collection formLinks au lieu de forms
+      const formRef = await addDoc(collection(db, 'formLinks'), {
         concertId,
         programmateurId: programmateurId || null,
         token,
@@ -30,13 +30,18 @@ const FormGenerator = ({ concertId, programmateurId, onFormGenerated }) => {
       
       // Mettre à jour le concert avec l'ID du formulaire
       await updateDoc(doc(db, 'concerts', concertId), {
-        formId: formRef.id,
+        formLinkId: formRef.id, // Utiliser formLinkId pour distinguer des soumissions
         updatedAt: serverTimestamp()
       });
       
-      // Générer le lien du formulaire
+      // Générer le lien du formulaire avec le bon format
       const baseUrl = window.location.origin;
-      const formUrl = `${baseUrl}/form/${token}`;
+      
+      // Si votre application utilise HashRouter
+      const formUrl = `${baseUrl}/#/formulaire/${concertId}/${token}`;
+      
+      // Si votre application utilise BrowserRouter (sans #)
+      // const formUrl = `${baseUrl}/formulaire/${concertId}/${token}`;
       
       setFormLink(formUrl);
       
@@ -105,6 +110,10 @@ const FormGenerator = ({ concertId, programmateurId, onFormGenerated }) => {
             <p className="text-muted">
               Ce lien est valable pendant 30 jours. Vous pouvez générer un nouveau lien à tout moment.
             </p>
+            <div className="alert alert-info">
+              <i className="bi bi-info-circle me-2"></i>
+              <strong>Information :</strong> Ce lien mène à un formulaire isolé que le programmateur peut remplir sans avoir accès au reste de l'application. Une fois qu'il aura soumis le formulaire, vous serez notifié et pourrez valider les informations.
+            </div>
             <button
               className="btn btn-outline-primary"
               onClick={generateForm}

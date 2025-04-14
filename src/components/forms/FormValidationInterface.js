@@ -145,17 +145,17 @@ function FormValidationInterface() {
               const progData = programmDoc.data();
               setExistingProgrammateur(progData);
               
-              // Initialiser les valeurs finales avec les valeurs existantes
+              // Initialiser les valeurs finales avec les valeurs EXISTANTES, mais PAS avec les valeurs du formulaire
+              // Cette modification est cruciale pour votre besoin
               const initialFinalValues = {};
               
-              // Traiter les champs contact
+              // Traiter les champs contact - initialiser avec les valeurs existantes seulement
               contactFields.forEach(field => {
                 initialFinalValues[`contact.${field.id}`] = progData[field.id] || '';
               });
               
-              // Traiter les champs structure
+              // Traiter les champs structure - initialiser avec les valeurs existantes seulement
               structureFields.forEach(field => {
-                // Certain champs structure ont un préfixe "structure" dans la base de données
                 if (field.id === 'raisonSociale') {
                   initialFinalValues[`structure.${field.id}`] = progData.structure || '';
                 } else if (['type', 'adresse', 'codePostal', 'ville', 'pays'].includes(field.id)) {
@@ -412,8 +412,8 @@ function FormValidationInterface() {
               <div>
                 <p className="mb-0">
                   Comparez les valeurs existantes avec celles soumises par le programmateur. 
-                  Utilisez la flèche (➡️) pour copier rapidement une valeur vers la colonne "Valeur finale", 
-                  ou modifiez directement cette valeur selon vos besoins.
+                  Utilisez la flèche (➡️) pour copier les valeurs du formulaire vers la colonne "Valeur finale". 
+                  Vous pouvez également modifier directement les champs de la colonne "Valeur finale".
                 </p>
               </div>
             </div>

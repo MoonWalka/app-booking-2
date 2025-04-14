@@ -1,4 +1,7 @@
-import React, { useState, useEffect } from 'react';
+// Au début de votre fichier ConcertForm.jsx, ajoutez :
+import '../../style/searchDropdown.css'; // Adaptez le chemin selon votre structure
+
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { db } from '../../firebase';
 import LieuForm from '../forms/LieuForm';
@@ -8,7 +11,11 @@ import {
   getDoc,
   getDocs,
   setDoc,
-  updateDoc
+  updateDoc,
+  query,
+  where,
+  orderBy,
+  limit
 } from 'firebase/firestore';
 
 const ConcertForm = () => {
@@ -21,6 +28,22 @@ const ConcertForm = () => {
   const [showLieuForm, setShowLieuForm] = useState(false);
   const [newLieu, setNewLieu] = useState(null);
   
+  // États pour la recherche
+  const [lieuSearchTerm, setLieuSearchTerm] = useState('');
+  const [progSearchTerm, setProgSearchTerm] = useState('');
+  const [lieuResults, setLieuResults] = useState([]);
+  const [progResults, setProgResults] = useState([]);
+  const [showLieuResults, setShowLieuResults] = useState(false);
+  const [showProgResults, setShowProgResults] = useState(false);
+  
+  // Refs pour les dropdowns
+  const lieuDropdownRef = useRef(null);
+  const progDropdownRef = useRef(null);
+  
+  // Timeout refs pour la recherche
+  const lieuSearchTimeoutRef = useRef(null);
+  const progSearchTimeoutRef = useRef(null);
+  
   const [formData, setFormData] = useState({
     date: '',
     montant: '',
@@ -32,32 +55,31 @@ const ConcertForm = () => {
     lieuVille: '',
     lieuCapacite: '',
     programmateurId: '',
-    programmateurNom: '', // Ajouté pour stocker le nom du programmateur
+    programmateurNom: '',
     notes: ''
   });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Récupérer les lieux
+        // Récupération initiale limitée (juste pour avoir quelques résultats par défaut)
         const lieuxRef = collection(db, 'lieux');
-        const lieuxSnapshot = await getDocs(lieuxRef);
+        const lieuxQuery = query(lieuxRef, orderBy('nom'), limit(10));
+        const lieuxSnapshot = await getDocs(lieuxQuery);
         const lieuxData = lieuxSnapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data()
         }));
         setLieux(lieuxData);
-        console.log('Lieux chargés:', lieuxData);
-  
-        // Récupérer les programmateurs
+        
         const progsRef = collection(db, 'programmateurs');
-        const programmateursSnapshot = await getDocs(progsRef);
+        const progsQuery = query(progsRef, orderBy('nom'), limit(10));
+        const programmateursSnapshot = await getDocs(progsQuery);
         const programmateursData = programmateursSnapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data()
         }));
         setProgrammateurs(programmateursData);
-        console.log('Programmateurs chargés:', programmateursData);
   
         // Si c'est une modification, récupérer les détails du concert
         if (id && id !== 'nouveau') {
@@ -67,7 +89,7 @@ const ConcertForm = () => {
             const concertData = concertDoc.data();
             console.log('Données du concert chargées:', concertData);
             
-            // Si le lieu existe dans les données du concert mais pas dans la liste des lieux
+            // Si on a un lieu associé, le récupérer s'il n'est pas dans la liste initiale
             if (concertData.lieuId && !lieuxData.some(l => l.id === concertData.lieuId)) {
               try {
                 const lieuDoc = await getDoc(doc(db, 'lieux', concertData.lieuId));
@@ -80,7 +102,7 @@ const ConcertForm = () => {
               }
             }
             
-            // Si le programmateur existe dans les données du concert mais pas dans la liste des programmateurs
+            // Si on a un programmateur associé, le récupérer s'il n'est pas dans la liste initiale
             if (concertData.programmateurId && !programmateursData.some(p => p.id === concertData.programmateurId)) {
               try {
                 const progDoc = await getDoc(doc(db, 'programmateurs', concertData.programmateurId));
@@ -91,6 +113,15 @@ const ConcertForm = () => {
               } catch (error) {
                 console.error('Erreur lors de la récupération du programmateur:', error);
               }
+            }
+            
+            // Initialiser le lieu et le programmateur dans les champs de recherche
+            if (concertData.lieuNom) {
+              setLieuSearchTerm(concertData.lieuNom);
+            }
+            
+            if (concertData.programmateurNom) {
+              setProgSearchTerm(concertData.programmateurNom);
             }
             
             setFormData({
@@ -123,54 +154,208 @@ const ConcertForm = () => {
     fetchData();
   }, [id, navigate]);
 
+  // Gestionnaire de clics en dehors des dropdowns
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (lieuDropdownRef.current && !lieuDropdownRef.current.contains(event.target)) {
+        setShowLieuResults(false);
+      }
+      if (progDropdownRef.current && !progDropdownRef.current.contains(event.target)) {
+        setShowProgResults(false);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  // Effets pour la recherche de lieux
+  useEffect(() => {
+    if (lieuSearchTimeoutRef.current) {
+      clearTimeout(lieuSearchTimeoutRef.current);
+    }
+    
+    if (lieuSearchTerm.length >= 2) {
+      lieuSearchTimeoutRef.current = setTimeout(() => {
+        searchLieux(lieuSearchTerm);
+      }, 300);
+    } else if (lieuSearchTerm.length === 0) {
+      // Si le champ est vidé, réinitialiser le lieu sélectionné
+      if (formData.lieuId) {
+        setFormData(prev => ({
+          ...prev,
+          lieuId: '',
+          lieuNom: '',
+          lieuAdresse: '',
+          lieuCodePostal: '',
+          lieuVille: '',
+          lieuCapacite: ''
+        }));
+      }
+      setLieuResults([]);
+    }
+    
+    return () => {
+      if (lieuSearchTimeoutRef.current) {
+        clearTimeout(lieuSearchTimeoutRef.current);
+      }
+    };
+  }, [lieuSearchTerm]);
+
+  // Effets pour la recherche de programmateurs
+  useEffect(() => {
+    if (progSearchTimeoutRef.current) {
+      clearTimeout(progSearchTimeoutRef.current);
+    }
+    
+    if (progSearchTerm.length >= 2) {
+      progSearchTimeoutRef.current = setTimeout(() => {
+        searchProgrammateurs(progSearchTerm);
+      }, 300);
+    } else if (progSearchTerm.length === 0) {
+      // Si le champ est vidé, réinitialiser le programmateur sélectionné
+      if (formData.programmateurId) {
+        setFormData(prev => ({
+          ...prev,
+          programmateurId: '',
+          programmateurNom: ''
+        }));
+      }
+      setProgResults([]);
+    }
+    
+    return () => {
+      if (progSearchTimeoutRef.current) {
+        clearTimeout(progSearchTimeoutRef.current);
+      }
+    };
+  }, [progSearchTerm]);
+
+  // Fonction pour rechercher des lieux
+  const searchLieux = async (term) => {
+    try {
+      const termLower = term.toLowerCase();
+      
+      // D'abord chercher dans les lieux déjà chargés
+      const filteredLieux = lieux.filter(lieu => 
+        lieu.nom?.toLowerCase().includes(termLower) || 
+        lieu.ville?.toLowerCase().includes(termLower)
+      );
+      
+      // Puis faire une requête dans Firestore pour compléter
+      const lieuxRef = collection(db, 'lieux');
+      const lieuxQuery = query(
+        lieuxRef,
+        where('nomLowercase', '>=', termLower),
+        where('nomLowercase', '<=', termLower + '\uf8ff'),
+        limit(10)
+      );
+      
+      const lieuxSnapshot = await getDocs(lieuxQuery);
+      const lieuxData = lieuxSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      
+      // Fusionner et dédupliquer les résultats
+      const allResults = [...filteredLieux];
+      
+      lieuxData.forEach(lieu => {
+        if (!allResults.some(l => l.id === lieu.id)) {
+          allResults.push(lieu);
+        }
+      });
+      
+      setLieuResults(allResults);
+      setShowLieuResults(true);
+    } catch (error) {
+      console.error('Erreur lors de la recherche de lieux:', error);
+    }
+  };
+
+  // Fonction pour rechercher des programmateurs
+  const searchProgrammateurs = async (term) => {
+    try {
+      const termLower = term.toLowerCase();
+      
+      // D'abord chercher dans les programmateurs déjà chargés
+      const filteredProgs = programmateurs.filter(prog => 
+        prog.nom?.toLowerCase().includes(termLower) || 
+        prog.structure?.toLowerCase().includes(termLower)
+      );
+      
+      // Puis faire une requête dans Firestore pour compléter
+      const progsRef = collection(db, 'programmateurs');
+      const progsQuery = query(
+        progsRef,
+        where('nomLowercase', '>=', termLower),
+        where('nomLowercase', '<=', termLower + '\uf8ff'),
+        limit(10)
+      );
+      
+      const progsSnapshot = await getDocs(progsQuery);
+      const progsData = progsSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      
+      // Fusionner et dédupliquer les résultats
+      const allResults = [...filteredProgs];
+      
+      progsData.forEach(prog => {
+        if (!allResults.some(p => p.id === prog.id)) {
+          allResults.push(prog);
+        }
+      });
+      
+      setProgResults(allResults);
+      setShowProgResults(true);
+    } catch (error) {
+      console.error('Erreur lors de la recherche de programmateurs:', error);
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(`Champ modifié: ${name}, nouvelle valeur: ${value}`);
-    
     setFormData(prev => ({
       ...prev,
       [name]: value
     }));
-    
-    // Si on sélectionne un lieu, mettre à jour les informations du lieu
-    if (name === 'lieuId' && value) {
-      const selectedLieu = lieux.find(lieu => lieu.id === value);
-      console.log('Lieu sélectionné:', selectedLieu);
-      
-      if (selectedLieu) {
-        setFormData(prev => ({
-          ...prev,
-          lieuId: selectedLieu.id,
-          lieuNom: selectedLieu.nom || '',
-          lieuAdresse: selectedLieu.adresse || '',
-          lieuCodePostal: selectedLieu.codePostal || '',
-          lieuVille: selectedLieu.ville || '',
-          lieuCapacite: selectedLieu.capacite || ''
-        }));
-      }
-    }
-    
-    // Si on sélectionne un programmateur, mettre à jour le nom du programmateur
-    if (name === 'programmateurId' && value) {
-      const selectedProg = programmateurs.find(prog => prog.id === value);
-      console.log('Programmateur sélectionné:', selectedProg);
-      
-      if (selectedProg) {
-        setFormData(prev => ({
-          ...prev,
-          programmateurId: selectedProg.id,
-          programmateurNom: selectedProg.nom || ''
-        }));
-      }
-    }
+  };
+
+  const handleSelectLieu = (lieu) => {
+    setLieuSearchTerm(lieu.nom);
+    setFormData(prev => ({
+      ...prev,
+      lieuId: lieu.id,
+      lieuNom: lieu.nom || '',
+      lieuAdresse: lieu.adresse || '',
+      lieuCodePostal: lieu.codePostal || '',
+      lieuVille: lieu.ville || '',
+      lieuCapacite: lieu.capacite || ''
+    }));
+    setShowLieuResults(false);
+  };
+
+  const handleSelectProgrammateur = (prog) => {
+    setProgSearchTerm(prog.nom);
+    setFormData(prev => ({
+      ...prev,
+      programmateurId: prog.id,
+      programmateurNom: prog.nom || ''
+    }));
+    setShowProgResults(false);
   };
 
   const handleLieuCreated = (lieu) => {
     // Ajouter le nouveau lieu à la liste
     const newLieuWithId = { ...lieu, id: newLieu.id };
-    setLieux([...lieux, newLieuWithId]);
+    setLieux(prev => [...prev, newLieuWithId]);
     
     // Mettre à jour le formulaire avec le nouveau lieu
+    setLieuSearchTerm(lieu.nom);
     setFormData(prev => ({
       ...prev,
       lieuId: newLieu.id,
@@ -214,23 +399,12 @@ const ConcertForm = () => {
         return;
       }
   
-      // Correction du format de date - s'assurer que la date est au format YYYY-MM-DD
+      // Correction du format de date
       let correctedDate = formData.date;
       if (formData.date.includes('/')) {
         const dateParts = formData.date.split('/');
         if (dateParts.length === 3) {
           correctedDate = `${dateParts[2]}-${dateParts[0].padStart(2, '0')}-${dateParts[1].padStart(2, '0')}`;
-        }
-      }
-  
-      console.log('Date corrigée:', correctedDate);
-      
-      // Si on a un programmateur sélectionné, assurons-nous d'avoir son nom
-      let programmateurNom = formData.programmateurNom || '';
-      if (formData.programmateurId && !programmateurNom) {
-        const selectedProg = programmateurs.find(p => p.id === formData.programmateurId);
-        if (selectedProg) {
-          programmateurNom = selectedProg.nom || '';
         }
       }
   
@@ -249,7 +423,7 @@ const ConcertForm = () => {
         
         // Infos du programmateur
         programmateurId: formData.programmateurId,
-        programmateurNom: programmateurNom,
+        programmateurNom: formData.programmateurNom,
         
         notes: formData.notes,
         updatedAt: new Date().toISOString()
@@ -337,24 +511,20 @@ const ConcertForm = () => {
         </select>
       </div>
 
-      <div className="mb-3">
-        <label htmlFor="lieuId" className="form-label">Lieu *</label>
+      {/* Barre de recherche pour les lieux */}
+      <div className="mb-3" ref={lieuDropdownRef}>
+        <label htmlFor="lieuSearch" className="form-label">Lieu *</label>
         <div className="input-group">
-          <select
-            className="form-select"
-            id="lieuId"
-            name="lieuId"
-            value={formData.lieuId}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Sélectionner un lieu</option>
-            {lieux.map(lieu => (
-              <option key={lieu.id} value={lieu.id}>
-                {lieu.nom} - {lieu.ville}
-              </option>
-            ))}
-          </select>
+          <input
+            type="text"
+            className="form-control"
+            id="lieuSearch"
+            placeholder="Rechercher un lieu..."
+            value={lieuSearchTerm}
+            onChange={(e) => setLieuSearchTerm(e.target.value)}
+            onFocus={() => lieuSearchTerm.length >= 2 && setShowLieuResults(true)}
+            required={formData.lieuId === ''}
+          />
           <button
             type="button"
             className="btn btn-outline-secondary"
@@ -363,6 +533,34 @@ const ConcertForm = () => {
             Créer un lieu
           </button>
         </div>
+        
+        {/* Résultats de recherche pour les lieux */}
+        {showLieuResults && lieuResults.length > 0 && (
+          <div className="dropdown-menu show w-100 mt-1">
+            {lieuResults.map(lieu => (
+              <div 
+                key={lieu.id} 
+                className="dropdown-item lieu-item"
+                onClick={() => handleSelectLieu(lieu)}
+              >
+                <div className="d-flex justify-content-between align-items-center">
+                  <div>
+                    <div className="fw-bold">{lieu.nom}</div>
+                    <div className="small text-muted">
+                      {lieu.adresse && lieu.ville ? `${lieu.adresse}, ${lieu.codePostal} ${lieu.ville}` : 'Adresse non spécifiée'}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+        
+        {showLieuResults && lieuResults.length === 0 && lieuSearchTerm.length >= 2 && (
+          <div className="dropdown-menu show w-100 mt-1">
+            <div className="dropdown-item text-muted">Aucun lieu trouvé</div>
+          </div>
+        )}
       </div>
 
       {formData.lieuId && (
@@ -378,28 +576,55 @@ const ConcertForm = () => {
         </div>
       )}
 
-      <div className="mb-3">
-        <label htmlFor="programmateurId" className="form-label">Programmateur</label>
-        <select
-          className="form-select"
-          id="programmateurId"
-          name="programmateurId"
-          value={formData.programmateurId}
-          onChange={handleChange}
-        >
-          <option value="">Sélectionner un programmateur</option>
-          {programmateurs.map(prog => (
-            <option key={prog.id} value={prog.id}>
-              {prog.nom}
-            </option>
-          ))}
-        </select>
-        {formData.programmateurId && (
-          <div className="mt-2">
-            <p><strong>Programmateur sélectionné:</strong> {formData.programmateurNom}</p>
+      {/* Barre de recherche pour les programmateurs */}
+      <div className="mb-3" ref={progDropdownRef}>
+        <label htmlFor="programmateurSearch" className="form-label">Programmateur</label>
+        <input
+          type="text"
+          className="form-control"
+          id="programmateurSearch"
+          placeholder="Rechercher un programmateur..."
+          value={progSearchTerm}
+          onChange={(e) => setProgSearchTerm(e.target.value)}
+          onFocus={() => progSearchTerm.length >= 2 && setShowProgResults(true)}
+        />
+        
+        {/* Résultats de recherche pour les programmateurs */}
+        {showProgResults && progResults.length > 0 && (
+          <div className="dropdown-menu show w-100 mt-1">
+            {progResults.map(prog => (
+              <div 
+                key={prog.id} 
+                className="dropdown-item prog-item"
+                onClick={() => handleSelectProgrammateur(prog)}
+              >
+                <div className="d-flex justify-content-between align-items-center">
+                  <div>
+                    <div className="fw-bold">{prog.nom}</div>
+                    {prog.structure && <div className="small text-muted">{prog.structure}</div>}
+                    {prog.email && <div className="small text-muted">{prog.email}</div>}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+        
+        {showProgResults && progResults.length === 0 && progSearchTerm.length >= 2 && (
+          <div className="dropdown-menu show w-100 mt-1">
+            <div className="dropdown-item text-muted">Aucun programmateur trouvé</div>
           </div>
         )}
       </div>
+
+      {formData.programmateurId && (
+        <div className="card mb-3">
+          <div className="card-body">
+            <h5 className="card-title">Programmateur sélectionné</h5>
+            <p><strong>Nom:</strong> {formData.programmateurNom}</p>
+          </div>
+        </div>
+      )}
 
       <div className="mb-3">
         <label htmlFor="notes" className="form-label">Notes</label>

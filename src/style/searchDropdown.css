@@ -1,0 +1,26 @@
+/* Ajoutez ces styles à votre fichier CSS existant, par exemple concertForm.css */
+.dropdown-menu {
+    max-height: 300px;
+    overflow-y: auto;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+  }
+  
+  .lieu-item, .prog-item {
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .lieu-item:hover, .prog-item:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .lieu-item .fw-bold, .prog-item .fw-bold {
+    color: #212529;
+  }
+  
+  .lieu-item .small, .prog-item .small {
+    font-size: 0.85rem;
+  }
+  

@@ -13,8 +13,27 @@ function FormValidationInterface() {
   const [error, setError] = useState(null);
   const [validated, setValidated] = useState(false);
   const [validationInProgress, setValidationInProgress] = useState(false);
-  const [validatedFields, setValidatedFields] = useState({});
-  const [showValidationForm, setShowValidationForm] = useState(true); // État pour contrôler l'affichage du formulaire
+  const [existingProgrammateur, setExistingProgrammateur] = useState(null);
+  const [finalValues, setFinalValues] = useState({});
+  
+  // Liste des champs à comparer et valider
+  const contactFields = [
+    { id: 'nom', label: 'Nom' },
+    { id: 'prenom', label: 'Prénom' },
+    { id: 'fonction', label: 'Fonction' },
+    { id: 'email', label: 'Email' },
+    { id: 'telephone', label: 'Téléphone' }
+  ];
+  
+  const structureFields = [
+    { id: 'raisonSociale', label: 'Raison sociale' },
+    { id: 'type', label: 'Type de structure' },
+    { id: 'adresse', label: 'Adresse' },
+    { id: 'codePostal', label: 'Code postal' },
+    { id: 'ville', label: 'Ville' },
+    { id: 'pays', label: 'Pays' },
+    { id: 'siret', label: 'SIRET' }
+  ];
 
   const fetchData = async () => {
     try {
@@ -118,17 +137,44 @@ function FormValidationInterface() {
         console.log("Soumission trouvée:", formDocData);
         setFormData(formDocData);
         
+        // Si un programmateur est associé, récupérer les données existantes
+        if (formDocData.programmId) {
+          try {
+            const programmDoc = await getDoc(doc(db, 'programmateurs', formDocData.programmId));
+            if (programmDoc.exists()) {
+              const progData = programmDoc.data();
+              setExistingProgrammateur(progData);
+              
+              // Initialiser les valeurs finales avec les valeurs existantes
+              const initialFinalValues = {};
+              
+              // Traiter les champs contact
+              contactFields.forEach(field => {
+                initialFinalValues[`contact.${field.id}`] = progData[field.id] || '';
+              });
+              
+              // Traiter les champs structure
+              structureFields.forEach(field => {
+                // Certain champs structure ont un préfixe "structure" dans la base de données
+                if (field.id === 'raisonSociale') {
+                  initialFinalValues[`structure.${field.id}`] = progData.structure || '';
+                } else if (['type', 'adresse', 'codePostal', 'ville', 'pays'].includes(field.id)) {
+                  initialFinalValues[`structure.${field.id}`] = progData[`structure${field.id.charAt(0).toUpperCase() + field.id.slice(1)}`] || '';
+                } else {
+                  initialFinalValues[`structure.${field.id}`] = progData[field.id] || '';
+                }
+              });
+              
+              setFinalValues(initialFinalValues);
+            }
+          } catch (error) {
+            console.error("Erreur lors de la récupération du programmateur:", error);
+          }
+        }
+        
         // Si la soumission a déjà un statut validé, initialiser l'état validé
         if (formDocData.status === 'validated') {
           setValidated(true);
-          
-          // Par défaut, cacher la forme de validation si déjà validé
-          setShowValidationForm(false);
-        }
-        
-        // Si la soumission a déjà des champs validés, les charger
-        if (formDocData.validatedFields) {
-          setValidatedFields(formDocData.validatedFields);
         }
       } else {
         console.error("Soumission non trouvée avec ID:", formSubmissionId);
@@ -147,64 +193,73 @@ function FormValidationInterface() {
     fetchData();
   }, [id]);
 
-  // Gérer la validation d'un champ spécifique
-  const handleValidateField = (fieldCategory, fieldName, value) => {
-    // Créer un objet qui représente le chemin complet du champ
-    // Par exemple: programmateur.nom, structure.raisonSociale, etc.
-    const fieldPath = `${fieldCategory}.${fieldName}`;
-    
-    // Mettre à jour l'état local des champs validés
-    setValidatedFields(prev => ({
+  // Mettre à jour une valeur finale
+  const handleFinalValueChange = (fieldPath, value) => {
+    setFinalValues(prev => ({
       ...prev,
       [fieldPath]: value
     }));
   };
 
+  // Copier la valeur du formulaire vers la valeur finale
+  const copyFormValueToFinal = (fieldPath, formValue) => {
+    handleFinalValueChange(fieldPath, formValue);
+  };
+
   // Valider le formulaire complet
   const validateForm = async () => {
-    if (!formId) return;
+    if (!formId || !formData?.programmId) return;
     
     try {
       setValidationInProgress(true);
       
-      // 1. Mettre à jour le statut de la soumission
-      await updateDoc(doc(db, 'formSubmissions', formId), {
-        status: 'validated',
-        validatedAt: new Date(),
-        validatedFields: validatedFields
-      });
+      // 1. Préparer les données à mettre à jour pour le programmateur
+      const programmUpdateData = {};
       
-      // 2. Mettre à jour les données du concert avec les champs validés
-      // Transformer les champs validés pour qu'ils correspondent à la structure du concert
-      const concertUpdates = {};
-      
-      // Pour chaque champ validé, créer la mise à jour correspondante
-      Object.entries(validatedFields).forEach(([fieldPath, value]) => {
-        const [category, field] = fieldPath.split('.');
-        
-        if (category === 'programmateur') {
-          // Exemple: programmateur.nom => programmateurNom
-          concertUpdates[`programmateur${field.charAt(0).toUpperCase() + field.slice(1)}`] = value;
-        } else if (category === 'structure') {
-          // Exemple: structure.raisonSociale => structureRaisonSociale
-          concertUpdates[`structure${field.charAt(0).toUpperCase() + field.slice(1)}`] = value;
-        } else {
-          // Autres champs
-          concertUpdates[field] = value;
+      // Traiter les champs contact
+      contactFields.forEach(field => {
+        const fieldPath = `contact.${field.id}`;
+        if (finalValues[fieldPath] !== undefined) {
+          programmUpdateData[field.id] = finalValues[fieldPath];
         }
       });
       
-      // Ajouter des informations de formulaire validé
-      concertUpdates.formValidated = true;
-      concertUpdates.formSubmissionId = formId;
-      concertUpdates.formValidatedAt = new Date();
+      // Traiter les champs structure
+      structureFields.forEach(field => {
+        const fieldPath = `structure.${field.id}`;
+        if (finalValues[fieldPath] !== undefined) {
+          if (field.id === 'raisonSociale') {
+            programmUpdateData.structure = finalValues[fieldPath];
+          } else if (['type', 'adresse', 'codePostal', 'ville', 'pays'].includes(field.id)) {
+            programmUpdateData[`structure${field.id.charAt(0).toUpperCase() + field.id.slice(1)}`] = finalValues[fieldPath];
+          } else {
+            programmUpdateData[field.id] = finalValues[fieldPath];
+          }
+        }
+      });
       
-      await updateDoc(doc(db, 'concerts', id), concertUpdates);
+      // Ajouter timestamp de mise à jour
+      programmUpdateData.updatedAt = Timestamp.now();
+      
+      // 2. Mettre à jour le programmateur
+      await updateDoc(doc(db, 'programmateurs', formData.programmId), programmUpdateData);
+      console.log("Programmateur mis à jour avec les valeurs validées:", programmUpdateData);
+      
+      // 3. Mettre à jour le statut de la soumission
+      await updateDoc(doc(db, 'formSubmissions', formId), {
+        status: 'validated',
+        validatedAt: Timestamp.now(),
+        validatedFields: finalValues
+      });
+      
+      // 4. Mettre à jour le concert pour indiquer que le formulaire a été validé
+      await updateDoc(doc(db, 'concerts', id), {
+        formValidated: true,
+        formValidatedAt: Timestamp.now()
+      });
       
       setValidated(true);
       setValidationInProgress(false);
-      // Ne pas masquer le formulaire après validation
-      // setShowValidationForm(false);
     } catch (err) {
       console.error("Erreur lors de la validation du formulaire:", err);
       setError("Impossible de valider le formulaire. Veuillez réessayer plus tard.");
@@ -289,27 +344,16 @@ function FormValidationInterface() {
         <div className="col-12">
           <div className="d-flex justify-content-between align-items-center">
             <h2 className="mb-0">
-              {isAlreadyValidated || validated ? 'Informations soumises par le programmateur' : 'Validation du formulaire'}
+              {isAlreadyValidated || validated ? 'Formulaire validé' : 'Validation du formulaire'}
             </h2>
             <div className="d-flex">
               <button 
-                className="btn btn-outline-secondary me-2"
+                className="btn btn-outline-secondary"
                 onClick={() => navigate(`/concerts/${id}`)}
               >
                 <i className="bi bi-arrow-left me-2"></i>
                 Retour au concert
               </button>
-              
-              {/* Bouton pour afficher/masquer le formulaire quand il est déjà validé */}
-              {(isAlreadyValidated || validated) && !showValidationForm && (
-                <button 
-                  className="btn btn-primary"
-                  onClick={() => setShowValidationForm(true)}
-                >
-                  <i className="bi bi-eye me-2"></i>
-                  Voir le formulaire soumis
-                </button>
-              )}
             </div>
           </div>
           <hr />
@@ -324,422 +368,219 @@ function FormValidationInterface() {
               <i className="bi bi-check-circle-fill text-success" style={{ fontSize: '3rem' }}></i>
             </div>
             <h3 className="mt-3">Formulaire validé avec succès</h3>
-            <p className="text-muted">Les informations validées ont été intégrées à la fiche du concert.</p>
-            
-            {/* Bouton pour afficher/masquer le formulaire */}
-            {!showValidationForm ? (
-              <button 
-                className="btn btn-primary mt-3" 
-                onClick={() => setShowValidationForm(true)}
-              >
-                <i className="bi bi-eye me-2"></i>
-                Voir les informations soumises
-              </button>
-            ) : (
-              <button 
-                className="btn btn-outline-primary mt-3" 
-                onClick={() => setShowValidationForm(false)}
-              >
-                <i className="bi bi-eye-slash me-2"></i>
-                Masquer les informations
-              </button>
-            )}
+            <p className="text-muted">Les informations validées ont été intégrées à la fiche du programmateur.</p>
           </div>
         </div>
       )}
 
-      {/* Afficher le formulaire si showValidationForm est true */}
-      {showValidationForm && (
-        <>
+      <div className="card mb-4">
+        <div className="card-header bg-primary text-white">
+          <h3 className="mb-0">Informations du concert</h3>
+        </div>
+        <div className="card-body">
+          <div className="row">
+            <div className="col-md-4">
+              <div className="mb-3">
+                <label className="fw-bold">Date</label>
+                <p>{formatDate(concert.date)}</p>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="mb-3">
+                <label className="fw-bold">Montant</label>
+                <p>{formatCurrency(concert.montant)}</p>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="mb-3">
+                <label className="fw-bold">Lieu</label>
+                <p>{concert.lieuNom || 'Non spécifié'}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="card mb-4">
+        <div className="card-header bg-secondary text-white">
+          <h3 className="mb-0">Informations du contact</h3>
+        </div>
+        <div className="card-body">
           <div className="alert alert-info mb-4">
             <div className="d-flex">
               <i className="bi bi-info-circle-fill me-3" style={{ fontSize: '1.5rem' }}></i>
               <div>
-                <h4 className="alert-heading">Informations soumises par le programmateur</h4>
                 <p className="mb-0">
-                  {isAlreadyValidated || validated 
-                    ? "Ces informations ont été validées et intégrées à la fiche du concert."
-                    : "Vérifiez les informations ci-dessous et validez les champs que vous souhaitez intégrer à la fiche du concert."}
+                  Comparez les valeurs existantes avec celles soumises par le programmateur. 
+                  Utilisez la flèche (➡️) pour copier rapidement une valeur vers la colonne "Valeur finale", 
+                  ou modifiez directement cette valeur selon vos besoins.
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="card mb-4">
-            <div className="card-header bg-primary text-white">
-              <h3 className="mb-0">Informations du concert</h3>
-            </div>
-            <div className="card-body">
-              <div className="row">
-                <div className="col-md-4">
-                  <div className="mb-3">
-                    <label className="fw-bold">Date</label>
-                    <p>{formatDate(concert.date)}</p>
-                  </div>
-                </div>
-                <div className="col-md-4">
-                  <div className="mb-3">
-                    <label className="fw-bold">Montant</label>
-                    <p>{formatCurrency(concert.montant)}</p>
-                  </div>
-                </div>
-                <div className="col-md-4">
-                  <div className="mb-3">
-                    <label className="fw-bold">Lieu</label>
-                    <p>{concert.lieuNom || 'Non spécifié'}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div className="table-responsive">
+            <table className="table table-bordered comparison-table">
+              <thead className="table-light">
+                <tr>
+                  <th style={{width: '15%'}}>Champ</th>
+                  <th style={{width: '25%'}}>Valeur existante</th>
+                  <th style={{width: '25%'}}>Valeur du formulaire</th>
+                  <th style={{width: '10%'}}></th>
+                  <th style={{width: '25%'}}>Valeur finale</th>
+                </tr>
+              </thead>
+              <tbody>
+                {contactFields.map(field => {
+                  const fieldPath = `contact.${field.id}`;
+                  const existingValue = existingProgrammateur ? existingProgrammateur[field.id] || '' : '';
+                  const formValue = formData.data?.[field.id] || '';
+                  
+                  return (
+                    <tr key={field.id}>
+                      <td className="field-name">{field.label}</td>
+                      <td className="existing-value">{existingValue || <em className="text-muted">Non renseigné</em>}</td>
+                      <td className="form-value">{formValue || <em className="text-muted">Non renseigné</em>}</td>
+                      <td className="action-cell text-center">
+                        <button 
+                          className="btn btn-sm btn-outline-primary"
+                          onClick={() => copyFormValueToFinal(fieldPath, formValue)}
+                          title="Copier vers valeur finale"
+                          disabled={isAlreadyValidated}
+                        >
+                          ➡️
+                        </button>
+                      </td>
+                      <td className="final-value">
+                        <input
+                          type="text"
+                          className="form-control"
+                          value={finalValues[fieldPath] || ''}
+                          onChange={(e) => handleFinalValueChange(fieldPath, e.target.value)}
+                          disabled={isAlreadyValidated}
+                        />
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
+        </div>
+      </div>
 
-          <div className="card mb-4">
-            <div className="card-header bg-secondary text-white">
-              <h3 className="mb-0">Informations du programmateur</h3>
-            </div>
-            <div className="card-body">
-              <div className="row g-3">
-                {formData.data && (
-                  <>
-                    <div className="col-md-6">
-                      <div className="card h-100">
-                        <div className="card-body">
-                          <div className="d-flex justify-content-between align-items-start">
-                            <div>
-                              <h5 className="card-title">Nom</h5>
-                              <p className="card-text">{formData.data.nom || 'Non spécifié'}</p>
-                            </div>
-                            <button 
-                              className={`btn ${validatedFields['programmateur.nom'] ? 'btn-success' : 'btn-outline-success'}`}
-                              onClick={() => handleValidateField('programmateur', 'nom', formData.data.nom)}
-                              disabled={isAlreadyValidated && !!validatedFields['programmateur.nom']}
-                            >
-                              {validatedFields['programmateur.nom'] ? (
-                                <>
-                                  <i className="bi bi-check-circle-fill me-2"></i>
-                                  Validé
-                                </>
-                              ) : (
-                                'Valider'
-                              )}
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="col-md-6">
-                      <div className="card h-100">
-                        <div className="card-body">
-                          <div className="d-flex justify-content-between align-items-start">
-                            <div>
-                              <h5 className="card-title">Prénom</h5>
-                              <p className="card-text">{formData.data.prenom || 'Non spécifié'}</p>
-                            </div>
-                            <button 
-                              className={`btn ${validatedFields['programmateur.prenom'] ? 'btn-success' : 'btn-outline-success'}`}
-                              onClick={() => handleValidateField('programmateur', 'prenom', formData.data.prenom)}
-                              disabled={isAlreadyValidated && !!validatedFields['programmateur.prenom']}
-                            >
-                              {validatedFields['programmateur.prenom'] ? (
-                                <>
-                                  <i className="bi bi-check-circle-fill me-2"></i>
-                                  Validé
-                                </>
-                              ) : (
-                                'Valider'
-                              )}
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="col-md-6">
-                      <div className="card h-100">
-                        <div className="card-body">
-                          <div className="d-flex justify-content-between align-items-start">
-                            <div>
-                              <h5 className="card-title">Fonction</h5>
-                              <p className="card-text">{formData.data.fonction || 'Non spécifiée'}</p>
-                            </div>
-                            <button 
-                              className={`btn ${validatedFields['programmateur.fonction'] ? 'btn-success' : 'btn-outline-success'}`}
-                              onClick={() => handleValidateField('programmateur', 'fonction', formData.data.fonction)}
-                              disabled={isAlreadyValidated && !!validatedFields['programmateur.fonction']}
-                            >
-                              {validatedFields['programmateur.fonction'] ? (
-                                <>
-                                  <i className="bi bi-check-circle-fill me-2"></i>
-                                  Validé
-                                </>
-                              ) : (
-                                'Valider'
-                              )}
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="col-md-6">
-                      <div className="card h-100">
-                        <div className="card-body">
-                          <div className="d-flex justify-content-between align-items-start">
-                            <div>
-                              <h5 className="card-title">Email</h5>
-                              <p className="card-text">{formData.data.email || 'Non spécifié'}</p>
-                            </div>
-                            <button 
-                              className={`btn ${validatedFields['programmateur.email'] ? 'btn-success' : 'btn-outline-success'}`}
-                              onClick={() => handleValidateField('programmateur', 'email', formData.data.email)}
-                              disabled={isAlreadyValidated && !!validatedFields['programmateur.email']}
-                            >
-                              {validatedFields['programmateur.email'] ? (
-                                <>
-                                  <i className="bi bi-check-circle-fill me-2"></i>
-                                  Validé
-                                </>
-                              ) : (
-                                'Valider'
-                              )}
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="col-md-6">
-                      <div className="card h-100">
-                        <div className="card-body">
-                          <div className="d-flex justify-content-between align-items-start">
-                            <div>
-                              <h5 className="card-title">Téléphone</h5>
-                              <p className="card-text">{formData.data.telephone || 'Non spécifié'}</p>
-                            </div>
-                            <button 
-                              className={`btn ${validatedFields['programmateur.telephone'] ? 'btn-success' : 'btn-outline-success'}`}
-                              onClick={() => handleValidateField('programmateur', 'telephone', formData.data.telephone)}
-                              disabled={isAlreadyValidated && !!validatedFields['programmateur.telephone']}
-                            >
-                              {validatedFields['programmateur.telephone'] ? (
-                                <>
-                                  <i className="bi bi-check-circle-fill me-2"></i>
-                                  Validé
-                                </>
-                              ) : (
-                                'Valider'
-                              )}
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
+      <div className="card mb-4">
+        <div className="card-header bg-secondary text-white">
+          <h3 className="mb-0">Informations de la structure</h3>
+        </div>
+        <div className="card-body">
+          <div className="table-responsive">
+            <table className="table table-bordered comparison-table">
+              <thead className="table-light">
+                <tr>
+                  <th style={{width: '15%'}}>Champ</th>
+                  <th style={{width: '25%'}}>Valeur existante</th>
+                  <th style={{width: '25%'}}>Valeur du formulaire</th>
+                  <th style={{width: '10%'}}></th>
+                  <th style={{width: '25%'}}>Valeur finale</th>
+                </tr>
+              </thead>
+              <tbody>
+                {structureFields.map(field => {
+                  const fieldPath = `structure.${field.id}`;
+                  let existingValue = '';
+                  
+                  // Obtenir la valeur existante selon le type de champ
+                  if (existingProgrammateur) {
+                    if (field.id === 'raisonSociale') {
+                      existingValue = existingProgrammateur.structure || '';
+                    } else if (['type', 'adresse', 'codePostal', 'ville', 'pays'].includes(field.id)) {
+                      existingValue = existingProgrammateur[`structure${field.id.charAt(0).toUpperCase() + field.id.slice(1)}`] || '';
+                    } else {
+                      existingValue = existingProgrammateur[field.id] || '';
+                    }
+                  }
+                  
+                  const formValue = formData.data?.[field.id] || '';
+                  
+                  return (
+                    <tr key={field.id}>
+                      <td className="field-name">{field.label}</td>
+                      <td className="existing-value">{existingValue || <em className="text-muted">Non renseigné</em>}</td>
+                      <td className="form-value">{formValue || <em className="text-muted">Non renseigné</em>}</td>
+                      <td className="action-cell text-center">
+                        <button 
+                          className="btn btn-sm btn-outline-primary"
+                          onClick={() => copyFormValueToFinal(fieldPath, formValue)}
+                          title="Copier vers valeur finale"
+                          disabled={isAlreadyValidated}
+                        >
+                          ➡️
+                        </button>
+                      </td>
+                      <td className="final-value">
+                        <input
+                          type="text"
+                          className="form-control"
+                          value={finalValues[fieldPath] || ''}
+                          onChange={(e) => handleFinalValueChange(fieldPath, e.target.value)}
+                          disabled={isAlreadyValidated}
+                        />
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
+        </div>
+      </div>
 
-          <div className="card mb-4">
-            <div className="card-header bg-secondary text-white">
-              <h3 className="mb-0">Structure juridique</h3>
-            </div>
-            <div className="card-body">
-              <div className="row g-3">
-                {formData.data && (
-                  <>
-                    <div className="col-md-6">
-                      <div className="card h-100">
-                        <div className="card-body">
-                          <div className="d-flex justify-content-between align-items-start">
-                            <div>
-                              <h5 className="card-title">Raison sociale</h5>
-                              <p className="card-text">{formData.data.raisonSociale || 'Non spécifiée'}</p>
-                            </div>
-                            <button 
-                              className={`btn ${validatedFields['structure.raisonSociale'] ? 'btn-success' : 'btn-outline-success'}`}
-                              onClick={() => handleValidateField('structure', 'raisonSociale', formData.data.raisonSociale)}
-                              disabled={isAlreadyValidated && !!validatedFields['structure.raisonSociale']}
-                            >
-                              {validatedFields['structure.raisonSociale'] ? (
-                                <>
-                                  <i className="bi bi-check-circle-fill me-2"></i>
-                                  Validé
-                                </>
-                              ) : (
-                                'Valider'
-                              )}
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="col-md-6">
-                      <div className="card h-100">
-                        <div className="card-body">
-                          <div className="d-flex justify-content-between align-items-start">
-                            <div>
-                              <h5 className="card-title">Type de structure</h5>
-                              <p className="card-text">{formData.data.type || 'Non spécifié'}</p>
-                            </div>
-                            <button 
-                              className={`btn ${validatedFields['structure.type'] ? 'btn-success' : 'btn-outline-success'}`}
-                              onClick={() => handleValidateField('structure', 'type', formData.data.type)}
-                              disabled={isAlreadyValidated && !!validatedFields['structure.type']}
-                            >
-                              {validatedFields['structure.type'] ? (
-                                <>
-                                  <i className="bi bi-check-circle-fill me-2"></i>
-                                  Validé
-                                </>
-                              ) : (
-                                'Valider'
-                              )}
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="col-md-6">
-                      <div className="card h-100">
-                        <div className="card-body">
-                          <div className="d-flex justify-content-between align-items-start">
-                            <div>
-                              <h5 className="card-title">Adresse</h5>
-                              <p className="card-text">{formData.data.adresse || 'Non spécifiée'}</p>
-                            </div>
-                            <button 
-                              className={`btn ${validatedFields['structure.adresse'] ? 'btn-success' : 'btn-outline-success'}`}
-                              onClick={() => handleValidateField('structure', 'adresse', formData.data.adresse)}
-                              disabled={isAlreadyValidated && !!validatedFields['structure.adresse']}
-                            >
-                              {validatedFields['structure.adresse'] ? (
-                                <>
-                                  <i className="bi bi-check-circle-fill me-2"></i>
-                                  Validé
-                                </>
-                              ) : (
-                                'Valider'
-                              )}
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="col-md-6">
-                      <div className="card h-100">
-                        <div className="card-body">
-                          <div className="d-flex justify-content-between align-items-start">
-                            <div>
-                              <h5 className="card-title">Code postal</h5>
-                              <p className="card-text">{formData.data.codePostal || 'Non spécifié'}</p>
-                            </div>
-                            <button 
-                              className={`btn ${validatedFields['structure.codePostal'] ? 'btn-success' : 'btn-outline-success'}`}
-                              onClick={() => handleValidateField('structure', 'codePostal', formData.data.codePostal)}
-                              disabled={isAlreadyValidated && !!validatedFields['structure.codePostal']}
-                            >
-                              {validatedFields['structure.codePostal'] ? (
-                                <>
-                                  <i className="bi bi-check-circle-fill me-2"></i>
-                                  Validé
-                                </>
-                              ) : (
-                                'Valider'
-                              )}
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="col-md-6">
-                      <div className="card h-100">
-                        <div className="card-body">
-                          <div className="d-flex justify-content-between align-items-start">
-                            <div>
-                              <h5 className="card-title">Ville</h5>
-                              <p className="card-text">{formData.data.ville || 'Non spécifiée'}</p>
-                            </div>
-                            <button 
-                              className={`btn ${validatedFields['structure.ville'] ? 'btn-success' : 'btn-outline-success'}`}
-                              onClick={() => handleValidateField('structure', 'ville', formData.data.ville)}
-                              disabled={isAlreadyValidated && !!validatedFields['structure.ville']}
-                            >
-                              {validatedFields['structure.ville'] ? (
-                                <>
-                                  <i className="bi bi-check-circle-fill me-2"></i>
-                                  Validé
-                                </>
-                              ) : (
-                                'Valider'
-                              )}
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="col-md-6">
-                      <div className="card h-100">
-                        <div className="card-body">
-                          <div className="d-flex justify-content-between align-items-start">
-                            <div>
-                              <h5 className="card-title">SIRET</h5>
-                              <p className="card-text">{formData.data.siret || 'Non spécifié'}</p>
-                            </div>
-                            <button 
-                              className={`btn ${validatedFields['structure.siret'] ? 'btn-success' : 'btn-outline-success'}`}
-                              onClick={() => handleValidateField('structure', 'siret', formData.data.siret)}
-                              disabled={isAlreadyValidated && !!validatedFields['structure.siret']}
-                            >
-                              {validatedFields['structure.siret'] ? (
-                                <>
-                                  <i className="bi bi-check-circle-fill me-2"></i>
-                                  Validé
-                                </>
-                              ) : (
-                                'Valider'
-                              )}
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Bouton de validation final - seulement visible si pas encore validé */}
-          {!isAlreadyValidated && !validated && (
-            <div className="d-flex justify-content-center mt-4 mb-5">
-              <button 
-                onClick={validateForm} 
-                className="btn btn-lg btn-primary"
-                disabled={validationInProgress || Object.keys(validatedFields).length === 0}
-              >
-                {validationInProgress ? (
-                  <>
-                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                    Validation en cours...
-                  </>
-                ) : (
-                  <>
-                    <i className="bi bi-check-circle me-2"></i>
-                    Valider le formulaire et enregistrer les modifications
-                  </>
-                )}
-                            </button>
-            </div>
-          )}
-        </>
+      {/* Bouton de validation final - seulement visible si pas encore validé */}
+      {!isAlreadyValidated && !validated && (
+        <div className="d-flex justify-content-center mt-4 mb-5">
+          <button 
+            onClick={validateForm} 
+            className="btn btn-lg btn-primary"
+            disabled={validationInProgress}
+          >
+            {validationInProgress ? (
+              <>
+                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                Validation en cours...
+              </>
+            ) : (
+              <>
+                <i className="bi bi-check-circle me-2"></i>
+                Valider et enregistrer les modifications
+              </>
+            )}
+          </button>
+        </div>
       )}
+
+      {/* Styles CSS spécifiques pour cette page */}
+      <style jsx="true">{`
+        .comparison-table th, .comparison-table td {
+          vertical-align: middle;
+        }
+        .field-name {
+          font-weight: 600;
+        }
+        .existing-value, .form-value {
+          font-family: monospace;
+          white-space: pre-wrap;
+        }
+        .action-cell {
+          width: 50px;
+        }
+        .final-value input {
+          font-family: monospace;
+        }
+        .table-responsive {
+          overflow-x: auto;
+        }
+      `}</style>
     </div>
   );
 }

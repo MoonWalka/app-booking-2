@@ -42,6 +42,7 @@ const ProgrammateurForm = ({ id, token, concertId, formLinkId, onSubmitSuccess }
     },
     concertsAssocies: []
   });
+  const [submitted, setSubmitted] = useState(false); // Nouvel état pour gérer l'affichage après soumission
 
   // Déterminer si nous sommes en mode formulaire public ou en mode édition standard
   const isPublicFormMode = Boolean(token && concertId && formLinkId);
@@ -338,38 +339,7 @@ const ProgrammateurForm = ({ id, token, concertId, formLinkId, onSubmitSuccess }
           onSubmitSuccess();
         } else {
           // Afficher un message de succès si pas de callback
-          setFormData({
-            contact: {
-              nom: '',
-              prenom: '',
-              fonction: '',
-              email: '',
-              telephone: ''
-            },
-            structure: {
-              raisonSociale: '',
-              type: '',
-              adresse: '',
-              codePostal: '',
-              ville: '',
-              pays: 'France',
-              siret: '',
-              tva: ''
-            },
-            concertsAssocies: []
-          });
-          
-          // Remplacer le formulaire par un message de succès
-          return (
-            <div className="form-success-container text-center">
-              <div className="success-icon">
-                <i className="bi bi-check-circle-fill text-success" style={{ fontSize: '4rem' }}></i>
-              </div>
-              <h2 className="mt-4">Merci pour votre soumission!</h2>
-              <p className="lead">Vos informations ont été enregistrées avec succès.</p>
-              <p>Vous pouvez maintenant fermer cette page.</p>
-            </div>
-          );
+          setSubmitted(true); // Marquer le formulaire comme soumis
         }
       } 
       // 8. Traitement spécifique au mode édition standard
@@ -398,11 +368,25 @@ const ProgrammateurForm = ({ id, token, concertId, formLinkId, onSubmitSuccess }
       setIsSubmitting(false);
     }
   };
-  
-  
 
   if (loading) {
     return <div className="text-center my-5 loading-spinner">Chargement des données...</div>;
+  }
+
+  // Si le formulaire a été soumis avec succès et qu'on est en mode formulaire public
+  if (submitted && isPublicFormMode) {
+    return (
+      <div className="form-public-container">
+        <div className="form-success text-center">
+          <div className="success-icon my-4">
+            <i className="bi bi-check-circle-fill text-success" style={{ fontSize: '5rem' }}></i>
+          </div>
+          <h2 className="mb-3">Merci pour votre soumission !</h2>
+          <p className="lead mb-4">Vos informations ont été enregistrées avec succès.</p>
+          <p>Vous pouvez maintenant fermer cette fenêtre.</p>
+        </div>
+      </div>
+    );
   }
 
   // Déterminer les classes CSS à utiliser selon le mode

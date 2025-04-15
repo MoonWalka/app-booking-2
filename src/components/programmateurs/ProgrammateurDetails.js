@@ -1,6 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { doc, getDoc, deleteDoc, updateDoc, serverTimestamp, arrayUnion } from 'firebase/firestore';
+import { 
+  doc, 
+  getDoc, 
+  deleteDoc, 
+  updateDoc, 
+  serverTimestamp, 
+  arrayUnion,
+  collection,
+  query,
+  where,
+  getDocs,
+  orderBy,
+  limit
+} from 'firebase/firestore';
 import { db } from '../../firebase';
 import '../../style/programmateurForm.css';
 
@@ -32,6 +45,15 @@ const ProgrammateurDetails = () => {
     concertsAssocies: []
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Nouveaux états pour la recherche de concerts
+  const [showConcertSearch, setShowConcertSearch] = useState(false);
+  const [concertSearchTerm, setConcertSearchTerm] = useState('');
+  const [concertResults, setConcertResults] = useState([]);
+  const [showConcertResults, setShowConcertResults] = useState(false);
+  const [isSearchingConcerts, setIsSearchingConcerts] = useState(false);
+  const concertSearchRef = useRef(null);
+  const concertSearchTimeoutRef = useRef(null);
   
   useEffect(() => {
     const fetchProgrammateur = async () => {
@@ -81,6 +103,155 @@ const ProgrammateurDetails = () => {
 
     fetchProgrammateur();
   }, [id, navigate]);
+
+  // Gestionnaire de clics en dehors du dropdown de recherche de concerts
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (concertSearchRef.current && !concertSearchRef.current.contains(event.target)) {
+        setShowConcertResults(false);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  // Effet pour la recherche de concerts
+  useEffect(() => {
+    if (concertSearchTimeoutRef.current) {
+      clearTimeout(concertSearchTimeoutRef.current);
+    }
+    
+    if (concertSearchTerm.length >= 2) {
+      concertSearchTimeoutRef.current = setTimeout(() => {
+        searchConcerts(concertSearchTerm);
+      }, 300);
+    } else {
+      setConcertResults([]);
+    }
+    
+    return () => {
+      if (concertSearchTimeoutRef.current) {
+        clearTimeout(concertSearchTimeoutRef.current);
+      }
+    };
+  }, [concertSearchTerm]);
+
+  // Fonction pour rechercher des concerts
+  const searchConcerts = async (term) => {
+    try {
+      setIsSearchingConcerts(true);
+      const termLower = term.toLowerCase();
+      
+      // Recherche par titre ou date
+      const concertsRef = collection(db, 'concerts');
+      let concertsQuery;
+      
+      // Si le terme est une date au format YYYY-MM-DD
+      if (/^\d{4}-\d{2}-\d{2}$/.test(term)) {
+        concertsQuery = query(
+          concertsRef,
+          where('date', '==', term),
+          limit(10)
+        );
+      } else {
+        // Sinon recherche générale
+        concertsQuery = query(
+          concertsRef,
+          orderBy('date', 'desc'),
+          limit(20)
+        );
+      }
+      
+      const concertsSnapshot = await getDocs(concertsQuery);
+      let concertsData = concertsSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      
+      // Filtrer les résultats localement si on n'a pas pu faire un where précis
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(term)) {
+        concertsData = concertsData.filter(concert => 
+          (concert.titre && concert.titre.toLowerCase().includes(termLower)) ||
+          (concert.lieuNom && concert.lieuNom.toLowerCase().includes(termLower)) ||
+          (concert.date && concert.date.includes(termLower))
+        );
+      }
+      
+      // Filtrer pour exclure les concerts déjà associés
+      const currentConcertIds = new Set((programmateur.concertsAssocies || []).map(c => c.id));
+      concertsData = concertsData.filter(concert => !currentConcertIds.has(concert.id));
+      
+      setConcertResults(concertsData);
+      setShowConcertResults(true);
+    } catch (error) {
+      console.error('Erreur lors de la recherche de concerts:', error);
+    } finally {
+      setIsSearchingConcerts(false);
+    }
+  };
+
+  // Fonction pour sélectionner un concert
+  const handleSelectConcert = async (concert) => {
+    try {
+      // Vérifier si le concert est déjà associé
+      const concertAlreadyAssociated = (programmateur.concertsAssocies || []).some(c => c.id === concert.id);
+      
+      if (!concertAlreadyAssociated) {
+        // Créer l'objet de référence de concert à ajouter
+        const concertReference = {
+          id: concert.id,
+          titre: concert.titre || `Concert du ${concert.date}`,
+          date: concert.date || null,
+          lieu: concert.lieuNom || null
+        };
+        
+        // Mettre à jour le programmateur dans Firestore
+        await updateDoc(doc(db, 'programmateurs', id), {
+          concertsAssocies: arrayUnion(concertReference),
+          updatedAt: serverTimestamp()
+        });
+        
+        // Mettre à jour le concert également avec le programmateur
+        await updateDoc(doc(db, 'concerts', concert.id), {
+          programmateurId: id,
+          programmateurNom: programmateur.nom,
+          updatedAt: serverTimestamp()
+        });
+        
+        // Mettre à jour l'état local du programmateur
+        setProgrammateur(prev => ({
+          ...prev,
+          concertsAssocies: [...(prev.concertsAssocies || []), concertReference]
+        }));
+        
+        // Réinitialiser le champ de recherche
+        setConcertSearchTerm('');
+        setShowConcertResults(false);
+        
+        // Montrer un message de confirmation
+        alert(`Le concert "${concertReference.titre}" a été associé au programmateur.`);
+      }
+    } catch (error) {
+      console.error('Erreur lors de l\'association du concert:', error);
+      alert('Une erreur est survenue lors de l\'association du concert.');
+    }
+  };
+
+  // Fonction pour créer rapidement un nouveau concert
+  const handleCreateConcert = () => {
+    // Rediriger vers le formulaire de création de concert
+    navigate('/concerts/nouveau');
+  };
+
+  // Fonction pour afficher/masquer la section de recherche de concerts
+  const toggleConcertSearch = () => {
+    setShowConcertSearch(!showConcertSearch);
+    setConcertSearchTerm('');
+    setShowConcertResults(false);
+  };
 
   const handleDelete = async () => {
     if (window.confirm('Êtes-vous sûr de vouloir supprimer ce programmateur ?')) {
@@ -666,7 +837,7 @@ const ProgrammateurDetails = () => {
                   <div className="form-group">
                     <label className="form-label">Type de structure</label>
                     <p className="form-display">
-                      {formatValue(structure.type ? (
+                    {formatValue(structure.type ? (
                         structure.type === 'association' ? 'Association' :
                         structure.type === 'mairie' ? 'Mairie / Collectivité' :
                         structure.type === 'entreprise' ? 'Entreprise' :
@@ -729,11 +900,103 @@ const ProgrammateurDetails = () => {
             </div>
             <div className="card-body">
               <div className="associated-concerts">
-                <h4 className="mb-3 concerts-title">
-                  {programmateur.concertsAssocies?.length > 0 
-                    ? `Concerts associés (${programmateur.concertsAssocies.length})` 
-                    : 'Aucun concert associé'}
-                </h4>
+                <div className="d-flex justify-content-between align-items-center mb-3">
+                  <h4 className="concerts-title mb-0">
+                    {programmateur.concertsAssocies?.length > 0 
+                      ? `Concerts associés (${programmateur.concertsAssocies.length})` 
+                      : 'Aucun concert associé'}
+                  </h4>
+                  
+                  <button 
+                    className="btn btn-sm btn-outline-primary"
+                    onClick={toggleConcertSearch}
+                  >
+                    {showConcertSearch ? (
+                      <><i className="bi bi-x-lg me-1"></i> Annuler</>
+                    ) : (
+                      <><i className="bi bi-plus-circle me-1"></i> Associer un concert</>
+                    )}
+                  </button>
+                </div>
+                
+                {/* Section de recherche de concerts */}
+                {showConcertSearch && (
+                  <div className="concert-search-section mb-4" ref={concertSearchRef}>
+                    <div className="input-group mb-2">
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Rechercher un concert par titre, lieu ou date..."
+                        value={concertSearchTerm}
+                        onChange={(e) => setConcertSearchTerm(e.target.value)}
+                        onFocus={() => concertSearchTerm.length >= 2 && setShowConcertResults(true)}
+                      />
+                      <button
+                        type="button"
+                        className="btn btn-outline-secondary"
+                        onClick={handleCreateConcert}
+                      >
+                        <i className="bi bi-plus-lg me-1"></i>
+                        Créer un concert
+                      </button>
+                    </div>
+                    
+                    {/* Résultats de recherche pour les concerts */}
+                    {showConcertResults && (
+                      <div className="dropdown-menu show w-100">
+                        {isSearchingConcerts ? (
+                          <div className="dropdown-item text-center">
+                            <div className="spinner-border spinner-border-sm me-2" role="status">
+                              <span className="visually-hidden">Recherche en cours...</span>
+                            </div>
+                            Recherche en cours...
+                          </div>
+                        ) : concertResults.length > 0 ? (
+                          concertResults.map(concert => (
+                            <div 
+                              key={concert.id} 
+                              className="dropdown-item concert-item"
+                              onClick={() => handleSelectConcert(concert)}
+                            >
+                              <div className="d-flex justify-content-between align-items-center">
+                                <div>
+                                  <div className="fw-bold">{concert.titre || `Concert du ${concert.date}`}</div>
+                                  <div className="small text-muted">
+                                    {concert.date && (
+                                      <span className="me-2">
+                                        <i className="bi bi-calendar-event me-1"></i>
+                                        {new Date(concert.date).toLocaleDateString('fr-FR')}
+                                      </span>
+                                    )}
+                                    {concert.lieuNom && (
+                                      <span>
+                                        <i className="bi bi-geo-alt me-1"></i>
+                                        {concert.lieuNom}
+                                      </span>
+                                    )}
+                                  </div>
+                                </div>
+                                <button 
+                                  className="btn btn-sm btn-outline-primary"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleSelectConcert(concert);
+                                  }}
+                                >
+                                  <i className="bi bi-plus-lg"></i>
+                                </button>
+                              </div>
+                            </div>
+                          ))
+                        ) : concertSearchTerm.length >= 2 ? (
+                          <div className="dropdown-item text-muted">Aucun concert trouvé</div>
+                        ) : (
+                          <div className="dropdown-item text-muted">Commencez à taper pour rechercher</div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
                 
                 {programmateur.concertsAssocies?.length > 0 ? (
                   <div className="concert-list">

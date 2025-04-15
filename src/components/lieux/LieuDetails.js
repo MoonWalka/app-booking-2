@@ -12,6 +12,7 @@ import {
   getDocs,
   orderBy,
   limit
+  setDoc
 } from 'firebase/firestore';
 import { db } from '../../firebase';
 import Badge from 'react-bootstrap/Badge';

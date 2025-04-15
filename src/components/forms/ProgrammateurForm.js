@@ -172,8 +172,8 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
   
     try {
       // Validation des champs obligatoires
-      if (!formData.contact.nom || !formData.contact.email) {
-        alert('Le nom et l\'email sont obligatoires');
+      if (!formData.contact.nom ) {
+        alert('Le nom est obligatoire');
         setIsSubmitting(false);
         return;
       }
@@ -492,7 +492,7 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
                       name="contact.email"
                       value={formData.contact.email}
                       onChange={handleChange}
-                      required
+                      //required
                       placeholder="Ex: jean.dupont@example.com"
                     />
                   </div>

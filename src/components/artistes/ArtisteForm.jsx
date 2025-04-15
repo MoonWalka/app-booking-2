@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { db } from '../../firebase';
 import {
   collection,
@@ -13,6 +13,7 @@ import '../../style/artisteForm.css';
 const ArtisteForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [artiste, setArtiste] = useState({
@@ -41,6 +42,17 @@ const ArtisteForm = () => {
   });
 
   useEffect(() => {
+    // Récupérer le nom depuis les paramètres d'URL (si présent)
+    const queryParams = new URLSearchParams(location.search);
+    const nomFromUrl = queryParams.get('nom');
+    
+    if (nomFromUrl && (!id || id === 'nouveau')) {
+      setArtiste(prev => ({
+        ...prev,
+        nom: nomFromUrl
+      }));
+    }
+
     if (id && id !== 'nouveau') {
       setLoading(true);
       const fetchArtiste = async () => {
@@ -63,7 +75,7 @@ const ArtisteForm = () => {
       
       fetchArtiste();
     }
-  }, [id, navigate]);
+  }, [id, navigate, location.search]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -250,6 +262,7 @@ const ArtisteForm = () => {
           </div>
         </div>
 
+        {/* Reste du formulaire inchangé... */}
         {/* Carte - Membres du groupe */}
         <div className="form-card">
           <div className="card-header">

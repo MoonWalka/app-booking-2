@@ -136,3 +136,99 @@
   padding: 40px;
   color: #6c757d;
 }
+
+/* Nouvelles classes pour la barre de recherche améliorée */
+.search-input-group {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  position: relative;
+}
+
+.search-input {
+  flex: 1;
+  position: relative;
+}
+
+.btn-clear {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #6c757d;
+  padding: 0;
+  cursor: pointer;
+}
+
+.btn-add-artiste {
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.search-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: calc(100% - 130px); /* Largeur de la barre de recherche moins le bouton */
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  z-index: 100;
+  max-height: 300px;
+  overflow-y: auto;
+  margin-top: 5px;
+}
+
+.search-item, .create-new-item {
+  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  color: #333;
+  border-bottom: 1px solid #eee;
+}
+
+.search-item:hover, .create-new-item:hover {
+  background-color: #f8f9fa;
+}
+
+.create-new-item {
+  color: #007bff;
+}
+
+.item-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #f1f3f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.item-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.item-content {
+  flex: 1;
+}
+
+.item-name {
+  font-weight: 500;
+}
+
+.item-genre {
+  font-size: 0.8rem;
+  color: #6c757d;
+}

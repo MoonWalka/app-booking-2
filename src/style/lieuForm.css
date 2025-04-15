@@ -138,3 +138,83 @@
 .pac-icon {
   margin-right: 10px;
 }
+/* Styles pour l'autocomplétion d'adresse et la prévisualisation de carte */
+.address-search-container {
+  position: relative;
+}
+
+.map-preview {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 10px;
+  background-color: #f8f9fa;
+}
+
+.map-container {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.address-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 300px;
+  overflow-y: auto;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  z-index: 1050;
+  margin-top: 5px;
+}
+
+.address-suggestion-item {
+  display: flex;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.2s;
+}
+
+.address-suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.address-suggestion-item:hover {
+  background-color: #f8f9fa;
+}
+
+.suggestion-icon {
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  color: #007bff;
+}
+
+.suggestion-text {
+  flex: 1;
+}
+
+.suggestion-name {
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.suggestion-details {
+  font-size: 0.85rem;
+  color: #6c757d;
+  margin-top: 3px;
+}
+
+.address-searching {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 5px;
+  color: #6c757d;
+  font-size: 0.9rem;
+}

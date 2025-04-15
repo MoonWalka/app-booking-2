@@ -3,26 +3,45 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+import { getRemoteConfig, fetchAndActivate } from "firebase/remote-config";
 import { mockFirestore } from "./mockStorage";
 
 // Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-  authDomain: "app-booking-26571.firebaseapp.com",
-  projectId: "app-booking-26571",
-  storageBucket: "app-booking-26571.firebasestorage.app",
-  messagingSenderId: "985724562753",
-  appId: "1:985724562753:web:146bd6983fd016cb9a85c0",
-  measurementId: "G-RL3N09C0WM"
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+// Initialisation conditionnelle pour éviter les erreurs si les variables ne sont pas définies
+const initFirebase = () => {
+  try {
+    // Vérifier si toutes les configurations nécessaires sont disponibles
+    const requiredConfigs = ['apiKey', 'authDomain', 'projectId'];
+    const missingConfigs = requiredConfigs.filter(key => !firebaseConfig[key]);
+    
+    if (missingConfigs.length > 0) {
+      console.warn(`Firebase configuration incomplete. Missing: ${missingConfigs.join(', ')}`);
+      return null;
+    }
+    
+    return initializeApp(firebaseConfig);
+  } catch (error) {
+    console.error("Error initializing Firebase:", error);
+    return null;
+  }
+};
 
-// Initialiser l'authentification Firebase
-export const auth = getAuth(app);
+// Initialize Firebase conditionally
+const app = initFirebase();
+
+// Export conditionally initialized services
+export const analytics = app ? getAnalytics(app) : null;
+export const auth = app ? getAuth(app) : null;
 
 // Utiliser mockFirestore en développement, Firestore en production
 const isEmulator = window.location.hostname === 'localhost' || 
@@ -34,4 +53,33 @@ console.log('Running in ' + (isEmulator ? 'emulator' : 'production') + ' mode. D
 export const BYPASS_AUTH = process.env.REACT_APP_BYPASS_AUTH === 'true';
 
 // Exporter db qui sera utilisé par tous les composants
-export const db = isEmulator ? mockFirestore : getFirestore(app);
+export const db = isEmulator ? mockFirestore : (app ? getFirestore(app) : null);
+
+// Initialiser Remote Config
+export const initializeRemoteConfig = async () => {
+  if (!app) {
+    console.error("Cannot initialize Remote Config: Firebase app not initialized");
+    return null;
+  }
+  
+  try {
+    const remoteConfig = getRemoteConfig(app);
+    
+    // Configurer le temps minimum entre les actualisations (1 heure en ms)
+    remoteConfig.settings.minimumFetchIntervalMillis = 3600000;
+    
+    // Définir les valeurs par défaut (utilisées en cas d'échec de chargement)
+    remoteConfig.defaultConfig = {
+      locationiq_api_key: process.env.REACT_APP_LOCATIONIQ_API_KEY || ""
+    };
+    
+    // Récupérer et activer la configuration
+    await fetchAndActivate(remoteConfig);
+    console.log("Remote Config activé avec succès");
+    
+    return remoteConfig;
+  } catch (error) {
+    console.error("Erreur d'initialisation de Remote Config:", error);
+    return null;
+  }
+};

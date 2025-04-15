@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { collection, doc, getDoc, setDoc, serverTimestamp, query, where, getDocs, orderBy, limit } from 'firebase/firestore';
 import { db } from '../../firebase';
+import { useLocationIQ } from '../../hooks/useLocationIQ';
 import '../../style/lieuForm.css';
 
 const LieuForm = () => {
@@ -23,15 +24,17 @@ const LieuForm = () => {
     },
     programmateurId: null,
     programmateurNom: null,
-    // Ajoutez ces propriétés pour stocker les coordonnées géographiques
     latitude: null,
-    longitude: null
+    longitude: null,
+    display_name: ''
   });
   
-  // Référence pour l'input d'adresse (pour l'autocomplete)
-  const adresseInputRef = useRef(null);
-  // Référence pour l'autocomplete
-  const autocompleteRef = useRef(null);
+  // État pour les suggestions d'adresse
+  const [addressSuggestions, setAddressSuggestions] = useState([]);
+  const [isSearchingAddress, setIsSearchingAddress] = useState(false);
+  const addressTimeoutRef = useRef(null);
+  const addressInputRef = useRef(null);
+  const suggestionsRef = useRef(null);
   
   // États pour la recherche de programmateurs
   const [searchTerm, setSearchTerm] = useState('');
@@ -40,6 +43,9 @@ const LieuForm = () => {
   const [selectedProgrammateur, setSelectedProgrammateur] = useState(null);
   const searchTimeoutRef = useRef(null);
   const dropdownRef = useRef(null);
+  
+  // Utiliser le hook LocationIQ
+  const { isLoading: isApiLoading, error: apiError, searchAddress, getStaticMapUrl } = useLocationIQ();
   
   useEffect(() => {
     const fetchLieu = async () => {
@@ -89,90 +95,62 @@ const LieuForm = () => {
     };
 
     fetchLieu();
-    
-    // Initialisation de l'autocomplete Google Places
-    if (window.google && window.google.maps && window.google.maps.places) {
-      initAutocomplete();
-    } else {
-      // Si l'API n'est pas encore chargée, attendre et réessayer
-      const checkGoogleMapsLoaded = setInterval(() => {
-        if (window.google && window.google.maps && window.google.maps.places) {
-          clearInterval(checkGoogleMapsLoaded);
-          initAutocomplete();
-        }
-      }, 100);
-      
-      // Nettoyer l'intervalle si le composant est démonté
-      return () => clearInterval(checkGoogleMapsLoaded);
-    }
   }, [id, navigate]);
 
-  // Initialisation de Google Places Autocomplete
-  const initAutocomplete = () => {
-    // Vérifier que l'input est monté
-    if (adresseInputRef.current) {
-      // Options pour l'autocomplete (limiter aux adresses, en France par défaut)
-      const options = {
-        types: ['address'],
-        componentRestrictions: { country: 'fr' } // Limiter aux adresses en France, modifiez selon vos besoins
-      };
-      
-      // Créer l'objet autocomplete
-      autocompleteRef.current = new window.google.maps.places.Autocomplete(
-        adresseInputRef.current,
-        options
-      );
-      
-      // Ajouter un écouteur d'événements pour quand un lieu est sélectionné
-      autocompleteRef.current.addListener('place_changed', handlePlaceSelect);
-    }
-  };
-  
-  // Fonction appelée quand un lieu est sélectionné dans l'autocomplete
-  const handlePlaceSelect = () => {
-    const place = autocompleteRef.current.getPlace();
-    
-    if (!place.geometry) {
-      console.log("Détails du lieu introuvables pour l'entrée:", place.name);
-      return;
+  // Gestionnaire pour la recherche d'adresse
+  useEffect(() => {
+    // Nettoyer le timeout précédent
+    if (addressTimeoutRef.current) {
+      clearTimeout(addressTimeoutRef.current);
     }
     
-    // Extraire les composants de l'adresse
-    let adresse = '';
-    let codePostal = '';
-    let ville = '';
-    let pays = 'France'; // Par défaut
-    
-    // Parcourir les composants d'adresse
-    place.address_components.forEach(component => {
-      const types = component.types;
-      
-      if (types.includes('street_number') || types.includes('route')) {
-        // Numéro et nom de la rue
-        adresse += component.long_name + ' ';
-      } else if (types.includes('postal_code')) {
-        // Code postal
-        codePostal = component.long_name;
-      } else if (types.includes('locality')) {
-        // Ville
-        ville = component.long_name;
-      } else if (types.includes('country')) {
-        // Pays
-        pays = component.long_name;
+    const handleSearch = async () => {
+      if (!lieu.adresse || lieu.adresse.length < 3 || isApiLoading) {
+        setAddressSuggestions([]);
+        return;
       }
-    });
+      
+      setIsSearchingAddress(true);
+      
+      try {
+        const results = await searchAddress(lieu.adresse);
+        setAddressSuggestions(results || []);
+      } catch (error) {
+        console.error('Erreur lors de la recherche d\'adresse:', error);
+        setAddressSuggestions([]);
+      } finally {
+        setIsSearchingAddress(false);
+      }
+    };
     
-    // Mettre à jour le state avec les informations d'adresse
-    setLieu(prev => ({
-      ...prev,
-      adresse: adresse.trim(),
-      codePostal,
-      ville,
-      pays,
-      latitude: place.geometry.location.lat(),
-      longitude: place.geometry.location.lng()
-    }));
-  };
+    // N'effectuer la recherche que si l'adresse a au moins 3 caractères
+    if (lieu.adresse && lieu.adresse.length >= 3 && !isApiLoading) {
+      addressTimeoutRef.current = setTimeout(handleSearch, 300);
+    } else {
+      setAddressSuggestions([]);
+    }
+    
+    return () => {
+      if (addressTimeoutRef.current) {
+        clearTimeout(addressTimeoutRef.current);
+      }
+    };
+  }, [lieu.adresse, isApiLoading, searchAddress]);
+
+  // Fermer les suggestions si on clique ailleurs
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (suggestionsRef.current && !suggestionsRef.current.contains(event.target) && 
+          addressInputRef.current && !addressInputRef.current.contains(event.target)) {
+        setAddressSuggestions([]);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   // Effet pour gérer la recherche de programmateurs
   useEffect(() => {
@@ -244,6 +222,46 @@ const LieuForm = () => {
     } finally {
       setIsSearching(false);
     }
+  };
+
+  // Sélectionner une adresse parmi les suggestions
+  const handleSelectAddress = (address) => {
+    let codePostal = '';
+    let ville = '';
+    let pays = 'France';
+    let adresse = '';
+    
+    // Extraire les composants d'adresse
+    if (address.address) {
+      // Extraire le code postal
+      codePostal = address.address.postcode || '';
+      
+      // Extraire la ville
+      ville = address.address.city || address.address.town || address.address.village || '';
+      
+      // Extraire le pays
+      pays = address.address.country || 'France';
+      
+      // Construire l'adresse de rue
+      const houseNumber = address.address.house_number || '';
+      const road = address.address.road || '';
+      adresse = `${houseNumber} ${road}`.trim();
+    }
+    
+    // Mettre à jour le state avec les informations d'adresse
+    setLieu(prev => ({
+      ...prev,
+      adresse: adresse || address.display_name.split(',')[0],
+      codePostal,
+      ville,
+      pays,
+      latitude: address.lat,
+      longitude: address.lon,
+      display_name: address.display_name
+    }));
+    
+    // Fermer les suggestions
+    setAddressSuggestions([]);
   };
 
   // Fonction pour créer un nouveau programmateur
@@ -364,6 +382,14 @@ const LieuForm = () => {
     return <div className="text-center my-5 loading-spinner">Chargement du lieu...</div>;
   }
 
+  if (isApiLoading) {
+    return <div className="text-center my-5 loading-spinner">Chargement de l'API de géolocalisation...</div>;
+  }
+
+  if (apiError) {
+    console.error("Erreur API LocationIQ:", apiError);
+  }
+
   return (
     <div className="lieu-form-container">
       <div className="form-header-container">
@@ -442,7 +468,7 @@ const LieuForm = () => {
             <h3>Adresse</h3>
           </div>
           <div className="card-body">
-            <div className="form-group">
+            <div className="form-group address-search-container">
               <label htmlFor="adresse" className="form-label">Adresse <span className="required">*</span></label>
               <div className="input-group">
                 <input
@@ -450,11 +476,12 @@ const LieuForm = () => {
                   className="form-control"
                   id="adresse"
                   name="adresse"
-                  ref={adresseInputRef} // Référence pour l'autocomplete
+                  ref={addressInputRef}
                   value={lieu.adresse}
                   onChange={handleChange}
                   required
                   placeholder="Commencez à taper une adresse..."
+                  autoComplete="off"
                 />
                 <span className="input-group-text">
                   <i className="bi bi-geo-alt"></i>
@@ -463,6 +490,42 @@ const LieuForm = () => {
               <small className="form-text text-muted">
                 Commencez à taper pour voir des suggestions d'adresses
               </small>
+              
+              {/* Suggestions d'adresse */}
+              {addressSuggestions.length > 0 && (
+                <div className="address-suggestions" ref={suggestionsRef}>
+                  {addressSuggestions.map((suggestion, index) => (
+                    <div
+                      key={index}
+                      className="address-suggestion-item"
+                      onClick={() => handleSelectAddress(suggestion)}
+                    >
+                      <div className="suggestion-icon">
+                        <i className="bi bi-geo-alt-fill"></i>
+                      </div>
+                      <div className="suggestion-text">
+                        <div className="suggestion-name">{suggestion.display_name}</div>
+                        {suggestion.address && (
+                          <div className="suggestion-details">
+                            {suggestion.address.postcode && suggestion.address.city && (
+                              <span>{suggestion.address.postcode} {suggestion.address.city}</span>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              
+              {isSearchingAddress && (
+                <div className="address-searching">
+                  <div className="spinner-border spinner-border-sm text-primary" role="status">
+                    <span className="visually-hidden">Recherche en cours...</span>
+                  </div>
+                  <span className="searching-text">Recherche d'adresses...</span>
+                </div>
+              )}
             </div>
 
             <div className="row">
@@ -514,15 +577,12 @@ const LieuForm = () => {
             {lieu.latitude && lieu.longitude && (
               <div className="map-preview mt-3">
                 <div className="map-container">
-                  <iframe
-                    title="Aperçu de la localisation"
-                    width="100%"
-                    height="200"
-                    frameBorder="0"
-                    style={{ border: 0, borderRadius: '4px' }}
-                    src={`https://www.google.com/maps/embed/v1/place?key=VOTRE_CLE_API&q=${lieu.latitude},${lieu.longitude}&zoom=15`}
-                    allowFullScreen
-                  ></iframe>
+                  <img
+                    src={getStaticMapUrl(lieu.latitude, lieu.longitude, 15, 600, 200)}
+                    alt="Localisation"
+                    className="img-fluid"
+                    style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '4px' }}
+                  />
                 </div>
                 <small className="form-text text-muted">
                   Aperçu de l'emplacement

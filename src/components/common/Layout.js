@@ -23,7 +23,7 @@ function Layout() {
     <div className="layout-container">
       <nav className="sidebar">
         <div className="sidebar-header">
-          <h3>{APP_NAME</h3>
+          <h3>{APP_NAME}</h3>
         </div>
         <div className="sidebar-content">
           <ul className="nav-links">

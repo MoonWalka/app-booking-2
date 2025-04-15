@@ -5,6 +5,15 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+// Vérification des variables d'environnement
+console.log("--- Vérification des variables d'environnement ---");
+console.log("NODE_ENV:", process.env.NODE_ENV);
+console.log("REACT_APP_FIREBASE_API_KEY existe:", !!process.env.REACT_APP_FIREBASE_API_KEY);
+console.log("REACT_APP_ variables:", Object.keys(process.env)
+  .filter(key => key.startsWith('REACT_APP_'))
+  .join(", "));
+console.log("--- Fin de la vérification ---");
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>

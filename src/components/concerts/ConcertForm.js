@@ -422,6 +422,59 @@ const ConcertForm = () => {
     }
   };
 
+  // Fonction pour créer un programmateur
+  const handleCreateProgrammateur = async () => {
+    try {
+      // Vérifier qu'un nom de programmateur a été saisi
+      if (!progSearchTerm.trim()) {
+        alert('Veuillez saisir un nom de programmateur avant de créer un nouveau programmateur.');
+        return;
+      }
+      
+      // Créer directement un nouveau programmateur avec le nom saisi dans la recherche
+      const newProgRef = doc(collection(db, 'programmateurs'));
+      
+      // Construire le nom complet et le prénom (en supposant que le nom est au format "Prénom Nom")
+      const nameParts = progSearchTerm.trim().split(' ');
+      const nom = nameParts.length > 1 ? nameParts.join(' ') : progSearchTerm.trim();
+      const prenom = '';  // Vous pouvez adapter cette logique selon vos besoins
+      
+      const progData = {
+        nom: nom,
+        nomLowercase: nom.toLowerCase(),
+        prenom: prenom,
+        email: '',
+        telephone: '',
+        structure: '',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      
+      await setDoc(newProgRef, progData);
+      
+      // Ajouter le nouveau programmateur à la liste
+      const newProgWithId = { ...progData, id: newProgRef.id };
+      setProgrammateurs(prev => [...prev, newProgWithId]);
+      
+      // Mettre à jour le formulaire avec le nouveau programmateur
+      setFormData(prev => ({
+        ...prev,
+        programmateurId: newProgRef.id,
+        programmateurNom: nom
+      }));
+      
+      // Fermer le dropdown de résultats de recherche
+      setShowProgResults(false);
+      
+      // Afficher un message de confirmation
+      alert(`Le programmateur "${nom}" a été créé avec succès. Vous pourrez compléter ses détails plus tard.`);
+      
+    } catch (error) {
+      console.error('Erreur lors de la création du programmateur:', error);
+      alert('Une erreur est survenue lors de la création du programmateur.');
+    }
+  };
+
   // Nouvelle fonction pour gérer la suppression
   const handleDelete = async () => {
     try {
@@ -626,18 +679,27 @@ const ConcertForm = () => {
         </div>
       )}
 
-      {/* Barre de recherche pour les programmateurs */}
+      {/* Barre de recherche pour les programmateurs - MODIFIÉE */}
       <div className="mb-3" ref={progDropdownRef}>
         <label htmlFor="programmateurSearch" className="form-label">Programmateur</label>
-        <input
-          type="text"
-          className="form-control"
-          id="programmateurSearch"
-          placeholder="Rechercher un programmateur..."
-          value={progSearchTerm}
-          onChange={(e) => setProgSearchTerm(e.target.value)}
-          onFocus={() => progSearchTerm.length >= 2 && setShowProgResults(true)}
-        />
+        <div className="input-group">
+          <input
+            type="text"
+            className="form-control"
+            id="programmateurSearch"
+            placeholder="Rechercher un programmateur..."
+            value={progSearchTerm}
+            onChange={(e) => setProgSearchTerm(e.target.value)}
+            onFocus={() => progSearchTerm.length >= 2 && setShowProgResults(true)}
+          />
+          <button
+            type="button"
+            className="btn btn-outline-secondary"
+            onClick={handleCreateProgrammateur}
+          >
+            Créer un programmateur
+          </button>
+        </div>
         
         {/* Résultats de recherche pour les programmateurs */}
         {showProgResults && progResults.length > 0 && (
@@ -736,7 +798,7 @@ const ConcertForm = () => {
           alignItems: 'center',
           zIndex: 1000
         }}>
-          <div className="modal-confirm" style={{
+                    <div className="modal-confirm" style={{
             backgroundColor: 'white',
             borderRadius: '8px',
             width: '400px',

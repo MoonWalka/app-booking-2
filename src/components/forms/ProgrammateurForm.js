@@ -172,51 +172,46 @@ const handleSubmit = async (e) => {
   setError(null);
 
   try {
-    // Validation des champs obligatoires
-    if (!formData.contact.nom || !formData.contact.email) {
-      alert('Le nom et l\'email sont obligatoires');
-      setIsSubmitting(false);
-      return;
-    }
+    // Validation des champs obligatoires - uniquement le nom est requis
+if (!formData.contact.nom) {
+  alert('Le nom est obligatoire');
+  setIsSubmitting(false);
+  return;
+}
+
 
     // 1. Si nous sommes en mode formulaire public, vérifier d'abord s'il y a un programmateur existant
     let progId = id && id !== 'nouveau' ? id : null;
     
     if (isPublicFormMode) {
-      // Vérifier si un programmateur avec cet email existe déjà
-      try {
-        const progsQuery = query(
-          collection(db, 'programmateurs'), 
-          where('email', '==', formData.contact.email)
-        );
-        
-        const progsSnapshot = await getDocs(progsQuery);
-        
-        if (!progsSnapshot.empty) {
-          // On a trouvé un programmateur existant avec cet email
-          progId = progsSnapshot.docs[0].id;
-          console.log('Programmateur existant trouvé:', progId);
-        } else if (concertId) {
-          // Si le concert a déjà un programmateur associé, utiliser cet ID
-          const concertDoc = await getDoc(doc(db, 'concerts', concertId));
-          if (concertDoc.exists() && concertDoc.data().programmateurId) {
-            progId = concertDoc.data().programmateurId;
-            console.log('Programmateur associé au concert trouvé:', progId);
-          }
-        }
-      } catch (error) {
-        console.error('Erreur lors de la vérification de l\'existence du programmateur:', error);
-      }
-      
-      // Si aucun programmateur existant n'a été trouvé, en créer un nouveau
-      if (!progId) {
-        progId = doc(collection(db, 'programmateurs')).id;
-        console.log('Nouveau programmateur créé:', progId);
-      }
-    } else if (!progId) {
-      // En mode admin standard, créer un nouvel ID si nécessaire
-      progId = doc(collection(db, 'programmateurs')).id;
+    // Vérifier si un programmateur avec cet email existe déjà
+try {
+  // Seulement si un email a été fourni
+  if (formData.contact.email) {
+    const progsQuery = query(
+      collection(db, 'programmateurs'), 
+      where('email', '==', formData.contact.email)
+    );
+    
+    const progsSnapshot = await getDocs(progsQuery);
+    
+    if (!progsSnapshot.empty) {
+      // On a trouvé un programmateur existant avec cet email
+      progId = progsSnapshot.docs[0].id;
+      console.log('Programmateur existant trouvé:', progId);
     }
+  } else if (concertId) {
+    // Si le concert a déjà un programmateur associé, utiliser cet ID
+    const concertDoc = await getDoc(doc(db, 'concerts', concertId));
+    if (concertDoc.exists() && concertDoc.data().programmateurId) {
+      progId = concertDoc.data().programmateurId;
+      console.log('Programmateur associé au concert trouvé:', progId);
+    }
+  }
+} catch (error) {
+  console.error('Erreur lors de la vérification de l\'existence du programmateur:', error);
+}
+
 
     // Récupérer les données existantes si on met à jour un programmateur
     let existingProgData = {};
@@ -483,7 +478,7 @@ const handleSubmit = async (e) => {
             <div className="row">
               <div className="col-md-6">
                 <div className="form-group">
-                  <label htmlFor="contact.email" className="form-label">Email <span className="required">*</span></label>
+                  <label htmlFor="contact.email" className="form-label">Email {/*<span className="required">*</span>*/}</label>
                   <div className="input-group">
                     <span className="input-group-text"><i className="bi bi-envelope"></i></span>
                     <input
@@ -493,7 +488,7 @@ const handleSubmit = async (e) => {
                       name="contact.email"
                       value={formData.contact.email}
                       onChange={handleChange}
-                      required
+                      //required
                       placeholder="Ex: jean.dupont@example.com"
                     />
                   </div>

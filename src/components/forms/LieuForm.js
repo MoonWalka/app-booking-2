@@ -284,6 +284,21 @@ const LieuForm = () => {
     };
   }, []);
 
+  // Gestionnaire de clic extérieur pour fermer la liste des suggestions d'adresse
+useEffect(() => {
+  const handleClickOutsideAddressSuggestions = (event) => {
+    if (suggestionsRef.current && !suggestionsRef.current.contains(event.target) && 
+        addressInputRef.current && !addressInputRef.current.contains(event.target)) {
+      setAddressSuggestions([]);
+    }
+  };
+  
+  document.addEventListener('mousedown', handleClickOutsideAddressSuggestions);
+  return () => {
+    document.removeEventListener('mousedown', handleClickOutsideAddressSuggestions);
+  };
+}, []);
+
   // Fonction pour rechercher des programmateurs dans Firebase
   const searchProgrammateurs = async (term) => {
     try {

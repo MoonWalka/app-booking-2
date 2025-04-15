@@ -1,10 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { APP_NAME } from '../../config';
 
 const Sidebar = () => {
   return (
     <div className="bg-dark text-white p-3 sidebar">
-      <h5 className="mb-3">App Booking</h5>
+      <h5 className="mb-3">{APP_NAME}</h5>
       <ul className="nav flex-column">
         <li className="nav-item">
           <Link className="nav-link text-white" to="/">

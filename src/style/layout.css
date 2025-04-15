@@ -121,5 +121,24 @@
     .nav-links a {
       justify-content: center;
     }
+  
+  /* ajout de la marque */
+  }
+  .brand-container {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
   }
   
+  .main-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  
+  .sub-brand {
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+    opacity: 0.8;
+  }

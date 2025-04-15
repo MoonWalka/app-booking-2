@@ -2,6 +2,9 @@ import React from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import '../../style/layout.css';
+import { APP_NAME } from '../../config';
+
+
 
 function Layout() {
   const { currentUser, logout } = useAuth();
@@ -20,7 +23,7 @@ function Layout() {
     <div className="layout-container">
       <nav className="sidebar">
         <div className="sidebar-header">
-          <h3>App Booking</h3>
+          <h3>{APP_NAME</h3>
         </div>
         <div className="sidebar-content">
           <ul className="nav-links">

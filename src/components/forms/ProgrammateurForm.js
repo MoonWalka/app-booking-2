@@ -482,7 +482,7 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
             <div className="row">
               <div className="col-md-6">
                 <div className="form-group">
-                  <label htmlFor="contact.email" className="form-label">Email <span className="required">*</span></label>
+                  <label htmlFor="contact.email" className="form-label">Email {/* <span className="required">*</span> */}</label>
                   <div className="input-group">
                     <span className="input-group-text"><i className="bi bi-envelope"></i></span>
                     <input

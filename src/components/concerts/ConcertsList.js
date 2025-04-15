@@ -156,7 +156,68 @@ const ConcertsList = () => {
       )}
     </OverlayTrigger>
   );
-
+  
+  const getStatusDetails = (statut) => {
+    switch (statut) {
+      case 'contact':
+        return {
+          icon: '📞',
+          label: 'Contact établi',
+          variant: 'info',
+          tooltip: 'Premier contact établi avec le programmateur',
+          step: 1
+        };
+      case 'preaccord':
+        return {
+          icon: '✅',
+          label: 'Pré-accord',
+          variant: 'primary',
+          tooltip: 'Accord verbal obtenu, en attente de confirmation',
+          step: 2
+        };
+      case 'contrat':
+        return {
+          icon: '📄',
+          label: 'Contrat signé',
+          variant: 'success',
+          tooltip: 'Contrat signé par toutes les parties',
+          step: 3
+        };
+      case 'acompte':
+        return {
+          icon: '💸',
+          label: 'Acompte facturé',
+          variant: 'warning',
+          tooltip: 'Acompte facturé, en attente de paiement',
+          step: 4
+        };
+      case 'solde':
+        return {
+          icon: '🔁',
+          label: 'Solde facturé',
+          variant: 'secondary',
+          tooltip: 'Solde facturé, concert terminé',
+          step: 5
+        };
+      case 'annule':
+        return {
+          icon: '❌',
+          label: 'Annulé',
+          variant: 'danger',
+          tooltip: 'Concert annulé',
+          step: 0
+        };
+      default:
+        return {
+          icon: '❓',
+          label: statut || 'Non défini',
+          variant: 'light',
+          tooltip: 'Statut non défini',
+          step: 0
+        };
+    }
+  };
+  
   // Composant pour afficher le statut avancé avec infos sur les étapes
   const StatusWithInfo = ({ concert }) => {
     const [showDetails, setShowDetails] = useState(false);

@@ -4,6 +4,65 @@ import { collection, doc, getDoc, setDoc, serverTimestamp, query, where, getDocs
 import { db } from '../../firebase';
 import { useLocationIQ } from '../../hooks/useLocationIQ';
 import '../../style/lieuForm.css';
+// Imports pour Leaflet
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+
+// Correction pour les icônes Leaflet
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+});
+
+// Composant pour mettre à jour automatiquement la vue de la carte
+const MapPositionHandler = ({ position }) => {
+  const map = useMap();
+  
+  useEffect(() => {
+    if (position && position.lat && position.lng) {
+      map.flyTo(position, map.getZoom());
+    }
+  }, [position, map]);
+  
+  return null;
+};
+
+// Composant pour un marqueur déplaçable
+const DraggableMarker = ({ position, setPosition, lieu }) => {
+  const markerRef = useRef(null);
+  
+  const eventHandlers = {
+    dragend() {
+      const marker = markerRef.current;
+      if (marker) {
+        const latLng = marker.getLatLng();
+        setPosition({
+          latitude: latLng.lat,
+          longitude: latLng.lng
+        });
+      }
+    },
+  };
+
+  return (
+    <Marker
+      draggable={true}
+      eventHandlers={eventHandlers}
+      position={position}
+      ref={markerRef}
+    >
+      <Popup>
+        <strong>{lieu.nom}</strong><br />
+        {lieu.adresse}<br />
+        {lieu.codePostal} {lieu.ville}<br />
+        <small>Déplacez ce marqueur pour ajuster l'emplacement précis</small>
+      </Popup>
+    </Marker>
+  );
+};
 
 const LieuForm = () => {
   const { id } = useParams();
@@ -44,6 +103,9 @@ const LieuForm = () => {
   const searchTimeoutRef = useRef(null);
   const dropdownRef = useRef(null);
   
+  // État pour l'affichage de la carte
+  const [showMap, setShowMap] = useState(false);
+  
   // Utilisation du hook LocationIQ
   const { isLoading: isApiLoading, error: apiError, searchAddress, getStaticMapUrl } = useLocationIQ();
   
@@ -60,6 +122,15 @@ const LieuForm = () => {
       console.error("Erreur hook LocationIQ:", apiError);
     }
   }, [isApiLoading, apiError, searchAddress, getStaticMapUrl]);
+  
+  // Effet pour afficher la carte lorsque les coordonnées sont disponibles
+  useEffect(() => {
+    if (lieu.latitude && lieu.longitude) {
+      setShowMap(true);
+    } else {
+      setShowMap(false);
+    }
+  }, [lieu.latitude, lieu.longitude]);
   
   useEffect(() => {
     const fetchLieu = async () => {
@@ -288,6 +359,15 @@ const LieuForm = () => {
     
     // Fermer les suggestions
     setAddressSuggestions([]);
+  };
+
+  // Fonction pour mettre à jour les coordonnées lorsque le marqueur est déplacé
+  const handleMarkerPositionChange = (position) => {
+    setLieu(prev => ({
+      ...prev,
+      latitude: position.latitude,
+      longitude: position.longitude
+    }));
   };
 
   // Fonction pour créer un nouveau programmateur
@@ -611,22 +691,29 @@ const LieuForm = () => {
               />
             </div>
             
-            {lieu.latitude && lieu.longitude && (
+            {/* Carte interactive */}
+            {showMap && (
               <div className="map-preview mt-3">
-                <div className="map-container">
-                  <img
-                    src={getStaticMapUrl(lieu.latitude, lieu.longitude, 15, 600, 200)}
-                    alt="Localisation"
-                    className="img-fluid"
-                    style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '4px' }}
-                    onError={(e) => {
-                      console.error("Erreur de chargement de la carte:", e);
-                      e.target.src = `https://via.placeholder.com/600x200?text=Carte+${lieu.latitude},${lieu.longitude}`;
-                    }}
-                  />
+                <div className="interactive-map-container">
+                  <MapContainer 
+                    center={[lieu.latitude, lieu.longitude]} 
+                    zoom={15} 
+                    style={{ height: '300px', width: '100%', borderRadius: '4px' }}
+                  >
+                    <TileLayer
+                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+                    <DraggableMarker 
+                      position={[lieu.latitude, lieu.longitude]} 
+                      setPosition={handleMarkerPositionChange}
+                      lieu={lieu}
+                    />
+                    <MapPositionHandler position={{ lat: lieu.latitude, lng: lieu.longitude }} />
+                  </MapContainer>
                 </div>
                 <small className="form-text text-muted">
-                  Aperçu de l'emplacement
+                  Vous pouvez zoomer et vous déplacer dans la carte. Déplacez le marqueur pour ajuster l'emplacement précis.
                 </small>
               </div>
             )}
@@ -739,8 +826,8 @@ const LieuForm = () => {
           </div>
         </div>
 
-        {/* Carte - Informations de contact */}
-        <div className="form-card">
+              {/* Carte - Informations de contact */}
+              <div className="form-card">
           <div className="card-header">
             <i className="bi bi-person-lines-fill"></i>
             <h3>Informations de contact</h3>

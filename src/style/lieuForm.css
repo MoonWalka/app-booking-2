@@ -173,3 +173,81 @@
   color: #6c757d;
   font-size: 0.9rem;
 }
+
+/* Nouveaux styles pour la carte interactive Leaflet */
+.interactive-map-container {
+  width: 100%;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 10px;
+}
+
+.leaflet-container {
+  width: 100%;
+  height: 300px;
+  z-index: 1; /* Assurez-vous que la carte a un z-index inférieur aux éléments dropdown */
+}
+
+.leaflet-popup-content {
+  margin: 8px 12px;
+  line-height: 1.5;
+}
+
+.leaflet-popup-content strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #344767;
+}
+
+.leaflet-popup-content small {
+  display: block;
+  margin-top: 8px;
+  font-style: italic;
+  color: #6c757d;
+}
+
+/* Assurez-vous que les contrôles de la carte sont au-dessus des autres éléments */
+.leaflet-control {
+  z-index: 1000 !important;
+}
+
+/* Style pour le marqueur en mode déplacement */
+.leaflet-marker-draggable {
+  cursor: move;
+}
+
+/* Amélioration visuelle du popup */
+.leaflet-popup {
+  margin-bottom: 20px;
+}
+
+.leaflet-popup-content-wrapper {
+  box-shadow: 0 3px 14px rgba(0,0,0,0.2);
+  border-radius: 8px;
+}
+
+.leaflet-popup-tip {
+  box-shadow: 0 3px 14px rgba(0,0,0,0.2);
+}
+
+/* Style pour l'info-bulle sur le déplacement du marqueur */
+.marker-drag-hint {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 1000;
+}
+
+.interactive-map-container:hover .marker-drag-hint {
+  opacity: 1;
+}

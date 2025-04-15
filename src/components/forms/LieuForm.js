@@ -300,7 +300,7 @@ const LieuForm = () => {
           </div>
           <div className="card-body">
             <div className="form-group">
-              <label htmlFor="adresse" className="form-label">Adresse <span className="required">*</span></label>
+              <label htmlFor="adresse" className="form-label">Adresse {/* <span className="required">*</span> */}</label>
               <input
                 type="text"
                 className="form-control"
@@ -308,7 +308,7 @@ const LieuForm = () => {
                 name="adresse"
                 value={lieu.adresse}
                 onChange={handleChange}
-                required
+                //required
                 placeholder="Numéro et nom de rue"
               />
             </div>
@@ -316,7 +316,7 @@ const LieuForm = () => {
             <div className="row">
               <div className="col-md-4">
                 <div className="form-group">
-                  <label htmlFor="codePostal" className="form-label">Code postal <span className="required">*</span></label>
+                  <label htmlFor="codePostal" className="form-label">Code postal {/* <span className="required">*</span> */}</label>
                   <input
                     type="text"
                     className="form-control"
@@ -324,14 +324,14 @@ const LieuForm = () => {
                     name="codePostal"
                     value={lieu.codePostal}
                     onChange={handleChange}
-                    required
+                    //required
                     placeholder="Ex: 75001"
                   />
                 </div>
               </div>
               <div className="col-md-8">
                 <div className="form-group">
-                  <label htmlFor="ville" className="form-label">Ville <span className="required">*</span></label>
+                  <label htmlFor="ville" className="form-label">Ville {/* <span className="required">*</span> */}</label>
                   <input
                     type="text"
                     className="form-control"
@@ -339,7 +339,7 @@ const LieuForm = () => {
                     name="ville"
                     value={lieu.ville}
                     onChange={handleChange}
-                    required
+                    //required
                     placeholder="Ex: Paris"
                   />
                 </div>
@@ -347,7 +347,7 @@ const LieuForm = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="pays" className="form-label">Pays <span className="required">*</span></label>
+              <label htmlFor="pays" className="form-label">Pays {/* <span className="required">*</span> */}</label>
               <input
                 type="text"
                 className="form-control"
@@ -355,7 +355,7 @@ const LieuForm = () => {
                 name="pays"
                 value={lieu.pays}
                 onChange={handleChange}
-                required
+                //required
               />
             </div>
           </div>

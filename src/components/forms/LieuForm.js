@@ -29,7 +29,7 @@ const LieuForm = () => {
     display_name: ''
   });
   
-  // État pour les suggestions d'adresse
+  // États pour les suggestions d'adresse
   const [addressSuggestions, setAddressSuggestions] = useState([]);
   const [isSearchingAddress, setIsSearchingAddress] = useState(false);
   const addressTimeoutRef = useRef(null);
@@ -44,8 +44,22 @@ const LieuForm = () => {
   const searchTimeoutRef = useRef(null);
   const dropdownRef = useRef(null);
   
-  // Utiliser le hook LocationIQ
+  // Utilisation du hook LocationIQ
   const { isLoading: isApiLoading, error: apiError, searchAddress, getStaticMapUrl } = useLocationIQ();
+  
+  // Log pour vérifier que le hook est bien chargé
+  useEffect(() => {
+    console.log("LieuForm - hook LocationIQ chargé:", {
+      isApiLoading,
+      hasError: !!apiError,
+      searchAddressFn: !!searchAddress,
+      getStaticMapUrlFn: !!getStaticMapUrl
+    });
+    
+    if (apiError) {
+      console.error("Erreur hook LocationIQ:", apiError);
+    }
+  }, [isApiLoading, apiError, searchAddress, getStaticMapUrl]);
   
   useEffect(() => {
     const fetchLieu = async () => {
@@ -97,7 +111,7 @@ const LieuForm = () => {
     fetchLieu();
   }, [id, navigate]);
 
-  // Gestionnaire pour la recherche d'adresse
+  // Effet pour la recherche d'adresse
   useEffect(() => {
     // Nettoyer le timeout précédent
     if (addressTimeoutRef.current) {
@@ -105,18 +119,29 @@ const LieuForm = () => {
     }
     
     const handleSearch = async () => {
+      console.log("handleSearch - état actuel:", {
+        adresse: lieu.adresse,
+        adresseLength: lieu.adresse?.length || 0,
+        isApiLoading,
+        isSearchingAddress
+      });
+      
       if (!lieu.adresse || lieu.adresse.length < 3 || isApiLoading) {
+        console.log("Conditions non remplies pour la recherche");
         setAddressSuggestions([]);
         return;
       }
       
       setIsSearchingAddress(true);
+      console.log("Recherche démarrée pour:", lieu.adresse);
       
       try {
+        // Appeler la fonction du hook
         const results = await searchAddress(lieu.adresse);
+        console.log("Résultats de recherche reçus:", results?.length || 0);
         setAddressSuggestions(results || []);
       } catch (error) {
-        console.error('Erreur lors de la recherche d\'adresse:', error);
+        console.error("Erreur lors de la recherche:", error);
         setAddressSuggestions([]);
       } finally {
         setIsSearchingAddress(false);
@@ -125,6 +150,7 @@ const LieuForm = () => {
     
     // N'effectuer la recherche que si l'adresse a au moins 3 caractères
     if (lieu.adresse && lieu.adresse.length >= 3 && !isApiLoading) {
+      console.log("Planification de la recherche après délai");
       addressTimeoutRef.current = setTimeout(handleSearch, 300);
     } else {
       setAddressSuggestions([]);
@@ -136,21 +162,14 @@ const LieuForm = () => {
       }
     };
   }, [lieu.adresse, isApiLoading, searchAddress]);
-
-  // Fermer les suggestions si on clique ailleurs
+  
+  // Log pour vérifier l'état des suggestions
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (suggestionsRef.current && !suggestionsRef.current.contains(event.target) && 
-          addressInputRef.current && !addressInputRef.current.contains(event.target)) {
-        setAddressSuggestions([]);
-      }
-    };
-    
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
+    console.log("État des suggestions:", {
+      count: addressSuggestions?.length || 0,
+      isSearching: isSearchingAddress
+    });
+  }, [addressSuggestions, isSearchingAddress]);
 
   // Effet pour gérer la recherche de programmateurs
   useEffect(() => {
@@ -226,6 +245,8 @@ const LieuForm = () => {
 
   // Sélectionner une adresse parmi les suggestions
   const handleSelectAddress = (address) => {
+    console.log("Adresse sélectionnée:", address);
+    
     let codePostal = '';
     let ville = '';
     let pays = 'France';
@@ -259,6 +280,11 @@ const LieuForm = () => {
       longitude: address.lon,
       display_name: address.display_name
     }));
+    
+    console.log("État du lieu mis à jour avec les coordonnées:", {
+      lat: address.lat, 
+      lon: address.lon
+    });
     
     // Fermer les suggestions
     setAddressSuggestions([]);
@@ -329,8 +355,15 @@ const LieuForm = () => {
     }));
   };
 
+  // Gestion de la saisie dans les champs
   const handleChange = (e) => {
     const { name, value } = e.target;
+    
+    // Log pour vérifier les changements dans le champ adresse
+    if (name === 'adresse') {
+      console.log("Modification du champ adresse:", value);
+    }
+    
     if (name.includes('.')) {
       const [parent, child] = name.split('.');
       setLieu(prev => ({
@@ -384,10 +417,6 @@ const LieuForm = () => {
 
   if (isApiLoading) {
     return <div className="text-center my-5 loading-spinner">Chargement de l'API de géolocalisation...</div>;
-  }
-
-  if (apiError) {
-    console.error("Erreur API LocationIQ:", apiError);
   }
 
   return (
@@ -491,8 +520,15 @@ const LieuForm = () => {
                 Commencez à taper pour voir des suggestions d'adresses
               </small>
               
+              {/* Log pour déboguer l'affichage des suggestions */}
+              {console.log("Rendu des suggestions:", {
+                hasSuggestions: addressSuggestions?.length > 0,
+                suggestionsCount: addressSuggestions?.length || 0,
+                isSearching: isSearchingAddress
+              })}
+              
               {/* Suggestions d'adresse */}
-              {addressSuggestions.length > 0 && (
+              {addressSuggestions && addressSuggestions.length > 0 && (
                 <div className="address-suggestions" ref={suggestionsRef}>
                   {addressSuggestions.map((suggestion, index) => (
                     <div
@@ -518,6 +554,7 @@ const LieuForm = () => {
                 </div>
               )}
               
+              {/* Indicateur de recherche */}
               {isSearchingAddress && (
                 <div className="address-searching">
                   <div className="spinner-border spinner-border-sm text-primary" role="status">
@@ -582,6 +619,10 @@ const LieuForm = () => {
                     alt="Localisation"
                     className="img-fluid"
                     style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '4px' }}
+                    onError={(e) => {
+                      console.error("Erreur de chargement de la carte:", e);
+                      e.target.src = `https://via.placeholder.com/600x200?text=Carte+${lieu.latitude},${lieu.longitude}`;
+                    }}
                   />
                 </div>
                 <small className="form-text text-muted">

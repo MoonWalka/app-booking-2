@@ -15,7 +15,6 @@ function ConcertsPage() {
         <Route path="/nouveau" element={<ConcertForm />} />
         <Route path="/:id" element={<ConcertDetails />} />
         <Route path="/:id/edit" element={<ConcertForm />} />
-        {/* Route modifiée pour utiliser le composant FormValidationInterface */}
         <Route path="/:id/form" element={<FormValidationInterface />} />
       </Routes>
     </div>

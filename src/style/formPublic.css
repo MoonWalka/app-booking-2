@@ -136,4 +136,33 @@
   .form-public .alert i {
     margin-right: 10px;
   }
-  
+  /* Ajoutez ces styles à la fin de votre fichier CSS existant */
+.form-value.updated {
+  background-color: #fff3cd;
+  border-left: 3px solid #ffc107;
+  padding-left: 8px;
+}
+
+.badge.bg-warning {
+  font-size: 0.75rem;
+  font-weight: normal;
+  vertical-align: middle;
+}
+
+.comparison-table .field-name {
+  font-weight: 600;
+}
+
+.comparison-table .existing-value, 
+.comparison-table .form-value {
+  font-family: monospace;
+  white-space: pre-wrap;
+}
+
+.comparison-table .action-cell {
+  width: 50px;
+}
+
+.comparison-table .final-value input {
+  font-family: monospace;
+}

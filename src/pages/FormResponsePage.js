@@ -134,6 +134,23 @@ const FormResponsePage = () => {
             return;
           }
           
+          // Si le formulaire est déjà rempli, mais permet d'être modifié
+if (completed) {
+  return (
+    <div className="alert alert-info">
+      <h3>Formulaire déjà complété</h3>
+      <p>Vous pouvez modifier vos informations si nécessaire avant leur validation par notre équipe.</p>
+      <button 
+        className="btn btn-primary mt-2"
+        onClick={() => setCompleted(false)} // Permet de revenir au formulaire
+      >
+        <i className="bi bi-pencil-square me-2"></i>
+        Modifier vos informations
+      </button>
+    </div>
+  );
+}
+
           console.log("Récupération des données du concert:", concertId);
           
           // Récupérer les données du concert

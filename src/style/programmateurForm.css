@@ -431,3 +431,105 @@
     align-self: flex-end;
   }
 }
+/* Styles pour le mode affichage des détails */
+.form-display {
+  font-size: 1rem;
+  padding: 0.5rem 0;
+  margin-bottom: 0;
+  min-height: 2.5rem;
+  display: flex;
+  align-items: center;
+  color: #333;
+}
+
+.email-link, .phone-link {
+  text-decoration: none;
+  color: #0d6efd;
+  transition: color 0.2s;
+}
+
+.email-link:hover, .phone-link:hover {
+  color: #0a58ca;
+  text-decoration: underline;
+}
+
+/* Style pour les cartes de concert plus détaillées */
+.concert-card {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  border: 1px solid #e9ecef;
+  transition: all 0.2s;
+}
+
+.concert-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.concert-card-body {
+  padding: 15px;
+}
+
+.concert-name {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.concert-name a {
+  text-decoration: none;
+  color: #0d6efd;
+}
+
+.concert-name a:hover {
+  text-decoration: underline;
+}
+
+.concert-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.concert-detail {
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.concert-detail i {
+  margin-right: 5px;
+  color: #0d6efd;
+}
+
+/* Styles pour les breadcrumbs */
+.breadcrumb-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.breadcrumb-item {
+  color: #6c757d;
+  cursor: pointer;
+}
+
+.breadcrumb-item:hover {
+  color: #0d6efd;
+  text-decoration: underline;
+}
+
+.breadcrumb-item.active {
+  color: #212529;
+  font-weight: 500;
+}
+
+.breadcrumb-container i {
+  margin: 0 8px;
+  font-size: 0.7rem;
+  color: #adb5bd;
+}

@@ -17,6 +17,7 @@ const ConcertsList = () => {
   const [filteredConcerts, setFilteredConcerts] = useState([]);
   const [statusFilter, setStatusFilter] = useState('tous');
   const [concertsWithForms, setConcertsWithForms] = useState([]);
+  const [unvalidatedForms, setUnvalidatedForms] = useState([]);
 
   useEffect(() => {
     const fetchConcertsAndForms = async () => {
@@ -35,7 +36,7 @@ const ConcertsList = () => {
         setFilteredConcerts(concertsData);
 
         // Récupérer les ID des concerts qui ont des formulaires associés
-        const formsRef = collection(db, 'formulaires');
+        const formsRef = collection(db, 'formLinks');
         const formsSnapshot = await getDocs(formsRef);
         
         // Créer un Set pour stocker les IDs des concerts avec formulaires
@@ -48,7 +49,27 @@ const ConcertsList = () => {
           }
         });
         
+        // Récupérer les soumissions de formulaires
+        const formSubmissionsRef = collection(db, 'formSubmissions');
+        const submissionsSnapshot = await getDocs(formSubmissionsRef);
+        
+        // Set pour stocker les IDs des concerts avec formulaires non validés
+        const concertsWithUnvalidatedFormsSet = new Set();
+        
+        submissionsSnapshot.forEach(doc => {
+          const formData = doc.data();
+          if (formData.concertId) {
+            concertsWithFormsSet.add(formData.concertId); // Ajouter aux formulaires existants
+            
+            // Si le formulaire est soumis mais pas encore validé, l'ajouter aux non validés
+            if (formData.status !== 'validated') {
+              concertsWithUnvalidatedFormsSet.add(formData.concertId);
+            }
+          }
+        });
+        
         setConcertsWithForms(Array.from(concertsWithFormsSet));
+        setUnvalidatedForms(Array.from(concertsWithUnvalidatedFormsSet));
         
         setLoading(false);
       } catch (error) {
@@ -213,6 +234,11 @@ const ConcertsList = () => {
            concerts.find(c => c.id === concertId)?.formId !== undefined;
   };
 
+  // Fonction pour vérifier si un formulaire est non validé
+  const hasUnvalidatedForm = (concertId) => {
+    return unvalidatedForms.includes(concertId);
+  };
+
   if (loading) {
     return <div className="text-center my-5 loading-spinner">Chargement des concerts...</div>;
   }
@@ -357,12 +383,17 @@ const ConcertsList = () => {
                         variant="light"
                       />
                       {hasForm(concert.id) && (
-                        <ActionButton 
-                          to={`/concerts/${concert.id}/form`} 
-                          tooltip="Voir le formulaire" 
-                          icon={<i className="bi bi-file-text"></i>} 
-                          variant="light"
-                        />
+                        <div className="position-relative">
+                          <ActionButton 
+                            to={`/concerts/${concert.id}/form`} 
+                            tooltip="Voir le formulaire" 
+                            icon={<i className="bi bi-file-text"></i>} 
+                            variant="light"
+                          />
+                          {hasUnvalidatedForm(concert.id) && (
+                            <span className="notification-badge" title="Formulaire mis à jour"></span>
+                          )}
+                        </div>
                       )}
                       {!hasForm(concert.id) && concert.programmateurId && (
                         <ActionButton 

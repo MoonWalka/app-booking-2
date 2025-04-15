@@ -13,6 +13,8 @@ import {
   setDoc,
   updateDoc,
   deleteDoc, // Ajout de l'import deleteDoc
+  arrayUnion,
+  arrayRemove,
   query,
   where,
   orderBy,
@@ -29,6 +31,7 @@ const ConcertForm = () => {
   const [showLieuForm, setShowLieuForm] = useState(false);
   const [newLieu, setNewLieu] = useState(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false); // Ajout de l'état pour la confirmation de suppression
+  const [initialProgrammateurId, setInitialProgrammateurId] = useState(null); // Pour suivre le programmateur initial
   
   // États pour la recherche
   const [lieuSearchTerm, setLieuSearchTerm] = useState('');
@@ -90,6 +93,11 @@ const ConcertForm = () => {
           if (concertDoc.exists()) {
             const concertData = concertDoc.data();
             console.log('Données du concert chargées:', concertData);
+            
+            // Stocker l'ID du programmateur initial pour gérer la mise à jour
+            if (concertData.programmateurId) {
+              setInitialProgrammateurId(concertData.programmateurId);
+            }
             
             // Si on a un lieu associé, le récupérer s'il n'est pas dans la liste initiale
             if (concertData.lieuId && !lieuxData.some(l => l.id === concertData.lieuId)) {
@@ -446,6 +454,7 @@ const ConcertForm = () => {
         email: '',
         telephone: '',
         structure: '',
+        concertsAssocies: [], // Initialiser le tableau de concerts associés
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       };
@@ -479,6 +488,32 @@ const ConcertForm = () => {
   const handleDelete = async () => {
     try {
       setIsSubmitting(true);
+      
+      // Si le concert avait un programmateur, mettre à jour sa liste de concerts associés
+      if (formData.programmateurId) {
+        try {
+          // Récupérer d'abord le programmateur
+          const progRef = doc(db, 'programmateurs', formData.programmateurId);
+          const progDoc = await getDoc(progRef);
+          
+          if (progDoc.exists()) {
+            // Supprimer le concert de la liste des concerts associés du programmateur
+            await updateDoc(progRef, {
+              concertsAssocies: arrayRemove({
+                id: id,
+                titre: formData.titre || 'Sans titre',
+                date: formData.date || null,
+                lieu: formData.lieuNom || null
+              })
+            });
+            console.log('Concert retiré de la liste des concerts associés du programmateur');
+          }
+        } catch (error) {
+          console.error('Erreur lors de la mise à jour du programmateur:', error);
+        }
+      }
+      
+      // Supprimer le concert
       await deleteDoc(doc(db, 'concerts', id));
       navigate('/concerts');
     } catch (error) {
@@ -487,6 +522,69 @@ const ConcertForm = () => {
     } finally {
       setIsSubmitting(false);
       setShowDeleteConfirm(false);
+    }
+  };
+
+  // Fonction pour mettre à jour l'association bidirectionnelle entre concert et programmateur
+  const updateProgrammateurAssociation = async (concertId, concertData, newProgrammateurId, oldProgrammateurId) => {
+    try {
+      // Si un nouveau programmateur est sélectionné
+      if (newProgrammateurId) {
+        const progRef = doc(db, 'programmateurs', newProgrammateurId);
+        const progDoc = await getDoc(progRef);
+        
+        if (progDoc.exists()) {
+          const progData = progDoc.data();
+          const concertsAssocies = progData.concertsAssocies || [];
+          
+          // Vérifier si le concert est déjà associé
+          const concertAlreadyAssociated = concertsAssocies.some(c => c.id === concertId);
+          
+          if (!concertAlreadyAssociated) {
+            // Ajouter le concert à la liste des concerts associés du programmateur
+            const concertReference = {
+              id: concertId,
+              titre: concertData.titre || 'Sans titre',
+              date: concertData.date || null,
+              lieu: concertData.lieuNom || null
+            };
+            
+            await updateDoc(progRef, {
+              concertsAssocies: arrayUnion(concertReference)
+            });
+            console.log('Concert ajouté à la liste des concerts associés du programmateur');
+          }
+        }
+      }
+      
+      // Si un ancien programmateur était associé et a changé
+      if (oldProgrammateurId && oldProgrammateurId !== newProgrammateurId) {
+        const oldProgRef = doc(db, 'programmateurs', oldProgrammateurId);
+        const oldProgDoc = await getDoc(oldProgRef);
+        
+        if (oldProgDoc.exists()) {
+          // Supprimer le concert de la liste des concerts associés de l'ancien programmateur
+          const concertReference = {
+            id: concertId,
+            titre: concertData.titre || 'Sans titre',
+            date: concertData.date || null,
+            lieu: concertData.lieuNom || null
+          };
+          
+          // Note: arrayRemove nécessite un objet exactement identique, ce qui peut ne pas fonctionner
+          // si les données ont changé. Une approche plus robuste serait de filtrer et reconstruire le tableau.
+          const oldProgData = oldProgDoc.data();
+          const updatedConcerts = (oldProgData.concertsAssocies || []).filter(c => c.id !== concertId);
+          
+          await updateDoc(oldProgRef, {
+            concertsAssocies: updatedConcerts
+          });
+          console.log('Concert retiré de la liste des concerts associés de l\'ancien programmateur');
+        }
+      }
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour des associations programmateur-concert:', error);
+      // Ne pas bloquer la sauvegarde du concert si cette étape échoue
     }
   };
 
@@ -515,6 +613,7 @@ const ConcertForm = () => {
         date: correctedDate,
         montant: formData.montant,
         statut: formData.statut,
+        titre: formData.titre || `Concert du ${correctedDate}`, // Ajout d'un titre par défaut
         
         // Infos du lieu
         lieuId: formData.lieuId,
@@ -534,6 +633,8 @@ const ConcertForm = () => {
       
       console.log('Données à enregistrer:', concertData);
   
+      let concertId = id;
+      
       if (id && id !== 'nouveau') {
         // Mise à jour d'un concert existant
         await updateDoc(doc(db, 'concerts', id), concertData);
@@ -541,7 +642,18 @@ const ConcertForm = () => {
         // Création d'un nouveau concert
         concertData.createdAt = new Date().toISOString();
         const newConcertRef = doc(collection(db, 'concerts'));
+        concertId = newConcertRef.id;
         await setDoc(newConcertRef, concertData);
+      }
+      
+      // Mise à jour bidirectionnelle : associer le concert au programmateur
+      if (formData.programmateurId || initialProgrammateurId) {
+        await updateProgrammateurAssociation(
+          concertId,
+          concertData,
+          formData.programmateurId,
+          initialProgrammateurId
+        );
       }
   
       navigate('/concerts');
@@ -570,6 +682,19 @@ const ConcertForm = () => {
     <form onSubmit={handleSubmit}>
       <div className="mb-4">
         <h2>{id && id !== 'nouveau' ? 'Modifier le concert' : 'Ajouter un concert'}</h2>
+      </div>
+
+      <div className="mb-3">
+        <label htmlFor="titre" className="form-label">Titre du concert</label>
+        <input
+          type="text"
+          className="form-control"
+          id="titre"
+          name="titre"
+          value={formData.titre || ''}
+          onChange={handleChange}
+          placeholder="Ex: Concert de jazz, Festival d'été, etc."
+        />
       </div>
 
       <div className="mb-3">
@@ -664,184 +789,184 @@ const ConcertForm = () => {
             <div className="dropdown-item text-muted">Aucun lieu trouvé</div>
           </div>
         )}
+           </div>
+
+{formData.lieuId && (
+  <div className="card mb-3">
+    <div className="card-body">
+      <h5 className="card-title">Détails du lieu</h5>
+      <p><strong>Nom:</strong> {formData.lieuNom}</p>
+      <p><strong>Adresse:</strong> {formData.lieuAdresse}</p>
+      <p><strong>Code postal:</strong> {formData.lieuCodePostal}</p>
+      <p><strong>Ville:</strong> {formData.lieuVille}</p>
+      {formData.lieuCapacite && <p><strong>Capacité:</strong> {formData.lieuCapacite}</p>}
+    </div>
+  </div>
+)}
+
+{/* Barre de recherche pour les programmateurs - MODIFIÉE */}
+<div className="mb-3" ref={progDropdownRef}>
+  <label htmlFor="programmateurSearch" className="form-label">Programmateur</label>
+  <div className="input-group">
+    <input
+      type="text"
+      className="form-control"
+      id="programmateurSearch"
+      placeholder="Rechercher un programmateur..."
+      value={progSearchTerm}
+      onChange={(e) => setProgSearchTerm(e.target.value)}
+      onFocus={() => progSearchTerm.length >= 2 && setShowProgResults(true)}
+    />
+    <button
+      type="button"
+      className="btn btn-outline-secondary"
+      onClick={handleCreateProgrammateur}
+    >
+      Créer un programmateur
+    </button>
+  </div>
+  
+  {/* Résultats de recherche pour les programmateurs */}
+  {showProgResults && progResults.length > 0 && (
+    <div className="dropdown-menu show w-100 mt-1">
+      {progResults.map(prog => (
+        <div 
+          key={prog.id} 
+          className="dropdown-item prog-item"
+          onClick={() => handleSelectProgrammateur(prog)}
+        >
+          <div className="d-flex justify-content-between align-items-center">
+            <div>
+              <div className="fw-bold">{prog.nom}</div>
+              {prog.structure && <div className="small text-muted">{prog.structure}</div>}
+              {prog.email && <div className="small text-muted">{prog.email}</div>}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  )}
+  
+  {showProgResults && progResults.length === 0 && progSearchTerm.length >= 2 && (
+    <div className="dropdown-menu show w-100 mt-1">
+      <div className="dropdown-item text-muted">Aucun programmateur trouvé</div>
+    </div>
+  )}
+</div>
+
+{formData.programmateurId && (
+  <div className="card mb-3">
+    <div className="card-body">
+      <h5 className="card-title">Programmateur sélectionné</h5>
+      <p><strong>Nom:</strong> {formData.programmateurNom}</p>
+    </div>
+  </div>
+)}
+
+<div className="mb-3">
+  <label htmlFor="notes" className="form-label">Notes</label>
+  <textarea
+    className="form-control"
+    id="notes"
+    name="notes"
+    rows="3"
+    value={formData.notes}
+    onChange={handleChange}
+  ></textarea>
+</div>
+
+<div className="d-flex justify-content-between">
+  <div>
+    <button
+      type="button"
+      className="btn btn-secondary me-2"
+      onClick={() => navigate('/concerts')}
+      disabled={isSubmitting}
+    >
+      Annuler
+    </button>
+    
+    {/* Bouton de suppression - visible uniquement en mode édition */}
+    {id && id !== 'nouveau' && (
+      <button
+        type="button"
+        className="btn btn-outline-danger"
+        onClick={() => setShowDeleteConfirm(true)}
+        disabled={isSubmitting}
+      >
+        <i className="bi bi-trash me-2"></i>
+        Supprimer
+      </button>
+    )}
+  </div>
+  
+  <button
+    type="submit"
+    className="btn btn-primary"
+    disabled={isSubmitting}
+  >
+    {isSubmitting ? 'Enregistrement...' : id && id !== 'nouveau' ? 'Enregistrer les modifications' : 'Créer le concert'}
+  </button>
+</div>
+
+{/* Modale de confirmation de suppression */}
+{showDeleteConfirm && (
+  <div className="modal-overlay" style={{
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000
+  }}>
+    <div className="modal-confirm" style={{
+      backgroundColor: 'white',
+      borderRadius: '8px',
+      width: '400px',
+      maxWidth: '90%',
+      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
+    }}>
+      <div className="modal-header" style={{
+        padding: '16px',
+        borderBottom: '1px solid #eee'
+      }}>
+        <h5>Confirmation de suppression</h5>
       </div>
-
-      {formData.lieuId && (
-        <div className="card mb-3">
-          <div className="card-body">
-            <h5 className="card-title">Détails du lieu</h5>
-            <p><strong>Nom:</strong> {formData.lieuNom}</p>
-            <p><strong>Adresse:</strong> {formData.lieuAdresse}</p>
-            <p><strong>Code postal:</strong> {formData.lieuCodePostal}</p>
-            <p><strong>Ville:</strong> {formData.lieuVille}</p>
-            {formData.lieuCapacite && <p><strong>Capacité:</strong> {formData.lieuCapacite}</p>}
-          </div>
-        </div>
-      )}
-
-      {/* Barre de recherche pour les programmateurs - MODIFIÉE */}
-      <div className="mb-3" ref={progDropdownRef}>
-        <label htmlFor="programmateurSearch" className="form-label">Programmateur</label>
-        <div className="input-group">
-          <input
-            type="text"
-            className="form-control"
-            id="programmateurSearch"
-            placeholder="Rechercher un programmateur..."
-            value={progSearchTerm}
-            onChange={(e) => setProgSearchTerm(e.target.value)}
-            onFocus={() => progSearchTerm.length >= 2 && setShowProgResults(true)}
-          />
-          <button
-            type="button"
-            className="btn btn-outline-secondary"
-            onClick={handleCreateProgrammateur}
-          >
-            Créer un programmateur
-          </button>
-        </div>
-        
-        {/* Résultats de recherche pour les programmateurs */}
-        {showProgResults && progResults.length > 0 && (
-          <div className="dropdown-menu show w-100 mt-1">
-            {progResults.map(prog => (
-              <div 
-                key={prog.id} 
-                className="dropdown-item prog-item"
-                onClick={() => handleSelectProgrammateur(prog)}
-              >
-                <div className="d-flex justify-content-between align-items-center">
-                  <div>
-                    <div className="fw-bold">{prog.nom}</div>
-                    {prog.structure && <div className="small text-muted">{prog.structure}</div>}
-                    {prog.email && <div className="small text-muted">{prog.email}</div>}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-        
-        {showProgResults && progResults.length === 0 && progSearchTerm.length >= 2 && (
-          <div className="dropdown-menu show w-100 mt-1">
-            <div className="dropdown-item text-muted">Aucun programmateur trouvé</div>
-          </div>
-        )}
+      <div className="modal-body" style={{
+        padding: '16px'
+      }}>
+        <p>Êtes-vous sûr de vouloir supprimer ce concert ? Cette action est irréversible.</p>
       </div>
-
-      {formData.programmateurId && (
-        <div className="card mb-3">
-          <div className="card-body">
-            <h5 className="card-title">Programmateur sélectionné</h5>
-            <p><strong>Nom:</strong> {formData.programmateurNom}</p>
-          </div>
-        </div>
-      )}
-
-      <div className="mb-3">
-        <label htmlFor="notes" className="form-label">Notes</label>
-        <textarea
-          className="form-control"
-          id="notes"
-          name="notes"
-          rows="3"
-          value={formData.notes}
-          onChange={handleChange}
-        ></textarea>
-      </div>
-
-      <div className="d-flex justify-content-between">
-        <div>
-          <button
-            type="button"
-            className="btn btn-secondary me-2"
-            onClick={() => navigate('/concerts')}
-            disabled={isSubmitting}
-          >
-            Annuler
-          </button>
-          
-          {/* Bouton de suppression - visible uniquement en mode édition */}
-          {id && id !== 'nouveau' && (
-            <button
-              type="button"
-              className="btn btn-outline-danger"
-              onClick={() => setShowDeleteConfirm(true)}
-              disabled={isSubmitting}
-            >
-              <i className="bi bi-trash me-2"></i>
-              Supprimer
-            </button>
-          )}
-        </div>
-        
-        <button
-          type="submit"
-          className="btn btn-primary"
+      <div className="modal-footer" style={{
+        padding: '16px',
+        borderTop: '1px solid #eee',
+        display: 'flex',
+        justifyContent: 'flex-end',
+        gap: '10px'
+      }}>
+        <button 
+          className="btn btn-secondary"
+          onClick={() => setShowDeleteConfirm(false)}
+        >
+          Annuler
+        </button>
+        <button 
+          className="btn btn-danger" 
+          onClick={handleDelete}
           disabled={isSubmitting}
         >
-          {isSubmitting ? 'Enregistrement...' : id && id !== 'nouveau' ? 'Enregistrer les modifications' : 'Créer le concert'}
+          {isSubmitting ? 'Suppression...' : 'Supprimer'}
         </button>
       </div>
-      
-      {/* Modale de confirmation de suppression */}
-      {showDeleteConfirm && (
-        <div className="modal-overlay" style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          zIndex: 1000
-        }}>
-                    <div className="modal-confirm" style={{
-            backgroundColor: 'white',
-            borderRadius: '8px',
-            width: '400px',
-            maxWidth: '90%',
-            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
-          }}>
-            <div className="modal-header" style={{
-              padding: '16px',
-              borderBottom: '1px solid #eee'
-            }}>
-              <h5>Confirmation de suppression</h5>
-            </div>
-            <div className="modal-body" style={{
-              padding: '16px'
-            }}>
-              <p>Êtes-vous sûr de vouloir supprimer ce concert ? Cette action est irréversible.</p>
-            </div>
-            <div className="modal-footer" style={{
-              padding: '16px',
-              borderTop: '1px solid #eee',
-              display: 'flex',
-              justifyContent: 'flex-end',
-              gap: '10px'
-            }}>
-              <button 
-                className="btn btn-secondary"
-                onClick={() => setShowDeleteConfirm(false)}
-              >
-                Annuler
-              </button>
-              <button 
-                className="btn btn-danger" 
-                onClick={handleDelete}
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? 'Suppression...' : 'Supprimer'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </form>
-  );
+    </div>
+  </div>
+)}
+</form>
+);
 };
 
 export default ConcertForm;

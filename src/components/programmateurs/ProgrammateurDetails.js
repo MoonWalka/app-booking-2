@@ -96,7 +96,11 @@ const ProgrammateurDetails = () => {
 
   // Fonction pour basculer en mode édition
   const toggleEditMode = () => {
-    setIsEditing(!isEditing);
+    if (isEditing) {
+      setIsEditing(false);
+    } else {
+      navigate(`/programmateurs/edit/${id}`);
+    }
   };
   
   // Fonction pour gérer les changements dans le formulaire

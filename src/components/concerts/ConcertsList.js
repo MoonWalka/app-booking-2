@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { db } from '../../firebase';
-import { formatDate } from '../../utils/dateUtils';
 import { collection, query, orderBy, getDocs, where } from 'firebase/firestore';
 import Badge from 'react-bootstrap/Badge';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
@@ -98,12 +97,32 @@ const ConcertsList = () => {
         concert.titre?.toLowerCase().includes(term) ||
         concert.lieuNom?.toLowerCase().includes(term) ||
         concert.programmateurNom?.toLowerCase().includes(term) ||
-        formatDate(concert.date).toLowerCase().includes(term)
+        concert.artisteNom?.toLowerCase().includes(term) ||
+        (concert.lieuVille && concert.lieuVille.toLowerCase().includes(term)) ||
+        (concert.lieuCodePostal && concert.lieuCodePostal.includes(term)) ||
+        formatDateFr(concert.date).includes(term)
       );
     }
     
     setFilteredConcerts(results);
   }, [searchTerm, statusFilter, concerts]);
+
+  // Fonction pour formater la date au format français
+  const formatDateFr = (dateString) => {
+    if (!dateString) return '-';
+    
+    // Si c'est un timestamp Firestore
+    if (dateString.seconds) {
+      const date = new Date(dateString.seconds * 1000);
+      return `${String(date.getDate()).padStart(2, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${date.getFullYear()}`;
+    }
+    
+    // Si c'est une chaîne de date au format ISO
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return dateString; // Si la date est invalide, retourner la chaîne originale
+    
+    return `${String(date.getDate()).padStart(2, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${date.getFullYear()}`;
+  };
 
   // Fonction pour obtenir les détails d'un concert
   const handleRowClick = (concertId) => {
@@ -138,93 +157,106 @@ const ConcertsList = () => {
     </OverlayTrigger>
   );
 
-  // Fonction pour obtenir les détails du statut
-  const getStatusDetails = (statut) => {
-    switch (statut) {
-      case 'contact':
-        return {
-          icon: '📞',
-          label: 'Contact établi',
-          variant: 'info',
-          tooltip: 'Premier contact établi avec le programmateur',
-          step: 1
-        };
-      case 'preaccord':
-        return {
-          icon: '✅',
-          label: 'Pré-accord',
-          variant: 'primary',
-          tooltip: 'Accord verbal obtenu, en attente de confirmation',
-          step: 2
-        };
-      case 'contrat':
-        return {
-          icon: '📄',
-          label: 'Contrat signé',
-          variant: 'success',
-          tooltip: 'Contrat signé par toutes les parties',
-          step: 3
-        };
-      case 'acompte':
-        return {
-          icon: '💸',
-          label: 'Acompte facturé',
-          variant: 'warning',
-          tooltip: 'Acompte facturé, en attente de paiement',
-          step: 4
-        };
-      case 'solde':
-        return {
-          icon: '🔁',
-          label: 'Solde facturé',
-          variant: 'secondary',
-          tooltip: 'Solde facturé, concert terminé',
-          step: 5
-        };
-      case 'annule':
-        return {
-          icon: '❌',
-          label: 'Annulé',
-          variant: 'danger',
-          tooltip: 'Concert annulé',
-          step: 0
-        };
-      default:
-        return {
-          icon: '❓',
-          label: statut || 'Non défini',
-          variant: 'light',
-          tooltip: 'Statut non défini',
-          step: 0
-        };
-    }
-  };
-
-  // Composant pour afficher la barre de progression du statut
-  const StatusProgressBar = ({ statut }) => {
-    const statusInfo = getStatusDetails(statut);
+  // Composant pour afficher le statut avancé avec infos sur les étapes
+  const StatusWithInfo = ({ concert }) => {
+    const [showDetails, setShowDetails] = useState(false);
+    
+    // Déterminer l'action et le message en fonction du statut et des étapes
+    const getStatusDetails = () => {
+      const today = new Date();
+      const concertDate = concert.date ? new Date(concert.date.seconds ? concert.date.seconds * 1000 : concert.date) : null;
+      const isPastDate = concertDate && concertDate < today;
+      
+      switch (concert.statut) {
+        case 'contact':
+          if (!hasForm(concert.id) && concert.programmateurId) 
+            return { message: 'Formulaire à envoyer', action: 'form', variant: 'warning' };
+          if (!concert.programmateurId) 
+            return { message: 'Programmateur à démarcher', action: 'prog', variant: 'warning' };
+          return { message: 'Contact établi', action: 'contact', variant: 'info' };
+        
+        case 'preaccord':
+          return { message: 'Pré-accord obtenu', action: 'preaccord', variant: 'primary' };
+          
+        case 'contrat':
+          return { message: 'Contrat signé', action: 'contrat', variant: 'success' };
+        
+        case 'acompte':
+          return { message: 'Acompte facturé', action: 'acompte', variant: 'warning' };
+        
+        case 'solde':
+          if (isPastDate)
+            return { message: 'Concert terminé', action: 'completed', variant: 'secondary' };
+          return { message: 'Solde facturé', action: 'solde', variant: 'info' };
+          
+        case 'annule':
+          return { message: 'Concert annulé', action: 'annule', variant: 'danger' };
+          
+        default:
+          return { message: concert.statut || 'Non défini', action: 'unknown', variant: 'light' };
+      }
+    };
+    
+    const statusInfo = getStatusDetails();
+    const statusDetails = getStatusDetails(concert.statut);
     const totalSteps = 5; // Nombre total d'étapes dans le processus
     
+    // Déterminer l'étape actuelle
+    const getStep = (statut) => {
+      switch (statut) {
+        case 'contact': return 1;
+        case 'preaccord': return 2;
+        case 'contrat': return 3;
+        case 'acompte': return 4;
+        case 'solde': return 5;
+        case 'annule': return 0;
+        default: return 0;
+      }
+    };
+    
+    const currentStep = getStep(concert.statut || 'contact');
+    
     return (
-      <OverlayTrigger
-        placement="top"
-        overlay={<Tooltip>{statusInfo.tooltip}</Tooltip>}
+      <div 
+        className="status-advanced-container" 
+        onMouseEnter={() => setShowDetails(true)}
+        onMouseLeave={() => setShowDetails(false)}
       >
         <div className="status-progress-container">
           <div className="status-steps">
             {Array.from({ length: totalSteps }, (_, i) => (
               <div 
                 key={i} 
-                className={`status-step ${i < statusInfo.step ? 'completed' : ''} ${i === statusInfo.step - 1 ? 'current' : ''}`}
+                className={`status-step ${i < currentStep ? 'completed' : ''} ${i === currentStep - 1 ? 'current' : ''}`}
               />
             ))}
           </div>
           <div className="status-label">
-            <span className="status-icon">{statusInfo.icon}</span>
-            <span className="status-text">{statusInfo.label}</span>
+            <span className="status-icon">{statusDetails.icon}</span>
+            <span className="status-text">{statusDetails.label}</span>
           </div>
         </div>
-      </OverlayTrigger>
+        
+        {showDetails && (
+          <div className="status-tooltip">
+            <div className={`status-message status-message-${statusInfo.variant}`}>
+              {statusInfo.message}
+              {!hasForm(concert.id) && concert.programmateurId && (
+                <div className="action-reminder">
+                  <i className="bi bi-exclamation-circle me-1"></i>
+                  Formulaire à envoyer
+                </div>
+              )}
+              {hasUnvalidatedForm(concert.id) && (
+                <div className="action-reminder">
+                  <i className="bi bi-exclamation-circle me-1"></i>
+                  Formulaire à valider
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
     );
   };
 
@@ -328,8 +360,9 @@ const ConcertsList = () => {
             <thead>
               <tr>
                 <th>Date</th>
-                <th>Titre</th>
                 <th>Lieu</th>
+                <th>Ville</th>
+                <th>Artiste</th>
                 <th>Programmateur</th>
                 <th>Montant</th>
                 <th>Statut</th>
@@ -345,13 +378,28 @@ const ConcertsList = () => {
                 >
                   <td className="date-column">
                     <div className="date-box">
-                      <div className="date-month">{formatDate(concert.date).split(' ')[1]}</div>
-                      <div className="date-day">{formatDate(concert.date).split(' ')[0]}</div>
-                      <div className="date-year">{formatDate(concert.date).split(' ')[2]}</div>
+                      <div className="date-day">{formatDateFr(concert.date).split('-')[0]}</div>
+                      <div className="date-month">{formatDateFr(concert.date).split('-')[1]}</div>
+                      <div className="date-year">{formatDateFr(concert.date).split('-')[2]}</div>
                     </div>
                   </td>
-                  <td className="fw-medium">{concert.titre || "Sans titre"}</td>
                   <td>{concert.lieuNom || "-"}</td>
+                  <td>
+                    {concert.lieuVille && concert.lieuCodePostal ? 
+                      `${concert.lieuVille} (${concert.lieuCodePostal})` : 
+                      concert.lieuVille || concert.lieuCodePostal || "-"
+                    }
+                  </td>
+                  <td>
+                    {concert.artisteNom ? (
+                      <span className="artiste-name">
+                        <i className="bi bi-music-note me-1"></i>
+                        {concert.artisteNom}
+                      </span>
+                    ) : (
+                      <span className="text-muted">-</span>
+                    )}
+                  </td>
                   <td>
                     {concert.programmateurNom ? (
                       <span className="programmateur-name">
@@ -372,9 +420,9 @@ const ConcertsList = () => {
                     )}
                   </td>
                   <td className="status-column">
-                    <StatusProgressBar statut={concert.statut || 'contact'} />
+                    <StatusWithInfo concert={concert} />
                   </td>
-                  <td>
+                  <td onClick={(e) => e.stopPropagation()}>
                     <div className="btn-group action-buttons">
                       <ActionButton 
                         to={`/concerts/${concert.id}/edit`} 
@@ -411,6 +459,69 @@ const ConcertsList = () => {
           </table>
         </div>
       )}
+      
+      {/* Styles supplémentaires pour le nouveau statut avancé */}
+      <style jsx>{`
+        .status-advanced-container {
+          position: relative;
+          width: 100%;
+        }
+        
+        .status-tooltip {
+          position: absolute;
+          top: 100%;
+          left: 0;
+          width: 200px;
+          z-index: 100;
+          margin-top: 5px;
+        }
+        
+        .status-message {
+          background-color: white;
+          border-radius: 6px;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+          padding: 8px 12px;
+          font-size: 0.85rem;
+        }
+        
+        .status-message-warning {
+          border-left: 4px solid #ffc107;
+        }
+        
+        .status-message-info {
+          border-left: 4px solid #17a2b8;
+        }
+        
+        .status-message-primary {
+          border-left: 4px solid #007bff;
+        }
+        
+        .status-message-success {
+          border-left: 4px solid #28a745;
+        }
+        
+        .status-message-secondary {
+          border-left: 4px solid #6c757d;
+        }
+        
+        .status-message-danger {
+          border-left: 4px solid #dc3545;
+        }
+        
+        .action-reminder {
+          font-size: 0.8rem;
+          margin-top: 5px;
+          padding-top: 5px;
+          border-top: 1px solid #eee;
+          color: #dc3545;
+        }
+        
+        .artiste-name {
+          display: flex;
+          align-items: center;
+          color: #6610f2;
+        }
+      `}</style>
     </div>
   );
 };

@@ -155,6 +155,47 @@ const LieuForm = () => {
     }
   };
 
+  // Fonction pour créer un nouveau programmateur
+  const handleCreateProgrammateur = async () => {
+    try {
+      // Vérifier qu'un nom de programmateur a été saisi
+      if (!searchTerm.trim()) {
+        alert('Veuillez saisir un nom de programmateur avant de créer un nouveau programmateur.');
+        return;
+      }
+      
+      // Créer directement un nouveau programmateur avec le nom saisi dans la recherche
+      const newProgRef = doc(collection(db, 'programmateurs'));
+      const progData = {
+        nom: searchTerm.trim(),
+        nomLowercase: searchTerm.trim().toLowerCase(),
+        structure: '',
+        email: '',
+        telephone: '',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      
+      await setDoc(newProgRef, progData);
+      
+      // Créer un objet programmateur avec l'ID et les données
+      const newProg = { 
+        id: newProgRef.id,
+        ...progData
+      };
+      
+      // Sélectionner automatiquement le nouveau programmateur
+      handleSelectProgrammateur(newProg);
+      
+      // Afficher un message de confirmation
+      alert(`Le programmateur "${progData.nom}" a été créé avec succès. Vous pourrez compléter ses détails plus tard.`);
+      
+    } catch (error) {
+      console.error('Erreur lors de la création du programmateur:', error);
+      alert('Une erreur est survenue lors de la création du programmateur.');
+    }
+  };
+
   // Fonction pour sélectionner un programmateur
   const handleSelectProgrammateur = (programmateur) => {
     setSelectedProgrammateur(programmateur);
@@ -393,6 +434,13 @@ const LieuForm = () => {
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary"
+                      onClick={handleCreateProgrammateur}
+                    >
+                      Créer un programmateur
+                    </button>
                   </div>
                   
                   {isSearching && (

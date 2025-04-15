@@ -1,54 +1,82 @@
 import React from 'react';
-import { Link, useLocation, Outlet } from 'react-router-dom';
+import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import '../../style/layout.css';
 
 function Layout() {
-  const location = useLocation();
-  const { currentUser } = useAuth();
-  
+  const { currentUser, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/login');
+    } catch (error) {
+      console.error('Erreur lors de la déconnexion:', error);
+    }
+  };
+
   return (
-    <div className="app-container">
-      <div className="sidebar">
+    <div className="layout-container">
+      <nav className="sidebar">
         <div className="sidebar-header">
-          <h2>Label Musical</h2>
-          <p>Gestion des concerts et artistes</p>
+          <h3>App Booking</h3>
         </div>
-        
-        {currentUser && (
-          <nav className="sidebar-nav">
-            <Link to="/" className={location.pathname === '/' ? 'active' : ''}>
-              <span role="img" aria-label="dashboard">📊</span> Tableau de bord
-            </Link>
-            <Link to="/concerts" className={location.pathname.includes('/concerts') ? 'active' : ''}>
-              <span role="img" aria-label="concerts">🎵</span> Concerts
-            </Link>
-            <Link to="/programmateurs" className={location.pathname.includes('/programmateurs') ? 'active' : ''}>
-              <span role="img" aria-label="programmers">👥</span> Programmateurs
-            </Link>
-            <Link to="/lieux" className={location.pathname.includes('/lieux') ? 'active' : ''}>
-              <span role="img" aria-label="venues">📍</span> Lieux
-            </Link>
-            <Link to="/contrats" className={location.pathname.includes('/contrats') ? 'active' : ''}>
-              <span role="img" aria-label="contracts">📄</span> Contrats
-            </Link>
-          </nav>
-        )}
-      </div>
-      
-      <div className="main-content">
-        <header className="main-header">
-          <h1>Gestion des concerts</h1>
+        <div className="sidebar-content">
+          <ul className="nav-links">
+            <li>
+              <NavLink to="/" end>
+                <i className="bi bi-speedometer2"></i>
+                <span>Dashboard</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/concerts">
+                <i className="bi bi-calendar-event"></i>
+                <span>Concerts</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/programmateurs">
+                <i className="bi bi-person-badge"></i>
+                <span>Programmateurs</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/lieux">
+                <i className="bi bi-geo-alt"></i>
+                <span>Lieux</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/contrats">
+                <i className="bi bi-file-earmark-text"></i>
+                <span>Contrats</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/artistes">
+                <i className="bi bi-music-note-beamed"></i>
+                <span>Artistes</span>
+              </NavLink>
+            </li>
+          </ul>
+        </div>
+        <div className="sidebar-footer">
           {currentUser && (
             <div className="user-info">
-              Utilisateur Test
+              <div className="user-email">{currentUser.email}</div>
+              <button onClick={handleLogout} className="btn btn-sm btn-outline-light">
+                <i className="bi bi-box-arrow-right me-2"></i>
+                Déconnexion
+              </button>
             </div>
           )}
-        </header>
-        
-        <main>
-          <Outlet /> {/* Utilisez Outlet au lieu de children */}
-        </main>
-      </div>
+        </div>
+      </nav>
+      <main className="content">
+        <Outlet />
+      </main>
     </div>
   );
 }

@@ -372,15 +372,48 @@ const ConcertForm = () => {
 
   const handleCreateLieu = async () => {
     try {
-      // Créer un document vide avec un ID généré
+      // Vérifier qu'un nom de lieu a été saisi
+      if (!lieuSearchTerm.trim()) {
+        alert('Veuillez saisir un nom de lieu avant de créer un nouveau lieu.');
+        return;
+      }
+      
+      // Créer directement un nouveau lieu avec le nom saisi dans la recherche
       const newLieuRef = doc(collection(db, 'lieux'));
-      await setDoc(newLieuRef, {
-        nom: 'Nouveau lieu',
-        createdAt: new Date().toISOString()
-      });
-  
-      setNewLieu({ id: newLieuRef.id });
-      setShowLieuForm(true);
+      const lieuData = {
+        nom: lieuSearchTerm.trim(),
+        nomLowercase: lieuSearchTerm.trim().toLowerCase(),
+        adresse: '',
+        codePostal: '',
+        ville: '',
+        capacite: '',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      
+      await setDoc(newLieuRef, lieuData);
+      
+      // Ajouter le nouveau lieu à la liste des lieux
+      const newLieuWithId = { ...lieuData, id: newLieuRef.id };
+      setLieux(prev => [...prev, newLieuWithId]);
+      
+      // Mettre à jour le formulaire avec le nouveau lieu
+      setFormData(prev => ({
+        ...prev,
+        lieuId: newLieuRef.id,
+        lieuNom: lieuData.nom,
+        lieuAdresse: '',
+        lieuCodePostal: '',
+        lieuVille: '',
+        lieuCapacite: ''
+      }));
+      
+      // Fermer le dropdown de résultats de recherche
+      setShowLieuResults(false);
+      
+      // Afficher un message de confirmation
+      alert(`Le lieu "${lieuData.nom}" a été créé avec succès. Vous pourrez compléter ses détails plus tard.`);
+      
     } catch (error) {
       console.error('Erreur lors de la création du lieu:', error);
       alert('Une erreur est survenue lors de la création du lieu.');

@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Layout from './components/common/Layout';
-import Dashboard from './pages/Dashboard';
+import DashboardPage from './pages/DashboardPage';
 import ConcertsPage from './pages/ConcertsPage';
 import ProgrammateursPage from './pages/ProgrammateursPage';
 import LieuxPage from './pages/LieuxPage';
@@ -31,7 +31,7 @@ function App() {
           
           {/* Routes protégées avec Layout */}
           <Route element={<Layout />}>
-            <Route path="/" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+            <Route path="/" element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
             <Route path="/concerts/*" element={<PrivateRoute><ConcertsPage /></PrivateRoute>} />
             <Route path="/programmateurs/*" element={<PrivateRoute><ProgrammateursPage /></PrivateRoute>} />
             <Route path="/lieux/*" element={<PrivateRoute><LieuxPage /></PrivateRoute>} />

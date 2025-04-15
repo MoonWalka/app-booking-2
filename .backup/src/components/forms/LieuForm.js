@@ -41,7 +41,18 @@ const LieuForm = () => {
           const lieuDoc = await getDoc(doc(db, 'lieux', id));
           if (lieuDoc.exists()) {
             const lieuData = lieuDoc.data();
-            setLieu(lieuData);
+            
+            // S'assurer que la propriété contact existe toujours
+            const lieuWithDefaults = {
+              ...lieuData,
+              contact: lieuData.contact || {
+                nom: '',
+                telephone: '',
+                email: ''
+              }
+            };
+            
+            setLieu(lieuWithDefaults);
             
             // Si un programmateur est associé, le récupérer
             if (lieuData.programmateurId) {
@@ -144,6 +155,47 @@ const LieuForm = () => {
     }
   };
 
+  // Fonction pour créer un nouveau programmateur
+  const handleCreateProgrammateur = async () => {
+    try {
+      // Vérifier qu'un nom de programmateur a été saisi
+      if (!searchTerm.trim()) {
+        alert('Veuillez saisir un nom de programmateur avant de créer un nouveau programmateur.');
+        return;
+      }
+      
+      // Créer directement un nouveau programmateur avec le nom saisi dans la recherche
+      const newProgRef = doc(collection(db, 'programmateurs'));
+      const progData = {
+        nom: searchTerm.trim(),
+        nomLowercase: searchTerm.trim().toLowerCase(),
+        structure: '',
+        email: '',
+        telephone: '',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      
+      await setDoc(newProgRef, progData);
+      
+      // Créer un objet programmateur avec l'ID et les données
+      const newProg = { 
+        id: newProgRef.id,
+        ...progData
+      };
+      
+      // Sélectionner automatiquement le nouveau programmateur
+      handleSelectProgrammateur(newProg);
+      
+      // Afficher un message de confirmation
+      alert(`Le programmateur "${progData.nom}" a été créé avec succès. Vous pourrez compléter ses détails plus tard.`);
+      
+    } catch (error) {
+      console.error('Erreur lors de la création du programmateur:', error);
+      alert('Une erreur est survenue lors de la création du programmateur.');
+    }
+  };
+
   // Fonction pour sélectionner un programmateur
   const handleSelectProgrammateur = (programmateur) => {
     setSelectedProgrammateur(programmateur);
@@ -175,7 +227,7 @@ const LieuForm = () => {
       setLieu(prev => ({
         ...prev,
         [parent]: {
-          ...prev[parent],
+          ...(prev[parent] || {}), // Utiliser un objet vide si prev[parent] n'existe pas
           [child]: value
         }
       }));
@@ -300,7 +352,7 @@ const LieuForm = () => {
           </div>
           <div className="card-body">
             <div className="form-group">
-              <label htmlFor="adresse" className="form-label">Adresse <span className="required">*</span></label>
+              <label htmlFor="adresse" className="form-label">Adresse {/* <span className="required">*</span> */}</label>
               <input
                 type="text"
                 className="form-control"
@@ -308,7 +360,7 @@ const LieuForm = () => {
                 name="adresse"
                 value={lieu.adresse}
                 onChange={handleChange}
-                required
+                //required
                 placeholder="Numéro et nom de rue"
               />
             </div>
@@ -316,7 +368,7 @@ const LieuForm = () => {
             <div className="row">
               <div className="col-md-4">
                 <div className="form-group">
-                  <label htmlFor="codePostal" className="form-label">Code postal <span className="required">*</span></label>
+                  <label htmlFor="codePostal" className="form-label">Code postal {/* <span className="required">*</span> */}</label>
                   <input
                     type="text"
                     className="form-control"
@@ -324,14 +376,14 @@ const LieuForm = () => {
                     name="codePostal"
                     value={lieu.codePostal}
                     onChange={handleChange}
-                    required
+                    //required
                     placeholder="Ex: 75001"
                   />
                 </div>
               </div>
               <div className="col-md-8">
                 <div className="form-group">
-                  <label htmlFor="ville" className="form-label">Ville <span className="required">*</span></label>
+                  <label htmlFor="ville" className="form-label">Ville {/* <span className="required">*</span> */}</label>
                   <input
                     type="text"
                     className="form-control"
@@ -339,7 +391,7 @@ const LieuForm = () => {
                     name="ville"
                     value={lieu.ville}
                     onChange={handleChange}
-                    required
+                    //required
                     placeholder="Ex: Paris"
                   />
                 </div>
@@ -347,7 +399,7 @@ const LieuForm = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="pays" className="form-label">Pays <span className="required">*</span></label>
+              <label htmlFor="pays" className="form-label">Pays {/* <span className="required">*</span> */}</label>
               <input
                 type="text"
                 className="form-control"
@@ -355,7 +407,7 @@ const LieuForm = () => {
                 name="pays"
                 value={lieu.pays}
                 onChange={handleChange}
-                required
+                //required
               />
             </div>
           </div>
@@ -382,6 +434,13 @@ const LieuForm = () => {
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary"
+                      onClick={handleCreateProgrammateur}
+                    >
+                      Créer un programmateur
+                    </button>
                   </div>
                   
                   {isSearching && (
@@ -474,7 +533,7 @@ const LieuForm = () => {
                 className="form-control"
                 id="contact.nom"
                 name="contact.nom"
-                value={lieu.contact.nom}
+                value={lieu.contact?.nom || ''}
                 onChange={handleChange}
                 placeholder="Nom et prénom du contact"
               />
@@ -491,7 +550,7 @@ const LieuForm = () => {
                       className="form-control"
                       id="contact.telephone"
                       name="contact.telephone"
-                      value={lieu.contact.telephone}
+                      value={lieu.contact?.telephone || ''}
                       onChange={handleChange}
                       placeholder="Ex: 01 23 45 67 89"
                     />
@@ -508,7 +567,7 @@ const LieuForm = () => {
                       className="form-control"
                       id="contact.email"
                       name="contact.email"
-                      value={lieu.contact.email}
+                      value={lieu.contact?.email || ''}
                       onChange={handleChange}
                       placeholder="Ex: contact@exemple.fr"
                     />

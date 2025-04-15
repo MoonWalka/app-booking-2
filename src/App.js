@@ -7,6 +7,7 @@ import ConcertsPage from './pages/ConcertsPage';
 import ProgrammateursPage from './pages/ProgrammateursPage';
 import LieuxPage from './pages/LieuxPage';
 import ContratsPage from './pages/ContratsPage';
+import ArtistesPage from './pages/ArtistesPage';
 import FormResponsePage from './pages/FormResponsePage';
 import './App.css';
 
@@ -36,6 +37,7 @@ function App() {
             <Route path="/programmateurs/*" element={<PrivateRoute><ProgrammateursPage /></PrivateRoute>} />
             <Route path="/lieux/*" element={<PrivateRoute><LieuxPage /></PrivateRoute>} />
             <Route path="/contrats/*" element={<PrivateRoute><ContratsPage /></PrivateRoute>} />
+            <Route path="/artistes/*" element={<PrivateRoute><ArtistesPage /></PrivateRoute>} />
             <Route path="/formulaire/validation/:id" element={<PrivateRoute><FormResponsePage /></PrivateRoute>} />
             
             {/* Redirection par défaut */}

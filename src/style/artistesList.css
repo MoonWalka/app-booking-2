@@ -1,0 +1,138 @@
+.artistes-list-container {
+  padding: 20px;
+}
+
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.search-filter-container {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.search-input {
+  position: relative;
+  flex: 1;
+}
+
+.search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6c757d;
+}
+
+.search-input input {
+  padding-left: 35px;
+}
+
+.filter-select {
+  width: 200px;
+}
+
+.artistes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.artiste-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  background-color: #fff;
+}
+
+.artiste-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.artiste-photo {
+  height: 180px;
+  overflow: hidden;
+  background-color: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.artiste-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.placeholder-photo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background-color: #e9ecef;
+  color: #6c757d;
+}
+
+.placeholder-photo i {
+  font-size: 3rem;
+}
+
+.artiste-content {
+  padding: 15px;
+}
+
+.artiste-name {
+  margin: 0 0 5px 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.artiste-genre {
+  color: #6c757d;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+}
+
+.artiste-stats {
+  display: flex;
+  gap: 15px;
+  font-size: 0.85rem;
+  color: #495057;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.artiste-actions {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 15px;
+  background-color: #f8f9fa;
+  border-top: 1px solid #e0e0e0;
+}
+
+.artiste-actions .btn {
+  padding: 0.25rem 0.5rem;
+}
+
+.no-results {
+  text-align: center;
+  padding: 40px;
+  color: #6c757d;
+}

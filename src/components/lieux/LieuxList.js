@@ -1,15 +1,14 @@
-import '../../style/lieuList.css'; // Nouveau fichier CSS pour les styles personnalisés
+import '../../style/lieuList.css';
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { collection, getDocs, query, orderBy, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../../firebase';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import Badge from 'react-bootstrap/Badge';
-//import '../../style/lieuList.css'; // Nouveau fichier CSS pour les styles personnalisés
-
 
 const LieuxList = () => {
+  const navigate = useNavigate();
   const [lieux, setLieux] = useState([]);
   const [filteredLieux, setFilteredLieux] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -56,7 +55,15 @@ const LieuxList = () => {
     return lieux.filter(lieu => lieu.type.toLowerCase() === type.toLowerCase()).length;
   };
 
-  const handleDelete = async (id) => {
+  // Fonction pour gérer le clic sur une ligne et naviguer vers la fiche détaillée
+  const handleRowClick = (lieuId) => {
+    navigate(`/lieux/${lieuId}`);
+  };
+
+  const handleDelete = async (id, e) => {
+    // Empêcher la propagation pour ne pas déclencher handleRowClick
+    e.stopPropagation();
+    
     if (window.confirm('Êtes-vous sûr de vouloir supprimer ce lieu ?')) {
       try {
         await deleteDoc(doc(db, 'lieux', id));
@@ -76,11 +83,18 @@ const LieuxList = () => {
       overlay={<Tooltip>{tooltip}</Tooltip>}
     >
       {to ? (
-        <Link to={to} className={`btn btn-${variant} btn-icon modern-btn`}>
+        <Link 
+          to={to} 
+          className={`btn btn-${variant} btn-icon modern-btn`}
+          onClick={(e) => e.stopPropagation()} // Empêcher la propagation pour ne pas naviguer via handleRowClick
+        >
           {icon}
         </Link>
       ) : (
-        <button onClick={onClick} className={`btn btn-${variant} btn-icon modern-btn`}>
+        <button 
+          onClick={onClick} 
+          className={`btn btn-${variant} btn-icon modern-btn`}
+        >
           {icon}
         </button>
       )}
@@ -120,7 +134,8 @@ const LieuxList = () => {
       <div className="d-flex justify-content-between align-items-center mb-4 header-container">
         <h2 className="modern-title">Liste des lieux</h2>
         <Link to="/lieux/nouveau" className="btn btn-primary modern-add-btn">
-          + Ajouter un lieu
+          <i className="bi bi-plus-lg me-2"></i>
+          Ajouter un lieu
         </Link>
       </div>
 
@@ -187,7 +202,7 @@ const LieuxList = () => {
         </div>
       ) : (
         <div className="table-responsive modern-table-container">
-          <table className="table table-striped modern-table">
+          <table className="table table-hover modern-table">
             <thead>
               <tr>
                 <th>Nom</th>
@@ -200,13 +215,17 @@ const LieuxList = () => {
             </thead>
             <tbody>
               {filteredLieux.map(lieu => (
-                <tr key={lieu.id} className="table-row-animate">
+                <tr 
+                  key={lieu.id} 
+                  className="table-row-animate clickable-row" 
+                  onClick={() => handleRowClick(lieu.id)}
+                >
                   <td className="fw-medium">{lieu.nom}</td>
                   <td><TypeBadge type={lieu.type} /></td>
                   <td>{lieu.adresse}</td>
                   <td>{lieu.ville}</td>
                   <td>{lieu.capacite || '-'}</td>
-                  <td>
+                  <td onClick={(e) => e.stopPropagation()}>
                     <div className="btn-group action-buttons">
                       <ActionButton 
                         to={`/lieux/${lieu.id}`} 
@@ -224,7 +243,7 @@ const LieuxList = () => {
                         tooltip="Supprimer le lieu" 
                         icon={<i className="bi bi-trash" />} 
                         variant="light" 
-                        onClick={() => handleDelete(lieu.id)}
+                        onClick={(e) => handleDelete(lieu.id, e)}
                       />
                     </div>
                   </td>
@@ -234,6 +253,22 @@ const LieuxList = () => {
           </table>
         </div>
       )}
+      
+      {/* Ajouter du CSS pour les lignes cliquables */}
+      <style jsx>{`
+        .clickable-row {
+          cursor: pointer;
+          transition: background-color 0.2s;
+        }
+        
+        .clickable-row:hover {
+          background-color: rgba(0, 123, 255, 0.05);
+        }
+        
+        .modern-table.table-hover tbody tr:hover {
+          background-color: rgba(0, 123, 255, 0.05);
+        }
+      `}</style>
     </div>
   );
 };

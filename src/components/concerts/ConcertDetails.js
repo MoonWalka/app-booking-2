@@ -345,15 +345,7 @@ const ConcertDetails = () => {
                       Non envoyé
                     </span>
                   )}
-                  {!formData && !showFormGenerator && (
-                    <button 
-                      className="btn btn-sm btn-outline-primary ms-2"
-                      onClick={() => setShowFormGenerator(true)}
-                    >
-                      <i className="bi bi-envelope me-1"></i>
-                      Envoyer formulaire
-                    </button>
-                  )}
+                 
                 </div>
               </div>
             </div>
@@ -395,8 +387,19 @@ const ConcertDetails = () => {
                 )}
               </div>
             </div>
-            {/* Bouton pour voir sur Google Maps */}
-            <div className="mt-2">
+           {/* Intégration de la carte Google Maps */}
+           <div className="mt-2">
+              <div className="map-container mb-3">
+                <iframe 
+                  src={`https://maps.google.com/maps?q=${encodeURIComponent(`${lieu.adresse}, ${lieu.codePostal} ${lieu.ville}`)}&z=6&output=embed`}
+                  width="100%" 
+                  height="250" 
+                  style={{border: '1px solid #ddd', borderRadius: '4px'}}
+                  allowFullScreen="" 
+                  loading="lazy" 
+                  referrerPolicy="no-referrer-when-downgrade"
+                ></iframe>
+              </div>
               <a 
                 href={`https://maps.google.com/maps?q=${encodeURIComponent(`${lieu.adresse}, ${lieu.codePostal} ${lieu.ville}`)}`}
                 target="_blank"
@@ -404,7 +407,7 @@ const ConcertDetails = () => {
                 className="btn btn-sm btn-outline-info"
               >
                 <i className="bi bi-map me-1"></i>
-                Voir sur Google Maps
+                Voir en plein écran
               </a>
             </div>
           </div>

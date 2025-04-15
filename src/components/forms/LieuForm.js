@@ -22,8 +22,16 @@ const LieuForm = () => {
       email: ''
     },
     programmateurId: null,
-    programmateurNom: null
+    programmateurNom: null,
+    // Ajoutez ces propriétés pour stocker les coordonnées géographiques
+    latitude: null,
+    longitude: null
   });
+  
+  // Référence pour l'input d'adresse (pour l'autocomplete)
+  const adresseInputRef = useRef(null);
+  // Référence pour l'autocomplete
+  const autocompleteRef = useRef(null);
   
   // États pour la recherche de programmateurs
   const [searchTerm, setSearchTerm] = useState('');
@@ -81,7 +89,90 @@ const LieuForm = () => {
     };
 
     fetchLieu();
+    
+    // Initialisation de l'autocomplete Google Places
+    if (window.google && window.google.maps && window.google.maps.places) {
+      initAutocomplete();
+    } else {
+      // Si l'API n'est pas encore chargée, attendre et réessayer
+      const checkGoogleMapsLoaded = setInterval(() => {
+        if (window.google && window.google.maps && window.google.maps.places) {
+          clearInterval(checkGoogleMapsLoaded);
+          initAutocomplete();
+        }
+      }, 100);
+      
+      // Nettoyer l'intervalle si le composant est démonté
+      return () => clearInterval(checkGoogleMapsLoaded);
+    }
   }, [id, navigate]);
+
+  // Initialisation de Google Places Autocomplete
+  const initAutocomplete = () => {
+    // Vérifier que l'input est monté
+    if (adresseInputRef.current) {
+      // Options pour l'autocomplete (limiter aux adresses, en France par défaut)
+      const options = {
+        types: ['address'],
+        componentRestrictions: { country: 'fr' } // Limiter aux adresses en France, modifiez selon vos besoins
+      };
+      
+      // Créer l'objet autocomplete
+      autocompleteRef.current = new window.google.maps.places.Autocomplete(
+        adresseInputRef.current,
+        options
+      );
+      
+      // Ajouter un écouteur d'événements pour quand un lieu est sélectionné
+      autocompleteRef.current.addListener('place_changed', handlePlaceSelect);
+    }
+  };
+  
+  // Fonction appelée quand un lieu est sélectionné dans l'autocomplete
+  const handlePlaceSelect = () => {
+    const place = autocompleteRef.current.getPlace();
+    
+    if (!place.geometry) {
+      console.log("Détails du lieu introuvables pour l'entrée:", place.name);
+      return;
+    }
+    
+    // Extraire les composants de l'adresse
+    let adresse = '';
+    let codePostal = '';
+    let ville = '';
+    let pays = 'France'; // Par défaut
+    
+    // Parcourir les composants d'adresse
+    place.address_components.forEach(component => {
+      const types = component.types;
+      
+      if (types.includes('street_number') || types.includes('route')) {
+        // Numéro et nom de la rue
+        adresse += component.long_name + ' ';
+      } else if (types.includes('postal_code')) {
+        // Code postal
+        codePostal = component.long_name;
+      } else if (types.includes('locality')) {
+        // Ville
+        ville = component.long_name;
+      } else if (types.includes('country')) {
+        // Pays
+        pays = component.long_name;
+      }
+    });
+    
+    // Mettre à jour le state avec les informations d'adresse
+    setLieu(prev => ({
+      ...prev,
+      adresse: adresse.trim(),
+      codePostal,
+      ville,
+      pays,
+      latitude: place.geometry.location.lat(),
+      longitude: place.geometry.location.lng()
+    }));
+  };
 
   // Effet pour gérer la recherche de programmateurs
   useEffect(() => {
@@ -352,23 +443,32 @@ const LieuForm = () => {
           </div>
           <div className="card-body">
             <div className="form-group">
-              <label htmlFor="adresse" className="form-label">Adresse {/* <span className="required">*</span> */}</label>
-              <input
-                type="text"
-                className="form-control"
-                id="adresse"
-                name="adresse"
-                value={lieu.adresse}
-                onChange={handleChange}
-                //required
-                placeholder="Numéro et nom de rue"
-              />
+              <label htmlFor="adresse" className="form-label">Adresse <span className="required">*</span></label>
+              <div className="input-group">
+                <input
+                  type="text"
+                  className="form-control"
+                  id="adresse"
+                  name="adresse"
+                  ref={adresseInputRef} // Référence pour l'autocomplete
+                  value={lieu.adresse}
+                  onChange={handleChange}
+                  required
+                  placeholder="Commencez à taper une adresse..."
+                />
+                <span className="input-group-text">
+                  <i className="bi bi-geo-alt"></i>
+                </span>
+              </div>
+              <small className="form-text text-muted">
+                Commencez à taper pour voir des suggestions d'adresses
+              </small>
             </div>
 
             <div className="row">
               <div className="col-md-4">
                 <div className="form-group">
-                  <label htmlFor="codePostal" className="form-label">Code postal {/* <span className="required">*</span> */}</label>
+                  <label htmlFor="codePostal" className="form-label">Code postal <span className="required">*</span></label>
                   <input
                     type="text"
                     className="form-control"
@@ -376,14 +476,14 @@ const LieuForm = () => {
                     name="codePostal"
                     value={lieu.codePostal}
                     onChange={handleChange}
-                    //required
+                    required
                     placeholder="Ex: 75001"
                   />
                 </div>
               </div>
               <div className="col-md-8">
                 <div className="form-group">
-                  <label htmlFor="ville" className="form-label">Ville {/* <span className="required">*</span> */}</label>
+                  <label htmlFor="ville" className="form-label">Ville <span className="required">*</span></label>
                   <input
                     type="text"
                     className="form-control"
@@ -391,7 +491,7 @@ const LieuForm = () => {
                     name="ville"
                     value={lieu.ville}
                     onChange={handleChange}
-                    //required
+                    required
                     placeholder="Ex: Paris"
                   />
                 </div>
@@ -399,7 +499,7 @@ const LieuForm = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="pays" className="form-label">Pays {/* <span className="required">*</span> */}</label>
+              <label htmlFor="pays" className="form-label">Pays <span className="required">*</span></label>
               <input
                 type="text"
                 className="form-control"
@@ -407,9 +507,28 @@ const LieuForm = () => {
                 name="pays"
                 value={lieu.pays}
                 onChange={handleChange}
-                //required
+                required
               />
             </div>
+            
+            {lieu.latitude && lieu.longitude && (
+              <div className="map-preview mt-3">
+                <div className="map-container">
+                  <iframe
+                    title="Aperçu de la localisation"
+                    width="100%"
+                    height="200"
+                    frameBorder="0"
+                    style={{ border: 0, borderRadius: '4px' }}
+                    src={`https://www.google.com/maps/embed/v1/place?key=VOTRE_CLE_API&q=${lieu.latitude},${lieu.longitude}&zoom=15`}
+                    allowFullScreen
+                  ></iframe>
+                </div>
+                <small className="form-text text-muted">
+                  Aperçu de l'emplacement
+                </small>
+              </div>
+            )}
           </div>
         </div>
 

@@ -12,6 +12,7 @@ import {
   getDocs,
   setDoc,
   updateDoc,
+  deleteDoc, // Ajout de l'import deleteDoc
   query,
   where,
   orderBy,
@@ -27,6 +28,7 @@ const ConcertForm = () => {
   const [programmateurs, setProgrammateurs] = useState([]);
   const [showLieuForm, setShowLieuForm] = useState(false);
   const [newLieu, setNewLieu] = useState(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false); // Ajout de l'état pour la confirmation de suppression
   
   // États pour la recherche
   const [lieuSearchTerm, setLieuSearchTerm] = useState('');
@@ -420,6 +422,21 @@ const ConcertForm = () => {
     }
   };
 
+  // Nouvelle fonction pour gérer la suppression
+  const handleDelete = async () => {
+    try {
+      setIsSubmitting(true);
+      await deleteDoc(doc(db, 'concerts', id));
+      navigate('/concerts');
+    } catch (error) {
+      console.error('Erreur lors de la suppression du concert:', error);
+      alert('Une erreur est survenue lors de la suppression du concert.');
+    } finally {
+      setIsSubmitting(false);
+      setShowDeleteConfirm(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -672,14 +689,30 @@ const ConcertForm = () => {
       </div>
 
       <div className="d-flex justify-content-between">
-        <button
-          type="button"
-          className="btn btn-secondary"
-          onClick={() => navigate('/concerts')}
-          disabled={isSubmitting}
-        >
-          Annuler
-        </button>
+        <div>
+          <button
+            type="button"
+            className="btn btn-secondary me-2"
+            onClick={() => navigate('/concerts')}
+            disabled={isSubmitting}
+          >
+            Annuler
+          </button>
+          
+          {/* Bouton de suppression - visible uniquement en mode édition */}
+          {id && id !== 'nouveau' && (
+            <button
+              type="button"
+              className="btn btn-outline-danger"
+              onClick={() => setShowDeleteConfirm(true)}
+              disabled={isSubmitting}
+            >
+              <i className="bi bi-trash me-2"></i>
+              Supprimer
+            </button>
+          )}
+        </div>
+        
         <button
           type="submit"
           className="btn btn-primary"
@@ -688,6 +721,63 @@ const ConcertForm = () => {
           {isSubmitting ? 'Enregistrement...' : id && id !== 'nouveau' ? 'Enregistrer les modifications' : 'Créer le concert'}
         </button>
       </div>
+      
+      {/* Modale de confirmation de suppression */}
+      {showDeleteConfirm && (
+        <div className="modal-overlay" style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 1000
+        }}>
+          <div className="modal-confirm" style={{
+            backgroundColor: 'white',
+            borderRadius: '8px',
+            width: '400px',
+            maxWidth: '90%',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
+          }}>
+            <div className="modal-header" style={{
+              padding: '16px',
+              borderBottom: '1px solid #eee'
+            }}>
+              <h5>Confirmation de suppression</h5>
+            </div>
+            <div className="modal-body" style={{
+              padding: '16px'
+            }}>
+              <p>Êtes-vous sûr de vouloir supprimer ce concert ? Cette action est irréversible.</p>
+            </div>
+            <div className="modal-footer" style={{
+              padding: '16px',
+              borderTop: '1px solid #eee',
+              display: 'flex',
+              justifyContent: 'flex-end',
+              gap: '10px'
+            }}>
+              <button 
+                className="btn btn-secondary"
+                onClick={() => setShowDeleteConfirm(false)}
+              >
+                Annuler
+              </button>
+              <button 
+                className="btn btn-danger" 
+                onClick={handleDelete}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Suppression...' : 'Supprimer'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </form>
   );
 };

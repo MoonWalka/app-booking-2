@@ -126,22 +126,28 @@ function FormValidationInterface() {
       setFormId(formSubmissionId);
       
       // 3. Récupérer les données de la soumission
-      const formDoc = await getDoc(doc(db, 'formSubmissions', formSubmissionId));
-      
-      if (formDoc.exists()) {
-        const formDocData = {
-          id: formDoc.id,
-          ...formDoc.data()
-        };
-        
-        console.log("Soumission trouvée:", formDocData);
-        setFormData(formDocData);
-        
-        // MODIFICATION: Utiliser directement les données stockées dans la soumission
-        if (formDocData.programmateurData) {
-          // Si la soumission contient une copie complète des données du programmateur
-          setProgrammateur(formDocData.programmateurData);
-          
+const formDoc = await getDoc(doc(db, 'formSubmissions', formSubmissionId));
+
+if (formDoc.exists()) {
+  const formDocData = {
+    id: formDoc.id,
+    ...formDoc.data()
+  };
+  
+  console.log("Soumission trouvée:", formDocData);
+  setFormData(formDocData);
+  
+  // Récupérer les données existantes du programmateur (s'il existe)
+  if (formDocData.programmId) {
+    try {
+      const progDoc = await getDoc(doc(db, 'programmateurs', formDocData.programmId));
+      if (progDoc.exists()) {
+        // Définir les données existantes du programmateur
+        setProgrammateur(progDoc.data());
+      }
+    } catch (error) {
+      console.error("Erreur lors de la récupération des données du programmateur:", error);
+    }
           // 5. Initialiser les valeurs finales avec les données de la soumission
           const initialValues = {};
           

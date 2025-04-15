@@ -41,7 +41,18 @@ const LieuForm = () => {
           const lieuDoc = await getDoc(doc(db, 'lieux', id));
           if (lieuDoc.exists()) {
             const lieuData = lieuDoc.data();
-            setLieu(lieuData);
+            
+            // S'assurer que la propriété contact existe toujours
+            const lieuWithDefaults = {
+              ...lieuData,
+              contact: lieuData.contact || {
+                nom: '',
+                telephone: '',
+                email: ''
+              }
+            };
+            
+            setLieu(lieuWithDefaults);
             
             // Si un programmateur est associé, le récupérer
             if (lieuData.programmateurId) {
@@ -175,7 +186,7 @@ const LieuForm = () => {
       setLieu(prev => ({
         ...prev,
         [parent]: {
-          ...prev[parent],
+          ...(prev[parent] || {}), // Utiliser un objet vide si prev[parent] n'existe pas
           [child]: value
         }
       }));
@@ -474,7 +485,7 @@ const LieuForm = () => {
                 className="form-control"
                 id="contact.nom"
                 name="contact.nom"
-                value={lieu.contact.nom}
+                value={lieu.contact?.nom || ''}
                 onChange={handleChange}
                 placeholder="Nom et prénom du contact"
               />
@@ -491,7 +502,7 @@ const LieuForm = () => {
                       className="form-control"
                       id="contact.telephone"
                       name="contact.telephone"
-                      value={lieu.contact.telephone}
+                      value={lieu.contact?.telephone || ''}
                       onChange={handleChange}
                       placeholder="Ex: 01 23 45 67 89"
                     />
@@ -508,7 +519,7 @@ const LieuForm = () => {
                       className="form-control"
                       id="contact.email"
                       name="contact.email"
-                      value={lieu.contact.email}
+                      value={lieu.contact?.email || ''}
                       onChange={handleChange}
                       placeholder="Ex: contact@exemple.fr"
                     />

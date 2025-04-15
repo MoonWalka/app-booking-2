@@ -1,7 +1,4 @@
-// Débogage des variables d'environnement
-console.log('REACT_APP_FIREBASE_API_KEY:', process.env.REACT_APP_FIREBASE_API_KEY ? 'définie' : 'non définie');
-console.log('REACT_APP_FIREBASE_AUTH_DOMAIN:', process.env.REACT_APP_FIREBASE_AUTH_DOMAIN ? 'définie' : 'non définie');
-// etc.
+
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
@@ -10,6 +7,10 @@ import { getAuth } from "firebase/auth";
 import { getRemoteConfig, fetchAndActivate } from "firebase/remote-config";
 import { mockFirestore } from "./mockStorage";
 
+// Débogage des variables d'environnement
+console.log('REACT_APP_FIREBASE_API_KEY:', process.env.REACT_APP_FIREBASE_API_KEY ? 'définie' : 'non définie');
+console.log('REACT_APP_FIREBASE_AUTH_DOMAIN:', process.env.REACT_APP_FIREBASE_AUTH_DOMAIN ? 'définie' : 'non définie');
+// etc.
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,

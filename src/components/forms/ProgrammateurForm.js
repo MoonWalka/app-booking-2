@@ -180,38 +180,38 @@ if (!formData.contact.nom) {
 }
 
 
-    // 1. Si nous sommes en mode formulaire public, vérifier d'abord s'il y a un programmateur existant
-    let progId = id && id !== 'nouveau' ? id : null;
-    
-    if (isPublicFormMode) {
-    // Vérifier si un programmateur avec cet email existe déjà
-try {
-  // Seulement si un email a été fourni
-  if (formData.contact.email) {
-    const progsQuery = query(
-      collection(db, 'programmateurs'), 
-      where('email', '==', formData.contact.email)
-    );
-    
-    const progsSnapshot = await getDocs(progsQuery);
-    
-    if (!progsSnapshot.empty) {
-      // On a trouvé un programmateur existant avec cet email
-      progId = progsSnapshot.docs[0].id;
-      console.log('Programmateur existant trouvé:', progId);
-    }
-  } else if (concertId) {
-    // Si le concert a déjà un programmateur associé, utiliser cet ID
-    const concertDoc = await getDoc(doc(db, 'concerts', concertId));
-    if (concertDoc.exists() && concertDoc.data().programmateurId) {
-      progId = concertDoc.data().programmateurId;
-      console.log('Programmateur associé au concert trouvé:', progId);
-    }
-  }
-} catch (error) {
-  console.error('Erreur lors de la vérification de l\'existence du programmateur:', error);
-}
+// 1. Si nous sommes en mode formulaire public, vérifier d'abord s'il y a un programmateur existant
+let progId = id && id !== 'nouveau' ? id : null;
 
+if (isPublicFormMode) {
+  // Vérifier si un programmateur avec cet email existe déjà
+  try {
+    // Seulement si un email a été fourni
+    if (formData.contact.email) {
+      const progsQuery = query(
+        collection(db, 'programmateurs'), 
+        where('email', '==', formData.contact.email)
+      );
+      
+      const progsSnapshot = await getDocs(progsQuery);
+      
+      if (!progsSnapshot.empty) {
+        // On a trouvé un programmateur existant avec cet email
+        progId = progsSnapshot.docs[0].id;
+        console.log('Programmateur existant trouvé:', progId);
+      }
+    } else if (concertId) {
+      // Si le concert a déjà un programmateur associé, utiliser cet ID
+      const concertDoc = await getDoc(doc(db, 'concerts', concertId));
+      if (concertDoc.exists() && concertDoc.data().programmateurId) {
+        progId = concertDoc.data().programmateurId;
+        console.log('Programmateur associé au concert trouvé:', progId);
+      }
+    }
+  } catch (error) {
+    console.error('Erreur lors de la vérification de l\'existence du programmateur:', error);
+  }
+}
 
     // Récupérer les données existantes si on met à jour un programmateur
     let existingProgData = {};

@@ -3,6 +3,7 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+import { getStorage } from "firebase/storage"; // Ajout de l'import pour Storage
 import { getRemoteConfig, fetchAndActivate } from "firebase/remote-config";
 import { mockFirestore } from "./mockStorage";
 
@@ -48,6 +49,7 @@ console.log('Running in ' + (isEmulator ? 'emulator' : 'production') + ' mode.')
 // Export des services avec vérification
 export const analytics = app ? getAnalytics(app) : null;
 export const auth = app ? getAuth(app) : null;
+export const storage = app ? getStorage(app) : null; // Ajout de l'export pour Storage
 
 // Variable pour contourner l'authentification en développement
 export const BYPASS_AUTH = process.env.REACT_APP_BYPASS_AUTH === 'true';

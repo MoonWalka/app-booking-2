@@ -11,12 +11,11 @@ import {
   where,
   getDocs,
   orderBy,
-  limit ,
+  limit,
   setDoc
 } from 'firebase/firestore';
 import { db } from '../../firebase';
 import Badge from 'react-bootstrap/Badge';
-import '../../style/lieuDetails.css';
 import '../../style/lieuForm.css';
 
 const LieuDetails = () => {
@@ -29,7 +28,7 @@ const LieuDetails = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  // États pour le formulaire en mode édition
+  // États pour le formulaire
   const [formData, setFormData] = useState({
     nom: '',
     adresse: '',
@@ -47,7 +46,7 @@ const LieuDetails = () => {
     programmateurNom: null
   });
   
-  // États pour la recherche de programmateurs en mode édition
+  // États pour la recherche de programmateurs
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -122,16 +121,13 @@ const LieuDetails = () => {
   useEffect(() => {
     if (!isEditing) return;
     
-    // Nettoyer le timeout précédent si une nouvelle recherche est lancée
     if (searchTimeoutRef.current) {
       clearTimeout(searchTimeoutRef.current);
     }
     
-    // N'effectuer la recherche que si le terme a au moins 2 caractères
     if (searchTerm.length >= 2) {
       setIsSearching(true);
       
-      // Ajouter un délai pour éviter trop de requêtes
       searchTimeoutRef.current = setTimeout(() => {
         searchProgrammateurs(searchTerm);
       }, 300);
@@ -140,7 +136,6 @@ const LieuDetails = () => {
       setIsSearching(false);
     }
     
-    // Nettoyage du timeout à la destruction du composant
     return () => {
       if (searchTimeoutRef.current) {
         clearTimeout(searchTimeoutRef.current);
@@ -165,7 +160,6 @@ const LieuDetails = () => {
   // Fonction pour rechercher des programmateurs dans Firebase
   const searchProgrammateurs = async (term) => {
     try {
-      // Créer une requête pour chercher les programmateurs dont le nom contient le terme
       const q = query(
         collection(db, 'programmateurs'),
         where('nom', '>=', term),
@@ -198,7 +192,6 @@ const LieuDetails = () => {
     setSearchTerm('');
     setSearchResults([]);
     
-    // Mettre à jour le formulaire avec le programmateur sélectionné
     setFormData(prev => ({
       ...prev,
       programmateurId: programmateur.id,
@@ -219,13 +212,11 @@ const LieuDetails = () => {
   // Fonction pour créer un nouveau programmateur
   const handleCreateProgrammateur = async () => {
     try {
-      // Vérifier qu'un nom de programmateur a été saisi
       if (!searchTerm.trim()) {
         alert('Veuillez saisir un nom de programmateur avant de créer un nouveau programmateur.');
         return;
       }
       
-      // Créer directement un nouveau programmateur avec le nom saisi dans la recherche
       const newProgRef = doc(collection(db, 'programmateurs'));
       const progData = {
         nom: searchTerm.trim(),
@@ -239,16 +230,13 @@ const LieuDetails = () => {
       
       await setDoc(newProgRef, progData);
       
-      // Créer un objet programmateur avec l'ID et les données
       const newProg = { 
         id: newProgRef.id,
         ...progData
       };
       
-      // Sélectionner automatiquement le nouveau programmateur
       handleSelectProgrammateur(newProg);
       
-      // Afficher un message de confirmation
       alert(`Le programmateur "${progData.nom}" a été créé avec succès. Vous pourrez compléter ses détails plus tard.`);
       
     } catch (error) {
@@ -271,6 +259,13 @@ const LieuDetails = () => {
 
   // Fonction pour basculer en mode édition
   const toggleEditMode = () => {
+    if (isEditing) {
+      // Si on quitte le mode édition, on réinitialise le formulaire aux valeurs actuelles
+      setFormData({
+        ...lieu,
+        contact: lieu.contact || { nom: '', telephone: '', email: '' }
+      });
+    }
     setIsEditing(!isEditing);
   };
   
@@ -282,7 +277,7 @@ const LieuDetails = () => {
       setFormData(prev => ({
         ...prev,
         [parent]: {
-          ...(prev[parent] || {}), // Utiliser un objet vide si prev[parent] n'existe pas
+          ...(prev[parent] || {}),
           [child]: value
         }
       }));
@@ -317,7 +312,8 @@ const LieuDetails = () => {
       await updateDoc(doc(db, 'lieux', id), lieuData);
       
       // Mettre à jour l'état local
-      setLieu(lieuData);
+      setLieu({...lieuData});
+      
       // Si le programmateur a changé, le mettre à jour
       if (lieuData.programmateurId && (!programmateur || programmateur.id !== lieuData.programmateurId)) {
         fetchProgrammateur(lieuData.programmateurId);
@@ -327,6 +323,9 @@ const LieuDetails = () => {
       
       // Sortir du mode édition
       setIsEditing(false);
+      
+      // Afficher un message de succès
+      alert('Les modifications ont été enregistrées avec succès !');
     } catch (error) {
       console.error('Erreur lors de l\'enregistrement du lieu:', error);
       alert('Une erreur est survenue lors de l\'enregistrement du lieu');
@@ -431,18 +430,17 @@ const LieuDetails = () => {
         </div>
       </div>
 
-      {isEditing ? (
-        // MODE ÉDITION
-        <form onSubmit={handleSubmit} className="modern-form">
-          {/* Première carte - Informations principales */}
-          <div className="form-card">
-            <div className="card-header">
-              <i className="bi bi-building"></i>
-              <h3>Informations principales</h3>
-            </div>
-            <div className="card-body">
-              <div className="form-group">
-                <label htmlFor="nom" className="form-label">Nom du lieu <span className="required">*</span></label>
+      <form onSubmit={handleSubmit} className="modern-form">
+        {/* Première carte - Informations principales */}
+        <div className="form-card">
+          <div className="card-header">
+            <i className="bi bi-building"></i>
+            <h3>Informations principales</h3>
+          </div>
+          <div className="card-body">
+            <div className="form-group">
+              <label htmlFor="nom" className="form-label">Nom du lieu {isEditing && <span className="required">*</span>}</label>
+              {isEditing ? (
                 <input
                   type="text"
                   className="form-control"
@@ -453,10 +451,14 @@ const LieuDetails = () => {
                   required
                   placeholder="Ex: Le Café des Artistes"
                 />
-              </div>
-              
-              <div className="form-group">
-                <label htmlFor="type" className="form-label">Type de lieu</label>
+              ) : (
+                <div className="form-control-static">{lieu.nom}</div>
+              )}
+            </div>
+            
+            <div className="form-group">
+              <label htmlFor="type" className="form-label">Type de lieu</label>
+              {isEditing ? (
                 <select
                   className="form-select"
                   id="type"
@@ -471,33 +473,47 @@ const LieuDetails = () => {
                   <option value="plateau">Plateau</option>
                   <option value="autre">Autre</option>
                 </select>
-              </div>
-              
-              <div className="form-group">
-                <label htmlFor="capacite" className="form-label">Capacité</label>
-                <input
-                  type="number"
-                  className="form-control"
-                  id="capacite"
-                  name="capacite"
-                  value={formData.capacite}
-                  onChange={handleChange}
-                  placeholder="Nombre de personnes"
-                />
-                <small className="form-text text-muted">Nombre maximum de personnes que le lieu peut accueillir</small>
-              </div>
+              ) : (
+                <div className="form-control-static">
+                  {lieu.type ? <TypeBadge type={lieu.type} /> : <span className="text-muted">Non spécifié</span>}
+                </div>
+              )}
+            </div>
+            
+            <div className="form-group">
+              <label htmlFor="capacite" className="form-label">Capacité</label>
+              {isEditing ? (
+                <>
+                  <input
+                    type="number"
+                    className="form-control"
+                    id="capacite"
+                    name="capacite"
+                    value={formData.capacite}
+                    onChange={handleChange}
+                    placeholder="Nombre de personnes"
+                  />
+                  <small className="form-text text-muted">Nombre maximum de personnes que le lieu peut accueillir</small>
+                </>
+              ) : (
+                <div className="form-control-static">
+                  {lieu.capacite ? `${lieu.capacite} personnes` : <span className="text-muted">Non spécifiée</span>}
+                </div>
+              )}
             </div>
           </div>
+        </div>
 
-          {/* Deuxième carte - Adresse */}
-          <div className="form-card">
-            <div className="card-header">
-              <i className="bi bi-geo-alt"></i>
-              <h3>Adresse</h3>
-            </div>
-            <div className="card-body">
-              <div className="form-group">
-                <label htmlFor="adresse" className="form-label">Adresse <span className="required">*</span></label>
+        {/* Deuxième carte - Adresse */}
+        <div className="form-card">
+          <div className="card-header">
+            <i className="bi bi-geo-alt"></i>
+            <h3>Adresse</h3>
+          </div>
+          <div className="card-body">
+            <div className="form-group">
+              <label htmlFor="adresse" className="form-label">Adresse {isEditing && <span className="required">*</span>}</label>
+              {isEditing ? (
                 <input
                   type="text"
                   className="form-control"
@@ -508,12 +524,16 @@ const LieuDetails = () => {
                   required
                   placeholder="Numéro et nom de rue"
                 />
-              </div>
+              ) : (
+                <div className="form-control-static">{lieu.adresse}</div>
+              )}
+            </div>
 
-              <div className="row">
-                <div className="col-md-4">
-                  <div className="form-group">
-                    <label htmlFor="codePostal" className="form-label">Code postal <span className="required">*</span></label>
+            <div className="row">
+              <div className="col-md-4">
+                <div className="form-group">
+                  <label htmlFor="codePostal" className="form-label">Code postal {isEditing && <span className="required">*</span>}</label>
+                  {isEditing ? (
                     <input
                       type="text"
                       className="form-control"
@@ -524,11 +544,15 @@ const LieuDetails = () => {
                       required
                       placeholder="Ex: 75001"
                     />
-                  </div>
+                  ) : (
+                    <div className="form-control-static">{lieu.codePostal}</div>
+                  )}
                 </div>
-                <div className="col-md-8">
-                  <div className="form-group">
-                    <label htmlFor="ville" className="form-label">Ville <span className="required">*</span></label>
+              </div>
+              <div className="col-md-8">
+                <div className="form-group">
+                  <label htmlFor="ville" className="form-label">Ville {isEditing && <span className="required">*</span>}</label>
+                  {isEditing ? (
                     <input
                       type="text"
                       className="form-control"
@@ -539,12 +563,16 @@ const LieuDetails = () => {
                       required
                       placeholder="Ex: Paris"
                     />
-                  </div>
+                  ) : (
+                    <div className="form-control-static">{lieu.ville}</div>
+                  )}
                 </div>
               </div>
+            </div>
 
-              <div className="form-group">
-                <label htmlFor="pays" className="form-label">Pays <span className="required">*</span></label>
+            <div className="form-group">
+              <label htmlFor="pays" className="form-label">Pays {isEditing && <span className="required">*</span>}</label>
+              {isEditing ? (
                 <input
                   type="text"
                   className="form-control"
@@ -554,17 +582,21 @@ const LieuDetails = () => {
                   onChange={handleChange}
                   required
                 />
-              </div>
+              ) : (
+                <div className="form-control-static">{lieu.pays}</div>
+              )}
             </div>
           </div>
+        </div>
 
-          {/* Carte - Programmateur */}
-          <div className="form-card">
-            <div className="card-header">
-              <i className="bi bi-person-badge"></i>
-              <h3>Programmateur</h3>
-            </div>
-            <div className="card-body">
+        {/* Carte - Programmateur */}
+        <div className="form-card">
+          <div className="card-header">
+            <i className="bi bi-person-badge"></i>
+            <h3>Programmateur</h3>
+          </div>
+          <div className="card-body">
+            {isEditing ? (
               <div className="form-group">
                 <label className="form-label">Associer un programmateur</label>
                 
@@ -661,160 +693,17 @@ const LieuDetails = () => {
                   Tapez au moins 2 caractères pour rechercher un programmateur par nom.
                 </small>
               </div>
-            </div>
-          </div>
-
-          {/* Carte - Informations de contact */}
-          <div className="form-card">
-            <div className="card-header">
-              <i className="bi bi-person-lines-fill"></i>
-              <h3>Informations de contact</h3>
-            </div>
-            <div className="card-body">
-              <div className="form-group">
-                <label htmlFor="contact.nom" className="form-label">Personne à contacter</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="contact.nom"
-                  name="contact.nom"
-                  value={formData.contact?.nom || ''}
-                  onChange={handleChange}
-                  placeholder="Nom et prénom du contact"
-                />
-              </div>
-
-              <div className="row">
-                <div className="col-md-6">
-                  <div className="form-group">
-                    <label htmlFor="contact.telephone" className="form-label">Téléphone</label>
-                    <div className="input-group">
-                      <span className="input-group-text"><i className="bi bi-telephone"></i></span>
-                      <input
-                        type="tel"
-                        className="form-control"
-                        id="contact.telephone"
-                        name="contact.telephone"
-                        value={formData.contact?.telephone || ''}
-                        onChange={handleChange}
-                        placeholder="Ex: 01 23 45 67 89"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="col-md-6">
-                  <div className="form-group">
-                    <label htmlFor="contact.email" className="form-label">Email</label>
-                    <div className="input-group">
-                      <span className="input-group-text"><i className="bi bi-envelope"></i></span>
-                      <input
-                        type="email"
-                        className="form-control"
-                        id="contact.email"
-                        name="contact.email"
-                        value={formData.contact?.email || ''}
-                        onChange={handleChange}
-                        placeholder="Ex: contact@exemple.fr"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="form-actions">
-            <button
-              type="button"
-              className="btn btn-outline-secondary"
-              onClick={toggleEditMode}
-              disabled={isSubmitting}
-            >
-              <i className="bi bi-x-circle me-2"></i>
-              Annuler
-            </button>
-            <button
-              type="submit"
-              className="btn btn-primary"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? (
-                <>
-                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                  Enregistrement...
-                </>
-              ) : (
-                <>
-                  <i className="bi bi-check-circle me-2"></i>
-                  Enregistrer les modifications
-                </>
-              )}
-            </button>
-          </div>
-        </form>
-      ) : (
-        // MODE AFFICHAGE
-        <div className="row details-content">
-          <div className="col-md-8">
-            <div className="detail-card">
-              <div className="card-header">
-                <i className="bi bi-building"></i>
-                <h3>Informations générales</h3>
-              </div>
-              <div className="card-body">
-                <div className="info-row">
-                  <div className="info-label">
-                    <i className="bi bi-geo-alt text-primary"></i>
-                    Adresse
-                  </div>
-                  <div className="info-value">{lieu.adresse}</div>
-                </div>
-                
-                <div className="info-group">
-                  <div className="info-row">
-                    <div className="info-label">Code postal</div>
-                    <div className="info-value">{lieu.codePostal}</div>
-                  </div>
-                  <div className="info-row">
-                    <div className="info-label">Ville</div>
-                    <div className="info-value">{lieu.ville}</div>
-                  </div>
-                  <div className="info-row">
-                    <div className="info-label">Pays</div>
-                    <div className="info-value">{lieu.pays}</div>
-                  </div>
-                </div>
-                
-                {lieu.capacite && (
-                  <div className="info-row">
-                    <div className="info-label">
-                      <i className="bi bi-people text-primary"></i>
-                      Capacité
-                    </div>
-                    <div className="info-value highlight">
-                      {lieu.capacite} personnes
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Carte pour le programmateur */}
-            {lieu.programmateurId && (
-              <div className="detail-card">
-                <div className="card-header">
-                  <i className="bi bi-person-badge"></i>
-                  <h3>Programmateur</h3>
-                </div>
-                <div className="card-body">
-                  {loadingProgrammateur ? (
+            ) : (
+              <>
+                {lieu.programmateurId ? (
+                  loadingProgrammateur ? (
                     <div className="text-center py-3">
                       <div className="spinner-border spinner-border-sm text-primary" role="status">
                         <span className="visually-hidden">Chargement du programmateur...</span>
                       </div>
                     </div>
                   ) : programmateur ? (
-                    <>
+                    <div className="programmateur-display">
                       <div className="info-row">
                         <div className="info-label">
                           <i className="bi bi-person text-primary"></i>
@@ -864,25 +753,83 @@ const LieuDetails = () => {
                           </div>
                         </div>
                       )}
-                    </>
+                    </div>
                   ) : (
                     <div className="alert alert-warning">
                       <i className="bi bi-exclamation-triangle me-2"></i>
                       Le programmateur associé (ID: {lieu.programmateurId}) n'a pas pu être chargé ou n'existe plus.
-                      </div>
-                  )}
-                </div>
-              </div>
+                    </div>
+                  )
+                ) : (
+                  <div className="text-muted">Aucun programmateur associé à ce lieu.</div>
+                )}
+              </>
             )}
+          </div>
+        </div>
 
-            {/* Carte pour les contacts du lieu (conservée si nécessaire) */}
-            {lieu.contact && (lieu.contact.nom || lieu.contact.telephone || lieu.contact.email) && (
-              <div className="detail-card">
-                <div className="card-header">
-                  <i className="bi bi-person-lines-fill"></i>
-                  <h3>Contact du lieu</h3>
+        {/* Carte - Informations de contact */}
+        <div className="form-card">
+          <div className="card-header">
+            <i className="bi bi-person-lines-fill"></i>
+            <h3>Informations de contact</h3>
+          </div>
+          <div className="card-body">
+            {isEditing ? (
+              <>
+                <div className="form-group">
+                  <label htmlFor="contact.nom" className="form-label">Personne à contacter</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="contact.nom"
+                    name="contact.nom"
+                    value={formData.contact?.nom || ''}
+                    onChange={handleChange}
+                    placeholder="Nom et prénom du contact"
+                  />
                 </div>
-                <div className="card-body">
+
+                <div className="row">
+                  <div className="col-md-6">
+                    <div className="form-group">
+                      <label htmlFor="contact.telephone" className="form-label">Téléphone</label>
+                      <div className="input-group">
+                        <span className="input-group-text"><i className="bi bi-telephone"></i></span>
+                        <input
+                          type="tel"
+                          className="form-control"
+                          id="contact.telephone"
+                          name="contact.telephone"
+                          value={formData.contact?.telephone || ''}
+                          onChange={handleChange}
+                          placeholder="Ex: 01 23 45 67 89"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <div className="form-group">
+                      <label htmlFor="contact.email" className="form-label">Email</label>
+                      <div className="input-group">
+                        <span className="input-group-text"><i className="bi bi-envelope"></i></span>
+                        <input
+                          type="email"
+                          className="form-control"
+                          id="contact.email"
+                          name="contact.email"
+                          value={formData.contact?.email || ''}
+                          onChange={handleChange}
+                          placeholder="Ex: contact@exemple.fr"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </>
+            ) : (
+              lieu.contact && (lieu.contact.nom || lieu.contact.telephone || lieu.contact.email) ? (
+                <>
                   {lieu.contact.nom && (
                     <div className="info-row">
                       <div className="info-label">
@@ -918,100 +865,87 @@ const LieuDetails = () => {
                       </div>
                     </div>
                   )}
-                </div>
-              </div>
+                </>
+              ) : (
+                <div className="text-muted">Aucune information de contact renseignée pour ce lieu.</div>
+              )
             )}
           </div>
-          
-          <div className="col-md-4">
-            <div className="detail-card summary-card">
-              <div className="card-header">
-                <i className="bi bi-info-circle"></i>
-                <h3>Résumé</h3>
+        </div>
+
+        {/* Carte - Informations supplémentaires (toujours visible, non-éditable) */}
+        <div className="form-card">
+          <div className="card-header">
+            <i className="bi bi-info-circle"></i>
+            <h3>Informations supplémentaires</h3>
+          </div>
+          <div className="card-body">
+            <div className="info-row">
+              <div className="info-label">
+                <i className="bi bi-calendar-check text-primary"></i>
+                Créé le
               </div>
-              <div className="card-body">
-                <div className="summary-item">
-                  <div className="summary-icon">
-                    <i className="bi bi-calendar-check"></i>
-                  </div>
-                  <div className="summary-details">
-                    <div className="summary-label">Créé le</div>
-                    <div className="summary-value">
-                      {lieu.createdAt ? new Date(lieu.createdAt.seconds * 1000).toLocaleDateString('fr-FR') : 'Non disponible'}
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="summary-item">
-                  <div className="summary-icon">
-                    <i className="bi bi-calendar-plus"></i>
-                  </div>
-                  <div className="summary-details">
-                    <div className="summary-label">Dernière modification</div>
-                    <div className="summary-value">
-                      {lieu.updatedAt ? new Date(lieu.updatedAt.seconds * 1000).toLocaleDateString('fr-FR') : 'Non disponible'}
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="summary-item">
-                  <div className="summary-icon">
-                    <i className="bi bi-geo"></i>
-                  </div>
-                  <div className="summary-details">
-                    <div className="summary-label">Localisation</div>
-                    <div className="summary-value">
-                      {lieu.ville}, {lieu.pays}
-                    </div>
-                  </div>
-                </div>
-                
-                {lieu.type && (
-                  <div className="summary-item">
-                    <div className="summary-icon">
-                      <i className="bi bi-tag"></i>
-                    </div>
-                    <div className="summary-details">
-                      <div className="summary-label">Type</div>
-                      <div className="summary-value">
-                        <TypeBadge type={lieu.type} />
-                      </div>
-                    </div>
-                  </div>
-                )}
-                
-                {lieu.programmateurId && programmateur && (
-                  <div className="summary-item">
-                    <div className="summary-icon">
-                      <i className="bi bi-person-badge"></i>
-                    </div>
-                    <div className="summary-details">
-                      <div className="summary-label">Programmateur</div>
-                      <div className="summary-value">
-                        <Link to={`/programmateurs/${programmateur.id}`}>
-                          {programmateur.nom}
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                )}
+              <div className="info-value">
+                {lieu.createdAt ? new Date(lieu.createdAt.seconds * 1000).toLocaleDateString('fr-FR') : 'Non disponible'}
               </div>
-              
-              <div className="card-footer">
-                <a 
-                  href={`https://maps.google.com/maps?q=${encodeURIComponent(`${lieu.adresse}, ${lieu.codePostal} ${lieu.ville}, ${lieu.pays}`)}`} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="btn btn-outline-primary btn-sm w-100"
-                >
-                  <i className="bi bi-map me-2"></i>
-                  Voir sur Google Maps
-                </a>
+            </div>
+            
+            <div className="info-row">
+              <div className="info-label">
+                <i className="bi bi-calendar-plus text-primary"></i>
+                Dernière modification
               </div>
+              <div className="info-value">
+                {lieu.updatedAt ? new Date(lieu.updatedAt.seconds * 1000).toLocaleDateString('fr-FR') : 'Non disponible'}
+              </div>
+            </div>
+            
+            <div className="map-link text-center mt-3">
+              <a 
+                href={`https://maps.google.com/maps?q=${encodeURIComponent(`${lieu.adresse}, ${lieu.codePostal} ${lieu.ville}, ${lieu.pays}`)}`} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="btn btn-outline-primary btn-sm"
+              >
+                <i className="bi bi-map me-2"></i>
+                Voir sur Google Maps
+              </a>
             </div>
           </div>
         </div>
-      )}
+
+        {/* Boutons d'action en mode édition */}
+        {isEditing && (
+          <div className="form-actions">
+            <button
+              type="button"
+              className="btn btn-outline-secondary"
+              onClick={toggleEditMode}
+              disabled={isSubmitting}
+            >
+              <i className="bi bi-x-circle me-2"></i>
+              Annuler
+            </button>
+            <button
+              type="submit"
+              className="btn btn-primary"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <>
+                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  Enregistrement...
+                </>
+              ) : (
+                <>
+                  <i className="bi bi-check-circle me-2"></i>
+                  Enregistrer les modifications
+                </>
+              )}
+            </button>
+          </div>
+        )}
+      </form>
     </div>
   );
 };

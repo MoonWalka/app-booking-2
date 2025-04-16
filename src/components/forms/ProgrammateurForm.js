@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { db } from '../../firebase';
 import {
@@ -14,8 +14,10 @@ import {
   where,
   getDocs
 } from 'firebase/firestore';
+import { useLocationIQ } from '../../hooks/useLocationIQ';
 import '../../style/programmateurForm.css';
-import '../../style/formPublic.css'; // Ajout du CSS pour le formulaire public
+import '../../style/formPublic.css'; // Ajout du CSS pour le formulaire public;
+import '../../style/lieuForm.css'; // Ajoutez cette ligne en haut du fichier;
 
 
 const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) => {
@@ -47,9 +49,18 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
   });
   const [submitted, setSubmitted] = useState(false); // Nouvel état pour gérer l'affichage après soumission
 
+  // États pour les suggestions d'adresse
+  const [addressSuggestions, setAddressSuggestions] = useState([]);
+  const [isSearchingAddress, setIsSearchingAddress] = useState(false);
+  const addressTimeoutRef = useRef(null);
+  const addressInputRef = useRef(null);
+  const suggestionsRef = useRef(null);
+
+  // Utilisation du hook LocationIQ
+  const { isLoading: isApiLoading, error: apiError, searchAddress } = useLocationIQ();
+
   // Déterminer si nous sommes en mode formulaire public ou en mode édition standard
   const isPublicFormMode = Boolean(token && concertId && formLinkId);
-
   useEffect(() => {
     console.log("ProgrammateurForm - ID depuis params:", id);
     const fetchProgrammateur = async () => {
@@ -203,6 +214,62 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
 
     fetchProgrammateur();
   }, [id, concertId, navigate, isPublicFormMode]);
+
+  // Effet pour la recherche d'adresse
+  useEffect(() => {
+    // Nettoyer le timeout précédent
+    if (addressTimeoutRef.current) {
+      clearTimeout(addressTimeoutRef.current);
+    }
+    
+    const handleSearch = async () => {
+      if (!formData.structure.adresse || formData.structure.adresse.length < 3 || isApiLoading) {
+        setAddressSuggestions([]);
+        return;
+      }
+      
+      setIsSearchingAddress(true);
+      
+      try {
+        // Appeler la fonction du hook
+        const results = await searchAddress(formData.structure.adresse);
+        setAddressSuggestions(results || []);
+      } catch (error) {
+        console.error("Erreur lors de la recherche d'adresse:", error);
+        setAddressSuggestions([]);
+      } finally {
+        setIsSearchingAddress(false);
+      }
+    };
+    
+    // N'effectuer la recherche que si l'adresse a au moins 3 caractères
+    if (formData.structure.adresse && formData.structure.adresse.length >= 3 && !isApiLoading) {
+      addressTimeoutRef.current = setTimeout(handleSearch, 300);
+    } else {
+      setAddressSuggestions([]);
+    }
+    
+    return () => {
+      if (addressTimeoutRef.current) {
+        clearTimeout(addressTimeoutRef.current);
+      }
+    };
+  }, [formData.structure.adresse, isApiLoading, searchAddress]);
+
+  // Gestionnaire de clic extérieur pour fermer la liste des suggestions d'adresse
+  useEffect(() => {
+    const handleClickOutsideAddressSuggestions = (event) => {
+      if (suggestionsRef.current && !suggestionsRef.current.contains(event.target) && 
+          addressInputRef.current && !addressInputRef.current.contains(event.target)) {
+        setAddressSuggestions([]);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutsideAddressSuggestions);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutsideAddressSuggestions);
+    };
+  }, []);
   const handleChange = (e) => {
     const { name, value } = e.target;
     
@@ -222,6 +289,46 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
         [name]: value
       }));
     }
+  };
+
+  // Sélectionner une adresse parmi les suggestions
+  const handleSelectAddress = (address) => {
+    let codePostal = '';
+    let ville = '';
+    let pays = 'France';
+    let adresse = '';
+    
+    // Extraire les composants d'adresse
+    if (address.address) {
+      // Extraire le code postal
+      codePostal = address.address.postcode || '';
+      
+      // Extraire la ville
+      ville = address.address.city || address.address.town || address.address.village || '';
+      
+      // Extraire le pays
+      pays = address.address.country || 'France';
+      
+      // Construire l'adresse de rue
+      const houseNumber = address.address.house_number || '';
+      const road = address.address.road || '';
+      adresse = `${houseNumber} ${road}`.trim();
+    }
+    
+    // Mettre à jour le state avec les informations d'adresse
+    setFormData(prev => ({
+      ...prev,
+      structure: {
+        ...prev.structure,
+        adresse: adresse || address.display_name.split(',')[0],
+        codePostal,
+        ville,
+        pays
+      }
+    }));
+    
+    // Fermer les suggestions
+    setAddressSuggestions([]);
   };
 
   const handleSubmit = async (e) => {
@@ -645,18 +752,65 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
                 </div>
               </div>
             </div>
-
-            <div className="form-group">
+                              {/* Champ d'adresse avec autocomplétion */}
+            <div className="form-group address-search-container">
               <label htmlFor="structure.adresse" className="form-label">Adresse complète</label>
-              <input
-                type="text"
-                className="form-control"
-                id="structure.adresse"
-                name="structure.adresse"
-                value={formData.structure.adresse}
-                onChange={handleChange}
-                placeholder="Numéro et nom de rue"
-              />
+              <div className="input-group">
+                <input
+                  type="text"
+                  className="form-control"
+                  id="structure.adresse"
+                  name="structure.adresse"
+                  ref={addressInputRef}
+                  value={formData.structure.adresse}
+                  onChange={handleChange}
+                  placeholder="Commencez à taper une adresse..."
+                  autoComplete="off"
+                />
+                <span className="input-group-text">
+                  <i className="bi bi-geo-alt"></i>
+                </span>
+              </div>
+              <small className="form-text text-muted">
+                Commencez à taper pour voir des suggestions d'adresses
+              </small>
+              
+              {/* Suggestions d'adresse */}
+              {addressSuggestions && addressSuggestions.length > 0 && (
+                <div className="address-suggestions" ref={suggestionsRef}>
+                  {addressSuggestions.map((suggestion, index) => (
+                    <div
+                      key={index}
+                      className="address-suggestion-item"
+                      onClick={() => handleSelectAddress(suggestion)}
+                    >
+                      <div className="suggestion-icon">
+                        <i className="bi bi-geo-alt-fill"></i>
+                      </div>
+                      <div className="suggestion-text">
+                        <div className="suggestion-name">{suggestion.display_name}</div>
+                        {suggestion.address && (
+                          <div className="suggestion-details">
+                            {suggestion.address.postcode && suggestion.address.city && (
+                              <span>{suggestion.address.postcode} {suggestion.address.city}</span>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              
+              {/* Indicateur de recherche */}
+              {isSearchingAddress && (
+                <div className="address-searching">
+                  <div className="spinner-border spinner-border-sm text-primary" role="status">
+                    <span className="visually-hidden">Recherche en cours...</span>
+                  </div>
+                  <span className="searching-text">Recherche d'adresses...</span>
+                </div>
+              )}
             </div>
 
             <div className="row">
@@ -753,7 +907,7 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
                 
                 {formData.concertsAssocies.length > 0 ? (
                   <div className="concert-list">
-                                        {formData.concertsAssocies.map(concert => (
+                    {formData.concertsAssocies.map(concert => (
                       <div key={concert.id} className="concert-card">
                         <div className="concert-card-body">
                           <div className="concert-info">

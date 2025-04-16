@@ -27,6 +27,11 @@ const LieuDetails = () => {
   const [loadingProgrammateur, setLoadingProgrammateur] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+    // États pour l'autocomplétion d'adresse
+    const [addressSearchActive, setAddressSearchActive] = useState(false);
+    const [addressSuggestions, setAddressSuggestions] = useState([]);
+    const [isAddressSearching, setIsAddressSearching] = useState(false);
+    const addressSearchTimeoutRef = useRef(null);
   
   // États pour le formulaire
   const [formData, setFormData] = useState({
@@ -268,6 +273,96 @@ const LieuDetails = () => {
     }
     setIsEditing(!isEditing);
   };
+    // Effet pour la recherche d'adresse
+    useEffect(() => {
+      if (!isEditing) return;
+      
+      // Nettoyer le timeout précédent
+      if (addressSearchTimeoutRef.current) {
+        clearTimeout(addressSearchTimeoutRef.current);
+      }
+      
+      // Ne rechercher que si l'utilisateur a saisi au moins 3 caractères
+      if (formData.adresse && formData.adresse.length >= 3) {
+        setIsAddressSearching(true);
+        
+        // Ajouter un délai pour éviter trop de requêtes
+        addressSearchTimeoutRef.current = setTimeout(() => {
+          searchAddress(formData.adresse);
+        }, 500);
+      } else {
+        setAddressSuggestions([]);
+        setIsAddressSearching(false);
+      }
+      
+      return () => {
+        if (addressSearchTimeoutRef.current) {
+          clearTimeout(addressSearchTimeoutRef.current);
+        }
+      };
+    }, [formData.adresse, isEditing]);
+  
+    // Fonction pour rechercher une adresse
+    const searchAddress = async (query) => {
+      try {
+        // Utilisation de l'API du gouvernement français pour l'autocomplétion
+        const response = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(query)}&limit=5`);
+        const data = await response.json();
+        
+        if (data.features && data.features.length > 0) {
+          const suggestions = data.features.map(feature => ({
+            name: feature.properties.label,
+            address: `${feature.properties.postcode} ${feature.properties.city}`,
+            coords: {
+              lat: feature.geometry.coordinates[1],
+              lng: feature.geometry.coordinates[0]
+            },
+            city: feature.properties.city,
+            postcode: feature.properties.postcode,
+            street: feature.properties.name
+          }));
+          
+          setAddressSuggestions(suggestions);
+        } else {
+          setAddressSuggestions([]);
+        }
+      } catch (error) {
+        console.error('Erreur lors de la recherche d\'adresse:', error);
+        setAddressSuggestions([]);
+      } finally {
+        setIsAddressSearching(false);
+      }
+    };
+  
+    // Fonction pour sélectionner une adresse
+    const handleAddressSelect = (suggestion) => {
+      setFormData(prev => ({
+        ...prev,
+        adresse: suggestion.street,
+        ville: suggestion.city,
+        codePostal: suggestion.postcode,
+        pays: 'France', // Par défaut pour les adresses françaises
+        coordonnees: suggestion.coords
+      }));
+      
+      setAddressSuggestions([]);
+      setAddressSearchActive(false);
+    };
+  
+    // Gestionnaire de clic extérieur pour les suggestions d'adresse
+    useEffect(() => {
+      const handleClickOutside = (event) => {
+        // Logique pour fermer les suggestions d'adresse quand on clique ailleurs
+        if (!event.target.closest('.address-search-container')) {
+          setAddressSearchActive(false);
+        }
+      };
+      
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }, []);
   
   // Gestion du changement des champs du formulaire
   const handleChange = (e) => {
@@ -504,90 +599,173 @@ const LieuDetails = () => {
           </div>
         </div>
 
-        {/* Deuxième carte - Adresse */}
-        <div className="form-card">
-          <div className="card-header">
-            <i className="bi bi-geo-alt"></i>
-            <h3>Adresse</h3>
+      {/* Deuxième carte - Adresse avec autocomplétion */}
+<div className="form-card">
+  <div className="card-header">
+    <i className="bi bi-geo-alt"></i>
+    <h3>Adresse</h3>
+  </div>
+  <div className="card-body">
+    {isEditing ? (
+      <>
+        <div className="form-group">
+          <label htmlFor="adresse" className="form-label">Adresse <span className="required">*</span></label>
+          <div className="address-search-container">
+            <div className="input-group">
+              <span className="input-group-text"><i className="bi bi-search"></i></span>
+              <input
+                type="text"
+                className="form-control"
+                id="adresse"
+                name="adresse"
+                value={formData.adresse}
+                onChange={handleChange}
+                onFocus={() => setAddressSearchActive(true)}
+                required
+                placeholder="Rechercher une adresse..."
+              />
+            </div>
+            
+            {addressSearchActive && addressSuggestions.length > 0 && (
+              <div className="address-suggestions">
+                {addressSuggestions.map((suggestion, index) => (
+                  <div 
+                    key={index} 
+                    className="address-suggestion-item"
+                    onClick={() => handleAddressSelect(suggestion)}
+                  >
+                    <div className="suggestion-icon">
+                      <i className="bi bi-geo-alt"></i>
+                    </div>
+                    <div className="suggestion-text">
+                      <div className="suggestion-name">{suggestion.name}</div>
+                      <div className="suggestion-details">{suggestion.address}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+            
+            {isAddressSearching && (
+              <div className="address-searching">
+                <div className="spinner-border spinner-border-sm" role="status">
+                  <span className="visually-hidden">Recherche...</span>
+                </div>
+                <span>Recherche d'adresses...</span>
+              </div>
+            )}
           </div>
-          <div className="card-body">
-            <div className="form-group">
-              <label htmlFor="adresse" className="form-label">Adresse {isEditing && <span className="required">*</span>}</label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  className="form-control"
-                  id="adresse"
-                  name="adresse"
-                  value={formData.adresse}
-                  onChange={handleChange}
-                  required
-                  placeholder="Numéro et nom de rue"
-                />
-              ) : (
-                <div className="form-control-static">{lieu.adresse}</div>
-              )}
-            </div>
+        </div>
 
-            <div className="row">
-              <div className="col-md-4">
-                <div className="form-group">
-                  <label htmlFor="codePostal" className="form-label">Code postal {isEditing && <span className="required">*</span>}</label>
-                  {isEditing ? (
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="codePostal"
-                      name="codePostal"
-                      value={formData.codePostal}
-                      onChange={handleChange}
-                      required
-                      placeholder="Ex: 75001"
-                    />
-                  ) : (
-                    <div className="form-control-static">{lieu.codePostal}</div>
-                  )}
-                </div>
-              </div>
-              <div className="col-md-8">
-                <div className="form-group">
-                  <label htmlFor="ville" className="form-label">Ville {isEditing && <span className="required">*</span>}</label>
-                  {isEditing ? (
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="ville"
-                      name="ville"
-                      value={formData.ville}
-                      onChange={handleChange}
-                      required
-                      placeholder="Ex: Paris"
-                    />
-                  ) : (
-                    <div className="form-control-static">{lieu.ville}</div>
-                  )}
-                </div>
-              </div>
-            </div>
-
+        <div className="row">
+          <div className="col-md-4">
             <div className="form-group">
-              <label htmlFor="pays" className="form-label">Pays {isEditing && <span className="required">*</span>}</label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  className="form-control"
-                  id="pays"
-                  name="pays"
-                  value={formData.pays}
-                  onChange={handleChange}
-                  required
-                />
-              ) : (
-                <div className="form-control-static">{lieu.pays}</div>
-              )}
+              <label htmlFor="codePostal" className="form-label">Code postal <span className="required">*</span></label>
+              <input
+                type="text"
+                className="form-control"
+                id="codePostal"
+                name="codePostal"
+                value={formData.codePostal}
+                onChange={handleChange}
+                required
+                placeholder="Ex: 75001"
+              />
+            </div>
+          </div>
+          <div className="col-md-8">
+            <div className="form-group">
+              <label htmlFor="ville" className="form-label">Ville <span className="required">*</span></label>
+              <input
+                type="text"
+                className="form-control"
+                id="ville"
+                name="ville"
+                value={formData.ville}
+                onChange={handleChange}
+                required
+                placeholder="Ex: Paris"
+              />
             </div>
           </div>
         </div>
+
+        <div className="form-group">
+          <label htmlFor="pays" className="form-label">Pays <span className="required">*</span></label>
+          <input
+            type="text"
+            className="form-control"
+            id="pays"
+            name="pays"
+            value={formData.pays}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        
+        {/* Prévisualisation de la carte si des coordonnées sont disponibles */}
+        {formData.coordonnees && (
+          <div className="form-group">
+            <label className="form-label">Emplacement sur la carte</label>
+            <div className="interactive-map-container">
+              <div id="address-map" className="leaflet-container">
+                {/* Ici, vous intégreriez la carte Leaflet */}
+                {/* Ceci est un espace réservé pour la carte interactive */}
+              </div>
+              <div className="marker-drag-hint">
+                <i className="bi bi-info-circle me-1"></i>
+                Cliquez et déplacez le marqueur pour ajuster la position
+              </div>
+            </div>
+            <small className="form-text text-muted mt-2">
+              Vous pouvez déplacer le marqueur pour ajuster précisément l'emplacement.
+            </small>
+          </div>
+        )}
+      </>
+    ) : (
+      <>
+        <div className="info-row">
+          <div className="info-label">
+            <i className="bi bi-geo-alt text-primary"></i>
+            Adresse
+          </div>
+          <div className="info-value">{lieu.adresse}</div>
+        </div>
+        
+        <div className="info-group">
+          <div className="info-row">
+            <div className="info-label">Code postal</div>
+            <div className="info-value">{lieu.codePostal}</div>
+          </div>
+          <div className="info-row">
+            <div className="info-label">Ville</div>
+            <div className="info-value">{lieu.ville}</div>
+          </div>
+          <div className="info-row">
+            <div className="info-label">Pays</div>
+            <div className="info-value">{lieu.pays}</div>
+          </div>
+        </div>
+        
+        {/* Affichage de la carte si des coordonnées sont disponibles */}
+        {lieu.coordonnees && (
+          <div className="map-preview mt-3">
+            <div className="map-container">
+              <img 
+                src={`https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/pin-s+f00(${lieu.coordonnees.lng},${lieu.coordonnees.lat})/${lieu.coordonnees.lng},${lieu.coordonnees.lat},13,0/600x300?access_token=YOUR_MAPBOX_TOKEN`} 
+                alt={`Carte de ${lieu.nom}`}
+                className="img-fluid rounded"
+                style={{ width: '100%' }}
+              />
+            </div>
+          </div>
+        )}
+      </>
+    )}
+  </div>
+</div>
+
 
         {/* Carte - Programmateur */}
         <div className="form-card">

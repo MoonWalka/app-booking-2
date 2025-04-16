@@ -599,170 +599,115 @@ const LieuDetails = () => {
           </div>
         </div>
 
-      {/* Deuxième carte - Adresse avec autocomplétion */}
+{/* Deuxième carte - Adresse */}
 <div className="form-card">
   <div className="card-header">
     <i className="bi bi-geo-alt"></i>
     <h3>Adresse</h3>
   </div>
   <div className="card-body">
-    {isEditing ? (
-      <>
+    <div className="form-group">
+      <label htmlFor="adresse" className="form-label">Adresse {isEditing && <span className="required">*</span>}</label>
+      {isEditing ? (
+        <input
+          type="text"
+          className="form-control"
+          id="adresse"
+          name="adresse"
+          value={formData.adresse}
+          onChange={handleChange}
+          required
+          placeholder="Numéro et nom de rue"
+        />
+      ) : (
+        <div className="form-control-static">{lieu.adresse}</div>
+      )}
+    </div>
+
+    <div className="row">
+      <div className="col-md-4">
         <div className="form-group">
-          <label htmlFor="adresse" className="form-label">Adresse <span className="required">*</span></label>
-          <div className="address-search-container">
-            <div className="input-group">
-              <span className="input-group-text"><i className="bi bi-search"></i></span>
-              <input
-                type="text"
-                className="form-control"
-                id="adresse"
-                name="adresse"
-                value={formData.adresse}
-                onChange={handleChange}
-                onFocus={() => setAddressSearchActive(true)}
-                required
-                placeholder="Rechercher une adresse..."
-              />
-            </div>
-            
-            {addressSearchActive && addressSuggestions.length > 0 && (
-              <div className="address-suggestions">
-                {addressSuggestions.map((suggestion, index) => (
-                  <div 
-                    key={index} 
-                    className="address-suggestion-item"
-                    onClick={() => handleAddressSelect(suggestion)}
-                  >
-                    <div className="suggestion-icon">
-                      <i className="bi bi-geo-alt"></i>
-                    </div>
-                    <div className="suggestion-text">
-                      <div className="suggestion-name">{suggestion.name}</div>
-                      <div className="suggestion-details">{suggestion.address}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-            
-            {isAddressSearching && (
-              <div className="address-searching">
-                <div className="spinner-border spinner-border-sm" role="status">
-                  <span className="visually-hidden">Recherche...</span>
-                </div>
-                <span>Recherche d'adresses...</span>
-              </div>
-            )}
-          </div>
+          <label htmlFor="codePostal" className="form-label">Code postal {isEditing && <span className="required">*</span>}</label>
+          {isEditing ? (
+            <input
+              type="text"
+              className="form-control"
+              id="codePostal"
+              name="codePostal"
+              value={formData.codePostal}
+              onChange={handleChange}
+              required
+              placeholder="Ex: 75001"
+            />
+          ) : (
+            <div className="form-control-static">{lieu.codePostal}</div>
+          )}
         </div>
-
-        <div className="row">
-          <div className="col-md-4">
-            <div className="form-group">
-              <label htmlFor="codePostal" className="form-label">Code postal <span className="required">*</span></label>
-              <input
-                type="text"
-                className="form-control"
-                id="codePostal"
-                name="codePostal"
-                value={formData.codePostal}
-                onChange={handleChange}
-                required
-                placeholder="Ex: 75001"
-              />
-            </div>
-          </div>
-          <div className="col-md-8">
-            <div className="form-group">
-              <label htmlFor="ville" className="form-label">Ville <span className="required">*</span></label>
-              <input
-                type="text"
-                className="form-control"
-                id="ville"
-                name="ville"
-                value={formData.ville}
-                onChange={handleChange}
-                required
-                placeholder="Ex: Paris"
-              />
-            </div>
-          </div>
-        </div>
-
+      </div>
+      <div className="col-md-8">
         <div className="form-group">
-          <label htmlFor="pays" className="form-label">Pays <span className="required">*</span></label>
-          <input
-            type="text"
-            className="form-control"
-            id="pays"
-            name="pays"
-            value={formData.pays}
-            onChange={handleChange}
-            required
-          />
+          <label htmlFor="ville" className="form-label">Ville {isEditing && <span className="required">*</span>}</label>
+          {isEditing ? (
+            <input
+              type="text"
+              className="form-control"
+              id="ville"
+              name="ville"
+              value={formData.ville}
+              onChange={handleChange}
+              required
+              placeholder="Ex: Paris"
+            />
+          ) : (
+            <div className="form-control-static">{lieu.ville}</div>
+          )}
         </div>
-        
-        {/* Prévisualisation de la carte si des coordonnées sont disponibles */}
-        {formData.coordonnees && (
-          <div className="form-group">
-            <label className="form-label">Emplacement sur la carte</label>
-            <div className="interactive-map-container">
-              <div id="address-map" className="leaflet-container">
-                {/* Ici, vous intégreriez la carte Leaflet */}
-                {/* Ceci est un espace réservé pour la carte interactive */}
-              </div>
-              <div className="marker-drag-hint">
-                <i className="bi bi-info-circle me-1"></i>
-                Cliquez et déplacez le marqueur pour ajuster la position
-              </div>
-            </div>
-            <small className="form-text text-muted mt-2">
-              Vous pouvez déplacer le marqueur pour ajuster précisément l'emplacement.
-            </small>
-          </div>
-        )}
-      </>
-    ) : (
-      <>
-        <div className="info-row">
-          <div className="info-label">
-            <i className="bi bi-geo-alt text-primary"></i>
-            Adresse
-          </div>
-          <div className="info-value">{lieu.adresse}</div>
-        </div>
-        
-        <div className="info-group">
-          <div className="info-row">
-            <div className="info-label">Code postal</div>
-            <div className="info-value">{lieu.codePostal}</div>
-          </div>
-          <div className="info-row">
-            <div className="info-label">Ville</div>
-            <div className="info-value">{lieu.ville}</div>
-          </div>
-          <div className="info-row">
-            <div className="info-label">Pays</div>
-            <div className="info-value">{lieu.pays}</div>
-          </div>
-        </div>
-        
-        {/* Affichage de la carte si des coordonnées sont disponibles */}
-        {lieu.coordonnees && (
-          <div className="map-preview mt-3">
-            <div className="map-container">
-            <img 
-  src={`https://staticmap.openstreetmap.de/staticmap.php?center=${lieu.coordonnees.lat},${lieu.coordonnees.lng}&zoom=15&size=600x300&markers=${lieu.coordonnees.lat},${lieu.coordonnees.lng},red`} 
-  alt={`Carte de ${lieu.nom}`}
-  className="img-fluid rounded"
-  style={{ width: '100%' }}
-/>
+      </div>
+    </div>
 
-            </div>
-          </div>
-        )}
-      </>
+    <div className="form-group">
+      <label htmlFor="pays" className="form-label">Pays {isEditing && <span className="required">*</span>}</label>
+      {isEditing ? (
+        <input
+          type="text"
+          className="form-control"
+          id="pays"
+          name="pays"
+          value={formData.pays}
+          onChange={handleChange}
+          required
+        />
+      ) : (
+        <div className="form-control-static">{lieu.pays}</div>
+      )}
+    </div>
+    
+    {/* Affichage de la carte uniquement en mode visualisation */}
+    {!isEditing && lieu.adresse && (
+      <div className="map-preview mt-4">
+        <div className="map-container mb-3">
+          <iframe 
+            src={`https://maps.google.com/maps?q=${encodeURIComponent(`${lieu.adresse}, ${lieu.codePostal} ${lieu.ville}`)}&z=14&output=embed`}
+            width="100%" 
+            height="300" 
+            style={{border: '1px solid #ddd', borderRadius: '8px'}}
+            allowFullScreen="" 
+            loading="lazy" 
+            referrerPolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
+        <div className="text-center">
+          <a 
+            href={`https://maps.google.com/maps?q=${encodeURIComponent(`${lieu.adresse}, ${lieu.codePostal} ${lieu.ville}`)}`}
+            target="_blank"
+            rel="noopener noreferrer" 
+            className="btn btn-sm btn-outline-primary"
+          >
+            <i className="bi bi-map me-2"></i>
+            Voir sur Google Maps
+          </a>
+        </div>
+      </div>
     )}
   </div>
 </div>
@@ -1051,6 +996,41 @@ const LieuDetails = () => {
             )}
           </div>
         </div>
+{/* Carte pour afficher l'emplacement */}
+        {!isEditing && lieu.adresse && (
+        <div className="form-card">
+          <div className="card-header">
+            <i className="bi bi-geo"></i>
+            <h3>Emplacement</h3>
+          </div>
+          <div className="card-body">
+            <div className="map-preview">
+              <div className="map-container mb-3">
+                <iframe 
+                  src={`https://maps.google.com/maps?q=${encodeURIComponent(`${lieu.adresse}, ${lieu.codePostal} ${lieu.ville}`)}&z=14&output=embed`}
+                  width="100%" 
+                  height="300" 
+                  style={{border: '1px solid #ddd', borderRadius: '8px'}}
+                  allowFullScreen="" 
+                  loading="lazy" 
+                  referrerPolicy="no-referrer-when-downgrade"
+                ></iframe>
+              </div>
+              <div className="text-center">
+                <a 
+                  href={`https://maps.google.com/maps?q=${encodeURIComponent(`${lieu.adresse}, ${lieu.codePostal} ${lieu.ville}`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer" 
+                  className="btn btn-sm btn-outline-primary"
+                >
+                  <i className="bi bi-map me-2"></i>
+                  Voir sur Google Maps
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
         {/* Carte - Informations supplémentaires (toujours visible, non-éditable) */}
         <div className="form-card">

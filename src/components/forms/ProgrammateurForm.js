@@ -335,7 +335,7 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
     e.preventDefault();
     setIsSubmitting(true);
     setError(null);
-
+  
     try {
       // Validation des champs obligatoires - uniquement le nom est requis
       if (!formData.contact.nom) {
@@ -343,7 +343,7 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
         setIsSubmitting(false);
         return;
       }
-
+  
       // 1. Si nous sommes en mode formulaire public, vérifier d'abord s'il y a un programmateur existant
       let progId = id && id !== 'nouveau' ? id : null;
       
@@ -375,8 +375,14 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
         } catch (error) {
           console.error('Erreur lors de la vérification de l\'existence du programmateur:', error);
         }
+        
+        // Si aucun programmateur existant n'a été trouvé, créer un nouvel ID
+        if (!progId) {
+          progId = doc(collection(db, 'programmateurs')).id;
+          console.log('Nouvel ID de programmateur créé:', progId);
+        }
       }
-
+  
       // Récupérer les données existantes si on met à jour un programmateur
       let existingProgData = {};
       if (progId) {
@@ -389,29 +395,49 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
           console.error('Erreur lors de la récupération des données existantes:', error);
         }
       }
-
+  
       // Créer une copie sécurisée de formData avec structure définie
       const safeFormData = {
         ...formData,
-        structure: formData.structure || {}
+        contact: {
+          nom: formData.contact?.nom || '',
+          prenom: formData.contact?.prenom || '',
+          fonction: formData.contact?.fonction || '',
+          email: formData.contact?.email || '',
+          telephone: formData.contact?.telephone || ''
+        },
+        structure: {
+          raisonSociale: formData.structure?.raisonSociale || '',
+          type: formData.structure?.type || '',
+          adresse: formData.structure?.adresse || '',
+          codePostal: formData.structure?.codePostal || '',
+          ville: formData.structure?.ville || '',
+          pays: formData.structure?.pays || 'France',
+          siret: formData.structure?.siret || '',
+          tva: formData.structure?.tva || ''
+        },
+        concertsAssocies: formData.concertsAssocies || []
       };
-
+  
       // 2. Préparer les données du programmateur
       const flattenedData = {
         // Champs principaux pour l'affichage dans la liste
         nom: `${safeFormData.contact.nom} ${safeFormData.contact.prenom}`.trim(),
         structure: safeFormData.structure.raisonSociale || '',
-        email: safeFormData.contact.email,
-        telephone: safeFormData.contact.telephone,
+        email: safeFormData.contact.email || '',
+        telephone: safeFormData.contact.telephone || '',
         
         // Ajouter tous les champs détaillés
         ...safeFormData.contact,
       };
       
       // Ajouter les champs de structure avec préfixe
-      Object.keys(safeFormData.structure).forEach(key => {
-        flattenedData[`structure${key.charAt(0).toUpperCase() + key.slice(1)}`] = safeFormData.structure[key];
-      });
+      if (safeFormData.structure) {
+        Object.keys(safeFormData.structure).forEach(key => {
+          flattenedData[`structure${key.charAt(0).toUpperCase() + key.slice(1)}`] = 
+            safeFormData.structure[key] || '';
+        });
+      }
       
       // 3. Si c'est un nouveau programmateur, ajouter la date de création
       if (!existingProgData.createdAt) {
@@ -443,7 +469,7 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
                 id: concertId,
                 titre: concertData.titre || 'Sans titre',
                 date: concertData.date || null,
-                lieu: concertData.lieuNom || null
+                lieu: concertData.lieuNom || ''
               });
             }
           } catch (error) {
@@ -456,10 +482,19 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
       
       // Ajouter les concerts associés aux données
       flattenedData.concertsAssocies = concertsAssocies;
-
+  
       // 7. Traitement spécifique au mode formulaire public
       if (isPublicFormMode) {
         console.log('Mode formulaire public, concertId:', concertId, 'formLinkId:', formLinkId);
+        
+        // Vérification des identifiants nécessaires
+        if (!concertId) {
+          throw new Error('ID du concert manquant');
+        }
+        
+        if (!formLinkId) {
+          throw new Error('ID du lien de formulaire manquant');
+        }
         
         // Vérifier si une soumission existe déjà pour ce concert
         let existingSubmissionId = null;
@@ -493,7 +528,9 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
             ...safeFormData.contact,
             ...safeFormData.structure
           },
-          submittedAt: existingSubmissionId ? formData.submittedAt || serverTimestamp() : serverTimestamp(),
+          submittedAt: existingSubmissionId ? 
+                       (formData.submittedAt || serverTimestamp()) : 
+                       serverTimestamp(),
           status: 'pending', // statut en attente de validation
           updatedAt: serverTimestamp() // Timestamp de mise à jour
         };
@@ -510,15 +547,19 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
           console.log('Nouvelle soumission créée avec ID:', existingSubmissionId);
           
           // Mettre à jour le lien et le concert uniquement lors de la première soumission
-          await updateDoc(doc(db, 'formLinks', formLinkId), {
-            completed: true,
-            completedAt: serverTimestamp()
-          });
+          if (formLinkId) {
+            await updateDoc(doc(db, 'formLinks', formLinkId), {
+              completed: true,
+              completedAt: serverTimestamp()
+            });
+          }
           
-          await updateDoc(doc(db, 'concerts', concertId), {
-            formSubmissionId: existingSubmissionId,
-            updatedAt: serverTimestamp()
-          });
+          if (concertId) {
+            await updateDoc(doc(db, 'concerts', concertId), {
+              formSubmissionId: existingSubmissionId,
+              updatedAt: serverTimestamp()
+            });
+          }
         }
         
         // CHANGEMENT IMPORTANT: Ne pas mettre à jour le programmateur tout de suite
@@ -537,19 +578,26 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
       else {
         console.log('Mode édition standard');
         
+        // Vérification de l'ID du programmateur
+        if (!progId) {
+          throw new Error('ID du programmateur manquant');
+        }
+        
         // En mode admin standard, mettre à jour le programmateur
         await setDoc(doc(db, 'programmateurs', progId), flattenedData, { merge: true });
         
         // Mise à jour réciproque : ajouter le programmateur à chaque concert
         for (const concert of concertsAssocies) {
-          const concertRef = doc(db, 'concerts', concert.id);
-          await updateDoc(concertRef, {
-            programmateurs: arrayUnion({
-              id: progId,
-              nom: flattenedData.nom
-            })
-          });
-          console.log('Programmateur associé au concert:', concert.id);
+          if (concert && concert.id) {
+            const concertRef = doc(db, 'concerts', concert.id);
+            await updateDoc(concertRef, {
+              programmateurs: arrayUnion({
+                id: progId,
+                nom: flattenedData.nom
+              })
+            });
+            console.log('Programmateur associé au concert:', concert.id);
+          }
         }
         
         // Rediriger vers la liste des programmateurs
@@ -557,11 +605,12 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
       }
     } catch (error) {
       console.error('Erreur lors de l\'enregistrement:', error);
-      setError('Une erreur est survenue lors de l\'enregistrement. Veuillez réessayer.');
+      setError(`Une erreur est survenue lors de l'enregistrement: ${error.message}`);
     } finally {
       setIsSubmitting(false);
     }
   };
+  
   if (loading) {
     return <div className="text-center my-5 loading-spinner">Chargement des données...</div>;
   }

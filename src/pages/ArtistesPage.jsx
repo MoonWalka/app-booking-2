@@ -19,4 +19,5 @@ function ArtistesPage() {
   );
 }
 
+
 export default ArtistesPage;

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { collection, getDocs, query, orderBy, deleteDoc, doc, limit, startAfter } from 'firebase/firestore';
 import { db } from '../../firebase';
+import { Container, Row, Col, Card, Button, Form, InputGroup, Badge, Spinner } from 'react-bootstrap';
 import '../../style/artistesList.css';
 
 const ArtistesList = () => {
@@ -157,7 +158,7 @@ const ArtistesList = () => {
 
   const filteredArtistes = artistes.filter(artiste => {
     // Appliquer filtre de recherche
-    const matchesSearch = artiste.nom.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = artiste.nom?.toLowerCase().includes(searchTerm.toLowerCase());
     
     // Appliquer filtres spécifiques si nécessaire
     if (filter === 'tous') return matchesSearch;
@@ -176,253 +177,286 @@ const ArtistesList = () => {
   };
 
   return (
-    <div className="artistes-list-container">
-      <div className="list-header">
-        <h2 className="page-title">Gestion des artistes</h2>
-        <div className="list-actions">
-          <button 
-            className="btn btn-primary"
+    <Container fluid className="py-4">
+      {/* En-tête avec titre et bouton d'ajout */}
+      <Row className="mb-4 align-items-center">
+        <Col>
+          <h1 className="mb-0">
+            <i className="bi bi-music-note-list me-2"></i>
+            Gestion des artistes
+          </h1>
+        </Col>
+        <Col xs="auto">
+          <Button 
+            variant="primary"
             onClick={() => navigate('/artistes/nouveau')}
           >
             <i className="bi bi-plus-circle me-2"></i>
             Nouvel artiste
-          </button>
-        </div>
-      </div>
+          </Button>
+        </Col>
+      </Row>
 
-      <div className="statistics-cards">
-        <div className="stat-card">
-          <div className="stat-icon">
-            <i className="bi bi-people-fill"></i>
-          </div>
-          <div className="stat-content">
-            <h3 className="stat-value">{stats.total}</h3>
-            <span className="stat-label">Total artistes</span>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon">
-            <i className="bi bi-calendar-check"></i>
-          </div>
-          <div className="stat-content">
-            <h3 className="stat-value">{stats.avecConcerts}</h3>
-            <span className="stat-label">Avec concerts</span>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon">
-            <i className="bi bi-calendar-x"></i>
-          </div>
-          <div className="stat-content">
-            <h3 className="stat-value">{stats.sansConcerts}</h3>
-            <span className="stat-label">Sans concerts</span>
-          </div>
-        </div>
-      </div>
+      {/* Cartes de statistiques */}
+      <Row className="mb-4">
+        <Col md={4}>
+          <Card className="stats-card h-100">
+            <Card.Body className="d-flex align-items-center">
+              <div className="stats-icon">
+                <i className="bi bi-people-fill"></i>
+              </div>
+              <div>
+                <h3 className="stats-value mb-0">{stats.total}</h3>
+                <div className="stats-label">Total artistes</div>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col md={4}>
+          <Card className="stats-card h-100">
+            <Card.Body className="d-flex align-items-center">
+              <div className="stats-icon text-success">
+                <i className="bi bi-calendar-check"></i>
+              </div>
+              <div>
+                <h3 className="stats-value mb-0">{stats.avecConcerts}</h3>
+                <div className="stats-label">Avec concerts</div>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col md={4}>
+          <Card className="stats-card h-100">
+            <Card.Body className="d-flex align-items-center">
+              <div className="stats-icon text-warning">
+                <i className="bi bi-calendar-x"></i>
+              </div>
+              <div>
+                <h3 className="stats-value mb-0">{stats.sansConcerts}</h3>
+                <div className="stats-label">Sans concerts</div>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
 
-      <div className="search-filter-controls">
-        <div className="search-filter-container" ref={searchInputRef}>
-          <div className="search-input-group">
-            <div className="search-input">
-              <i className="bi bi-search search-icon"></i>
-              <input
-                type="text"
-                placeholder="Rechercher un artiste..."
-                value={searchTerm}
-                onChange={handleSearchChange}
-                onFocus={() => setShowDropdown(searchTerm.length > 0)}
-                className="form-control"
-              />
-              {searchTerm && (
-                <button 
-                  className="btn btn-clear" 
-                  onClick={() => {
-                    setSearchTerm('');
-                    setShowDropdown(false);
-                  }}
-                >
-                  <i className="bi bi-x-circle"></i>
-                </button>
-              )}
-            </div>
-            
-            {/* Dropdown qui apparaît lors de la recherche */}
-            {showDropdown && (
-              <div className="search-dropdown">
-                {noResults ? (
-                  <div className="create-new-item" onClick={handleCreateArtiste}>
-                    <div className="item-content">
+      {/* Barre de recherche et filtres */}
+      <Card className="mb-4">
+        <Card.Body>
+          <Row className="mb-3">
+            <Col lg={6} ref={searchInputRef} className="position-relative mb-3 mb-lg-0">
+              <InputGroup>
+                <InputGroup.Text>
+                  <i className="bi bi-search"></i>
+                </InputGroup.Text>
+                <Form.Control
+                  type="text"
+                  placeholder="Rechercher un artiste..."
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                  onFocus={() => setShowDropdown(searchTerm.length > 0)}
+                />
+                {searchTerm && (
+                  <Button 
+                    variant="outline-secondary"
+                    onClick={() => {
+                      setSearchTerm('');
+                      setShowDropdown(false);
+                    }}
+                  >
+                    <i className="bi bi-x-circle"></i>
+                  </Button>
+                )}
+              </InputGroup>
+              
+              {/* Dropdown qui apparaît lors de la recherche */}
+              {showDropdown && (
+                <div className="search-results-dropdown">
+                  {noResults ? (
+                    <div className="search-create-item p-3" onClick={handleCreateArtiste}>
                       <i className="bi bi-plus-circle me-2"></i>
                       <span>
                         Créer l'artiste "<strong>{searchTerm}</strong>"
                       </span>
                     </div>
-                  </div>
-                ) : (
-                  filteredArtistes.slice(0, 5).map(artiste => (
-                    <Link to={`/artistes/${artiste.id}`} key={artiste.id} className="search-item">
-                      <div className="item-avatar">
-                        {artiste.photoPrincipale ? (
-                          <img src={artiste.photoPrincipale} alt={artiste.nom} />
-                        ) : (
-                          <i className="bi bi-music-note"></i>
-                        )}
-                      </div>
-                      <div className="item-content">
-                        <div className="item-name">{artiste.nom}</div>
-                        {artiste.genre && <div className="item-genre">{artiste.genre}</div>}
-                      </div>
-                    </Link>
-                  ))
-                )}
-              </div>
-            )}
-          </div>
-          
-          <div className="filter-controls">
-            <div className="filter-select">
-              <select 
-                className="form-select" 
-                value={filter}
-                onChange={(e) => setFilter(e.target.value)}
-              >
-                <option value="tous">Tous les artistes</option>
-                <option value="avecConcerts">Avec concerts</option>
-                <option value="sansConcerts">Sans concerts</option>
-              </select>
-            </div>
+                  ) : (
+                    filteredArtistes.slice(0, 5).map(artiste => (
+                      <Link to={`/artistes/${artiste.id}`} key={artiste.id} className="search-result-item">
+                        <div className="search-result-avatar">
+                          {artiste.photoPrincipale ? (
+                            <img src={artiste.photoPrincipale} alt={artiste.nom} />
+                          ) : (
+                            <div className="placeholder-avatar">
+                              <i className="bi bi-music-note"></i>
+                            </div>
+                          )}
+                        </div>
+                        <div>
+                          <div className="fw-bold">{artiste.nom}</div>
+                          {artiste.genre && <div className="small text-muted">{artiste.genre}</div>}
+                        </div>
+                      </Link>
+                    ))
+                  )}
+                </div>
+              )}
+            </Col>
             
-            <div className="sort-controls">
-              <div className="sort-label">Trier par:</div>
-              <div className="sort-options">
-                <button 
-                  className={`sort-button ${sortBy === 'nom' ? 'active' : ''}`}
-                  onClick={() => handleSortChange('nom')}
-                >
-                  Nom {sortBy === 'nom' && (
-                    <i className={`bi bi-sort-${sortDirection === 'asc' ? 'down' : 'up'}`}></i>
-                  )}
-                </button>
-                <button 
-                  className={`sort-button ${sortBy === 'createdAt' ? 'active' : ''}`}
-                  onClick={() => handleSortChange('createdAt')}
-                >
-                  Date {sortBy === 'createdAt' && (
-                    <i className={`bi bi-sort-${sortDirection === 'asc' ? 'down' : 'up'}`}></i>
-                  )}
-                </button>
-                <button 
-                  className={`sort-button ${sortBy === 'cachetMoyen' ? 'active' : ''}`}
-                  onClick={() => handleSortChange('cachetMoyen')}
-                >
-                  Cachet {sortBy === 'cachetMoyen' && (
-                    <i className={`bi bi-sort-${sortDirection === 'asc' ? 'down' : 'up'}`}></i>
-                  )}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+            <Col lg={6}>
+              <Row>
+                <Col xs={12} md={4} className="mb-2 mb-md-0">
+                  <Form.Select 
+                    value={filter}
+                    onChange={(e) => setFilter(e.target.value)}
+                  >
+                    <option value="tous">Tous les artistes</option>
+                    <option value="avecConcerts">Avec concerts</option>
+                    <option value="sansConcerts">Sans concerts</option>
+                  </Form.Select>
+                </Col>
+                <Col xs={12} md={8}>
+                  <div className="d-flex align-items-center h-100">
+                    <span className="me-2 d-none d-md-block">Trier par:</span>
+                    <div className="d-flex gap-2 flex-wrap">
+                      <Button 
+                        variant={sortBy === 'nom' ? 'primary' : 'outline-secondary'}
+                        size="sm"
+                        onClick={() => handleSortChange('nom')}
+                      >
+                        Nom {sortBy === 'nom' && (
+                          <i className={`bi bi-sort-${sortDirection === 'asc' ? 'down' : 'up'} ms-1`}></i>
+                        )}
+                      </Button>
+                      <Button 
+                        variant={sortBy === 'createdAt' ? 'primary' : 'outline-secondary'}
+                        size="sm"
+                        onClick={() => handleSortChange('createdAt')}
+                      >
+                        Date {sortBy === 'createdAt' && (
+                          <i className={`bi bi-sort-${sortDirection === 'asc' ? 'down' : 'up'} ms-1`}></i>
+                        )}
+                      </Button>
+                      <Button 
+                        variant={sortBy === 'cachetMoyen' ? 'primary' : 'outline-secondary'}
+                        size="sm"
+                        onClick={() => handleSortChange('cachetMoyen')}
+                      >
+                        Cachet {sortBy === 'cachetMoyen' && (
+                          <i className={`bi bi-sort-${sortDirection === 'asc' ? 'down' : 'up'} ms-1`}></i>
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+        </Card.Body>
+      </Card>
 
+      {/* État de chargement initial */}
       {loading && artistes.length === 0 ? (
-        <div className="loading-container">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Chargement des artistes...</span>
-          </div>
-          <p>Chargement des artistes...</p>
+        <div className="text-center py-5">
+          <Spinner animation="border" variant="primary" />
+          <p className="mt-3">Chargement des artistes...</p>
         </div>
       ) : filteredArtistes.length === 0 ? (
-        <div className="no-results">
-          <div className="empty-state">
-            <i className="bi bi-music-note-list empty-icon"></i>
+        <Card className="text-center py-5">
+          <Card.Body>
+            <i className="bi bi-music-note-list display-1 text-muted mb-3"></i>
             <h3>Aucun artiste trouvé</h3>
             {searchTerm ? (
               <p>Aucun résultat pour la recherche "{searchTerm}"</p>
             ) : (
               <p>Vous n'avez pas encore ajouté d'artistes</p>
             )}
-            <button
-              className="btn btn-primary mt-3"
+            <Button
+              variant="primary"
+              className="mt-3"
               onClick={() => navigate('/artistes/nouveau')}
             >
               <i className="bi bi-plus-circle me-2"></i>
               Ajouter un artiste
-            </button>
-          </div>
-        </div>
+            </Button>
+          </Card.Body>
+        </Card>
       ) : (
         <>
-          <div className="artistes-grid">
+          {/* Liste des artistes en grille */}
+          <Row xs={1} sm={2} md={3} xl={4} className="g-4">
             {filteredArtistes.map(artiste => (
-              <div 
-                className="artiste-card" 
-                key={artiste.id}
-                onClick={() => navigate(`/artistes/${artiste.id}`)}
-              >
-                <div className="artiste-photo">
-                  {artiste.photoPrincipale ? (
-                    <img src={artiste.photoPrincipale} alt={artiste.nom} />
-                  ) : (
-                    <div className="placeholder-photo">
-                      <i className="bi bi-music-note"></i>
+              <Col key={artiste.id}>
+                <Card 
+                  className="artiste-card h-100"
+                  onClick={() => navigate(`/artistes/${artiste.id}`)}
+                >
+                  <div className="artiste-photo">
+                    {artiste.photoPrincipale ? (
+                      <img src={artiste.photoPrincipale} alt={artiste.nom} />
+                    ) : (
+                      <div className="placeholder-photo">
+                        <i className="bi bi-music-note"></i>
+                      </div>
+                    )}
+                    <div className="artiste-badges">
+                      {getNbConcerts(artiste) > 0 && (
+                        <Badge bg="primary">{getNbConcerts(artiste)} concert{getNbConcerts(artiste) > 1 ? 's' : ''}</Badge>
+                      )}
+                      {artiste.estGroupeFavori && (
+                        <Badge bg="warning"><i className="bi bi-star-fill me-1"></i>Favori</Badge>
+                      )}
                     </div>
-                  )}
-                  <div className="artiste-badges">
-                    {getNbConcerts(artiste) > 0 && (
-                      <span className="badge bg-primary">{getNbConcerts(artiste)} concert{getNbConcerts(artiste) > 1 ? 's' : ''}</span>
-                    )}
-                    {artiste.estGroupeFavori && (
-                      <span className="badge bg-warning"><i className="bi bi-star-fill"></i> Favori</span>
-                    )}
                   </div>
-                </div>
-                <div className="artiste-content">
-                  <h3 className="artiste-name">{artiste.nom}</h3>
-                  {artiste.genre && <p className="artiste-genre">{artiste.genre}</p>}
-                  <div className="artiste-info">
-                    {artiste.cachetMoyen && (
-                      <span className="info-item">
-                        <i className="bi bi-cash"></i>
-                        {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(artiste.cachetMoyen)}
-                      </span>
-                    )}
-                    {artiste.ville && (
-                      <span className="info-item">
-                        <i className="bi bi-geo-alt"></i>
-                        {artiste.ville}
-                      </span>
-                    )}
+                  <div className="artiste-content">
+                    <h3 className="artiste-name">{artiste.nom}</h3>
+                    {artiste.genre && <p className="artiste-genre">{artiste.genre}</p>}
+                    <div className="artiste-info">
+                      {artiste.cachetMoyen && (
+                        <span className="info-item">
+                          <i className="bi bi-cash"></i>
+                          {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(artiste.cachetMoyen)}
+                        </span>
+                      )}
+                      {artiste.ville && (
+                        <span className="info-item">
+                          <i className="bi bi-geo-alt"></i>
+                          {artiste.ville}
+                        </span>
+                      )}
+                    </div>
                   </div>
-                </div>
-                <div className="artiste-actions">
-                  <Link to={`/artistes/${artiste.id}`} className="btn btn-outline-primary btn-sm" onClick={(e) => e.stopPropagation()}>
-                    <i className="bi bi-eye"></i>
-                  </Link>
-                  <Link to={`/artistes/${artiste.id}/modifier`} className="btn btn-outline-secondary btn-sm" onClick={(e) => e.stopPropagation()}>
-                    <i className="bi bi-pencil"></i>
-                  </Link>
-                  <button 
-                    className="btn btn-outline-danger btn-sm"
-                    onClick={(e) => handleDelete(artiste.id, e)}
-                  >
-                    <i className="bi bi-trash"></i>
-                  </button>
-                </div>
-              </div>
+                  <div className="artiste-actions">
+                    <Link to={`/artistes/${artiste.id}`} className="btn btn-outline-primary btn-sm" onClick={(e) => e.stopPropagation()}>
+                      <i className="bi bi-eye"></i>
+                    </Link>
+                    <Link to={`/artistes/${artiste.id}/modifier`} className="btn btn-outline-secondary btn-sm" onClick={(e) => e.stopPropagation()}>
+                      <i className="bi bi-pencil"></i>
+                    </Link>
+                    <Button 
+                      variant="outline-danger"
+                      size="sm"
+                      onClick={(e) => handleDelete(artiste.id, e)}
+                    >
+                      <i className="bi bi-trash"></i>
+                    </Button>
+                  </div>
+                </Card>
+              </Col>
             ))}
-          </div>
+          </Row>
           
+          {/* Bouton pour charger plus */}
           {hasMore && !searchTerm && (
-            <div className="load-more-container">
-              <button 
-                className="btn btn-outline-primary load-more-btn"
+            <div className="text-center mt-4">
+              <Button 
+                variant="outline-primary"
                 onClick={handleLoadMore}
                 disabled={loading}
+                className="px-4 py-2"
               >
                 {loading ? (
                   <>
-                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    <Spinner animation="border" size="sm" className="me-2" />
                     Chargement...
                   </>
                 ) : (
@@ -431,12 +465,12 @@ const ArtistesList = () => {
                     Charger plus d'artistes
                   </>
                 )}
-              </button>
+              </Button>
             </div>
           )}
         </>
       )}
-    </div>
+    </Container>
   );
 };
 

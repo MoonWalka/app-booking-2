@@ -752,12 +752,13 @@ const LieuDetails = () => {
         {lieu.coordonnees && (
           <div className="map-preview mt-3">
             <div className="map-container">
-              <img 
-                src={`https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/pin-s+f00(${lieu.coordonnees.lng},${lieu.coordonnees.lat})/${lieu.coordonnees.lng},${lieu.coordonnees.lat},13,0/600x300?access_token=YOUR_MAPBOX_TOKEN`} 
-                alt={`Carte de ${lieu.nom}`}
-                className="img-fluid rounded"
-                style={{ width: '100%' }}
-              />
+            <img 
+  src={`https://staticmap.openstreetmap.de/staticmap.php?center=${lieu.coordonnees.lat},${lieu.coordonnees.lng}&zoom=15&size=600x300&markers=${lieu.coordonnees.lat},${lieu.coordonnees.lng},red`} 
+  alt={`Carte de ${lieu.nom}`}
+  className="img-fluid rounded"
+  style={{ width: '100%' }}
+/>
+
             </div>
           </div>
         )}

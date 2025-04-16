@@ -1,423 +1,665 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import { db } from '../../firebase';
-import {
-  collection,
-  doc,
-  getDoc,
-  setDoc,
-  serverTimestamp
-} from 'firebase/firestore';
-import '../../style/artisteForm.css';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { collection, getDocs, query, orderBy, deleteDoc, doc, limit, startAfter, updateDoc } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'; // Importez les fonctions de Firebase Storage
+import { db, storage } from '../../firebase'; // Assurez-vous d'importer le module storage de Firebase
+import { Container, Row, Col, Card, Button, Form, InputGroup, Badge, Spinner, Modal } from 'react-bootstrap';
+import '../../style/artistesList.css';
 
-const ArtisteForm = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [loading, setLoading] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [artiste, setArtiste] = useState({
-    nom: '',
-    description: '',
-    genre: '',
-    membres: [],
-    contacts: {
-      email: '',
-      telephone: '',
-      siteWeb: '',
-      instagram: '',
-      facebook: ''
-    },
-    cachetMoyen: '',
-    photoPrincipale: '',
-    dateCreation: '',
-    concertsAssocies: [],
-    contrats: [],
-    stats: {
-      nombreConcerts: 0,
-      montantTotal: 0,
-      programmateursFrequents: [],
-      lieuxFrequents: []
-    }
+const ArtistesList = () => {
+  const [artistes, setArtistes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filter, setFilter] = useState('tous');
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [sortBy, setSortBy] = useState('nom');
+  const [sortDirection, setSortDirection] = useState('asc');
+  const [stats, setStats] = useState({
+    total: 0,
+    avecConcerts: 0,
+    sansConcerts: 0
   });
+  const [lastVisible, setLastVisible] = useState(null);
+  const [hasMore, setHasMore] = useState(true);
 
-  useEffect(() => {
-    // Récupérer le nom depuis les paramètres d'URL (si présent)
-    const queryParams = new URLSearchParams(location.search);
-    const nomFromUrl = queryParams.get('nom');
-    
-    if (nomFromUrl && (!id || id === 'nouveau')) {
-      setArtiste(prev => ({
-        ...prev,
-        nom: nomFromUrl
-      }));
-    }
+  // État pour la modal d'ajout de photo
+  const [showPhotoModal, setShowPhotoModal] = useState(false);
+  const [selectedArtiste, setSelectedArtiste] = useState(null);
+  const [photoFile, setPhotoFile] = useState(null);
+  const [photoPreview, setPhotoPreview] = useState(null);
+  const [uploadLoading, setUploadLoading] = useState(false);
+  const [uploadError, setUploadError] = useState('');
 
-    if (id && id !== 'nouveau') {
+  const searchInputRef = useRef(null);
+  const fileInputRef = useRef(null);
+  const navigate = useNavigate();
+  const pageSize = 12; // Nombre d'artistes à charger par page
+
+  // Fonction pour charger les artistes
+  const fetchArtistes = async (reset = true) => {
+    if (reset) {
       setLoading(true);
-      const fetchArtiste = async () => {
-        try {
-          const artisteDoc = await getDoc(doc(db, 'artistes', id));
-          if (artisteDoc.exists()) {
-            setArtiste({
-              ...artiste,
-              ...artisteDoc.data()
-            });
-          } else {
-            navigate('/artistes');
-          }
-        } catch (error) {
-          console.error('Erreur lors de la récupération de l\'artiste:', error);
-        } finally {
-          setLoading(false);
-        }
-      };
+      setLastVisible(null);
+    }
+    
+    try {
+      let q;
+      if (reset || !lastVisible) {
+        // Première charge ou réinitialisation
+        q = query(collection(db, 'artistes'), orderBy(sortBy, sortDirection), limit(pageSize));
+      } else {
+        // Chargement de page supplémentaire
+        q = query(collection(db, 'artistes'), orderBy(sortBy, sortDirection), startAfter(lastVisible), limit(pageSize));
+      }
       
-      fetchArtiste();
-    }
-  }, [id, navigate, location.search]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    if (name.includes('.')) {
-      const [parent, child] = name.split('.');
-      setArtiste(prev => ({
-        ...prev,
-        [parent]: {
-          ...prev[parent],
-          [child]: value
-        }
+      const querySnapshot = await getDocs(q);
+      
+      if (querySnapshot.empty) {
+        setHasMore(false);
+        if (!reset) return; // Ne rien faire s'il n'y a pas de résultats supplémentaires
+      } else {
+        setLastVisible(querySnapshot.docs[querySnapshot.docs.length - 1]);
+        setHasMore(querySnapshot.docs.length >= pageSize);
+      }
+      
+      const fetchedArtistes = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
       }));
+      
+      if (reset) {
+        setArtistes(fetchedArtistes);
+      } else {
+        setArtistes(prevArtistes => [...prevArtistes, ...fetchedArtistes]);
+      }
+      
+      // Calculer les statistiques si c'est un chargement initial
+      if (reset) {
+        const allDataQuery = query(collection(db, 'artistes'));
+        const allDataSnapshot = await getDocs(allDataQuery);
+        
+        let avecConcerts = 0;
+        let sansConcerts = 0;
+        
+        allDataSnapshot.forEach(doc => {
+          const artisteData = doc.data();
+          if (artisteData.concertsAssocies && artisteData.concertsAssocies.length > 0) {
+            avecConcerts++;
+          } else {
+            sansConcerts++;
+          }
+        });
+        
+        setStats({
+          total: allDataSnapshot.size,
+          avecConcerts,
+          sansConcerts
+        });
+      }
+    } catch (error) {
+      console.error('Erreur lors de la récupération des artistes:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Chargement initial
+  useEffect(() => {
+    fetchArtistes();
+  }, [sortBy, sortDirection]);
+
+  // Gestion de la fermeture du dropdown si on clique ailleurs
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchInputRef.current && !searchInputRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const handleDelete = async (id, event) => {
+    event.stopPropagation(); // Empêcher la propagation de l'événement
+    
+    if (window.confirm('Êtes-vous sûr de vouloir supprimer cet artiste ?')) {
+      try {
+        await deleteDoc(doc(db, 'artistes', id));
+        setArtistes(artistes.filter(artiste => artiste.id !== id));
+        setStats(prev => ({
+          ...prev,
+          total: prev.total - 1
+        }));
+      } catch (error) {
+        console.error('Erreur lors de la suppression de l\'artiste:', error);
+      }
+    }
+  };
+
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    setShowDropdown(value.length > 0);
+  };
+
+  const handleCreateArtiste = () => {
+    // Rediriger vers le formulaire d'ajout et pré-remplir le nom
+    navigate(`/artistes/nouveau?nom=${encodeURIComponent(searchTerm)}`);
+  };
+
+  const handleSortChange = (field) => {
+    if (field === sortBy) {
+      // Si on clique sur le même champ, inverser la direction
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
     } else {
-      setArtiste(prev => ({
-        ...prev,
-        [name]: value
-      }));
+      // Sinon, changer le champ et mettre en ordre ascendant par défaut
+      setSortBy(field);
+      setSortDirection('asc');
     }
   };
 
-  const handleMembresChange = (e, index) => {
-    const newMembres = [...artiste.membres];
-    newMembres[index] = e.target.value;
-    setArtiste(prev => ({
-      ...prev,
-      membres: newMembres
-    }));
+  const handleLoadMore = () => {
+    if (hasMore && !loading) {
+      fetchArtistes(false);
+    }
   };
 
-  const addMembre = () => {
-    setArtiste(prev => ({
-      ...prev,
-      membres: [...prev.membres, '']
-    }));
+  // Gestion de l'ouverture de la modal d'ajout de photo
+  const handleOpenPhotoModal = (artiste, event) => {
+    event.stopPropagation(); // Empêcher la navigation vers la page de détails
+    setSelectedArtiste(artiste);
+    setPhotoPreview(artiste.photoPrincipale || null);
+    setPhotoFile(null);
+    setUploadError('');
+    setShowPhotoModal(true);
   };
 
-  const removeMembre = (index) => {
-    const newMembres = [...artiste.membres];
-    newMembres.splice(index, 1);
-    setArtiste(prev => ({
-      ...prev,
-      membres: newMembres
-    }));
+  // Gestion de la fermeture de la modal
+  const handleClosePhotoModal = () => {
+    setShowPhotoModal(false);
+    setSelectedArtiste(null);
+    setPhotoFile(null);
+    setPhotoPreview(null);
+    setUploadError('');
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!artiste.nom) {
-      alert('Le nom de l\'artiste est obligatoire');
+  // Gestion de la sélection d'un fichier
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Vérification du type de fichier
+    if (!file.type.match('image.*')) {
+      setUploadError('Veuillez sélectionner une image valide (JPEG, PNG, GIF)');
       return;
     }
 
-    setSaving(true);
+    // Vérification de la taille du fichier (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setUploadError('La taille de l\'image ne doit pas dépasser 5MB');
+      return;
+    }
+
+    setPhotoFile(file);
+    setUploadError('');
+
+    // Création d'une prévisualisation
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPhotoPreview(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Fonction pour télécharger la photo
+  const handleUploadPhoto = async () => {
+    if (!photoFile || !selectedArtiste) return;
+
+    setUploadLoading(true);
+    setUploadError('');
+
     try {
-      const artisteId = id && id !== 'nouveau' ? id : doc(collection(db, 'artistes')).id;
-      const artisteData = {
-        ...artiste,
-        updatedAt: serverTimestamp(),
-        ...(id === 'nouveau' && { createdAt: serverTimestamp() })
-      };
+      // Créer une référence dans Firebase Storage
+      const fileExtension = photoFile.name.split('.').pop();
+      const fileName = `artistes/${selectedArtiste.id}_${Date.now()}.${fileExtension}`;
+      const storageRef = ref(storage, fileName);
 
-      // Convertir cachetMoyen en nombre si c'est une chaîne
-      if (artisteData.cachetMoyen && typeof artisteData.cachetMoyen === 'string') {
-        artisteData.cachetMoyen = parseInt(artisteData.cachetMoyen, 10) || 0;
-      }
+      // Télécharger le fichier
+      await uploadBytes(storageRef, photoFile);
 
-      await setDoc(doc(db, 'artistes', artisteId), artisteData, { merge: true });
-      navigate('/artistes');
+      // Obtenir l'URL de téléchargement
+      const downloadURL = await getDownloadURL(storageRef);
+
+      // Mettre à jour l'artiste dans Firestore
+      const artisteRef = doc(db, 'artistes', selectedArtiste.id);
+      await updateDoc(artisteRef, {
+        photoPrincipale: downloadURL,
+        updatedAt: new Date()
+      });
+
+      // Mettre à jour l'artiste dans l'état local
+      setArtistes(prevArtistes => 
+        prevArtistes.map(artiste => 
+          artiste.id === selectedArtiste.id 
+            ? { ...artiste, photoPrincipale: downloadURL } 
+            : artiste
+        )
+      );
+
+      // Fermer la modal
+      handleClosePhotoModal();
     } catch (error) {
-      console.error('Erreur lors de l\'enregistrement de l\'artiste:', error);
-      alert('Une erreur est survenue lors de l\'enregistrement');
+      console.error('Erreur lors du téléchargement de la photo:', error);
+      setUploadError('Une erreur est survenue lors du téléchargement. Veuillez réessayer.');
     } finally {
-      setSaving(false);
+      setUploadLoading(false);
     }
   };
 
-  if (loading) {
-    return <div className="loading-container">Chargement de l'artiste...</div>;
-  }
+  const filteredArtistes = artistes.filter(artiste => {
+    // Appliquer filtre de recherche
+    const matchesSearch = artiste.nom?.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    // Appliquer filtres spécifiques si nécessaire
+    if (filter === 'tous') return matchesSearch;
+    if (filter === 'avecConcerts') return matchesSearch && artiste.concertsAssocies?.length > 0;
+    if (filter === 'sansConcerts') return matchesSearch && (!artiste.concertsAssocies || artiste.concertsAssocies.length === 0);
+    
+    return matchesSearch;
+  });
+
+  // Déterminer si aucun résultat ne correspond à la recherche
+  const noResults = searchTerm.length > 0 && filteredArtistes.length === 0;
+
+  const getNbConcerts = (artiste) => {
+    if (!artiste.concertsAssocies) return 0;
+    return artiste.concertsAssocies.length;
+  };
 
   return (
-    <div className="artiste-form-container">
-      <div className="form-header">
-        <h2 className="page-title">
-          {id === 'nouveau' ? 'Créer un nouvel artiste' : 'Modifier l\'artiste'}
-        </h2>
-        <div className="breadcrumb">
-          <span className="breadcrumb-item" onClick={() => navigate('/artistes')}>Artistes</span>
-          <span className="breadcrumb-separator">/</span>
-          <span className="breadcrumb-current">
-            {id === 'nouveau' ? 'Nouveau' : artiste.nom}
-          </span>
-        </div>
-      </div>
+    <Container fluid className="py-4">
+      {/* En-tête avec titre et bouton d'ajout */}
+      <Row className="mb-4 align-items-center">
+        <Col>
+          <h1 className="mb-0">
+            <i className="bi bi-music-note-list me-2"></i>
+            Gestion des artistes
+          </h1>
+        </Col>
+        <Col xs="auto">
+          <Button 
+            variant="primary"
+            onClick={() => navigate('/artistes/nouveau')}
+          >
+            <i className="bi bi-plus-circle me-2"></i>
+            Nouvel artiste
+          </Button>
+        </Col>
+      </Row>
 
-      <form onSubmit={handleSubmit} className="artiste-form">
-        {/* Carte - Informations principales */}
-        <div className="form-card">
-          <div className="card-header">
-            <i className="bi bi-music-note"></i>
-            <h3>Informations principales</h3>
-          </div>
-          <div className="card-body">
-            <div className="form-group">
-              <label htmlFor="nom" className="form-label">Nom de l'artiste <span className="required">*</span></label>
-              <input
-                type="text"
-                className="form-control"
-                id="nom"
-                name="nom"
-                value={artiste.nom}
-                onChange={handleChange}
-                required
-                placeholder="Nom de l'artiste ou du groupe"
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="description" className="form-label">Description / Biographie</label>
-              <textarea
-                className="form-control"
-                id="description"
-                name="description"
-                value={artiste.description || ''}
-                onChange={handleChange}
-                rows="3"
-                placeholder="Description courte ou biographie de l'artiste"
-              ></textarea>
-            </div>
-
-            <div className="row">
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label htmlFor="genre" className="form-label">Genre musical</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="genre"
-                    name="genre"
-                    value={artiste.genre || ''}
-                    onChange={handleChange}
-                    placeholder="Ex: Rock, Jazz, Électro..."
-                  />
-                </div>
+      {/* Cartes de statistiques */}
+      <Row className="mb-4">
+        <Col md={4}>
+          <Card className="stats-card h-100">
+            <Card.Body className="d-flex align-items-center">
+              <div className="stats-icon">
+                <i className="bi bi-people-fill"></i>
               </div>
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label htmlFor="cachetMoyen" className="form-label">Cachet moyen (€)</label>
-                  <input
-                    type="number"
-                    className="form-control"
-                    id="cachetMoyen"
-                    name="cachetMoyen"
-                    value={artiste.cachetMoyen || ''}
-                    onChange={handleChange}
-                    placeholder="Montant moyen du cachet"
-                  />
-                </div>
+              <div>
+                <h3 className="stats-value mb-0">{stats.total}</h3>
+                <div className="stats-label">Total artistes</div>
               </div>
-            </div>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col md={4}>
+          <Card className="stats-card h-100">
+            <Card.Body className="d-flex align-items-center">
+              <div className="stats-icon text-success">
+                <i className="bi bi-calendar-check"></i>
+              </div>
+              <div>
+                <h3 className="stats-value mb-0">{stats.avecConcerts}</h3>
+                <div className="stats-label">Avec concerts</div>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col md={4}>
+          <Card className="stats-card h-100">
+            <Card.Body className="d-flex align-items-center">
+              <div className="stats-icon text-warning">
+                <i className="bi bi-calendar-x"></i>
+              </div>
+              <div>
+                <h3 className="stats-value mb-0">{stats.sansConcerts}</h3>
+                <div className="stats-label">Sans concerts</div>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
 
-            <div className="form-group">
-              <label htmlFor="photoPrincipale" className="form-label">Photo principale (URL)</label>
-              <input
-                type="url"
-                className="form-control"
-                id="photoPrincipale"
-                name="photoPrincipale"
-                value={artiste.photoPrincipale || ''}
-                onChange={handleChange}
-                placeholder="URL de la photo principale"
-              />
-              {artiste.photoPrincipale && (
-                <div className="photo-preview mt-2">
-                  <img 
-                    src={artiste.photoPrincipale} 
-                    alt="Aperçu" 
-                    className="img-thumbnail" 
-                    style={{ maxHeight: '150px' }}
-                  />
+      {/* Barre de recherche et filtres */}
+      <Card className="mb-4">
+        <Card.Body>
+          <Row className="mb-3">
+            <Col lg={6} ref={searchInputRef} className="position-relative mb-3 mb-lg-0">
+              <InputGroup>
+                <InputGroup.Text>
+                  <i className="bi bi-search"></i>
+                </InputGroup.Text>
+                <Form.Control
+                  type="text"
+                  placeholder="Rechercher un artiste..."
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                  onFocus={() => setShowDropdown(searchTerm.length > 0)}
+                />
+                {searchTerm && (
+                  <Button 
+                    variant="outline-secondary"
+                    onClick={() => {
+                      setSearchTerm('');
+                      setShowDropdown(false);
+                    }}
+                  >
+                    <i className="bi bi-x-circle"></i>
+                  </Button>
+                )}
+              </InputGroup>
+              
+              {/* Dropdown qui apparaît lors de la recherche */}
+              {showDropdown && (
+                <div className="search-results-dropdown">
+                  {noResults ? (
+                    <div className="search-create-item p-3" onClick={handleCreateArtiste}>
+                      <i className="bi bi-plus-circle me-2"></i>
+                      <span>
+                        Créer l'artiste "<strong>{searchTerm}</strong>"
+                      </span>
+                    </div>
+                  ) : (
+                    filteredArtistes.slice(0, 5).map(artiste => (
+                      <Link to={`/artistes/${artiste.id}`} key={artiste.id} className="search-result-item">
+                        <div className="search-result-avatar">
+                          {artiste.photoPrincipale ? (
+                            <img src={artiste.photoPrincipale} alt={artiste.nom} />
+                          ) : (
+                            <div className="placeholder-avatar">
+                              <i className="bi bi-music-note"></i>
+                            </div>
+                          )}
+                        </div>
+                        <div>
+                          <div className="fw-bold">{artiste.nom}</div>
+                          {artiste.genre && <div className="small text-muted">{artiste.genre}</div>}
+                        </div>
+                      </Link>
+                    ))
+                  )}
                 </div>
               )}
-            </div>
-          </div>
-        </div>
-
-        {/* Reste du formulaire inchangé... */}
-        {/* Carte - Membres du groupe */}
-        <div className="form-card">
-          <div className="card-header">
-            <i className="bi bi-people"></i>
-            <h3>Membres</h3>
-          </div>
-          <div className="card-body">
-            <div className="membres-list">
-              {artiste.membres && artiste.membres.map((membre, index) => (
-                <div className="membre-item" key={index}>
-                  <div className="input-group">
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={membre}
-                      onChange={(e) => handleMembresChange(e, index)}
-                      placeholder="Nom du membre"
-                    />
-                    <button
-                      type="button"
-                      className="btn btn-outline-danger"
-                      onClick={() => removeMembre(index)}
-                    >
-                      <i className="bi bi-trash"></i>
-                    </button>
+            </Col>
+            
+            <Col lg={6}>
+              <Row>
+                <Col xs={12} md={4} className="mb-2 mb-md-0">
+                  <Form.Select 
+                    value={filter}
+                    onChange={(e) => setFilter(e.target.value)}
+                  >
+                    <option value="tous">Tous les artistes</option>
+                    <option value="avecConcerts">Avec concerts</option>
+                    <option value="sansConcerts">Sans concerts</option>
+                  </Form.Select>
+                </Col>
+                <Col xs={12} md={8}>
+                  <div className="d-flex align-items-center h-100">
+                    <span className="me-2 d-none d-md-block">Trier par:</span>
+                    <div className="d-flex gap-2 flex-wrap">
+                      <Button 
+                        variant={sortBy === 'nom' ? 'primary' : 'outline-secondary'}
+                        size="sm"
+                        onClick={() => handleSortChange('nom')}
+                      >
+                        Nom {sortBy === 'nom' && (
+                          <i className={`bi bi-sort-${sortDirection === 'asc' ? 'down' : 'up'} ms-1`}></i>
+                        )}
+                      </Button>
+                      <Button 
+                        variant={sortBy === 'createdAt' ? 'primary' : 'outline-secondary'}
+                        size="sm"
+                        onClick={() => handleSortChange('createdAt')}
+                      >
+                        Date {sortBy === 'createdAt' && (
+                          <i className={`bi bi-sort-${sortDirection === 'asc' ? 'down' : 'up'} ms-1`}></i>
+                        )}
+                      </Button>
+                      <Button 
+                        variant={sortBy === 'cachetMoyen' ? 'primary' : 'outline-secondary'}
+                        size="sm"
+                        onClick={() => handleSortChange('cachetMoyen')}
+                      >
+                        Cachet {sortBy === 'cachetMoyen' && (
+                          <i className={`bi bi-sort-${sortDirection === 'asc' ? 'down' : 'up'} ms-1`}></i>
+                        )}
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-            <button
-              type="button"
-              className="btn btn-outline-primary mt-2"
-              onClick={addMembre}
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+        </Card.Body>
+      </Card>
+
+      {/* État de chargement initial */}
+      {loading && artistes.length === 0 ? (
+        <div className="text-center py-5">
+          <Spinner animation="border" variant="primary" />
+          <p className="mt-3">Chargement des artistes...</p>
+        </div>
+      ) : filteredArtistes.length === 0 ? (
+        <Card className="text-center py-5">
+          <Card.Body>
+            <i className="bi bi-music-note-list display-1 text-muted mb-3"></i>
+            <h3>Aucun artiste trouvé</h3>
+            {searchTerm ? (
+              <p>Aucun résultat pour la recherche "{searchTerm}"</p>
+            ) : (
+              <p>Vous n'avez pas encore ajouté d'artistes</p>
+            )}
+            <Button
+              variant="primary"
+              className="mt-3"
+              onClick={() => navigate('/artistes/nouveau')}
             >
               <i className="bi bi-plus-circle me-2"></i>
-              Ajouter un membre
-            </button>
-          </div>
-        </div>
-
-        {/* Carte - Informations de contact */}
-        <div className="form-card">
-          <div className="card-header">
-            <i className="bi bi-envelope"></i>
-            <h3>Informations de contact</h3>
-          </div>
-          <div className="card-body">
-            <div className="row">
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label htmlFor="contacts.email" className="form-label">Email</label>
-                  <input
-                    type="email"
-                    className="form-control"
-                    id="contacts.email"
-                    name="contacts.email"
-                    value={artiste.contacts?.email || ''}
-                    onChange={handleChange}
-                    placeholder="Email de contact"
-                  />
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label htmlFor="contacts.telephone" className="form-label">Téléphone</label>
-                  <input
-                    type="tel"
-                    className="form-control"
-                    id="contacts.telephone"
-                    name="contacts.telephone"
-                    value={artiste.contacts?.telephone || ''}
-                    onChange={handleChange}
-                    placeholder="Numéro de téléphone"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="contacts.siteWeb" className="form-label">Site web</label>
-              <input
-                type="url"
-                className="form-control"
-                id="contacts.siteWeb"
-                name="contacts.siteWeb"
-                value={artiste.contacts?.siteWeb || ''}
-                onChange={handleChange}
-                placeholder="URL du site web"
-              />
-            </div>
-
-            <div className="row">
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label htmlFor="contacts.instagram" className="form-label">Instagram</label>
-                  <div className="input-group">
-                    <span className="input-group-text">@</span>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="contacts.instagram"
-                      name="contacts.instagram"
-                      value={artiste.contacts?.instagram || ''}
-                      onChange={handleChange}
-                      placeholder="Nom d'utilisateur Instagram"
-                    />
+              Ajouter un artiste
+            </Button>
+          </Card.Body>
+        </Card>
+      ) : (
+        <>
+          {/* Liste des artistes en grille */}
+          <Row xs={1} sm={2} md={3} xl={4} className="g-4">
+            {filteredArtistes.map(artiste => (
+              <Col key={artiste.id}>
+                <Card 
+                  className="artiste-card h-100"
+                  onClick={() => navigate(`/artistes/${artiste.id}`)}
+                >
+                  <div className="artiste-photo">
+                    {artiste.photoPrincipale ? (
+                      <img src={artiste.photoPrincipale} alt={artiste.nom} />
+                    ) : (
+                      <div className="placeholder-photo">
+                        <i className="bi bi-music-note"></i>
+                      </div>
+                    )}
+                    <div className="artiste-badges">
+                      {getNbConcerts(artiste) > 0 && (
+                        <Badge bg="primary">{getNbConcerts(artiste)} concert{getNbConcerts(artiste) > 1 ? 's' : ''}</Badge>
+                      )}
+                      {artiste.estGroupeFavori && (
+                        <Badge bg="warning"><i className="bi bi-star-fill me-1"></i>Favori</Badge>
+                      )}
+                    </div>
+                    {/* Bouton d'ajout de photo superposé */}
+                    <Button 
+                      variant="light" 
+                      size="sm" 
+                      className="photo-upload-btn"
+                      onClick={(e) => handleOpenPhotoModal(artiste, e)}
+                      title="Ajouter/modifier la photo"
+                    >
+                      <i className="bi bi-camera-fill"></i>
+                    </Button>
                   </div>
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label htmlFor="contacts.facebook" className="form-label">Facebook</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="contacts.facebook"
-                    name="contacts.facebook"
-                    value={artiste.contacts?.facebook || ''}
-                    onChange={handleChange}
-                    placeholder="Nom de la page Facebook"
-                  />
-                </div>
-              </div>
+                  <div className="artiste-content">
+                    <h3 className="artiste-name">{artiste.nom}</h3>
+                    {artiste.genre && <p className="artiste-genre">{artiste.genre}</p>}
+                    <div className="artiste-info">
+                      {artiste.cachetMoyen && (
+                        <span className="info-item">
+                          <i className="bi bi-cash"></i>
+                          {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(artiste.cachetMoyen)}
+                        </span>
+                      )}
+                      {artiste.ville && (
+                        <span className="info-item">
+                          <i className="bi bi-geo-alt"></i>
+                          {artiste.ville}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="artiste-actions">
+                    <Link to={`/artistes/${artiste.id}`} className="btn btn-outline-primary btn-sm" onClick={(e) => e.stopPropagation()}>
+                      <i className="bi bi-eye"></i>
+                    </Link>
+                    <Link to={`/artistes/${artiste.id}/modifier`} className="btn btn-outline-secondary btn-sm" onClick={(e) => e.stopPropagation()}>
+                      <i className="bi bi-pencil"></i>
+                    </Link>
+                    <Button 
+                      variant="outline-danger"
+                      size="sm"
+                      onClick={(e) => handleDelete(artiste.id, e)}
+                    >
+                      <i className="bi bi-trash"></i>
+                    </Button>
+                  </div>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+          
+          {/* Bouton pour charger plus */}
+          {hasMore && !searchTerm && (
+            <div className="text-center mt-4">
+              <Button 
+                variant="outline-primary"
+                onClick={handleLoadMore}
+                disabled={loading}
+                className="px-4 py-2"
+              >
+                {loading ? (
+                  <>
+                    <Spinner animation="border" size="sm" className="me-2" />
+                    Chargement...
+                  </>
+                ) : (
+                  <>
+                    <i className="bi bi-plus-circle me-2"></i>
+                    Charger plus d'artistes
+                  </>
+                )}
+              </Button>
             </div>
-          </div>
-        </div>
+          )}
+        </>
+      )}
 
-        {/* Boutons d'action */}
-        <div className="form-actions">
-          <button
-            type="button"
-            className="btn btn-outline-secondary"
-            onClick={() => navigate('/artistes')}
-            disabled={saving}
-          >
+      {/* Modal d'ajout de photo */}
+      <Modal
+        show={showPhotoModal}
+        onHide={handleClosePhotoModal}
+        centered
+        backdrop="static"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>
+            {selectedArtiste ? 
+              (selectedArtiste.photoPrincipale ? 'Modifier la photo' : 'Ajouter une photo') : 
+              'Photo de l\'artiste'
+            }
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedArtiste && (
+            <>
+              <div className="photo-preview-container mb-3">
+                {photoPreview ? (
+                  <img 
+                    src={photoPreview} 
+                    alt="Prévisualisation" 
+                    className="photo-preview-img" 
+                  />
+                ) : (
+                  <div className="photo-preview-placeholder">
+                    <i className="bi bi-image"></i>
+                    <p>Aucune photo sélectionnée</p>
+                  </div>
+                )}
+              </div>
+              
+              <Form.Group className="mb-3">
+                <Form.Label>Sélectionner une photo</Form.Label>
+                <Form.Control
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  ref={fileInputRef}
+                />
+                <Form.Text className="text-muted">
+                  Formats acceptés: JPEG, PNG, GIF. Taille max: 5MB
+                </Form.Text>
+                {uploadError && (
+                  <div className="text-danger mt-2">{uploadError}</div>
+                )}
+              </Form.Group>
+            </>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClosePhotoModal}>
             Annuler
-          </button>
-          <button
-            type="submit"
-            className="btn btn-primary"
-            disabled={saving}
+          </Button>
+          <Button 
+            variant="primary" 
+            onClick={handleUploadPhoto}
+            disabled={!photoFile || uploadLoading}
           >
-            {saving ? (
+            {uploadLoading ? (
               <>
-                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                Enregistrement...
+                <Spinner animation="border" size="sm" className="me-2" />
+                Téléchargement...
               </>
             ) : (
-              'Enregistrer'
+              <>
+                <i className="bi bi-cloud-upload me-2"></i>
+                Enregistrer
+              </>
             )}
-          </button>
-        </div>
-      </form>
-    </div>
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </Container>
   );
 };
 
-export default ArtisteForm;
+export default ArtistesList;

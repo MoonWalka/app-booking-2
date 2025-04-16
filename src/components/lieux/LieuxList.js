@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Card, Button, Form, InputGroup, Badge, Spinner } from 'react-bootstrap';
 import { collection, getDocs, query, orderBy, limit, startAfter, deleteDoc, doc, where } from 'firebase/firestore';
 import { db } from '../../firebase';
-import '../../style/lieuxList.css';
+import '../../style/lieuList.css';
 
 const LieuxList = () => {
   const [lieux, setLieux] = useState([]);

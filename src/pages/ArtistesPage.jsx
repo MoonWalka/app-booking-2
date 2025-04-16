@@ -12,6 +12,7 @@ function ArtistesPage() {
         <Route path="/nouveau" element={<ArtisteForm />} />
         <Route path="/:id" element={<ArtisteDetail />} />
         <Route path="/:id/modifier" element={<ArtisteForm />} />
+        <Route path="*" element={<Navigate to="/artistes" replace />} />
       </Routes>
     </div>
   );

@@ -574,36 +574,50 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
           setSubmitted(true); // Marquer le formulaire comme soumis
         }
       } 
-      // 8. Traitement spécifique au mode édition standard (inchangé)
-      else {
-        console.log('Mode édition standard');
-        
-        // Vérification de l'ID du programmateur
-        if (!progId) {
-          throw new Error('ID du programmateur manquant');
-        }
-        
-        // En mode admin standard, mettre à jour le programmateur
-        await setDoc(doc(db, 'programmateurs', progId), flattenedData, { merge: true });
-        
-        // Mise à jour réciproque : ajouter le programmateur à chaque concert
-        for (const concert of concertsAssocies) {
-          if (concert && concert.id) {
-            const concertRef = doc(db, 'concerts', concert.id);
-            await updateDoc(concertRef, {
-              programmateurs: arrayUnion({
-                id: progId,
-                nom: flattenedData.nom
-              })
-            });
-            console.log('Programmateur associé au concert:', concert.id);
-          }
-        }
+      // 8. Traitement spécifique au mode édition standard
+else {
+  console.log('Mode édition standard', { id, progId });
+  
+  // Si nous sommes en mode création d'un nouveau programmateur
+  if (id === 'nouveau') {
+    if (!progId) {
+      progId = doc(collection(db, 'programmateurs')).id;
+      console.log('Nouvel ID de programmateur créé:', progId);
+    }
+  } 
+  // En mode édition, on vérifie que l'ID existe
+  else if (!progId) {
+    setError("Erreur: Impossible d'identifier le programmateur à modifier");
+    setIsSubmitting(false);
+    return;
+  }
+  
+  // En mode admin standard, mettre à jour le programmateur
+  await setDoc(doc(db, 'programmateurs', progId), flattenedData, { merge: true });
+  
+  // Mise à jour réciproque : ajouter le programmateur à chaque concert
+  for (const concert of concertsAssocies) {
+    if (concert && concert.id) {
+      const concertRef = doc(db, 'concerts', concert.id);
+      await updateDoc(concertRef, {
+        programmateurs: arrayUnion({
+          id: progId,
+          nom: flattenedData.nom
+        })
+      });
+      console.log('Programmateur associé au concert:', concert.id);
+    }
+  }
+  
+  // Rediriger vers la liste des programmateurs
+  navigate('/programmateurs');
+}
+
         
         // Rediriger vers la liste des programmateurs
         navigate('/programmateurs');
       }
-    } catch (error) {
+     catch (error) {
       console.error('Erreur lors de l\'enregistrement:', error);
       setError(`Une erreur est survenue lors de l'enregistrement: ${error.message}`);
     } finally {

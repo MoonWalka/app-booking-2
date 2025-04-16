@@ -6,40 +6,37 @@ import { getAuth } from "firebase/auth";
 import { getRemoteConfig, fetchAndActivate } from "firebase/remote-config";
 import { mockFirestore } from "./mockStorage";
 
-// Configuration Firebase avec fallbacks explicites
+// Configuration Firebase avec variables d'environnement uniquement
 const firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE_API_KEY || "AIzaSyABTcYWfzZWWBBc0x7uQPqVGxHZ7EZjKI0", // Remplacez par votre clé réelle si nécessaire
-  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN || "app-booking-26571.firebaseapp.com",
-  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID || "app-booking-26571",
-  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET || "app-booking-26571.firebasestorage.app",
-  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID || "985724562753",
-  appId: process.env.REACT_APP_FIREBASE_APP_ID || "1:985724562753:web:146bd6983fd016cb9a85c0",
-  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID || "G-RL3N09C0WM"
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
 };
 
-// Log de débogage
+// Vérification des variables requises
+const requiredEnvVars = ['REACT_APP_FIREBASE_API_KEY', 'REACT_APP_FIREBASE_PROJECT_ID'];
+const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
+
+if (missingVars.length > 0) {
+  console.error(`Variables d'environnement manquantes: ${missingVars.join(', ')}`);
+  console.error('Consultez le fichier .env.example pour configurer correctement votre environnement');
+}
+
+// Log de débogage (sécurisé - ne montre pas les valeurs)
 console.log("Firebase config - apiKey présente:", !!firebaseConfig.apiKey);
 console.log("Firebase config - projectId:", firebaseConfig.projectId);
 
-// Initialisation directe de Firebase
+// Initialisation de Firebase
 let app;
 try {
   app = initializeApp(firebaseConfig);
   console.log("Firebase initialisé avec succès");
 } catch (error) {
   console.error("Erreur d'initialisation Firebase:", error);
-  // Réessayer avec une configuration minimale en cas d'erreur
-  try {
-    const minimalConfig = {
-      apiKey: "AIzaSyABTcYWfzZWWBBc0x7uQPqVGxHZ7EZjKI0", // Remplacez par votre clé réelle
-      authDomain: "app-booking-26571.firebaseapp.com",
-      projectId: "app-booking-26571",
-    };
-    app = initializeApp(minimalConfig);
-    console.warn("Firebase initialisé avec configuration minimale");
-  } catch (fallbackError) {
-    console.error("Échec de l'initialisation de secours:", fallbackError);
-  }
 }
 
 // Détection de l'environnement

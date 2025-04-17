@@ -164,17 +164,22 @@ const FormResponsePage = () => {
     setAddressSuggestions([]);
   };
 
-  // Fonction pour sauvegarder les modifications du lieu
-  const saveLieuChanges = () => {
-    // Mettre à jour l'objet lieu avec les nouvelles valeurs
-    const updatedLieu = {
-      ...lieu,
-      ...lieuFormData
-    };
-    
-    setLieu(updatedLieu);
-    setEditingConcertInfo(false);
+ // Fonction pour sauvegarder les modifications du lieu
+const saveLieuChanges = () => {
+  // Créer un nouvel objet lieu avec les nouvelles valeurs
+  const updatedLieu = {
+    ...lieu,
+    ...lieuFormData,
+    // Assurez-vous que capacite est un nombre
+    capacite: lieuFormData.capacite ? parseInt(lieuFormData.capacite, 10) : null
   };
+  
+  // Mettre à jour l'état local
+  setLieu(updatedLieu);
+  
+  // Fermer l'édition
+  setEditingConcertInfo(false);
+};
 
   useEffect(() => {
     // En mode validation admin (route /formulaire/validation/:id)
@@ -402,26 +407,24 @@ const FormResponsePage = () => {
             </div>
             
             {!editingConcertInfo ? (
-              // Affichage normal des informations
-              <div className="card-body">
-                <div className="row mb-3">
-                  <div className="col-md-3 fw-bold">Date:</div>
-                  <div className="col-md-9">{formatDate(concert.date)}</div>
-                </div>
-                <div className="row mb-3">
-                  <div className="col-md-3 fw-bold">Lieu:</div>
-                  <div className="col-md-9">{lieu?.nom}, {lieu?.ville}</div>
-                </div>
-                <div className="row mb-3">
-                  <div className="col-md-3 fw-bold">Adresse:</div>
-                  <div className="col-md-9">{lieu?.adresse}, {lieu?.codePostal} {lieu?.ville}</div>
-                </div>
-                <div className="row mb-3">
-                  <div className="col-md-3 fw-bold">Montant:</div>
-                  <div className="col-md-9">{formatMontant(concert.montant)}</div>
-                </div>
-              </div>
-            ) : (
+  // Affichage simplifié des informations du concert
+  <div className="card-body">
+    <div className="row">
+      <div className="col-md-4">
+        <div className="fw-bold">Date</div>
+        <div>{formatDate(concert.date)}</div>
+      </div>
+      <div className="col-md-4">
+        <div className="fw-bold">Lieu</div>
+        <div>{lieu?.nom || 'Non spécifié'}</div>
+      </div>
+      <div className="col-md-4">
+        <div className="fw-bold">Montant</div>
+        <div>{formatMontant(concert.montant)}</div>
+      </div>
+    </div>
+  </div>
+) : (
               // Formulaire d'édition des informations du lieu
               <div className="card-body">
                 <div className="row mb-3">
@@ -580,12 +583,13 @@ const FormResponsePage = () => {
           <div className="card-body">
             <p>Veuillez remplir le formulaire ci-dessous avec vos informations de contact.</p>
             <ProgrammateurForm 
-              token={token} 
-              concertId={concertId} 
-              formLinkId={formLinkId} 
-              lieuFormData={lieuFormData}
-              onSubmitSuccess={() => setCompleted(true)}
-            />
+  token={token} 
+  concertId={concertId} 
+  formLinkId={formLinkId} 
+  initialLieuData={lieuFormData}
+  onSubmitSuccess={() => setCompleted(true)}
+/>
+
           </div>
         </div>
         

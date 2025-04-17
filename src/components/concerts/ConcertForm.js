@@ -723,7 +723,7 @@ const ConcertForm = () => {
 
   return (
     <div className="concert-form-container">
-      {/* En-tête du formulaire */}
+      {/* En-tête du formulaire sans les boutons d'action */}
       <div className="form-header-container">
         <h2 className="modern-title">
           {id === 'nouveau' ? 'Créer un nouveau concert' : 'Modifier le concert'}
@@ -735,6 +735,25 @@ const ConcertForm = () => {
             {id === 'nouveau' ? 'Nouveau concert' : formData.titre || 'Concert'}
           </span>
         </div>
+      </div>
+  
+      {/* Boutons d'action déplacés ici, avant le formulaire */}
+      <div className="action-buttons">
+        <Link to="/concerts" className="btn btn-outline-secondary action-btn">
+          <i className="bi bi-arrow-left"></i>
+          <span className="btn-text">Retour</span>
+        </Link>
+        
+        {id && id !== 'nouveau' && (
+          <button 
+            onClick={() => setShowDeleteConfirm(true)} 
+            className="btn btn-outline-danger action-btn"
+            disabled={isSubmitting}
+          >
+            <i className="bi bi-trash"></i>
+            <span className="btn-text">Supprimer</span>
+          </button>
+        )}
       </div>
 
       <form onSubmit={handleSubmit} className="modern-form">

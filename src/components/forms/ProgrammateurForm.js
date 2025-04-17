@@ -1,239 +1,217 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Form, Button, Row, Col, Alert } from 'react-bootstrap';
+import { collection, addDoc, updateDoc, doc, getDoc, query, where, getDocs, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../firebase';
-import {
-  collection,
-  doc,
-  getDoc,
-  setDoc,
-  updateDoc,
-  addDoc,
-  arrayUnion,
-  serverTimestamp,
-  query,
-  where,
-  getDocs
-} from 'firebase/firestore';
-import { useLocationIQ } from '../../hooks/useLocationIQ';
-import '../../style/programmateurForm.css';
-import '../../style/formPublic.css'; // Ajout du CSS pour le formulaire public
-import '../../style/lieuForm.css'; // Ajout du CSS pour l'autocomplétion d'adresses
+import '../../style/formPublic.css';
 
 const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) => {
-  const navigate = useNavigate();
-  const params = useParams();
-  const id = params.id;
-  const [loading, setLoading] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState(null);
   const [formData, setFormData] = useState({
-    contact: {
-      nom: '',
-      prenom: '',
-      fonction: '',
-      email: '',
-      telephone: ''
-    },
-    structure: {
-      raisonSociale: '',
-      type: '',
-      adresse: '',
-      codePostal: '',
-      ville: '',
-      pays: 'France',
-      siret: '',
-      tva: ''
-    },
-    concertsAssocies: []
+    nom: '',
+    prenom: '',
+    fonction: '',
+    email: '',
+    telephone: '',
+    structure: '',
+    structureType: '',
+    structureAdresse: '',
+    structureCodePostal: '',
+    structureVille: '',
+    structurePays: 'France',
+    siret: '',
+    codeAPE: ''
   });
-  const [submitted, setSubmitted] = useState(false); // Nouvel état pour gérer l'affichage après soumission
+  
+  // États pour les informations du lieu (si besoin de les modifier)
+  const [lieuData, setLieuData] = useState({
+    nom: '',
+    adresse: '',
+    codePostal: '',
+    ville: '',
+    capacite: ''
+  });
 
-  // États pour les suggestions d'adresse
+  // États pour la recherche d'entreprise
+  const [searchType, setSearchType] = useState('manual'); // 'manual', 'name', 'siret'
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearchingCompany, setIsSearchingCompany] = useState(false);
+  const companySearchTimeoutRef = useRef(null);
+  const companySearchResultsRef = useRef(null);
+  
+  // États pour l'auto-complétion d'adresse
   const [addressSuggestions, setAddressSuggestions] = useState([]);
   const [isSearchingAddress, setIsSearchingAddress] = useState(false);
   const addressTimeoutRef = useRef(null);
   const addressInputRef = useRef(null);
   const suggestionsRef = useRef(null);
-
-  // Utilisation du hook LocationIQ
-  const { isLoading: isApiLoading, error: apiError, searchAddress } = useLocationIQ();
-
-  // Déterminer si nous sommes en mode formulaire public ou en mode édition standard
-  const isPublicFormMode = Boolean(token && concertId && formLinkId);
   
+  // États pour la gestion du formulaire
+  const [existingProgrammId, setExistingProgrammId] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(true);
+  
+  // Chercher si ce formulaire a déjà été rempli pour pré-remplir les données
   useEffect(() => {
-    console.log("ProgrammateurForm - ID depuis params:", id);
-    const fetchProgrammateur = async () => {
-      if (id && id !== 'nouveau') {
-        setLoading(true);
-        try {
-          const docRef = doc(db, 'programmateurs', id);
-          const snap = await getDoc(docRef);
+    const fetchPreviousData = async () => {
+      setLoading(true);
+      try {
+        // Vérifier si on a déjà une soumission pour ce formulaire
+        const submissionsQuery = query(
+          collection(db, 'formSubmissions'),
+          where('concertId', '==', concertId)
+        );
+        
+        const submissionsSnapshot = await getDocs(submissionsQuery);
+        
+        if (!submissionsSnapshot.empty) {
+          // Prendre la soumission la plus récente pour pré-remplir le formulaire
+          const submissions = submissionsSnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          }));
           
-          if (snap.exists()) {
-            const data = snap.data();
-            const adaptedData = {
-              contact: {
-                nom: data.nom?.split(' ')[0] || '',
-                prenom: data.prenom || (data.nom?.includes(' ') ? data.nom.split(' ').slice(1).join(' ') : ''),
-                fonction: data.fonction || '',
-                email: data.email || '',
-                telephone: data.telephone || ''
-              },
-              structure: {
-                raisonSociale: data.structure || '',
-                type: data.structureType || '',
-                adresse: data.structureAdresse || '',
-                codePostal: data.structureCodePostal || '',
-                ville: data.structureVille || '',
-                pays: data.structurePays || 'France',
-                siret: data.siret || '',
-                tva: data.tva || ''
-              },
-              concertsAssocies: data.concertsAssocies || []
-            };
-            
-            setFormData(adaptedData);
-          } else {
-            console.error('Aucun programmateur trouvé avec cet ID');
-            // Ne pas naviguer en mode formulaire public
-            if (!isPublicFormMode) {
-              navigate('/programmateurs');
-            }
+          // Trier par date (plus récent en premier)
+          submissions.sort((a, b) => {
+            const dateA = a.submittedAt?.toDate() || new Date(0);
+            const dateB = b.submittedAt?.toDate() || new Date(0);
+            return dateB - dateA;
+          });
+          
+          const latestSubmission = submissions[0];
+          
+          // Si la soumission contient des données de programmateur, les utiliser
+          if (latestSubmission.programmateurData) {
+            setFormData(latestSubmission.programmateurData);
+          } else if (latestSubmission.data) {
+            // Compatibilité avec l'ancien format
+            setFormData(latestSubmission.data);
           }
-        } catch (error) {
-          console.error('Erreur lors de la récupération du programmateur:', error);
-          setError('Une erreur est survenue lors de la récupération des données.');
-        } finally {
-          setLoading(false);
-        }
-      } else if (isPublicFormMode) {
-        // En mode formulaire public, pré-remplir avec les infos du concert si possible
-        setLoading(true);
-        try {
-          // Récupérer le concert et voir s'il a un programmateur associé ou une soumission existante
-          const concertDoc = await getDoc(doc(db, 'concerts', concertId));
-          if (concertDoc.exists()) {
-            const concertData = concertDoc.data();
-            
-            // Vérifier s'il existe déjà une soumission pour ce concert
-            if (concertData.formSubmissionId) {
-              try {
-                const submissionDoc = await getDoc(doc(db, 'formSubmissions', concertData.formSubmissionId));
-                if (submissionDoc.exists()) {
-                  const submissionData = submissionDoc.data();
-                  
-                  // Si la soumission contient des données, les utiliser pour pré-remplir le formulaire
-                  if (submissionData.data) {
-                    setFormData({
-                      contact: {
-                        nom: submissionData.data.nom || '',
-                        prenom: submissionData.data.prenom || '',
-                        fonction: submissionData.data.fonction || '',
-                        email: submissionData.data.email || '',
-                        telephone: submissionData.data.telephone || ''
-                      },
-                      structure: {
-                        raisonSociale: submissionData.data.raisonSociale || '',
-                        type: submissionData.data.type || '',
-                        adresse: submissionData.data.adresse || '',
-                        codePostal: submissionData.data.codePostal || '',
-                        ville: submissionData.data.ville || '',
-                        pays: submissionData.data.pays || 'France',
-                        siret: submissionData.data.siret || '',
-                        tva: submissionData.data.tva || ''
-                      },
-                      concertsAssocies: []
-                    });
-                  }
-                  // Ou si la soumission contient programmateurData
-                  else if (submissionData.programmateurData) {
-                    const progData = submissionData.programmateurData;
-                    setFormData({
-                      contact: {
-                        nom: progData.nom?.split(' ')[0] || '',
-                        prenom: progData.prenom || (progData.nom?.includes(' ') ? progData.nom.split(' ').slice(1).join(' ') : ''),
-                        fonction: progData.fonction || '',
-                        email: progData.email || '',
-                        telephone: progData.telephone || ''
-                      },
-                      structure: {
-                        raisonSociale: progData.structure || '',
-                        type: progData.structureType || '',
-                        adresse: progData.structureAdresse || '',
-                        codePostal: progData.structureCodePostal || '',
-                        ville: progData.structureVille || '',
-                        pays: progData.structurePays || 'France',
-                        siret: progData.siret || '',
-                        tva: progData.tva || ''
-                      },
-                      concertsAssocies: []
-                    });
-                  }
-                }
-              } catch (error) {
-                console.error('Erreur lors de la récupération de la soumission:', error);
-              }
-            }
-            // Si pas de soumission mais un programmateur associé
-            else if (concertData.programmateurId) {
-              const progDoc = await getDoc(doc(db, 'programmateurs', concertData.programmateurId));
-              if (progDoc.exists()) {
-                const progData = progDoc.data();
-                // Pré-remplir le formulaire avec les données existantes
-                setFormData({
-                  contact: {
-                    nom: progData.nom?.split(' ')[0] || '',
-                    prenom: progData.prenom || (progData.nom?.includes(' ') ? progData.nom.split(' ').slice(1).join(' ') : ''),
-                    fonction: progData.fonction || '',
-                    email: progData.email || '',
-                    telephone: progData.telephone || ''
-                  },
-                  structure: {
-                    raisonSociale: progData.structure || '',
-                    type: progData.structureType || '',
-                    adresse: progData.structureAdresse || '',
-                    codePostal: progData.structureCodePostal || '',
-                    ville: progData.structureVille || '',
-                    pays: progData.structurePays || 'France',
-                    siret: progData.siret || '',
-                    tva: progData.tva || ''
-                  },
-                  concertsAssocies: progData.concertsAssocies || []
-                });
-              }
-            }
+          
+          // Si la soumission a un ID de programmateur, le récupérer
+          if (latestSubmission.programmId) {
+            setExistingProgrammId(latestSubmission.programmId);
           }
-        } catch (error) {
-          console.error('Erreur lors de la récupération des données:', error);
-        } finally {
-          setLoading(false);
+          
+          // Si la soumission contient des données de lieu, les utiliser
+          if (latestSubmission.lieuData) {
+            setLieuData(latestSubmission.lieuData);
+          }
         }
+      } catch (error) {
+        console.error('Erreur lors de la récupération des données existantes:', error);
+      } finally {
+        setLoading(false);
       }
     };
+    
+    if (concertId) {
+      fetchPreviousData();
+    } else {
+      setLoading(false);
+    }
+  }, [concertId]);
 
-    fetchProgrammateur();
-  }, [id, concertId, navigate, isPublicFormMode]);
-
-  // Effet pour la recherche d'adresse
+  // Effet pour la recherche d'entreprise
   useEffect(() => {
-    // Nettoyer le timeout précédent
+    if (companySearchTimeoutRef.current) {
+      clearTimeout(companySearchTimeoutRef.current);
+    }
+    
+    const searchCompany = async () => {
+      if (!searchTerm || searchTerm.length < 3) {
+        setSearchResults([]);
+        return;
+      }
+      
+      setIsSearchingCompany(true);
+      
+      try {
+        // Utiliser l'API Recherche d'Entreprises (publique)
+        let apiUrl;
+        
+        if (searchType === 'name') {
+          // Recherche par nom (q est le paramètre de recherche textuelle)
+          apiUrl = `https://recherche-entreprises.api.gouv.fr/search?q=${encodeURIComponent(searchTerm)}&per_page=10`;
+        } else if (searchType === 'siret') {
+          // Recherche par SIRET
+          apiUrl = `https://recherche-entreprises.api.gouv.fr/search?q=${encodeURIComponent(searchTerm)}&per_page=5`;
+        }
+        
+        const response = await fetch(apiUrl);
+        
+        if (!response.ok) {
+          throw new Error(`Erreur lors de la recherche: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        // Transformer les données au format attendu
+        const formattedResults = data.results ? data.results.map(company => {
+          // Extraire l'adresse complète
+          const siege = company.siege;
+          const adresseComplete = siege 
+            ? `${siege.numero_voie || ''} ${siege.type_voie || ''} ${siege.libelle_voie || ''}`
+            : '';
+          
+          return {
+            siret: company.siege?.siret || '',
+            siren: company.siren || '',
+            nom: company.nom_complet || company.nom_raison_sociale || '',
+            adresse: adresseComplete.trim(),
+            codePostal: siege?.code_postal || '',
+            ville: siege?.libelle_commune || '',
+            codeAPE: company.activite_principale?.code || '',
+            libelleAPE: company.activite_principale?.libelle || '',
+            statutJuridique: company.nature_juridique?.libelle || '',
+            active: company.etat_administratif === 'A'
+          };
+        }) : [];
+        
+        setSearchResults(formattedResults);
+      } catch (error) {
+        console.error("Erreur lors de la recherche d'entreprise:", error);
+        setSearchResults([]);
+      } finally {
+        setIsSearchingCompany(false);
+      }
+    };
+    
+    if (searchTerm.length >= 3 && (searchType === 'name' || searchType === 'siret')) {
+      companySearchTimeoutRef.current = setTimeout(searchCompany, 500);
+    } else {
+      setSearchResults([]);
+    }
+    
+    return () => {
+      if (companySearchTimeoutRef.current) {
+        clearTimeout(companySearchTimeoutRef.current);
+      }
+    };
+  }, [searchTerm, searchType]);
+
+  // Effet pour la recherche d'adresse (si vous utilisez une API d'auto-complétion)
+  useEffect(() => {
     if (addressTimeoutRef.current) {
       clearTimeout(addressTimeoutRef.current);
     }
     
-    const handleSearch = async () => {
-      if (!formData.structure.adresse || formData.structure.adresse.length < 3 || isApiLoading) {
-        setAddressSuggestions([]);
-        return;
-      }
+    const searchAddress = async () => {
+      // Insérez ici votre logique de recherche d'adresse avec l'API de votre choix
+      // Par exemple, utilisation de useLocationIQ comme mentionné précédemment
       
+      // Exemple simplifié (à remplacer par l'implémentation réelle)
       setIsSearchingAddress(true);
       
       try {
-        // Appeler la fonction du hook
-        const results = await searchAddress(formData.structure.adresse);
-        setAddressSuggestions(results || []);
+        // Simuler un appel API
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        // Remplacer par l'implémentation réelle
+        const mockResults = [];
+        setAddressSuggestions(mockResults);
       } catch (error) {
         console.error("Erreur lors de la recherche d'adresse:", error);
         setAddressSuggestions([]);
@@ -242,9 +220,9 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
       }
     };
     
-    // N'effectuer la recherche que si l'adresse a au moins 3 caractères
-    if (formData.structure.adresse && formData.structure.adresse.length >= 3 && !isApiLoading) {
-      addressTimeoutRef.current = setTimeout(handleSearch, 300);
+    // Si vous avez une recherche d'adresse active
+    if (formData.structureAdresse && formData.structureAdresse.length >= 3 && searchType === 'manual') {
+      addressTimeoutRef.current = setTimeout(searchAddress, 300);
     } else {
       setAddressSuggestions([]);
     }
@@ -254,820 +232,593 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
         clearTimeout(addressTimeoutRef.current);
       }
     };
-  }, [formData.structure.adresse, isApiLoading, searchAddress]);
+  }, [formData.structureAdresse, searchType]);
 
-  // Gestionnaire de clic extérieur pour fermer la liste des suggestions d'adresse
-  useEffect(() => {
-    const handleClickOutsideAddressSuggestions = (event) => {
-      if (suggestionsRef.current && !suggestionsRef.current.contains(event.target) && 
-          addressInputRef.current && !addressInputRef.current.contains(event.target)) {
-        setAddressSuggestions([]);
-      }
-    };
-    
-    document.addEventListener('mousedown', handleClickOutsideAddressSuggestions);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutsideAddressSuggestions);
-    };
-  }, []);
-  
+  // Gestionnaire de changement de champ
   const handleChange = (e) => {
     const { name, value } = e.target;
-    
-    // Gérer les champs imbriqués (ex: contact.nom, structure.adresse, etc.)
-    if (name.includes('.')) {
-      const [section, field] = name.split('.');
-      setFormData(prevState => ({
-        ...prevState,
-        [section]: {
-          ...prevState[section],
-          [field]: value
-        }
-      }));
-    } else {
-      setFormData(prevState => ({
-        ...prevState,
-        [name]: value
-      }));
-    }
-  };
-
-  // Sélectionner une adresse parmi les suggestions
-  const handleSelectAddress = (address) => {
-    let codePostal = '';
-    let ville = '';
-    let pays = 'France';
-    let adresse = '';
-    
-    // Extraire les composants d'adresse
-    if (address.address) {
-      // Extraire le code postal
-      codePostal = address.address.postcode || '';
-      
-      // Extraire la ville
-      ville = address.address.city || address.address.town || address.address.village || '';
-      
-      // Extraire le pays
-      pays = address.address.country || 'France';
-      
-      // Construire l'adresse de rue
-      const houseNumber = address.address.house_number || '';
-      const road = address.address.road || '';
-      adresse = `${houseNumber} ${road}`.trim();
-    }
-    
-    // Mettre à jour le state avec les informations d'adresse
-    setFormData(prev => ({
-      ...prev,
-      structure: {
-        ...prev.structure,
-        adresse: adresse || address.display_name.split(',')[0],
-        codePostal,
-        ville,
-        pays
-      }
+    setFormData(prevState => ({
+      ...prevState,
+      [name]: value
     }));
     
-    // Fermer les suggestions
-    setAddressSuggestions([]);
+    // Réinitialiser l'erreur pour ce champ
+    if (errors[name]) {
+      setErrors(prevErrors => ({
+        ...prevErrors,
+        [name]: null
+      }));
+    }
   };
 
+  // Sélectionner une entreprise parmi les résultats
+  const handleSelectCompany = (company) => {
+    setFormData(prev => ({
+      ...prev,
+      structure: company.nom,
+      structureType: company.statutJuridique || '',
+      structureAdresse: company.adresse || '',
+      structureCodePostal: company.codePostal || '',
+      structureVille: company.ville || '',
+      siret: company.siret || '',
+      codeAPE: company.codeAPE || ''
+    }));
+    
+    setSearchResults([]);
+    setSearchTerm('');
+    setSearchType('manual'); // Revenir au mode manuel après sélection
+  };
+
+  // Valider le formulaire
+  const validateForm = () => {
+    const newErrors = {};
+    
+    // Validation des champs requis
+    if (!formData.nom.trim()) newErrors.nom = 'Le nom est requis';
+    if (!formData.prenom.trim()) newErrors.prenom = 'Le prénom est requis';
+    if (!formData.email.trim()) newErrors.email = 'L\'email est requis';
+    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Adresse email invalide';
+    }
+    if (!formData.structure.trim()) newErrors.structure = 'Le nom de la structure est requis';
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  // Soumettre le formulaire
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
+    if (submitting) return;
+    
+    if (!validateForm()) {
+      return;
+    }
+    
+    setSubmitting(true);
     setError(null);
     
-    console.log("Démarrage de handleSubmit avec:", { id, isPublicFormMode, formData });
-
     try {
-      // Validation des champs obligatoires - uniquement le nom est requis
-      if (!formData.contact.nom) {
-        alert('Le nom est obligatoire');
-        setIsSubmitting(false);
-        return;
-      }
-
-      // 1. Si nous sommes en mode formulaire public, vérifier d'abord s'il y a un programmateur existant
-      let progId = id && id !== 'nouveau' ? id : null;
+      let programmId = existingProgrammId;
       
-      if (isPublicFormMode) {
-        // Vérifier si un programmateur avec cet email existe déjà
-        try {
-          // Seulement si un email a été fourni
-          if (formData.contact.email) {
-            const progsQuery = query(
-              collection(db, 'programmateurs'), 
-              where('email', '==', formData.contact.email)
-            );
-            
-            const progsSnapshot = await getDocs(progsQuery);
-            
-            if (!progsSnapshot.empty) {
-              // On a trouvé un programmateur existant avec cet email
-              progId = progsSnapshot.docs[0].id;
-              console.log('Programmateur existant trouvé:', progId);
-            }
-          } else if (concertId) {
-            // Si le concert a déjà un programmateur associé, utiliser cet ID
-            const concertDoc = await getDoc(doc(db, 'concerts', concertId));
-            if (concertDoc.exists() && concertDoc.data().programmateurId) {
-              progId = concertDoc.data().programmateurId;
-              console.log('Programmateur associé au concert trouvé:', progId);
-            }
-          }
-        } catch (error) {
-          console.error('Erreur lors de la vérification de l\'existence du programmateur:', error);
-        }
+      // Si nous n'avons pas d'ID de programmateur, essayons de trouver un programmateur existant par email
+      if (!programmId) {
+        const programmateursQuery = query(
+          collection(db, 'programmateurs'),
+          where('email', '==', formData.email)
+        );
         
-        // Si aucun programmateur existant n'a été trouvé, créer un nouvel ID
-        if (!progId) {
-          progId = doc(collection(db, 'programmateurs')).id;
-          console.log('Nouvel ID de programmateur créé:', progId);
-        }
-      }
-
-      // Récupérer les données existantes si on met à jour un programmateur
-      let existingProgData = {};
-      if (progId) {
-        try {
-          const existingProgDoc = await getDoc(doc(db, 'programmateurs', progId));
-          if (existingProgDoc.exists()) {
-            existingProgData = existingProgDoc.data();
-          }
-        } catch (error) {
-          console.error('Erreur lors de la récupération des données existantes:', error);
-        }
-      }
-
-      // Créer une copie sécurisée de formData avec structure définie
-      const safeFormData = {
-        ...formData,
-        contact: {
-          nom: formData.contact?.nom || '',
-          prenom: formData.contact?.prenom || '',
-          fonction: formData.contact?.fonction || '',
-          email: formData.contact?.email || '',
-          telephone: formData.contact?.telephone || ''
-        },
-        structure: {
-          raisonSociale: formData.structure?.raisonSociale || '',
-          type: formData.structure?.type || '',
-          adresse: formData.structure?.adresse || '',
-          codePostal: formData.structure?.codePostal || '',
-          ville: formData.structure?.ville || '',
-          pays: formData.structure?.pays || 'France',
-          siret: formData.structure?.siret || '',
-          tva: formData.structure?.tva || ''
-        },
-        concertsAssocies: formData.concertsAssocies || []
-      };
-
-      // 2. Préparer les données du programmateur
-      const flattenedData = {
-        // Champs principaux pour l'affichage dans la liste
-        nom: `${safeFormData.contact.nom} ${safeFormData.contact.prenom}`.trim(),
-        structure: safeFormData.structure.raisonSociale || '',
-        email: safeFormData.contact.email || '',
-        telephone: safeFormData.contact.telephone || '',
+        const programmateursSnapshot = await getDocs(programmateursQuery);
         
-        // Ajouter tous les champs détaillés
-        ...safeFormData.contact,
-      };
-      
-      // Ajouter les champs de structure avec préfixe
-      if (safeFormData.structure) {
-        Object.keys(safeFormData.structure).forEach(key => {
-          flattenedData[`structure${key.charAt(0).toUpperCase() + key.slice(1)}`] = 
-            safeFormData.structure[key] || '';
+        if (!programmateursSnapshot.empty) {
+          // On a trouvé un programmateur existant, on utilise son ID
+          programmId = programmateursSnapshot.docs[0].id;
+        } else {
+          // Créer un nouveau programmateur
+          const programmateurData = {
+            nom: formData.nom,
+            prenom: formData.prenom,
+            fonction: formData.fonction,
+            email: formData.email,
+            telephone: formData.telephone,
+            structure: formData.structure,
+            structureType: formData.structureType,
+            structureAdresse: formData.structureAdresse,
+            structureCodePostal: formData.structureCodePostal,
+            structureVille: formData.structureVille,
+            structurePays: formData.structurePays,
+            siret: formData.siret,
+            codeAPE: formData.codeAPE,
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
+          };
+          
+          const docRef = await addDoc(collection(db, 'programmateurs'), programmateurData);
+          programmId = docRef.id;
+        }
+      } else {
+        // Mettre à jour le programmateur existant
+        await updateDoc(doc(db, 'programmateurs', programmId), {
+          nom: formData.nom,
+          prenom: formData.prenom,
+          fonction: formData.fonction,
+          email: formData.email,
+          telephone: formData.telephone,
+          structure: formData.structure,
+          structureType: formData.structureType,
+          structureAdresse: formData.structureAdresse,
+          structureCodePostal: formData.structureCodePostal,
+          structureVille: formData.structureVille,
+          structurePays: formData.structurePays,
+          siret: formData.siret,
+          codeAPE: formData.codeAPE,
+          updatedAt: serverTimestamp()
         });
       }
       
-      // 3. Si c'est un nouveau programmateur, ajouter la date de création
-      if (!existingProgData.createdAt) {
-        flattenedData.createdAt = serverTimestamp();
+      // Préparation des données pour la soumission
+      const submissionData = {
+        concertId,
+        programmId,
+        programmateurData: { ...formData },
+        lieuData: { ...lieuData }, // Ajouter les données du lieu
+        submittedAt: serverTimestamp(),
+        status: 'submitted'
+      };
+      
+      // Créer la soumission
+      const submissionRef = await addDoc(collection(db, 'formSubmissions'), submissionData);
+      
+      // Mettre à jour le statut du lien (s'il existe)
+      if (formLinkId) {
+        await updateDoc(doc(db, 'formLinks', formLinkId), {
+          completed: true,
+          completedAt: serverTimestamp()
+        });
       }
       
-      // 4. Ajouter le timestamp de mise à jour
-      flattenedData.updatedAt = serverTimestamp();
-      
-      // 5. Gestion des concerts associés
-      let concertsAssocies = [];
-      
-      if (existingProgData.concertsAssocies) {
-        concertsAssocies = [...existingProgData.concertsAssocies];
-      }
-      
-      if (isPublicFormMode && concertId) {
-        // Vérifier si le concert est déjà associé
-        const concertAlreadyAssociated = concertsAssocies.some(c => c.id === concertId);
-        
-        if (!concertAlreadyAssociated) {
-          // Récupérer les détails du concert pour l'association
-          try {
-            const concertDoc = await getDoc(doc(db, 'concerts', concertId));
-            if (concertDoc.exists()) {
-              const concertData = concertDoc.data();
-              
-              concertsAssocies.push({
-                id: concertId,
-                titre: concertData.titre || 'Sans titre',
-                date: concertData.date || null,
-                lieu: concertData.lieuNom || ''
-              });
-            }
-          } catch (error) {
-            console.error('Erreur lors de la récupération des détails du concert:', error);
-          }
-        }
-      } else if (safeFormData.concertsAssocies && safeFormData.concertsAssocies.length > 0) {
-        concertsAssocies = safeFormData.concertsAssocies;
-      }
-      
-      // Ajouter les concerts associés aux données
-      flattenedData.concertsAssocies = concertsAssocies;
-
-      // 7. Traitement spécifique au mode formulaire public
-      if (isPublicFormMode) {
-        console.log('Mode formulaire public, concertId:', concertId, 'formLinkId:', formLinkId);
-        
-        // Vérification des identifiants nécessaires
-        if (!concertId) {
-          throw new Error('ID du concert manquant');
-        }
-        
-        if (!formLinkId) {
-          throw new Error('ID du lien de formulaire manquant');
-        }
-        
-        // Vérifier si une soumission existe déjà pour ce concert
-        let existingSubmissionId = null;
-        
-        // Si le concert a déjà un formSubmissionId associé
-        const concertDoc = await getDoc(doc(db, 'concerts', concertId));
-        if (concertDoc.exists() && concertDoc.data().formSubmissionId) {
-          existingSubmissionId = concertDoc.data().formSubmissionId;
-        } else {
-          // Chercher dans formSubmissions par concertId
-          const submissionsQuery = query(
-            collection(db, 'formSubmissions'),
-            where('concertId', '==', concertId)
-          );
-          
-          const submissionsSnapshot = await getDocs(submissionsQuery);
-          if (!submissionsSnapshot.empty) {
-            existingSubmissionId = submissionsSnapshot.docs[0].id;
-          }
-        }
-        
-        // Préparer les données de soumission
-        const submissionData = {
-          concertId,
-          formLinkId,
-          programmId: progId,
-          programmateurData: {
-            ...flattenedData
-          },
-          data: {
-            ...safeFormData.contact,
-            ...safeFormData.structure
-          },
-          submittedAt: existingSubmissionId ? 
-                       (formData.submittedAt || serverTimestamp()) : 
-                       serverTimestamp(),
-          status: 'pending', // statut en attente de validation
-          updatedAt: serverTimestamp() // Timestamp de mise à jour
-        };
-        
-        // Si une soumission existe déjà, la mettre à jour
-        if (existingSubmissionId) {
-          await updateDoc(doc(db, 'formSubmissions', existingSubmissionId), submissionData);
-          console.log('Soumission existante mise à jour avec ID:', existingSubmissionId);
-        } 
-        // Sinon, créer une nouvelle soumission
-        else {
-          const submissionRef = await addDoc(collection(db, 'formSubmissions'), submissionData);
-          existingSubmissionId = submissionRef.id;
-          console.log('Nouvelle soumission créée avec ID:', existingSubmissionId);
-          
-          // Mettre à jour le lien et le concert uniquement lors de la première soumission
-          if (formLinkId) {
-            await updateDoc(doc(db, 'formLinks', formLinkId), {
-              completed: true,
-              completedAt: serverTimestamp()
-            });
-          }
-          
-          if (concertId) {
-            await updateDoc(doc(db, 'concerts', concertId), {
-              formSubmissionId: existingSubmissionId,
-              updatedAt: serverTimestamp()
-            });
-          }
-        }
-        
-        // CHANGEMENT IMPORTANT: Ne pas mettre à jour le programmateur tout de suite
-        // Nous allons laisser l'administrateur valider les données avant de les appliquer
-        
-        // Appeler le callback de succès si fourni
-        if (onSubmitSuccess) {
-          console.log('Appel du callback onSubmitSuccess');
-          onSubmitSuccess();
-        } else {
-          // Afficher un message de succès si pas de callback
-          setSubmitted(true); // Marquer le formulaire comme soumis
-        }
-      } 
-      // 8. Traitement spécifique au mode édition standard
-      else {
-        console.log('Mode édition standard', { id, progId });
-        
-        // Si nous sommes en mode création d'un nouveau programmateur ou si l'ID est undefined
-        if (!id || id === 'nouveau') {
-          if (!progId) {
-            progId = doc(collection(db, 'programmateurs')).id;
-            console.log('Nouvel ID de programmateur créé:', progId);
-          }
-        } 
-        // En mode édition, on vérifie que l'ID existe
-        else if (!progId) {
-          setError("Erreur: Impossible d'identifier le programmateur à modifier");
-          setIsSubmitting(false);
-          return;
-        }
-        
-        // En mode admin standard, mettre à jour le programmateur
-        await setDoc(doc(db, 'programmateurs', progId), flattenedData, { merge: true });
-        
-        // Mise à jour réciproque : ajouter le programmateur à chaque concert
-        for (const concert of concertsAssocies) {
-          if (concert && concert.id) {
-            const concertRef = doc(db, 'concerts', concert.id);
-            await updateDoc(concertRef, {
-              programmateurs: arrayUnion({
-                id: progId,
-                nom: flattenedData.nom
-              })
-            });
-            console.log('Programmateur associé au concert:', concert.id);
-          }
-        }
-        
-        // Rediriger vers la liste des programmateurs
-        navigate('/programmateurs');
-      }
+      // Notifier le succès
+      setSuccess(true);
+      if (onSubmitSuccess) onSubmitSuccess();
     } catch (error) {
-      console.error('Erreur lors de l\'enregistrement:', error);
-      setError(`Une erreur est survenue lors de l'enregistrement: ${error.message}`);
+      console.error('Erreur lors de la soumission du formulaire:', error);
+      setError('Une erreur est survenue lors de la soumission. Veuillez réessayer plus tard.');
     } finally {
-      setIsSubmitting(false);
+      setSubmitting(false);
     }
   };
-  
-  if (loading) {
-    return <div className="text-center my-5 loading-spinner">Chargement des données...</div>;
-  }
 
-  // Si le formulaire a été soumis avec succès et qu'on est en mode formulaire public
-  if (submitted && isPublicFormMode) {
+  if (loading) {
     return (
-      <div className="form-public-container">
-        <div className="form-success text-center">
-          <div className="success-icon my-4">
-            <i className="bi bi-check-circle-fill text-success" style={{ fontSize: '5rem' }}></i>
-          </div>
-          <h2 className="mb-3">Merci pour votre soumission !</h2>
-          <p className="lead mb-4">Vos informations ont été enregistrées avec succès.</p>
-          <p>Vous pouvez modifier vos informations à tout moment jusqu'à leur validation par notre équipe.</p>
-          <button 
-            className="btn btn-primary mt-3"
-            onClick={() => setSubmitted(false)} // Permet de revenir au formulaire
-          >
-            <i className="bi bi-pencil-square me-2"></i>
-            Modifier vos informations
-          </button>
+      <div className="text-center my-4">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Chargement...</span>
         </div>
+        <p className="mt-2">Chargement du formulaire...</p>
       </div>
     );
   }
 
-  // Déterminer les classes CSS à utiliser selon le mode
-  const containerClass = isPublicFormMode ? 'form-public-container' : 'programmateur-form-container';
-  const formClass = isPublicFormMode ? 'form-public' : 'modern-form';
+  if (success) {
+    return (
+      <div className="form-success text-center my-4">
+        <div className="icon-container mb-3">
+          <i className="bi bi-check-circle-fill text-success" style={{ fontSize: '4rem' }}></i>
+        </div>
+        <h2 className="mb-3">Merci pour votre soumission !</h2>
+        <p className="mb-4">Vos informations ont été enregistrées avec succès.</p>
+        {!onSubmitSuccess && (
+          <Button 
+            variant="outline-primary" 
+            onClick={() => setSuccess(false)}
+          >
+            <i className="bi bi-pencil me-2"></i>
+            Modifier mes informations
+          </Button>
+        )}
+      </div>
+    );
+  }
 
   return (
-    <div className={containerClass}>
-      {!isPublicFormMode && (
-        <div className="form-header-container">
-          <h2 className="modern-title">
-            {id && id !== 'nouveau' ? 'Modifier le programmateur' : 'Ajouter un programmateur'}
-          </h2>
-          <div className="breadcrumb-container">
-            <span className="breadcrumb-item" onClick={() => navigate('/programmateurs')}>Programmateurs</span>
-            <i className="bi bi-chevron-right"></i>
-            <span className="breadcrumb-item active">
-              {id && id !== 'nouveau' ? formData.contact.nom || 'Édition' : 'Nouveau'}
-            </span>
-          </div>
-        </div>
-      )}
-
+    <Form onSubmit={handleSubmit} className="programmer-form">
       {error && (
-        <div className="alert alert-danger mb-4">
+        <Alert variant="danger" className="mb-4">
           <i className="bi bi-exclamation-triangle-fill me-2"></i>
           {error}
-        </div>
+        </Alert>
       )}
-
-      <form onSubmit={handleSubmit} className={formClass}>
-        {/* Section Informations du contact */}
-        <div className={isPublicFormMode ? "form-section" : "form-card"}>
-          <div className="card-header">
-            <i className="bi bi-person-vcard"></i>
-            <h3>Informations du contact</h3>
-          </div>
-          <div className="card-body">
-            <div className="row">
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label htmlFor="contact.nom" className="form-label">Nom <span className="required">*</span></label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="contact.nom"
-                    name="contact.nom"
-                    value={formData.contact.nom}
-                    onChange={handleChange}
-                    required
-                    placeholder="Ex: Dupont"
-                  />
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label htmlFor="contact.prenom" className="form-label">Prénom</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="contact.prenom"
-                    name="contact.prenom"
-                    value={formData.contact.prenom}
-                    onChange={handleChange}
-                    placeholder="Ex: Jean"
-                  />
-                </div>
-              </div>
+      
+      {/* Section des informations de contact */}
+      <div className="card mb-4">
+        <div className="card-header">
+          <h3>Informations de contact</h3>
+        </div>
+        <div className="card-body">
+          <Row>
+            <Col md={6}>
+              <Form.Group className="mb-3">
+                <Form.Label>Nom <span className="text-danger">*</span></Form.Label>
+                <Form.Control
+                  type="text"
+                  name="nom"
+                  value={formData.nom}
+                  onChange={handleChange}
+                  isInvalid={!!errors.nom}
+                  required
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.nom}
+                </Form.Control.Feedback>
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group className="mb-3">
+                <Form.Label>Prénom <span className="text-danger">*</span></Form.Label>
+                <Form.Control
+                  type="text"
+                  name="prenom"
+                  value={formData.prenom}
+                  onChange={handleChange}
+                  isInvalid={!!errors.prenom}
+                  required
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.prenom}
+                </Form.Control.Feedback>
+              </Form.Group>
+            </Col>
+          </Row>
+          
+          <Form.Group className="mb-3">
+            <Form.Label>Fonction</Form.Label>
+            <Form.Control
+              type="text"
+              name="fonction"
+              value={formData.fonction}
+              onChange={handleChange}
+              placeholder="Ex: Directeur artistique, Responsable programmation..."
+            />
+          </Form.Group>
+          
+          <Row>
+            <Col md={6}>
+              <Form.Group className="mb-3">
+                <Form.Label>Email <span className="text-danger">*</span></Form.Label>
+                <Form.Control
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  isInvalid={!!errors.email}
+                  required
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.email}
+                </Form.Control.Feedback>
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group className="mb-3">
+                <Form.Label>Téléphone</Form.Label>
+                <Form.Control
+                  type="tel"
+                  name="telephone"
+                  value={formData.telephone}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+        </div>
+      </div>
+      
+      {/* Section Structure juridique avec recherche d'entreprise intégrée */}
+      <div className="card mb-4">
+        <div className="card-header">
+          <h3>Structure juridique</h3>
+        </div>
+        <div className="card-body">
+          {/* Options de recherche d'entreprise */}
+          <div className="mb-4">
+            <h5>Comment souhaitez-vous renseigner votre structure ?</h5>
+            <div className="d-flex gap-2 mb-3">
+              <Button 
+                variant={searchType === 'manual' ? 'primary' : 'outline-primary'} 
+                onClick={() => setSearchType('manual')}
+                size="sm"
+              >
+                <i className="bi bi-pencil-fill me-2"></i>
+                Saisie manuelle
+              </Button>
+              <Button 
+                variant={searchType === 'name' ? 'primary' : 'outline-primary'} 
+                onClick={() => setSearchType('name')}
+                size="sm"
+              >
+                <i className="bi bi-search me-2"></i>
+                Rechercher par nom
+              </Button>
+              <Button 
+                variant={searchType === 'siret' ? 'primary' : 'outline-primary'} 
+                onClick={() => setSearchType('siret')}
+                size="sm"
+              >
+                <i className="bi bi-upc-scan me-2"></i>
+                Rechercher par SIREN/SIRET
+              </Button>
             </div>
-
-            <div className="form-group">
-              <label htmlFor="contact.fonction" className="form-label">Fonction</label>
-              <input
-                type="text"
-                className="form-control"
-                id="contact.fonction"
-                name="contact.fonction"
-                value={formData.contact.fonction}
-                onChange={handleChange}
-                placeholder="Ex: Directeur artistique"
-              />
-            </div>
-
-            <div className="row">
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label htmlFor="contact.email" className="form-label">Email {/*<span className="required">*</span>*/}</label>
-                  <div className="input-group">
-                    <span className="input-group-text"><i className="bi bi-envelope"></i></span>
-                    <input
-                      type="email"
-                      className="form-control"
-                      id="contact.email"
-                      name="contact.email"
-                      value={formData.contact.email}
-                      onChange={handleChange}
-                      //required
-                      placeholder="Ex: jean.dupont@example.com"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label htmlFor="contact.telephone" className="form-label">Téléphone</label>
-                  <div className="input-group">
-                    <span className="input-group-text"><i className="bi bi-telephone"></i></span>
-                    <input
-                      type="tel"
-                      className="form-control"
-                      id="contact.telephone"
-                      name="contact.telephone"
-                      value={formData.contact.telephone}
-                      onChange={handleChange}
-                      placeholder="Ex: 01 23 45 67 89"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-  
-          {/* Section Structure juridique */}
-          <div className={isPublicFormMode ? "form-section" : "form-card"}>
-            <div className="card-header">
-              <i className="bi bi-building"></i>
-              <h3>Structure juridique</h3>
-            </div>
-            <div className="card-body">
-              <div className="row">
-                <div className="col-md-7">
-                  <div className="form-group">
-                    <label htmlFor="structure.raisonSociale" className="form-label">Raison sociale</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="structure.raisonSociale"
-                      name="structure.raisonSociale"
-                      value={formData.structure.raisonSociale}
-                      onChange={handleChange}
-                      placeholder="Ex: Association Culturelle XYZ"
-                    />
-                  </div>
-                </div>
-                <div className="col-md-5">
-                  <div className="form-group">
-                    <label htmlFor="structure.type" className="form-label">Type de structure</label>
-                    <select
-                      className="form-select"
-                      id="structure.type"
-                      name="structure.type"
-                      value={formData.structure.type}
-                      onChange={handleChange}
-                    >
-                      <option value="">Sélectionnez un type</option>
-                      <option value="association">Association</option>
-                      <option value="mairie">Mairie / Collectivité</option>
-                      <option value="entreprise">Entreprise</option>
-                      <option value="auto-entrepreneur">Auto-entrepreneur</option>
-                      <option value="autre">Autre</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-                                {/* Champ d'adresse avec autocomplétion */}
-              <div className="form-group address-search-container">
-                <label htmlFor="structure.adresse" className="form-label">Adresse complète</label>
+            
+            {/* Champ de recherche si mode nom ou SIRET */}
+            {(searchType === 'name' || searchType === 'siret') && (
+              <div className="position-relative mb-4">
                 <div className="input-group">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="structure.adresse"
-                    name="structure.adresse"
-                    ref={addressInputRef}
-                    value={formData.structure.adresse}
-                    onChange={handleChange}
-                    placeholder="Commencez à taper une adresse..."
-                    autoComplete="off"
-                  />
                   <span className="input-group-text">
-                    <i className="bi bi-geo-alt"></i>
+                    <i className={`bi ${searchType === 'name' ? 'bi-building' : 'bi-upc'}`}></i>
                   </span>
+                  <Form.Control
+                    type="text"
+                    placeholder={searchType === 'name' 
+                      ? "Entrez le nom de l'entreprise..." 
+                      : "Entrez le numéro SIREN ou SIRET..."
+                    }
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                  {isSearchingCompany && (
+                    <span className="input-group-text">
+                      <div className="spinner-border spinner-border-sm" role="status">
+                        <span className="visually-hidden">Recherche en cours...</span>
+                      </div>
+                    </span>
+                  )}
                 </div>
                 <small className="form-text text-muted">
-                  Commencez à taper pour voir des suggestions d'adresses
+                  {searchType === 'name' 
+                    ? "Entrez au moins 3 caractères pour lancer la recherche" 
+                    : "Entrez un numéro SIREN (9 chiffres) ou SIRET (14 chiffres)"
+                  }
                 </small>
                 
-                {/* Suggestions d'adresse */}
-                {addressSuggestions && addressSuggestions.length > 0 && (
-                  <div className="address-suggestions" ref={suggestionsRef}>
-                    {addressSuggestions.map((suggestion, index) => (
+                {/* Résultats de recherche d'entreprise */}
+                {searchResults.length > 0 && (
+                  <div ref={companySearchResultsRef} className="position-absolute w-100 bg-white border rounded shadow-sm" style={{ zIndex: 1000 }}>
+                    {searchResults.map((company, index) => (
                       <div
                         key={index}
-                        className="address-suggestion-item"
-                        onClick={() => handleSelectAddress(suggestion)}
+                        className="p-3 border-bottom hover-bg-light cursor-pointer d-flex"
+                        onClick={() => handleSelectCompany(company)}
+                        style={{ cursor: 'pointer' }}
                       >
-                        <div className="suggestion-icon">
-                          <i className="bi bi-geo-alt-fill"></i>
+                        <div className="me-2 text-primary">
+                          <i className="bi bi-building-fill"></i>
                         </div>
-                        <div className="suggestion-text">
-                          <div className="suggestion-name">{suggestion.display_name}</div>
-                          {suggestion.address && (
-                            <div className="suggestion-details">
-                              {suggestion.address.postcode && suggestion.address.city && (
-                                <span>{suggestion.address.postcode} {suggestion.address.city}</span>
-                              )}
-                            </div>
-                          )}
+                        <div className="flex-grow-1">
+                          <div className="fw-bold">{company.nom}</div>
+                          <div className="small text-muted">
+                            {company.adresse && `${company.adresse}, `}{company.codePostal} {company.ville}
+                          </div>
+                          <div className="small text-muted">
+                            {company.siren && `SIREN: ${company.siren} • `}
+                            {company.siret && `SIRET: ${company.siret} • `}
+                            {company.codeAPE && `APE: ${company.codeAPE}`}
+                          </div>
                         </div>
                       </div>
                     ))}
                   </div>
                 )}
                 
-                {/* Indicateur de recherche */}
-                {isSearchingAddress && (
-                  <div className="address-searching">
-                    <div className="spinner-border spinner-border-sm text-primary" role="status">
-                      <span className="visually-hidden">Recherche en cours...</span>
-                    </div>
-                    <span className="searching-text">Recherche d'adresses...</span>
+                {/* Message si aucun résultat */}
+                {searchTerm.length >= 3 && searchResults.length === 0 && !isSearchingCompany && (
+                  <div className="alert alert-info mt-2">
+                    <i className="bi bi-info-circle me-2"></i>
+                    Aucune entreprise trouvée. Vérifiez votre saisie ou saisissez les informations manuellement.
                   </div>
                 )}
               </div>
-  
-              <div className="row">
-                <div className="col-md-4">
-                  <div className="form-group">
-                    <label htmlFor="structure.codePostal" className="form-label">Code postal</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="structure.codePostal"
-                      name="structure.codePostal"
-                      value={formData.structure.codePostal}
-                      onChange={handleChange}
-                      placeholder="Ex: 75001"
-                    />
-                  </div>
-                </div>
-                <div className="col-md-5">
-                  <div className="form-group">
-                    <label htmlFor="structure.ville" className="form-label">Ville</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="structure.ville"
-                      name="structure.ville"
-                      value={formData.structure.ville}
-                      onChange={handleChange}
-                      placeholder="Ex: Paris"
-                    />
-                  </div>
-                </div>
-                <div className="col-md-3">
-                  <div className="form-group">
-                    <label htmlFor="structure.pays" className="form-label">Pays</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="structure.pays"
-                      name="structure.pays"
-                      value={formData.structure.pays}
-                      onChange={handleChange}
-                    />
-                  </div>
-                </div>
-              </div>
-  
-              <div className="row">
-                <div className="col-md-6">
-                  <div className="form-group">
-                    <label htmlFor="structure.siret" className="form-label">SIRET</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="structure.siret"
-                      name="structure.siret"
-                      value={formData.structure.siret}
-                      onChange={handleChange}
-                      placeholder="Ex: 123 456 789 00012"
-                    />
-                  </div>
-                </div>
-                <div className="col-md-6">
-                  <div className="form-group">
-                    <label htmlFor="structure.tva" className="form-label">N° TVA intracommunautaire <span className="optional">(facultatif)</span></label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="structure.tva"
-                      name="structure.tva"
-                      value={formData.structure.tva}
-                      onChange={handleChange}
-                      placeholder="Ex: FR123456789"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-  
-          {/* Section Concerts associés - visible uniquement en mode édition standard */}
-          {!isPublicFormMode && (
-            <div className="form-card">
-              <div className="card-header">
-                <i className="bi bi-music-note-list"></i>
-                <h3>Concerts associés</h3>
-              </div>
-              <div className="card-body">
-                <div className="associated-concerts">
-                  <h4 className="mb-3 concerts-title">
-                    {formData.concertsAssocies.length > 0 
-                      ? `Concerts associés (${formData.concertsAssocies.length})` 
-                      : 'Aucun concert associé'}
-                  </h4>
-                  
-                  {formData.concertsAssocies.length > 0 ? (
-                    <div className="concert-list">
-                      {formData.concertsAssocies.map(concert => (
-                        <div key={concert.id} className="concert-card">
-                          <div className="concert-card-body">
-                            <div className="concert-info">
-                              <h5 className="concert-name">
-                                <i className="bi bi-music-note me-2"></i>
-                                {concert.titre}
-                              </h5>
-                              <div className="concert-details">
-                                {concert.date && (
-                                  <span className="concert-detail">
-                                    <i className="bi bi-calendar-event"></i>
-                                    {typeof concert.date === 'object' && concert.date.seconds
-                                      ? new Date(concert.date.seconds * 1000).toLocaleDateString('fr-FR')
-                                      : concert.date}
-                                  </span>
-                                )}
-                                {concert.lieu && (
-                                  <span className="concert-detail">
-                                    <i className="bi bi-geo-alt"></i>
-                                    {concert.lieu}
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="alert alert-info">
-                      <i className="bi bi-info-circle me-2"></i>
-                      Aucun concert n'est associé à ce programmateur.
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
-  
-          {/* Message d'information et consentement RGPD - visible uniquement en mode formulaire public */}
-          {isPublicFormMode && (
-            <div className="form-section">
-              <div className="card-body">
-                <div className="alert alert-info mb-4">
-                  <i className="bi bi-info-circle me-2"></i>
-                  <p className="mb-0">
-                    Les informations recueillies sur ce formulaire sont enregistrées dans un fichier informatisé 
-                    à des fins de gestion des concerts. Conformément à la loi « informatique et libertés », 
-                    vous pouvez exercer votre droit d'accès aux données vous concernant et les faire rectifier.
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-  
-          <div className={isPublicFormMode ? "form-actions text-center" : "form-actions"}>
-            {!isPublicFormMode && (
-              <button
-                type="button"
-                className="btn btn-outline-secondary"
-                onClick={() => navigate('/programmateurs')}
-                disabled={isSubmitting}
-              >
-                <i className="bi bi-x-circle me-2"></i>
-                Annuler
-              </button>
             )}
-            <button
-              type="submit"
-              className={isPublicFormMode ? "btn-submit-public btn-lg" : "btn btn-primary"}
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? (
-                <>
-                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                  {isPublicFormMode ? 'Envoi en cours...' : 'Enregistrement...'}
-                </>
-              ) : (
-                <>
-                  <i className="bi bi-check-circle me-2"></i>
-                  {isPublicFormMode 
-                    ? 'Envoyer mes informations' 
-                    : (id && id !== 'nouveau' ? 'Enregistrer les modifications' : 'Créer le programmateur')}
-                </>
-              )}
-            </button>
           </div>
-  
-          {isPublicFormMode && (
-            <div className="form-footer mt-4">
-              <p className="text-muted text-center small">
-                © {new Date().getFullYear()} - Vos informations resteront confidentielles et ne seront utilisées que dans le cadre de la relation contractuelle.
-              </p>
-            </div>
-          )}
-        </form>
+          
+          {/* Formulaire de structure juridique */}
+          <Form.Group className="mb-3">
+            <Form.Label>Raison sociale <span className="text-danger">*</span></Form.Label>
+            <Form.Control
+              type="text"
+              name="structure"
+              value={formData.structure}
+              onChange={handleChange}
+              required
+              isInvalid={!!errors.structure}
+            />
+            <Form.Control.Feedback type="invalid">
+              {errors.structure}
+            </Form.Control.Feedback>
+          </Form.Group>
+          
+          <Form.Group className="mb-3">
+            <Form.Label>Type de structure</Form.Label>
+            <Form.Select
+              name="structureType"
+              value={formData.structureType}
+              onChange={handleChange}
+            >
+              <option value="">Sélectionnez...</option>
+              <option value="Association">Association</option>
+              <option value="SARL">SARL</option>
+              <option value="SAS">SAS</option>
+              <option value="EURL">EURL</option>
+              <option value="Entreprise individuelle">Entreprise individuelle</option>
+              <option value="Collectivité territoriale">Collectivité territoriale</option>
+              <option value="Autre">Autre</option>
+            </Form.Select>
+          </Form.Group>
+          
+          <Form.Group className="mb-3">
+            <Form.Label>Adresse</Form.Label>
+            <Form.Control
+              type="text"
+              name="structureAdresse"
+              ref={addressInputRef}
+              value={formData.structureAdresse}
+              onChange={handleChange}
+              placeholder="Numéro et nom de la rue"
+            />
+            
+            {/* Si vous implémentez l'auto-complétion d'adresse, ajoutez ici les suggestions */}
+          </Form.Group>
+          
+          <Row>
+            <Col md={4}>
+              <Form.Group className="mb-3">
+                <Form.Label>Code postal</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="structureCodePostal"
+                  value={formData.structureCodePostal}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+            </Col>
+            <Col md={8}>
+              <Form.Group className="mb-3">
+                <Form.Label>Ville</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="structureVille"
+                  value={formData.structureVille}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+          
+          <Form.Group className="mb-3">
+            <Form.Label>Pays</Form.Label>
+            <Form.Control
+              type="text"
+              name="structurePays"
+              value={formData.structurePays}
+              onChange={handleChange}
+            />
+          </Form.Group>
+          
+          <Row>
+            <Col md={6}>
+              <Form.Group className="mb-3">
+                <Form.Label>SIRET</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="siret"
+                  value={formData.siret}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group className="mb-3">
+                <Form.Label>Code APE</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="codeAPE"
+                  value={formData.codeAPE}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+        </div>
       </div>
-    );
-  };
-  
-  export default ProgrammateurForm;
-  
+      
+      {/* Section d'édition des informations du lieu (optionnel) */}
+      <div className="card mb-4">
+        <div className="card-header">
+          <h3>Informations sur le lieu</h3>
+        </div>
+        <div className="card-body">
+          <p className="text-muted mb-3">Si vous disposez d'informations supplémentaires concernant le lieu du concert, vous pouvez les renseigner ici.</p>
+          
+          <Form.Group className="mb-3">
+            <Form.Label>Nom du lieu</Form.Label>
+            <Form.Control
+              type="text"
+              name="lieuNom"
+              value={lieuData.nom}
+              onChange={(e) => setLieuData({...lieuData, nom: e.target.value})}
+              placeholder="Nom du lieu"
+            />
+          </Form.Group>
+          
+          <Form.Group className="mb-3">
+            <Form.Label>Adresse</Form.Label>
+            <Form.Control
+              type="text"
+              name="lieuAdresse"
+              value={lieuData.adresse}
+              onChange={(e) => setLieuData({...lieuData, adresse: e.target.value})}
+              placeholder="Adresse du lieu"
+            />
+          </Form.Group>
+          
+          <Row>
+            <Col md={4}>
+              <Form.Group className="mb-3">
+                <Form.Label>Code postal</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="lieuCodePostal"
+                  value={lieuData.codePostal}
+                  onChange={(e) => setLieuData({...lieuData, codePostal: e.target.value})}
+                />
+              </Form.Group>
+            </Col>
+            <Col md={8}>
+              <Form.Group className="mb-3">
+                <Form.Label>Ville</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="lieuVille"
+                  value={lieuData.ville}
+                  onChange={(e) => setLieuData({...lieuData, ville: e.target.value})}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+          
+          <Form.Group className="mb-3">
+            <Form.Label>Capacité</Form.Label>
+            <Form.Control
+              type="number"
+              name="lieuCapacite"
+              value={lieuData.capacite}
+              onChange={(e) => setLieuData({...lieuData, capacite: e.target.value})}
+              placeholder="Nombre de places"
+            />
+          </Form.Group>
+        </div>
+      </div>
+      <div className="d-flex justify-content-end mt-4">
+        <Button 
+          type="submit"
+          variant="primary"
+          disabled={submitting}
+          className="px-4 py-2"
+        >
+          {submitting ? (
+            <>
+              <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              Envoi en cours...
+            </>
+          ) : (
+            <>
+              <i className="bi bi-check-circle me-2"></i>
+              Envoyer les informations
+            </>
+          )}
+        </Button>
+      </div>
+    </Form>
+  );
+};
+
+export default ProgrammateurForm;

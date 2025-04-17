@@ -7,7 +7,6 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import '../../style/concertsList.css';
 
-
 const ConcertsList = () => {
   const navigate = useNavigate();
   const [concerts, setConcerts] = useState([]);
@@ -71,6 +70,8 @@ const ConcertsList = () => {
         
         setConcertsWithForms(Array.from(concertsWithFormsSet));
         setUnvalidatedForms(Array.from(concertsWithUnvalidatedFormsSet));
+        
+        // Récupérer les contrats
         const contratsRef = collection(db, 'contrats');
         const contratsSnapshot = await getDocs(contratsRef);
         
@@ -125,18 +126,18 @@ const ConcertsList = () => {
     setFilteredConcerts(results);
   }, [searchTerm, statusFilter, concerts]);
 
-  // NOUVELLE FONCTION: Vérifier si un concert a un contrat
+  // Fonction pour vérifier si un concert a un contrat
   const hasContract = (concertId) => {
     return concertsWithContracts[concertId] !== undefined;
   };
   
-  // NOUVELLE FONCTION: Obtenir le statut du contrat
+  // Fonction pour obtenir le statut du contrat
   const getContractStatus = (concertId) => {
     if (!hasContract(concertId)) return null;
     return concertsWithContracts[concertId].status || 'generated';
   };
   
-  // NOUVELLE FONCTION: Obtenir la variante du bouton contrat
+  // Fonction pour obtenir la variante du bouton contrat
   const getContractButtonVariant = (concertId) => {
     const status = getContractStatus(concertId);
     if (!status) return 'outline-primary';
@@ -153,7 +154,7 @@ const ConcertsList = () => {
     }
   };
   
-  // NOUVELLE FONCTION: Obtenir le texte de l'info-bulle
+  // Fonction pour obtenir le texte de l'info-bulle
   const getContractTooltip = (concertId) => {
     const status = getContractStatus(concertId);
     if (!status) return 'Aucun contrat généré';
@@ -598,7 +599,6 @@ const ConcertsList = () => {
                         </Link>
                       </OverlayTrigger>
                       {/* FIN DU NOUVEAU BOUTON */}
-                      
                     </div>
                   </td>
                 </tr>
@@ -607,103 +607,6 @@ const ConcertsList = () => {
           </table>
         </div>
       )}
-      
-      {/* Styles supplémentaires pour le nouveau statut avancé */}
-      <style jsx>{`
-        .status-advanced-container {
-          position: relative;
-          width: 100%;
-        }
-        
-        .status-tooltip {
-          position: absolute;
-          top: 100%;
-          left: 0;
-          width: 200px;
-          z-index: 100;
-          margin-top: 5px;
-        }
-        
-        .status-message {
-          background-color: white;
-          border-radius: 6px;
-          box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-          padding: 8px 12px;
-          font-size: 0.85rem;
-        }
-        
-        .status-message-warning {
-          border-left: 4px solid #ffc107;
-        }
-        
-        .status-message-info {
-          border-left: 4px solid #17a2b8;
-        }
-        
-        .status-message-primary {
-          border-left: 4px solid #007bff;
-        }
-        
-        .status-message-success {
-          border-left: 4px solid #28a745;
-        }
-        
-        .status-message-secondary {
-          border-left: 4px solid #6c757d;
-        }
-        
-        .status-message-danger {
-          border-left: 4px solid #dc3545;
-        }
-        
-        .action-reminder {
-          font-size: 0.8rem;
-          margin-top: 5px;
-          padding-top: 5px;
-          border-top: 1px solid #eee;
-          color: #dc3545;
-        }
-        
-        .artiste-name {
-          display: flex;
-          align-items: center;
-          color: #6610f2;
-        }
-        
-        /* Styles pour le bouton de contrat */
-        .btn-icon.modern-btn {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 32px;
-          height: 32px;
-          padding: 0;
-          border-radius: 4px;
-          margin-right: 5px;
-        }
-        
-        .btn-warning {
-          background-color: #ffc107;
-          border-color: #ffc107;
-          color: #212529;
-        }
-        
-        .btn-success {
-          background-color: #28a745;
-          border-color: #28a745;
-          color: white;
-        }
-        
-        .btn-outline-primary {
-          color: #007bff;
-          border-color: #007bff;
-        }
-        
-        .btn-outline-primary:hover {
-          background-color: #007bff;
-          color: white;
-        }
-      `}</style>
     </div>
   );
 };

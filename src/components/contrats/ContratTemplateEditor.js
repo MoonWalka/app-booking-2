@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -27,7 +27,7 @@ const ContratTemplateEditor = ({ template, onSave }) => {
       }]);
     }
   }, [sections.length]);
-  
+
   // Fonction pour ajouter une section
   const handleAddSection = () => {
     const newSections = [...sections, { title: `Section ${sections.length + 1}`, content: '' }];

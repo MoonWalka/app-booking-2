@@ -399,3 +399,17 @@
         align-self: flex-end !important;
     }
 }
+/* Ajoutez ces styles à votre CSS existant */
+.concert-form-container .action-buttons {
+    display: flex !important;
+    gap: 10px !important;
+    margin-bottom: 1.5rem !important; /* Pour créer de l'espace avant la première carte */
+  }
+  
+  /* Modifier l'entête du formulaire */
+  .concert-form-container .form-header-container {
+    display: flex !important;
+    flex-direction: column !important;
+    margin-bottom: 1rem !important;
+  }
+  

@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { APP_NAME } from '../../config';
 
 const Navbar = () => {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container-fluid">
-        <Link className="navbar-brand" to="/">App Booking</Link>
+        <Link className="navbar-brand" to="/">{APP_NAME}</Link>
         <button 
           className="navbar-toggler" 
           type="button" 
@@ -32,7 +33,13 @@ const Navbar = () => {
               <Link className="nav-link" to="/lieux">Lieux</Link>
             </li>
             <li className="nav-item">
+              <Link className="nav-link" to="/artistes">Artistes</Link>
+            </li>
+            <li className="nav-item">
               <Link className="nav-link" to="/contrats">Contrats</Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/parametres">Paramètres</Link>
             </li>
           </ul>
           <div className="d-flex">

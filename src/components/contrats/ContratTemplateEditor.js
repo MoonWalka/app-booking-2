@@ -8,7 +8,7 @@ import '../../style/contratTemplateEditor.css';
 const ContratTemplateEditor = ({ template, onSave }) => {
   const navigate = useNavigate();
   const [name, setName] = useState(template?.name || 'Nouveau modèle');
-  const [sections, setSections] = useState(template?.sections || []);
+  const [sections, setSections] = useState(template?.sections || [{title: 'Section 1',content: ''}]);
   const [isDefault, setIsDefault] = useState(template?.isDefault || false);
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [previewMode, setPreviewMode] = useState(false);
@@ -17,10 +17,22 @@ const ContratTemplateEditor = ({ template, onSave }) => {
   // Référence pour le quill editor
   const quillRef = useRef();
 
+  // useEffect pour initialiser les sections si besoin
+  useEffect(() => {
+    // Si c'est un nouveau modèle et qu'il n'y a pas encore de sections, en ajouter une par défaut
+    if (sections.length === 0) {
+      setSections([{
+        title: 'Parties contractantes',
+        content: '<p>Entre les soussignés:</p><p><strong>L\'Organisateur:</strong> {programmateur_nom}, {programmateur_structure}</p><p><strong>L\'Artiste:</strong> {artiste_nom}</p>'
+      }]);
+    }
+  }, [sections.length]);
+  
   // Fonction pour ajouter une section
   const handleAddSection = () => {
-    setSections([...sections, { title: `Section ${sections.length + 1}`, content: '' }]);
-    setCurrentSectionIndex(sections.length);
+    const newSections = [...sections, { title: `Section ${sections.length + 1}`, content: '' }];
+    setSections(newSections);
+    setCurrentSectionIndex(newSections.length - 1); // Pointer vers la nouvelle section
   };
 
   // Fonction pour supprimer une section
@@ -289,54 +301,55 @@ const ContratTemplateEditor = ({ template, onSave }) => {
             </div>
             
             <div className="section-editor">
-              {sections.length > 0 ? (
-                <>
-                  <div className="section-editor-header">
-                    <div className="form-group">
-                      <label htmlFor="sectionTitle">Titre de la section</label>
-                      <input
-                        type="text"
-                        id="sectionTitle"
-                        className="form-control"
-                        value={sections[currentSectionIndex].title}
-                        onChange={(e) => handleSectionTitleChange(currentSectionIndex, e.target.value)}
-                        placeholder="Ex: Parties contractantes"
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="section-editor-content">
-                    <label>Contenu</label>
-                    <ReactQuill
-                      ref={quillRef}
-                      theme="snow"
-                      value={sections[currentSectionIndex].content}
-                      onChange={(content) => handleSectionContentChange(currentSectionIndex, content)}
-                      modules={{
-                        toolbar: [
-                          [{ 'header': [1, 2, 3, false] }],
-                          ['bold', 'italic', 'underline', 'strike'],
-                          [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                          [{ 'indent': '-1' }, { 'indent': '+1' }],
-                          [{ 'align': [] }],
-                          ['clean']
-                        ],
-                      }}
-                    />
-                  </div>
-                </>
-              ) : (
-                <div className="no-sections-message">
-                  <p>Aucune section n'a été créée.</p>
-                  <button 
-                    className="btn btn-primary" 
-                    onClick={handleAddSection}
-                  >
-                    Ajouter une section
-                  </button>
-                </div>
-              )}
-            </div>
+  {sections.length > 0 && currentSectionIndex < sections.length ? (
+    <>
+      <div className="section-editor-header">
+        <div className="form-group">
+          <label htmlFor="sectionTitle">Titre de la section</label>
+          <input
+            type="text"
+            id="sectionTitle"
+            className="form-control"
+            value={sections[currentSectionIndex].title}
+            onChange={(e) => handleSectionTitleChange(currentSectionIndex, e.target.value)}
+            placeholder="Ex: Parties contractantes"
+          />
+        </div>
+      </div>
+      
+      <div className="section-editor-content">
+        <label>Contenu</label>
+        <ReactQuill
+          ref={quillRef}
+          theme="snow"
+          value={sections[currentSectionIndex].content}
+          onChange={(content) => handleSectionContentChange(currentSectionIndex, content)}
+          modules={{
+            toolbar: [
+              [{ 'header': [1, 2, 3, false] }],
+              ['bold', 'italic', 'underline', 'strike'],
+              [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+              [{ 'indent': '-1' }, { 'indent': '+1' }],
+              [{ 'align': [] }],
+              ['clean']
+            ],
+          }}
+        />
+      </div>
+    </>
+  ) : (
+    <div className="no-sections-message">
+      <p>Aucune section n'a été créée.</p>
+      <button 
+        className="btn btn-primary" 
+        onClick={handleAddSection}
+      >
+        Ajouter une section
+      </button>
+    </div>
+  )}
+</div>
+
             
             <div className="variables-sidebar">
               <h4>Variables disponibles</h4>

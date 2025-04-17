@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Nav, Tab, Form, Button, Card } from 'react-bootstrap';
 import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { db } from '../../firebase';
 import ContratTemplatesPage from './contratTemplatesPage';
 import ContratTemplatesEditPage from './contratTemplatesEditPage';
 
@@ -22,6 +24,8 @@ const ParametresPage = () => {
       setActiveKey('appearance');
     } else if (path.includes('/parametres/export')) {
       setActiveKey('export');
+    } else if (path.includes('/parametres/entreprise')) {
+      setActiveKey('entreprise');
     } else {
       setActiveKey('general');
     }
@@ -47,6 +51,9 @@ const ParametresPage = () => {
         break;
       case 'export':
         navigate('/parametres/export');
+        break;
+      case 'entreprise':
+        navigate('/parametres/entreprise');
         break;
       default:
         navigate('/parametres');
@@ -95,6 +102,14 @@ const ParametresPage = () => {
             </Nav.Item>
             <Nav.Item>
               <Nav.Link 
+                active={activeKey === 'entreprise'} 
+                onClick={() => handleTabChange('entreprise')}
+              >
+                Informations de l'entreprise
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link 
                 active={activeKey === 'contrats'} 
                 onClick={() => handleTabChange('contrats')}
               >
@@ -125,6 +140,9 @@ const ParametresPage = () => {
             <Route path="/appearance" element={
               <ParametresAppearanceContent />
             } />
+            <Route path="/entreprise" element={
+              <ParametresEntrepriseContent />
+            } />
             <Route path="/contrats" element={
               <ContratTemplatesPage />
             } />
@@ -141,7 +159,213 @@ const ParametresPage = () => {
   );
 };
 
-// Composants pour les différents contenus des onglets
+// Composant pour les informations de l'entreprise
+const ParametresEntrepriseContent = () => {
+  const [entrepriseInfo, setEntrepriseInfo] = useState({
+    nom: '',
+    adresse: '',
+    codePostal: '',
+    ville: '',
+    telephone: '',
+    email: '',
+    siteWeb: '',
+    siret: '',
+    codeAPE: '',
+    logo: '',
+    mentionsLegales: ''
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Récupérer les informations d'entreprise de Firestore
+    const fetchEntrepriseInfo = async () => {
+      try {
+        const docRef = doc(db, 'parametres', 'entreprise');
+        const docSnap = await getDoc(docRef);
+        
+        if (docSnap.exists()) {
+          setEntrepriseInfo(docSnap.data());
+        }
+      } catch (error) {
+        console.error("Erreur lors de la récupération des infos de l'entreprise:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchEntrepriseInfo();
+  }, []);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setEntrepriseInfo(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await setDoc(doc(db, 'parametres', 'entreprise'), entrepriseInfo);
+      alert("Informations de l'entreprise enregistrées avec succès!");
+    } catch (error) {
+      console.error("Erreur lors de l'enregistrement des infos de l'entreprise:", error);
+      alert("Une erreur est survenue lors de l'enregistrement.");
+    }
+  };
+
+  if (loading) {
+    return <div className="text-center"><div className="spinner-border" role="status"></div></div>;
+  }
+
+  return (
+    <Card>
+      <Card.Body>
+        <h3 className="mb-3">Informations de l'entreprise</h3>
+        <p className="text-muted">Ces informations apparaîtront dans les entêtes et pieds de page des contrats générés.</p>
+        
+        <Form onSubmit={handleSubmit}>
+          <Row>
+            <Col md={6}>
+              <Form.Group className="mb-3">
+                <Form.Label>Nom de l'entreprise</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="nom"
+                  value={entrepriseInfo.nom}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group className="mb-3">
+                <Form.Label>Logo (URL)</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="logo"
+                  value={entrepriseInfo.logo}
+                  onChange={handleChange}
+                  placeholder="https://example.com/logo.png"
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+          
+          <Form.Group className="mb-3">
+            <Form.Label>Adresse</Form.Label>
+            <Form.Control
+              type="text"
+              name="adresse"
+              value={entrepriseInfo.adresse}
+              onChange={handleChange}
+            />
+          </Form.Group>
+          
+          <Row>
+            <Col md={4}>
+              <Form.Group className="mb-3">
+                <Form.Label>Code postal</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="codePostal"
+                  value={entrepriseInfo.codePostal}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+            </Col>
+            <Col md={8}>
+              <Form.Group className="mb-3">
+                <Form.Label>Ville</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="ville"
+                  value={entrepriseInfo.ville}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+          
+          <Row>
+            <Col md={6}>
+              <Form.Group className="mb-3">
+                <Form.Label>Téléphone</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="telephone"
+                  value={entrepriseInfo.telephone}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group className="mb-3">
+                <Form.Label>Email</Form.Label>
+                <Form.Control
+                  type="email"
+                  name="email"
+                  value={entrepriseInfo.email}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+          
+          <Form.Group className="mb-3">
+            <Form.Label>Site web</Form.Label>
+            <Form.Control
+              type="text"
+              name="siteWeb"
+              value={entrepriseInfo.siteWeb}
+              onChange={handleChange}
+            />
+          </Form.Group>
+          
+          <Row>
+            <Col md={6}>
+              <Form.Group className="mb-3">
+                <Form.Label>SIRET</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="siret"
+                  value={entrepriseInfo.siret}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group className="mb-3">
+                <Form.Label>Code APE</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="codeAPE"
+                  value={entrepriseInfo.codeAPE}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+          
+          <Form.Group className="mb-3">
+            <Form.Label>Mentions légales (pied de page)</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={3}
+              name="mentionsLegales"
+              value={entrepriseInfo.mentionsLegales}
+              onChange={handleChange}
+              placeholder="Association loi 1901, etc."
+            />
+          </Form.Group>
+          
+          <Button type="submit" variant="primary">Enregistrer les informations</Button>
+        </Form>
+      </Card.Body>
+    </Card>
+  );
+};
+// Les autres composants de contenu avec des retours JSX valides
 const ParametresGeneralContent = () => (
   <Card>
     <Card.Body>
@@ -307,5 +531,6 @@ const ParametresExportContent = () => (
     </Card.Body>
   </Card>
 );
+
 
 export default ParametresPage;

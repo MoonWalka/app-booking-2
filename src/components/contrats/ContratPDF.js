@@ -3,14 +3,13 @@ import { Document, Page, Text, View, StyleSheet, Font, Image } from '@react-pdf/
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 
-// Enregistrer une police
+// Enregistrer Arial comme police
 Font.register({
-  family: 'Roboto',
+  family: 'Arial',
   fonts: [
-    { src: 'https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-light-webfont.ttf', fontWeight: 300 },
-    { src: 'https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-regular-webfont.ttf', fontWeight: 400 },
-    { src: 'https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-medium-webfont.ttf', fontWeight: 500 },
-    { src: 'https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-bold-webfont.ttf', fontWeight: 700 }
+    { src: 'https://cdn.jsdelivr.net/npm/@canvas-fonts/arial@1.0.4/Arial.ttf' },
+    { src: 'https://cdn.jsdelivr.net/npm/@canvas-fonts/arial@1.0.4/Arial-Bold.ttf', fontWeight: 'bold' },
+    { src: 'https://cdn.jsdelivr.net/npm/@canvas-fonts/arial@1.0.4/Arial-Italic.ttf', fontStyle: 'italic' },
   ]
 });
 
@@ -18,17 +17,34 @@ Font.register({
 const styles = StyleSheet.create({
   page: {
     padding: 30,
-    fontFamily: 'Roboto',
-    fontSize: 12,
+    fontFamily: 'Arial',
+    fontSize: 9, // Taille de police 9 comme demandé
   },
   header: {
+    fontSize: 8,
     marginBottom: 20,
+    textAlign: 'center',
     paddingBottom: 10,
     borderBottom: '1px solid #ccc',
   },
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  headerLogo: {
+    width: 100,
+    height: 40,
+    objectFit: 'contain',
+  },
+  headerCompanyInfo: {
+    flexDirection: 'column',
+    textAlign: 'right',
+    fontSize: 8,
+  },
   title: {
     fontSize: 20,
-    fontWeight: 700,
+    fontWeight: 'bold',
     marginBottom: 10,
     textAlign: 'center',
   },
@@ -43,7 +59,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 14,
-    fontWeight: 700,
+    fontWeight: 'bold',
     marginBottom: 8,
     backgroundColor: '#f5f5f5',
     padding: 5,
@@ -51,17 +67,6 @@ const styles = StyleSheet.create({
   sectionContent: {
     lineHeight: 1.5,
     textAlign: 'justify',
-  },
-  footer: {
-    position: 'absolute',
-    bottom: 30,
-    left: 30,
-    right: 30,
-    textAlign: 'center',
-    fontSize: 10,
-    color: '#999',
-    borderTop: '1px solid #ccc',
-    paddingTop: 10,
   },
   signature: {
     marginTop: 30,
@@ -73,13 +78,29 @@ const styles = StyleSheet.create({
     width: '45%',
   },
   signatureTitle: {
-    fontWeight: 500,
+    fontWeight: 'bold',
     marginBottom: 50,
   },
   signatureLine: {
     borderTop: '1px solid #000',
     marginTop: 5,
   },
+  footer: {
+    position: 'absolute',
+    bottom: 30,
+    left: 30,
+    right: 30,
+    textAlign: 'center',
+    fontSize: 8,
+    color: '#666',
+    borderTop: '1px solid #ccc',
+    paddingTop: 10,
+  },
+  legalInfo: {
+    fontSize: 7,
+    color: '#999',
+    marginTop: 5,
+  }
 });
 
 const parseHtmlToReactPdf = (html) => {
@@ -100,7 +121,7 @@ const parseHtmlToReactPdf = (html) => {
   return text;
 };
 
-const ContratPDF = ({ template, concertData, programmateurData, artisteData, lieuData }) => {
+const ContratPDF = ({ template, concertData, programmateurData, artisteData, lieuData, entrepriseInfo }) => {
   const today = new Date();
   const formattedDate = format(today, "dd MMMM yyyy", { locale: fr });
   
@@ -154,11 +175,31 @@ const ContratPDF = ({ template, concertData, programmateurData, artisteData, lie
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        <View style={styles.header}>
-          <Text style={styles.title}>{documentTitle}</Text>
-          <Text style={styles.date}>Fait à {lieuData?.ville || 'N/A'}, le {formattedDate}</Text>
-        </View>
+        {/* En-tête avec informations de l'entreprise */}
+        {entrepriseInfo && (
+          <View style={styles.header}>
+            <View style={styles.headerRow}>
+              {entrepriseInfo.logo && (
+                <Image src={entrepriseInfo.logo} style={styles.headerLogo} />
+              )}
+              <View style={styles.headerCompanyInfo}>
+                <Text>{entrepriseInfo.nom}</Text>
+                <Text>{entrepriseInfo.adresse}</Text>
+                <Text>{entrepriseInfo.codePostal} {entrepriseInfo.ville}</Text>
+                <Text>Tél: {entrepriseInfo.telephone} - Email: {entrepriseInfo.email}</Text>
+                {entrepriseInfo.siret && (
+                  <Text>SIRET: {entrepriseInfo.siret} - APE: {entrepriseInfo.codeAPE}</Text>
+                )}
+              </View>
+            </View>
+          </View>
+        )}
         
+        {/* Titre du document */}
+        <Text style={styles.title}>{documentTitle}</Text>
+        <Text style={styles.date}>Fait à {lieuData?.ville || 'N/A'}, le {formattedDate}</Text>
+        
+        {/* Contenu du contrat */}
         {template.sections.map((section, index) => (
           <View style={styles.section} key={index}>
             <Text style={styles.sectionTitle}>{section.title}</Text>
@@ -168,6 +209,7 @@ const ContratPDF = ({ template, concertData, programmateurData, artisteData, lie
           </View>
         ))}
         
+        {/* Zone de signature */}
         <View style={styles.signature}>
           <View style={styles.signatureBlock}>
             <Text style={styles.signatureTitle}>Pour l'Organisateur:</Text>
@@ -182,9 +224,23 @@ const ContratPDF = ({ template, concertData, programmateurData, artisteData, lie
           </View>
         </View>
         
-        <Text style={styles.footer}>
-          Document généré automatiquement par TourCraft le {formattedDate}
-        </Text>
+        {/* Pied de page avec mentions légales */}
+        <View style={styles.footer}>
+          {entrepriseInfo && (
+            <>
+              <Text>{entrepriseInfo.nom} - {entrepriseInfo.adresse}, {entrepriseInfo.codePostal} {entrepriseInfo.ville}</Text>
+              {entrepriseInfo.siret && (
+                <Text>SIRET: {entrepriseInfo.siret} - APE: {entrepriseInfo.codeAPE}</Text>
+              )}
+              {entrepriseInfo.mentionsLegales && (
+                <Text style={styles.legalInfo}>{entrepriseInfo.mentionsLegales}</Text>
+              )}
+            </>
+          )}
+          <Text style={styles.legalInfo}>
+            Document généré automatiquement par TourCraft le {formattedDate}
+          </Text>
+        </View>
       </Page>
     </Document>
   );

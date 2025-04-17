@@ -66,15 +66,24 @@ const ContratTemplateEditor = ({ template, onSave }) => {
   };
 
   // Fonction pour insérer une variable
-  const handleInsertVariable = (variable) => {
-    if (quillRef.current) {
-      const editor = quillRef.current.getEditor();
-      const range = editor.getSelection();
+const handleInsertVariable = (variable) => {
+  if (quillRef.current) {
+    const editor = quillRef.current.getEditor();
+    // Vérifiez si l'éditeur est initialisé et a une sélection
+    if (editor) {
+      const range = editor.getSelection(true); // 'true' pour forcer l'obtention de la dernière sélection connue
       if (range) {
+        // Insérer la variable à la position actuelle du curseur
         editor.insertText(range.index, `{${variable}}`, 'user');
+      } else {
+        // Si aucune sélection n'est active, insérer à la fin du contenu
+        const length = editor.getLength();
+        editor.insertText(length - 1, `{${variable}}`, 'user');
       }
     }
-  };
+  }
+};
+
 
   // Fonction pour enregistrer le modèle
   const handleSave = () => {

@@ -337,3 +337,68 @@
     width: 100%;
   }
 }
+/* Styles pour la section concerts associés */
+.concerts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.concert-item {
+  padding: 12px;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  transition: all 0.2s;
+}
+
+.concert-item:hover {
+  background-color: #f1f3f5;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.concert-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.concert-title {
+  font-weight: 600;
+  color: #0d6efd;
+  text-decoration: none;
+  font-size: 1.05rem;
+}
+
+.concert-title:hover {
+  text-decoration: underline;
+}
+
+.concert-date {
+  color: #6c757d;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.concert-artistes {
+  font-size: 0.9rem;
+  color: #495057;
+  margin-top: 4px;
+}
+
+.header-actions {
+  margin-left: auto;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+}
+
+.card-header h3 {
+  margin-bottom: 0;
+  margin-right: auto;
+}

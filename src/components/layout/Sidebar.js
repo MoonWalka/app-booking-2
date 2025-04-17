@@ -32,9 +32,22 @@ const Sidebar = () => {
           </Link>
         </li>
         <li className="nav-item">
+          <Link className="nav-link text-white" to="/artistes">
+            <i className="bi bi-music-note-beamed me-2"></i>
+            Artistes
+          </Link>
+        </li>
+        <li className="nav-item">
           <Link className="nav-link text-white" to="/contrats">
             <i className="bi bi-file-earmark-text me-2"></i>
             Contrats
+          </Link>
+        </li>
+        {/* Nouvel élément de menu pour les paramètres */}
+        <li className="nav-item">
+          <Link className="nav-link text-white" to="/parametres">
+            <i className="bi bi-gear me-2"></i>
+            Paramètres
           </Link>
         </li>
       </ul>

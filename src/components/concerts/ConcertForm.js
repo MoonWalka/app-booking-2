@@ -18,8 +18,64 @@ import {
   orderBy,
   limit
 } from 'firebase/firestore';
-import '../../style/concertForm.css'; // Assurez-vous de créer ce fichier CSS
+import '../../style/concertForm.css';
 import '../../style/searchDropdown.css';
+
+// Styles inline pour garantir l'affichage correct
+const headerStyle = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'flex-start',
+  marginBottom: '1.5rem',
+  position: 'relative',
+  zIndex: 10
+};
+
+const titleContainerStyle = {
+  display: 'flex',
+  flexDirection: 'column'
+};
+
+const breadcrumbStyle = {
+  display: 'flex',
+  alignItems: 'center',
+  fontSize: '0.875rem',
+  color: '#6c757d',
+  marginBottom: '0.5rem'
+};
+
+const modernTitleStyle = {
+  fontWeight: 600,
+  color: '#344767',
+  margin: 0,
+  fontSize: '1.5rem'
+};
+
+const actionButtonsStyle = {
+  display: 'flex',
+  gap: '10px',
+  position: 'relative',
+  zIndex: 20
+};
+
+const actionBtnStyle = {
+  display: 'flex',
+  alignItems: 'center',
+  padding: '0.5rem 1rem',
+  fontWeight: 500
+};
+
+const actionBtnIconStyle = {
+  marginRight: '0.5rem'
+};
+
+const formActionsStyle = {
+  display: 'flex',
+  justifyContent: 'flex-end',
+  gap: '1rem',
+  marginTop: '2rem',
+  marginBottom: '2rem'
+};
 
 const ConcertForm = () => {
   const { id } = useParams();
@@ -755,8 +811,7 @@ const ConcertForm = () => {
             date: concertData.date || null,
             lieu: concertData.lieuNom || null
           };
-          
-          // Note: arrayRemove nécessite un objet exactement identique, ce qui peut ne pas fonctionner
+                    // Note: arrayRemove nécessite un objet exactement identique, ce qui peut ne pas fonctionner
           // si les données ont changé. Une approche plus robuste serait de filtrer et reconstruire le tableau.
           const oldProgData = oldProgDoc.data();
           const updatedConcerts = (oldProgData.concertsAssocies || []).filter(c => c.id !== concertId);
@@ -932,23 +987,23 @@ const ConcertForm = () => {
   return (
     <div className="concert-form-container">
       {/* Nouveau header avec boutons d'action */}
-      <div className="details-header-container">
-        <div className="title-container">
-          <div className="breadcrumb-container mb-2">
+      <div className="details-header-container" style={headerStyle}>
+        <div className="title-container" style={titleContainerStyle}>
+          <div className="breadcrumb-container mb-2" style={breadcrumbStyle}>
             <span className="breadcrumb-item" onClick={() => navigate('/concerts')}>Concerts</span>
             <i className="bi bi-chevron-right"></i>
             <span className="breadcrumb-item active">
               {id && id !== 'nouveau' ? (formData.titre || 'Modifier le concert') : 'Nouveau concert'}
             </span>
           </div>
-          <h2 className="modern-title">
+          <h2 className="modern-title" style={modernTitleStyle}>
             {id && id !== 'nouveau' ? (formData.titre || 'Modifier le concert') : 'Ajouter un concert'}
           </h2>
         </div>
         
-        <div className="action-buttons">
-          <Link to="/concerts" className="btn btn-outline-secondary action-btn">
-            <i className="bi bi-arrow-left"></i>
+        <div className="action-buttons" style={actionButtonsStyle}>
+          <Link to="/concerts" className="btn btn-outline-secondary action-btn" style={actionBtnStyle}>
+            <i className="bi bi-arrow-left" style={actionBtnIconStyle}></i>
             <span className="btn-text">Retour</span>
           </Link>
           
@@ -956,9 +1011,10 @@ const ConcertForm = () => {
             <button 
               onClick={() => setShowDeleteConfirm(true)} 
               className="btn btn-outline-danger action-btn"
+              style={actionBtnStyle}
               disabled={isSubmitting}
             >
-              <i className="bi bi-trash"></i>
+              <i className="bi bi-trash" style={actionBtnIconStyle}></i>
               <span className="btn-text">Supprimer</span>
             </button>
           )}
@@ -1233,7 +1289,7 @@ const ConcertForm = () => {
         </div>
 
         {/* Boutons d'action en bas de formulaire */}
-        <div className="form-actions">
+        <div className="form-actions" style={formActionsStyle}>
           <button
             type="button"
             className="btn btn-outline-secondary"

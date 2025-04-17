@@ -4,8 +4,6 @@ import { useAuth } from '../../context/AuthContext';
 import '../../style/layout.css';
 import { APP_NAME } from '../../config';
 
-
-
 function Layout() {
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
@@ -61,6 +59,13 @@ function Layout() {
               <NavLink to="/artistes">
                 <i className="bi bi-music-note-beamed"></i>
                 <span>Artistes</span>
+              </NavLink>
+            </li>
+            {/* Nouvel élément pour Paramètres */}
+            <li>
+              <NavLink to="/parametres">
+                <i className="bi bi-gear"></i>
+                <span>Paramètres</span>
               </NavLink>
             </li>
           </ul>

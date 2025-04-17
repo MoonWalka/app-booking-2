@@ -12,12 +12,14 @@ const ContratGenerator = ({ concert, programmateur, artiste, lieu }) => {
   const [loading, setLoading] = useState(true);
   const [generatingPdf, setGeneratingPdf] = useState(false);
   const [pdfUrl, setPdfUrl] = useState(null);
+  const [entrepriseInfo, setEntrepriseInfo] = useState(null);
   
-  // Charger les modèles de contrat disponibles
+  // Charger les modèles de contrat disponibles et les infos d'entreprise
   useEffect(() => {
-    const fetchTemplates = async () => {
+    const fetchData = async () => {
       setLoading(true);
       try {
+        // Récupérer les modèles de contrat
         const templatesQuery = query(
           collection(db, 'contratTemplates'), 
           orderBy('name')
@@ -40,14 +42,20 @@ const ContratGenerator = ({ concert, programmateur, artiste, lieu }) => {
           setSelectedTemplateId(templatesList[0].id);
           setSelectedTemplate(templatesList[0]);
         }
+        
+        // Charger les informations de l'entreprise
+        const entrepriseDoc = await getDoc(doc(db, 'parametres', 'entreprise'));
+        if (entrepriseDoc.exists()) {
+          setEntrepriseInfo(entrepriseDoc.data());
+        }
       } catch (error) {
-        console.error('Erreur lors de la récupération des modèles:', error);
+        console.error('Erreur lors de la récupération des données:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchTemplates();
+    fetchData();
   }, []);
   
   // Mettre à jour le modèle sélectionné quand l'ID change
@@ -153,6 +161,7 @@ const ContratGenerator = ({ concert, programmateur, artiste, lieu }) => {
                   programmateurData={programmateur}
                   artisteData={artiste}
                   lieuData={lieu}
+                  entrepriseInfo={entrepriseInfo}
                 />
               }
               fileName={`Contrat_${concert.titre || 'Concert'}_${new Date().toISOString().slice(0, 10)}.pdf`}

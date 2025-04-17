@@ -66,23 +66,23 @@ const ContratTemplateEditor = ({ template, onSave }) => {
   };
 
   // Fonction pour insérer une variable
-const handleInsertVariable = (variable) => {
-  if (quillRef.current) {
-    const editor = quillRef.current.getEditor();
-    // Vérifiez si l'éditeur est initialisé et a une sélection
-    if (editor) {
-      const range = editor.getSelection(true); // 'true' pour forcer l'obtention de la dernière sélection connue
-      if (range) {
-        // Insérer la variable à la position actuelle du curseur
-        editor.insertText(range.index, `{${variable}}`, 'user');
-      } else {
-        // Si aucune sélection n'est active, insérer à la fin du contenu
-        const length = editor.getLength();
-        editor.insertText(length - 1, `{${variable}}`, 'user');
+  const handleInsertVariable = (variable) => {
+    if (quillRef.current) {
+      const editor = quillRef.current.getEditor();
+      // Vérifiez si l'éditeur est initialisé et a une sélection
+      if (editor) {
+        const range = editor.getSelection(true); // 'true' pour forcer l'obtention de la dernière sélection connue
+        if (range) {
+          // Insérer la variable à la position actuelle du curseur
+          editor.insertText(range.index, `{${variable}}`, 'user');
+        } else {
+          // Si aucune sélection n'est active, insérer à la fin du contenu
+          const length = editor.getLength();
+          editor.insertText(length - 1, `{${variable}}`, 'user');
+        }
       }
     }
-  }
-};
+  };
 
 
   // Fonction pour enregistrer le modèle
@@ -106,10 +106,51 @@ const handleInsertVariable = (variable) => {
 
   // Générer un aperçu avec des données fictives
   const getPreviewContent = () => {
-    let content = '';
+    let content = `
+      <style>
+        .preview-container {
+          font-family: Arial, sans-serif;
+          font-size: 9px;
+        }
+        .section-title {
+          font-size: 14px;
+          font-weight: bold;
+          margin-top: 15px;
+          margin-bottom: 10px;
+          background-color: #f5f5f5;
+          padding: 5px;
+        }
+      </style>
+      <div class="preview-container">
+    `;
     
+    // Simuler l'en-tête
+    content += `
+      <div style="text-align: center; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 20px; font-size: 8px;">
+        <div style="display: flex; justify-content: space-between;">
+          <div>[LOGO]</div>
+          <div style="text-align: right;">
+            <div>Nom de l'entreprise</div>
+            <div>Adresse de l'entreprise</div>
+            <div>Code postal, Ville</div>
+            <div>Tél: XX XX XX XX XX - Email: contact@example.com</div>
+            <div>SIRET: XXX XXX XXX XXXXX - APE: XXXX</div>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    // Titre du contrat
+    content += `
+      <div style="text-align: center; margin-bottom: 20px;">
+        <h1 style="font-size: 20px; font-weight: bold;">Contrat - Concert de printemps</h1>
+        <div style="text-align: right; font-size: 12px; color: #777;">Fait à Paris, le 15 mai 2023</div>
+      </div>
+    `;
+    
+    // Contenu des sections
     sections.forEach(section => {
-      content += `<h3>${section.title}</h3>`;
+      content += `<div class="section-title">${section.title}</div>`;
       let sectionContent = section.content;
       
       // Remplacer les variables par des exemples
@@ -127,6 +168,34 @@ const handleInsertVariable = (variable) => {
       
       content += sectionContent;
     });
+    
+    // Simuler la zone de signature
+    content += `
+      <div style="display: flex; justify-content: space-between; margin-top: 30px;">
+        <div style="width: 45%;">
+          <div style="margin-bottom: 50px;"><strong>Pour l'Organisateur:</strong></div>
+          <div>Jean Dupont</div>
+          <div style="border-top: 1px solid #000; margin-top: 5px;"></div>
+        </div>
+        <div style="width: 45%;">
+          <div style="margin-bottom: 50px;"><strong>Pour l'Artiste:</strong></div>
+          <div>Les Rockeurs du Dimanche</div>
+          <div style="border-top: 1px solid #000; margin-top: 5px;"></div>
+        </div>
+      </div>
+    `;
+    
+    // Simuler le pied de page
+    content += `
+      <div style="text-align: center; font-size: 8px; color: #999; border-top: 1px solid #ccc; margin-top: 30px; padding-top: 10px;">
+        <div>Nom de l'entreprise - Adresse, Code Postal Ville</div>
+        <div>SIRET: XXX XXX XXX XXXXX - APE: XXXX</div>
+        <div style="font-size: 7px; color: #999; margin-top: 5px;">Association loi 1901 non assujettie à la TVA</div>
+        <div style="font-size: 7px; color: #999;">Document généré automatiquement par TourCraft le 15/05/2025</div>
+      </div>
+    `;
+    
+    content += '</div>'; // Fermer .preview-container
     
     return content;
   };
@@ -310,55 +379,54 @@ const handleInsertVariable = (variable) => {
             </div>
             
             <div className="section-editor">
-  {sections.length > 0 && currentSectionIndex < sections.length ? (
-    <>
-      <div className="section-editor-header">
-        <div className="form-group">
-          <label htmlFor="sectionTitle">Titre de la section</label>
-          <input
-            type="text"
-            id="sectionTitle"
-            className="form-control"
-            value={sections[currentSectionIndex].title}
-            onChange={(e) => handleSectionTitleChange(currentSectionIndex, e.target.value)}
-            placeholder="Ex: Parties contractantes"
-          />
-        </div>
-      </div>
-      
-      <div className="section-editor-content">
-        <label>Contenu</label>
-        <ReactQuill
-          ref={quillRef}
-          theme="snow"
-          value={sections[currentSectionIndex].content}
-          onChange={(content) => handleSectionContentChange(currentSectionIndex, content)}
-          modules={{
-            toolbar: [
-              [{ 'header': [1, 2, 3, false] }],
-              ['bold', 'italic', 'underline', 'strike'],
-              [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-              [{ 'indent': '-1' }, { 'indent': '+1' }],
-              [{ 'align': [] }],
-              ['clean']
-            ],
-          }}
-        />
-      </div>
-    </>
-  ) : (
-    <div className="no-sections-message">
-      <p>Aucune section n'a été créée.</p>
-      <button 
-        className="btn btn-primary" 
-        onClick={handleAddSection}
-      >
-        Ajouter une section
-      </button>
-    </div>
-  )}
-</div>
-
+            {sections.length > 0 && currentSectionIndex < sections.length ? (
+              <>
+                <div className="section-editor-header">
+                  <div className="form-group">
+                    <label htmlFor="sectionTitle">Titre de la section</label>
+                    <input
+                      type="text"
+                      id="sectionTitle"
+                      className="form-control"
+                      value={sections[currentSectionIndex].title}
+                      onChange={(e) => handleSectionTitleChange(currentSectionIndex, e.target.value)}
+                      placeholder="Ex: Parties contractantes"
+                    />
+                  </div>
+                </div>
+                
+                <div className="section-editor-content">
+                  <label>Contenu</label>
+                  <ReactQuill
+                    ref={quillRef}
+                    theme="snow"
+                    value={sections[currentSectionIndex].content}
+                    onChange={(content) => handleSectionContentChange(currentSectionIndex, content)}
+                    modules={{
+                      toolbar: [
+                        [{ 'header': [1, 2, 3, false] }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                        [{ 'indent': '-1' }, { 'indent': '+1' }],
+                        [{ 'align': [] }],
+                        ['clean']
+                      ],
+                    }}
+                  />
+                </div>
+              </>
+            ) : (
+              <div className="no-sections-message">
+                <p>Aucune section n'a été créée.</p>
+                <button 
+                  className="btn btn-primary" 
+                  onClick={handleAddSection}
+                >
+                  Ajouter une section
+                </button>
+              </div>
+            )}
+          </div>
             
             <div className="variables-sidebar">
               <h4>Variables disponibles</h4>

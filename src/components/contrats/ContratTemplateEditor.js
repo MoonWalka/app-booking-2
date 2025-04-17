@@ -5,25 +5,6 @@ import 'react-quill/dist/quill.snow.css';
 import ContratVariable from './ContratVariable';
 import '../../style/contratTemplateEditor.css';
 
-const quillModules = {
-  toolbar: [
-    [{ 'header': [1, 2, 3, false] }],
-    ['bold', 'italic', 'underline', 'strike'],
-    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-    [{ 'indent': '-1' }, { 'indent': '+1' }],
-    [{ 'align': [] }],
-    ['clean']
-  ],
-};
-
-const quillFormats = [
-  'header',
-  'bold', 'italic', 'underline', 'strike',
-  'list', 'bullet',
-  'indent',
-  'align'
-];
-
 const ContratTemplateEditor = ({ template, onSave }) => {
   const navigate = useNavigate();
   const [name, setName] = useState(template?.name || 'Nouveau modèle');
@@ -31,6 +12,7 @@ const ContratTemplateEditor = ({ template, onSave }) => {
   const [isDefault, setIsDefault] = useState(template?.isDefault || false);
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [previewMode, setPreviewMode] = useState(false);
+  const [showGuide, setShowGuide] = useState(false);
   
   // Référence pour le quill editor
   const quillRef = useRef();
@@ -128,6 +110,66 @@ const ContratTemplateEditor = ({ template, onSave }) => {
     return content;
   };
 
+  // Composant pour le guide d'utilisation
+  const UserGuide = () => (
+    <div className="user-guide">
+      <div className="guide-header">
+        <h3>Mode d'emploi de l'éditeur de modèles de contrat</h3>
+        <button 
+          className="btn btn-sm btn-outline-secondary" 
+          onClick={() => setShowGuide(false)}
+        >
+          <i className="bi bi-x-lg"></i>
+        </button>
+      </div>
+      
+      <div className="guide-content">
+        <div className="guide-section">
+          <h4>1. Créer un modèle de contrat</h4>
+          <p>Les modèles de contrat vous permettent de générer rapidement des contrats professionnels pour vos concerts.</p>
+          <ul>
+            <li>Commencez par donner un nom à votre modèle</li>
+            <li>Organisez votre contrat en sections thématiques (parties contractantes, objet, rémunération...)</li>
+            <li>Cochez "Utiliser comme modèle par défaut" pour que ce modèle soit sélectionné automatiquement</li>
+          </ul>
+        </div>
+        
+        <div className="guide-section">
+          <h4>2. Ajouter et organiser des sections</h4>
+          <p>Un contrat est divisé en sections pour une meilleure organisation :</p>
+          <ul>
+            <li>Cliquez sur le bouton + dans la barre latérale pour ajouter une section</li>
+            <li>Donnez un titre explicite à chaque section</li>
+            <li>Utilisez l'éditeur de texte pour formater le contenu de chaque section</li>
+            <li>Réorganisez les sections en fonction de vos besoins</li>
+          </ul>
+        </div>
+        
+        <div className="guide-section">
+          <h4>3. Utiliser les variables dynamiques</h4>
+          <p>Les variables permettent de personnaliser automatiquement chaque contrat :</p>
+          <ul>
+            <li>Cliquez sur une variable dans la barre latérale droite pour l'insérer à l'endroit du curseur</li>
+            <li>Les variables sont remplacées par les informations réelles lors de la génération du contrat</li>
+            <li>Par exemple, {'{programmateur_nom}'} sera remplacé par le nom du programmateur associé au concert</li>
+            <li>Utilisez la fonction Aperçu pour voir comment le contrat apparaîtra avec des données d'exemple</li>
+          </ul>
+        </div>
+        
+        <div className="guide-section">
+          <h4>4. Conseils pour créer un bon modèle</h4>
+          <ul>
+            <li>Incluez toujours les sections essentielles (parties contractantes, objet, rémunération, etc.)</li>
+            <li>Utilisez une structure claire et cohérente</li>
+            <li>Utilisez les variables pour toutes les informations qui changent d'un concert à l'autre</li>
+            <li>Vérifiez l'aperçu avant d'enregistrer pour s'assurer que tout est correct</li>
+            <li>Consultez un professionnel du droit pour valider vos modèles de contrats</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="template-editor-container">
       <div className="editor-header">
@@ -139,6 +181,13 @@ const ContratTemplateEditor = ({ template, onSave }) => {
         <h2 className="editor-title">{template?.id ? 'Modifier le modèle' : 'Créer un nouveau modèle'}</h2>
         
         <div className="editor-actions">
+          <button 
+            className="btn btn-outline-info" 
+            onClick={() => setShowGuide(!showGuide)}
+          >
+            <i className="bi bi-question-circle me-2"></i>
+            {showGuide ? 'Masquer l\'aide' : 'Aide'}
+          </button>
           <button 
             className="btn btn-outline-secondary" 
             onClick={() => navigate('/parametres/contrats')}
@@ -160,6 +209,9 @@ const ContratTemplateEditor = ({ template, onSave }) => {
           </button>
         </div>
       </div>
+      
+      {/* Guide d'utilisation */}
+      {showGuide && <UserGuide />}
       
       {previewMode ? (
         <div className="template-preview">
@@ -260,8 +312,16 @@ const ContratTemplateEditor = ({ template, onSave }) => {
                       theme="snow"
                       value={sections[currentSectionIndex].content}
                       onChange={(content) => handleSectionContentChange(currentSectionIndex, content)}
-                      modules={quillModules}
-                      formats={quillFormats}
+                      modules={{
+                        toolbar: [
+                          [{ 'header': [1, 2, 3, false] }],
+                          ['bold', 'italic', 'underline', 'strike'],
+                          [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                          [{ 'indent': '-1' }, { 'indent': '+1' }],
+                          [{ 'align': [] }],
+                          ['clean']
+                        ],
+                      }}
                     />
                   </div>
                 </>

@@ -1,8 +1,5 @@
-// Au début de votre fichier ConcertForm.jsx
-import '../../style/searchDropdown.css'; // Adaptez le chemin selon votre structure
-
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { db } from '../../firebase';
 import LieuForm from '../forms/LieuForm';
 import {
@@ -20,6 +17,8 @@ import {
   orderBy,
   limit
 } from 'firebase/firestore';
+import '../../style/concertForm.css'; // Assurez-vous de créer ce fichier CSS
+import '../../style/searchDropdown.css';
 
 const ConcertForm = () => {
   const { id } = useParams();
@@ -773,168 +772,199 @@ const ConcertForm = () => {
     }
   };
 
-    // Fonction pour mettre à jour l'association entre concert et artiste
-    const updateArtisteAssociation = async (concertId, concertData, newArtisteId, oldArtisteId) => {
-      try {
-        // Si un nouvel artiste est sélectionné
-        if (newArtisteId) {
-          const artisteRef = doc(db, 'artistes', newArtisteId);
-          const artisteDoc = await getDoc(artisteRef);
-          
-          if (artisteDoc.exists()) {
-            // Créer une référence au concert
-            const concertReference = {
-              id: concertId,
-              titre: concertData.titre || 'Sans titre',
-              date: concertData.date || null,
-              lieu: concertData.lieuNom || null
-            };
-            
-            // Ajouter le concert à la liste des concerts de l'artiste
-            // Si "concerts" n'existe pas encore dans le document de l'artiste, il sera créé
-            await updateDoc(artisteRef, {
-              concerts: arrayUnion(concertReference),
-              updatedAt: new Date().toISOString()
-            });
-            console.log('Concert ajouté à la liste des concerts de l\'artiste');
-          }
-        }
+  // Fonction pour mettre à jour l'association entre concert et artiste
+  const updateArtisteAssociation = async (concertId, concertData, newArtisteId, oldArtisteId) => {
+    try {
+      // Si un nouvel artiste est sélectionné
+      if (newArtisteId) {
+        const artisteRef = doc(db, 'artistes', newArtisteId);
+        const artisteDoc = await getDoc(artisteRef);
         
-        // Si un ancien artiste était associé et a changé
-        if (oldArtisteId && oldArtisteId !== newArtisteId) {
-          const oldArtisteRef = doc(db, 'artistes', oldArtisteId);
-          const oldArtisteDoc = await getDoc(oldArtisteRef);
+        if (artisteDoc.exists()) {
+          // Créer une référence au concert
+          const concertReference = {
+            id: concertId,
+            titre: concertData.titre || 'Sans titre',
+            date: concertData.date || null,
+            lieu: concertData.lieuNom || null
+          };
           
-          if (oldArtisteDoc.exists()) {
-            // Supprimer le concert de la liste des concerts de l'ancien artiste
-            // Une approche robuste consiste à filtrer et reconstruire le tableau
-            const oldArtisteData = oldArtisteDoc.data();
-            const concerts = oldArtisteData.concerts || [];
-            const updatedConcerts = concerts.filter(c => c.id !== concertId);
-            
-            await updateDoc(oldArtisteRef, {
-              concerts: updatedConcerts,
-              updatedAt: new Date().toISOString()
-            });
-            console.log('Concert retiré de la liste des concerts de l\'ancien artiste');
-          }
+          // Ajouter le concert à la liste des concerts de l'artiste
+          // Si "concerts" n'existe pas encore dans le document de l'artiste, il sera créé
+          await updateDoc(artisteRef, {
+            concerts: arrayUnion(concertReference),
+            updatedAt: new Date().toISOString()
+          });
+          console.log('Concert ajouté à la liste des concerts de l\'artiste');
         }
-      } catch (error) {
-        console.error('Erreur lors de la mise à jour des associations artiste-concert:', error);
-        // Ne pas bloquer la sauvegarde du concert si cette étape échoue
       }
-    };
+      
+      // Si un ancien artiste était associé et a changé
+      if (oldArtisteId && oldArtisteId !== newArtisteId) {
+        const oldArtisteRef = doc(db, 'artistes', oldArtisteId);
+        const oldArtisteDoc = await getDoc(oldArtisteRef);
+        
+        if (oldArtisteDoc.exists()) {
+          // Supprimer le concert de la liste des concerts de l'ancien artiste
+          // Une approche robuste consiste à filtrer et reconstruire le tableau
+          const oldArtisteData = oldArtisteDoc.data();
+          const concerts = oldArtisteData.concerts || [];
+          const updatedConcerts = concerts.filter(c => c.id !== concertId);
+          
+          await updateDoc(oldArtisteRef, {
+            concerts: updatedConcerts,
+            updatedAt: new Date().toISOString()
+          });
+          console.log('Concert retiré de la liste des concerts de l\'ancien artiste');
+        }
+      }
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour des associations artiste-concert:', error);
+      // Ne pas bloquer la sauvegarde du concert si cette étape échoue
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
   
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      setIsSubmitting(true);
-    
-      try {
-        // Vérifier que les champs obligatoires sont remplis
-        if (!formData.date || !formData.montant || !formData.lieuId) {
-          alert('Veuillez remplir tous les champs obligatoires.');
-          setIsSubmitting(false);
-          return;
-        }
-    
-        // Correction du format de date
-        let correctedDate = formData.date;
-        if (formData.date.includes('/')) {
-          const dateParts = formData.date.split('/');
-          if (dateParts.length === 3) {
-            correctedDate = `${dateParts[2]}-${dateParts[0].padStart(2, '0')}-${dateParts[1].padStart(2, '0')}`;
-          }
-        }
-    
-        const concertData = {
-          date: correctedDate,
-          montant: formData.montant,
-          statut: formData.statut,
-          titre: formData.titre || `Concert du ${correctedDate}`, // Ajout d'un titre par défaut
-          
-          // Infos du lieu
-          lieuId: formData.lieuId,
-          lieuNom: formData.lieuNom,
-          lieuAdresse: formData.lieuAdresse,
-          lieuCodePostal: formData.lieuCodePostal,
-          lieuVille: formData.lieuVille,
-          lieuCapacite: formData.lieuCapacite,
-          
-          // Infos du programmateur
-          programmateurId: formData.programmateurId,
-          programmateurNom: formData.programmateurNom,
-          
-          // Infos de l'artiste
-          artisteId: formData.artisteId,
-          artisteNom: formData.artisteNom,
-          
-          notes: formData.notes,
-          updatedAt: new Date().toISOString()
-        };
-        
-        console.log('Données à enregistrer:', concertData);
-    
-        let concertId = id;
-        
-        if (id && id !== 'nouveau') {
-          // Mise à jour d'un concert existant
-          await updateDoc(doc(db, 'concerts', id), concertData);
-        } else {
-          // Création d'un nouveau concert
-          concertData.createdAt = new Date().toISOString();
-          const newConcertRef = doc(collection(db, 'concerts'));
-          concertId = newConcertRef.id;
-          await setDoc(newConcertRef, concertData);
-        }
-        
-        // Mise à jour bidirectionnelle : associer le concert au programmateur
-        if (formData.programmateurId || initialProgrammateurId) {
-          await updateProgrammateurAssociation(
-            concertId,
-            concertData,
-            formData.programmateurId,
-            initialProgrammateurId
-          );
-        }
-        
-        // Mise à jour bidirectionnelle : associer le concert à l'artiste
-        if (formData.artisteId || initialArtisteId) {
-          await updateArtisteAssociation(
-            concertId,
-            concertData,
-            formData.artisteId,
-            initialArtisteId
-          );
-        }
-    
-        navigate('/concerts');
-      } catch (error) {
-        console.error('Erreur lors de l\'enregistrement du concert:', error);
-        alert('Une erreur est survenue lors de l\'enregistrement du concert.');
-      } finally {
+    try {
+      // Vérifier que les champs obligatoires sont remplis
+      if (!formData.date || !formData.montant || !formData.lieuId) {
+        alert('Veuillez remplir tous les champs obligatoires.');
         setIsSubmitting(false);
+        return;
       }
-    };
   
-    if (loading) {
-      return <div>Chargement du concert...</div>;
+      // Correction du format de date
+      let correctedDate = formData.date;
+      if (formData.date.includes('/')) {
+        const dateParts = formData.date.split('/');
+        if (dateParts.length === 3) {
+          correctedDate = `${dateParts[2]}-${dateParts[0].padStart(2, '0')}-${dateParts[1].padStart(2, '0')}`;
+        }
+      }
+  
+      const concertData = {
+        date: correctedDate,
+        montant: formData.montant,
+        statut: formData.statut,
+        titre: formData.titre || `Concert du ${correctedDate}`, // Ajout d'un titre par défaut
+        
+        // Infos du lieu
+        lieuId: formData.lieuId,
+        lieuNom: formData.lieuNom,
+        lieuAdresse: formData.lieuAdresse,
+        lieuCodePostal: formData.lieuCodePostal,
+        lieuVille: formData.lieuVille,
+        lieuCapacite: formData.lieuCapacite,
+        
+        // Infos du programmateur
+        programmateurId: formData.programmateurId,
+        programmateurNom: formData.programmateurNom,
+        
+        // Infos de l'artiste
+        artisteId: formData.artisteId,
+        artisteNom: formData.artisteNom,
+        
+        notes: formData.notes,
+        updatedAt: new Date().toISOString()
+      };
+      
+      console.log('Données à enregistrer:', concertData);
+  
+      let concertId = id;
+      
+      if (id && id !== 'nouveau') {
+        // Mise à jour d'un concert existant
+        await updateDoc(doc(db, 'concerts', id), concertData);
+      } else {
+        // Création d'un nouveau concert
+        concertData.createdAt = new Date().toISOString();
+        const newConcertRef = doc(collection(db, 'concerts'));
+        concertId = newConcertRef.id;
+        await setDoc(newConcertRef, concertData);
+      }
+      
+      // Mise à jour bidirectionnelle : associer le concert au programmateur
+      if (formData.programmateurId || initialProgrammateurId) {
+        await updateProgrammateurAssociation(
+          concertId,
+          concertData,
+          formData.programmateurId,
+          initialProgrammateurId
+        );
+      }
+      
+      // Mise à jour bidirectionnelle : associer le concert à l'artiste
+      if (formData.artisteId || initialArtisteId) {
+        await updateArtisteAssociation(
+          concertId,
+          concertData,
+          formData.artisteId,
+          initialArtisteId
+        );
+      }
+  
+      navigate('/concerts');
+    } catch (error) {
+      console.error('Erreur lors de l\'enregistrement du concert:', error);
+      alert('Une erreur est survenue lors de l\'enregistrement du concert.');
+    } finally {
+      setIsSubmitting(false);
     }
-  
-    if (showLieuForm && newLieu) {
-      return (
-        <div>
-          <h2>Créer un nouveau lieu</h2>
-          <LieuForm lieu={newLieu} onSave={handleLieuCreated} />
-        </div>
-      );
-    }
-  
+  };
+
+  if (loading) {
+    return <div className="text-center my-5 loading-spinner">Chargement du concert...</div>;
+  }
+
+  if (showLieuForm && newLieu) {
     return (
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <h2>{id && id !== 'nouveau' ? 'Modifier le concert' : 'Ajouter un concert'}</h2>
+      <div>
+        <h2>Créer un nouveau lieu</h2>
+        <LieuForm lieu={newLieu} onSave={handleLieuCreated} />
+      </div>
+    );
+  }
+
+  return (
+    <div className="concert-form-container">
+      {/* Nouveau header avec boutons d'action */}
+      <div className="details-header-container">
+        <div className="title-container">
+          <div className="breadcrumb-container mb-2">
+            <span className="breadcrumb-item" onClick={() => navigate('/concerts')}>Concerts</span>
+            <i className="bi bi-chevron-right"></i>
+            <span className="breadcrumb-item active">
+              {id && id !== 'nouveau' ? (formData.titre || 'Modifier le concert') : 'Nouveau concert'}
+            </span>
+          </div>
+          <h2 className="modern-title">
+            {id && id !== 'nouveau' ? (formData.titre || 'Modifier le concert') : 'Ajouter un concert'}
+          </h2>
         </div>
-  
+        
+        <div className="action-buttons">
+          <Link to="/concerts" className="btn btn-outline-secondary action-btn">
+            <i className="bi bi-arrow-left"></i>
+            <span className="btn-text">Retour</span>
+          </Link>
+          
+          {id && id !== 'nouveau' && (
+            <button 
+              onClick={() => setShowDeleteConfirm(true)} 
+              className="btn btn-outline-danger action-btn"
+              disabled={isSubmitting}
+            >
+              <i className="bi bi-trash"></i>
+              <span className="btn-text">Supprimer</span>
+            </button>
+          )}
+        </div>
+      </div>
+
+      <form onSubmit={handleSubmit} className="modern-form">
         <div className="mb-3">
           <label htmlFor="titre" className="form-label">Titre du concert</label>
           <input
@@ -947,7 +977,7 @@ const ConcertForm = () => {
             placeholder="Ex: Concert de jazz, Festival d'été, etc."
           />
         </div>
-  
+
         <div className="mb-3">
           <label htmlFor="date" className="form-label">Date du concert *</label>
           <input
@@ -973,7 +1003,7 @@ const ConcertForm = () => {
             required
           />
         </div>
-  
+
         <div className="mb-3">
           <label htmlFor="statut" className="form-label">Statut</label>
           <select
@@ -989,7 +1019,7 @@ const ConcertForm = () => {
             <option value="Terminé">Terminé</option>
           </select>
         </div>
-  
+
         {/* Barre de recherche pour les lieux */}
         <div className="mb-3" ref={lieuDropdownRef}>
           <label htmlFor="lieuSearch" className="form-label">Lieu *</label>
@@ -1041,7 +1071,7 @@ const ConcertForm = () => {
             </div>
           )}
         </div>
-  
+
         {formData.lieuId && (
           <div className="card mb-3">
             <div className="card-body">
@@ -1054,7 +1084,7 @@ const ConcertForm = () => {
             </div>
           </div>
         )}
-  
+
         {/* Barre de recherche pour les programmateurs */}
         <div className="mb-3" ref={progDropdownRef}>
           <label htmlFor="programmateurSearch" className="form-label">Programmateur</label>
@@ -1104,7 +1134,7 @@ const ConcertForm = () => {
             </div>
           )}
         </div>
-  
+
         {formData.programmateurId && (
           <div className="card mb-3">
             <div className="card-body">
@@ -1113,7 +1143,7 @@ const ConcertForm = () => {
             </div>
           </div>
         )}
-  
+
         {/* Barre de recherche pour les artistes */}
         <div className="mb-3" ref={artisteDropdownRef}>
           <label htmlFor="artisteSearch" className="form-label">Artiste</label>
@@ -1167,7 +1197,7 @@ const ConcertForm = () => {
             </div>
           )}
         </div>
-  
+
         {selectedArtiste && (
           <div className="card mb-3">
             <div className="card-body">
@@ -1188,7 +1218,7 @@ const ConcertForm = () => {
             </div>
           </div>
         )}
-  
+
         <div className="mb-3">
           <label htmlFor="notes" className="form-label">Notes</label>
           <textarea
@@ -1200,100 +1230,68 @@ const ConcertForm = () => {
             onChange={handleChange}
           ></textarea>
         </div>
-  
-        <div className="d-flex justify-content-between">
-          <div>
-            <button
-              type="button"
-              className="btn btn-secondary me-2"
-              onClick={() => navigate('/concerts')}
-              disabled={isSubmitting}
-            >
-              Annuler
-            </button>
-            
-            {/* Bouton de suppression - visible uniquement en mode édition */}
-            {id && id !== 'nouveau' && (
-              <button
-                type="button"
-                className="btn btn-outline-danger"
-                onClick={() => setShowDeleteConfirm(true)}
-                disabled={isSubmitting}
-              >
-                <i className="bi bi-trash me-2"></i>
-                Supprimer
-              </button>
-            )}
-          </div>
-          
+
+        {/* Boutons d'action en bas de formulaire */}
+        <div className="form-actions">
+          <button
+            type="button"
+            className="btn btn-outline-secondary"
+            onClick={() => navigate('/concerts')}
+            disabled={isSubmitting}
+          >
+            <i className="bi bi-x-circle me-2"></i>
+            Annuler
+          </button>
           <button
             type="submit"
             className="btn btn-primary"
             disabled={isSubmitting}
           >
-            {isSubmitting ? 'Enregistrement...' : id && id !== 'nouveau' ? 'Enregistrer les modifications' : 'Créer le concert'}
+            {isSubmitting ? (
+              <>
+                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                Enregistrement...
+              </>
+            ) : (
+              <>
+                <i className="bi bi-check-circle me-2"></i>
+                {id && id !== 'nouveau' ? 'Enregistrer les modifications' : 'Créer le concert'}
+              </>
+            )}
           </button>
         </div>
-        
-        {/* Modale de confirmation de suppression */}
-        {showDeleteConfirm && (
-          <div className="modal-overlay" style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            zIndex: 1000
-          }}>
-            <div className="modal-confirm" style={{
-              backgroundColor: 'white',
-              borderRadius: '8px',
-              width: '400px',
-              maxWidth: '90%',
-              boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
-            }}>
-              <div className="modal-header" style={{
-                padding: '16px',
-                borderBottom: '1px solid #eee'
-              }}>
-                <h5>Confirmation de suppression</h5>
-              </div>
-              <div className="modal-body" style={{
-                padding: '16px'
-              }}>
-                <p>Êtes-vous sûr de vouloir supprimer ce concert ? Cette action est irréversible.</p>
-              </div>
-              <div className="modal-footer" style={{
-                padding: '16px',
-                borderTop: '1px solid #eee',
-                display: 'flex',
-                justifyContent: 'flex-end',
-                gap: '10px'
-              }}>
-                <button 
-                  className="btn btn-secondary"
-                  onClick={() => setShowDeleteConfirm(false)}
-                >
-                  Annuler
-                </button>
-                <button 
-                  className="btn btn-danger" 
-                  onClick={handleDelete}
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? 'Suppression...' : 'Supprimer'}
-                </button>
-              </div>
+      </form>
+      
+      {/* Modale de confirmation de suppression */}
+      {showDeleteConfirm && (
+        <div className="modal-overlay">
+          <div className="modal-confirm">
+            <div className="modal-header">
+              <h5>Confirmation de suppression</h5>
+            </div>
+            <div className="modal-body">
+              <p>Êtes-vous sûr de vouloir supprimer ce concert ? Cette action est irréversible.</p>
+            </div>
+            <div className="modal-footer">
+              <button 
+                className="btn btn-secondary"
+                onClick={() => setShowDeleteConfirm(false)}
+              >
+                Annuler
+              </button>
+              <button 
+                className="btn btn-danger" 
+                onClick={handleDelete}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Suppression...' : 'Supprimer'}
+              </button>
             </div>
           </div>
-        )}
-      </form>
-    );
-  };
-  
-  export default ConcertForm;
-  
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ConcertForm;

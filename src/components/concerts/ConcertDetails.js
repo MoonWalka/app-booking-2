@@ -598,12 +598,6 @@ const ConcertDetails = () => {
             <div className="alert alert-warning">
               <i className="bi bi-exclamation-triangle me-2"></i>
               Aucun programmateur n'est associé à ce concert.
-              <div className="mt-2">
-                <Link to={`/concerts/${id}/edit`} className="btn btn-sm btn-primary">
-                  <i className="bi bi-plus-lg me-1"></i>
-                  Ajouter un programmateur
-                </Link>
-              </div>
             </div>
           )}
         </div>

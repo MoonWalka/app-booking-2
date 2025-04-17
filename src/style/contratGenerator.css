@@ -78,4 +78,108 @@
     padding: 20px;
     text-align: center;
   }
-  
+  /* src/style/contratGenerator.css */
+
+.contrat-generator {
+  border: 1px solid #e3e3e3;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #ffffff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.contrat-generator-header {
+  background-color: #f8f9fa;
+  padding: 15px 20px;
+  border-bottom: 1px solid #e3e3e3;
+}
+
+.contrat-generator-header h4 {
+  margin: 0;
+  color: #343a40;
+  font-weight: 600;
+}
+
+.contrat-generator-form {
+  padding: 20px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  font-weight: 500;
+  margin-bottom: 8px;
+  display: block;
+  color: #495057;
+}
+
+.template-preview {
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  padding: 15px;
+}
+
+.template-preview-header {
+  margin-bottom: 10px;
+}
+
+.template-preview-header h5 {
+  font-size: 1rem;
+  color: #495057;
+  margin: 0;
+}
+
+.template-sections-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.template-section-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: white;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.section-number {
+  width: 25px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #007bff;
+  color: white;
+  border-radius: 50%;
+  margin-right: 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.section-title {
+  flex: 1;
+  color: #495057;
+}
+
+.contrat-actions {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.contrat-generator-loading {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6c757d;
+}
+
+.contrat-generator-empty {
+  padding: 20px;
+}

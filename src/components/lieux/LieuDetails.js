@@ -18,6 +18,89 @@ import { db } from '../../firebase';
 import Badge from 'react-bootstrap/Badge';
 import '../../style/lieuForm.css';
 
+//composant pour afficher concert associé
+const ConcertItem = ({ concertId, lieuId, onConcertRemoved }) => {
+  const [concert, setConcert] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchConcert = async () => {
+      try {
+        const concertDoc = await getDoc(doc(db, 'concerts', concertId));
+        if (concertDoc.exists()) {
+          setConcert({
+            id: concertDoc.id,
+            ...concertDoc.data()
+          });
+        }
+      } catch (error) {
+        console.error(`Erreur lors du chargement du concert ${concertId}:`, error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchConcert();
+  }, [concertId]);
+
+  if (loading) {
+    return (
+      <div className="concert-item loading">
+        <div className="spinner-border spinner-border-sm" role="status">
+          <span className="visually-hidden">Chargement...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (!concert) {
+    return (
+      <div className="concert-item error">
+        <div className="alert alert-warning mb-0">
+          <i className="bi bi-exclamation-triangle me-2"></i>
+          Ce concert n'existe plus ou n'a pas pu être chargé.
+        </div>
+      </div>
+    );
+  }
+
+  // Formater la date du concert
+  const formatDate = (date) => {
+    if (!date) return 'Date non spécifiée';
+    const d = date.toDate ? date.toDate() : new Date(date);
+    return d.toLocaleDateString('fr-FR', { 
+      weekday: 'long', 
+      day: 'numeric', 
+      month: 'long', 
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  return (
+    <div className="concert-item">
+      <div className="concert-details">
+        <div className="concert-header">
+          <Link to={`/concerts/${concert.id}`} className="concert-title" onClick={(e) => e.stopPropagation()}>
+            {concert.titre || 'Concert sans titre'}
+          </Link>
+          <span className="concert-date">
+            <i className="bi bi-calendar3 me-1"></i>
+            {formatDate(concert.date)}
+          </span>
+        </div>
+        {concert.artistes && concert.artistes.length > 0 && (
+          <div className="concert-artistes">
+            <i className="bi bi-music-note-beamed me-1"></i>
+            {concert.artistes.map(artiste => artiste.nom).join(', ')}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 const LieuDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -27,6 +110,18 @@ const LieuDetails = () => {
   const [loadingProgrammateur, setLoadingProgrammateur] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // Ajoutez cette fonction avec les autres fonctions de gestion
+const handleConcertRemoved = (concertId) => {
+  // Mettre à jour l'état local lorsqu'un concert est retiré
+  if (lieu && lieu.concertsAssocies) {
+    const updatedConcerts = lieu.concertsAssocies.filter(id => id !== concertId);
+    setLieu(prev => ({
+      ...prev,
+      concertsAssocies: updatedConcerts
+    }));
+  }
+};
+
   
   // États pour le formulaire
   const [formData, setFormData] = useState({
@@ -931,6 +1026,46 @@ const LieuDetails = () => {
             </div>
           </div>
         </div>
+{/* Carte - Concerts associés */}
+<div className="form-card">
+  <div className="card-header">
+    <i className="bi bi-calendar-event"></i>
+    <h3>Concerts associés</h3>
+    {!isEditing && (
+      <div className="header-actions">
+        <Link 
+          to={`/concerts/nouveau?lieuId=${lieu.id}&lieuNom=${encodeURIComponent(lieu.nom)}`} 
+          className="btn btn-sm btn-outline-primary"
+        >
+          <i className="bi bi-plus-circle me-1"></i>
+          Ajouter un concert
+        </Link>
+      </div>
+    )}
+  </div>
+  <div className="card-body">
+    {!isEditing ? (
+      <>
+        {lieu.concertsAssocies && lieu.concertsAssocies.length > 0 ? (
+          <div className="concerts-list">
+            {lieu.concertsAssocies.map((concertId, index) => (
+              <ConcertItem key={concertId} concertId={concertId} lieuId={lieu.id} onConcertRemoved={handleConcertRemoved} />
+            ))}
+          </div>
+        ) : (
+          <div className="text-muted">
+            Aucun concert n'est associé à ce lieu.
+          </div>
+        )}
+      </>
+    ) : (
+      <div className="alert alert-info">
+        <i className="bi bi-info-circle me-2"></i>
+        Pour associer des concerts à ce lieu, utilisez la page de détails du lieu après avoir enregistré les modifications.
+      </div>
+    )}
+  </div>
+</div>
 
         {/* Boutons d'action en mode édition */}
         {isEditing && (

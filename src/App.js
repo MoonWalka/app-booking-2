@@ -10,6 +10,8 @@ import ContratsPage from './pages/ContratsPage';
 import ArtistesPage from './pages/ArtistesPage';
 import ParametresPage from './pages/ParametresPage'; // Nouvel import
 import FormResponsePage from './pages/FormResponsePage';
+import ContratGenerationPage from './pages/ContratGenerationPage'; // Nouvel import
+import ContratDetailsPage from './pages/ContratDetailsPage'; // Nouvel import
 import './App.css';
 
 // Composant de protection des routes
@@ -34,12 +36,28 @@ function App() {
           {/* Routes protégées avec Layout */}
           <Route element={<Layout />}>
             <Route path="/" element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
+            
+            {/* Routes pour les concerts */}
             <Route path="/concerts/*" element={<PrivateRoute><ConcertsPage /></PrivateRoute>} />
+            
+            {/* Routes pour les programmateurs */}
             <Route path="/programmateurs/*" element={<PrivateRoute><ProgrammateursPage /></PrivateRoute>} />
+            
+            {/* Routes pour les lieux */}
             <Route path="/lieux/*" element={<PrivateRoute><LieuxPage /></PrivateRoute>} />
-            <Route path="/contrats/*" element={<PrivateRoute><ContratsPage /></PrivateRoute>} />
+            
+            {/* Routes pour les contrats */}
+            <Route path="/contrats" element={<PrivateRoute><ContratsPage /></PrivateRoute>} />
+            <Route path="/contrats/generate/:concertId" element={<PrivateRoute><ContratGenerationPage /></PrivateRoute>} />
+            <Route path="/contrats/:contratId" element={<PrivateRoute><ContratDetailsPage /></PrivateRoute>} />
+            
+            {/* Routes pour les artistes */}
             <Route path="/artistes/*" element={<PrivateRoute><ArtistesPage /></PrivateRoute>} />
-            <Route path="/parametres/*" element={<PrivateRoute><ParametresPage /></PrivateRoute>} /> {/* Nouvelle route */}
+            
+            {/* Routes pour les paramètres */}
+            <Route path="/parametres/*" element={<PrivateRoute><ParametresPage /></PrivateRoute>} />
+            
+            {/* Route pour la validation des formulaires */}
             <Route path="/formulaire/validation/:id" element={<PrivateRoute><FormResponsePage /></PrivateRoute>} />
             
             {/* Redirection par défaut */}

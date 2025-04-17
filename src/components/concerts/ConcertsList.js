@@ -6,6 +6,7 @@ import Badge from 'react-bootstrap/Badge';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import '../../style/concertsList.css';
+import { FaFileContract } from 'react-icons/fa';
 
 const ConcertsList = () => {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ const ConcertsList = () => {
   const [statusFilter, setStatusFilter] = useState('tous');
   const [concertsWithForms, setConcertsWithForms] = useState([]);
   const [unvalidatedForms, setUnvalidatedForms] = useState([]);
+  const [concertsWithContracts, setConcertsWithContracts] = useState({});
 
   useEffect(() => {
     const fetchConcertsAndForms = async () => {
@@ -69,6 +71,22 @@ const ConcertsList = () => {
         
         setConcertsWithForms(Array.from(concertsWithFormsSet));
         setUnvalidatedForms(Array.from(concertsWithUnvalidatedFormsSet));
+        const contratsRef = collection(db, 'contrats');
+        const contratsSnapshot = await getDocs(contratsRef);
+        
+        const contratsData = {};
+        
+        contratsSnapshot.forEach(doc => {
+          const contratData = doc.data();
+          if (contratData.concertId) {
+            contratsData[contratData.concertId] = {
+              id: doc.id,
+              ...contratData
+            };
+          }
+        });
+        
+        setConcertsWithContracts(contratsData);
         
         setLoading(false);
       } catch (error) {
@@ -106,6 +124,51 @@ const ConcertsList = () => {
     
     setFilteredConcerts(results);
   }, [searchTerm, statusFilter, concerts]);
+
+  // NOUVELLE FONCTION: Vérifier si un concert a un contrat
+  const hasContract = (concertId) => {
+    return concertsWithContracts[concertId] !== undefined;
+  };
+  
+  // NOUVELLE FONCTION: Obtenir le statut du contrat
+  const getContractStatus = (concertId) => {
+    if (!hasContract(concertId)) return null;
+    return concertsWithContracts[concertId].status || 'generated';
+  };
+  
+  // NOUVELLE FONCTION: Obtenir la variante du bouton contrat
+  const getContractButtonVariant = (concertId) => {
+    const status = getContractStatus(concertId);
+    if (!status) return 'outline-primary';
+    
+    switch (status) {
+      case 'signed':
+        return 'success';
+      case 'sent':
+        return 'success';
+      case 'generated':
+        return 'warning';
+      default:
+        return 'outline-primary';
+    }
+  };
+  
+  // NOUVELLE FONCTION: Obtenir le texte de l'info-bulle
+  const getContractTooltip = (concertId) => {
+    const status = getContractStatus(concertId);
+    if (!status) return 'Aucun contrat généré';
+    
+    switch (status) {
+      case 'signed':
+        return 'Contrat signé';
+      case 'sent':
+        return 'Contrat envoyé';
+      case 'generated':
+        return 'Contrat généré mais non envoyé';
+      default:
+        return 'Statut inconnu';
+    }
+  };
 
   // Fonction pour formater la date au format français
   const formatDateFr = (dateString) => {
@@ -356,7 +419,7 @@ const ConcertsList = () => {
           Ajouter un concert
         </Link>
       </div>
-
+  
       <div className="search-filter-container mb-4">
         <div className="search-bar">
           <div className="input-group">
@@ -381,7 +444,7 @@ const ConcertsList = () => {
           </div>
         </div>
       </div>
-
+  
       <div className="status-filter-tabs mb-4">
         <button 
           className={`status-tab ${statusFilter === 'tous' ? 'active' : ''}`}
@@ -403,7 +466,7 @@ const ConcertsList = () => {
           );
         })}
       </div>
-
+  
       {filteredConcerts.length === 0 ? (
         <div className="alert alert-info modern-alert">
           <div className="d-flex align-items-center">
@@ -512,6 +575,30 @@ const ConcertsList = () => {
                           onClick={() => navigate(`/concerts/${concert.id}?openFormGenerator=true`)}
                         />
                       )}
+                      
+                      {/* NOUVEAU BOUTON DE CONTRAT */}
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={
+                          <Tooltip>
+                            {hasContract(concert.id) 
+                              ? getContractTooltip(concert.id) 
+                              : "Générer un contrat"}
+                          </Tooltip>
+                        }
+                      >
+                        <Link 
+                          to={hasContract(concert.id) 
+                            ? `/contrats/${concertsWithContracts[concert.id].id}` 
+                            : `/contrats/generate/${concert.id}`}
+                          onClick={(e) => e.stopPropagation()}
+                          className={`btn btn-${getContractButtonVariant(concert.id)} btn-icon modern-btn`}
+                        >
+                          <i className="bi bi-file-earmark-text"></i>
+                        </Link>
+                      </OverlayTrigger>
+                      {/* FIN DU NOUVEAU BOUTON */}
+                      
                     </div>
                   </td>
                 </tr>
@@ -581,6 +668,40 @@ const ConcertsList = () => {
           display: flex;
           align-items: center;
           color: #6610f2;
+        }
+        
+        /* Styles pour le bouton de contrat */
+        .btn-icon.modern-btn {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 32px;
+          height: 32px;
+          padding: 0;
+          border-radius: 4px;
+          margin-right: 5px;
+        }
+        
+        .btn-warning {
+          background-color: #ffc107;
+          border-color: #ffc107;
+          color: #212529;
+        }
+        
+        .btn-success {
+          background-color: #28a745;
+          border-color: #28a745;
+          color: white;
+        }
+        
+        .btn-outline-primary {
+          color: #007bff;
+          border-color: #007bff;
+        }
+        
+        .btn-outline-primary:hover {
+          background-color: #007bff;
+          color: white;
         }
       `}</style>
     </div>

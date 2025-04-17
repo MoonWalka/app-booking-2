@@ -573,3 +573,24 @@
     width: 100%;
   }
 }
+/* Ajoutez ces styles à la fin de votre fichier CSS */
+.details-header-container {
+  position: relative;
+  z-index: 10; /* Augmenter le z-index pour s'assurer que les boutons sont au-dessus */
+  margin-bottom: 1.5rem; /* Augmenter légèrement la marge inférieure */
+}
+
+.action-buttons {
+  position: relative;
+  z-index: 20; /* Assurer que les boutons d'action sont au-dessus de tout */
+}
+
+.form-card {
+  position: relative;
+  z-index: 1; /* Réduire le z-index des cartes pour qu'elles restent en arrière-plan */
+  margin-top: 0.5rem; /* Ajouter une petite marge supérieure à chaque carte */
+}
+
+.form-card:first-of-type {
+  margin-top: 1rem; /* Plus grande marge pour la première carte */
+}

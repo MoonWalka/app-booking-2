@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../../firebase';
-import { doc, getDoc, updateDoc, collection, query, where, getDocs, Timestamp } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, collection, query, where, getDocs, addDoc, Timestamp } from 'firebase/firestore';
 
 function FormValidationInterface() {
   const { id } = useParams(); // Ici, id est l'ID du concert
@@ -172,6 +172,7 @@ function FormValidationInterface() {
         
         // Si la soumission contient des données de lieu, les prendre en compte après
         if (formDocData.lieuData) {
+          console.log("Données de lieu trouvées dans la soumission:", formDocData.lieuData);
           lieuFields.forEach(field => {
             if (formDocData.lieuData[field.id]) {
               initialValues[`lieu.${field.id}`] = formDocData.lieuData[field.id];
@@ -280,7 +281,11 @@ function FormValidationInterface() {
       await updateDoc(doc(db, 'concerts', id), concertUpdates);
       
       // 3. Si un programmateur est associé, mettre à jour ses informations
-      if (formData.programmId) {
+      // Vérifier si un programmateur existant est associé
+      let programmId = formData.programmId;
+      
+      if (programmId) {
+        // Si programmateur existant, mise à jour
         const programmUpdateData = {};
         
         // Traiter les champs contact
@@ -308,7 +313,49 @@ function FormValidationInterface() {
         // Ajouter timestamp de mise à jour
         programmUpdateData.updatedAt = Timestamp.now();
         
-        await updateDoc(doc(db, 'programmateurs', formData.programmId), programmUpdateData);
+        await updateDoc(doc(db, 'programmateurs', programmId), programmUpdateData);
+      } else {
+        // Si pas de programmateur existant, on en crée un nouveau
+        const newProgrammateurData = {};
+        
+        // Extraire les champs validés
+        contactFields.forEach(field => {
+          const fieldPath = `contact.${field.id}`;
+          if (validatedFields[fieldPath] !== undefined) {
+            // L'email n'est plus obligatoire pour la création d'un programmateur
+            newProgrammateurData[field.id] = validatedFields[fieldPath] || '';
+          }
+        });
+        
+        structureFields.forEach(field => {
+          const fieldPath = `structure.${field.id}`;
+          if (validatedFields[fieldPath] !== undefined) {
+            if (field.id === 'raisonSociale') {
+              newProgrammateurData.structure = validatedFields[fieldPath];
+            } else if (['type', 'adresse', 'codePostal', 'ville', 'pays'].includes(field.id)) {
+              newProgrammateurData[`structure${field.id.charAt(0).toUpperCase() + field.id.slice(1)}`] = validatedFields[fieldPath];
+            } else {
+              newProgrammateurData[field.id] = validatedFields[fieldPath];
+            }
+          }
+        });
+        
+        // Ajouter timestamps
+        newProgrammateurData.createdAt = Timestamp.now();
+        newProgrammateurData.updatedAt = Timestamp.now();
+        
+        // Créer le nouveau programmateur
+        const newProgRef = await addDoc(collection(db, 'programmateurs'), newProgrammateurData);
+        
+        // Mettre à jour la soumission avec l'ID du programmateur créé
+        await updateDoc(doc(db, 'formSubmissions', formId), {
+          programmId: newProgRef.id
+        });
+        
+        // Mettre à jour le concert avec l'ID du programmateur
+        await updateDoc(doc(db, 'concerts', id), {
+          programmateurId: newProgRef.id
+        });
       }
       
       // 4. Si un lieu est associé, mettre à jour ses informations
@@ -323,10 +370,50 @@ function FormValidationInterface() {
           }
         });
         
+        // Ajouter les coordonnées si disponibles
+        if (formData.lieuData && formData.lieuData.latitude && formData.lieuData.longitude) {
+          lieuUpdateData.latitude = formData.lieuData.latitude;
+          lieuUpdateData.longitude = formData.lieuData.longitude;
+        }
+        
         // Ajouter timestamp de mise à jour
         lieuUpdateData.updatedAt = Timestamp.now();
         
-        await updateDoc(doc(db, 'lieux', concert.lieuId), lieuUpdateData);
+        // Ne mettre à jour que si des changements sont présents
+        if (Object.keys(lieuUpdateData).length > 0) {
+          console.log("Mise à jour du lieu avec les données:", lieuUpdateData);
+          await updateDoc(doc(db, 'lieux', concert.lieuId), lieuUpdateData);
+        }
+      } else if (validatedFields['lieu.nom'] && validatedFields['lieu.ville']) {
+        // Si aucun lieu n'est associé mais que des informations sont présentes, créer un nouveau lieu
+        const newLieuData = {};
+        
+        lieuFields.forEach(field => {
+          const fieldPath = `lieu.${field.id}`;
+          if (validatedFields[fieldPath]) {
+            newLieuData[field.id] = validatedFields[fieldPath];
+          }
+        });
+        
+        // Ajouter les coordonnées si disponibles
+        if (formData.lieuData && formData.lieuData.latitude && formData.lieuData.longitude) {
+          newLieuData.latitude = formData.lieuData.latitude;
+          newLieuData.longitude = formData.lieuData.longitude;
+        }
+        
+        // Ajouter timestamps
+        newLieuData.createdAt = Timestamp.now();
+        newLieuData.updatedAt = Timestamp.now();
+        
+        // Créer le nouveau lieu
+        const newLieuRef = await addDoc(collection(db, 'lieux'), newLieuData);
+        
+        // Mettre à jour le concert avec l'ID du lieu
+        await updateDoc(doc(db, 'concerts', id), {
+          lieuId: newLieuRef.id,
+          lieuNom: newLieuData.nom,
+          lieuVille: newLieuData.ville
+        });
       }
       
       setValidated(true);
@@ -626,7 +713,7 @@ function FormValidationInterface() {
                           onChange={(e) => handleValidateField('contact', field.id, e.target.value)}
                           disabled={isAlreadyValidated}
                         />
-                      </td>
+                                              </td>
                     </tr>
                   );
                 })}
@@ -675,14 +762,36 @@ function FormValidationInterface() {
                       
                       // Utiliser programmateurData si disponible
                       if (formData.programmateurData) {
-                        formValue = formData.programmateurData[fieldKey] || '';
+                        formValue = formData.programmateurData[fieldKey] || formData.programmateurData[field.id] || '';
                       } else if (formData.data) {
-                        formValue = formData.data[field.id] || '';
+                        formValue = formData.data[fieldKey] || formData.data[field.id] || '';
                       }
                     } else {
                       existingValue = programmateur[field.id] || '';
                       
                       // Utiliser programmateurData si disponible
+                      if (formData.programmateurData) {
+                        formValue = formData.programmateurData[field.id] || '';
+                      } else if (formData.data) {
+                        formValue = formData.data[field.id] || '';
+                      }
+                    }
+                  } else {
+                    // Si pas de programmateur existant, chercher uniquement dans les données du formulaire
+                    if (field.id === 'raisonSociale') {
+                      if (formData.programmateurData) {
+                        formValue = formData.programmateurData.structure || '';
+                      } else if (formData.data) {
+                        formValue = formData.data.structure || formData.data[field.id] || '';
+                      }
+                    } else if (['type', 'adresse', 'codePostal', 'ville', 'pays'].includes(field.id)) {
+                      if (formData.programmateurData) {
+                        const fieldKey = `structure${field.id.charAt(0).toUpperCase() + field.id.slice(1)}`;
+                        formValue = formData.programmateurData[fieldKey] || formData.programmateurData[field.id] || '';
+                      } else if (formData.data) {
+                        formValue = formData.data[field.id] || '';
+                      }
+                    } else {
                       if (formData.programmateurData) {
                         formValue = formData.programmateurData[field.id] || '';
                       } else if (formData.data) {
@@ -723,6 +832,7 @@ function FormValidationInterface() {
           </div>
         </div>
       </div>
+      
       {/* Bouton de validation final - seulement visible si pas encore validé */}
       {!isAlreadyValidated && !validated && (
         <div className="d-flex justify-content-center mt-4 mb-5">

@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Form, Button, Row, Col, Alert } from 'react-bootstrap';
-import { collection, addDoc, updateDoc, doc, getDoc, query, where, getDocs, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, query, where, getDocs, doc, getDoc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebase';
+import { useLocationIQ } from '../../hooks/useLocationIQ';
 import '../../style/formPublic.css';
 
 const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) => {
@@ -21,13 +22,15 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
     codeAPE: ''
   });
   
-  // États pour les informations du lieu (si besoin de les modifier)
+  // États pour les informations du lieu
   const [lieuData, setLieuData] = useState({
     nom: '',
     adresse: '',
     codePostal: '',
     ville: '',
-    capacite: ''
+    capacite: '',
+    latitude: null,
+    longitude: null
   });
 
   // États pour la recherche d'entreprise
@@ -38,12 +41,19 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
   const companySearchTimeoutRef = useRef(null);
   const companySearchResultsRef = useRef(null);
   
-  // États pour l'auto-complétion d'adresse
+  // États pour l'auto-complétion d'adresse de structure
   const [addressSuggestions, setAddressSuggestions] = useState([]);
   const [isSearchingAddress, setIsSearchingAddress] = useState(false);
   const addressTimeoutRef = useRef(null);
   const addressInputRef = useRef(null);
   const suggestionsRef = useRef(null);
+  
+  // États pour l'auto-complétion d'adresse de lieu
+  const [lieuAddressSuggestions, setLieuAddressSuggestions] = useState([]);
+  const [isSearchingLieuAddress, setIsSearchingLieuAddress] = useState(false);
+  const lieuAddressTimeoutRef = useRef(null);
+  const lieuAddressInputRef = useRef(null);
+  const lieuSuggestionsRef = useRef(null);
   
   // États pour la gestion du formulaire
   const [existingProgrammId, setExistingProgrammId] = useState(null);
@@ -52,6 +62,9 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
   const [success, setSuccess] = useState(false);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(true);
+  
+  // Utilisation du hook LocationIQ pour l'autocomplétion d'adresse
+  const { isLoading: isApiLoading, error: apiError, searchAddress } = useLocationIQ();
   
   // Chercher si ce formulaire a déjà été rempli pour pré-remplir les données
   useEffect(() => {
@@ -98,6 +111,67 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
           // Si la soumission contient des données de lieu, les utiliser
           if (latestSubmission.lieuData) {
             setLieuData(latestSubmission.lieuData);
+          }
+        }
+        
+        // Ajouter cette partie pour rechercher les informations de contact par concertId
+        if (concertId) {
+          const concertDoc = await getDoc(doc(db, 'concerts', concertId));
+          if (concertDoc.exists()) {
+            const concertData = concertDoc.data();
+            
+            // Si le concert a un programmateur associé
+            if (concertData.programmateurId) {
+              const progDoc = await getDoc(doc(db, 'programmateurs', concertData.programmateurId));
+              if (progDoc.exists()) {
+                const progData = progDoc.data();
+                
+                // Pré-remplir les champs avec les infos existantes s'ils ne sont pas déjà remplis
+                setFormData(prev => ({
+                  ...prev,
+                  nom: prev.nom || progData.nom || '',
+                  prenom: prev.prenom || progData.prenom || '',
+                  email: prev.email || progData.email || '',
+                  telephone: prev.telephone || progData.telephone || '',
+                  fonction: prev.fonction || progData.fonction || ''
+                  // Vous pouvez ajouter d'autres champs ici si nécessaire
+                }));
+                
+                // Sauvegarder l'ID du programmateur
+                setExistingProgrammId(concertData.programmateurId);
+              }
+            } else {
+              // Si le concert n'a pas de programmateur associé, mais a des informations de contact
+              // Par exemple, si ces champs sont stockés directement dans le concert
+              if (concertData.programmateurEmail) {
+                setFormData(prev => ({
+                  ...prev,
+                  nom: prev.nom || concertData.programmateurNom || '',
+                  prenom: prev.prenom || concertData.programmateurPrenom || '',
+                  email: prev.email || concertData.programmateurEmail || '',
+                  telephone: prev.telephone || concertData.programmateurTelephone || '',
+                  fonction: prev.fonction || concertData.programmateurFonction || ''
+                }));
+              }
+            }
+            
+            // Si des données du lieu sont disponibles via le concertId, les récupérer également
+            if (concertData.lieuId) {
+              const lieuDoc = await getDoc(doc(db, 'lieux', concertData.lieuId));
+              if (lieuDoc.exists()) {
+                const lieuInfo = lieuDoc.data();
+                // Pré-remplir les champs du lieu avec les infos existantes s'ils ne sont pas déjà remplis
+                setLieuData(prev => ({
+                  nom: prev.nom || lieuInfo.nom || '',
+                  adresse: prev.adresse || lieuInfo.adresse || '',
+                  codePostal: prev.codePostal || lieuInfo.codePostal || '',
+                  ville: prev.ville || lieuInfo.ville || '',
+                  capacite: prev.capacite || lieuInfo.capacite || '',
+                  latitude: prev.latitude || lieuInfo.latitude || null,
+                  longitude: prev.longitude || lieuInfo.longitude || null
+                }));
+              }
+            }
           }
         }
       } catch (error) {
@@ -192,26 +266,24 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
     };
   }, [searchTerm, searchType]);
 
-  // Effet pour la recherche d'adresse (si vous utilisez une API d'auto-complétion)
+  // Effet pour la recherche d'adresse de structure
   useEffect(() => {
     if (addressTimeoutRef.current) {
       clearTimeout(addressTimeoutRef.current);
     }
     
-    const searchAddress = async () => {
-      // Insérez ici votre logique de recherche d'adresse avec l'API de votre choix
-      // Par exemple, utilisation de useLocationIQ comme mentionné précédemment
+    const handleSearch = async () => {
+      if (!formData.structureAdresse || formData.structureAdresse.length < 3 || isApiLoading) {
+        setAddressSuggestions([]);
+        return;
+      }
       
-      // Exemple simplifié (à remplacer par l'implémentation réelle)
       setIsSearchingAddress(true);
       
       try {
-        // Simuler un appel API
-        await new Promise(resolve => setTimeout(resolve, 500));
-        
-        // Remplacer par l'implémentation réelle
-        const mockResults = [];
-        setAddressSuggestions(mockResults);
+        // Appeler la fonction du hook
+        const results = await searchAddress(formData.structureAdresse);
+        setAddressSuggestions(results || []);
       } catch (error) {
         console.error("Erreur lors de la recherche d'adresse:", error);
         setAddressSuggestions([]);
@@ -220,9 +292,9 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
       }
     };
     
-    // Si vous avez une recherche d'adresse active
-    if (formData.structureAdresse && formData.structureAdresse.length >= 3 && searchType === 'manual') {
-      addressTimeoutRef.current = setTimeout(searchAddress, 300);
+    // N'effectuer la recherche que si l'adresse a au moins 3 caractères
+    if (formData.structureAdresse && formData.structureAdresse.length >= 3 && !isApiLoading && searchType === 'manual') {
+      addressTimeoutRef.current = setTimeout(handleSearch, 300);
     } else {
       setAddressSuggestions([]);
     }
@@ -232,7 +304,74 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
         clearTimeout(addressTimeoutRef.current);
       }
     };
-  }, [formData.structureAdresse, searchType]);
+  }, [formData.structureAdresse, isApiLoading, searchAddress, searchType]);
+
+  // Effet pour la recherche d'adresse de lieu
+  useEffect(() => {
+    if (lieuAddressTimeoutRef.current) {
+      clearTimeout(lieuAddressTimeoutRef.current);
+    }
+    
+    const searchLieuAddress = async () => {
+      if (!lieuData.adresse || lieuData.adresse.length < 3 || isApiLoading) {
+        setLieuAddressSuggestions([]);
+        return;
+      }
+      
+      setIsSearchingLieuAddress(true);
+      
+      try {
+        // Appeler la fonction du hook
+        const results = await searchAddress(lieuData.adresse);
+        setLieuAddressSuggestions(results || []);
+      } catch (error) {
+        console.error("Erreur lors de la recherche d'adresse pour le lieu:", error);
+        setLieuAddressSuggestions([]);
+      } finally {
+        setIsSearchingLieuAddress(false);
+      }
+    };
+    
+    // N'effectuer la recherche que si l'adresse a au moins 3 caractères
+    if (lieuData.adresse && lieuData.adresse.length >= 3 && !isApiLoading) {
+      lieuAddressTimeoutRef.current = setTimeout(searchLieuAddress, 300);
+    } else {
+      setLieuAddressSuggestions([]);
+    }
+    
+    return () => {
+      if (lieuAddressTimeoutRef.current) {
+        clearTimeout(lieuAddressTimeoutRef.current);
+      }
+    };
+  }, [lieuData.adresse, isApiLoading, searchAddress]);
+
+  // Gestionnaire de clic extérieur pour fermer les suggestions d'adresse
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // Pour les suggestions d'adresse de structure
+      if (suggestionsRef.current && !suggestionsRef.current.contains(event.target) && 
+          addressInputRef.current && !addressInputRef.current.contains(event.target)) {
+        setAddressSuggestions([]);
+      }
+      
+      // Pour les suggestions d'adresse de lieu
+      if (lieuSuggestionsRef.current && !lieuSuggestionsRef.current.contains(event.target) && 
+          lieuAddressInputRef.current && !lieuAddressInputRef.current.contains(event.target)) {
+        setLieuAddressSuggestions([]);
+      }
+      
+      // Pour les résultats de recherche d'entreprise
+      if (companySearchResultsRef.current && !companySearchResultsRef.current.contains(event.target)) {
+        setSearchResults([]);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   // Gestionnaire de changement de champ
   const handleChange = (e) => {
@@ -269,6 +408,72 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
     setSearchType('manual'); // Revenir au mode manuel après sélection
   };
 
+  // Sélectionner une adresse pour la structure
+  const handleSelectAddress = (address) => {
+    let codePostal = '';
+    let ville = '';
+    let adresse = '';
+    
+    // Extraire les composants d'adresse
+    if (address.address) {
+      // Extraire le code postal
+      codePostal = address.address.postcode || '';
+      
+      // Extraire la ville
+      ville = address.address.city || address.address.town || address.address.village || '';
+      
+      // Construire l'adresse de rue
+      const houseNumber = address.address.house_number || '';
+      const road = address.address.road || '';
+      adresse = `${houseNumber} ${road}`.trim();
+    }
+    
+    // Mettre à jour le state avec les informations d'adresse
+    setFormData(prev => ({
+      ...prev,
+      structureAdresse: adresse || address.display_name.split(',')[0],
+      structureCodePostal: codePostal,
+      structureVille: ville
+    }));
+    
+    // Fermer les suggestions
+    setAddressSuggestions([]);
+  };
+
+  // Sélectionner une adresse pour le lieu
+  const handleSelectLieuAddress = (address) => {
+    let codePostal = '';
+    let ville = '';
+    let adresse = '';
+    
+    // Extraire les composants d'adresse
+    if (address.address) {
+      // Extraire le code postal
+      codePostal = address.address.postcode || '';
+      
+      // Extraire la ville
+      ville = address.address.city || address.address.town || address.address.village || '';
+      
+      // Construire l'adresse de rue
+      const houseNumber = address.address.house_number || '';
+      const road = address.address.road || '';
+      adresse = `${houseNumber} ${road}`.trim();
+    }
+    
+    // Mettre à jour le state avec les informations d'adresse
+    setLieuData(prev => ({
+      ...prev,
+      adresse: adresse || address.display_name.split(',')[0],
+      codePostal,
+      ville,
+      latitude: address.lat,
+      longitude: address.lon
+    }));
+    
+    // Fermer les suggestions
+    setLieuAddressSuggestions([]);
+  };
+
   // Valider le formulaire
   const validateForm = () => {
     const newErrors = {};
@@ -276,10 +481,12 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
     // Validation des champs requis
     if (!formData.nom.trim()) newErrors.nom = 'Le nom est requis';
     if (!formData.prenom.trim()) newErrors.prenom = 'Le prénom est requis';
-    if (!formData.email.trim()) newErrors.email = 'L\'email est requis';
+    
+    // L'email n'est plus requis, mais on valide quand même son format s'il est fourni
     if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Adresse email invalide';
+      newErrors.email = "Format d'adresse email invalide";
     }
+    
     if (!formData.structure.trim()) newErrors.structure = 'Le nom de la structure est requis';
     
     setErrors(newErrors);
@@ -301,34 +508,45 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
     try {
       let programmId = existingProgrammId;
       
-      // Si nous n'avons pas d'ID de programmateur, essayons de trouver un programmateur existant par email
+      // Si nous n'avons pas d'ID de programmateur, essayons de trouver un programmateur existant
       if (!programmId) {
-        const programmateursQuery = query(
-          collection(db, 'programmateurs'),
-          where('email', '==', formData.email)
-        );
-        
-        const programmateursSnapshot = await getDocs(programmateursQuery);
-        
-        if (!programmateursSnapshot.empty) {
-          // On a trouvé un programmateur existant, on utilise son ID
-          programmId = programmateursSnapshot.docs[0].id;
+        // Si un email est fourni, rechercher par email
+        if (formData.email) {
+          const programmateursQuery = query(
+            collection(db, 'programmateurs'),
+            where('email', '==', formData.email)
+          );
+          
+          const programmateursSnapshot = await getDocs(programmateursQuery);
+          
+          if (!programmateursSnapshot.empty) {
+            // On a trouvé un programmateur existant, on utilise son ID
+            programmId = programmateursSnapshot.docs[0].id;
+          }
         } else {
-          // Créer un nouveau programmateur
+          // Si pas d'email, rechercher par nom et prénom
+          const programmateursQuery = query(
+            collection(db, 'programmateurs'),
+            where('nom', '==', formData.nom),
+            where('prenom', '==', formData.prenom)
+          );
+          
+          const programmateursSnapshot = await getDocs(programmateursQuery);
+          
+          if (!programmateursSnapshot.empty) {
+            // On a trouvé un programmateur existant, on utilise son ID
+            programmId = programmateursSnapshot.docs[0].id;
+          }
+        }
+        
+        // Si aucun programmateur existant n'a été trouvé, en créer un nouveau
+        if (!programmId) {
+          // Créer un nouveau programmateur avec uniquement les informations minimales
+          // Les informations complètes seront ajoutées après validation
           const programmateurData = {
             nom: formData.nom,
             prenom: formData.prenom,
-            fonction: formData.fonction,
-            email: formData.email,
-            telephone: formData.telephone,
-            structure: formData.structure,
-            structureType: formData.structureType,
-            structureAdresse: formData.structureAdresse,
-            structureCodePostal: formData.structureCodePostal,
-            structureVille: formData.structureVille,
-            structurePays: formData.structurePays,
-            siret: formData.siret,
-            codeAPE: formData.codeAPE,
+            email: formData.email || '', // Utiliser une chaîne vide si pas d'email
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp()
           };
@@ -336,24 +554,6 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
           const docRef = await addDoc(collection(db, 'programmateurs'), programmateurData);
           programmId = docRef.id;
         }
-      } else {
-        // Mettre à jour le programmateur existant
-        await updateDoc(doc(db, 'programmateurs', programmId), {
-          nom: formData.nom,
-          prenom: formData.prenom,
-          fonction: formData.fonction,
-          email: formData.email,
-          telephone: formData.telephone,
-          structure: formData.structure,
-          structureType: formData.structureType,
-          structureAdresse: formData.structureAdresse,
-          structureCodePostal: formData.structureCodePostal,
-          structureVille: formData.structureVille,
-          structurePays: formData.structurePays,
-          siret: formData.siret,
-          codeAPE: formData.codeAPE,
-          updatedAt: serverTimestamp()
-        });
       }
       
       // Préparation des données pour la soumission
@@ -363,7 +563,7 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
         programmateurData: { ...formData },
         lieuData: { ...lieuData }, // Ajouter les données du lieu
         submittedAt: serverTimestamp(),
-        status: 'submitted'
+        status: 'submitted' // En attente de validation
       };
       
       // Créer la soumission
@@ -391,11 +591,12 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
   if (loading) {
     return (
       <div className="text-center my-4">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Chargement...</span>
-        </div>
-        <p className="mt-2">Chargement du formulaire...</p>
-      </div>
+  <div className="spinner-border text-primary" role="status">
+    <span className="visually-hidden">Chargement...</span>
+  </div>
+  <p className="mt-2">Chargement du formulaire...</p>
+</div>
+
     );
   }
 
@@ -419,6 +620,34 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
       </div>
     );
   }
+
+  // Styles pour les suggestions d'adresse
+  const suggestionsStyle = {
+    position: 'absolute',
+    width: '100%',
+    maxHeight: '200px',
+    overflowY: 'auto',
+    zIndex: 1000,
+    backgroundColor: 'white',
+    border: '1px solid #ced4da',
+    borderRadius: '0 0 4px 4px',
+    boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+    marginTop: '-1px'
+  };
+
+  const suggestionItemStyle = {
+    padding: '10px 15px',
+    display: 'flex',
+    alignItems: 'center',
+    cursor: 'pointer',
+    borderBottom: '1px solid #f0f0f0',
+    hoverBgColor: '#f8f9fa'
+  };
+
+  const suggestionIconStyle = {
+    marginRight: '10px',
+    color: '#007bff'
+  };
 
   return (
     <Form onSubmit={handleSubmit} className="programmer-form">
@@ -484,18 +713,20 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
           <Row>
             <Col md={6}>
               <Form.Group className="mb-3">
-                <Form.Label>Email <span className="text-danger">*</span></Form.Label>
+                <Form.Label>Email</Form.Label>
                 <Form.Control
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
                   isInvalid={!!errors.email}
-                  required
                 />
                 <Form.Control.Feedback type="invalid">
                   {errors.email}
                 </Form.Control.Feedback>
+                <Form.Text className="text-muted">
+                  Facultatif, mais recommandé pour les communications futures.
+                </Form.Text>
               </Form.Group>
             </Col>
             <Col md={6}>
@@ -582,44 +813,58 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
                 
                 {/* Résultats de recherche d'entreprise */}
                 {searchResults.length > 0 && (
-                  <div ref={companySearchResultsRef} className="position-absolute w-100 bg-white border rounded shadow-sm" style={{ zIndex: 1000 }}>
+                  <div 
+                    ref={companySearchResultsRef} 
+                    className="position-absolute w-100 bg-white border rounded shadow-sm"
+                    style={{ zIndex: 1000 }}
+                  >
                     {searchResults.map((company, index) => (
                       <div
                         key={index}
-                        className="p-3 border-bottom hover-bg-light cursor-pointer d-flex"
+                        className="p-3 border-bottom"
                         onClick={() => handleSelectCompany(company)}
                         style={{ cursor: 'pointer' }}
+                        onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#f8f9fa'}
+                        onMouseOut={(e) => e.currentTarget.style.backgroundColor = ''}
                       >
-                        <div className="me-2 text-primary">
-                          <i className="bi bi-building-fill"></i>
-                        </div>
-                        <div className="flex-grow-1">
-                          <div className="fw-bold">{company.nom}</div>
-                          <div className="small text-muted">
-                            {company.adresse && `${company.adresse}, `}{company.codePostal} {company.ville}
+                        <div className="d-flex">
+                          <div className="me-2 text-primary">
+                            <i className="bi bi-building-fill"></i>
                           </div>
-                          <div className="small text-muted">
-                            {company.siren && `SIREN: ${company.siren} • `}
-                            {company.siret && `SIRET: ${company.siret} • `}
-                            {company.codeAPE && `APE: ${company.codeAPE}`}
+                          <div className="flex-grow-1">
+                            <div className="fw-bold">{company.nom}</div>
+                            <div className="small text-muted">
+                              {company.adresse && `${company.adresse}, `}{company.codePostal} {company.ville}
+                            </div>
+                            <div className="small text-muted">
+                              {company.siren && `SIREN: ${company.siren} • `}
+                              {company.siret && `SIRET: ${company.siret} • `}
+                              {company.codeAPE && `APE: ${company.codeAPE}`}
+                            </div>
                           </div>
+                          
+                          {company.active ? (
+                            <span className="badge bg-success ms-2">Actif</span>
+                          ) : (
+                            <span className="badge bg-danger ms-2">Fermé</span>
+                          )}
                         </div>
                       </div>
                     ))}
                   </div>
                 )}
-                
-                {/* Message si aucun résultat */}
-                {searchTerm.length >= 3 && searchResults.length === 0 && !isSearchingCompany && (
-                  <div className="alert alert-info mt-2">
-                    <i className="bi bi-info-circle me-2"></i>
-                    Aucune entreprise trouvée. Vérifiez votre saisie ou saisissez les informations manuellement.
-                  </div>
-                )}
+              </div>
+            )}
+            
+            {/* Message si aucun résultat */}
+            {searchTerm.length >= 3 && searchResults.length === 0 && !isSearchingCompany && (
+              <div className="alert alert-info mt-2">
+                <i className="bi bi-info-circle me-2"></i>
+                Aucune entreprise trouvée. Vérifiez votre saisie ou saisissez les informations manuellement.
               </div>
             )}
           </div>
-          
+        
           {/* Formulaire de structure juridique */}
           <Form.Group className="mb-3">
             <Form.Label>Raison sociale <span className="text-danger">*</span></Form.Label>
@@ -654,18 +899,48 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
             </Form.Select>
           </Form.Group>
           
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3 position-relative">
             <Form.Label>Adresse</Form.Label>
-            <Form.Control
-              type="text"
-              name="structureAdresse"
-              ref={addressInputRef}
-              value={formData.structureAdresse}
-              onChange={handleChange}
-              placeholder="Numéro et nom de la rue"
-            />
+            <div className="input-group">
+              <Form.Control
+                type="text"
+                name="structureAdresse"
+                ref={addressInputRef}
+                value={formData.structureAdresse}
+                onChange={handleChange}
+                placeholder="Numéro et nom de la rue"
+              />
+              <span className="input-group-text">
+                <i className="bi bi-geo-alt"></i>
+              </span>
+            </div>
             
-            {/* Si vous implémentez l'auto-complétion d'adresse, ajoutez ici les suggestions */}
+            {/* Suggestions d'adresse pour la structure */}
+            {addressSuggestions.length > 0 && (
+              <div ref={suggestionsRef} style={suggestionsStyle}>
+                {addressSuggestions.map((suggestion, index) => (
+                  <div
+                    key={index}
+                    style={suggestionItemStyle}
+                    onMouseOver={(e) => e.target.style.backgroundColor = '#f8f9fa'}
+                    onMouseOut={(e) => e.target.style.backgroundColor = ''}
+                    onMouseDown={() => handleSelectAddress(suggestion)}
+                  >
+                    <div style={suggestionIconStyle}>
+                      <i className="bi bi-geo-alt-fill"></i>
+                    </div>
+                    <div>
+                      <div style={{ fontWeight: 'bold' }}>{suggestion.display_name}</div>
+                      {suggestion.address && (
+                        <div style={{ fontSize: '0.85em', color: '#6c757d' }}>
+                          {suggestion.address.postcode} {suggestion.address.city}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </Form.Group>
           
           <Row>
@@ -730,7 +1005,7 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
         </div>
       </div>
       
-      {/* Section d'édition des informations du lieu (optionnel) */}
+      {/* Section d'édition des informations du lieu */}
       <div className="card mb-4">
         <div className="card-header">
           <h3>Informations sur le lieu</h3>
@@ -742,22 +1017,55 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
             <Form.Label>Nom du lieu</Form.Label>
             <Form.Control
               type="text"
-              name="lieuNom"
+              name="nomLieu"
               value={lieuData.nom}
               onChange={(e) => setLieuData({...lieuData, nom: e.target.value})}
               placeholder="Nom du lieu"
             />
           </Form.Group>
           
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3 position-relative">
             <Form.Label>Adresse</Form.Label>
-            <Form.Control
-              type="text"
-              name="lieuAdresse"
-              value={lieuData.adresse}
-              onChange={(e) => setLieuData({...lieuData, adresse: e.target.value})}
-              placeholder="Adresse du lieu"
-            />
+            <div className="input-group">
+              <Form.Control
+                type="text"
+                name="adresseLieu"
+                ref={lieuAddressInputRef}
+                value={lieuData.adresse}
+                onChange={(e) => setLieuData({...lieuData, adresse: e.target.value})}
+                placeholder="Adresse du lieu"
+              />
+              <span className="input-group-text">
+                <i className="bi bi-geo-alt"></i>
+              </span>
+            </div>
+            
+            {/* Suggestions d'adresse pour le lieu */}
+            {lieuAddressSuggestions.length > 0 && (
+              <div ref={lieuSuggestionsRef} style={suggestionsStyle}>
+                {lieuAddressSuggestions.map((suggestion, index) => (
+                  <div
+                    key={index}
+                    style={suggestionItemStyle}
+                    onMouseOver={(e) => e.target.style.backgroundColor = '#f8f9fa'}
+                    onMouseOut={(e) => e.target.style.backgroundColor = ''}
+                    onMouseDown={() => handleSelectLieuAddress(suggestion)}
+                  >
+                    <div style={suggestionIconStyle}>
+                      <i className="bi bi-geo-alt-fill"></i>
+                    </div>
+                    <div>
+                      <div style={{ fontWeight: 'bold' }}>{suggestion.display_name}</div>
+                      {suggestion.address && (
+                        <div style={{ fontSize: '0.85em', color: '#6c757d' }}>
+                          {suggestion.address.postcode} {suggestion.address.city}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </Form.Group>
           
           <Row>
@@ -766,7 +1074,7 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
                 <Form.Label>Code postal</Form.Label>
                 <Form.Control
                   type="text"
-                  name="lieuCodePostal"
+                  name="codePostalLieu"
                   value={lieuData.codePostal}
                   onChange={(e) => setLieuData({...lieuData, codePostal: e.target.value})}
                 />
@@ -777,7 +1085,7 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
                 <Form.Label>Ville</Form.Label>
                 <Form.Control
                   type="text"
-                  name="lieuVille"
+                  name="villeLieu"
                   value={lieuData.ville}
                   onChange={(e) => setLieuData({...lieuData, ville: e.target.value})}
                 />
@@ -789,7 +1097,7 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
             <Form.Label>Capacité</Form.Label>
             <Form.Control
               type="number"
-              name="lieuCapacite"
+              name="capaciteLieu"
               value={lieuData.capacite}
               onChange={(e) => setLieuData({...lieuData, capacite: e.target.value})}
               placeholder="Nombre de places"
@@ -797,6 +1105,7 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
           </Form.Group>
         </div>
       </div>
+      
       <div className="d-flex justify-content-end mt-4">
         <Button 
           type="submit"

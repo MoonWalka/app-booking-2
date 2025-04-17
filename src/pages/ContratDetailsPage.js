@@ -1,10 +1,12 @@
 // src/pages/ContratDetailsPage.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Card, Alert, Badge } from 'react-bootstrap';
 import { db } from '../firebase';
 import { doc, getDoc, updateDoc, Timestamp } from 'firebase/firestore';
 import { FaDownload, FaEnvelope, FaFileSignature } from 'react-icons/fa';
+import ContratPDF from '../components/contrats/ContratPDF';
+import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
 
 const ContratDetailsPage = () => {
   const { contratId } = useParams();
@@ -12,8 +14,14 @@ const ContratDetailsPage = () => {
   const [contrat, setContrat] = useState(null);
   const [concert, setConcert] = useState(null);
   const [template, setTemplate] = useState(null);
+  const [programmateur, setProgrammateur] = useState(null);
+  const [lieu, setLieu] = useState(null);
+  const [artiste, setArtiste] = useState(null);
+  const [entreprise, setEntreprise] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [showPdfViewer, setShowPdfViewer] = useState(false);
+  const pdfViewerRef = useRef(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,7 +41,32 @@ const ContratDetailsPage = () => {
         if (contratData.concertId) {
           const concertDoc = await getDoc(doc(db, 'concerts', contratData.concertId));
           if (concertDoc.exists()) {
-            setConcert({ id: concertDoc.id, ...concertDoc.data() });
+            const concertData = { id: concertDoc.id, ...concertDoc.data() };
+            setConcert(concertData);
+            
+            // Récupérer le programmateur
+            if (concertData.programmateurId) {
+              const progDoc = await getDoc(doc(db, 'programmateurs', concertData.programmateurId));
+              if (progDoc.exists()) {
+                setProgrammateur({ id: progDoc.id, ...progDoc.data() });
+              }
+            }
+            
+            // Récupérer le lieu
+            if (concertData.lieuId) {
+              const lieuDoc = await getDoc(doc(db, 'lieux', concertData.lieuId));
+              if (lieuDoc.exists()) {
+                setLieu({ id: lieuDoc.id, ...lieuDoc.data() });
+              }
+            }
+            
+            // Si artiste existe, récupérer les données
+            if (concertData.artisteId) {
+              const artisteDoc = await getDoc(doc(db, 'artistes', concertData.artisteId));
+              if (artisteDoc.exists()) {
+                setArtiste({ id: artisteDoc.id, ...artisteDoc.data() });
+              }
+            }
           }
         }
         
@@ -43,6 +76,12 @@ const ContratDetailsPage = () => {
           if (templateDoc.exists()) {
             setTemplate({ id: templateDoc.id, ...templateDoc.data() });
           }
+        }
+        
+        // Récupérer les informations de l'entreprise
+        const entrepriseDoc = await getDoc(doc(db, 'parametres', 'entreprise'));
+        if (entrepriseDoc.exists()) {
+          setEntreprise(entrepriseDoc.data());
         }
         
         setLoading(false);
@@ -116,8 +155,22 @@ const ContratDetailsPage = () => {
     }
   };
 
+  const togglePdfViewer = () => {
+    setShowPdfViewer(!showPdfViewer);
+    
+    if (!showPdfViewer && pdfViewerRef.current) {
+      pdfViewerRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   if (loading) {
-    return <div>Chargement en cours...</div>;
+    return (
+      <div className="text-center my-5">
+        <div className="spinner-border" role="status">
+          <span className="visually-hidden">Chargement en cours...</span>
+        </div>
+      </div>
+    );
   }
 
   if (error) {
@@ -126,48 +179,102 @@ const ContratDetailsPage = () => {
 
   return (
     <div className="contrat-details">
-      <h2>Détails du contrat {getStatusBadge()}</h2>
+      <h2>
+        Détails du contrat {getStatusBadge()}
+      </h2>
+      
       <Card className="mb-4">
         <Card.Body>
           <Card.Title>Informations du contrat</Card.Title>
-          <p><strong>Modèle utilisé :</strong> {template?.nom || 'Non spécifié'}</p>
-          <p><strong>Date de génération :</strong> {contrat?.dateGeneration ? new Date(contrat.dateGeneration.seconds * 1000).toLocaleDateString('fr-FR') : 'Non spécifiée'}</p>
-          {contrat?.dateEnvoi && (
-            <p><strong>Date d'envoi :</strong> {new Date(contrat.dateEnvoi.seconds * 1000).toLocaleDateString('fr-FR')}</p>
-          )}
-          
-          <div className="mt-3 mb-3">
-            <h5>Informations du concert</h5>
-            <p><strong>Date :</strong> {concert?.date ? new Date(concert.date.seconds * 1000).toLocaleDateString('fr-FR') : 'Non spécifiée'}</p>
-            <p><strong>Lieu :</strong> {concert?.lieuNom || 'Non spécifié'}</p>
-            <p><strong>Programmateur :</strong> {concert?.programmateurNom || 'Non spécifié'}</p>
+          <div className="row">
+            <div className="col-md-6">
+              <p><strong>Modèle utilisé :</strong> {template?.name || 'Non spécifié'}</p>
+              <p><strong>Date de génération :</strong> {contrat?.dateGeneration ? new Date(contrat.dateGeneration.seconds * 1000).toLocaleDateString('fr-FR') : 'Non spécifiée'}</p>
+              {contrat?.dateEnvoi && (
+                <p><strong>Date d'envoi :</strong> {new Date(contrat.dateEnvoi.seconds * 1000).toLocaleDateString('fr-FR')}</p>
+              )}
+            </div>
+            
+            <div className="col-md-6">
+              <h5>Informations du concert</h5>
+              <p><strong>Date :</strong> {concert?.date ? new Date(concert.date.seconds * 1000).toLocaleDateString('fr-FR') : 'Non spécifiée'}</p>
+              <p><strong>Lieu :</strong> {concert?.lieuNom || 'Non spécifié'}</p>
+              <p><strong>Programmateur :</strong> {concert?.programmateurNom || 'Non spécifié'}</p>
+            </div>
           </div>
           
-          <div className="d-flex gap-2">
-            {contrat?.pdfUrl && (
-              <Button variant="primary" href={contrat.pdfUrl} target="_blank">
-                <FaDownload /> Télécharger le PDF
-              </Button>
+          <div className="d-flex gap-2 mt-4">
+            <Button 
+              variant="primary" 
+              onClick={togglePdfViewer}
+            >
+              <i className="bi bi-eye me-1"></i> {showPdfViewer ? 'Masquer l\'aperçu' : 'Afficher le contrat'}
+            </Button>
+            
+            {template && concert && (
+              <PDFDownloadLink
+                document={
+                  <ContratPDF 
+                    template={template}
+                    concertData={concert}
+                    programmateurData={programmateur}
+                    artisteData={artiste}
+                    lieuData={lieu}
+                    entrepriseInfo={entreprise}
+                  />
+                }
+                fileName={`Contrat_${concert.titre || 'Concert'}_${new Date().toISOString().slice(0, 10)}.pdf`}
+                className="btn btn-success"
+              >
+                {({ blob, url, loading, error }) => 
+                  loading ? 
+                    <span><i className="bi bi-hourglass me-1"></i> Préparation...</span> : 
+                    <span><i className="bi bi-file-pdf me-1"></i> Télécharger PDF</span>
+                }
+              </PDFDownloadLink>
             )}
             
             {contrat?.status === 'generated' && (
-              <Button variant="success" onClick={handleSendContrat}>
-                <FaEnvelope /> Marquer comme envoyé
+              <Button variant="info" onClick={handleSendContrat}>
+                <FaEnvelope className="me-1" /> Marquer comme envoyé
               </Button>
             )}
             
             {contrat?.status === 'sent' && (
-              <Button variant="info" onClick={handleMarkAsSigned}>
-                <FaFileSignature /> Marquer comme signé
+              <Button variant="success" onClick={handleMarkAsSigned}>
+                <FaFileSignature className="me-1" /> Marquer comme signé
               </Button>
             )}
             
             <Button variant="outline-secondary" onClick={() => navigate(`/concerts/${concert?.id}`)}>
-              Retour au concert
+              <i className="bi bi-arrow-left me-1"></i> Retour au concert
             </Button>
           </div>
         </Card.Body>
       </Card>
+      
+      {/* PDF Viewer */}
+      {showPdfViewer && template && concert && (
+        <div ref={pdfViewerRef} className="pdf-viewer-container mb-4">
+          <Card>
+            <Card.Body>
+              <Card.Title>Aperçu du contrat</Card.Title>
+              <div className="pdf-viewer">
+                <PDFViewer width="100%" height={600}>
+                  <ContratPDF 
+                    template={template}
+                    concertData={concert}
+                    programmateurData={programmateur}
+                    artisteData={artiste}
+                    lieuData={lieu}
+                    entrepriseInfo={entreprise}
+                  />
+                </PDFViewer>
+              </div>
+            </Card.Body>
+          </Card>
+        </div>
+      )}
       
       {/* Affichage des variables utilisées pour générer le contrat */}
       <Card>

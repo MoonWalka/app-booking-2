@@ -78,11 +78,11 @@ const ContratGenerator = ({ concert, programmateur, artiste, lieu }) => {
         concertId: concert.id,
         templateId: selectedTemplateId,
         createdAt: new Date(),
-        status: 'draft',
+        status: 'generated', 
         pdfUrl: pdfUrl,
       };
       
-      const docRef = await addDoc(collection(db, 'generatedContrats'), contratData);
+      const docRef = await addDoc(collection(db, 'contrats'), contratData);
       return docRef.id;
     } catch (error) {
       console.error('Erreur lors de la sauvegarde du contrat:', error);

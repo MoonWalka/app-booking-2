@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Container, Row, Col, Nav, Tab, Form, Button, Card } from 'react-bootstrap';
 import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '../firebase';
+import { useLocationIQ } from '../hooks/useLocationIQ';
 import ContratTemplatesPage from './contratTemplatesPage';
 import ContratTemplatesEditPage from './contratTemplatesEditPage';
 
@@ -159,7 +160,7 @@ const ParametresPage = () => {
   );
 };
 
-// Composant pour les informations de l'entreprise
+// Composant pour les informations de l'entreprise avec autocomplétion d'adresse
 const ParametresEntrepriseContent = () => {
   const [entrepriseInfo, setEntrepriseInfo] = useState({
     nom: '',
@@ -172,9 +173,21 @@ const ParametresEntrepriseContent = () => {
     siret: '',
     codeAPE: '',
     logo: '',
-    mentionsLegales: ''
+    mentionsLegales: '',
+    latitude: null,
+    longitude: null
   });
   const [loading, setLoading] = useState(true);
+  
+  // États pour les suggestions d'adresse
+  const [addressSuggestions, setAddressSuggestions] = useState([]);
+  const [isSearchingAddress, setIsSearchingAddress] = useState(false);
+  const addressTimeoutRef = useRef(null);
+  const addressInputRef = useRef(null);
+  const suggestionsRef = useRef(null);
+  
+  // Utilisation du hook LocationIQ
+  const { isLoading: isApiLoading, error: apiError, searchAddress } = useLocationIQ();
 
   useEffect(() => {
     // Récupérer les informations d'entreprise de Firestore
@@ -196,12 +209,102 @@ const ParametresEntrepriseContent = () => {
     fetchEntrepriseInfo();
   }, []);
 
+  // Effet pour la recherche d'adresse
+  useEffect(() => {
+    // Nettoyer le timeout précédent
+    if (addressTimeoutRef.current) {
+      clearTimeout(addressTimeoutRef.current);
+    }
+    
+    const handleSearch = async () => {
+      if (!entrepriseInfo.adresse || entrepriseInfo.adresse.length < 3 || isApiLoading) {
+        setAddressSuggestions([]);
+        return;
+      }
+      
+      setIsSearchingAddress(true);
+      
+      try {
+        // Appeler la fonction du hook
+        const results = await searchAddress(entrepriseInfo.adresse);
+        setAddressSuggestions(results || []);
+      } catch (error) {
+        console.error("Erreur lors de la recherche:", error);
+        setAddressSuggestions([]);
+      } finally {
+        setIsSearchingAddress(false);
+      }
+    };
+    
+    // N'effectuer la recherche que si l'adresse a au moins 3 caractères
+    if (entrepriseInfo.adresse && entrepriseInfo.adresse.length >= 3 && !isApiLoading) {
+      addressTimeoutRef.current = setTimeout(handleSearch, 300);
+    } else {
+      setAddressSuggestions([]);
+    }
+    
+    return () => {
+      if (addressTimeoutRef.current) {
+        clearTimeout(addressTimeoutRef.current);
+      }
+    };
+  }, [entrepriseInfo.adresse, isApiLoading, searchAddress]);
+  
+  // Gestionnaire de clic extérieur pour fermer la liste des suggestions d'adresse
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (suggestionsRef.current && !suggestionsRef.current.contains(event.target) && 
+          addressInputRef.current && !addressInputRef.current.contains(event.target)) {
+        setAddressSuggestions([]);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setEntrepriseInfo(prev => ({
       ...prev,
       [name]: value
     }));
+  };
+
+  // Sélectionner une adresse parmi les suggestions
+  const handleSelectAddress = (address) => {
+    let codePostal = '';
+    let ville = '';
+    let adresse = '';
+    
+    // Extraire les composants d'adresse
+    if (address.address) {
+      // Extraire le code postal
+      codePostal = address.address.postcode || '';
+      
+      // Extraire la ville
+      ville = address.address.city || address.address.town || address.address.village || '';
+      
+      // Construire l'adresse de rue
+      const houseNumber = address.address.house_number || '';
+      const road = address.address.road || '';
+      adresse = `${houseNumber} ${road}`.trim();
+    }
+    
+    // Mettre à jour le state avec les informations d'adresse
+    setEntrepriseInfo(prev => ({
+      ...prev,
+      adresse: adresse || address.display_name.split(',')[0],
+      codePostal,
+      ville,
+      latitude: address.lat,
+      longitude: address.lon
+    }));
+    
+    // Fermer les suggestions
+    setAddressSuggestions([]);
   };
 
   const handleSubmit = async (e) => {
@@ -218,6 +321,34 @@ const ParametresEntrepriseContent = () => {
   if (loading) {
     return <div className="text-center"><div className="spinner-border" role="status"></div></div>;
   }
+
+  // Styles CSS pour les suggestions d'adresse
+  const addressSuggestionsStyle = {
+    position: 'absolute',
+    width: '100%',
+    maxHeight: '200px',
+    overflow: 'auto',
+    zIndex: 1000,
+    backgroundColor: 'white',
+    border: '1px solid #ced4da',
+    borderRadius: '0 0 4px 4px',
+    boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+    marginTop: '-1px'
+  };
+
+  const suggestionItemStyle = {
+    padding: '10px 15px',
+    display: 'flex',
+    alignItems: 'center',
+    cursor: 'pointer',
+    transition: 'background-color 0.2s',
+    borderBottom: '1px solid #f0f0f0'
+  };
+
+  const suggestionIconStyle = {
+    marginRight: '10px',
+    color: '#007bff'
+  };
 
   return (
     <Card>
@@ -252,14 +383,61 @@ const ParametresEntrepriseContent = () => {
             </Col>
           </Row>
           
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3 position-relative">
             <Form.Label>Adresse</Form.Label>
-            <Form.Control
-              type="text"
-              name="adresse"
-              value={entrepriseInfo.adresse}
-              onChange={handleChange}
-            />
+            <div className="input-group">
+              <Form.Control
+                type="text"
+                name="adresse"
+                ref={addressInputRef}
+                value={entrepriseInfo.adresse}
+                onChange={handleChange}
+                placeholder="Commencez à taper une adresse..."
+                autoComplete="off"
+              />
+              <span className="input-group-text">
+                <i className="bi bi-geo-alt"></i>
+              </span>
+            </div>
+            <Form.Text className="text-muted">
+              Commencez à taper pour voir des suggestions d'adresses
+            </Form.Text>
+            
+            {/* Suggestions d'adresse */}
+            {addressSuggestions && addressSuggestions.length > 0 && (
+              <div ref={suggestionsRef} style={addressSuggestionsStyle}>
+                {addressSuggestions.map((suggestion, index) => (
+                  <div
+                    key={index}
+                    style={suggestionItemStyle}
+                    onMouseDown={() => handleSelectAddress(suggestion)}
+                    className="address-suggestion-item"
+                  >
+                    <div style={suggestionIconStyle}>
+                      <i className="bi bi-geo-alt-fill"></i>
+                    </div>
+                    <div>
+                      <div style={{ fontWeight: 'bold' }}>{suggestion.display_name}</div>
+                      {suggestion.address && suggestion.address.postcode && suggestion.address.city && (
+                        <div style={{ fontSize: '0.85em', color: '#6c757d' }}>
+                          {suggestion.address.postcode} {suggestion.address.city}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+            
+            {/* Indicateur de recherche */}
+            {isSearchingAddress && (
+              <div style={{ position: 'absolute', top: '100%', width: '100%', padding: '10px', backgroundColor: 'white', borderRadius: '0 0 4px 4px', border: '1px solid #ced4da', borderTop: 'none', boxShadow: '0 4px 8px rgba(0,0,0,0.1)', zIndex: 1000, display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div className="spinner-border spinner-border-sm text-primary" role="status">
+                  <span className="visually-hidden">Recherche en cours...</span>
+                </div>
+                <span>Recherche d'adresses...</span>
+              </div>
+            )}
           </Form.Group>
           
           <Row>
@@ -365,7 +543,8 @@ const ParametresEntrepriseContent = () => {
     </Card>
   );
 };
-// Les autres composants de contenu avec des retours JSX valides
+
+// Les autres composants de contenu
 const ParametresGeneralContent = () => (
   <Card>
     <Card.Body>
@@ -531,6 +710,5 @@ const ParametresExportContent = () => (
     </Card.Body>
   </Card>
 );
-
 
 export default ParametresPage;

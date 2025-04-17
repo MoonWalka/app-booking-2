@@ -6,7 +6,7 @@ import Badge from 'react-bootstrap/Badge';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import '../../style/concertsList.css';
-import { FaFileContract } from 'react-icons/fa';
+
 
 const ConcertsList = () => {
   const navigate = useNavigate();

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
   doc, getDoc, deleteDoc, updateDoc, collection, getDocs, 
-  query, where, serverTimestamp, arrayUnion, arrayRemove, setDoc 
+  query, where, serverTimestamp, arrayUnion, arrayRemove, setDoc, limit
 } from 'firebase/firestore';
 import { db } from '../../firebase';
 import FormGenerator from '../forms/FormGenerator';

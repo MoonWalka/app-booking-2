@@ -340,269 +340,113 @@ const saveLieuChanges = () => {
     return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(montant);
   };
 
-  // Contenu pour le formulaire public
-  const renderPublicForm = () => {
-    if (loading) {
-      return (
-        <div className="text-center my-5">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Chargement du formulaire...</span>
-          </div>
-          <p className="mt-3">Chargement du formulaire...</p>
-        </div>
-      );
-    }
-
-    if (error) {
-      return (
-        <div className="alert alert-danger">
-          <h3>Erreur</h3>
-          <p>{error}</p>
-        </div>
-      );
-    }
-
-    if (expired) {
-      return (
-        <div className="alert alert-warning">
-          <h3>Lien expiré</h3>
-          <p>Ce lien de formulaire a expiré. Veuillez contacter l'organisateur pour obtenir un nouveau lien.</p>
-        </div>
-      );
-    }
-
-    if (completed) {
-      return (
-        <div className="alert alert-success">
-          <h3>Formulaire déjà complété</h3>
-          <p>Vous avez déjà complété ce formulaire. Merci pour votre participation.</p>
-          <button 
-            className="btn btn-primary mt-3"
-            onClick={() => setCompleted(false)} // Permet de revenir au formulaire
-          >
-            <i className="bi bi-pencil-square me-2"></i>
-            Modifier vos informations
-          </button>
-        </div>
-      );
-    }
-    
-
+// Contenu pour le formulaire public
+const renderPublicForm = () => {
+  if (loading) {
     return (
-      <>
-        <div className="form-header">
-          <h1>Formulaire programmateur</h1>
+      <div className="text-center my-5">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Chargement du formulaire...</span>
         </div>
-        
-        {concert && (
-          <div className="concert-info card mb-4">
-            <div className="card-header d-flex justify-content-between align-items-center">
-              <h3>Informations sur le concert</h3>
-              <button 
-                className="btn btn-sm btn-outline-primary" 
-                onClick={() => setEditingConcertInfo(!editingConcertInfo)}
-              >
-                {editingConcertInfo ? 'Annuler' : 'Modifier'}
-              </button>
-            </div>
-            
-            {!editingConcertInfo ? (
-  // Affichage simplifié des informations du concert
-  <div className="card-body">
-    <div className="row">
-      <div className="col-md-4">
-        <div className="fw-bold">Date</div>
-        <div>{formatDate(concert.date)}</div>
+        <p className="mt-3">Chargement du formulaire...</p>
       </div>
-      <div className="col-md-4">
-        <div className="fw-bold">Lieu</div>
-        <div>{lieu?.nom || 'Non spécifié'}</div>
-      </div>
-      <div className="col-md-4">
-        <div className="fw-bold">Montant</div>
-        <div>{formatMontant(concert.montant)}</div>
-      </div>
-    </div>
-  </div>
-) : (
-              // Formulaire d'édition des informations du lieu
-              <div className="card-body">
-                <div className="row mb-3">
-                  <div className="col-md-3 fw-bold">Date:</div>
-                  <div className="col-md-9">{formatDate(concert.date)}</div>
-                </div>
-                <div className="row mb-3">
-                  <div className="col-md-3 fw-bold">Montant:</div>
-                  <div className="col-md-9">{formatMontant(concert.montant)}</div>
-                </div>
-                
-                <hr className="my-3" />
-                <h4 className="mb-3">Modifier les informations du lieu</h4>
-                
-                <div className="mb-3">
-                  <label htmlFor="lieuNom" className="form-label">Nom du lieu</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="lieuNom"
-                    value={lieuFormData.nom}
-                    onChange={(e) => setLieuFormData({...lieuFormData, nom: e.target.value})}
-                  />
-                </div>
-                
-                <div className="mb-3 position-relative">
-                  <label htmlFor="lieuAdresse" className="form-label">Adresse</label>
-                  <div className="input-group">
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="lieuAdresse"
-                      ref={addressInputRef}
-                      value={lieuFormData.adresse}
-                      onChange={(e) => setLieuFormData({...lieuFormData, adresse: e.target.value})}
-                      autoComplete="off"
-                    />
-                    <span className="input-group-text">
-                      <i className="bi bi-geo-alt"></i>
-                    </span>
-                  </div>
-                  
-                  {/* Suggestions d'adresse */}
-                  {addressSuggestions && addressSuggestions.length > 0 && (
-                    <div 
-                      ref={suggestionsRef} 
-                      className="position-absolute w-100 bg-white border rounded shadow-sm z-10"
-                    >
-                      {addressSuggestions.map((suggestion, index) => (
-                        <div
-                          key={index}
-                          className="p-3 border-bottom hover:bg-gray-100 cursor-pointer"
-                          onClick={() => handleSelectAddress(suggestion)}
-                        >
-                          <div className="d-flex align-items-start">
-                            <div className="me-2 text-primary">
-                              <i className="bi bi-geo-alt-fill"></i>
-                            </div>
-                            <div className="flex-grow-1">
-                              <div className="fw-bold">{suggestion.display_name}</div>
-                              {suggestion.address && suggestion.address.postcode && suggestion.address.city && (
-                                <div className="small text-muted">
-                                  {suggestion.address.postcode} {suggestion.address.city}
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                  
-                  {/* Indicateur de recherche */}
-                  {isSearchingAddress && (
-                    <div className="position-absolute top-100 w-100 p-2 bg-white border rounded shadow-sm d-flex align-items-center gap-2">
-                      <div className="spinner-border spinner-border-sm text-primary" role="status">
-                        <span className="visually-hidden">Recherche en cours...</span>
-                      </div>
-                      <span>Recherche d'adresses...</span>
-                    </div>
-                  )}
-                </div>
-                
-                <div className="row">
-                  <div className="col-md-4">
-                    <div className="mb-3">
-                      <label htmlFor="lieuCodePostal" className="form-label">Code postal</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="lieuCodePostal"
-                        value={lieuFormData.codePostal}
-                        onChange={(e) => setLieuFormData({...lieuFormData, codePostal: e.target.value})}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-md-8">
-                    <div className="mb-3">
-                      <label htmlFor="lieuVille" className="form-label">Ville</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="lieuVille"
-                        value={lieuFormData.ville}
-                        onChange={(e) => setLieuFormData({...lieuFormData, ville: e.target.value})}
-                      />
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="mb-3">
-                  <label htmlFor="lieuCapacite" className="form-label">Capacité</label>
-                  <input
-                    type="number"
-                    className="form-control"
-                    id="lieuCapacite"
-                    value={lieuFormData.capacite}
-                    onChange={(e) => setLieuFormData({...lieuFormData, capacite: e.target.value})}
-                  />
-                </div>
-                
-                <div className="mt-3">
-                  <button 
-                    type="button" 
-                    className="btn btn-outline-secondary me-2"
-                    onClick={() => {
-                      setEditingConcertInfo(false);
-                      setLieuFormData({
-                        nom: lieu?.nom || '',
-                        adresse: lieu?.adresse || '',
-                        codePostal: lieu?.codePostal || '',
-                        ville: lieu?.ville || '',
-                        capacite: lieu?.capacite || ''
-                      });
-                    }}
-                  >
-                    Annuler
-                  </button>
-                  <button 
-                    type="button" 
-                    className="btn btn-primary"
-                    onClick={saveLieuChanges}
-                  >
-                    Enregistrer les modifications
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-        
-        <div className="form-content card">
-          <div className="card-header">
-            <h3>Vos informations</h3>
-          </div>
-          <div className="card-body">
-            <p>Veuillez remplir le formulaire ci-dessous avec vos informations de contact.</p>
-            <ProgrammateurForm 
-  token={token} 
-  concertId={concertId} 
-  formLinkId={formLinkId} 
-  initialLieuData={lieuFormData}
-  onSubmitSuccess={() => setCompleted(true)}
-/>
-
-          </div>
-        </div>
-        
-        <div className="form-footer mt-4">
-          <p className="text-muted text-center">
-            Les informations recueillies sur ce formulaire sont enregistrées dans un fichier informatisé 
-            à des fins de gestion des concerts. Conformément à la loi « informatique et libertés », 
-            vous pouvez exercer votre droit d'accès aux données vous concernant et les faire rectifier.
-          </p>
-        </div>
-      </>
     );
-  };
+  }
+
+  if (error) {
+    return (
+      <div className="alert alert-danger">
+        <h3>Erreur</h3>
+        <p>{error}</p>
+      </div>
+    );
+  }
+
+  if (expired) {
+    return (
+      <div className="alert alert-warning">
+        <h3>Lien expiré</h3>
+        <p>Ce lien de formulaire a expiré. Veuillez contacter l'organisateur pour obtenir un nouveau lien.</p>
+      </div>
+    );
+  }
+
+  if (completed) {
+    return (
+      <div className="alert alert-success">
+        <h3>Formulaire déjà complété</h3>
+        <p>Vous avez déjà complété ce formulaire. Merci pour votre participation.</p>
+        <button 
+          className="btn btn-primary mt-3"
+          onClick={() => setCompleted(false)} // Permet de revenir au formulaire
+        >
+          <i className="bi bi-pencil-square me-2"></i>
+          Modifier vos informations
+        </button>
+      </div>
+    );
+  }
+  
+
+  return (
+    <>
+      <div className="form-header">
+        <h1>Formulaire programmateur</h1>
+      </div>
+      
+      {concert && (
+        <div className="concert-info card mb-4">
+          <div className="card-header">
+            <h3>Informations sur le concert</h3>
+          </div>
+          
+          {/* Affichage des informations du concert - toujours visible */}
+          <div className="card-body">
+            <div className="row">
+              <div className="col-md-4">
+                <div className="fw-bold">Date</div>
+                <div>{formatDate(concert.date)}</div>
+              </div>
+              <div className="col-md-4">
+                <div className="fw-bold">Lieu</div>
+                <div>{lieu?.nom || 'Non spécifié'}</div>
+              </div>
+              <div className="col-md-4">
+                <div className="fw-bold">Montant</div>
+                <div>{formatMontant(concert.montant)}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      <div className="form-content card">
+        <div className="card-header">
+          <h3>Vos informations</h3>
+        </div>
+        <div className="card-body">
+          <p>Veuillez remplir le formulaire ci-dessous avec vos informations de contact.</p>
+          <ProgrammateurForm 
+            token={token} 
+            concertId={concertId} 
+            formLinkId={formLinkId} 
+            initialLieuData={lieuFormData}
+            onSubmitSuccess={() => setCompleted(true)}
+          />
+        </div>
+      </div>
+      
+      <div className="form-footer mt-4">
+        <p className="text-muted text-center">
+          Les informations recueillies sur ce formulaire sont enregistrées dans un fichier informatisé 
+          à des fins de gestion des concerts. Conformément à la loi « informatique et libertés », 
+          vous pouvez exercer votre droit d'accès aux données vous concernant et les faire rectifier.
+        </p>
+      </div>
+    </>
+  );
+};
+
 
   // Contenu pour l'interface admin de validation
   const renderAdminValidation = () => {

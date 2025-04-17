@@ -27,11 +27,6 @@ const LieuDetails = () => {
   const [loadingProgrammateur, setLoadingProgrammateur] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-    // États pour l'autocomplétion d'adresse
-    const [addressSearchActive, setAddressSearchActive] = useState(false);
-    const [addressSuggestions, setAddressSuggestions] = useState([]);
-    const [isAddressSearching, setIsAddressSearching] = useState(false);
-    const addressSearchTimeoutRef = useRef(null);
   
   // États pour le formulaire
   const [formData, setFormData] = useState({
@@ -273,97 +268,7 @@ const LieuDetails = () => {
     }
     setIsEditing(!isEditing);
   };
-    // Effet pour la recherche d'adresse
-    useEffect(() => {
-      if (!isEditing) return;
-      
-      // Nettoyer le timeout précédent
-      if (addressSearchTimeoutRef.current) {
-        clearTimeout(addressSearchTimeoutRef.current);
-      }
-      
-      // Ne rechercher que si l'utilisateur a saisi au moins 3 caractères
-      if (formData.adresse && formData.adresse.length >= 3) {
-        setIsAddressSearching(true);
-        
-        // Ajouter un délai pour éviter trop de requêtes
-        addressSearchTimeoutRef.current = setTimeout(() => {
-          searchAddress(formData.adresse);
-        }, 500);
-      } else {
-        setAddressSuggestions([]);
-        setIsAddressSearching(false);
-      }
-      
-      return () => {
-        if (addressSearchTimeoutRef.current) {
-          clearTimeout(addressSearchTimeoutRef.current);
-        }
-      };
-    }, [formData.adresse, isEditing]);
-  
-    // Fonction pour rechercher une adresse
-    const searchAddress = async (query) => {
-      try {
-        // Utilisation de l'API du gouvernement français pour l'autocomplétion
-        const response = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(query)}&limit=5`);
-        const data = await response.json();
-        
-        if (data.features && data.features.length > 0) {
-          const suggestions = data.features.map(feature => ({
-            name: feature.properties.label,
-            address: `${feature.properties.postcode} ${feature.properties.city}`,
-            coords: {
-              lat: feature.geometry.coordinates[1],
-              lng: feature.geometry.coordinates[0]
-            },
-            city: feature.properties.city,
-            postcode: feature.properties.postcode,
-            street: feature.properties.name
-          }));
-          
-          setAddressSuggestions(suggestions);
-        } else {
-          setAddressSuggestions([]);
-        }
-      } catch (error) {
-        console.error('Erreur lors de la recherche d\'adresse:', error);
-        setAddressSuggestions([]);
-      } finally {
-        setIsAddressSearching(false);
-      }
-    };
-  
-    // Fonction pour sélectionner une adresse
-    const handleAddressSelect = (suggestion) => {
-      setFormData(prev => ({
-        ...prev,
-        adresse: suggestion.street,
-        ville: suggestion.city,
-        codePostal: suggestion.postcode,
-        pays: 'France', // Par défaut pour les adresses françaises
-        coordonnees: suggestion.coords
-      }));
-      
-      setAddressSuggestions([]);
-      setAddressSearchActive(false);
-    };
-  
-    // Gestionnaire de clic extérieur pour les suggestions d'adresse
-    useEffect(() => {
-      const handleClickOutside = (event) => {
-        // Logique pour fermer les suggestions d'adresse quand on clique ailleurs
-        if (!event.target.closest('.address-search-container')) {
-          setAddressSearchActive(false);
-        }
-      };
-      
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
-      };
-    }, []);
-  
+
   // Gestion du changement des champs du formulaire
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -996,41 +901,7 @@ const LieuDetails = () => {
             )}
           </div>
         </div>
-{/* Carte pour afficher l'emplacement */}
-        {!isEditing && lieu.adresse && (
-        <div className="form-card">
-          <div className="card-header">
-            <i className="bi bi-geo"></i>
-            <h3>Emplacement</h3>
-          </div>
-          <div className="card-body">
-            <div className="map-preview">
-              <div className="map-container mb-3">
-                <iframe 
-                  src={`https://maps.google.com/maps?q=${encodeURIComponent(`${lieu.adresse}, ${lieu.codePostal} ${lieu.ville}`)}&z=14&output=embed`}
-                  width="100%" 
-                  height="300" 
-                  style={{border: '1px solid #ddd', borderRadius: '8px'}}
-                  allowFullScreen="" 
-                  loading="lazy" 
-                  referrerPolicy="no-referrer-when-downgrade"
-                ></iframe>
-              </div>
-              <div className="text-center">
-                <a 
-                  href={`https://maps.google.com/maps?q=${encodeURIComponent(`${lieu.adresse}, ${lieu.codePostal} ${lieu.ville}`)}`}
-                  target="_blank"
-                  rel="noopener noreferrer" 
-                  className="btn btn-sm btn-outline-primary"
-                >
-                  <i className="bi bi-map me-2"></i>
-                  Voir sur Google Maps
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+
 
         {/* Carte - Informations supplémentaires (toujours visible, non-éditable) */}
         <div className="form-card">
@@ -1057,18 +928,6 @@ const LieuDetails = () => {
               <div className="info-value">
                 {lieu.updatedAt ? new Date(lieu.updatedAt.seconds * 1000).toLocaleDateString('fr-FR') : 'Non disponible'}
               </div>
-            </div>
-            
-            <div className="map-link text-center mt-3">
-              <a 
-                href={`https://maps.google.com/maps?q=${encodeURIComponent(`${lieu.adresse}, ${lieu.codePostal} ${lieu.ville}, ${lieu.pays}`)}`} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="btn btn-outline-primary btn-sm"
-              >
-                <i className="bi bi-map me-2"></i>
-                Voir sur Google Maps
-              </a>
             </div>
           </div>
         </div>

@@ -309,6 +309,41 @@ function FormValidationInterface() {
             }
           }
         });
+        // NOUVEAU: Ajouter le lieu à la liste des lieux associés du programmateur
+      if (concert.lieuId) {
+        const lieuDoc = await getDoc(doc(db, 'lieux', concert.lieuId));
+        if (lieuDoc.exists()) {
+          const lieuData = lieuDoc.data();
+          
+          // Préparer l'objet lieu à ajouter
+          const lieuRef = {
+            id: concert.lieuId,
+            nom: lieuData.nom || '',
+            ville: lieuData.ville || '',
+            dateAssociation: Timestamp.now()
+          };
+          
+          // Récupérer la liste actuelle des lieux associés
+          const progDoc = await getDoc(doc(db, 'programmateurs', programmId));
+          const progData = progDoc.data();
+          
+          // Initialiser lieuxAssocies s'il n'existe pas
+          const lieuxAssocies = progData.lieuxAssocies || [];
+          
+          // Vérifier si le lieu est déjà associé
+          const lieuExistant = lieuxAssocies.findIndex(lieu => lieu.id === concert.lieuId);
+          
+          if (lieuExistant === -1) {
+            // Ajouter le nouveau lieu à la liste
+            programmUpdateData.lieuxAssocies = [...lieuxAssocies, lieuRef];
+          } else {
+            // Mettre à jour l'entrée existante
+            const updatedLieuxAssocies = [...lieuxAssocies];
+            updatedLieuxAssocies[lieuExistant] = lieuRef;
+            programmUpdateData.lieuxAssocies = updatedLieuxAssocies;
+          }
+        }
+      }
         
         // Ajouter timestamp de mise à jour
         programmUpdateData.updatedAt = Timestamp.now();
@@ -359,62 +394,142 @@ function FormValidationInterface() {
       }
       
       // 4. Si un lieu est associé, mettre à jour ses informations
-      if (concert.lieuId) {
-        const lieuUpdateData = {};
-        
-        // Extraire les champs du lieu
-        lieuFields.forEach(field => {
-          const fieldPath = `lieu.${field.id}`;
-          if (validatedFields[fieldPath] !== undefined) {
-            lieuUpdateData[field.id] = validatedFields[fieldPath];
-          }
-        });
-        
-        // Ajouter les coordonnées si disponibles
-        if (formData.lieuData && formData.lieuData.latitude && formData.lieuData.longitude) {
-          lieuUpdateData.latitude = formData.lieuData.latitude;
-          lieuUpdateData.longitude = formData.lieuData.longitude;
-        }
-        
-        // Ajouter timestamp de mise à jour
-        lieuUpdateData.updatedAt = Timestamp.now();
-        
-        // Ne mettre à jour que si des changements sont présents
-        if (Object.keys(lieuUpdateData).length > 0) {
-          console.log("Mise à jour du lieu avec les données:", lieuUpdateData);
-          await updateDoc(doc(db, 'lieux', concert.lieuId), lieuUpdateData);
-        }
-      } else if (validatedFields['lieu.nom'] && validatedFields['lieu.ville']) {
-        // Si aucun lieu n'est associé mais que des informations sont présentes, créer un nouveau lieu
-        const newLieuData = {};
-        
-        lieuFields.forEach(field => {
-          const fieldPath = `lieu.${field.id}`;
-          if (validatedFields[fieldPath]) {
-            newLieuData[field.id] = validatedFields[fieldPath];
-          }
-        });
-        
-        // Ajouter les coordonnées si disponibles
-        if (formData.lieuData && formData.lieuData.latitude && formData.lieuData.longitude) {
-          newLieuData.latitude = formData.lieuData.latitude;
-          newLieuData.longitude = formData.lieuData.longitude;
-        }
-        
-        // Ajouter timestamps
-        newLieuData.createdAt = Timestamp.now();
-        newLieuData.updatedAt = Timestamp.now();
-        
-        // Créer le nouveau lieu
-        const newLieuRef = await addDoc(collection(db, 'lieux'), newLieuData);
-        
-        // Mettre à jour le concert avec l'ID du lieu
-        await updateDoc(doc(db, 'concerts', id), {
-          lieuId: newLieuRef.id,
-          lieuNom: newLieuData.nom,
-          lieuVille: newLieuData.ville
-        });
+if (concert.lieuId) {
+  const lieuUpdateData = {};
+  
+  // Extraire les champs du lieu
+  lieuFields.forEach(field => {
+    const fieldPath = `lieu.${field.id}`;
+    if (validatedFields[fieldPath] !== undefined) {
+      lieuUpdateData[field.id] = validatedFields[fieldPath];
+    }
+  });
+  
+  // Ajouter les coordonnées si disponibles
+  if (formData.lieuData && formData.lieuData.latitude && formData.lieuData.longitude) {
+    lieuUpdateData.latitude = formData.lieuData.latitude;
+    lieuUpdateData.longitude = formData.lieuData.longitude;
+  }
+  
+  // NOUVEAU: Ajouter le programmateur à la liste des programmateurs associés
+  if (formData.programmId) {
+    // Récupérer les données du programmateur
+    const progDoc = await getDoc(doc(db, 'programmateurs', formData.programmId));
+    if (progDoc.exists()) {
+      const progData = progDoc.data();
+      
+      // Préparer l'objet programmateur à ajouter
+      const progRef = {
+        id: formData.programmId,
+        nom: progData.nom || '',
+        dateAssociation: Timestamp.now()
+      };
+      
+      // Récupérer la liste actuelle des programmateurs associés
+      const lieuDoc = await getDoc(doc(db, 'lieux', concert.lieuId));
+      const lieuData = lieuDoc.data();
+      
+      // Initialiser programmateursAssocies s'il n'existe pas
+      const programmateursAssocies = lieuData.programmateursAssocies || [];
+      
+      // Vérifier si le programmateur est déjà associé
+      const progExistant = programmateursAssocies.findIndex(prog => prog.id === formData.programmId);
+      
+      if (progExistant === -1) {
+        // Ajouter le nouveau programmateur à la liste
+        lieuUpdateData.programmateursAssocies = [...programmateursAssocies, progRef];
+      } else {
+        // Mettre à jour l'entrée existante
+        const updatedProgrammateurs = [...programmateursAssocies];
+        updatedProgrammateurs[progExistant] = progRef;
+        lieuUpdateData.programmateursAssocies = updatedProgrammateurs;
       }
+    }
+  }
+  
+  // Ajouter timestamp de mise à jour
+  lieuUpdateData.updatedAt = Timestamp.now();
+  
+  // Ne mettre à jour que si des changements sont présents
+  if (Object.keys(lieuUpdateData).length > 0) {
+    console.log("Mise à jour du lieu avec les données:", lieuUpdateData);
+    await updateDoc(doc(db, 'lieux', concert.lieuId), lieuUpdateData);
+  }
+} else if (validatedFields['lieu.nom'] && validatedFields['lieu.ville']) {
+  // Si aucun lieu n'est associé mais que des informations sont présentes, créer un nouveau lieu
+  const newLieuData = {};
+  
+  lieuFields.forEach(field => {
+    const fieldPath = `lieu.${field.id}`;
+    if (validatedFields[fieldPath]) {
+      newLieuData[field.id] = validatedFields[fieldPath];
+    }
+  });
+  
+  // Ajouter les coordonnées si disponibles
+  if (formData.lieuData && formData.lieuData.latitude && formData.lieuData.longitude) {
+    newLieuData.latitude = formData.lieuData.latitude;
+    newLieuData.longitude = formData.lieuData.longitude;
+  }
+  
+  // NOUVEAU: Initialiser programmateursAssocies si un programmateur est associé
+  if (formData.programmId) {
+    const progDoc = await getDoc(doc(db, 'programmateurs', formData.programmId));
+    if (progDoc.exists()) {
+      const progData = progDoc.data();
+      
+      // Initialiser programmateursAssocies avec le programmateur actuel
+      newLieuData.programmateursAssocies = [{
+        id: formData.programmId,
+        nom: progData.nom || '',
+        dateAssociation: Timestamp.now()
+      }];
+    }
+  } else {
+    // Initialiser à un tableau vide si pas de programmateur
+    newLieuData.programmateursAssocies = [];
+  }
+  
+  // Ajouter timestamps
+  newLieuData.createdAt = Timestamp.now();
+  newLieuData.updatedAt = Timestamp.now();
+  
+  // Créer le nouveau lieu
+  const newLieuRef = await addDoc(collection(db, 'lieux'), newLieuData);
+  
+  // Mettre à jour le concert avec l'ID du lieu
+  await updateDoc(doc(db, 'concerts', id), {
+    lieuId: newLieuRef.id,
+    lieuNom: newLieuData.nom,
+    lieuVille: newLieuData.ville
+  });
+  
+  // NOUVEAU: Si un programmateur est associé, mettre à jour sa liste de lieux
+  if (formData.programmId) {
+    const progDoc = await getDoc(doc(db, 'programmateurs', formData.programmId));
+    if (progDoc.exists()) {
+      const progData = progDoc.data();
+      
+      // Créer ou mettre à jour lieuxAssocies avec le nouveau lieu
+      const lieuxAssocies = progData.lieuxAssocies || [];
+      
+      // Ajouter le nouveau lieu
+      const lieuRef = {
+        id: newLieuRef.id,
+        nom: newLieuData.nom,
+        ville: newLieuData.ville,
+        dateAssociation: Timestamp.now()
+      };
+      
+      // Mettre à jour le programmateur
+      await updateDoc(doc(db, 'programmateurs', formData.programmId), {
+        lieuxAssocies: [...lieuxAssocies, lieuRef],
+        updatedAt: Timestamp.now()
+      });
+    }
+  }
+}
+
       
       setValidated(true);
       setValidationInProgress(false);

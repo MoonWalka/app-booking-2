@@ -28,6 +28,7 @@ const ContratGenerationPage = () => {
         }
         
         const concertData = { id: concertDoc.id, ...concertDoc.data() };
+        console.log("Données du concert récupérées:", concertData);
         setConcert(concertData);
         
         // Récupérer les informations du programmateur
@@ -52,6 +53,7 @@ const ContratGenerationPage = () => {
           id: doc.id,
           ...doc.data()
         }));
+        console.log("Modèles de contrats récupérés:", templatesData);
         setTemplates(templatesData);
         
         if (templatesData.length > 0) {
@@ -69,6 +71,30 @@ const ContratGenerationPage = () => {
     fetchData();
   }, [concertId]);
 
+  // Fonction utilitaire pour formater les dates de manière sécurisée
+  const formatDate = (dateValue) => {
+    if (!dateValue) return 'Non spécifiée';
+    
+    try {
+      // Vérifier si c'est un timestamp Firestore
+      if (dateValue.seconds !== undefined) {
+        return new Date(dateValue.seconds * 1000).toLocaleDateString('fr-FR');
+      } 
+      // Si c'est un objet Date
+      else if (dateValue instanceof Date) {
+        return dateValue.toLocaleDateString('fr-FR');
+      }
+      // Si c'est une chaîne de date ou un timestamp
+      else {
+        const date = new Date(dateValue);
+        return isNaN(date.getTime()) ? 'Non spécifiée' : date.toLocaleDateString('fr-FR');
+      }
+    } catch (error) {
+      console.error('Erreur de formatage de date:', error, dateValue);
+      return 'Non spécifiée';
+    }
+  };
+
   const handleGenerateContrat = async () => {
     try {
       if (!selectedTemplate) {
@@ -84,6 +110,7 @@ const ContratGenerationPage = () => {
       }
       
       const templateData = templateDoc.data();
+      console.log("Modèle sélectionné:", templateData);
       
       // Préparer les variables pour le contrat
       const variables = {
@@ -97,7 +124,7 @@ const ContratGenerationPage = () => {
         adresseLieu: lieu?.adresse || 'Non spécifiée',
         capaciteLieu: lieu?.capacite || 'Non spécifiée',
         
-        dateConcert: concert?.date ? new Date(concert.date.seconds * 1000).toLocaleDateString('fr-FR') : 'Non spécifiée',
+        dateConcert: formatDate(concert?.date),
         heureConcert: concert?.heure || 'Non spécifiée',
         // Ajoutez d'autres variables selon vos besoins
       };
@@ -113,6 +140,8 @@ const ContratGenerationPage = () => {
         variables
       });
       
+      console.log("Contrat créé avec l'ID:", contratRef.id);
+      
       // Rediriger vers la page du contrat généré
       navigate(`/contrats/${contratRef.id}`);
       
@@ -123,7 +152,11 @@ const ContratGenerationPage = () => {
   };
 
   if (loading) {
-    return <div>Chargement en cours...</div>;
+    return <div className="text-center my-5">
+      <div className="spinner-border" role="status">
+        <span className="visually-hidden">Chargement...</span>
+      </div>
+    </div>;
   }
 
   if (error) {
@@ -136,7 +169,7 @@ const ContratGenerationPage = () => {
       <Card>
         <Card.Body>
           <Card.Title>Informations du concert</Card.Title>
-          <p><strong>Date :</strong> {concert?.date ? new Date(concert.date.seconds * 1000).toLocaleDateString('fr-FR') : 'Non spécifiée'}</p>
+          <p><strong>Date :</strong> {formatDate(concert?.date)}</p>
           <p><strong>Lieu :</strong> {lieu?.nom || 'Non spécifié'}</p>
           <p><strong>Programmateur :</strong> {programmateur?.nom || 'Non spécifié'}</p>
           
@@ -146,18 +179,23 @@ const ContratGenerationPage = () => {
               value={selectedTemplate}
               onChange={(e) => setSelectedTemplate(e.target.value)}
             >
-              {templates.map(template => (
-                <option key={template.id} value={template.id}>
-                  {template.nom}
-                </option>
-              ))}
+              {templates.length === 0 ? (
+                <option disabled>Aucun modèle disponible</option>
+              ) : (
+                templates.map(template => (
+                  <option key={template.id} value={template.id}>
+                    {/* Utiliser template.name ou template.nom selon la structure de vos données */}
+                    {template.name || template.nom || `Modèle ${template.id}`}
+                  </option>
+                ))
+              )}
             </Form.Select>
           </Form.Group>
           
           <Button 
             variant="primary" 
             onClick={handleGenerateContrat}
-            disabled={!selectedTemplate}
+            disabled={!selectedTemplate || templates.length === 0}
           >
             Générer le contrat
           </Button>

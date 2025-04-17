@@ -1,155 +1,155 @@
 /* concertForm.css */
 .concert-form-container {
-    padding: 1.5rem;
-    background: #fff;
-    border-radius: 0.5rem;
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-    transition: all 0.3s ease;
+    padding: 1.5rem !important;
+    background: #fff !important;
+    border-radius: 0.5rem !important;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+    transition: all 0.3s ease !important;
   }
   
-  .details-header-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 1.5rem;
-    position: relative;
-    z-index: 10;
+  .concert-form-container .details-header-container {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: flex-start !important;
+    margin-bottom: 1.5rem !important;
+    position: relative !important;
+    z-index: 10 !important;
   }
   
-  .title-container {
-    display: flex;
-    flex-direction: column;
+  .concert-form-container .title-container {
+    display: flex !important;
+    flex-direction: column !important;
   }
   
-  .breadcrumb-container {
-    display: flex;
-    align-items: center;
-    font-size: 0.875rem;
-    color: #6c757d;
-    margin-bottom: 0.5rem;
+  .concert-form-container .breadcrumb-container {
+    display: flex !important;
+    align-items: center !important;
+    font-size: 0.875rem !important;
+    color: #6c757d !important;
+    margin-bottom: 0.5rem !important;
   }
   
-  .breadcrumb-item {
-    cursor: pointer;
+  .concert-form-container .breadcrumb-item {
+    cursor: pointer !important;
   }
   
-  .breadcrumb-item:hover {
-    color: #0d6efd;
-    text-decoration: underline;
+  .concert-form-container .breadcrumb-item:hover {
+    color: #0d6efd !important;
+    text-decoration: underline !important;
   }
   
-  .breadcrumb-item.active {
-    color: #343a40;
-    font-weight: 600;
+  .concert-form-container .breadcrumb-item.active {
+    color: #343a40 !important;
+    font-weight: 600 !important;
   }
   
-  .breadcrumb-container i {
-    margin: 0 0.5rem;
-    font-size: 0.75rem;
+  .concert-form-container .breadcrumb-container i {
+    margin: 0 0.5rem !important;
+    font-size: 0.75rem !important;
   }
   
-  .modern-title {
-    font-weight: 600;
-    color: #344767;
-    margin: 0;
-    font-size: 1.5rem;
+  .concert-form-container .modern-title {
+    font-weight: 600 !important;
+    color: #344767 !important;
+    margin: 0 !important;
+    font-size: 1.5rem !important;
   }
   
-  .action-buttons {
-    display: flex;
-    gap: 10px;
-    position: relative;
-    z-index: 20;
+  .concert-form-container .action-buttons {
+    display: flex !important;
+    gap: 10px !important;
+    position: relative !important;
+    z-index: 20 !important;
   }
   
-  .action-btn {
-    display: flex;
-    align-items: center;
-    padding: 0.5rem 1rem;
-    font-weight: 500;
+  .concert-form-container .action-btn {
+    display: flex !important;
+    align-items: center !important;
+    padding: 0.5rem 1rem !important;
+    font-weight: 500 !important;
   }
   
-  .action-btn i {
-    margin-right: 0.5rem;
+  .concert-form-container .action-btn i {
+    margin-right: 0.5rem !important;
   }
   
-  .form-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
+  .concert-form-container .form-actions {
+    display: flex !important;
+    justify-content: flex-end !important;
+    gap: 1rem !important;
+    margin-top: 2rem !important;
+    margin-bottom: 2rem !important;
   }
   
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+  .concert-form-container .modal-overlay {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    z-index: 1000 !important;
   }
   
-  .modal-confirm {
-    background-color: white;
-    border-radius: 8px;
-    width: 400px;
-    max-width: 90%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  .concert-form-container .modal-confirm {
+    background-color: white !important;
+    border-radius: 8px !important;
+    width: 400px !important;
+    max-width: 90% !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
   }
   
-  .modal-header {
-    padding: 16px;
-    border-bottom: 1px solid #eee;
+  .concert-form-container .modal-header {
+    padding: 16px !important;
+    border-bottom: 1px solid #eee !important;
   }
   
-  .modal-body {
-    padding: 16px;
+  .concert-form-container .modal-body {
+    padding: 16px !important;
   }
   
-  .modal-footer {
-    padding: 16px;
-    border-top: 1px solid #eee;
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
+  .concert-form-container .modal-footer {
+    padding: 16px !important;
+    border-top: 1px solid #eee !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+    gap: 10px !important;
   }
   
   @media (max-width: 768px) {
-    .details-header-container {
-      flex-direction: column;
-      gap: 1rem;
+    .concert-form-container .details-header-container {
+      flex-direction: column !important;
+      gap: 1rem !important;
     }
     
-    .action-buttons {
-      width: 100%;
+    .concert-form-container .action-buttons {
+      width: 100% !important;
     }
     
-    .action-btn .btn-text {
-      display: none;
+    .concert-form-container .action-btn .btn-text {
+      display: none !important;
     }
     
-    .action-btn i {
-      margin-right: 0;
+    .concert-form-container .action-btn i {
+      margin-right: 0 !important;
     }
     
-    .action-btn {
-      padding: 0.375rem 0.5rem;
-      flex: 1;
-      justify-content: center;
+    .concert-form-container .action-btn {
+      padding: 0.375rem 0.5rem !important;
+      flex: 1 !important;
+      justify-content: center !important;
     }
     
-    .form-actions {
-      flex-direction: column;
-      gap: 0.5rem;
+    .concert-form-container .form-actions {
+      flex-direction: column !important;
+      gap: 0.5rem !important;
     }
     
-    .form-actions button {
-      width: 100%;
+    .concert-form-container .form-actions button {
+      width: 100% !important;
     }
   }
   

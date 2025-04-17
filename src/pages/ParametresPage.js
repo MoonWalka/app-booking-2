@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Nav, Tab, Form, Button, Card } from 'react-bootstrap';
 import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { db } from '../../firebase';
+import { db } from '../firebase';
 import ContratTemplatesPage from './contratTemplatesPage';
 import ContratTemplatesEditPage from './contratTemplatesEditPage';
 

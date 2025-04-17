@@ -5,7 +5,8 @@ import { db } from '../../firebase';
 import { useLocationIQ } from '../../hooks/useLocationIQ';
 import '../../style/formPublic.css';
 
-const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) => {
+
+const ProgrammateurForm = ({ token, concertId, formLinkId, initialLieuData, onSubmitSuccess }) => {
   const [formData, setFormData] = useState({
     nom: '',
     prenom: '',
@@ -65,6 +66,16 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
   
   // Utilisation du hook LocationIQ pour l'autocomplétion d'adresse
   const { isLoading: isApiLoading, error: apiError, searchAddress } = useLocationIQ();
+
+  // Initialiser lieuData avec initialLieuData si fourni
+  useEffect(() => {
+    if (initialLieuData && Object.keys(initialLieuData).length > 0) {
+      setLieuData(prev => ({
+        ...prev,
+        ...initialLieuData
+      }));
+    }
+  }, [initialLieuData]);
   
   // Chercher si ce formulaire a déjà été rempli pour pré-remplir les données
   useEffect(() => {
@@ -867,13 +878,13 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, onSubmitSuccess }) =>
         
           {/* Formulaire de structure juridique */}
           <Form.Group className="mb-3">
-            <Form.Label>Raison sociale <span className="text-danger">*</span></Form.Label>
+            <Form.Label>Raison sociale {/*<span className="text-danger">*</span>*/}</Form.Label>
             <Form.Control
               type="text"
               name="structure"
               value={formData.structure}
               onChange={handleChange}
-              required
+              //required
               isInvalid={!!errors.structure}
             />
             <Form.Control.Feedback type="invalid">

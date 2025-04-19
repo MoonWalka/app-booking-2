@@ -1,5 +1,7 @@
 // src/hooks/useLocationIQ.js
 import { useState, useEffect, useCallback } from 'react';
+import { query, limit } from 'firebase/firestore';
+
 
 /**
  * Hook personnalisé pour la géolocalisation et l'autocomplétion d'adresse

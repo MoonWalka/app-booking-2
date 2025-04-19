@@ -13,9 +13,11 @@ import {
   getDocs,
   orderBy,
   limit
-} from './firebase/firestore';
+} from 'firebase/firestore';
 import { db } from '../../../firebase.js.m1fix.bak';
 import '../../../style/programmateurForm.css';
+import { handleDelete } from './handlers/deleteHandler';
+
 
 const ProgrammateurDetails = () => {
   const { id } = useParams();

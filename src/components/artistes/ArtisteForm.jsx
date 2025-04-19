@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { collection, getDocs, query, orderBy, deleteDoc, doc, limit, startAfter, updateDoc } from './firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from './firebase/storage'; // Importez les fonctions de Firebase Storage
-import { db, storage } from '../../firebase.js.m1fix.bak';
+import firebase from '../../firebase';
 import { Container, Row, Col, Card, Button, Form, InputGroup, Badge, Spinner, Modal } from 'react-bootstrap';
 import '../../style/artistesList.css';
+import { getNbConcerts, filteredArtistes } from './utils/concertUtils';
+import { handleDelete } from './handlers/deleteHandler';
+import { handleLoadMore } from './handlers/paginationHandler';
+
 
 const ArtistesList = () => {
   const [artistes, setArtistes] = useState([]);

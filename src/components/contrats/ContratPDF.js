@@ -1,8 +1,8 @@
 // src/components/contrats/ContratPDF.js
 import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Font, Image } from '@react-pdf/renderer';
-import { format } from './date-fns';
-import { fr } from './date-fns/locale';
+import { format } from 'date-fns';
+import { fr } from 'date-fns/locale';
 
 // Enregistrer Arial comme police
 Font.register({
@@ -306,4 +306,3 @@ const ContratPDF = ({ template, concertData, programmateurData, artisteData, lie
   };
   
   export default ContratPDF;
-  

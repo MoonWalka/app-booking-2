@@ -1,6 +1,6 @@
 // src/components/programmateurs/ProgrammateurDetails.js
 import React from 'react';
-import { useResponsiveComponent } from '../../hooks/useResponsiveComponent.js';
+import { useResponsiveComponent } from '@hooks/useResponsiveComponent';
 
 function ProgrammateurDetails(props) {
   const ResponsiveComponent = useResponsiveComponent({

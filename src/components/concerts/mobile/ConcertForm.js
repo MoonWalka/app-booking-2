@@ -1,11 +1,13 @@
 // src/components/concerts/mobile/ConcertForm.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { collection, doc, getDoc, setDoc, updateDoc, serverTimestamp, arrayUnion, arrayRemove } from './firebase/firestore';
+import { collection, doc, getDoc, setDoc, updateDoc, serverTimestamp, arrayUnion, arrayRemove } from 'firebase/firestore';
 import { db } from '../../../firebase.js.m1fix.bak';
 import StepNavigation from '../../common/steps/StepNavigation.js';
 import '../../../style/concertForm.css';
 import '../../../style/formsResponsive.css';
+import { query, where, limit, getDocs } from 'firebase/firestore';
+
 
 // Étape 1: Informations de base
 const BasicInfoStep = ({ data, onNext, onBack }) => {

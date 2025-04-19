@@ -1,7 +1,7 @@
 // src/components/contrats/ContratGenerator.js
 import React, { useState, useEffect } from 'react';
 import { PDFDownloadLink } from '@react-pdf/renderer';
-import { collection, query, where, orderBy, getDocs, doc, getDoc, addDoc, serverTimestamp, updateDoc } from './firebase/firestore';
+import { collection, query, where, orderBy, getDocs, doc, getDoc, addDoc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { db } from '../../../firebase.js.m1fix.bak';
 import { Card, Form, Button } from 'react-bootstrap';
 import ContratPDF from '../ContratPDF.js';

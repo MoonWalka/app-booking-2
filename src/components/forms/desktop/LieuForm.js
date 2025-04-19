@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { collection, doc, getDoc, setDoc, serverTimestamp, query, where, getDocs, orderBy, limit } from './firebase/firestore';
-import { db } from '../../../firebase.js.m1fix.bak';
-import { useLocationIQ } from '../../../hooks/useLocationIQ.js';
+import firebase from '../../../firebase';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import { useLocationIQ } from '../../../hooks/useLocationIQ';
 import '../../../style/lieuForm.css';
-// Imports pour Leaflet
-import { MapContainer, TileLayer, Marker, Popup, useMap } from './react-leaflet';
 
-import L from './leaflet';
+import L from 'leaflet';
 
 // Correction pour les icônes Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
@@ -137,7 +136,7 @@ const LieuForm = () => {
       if (id && id !== 'nouveau') {
         setLoading(true);
         try {
-          const lieuDoc = await getDoc(doc(db, 'lieux', id));
+          const lieuDoc = await getDoc(doc(firebase.db, 'lieux', id));
           if (lieuDoc.exists()) {
             const lieuData = lieuDoc.data();
             
@@ -156,7 +155,7 @@ const LieuForm = () => {
             // Si un programmateur est associé, le récupérer
             if (lieuData.programmateurId) {
               try {
-                const programmateurDoc = await getDoc(doc(db, 'programmateurs', lieuData.programmateurId));
+                const programmateurDoc = await getDoc(doc(firebase.db, 'programmateurs', lieuData.programmateurId));
                 if (programmateurDoc.exists()) {
                   setSelectedProgrammateur({
                     id: programmateurDoc.id,
@@ -304,7 +303,7 @@ useEffect(() => {
     try {
       // Créer une requête pour chercher les programmateurs dont le nom contient le terme
       const q = query(
-        collection(db, 'programmateurs'),
+        collection(firebase.db, 'programmateurs'),
         where('nom', '>=', term),
         where('nom', '<=', term + '\uf8ff'),
         orderBy('nom'),
@@ -395,7 +394,7 @@ useEffect(() => {
       }
       
       // Créer directement un nouveau programmateur avec le nom saisi dans la recherche
-      const newProgRef = doc(collection(db, 'programmateurs'));
+      const newProgRef = doc(collection(firebase.db, 'programmateurs'));
       const progData = {
         nom: searchTerm.trim(),
         nomLowercase: searchTerm.trim().toLowerCase(),
@@ -489,14 +488,14 @@ useEffect(() => {
 
     setLoading(true);
     try {
-      const lieuId = id && id !== 'nouveau' ? id : doc(collection(db, 'lieux')).id;
+      const lieuId = id && id !== 'nouveau' ? id : doc(collection(firebase.db, 'lieux')).id;
       const lieuData = {
         ...lieu,
         updatedAt: serverTimestamp(),
         ...(id === 'nouveau' && { createdAt: serverTimestamp() })
       };
 
-      await setDoc(doc(db, 'lieux', lieuId), lieuData, { merge: true });
+      await setDoc(doc(firebase.db, 'lieux', lieuId), lieuData, { merge: true });
       navigate('/lieux');
     } catch (error) {
       console.error('Erreur lors de l\'enregistrement du lieu:', error);

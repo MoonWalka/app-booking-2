@@ -1,5 +1,5 @@
 // Dans index.js
-import './bootstrap/dist/css/bootstrap.min.css';  // Notez qu'il n'y a pas de './' au début
+import 'bootstrap/dist/css/bootstrap.min.css';  // Notez qu'il n'y a pas de './' au début
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';

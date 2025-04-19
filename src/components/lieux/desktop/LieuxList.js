@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { collection, getDocs, query, orderBy, deleteDoc, doc } from './firebase/firestore';
-import { db } from '../../../firebase.js.m1fix.bak';
-import OverlayTrigger from './react-bootstrap/OverlayTrigger';
-import Tooltip from './react-bootstrap/Tooltip';
+import firebase from '../../../firebase';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import '../../../style/lieuxList.css';
+import { handleDelete } from './handlers/deleteHandler';
+
 
 const LieuxList = () => {
   const navigate = useNavigate();
@@ -25,8 +25,8 @@ const LieuxList = () => {
     const fetchLieux = async () => {
       setLoading(true);
       try {
-        const q = query(collection(db, 'lieux'), orderBy('nom'));
-        const querySnapshot = await getDocs(q);
+        const q = firebase.query(firebase.collection(firebase.db, 'lieux'), firebase.orderBy('nom'));
+        const querySnapshot = await firebase.getDocs(q);
         const lieuxData = querySnapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data()
@@ -104,7 +104,7 @@ const LieuxList = () => {
     
     if (window.confirm('Êtes-vous sûr de vouloir supprimer ce lieu ?')) {
       try {
-        await deleteDoc(doc(db, 'lieux', id));
+        await firebase.deleteDoc(firebase.doc(firebase.db, 'lieux', id));
         setLieux(lieux.filter(lieu => lieu.id !== id));
         setFilteredLieux(filteredLieux.filter(lieu => lieu.id !== id));
         

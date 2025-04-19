@@ -1,11 +1,15 @@
 // src/components/artistes/mobile/ArtistesList.js
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { collection, getDocs, query, orderBy, deleteDoc, doc, limit, startAfter } from './firebase/firestore';
+import { collection, getDocs, query, orderBy, deleteDoc, doc, limit, startAfter } from 'firebase/firestore';
 import { db } from '../../../firebase.js.m1fix.bak';
 import { Button, Form, InputGroup, Spinner } from 'react-bootstrap';
 import '../../../style/artistesList.css';
-import '../../../style/artistesListMobile.css'; // Nouveau fichier CSS spécifique au mobile
+import '../../../style/artistesListMobile.css';
+import { getNbConcerts, filteredArtistes } from './utils/concertUtils';
+import { handleDelete } from './handlers/deleteHandler';
+import { handleLoadMore } from './handlers/paginationHandler';
+ // Nouveau fichier CSS spécifique au mobile
 
 const ArtistesListMobile = () => {
   const [artistes, setArtistes] = useState([]);

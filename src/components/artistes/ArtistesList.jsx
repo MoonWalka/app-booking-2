@@ -1,6 +1,6 @@
 // src/components/artistes/ArtistesList.jsx
 import React from 'react';
-import { useResponsiveComponent } from '../../hooks/useResponsiveComponent.js';
+import { useResponsiveComponent } from '@hooks/useResponsiveComponent';
 
 function ArtistesList(props) {
   const ResponsiveComponent = useResponsiveComponent({

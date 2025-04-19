@@ -1,10 +1,11 @@
-// src/components/lieux/mobile/LieuxList.js
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { collection, getDocs, query, orderBy, deleteDoc, doc } from './firebase/firestore';
+import { collection, getDocs, query, orderBy, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../../../firebase.js.m1fix.bak';
 import { Button, Form, InputGroup, Spinner } from 'react-bootstrap';
 import '../../../style/lieuxListMobile.css';
+import { handleDelete } from './handlers/deleteHandler';
+
 
 const LieuxListMobile = () => {
   const navigate = useNavigate();

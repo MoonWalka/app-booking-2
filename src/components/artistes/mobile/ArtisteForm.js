@@ -1,7 +1,7 @@
 // src/components/artistes/mobile/ArtisteForm.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getDoc, doc, setDoc, collection, updateDoc, serverTimestamp } from './firebase/firestore';
+import { getDoc, doc, setDoc, collection, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../../firebase.js.m1fix.bak';
 import StepNavigation from '../../common/steps/StepNavigation.js';
 import '../../../style/artisteForm.css';

@@ -1,3 +1,5 @@
+
+import { where } from 'firebase/firestore';
 // Mock de Firestore pour le développement local
 // Simule les fonctionnalités de base de Firestore sans connexion à Firebase
 

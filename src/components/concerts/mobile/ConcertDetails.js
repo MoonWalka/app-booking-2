@@ -1,12 +1,14 @@
 // src/components/concerts/mobile/ConcertDetails.js
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { doc, getDoc, deleteDoc } from './firebase/firestore';
+import { doc, getDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../../../firebase.js.m1fix.bak';
 import { Button, Modal, Badge } from 'react-bootstrap';
 import FormGenerator from '../../forms/FormGenerator.js';
 import '../../../style/concertDetails.css';
 import '../../../style/concertDetailsMobile.css';
+import { handleDelete } from './handlers/deleteHandler';
+
 
 const ConcertDetailsMobile = () => {
   const { id } = useParams();

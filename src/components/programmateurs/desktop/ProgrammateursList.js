@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { collection, getDocs, query, orderBy, deleteDoc, doc } from './firebase/firestore';
-import { db } from '../../../firebase.js.m1fix.bak';
-import OverlayTrigger from './react-bootstrap/OverlayTrigger';
-import Tooltip from './react-bootstrap/Tooltip';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import firebase from '../../../firebase';
 import '../../../style/programmateursList.css';
+import { handleDelete } from './handlers/deleteHandler';
 
 const ProgrammateursList = () => {
   const navigate = useNavigate();

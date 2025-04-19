@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { collection, getDocs, doc, deleteDoc, query, where, orderBy } from './firebase/firestore';
+import { collection, getDocs, doc, deleteDoc, query, where, orderBy } from 'firebase/firestore';
 import { db } from '../firebase.js.m1fix.bak';
 import '../style/contratTemplates.css';
+import { handleDelete } from './handlers/deleteHandler';
+
 
 const ContratTemplatesPage = () => {
   const [templates, setTemplates] = useState([]);

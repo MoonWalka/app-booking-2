@@ -1,6 +1,6 @@
 // src/components/contrats/ContratTemplateEditor.js
 import React from 'react';
-import { useResponsiveComponent } from '../../hooks/useResponsiveComponent.js';
+import { useResponsiveComponent } from '@hooks/useResponsiveComponent';
 
 function ContratTemplateEditor(props) {
   const ResponsiveComponent = useResponsiveComponent({

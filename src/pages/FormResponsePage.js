@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { collection, query, where, getDocs, getDoc, doc, updateDoc, addDoc, serverTimestamp } from './firebase/firestore';
+import { collection, query, where, getDocs, getDoc, doc, updateDoc, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase.js.m1fix.bak';
-import { useLocationIQ } from '../hooks/useLocationIQ.js';
+import { useLocationIQ } from '@hooks/useLocationIQ';
 import ProgrammateurForm from '../components/forms/ProgrammateurForm.js.path_bak';
 import '../style/formPublic.css';
+
 
 // Composant pour le layout public du formulaire
 const PublicFormLayout = ({ children }) => {

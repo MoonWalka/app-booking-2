@@ -1,9 +1,9 @@
 import React from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import ConcertsList from '../components/concerts/ConcertsList.js';
+import ConcertsList from '@components/concerts/ConcertsList.js';
 import ConcertForm from '../components/concerts/desktop/ConcertForm.js.systematic_bak';
 import ConcertDetails from '../components/concerts/ConcertDetails.js.path_bak';
-import FormValidationInterface from '../components/forms/desktop/FormValidationInterface.js';
+import FormValidationInterface from '@components/forms/desktop/FormValidationInterface.js';
 
 function ConcertsPage() {
   const navigate = useNavigate();

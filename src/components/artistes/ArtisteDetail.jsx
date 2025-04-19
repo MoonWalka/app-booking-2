@@ -1,6 +1,6 @@
 // src/components/artistes/ArtisteDetail.jsx
 import React from 'react';
-import { useResponsiveComponent } from '../../hooks/useResponsiveComponent.js';
+import { useResponsiveComponent } from '@hooks/useResponsiveComponent';
 
 function ArtisteDetail(props) {
   const ResponsiveComponent = useResponsiveComponent({

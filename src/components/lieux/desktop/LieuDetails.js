@@ -13,10 +13,12 @@ import {
   orderBy,
   limit,
   setDoc
-} from './firebase/firestore';
+} from 'firebase/firestore';
 import { db } from '../../../firebase.js.m1fix.bak';
-import Badge from './react-bootstrap/Badge';
+import { Badge } from 'react-bootstrap';
 import '../../../style/lieuForm.css';
+import { handleDelete } from './handlers/deleteHandler';
+
 
 //composant pour afficher concert associé
 const ConcertItem = ({ concertId, lieuId, onConcertRemoved }) => {

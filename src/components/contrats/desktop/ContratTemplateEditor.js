@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReactQuill from 'react-quill';
-import './react-quill/dist/quill.snow.css';
+import 'react-quill/dist/quill.snow.css';
 import ContratVariable from './ContratVariable.js';
 import '../../../style/contratTemplateEditor.css';
 

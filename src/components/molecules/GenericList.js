@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Form, InputGroup, Table, Button, Tabs, Tab, Spinner } from 'react-bootstrap';
+import { handleLoadMore } from './handlers/paginationHandler';
+
 
 const GenericList = ({
   title,

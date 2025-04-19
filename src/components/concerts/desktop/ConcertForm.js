@@ -4,9 +4,11 @@ import { db } from '../../../firebase.js.m1fix.bak';
 import {
   collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc,
   arrayUnion, arrayRemove, query, where, orderBy, limit, serverTimestamp
-} from './firebase/firestore';
+} from 'firebase/firestore';
 import '../../../style/concertForm.css';
 import '../../../style/searchDropdown.css';
+import { handleDelete } from './handlers/deleteHandler';
+
 
 const ConcertForm = () => {
   const { id } = useParams();

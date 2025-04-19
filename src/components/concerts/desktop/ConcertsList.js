@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { db } from '../../../firebase.js.m1fix.bak';
-import { collection, query, orderBy, getDocs, where } from './firebase/firestore';
-import Badge from './react-bootstrap/Badge';
-import OverlayTrigger from './react-bootstrap/OverlayTrigger';
-import Tooltip from './react-bootstrap/Tooltip';
+import firebase from '../../../firebase';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import '../../../style/concertsList.css';
 
 const ConcertsList = () => {
@@ -23,9 +20,9 @@ const ConcertsList = () => {
     const fetchConcertsAndForms = async () => {
       try {
         // Récupérer les concerts
-        const concertsRef = collection(db, 'concerts');
-        const q = query(concertsRef, orderBy('date', 'desc'));
-        const querySnapshot = await getDocs(q);
+        const concertsRef = firebase.collection(firebase.db, 'concerts');
+        const q = firebase.query(concertsRef, firebase.orderBy('date', 'desc'));
+        const querySnapshot = await firebase.getDocs(q);
 
         const concertsData = querySnapshot.docs.map(doc => ({
           id: doc.id,
@@ -36,8 +33,8 @@ const ConcertsList = () => {
         setFilteredConcerts(concertsData);
 
         // Récupérer les ID des concerts qui ont des formulaires associés
-        const formsRef = collection(db, 'formLinks');
-        const formsSnapshot = await getDocs(formsRef);
+        const formsRef = firebase.collection(firebase.db, 'formLinks');
+        const formsSnapshot = await firebase.getDocs(formsRef);
         
         // Créer un Set pour stocker les IDs des concerts avec formulaires
         const concertsWithFormsSet = new Set();
@@ -50,8 +47,8 @@ const ConcertsList = () => {
         });
         
         // Récupérer les soumissions de formulaires
-        const formSubmissionsRef = collection(db, 'formSubmissions');
-        const submissionsSnapshot = await getDocs(formSubmissionsRef);
+        const formSubmissionsRef = firebase.collection(firebase.db, 'formSubmissions');
+        const submissionsSnapshot = await firebase.getDocs(formSubmissionsRef);
         
         // Set pour stocker les IDs des concerts avec formulaires non validés
         const concertsWithUnvalidatedFormsSet = new Set();
@@ -72,8 +69,8 @@ const ConcertsList = () => {
         setUnvalidatedForms(Array.from(concertsWithUnvalidatedFormsSet));
         
         // Récupérer les contrats
-        const contratsRef = collection(db, 'contrats');
-        const contratsSnapshot = await getDocs(contratsRef);
+        const contratsRef = firebase.collection(firebase.db, 'contrats');
+        const contratsSnapshot = await firebase.getDocs(contratsRef);
         
         const contratsData = {};
         

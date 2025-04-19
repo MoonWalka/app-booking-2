@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Form, Button, Row, Col, Alert } from 'react-bootstrap';
-import { collection, addDoc, query, where, getDocs, doc, getDoc, serverTimestamp, updateDoc } from './firebase/firestore';
+import { collection, addDoc, query, where, getDocs, doc, getDoc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { db } from '../../../firebase.js.m1fix.bak';
-import { useLocationIQ } from '../../../hooks/useLocationIQ.js';
+import { useLocationIQ } from '@hooks/useLocationIQ';
 import '../../../style/formPublic.css';
 
 

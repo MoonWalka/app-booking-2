@@ -2,9 +2,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../../../firebase.js.m1fix.bak';
-import { doc, getDoc, updateDoc, collection, query, where, getDocs, addDoc, Timestamp } from './firebase/firestore';
+import { doc, getDoc, updateDoc, collection, query, where, getDocs, addDoc, Timestamp } from 'firebase/firestore';
 import { Button, Badge, Spinner } from 'react-bootstrap';
 import '../../../style/formsResponsive.css';
+
 
 const FormValidationInterfaceMobile = () => {
   const { id } = useParams(); // Ici, id est l'ID du concert

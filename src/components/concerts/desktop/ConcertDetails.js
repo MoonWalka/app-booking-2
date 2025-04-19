@@ -3,10 +3,12 @@ import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
   doc, getDoc, deleteDoc, updateDoc, collection, getDocs, 
   query, where, serverTimestamp, arrayUnion, arrayRemove, setDoc, limit
-} from './firebase/firestore';
+} from 'firebase/firestore';
 import { db } from '../../../firebase.js.m1fix.bak';
 import FormGenerator from '../../forms/FormGenerator.js';
 import '../../../style/concertDetails.css';
+import { handleDelete } from './handlers/deleteHandler';
+
 
 
 const ConcertDetails = () => {

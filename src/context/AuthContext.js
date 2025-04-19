@@ -1,40 +1,43 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
-import { auth, BYPASS_AUTH } from '../firebase.js.m1fix.bak';
-import { onAuthStateChanged } from './firebase/auth';
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import firebase from '../firebase';
 
-const AuthContext = createContext();
+// Créer le contexte
+export const AuthContext = createContext(null);
 
-export function useAuth() {
-  return useContext(AuthContext);
-}
+// Hook personnalisé pour utiliser le contexte d'authentification
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth doit être utilisé à l\'intérieur d\'un AuthProvider');
+  }
+  return context;
+};
 
-export function AuthProvider({ children }) {
-  const [currentUser, setCurrentUser] = useState(null);
+// Provider du contexte d'authentification
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (BYPASS_AUTH) {
-      console.log("Mode bypass d'authentification activé");
-      setCurrentUser({ 
-        uid: 'test-user-id',
-        email: 'test@example.com',
-        displayName: 'Utilisateur Test',
-        emailVerified: true
-      });
+    if (firebase.BYPASS_AUTH) {
+      console.log('Mode développement : authentification bypassed');
+      setUser({ uid: 'dev-user', email: 'dev@example.com' });
       setLoading(false);
       return;
     }
 
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
+    const unsubscribe = firebase.onAuthStateChanged(firebase.auth, (user) => {
+      setUser(user);
       setLoading(false);
     });
 
-    return unsubscribe;
+    return () => unsubscribe();
   }, []);
 
   const value = {
-    currentUser,
+    user,
     loading
   };
 

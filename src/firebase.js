@@ -1,9 +1,17 @@
-// Import direct des modules Firebase pour éviter les problèmes de réexportation
-import { initializeApp } from './firebase/app';
-import { getFirestore } from './firebase/firestore';
-import { getAuth } from './firebase/auth';
-import { getStorage } from './firebase/storage';
-import { getRemoteConfig } from './firebase/remote-config';
+import { initializeApp } from 'firebase/app';
+import { 
+  getFirestore, collection, doc, getDoc, getDocs,
+  setDoc, addDoc, updateDoc, deleteDoc,
+  query, where, orderBy, limit, startAfter,
+  serverTimestamp, arrayUnion, arrayRemove 
+} from 'firebase/firestore';
+import { 
+  getAuth, signInWithEmailAndPassword,
+  createUserWithEmailAndPassword, signOut,
+  onAuthStateChanged 
+} from 'firebase/auth';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { getRemoteConfig } from 'firebase/remote-config';
 
 // Configuration Firebase
 const firebaseConfig = {
@@ -26,30 +34,39 @@ const remoteConfig = getRemoteConfig(app);
 // Configuration du bypass d'authentification pour le développement
 const BYPASS_AUTH = process.env.REACT_APP_BYPASS_AUTH === 'true';
 
-// Exports des instances
-export {
+const firebase = {
   app,
   db,
   auth,
   storage,
   remoteConfig,
-  BYPASS_AUTH
-};
-
-// Exports des fonctions - importées individuellement pour éviter les problèmes de réexportation
-export {
-  collection, doc, getDoc, getDocs,
-  setDoc, addDoc, updateDoc, deleteDoc,
-  query, where, orderBy, limit, startAfter,
-  serverTimestamp, arrayUnion, arrayRemove
-} from './firebase/firestore';
-
-export {
+  BYPASS_AUTH,
+  // Fonctions Firestore
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  query,
+  where,
+  orderBy,
+  limit,
+  startAfter,
+  serverTimestamp,
+  arrayUnion,
+  arrayRemove,
+  // Fonctions Auth
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-  signOut
-} from './firebase/auth';
+  signOut,
+  onAuthStateChanged,
+  // Fonctions Storage
+  ref,
+  uploadBytes,
+  getDownloadURL
+};
 
-export {
-  ref, uploadBytes, getDownloadURL
-} from './firebase/storage';
+export default firebase;

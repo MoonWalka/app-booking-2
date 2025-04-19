@@ -1,6 +1,6 @@
 // src/components/forms/ProgrammateurForm.js
 import React from 'react';
-import { useResponsiveComponent } from '../../hooks/useResponsiveComponent.js';
+import { useResponsiveComponent } from '@hooks/useResponsiveComponent';
 
 function ProgrammateurForm(props) {
   const ResponsiveComponent = useResponsiveComponent({

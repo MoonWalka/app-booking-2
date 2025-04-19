@@ -2,6 +2,8 @@
 // Il réexporte les fonctionnalités de firebase/firestore
 
 import * as firestoreModule from './firebase/firestore';
+import { query, where, limit, getDocs } from 'firebase/firestore';
+
 
 // Exporter toutes les fonctions et objets du module
 export default firestoreModule;

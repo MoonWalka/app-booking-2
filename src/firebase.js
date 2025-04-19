@@ -41,8 +41,7 @@ try {
 }
 
 // Détection de l'environnement
-const isEmulator = window.location.hostname === 'localhost' || 
-                   window.location.hostname === '127.0.0.1';
+const isEmulator = true;
 
 console.log('Running in ' + (isEmulator ? 'emulator' : 'production') + ' mode.');
 

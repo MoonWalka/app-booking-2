@@ -73,6 +73,7 @@ const ConcertsList = () => {
         setLoading(false);
       } catch (error) {
         console.error('Erreur lors du chargement des données:', error);
+        console.error('Erreur Firebase complète :', error);
         setError('Impossible de charger les concerts. Veuillez réessayer plus tard.');
         setLoading(false);
       }

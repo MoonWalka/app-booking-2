@@ -8,6 +8,13 @@ const localData = {
   programmateurs: {},
   forms: {}
 };
+localData.concerts['concert1'] = {
+  titre: 'Test concert',
+  date: '2025-05-01',
+  lieu: 'Salle Imaginaire',
+  statut: 'validé',
+  artistePrincipal: "M'Dezoen"
+};
 
 // Génère un ID unique pour les documents
 const generateId = () => {

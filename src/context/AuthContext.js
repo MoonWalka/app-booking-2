@@ -21,6 +21,7 @@ export function AuthProvider({ children }) {
         displayName: 'Utilisateur Test',
         emailVerified: true
       });
+      // setUserRoles({ admin: true });
       setLoading(false);
       return;
     }

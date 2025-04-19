@@ -31,7 +31,7 @@ const isEmulator = window.location.hostname === 'localhost' ||
 console.log('Running in ' + (isEmulator ? 'emulator' : 'production') + ' mode. Do not use with production credentials.');
 
 // Variable pour contourner l'authentification en développement
-export const BYPASS_AUTH = process.env.REACT_APP_BYPASS_AUTH === 'true';
+//export const BYPASS_AUTH = process.env.REACT_APP_BYPASS_AUTH === 'true';
 
 // Exporter db qui sera utilisé par tous les composants
 export const db = isEmulator ? mockFirestore : getFirestore(app);

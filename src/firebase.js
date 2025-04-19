@@ -1,11 +1,10 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage"; // Ajout de l'import pour Storage
 import { getRemoteConfig, fetchAndActivate } from "firebase/remote-config";
-import { mockFirestore } from "./mockStorage";
 
 // Configuration Firebase avec variables d'environnement uniquement
 const firebaseConfig = {
@@ -41,39 +40,23 @@ try {
 }
 
 // Détection de l'environnement
-const isEmulator = window.location.hostname === 'localhost' || 
-                   window.location.hostname === '127.0.0.1';
+// Toujours en production – pas d'émulateur Firestore
+const isEmulator = false;
 
 console.log('Running in ' + (isEmulator ? 'emulator' : 'production') + ' mode.');
 
-// Export des services avec vérification
+// Export des services
 export const analytics = app ? getAnalytics(app) : null;
-export const auth = app ? getAuth(app) : null;
-export const storage = app ? getStorage(app) : null; // Ajout de l'export pour Storage
-
-// Variable pour contourner l'authentification en développement
+export const auth      = app ? getAuth(app) : null;
+export const storage   = app ? getStorage(app) : null;
 export const BYPASS_AUTH = process.env.REACT_APP_BYPASS_AUTH === 'true';
 
-// Base de données avec fallback explicite
-let firestore;
-try {
-  if (isEmulator) {
-    console.log("Utilisation de mockFirestore en mode développement");
-    firestore = mockFirestore;
-  } else if (app) {
-    firestore = getFirestore(app);
-    console.log("Firestore initialisé avec succès");
-  } else {
-    throw new Error("App Firebase non disponible");
-  }
-} catch (error) {
-  console.error("Erreur d'initialisation Firestore:", error);
-  console.warn("Utilisation de mockFirestore comme fallback");
-  firestore = mockFirestore;
-}
+// Initialisation de Firestore
+const db = getFirestore(app);
+console.log("Firestore initialisé avec succès");
 
 // Export de la base de données
-export const db = firestore;
+export { db };
 
 // Initialiser Remote Config
 export const initializeRemoteConfig = async () => {

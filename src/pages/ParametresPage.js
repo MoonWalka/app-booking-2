@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Container, Row, Col, Nav, Tab, Form, Button, Card } from 'react-bootstrap';
 import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { db } from '../firebase';
-import { useLocationIQ } from '../hooks/useLocationIQ';
-import ContratTemplatesPage from './contratTemplatesPage';
-import ContratTemplatesEditPage from './contratTemplatesEditPage';
+import { doc, getDoc, setDoc } from './firebase/firestore';
+import { db } from '../firebase.js.m1fix.bak';
+import { useLocationIQ } from '../hooks/useLocationIQ.js';
+import ContratTemplatesPage from './contratTemplatesPage.js.path_bak';
+import ContratTemplatesEditPage from './contratTemplatesEditPage.js.path_bak';
 
 const ParametresPage = () => {
   const navigate = useNavigate();

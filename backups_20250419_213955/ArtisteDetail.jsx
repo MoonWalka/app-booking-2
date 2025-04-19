@@ -1,0 +1,14 @@
+// src/components/artistes/ArtisteDetail.jsx
+import React from 'react';
+import { useResponsiveComponent } from '../../hooks/useResponsiveComponent';
+
+function ArtisteDetail(props) {
+  const ResponsiveComponent = useResponsiveComponent({
+    desktopPath: 'artistes/desktop/ArtisteDetail',
+    mobilePath: 'artistes/mobile/ArtisteDetail'
+  });
+  
+  return <ResponsiveComponent {...props} />;
+}
+
+export default ArtisteDetail;

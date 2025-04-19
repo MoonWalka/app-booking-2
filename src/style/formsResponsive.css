@@ -1,0 +1,213 @@
+/* src/style/formsResponsive.css */
+/* Styles pour les formulaires responsifs sur mobile */
+
+.mobile-form-container {
+    padding: 15px;
+  }
+  
+  .mobile-form-header {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+  }
+  
+  .mobile-form-header h1 {
+    font-size: 1.4rem;
+    margin: 0;
+    color: #344767;
+  }
+  
+  .mobile-form-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 10px;
+  }
+  
+  .mobile-form-breadcrumb i {
+    font-size: 0.7rem;
+  }
+  
+  .mobile-form-card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    margin-bottom: 15px;
+    overflow: hidden;
+  }
+  
+  .mobile-form-card-header {
+    padding: 15px;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .mobile-form-card-header i {
+    font-size: 1.2rem;
+    color: #6c757d;
+  }
+  
+  .mobile-form-card-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #344767;
+  }
+  
+  .mobile-form-card-body {
+    padding: 15px;
+  }
+  
+  .mobile-form-group {
+    margin-bottom: 15px;
+  }
+  
+  .mobile-form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: #495057;
+  }
+  
+  .mobile-form-group input,
+  .mobile-form-group select,
+  .mobile-form-group textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+  }
+  
+  .mobile-form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+  
+  .mobile-form-group .input-group {
+    display: flex;
+  }
+  
+  .mobile-form-group .input-group-text {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-right: none;
+    border-radius: 5px 0 0 5px;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .mobile-form-group .input-group input {
+    border-radius: 0 5px 5px 0;
+  }
+  
+  .mobile-form-actions {
+    padding: 15px;
+    border-top: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  
+  .mobile-form-actions button {
+    flex: 1;
+  }
+  
+  .mobile-form-footer {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    color: #6c757d;
+  }
+  
+  /* Personnalisation pour les champs de date et de recherche */
+  .mobile-form-date-picker {
+    position: relative;
+  }
+  
+  .mobile-form-date-picker input {
+    padding-right: 30px;
+  }
+  
+  .mobile-form-date-picker i {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+  }
+  
+  .mobile-search-dropdown {
+    position: relative;
+  }
+  
+  .mobile-search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background-color: white;
+    border: 1px solid #dee2e6;
+    border-radius: 0 0 5px 5px;
+    max-height: 200px;
+    overflow-y: auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .mobile-search-item {
+    padding: 10px;
+    border-bottom: 1px solid #f0f0f0;
+    cursor: pointer;
+  }
+  
+  .mobile-search-item:last-child {
+    border-bottom: none;
+  }
+  
+  .mobile-search-item:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .mobile-selected-item {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .mobile-selected-item-info {
+    flex: 1;
+  }
+  
+  .mobile-selected-item-name {
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+  
+  .mobile-selected-item-details {
+    font-size: 0.85rem;
+    color: #6c757d;
+  }
+  
+  .mobile-selected-item-remove {
+    background: none;
+    border: none;
+    color: #dc3545;
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 5px;
+  }
+  

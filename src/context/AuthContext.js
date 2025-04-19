@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import { auth, BYPASS_AUTH } from '../firebase';
-import { onAuthStateChanged } from 'firebase/auth';
+import { auth, BYPASS_AUTH } from '../firebase.js.m1fix.bak';
+import { onAuthStateChanged } from './firebase/auth';
 
 const AuthContext = createContext();
 

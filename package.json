@@ -3,6 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@firebase/app": "^0.11.4",
+    "@firebase/auth": "^1.10.0",
+    "@firebase/firestore": "^4.7.10",
+    "@firebase/remote-config": "^0.6.0",
+    "@firebase/storage": "^0.13.7",
     "@react-pdf/renderer": "^3.1.12",
     "@testing-library/dom": "^9.3.1",
     "@testing-library/jest-dom": "^5.16.5",
@@ -10,7 +15,7 @@
     "@testing-library/user-event": "^13.5.0",
     "bootstrap": "^5.3.0",
     "date-fns": "^2.30.0",
-    "firebase": "^9.23.0",
+    "firebase": "^9.17.2",
     "leaflet": "^1.9.4",
     "react": "^18.2.0",
     "react-bootstrap": "^2.9.0",
@@ -24,9 +29,9 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start --host 0.0.0.0",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "craco start --host 0.0.0.0",
+    "build": "craco build",
+    "test": "craco test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -46,5 +51,17 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@craco/craco": "^7.1.0",
+    "assert": "^2.1.0",
+    "browserify-zlib": "^0.2.0",
+    "crypto-browserify": "^3.12.1",
+    "https-browserify": "^1.0.0",
+    "path-browserify": "^1.0.1",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
+    "url": "^0.11.4",
+    "util": "^0.12.5"
   }
 }

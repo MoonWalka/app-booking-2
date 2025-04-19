@@ -1,13 +1,13 @@
 // src/pages/ContratsPage.js
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Link, useNavigate } from 'react-router-dom';
-import { collection, getDocs, query, orderBy, where } from 'firebase/firestore';
-import { db } from '../firebase';
+import { collection, getDocs, query, orderBy, where } from './firebase/firestore';
+import { db } from '../firebase.js.m1fix.bak';
 import { Table, Badge, Tabs, Tab } from 'react-bootstrap';
-import ContratTemplatesPage from './contratTemplatesPage';
-import ContratTemplatesEditPage from './contratTemplatesEditPage';
-import ContratGenerationPage from './ContratGenerationPage';
-import ContratDetailsPage from './ContratDetailsPage';
+import ContratTemplatesPage from './contratTemplatesPage.js.path_bak';
+import ContratTemplatesEditPage from './contratTemplatesEditPage.js.bak';
+import ContratGenerationPage from './ContratGenerationPage.js.bak';
+import ContratDetailsPage from './ContratDetailsPage.js';
 import '../style/contrats.css';
 
 const ContratsTab = () => {

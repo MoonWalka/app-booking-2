@@ -1,0 +1,35 @@
+// src/hooks/useResponsiveComponent.js
+import React, { lazy, Suspense } from 'react';
+import { useIsMobile } from './useIsMobile.js';
+
+export const useResponsiveComponent = (options) => {
+  const {
+    // Chemins des composants
+    desktopPath, 
+    mobilePath,
+    // Breakpoint personnalisable
+    breakpoint = 768,
+    // Composant de fallback
+    fallback = <div className="loading-placeholder">Chargement...</div>
+  } = options;
+  
+  const isMobile = useIsMobile(breakpoint);
+  
+  // Import dynamique basé sur la détection mobile/desktop
+  const Component = lazy(() =>
+    import(`../components/${isMobile ? mobilePath : desktopPath}`)
+      .then(module => {
+        // Beaucoup de modules ES6 contiennent leur export par défaut dans module.default
+        return { default: module.default || module };
+      })
+  );
+  
+  // Composant enveloppé dans Suspense
+  const ResponsiveComponent = (props) => (
+    <Suspense fallback={fallback}>
+      <Component {...props} />
+    </Suspense>
+  );
+  
+  return ResponsiveComponent;
+};

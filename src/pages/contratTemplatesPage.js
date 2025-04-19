@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { collection, getDocs, doc, deleteDoc, query, where, orderBy } from 'firebase/firestore';
-import { db } from '../firebase';
+import { collection, getDocs, doc, deleteDoc, query, where, orderBy } from './firebase/firestore';
+import { db } from '../firebase.js.m1fix.bak';
 import '../style/contratTemplates.css';
 
 const ContratTemplatesPage = () => {

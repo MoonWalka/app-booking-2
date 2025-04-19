@@ -2,10 +2,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Card, Alert, Badge } from 'react-bootstrap';
-import { db } from '../firebase';
-import { doc, getDoc, updateDoc, Timestamp } from 'firebase/firestore';
-import { FaDownload, FaEnvelope, FaFileSignature } from 'react-icons/fa';
-import ContratPDF from '../components/contrats/ContratPDF';
+import { db } from '../firebase.js.m1fix.bak';
+import { doc, getDoc, updateDoc, Timestamp } from './firebase/firestore';
+import { FaDownload, FaEnvelope, FaFileSignature } from './react-icons/fa';
+import ContratPDF from '../components/contrats/ContratPDF.js';
 import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
 
 const ContratDetailsPage = () => {

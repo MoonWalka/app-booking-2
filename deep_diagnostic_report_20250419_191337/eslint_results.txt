@@ -1,0 +1,18 @@
+
+Oops! Something went wrong! :(
+
+ESLint: 8.57.1
+
+EslintPluginImportResolveError: unable to load resolver "alias".
+Occurred while linting /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/App.js:1
+Rule: "import/namespace"
+    at requireResolver (/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/node_modules/eslint-module-utils/resolve.js:106:17)
+    at fullResolve (/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/node_modules/eslint-module-utils/resolve.js:200:22)
+    at Function.relative (/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/node_modules/eslint-module-utils/resolve.js:217:10)
+    at RemotePath.resolve (/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/node_modules/eslint-plugin-import/lib/exportMap/remotePath.js:10:37)
+    at captureDependency (/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/node_modules/eslint-plugin-import/lib/exportMap/captureDependency.js:35:362)
+    at captureDependencyWithSpecifiers (/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/node_modules/eslint-plugin-import/lib/exportMap/captureDependency.js:59:3)
+    at ImportExportVisitorBuilder.ImportDeclaration (/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/node_modules/eslint-plugin-import/lib/exportMap/visitor.js:67:70)
+    at /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/node_modules/eslint-plugin-import/lib/exportMap/builder.js:193:35
+    at Array.forEach (<anonymous>)
+    at Function.parse (/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/node_modules/eslint-plugin-import/lib/exportMap/builder.js:189:18)

@@ -1,0 +1,2 @@
+-e [0;31m✗ Dépendances circulaires détectées:[0m
+=== TOP 5 DES ERREURS LES PLUS FRÉQUENTES ===

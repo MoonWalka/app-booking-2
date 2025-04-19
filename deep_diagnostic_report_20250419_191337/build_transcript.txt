@@ -1,0 +1,25 @@
+=== PRÉPARATION DE L'INSTRUMENTATION DU BUILD ===
+Configuration webpack de débogage créée dans /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/temp_webpack_debug
+Configuration craco de débogage créée avec succès
+
+=== EXÉCUTION DU BUILD INSTRUMENTÉ ===
+Cette étape peut prendre quelques instants...
+✗ Build échoué, analyse des erreurs...
+
+=== ANALYSE DE L'ARBRE DES MODULES ===
+Génération d'un graphique des dépendances...
+Processed 105 files (494ms) (21 warnings)
+
+
+✖ Error: Graphviz could not be found. Ensure that "gvpr" is in your $PATH. Error: spawn gvpr ENOENT
+    at checkGraphvizInstalled (/opt/homebrew/lib/node_modules/madge/lib/graph.js:33:10)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+✗ Impossible de générer le graphique: Command failed: npx madge --extensions js,jsx --image dependency-graph.png src/
+
+=== NETTOYAGE ===
+✓ Fichiers temporaires supprimés
+
+=== RAPPORT D'INSTRUMENTATION ===
+Toutes les erreurs et les problèmes identifiés ont été enregistrés
+Consultez le journal et les fichiers d'analyse pour plus de détails

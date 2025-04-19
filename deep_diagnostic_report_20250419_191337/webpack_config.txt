@@ -1,0 +1,46 @@
+=== ANALYSE DE CRACO.CONFIG.JS ===
+✓ craco.config.js chargé avec succès
+
+=== ALIAS WEBPACK DÉTECTÉS ===
+@firebase -> /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/firebase.js
+@components -> /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components
+@hooks -> /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/hooks
+@context -> /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/context
+@utils -> /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/utils
+@styles -> /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/style
+@services -> /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/services
+@ -> /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src
+
+=== ANALYSE DE JSCONFIG.JSON ===
+✓ jsconfig.json chargé avec succès
+
+=== PATHS JSCONFIG DÉTECTÉS ===
+@firebase -> ./src/firebase.js
+@components -> ./src/components
+@hooks -> ./src/hooks
+@context -> ./src/context
+@utils -> ./src/utils
+@styles -> ./src/style
+@services -> ./src/services
+@ -> ./src
+! ERREUR lors du chargement de jsconfig.json: cracoConfig is not defined
+
+Contenu du fichier:
+```
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@firebase": ["./src/firebase.js"],
+      "@components": ["./src/components"],
+      "@hooks": ["./src/hooks"],
+      "@context": ["./src/context"],
+      "@utils": ["./src/utils"],
+      "@styles": ["./src/style"],
+      "@services": ["./src/services"],
+      "@": ["./src"]
+    }
+  }
+}
+
+```

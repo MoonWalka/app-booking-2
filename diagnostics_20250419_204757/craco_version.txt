@@ -1,0 +1,3 @@
+app-booking@0.1.0 /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2
+└── @craco/craco@7.1.0
+

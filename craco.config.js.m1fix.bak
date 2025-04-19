@@ -1,0 +1,40 @@
+const path = require('path');
+
+module.exports = {
+  webpack: {
+    alias: {
+      // Alias pour firebase
+      '@firebase': path.resolve(__dirname, 'src/firebase.js'),
+      
+      // Shim pour @firebase/firestore
+      '@firebase/firestore': path.resolve(__dirname, 'src/shims/firebase-firestore-shim.js'),
+      
+      // Autres alias existants
+      '@components': path.resolve(__dirname, 'src/components'),
+      '@hooks': path.resolve(__dirname, 'src/hooks'),
+      '@context': path.resolve(__dirname, 'src/context'),
+      '@utils': path.resolve(__dirname, 'src/utils'),
+      '@styles': path.resolve(__dirname, 'src/style'),
+      '@services': path.resolve(__dirname, 'src/services'),
+      '@': path.resolve(__dirname, 'src')
+    },
+    configure: {
+      resolve: {
+        fallback: {
+          "path": require.resolve("path-browserify"),
+          "stream": require.resolve("stream-browserify"),
+          "crypto": require.resolve("crypto-browserify"),
+          "http": require.resolve("stream-http"),
+          "https": require.resolve("https-browserify"),
+          "zlib": require.resolve("browserify-zlib"),
+          "url": require.resolve("url/"),
+          "assert": require.resolve("assert/"),
+          "util": require.resolve("util/"),
+          "fs": false,
+          "net": false,
+          "tls": false
+        }
+      }
+    }
+  }
+};

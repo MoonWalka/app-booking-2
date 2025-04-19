@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { collection, getDocs, query, orderBy, deleteDoc, doc, limit, startAfter, updateDoc } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'; // Importez les fonctions de Firebase Storage
-import { db, storage } from '../../firebase'; // Assurez-vous d'importer le module storage de Firebase
+import { collection, getDocs, query, orderBy, deleteDoc, doc, limit, startAfter, updateDoc } from './firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from './firebase/storage'; // Importez les fonctions de Firebase Storage
+import { db, storage } from '../../firebase.js.m1fix.bak';
 import { Container, Row, Col, Card, Button, Form, InputGroup, Badge, Spinner, Modal } from 'react-bootstrap';
 import '../../style/artistesList.css';
 

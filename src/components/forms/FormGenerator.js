@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { collection, addDoc, serverTimestamp, doc, updateDoc, getDoc } from 'firebase/firestore';
-import { db } from '../../firebase';
+import { collection, addDoc, serverTimestamp, doc, updateDoc, getDoc } from './firebase/firestore';
+import { db } from '../../firebase.js.m1fix.bak';
 import { v4 as uuidv4 } from 'uuid';
 
 const FormGenerator = ({ concertId, programmateurId, onFormGenerated }) => {

@@ -1,0 +1,775 @@
+[0;34m=== Analyse complète et correction des imports dans le projet ===[0m
+Date: Sat Apr 19 21:50:27 CEST 2025
+
+[1;33mRecherche de tous les fichiers JS/JSX...[0m
+[0;34m      85 fichiers trouvés[0m
+[0;32m✓ Analyse prête[0m
+
+[1;33mAnalyse des imports dans chaque fichier...[0m
+[0;31m✗ Import problématique dans ./src/context/AuthContext.js: ../firebase.js (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/firebase.js.m1fix.bak[0m
+[0;34m  - ./src/firebase.js.bak[0m
+[0;34m  - ./src/firebase.js.original[0m
+[0;34m  - ./src/firebase.js[0m
+[0;32m✓ Corrigé: ../firebase.js -> ../firebase.js.m1fix.bak[0m
+[0;31m✗ Import problématique dans ./src/index.js: ./App (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/App.css[0m
+[0;34m  - ./src/App.js[0m
+[0;32m✓ Corrigé: ./App -> App.css[0m
+[0;31m✗ Import problématique dans ./src/index.js: ./reportWebVitals (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/reportWebVitals.js[0m
+[0;32m✓ Corrigé: ./reportWebVitals -> reportWebVitals.js[0m
+[0;31m✗ Import problématique dans ./src/components/concerts/ConcertsList.js: ../../hooks/useResponsiveComponent (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/hooks/useResponsiveComponent.js[0m
+[0;32m✓ Corrigé: ../../hooks/useResponsiveComponent -> ../../hooks/useResponsiveComponent.js[0m
+[0;31m✗ Import problématique dans ./src/components/concerts/desktop/ConcertsList.js: ../../../firebase.js (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/firebase.js.m1fix.bak[0m
+[0;34m  - ./src/firebase.js.bak[0m
+[0;34m  - ./src/firebase.js.original[0m
+[0;34m  - ./src/firebase.js[0m
+[0;32m✓ Corrigé: ../../../firebase.js -> ../../../firebase.js.m1fix.bak[0m
+[0;31m✗ Import problématique dans ./src/components/concerts/desktop/ConcertForm.js: ../../../firebase.js (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/firebase.js.m1fix.bak[0m
+[0;34m  - ./src/firebase.js.bak[0m
+[0;34m  - ./src/firebase.js.original[0m
+[0;34m  - ./src/firebase.js[0m
+[0;32m✓ Corrigé: ../../../firebase.js -> ../../../firebase.js.m1fix.bak[0m
+[0;31m✗ Import problématique dans ./src/components/concerts/desktop/ConcertDetails.js: ../../../firebase.js (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/firebase.js.m1fix.bak[0m
+[0;34m  - ./src/firebase.js.bak[0m
+[0;34m  - ./src/firebase.js.original[0m
+[0;34m  - ./src/firebase.js[0m
+[0;32m✓ Corrigé: ../../../firebase.js -> ../../../firebase.js.m1fix.bak[0m
+[0;31m✗ Import problématique dans ./src/components/concerts/desktop/ConcertDetails.js: ../forms/FormGenerator (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/components/forms/FormGenerator.js[0m
+[0;34m  - ./src/components/forms/FormGenerator.js.bak[0m
+[0;32m✓ Corrigé: ../forms/FormGenerator -> ../../forms/FormGenerator.js[0m
+[0;31m✗ Import problématique dans ./src/components/concerts/ConcertForm.js: ../../hooks/useResponsiveComponent (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/hooks/useResponsiveComponent.js[0m
+[0;32m✓ Corrigé: ../../hooks/useResponsiveComponent -> ../../hooks/useResponsiveComponent.js[0m
+[0;31m✗ Import problématique dans ./src/components/concerts/mobile/ConcertsList.js: ../../../firebase.js (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/firebase.js.m1fix.bak[0m
+[0;34m  - ./src/firebase.js.bak[0m
+[0;34m  - ./src/firebase.js.original[0m
+[0;34m  - ./src/firebase.js[0m
+[0;32m✓ Corrigé: ../../../firebase.js -> ../../../firebase.js.m1fix.bak[0m
+[0;31m✗ Import problématique dans ./src/components/concerts/mobile/ConcertForm.js: ../../../firebase.js (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/firebase.js.m1fix.bak[0m
+[0;34m  - ./src/firebase.js.bak[0m
+[0;34m  - ./src/firebase.js.original[0m
+[0;34m  - ./src/firebase.js[0m
+[0;32m✓ Corrigé: ../../../firebase.js -> ../../../firebase.js.m1fix.bak[0m
+[0;31m✗ Import problématique dans ./src/components/concerts/mobile/ConcertForm.js: ../../common/steps/StepNavigation (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/components/common/steps/StepNavigation.js[0m
+[0;34m  - ./src/components/common/steps/StepNavigation.js.systematic_bak[0m
+[0;34m  - ./src/components/common/steps/StepNavigation.js.final_bak[0m
+[0;32m✓ Corrigé: ../../common/steps/StepNavigation -> ../../common/steps/StepNavigation.js[0m
+[0;31m✗ Import problématique dans ./src/components/concerts/mobile/ConcertDetails.js: ../../../firebase.js (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/firebase.js.m1fix.bak[0m
+[0;34m  - ./src/firebase.js.bak[0m
+[0;34m  - ./src/firebase.js.original[0m
+[0;34m  - ./src/firebase.js[0m
+[0;32m✓ Corrigé: ../../../firebase.js -> ../../../firebase.js.m1fix.bak[0m
+[0;31m✗ Import problématique dans ./src/components/concerts/mobile/ConcertDetails.js: ../../forms/FormGenerator (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/components/forms/FormGenerator.js[0m
+[0;34m  - ./src/components/forms/FormGenerator.js.bak[0m
+[0;32m✓ Corrigé: ../../forms/FormGenerator -> ../../forms/FormGenerator.js[0m
+[0;31m✗ Import problématique dans ./src/components/concerts/ConcertDetails.js: ../../hooks/useResponsiveComponent (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/hooks/useResponsiveComponent.js[0m
+[0;32m✓ Corrigé: ../../hooks/useResponsiveComponent -> ../../hooks/useResponsiveComponent.js[0m
+[0;31m✗ Import problématique dans ./src/components/forms/ProgrammateurForm.js: ../../hooks/useResponsiveComponent (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/hooks/useResponsiveComponent.js[0m
+[0;32m✓ Corrigé: ../../hooks/useResponsiveComponent -> ../../hooks/useResponsiveComponent.js[0m
+[0;31m✗ Import problématique dans ./src/components/forms/desktop/ProgrammateurForm.js: ../../../firebase.js (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/firebase.js.m1fix.bak[0m
+[0;34m  - ./src/firebase.js.bak[0m
+[0;34m  - ./src/firebase.js.original[0m
+[0;34m  - ./src/firebase.js[0m
+[0;32m✓ Corrigé: ../../../firebase.js -> ../../../firebase.js.m1fix.bak[0m
+[0;31m✗ Import problématique dans ./src/components/forms/desktop/ProgrammateurForm.js: ../../hooks/useLocationIQ (fichier non trouvé)[0m
+[0;32m✓ Corrigé hook: ../../hooks/useLocationIQ -> ../../../hooks/useLocationIQ.js[0m
+[0;31m✗ Import problématique dans ./src/components/forms/desktop/LieuForm.js: ../../../firebase.js (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/firebase.js.m1fix.bak[0m
+[0;34m  - ./src/firebase.js.bak[0m
+[0;34m  - ./src/firebase.js.original[0m
+[0;34m  - ./src/firebase.js[0m
+[0;32m✓ Corrigé: ../../../firebase.js -> ../../../firebase.js.m1fix.bak[0m
+[0;31m✗ Import problématique dans ./src/components/forms/desktop/LieuForm.js: ../../hooks/useLocationIQ (fichier non trouvé)[0m
+[0;32m✓ Corrigé hook: ../../hooks/useLocationIQ -> ../../../hooks/useLocationIQ.js[0m
+[0;31m✗ Import problématique dans ./src/components/forms/FormGenerator.js: ../../firebase.js (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/firebase.js.m1fix.bak[0m
+[0;34m  - ./src/firebase.js.bak[0m
+[0;34m  - ./src/firebase.js.original[0m
+[0;34m  - ./src/firebase.js[0m
+[0;32m✓ Corrigé: ../../firebase.js -> ../../firebase.js.m1fix.bak[0m
+[0;31m✗ Import problématique dans ./src/components/forms/FormValidationInterface.js: ../../hooks/useResponsiveComponent (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/hooks/useResponsiveComponent.js[0m
+[0;32m✓ Corrigé: ../../hooks/useResponsiveComponent -> ../../hooks/useResponsiveComponent.js[0m
+[0;31m✗ Import problématique dans ./src/components/forms/mobile/ProgrammateurForm.js: ../../../firebase.js (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/firebase.js.m1fix.bak[0m
+[0;34m  - ./src/firebase.js.bak[0m
+[0;34m  - ./src/firebase.js.original[0m
+[0;34m  - ./src/firebase.js[0m
+[0;32m✓ Corrigé: ../../../firebase.js -> ../../../firebase.js.m1fix.bak[0m
+[0;31m✗ Import problématique dans ./src/components/forms/mobile/ProgrammateurForm.js: ../../../hooks/useLocationIQ (fichier non trouvé)[0m
+[0;32m✓ Corrigé hook: ../../../hooks/useLocationIQ -> ../../../hooks/useLocationIQ.js[0m
+[0;31m✗ Import problématique dans ./src/components/forms/mobile/ProgrammateurForm.js: ../../common/steps/StepNavigation (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/components/common/steps/StepNavigation.js[0m
+[0;34m  - ./src/components/common/steps/StepNavigation.js.systematic_bak[0m
+[0;34m  - ./src/components/common/steps/StepNavigation.js.final_bak[0m
+[0;32m✓ Corrigé: ../../common/steps/StepNavigation -> ../../common/steps/StepNavigation.js[0m
+[0;31m✗ Import problématique dans ./src/components/forms/mobile/FormValidationInterface.js: ../../../firebase.js (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/firebase.js.m1fix.bak[0m
+[0;34m  - ./src/firebase.js.bak[0m
+[0;34m  - ./src/firebase.js.original[0m
+[0;34m  - ./src/firebase.js[0m
+[0;32m✓ Corrigé: ../../../firebase.js -> ../../../firebase.js.m1fix.bak[0m
+[0;31m✗ Import problématique dans ./src/components/forms/mobile/LieuForm.js: ../../../firebase.js (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/firebase.js.m1fix.bak[0m
+[0;34m  - ./src/firebase.js.bak[0m
+[0;34m  - ./src/firebase.js.original[0m
+[0;34m  - ./src/firebase.js[0m
+[0;32m✓ Corrigé: ../../../firebase.js -> ../../../firebase.js.m1fix.bak[0m
+[0;31m✗ Import problématique dans ./src/components/forms/mobile/LieuForm.js: ../../../hooks/useLocationIQ (fichier non trouvé)[0m
+[0;32m✓ Corrigé hook: ../../../hooks/useLocationIQ -> ../../../hooks/useLocationIQ.js[0m
+[0;31m✗ Import problématique dans ./src/components/forms/mobile/LieuForm.js: ../../common/steps/StepNavigation (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/components/common/steps/StepNavigation.js[0m
+[0;34m  - ./src/components/common/steps/StepNavigation.js.systematic_bak[0m
+[0;34m  - ./src/components/common/steps/StepNavigation.js.final_bak[0m
+[0;32m✓ Corrigé: ../../common/steps/StepNavigation -> ../../common/steps/StepNavigation.js[0m
+[0;31m✗ Import problématique dans ./src/components/forms/LieuForm.js: ../../hooks/useResponsiveComponent (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/hooks/useResponsiveComponent.js[0m
+[0;32m✓ Corrigé: ../../hooks/useResponsiveComponent -> ../../hooks/useResponsiveComponent.js[0m
+[0;31m✗ Import problématique dans ./src/components/layout/Navbar.js: ../../config (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/config.js[0m
+[0;32m✓ Corrigé: ../../config -> ../../config.js[0m
+[0;31m✗ Import problématique dans ./src/components/layout/Sidebar.js: ../../config (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/config.js[0m
+[0;32m✓ Corrigé: ../../config -> ../../config.js[0m
+[0;31m✗ Import problématique dans ./src/components/lieux/desktop/LieuxList.js: ../../../firebase.js (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/firebase.js.m1fix.bak[0m
+[0;34m  - ./src/firebase.js.bak[0m
+[0;34m  - ./src/firebase.js.original[0m
+[0;34m  - ./src/firebase.js[0m
+[0;32m✓ Corrigé: ../../../firebase.js -> ../../../firebase.js.m1fix.bak[0m
+[0;31m✗ Import problématique dans ./src/components/lieux/desktop/LieuDetails.js: ../../../firebase.js (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/firebase.js.m1fix.bak[0m
+[0;34m  - ./src/firebase.js.bak[0m
+[0;34m  - ./src/firebase.js.original[0m
+[0;34m  - ./src/firebase.js[0m
+[0;32m✓ Corrigé: ../../../firebase.js -> ../../../firebase.js.m1fix.bak[0m
+[0;31m✗ Import problématique dans ./src/components/lieux/mobile/LieuxList.js: ../../../firebase.js (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/firebase.js.m1fix.bak[0m
+[0;34m  - ./src/firebase.js.bak[0m
+[0;34m  - ./src/firebase.js.original[0m
+[0;34m  - ./src/firebase.js[0m
+[0;32m✓ Corrigé: ../../../firebase.js -> ../../../firebase.js.m1fix.bak[0m
+[0;31m✗ Import problématique dans ./src/components/lieux/LieuxList.js: ../../hooks/useResponsiveComponent (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/hooks/useResponsiveComponent.js[0m
+[0;32m✓ Corrigé: ../../hooks/useResponsiveComponent -> ../../hooks/useResponsiveComponent.js[0m
+[0;31m✗ Import problématique dans ./src/components/lieux/LieuDetails.js: ../../hooks/useResponsiveComponent (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/hooks/useResponsiveComponent.js[0m
+[0;32m✓ Corrigé: ../../hooks/useResponsiveComponent -> ../../hooks/useResponsiveComponent.js[0m
+[0;31m✗ Import problématique dans ./src/components/programmateurs/desktop/ProgrammateursList.js: ../../../firebase.js (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/firebase.js.m1fix.bak[0m
+[0;34m  - ./src/firebase.js.bak[0m
+[0;34m  - ./src/firebase.js.original[0m
+[0;34m  - ./src/firebase.js[0m
+[0;32m✓ Corrigé: ../../../firebase.js -> ../../../firebase.js.m1fix.bak[0m
+[0;31m✗ Import problématique dans ./src/components/programmateurs/desktop/ProgrammateurDetails.js: ../../../firebase.js (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/firebase.js.m1fix.bak[0m
+[0;34m  - ./src/firebase.js.bak[0m
+[0;34m  - ./src/firebase.js.original[0m
+[0;34m  - ./src/firebase.js[0m
+[0;32m✓ Corrigé: ../../../firebase.js -> ../../../firebase.js.m1fix.bak[0m
+[0;31m✗ Import problématique dans ./src/components/programmateurs/ProgrammateursList.js: ../../hooks/useResponsiveComponent (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/hooks/useResponsiveComponent.js[0m
+[0;32m✓ Corrigé: ../../hooks/useResponsiveComponent -> ../../hooks/useResponsiveComponent.js[0m
+[0;31m✗ Import problématique dans ./src/components/programmateurs/mobile/ProgrammateursList.js: ../../../firebase.js (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/firebase.js.m1fix.bak[0m
+[0;34m  - ./src/firebase.js.bak[0m
+[0;34m  - ./src/firebase.js.original[0m
+[0;34m  - ./src/firebase.js[0m
+[0;32m✓ Corrigé: ../../../firebase.js -> ../../../firebase.js.m1fix.bak[0m
+[0;31m✗ Import problématique dans ./src/components/programmateurs/ProgrammateurDetails.js: ../../hooks/useResponsiveComponent (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/hooks/useResponsiveComponent.js[0m
+[0;32m✓ Corrigé: ../../hooks/useResponsiveComponent -> ../../hooks/useResponsiveComponent.js[0m
+[0;31m✗ Import problématique dans ./src/components/common/Layout.js: ../../hooks/useResponsiveComponent (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/hooks/useResponsiveComponent.js[0m
+[0;32m✓ Corrigé: ../../hooks/useResponsiveComponent -> ../../hooks/useResponsiveComponent.js[0m
+[0;31m✗ Import problématique dans ./src/components/common/layout/DesktopLayout.js: ../../../context/AuthContext (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/context/AuthContext.js[0m
+[0;34m  - ./src/context/AuthContext.js.bak[0m
+[0;34m  - ./src/context/AuthContext.js.path_bak[0m
+[0;32m✓ Corrigé: ../../../context/AuthContext -> ../../../context/AuthContext.js[0m
+[0;31m✗ Import problématique dans ./src/components/common/layout/DesktopLayout.js: ../../../config (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/config.js[0m
+[0;32m✓ Corrigé: ../../../config -> ../../../config.js[0m
+[0;31m✗ Import problématique dans ./src/components/common/layout/MobileLayout.js: ../../../context/AuthContext (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/context/AuthContext.js[0m
+[0;34m  - ./src/context/AuthContext.js.bak[0m
+[0;34m  - ./src/context/AuthContext.js.path_bak[0m
+[0;32m✓ Corrigé: ../../../context/AuthContext -> ../../../context/AuthContext.js[0m
+[0;31m✗ Import problématique dans ./src/components/common/layout/MobileLayout.js: ../../../config (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/config.js[0m
+[0;32m✓ Corrigé: ../../../config -> ../../../config.js[0m
+[0;31m✗ Import problématique dans ./src/components/common/PublicFormLayout.js: ../../config (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/config.js[0m
+[0;32m✓ Corrigé: ../../config -> ../../config.js[0m
+[0;31m✗ Import problématique dans ./src/components/contrats/ContratTemplateEditor.js: ../../hooks/useResponsiveComponent (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/hooks/useResponsiveComponent.js[0m
+[0;32m✓ Corrigé: ../../hooks/useResponsiveComponent -> ../../hooks/useResponsiveComponent.js[0m
+[0;31m✗ Import problématique dans ./src/components/contrats/ContratGenerator.js: ../../hooks/useResponsiveComponent (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/hooks/useResponsiveComponent.js[0m
+[0;32m✓ Corrigé: ../../hooks/useResponsiveComponent -> ../../hooks/useResponsiveComponent.js[0m
+[0;31m✗ Import problématique dans ./src/components/contrats/desktop/ContratTemplateEditor.js: ./ContratVariable (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/components/contrats/desktop/ContratVariable.js[0m
+[0;34m  - ./src/components/contrats/ContratVariable.js[0m
+[0;32m✓ Corrigé: ./ContratVariable -> ContratVariable.js[0m
+[0;31m✗ Import problématique dans ./src/components/contrats/desktop/ContratGenerator.js: ../../../firebase.js (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/firebase.js.m1fix.bak[0m
+[0;34m  - ./src/firebase.js.bak[0m
+[0;34m  - ./src/firebase.js.original[0m
+[0;34m  - ./src/firebase.js[0m
+[0;32m✓ Corrigé: ../../../firebase.js -> ../../../firebase.js.m1fix.bak[0m
+[0;31m✗ Import problématique dans ./src/components/contrats/desktop/ContratGenerator.js: ./ContratPDF (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/components/contrats/ContratPDF.js[0m
+[0;34m  - ./src/components/contrats/desktop/ContratPDF.js[0m
+[0;32m✓ Corrigé: ./ContratPDF -> ../ContratPDF.js[0m
+[0;31m✗ Import problématique dans ./src/components/artistes/ArtistesList.jsx: ../../hooks/useResponsiveComponent (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/hooks/useResponsiveComponent.js[0m
+[0;32m✓ Corrigé: ../../hooks/useResponsiveComponent -> ../../hooks/useResponsiveComponent.js[0m
+[0;31m✗ Import problématique dans ./src/components/artistes/mobile/ArtisteDetail.js: ../../../firebase.js (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/firebase.js.m1fix.bak[0m
+[0;34m  - ./src/firebase.js.bak[0m
+[0;34m  - ./src/firebase.js.original[0m
+[0;34m  - ./src/firebase.js[0m
+[0;32m✓ Corrigé: ../../../firebase.js -> ../../../firebase.js.m1fix.bak[0m
+[0;31m✗ Import problématique dans ./src/components/artistes/mobile/ArtistesList.js: ../../../firebase.js (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/firebase.js.m1fix.bak[0m
+[0;34m  - ./src/firebase.js.bak[0m
+[0;34m  - ./src/firebase.js.original[0m
+[0;34m  - ./src/firebase.js[0m
+[0;32m✓ Corrigé: ../../../firebase.js -> ../../../firebase.js.m1fix.bak[0m
+[0;31m✗ Import problématique dans ./src/components/artistes/mobile/ArtisteForm.js: ../../../firebase.js (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/firebase.js.m1fix.bak[0m
+[0;34m  - ./src/firebase.js.bak[0m
+[0;34m  - ./src/firebase.js.original[0m
+[0;34m  - ./src/firebase.js[0m
+[0;32m✓ Corrigé: ../../../firebase.js -> ../../../firebase.js.m1fix.bak[0m
+[0;31m✗ Import problématique dans ./src/components/artistes/mobile/ArtisteForm.js: ../../common/steps/StepNavigation (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/components/common/steps/StepNavigation.js[0m
+[0;34m  - ./src/components/common/steps/StepNavigation.js.systematic_bak[0m
+[0;34m  - ./src/components/common/steps/StepNavigation.js.final_bak[0m
+[0;32m✓ Corrigé: ../../common/steps/StepNavigation -> ../../common/steps/StepNavigation.js[0m
+[0;31m✗ Import problématique dans ./src/components/artistes/ArtisteForm.jsx: ../../firebase.js (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/firebase.js.m1fix.bak[0m
+[0;34m  - ./src/firebase.js.bak[0m
+[0;34m  - ./src/firebase.js.original[0m
+[0;34m  - ./src/firebase.js[0m
+[0;32m✓ Corrigé: ../../firebase.js -> ../../firebase.js.m1fix.bak[0m
+[0;31m✗ Import problématique dans ./src/components/artistes/ArtisteDetail.jsx: ../../hooks/useResponsiveComponent (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/hooks/useResponsiveComponent.js[0m
+[0;32m✓ Corrigé: ../../hooks/useResponsiveComponent -> ../../hooks/useResponsiveComponent.js[0m
+[0;31m✗ Import problématique dans ./src/hooks/forms/useConcertForm.js: ../services/firebaseService (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/services/firebaseService.js[0m
+[0;34m  - ./src/services/firebaseService.js.diagnostic.bak[0m
+[0;34m  - ./src/services/firebaseService.js.bak[0m
+[0;32m✓ Corrigé: ../services/firebaseService -> ../../services/firebaseService.js[0m
+[0;31m✗ Import problématique dans ./src/hooks/lists/useConcertsList.js: ../../services/firebaseService (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/services/firebaseService.js[0m
+[0;34m  - ./src/services/firebaseService.js.diagnostic.bak[0m
+[0;34m  - ./src/services/firebaseService.js.bak[0m
+[0;32m✓ Corrigé: ../../services/firebaseService -> ../../services/firebaseService.js[0m
+[0;31m✗ Import problématique dans ./src/hooks/lists/useConcertsList.js: ../../services/firebaseService (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/services/firebaseService.js[0m
+[0;34m  - ./src/services/firebaseService.js.diagnostic.bak[0m
+[0;34m  - ./src/services/firebaseService.js.bak[0m
+[0;32m✓ Corrigé: ../../services/firebaseService -> ../../services/firebaseService.js[0m
+[0;31m✗ Import problématique dans ./src/hooks/useResponsiveComponent.js: ./useIsMobile (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/hooks/useIsMobile.js[0m
+[0;32m✓ Corrigé: ./useIsMobile -> useIsMobile.js[0m
+[0;31m✗ Import problématique dans ./src/pages/ConcertsPage.js: ../components/concerts/ConcertsList (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/components/concerts/ConcertsList.js[0m
+[0;34m  - ./src/components/concerts/desktop/ConcertsList.js.systematic_bak[0m
+[0;34m  - ./src/components/concerts/desktop/ConcertsList.js[0m
+[0;34m  - ./src/components/concerts/desktop/ConcertsList.js.final_bak[0m
+[0;34m  - ./src/components/concerts/desktop/ConcertsList.js.path_bak[0m
+[0;34m  - ./src/components/concerts/desktop/ConcertsList.js.bak[0m
+[0;34m  - ./src/components/concerts/mobile/ConcertsList.js.systematic_bak[0m
+[0;34m  - ./src/components/concerts/mobile/ConcertsList.js[0m
+[0;34m  - ./src/components/concerts/mobile/ConcertsList.js.final_bak[0m
+[0;34m  - ./src/components/concerts/mobile/ConcertsList.js.path_bak[0m
+[0;34m  - ./src/components/concerts/mobile/ConcertsList.js.bak[0m
+[0;34m  - ./src/components/concerts/ConcertsList.js.path_bak[0m
+[0;32m✓ Corrigé: ../components/concerts/ConcertsList -> ../components/concerts/ConcertsList.js[0m
+[0;31m✗ Import problématique dans ./src/pages/ConcertsPage.js: ../components/concerts/ConcertForm (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/components/concerts/desktop/ConcertForm.js.systematic_bak[0m
+[0;34m  - ./src/components/concerts/desktop/ConcertForm.js.bak[0m
+[0;34m  - ./src/components/concerts/desktop/ConcertForm.js[0m
+[0;34m  - ./src/components/concerts/desktop/ConcertForm.js.path_bak[0m
+[0;34m  - ./src/components/concerts/desktop/ConcertForm.js.final_bak[0m
+[0;34m  - ./src/components/concerts/ConcertForm.js[0m
+[0;34m  - ./src/components/concerts/mobile/ConcertForm.js.systematic_bak[0m
+[0;34m  - ./src/components/concerts/mobile/ConcertForm.js.bak[0m
+[0;34m  - ./src/components/concerts/mobile/ConcertForm.js[0m
+[0;34m  - ./src/components/concerts/mobile/ConcertForm.js.path_bak[0m
+[0;34m  - ./src/components/concerts/mobile/ConcertForm.js.final_bak[0m
+[0;34m  - ./src/components/concerts/ConcertForm.js.path_bak[0m
+[0;32m✓ Corrigé: ../components/concerts/ConcertForm -> ../components/concerts/desktop/ConcertForm.js.systematic_bak[0m
+[0;31m✗ Import problématique dans ./src/pages/ConcertsPage.js: ../components/concerts/ConcertDetails (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/components/concerts/ConcertDetails.js.path_bak[0m
+[0;34m  - ./src/components/concerts/desktop/ConcertDetails.js.path_bak[0m
+[0;34m  - ./src/components/concerts/desktop/ConcertDetails.js.final_bak[0m
+[0;34m  - ./src/components/concerts/desktop/ConcertDetails.js.systematic_bak[0m
+[0;34m  - ./src/components/concerts/desktop/ConcertDetails.js[0m
+[0;34m  - ./src/components/concerts/desktop/ConcertDetails.js.bak[0m
+[0;34m  - ./src/components/concerts/mobile/ConcertDetails.js.path_bak[0m
+[0;34m  - ./src/components/concerts/mobile/ConcertDetails.js.final_bak[0m
+[0;34m  - ./src/components/concerts/mobile/ConcertDetails.js.systematic_bak[0m
+[0;34m  - ./src/components/concerts/mobile/ConcertDetails.js[0m
+[0;34m  - ./src/components/concerts/mobile/ConcertDetails.js.bak[0m
+[0;34m  - ./src/components/concerts/ConcertDetails.js[0m
+[0;32m✓ Corrigé: ../components/concerts/ConcertDetails -> ../components/concerts/ConcertDetails.js.path_bak[0m
+[0;31m✗ Import problématique dans ./src/pages/ConcertsPage.js: ../components/forms/FormValidationInterface (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/components/forms/desktop/FormValidationInterface.js[0m
+[0;34m  - ./src/components/forms/FormValidationInterface.js[0m
+[0;34m  - ./src/components/forms/mobile/FormValidationInterface.js.final_bak[0m
+[0;34m  - ./src/components/forms/mobile/FormValidationInterface.js[0m
+[0;34m  - ./src/components/forms/mobile/FormValidationInterface.js.bak[0m
+[0;34m  - ./src/components/forms/mobile/FormValidationInterface.js.path_bak[0m
+[0;34m  - ./src/components/forms/mobile/FormValidationInterface.js.systematic_bak[0m
+[0;34m  - ./src/components/forms/FormValidationInterface.js.path_bak[0m
+[0;32m✓ Corrigé: ../components/forms/FormValidationInterface -> ../components/forms/desktop/FormValidationInterface.js[0m
+[0;31m✗ Import problématique dans ./src/pages/ContratDetailsPage.js: ../firebase.js (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/firebase.js.m1fix.bak[0m
+[0;34m  - ./src/firebase.js.bak[0m
+[0;34m  - ./src/firebase.js.original[0m
+[0;34m  - ./src/firebase.js[0m
+[0;32m✓ Corrigé: ../firebase.js -> ../firebase.js.m1fix.bak[0m
+[0;31m✗ Import problématique dans ./src/pages/ContratDetailsPage.js: ../components/contrats/ContratPDF (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/components/contrats/ContratPDF.js[0m
+[0;34m  - ./src/components/contrats/desktop/ContratPDF.js[0m
+[0;32m✓ Corrigé: ../components/contrats/ContratPDF -> ../components/contrats/ContratPDF.js[0m
+[0;31m✗ Import problématique dans ./src/pages/contratTemplatesPage.js: ../firebase.js (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/firebase.js.m1fix.bak[0m
+[0;34m  - ./src/firebase.js.bak[0m
+[0;34m  - ./src/firebase.js.original[0m
+[0;34m  - ./src/firebase.js[0m
+[0;32m✓ Corrigé: ../firebase.js -> ../firebase.js.m1fix.bak[0m
+[0;31m✗ Import problématique dans ./src/pages/ContratsPage.js: ../firebase.js (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/firebase.js.m1fix.bak[0m
+[0;34m  - ./src/firebase.js.bak[0m
+[0;34m  - ./src/firebase.js.original[0m
+[0;34m  - ./src/firebase.js[0m
+[0;32m✓ Corrigé: ../firebase.js -> ../firebase.js.m1fix.bak[0m
+[0;31m✗ Import problématique dans ./src/pages/ContratsPage.js: ./contratTemplatesPage (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/pages/contratTemplatesPage.js.path_bak[0m
+[0;34m  - ./src/pages/contratTemplatesPage.js[0m
+[0;34m  - ./src/pages/contratTemplatesPage.js.bak[0m
+[0;32m✓ Corrigé: ./contratTemplatesPage -> contratTemplatesPage.js.path_bak[0m
+[0;31m✗ Import problématique dans ./src/pages/ContratsPage.js: ./contratTemplatesEditPage (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/pages/contratTemplatesEditPage.js.bak[0m
+[0;34m  - ./src/pages/contratTemplatesEditPage.js[0m
+[0;34m  - ./src/pages/contratTemplatesEditPage.js.alias_bak[0m
+[0;32m✓ Corrigé: ./contratTemplatesEditPage -> contratTemplatesEditPage.js.bak[0m
+[0;31m✗ Import problématique dans ./src/pages/ContratsPage.js: ./ContratGenerationPage (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/pages/ContratGenerationPage.js.bak[0m
+[0;34m  - ./src/pages/ContratGenerationPage.js.alias_bak[0m
+[0;34m  - ./src/pages/ContratGenerationPage.js[0m
+[0;32m✓ Corrigé: ./ContratGenerationPage -> ContratGenerationPage.js.bak[0m
+[0;31m✗ Import problématique dans ./src/pages/ContratsPage.js: ./ContratDetailsPage (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/pages/ContratDetailsPage.js[0m
+[0;34m  - ./src/pages/ContratDetailsPage.js.bak[0m
+[0;34m  - ./src/pages/ContratDetailsPage.js.path_bak[0m
+[0;34m  - ./src/pages/ContratDetailsPage.js.alias_bak[0m
+[0;32m✓ Corrigé: ./ContratDetailsPage -> ContratDetailsPage.js[0m
+[0;31m✗ Import problématique dans ./src/pages/ContratGenerationPage.js: ../firebase.js (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/firebase.js.m1fix.bak[0m
+[0;34m  - ./src/firebase.js.bak[0m
+[0;34m  - ./src/firebase.js.original[0m
+[0;34m  - ./src/firebase.js[0m
+[0;32m✓ Corrigé: ../firebase.js -> ../firebase.js.m1fix.bak[0m
+[0;31m✗ Import problématique dans ./src/pages/ContratGenerationPage.js: ../components/contrats/ContratGenerator (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/components/contrats/ContratGenerator.js[0m
+[0;34m  - ./src/components/contrats/desktop/ContratGenerator.js.systematic_bak[0m
+[0;34m  - ./src/components/contrats/desktop/ContratGenerator.js.final_bak[0m
+[0;34m  - ./src/components/contrats/desktop/ContratGenerator.js[0m
+[0;34m  - ./src/components/contrats/desktop/ContratGenerator.js.bak[0m
+[0;34m  - ./src/components/contrats/desktop/ContratGenerator.js.path_bak[0m
+[0;34m  - ./src/components/contrats/desktop/ContratGenerator.js.known_bak[0m
+[0;34m  - ./src/components/contrats/ContratGenerator.js.path_bak[0m
+[0;32m✓ Corrigé: ../components/contrats/ContratGenerator -> ../components/contrats/ContratGenerator.js[0m
+[0;31m✗ Import problématique dans ./src/pages/contratTemplatesEditPage.js: ../firebase.js (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/firebase.js.m1fix.bak[0m
+[0;34m  - ./src/firebase.js.bak[0m
+[0;34m  - ./src/firebase.js.original[0m
+[0;34m  - ./src/firebase.js[0m
+[0;32m✓ Corrigé: ../firebase.js -> ../firebase.js.m1fix.bak[0m
+[0;31m✗ Import problématique dans ./src/pages/contratTemplatesEditPage.js: ../components/contrats/ContratTemplateEditor (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/components/contrats/ContratTemplateEditor.js[0m
+[0;34m  - ./src/components/contrats/ContratTemplateEditor.js.path_bak[0m
+[0;34m  - ./src/components/contrats/desktop/ContratTemplateEditor.js.known_bak[0m
+[0;34m  - ./src/components/contrats/desktop/ContratTemplateEditor.js[0m
+[0;34m  - ./src/components/contrats/desktop/ContratTemplateEditor.js.path_bak[0m
+[0;34m  - ./src/components/contrats/desktop/ContratTemplateEditor.js.final_bak[0m
+[0;34m  - ./src/components/contrats/desktop/ContratTemplateEditor.js.systematic_bak[0m
+[0;32m✓ Corrigé: ../components/contrats/ContratTemplateEditor -> ../components/contrats/ContratTemplateEditor.js[0m
+[0;31m✗ Import problématique dans ./src/pages/ParametresPage.js: ../firebase.js (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/firebase.js.m1fix.bak[0m
+[0;34m  - ./src/firebase.js.bak[0m
+[0;34m  - ./src/firebase.js.original[0m
+[0;34m  - ./src/firebase.js[0m
+[0;32m✓ Corrigé: ../firebase.js -> ../firebase.js.m1fix.bak[0m
+[0;31m✗ Import problématique dans ./src/pages/ParametresPage.js: ../hooks/useLocationIQ (fichier non trouvé)[0m
+[0;32m✓ Corrigé hook: ../hooks/useLocationIQ -> ../hooks/useLocationIQ.js[0m
+[0;31m✗ Import problématique dans ./src/pages/ParametresPage.js: ./contratTemplatesPage (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/pages/contratTemplatesPage.js.path_bak[0m
+[0;34m  - ./src/pages/contratTemplatesPage.js[0m
+[0;34m  - ./src/pages/contratTemplatesPage.js.bak[0m
+[0;32m✓ Corrigé: ./contratTemplatesPage -> contratTemplatesPage.js.path_bak[0m
+[0;31m✗ Import problématique dans ./src/pages/ParametresPage.js: ./contratTemplatesEditPage (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/pages/contratTemplatesEditPage.js.path_bak[0m
+[0;34m  - ./src/pages/contratTemplatesEditPage.js.bak[0m
+[0;34m  - ./src/pages/contratTemplatesEditPage.js[0m
+[0;34m  - ./src/pages/contratTemplatesEditPage.js.alias_bak[0m
+[0;32m✓ Corrigé: ./contratTemplatesEditPage -> contratTemplatesEditPage.js.path_bak[0m
+[0;31m✗ Import problématique dans ./src/pages/LieuxPage.js: ../components/lieux/LieuxList (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/components/lieux/LieuxList.js.path_bak[0m
+[0;34m  - ./src/components/lieux/desktop/LieuxList.js.path_bak[0m
+[0;34m  - ./src/components/lieux/desktop/LieuxList.js.systematic_bak[0m
+[0;34m  - ./src/components/lieux/desktop/LieuxList.js.final_bak[0m
+[0;34m  - ./src/components/lieux/desktop/LieuxList.js[0m
+[0;34m  - ./src/components/lieux/desktop/LieuxList.js.bak[0m
+[0;34m  - ./src/components/lieux/mobile/LieuxList.js.path_bak[0m
+[0;34m  - ./src/components/lieux/mobile/LieuxList.js.systematic_bak[0m
+[0;34m  - ./src/components/lieux/mobile/LieuxList.js.final_bak[0m
+[0;34m  - ./src/components/lieux/mobile/LieuxList.js[0m
+[0;34m  - ./src/components/lieux/mobile/LieuxList.js.bak[0m
+[0;34m  - ./src/components/lieux/LieuxList.js[0m
+[0;32m✓ Corrigé: ../components/lieux/LieuxList -> ../components/lieux/LieuxList.js.path_bak[0m
+[0;31m✗ Import problématique dans ./src/pages/LieuxPage.js: ../components/lieux/LieuDetails (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/components/lieux/desktop/LieuDetails.js.systematic_bak[0m
+[0;34m  - ./src/components/lieux/desktop/LieuDetails.js.final_bak[0m
+[0;34m  - ./src/components/lieux/desktop/LieuDetails.js.known_bak[0m
+[0;34m  - ./src/components/lieux/desktop/LieuDetails.js.path_bak[0m
+[0;34m  - ./src/components/lieux/desktop/LieuDetails.js[0m
+[0;34m  - ./src/components/lieux/desktop/LieuDetails.js.bak[0m
+[0;34m  - ./src/components/lieux/mobile/LieuDetails.js[0m
+[0;34m  - ./src/components/lieux/LieuDetails.js.path_bak[0m
+[0;34m  - ./src/components/lieux/LieuDetails.js[0m
+[0;32m✓ Corrigé: ../components/lieux/LieuDetails -> ../components/lieux/desktop/LieuDetails.js.systematic_bak[0m
+[0;31m✗ Import problématique dans ./src/pages/LieuxPage.js: ../components/forms/LieuForm (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/components/forms/LieuForm.js.path_bak[0m
+[0;34m  - ./src/components/forms/desktop/LieuForm.js.hook_bak[0m
+[0;34m  - ./src/components/forms/desktop/LieuForm.js.path_bak[0m
+[0;34m  - ./src/components/forms/desktop/LieuForm.js.bak[0m
+[0;34m  - ./src/components/forms/desktop/LieuForm.js.final_bak[0m
+[0;34m  - ./src/components/forms/desktop/LieuForm.js[0m
+[0;34m  - ./src/components/forms/desktop/LieuForm.js.systematic_bak[0m
+[0;34m  - ./src/components/forms/mobile/LieuForm.js.hook_bak[0m
+[0;34m  - ./src/components/forms/mobile/LieuForm.js.path_bak[0m
+[0;34m  - ./src/components/forms/mobile/LieuForm.js.bak[0m
+[0;34m  - ./src/components/forms/mobile/LieuForm.js.final_bak[0m
+[0;34m  - ./src/components/forms/mobile/LieuForm.js[0m
+[0;34m  - ./src/components/forms/mobile/LieuForm.js.systematic_bak[0m
+[0;34m  - ./src/components/forms/LieuForm.js[0m
+[0;32m✓ Corrigé: ../components/forms/LieuForm -> ../components/forms/LieuForm.js.path_bak[0m
+[0;31m✗ Import problématique dans ./src/pages/ProgrammateursPage.js: ../components/programmateurs/ProgrammateursList (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/components/programmateurs/ProgrammateursList.js.path_bak[0m
+[0;34m  - ./src/components/programmateurs/desktop/ProgrammateursList.js.final_bak[0m
+[0;34m  - ./src/components/programmateurs/desktop/ProgrammateursList.js.path_bak[0m
+[0;34m  - ./src/components/programmateurs/desktop/ProgrammateursList.js.fix_bak[0m
+[0;34m  - ./src/components/programmateurs/desktop/ProgrammateursList.js[0m
+[0;34m  - ./src/components/programmateurs/desktop/ProgrammateursList.js.bak[0m
+[0;34m  - ./src/components/programmateurs/desktop/ProgrammateursList.js.systematic_bak[0m
+[0;34m  - ./src/components/programmateurs/ProgrammateursList.js[0m
+[0;34m  - ./src/components/programmateurs/mobile/ProgrammateursList.js.final_bak[0m
+[0;34m  - ./src/components/programmateurs/mobile/ProgrammateursList.js.path_bak[0m
+[0;34m  - ./src/components/programmateurs/mobile/ProgrammateursList.js[0m
+[0;34m  - ./src/components/programmateurs/mobile/ProgrammateursList.js.bak[0m
+[0;34m  - ./src/components/programmateurs/mobile/ProgrammateursList.js.systematic_bak[0m
+[0;32m✓ Corrigé: ../components/programmateurs/ProgrammateursList -> ../components/programmateurs/ProgrammateursList.js.path_bak[0m
+[0;31m✗ Import problématique dans ./src/pages/ProgrammateursPage.js: ../components/programmateurs/ProgrammateurDetails (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/components/programmateurs/ProgrammateurDetails.js.path_bak[0m
+[0;34m  - ./src/components/programmateurs/desktop/ProgrammateurDetails.js.final_bak[0m
+[0;34m  - ./src/components/programmateurs/desktop/ProgrammateurDetails.js.bak[0m
+[0;34m  - ./src/components/programmateurs/desktop/ProgrammateurDetails.js.path_bak[0m
+[0;34m  - ./src/components/programmateurs/desktop/ProgrammateurDetails.js.forced_bak[0m
+[0;34m  - ./src/components/programmateurs/desktop/ProgrammateurDetails.js.systematic_bak[0m
+[0;34m  - ./src/components/programmateurs/desktop/ProgrammateurDetails.js.known_bak[0m
+[0;34m  - ./src/components/programmateurs/desktop/ProgrammateurDetails.js[0m
+[0;34m  - ./src/components/programmateurs/mobile/ProgrammateurDetails.js[0m
+[0;34m  - ./src/components/programmateurs/ProgrammateurDetails.js[0m
+[0;32m✓ Corrigé: ../components/programmateurs/ProgrammateurDetails -> ../components/programmateurs/ProgrammateurDetails.js.path_bak[0m
+[0;31m✗ Import problématique dans ./src/pages/ProgrammateursPage.js: ../components/forms/ProgrammateurForm (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/components/forms/ProgrammateurForm.js.path_bak[0m
+[0;34m  - ./src/components/forms/ProgrammateurForm.js[0m
+[0;34m  - ./src/components/forms/desktop/ProgrammateurForm.js.path_bak[0m
+[0;34m  - ./src/components/forms/desktop/ProgrammateurForm.js[0m
+[0;34m  - ./src/components/forms/desktop/ProgrammateurForm.js.hook_bak[0m
+[0;34m  - ./src/components/forms/desktop/ProgrammateurForm.js.final_bak[0m
+[0;34m  - ./src/components/forms/desktop/ProgrammateurForm.js.bak[0m
+[0;34m  - ./src/components/forms/desktop/ProgrammateurForm.js.systematic_bak[0m
+[0;34m  - ./src/components/forms/mobile/ProgrammateurForm.js.path_bak[0m
+[0;34m  - ./src/components/forms/mobile/ProgrammateurForm.js[0m
+[0;34m  - ./src/components/forms/mobile/ProgrammateurForm.js.hook_bak[0m
+[0;34m  - ./src/components/forms/mobile/ProgrammateurForm.js.final_bak[0m
+[0;34m  - ./src/components/forms/mobile/ProgrammateurForm.js.bak[0m
+[0;34m  - ./src/components/forms/mobile/ProgrammateurForm.js.systematic_bak[0m
+[0;32m✓ Corrigé: ../components/forms/ProgrammateurForm -> ../components/forms/ProgrammateurForm.js.path_bak[0m
+[0;31m✗ Import problématique dans ./src/pages/ArtistesPage.jsx: ../components/artistes/ArtistesList (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/components/artistes/ArtistesList.jsx[0m
+[0;34m  - ./src/components/artistes/desktop/ArtistesList.js[0m
+[0;34m  - ./src/components/artistes/mobile/ArtistesList.js.systematic_bak[0m
+[0;34m  - ./src/components/artistes/mobile/ArtistesList.js[0m
+[0;34m  - ./src/components/artistes/mobile/ArtistesList.js.path_bak[0m
+[0;34m  - ./src/components/artistes/mobile/ArtistesList.js.bak[0m
+[0;34m  - ./src/components/artistes/mobile/ArtistesList.js.final_bak[0m
+[0;34m  - ./src/components/artistes/ArtistesList.jsx.path_bak[0m
+[0;32m✓ Corrigé: ../components/artistes/ArtistesList -> ../components/artistes/ArtistesList.jsx[0m
+[0;31m✗ Import problématique dans ./src/pages/ArtistesPage.jsx: ../components/artistes/ArtisteForm (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/components/artistes/ArtisteForm.jsx.systematic_bak[0m
+[0;34m  - ./src/components/artistes/desktop/ArtisteForm.js[0m
+[0;34m  - ./src/components/artistes/ArtisteForm.jsx.path_bak[0m
+[0;34m  - ./src/components/artistes/mobile/ArtisteForm.js.final_bak[0m
+[0;34m  - ./src/components/artistes/mobile/ArtisteForm.js[0m
+[0;34m  - ./src/components/artistes/mobile/ArtisteForm.js.path_bak[0m
+[0;34m  - ./src/components/artistes/mobile/ArtisteForm.js.systematic_bak[0m
+[0;34m  - ./src/components/artistes/mobile/ArtisteForm.js.bak[0m
+[0;34m  - ./src/components/artistes/ArtisteForm.jsx.bak[0m
+[0;34m  - ./src/components/artistes/ArtisteForm.jsx[0m
+[0;32m✓ Corrigé: ../components/artistes/ArtisteForm -> ../components/artistes/ArtisteForm.jsx.systematic_bak[0m
+[0;31m✗ Import problématique dans ./src/pages/ArtistesPage.jsx: ../components/artistes/ArtisteDetail (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/components/artistes/ArtisteDetail.jsx.path_bak[0m
+[0;34m  - ./src/components/artistes/desktop/ArtisteDetail.js[0m
+[0;34m  - ./src/components/artistes/mobile/ArtisteDetail.js.final_bak[0m
+[0;34m  - ./src/components/artistes/mobile/ArtisteDetail.js[0m
+[0;34m  - ./src/components/artistes/mobile/ArtisteDetail.js.systematic_bak[0m
+[0;34m  - ./src/components/artistes/mobile/ArtisteDetail.js.bak[0m
+[0;34m  - ./src/components/artistes/mobile/ArtisteDetail.js.fix_bak[0m
+[0;34m  - ./src/components/artistes/mobile/ArtisteDetail.js.path_bak[0m
+[0;34m  - ./src/components/artistes/ArtisteDetail.jsx[0m
+[0;32m✓ Corrigé: ../components/artistes/ArtisteDetail -> ../components/artistes/ArtisteDetail.jsx.path_bak[0m
+[0;31m✗ Import problématique dans ./src/pages/FormResponsePage.js: ../firebase.js (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/firebase.js.m1fix.bak[0m
+[0;34m  - ./src/firebase.js.bak[0m
+[0;34m  - ./src/firebase.js.original[0m
+[0;34m  - ./src/firebase.js[0m
+[0;32m✓ Corrigé: ../firebase.js -> ../firebase.js.m1fix.bak[0m
+[0;31m✗ Import problématique dans ./src/pages/FormResponsePage.js: ../hooks/useLocationIQ (fichier non trouvé)[0m
+[0;32m✓ Corrigé hook: ../hooks/useLocationIQ -> ../hooks/useLocationIQ.js[0m
+[0;31m✗ Import problématique dans ./src/pages/FormResponsePage.js: ../components/forms/ProgrammateurForm (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/components/forms/ProgrammateurForm.js.path_bak[0m
+[0;34m  - ./src/components/forms/ProgrammateurForm.js[0m
+[0;34m  - ./src/components/forms/desktop/ProgrammateurForm.js.path_bak[0m
+[0;34m  - ./src/components/forms/desktop/ProgrammateurForm.js[0m
+[0;34m  - ./src/components/forms/desktop/ProgrammateurForm.js.hook_bak[0m
+[0;34m  - ./src/components/forms/desktop/ProgrammateurForm.js.final_bak[0m
+[0;34m  - ./src/components/forms/desktop/ProgrammateurForm.js.bak[0m
+[0;34m  - ./src/components/forms/desktop/ProgrammateurForm.js.systematic_bak[0m
+[0;34m  - ./src/components/forms/mobile/ProgrammateurForm.js.path_bak[0m
+[0;34m  - ./src/components/forms/mobile/ProgrammateurForm.js[0m
+[0;34m  - ./src/components/forms/mobile/ProgrammateurForm.js.hook_bak[0m
+[0;34m  - ./src/components/forms/mobile/ProgrammateurForm.js.final_bak[0m
+[0;34m  - ./src/components/forms/mobile/ProgrammateurForm.js.bak[0m
+[0;34m  - ./src/components/forms/mobile/ProgrammateurForm.js.systematic_bak[0m
+[0;32m✓ Corrigé: ../components/forms/ProgrammateurForm -> ../components/forms/ProgrammateurForm.js.path_bak[0m
+[0;31m✗ Import problématique dans ./src/App.js: ./context/AuthContext (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/context/AuthContext.js[0m
+[0;34m  - ./src/context/AuthContext.js.bak[0m
+[0;34m  - ./src/context/AuthContext.js.path_bak[0m
+[0;32m✓ Corrigé: ./context/AuthContext -> context/AuthContext.js[0m
+[0;31m✗ Import problématique dans ./src/App.js: ./components/common/Layout (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/components/common/Layout.js[0m
+[0;34m  - ./src/components/common/Layout.js.path_bak[0m
+[0;32m✓ Corrigé: ./components/common/Layout -> components/common/Layout.js[0m
+[0;31m✗ Import problématique dans ./src/App.js: ./pages/DashboardPage (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/pages/DashboardPage.js[0m
+[0;32m✓ Corrigé: ./pages/DashboardPage -> pages/DashboardPage.js[0m
+[0;31m✗ Import problématique dans ./src/App.js: ./pages/ConcertsPage (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/pages/ConcertsPage.js[0m
+[0;34m  - ./src/pages/ConcertsPage.js.path_bak[0m
+[0;32m✓ Corrigé: ./pages/ConcertsPage -> pages/ConcertsPage.js[0m
+[0;31m✗ Import problématique dans ./src/App.js: ./pages/ProgrammateursPage (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/pages/ProgrammateursPage.js[0m
+[0;34m  - ./src/pages/ProgrammateursPage.js.path_bak[0m
+[0;32m✓ Corrigé: ./pages/ProgrammateursPage -> pages/ProgrammateursPage.js[0m
+[0;31m✗ Import problématique dans ./src/App.js: ./pages/LieuxPage (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/pages/LieuxPage.js[0m
+[0;34m  - ./src/pages/LieuxPage.js.path_bak[0m
+[0;32m✓ Corrigé: ./pages/LieuxPage -> pages/LieuxPage.js[0m
+[0;31m✗ Import problématique dans ./src/App.js: ./pages/ContratsPage (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/pages/ContratsPage.js.bak[0m
+[0;34m  - ./src/pages/ContratsPage.js[0m
+[0;34m  - ./src/pages/ContratsPage.js.path_bak[0m
+[0;32m✓ Corrigé: ./pages/ContratsPage -> pages/ContratsPage.js.bak[0m
+[0;31m✗ Import problématique dans ./src/App.js: ./pages/ArtistesPage (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/pages/ArtistesPage.jsx.path_bak[0m
+[0;34m  - ./src/pages/ArtistesPage.jsx[0m
+[0;32m✓ Corrigé: ./pages/ArtistesPage -> pages/ArtistesPage.jsx.path_bak[0m
+[0;31m✗ Import problématique dans ./src/App.js: ./pages/ParametresPage (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/pages/ParametresPage.js.bak[0m
+[0;34m  - ./src/pages/ParametresPage.js[0m
+[0;34m  - ./src/pages/ParametresPage.js.hook_bak[0m
+[0;34m  - ./src/pages/ParametresPage.js.path_bak[0m
+[0;32m✓ Corrigé: ./pages/ParametresPage -> pages/ParametresPage.js.bak[0m
+[0;31m✗ Import problématique dans ./src/App.js: ./pages/FormResponsePage (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/pages/FormResponsePage.js.bak[0m
+[0;34m  - ./src/pages/FormResponsePage.js.path_bak[0m
+[0;34m  - ./src/pages/FormResponsePage.js.hook_bak[0m
+[0;34m  - ./src/pages/FormResponsePage.js.alias_bak[0m
+[0;34m  - ./src/pages/FormResponsePage.js[0m
+[0;32m✓ Corrigé: ./pages/FormResponsePage -> pages/FormResponsePage.js.bak[0m
+[0;31m✗ Import problématique dans ./src/App.js: ./pages/ContratGenerationPage (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/pages/ContratGenerationPage.js.path_bak[0m
+[0;34m  - ./src/pages/ContratGenerationPage.js.bak[0m
+[0;34m  - ./src/pages/ContratGenerationPage.js.alias_bak[0m
+[0;34m  - ./src/pages/ContratGenerationPage.js[0m
+[0;32m✓ Corrigé: ./pages/ContratGenerationPage -> pages/ContratGenerationPage.js.path_bak[0m
+[0;31m✗ Import problématique dans ./src/App.js: ./pages/ContratDetailsPage (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/pages/ContratDetailsPage.js[0m
+[0;34m  - ./src/pages/ContratDetailsPage.js.bak[0m
+[0;34m  - ./src/pages/ContratDetailsPage.js.path_bak[0m
+[0;34m  - ./src/pages/ContratDetailsPage.js.alias_bak[0m
+[0;32m✓ Corrigé: ./pages/ContratDetailsPage -> pages/ContratDetailsPage.js[0m
+[0;31m✗ Import problématique dans ./src/services/firebaseService.js: ../firebase.js (fichier non trouvé)[0m
+[1;33m  Correspondances possibles:[0m
+[0;34m  - ./src/firebase.js.m1fix.bak[0m
+[0;34m  - ./src/firebase.js.bak[0m
+[0;34m  - ./src/firebase.js.original[0m
+[0;34m  - ./src/firebase.js[0m
+[0;32m✓ Corrigé: ../firebase.js -> ../firebase.js.m1fix.bak[0m
+
+[1;33mVérification spécifique de useLocationIQ...[0m
+[0;34mFichiers utilisant useLocationIQ:[0m
+./src/components/forms/desktop/ProgrammateurForm.js:import { useLocationIQ } from '../../../hooks/useLocationIQ.js';
+./src/components/forms/desktop/ProgrammateurForm.js:  const { isLoading: isApiLoading, error: apiError, searchAddress } = useLocationIQ();
+./src/components/forms/desktop/LieuForm.js:import { useLocationIQ } from '../../../hooks/useLocationIQ.js';
+./src/components/forms/desktop/LieuForm.js:  const { isLoading: isApiLoading, error: apiError, searchAddress, getStaticMapUrl } = useLocationIQ();
+./src/components/forms/mobile/ProgrammateurForm.js:import { useLocationIQ } from '../../../hooks/useLocationIQ.js';
+./src/components/forms/mobile/ProgrammateurForm.js:  const { searchAddress } = useLocationIQ();
+./src/components/forms/mobile/LieuForm.js:import { useLocationIQ } from '../../../hooks/useLocationIQ.js';
+./src/components/forms/mobile/LieuForm.js:  const { searchAddress } = useLocationIQ();
+./src/hooks/useLocationIQ.js:// src/hooks/useLocationIQ.js
+./src/hooks/useLocationIQ.js:export function useLocationIQ() {
+./src/pages/ParametresPage.js:import { useLocationIQ } from '../hooks/useLocationIQ.js';
+./src/pages/ParametresPage.js:  const { isLoading: isApiLoading, error: apiError, searchAddress } = useLocationIQ();
+./src/pages/FormResponsePage.js:import { useLocationIQ } from '../hooks/useLocationIQ.js';
+./src/pages/FormResponsePage.js:  const { isLoading: isApiLoading, error: apiError, searchAddress } = useLocationIQ();
+[0;32m✓ Le hook useLocationIQ existe à ./src/hooks/useLocationIQ.js[0m
+
+[0;34m=== Résumé ===[0m
+[0;31m0 problèmes détectés[0m
+[0;32m0 problèmes corrigés automatiquement[0m
+
+[1;33mNettoyage du cache...[0m
+[0;32m✓ Cache nettoyé[0m
+
+[0;34m=== Analyse terminée ===[0m
+[1;33mRapport détaillé disponible dans import_report_20250419_215027.md[0m
+[1;33mLog complet disponible dans import_analysis_20250419_215027.log[0m
+[1;33mTestez maintenant la compilation avec:[0m
+[0;34mnpm run build[0m

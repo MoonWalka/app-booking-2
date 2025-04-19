@@ -1,0 +1,133 @@
+/* src/style/programmateursListMobile.css */
+.programmateurs-mobile-container {
+    padding: 15px;
+  }
+  
+  .programmateurs-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .programmateurs-header h1 {
+    font-size: 1.5rem;
+    margin: 0;
+    color: #344767;
+  }
+  
+  .programmateurs-add-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11);
+  }
+  
+  .programmateurs-search-container {
+    margin-bottom: 15px;
+  }
+  
+  .programmateurs-list-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .programmateur-card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+  }
+  
+  .programmateur-info {
+    padding: 15px;
+  }
+  
+  .programmateur-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 5px 0;
+    color: #344767;
+  }
+  
+  .programmateur-structure {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+  }
+  
+  .programmateur-contact {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+    color: #6c757d;
+  }
+  
+  .programmateur-contact i {
+    color: #495057;
+    font-size: 0.9rem;
+    width: 16px;
+  }
+  
+  .programmateur-concerts {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+  }
+  
+  .concert-count {
+    background-color: #f0f0f0;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-left: 5px;
+  }
+  
+  .programmateur-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 15px;
+    background-color: #f8f9fa;
+    border-top: 1px solid #f0f0f0;
+    gap: 10px;
+  }
+  
+  .programmateur-action-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+  
+  /* Styles pour l'état vide */
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 15px;
+    text-align: center;
+  }
+  
+  .empty-state i {
+    font-size: 3rem;
+    color: #dee2e6;
+    margin-bottom: 15px;
+  }
+  
+  .empty-state p {
+    color: #6c757d;
+    margin-bottom: 20px;
+  }
+  

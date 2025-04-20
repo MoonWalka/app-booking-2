@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Row, Col, Form, Button, Card } from 'react-bootstrap';
-import { useParametres } from '../../contexts/ParametresContext';
+import { useParametres } from '@context/ParametresContext';
 import { useLocationIQ } from '@hooks/useLocationIQ';
 
 const ParametresEntreprise = () => {

@@ -9,6 +9,12 @@
       "@styles/*": ["src/style/*"],
       "@services/*": ["src/services/*"],
       "@/*": ["src/*"]
-    }
-  }
+    },
+    "checkJs": false,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "node"
+  },
+  "exclude": ["node_modules", "build"]
 }

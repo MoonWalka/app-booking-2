@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Card, Alert, Row, Col, ProgressBar } from 'react-bootstrap';
-import { useParametres } from '../../contexts/ParametresContext';
+import { useParametres } from '@context/ParametresContext';
 import { db } from '../../firebase';
 import { collection, query, getDocs } from 'firebase/firestore';
 

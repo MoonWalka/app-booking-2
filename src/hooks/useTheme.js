@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useParametres } from '../contexts/ParametresContext';
+import { useParametres } from '../context/ParametresContext';
 
 const useTheme = () => {
   const { parametres } = useParametres();

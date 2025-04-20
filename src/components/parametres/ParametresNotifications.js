@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Card, Alert } from 'react-bootstrap';
-import { useParametres } from '../../contexts/ParametresContext';
+import { useParametres } from '@context/ParametresContext';
 
 const ParametresNotifications = () => {
   const { parametres, sauvegarderParametres, loading } = useParametres();

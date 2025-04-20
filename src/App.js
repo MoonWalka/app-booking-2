@@ -9,7 +9,7 @@ import {
   RouterProvider
 } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
-import { ParametresProvider } from './contexts/ParametresContext';
+import { ParametresProvider } from './context/ParametresContext';
 import Layout from './components/common/Layout';
 import DashboardPage from './pages/DashboardPage';
 import ConcertsPage from './pages/ConcertsPage';

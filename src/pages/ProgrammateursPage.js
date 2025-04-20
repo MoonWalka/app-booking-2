@@ -1,8 +1,8 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import ProgrammateursList from '../components/programmateurs/ProgrammateursList.js.path_bak';
-import ProgrammateurDetails from '../components/programmateurs/ProgrammateurDetails.js.path_bak';
-import ProgrammateurForm from '../components/forms/ProgrammateurForm.js.path_bak';
+import ProgrammateursList from '../components/programmateurs/ProgrammateursList';
+import ProgrammateurDetails from '../components/programmateurs/ProgrammateurDetails';
+import ProgrammateurForm from '../components/forms/ProgrammateurForm';
 
 const ProgrammateursPage = () => {
   return (

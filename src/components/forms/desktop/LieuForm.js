@@ -8,6 +8,20 @@ import '../../../style/lieuForm.css';
 
 import L from 'leaflet';
 
+import { 
+  getDoc,
+  doc, 
+  query,
+  collection,
+  where,
+  orderBy,
+  limit,
+  getDocs,
+  setDoc,
+  serverTimestamp
+} from 'firebase/firestore';
+import { db } from '../../../firebase';
+
 // Correction pour les icônes Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({

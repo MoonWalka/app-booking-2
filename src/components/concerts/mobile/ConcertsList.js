@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { collection, query, orderBy, getDocs, where } from 'firebase/firestore';
-import { db } from '../../../firebase.js.m1fix.bak';
+import { db } from '../../../firebase';
 import { Badge, Button, Form, InputGroup, Spinner } from 'react-bootstrap';
 import '../../../style/concertsList.css';
 import '../../../style/concertsListMobile.css';

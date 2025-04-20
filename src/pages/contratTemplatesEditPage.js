@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc, setDoc, collection, serverTimestamp } from 'firebase/firestore';
-import { db } from '../firebase.js.m1fix.bak';
+import { db } from '../firebase';
 import ContratTemplateEditor from '@components/contrats/ContratTemplateEditor.js';
 import '../style/contratTemplateEdit.css';
 

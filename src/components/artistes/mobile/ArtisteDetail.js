@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
-import { db } from '../../../firebase.js.m1fix.bak';
+import { db } from '../../../firebase';
 import '../../../style/artisteDetail.css';
 import '../../../style/artisteDetailsMobile.css';
 

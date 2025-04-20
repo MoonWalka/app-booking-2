@@ -6,6 +6,19 @@ import '../../style/artistesList.css';
 import { getNbConcerts, filteredArtistes } from './utils/concertUtils';
 import { handleDelete } from './handlers/deleteHandler';
 import { handleLoadMore } from './handlers/paginationHandler';
+import { 
+  query, 
+  collection, 
+  orderBy, 
+  limit, 
+  startAfter, 
+  getDocs, 
+  deleteDoc, 
+  doc, 
+  updateDoc
+} from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { db, storage } from '../../firebase';
 
 
 const ArtistesList = () => {

@@ -1,5 +1,5 @@
 // src/services/firebaseService.js
-import { db, collection, doc, getDoc, getDocs, setDoc, addDoc, updateDoc, deleteDoc, query, where, orderBy, limit, startAfter } from '../firebase.js.m1fix.bak';
+import { db, collection, doc, getDoc, getDocs, setDoc, addDoc, updateDoc, deleteDoc, query, where, orderBy, limit, startAfter } from '../firebase';
 
 // Service pour les concerts
 export const concertService = {

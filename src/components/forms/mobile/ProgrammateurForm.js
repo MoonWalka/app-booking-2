@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { collection, doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '../../../firebase.js.m1fix.bak';
+import { db } from '../../../firebase';
 import { useLocationIQ } from '@hooks/useLocationIQ';
 import StepNavigation from '../../common/steps/StepNavigation.js';
 import '../../../style/formsResponsive.css';

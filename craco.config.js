@@ -11,14 +11,41 @@ module.exports = {
       '@services': path.resolve(__dirname, 'src/services'),
       '@': path.resolve(__dirname, 'src')
     },
-    configure: (webpackConfig) => {
+    configure: (webpackConfig, { env }) => {
       webpackConfig.resolve.fallback = {
         ...webpackConfig.resolve.fallback,
         "path": false,
         "fs": false,
         "os": false
       };
+      
+      // Désactiver React Refresh en production
+      if (env === 'production') {
+        webpackConfig.plugins = webpackConfig.plugins.filter(
+          (plugin) => !plugin.constructor.name.includes('ReactRefreshPlugin')
+        );
+      }
+      
       return webpackConfig;
+    }
+  },
+  // Configuration correcte du serveur de développement compatible avec webpack-dev-server
+  devServer: {
+    hot: true,
+    liveReload: false,
+    // Utiliser watchFiles au lieu de watchOptions
+    watchFiles: ['src/**/*.js', 'src/**/*.jsx', 'src/**/*.css'],
+    client: {
+      overlay: {
+        errors: true,
+        warnings: false,
+      },
+      webSocketURL: {
+        hostname: 'localhost',
+        pathname: '/ws',
+        port: 3000,
+      },
+      reconnect: 5,
     }
   }
 };

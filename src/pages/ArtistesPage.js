@@ -1,8 +1,8 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import ArtistesList from '@components/artistes/ArtistesList.jsx';
-import ArtisteForm from '../components/artistes/ArtisteForm.jsx.systematic_bak';
-import ArtisteDetail from '../components/artistes/ArtisteDetail.jsx.path_bak';
+import ArtisteForm from '../components/artistes/ArtisteForm.jsx';
+import ArtisteDetail from '../components/artistes/ArtisteDetail.jsx';
 
 function ArtistesPage() {
   return (
@@ -18,6 +18,5 @@ function ArtistesPage() {
     </div>
   );
 }
-
 
 export default ArtistesPage;

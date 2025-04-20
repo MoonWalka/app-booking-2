@@ -4,6 +4,8 @@ import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import firebase from '../../../firebase';
 import '../../../style/programmateursList.css';
 import { handleDelete } from './handlers/deleteHandler';
+import { collection, query, getDocs, orderBy, deleteDoc, doc } from 'firebase/firestore';
+import { db } from '../../../firebase';
 
 const ProgrammateursList = () => {
   const navigate = useNavigate();

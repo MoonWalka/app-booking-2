@@ -1,14 +1,14 @@
-// src/components/concerts/ConcertDetails.js
+// src/components/concerts/ConcertsList.js
 import React from 'react';
 import { useResponsiveComponent } from '@hooks/useResponsiveComponent';
 
-function ConcertDetails(props) {
+function ConcertsList(props) {
   const ResponsiveComponent = useResponsiveComponent({
-    desktopPath: 'concerts/desktop/ConcertDetails',
-    mobilePath: 'concerts/mobile/ConcertDetails'
+    desktopPath: 'concerts/desktop/ConcertsList',
+    mobilePath: 'concerts/mobile/ConcertsList'
   });
   
   return <ResponsiveComponent {...props} />;
 }
 
-export default ConcertDetails;
+export default ConcertsList;

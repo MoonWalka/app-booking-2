@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
-import { db } from '../../../firebase.js.m1fix.bak';
+import { db } from '../../../firebase';
 import {
   collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc,
   arrayUnion, arrayRemove, query, where, orderBy, limit, serverTimestamp

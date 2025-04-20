@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { doc, getDoc, deleteDoc } from 'firebase/firestore';
-import { db } from '../../../firebase.js.m1fix.bak';
+import { db } from '../../../firebase';
 import { Button, Modal, Badge } from 'react-bootstrap';
 import FormGenerator from '../../forms/FormGenerator.js';
 import '../../../style/concertDetails.css';

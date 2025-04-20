@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Form, Card, Alert } from 'react-bootstrap';
-import { db } from '../firebase.js.m1fix.bak';
+import { db } from '../firebase';
 import { doc, getDoc, collection, getDocs, addDoc, serverTimestamp } from 'firebase/firestore';
 import ContratGenerator from '@components/contrats/ContratGenerator.js';
 

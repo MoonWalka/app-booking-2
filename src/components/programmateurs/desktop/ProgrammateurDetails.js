@@ -14,7 +14,7 @@ import {
   orderBy,
   limit
 } from 'firebase/firestore';
-import { db } from '../../../firebase.js.m1fix.bak';
+import { db } from '../../../firebase';
 import '../../../style/programmateurForm.css';
 import { handleDelete } from './handlers/deleteHandler';
 

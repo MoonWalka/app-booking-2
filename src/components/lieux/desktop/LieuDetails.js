@@ -14,7 +14,7 @@ import {
   limit,
   setDoc
 } from 'firebase/firestore';
-import { db } from '../../../firebase.js.m1fix.bak';
+import { db } from '../../../firebase';
 import { Badge } from 'react-bootstrap';
 import '../../../style/lieuForm.css';
 import { handleDelete } from './handlers/deleteHandler';

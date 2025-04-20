@@ -5,7 +5,10 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { initNetworkStabilizer } from './utils/networkStabilizer';
 
+// Initialisation du stabilisateur réseau pour prévenir les rechargements intempestifs
+initNetworkStabilizer();
 
 // Vérification des variables d'environnement
 console.log("--- Vérification des variables d'environnement ---");

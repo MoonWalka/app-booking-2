@@ -2,11 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import { collection, getDocs, query, orderBy, where } from 'firebase/firestore';
-import { db } from '../firebase.js.m1fix.bak';
+import { db } from '../firebase';
 import { Table, Badge, Tabs, Tab } from 'react-bootstrap';
-import ContratTemplatesPage from './contratTemplatesPage.js.path_bak';
-import ContratTemplatesEditPage from './contratTemplatesEditPage.js.bak';
-import ContratGenerationPage from './ContratGenerationPage.js.bak';
+import ContratTemplatesPage from './contratTemplatesPage.js';
+import ContratTemplatesEditPage from './contratTemplatesEditPage.js';
+import ContratGenerationPage from './ContratGenerationPage.js';
 import ContratDetailsPage from './ContratDetailsPage.js';
 import '../style/contrats.css';
 

@@ -3,14 +3,16 @@ import {
   getFirestore, collection, doc, getDoc, getDocs,
   setDoc, addDoc, updateDoc, deleteDoc,
   query, where, orderBy, limit, startAfter,
-  serverTimestamp, arrayUnion, arrayRemove 
+  serverTimestamp, arrayUnion, arrayRemove,
+  initializeFirestore, connectFirestoreEmulator,
+  CACHE_SIZE_UNLIMITED
 } from 'firebase/firestore';
 import { 
   getAuth, signInWithEmailAndPassword,
   createUserWithEmailAndPassword, signOut,
   onAuthStateChanged 
 } from 'firebase/auth';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { getRemoteConfig } from 'firebase/remote-config';
 
 // Configuration Firebase
@@ -26,7 +28,50 @@ const firebaseConfig = {
 
 // Initialisation Firebase
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+
+// Configuration avancée de Firestore pour résoudre les problèmes de connexion
+// Utilisation forcée du long polling au lieu des WebSockets
+const db = initializeFirestore(app, {
+  cacheSizeBytes: CACHE_SIZE_UNLIMITED,
+  experimentalForceLongPolling: true, // Force l'utilisation du long polling
+  experimentalAutoDetectLongPolling: false, // Désactive la détection automatique
+  useFetchStreams: false, // Désactive les flux fetch qui peuvent causer des problèmes
+  ignoreUndefinedProperties: true,
+  timeout: 60000, // Timeout plus long pour les requêtes (60 secondes)
+});
+
+// Fonctions de gestion d'erreurs pour les opérations Firestore
+const handleFirestoreError = (error) => {
+  console.error("Erreur Firestore:", error);
+  
+  // Si l'erreur est liée à la connexion
+  if (error.code === 'unavailable' || error.code === 'failed-precondition') {
+    console.warn("Problème de connexion Firestore détecté. Tentative de reconnexion...");
+    // N'affecte pas l'expérience utilisateur, juste un log
+  }
+  
+  return Promise.reject(error); // Propage l'erreur
+};
+
+// Surcharge des fonctions Firestore avec gestion d'erreurs
+const enhancedGetDocs = async (...args) => {
+  try {
+    return await getDocs(...args);
+  } catch (error) {
+    return handleFirestoreError(error);
+  }
+};
+
+const enhancedGetDoc = async (...args) => {
+  try {
+    return await getDoc(...args);
+  } catch (error) {
+    return handleFirestoreError(error);
+  }
+};
+
+// Même principe pour les autres fonctions Firestore que vous utilisez fréquemment
+
 const auth = getAuth(app);
 const storage = getStorage(app);
 const remoteConfig = getRemoteConfig(app);
@@ -34,6 +79,17 @@ const remoteConfig = getRemoteConfig(app);
 // Configuration du bypass d'authentification pour le développement
 const BYPASS_AUTH = process.env.REACT_APP_BYPASS_AUTH === 'true';
 
+// Utilisation de l'émulateur Firebase en développement
+if (process.env.NODE_ENV === 'development' && process.env.REACT_APP_USE_FIREBASE_EMULATOR === 'true') {
+  try {
+    connectFirestoreEmulator(db, 'localhost', 8080);
+    console.log('Connecté à l\'émulateur Firestore');
+  } catch (e) {
+    console.warn('Erreur lors de la connexion à l\'émulateur Firestore:', e);
+  }
+}
+
+// Création d'un objet firebase avec toutes les fonctions et instances
 const firebase = {
   app,
   db,
@@ -41,11 +97,11 @@ const firebase = {
   storage,
   remoteConfig,
   BYPASS_AUTH,
-  // Fonctions Firestore
+  // Fonctions Firestore avec gestion d'erreurs améliorée
   collection,
   doc,
-  getDoc,
-  getDocs,
+  getDoc: enhancedGetDoc,
+  getDocs: enhancedGetDocs,
   setDoc,
   addDoc,
   updateDoc,
@@ -64,9 +120,44 @@ const firebase = {
   signOut,
   onAuthStateChanged,
   // Fonctions Storage
-  ref,
+  storageRef,
   uploadBytes,
   getDownloadURL
 };
 
+// Export des éléments individuels
+export {
+  db,
+  auth,
+  storage,
+  remoteConfig,
+  BYPASS_AUTH,
+  // Firestore exports
+  collection,
+  doc,
+  enhancedGetDoc as getDoc,
+  enhancedGetDocs as getDocs,
+  setDoc,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  query,
+  where,
+  orderBy,
+  limit,
+  startAfter,
+  serverTimestamp,
+  arrayUnion,
+  arrayRemove,
+  // Auth exports
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+};
+
+// Storage exports
+export { storageRef as ref, uploadBytes, getDownloadURL };
+
+// Export par défaut de l'objet firebase
 export default firebase;

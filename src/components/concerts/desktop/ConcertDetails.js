@@ -4,7 +4,7 @@ import {
   doc, getDoc, deleteDoc, updateDoc, collection, getDocs, 
   query, where, serverTimestamp, arrayUnion, arrayRemove, setDoc, limit
 } from 'firebase/firestore';
-import { db } from '../../../firebase.js.m1fix.bak';
+import { db } from '../../../firebase';
 import FormGenerator from '../../forms/FormGenerator.js';
 import '../../../style/concertDetails.css';
 import { handleDelete } from './handlers/deleteHandler';

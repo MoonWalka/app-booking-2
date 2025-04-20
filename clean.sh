@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Script pour analyser les scripts .sh à la racine et nettoyer les backups créés par eux
+# Script amélioré pour nettoyer tous les types de backups (fichiers et dossiers)
 
 # Définir les couleurs pour l'affichage
 RED='\033[0;31m'
@@ -9,91 +9,86 @@ YELLOW='\033[0;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-echo -e "${BLUE}Analyse des scripts .sh à la racine pour identifier les fichiers de backup...${NC}"
+echo -e "${BLUE}Analyse complète des backups dans le projet...${NC}"
 
-# Trouver tous les scripts .sh à la racine
-SCRIPTS=$(find . -maxdepth 1 -type f -name "*.sh")
-
-# Tableau pour stocker les patterns de backup trouvés
-declare -a BACKUP_PATTERNS
-declare -a BACKUP_DIRS
-
-# Analyser chaque script pour trouver les commandes de création de backup
-for script in $SCRIPTS; do
-  echo -e "${YELLOW}Analyse du script:${NC} $script"
-  
-  # Rechercher les lignes qui créent des dossiers de backup
-  BACKUP_DIR_LINES=$(grep -E 'BACKUP_DIR=|mkdir.*backup' "$script" || true)
-  if [ ! -z "$BACKUP_DIR_LINES" ]; then
-    echo -e "  ${GREEN}Trouvé références à des dossiers de backup${NC}"
-    
-    # Extraire les patterns de dossiers (imports-backup-* est courant)
-    DIRS=$(echo "$BACKUP_DIR_LINES" | grep -oE 'imports-backup[^"]*|\$\{BACKUP_DIR\}' || true)
-    if [ ! -z "$DIRS" ]; then
-      BACKUP_DIRS+=("imports-backup-*")
-      echo -e "  ${GREEN}Pattern de dossier détecté:${NC} imports-backup-*"
-    fi
-  fi
-  
-  # Rechercher les lignes qui créent des fichiers .backup
-  BACKUP_FILE_LINES=$(grep -E '\.backup' "$script" || true)
-  if [ ! -z "$BACKUP_FILE_LINES" ]; then
-    echo -e "  ${GREEN}Trouvé références à des fichiers .backup${NC}"
-    BACKUP_PATTERNS+=("*.backup")
-    echo -e "  ${GREEN}Pattern de fichier détecté:${NC} *.backup"
-  fi
-done
-
-# Si aucun pattern n'a été trouvé, ajouter les patterns par défaut
-if [ ${#BACKUP_PATTERNS[@]} -eq 0 ]; then
-  BACKUP_PATTERNS+=("*.backup")
-  echo -e "${YELLOW}Aucun pattern de fichier spécifique trouvé, utilisation du pattern par défaut:${NC} *.backup"
-fi
-
-if [ ${#BACKUP_DIRS[@]} -eq 0 ]; then
-  BACKUP_DIRS+=("imports-backup-*")
-  echo -e "${YELLOW}Aucun pattern de dossier spécifique trouvé, utilisation du pattern par défaut:${NC} imports-backup-*"
-fi
-
-# Chercher les fichiers et dossiers correspondants
-echo -e "\n${BLUE}Recherche des fichiers et dossiers de backup...${NC}"
-
-# Chercher les fichiers .backup
+# 1. Chercher tous les fichiers .backup
+echo -e "${YELLOW}Recherche des fichiers .backup...${NC}"
 BACKUP_FILES=$(find . -name "*.backup" -type f 2>/dev/null)
 BACKUP_FILE_COUNT=$(echo "$BACKUP_FILES" | grep -v "^$" | wc -l)
+echo -e "  ${GREEN}$BACKUP_FILE_COUNT${NC} fichiers .backup trouvés"
 
-# Chercher les dossiers de backup
-FOUND_BACKUP_DIRS=$(find . -type d -name "imports-backup-*" 2>/dev/null)
+# 2. Chercher les dossiers de backup avec différents patterns
+echo -e "${YELLOW}Recherche des dossiers de backup...${NC}"
+
+# Patterns de dossiers à rechercher
+BACKUP_DIR_PATTERNS=(
+    "imports-backup-*"
+    "*-backup-*"
+    "*backup*"
+    "*sauvegarde*"
+    "*save-*"
+)
+
+# Fonction pour trouver les dossiers uniques correspondant aux patterns
+find_unique_dirs() {
+    local all_dirs=""
+    for pattern in "${BACKUP_DIR_PATTERNS[@]}"; do
+        dirs=$(find . -type d -name "$pattern" 2>/dev/null)
+        if [ ! -z "$dirs" ]; then
+            all_dirs="$all_dirs
+$dirs"
+        fi
+    done
+    
+    # Éliminer les doublons et les lignes vides
+    echo "$all_dirs" | grep -v "^$" | sort | uniq
+}
+
+FOUND_BACKUP_DIRS=$(find_unique_dirs)
 BACKUP_DIR_COUNT=$(echo "$FOUND_BACKUP_DIRS" | grep -v "^$" | wc -l)
+echo -e "  ${GREEN}$BACKUP_DIR_COUNT${NC} dossiers de backup trouvés"
 
-# Afficher les résultats
-echo -e "${YELLOW}$BACKUP_DIR_COUNT${NC} dossiers de backup trouvés"
-echo -e "${YELLOW}$BACKUP_FILE_COUNT${NC} fichiers .backup trouvés"
+# 3. Chercher les dossiers node_modules/.cache qui peuvent contenir d'anciens fichiers
+echo -e "${YELLOW}Recherche des caches potentiels...${NC}"
+CACHE_DIRS=$(find . -type d -path "*/node_modules/.cache" 2>/dev/null)
+CACHE_DIR_COUNT=$(echo "$CACHE_DIRS" | grep -v "^$" | wc -l)
+echo -e "  ${GREEN}$CACHE_DIR_COUNT${NC} dossiers de cache node_modules trouvés"
+
+# Afficher un récapitulatif
+echo -e "\n${BLUE}=== Récapitulatif des éléments trouvés ===${NC}"
+echo -e "${YELLOW}$BACKUP_FILE_COUNT${NC} fichiers .backup"
+echo -e "${YELLOW}$BACKUP_DIR_COUNT${NC} dossiers de backup"
+echo -e "${YELLOW}$CACHE_DIR_COUNT${NC} dossiers de cache"
 
 # S'il n'y a rien à supprimer, terminer
-if [ $BACKUP_DIR_COUNT -eq 0 ] && [ $BACKUP_FILE_COUNT -eq 0 ]; then
-  echo -e "${GREEN}Aucun fichier de backup trouvé.${NC}"
+TOTAL_COUNT=$((BACKUP_FILE_COUNT + BACKUP_DIR_COUNT + CACHE_DIR_COUNT))
+if [ $TOTAL_COUNT -eq 0 ]; then
+  echo -e "\n${GREEN}Aucun élément à nettoyer.${NC}"
   exit 0
 fi
 
-# Afficher tous les éléments trouvés
+# Afficher les détails des éléments trouvés
 if [ $BACKUP_DIR_COUNT -gt 0 ]; then
   echo -e "\n${BLUE}Dossiers de backup trouvés:${NC}"
   echo "$FOUND_BACKUP_DIRS" | sed 's/^/  /'
 fi
 
 if [ $BACKUP_FILE_COUNT -gt 0 ]; then
-  echo -e "\n${BLUE}Fichiers de backup trouvés (affichage limité à 20):${NC}"
-  echo "$BACKUP_FILES" | head -n 20 | sed 's/^/  /'
+  echo -e "\n${BLUE}Fichiers .backup (aperçu limité à 15):${NC}"
+  echo "$BACKUP_FILES" | head -n 15 | sed 's/^/  /'
   
-  # Si plus de 20 fichiers, indiquer qu'il y en a plus
-  if [ $BACKUP_FILE_COUNT -gt 20 ]; then
-    echo -e "  ${YELLOW}... et $(($BACKUP_FILE_COUNT - 20)) autres fichiers${NC}"
+  if [ $BACKUP_FILE_COUNT -gt 15 ]; then
+    echo -e "  ${YELLOW}... et $(($BACKUP_FILE_COUNT - 15)) autres fichiers${NC}"
   fi
 fi
 
+if [ $CACHE_DIR_COUNT -gt 0 ]; then
+  echo -e "\n${BLUE}Dossiers de cache:${NC}"
+  echo "$CACHE_DIRS" | sed 's/^/  /'
+fi
+
 # Demander confirmation avant suppression
-echo -e "\n${RED}ATTENTION: Cette action va supprimer définitivement tous les fichiers et dossiers de backup listés ci-dessus.${NC}"
+echo -e "\n${RED}ATTENTION: Cette action va supprimer définitivement tous les éléments listés ci-dessus.${NC}"
 read -p "Voulez-vous continuer? (o/n): " CONFIRM
 
 if [[ $CONFIRM != "o" && $CONFIRM != "O" && $CONFIRM != "oui" && $CONFIRM != "Oui" ]]; then
@@ -101,22 +96,80 @@ if [[ $CONFIRM != "o" && $CONFIRM != "O" && $CONFIRM != "oui" && $CONFIRM != "Ou
   exit 0
 fi
 
+# Supprimer les fichiers .backup
+if [ $BACKUP_FILE_COUNT -gt 0 ]; then
+  echo -e "\n${BLUE}Suppression des fichiers .backup...${NC}"
+  find . -name "*.backup" -type f -delete
+  echo -e "✅ ${GREEN}$BACKUP_FILE_COUNT fichiers .backup supprimés${NC}"
+fi
+
 # Supprimer les dossiers de backup
 if [ $BACKUP_DIR_COUNT -gt 0 ]; then
-  echo -e "${BLUE}Suppression des dossiers de backup...${NC}"
+  echo -e "\n${BLUE}Suppression des dossiers de backup...${NC}"
   for dir in $FOUND_BACKUP_DIRS; do
-    rm -rf "$dir"
-    echo -e "✅ Supprimé: ${YELLOW}$dir${NC}"
+    if [ -d "$dir" ]; then
+      rm -rf "$dir"
+      echo -e "✅ Supprimé: ${YELLOW}$dir${NC}"
+    fi
   done
 fi
 
-# Supprimer les fichiers de backup
-if [ $BACKUP_FILE_COUNT -gt 0 ]; then
-  echo -e "${BLUE}Suppression des fichiers .backup...${NC}"
+# Proposer de nettoyer les caches
+if [ $CACHE_DIR_COUNT -gt 0 ]; then
+  echo -e "\n${YELLOW}Voulez-vous également nettoyer les dossiers de cache? (o/n):${NC} "
+  read CLEAN_CACHE
   
-  # Utiliser une commande find pour supprimer tous les fichiers en une fois
-  find . -name "*.backup" -type f -delete
-  echo -e "✅ Supprimé: ${YELLOW}$BACKUP_FILE_COUNT fichiers .backup${NC}"
+  if [[ $CLEAN_CACHE == "o" || $CLEAN_CACHE == "O" || $CLEAN_CACHE == "oui" || $CLEAN_CACHE == "Oui" ]]; then
+    echo -e "${BLUE}Nettoyage des dossiers de cache...${NC}"
+    for cache_dir in $CACHE_DIRS; do
+      if [ -d "$cache_dir" ]; then
+        rm -rf "$cache_dir"
+        echo -e "✅ Cache nettoyé: ${YELLOW}$cache_dir${NC}"
+      fi
+    done
+  else
+    echo -e "${BLUE}Les dossiers de cache ont été conservés.${NC}"
+  fi
 fi
 
-echo -e "\n${GREEN}Tous les fichiers de backup ont été supprimés.${NC}"
+# Rechercher d'autres fichiers temporaires couramment utilisés
+echo -e "\n${BLUE}Recherche de fichiers temporaires supplémentaires...${NC}"
+
+TEMP_PATTERNS=(
+  "*.tmp"
+  "*.temp"
+  "*.swp"
+  "*.bak"
+  "*.old"
+  "*~"
+)
+
+TOTAL_TEMP_FILES=0
+
+for pattern in "${TEMP_PATTERNS[@]}"; do
+  TEMP_FILES=$(find . -name "$pattern" -type f 2>/dev/null)
+  COUNT=$(echo "$TEMP_FILES" | grep -v "^$" | wc -l)
+  
+  if [ $COUNT -gt 0 ]; then
+    TOTAL_TEMP_FILES=$((TOTAL_TEMP_FILES + COUNT))
+    echo -e "  ${YELLOW}$COUNT${NC} fichiers $pattern trouvés"
+  fi
+done
+
+if [ $TOTAL_TEMP_FILES -gt 0 ]; then
+  echo -e "\n${YELLOW}Voulez-vous supprimer ces $TOTAL_TEMP_FILES fichiers temporaires? (o/n):${NC} "
+  read CLEAN_TEMP
+  
+  if [[ $CLEAN_TEMP == "o" || $CLEAN_TEMP == "O" || $CLEAN_TEMP == "oui" || $CLEAN_TEMP == "Oui" ]]; then
+    echo -e "${BLUE}Suppression des fichiers temporaires...${NC}"
+    for pattern in "${TEMP_PATTERNS[@]}"; do
+      find . -name "$pattern" -type f -delete 2>/dev/null
+    done
+    echo -e "✅ ${GREEN}$TOTAL_TEMP_FILES fichiers temporaires supprimés${NC}"
+  else
+    echo -e "${BLUE}Les fichiers temporaires ont été conservés.${NC}"
+  fi
+fi
+
+echo -e "\n${GREEN}Nettoyage terminé avec succès!${NC}"
+echo -e "${BLUE}Espace disque libéré. Votre projet est maintenant plus propre.${NC}"

@@ -1,6 +1,6 @@
 // src/components/forms/LieuForm.js
 import React from 'react';
-import { useResponsiveComponent } from '@hooks/useResponsiveComponent';
+import { useResponsiveComponent } from '@/hooks/useResponsiveComponent';
 
 function LieuForm(props) {
   const ResponsiveComponent = useResponsiveComponent({

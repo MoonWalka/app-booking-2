@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { collection, query, orderBy, getDocs, where } from 'firebase/firestore';
 import { db } from '../../../firebase';
-import { Badge, Button, Form, InputGroup, Spinner } from 'react-bootstrap';
+import { Badge, Button, Form, InputGroup } from 'react-bootstrap';
+import Spinner from '../../common/Spinner';
 import '../../../style/concertsList.css';
 import '../../../style/concertsListMobile.css';
 
@@ -177,10 +178,7 @@ const ConcertsListMobile = () => {
 
       {/* Affichage des concerts */}
       {loading ? (
-        <div className="loading-container">
-          <Spinner animation="border" variant="primary" />
-          <p>Chargement des concerts...</p>
-        </div>
+        <Spinner message="Chargement des concerts..." />
       ) : error ? (
         <div className="error-container">
           <i className="bi bi-exclamation-triangle-fill"></i>

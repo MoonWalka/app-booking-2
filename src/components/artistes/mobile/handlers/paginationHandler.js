@@ -1,16 +1,17 @@
-import firebase from '../../../../firebase';
+import { collection, query, orderBy, startAfter, limit, getDocs } from 'firebase/firestore';
+import { db } from '@/firebase';
 
-export const handleLoadMore = async (lastDoc, pageSize = 10) => {
+export const handleLoadMore = async (collectionName, lastDoc, orderByField = 'nom', pageSize = 10) => {
   try {
-    const collectionRef = firebase.collection(firebase.db, 'artistes');
-    const q = firebase.query(
+    const collectionRef = collection(db, collectionName);
+    const q = query(
       collectionRef,
-      firebase.orderBy('nom'),
-      firebase.startAfter(lastDoc),
-      firebase.limit(pageSize)
+      orderBy(orderByField),
+      startAfter(lastDoc),
+      limit(pageSize)
     );
     
-    const snapshot = await firebase.getDocs(q);
+    const snapshot = await getDocs(q);
     const newDocs = snapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
@@ -21,7 +22,9 @@ export const handleLoadMore = async (lastDoc, pageSize = 10) => {
     
     return { newDocs, lastVisible, hasMore };
   } catch (error) {
-    console.error('Erreur lors du chargement des artistes:', error);
+    console.error(`Erreur lors du chargement de ${collectionName}:`, error);
     return { newDocs: [], lastVisible: null, hasMore: false };
   }
 };
+
+

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import LieuxList from '../components/lieux/LieuxList';
-import LieuDetails from '../components/lieux/desktop/LieuDetails';
-import LieuForm from '../components/forms/LieuForm';
+import LieuxList from '@/components/lieux/LieuxList';
+import LieuDetails from '@/components/lieux/desktop/LieuDetails';
+import LieuForm from '@/components/forms/LieuForm';
 
 const LieuxPage = () => {
   return (

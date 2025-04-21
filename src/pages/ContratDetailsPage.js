@@ -2,11 +2,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Card, Alert, Badge } from 'react-bootstrap';
-import { db } from '../firebase';
-import { doc, getDoc, updateDoc, Timestamp } from 'firebase/firestore';
+import { db } from '@/firebase';
+import { doc, getDoc, updateDoc, deleteDoc, Timestamp } from 'firebase/firestore';
+
 import { FaDownload, FaEnvelope, FaFileSignature } from 'react-icons/fa';
-import ContratPDF from '@components/contrats/ContratPDF.js';
+import ContratPDF from '@/components/contrats/ContratPDF.js';
 import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
+
 
 const ContratDetailsPage = () => {
   const { contratId } = useParams();
@@ -21,6 +23,7 @@ const ContratDetailsPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [showPdfViewer, setShowPdfViewer] = useState(false);
+  const [showVariables, setShowVariables] = useState(false); // false pour que la carte soit pliée par défaut
   const pdfViewerRef = useRef(null);
 
   useEffect(() => {
@@ -140,6 +143,25 @@ const ContratDetailsPage = () => {
     }
   };
 
+  const handleDeleteContrat = async () => {
+    if (window.confirm('Êtes-vous sûr de vouloir supprimer ce contrat ? Cette action est irréversible.')) {
+      try {
+        // Supprimer le contrat de la base de données
+        await deleteDoc(doc(db, 'contrats', contratId));
+        
+        // Afficher un message de confirmation
+        alert('Le contrat a été supprimé avec succès');
+        
+        // Rediriger vers la liste des contrats
+        navigate('/contrats');
+      } catch (err) {
+        console.error('Erreur lors de la suppression du contrat :', err);
+        setError('Une erreur est survenue lors de la suppression du contrat');
+      }
+    }
+  };
+  
+
   const getStatusBadge = () => {
     if (!contrat) return null;
     
@@ -165,9 +187,12 @@ const ContratDetailsPage = () => {
 
   if (loading) {
     return (
-      <div className="text-center my-5">
-        <div className="spinner-border" role="status">
-          <span className="visually-hidden">Chargement en cours...</span>
+      <div className="loading-container d-flex justify-content-center align-items-center" style={{ minHeight: '300px' }}>
+        <div className="text-center">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Chargement du contrat...</span>
+          </div>
+          <p className="mt-2">Chargement du contrat...</p>
         </div>
       </div>
     );
@@ -246,9 +271,21 @@ const ContratDetailsPage = () => {
               </Button>
             )}
             
-            <Button variant="outline-secondary" onClick={() => navigate(`/concerts/${concert?.id}`)}>
-              <i className="bi bi-arrow-left me-1"></i> Retour au concert
-            </Button>
+            {/* Nouveau bouton Supprimer */}
+  <Button 
+    variant="danger" 
+    onClick={handleDeleteContrat}
+  >
+    <i className="bi bi-trash me-1"></i> Supprimer
+  </Button>
+  
+  {/* Bouton de retour modifié */}
+  <Button 
+    variant="outline-secondary" 
+    onClick={() => navigate('/contrats')}
+  >
+    <i className="bi bi-arrow-left me-1"></i> Retour aux contrats
+  </Button>
           </div>
         </Card.Body>
       </Card>
@@ -276,15 +313,63 @@ const ContratDetailsPage = () => {
         </div>
       )}
       
-      {/* Affichage des variables utilisées pour générer le contrat */}
-      <Card>
-        <Card.Body>
-          <Card.Title>Variables du contrat</Card.Title>
-          <pre className="bg-light p-3 rounded">
-            {JSON.stringify(contrat?.variables, null, 2)}
-          </pre>
-        </Card.Body>
-      </Card>
+     {/* Affichage des variables utilisées pour générer le contrat - Version avec collapse */}
+<Card className="contract-variables-card mt-4">
+  <Card.Header 
+    className="d-flex align-items-center cursor-pointer"
+    onClick={() => setShowVariables(!showVariables)}
+  >
+    <i className="bi bi-braces me-2 text-primary"></i>
+    <h5 className="mb-0">Variables du contrat</h5>
+    <div className="ms-auto d-flex align-items-center">
+      {showVariables && (
+        <Button 
+          variant="outline-secondary" 
+          size="sm" 
+          className="me-2"
+          onClick={(e) => {
+            e.stopPropagation(); // Empêcher le toggle du collapse
+            navigator.clipboard.writeText(JSON.stringify(contrat?.variables, null, 2));
+            // Notification que vous pourriez remplacer par un toast
+            alert('Variables copiées dans le presse-papier');
+          }}
+        >
+          <i className="bi bi-clipboard me-1"></i> Copier
+        </Button>
+      )}
+      <i className={`bi bi-chevron-${showVariables ? 'up' : 'down'} transition-icon`}></i>
+    </div>
+  </Card.Header>
+  
+  <div className={`collapse ${showVariables ? 'show' : ''}`}>
+    <Card.Body>
+      <div className="mb-2 text-muted small">
+        <i className="bi bi-info-circle me-1"></i>
+        Ces variables ont été utilisées pour générer le contrat à partir du modèle.
+      </div>
+      {contrat?.variables ? (
+        <div className="variables-container">
+          {Object.entries(contrat.variables).map(([key, value]) => (
+            <div key={key} className="variable-item">
+              <div className="variable-name">
+                <code>{'{' + key + '}'}</code>
+              </div>
+              <div className="variable-value">
+                {typeof value === 'object' ? JSON.stringify(value) : String(value)}
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="text-center p-4 text-muted">
+          <i className="bi bi-exclamation-circle fs-4 d-block mb-2"></i>
+          Aucune variable disponible pour ce contrat
+        </div>
+      )}
+    </Card.Body>
+  </div>
+</Card>
+
     </div>
   );
 };

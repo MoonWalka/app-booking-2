@@ -14,9 +14,10 @@ import {
   orderBy,
   limit
 } from 'firebase/firestore';
-import { db } from '../../../firebase';
-import '../../../style/programmateurForm.css';
+import { db } from '@/firebase';
+import '@/style/programmateurForm.css';
 import { handleDelete } from './handlers/deleteHandler';
+import Spinner from '@/components/common/Spinner';
 
 
 const ProgrammateurDetails = () => {
@@ -379,7 +380,7 @@ const ProgrammateurDetails = () => {
   };
 
   if (loading) {
-    return <div className="text-center my-5 loading-spinner">Chargement des données...</div>;
+    return <Spinner message="Chargement des données..." />;
   }
 
   if (error) {
@@ -439,35 +440,58 @@ const ProgrammateurDetails = () => {
         
         {/* MODIFICATION: Boutons d'action harmonisés avec LieuDetails */}
         <div className="action-buttons">
-          <Link to="/programmateurs" className="btn btn-outline-secondary action-btn">
-            <i className="bi bi-arrow-left"></i>
-            <span className="btn-text">Retour</span>
-          </Link>
-          
-          {isEditing ? (
-            <button 
-              onClick={toggleEditMode} 
-              className="btn btn-outline-secondary action-btn"
-            >
-              <i className="bi bi-x-circle"></i>
-              <span className="btn-text">Annuler</span>
-            </button>
-          ) : (
-            <>
-              <button 
-                onClick={toggleEditMode} 
-                className="btn btn-outline-primary action-btn"
-              >
-                <i className="bi bi-pencil"></i>
-                <span className="btn-text">Modifier</span>
-              </button>
-              <button 
-                onClick={handleDelete} 
-                className="btn btn-outline-danger action-btn"
-              >
-                <i className="bi bi-trash"></i>
-                <span className="btn-text">Supprimer</span>
-              </button>
+  {isEditing ? (
+    <>
+      {/* Boutons en mode édition */}
+      <button 
+        onClick={handleSubmit} 
+        className="btn btn-primary action-btn"
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? (
+          <>
+            <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            <span className="btn-text">Enregistrement...</span>
+          </>
+        ) : (
+          <>
+            <i className="bi bi-check-circle"></i>
+            <span className="btn-text">Enregistrer</span>
+          </>
+        )}
+      </button>
+      
+      <button 
+        onClick={toggleEditMode} 
+        className="btn btn-outline-secondary action-btn"
+      >
+        <i className="bi bi-x-circle"></i>
+        <span className="btn-text">Annuler</span>
+      </button>
+      
+      <button 
+        onClick={handleDelete} 
+        className="btn btn-outline-danger action-btn"
+      >
+        <i className="bi bi-trash"></i>
+        <span className="btn-text">Supprimer</span>
+      </button>
+    </>
+  ) : (
+    <>
+      {/* Boutons en mode affichage */}
+      <Link to="/programmateurs" className="btn btn-outline-secondary action-btn">
+        <i className="bi bi-arrow-left"></i>
+        <span className="btn-text">Retour</span>
+      </Link>
+      
+      <button 
+        onClick={toggleEditMode} 
+        className="btn btn-outline-primary action-btn"
+      >
+        <i className="bi bi-pencil"></i>
+        <span className="btn-text">Modifier</span>
+      </button>
             </>
           )}
         </div>

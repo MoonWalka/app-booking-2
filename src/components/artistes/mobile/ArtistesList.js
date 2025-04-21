@@ -1,17 +1,18 @@
 // src/components/artistes/mobile/ArtistesList.js
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { collection, getDocs, query, orderBy, deleteDoc, doc, limit, startAfter } from 'firebase/firestore';
-import { db } from '../../../firebase';
-import { Button, Form, InputGroup, Spinner } from 'react-bootstrap';
-import '../../../style/artistesList.css';
-import '../../../style/artistesListMobile.css';
-import { getNbConcerts, filteredArtistes } from './utils/concertUtils';
-import { handleDelete } from './handlers/deleteHandler';
-import { handleLoadMore } from './handlers/paginationHandler';
- // Nouveau fichier CSS spécifique au mobile
+import { collection, getDocs, query, orderBy, deleteDoc, doc, limit, startAfter } from '@/firebase';
+import { db } from '@/firebase';
+import { Button, Form, InputGroup } from 'react-bootstrap';
+import Spinner from '@/components/common/Spinner';
+import '@styles/artistesList.css';
+import '@styles/artistesListMobile.css';
+import { getNbConcerts, filteredArtistes } from '@/components/artistes/mobile/utils/concertUtils';
+import { handleDelete } from '@/components/artistes/mobile/handlers/deleteHandler';
+import { handleLoadMore } from '@/components/artistes/mobile/handlers/paginationHandler';
+// Nouveau fichier CSS spécifique au mobile
 
-const ArtistesListMobile = () => {
+const ArtistesList = () => {
   const [artistes, setArtistes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -24,7 +25,96 @@ const ArtistesListMobile = () => {
   const pageSize = 10; // Nombre d'artistes à charger par page (réduit pour le mobile)
 
   // Même logique de chargement des données que la version desktop
-  // ...
+  useEffect(() => {
+    const loadArtistes = async () => {
+      setLoading(true);
+      try {
+        const artistesRef = collection(db, 'artistes');
+        const q = query(
+          artistesRef,
+          orderBy('nom'),
+          limit(pageSize)
+        );
+        
+        const querySnapshot = await getDocs(q);
+        const artistesList = [];
+        
+        for (const doc of querySnapshot.docs) {
+          const artisteData = { id: doc.id, ...doc.data() };
+          // Récupération du nombre de concerts pour chaque artiste
+          const nbConcerts = await getNbConcerts(doc.id);
+          artisteData.nbConcerts = nbConcerts;
+          artistesList.push(artisteData);
+        }
+        
+        setArtistes(artistesList);
+        setLastVisible(querySnapshot.docs[querySnapshot.docs.length - 1]);
+        setHasMore(querySnapshot.docs.length === pageSize);
+      } catch (error) {
+        console.error("Erreur lors du chargement des artistes:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadArtistes();
+  }, []);
+
+  // Fonction pour charger plus d'artistes
+  const loadMoreData = async () => {
+    if (!hasMore || loading) return;
+    
+    setLoading(true);
+    try {
+      const result = await handleLoadMore('artistes', lastVisible, 'nom', pageSize);
+      if (result.newDocs.length > 0) {
+        // Ajouter les infos de concerts pour chaque nouvel artiste
+        const artistesWithConcerts = await Promise.all(
+          result.newDocs.map(async (artiste) => {
+            const nbConcerts = await getNbConcerts(artiste.id);
+            return { ...artiste, nbConcerts };
+          })
+        );
+        
+        setArtistes(prev => [...prev, ...artistesWithConcerts]);
+        setLastVisible(result.lastVisible);
+        setHasMore(result.hasMore);
+      } else {
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error("Erreur lors du chargement des artistes supplémentaires:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Gestion de la suppression d'un artiste
+  const handleDeleteArtiste = async (artisteId, e) => {
+    e.stopPropagation(); // Éviter la navigation
+    const success = await handleDelete('artistes', artisteId, 'Êtes-vous sûr de vouloir supprimer cet artiste ?');
+    if (success) {
+      setArtistes(prev => prev.filter(artiste => artiste.id !== artisteId));
+    }
+  };
+
+  // Appliquer le filtre aux artistes
+  const getFilteredArtistes = () => {
+    // D'abord, filtrer par recherche
+    let filtered = filteredArtistes(artistes, searchTerm);
+    
+    // Ensuite, appliquer le filtre de concerts
+    if (filter === 'avecConcerts') {
+      filtered = filtered.filter(artiste => artiste.nbConcerts > 0);
+    } else if (filter === 'sansConcerts') {
+      filtered = filtered.filter(artiste => artiste.nbConcerts === 0);
+    }
+    
+    return filtered;
+  };
+  
+  // Obtenir la liste filtrée
+  const filteredArtistesList = getFilteredArtistes();
 
   return (
     <div className="artistes-mobile-container">
@@ -90,11 +180,8 @@ const ArtistesListMobile = () => {
       {/* Liste d'artistes en cards adaptées au mobile */}
       <div className="mobile-artistes-grid">
         {loading && artistes.length === 0 ? (
-          <div className="loading-indicator">
-            <Spinner animation="border" variant="primary" />
-            <p>Chargement...</p>
-          </div>
-        ) : filteredArtistes.length === 0 ? (
+          <Spinner message="Chargement des artistes..." />
+        ) : filteredArtistesList.length === 0 ? (
           <div className="empty-state-mobile">
             <i className="bi bi-music-note-list"></i>
             <p>Aucun artiste trouvé</p>
@@ -106,7 +193,7 @@ const ArtistesListMobile = () => {
             </Button>
           </div>
         ) : (
-          filteredArtistes.map(artiste => (
+          filteredArtistesList.map(artiste => (
             <div 
               key={artiste.id} 
               className="artiste-card-mobile"
@@ -155,7 +242,7 @@ const ArtistesListMobile = () => {
                   </button>
                   <button 
                     className="action-btn delete"
-                    onClick={(e) => handleDelete(artiste.id, e)}
+                    onClick={(e) => handleDeleteArtiste(artiste.id, e)}
                   >
                     <i className="bi bi-trash"></i>
                   </button>
@@ -171,12 +258,12 @@ const ArtistesListMobile = () => {
         <div className="load-more-container-mobile">
           <Button 
             variant="outline-primary"
-            onClick={handleLoadMore}
+            onClick={loadMoreData}
             disabled={loading}
             className="load-more-btn-mobile"
           >
             {loading ? (
-              <Spinner animation="border" size="sm" />
+              <Spinner inline />
             ) : (
               <i className="bi bi-plus-circle"></i>
             )}
@@ -187,4 +274,4 @@ const ArtistesListMobile = () => {
   );
 };
 
-export default ArtistesListMobile;
+export default ArtistesList;

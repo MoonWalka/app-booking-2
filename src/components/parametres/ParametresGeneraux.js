@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Card, Alert } from 'react-bootstrap';
-import { useParametres } from '@context/ParametresContext';
+import { useParametres } from '@/context/ParametresContext';
 
 const ParametresGeneraux = () => {
   const { parametres, sauvegarderParametres, loading } = useParametres();
   const [localState, setLocalState] = useState(parametres.generaux || {
     langue: 'fr',
-    formatDate: 'dd/mm/yyyy',
-    nomApplication: 'TourCraft'
+    formatDate: 'dd/mm/yyyy'
   });
+  const [success, setSuccess] = useState('');
 
   useEffect(() => {
     if (parametres.generaux) {
@@ -28,7 +28,8 @@ const ParametresGeneraux = () => {
     e.preventDefault();
     const success = await sauvegarderParametres('generaux', localState);
     if (success) {
-      alert('Paramètres généraux sauvegardés avec succès');
+      setSuccess('Paramètres généraux sauvegardés avec succès');
+      setTimeout(() => setSuccess(''), 3000);
     }
   };
 
@@ -40,17 +41,14 @@ const ParametresGeneraux = () => {
     <Card>
       <Card.Body>
         <h3 className="mb-3">Paramètres généraux</h3>
+        
+        {success && (
+          <Alert variant="success" className="mb-3">
+            {success}
+          </Alert>
+        )}
+        
         <Form onSubmit={handleSubmit}>
-          <Form.Group className="mb-3">
-            <Form.Label>Nom de l'application</Form.Label>
-            <Form.Control
-              type="text"
-              name="nomApplication"
-              value={localState.nomApplication}
-              onChange={handleChange}
-            />
-          </Form.Group>
-
           <Form.Group className="mb-3">
             <Form.Label>Langue</Form.Label>
             <Form.Select
@@ -63,6 +61,9 @@ const ParametresGeneraux = () => {
               <option value="es">Español</option>
               <option value="de">Deutsch</option>
             </Form.Select>
+            <Form.Text className="text-muted">
+              La langue utilisée dans l'interface de l'application.
+            </Form.Text>
           </Form.Group>
 
           <Form.Group className="mb-3">
@@ -76,6 +77,9 @@ const ParametresGeneraux = () => {
               <option value="mm/dd/yyyy">MM/JJ/AAAA</option>
               <option value="yyyy-mm-dd">AAAA-MM-JJ</option>
             </Form.Select>
+            <Form.Text className="text-muted">
+              Format d'affichage des dates dans l'application.
+            </Form.Text>
           </Form.Group>
 
           <div className="d-flex justify-content-end">

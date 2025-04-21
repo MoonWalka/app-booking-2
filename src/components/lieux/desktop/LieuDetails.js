@@ -18,6 +18,8 @@ import { db } from '../../../firebase';
 import { Badge } from 'react-bootstrap';
 import '../../../style/lieuForm.css';
 import { handleDelete } from './handlers/deleteHandler';
+import Spinner from '@/components/common/Spinner';
+import { useLocationIQ } from '@/hooks/useLocationIQ';
 
 
 //composant pour afficher concert associé
@@ -112,17 +114,42 @@ const LieuDetails = () => {
   const [loadingProgrammateur, setLoadingProgrammateur] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // États pour les suggestions d'adresse
+  const [addressSuggestions, setAddressSuggestions] = useState([]);
+  const [isSearchingAddress, setIsSearchingAddress] = useState(false);
+  const addressTimeoutRef = useRef(null);
+  const addressInputRef = useRef(null);
+  const suggestionsRef = useRef(null);
+  
+  // Utilisation du hook LocationIQ
+  const { isLoading: isApiLoading, error: apiError, searchAddress, getStaticMapUrl } = useLocationIQ();
+  
+  // Log pour vérifier que le hook est bien chargé
+  useEffect(() => {
+    console.log("LieuDetails - hook LocationIQ chargé:", {
+      isApiLoading,
+      hasError: !!apiError,
+      searchAddressFn: !!searchAddress,
+      getStaticMapUrlFn: !!getStaticMapUrl
+    });
+    
+    if (apiError) {
+      console.error("Erreur hook LocationIQ:", apiError);
+    }
+  }, [isApiLoading, apiError, searchAddress, getStaticMapUrl]);
+
   // Ajoutez cette fonction avec les autres fonctions de gestion
-const handleConcertRemoved = (concertId) => {
-  // Mettre à jour l'état local lorsqu'un concert est retiré
-  if (lieu && lieu.concertsAssocies) {
-    const updatedConcerts = lieu.concertsAssocies.filter(id => id !== concertId);
-    setLieu(prev => ({
-      ...prev,
-      concertsAssocies: updatedConcerts
-    }));
-  }
-};
+  const handleConcertRemoved = (concertId) => {
+    // Mettre à jour l'état local lorsqu'un concert est retiré
+    if (lieu && lieu.concertsAssocies) {
+      const updatedConcerts = lieu.concertsAssocies.filter(id => id !== concertId);
+      setLieu(prev => ({
+        ...prev,
+        concertsAssocies: updatedConcerts
+      }));
+    }
+  };
 
   
   // États pour le formulaire
@@ -216,7 +243,7 @@ const handleConcertRemoved = (concertId) => {
 
   // Effet pour gérer la recherche de programmateurs
   useEffect(() => {
-    if (!isEditing) return;
+    //if (!isEditing) return;
     
     if (searchTimeoutRef.current) {
       clearTimeout(searchTimeoutRef.current);
@@ -238,7 +265,7 @@ const handleConcertRemoved = (concertId) => {
         clearTimeout(searchTimeoutRef.current);
       }
     };
-  }, [searchTerm, isEditing]);
+  }, [searchTerm]);
   
   // Gestionnaire de clic extérieur pour fermer la liste déroulante
   useEffect(() => {
@@ -457,8 +484,126 @@ const handleConcertRemoved = (concertId) => {
     return <Badge bg={variant} className="type-badge">{type}</Badge>;
   };
 
+  // Effet pour la recherche d'adresse
+  useEffect(() => {
+    if (!isEditing) return; // Ne rechercher que si on est en mode édition
+    
+    // Nettoyer le timeout précédent
+    if (addressTimeoutRef.current) {
+      clearTimeout(addressTimeoutRef.current);
+    }
+    
+    const handleSearch = async () => {
+      console.log("handleSearch - état actuel:", {
+        adresse: formData.adresse,
+        adresseLength: formData.adresse?.length || 0,
+        isApiLoading,
+        isSearchingAddress
+      });
+      
+      if (!formData.adresse || formData.adresse.length < 3 || isApiLoading) {
+        console.log("Conditions non remplies pour la recherche");
+        setAddressSuggestions([]);
+        return;
+      }
+      
+      setIsSearchingAddress(true);
+      console.log("Recherche démarrée pour:", formData.adresse);
+      
+      try {
+        // Appeler la fonction du hook
+        const results = await searchAddress(formData.adresse);
+        console.log("Résultats de recherche reçus:", results?.length || 0);
+        setAddressSuggestions(results || []);
+      } catch (error) {
+        console.error("Erreur lors de la recherche:", error);
+        setAddressSuggestions([]);
+      } finally {
+        setIsSearchingAddress(false);
+      }
+    };
+    
+    // N'effectuer la recherche que si l'adresse a au moins 3 caractères
+    if (formData.adresse && formData.adresse.length >= 3 && !isApiLoading) {
+      console.log("Planification de la recherche après délai");
+      addressTimeoutRef.current = setTimeout(handleSearch, 300);
+    } else {
+      setAddressSuggestions([]);
+    }
+    
+    return () => {
+      if (addressTimeoutRef.current) {
+        clearTimeout(addressTimeoutRef.current);
+      }
+    };
+  }, [formData.adresse, isApiLoading, searchAddress, isEditing]);
+  
+  // Gestionnaire de clic extérieur pour fermer les suggestions d'adresse
+  useEffect(() => {
+    if (!isEditing) return; // Ne rien faire si on n'est pas en mode édition
+    
+    const handleClickOutsideAddressSuggestions = (event) => {
+      if (suggestionsRef.current && !suggestionsRef.current.contains(event.target) && 
+          addressInputRef.current && !addressInputRef.current.contains(event.target)) {
+        setAddressSuggestions([]);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutsideAddressSuggestions);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutsideAddressSuggestions);
+    };
+  }, [isEditing]);
+  
+  // Sélectionner une adresse parmi les suggestions
+  const handleSelectAddress = (address) => {
+    console.log("Adresse sélectionnée:", address);
+    
+    let codePostal = '';
+    let ville = '';
+    let pays = 'France';
+    let adresse = '';
+    
+    // Extraire les composants d'adresse
+    if (address.address) {
+      // Extraire le code postal
+      codePostal = address.address.postcode || '';
+      
+      // Extraire la ville
+      ville = address.address.city || address.address.town || address.address.village || '';
+      
+      // Extraire le pays
+      pays = address.address.country || 'France';
+      
+      // Construire l'adresse de rue
+      const houseNumber = address.address.house_number || '';
+      const road = address.address.road || '';
+      adresse = `${houseNumber} ${road}`.trim();
+    }
+    
+    // Mettre à jour le formulaire avec les informations d'adresse
+    setFormData(prev => ({
+      ...prev,
+      adresse: adresse || address.display_name.split(',')[0],
+      codePostal,
+      ville,
+      pays,
+      latitude: address.lat,
+      longitude: address.lon,
+      display_name: address.display_name
+    }));
+    
+    console.log("État du formulaire mis à jour avec les coordonnées:", {
+      lat: address.lat, 
+      lon: address.lon
+    });
+    
+    // Fermer les suggestions
+    setAddressSuggestions([]);
+  };
+
   if (loading) {
-    return <div className="text-center my-5 loading-spinner">Chargement du lieu...</div>;
+    return <Spinner message="Chargement du lieu..." />;
   }
 
   if (!lieu) {
@@ -493,34 +638,57 @@ const handleConcertRemoved = (concertId) => {
           </h2>
         </div>
         <div className="action-buttons">
-          <Link to="/lieux" className="btn btn-outline-secondary action-btn">
-            <i className="bi bi-arrow-left"></i>
-            <span className="btn-text">Retour</span>
-          </Link>
-          
           {isEditing ? (
-            <button 
-              onClick={toggleEditMode} 
-              className="btn btn-outline-secondary action-btn"
-            >
-              <i className="bi bi-x-circle"></i>
-              <span className="btn-text">Annuler</span>
-            </button>
-          ) : (
             <>
+              {/* Boutons en mode édition */}
+              <button 
+                onClick={handleSubmit} 
+                className="btn btn-primary action-btn"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    <span className="btn-text">Enregistrement...</span>
+                  </>
+                ) : (
+                  <>
+                    <i className="bi bi-check-circle"></i>
+                    <span className="btn-text">Enregistrer</span>
+                  </>
+                )}
+              </button>
+              
               <button 
                 onClick={toggleEditMode} 
-                className="btn btn-outline-primary action-btn"
+                className="btn btn-outline-secondary action-btn"
               >
-                <i className="bi bi-pencil"></i>
-                <span className="btn-text">Modifier</span>
+                <i className="bi bi-x-circle"></i>
+                <span className="btn-text">Annuler</span>
               </button>
+              
               <button 
                 onClick={handleDelete} 
                 className="btn btn-outline-danger action-btn"
               >
                 <i className="bi bi-trash"></i>
                 <span className="btn-text">Supprimer</span>
+              </button>
+            </>
+          ) : (
+            <>
+              {/* Boutons en mode affichage */}
+              <Link to="/lieux" className="btn btn-outline-secondary action-btn">
+                <i className="bi bi-arrow-left"></i>
+                <span className="btn-text">Retour</span>
+              </Link>
+              
+              <button 
+                onClick={toggleEditMode} 
+                className="btn btn-outline-primary action-btn"
+              >
+                <i className="bi bi-pencil"></i>
+                <span className="btn-text">Modifier</span>
               </button>
             </>
           )}
@@ -611,16 +779,65 @@ const handleConcertRemoved = (concertId) => {
     <div className="form-group">
       <label htmlFor="adresse" className="form-label">Adresse {isEditing && <span className="required">*</span>}</label>
       {isEditing ? (
-        <input
-          type="text"
-          className="form-control"
-          id="adresse"
-          name="adresse"
-          value={formData.adresse}
-          onChange={handleChange}
-          required
-          placeholder="Numéro et nom de rue"
-        />
+        <div className="address-search-container">
+          <div className="input-group">
+            <input
+              type="text"
+              className="form-control"
+              id="adresse"
+              name="adresse"
+              ref={addressInputRef}
+              value={formData.adresse}
+              onChange={handleChange}
+              required
+              placeholder="Commencez à taper une adresse..."
+              autoComplete="off"
+            />
+            <span className="input-group-text">
+              <i className="bi bi-geo-alt"></i>
+            </span>
+          </div>
+          <small className="form-text text-muted">
+            Commencez à taper pour voir des suggestions d'adresses
+          </small>
+          
+          {/* Suggestions d'adresse */}
+          {addressSuggestions && addressSuggestions.length > 0 && (
+            <div className="address-suggestions" ref={suggestionsRef}>
+              {addressSuggestions.map((suggestion, index) => (
+                <div
+                  key={index}
+                  className="address-suggestion-item"
+                  onClick={() => handleSelectAddress(suggestion)}
+                >
+                  <div className="suggestion-icon">
+                    <i className="bi bi-geo-alt-fill"></i>
+                  </div>
+                  <div className="suggestion-text">
+                    <div className="suggestion-name">{suggestion.display_name}</div>
+                    {suggestion.address && (
+                      <div className="suggestion-details">
+                        {suggestion.address.postcode && suggestion.address.city && (
+                          <span>{suggestion.address.postcode} {suggestion.address.city}</span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+          
+          {/* Indicateur de recherche */}
+          {isSearchingAddress && (
+            <div className="address-searching">
+              <div className="spinner-border spinner-border-sm text-primary" role="status">
+                <span className="visually-hidden">Recherche en cours...</span>
+              </div>
+              <span className="searching-text">Recherche d'adresses...</span>
+            </div>
+          )}
+        </div>
       ) : (
         <div className="form-control-static">{lieu.adresse}</div>
       )}
@@ -865,8 +1082,7 @@ const handleConcertRemoved = (concertId) => {
                           </div>
                         </div>
                       )}
-                      
-                      {programmateur.email && (
+                                            {programmateur.email && (
                         <div className="info-row">
                           <div className="info-label">
                             <i className="bi bi-envelope text-primary"></i>
@@ -1069,37 +1285,7 @@ const handleConcertRemoved = (concertId) => {
   </div>
 </div>
 
-        {/* Boutons d'action en mode édition */}
-        {isEditing && (
-          <div className="form-actions">
-            <button
-              type="button"
-              className="btn btn-outline-secondary"
-              onClick={toggleEditMode}
-              disabled={isSubmitting}
-            >
-              <i className="bi bi-x-circle me-2"></i>
-              Annuler
-            </button>
-            <button
-              type="submit"
-              className="btn btn-primary"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? (
-                <>
-                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                  Enregistrement...
-                </>
-              ) : (
-                <>
-                  <i className="bi bi-check-circle me-2"></i>
-                  Enregistrer les modifications
-                </>
-              )}
-            </button>
-          </div>
-        )}
+        {/* Suppression des boutons d'action en bas du formulaire */}
       </form>
     </div>
   );

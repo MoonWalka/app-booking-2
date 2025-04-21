@@ -1,6 +1,6 @@
 // src/components/lieux/LieuxList.js
 import React from 'react';
-import { useResponsiveComponent } from '@hooks/useResponsiveComponent';
+import { useResponsiveComponent } from '@/hooks/useResponsiveComponent';
 
 function LieuxList(props) {
   const ResponsiveComponent = useResponsiveComponent({

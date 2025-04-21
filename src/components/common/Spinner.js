@@ -1,0 +1,64 @@
+// src/components/common/Spinner.js
+import React from 'react';
+import { Spinner as BootstrapSpinner } from 'react-bootstrap';
+import PropTypes from 'prop-types';
+
+/**
+ * Composant Spinner unifié pour toute l'application
+ * @param {Object} props - Propriétés du composant
+ * @param {string} [props.variant='primary'] - Variante de couleur Bootstrap
+ * @param {string} [props.size=''] - Taille du spinner (sm ou vide pour taille normale)
+ * @param {string} [props.message='Chargement...'] - Message à afficher sous le spinner
+ * @param {boolean} [props.fullPage=false] - Si true, centre le spinner au milieu de la page
+ * @param {boolean} [props.inline=false] - Si true, affiche le spinner en ligne (pour les boutons)
+ * @param {string} [props.className=''] - Classes CSS additionnelles
+ */
+const Spinner = ({ 
+  variant = 'primary', 
+  size = '', 
+  message = 'Chargement...', 
+  fullPage = false,
+  inline = false,
+  className = ''
+}) => {
+  if (inline) {
+    return (
+      <BootstrapSpinner 
+        as="span" 
+        animation="border" 
+        size={size || 'sm'} 
+        role="status" 
+        aria-hidden="true" 
+        variant={variant}
+        className={className}
+      />
+    );
+  }
+  
+  const containerClass = fullPage 
+    ? 'spinner-fullpage-container' 
+    : 'spinner-container';
+
+  return (
+    <div className={`${containerClass} ${className}`}>
+      <BootstrapSpinner 
+        animation="border" 
+        variant={variant} 
+        size={size}
+        role="status" 
+      />
+      {message && <p className="spinner-message">{message}</p>}
+    </div>
+  );
+};
+
+Spinner.propTypes = {
+  variant: PropTypes.string,
+  size: PropTypes.string,
+  message: PropTypes.string,
+  fullPage: PropTypes.bool,
+  inline: PropTypes.bool,
+  className: PropTypes.string
+};
+
+export default Spinner;

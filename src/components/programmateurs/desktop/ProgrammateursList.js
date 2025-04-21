@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
-import firebase from '../../../firebase';
-import '../../../style/programmateursList.css';
+import firebase from '@/firebase';
+import '@/style/programmateursList.css';
 import { handleDelete } from './handlers/deleteHandler';
 import { collection, query, getDocs, orderBy, deleteDoc, doc } from 'firebase/firestore';
-import { db } from '../../../firebase';
+import { db } from '@/firebase';
+import Spinner from '@/components/common/Spinner';
 
 const ProgrammateursList = () => {
   const navigate = useNavigate();
@@ -126,7 +127,7 @@ const ProgrammateursList = () => {
   );
 
   if (loading) {
-    return <div className="text-center my-5 loading-spinner">Chargement des programmateurs...</div>;
+    return <Spinner message="Chargement des programmateurs..." />;
   }
 
   return (

@@ -4,6 +4,7 @@ import firebase from '../../../firebase';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import '../../../style/lieuxList.css';
 import { handleDelete } from './handlers/deleteHandler';
+import Spinner from '@/components/common/Spinner';
 
 
 const LieuxList = () => {
@@ -174,7 +175,7 @@ const LieuxList = () => {
   );
 
   if (loading) {
-    return <div className="text-center my-5 loading-spinner">Chargement des lieux...</div>;
+    return <Spinner message="Chargement des lieux..." />;
   }
 
   return (

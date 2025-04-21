@@ -1,6 +1,6 @@
 // src/components/lieux/LieuDetails.js
 import React from 'react';
-import { useResponsiveComponent } from '@hooks/useResponsiveComponent';
+import { useResponsiveComponent } from '@/hooks/useResponsiveComponent';
 
 function LieuDetails(props) {
   const ResponsiveComponent = useResponsiveComponent({

@@ -1,14 +1,18 @@
-// src/components/artistes/ArtisteDetail.jsx
-import React, { useState, useEffect } from 'react';
+// src/components/artistes/ArtisteDetail.js
+import React from 'react';
 import { useResponsiveComponent } from '@/hooks/useResponsiveComponent';
 
-function ArtisteDetail(props) {
+/**
+ * Wrapper pour la page de détail d'un artiste qui affiche la version mobile ou desktop
+ * selon la taille de l'écran
+ */
+const ArtisteDetail = (props) => {
   const ResponsiveComponent = useResponsiveComponent({
     desktopPath: 'artistes/desktop/ArtisteDetail',
     mobilePath: 'artistes/mobile/ArtisteDetail'
   });
   
   return <ResponsiveComponent {...props} />;
-}
+};
 
 export default ArtisteDetail;

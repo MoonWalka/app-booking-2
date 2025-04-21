@@ -1,3 +1,4 @@
+// src/components/artistes/ArtisteForm.js
 import React from 'react';
 import { useResponsiveComponent } from '@/hooks/useResponsiveComponent';
 

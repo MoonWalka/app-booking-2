@@ -3,250 +3,58 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getDoc, doc, setDoc, collection, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../../firebase';
-import StepNavigation from '../../common/steps/StepNavigation.js';
 import '../../../style/artisteForm.css';
 
-// Composant pour l'étape 1 : Informations de base
-const BasicInfoStep = ({ data, onNext, onBack }) => {
-  const [nom, setNom] = useState(data.nom || '');
-  const [genre, setGenre] = useState(data.genre || '');
-  const [description, setDescription] = useState(data.description || '');
-  
-  const handleNext = () => {
-    if (!nom.trim()) {
-      alert('Le nom de l\'artiste est obligatoire');
-      return;
-    }
-    
-    onNext({ nom, genre, description });
-  };
-  
-  return (
-    <div className="step-form">
-      <div className="step-form-group">
-        <label htmlFor="nom">Nom de l'artiste *</label>
-        <input
-          type="text"
-          id="nom"
-          value={nom}
-          onChange={(e) => setNom(e.target.value)}
-          placeholder="Ex: Les Rockeurs du Dimanche"
-          required
-        />
-      </div>
-      
-      <div className="step-form-group">
-        <label htmlFor="genre">Genre musical</label>
-        <input
-          type="text"
-          id="genre"
-          value={genre}
-          onChange={(e) => setGenre(e.target.value)}
-          placeholder="Ex: Rock, Jazz, Pop..."
-        />
-      </div>
-      
-      <div className="step-form-group">
-        <label htmlFor="description">Description</label>
-        <textarea
-          id="description"
-          rows="4"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Présentez l'artiste en quelques lignes..."
-        ></textarea>
-      </div>
-      
-      <div className="step-form-actions">
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={handleNext}
-        >
-          Suivant
-        </button>
-      </div>
-    </div>
-  );
-};
-
-// Composant pour l'étape 2 : Contacts
-const ContactStep = ({ data, onNext, onBack }) => {
-  const [email, setEmail] = useState(data.contacts?.email || '');
-  const [telephone, setTelephone] = useState(data.contacts?.telephone || '');
-  const [siteWeb, setSiteWeb] = useState(data.contacts?.siteWeb || '');
-  const [instagram, setInstagram] = useState(data.contacts?.instagram || '');
-  const [facebook, setFacebook] = useState(data.contacts?.facebook || '');
-  
-  const handleNext = () => {
-    const contacts = { email, telephone, siteWeb, instagram, facebook };
-    onNext({ contacts });
-  };
-  
-  return (
-    <div className="step-form">
-      <div className="step-form-group">
-        <label htmlFor="email">Email</label>
-        <input
-          type="email"
-          id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Ex: contact@artiste.com"
-        />
-      </div>
-      
-      <div className="step-form-group">
-        <label htmlFor="telephone">Téléphone</label>
-        <input
-          type="tel"
-          id="telephone"
-          value={telephone}
-          onChange={(e) => setTelephone(e.target.value)}
-          placeholder="Ex: 06 12 34 56 78"
-        />
-      </div>
-      
-      <div className="step-form-group">
-        <label htmlFor="siteWeb">Site web</label>
-        <input
-          type="url"
-          id="siteWeb"
-          value={siteWeb}
-          onChange={(e) => setSiteWeb(e.target.value)}
-          placeholder="Ex: https://www.artiste.com"
-        />
-      </div>
-      
-      <div className="step-form-group">
-        <label htmlFor="instagram">Instagram</label>
-        <input
-          type="text"
-          id="instagram"
-          value={instagram}
-          onChange={(e) => setInstagram(e.target.value)}
-          placeholder="Ex: artisteofficiel"
-        />
-      </div>
-      
-      <div className="step-form-group">
-        <label htmlFor="facebook">Facebook</label>
-        <input
-          type="text"
-          id="facebook"
-          value={facebook}
-          onChange={(e) => setFacebook(e.target.value)}
-          placeholder="Ex: artisteofficiel"
-        />
-      </div>
-      
-      <div className="step-form-actions">
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={handleNext}
-        >
-          Suivant
-        </button>
-      </div>
-    </div>
-  );
-};
-
-// Composant pour l'étape 3 : Membres
-const MembersStep = ({ data, onNext, onBack }) => {
-  const [membres, setMembres] = useState(data.membres || []);
-  const [nouveauMembre, setNouveauMembre] = useState('');
-  
-  const ajouterMembre = () => {
-    if (nouveauMembre.trim()) {
-      setMembres([...membres, nouveauMembre.trim()]);
-      setNouveauMembre('');
-    }
-  };
-  
-  const supprimerMembre = (index) => {
-    const newMembres = [...membres];
-    newMembres.splice(index, 1);
-    setMembres(newMembres);
-  };
-  
-  const handleNext = () => {
-    onNext({ membres });
-  };
-  
-  return (
-    <div className="step-form">
-      <div className="step-form-group">
-        <label>Membres du groupe</label>
-        <div className="add-membre-container">
-          <input
-            type="text"
-            value={nouveauMembre}
-            onChange={(e) => setNouveauMembre(e.target.value)}
-            placeholder="Nom du membre"
-          />
-          <button 
-            type="button" 
-            className="btn btn-sm btn-outline-primary"
-            onClick={ajouterMembre}
-          >
-            <i className="bi bi-plus-lg"></i>
-          </button>
-        </div>
-        
-        <div className="membres-list">
-          {membres.length === 0 ? (
-            <div className="text-muted small">Aucun membre ajouté</div>
-          ) : (
-            <ul className="list-group">
-              {membres.map((membre, index) => (
-                <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
-                  {membre}
-                  <button 
-                    type="button" 
-                    className="btn btn-sm btn-outline-danger"
-                    onClick={() => supprimerMembre(index)}
-                  >
-                    <i className="bi bi-trash"></i>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      </div>
-      
-      <div className="step-form-actions">
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={handleNext}
-        >
-          Terminer
-        </button>
-      </div>
-    </div>
-  );
-};
-
-// Composant principal ArtisteForm pour mobile
+// Version mobile simplifiée du formulaire d'artiste
 const ArtisteFormMobile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(!!id && id !== 'nouveau');
-  const [initialData, setInitialData] = useState({});
   
+  // État pour stocker toutes les données du formulaire
+  const [formData, setFormData] = useState({
+    nom: '',
+    genre: '',
+    description: '',
+    contacts: {
+      email: '',
+      telephone: '',
+      siteWeb: '',
+      instagram: '',
+      facebook: ''
+    },
+    membres: []
+  });
+  
+  // État pour gérer la saisie d'un nouveau membre
+  const [nouveauMembre, setNouveauMembre] = useState('');
+  
+  // Chargement des données si mode édition
   useEffect(() => {
     const fetchArtiste = async () => {
       if (id && id !== 'nouveau') {
         try {
           const artisteDoc = await getDoc(doc(db, 'artistes', id));
           if (artisteDoc.exists()) {
-            setInitialData(artisteDoc.data());
+            // Pré-remplir le formulaire avec les données existantes
+            const data = artisteDoc.data();
+            setFormData({
+              nom: data.nom || '',
+              genre: data.genre || '',
+              description: data.description || '',
+              contacts: {
+                email: data.contacts?.email || '',
+                telephone: data.contacts?.telephone || '',
+                siteWeb: data.contacts?.siteWeb || '',
+                instagram: data.contacts?.instagram || '',
+                facebook: data.contacts?.facebook || ''
+              },
+              membres: data.membres || []
+            });
           }
         } catch (error) {
           console.error('Erreur lors de la récupération de l\'artiste:', error);
+          alert('Erreur lors du chargement des données');
         } finally {
           setLoading(false);
         }
@@ -258,11 +66,62 @@ const ArtisteFormMobile = () => {
     fetchArtiste();
   }, [id]);
   
-  const handleComplete = async (data) => {
+  // Gestion des changements de champs
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    
+    if (name.includes('.')) {
+      // Pour les champs imbriqués comme "contacts.email"
+      const [parent, child] = name.split('.');
+      setFormData({
+        ...formData,
+        [parent]: {
+          ...formData[parent],
+          [child]: value
+        }
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value
+      });
+    }
+  };
+  
+  // Ajout d'un membre
+  const ajouterMembre = () => {
+    if (nouveauMembre.trim()) {
+      setFormData({
+        ...formData,
+        membres: [...formData.membres, nouveauMembre.trim()]
+      });
+      setNouveauMembre('');
+    }
+  };
+  
+  // Suppression d'un membre
+  const supprimerMembre = (index) => {
+    const nouveauxMembres = [...formData.membres];
+    nouveauxMembres.splice(index, 1);
+    setFormData({
+      ...formData,
+      membres: nouveauxMembres
+    });
+  };
+  
+  // Soumission du formulaire
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!formData.nom.trim()) {
+      alert('Le nom de l\'artiste est obligatoire');
+      return;
+    }
+    
     try {
-      // Fusionner les données de toutes les étapes
+      // Préparation des données
       const artisteData = {
-        ...data,
+        ...formData,
         updatedAt: serverTimestamp()
       };
       
@@ -279,46 +138,204 @@ const ArtisteFormMobile = () => {
       navigate('/artistes');
     } catch (error) {
       console.error('Erreur lors de l\'enregistrement de l\'artiste:', error);
-      alert('Une erreur est survenue lors de l\'enregistrement de l\'artiste.');
+      alert('Une erreur est survenue lors de l\'enregistrement');
     }
   };
   
+  // Annulation et retour à la liste
   const handleCancel = () => {
     navigate('/artistes');
   };
   
   if (loading) {
-    return <div className="loading-indicator">Chargement...</div>;
+    return (
+      <div className="loading-container">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Chargement...</span>
+        </div>
+      </div>
+    );
   }
-  
-  // Définir les étapes du formulaire
-  const steps = [
-    { 
-      title: 'Informations de base', 
-      component: BasicInfoStep 
-    },
-    { 
-      title: 'Coordonnées', 
-      component: ContactStep 
-    },
-    { 
-      title: 'Membres', 
-      component: MembersStep 
-    }
-  ];
   
   return (
     <div className="artiste-form-mobile">
       <div className="mobile-form-header">
-        <h1>{id !== 'nouveau' ? 'Modifier l\'artiste' : 'Nouvel artiste'}</h1>
+        <h1 className="mb-3">{id !== 'nouveau' ? 'Modifier l\'artiste' : 'Nouvel artiste'}</h1>
+        <p className="text-muted small">Tous les champs avec * sont obligatoires</p>
       </div>
       
-      <StepNavigation 
-        steps={steps}
-        onComplete={handleComplete}
-        onCancel={handleCancel}
-        initialStep={0}
-      />
+      <form onSubmit={handleSubmit} className="mobile-form">
+        {/* Section Informations de base */}
+        <div className="form-section">
+          <h3 className="section-title">Informations de base</h3>
+          
+          <div className="form-floating mb-3">
+            <input
+              type="text"
+              className="form-control"
+              id="nom"
+              name="nom"
+              value={formData.nom}
+              onChange={handleChange}
+              placeholder="Nom de l'artiste"
+              required
+            />
+            <label htmlFor="nom">Nom de l'artiste *</label>
+          </div>
+          
+          <div className="form-floating mb-3">
+            <input
+              type="text"
+              className="form-control"
+              id="genre"
+              name="genre"
+              value={formData.genre}
+              onChange={handleChange}
+              placeholder="Genre musical"
+            />
+            <label htmlFor="genre">Genre musical</label>
+          </div>
+          
+          <div className="form-floating mb-3">
+            <textarea
+              className="form-control"
+              id="description"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              placeholder="Description"
+              style={{height: "100px"}}
+            ></textarea>
+            <label htmlFor="description">Description</label>
+          </div>
+        </div>
+        
+        {/* Section Contacts */}
+        <div className="form-section">
+          <h3 className="section-title">Coordonnées</h3>
+          
+          <div className="form-floating mb-3">
+            <input
+              type="email"
+              className="form-control"
+              id="email"
+              name="contacts.email"
+              value={formData.contacts.email}
+              onChange={handleChange}
+              placeholder="Email"
+            />
+            <label htmlFor="email">Email</label>
+          </div>
+          
+          <div className="form-floating mb-3">
+            <input
+              type="tel"
+              className="form-control"
+              id="telephone"
+              name="contacts.telephone"
+              value={formData.contacts.telephone}
+              onChange={handleChange}
+              placeholder="Téléphone"
+            />
+            <label htmlFor="telephone">Téléphone</label>
+          </div>
+          
+          <div className="form-floating mb-3">
+            <input
+              type="url"
+              className="form-control"
+              id="siteWeb"
+              name="contacts.siteWeb"
+              value={formData.contacts.siteWeb}
+              onChange={handleChange}
+              placeholder="Site web"
+            />
+            <label htmlFor="siteWeb">Site web</label>
+          </div>
+          
+          <div className="form-floating mb-3">
+            <input
+              type="text"
+              className="form-control"
+              id="instagram"
+              name="contacts.instagram"
+              value={formData.contacts.instagram}
+              onChange={handleChange}
+              placeholder="Instagram"
+            />
+            <label htmlFor="instagram">Instagram</label>
+          </div>
+          
+          <div className="form-floating mb-3">
+            <input
+              type="text"
+              className="form-control"
+              id="facebook"
+              name="contacts.facebook"
+              value={formData.contacts.facebook}
+              onChange={handleChange}
+              placeholder="Facebook"
+            />
+            <label htmlFor="facebook">Facebook</label>
+          </div>
+        </div>
+        
+        {/* Section Membres */}
+        <div className="form-section">
+          <h3 className="section-title">Membres</h3>
+          
+          <div className="input-group mb-3">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Nom du membre"
+              value={nouveauMembre}
+              onChange={(e) => setNouveauMembre(e.target.value)}
+            />
+            <button 
+              type="button" 
+              className="btn btn-primary"
+              onClick={ajouterMembre}
+            >
+              <i className="bi bi-plus-lg"></i> Ajouter
+            </button>
+          </div>
+          
+          {formData.membres.length === 0 ? (
+            <div className="text-muted text-center my-3">Aucun membre ajouté</div>
+          ) : (
+            <div className="membres-list mb-3">
+              {formData.membres.map((membre, index) => (
+                <div key={index} className="membre-item d-flex justify-content-between align-items-center p-2 mb-2 border rounded">
+                  <span>{membre}</span>
+                  <button 
+                    type="button" 
+                    className="btn btn-sm btn-outline-danger"
+                    onClick={() => supprimerMembre(index)}
+                  >
+                    <i className="bi bi-trash"></i>
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+        
+        {/* Boutons d'action */}
+        <div className="form-actions mt-4 d-grid gap-2">
+          <button type="submit" className="btn btn-primary btn-lg">
+            <i className="bi bi-check-lg me-2"></i>
+            {id !== 'nouveau' ? 'Enregistrer' : 'Créer l\'artiste'}
+          </button>
+          <button 
+            type="button" 
+            className="btn btn-outline-secondary btn-lg"
+            onClick={handleCancel}
+          >
+            Annuler
+          </button>
+        </div>
+      </form>
     </div>
   );
 };

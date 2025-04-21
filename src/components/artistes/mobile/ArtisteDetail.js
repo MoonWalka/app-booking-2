@@ -2,11 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
-import { db } from '../../../firebase';
-import '../../../style/artisteDetail.css';
-import '../../../style/artisteDetailsMobile.css';
+import { db } from '@/firebase';
+import '@styles/artisteDetail.css';
+import '@styles/artisteDetailsMobile.css';
 
-const ArtisteDetailMobile = () => {
+const ArtisteDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [artiste, setArtiste] = useState(null);
@@ -332,4 +332,4 @@ const ArtisteDetailMobile = () => {
   );
 };
 
-export default ArtisteDetailMobile;
+export default ArtisteDetail;

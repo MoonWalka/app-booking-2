@@ -1,6 +1,6 @@
 // src/components/contrats/ContratGenerator.js
 import React from 'react';
-import { useResponsiveComponent } from '@hooks/useResponsiveComponent';
+import { useResponsiveComponent } from '@/hooks/useResponsiveComponent';
 
 function ContratGenerator(props) {
   const ResponsiveComponent = useResponsiveComponent({

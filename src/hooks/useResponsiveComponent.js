@@ -9,8 +9,8 @@ export const useResponsiveComponent = (options) => {
     mobilePath,
     // Breakpoint personnalisable
     breakpoint = 768,
-    // Composant de fallback
-    fallback = <div className="loading-placeholder">Chargement...</div>
+    // Composant de fallback personnalisable
+    fallback = null
   } = options;
   
   const isMobile = useIsMobile(breakpoint);
@@ -19,11 +19,10 @@ export const useResponsiveComponent = (options) => {
   // Import dynamique avec meilleure gestion des erreurs et chemin corrigé
   const Component = lazy(() => {
     // Corriger le chemin pour qu'il pointe correctement vers les composants
-    // Au lieu d'utiliser un chemin relatif ../components/, utiliser un import direct depuis src
     const path = isMobile ? mobilePath : desktopPath;
     
     // Utiliser un import direct depuis le répertoire src/components avec @ qui est un alias vers src
-    return import(/* webpackChunkName: "[request]" */ `@components/${path}`)
+    return import(/* webpackChunkName: "[request]" */ `@/components/${path}`)
       .then(module => {
         // Réinitialiser l'état d'erreur si le chargement réussit
         setErrorLoading(false);
@@ -32,7 +31,7 @@ export const useResponsiveComponent = (options) => {
       })
       .catch(error => {
         console.error(`Erreur lors du chargement du composant ${path}:`, error);
-        console.error(`Tentative de chargement depuis: @components/${path}`);
+        console.error(`Tentative de chargement depuis: @/components/${path}`);
         setErrorLoading(true);
         
         // Retourner un composant de secours en cas d'erreur
@@ -41,7 +40,7 @@ export const useResponsiveComponent = (options) => {
             <div className="component-error">
               <h3>Impossible de charger le composant</h3>
               <p>Une erreur est survenue lors du chargement de l'interface.</p>
-              <p className="error-path">Chemin: @components/{path}</p>
+              <p className="error-path">Chemin: @/components/{path}</p>
               <button onClick={() => window.location.reload()}>
                 Rafraîchir la page
               </button>
@@ -51,7 +50,7 @@ export const useResponsiveComponent = (options) => {
       });
   });
   
-  // Composant enveloppé dans Suspense avec meilleur fallback
+  // Composant enveloppé dans Suspense avec fallback centralisé et unifié
   const ResponsiveComponent = (props) => {
     // Utiliser un effet pour réessayer le chargement en cas d'erreur
     useEffect(() => {
@@ -64,13 +63,20 @@ export const useResponsiveComponent = (options) => {
       }
     }, [errorLoading]);
     
-    return (
-      <Suspense fallback={
-        <div className="loading-placeholder">
-          <div className="loading-spinner"></div>
-          <p>Chargement de l'interface...</p>
+    // Le fallback par défaut unifié et centré
+    const defaultFallback = (
+      <div className="loading-container d-flex justify-content-center align-items-center" style={{ minHeight: '300px' }}>
+        <div className="text-center">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Chargement de l'interface...</span>
+          </div>
+          <p className="mt-2">Chargement de l'interface...</p>
         </div>
-      }>
+      </div>
+    );
+    
+    return (
+      <Suspense fallback={fallback || defaultFallback}>
         <Component {...props} />
       </Suspense>
     );

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc, setDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase';
-import ContratTemplateEditor from '@components/contrats/ContratTemplateEditor.js';
+import ContratTemplateEditor from '../components/contrats/ContratTemplateEditor';
 import '../style/contratTemplateEdit.css';
 
 const ContratTemplatesEditPage = () => {

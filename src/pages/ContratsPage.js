@@ -1,15 +1,19 @@
 // src/pages/ContratsPage.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import { collection, getDocs, query, orderBy, where } from 'firebase/firestore';
-import { db } from '../firebase';
+import { db } from '@/firebase';
 import { Table, Badge, Tabs, Tab } from 'react-bootstrap';
-import ContratTemplatesPage from './contratTemplatesPage.js';
-import ContratTemplatesEditPage from './contratTemplatesEditPage.js';
-import ContratGenerationPage from './ContratGenerationPage.js';
-import ContratDetailsPage from './ContratDetailsPage.js';
-import '../style/contrats.css';
+// Suppression des importations problématiques
+// import ContratTemplatesPage from '@/pages/contratTemplatesPage.js';
+// import ContratTemplatesEditPage from '@/pages/contratTemplatesEditPage.js';
+import ContratGenerationPage from '@/pages/ContratGenerationPage.js';
+import ContratDetailsPage from '@/pages/ContratDetailsPage.js';
+import '@/style/contrats.css';
 
+// Charger les composants de manière dynamique pour éviter les dépendances circulaires
+const ContratTemplatesPage = React.lazy(() => import('@/pages/contratTemplatesPage.js'));
+const ContratTemplatesEditPage = React.lazy(() => import('@/pages/contratTemplatesEditPage.js'));
 
 const ContratsTab = () => {
   const [contrats, setContrats] = useState([]);
@@ -390,8 +394,16 @@ const ContratsPage = () => {
       </Tabs>
 
       <Routes>
-        <Route path="/templates" element={<ContratTemplatesPage />} />
-        <Route path="/templates/:id" element={<ContratTemplatesEditPage />} />
+        <Route path="/templates" element={
+          <Suspense fallback={<div className="text-center my-3"><div className="spinner-border" role="status"></div></div>}>
+            <ContratTemplatesPage />
+          </Suspense>
+        } />
+        <Route path="/templates/:id" element={
+          <Suspense fallback={<div className="text-center my-3"><div className="spinner-border" role="status"></div></div>}>
+            <ContratTemplatesEditPage />
+          </Suspense>
+        } />
       </Routes>
     </div>
   );

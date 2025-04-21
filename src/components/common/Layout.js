@@ -1,17 +1,20 @@
 // src/components/common/Layout.js
 import React, { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
-import { useResponsiveComponent } from '@hooks/useResponsiveComponent';
+import { useResponsiveComponent } from '@/hooks/useResponsiveComponent';
 
 function Layout() {
   const [layoutError, setLayoutError] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
   
-  // Charger le composant de mise en page responsive
+  // Charger le composant de mise en page responsive avec un fallback personnalisé
+  // qui sera utilisé à la place du fallback par défaut dans useResponsiveComponent
   const ResponsiveLayout = useResponsiveComponent({
     desktopPath: 'common/layout/DesktopLayout',
     mobilePath: 'common/layout/MobileLayout',
-    breakpoint: 768
+    breakpoint: 768,
+    // Pas de fallback ici - on utilisera celui par défaut du hook
+    // pour éviter les doublons de spinner
   });
   
   // Gestion des erreurs de chargement
@@ -39,15 +42,17 @@ function Layout() {
   // Afficher un fallback en cas d'erreur persistante
   if (layoutError && retryCount >= 2) {
     return (
-      <div className="error-container">
-        <h2>Problème de chargement</h2>
-        <p>Nous rencontrons des difficultés à charger l'interface de l'application.</p>
-        <button 
-          className="retry-button"
-          onClick={() => window.location.reload()}
-        >
-          Réessayer
-        </button>
+      <div className="error-container d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
+        <div className="text-center">
+          <h2>Problème de chargement</h2>
+          <p>Nous rencontrons des difficultés à charger l'interface de l'application.</p>
+          <button 
+            className="btn btn-primary mt-3"
+            onClick={() => window.location.reload()}
+          >
+            Réessayer
+          </button>
+        </div>
       </div>
     );
   }
@@ -61,12 +66,7 @@ function Layout() {
     );
   } catch (error) {
     handleLayoutError(error);
-    return (
-      <div className="loading-placeholder">
-        <div className="loading-spinner"></div>
-        <p>Chargement de l'interface...</p>
-      </div>
-    );
+    return null; // Le fallback s'affichera après le setState
   }
 }
 

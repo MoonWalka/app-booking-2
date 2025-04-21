@@ -4,10 +4,11 @@ import {
   doc, getDoc, deleteDoc, updateDoc, collection, getDocs, 
   query, where, serverTimestamp, arrayUnion, arrayRemove, setDoc, limit
 } from 'firebase/firestore';
-import { db } from '../../../firebase';
-import FormGenerator from '../../forms/FormGenerator.js';
-import '../../../style/concertDetails.css';
+import { db } from '@/firebase';
+import FormGenerator from '@/components/forms/FormGenerator.js';
+import '@/style/concertDetails.css';
 import { handleDelete } from './handlers/deleteHandler';
+import Spinner from '@/components/common/Spinner';
 
 
 
@@ -863,9 +864,17 @@ const ConcertDetails = () => {
       switch (concert.statut) {
         case 'contact':
           if (!formData) return { message: 'Formulaire à envoyer', actionNeeded: true, action: 'form' };
+          if (formData && (!formData.programmateurData && (!formData.data || Object.keys(formData.data).length === 0))) 
+            return { message: 'Formulaire envoyé, en attente de réponse', actionNeeded: false };
+          if (formData && (formData.programmateurData || (formData.data && Object.keys(formData.data).length > 0)) && formData.status !== 'validated') 
+            return { message: 'Formulaire à valider', actionNeeded: true, action: 'validate_form' };
+          if (formData && formData.status === 'validated')
+            return { message: 'Contrat à préparer', actionNeeded: true, action: 'prepare_contract' };
           return { message: 'Contact établi', actionNeeded: false };
           
         case 'preaccord':
+          if (formData && formData.status === 'validated')
+            return { message: 'Contrat à envoyer', actionNeeded: true, action: 'send_contract' };
           return { message: 'Contrat à préparer', actionNeeded: true, action: 'contract' };
           
         case 'contrat':
@@ -883,9 +892,10 @@ const ConcertDetails = () => {
       }
     };
   
-    if (loading) {
-      return <div className="text-center my-5 loading-spinner">Chargement du concert...</div>;
-    }
+  if (loading) {
+    return <Spinner message="Chargement du concert..." />;
+  }
+
   
     if (!concert) {
       return <div className="alert alert-danger">Concert non trouvé</div>;
@@ -911,46 +921,60 @@ const ConcertDetails = () => {
     
         {/* Boutons d'action */}
         <div className="action-buttons">
-          <Link to="/concerts" className="btn btn-outline-secondary action-btn">
-            <i className="bi bi-arrow-left"></i>
-            <span className="btn-text">Retour</span>
-          </Link>
-          
-          <button
-            onClick={toggleEditMode}
-            className={`btn btn-outline-${isEditMode ? 'warning' : 'primary'} action-btn`}
-          >
-            <i className={`bi bi-${isEditMode ? 'x-circle' : 'pencil'}`}></i>
-            <span className="btn-text">{isEditMode ? 'Annuler' : 'Modifier'}</span>
-          </button>
-          
           {isEditMode ? (
-            <button
-              type="button"
-              className="btn btn-primary action-btn"
-              onClick={handleSubmit}
-              disabled={isSubmitting || !validateForm()}
-            >
-              {isSubmitting ? (
-                <>
-                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                  <span className="btn-text">Enregistrement...</span>
-                </>
-              ) : (
-                <>
-                  <i className="bi bi-check-circle"></i>
-                  <span className="btn-text">Enregistrer</span>
-                </>
-              )}
-            </button>
+            <>
+              {/* Boutons en mode édition */}
+              <button
+                type="button"
+                className="btn btn-primary action-btn"
+                onClick={handleSubmit}
+                disabled={isSubmitting || !validateForm()}
+              >
+                {isSubmitting ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    <span className="btn-text">Enregistrement...</span>
+                  </>
+                ) : (
+                  <>
+                    <i className="bi bi-check-circle"></i>
+                    <span className="btn-text">Enregistrer</span>
+                  </>
+                )}
+              </button>
+              
+              <button 
+                onClick={toggleEditMode} 
+                className="btn btn-outline-secondary action-btn"
+              >
+                <i className="bi bi-x-circle"></i>
+                <span className="btn-text">Annuler</span>
+              </button>
+              
+              <button 
+                onClick={() => setShowDeleteConfirm(true)} 
+                className="btn btn-outline-danger action-btn"
+              >
+                <i className="bi bi-trash"></i>
+                <span className="btn-text">Supprimer</span>
+              </button>
+            </>
           ) : (
-            <button 
-              onClick={() => setShowDeleteConfirm(true)} 
-              className="btn btn-outline-danger action-btn"
-            >
-              <i className="bi bi-trash"></i>
-              <span className="btn-text">Supprimer</span>
-            </button>
+            <>
+              {/* Boutons en mode affichage */}
+              <Link to="/concerts" className="btn btn-outline-secondary action-btn">
+                <i className="bi bi-arrow-left"></i>
+                <span className="btn-text">Retour</span>
+              </Link>
+              
+              <button
+                onClick={toggleEditMode}
+                className="btn btn-outline-primary action-btn"
+              >
+                <i className="bi bi-pencil"></i>
+                <span className="btn-text">Modifier</span>
+              </button>
+            </>
           )}
         </div>
   
@@ -1422,15 +1446,25 @@ const ConcertDetails = () => {
                     <div className="mb-3">
                       <div className="fw-bold">Formulaire:</div>
                       <div>
-                        {formData ? (
-                          <span className="badge bg-success me-2">
-                            <i className="bi bi-check-circle me-1"></i>
-                            Envoyé
-                          </span>
-                        ) : (
+                        {!formData ? (
                           <span className="badge bg-warning me-2">
                             <i className="bi bi-exclamation-triangle me-1"></i>
                             Non envoyé
+                          </span>
+                        ) : formData.status === 'validated' ? (
+                          <span className="badge bg-success me-2">
+                            <i className="bi bi-check-circle me-1"></i>
+                            Formulaire validé
+                          </span>
+                        ) : formData.programmateurData || (formData.data && Object.keys(formData.data).length > 0) ? (
+                          <span className="badge bg-info me-2">
+                            <i className="bi bi-hourglass-split me-1"></i>
+                            Formulaire rempli, à valider
+                          </span>
+                        ) : (
+                          <span className="badge bg-primary me-2">
+                            <i className="bi bi-envelope me-1"></i>
+                            Formulaire envoyé
                           </span>
                         )}
                       </div>
@@ -1837,4 +1871,3 @@ const ConcertDetails = () => {
   };
   
   export default ConcertDetails;
-  

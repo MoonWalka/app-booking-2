@@ -1,11 +1,25 @@
 // src/components/contrats/ContratGenerator.js
 import React, { useState, useEffect } from 'react';
+
+import { Button, Form, Alert, Card, Spinner } from 'react-bootstrap';
+import { useParams, useNavigate } from 'react-router-dom';
+import { db } from '@/firebase';
+import { 
+  collection, 
+  doc, 
+  getDoc, 
+  getDocs, 
+  query, 
+  where, 
+  orderBy,
+  addDoc,
+  updateDoc,
+  serverTimestamp
+} from 'firebase/firestore';
 import { PDFDownloadLink } from '@react-pdf/renderer';
-import { collection, query, where, orderBy, getDocs, doc, getDoc, addDoc, serverTimestamp, updateDoc } from 'firebase/firestore';
-import { db } from '../../../firebase';
-import { Card, Form, Button } from 'react-bootstrap';
-import ContratPDF from '../ContratPDF.js';
+import ContratPDF from '@/components/contrats/ContratPDF.js';
 import '../../../style/contratGenerator.css';
+
 
 
 const ContratGenerator = ({ concert, programmateur, artiste, lieu }) => {

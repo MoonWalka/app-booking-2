@@ -1,13 +1,14 @@
-import firebase from '../../../../firebase';
+import { doc, deleteDoc } from 'firebase/firestore';
+import { db } from '@/firebase';
 
-export const handleDelete = async (id) => {
-  if (window.confirm('Êtes-vous sûr de vouloir supprimer cet artiste ?')) {
+export const handleDelete = async (collection, id, confirmMessage = 'Êtes-vous sûr de vouloir supprimer cet élément ?') => {
+  if (window.confirm(confirmMessage)) {
     try {
-      const docRef = firebase.doc(firebase.db, 'artistes', id);
-      await firebase.deleteDoc(docRef);
+      const docRef = doc(db, collection, id);
+      await deleteDoc(docRef);
       return true;
     } catch (error) {
-      console.error('Erreur lors de la suppression de l\'artiste:', error);
+      console.error(`Erreur lors de la suppression dans ${collection}:`, error);
       return false;
     }
   }

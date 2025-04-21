@@ -1,28 +1,25 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, Suspense } from 'react';
 import { 
   BrowserRouter as Router, 
   Routes, 
   Route, 
-  Navigate,
-  createRoutesFromElements,
-  createBrowserRouter,
-  RouterProvider
+  Navigate
 } from 'react-router-dom';
-import { AuthProvider, useAuth } from './context/AuthContext';
-import { ParametresProvider } from './context/ParametresContext';
-import Layout from './components/common/Layout';
-import DashboardPage from './pages/DashboardPage';
-import ConcertsPage from './pages/ConcertsPage';
-import ProgrammateursPage from './pages/ProgrammateursPage';
-import LieuxPage from './pages/LieuxPage';
-import ContratsPage from './pages/ContratsPage';
-import ArtistesPage from './pages/ArtistesPage';
-import ParametresPage from './pages/ParametresPage'; // Nouvel import
-import FormResponsePage from './pages/FormResponsePage';
-import ContratGenerationPage from './pages/ContratGenerationPage'; // Nouvel import
-import ContratDetailsPage from './pages/ContratDetailsPage'; // Nouvel import
-import RouterStabilizer from './utils/RouterStabilizer';
-import './App.css';
+import { AuthProvider, useAuth } from '@/context/AuthContext';
+import { ParametresProvider } from '@/context/ParametresContext';
+import Layout from '@/components/common/Layout';
+import DashboardPage from '@/pages/DashboardPage';
+import ConcertsPage from '@/pages/ConcertsPage';
+import ProgrammateursPage from '@/pages/ProgrammateursPage';
+import LieuxPage from '@/pages/LieuxPage';
+import ContratsPage from '@/pages/ContratsPage';
+import ArtistesPage from '@/pages/ArtistesPage';
+import ParametresPage from '@/pages/ParametresPage';
+import FormResponsePage from '@/pages/FormResponsePage';
+import ContratGenerationPage from '@/pages/ContratGenerationPage';
+import ContratDetailsPage from '@/pages/ContratDetailsPage';
+import RouterStabilizer from '@/utils/RouterStabilizer';
+import '@/style/App.css';
 
 // Composant ErrorBoundary pour capturer les erreurs de chargement
 class ErrorBoundary extends React.Component {
@@ -139,9 +136,13 @@ function PrivateRoute({ children }) {
   
   if (loading) {
     return (
-      <div className="loading-container">
-        <div className="loading-spinner"></div>
-        <p>Vérification de l'authentification...</p>
+      <div className="loading-container d-flex justify-content-center align-items-center" style={{ minHeight: '300px' }}>
+        <div className="text-center">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Vérification de l'authentification...</span>
+          </div>
+          <p className="mt-2">Vérification de l'authentification...</p>
+        </div>
       </div>
     );
   }
@@ -161,6 +162,18 @@ function App() {
     v7_relativeSplatPath: true // Améliore la résolution des chemins
   };
 
+  // Le fallback unifié pour les chargements de routes
+  const routeFallback = (
+    <div className="loading-container d-flex justify-content-center align-items-center" style={{ minHeight: '300px' }}>
+      <div className="text-center">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Chargement de la page...</span>
+        </div>
+        <p className="mt-2">Chargement de la page...</p>
+      </div>
+    </div>
+  );
+
   return (
     <ErrorBoundary>
       <Router>
@@ -177,24 +190,60 @@ function App() {
                 <Route path="/" element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
                 
                 {/* Routes pour les concerts */}
-                <Route path="/concerts/*" element={<PrivateRoute><ConcertsPage /></PrivateRoute>} />
+                <Route path="/concerts/*" element={
+                  <PrivateRoute>
+                    <ConcertsPage />
+                  </PrivateRoute>
+                } />
                 
                 {/* Routes pour les programmateurs */}
-                <Route path="/programmateurs/*" element={<PrivateRoute><ProgrammateursPage /></PrivateRoute>} />
+                <Route path="/programmateurs/*" element={
+                  <PrivateRoute>
+                    <ProgrammateursPage />
+                  </PrivateRoute>
+                } />
                 
                 {/* Routes pour les lieux */}
-                <Route path="/lieux/*" element={<PrivateRoute><LieuxPage /></PrivateRoute>} />
+                <Route path="/lieux/*" element={
+                  <PrivateRoute>
+                    <LieuxPage />
+                  </PrivateRoute>
+                } />
                 
                 {/* Routes pour les contrats */}
-                <Route path="/contrats" element={<PrivateRoute><ContratsPage /></PrivateRoute>} />
-                <Route path="/contrats/generate/:concertId" element={<PrivateRoute><ContratGenerationPage /></PrivateRoute>} />
-                <Route path="/contrats/:contratId" element={<PrivateRoute><ContratDetailsPage /></PrivateRoute>} />
+                <Route path="/contrats" element={
+                  <PrivateRoute>
+                    <ContratsPage />
+                  </PrivateRoute>
+                } />
+                <Route path="/contrats/generate/:concertId" element={
+                  <PrivateRoute>
+                    <Suspense fallback={routeFallback}>
+                      <ContratGenerationPage />
+                    </Suspense>
+                  </PrivateRoute>
+                } />
+                <Route path="/contrats/:contratId" element={
+                  <PrivateRoute>
+                    <Suspense fallback={routeFallback}>
+                      <ContratDetailsPage />
+                    </Suspense>
+                  </PrivateRoute>
+                } />
                 
                 {/* Routes pour les artistes */}
-                <Route path="/artistes/*" element={<PrivateRoute><ArtistesPage /></PrivateRoute>} />
+                <Route path="/artistes/*" element={
+                  <PrivateRoute>
+                    <ArtistesPage />
+                  </PrivateRoute>
+                } />
                 
                 {/* Routes pour les paramètres */}
-                <Route path="/parametres/*" element={<PrivateRoute><ParametresPage /></PrivateRoute>} />
+                <Route path="/parametres/*" element={
+                  <PrivateRoute>
+                    <ParametresPage />
+                  </PrivateRoute>
+                } />
                 
                 {/* Route pour la validation des formulaires */}
                 <Route path="/formulaire/validation/:id" element={<PrivateRoute><FormResponsePage /></PrivateRoute>} />

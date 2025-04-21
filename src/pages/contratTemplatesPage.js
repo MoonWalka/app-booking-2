@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { collection, getDocs, doc, deleteDoc, query, where, orderBy } from 'firebase/firestore';
-import { db } from '../firebase';
-import '../style/contratTemplates.css';
-
+import { db } from '@/firebase';
+import '@styles/contratTemplates.css';
 
 const ContratTemplatesPage = () => {
   const [templates, setTemplates] = useState([]);

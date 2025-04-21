@@ -1,6 +1,6 @@
 // src/components/concerts/ConcertsList.js
 import React from 'react';
-import { useResponsiveComponent } from '@hooks/useResponsiveComponent';
+import { useResponsiveComponent } from '@/hooks/useResponsiveComponent';
 
 function ConcertsList(props) {
   const ResponsiveComponent = useResponsiveComponent({

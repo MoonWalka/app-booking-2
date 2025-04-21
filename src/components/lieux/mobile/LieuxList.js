@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { collection, getDocs, query, orderBy, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../../../firebase';
-import { Button, Form, InputGroup, Spinner } from 'react-bootstrap';
+import { Button, Form, InputGroup } from 'react-bootstrap';
 import '../../../style/lieuxListMobile.css';
-import { handleDelete } from './handlers/deleteHandler';
-
+import '../../../style/spinner.css'; // Import du style du spinner unifié
 
 const LieuxListMobile = () => {
   const navigate = useNavigate();
@@ -108,9 +107,11 @@ const LieuxListMobile = () => {
 
       {/* Liste de lieux */}
       {loading ? (
-        <div className="loading-container">
-          <Spinner animation="border" variant="primary" />
-          <p>Chargement des lieux...</p>
+        <div className="spinner-container">
+          <div className="spinner-overlay">
+            <div className="spinner"></div>
+            <p className="spinner-text">Chargement des lieux...</p>
+          </div>
         </div>
       ) : filteredLieux.length === 0 ? (
         <div className="empty-state">

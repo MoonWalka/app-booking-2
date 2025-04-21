@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import firebase from '../../../firebase';
+import firebase from '@/firebase';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
-import '../../../style/concertsList.css';
+import '@/style/concertsList.css';
+import Spinner from '@/components/common/Spinner';
 
 const ConcertsList = () => {
   const navigate = useNavigate();
@@ -281,8 +282,6 @@ const ConcertsList = () => {
   
   // Composant pour afficher le statut avancé avec infos sur les étapes
   const StatusWithInfo = ({ concert }) => {
-    const [showDetails, setShowDetails] = useState(false);
-    
     // Déterminer l'action et le message en fonction du statut et des étapes
     const getStatusDetails = () => {
       const today = new Date();
@@ -321,63 +320,27 @@ const ConcertsList = () => {
     
     const statusInfo = getStatusDetails();
     const statusDetails = getStatusDetails(concert.statut);
-    const totalSteps = 5; // Nombre total d'étapes dans le processus
-    
-    // Déterminer l'étape actuelle
-    const getStep = (statut) => {
-      switch (statut) {
-        case 'contact': return 1;
-        case 'preaccord': return 2;
-        case 'contrat': return 3;
-        case 'acompte': return 4;
-        case 'solde': return 5;
-        case 'annule': return 0;
-        default: return 0;
-      }
-    };
-    
-    const currentStep = getStep(concert.statut || 'contact');
     
     return (
-      <div 
-        className="status-advanced-container" 
-        onMouseEnter={() => setShowDetails(true)}
-        onMouseLeave={() => setShowDetails(false)}
-      >
-        <div className="status-progress-container">
-          <div className="status-steps">
-            {Array.from({ length: totalSteps }, (_, i) => (
-              <div 
-                key={i} 
-                className={`status-step ${i < currentStep ? 'completed' : ''} ${i === currentStep - 1 ? 'current' : ''}`}
-              />
-            ))}
-          </div>
-          <div className="status-label">
-            <span className="status-icon">{statusDetails.icon}</span>
-            <span className="status-text">{statusDetails.label}</span>
+      <div className="status-advanced-container">
+        {/* Affichez directement le message, sans condition de survol */}
+        <div className="status-message-container">
+          <div className={`status-message status-message-${statusInfo.variant}`}>
+            {statusInfo.message}
+            {!hasForm(concert.id) && concert.programmateurId && (
+              <div className="action-reminder">
+                <i className="bi bi-exclamation-circle me-1"></i>
+                Formulaire à envoyer
+              </div>
+            )}
+            {hasUnvalidatedForm(concert.id) && (
+              <div className="action-reminder">
+                <i className="bi bi-exclamation-circle me-1"></i>
+                Formulaire à valider
+              </div>
+            )}
           </div>
         </div>
-        
-        {showDetails && (
-          <div className="status-tooltip">
-            <div className={`status-message status-message-${statusInfo.variant}`}>
-              {statusInfo.message}
-              {!hasForm(concert.id) && concert.programmateurId && (
-                <div className="action-reminder">
-                  <i className="bi bi-exclamation-circle me-1"></i>
-                  Formulaire à envoyer
-                </div>
-              )}
-              {hasUnvalidatedForm(concert.id) && (
-                <div className="action-reminder">
-                  <i className="bi bi-exclamation-circle me-1"></i>
-                  Formulaire à valider
-                </div>
-              )}
-            </div>
-          </div>
-        )}
       </div>
     );
   };
@@ -394,7 +357,7 @@ const ConcertsList = () => {
   };
 
   if (loading) {
-    return <div className="text-center my-5 loading-spinner">Chargement des concerts...</div>;
+    return <Spinner message="Chargement des concerts..." />;
   }
 
   if (error) {
@@ -546,12 +509,12 @@ const ConcertsList = () => {
                   </td>
                   <td onClick={(e) => e.stopPropagation()}>
                     <div className="btn-group action-buttons">
-                      <ActionButton 
+                      {/*<ActionButton 
                         to={`/concerts/${concert.id}/edit`} 
                         tooltip="Modifier le concert" 
                         icon={<i className="bi bi-pencil"></i>} 
                         variant="light"
-                      />
+                      />*/}
                       {hasForm(concert.id) && (
                         <div className="position-relative">
                           <ActionButton 

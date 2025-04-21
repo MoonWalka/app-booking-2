@@ -1,8 +1,19 @@
-/* 
-   App.css - Styles globaux de l'application
-   Utilise les variables définies dans variables.css
-*/
-@import url("./style/variables.css");
+/* Variables globales */
+:root {
+  --primary-color: #3498db;
+  --primary-dark: #2980b9;
+  --secondary-color: #2c3e50;
+  --success-color: #2ecc71;
+  --warning-color: #f39c12;
+  --danger-color: #e74c3c;
+  --light-color: #ecf0f1;
+  --dark-color: #2c3e50;
+  --text-color: #333;
+  --border-color: #ddd;
+  --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  --border-radius: 4px;
+  --transition: all 0.3s ease;
+}
 
 /* Reset et styles de base */
 * {
@@ -15,7 +26,7 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.6;
   color: var(--text-color);
-  background-color: var(--background-color);
+  background-color: #f5f7fa;
 }
 
 a {
@@ -114,7 +125,7 @@ input:focus, select:focus, textarea:focus {
 }
 
 .main-header {
-  background-color: var(--card-bg);
+  background-color: white;
   padding: 15px 30px;
   box-shadow: var(--shadow);
   display: flex;
@@ -170,7 +181,7 @@ main {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
-  background-color: var(--card-bg);
+  background-color: white;
   box-shadow: var(--shadow);
   border-radius: var(--border-radius);
   overflow: hidden;
@@ -208,7 +219,7 @@ main {
 }
 
 .dashboard-card {
-  background-color: var(--card-bg);
+  background-color: white;
   border-radius: var(--border-radius);
   padding: 20px;
   box-shadow: var(--shadow);
@@ -217,7 +228,7 @@ main {
 
 .dashboard-card:hover {
   transform: translateY(-5px);
-  box-shadow: var(--shadow-hover);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .card-icon {
@@ -268,6 +279,46 @@ label {
   margin-top: 30px;
 }
 
+/* Formulaire multi-étapes */
+.form-progress {
+  display: flex;
+  margin-bottom: 30px;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.progress-step {
+  flex: 1;
+  padding: 10px;
+  text-align: center;
+  background-color: var(--light-color);
+  color: var(--text-color);
+  position: relative;
+}
+
+.progress-step.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.progress-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 10px solid var(--light-color);
+  z-index: 1;
+}
+
+.progress-step.active:not(:last-child)::after {
+  border-left-color: var(--primary-color);
+}
+
 /* Statut */
 .status-badge {
   display: inline-block;
@@ -278,23 +329,23 @@ label {
 }
 
 .status-option {
-  background-color: var(--warning-color);
+  background-color: #f39c12;
   color: white;
 }
 
 .status-confirmed {
-  background-color: var(--success-color);
+  background-color: #2ecc71;
   color: white;
 }
 
 .status-cancelled {
-  background-color: var(--danger-color);
+  background-color: #e74c3c;
   color: white;
 }
 
 /* Détails */
 .details-card {
-  background-color: var(--card-bg);
+  background-color: white;
   border-radius: var(--border-radius);
   padding: 20px;
   box-shadow: var(--shadow);
@@ -328,12 +379,90 @@ label {
 
 .detail-label {
   font-size: 12px;
-  color: var(--text-muted);
+  color: #7f8c8d;
   margin-bottom: 5px;
 }
 
 .detail-value {
   font-weight: 500;
+}
+
+/* Formulaire de programmateur */
+.programmateur-form {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.form-intro {
+  margin-bottom: 30px;
+}
+
+.concert-info {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: var(--border-radius);
+  margin-top: 15px;
+}
+
+/* Succès */
+.form-success {
+  text-align: center;
+  padding: 50px 20px;
+}
+
+.success-icon {
+  font-size: 64px;
+  color: var(--success-color);
+  margin-bottom: 20px;
+}
+
+/* Validation */
+.form-validation {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.validation-card {
+  background-color: white;
+  border-radius: var(--border-radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+  margin-top: 20px;
+}
+
+.validation-success {
+  text-align: center;
+  padding: 50px 20px;
+}
+
+/* Lien de formulaire */
+.form-link-container {
+  margin-top: 20px;
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: var(--border-radius);
+}
+
+.form-link {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.form-link input {
+  flex: 1;
+  background-color: white;
+}
+
+/* Page en construction */
+.page-under-construction {
+  text-align: center;
+  padding: 50px 20px;
+}
+
+.construction-icon {
+  font-size: 64px;
+  margin-bottom: 20px;
 }
 
 /* Chargement */
@@ -379,54 +508,6 @@ label {
   margin-top: 15px;
 }
 
-/* Styles pour ErrorBoundary */
-.error-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  text-align: center;
-  padding: 2rem;
-  background-color: var(--background-color);
-}
-
-.error-container h2 {
-  margin-bottom: 1rem;
-  color: var(--secondary-color);
-}
-
-.loading-spinner {
-  display: inline-block;
-  width: 50px;
-  height: 50px;
-  border: 5px solid rgba(52, 152, 219, 0.2);
-  border-radius: 50%;
-  border-top-color: var(--primary-color);
-  animation: spin 1s ease-in-out infinite;
-  margin: 20px auto;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-.retry-button {
-  margin-top: 1.5rem;
-  padding: 10px 20px;
-  background-color: var(--primary-color);
-  color: white;
-  border: none;
-  border-radius: var(--border-radius);
-  cursor: pointer;
-  font-size: 16px;
-  transition: var(--transition);
-}
-
-.retry-button:hover {
-  background-color: var(--primary-dark);
-}
-
 /* Responsive */
 @media (max-width: 768px) {
   .app-container {
@@ -465,4 +546,146 @@ label {
   .details-grid {
     grid-template-columns: 1fr;
   }
+}
+/* Styles pour l'interface isolée du formulaire */
+.form-isolated-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f5f7fa;
+}
+
+.form-header {
+  background-color: var(--secondary-color);
+  color: white;
+  padding: 15px 30px;
+  text-align: center;
+}
+
+.form-logo h2 {
+  margin: 0;
+}
+
+.form-content {
+  flex: 1;
+  padding: 30px;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.form-footer {
+  background-color: var(--secondary-color);
+  color: white;
+  padding: 15px;
+  text-align: center;
+  font-size: 12px;
+}
+
+.form-security-notice {
+  margin-top: 30px;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: var(--border-radius);
+  text-align: center;
+  font-size: 12px;
+  color: #7f8c8d;
+}
+
+.form-error {
+  text-align: center;
+  padding: 50px 20px;
+}
+
+.error-icon {
+  font-size: 64px;
+  color: var(--danger-color);
+  margin-bottom: 20px;
+}
+
+.error-help {
+  margin-top: 20px;
+  font-style: italic;
+}
+/* Styles pour les avertissements d'expiration */
+.form-expired-warning {
+  margin-top: 15px;
+  padding: 10px;
+  background-color: #fff3cd;
+  border-radius: var(--border-radius);
+  color: #856404;
+}
+
+.btn-warning {
+  background-color: #f39c12;
+  color: white;
+}
+
+.btn-warning:hover {
+  background-color: #e67e22;
+}
+
+/* Styles pour les informations de soumission */
+.form-submitted-info, .form-validated-info {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #d4edda;
+  border-radius: var(--border-radius);
+  color: #155724;
+}
+
+/* Styles pour les liens de formulaire */
+.form-link-container {
+  margin-top: 20px;
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: var(--border-radius);
+}
+
+/* Styles pour ErrorBoundary */
+.error-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+  padding: 2rem;
+  background-color: #f8f9fa;
+}
+
+.error-container h2 {
+  margin-bottom: 1rem;
+  color: var(--secondary-color);
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(52, 152, 219, 0.2);
+  border-radius: 50%;
+  border-top-color: var(--primary-color);
+  animation: spin 1s ease-in-out infinite;
+  margin: 20px auto;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.retry-button {
+  margin-top: 1.5rem;
+  padding: 10px 20px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.retry-button:hover {
+  background-color: var(--primary-dark);
 }

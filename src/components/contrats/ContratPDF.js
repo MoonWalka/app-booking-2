@@ -4,21 +4,14 @@ import { Document, Page, Text, View, StyleSheet, Font, Image } from '@react-pdf/
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 
-// Enregistrer Arial comme police
-Font.register({
-  family: 'Arial',
-  fonts: [
-    { src: 'https://cdn.jsdelivr.net/npm/@canvas-fonts/arial@1.0.4/Arial.ttf' },
-    { src: 'https://cdn.jsdelivr.net/npm/@canvas-fonts/arial@1.0.4/Arial-Bold.ttf', fontWeight: 'bold' },
-    { src: 'https://cdn.jsdelivr.net/npm/@canvas-fonts/arial@1.0.4/Arial-Italic.ttf', fontStyle: 'italic' },
-  ]
-});
+// Utiliser Helvetica comme police par défaut (déjà intégrée dans react-pdf)
+// Pas besoin d'enregistrer de police externe
 
 // Styles pour le PDF
 const styles = StyleSheet.create({
   page: {
     padding: 30,
-    fontFamily: 'Arial',
+    fontFamily: 'Helvetica',
     fontSize: 10,
   },
   header: {

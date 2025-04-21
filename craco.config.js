@@ -9,6 +9,7 @@ module.exports = {
       '@utils': path.resolve(__dirname, 'src/utils'),
       '@styles': path.resolve(__dirname, 'src/style'),
       '@services': path.resolve(__dirname, 'src/services'),
+      '@pages': path.resolve(__dirname, 'src/pages'),
       '@': path.resolve(__dirname, 'src')
     },
     configure: (webpackConfig, { env }) => {

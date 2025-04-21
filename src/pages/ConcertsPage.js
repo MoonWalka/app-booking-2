@@ -1,9 +1,9 @@
 import React from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import ConcertsList from '@components/concerts/ConcertsList.js';
-import ConcertForm from '../components/concerts/desktop/ConcertForm';
-import ConcertDetails from '../components/concerts/ConcertDetails';
-import FormValidationInterface from '@components/forms/desktop/FormValidationInterface.js';
+import ConcertsList from '@/components/concerts/ConcertsList.js';
+import ConcertForm from '@/components/concerts/desktop/ConcertForm';
+import ConcertDetails from '@/components/concerts/ConcertDetails';
+import FormValidationInterface from '@/components/forms/desktop/FormValidationInterface';
 
 function ConcertsPage() {
   const navigate = useNavigate();
@@ -20,6 +20,5 @@ function ConcertsPage() {
     </div>
   );
 }
-
 
 export default ConcertsPage;

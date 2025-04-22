@@ -4,10 +4,23 @@ import { collection, getDocs, doc, deleteDoc, query, where, orderBy } from 'fire
 import { db } from '@/firebase';
 import '@styles/contratTemplates.css';
 
+// Imports supplémentaires de la branche refacto-structure-scriptshell pour l'implémentation future
+// import { Button, Card, Table, Badge, Modal, Form } from 'react-bootstrap';
+// import { addDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
+// import ContratTemplateEditor from '@/components/contrats/ContratTemplateEditor';
+// IMPORTANT: Le composant ContratTemplateEditor n'existe pas dans cette branche. 
+// Il devra être récupéré depuis la branche refacto-structure-scriptshell
+// et placé dans src/components/contrats/ContratTemplateEditor.js pour que la fonctionnalité modale fonctionne.
+
 const ContratTemplatesPage = () => {
   const [templates, setTemplates] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  
+  // États supplémentaires pour la modale (de la branche refacto-structure-scriptshell) - pour implémentation future
+  // const [showEditorModal, setShowEditorModal] = useState(false);
+  // const [currentTemplate, setCurrentTemplate] = useState(null);
+  // const [isNewTemplate, setIsNewTemplate] = useState(false);
 
   useEffect(() => {
     const fetchTemplates = async () => {
@@ -75,6 +88,71 @@ const ContratTemplatesPage = () => {
     }
   };
 
+  // Fonctions pour la gestion de la modale (de la branche refacto-structure-scriptshell) - pour implémentation future
+  /*
+  const handleEditTemplate = (template) => {
+    setCurrentTemplate(template);
+    setIsNewTemplate(false);
+    setShowEditorModal(true);
+  };
+  
+  const handleCreateTemplate = () => {
+    setCurrentTemplate(null);
+    setIsNewTemplate(true);
+    setShowEditorModal(true);
+  };
+  
+  const handleCloseEditor = () => {
+    setShowEditorModal(false);
+    setCurrentTemplate(null);
+  };
+  
+  const handleSaveTemplate = async (templateData) => {
+    try {
+      if (isNewTemplate) {
+        // Création d'un nouveau modèle
+        const docRef = await addDoc(collection(db, 'contratTemplates'), {
+          ...templateData,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp()
+        });
+        
+        const newTemplate = {
+          id: docRef.id,
+          ...templateData,
+          createdAt: { seconds: Date.now() / 1000 },
+          updatedAt: { seconds: Date.now() / 1000 }
+        };
+        
+        setTemplates([newTemplate, ...templates]);
+      } else {
+        // Mise à jour d'un modèle existant
+        await updateDoc(doc(db, 'contratTemplates', currentTemplate.id), {
+          ...templateData,
+          updatedAt: serverTimestamp()
+        });
+        
+        // Mettre à jour l'état local
+        setTemplates(templates.map(template => 
+          template.id === currentTemplate.id 
+            ? { 
+                ...template, 
+                ...templateData, 
+                updatedAt: { seconds: Date.now() / 1000 } 
+              } 
+            : template
+        ));
+      }
+      
+      // Fermer la modale après sauvegarde
+      handleCloseEditor();
+    } catch (error) {
+      console.error('Erreur lors de la sauvegarde du modèle:', error);
+      alert('Une erreur est survenue lors de la sauvegarde du modèle.');
+    }
+  };
+  */
+
   return (
     <div className="contrat-templates-container">
       <div className="templates-header">
@@ -85,6 +163,14 @@ const ContratTemplatesPage = () => {
         >
           <i className="bi bi-plus-circle me-2"></i>Créer un modèle
         </button>
+        {/* Bouton pour ouvrir la modale (de la branche refacto-structure-scriptshell) - pour implémentation future
+        <button 
+          className="btn btn-primary" 
+          onClick={handleCreateTemplate}
+        >
+          <i className="bi bi-plus-circle me-2"></i>Créer un modèle
+        </button>
+        */}
       </div>
 
       {loading ? (
@@ -103,6 +189,14 @@ const ContratTemplatesPage = () => {
           >
             Créer votre premier modèle
           </button>
+          {/* Bouton pour nouveau modèle avec modale (de la branche refacto-structure-scriptshell) - pour implémentation future
+          <button 
+            className="btn btn-outline-primary" 
+            onClick={handleCreateTemplate}
+          >
+            Créer votre premier modèle
+          </button>
+          */}
         </div>
       ) : (
         <div className="templates-grid">
@@ -133,6 +227,14 @@ const ContratTemplatesPage = () => {
                 >
                   <i className="bi bi-pencil"></i> Modifier
                 </button>
+                {/* Bouton pour modification avec modale (de la branche refacto-structure-scriptshell) - pour implémentation future
+                <button 
+                  className="btn btn-sm btn-outline-primary" 
+                  onClick={() => handleEditTemplate(template)}
+                >
+                  <i className="bi bi-pencil"></i> Modifier
+                </button>
+                */}
                 {!template.isDefault && (
                   <button 
                     className="btn btn-sm btn-outline-success" 
@@ -153,6 +255,31 @@ const ContratTemplatesPage = () => {
           ))}
         </div>
       )}
+      
+      {/* Modale d'édition du modèle de contrat (de la branche refacto-structure-scriptshell) - pour implémentation future
+      {showEditorModal && (
+        <div className="modal-overlay">
+          <div className="modal-content template-editor-modal">
+            <div className="modal-header">
+              <h3>{isNewTemplate ? 'Créer un nouveau modèle de contrat' : 'Modifier le modèle de contrat'}</h3>
+              <button 
+                className="btn btn-sm btn-outline-secondary" 
+                onClick={handleCloseEditor}
+              >
+                <i className="bi bi-x-lg"></i>
+              </button>
+            </div>
+            <div className="modal-body p-0">
+              <ContratTemplateEditor 
+                template={currentTemplate}
+                onSave={handleSaveTemplate}
+                isModal={true}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+      */}
     </div>
   );
 };

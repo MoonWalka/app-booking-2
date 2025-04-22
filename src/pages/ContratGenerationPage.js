@@ -5,7 +5,21 @@ import { db } from '@/firebase';
 import { doc, getDoc, collection, getDocs, addDoc, updateDoc, serverTimestamp, orderBy, query, where } from 'firebase/firestore';
 import ContratGenerator from '@/components/contrats/ContratGenerator.js';
 import { PDFDownloadLink } from '@react-pdf/renderer';
+import '@/style/contratGeneration.css';
 
+// Imports modifiés de la branche refacto-structure-scriptshell - pour implémentation future
+{/*
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Button, Form, Card, Alert } from 'react-bootstrap';
+import { db } from '@firebase';
+import { doc, getDoc, collection, getDocs, addDoc, updateDoc, serverTimestamp, orderBy, query, where } from '@firebase';
+import ContratGenerator from '@components/contrats/ContratGenerator.js';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import '@styles/index.css';
+*/}
+// Note: Les imports utilisent '@firebase' et '@styles/index.css' au lieu de '@/firebase' et 'firebase/firestore'
+// Vous devrez vérifier que ces alias sont correctement configurés dans votre projet
 
 const ContratGenerationPage = () => {
   const { concertId } = useParams();
@@ -114,7 +128,7 @@ const ContratGenerationPage = () => {
       const templateData = templateDoc.data();
       console.log("Modèle sélectionné:", templateData);
       
-      // Préparer les variables pour le contrat
+      // Variables originales - actuellement utilisées
       const variables = {
         nomProgrammateur: programmateur?.nom || 'Non spécifié',
         prenomProgrammateur: programmateur?.prenom || '',
@@ -130,6 +144,59 @@ const ContratGenerationPage = () => {
         heureConcert: concert?.heure || 'Non spécifiée',
         // Ajoutez d'autres variables selon vos besoins
       };
+      
+      // Variables complètes de la branche refacto-structure-scriptshell - pour implémentation future
+      {/*
+      const variables = {
+        // Variables programmateur
+        raison_sociale: programmateur?.structure || 'Non spécifiée',
+        siret: programmateur?.siret || 'Non spécifié',
+        tva: programmateur?.tva || 'Non spécifiée',
+        adresse_organisateur: programmateur?.structureAdresse ? 
+          `${programmateur.structureAdresse}, ${programmateur.structureCodePostal || ''} ${programmateur.structureVille || ''}` : 
+          'Non spécifiée',
+        representant: programmateur ? `${programmateur.prenom || ''} ${programmateur.nom || ''}`.trim() : 'Non spécifié',
+        qualite_representant: programmateur?.fonction || 'Non spécifiée',
+        programmateur_nom: programmateur ? `${programmateur.prenom || ''} ${programmateur.nom || ''}`.trim() : 'Non spécifié',
+        programmateur_structure: programmateur?.structure || 'Non spécifiée',
+        programmateur_email: programmateur?.email || 'Non spécifié',
+        
+        // Variables artiste
+        artiste_nom: concert?.artisteNom || 'Non spécifié',
+        artiste_genre: concert?.artisteGenre || 'Non spécifié',
+        
+        // Variables événement
+        date_evenement: formatDate(concert?.date),
+        adresse_evenement: lieu?.adresse ? 
+          `${lieu.adresse}, ${lieu.codePostal || ''} ${lieu.ville || ''}` :
+          'Non spécifiée',
+        concert_titre: concert?.titre || 'Concert',
+        concert_date: formatDate(concert?.date),
+        
+        // Variables financières
+        prix_vente: concert?.montant?.toString() || '0',
+        prix_lettres: concert?.montantLettres || 'zéro euros',
+        concert_montant: concert?.montant?.toString() || '0',
+        
+        // Variables lieu
+        lieu_nom: lieu?.nom || 'Non spécifié',
+        lieu_adresse: lieu?.adresse || 'Non spécifiée',
+        lieu_code_postal: lieu?.codePostal || 'Non spécifié',
+        lieu_ville: lieu?.ville || 'Non spécifiée',
+        lieu_capacite: lieu?.capacite?.toString() || 'Non spécifiée',
+        
+        // Variables signature
+        lieu_signature: programmateur?.structureVille || 'Paris',
+        date_signature: new Date().toLocaleDateString('fr-FR'),
+        
+        // Date actuelle
+        date_jour: new Date().getDate().toString(),
+        date_mois: (new Date().getMonth() + 1).toString(),
+        date_annee: new Date().getFullYear().toString()
+      };
+      */}
+      // Note: La version refacto-structure-scriptshell contient beaucoup plus de variables pour le contrat,
+      // notamment des informations détaillées sur le programmateur, l'artiste, le lieu et des variables de date formatées.
       
       // Créer le contrat dans Firestore
       const contratRef = await addDoc(collection(db, 'contrats'), {

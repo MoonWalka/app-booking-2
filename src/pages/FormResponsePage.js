@@ -6,6 +6,22 @@ import { useLocationIQ } from '@/hooks/useLocationIQ';
 import ProgrammateurForm from '@/components/forms/ProgrammateurForm.js';
 import '@/style/formPublic.css';
 
+// Imports modifiés de la branche refacto-structure-scriptshell - pour implémentation future
+{/* 
+import React, { useState, useEffect, useRef } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { collection, query, where, getDocs, getDoc, doc, updateDoc, addDoc, serverTimestamp } from '@firebase';
+import { db } from '@firebase';
+import { useLocationIQ } from '@hooks/useLocationIQ';
+import ProgrammateurForm from '@components/forms/ProgrammateurForm.js';
+import '@styles/index.css';
+import { Card, Alert, Form, Button } from 'react-bootstrap';
+import PublicFormLayout from '@components/common/PublicFormLayout';
+*/}
+// Note: Les imports utilisent des alias différents comme '@firebase' et '@components' au lieu de '@/firebase' et '@/components'
+// De plus, l'import de PublicFormLayout indique qu'il serait un composant séparé qui aurait besoin d'être créé à
+// @/components/common/PublicFormLayout.js pour que cette implémentation fonctionne
+
 
 // Composant pour le layout public du formulaire
 const PublicFormLayout = ({ children }) => {

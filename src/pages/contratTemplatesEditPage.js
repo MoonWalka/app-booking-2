@@ -5,6 +5,18 @@ import { db } from '../firebase';
 import ContratTemplateEditor from '../components/contrats/ContratTemplateEditor';
 import '../style/contratTemplateEdit.css';
 
+// Imports modifiés de la branche refacto-structure-scriptshell - pour implémentation future
+{/* 
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { db } from '../firebase';
+import { getDoc, doc, collection, setDoc, serverTimestamp } from '@firebase';
+import ContratTemplateEditor from '../components/contrats/ContratTemplateEditor';
+import '@styles/index.css';
+*/}
+// Note: Vous devrez vérifier que le dossier @styles existe et contient un fichier index.css,
+// sinon créez ce dossier et ce fichier avec les styles appropriés.
+
 const ContratTemplatesEditPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Form, Alert, Card, Spinner } from 'react-bootstrap';
 import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '@/firebase';
+// import { db } from '@firebase';
 import { 
   collection, 
   doc, 
@@ -16,11 +17,12 @@ import {
   updateDoc,
   serverTimestamp
 } from 'firebase/firestore';
+// from '@firebase';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import ContratPDF from '@/components/contrats/ContratPDF.js';
+// import ContratPDF from '@components/contrats/ContratPDF.js';
 import '../../../style/contratGenerator.css';
-
-
+// import '@styles/index.css';
 
 const ContratGenerator = ({ concert, programmateur, artiste, lieu }) => {
   const [templates, setTemplates] = useState([]);

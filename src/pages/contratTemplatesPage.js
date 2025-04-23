@@ -9,7 +9,6 @@ import '@styles/contratTemplates.css';
 // import { addDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 // import ContratTemplateEditor from '@/components/contrats/ContratTemplateEditor';
 // IMPORTANT: Le composant ContratTemplateEditor n'existe pas dans cette branche. 
-// Il devra être récupéré depuis la branche refacto-structure-scriptshell
 // et placé dans src/components/contrats/ContratTemplateEditor.js pour que la fonctionnalité modale fonctionne.
 
 const ContratTemplatesPage = () => {

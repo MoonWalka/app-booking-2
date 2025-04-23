@@ -7,7 +7,10 @@ module.exports = {
       '@hooks': path.resolve(__dirname, 'src/hooks'),
       '@context': path.resolve(__dirname, 'src/context'),
       '@utils': path.resolve(__dirname, 'src/utils'),
-      '@styles': path.resolve(__dirname, 'src/style'),
+      '@styles': [
+        path.resolve(__dirname, 'src/styles'),
+        path.resolve(__dirname, 'src/style'),
+      ],
       '@services': path.resolve(__dirname, 'src/services'),
       '@pages': path.resolve(__dirname, 'src/pages'),
       '@': path.resolve(__dirname, 'src')
@@ -19,6 +22,14 @@ module.exports = {
         "fs": false,
         "os": false
       };
+      
+      // Ajouter l'extension .css à resolve.extensions
+      if (!webpackConfig.resolve.extensions) {
+        webpackConfig.resolve.extensions = [];
+      }
+      if (!webpackConfig.resolve.extensions.includes('.css')) {
+        webpackConfig.resolve.extensions.push('.css');
+      }
       
       // Désactiver React Refresh en production
       if (env === 'production') {

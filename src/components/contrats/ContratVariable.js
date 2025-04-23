@@ -1,4 +1,5 @@
 import React from 'react';
+//import '@styles/index.css';
 
 const ContratVariable = ({ name, description, onInsert }) => {
   return (

@@ -2,8 +2,30 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+// import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import ContratVariable from './ContratVariable.js';
+// import FullscreenEditorModal from '@components/contrats/FullscreenEditorModal';
 import '../../../style/contratTemplateEditor.css';
+
+// Correctif pour React 18 et react-beautiful-dnd
+// const StrictModeDroppable = ({ children, ...props }) => {
+//   const [enabled, setEnabled] = useState(false);
+//   
+//   useEffect(() => {
+//     // Petit délai pour permettre au DOM de se rendre complètement
+//     const animation = requestAnimationFrame(() => setEnabled(true));
+//     return () => {
+//       cancelAnimationFrame(animation);
+//       setEnabled(false);
+//     };
+//   }, []);
+//   
+//   if (!enabled) {
+//     return null;
+//   }
+//   
+//   return <Droppable {...props}>{children}</Droppable>;
+// };
 
 const ContratTemplateEditor = ({ template, onSave }) => {
   const navigate = useNavigate();
@@ -14,8 +36,35 @@ const ContratTemplateEditor = ({ template, onSave }) => {
   const [previewMode, setPreviewMode] = useState(false);
   const [showGuide, setShowGuide] = useState(false);
   
+  // États pour la modale d'édition
+  // const [showModal, setShowModal] = useState(false);
+  // const [modalContent, setModalContent] = useState('');
+  // const [modalSectionIndex, setModalSectionIndex] = useState(null);
+  
   // Référence pour le quill editor
   const quillRef = useRef();
+
+  // Fonction pour ouvrir la modale d'édition
+  // const openSectionEditModal = (index) => {
+  //   if (index >= 0 && index < sections.length) {
+  //     setModalSectionIndex(index);
+  //     setModalContent(sections[index].content);
+  //     setShowModal(true);
+  //   }
+  // };
+
+  // Fonction pour fermer la modale
+  // const closeSectionEditModal = () => {
+  //   setShowModal(false);
+  //   setModalSectionIndex(null);
+  // };
+
+  // Fonction pour sauvegarder le contenu depuis la modale
+  // const saveSectionContentFromModal = (content) => {
+  //   if (modalSectionIndex !== null) {
+  //     handleSectionContentChange(modalSectionIndex, content);
+  //   }
+  // };
 
   // useEffect pour initialiser les sections si besoin
   useEffect(() => {
@@ -64,6 +113,20 @@ const ContratTemplateEditor = ({ template, onSave }) => {
     newSections[index].content = content;
     setSections(newSections);
   };
+  
+  // Fonction pour changer de section active
+  // const handleSectionChange = (index) => {
+  //   // Sauvegarder le contenu de la section actuelle avant de changer
+  //   const editor = quillRef.current.getEditor();
+  //   const content = editor.root.innerHTML;
+  //   handleSectionContentChange(currentSectionIndex, content);
+  // 
+  //   // Aucun changement à faire si on clique sur la section active
+  //   if (currentSectionIndex === index) return;
+  //   
+  //   // Mettre à jour l'index de la section courante
+  //   setCurrentSectionIndex(index);
+  // };
 
   // Fonction pour insérer une variable
   const handleInsertVariable = (variable) => {
@@ -83,7 +146,6 @@ const ContratTemplateEditor = ({ template, onSave }) => {
       }
     }
   };
-
 
   // Fonction pour enregistrer le modèle
   const handleSave = () => {
@@ -155,16 +217,47 @@ const ContratTemplateEditor = ({ template, onSave }) => {
       
       // Remplacer les variables par des exemples
       sectionContent = sectionContent
+        // Organisateur
+        .replace(/{raison_sociale}/g, 'Association Culturelle XYZ')
+        .replace(/{siret}/g, '123 456 789 00012')
+        .replace(/{tva}/g, 'FR 12 123456789')
+        .replace(/{adresse_organisateur}/g, '123 rue Principale, 75001 Paris')
+        .replace(/{representant}/g, 'Jean Dupont')
+        .replace(/{qualite_representant}/g, 'Président')
         .replace(/{programmateur_nom}/g, 'Jean Dupont')
         .replace(/{programmateur_structure}/g, 'Asso Culturelle XYZ')
+        .replace(/{programmateur_email}/g, 'contact@asso-xyz.fr')
+        
+        // Artiste
         .replace(/{artiste_nom}/g, 'Les Rockeurs du Dimanche')
+        .replace(/{artiste_genre}/g, 'Rock Alternatif')
+        
+        // Événement
+        .replace(/{date_evenement}/g, '15/05/2025')
+        .replace(/{adresse_evenement}/g, '123 rue Principale, 75001 Paris')
         .replace(/{concert_titre}/g, 'Concert de printemps')
         .replace(/{concert_date}/g, '15/05/2025')
+        
+        // Finances
+        .replace(/{prix_vente}/g, '800')
+        .replace(/{prix_lettres}/g, 'huit cents euros')
         .replace(/{concert_montant}/g, '800')
+        
+        // Lieu
         .replace(/{lieu_nom}/g, 'Salle des fêtes')
         .replace(/{lieu_adresse}/g, '123 rue Principale')
         .replace(/{lieu_code_postal}/g, '75001')
-        .replace(/{lieu_ville}/g, 'Paris');
+        .replace(/{lieu_ville}/g, 'Paris')
+        .replace(/{lieu_capacite}/g, '200')
+        
+        // Signature
+        .replace(/{lieu_signature}/g, 'Paris')
+        .replace(/{date_signature}/g, '01/04/2025')
+        
+        // Date actuelle
+        .replace(/{date_jour}/g, new Date().getDate().toString())
+        .replace(/{date_mois}/g, (new Date().getMonth() + 1).toString())
+        .replace(/{date_annee}/g, new Date().getFullYear().toString());
       
       content += sectionContent;
     });
@@ -199,6 +292,37 @@ const ContratTemplateEditor = ({ template, onSave }) => {
     
     return content;
   };
+
+  // Fonction pour gérer la fin d'un drag-and-drop
+  // const handleDragEnd = (result) => {
+  //   if (!result.destination) return; // Si la destination n'est pas valide
+  // 
+  //   const sourceIndex = result.source.index;
+  //   const destinationIndex = result.destination.index;
+  //   
+  //   if (sourceIndex === destinationIndex) return; // Pas de changement
+  //   
+  //   const newSections = [...sections];
+  //   const [removed] = newSections.splice(sourceIndex, 1);
+  //   newSections.splice(destinationIndex, 0, removed);
+  //   
+  //   setSections(newSections);
+  //   
+  //   // Mettre à jour l'index courant si nécessaire
+  //   if (currentSectionIndex === sourceIndex) {
+  //     setCurrentSectionIndex(destinationIndex);
+  //   } else if (
+  //     (currentSectionIndex > sourceIndex && currentSectionIndex <= destinationIndex) ||
+  //     (currentSectionIndex < sourceIndex && currentSectionIndex >= destinationIndex)
+  //   ) {
+  //     // Ajuster l'index si la section actuelle a été déplacée par le drag and drop
+  //     setCurrentSectionIndex(
+  //       currentSectionIndex > sourceIndex && currentSectionIndex <= destinationIndex
+  //         ? currentSectionIndex - 1
+  //         : currentSectionIndex + 1
+  //     );
+  //   }
+  // };
 
   // Composant pour le guide d'utilisation
   const UserGuide = () => (
@@ -246,7 +370,7 @@ const ContratTemplateEditor = ({ template, onSave }) => {
           </ul>
         </div>
         
-        <div className="guide-section">
+        <div class="guide-section">
           <h4>4. Conseils pour créer un bon modèle</h4>
           <ul>
             <li>Incluez toujours les sections essentielles (parties contractantes, objet, rémunération, etc.)</li>

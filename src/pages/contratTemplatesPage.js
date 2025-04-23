@@ -21,6 +21,13 @@ const ContratTemplatesPage = () => {
   const [currentTemplate, setCurrentTemplate] = useState(null);
   const [isNewTemplate, setIsNewTemplate] = useState(false);
 
+  // Ajouter useEffect pour déboguer les changements d'état de la modale
+  useEffect(() => {
+    console.log("État de showEditorModal a changé:", showEditorModal);
+    console.log("Template actuel:", currentTemplate);
+    console.log("isNewTemplate:", isNewTemplate);
+  }, [showEditorModal, currentTemplate, isNewTemplate]);
+
   useEffect(() => {
     const fetchTemplates = async () => {
       setLoading(true);
@@ -94,23 +101,27 @@ const ContratTemplatesPage = () => {
 
   // Fonctions pour la gestion de la modale
   const handleEditTemplate = (template) => {
+    console.log("handleEditTemplate appelé avec template:", template);
     setCurrentTemplate(template);
     setIsNewTemplate(false);
     setShowEditorModal(true);
   };
   
   const handleCreateTemplate = () => {
+    console.log("handleCreateTemplate appelé");
     setCurrentTemplate(null);
     setIsNewTemplate(true);
     setShowEditorModal(true);
   };
   
   const handleCloseEditor = () => {
+    console.log("handleCloseEditor appelé");
     setShowEditorModal(false);
     setCurrentTemplate(null);
   };
   
   const handleSaveTemplate = async (templateData) => {
+    console.log("handleSaveTemplate appelé avec data:", templateData);
     try {
       if (isNewTemplate) {
         // Création d'un nouveau modèle
@@ -162,7 +173,10 @@ const ContratTemplatesPage = () => {
         {/* Nouveau bouton pour ouvrir la modale */}
         <Button 
           variant="primary" 
-          onClick={handleCreateTemplate}
+          onClick={() => {
+            console.log("Bouton Créer un modèle cliqué");
+            handleCreateTemplate();
+          }}
         >
           <i className="bi bi-plus-circle me-2"></i>Créer un modèle
         </Button>
@@ -181,7 +195,10 @@ const ContratTemplatesPage = () => {
           {/* Nouveau bouton pour ouvrir la modale */}
           <Button 
             variant="outline-primary" 
-            onClick={handleCreateTemplate}
+            onClick={() => {
+              console.log("Bouton Créer votre premier modèle cliqué");
+              handleCreateTemplate();
+            }}
           >
             Créer votre premier modèle
           </Button>
@@ -213,7 +230,10 @@ const ContratTemplatesPage = () => {
                 <Button 
                   variant="outline-primary" 
                   size="sm"
-                  onClick={() => handleEditTemplate(template)}
+                  onClick={() => {
+                    console.log("Bouton Modifier cliqué pour template:", template.id);
+                    handleEditTemplate(template);
+                  }}
                 >
                   <i className="bi bi-pencil"></i> Modifier
                 </Button>
@@ -243,8 +263,27 @@ const ContratTemplatesPage = () => {
       
       {/* Modale d'édition du modèle de contrat */}
       {showEditorModal && (
-        <div className="modal-overlay">
-          <div className="modal-content template-editor-modal">
+        <div className="modal-overlay" style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.5)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 1000
+        }}>
+          <div className="modal-content template-editor-modal" style={{
+            backgroundColor: 'white',
+            padding: '20px',
+            borderRadius: '5px',
+            width: '90%',
+            maxWidth: '1200px',
+            maxHeight: '90vh',
+            overflow: 'auto'
+          }}>
             <div className="modal-header">
               <h3>{isNewTemplate ? 'Créer un nouveau modèle de contrat' : 'Modifier le modèle de contrat'}</h3>
               <Button 

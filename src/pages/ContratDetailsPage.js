@@ -15,16 +15,16 @@ import '@/style/contratDetails.css';
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Card, Alert, Badge } from 'react-bootstrap';
-import { db } from '@firebase';
-import { doc, getDoc, updateDoc, deleteDoc, Timestamp } from '@firebase';
+import { db } from '@/firebase';
+import { doc, getDoc, updateDoc, deleteDoc, Timestamp } from '@/firebase';
 
 import { FaDownload, FaEnvelope, FaFileSignature } from 'react-icons/fa';
 import ContratPDF from '@components/contrats/ContratPDF.js';
 import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
 import '@styles/index.css';
 */}
-// Note: Les imports utilisent '@firebase' et '@styles/index.css' au lieu de '@/firebase' et 'firebase/firestore'
-// Vous devrez vérifier que ces alias sont correctement configurés dans votre projet
+// Note: Les imports utilisent '@components' et '@styles/index.css' au lieu de '@/components' et '@/style/contratDetails.css'
+// Les alias sont correctement configurés dans votre projet selon jsconfig.json et craco.config.js
 
 const ContratDetailsPage = () => {
   const { contratId } = useParams();

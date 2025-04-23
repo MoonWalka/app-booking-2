@@ -12,14 +12,14 @@ import '@/style/contratGeneration.css';
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Form, Card, Alert } from 'react-bootstrap';
-import { db } from '@firebase';
-import { doc, getDoc, collection, getDocs, addDoc, updateDoc, serverTimestamp, orderBy, query, where } from '@firebase';
+import { db } from '@/firebase';
+import { doc, getDoc, collection, getDocs, addDoc, updateDoc, serverTimestamp, orderBy, query, where } from '@/firebase';
 import ContratGenerator from '@components/contrats/ContratGenerator.js';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import '@styles/index.css';
 */}
-// Note: Les imports utilisent '@firebase' et '@styles/index.css' au lieu de '@/firebase' et 'firebase/firestore'
-// Vous devrez vérifier que ces alias sont correctement configurés dans votre projet
+// Note: Les imports utilisent '@components', '@styles/index.css' au lieu de '@/components', '@/style/contratGeneration.css
+// Les alias sont correctement configurés dans votre projet selon jsconfig.json et craco.config.js
 
 const ContratGenerationPage = () => {
   const { concertId } = useParams();

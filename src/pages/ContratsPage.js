@@ -1,4 +1,7 @@
+
 // src/pages/ContratsPage.js
+//imports focntionels
+
 import React, { useState, useEffect, Suspense } from 'react';
 import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import { collection, getDocs, query, orderBy, where } from 'firebase/firestore';
@@ -15,15 +18,15 @@ import '@/style/contrats.css';
 {/* 
 import React, { useState, useEffect, Suspense } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import { collection, getDocs, query, orderBy, where } from '@firebase';
-import { db } from '@firebase';
+import { collection, getDocs, query, orderBy, where } from '@/firebase';
+import { db } from '@/firebase';
 import { Table, Badge } from 'react-bootstrap';
 import ContratGenerationPage from '@pages/ContratGenerationPage.js';
 import ContratDetailsPage from '@pages/ContratDetailsPage.js';
 import '@styles/index.css';
 */}
-// Note: Les imports utilisent '@firebase' et '@styles/index.css' au lieu de 'firebase/firestore' et '@/style/contrats.css'
-// Vous devrez vérifier que ces alias sont correctement configurés dans votre projet
+// Note: Les imports utilisent '@pages' et '@styles/index.css' au lieu de '@/pages' et '@/style/contrats.css'
+// Les alias sont correctement configurés dans votre projet selon jsconfig.json et craco.config.js
 
 // Charger les composants de manière dynamique pour éviter les dépendances circulaires
 const ContratTemplatesPage = React.lazy(() => import('@/pages/contratTemplatesPage.js'));

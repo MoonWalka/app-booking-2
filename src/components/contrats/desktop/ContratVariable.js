@@ -1,17 +1,7 @@
 import React from 'react';
-// import '@styles/index.css';
+import '@styles/index.css';
 
-// Version originale
-const ContratVariable = ({ name, description, onInsert }) => {
-  return (
-    <div className="variable-item" onClick={() => onInsert(name)}>
-      <div className="variable-name">{`{${name}}`}</div>
-      <div className="variable-description">{description}</div>
-    </div>
-  );
-};
-
-/* Version alternative commentée
+// Version avec bouton moderne et icône
 const ContratVariable = ({ name, description, onInsert }) => {
   return (
     <div className="variable-item">
@@ -26,6 +16,16 @@ const ContratVariable = ({ name, description, onInsert }) => {
         </div>
         <i className="bi bi-plus-circle-dotted"></i>
       </button>
+    </div>
+  );
+};
+
+/* Version originale commentée
+const ContratVariable = ({ name, description, onInsert }) => {
+  return (
+    <div className="variable-item" onClick={() => onInsert(name)}>
+      <div className="variable-name">{`{${name}}`}</div>
+      <div className="variable-description">{description}</div>
     </div>
   );
 };

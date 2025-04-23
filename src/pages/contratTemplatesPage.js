@@ -1,25 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { collection, getDocs, doc, deleteDoc, query, where, orderBy } from 'firebase/firestore';
-import { db } from '@/firebase';
-import '@styles/contratTemplates.css';
+// import { collection, getDocs, doc, deleteDoc, query, where, orderBy } from '@/firebase';
+// import { db } from '@/firebase';
+import { db, collection, getDocs, doc, deleteDoc, query, where, orderBy, addDoc, updateDoc, serverTimestamp } from '@/firebase';
+// Ne pas importer batch deux fois
+// import { batch } from 'firebase/firestore';
+import '@styles/index.css';
 
-// Imports supplémentaires de la branche refacto-structure-scriptshell pour l'implémentation future
-// import { Button, Card, Table, Badge, Modal, Form } from 'react-bootstrap';
-// import { addDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
-// import ContratTemplateEditor from '@/components/contrats/ContratTemplateEditor';
-// IMPORTANT: Le composant ContratTemplateEditor n'existe pas dans cette branche. 
-// et placé dans src/components/contrats/ContratTemplateEditor.js pour que la fonctionnalité modale fonctionne.
+// Imports supplémentaires de la branche refacto-structure-scriptshell - maintenant implémentés
+import { Button, Card, Table, Badge, Modal, Form } from 'react-bootstrap';
+import ContratTemplateEditor from '@components/contrats/ContratTemplateEditor';
 
 const ContratTemplatesPage = () => {
   const [templates, setTemplates] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   
-  // États supplémentaires pour la modale (de la branche refacto-structure-scriptshell) - pour implémentation future
-  // const [showEditorModal, setShowEditorModal] = useState(false);
-  // const [currentTemplate, setCurrentTemplate] = useState(null);
-  // const [isNewTemplate, setIsNewTemplate] = useState(false);
+  // États supplémentaires pour la modale - maintenant implémentés
+  const [showEditorModal, setShowEditorModal] = useState(false);
+  const [currentTemplate, setCurrentTemplate] = useState(null);
+  const [isNewTemplate, setIsNewTemplate] = useState(false);
 
   useEffect(() => {
     const fetchTemplates = async () => {
@@ -45,11 +45,15 @@ const ContratTemplatesPage = () => {
     fetchTemplates();
   }, []);
 
+  // Nouvelle implémentation de handleDelete
   const handleDelete = async (id) => {
     if (window.confirm('Êtes-vous sûr de vouloir supprimer ce modèle de contrat ?')) {
       try {
         await deleteDoc(doc(db, 'contratTemplates', id));
         setTemplates(templates.filter(template => template.id !== id));
+        
+        // Notification de succès plus élégante (à implémenter si vous avez un système de notification)
+        console.log('Modèle supprimé avec succès');
       } catch (error) {
         console.error('Erreur lors de la suppression du modèle:', error);
         alert('Une erreur est survenue lors de la suppression du modèle.');
@@ -57,23 +61,22 @@ const ContratTemplatesPage = () => {
     }
   };
 
+  // Nouvelle implémentation de handleSetDefault sans utiliser batch
   const handleSetDefault = async (id) => {
     try {
-      // Mettre à jour tous les templates pour enlever isDefault
-      const batch = db.batch();
+      // Version sans batch - effectuer les mises à jour individuellement
+      // D'abord, réinitialiser tous les templates par défaut
+      const defaultTemplates = templates.filter(t => t.isDefault && t.id !== id);
+      for (const template of defaultTemplates) {
+        await updateDoc(doc(db, 'contratTemplates', template.id), { 
+          isDefault: false 
+        });
+      }
       
-      templates.forEach(template => {
-        if (template.id !== id && template.isDefault) {
-          const templateRef = doc(db, 'contratTemplates', template.id);
-          batch.update(templateRef, { isDefault: false });
-        }
+      // Ensuite, définir le nouveau template par défaut
+      await updateDoc(doc(db, 'contratTemplates', id), { 
+        isDefault: true 
       });
-      
-      // Définir le nouveau template par défaut
-      const newDefaultRef = doc(db, 'contratTemplates', id);
-      batch.update(newDefaultRef, { isDefault: true });
-      
-      await batch.commit();
       
       // Mettre à jour l'état local
       setTemplates(templates.map(template => ({
@@ -81,14 +84,15 @@ const ContratTemplatesPage = () => {
         isDefault: template.id === id
       })));
       
+      // Notification de succès
+      console.log('Modèle défini comme défaut avec succès');
     } catch (error) {
       console.error('Erreur lors de la définition du modèle par défaut:', error);
       alert('Une erreur est survenue lors de la mise à jour du modèle par défaut.');
     }
   };
 
-  // Fonctions pour la gestion de la modale (de la branche refacto-structure-scriptshell) - pour implémentation future
-  /*
+  // Fonctions pour la gestion de la modale
   const handleEditTemplate = (template) => {
     setCurrentTemplate(template);
     setIsNewTemplate(false);
@@ -150,26 +154,18 @@ const ContratTemplatesPage = () => {
       alert('Une erreur est survenue lors de la sauvegarde du modèle.');
     }
   };
-  */
 
   return (
     <div className="contrat-templates-container">
       <div className="templates-header">
         <h2>Modèles de contrats</h2>
-        <button 
-          className="btn btn-primary" 
-          onClick={() => navigate('/parametres/contrats/nouveau')}
-        >
-          <i className="bi bi-plus-circle me-2"></i>Créer un modèle
-        </button>
-        {/* Bouton pour ouvrir la modale (de la branche refacto-structure-scriptshell) - pour implémentation future
-        <button 
-          className="btn btn-primary" 
+        {/* Nouveau bouton pour ouvrir la modale */}
+        <Button 
+          variant="primary" 
           onClick={handleCreateTemplate}
         >
           <i className="bi bi-plus-circle me-2"></i>Créer un modèle
-        </button>
-        */}
+        </Button>
       </div>
 
       {loading ? (
@@ -182,20 +178,13 @@ const ContratTemplatesPage = () => {
         <div className="no-templates-message">
           <i className="bi bi-file-earmark-text"></i>
           <p>Aucun modèle de contrat n'a été créé.</p>
-          <button 
-            className="btn btn-outline-primary" 
-            onClick={() => navigate('/parametres/contrats/nouveau')}
-          >
-            Créer votre premier modèle
-          </button>
-          {/* Bouton pour nouveau modèle avec modale (de la branche refacto-structure-scriptshell) - pour implémentation future
-          <button 
-            className="btn btn-outline-primary" 
+          {/* Nouveau bouton pour ouvrir la modale */}
+          <Button 
+            variant="outline-primary" 
             onClick={handleCreateTemplate}
           >
             Créer votre premier modèle
-          </button>
-          */}
+          </Button>
         </div>
       ) : (
         <div className="templates-grid">
@@ -220,53 +209,51 @@ const ContratTemplatesPage = () => {
                 </p>
               </div>
               <div className="template-actions">
-                <button 
-                  className="btn btn-sm btn-outline-primary" 
-                  onClick={() => navigate(`/parametres/contrats/${template.id}`)}
-                >
-                  <i className="bi bi-pencil"></i> Modifier
-                </button>
-                {/* Bouton pour modification avec modale (de la branche refacto-structure-scriptshell) - pour implémentation future
-                <button 
-                  className="btn btn-sm btn-outline-primary" 
+                {/* Nouveau bouton pour modification avec modale */}
+                <Button 
+                  variant="outline-primary" 
+                  size="sm"
                   onClick={() => handleEditTemplate(template)}
                 >
                   <i className="bi bi-pencil"></i> Modifier
-                </button>
-                */}
+                </Button>
+                
                 {!template.isDefault && (
-                  <button 
-                    className="btn btn-sm btn-outline-success" 
+                  <Button 
+                    variant="outline-success" 
+                    size="sm"
                     onClick={() => handleSetDefault(template.id)}
                   >
                     <i className="bi bi-star"></i> Définir par défaut
-                  </button>
+                  </Button>
                 )}
-                <button 
-                  className="btn btn-sm btn-outline-danger" 
+                <Button 
+                  variant="outline-danger" 
+                  size="sm"
                   onClick={() => handleDelete(template.id)}
                   disabled={template.isDefault}
                 >
                   <i className="bi bi-trash"></i> {template.isDefault ? 'Non supprimable' : 'Supprimer'}
-                </button>
+                </Button>
               </div>
             </div>
           ))}
         </div>
       )}
       
-      {/* Modale d'édition du modèle de contrat (de la branche refacto-structure-scriptshell) - pour implémentation future
+      {/* Modale d'édition du modèle de contrat */}
       {showEditorModal && (
         <div className="modal-overlay">
           <div className="modal-content template-editor-modal">
             <div className="modal-header">
               <h3>{isNewTemplate ? 'Créer un nouveau modèle de contrat' : 'Modifier le modèle de contrat'}</h3>
-              <button 
-                className="btn btn-sm btn-outline-secondary" 
+              <Button 
+                variant="outline-secondary" 
+                size="sm"
                 onClick={handleCloseEditor}
               >
                 <i className="bi bi-x-lg"></i>
-              </button>
+              </Button>
             </div>
             <div className="modal-body p-0">
               <ContratTemplateEditor 
@@ -278,7 +265,6 @@ const ContratTemplatesPage = () => {
           </div>
         </div>
       )}
-      */}
     </div>
   );
 };

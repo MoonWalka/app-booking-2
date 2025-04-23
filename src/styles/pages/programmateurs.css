@@ -1,1 +1,241 @@
-/* Styles pour la page des programmateurs */
+/* Styles pour la page des programmateurs *//* Styles for all programmateur-related components */
+
+/* Programmateur details styles */
+.programmateur-detail-container {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+  }
+  
+  .programmateur-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .programmateur-info {
+    flex: 1;
+  }
+  
+  .programmateur-name {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .programmateur-organization {
+    color: #666;
+    margin-bottom: 10px;
+  }
+  
+  .programmateur-actions {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .programmateur-contact {
+    margin-top: 20px;
+  }
+  
+  .contact-list {
+    margin-top: 15px;
+  }
+  
+  .notes-section {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #fff9e6;
+    border-radius: 8px;
+    border-left: 4px solid #f0c674;
+  }
+  
+  .notes-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .notes-content {
+    white-space: pre-line;
+  }
+  
+  /* Programmateur form styles */
+  .programmateur-form {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .contact-form-section {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+  }
+  
+  .contact-form-title {
+    font-weight: bold;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .contact-inputs {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+  }
+  
+  .communications-section {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f0f7ff;
+    border-radius: 8px;
+  }
+  
+  .preferences-section {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f7f7f7;
+    border-radius: 8px;
+  }
+  
+  .preference-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .preference-checkbox {
+    margin-right: 10px;
+  }
+  
+  /* Programmateurs list styles */
+  .programmateurs-list-container {
+    padding: 20px;
+  }
+  
+  .programmateurs-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .programmateurs-title {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .programmateurs-actions {
+    display: flex;
+  }
+  
+  .filter-options {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+  
+  .filter-option {
+    display: flex;
+    align-items: center;
+  }
+  
+  .filter-option label {
+    margin-right: 10px;
+    font-weight: 500;
+  }
+  
+  .programmateur-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+    overflow: hidden;
+    transition: transform 0.2s;
+  }
+  
+  .programmateur-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  .programmateur-card-header {
+    padding: 15px;
+    background-color: #f5f5f5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .programmateur-card-body {
+    padding: 15px;
+  }
+  
+  .programmateur-card-organization {
+    color: #666;
+    margin-bottom: 10px;
+  }
+  
+  .programmateur-card-contacts {
+    margin-top: 10px;
+  }
+  
+  .programmateur-card-contact {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  
+  .contact-icon {
+    margin-right: 8px;
+    color: #4a90e2;
+  }
+  
+  .programmateur-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  
+  .tag {
+    padding: 4px 8px;
+    background-color: #e3f2fd;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #0d47a1;
+  }
+  
+  .programmateur-card-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 15px;
+    background-color: #f9f9f9;
+  }
+  
+  /* Mobile-specific styles */
+  @media (max-width: 768px) {
+    .programmateur-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .programmateur-actions {
+      margin-top: 15px;
+    }
+    
+    .contact-inputs {
+      grid-template-columns: 1fr;
+    }
+    
+    .filter-options {
+      flex-direction: column;
+      gap: 10px;
+    }
+  }

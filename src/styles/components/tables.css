@@ -1,0 +1,68 @@
+/* Styles communs pour les tableaux */
+.data-table,
+.contrats-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: var(--card-bg);
+  box-shadow: var(--shadow);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.data-table th, 
+.data-table td,
+.contrats-table th, 
+.contrats-table td {
+  padding: 12px 15px;
+  text-align: left;
+}
+
+.data-table th,
+.contrats-table th {
+  background-color: var(--secondary-color);
+  color: white;
+  font-weight: 500;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.data-table tr,
+.contrats-table tr {
+  border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.data-table tr:last-child,
+.contrats-table tr:last-child {
+  border-bottom: none;
+}
+
+.data-table tr:nth-child(even),
+.contrats-table tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+.data-table tbody tr:hover,
+.contrats-table tbody tr:hover {
+  background-color: rgba(13, 110, 253, 0.05);
+}
+
+/* Styles responsifs pour les tableaux */
+.table-responsive {
+  overflow-x: auto;
+}
+
+@media (max-width: 768px) {
+  .data-table,
+  .contrats-table {
+    font-size: 0.9rem;
+  }
+  
+  .data-table th, 
+  .data-table td,
+  .contrats-table th, 
+  .contrats-table td {
+    padding: 8px 10px;
+  }
+}

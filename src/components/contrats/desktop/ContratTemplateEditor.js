@@ -4,8 +4,8 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 // import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import ContratVariable from './ContratVariable.js';
-// import FullscreenEditorModal from '@components/contrats/FullscreenEditorModal';
-import '../../../style/contratTemplateEditor.css';
+import FullscreenEditorModal from '@components/contrats/FullscreenEditorModal.js';
+import '@/styles/index.css';
 
 // Correctif pour React 18 et react-beautiful-dnd
 // const StrictModeDroppable = ({ children, ...props }) => {
@@ -37,34 +37,34 @@ const ContratTemplateEditor = ({ template, onSave }) => {
   const [showGuide, setShowGuide] = useState(false);
   
   // États pour la modale d'édition
-  // const [showModal, setShowModal] = useState(false);
-  // const [modalContent, setModalContent] = useState('');
-  // const [modalSectionIndex, setModalSectionIndex] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [modalContent, setModalContent] = useState('');
+  const [modalSectionIndex, setModalSectionIndex] = useState(null);
   
   // Référence pour le quill editor
   const quillRef = useRef();
 
   // Fonction pour ouvrir la modale d'édition
-  // const openSectionEditModal = (index) => {
-  //   if (index >= 0 && index < sections.length) {
-  //     setModalSectionIndex(index);
-  //     setModalContent(sections[index].content);
-  //     setShowModal(true);
-  //   }
-  // };
+  const openSectionEditModal = (index) => {
+    if (index >= 0 && index < sections.length) {
+      setModalSectionIndex(index);
+      setModalContent(sections[index].content);
+      setShowModal(true);
+    }
+  };
 
   // Fonction pour fermer la modale
-  // const closeSectionEditModal = () => {
-  //   setShowModal(false);
-  //   setModalSectionIndex(null);
-  // };
+  const closeSectionEditModal = () => {
+    setShowModal(false);
+    setModalSectionIndex(null);
+  };
 
   // Fonction pour sauvegarder le contenu depuis la modale
-  // const saveSectionContentFromModal = (content) => {
-  //   if (modalSectionIndex !== null) {
-  //     handleSectionContentChange(modalSectionIndex, content);
-  //   }
-  // };
+  const saveSectionContentFromModal = (content) => {
+    if (modalSectionIndex !== null) {
+      handleSectionContentChange(modalSectionIndex, content);
+    }
+  };
 
   // useEffect pour initialiser les sections si besoin
   useEffect(() => {
@@ -517,6 +517,13 @@ const ContratTemplateEditor = ({ template, onSave }) => {
                       placeholder="Ex: Parties contractantes"
                     />
                   </div>
+                  <button 
+                    className="btn btn-sm btn-outline-secondary" 
+                    onClick={() => openSectionEditModal(currentSectionIndex)}
+                  >
+                    <i className="bi bi-arrows-fullscreen me-1"></i>
+                    Éditer en plein écran
+                  </button>
                 </div>
                 
                 <div className="section-editor-content">
@@ -658,6 +665,20 @@ const ContratTemplateEditor = ({ template, onSave }) => {
             </div>
           </div>
         </div>
+      )}
+      
+      {/* Modale pour l'édition en plein écran */}
+      {showModal && (
+        <FullscreenEditorModal
+          title={sections[modalSectionIndex].title}
+          content={modalContent}
+          onSave={(content) => {
+            saveSectionContentFromModal(content);
+            closeSectionEditModal();
+          }}
+          onClose={closeSectionEditModal}
+          onInsertVariable={handleInsertVariable}
+        />
       )}
     </div>
   );

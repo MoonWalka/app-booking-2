@@ -1,30 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { doc, getDoc, setDoc, collection, serverTimestamp } from 'firebase/firestore';
-import { db } from '../firebase';
-import ContratTemplateEditor from '../components/contrats/ContratTemplateEditor';
-import '../style/contratTemplateEdit.css';
-
-// Imports modifiés de la branche refacto-structure-scriptshell - pour implémentation future
-{/* 
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { db } from '../firebase';
-import { getDoc, doc, collection, setDoc, serverTimestamp } from '@firebase';
-import ContratTemplateEditor from '../components/contrats/ContratTemplateEditor';
+import { db, getDoc, doc, collection, setDoc, serverTimestamp } from '@/firebase';
+import ContratTemplateEditor from '@components/contrats/ContratTemplateEditor';
 import '@styles/index.css';
-*/}
-// Note: Vous devrez vérifier que le dossier @styles existe et contient un fichier index.css,
-// sinon créez ce dossier et ce fichier avec les styles appropriés.
 
 const ContratTemplatesEditPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [template, setTemplate] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchTemplate = async () => {
+      console.log("Fetching template with ID:", id, "type:", typeof id);
+      
+      // Vérifier si l'ID est défini
+      if (!id) {
+        console.error("ID invalide:", id);
+        setError("Identifiant de modèle manquant");
+        setLoading(false);
+        // Rediriger après un court délai
+        setTimeout(() => navigate('/parametres/contrats'), 2000);
+        return;
+      }
+
       if (id === 'nouveau') {
         // Nouveau modèle
         setTemplate({
@@ -49,18 +49,29 @@ const ContratTemplatesEditPage = () => {
       } else {
         // Modèle existant
         try {
-          const templateDoc = await getDoc(doc(db, 'contratTemplates', id));
+          console.log("Attempting to fetch template document with ID:", id);
+          const templateRef = doc(db, 'contratTemplates', id);
+          console.log("Template reference created:", templateRef);
+          
+          const templateDoc = await getDoc(templateRef);
+          console.log("Template document fetched, exists:", templateDoc.exists());
+          
           if (templateDoc.exists()) {
+            const templateData = templateDoc.data();
+            console.log("Template data:", templateData);
+            
             setTemplate({
               id: templateDoc.id,
-              ...templateDoc.data()
+              ...templateData
             });
           } else {
             console.error('Modèle de contrat non trouvé');
-            navigate('/parametres/contrats');
+            setError("Le modèle demandé n'existe pas");
+            setTimeout(() => navigate('/parametres/contrats'), 2000);
           }
         } catch (error) {
           console.error('Erreur lors de la récupération du modèle:', error);
+          setError(`Erreur lors de la récupération du modèle: ${error.message}`);
         } finally {
           setLoading(false);
         }
@@ -72,7 +83,18 @@ const ContratTemplatesEditPage = () => {
 
   const handleSave = async (updatedTemplate) => {
     try {
-      const templateId = id === 'nouveau' ? doc(collection(db, 'contratTemplates')).id : id;
+      let templateId;
+      
+      if (id === 'nouveau') {
+        // Créer un nouvel ID pour le document
+        const templateRef = doc(collection(db, 'contratTemplates'));
+        templateId = templateRef.id;
+        console.log("Nouveau template ID généré:", templateId);
+      } else {
+        templateId = id;
+      }
+      
+      console.log("Saving template with ID:", templateId);
       
       const templateData = {
         ...updatedTemplate,
@@ -80,13 +102,35 @@ const ContratTemplatesEditPage = () => {
         ...(id === 'nouveau' && { createdAt: serverTimestamp() })
       };
       
+      console.log("Template data to save:", templateData);
+      
       await setDoc(doc(db, 'contratTemplates', templateId), templateData, { merge: true });
-      navigate('/parametres/contrats');
+      console.log("Template saved successfully");
+      
+      // Redirection avec délai pour permettre à Firestore de finaliser l'opération
+      setTimeout(() => navigate('/parametres/contrats'), 500);
     } catch (error) {
       console.error('Erreur lors de l\'enregistrement du modèle:', error);
-      alert('Une erreur est survenue lors de l\'enregistrement du modèle.');
+      setError(`Erreur lors de l'enregistrement: ${error.message}`);
     }
   };
+
+  if (error) {
+    return (
+      <div className="alert alert-danger my-4">
+        <h4>Erreur</h4>
+        <p>{error}</p>
+        <div className="mt-3">
+          <button 
+            className="btn btn-outline-primary"
+            onClick={() => navigate('/parametres/contrats')}
+          >
+            Retour à la liste des modèles
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
@@ -94,12 +138,44 @@ const ContratTemplatesEditPage = () => {
         <div className="spinner-border" role="status">
           <span className="visually-hidden">Chargement...</span>
         </div>
+        <p className="mt-2">Chargement du modèle...</p>
+      </div>
+    );
+  }
+
+  if (!template) {
+    return (
+      <div className="alert alert-warning my-4">
+        <h4>Modèle non disponible</h4>
+        <p>Le modèle demandé n'a pas pu être chargé.</p>
+        <div className="mt-3">
+          <button 
+            className="btn btn-outline-primary"
+            onClick={() => navigate('/parametres/contrats')}
+          >
+            Retour à la liste des modèles
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="template-edit-container">
+      <div className="mb-4">
+        <button 
+          className="btn btn-outline-secondary"
+          onClick={() => navigate('/parametres/contrats')}
+        >
+          <i className="bi bi-arrow-left me-2"></i>
+          Retour à la liste
+        </button>
+      </div>
+      
+      <h2 className="mb-4">
+        {id === 'nouveau' ? 'Créer un nouveau modèle' : 'Modifier le modèle'}
+      </h2>
+      
       <ContratTemplateEditor template={template} onSave={handleSave} />
     </div>
   );

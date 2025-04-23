@@ -1,42 +1,19 @@
-
 // src/pages/ContratsPage.js
 //imports focntionels
 
-import React, { useState, useEffect, Suspense } from 'react';
-import { Routes, Route, Link, useNavigate } from 'react-router-dom';
-import { collection, getDocs, query, orderBy, where } from 'firebase/firestore';
-import { db } from '@/firebase';
-import { Table, Badge, Tabs, Tab } from 'react-bootstrap';
-// Suppression des importations problématiques
-// import ContratTemplatesPage from '@/pages/contratTemplatesPage.js';
-// import ContratTemplatesEditPage from '@/pages/contratTemplatesEditPage.js';
-import ContratGenerationPage from '@/pages/ContratGenerationPage.js';
-import ContratDetailsPage from '@/pages/ContratDetailsPage.js';
-import '@/style/contrats.css';
-
 // Imports modifiés de la branche refacto-structure-scriptshell - pour implémentation future
-{/* 
 import React, { useState, useEffect, Suspense } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { collection, getDocs, query, orderBy, where } from '@/firebase';
 import { db } from '@/firebase';
-import { Table, Badge } from 'react-bootstrap';
+import { Table, Badge, Tabs, Tab } from 'react-bootstrap';
 import ContratGenerationPage from '@pages/ContratGenerationPage.js';
 import ContratDetailsPage from '@pages/ContratDetailsPage.js';
 import '@styles/index.css';
-*/}
-// Note: Les imports utilisent '@pages' et '@styles/index.css' au lieu de '@/pages' et '@/style/contrats.css'
-// Les alias sont correctement configurés dans votre projet selon jsconfig.json et craco.config.js
 
 // Charger les composants de manière dynamique pour éviter les dépendances circulaires
-const ContratTemplatesPage = React.lazy(() => import('@/pages/contratTemplatesPage.js'));
-const ContratTemplatesEditPage = React.lazy(() => import('@/pages/contratTemplatesEditPage.js'));
-
-// Lazy loading modifié de la branche refacto-structure-scriptshell - pour implémentation future
-{/*
 const ContratTemplatesPage = React.lazy(() => import('@pages/contratTemplatesPage.js'));
 const ContratTemplatesEditPage = React.lazy(() => import('@pages/contratTemplatesEditPage.js'));
-*/}
 
 // Version actuelle de la page utilise des onglets
 const ContratsTab = () => {
@@ -193,61 +170,6 @@ const ContratsTab = () => {
     </div>
   );
 };
-
-// Structure simplifiée de la branche refacto-structure-scriptshell - pour implémentation future
-{/*
-const ContratsPage = () => {
-  const [contrats, setContrats] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchContrats = async () => {
-      // ...même logique de récupération des contrats...
-    };
-
-    fetchContrats();
-  }, []);
-
-  const formatDate = (dateValue) => {
-    // ...même fonction de formatage...
-  };
-
-  const getStatusBadge = (status) => {
-    // ...même fonction pour les badges...
-  };
-
-  return (
-    <div className="contrats-page-container">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2>Contrats</h2>
-        <button 
-          className="btn btn-primary" 
-          onClick={() => navigate('/parametres/contrats')}
-        >
-          <i className="bi bi-file-earmark-text me-2"></i>
-          Gérer les modèles
-        </button>
-      </div>
-
-      {loading ? (
-        // ...spinner de chargement...
-      ) : contrats.length === 0 ? (
-        // ...message quand aucun contrat...
-      ) : (
-        // ...tableau des contrats...
-      )}
-
-      <Routes>
-        <Route path="/generate/:id" element={<ContratGenerationPage />} />
-        <Route path="/:id" element={<ContratDetailsPage />} />
-      </Routes>
-    </div>
-  );
-};
-*/}
-// Note: La version de refacto-structure-scriptshell n'utilise pas d'onglets mais une vue simplifiée
-// avec un bouton pour accéder aux modèles de contrats dans les paramètres
 
 const ConcertsTab = () => {
   const [concerts, setConcerts] = useState([]);

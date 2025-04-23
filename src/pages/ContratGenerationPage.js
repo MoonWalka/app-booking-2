@@ -2,24 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Form, Card, Alert } from 'react-bootstrap';
 import { db } from '@/firebase';
-import { doc, getDoc, collection, getDocs, addDoc, updateDoc, serverTimestamp, orderBy, query, where } from 'firebase/firestore';
-import ContratGenerator from '@/components/contrats/ContratGenerator.js';
-import { PDFDownloadLink } from '@react-pdf/renderer';
-import '@/style/contratGeneration.css';
-
-// Imports modifiés de la branche refacto-structure-scriptshell - pour implémentation future
-{/*
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Button, Form, Card, Alert } from 'react-bootstrap';
-import { db } from '@/firebase';
+// import { doc, getDoc, collection, getDocs, addDoc, updateDoc, serverTimestamp, orderBy, query, where } from 'firebase/firestore';
 import { doc, getDoc, collection, getDocs, addDoc, updateDoc, serverTimestamp, orderBy, query, where } from '@/firebase';
+// import ContratGenerator from '@/components/contrats/ContratGenerator.js';
 import ContratGenerator from '@components/contrats/ContratGenerator.js';
 import { PDFDownloadLink } from '@react-pdf/renderer';
+// import '@/style/contratGeneration.css';
 import '@styles/index.css';
-*/}
-// Note: Les imports utilisent '@components', '@styles/index.css' au lieu de '@/components', '@/style/contratGeneration.css
-// Les alias sont correctement configurés dans votre projet selon jsconfig.json et craco.config.js
 
 const ContratGenerationPage = () => {
   const { concertId } = useParams();
@@ -128,7 +117,8 @@ const ContratGenerationPage = () => {
       const templateData = templateDoc.data();
       console.log("Modèle sélectionné:", templateData);
       
-      // Variables originales - actuellement utilisées
+      // Variables originales - commentées
+      /*
       const variables = {
         nomProgrammateur: programmateur?.nom || 'Non spécifié',
         prenomProgrammateur: programmateur?.prenom || '',
@@ -144,9 +134,9 @@ const ContratGenerationPage = () => {
         heureConcert: concert?.heure || 'Non spécifiée',
         // Ajoutez d'autres variables selon vos besoins
       };
+      */
       
-      // Variables complètes de la branche refacto-structure-scriptshell - pour implémentation future
-      {/*
+      // Variables complètes de la branche refacto-structure-scriptshell - implémentées
       const variables = {
         // Variables programmateur
         raison_sociale: programmateur?.structure || 'Non spécifiée',
@@ -194,9 +184,6 @@ const ContratGenerationPage = () => {
         date_mois: (new Date().getMonth() + 1).toString(),
         date_annee: new Date().getFullYear().toString()
       };
-      */}
-      // Note: La version refacto-structure-scriptshell contient beaucoup plus de variables pour le contrat,
-      // notamment des informations détaillées sur le programmateur, l'artiste, le lieu et des variables de date formatées.
       
       // Créer le contrat dans Firestore
       const contratRef = await addDoc(collection(db, 'contrats'), {

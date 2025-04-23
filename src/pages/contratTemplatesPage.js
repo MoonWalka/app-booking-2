@@ -4,10 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { db, collection, getDocs, doc, deleteDoc, query, where, orderBy, addDoc, updateDoc, serverTimestamp } from '@/firebase';
 import '@styles/index.css';
 
-// Imports supplémentaires de la branche refacto-structure-scriptshell
-import { Button, Card, Table, Badge, Form } from 'react-bootstrap';
-import ContratTemplateEditor from '@components/contrats/ContratTemplateEditor';
-import Modal from '@components/common/Modal';
+// Imports
+import { Button } from 'react-bootstrap';
+// Importer uniquement le composant dédié qui fonctionne
+import ContratTemplateEditorModal from '@components/contrats/ContratTemplateEditorModal';
 
 const ContratTemplatesPage = () => {
   const [templates, setTemplates] = useState([]);
@@ -18,17 +18,6 @@ const ContratTemplatesPage = () => {
   const [showEditorModal, setShowEditorModal] = useState(false);
   const [currentTemplate, setCurrentTemplate] = useState(null);
   const [isNewTemplate, setIsNewTemplate] = useState(false);
-  
-  // État pour basculer entre la modale de test et la vraie modale
-  const [useTestModal, setUseTestModal] = useState(true); // true = modale de test, false = vraie modale
-
-  // Ajouter useEffect pour déboguer les changements d'état de la modale
-  useEffect(() => {
-    console.log("État de showEditorModal a changé:", showEditorModal);
-    console.log("Template actuel:", currentTemplate);
-    console.log("isNewTemplate:", isNewTemplate);
-    console.log("useTestModal:", useTestModal);
-  }, [showEditorModal, currentTemplate, isNewTemplate, useTestModal]);
 
   useEffect(() => {
     const fetchTemplates = async () => {
@@ -168,26 +157,15 @@ const ContratTemplatesPage = () => {
     <div className="contrat-templates-container">
       <div className="templates-header">
         <h2>Modèles de contrats</h2>
-        <div style={{ display: 'flex', gap: '10px' }}>
-          {/* Bouton pour basculer entre les modales */}
-          <Button 
-            variant={useTestModal ? "outline-secondary" : "outline-primary"} 
-            onClick={() => setUseTestModal(!useTestModal)}
-            size="sm"
-          >
-            {useTestModal ? "Utiliser vraie modale" : "Utiliser modale de test"}
-          </Button>
-          
-          <Button 
-            variant="primary" 
-            onClick={() => {
-              console.log("Bouton Créer un modèle cliqué");
-              handleCreateTemplate();
-            }}
-          >
-            <i className="bi bi-plus-circle me-2"></i>Créer un modèle
-          </Button>
-        </div>
+        <Button 
+          variant="primary" 
+          onClick={() => {
+            console.log("Bouton Créer un modèle cliqué");
+            handleCreateTemplate();
+          }}
+        >
+          <i className="bi bi-plus-circle me-2"></i>Créer un modèle
+        </Button>
       </div>
 
       {loading ? (
@@ -267,83 +245,13 @@ const ContratTemplatesPage = () => {
         </div>
       )}
       
-      {/* OPTION 1: Test avec une modale simple sans ContratTemplateEditor */}
-      {showEditorModal && useTestModal && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          zIndex: 1050
-        }}>
-          <div style={{
-            backgroundColor: 'white',
-            padding: '20px',
-            borderRadius: '8px',
-            maxWidth: '1000px',
-            width: '90%',
-            maxHeight: '90vh',
-            overflow: 'auto'
-          }}>
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              marginBottom: '20px'
-            }}>
-              <h3>{isNewTemplate ? 'Créer un nouveau modèle de contrat' : 'Modifier le modèle de contrat'}</h3>
-              <button 
-                className="btn btn-sm btn-outline-secondary" 
-                onClick={handleCloseEditor}
-              >
-                <i className="bi bi-x-lg"></i>
-              </button>
-            </div>
-            
-            <div>
-              <p style={{ fontSize: '18px', textAlign: 'center', padding: '50px' }}>
-                Si vous voyez ce message, la modale fonctionne correctement.
-                Le problème vient du composant Modal ou ContratTemplateEditor.
-              </p>
-              <div style={{ textAlign: 'center' }}>
-                <button 
-                  className="btn btn-primary" 
-                  onClick={handleCloseEditor}
-                >
-                  Fermer la modale
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-      
-      {/*} OPTION 2: Utilisation du composant Modal avec ContratTemplateEditor */}
-      {showEditorModal && !useTestModal && (
-        <Modal 
-        isOpen={showEditorModal} 
+      {/* Utilisation du composant dédié ContratTemplateEditorModal */}
+      <ContratTemplateEditorModal
+        isOpen={showEditorModal}
         onClose={handleCloseEditor}
-        title={isNewTemplate ? 'Créer un nouveau modèle de contrat' : 'Modifier le modèle de contrat'}
-        size="large"
-      >
-        {/* Wrapper de débogage autour du ContratTemplateEditor */}
-        <div style={{ border: '1px dashed #ccc', padding: '10px', marginBottom: '10px' }}>
-          <div style={{ backgroundColor: '#f8f9fa', padding: '8px', marginBottom: '10px', fontSize: '12px' }}>
-            Wrapper de débogage: ContratTemplateEditor va apparaître ci-dessous
-          </div>
-          
-          <ContratTemplateEditor
-            template={currentTemplate}
-            onSave={handleSaveTemplate}
-            isModal={true}
-          />
-        </div>
-      </Modal>
-      )}
+        template={currentTemplate}
+        onSave={handleSaveTemplate}
+      />
     </div>
   );
 };

@@ -93,7 +93,36 @@ const ContratTemplatesPage = () => {
   
   const handleCreateTemplate = () => {
     console.log("handleCreateTemplate appelé");
-    setCurrentTemplate(null);
+    // Créer un objet template vide pour un nouveau modèle
+    // Ceci garantit que la modale s'ouvre toujours avec un nouvel objet vide
+    // et non avec le dernier template édité
+    const emptyTemplate = {
+      name: 'Nouveau modèle',
+      type: 'session',
+      isDefault: false,
+      bodyContent: '',
+      headerContent: '',
+      footerContent: '',
+      headerHeight: 20,
+      headerBottomMargin: 10,
+      footerHeight: 15,
+      footerTopMargin: 10,
+      logoUrl: '',
+      titleTemplate: 'Contrat - {concert_titre}',
+      signatureTemplate: `<div style="display: flex; justify-content: space-between; margin-top: 30px;">
+        <div style="width: 45%;">
+          <div style="margin-bottom: 50px;"><strong>Pour l'Organisateur:</strong></div>
+          <div>{programmateur_nom}</div>
+          <div style="border-top: 1px solid #000; margin-top: 5px;"></div>
+        </div>
+        <div style="width: 45%;">
+          <div style="margin-bottom: 50px;"><strong>Pour l'Artiste:</strong></div>
+          <div>{artiste_nom}</div>
+          <div style="border-top: 1px solid #000; margin-top: 5px;"></div>
+        </div>
+      </div>`
+    };
+    setCurrentTemplate(emptyTemplate);
     setIsNewTemplate(true);
     setShowEditorModal(true);
   };

@@ -23,11 +23,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: 'center',
   },
-  defaultDate: {
-    fontSize: 12,
-    marginBottom: 20,
-    textAlign: 'right',
-  },
+  // Suppression du style defaultDate qui n'est plus nécessaire
   // Styles pour les éléments HTML basiques
   p: { marginBottom: 10 },
   h1: { fontSize: 16, fontWeight: 'bold', marginBottom: 10, marginTop: 10 },
@@ -49,6 +45,10 @@ const parseHtmlToReactPdf = (html) => {
 };
 
 const ContratPDF = ({ template, concertData, programmateurData, artisteData, lieuData, entrepriseInfo }) => {
+  // Débogage pour identifier pourquoi la date apparaît encore
+  console.log("Template reçu dans ContratPDF:", template);
+  console.log("La propriété dateTemplate existe-t-elle?", template && 'dateTemplate' in template);
+  
   // Sécuriser contre les valeurs nulles ou undefined
   const safeData = {
     concert: concertData || {},
@@ -189,10 +189,7 @@ const ContratPDF = ({ template, concertData, programmateurData, artisteData, lie
           {parseHtmlToReactPdf(replaceVariables(template.titleTemplate || `Contrat - {concert_titre}`))}
         </Text>
         
-        {/* Ligne de date (depuis le template) */}
-        <Text style={styles.defaultDate}>
-          {parseHtmlToReactPdf(replaceVariables(template.dateTemplate || `Fait à {lieu_ville}, le {date_complete}`))}
-        </Text>
+        {/* Suppression de la ligne de date - Si vous voyez encore une date, elle vient d'ailleurs */}
         
         {/* Contenu principal */}
         <View style={styles.content}>

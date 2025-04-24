@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import ContratVariable from '@/components/contrats/desktop/ContratVariable';
+import ContratVariable from '@/components/contrats/ContratVariable';
 import '@/styles/index.css';
 
 const ContratTemplateEditorModal = ({ 
@@ -33,7 +33,6 @@ const ContratTemplateEditorModal = ({
   
   // Nouveaux états pour les éléments hardcodés
   const [titleTemplate, setTitleTemplate] = useState(template?.titleTemplate || 'Contrat - {concert_titre}');
-  const [dateTemplate, setDateTemplate] = useState(template?.dateTemplate || 'Fait à {lieu_ville}, le {date_complete}');
   const [signatureTemplate, setSignatureTemplate] = useState(template?.signatureTemplate || 
     `<div style="display: flex; justify-content: space-between; margin-top: 30px;">
       <div style="width: 45%;">
@@ -67,7 +66,6 @@ const ContratTemplateEditorModal = ({
       setLogoUrl(template.logoUrl || '');
       
       setTitleTemplate(template.titleTemplate || 'Contrat - {concert_titre}');
-      setDateTemplate(template.dateTemplate || 'Fait à {lieu_ville}, le {date_complete}');
       setSignatureTemplate(template.signatureTemplate || `<div style="display: flex; justify-content: space-between; margin-top: 30px;">
         <div style="width: 45%;">
           <div style="margin-bottom: 50px;"><strong>Pour l'Organisateur:</strong></div>
@@ -193,7 +191,6 @@ const ContratTemplateEditorModal = ({
       logoUrl,
       // Nouveaux champs pour les éléments précédemment hardcodés
       titleTemplate,
-      dateTemplate,
       signatureTemplate
     };
     
@@ -735,39 +732,6 @@ const ContratTemplateEditorModal = ({
                   </div>
                 </div>
                 
-                {/* Ligne de date */}
-                <div className="card mb-4">
-                  <div className="card-header d-flex justify-content-between align-items-center">
-                    <h3 className="card-title h5 mb-0">Ligne de date</h3>
-                    <button 
-                      className="btn btn-sm btn-outline-secondary"
-                      type="button"
-                      data-bs-toggle="collapse"
-                      data-bs-target="#dateCollapse"
-                      aria-expanded="true"
-                    >
-                      <i className="bi bi-chevron-down"></i>
-                    </button>
-                  </div>
-                  <div className="collapse show" id="dateCollapse">
-                    <div className="card-body">
-                      <div className="form-group">
-                        <label htmlFor="dateTemplate">Format de la date</label>
-                        <input
-                          type="text"
-                          id="dateTemplate"
-                          className="form-control"
-                          value={dateTemplate}
-                          onChange={(e) => setDateTemplate(e.target.value)}
-                        />
-                        <small className="text-muted">
-                          Exemple: "Fait à {'{lieu_ville}'}, le {'{date_complete}'}"
-                        </small>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
                 {/* Zone de signature */}
                 <div className="card mb-4">
                   <div className="card-header d-flex justify-content-between align-items-center">
@@ -800,9 +764,16 @@ const ContratTemplateEditorModal = ({
                               <li><button className="dropdown-item" onClick={() => handleInsertVariable('programmateur_nom', 'signature')}>programmateur_nom</button></li>
                               <li><button className="dropdown-item" onClick={() => handleInsertVariable('programmateur_structure', 'signature')}>programmateur_structure</button></li>
                               <li><button className="dropdown-item" onClick={() => handleInsertVariable('artiste_nom', 'signature')}>artiste_nom</button></li>
+                              <li><button className="dropdown-item" onClick={() => handleInsertVariable('lieu_ville', 'signature')}>lieu_ville</button></li>
+                              <li><button className="dropdown-item" onClick={() => handleInsertVariable('date_jour', 'signature')}>date_jour</button></li>
+                              <li><button className="dropdown-item" onClick={() => handleInsertVariable('date_mois', 'signature')}>date_mois</button></li>
+                              <li><button className="dropdown-item" onClick={() => handleInsertVariable('date_annee', 'signature')}>date_annee</button></li>
                             </ul>
                           </div>
                         </div>
+                        <p className="text-muted mb-2">
+                          Vous pouvez inclure la date et le lieu de signature directement dans cette zone si nécessaire.
+                        </p>
                         <textarea
                           className="form-control"
                           rows="6"

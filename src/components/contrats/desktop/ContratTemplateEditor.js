@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import ContratVariable from '@/components/contrats/desktop/ContratVariable.js';
+import ContratVariable from '@/components/contrats/ContratVariable';
 import '@/styles/index.css';
 
 const ContratTemplateEditor = ({ template, onSave, isModalContext }) => {

@@ -1,31 +1,25 @@
 // src/components/contrats/ContratTemplateEditor.js
-import React, { useEffect, useState } from 'react';
-import { useResponsiveComponent } from '@/hooks/useResponsiveComponent';
+import React from 'react';
+import { useIsMobile } from '@/hooks/useIsMobile';
 import DesktopContratTemplateEditor from './desktop/ContratTemplateEditor';
 
+/**
+ * Wrapper responsive pour l'éditeur de modèles de contrats
+ * Note: Pour le moment, seule la version desktop est implémentée
+ */
 function ContratTemplateEditor(props) {
   console.log("ContratTemplateEditor rendu avec props:", props);
   const { isModal, ...otherProps } = props;
+  const isMobile = useIsMobile();
   
-  // Toujours appeler useResponsiveComponent, car les Hooks doivent être appelés à chaque render
-  // et dans le même ordre - c'est une règle fondamentale de React
-  const ResponsiveComponent = useResponsiveComponent({
-    desktopPath: 'contrats/desktop/ContratTemplateEditor',
-    mobilePath: 'contrats/mobile/ContratTemplateEditor'
-  });
-  
-  // Utiliser le résultat du hook pour le rendu non-modal
-  // Pour le mode modal, utiliser directement le composant desktop 
-  // ou le composant responsif selon la plateforme
-  if (isModal) {
-    console.log("Mode modal détecté");
-    
-    // Utiliser le composant responsif même en mode modal
-    return <ResponsiveComponent {...otherProps} isModalContext={true} />;
-  }
-  
-  console.log("Mode normal (non-modal)");
-  return <ResponsiveComponent {...otherProps} />;
+  // Pour l'instant, utiliser la version desktop dans tous les cas
+  // avec une propriété pour indiquer si on est en mode modal
+  return (
+    <DesktopContratTemplateEditor 
+      {...otherProps} 
+      isModalContext={isModal === true}
+    />
+  );
 }
 
 export default ContratTemplateEditor;

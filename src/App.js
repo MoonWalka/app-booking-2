@@ -18,6 +18,7 @@ import ParametresPage from '@/pages/ParametresPage';
 import FormResponsePage from '@/pages/FormResponsePage';
 import ContratGenerationPage from '@/pages/ContratGenerationPage';
 import ContratDetailsPage from '@/pages/ContratDetailsPage';
+import StructuresPage from '@/pages/StructuresPage';
 import RouterStabilizer from '@/utils/RouterStabilizer';
 
 // Importer le nouveau fichier centralisé de variables CSS
@@ -211,6 +212,13 @@ function App() {
                 <Route path="/lieux/*" element={
                   <PrivateRoute>
                     <LieuxPage />
+                  </PrivateRoute>
+                } />
+                
+                {/* Routes pour les structures */}
+                <Route path="/structures/*" element={
+                  <PrivateRoute>
+                    <StructuresPage />
                   </PrivateRoute>
                 } />
                 

@@ -51,6 +51,12 @@ function DesktopLayout() {
               </NavLink>
             </li>
             <li>
+              <NavLink to="/structures">
+                <i className="bi bi-building"></i>
+                <span>Structures</span>
+              </NavLink>
+            </li>
+            <li>
               <NavLink to="/contrats">
                 <i className="bi bi-file-earmark-text"></i>
                 <span>Contrats</span>

@@ -67,7 +67,42 @@ function MobileLayout() {
                 <span>Concerts</span>
               </NavLink>
             </li>
-            {/* Autres liens de navigation */}
+            <li>
+              <NavLink to="/programmateurs" onClick={closeMenu}>
+                <i className="bi bi-person-badge"></i>
+                <span>Programmateurs</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/lieux" onClick={closeMenu}>
+                <i className="bi bi-geo-alt"></i>
+                <span>Lieux</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/structures" onClick={closeMenu}>
+                <i className="bi bi-building"></i>
+                <span>Structures</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/contrats" onClick={closeMenu}>
+                <i className="bi bi-file-earmark-text"></i>
+                <span>Contrats</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/artistes" onClick={closeMenu}>
+                <i className="bi bi-music-note-beamed"></i>
+                <span>Artistes</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/parametres" onClick={closeMenu}>
+                <i className="bi bi-gear"></i>
+                <span>Paramètres</span>
+              </NavLink>
+            </li>
           </ul>
         </div>
         <div className="sidebar-footer">
@@ -108,6 +143,10 @@ function MobileLayout() {
         <NavLink to="/lieux">
           <i className="bi bi-geo-alt"></i>
           <span>Lieux</span>
+        </NavLink>
+        <NavLink to="/structures">
+          <i className="bi bi-building"></i>
+          <span>Struct.</span>
         </NavLink>
       </nav>
     </div>

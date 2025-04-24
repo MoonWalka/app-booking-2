@@ -5,14 +5,15 @@ import { useParametres } from '@/context/ParametresContext';
 const ParametresGeneraux = () => {
   const { parametres, sauvegarderParametres, loading } = useParametres();
   const [localState, setLocalState] = useState(parametres.generaux || {
-    langue: 'fr',
-    formatDate: 'dd/mm/yyyy'
+    langue: 'fr'
   });
   const [success, setSuccess] = useState('');
 
   useEffect(() => {
     if (parametres.generaux) {
-      setLocalState(parametres.generaux);
+      // Filtrer pour exclure formatDate si déjà présent
+      const { formatDate, ...rest } = parametres.generaux;
+      setLocalState(rest);
     }
   }, [parametres.generaux]);
 
@@ -63,22 +64,6 @@ const ParametresGeneraux = () => {
             </Form.Select>
             <Form.Text className="text-muted">
               La langue utilisée dans l'interface de l'application.
-            </Form.Text>
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Label>Format de date</Form.Label>
-            <Form.Select
-              name="formatDate"
-              value={localState.formatDate}
-              onChange={handleChange}
-            >
-              <option value="dd/mm/yyyy">JJ/MM/AAAA</option>
-              <option value="mm/dd/yyyy">MM/JJ/AAAA</option>
-              <option value="yyyy-mm-dd">AAAA-MM-JJ</option>
-            </Form.Select>
-            <Form.Text className="text-muted">
-              Format d'affichage des dates dans l'application.
             </Form.Text>
           </Form.Group>
 

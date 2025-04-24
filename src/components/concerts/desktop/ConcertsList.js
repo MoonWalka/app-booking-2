@@ -448,9 +448,9 @@ const ConcertsList = () => {
                 >
                   <td className="concert-date-cell">
                     <div className="date-box">
-                      <div className="date-day">{formatDateFr(concert.date).split('-')[0]}</div>
-                      <div className="date-month">{formatDateFr(concert.date).split('-')[1]}</div>
-                      <div className="date-year">{formatDateFr(concert.date).split('-')[2]}</div>
+                      <span className="date-day">{formatDateFr(concert.date).split('-')[0]}</span>
+                      <span className="date-month">{formatDateFr(concert.date).split('-')[1]}</span>
+                      <span className="date-year">{formatDateFr(concert.date).split('-')[2]}</span>
                     </div>
                   </td>
                   <td className="concert-venue-name">{concert.lieuNom || "-"}</td>

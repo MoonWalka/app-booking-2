@@ -153,28 +153,34 @@
   .date-box {
     background: #f8f9fa;
     border-radius: 0.375rem;
-    padding: 0.25rem 0.5rem;
+    padding: 0.5rem;
     text-align: center;
     border: 1px solid #e9ecef;
-    width: 80px;
+    width: 110px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 0.25rem;
   }
   
-  .date-month {
-    font-size: 0.7rem;
-    text-transform: uppercase;
+  .date-day, .date-month, .date-year {
+    font-size: 0.95rem;
     font-weight: 600;
-    color: #6c757d;
+    color: #344767;
+    display: inline-block;
   }
   
   .date-day {
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 700;
-    color: #344767;
   }
   
-  .date-year {
-    font-size: 0.7rem;
+  .date-month:before, .date-year:before {
+    content: "/";
+    margin: 0 2px 0 0;
     color: #6c757d;
+    font-weight: 400;
   }
   
   .programmateur-name {

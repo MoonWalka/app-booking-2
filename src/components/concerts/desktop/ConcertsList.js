@@ -462,8 +462,7 @@ const ConcertsList = () => {
                   </td>
                   <td className="concert-artist-cell">
                     {concert.artisteNom ? (
-                      <span className="artist-tag">
-                        <i className="bi bi-music-note me-1"></i>
+                      <span className="artist-name">
                         {concert.artisteNom}
                       </span>
                     ) : (

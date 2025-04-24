@@ -1,11 +1,11 @@
-// src/pages/contratTemplatesPage.js
+// src/pages/contratTemplatesPage.js - MODIFIÉ
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db, collection, getDocs, doc, deleteDoc, query, where, orderBy, addDoc, updateDoc, serverTimestamp } from '@/firebase';
 import '@styles/index.css';
 
 // Imports
-import { Button } from 'react-bootstrap';
+import { Button, Table, Badge } from 'react-bootstrap';
 // Importer uniquement le composant dédié qui fonctionne
 import ContratTemplateEditorModal from '@components/contrats/ContratTemplateEditorModal';
 
@@ -189,59 +189,88 @@ const ContratTemplatesPage = () => {
           </Button>
         </div>
       ) : (
-        <div className="templates-grid">
-          {templates.map((template) => (
-            <div key={template.id} className={`template-card ${template.isDefault ? 'default-template' : ''}`}>
-              <div className="template-header">
-                <h3>{template.name}</h3>
-                {template.isDefault && (
-                  <span className="default-badge">
-                    <i className="bi bi-star-fill"></i> Par défaut
-                  </span>
-                )}
-              </div>
-              <div className="template-info">
-                <p>
-                  <i className="bi bi-calendar3"></i>
-                  Mis à jour le {new Date(template.updatedAt.seconds * 1000).toLocaleDateString()}
-                </p>
-                <p>
-                  <i className="bi bi-list-ul"></i>
-                  {template.sections ? template.sections.length : 0} sections
-                </p>
-              </div>
-              <div className="template-actions">
-                <Button 
-                  variant="outline-primary" 
-                  size="sm"
-                  onClick={() => {
-                    console.log("Bouton Modifier cliqué pour template:", template.id);
-                    handleEditTemplate(template);
-                  }}
-                >
-                  <i className="bi bi-pencil"></i> Modifier
-                </Button>
-                
-                {!template.isDefault && (
-                  <Button 
-                    variant="outline-success" 
-                    size="sm"
-                    onClick={() => handleSetDefault(template.id)}
-                  >
-                    <i className="bi bi-star"></i> Définir par défaut
-                  </Button>
-                )}
-                <Button 
-                  variant="outline-danger" 
-                  size="sm"
-                  onClick={() => handleDelete(template.id)}
-                  disabled={template.isDefault}
-                >
-                  <i className="bi bi-trash"></i> {template.isDefault ? 'Non supprimable' : 'Supprimer'}
-                </Button>
-              </div>
-            </div>
-          ))}
+        // Nouveau design en liste
+        <div className="templates-list-container">
+          <Table hover responsive className="templates-table">
+            <thead>
+              <tr>
+                <th style={{ width: '30%' }}>Nom du modèle</th>
+                <th style={{ width: '15%' }}>Statut</th>
+                <th style={{ width: '20%' }}>Dernière mise à jour</th>
+                <th style={{ width: '10%' }}>Sections</th>
+                <th style={{ width: '25%' }}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {templates.map((template) => (
+                <tr key={template.id} className={template.isDefault ? 'default-template-row' : ''}>
+                  <td className="template-name-cell">
+                    <div className="d-flex align-items-center">
+                      <i className="bi bi-file-earmark-text me-2 text-primary"></i>
+                      <span className="fw-medium">{template.name}</span>
+                    </div>
+                  </td>
+                  <td>
+                    {template.isDefault ? (
+                      <Badge bg="success" className="d-flex align-items-center" style={{ width: 'fit-content' }}>
+                        <i className="bi bi-star-fill me-1"></i> Par défaut
+                      </Badge>
+                    ) : (
+                      <Badge bg="secondary" style={{ width: 'fit-content' }}>Standard</Badge>
+                    )}
+                  </td>
+                  <td>
+                    <div className="d-flex align-items-center">
+                      <i className="bi bi-calendar3 me-2 text-muted"></i>
+                      {new Date(template.updatedAt.seconds * 1000).toLocaleDateString()}
+                    </div>
+                  </td>
+                  <td>
+                    <div className="d-flex align-items-center">
+                      <i className="bi bi-list-ul me-2 text-muted"></i>
+                      {template.sections ? template.sections.length : 0}
+                    </div>
+                  </td>
+                  <td>
+                    <div className="d-flex align-items-center gap-2">
+                      <Button 
+                        variant="outline-primary" 
+                        size="sm"
+                        className="action-button"
+                        onClick={() => {
+                          console.log("Bouton Modifier cliqué pour template:", template.id);
+                          handleEditTemplate(template);
+                        }}
+                      >
+                        <i className="bi bi-pencil me-1"></i> Modifier
+                      </Button>
+                      
+                      {!template.isDefault && (
+                        <Button 
+                          variant="outline-success" 
+                          size="sm"
+                          className="action-button"
+                          onClick={() => handleSetDefault(template.id)}
+                        >
+                          <i className="bi bi-star me-1"></i> Par défaut
+                        </Button>
+                      )}
+                      <Button 
+                        variant="outline-danger" 
+                        size="sm"
+                        className="action-button"
+                        onClick={() => handleDelete(template.id)}
+                        disabled={template.isDefault}
+                      >
+                        <i className="bi bi-trash me-1"></i>
+                        {template.isDefault ? '' : 'Supprimer'}
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
         </div>
       )}
       

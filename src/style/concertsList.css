@@ -93,6 +93,8 @@
   
   .modern-table {
     margin-bottom: 0;
+    table-layout: fixed; /* Ajout de cette propriété pour contrôler la largeur des colonnes */
+    width: 100%;
   }
   
   .modern-table thead {
@@ -132,6 +134,20 @@
   
   .date-column {
     width: 100px;
+  }
+  
+  /* Largeur contrôlée pour la colonne artiste */
+  .concerts-table th:nth-child(4),
+  .concerts-table td:nth-child(4) {
+    width: 150px;
+    max-width: 150px;
+  }
+  
+  /* Largeur contrôlée pour la colonne programmateur */
+  .concerts-table th:nth-child(5),
+  .concerts-table td:nth-child(5) {
+    width: 150px;
+    max-width: 150px;
   }
   
   .date-box {

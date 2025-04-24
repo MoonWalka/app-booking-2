@@ -7,6 +7,7 @@ import { Button, Modal, Badge } from 'react-bootstrap';
 import FormGenerator from '../../forms/FormGenerator.js';
 import '../../../style/concertDetails.css';
 import '../../../style/concertDetailsMobile.css';
+import '../../../style/concertDisplay.css';
 import { handleDelete } from './handlers/deleteHandler';
 
 

@@ -3,7 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import firebase from '@/firebase';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import '@/style/concertsList.css';
+import '@/style/concertDisplay.css';
 import Spinner from '@/components/common/Spinner';
+import { formatDateFr } from '@/utils/dateUtils';
 
 const ConcertsList = () => {
   const navigate = useNavigate();
@@ -167,23 +169,6 @@ const ConcertsList = () => {
       default:
         return 'Statut inconnu';
     }
-  };
-
-  // Fonction pour formater la date au format français
-  const formatDateFr = (dateString) => {
-    if (!dateString) return '-';
-    
-    // Si c'est un timestamp Firestore
-    if (dateString.seconds) {
-      const date = new Date(dateString.seconds * 1000);
-      return `${String(date.getDate()).padStart(2, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${date.getFullYear()}`;
-    }
-    
-    // Si c'est une chaîne de date au format ISO
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) return dateString; // Si la date est invalide, retourner la chaîne originale
-    
-    return `${String(date.getDate()).padStart(2, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${date.getFullYear()}`;
   };
 
   // Fonction pour obtenir les détails d'un concert
@@ -441,7 +426,7 @@ const ConcertsList = () => {
         </div>
       ) : (
         <div className="table-responsive modern-table-container">
-          <table className="table table-hover modern-table">
+          <table className="table table-hover modern-table concerts-table">
             <thead>
               <tr>
                 <th>Date</th>
@@ -461,23 +446,23 @@ const ConcertsList = () => {
                   className="table-row-animate clickable-row"
                   onClick={() => handleRowClick(concert.id)}
                 >
-                  <td className="date-column">
+                  <td className="concert-date-cell">
                     <div className="date-box">
                       <div className="date-day">{formatDateFr(concert.date).split('-')[0]}</div>
                       <div className="date-month">{formatDateFr(concert.date).split('-')[1]}</div>
                       <div className="date-year">{formatDateFr(concert.date).split('-')[2]}</div>
                     </div>
                   </td>
-                  <td>{concert.lieuNom || "-"}</td>
-                  <td>
+                  <td className="concert-venue-name">{concert.lieuNom || "-"}</td>
+                  <td className="concert-venue-location">
                     {concert.lieuVille && concert.lieuCodePostal ? 
                       `${concert.lieuVille} (${concert.lieuCodePostal})` : 
                       concert.lieuVille || concert.lieuCodePostal || "-"
                     }
                   </td>
-                  <td>
+                  <td className="concert-artist-cell">
                     {concert.artisteNom ? (
-                      <span className="artiste-name">
+                      <span className="artist-tag">
                         <i className="bi bi-music-note me-1"></i>
                         {concert.artisteNom}
                       </span>
@@ -486,14 +471,16 @@ const ConcertsList = () => {
                     )}
                   </td>
                   <td>
-                    {concert.programmateurNom ? (
-                      <span className="programmateur-name">
-                        <i className="bi bi-person-fill me-1"></i>
-                        {concert.programmateurNom}
-                      </span>
-                    ) : (
-                      <span className="text-muted">-</span>
-                    )}
+                    <div className="concert-artist-cell">
+                      {concert.programmateurNom ? (
+                        <span className="programmateur-name">
+                          <i className="bi bi-person-fill me-1"></i>
+                          {concert.programmateurNom}
+                        </span>
+                      ) : (
+                        <span className="text-muted">-</span>
+                      )}
+                    </div>
                   </td>
                   <td className="montant-column">
                     {concert.montant ? (
@@ -509,12 +496,6 @@ const ConcertsList = () => {
                   </td>
                   <td onClick={(e) => e.stopPropagation()}>
                     <div className="btn-group action-buttons">
-                      {/*<ActionButton 
-                        to={`/concerts/${concert.id}/edit`} 
-                        tooltip="Modifier le concert" 
-                        icon={<i className="bi bi-pencil"></i>} 
-                        variant="light"
-                      />*/}
                       {hasForm(concert.id) && (
                         <div className="position-relative">
                           <ActionButton 
@@ -522,6 +503,7 @@ const ConcertsList = () => {
                             tooltip="Voir le formulaire" 
                             icon={<i className="bi bi-file-text"></i>} 
                             variant="light"
+                            className="concert-action-button"
                           />
                           {hasUnvalidatedForm(concert.id) && (
                             <span className="notification-badge" title="Formulaire mis à jour"></span>
@@ -533,6 +515,7 @@ const ConcertsList = () => {
                           tooltip="Envoyer formulaire" 
                           icon={<i className="bi bi-envelope"></i>} 
                           variant="light"
+                          className="concert-action-button"
                           onClick={() => navigate(`/concerts/${concert.id}?openFormGenerator=true`)}
                         />
                       )}
@@ -553,7 +536,7 @@ const ConcertsList = () => {
                             ? `/contrats/${concertsWithContracts[concert.id].id}` 
                             : `/contrats/generate/${concert.id}`}
                           onClick={(e) => e.stopPropagation()}
-                          className={`btn btn-${getContractButtonVariant(concert.id)} btn-icon modern-btn`}
+                          className={`btn btn-${getContractButtonVariant(concert.id)} btn-icon modern-btn concert-action-button`}
                         >
                           <i className="bi bi-file-earmark-text"></i>
                         </Link>

@@ -9,6 +9,7 @@ import ContratGenerator from '@components/contrats/ContratGenerator.js';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 // import '@/style/contratGeneration.css';
 import '@styles/index.css';
+import { formatDateFr } from '../utils/dateUtils';
 
 const ContratGenerationPage = () => {
   const { concertId } = useParams();
@@ -80,24 +81,8 @@ const ContratGenerationPage = () => {
   const formatDate = (dateValue) => {
     if (!dateValue) return 'Non spécifiée';
     
-    try {
-      // Vérifier si c'est un timestamp Firestore
-      if (dateValue.seconds !== undefined) {
-        return new Date(dateValue.seconds * 1000).toLocaleDateString('fr-FR');
-      } 
-      // Si c'est un objet Date
-      else if (dateValue instanceof Date) {
-        return dateValue.toLocaleDateString('fr-FR');
-      }
-      // Si c'est une chaîne de date ou un timestamp
-      else {
-        const date = new Date(dateValue);
-        return isNaN(date.getTime()) ? 'Non spécifiée' : date.toLocaleDateString('fr-FR');
-      }
-    } catch (error) {
-      console.error('Erreur de formatage de date:', error, dateValue);
-      return 'Non spécifiée';
-    }
+    // Utiliser la fonction centralisée formatDateFr
+    return formatDateFr(dateValue) || 'Non spécifiée';
   };
 
   const handleGenerateContrat = async () => {

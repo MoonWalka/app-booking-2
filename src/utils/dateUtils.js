@@ -1,4 +1,3 @@
-
 /**
  * Utilitaires pour la manipulation des dates
  */
@@ -69,4 +68,64 @@ export const isFutureDate = (date) => {
   today.setHours(0, 0, 0, 0);
   
   return d > today;
+};
+
+/**
+ * Formate une date au format français JJ-MM-AA
+ * @param {Date|string|Object} dateString - Date à formater (peut être un timestamp Firestore)
+ * @returns {string} Date formatée au format JJ-MM-AA avec tiret comme séparateur
+ */
+export const formatDateFr = (dateString) => {
+  if (!dateString) return '-';
+  
+  let day, month, year;
+  
+  // Si c'est un timestamp Firestore
+  if (dateString.seconds) {
+    const date = new Date(dateString.seconds * 1000);
+    day = String(date.getDate()).padStart(2, '0');
+    month = String(date.getMonth() + 1).padStart(2, '0');
+    year = String(date.getFullYear()).slice(-2); // Prendre uniquement les 2 derniers chiffres
+    return `${day}-${month}-${year}`;
+  }
+  
+  // Si c'est une chaîne de date au format ISO ou un objet Date
+  const date = dateString instanceof Date ? dateString : new Date(dateString);
+  if (isNaN(date.getTime())) return dateString; // Si la date est invalide, retourner la chaîne originale
+  
+  day = String(date.getDate()).padStart(2, '0');
+  month = String(date.getMonth() + 1).padStart(2, '0');
+  year = String(date.getFullYear()).slice(-2); // Prendre uniquement les 2 derniers chiffres
+  
+  return `${day}-${month}-${year}`;
+};
+
+/**
+ * Formate une date au format français JJ/MM/AA avec slash comme séparateur
+ * @param {Date|string|Object} dateString - Date à formater (peut être un timestamp Firestore)
+ * @returns {string} Date formatée au format JJ/MM/AA
+ */
+export const formatDateFrSlash = (dateString) => {
+  if (!dateString) return '-';
+  
+  let day, month, year;
+  
+  // Si c'est un timestamp Firestore
+  if (dateString.seconds) {
+    const date = new Date(dateString.seconds * 1000);
+    day = String(date.getDate()).padStart(2, '0');
+    month = String(date.getMonth() + 1).padStart(2, '0');
+    year = String(date.getFullYear()).slice(-2); // Prendre uniquement les 2 derniers chiffres
+    return `${day}/${month}/${year}`;
+  }
+  
+  // Si c'est une chaîne de date au format ISO ou un objet Date
+  const date = dateString instanceof Date ? dateString : new Date(dateString);
+  if (isNaN(date.getTime())) return dateString; // Si la date est invalide, retourner la chaîne originale
+  
+  day = String(date.getDate()).padStart(2, '0');
+  month = String(date.getMonth() + 1).padStart(2, '0');
+  year = String(date.getFullYear()).slice(-2); // Prendre uniquement les 2 derniers chiffres
+  
+  return `${day}/${month}/${year}`;
 };

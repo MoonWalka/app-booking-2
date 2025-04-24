@@ -1,0 +1,107 @@
+/* 
+ * Système de couleurs centralisé pour TourCraft
+ * ---------------------------------------------
+ * 
+ * IMPORTANT : TOUJOURS utiliser ces variables pour les couleurs dans l'application
+ * au lieu de coder des valeurs hexadécimales en dur. Cela garantit une cohérence
+ * visuelle et facilite les changements de design à l'échelle de l'application.
+ * 
+ * Exemples :
+ * FAIRE :     color: var(--primary-color);
+ * NE PAS :    color: #2c3e50;
+ * 
+ * Si vous avez besoin d'une couleur qui n'existe pas encore dans cette liste,
+ * ajoutez-la ici avec un nom descriptif plutôt que de l'utiliser directement
+ * dans votre composant.
+ */
+
+:root {
+  /* Couleurs principales */
+  --primary-color: #2c3e50;
+  --primary-color-rgb: 44, 62, 80;  /* Valeur RGB pour les opacités */
+  --primary-light: #3498db;
+  --primary-light-rgb: 52, 152, 219;
+  --primary-dark: #1e2b38;
+  --primary-dark-rgb: 30, 43, 56;
+  
+  /* Couleurs secondaires */
+  --secondary-color: #2980b9;
+  --secondary-color-rgb: 41, 128, 185;
+  --secondary-light: #3498db;
+  --secondary-dark: #1f618d;
+  
+  /* Autres couleurs fonctionnelles */
+  --success-color: #27ae60;
+  --success-color-rgb: 39, 174, 96;
+  --warning-color: #f39c12;
+  --warning-color-rgb: 243, 156, 18;
+  --danger-color: #e74c3c;
+  --danger-color-rgb: 231, 76, 60;
+  --info-color: #3498db;
+  --info-color-rgb: 52, 152, 219;
+  
+  /* Couleurs de fond et de texte */
+  --background-color: #f8f9fa;
+  --background-color-rgb: 248, 249, 250;
+  --card-bg: #ffffff;
+  --card-bg-rgb: 255, 255, 255;
+  
+  /* Couleurs de texte */
+  --text-color: #333333;
+  --text-color-rgb: 51, 51, 51;
+  --text-muted: #6c757d;
+  --text-muted-rgb: 108, 117, 125;
+  --text-light: #f8f9fa;
+  --text-light-rgb: 248, 249, 250;
+  
+  /* Couleurs de bordure */
+  --border-color: #dee2e6;
+  --border-color-rgb: 222, 226, 230;
+  
+  /* Couleurs pour les statuts de concert */
+  --status-contact: var(--info-color);
+  --status-preaccord: var(--primary-color);
+  --status-contrat: var(--success-color);
+  --status-acompte: var(--warning-color);
+  --status-solde: #6c757d;
+  --status-annule: var(--danger-color);
+  
+  /* Couleurs grises standardisées */
+  --gray-100: #f8f9fa;
+  --gray-200: #e9ecef;
+  --gray-300: #dee2e6;
+  --gray-400: #ced4da;
+  --gray-500: #adb5bd;
+  --gray-600: #6c757d;
+  --gray-700: #495057;
+  --gray-800: #343a40;
+  --gray-900: #212529;
+  
+  /* Effets et ombres */
+  --shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-hover: 0 4px 8px rgba(0, 0, 0, 0.1);
+  --border-radius: 8px;
+  --border-radius-sm: 4px;
+  --border-radius-lg: 12px;
+  --transition: all 0.3s ease;
+  
+  /* Tailles de police */
+  --font-size-xs: 0.75rem;   /* 12px */
+  --font-size-sm: 0.875rem;  /* 14px */
+  --font-size-md: 1rem;      /* 16px */
+  --font-size-lg: 1.125rem;  /* 18px */
+  --font-size-xl: 1.25rem;   /* 20px */
+  --font-size-2xl: 1.5rem;   /* 24px */
+  --font-size-3xl: 1.875rem; /* 30px */
+  --font-size-4xl: 2.25rem;  /* 36px */
+}
+
+/* 
+ * Exemple d'utilisation d'une couleur avec opacité :
+ * 
+ * .element {
+ *   background-color: rgba(var(--primary-color-rgb), 0.1);
+ * }
+ * 
+ * Cela donne un fond avec la couleur primaire à 10% d'opacité.
+ */

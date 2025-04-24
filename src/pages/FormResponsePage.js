@@ -5,6 +5,7 @@ import { db } from '@/firebase';
 import { useLocationIQ } from '@/hooks/useLocationIQ';
 import ProgrammateurForm from '@/components/forms/ProgrammateurForm.js';
 import '@/style/formPublic.css';
+import { formatDateFr, formatDateFrSlash } from '../utils/dateUtils';
 
 // Imports modifiés de la branche refacto-structure-scriptshell - pour implémentation future
 {/* 
@@ -338,17 +339,8 @@ const saveLieuChanges = () => {
   const formatDate = (dateValue) => {
     if (!dateValue) return 'Date non spécifiée';
     
-    // Si c'est un timestamp Firestore
-    if (dateValue.seconds) {
-      return new Date(dateValue.seconds * 1000).toLocaleDateString('fr-FR');
-    }
-    
-    // Si c'est une chaîne de date
-    try {
-      return new Date(dateValue).toLocaleDateString('fr-FR');
-    } catch (e) {
-      return dateValue;
-    }
+    // Utilisez la fonction centralisée formatDateFrSlash
+    return formatDateFrSlash(dateValue);
   };
 
   // Fonction pour formater le montant

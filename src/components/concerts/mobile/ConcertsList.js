@@ -7,6 +7,8 @@ import { Badge, Button, Form, InputGroup } from 'react-bootstrap';
 import Spinner from '../../common/Spinner';
 import '../../../style/concertsList.css';
 import '../../../style/concertsListMobile.css';
+import '../../../style/concertDisplay.css';
+import { formatDateFrSlash } from '@/utils/dateUtils';
 
 
 const ConcertsListMobile = () => {
@@ -68,22 +70,7 @@ const ConcertsListMobile = () => {
     setFilteredConcerts(results);
   }, [searchTerm, statusFilter, concerts]);
 
-  // Formater la date pour l'affichage
-  const formatDate = (dateString) => {
-    if (!dateString) return '-';
-    
-    // Si c'est un timestamp Firestore
-    if (dateString.seconds) {
-      const date = new Date(dateString.seconds * 1000);
-      return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
-    }
-    
-    // Si c'est une chaîne de date au format ISO
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) return dateString; // Si la date est invalide, retourner la chaîne originale
-    
-    return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
-  };
+  // La fonction formatDate locale n'est plus nécessaire car nous utilisons formatDateFrSlash depuis dateUtils
 
   // Fonction pour obtenir la couleur du statut
   const getStatusColor = (statut) => {
@@ -204,27 +191,30 @@ const ConcertsListMobile = () => {
               className="concert-card"
               onClick={() => navigate(`/concerts/${concert.id}`)}
             >
-              <div className="concert-date">
-                <div className="date-day">{formatDate(concert.date).split('/')[0]}</div>
-                <div className="date-month">{formatDate(concert.date).split('/')[1]}</div>
-                <div className="date-year">{formatDate(concert.date).split('/')[2]}</div>
+              <div className="concert-date concert-card-date">
+                <div className="date-day">{formatDateFrSlash(concert.date).split('/')[0]}</div>
+                <div className="date-month">{formatDateFrSlash(concert.date).split('/')[1]}</div>
+                <div className="date-year">{formatDateFrSlash(concert.date).split('/')[2]}</div>
               </div>
               
               <div className="concert-details">
-                <h3 className="concert-title">{concert.titre || "Concert sans titre"}</h3>
+                <h3 className="concert-title concert-card-title">{concert.titre || "Concert sans titre"}</h3>
                 
                 <div className="concert-info">
                   {concert.lieuNom && (
-                    <div className="info-item">
+                    <div className="info-item concert-venue-cell">
                       <i className="bi bi-geo-alt"></i>
-                      <span>{concert.lieuNom}</span>
+                      <span className="concert-venue-name">{concert.lieuNom}</span>
+                      {concert.lieuVille && (
+                        <span className="concert-venue-location">{concert.lieuVille}</span>
+                      )}
                     </div>
                   )}
                   
                   {concert.artisteNom && (
-                    <div className="info-item">
+                    <div className="info-item concert-artist-cell">
                       <i className="bi bi-music-note"></i>
-                      <span>{concert.artisteNom}</span>
+                      <span className="artist-tag">{concert.artisteNom}</span>
                     </div>
                   )}
                   
@@ -237,7 +227,7 @@ const ConcertsListMobile = () => {
                 </div>
                 
                 <div className="concert-status">
-                  <Badge bg={getStatusColor(concert.statut)}>
+                  <Badge bg={getStatusColor(concert.statut)} className="concert-status-badge">
                     {concert.statut || 'Non défini'}
                   </Badge>
                 </div>
@@ -246,14 +236,14 @@ const ConcertsListMobile = () => {
               <div className="concert-actions">
                 <Link 
                   to={`/concerts/${concert.id}`}
-                  className="action-btn view"
+                  className="action-btn view concert-action-button"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <i className="bi bi-eye"></i>
                 </Link>
                 <Link 
                   to={`/concerts/${concert.id}/edit`}
-                  className="action-btn edit"
+                  className="action-btn edit concert-action-button"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <i className="bi bi-pencil"></i>

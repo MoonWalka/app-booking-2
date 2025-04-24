@@ -30,3 +30,23 @@
 
 /* Thèmes */
 @import './theme.css';
+
+/* Style pour les boutons personnalisés (pagebreak & box) */
+.ql-toolbar.ql-snow .ql-formats {
+  margin-right: 8px;
+}
+
+/* Espacer les icônes pour éviter la superposition */
+.ql-toolbar .ql-formats button {
+  margin-right: 2px;
+}
+
+/* Style spécifique pour le conteneur de bouton d'encadré */
+.box-button-container {
+  margin-right: 8px;
+}
+
+/* Ajustement pour éviter la superposition avec le bouton de nettoyage */
+.ql-clean {
+  margin-left: 8px !important;
+}

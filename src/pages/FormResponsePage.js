@@ -4,7 +4,7 @@ import { collection, query, where, getDocs, getDoc, doc, updateDoc, addDoc, serv
 import { db } from '@/firebase';
 import { useLocationIQ } from '@/hooks/useLocationIQ';
 import ProgrammateurForm from '@/components/forms/ProgrammateurForm.js';
-import '@/style/formPublic.css';
+import '@styles/pages/formPublic.css';
 import { formatDateFr, formatDateFrSlash } from '../utils/dateUtils';
 
 // Imports modifiés de la branche refacto-structure-scriptshell - pour implémentation future

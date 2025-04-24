@@ -19,7 +19,11 @@ import FormResponsePage from '@/pages/FormResponsePage';
 import ContratGenerationPage from '@/pages/ContratGenerationPage';
 import ContratDetailsPage from '@/pages/ContratDetailsPage';
 import RouterStabilizer from '@/utils/RouterStabilizer';
-import '@/style/App.css';
+
+// Importer le nouveau fichier centralisé de variables CSS
+import '@styles/base/index.css';
+// Conserver l'import de App.css pour les styles spécifiques à l'application
+import '@/App.css';
 
 // Composant ErrorBoundary pour capturer les erreurs de chargement
 class ErrorBoundary extends React.Component {

@@ -1,150 +1,121 @@
+// components/contrats/desktop/ContratTemplateEditor.js
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-// import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import ContratVariable from './ContratVariable.js';
-import FullscreenEditorModal from '@components/contrats/FullscreenEditorModal.js';
 import '@/styles/index.css';
 
-// Correctif pour React 18 et react-beautiful-dnd
-// const StrictModeDroppable = ({ children, ...props }) => {
-//   const [enabled, setEnabled] = useState(false);
-//   
-//   useEffect(() => {
-//     // Petit délai pour permettre au DOM de se rendre complètement
-//     const animation = requestAnimationFrame(() => setEnabled(true));
-//     return () => {
-//       cancelAnimationFrame(animation);
-//       setEnabled(false);
-//     };
-//   }, []);
-//   
-//   if (!enabled) {
-//     return null;
-//   }
-//   
-//   return <Droppable {...props}>{children}</Droppable>;
-// };
-
-const ContratTemplateEditor = ({ template, onSave }) => {
+const ContratTemplateEditor = ({ template, onSave, isModalContext }) => {
+  console.log("============ NOUVEAU COMPOSANT CHARGÉ ============");
+  console.log("Template reçu:", template);
+  console.log("Est en contexte modal:", isModalContext);
+  
   const navigate = useNavigate();
+  
+  // États pour le modèle
   const [name, setName] = useState(template?.name || 'Nouveau modèle');
-  const [sections, setSections] = useState(template?.sections || [{title: 'Section 1',content: ''}]);
   const [isDefault, setIsDefault] = useState(template?.isDefault || false);
-  const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
+  const [templateType, setTemplateType] = useState(template?.type || 'session');
   const [previewMode, setPreviewMode] = useState(false);
   const [showGuide, setShowGuide] = useState(false);
   
-  // États pour la modale d'édition
-  const [showModal, setShowModal] = useState(false);
-  const [modalContent, setModalContent] = useState('');
-  const [modalSectionIndex, setModalSectionIndex] = useState(null);
+  // États pour le contenu du contrat
+  const [bodyContent, setBodyContent] = useState(template?.bodyContent || '');
+  const [headerContent, setHeaderContent] = useState(template?.headerContent || '');
+  const [headerHeight, setHeaderHeight] = useState(template?.headerHeight || 20);
+  const [headerBottomMargin, setHeaderBottomMargin] = useState(template?.headerBottomMargin || 10);
+  const [footerContent, setFooterContent] = useState(template?.footerContent || '');
+  const [footerHeight, setFooterHeight] = useState(template?.footerHeight || 15);
+  const [footerTopMargin, setFooterTopMargin] = useState(template?.footerTopMargin || 10);
+  const [logoUrl, setLogoUrl] = useState(template?.logoUrl || '');
   
-  // Référence pour le quill editor
-  const quillRef = useRef();
+  // Référence pour les éditeurs quill
+  const bodyEditorRef = useRef();
+  const headerEditorRef = useRef();
+  const footerEditorRef = useRef();
 
-  // Fonction pour ouvrir la modale d'édition
-  const openSectionEditModal = (index) => {
-    if (index >= 0 && index < sections.length) {
-      setModalSectionIndex(index);
-      setModalContent(sections[index].content);
-      setShowModal(true);
-    }
+  // Types de modèles disponibles
+  const templateTypes = [
+    { value: 'session', label: 'Session standard' },
+    { value: 'co-realisation', label: 'Co-réalisation' },
+    { value: 'date-multiple', label: 'Dates multiples' },
+    { value: 'residency', label: 'Résidence artistique' },
+    { value: 'workshop', label: 'Atelier / Workshop' },
+    { value: 'custom', label: 'Personnalisé' }
+  ];
+  
+  // Configuration de l'éditeur
+  const editorModules = {
+    toolbar: [
+      [{ 'header': [1, 2, 3, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'color': [] }, { 'background': [] }],
+      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+      [{ 'indent': '-1' }, { 'indent': '+1' }],
+      [{ 'align': [] }],
+      ['link', 'image'],
+      ['clean']
+    ]
   };
 
-  // Fonction pour fermer la modale
-  const closeSectionEditModal = () => {
-    setShowModal(false);
-    setModalSectionIndex(null);
-  };
-
-  // Fonction pour sauvegarder le contenu depuis la modale
-  const saveSectionContentFromModal = (content) => {
-    if (modalSectionIndex !== null) {
-      handleSectionContentChange(modalSectionIndex, content);
-    }
-  };
-
-  // useEffect pour initialiser les sections si besoin
+  // Conversion depuis l'ancien format si besoin
   useEffect(() => {
-    // Si c'est un nouveau modèle et qu'il n'y a pas encore de sections, en ajouter une par défaut
-    if (sections.length === 0) {
-      setSections([{
-        title: 'Parties contractantes',
-        content: '<p>Entre les soussignés:</p><p><strong>L\'Organisateur:</strong> {programmateur_nom}, {programmateur_structure}</p><p><strong>L\'Artiste:</strong> {artiste_nom}</p>'
-      }]);
+    // Si le modèle utilise l'ancien format avec des sections
+    if (template && template.sections && Array.isArray(template.sections) && !template.bodyContent) {
+      // Convertir les sections en contenu principal
+      const convertedContent = template.sections.map(section => 
+        `<h3>${section.title}</h3>${section.content}`
+      ).join('<br/>');
+      
+      setBodyContent(convertedContent);
     }
-  }, [sections.length]);
+  }, [template]);
 
-  // Fonction pour ajouter une section
-  const handleAddSection = () => {
-    const newSections = [...sections, { title: `Section ${sections.length + 1}`, content: '' }];
-    setSections(newSections);
-    setCurrentSectionIndex(newSections.length - 1); // Pointer vers la nouvelle section
-  };
-
-  // Fonction pour supprimer une section
-  const handleDeleteSection = (index) => {
-    if (sections.length <= 1) {
-      alert('Vous devez avoir au moins une section dans votre modèle.');
-      return;
+  // Fonction pour insérer une variable dans un éditeur spécifique
+  const handleInsertVariable = (variable, targetEditor) => {
+    let editor;
+    
+    switch (targetEditor) {
+      case 'header':
+        editor = headerEditorRef.current?.getEditor();
+        break;
+      case 'footer':
+        editor = footerEditorRef.current?.getEditor();
+        break;
+      case 'body':
+      default:
+        editor = bodyEditorRef.current?.getEditor();
     }
     
-    const newSections = [...sections];
-    newSections.splice(index, 1);
-    setSections(newSections);
-    
-    if (currentSectionIndex >= newSections.length) {
-      setCurrentSectionIndex(newSections.length - 1);
-    }
-  };
-
-  // Fonction pour mettre à jour le titre d'une section
-  const handleSectionTitleChange = (index, title) => {
-    const newSections = [...sections];
-    newSections[index].title = title;
-    setSections(newSections);
-  };
-
-  // Fonction pour mettre à jour le contenu d'une section
-  const handleSectionContentChange = (index, content) => {
-    const newSections = [...sections];
-    newSections[index].content = content;
-    setSections(newSections);
-  };
-  
-  // Fonction pour changer de section active
-  // const handleSectionChange = (index) => {
-  //   // Sauvegarder le contenu de la section actuelle avant de changer
-  //   const editor = quillRef.current.getEditor();
-  //   const content = editor.root.innerHTML;
-  //   handleSectionContentChange(currentSectionIndex, content);
-  // 
-  //   // Aucun changement à faire si on clique sur la section active
-  //   if (currentSectionIndex === index) return;
-  //   
-  //   // Mettre à jour l'index de la section courante
-  //   setCurrentSectionIndex(index);
-  // };
-
-  // Fonction pour insérer une variable
-  const handleInsertVariable = (variable) => {
-    if (quillRef.current) {
-      const editor = quillRef.current.getEditor();
-      // Vérifiez si l'éditeur est initialisé et a une sélection
-      if (editor) {
-        const range = editor.getSelection(true); // 'true' pour forcer l'obtention de la dernière sélection connue
-        if (range) {
-          // Insérer la variable à la position actuelle du curseur
-          editor.insertText(range.index, `{${variable}}`, 'user');
-        } else {
-          // Si aucune sélection n'est active, insérer à la fin du contenu
-          const length = editor.getLength();
-          editor.insertText(length - 1, `{${variable}}`, 'user');
-        }
+    if (editor) {
+      const range = editor.getSelection(true);
+      if (range) {
+        editor.insertText(range.index, `{${variable}}`, 'user');
+      } else {
+        const length = editor.getLength();
+        editor.insertText(length - 1, `{${variable}}`, 'user');
       }
     }
+  };
+  
+  // Fonction pour uploader un logo
+  const handleLogoUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      // Pour une implémentation réelle, vous auriez besoin d'uploader ce fichier vers Firebase Storage
+      // et d'obtenir l'URL de téléchargement
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setLogoUrl(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Fonction pour supprimer le logo
+  const handleRemoveLogo = () => {
+    setLogoUrl('');
   };
 
   // Fonction pour enregistrer le modèle
@@ -154,16 +125,22 @@ const ContratTemplateEditor = ({ template, onSave }) => {
       return;
     }
     
-    if (sections.some(section => !section.title.trim())) {
-      alert('Toutes les sections doivent avoir un titre.');
-      return;
-    }
-    
-    onSave({
+    // Préparer les données dans le nouveau format
+    const modelData = {
       name,
-      sections,
-      isDefault
-    });
+      type: templateType,
+      isDefault,
+      bodyContent,
+      headerContent,
+      headerHeight,
+      headerBottomMargin,
+      footerContent,
+      footerHeight,
+      footerTopMargin,
+      logoUrl
+    };
+    
+    onSave(modelData);
   };
 
   // Générer un aperçu avec des données fictives
@@ -172,95 +149,82 @@ const ContratTemplateEditor = ({ template, onSave }) => {
       <style>
         .preview-container {
           font-family: Arial, sans-serif;
-          font-size: 9px;
+          font-size: 11px;
+          position: relative;
         }
-        .section-title {
-          font-size: 14px;
-          font-weight: bold;
-          margin-top: 15px;
-          margin-bottom: 10px;
-          background-color: #f5f5f5;
-          padding: 5px;
+        .header {
+          height: ${headerHeight}mm;
+          margin-bottom: ${headerBottomMargin}mm;
+          position: relative;
+          border-bottom: 1px solid #eee;
+        }
+        .content {
+          min-height: calc(100% - ${headerHeight}mm - ${footerHeight}mm - ${headerBottomMargin}mm - ${footerTopMargin}mm);
+        }
+        .footer {
+          height: ${footerHeight}mm;
+          margin-top: ${footerTopMargin}mm;
+          position: relative;
+          border-top: 1px solid #eee;
+        }
+        .logo-container {
+          position: absolute;
+          top: 0;
+          left: 0;
+          max-height: ${headerHeight}mm;
+          max-width: 30%;
+        }
+        .logo-container img {
+          max-height: 100%;
+          max-width: 100%;
         }
       </style>
       <div class="preview-container">
     `;
     
-    // Simuler l'en-tête
-    content += `
-      <div style="text-align: center; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 20px; font-size: 8px;">
-        <div style="display: flex; justify-content: space-between;">
-          <div>[LOGO]</div>
-          <div style="text-align: right;">
-            <div>Nom de l'entreprise</div>
-            <div>Adresse de l'entreprise</div>
-            <div>Code postal, Ville</div>
-            <div>Tél: XX XX XX XX XX - Email: contact@example.com</div>
-            <div>SIRET: XXX XXX XXX XXXXX - APE: XXXX</div>
-          </div>
+    // Ajouter l'en-tête
+    content += `<div class="header">`;
+    if (logoUrl) {
+      content += `
+        <div class="logo-container">
+          <img src="${logoUrl}" alt="Logo" />
         </div>
-      </div>
-    `;
+      `;
+    }
     
-    // Titre du contrat
-    content += `
-      <div style="text-align: center; margin-bottom: 20px;">
-        <h1 style="font-size: 20px; font-weight: bold;">Contrat - Concert de printemps</h1>
-        <div style="text-align: right; font-size: 12px; color: #777;">Fait à Paris, le 15 mai 2023</div>
-      </div>
-    `;
+    // Contenu de l'en-tête avec les variables remplacées
+    let processedHeaderContent = headerContent
+      .replace(/{programmateur_nom}/g, 'Jean Dupont')
+      .replace(/{programmateur_structure}/g, 'Association Culturelle XYZ')
+      .replace(/{programmateur_email}/g, 'contact@asso-xyz.fr')
+      .replace(/{programmateur_siret}/g, '123 456 789 00012');
     
-    // Contenu des sections
-    sections.forEach(section => {
-      content += `<div class="section-title">${section.title}</div>`;
-      let sectionContent = section.content;
-      
-      // Remplacer les variables par des exemples
-      sectionContent = sectionContent
-        // Organisateur
-        .replace(/{raison_sociale}/g, 'Association Culturelle XYZ')
-        .replace(/{siret}/g, '123 456 789 00012')
-        .replace(/{tva}/g, 'FR 12 123456789')
-        .replace(/{adresse_organisateur}/g, '123 rue Principale, 75001 Paris')
-        .replace(/{representant}/g, 'Jean Dupont')
-        .replace(/{qualite_representant}/g, 'Président')
-        .replace(/{programmateur_nom}/g, 'Jean Dupont')
-        .replace(/{programmateur_structure}/g, 'Asso Culturelle XYZ')
-        .replace(/{programmateur_email}/g, 'contact@asso-xyz.fr')
-        
-        // Artiste
-        .replace(/{artiste_nom}/g, 'Les Rockeurs du Dimanche')
-        .replace(/{artiste_genre}/g, 'Rock Alternatif')
-        
-        // Événement
-        .replace(/{date_evenement}/g, '15/05/2025')
-        .replace(/{adresse_evenement}/g, '123 rue Principale, 75001 Paris')
-        .replace(/{concert_titre}/g, 'Concert de printemps')
-        .replace(/{concert_date}/g, '15/05/2025')
-        
-        // Finances
-        .replace(/{prix_vente}/g, '800')
-        .replace(/{prix_lettres}/g, 'huit cents euros')
-        .replace(/{concert_montant}/g, '800')
-        
-        // Lieu
-        .replace(/{lieu_nom}/g, 'Salle des fêtes')
-        .replace(/{lieu_adresse}/g, '123 rue Principale')
-        .replace(/{lieu_code_postal}/g, '75001')
-        .replace(/{lieu_ville}/g, 'Paris')
-        .replace(/{lieu_capacite}/g, '200')
-        
-        // Signature
-        .replace(/{lieu_signature}/g, 'Paris')
-        .replace(/{date_signature}/g, '01/04/2025')
-        
-        // Date actuelle
-        .replace(/{date_jour}/g, new Date().getDate().toString())
-        .replace(/{date_mois}/g, (new Date().getMonth() + 1).toString())
-        .replace(/{date_annee}/g, new Date().getFullYear().toString());
-      
-      content += sectionContent;
-    });
+    content += processedHeaderContent;
+    content += `</div>`;
+    
+    // Ajouter le corps
+    content += `<div class="content">`;
+    
+    // Contenu principal avec les variables remplacées
+    let processedBodyContent = bodyContent
+      .replace(/{programmateur_nom}/g, 'Jean Dupont')
+      .replace(/{programmateur_structure}/g, 'Association Culturelle XYZ')
+      .replace(/{programmateur_email}/g, 'contact@asso-xyz.fr')
+      .replace(/{artiste_nom}/g, 'Les Rockeurs du Dimanche')
+      .replace(/{artiste_genre}/g, 'Rock Alternatif')
+      .replace(/{concert_titre}/g, 'Concert de printemps')
+      .replace(/{concert_date}/g, '15/05/2025')
+      .replace(/{concert_montant}/g, '800')
+      .replace(/{lieu_nom}/g, 'Salle des fêtes')
+      .replace(/{lieu_adresse}/g, '123 rue Principale')
+      .replace(/{lieu_code_postal}/g, '75001')
+      .replace(/{lieu_ville}/g, 'Paris')
+      .replace(/{lieu_capacite}/g, '200')
+      .replace(/{date_jour}/g, new Date().getDate().toString())
+      .replace(/{date_mois}/g, (new Date().getMonth() + 1).toString())
+      .replace(/{date_annee}/g, new Date().getFullYear().toString());
+    
+    content += processedBodyContent;
     
     // Simuler la zone de signature
     content += `
@@ -278,51 +242,25 @@ const ContratTemplateEditor = ({ template, onSave }) => {
       </div>
     `;
     
-    // Simuler le pied de page
-    content += `
-      <div style="text-align: center; font-size: 8px; color: #999; border-top: 1px solid #ccc; margin-top: 30px; padding-top: 10px;">
-        <div>Nom de l'entreprise - Adresse, Code Postal Ville</div>
-        <div>SIRET: XXX XXX XXX XXXXX - APE: XXXX</div>
-        <div style="font-size: 7px; color: #999; margin-top: 5px;">Association loi 1901 non assujettie à la TVA</div>
-        <div style="font-size: 7px; color: #999;">Document généré automatiquement par TourCraft le 15/05/2025</div>
-      </div>
-    `;
+    content += `</div>`;
+    
+    // Ajouter le pied de page
+    content += `<div class="footer">`;
+    
+    // Contenu du pied de page avec les variables remplacées
+    let processedFooterContent = footerContent
+      .replace(/{programmateur_nom}/g, 'Jean Dupont')
+      .replace(/{programmateur_structure}/g, 'Association Culturelle XYZ')
+      .replace(/{programmateur_email}/g, 'contact@asso-xyz.fr')
+      .replace(/{programmateur_siret}/g, '123 456 789 00012');
+    
+    content += processedFooterContent;
+    content += `</div>`;
     
     content += '</div>'; // Fermer .preview-container
     
     return content;
   };
-
-  // Fonction pour gérer la fin d'un drag-and-drop
-  // const handleDragEnd = (result) => {
-  //   if (!result.destination) return; // Si la destination n'est pas valide
-  // 
-  //   const sourceIndex = result.source.index;
-  //   const destinationIndex = result.destination.index;
-  //   
-  //   if (sourceIndex === destinationIndex) return; // Pas de changement
-  //   
-  //   const newSections = [...sections];
-  //   const [removed] = newSections.splice(sourceIndex, 1);
-  //   newSections.splice(destinationIndex, 0, removed);
-  //   
-  //   setSections(newSections);
-  //   
-  //   // Mettre à jour l'index courant si nécessaire
-  //   if (currentSectionIndex === sourceIndex) {
-  //     setCurrentSectionIndex(destinationIndex);
-  //   } else if (
-  //     (currentSectionIndex > sourceIndex && currentSectionIndex <= destinationIndex) ||
-  //     (currentSectionIndex < sourceIndex && currentSectionIndex >= destinationIndex)
-  //   ) {
-  //     // Ajuster l'index si la section actuelle a été déplacée par le drag and drop
-  //     setCurrentSectionIndex(
-  //       currentSectionIndex > sourceIndex && currentSectionIndex <= destinationIndex
-  //         ? currentSectionIndex - 1
-  //         : currentSectionIndex + 1
-  //     );
-  //   }
-  // };
 
   // Composant pour le guide d'utilisation
   const UserGuide = () => (
@@ -339,45 +277,34 @@ const ContratTemplateEditor = ({ template, onSave }) => {
       
       <div className="guide-content">
         <div className="guide-section">
-          <h4>1. Créer un modèle de contrat</h4>
-          <p>Les modèles de contrat vous permettent de générer rapidement des contrats professionnels pour vos concerts.</p>
+          <h4>1. Structure du modèle</h4>
+          <p>Votre modèle de contrat est divisé en trois parties principales :</p>
           <ul>
-            <li>Commencez par donner un nom à votre modèle</li>
-            <li>Organisez votre contrat en sections thématiques (parties contractantes, objet, rémunération...)</li>
-            <li>Cochez "Utiliser comme modèle par défaut" pour que ce modèle soit sélectionné automatiquement</li>
+            <li><strong>En-tête</strong> : Apparaît en haut de chaque page</li>
+            <li><strong>Corps</strong> : Contenu principal du contrat</li>
+            <li><strong>Pied de page</strong> : Apparaît en bas de chaque page</li>
           </ul>
         </div>
         
         <div className="guide-section">
-          <h4>2. Ajouter et organiser des sections</h4>
-          <p>Un contrat est divisé en sections pour une meilleure organisation :</p>
+          <h4>2. Type de modèle</h4>
+          <p>Choisissez le type qui correspond le mieux à votre contrat :</p>
           <ul>
-            <li>Cliquez sur le bouton + dans la barre latérale pour ajouter une section</li>
-            <li>Donnez un titre explicite à chaque section</li>
-            <li>Utilisez l'éditeur de texte pour formater le contenu de chaque section</li>
-            <li>Réorganisez les sections en fonction de vos besoins</li>
+            <li><strong>Session standard</strong> : Pour un concert unique</li>
+            <li><strong>Co-réalisation</strong> : Partage des recettes</li>
+            <li><strong>Dates multiples</strong> : Plusieurs représentations</li>
+            <li><strong>Résidence artistique</strong> : Pour les résidences</li>
+            <li><strong>Atelier / Workshop</strong> : Pour les activités pédagogiques</li>
           </ul>
         </div>
         
         <div className="guide-section">
-          <h4>3. Utiliser les variables dynamiques</h4>
-          <p>Les variables permettent de personnaliser automatiquement chaque contrat :</p>
+          <h4>3. Utiliser les variables</h4>
+          <p>Les variables sont remplacées par les vraies données lors de la génération du contrat :</p>
           <ul>
-            <li>Cliquez sur une variable dans la barre latérale droite pour l'insérer à l'endroit du curseur</li>
-            <li>Les variables sont remplacées par les informations réelles lors de la génération du contrat</li>
-            <li>Par exemple, {'{programmateur_nom}'} sera remplacé par le nom du programmateur associé au concert</li>
-            <li>Utilisez la fonction Aperçu pour voir comment le contrat apparaîtra avec des données d'exemple</li>
-          </ul>
-        </div>
-        
-        <div class="guide-section">
-          <h4>4. Conseils pour créer un bon modèle</h4>
-          <ul>
-            <li>Incluez toujours les sections essentielles (parties contractantes, objet, rémunération, etc.)</li>
-            <li>Utilisez une structure claire et cohérente</li>
-            <li>Utilisez les variables pour toutes les informations qui changent d'un concert à l'autre</li>
-            <li>Vérifiez l'aperçu avant d'enregistrer pour s'assurer que tout est correct</li>
-            <li>Consultez un professionnel du droit pour valider vos modèles de contrats</li>
+            <li>Cliquez sur le menu "Variables" pour voir celles disponibles</li>
+            <li>Sélectionnez une variable pour l'insérer à l'endroit du curseur</li>
+            <li>Par exemple, {'{programmateur_nom}'} sera remplacé par le nom du programmateur</li>
           </ul>
         </div>
       </div>
@@ -386,46 +313,48 @@ const ContratTemplateEditor = ({ template, onSave }) => {
 
   return (
     <div className="template-editor-container">
-      <div className="editor-header">
-        <div className="breadcrumb-container">
-          <span className="breadcrumb-item" onClick={() => navigate('/parametres/contrats')}>Modèles de contrats</span>
-          <i className="bi bi-chevron-right"></i>
-          <span className="breadcrumb-item active">{template?.id ? name : 'Nouveau modèle'}</span>
+      {!isModalContext && (
+        <div className="editor-header">
+          <div className="breadcrumb-container">
+            <span className="breadcrumb-item" onClick={() => navigate('/parametres/contrats')}>Modèles de contrats</span>
+            <i className="bi bi-chevron-right"></i>
+            <span className="breadcrumb-item active">{template?.id ? name : 'Nouveau modèle'}</span>
+          </div>
+          <h2 className="editor-title">{template?.id ? 'Modifier le modèle' : 'Créer un nouveau modèle'}</h2>
+          
+          <div className="editor-actions">
+            <button 
+              className="btn btn-outline-info" 
+              onClick={() => setShowGuide(!showGuide)}
+            >
+              <i className="bi bi-question-circle me-2"></i>
+              {showGuide ? 'Masquer l\'aide' : 'Aide'}
+            </button>
+            <button 
+              className="btn btn-outline-secondary" 
+              onClick={() => navigate('/parametres/contrats')}
+            >
+              <i className="bi bi-x-circle me-2"></i>Annuler
+            </button>
+            <button 
+              className="btn btn-outline-primary" 
+              onClick={() => setPreviewMode(!previewMode)}
+            >
+              <i className={`bi bi-${previewMode ? 'pencil' : 'eye'} me-2`}></i>
+              {previewMode ? 'Éditer' : 'Aperçu'}
+            </button>
+            <button 
+              className="btn btn-primary" 
+              onClick={handleSave}
+            >
+              <i className="bi bi-check-circle me-2"></i>Enregistrer
+            </button>
+          </div>
         </div>
-        <h2 className="editor-title">{template?.id ? 'Modifier le modèle' : 'Créer un nouveau modèle'}</h2>
-        
-        <div className="editor-actions">
-          <button 
-            className="btn btn-outline-info" 
-            onClick={() => setShowGuide(!showGuide)}
-          >
-            <i className="bi bi-question-circle me-2"></i>
-            {showGuide ? 'Masquer l\'aide' : 'Aide'}
-          </button>
-          <button 
-            className="btn btn-outline-secondary" 
-            onClick={() => navigate('/parametres/contrats')}
-          >
-            <i className="bi bi-x-circle me-2"></i>Annuler
-          </button>
-          <button 
-            className="btn btn-outline-primary" 
-            onClick={() => setPreviewMode(!previewMode)}
-          >
-            <i className={`bi bi-${previewMode ? 'pencil' : 'eye'} me-2`}></i>
-            {previewMode ? 'Éditer' : 'Aperçu'}
-          </button>
-          <button 
-            className="btn btn-primary" 
-            onClick={handleSave}
-          >
-            <i className="bi bi-check-circle me-2"></i>Enregistrer
-          </button>
-        </div>
-      </div>
+      )}
       
       {/* Guide d'utilisation */}
-      {showGuide && <UserGuide />}
+      {showGuide && !isModalContext && <UserGuide />}
       
       {previewMode ? (
         <div className="template-preview">
@@ -440,17 +369,37 @@ const ContratTemplateEditor = ({ template, onSave }) => {
         </div>
       ) : (
         <div className="editor-content">
-          <div className="template-info-card">
-            <div className="form-group">
-              <label htmlFor="templateName">Nom du modèle</label>
-              <input
-                type="text"
-                id="templateName"
-                className="form-control"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Ex: Contrat standard de prestation musicale"
-              />
+          {/* Informations générales */}
+          <div className="template-info-card mb-4">
+            <div className="row">
+              <div className="col-md-6">
+                <div className="form-group mb-3">
+                  <label htmlFor="templateName">Nom du modèle</label>
+                  <input
+                    type="text"
+                    id="templateName"
+                    className="form-control"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Ex: Contrat standard de prestation musicale"
+                  />
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="form-group mb-3">
+                  <label htmlFor="templateType">Type de modèle</label>
+                  <select
+                    id="templateType"
+                    className="form-select"
+                    value={templateType}
+                    onChange={(e) => setTemplateType(e.target.value)}
+                  >
+                    {templateTypes.map(type => (
+                      <option key={type.value} value={type.value}>{type.label}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
             </div>
             
             <div className="form-check my-3">
@@ -467,218 +416,265 @@ const ContratTemplateEditor = ({ template, onSave }) => {
             </div>
           </div>
           
-          <div className="editor-two-columns">
-            <div className="sections-sidebar">
-              <div className="sections-header">
-                <h4>Sections</h4>
-                <button 
-                  className="btn btn-sm btn-outline-primary" 
-                  onClick={handleAddSection}
-                >
-                  <i className="bi bi-plus-circle"></i>
-                </button>
-              </div>
-              <div className="sections-list">
-                {sections.map((section, index) => (
-                  <div 
-                    key={index} 
-                    className={`section-item ${currentSectionIndex === index ? 'active' : ''}`}
-                    onClick={() => setCurrentSectionIndex(index)}
-                  >
-                    <div className="section-item-title">
-                      {section.title || `Section ${index + 1}`}
+          {/* En-tête du contrat */}
+          <div className="card mb-4">
+            <div className="card-header d-flex justify-content-between align-items-center">
+              <h3 className="card-title h5 mb-0">En-tête du contrat</h3>
+              <button 
+                className="btn btn-sm btn-outline-secondary"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#headerCollapse"
+                aria-expanded="true"
+              >
+                <i className="bi bi-chevron-down"></i>
+              </button>
+            </div>
+            <div className="collapse show" id="headerCollapse">
+              <div className="card-body">
+                <div className="row mb-3">
+                  <div className="col-md-6">
+                    <div className="form-group">
+                      <label htmlFor="headerHeight">Hauteur de l'en-tête (mm)</label>
+                      <input
+                        type="number"
+                        id="headerHeight"
+                        className="form-control"
+                        value={headerHeight}
+                        onChange={(e) => setHeaderHeight(parseInt(e.target.value) || 0)}
+                        min="0"
+                        max="100"
+                      />
                     </div>
-                    <button 
-                      className="btn btn-sm btn-outline-danger section-delete-btn"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeleteSection(index);
-                      }}
-                    >
-                      <i className="bi bi-trash"></i>
-                    </button>
                   </div>
-                ))}
+                  <div className="col-md-6">
+                    <div className="form-group">
+                      <label htmlFor="headerBottomMargin">Marge basse de l'en-tête (mm)</label>
+                      <input
+                        type="number"
+                        id="headerBottomMargin"
+                        className="form-control"
+                        value={headerBottomMargin}
+                        onChange={(e) => setHeaderBottomMargin(parseInt(e.target.value) || 0)}
+                        min="0"
+                        max="50"
+                      />
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Logo upload */}
+                <div className="mb-3">
+                  <label className="form-label">Logo</label>
+                  <div className="d-flex align-items-center">
+                    {logoUrl ? (
+                      <div className="position-relative me-3">
+                        <img 
+                          src={logoUrl} 
+                          alt="Logo" 
+                          style={{ maxWidth: '100px', maxHeight: '60px' }} 
+                          className="border rounded"
+                        />
+                        <button 
+                          className="btn btn-sm btn-danger position-absolute top-0 end-0"
+                          onClick={handleRemoveLogo}
+                          type="button"
+                          style={{ transform: 'translate(50%, -50%)' }}
+                        >
+                          <i className="bi bi-x"></i>
+                        </button>
+                      </div>
+                    ) : (
+                      <div 
+                        className="border rounded d-flex align-items-center justify-content-center text-muted me-3"
+                        style={{ width: '100px', height: '60px' }}
+                      >
+                        Pas de logo
+                      </div>
+                    )}
+                    <div>
+                      <label className="btn btn-outline-primary">
+                        <i className="bi bi-upload me-1"></i>
+                        Charger un logo
+                        <input 
+                          type="file" 
+                          hidden 
+                          accept="image/*" 
+                          onChange={handleLogoUpload}
+                        />
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Contenu de l'en-tête */}
+                <div className="form-group">
+                  <div className="d-flex justify-content-between align-items-center mb-2">
+                    <label>Contenu de l'en-tête</label>
+                    <div className="dropdown">
+                      <button 
+                        className="btn btn-sm btn-outline-secondary dropdown-toggle" 
+                        type="button" 
+                        data-bs-toggle="dropdown"
+                      >
+                        <i className="bi bi-code-square me-1"></i>
+                        Variables
+                      </button>
+                      <ul className="dropdown-menu">
+                        <li><button className="dropdown-item" onClick={() => handleInsertVariable('programmateur_nom', 'header')}>programmateur_nom</button></li>
+                        <li><button className="dropdown-item" onClick={() => handleInsertVariable('programmateur_structure', 'header')}>programmateur_structure</button></li>
+                        <li><button className="dropdown-item" onClick={() => handleInsertVariable('programmateur_email', 'header')}>programmateur_email</button></li>
+                        <li><button className="dropdown-item" onClick={() => handleInsertVariable('programmateur_siret', 'header')}>programmateur_siret</button></li>
+                      </ul>
+                    </div>
+                  </div>
+                  <ReactQuill
+                    ref={headerEditorRef}
+                    theme="snow"
+                    value={headerContent}
+                    onChange={setHeaderContent}
+                    modules={editorModules}
+                    style={{ height: '150px', marginBottom: '50px' }}
+                  />
+                </div>
               </div>
             </div>
-            
-            <div className="section-editor">
-            {sections.length > 0 && currentSectionIndex < sections.length ? (
-              <>
-                <div className="section-editor-header">
-                  <div className="form-group">
-                    <label htmlFor="sectionTitle">Titre de la section</label>
-                    <input
-                      type="text"
-                      id="sectionTitle"
-                      className="form-control"
-                      value={sections[currentSectionIndex].title}
-                      onChange={(e) => handleSectionTitleChange(currentSectionIndex, e.target.value)}
-                      placeholder="Ex: Parties contractantes"
-                    />
-                  </div>
-                  <button 
-                    className="btn btn-sm btn-outline-secondary" 
-                    onClick={() => openSectionEditModal(currentSectionIndex)}
-                  >
-                    <i className="bi bi-arrows-fullscreen me-1"></i>
-                    Éditer en plein écran
-                  </button>
-                </div>
-                
-                <div className="section-editor-content">
-                  <label>Contenu</label>
-                  <ReactQuill
-                    ref={quillRef}
-                    theme="snow"
-                    value={sections[currentSectionIndex].content}
-                    onChange={(content) => handleSectionContentChange(currentSectionIndex, content)}
-                    modules={{
-                      toolbar: [
-                        [{ 'header': [1, 2, 3, false] }],
-                        ['bold', 'italic', 'underline', 'strike'],
-                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                        [{ 'indent': '-1' }, { 'indent': '+1' }],
-                        [{ 'align': [] }],
-                        ['clean']
-                      ],
-                    }}
-                  />
-                </div>
-              </>
-            ) : (
-              <div className="no-sections-message">
-                <p>Aucune section n'a été créée.</p>
-                <button 
-                  className="btn btn-primary" 
-                  onClick={handleAddSection}
-                >
-                  Ajouter une section
-                </button>
-              </div>
-            )}
           </div>
-            
-            <div className="variables-sidebar">
-              <h4>Variables disponibles</h4>
-              <div className="variables-list">
-                <div className="variable-group">
-                  <h5>Programmateur</h5>
-                  <ContratVariable 
-                    name="programmateur_nom" 
-                    description="Nom du programmateur"
-                    onInsert={handleInsertVariable}
-                  />
-                  <ContratVariable 
-                    name="programmateur_structure" 
-                    description="Structure du programmateur"
-                    onInsert={handleInsertVariable}
-                  />
-                  <ContratVariable 
-                    name="programmateur_email" 
-                    description="Email du programmateur"
-                    onInsert={handleInsertVariable}
-                  />
+          
+          {/* Corps du contrat */}
+          <div className="card mb-4">
+            <div className="card-header">
+              <h3 className="card-title h5 mb-0">Corps du contrat</h3>
+            </div>
+            <div className="card-body">
+              <div className="form-group">
+                <div className="d-flex justify-content-between align-items-center mb-2">
+                  <label>Contenu du contrat</label>
+                  <div className="dropdown">
+                    <button 
+                      className="btn btn-sm btn-outline-secondary dropdown-toggle" 
+                      type="button" 
+                      data-bs-toggle="dropdown"
+                    >
+                      <i className="bi bi-code-square me-1"></i>
+                      Variables
+                    </button>
+                    <ul className="dropdown-menu">
+                      <li><h6 className="dropdown-header">Programmateur</h6></li>
+                      <li><button className="dropdown-item" onClick={() => handleInsertVariable('programmateur_nom', 'body')}>programmateur_nom</button></li>
+                      <li><button className="dropdown-item" onClick={() => handleInsertVariable('programmateur_structure', 'body')}>programmateur_structure</button></li>
+                      <li><button className="dropdown-item" onClick={() => handleInsertVariable('programmateur_email', 'body')}>programmateur_email</button></li>
+                      <li><hr className="dropdown-divider" /></li>
+                      <li><h6 className="dropdown-header">Artiste</h6></li>
+                      <li><button className="dropdown-item" onClick={() => handleInsertVariable('artiste_nom', 'body')}>artiste_nom</button></li>
+                      <li><button className="dropdown-item" onClick={() => handleInsertVariable('artiste_genre', 'body')}>artiste_genre</button></li>
+                      <li><hr className="dropdown-divider" /></li>
+                      <li><h6 className="dropdown-header">Concert</h6></li>
+                      <li><button className="dropdown-item" onClick={() => handleInsertVariable('concert_titre', 'body')}>concert_titre</button></li>
+                      <li><button className="dropdown-item" onClick={() => handleInsertVariable('concert_date', 'body')}>concert_date</button></li>
+                      <li><button className="dropdown-item" onClick={() => handleInsertVariable('concert_montant', 'body')}>concert_montant</button></li>
+                      <li><hr className="dropdown-divider" /></li>
+                      <li><h6 className="dropdown-header">Lieu</h6></li>
+                      <li><button className="dropdown-item" onClick={() => handleInsertVariable('lieu_nom', 'body')}>lieu_nom</button></li>
+                      <li><button className="dropdown-item" onClick={() => handleInsertVariable('lieu_adresse', 'body')}>lieu_adresse</button></li>
+                      <li><button className="dropdown-item" onClick={() => handleInsertVariable('lieu_code_postal', 'body')}>lieu_code_postal</button></li>
+                      <li><button className="dropdown-item" onClick={() => handleInsertVariable('lieu_ville', 'body')}>lieu_ville</button></li>
+                    </ul>
+                  </div>
+                </div>
+                <ReactQuill
+                  ref={bodyEditorRef}
+                  theme="snow"
+                  value={bodyContent}
+                  onChange={setBodyContent}
+                  modules={editorModules}
+                  style={{ height: '400px', marginBottom: '50px' }}
+                />
+              </div>
+            </div>
+          </div>
+          
+          {/* Pied de page du contrat */}
+          <div className="card mb-4">
+            <div className="card-header d-flex justify-content-between align-items-center">
+              <h3 className="card-title h5 mb-0">Pied de page du contrat</h3>
+              <button 
+                className="btn btn-sm btn-outline-secondary"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#footerCollapse"
+                aria-expanded="true"
+              >
+                <i className="bi bi-chevron-down"></i>
+              </button>
+            </div>
+            <div className="collapse show" id="footerCollapse">
+              <div className="card-body">
+                <div className="row mb-3">
+                  <div className="col-md-6">
+                    <div className="form-group">
+                      <label htmlFor="footerHeight">Hauteur du pied de page (mm)</label>
+                      <input
+                        type="number"
+                        id="footerHeight"
+                        className="form-control"
+                        value={footerHeight}
+                        onChange={(e) => setFooterHeight(parseInt(e.target.value) || 0)}
+                        min="0"
+                        max="100"
+                      />
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <div className="form-group">
+                      <label htmlFor="footerTopMargin">Marge haute du pied de page (mm)</label>
+                      <input
+                        type="number"
+                        id="footerTopMargin"
+                        className="form-control"
+                        value={footerTopMargin}
+                        onChange={(e) => setFooterTopMargin(parseInt(e.target.value) || 0)}
+                        min="0"
+                        max="50"
+                      />
+                    </div>
+                  </div>
                 </div>
                 
-                <div className="variable-group">
-                  <h5>Artiste</h5>
-                  <ContratVariable 
-                    name="artiste_nom" 
-                    description="Nom de l'artiste"
-                    onInsert={handleInsertVariable}
-                  />
-                  <ContratVariable 
-                    name="artiste_genre" 
-                    description="Genre musical"
-                    onInsert={handleInsertVariable}
-                  />
-                </div>
-                
-                <div className="variable-group">
-                  <h5>Concert</h5>
-                  <ContratVariable 
-                    name="concert_titre" 
-                    description="Titre du concert"
-                    onInsert={handleInsertVariable}
-                  />
-                  <ContratVariable 
-                    name="concert_date" 
-                    description="Date du concert"
-                    onInsert={handleInsertVariable}
-                  />
-                  <ContratVariable 
-                    name="concert_montant" 
-                    description="Montant du concert (€)"
-                    onInsert={handleInsertVariable}
-                  />
-                </div>
-                
-                <div className="variable-group">
-                  <h5>Lieu</h5>
-                  <ContratVariable 
-                    name="lieu_nom" 
-                    description="Nom du lieu"
-                    onInsert={handleInsertVariable}
-                  />
-                  <ContratVariable 
-                    name="lieu_adresse" 
-                    description="Adresse du lieu"
-                    onInsert={handleInsertVariable}
-                  />
-                  <ContratVariable 
-                    name="lieu_code_postal" 
-                    description="Code postal"
-                    onInsert={handleInsertVariable}
-                  />
-                  <ContratVariable 
-                    name="lieu_ville" 
-                    description="Ville"
-                    onInsert={handleInsertVariable}
-                  />
-                  <ContratVariable 
-                    name="lieu_capacite" 
-                    description="Capacité du lieu"
-                    onInsert={handleInsertVariable}
-                  />
-                </div>
-                
-                <div className="variable-group">
-                  <h5>Date</h5>
-                  <ContratVariable 
-                    name="date_jour" 
-                    description="Jour actuel"
-                    onInsert={handleInsertVariable}
-                  />
-                  <ContratVariable 
-                    name="date_mois" 
-                    description="Mois actuel"
-                    onInsert={handleInsertVariable}
-                  />
-                  <ContratVariable 
-                    name="date_annee" 
-                    description="Année actuelle"
-                    onInsert={handleInsertVariable}
+                {/* Contenu du pied de page */}
+                <div className="form-group">
+                  <div className="d-flex justify-content-between align-items-center mb-2">
+                    <label>Contenu du pied de page</label>
+                    <div className="dropdown">
+                      <button 
+                        className="btn btn-sm btn-outline-secondary dropdown-toggle" 
+                        type="button" 
+                        data-bs-toggle="dropdown"
+                      >
+                        <i className="bi bi-code-square me-1"></i>
+                        Variables
+                      </button>
+                      <ul className="dropdown-menu">
+                        <li><button className="dropdown-item" onClick={() => handleInsertVariable('programmateur_nom', 'footer')}>programmateur_nom</button></li>
+                        <li><button className="dropdown-item" onClick={() => handleInsertVariable('programmateur_structure', 'footer')}>programmateur_structure</button></li>
+                        <li><button className="dropdown-item" onClick={() => handleInsertVariable('programmateur_email', 'footer')}>programmateur_email</button></li>
+                        <li><button className="dropdown-item" onClick={() => handleInsertVariable('programmateur_siret', 'footer')}>programmateur_siret</button></li>
+                      </ul>
+                    </div>
+                  </div>
+                  <ReactQuill
+                    ref={footerEditorRef}
+                    theme="snow"
+                    value={footerContent}
+                    onChange={setFooterContent}
+                    modules={editorModules}
+                    style={{ height: '150px', marginBottom: '50px' }}
                   />
                 </div>
               </div>
             </div>
           </div>
         </div>
-      )}
-      
-      {/* Modale pour l'édition en plein écran */}
-      {showModal && (
-        <FullscreenEditorModal
-          title={sections[modalSectionIndex].title}
-          content={modalContent}
-          onSave={(content) => {
-            saveSectionContentFromModal(content);
-            closeSectionEditModal();
-          }}
-          onClose={closeSectionEditModal}
-          onInsertVariable={handleInsertVariable}
-        />
       )}
     </div>
   );

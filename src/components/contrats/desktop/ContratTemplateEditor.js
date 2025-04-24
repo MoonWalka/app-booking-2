@@ -6,8 +6,8 @@ import 'react-quill/dist/quill.snow.css';
 import ContratVariable from '@/components/contrats/ContratVariable';
 import '@/styles/index.css';
 
-const ContratTemplateEditorContent = ({ template, onSave, isModalContext, onClose }) => {
-  console.log("============ CONTRAT TEMPLATE EDITOR CONTENT CHARGÉ ============");
+const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) => {
+  console.log("============ CONTRAT TEMPLATE EDITOR CHARGÉ ============");
   console.log("Template reçu:", template);
   console.log("Est en contexte modal:", isModalContext);
   
@@ -129,18 +129,174 @@ const ContratTemplateEditorContent = ({ template, onSave, isModalContext, onClos
     return null;
   };
 
-  // Appeler le composant PageBreak
+  // Définition et enregistrement des formats personnalisés pour les encadrés
+  const CustomFormats = () => {
+    const Quill = ReactQuill.Quill;
+    
+    // Import des classes Quill nécessaires
+    const BlockEmbed = Quill.import('blots/block/embed');
+    const Inline = Quill.import('blots/inline');
+    
+    // 1. Format pour les encadrés en ligne (sélection de texte)
+    class InlineBoxBlot extends Inline {
+      static create(value) {
+        const node = super.create();
+        node.setAttribute('class', `inline-box inline-box-${value.style || 'standard'}`);
+        return node;
+      }
+      
+      static formats(node) {
+        const className = node.getAttribute('class') || '';
+        const styleMatch = className.match(/inline-box-(\w+)/);
+        if (styleMatch) {
+          return { style: styleMatch[1] };
+        }
+        return { style: 'standard' };
+      }
+    }
+    
+    InlineBoxBlot.blotName = 'inlineBox';
+    InlineBoxBlot.tagName = 'span';
+    
+    // 2. Format pour les encadrés en bloc (bloc complet)
+    class CustomBoxBlot extends BlockEmbed {
+      static create(value) {
+        const node = super.create();
+        node.setAttribute('class', `custom-box custom-box-${value.style || 'standard'}`);
+        
+        // Ajouter du contenu éditable dans l'encadré
+        const contentNode = document.createElement('div');
+        contentNode.className = 'box-content';
+        contentNode.contentEditable = 'true';
+        contentNode.innerHTML = value.content || '<p>Votre texte ici</p>';
+        
+        // Centrer le texte si demandé
+        if (value.centered) {
+          contentNode.style.textAlign = 'center';
+        }
+        
+        node.appendChild(contentNode);
+        return node;
+      }
+      
+      static value(node) {
+        const contentNode = node.querySelector('.box-content');
+        const className = node.getAttribute('class') || '';
+        const styleMatch = className.match(/custom-box-(\w+)/);
+        
+        return {
+          content: contentNode ? contentNode.innerHTML : '',
+          style: styleMatch ? styleMatch[1] : 'standard',
+          centered: contentNode && contentNode.style.textAlign === 'center'
+        };
+      }
+    }
+    
+    CustomBoxBlot.blotName = 'customBox';
+    CustomBoxBlot.tagName = 'div';
+    
+    // Enregistrer les formats auprès de Quill
+    Quill.register(InlineBoxBlot);
+    Quill.register(CustomBoxBlot);
+    
+    // Ajouter les styles CSS pour les encadrés
+    useEffect(() => {
+      const style = document.createElement('style');
+      style.innerHTML = `
+        /* Styles pour les encadrés en ligne */
+        .inline-box {
+          padding: 2px 5px;
+          border-radius: 3px;
+        }
+        
+        .inline-box-standard {
+          background-color: #f8f9fa;
+          border: 1px solid #dee2e6;
+        }
+        
+        .inline-box-success {
+          background-color: #d4edda;
+          border: 1px solid #c3e6cb;
+        }
+        
+        .inline-box-danger {
+          background-color: #f8d7da;
+          border: 1px solid #f5c6cb;
+        }
+        
+        /* Styles pour les encadrés en bloc */
+        .custom-box {
+          width: 100%;
+          margin: 15px 0;
+          padding: 15px;
+          border-radius: 5px;
+          position: relative;
+        }
+        
+        .custom-box-standard {
+          background-color: #f8f9fa;
+          border: 1px solid #dee2e6;
+        }
+        
+        .custom-box-standard-line {
+          background-color: #f8f9fa;
+          border: 1px solid #dee2e6;
+        }
+        
+        .custom-box-success {
+          background-color: #d4edda;
+          border: 1px solid #c3e6cb;
+        }
+        
+        .custom-box-danger {
+          background-color: #f8d7da;
+          border: 1px solid #f5c6cb;
+        }
+        
+        .box-content {
+          outline: none;
+        }
+        
+        /* S'assurer que les encadrés restent visibles dans l'éditeur */
+        .ql-editor .custom-box {
+          display: block !important;
+        }
+        
+        .ql-editor .inline-box {
+          display: inline !important;
+        }
+      `;
+      document.head.appendChild(style);
+      
+      return () => {
+        document.head.removeChild(style);
+      };
+    }, []);
+    
+    return null;
+  };
+
+  // Appeler les composants pour enregistrer les formats personnalisés
   PageBreak();
+  CustomFormats();
 
   // Créer un module personnalisé pour Quill avec gestion des encadrés uniquement
   useEffect(() => {
+    // ID unique pour ce composant, utilisé pour les dropdowns
+    const componentId = `quill-box-dropdown-${Math.random().toString(36).substring(2, 9)}`;
+    
     // Créer le bouton et l'icône d'encadrés
     const createCustomButtons = () => {
+      // Nettoyer d'abord les anciens dropdowns qui pourraient être restés
+      document.querySelectorAll('.box-style-dropdown').forEach(el => {
+        el.remove();
+      });
+      
       // S'assurer que nous ne créons les boutons qu'une seule fois
       if (document.querySelector('.ql-box')) return;
       
       // Trouver la barre d'outils de chaque éditeur Quill
-      document.querySelectorAll('.ql-toolbar').forEach(toolbar => {
+      document.querySelectorAll('.ql-toolbar').forEach((toolbar, index) => {
         // Vérifier si la barre d'outils a déjà le bouton
         if (toolbar.querySelector('.ql-box')) return;
         
@@ -152,10 +308,13 @@ const ContratTemplateEditorContent = ({ template, onSave, isModalContext, onClos
           boxButton.className = 'ql-box';
           boxButton.type = 'button';
           boxButton.title = 'Insérer un encadré';
+          boxButton.setAttribute('data-editor-id', `${componentId}-editor-${index}`);
           
-          // Créer le dropdown pour les styles d'encadrés
+          // Créer le dropdown pour les styles d'encadrés avec un ID unique
           const boxDropdown = document.createElement('div');
           boxDropdown.className = 'box-style-dropdown';
+          boxDropdown.id = `${componentId}-dropdown-${index}`;
+          boxDropdown.setAttribute('data-editor-id', `${componentId}-editor-${index}`);
           
           // Ajouter les options d'encadrés
           boxDropdown.innerHTML = `
@@ -175,10 +334,10 @@ const ContratTemplateEditorContent = ({ template, onSave, isModalContext, onClos
               <div class="box-style-color danger"></div>
               Danger (rouge)
             </div>
-            <div class="box-style-options" id="block-box-options" style="display:none;">
+            <div class="box-style-options" id="block-box-options-${index}" style="display:none;">
               <div class="box-style-option">
-                <input type="checkbox" id="box-centered" />
-                <label for="box-centered">Centrer le texte</label>
+                <input type="checkbox" id="box-centered-${index}" />
+                <label for="box-centered-${index}">Centrer le texte</label>
               </div>
             </div>
           `;
@@ -192,6 +351,13 @@ const ContratTemplateEditorContent = ({ template, onSave, isModalContext, onClos
           // Ajouter l'écouteur d'événement pour ouvrir/fermer le dropdown des encadrés
           boxButton.addEventListener('click', (e) => {
             e.stopPropagation();
+            
+            // Fermer tous les autres dropdowns d'abord
+            document.querySelectorAll('.box-style-dropdown.show').forEach(dropdown => {
+              if (dropdown.id !== boxDropdown.id) {
+                dropdown.classList.remove('show');
+              }
+            });
             
             // Positionner le dropdown par rapport au bouton
             const rect = boxButton.getBoundingClientRect();
@@ -226,12 +392,12 @@ const ContratTemplateEditorContent = ({ template, onSave, isModalContext, onClos
                 const range = editor.getSelection(true);
                 
                 // Afficher/masquer les options supplémentaires pour les encadrés en bloc
-                const blockOptions = document.getElementById('block-box-options');
+                const blockOptions = document.getElementById(`block-box-options-${index}`);
                 if (type === 'block') {
                   blockOptions.style.display = 'block';
                   
                   // Obtenir l'état du checkbox
-                  const isCentered = document.getElementById('box-centered').checked;
+                  const isCentered = document.getElementById(`box-centered-${index}`).checked;
                   
                   // Créer un encadré en bloc
                   editor.insertEmbed(range.index, 'customBox', {
@@ -254,7 +420,7 @@ const ContratTemplateEditorContent = ({ template, onSave, isModalContext, onClos
                     }
                   }, 10);
                 } else {
-                  blockOptions.style.display = 'none';
+                  if (blockOptions) blockOptions.style.display = 'none';
                   
                   // Appliquer un encadré en ligne au texte sélectionné
                   if (range.length > 0) {
@@ -271,13 +437,21 @@ const ContratTemplateEditorContent = ({ template, onSave, isModalContext, onClos
               }
             });
           });
-          
-          // Fermer le dropdown au clic à l'extérieur
-          document.addEventListener('click', (e) => {
-            if (!boxButton.contains(e.target) && !boxDropdown.contains(e.target)) {
-              boxDropdown.classList.remove('show');
-            }
-          });
+        }
+      });
+      
+      // Fermer tous les dropdowns au clic à l'extérieur
+      document.addEventListener('click', handleOutsideClick);
+    };
+    
+    // Gestionnaire pour fermer les dropdowns au clic extérieur
+    const handleOutsideClick = (e) => {
+      document.querySelectorAll('.box-style-dropdown.show').forEach(dropdown => {
+        const editorId = dropdown.getAttribute('data-editor-id');
+        const relatedButton = document.querySelector(`.ql-box[data-editor-id="${editorId}"]`);
+        
+        if (!dropdown.contains(e.target) && (!relatedButton || !relatedButton.contains(e.target))) {
+          dropdown.classList.remove('show');
         }
       });
     };
@@ -299,16 +473,23 @@ const ContratTemplateEditorContent = ({ template, onSave, isModalContext, onClos
       subtree: true 
     });
     
-    // Essayer de créer les boutons immédiatement si les éditeurs sont déjà chargés
+    // Créer les boutons immédiatement si les éditeurs sont déjà chargés
     setTimeout(createCustomButtons, 500);
     
+    // Nettoyage lors du démontage du composant
     return () => {
       observer.disconnect();
-      // Supprimer le dropdown lors du démontage du composant
-      const dropdown = document.querySelector('.box-style-dropdown');
-      if (dropdown) {
-        dropdown.remove();
-      }
+      document.removeEventListener('click', handleOutsideClick);
+      
+      // Supprimer tous les dropdowns créés par ce composant
+      document.querySelectorAll(`[data-editor-id^="${componentId}"]`).forEach(el => {
+        el.remove();
+      });
+      
+      // Pour être vraiment certain, supprimer aussi tous les anciens dropdowns
+      document.querySelectorAll('.box-style-dropdown').forEach(el => {
+        el.remove();
+      });
     };
   }, []);
 
@@ -404,7 +585,7 @@ const ContratTemplateEditorContent = ({ template, onSave, isModalContext, onClos
       
       /* Style pour le dropdown des encadrés */
       .box-style-dropdown {
-        display: none;
+        display: none !important; /* Utiliser !important pour s'assurer que c'est masqué */
         position: absolute;
         z-index: 1001;
         background: white;
@@ -413,10 +594,14 @@ const ContratTemplateEditorContent = ({ template, onSave, isModalContext, onClos
         border-radius: 4px;
         padding: 8px 0;
         min-width: 180px;
+        visibility: hidden; /* Double sécurité pour éviter que ça ne s'affiche */
+        opacity: 0;
       }
       
       .box-style-dropdown.show {
-        display: block;
+        display: block !important;
+        visibility: visible;
+        opacity: 1;
       }
       
       .box-style-item {
@@ -1539,4 +1724,4 @@ const ContratTemplateEditorContent = ({ template, onSave, isModalContext, onClos
   );
 };
 
-export default ContratTemplateEditorContent;
+export default ContratTemplateEditor;

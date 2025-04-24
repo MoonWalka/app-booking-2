@@ -243,6 +243,7 @@ const ContratDetailsPage = () => {
                 document={
                   <ContratPDFWrapper 
                     template={template}
+                    contratData={contrat} // NOUVEAU: Passage des données complètes du contrat incluant la templateSnapshot
                     concertData={concert}
                     programmateurData={programmateur}
                     artisteData={artiste}
@@ -302,6 +303,7 @@ const ContratDetailsPage = () => {
                 <PDFViewer width="100%" height={600}>
                   <ContratPDFWrapper 
                     template={template}
+                    contratData={contrat} // NOUVEAU: Passage des données complètes du contrat incluant la templateSnapshot
                     concertData={concert}
                     programmateurData={programmateur}
                     artisteData={artiste}

@@ -35,48 +35,276 @@ const styles = StyleSheet.create({
   li: { marginBottom: 3 },
 });
 
-// Fonction améliorée pour convertir HTML en composants React-PDF
+// Fonction pour rendre les textes avec leurs styles
+const renderTextWithStyles = (segments) => {
+  if (!segments) return null;
+  
+  if (!Array.isArray(segments)) {
+    segments = [segments];
+  }
+  
+  return segments.map((segment, index) => (
+    <Text key={index} style={segment.styles}>
+      {segment.text}
+    </Text>
+  ));
+};
+
+// Fonction avancée pour parser le HTML en composants React-PDF
 const parseHtmlToReactPdf = (html) => {
   if (!html) return null;
   
-  // Version améliorée: mieux préserver la structure des paragraphes, titres, etc.
-  let content = html
-    // Remplacer les balises de titre
-    .replace(/<h1.*?>(.*?)<\/h1>/g, (_, text) => `\n# ${text}\n`)
-    .replace(/<h2.*?>(.*?)<\/h2>/g, (_, text) => `\n## ${text}\n`)
-    .replace(/<h3.*?>(.*?)<\/h3>/g, (_, text) => `\n### ${text}\n`)
+  // Fonction récursive pour traiter les éléments HTML
+  const processNode = (content, styles = {}) => {
+    // Traiter d'abord le gras
+    const boldRegex = /<(strong|b)>(.*?)<\/(strong|b)>/g;
+    let boldMatch;
+    let segments = [];
+    let lastIndex = 0;
     
-    // Remplacer les paragraphes
-    .replace(/<p.*?>(.*?)<\/p>/g, (_, text) => `\n${text}\n`)
+    // Trouver tous les segments en gras
+    while ((boldMatch = boldRegex.exec(content)) !== null) {
+      // Ajouter le texte avant le match avec les styles actuels
+      if (boldMatch.index > lastIndex) {
+        segments.push({
+          text: content.substring(lastIndex, boldMatch.index),
+          styles: { ...styles }
+        });
+      }
+      
+      // Traiter récursivement le contenu en gras avec le style bold ajouté
+      const boldContent = processNode(boldMatch[2], { 
+        ...styles, 
+        fontWeight: 'bold' 
+      });
+      
+      // Si le traitement récursif a retourné des segments, les ajouter
+      if (Array.isArray(boldContent)) {
+        segments = [...segments, ...boldContent];
+      } else if (boldContent) {
+        segments.push(boldContent);
+      }
+      
+      lastIndex = boldMatch.index + boldMatch[0].length;
+    }
     
+    // Ajouter le reste du contenu avec les styles actuels
+    if (lastIndex < content.length) {
+      // Traiter l'italique dans le reste
+      const italicRegex = /<(em|i)>(.*?)<\/(em|i)>/g;
+      let italicMatch;
+      let lastItalicIndex = lastIndex;
+      let italicSegments = [];
+      
+      while ((italicMatch = italicRegex.exec(content.substring(lastIndex))) !== null) {
+        const actualIndex = lastIndex + italicMatch.index;
+        
+        // Ajouter le texte avant l'italique
+        if (actualIndex > lastItalicIndex) {
+          italicSegments.push({
+            text: content.substring(lastItalicIndex, actualIndex),
+            styles: { ...styles }
+          });
+        }
+        
+        // Ajouter le texte en italique
+        italicSegments.push({
+          text: italicMatch[2],
+          styles: { ...styles, fontStyle: 'italic' }
+        });
+        
+        lastItalicIndex = actualIndex + italicMatch[0].length;
+      }
+      
+      // Ajouter le reste sans formatage spécial
+      if (lastItalicIndex < content.length) {
+        italicSegments.push({
+          text: content.substring(lastItalicIndex),
+          styles: { ...styles }
+        });
+      }
+      
+      segments = [...segments, ...italicSegments];
+    }
+    
+    // Si aucun formatage n'a été trouvé, retourner un segment unique
+    if (segments.length === 0 && content.trim()) {
+      return { text: content, styles };
+    }
+    
+    return segments;
+  };
+  
+  // Traiter les titres et paragraphes d'abord
+  let processedHtml = html
     // Gérer les sauts de ligne
     .replace(/<br\s*\/?>/g, '\n')
-    
-    // Supprimer les autres balises HTML mais conserver le texte
-    .replace(/<[^>]*>/g, '')
-    
-    // Gérer les entités HTML communes
-    .replace(/&nbsp;/g, ' ')
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>');
+    // Remplacer temporairement les balises spéciales par des marqueurs
+    .replace(/<(strong|b)>(.*?)<\/(strong|b)>/g, (match) => match)
+    .replace(/<(em|i)>(.*?)<\/(em|i)>/g, (match) => match);
   
-  // Découper en lignes pour préserver les sauts de ligne
-  const lines = content.split('\n');
+  // Diviser par paragraphes et titres
+  const sections = [];
   
+  // Traiter les titres h1
+  const h1Regex = /<h1[^>]*>(.*?)<\/h1>/g;
+  let h1Match;
+  let lastH1Index = 0;
+  
+  while ((h1Match = h1Regex.exec(processedHtml)) !== null) {
+    // Ajouter le contenu avant le h1
+    if (h1Match.index > lastH1Index) {
+      sections.push({
+        type: 'content',
+        content: processedHtml.substring(lastH1Index, h1Match.index)
+      });
+    }
+    
+    // Ajouter le h1
+    sections.push({
+      type: 'h1',
+      content: h1Match[1]
+    });
+    
+    lastH1Index = h1Match.index + h1Match[0].length;
+  }
+  
+  // Ajouter le reste
+  if (lastH1Index < processedHtml.length) {
+    sections.push({
+      type: 'content',
+      content: processedHtml.substring(lastH1Index)
+    });
+  }
+  
+  // Traiter les autres niveaux de titre et paragraphes dans chaque section
+  const processedSections = sections.map(section => {
+    if (section.type === 'h1') {
+      return {
+        type: 'h1',
+        segments: processNode(section.content, { fontSize: 16, fontWeight: 'bold' })
+      };
+    }
+    
+    // Traiter les h2 dans la section content
+    const h2Sections = [];
+    const h2Regex = /<h2[^>]*>(.*?)<\/h2>/g;
+    let h2Match;
+    let lastH2Index = 0;
+    
+    while ((h2Match = h2Regex.exec(section.content)) !== null) {
+      // Ajouter le contenu avant le h2
+      if (h2Match.index > lastH2Index) {
+        h2Sections.push({
+          type: 'content',
+          content: section.content.substring(lastH2Index, h2Match.index)
+        });
+      }
+      
+      // Ajouter le h2
+      h2Sections.push({
+        type: 'h2',
+        content: h2Match[1]
+      });
+      
+      lastH2Index = h2Match.index + h2Match[0].length;
+    }
+    
+    // Ajouter le reste
+    if (lastH2Index < section.content.length) {
+      h2Sections.push({
+        type: 'content',
+        content: section.content.substring(lastH2Index)
+      });
+    }
+    
+    // Traiter les paragraphes dans chaque section h2
+    return h2Sections.map(h2Section => {
+      if (h2Section.type === 'h2') {
+        return {
+          type: 'h2',
+          segments: processNode(h2Section.content, { fontSize: 14, fontWeight: 'bold' })
+        };
+      }
+      
+      // Traiter les paragraphes
+      const pSections = [];
+      const pRegex = /<p[^>]*>(.*?)<\/p>/g;
+      let pMatch;
+      let lastPIndex = 0;
+      
+      while ((pMatch = pRegex.exec(h2Section.content)) !== null) {
+        // Ajouter le contenu avant le p
+        if (pMatch.index > lastPIndex) {
+          const textContent = h2Section.content
+            .substring(lastPIndex, pMatch.index)
+            .replace(/<[^>]*>/g, '') // Supprimer les balises restantes
+            .trim();
+            
+          if (textContent) {
+            pSections.push({
+              type: 'text',
+              segments: processNode(textContent)
+            });
+          }
+        }
+        
+        // Ajouter le p
+        pSections.push({
+          type: 'p',
+          segments: processNode(pMatch[1])
+        });
+        
+        lastPIndex = pMatch.index + pMatch[0].length;
+      }
+      
+      // Ajouter le reste
+      if (lastPIndex < h2Section.content.length) {
+        const textContent = h2Section.content
+          .substring(lastPIndex)
+          .replace(/<[^>]*>/g, '') // Supprimer les balises restantes
+          .trim();
+          
+        if (textContent) {
+          pSections.push({
+            type: 'text',
+            segments: processNode(textContent)
+          });
+        }
+      }
+      
+      return pSections;
+    }).flat();
+  }).flat();
+  
+  // Transformer les sections traitées en composants React-PDF
   return (
     <View>
-      {lines.map((line, index) => {
-        if (line.startsWith('#')) {
-          if (line.startsWith('# ')) {
-            return <Text key={index} style={styles.h1}>{line.substring(2).trim()}</Text>;
-          } else if (line.startsWith('## ')) {
-            return <Text key={index} style={styles.h2}>{line.substring(3).trim()}</Text>;
-          } else if (line.startsWith('### ')) {
-            return <Text key={index} style={styles.h3}>{line.substring(4).trim()}</Text>;
-          }
-        } else if (line.trim()) {
-          return <Text key={index} style={styles.p}>{line}</Text>;
+      {processedSections.map((section, sectionIndex) => {
+        if (section.type === 'h1') {
+          return (
+            <Text key={`h1-${sectionIndex}`} style={styles.h1}>
+              {renderTextWithStyles(section.segments)}
+            </Text>
+          );
+        } else if (section.type === 'h2') {
+          return (
+            <Text key={`h2-${sectionIndex}`} style={styles.h2}>
+              {renderTextWithStyles(section.segments)}
+            </Text>
+          );
+        } else if (section.type === 'p') {
+          return (
+            <Text key={`p-${sectionIndex}`} style={styles.p}>
+              {renderTextWithStyles(section.segments)}
+            </Text>
+          );
+        } else if (section.type === 'text') {
+          return (
+            <Text key={`text-${sectionIndex}`}>
+              {renderTextWithStyles(section.segments)}
+            </Text>
+          );
         }
         return null;
       })}
@@ -90,13 +318,37 @@ const splitContentByPageBreaks = (content) => {
   
   // Les sauts de page seront des balises <hr class="page-break"> dans le HTML
   const pageBreakPattern = /<hr\s+class=["|']page-break["|'][^>]*>/gi;
-  return content.split(pageBreakPattern);
+  
+  // Diviser et filtrer les sections vides
+  const sections = content.split(pageBreakPattern);
+  const nonEmptySections = sections
+    .map(section => section.trim())
+    .filter(section => section.length > 0);
+  
+  // Log de débogage pour voir les sections
+  console.log("Sections après filtrage:", nonEmptySections.length, "sections non vides");
+  
+  return nonEmptySections.length > 0 ? nonEmptySections : [content];
 };
 
-const ContratPDFWrapper = ({ template, concertData, programmateurData, artisteData, lieuData, entrepriseInfo }) => {
+const ContratPDFWrapper = ({ 
+  template, 
+  contratData, // NOUVEAU: Ajouter ce paramètre pour accéder aux données du contrat
+  concertData, 
+  programmateurData, 
+  artisteData, 
+  lieuData, 
+  entrepriseInfo 
+}) => {
+  // NOUVEAU: Utiliser la snapshot du template si disponible
+  const effectiveTemplate = contratData?.templateSnapshot || template;
+  
+  console.log("Template effectif utilisé:", effectiveTemplate);
+  console.log("Source du template:", contratData?.templateSnapshot ? "Snapshot stockée" : "Template live");
+  
   // Débogage pour identifier pourquoi la date apparaît encore
-  console.log("Template reçu dans ContratPDFWrapper:", template);
-  console.log("La propriété dateTemplate existe-t-elle?", template && 'dateTemplate' in template);
+  console.log("Template reçu dans ContratPDFWrapper:", effectiveTemplate);
+  console.log("La propriété dateTemplate existe-t-elle?", effectiveTemplate && 'dateTemplate' in effectiveTemplate);
   
   // Sécuriser contre les valeurs nulles ou undefined
   const safeData = {
@@ -169,7 +421,7 @@ const ContratPDFWrapper = ({ template, concertData, programmateurData, artisteDa
       ...(content.includes('{date_complete}') ? {'date_complete': format(new Date(), "dd MMMM yyyy", { locale: fr })} : {}),
       
       // Ajouter le type de template comme variable
-      'templateType': getTemplateTypeLabel(template.type || 'session')
+      'templateType': getTemplateTypeLabel(effectiveTemplate.type || 'session')
     };
     
     // Remplacer toutes les variables possibles
@@ -201,7 +453,7 @@ const ContratPDFWrapper = ({ template, concertData, programmateurData, artisteDa
   };
 
   // Vérifier si le template est valide
-  if (!template || !template.bodyContent) {
+  if (!effectiveTemplate || !effectiveTemplate.bodyContent) {
     return (
       <Document>
         <Page size="A4" style={styles.page}>
@@ -214,13 +466,13 @@ const ContratPDFWrapper = ({ template, concertData, programmateurData, artisteDa
   // Fonctions pour rendre les parties communes
   const renderHeader = () => (
     <View style={{
-      height: `${template.headerHeight || 20}mm`,
-      marginBottom: `${template.headerBottomMargin || 10}mm`,
+      height: `${effectiveTemplate.headerHeight || 20}mm`,
+      marginBottom: `${effectiveTemplate.headerBottomMargin || 10}mm`,
       borderBottom: '1px solid #ccc',
       paddingBottom: 5,
     }}>
-      {template.logoUrl && (
-        <Image src={template.logoUrl} style={{
+      {effectiveTemplate.logoUrl && (
+        <Image src={effectiveTemplate.logoUrl} style={{
           position: 'absolute',
           top: 0,
           left: 0,
@@ -228,21 +480,15 @@ const ContratPDFWrapper = ({ template, concertData, programmateurData, artisteDa
           maxHeight: '100%',
         }} />
       )}
-      <Text>{parseHtmlToReactPdf(replaceVariables(template.headerContent))}</Text>
+      <Text>{parseHtmlToReactPdf(replaceVariables(effectiveTemplate.headerContent))}</Text>
     </View>
   );
   
   const renderTitle = () => (
     <View style={{marginBottom: 15}}>
       <Text style={styles.defaultTitle}>
-        {parseHtmlToReactPdf(replaceVariables(template.titleTemplate))}
+        {parseHtmlToReactPdf(replaceVariables(effectiveTemplate.titleTemplate))}
       </Text>
-    </View>
-  );
-  
-  const renderDate = () => (
-    <View style={{marginBottom: 10}}>
-      {parseHtmlToReactPdf(replaceVariables(template.dateTemplate))}
     </View>
   );
   
@@ -252,17 +498,17 @@ const ContratPDFWrapper = ({ template, concertData, programmateurData, artisteDa
       bottom: 30,
       left: 30,
       right: 30,
-      height: `${template.footerHeight || 15}mm`,
-      marginTop: `${template.footerTopMargin || 10}mm`,
+      height: `${effectiveTemplate.footerHeight || 15}mm`,
+      marginTop: `${effectiveTemplate.footerTopMargin || 10}mm`,
       borderTop: '1px solid #ccc',
       paddingTop: 5,
     }}>
-      <Text>{parseHtmlToReactPdf(replaceVariables(template.footerContent))}</Text>
+      <Text>{parseHtmlToReactPdf(replaceVariables(effectiveTemplate.footerContent))}</Text>
     </View>
   );
 
   // Gérer les sauts de page
-  const processedBodyContent = replaceVariables(template.bodyContent);
+  const processedBodyContent = replaceVariables(effectiveTemplate.bodyContent);
   const contentSections = splitContentByPageBreaks(processedBodyContent);
 
   // Si pas de sauts de page ou un seul contenu, rendu normal sur une seule page
@@ -271,13 +517,10 @@ const ContratPDFWrapper = ({ template, concertData, programmateurData, artisteDa
       <Document>
         <Page size="A4" style={styles.page}>
           {/* En-tête (uniquement si défini dans le template) */}
-          {template.headerContent && renderHeader()}
+          {effectiveTemplate.headerContent && renderHeader()}
           
           {/* Titre (depuis le template) */}
-          {template.titleTemplate && renderTitle()}
-          
-          {/* Date (si définie dans le template) */}
-          {template.dateTemplate && renderDate()}
+          {effectiveTemplate.titleTemplate && renderTitle()}
           
           {/* Contenu principal */}
           <View style={styles.content}>
@@ -285,14 +528,14 @@ const ContratPDFWrapper = ({ template, concertData, programmateurData, artisteDa
           </View>
           
           {/* Zone de signature (depuis le template) */}
-          {template.signatureTemplate && (
+          {effectiveTemplate.signatureTemplate && (
             <View style={{marginTop: 30}}>
-              {parseHtmlToReactPdf(replaceVariables(template.signatureTemplate))}
+              {parseHtmlToReactPdf(replaceVariables(effectiveTemplate.signatureTemplate))}
             </View>
           )}
           
           {/* Pied de page (uniquement si défini dans le template) */}
-          {template.footerContent && renderFooter()}
+          {effectiveTemplate.footerContent && renderFooter()}
         </Page>
       </Document>
     );
@@ -304,13 +547,10 @@ const ContratPDFWrapper = ({ template, concertData, programmateurData, artisteDa
       {contentSections.map((section, index) => (
         <Page key={index} size="A4" style={styles.page}>
           {/* En-tête sur chaque page */}
-          {template.headerContent && renderHeader()}
+          {effectiveTemplate.headerContent && renderHeader()}
           
           {/* Titre uniquement sur la première page */}
-          {index === 0 && template.titleTemplate && renderTitle()}
-          
-          {/* Date uniquement sur la première page */}
-          {index === 0 && template.dateTemplate && renderDate()}
+          {index === 0 && effectiveTemplate.titleTemplate && renderTitle()}
           
           {/* Contenu de cette section */}
           <View style={styles.content}>
@@ -318,14 +558,14 @@ const ContratPDFWrapper = ({ template, concertData, programmateurData, artisteDa
           </View>
           
           {/* Zone de signature uniquement sur la dernière page */}
-          {index === contentSections.length - 1 && template.signatureTemplate && (
+          {index === contentSections.length - 1 && effectiveTemplate.signatureTemplate && (
             <View style={{marginTop: 30}}>
-              {parseHtmlToReactPdf(replaceVariables(template.signatureTemplate))}
+              {parseHtmlToReactPdf(replaceVariables(effectiveTemplate.signatureTemplate))}
             </View>
           )}
           
           {/* Pied de page sur chaque page */}
-          {template.footerContent && renderFooter()}
+          {effectiveTemplate.footerContent && renderFooter()}
         </Page>
       ))}
     </Document>

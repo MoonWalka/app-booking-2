@@ -1,7 +1,7 @@
 // src/components/contrats/ContratTemplateEditorModal.js
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ContratTemplateEditorContent from './desktop/ContratTemplateEditor';
+import ContratTemplateEditor from './desktop/ContratTemplateEditor';
 
 const ContratTemplateEditorModal = ({ 
   isOpen, 
@@ -51,8 +51,8 @@ const ContratTemplateEditorModal = ({
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Utilisation du composant ContratTemplateEditorContent réutilisable */}
-        <ContratTemplateEditorContent
+        {/* Utilisation du composant ContratTemplateEditor réutilisable */}
+        <ContratTemplateEditor
           template={template}
           onSave={handleSave}
           isModalContext={true}

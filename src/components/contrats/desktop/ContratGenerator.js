@@ -216,6 +216,33 @@ const ContratGenerator = ({ concert, programmateur, artiste, lieu }) => {
       const variables = prepareContractVariables();
       console.log("Variables préparées:", variables);
       
+      // NOUVEAU: Créer une "snapshot" complète du template utilisé
+      // au lieu de simplement stocker son ID
+      const templateSnapshot = {
+        id: selectedTemplate.id,
+        name: selectedTemplate.name,
+        version: Date.now(), // Ajouter un timestamp comme version
+        // Copier toutes les propriétés pertinentes du template
+        bodyContent: selectedTemplate.bodyContent,
+        headerContent: selectedTemplate.headerContent,
+        footerContent: selectedTemplate.footerContent,
+        titleTemplate: selectedTemplate.titleTemplate,
+        // IMPORTANT: Garantir que dateTemplate est bien défini ou null (pas une chaîne vide)
+        dateTemplate: selectedTemplate.dateTemplate && selectedTemplate.dateTemplate.trim() !== '' 
+          ? selectedTemplate.dateTemplate 
+          : null,
+        signatureTemplate: selectedTemplate.signatureTemplate,
+        // Autres propriétés importantes
+        headerHeight: selectedTemplate.headerHeight,
+        footerHeight: selectedTemplate.footerHeight,
+        headerBottomMargin: selectedTemplate.headerBottomMargin,
+        footerTopMargin: selectedTemplate.footerTopMargin,
+        logoUrl: selectedTemplate.logoUrl,
+        type: selectedTemplate.type
+      };
+      
+      console.log("Snapshot du template créée:", templateSnapshot);
+      
       // Vérifier si un contrat existe déjà
       if (contratId) {
         console.log("Mise à jour du contrat existant:", contratId);
@@ -223,6 +250,7 @@ const ContratGenerator = ({ concert, programmateur, artiste, lieu }) => {
         await updateDoc(contratRef, {
           pdfUrl: url,
           templateId: selectedTemplateId,
+          templateSnapshot, // NOUVEAU: Stocker la snapshot du template
           dateGeneration: serverTimestamp(),
           variables
         });
@@ -234,6 +262,7 @@ const ContratGenerator = ({ concert, programmateur, artiste, lieu }) => {
         const contratData = {
           concertId: concert.id,
           templateId: selectedTemplateId,
+          templateSnapshot, // NOUVEAU: Stocker la snapshot du template
           dateGeneration: serverTimestamp(),
           dateEnvoi: null,
           status: 'generated',
@@ -358,6 +387,7 @@ const ContratGenerator = ({ concert, programmateur, artiste, lieu }) => {
                   document={
                     <ContratPDFWrapper 
                       template={selectedTemplate}
+                      contratData={contratId ? { templateSnapshot: selectedTemplate } : null} // NOUVEAU: Passage de templateSnapshot
                       concertData={concert}
                       programmateurData={programmateur}
                       artisteData={artiste}

@@ -32,7 +32,7 @@
   }
   
   .breadcrumb-item:hover {
-    color: #0d6efd;
+    color: var(--primary-color);
     text-decoration: underline;
   }
   
@@ -110,7 +110,7 @@
   }
   
   .card-header i {
-    color: #0d6efd;
+    color: var(--primary-color);
     font-size: 1.25rem;
     margin-right: 0.75rem;
   }
@@ -161,7 +161,7 @@
   
   .info-value.highlight {
     font-weight: 600;
-    color: #0d6efd;
+    color: var(--primary-color);
     font-size: 1.1rem;
   }
   
@@ -178,14 +178,14 @@
   }
   
   .contact-link {
-    color: #0d6efd;
+    color: var(--primary-color);
     text-decoration: none;
     transition: all 0.2s;
   }
   
   .contact-link:hover {
     text-decoration: underline;
-    color: #0a58ca;
+    color: var(--primary-dark);
   }
   
   .summary-card {
@@ -206,7 +206,7 @@
   .summary-icon {
     flex: 0 0 2.5rem;
     height: 2.5rem;
-    background-color: rgba(13, 110, 253, 0.1);
+    background-color: rgba(44, 62, 80, 0.1); /* Utiliser une valeur hexadécimale directe pour éviter les erreurs */
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -215,7 +215,7 @@
   }
   
   .summary-icon i {
-    color: #0d6efd;
+    color: var(--primary-color);
     font-size: 1rem;
   }
   
@@ -265,7 +265,7 @@
   
   /* Styles pour la carte programmateur */
   .detail-card .spinner-border {
-    color: #0d6efd;
+    color: var(--primary-color);
     width: 1.5rem;
     height: 1.5rem;
     margin: 0.5rem 0;
@@ -346,4 +346,3 @@
       position: static;
     }
   }
-  

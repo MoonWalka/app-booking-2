@@ -168,7 +168,7 @@
   }
   
   .concert-form-container .breadcrumb-item:hover {
-    color: #0d6efd;
+    color: var(--primary-color);
     text-decoration: underline;
   }
   
@@ -629,3 +629,7 @@
       align-self: flex-end;
     }
   }
+
+.concert-action-button {
+    color: var(--primary-color);
+}

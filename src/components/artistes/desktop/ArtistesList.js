@@ -15,7 +15,7 @@ import {
 } from 'firebase/firestore';
 
 // Imports internes
-import { db } from '../../../firebase';
+import { db } from '@/firebase';
 
 // Imports Bootstrap
 import { 
@@ -27,11 +27,12 @@ import {
   Form, 
   InputGroup, 
   Badge, 
-  Spinner 
+  Spinner,
+  Table 
 } from 'react-bootstrap';
 
 // Styles
-import '../../../style/artistesList.css';
+import '@/style/artistesList.css';
 
 const ArtistesList = () => {
   const [artistes, setArtistes] = useState([]);
@@ -50,7 +51,7 @@ const ArtistesList = () => {
   const [hasMore, setHasMore] = useState(true);
   const searchInputRef = useRef(null);
   const navigate = useNavigate();
-  const pageSize = 12; // Nombre d'artistes à charger par page
+  const pageSize = 20; // Augmenté pour la vue liste
 
   // Fonction pour charger les artistes
   const fetchArtistes = async (reset = true) => {
@@ -141,6 +142,7 @@ const ArtistesList = () => {
 
   const handleDelete = async (id, event) => {
     event.stopPropagation(); // Empêcher la propagation de l'événement
+    event.preventDefault(); // Empêcher la navigation
     
     if (window.confirm('Êtes-vous sûr de vouloir supprimer cet artiste ?')) {
       try {
@@ -410,68 +412,96 @@ const ArtistesList = () => {
         </Card>
       ) : (
         <>
-          {/* Liste des artistes en grille */}
-          <Row xs={1} sm={2} md={3} xl={4} className="g-4">
-            {filteredArtistes.map(artiste => (
-              <Col key={artiste.id}>
-                <Card 
-                  className="artiste-card h-100"
-                  onClick={() => navigate(`/artistes/${artiste.id}`)}
-                >
-                  <div className="artiste-photo">
-                    {artiste.photoPrincipale ? (
-                      <img src={artiste.photoPrincipale} alt={artiste.nom} />
-                    ) : (
-                      <div className="placeholder-photo">
-                        <i className="bi bi-music-note"></i>
-                      </div>
-                    )}
-                    <div className="artiste-badges">
-                      {getNbConcerts(artiste) > 0 && (
-                        <Badge bg="primary">{getNbConcerts(artiste)} concert{getNbConcerts(artiste) > 1 ? 's' : ''}</Badge>
-                      )}
-                      {artiste.estGroupeFavori && (
-                        <Badge bg="warning"><i className="bi bi-star-fill me-1"></i>Favori</Badge>
-                      )}
-                    </div>
-                  </div>
-                  <div className="artiste-content">
-                    <h3 className="artiste-name">{artiste.nom}</h3>
-                    {artiste.genre && <p className="artiste-genre">{artiste.genre}</p>}
-                    <div className="artiste-info">
-                      {artiste.cachetMoyen && (
-                        <span className="info-item">
-                          <i className="bi bi-cash"></i>
-                          {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(artiste.cachetMoyen)}
-                        </span>
-                      )}
-                      {artiste.ville && (
-                        <span className="info-item">
-                          <i className="bi bi-geo-alt"></i>
+          {/* Nouvelle liste des artistes en format tableau */}
+          <Card className="artistes-list-container">
+            <Table hover responsive className="artistes-table mb-0">
+              <thead>
+                <tr>
+                  <th style={{ width: '40%' }}>Artiste</th>
+                  <th style={{ width: '15%' }}>Lieu</th>
+                  <th style={{ width: '15%' }}>Cachet</th>
+                  <th style={{ width: '15%' }}>Concerts</th>
+                  <th style={{ width: '15%' }}>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredArtistes.map(artiste => (
+                  <tr key={artiste.id} className={artiste.estGroupeFavori ? 'favorite-artiste-row' : ''}>
+                    <td className="artiste-name-cell">
+                      <Link to={`/artistes/${artiste.id}`} className="d-flex align-items-center text-decoration-none">
+                        <div className="artiste-avatar me-3">
+                          {artiste.photoPrincipale ? (
+                            <img src={artiste.photoPrincipale} alt={artiste.nom} />
+                          ) : (
+                            <div className="placeholder-avatar">
+                              <i className="bi bi-music-note"></i>
+                            </div>
+                          )}
+                        </div>
+                        <div>
+                          <div className="fw-bold d-flex align-items-center">
+                            {artiste.nom}
+                            {artiste.estGroupeFavori && (
+                              <i className="bi bi-star-fill text-warning ms-2"></i>
+                            )}
+                          </div>
+                          {artiste.genre && <div className="small text-muted">{artiste.genre}</div>}
+                        </div>
+                      </Link>
+                    </td>
+                    <td>
+                      {artiste.ville ? (
+                        <div className="d-flex align-items-center">
+                          <i className="bi bi-geo-alt text-muted me-2"></i>
                           {artiste.ville}
-                        </span>
+                        </div>
+                      ) : (
+                        <span className="text-muted">-</span>
                       )}
-                    </div>
-                  </div>
-                  <div className="artiste-actions">
-                    <Link to={`/artistes/${artiste.id}`} className="btn btn-outline-primary btn-sm" onClick={(e) => e.stopPropagation()}>
-                      <i className="bi bi-eye"></i>
-                    </Link>
-                    <Link to={`/artistes/${artiste.id}/modifier`} className="btn btn-outline-secondary btn-sm" onClick={(e) => e.stopPropagation()}>
-                      <i className="bi bi-pencil"></i>
-                    </Link>
-                    <Button 
-                      variant="outline-danger"
-                      size="sm"
-                      onClick={(e) => handleDelete(artiste.id, e)}
-                    >
-                      <i className="bi bi-trash"></i>
-                    </Button>
-                  </div>
-                </Card>
-              </Col>
-            ))}
-          </Row>
+                    </td>
+                    <td>
+                      {artiste.cachetMoyen ? (
+                        <div className="d-flex align-items-center">
+                          <i className="bi bi-cash text-muted me-2"></i>
+                          {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(artiste.cachetMoyen)}
+                        </div>
+                      ) : (
+                        <span className="text-muted">-</span>
+                      )}
+                    </td>
+                    <td>
+                      {getNbConcerts(artiste) > 0 ? (
+                        <Badge bg="primary" className="px-2 py-1 d-inline-flex align-items-center">
+                          <i className="bi bi-music-note-beamed me-1"></i>
+                          {getNbConcerts(artiste)}
+                        </Badge>
+                      ) : (
+                        <Badge bg="secondary" className="px-2 py-1">0</Badge>
+                      )}
+                    </td>
+                    <td>
+                      <div className="d-flex align-items-center gap-2">
+                        <Link to={`/artistes/${artiste.id}`} className="btn btn-outline-primary btn-sm action-button">
+                          <i className="bi bi-eye me-1"></i>Voir
+                        </Link>
+                        <Link to={`/artistes/${artiste.id}/modifier`} className="btn btn-outline-secondary btn-sm action-button">
+                          <i className="bi bi-pencil me-1"></i>Modifier
+                        </Link>
+                        <Button 
+                          variant="outline-danger"
+                          size="sm"
+                          className="action-button"
+                          onClick={(e) => handleDelete(artiste.id, e)}
+                        >
+                          <i className="bi bi-trash me-1"></i>
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </Card>
           
           {/* Bouton pour charger plus */}
           {hasMore && !searchTerm && (

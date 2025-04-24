@@ -8,7 +8,7 @@
   
   .sidebar {
     width: 250px;
-    background-color: #2c3e50;
+    background-color: var(--primary-color);
     color: white;
     position: sticky;
     top: 0;
@@ -48,7 +48,7 @@
   }
   
   .menu-item.active {
-    background-color: #3498db;
+    background-color: var(--primary-light);
     color: white;
   }
   
@@ -135,7 +135,7 @@
   }
   
   .mobile-header {
-    background-color: #2c3e50;
+    background-color: var(--primary-color);
     color: white;
     padding: 12px 15px;
     display: flex;
@@ -177,7 +177,7 @@
     width: 80%;
     max-width: 300px;
     height: 100vh;
-    background-color: #2c3e50;
+    background-color: var(--primary-color);
     color: white;
     z-index: 30;
     transform: translateX(-100%);
@@ -227,7 +227,7 @@
   }
   
   .mobile-menu-item.active {
-    background-color: #3498db;
+    background-color: var(--primary-light);
     color: white;
   }
   

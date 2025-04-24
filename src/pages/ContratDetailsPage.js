@@ -6,7 +6,7 @@ import { db } from '@/firebase';
 import { doc, getDoc, updateDoc, deleteDoc, Timestamp } from 'firebase/firestore';
 
 import { FaDownload, FaEnvelope, FaFileSignature } from 'react-icons/fa';
-import ContratPDF from '@/components/contrats/ContratPDF.js';
+import ContratPDFWrapper from '@/components/contrats/ContratPDFWrapper.js';
 import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
 import '@/styles/index.css';
 
@@ -241,7 +241,7 @@ const ContratDetailsPage = () => {
             {template && concert && (
               <PDFDownloadLink
                 document={
-                  <ContratPDF 
+                  <ContratPDFWrapper 
                     template={template}
                     concertData={concert}
                     programmateurData={programmateur}
@@ -300,7 +300,7 @@ const ContratDetailsPage = () => {
               <Card.Title>Aperçu du contrat</Card.Title>
               <div className="pdf-viewer">
                 <PDFViewer width="100%" height={600}>
-                  <ContratPDF 
+                  <ContratPDFWrapper 
                     template={template}
                     concertData={concert}
                     programmateurData={programmateur}

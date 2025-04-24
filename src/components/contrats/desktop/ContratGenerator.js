@@ -30,7 +30,7 @@ import {
   serverTimestamp
 } from '@/firebase';
 import { PDFDownloadLink } from '@react-pdf/renderer';
-import ContratPDF from '@/components/contrats/ContratPDF.js';
+import ContratPDFWrapper from '@/components/contrats/ContratPDFWrapper.js';
 import '@/styles/index.css';
 
 const ContratGenerator = ({ concert, programmateur, artiste, lieu }) => {
@@ -356,7 +356,7 @@ const ContratGenerator = ({ concert, programmateur, artiste, lieu }) => {
               {validateDataBeforeGeneration() ? (
                 <PDFDownloadLink
                   document={
-                    <ContratPDF 
+                    <ContratPDFWrapper 
                       template={selectedTemplate}
                       concertData={concert}
                       programmateurData={programmateur}
@@ -365,7 +365,7 @@ const ContratGenerator = ({ concert, programmateur, artiste, lieu }) => {
                       entrepriseInfo={entrepriseInfo}
                     />
                   }
-                  fileName={`Contrat_${concert.titre || 'Concert'}_${new Date().toISOString().slice(0, 10)}.pdf`}
+                  fileName={`Contrat_${concert.titre || 'Concert'}.pdf`}
                   className="btn btn-primary"
                 >
                   {({ blob, url, loading, error }) => {

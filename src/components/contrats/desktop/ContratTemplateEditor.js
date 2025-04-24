@@ -53,6 +53,68 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext }) => {
   const headerEditorRef = useRef();
   const footerEditorRef = useRef();
 
+  // Module personnalisé pour les sauts de page
+  const PageBreak = () => {
+    const Quill = ReactQuill.Quill;
+    const BlockEmbed = Quill.import('blots/block/embed');
+
+    class PageBreakBlot extends BlockEmbed {
+      static create(value) {
+        const node = super.create();
+        node.setAttribute('class', 'page-break');
+        return node;
+      }
+    }
+
+    PageBreakBlot.blotName = 'pageBreak';
+    PageBreakBlot.tagName = 'hr'; // Utilise une balise HR pour représenter visuellement
+
+    Quill.register(PageBreakBlot);
+    
+    // Ajouter le style CSS pour les sauts de page
+    useEffect(() => {
+      const style = document.createElement('style');
+      style.innerHTML = `
+        .page-break {
+          display: block;
+          width: 100%;
+          margin: 10px 0;
+          border: none;
+          height: 5px;
+          background: repeating-linear-gradient(
+            to right,
+            #ccc,
+            #ccc 5px,
+            transparent 5px,
+            transparent 10px
+          );
+          position: relative;
+        }
+        .page-break::after {
+          content: "SAUT DE PAGE";
+          position: absolute;
+          top: -8px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: white;
+          padding: 0 10px;
+          font-size: 10px;
+          color: #666;
+        }
+      `;
+      document.head.appendChild(style);
+      
+      return () => {
+        document.head.removeChild(style);
+      };
+    }, []);
+
+    return null;
+  };
+
+  // Appeler le composant PageBreak
+  PageBreak();
+
   // Types de modèles disponibles
   const templateTypes = [
     { value: 'session', label: 'Session standard' },
@@ -63,18 +125,29 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext }) => {
     { value: 'custom', label: 'Personnalisé' }
   ];
   
-  // Configuration de l'éditeur
+  // Configuration de l'éditeur avec saut de page
   const editorModules = {
-    toolbar: [
-      [{ 'header': [1, 2, 3, false] }],
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ 'color': [] }, { 'background': [] }],
-      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-      [{ 'indent': '-1' }, { 'indent': '+1' }],
-      [{ 'align': [] }],
-      ['link', 'image'],
-      ['clean']
-    ]
+    toolbar: {
+      container: [
+        [{ 'header': [1, 2, 3, false] }],
+        ['bold', 'italic', 'underline', 'strike'],
+        [{ 'color': [] }, { 'background': [] }],
+        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+        [{ 'indent': '-1' }, { 'indent': '+1' }],
+        [{ 'align': [] }],
+        ['link', 'image'],
+        ['pagebreak'], // Nouveau bouton pour le saut de page
+        ['clean']
+      ],
+      handlers: {
+        pagebreak: function() {
+          const quill = this.quill;
+          const range = quill.getSelection(true);
+          quill.insertEmbed(range.index, 'pageBreak', true, 'user');
+          quill.setSelection(range.index + 1, 0);
+        }
+      }
+    }
   };
 
   // Fonction pour insérer une variable dans un éditeur spécifique
@@ -187,6 +260,22 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext }) => {
           max-height: 100%;
           max-width: 100%;
         }
+        /* Style pour les sauts de page dans l'aperçu */
+        .page-break {
+          display: block;
+          width: 100%;
+          margin: 20px 0;
+          padding: 10px 0;
+          border-top: 2px dashed #999;
+          border-bottom: 2px dashed #999;
+          text-align: center;
+          background-color: #f8f9fa;
+        }
+        .page-break::before {
+          content: "⁂ SAUT DE PAGE ⁂";
+          font-size: 12px;
+          color: #666;
+        }
       </style>
       <div class="preview-container">
     `;
@@ -231,7 +320,10 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext }) => {
       .replace(/{lieu_capacite}/g, '200')
       .replace(/{date_jour}/g, new Date().getDate().toString())
       .replace(/{date_mois}/g, (new Date().getMonth() + 1).toString())
-      .replace(/{date_annee}/g, new Date().getFullYear().toString());
+      .replace(/{date_annee}/g, new Date().getFullYear().toString())
+      // Remplacer les sauts de page par des visualisations
+      .replace(/<hr\s+class=["|']page-break["|'][^>]*>/gi, 
+        '<div class="page-break"></div>');
     
     content += processedBodyContent;
     
@@ -315,6 +407,18 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext }) => {
             <li>Sélectionnez une variable pour l'insérer à l'endroit du curseur</li>
             <li>Par exemple, {'{programmateur_nom}'} sera remplacé par le nom du programmateur</li>
           </ul>
+        </div>
+        
+        <div className="guide-section">
+          <h4>4. Gestion des sauts de page</h4>
+          <p>Pour éviter qu'un article soit coupé entre deux pages :</p>
+          <ul>
+            <li>Utilisez le bouton <strong>Saut de page</strong> pour forcer un changement de page</li>
+            <li>Placez les sauts de page entre vos articles ou sections principales</li>
+            <li>Vérifiez le rendu dans l'aperçu avant de finaliser votre modèle</li>
+            <li>Pour les articles courts, regroupez-les sur une même page</li>
+          </ul>
+          <p><strong>Astuce</strong> : Dans l'aperçu, les sauts de page sont représentés par une ligne pointillée.</p>
         </div>
       </div>
     </div>

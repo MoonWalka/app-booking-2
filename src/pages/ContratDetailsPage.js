@@ -8,23 +8,9 @@ import { doc, getDoc, updateDoc, deleteDoc, Timestamp } from 'firebase/firestore
 import { FaDownload, FaEnvelope, FaFileSignature } from 'react-icons/fa';
 import ContratPDF from '@/components/contrats/ContratPDF.js';
 import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
-import '@/style/contratDetails.css';
+import '@/styles/index.css';
 
-// Imports modifiés de la branche refacto-structure-scriptshell - pour implémentation future
-{/*
-import React, { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Button, Card, Alert, Badge } from 'react-bootstrap';
-import { db } from '@/firebase';
-import { doc, getDoc, updateDoc, deleteDoc, Timestamp } from '@/firebase';
-
-import { FaDownload, FaEnvelope, FaFileSignature } from 'react-icons/fa';
-import ContratPDF from '@components/contrats/ContratPDF.js';
-import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
-import '@styles/index.css';
-*/}
-// Note: Les imports utilisent '@components' et '@styles/index.css' au lieu de '@/components' et '@/style/contratDetails.css'
-// Les alias sont correctement configurés dans votre projet selon jsconfig.json et craco.config.js
+// Note: Les imports sont standardisés en utilisant le format @/components/ et @/styles/
 
 const ContratDetailsPage = () => {
   const { contratId } = useParams();

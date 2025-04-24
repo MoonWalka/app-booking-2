@@ -30,10 +30,8 @@ import {
   serverTimestamp
 } from '@/firebase';
 import { PDFDownloadLink } from '@react-pdf/renderer';
-// import ContratPDF from '@/components/contrats/ContratPDF.js';
-import ContratPDF from '@components/contrats/ContratPDF.js';
-// import '../../../style/contratGenerator.css';
-import '@styles/index.css';
+import ContratPDF from '@/components/contrats/ContratPDF.js';
+import '@/styles/index.css';
 
 const ContratGenerator = ({ concert, programmateur, artiste, lieu }) => {
   const [templates, setTemplates] = useState([]);
@@ -64,9 +62,9 @@ const ContratGenerator = ({ concert, programmateur, artiste, lieu }) => {
       return false;
     }
     
-    // Vérifier si le modèle a le bon format (ancien ou nouveau)
-    if (!selectedTemplate.bodyContent && (!selectedTemplate.sections || !Array.isArray(selectedTemplate.sections))) {
-      console.error("Le modèle sélectionné n'a ni contenu body ni sections:", selectedTemplate);
+    // Vérifier si le modèle a le bon format
+    if (!selectedTemplate.bodyContent) {
+      console.error("Le modèle sélectionné n'a pas de contenu body:", selectedTemplate);
       return false;
     }
     
@@ -89,35 +87,11 @@ const ContratGenerator = ({ concert, programmateur, artiste, lieu }) => {
         );
         const templatesSnapshot = await getDocs(templatesQuery);
         
-        // Convertir les modèles à la volée si nécessaire
-        const templatesList = templatesSnapshot.docs.map(doc => {
-          const data = doc.data();
-          const template = {
-            id: doc.id,
-            ...data
-          };
-          
-          // Si c'est un ancien format (avec sections mais sans bodyContent)
-          if (template.sections && Array.isArray(template.sections) && !template.bodyContent) {
-            console.log("Conversion à la volée d'un modèle ancien format:", template.id);
-            
-            // Convertir les sections en bodyContent
-            template.bodyContent = template.sections.map(section => 
-              `<h3>${section.title}</h3>${section.content}`
-            ).join('<br/>');
-            
-            // Ajouter des valeurs par défaut pour les autres propriétés
-            template.headerContent = template.headerContent || '';
-            template.headerHeight = template.headerHeight || 20;
-            template.headerBottomMargin = template.headerBottomMargin || 10;
-            template.footerContent = template.footerContent || '';
-            template.footerHeight = template.footerHeight || 15;
-            template.footerTopMargin = template.footerTopMargin || 10;
-            template.logoUrl = template.logoUrl || '';
-          }
-          
-          return template;
-        });
+        // Convertir les documents en objets
+        const templatesList = templatesSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
         
         console.log(`${templatesList.length} modèles de contrat chargés`);
         setTemplates(templatesList);
@@ -166,28 +140,10 @@ const ContratGenerator = ({ concert, programmateur, artiste, lieu }) => {
               setSelectedTemplateId(contratData.templateId);
               const templateDoc = templatesSnapshot.docs.find(doc => doc.id === contratData.templateId);
               if (templateDoc) {
-                const templateData = {
+                setSelectedTemplate({
                   id: templateDoc.id,
                   ...templateDoc.data()
-                };
-                
-                // Conversion à la volée si nécessaire
-                if (templateData.sections && Array.isArray(templateData.sections) && !templateData.bodyContent) {
-                  console.log("Conversion à la volée du template existant");
-                  templateData.bodyContent = templateData.sections.map(section => 
-                    `<h3>${section.title}</h3>${section.content}`
-                  ).join('<br/>');
-                  
-                  templateData.headerContent = templateData.headerContent || '';
-                  templateData.headerHeight = templateData.headerHeight || 20;
-                  templateData.headerBottomMargin = templateData.headerBottomMargin || 10;
-                  templateData.footerContent = templateData.footerContent || '';
-                  templateData.footerHeight = templateData.footerHeight || 15;
-                  templateData.footerTopMargin = templateData.footerTopMargin || 10;
-                  templateData.logoUrl = templateData.logoUrl || '';
-                }
-                
-                setSelectedTemplate(templateData);
+                });
               } else {
                 console.warn("Le template du contrat existant n'a pas été trouvé");
               }
@@ -380,22 +336,12 @@ const ContratGenerator = ({ concert, programmateur, artiste, lieu }) => {
           <>
             <div className="template-preview mt-3">
               <h6>Aperçu du modèle</h6>
-              {/* Afficher les sections si ancien format, ou aperçu du bodyContent si nouveau format */}
-              {selectedTemplate.sections && selectedTemplate.sections.length > 0 ? (
-                <div className="template-sections-list">
-                  {selectedTemplate.sections.map((section, index) => (
-                    <div key={index} className="template-section-item">
-                      <span className="section-number">{index + 1}</span>
-                      <span className="section-title">{section.title}</span>
-                    </div>
-                  ))}
-                </div>
-              ) : selectedTemplate.bodyContent ? (
+              {selectedTemplate.bodyContent ? (
                 <div className="template-body-preview">
-                  <p className="text-muted small">Ce modèle utilise le nouveau format avec en-tête, corps et pied de page.</p>
+                  <p className="text-muted small">Ce modèle utilise le format avec en-tête, corps et pied de page.</p>
                 </div>
               ) : (
-                <p className="text-danger">Attention: Ce modèle ne contient ni sections ni contenu principal.</p>
+                <p className="text-danger">Attention: Ce modèle ne contient pas de contenu principal.</p>
               )}
             </div>
             

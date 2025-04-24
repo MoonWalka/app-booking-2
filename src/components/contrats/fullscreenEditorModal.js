@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import '@styles/index.css';
+import '@/styles/index.css';
 
 const FullscreenEditorModal = ({ 
   isOpen, 
@@ -10,6 +10,10 @@ const FullscreenEditorModal = ({
   initialContent, 
   onSave 
 }) => {
+  console.log("============ FULLSCREEN EDITOR MODAL CHARGÉE ============");
+  console.log("Section titre:", sectionTitle);
+  console.log("Contenu initial reçu:", initialContent);
+  
   const [content, setContent] = useState('');
   const editorRef = useRef(null);
   const modalRef = useRef(null);
@@ -17,6 +21,7 @@ const FullscreenEditorModal = ({
   // Initialiser le contenu lorsque la modale s'ouvre ou que le contenu initial change
   useEffect(() => {
     if (isOpen && initialContent !== undefined) {
+      console.log("Initialisation du contenu dans l'éditeur:", initialContent);
       setContent(initialContent);
     }
   }, [isOpen, initialContent]);
@@ -48,6 +53,13 @@ const FullscreenEditorModal = ({
     if (modalRef.current && !modalRef.current.contains(event.target)) {
       onClose();
     }
+  };
+  
+  // Fonction de sauvegarde avec log
+  const handleSave = () => {
+    console.log("Sauvegarde du contenu:", content);
+    onSave(content);
+    onClose();
   };
   
   if (!isOpen) return null;
@@ -99,10 +111,7 @@ const FullscreenEditorModal = ({
           <button 
             type="button"
             className="btn btn-primary" 
-            onClick={() => {
-              onSave(content);
-              onClose();
-            }}
+            onClick={handleSave}
           >
             Enregistrer les modifications
           </button>

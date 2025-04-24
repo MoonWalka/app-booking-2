@@ -26,24 +26,28 @@ const ContratTemplatesEditPage = () => {
       }
 
       if (id === 'nouveau') {
-        // Nouveau modèle
+        // Nouveau modèle avec bodyContent directement
         setTemplate({
           name: 'Nouveau modèle de contrat',
           isDefault: false,
-          sections: [
-            {
-              title: 'Parties contractantes',
-              content: '<p>Entre les soussignés:</p><p><strong>L\'Organisateur:</strong> {programmateur_nom}, {programmateur_structure}</p><p><strong>L\'Artiste:</strong> {artiste_nom}</p>'
-            },
-            {
-              title: 'Objet du contrat',
-              content: '<p>Le présent contrat a pour objet de définir les conditions dans lesquelles l\'Artiste se produira lors du concert intitulé "{concert_titre}" qui se déroulera le {concert_date} à {lieu_nom}, {lieu_adresse}, {lieu_code_postal} {lieu_ville}.</p>'
-            },
-            {
-              title: 'Rémunération',
-              content: '<p>L\'Organisateur s\'engage à verser à l\'Artiste la somme de {concert_montant} euros pour sa prestation.</p>'
-            }
-          ]
+          bodyContent: `
+            <h3>Parties contractantes</h3>
+            <p>Entre les soussignés:</p>
+            <p><strong>L'Organisateur:</strong> {programmateur_nom}, {programmateur_structure}</p>
+            <p><strong>L'Artiste:</strong> {artiste_nom}</p>
+            
+            <h3>Objet du contrat</h3>
+            <p>Le présent contrat a pour objet de définir les conditions dans lesquelles l'Artiste se produira lors du concert intitulé "{concert_titre}" qui se déroulera le {concert_date} à {lieu_nom}, {lieu_adresse}, {lieu_code_postal} {lieu_ville}.</p>
+            
+            <h3>Rémunération</h3>
+            <p>L'Organisateur s'engage à verser à l'Artiste la somme de {concert_montant} euros pour sa prestation.</p>
+          `,
+          headerContent: '',
+          footerContent: '',
+          headerHeight: 20,
+          headerBottomMargin: 10,
+          footerHeight: 15,
+          footerTopMargin: 10
         });
         setLoading(false);
       } else {

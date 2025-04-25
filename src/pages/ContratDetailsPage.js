@@ -1,7 +1,7 @@
 // src/pages/ContratDetailsPage.js
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Button, Card, Alert, Badge } from 'react-bootstrap';
+import { Button, Card, Alert, Badge, Nav } from 'react-bootstrap';
 import { db } from '@/firebase';
 import { doc, getDoc, updateDoc, deleteDoc, Timestamp } from 'firebase/firestore';
 
@@ -27,6 +27,11 @@ const ContratDetailsPage = () => {
   const [showPdfViewer, setShowPdfViewer] = useState(false);
   const [showVariables, setShowVariables] = useState(false); // false pour que la carte soit pliée par défaut
   const pdfViewerRef = useRef(null);
+
+  // États pour gérer les différents types d'aperçus
+  const [previewType, setPreviewType] = useState('html'); // 'html', 'react-pdf' ou 'pdf'
+  const [pdfPreviewUrl, setPdfPreviewUrl] = useState(null);
+  const [isGeneratingPdfPreview, setIsGeneratingPdfPreview] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -187,7 +192,38 @@ const ContratDetailsPage = () => {
     }
   };
 
-  // Fonction pour télécharger le PDF avec Puppeteer
+  // Fonction pour générer l'aperçu PDF exact via Puppeteer
+  const generatePDFPreview = async () => {
+    if (!template || !concert) {
+      alert('Données insuffisantes pour générer l\'aperçu PDF');
+      return;
+    }
+
+    setIsGeneratingPdfPreview(true);
+    try {
+      // Préparer les données pour l'aperçu
+      const data = {
+        template,
+        contratData: contrat,
+        concertData: concert,
+        programmateurData: programmateur,
+        artisteData: artiste,
+        lieuData: lieu,
+        entrepriseInfo: entreprise
+      };
+      
+      // Utiliser la nouvelle méthode ajoutée au ContratPDFWrapper pour générer un aperçu PDF
+      const url = await ContratPDFWrapper.generatePDFPreview(data, `Aperçu_${concert.titre || 'Concert'}`);
+      setPdfPreviewUrl(url);
+      setPreviewType('pdf');
+    } catch (error) {
+      console.error('Erreur lors de la génération de l\'aperçu PDF:', error);
+      alert(`Erreur lors de la génération de l'aperçu PDF: ${error.message}`);
+    } finally {
+      setIsGeneratingPdfPreview(false);
+    }
+  };
+
   const handleDownloadPdf = async () => {
     try {
       if (!template || !concert) {
@@ -330,24 +366,139 @@ const ContratDetailsPage = () => {
         </Card.Body>
       </Card>
       
-      {/* PDF Viewer */}
+      {/* PDF Viewer avec options d'aperçu améliorées */}
       {showPdfViewer && template && concert && (
         <div ref={pdfViewerRef} className="pdf-viewer-container mb-4">
           <Card>
             <Card.Body>
-              <Card.Title>Aperçu du contrat</Card.Title>
-              <div className="pdf-viewer">
-                <PDFViewer width="100%" height={600}>
-                  <ContratPDFWrapper 
-                    template={template}
-                    contratData={contrat} // NOUVEAU: Passage des données complètes du contrat incluant la templateSnapshot
-                    concertData={concert}
-                    programmateurData={programmateur}
-                    artisteData={artiste}
-                    lieuData={lieu}
-                    entrepriseInfo={entreprise}
-                  />
-                </PDFViewer>
+              <Card.Title className="mb-3">Aperçu du contrat</Card.Title>
+              
+              {/* Onglets pour les différents types d'aperçu */}
+              <Nav 
+                variant="tabs" 
+                className="mb-3"
+                activeKey={previewType}
+                onSelect={(k) => setPreviewType(k)}
+              >
+                <Nav.Item>
+                  <Nav.Link eventKey="html" className="d-flex align-items-center">
+                    <i className="bi bi-file-earmark-code me-2"></i>
+                    Aperçu HTML
+                    <span className="badge bg-success ms-2" style={{ fontSize: '0.7em' }}>Recommandé</span>
+                  </Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link eventKey="react-pdf" className="d-flex align-items-center">
+                    <i className="bi bi-file-earmark-text me-2"></i>
+                    Aperçu simple
+                  </Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link 
+                    eventKey="pdf" 
+                    className="d-flex align-items-center"
+                    onClick={() => {
+                      if (previewType !== 'pdf' && !pdfPreviewUrl) {
+                        generatePDFPreview();
+                      }
+                    }}
+                    disabled={isGeneratingPdfPreview}
+                  >
+                    <i className="bi bi-file-earmark-pdf me-2"></i>
+                    {isGeneratingPdfPreview ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        Génération en cours...
+                      </>
+                    ) : (
+                      <>
+                        Aperçu PDF exact
+                        {pdfPreviewUrl && <span className="badge bg-info ms-2" style={{ fontSize: '0.7em' }}>Prêt</span>}
+                      </>
+                    )}
+                  </Nav.Link>
+                </Nav.Item>
+              </Nav>
+              
+              <div className="preview-content mt-3">
+                {previewType === 'html' && (
+                  <div className="html-preview">
+                    <ContratPDFWrapper.HTMLPreview 
+                      data={{
+                        template,
+                        contratData: contrat,
+                        concertData: concert,
+                        programmateurData: programmateur,
+                        artisteData: artiste,
+                        lieuData: lieu,
+                        entrepriseInfo: entreprise
+                      }}
+                      title={`Contrat - ${concert.titre || 'Concert'}`}
+                    />
+                  </div>
+                )}
+                
+                {previewType === 'react-pdf' && (
+                  <div className="react-pdf-preview">
+                    <div className="alert alert-warning mb-3">
+                      <i className="bi bi-exclamation-triangle-fill me-2"></i>
+                      Cet aperçu est simplifié. La mise en page peut différer du résultat final.
+                    </div>
+                    <PDFViewer width="100%" height={550}>
+                      <ContratPDFWrapper 
+                        template={template}
+                        contratData={contrat}
+                        concertData={concert}
+                        programmateurData={programmateur}
+                        artisteData={artiste}
+                        lieuData={lieu}
+                        entrepriseInfo={entreprise}
+                      />
+                    </PDFViewer>
+                  </div>
+                )}
+                
+                {previewType === 'pdf' && (
+                  <div className="pdf-exact-preview">
+                    {isGeneratingPdfPreview ? (
+                      <div className="text-center p-5">
+                        <div className="spinner-border text-primary" role="status">
+                          <span className="visually-hidden">Génération de l'aperçu PDF...</span>
+                        </div>
+                        <p className="mt-3">Génération de l'aperçu PDF en cours...</p>
+                        <p className="text-muted small">Cela peut prendre quelques secondes</p>
+                      </div>
+                    ) : pdfPreviewUrl ? (
+                      <div className="pdf-container">
+                        <div className="alert alert-success mb-3">
+                          <i className="bi bi-check-circle-fill me-2"></i>
+                          Cet aperçu est identique au PDF qui sera téléchargé.
+                        </div>
+                        <iframe 
+                          src={pdfPreviewUrl} 
+                          width="100%" 
+                          height={550} 
+                          title="Aperçu PDF"
+                          style={{ border: '1px solid #ddd' }}
+                        />
+                      </div>
+                    ) : (
+                      <div className="text-center p-5">
+                        <button 
+                          className="btn btn-primary" 
+                          onClick={generatePDFPreview}
+                          disabled={isGeneratingPdfPreview}
+                        >
+                          <i className="bi bi-file-earmark-pdf me-2"></i>
+                          Générer l'aperçu PDF exact
+                        </button>
+                        <p className="text-muted mt-3">
+                          L'aperçu PDF utilise le même moteur de rendu que le PDF final
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </Card.Body>
           </Card>

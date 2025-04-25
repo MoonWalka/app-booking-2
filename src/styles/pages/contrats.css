@@ -1174,3 +1174,96 @@
   .guide-section ul li {
     margin-bottom: 5px;
   }
+  
+  /* Styles pour les aperçus de contrat améliorés */
+  .preview-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  /* Container pour l'aperçu du contrat */
+  .preview-content {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background-color: white;
+    position: relative;
+  }
+  
+  /* Styles spécifiques pour l'aperçu HTML */
+  .html-preview-frame {
+    width: 100%;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    min-height: 600px;
+  }
+  
+  /* Styles pour l'aperçu PDF */
+  .pdf-container {
+    width: 100%;
+    border-radius: var(--border-radius-sm);
+    overflow: hidden;
+  }
+  
+  /* Styles pour les badges dans les onglets */
+  .nav-link .badge {
+    font-size: 0.65rem;
+    padding: 0.25em 0.5em;
+  }
+  
+  /* Styles pour l'affichage de l'aperçu */
+  .preview-content iframe {
+    display: block;
+    margin: 0 auto;
+  }
+  
+  /* Style pour le message de chargement de l'aperçu */
+  .loading-preview {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    color: var(--text-muted);
+  }
+  
+  /* Style amélioré pour les onglets d'aperçu */
+  .pdf-viewer-container .nav-tabs {
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .pdf-viewer-container .nav-tabs .nav-link {
+    color: var(--gray-600);
+    border: none;
+    padding: 10px 15px;
+    position: relative;
+    transition: color 0.3s, background-color 0.3s;
+  }
+  
+  .pdf-viewer-container .nav-tabs .nav-link:hover {
+    color: var(--primary-color);
+    background-color: rgba(var(--primary-color-rgb), 0.05);
+  }
+  
+  .pdf-viewer-container .nav-tabs .nav-link.active {
+    color: var(--primary-color);
+    background-color: transparent;
+    font-weight: 500;
+  }
+  
+  .pdf-viewer-container .nav-tabs .nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: var(--primary-color);
+  }
+  
+  /* Style pour les messages d'info dans les aperçus */
+  .preview-content .alert {
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }

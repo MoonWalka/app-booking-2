@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext.js';
 import { APP_NAME } from '../../../config.js';
-import '../../../style/layout.css';
-import '../../../style/mobileLayout.css'; // Nouveaux styles spécifiques au mobile
+// Importer le système de styles modulaire au lieu des anciens fichiers CSS
+import '@styles/index.css';
 
 function MobileLayout() {
   const { currentUser, logout } = useAuth();

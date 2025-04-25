@@ -1,4 +1,3 @@
-// src/components/structures/desktop/StructuresList.js
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
@@ -12,9 +11,8 @@ import {
   deleteDoc, 
   doc 
 } from 'firebase/firestore';
-import { db } from '../../../firebase';
+import { db } from '@/firebase';
 import { Button, Form, InputGroup } from 'react-bootstrap';
-import '../../../style/structuresList.css';
 
 const StructuresList = () => {
   const [structures, setStructures] = useState([]);
@@ -186,10 +184,10 @@ const StructuresList = () => {
   };
 
   return (
-    <div className="structures-container">
-      <div className="structures-header">
-        <h2 className="structures-title">Structures</h2>
-        <div className="structures-actions">
+    <div className="card">
+      <div className="card-header d-flex justify-content-between align-items-center">
+        <h2 className="mb-0">Structures</h2>
+        <div>
           <Link to="/structures/nouveau" className="btn btn-primary">
             <i className="bi bi-plus-circle me-2"></i>
             Ajouter une structure
@@ -197,186 +195,189 @@ const StructuresList = () => {
         </div>
       </div>
 
-      <div className="structures-filters">
-        <InputGroup className="structures-search">
-          <InputGroup.Text>
-            <i className="bi bi-search"></i>
-          </InputGroup.Text>
-          <Form.Control
-            ref={searchInputRef}
-            type="text"
-            placeholder="Rechercher par nom, raison sociale, ville ou SIRET..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          {searchTerm && (
-            <Button 
-              variant="outline-secondary" 
-              onClick={() => {
-                setSearchTerm('');
-                searchInputRef.current.focus();
-              }}
-            >
-              <i className="bi bi-x-lg"></i>
-            </Button>
-          )}
-        </InputGroup>
-
-        <Form.Select
-          className="structures-type-filter"
-          value={typeFilter}
-          onChange={(e) => setTypeFilter(e.target.value)}
-        >
-          <option value="tous">Tous les types</option>
-          <option value="association">Association</option>
-          <option value="entreprise">Entreprise</option>
-          <option value="administration">Administration</option>
-          <option value="collectivite">Collectivité</option>
-          <option value="autre">Autre</option>
-        </Form.Select>
-      </div>
-
-      {searchTerm && (
-        <p className="results-count">
-          {filteredStructures.length} résultat{filteredStructures.length !== 1 ? 's' : ''} trouvé{filteredStructures.length !== 1 ? 's' : ''}
-        </p>
-      )}
-
-      {filteredStructures.length === 0 ? (
-        <div className="alert alert-info modern-alert">
-          {searchTerm || typeFilter !== 'tous' ? (
-            <div className="d-flex align-items-center">
-              <i className="bi bi-info-circle me-3"></i>
-              <p className="mb-0">Aucune structure ne correspond à votre recherche.</p>
-            </div>
-          ) : (
-            <div className="d-flex align-items-center">
-              <i className="bi bi-info-circle me-3"></i>
-              <p className="mb-0">Aucune structure n'a été ajoutée. Cliquez sur "Ajouter une structure" pour commencer.</p>
-            </div>
-          )}
-        </div>
-      ) : (
-        <div className="table-responsive">
-          <table className="structures-table">
-            <thead>
-              <tr>
-                <th onClick={() => handleSort('nom')} style={{ cursor: 'pointer' }}>
-                  Nom {renderSortArrow('nom')}
-                </th>
-                <th onClick={() => handleSort('type')} style={{ cursor: 'pointer' }}>
-                  Type {renderSortArrow('type')}
-                </th>
-                <th onClick={() => handleSort('ville')} style={{ cursor: 'pointer' }}>
-                  Ville {renderSortArrow('ville')}
-                </th>
-                <th>SIRET</th>
-                <th>Programmateurs</th>
-                <th className="structures-actions-cell">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredStructures.map(structure => (
-                <tr key={structure.id} onClick={() => handleRowClick(structure.id)} style={{ cursor: 'pointer' }}>
-                  <td>
-                    <div className="d-flex align-items-center">
-                      <i className="bi bi-building me-2 text-muted"></i>
-                      <span>{structure.nom || structure.raisonSociale}</span>
-                    </div>
-                  </td>
-                  <td>
-                    {structure.type ? (
-                      <span className={`badge bg-${getTypeColor(structure.type)}`}>
-                        {getTypeLabel(structure.type)}
-                      </span>
-                    ) : (
-                      <span className="text-muted">-</span>
-                    )}
-                  </td>
-                  <td>
-                    {structure.ville ? (
-                      <div className="d-flex align-items-center">
-                        <i className="bi bi-geo-alt text-muted me-2"></i>
-                        {structure.ville}
-                      </div>
-                    ) : (
-                      <span className="text-muted">-</span>
-                    )}
-                  </td>
-                  <td>
-                    {structure.siret || <span className="text-muted">-</span>}
-                  </td>
-                  <td>
-                    {structure.programmateursAssocies?.length > 0 ? (
-                      <div className="d-flex align-items-center">
-                        <i className="bi bi-person-badge text-muted me-2"></i>
-                        {structure.programmateursAssocies.length}
-                      </div>
-                    ) : (
-                      <span className="text-muted">0</span>
-                    )}
-                  </td>
-                  <td className="structures-actions-cell">
-                    <Link 
-                      to={`/structures/${structure.id}`} 
-                      className="btn btn-sm btn-outline-primary me-1"
-                      onClick={handleActionClick}
-                    >
-                      <i className="bi bi-eye"></i>
-                    </Link>
-                    <Link 
-                      to={`/structures/${structure.id}/edit`} 
-                      className="btn btn-sm btn-outline-secondary me-1"
-                      onClick={handleActionClick}
-                    >
-                      <i className="bi bi-pencil"></i>
-                    </Link>
-                    <button 
-                      className="btn btn-sm btn-outline-danger"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDelete(structure.id);
-                      }}
-                    >
-                      <i className="bi bi-trash"></i>
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      {hasMore && !loading && filteredStructures.length > 0 && (
-        <div className="text-center mt-3">
-          <button 
-            className="btn btn-outline-primary" 
-            onClick={loadMore}
-            disabled={loading}
-          >
-            {loading ? (
-              <>
-                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                Chargement...
-              </>
-            ) : (
-              <>
-                <i className="bi bi-arrow-down-circle me-2"></i>
-                Afficher plus
-              </>
+      <div className="card-body">
+        <div className="d-flex flex-wrap gap-3 mb-4">
+          <InputGroup className="flex-grow-1" style={{ minWidth: '250px' }}>
+            <InputGroup.Text>
+              <i className="bi bi-search"></i>
+            </InputGroup.Text>
+            <Form.Control
+              ref={searchInputRef}
+              type="text"
+              placeholder="Rechercher par nom, raison sociale, ville ou SIRET..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            {searchTerm && (
+              <Button 
+                variant="outline-secondary" 
+                onClick={() => {
+                  setSearchTerm('');
+                  searchInputRef.current.focus();
+                }}
+              >
+                <i className="bi bi-x-lg"></i>
+              </Button>
             )}
-          </button>
-        </div>
-      )}
+          </InputGroup>
 
-      {loading && !hasMore && (
-        <div className="text-center mt-3">
-          <div className="spinner-border" role="status">
-            <span className="visually-hidden">Chargement...</span>
-          </div>
+          <Form.Select
+            className="w-auto"
+            style={{ minWidth: '200px' }}
+            value={typeFilter}
+            onChange={(e) => setTypeFilter(e.target.value)}
+          >
+            <option value="tous">Tous les types</option>
+            <option value="association">Association</option>
+            <option value="entreprise">Entreprise</option>
+            <option value="administration">Administration</option>
+            <option value="collectivite">Collectivité</option>
+            <option value="autre">Autre</option>
+          </Form.Select>
         </div>
-      )}
+
+        {searchTerm && (
+          <p className="results-count">
+            {filteredStructures.length} résultat{filteredStructures.length !== 1 ? 's' : ''} trouvé{filteredStructures.length !== 1 ? 's' : ''}
+          </p>
+        )}
+
+        {filteredStructures.length === 0 ? (
+          <div className="alert alert-info modern-alert">
+            {searchTerm || typeFilter !== 'tous' ? (
+              <div className="d-flex align-items-center">
+                <i className="bi bi-info-circle me-3"></i>
+                <p className="mb-0">Aucune structure ne correspond à votre recherche.</p>
+              </div>
+            ) : (
+              <div className="d-flex align-items-center">
+                <i className="bi bi-info-circle me-3"></i>
+                <p className="mb-0">Aucune structure n'a été ajoutée. Cliquez sur "Ajouter une structure" pour commencer.</p>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="table-responsive">
+            <table className="data-table">
+              <thead>
+                <tr>
+                  <th onClick={() => handleSort('nom')} style={{ cursor: 'pointer' }}>
+                    Nom {renderSortArrow('nom')}
+                  </th>
+                  <th onClick={() => handleSort('type')} style={{ cursor: 'pointer' }}>
+                    Type {renderSortArrow('type')}
+                  </th>
+                  <th onClick={() => handleSort('ville')} style={{ cursor: 'pointer' }}>
+                    Ville {renderSortArrow('ville')}
+                  </th>
+                  <th>SIRET</th>
+                  <th>Programmateurs</th>
+                  <th style={{ width: '120px', textAlign: 'right' }}>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredStructures.map(structure => (
+                  <tr key={structure.id} onClick={() => handleRowClick(structure.id)} style={{ cursor: 'pointer' }}>
+                    <td>
+                      <div className="d-flex align-items-center">
+                        <i className="bi bi-building me-2 text-muted"></i>
+                        <span>{structure.nom || structure.raisonSociale}</span>
+                      </div>
+                    </td>
+                    <td>
+                      {structure.type ? (
+                        <span className={`badge bg-${getTypeColor(structure.type)}`}>
+                          {getTypeLabel(structure.type)}
+                        </span>
+                      ) : (
+                        <span className="text-muted">-</span>
+                      )}
+                    </td>
+                    <td>
+                      {structure.ville ? (
+                        <div className="d-flex align-items-center">
+                          <i className="bi bi-geo-alt text-muted me-2"></i>
+                          {structure.ville}
+                        </div>
+                      ) : (
+                        <span className="text-muted">-</span>
+                      )}
+                    </td>
+                    <td>
+                      {structure.siret || <span className="text-muted">-</span>}
+                    </td>
+                    <td>
+                      {structure.programmateursAssocies?.length > 0 ? (
+                        <div className="d-flex align-items-center">
+                          <i className="bi bi-person-badge text-muted me-2"></i>
+                          {structure.programmateursAssocies.length}
+                        </div>
+                      ) : (
+                        <span className="text-muted">0</span>
+                      )}
+                    </td>
+                    <td style={{ textAlign: 'right' }}>
+                      <Link 
+                        to={`/structures/${structure.id}`} 
+                        className="btn btn-sm btn-outline-primary me-1"
+                        onClick={handleActionClick}
+                      >
+                        <i className="bi bi-eye"></i>
+                      </Link>
+                      <Link 
+                        to={`/structures/${structure.id}/edit`} 
+                        className="btn btn-sm btn-outline-secondary me-1"
+                        onClick={handleActionClick}
+                      >
+                        <i className="bi bi-pencil"></i>
+                      </Link>
+                      <button 
+                        className="btn btn-sm btn-outline-danger"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDelete(structure.id);
+                        }}
+                      >
+                        <i className="bi bi-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {hasMore && !loading && filteredStructures.length > 0 && (
+          <div className="text-center mt-3">
+            <button 
+              className="btn btn-outline-primary" 
+              onClick={loadMore}
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  Chargement...
+                </>
+              ) : (
+                <>
+                  <i className="bi bi-arrow-down-circle me-2"></i>
+                  Afficher plus
+                </>
+              )}
+            </button>
+          </div>
+        )}
+
+        {loading && !hasMore && (
+          <div className="text-center mt-3">
+            <div className="spinner-border" role="status">
+              <span className="visually-hidden">Chargement...</span>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

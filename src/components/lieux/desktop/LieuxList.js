@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import firebase from '../../../firebase';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
-import '../../../style/lieuxList.css';
+// Remplacer l'import de l'ancien système par le nouveau système modulaire
+import '@styles/index.css';
 import { handleDelete } from './handlers/deleteHandler';
 import Spinner from '@/components/common/Spinner';
 

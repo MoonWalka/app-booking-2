@@ -1,40 +1,26 @@
 // Imports React
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-
-// Imports Firebase
-import { 
-  collection, 
-  getDocs, 
-  query, 
-  orderBy, 
-  deleteDoc, 
-  doc, 
-  limit, 
-  startAfter 
+import {
+  collection,
+  getDocs,
+  query,
+  where,
+  orderBy,
+  limit,
+  startAfter,
+  doc,
+  deleteDoc
 } from 'firebase/firestore';
-
-// Imports internes
 import { db } from '@/firebase';
+import { Button, Form, InputGroup, Spinner, Card, Table, Badge } from 'react-bootstrap';
+import '@styles/index.css';
 
-// Imports Bootstrap
-import { 
-  Container, 
-  Row, 
-  Col, 
-  Card, 
-  Button, 
-  Form, 
-  InputGroup, 
-  Badge, 
-  Spinner,
-  Table 
-} from 'react-bootstrap';
-
-// Styles
-import '@/style/artistesList.css';
+// Constantes
+const pageSize = 20; // Nombre d'artistes à charger par page
 
 const ArtistesList = () => {
+  // States
   const [artistes, setArtistes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -51,7 +37,6 @@ const ArtistesList = () => {
   const [hasMore, setHasMore] = useState(true);
   const searchInputRef = useRef(null);
   const navigate = useNavigate();
-  const pageSize = 20; // Augmenté pour la vue liste
 
   // Fonction pour charger les artistes
   const fetchArtistes = async (reset = true) => {
@@ -207,16 +192,16 @@ const ArtistesList = () => {
   };
 
   return (
-    <Container fluid className="py-4">
+    <div className="container-fluid py-4">
       {/* En-tête avec titre et bouton d'ajout */}
-      <Row className="mb-4 align-items-center">
-        <Col>
+      <div className="row mb-4 align-items-center">
+        <div className="col">
           <h1 className="mb-0">
             <i className="bi bi-music-note-list me-2"></i>
             Gestion des artistes
           </h1>
-        </Col>
-        <Col xs="auto">
+        </div>
+        <div className="col-auto">
           <Button 
             variant="primary"
             onClick={() => navigate('/artistes/nouveau')}
@@ -224,14 +209,14 @@ const ArtistesList = () => {
             <i className="bi bi-plus-circle me-2"></i>
             Nouvel artiste
           </Button>
-        </Col>
-      </Row>
+        </div>
+      </div>
 
       {/* Cartes de statistiques */}
-      <Row className="mb-4">
-        <Col md={4}>
-          <Card className="stats-card h-100">
-            <Card.Body className="d-flex align-items-center">
+      <div className="row mb-4">
+        <div className="col-md-4">
+          <div className="card stats-card h-100">
+            <div className="card-body d-flex align-items-center">
               <div className="stats-icon">
                 <i className="bi bi-people-fill"></i>
               </div>
@@ -239,12 +224,12 @@ const ArtistesList = () => {
                 <h3 className="stats-value mb-0">{stats.total}</h3>
                 <div className="stats-label">Total artistes</div>
               </div>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col md={4}>
-          <Card className="stats-card h-100">
-            <Card.Body className="d-flex align-items-center">
+            </div>
+          </div>
+        </div>
+        <div className="col-md-4">
+          <div className="card stats-card h-100">
+            <div className="card-body d-flex align-items-center">
               <div className="stats-icon text-success">
                 <i className="bi bi-calendar-check"></i>
               </div>
@@ -252,12 +237,12 @@ const ArtistesList = () => {
                 <h3 className="stats-value mb-0">{stats.avecConcerts}</h3>
                 <div className="stats-label">Avec concerts</div>
               </div>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col md={4}>
-          <Card className="stats-card h-100">
-            <Card.Body className="d-flex align-items-center">
+            </div>
+          </div>
+        </div>
+        <div className="col-md-4">
+          <div className="card stats-card h-100">
+            <div className="card-body d-flex align-items-center">
               <div className="stats-icon text-warning">
                 <i className="bi bi-calendar-x"></i>
               </div>
@@ -265,16 +250,16 @@ const ArtistesList = () => {
                 <h3 className="stats-value mb-0">{stats.sansConcerts}</h3>
                 <div className="stats-label">Sans concerts</div>
               </div>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Barre de recherche et filtres */}
-      <Card className="mb-4">
-        <Card.Body>
-          <Row className="mb-3">
-            <Col lg={6} ref={searchInputRef} className="position-relative mb-3 mb-lg-0">
+      <div className="card mb-4">
+        <div className="card-body">
+          <div className="row mb-3">
+            <div className="col-lg-6" ref={searchInputRef} className="position-relative mb-3 mb-lg-0">
               <InputGroup>
                 <InputGroup.Text>
                   <i className="bi bi-search"></i>
@@ -330,11 +315,11 @@ const ArtistesList = () => {
                   )}
                 </div>
               )}
-            </Col>
+            </div>
             
-            <Col lg={6}>
-              <Row>
-                <Col xs={12} md={4} className="mb-2 mb-md-0">
+            <div className="col-lg-6">
+              <div className="row">
+                <div className="col-xs-12 col-md-4 mb-2 mb-md-0">
                   <Form.Select 
                     value={filter}
                     onChange={(e) => setFilter(e.target.value)}
@@ -343,8 +328,8 @@ const ArtistesList = () => {
                     <option value="avecConcerts">Avec concerts</option>
                     <option value="sansConcerts">Sans concerts</option>
                   </Form.Select>
-                </Col>
-                <Col xs={12} md={8}>
+                </div>
+                <div className="col-xs-12 col-md-8">
                   <div className="d-flex align-items-center h-100">
                     <span className="me-2 d-none d-md-block">Trier par:</span>
                     <div className="d-flex gap-2 flex-wrap">
@@ -377,12 +362,12 @@ const ArtistesList = () => {
                       </Button>
                     </div>
                   </div>
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-        </Card.Body>
-      </Card>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* État de chargement initial */}
       {loading && artistes.length === 0 ? (
@@ -528,7 +513,7 @@ const ArtistesList = () => {
           )}
         </>
       )}
-    </Container>
+    </div>
   );
 };
 

@@ -1,4 +1,3 @@
-// src/components/structures/mobile/StructuresList.js
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
@@ -11,9 +10,8 @@ import {
   deleteDoc, 
   doc 
 } from 'firebase/firestore';
-import { db } from '../../../firebase';
+import { db } from '@/firebase';
 import { Form, Button, InputGroup } from 'react-bootstrap';
-import '../../../style/structuresListMobile.css';
 
 const StructuresList = () => {
   const [structures, setStructures] = useState([]);

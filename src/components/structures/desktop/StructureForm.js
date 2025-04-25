@@ -1,4 +1,3 @@
-// src/components/structures/desktop/StructureForm.js
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
@@ -9,9 +8,8 @@ import {
   collection, 
   Timestamp 
 } from 'firebase/firestore';
-import { db } from '../../../firebase';
+import { db } from '@/firebase';
 import { Form, Button, Row, Col, Alert } from 'react-bootstrap';
-import '../../../style/structuresList.css';
 
 const StructureForm = () => {
   const { id } = useParams();

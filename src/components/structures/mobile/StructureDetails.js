@@ -1,4 +1,3 @@
-// src/components/structures/mobile/StructureDetails.js
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { 
@@ -9,7 +8,6 @@ import {
 } from 'firebase/firestore';
 import { db } from '../../../firebase';
 import { Button, Alert, Modal } from 'react-bootstrap';
-import '../../../style/structuresListMobile.css';
 
 const StructureDetails = () => {
   const { id } = useParams();

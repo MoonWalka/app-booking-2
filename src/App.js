@@ -21,8 +21,8 @@ import ContratDetailsPage from '@/pages/ContratDetailsPage';
 import StructuresPage from '@/pages/StructuresPage';
 import RouterStabilizer from '@/utils/RouterStabilizer';
 
-// Importer le nouveau fichier centralisé de variables CSS
-import '@styles/base/index.css';
+// Importer le système de styles modulaire complet
+import '@styles/index.css';
 // Conserver l'import de App.css pour les styles spécifiques à l'application
 import '@/App.css';
 

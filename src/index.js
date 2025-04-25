@@ -2,8 +2,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';  // Notez qu'il n'y a pas de './' au début
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import './style/spinner.css'; // Importation du style pour le spinner unifié
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { initNetworkStabilizer } from './utils/networkStabilizer';

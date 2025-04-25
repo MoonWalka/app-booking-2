@@ -7,7 +7,7 @@ import { doc, getDoc, updateDoc, deleteDoc, Timestamp } from 'firebase/firestore
 
 import { FaDownload, FaEnvelope, FaFileSignature } from 'react-icons/fa';
 import ContratPDFWrapper from '@/components/contrats/ContratPDFWrapper.js';
-import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
+import { PDFViewer } from '@react-pdf/renderer';
 import '@/styles/index.css';
 
 // Note: Les imports sont standardisés en utilisant le format @/components/ et @/styles/
@@ -187,6 +187,48 @@ const ContratDetailsPage = () => {
     }
   };
 
+  // Fonction pour télécharger le PDF avec Puppeteer
+  const handleDownloadPdf = async () => {
+    try {
+      if (!template || !concert) {
+        alert('Données insuffisantes pour générer le PDF');
+        return;
+      }
+
+      // Afficher l'indicateur de chargement
+      setLoading(true);
+      
+      // Générer un titre pour le PDF
+      const pdfTitle = `Contrat_${concert.titre || 'Concert'}_${new Date().toISOString().slice(0, 10)}`;
+      
+      try {
+        // Préparer les données à passer à la méthode statique
+        const data = {
+          template,
+          contratData: contrat,
+          concertData: concert,
+          programmateurData: programmateur,
+          artisteData: artiste,
+          lieuData: lieu,
+          entrepriseInfo: entreprise
+        };
+        
+        // Appeler la méthode statique du wrapper pour générer le PDF avec Puppeteer
+        await ContratPDFWrapper.generatePuppeteerPdf(pdfTitle, data);
+        // Le téléchargement est géré automatiquement par le service
+      } catch (error) {
+        console.error('Erreur lors de la génération du PDF:', error);
+        alert(`Erreur lors de la génération du PDF: ${error.message}`);
+      } finally {
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error('Erreur:', error);
+      alert('Une erreur est survenue');
+      setLoading(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="loading-container d-flex justify-content-center align-items-center" style={{ minHeight: '300px' }}>
@@ -239,27 +281,22 @@ const ContratDetailsPage = () => {
             </Button>
             
             {template && concert && (
-              <PDFDownloadLink
-                document={
-                  <ContratPDFWrapper 
-                    template={template}
-                    contratData={contrat} // NOUVEAU: Passage des données complètes du contrat incluant la templateSnapshot
-                    concertData={concert}
-                    programmateurData={programmateur}
-                    artisteData={artiste}
-                    lieuData={lieu}
-                    entrepriseInfo={entreprise}
-                  />
-                }
-                fileName={`Contrat_${concert.titre || 'Concert'}_${new Date().toISOString().slice(0, 10)}.pdf`}
-                className="btn btn-success"
+              <Button
+                variant="success"
+                onClick={handleDownloadPdf}
+                disabled={loading}
               >
-                {({ blob, url, loading, error }) => 
-                  loading ? 
-                    <span><i className="bi bi-hourglass me-1"></i> Préparation...</span> : 
-                    <span><i className="bi bi-file-pdf me-1"></i> Télécharger PDF</span>
-                }
-              </PDFDownloadLink>
+                {loading ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                    Préparation...
+                  </>
+                ) : (
+                  <>
+                    <i className="bi bi-file-pdf me-1"></i> Télécharger PDF
+                  </>
+                )}
+              </Button>
             )}
             
             {contrat?.status === 'generated' && (

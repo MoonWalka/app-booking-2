@@ -3,7 +3,8 @@ import React from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext.js';
 import { APP_NAME } from '../../../config.js';
-import '../../../style/layout.css';
+// Importer le système de styles modulaire au lieu de l'ancien système
+import '@styles/index.css';
 
 function DesktopLayout() {
   const { currentUser, logout } = useAuth();

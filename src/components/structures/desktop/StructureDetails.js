@@ -1,4 +1,3 @@
-// src/components/structures/desktop/StructureDetails.js
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { 
@@ -13,9 +12,8 @@ import {
   arrayUnion,
   arrayRemove
 } from 'firebase/firestore';
-import { db } from '../../../firebase';
+import { db } from '@/firebase';
 import { Button, Alert, Modal } from 'react-bootstrap';
-import '../../../style/structuresList.css';
 
 const StructureDetails = () => {
   const { id } = useParams();

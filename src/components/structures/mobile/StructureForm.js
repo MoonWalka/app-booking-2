@@ -1,4 +1,3 @@
-// src/components/structures/mobile/StructureForm.js
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
@@ -11,7 +10,6 @@ import {
 } from 'firebase/firestore';
 import { db } from '../../../firebase';
 import { Form, Button, Alert } from 'react-bootstrap';
-import '../../../style/structuresListMobile.css';
 
 const StructureForm = () => {
   const { id } = useParams();

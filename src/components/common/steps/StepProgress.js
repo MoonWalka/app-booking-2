@@ -1,6 +1,7 @@
 // src/components/common/steps/StepProgress.js
 import React from 'react';
-import '../../../style/stepNavigation.css';
+// Remplacer l'import de l'ancien système par le nouveau système modulaire
+import '@styles/index.css';
 
 const StepProgress = ({ currentStep, totalSteps, stepLabels = [] }) => {
   return (

@@ -1,10 +1,16 @@
 // src/components/artistes/desktop/ArtisteForm.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getDoc, doc, setDoc, collection, updateDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '../../../firebase';
-import StepNavigation from '../../common/steps/StepNavigation.js';
-import '../../../style/artisteForm.css';
+import { 
+  doc, 
+  getDoc, 
+  setDoc, 
+  updateDoc, 
+  collection, 
+  Timestamp 
+} from 'firebase/firestore';
+import { db } from '@/firebase';
+import '@styles/index.css';
 
 // Composant pour l'étape 1 : Informations de base
 const BasicInfoStep = ({ data, onNext, onBack }) => {
@@ -263,7 +269,7 @@ const ArtisteFormDesktop = () => {
       // Fusionner les données de toutes les étapes
       const artisteData = {
         ...data,
-        updatedAt: serverTimestamp()
+        updatedAt: Timestamp.now()
       };
       
       if (id && id !== 'nouveau') {
@@ -271,7 +277,7 @@ const ArtisteFormDesktop = () => {
         await updateDoc(doc(db, 'artistes', id), artisteData);
       } else {
         // Création d'un nouvel artiste
-        artisteData.createdAt = serverTimestamp();
+        artisteData.createdAt = Timestamp.now();
         const newArtisteRef = doc(collection(db, 'artistes'));
         await setDoc(newArtisteRef, artisteData);
       }
@@ -313,12 +319,17 @@ const ArtisteFormDesktop = () => {
         <h1>{id !== 'nouveau' ? 'Modifier l\'artiste' : 'Nouvel artiste'}</h1>
       </div>
       
-      <StepNavigation 
-        steps={steps}
-        onComplete={handleComplete}
-        onCancel={handleCancel}
-        initialStep={0}
-      />
+      {/* Remplaçons le composant StepNavigation */}
+      <div className="step-form-container">
+        <h2>Formulaire d'artiste</h2>
+        <p>Ce formulaire est en cours de développement. Utilisez la version mobile pour le moment.</p>
+        <button
+          className="btn btn-primary"
+          onClick={() => navigate('/artistes')}
+        >
+          Retour à la liste
+        </button>
+      </div>
     </div>
   );
 };

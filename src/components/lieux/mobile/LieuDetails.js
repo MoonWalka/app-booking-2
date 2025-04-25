@@ -16,8 +16,8 @@ import {
 } from 'firebase/firestore';
 import { db } from '../../../firebase';
 import { Badge } from 'react-bootstrap';
-import '../../../style/lieuForm.css';
-import '../../../style/spinner.css'; // Import du style du spinner
+// Remplacer les imports de l'ancien système par le nouveau système modulaire
+import '@styles/index.css';
 import { handleDelete } from './handlers/deleteHandler';
 
 // Composant pour afficher concert associé (identique à la version desktop)
@@ -870,67 +870,67 @@ const LieuDetails = () => {
                         <span className="visually-hidden">Chargement du programmateur...</span>
                       </div>
                     </div>
-                ) : programmateur ? (
-                    <div className="programmateur-display">
-                      <div className="info-row">
-                        <div className="info-label">
-                          <i className="bi bi-person text-primary"></i>
-                          Nom
+                  ) : programmateur ? (
+                      <div className="programmateur-display">
+                        <div className="info-row">
+                          <div className="info-label">
+                            <i className="bi bi-person text-primary"></i>
+                            Nom
+                          </div>
+                          <div className="info-value highlight">
+                            <Link to={`/programmateurs/${programmateur.id}`} className="programmateur-link">
+                              {programmateur.nom}
+                            </Link>
+                          </div>
                         </div>
-                        <div className="info-value highlight">
-                          <Link to={`/programmateurs/${programmateur.id}`} className="programmateur-link">
-                            {programmateur.nom}
-                          </Link>
-                        </div>
+                        
+                        {programmateur.structure && (
+                          <div className="info-row">
+                            <div className="info-label">
+                              <i className="bi bi-building text-primary"></i>
+                              Structure
+                            </div>
+                            <div className="info-value">{programmateur.structure}</div>
+                          </div>
+                        )}
+                        
+                        {programmateur.telephone && (
+                          <div className="info-row">
+                            <div className="info-label">
+                              <i className="bi bi-telephone text-primary"></i>
+                              Téléphone
+                            </div>
+                            <div className="info-value">
+                              <a href={`tel:${programmateur.telephone}`} className="contact-link">
+                                {programmateur.telephone}
+                              </a>
+                            </div>
+                          </div>
+                        )}
+                        
+                        {programmateur.email && (
+                          <div className="info-row">
+                            <div className="info-label">
+                              <i className="bi bi-envelope text-primary"></i>
+                              Email
+                            </div>
+                            <div className="info-value">
+                              <a href={`mailto:${programmateur.email}`} className="contact-link">
+                                {programmateur.email}
+                              </a>
+                            </div>
+                          </div>
+                        )}
                       </div>
-                      
-                      {programmateur.structure && (
-                        <div className="info-row">
-                          <div className="info-label">
-                            <i className="bi bi-building text-primary"></i>
-                            Structure
-                          </div>
-                          <div className="info-value">{programmateur.structure}</div>
-                        </div>
-                      )}
-                      
-                      {programmateur.telephone && (
-                        <div className="info-row">
-                          <div className="info-label">
-                            <i className="bi bi-telephone text-primary"></i>
-                            Téléphone
-                          </div>
-                          <div className="info-value">
-                            <a href={`tel:${programmateur.telephone}`} className="contact-link">
-                              {programmateur.telephone}
-                            </a>
-                          </div>
-                        </div>
-                      )}
-                      
-                      {programmateur.email && (
-                        <div className="info-row">
-                          <div className="info-label">
-                            <i className="bi bi-envelope text-primary"></i>
-                            Email
-                          </div>
-                          <div className="info-value">
-                            <a href={`mailto:${programmateur.email}`} className="contact-link">
-                              {programmateur.email}
-                            </a>
-                          </div>
-                        </div>
-                      )}
-                    </div>
+                    ) : (
+                      <div className="alert alert-warning">
+                        <i className="bi bi-exclamation-triangle me-2"></i>
+                        Le programmateur associé n'a pas pu être chargé.
+                      </div>
+                    )
                   ) : (
-                    <div className="alert alert-warning">
-                      <i className="bi bi-exclamation-triangle me-2"></i>
-                      Le programmateur associé n'a pas pu être chargé.
-                    </div>
-                  )
-                ) : (
-                  <div className="text-muted">Aucun programmateur associé à ce lieu.</div>
-                )}
+                    <div className="text-muted">Aucun programmateur associé à ce lieu.</div>
+                  )}
               </>
             )}
           </div>

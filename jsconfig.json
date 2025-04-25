@@ -7,8 +7,7 @@
       "@context/*": ["src/context/*"],
       "@utils/*": ["src/utils/*"],
       "@styles/*": [
-        "src/styles/*",
-        "src/style/*"
+        "src/styles/*"
       ],
       "@services/*": ["src/services/*"],
       "@pages/*": ["src/pages/*"],

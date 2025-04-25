@@ -1,9 +1,16 @@
 // src/components/artistes/mobile/ArtisteForm.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getDoc, doc, setDoc, collection, updateDoc, serverTimestamp } from 'firebase/firestore';
+import { 
+  doc, 
+  getDoc, 
+  setDoc, 
+  updateDoc, 
+  collection, 
+  Timestamp 
+} from 'firebase/firestore';
 import { db } from '../../../firebase';
-import '../../../style/artisteForm.css';
+import '@styles/index.css';
 
 // Version mobile simplifiée du formulaire d'artiste
 const ArtisteFormMobile = () => {
@@ -122,7 +129,7 @@ const ArtisteFormMobile = () => {
       // Préparation des données
       const artisteData = {
         ...formData,
-        updatedAt: serverTimestamp()
+        updatedAt: Timestamp.now()
       };
       
       if (id && id !== 'nouveau') {
@@ -130,7 +137,7 @@ const ArtisteFormMobile = () => {
         await updateDoc(doc(db, 'artistes', id), artisteData);
       } else {
         // Création d'un nouvel artiste
-        artisteData.createdAt = serverTimestamp();
+        artisteData.createdAt = Timestamp.now();
         const newArtisteRef = doc(collection(db, 'artistes'));
         await setDoc(newArtisteRef, artisteData);
       }

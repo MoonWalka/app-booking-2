@@ -1,12 +1,20 @@
 // src/components/artistes/mobile/ArtistesList.js
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { collection, getDocs, query, orderBy, deleteDoc, doc, limit, startAfter } from '@/firebase';
+import { 
+  collection, 
+  query, 
+  orderBy, 
+  limit, 
+  getDocs, 
+  startAfter,
+  doc,
+  deleteDoc
+} from 'firebase/firestore';
 import { db } from '@/firebase';
+import '@styles/index.css';
 import { Button, Form, InputGroup } from 'react-bootstrap';
 import Spinner from '@/components/common/Spinner';
-import '@styles/artistesList.css';
-import '@styles/artistesListMobile.css';
 import { getNbConcerts, filteredArtistes } from '@/components/artistes/mobile/utils/concertUtils';
 import { handleDelete } from '@/components/artistes/mobile/handlers/deleteHandler';
 import { handleLoadMore } from '@/components/artistes/mobile/handlers/paginationHandler';

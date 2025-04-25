@@ -1,10 +1,9 @@
 // src/components/artistes/desktop/ArtisteDetail.js
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { doc, getDoc } from 'firebase/firestore';
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import { doc, getDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '@/firebase';
-import '@styles/artisteDetail.css';
-import '@styles/artisteDetailsMobile.css';
+import '@styles/index.css';
 
 const ArtisteDetail = () => {
   const { id } = useParams();

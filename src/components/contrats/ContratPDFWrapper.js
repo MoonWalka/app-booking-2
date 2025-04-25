@@ -33,6 +33,23 @@ const styles = StyleSheet.create({
   em: { fontStyle: 'italic' },
   ul: { marginLeft: 10, marginBottom: 10 },
   li: { marginBottom: 3 },
+  // Nouveaux styles pour l'alignement
+  alignCenter: { textAlign: 'center' },
+  alignRight: { textAlign: 'right' },
+  alignJustify: { textAlign: 'justify' },
+  // Styles pour les listes
+  listItem: { 
+    marginLeft: 10,
+    marginBottom: 3,
+    flexDirection: 'row' 
+  },
+  bulletPoint: {
+    width: 10,
+    marginRight: 5
+  },
+  listItemContent: {
+    flex: 1
+  }
 });
 
 // Fonction pour rendre les textes avec leurs styles
@@ -54,259 +71,360 @@ const renderTextWithStyles = (segments) => {
 const parseHtmlToReactPdf = (html) => {
   if (!html) return null;
   
+  // Prétraitement pour traiter les styles inline de ReactQuill
+  let processedHtml = html
+    // Convertir les spans avec font-weight: bold en balises <strong>
+    .replace(/<span[^>]*style="[^"]*font-weight:\s*bold[^"]*"[^>]*>(.*?)<\/span>/gi, '<strong>$1</strong>')
+    .replace(/<span[^>]*style="[^"]*font-weight:\s*[7-9]00[^"]*"[^>]*>(.*?)<\/span>/gi, '<strong>$1</strong>')
+    // Convertir les spans avec font-style: italic en balises <em>
+    .replace(/<span[^>]*style="[^"]*font-style:\s*italic[^"]*"[^>]*>(.*?)<\/span>/gi, '<em>$1</em>')
+    // Convertir les classes d'alignement
+    .replace(/<p[^>]*class="[^"]*ql-align-center[^"]*"[^>]*>(.*?)<\/p>/gi, '<p style="text-align: center">$1</p>')
+    .replace(/<p[^>]*class="[^"]*ql-align-right[^"]*"[^>]*>(.*?)<\/p>/gi, '<p style="text-align: right">$1</p>')
+    .replace(/<p[^>]*class="[^"]*ql-align-justify[^"]*"[^>]*>(.*?)<\/p>/gi, '<p style="text-align: justify">$1</p>')
+    // Gérer les sauts de ligne
+    .replace(/<br\s*\/?>/g, '\n');
+  
+  // Fonction pour extraire les styles en ligne
+  const extractInlineStyles = (styleAttr) => {
+    if (!styleAttr) return {};
+    
+    const styles = {};
+    const styleProps = styleAttr.split(';');
+    
+    styleProps.forEach(prop => {
+      const [name, value] = prop.split(':').map(s => s.trim());
+      if (!name || !value) return;
+      
+      // Convertir les propriétés CSS en propriétés React
+      switch (name) {
+        case 'text-align':
+          styles.textAlign = value;
+          break;
+        case 'font-weight':
+          if (value === 'bold' || parseInt(value) >= 700) {
+            styles.fontWeight = 'bold';
+          }
+          break;
+        case 'font-style':
+          if (value === 'italic') styles.fontStyle = 'italic';
+          break;
+        case 'color':
+          styles.color = value;
+          break;
+        // Ajouter d'autres propriétés CSS selon besoin
+      }
+    });
+    
+    return styles;
+  };
+  
+  // Traiter spécifiquement les listes
+  const processLists = (html) => {
+    const listRegex = /<ul[^>]*>([\s\S]*?)<\/ul>/g;
+    let match;
+    let processedHtml = html;
+    
+    while ((match = listRegex.exec(html)) !== null) {
+      const listContent = match[1];
+      const listItems = [];
+      
+      // Extraire les éléments de liste
+      const itemRegex = /<li[^>]*>([\s\S]*?)<\/li>/g;
+      let itemMatch;
+      
+      while ((itemMatch = itemRegex.exec(listContent)) !== null) {
+        listItems.push(itemMatch[1]);
+      }
+      
+      // Remplacer la liste par des paragraphes avec puces
+      const replacement = listItems.map(item => `<p>• ${item}</p>`).join('');
+      
+      // Remplacer la liste originale par notre version
+      const fullMatch = match[0];
+      processedHtml = processedHtml.replace(fullMatch, replacement);
+    }
+    
+    return processedHtml;
+  };
+  
   // Fonction récursive pour traiter les éléments HTML
-  const processNode = (content, styles = {}) => {
-    // Traiter d'abord le gras
-    const boldRegex = /<(strong|b)>(.*?)<\/(strong|b)>/g;
-    let boldMatch;
+  const processNode = (content, baseStyles = {}) => {
+    // D'abord traiter les éléments avec style inline
+    const styleRegex = /<([a-z]+)[^>]*style="([^"]*)"[^>]*>(.*?)<\/\1>/gi;
+    let styleMatch;
     let segments = [];
     let lastIndex = 0;
     
-    // Trouver tous les segments en gras
-    while ((boldMatch = boldRegex.exec(content)) !== null) {
+    while ((styleMatch = styleRegex.exec(content)) !== null) {
       // Ajouter le texte avant le match avec les styles actuels
-      if (boldMatch.index > lastIndex) {
-        segments.push({
-          text: content.substring(lastIndex, boldMatch.index),
-          styles: { ...styles }
-        });
+      if (styleMatch.index > lastIndex) {
+        // Traiter ce segment pour d'autres formatages (comme bold/italic)
+        const prevSegments = processNode(content.substring(lastIndex, styleMatch.index), baseStyles);
+        if (Array.isArray(prevSegments)) {
+          segments = [...segments, ...prevSegments];
+        } else if (prevSegments) {
+          segments.push(prevSegments);
+        }
       }
       
-      // Traiter récursivement le contenu en gras avec le style bold ajouté
-      const boldContent = processNode(boldMatch[2], { 
-        ...styles, 
-        fontWeight: 'bold' 
-      });
+      // Extraire les styles de l'élément
+      const tagName = styleMatch[1];
+      const styleAttr = styleMatch[2];
+      const innerContent = styleMatch[3];
+      const extractedStyles = extractInlineStyles(styleAttr);
       
-      // Si le traitement récursif a retourné des segments, les ajouter
-      if (Array.isArray(boldContent)) {
-        segments = [...segments, ...boldContent];
-      } else if (boldContent) {
-        segments.push(boldContent);
+      // Combiner avec les styles de base
+      const combinedStyles = { ...baseStyles, ...extractedStyles };
+      
+      // Traiter le contenu intérieur récursivement avec les styles combinés
+      const innerSegments = processNode(innerContent, combinedStyles);
+      
+      if (Array.isArray(innerSegments)) {
+        segments = [...segments, ...innerSegments];
+      } else if (innerSegments) {
+        segments.push(innerSegments);
       }
       
-      lastIndex = boldMatch.index + boldMatch[0].length;
+      lastIndex = styleMatch.index + styleMatch[0].length;
     }
     
-    // Ajouter le reste du contenu avec les styles actuels
+    // Ajouter le reste du contenu
     if (lastIndex < content.length) {
-      // Traiter l'italique dans le reste
-      const italicRegex = /<(em|i)>(.*?)<\/(em|i)>/g;
-      let italicMatch;
-      let lastItalicIndex = lastIndex;
-      let italicSegments = [];
+      // Continuer à traiter d'autres balises comme <strong> ou <b>
+      const boldRegex = /<(strong|b)>(.*?)<\/\1>/gi;
+      let boldMatch;
+      let boldLastIndex = lastIndex;
+      let boldSegments = [];
       
-      while ((italicMatch = italicRegex.exec(content.substring(lastIndex))) !== null) {
-        const actualIndex = lastIndex + italicMatch.index;
+      while ((boldMatch = boldRegex.exec(content.substring(lastIndex))) !== null) {
+        const actualIndex = lastIndex + boldMatch.index;
         
-        // Ajouter le texte avant l'italique
-        if (actualIndex > lastItalicIndex) {
-          italicSegments.push({
-            text: content.substring(lastItalicIndex, actualIndex),
-            styles: { ...styles }
+        // Ajouter le texte avant le bold
+        if (actualIndex > boldLastIndex) {
+          boldSegments.push({
+            text: content.substring(boldLastIndex, actualIndex),
+            styles: { ...baseStyles }
           });
         }
         
-        // Ajouter le texte en italique
-        italicSegments.push({
-          text: italicMatch[2],
-          styles: { ...styles, fontStyle: 'italic' }
+        // Ajouter le texte en gras
+        boldSegments.push({
+          text: boldMatch[2],
+          styles: { ...baseStyles, fontWeight: 'bold' }
         });
         
-        lastItalicIndex = actualIndex + italicMatch[0].length;
+        boldLastIndex = actualIndex + boldMatch[0].length;
       }
       
-      // Ajouter le reste sans formatage spécial
-      if (lastItalicIndex < content.length) {
-        italicSegments.push({
-          text: content.substring(lastItalicIndex),
-          styles: { ...styles }
-        });
+      // Ajouter le reste
+      if (boldLastIndex < content.length) {
+        // Traiter l'italique de manière similaire
+        const italicRegex = /<(em|i)>(.*?)<\/\1>/gi;
+        let italicMatch;
+        let italicLastIndex = boldLastIndex;
+        let italicSegments = [];
+        
+        while ((italicMatch = italicRegex.exec(content.substring(boldLastIndex))) !== null) {
+          const actualIndex = boldLastIndex + italicMatch.index;
+          
+          // Ajouter le texte avant l'italique
+          if (actualIndex > italicLastIndex) {
+            italicSegments.push({
+              text: content.substring(italicLastIndex, actualIndex),
+              styles: { ...baseStyles }
+            });
+          }
+          
+          // Ajouter le texte en italique
+          italicSegments.push({
+            text: italicMatch[2],
+            styles: { ...baseStyles, fontStyle: 'italic' }
+          });
+          
+          italicLastIndex = actualIndex + italicMatch[0].length;
+        }
+        
+        // Ajouter le reste sans formatage spécial
+        if (italicLastIndex < content.length) {
+          const restText = content.substring(italicLastIndex)
+            .replace(/<[^>]*>/g, '') // Supprimer les balises restantes
+            .trim();
+            
+          if (restText) {
+            italicSegments.push({
+              text: restText,
+              styles: { ...baseStyles }
+            });
+          }
+        }
+        
+        boldSegments = [...boldSegments, ...italicSegments];
       }
       
-      segments = [...segments, ...italicSegments];
+      segments = [...segments, ...boldSegments];
     }
     
-    // Si aucun formatage n'a été trouvé, retourner un segment unique
+    // Si aucun segment n'a été créé, retourner le texte avec les styles de base
     if (segments.length === 0 && content.trim()) {
-      return { text: content, styles };
+      const cleanText = content.replace(/<[^>]*>/g, '').trim();
+      if (cleanText) {
+        return { text: cleanText, styles: baseStyles };
+      }
     }
     
     return segments;
   };
   
-  // Traiter les titres et paragraphes d'abord
-  let processedHtml = html
-    // Gérer les sauts de ligne
-    .replace(/<br\s*\/?>/g, '\n')
-    // Remplacer temporairement les balises spéciales par des marqueurs
-    .replace(/<(strong|b)>(.*?)<\/(strong|b)>/g, (match) => match)
-    .replace(/<(em|i)>(.*?)<\/(em|i)>/g, (match) => match);
+  // Traiter d'abord les listes
+  processedHtml = processLists(processedHtml);
   
-  // Diviser par paragraphes et titres
-  const sections = [];
+  // Diviser par paragraphes pour un meilleur contrôle
+  const paragraphRegex = /<p[^>]*>([\s\S]*?)<\/p>/g;
+  const paragraphs = [];
+  let paragraphMatch;
   
-  // Traiter les titres h1
-  const h1Regex = /<h1[^>]*>(.*?)<\/h1>/g;
-  let h1Match;
-  let lastH1Index = 0;
-  
-  while ((h1Match = h1Regex.exec(processedHtml)) !== null) {
-    // Ajouter le contenu avant le h1
-    if (h1Match.index > lastH1Index) {
-      sections.push({
-        type: 'content',
-        content: processedHtml.substring(lastH1Index, h1Match.index)
-      });
+  while ((paragraphMatch = paragraphRegex.exec(processedHtml)) !== null) {
+    const fullTag = paragraphMatch[0];
+    const content = paragraphMatch[1];
+    
+    // Extraire les styles du paragraphe
+    const styleMatch = fullTag.match(/style="([^"]*)"/);
+    const paragraphStyles = styleMatch ? extractInlineStyles(styleMatch[1]) : {};
+    
+    // Détecter l'alignement basé sur les classes
+    if (fullTag.includes('ql-align-center') || fullTag.includes('text-align: center')) {
+      paragraphStyles.textAlign = 'center';
+    } else if (fullTag.includes('ql-align-right') || fullTag.includes('text-align: right')) {
+      paragraphStyles.textAlign = 'right';
+    } else if (fullTag.includes('ql-align-justify') || fullTag.includes('text-align: justify')) {
+      paragraphStyles.textAlign = 'justify';
     }
     
-    // Ajouter le h1
-    sections.push({
-      type: 'h1',
-      content: h1Match[1]
+    paragraphs.push({
+      content,
+      styles: paragraphStyles
     });
+  }
+  
+  // Traiter les titres et le contenu hors paragraphes
+  const processHeadings = () => {
+    let remainingHtml = processedHtml;
+    const headingContents = [];
     
-    lastH1Index = h1Match.index + h1Match[0].length;
-  }
-  
-  // Ajouter le reste
-  if (lastH1Index < processedHtml.length) {
-    sections.push({
-      type: 'content',
-      content: processedHtml.substring(lastH1Index)
-    });
-  }
-  
-  // Traiter les autres niveaux de titre et paragraphes dans chaque section
-  const processedSections = sections.map(section => {
-    if (section.type === 'h1') {
-      return {
+    // Traiter les h1
+    const h1Regex = /<h1[^>]*>([\s\S]*?)<\/h1>/g;
+    let h1Match;
+    
+    while ((h1Match = h1Regex.exec(remainingHtml)) !== null) {
+      const h1Content = h1Match[1];
+      const h1Segments = processNode(h1Content, { fontSize: 16, fontWeight: 'bold' });
+      
+      headingContents.push({
         type: 'h1',
-        segments: processNode(section.content, { fontSize: 16, fontWeight: 'bold' })
-      };
+        segments: h1Segments,
+        fullMatch: h1Match[0]
+      });
     }
     
-    // Traiter les h2 dans la section content
-    const h2Sections = [];
-    const h2Regex = /<h2[^>]*>(.*?)<\/h2>/g;
+    // Traiter les h2
+    const h2Regex = /<h2[^>]*>([\s\S]*?)<\/h2>/g;
     let h2Match;
-    let lastH2Index = 0;
     
-    while ((h2Match = h2Regex.exec(section.content)) !== null) {
-      // Ajouter le contenu avant le h2
-      if (h2Match.index > lastH2Index) {
-        h2Sections.push({
-          type: 'content',
-          content: section.content.substring(lastH2Index, h2Match.index)
-        });
-      }
+    while ((h2Match = h2Regex.exec(remainingHtml)) !== null) {
+      const h2Content = h2Match[1];
+      const h2Segments = processNode(h2Content, { fontSize: 14, fontWeight: 'bold' });
       
-      // Ajouter le h2
-      h2Sections.push({
+      headingContents.push({
         type: 'h2',
-        content: h2Match[1]
-      });
-      
-      lastH2Index = h2Match.index + h2Match[0].length;
-    }
-    
-    // Ajouter le reste
-    if (lastH2Index < section.content.length) {
-      h2Sections.push({
-        type: 'content',
-        content: section.content.substring(lastH2Index)
+        segments: h2Segments,
+        fullMatch: h2Match[0]
       });
     }
     
-    // Traiter les paragraphes dans chaque section h2
-    return h2Sections.map(h2Section => {
-      if (h2Section.type === 'h2') {
-        return {
-          type: 'h2',
-          segments: processNode(h2Section.content, { fontSize: 14, fontWeight: 'bold' })
-        };
-      }
+    // Traiter les h3
+    const h3Regex = /<h3[^>]*>([\s\S]*?)<\/h3>/g;
+    let h3Match;
+    
+    while ((h3Match = h3Regex.exec(remainingHtml)) !== null) {
+      const h3Content = h3Match[1];
+      const h3Segments = processNode(h3Content, { fontSize: 12, fontWeight: 'bold' });
       
-      // Traiter les paragraphes
-      const pSections = [];
-      const pRegex = /<p[^>]*>(.*?)<\/p>/g;
-      let pMatch;
-      let lastPIndex = 0;
-      
-      while ((pMatch = pRegex.exec(h2Section.content)) !== null) {
-        // Ajouter le contenu avant le p
-        if (pMatch.index > lastPIndex) {
-          const textContent = h2Section.content
-            .substring(lastPIndex, pMatch.index)
-            .replace(/<[^>]*>/g, '') // Supprimer les balises restantes
-            .trim();
-            
-          if (textContent) {
-            pSections.push({
-              type: 'text',
-              segments: processNode(textContent)
-            });
-          }
-        }
-        
-        // Ajouter le p
-        pSections.push({
-          type: 'p',
-          segments: processNode(pMatch[1])
-        });
-        
-        lastPIndex = pMatch.index + pMatch[0].length;
-      }
-      
-      // Ajouter le reste
-      if (lastPIndex < h2Section.content.length) {
-        const textContent = h2Section.content
-          .substring(lastPIndex)
-          .replace(/<[^>]*>/g, '') // Supprimer les balises restantes
-          .trim();
-          
-        if (textContent) {
-          pSections.push({
-            type: 'text',
-            segments: processNode(textContent)
-          });
-        }
-      }
-      
-      return pSections;
-    }).flat();
-  }).flat();
+      headingContents.push({
+        type: 'h3',
+        segments: h3Segments,
+        fullMatch: h3Match[0]
+      });
+    }
+    
+    return headingContents;
+  };
   
-  // Transformer les sections traitées en composants React-PDF
+  const headingContents = processHeadings();
+  
+  // Si nous n'avons pas trouvé de paragraphes, essayer de traiter le contenu brut
+  if (paragraphs.length === 0) {
+    const rawContent = processedHtml
+      .replace(/<[^>]*>/g, '') // Supprimer toutes les balises
+      .trim();
+      
+    if (rawContent) {
+      paragraphs.push({
+        content: rawContent,
+        styles: {}
+      });
+    }
+  }
+  
+  // Combiner paragraphes et titres
+  const allContents = [...headingContents, ...paragraphs.map(p => ({
+    type: 'p',
+    segments: processNode(p.content, p.styles),
+    styles: p.styles
+  }))];
+  
+  // Trier selon l'ordre original
+  // Cette approche simple gère la plupart des cas mais pourrait être améliorée
+  // pour une détection d'ordre plus précise si nécessaire
+  allContents.sort((a, b) => {
+    const indexA = processedHtml.indexOf(a.fullMatch || '');
+    const indexB = processedHtml.indexOf(b.fullMatch || '');
+    
+    if (indexA === -1) return 1;
+    if (indexB === -1) return -1;
+    
+    return indexA - indexB;
+  });
+  
+  // Traiter les paragraphes individuellement
   return (
     <View>
-      {processedSections.map((section, sectionIndex) => {
-        if (section.type === 'h1') {
+      {allContents.map((item, index) => {
+        if (item.type === 'h1') {
           return (
-            <Text key={`h1-${sectionIndex}`} style={styles.h1}>
-              {renderTextWithStyles(section.segments)}
+            <Text key={`h1-${index}`} style={styles.h1}>
+              {renderTextWithStyles(item.segments)}
             </Text>
           );
-        } else if (section.type === 'h2') {
+        } else if (item.type === 'h2') {
           return (
-            <Text key={`h2-${sectionIndex}`} style={styles.h2}>
-              {renderTextWithStyles(section.segments)}
+            <Text key={`h2-${index}`} style={styles.h2}>
+              {renderTextWithStyles(item.segments)}
             </Text>
           );
-        } else if (section.type === 'p') {
+        } else if (item.type === 'h3') {
           return (
-            <Text key={`p-${sectionIndex}`} style={styles.p}>
-              {renderTextWithStyles(section.segments)}
+            <Text key={`h3-${index}`} style={styles.h3}>
+              {renderTextWithStyles(item.segments)}
             </Text>
           );
-        } else if (section.type === 'text') {
+        } else {
           return (
-            <Text key={`text-${sectionIndex}`}>
-              {renderTextWithStyles(section.segments)}
+            <Text key={`p-${index}`} style={{...styles.p, ...item.styles}}>
+              {renderTextWithStyles(item.segments)}
             </Text>
           );
         }
-        return null;
       })}
     </View>
   );

@@ -1,0 +1,132 @@
+/* src/style/structureDisplay.css */
+/* Styles communs pour l'affichage des structures (liste et détails) */
+
+.structure-card-title {
+  font-weight: 600;
+  color: #344767;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.structure-type-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.structure-type {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.structure-location-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.structure-location {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.structure-type-badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-weight: 500;
+}
+
+.structure-contact-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+.structure-action-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  font-size: 0.875rem;
+  border-radius: 0.5rem;
+  background-color: #f8f9fa;
+  color: #6c757d;
+  border: 1px solid #e9ecef;
+  transition: all 0.2s;
+}
+
+.structure-action-button:hover {
+  background-color: #e9ecef;
+}
+
+.structure-view-button {
+  color: #0d6efd;
+}
+
+.structure-edit-button {
+  color: #6c757d;
+}
+
+.structure-delete-button {
+  color: #dc3545;
+}
+
+/* Types de structures - couleurs */
+.type-salle {
+  background-color: rgba(13, 202, 240, 0.1);
+  color: #0dcaf0;
+}
+
+.type-festival {
+  background-color: rgba(13, 110, 253, 0.1);
+  color: #0d6efd;
+}
+
+.type-association {
+  background-color: rgba(25, 135, 84, 0.1);
+  color: #198754;
+}
+
+.type-mairie {
+  background-color: rgba(108, 117, 125, 0.1);
+  color: #6c757d;
+}
+
+.type-autre {
+  background-color: rgba(248, 249, 250, 0.6);
+  color: #6c757d;
+}
+
+/* Styles pour les infos rapides */
+.structure-info-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  background-color: #f8f9fa;
+  color: #6c757d;
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.structure-info-tag i {
+  font-size: 0.875rem;
+}
+
+.structure-contact-link {
+  color: #0d6efd;
+  text-decoration: none;
+}
+
+.structure-contact-link:hover {
+  text-decoration: underline;
+}

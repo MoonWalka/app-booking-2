@@ -4,7 +4,7 @@ import firebase from '../../../firebase';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useLocationIQ } from '../../../hooks/useLocationIQ';
-import '../../../style/lieuForm.css';
+import '@styles/index.css';
 
 import L from 'leaflet';
 

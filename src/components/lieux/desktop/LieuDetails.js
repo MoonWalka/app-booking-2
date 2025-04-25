@@ -16,7 +16,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../../../firebase';
 import { Badge } from 'react-bootstrap';
-import '../../../style/lieuForm.css';
+import '@styles/index.css';
 import { handleDelete } from './handlers/deleteHandler';
 import Spinner from '@/components/common/Spinner';
 import { useLocationIQ } from '@/hooks/useLocationIQ';

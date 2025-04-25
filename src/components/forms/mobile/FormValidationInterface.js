@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../../../firebase';
 import { doc, getDoc, updateDoc, collection, query, where, getDocs, addDoc, Timestamp } from 'firebase/firestore';
 import { Button, Badge, Spinner } from 'react-bootstrap';
-import '../../../style/formsResponsive.css';
+import '@styles/index.css';
 
 
 const FormValidationInterfaceMobile = () => {

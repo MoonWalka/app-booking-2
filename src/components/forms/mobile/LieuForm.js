@@ -5,7 +5,7 @@ import { collection, doc, getDoc, setDoc, serverTimestamp } from 'firebase/fires
 import { db } from '../../../firebase';
 import { useLocationIQ } from '@/hooks/useLocationIQ';
 import StepNavigation from '../../common/steps/StepNavigation.js';
-import '../../../style/formsResponsive.css';
+import '@styles/index.css';
 
 // Étape 1: Informations de base
 const BasicInfoStep = ({ data, onNext, onBack }) => {

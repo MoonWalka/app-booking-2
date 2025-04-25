@@ -108,6 +108,9 @@ const LieuForm = () => {
   const addressInputRef = useRef(null);
   const suggestionsRef = useRef(null);
   
+  // Ajout d'un état pour suivre si le champ d'adresse est actif
+  const [addressFieldActive, setAddressFieldActive] = useState(false);
+  
   // États pour la recherche de programmateurs
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
@@ -207,7 +210,8 @@ const LieuForm = () => {
         adresse: lieu.adresse,
         adresseLength: lieu.adresse?.length || 0,
         isApiLoading,
-        isSearchingAddress
+        isSearchingAddress,
+        addressFieldActive
       });
       
       if (!lieu.adresse || lieu.adresse.length < 3 || isApiLoading) {
@@ -232,8 +236,8 @@ const LieuForm = () => {
       }
     };
     
-    // N'effectuer la recherche que si l'adresse a au moins 3 caractères
-    if (lieu.adresse && lieu.adresse.length >= 3 && !isApiLoading) {
+    // N'effectuer la recherche que si le champ est actif et l'adresse a au moins 3 caractères
+    if (addressFieldActive && lieu.adresse && lieu.adresse.length >= 3 && !isApiLoading) {
       console.log("Planification de la recherche après délai");
       addressTimeoutRef.current = setTimeout(handleSearch, 300);
     } else {
@@ -245,7 +249,7 @@ const LieuForm = () => {
         clearTimeout(addressTimeoutRef.current);
       }
     };
-  }, [lieu.adresse, isApiLoading, searchAddress]);
+  }, [lieu.adresse, isApiLoading, searchAddress, addressFieldActive]);
   
   // Log pour vérifier l'état des suggestions
   useEffect(() => {
@@ -619,6 +623,11 @@ useEffect(() => {
                   required
                   placeholder="Commencez à taper une adresse..."
                   autoComplete="off"
+                  onFocus={() => setAddressFieldActive(true)}
+                  onBlur={() => {
+                    // Délai pour permettre le clic sur une suggestion
+                    setTimeout(() => setAddressFieldActive(false), 200);
+                  }}
                 />
                 <span className="input-group-text">
                   <i className="bi bi-geo-alt"></i>

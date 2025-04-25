@@ -122,6 +122,9 @@ const LieuDetails = () => {
   const addressInputRef = useRef(null);
   const suggestionsRef = useRef(null);
   
+  // Ajout d'un état pour suivre si le champ d'adresse est actif
+  const [addressFieldActive, setAddressFieldActive] = useState(false);
+  
   // Utilisation du hook LocationIQ
   const { isLoading: isApiLoading, error: apiError, searchAddress, getStaticMapUrl } = useLocationIQ();
   
@@ -498,7 +501,8 @@ const LieuDetails = () => {
         adresse: formData.adresse,
         adresseLength: formData.adresse?.length || 0,
         isApiLoading,
-        isSearchingAddress
+        isSearchingAddress,
+        addressFieldActive
       });
       
       if (!formData.adresse || formData.adresse.length < 3 || isApiLoading) {
@@ -523,8 +527,8 @@ const LieuDetails = () => {
       }
     };
     
-    // N'effectuer la recherche que si l'adresse a au moins 3 caractères
-    if (formData.adresse && formData.adresse.length >= 3 && !isApiLoading) {
+    // N'effectuer la recherche que si le champ est actif et l'adresse a au moins 3 caractères
+    if (addressFieldActive && formData.adresse && formData.adresse.length >= 3 && !isApiLoading) {
       console.log("Planification de la recherche après délai");
       addressTimeoutRef.current = setTimeout(handleSearch, 300);
     } else {
@@ -536,7 +540,7 @@ const LieuDetails = () => {
         clearTimeout(addressTimeoutRef.current);
       }
     };
-  }, [formData.adresse, isApiLoading, searchAddress, isEditing]);
+  }, [formData.adresse, isApiLoading, searchAddress, isEditing, addressFieldActive]);
   
   // Gestionnaire de clic extérieur pour fermer les suggestions d'adresse
   useEffect(() => {
@@ -769,168 +773,172 @@ const LieuDetails = () => {
           </div>
         </div>
 
-{/* Deuxième carte - Adresse */}
-<div className="form-card">
-  <div className="card-header">
-    <i className="bi bi-geo-alt"></i>
-    <h3>Adresse</h3>
-  </div>
-  <div className="card-body">
-    <div className="form-group">
-      <label htmlFor="adresse" className="form-label">Adresse {isEditing && <span className="required">*</span>}</label>
-      {isEditing ? (
-        <div className="address-search-container">
-          <div className="input-group">
-            <input
-              type="text"
-              className="form-control"
-              id="adresse"
-              name="adresse"
-              ref={addressInputRef}
-              value={formData.adresse}
-              onChange={handleChange}
-              required
-              placeholder="Commencez à taper une adresse..."
-              autoComplete="off"
-            />
-            <span className="input-group-text">
-              <i className="bi bi-geo-alt"></i>
-            </span>
+        {/* Deuxième carte - Adresse */}
+        <div className="form-card">
+          <div className="card-header">
+            <i className="bi bi-geo-alt"></i>
+            <h3>Adresse</h3>
           </div>
-          <small className="form-text text-muted">
-            Commencez à taper pour voir des suggestions d'adresses
-          </small>
-          
-          {/* Suggestions d'adresse */}
-          {addressSuggestions && addressSuggestions.length > 0 && (
-            <div className="address-suggestions" ref={suggestionsRef}>
-              {addressSuggestions.map((suggestion, index) => (
-                <div
-                  key={index}
-                  className="address-suggestion-item"
-                  onClick={() => handleSelectAddress(suggestion)}
-                >
-                  <div className="suggestion-icon">
-                    <i className="bi bi-geo-alt-fill"></i>
+          <div className="card-body">
+            <div className="form-group">
+              <label htmlFor="adresse" className="form-label">Adresse {isEditing && <span className="required">*</span>}</label>
+              {isEditing ? (
+                <div className="address-search-container">
+                  <div className="input-group">
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="adresse"
+                      name="adresse"
+                      ref={addressInputRef}
+                      value={formData.adresse}
+                      onChange={handleChange}
+                      required
+                      placeholder="Commencez à taper une adresse..."
+                      autoComplete="off"
+                      onFocus={() => setAddressFieldActive(true)}
+                      onBlur={() => {
+                        // Délai pour permettre le clic sur une suggestion
+                        setTimeout(() => setAddressFieldActive(false), 200);
+                      }}
+                    />
+                    <span className="input-group-text">
+                      <i className="bi bi-geo-alt"></i>
+                    </span>
                   </div>
-                  <div className="suggestion-text">
-                    <div className="suggestion-name">{suggestion.display_name}</div>
-                    {suggestion.address && (
-                      <div className="suggestion-details">
-                        {suggestion.address.postcode && suggestion.address.city && (
-                          <span>{suggestion.address.postcode} {suggestion.address.city}</span>
-                        )}
+                  <small className="form-text text-muted">
+                    Commencez à taper pour voir des suggestions d'adresses
+                  </small>
+                  
+                  {/* Suggestions d'adresse */}
+                  {addressSuggestions && addressSuggestions.length > 0 && (
+                    <div className="address-suggestions" ref={suggestionsRef}>
+                      {addressSuggestions.map((suggestion, index) => (
+                        <div
+                          key={index}
+                          className="address-suggestion-item"
+                          onClick={() => handleSelectAddress(suggestion)}
+                        >
+                          <div className="suggestion-icon">
+                            <i className="bi bi-geo-alt-fill"></i>
+                          </div>
+                          <div className="suggestion-text">
+                            <div className="suggestion-name">{suggestion.display_name}</div>
+                            {suggestion.address && (
+                              <div className="suggestion-details">
+                                {suggestion.address.postcode && suggestion.address.city && (
+                                  <span>{suggestion.address.postcode} {suggestion.address.city}</span>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  
+                  {/* Indicateur de recherche */}
+                  {isSearchingAddress && (
+                    <div className="address-searching">
+                      <div className="spinner-border spinner-border-sm text-primary" role="status">
+                        <span className="visually-hidden">Recherche en cours...</span>
                       </div>
-                    )}
-                  </div>
+                      <span className="searching-text">Recherche d'adresses...</span>
+                    </div>
+                  )}
                 </div>
-              ))}
+              ) : (
+                <div className="form-control-static">{lieu.adresse}</div>
+              )}
             </div>
-          )}
-          
-          {/* Indicateur de recherche */}
-          {isSearchingAddress && (
-            <div className="address-searching">
-              <div className="spinner-border spinner-border-sm text-primary" role="status">
-                <span className="visually-hidden">Recherche en cours...</span>
+
+            <div className="row">
+              <div className="col-md-4">
+                <div className="form-group">
+                  <label htmlFor="codePostal" className="form-label">Code postal {isEditing && <span className="required">*</span>}</label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="codePostal"
+                      name="codePostal"
+                      value={formData.codePostal}
+                      onChange={handleChange}
+                      required
+                      placeholder="Ex: 75001"
+                    />
+                  ) : (
+                    <div className="form-control-static">{lieu.codePostal}</div>
+                  )}
+                </div>
               </div>
-              <span className="searching-text">Recherche d'adresses...</span>
+              <div className="col-md-8">
+                <div className="form-group">
+                  <label htmlFor="ville" className="form-label">Ville {isEditing && <span className="required">*</span>}</label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="ville"
+                      name="ville"
+                      value={formData.ville}
+                      onChange={handleChange}
+                      required
+                      placeholder="Ex: Paris"
+                    />
+                  ) : (
+                    <div className="form-control-static">{lieu.ville}</div>
+                  )}
+                </div>
+              </div>
             </div>
-          )}
-        </div>
-      ) : (
-        <div className="form-control-static">{lieu.adresse}</div>
-      )}
-    </div>
 
-    <div className="row">
-      <div className="col-md-4">
-        <div className="form-group">
-          <label htmlFor="codePostal" className="form-label">Code postal {isEditing && <span className="required">*</span>}</label>
-          {isEditing ? (
-            <input
-              type="text"
-              className="form-control"
-              id="codePostal"
-              name="codePostal"
-              value={formData.codePostal}
-              onChange={handleChange}
-              required
-              placeholder="Ex: 75001"
-            />
-          ) : (
-            <div className="form-control-static">{lieu.codePostal}</div>
-          )}
+            <div className="form-group">
+              <label htmlFor="pays" className="form-label">Pays {isEditing && <span className="required">*</span>}</label>
+              {isEditing ? (
+                <input
+                  type="text"
+                  className="form-control"
+                  id="pays"
+                  name="pays"
+                  value={formData.pays}
+                  onChange={handleChange}
+                  required
+                />
+              ) : (
+                <div className="form-control-static">{lieu.pays}</div>
+              )}
+            </div>
+            
+            {/* Affichage de la carte uniquement en mode visualisation */}
+            {!isEditing && lieu.adresse && (
+              <div className="map-preview mt-4">
+                <div className="map-container mb-3">
+                  <iframe 
+                    src={`https://maps.google.com/maps?q=${encodeURIComponent(`${lieu.adresse}, ${lieu.codePostal} ${lieu.ville}`)}&z=14&output=embed`}
+                    width="100%" 
+                    height="300" 
+                    style={{border: '1px solid #ddd', borderRadius: '8px'}}
+                    allowFullScreen="" 
+                    loading="lazy" 
+                    referrerPolicy="no-referrer-when-downgrade"
+                  ></iframe>
+                </div>
+                <div className="text-center">
+                  <a 
+                    href={`https://maps.google.com/maps?q=${encodeURIComponent(`${lieu.adresse}, ${lieu.codePostal} ${lieu.ville}`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer" 
+                    className="btn btn-sm btn-outline-primary"
+                  >
+                    <i className="bi bi-map me-2"></i>
+                    Voir sur Google Maps
+                  </a>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-      <div className="col-md-8">
-        <div className="form-group">
-          <label htmlFor="ville" className="form-label">Ville {isEditing && <span className="required">*</span>}</label>
-          {isEditing ? (
-            <input
-              type="text"
-              className="form-control"
-              id="ville"
-              name="ville"
-              value={formData.ville}
-              onChange={handleChange}
-              required
-              placeholder="Ex: Paris"
-            />
-          ) : (
-            <div className="form-control-static">{lieu.ville}</div>
-          )}
-        </div>
-      </div>
-    </div>
-
-    <div className="form-group">
-      <label htmlFor="pays" className="form-label">Pays {isEditing && <span className="required">*</span>}</label>
-      {isEditing ? (
-        <input
-          type="text"
-          className="form-control"
-          id="pays"
-          name="pays"
-          value={formData.pays}
-          onChange={handleChange}
-          required
-        />
-      ) : (
-        <div className="form-control-static">{lieu.pays}</div>
-      )}
-    </div>
-    
-    {/* Affichage de la carte uniquement en mode visualisation */}
-    {!isEditing && lieu.adresse && (
-      <div className="map-preview mt-4">
-        <div className="map-container mb-3">
-          <iframe 
-            src={`https://maps.google.com/maps?q=${encodeURIComponent(`${lieu.adresse}, ${lieu.codePostal} ${lieu.ville}`)}&z=14&output=embed`}
-            width="100%" 
-            height="300" 
-            style={{border: '1px solid #ddd', borderRadius: '8px'}}
-            allowFullScreen="" 
-            loading="lazy" 
-            referrerPolicy="no-referrer-when-downgrade"
-          ></iframe>
-        </div>
-        <div className="text-center">
-          <a 
-            href={`https://maps.google.com/maps?q=${encodeURIComponent(`${lieu.adresse}, ${lieu.codePostal} ${lieu.ville}`)}`}
-            target="_blank"
-            rel="noopener noreferrer" 
-            className="btn btn-sm btn-outline-primary"
-          >
-            <i className="bi bi-map me-2"></i>
-            Voir sur Google Maps
-          </a>
-        </div>
-      </div>
-    )}
-  </div>
-</div>
-
 
         {/* Carte - Programmateur */}
         <div className="form-card">

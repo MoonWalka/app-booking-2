@@ -36,6 +36,9 @@ const ParametresEntreprise = () => {
   const addressInputRef = useRef(null);
   const suggestionsRef = useRef(null);
   
+  // Ajout d'un état pour suivre si le champ d'adresse est actif
+  const [addressFieldActive, setAddressFieldActive] = useState(false);
+  
   // Utilisation du hook LocationIQ
   const { isLoading: isApiLoading, error: apiError, searchAddress } = useLocationIQ();
   const [success, setSuccess] = useState('');
@@ -151,8 +154,8 @@ const ParametresEntreprise = () => {
       }
     };
     
-    // N'effectuer la recherche que si l'adresse a au moins 3 caractères
-    if (localState.adresse && localState.adresse.length >= 3 && !isApiLoading && searchType === 'manual') {
+    // N'effectuer la recherche que si le champ est actif, l'adresse a au moins 3 caractères et en mode manuel
+    if (addressFieldActive && localState.adresse && localState.adresse.length >= 3 && !isApiLoading && searchType === 'manual') {
       addressTimeoutRef.current = setTimeout(handleSearch, 300);
     } else {
       setAddressSuggestions([]);
@@ -163,7 +166,7 @@ const ParametresEntreprise = () => {
         clearTimeout(addressTimeoutRef.current);
       }
     };
-  }, [localState.adresse, isApiLoading, searchAddress, searchType]);
+  }, [localState.adresse, isApiLoading, searchAddress, searchType, addressFieldActive]);
   
   // Gestionnaire de clic extérieur pour fermer la liste des suggestions
   useEffect(() => {
@@ -445,6 +448,11 @@ const ParametresEntreprise = () => {
                     onChange={handleChange}
                     placeholder="Commencez à taper une adresse..."
                     autoComplete="off"
+                    onFocus={() => setAddressFieldActive(true)}
+                    onBlur={() => {
+                      // Délai pour permettre le clic sur une suggestion
+                      setTimeout(() => setAddressFieldActive(false), 200);
+                    }}
                   />
                   <span className="input-group-text">
                     <i className="bi bi-geo-alt"></i>

@@ -42,7 +42,7 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, initialLieuData, onSu
   const companySearchTimeoutRef = useRef(null);
   const companySearchResultsRef = useRef(null);
   
-  // États pour l'auto-complétion d'adresse de structure
+  // États pour les suggestions d'adresse
   const [addressSuggestions, setAddressSuggestions] = useState([]);
   const [isSearchingAddress, setIsSearchingAddress] = useState(false);
   const addressTimeoutRef = useRef(null);
@@ -55,6 +55,10 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, initialLieuData, onSu
   const lieuAddressTimeoutRef = useRef(null);
   const lieuAddressInputRef = useRef(null);
   const lieuSuggestionsRef = useRef(null);
+  
+  // Ajout d'états pour suivre si les champs d'adresse sont actifs
+  const [addressFieldActive, setAddressFieldActive] = useState(false);
+  const [lieuAddressFieldActive, setLieuAddressFieldActive] = useState(false);
   
   // États pour la gestion du formulaire
   const [existingProgrammId, setExistingProgrammId] = useState(null);
@@ -303,8 +307,8 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, initialLieuData, onSu
       }
     };
     
-    // N'effectuer la recherche que si l'adresse a au moins 3 caractères
-    if (formData.structureAdresse && formData.structureAdresse.length >= 3 && !isApiLoading && searchType === 'manual') {
+    // N'effectuer la recherche que si le champ est actif et l'adresse a au moins 3 caractères
+    if (addressFieldActive && formData.structureAdresse && formData.structureAdresse.length >= 3 && !isApiLoading && searchType === 'manual') {
       addressTimeoutRef.current = setTimeout(handleSearch, 300);
     } else {
       setAddressSuggestions([]);
@@ -315,7 +319,7 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, initialLieuData, onSu
         clearTimeout(addressTimeoutRef.current);
       }
     };
-  }, [formData.structureAdresse, isApiLoading, searchAddress, searchType]);
+  }, [formData.structureAdresse, isApiLoading, searchAddress, searchType, addressFieldActive]);
 
   // Effet pour la recherche d'adresse de lieu
   useEffect(() => {
@@ -343,8 +347,8 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, initialLieuData, onSu
       }
     };
     
-    // N'effectuer la recherche que si l'adresse a au moins 3 caractères
-    if (lieuData.adresse && lieuData.adresse.length >= 3 && !isApiLoading) {
+    // N'effectuer la recherche que si le champ est actif et l'adresse a au moins 3 caractères
+    if (lieuAddressFieldActive && lieuData.adresse && lieuData.adresse.length >= 3 && !isApiLoading) {
       lieuAddressTimeoutRef.current = setTimeout(searchLieuAddress, 300);
     } else {
       setLieuAddressSuggestions([]);
@@ -355,7 +359,7 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, initialLieuData, onSu
         clearTimeout(lieuAddressTimeoutRef.current);
       }
     };
-  }, [lieuData.adresse, isApiLoading, searchAddress]);
+  }, [lieuData.adresse, isApiLoading, searchAddress, lieuAddressFieldActive]);
 
   // Gestionnaire de clic extérieur pour fermer les suggestions d'adresse
   useEffect(() => {
@@ -920,6 +924,11 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, initialLieuData, onSu
                 value={formData.structureAdresse}
                 onChange={handleChange}
                 placeholder="Numéro et nom de la rue"
+                onFocus={() => setAddressFieldActive(true)}
+                onBlur={() => {
+                  // Délai pour permettre le clic sur une suggestion
+                  setTimeout(() => setAddressFieldActive(false), 200);
+                }}
               />
               <span className="input-group-text">
                 <i className="bi bi-geo-alt"></i>
@@ -1045,6 +1054,11 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, initialLieuData, onSu
                 value={lieuData.adresse}
                 onChange={(e) => setLieuData({...lieuData, adresse: e.target.value})}
                 placeholder="Adresse du lieu"
+                onFocus={() => setLieuAddressFieldActive(true)}
+                onBlur={() => {
+                  // Délai pour permettre le clic sur une suggestion
+                  setTimeout(() => setLieuAddressFieldActive(false), 200);
+                }}
               />
               <span className="input-group-text">
                 <i className="bi bi-geo-alt"></i>

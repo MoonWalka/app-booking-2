@@ -1,211 +1,198 @@
-/* Styles pour les formulaires responsifs sur mobile */
-
-.mobile-form-container {
-  padding: var(--spacing-md);
-}
-
-.mobile-form-header {
+/* 
+ * Formulaire multi-étapes 
+ * Ces styles sont utilisés pour la navigation entre les étapes d'un formulaire
+ */
+.form-progress {
   display: flex;
-  flex-direction: column;
-  margin-bottom: var(--spacing-lg);
-}
-
-.mobile-form-header h1 {
-  font-size: var(--font-size-lg);
-  margin: 0;
-  color: var(--text-color);
-}
-
-.mobile-form-breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  font-size: var(--font-size-sm);
-  color: var(--text-muted);
-  margin-bottom: var(--spacing-sm);
-}
-
-.mobile-form-breadcrumb i {
-  font-size: var(--font-size-xs);
-}
-
-.mobile-form-card {
-  background-color: white;
+  margin-bottom: 30px;
   border-radius: var(--border-radius);
-  box-shadow: var(--shadow);
-  margin-bottom: var(--spacing-md);
   overflow: hidden;
 }
 
-.mobile-form-card-header {
-  padding: var(--spacing-md);
-  border-bottom: 1px solid var(--border-color-light);
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-}
-
-.mobile-form-card-header i {
-  font-size: var(--font-size-lg);
-  color: var(--text-muted);
-}
-
-.mobile-form-card-header h3 {
-  margin: 0;
-  font-size: var(--font-size-md);
-  font-weight: 600;
-  color: var(--text-color);
-}
-
-.mobile-form-card-body {
-  padding: var(--spacing-md);
-}
-
-.mobile-form-group {
-  margin-bottom: var(--spacing-md);
-}
-
-.mobile-form-group label {
-  display: block;
-  margin-bottom: var(--spacing-sm);
-  font-weight: 500;
-  font-size: var(--font-size-sm);
-  color: var(--text-color);
-}
-
-.mobile-form-group input,
-.mobile-form-group select,
-.mobile-form-group textarea {
-  width: 100%;
-  padding: var(--spacing-sm);
-  font-size: var(--font-size-md);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-sm);
-}
-
-.mobile-form-group textarea {
-  min-height: 100px;
-  resize: vertical;
-}
-
-.mobile-form-group .input-group {
-  display: flex;
-}
-
-.mobile-form-group .input-group-text {
-  background-color: var(--bg-light);
-  border: 1px solid var(--border-color);
-  border-right: none;
-  border-radius: var(--border-radius-sm) 0 0 var(--border-radius-sm);
-  padding: 0 var(--spacing-sm);
-  display: flex;
-  align-items: center;
-}
-
-.mobile-form-group .input-group input {
-  border-radius: 0 var(--border-radius-sm) var(--border-radius-sm) 0;
-}
-
-.mobile-form-actions {
-  padding: var(--spacing-md);
-  border-top: 1px solid var(--border-color-light);
-  display: flex;
-  justify-content: space-between;
-  gap: var(--spacing-sm);
-}
-
-.mobile-form-actions button {
+.progress-step {
   flex: 1;
-}
-
-.mobile-form-footer {
-  margin-top: var(--spacing-lg);
-  padding: var(--spacing-md);
-  background-color: var(--bg-light);
-  border-radius: var(--border-radius-sm);
-  font-size: var(--font-size-sm);
-  color: var(--text-muted);
-}
-
-/* Personnalisation pour les champs de date et de recherche */
-.mobile-form-date-picker {
+  padding: 10px;
+  text-align: center;
+  background-color: var(--light-color);
+  color: var(--text-color);
   position: relative;
 }
 
-.mobile-form-date-picker input {
-  padding-right: 30px;
+.progress-step.active {
+  background-color: var(--primary-color);
+  color: white;
 }
 
-.mobile-form-date-picker i {
+.progress-step:not(:last-child)::after {
+  content: '';
   position: absolute;
-  right: var(--spacing-sm);
   top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-muted);
-}
-
-.mobile-search-dropdown {
-  position: relative;
-}
-
-.mobile-search-results {
-  position: absolute;
-  top: 100%;
-  left: 0;
   right: 0;
-  z-index: 1000;
-  background-color: white;
-  border: 1px solid var(--border-color);
-  border-radius: 0 0 var(--border-radius-sm) var(--border-radius-sm);
-  max-height: 200px;
-  overflow-y: auto;
-  box-shadow: var(--shadow);
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 10px solid var(--light-color);
+  z-index: 1;
 }
 
-.mobile-search-item {
-  padding: var(--spacing-sm);
-  border-bottom: 1px solid var(--border-color-light);
-  cursor: pointer;
+.progress-step.active:not(:last-child)::after {
+  border-left-color: var(--primary-color);
 }
 
-.mobile-search-item:last-child {
-  border-bottom: none;
-}
-
-.mobile-search-item:hover {
-  background-color: var(--bg-light);
-}
-
-.mobile-selected-item {
-  background-color: var(--bg-light);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-sm);
-  padding: var(--spacing-sm);
-  margin-top: var(--spacing-sm);
+/* Styles pour l'interface isolée du formulaire */
+.form-isolated-container {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f5f7fa;
 }
 
-.mobile-selected-item-info {
+.form-header {
+  background-color: var(--secondary-color);
+  color: white;
+  padding: 15px 30px;
+  text-align: center;
+}
+
+.form-logo h2 {
+  margin: 0;
+}
+
+.form-content {
   flex: 1;
+  padding: 30px;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
 }
 
-.mobile-selected-item-name {
-  font-weight: 600;
-  margin-bottom: var(--spacing-xs);
+.form-footer {
+  background-color: var(--secondary-color);
+  color: white;
+  padding: 15px;
+  text-align: center;
+  font-size: 12px;
 }
 
-.mobile-selected-item-details {
-  font-size: var(--font-size-xs);
-  color: var(--text-muted);
+.form-security-notice {
+  margin-top: 30px;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: var(--border-radius);
+  text-align: center;
+  font-size: 12px;
+  color: #7f8c8d;
 }
 
-.mobile-selected-item-remove {
-  background: none;
-  border: none;
+.form-error {
+  text-align: center;
+  padding: 50px 20px;
+}
+
+.error-icon {
+  font-size: 64px;
   color: var(--danger-color);
-  font-size: var(--font-size-md);
-  cursor: pointer;
-  padding: var(--spacing-xs);
+  margin-bottom: 20px;
+}
+
+.error-help {
+  margin-top: 20px;
+  font-style: italic;
+}
+
+/* Styles pour les avertissements d'expiration */
+.form-expired-warning {
+  margin-top: 15px;
+  padding: 10px;
+  background-color: #fff3cd;
+  border-radius: var(--border-radius);
+  color: #856404;
+}
+
+.btn-warning {
+  background-color: var(--warning-color);
+  color: white;
+}
+
+.btn-warning:hover {
+  background-color: #e67e22;
+}
+
+/* Styles pour les informations de soumission */
+.form-submitted-info, 
+.form-validated-info {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #d4edda;
+  border-radius: var(--border-radius);
+  color: #155724;
+}
+
+/* Styles pour les liens de formulaire */
+.form-link-container {
+  margin-top: 20px;
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: var(--border-radius);
+}
+
+.form-link {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.form-link input {
+  flex: 1;
+  background-color: white;
+}
+
+/* Styles pour le succès du formulaire */
+.form-success {
+  text-align: center;
+  padding: 50px 20px;
+}
+
+.success-icon {
+  font-size: 64px;
+  color: var(--success-color);
+  margin-bottom: 20px;
+}
+
+/* Styles pour la validation */
+.form-validation {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.validation-card {
+  background-color: white;
+  border-radius: var(--border-radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+  margin-top: 20px;
+}
+
+.validation-success {
+  text-align: center;
+  padding: 50px 20px;
+}
+
+/* Formulaire de programmateur */
+.programmateur-form {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.form-intro {
+  margin-bottom: 30px;
+}
+
+.concert-info {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: var(--border-radius);
+  margin-top: 15px;
 }

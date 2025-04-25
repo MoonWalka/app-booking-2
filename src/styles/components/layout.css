@@ -1,6 +1,10 @@
-/* Layout styles for desktop and mobile */
+/* Styles de base pour le layout */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
 
-/* Desktop layout */
+/* Intégration de l'ancien layout-container pour maintenir la compatibilité */
 .layout-container {
   display: flex;
   height: 100vh;
@@ -8,22 +12,26 @@
   overflow: hidden;
 }
 
-/* Sidebar */
 .sidebar {
+  width: 250px;
+  background-color: var(--secondary-color);
+  color: white;
+  padding: 20px 0;
   display: flex;
   flex-direction: column;
-  width: 250px;
-  min-width: 250px;
-  background-color: var(--primary-color);
-  color: white;
   height: 100vh;
   overflow-y: auto;
   transition: width 0.3s;
+  min-width: 250px;
 }
 
 .sidebar-header {
-  padding: 20px 15px;
+  padding: 0 20px 20px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-header h2 {
+  margin-bottom: 5px;
 }
 
 .sidebar-header h3 {
@@ -32,6 +40,12 @@
   font-weight: 600;
 }
 
+.sidebar-header p {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+/* Ajout des éléments manquants */
 .sidebar-content {
   flex: 1;
   padding: 15px 0;
@@ -42,7 +56,34 @@
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Navigation */
+/* Navigation - support des deux styles (sidebar-nav et nav-links) */
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+}
+
+.sidebar-nav a {
+  color: white;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  transition: var(--transition);
+}
+
+.sidebar-nav a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-nav a.active {
+  background-color: var(--primary-color);
+}
+
+.sidebar-nav a span {
+  margin-right: 10px;
+}
+
+/* Navigation style ancien */
 .nav-links {
   list-style: none;
   padding: 0;
@@ -79,7 +120,13 @@
   font-size: 1.1rem;
 }
 
-/* Zone de contenu principal */
+/* Contenu principal - support des deux styles */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
 .content {
   flex: 1;
   overflow-y: auto;
@@ -87,7 +134,21 @@
   background-color: #f1f5f9;
 }
 
-/* Informations utilisateur */
+.main-header {
+  background-color: white;
+  padding: 15px 30px;
+  box-shadow: var(--shadow);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+/* Style utilisateur complet de l'ancien layout */
 .user-info {
   display: flex;
   flex-direction: column;
@@ -102,116 +163,13 @@
   text-overflow: ellipsis;
 }
 
-/* Mobile layout */
-.mobile-layout-container {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.mobile-header {
-  background-color: var(--primary-color);
-  color: white;
-  padding: 12px 15px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: sticky;
-  top: 0;
-  z-index: 20;
-}
-
-.app-title {
-  font-weight: 600;
-  font-size: 1.1rem;
-}
-
-.menu-toggle {
-  border: none;
-  background: none;
-  color: white;
-  font-size: 24px;
-  cursor: pointer;
-  padding: 5px;
-}
-
-.user-menu {
-  background: none;
-  border: none;
-  color: white;
-  cursor: pointer;
-}
-
-.menu-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 25;
-}
-
-.mobile-sidebar {
-  position: fixed;
-  top: 0;
-  left: -280px;
-  width: 280px;
-  height: 100vh;
-  background-color: var(--primary-color);
-  color: white;
-  z-index: 30;
-  transition: left 0.3s ease;
+main {
+  flex: 1;
+  padding: 30px;
   overflow-y: auto;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
 }
 
-.mobile-sidebar.open {
-  left: 0;
-}
-
-.mobile-content {
-  flex: 1;
-  padding: 15px;
-  background-color: #f5f7fa;
-  margin-bottom: 60px; /* Espace pour la barre de navigation du bas */
-}
-
-.bottom-navbar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 60px;
-  background-color: white;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-  z-index: 20;
-}
-
-.bottom-navbar a {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex: 1;
-  padding: 8px 0;
-  color: var(--text-muted);
-  text-decoration: none;
-  font-size: 0.8rem;
-}
-
-.bottom-navbar a i {
-  font-size: 1.2rem;
-  margin-bottom: 4px;
-}
-
-.bottom-navbar a.active {
-  color: var(--primary-color);
-}
-
-/* Marque */
+/* Styles pour la marque */
 .brand-container {
   display: flex;
   flex-direction: column;
@@ -231,9 +189,42 @@
   opacity: 0.8;
 }
 
-/* Adaptations responsive */
+/* Responsive layout - combiné des deux approches */
 @media (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+  }
+  
   .sidebar {
+    width: 100%;
+    padding: 10px 0;
+  }
+  
+  .sidebar-nav {
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 10px 0;
+  }
+  
+  .sidebar-nav a {
+    padding: 8px 15px;
+    white-space: nowrap;
+  }
+  
+  .main-header {
+    padding: 10px 15px;
+  }
+  
+  main {
+    padding: 15px;
+  }
+  
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  /* Responsive de l'ancien style */
+  .layout-container .sidebar {
     width: 70px;
     min-width: 70px;
   }

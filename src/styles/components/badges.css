@@ -1,43 +1,23 @@
 /* Styles pour les badges de statut */
-.badge,
 .status-badge {
   display: inline-block;
   padding: 4px 8px;
   border-radius: 20px;
-  font-size: var(--font-size-xs);
+  font-size: 12px;
   font-weight: 500;
 }
 
-/* Badges pour les statuts génériques */
-.badge-success,
-.status-confirmed,
-.status-signed {
-  background-color: var(--success-color);
-  color: white;
-}
-
-.badge-warning,
-.status-option,
-.status-generated,
-.status-draft {
+.status-option {
   background-color: var(--warning-color);
   color: white;
 }
 
-.badge-info,
-.status-sent {
-  background-color: var(--primary-color);
+.status-confirmed {
+  background-color: var(--success-color);
   color: white;
 }
 
-.badge-danger,
 .status-cancelled {
   background-color: var(--danger-color);
-  color: white;
-}
-
-.badge-secondary,
-.status-unknown {
-  background-color: var(--text-muted);
   color: white;
 }

@@ -11,7 +11,9 @@
 @import './components/badges.css';
 @import './components/buttons.css';
 @import './components/cards.css';
+@import './components/details.css';  /* Nouveau fichier pour les styles de détails */
 @import './components/dropdowns.css';
+@import './components/errors.css';  /* Nouveau fichier pour les styles d'erreur */
 @import './components/forms.css';
 @import './components/layout.css';
 @import './components/modals.css';

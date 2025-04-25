@@ -1367,3 +1367,240 @@ td .programmateur-name {
   background-color: #fde8e8;
   color: #e74c3c;
 }
+
+/* Style pour les artistes */
+.concert-artist-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.artist-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--gray-100);
+  color: var(--text-color);
+  border-radius: 20px;
+  padding: 4px 12px;
+  margin: 2px auto;
+  font-size: var(--font-size-sm);
+  max-width: 95%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative !important;
+  cursor: help !important;
+  white-space: nowrap !important; /* Empêcher le retour à la ligne */
+  max-width: 130px !important; /* Limiter la largeur à l'intérieur de la cellule */
+}
+
+.artist-tag:hover::after {
+  content: attr(data-full-name) !important;
+  position: absolute !important;
+  bottom: 125% !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  color: white !important;
+  padding: 5px 10px !important;
+  border-radius: 4px !important;
+  white-space: nowrap !important;
+  z-index: 10 !important;
+  font-size: 12px !important;
+  max-width: none !important; /* Le tooltip peut être aussi large que nécessaire */
+}
+
+/* Cellule montant - uniformisation */
+.montant-column {
+  text-align: center !important;
+}
+
+.montant-value {
+  display: inline-block;
+  font-weight: 500;
+  white-space: nowrap;
+  margin: 0 auto;
+}
+
+/* Style pour les badges de statut */
+.concert-status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 500;
+  font-size: var(--font-size-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Boutons d'actions uniformes */
+.concert-action-button {
+  min-width: 80px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-sm);
+  padding: 0.35rem 0.65rem;
+  border-radius: var(--border-radius-sm);
+}
+
+/* État de survol des lignes */
+.concerts-table tbody tr:hover {
+  background-color: rgba(var(--primary-color-rgb), 0.05);
+}
+
+/* Assurer l'uniformité dans les vues détaillées */
+.concert-details-container {
+  font-size: var(--font-size-md);
+}
+
+.concert-details-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.concert-details-section {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+/* Pour les vues en cartes supplémentaires */
+.concert-card-title {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.concert-card-date {
+  font-size: var(--font-size-md);
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.concert-card-venue {
+  font-size: var(--font-size-md);
+  margin-bottom: 15px;
+}
+
+/* Correction de l'alignement vertical pour la colonne Artiste */
+.concert-artist-cell,
+.artist-tag {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 100% !important;
+  line-height: normal !important;
+}
+
+/* Assurer que l'icône et le texte sont alignés sur la même ligne */
+.artist-tag i.bi,
+.artist-tag .bi-music-note,
+.artist-tag emoji,
+.artist-tag span {
+  line-height: 1 !important;
+  vertical-align: middle !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+/* Correction spécifique pour les émojis dans la colonne artiste */
+.artist-tag span {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Assurer que l'icône de musique est bien alignée verticalement */
+.bi-music-note, 
+.bi-music-note-beamed {
+  transform: translateY(-1px) !important;
+}
+
+/* Forcer le centrage dans les cellules du tableau */
+.concerts-table tbody tr td {
+  display: table-cell !important;
+  vertical-align: middle !important;
+  height: 60px !important; /* hauteur fixe pour l'uniformité */
+}
+
+/* S'assurer que les icônes restent alignées avec le texte */
+.programmateur-name .bi,
+.artist-tag .bi {
+  vertical-align: -0.125em !important;
+}
+
+/* Assurer la compatibilité avec les deux layouts */
+.concerts-table .montant-column,
+.concerts-table .status-column,
+.concerts-table .concert-venue-name,
+.concerts-table .concert-venue-location {
+  text-align: center !important;
+}
+
+/* Améliorer les informations de statut */
+.status-advanced-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Renforcer le style pour les conteneurs imbriqués */
+.concerts-table td > div,
+.concerts-table td > span {
+  display: flex !important;
+  justify-content: center !important;
+  text-align: center !important;
+  margin: 0 auto !important;
+}
+
+/* Adaptation responsive */
+@media (max-width: 768px) {
+  .concert-action-button {
+    min-width: 32px;
+    padding: 0.25rem;
+  }
+  
+  .concert-action-button span {
+    display: none;
+  }
+  
+  .concert-action-button i {
+    margin-right: 0 !important;
+  }
+  
+  .concert-artist-cell,
+  .programmateur-name {
+    justify-content: center;
+    text-align: center;
+  }
+}
+
+/* Uniformiser l'apparence de toutes les cellules spéciales */
+.date-box,
+.concert-venue-name,
+.concert-venue-location,
+.artist-tag,
+.programmateur-name,
+.montant-value,
+.status-message-container {
+  margin: 0 auto;
+}
+
+/* Compatibilité avec les styles existants */
+.modern-table.concerts-table {
+  margin-bottom: 0;
+}
+
+.status-column .status-message-container {
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.date-column .date-box {
+  margin: 0 auto;
+}

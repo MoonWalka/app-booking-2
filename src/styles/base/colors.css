@@ -61,4 +61,65 @@
   --hover-bg: #f8f9fa;
   
   /* Ces variables peuvent être redéfinies dans un thème sombre si nécessaire */
+  
+  /* DÉBUT: Variables spécifiques aux composants */
+  
+  /* Layout et navigation */
+  --sidebar-bg-color: var(--primary-color);
+  --sidebar-text-color: white;
+  --sidebar-hover-bg-color: rgba(255, 255, 255, 0.1);
+  --sidebar-active-bg-color: var(--primary-color);
+  --sidebar-border-color: rgba(255, 255, 255, 0.1);
+  --header-bg-color: white;
+  --header-text-color: var(--text-color);
+  --header-border-color: var(--gray-200);
+  --content-bg-color: var(--background-color);
+  
+  /* Cartes et conteneurs */
+  --card-bg-color: var(--card-bg);
+  --card-border-color: var(--border-color);
+  --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --card-header-bg-color: var(--gray-100);
+  --card-header-text-color: var(--text-color);
+  
+  /* Boutons */
+  --btn-primary-bg: var(--primary-color);
+  --btn-primary-text: white;
+  --btn-primary-border: var(--primary-color);
+  --btn-primary-hover-bg: var(--primary-dark);
+  --btn-secondary-bg: var(--secondary-color);
+  --btn-secondary-text: white;
+  --btn-success-bg: var(--success-color);
+  --btn-success-text: white;
+  --btn-danger-bg: var(--danger-color);
+  --btn-danger-text: white;
+  --btn-info-bg: var(--info-color);
+  --btn-info-text: white;
+  
+  /* Formulaires */
+  --input-border-color: var(--gray-300);
+  --input-focus-border-color: var(--primary-light);
+  --input-focus-shadow: 0 0 0 0.25rem rgba(var(--primary-color-rgb), 0.25);
+  --input-placeholder-color: var(--gray-500);
+  --label-color: var(--text-color);
+  
+  /* Tables */
+  --table-header-bg: var(--gray-100);
+  --table-border-color: var(--gray-300);
+  --table-hover-bg: var(--gray-100);
+  --table-row-even-bg: white;
+  --table-row-odd-bg: var(--gray-50, #fafbfc);
+  
+  /* Badges */
+  --badge-bg: var(--primary-color);
+  --badge-text: white;
+  
+  /* Modales */
+  --modal-bg: white;
+  --modal-header-bg: var(--gray-100);
+  --modal-border-color: var(--gray-300);
+  --modal-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --modal-overlay-bg: rgba(0, 0, 0, 0.5);
+  
+  /* FIN: Variables spécifiques aux composants */
 }

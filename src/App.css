@@ -61,8 +61,8 @@ input:focus, select:focus, textarea:focus {
 
 .sidebar {
   width: 250px;
-  background-color: var(--secondary-color);
-  color: white;
+  background-color: var(--sidebar-bg-color);
+  color: var(--sidebar-text-color);
   padding: 20px 0;
   display: flex;
   flex-direction: column;
@@ -70,7 +70,7 @@ input:focus, select:focus, textarea:focus {
 
 .sidebar-header {
   padding: 0 20px 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--sidebar-border-color);
 }
 
 .sidebar-header h2 {
@@ -89,7 +89,7 @@ input:focus, select:focus, textarea:focus {
 }
 
 .sidebar-nav a {
-  color: white;
+  color: var(--sidebar-text-color);
   padding: 10px 20px;
   display: flex;
   align-items: center;
@@ -97,11 +97,11 @@ input:focus, select:focus, textarea:focus {
 }
 
 .sidebar-nav a:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--sidebar-hover-bg-color);
 }
 
 .sidebar-nav a.active {
-  background-color: var(--primary-color);
+  background-color: var(--sidebar-active-bg-color);
 }
 
 .sidebar-nav a span {
@@ -112,12 +112,13 @@ input:focus, select:focus, textarea:focus {
   flex: 1;
   display: flex;
   flex-direction: column;
+  background-color: var(--content-bg-color);
 }
 
 .main-header {
-  background-color: var(--card-bg);
+  background-color: var(--header-bg-color);
   padding: 15px 30px;
-  box-shadow: var(--shadow);
+  box-shadow: var(--card-shadow);
   display: flex;
   justify-content: space-between;
   align-items: center;

@@ -3,7 +3,7 @@ import { Form, Button, Row, Col, Alert } from 'react-bootstrap';
 import { collection, addDoc, query, where, getDocs, doc, getDoc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { db } from '@/firebase';
 import { useLocationIQ } from '@/hooks/useLocationIQ';
-import '../../../style/formPublic.css';
+import '@styles/index.css';
 
 
 const ProgrammateurForm = ({ token, concertId, formLinkId, initialLieuData, onSubmitSuccess }) => {

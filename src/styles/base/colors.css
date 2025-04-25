@@ -16,110 +16,251 @@
  */
 
 :root {
+  /* =========================================== */
+  /* COULEURS DE BASE                           */
+  /* =========================================== */
+
   /* Couleurs principales */
   --primary-color: #2c3e50;  /* Bleu foncé (préféré) */
+  /* Utilisation: Barre latérale, boutons principaux, liens actifs, en-têtes, badges */
+  
   --primary-color-rgb: 44, 62, 80;  /* Valeurs RGB pour les effets de transparence */
+  /* Utilisation: Ombres, overlays, effets de hover sur éléments principaux */
+  
   --primary-light: #3498db;  /* Ancienne couleur principale, utilisable comme variante claire */
+  /* Utilisation: Liens, boutons secondaires, focus sur inputs, icônes */
+  
   --primary-light-rgb: 52, 152, 219;
+  /* Utilisation: Effets de transparence sur éléments clairs */
+  
   --primary-dark: #1e2b38;   /* Version encore plus foncée pour contraste */
+  /* Utilisation: Hover sur boutons principaux, éléments actifs, footer */
+  
   --primary-dark-rgb: 30, 43, 56;
+  /* Utilisation: Effets de transparence sur éléments foncés */
   
   /* Couleurs secondaires */
   --secondary-color: #2980b9;
+  /* Utilisation: Boutons secondaires, en-têtes de tableaux, badges secondaires */
+  
   --secondary-light: #3498db;
+  /* Utilisation: Hover sur boutons secondaires, notifications */
+  
   --secondary-dark: #1f618d;
+  /* Utilisation: Éléments actifs secondaires */
   
   /* Autres couleurs fonctionnelles */
   --success-color: #27ae60;
+  /* Utilisation: Messages de succès, badges de confirmation, boutons de validation */
+  
   --warning-color: #f39c12;
+  /* Utilisation: Alertes, notifications, badges d'état "en attente" */
+  
   --danger-color: #e74c3c;
+  /* Utilisation: Erreurs, boutons de suppression, alertes importantes */
+  
   --info-color: #3498db;
+  /* Utilisation: Messages d'information, badges d'état "info", tooltips */
   
   /* Couleurs neutres */
   --dark-color: #2c3e50;
+  /* Utilisation: Texte principal, titres, icônes importantes */
+  
   --light-color: #ecf0f1;
+  /* Utilisation: Arrière-plans clairs, texte sur fond sombre, bordures légères */
+  
   --gray-100: #f8f9fa;
+  /* Utilisation: Arrière-plans, en-têtes de cartes, hover sur tableaux */
+  
   --gray-200: #e9ecef;
+  /* Utilisation: Bordures, séparateurs, fond des inputs désactivés */
+  
   --gray-300: #dee2e6;
+  /* Utilisation: Bordures des inputs, séparateurs plus visibles */
+  
   --gray-400: #ced4da;
+  /* Utilisation: Icônes secondaires, texte désactivé */
+  
   --gray-500: #adb5bd;
+  /* Utilisation: Placeholder des inputs, texte secondaire */
+  
   --gray-600: #6c757d;
+  /* Utilisation: Texte secondaire, labels, info complémentaire */
+  
   --gray-700: #495057;
+  /* Utilisation: Texte des formulaires, sous-titres */
+  
   --gray-800: #343a40;
+  /* Utilisation: En-têtes, titres importants */
+  
   --gray-900: #212529;
+  /* Utilisation: Texte très important, titres principaux */
   
   /* Couleurs de texte et fond */
   --text-color: #344767;
+  /* Utilisation: Texte principal dans toute l'application */
+  
   --text-muted: #6c757d;
+  /* Utilisation: Texte secondaire, info complémentaire, pied de page */
+  
   --background-color: #f5f7fa;
+  /* Utilisation: Arrière-plan principal de l'application */
+  
   --card-bg: #ffffff;
+  /* Utilisation: Arrière-plan des cartes, formulaires, modales */
+  
   --border-color: #ddd;
+  /* Utilisation: Bordures pour cartes, tableaux, séparateurs */
   
   /* Variables spécifiques au thème clair (par défaut) */
   --bg-color: #ffffff;
+  /* Utilisation: Arrière-plan des conteneurs principaux */
+  
   --input-bg: #ffffff;
+  /* Utilisation: Arrière-plan des champs de formulaire */
+  
   --hover-bg: #f8f9fa;
+  /* Utilisation: Effet hover sur éléments neutres */
   
   /* Ces variables peuvent être redéfinies dans un thème sombre si nécessaire */
   
-  /* DÉBUT: Variables spécifiques aux composants */
+  /* =========================================== */
+  /* VARIABLES SPÉCIFIQUES AUX COMPOSANTS       */
+  /* =========================================== */
   
   /* Layout et navigation */
   --sidebar-bg-color: var(--primary-color);
+  /* Utilisation: Arrière-plan de la barre latérale dans DesktopLayout.js et MobileLayout.js */
+  
   --sidebar-text-color: white;
+  /* Utilisation: Texte dans la barre latérale, liens de navigation */
+  
   --sidebar-hover-bg-color: rgba(255, 255, 255, 0.1);
+  /* Utilisation: Effet hover sur les liens de la barre latérale */
+  
   --sidebar-active-bg-color: var(--primary-color);
+  /* Utilisation: Élément actif dans la barre latérale */
+  
   --sidebar-border-color: rgba(255, 255, 255, 0.1);
+  /* Utilisation: Séparateurs et bordures dans la barre latérale */
+  
   --header-bg-color: white;
+  /* Utilisation: Arrière-plan de l'en-tête principal dans Layout.js */
+  
   --header-text-color: var(--text-color);
+  /* Utilisation: Texte dans l'en-tête principal */
+  
   --header-border-color: var(--gray-200);
+  /* Utilisation: Bordure inférieure de l'en-tête */
+  
   --content-bg-color: var(--background-color);
+  /* Utilisation: Arrière-plan de la zone de contenu principal */
   
   /* Cartes et conteneurs */
   --card-bg-color: var(--card-bg);
+  /* Utilisation: Arrière-plan des cartes dans DashboardPage.js, detail-card dans LieuDetails.js */
+  
   --card-border-color: var(--border-color);
+  /* Utilisation: Bordures des cartes et conteneurs */
+  
   --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  /* Utilisation: Ombre portée sur cartes, conteneurs, dropdowns */
+  
   --card-header-bg-color: var(--gray-100);
+  /* Utilisation: En-tête des cartes, comme dans LieuDetails.js */
+  
   --card-header-text-color: var(--text-color);
+  /* Utilisation: Texte des en-têtes de cartes */
   
   /* Boutons */
   --btn-primary-bg: var(--primary-color);
+  /* Utilisation: Boutons principaux dans tous les formulaires et actions principales */
+  
   --btn-primary-text: white;
+  /* Utilisation: Texte des boutons principaux */
+  
   --btn-primary-border: var(--primary-color);
+  /* Utilisation: Bordure des boutons principaux */
+  
   --btn-primary-hover-bg: var(--primary-dark);
+  /* Utilisation: Arrière-plan au survol des boutons principaux */
+  
   --btn-secondary-bg: var(--secondary-color);
+  /* Utilisation: Boutons secondaires comme Annuler, Retour */
+  
   --btn-secondary-text: white;
+  /* Utilisation: Texte des boutons secondaires */
+  
   --btn-success-bg: var(--success-color);
+  /* Utilisation: Boutons de confirmation, validation */
+  
   --btn-success-text: white;
+  /* Utilisation: Texte des boutons de confirmation */
+  
   --btn-danger-bg: var(--danger-color);
+  /* Utilisation: Boutons de suppression, comme dans LieuxList.js */
+  
   --btn-danger-text: white;
+  /* Utilisation: Texte des boutons de suppression */
+  
   --btn-info-bg: var(--info-color);
+  /* Utilisation: Boutons d'information, aide */
+  
   --btn-info-text: white;
+  /* Utilisation: Texte des boutons d'information */
   
   /* Formulaires */
   --input-border-color: var(--gray-300);
+  /* Utilisation: Bordures des champs de formulaire dans ArtisteForm.js, LieuForm.js */
+  
   --input-focus-border-color: var(--primary-light);
+  /* Utilisation: Bordure des champs de formulaire au focus */
+  
   --input-focus-shadow: 0 0 0 0.25rem rgba(var(--primary-color-rgb), 0.25);
+  /* Utilisation: Ombre autour des champs de formulaire au focus */
+  
   --input-placeholder-color: var(--gray-500);
+  /* Utilisation: Couleur du texte placeholder dans les inputs */
+  
   --label-color: var(--text-color);
+  /* Utilisation: Libellés des champs de formulaire */
   
   /* Tables */
   --table-header-bg: var(--gray-100);
+  /* Utilisation: Arrière-plan des en-têtes de tableau dans LieuxList.js, ConcertsList.js */
+  
   --table-border-color: var(--gray-300);
+  /* Utilisation: Bordures des cellules de tableau */
+  
   --table-hover-bg: var(--gray-100);
+  /* Utilisation: Effet hover sur les lignes de tableau */
+  
   --table-row-even-bg: white;
+  /* Utilisation: Lignes paires dans les tableaux */
+  
   --table-row-odd-bg: var(--gray-50, #fafbfc);
+  /* Utilisation: Lignes impaires dans les tableaux */
   
   /* Badges */
   --badge-bg: var(--primary-color);
+  /* Utilisation: Badges standards, comme dans LieuxPage.js */
+  
   --badge-text: white;
+  /* Utilisation: Texte des badges */
   
   /* Modales */
   --modal-bg: white;
-  --modal-header-bg: var(--gray-100);
-  --modal-border-color: var(--gray-300);
-  --modal-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  --modal-overlay-bg: rgba(0, 0, 0, 0.5);
+  /* Utilisation: Arrière-plan des fenêtres modales, comme ContratTemplateEditorModal.js */
   
-  /* FIN: Variables spécifiques aux composants */
+  --modal-header-bg: var(--gray-100);
+  /* Utilisation: En-tête des fenêtres modales */
+  
+  --modal-border-color: var(--gray-300);
+  /* Utilisation: Bordures des fenêtres modales */
+  
+  --modal-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  /* Utilisation: Ombre portée des fenêtres modales */
+  
+  --modal-overlay-bg: rgba(0, 0, 0, 0.5);
+  /* Utilisation: Arrière-plan semi-transparent derrière les modales */
 }

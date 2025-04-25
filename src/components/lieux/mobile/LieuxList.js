@@ -3,8 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { collection, getDocs, query, orderBy, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../../../firebase';
 import { Button, Form, InputGroup } from 'react-bootstrap';
-// Mise à jour des importations pour utiliser le nouveau répertoire avec l'alias @styles
-import '@styles/pages/lieuxListMobile.css';
+// Mise à jour des importations pour utiliser le fichier lieux.css unifié au lieu de lieuxListMobile.css
+import '@styles/pages/lieux.css';
 import '@styles/components/spinner.css'; // Import du style du spinner unifié
 
 const LieuxListMobile = () => {

@@ -17,9 +17,8 @@
 @import './components/forms.css';
 @import './components/layout.css';
 @import './components/modals.css';
-@import './components/navigation.css';
+@import './components/navigation.css'; /* Inclut maintenant les styles de steps.css également */
 @import './components/spinner.css';
-@import './components/steps.css';  /* Navigation par étapes */
 @import './components/tables.css';
 
 /* Pages */

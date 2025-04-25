@@ -1,8 +1,9 @@
 /* 
    App.css - Styles globaux de l'application
-   Utilise les variables définies dans variables.css
+   Utilise les variables définies dans variables.css et colors.css
 */
 @import url("@styles/base/variables.css");
+@import url("@styles/base/colors.css");
 
 /* Reset et styles de base */
 * {

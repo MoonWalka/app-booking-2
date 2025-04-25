@@ -14,9 +14,9 @@ import ParametresApparence from '../components/parametres/ParametresApparence';
 import ParametresExport from '../components/parametres/ParametresExport';
 import ContratTemplatesPage from '@pages/contratTemplatesPage'; // Ajustez le chemin selon votre structure
 import ContratTemplatesEditPage from '@pages/contratTemplatesEditPage'; // Ajustez le chemin selon votre structure
-import '../components/parametres/Parametres.css';
+
 // Import du style global de la branche refacto-structure-scriptshell - pour implémentation future
-// import '@styles/index.css';
+import '@styles/index.css';
 // Note: Vous devrez vérifier que le dossier @styles existe et contient un fichier index.css,
 // sinon créez ce dossier et ce fichier avec les styles appropriés.
 

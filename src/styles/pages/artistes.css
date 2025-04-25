@@ -551,3 +551,146 @@
       grid-template-columns: 1fr;
     }
   }
+  
+  /* Styles déplacés depuis concerts.css */
+  
+  /* Sélecteur pour le choix d'artiste dans les formulaires */
+.artist-select {
+  margin-bottom: 15px;
+}
+
+/* Style de tag d'artiste */
+.artist-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-light);
+  color: var(--text-color);
+  border-radius: 20px;
+  padding: 4px 12px;
+  margin: 2px auto;
+  font-size: var(--font-size-sm);
+  max-width: 95%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+  cursor: help;
+  white-space: nowrap;
+  max-width: 130px;
+}
+
+.artist-tag:hover::after {
+  content: attr(data-full-name);
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+  z-index: 10;
+  font-size: 12px;
+  max-width: none;
+}
+
+/* Styles de lien pour les artistes */
+.artiste-link {
+  color: #6610f2;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.artiste-link:hover {
+  text-decoration: underline;
+}
+
+/* Styles de contenu d'onglet pour les artistes */
+.artiste-tab-content {
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.artiste-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.artiste-genre,
+.artiste-contact {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.artiste-genre i,
+.artiste-contact i {
+  color: var(--primary-color);
+  font-size: var(--font-size-md);
+  width: 20px;
+  text-align: center;
+}
+
+/* Styles supplémentaires déplacés depuis concerts.css */
+
+/* Styles pour la recherche d'artistes */
+.artiste-search-container {
+  position: relative;
+  margin-bottom: 0.5rem;
+}
+
+/* Styles pour les éléments d'artistes (élément individuel dans les résultats de recherche) */
+.artiste-item {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.artiste-item:last-child {
+  border-bottom: none;
+}
+
+.artiste-item:hover {
+  background-color: rgba(13, 110, 253, 0.1);
+}
+
+/* Couleur pour la section des artistes dans le formulaire */
+.card-header i.bi-person-music {
+  color: #6610f2; /* Violet pour les artistes */
+}
+
+/* Styles pour les onglets artistes en vue mobile */
+.mobile-tab-content .artiste-tab-content {
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+/* Styles pour la vue détaillée d'un artiste dans un formulaire de concert */
+.form-display.artiste-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.artiste-small-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  background-color: #f0e6ff;
+  border-radius: 12px;
+  color: #6610f2;
+  font-size: 0.75rem;
+  margin-right: 4px;
+}

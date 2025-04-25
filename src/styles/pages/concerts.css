@@ -124,10 +124,6 @@
     margin-bottom: 15px;
   }
   
-  .artist-select {
-    margin-bottom: 15px;
-  }
-  
   .financial-section {
     background-color: #f0f7ff;
     padding: 15px;
@@ -497,14 +493,12 @@
   
   /* Selected items */
   .concert-form-container .selected-lieu, 
-  .concert-form-container .selected-programmateur, 
-  .concert-form-container .selected-artiste {
+  .concert-form-container .selected-programmateur {
     margin-top: 0.5rem;
   }
   
   .concert-form-container .lieu-card, 
-  .concert-form-container .programmateur-card, 
-  .concert-form-container .artiste-card {
+  .concert-form-container .programmateur-card {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
@@ -516,8 +510,7 @@
   }
   
   .concert-form-container .lieu-info, 
-  .concert-form-container .programmateur-info, 
-  .concert-form-container .artiste-info {
+  .concert-form-container .programmateur-info {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
@@ -525,8 +518,7 @@
   }
   
   .concert-form-container .lieu-name, 
-  .concert-form-container .programmateur-name, 
-  .concert-form-container .artiste-name {
+  .concert-form-container .programmateur-name {
     font-weight: 600;
     color: #344767;
     font-size: 1rem;
@@ -535,9 +527,7 @@
   .concert-form-container .lieu-address, 
   .concert-form-container .lieu-capacity, 
   .concert-form-container .programmateur-structure, 
-  .concert-form-container .programmateur-contacts, 
-  .concert-form-container .artiste-genre, 
-  .concert-form-container .artiste-description {
+  .concert-form-container .programmateur-contacts {
     font-size: 0.875rem;
     color: #6c757d;
   }
@@ -551,15 +541,13 @@
   
   /* Search results */
   .concert-form-container .lieu-item, 
-  .concert-form-container .programmateur-item, 
-  .concert-form-container .artiste-item {
+  .concert-form-container .programmateur-item {
     display: flex;
     flex-direction: column;
   }
   
   .concert-form-container .lieu-details, 
-  .concert-form-container .programmateur-details, 
-  .concert-form-container .artiste-details {
+  .concert-form-container .programmateur-details {
     display: flex;
     flex-direction: column;
     font-size: 0.8rem;
@@ -893,41 +881,6 @@
   font-weight: 400;
 }
 
-.artist-tag {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--bg-light);
-  color: var(--text-color);
-  border-radius: 20px;
-  padding: 4px 12px;
-  margin: 2px auto;
-  font-size: var(--font-size-sm);
-  max-width: 95%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  position: relative;
-  cursor: help;
-  white-space: nowrap;
-  max-width: 130px;
-}
-
-.artist-tag:hover::after {
-  content: attr(data-full-name);
-  position: absolute;
-  bottom: 125%;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 5px 10px;
-  border-radius: 4px;
-  white-space: nowrap;
-  z-index: 10;
-  font-size: 12px;
-  max-width: none;
-}
-
 /* Loading and error states */
 .loading-container,
 .error-container,
@@ -1039,16 +992,6 @@
     text-decoration: underline;
 }
   
-.artiste-link {
-    color: #6610f2;
-    text-decoration: none;
-    font-weight: 500;
-}
-  
-.artiste-link:hover {
-    text-decoration: underline;
-}
-  
 .notes-content {
     white-space: pre-line;
 }
@@ -1056,8 +999,7 @@
 /* Styles pour les tabs et les infos dans la vue mobile */
 .info-tab-content, 
 .lieu-tab-content, 
-.programmateur-tab-content,
-.artiste-tab-content {
+.programmateur-tab-content {
     background-color: white;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
@@ -1067,8 +1009,7 @@
 
 .info-card, 
 .lieu-card, 
-.programmateur-card, 
-.artiste-card {
+.programmateur-card {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-sm);
@@ -1099,9 +1040,7 @@
 .lieu-capacity, 
 .lieu-contact,
 .programmateur-structure,
-.programmateur-contact,
-.artiste-genre,
-.artiste-contact {
+.programmateur-contact {
     display: flex;
     align-items: flex-start;
     gap: var(--spacing-sm);
@@ -1114,9 +1053,7 @@
 .lieu-capacity i, 
 .lieu-contact i,
 .programmateur-structure i,
-.programmateur-contact i,
-.artiste-genre i,
-.artiste-contact i {
+.programmateur-contact i {
     color: var(--primary-color);
     font-size: var(--font-size-md);
     width: 20px;
@@ -1172,27 +1109,23 @@
 
 /* Menus déroulants et recherches */
 .lieu-search-container,
-.programmateur-search-container,
-.artiste-search-container {
+.programmateur-search-container {
     position: relative;
 }
 
 .lieu-item,
-.programmateur-item,
-.artiste-item {
+.programmateur-item {
     padding: 0.75rem 1rem;
 }
 
 .lieu-name,
-.programmateur-name,
-.artiste-name {
+.programmateur-name {
     font-weight: 600;
     margin-bottom: 2px;
 }
 
 .lieu-details,
-.programmateur-details,
-.artiste-details {
+.programmateur-details {
     display: flex;
     flex-direction: column;
     font-size: 0.8rem;
@@ -1232,283 +1165,6 @@
         font-size: 0.875rem;
         padding: 0.375rem 0.5rem;
     }
-}
-
-/* Styles supplémentaires pour la liste des concerts */
-.concerts-container {
-  padding: 1.5rem;
-  background: #fff;
-  border-radius: 0.5rem;
-  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-  transition: all 0.3s ease;
-}
-
-.header-container {
-  border-bottom: 2px solid #f0f0f0;
-  padding-bottom: 1rem;
-}
-
-.modern-add-btn {
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  font-weight: 500;
-  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
-  transition: all 0.2s;
-  display: flex;
-  align-items: center;
-}
-
-.modern-add-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
-}
-
-/* Styles pour la recherche et les filtres */
-.search-filter-container {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.search-bar {
-  max-width: 500px;
-  transition: all 0.3s ease;
-}
-
-.search-bar:focus-within {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.search-input {
-  border-radius: 0;
-  border-left: none;
-  padding-left: 0.5rem;
-  font-size: 0.95rem;
-  box-shadow: none !important;
-}
-
-.search-input:focus {
-  border-color: #86b7fe;
-}
-
-.clear-search {
-  border-radius: 0;
-  border-left: none;
-}
-
-/* Styles pour le tableau moderne */
-.modern-table-container {
-  border-radius: 0.5rem;
-  overflow: hidden;
-  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
-}
-
-.modern-table {
-  margin-bottom: 0;
-  table-layout: fixed;
-  width: 100%;
-}
-
-.modern-table thead {
-  background-color: #f8f9fa;
-}
-
-.modern-table thead th {
-  border-bottom: none;
-  color: #344767;
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 0.75rem;
-  letter-spacing: 0.05rem;
-  padding: 0.75rem 1rem;
-  white-space: nowrap;
-}
-
-.modern-table tbody tr {
-  transition: all 0.2s;
-}
-
-/* Style pour les lignes cliquables */
-.clickable-row {
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.clickable-row:hover {
-  background-color: rgba(13, 110, 253, 0.05) !important;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-}
-
-.table-row-animate {
-  animation: fadeIn 0.5s ease-in-out;
-}
-
-/* Styles pour les colonnes du tableau */
-.date-column {
-  width: 100px;
-}
-
-.concerts-table th:nth-child(4),
-.concerts-table td:nth-child(4) {
-  width: 150px;
-  max-width: 150px;
-}
-
-.concerts-table th:nth-child(5),
-.concerts-table td:nth-child(5) {
-  width: 150px;
-  max-width: 150px;
-}
-
-.montant-column {
-  width: 120px;
-  text-align: right;
-}
-
-.status-column {
-  width: 180px;
-}
-
-/* Styles pour la barre de progression du statut */
-.status-progress-container {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.status-steps {
-  display: flex;
-  height: 6px;
-  width: 100%;
-  background-color: #f0f0f0;
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.status-step {
-  flex: 1;
-  height: 100%;
-  background-color: transparent;
-  margin: 0 1px;
-}
-
-.status-step.completed {
-  background-color: #0d6efd;
-}
-
-.status-step.current {
-  background-color: #0d6efd;
-  animation: pulse 2s infinite;
-}
-
-.status-label {
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  font-size: 0.8rem;
-  color: #6c757d;
-}
-
-.status-icon {
-  font-size: 1rem;
-}
-
-.status-text {
-  font-weight: 500;
-}
-
-/* Styles pour les filtres par statut */
-.status-filter-tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-.status-tab {
-  background: transparent;
-  border: 1px solid #dee2e6;
-  border-radius: 30px;
-  padding: 0.375rem 0.75rem;
-  font-size: 0.875rem;
-  color: #6c757d;
-  cursor: pointer;
-  transition: all 0.2s;
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-}
-
-.status-tab:hover {
-  background-color: #f8f9fa;
-  transform: translateY(-1px);
-}
-
-.status-tab.active {
-  background-color: #0d6efd;
-  color: white;
-  border-color: #0d6efd;
-  box-shadow: 0 2px 4px rgba(13, 110, 253, 0.25);
-}
-
-/* Styles pour les boutons d'action */
-.action-buttons {
-  display: flex;
-  gap: 0.25rem;
-}
-
-.modern-btn {
-  width: 2rem;
-  height: 2rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 0.375rem;
-  padding: 0;
-  transition: all 0.2s;
-}
-
-.modern-btn:hover {
-  background-color: #eaeaea;
-}
-
-.modern-btn i {
-  font-size: 0.875rem;
-}
-
-.loading-spinner {
-  font-size: 1rem;
-  color: #6c757d;
-  position: relative;
-  padding-top: 3rem;
-}
-
-.loading-spinner:before {
-  content: "";
-  display: block;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  border: 0.25rem solid rgba(0, 0, 0, 0.1);
-  border-top-color: #3b7ddd;
-  animation: spin 1s infinite linear;
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-/* Animations */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes spin {
-  to { transform: translateX(-50%) rotate(360deg); }
 }
 
 /* Styles supplémentaires pour l'affichage des concerts */
@@ -1578,77 +1234,7 @@
   line-height: 1.5 !important;
 }
 
-/* Correction pour les cellules artiste */
-.concert-artist-cell {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  flex-direction: column !important;
-  margin: 0 auto !important;
-  width: 100% !important;
-  padding: 0 !important;
-  margin: 0 auto !important;
-  height: 100% !important;
-  line-height: normal !important;
-}
-
-.artist-tag {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  margin: 0 auto !important;
-  max-width: 95% !important;
-  height: 100% !important;
-  line-height: normal !important;
-  position: relative !important;
-  cursor: help !important;
-  white-space: nowrap !important;
-  max-width: 130px !important;
-}
-
-/* Assurer que l'icône et le texte sont alignés sur la même ligne */
-.artist-tag i.bi,
-.artist-tag .bi-music-note,
-.artist-tag emoji,
-.artist-tag span {
-  line-height: 1 !important;
-  vertical-align: middle !important;
-  display: inline-flex !important;
-  align-items: center !important;
-}
-
-/* Correction spécifique pour les émojis dans la colonne artiste */
-.artist-tag span {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-/* Assurer que l'icône de musique est bien alignée verticalement */
-.bi-music-note, 
-.bi-music-note-beamed {
-  transform: translateY(-1px) !important;
-}
-
-/* Forcer le centrage dans les cellules du tableau */
-.concerts-table tbody tr td {
-  display: table-cell !important;
-  vertical-align: middle !important;
-  height: 60px !important;
-}
-
-/* Uniformiser l'apparence de toutes les cellules spéciales */
-.date-box,
-.concert-venue-name,
-.concert-venue-location,
-.artist-tag,
-.programmateur-name,
-.montant-value,
-.status-message-container {
-  margin: 0 auto;
-}
-
-/* Style pour les cellules programmateur */
+/* Correction spécifique pour les cellules programmateur */
 td .programmateur-name {
   display: inline-flex !important;
   align-items: center !important;
@@ -1674,4 +1260,110 @@ td .programmateur-name {
   text-align: center !important;
   margin: 0 auto !important;
   width: 100% !important;
+}
+
+/* Styles déplacés depuis programmateurs.css */
+/* Couleur pour la section des concerts dans le formulaire */
+.card-header i.bi-music-note-list {
+  color: #dc3545; /* Rouge pour les concerts */
+}
+
+/* Styles pour la recherche de concerts */
+.concert-search-container {
+  position: relative;
+  margin-bottom: 0.5rem;
+}
+
+/* Styles pour les éléments de concerts (élément individuel dans les résultats de recherche) */
+.concert-item {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.concert-item:last-child {
+  border-bottom: none;
+}
+
+.concert-item:hover {
+  background-color: rgba(13, 110, 253, 0.1);
+}
+
+.concert-title {
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.concert-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+.concert-date, .concert-lieu {
+  display: block;
+  color: #6c757d;
+  font-size: 0.8rem;
+}
+
+/* Styles pour le titre d'une section de concerts */
+.concerts-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #344767;
+}
+
+/* Styles pour une liste de concerts */
+.concert-list {
+  margin-bottom: 1.5rem;
+}
+
+/* Styles pour les cartes de concerts (affichage complet) */
+.concert-card {
+  margin-bottom: 1rem;
+  transition: transform 0.2s;
+}
+
+.concert-name {
+  font-weight: 600;
+  color: #344767;
+}
+
+.concert-detail {
+  color: #6c757d;
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+}
+
+/* Styles pour les statuts de concert */
+.concert-status {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.status-contact {
+  background-color: #fef8e8;
+  color: #f5a623;
+}
+
+.status-preaccord {
+  background-color: #e8f4fd;
+  color: #3498db;
+}
+
+.status-contrat {
+  background-color: #e8fdf5;
+  color: #2ecc71;
+}
+
+.status-annule {
+  background-color: #fde8e8;
+  color: #e74c3c;
 }

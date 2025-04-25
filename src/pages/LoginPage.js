@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-// import '@/style/login.css'; // Si vous avez un fichier CSS spécifique pour la page de login
 
 // Imports modifiés de la branche refacto-structure-scriptshell - pour implémentation future
 {/* 

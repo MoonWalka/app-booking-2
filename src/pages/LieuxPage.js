@@ -3,7 +3,6 @@ import { Routes, Route } from 'react-router-dom';
 import LieuxList from '@/components/lieux/LieuxList';
 import LieuDetails from '@/components/lieux/desktop/LieuDetails';
 import LieuForm from '@/components/forms/LieuForm';
-// import '@/style/lieux.css'; // Si vous avez un fichier CSS spécifique pour les lieux
 
 // Imports modifiés de la branche refacto-structure-scriptshell - pour implémentation future
 {/* 

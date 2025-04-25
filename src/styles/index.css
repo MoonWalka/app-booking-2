@@ -17,6 +17,7 @@
 @import './components/modals.css';
 @import './components/navigation.css';
 @import './components/spinner.css';
+@import './components/steps.css';  /* Navigation par étapes */
 @import './components/tables.css';
 
 /* Pages */

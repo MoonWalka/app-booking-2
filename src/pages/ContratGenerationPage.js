@@ -6,7 +6,6 @@ import { db } from '@/firebase';
 import { doc, getDoc, collection, getDocs, addDoc, updateDoc, serverTimestamp, orderBy, query, where } from '@/firebase';
 import ContratGenerator from '@/components/contrats/ContratGenerator.js';
 import { PDFDownloadLink } from '@react-pdf/renderer';
-// import '@/style/contratGeneration.css';
 import '@/styles/index.css';
 import { formatDateFr } from '../utils/dateUtils';
 

@@ -3,7 +3,6 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import ArtistesList from '@/components/artistes/ArtistesList';
 import ArtisteForm from '@/components/artistes/ArtisteForm';
 import ArtisteDetail from '@/components/artistes/ArtisteDetail';
-// import '@/style/artistes.css'; // Si vous avez un fichier CSS spécifique pour les artistes
 
 // Imports modifiés de la branche refacto-structure-scriptshell - pour implémentation future
 {/* 

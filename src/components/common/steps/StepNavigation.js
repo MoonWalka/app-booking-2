@@ -1,6 +1,6 @@
 // src/components/common/StepNavigation.js
 import React, { useState } from 'react';
-import '../../../style/stepNavigation.css';
+import '@styles/index.css';
 
 const StepNavigation = ({ 
   steps, 

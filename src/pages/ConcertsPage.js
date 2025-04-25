@@ -4,7 +4,6 @@ import ConcertsList from '@/components/concerts/ConcertsList.js';
 import ConcertForm from '@/components/concerts/desktop/ConcertForm';
 import ConcertDetails from '@/components/concerts/ConcertDetails';
 import FormValidationInterface from '@/components/forms/desktop/FormValidationInterface';
-// import '@/style/concerts.css'; // Si vous avez un fichier CSS spécifique pour les concerts
 
 // Imports modifiés de la branche refacto-structure-scriptshell - pour implémentation future
 {/* 

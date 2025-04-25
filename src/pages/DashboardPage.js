@@ -1,5 +1,4 @@
 import React from 'react';
-// import '@/style/dashboard.css'; // Si vous avez un fichier CSS spécifique pour le dashboard
 
 // Imports modifiés de la branche refacto-structure-scriptshell - pour implémentation future
 {/* 

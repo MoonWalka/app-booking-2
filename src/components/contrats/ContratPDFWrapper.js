@@ -211,7 +211,7 @@ const getContratHTML = (data, title = 'Contrat', forPreview = false) => {
         @media screen {
           body {
             font-family: Arial, sans-serif;
-            font-size: 11pt;
+            font-size: 9pt;
             line-height: 1.3;
             margin: 0;
             padding: 0;
@@ -322,7 +322,7 @@ const getContratHTML = (data, title = 'Contrat', forPreview = false) => {
           }
           body {
             font-family: Arial, sans-serif;
-            font-size: 11pt;
+            font-size: 9pt;
           }
         }
       </style>
@@ -469,14 +469,31 @@ const generatePDFPreview = async (data, title = 'Aperçu Contrat') => {
         bottom: safeData.template.footerContent ? '60px' : '30px',
         left: '30px',
         right: '30px'
-      }
+      },
+      // Augmentation du timeout pour éviter les problèmes réseau
+      timeout: 60000  // 60 secondes
     };
     
-    // Générer le PDF mais ne pas le télécharger, renvoyer le blob URL
-    const pdfBlob = await pdfService.generatePdf(htmlContent, title, options);
-    const blobUrl = URL.createObjectURL(pdfBlob);
-    
-    return blobUrl;
+    try {
+      // Générer le PDF mais ne pas le télécharger, renvoyer le blob URL
+      const pdfBlob = await pdfService.generatePdf(htmlContent, title, options);
+      const blobUrl = URL.createObjectURL(pdfBlob);
+      
+      return blobUrl;
+    } catch (networkError) {
+      console.error('Erreur réseau lors de la génération de l\'aperçu PDF:', networkError);
+      
+      // Vérifier si l'erreur est liée au réseau
+      if (networkError.message && networkError.message.includes('Network Error')) {
+        throw new Error('Impossible de se connecter au service de génération de PDF. Vérifiez votre connexion internet ou réessayez plus tard.');
+      } else if (networkError.response) {
+        // Erreur serveur
+        const status = networkError.response.status;
+        throw new Error(`Le serveur a retourné une erreur (${status}). Veuillez réessayer plus tard.`);
+      } else {
+        throw networkError;
+      }
+    }
   } catch (error) {
     console.error('Erreur lors de la génération de l\'aperçu PDF:', error);
     throw error;

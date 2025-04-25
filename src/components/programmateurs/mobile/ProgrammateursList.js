@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { collection, getDocs, query, orderBy, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '@/firebase';
 import { Button, Form, InputGroup, Spinner } from 'react-bootstrap';
-import '@/style/programmateursListMobile.css';
+import '@styles/index.css';
 import { handleDelete } from './handlers/deleteHandler';
 
 

@@ -15,7 +15,7 @@ import {
   limit
 } from 'firebase/firestore';
 import { db } from '@/firebase';
-import '@/style/programmateurForm.css';
+import '@styles/index.css';
 import { handleDelete } from './handlers/deleteHandler';
 import Spinner from '@/components/common/Spinner';
 

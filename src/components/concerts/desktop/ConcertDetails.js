@@ -6,7 +6,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/firebase';
 import FormGenerator from '@/components/forms/FormGenerator.js';
-import '@/style/concertDetails.css';
+import '@styles/index.css';
 import { handleDelete } from './handlers/deleteHandler';
 import Spinner from '@/components/common/Spinner';
 

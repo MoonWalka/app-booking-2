@@ -5,9 +5,7 @@ import { collection, query, orderBy, getDocs, where } from 'firebase/firestore';
 import { db } from '../../../firebase';
 import { Badge, Button, Form, InputGroup } from 'react-bootstrap';
 import Spinner from '../../common/Spinner';
-import '../../../style/concertsList.css';
-import '../../../style/concertsListMobile.css';
-import '../../../style/concertDisplay.css';
+import '@/styles/index.css';
 import { formatDateFrSlash } from '@/utils/dateUtils';
 
 

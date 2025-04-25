@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import firebase from '@/firebase';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
-import '@/style/concertsList.css';
-import '@/style/concertDisplay.css';
+import '@styles/index.css';
 import Spinner from '@/components/common/Spinner';
 import { formatDateFr } from '@/utils/dateUtils';
 

@@ -5,8 +5,7 @@ import {
   collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc,
   arrayUnion, arrayRemove, query, where, orderBy, limit, serverTimestamp
 } from 'firebase/firestore';
-import '../../../style/concertForm.css';
-import '../../../style/searchDropdown.css';
+import '@/styles/index.css';
 import { handleDelete } from './handlers/deleteHandler';
 
 

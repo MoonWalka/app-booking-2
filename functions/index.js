@@ -13,8 +13,8 @@ admin.initializeApp();
 // Fonction pour générer un PDF à partir de HTML
 exports.generatePdf = functions
   .runWith({
-    timeoutSeconds: 300, // Augmenter le timeout pour les opérations complexes
-    memory: '1GB', // Allouer plus de mémoire pour Puppeteer
+    timeoutSeconds: 180, // Réduit de 300 à 180 secondes
+    memory: '1GB', // Maintien de 1GB pour Puppeteer qui en a besoin
   })
   .https.onRequest((request, response) => {
     // Gérer la requête preflight CORS

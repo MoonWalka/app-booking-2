@@ -7,7 +7,7 @@
 @import './base/colors.css';  /* Définition des couleurs centralisées */
 @import './base/variables.css'; /* Variables globales faisant référence aux couleurs */
 
-/* Thèmes - Applique les styles de base utilisant les variables */
+/* Thème global */
 @import './theme.css';
 
 /* Composants */

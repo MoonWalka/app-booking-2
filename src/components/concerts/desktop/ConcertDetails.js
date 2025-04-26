@@ -13,7 +13,7 @@ import {
   setDoc,
   arrayUnion
 } from 'firebase/firestore';
-import { db } from '../../../firebase';
+import { db } from '@/firebase';
 import { Button, Spinner as BootstrapSpinner, Alert } from 'react-bootstrap';
 import { formatDateFr } from '@/utils/dateUtils';
 import Modal from '@/components/common/Modal';

@@ -4,7 +4,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { collection, doc, getDoc, setDoc, updateDoc, serverTimestamp, arrayUnion, arrayRemove } from 'firebase/firestore';
 import { db } from '../../../firebase';
 import StepNavigation from '../../common/steps/StepNavigation.js';
-import '@styles/index.css';
 import { query, where, limit, getDocs } from 'firebase/firestore';
 
 

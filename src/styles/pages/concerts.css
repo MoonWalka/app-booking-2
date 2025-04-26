@@ -1,6 +1,38 @@
 /* Styles pour la page des concerts */
 /* Styles for all concert-related components */
 
+/* CORRECTIF POUR LES BOUTONS D'ACTION DANS LES FORMULAIRES DE CONCERT */
+/* Ce correctif assure que les boutons d'action ne se chevauchent pas */
+.concert-form-container .action-buttons {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+  margin-bottom: 1.5rem !important;
+  justify-content: flex-start !important; /* Aligner à gauche au lieu de centre */
+  align-items: center !important;
+  width: 100% !important; /* S'assurer que le conteneur prend toute la largeur */
+}
+
+.concert-form-container .action-buttons .action-btn,
+.concert-form-container .action-buttons .btn {
+  margin: 0 !important; /* Supprimer les marges qui pourraient causer des problèmes */
+  position: static !important; /* Empêcher le positionnement absolu */
+  min-width: 120px !important; /* Donner une largeur minimale aux boutons */
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+/* S'assurer que les boutons dans form-actions ne causent pas de conflit */
+.concert-form-container .form-actions {
+  display: flex !important;
+  justify-content: flex-end !important;
+  gap: 1rem !important;
+  margin-top: 2rem !important;
+  margin-bottom: 2rem !important;
+  flex-wrap: wrap !important;
+}
+
 /* Concert details styles */
 .concert-detail-container {
     padding: 20px;
@@ -816,16 +848,25 @@
 }
 
 .action-btn {
-  width: 36px;
+  min-width: 36px;
   height: 36px;
   border-radius: var(--border-radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0 12px;
   color: var(--text-muted);
   background-color: var(--bg-light);
   border: none;
   transition: background-color 0.2s;
+}
+
+.action-btn i {
+  margin-right: 8px;
+}
+
+.action-btn .btn-text {
+  display: inline-block;
 }
 
 .action-btn:hover {

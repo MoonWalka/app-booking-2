@@ -3,8 +3,7 @@ import React, { useState } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext.js';
 import { APP_NAME } from '../../../config.js';
-// Importer le système de styles modulaire au lieu des anciens fichiers CSS
-import '@styles/index.css';
+// Import redondant supprimé - les styles sont déjà chargés dans App.js
 
 function MobileLayout() {
   const { currentUser, logout } = useAuth();

@@ -21,10 +21,10 @@ import ContratDetailsPage from '@/pages/ContratDetailsPage';
 import StructuresPage from '@/pages/StructuresPage';
 import RouterStabilizer from '@/utils/RouterStabilizer';
 
-// Importer le système de styles modulaire complet
-import '@styles/index.css';
-// Conserver l'import de App.css pour les styles spécifiques à l'application
+// Importer d'abord les styles globaux de base
 import '@/App.css';
+// Importer ensuite le système de styles modulaire pour qu'il ait priorité
+import '@styles/index.css';
 
 // Composant ErrorBoundary pour capturer les erreurs de chargement
 class ErrorBoundary extends React.Component {

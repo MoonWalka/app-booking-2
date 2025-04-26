@@ -5,6 +5,13 @@
 @import url("@styles/base/variables.css");
 @import url("@styles/base/colors.css");
 
+/* Les styles suivants sont dorénavant importés depuis leurs fichiers respectifs:
+   - Boutons: @styles/components/buttons.css
+   - Tableaux: @styles/components/tables.css
+   - Formulaires: @styles/components/forms.css
+   - Cartes: @styles/components/cards.css
+*/
+
 /* Reset et styles de base */
 * {
   box-sizing: border-box;
@@ -27,30 +34,6 @@ a {
 
 a:hover {
   color: var(--primary-dark);
-}
-
-button {
-  cursor: pointer;
-  border: none;
-  border-radius: var(--border-radius);
-  padding: 8px 16px;
-  font-size: 14px;
-  transition: var(--transition);
-}
-
-input, select, textarea {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-  font-size: 14px;
-  transition: var(--transition);
-}
-
-input:focus, select:focus, textarea:focus {
-  outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
 }
 
 /* Layout */
@@ -135,141 +118,6 @@ main {
   overflow-y: auto;
 }
 
-/* Boutons */
-.btn-primary {
-  background-color: var(--primary-color);
-  color: white;
-}
-
-.btn-primary:hover {
-  background-color: var(--primary-dark);
-}
-
-.btn-secondary {
-  background-color: var(--light-color);
-  color: var(--text-color);
-}
-
-.btn-secondary:hover {
-  background-color: #dfe6e9;
-}
-
-.btn-action {
-  background-color: var(--primary-color);
-  color: white;
-  padding: 6px 12px;
-  border-radius: var(--border-radius);
-  font-size: 12px;
-}
-
-.btn-action:hover {
-  background-color: var(--primary-dark);
-  color: white;
-}
-
-/* Tableaux */
-.data-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-  background-color: var(--card-bg);
-  box-shadow: var(--shadow);
-  border-radius: var(--border-radius);
-  overflow: hidden;
-}
-
-.data-table th, .data-table td {
-  padding: 12px 15px;
-  text-align: left;
-}
-
-.data-table th {
-  background-color: var(--secondary-color);
-  color: white;
-  font-weight: 500;
-}
-
-.data-table tr {
-  border-bottom: 1px solid var(--border-color);
-}
-
-.data-table tr:last-child {
-  border-bottom: none;
-}
-
-.data-table tr:nth-child(even) {
-  background-color: #f8f9fa;
-}
-
-/* Cartes */
-.dashboard-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
-  margin-top: 20px;
-}
-
-.dashboard-card {
-  background-color: var(--card-bg);
-  border-radius: var(--border-radius);
-  padding: 20px;
-  box-shadow: var(--shadow);
-  transition: var(--transition);
-}
-
-.dashboard-card:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-hover);
-}
-
-.card-icon {
-  font-size: 32px;
-  margin-bottom: 15px;
-}
-
-.card-link {
-  display: inline-block;
-  margin-top: 15px;
-  font-weight: 500;
-}
-
-/* Formulaires */
-.form-group {
-  margin-bottom: 20px;
-}
-
-.form-row {
-  display: flex;
-  gap: 15px;
-}
-
-.form-group.half {
-  flex: 1;
-}
-
-label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: 500;
-}
-
-.error {
-  border-color: var(--danger-color);
-}
-
-.error-message {
-  color: var(--danger-color);
-  font-size: 12px;
-  margin-top: 5px;
-}
-
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 30px;
-}
-
 /* Statut */
 .status-badge {
   display: inline-block;
@@ -348,20 +196,6 @@ label {
   color: var(--primary-color);
 }
 
-/* Liste vide */
-.empty-list {
-  text-align: center;
-  padding: 50px 20px;
-}
-
-/* En-têtes de liste */
-.list-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
 /* En-têtes de détails */
 .details-header {
   display: flex;
@@ -373,12 +207,6 @@ label {
 /* Actions rapides */
 .quick-actions {
   margin-top: 40px;
-}
-
-.action-buttons {
-  display: flex;
-  gap: 10px;
-  margin-top: 15px;
 }
 
 /* Styles pour ErrorBoundary */
@@ -457,11 +285,6 @@ label {
   
   main {
     padding: 15px;
-  }
-  
-  .form-row {
-    flex-direction: column;
-    gap: 0;
   }
   
   .details-grid {

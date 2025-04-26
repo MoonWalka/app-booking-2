@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import firebase from '@/firebase';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
-import '@styles/index.css';
 import Spinner from '@/components/common/Spinner';
 import { formatDateFr } from '@/utils/dateUtils';
 
@@ -471,7 +470,7 @@ const ConcertsList = () => {
                   <td>
                     <div className="concert-artist-cell">
                       {concert.programmateurNom ? (
-                        <span className="programmateur-name">
+                        <span className="programmateur-name" title={concert.programmateurNom}>
                           <i className="bi bi-person-fill me-1"></i>
                           {concert.programmateurNom}
                         </span>

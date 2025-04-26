@@ -1,14 +1,23 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
 import { 
-  doc, getDoc, deleteDoc, updateDoc, collection, getDocs, 
-  query, where, serverTimestamp, arrayUnion, arrayRemove, setDoc, limit
+  doc, 
+  getDoc, 
+  collection, 
+  query, 
+  where, 
+  limit, 
+  getDocs, 
+  updateDoc, 
+  deleteDoc, 
+  setDoc,
+  arrayUnion
 } from 'firebase/firestore';
-import { db } from '@/firebase';
-import FormGenerator from '@/components/forms/FormGenerator.js';
-import '@styles/index.css';
-import { handleDelete } from './handlers/deleteHandler';
-import Spinner from '@/components/common/Spinner';
+import { db } from '../../../firebase';
+import { Button, Spinner as BootstrapSpinner, Alert } from 'react-bootstrap';
+import { formatDateFr } from '@/utils/dateUtils';
+import Modal from '@/components/common/Modal';
+import FormGenerator from '@/components/forms/FormGenerator';
 
 
 
@@ -893,7 +902,7 @@ const ConcertDetails = () => {
     };
   
   if (loading) {
-    return <Spinner message="Chargement du concert..." />;
+    return <BootstrapSpinner message="Chargement du concert..." />;
   }
 
   

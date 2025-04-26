@@ -1,10 +1,4 @@
-:root {
-  /* Variables de base - Les définitions de couleurs ont été déplacées vers colors.css */
-  --font-size-base: 16px;
-  --spacing-unit: 1rem;
-  --transition-duration: 0.3s;
-  --border-radius: 0.375rem;
-}
+/* Ce fichier contient les styles d'application des variables et les utilitaires généraux */
 
 /* Application des variables */
 body {
@@ -45,11 +39,6 @@ body {
   background-color: var(--primary-color);
 }
 
-/* Mode compact */
-[data-compact="true"] {
-  --spacing-unit: 0.75rem;
-}
-
 /* Animations désactivées */
 [data-animations="false"] * {
   transition: none !important;
@@ -58,14 +47,14 @@ body {
 /* Styles spécifiques aux paramètres */
 .address-suggestions {
   position: absolute;
-  z-index: 1000;
+  z-index: var(--z-index-dropdown);
   width: 100%;
   max-height: 200px;
   overflow-y: auto;
   background-color: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
-  margin-top: 4px;
+  margin-top: var(--spacing-xs);
 }
 
 .suggestion-item {
@@ -78,10 +67,133 @@ body {
   background-color: var(--hover-bg);
 }
 
-/* Responsive design */
-@media (max-width: 768px) {
-  :root {
-    --spacing-unit: 0.75rem;
-    --font-size-base: 14px;
-  }
+/* CORRECTIFS POUR LES PROBLÈMES DE COULEURS */
+
+/* Correction des couleurs pour les classes Bootstrap */
+.btn-primary {
+  background-color: var(--btn-primary-bg, var(--primary-color));
+  border-color: var(--btn-primary-border, var(--primary-color));
+  color: var(--btn-primary-text, white);
+}
+
+.btn-primary:hover, 
+.btn-primary:focus, 
+.btn-primary:active,
+.btn-primary.active {
+  background-color: var(--btn-primary-hover-bg, var(--primary-dark));
+  border-color: var(--btn-primary-hover-bg, var(--primary-dark));
+}
+
+.btn-secondary {
+  background-color: var(--btn-secondary-bg, var(--secondary-color));
+  color: var(--btn-secondary-text, white);
+  border-color: var(--secondary-color);
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus,
+.btn-secondary:active,
+.btn-secondary.active {
+  background-color: var(--secondary-dark);
+  border-color: var(--secondary-dark);
+}
+
+.btn-success {
+  background-color: var(--btn-success-bg, var(--success-color));
+  color: var(--btn-success-text, white);
+  border-color: var(--success-color);
+}
+
+.btn-success:hover,
+.btn-success:focus,
+.btn-success:active,
+.btn-success.active {
+  background-color: var(--success-color);
+  filter: brightness(90%);
+}
+
+.btn-danger {
+  background-color: var(--btn-danger-bg, var(--danger-color));
+  color: var(--btn-danger-text, white);
+  border-color: var(--danger-color);
+}
+
+.btn-danger:hover,
+.btn-danger:focus,
+.btn-danger:active,
+.btn-danger.active {
+  background-color: var(--danger-color);
+  filter: brightness(90%);
+}
+
+.btn-info {
+  background-color: var(--btn-info-bg, var(--info-color));
+  color: var(--btn-info-text, white);
+  border-color: var(--info-color);
+}
+
+.btn-info:hover,
+.btn-info:focus,
+.btn-info:active,
+.btn-info.active {
+  background-color: var(--info-color);
+  filter: brightness(90%);
+}
+
+/* Badge et étiquettes */
+.badge-primary,
+.bg-primary {
+  background-color: var(--badge-bg, var(--primary-color)) !important;
+  color: var(--badge-text, white);
+}
+
+.badge-secondary,
+.bg-secondary {
+  background-color: var(--secondary-color) !important;
+  color: white;
+}
+
+.badge-success,
+.bg-success {
+  background-color: var(--success-color) !important;
+  color: white;
+}
+
+.badge-danger,
+.bg-danger {
+  background-color: var(--danger-color) !important;
+  color: white;
+}
+
+.badge-warning,
+.bg-warning {
+  background-color: var(--warning-color) !important;
+  color: white;
+}
+
+.badge-info,
+.bg-info {
+  background-color: var(--info-color) !important;
+  color: white;
+}
+
+/* Textes colorés */
+.text-primary { color: var(--primary-color) !important; }
+.text-secondary { color: var(--secondary-color) !important; }
+.text-success { color: var(--success-color) !important; }
+.text-danger { color: var(--danger-color) !important; }
+.text-warning { color: var(--warning-color) !important; }
+.text-info { color: var(--info-color) !important; }
+.text-muted { color: var(--text-muted) !important; }
+
+/* Liens */
+a {
+  color: var(--primary-light);
+  text-decoration: none;
+  transition: color var(--transition-duration);
+}
+
+a:hover {
+  color: var(--primary-color);
+  text-decoration: underline;
 }

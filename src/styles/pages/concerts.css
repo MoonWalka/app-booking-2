@@ -840,45 +840,224 @@
   color: var(--text-muted);
 }
 
-/* Concert display styles */
-.status-advanced-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+/* STYLES RENFORCÉS POUR LA TABLE DES CONCERTS */
+/* Ces styles ont une spécificité plus élevée pour éviter les écrasements */
+
+/* Table générale avec une spécificité élevée */
+.concerts-container .concerts-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.date-box {
-  background: var(--bg-light);
-  border-radius: var(--border-radius-sm);
-  padding: var(--spacing-xs);
+/* Style renforcé pour les cellules de date */
+.concerts-container .concerts-table .concert-date-cell {
+  padding: 12px;
+  vertical-align: middle;
   text-align: center;
-  border: 1px solid var(--border-color-light);
   width: 110px;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  gap: var(--spacing-xs);
 }
 
-.date-day, .date-month, .date-year {
-  font-size: var(--font-size-sm);
-  font-weight: 600;
-  color: var(--text-color);
-  display: inline-block;
+/* Conteneur de date avec style forcé */
+.concerts-container .concerts-table .date-box {
+  background: var(--bg-light, #f8f9fa);
+  border-radius: var(--border-radius-sm, 4px);
+  padding: var(--spacing-xs, 4px);
+  text-align: center;
+  border: 1px solid var(--border-color-light, #e9ecef);
+  width: 110px;
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: var(--spacing-xs, 4px);
+  margin: 0 auto;
 }
 
-.date-day {
-  font-size: var(--font-size-md);
-  font-weight: 700;
+/* Styles forcés pour les éléments de date */
+.concerts-container .concerts-table .date-day {
+  font-size: var(--font-size-md, 16px) !important;
+  font-weight: 700 !important;
+  color: var(--text-color, #343a40) !important;
+  display: inline-block !important;
 }
 
-.date-month:before, .date-year:before {
-  content: "/";
-  margin: 0 2px 0 0;
-  color: var(--text-muted);
-  font-weight: 400;
+.concerts-container .concerts-table .date-month:before,
+.concerts-container .concerts-table .date-year:before {
+  content: "/" !important;
+  margin: 0 2px 0 0 !important;
+  color: var(--text-muted, #6c757d) !important;
+  font-weight: 400 !important;
+}
+
+.concerts-container .concerts-table .date-month,
+.concerts-container .concerts-table .date-year {
+  font-size: var(--font-size-sm, 14px) !important;
+  font-weight: 600 !important;
+  color: var(--text-color, #343a40) !important;
+  display: inline-block !important;
+}
+
+/* Styles renforcés pour la cellule programmateur */
+.concerts-container .concerts-table .programmateur-name {
+  display: inline-flex !important;
+  align-items: center !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: 200px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: var(--text-color, #343a40) !important;
+}
+
+/* Styles renforcés pour les badges de statut */
+.concerts-container .concerts-table .status-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 4px 8px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  border-radius: 30px !important;
+  min-width: 80px !important;
+  line-height: 1.2 !important;
+  height: auto !important;
+  text-transform: capitalize !important;
+}
+
+.concerts-container .concerts-table .status-confirmed {
+  background-color: rgba(var(--success-rgb, 40, 167, 69), 0.1) !important;
+  color: var(--success, #28a745) !important;
+}
+
+.concerts-container .concerts-table .status-pending {
+  background-color: rgba(var(--warning-rgb, 255, 193, 7), 0.1) !important;
+  color: var(--warning, #ffc107) !important;
+}
+
+.concerts-container .concerts-table .status-cancelled {
+  background-color: rgba(var(--danger-rgb, 220, 53, 69), 0.1) !important;
+  color: var(--danger, #dc3545) !important;
+}
+
+.concerts-container .concerts-table .status-draft {
+  background-color: rgba(var(--secondary-rgb, 108, 117, 125), 0.1) !important;
+  color: var(--secondary, #6c757d) !important;
+}
+
+/* Styles pour la colonne d'actions */
+.concerts-container .concerts-table .action-buttons {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+}
+
+.concerts-container .concerts-table .concert-action-button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 4px !important;
+  background-color: var(--bg-light, #f8f9fa) !important;
+  border: 1px solid var(--border-color-light, #e9ecef) !important;
+  color: var(--text-muted, #6c757d) !important;
+  font-size: 14px !important;
+  transition: all 0.2s ease !important;
+  padding: 0 !important;
+}
+
+/* Style pour les cellules d'artiste */
+.concerts-container .concerts-table .artist-cell {
+  position: relative !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+  height: 60px !important;
+}
+
+.concerts-container .concerts-table .artist-tag {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background-color: var(--secondary-bg, #e2e3e5) !important;
+  color: var(--secondary-text, #383d41) !important;
+  border-radius: 4px !important;
+  padding: 4px 8px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  max-width: 150px !important;
+  margin: 0 auto !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  height: auto !important;
+}
+
+/* Status advanced container */
+.concerts-container .concerts-table .status-advanced-container {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.concerts-container .concerts-table .status-message-container {
+  width: 100% !important;
+}
+
+.concerts-container .concerts-table .status-message {
+  padding: 4px 10px !important;
+  border-radius: 4px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+}
+
+.concerts-container .concerts-table .status-message-warning {
+  background-color: rgba(var(--warning-rgb, 255, 193, 7), 0.1) !important;
+  color: var(--warning, #ffc107) !important;
+}
+
+.concerts-container .concerts-table .status-message-info {
+  background-color: rgba(var(--info-rgb, 23, 162, 184), 0.1) !important;
+  color: var(--info, #17a2b8) !important;
+}
+
+.concerts-container .concerts-table .status-message-primary {
+  background-color: rgba(var(--primary-rgb, 0, 123, 255), 0.1) !important;
+  color: var(--primary, #007bff) !important;
+}
+
+.concerts-container .concerts-table .status-message-success {
+  background-color: rgba(var(--success-rgb, 40, 167, 69), 0.1) !important;
+  color: var(--success, #28a745) !important;
+}
+
+.concerts-container .concerts-table .status-message-secondary {
+  background-color: rgba(var(--secondary-rgb, 108, 117, 125), 0.1) !important;
+  color: var(--secondary, #6c757d) !important;
+}
+
+.concerts-container .concerts-table .status-message-danger {
+  background-color: rgba(var(--danger-rgb, 220, 53, 69), 0.1) !important;
+  color: var(--danger, #dc3545) !important;
+}
+
+/* Styles pour les rappels d'action */
+.concerts-container .concerts-table .action-reminder {
+  margin-top: 4px !important;
+  font-size: 11px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
 }
 
 /* Loading and error states */
@@ -1077,528 +1256,4 @@
 .empty-state i {
     font-size: var(--font-size-xxl);
     color: var(--gray-200);
-}
-
-/* Formulaires et champs de la vue de formulaire */
-.form-section {
-    margin-top: var(--spacing-md);
-    border-top: 1px solid var(--border-color-light);
-    padding-top: var(--spacing-md);
-}
-
-.form-section h4 {
-    font-size: var(--font-size-md);
-    margin-bottom: var(--spacing-sm);
-    color: var(--text-color);
-}
-
-.form-status {
-    margin-bottom: var(--spacing-sm);
-}
-
-.form-action {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-sm);
-}
-
-.form-action p {
-    color: var(--text-muted);
-    margin: 0;
-}
-
-/* Menus déroulants et recherches */
-.lieu-search-container,
-.programmateur-search-container {
-    position: relative;
-}
-
-.lieu-item,
-.programmateur-item {
-    padding: 0.75rem 1rem;
-}
-
-.lieu-name,
-.programmateur-name {
-    font-weight: 600;
-    margin-bottom: 2px;
-}
-
-.lieu-details,
-.programmateur-details {
-    display: flex;
-    flex-direction: column;
-    font-size: 0.8rem;
-    color: var(--text-muted);
-}
-
-/* Media queries pour la responsivité */
-@media (max-width: 768px) {
-    .action-buttons {
-        flex-wrap: wrap;
-    }
-    
-    .action-btn {
-        flex: 1 0 auto;
-        justify-content: center;
-    }
-    
-    .action-btn .btn-text {
-        display: none;
-    }
-    
-    .action-btn i {
-        margin-right: 0;
-    }
-    
-    .card-header {
-        flex-wrap: wrap;
-    }
-    
-    .card-header-action {
-        margin-top: 0.5rem;
-        width: 100%;
-    }
-    
-    .form-sharing-options .btn {
-        flex: 1;
-        font-size: 0.875rem;
-        padding: 0.375rem 0.5rem;
-    }
-}
-
-/* Styles supplémentaires pour l'affichage des concerts */
-/* Table des concerts - style général */
-.concerts-table {
-  width: 100%;
-  border-collapse: collapse;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  border-radius: var(--border-radius);
-  overflow: hidden;
-}
-
-/* En-têtes de colonnes */
-.concerts-table thead th {
-  background-color: var(--gray-100);
-  color: var(--text-color);
-  font-size: var(--font-size-md);
-  font-weight: 600;
-  text-align: center;
-  padding: 12px 15px;
-  border-bottom: 2px solid var(--border-color);
-}
-
-/* Cellules du tableau */
-.concerts-table tbody td {
-  font-size: var(--font-size-md);
-  text-align: center !important;
-  vertical-align: middle;
-  padding: 12px 15px;
-  border-top: 1px solid var(--gray-200);
-}
-
-/* Style pour les dates */
-.concert-date-cell {
-  font-weight: 500;
-}
-
-/* Style pour les titres de concerts */
-.concert-title-cell {
-  font-weight: 600;
-  color: var(--primary-color);
-}
-
-/* Style pour le lieu */
-.concert-venue-cell {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.concert-venue-name {
-  font-weight: 500;
-  margin: 0 auto;
-}
-
-.concert-venue-location {
-  font-size: var(--font-size-sm);
-  color: var(--text-muted);
-  margin: 0 auto;
-}
-
-/* Table des concerts - alignements spécifiques */
-.concerts-table td {
-  text-align: center !important;
-  vertical-align: middle !important;
-  line-height: 1.5 !important;
-}
-
-/* Correction spécifique pour les cellules programmateur */
-td .programmateur-name {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  width: 100% !important;
-  margin: 0 auto !important;
-}
-
-/* Styles d'alignement pour les conteneurs imbriqués */
-.concerts-table td > div,
-.concerts-table td > span {
-  display: flex !important;
-  justify-content: center !important;
-  text-align: center !important;
-  margin: 0 auto !important;
-}
-
-/* Style pour les programmateurs - uniformisation */
-.programmateur-name {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 4px 0;
-  width: 100%;
-  margin: 0 auto;
-}
-
-/* Cellule montant - uniformisation */
-.montant-column {
-  text-align: center !important;
-}
-
-.montant-value {
-  display: inline-block;
-  font-weight: 500;
-  white-space: nowrap;
-  margin: 0 auto;
-}
-
-/* Style pour les badges de statut */
-.concert-status-badge {
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-weight: 500;
-  font-size: var(--font-size-sm);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Boutons d'actions uniformes */
-.concert-action-button {
-  min-width: 80px;
-  height: 32px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--font-size-sm);
-  padding: 0.35rem 0.65rem;
-  border-radius: var(--border-radius-sm);
-}
-
-/* Assurer l'uniformité dans les vues détaillées */
-.concert-details-header {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.concert-details-section {
-  text-align: center;
-  margin-bottom: 15px;
-}
-
-/* Pour les vues en cartes */
-.concert-card-title {
-  font-size: var(--font-size-lg);
-  font-weight: 600;
-  color: var(--primary-color);
-}
-
-.concert-card-date {
-  font-size: var(--font-size-md);
-  font-weight: 500;
-  margin-bottom: 10px;
-}
-
-.concert-card-venue {
-  font-size: var(--font-size-md);
-  margin-bottom: 15px;
-}
-
-/* Assurer que l'icône et le texte sont alignés sur la même ligne */
-.artist-tag i.bi,
-.artist-tag .bi-music-note,
-.artist-tag emoji,
-.artist-tag span {
-  line-height: 1 !important;
-  vertical-align: middle !important;
-  display: inline-flex !important;
-  align-items: center !important;
-}
-
-/* Correction spécifique pour les émojis dans la colonne artiste */
-.artist-tag span {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-/* Assurer que l'icône de musique est bien alignée verticalement */
-.bi-music-note, 
-.bi-music-note-beamed {
-  transform: translateY(-1px) !important;
-}
-
-/* Uniformiser l'apparence de toutes les cellules spéciales */
-.date-box,
-.concert-venue-name,
-.concert-venue-location,
-.artist-tag,
-.programmateur-name,
-.montant-value,
-.status-message-container {
-  margin: 0 auto;
-}
-
-/* S'assurer que les icônes restent alignées avec le texte */
-.programmateur-name .bi,
-.artist-tag .bi {
-  vertical-align: -0.125em !important;
-}
-
-/* Assurer la compatibilité avec les deux layouts */
-.concerts-table .montant-column,
-.concerts-table .status-column,
-.concerts-table .concert-venue-name,
-.concerts-table .concert-venue-location {
-  text-align: center !important;
-}
-
-/* Style spécial pour les colonnes qui ont des structures complexes */
-.status-column .status-advanced-container,
-.status-column .status-message-container {
-  display: flex !important;
-  justify-content: center !important;
-  text-align: center !important;
-  margin: 0 auto !important;
-  width: 100% !important;
-}
-
-/* Styles déplacés depuis programmateurs.css */
-/* Couleur pour la section des concerts dans le formulaire */
-.card-header i.bi-music-note-list {
-  color: #dc3545; /* Rouge pour les concerts */
-}
-
-/* Styles pour la recherche de concerts */
-.concert-search-container {
-  position: relative;
-  margin-bottom: 0.5rem;
-}
-
-/* Styles pour les éléments de concerts (élément individuel dans les résultats de recherche) */
-.concert-item {
-  padding: 0.75rem 1rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.concert-item:last-child {
-  border-bottom: none;
-}
-
-.concert-item:hover {
-  background-color: rgba(13, 110, 253, 0.1);
-}
-
-.concert-title {
-  font-weight: 600;
-  margin-bottom: 2px;
-}
-
-.concert-details {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  font-size: 0.8rem;
-  color: #6c757d;
-}
-
-.concert-date, .concert-lieu {
-  display: block;
-  color: #6c757d;
-  font-size: 0.8rem;
-}
-
-/* Styles pour le titre d'une section de concerts */
-.concerts-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  color: #344767;
-}
-
-/* Styles pour une liste de concerts */
-.concert-list {
-  margin-bottom: 1.5rem;
-}
-
-/* Styles pour les cartes de concerts (affichage complet) */
-.concert-card {
-  margin-bottom: 1rem;
-  transition: transform 0.2s;
-}
-
-.concert-name {
-  font-weight: 600;
-  color: #344767;
-}
-
-.concert-detail {
-  color: #6c757d;
-  font-size: 0.9rem;
-  margin-top: 0.25rem;
-}
-
-/* Styles pour les statuts de concert */
-.concert-status {
-  display: inline-block;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.8rem;
-  font-weight: 500;
-}
-
-.status-contact {
-  background-color: #fef8e8;
-  color: #f5a623;
-}
-
-.status-preaccord {
-  background-color: #e8f4fd;
-  color: #3498db;
-}
-
-.status-contrat {
-  background-color: #e8fdf5;
-  color: #2ecc71;
-}
-
-.status-annule {
-  background-color: #fde8e8;
-  color: #e74c3c;
-}
-
-/* Style pour les artistes */
-.concert-artist-cell {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  margin: 0 auto;
-  width: 100%;
-}
-
-.artist-tag {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--gray-100);
-  color: var(--text-color);
-  border-radius: 20px;
-  padding: 4px 12px;
-  margin: 2px auto;
-  font-size: var(--font-size-sm);
-  max-width: 95%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  position: relative !important;
-  cursor: help !important;
-  white-space: nowrap !important;
-  max-width: 130px !important;
-}
-
-.artist-tag:hover::after {
-  content: attr(data-full-name) !important;
-  position: absolute !important;
-  bottom: 125% !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  background-color: rgba(0, 0, 0, 0.8) !important;
-  color: white !important;
-  padding: 5px 10px !important;
-  border-radius: 4px !important;
-  white-space: nowrap !important;
-  z-index: 10 !important;
-  font-size: 12px !important;
-  max-width: none !important;
-}
-
-/* Correction de l'alignement vertical pour la colonne Artiste */
-.concert-artist-cell,
-.artist-tag {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  height: 100% !important;
-  line-height: normal !important;
-}
-
-/* Forcer le centrage dans les cellules du tableau */
-.concerts-table tbody tr td {
-  display: table-cell !important;
-  vertical-align: middle !important;
-  height: 60px !important;
-}
-
-/* Garantir l'alignement même avec Bootstrap */
-.table>tbody>tr>td {
-  text-align: center !important;
-  vertical-align: middle !important;
-}
-
-/* Compatibilité avec les styles existants */
-.modern-table.concerts-table {
-  margin-bottom: 0;
-}
-
-.status-column .status-message-container {
-  justify-content: center;
-  margin: 0 auto;
-}
-
-.date-column .date-box {
-  margin: 0 auto;
-}
-
-/* Uniformiser l'alignement du contenu dans toutes les colonnes */
-.table-responsive.modern-table-container .table tbody td {
-  text-align: center;
-}
-
-/* Assurer l'uniformité de la taille du texte */
-.table-responsive.modern-table-container .table {
-  font-size: var(--font-size-md);
-}
-
-/* Pour éviter tout conflit d'alignement avec Bootstrap */
-.table>tbody>tr>td {
-  vertical-align: middle;
-}
-
-/* Assurer que les icônes restent alignées avec le texte */
-.bi {
-  vertical-align: -0.125em;
-  display: inline-block;
-}
-
-/* Renforcer le style pour les conteneurs imbriqués */
-.concerts-table td > div,
-.concerts-table td > span {
-  display: flex !important;
-  justify-content: center !important;
-  text-align: center !important;
-  margin: 0 auto !important;
 }

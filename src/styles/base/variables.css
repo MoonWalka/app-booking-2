@@ -1,10 +1,27 @@
 /* Variables globales CSS */
 :root {
-    /* Les définitions de couleurs ont été déplacées vers colors.css */
+    /* 
+     * CENTRALISATION DES VARIABLES CSS
+     * ================================
+     * Ce fichier est la source unique de vérité pour toutes les variables CSS utilisées
+     * dans l'application TourCraft. Tout ajout ou modification de variables doit se faire ici.
+     */
+    
+    /* Typographie */
+    --font-size-base: 16px;
+    --font-size-xs: 0.75rem;    /* 12px */
+    --font-size-sm: 0.875rem;   /* 14px */
+    --font-size-md: 1rem;       /* 16px */
+    --font-size-lg: 1.2rem;     /* 19.2px */
+    --font-size-xl: 1.5rem;     /* 24px */
+    --font-size-xxl: 1.8rem;    /* 28.8px */
     
     /* Effets et formes */
     --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.12);
+    --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.05);
+    --shadow-modal: 0 4px 12px rgba(0, 0, 0, 0.15);
+    
     --border-radius: 8px;
     --border-radius-lg: 12px;
     --border-radius-sm: 4px;
@@ -12,19 +29,82 @@
     /* Animations */
     --transition: all 0.3s ease;
     --transition-fast: all 0.2s ease;
+    --transition-duration: 0.3s;
     
     /* Espacement */
+    --spacing-unit: 1rem;
     --spacing-xs: 4px;
     --spacing-sm: 8px;
     --spacing-md: 16px;
     --spacing-lg: 24px;
     --spacing-xl: 32px;
     
-    /* Tailles de police */
-    --font-size-xs: 0.75rem;
-    --font-size-sm: 0.875rem;
-    --font-size-md: 1rem;
-    --font-size-lg: 1.2rem;
-    --font-size-xl: 1.5rem;
-    --font-size-xxl: 1.8rem;
-  }
+    /* Z-index */
+    --z-index-dropdown: 1000;
+    --z-index-modal: 1050;
+    --z-index-tooltip: 1070;
+    --z-index-toast: 1080;
+    
+    /* Variables d'interface */
+    --header-height: 60px;
+    --sidebar-width: 240px;
+    --sidebar-collapsed-width: 64px;
+    --modal-overlay-bg: rgba(0, 0, 0, 0.5);
+    
+    /* Focus outline pour l'accessibilité */
+    --focus-ring-color: rgba(52, 152, 219, 0.5);
+    --focus-ring-width: 3px;
+    
+    /* Input styling */
+    --input-focus-shadow: 0 0 0 0.25rem rgba(var(--primary-color-rgb), 0.25);
+    --input-placeholder-color: var(--gray-500);
+    --input-bg: white;
+    
+    /* Les couleurs sont importées de colors.css,
+     * mais elles sont référencées ici pour documentation et autocomplétion
+     * 
+     * Principales variables de couleur:
+     * --primary-color: #2c3e50
+     * --primary-color-rgb: 44, 62, 80
+     * --primary-light: #3498db
+     * --primary-dark: #1e2b38
+     * --secondary-color: #2980b9
+     * --success-color: #27ae60
+     * --warning-color: #f39c12
+     * --danger-color: #e74c3c
+     * --info-color: #3498db
+     * --text-color: #344767
+     * --text-muted: #6c757d
+     * --background-color: #f5f7fa
+     * --card-bg: #ffffff
+     * --border-color: #ddd
+     * etc.
+     */
+}
+
+/* Mode compact - définition en dehors de :root pour permettre le surcharge via data-attributes */
+[data-compact="true"] {
+    --spacing-unit: 0.75rem;
+    --font-size-base: 14px;
+}
+
+/* Variables de responsive design */
+@media (max-width: 768px) {
+    :root {
+        --spacing-unit: 0.75rem;
+        --font-size-base: 14px;
+        --sidebar-width: 100%;  /* Sidebar prend toute la largeur en mobile */
+    }
+}
+
+/* Variables de dark mode - activé via data-attribute */
+[data-theme="dark"] {
+    /* Ces variables seront activées quand le thème sombre sera implémenté */
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --card-bg: #1e1e1e;
+    --border-color: #333;
+    --hover-bg: #2a2a2a;
+    --shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    --input-bg: #2a2a2a;
+}

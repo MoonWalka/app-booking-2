@@ -2,18 +2,18 @@
 * Fichier CSS global qui importe tous les autres fichiers CSS
 */
 
-/* Base */
+/* Base - Ordre important: d'abord le reset, puis les couleurs, puis les variables */
 @import './base/reset.css';
-@import './base/colors.css';  /* Nouveau fichier centralisé de couleurs */
-@import './base/variables.css';
+@import './base/colors.css';  /* Définition des couleurs centralisées */
+@import './base/variables.css'; /* Variables globales faisant référence aux couleurs */
 
 /* Composants */
 @import './components/badges.css';
 @import './components/buttons.css';
 @import './components/cards.css';
-@import './components/details.css';  /* Nouveau fichier pour les styles de détails */
+@import './components/details.css';  /* Styles pour les pages de détails */
 @import './components/dropdowns.css';
-@import './components/errors.css';  /* Nouveau fichier pour les styles d'erreur */
+@import './components/errors.css';  /* Styles pour les messages d'erreur */
 @import './components/forms.css';
 @import './components/layout.css';
 @import './components/modals.css';
@@ -30,5 +30,5 @@
 @import './pages/programmateurs.css';
 @import './pages/structures.css';
 
-/* Thèmes */
+/* Thèmes - Applique les styles finaux utilisant toutes les variables */
 @import './theme.css';

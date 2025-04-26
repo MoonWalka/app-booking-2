@@ -7,9 +7,6 @@
 @import './base/colors.css';  /* Définition des couleurs centralisées */
 @import './base/variables.css'; /* Variables globales faisant référence aux couleurs */
 
-/* Thème global */
-@import './theme.css';
-
 /* Composants */
 @import './components/badges.css';
 @import './components/buttons.css';
@@ -32,3 +29,6 @@
 @import './pages/lieux.css';
 @import './pages/programmateurs.css';
 @import './pages/structures.css';
+
+/* Thème global - Appliqué en dernier pour ne pas écraser les styles spécifiques */
+@import './theme.css';

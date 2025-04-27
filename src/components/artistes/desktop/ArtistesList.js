@@ -214,41 +214,41 @@ const ArtistesList = () => {
 
       {/* Cartes de statistiques */}
       <div className="row mb-4">
-        <div className="col-md-4">
-          <div className="card stats-card h-100">
-            <div className="card-body d-flex align-items-center">
-              <div className="stats-icon">
-                <i className="bi bi-people-fill"></i>
+        <div className="col-lg-4 mb-3 mb-lg-0">
+          <div className="card stats-card h-100 border-0 shadow-sm">
+            <div className="card-body d-flex align-items-center p-4">
+              <div className="stats-icon text-primary me-3">
+                <i className="bi bi-people-fill fs-2"></i>
               </div>
               <div>
-                <h3 className="stats-value mb-0">{stats.total}</h3>
-                <div className="stats-label">Total artistes</div>
+                <h3 className="stats-value fw-bold mb-1 text-primary">{stats.total}</h3>
+                <div className="stats-label text-muted">Total artistes</div>
               </div>
             </div>
           </div>
         </div>
-        <div className="col-md-4">
-          <div className="card stats-card h-100">
-            <div className="card-body d-flex align-items-center">
-              <div className="stats-icon text-success">
-                <i className="bi bi-calendar-check"></i>
+        <div className="col-lg-4 mb-3 mb-lg-0">
+          <div className="card stats-card h-100 border-0 shadow-sm">
+            <div className="card-body d-flex align-items-center p-4">
+              <div className="stats-icon text-success me-3">
+                <i className="bi bi-calendar-check fs-2"></i>
               </div>
               <div>
-                <h3 className="stats-value mb-0">{stats.avecConcerts}</h3>
-                <div className="stats-label">Avec concerts</div>
+                <h3 className="stats-value fw-bold mb-1 text-success">{stats.avecConcerts}</h3>
+                <div className="stats-label text-muted">Avec concerts</div>
               </div>
             </div>
           </div>
         </div>
-        <div className="col-md-4">
-          <div className="card stats-card h-100">
-            <div className="card-body d-flex align-items-center">
-              <div className="stats-icon text-warning">
-                <i className="bi bi-calendar-x"></i>
+        <div className="col-lg-4">
+          <div className="card stats-card h-100 border-0 shadow-sm">
+            <div className="card-body d-flex align-items-center p-4">
+              <div className="stats-icon text-warning me-3">
+                <i className="bi bi-calendar-x fs-2"></i>
               </div>
               <div>
-                <h3 className="stats-value mb-0">{stats.sansConcerts}</h3>
-                <div className="stats-label">Sans concerts</div>
+                <h3 className="stats-value fw-bold mb-1 text-warning">{stats.sansConcerts}</h3>
+                <div className="stats-label text-muted">Sans concerts</div>
               </div>
             </div>
           </div>
@@ -259,7 +259,7 @@ const ArtistesList = () => {
       <div className="card mb-4">
         <div className="card-body">
           <div className="row mb-3">
-            <div className="col-lg-6" ref={searchInputRef} className="position-relative mb-3 mb-lg-0">
+            <div className="position-relative col-lg-6 mb-3 mb-lg-0" ref={searchInputRef}>
               <InputGroup>
                 <InputGroup.Text>
                   <i className="bi bi-search"></i>
@@ -286,7 +286,7 @@ const ArtistesList = () => {
               
               {/* Dropdown qui apparaît lors de la recherche */}
               {showDropdown && (
-                <div className="search-results-dropdown">
+                <div className="search-results-dropdown position-absolute w-100 mt-1 shadow-sm">
                   {noResults ? (
                     <div className="search-create-item p-3" onClick={handleCreateArtiste}>
                       <i className="bi bi-plus-circle me-2"></i>
@@ -299,16 +299,16 @@ const ArtistesList = () => {
                       <Link to={`/artistes/${artiste.id}`} key={artiste.id} className="search-result-item">
                         <div className="search-result-avatar">
                           {artiste.photoPrincipale ? (
-                            <img src={artiste.photoPrincipale} alt={artiste.nom} />
+                            <img src={artiste.photoPrincipale} alt={artiste.nom} className="img-fluid" />
                           ) : (
                             <div className="placeholder-avatar">
                               <i className="bi bi-music-note"></i>
                             </div>
                           )}
                         </div>
-                        <div>
-                          <div className="fw-bold">{artiste.nom}</div>
-                          {artiste.genre && <div className="small text-muted">{artiste.genre}</div>}
+                        <div className="text-truncate">
+                          <div className="fw-bold text-truncate">{artiste.nom}</div>
+                          {artiste.genre && <div className="small text-muted text-truncate">{artiste.genre}</div>}
                         </div>
                       </Link>
                     ))
@@ -319,7 +319,7 @@ const ArtistesList = () => {
             
             <div className="col-lg-6">
               <div className="row">
-                <div className="col-xs-12 col-md-4 mb-2 mb-md-0">
+                <div className="col-md-4 mb-2 mb-md-0">
                   <Form.Select 
                     value={filter}
                     onChange={(e) => setFilter(e.target.value)}
@@ -329,7 +329,7 @@ const ArtistesList = () => {
                     <option value="sansConcerts">Sans concerts</option>
                   </Form.Select>
                 </div>
-                <div className="col-xs-12 col-md-8">
+                <div className="col-md-8">
                   <div className="d-flex align-items-center h-100">
                     <span className="me-2 d-none d-md-block">Trier par:</span>
                     <div className="d-flex gap-2 flex-wrap">
@@ -369,7 +369,7 @@ const ArtistesList = () => {
         </div>
       </div>
 
-      {/* État de chargement initial */}
+      {/* État de chargement et contenus conditionnels */}
       {loading && artistes.length === 0 ? (
         <div className="text-center py-5">
           <Spinner animation="border" variant="primary" />
@@ -402,11 +402,11 @@ const ArtistesList = () => {
             <Table hover responsive className="artistes-table mb-0">
               <thead>
                 <tr>
-                  <th style={{ width: '40%' }}>Artiste</th>
-                  <th style={{ width: '15%' }}>Lieu</th>
-                  <th style={{ width: '15%' }}>Cachet</th>
-                  <th style={{ width: '15%' }}>Concerts</th>
-                  <th style={{ width: '15%' }}>Actions</th>
+                  <th className="w-40">Artiste</th>
+                  <th className="w-15">Lieu</th>
+                  <th className="w-15">Cachet</th>
+                  <th className="w-15">Concerts</th>
+                  <th className="w-15">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -416,42 +416,42 @@ const ArtistesList = () => {
                       <Link to={`/artistes/${artiste.id}`} className="d-flex align-items-center text-decoration-none">
                         <div className="artiste-avatar me-3">
                           {artiste.photoPrincipale ? (
-                            <img src={artiste.photoPrincipale} alt={artiste.nom} />
+                            <img src={artiste.photoPrincipale} alt={artiste.nom} className="img-fluid" />
                           ) : (
                             <div className="placeholder-avatar">
                               <i className="bi bi-music-note"></i>
                             </div>
                           )}
                         </div>
-                        <div>
-                          <div className="fw-bold d-flex align-items-center">
-                            {artiste.nom}
+                        <div className="text-truncate">
+                          <div className="fw-bold d-flex align-items-center text-truncate">
+                            <span className="text-truncate">{artiste.nom}</span>
                             {artiste.estGroupeFavori && (
-                              <i className="bi bi-star-fill text-warning ms-2"></i>
+                              <i className="bi bi-star-fill text-warning ms-2 flex-shrink-0"></i>
                             )}
                           </div>
-                          {artiste.genre && <div className="small text-muted">{artiste.genre}</div>}
+                          {artiste.genre && <div className="small text-muted text-truncate">{artiste.genre}</div>}
                         </div>
                       </Link>
                     </td>
                     <td>
                       {artiste.ville ? (
                         <div className="d-flex align-items-center">
-                          <i className="bi bi-geo-alt text-muted me-2"></i>
-                          {artiste.ville}
+                          <i className="bi bi-geo-alt text-muted me-2 flex-shrink-0"></i>
+                          <span className="text-truncate">{artiste.ville}</span>
                         </div>
                       ) : (
-                        <span className="text-muted">-</span>
+                        <span className="text-muted" aria-label="Pas de lieu spécifié">-</span>
                       )}
                     </td>
                     <td>
                       {artiste.cachetMoyen ? (
                         <div className="d-flex align-items-center">
-                          <i className="bi bi-cash text-muted me-2"></i>
-                          {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(artiste.cachetMoyen)}
+                          <i className="bi bi-cash text-muted me-2 flex-shrink-0"></i>
+                          <span className="text-nowrap">{new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(artiste.cachetMoyen)}</span>
                         </div>
                       ) : (
-                        <span className="text-muted">-</span>
+                        <span className="text-muted" aria-label="Pas de cachet spécifié">-</span>
                       )}
                     </td>
                     <td>
@@ -461,24 +461,36 @@ const ArtistesList = () => {
                           {getNbConcerts(artiste)}
                         </Badge>
                       ) : (
-                        <Badge bg="secondary" className="px-2 py-1">0</Badge>
+                        <Badge bg="secondary" className="px-2 py-1" aria-label="Aucun concert">0</Badge>
                       )}
                     </td>
                     <td>
                       <div className="d-flex align-items-center gap-2">
-                        <Link to={`/artistes/${artiste.id}`} className="btn btn-outline-primary btn-sm action-button">
+                        <Button 
+                          as={Link} 
+                          to={`/artistes/${artiste.id}`} 
+                          variant="outline-primary" 
+                          size="sm" 
+                          className="d-flex align-items-center"
+                        >
                           <i className="bi bi-eye me-1"></i>Voir
-                        </Link>
-                        <Link to={`/artistes/${artiste.id}/modifier`} className="btn btn-outline-secondary btn-sm action-button">
+                        </Button>
+                        <Button 
+                          as={Link} 
+                          to={`/artistes/${artiste.id}/modifier`} 
+                          variant="outline-secondary" 
+                          size="sm" 
+                          className="d-flex align-items-center"
+                        >
                           <i className="bi bi-pencil me-1"></i>Modifier
-                        </Link>
+                        </Button>
                         <Button 
                           variant="outline-danger"
                           size="sm"
-                          className="action-button"
                           onClick={(e) => handleDelete(artiste.id, e)}
+                          aria-label="Supprimer l'artiste"
                         >
-                          <i className="bi bi-trash me-1"></i>
+                          <i className="bi bi-trash"></i>
                         </Button>
                       </div>
                     </td>
@@ -495,17 +507,17 @@ const ArtistesList = () => {
                 variant="outline-primary"
                 onClick={handleLoadMore}
                 disabled={loading}
-                className="px-4 py-2"
+                className="px-4 py-2 d-inline-flex align-items-center"
               >
                 {loading ? (
                   <>
                     <Spinner animation="border" size="sm" className="me-2" />
-                    Chargement...
+                    <span>Chargement...</span>
                   </>
                 ) : (
                   <>
                     <i className="bi bi-plus-circle me-2"></i>
-                    Charger plus d'artistes
+                    <span>Charger plus d'artistes</span>
                   </>
                 )}
               </Button>

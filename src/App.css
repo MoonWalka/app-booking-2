@@ -11,7 +11,7 @@ a {
 
 a:hover {
   color: var(--tc-primary-dark);
-  text-decoration: underline;
+  text-decoration: none; /* Modification: désactive le soulignement pour tous les liens au survol */
 }
 
 /* Styles de base pour la sidebar */
@@ -41,6 +41,11 @@ a:hover {
   color: var(--tc-sidebar-text-color);
   text-decoration: none;
   display: block;
+}
+
+.sidebar-menu-item a:hover {
+  text-decoration: none; /* Désactive le soulignement au survol pour les liens de la sidebar */
+  color: var(--tc-sidebar-text-color); /* Conserve la couleur de texte de la sidebar */
 }
 
 .sidebar-menu-item:hover {
@@ -173,4 +178,12 @@ a:hover {
 .btn-primary:hover {
   background-color: var(--tc-primary-dark);
   border-color: var(--tc-primary-dark);
+  text-decoration: none; /* Assure qu'il n'y a pas de soulignement au survol pour les boutons */
+}
+
+/* Règle générale pour tous les éléments interactifs */
+button:hover, 
+.btn:hover, 
+[role="button"]:hover {
+  text-decoration: none; /* Suppression du !important */
 }

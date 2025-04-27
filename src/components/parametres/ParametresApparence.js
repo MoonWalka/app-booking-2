@@ -12,6 +12,20 @@ const ParametresApparence = () => {
     compactMode: false,
     menuPosition: 'left'
   });
+  // Live–preview : applique les variables CSS dès que localState change
+  useEffect(() => {
+    // Met à jour la couleur principale
+    document.documentElement.style.setProperty(
+      '--tc-primary-color',
+      localState.couleurPrincipale
+    );
+    // Met à jour la taille de la police de base
+    document.documentElement.style.setProperty(
+      '--tc-font-size-base',
+      `${localState.taillePolicePx}px`
+    );
+    // Vous pouvez ajouter d’autres propriétés ici si nécessaire
+  }, [localState]);
   const [success, setSuccess] = useState('');
 
   useEffect(() => {
@@ -34,8 +48,8 @@ const ParametresApparence = () => {
     if (success) {
       setSuccess('Préférences d\'apparence mises à jour avec succès');
       // Appliquer les changements immédiatement
-      document.documentElement.style.setProperty('--primary-color', localState.couleurPrincipale);
-      document.documentElement.style.setProperty('--font-size-base', `${localState.taillePolicePx}px`);
+      document.documentElement.style.setProperty('--tc-primary-color', localState.couleurPrincipale);
+      document.documentElement.style.setProperty('--tc-font-size-base', `${localState.taillePolicePx}px`);
       document.body.setAttribute('data-theme', localState.theme);
       setTimeout(() => setSuccess(''), 3000);
     }

@@ -62,7 +62,7 @@
 
 /* Styles pour afficher les informations de contact */
 .structure-contact-link {
-  color: var(--primary-color);
+  color: var(--tc-primary-color);
   text-decoration: none;
 }
 
@@ -73,11 +73,11 @@
 /* Mobile - card de structure */
 .structures-card {
   position: relative;
-  background-color: var(--card-bg);
-  border-radius: var(--border-radius);
+  background-color: var(--tc-card-bg);
+  border-radius: var(--tc-border-radius);
   padding: 1rem;
   margin-bottom: 1rem;
-  box-shadow: var(--shadow);
+  box-shadow: var(--tc-shadow);
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -87,7 +87,7 @@
 }
 
 .structures-card:hover {
-  box-shadow: var(--shadow-hover);
+  box-shadow: var(--tc-shadow-hover);
 }
 
 /* Badge pour le nombre de programmateurs */
@@ -108,5 +108,5 @@
 }
 
 .badge-programmateurs {
-  background-color: var(--success-color);
+  background-color: var(--tc-success-color);
 }

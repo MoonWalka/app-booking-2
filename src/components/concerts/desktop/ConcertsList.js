@@ -340,7 +340,7 @@ const ConcertsList = () => {
   };
 
   if (loading) {
-    return <Spinner message="Chargement des concerts..." />;
+    return <Spinner message="Chargement des concerts..." contentOnly={true} />;
   }
 
   if (error) {

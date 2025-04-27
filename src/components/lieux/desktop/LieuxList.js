@@ -176,7 +176,7 @@ const LieuxList = () => {
   );
 
   if (loading) {
-    return <Spinner message="Chargement des lieux..." />;
+    return <Spinner message="Chargement des lieux..." contentOnly={true} />;
   }
 
   return (

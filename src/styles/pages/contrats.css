@@ -34,7 +34,7 @@
 
 .no-contrats-message i {
   font-size: 3rem;
-  color: #adb5bd;
+  color: var(--tc-gray-500);
   display: block;
   margin-bottom: 20px;
 }
@@ -83,7 +83,7 @@
 
 /* Styles pour l'aperçu du template */
 .template-preview {
-  background-color: #f8f9fa;
+  background-color: var(--tc-hover-bg);
   border-radius: var(--tc-border-radius);
   padding: 15px;
   margin-top: 20px;
@@ -100,7 +100,7 @@
   background-color: white;
   display: flex;
   align-items: center;
-  border: 1px solid #e9ecef;
+  border: 1px solid var(--tc-gray-200);
 }
 
 .section-number {

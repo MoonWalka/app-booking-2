@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
  * @param {string} [props.size=''] - Taille du spinner (sm ou vide pour taille normale)
  * @param {string} [props.message='Chargement...'] - Message à afficher sous le spinner
  * @param {boolean} [props.fullPage=false] - Si true, centre le spinner au milieu de la page
+ * @param {boolean} [props.contentOnly=false] - Si true, affiche le spinner dans la zone de contenu principal sans recouvrir la sidebar
  * @param {boolean} [props.inline=false] - Si true, affiche le spinner en ligne (pour les boutons)
  * @param {string} [props.className=''] - Classes CSS additionnelles
  */
@@ -18,6 +19,7 @@ const Spinner = ({
   size = '', 
   message = 'Chargement...', 
   fullPage = false,
+  contentOnly = false,
   inline = false,
   className = ''
 }) => {
@@ -35,9 +37,14 @@ const Spinner = ({
     );
   }
   
-  const containerClass = fullPage 
-    ? 'spinner-fullpage-container' 
-    : 'spinner-container';
+  let containerClass;
+  if (fullPage) {
+    containerClass = 'spinner-fullpage-container';
+  } else if (contentOnly) {
+    containerClass = 'spinner-content-container';
+  } else {
+    containerClass = 'spinner-container';
+  }
 
   return (
     <div className={`${containerClass} ${className}`}>
@@ -57,6 +64,7 @@ Spinner.propTypes = {
   size: PropTypes.string,
   message: PropTypes.string,
   fullPage: PropTypes.bool,
+  contentOnly: PropTypes.bool,
   inline: PropTypes.bool,
   className: PropTypes.string
 };

@@ -43,11 +43,14 @@
   --tc-secondary-color: #2980b9;
   /* Utilisation: Boutons secondaires, en-têtes de tableaux, badges secondaires */
   
+  --tc-secondary-color-rgb: 41, 128, 185;
+  /* Utilisation: Valeurs RGB pour les effets de transparence des éléments secondaires */
+  
   --tc-secondary-light: #3498db;
-  /* Utilisation: Hover sur boutons secondaires, notifications */
+  /* Utilisation: Hover sur boutons secondaires, notifications, liens au survol (réservé pour usages futurs) */
   
   --tc-secondary-dark: #1f618d;
-  /* Utilisation: Éléments actifs secondaires */
+  /* Utilisation: Éléments actifs secondaires, états actifs des liens (réservé pour usages futurs) */
   
   /* Autres couleurs fonctionnelles */
   --tc-success-color: #27ae60;
@@ -69,6 +72,7 @@
   --tc-light-color: #ecf0f1;
   /* Utilisation: Arrière-plans clairs, texte sur fond sombre, bordures légères */
   
+  --tc-gray-50: #fafbfc;  /* Utilisation: Lignes impaires dans les tableaux */
   --tc-gray-100: #f8f9fa;
   /* Utilisation: Arrière-plans, en-têtes de cartes, hover sur tableaux */
   
@@ -103,6 +107,9 @@
   --tc-text-muted: #6c757d;
   /* Utilisation: Texte secondaire, info complémentaire, pied de page */
   
+  --tc-text-light: #ffffff; 
+  /* Utilisation: Texte sur fond sombre, comme les boutons, la sidebar, etc. */
+  
   --tc-background-color: #f5f7fa;
   /* Utilisation: Arrière-plan principal de l'application */
   
@@ -122,6 +129,16 @@
   --tc-hover-bg: #f8f9fa;
   /* Utilisation: Effet hover sur éléments neutres */
   
+  /* Variables de transparence */
+  --tc-white-overlay-20: rgba(255, 255, 255, 0.2);
+  /* Utilisation: Overlay blanc léger comme dans les menus de la sidebar, éléments actifs */
+  
+  --tc-white-overlay-50: rgba(255, 255, 255, 0.5);
+  /* Utilisation: Texte semi-transparent, éléments visuels secondaires */
+  
+  --tc-shadow-light: 0 -2px 4px rgba(0, 0, 0, 0.05);
+  /* Utilisation: Ombres légères pour les footers, séparateurs */
+  
   /* Ces variables peuvent être redéfinies dans un thème sombre si nécessaire */
   
   /* =========================================== */
@@ -132,7 +149,7 @@
   --tc-sidebar-bg-color: var(--tc-primary-color);
   /* Utilisation: Arrière-plan de la barre latérale dans DesktopLayout.js et MobileLayout.js */
   
-  --tc-sidebar-text-color: white;
+  --tc-sidebar-text-color: var(--tc-text-light);
   /* Utilisation: Texte dans la barre latérale, liens de navigation */
   
   --tc-sidebar-hover-bg-color: rgba(255, 255, 255, 0.1);
@@ -144,7 +161,7 @@
   --tc-sidebar-border-color: rgba(255, 255, 255, 0.1);
   /* Utilisation: Séparateurs et bordures dans la barre latérale */
   
-  --tc-header-bg-color: white;
+  --tc-header-bg-color: var(--tc-bg-color);
   /* Utilisation: Arrière-plan de l'en-tête principal dans Layout.js */
   
   --tc-header-text-color: var(--tc-text-color);
@@ -176,7 +193,7 @@
   --tc-btn-primary-bg: var(--tc-primary-color);
   /* Utilisation: Boutons principaux dans tous les formulaires et actions principales */
   
-  --tc-btn-primary-text: white;
+  --tc-btn-primary-text: var(--tc-text-light);
   /* Utilisation: Texte des boutons principaux */
   
   --tc-btn-primary-border: var(--tc-primary-color);
@@ -188,25 +205,37 @@
   --tc-btn-secondary-bg: var(--tc-secondary-color);
   /* Utilisation: Boutons secondaires comme Annuler, Retour */
   
-  --tc-btn-secondary-text: white;
+  --tc-btn-secondary-text: var(--tc-text-light);
   /* Utilisation: Texte des boutons secondaires */
+  
+  --tc-btn-secondary-border: var(--tc-secondary-color);
+  /* Utilisation: Bordure des boutons secondaires */
+  
+  --tc-btn-secondary-hover-bg: var(--tc-secondary-dark);
+  /* Utilisation: Arrière-plan au survol des boutons secondaires */
+  
+  --tc-btn-secondary-active-bg: var(--tc-secondary-dark);
+  /* Utilisation: Arrière-plan des boutons secondaires actifs */
+  
+  --tc-btn-secondary-focus-shadow: 0 0 0 0.25rem rgba(var(--tc-secondary-color-rgb), 0.25);
+  /* Utilisation: Ombre au focus des boutons secondaires */
   
   --tc-btn-success-bg: var(--tc-success-color);
   /* Utilisation: Boutons de confirmation, validation */
   
-  --tc-btn-success-text: white;
+  --tc-btn-success-text: var(--tc-text-light);
   /* Utilisation: Texte des boutons de confirmation */
   
   --tc-btn-danger-bg: var(--tc-danger-color);
   /* Utilisation: Boutons de suppression, comme dans LieuxList.js */
   
-  --tc-btn-danger-text: white;
+  --tc-btn-danger-text: var(--tc-text-light);
   /* Utilisation: Texte des boutons de suppression */
   
   --tc-btn-info-bg: var(--tc-info-color);
   /* Utilisation: Boutons d'information, aide */
   
-  --tc-btn-info-text: white;
+  --tc-btn-info-text: var(--tc-text-light);
   /* Utilisation: Texte des boutons d'information */
   
   /* Formulaires */
@@ -235,7 +264,7 @@
   --tc-table-hover-bg: var(--tc-gray-100);
   /* Utilisation: Effet hover sur les lignes de tableau */
   
-  --tc-table-row-even-bg: white;
+  --tc-table-row-even-bg: var(--tc-bg-color);
   /* Utilisation: Lignes paires dans les tableaux */
   
   --tc-table-row-odd-bg: var(--tc-gray-50, #fafbfc);
@@ -245,11 +274,11 @@
   --tc-badge-bg: var(--tc-primary-color);
   /* Utilisation: Badges standards, comme dans LieuxPage.js */
   
-  --tc-badge-text: white;
+  --tc-badge-text: var(--tc-text-light);
   /* Utilisation: Texte des badges */
   
   /* Modales */
-  --tc-modal-bg: white;
+  --tc-modal-bg: var(--tc-bg-color);
   /* Utilisation: Arrière-plan des fenêtres modales, comme ContratTemplateEditorModal.js */
   
   --tc-modal-header-bg: var(--tc-gray-100);

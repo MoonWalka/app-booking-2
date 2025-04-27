@@ -5,14 +5,14 @@ body {
   background-color: var(--tc-bg-color);
   color: var(--tc-text-color);
   font-size: var(--tc-font-size-base);
-  transition: background-color var(--tc-transition-duration), color var(--tc-transition-duration);
+  transition: var(--tc-transition);
 }
 
 /* Classes utilitaires */
 .card {
   background-color: var(--tc-card-bg);
   border-color: var(--tc-border-color);
-  transition: all var(--tc-transition-duration);
+  transition: var(--tc-transition);
 }
 
 .form-control {
@@ -22,7 +22,7 @@ body {
 }
 
 .btn {
-  transition: all var(--tc-transition-duration);
+  transition: var(--tc-transition);
 }
 
 .btn-primary {
@@ -32,7 +32,7 @@ body {
 
 .nav-link {
   color: var(--tc-text-color);
-  transition: all var(--tc-transition-duration);
+  transition: var(--tc-transition);
 }
 
 .nav-pills .nav-link.active {
@@ -60,7 +60,7 @@ body {
 .suggestion-item {
   padding: 0.5rem 1rem;
   cursor: pointer;
-  transition: background-color var(--tc-transition-duration);
+  transition: var(--tc-transition);
 }
 
 .suggestion-item:hover {

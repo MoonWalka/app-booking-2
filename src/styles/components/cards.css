@@ -78,6 +78,7 @@
 
 /* Styles de cartes spécifiques */
 .dashboard-card {
+  transition: var(--tc-transition);
   height: 100%;
   display: flex;
   flex-direction: column;

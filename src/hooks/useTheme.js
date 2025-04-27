@@ -18,34 +18,34 @@ const useTheme = () => {
     }
 
     // Application des variables CSS
-    root.style.setProperty('--primary-color', couleurPrincipale);
-    root.style.setProperty('--font-size-base', `${taillePolicePx}px`);
-    root.style.setProperty('--spacing-unit', compactMode ? '0.75rem' : '1rem');
+    root.style.setProperty('--tc-primary-color', couleurPrincipale);
+    root.style.setProperty('--tc-font-size-base', `${taillePolicePx}px`);
+    root.style.setProperty('--tc-spacing-unit', compactMode ? '0.75rem' : '1rem');
 
     // Gestion des animations
     if (!parametres.apparence.animations) {
-      root.style.setProperty('--transition-duration', '0s');
+      root.style.setProperty('--tc-transition-duration', '0s');
     } else {
-      root.style.setProperty('--transition-duration', '0.3s');
+      root.style.setProperty('--tc-transition-duration', '0.3s');
     }
 
     // Variables de thème sombre/clair
     const themeVariables = {
       light: {
-        '--bg-color': '#ffffff',
-        '--text-color': '#212529',
-        '--border-color': '#dee2e6',
-        '--card-bg': '#ffffff',
-        '--input-bg': '#ffffff',
-        '--hover-bg': '#f8f9fa'
+        '--tc-bg-color': '#ffffff',
+        '--tc-text-color': '#212529',
+        '--tc-border-color': '#dee2e6',
+        '--tc-card-bg': '#ffffff',
+        '--tc-input-bg': '#ffffff',
+        '--tc-hover-bg': '#f8f9fa'
       },
       dark: {
-        '--bg-color': '#212529',
-        '--text-color': '#f8f9fa',
-        '--border-color': '#495057',
-        '--card-bg': '#343a40',
-        '--input-bg': '#495057',
-        '--hover-bg': '#343a40'
+        '--tc-bg-color': '#212529',
+        '--tc-text-color': '#f8f9fa',
+        '--tc-border-color': '#495057',
+        '--tc-card-bg': '#343a40',
+        '--tc-input-bg': '#495057',
+        '--tc-hover-bg': '#343a40'
       }
     };
 

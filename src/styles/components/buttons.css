@@ -8,49 +8,92 @@ button {
   transition: var(--tc-transition);
 }
 
-/* Variations de boutons par couleur */
-.btn-primary {
+/* Variations de boutons par couleur avec namespace tc- */
+.tc-btn-primary {
   background-color: var(--tc-primary-color);
-  color: white;
+  color: var(--tc-text-light);
+  border: 1px solid var(--tc-btn-primary-border);
 }
 
-.btn-primary:hover {
+.tc-btn-primary:hover {
   background-color: var(--tc-primary-dark);
 }
 
-.btn-secondary {
-  background-color: var(--tc-light-color);
-  color: var(--tc-text-color);
+.tc-btn-primary:focus {
+  box-shadow: var(--tc-input-focus-shadow);
 }
 
-.btn-secondary:hover {
-  background-color: #dfe6e9;
+.tc-btn-secondary {
+  background-color: var(--tc-secondary-color);
+  color: var(--tc-text-light);
+  border: 1px solid var(--tc-btn-secondary-border);
 }
 
-.btn-action {
+.tc-btn-secondary:hover {
+  background-color: var(--tc-secondary-dark);
+}
+
+.tc-btn-secondary:focus {
+  box-shadow: var(--tc-btn-secondary-focus-shadow);
+}
+
+.tc-btn-outline-secondary {
+  background-color: transparent;
+  color: var(--tc-secondary-color);
+  border: 1px solid var(--tc-secondary-color);
+}
+
+.tc-btn-outline-secondary:hover {
+  background-color: var(--tc-secondary-light);
+  color: var(--tc-text-light);
+}
+
+.tc-btn-action {
   background-color: var(--tc-primary-color);
-  color: white;
+  color: var(--tc-text-light);
   padding: 6px 12px;
   border-radius: var(--tc-border-radius);
   font-size: 12px;
 }
 
-.btn-action:hover {
+.tc-btn-action:hover {
   background-color: var(--tc-primary-dark);
-  color: white;
+  color: var(--tc-text-light);
+}
+
+/* Classes Bootstrap d'origine - pour maintenir la compatibilité */
+.btn-primary {
+  composes: tc-btn-primary;
+}
+
+.btn-secondary {
+  composes: tc-btn-secondary;
+}
+
+.btn-outline-secondary {
+  composes: tc-btn-outline-secondary;
+}
+
+.btn-action {
+  composes: tc-btn-action;
 }
 
 /* Boutons d'action groupés */
-.action-buttons {
+.tc-action-buttons {
   display: flex;
   gap: 10px;
   margin-top: 15px;
 }
 
+/* Classe de compatibilité */
+.action-buttons {
+  composes: tc-action-buttons;
+}
+
 /* CORRECTIFS POUR LES PROBLÈMES DE POSITIONNEMENT DES BOUTONS */
 
 /* Boutons en mode édition */
-.edit-mode .action-buttons {
+.edit-mode .tc-action-buttons {
   display: flex;
   justify-content: flex-end; /* Aligne les boutons à droite */
   gap: 10px;
@@ -60,13 +103,14 @@ button {
 }
 
 /* Correction pour les boutons dans les formulaires */
-.form-container .action-buttons {
+.form-container .tc-action-buttons {
   flex-wrap: wrap; /* Permet aux boutons de passer à la ligne sur les petits écrans */
   margin-bottom: 20px; /* Ajoute de l'espace en bas */
 }
 
 /* Prévention de la superposition des boutons dans les cartes */
-.card-footer .action-buttons {
+.tc-card-footer .tc-action-buttons,
+.card-footer .tc-action-buttons {
   position: static; /* Annule tout positionnement absolu hérité */
   display: flex;
   justify-content: flex-end;
@@ -74,28 +118,33 @@ button {
 }
 
 /* Alignement des boutons dans les modales */
-.modal-footer .action-buttons {
+.tc-modal-footer .tc-action-buttons,
+.modal-footer .tc-action-buttons {
   justify-content: space-between;
   width: 100%;
 }
 
 /* Éviter que les boutons ne débordent de leur conteneur */
-.card .action-buttons, 
-.form-group .action-buttons,
-.modal-body .action-buttons {
+.tc-card .tc-action-buttons, 
+.card .tc-action-buttons,
+.form-group .tc-action-buttons,
+.tc-modal-body .tc-action-buttons,
+.modal-body .tc-action-buttons {
   max-width: 100%;
   overflow: hidden;
 }
 
 /* Amélioration de la disposition des boutons sur mobile */
 @media (max-width: 768px) {
-  .action-buttons {
+  .tc-action-buttons {
     flex-direction: column;
     width: 100%;
   }
   
-  .card-footer .action-buttons,
-  .modal-footer .action-buttons {
+  .tc-card-footer .tc-action-buttons,
+  .card-footer .tc-action-buttons,
+  .tc-modal-footer .tc-action-buttons,
+  .modal-footer .tc-action-buttons {
     flex-direction: row;
     justify-content: space-around;
   }

@@ -45,6 +45,11 @@
   background-color: var(--tc-table-striped-bg);
 }
 
+/* Animation du survol des lignes de tableau */
+.table-hover tbody tr {
+  transition: background-color var(--tc-transition);
+}
+
 .table-hover tbody tr:hover {
   background-color: var(--tc-hover-bg);
 }

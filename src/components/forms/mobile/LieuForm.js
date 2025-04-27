@@ -5,6 +5,7 @@ import { collection, doc, getDoc, setDoc, serverTimestamp } from 'firebase/fires
 import { db } from '../../../firebase';
 import { useLocationIQ } from '@/hooks/useLocationIQ';
 import StepNavigation from '../../common/steps/StepNavigation.js';
+import Spinner from '@/components/common/Spinner';
 import '@styles/index.css';
 
 // Étape 1: Informations de base
@@ -313,7 +314,7 @@ const LieuFormMobile = () => {
   };
   
   if (loading) {
-    return <div className="loading-indicator">Chargement...</div>;
+    return <Spinner message="Chargement du lieu..." contentOnly={true} />;
   }
   
   // Définir les étapes du formulaire

@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
  * @param {boolean} [props.fullPage=false] - Si true, centre le spinner au milieu de la page
  * @param {boolean} [props.contentOnly=false] - Si true, affiche le spinner dans la zone de contenu principal sans recouvrir la sidebar
  * @param {boolean} [props.inline=false] - Si true, affiche le spinner en ligne (pour les boutons)
+ * @param {boolean} [props.transparent=false] - Si true, utilise un fond transparent pour le spinner
  * @param {string} [props.className=''] - Classes CSS additionnelles
  */
 const Spinner = ({ 
@@ -21,6 +22,7 @@ const Spinner = ({
   fullPage = false,
   contentOnly = false,
   inline = false,
+  transparent = false,
   className = ''
 }) => {
   if (inline) {
@@ -46,9 +48,11 @@ const Spinner = ({
     containerClass = 'spinner-container';
   }
 
+  const overlayClass = transparent ? "spinner-overlay spinner-overlay-transparent" : "spinner-overlay";
+
   return (
     <div className={`${containerClass} ${className}`}>
-      <div className={contentOnly ? "position-relative" : "spinner-overlay"}>
+      <div className={contentOnly ? "position-relative" : overlayClass}>
         <BootstrapSpinner 
           animation="border" 
           variant={variant} 
@@ -68,6 +72,7 @@ Spinner.propTypes = {
   fullPage: PropTypes.bool,
   contentOnly: PropTypes.bool,
   inline: PropTypes.bool,
+  transparent: PropTypes.bool,
   className: PropTypes.string
 };
 

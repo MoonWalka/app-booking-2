@@ -71,6 +71,39 @@
   background-color: rgba(255, 255, 255, 0.7);
   text-align: center;
   border-radius: var(--tc-border-radius, 8px);
+  position: relative; /* Ajout pour assurer que les éléments absolus se positionnent par rapport à ce conteneur */
+}
+
+/* Classe de base pour les overlays de spinner */
+.spinner-overlay {
+  position: fixed; /* Changé de absolute à fixed pour assurer une couverture complète */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.9); /* Plus opaque pour une meilleure visibilité */
+  z-index: 9999; /* Augmenté pour être sûr qu'il est au-dessus de tout */
+  border-radius: var(--tc-border-radius, 0.5rem);
+}
+
+/* Spinner transparent */
+.spinner-overlay-transparent {
+  position: fixed; /* Changé de absolute à fixed pour cohérence avec spinner-overlay */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.7); /* Fond semi-transparent */
+  z-index: 9999; /* Augmenté pour cohérence avec les autres z-index de spinners */
+  border-radius: var(--tc-border-radius, 0.5rem);
 }
 
 /* Message de spinner */
@@ -79,6 +112,7 @@
   color: var(--tc-text-color, #333);
   font-size: 16px;
   text-align: center;
+  font-weight: 500; /* Légèrement plus gras pour une meilleure lisibilité */
 }
 
 /* Support pour les spinners dans différents contextes */
@@ -141,4 +175,11 @@ div.text-center > .spinner-grow {
 .mobile-tab-content .spinner-border {
   display: block;
   margin: 30px auto;
+}
+
+/* Style spécifique pour le spinner dans le mode édition des lieux */
+.lieu-form-container .spinner-border {
+  width: 3rem;
+  height: 3rem;
+  border-width: 0.25em;
 }

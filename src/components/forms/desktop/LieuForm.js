@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import firebase from '../../../firebase';
+import firebase from '@/firebase';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useLocationIQ } from '../../../hooks/useLocationIQ';
-import '@styles/index.css';
+import '@/styles/index.css'; // Correction du chemin d'importation
+import Spinner from '../../../components/common/Spinner';
 
 import L from 'leaflet';
 
@@ -20,7 +21,7 @@ import {
   setDoc,
   serverTimestamp
 } from 'firebase/firestore';
-import { db } from '../../../firebase';
+import { db } from '@/firebase';
 
 // Correction pour les icônes Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
@@ -524,11 +525,11 @@ useEffect(() => {
   };
 
   if (loading && id !== 'nouveau') {
-    return <div className="text-center my-5 loading-spinner">Chargement du lieu...</div>;
+    return <Spinner message="Chargement du lieu..." contentOnly={true} />;
   }
 
   if (isApiLoading) {
-    return <div className="text-center my-5 loading-spinner">Chargement de l'API de géolocalisation...</div>;
+    return <Spinner message="Chargement de l'API de géolocalisation..." contentOnly={true} />;
   }
 
   return (
@@ -554,7 +555,7 @@ useEffect(() => {
             <h3>Informations principales</h3>
           </div>
           <div className="card-body">
-            <div className="form-group">
+            <div className="mb-3">
               <label htmlFor="nom" className="form-label">Nom du lieu <span className="required">*</span></label>
               <input
                 type="text"
@@ -568,7 +569,7 @@ useEffect(() => {
               />
             </div>
             
-            <div className="form-group">
+            <div className="mb-3">
               <label htmlFor="type" className="form-label">Type de lieu</label>
               <select
                 className="form-select"
@@ -586,18 +587,19 @@ useEffect(() => {
               </select>
             </div>
             
-            <div className="form-group">
+            <div className="mb-3">
               <label htmlFor="capacite" className="form-label">Capacité</label>
               <input
-                type="number"
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 className="form-control"
                 id="capacite"
                 name="capacite"
                 value={lieu.capacite}
                 onChange={handleChange}
-                placeholder="Nombre de personnes"
+                placeholder="Nombre maximum de personnes que le lieu peut accueillir"
               />
-              <small className="form-text text-muted">Nombre maximum de personnes que le lieu peut accueillir</small>
             </div>
           </div>
         </div>
@@ -609,7 +611,7 @@ useEffect(() => {
             <h3>Adresse</h3>
           </div>
           <div className="card-body">
-            <div className="form-group address-search-container">
+            <div className="mb-3 address-search-container">
               <label htmlFor="adresse" className="form-label">Adresse <span className="required">*</span></label>
               <div className="input-group">
                 <input
@@ -682,9 +684,9 @@ useEffect(() => {
               )}
             </div>
 
-            <div className="row">
+            <div className="row mb-3">
               <div className="col-md-4">
-                <div className="form-group">
+                <div className="mb-md-0">
                   <label htmlFor="codePostal" className="form-label">Code postal <span className="required">*</span></label>
                   <input
                     type="text"
@@ -699,7 +701,7 @@ useEffect(() => {
                 </div>
               </div>
               <div className="col-md-8">
-                <div className="form-group">
+                <div className="mb-md-0">
                   <label htmlFor="ville" className="form-label">Ville <span className="required">*</span></label>
                   <input
                     type="text"
@@ -715,7 +717,7 @@ useEffect(() => {
               </div>
             </div>
 
-            <div className="form-group">
+            <div className="mb-3">
               <label htmlFor="pays" className="form-label">Pays <span className="required">*</span></label>
               <input
                 type="text"
@@ -764,7 +766,7 @@ useEffect(() => {
             <h3>Programmateur</h3>
           </div>
           <div className="card-body">
-            <div className="form-group">
+            <div className="mb-3">
               <label className="form-label">Associer un programmateur</label>
               
               {!selectedProgrammateur ? (
@@ -870,7 +872,7 @@ useEffect(() => {
             <h3>Informations de contact</h3>
           </div>
           <div className="card-body">
-            <div className="form-group">
+            <div className="mb-3">
               <label htmlFor="contact.nom" className="form-label">Personne à contacter</label>
               <input
                 type="text"
@@ -883,9 +885,9 @@ useEffect(() => {
               />
             </div>
 
-            <div className="row">
+            <div className="row mb-3">
               <div className="col-md-6">
-                <div className="form-group">
+                <div className="mb-md-0">
                   <label htmlFor="contact.telephone" className="form-label">Téléphone</label>
                   <div className="input-group">
                     <span className="input-group-text"><i className="bi bi-telephone"></i></span>
@@ -902,7 +904,7 @@ useEffect(() => {
                 </div>
               </div>
               <div className="col-md-6">
-                <div className="form-group">
+                <div className="mb-md-0">
                   <label htmlFor="contact.email" className="form-label">Email</label>
                   <div className="input-group">
                     <span className="input-group-text"><i className="bi bi-envelope"></i></span>

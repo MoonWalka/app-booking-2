@@ -392,8 +392,15 @@ const LieuDetails = () => {
         ...lieu,
         contact: lieu.contact || { nom: '', telephone: '', email: '' }
       });
+      setIsEditing(false);
+    } else {
+      // Avant d'entrer en mode édition, on s'assure que les données sont bien initialisées
+      setFormData({
+        ...lieu,
+        contact: lieu.contact || { nom: '', telephone: '', email: '' }
+      });
+      setIsEditing(true);
     }
-    setIsEditing(!isEditing);
   };
 
   // Gestion du changement des champs du formulaire
@@ -760,7 +767,7 @@ const LieuDetails = () => {
                     name="capacite"
                     value={formData.capacite}
                     onChange={handleChange}
-                    placeholder="Nombre de personnes"
+                    placeholder="Nombre maximum de personnes que le lieu peut accueillir"
                   />
                   <small className="form-text text-muted">Nombre maximum de personnes que le lieu peut accueillir</small>
                 </>
@@ -840,10 +847,12 @@ const LieuDetails = () => {
                   {/* Indicateur de recherche */}
                   {isSearchingAddress && (
                     <div className="address-searching">
-                      <div className="spinner-border spinner-border-sm text-primary" role="status">
-                        <span className="visually-hidden">Recherche en cours...</span>
-                      </div>
-                      <span className="searching-text">Recherche d'adresses...</span>
+                      <Spinner 
+                        size="sm" 
+                        variant="primary" 
+                        message="Recherche d'adresses..." 
+                        transparent={true}
+                      />
                     </div>
                   )}
                 </div>

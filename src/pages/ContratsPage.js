@@ -3,7 +3,7 @@ import React, { useState, useEffect, Suspense } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { collection, getDocs, query, orderBy, where } from '@/firebase';
 import { db } from '@/firebase';
-import { Table, Badge, Button } from 'react-bootstrap';
+import { Table, Badge, Button, Container, Row, Col, Card } from 'react-bootstrap';
 import ContratGenerationPage from '@pages/ContratGenerationPage.js';
 import ContratDetailsPage from '@pages/ContratDetailsPage.js';
 import '@styles/index.css';
@@ -98,17 +98,21 @@ const ContratsPage = () => {
   };
 
   return (
-    <div className="contrats-page-container">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2><i className="bi bi-file-earmark-text me-2"></i>Contrats</h2>
-        <Button 
-          variant="primary" 
-          onClick={() => navigate('/parametres/contrats')}
-        >
-          <i className="bi bi-gear me-2"></i>
-          Gérer les modèles
-        </Button>
-      </div>
+    <Container fluid className="p-4">
+      <Row className="mb-4">
+        <Col>
+          <div className="d-flex justify-content-between align-items-center">
+            <h2 className="mb-0"><i className="bi bi-file-earmark-text me-2"></i>Contrats</h2>
+            <Button 
+              variant="primary" 
+              onClick={() => navigate('/parametres/contrats')}
+            >
+              <i className="bi bi-gear me-2"></i>
+              Gérer les modèles
+            </Button>
+          </div>
+        </Col>
+      </Row>
 
       {loading ? (
         <div className="text-center my-5">
@@ -117,67 +121,68 @@ const ContratsPage = () => {
           </div>
         </div>
       ) : contrats.length === 0 ? (
-        <div className="no-contrats-message">
-          <i className="bi bi-file-earmark-text fs-1 mb-3 text-muted"></i>
-          <p className="fs-5">Aucun contrat n'a été généré.</p>
-          <p className="text-muted">
-            Rendez-vous sur la page de détail d'un concert pour générer un contrat.
-          </p>
-          <Button 
-            variant="outline-primary" 
-            className="mt-3"
-            onClick={() => navigate('/parametres/contrats')}
-          >
-            <i className="bi bi-file-earmark-text me-2"></i>
-            Gérer les modèles de contrats
-          </Button>
-        </div>
+        <Card className="border-0 shadow-sm">
+          <Card.Body className="p-5 text-center">
+            <i className="bi bi-file-earmark-text fs-1 mb-3 text-muted"></i>
+            <p className="fs-5">Aucun contrat n'a été généré.</p>
+            <p className="text-muted">
+              Rendez-vous sur la page de détail d'un concert pour générer un contrat.
+            </p>
+            <Button 
+              variant="outline-primary" 
+              className="mt-3"
+              onClick={() => navigate('/parametres/contrats')}
+            >
+              <i className="bi bi-file-earmark-text me-2"></i>
+              Gérer les modèles de contrats
+            </Button>
+          </Card.Body>
+        </Card>
       ) : (
-        <div className="contrats-list-container">
-          <Table hover responsive className="contrats-table">
-            <thead>
-              <tr>
-                <th style={{ width: '12%' }}>Date</th>
-                <th style={{ width: '25%' }}>Concert</th>
-                <th style={{ width: '20%' }}>Lieu</th>
-                <th style={{ width: '20%' }}>Programmateur</th>
-                <th style={{ width: '10%' }}>Statut</th>
-                <th style={{ width: '13%' }}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {contrats.map(contrat => (
-                <tr 
-                  key={contrat.id} 
-                  onClick={() => navigate(`/contrats/${contrat.id}`)}
-                  style={{ cursor: 'pointer' }}
-                  className="contrat-row"
-                >
-                  <td className="align-middle">{formatDate(contrat.dateGeneration)}</td>
-                  <td className="align-middle fw-medium">{contrat.concert?.titre || 'N/A'}</td>
-                  <td className="align-middle">
-                    {contrat.concert?.lieuNom ? (
-                      <div className="d-flex align-items-center">
-                        <i className="bi bi-geo-alt text-muted me-2"></i>
-                        {contrat.concert.lieuNom}
-                      </div>
-                    ) : 'N/A'}
-                  </td>
-                  <td className="align-middle">
-                    {contrat.concert?.programmateurNom ? (
-                      <div className="d-flex align-items-center">
-                        <i className="bi bi-person text-muted me-2"></i>
-                        {contrat.concert.programmateurNom}
-                      </div>
-                    ) : 'N/A'}
-                  </td>
-                  <td className="align-middle">{getStatusBadge(contrat.status)}</td>
-                  <td className="align-middle">
-                    <div className="d-flex gap-2">
+        <Card className="border-0 shadow-sm">
+          <Card.Body className="p-0">
+            <Table hover responsive className="mb-0">
+              <thead className="bg-light">
+                <tr>
+                  <th className="ps-3" style={{ width: '12%' }}>Date</th>
+                  <th style={{ width: '25%' }}>Concert</th>
+                  <th style={{ width: '20%' }}>Lieu</th>
+                  <th style={{ width: '20%' }}>Programmateur</th>
+                  <th style={{ width: '10%' }}>Statut</th>
+                  <th className="pe-3" style={{ width: '13%' }}>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {contrats.map(contrat => (
+                  <tr 
+                    key={contrat.id} 
+                    onClick={() => navigate(`/contrats/${contrat.id}`)}
+                    style={{ cursor: 'pointer' }}
+                    className="contrat-row"
+                  >
+                    <td className="align-middle ps-3">{formatDate(contrat.dateGeneration)}</td>
+                    <td className="align-middle fw-medium">{contrat.concert?.titre || 'N/A'}</td>
+                    <td className="align-middle">
+                      {contrat.concert?.lieuNom ? (
+                        <div className="d-flex align-items-center">
+                          <i className="bi bi-geo-alt text-muted me-2"></i>
+                          {contrat.concert.lieuNom}
+                        </div>
+                      ) : 'N/A'}
+                    </td>
+                    <td className="align-middle">
+                      {contrat.concert?.programmateurNom ? (
+                        <div className="d-flex align-items-center">
+                          <i className="bi bi-person text-muted me-2"></i>
+                          {contrat.concert.programmateurNom}
+                        </div>
+                      ) : 'N/A'}
+                    </td>
+                    <td className="align-middle">{getStatusBadge(contrat.status)}</td>
+                    <td className="align-middle pe-3">
                       <Button 
                         variant="outline-primary" 
                         size="sm"
-                        className="action-button"
                         onClick={(e) => {
                           e.stopPropagation();
                           navigate(`/contrats/${contrat.id}`);
@@ -185,20 +190,20 @@ const ContratsPage = () => {
                       >
                         <i className="bi bi-eye me-1"></i> Voir
                       </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </Card.Body>
+        </Card>
       )}
 
       <Routes>
         <Route path="/generate/:id" element={<ContratGenerationPage />} />
         <Route path="/:id" element={<ContratDetailsPage />} />
       </Routes>
-    </div>
+    </Container>
   );
 };
 

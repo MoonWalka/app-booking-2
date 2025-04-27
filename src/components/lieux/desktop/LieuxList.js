@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import firebase from '../../../firebase';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
-// Remplacer l'import de l'ancien système par le nouveau système modulaire
+import { OverlayTrigger, Tooltip, Badge, Card, Dropdown } from 'react-bootstrap';
 import '@styles/index.css';
-import { handleDelete } from './handlers/deleteHandler';
+import '@styles/pages/lieux.css';
 import Spinner from '@/components/common/Spinner';
-
 
 const LieuxList = () => {
   const navigate = useNavigate();
@@ -14,14 +12,20 @@ const LieuxList = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredLieux, setFilteredLieux] = useState([]);
+  const [sortOption, setSortOption] = useState('nom-asc');
+  const [filterType, setFilterType] = useState('tous');
   const [stats, setStats] = useState({
     total: 0,
     avecConcerts: 0,
-    sansConcerts: 0
+    sansConcerts: 0,
+    festivals: 0,
+    salles: 0,
+    bars: 0,
+    plateaux: 0
   });
   
   // Référence pour le focus de la recherche
-  const searchInputRef = React.useRef(null);
+  const searchInputRef = useRef(null);
 
   useEffect(() => {
     const fetchLieux = async () => {
@@ -37,6 +41,10 @@ const LieuxList = () => {
         // Calculer les statistiques
         let avecConcerts = 0;
         let sansConcerts = 0;
+        let festivals = 0;
+        let salles = 0;
+        let bars = 0;
+        let plateaux = 0;
         
         lieuxData.forEach(lieu => {
           if (lieu.concertsAssocies && lieu.concertsAssocies.length > 0) {
@@ -44,16 +52,26 @@ const LieuxList = () => {
           } else {
             sansConcerts++;
           }
+          
+          // Compter les types de lieux
+          if (lieu.type === 'festival') festivals++;
+          else if (lieu.type === 'salle') salles++;
+          else if (lieu.type === 'bar') bars++;
+          else if (lieu.type === 'plateau') plateaux++;
         });
         
         setStats({
           total: lieuxData.length,
           avecConcerts,
-          sansConcerts
+          sansConcerts,
+          festivals,
+          salles,
+          bars,
+          plateaux
         });
         
         setLieux(lieuxData);
-        setFilteredLieux(lieuxData);
+        applyFiltersAndSort(lieuxData, searchTerm, sortOption, filterType);
       } catch (error) {
         console.error('Erreur lors de la récupération des lieux:', error);
       } finally {
@@ -80,41 +98,114 @@ const LieuxList = () => {
     };
   }, []);
 
+  // Fonction pour appliquer les filtres et le tri
+  const applyFiltersAndSort = (lieuxData = lieux, search = searchTerm, sort = sortOption, filter = filterType) => {
+    // Étape 1: Filtrer par terme de recherche
+    let result = lieuxData;
+    
+    if (search.trim() !== '') {
+      const searchTermLower = search.toLowerCase();
+      result = result.filter(lieu => 
+        lieu.nom?.toLowerCase().includes(searchTermLower) || 
+        lieu.ville?.toLowerCase().includes(searchTermLower) ||
+        lieu.adresse?.toLowerCase().includes(searchTermLower) ||
+        lieu.codePostal?.toLowerCase().includes(searchTermLower)
+      );
+    }
+    
+    // Étape 2: Filtrer par type de lieu
+    if (filter !== 'tous') {
+      if (filter === 'avec-concerts') {
+        result = result.filter(lieu => lieu.concertsAssocies && lieu.concertsAssocies.length > 0);
+      } else if (filter === 'sans-concerts') {
+        result = result.filter(lieu => !lieu.concertsAssocies || lieu.concertsAssocies.length === 0);
+      } else {
+        // Filtrer par type de lieu (festival, salle, bar, plateau)
+        result = result.filter(lieu => lieu.type === filter);
+      }
+    }
+    
+    // Étape 3: Trier les résultats
+    const [field, direction] = sort.split('-');
+    result = [...result].sort((a, b) => {
+      let comparison = 0;
+      
+      // Gestion du tri par différents champs
+      if (field === 'nom') {
+        comparison = (a.nom || '').localeCompare(b.nom || '');
+      } else if (field === 'ville') {
+        comparison = (a.ville || '').localeCompare(b.ville || '');
+      } else if (field === 'jauge') {
+        const jaugeA = a.jauge || 0;
+        const jaugeB = b.jauge || 0;
+        comparison = jaugeA - jaugeB;
+      } else if (field === 'concerts') {
+        const concertsA = (a.concertsAssocies?.length || 0);
+        const concertsB = (b.concertsAssocies?.length || 0);
+        comparison = concertsA - concertsB;
+      }
+      
+      // Inverser le tri si descendant
+      return direction === 'desc' ? -comparison : comparison;
+    });
+    
+    setFilteredLieux(result);
+  };
+
   // Effet pour filtrer les lieux avec un léger délai
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
-      if (searchTerm.trim() === '') {
-        setFilteredLieux(lieux);
-      } else {
-        const searchTermLower = searchTerm.toLowerCase();
-        const filtered = lieux.filter(lieu => 
-          lieu.nom?.toLowerCase().includes(searchTermLower) || 
-          lieu.ville?.toLowerCase().includes(searchTermLower) ||
-          lieu.adresse?.toLowerCase().includes(searchTermLower) ||
-          lieu.codePostal?.toLowerCase().includes(searchTermLower)
-        );
-        setFilteredLieux(filtered);
-      }
+      applyFiltersAndSort(lieux, searchTerm, sortOption, filterType);
     }, 300); // Délai de 300ms pour éviter trop de rafraîchissements
 
     return () => clearTimeout(delayDebounceFn);
-  }, [searchTerm, lieux]);
+  }, [searchTerm, sortOption, filterType, lieux]);
 
-  const handleDelete = async (id, e) => {
+  const handleDeleteLieu = async (id, e) => {
     // Empêcher la propagation pour que le clic ne navigue pas vers la fiche
     e.stopPropagation();
     
     if (window.confirm('Êtes-vous sûr de vouloir supprimer ce lieu ?')) {
       try {
         await firebase.deleteDoc(firebase.doc(firebase.db, 'lieux', id));
-        setLieux(lieux.filter(lieu => lieu.id !== id));
-        setFilteredLieux(filteredLieux.filter(lieu => lieu.id !== id));
         
-        // Mettre à jour les statistiques
-        setStats(prev => ({
-          ...prev,
-          total: prev.total - 1
-        }));
+        // Mettre à jour le state et recalculer les statistiques
+        const updatedLieux = lieux.filter(lieu => lieu.id !== id);
+        setLieux(updatedLieux);
+        
+        // Recalcul des statistiques
+        let avecConcerts = 0;
+        let sansConcerts = 0;
+        let festivals = 0;
+        let salles = 0;
+        let bars = 0;
+        let plateaux = 0;
+        
+        updatedLieux.forEach(lieu => {
+          if (lieu.concertsAssocies && lieu.concertsAssocies.length > 0) {
+            avecConcerts++;
+          } else {
+            sansConcerts++;
+          }
+          
+          if (lieu.type === 'festival') festivals++;
+          else if (lieu.type === 'salle') salles++;
+          else if (lieu.type === 'bar') bars++;
+          else if (lieu.type === 'plateau') plateaux++;
+        });
+        
+        setStats({
+          total: updatedLieux.length,
+          avecConcerts,
+          sansConcerts,
+          festivals,
+          salles,
+          bars,
+          plateaux
+        });
+        
+        // Appliquer les filtres et le tri aux lieux mis à jour
+        applyFiltersAndSort(updatedLieux);
       } catch (error) {
         console.error('Erreur lors de la suppression du lieu:', error);
         alert('Une erreur est survenue lors de la suppression du lieu');
@@ -149,44 +240,36 @@ const LieuxList = () => {
     if (jauge < 1000) return 'Grande';
     return 'Très grande';
   };
-
-  // Composant pour les boutons d'action avec tooltip
-  const ActionButton = ({ id, to, tooltip, icon, variant, onClick }) => (
-    <OverlayTrigger
-      placement="top"
-      overlay={<Tooltip>{tooltip}</Tooltip>}
-    >
-      {to ? (
-        <Link 
-          to={to} 
-          className={`btn btn-${variant} btn-icon modern-btn`}
-          onClick={handleActionClick}
-        >
-          {icon}
-        </Link>
-      ) : (
-        <button 
-          onClick={(e) => { onClick(e); handleActionClick(e); }} 
-          className={`btn btn-${variant} btn-icon modern-btn`}
-        >
-          {icon}
-        </button>
-      )}
-    </OverlayTrigger>
-  );
+  
+  // Fonction pour obtenir la couleur du badge de type
+  const getTypeBadgeColor = (type) => {
+    switch(type) {
+      case 'festival': return 'danger';
+      case 'salle': return 'success';
+      case 'bar': return 'info';
+      case 'plateau': return 'warning';
+      default: return 'secondary';
+    }
+  };
+  
+  // Fonction pour formater le type
+  const formatType = (type) => {
+    if (!type) return 'Non spécifié';
+    return type.charAt(0).toUpperCase() + type.slice(1);
+  };
 
   if (loading) {
     return <Spinner message="Chargement des lieux..." contentOnly={true} />;
   }
 
   return (
-    <div className="lieux-container">
-      <div className="d-flex justify-content-between align-items-center mb-4 header-container">
+    <div className="lieux-container shadow-sm">
+      <div className="header-container">
         <div>
-          <h2 className="modern-title">Liste des lieux</h2>
-          <div className="d-flex mt-2 gap-3">
+          <h5 className="modern-title">Liste des lieux</h5>
+          <div className="d-flex mt-2 gap-3 flex-wrap">
             <span className="stats-badge">
-              <span className="stats-number">{stats.total}</span> Total
+              <span className="stats-number">{stats.total}</span> Lieux
             </span>
             <span className="stats-badge success">
               <span className="stats-number">{stats.avecConcerts}</span> Avec concerts
@@ -194,16 +277,36 @@ const LieuxList = () => {
             <span className="stats-badge warning">
               <span className="stats-number">{stats.sansConcerts}</span> Sans concerts
             </span>
+            {stats.festivals > 0 && (
+              <span className="stats-badge danger">
+                <span className="stats-number">{stats.festivals}</span> Festivals
+              </span>
+            )}
+            {stats.salles > 0 && (
+              <span className="stats-badge success">
+                <span className="stats-number">{stats.salles}</span> Salles
+              </span>
+            )}
+            {stats.bars > 0 && (
+              <span className="stats-badge info">
+                <span className="stats-number">{stats.bars}</span> Bars
+              </span>
+            )}
+            {stats.plateaux > 0 && (
+              <span className="stats-badge warning">
+                <span className="stats-number">{stats.plateaux}</span> Plateaux
+              </span>
+            )}
           </div>
         </div>
-        <Link to="/lieux/nouveau" className="btn btn-primary modern-add-btn">
+        <Link to="/lieux/nouveau" className="modern-add-btn btn btn-primary d-flex align-items-center">
           <i className="bi bi-plus-lg me-2"></i>
           Ajouter un lieu
         </Link>
       </div>
-
-      <div className="search-filter-container mb-4">
-        <div className="search-bar">
+      
+      <div className="search-filter-container d-flex flex-wrap gap-3 align-items-center">
+        <div className="search-bar flex-grow-1">
           <div className="input-group">
             <span className="input-group-text">
               <i className="bi bi-search"></i>
@@ -226,48 +329,124 @@ const LieuxList = () => {
               </button>
             )}
           </div>
-        </div>
-        <div className="search-results">
           {searchTerm && (
-            <p className="results-count">
+            <div className="results-count">
               {filteredLieux.length} résultat{filteredLieux.length !== 1 ? 's' : ''} trouvé{filteredLieux.length !== 1 ? 's' : ''}
-            </p>
+            </div>
           )}
+        </div>
+        
+        <div className="d-flex gap-2">
+          <Dropdown>
+            <Dropdown.Toggle variant="outline-secondary" id="filter-dropdown" className="modern-filter-btn">
+              <i className="bi bi-funnel me-2"></i>
+              {filterType === 'tous' ? 'Tous les lieux' : 
+               filterType === 'avec-concerts' ? 'Avec concerts' :
+               filterType === 'sans-concerts' ? 'Sans concerts' :
+               filterType === 'festival' ? 'Festivals' :
+               filterType === 'salle' ? 'Salles' :
+               filterType === 'bar' ? 'Bars' :
+               filterType === 'plateau' ? 'Plateaux' : 'Filtrer'}
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <Dropdown.Item onClick={() => setFilterType('tous')} active={filterType === 'tous'}>
+                Tous les lieux
+              </Dropdown.Item>
+              <Dropdown.Divider />
+              <Dropdown.Item onClick={() => setFilterType('avec-concerts')} active={filterType === 'avec-concerts'}>
+                Avec concerts
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => setFilterType('sans-concerts')} active={filterType === 'sans-concerts'}>
+                Sans concerts
+              </Dropdown.Item>
+              <Dropdown.Divider />
+              <Dropdown.Item onClick={() => setFilterType('festival')} active={filterType === 'festival'}>
+                Festivals
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => setFilterType('salle')} active={filterType === 'salle'}>
+                Salles
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => setFilterType('bar')} active={filterType === 'bar'}>
+                Bars
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => setFilterType('plateau')} active={filterType === 'plateau'}>
+                Plateaux
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+          
+          <Dropdown>
+            <Dropdown.Toggle variant="outline-secondary" id="sort-dropdown" className="modern-sort-btn">
+              <i className="bi bi-sort-alpha-down me-2"></i>
+              {sortOption === 'nom-asc' ? 'Nom (A-Z)' :
+               sortOption === 'nom-desc' ? 'Nom (Z-A)' :
+               sortOption === 'ville-asc' ? 'Ville (A-Z)' :
+               sortOption === 'ville-desc' ? 'Ville (Z-A)' :
+               sortOption === 'jauge-asc' ? 'Jauge (croissant)' :
+               sortOption === 'jauge-desc' ? 'Jauge (décroissant)' :
+               sortOption === 'concerts-asc' ? 'Nb. concerts (croissant)' :
+               sortOption === 'concerts-desc' ? 'Nb. concerts (décroissant)' : 'Trier par'}
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <Dropdown.Item onClick={() => setSortOption('nom-asc')} active={sortOption === 'nom-asc'}>
+                Nom (A-Z)
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => setSortOption('nom-desc')} active={sortOption === 'nom-desc'}>
+                Nom (Z-A)
+              </Dropdown.Item>
+              <Dropdown.Divider />
+              <Dropdown.Item onClick={() => setSortOption('ville-asc')} active={sortOption === 'ville-asc'}>
+                Ville (A-Z)
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => setSortOption('ville-desc')} active={sortOption === 'ville-desc'}>
+                Ville (Z-A)
+              </Dropdown.Item>
+              <Dropdown.Divider />
+              <Dropdown.Item onClick={() => setSortOption('jauge-asc')} active={sortOption === 'jauge-asc'}>
+                Jauge (croissant)
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => setSortOption('jauge-desc')} active={sortOption === 'jauge-desc'}>
+                Jauge (décroissant)
+              </Dropdown.Item>
+              <Dropdown.Divider />
+              <Dropdown.Item onClick={() => setSortOption('concerts-asc')} active={sortOption === 'concerts-asc'}>
+                Nb. concerts (croissant)
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => setSortOption('concerts-desc')} active={sortOption === 'concerts-desc'}>
+                Nb. concerts (décroissant)
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
         </div>
       </div>
 
       {filteredLieux.length === 0 ? (
-        <div className="alert alert-info modern-alert">
-          {searchTerm ? (
-            <div className="d-flex align-items-center">
-              <i className="bi bi-info-circle me-3"></i>
-              <p className="mb-0">Aucun lieu ne correspond à votre recherche.</p>
-            </div>
-          ) : (
-            <div className="d-flex align-items-center">
-              <i className="bi bi-info-circle me-3"></i>
-              <p className="mb-0">Aucun lieu n'a été ajouté. Cliquez sur "Ajouter un lieu" pour commencer.</p>
-            </div>
-          )}
+        <div className="modern-alert alert d-flex align-items-center">
+          <i className="bi bi-info-circle me-3 fs-4"></i>
+          <div>
+            {searchTerm || filterType !== 'tous' ? 
+              "Aucun lieu ne correspond à votre recherche ou aux filtres sélectionnés." : 
+              "Aucun lieu n'a été ajouté. Cliquez sur \"Ajouter un lieu\" pour commencer."}
+          </div>
         </div>
       ) : (
-        <div className="table-responsive modern-table-container">
+        <div className="modern-table-container">
           <table className="table table-hover modern-table">
             <thead>
               <tr>
                 <th>Nom</th>
+                <th>Type</th>
                 <th>Ville / Code postal</th>
-                <th>Adresse</th>
                 <th>Jauge</th>
                 <th>Concerts</th>
-                <th>Actions</th>
+                <th className="text-end">Actions</th>
               </tr>
             </thead>
             <tbody>
               {filteredLieux.map(lieu => (
                 <tr 
                   key={lieu.id} 
-                  className="table-row-animate clickable-row"
+                  className="clickable-row table-row-animate"
                   onClick={() => handleRowClick(lieu.id)}
                 >
                   <td className="fw-medium">
@@ -275,6 +454,15 @@ const LieuxList = () => {
                       <i className="bi bi-geo-alt me-2 text-primary"></i>
                       {lieu.nom || <span className="text-muted">Sans nom</span>}
                     </div>
+                  </td>
+                  <td>
+                    {lieu.type ? (
+                      <span className={`type-badge bg-${getTypeBadgeColor(lieu.type)}`}>
+                        {formatType(lieu.type)}
+                      </span>
+                    ) : (
+                      <span className="text-muted">Non spécifié</span>
+                    )}
                   </td>
                   <td>
                     {lieu.ville ? (
@@ -287,19 +475,9 @@ const LieuxList = () => {
                     )}
                   </td>
                   <td>
-                    {lieu.adresse ? (
-                      <span className="address-text">
-                        {lieu.adresse}
-                      </span>
-                    ) : (
-                      <span className="text-muted">-</span>
-                    )}
-                  </td>
-                  <td>
                     {lieu.jauge ? (
                       <span className={`jauge-badge bg-${getJaugeColor(lieu.jauge)}`}>
-                        {lieu.jauge} places
-                        <span className="jauge-type ms-1">({getJaugeLabel(lieu.jauge)})</span>
+                        {lieu.jauge} places <span className="jauge-type">({getJaugeLabel(lieu.jauge)})</span>
                       </span>
                     ) : (
                       <span className="text-muted">Non spécifiée</span>
@@ -315,26 +493,43 @@ const LieuxList = () => {
                       <span className="text-muted">Aucun concert</span>
                     )}
                   </td>
-                  <td>
-                    <div className="btn-group action-buttons">
-                      <ActionButton 
-                        to={`/lieux/${lieu.id}`} 
-                        tooltip="Voir le lieu" 
-                        icon={<i className="bi bi-eye"></i>} 
-                        variant="light"
-                      />
-                      <ActionButton 
-                        to={`/lieux/${lieu.id}/modifier`} 
-                        tooltip="Modifier le lieu" 
-                        icon={<i className="bi bi-pencil"></i>} 
-                        variant="light"
-                      />
-                      <ActionButton 
-                        tooltip="Supprimer le lieu" 
-                        icon={<i className="bi bi-trash"></i>} 
-                        variant="light" 
-                        onClick={(e) => handleDelete(lieu.id, e)}
-                      />
+                  <td className="text-end">
+                    <div className="action-buttons">
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={<Tooltip>Voir le lieu</Tooltip>}
+                      >
+                        <Link 
+                          to={`/lieux/${lieu.id}`} 
+                          className="btn btn-light modern-btn"
+                          onClick={handleActionClick}
+                        >
+                          <i className="bi bi-eye"></i>
+                        </Link>
+                      </OverlayTrigger>
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={<Tooltip>Modifier le lieu</Tooltip>}
+                      >
+                        <Link 
+                          to={`/lieux/edit/${lieu.id}`} 
+                          className="btn btn-light modern-btn"
+                          onClick={handleActionClick}
+                        >
+                          <i className="bi bi-pencil"></i>
+                        </Link>
+                      </OverlayTrigger>
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={<Tooltip>Supprimer le lieu</Tooltip>}
+                      >
+                        <button 
+                          onClick={(e) => { handleDeleteLieu(lieu.id, e); handleActionClick(e); }} 
+                          className="btn btn-light modern-btn"
+                        >
+                          <i className="bi bi-trash"></i>
+                        </button>
+                      </OverlayTrigger>
                     </div>
                   </td>
                 </tr>

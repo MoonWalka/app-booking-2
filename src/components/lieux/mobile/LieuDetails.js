@@ -460,8 +460,8 @@ const LieuDetails = () => {
 
   if (loading) {
     return (
-      <div className="spinner-container">
-        <div className="spinner-overlay">
+      <div className="lieu-details-container mobile">
+        <div className="spinner-container position-relative">
           <div className="spinner"></div>
           <p className="spinner-text">Chargement du lieu...</p>
         </div>
@@ -618,7 +618,7 @@ const LieuDetails = () => {
                 </select>
               ) : (
                 <div className="form-control-static">
-                  {lieu.type ? <TypeBadge type={lieu.type} /> : <span className="text-muted">Non spécifié</span>}
+                  {lieu.type ? <TypeBadge type={lieu.type} /> : <span className="text-empty">Non spécifié</span>}
                 </div>
               )}
             </div>
@@ -640,7 +640,7 @@ const LieuDetails = () => {
                 </>
               ) : (
                 <div className="form-control-static">
-                  {lieu.capacite ? `${lieu.capacite} personnes` : <span className="text-muted">Non spécifiée</span>}
+                  {lieu.capacite ? `${lieu.capacite} personnes` : <span className="text-empty">Non spécifiée</span>}
                 </div>
               )}
             </div>
@@ -929,7 +929,7 @@ const LieuDetails = () => {
                       </div>
                     )
                   ) : (
-                    <div className="text-muted">Aucun programmateur associé à ce lieu.</div>
+                    <div className="text-empty">Aucun programmateur associé à ce lieu.</div>
                   )}
               </>
             )}
@@ -1065,8 +1065,8 @@ const LieuDetails = () => {
                     ))}
                   </div>
                 ) : (
-                  <div className="text-muted py-3 text-center">
-                    <i className="bi bi-calendar-x d-block fs-3 mb-2"></i>
+                  <div className="text-empty">
+                    <i className="bi bi-calendar-x d-block mb-2"></i>
                     Aucun concert n'est associé à ce lieu.
                   </div>
                 )}

@@ -41,20 +41,22 @@ const Spinner = ({
   if (fullPage) {
     containerClass = 'spinner-fullpage-container';
   } else if (contentOnly) {
-    containerClass = 'spinner-content-container';
+    containerClass = 'spinner-content-container position-relative';
   } else {
     containerClass = 'spinner-container';
   }
 
   return (
     <div className={`${containerClass} ${className}`}>
-      <BootstrapSpinner 
-        animation="border" 
-        variant={variant} 
-        size={size}
-        role="status" 
-      />
-      {message && <p className="spinner-message">{message}</p>}
+      <div className={contentOnly ? "position-relative" : "spinner-overlay"}>
+        <BootstrapSpinner 
+          animation="border" 
+          variant={variant} 
+          size={size}
+          role="status" 
+        />
+        {message && <p className="spinner-message">{message}</p>}
+      </div>
     </div>
   );
 };

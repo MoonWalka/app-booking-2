@@ -607,7 +607,7 @@ const LieuDetails = () => {
   };
 
   if (loading) {
-    return <Spinner message="Chargement du lieu..." />;
+    return <Spinner message="Chargement du lieu..." contentOnly={true} />;
   }
 
   if (!lieu) {
@@ -744,7 +744,7 @@ const LieuDetails = () => {
                 </select>
               ) : (
                 <div className="form-control-static">
-                  {lieu.type ? <TypeBadge type={lieu.type} /> : <span className="text-muted">Non spécifié</span>}
+                  {lieu.type ? <TypeBadge type={lieu.type} /> : <span className="text-empty">Non spécifié</span>}
                 </div>
               )}
             </div>
@@ -766,7 +766,7 @@ const LieuDetails = () => {
                 </>
               ) : (
                 <div className="form-control-static">
-                  {lieu.capacite ? `${lieu.capacite} personnes` : <span className="text-muted">Non spécifiée</span>}
+                  {lieu.capacite ? `${lieu.capacite} personnes` : <span className="text-empty">Non spécifiée</span>}
                 </div>
               )}
             </div>
@@ -1111,7 +1111,7 @@ const LieuDetails = () => {
                     </div>
                   )
                 ) : (
-                  <div className="text-muted">Aucun programmateur associé à ce lieu.</div>
+                  <div className="text-empty">Aucun programmateur associé à ce lieu.</div>
                 )}
               </>
             )}
@@ -1217,7 +1217,7 @@ const LieuDetails = () => {
                   )}
                 </>
               ) : (
-                <div className="text-muted">Aucune information de contact renseignée pour ce lieu.</div>
+                <div className="text-empty">Aucune information de contact renseignée pour ce lieu.</div>
               )
             )}
           </div>
@@ -1279,7 +1279,7 @@ const LieuDetails = () => {
             ))}
           </div>
         ) : (
-          <div className="text-muted">
+          <div className="text-empty">
             Aucun concert n'est associé à ce lieu.
           </div>
         )}

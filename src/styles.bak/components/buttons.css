@@ -2,25 +2,25 @@
 button {
   cursor: pointer;
   border: none;
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--border-radius);
   padding: 8px 16px;
   font-size: 14px;
-  transition: var(--tc-transition);
+  transition: var(--transition);
 }
 
 /* Variations de boutons par couleur */
 .btn-primary {
-  background-color: var(--tc-primary-color);
+  background-color: var(--primary-color);
   color: white;
 }
 
 .btn-primary:hover {
-  background-color: var(--tc-primary-dark);
+  background-color: var(--primary-dark);
 }
 
 .btn-secondary {
-  background-color: var(--tc-light-color);
-  color: var(--tc-text-color);
+  background-color: var(--light-color);
+  color: var(--text-color);
 }
 
 .btn-secondary:hover {
@@ -28,15 +28,15 @@ button {
 }
 
 .btn-action {
-  background-color: var(--tc-primary-color);
+  background-color: var(--primary-color);
   color: white;
   padding: 6px 12px;
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--border-radius);
   font-size: 12px;
 }
 
 .btn-action:hover {
-  background-color: var(--tc-primary-dark);
+  background-color: var(--primary-dark);
   color: white;
 }
 

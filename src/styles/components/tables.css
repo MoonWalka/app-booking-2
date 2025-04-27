@@ -1,47 +1,238 @@
-/* Styles pour les tableaux de données */
-.data-table {
+/* Styles pour les tableaux */
+.table {
   width: 100%;
+  margin-bottom: 1rem;
+  color: var(--tc-text-color);
   border-collapse: collapse;
-  margin-top: 20px;
-  background-color: white;
-  box-shadow: var(--shadow);
-  border-radius: var(--border-radius);
-  overflow: hidden;
 }
 
-.data-table th, .data-table td {
-  padding: 12px 15px;
+.table th,
+.table td {
+  padding: 0.75rem;
+  vertical-align: top;
+  border-top: 1px solid var(--tc-table-border-color);
   text-align: left;
 }
 
-.data-table th {
-  background-color: var(--secondary-color);
-  color: white;
-  font-weight: 500;
+.table thead th {
+  vertical-align: bottom;
+  border-bottom: 2px solid var(--tc-table-border-color);
+  background-color: var(--tc-table-header-bg);
+  color: var(--tc-table-header-color);
+  font-weight: 600;
 }
 
-.data-table tr {
-  border-bottom: 1px solid var(--border-color);
+.table tbody + tbody {
+  border-top: 2px solid var(--tc-table-border-color);
 }
 
-.data-table tr:last-child {
-  border-bottom: none;
+/* Table variations */
+.table-sm th,
+.table-sm td {
+  padding: 0.3rem;
 }
 
-.data-table tr:nth-child(even) {
-  background-color: #f8f9fa;
+.table-bordered {
+  border: 1px solid var(--tc-table-border-color);
 }
 
-/* En-têtes de liste */
-.list-header {
+.table-bordered th,
+.table-bordered td {
+  border: 1px solid var(--tc-table-border-color);
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: var(--tc-table-striped-bg);
+}
+
+.table-hover tbody tr:hover {
+  background-color: var(--tc-hover-bg);
+}
+
+.table-responsive {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Table captions */
+.table caption {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  color: var(--tc-text-muted);
+  text-align: left;
+  caption-side: bottom;
+}
+
+/* Contextual classes */
+.table .table-active {
+  background-color: var(--tc-table-active-bg);
+}
+
+.table .table-primary {
+  background-color: var(--tc-primary-light);
+}
+
+.table .table-secondary {
+  background-color: var(--tc-secondary-light);
+}
+
+.table .table-success {
+  background-color: var(--tc-success-light);
+}
+
+.table .table-info {
+  background-color: var(--tc-info-light);
+}
+
+.table .table-warning {
+  background-color: var(--tc-warning-light);
+}
+
+.table .table-danger {
+  background-color: var(--tc-danger-light);
+}
+
+/* Table avec statut des lignes */
+.table tr.inactive {
+  opacity: 0.7;
+}
+
+.table tr.canceled {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.table tr.highlighted {
+  background-color: var(--tc-highlight-bg) !important;
+}
+
+/* Table avec actions */
+.table .action-cell {
+  white-space: nowrap;
+  width: 1%;
+  text-align: right;
+}
+
+.table .table-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.table .table-action-button {
+  background: transparent;
+  border: none;
+  color: var(--tc-text-muted);
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: var(--tc-border-radius-sm);
+  transition: var(--tc-transition);
+}
+
+.table .table-action-button:hover {
+  background-color: var(--tc-hover-bg);
+  color: var(--tc-primary-color);
+}
+
+.table .table-action-edit:hover {
+  color: var(--tc-info-color);
+}
+
+.table .table-action-delete:hover {
+  color: var(--tc-danger-color);
+}
+
+/* Pagination pour tableaux */
+.table-pagination {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-top: 1rem;
 }
 
-/* Liste vide */
-.empty-list {
-  text-align: center;
-  padding: 50px 20px;
+.page-info {
+  color: var(--tc-text-muted);
+}
+
+.pagination {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.pagination-item {
+  margin: 0 0.25rem;
+}
+
+.pagination-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--tc-border-radius-sm);
+  background-color: var(--tc-card-bg);
+  color: var(--tc-text-color);
+  text-decoration: none;
+  transition: var(--tc-transition);
+}
+
+.pagination-link:hover {
+  background-color: var(--tc-hover-bg);
+}
+
+.pagination-link.active {
+  background-color: var(--tc-primary-color);
+  color: white;
+}
+
+.pagination-prev,
+.pagination-next {
+  font-size: 1.25rem;
+}
+
+/* Responsive pour petits écrans */
+@media (max-width: 768px) {
+  .table-responsive-stack th,
+  .table-responsive-stack td {
+    display: block;
+    width: 100%;
+  }
+  
+  .table-responsive-stack tr {
+    display: block;
+    margin-bottom: 1rem;
+    border: 1px solid var(--tc-table-border-color);
+    border-radius: var(--tc-border-radius);
+  }
+  
+  .table-responsive-stack thead {
+    display: none;
+  }
+  
+  .table-responsive-stack td {
+    position: relative;
+    padding-left: 40%;
+    text-align: left;
+    min-height: 1.5rem;
+    border-top: none;
+    border-bottom: 1px solid var(--tc-table-border-color);
+  }
+  
+  .table-responsive-stack td:last-child {
+    border-bottom: none;
+  }
+  
+  .table-responsive-stack td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0.75rem;
+    width: 35%;
+    white-space: nowrap;
+    font-weight: 600;
+    color: var(--tc-text-muted);
+  }
 }

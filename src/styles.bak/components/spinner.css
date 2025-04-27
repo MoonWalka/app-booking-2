@@ -1,0 +1,85 @@
+/* src/styles/components/spinner.css */
+/* Styles pour le spinner de chargement */
+.loading-spinner {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(var(--primary-color-rgb), 0.2);
+  border-radius: 50%;
+  border-top-color: var(--primary-color);
+  animation: spin 1s ease-in-out infinite;
+  margin: 20px auto;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 18px;
+  color: var(--primary-color);
+}
+
+/* CORRECTIFS POUR LES SPINNERS NON CENTRÉS */
+
+/* Styles pour les spinners Bootstrap */
+.spinner-border, .spinner-grow {
+  display: inline-block;
+  margin: 0 auto;
+}
+
+/* Classe de conteneur pour centrer n'importe quel spinner */
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 100px;
+}
+
+/* Support pour les spinners dans différents contextes */
+.card .spinner-border,
+.modal-body .spinner-border,
+.form-container .spinner-border,
+.page-container .spinner-border {
+  display: block;
+  margin: 20px auto;
+}
+
+/* Compatibilité avec les classes Bootstrap */
+.text-center .spinner-border,
+.text-center .spinner-grow {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Centrage du spinner dans les conteneurs flex */
+div[role="status"] {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Centrage horizontal pour les conteneurs de tout type */
+.text-center .spinner-border,
+.text-center .spinner-grow,
+div.text-center > .spinner-border,
+div.text-center > .spinner-grow {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Correction pour les spinners qui sont des enfants directs de composants */
+.card-body > .spinner-border,
+.modal-body > .spinner-border,
+.container > .spinner-border,
+.row > .spinner-border,
+.col > .spinner-border {
+  display: block;
+  margin: 40px auto;
+}

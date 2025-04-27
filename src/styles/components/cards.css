@@ -1,42 +1,183 @@
 /* Styles pour les cartes de l'interface */
-.dashboard-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
-  margin-top: 20px;
+.card {
+  background-color: var(--tc-card-bg);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-card-shadow);
+  border: 1px solid var(--tc-card-border-color);
+  margin-bottom: 1.5rem;
+  overflow: hidden;
 }
 
-.dashboard-card {
-  background-color: white;
-  border-radius: var(--border-radius);
-  padding: 20px;
-  box-shadow: var(--shadow);
-  transition: var(--transition);
+.card-header {
+  padding: 1rem;
+  background-color: var(--tc-card-header-bg-color);
+  border-bottom: 1px solid var(--tc-card-border-color);
+  font-weight: 500;
+  color: var(--tc-card-header-text-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.dashboard-card:hover {
+.card-body {
+  padding: 1rem;
+}
+
+.card-footer {
+  padding: 0.75rem 1rem;
+  background-color: var(--tc-card-header-bg-color);
+  border-top: 1px solid var(--tc-card-border-color);
+}
+
+/* Card Variations */
+.card-compact {
+  margin-bottom: 0.75rem;
+}
+
+.card-compact .card-header {
+  padding: 0.75rem;
+}
+
+.card-compact .card-body {
+  padding: 0.75rem;
+}
+
+.card-compact .card-footer {
+  padding: 0.5rem 0.75rem;
+}
+
+.card-hover:hover {
   transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--tc-shadow-hover);
+  transition: var(--tc-transition);
 }
 
-.card-icon {
-  font-size: 32px;
-  margin-bottom: 15px;
+/* Styles pour les tableaux dans les cartes */
+.card-table {
+  margin: 0;
 }
 
-.card-link {
-  display: inline-block;
-  margin-top: 15px;
+.card-table th {
+  background-color: var(--tc-table-header-bg);
   font-weight: 500;
 }
 
-/* Page en construction */
-.page-under-construction {
-  text-align: center;
-  padding: 50px 20px;
+.card-table th,
+.card-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--tc-border-color);
 }
 
-.construction-icon {
-  font-size: 64px;
-  margin-bottom: 20px;
+.card-table tr:last-child td {
+  border-bottom: none;
+}
+
+.card-table tr:hover {
+  background-color: var(--tc-hover-bg);
+}
+
+/* Styles de cartes spécifiques */
+.dashboard-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-card .card-body {
+  flex: 1;
+}
+
+.info-card {
+  border-left: 4px solid var(--tc-primary-color);
+}
+
+.warning-card {
+  border-left: 4px solid var(--tc-warning-color);
+}
+
+.danger-card {
+  border-left: 4px solid var(--tc-danger-color);
+}
+
+.success-card {
+  border-left: 4px solid var(--tc-success-color);
+}
+
+/* Cartes avec états */
+.card-inactive {
+  opacity: 0.7;
+}
+
+.card-disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Cartes avec media */
+.card-with-media .card-media {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.card-with-media .card-media-small {
+  height: 150px;
+}
+
+.card-with-media .card-media-large {
+  height: 250px;
+}
+
+/* Cartes en grille */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Cartes Responsive */
+@media (max-width: 576px) {
+  .card-header, 
+  .card-body, 
+  .card-footer {
+    padding: 0.75rem;
+  }
+  
+  .card-table th,
+  .card-table td {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Cartes avec actions */
+.card-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.card-action-button {
+  background: transparent;
+  border: none;
+  color: var(--tc-text-muted);
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: var(--tc-border-radius-sm);
+  transition: var(--tc-transition);
+}
+
+.card-action-button:hover {
+  background-color: var(--tc-hover-bg);
+  color: var(--tc-primary-color);
+}
+
+.card-action-button.card-action-edit:hover {
+  color: var(--tc-info-color);
+}
+
+.card-action-button.card-action-delete:hover {
+  color: var(--tc-danger-color);
 }

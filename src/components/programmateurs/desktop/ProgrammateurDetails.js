@@ -503,8 +503,8 @@ const ProgrammateurDetails = () => {
           {/* Section Informations du contact */}
           <div className="card mb-4 shadow-sm">
             <div className="card-header bg-light d-flex align-items-center">
-              <i className="bi bi-person-vcard me-2"></i>
-              <h5 className="mb-0">Informations du contact</h5>
+              <i className="fa fa-user-circle text-primary" style={{ fontSize: "1.45em" }}></i>
+              <h5 className="mb-0 ms-2">Informations du contact</h5>
             </div>
             <div className="card-body p-4">
               <div className="row g-3 mb-3">
@@ -882,8 +882,8 @@ const ProgrammateurDetails = () => {
           {/* Section Structure juridique */}
           <div className="card mb-4 shadow-sm">
             <div className="card-header">
-              <i className="bi bi-building me-2"></i>
-              <h5 className="mb-0">Structure juridique</h5>
+              <i className="fa fa-building text-primary"></i>
+              <h5 className="mb-0 ms-2">Structure juridique</h5>
             </div>
             <div className="card-body p-4">
               <div className="row mb-4">
@@ -957,8 +957,8 @@ const ProgrammateurDetails = () => {
           {/* Section Concerts associés */}
           <div className="card mb-4 shadow-sm">
             <div className="card-header bg-light d-flex align-items-center">
-              <i className="bi bi-music-note-list me-2"></i>
-              <h5 className="mb-0">Concerts associés</h5>
+              <i className="fa fa-music text-primary"></i>
+              <h5 className="mb-0 ms-2">Concerts associés</h5>
             </div>
             <div className="card-body p-4">
               <div>

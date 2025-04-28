@@ -132,9 +132,9 @@ const ProgrammateursList = () => {
   return (
     <div className="container-fluid p-3">
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2 className="fw-bold">Liste des programmateurs</h2>
-        <Link to="/programmateurs/nouveau" className="btn btn-primary">
-          <i className="bi bi-plus-lg me-2"></i>
+        <h2><i className="fas fa-users-cog text-primary me-2"></i>Liste des programmateurs</h2>
+        <Link to="/programmateurs/nouveau" className="btn-add">
+          <i className="fas fa-plus me-2"></i>
           Ajouter un programmateur
         </Link>
       </div>
@@ -143,7 +143,7 @@ const ProgrammateursList = () => {
         <div className="mb-3">
           <div className="input-group">
             <span className="input-group-text">
-              <i className="bi bi-search"></i>
+              <i className="fas fa-search"></i>
             </span>
             <input
               ref={searchInputRef}
@@ -158,8 +158,9 @@ const ProgrammateursList = () => {
               <button 
                 className="btn btn-outline-secondary" 
                 onClick={() => setSearchTerm('')}
+                aria-label="Clear search"
               >
-                <i className="bi bi-x-lg"></i>
+                <i className="fas fa-times"></i>
               </button>
             )}
           </div>
@@ -177,18 +178,18 @@ const ProgrammateursList = () => {
         <div className="alert alert-info">
           {searchTerm ? (
             <div className="d-flex align-items-center">
-              <i className="bi bi-info-circle me-3"></i>
+              <i className="fas fa-info-circle me-3"></i>
               <p className="mb-0">Aucun programmateur ne correspond à votre recherche.</p>
             </div>
           ) : (
             <div className="d-flex align-items-center">
-              <i className="bi bi-info-circle me-3"></i>
+              <i className="fas fa-info-circle me-3"></i>
               <p className="mb-0">Aucun programmateur n'a été ajouté. Cliquez sur "Ajouter un programmateur" pour commencer.</p>
             </div>
           )}
         </div>
       ) : (
-        <div className="table-responsive shadow-sm rounded">
+        <div className="table-responsive">
           <table className="table table-hover mb-0">
             <thead>
               <tr>
@@ -208,15 +209,15 @@ const ProgrammateursList = () => {
                 >
                   <td className="fw-medium">
                     <div className="d-flex align-items-center">
-                      <i className="bi bi-person-circle me-2 text-primary"></i>
+                      <i className="fas fa-user-circle me-2 text-primary"></i>
                       {prog.nom}
                     </div>
                   </td>
                   <td>
                     {prog.structure ? (
-                      <span className="badge bg-light text-dark">{prog.structure}</span>
+                      <span className="structure-badge">{prog.structure}</span>
                     ) : (
-                      <span className="text-muted">-</span>
+                      <span className="field-empty"><i className="fa fa-minus-circle"></i> non spécifié</span>
                     )}
                   </td>
                   <td>
@@ -226,11 +227,11 @@ const ProgrammateursList = () => {
                         className="text-decoration-none"
                         onClick={handleActionClick}
                       >
-                        <i className="bi bi-envelope-fill me-1"></i>
+                        <i className="fas fa-envelope me-1"></i>
                         {prog.email}
                       </a>
                     ) : (
-                      <span className="text-muted">-</span>
+                      <span className="field-empty"><i className="fa fa-minus-circle"></i> non spécifié</span>
                     )}
                   </td>
                   <td>
@@ -240,11 +241,11 @@ const ProgrammateursList = () => {
                         className="text-decoration-none"
                         onClick={handleActionClick}
                       >
-                        <i className="bi bi-telephone-fill me-1"></i>
+                        <i className="fas fa-phone me-1"></i>
                         {prog.telephone}
                       </a>
                     ) : (
-                      <span className="text-muted">-</span>
+                      <span className="field-empty"><i className="fa fa-minus-circle"></i> non spécifié</span>
                     )}
                   </td>
                   <td>
@@ -252,12 +253,12 @@ const ProgrammateursList = () => {
                       <ActionButton 
                         to={`/programmateurs/edit/${prog.id}`} 
                         tooltip="Modifier le programmateur" 
-                        icon={<i className="bi bi-pencil"></i>} 
+                        icon={<i className="fas fa-pencil-alt"></i>} 
                         variant="light"
                       />
                       <ActionButton 
                         tooltip="Supprimer le programmateur" 
-                        icon={<i className="bi bi-trash"></i>} 
+                        icon={<i className="fas fa-trash"></i>} 
                         variant="light" 
                         onClick={(e) => handleDelete(prog.id, e)}
                       />

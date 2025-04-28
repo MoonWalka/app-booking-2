@@ -9,8 +9,10 @@ import MobileStructureDetails from '../components/structures/mobile/StructureDet
 import MobileStructureForm from '../components/structures/mobile/StructureForm';
 
 const StructuresPage = () => {
-  const isMobile = useIsMobile();
-
+  // TODO: Réactiver le mode mobile plus tard.
+  // const isMobile = useIsMobile();
+  const isMobile = false; // Force l'utilisation des composants desktop
+  
   // Utiliser les composants adaptés selon le type d'appareil
   return (
     <Routes>

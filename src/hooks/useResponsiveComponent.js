@@ -41,7 +41,8 @@ export const useResponsiveComponent = (options) => {
               <h3>Impossible de charger le composant</h3>
               <p>Une erreur est survenue lors du chargement de l'interface.</p>
               <p className="error-path">Chemin: @/components/{path}</p>
-              <button onClick={() => window.location.reload()}>
+              {/* // Correction : ajout classes Bootstrap */}
+              <button className="btn btn-primary" onClick={() => window.location.reload()}>
                 Rafraîchir la page
               </button>
             </div>

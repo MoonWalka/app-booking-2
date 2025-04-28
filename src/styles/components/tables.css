@@ -109,8 +109,11 @@
   opacity: 0.6;
 }
 
-.table tr.highlighted {
-  background-color: var(--tc-highlight-bg) !important;
+/* Utilisation d'un sélecteur plus spécifique pour éviter !important */
+.table tr.highlighted,
+.table-striped tbody tr.highlighted:nth-of-type(odd),
+.table-hover tbody tr.highlighted:hover {
+  background-color: var(--tc-highlight-bg);
 }
 
 /* Table avec actions */

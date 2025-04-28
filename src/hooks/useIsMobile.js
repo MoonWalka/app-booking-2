@@ -15,6 +15,11 @@ const debounce = (func, wait) => {
 };
 
 export const useIsMobile = (breakpoint = 768) => {
+  // TODO: Réactiver le mode mobile plus tard.
+  // Pour l'instant, on retourne toujours false pour forcer l'affichage desktop
+  return false;
+
+  /* Code original commenté pour référence future
   // Initialiser à false pour éviter les erreurs au SSR
   const [isMobile, setIsMobile] = useState(false);
 
@@ -38,4 +43,5 @@ export const useIsMobile = (breakpoint = 768) => {
   }, [breakpoint]);
 
   return isMobile;
+  */
 };

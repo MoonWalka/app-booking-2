@@ -3,10 +3,17 @@ import React, { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { useResponsiveComponent } from '@/hooks/useResponsiveComponent';
 
+// Import direct du DesktopLayout pour forcer son utilisation
+import DesktopLayout from './layout/DesktopLayout';
+
 function Layout() {
   const [layoutError, setLayoutError] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
   
+  // TODO: Réactiver le mode mobile plus tard.
+  // Pour l'instant, on utilise directement le DesktopLayout au lieu de passer par useResponsiveComponent
+  
+  /* Code original commenté pour référence future
   // Charger le composant de mise en page responsive avec un fallback personnalisé
   // qui sera utilisé à la place du fallback par défaut dans useResponsiveComponent
   const ResponsiveLayout = useResponsiveComponent({
@@ -16,6 +23,7 @@ function Layout() {
     // Pas de fallback ici - on utilisera celui par défaut du hook
     // pour éviter les doublons de spinner
   });
+  */
   
   // Gestion des erreurs de chargement
   useEffect(() => {
@@ -59,10 +67,11 @@ function Layout() {
   
   // Utiliser un try-catch pour gérer les erreurs de rendu
   try {
+    // Utilisation directe du DesktopLayout au lieu du composant responsif
     return (
-      <ResponsiveLayout>
+      <DesktopLayout>
         <Outlet />
-      </ResponsiveLayout>
+      </DesktopLayout>
     );
   } catch (error) {
     handleLayoutError(error);

@@ -7,7 +7,9 @@ import '@/styles/index.css';
  * Adapte son interface selon la taille de l'écran (mobile/desktop)
  */
 const ContratVariable = ({ name, description, onInsert }) => {
-  const isMobile = useIsMobile();
+  // TODO: Réactiver le mode mobile plus tard.
+  // const isMobile = useIsMobile();
+  const isMobile = false; // Force l'utilisation de la version desktop
   
   // Version mobile (simple)
   if (isMobile) {

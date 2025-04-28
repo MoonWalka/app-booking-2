@@ -850,7 +850,13 @@
   .details-header-container,
   .header-container {
     flex-direction: column;
-    align-items: flex-start !important;
+    align-items: flex-start; /* Suppression du !important */
+  }
+  
+  /* Ajouter une classe spécifique pour résoudre les conflits potentiels */
+  .tc-mobile-container .details-header-container,
+  .tc-mobile-container .header-container {
+    align-items: flex-start;
   }
   
   .action-buttons {

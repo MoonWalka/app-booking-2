@@ -132,10 +132,14 @@
   display: inline-block;
 }
 
-.field-empty, 
-.field-empty span, 
-.field-empty i {
-  color: #bfc8dc !important;
+/* Sélecteur plus spécifique pour éviter l'utilisation de !important */
+.table .field-empty, 
+.table .field-empty span, 
+.table .field-empty i,
+.list-view .field-empty,
+.list-view .field-empty span,
+.list-view .field-empty i {
+  color: #bfc8dc;
   font-style: italic;
   font-size: 1rem;
 }

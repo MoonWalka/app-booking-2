@@ -306,24 +306,23 @@ const ConcertsList = () => {
     
     return (
       <div className="status-advanced-container">
-        {/* Affichez directement le message, sans condition de survol */}
         <div className="status-message-container">
-          <div className={`status-message status-message-${statusInfo.variant}`}>
+          <div className={`status-message rounded-pill px-3 py-1 d-inline-flex align-items-center bg-${statusDetails.variant} bg-opacity-10 text-${statusDetails.variant}`}>
             {statusInfo.message}
-            {!hasForm(concert.id) && concert.programmateurId && (
-              <div className="action-reminder">
-                <i className="bi bi-exclamation-circle me-1"></i>
-                Formulaire à envoyer
-              </div>
-            )}
-            {hasUnvalidatedForm(concert.id) && (
-              <div className="action-reminder">
-                <i className="bi bi-exclamation-circle me-1"></i>
-                Formulaire à valider
-              </div>
-            )}
           </div>
         </div>
+        {!hasForm(concert.id) && concert.programmateurId && (
+          <div className="action-reminder mt-2 small text-warning d-flex align-items-center justify-content-center">
+            <i className="bi bi-exclamation-circle me-1"></i>
+            <span>Formulaire à envoyer</span>
+          </div>
+        )}
+        {hasUnvalidatedForm(concert.id) && (
+          <div className="action-reminder mt-2 small text-warning d-flex align-items-center justify-content-center">
+            <i className="bi bi-exclamation-circle me-1"></i>
+            <span>Formulaire à valider</span>
+          </div>
+        )}
       </div>
     );
   };
@@ -337,6 +336,12 @@ const ConcertsList = () => {
   // Fonction pour vérifier si un formulaire est non validé
   const hasUnvalidatedForm = (concertId) => {
     return unvalidatedForms.includes(concertId);
+  };
+
+  const isDatePassed = (date) => {
+    const today = new Date();
+    const concertDate = new Date(date.seconds ? date.seconds * 1000 : date);
+    return concertDate < today;
   };
 
   if (loading) {
@@ -355,31 +360,31 @@ const ConcertsList = () => {
   }
 
   return (
-    <div className="concerts-container">
+    <div className="concerts-container p-4">
       <div className="d-flex justify-content-between align-items-center mb-4 header-container">
-        <h2 className="modern-title">Liste des concerts</h2>
-        <Link to="/concerts/nouveau" className="btn btn-primary modern-add-btn">
-          <i className="bi bi-plus-lg me-2"></i>
+        <h2 className="fs-4 fw-bold text-primary mb-0">Liste des concerts</h2>
+        <Link to="/concerts/nouveau" className="btn btn-primary d-flex align-items-center gap-2 px-3 py-2 rounded-3">
+          <i className="bi bi-plus-lg"></i>
           Ajouter un concert
         </Link>
       </div>
-  
+
       <div className="search-filter-container mb-4">
-        <div className="search-bar">
-          <div className="input-group">
-            <span className="input-group-text">
-              <i className="bi bi-search"></i>
+        <div className="search-bar bg-white rounded-3 shadow-sm">
+          <div className="input-group border-0">
+            <span className="input-group-text bg-transparent border-0">
+              <i className="bi bi-search text-primary"></i>
             </span>
             <input
               type="text"
-              className="form-control search-input"
+              className="form-control border-0 py-2 search-input"
               placeholder="Rechercher un concert..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
             {searchTerm && (
               <button 
-                className="btn btn-outline-secondary clear-search" 
+                className="btn border-0 text-secondary" 
                 onClick={() => setSearchTerm('')}
               >
                 <i className="bi bi-x-lg"></i>
@@ -389,9 +394,9 @@ const ConcertsList = () => {
         </div>
       </div>
   
-      <div className="status-filter-tabs mb-4">
+      <div className="status-filter-tabs mb-4 d-flex gap-2 flex-wrap">
         <button 
-          className={`status-tab ${statusFilter === 'tous' ? 'active' : ''}`}
+          className={`btn ${statusFilter === 'tous' ? 'btn-primary' : 'btn-light'} rounded-pill px-3 py-2`}
           onClick={() => setStatusFilter('tous')}
         >
           Tous les concerts
@@ -401,7 +406,7 @@ const ConcertsList = () => {
           return (
             <button 
               key={status}
-              className={`status-tab ${statusFilter === status ? 'active' : ''}`}
+              className={`btn ${statusFilter === status ? 'btn-primary' : 'btn-light'} rounded-pill px-3 py-2 d-flex align-items-center gap-2`}
               onClick={() => setStatusFilter(status)}
             >
               <span className="status-icon">{statusInfo.icon}</span>
@@ -412,9 +417,9 @@ const ConcertsList = () => {
       </div>
   
       {filteredConcerts.length === 0 ? (
-        <div className="alert alert-info modern-alert">
+        <div className="alert bg-white text-secondary border-0 shadow-sm rounded-4 p-4">
           <div className="d-flex align-items-center">
-            <i className="bi bi-info-circle me-3"></i>
+            <i className="bi bi-info-circle fs-3 me-3 text-primary"></i>
             <p className="mb-0">
               {searchTerm || statusFilter !== 'tous' 
                 ? 'Aucun concert ne correspond à vos critères de recherche.' 
@@ -423,51 +428,63 @@ const ConcertsList = () => {
           </div>
         </div>
       ) : (
-        <div className="table-responsive modern-table-container">
-          <table className="table table-hover modern-table concerts-table">
+        <div className="table-responsive bg-white rounded-4 shadow-sm p-3">
+          <table className="table table-hover concerts-table">
             <thead>
-              <tr>
-                <th>Date</th>
-                <th>Lieu</th>
-                <th>Ville</th>
-                <th>Artiste</th>
-                <th>Programmateur</th>
-                <th>Montant</th>
-                <th>Statut</th>
-                <th>Actions</th>
+              <tr className="text-secondary border-bottom">
+                <th className="fw-medium text-center">Date</th>
+                <th className="fw-medium">Lieu</th>
+                <th className="fw-medium">Ville</th>
+                <th className="fw-medium">Artiste</th>
+                <th className="fw-medium">Programmateur</th>
+                <th className="fw-medium text-end">Montant</th>
+                <th className="fw-medium text-center">Statut</th>
+                <th className="fw-medium text-center">Actions</th>
               </tr>
             </thead>
             <tbody>
               {filteredConcerts.map(concert => (
                 <tr 
                   key={concert.id} 
-                  className="table-row-animate clickable-row"
+                  className={`clickable-row border-bottom ${isDatePassed(concert.date) ? 'past-concert' : ''}`}
                   onClick={() => handleRowClick(concert.id)}
+                  style={{ transition: "all 0.2s ease", cursor: "pointer" }}
                 >
-                  <td className="concert-date-cell">
+                  <td className={`concert-date-cell text-center align-middle ${isDatePassed(concert.date) ? 'past-date' : ''}`}>
                     <div className="date-box">
                       <span className="date-day">{formatDateFr(concert.date).split('-')[0]}</span>
+                      <span className="date-separator">/</span>
                       <span className="date-month">{formatDateFr(concert.date).split('-')[1]}</span>
+                      <span className="date-separator">/</span>
                       <span className="date-year">{formatDateFr(concert.date).split('-')[2]}</span>
                     </div>
                   </td>
-                  <td className="concert-venue-name">{concert.lieuNom || "-"}</td>
-                  <td className="concert-venue-location">
-                    {concert.lieuVille && concert.lieuCodePostal ? 
-                      `${concert.lieuVille} (${concert.lieuCodePostal})` : 
-                      concert.lieuVille || concert.lieuCodePostal || "-"
-                    }
+                  <td className="concert-venue-name align-middle">
+                    <div className="text-truncate-container" title={concert.lieuNom || "-"}>
+                      {concert.lieuNom || "-"}
+                    </div>
                   </td>
-                  <td className="concert-artist-cell">
+                  <td className="concert-venue-location align-middle">
+                    <div className="text-truncate-container" title={concert.lieuVille && concert.lieuCodePostal ? 
+                      `${concert.lieuVille} (${concert.lieuCodePostal})` : 
+                      concert.lieuVille || concert.lieuCodePostal || "-"}>
+                      {concert.lieuVille && concert.lieuCodePostal ? 
+                        `${concert.lieuVille} (${concert.lieuCodePostal})` : 
+                        concert.lieuVille || concert.lieuCodePostal || "-"
+                      }
+                    </div>
+                  </td>
+                  <td className="concert-artist-cell align-middle">
                     {concert.artisteNom ? (
                       <span className="artist-name">
+                        <i className="bi bi-music-note me-1"></i>
                         {concert.artisteNom}
                       </span>
                     ) : (
                       <span className="text-muted">-</span>
                     )}
                   </td>
-                  <td>
+                  <td className="align-middle">
                     <div className="concert-artist-cell">
                       {concert.programmateurNom ? (
                         <span className="programmateur-name" title={concert.programmateurNom}>
@@ -479,20 +496,38 @@ const ConcertsList = () => {
                       )}
                     </div>
                   </td>
-                  <td className="montant-column">
+                  <td className="montant-column text-end align-middle">
                     {concert.montant ? (
-                      <span className="montant-value">
+                      <span className="montant-value fw-medium">
                         {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(concert.montant)}
                       </span>
                     ) : (
                       <span className="text-muted">-</span>
                     )}
                   </td>
-                  <td className="status-column">
-                    <StatusWithInfo concert={concert} />
+                  <td className="status-column align-middle">
+                    <div className="status-advanced-container">
+                      <div className="status-message-container">
+                        <div className={`status-message rounded-pill px-3 py-1 d-inline-flex align-items-center bg-${getStatusDetails(concert.statut).variant} bg-opacity-10 text-${getStatusDetails(concert.statut).variant}`}>
+                          {getStatusDetails(concert.statut).label}
+                        </div>
+                      </div>
+                      {!hasForm(concert.id) && concert.programmateurId && (
+                        <div className="action-reminder mt-2 small text-warning d-flex align-items-center justify-content-center">
+                          <i className="bi bi-exclamation-circle me-1"></i>
+                          <span>Formulaire à envoyer</span>
+                        </div>
+                      )}
+                      {hasUnvalidatedForm(concert.id) && (
+                        <div className="action-reminder mt-2 small text-warning d-flex align-items-center justify-content-center">
+                          <i className="bi bi-exclamation-circle me-1"></i>
+                          <span>Formulaire à valider</span>
+                        </div>
+                      )}
+                    </div>
                   </td>
-                  <td onClick={(e) => e.stopPropagation()}>
-                    <div className="btn-group action-buttons">
+                  <td onClick={(e) => e.stopPropagation()} className="align-middle">
+                    <div className="d-flex gap-2 justify-content-center">
                       {hasForm(concert.id) && (
                         <div className="position-relative">
                           <ActionButton 
@@ -500,10 +535,10 @@ const ConcertsList = () => {
                             tooltip="Voir le formulaire" 
                             icon={<i className="bi bi-file-text"></i>} 
                             variant="light"
-                            className="concert-action-button"
+                            className="rounded-3 p-2 d-flex align-items-center justify-content-center"
                           />
                           {hasUnvalidatedForm(concert.id) && (
-                            <span className="notification-badge" title="Formulaire mis à jour"></span>
+                            <span className="notification-badge position-absolute top-0 end-0 bg-danger rounded-circle" style={{ width: "10px", height: "10px" }} title="Formulaire mis à jour"></span>
                           )}
                         </div>
                       )}
@@ -512,12 +547,11 @@ const ConcertsList = () => {
                           tooltip="Envoyer formulaire" 
                           icon={<i className="bi bi-envelope"></i>} 
                           variant="light"
-                          className="concert-action-button"
+                          className="rounded-3 p-2 d-flex align-items-center justify-content-center"
                           onClick={() => navigate(`/concerts/${concert.id}?openFormGenerator=true`)}
                         />
                       )}
                       
-                      {/* NOUVEAU BOUTON DE CONTRAT */}
                       <OverlayTrigger
                         placement="top"
                         overlay={
@@ -533,12 +567,11 @@ const ConcertsList = () => {
                             ? `/contrats/${concertsWithContracts[concert.id].id}` 
                             : `/contrats/generate/${concert.id}`}
                           onClick={(e) => e.stopPropagation()}
-                          className={`btn btn-${getContractButtonVariant(concert.id)} btn-icon modern-btn concert-action-button`}
+                          className={`btn btn-${getContractButtonVariant(concert.id)} rounded-3 p-2 d-flex align-items-center justify-content-center`}
                         >
                           <i className="bi bi-file-earmark-text"></i>
                         </Link>
                       </OverlayTrigger>
-                      {/* FIN DU NOUVEAU BOUTON */}
                     </div>
                   </td>
                 </tr>

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import firebase from '@/firebase';
 import '@styles/index.css';
+import '@styles/components/lists.css';
 import { collection, query, getDocs, orderBy, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '@/firebase';
 import Spinner from '@/components/common/Spinner';
@@ -100,104 +101,75 @@ const ProgrammateursList = () => {
     e.stopPropagation();
   };
 
-  // Composant pour les boutons d'action avec tooltip
-  const ActionButton = ({ id, to, tooltip, icon, variant, onClick }) => (
-    <OverlayTrigger
-      placement="top"
-      overlay={<Tooltip>{tooltip}</Tooltip>}
-    >
-      {to ? (
-        <Link 
-          to={to} 
-          className={`btn btn-${variant} btn-sm`}
-          onClick={handleActionClick}
-        >
-          {icon}
-        </Link>
-      ) : (
-        <button 
-          onClick={(e) => { onClick(e); handleActionClick(e); }} 
-          className={`btn btn-${variant} btn-sm`}
-        >
-          {icon}
-        </button>
-      )}
-    </OverlayTrigger>
-  );
-
   if (loading) {
     return <Spinner message="Chargement des programmateurs..." contentOnly={true} />;
   }
 
   return (
-    <div className="container-fluid p-3">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2><i className="fas fa-users-cog text-primary me-2"></i>Liste des programmateurs</h2>
+    <div className="container-fluid p-4">
+      <div className="section-header">
+        <h2><i className="bi bi-people-gear text-primary me-2"></i>Liste des programmateurs</h2>
         <Link to="/programmateurs/nouveau" className="btn-add">
-          <i className="fas fa-plus me-2"></i>
+          <i className="bi bi-plus"></i>
           Ajouter un programmateur
         </Link>
       </div>
 
-      <div className="mb-4">
-        <div className="mb-3">
-          <div className="input-group">
-            <span className="input-group-text">
-              <i className="fas fa-search"></i>
-            </span>
-            <input
-              ref={searchInputRef}
-              type="text"
-              className="form-control"
-              placeholder="Rechercher un programmateur... (Ctrl+F)"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              autoComplete="off"
-            />
-            {searchTerm && (
-              <button 
-                className="btn btn-outline-secondary" 
-                onClick={() => setSearchTerm('')}
-                aria-label="Clear search"
-              >
-                <i className="fas fa-times"></i>
-              </button>
-            )}
-          </div>
-        </div>
-        <div>
+      <form className="search-bar" autoComplete="off">
+        <div className="input-group shadow-sm">
+          <span className="input-group-text bg-white"><i className="bi bi-search"></i></span>
+          <input
+            ref={searchInputRef}
+            type="text"
+            className="form-control"
+            placeholder="Rechercher un programmateur... (Ctrl+F)"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
           {searchTerm && (
-            <p className="small text-muted">
-              {filteredProgrammateurs.length} résultat{filteredProgrammateurs.length !== 1 ? 's' : ''} trouvé{filteredProgrammateurs.length !== 1 ? 's' : ''}
-            </p>
+            <button 
+              className="btn" 
+              type="button"
+              onClick={() => setSearchTerm('')}
+              aria-label="Clear search"
+              tabIndex="-1"
+            >
+              <i className="bi bi-x"></i>
+            </button>
           )}
         </div>
-      </div>
+      </form>
+
+      {searchTerm && (
+        <p className="small text-muted mb-3">
+          {filteredProgrammateurs.length} résultat{filteredProgrammateurs.length !== 1 ? 's' : ''} trouvé{filteredProgrammateurs.length !== 1 ? 's' : ''}
+        </p>
+      )}
 
       {filteredProgrammateurs.length === 0 ? (
         <div className="alert alert-info">
           {searchTerm ? (
             <div className="d-flex align-items-center">
-              <i className="fas fa-info-circle me-3"></i>
+              <i className="bi bi-info-circle me-3"></i>
               <p className="mb-0">Aucun programmateur ne correspond à votre recherche.</p>
             </div>
           ) : (
             <div className="d-flex align-items-center">
-              <i className="fas fa-info-circle me-3"></i>
+              <i className="bi bi-info-circle me-3"></i>
               <p className="mb-0">Aucun programmateur n'a été ajouté. Cliquez sur "Ajouter un programmateur" pour commencer.</p>
             </div>
           )}
         </div>
       ) : (
         <div className="table-responsive">
-          <table className="table table-hover mb-0">
+          <table className="table table-hover align-middle mb-0">
             <thead>
               <tr>
-                <th>Nom</th>
-                <th>Structure</th>
-                <th>Email</th>
-                <th>Téléphone</th>
-                <th>Actions</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Structure</th>
+                <th scope="col">Email</th>
+                <th scope="col">Téléphone</th>
+                <th scope="col" style={{minWidth: "90px"}}>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -207,17 +179,15 @@ const ProgrammateursList = () => {
                   className="cursor-pointer"
                   onClick={() => handleRowClick(prog.id)}
                 >
-                  <td className="fw-medium">
-                    <div className="d-flex align-items-center">
-                      <i className="fas fa-user-circle me-2 text-primary"></i>
-                      {prog.nom}
-                    </div>
+                  <td title={prog.nom} style={{fontSize: "1.09em", fontWeight: "500"}}>
+                    <i className="bi bi-person-circle me-2 text-primary"></i>
+                    {prog.nom}
                   </td>
                   <td>
                     {prog.structure ? (
                       <span className="structure-badge">{prog.structure}</span>
                     ) : (
-                      <span className="field-empty"><i className="fa fa-minus-circle"></i> non spécifié</span>
+                      <span className="field-empty"><i className="bi bi-dash-circle"></i> non spécifié</span>
                     )}
                   </td>
                   <td>
@@ -227,11 +197,11 @@ const ProgrammateursList = () => {
                         className="text-decoration-none"
                         onClick={handleActionClick}
                       >
-                        <i className="fas fa-envelope me-1"></i>
+                        <i className="bi bi-envelope me-1"></i>
                         {prog.email}
                       </a>
                     ) : (
-                      <span className="field-empty"><i className="fa fa-minus-circle"></i> non spécifié</span>
+                      <span className="field-empty"><i className="bi bi-dash-circle"></i> non spécifié</span>
                     )}
                   </td>
                   <td>
@@ -241,27 +211,30 @@ const ProgrammateursList = () => {
                         className="text-decoration-none"
                         onClick={handleActionClick}
                       >
-                        <i className="fas fa-phone me-1"></i>
+                        <i className="bi bi-telephone me-1"></i>
                         {prog.telephone}
                       </a>
                     ) : (
-                      <span className="field-empty"><i className="fa fa-minus-circle"></i> non spécifié</span>
+                      <span className="field-empty"><i className="bi bi-dash-circle"></i> non spécifié</span>
                     )}
                   </td>
                   <td>
-                    <div className="btn-group">
-                      <ActionButton 
+                    <div className="table-actions d-flex">
+                      <Link 
                         to={`/programmateurs/edit/${prog.id}`} 
-                        tooltip="Modifier le programmateur" 
-                        icon={<i className="fas fa-pencil-alt"></i>} 
-                        variant="light"
-                      />
-                      <ActionButton 
-                        tooltip="Supprimer le programmateur" 
-                        icon={<i className="fas fa-trash"></i>} 
-                        variant="light" 
+                        className="btn btn-light me-2"
+                        onClick={handleActionClick}
+                        title="Modifier le programmateur"
+                      >
+                        <i className="bi bi-pencil"></i>
+                      </Link>
+                      <button 
                         onClick={(e) => handleDelete(prog.id, e)}
-                      />
+                        className="btn btn-light"
+                        title="Supprimer le programmateur"
+                      >
+                        <i className="bi bi-trash"></i>
+                      </button>
                     </div>
                   </td>
                 </tr>

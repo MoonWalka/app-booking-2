@@ -1212,30 +1212,32 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
           
           <div className="editor-actions">
             <button 
-              className="btn btn-outline-info" 
+              className="btn btn-outline-info d-flex align-items-center gap-2"
               onClick={() => setShowGuide(!showGuide)}
             >
-              <i className="bi bi-question-circle me-2"></i>
+              <i className="bi bi-question-circle me-1"></i>
               {showGuide ? 'Masquer l\'aide' : 'Aide'}
             </button>
             <button 
-              className="btn btn-outline-secondary" 
+              className="btn btn-outline-secondary d-flex align-items-center gap-2"
               onClick={handleCancel}
             >
-              <i className="bi bi-x-circle me-2"></i>Annuler
+              <i className="bi bi-x-circle me-1"></i>
+              Annuler
             </button>
             <button 
-              className="btn btn-outline-primary" 
+              className="btn btn-outline-primary d-flex align-items-center gap-2"
               onClick={() => setPreviewMode(!previewMode)}
             >
-              <i className={`bi bi-${previewMode ? 'pencil' : 'eye'} me-2`}></i>
+              <i className={`bi bi-${previewMode ? 'pencil' : 'eye'} me-1`}></i>
               {previewMode ? 'Éditer' : 'Aperçu'}
             </button>
             <button 
-              className="btn btn-primary" 
+              className="btn btn-primary d-flex align-items-center gap-2"
               onClick={handleSave}
             >
-              <i className="bi bi-check-circle me-2"></i>Enregistrer
+              <i className="bi bi-check-circle me-1"></i>
+              Enregistrer
             </button>
           </div>
         </div>

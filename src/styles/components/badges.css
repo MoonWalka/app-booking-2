@@ -22,6 +22,21 @@
   color: var(--tc-text-light);
 }
 
+/* Badge de notification pour les alertes et indicateurs */
+.tc-notification-badge {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--tc-danger-color);
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(40%, -40%);
+  box-shadow: 0 0 0 2px white;
+  animation: pulse 1.5s infinite;
+}
+
 /* Badges principaux et secondaires */
 .badge-primary {
   background-color: var(--tc-badge-bg);
@@ -58,4 +73,11 @@
 
 .badge-interactive.badge-secondary:hover {
   background-color: var(--tc-secondary-dark);
+}
+
+/* Animation pour notification badge */
+@keyframes pulse {
+  0% { opacity: 0.7; }
+  50% { opacity: 1; }
+  100% { opacity: 0.7; }
 }

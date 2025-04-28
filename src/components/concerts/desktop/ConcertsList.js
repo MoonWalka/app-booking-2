@@ -307,18 +307,19 @@ const ConcertsList = () => {
     return (
       <div className="status-advanced-container">
         <div className="status-message-container">
-          <div className={`status-message rounded-pill px-3 py-1 d-inline-flex align-items-center bg-${statusDetails.variant} bg-opacity-10 text-${statusDetails.variant}`}>
+          {/* // Correction UI : Amélioration contraste avec classes standardisées et stockage du résultat dans une variable */}
+          <div className={`status-message status-message-${statusDetails.variant}`}>
             {statusInfo.message}
           </div>
         </div>
         {!hasForm(concert.id) && concert.programmateurId && (
-          <div className="action-reminder mt-2 small text-warning d-flex align-items-center justify-content-center">
+          <div className="action-reminder">
             <i className="bi bi-exclamation-circle me-1"></i>
             <span>Formulaire à envoyer</span>
           </div>
         )}
         {hasUnvalidatedForm(concert.id) && (
-          <div className="action-reminder mt-2 small text-warning d-flex align-items-center justify-content-center">
+          <div className="action-reminder">
             <i className="bi bi-exclamation-circle me-1"></i>
             <span>Formulaire à valider</span>
           </div>
@@ -364,7 +365,7 @@ const ConcertsList = () => {
       <div className="d-flex justify-content-between align-items-center mb-4 header-container">
         <h2 className="fs-4 fw-bold text-primary mb-0">Liste des concerts</h2>
         <Link to="/concerts/nouveau" className="btn btn-primary d-flex align-items-center gap-2 px-3 py-2 rounded-3">
-          <i className="bi bi-plus-lg"></i>
+          <i className="bi bi-plus-lg me-1"></i>
           Ajouter un concert
         </Link>
       </div>
@@ -395,7 +396,7 @@ const ConcertsList = () => {
       </div>
   
       <div className="status-filter-tabs mb-4 d-flex gap-2 flex-wrap">
-        // Harmonisation : ajout classe selon l'action
+        {/* Correction : harmonisation UI des boutons avec marges et espacements cohérents */}
         <button 
           className={`btn ${statusFilter === 'tous' ? 'btn-primary' : 'btn-light'} rounded-pill px-3 py-2`}
           onClick={() => setStatusFilter('tous')}
@@ -404,7 +405,6 @@ const ConcertsList = () => {
         </button>
         {['contact', 'preaccord', 'contrat', 'acompte', 'solde'].map(status => {
           const statusInfo = getStatusDetails(status);
-          // Harmonisation : ajout classe selon l'action
           return (
             <button 
               key={status}
@@ -448,9 +448,8 @@ const ConcertsList = () => {
               {filteredConcerts.map(concert => (
                 <tr 
                   key={concert.id} 
-                  className={`clickable-row border-bottom ${isDatePassed(concert.date) ? 'past-concert' : ''}`}
+                  className={`tc-clickable-row border-bottom ${isDatePassed(concert.date) ? 'past-concert' : ''}`}
                   onClick={() => handleRowClick(concert.id)}
-                  style={{ transition: "all 0.2s ease", cursor: "pointer" }}
                 >
                   <td className={`concert-date-cell text-center align-middle ${isDatePassed(concert.date) ? 'past-date' : ''}`}>
                     <div className="date-box">
@@ -510,7 +509,8 @@ const ConcertsList = () => {
                   <td className="status-column align-middle">
                     <div className="status-advanced-container">
                       <div className="status-message-container">
-                        <div className={`status-message rounded-pill px-3 py-1 d-inline-flex align-items-center bg-${getStatusDetails(concert.statut).variant} bg-opacity-10 text-${getStatusDetails(concert.statut).variant}`}>
+                        {/* Correction : amélioration contraste fond/texte */}
+                        <div className={`status-message rounded-pill px-3 py-1 d-inline-flex align-items-center ${getStatusDetails(concert.statut).variant === 'light' ? 'bg-secondary bg-opacity-10 text-dark' : `bg-${getStatusDetails(concert.statut).variant} bg-opacity-10 text-${getStatusDetails(concert.statut).variant}`}`}>
                           {getStatusDetails(concert.statut).label}
                         </div>
                       </div>
@@ -531,7 +531,7 @@ const ConcertsList = () => {
                   <td onClick={(e) => e.stopPropagation()} className="align-middle">
                     <div className="d-flex gap-2 justify-content-center">
                       {hasForm(concert.id) && (
-                        <div className="position-relative">
+                        <div className="tc-notification-container">
                           <ActionButton 
                             to={`/concerts/${concert.id}/form`} 
                             tooltip="Voir le formulaire" 
@@ -539,8 +539,9 @@ const ConcertsList = () => {
                             variant="light"
                             className="rounded-3 p-2 d-flex align-items-center justify-content-center"
                           />
+                          {/* // Correction UI : Remplacement du style inline par une classe CSS */}
                           {hasUnvalidatedForm(concert.id) && (
-                            <span className="notification-badge position-absolute top-0 end-0 bg-danger rounded-circle" style={{ width: "10px", height: "10px" }} title="Formulaire mis à jour"></span>
+                            <span className="tc-notification-badge" title="Formulaire mis à jour"></span>
                           )}
                         </div>
                       )}

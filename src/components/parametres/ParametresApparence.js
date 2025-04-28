@@ -4,35 +4,26 @@ import { useParametres } from '@/context/ParametresContext';
 
 const ParametresApparence = () => {
   const { parametres, sauvegarderParametres, loading } = useParametres();
+  const [originalAppearance, setOriginalAppearance] = useState(null);
   const [localState, setLocalState] = useState(parametres.apparence || {
     theme: 'light',
-    couleurPrincipale: '#0d6efd',
+    couleurPrincipale: '#2c3e50',
     taillePolicePx: 16,
     animations: true,
     compactMode: false,
     menuPosition: 'left'
   });
-  // Live–preview : applique les variables CSS dès que localState change
-  useEffect(() => {
-    // Met à jour la couleur principale
-    document.documentElement.style.setProperty(
-      '--tc-primary-color',
-      localState.couleurPrincipale
-    );
-    // Met à jour la taille de la police de base
-    document.documentElement.style.setProperty(
-      '--tc-font-size-base',
-      `${localState.taillePolicePx}px`
-    );
-    // Vous pouvez ajouter d’autres propriétés ici si nécessaire
-  }, [localState]);
   const [success, setSuccess] = useState('');
-
+  
+  // Sauvegarde les paramètres initiaux lors du premier chargement
   useEffect(() => {
-    if (parametres.apparence) {
+    if (parametres.apparence && !originalAppearance) {
+      setOriginalAppearance({
+        ...parametres.apparence
+      });
       setLocalState(parametres.apparence);
     }
-  }, [parametres.apparence]);
+  }, [parametres.apparence, originalAppearance]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -40,6 +31,15 @@ const ParametresApparence = () => {
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
+    
+    // Pour la prévisualisation du sélecteur de couleur uniquement
+    if (name === 'couleurPrincipale') {
+      // Met à jour la couleur du sélecteur sans affecter toute l'application
+      const colorPicker = document.getElementById('colorPreview');
+      if (colorPicker) {
+        colorPicker.style.backgroundColor = value;
+      }
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -51,6 +51,7 @@ const ParametresApparence = () => {
       document.documentElement.style.setProperty('--tc-primary-color', localState.couleurPrincipale);
       document.documentElement.style.setProperty('--tc-font-size-base', `${localState.taillePolicePx}px`);
       document.body.setAttribute('data-theme', localState.theme);
+      setOriginalAppearance(localState);
       setTimeout(() => setSuccess(''), 3000);
     }
   };
@@ -58,13 +59,25 @@ const ParametresApparence = () => {
   const handleReset = () => {
     const defaultState = {
       theme: 'light',
-      couleurPrincipale: '#0d6efd',
+      couleurPrincipale: '#2c3e50',
       taillePolicePx: 16,
       animations: true,
       compactMode: false,
       menuPosition: 'left'
     };
     setLocalState(defaultState);
+  };
+  
+  // Fonction pour annuler les changements non sauvegardés
+  const handleCancel = () => {
+    if (originalAppearance) {
+      // Restaure les paramètres originaux
+      setLocalState(originalAppearance);
+      
+      // Réapplique les styles CSS originaux
+      document.documentElement.style.setProperty('--tc-primary-color', originalAppearance.couleurPrincipale);
+      document.documentElement.style.setProperty('--tc-font-size-base', `${originalAppearance.taillePolicePx}px`);
+    }
   };
 
   if (loading) {
@@ -98,6 +111,14 @@ const ParametresApparence = () => {
               <Form.Group className="mb-3">
                 <Form.Label>Couleur principale</Form.Label>
                 <div className="d-flex align-items-center">
+                  <div id="colorPreview" style={{ 
+                    backgroundColor: localState.couleurPrincipale, 
+                    width: '40px', 
+                    height: '40px', 
+                    borderRadius: '4px',
+                    marginRight: '10px',
+                    border: '1px solid #dee2e6'
+                  }} />
                   <Form.Control
                     type="color"
                     name="couleurPrincipale"
@@ -181,13 +202,23 @@ const ParametresApparence = () => {
           </Form.Group>
 
           <div className="d-flex justify-content-between">
-            <Button 
-              variant="outline-secondary" 
-              type="button"
-              onClick={handleReset}
-            >
-              Réinitialiser
-            </Button>
+            <div>
+              <Button 
+                variant="outline-secondary" 
+                type="button"
+                onClick={handleReset}
+                className="me-2"
+              >
+                Réinitialiser
+              </Button>
+              <Button 
+                variant="outline-secondary" 
+                type="button"
+                onClick={handleCancel}
+              >
+                Annuler
+              </Button>
+            </div>
             <Button type="submit" variant="primary">
               Enregistrer les préférences
             </Button>

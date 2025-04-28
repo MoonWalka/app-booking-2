@@ -107,10 +107,13 @@ const ProgrammateursList = () => {
 
   return (
     <div className="container-fluid p-4">
-      <div className="section-header">
-        <h2><i className="bi bi-people-gear text-primary me-2"></i>Liste des programmateurs</h2>
-        <Link to="/programmateurs/nouveau" className="btn-add">
-          <i className="bi bi-plus"></i>
+      <div className="header-container mb-4">
+        <h2 className="fs-4 fw-bold text-primary mb-0">Liste des programmateurs</h2>
+        <Link 
+          to="/programmateurs/nouveau" 
+          className="btn btn-primary d-flex align-items-center gap-2 px-3 py-2 rounded-3"
+        >
+          <i className="bi bi-plus-lg me-1"></i>
           Ajouter un programmateur
         </Link>
       </div>

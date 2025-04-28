@@ -434,6 +434,7 @@ const ProgrammateurDetails = () => {
           </nav>
           <h2 className="fw-bold mb-0">
             {programmateur.nom}
+            {/* Correction : amélioration contraste fond/texte */}
             {programmateur.structure && <span className="badge bg-light text-dark ms-2 fs-6">{programmateur.structure}</span>}
           </h2>
         </div>

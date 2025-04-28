@@ -264,45 +264,15 @@ const LieuxList = () => {
 
   return (
     <div className="lieux-container shadow-sm">
-      <div className="header-container">
-        <div>
-          <h5 className="modern-title">Liste des lieux</h5>
-          <div className="d-flex mt-2 gap-3 flex-wrap">
-            <span className="stats-badge">
-              <span className="stats-number">{stats.total}</span> Lieux
-            </span>
-            <span className="stats-badge success">
-              <span className="stats-number">{stats.avecConcerts}</span> Avec concerts
-            </span>
-            <span className="stats-badge warning">
-              <span className="stats-number">{stats.sansConcerts}</span> Sans concerts
-            </span>
-            {stats.festivals > 0 && (
-              <span className="stats-badge danger">
-                <span className="stats-number">{stats.festivals}</span> Festivals
-              </span>
-            )}
-            {stats.salles > 0 && (
-              <span className="stats-badge success">
-                <span className="stats-number">{stats.salles}</span> Salles
-              </span>
-            )}
-            {stats.bars > 0 && (
-              <span className="stats-badge info">
-                <span className="stats-number">{stats.bars}</span> Bars
-              </span>
-            )}
-            {stats.plateaux > 0 && (
-              <span className="stats-badge warning">
-                <span className="stats-number">{stats.plateaux}</span> Plateaux
-              </span>
-            )}
-          </div>
-        </div>
-        <Link to="/lieux/nouveau" className="modern-add-btn btn btn-primary d-flex align-items-center">
-          <i className="bi bi-plus-lg me-2"></i>
+      <div className="header-container mb-3">
+        <h2 className="fs-4 fw-bold text-primary mb-0">Liste des lieux</h2>
+        <button 
+          className="btn btn-primary d-flex align-items-center gap-2 px-3 py-2 rounded-3"
+          onClick={() => navigate('/lieux/nouveau')}
+        >
+          <i className="bi bi-plus-lg"></i>
           Ajouter un lieu
-        </Link>
+        </button>
       </div>
       
       <div className="search-filter-container d-flex flex-wrap gap-3 align-items-center">

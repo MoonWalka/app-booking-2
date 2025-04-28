@@ -4,6 +4,7 @@ import { collection, addDoc, query, where, getDocs, doc, getDoc, serverTimestamp
 import { db } from '@/firebase';
 import { useLocationIQ } from '@/hooks/useLocationIQ';
 import '@styles/index.css';
+import { useNavigate } from 'react-router-dom';
 
 
 const ProgrammateurForm = ({ token, concertId, formLinkId, initialLieuData, onSubmitSuccess }) => {
@@ -67,6 +68,16 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, initialLieuData, onSu
   const [success, setSuccess] = useState(false);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  
+  // Fonction pour gérer l'annulation du formulaire
+  const handleCancel = () => {
+    if (onSubmitSuccess) {
+      onSubmitSuccess();
+    } else {
+      navigate('/programmateurs');
+    }
+  };
   
   // Utilisation du hook LocationIQ pour l'autocomplétion d'adresse
   const { isLoading: isApiLoading, error: apiError, searchAddress } = useLocationIQ();
@@ -1131,26 +1142,33 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, initialLieuData, onSu
         </div>
       </div>
       
-      <div className="d-flex justify-content-end mt-4">
-        <Button 
-          type="submit"
-          variant="primary"
-          disabled={submitting}
-          className="px-4 py-2"
-        >
-          {submitting ? (
-            <>
-              <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-              Envoi en cours...
-            </>
-          ) : (
-            <>
-              <i className="bi bi-check-circle me-2"></i>
-              Envoyer les informations
-            </>
-          )}
-        </Button>
-      </div>
+      <div className="form-actions">
+          <button 
+            type="button" 
+            className="btn btn-outline-secondary d-flex align-items-center gap-2"
+            onClick={handleCancel}
+          >
+            <i className="bi bi-x-circle me-1"></i>
+            Annuler
+          </button>
+          <button 
+            type="submit" 
+            className="btn btn-primary d-flex align-items-center gap-2"
+            disabled={submitting}
+          >
+            {submitting ? (
+              <>
+                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                Enregistrement...
+              </>
+            ) : (
+              <>
+                <i className="bi bi-check-circle me-1"></i>
+                Enregistrer
+              </>
+            )}
+          </button>
+        </div>
     </Form>
   );
 };

@@ -22,7 +22,7 @@ export const ParametresProvider = ({ children }) => {
     },
     apparence: {
       theme: 'light',
-      couleurPrincipale: '#0d6efd',
+      couleurPrincipale: '#2c3e50',
       taillePolicePx: 16,
       animations: true
     },
@@ -47,10 +47,41 @@ export const ParametresProvider = ({ children }) => {
       try {
         const parametresDoc = await getDoc(doc(db, 'parametres', 'global'));
         if (parametresDoc.exists()) {
-          setParametres(prev => ({
-            ...prev,
-            ...parametresDoc.data()
-          }));
+          const parametresServeur = parametresDoc.data();
+          
+          // Fusion améliorée des paramètres avec gestion correcte des sous-objets
+          setParametres(prev => {
+            const newParams = { ...prev };
+            
+            // Parcourir toutes les sections
+            Object.keys(parametresServeur).forEach(section => {
+              if (typeof parametresServeur[section] === 'object' && parametresServeur[section] !== null) {
+                // Fusionner la section avec les valeurs par défaut
+                newParams[section] = {
+                  ...newParams[section],
+                  ...parametresServeur[section]
+                };
+              } else {
+                // Pour les valeurs simples
+                newParams[section] = parametresServeur[section];
+              }
+            });
+            
+            return newParams;
+          });
+          
+          // Appliquer les paramètres d'apparence immédiatement au chargement
+          if (parametresServeur.apparence) {
+            if (parametresServeur.apparence.couleurPrincipale) {
+              document.documentElement.style.setProperty('--tc-primary-color', parametresServeur.apparence.couleurPrincipale);
+            }
+            if (parametresServeur.apparence.taillePolicePx) {
+              document.documentElement.style.setProperty('--tc-font-size-base', `${parametresServeur.apparence.taillePolicePx}px`);
+            }
+            if (parametresServeur.apparence.theme) {
+              document.body.setAttribute('data-theme', parametresServeur.apparence.theme);
+            }
+          }
         }
       } catch (err) {
         console.error('Erreur lors du chargement des paramètres:', err);

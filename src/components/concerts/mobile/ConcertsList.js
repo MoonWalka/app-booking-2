@@ -85,14 +85,15 @@ const ConcertsListMobile = () => {
   return (
     <div className="concerts-mobile-container">
       {/* En-tête avec titre et bouton d'ajout */}
-      <div className="mobile-header">
-        <h1>Concerts</h1>
+      <div className="mobile-header d-flex justify-content-between align-items-center mb-3">
+        <h1 className="fs-4 fw-bold text-primary mb-0">Concerts</h1>
         <Button 
           variant="primary"
-          className="mobile-add-btn"
+          className="d-flex align-items-center gap-2 rounded-3 px-3 py-2"
           onClick={() => navigate('/concerts/nouveau')}
         >
-          <i className="bi bi-plus-lg"></i>
+          <i className="bi bi-plus-lg me-1"></i>
+          <span className="d-none d-sm-inline">Ajouter</span>
         </Button>
       </div>
 
@@ -121,42 +122,42 @@ const ConcertsListMobile = () => {
       </div>
 
       {/* Filtres par statut */}
-      <div className="mobile-filters-container">
+      <div className="mobile-filters-container mb-3">
         <button 
-          className={`btn ${statusFilter === 'tous' ? 'btn-primary' : 'btn-outline-primary'} btn-sm me-1 mb-1`}
+          className={`btn ${statusFilter === 'tous' ? 'btn-primary' : 'btn-outline-primary'} btn-sm me-2 mb-2 px-3 py-2 rounded-pill`}
           onClick={() => setStatusFilter('tous')}
         >
           Tous
         </button>
         <button 
-          className={`btn ${statusFilter === 'contact' ? 'btn-primary' : 'btn-outline-primary'} btn-sm me-1 mb-1`}
+          className={`btn ${statusFilter === 'contact' ? 'btn-primary' : 'btn-outline-primary'} btn-sm me-2 mb-2 px-3 py-2 rounded-pill d-inline-flex align-items-center`}
           onClick={() => setStatusFilter('contact')}
         >
-          <span className="filter-icon">📞</span> Contact
+          <span className="filter-icon me-1">📞</span> Contact
         </button>
         <button 
-          className={`btn ${statusFilter === 'preaccord' ? 'btn-primary' : 'btn-outline-primary'} btn-sm me-1 mb-1`}
+          className={`btn ${statusFilter === 'preaccord' ? 'btn-primary' : 'btn-outline-primary'} btn-sm me-2 mb-2 px-3 py-2 rounded-pill d-inline-flex align-items-center`}
           onClick={() => setStatusFilter('preaccord')}
         >
-          <span className="filter-icon">✅</span> Pré-accord
+          <span className="filter-icon me-1">✅</span> Pré-accord
         </button>
         <button 
-          className={`btn ${statusFilter === 'contrat' ? 'btn-primary' : 'btn-outline-primary'} btn-sm me-1 mb-1`}
+          className={`btn ${statusFilter === 'contrat' ? 'btn-primary' : 'btn-outline-primary'} btn-sm me-2 mb-2 px-3 py-2 rounded-pill d-inline-flex align-items-center`}
           onClick={() => setStatusFilter('contrat')}
         >
-          <span className="filter-icon">📄</span> Contrat
+          <span className="filter-icon me-1">📄</span> Contrat
         </button>
         <button 
-          className={`btn ${statusFilter === 'acompte' ? 'btn-primary' : 'btn-outline-primary'} btn-sm me-1 mb-1`}
+          className={`btn ${statusFilter === 'acompte' ? 'btn-primary' : 'btn-outline-primary'} btn-sm me-2 mb-2 px-3 py-2 rounded-pill d-inline-flex align-items-center`}
           onClick={() => setStatusFilter('acompte')}
         >
-          <span className="filter-icon">💸</span> Acompte
+          <span className="filter-icon me-1">💸</span> Acompte
         </button>
         <button 
-          className={`btn ${statusFilter === 'solde' ? 'btn-primary' : 'btn-outline-primary'} btn-sm me-1 mb-1`}
+          className={`btn ${statusFilter === 'solde' ? 'btn-primary' : 'btn-outline-primary'} btn-sm me-2 mb-2 px-3 py-2 rounded-pill d-inline-flex align-items-center`}
           onClick={() => setStatusFilter('solde')}
         >
-          <span className="filter-icon">🔁</span> Solde
+          <span className="filter-icon me-1">🔁</span> Solde
         </button>
       </div>
 

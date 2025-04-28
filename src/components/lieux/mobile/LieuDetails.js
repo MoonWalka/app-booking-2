@@ -507,23 +507,34 @@ const LieuDetails = () => {
         {/* Boutons flottants pour les actions principales */}
         <div className="floating-action-buttons">
           {isEditing ? (
-            <>
-              <button 
-                onClick={handleSubmit} 
-                // Harmonisation : ajout classe selon l'action
-                className="floating-action-btn save btn-success"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? <i className="bi bi-hourglass-split"></i> : <i className="bi bi-check-circle"></i>}
-              </button>
-              <button 
-                onClick={toggleEditMode} 
-                // Harmonisation : ajout classe selon l'action
-                className="floating-action-btn cancel btn-danger"
-              >
-                <i className="bi bi-x-circle"></i>
-              </button>
-            </>
+            <div className="d-flex align-items-center gap-2">
+            <button 
+              onClick={handleSubmit} 
+              className="btn btn-success d-flex align-items-center gap-2"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <>
+                  <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  <span>Enregistrement...</span>
+                </>
+              ) : (
+                <>
+                  <i className="bi bi-check-circle me-1"></i>
+                  <span>Enregistrer</span>
+                </>
+              )}
+            </button>
+            
+            <button 
+              onClick={toggleEditMode} 
+              className="btn btn-outline-secondary d-flex align-items-center gap-2"
+              disabled={isSubmitting}
+            >
+              <i className="bi bi-x-circle me-1"></i>
+              <span>Annuler</span>
+            </button>
+          </div>
           ) : (
             <>
               <button 

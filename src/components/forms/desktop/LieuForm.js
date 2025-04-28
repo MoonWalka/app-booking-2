@@ -148,11 +148,14 @@ const LieuForm = () => {
       setShowMap(false);
     }
   }, [lieu.latitude, lieu.longitude]);
-  
+
+  const [error, setError] = useState(null);
+
   useEffect(() => {
     const fetchLieu = async () => {
       if (id && id !== 'nouveau') {
         setLoading(true);
+        setError(null); // Réinitialiser l'erreur lors d'un nouveau chargement
         try {
           const lieuDoc = await getDoc(doc(firebase.db, 'lieux', id));
           if (lieuDoc.exists()) {
@@ -188,8 +191,9 @@ const LieuForm = () => {
             console.error('Lieu non trouvé');
             navigate('/lieux');
           }
-        } catch (error) {
-          console.error('Erreur lors de la récupération du lieu:', error);
+        } catch (err) {
+          console.error('Erreur lors de la récupération du lieu:', err);
+          setError('Une erreur est survenue lors du chargement des données. Veuillez réessayer.');
         } finally {
           setLoading(false);
         }
@@ -952,6 +956,13 @@ useEffect(() => {
             )}
           </button>
         </div>
+
+        {error && (
+        <div className="alert alert-danger d-flex align-items-center gap-2 shadow-sm rounded-3 mb-4">
+          <i className="bi bi-exclamation-triangle-fill fs-5 text-danger me-2"></i>
+          <div>{error}</div>
+        </div>
+      )}
       </form>
     </div>
   );

@@ -600,43 +600,52 @@
 }
 
 .concerts-container .concerts-table .status-message {
-  padding: 4px 10px;
-  border-radius: 4px;
-  /* Harmonisation : taille standardisée */
+  padding: 6px 12px;
+  border-radius: 20px;
   font-size: var(--tc-font-size-xs);
   font-weight: 500;
   text-align: center;
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
 }
 
+/* Styles améliorés pour meilleur contraste */
 .concerts-container .concerts-table .status-message-warning {
-  background-color: rgba(var(--tc-warning-rgb, 255, 193, 7), 0.1);
-  color: var(--tc-warning, #ffc107);
+  background-color: rgba(var(--tc-warning-rgb, 255, 193, 7), 0.15);
+  color: #b36d00; /* Couleur plus foncée pour meilleur contraste */
 }
 
 .concerts-container .concerts-table .status-message-info {
-  background-color: rgba(var(--tc-info-rgb, 23, 162, 184), 0.1);
-  color: var(--tc-info, #17a2b8);
+  background-color: rgba(var(--tc-info-rgb, 23, 162, 184), 0.15);
+  color: #0a6c7e; /* Couleur plus foncée pour meilleur contraste */
 }
 
 .concerts-container .concerts-table .status-message-primary {
-  background-color: rgba(var(--tc-primary-rgb, 0, 123, 255), 0.1);
-  color: var(--tc-primary, #007bff);
+  background-color: rgba(var(--tc-primary-rgb, 0, 123, 255), 0.15);
+  color: #0056b3; /* Couleur plus foncée pour meilleur contraste */
 }
 
 .concerts-container .concerts-table .status-message-success {
-  background-color: rgba(var(--tc-success-rgb, 40, 167, 69), 0.1);
-  color: var(--tc-success, #28a745);
+  background-color: rgba(var(--tc-success-rgb, 40, 167, 69), 0.15);
+  color: #176639; /* Couleur plus foncée pour meilleur contraste */
 }
 
 .concerts-container .concerts-table .status-message-secondary {
-  background-color: rgba(var(--tc-secondary-rgb, 108, 117, 125), 0.1);
-  color: var(--tc-secondary, #6c757d);
+  background-color: rgba(var(--tc-secondary-rgb, 108, 117, 125), 0.15);
+  color: #45494e; /* Couleur plus foncée pour meilleur contraste */
 }
 
 .concerts-container .concerts-table .status-message-danger {
-  background-color: rgba(var(--tc-danger-rgb, 220, 53, 69), 0.1);
-  color: var(--tc-danger, #dc3545);
+  background-color: rgba(var(--tc-danger-rgb, 220, 53, 69), 0.15);
+  color: #a71d2a; /* Couleur plus foncée pour meilleur contraste */
+}
+
+.concerts-container .concerts-table .status-message-light {
+  background-color: rgba(var(--tc-secondary-rgb, 108, 117, 125), 0.1);
+  color: #333; /* Sombre sur fond clair pour contraste */
 }
 
 /* Styles pour les rappels d'action */
@@ -647,6 +656,10 @@
   align-items: center;
   justify-content: center;
   gap: 4px;
+  padding: 3px 8px;
+  background-color: rgba(var(--tc-warning-rgb, 255, 193, 7), 0.1);
+  border-radius: 12px;
+  color: #b36d00; /* Couleur plus foncée pour meilleur contraste */
 }
 
 /* Loading and error states */
@@ -807,4 +820,61 @@
 /* Style pour centrer le contenu des cellules d'actions */
 .concerts-container .concerts-table td:last-child {
   text-align: center;
+}
+
+/* Style pour la ligne cliquable avec transition */
+.tc-clickable-row {
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.tc-clickable-row:hover {
+  background-color: rgba(var(--tc-primary-rgb, 0, 123, 255), 0.03);
+}
+
+/* Classes pour la notification badge */
+.tc-notification-container {
+  position: relative;
+}
+
+/* Définition de la taille des badges de notification dans une classe plutôt qu'en style inline */
+.tc-notification-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--tc-danger-color);
+  transform: translate(40%, -40%);
+  box-shadow: 0 0 0 2px white;
+  animation: pulse 1.5s infinite;
+}
+
+@media (max-width: 768px) {
+  .concerts-container .concerts-table .text-truncate-container {
+    max-width: 120px; /* Réduit la largeur sur mobile */
+  }
+  
+  .concerts-container .concerts-table .lieu-nom,
+  .concerts-container .concerts-table .artist-name,
+  .concerts-container .concerts-table .programmateur-name {
+    max-width: 120px; /* Réduit la largeur sur mobile */
+  }
+  
+  .filter-bar {
+    padding: 10px;
+  }
+  
+  .status-filter-tabs {
+    gap: 8px;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+  
+  .status-filter-tabs button {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
 }

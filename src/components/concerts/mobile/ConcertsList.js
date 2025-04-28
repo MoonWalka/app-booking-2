@@ -123,37 +123,37 @@ const ConcertsListMobile = () => {
       {/* Filtres par statut */}
       <div className="mobile-filters-container">
         <button 
-          className={`filter-pill ${statusFilter === 'tous' ? 'active' : ''}`}
+          className={`btn ${statusFilter === 'tous' ? 'btn-primary' : 'btn-outline-primary'} btn-sm me-1 mb-1`}
           onClick={() => setStatusFilter('tous')}
         >
           Tous
         </button>
         <button 
-          className={`filter-pill ${statusFilter === 'contact' ? 'active' : ''}`}
+          className={`btn ${statusFilter === 'contact' ? 'btn-primary' : 'btn-outline-primary'} btn-sm me-1 mb-1`}
           onClick={() => setStatusFilter('contact')}
         >
           <span className="filter-icon">📞</span> Contact
         </button>
         <button 
-          className={`filter-pill ${statusFilter === 'preaccord' ? 'active' : ''}`}
+          className={`btn ${statusFilter === 'preaccord' ? 'btn-primary' : 'btn-outline-primary'} btn-sm me-1 mb-1`}
           onClick={() => setStatusFilter('preaccord')}
         >
           <span className="filter-icon">✅</span> Pré-accord
         </button>
         <button 
-          className={`filter-pill ${statusFilter === 'contrat' ? 'active' : ''}`}
+          className={`btn ${statusFilter === 'contrat' ? 'btn-primary' : 'btn-outline-primary'} btn-sm me-1 mb-1`}
           onClick={() => setStatusFilter('contrat')}
         >
           <span className="filter-icon">📄</span> Contrat
         </button>
         <button 
-          className={`filter-pill ${statusFilter === 'acompte' ? 'active' : ''}`}
+          className={`btn ${statusFilter === 'acompte' ? 'btn-primary' : 'btn-outline-primary'} btn-sm me-1 mb-1`}
           onClick={() => setStatusFilter('acompte')}
         >
           <span className="filter-icon">💸</span> Acompte
         </button>
         <button 
-          className={`filter-pill ${statusFilter === 'solde' ? 'active' : ''}`}
+          className={`btn ${statusFilter === 'solde' ? 'btn-primary' : 'btn-outline-primary'} btn-sm me-1 mb-1`}
           onClick={() => setStatusFilter('solde')}
         >
           <span className="filter-icon">🔁</span> Solde

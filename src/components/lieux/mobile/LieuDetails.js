@@ -509,17 +509,19 @@ const LieuDetails = () => {
           {isEditing ? (
             <>
               <button 
-                onClick={toggleEditMode} 
-                className="floating-action-btn cancel"
-              >
-                <i className="bi bi-x-circle"></i>
-              </button>
-              <button 
                 onClick={handleSubmit} 
-                className="floating-action-btn save"
+                // Harmonisation : ajout classe selon l'action
+                className="floating-action-btn save btn-success"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? <i className="bi bi-hourglass-split"></i> : <i className="bi bi-check-circle"></i>}
+              </button>
+              <button 
+                onClick={toggleEditMode} 
+                // Harmonisation : ajout classe selon l'action
+                className="floating-action-btn cancel btn-danger"
+              >
+                <i className="bi bi-x-circle"></i>
               </button>
             </>
           ) : (
@@ -532,7 +534,8 @@ const LieuDetails = () => {
               </button>
               <button 
                 onClick={() => setShowConfirmDelete(true)} 
-                className="floating-action-btn delete"
+                // Harmonisation : ajout classe selon l'action
+                className="floating-action-btn delete btn-danger"
               >
                 <i className="bi bi-trash"></i>
               </button>
@@ -558,12 +561,14 @@ const LieuDetails = () => {
             </div>
             <div className="confirmation-footer">
               <button 
-                className="btn btn-outline-secondary" 
+                // Harmonisation : ajout classe selon l'action
+                className="btn btn-secondary" 
                 onClick={() => setShowConfirmDelete(false)}
               >
                 Annuler
               </button>
               <button 
+                // Harmonisation : ajout classe selon l'action
                 className="btn btn-danger" 
                 onClick={handleDeleteConfirm}
               >

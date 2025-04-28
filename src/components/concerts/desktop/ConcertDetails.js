@@ -920,8 +920,10 @@ const ConcertDetails = () => {
             {concert.titre || `Concert du ${formatDate(concert.date)}`}
           </h2>
           <div className="breadcrumb-container">
-            {/* Correction : ajout accessibilité (role/button + tabIndex) */}
-            <span className="breadcrumb-item" onClick={() => navigate('/concerts')} role="button" tabIndex={0}>Concerts</span>
+            {/* Transformé en bouton avec classes standards */}
+            <button className="btn btn-light btn-sm" onClick={() => navigate('/concerts')}>
+              Concerts
+            </button>
             <i className="bi bi-chevron-right"></i>
             <span className="breadcrumb-item active">
               {concert.titre || formatDate(concert.date)}
@@ -972,10 +974,13 @@ const ConcertDetails = () => {
           ) : (
             <>
               {/* Boutons en mode affichage */}
-              <Link to="/concerts" className="btn btn-outline-secondary action-btn">
+              <button 
+                onClick={() => navigate('/concerts')} 
+                className="btn btn-outline-secondary action-btn"
+              >
                 <i className="bi bi-arrow-left"></i>
                 <span className="btn-text">Retour</span>
-              </Link>
+              </button>
               
               <button
                 onClick={toggleEditMode}

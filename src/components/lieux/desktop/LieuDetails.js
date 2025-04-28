@@ -655,7 +655,8 @@ const LieuDetails = () => {
               {/* Boutons en mode édition */}
               <button 
                 onClick={handleSubmit} 
-                className="btn btn-primary action-btn"
+                // Harmonisation : ajout classe selon l'action
+                className="btn btn-success action-btn"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
@@ -673,7 +674,8 @@ const LieuDetails = () => {
               
               <button 
                 onClick={toggleEditMode} 
-                className="btn btn-outline-secondary action-btn"
+                // Harmonisation : ajout classe selon l'action
+                className="btn btn-danger action-btn"
               >
                 <i className="bi bi-x-circle"></i>
                 <span className="btn-text">Annuler</span>
@@ -681,7 +683,8 @@ const LieuDetails = () => {
               
               <button 
                 onClick={handleDelete} 
-                className="btn btn-outline-danger action-btn"
+                // Harmonisation : ajout classe selon l'action
+                className="btn btn-danger action-btn"
               >
                 <i className="bi bi-trash"></i>
                 <span className="btn-text">Supprimer</span>
@@ -690,10 +693,14 @@ const LieuDetails = () => {
           ) : (
             <>
               {/* Boutons en mode affichage */}
-              <Link to="/lieux" className="btn btn-outline-secondary action-btn">
+              <button 
+                onClick={() => navigate('/lieux')} 
+                // Harmonisation : ajout classe selon l'action
+                className="btn btn-secondary action-btn"
+              >
                 <i className="bi bi-arrow-left"></i>
                 <span className="btn-text">Retour</span>
-              </Link>
+              </button>
               
               <button 
                 onClick={toggleEditMode} 
@@ -876,7 +883,7 @@ const LieuDetails = () => {
                       onChange={handleChange}
                       required
                       placeholder="Ex: 75001"
-                    />
+                    />                     
                   ) : (
                     <div className="form-control-static">{lieu.codePostal}</div>
                   )}

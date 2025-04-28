@@ -166,7 +166,7 @@ const ConcertDetailsMobile = () => {
       {/* En-tête avec actions */}
       <div className="mobile-header-bar">
         <button 
-          className="back-button" 
+          className="btn btn-light btn-sm back-button" 
           onClick={() => navigate('/concerts')}
         >
           <i className="bi bi-arrow-left"></i>
@@ -176,13 +176,13 @@ const ConcertDetailsMobile = () => {
         </div>
         <div className="mobile-actions">
           <button 
-            className="edit-button"
+            className="btn btn-outline-primary btn-sm me-2"
             onClick={() => navigate(`/concerts/${id}/edit`)}
           >
             <i className="bi bi-pencil"></i>
           </button>
           <button 
-            className="delete-button"
+            className="btn btn-outline-danger btn-sm"
             onClick={() => setShowDeleteModal(true)}
           >
             <i className="bi bi-trash"></i>
@@ -193,31 +193,31 @@ const ConcertDetailsMobile = () => {
       {/* Onglets pour la navigation mobile */}
       <div className="mobile-tabs">
         <button 
-          className={`tab-button ${activeTab === 'infos' ? 'active' : ''}`}
+          className={`btn ${activeTab === 'infos' ? 'btn-primary' : 'btn-outline-primary'} btn-sm m-1`}
           onClick={() => setActiveTab('infos')}
         >
-          <i className="bi bi-info-circle"></i>
+          <i className="bi bi-info-circle me-1"></i>
           <span>Infos</span>
         </button>
         <button 
-          className={`tab-button ${activeTab === 'lieu' ? 'active' : ''}`}
+          className={`btn ${activeTab === 'lieu' ? 'btn-primary' : 'btn-outline-primary'} btn-sm m-1`}
           onClick={() => setActiveTab('lieu')}
         >
-          <i className="bi bi-geo-alt"></i>
+          <i className="bi bi-geo-alt me-1"></i>
           <span>Lieu</span>
         </button>
         <button 
-          className={`tab-button ${activeTab === 'programmateur' ? 'active' : ''}`}
+          className={`btn ${activeTab === 'programmateur' ? 'btn-primary' : 'btn-outline-primary'} btn-sm m-1`}
           onClick={() => setActiveTab('programmateur')}
         >
-          <i className="bi bi-person-badge"></i>
+          <i className="bi bi-person-badge me-1"></i>
           <span>Prog.</span>
         </button>
         <button 
-          className={`tab-button ${activeTab === 'artiste' ? 'active' : ''}`}
+          className={`btn ${activeTab === 'artiste' ? 'btn-primary' : 'btn-outline-primary'} btn-sm m-1`}
           onClick={() => setActiveTab('artiste')}
         >
-          <i className="bi bi-music-note-beamed"></i>
+          <i className="bi bi-music-note-beamed me-1"></i>
           <span>Artiste</span>
         </button>
       </div>

@@ -157,27 +157,27 @@ const StructureDetails = () => {
       </div>
 
       <div className="d-flex mb-3">
-        <div 
-          className={`nav-item flex-fill text-center py-2 ${activeTab === 'infos' ? 'border-bottom border-primary text-primary' : 'text-muted'}`}
+        <button 
+          className={`btn ${activeTab === 'infos' ? 'btn-primary' : 'btn-outline-primary'} flex-fill`}
           onClick={() => setActiveTab('infos')}
         >
           <i className="bi bi-info-circle me-1"></i>
           Infos
-        </div>
-        <div 
-          className={`nav-item flex-fill text-center py-2 ${activeTab === 'contact' ? 'border-bottom border-primary text-primary' : 'text-muted'}`}
+        </button>
+        <button 
+          className={`btn ${activeTab === 'contact' ? 'btn-primary' : 'btn-outline-primary'} flex-fill`}
           onClick={() => setActiveTab('contact')}
         >
           <i className="bi bi-person me-1"></i>
           Contact
-        </div>
-        <div 
-          className={`nav-item flex-fill text-center py-2 ${activeTab === 'programmateurs' ? 'border-bottom border-primary text-primary' : 'text-muted'}`}
+        </button>
+        <button 
+          className={`btn ${activeTab === 'programmateurs' ? 'btn-primary' : 'btn-outline-primary'} flex-fill`}
           onClick={() => setActiveTab('programmateurs')}
         >
           <i className="bi bi-person-badge me-1"></i>
           Programmateurs
-        </div>
+        </button>
       </div>
 
       {activeTab === 'infos' && (

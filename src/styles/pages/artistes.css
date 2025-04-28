@@ -55,7 +55,8 @@
 }
 
 .placeholder-photo i {
-  font-size: 3rem;
+  /* Harmonisation : taille standardisée */
+  font-size: var(--tc-font-size-xxl);
 }
 
 .header-info {
@@ -83,7 +84,8 @@
 }
 
 .artiste-name {
-  font-size: 24px;
+  /* Harmonisation : taille standardisée */
+  font-size: var(--tc-font-size-xl);
   font-weight: bold;
   margin-bottom: 5px;
 }
@@ -114,7 +116,8 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 1rem;
+  /* Harmonisation : taille standardisée */
+  font-size: var(--tc-font-size-md);
   color: #495057;
 }
 
@@ -166,7 +169,8 @@
 }
 
 .info-section h3 {
-  font-size: 1.2rem;
+  /* Harmonisation : taille standardisée */
+  font-size: var(--tc-font-size-lg);
   font-weight: 600;
   margin-bottom: 15px;
   padding-bottom: 8px;
@@ -192,7 +196,8 @@
 }
 
 .contact-item i {
-  font-size: 1.2rem;
+  /* Harmonisation : taille standardisée */
+  font-size: var(--tc-font-size-lg);
   color: var(--tc-text-muted, #6c757d);
 }
 
@@ -230,7 +235,8 @@
 }
 
 .empty-state i {
-  font-size: 3rem;
+  /* Harmonisation : taille standardisée */
+  font-size: var(--tc-font-size-xxl);
   color: #dee2e6;
   margin-bottom: 15px;
 }
@@ -249,7 +255,8 @@
 
 .list-header h3 {
   margin: 0;
-  font-size: 1.2rem;
+  /* Harmonisation : taille standardisée */
+  font-size: var(--tc-font-size-lg);
   font-weight: 600;
 }
 
@@ -274,19 +281,22 @@
 }
 
 .stat-icon {
-  font-size: 2rem;
+  /* Harmonisation : taille standardisée */
+  font-size: var(--tc-font-size-xl);
   color: #007bff;
 }
 
 .stat-content h4 {
   margin: 0 0 5px 0;
-  font-size: 0.9rem;
+  /* Harmonisation : taille standardisée */
+  font-size: var(--tc-font-size-sm);
   color: #6c757d;
 }
 
 .stat-value {
   margin: 0;
-  font-size: 1.5rem;
+  /* Harmonisation : taille standardisée */
+  font-size: var(--tc-font-size-xl);
   font-weight: 600;
 }
 
@@ -297,7 +307,8 @@
 }
 
 .stats-section h3 {
-  font-size: 1.2rem;
+  /* Harmonisation : taille standardisée */
+  font-size: var(--tc-font-size-lg);
   font-weight: 600;
   margin-bottom: 15px;
   padding-bottom: 8px;
@@ -320,14 +331,16 @@
 
 .page-title {
   margin: 0;
-  font-size: 1.8rem;
+  /* Harmonisation : taille standardisée */
+  font-size: var(--tc-font-size-xxl);
   font-weight: 600;
 }
 
 .breadcrumb {
   display: flex;
   align-items: center;
-  font-size: 0.9rem;
+  /* Harmonisation : taille standardisée */
+  font-size: var(--tc-font-size-sm);
 }
 
 .breadcrumb-item {
@@ -371,12 +384,14 @@
 
 .card-header h3 {
   margin: 0;
-  font-size: 1.2rem;
+  /* Harmonisation : taille standardisée */
+  font-size: var(--tc-font-size-lg);
   font-weight: 600;
 }
 
 .card-header i {
-  font-size: 1.2rem;
+  /* Harmonisation : taille standardisée */
+  font-size: var(--tc-font-size-lg);
   color: #6c757d;
 }
 
@@ -392,7 +407,8 @@
 }
 
 .section-title {
-  font-size: 18px;
+  /* Harmonisation : taille standardisée */
+  font-size: var(--tc-font-size-lg);
   font-weight: bold;
   margin-bottom: 15px;
   border-bottom: 1px solid #ddd;
@@ -431,7 +447,8 @@
   padding: 8px 12px;
   border: 1px solid #ddd;
   border-radius: 4px;
-  font-size: 14px;
+  /* Harmonisation : taille standardisée */
+  font-size: var(--tc-font-size-sm);
 }
 
 .membres-list {
@@ -485,7 +502,8 @@
 }
 
 .artistes-title {
-  font-size: 24px;
+  /* Harmonisation : taille standardisée */
+  font-size: var(--tc-font-size-xl);
   font-weight: bold;
 }
 
@@ -557,7 +575,6 @@
   text-overflow: ellipsis;
   position: relative;
   cursor: help;
-  white-space: nowrap;
 }
 
 .artiste-small-tag {
@@ -567,7 +584,8 @@
   background-color: var(--artiste-color-light, #f0e6ff);
   border-radius: 12px;
   color: var(--artiste-color, #6610f2);
-  font-size: 0.75rem;
+  /* Harmonisation : taille standardisée */
+  font-size: var(--tc-font-size-xs);
   margin-right: 4px;
 }
 

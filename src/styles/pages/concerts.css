@@ -80,7 +80,8 @@
 
 /* Titre du concert - Desktop */
 .concert-title-desktop {
-  font-size: 24px;
+  /* Harmonisation : taille standardisée */
+  font-size: var(--tc-font-size-xl);
   font-weight: bold;
   margin-bottom: 5px;
   color: var(--tc-text-color, #333);
@@ -88,7 +89,8 @@
 
 /* Date du concert - affichage sous le titre */
 .concert-date-display {
-  font-size: 16px;
+  /* Harmonisation : taille standardisée */
+  font-size: var(--tc-font-size-md);
   color: var(--tc-text-muted, #666);
 }
 
@@ -96,7 +98,8 @@
 .concert-status {
   padding: 6px 12px;
   border-radius: 20px;
-  font-size: 14px;
+  /* Harmonisation : taille standardisée */
+  font-size: var(--tc-font-size-sm);
   font-weight: 500;
 }
 
@@ -137,7 +140,8 @@
 }
 
 .section-header {
-  font-size: 18px;
+  /* Harmonisation : taille standardisée */
+  font-size: var(--tc-font-size-lg);
   font-weight: bold;
   margin-bottom: 15px;
   padding-bottom: 8px;
@@ -155,29 +159,33 @@
   border-bottom: none;
 }
 
+/* Harmonisation : utilisation des variables CSS standardisées */
 .info-label {
   font-weight: 500;
   margin-bottom: 5px;
   color: var(--tc-text-muted, #666);
-  font-size: var(--tc-font-size-sm, 14px);
+  font-size: var(--tc-font-size-sm);
 }
 
+/* Harmonisation : utilisation des variables CSS standardisées */
 .info-value {
   color: var(--tc-text-color, #333);
-  font-size: var(--tc-font-size-md, 16px);
+  font-size: var(--tc-font-size-md);
 }
 
 /* Style spécifique pour info-item mobile avec icône */
+/* Harmonisation : utilisation des variables CSS standardisées */
 .info-item-with-icon {
   display: flex;
   align-items: center;
   gap: var(--tc-spacing-xs, 5px);
-  font-size: var(--tc-font-size-sm, 14px);
+  font-size: var(--tc-font-size-sm);
   color: var(--tc-text-muted, #666);
 }
 
+/* Harmonisation : utilisation des variables CSS standardisées */
 .info-item-with-icon i {
-  font-size: var(--tc-font-size-sm, 14px);
+  font-size: var(--tc-font-size-sm);
   width: 15px;
 }
 
@@ -209,7 +217,8 @@
 }
 
 .concerts-title {
-  font-size: 24px;
+  /* Harmonisation : taille standardisée */
+  font-size: var(--tc-font-size-xl);
   font-weight: bold;
 }
 
@@ -338,14 +347,16 @@
 .concert-form-container .programmateur-name {
   font-weight: 600;
   color: var(--tc-text-color, #344767);
-  font-size: 1rem;
+  /* Harmonisation : taille standardisée */
+  font-size: var(--tc-font-size-md);
 }
 
 .concert-form-container .lieu-address, 
 .concert-form-container .lieu-capacity, 
 .concert-form-container .programmateur-structure, 
 .concert-form-container .programmateur-contacts {
-  font-size: 0.875rem;
+  /* Harmonisation : taille standardisée */
+  font-size: var(--tc-font-size-sm);
   color: var(--tc-text-muted, #6c757d);
 }
 
@@ -459,7 +470,8 @@
 .concerts-container .concerts-table .date-day,
 .concerts-container .concerts-table .date-month,
 .concerts-container .concerts-table .date-year {
-  font-size: 14px;
+  /* Harmonisation : taille standardisée */
+  font-size: var(--tc-font-size-sm);
   font-weight: 600;
   color: var(--tc-text-color, #343a40);
   display: inline-block;
@@ -482,7 +494,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 200px;
-  font-size: 14px;
+  /* Harmonisation : taille standardisée */
+  font-size: var(--tc-font-size-sm);
   font-weight: 500;
   color: var(--tc-text-color, #343a40);
 }
@@ -493,7 +506,8 @@
   align-items: center;
   justify-content: center;
   padding: 4px 8px;
-  font-size: 12px;
+  /* Harmonisation : taille standardisée */
+  font-size: var(--tc-font-size-xs);
   font-weight: 500;
   border-radius: 30px;
   min-width: 80px;
@@ -540,7 +554,8 @@
   background-color: var(--tc-bg-light, #f8f9fa);
   border: 1px solid var(--tc-border-color-light, #e9ecef);
   color: var(--tc-text-muted, #6c757d);
-  font-size: 14px;
+  /* Harmonisation : taille standardisée */
+  font-size: var(--tc-font-size-sm);
   transition: all 0.2s ease;
   padding: 0;
 }
@@ -561,7 +576,8 @@
   color: var(--tc-secondary-text, #383d41);
   border-radius: 4px;
   padding: 4px 8px;
-  font-size: 13px;
+  /* Harmonisation : taille standardisée */
+  font-size: var(--tc-font-size-xs);
   font-weight: 500;
   max-width: 150px;
   margin: 0 auto;
@@ -586,7 +602,8 @@
 .concerts-container .concerts-table .status-message {
   padding: 4px 10px;
   border-radius: 4px;
-  font-size: 12px;
+  /* Harmonisation : taille standardisée */
+  font-size: var(--tc-font-size-xs);
   font-weight: 500;
   text-align: center;
   white-space: nowrap;

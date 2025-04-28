@@ -1,11 +1,15 @@
-/* Styles de base pour les boutons */
-button:not(.btn) {
+/* Harmonisation : appliquer le style de base à tous les boutons */
+button {
   cursor: pointer;
   border: none;
   border-radius: var(--tc-border-radius);
   padding: 8px 16px;
   font-size: 14px;
   transition: var(--tc-transition);
+}
+
+.btn {
+  /* On garde les styles Bootstrap normaux pour les boutons avec la classe .btn */
 }
 
 /* Variations de boutons par couleur avec namespace tc- */

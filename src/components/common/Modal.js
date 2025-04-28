@@ -85,20 +85,14 @@ const Modal = ({
           <h3 
             className="modal-title"
             style={{
-              fontSize: '18px',
+              // Harmonisation : taille standardisée
+              fontSize: "var(--tc-font-size-lg)",
               fontWeight: 'bold',
               margin: 0
             }}
           >{title}</h3>
           <button 
-            className="modal-close"
-            style={{
-              background: 'none',
-              border: 'none',
-              fontSize: '20px',
-              cursor: 'pointer',
-              color: '#999'
-            }}
+            className="btn btn-light btn-sm"
             onClick={onClose}
           >
             <i className="bi bi-x-lg"></i>

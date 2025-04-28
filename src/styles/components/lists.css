@@ -145,8 +145,8 @@
 }
 
 /* ===== ACTIONS BUTTONS ===== */
-.table-actions .btn, 
-.table-actions .btn i {
+
+.table-actions .btn {
   color: #5c6791;
   background: #f6f8fd;
   border-radius: 5px;
@@ -155,6 +155,12 @@
   font-size: 1.05rem;
   transition: background .13s;
   padding: 7px 10px;
+}
+
+.table-actions .btn i {
+  color: inherit;
+  font-size: 1rem;
+  margin-right: 4px;
 }
 
 .table-actions .btn:hover,

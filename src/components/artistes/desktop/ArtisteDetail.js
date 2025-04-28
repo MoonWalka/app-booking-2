@@ -37,17 +37,21 @@ const ArtisteDetail = () => {
   }, [id, navigate]);
 
   if (loading) {
-    return <div className="loading-container-mobile">Chargement...</div>;
+    // Correction : renommage pour cohérence
+    return <div className="loading-container-desktop">Chargement...</div>;
   }
 
   if (!artiste) {
-    return <div className="error-container-mobile">Artiste non trouvé</div>;
+    // Correction : renommage pour cohérence
+    return <div className="error-container-desktop">Artiste non trouvé</div>;
   }
 
   return (
-    <div className="artiste-detail-mobile">
+    // Correction : renommage pour cohérence
+    <div className="artiste-detail-desktop">
       {/* En-tête avec image et infos de base */}
-      <div className="mobile-header-container">
+      // Correction : renommage pour cohérence
+      <div className="desktop-header-container">
         <button 
           className="back-button" 
           onClick={() => navigate('/artistes')}
@@ -55,7 +59,8 @@ const ArtisteDetail = () => {
           <i className="bi bi-arrow-left"></i>
         </button>
         
-        <div className="mobile-edit-button">
+        // Correction : renommage pour cohérence
+        <div className="desktop-edit-button">
           <button 
             className="edit-btn"
             onClick={() => navigate(`/artistes/${id}/modifier`)}
@@ -65,22 +70,27 @@ const ArtisteDetail = () => {
         </div>
       </div>
       
-      <div className="mobile-artiste-profile">
-        <div className="mobile-artiste-image">
+      // Correction : renommage pour cohérence
+      <div className="desktop-artiste-profile">
+        // Correction : renommage pour cohérence
+        <div className="desktop-artiste-image">
           {artiste.photoPrincipale ? (
             <img src={artiste.photoPrincipale} alt={artiste.nom} />
           ) : (
-            <div className="mobile-placeholder-photo">
+            // Correction : renommage pour cohérence
+            <div className="desktop-placeholder-photo">
               <i className="bi bi-music-note-beamed"></i>
             </div>
           )}
         </div>
         
-        <div className="mobile-artiste-info">
+        // Correction : renommage pour cohérence
+        <div className="desktop-artiste-info">
           <h1>{artiste.nom}</h1>
           {artiste.genre && <p className="genre">{artiste.genre}</p>}
           
-          <div className="artiste-stats-mobile">
+          // Correction : renommage pour cohérence
+          <div className="artiste-stats-desktop">
             <div className="stat-item">
               <i className="bi bi-calendar-event"></i>
               <span>{artiste.concertsAssocies?.length || 0} concerts</span>
@@ -95,8 +105,9 @@ const ArtisteDetail = () => {
         </div>
       </div>
 
-      {/* Onglets pour la navigation mobile */}
-      <div className="mobile-tabs">
+      {/* Onglets pour la navigation desktop */}
+      // Correction : renommage pour cohérence
+      <div className="desktop-tabs">
         <button 
           className={`tab-button ${activeTab === 'infos' ? 'active' : ''}`}
           onClick={() => setActiveTab('infos')}
@@ -128,7 +139,8 @@ const ArtisteDetail = () => {
       </div>
 
       {/* Contenu de l'onglet sélectionné */}
-      <div className="mobile-tab-content">
+      // Correction : renommage pour cohérence
+      <div className="desktop-tab-content">
         {activeTab === 'infos' && (
           <div className="info-content">
             {artiste.description && (
@@ -151,7 +163,8 @@ const ArtisteDetail = () => {
 
             <div className="info-section">
               <h3>Contacts</h3>
-              <div className="contacts-grid-mobile">
+              // Correction : renommage pour cohérence
+              <div className="contacts-grid-desktop">
                 {artiste.contacts?.email && (
                   <a href={`mailto:${artiste.contacts.email}`} className="contact-item">
                     <i className="bi bi-envelope"></i>
@@ -190,7 +203,8 @@ const ArtisteDetail = () => {
         {activeTab === 'concerts' && (
           <div className="concerts-content">
             {(!artiste.concertsAssocies || artiste.concertsAssocies.length === 0) ? (
-              <div className="empty-state-mobile">
+              // Correction : renommage pour cohérence
+              <div className="empty-state-desktop">
                 <i className="bi bi-calendar-x"></i>
                 <p>Aucun concert associé à cet artiste</p>
                 <button 
@@ -203,7 +217,8 @@ const ArtisteDetail = () => {
               </div>
             ) : (
               <>
-                <div className="concerts-header-mobile">
+                // Correction : renommage pour cohérence
+                <div className="concerts-header-desktop">
                   <h3>Concerts ({artiste.concertsAssocies.length})</h3>
                   <button 
                     className="btn btn-sm btn-outline-primary"
@@ -213,7 +228,8 @@ const ArtisteDetail = () => {
                   </button>
                 </div>
                 
-                <div className="concerts-list-mobile">
+                // Correction : renommage pour cohérence
+                <div className="concerts-list-desktop">
                   {artiste.concertsAssocies.map(concert => (
                     <div 
                       key={concert.id}
@@ -244,17 +260,20 @@ const ArtisteDetail = () => {
         {activeTab === 'contrats' && (
           <div className="contrats-content">
             {(!artiste.contrats || artiste.contrats.length === 0) ? (
-              <div className="empty-state-mobile">
+              // Correction : renommage pour cohérence
+              <div className="empty-state-desktop">
                 <i className="bi bi-file-earmark-x"></i>
                 <p>Aucun contrat associé à cet artiste</p>
               </div>
             ) : (
               <>
-                <div className="contrats-header-mobile">
+                // Correction : renommage pour cohérence
+                <div className="contrats-header-desktop">
                   <h3>Contrats ({artiste.contrats.length})</h3>
                 </div>
                 
-                <div className="contrats-list-mobile">
+                // Correction : renommage pour cohérence
+                <div className="contrats-list-desktop">
                   {artiste.contrats.map(contrat => (
                     <div 
                       key={contrat.id}
@@ -287,7 +306,8 @@ const ArtisteDetail = () => {
 
         {activeTab === 'stats' && (
           <div className="stats-content">
-            <div className="stats-cards-mobile">
+            // Correction : renommage pour cohérence
+            <div className="stats-cards-desktop">
               <div className="stat-card">
                 <div className="stat-icon">
                   <i className="bi bi-calendar-check"></i>

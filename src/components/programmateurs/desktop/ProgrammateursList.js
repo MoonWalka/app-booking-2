@@ -179,7 +179,11 @@ const ProgrammateursList = () => {
                   className="cursor-pointer"
                   onClick={() => handleRowClick(prog.id)}
                 >
-                  <td title={prog.nom} style={{fontSize: "1.09em", fontWeight: "500"}}>
+                  <td title={prog.nom} style={{
+                    // Harmonisation : taille standardisée
+                    fontSize: "var(--tc-font-size-md)",
+                    fontWeight: "500"
+                  }}>
                     <i className="bi bi-person-circle me-2 text-primary"></i>
                     {prog.nom}
                   </td>

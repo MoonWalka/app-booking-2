@@ -227,13 +227,15 @@ const LieuxListMobile = () => {
               <div className="lieu-card-actions">
                 <Link 
                   to={`/lieux/edit/${lieu.id}`}
-                  className="btn btn-outline-secondary lieu-action-btn"
+                  // Harmonisation : ajout classe selon l'action
+                  className="btn btn-outline-primary lieu-action-btn"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <i className="bi bi-pencil"></i>
                 </Link>
                 <Button
-                  variant="outline-danger"
+                  // Harmonisation : ajout classe selon l'action
+                  variant="danger"
                   className="lieu-action-btn"
                   onClick={(e) => handleDelete(lieu.id, e)}
                 >

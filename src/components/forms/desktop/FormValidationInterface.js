@@ -659,7 +659,10 @@ if (concert.lieuId) {
         <div className="validation-success card border-success mb-4">
           <div className="card-body text-center">
             <div className="success-icon">
-              <i className="bi bi-check-circle-fill text-success" style={{ fontSize: '3rem' }}></i>
+              <i className="bi bi-check-circle-fill text-success" style={{ 
+                // Harmonisation : taille standardisée
+                fontSize: "var(--tc-font-size-xxl)" 
+              }}></i>
             </div>
             <h3 className="mt-3">Formulaire validé avec succès</h3>
             <p className="text-muted">Les informations validées ont été intégrées à la fiche du programmateur et du lieu.</p>
@@ -703,7 +706,10 @@ if (concert.lieuId) {
         <div className="card-body">
           <div className="alert alert-info mb-4">
             <div className="d-flex">
-              <i className="bi bi-info-circle-fill me-3" style={{ fontSize: '1.5rem' }}></i>
+              <i className="bi bi-info-circle-fill me-3" style={{ 
+                // Harmonisation : taille standardisée
+                fontSize: "var(--tc-font-size-lg)" 
+              }}></i>
               <div>
                 <p className="mb-0">
                   Validez ou modifiez les informations sur le lieu du concert. Ces informations seront enregistrées dans la base de données.

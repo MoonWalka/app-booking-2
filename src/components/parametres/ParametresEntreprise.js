@@ -375,10 +375,18 @@ const ParametresEntreprise = () => {
                       </div>
                       <div style={{ flex: 1 }}>
                         <div style={{ fontWeight: 'bold' }}>{company.nom}</div>
-                        <div style={{ fontSize: '0.85em', color: '#6c757d' }}>
+                        <div style={{ 
+                          // Harmonisation : taille standardisée
+                          fontSize: 'var(--tc-font-size-sm)', 
+                          color: '#6c757d' 
+                        }}>
                           {company.adresse && `${company.adresse}, `}{company.codePostal} {company.ville}
                         </div>
-                        <div style={{ fontSize: '0.85em', color: '#6c757d' }}>
+                        <div style={{ 
+                          // Harmonisation : taille standardisée
+                          fontSize: 'var(--tc-font-size-sm)', 
+                          color: '#6c757d' 
+                        }}>
                           {company.siren && `SIREN: ${company.siren} • `}
                           {company.siret && `SIRET: ${company.siret} • `}
                           {company.codeAPE && `APE: ${company.codeAPE} `}
@@ -482,7 +490,11 @@ const ParametresEntreprise = () => {
                         <div>
                           <div style={{ fontWeight: 'bold' }}>{suggestion.display_name}</div>
                           {suggestion.address && suggestion.address.postcode && suggestion.address.city && (
-                            <div style={{ fontSize: '0.85em', color: '#6c757d' }}>
+                            <div style={{ 
+                              // Harmonisation : taille standardisée
+                              fontSize: "var(--tc-font-size-sm)", 
+                              color: '#6c757d' 
+                            }}>
                               {suggestion.address.postcode} {suggestion.address.city}
                             </div>
                           )}

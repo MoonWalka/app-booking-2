@@ -174,7 +174,7 @@ const ConcertsList = () => {
     navigate(`/concerts/${concertId}`);
   };
 
-  // Composant pour les boutons d'action avec tooltip
+  // Composant pour les boutons d'action avec tooltip (version corrigée)
   const ActionButton = ({ to, tooltip, icon, variant, onClick }) => (
     <OverlayTrigger
       placement="top"
@@ -183,7 +183,7 @@ const ConcertsList = () => {
       {to ? (
         <Link 
           to={to} 
-          className={`btn btn-${variant} btn-icon modern-btn`}
+          className={`btn btn-${variant} rounded-3 p-2 d-flex align-items-center justify-content-center`}
           onClick={(e) => e.stopPropagation()}
         >
           {icon}
@@ -194,7 +194,7 @@ const ConcertsList = () => {
             e.stopPropagation();
             onClick(); 
           }} 
-          className={`btn btn-${variant} btn-icon modern-btn`}
+          className={`btn btn-${variant} rounded-3 p-2 d-flex align-items-center justify-content-center`}
         >
           {icon}
         </button>
@@ -395,6 +395,7 @@ const ConcertsList = () => {
       </div>
   
       <div className="status-filter-tabs mb-4 d-flex gap-2 flex-wrap">
+        // Harmonisation : ajout classe selon l'action
         <button 
           className={`btn ${statusFilter === 'tous' ? 'btn-primary' : 'btn-light'} rounded-pill px-3 py-2`}
           onClick={() => setStatusFilter('tous')}
@@ -403,6 +404,7 @@ const ConcertsList = () => {
         </button>
         {['contact', 'preaccord', 'contrat', 'acompte', 'solde'].map(status => {
           const statusInfo = getStatusDetails(status);
+          // Harmonisation : ajout classe selon l'action
           return (
             <button 
               key={status}

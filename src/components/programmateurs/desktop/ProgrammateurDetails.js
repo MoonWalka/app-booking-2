@@ -503,7 +503,10 @@ const ProgrammateurDetails = () => {
           {/* Section Informations du contact */}
           <div className="card mb-4 shadow-sm">
             <div className="card-header bg-light d-flex align-items-center">
-              <i className="fa fa-user-circle text-primary" style={{ fontSize: "1.45em" }}></i>
+              <i className="fa fa-user-circle text-primary" style={{ 
+                // Harmonisation : taille standardisée
+                fontSize: "var(--tc-font-size-lg)" 
+              }}></i>
               <h5 className="mb-0 ms-2">Informations du contact</h5>
             </div>
             <div className="card-body p-4">

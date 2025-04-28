@@ -314,15 +314,15 @@ const ArtisteFormDesktop = () => {
   ];
   
   return (
-    <div className="artiste-form-mobile">
-      <div className="mobile-form-header">
+    <div className="artiste-form-desktop">
+      <div className="desktop-form-header">
         <h1>{id !== 'nouveau' ? 'Modifier l\'artiste' : 'Nouvel artiste'}</h1>
       </div>
       
       {/* Remplaçons le composant StepNavigation */}
       <div className="step-form-container">
         <h2>Formulaire d'artiste</h2>
-        <p>Ce formulaire est en cours de développement. Utilisez la version mobile pour le moment.</p>
+        <p>Ce formulaire est en cours de développement. Utilisez la version desktop pour le moment.</p>
         <button
           className="btn btn-primary"
           onClick={() => navigate('/artistes')}

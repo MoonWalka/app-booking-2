@@ -324,6 +324,7 @@ const LieuxList = () => {
               <button 
                 className="btn btn-outline-secondary clear-search" 
                 onClick={() => setSearchTerm('')}
+                aria-label="Effacer la recherche"
               >
                 <i className="bi bi-x-lg"></i>
               </button>
@@ -501,7 +502,8 @@ const LieuxList = () => {
                       >
                         <Link 
                           to={`/lieux/${lieu.id}`} 
-                          className="btn btn-light modern-btn"
+                          // Harmonisation : ajout classe selon l'action
+                          className="btn btn-secondary modern-btn"
                           onClick={handleActionClick}
                         >
                           <i className="bi bi-eye"></i>
@@ -513,7 +515,7 @@ const LieuxList = () => {
                       >
                         <Link 
                           to={`/lieux/edit/${lieu.id}`} 
-                          className="btn btn-light modern-btn"
+                          className="btn btn-outline-primary modern-btn"
                           onClick={handleActionClick}
                         >
                           <i className="bi bi-pencil"></i>
@@ -525,7 +527,8 @@ const LieuxList = () => {
                       >
                         <button 
                           onClick={(e) => { handleDeleteLieu(lieu.id, e); handleActionClick(e); }} 
-                          className="btn btn-light modern-btn"
+                          // Harmonisation : ajout classe selon l'action
+                          className="btn btn-danger modern-btn"
                         >
                           <i className="bi bi-trash"></i>
                         </button>

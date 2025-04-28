@@ -1,5 +1,5 @@
 /* Styles de base pour les boutons */
-button {
+button:not(.btn) {
   cursor: pointer;
   border: none;
   border-radius: var(--tc-border-radius);
@@ -61,33 +61,11 @@ button {
   color: var(--tc-text-light);
 }
 
-/* Classes Bootstrap d'origine - pour maintenir la compatibilité */
-.btn-primary {
-  composes: tc-btn-primary;
-}
-
-.btn-secondary {
-  composes: tc-btn-secondary;
-}
-
-.btn-outline-secondary {
-  composes: tc-btn-outline-secondary;
-}
-
-.btn-action {
-  composes: tc-btn-action;
-}
-
 /* Boutons d'action groupés */
 .tc-action-buttons {
   display: flex;
   gap: 10px;
   margin-top: 15px;
-}
-
-/* Classe de compatibilité */
-.action-buttons {
-  composes: tc-action-buttons;
 }
 
 /* CORRECTIFS POUR LES PROBLÈMES DE POSITIONNEMENT DES BOUTONS */

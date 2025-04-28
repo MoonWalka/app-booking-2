@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import firebase from '@/firebase';
 import '@styles/index.css';
-import { handleDelete } from './handlers/deleteHandler';
 import { collection, query, getDocs, orderBy, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '@/firebase';
 import Spinner from '@/components/common/Spinner';
@@ -110,7 +109,7 @@ const ProgrammateursList = () => {
       {to ? (
         <Link 
           to={to} 
-          className={`btn btn-${variant} btn-icon modern-btn`}
+          className={`btn btn-${variant} btn-sm`}
           onClick={handleActionClick}
         >
           {icon}
@@ -118,7 +117,7 @@ const ProgrammateursList = () => {
       ) : (
         <button 
           onClick={(e) => { onClick(e); handleActionClick(e); }} 
-          className={`btn btn-${variant} btn-icon modern-btn`}
+          className={`btn btn-${variant} btn-sm`}
         >
           {icon}
         </button>
@@ -131,17 +130,17 @@ const ProgrammateursList = () => {
   }
 
   return (
-    <div className="programmateurs-container">
-      <div className="d-flex justify-content-between align-items-center mb-4 header-container">
-        <h2 className="modern-title">Liste des programmateurs</h2>
-        <Link to="/programmateurs/nouveau" className="btn btn-primary modern-add-btn">
+    <div className="container-fluid p-3">
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h2 className="fw-bold">Liste des programmateurs</h2>
+        <Link to="/programmateurs/nouveau" className="btn btn-primary">
           <i className="bi bi-plus-lg me-2"></i>
           Ajouter un programmateur
         </Link>
       </div>
 
-      <div className="search-filter-container mb-4">
-        <div className="search-bar">
+      <div className="mb-4">
+        <div className="mb-3">
           <div className="input-group">
             <span className="input-group-text">
               <i className="bi bi-search"></i>
@@ -149,7 +148,7 @@ const ProgrammateursList = () => {
             <input
               ref={searchInputRef}
               type="text"
-              className="form-control search-input"
+              className="form-control"
               placeholder="Rechercher un programmateur... (Ctrl+F)"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -157,7 +156,7 @@ const ProgrammateursList = () => {
             />
             {searchTerm && (
               <button 
-                className="btn btn-outline-secondary clear-search" 
+                className="btn btn-outline-secondary" 
                 onClick={() => setSearchTerm('')}
               >
                 <i className="bi bi-x-lg"></i>
@@ -165,9 +164,9 @@ const ProgrammateursList = () => {
             )}
           </div>
         </div>
-        <div className="search-results">
+        <div>
           {searchTerm && (
-            <p className="results-count">
+            <p className="small text-muted">
               {filteredProgrammateurs.length} résultat{filteredProgrammateurs.length !== 1 ? 's' : ''} trouvé{filteredProgrammateurs.length !== 1 ? 's' : ''}
             </p>
           )}
@@ -175,7 +174,7 @@ const ProgrammateursList = () => {
       </div>
 
       {filteredProgrammateurs.length === 0 ? (
-        <div className="alert alert-info modern-alert">
+        <div className="alert alert-info">
           {searchTerm ? (
             <div className="d-flex align-items-center">
               <i className="bi bi-info-circle me-3"></i>
@@ -189,8 +188,8 @@ const ProgrammateursList = () => {
           )}
         </div>
       ) : (
-        <div className="table-responsive modern-table-container">
-          <table className="table table-hover modern-table">
+        <div className="table-responsive shadow-sm rounded">
+          <table className="table table-hover mb-0">
             <thead>
               <tr>
                 <th>Nom</th>
@@ -204,7 +203,7 @@ const ProgrammateursList = () => {
               {filteredProgrammateurs.map(prog => (
                 <tr 
                   key={prog.id} 
-                  className="table-row-animate clickable-row"
+                  className="cursor-pointer"
                   onClick={() => handleRowClick(prog.id)}
                 >
                   <td className="fw-medium">
@@ -215,7 +214,7 @@ const ProgrammateursList = () => {
                   </td>
                   <td>
                     {prog.structure ? (
-                      <span className="structure-badge">{prog.structure}</span>
+                      <span className="badge bg-light text-dark">{prog.structure}</span>
                     ) : (
                       <span className="text-muted">-</span>
                     )}
@@ -224,7 +223,7 @@ const ProgrammateursList = () => {
                     {prog.email ? (
                       <a 
                         href={`mailto:${prog.email}`} 
-                        className="email-link"
+                        className="text-decoration-none"
                         onClick={handleActionClick}
                       >
                         <i className="bi bi-envelope-fill me-1"></i>
@@ -238,7 +237,7 @@ const ProgrammateursList = () => {
                     {prog.telephone ? (
                       <a 
                         href={`tel:${prog.telephone}`} 
-                        className="phone-link"
+                        className="text-decoration-none"
                         onClick={handleActionClick}
                       >
                         <i className="bi bi-telephone-fill me-1"></i>
@@ -249,7 +248,7 @@ const ProgrammateursList = () => {
                     )}
                   </td>
                   <td>
-                    <div className="btn-group action-buttons">
+                    <div className="btn-group">
                       <ActionButton 
                         to={`/programmateurs/edit/${prog.id}`} 
                         tooltip="Modifier le programmateur" 

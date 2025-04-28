@@ -92,7 +92,6 @@
 @media (max-width: 768px) {
     :root {
         --tc-spacing-unit: 0.75rem;
-        --tc-font-size-base: 14px;
         --tc-sidebar-width: 100%;  /* Sidebar prend toute la largeur en mobile */
     }
 }

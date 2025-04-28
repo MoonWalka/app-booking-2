@@ -16,7 +16,6 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/firebase';
 import '@styles/index.css';
-import { handleDelete } from './handlers/deleteHandler';
 import Spinner from '@/components/common/Spinner';
 
 
@@ -380,7 +379,7 @@ const ProgrammateurDetails = () => {
   };
 
   if (loading) {
-    return <Spinner message="Chargement des données..." />;
+    return <Spinner message="Chargement des données..." contentOnly={true} />;
   }
 
   if (error) {
@@ -424,74 +423,74 @@ const ProgrammateurDetails = () => {
   const { contact, structure } = extractData();
   
   return (
-    <div className="programmateur-details-container">
-      <div className="details-header-container">
-        <div className="title-container">
-          <div className="breadcrumb-container mb-2">
-            <span className="breadcrumb-item" onClick={() => navigate('/programmateurs')}>Programmateurs</span>
-            <i className="bi bi-chevron-right"></i>
-            <span className="breadcrumb-item active">{programmateur.nom}</span>
-          </div>
-          <h2 className="modern-title">
+    <div className="container-fluid p-4">
+      <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
+        <div>
+          <nav aria-label="breadcrumb" className="mb-2">
+            <ol className="breadcrumb">
+              <li className="breadcrumb-item"><a href="#" onClick={(e) => { e.preventDefault(); navigate('/programmateurs'); }} className="text-decoration-none">Programmateurs</a></li>
+              <li className="breadcrumb-item active" aria-current="page">{programmateur.nom}</li>
+            </ol>
+          </nav>
+          <h2 className="fw-bold mb-0">
             {programmateur.nom}
-            {programmateur.structure && <span className="structure-badge ms-2">{programmateur.structure}</span>}
+            {programmateur.structure && <span className="badge bg-light text-dark ms-2 fs-6">{programmateur.structure}</span>}
           </h2>
         </div>
         
-        {/* MODIFICATION: Boutons d'action harmonisés avec LieuDetails */}
-        <div className="action-buttons">
-  {isEditing ? (
-    <>
-      {/* Boutons en mode édition */}
-      <button 
-        onClick={handleSubmit} 
-        className="btn btn-primary action-btn"
-        disabled={isSubmitting}
-      >
-        {isSubmitting ? (
-          <>
-            <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-            <span className="btn-text">Enregistrement...</span>
-          </>
-        ) : (
-          <>
-            <i className="bi bi-check-circle"></i>
-            <span className="btn-text">Enregistrer</span>
-          </>
-        )}
-      </button>
-      
-      <button 
-        onClick={toggleEditMode} 
-        className="btn btn-outline-secondary action-btn"
-      >
-        <i className="bi bi-x-circle"></i>
-        <span className="btn-text">Annuler</span>
-      </button>
-      
-      <button 
-        onClick={handleDelete} 
-        className="btn btn-outline-danger action-btn"
-      >
-        <i className="bi bi-trash"></i>
-        <span className="btn-text">Supprimer</span>
-      </button>
-    </>
-  ) : (
-    <>
-      {/* Boutons en mode affichage */}
-      <Link to="/programmateurs" className="btn btn-outline-secondary action-btn">
-        <i className="bi bi-arrow-left"></i>
-        <span className="btn-text">Retour</span>
-      </Link>
-      
-      <button 
-        onClick={toggleEditMode} 
-        className="btn btn-outline-primary action-btn"
-      >
-        <i className="bi bi-pencil"></i>
-        <span className="btn-text">Modifier</span>
-      </button>
+        <div className="d-flex gap-2 mt-3 mt-md-0">
+          {isEditing ? (
+            <>
+              {/* Boutons en mode édition */}
+              <button 
+                onClick={handleSubmit} 
+                className="btn btn-primary d-flex align-items-center"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    <span>Enregistrement...</span>
+                  </>
+                ) : (
+                  <>
+                    <i className="bi bi-check-circle me-2"></i>
+                    <span>Enregistrer</span>
+                  </>
+                )}
+              </button>
+              
+              <button 
+                onClick={toggleEditMode} 
+                className="btn btn-outline-secondary d-flex align-items-center"
+              >
+                <i className="bi bi-x-circle me-2"></i>
+                <span>Annuler</span>
+              </button>
+              
+              <button 
+                onClick={handleDelete} 
+                className="btn btn-outline-danger d-flex align-items-center"
+              >
+                <i className="bi bi-trash me-2"></i>
+                <span>Supprimer</span>
+              </button>
+            </>
+          ) : (
+            <>
+              {/* Boutons en mode affichage */}
+              <Link to="/programmateurs" className="btn btn-outline-secondary d-flex align-items-center">
+                <i className="bi bi-arrow-left me-2"></i>
+                <span>Retour</span>
+              </Link>
+              
+              <button 
+                onClick={toggleEditMode} 
+                className="btn btn-outline-primary d-flex align-items-center"
+              >
+                <i className="bi bi-pencil me-2"></i>
+                <span>Modifier</span>
+              </button>
             </>
           )}
         </div>
@@ -500,18 +499,18 @@ const ProgrammateurDetails = () => {
       {/* Contenu principal avec mode conditionnellement rendu */}
       {isEditing ? (
         // MODE ÉDITION
-        <form onSubmit={handleSubmit} className="modern-form">
+        <form onSubmit={handleSubmit}>
           {/* Section Informations du contact */}
-          <div className="form-card">
-            <div className="card-header">
-              <i className="bi bi-person-vcard"></i>
-              <h3>Informations du contact</h3>
+          <div className="card mb-4 shadow-sm">
+            <div className="card-header bg-light d-flex align-items-center">
+              <i className="bi bi-person-vcard me-2"></i>
+              <h5 className="mb-0">Informations du contact</h5>
             </div>
-            <div className="card-body">
-              <div className="row">
+            <div className="card-body p-4">
+              <div className="row g-3 mb-3">
                 <div className="col-md-6">
-                  <div className="form-group">
-                    <label htmlFor="contact.nom" className="form-label">Nom <span className="required">*</span></label>
+                  <div className="form-group mb-3">
+                    <label htmlFor="contact.nom" className="form-label fw-medium">Nom <span className="text-danger">*</span></label>
                     <input
                       type="text"
                       className="form-control"
@@ -525,8 +524,8 @@ const ProgrammateurDetails = () => {
                   </div>
                 </div>
                 <div className="col-md-6">
-                  <div className="form-group">
-                    <label htmlFor="contact.prenom" className="form-label">Prénom</label>
+                  <div className="form-group mb-3">
+                    <label htmlFor="contact.prenom" className="form-label fw-medium">Prénom</label>
                     <input
                       type="text"
                       className="form-control"
@@ -540,8 +539,8 @@ const ProgrammateurDetails = () => {
                 </div>
               </div>
 
-              <div className="form-group">
-                <label htmlFor="contact.fonction" className="form-label">Fonction</label>
+              <div className="form-group mb-4">
+                <label htmlFor="contact.fonction" className="form-label fw-medium">Fonction</label>
                 <input
                   type="text"
                   className="form-control"
@@ -553,10 +552,10 @@ const ProgrammateurDetails = () => {
                 />
               </div>
 
-              <div className="row">
+              <div className="row g-3">
                 <div className="col-md-6">
-                  <div className="form-group">
-                    <label htmlFor="contact.email" className="form-label">Email</label>
+                  <div className="form-group mb-3">
+                    <label htmlFor="contact.email" className="form-label fw-medium">Email</label>
                     <div className="input-group">
                       <span className="input-group-text"><i className="bi bi-envelope"></i></span>
                       <input
@@ -572,8 +571,8 @@ const ProgrammateurDetails = () => {
                   </div>
                 </div>
                 <div className="col-md-6">
-                  <div className="form-group">
-                    <label htmlFor="contact.telephone" className="form-label">Téléphone</label>
+                  <div className="form-group mb-3">
+                    <label htmlFor="contact.telephone" className="form-label fw-medium">Téléphone</label>
                     <div className="input-group">
                       <span className="input-group-text"><i className="bi bi-telephone"></i></span>
                       <input
@@ -593,19 +592,20 @@ const ProgrammateurDetails = () => {
           </div>
 
           {/* Section Structure juridique */}
-          <div className="form-card">
+          <div className="bootstrap-card">
             <div className="card-header">
-              <i className="bi bi-building"></i>
-              <h3>Structure juridique</h3>
+              <i className="bi bi-building me-2"></i>
+              <h5 className="mb-0">Structure juridique</h5>
             </div>
             <div className="card-body">
-              <div className="row">
+              {/* Première ligne: Raison sociale et Type */}
+              <div className="row mb-4">
                 <div className="col-md-7">
-                  <div className="form-group">
-                    <label htmlFor="structure.raisonSociale" className="form-label">Raison sociale</label>
+                  <div className="mb-3">
+                    <label htmlFor="structure.raisonSociale" className="card-label">Raison sociale</label>
                     <input
                       type="text"
-                      className="form-control"
+                      className="form-control form-control-lg"
                       id="structure.raisonSociale"
                       name="structure.raisonSociale"
                       value={formData.structure.raisonSociale}
@@ -615,8 +615,8 @@ const ProgrammateurDetails = () => {
                   </div>
                 </div>
                 <div className="col-md-5">
-                  <div className="form-group">
-                    <label htmlFor="structure.type" className="form-label">Type de structure</label>
+                  <div className="mb-3">
+                    <label htmlFor="structure.type" className="card-label">Type de structure</label>
                     <select
                       className="form-select"
                       id="structure.type"
@@ -635,8 +635,9 @@ const ProgrammateurDetails = () => {
                 </div>
               </div>
 
-              <div className="form-group">
-                <label htmlFor="structure.adresse" className="form-label">Adresse complète</label>
+              {/* Adresse complète */}
+              <div className="mb-4">
+                <label htmlFor="structure.adresse" className="card-label">Adresse complète</label>
                 <input
                   type="text"
                   className="form-control"
@@ -648,10 +649,11 @@ const ProgrammateurDetails = () => {
                 />
               </div>
 
-              <div className="row">
+              {/* Code postal, Ville, Pays */}
+              <div className="row mb-4">
                 <div className="col-md-4">
-                  <div className="form-group">
-                    <label htmlFor="structure.codePostal" className="form-label">Code postal</label>
+                  <div className="mb-0">
+                    <label htmlFor="structure.codePostal" className="card-label">Code postal</label>
                     <input
                       type="text"
                       className="form-control"
@@ -664,8 +666,8 @@ const ProgrammateurDetails = () => {
                   </div>
                 </div>
                 <div className="col-md-5">
-                  <div className="form-group">
-                    <label htmlFor="structure.ville" className="form-label">Ville</label>
+                  <div className="mb-0">
+                    <label htmlFor="structure.ville" className="card-label">Ville</label>
                     <input
                       type="text"
                       className="form-control"
@@ -678,8 +680,8 @@ const ProgrammateurDetails = () => {
                   </div>
                 </div>
                 <div className="col-md-3">
-                  <div className="form-group">
-                    <label htmlFor="structure.pays" className="form-label">Pays</label>
+                  <div className="mb-0">
+                    <label htmlFor="structure.pays" className="card-label">Pays</label>
                     <input
                       type="text"
                       className="form-control"
@@ -692,13 +694,14 @@ const ProgrammateurDetails = () => {
                 </div>
               </div>
 
+              {/* SIRET et TVA */}
               <div className="row">
                 <div className="col-md-6">
-                  <div className="form-group">
-                    <label htmlFor="structure.siret" className="form-label">SIRET</label>
+                  <div className="mb-md-0 mb-3">
+                    <label htmlFor="structure.siret" className="card-label">SIRET</label>
                     <input
                       type="text"
-                      className="form-control"
+                      className="form-control card-value-code"
                       id="structure.siret"
                       name="structure.siret"
                       value={formData.structure.siret}
@@ -708,11 +711,13 @@ const ProgrammateurDetails = () => {
                   </div>
                 </div>
                 <div className="col-md-6">
-                  <div className="form-group">
-                    <label htmlFor="structure.tva" className="form-label">N° TVA intracommunautaire <span className="optional">(facultatif)</span></label>
+                  <div className="mb-0">
+                    <label htmlFor="structure.tva" className="card-label">
+                      N° TVA intracommunautaire <span className="optional-text">(facultatif)</span>
+                    </label>
                     <input
                       type="text"
-                      className="form-control"
+                      className="form-control card-value-code"
                       id="structure.tva"
                       name="structure.tva"
                       value={formData.structure.tva}
@@ -726,41 +731,41 @@ const ProgrammateurDetails = () => {
           </div>
           
           {/* Concerts associés en édition (lecture seule) */}
-          <div className="form-card">
-            <div className="card-header">
-              <i className="bi bi-music-note-list"></i>
-              <h3>Concerts associés</h3>
+          <div className="card mb-4 shadow-sm">
+            <div className="card-header bg-light d-flex align-items-center">
+              <i className="bi bi-music-note-list me-2"></i>
+              <h5 className="mb-0">Concerts associés</h5>
             </div>
-            <div className="card-body">
-              <div className="associated-concerts">
-                <h4 className="mb-3 concerts-title">
+            <div className="card-body p-4">
+              <div>
+                <h5 className="mb-3">
                   {formData.concertsAssocies?.length > 0 
                     ? `Concerts associés (${formData.concertsAssocies.length})` 
                     : 'Aucun concert associé'}
-                </h4>
+                </h5>
                 
                 {formData.concertsAssocies?.length > 0 ? (
-                  <div className="concert-list">
+                  <div className="list-group">
                     {formData.concertsAssocies.map(concert => (
-                      <div key={concert.id} className="concert-card">
-                        <div className="concert-card-body">
-                          <div className="concert-info">
-                            <h5 className="concert-name">
+                      <div key={concert.id} className="list-group-item list-group-item-action p-3">
+                        <div className="d-flex justify-content-between align-items-center">
+                          <div>
+                            <h6 className="mb-1">
                               <i className="bi bi-music-note me-2"></i>
-                              <Link to={`/concerts/${concert.id}`}>{concert.titre}</Link>
-                            </h5>
-                            <div className="concert-details">
+                              <Link to={`/concerts/${concert.id}`} className="text-decoration-none">{concert.titre}</Link>
+                            </h6>
+                            <div className="d-flex gap-3 text-muted small">
                               {concert.date && (
-                                <span className="concert-detail">
-                                  <i className="bi bi-calendar-event"></i>
+                                <span>
+                                  <i className="bi bi-calendar-event me-1"></i>
                                   {typeof concert.date === 'object' && concert.date.seconds
                                     ? new Date(concert.date.seconds * 1000).toLocaleDateString('fr-FR')
                                     : concert.date}
                                 </span>
                               )}
                               {concert.lieu && (
-                                <span className="concert-detail">
-                                  <i className="bi bi-geo-alt"></i>
+                                <span>
+                                  <i className="bi bi-geo-alt me-1"></i>
                                   {concert.lieu}
                                 </span>
                               )}
@@ -780,7 +785,7 @@ const ProgrammateurDetails = () => {
             </div>
           </div>
           
-          <div className="form-actions">
+          <div className="d-flex justify-content-end gap-3 mb-4">
             <button
               type="button"
               className="btn btn-outline-secondary"
@@ -813,39 +818,39 @@ const ProgrammateurDetails = () => {
         // MODE AFFICHAGE
         <>
           {/* Section Informations du contact */}
-          <div className="form-card">
-            <div className="card-header">
-              <i className="bi bi-person-vcard"></i>
-              <h3>Informations du contact</h3>
+          <div className="card mb-4 shadow-sm">
+            <div className="card-header bg-light d-flex align-items-center">
+              <i className="bi bi-person-vcard me-2"></i>
+              <h5 className="mb-0">Informations du contact</h5>
             </div>
-            <div className="card-body">
-              <div className="row">
+            <div className="card-body p-4">
+              <div className="row g-3">
                 <div className="col-md-6">
-                  <div className="form-group">
-                    <label className="form-label">Nom</label>
-                    <p className="form-display">{formatValue(contact.nom)}</p>
+                  <div className="mb-3">
+                    <label className="form-label fw-bold text-secondary fs-6">Nom</label>
+                    <p className="mb-0 fs-5">{formatValue(contact.nom)}</p>
                   </div>
                 </div>
                 <div className="col-md-6">
-                  <div className="form-group">
-                    <label className="form-label">Prénom</label>
-                    <p className="form-display">{formatValue(contact.prenom)}</p>
+                  <div className="mb-3">
+                    <label className="form-label fw-bold text-secondary fs-6">Prénom</label>
+                    <p className="mb-0 fs-5">{formatValue(contact.prenom)}</p>
                   </div>
                 </div>
               </div>
 
-              <div className="form-group">
-                <label className="form-label">Fonction</label>
-                <p className="form-display">{formatValue(contact.fonction)}</p>
+              <div className="mb-4">
+                <label className="form-label fw-bold text-secondary fs-6">Fonction</label>
+                <p className="mb-0">{formatValue(contact.fonction)}</p>
               </div>
 
-              <div className="row">
+              <div className="row g-3">
                 <div className="col-md-6">
-                  <div className="form-group">
-                    <label className="form-label">Email</label>
-                    <p className="form-display">
+                  <div className="mb-3">
+                    <label className="form-label fw-bold text-secondary fs-6">Email</label>
+                    <p className="mb-0">
                       {contact.email ? (
-                        <a href={`mailto:${contact.email}`} className="email-link">
+                        <a href={`mailto:${contact.email}`} className="text-decoration-none">
                           <i className="bi bi-envelope me-1"></i>
                           {contact.email}
                         </a>
@@ -856,11 +861,11 @@ const ProgrammateurDetails = () => {
                   </div>
                 </div>
                 <div className="col-md-6">
-                  <div className="form-group">
-                    <label className="form-label">Téléphone</label>
-                    <p className="form-display">
+                  <div className="mb-3">
+                    <label className="form-label fw-bold text-secondary fs-6">Téléphone</label>
+                    <p className="mb-0">
                       {contact.telephone ? (
-                        <a href={`tel:${contact.telephone}`} className="phone-link">
+                        <a href={`tel:${contact.telephone}`} className="text-decoration-none">
                           <i className="bi bi-telephone me-1"></i>
                           {contact.telephone}
                         </a>
@@ -875,72 +880,74 @@ const ProgrammateurDetails = () => {
           </div>
 
           {/* Section Structure juridique */}
-          <div className="form-card">
+          <div className="card mb-4 shadow-sm">
             <div className="card-header">
-              <i className="bi bi-building"></i>
-              <h3>Structure juridique</h3>
+              <i className="bi bi-building me-2"></i>
+              <h5 className="mb-0">Structure juridique</h5>
             </div>
-            <div className="card-body">
-              <div className="row">
+            <div className="card-body p-4">
+              <div className="row mb-4">
                 <div className="col-md-7">
-                  <div className="form-group">
-                    <label className="form-label">Raison sociale</label>
-                    <p className="form-display">{formatValue(structure.raisonSociale)}</p>
+                  <div className="mb-3">
+                    <label className="form-label fw-bold text-secondary">Raison sociale</label>
+                    <p className="form-control-plaintext">{formatValue(structure.raisonSociale)}</p>
                   </div>
                 </div>
                 <div className="col-md-5">
-                  <div className="form-group">
-                    <label className="form-label">Type de structure</label>
-                    <p className="form-display">
-                    {formatValue(structure.type ? (
-                        structure.type === 'association' ? 'Association' :
-                        structure.type === 'mairie' ? 'Mairie / Collectivité' :
-                        structure.type === 'entreprise' ? 'Entreprise' :
-                        structure.type === 'auto-entrepreneur' ? 'Auto-entrepreneur' :
-                        structure.type
+                  <div className="mb-3">
+                    <label className="form-label fw-bold text-secondary">Type de structure</label>
+                    <p className="form-control-plaintext">
+                      {formatValue(structure.type ? (
+                        <span>
+                          {structure.type === 'association' ? 'Association' :
+                           structure.type === 'mairie' ? 'Mairie / Collectivité' :
+                           structure.type === 'entreprise' ? 'Entreprise' :
+                           structure.type === 'auto-entrepreneur' ? 'Auto-entrepreneur' :
+                           structure.type}
+                        </span>
                       ) : '')}
                     </p>
                   </div>
                 </div>
               </div>
 
-              <div className="form-group">
-                <label className="form-label">Adresse complète</label>
-                <p className="form-display">{formatValue(structure.adresse)}</p>
+              <div className="mb-4">
+                <label className="form-label fw-bold text-secondary">Adresse complète</label>
+                <p className="form-control-plaintext">{formatValue(structure.adresse)}</p>
               </div>
 
-              <div className="row">
+              <div className="row mb-4">
                 <div className="col-md-4">
-                  <div className="form-group">
-                    <label className="form-label">Code postal</label>
-                    <p className="form-display">{formatValue(structure.codePostal)}</p>
+                  <div className="mb-3">
+                    <label className="form-label fw-bold text-secondary">Code postal</label>
+                    <p className="form-control-plaintext">{formatValue(structure.codePostal)}</p>
                   </div>
                 </div>
                 <div className="col-md-5">
-                  <div className="form-group">
-                    <label className="form-label">Ville</label>
-                    <p className="form-display">{formatValue(structure.ville)}</p>
+                  <div className="mb-3">
+                    <label className="form-label fw-bold text-secondary">Ville</label>
+                    <p className="form-control-plaintext">{formatValue(structure.ville)}</p>
                   </div>
                 </div>
                 <div className="col-md-3">
-                  <div className="form-group">
-                    <label className="form-label">Pays</label>
-                    <p className="form-display">{formatValue(structure.pays)}</p>
+                  <div className="mb-3">
+                    <label className="form-label fw-bold text-secondary">Pays</label>
+                    <p className="form-control-plaintext">{formatValue(structure.pays)}</p>
                   </div>
                 </div>
               </div>
 
               <div className="row">
                 <div className="col-md-6">
-                  <div className="form-group">
-                    <label className="form-label">SIRET</label>
-                    <p className="form-display">{formatValue(structure.siret)}</p>
+                  <div className="mb-3">
+                    <label className="form-label fw-bold text-secondary">SIRET</label>
+                    <p className="form-control-plaintext">{formatValue(structure.siret)}</p>
                   </div>
                 </div>
                 <div className="col-md-6">
-                  <div className="form-group">
-                    <label className="form-label">N° TVA intracommunautaire</label>
-                    <p className="form-display">{formatValue(structure.tva)}</p>
+                  <div className="mb-3">
+                    <label className="form-label fw-bold text-secondary">N° TVA intracommunautaire</label>
+                    <p className="form-control-plaintext">{formatValue(structure.tva)}</p>
                   </div>
                 </div>
               </div>
@@ -948,19 +955,19 @@ const ProgrammateurDetails = () => {
           </div>
 
           {/* Section Concerts associés */}
-          <div className="form-card">
-            <div className="card-header">
-              <i className="bi bi-music-note-list"></i>
-              <h3>Concerts associés</h3>
+          <div className="card mb-4 shadow-sm">
+            <div className="card-header bg-light d-flex align-items-center">
+              <i className="bi bi-music-note-list me-2"></i>
+              <h5 className="mb-0">Concerts associés</h5>
             </div>
-            <div className="card-body">
-              <div className="associated-concerts">
+            <div className="card-body p-4">
+              <div>
                 <div className="d-flex justify-content-between align-items-center mb-3">
-                  <h4 className="concerts-title mb-0">
+                  <h5 className="mb-0">
                     {programmateur.concertsAssocies?.length > 0 
                       ? `Concerts associés (${programmateur.concertsAssocies.length})` 
                       : 'Aucun concert associé'}
-                  </h4>
+                  </h5>
                   
                   <button 
                     className="btn btn-sm btn-outline-primary"
@@ -976,7 +983,7 @@ const ProgrammateurDetails = () => {
                 
                 {/* Section de recherche de concerts */}
                 {showConcertSearch && (
-                  <div className="concert-search-section mb-4" ref={concertSearchRef}>
+                  <div className="mb-4" ref={concertSearchRef}>
                     <div className="input-group mb-2">
                       <input
                         type="text"
@@ -1010,7 +1017,7 @@ const ProgrammateurDetails = () => {
                           concertResults.map(concert => (
                             <div 
                               key={concert.id} 
-                              className="dropdown-item concert-item"
+                              className="dropdown-item"
                               onClick={() => handleSelectConcert(concert)}
                             >
                               <div className="d-flex justify-content-between align-items-center">
@@ -1054,27 +1061,27 @@ const ProgrammateurDetails = () => {
                 )}
                 
                 {programmateur.concertsAssocies?.length > 0 ? (
-                  <div className="concert-list">
+                  <div className="list-group">
                     {programmateur.concertsAssocies.map(concert => (
-                      <div key={concert.id} className="concert-card">
-                        <div className="concert-card-body">
-                          <div className="concert-info">
-                            <h5 className="concert-name">
+                      <div key={concert.id} className="list-group-item list-group-item-action p-3">
+                        <div className="d-flex justify-content-between align-items-center">
+                          <div>
+                            <h6 className="mb-1">
                               <i className="bi bi-music-note me-2"></i>
-                              <Link to={`/concerts/${concert.id}`}>{concert.titre}</Link>
-                            </h5>
-                            <div className="concert-details">
+                              <Link to={`/concerts/${concert.id}`} className="text-decoration-none">{concert.titre}</Link>
+                            </h6>
+                            <div className="d-flex gap-3 text-muted small">
                               {concert.date && (
-                                <span className="concert-detail">
-                                  <i className="bi bi-calendar-event"></i>
+                                <span>
+                                  <i className="bi bi-calendar-event me-1"></i>
                                   {typeof concert.date === 'object' && concert.date.seconds
                                     ? new Date(concert.date.seconds * 1000).toLocaleDateString('fr-FR')
                                     : concert.date}
                                 </span>
                               )}
                               {concert.lieu && (
-                                <span className="concert-detail">
-                                  <i className="bi bi-geo-alt"></i>
+                                <span>
+                                  <i className="bi bi-geo-alt me-1"></i>
                                   {concert.lieu}
                                 </span>
                               )}

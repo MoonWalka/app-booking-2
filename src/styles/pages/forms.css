@@ -111,15 +111,6 @@
   color: #856404;
 }
 
-.btn-warning {
-  background-color: var(--tc-warning-color);
-  color: white;
-}
-
-.btn-warning:hover {
-  background-color: #e67e22;
-}
-
 /* Styles pour les informations de soumission */
 .form-submitted-info, 
 .form-validated-info {

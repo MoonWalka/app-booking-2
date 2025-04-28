@@ -1,47 +1,23 @@
 /* Reset et styles de base */
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-  
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.6;
-    color: var(--tc-text-color);
-    background-color: var(--tc-background-color);
-  }
-  
-  a {
-    text-decoration: none;
-    color: var(--tc-primary-color);
-    transition: var(--tc-transition);
-  }
-  
-  a:hover {
-    color: var(--tc-primary-dark);
-  }
-  
-  button {
-    cursor: pointer;
-    border: none;
-    border-radius: var(--tc-border-radius);
-    padding: 8px 16px;
-    font-size: 14px;
-    transition: var(--tc-transition);
-  }
-  
-  input, select, textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid var(--tc-border-color);
-    border-radius: var(--tc-border-radius);
-    font-size: 14px;
-    transition: var(--tc-transition);
-  }
-  
-  input:focus, select:focus, textarea:focus {
-    outline: none;
-    border-color: var(--tc-primary-color);
-    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
-  }
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: var(--tc-text-color);
+  background-color: var(--tc-background-color);
+}
+
+a {
+  text-decoration: none;
+  color: var(--tc-primary-color);
+  transition: var(--tc-transition);
+}
+
+a:hover {
+  color: var(--tc-primary-dark);
+}

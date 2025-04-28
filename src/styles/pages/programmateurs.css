@@ -173,7 +173,7 @@
 
 .card-header h3 {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: 1.5rem;
   font-weight: 600;
   color: var(--tc-text-color, #344767);
 }
@@ -487,4 +487,75 @@
 
 .programmateur-link:hover {
   text-decoration: underline;
+}
+
+/* =============================
+   STRUCTURE JURIDIQUE - AMÉLIORATIONS
+   ============================= */
+.structure-card .card-body {
+  padding: 1.5rem;
+}
+
+.structure-card .data-label {
+  font-size: 0.75rem;
+  color: #6c757d;
+  margin-bottom: 0.25rem;
+  display: block;
+}
+
+.structure-card .data-value {
+  font-weight: 500;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.structure-card .raison-sociale {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.structure-card .row-spacing {
+  margin-bottom: 1.5rem;
+}
+
+.structure-card .code-value {
+  font-family: var(--font-monospace, monospace);
+  letter-spacing: 0.5px;
+}
+
+.structure-card .row + .row {
+  margin-top: 1.25rem;
+}
+
+.structure-card .type-badge {
+  display: inline-block;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  line-height: 1;
+  color: #495057;
+  background-color: #f8f9fa;
+  border-radius: 0.25rem;
+}
+
+/* Input styles for structure card */
+.structure-card .form-control-lg {
+  height: calc(2.5rem + 2px);
+  font-size: 1.1rem;
+}
+
+.structure-card .input-label {
+  font-size: 0.75rem;
+  color: #6c757d;
+  margin-bottom: 0.25rem;
+  display: block;
+}
+
+.structure-card .optional-text {
+  font-size: 0.7rem;
+  color: #999;
+  font-style: italic;
+  margin-left: 0.25rem;
+  font-weight: normal;
 }

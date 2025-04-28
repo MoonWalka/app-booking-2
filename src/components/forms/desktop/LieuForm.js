@@ -539,7 +539,8 @@ useEffect(() => {
           {id === 'nouveau' ? 'Créer un nouveau lieu' : 'Modifier le lieu'}
         </h2>
         <div className="breadcrumb-container">
-          <span className="breadcrumb-item" onClick={() => navigate('/lieux')}>Lieux</span>
+          {/* Correction : ajout accessibilité (role/button + tabIndex) */}
+          <span className="breadcrumb-item" onClick={() => navigate('/lieux')} role="button" tabIndex={0}>Lieux</span>
           <i className="bi bi-chevron-right"></i>
           <span className="breadcrumb-item active">
             {id === 'nouveau' ? 'Nouveau lieu' : lieu.nom}

@@ -729,7 +729,13 @@ const ConcertForm = () => {
           {id === 'nouveau' ? 'Créer un nouveau concert' : 'Modifier le concert'}
         </h2>
         <div className="breadcrumb-container">
-          <span className="breadcrumb-item" onClick={() => navigate('/concerts')}>Concerts</span>
+          {/* Correction : ajout accessibilité (role/button + tabIndex) */}
+          <span 
+            className="breadcrumb-item" 
+            onClick={() => navigate('/concerts')} 
+            role="button" 
+            tabIndex={0}
+          >Concerts</span>
           <i className="bi bi-chevron-right"></i>
           <span className="breadcrumb-item active">
             {id === 'nouveau' ? 'Nouveau concert' : formData.titre || 'Concert'}

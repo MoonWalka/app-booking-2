@@ -44,7 +44,13 @@ function MobileLayout() {
 
       {/* Overlay qui apparaît derrière le menu */}
       {menuOpen && (
-        <div className="menu-overlay" onClick={closeMenu}></div>
+        /* Correction : ajout accessibilité (role/button + tabIndex) */
+        <div 
+          className="menu-overlay" 
+          onClick={closeMenu} 
+          role="button" 
+          tabIndex={0}
+        ></div>
       )}
 
       {/* Menu latéral */}

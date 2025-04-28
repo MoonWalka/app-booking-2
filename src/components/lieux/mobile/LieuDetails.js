@@ -491,7 +491,8 @@ const LieuDetails = () => {
       {/* Header avec navigation et actions */}
       <div className="details-header-container">
         <div className="breadcrumb-container mb-2">
-          <span className="breadcrumb-item" onClick={() => navigate('/lieux')}>Lieux</span>
+          {/* Correction : ajout accessibilité (role/button + tabIndex) */}
+          <span className="breadcrumb-item" onClick={() => navigate('/lieux')} role="button" tabIndex={0}>Lieux</span>
           <i className="bi bi-chevron-right"></i>
           <span className="breadcrumb-item active">{lieu.nom}</span>
         </div>

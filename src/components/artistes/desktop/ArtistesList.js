@@ -287,8 +287,14 @@ const ArtistesList = () => {
               {/* Dropdown qui apparaît lors de la recherche */}
               {showDropdown && (
                 <div className="search-results-dropdown position-absolute w-100 mt-1 shadow-sm">
+                  {/* Correction : ajout accessibilité (role/button + tabIndex) */}
                   {noResults ? (
-                    <div className="search-create-item p-3" onClick={handleCreateArtiste}>
+                    <div 
+                      className="search-create-item p-3" 
+                      onClick={handleCreateArtiste} 
+                      role="button" 
+                      tabIndex={0}
+                    >
                       <i className="bi bi-plus-circle me-2"></i>
                       <span>
                         Créer l'artiste "<strong>{searchTerm}</strong>"

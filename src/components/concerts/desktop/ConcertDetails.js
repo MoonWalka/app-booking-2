@@ -920,7 +920,8 @@ const ConcertDetails = () => {
             {concert.titre || `Concert du ${formatDate(concert.date)}`}
           </h2>
           <div className="breadcrumb-container">
-            <span className="breadcrumb-item" onClick={() => navigate('/concerts')}>Concerts</span>
+            {/* Correction : ajout accessibilité (role/button + tabIndex) */}
+            <span className="breadcrumb-item" onClick={() => navigate('/concerts')} role="button" tabIndex={0}>Concerts</span>
             <i className="bi bi-chevron-right"></i>
             <span className="breadcrumb-item active">
               {concert.titre || formatDate(concert.date)}

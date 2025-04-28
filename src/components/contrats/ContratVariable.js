@@ -14,7 +14,13 @@ const ContratVariable = ({ name, description, onInsert }) => {
   // Version mobile (simple)
   if (isMobile) {
     return (
-      <div className="variable-item" onClick={() => onInsert(name)}>
+      /* Correction : ajout accessibilité (role/button + tabIndex) */
+      <div 
+        className="variable-item" 
+        onClick={() => onInsert(name)} 
+        role="button" 
+        tabIndex={0}
+      >
         <div className="variable-name">{`{${name}}`}</div>
         <div className="variable-description">{description}</div>
       </div>

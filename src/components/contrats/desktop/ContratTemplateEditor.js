@@ -1198,7 +1198,13 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
       {!isModalContext ? (
         <div className="editor-header">
           <div className="breadcrumb-container">
-            <span className="breadcrumb-item" onClick={() => navigate('/parametres/contrats')}>Modèles de contrats</span>
+            {/* Correction : ajout accessibilité (role/button + tabIndex) */}
+            <span 
+              className="breadcrumb-item" 
+              onClick={() => navigate('/parametres/contrats')} 
+              role="button"
+              tabIndex={0}
+            >Modèles de contrats</span>
             <i className="bi bi-chevron-right"></i>
             <span className="breadcrumb-item active">{template?.id ? name : 'Nouveau modèle'}</span>
           </div>

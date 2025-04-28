@@ -76,7 +76,7 @@ const FullscreenEditorModal = ({
   };
 
   return (
-    <div className="modal-overlay" onClick={handleBackdropClick}>
+    <div className="modal-overlay" onClick={handleBackdropClick} role="button" tabIndex={0}>
       <div className="modal-content" ref={modalRef}>
         <div className="modal-header">
           <h3>{sectionTitle ? `Édition de la section "${sectionTitle}"` : 'Édition de section'}</h3>
@@ -88,7 +88,7 @@ const FullscreenEditorModal = ({
             <i className="bi bi-x-lg"></i>
           </button>
         </div>
-        
+
         <div className="modal-body">
           <ReactQuill
             ref={editorRef}
@@ -99,7 +99,7 @@ const FullscreenEditorModal = ({
             placeholder="Commencez à rédiger le contenu de votre section ici..."
           />
         </div>
-        
+
         <div className="modal-footer">
           <button 
             type="button"

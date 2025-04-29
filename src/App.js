@@ -10,6 +10,7 @@ import { ParametresProvider } from '@/context/ParametresContext';
 import Layout from '@/components/common/Layout';
 import DashboardPage from '@/pages/DashboardPage';
 import ConcertsPage from '@/pages/ConcertsPage';
+import TestButtons from '@/components/debug';
 import ProgrammateursPage from '@/pages/ProgrammateursPage';
 import LieuxPage from '@/pages/LieuxPage';
 import ContratsPage from '@/pages/ContratsPage';
@@ -187,6 +188,7 @@ function App() {
             {/* Intégration du stabilisateur de routeur */}
             <RouterStabilizer />
             <Routes>
+              <Route path="/test-buttons" element={<TestButtons />} />
               {/* Routes publiques pour les formulaires */}
               <Route path="/formulaire/:concertId/:token" element={<FormResponsePage />} />
               

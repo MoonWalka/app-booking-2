@@ -921,7 +921,7 @@ const ConcertDetails = () => {
           </h2>
           <div className="breadcrumb-container">
             {/* Transformé en bouton avec classes standards */}
-            <button className="btn btn-light btn-sm" onClick={() => navigate('/concerts')}>
+          <button className="tc-btn-light btn-sm" onClick={() => navigate('/concerts')}>
               Concerts
             </button>
             <i className="bi bi-chevron-right"></i>
@@ -938,7 +938,7 @@ const ConcertDetails = () => {
               {/* Boutons en mode édition */}
               <button
                 type="button"
-                className="btn btn-primary action-btn"
+                className="tc-btn-primary action-btn"
                 onClick={handleSubmit}
                 disabled={isSubmitting || !validateForm()}
               >
@@ -957,7 +957,7 @@ const ConcertDetails = () => {
               
               <button 
                 onClick={toggleEditMode} 
-                className="btn btn-outline-secondary action-btn"
+                className="tc-btn-outline-secondary action-btn"
               >
                 <i className="bi bi-x-circle"></i>
                 <span className="btn-text">Annuler</span>
@@ -965,7 +965,7 @@ const ConcertDetails = () => {
               
               <button 
                 onClick={() => setShowDeleteConfirm(true)} 
-                className="btn btn-outline-danger action-btn"
+                className="tc-btn-outline-danger action-btn"
               >
                 <i className="bi bi-trash"></i>
                 <span className="btn-text">Supprimer</span>
@@ -976,7 +976,7 @@ const ConcertDetails = () => {
               {/* Boutons en mode affichage */}
               <button 
                 onClick={() => navigate('/concerts')} 
-                className="btn btn-outline-secondary action-btn"
+                className="tc-btn-outline-secondary action-btn"
               >
                 <i className="bi bi-arrow-left"></i>
                 <span className="btn-text">Retour</span>
@@ -984,7 +984,7 @@ const ConcertDetails = () => {
               
               <button
                 onClick={toggleEditMode}
-                className="btn btn-outline-primary action-btn"
+                className="tc-btn-outline-primary action-btn"
               >
                 <i className="bi bi-pencil"></i>
                 <span className="btn-text">Modifier</span>
@@ -1106,7 +1106,7 @@ const ConcertDetails = () => {
                         />
                         <button
                           type="button"
-                          className="btn btn-outline-secondary"
+                          className="tc-btn-outline-secondary"
                           onClick={handleCreateLieu}
                         >
                           Créer un lieu
@@ -1176,7 +1176,7 @@ const ConcertDetails = () => {
                         </div>
                         <button 
                           type="button" 
-                          className="btn btn-sm btn-outline-danger" 
+                          className="tc-btn-outline-danger btn-sm" 
                           onClick={handleRemoveLieu}
                           aria-label="Supprimer ce lieu"
                         >
@@ -1216,7 +1216,7 @@ const ConcertDetails = () => {
                         />
                         <button
                           type="button"
-                          className="btn btn-outline-secondary"
+                          className="tc-btn-outline-secondary"
                           onClick={handleCreateProgrammateur}
                         >
                           Créer un programmateur
@@ -1282,7 +1282,7 @@ const ConcertDetails = () => {
                         </div>
                         <button 
                           type="button" 
-                          className="btn btn-sm btn-outline-danger" 
+                          className="tc-btn-outline-danger btn-sm" 
                           onClick={handleRemoveProgrammateur}
                           aria-label="Supprimer ce programmateur"
                         >
@@ -1322,7 +1322,7 @@ const ConcertDetails = () => {
                         />
                         <button
                           type="button"
-                          className="btn btn-outline-secondary"
+                          className="tc-btn-outline-secondary"
                           onClick={handleCreateArtiste}
                         >
                           Créer un artiste
@@ -1378,7 +1378,7 @@ const ConcertDetails = () => {
                         </div>
                         <button 
                           type="button" 
-                          className="btn btn-sm btn-outline-danger" 
+                          className="tc-btn-outline-danger btn-sm" 
                           onClick={handleRemoveArtiste}
                           aria-label="Supprimer cet artiste"
                         >
@@ -1508,7 +1508,7 @@ const ConcertDetails = () => {
                 <div className="card-header">
                   <i className="bi bi-geo-alt"></i>
                   <h3>Lieu</h3>
-                  <Link to={`/lieux/${lieu.id}`} className="btn btn-sm btn-outline-primary card-header-action">
+                  <Link to={`/lieux/${lieu.id}`} className="tc-btn-outline-primary btn-sm card-header-action">
                     <i className="bi bi-eye"></i>
                     <span>Voir détails</span>
                   </Link>
@@ -1555,7 +1555,7 @@ const ConcertDetails = () => {
                       href={`https://maps.google.com/maps?q=${encodeURIComponent(`${lieu.adresse}, ${lieu.codePostal} ${lieu.ville}`)}`}
                       target="_blank"
                       rel="noopener noreferrer" 
-                      className="btn btn-sm btn-outline-info"
+                      className="tc-btn-outline-info btn-sm"
                     >
                       <i className="bi bi-map me-1"></i>
                       Voir en plein écran
@@ -1571,7 +1571,7 @@ const ConcertDetails = () => {
                 <i className="bi bi-person-badge"></i>
                 <h3>Programmateur</h3>
                 {programmateur && (
-                  <Link to={`/programmateurs/${programmateur.id}`} className="btn btn-sm btn-outline-primary card-header-action">
+                  <Link to={`/programmateurs/${programmateur.id}`} className="tc-btn-outline-primary btn-sm card-header-action">
                     <i className="bi bi-eye"></i>
                     <span>Voir détails</span>
                   </Link>
@@ -1636,7 +1636,7 @@ const ConcertDetails = () => {
                                 {formData.statut === 'valide' ? (
                                   <span className="badge bg-success me-2">Validé</span>
                                 ) : (
-                                  <Link to={`/concerts/${id}/form`} className="btn btn-sm btn-primary">
+                                  <Link to={`/concerts/${id}/form`} className="tc-btn-primary btn-sm">
                                     {formData.reponses ? 'Voir les réponses' : 'Voir le formulaire'}
                                   </Link>
                                 )}
@@ -1645,106 +1645,106 @@ const ConcertDetails = () => {
                           </div>
                         ) : null}
   
-  {(showFormGenerator || generatedFormLink) ? (
-  <div className="p-3 border rounded mb-3">
-    <div className="d-flex justify-content-between align-items-center mb-3">
-      <h4 className="mb-0">
-        {generatedFormLink ? 'Formulaire généré avec succès' : 'Envoyer un formulaire au programmateur'}
-      </h4>
-      <button
-        className="btn btn-sm btn-outline-secondary"
-        onClick={() => {
-          setShowFormGenerator(false);
-          setGeneratedFormLink(null);
-        }}
-      >
-        <i className="bi bi-x-lg"></i>
-      </button>
-    </div>
+                      {(showFormGenerator || generatedFormLink) ? (
+                      <div className="p-3 border rounded mb-3">
+                        <div className="d-flex justify-content-between align-items-center mb-3">
+                          <h4 className="mb-0">
+                            {generatedFormLink ? 'Formulaire généré avec succès' : 'Envoyer un formulaire au programmateur'}
+                          </h4>
+                          <button
+                            className="tc-btn-outline-secondary btn-sm"
+                            onClick={() => {
+                              setShowFormGenerator(false);
+                              setGeneratedFormLink(null);
+                            }}
+                          >
+                            <i className="bi bi-x-lg"></i>
+                          </button>
+                        </div>
 
-                            
-                            {generatedFormLink ? (
-                              <div>
-                                <p>Voici le lien du formulaire à envoyer au programmateur :</p>
-                                <div className="input-group mb-3">
-                                  <input
-                                    type="text"
-                                    className="form-control"
-                                    value={generatedFormLink}
-                                    readOnly
-                                  />
-                                  <button
-                                    className="btn btn-outline-primary"
-                                    type="button"
-                                    onClick={() => copyToClipboard(generatedFormLink)}
-                                  >
-                                    <i className="bi bi-clipboard me-1"></i> Copier
-                                  </button>
-                                </div>
-                                <div className="form-sharing-options mt-3 mb-3">
-                                  <div className="d-flex gap-2">
-                                    <a 
-                                      href={`mailto:${programmateur?.email || ''}?subject=Formulaire pour le concert du ${formatDate(concert.date)}&body=Bonjour,%0D%0A%0D%0AVeuillez remplir le formulaire pour le concert prévu le ${formatDate(concert.date)} en cliquant sur ce lien : ${generatedFormLink}%0D%0A%0D%0AMerci.`} 
-                                      className="btn btn-outline-secondary"
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                    >
-                                      <i className="bi bi-envelope"></i> Envoyer par email
-                                    </a>
-                                    <a 
-                                      href={`https://wa.me/?text=Formulaire pour le concert du ${formatDate(concert.date)} : ${generatedFormLink}`} 
-                                      className="btn btn-outline-success"
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                    >
-                                      <i className="bi bi-whatsapp"></i> WhatsApp
-                                    </a>
-                                  </div>
-                                </div>
-                                <p className="text-muted">
-                                  Ce lien est valable pendant 30 jours. Une fois que le programmateur aura rempli le formulaire, 
-                                  vous pourrez valider les informations depuis la fiche du concert.
-                                </p>
-                                <div className="d-flex justify-content-between mt-3">
-                                  <button
-                                    className="btn btn-outline-secondary"
-                                    onClick={() => {
-                                      setShowFormGenerator(false);
-                                      setGeneratedFormLink(null);
-                                    }}
-                                  >
-                                    Fermer
-                                  </button>
-                                  <button
-                                    className="btn btn-primary"
-                                    onClick={() => {
-                                      setGeneratedFormLink(null);
-                                      setShowFormGenerator(true);
-                                    }}
-                                  >
-                                    Générer un nouveau lien
-                                  </button>
-                                </div>
-                              </div>
-                            ) : (
-                              <FormGenerator
-                                concertId={id}
-                                programmateurId={concert.programmateurId}
-                                onFormGenerated={handleFormGenerated}
+                                        
+                        {generatedFormLink ? (
+                          <div>
+                            <p>Voici le lien du formulaire à envoyer au programmateur :</p>
+                            <div className="input-group mb-3">
+                              <input
+                                type="text"
+                                className="form-control"
+                                value={generatedFormLink}
+                                readOnly
                               />
-                            )}
+                              <button
+                                className="tc-btn-outline-primary"
+                                type="button"
+                                onClick={() => copyToClipboard(generatedFormLink)}
+                              >
+                                <i className="bi bi-clipboard me-1"></i> Copier
+                              </button>
+                            </div>
+                            <div className="form-sharing-options mt-3 mb-3">
+                              <div className="d-flex gap-2">
+                                <a 
+                                  href={`mailto:${programmateur?.email || ''}?subject=Formulaire pour le concert du ${formatDate(concert.date)}&body=Bonjour,%0D%0A%0D%0AVeuillez remplir le formulaire pour le concert prévu le ${formatDate(concert.date)} en cliquant sur ce lien : ${generatedFormLink}%0D%0A%0D%0AMerci.`} 
+                                  className="tc-btn-outline-secondary"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  <i className="bi bi-envelope"></i> Envoyer par email
+                                </a>
+                                <a 
+                                  href={`https://wa.me/?text=Formulaire pour le concert du ${formatDate(concert.date)} : ${generatedFormLink}`} 
+                                  className="tc-btn-outline-success"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  <i className="bi bi-whatsapp"></i> WhatsApp
+                                </a>
+                              </div>
+                            </div>
+                            <p className="text-muted">
+                              Ce lien est valable pendant 30 jours. Une fois que le programmateur aura rempli le formulaire, 
+                              vous pourrez valider les informations depuis la fiche du concert.
+                            </p>
+                            <div className="d-flex justify-content-between mt-3">
+                              <button
+                                className="tc-btn-outline-secondary"
+                                onClick={() => {
+                                  setShowFormGenerator(false);
+                                  setGeneratedFormLink(null);
+                                }}
+                              >
+                                Fermer
+                              </button>
+                              <button
+                                className="tc-btn-primary"
+                                onClick={() => {
+                                  setGeneratedFormLink(null);
+                                  setShowFormGenerator(true);
+                                }}
+                              >
+                                Générer un nouveau lien
+                              </button>
+                            </div>
                           </div>
                         ) : (
-                          !formData && (
-                            <button
-                              className="btn btn-primary mt-3"
-                              onClick={() => setShowFormGenerator(true)}
-                            >
-                              <i className="bi bi-envelope me-2"></i>
-                              Envoyer un formulaire au programmateur
-                            </button>
-                          )
+                          <FormGenerator
+                            concertId={id}
+                            programmateurId={concert.programmateurId}
+                            onFormGenerated={handleFormGenerated}
+                          />
                         )}
+                      </div>
+                    ) : (
+                      !formData && (
+                        <button
+                          className="tc-btn-primary mt-3"
+                          onClick={() => setShowFormGenerator(true)}
+                        >
+                          <i className="bi bi-envelope me-2"></i>
+                          Envoyer un formulaire au programmateur
+                        </button>
+                      )
+                    )}
                       </div>
                     </div>
                   </>
@@ -1763,7 +1763,7 @@ const ConcertDetails = () => {
                 <div className="card-header">
                   <i className="bi bi-music-note-beamed"></i>
                   <h3>Artiste</h3>
-                  <Link to={`/artistes/${artiste.id}`} className="btn btn-sm btn-outline-primary card-header-action">
+                  <Link to={`/artistes/${artiste.id}`} className="tc-btn-outline-primary btn-sm card-header-action">
                     <i className="bi bi-eye"></i>
                     <span>Voir détails</span>
                   </Link>
@@ -1820,19 +1820,19 @@ const ConcertDetails = () => {
                               <div className="fw-bold">Réseaux sociaux:</div>
                               <div className="mt-2 d-flex gap-2">
                                 {artiste.contacts.siteWeb && (
-                                  <a href={artiste.contacts.siteWeb} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-outline-primary">
+                                  <a href={artiste.contacts.siteWeb} target="_blank" rel="noopener noreferrer" className="tc-btn-outline-primary btn-sm">
                                     <i className="bi bi-globe me-1"></i>
                                     Site web
                                   </a>
                                 )}
                                 {artiste.contacts.instagram && (
-                                  <a href={`https://instagram.com/${artiste.contacts.instagram.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-outline-danger">
+                                  <a href={`https://instagram.com/${artiste.contacts.instagram.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="tc-btn-outline-danger btn-sm">
                                     <i className="bi bi-instagram me-1"></i>
                                     Instagram
                                   </a>
                                 )}
                                 {artiste.contacts.facebook && (
-                                  <a href={artiste.contacts.facebook} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-outline-primary">
+                                  <a href={artiste.contacts.facebook} target="_blank" rel="noopener noreferrer" className="tc-btn-outline-primary btn-sm">
                                     <i className="bi bi-facebook me-1"></i>
                                     Facebook
                                   </a>
@@ -1862,13 +1862,13 @@ const ConcertDetails = () => {
               </div>
               <div className="tc-modal-footer">
                 <button 
-                  className="tc-btn tc-btn-secondary"
+                  className="tc-btn-secondary"
                   onClick={() => setShowDeleteConfirm(false)}
                 >
                   Annuler
                 </button>
                 <button 
-                  className="tc-btn tc-btn-danger" 
+                  className="tc-btn-danger" 
                   onClick={handleDelete}
                   disabled={isSubmitting}
                 >

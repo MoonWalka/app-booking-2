@@ -208,7 +208,7 @@
 /* // ...existing code for concert-card components... */
 
 /* // Correction UI: Standardisation des modals */
-.concert-form-container .modal-overlay {
+.concert-form-container .tc-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -221,7 +221,7 @@
   z-index: 1000;
 }
 
-.concert-form-container .modal-confirm {
+.concert-form-container .tc-modal-confirm {
   background-color: var(--tc-bg-color, #fff);
   border-radius: var(--tc-border-radius, 0.5rem);
   width: 450px;
@@ -229,8 +229,6 @@
   box-shadow: var(--tc-shadow-lg, 0 4px 20px rgba(0, 0, 0, 0.15));
   overflow: hidden;
 }
-
-/* // ...existing code for modal components... */
 
 /* =============================
    MOBILE CONCERT STYLES

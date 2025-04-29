@@ -143,20 +143,20 @@ a:hover {
 }
 
 /* Cards */
-.card {
+.tc-card {
   background-color: var(--tc-card-bg);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow);
   margin-bottom: 20px;
 }
 
-.card-header {
+.tc-card-header {
   padding: 15px;
   border-bottom: 1px solid var(--tc-border-color);
   font-weight: bold;
 }
 
-.card-title {
+.tc-card-title {
   margin: 0;
   color: var(--tc-primary-color);
 }
@@ -197,7 +197,7 @@ a:hover {
 }
 
 /* Buttons */
-.btn {
+.tc-btn {
   display: inline-block;
   font-weight: 400;
   text-align: center;
@@ -213,13 +213,13 @@ a:hover {
   cursor: pointer;
 }
 
-.btn-primary {
+.tc-btn-primary {
   background-color: var(--tc-primary-color);
   border-color: var(--tc-primary-color);
   color: #fff;
 }
 
-.btn-primary:hover {
+.tc-btn-primary:hover {
   background-color: var(--tc-primary-dark);
   border-color: var(--tc-primary-dark);
   text-decoration: none; /* Assure qu'il n'y a pas de soulignement au survol pour les boutons */
@@ -227,7 +227,7 @@ a:hover {
 
 /* Règle générale pour tous les éléments interactifs */
 button:hover, 
-.btn:hover, 
+.tc-btn:hover, 
 [role="button"]:hover {
   text-decoration: none; /* Suppression du !important */
 }

@@ -92,7 +92,7 @@ button {
 
 /* Prévention de la superposition des boutons dans les cartes */
 .tc-card-footer .tc-action-buttons,
-.card-footer .tc-action-buttons {
+.tc-card-footer .tc-action-buttons {
   position: static; /* Annule tout positionnement absolu hérité */
   display: flex;
   justify-content: flex-end;
@@ -101,17 +101,17 @@ button {
 
 /* Alignement des boutons dans les modales */
 .tc-modal-footer .tc-action-buttons,
-.modal-footer .tc-action-buttons {
+.tc-modal-footer .tc-action-buttons {
   justify-content: space-between;
   width: 100%;
 }
 
 /* Éviter que les boutons ne débordent de leur conteneur */
 .tc-card .tc-action-buttons, 
-.card .tc-action-buttons,
+.tc-card .tc-action-buttons,
 .form-group .tc-action-buttons,
 .tc-modal-body .tc-action-buttons,
-.modal-body .tc-action-buttons {
+.tc-modal-body .tc-action-buttons {
   max-width: 100%;
   overflow: hidden;
 }
@@ -124,9 +124,9 @@ button {
   }
   
   .tc-card-footer .tc-action-buttons,
-  .card-footer .tc-action-buttons,
+  .tc-card-footer .tc-action-buttons,
   .tc-modal-footer .tc-action-buttons,
-  .modal-footer .tc-action-buttons {
+  .tc-modal-footer .tc-action-buttons {
     flex-direction: row;
     justify-content: space-around;
   }

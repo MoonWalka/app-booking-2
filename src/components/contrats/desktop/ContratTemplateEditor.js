@@ -659,7 +659,7 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
     
     const style = document.createElement('style');
     style.innerHTML = `
-      .modal-fixed-header {
+      .tc-modal-fixed-header {
         position: sticky;
         top: 0;
         background-color: white;
@@ -668,7 +668,7 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
         border-bottom: 1px solid #eee;
       }
       
-      .modal-fixed-footer {
+      .tc-modal-fixed-footer {
         position: sticky;
         bottom: 0;
         background-color: white;
@@ -678,7 +678,7 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
         box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
       }
       
-      .modal-scrollable-content {
+      .tc-modal-scrollable-content {
         overflow-y: auto;
         padding: 20px;
         box-sizing: border-box;
@@ -694,7 +694,7 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
       }
       
       /* Pour que le contenu principal prenne l'espace disponible et soit défilable */
-      .modal-body {
+      .tc-modal-body {
         flex: 1;
         overflow: auto;
         padding: 0 !important;
@@ -1244,7 +1244,7 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
           </div>
         </div>
       ) : (
-        <div className="modal-fixed-header">
+        <div className="tc-modal-fixed-header">
           <div 
             className="modal-header" 
             style={{
@@ -1284,9 +1284,9 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
       )}
       
       {/* Corps principal */}
-      <div className={isModalContext ? "modal-body" : ""}>
+      <div className={isModalContext ? "tc-modal-body" : ""}>
         {/* Contenu défilable */}
-        <div className={isModalContext ? "modal-scrollable-content" : ""}>
+        <div className={isModalContext ? "tc-modal-scrollable-content" : ""}>
           {/* Guide d'utilisation */}
           {showGuide && <UserGuide />}
           
@@ -1698,7 +1698,7 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
       
       {/* Pied de page en mode modal */}
       {isModalContext && (
-        <div className="modal-fixed-footer">
+        <div className={isModalContext ? "tc-modal-footer" : ""}>
           <div 
             className="modal-footer" 
             style={{

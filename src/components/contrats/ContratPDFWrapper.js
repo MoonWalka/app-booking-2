@@ -328,7 +328,7 @@ const getContratHTML = (data, title = 'Contrat', forPreview = false) => {
         select, 
         .menu, 
         .tabs, 
-        .toolbar {
+        .tc-toolbar {
           display: none !important;
         }
 

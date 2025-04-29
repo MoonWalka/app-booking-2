@@ -58,7 +58,7 @@
   font-size: 1.05rem;
 }
 
-.search-bar .btn {
+.search-bar .tc-btn {
   border-radius: 0 8px 8px 0;
   border: 1px solid #e2e8f0;
   border-left: none;
@@ -66,7 +66,7 @@
   color: #565e74;
 }
 
-.search-bar .btn:active {
+.search-bar .tc-btn:active {
   background: #e3e8f1;
 }
 
@@ -79,23 +79,23 @@
   margin-bottom: 2.5rem;
 }
 
-.table {
+.tc-table {
   margin-bottom: 0;
 }
 
-.table thead {
+.tc-table thead {
   background: #f6f9fc;
   border-top: 1px solid #e2e8f0;
 }
 
-.table th, 
-.table td {
+.tc-table th, 
+.tc-table td {
   vertical-align: middle;
   transition: background 0.12s;
   font-size: 1.06rem;
 }
 
-.table th {
+.tc-table th {
   color: #3f4c65;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -104,16 +104,16 @@
   background: #f6f9fc;
 }
 
-.table tbody tr {
+.tc-table tbody tr {
   cursor: pointer;
   transition: background .10s;
 }
 
-.table tbody tr:hover {
+.tc-table tbody tr:hover {
   background: #f2f6fa;
 }
 
-.table td {
+.tc-table td {
   border-bottom: 1px solid #f0f3fa;
   color: #222d3a;
   padding: 11px 16px;
@@ -133,9 +133,9 @@
 }
 
 /* Sélecteur plus spécifique pour éviter l'utilisation de !important */
-.table .field-empty, 
-.table .field-empty span, 
-.table .field-empty i,
+.tc-table .field-empty, 
+.tc-table .field-empty span, 
+.tc-table .field-empty i,
 .list-view .field-empty,
 .list-view .field-empty span,
 .list-view .field-empty i {
@@ -146,7 +146,7 @@
 
 /* ===== ACTIONS BUTTONS ===== */
 
-.table-actions .btn {
+.table-actions .tc-btn {
   color: #5c6791;
   background: #f6f8fd;
   border-radius: 5px;
@@ -157,15 +157,15 @@
   padding: 7px 10px;
 }
 
-.table-actions .btn i {
+.table-actions .tc-btn i {
   color: inherit;
   font-size: 1rem;
   margin-right: 4px;
 }
 
-.table-actions .btn:hover,
-.table-actions .btn:focus, 
-.table-actions .btn:active {
+.table-actions .tc-btn:hover,
+.table-actions .tc-btn:focus, 
+.table-actions .tc-btn:active {
   background: #e6f0ff;
   color: #1573e1;
 }
@@ -176,18 +176,18 @@
     font-size: 1.25rem;
   }
   
-  .table thead {
+  .tc-table thead {
     display: none;
   }
   
-  .table td {
+  .tc-table td {
     display: block;
     width: 100%;
     padding: 14px 6vw;
     text-align: left;
   }
   
-  .table tr {
+  .tc-table tr {
     margin-bottom: 12px;
     display: block;
     border-radius: 8px;

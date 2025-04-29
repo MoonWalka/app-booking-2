@@ -4,6 +4,8 @@ import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/render
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import pdfService from '../../services/pdfService';
+// Import du fichier CSS dédié à l'impression
+import '@/styles/components/contrat-print.css';
 
 // Styles pour le PDF de fallback (mode prévisualisation simple)
 const styles = StyleSheet.create({
@@ -197,70 +199,285 @@ const getContratHTML = (data, title = 'Contrat', forPreview = false) => {
   const signatureContent = replaceVariables(safeData.template.signatureTemplate || '', variables);
   const titleContent = replaceVariables(safeData.template.titleTemplate || title, variables);
   
-  // Définir des options spécifiques à l'aperçu si nécessaire
-  let htmlStyles = '';
-  let bodyContentProcessed = bodyContent;
+  // Traitement des sauts de page pour l'aperçu
+  let bodyContentProcessed = forPreview ? processPageBreaks(bodyContent) : bodyContent;
   
-  if (forPreview) {
-    // Traitement spécial des sauts de page pour l'aperçu
-    bodyContentProcessed = processPageBreaks(bodyContent);
-    
-    // Styles spécifiques pour l'aperçu dans le navigateur
-    htmlStyles = `
+  // Importer le contenu CSS directement depuis le fichier - il sera ensuite disponible comme variable
+  // Note: Pour Puppeteer dans Cloud Functions, nous incluons le CSS directement dans le HTML
+  // plutôt que de compter sur un lien externe qui ne serait pas accessible
+  
+  // Construire le contenu HTML complet
+  let htmlContent = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <title>${titleContent}</title>
       <style>
+        /* 
+         * Styles CSS intégrés pour l'impression des contrats
+         * Format cible : A4 (210mm × 297mm)
+         */
+
+        /* ===== RÉGLAGES DE BASE DU DOCUMENT ===== */
+        @page {
+          size: A4;                     /* Format A4 */
+          margin: 25mm 20mm 25mm 20mm;  /* Marges standards pour documents professionnels */
+        }
+
+        /* ===== STYLES GÉNÉRAUX ===== */
+        body {
+          /* Normalisation des polices */
+          font-family: Arial, Helvetica, sans-serif;
+          font-size: 11pt;
+          line-height: 1.5;
+          color: #000000;
+          
+          /* Dimensionnement pour A4 */
+          width: 210mm;
+          min-height: 297mm;
+          margin: 0 auto;
+          background-color: white;
+          
+          /* Supprimer couleurs de fond & images inutiles à l'impression */
+          background-image: none;
+        }
+
+        /* ===== TITRES ===== */
+        h1, h2, h3, h4, h5, h6 {
+          page-break-after: avoid;
+          page-break-inside: avoid;
+          margin-top: 1.5em;
+          margin-bottom: 0.75em;
+          color: #000000;
+        }
+
+        h1 {
+          font-size: 18pt;
+          margin-top: 0;
+          text-align: center;
+        }
+
+        h2 {
+          font-size: 16pt;
+        }
+
+        h3 {
+          font-size: 14pt;
+        }
+
+        h4, h5, h6 {
+          font-size: 12pt;
+        }
+
+        /* ===== PARAGRAPHES ET TEXTE ===== */
+        p {
+          margin-bottom: 0.75em;
+          text-align: justify;
+        }
+
+        strong, b {
+          font-weight: bold;
+        }
+
+        em, i {
+          font-style: italic;
+        }
+
+        ul, ol {
+          margin: 0.75em 0;
+          padding-left: 2em;
+        }
+
+        li {
+          margin-bottom: 0.5em;
+        }
+
+        /* ===== TABLEAUX ===== */
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          margin: 1.5em 0;
+          page-break-inside: avoid;
+        }
+
+        table, th, td {
+          border: 1px solid #000000;
+        }
+
+        th, td {
+          padding: 0.5em;
+          text-align: left;
+        }
+
+        th {
+          background-color: #f2f2f2;
+          font-weight: bold;
+        }
+
+        /* ===== ÉLÉMENTS D'INTERFACE À MASQUER ===== */
+        .preview-note, 
+        .page-break::after,
+        nav, 
+        header, 
+        footer, 
+        .sidebar, 
+        .no-print, 
+        button, 
+        input, 
+        select, 
+        .menu, 
+        .tabs, 
+        .toolbar {
+          display: none !important;
+        }
+
+        /* ===== GESTION DES SAUTS DE PAGE ===== */
+        .page-break {
+          page-break-after: always;
+          border: none;
+          height: 0;
+          margin: 0;
+          padding: 0;
+        }
+
+        /* Éviter les sauts au milieu des éléments importants */
+        table, figure, blockquote {
+          page-break-inside: avoid;
+        }
+
+        /* Contrôler où les sauts de page peuvent se produire */
+        p, h2, h3, h4, h5, h6 {
+          orphans: 3; /* Min. lignes en bas de page */
+          widows: 3;  /* Min. lignes en haut de page */
+        }
+
+        /* ===== STRUCTURE ET LAYOUT DU DOCUMENT ===== */
+        .contrat-container {
+          width: 100%;
+          max-width: 210mm; /* Largeur A4 */
+          margin: 0 auto;
+        }
+
+        .header {
+          margin-bottom: 20mm;
+          position: relative;
+          min-height: 20mm;
+        }
+
+        .header-content {
+          width: 100%;
+        }
+
+        .body-content {
+          margin-bottom: 20mm;
+        }
+
+        .footer {
+          margin-top: 15mm;
+          position: relative;
+          min-height: 15mm;
+        }
+
+        /* ===== LOGO ET ÉLÉMENTS GRAPHIQUES ===== */
+        .logo-container {
+          position: absolute;
+          top: 0;
+          left: 0;
+          max-height: 20mm;
+          max-width: 30%;
+        }
+
+        .logo-container img {
+          max-height: 100%;
+          max-width: 100%;
+        }
+
+        /* ===== SECTIONS SPÉCIFIQUES DU CONTRAT ===== */
+        .title {
+          text-align: center;
+          font-size: 16pt;
+          font-weight: bold;
+          margin: 20px 0;
+        }
+
+        .subtitle {
+          text-align: center;
+          font-size: 14pt;
+          margin: 15px 0;
+        }
+
+        .signature-section {
+          margin-top: 30mm;
+          page-break-inside: avoid;
+        }
+
+        .signature-block {
+          display: inline-block;
+          width: 45%;
+          vertical-align: top;
+          margin-top: 10mm;
+        }
+
+        .signature-block-left {
+          float: left;
+        }
+
+        .signature-block-right {
+          float: right;
+        }
+
+        .signature-title {
+          font-weight: bold;
+          margin-bottom: 5mm;
+        }
+
+        .signature-line {
+          border-bottom: 1px solid #000;
+          height: 15mm;
+          margin-top: 15mm;
+        }
+
+        /* ===== UTILITAIRES ===== */
+        .text-center {
+          text-align: center;
+        }
+
+        .text-right {
+          text-align: right;
+        }
+
+        .text-left {
+          text-align: left;
+        }
+
+        .clearfix::after {
+          content: "";
+          clear: both;
+          display: table;
+        }
+
+        /* ===== RESPONSIVE POUR ÉCRANS ===== */
         @media screen {
           body {
-            font-family: Arial, sans-serif;
-            font-size: 9pt;
-            line-height: 1.3;
-            margin: 0;
-            padding: 0;
             background-color: #f8f9fa;
+            padding: 20px;
           }
-          .contrat-preview-container {
-            width: 100%;
-            max-width: 210mm;
-            min-height: 100%;
-            margin: 0 auto;
-            padding: 15mm;
-            background-color: white;
+          
+          .contrat-container {
+            padding: 30px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            box-sizing: border-box;
+            background-color: white;
           }
-          .header {
-            margin-bottom: ${safeData.template.headerBottomMargin || 10}mm;
-            padding-bottom: 5mm;
-            position: relative;
-            min-height: ${safeData.template.headerHeight || 20}mm;
-          }
-          .body-content {
-            font-size: 11pt;
-            width: 100%;
-            overflow-wrap: break-word;
-            word-wrap: break-word;
-          }
-          .footer {
-            margin-top: ${safeData.template.footerTopMargin || 10}mm;
-            padding-top: 5mm;
-            position: relative;
-            min-height: ${safeData.template.footerHeight || 20}mm;
-          }
-          .title {
-            text-align: center;
-            font-size: 16pt;
-            margin-bottom: 20px;
-            font-weight: bold;
-          }
+          
+          /* Visualisation des sauts de page en mode prévisualisation */
           .page-break {
-            display: block;
-            height: 10px;
-            margin: 20px 0;
-            border: none;
             border-top: 2px dashed #999;
+            margin: 20px 0;
             position: relative;
-            text-align: center;
-            padding: 10px 0;
+            height: 20px;
           }
+          
           .page-break::after {
             content: "⟿ SAUT DE PAGE ⟿";
             position: absolute;
@@ -271,19 +488,12 @@ const getContratHTML = (data, title = 'Contrat', forPreview = false) => {
             padding: 0 10px;
             font-size: 10px;
             color: #666;
+            display: block !important;
           }
-          .logo-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            max-height: ${safeData.template.headerHeight || 20}mm;
-            max-width: 30%;
-          }
-          .logo-container img {
-            max-height: 100%;
-            max-width: 100%;
-          }
+          
+          /* Note de prévisualisation */
           .preview-note {
+            display: block !important;
             background-color: #fff3cd;
             color: #856404;
             padding: 10px;
@@ -293,56 +503,51 @@ const getContratHTML = (data, title = 'Contrat', forPreview = false) => {
             font-size: 0.9em;
             text-align: center;
           }
-          table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 15px 0;
-          }
-          table, th, td {
-            border: 1px solid #ddd;
-          }
-          th, td {
-            padding: 8px;
-            text-align: left;
-          }
-          th {
-            background-color: #f2f2f2;
-          }
         }
+
+        /* ===== STYLE POUR IMPRESSION RÉELLE ===== */
         @media print {
-          .preview-note, .page-break::after {
-            display: none;
-          }
-          .page-break {
-            page-break-after: always;
-            border: none;
-            height: 0;
+          /* Rendre toute la page visible lors de l'impression */
+          html, body {
+            width: 210mm;
+            height: 297mm;
             margin: 0;
             padding: 0;
           }
-          body {
-            font-family: Arial, sans-serif;
-            font-size: 9pt;
+          
+          /* Garantir que les couleurs d'arrière-plan sont imprimées */
+          * {
+            -webkit-print-color-adjust: exact !important;
+            color-adjust: exact !important;
+            print-color-adjust: exact !important;
+          }
+          
+          /* Optimisation pour Puppeteer */
+          @page {
+            margin: 0;
+          }
+          
+          .contrat-container {
+            padding: 25mm 20mm;
+            box-shadow: none;
+          }
+          
+          /* Numérotation des pages */
+          .page-number::after {
+            content: counter(page);
+          }
+          
+          .total-pages::after {
+            content: counter(pages);
           }
         }
       </style>
-    `;
-  }
-  
-  // Construire le contenu HTML complet
-  let htmlContent = `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="UTF-8">
-      <title>${titleContent}</title>
-      ${htmlStyles}
     </head>
     <body>
   `;
 
   if (forPreview) {
-    htmlContent += `<div class="contrat-preview-container">`;
+    htmlContent += `<div class="contrat-container">`;
     htmlContent += `<div class="preview-note">Aperçu du contrat - La mise en page sera identique au téléchargement PDF final</div>`;
   }
 
@@ -356,7 +561,7 @@ const getContratHTML = (data, title = 'Contrat', forPreview = false) => {
         </div>
       `;
     }
-    htmlContent += `${headerContent}</div>`;
+    htmlContent += `<div class="header-content">${headerContent}</div></div>`;
   }
 
   // Ajouter le titre
@@ -369,7 +574,7 @@ const getContratHTML = (data, title = 'Contrat', forPreview = false) => {
 
   // Ajouter la signature si définie
   if (signatureContent) {
-    htmlContent += `<div class="signature" style="margin-top: 30px;">${signatureContent}</div>`;
+    htmlContent += `<div class="signature-section">${signatureContent}</div>`;
   }
 
   // Ajouter le pied de page si défini
@@ -378,7 +583,7 @@ const getContratHTML = (data, title = 'Contrat', forPreview = false) => {
   }
 
   if (forPreview) {
-    htmlContent += `</div>`; // Fermer .contrat-preview-container
+    htmlContent += `</div>`; // Fermer .contrat-container
   }
 
   htmlContent += `

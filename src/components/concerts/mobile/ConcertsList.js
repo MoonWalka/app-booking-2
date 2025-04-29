@@ -1,12 +1,14 @@
 // src/components/concerts/mobile/ConcertsList.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { collection, query, orderBy, getDocs, where } from 'firebase/firestore';
+import { collection, query, orderBy, getDocs } from 'firebase/firestore';
 import { db } from '../../../firebase';
 import { Badge, Button, Form, InputGroup } from 'react-bootstrap';
 import Spinner from '../../common/Spinner';
 import { formatDateFrSlash } from '@/utils/dateUtils';
-
+// Correction UI: Import des fichiers CSS centralisés
+import '@/styles/components/concerts.css';
+import '@/styles/components/concerts-mobile.css';
 
 const ConcertsListMobile = () => {
   const navigate = useNavigate();
@@ -16,6 +18,46 @@ const ConcertsListMobile = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredConcerts, setFilteredConcerts] = useState([]);
   const [statusFilter, setStatusFilter] = useState('tous');
+  
+  // Correction UI: Utilisation de useMemo pour optimiser les appels à getStatusDetails
+  const statusDetailsMap = useMemo(() => ({
+    contact: {
+      icon: '📞',
+      label: 'Contact',
+      variant: 'info',
+      tooltip: 'Premier contact établi avec le programmateur'
+    },
+    preaccord: {
+      icon: '✅',
+      label: 'Pré-accord',
+      variant: 'primary',
+      tooltip: 'Accord verbal obtenu, en attente de confirmation'
+    },
+    contrat: {
+      icon: '📄',
+      label: 'Contrat',
+      variant: 'success',
+      tooltip: 'Contrat signé par toutes les parties'
+    },
+    acompte: {
+      icon: '💸',
+      label: 'Acompte',
+      variant: 'warning',
+      tooltip: 'Acompte facturé, en attente de paiement'
+    },
+    solde: {
+      icon: '🔁',
+      label: 'Solde',
+      variant: 'secondary',
+      tooltip: 'Solde facturé, concert terminé'
+    },
+    annule: {
+      icon: '❌',
+      label: 'Annulé',
+      variant: 'danger',
+      tooltip: 'Concert annulé'
+    }
+  }), []);
   
   // Logique de chargement des données (similaire à la version desktop)
   useEffect(() => {
@@ -60,39 +102,49 @@ const ConcertsListMobile = () => {
         concert.titre?.toLowerCase().includes(term) ||
         concert.lieuNom?.toLowerCase().includes(term) ||
         concert.programmateurNom?.toLowerCase().includes(term) ||
-        concert.artisteNom?.toLowerCase().includes(term)
+        concert.artisteNom?.toLowerCase().includes(term) ||
+        (concert.lieuVille && concert.lieuVille.toLowerCase().includes(term)) ||
+        (concert.lieuCodePostal && concert.lieuCodePostal.includes(term))
       );
     }
     
     setFilteredConcerts(results);
   }, [searchTerm, statusFilter, concerts]);
 
-  // La fonction formatDate locale n'est plus nécessaire car nous utilisons formatDateFrSlash depuis dateUtils
-
-  // Fonction pour obtenir la couleur du statut
+  // Correction UI: Fonction optimisée pour obtenir la couleur du statut
   const getStatusColor = (statut) => {
-    switch (statut) {
-      case 'contact': return 'info';
-      case 'preaccord': return 'primary';
-      case 'contrat': return 'success';
-      case 'acompte': return 'warning';
-      case 'solde': return 'secondary';
-      case 'annule': return 'danger';
-      default: return 'light';
-    }
+    return statusDetailsMap[statut]?.variant || 'light';
+  };
+
+  // Correction UI: Fonction pour obtenir les informations complètes sur le statut
+  const getStatusInfo = (statut) => {
+    return statusDetailsMap[statut] || {
+      icon: '❓',
+      label: statut || 'Non défini',
+      variant: 'light',
+      tooltip: 'Statut non défini'
+    };
+  };
+
+  // Fonction pour vérifier si une date est passée
+  const isDatePassed = (date) => {
+    if (!date) return false;
+    const today = new Date();
+    const concertDate = new Date(date.seconds ? date.seconds * 1000 : date);
+    return concertDate < today;
   };
 
   return (
     <div className="concerts-mobile-container">
       {/* En-tête avec titre et bouton d'ajout */}
-      <div className="mobile-header d-flex justify-content-between align-items-center mb-3">
+      <div className="mobile-header">
         <h1 className="fs-4 fw-bold text-primary mb-0">Concerts</h1>
         <Button 
           variant="primary"
           className="d-flex align-items-center gap-2 rounded-3 px-3 py-2"
           onClick={() => navigate('/concerts/nouveau')}
         >
-          <i className="bi bi-plus-lg me-1"></i>
+          <i className="bi bi-plus-lg"></i>
           <span className="d-none d-sm-inline">Ajouter</span>
         </Button>
       </div>
@@ -122,43 +174,24 @@ const ConcertsListMobile = () => {
       </div>
 
       {/* Filtres par statut */}
-      <div className="mobile-filters-container mb-3">
+      <div className="mobile-filters-container">
+        {/* Correction UI: Utilisation des filtres standardisés depuis statusDetailsMap */}
         <button 
-          className={`btn ${statusFilter === 'tous' ? 'btn-primary' : 'btn-outline-primary'} btn-sm me-2 mb-2 px-3 py-2 rounded-pill`}
+          className={`btn ${statusFilter === 'tous' ? 'btn-primary' : 'btn-outline-primary'} btn-sm me-2 px-3 py-2 rounded-pill`}
           onClick={() => setStatusFilter('tous')}
         >
           Tous
         </button>
-        <button 
-          className={`btn ${statusFilter === 'contact' ? 'btn-primary' : 'btn-outline-primary'} btn-sm me-2 mb-2 px-3 py-2 rounded-pill d-inline-flex align-items-center`}
-          onClick={() => setStatusFilter('contact')}
-        >
-          <span className="filter-icon me-1">📞</span> Contact
-        </button>
-        <button 
-          className={`btn ${statusFilter === 'preaccord' ? 'btn-primary' : 'btn-outline-primary'} btn-sm me-2 mb-2 px-3 py-2 rounded-pill d-inline-flex align-items-center`}
-          onClick={() => setStatusFilter('preaccord')}
-        >
-          <span className="filter-icon me-1">✅</span> Pré-accord
-        </button>
-        <button 
-          className={`btn ${statusFilter === 'contrat' ? 'btn-primary' : 'btn-outline-primary'} btn-sm me-2 mb-2 px-3 py-2 rounded-pill d-inline-flex align-items-center`}
-          onClick={() => setStatusFilter('contrat')}
-        >
-          <span className="filter-icon me-1">📄</span> Contrat
-        </button>
-        <button 
-          className={`btn ${statusFilter === 'acompte' ? 'btn-primary' : 'btn-outline-primary'} btn-sm me-2 mb-2 px-3 py-2 rounded-pill d-inline-flex align-items-center`}
-          onClick={() => setStatusFilter('acompte')}
-        >
-          <span className="filter-icon me-1">💸</span> Acompte
-        </button>
-        <button 
-          className={`btn ${statusFilter === 'solde' ? 'btn-primary' : 'btn-outline-primary'} btn-sm me-2 mb-2 px-3 py-2 rounded-pill d-inline-flex align-items-center`}
-          onClick={() => setStatusFilter('solde')}
-        >
-          <span className="filter-icon me-1">🔁</span> Solde
-        </button>
+        {Object.keys(statusDetailsMap).map(status => (
+          <button 
+            key={status}
+            className={`btn ${statusFilter === status ? 'btn-primary' : 'btn-outline-primary'} btn-sm me-2 px-3 py-2 rounded-pill d-inline-flex align-items-center`}
+            onClick={() => setStatusFilter(status)}
+          >
+            <span className="filter-icon me-1">{statusDetailsMap[status].icon}</span> 
+            {statusDetailsMap[status].label}
+          </button>
+        ))}
       </div>
 
       {/* Affichage des concerts */}
@@ -189,18 +222,19 @@ const ConcertsListMobile = () => {
               className="concert-card"
               onClick={() => navigate(`/concerts/${concert.id}`)}
             >
-              <div className="concert-date concert-card-date">
+              {/* Correction UI: Amélioration de l'affichage des dates */}
+              <div className={`concert-card-date ${isDatePassed(concert.date) ? 'past-date' : ''}`}>
                 <div className="date-day">{formatDateFrSlash(concert.date).split('/')[0]}</div>
                 <div className="date-month">{formatDateFrSlash(concert.date).split('/')[1]}</div>
                 <div className="date-year">{formatDateFrSlash(concert.date).split('/')[2]}</div>
               </div>
               
               <div className="concert-details">
-                <h3 className="concert-title concert-card-title">{concert.titre || "Concert sans titre"}</h3>
+                <h3 className="concert-card-title">{concert.titre || concert.artisteNom || "Concert sans titre"}</h3>
                 
                 <div className="concert-info">
                   {concert.lieuNom && (
-                    <div className="info-item concert-venue-cell">
+                    <div className="info-item">
                       <i className="bi bi-geo-alt"></i>
                       <span className="concert-venue-name">{concert.lieuNom}</span>
                       {concert.lieuVille && (
@@ -210,7 +244,7 @@ const ConcertsListMobile = () => {
                   )}
                   
                   {concert.artisteNom && (
-                    <div className="info-item concert-artist-cell">
+                    <div className="info-item">
                       <i className="bi bi-music-note"></i>
                       <span className="artist-tag">{concert.artisteNom}</span>
                     </div>
@@ -219,14 +253,15 @@ const ConcertsListMobile = () => {
                   {concert.montant && (
                     <div className="info-item montant">
                       <i className="bi bi-cash"></i>
-                      <span>{concert.montant.toLocaleString('fr-FR')} €</span>
+                      <span>{new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(concert.montant)}</span>
                     </div>
                   )}
                 </div>
                 
                 <div className="concert-status">
+                  {/* Correction UI: Utilisation de classes personnalisées pour améliorer le contraste */}
                   <Badge bg={getStatusColor(concert.statut)} className="concert-status-badge">
-                    {concert.statut || 'Non défini'}
+                    {getStatusInfo(concert.statut).label}
                   </Badge>
                 </div>
               </div>
@@ -236,6 +271,7 @@ const ConcertsListMobile = () => {
                   to={`/concerts/${concert.id}`}
                   className="action-btn view concert-action-button"
                   onClick={(e) => e.stopPropagation()}
+                  aria-label="Voir le détail"
                 >
                   <i className="bi bi-eye"></i>
                 </Link>
@@ -243,6 +279,7 @@ const ConcertsListMobile = () => {
                   to={`/concerts/${concert.id}/edit`}
                   className="action-btn edit concert-action-button"
                   onClick={(e) => e.stopPropagation()}
+                  aria-label="Modifier le concert"
                 >
                   <i className="bi bi-pencil"></i>
                 </Link>

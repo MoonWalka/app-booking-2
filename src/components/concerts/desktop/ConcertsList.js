@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import firebase from '@/firebase';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Spinner from '@/components/common/Spinner';
 import { formatDateFr } from '@/utils/dateUtils';
+// Correction UI: Import du fichier CSS centralisé pour les concerts
+import '@/styles/components/concerts.css';
 
 const ConcertsList = () => {
   const navigate = useNavigate();
@@ -175,6 +177,7 @@ const ConcertsList = () => {
   };
 
   // Composant pour les boutons d'action avec tooltip (version corrigée)
+  // Correction UI: Utilisation de classes standardisées pour les boutons d'action
   const ActionButton = ({ to, tooltip, icon, variant, onClick }) => (
     <OverlayTrigger
       placement="top"
@@ -183,7 +186,7 @@ const ConcertsList = () => {
       {to ? (
         <Link 
           to={to} 
-          className={`btn btn-${variant} rounded-3 p-2 d-flex align-items-center justify-content-center`}
+          className={`btn btn-${variant} action-button`}
           onClick={(e) => e.stopPropagation()}
         >
           {icon}
@@ -194,7 +197,7 @@ const ConcertsList = () => {
             e.stopPropagation();
             onClick(); 
           }} 
-          className={`btn btn-${variant} rounded-3 p-2 d-flex align-items-center justify-content-center`}
+          className={`btn btn-${variant} action-button`}
         >
           {icon}
         </button>
@@ -202,75 +205,70 @@ const ConcertsList = () => {
     </OverlayTrigger>
   );
   
-  const getStatusDetails = (statut) => {
-    switch (statut) {
-      case 'contact':
-        return {
-          icon: '📞',
-          label: 'Contact établi',
-          variant: 'info',
-          tooltip: 'Premier contact établi avec le programmateur',
-          step: 1
-        };
-      case 'preaccord':
-        return {
-          icon: '✅',
-          label: 'Pré-accord',
-          variant: 'primary',
-          tooltip: 'Accord verbal obtenu, en attente de confirmation',
-          step: 2
-        };
-      case 'contrat':
-        return {
-          icon: '📄',
-          label: 'Contrat signé',
-          variant: 'success',
-          tooltip: 'Contrat signé par toutes les parties',
-          step: 3
-        };
-      case 'acompte':
-        return {
-          icon: '💸',
-          label: 'Acompte facturé',
-          variant: 'warning',
-          tooltip: 'Acompte facturé, en attente de paiement',
-          step: 4
-        };
-      case 'solde':
-        return {
-          icon: '🔁',
-          label: 'Solde facturé',
-          variant: 'secondary',
-          tooltip: 'Solde facturé, concert terminé',
-          step: 5
-        };
-      case 'annule':
-        return {
-          icon: '❌',
-          label: 'Annulé',
-          variant: 'danger',
-          tooltip: 'Concert annulé',
-          step: 0
-        };
-      default:
-        return {
-          icon: '❓',
-          label: statut || 'Non défini',
-          variant: 'light',
-          tooltip: 'Statut non défini',
-          step: 0
-        };
+  // Correction UI: Utilisation de useMemo pour éviter les appels redondants à getStatusDetails
+  const statusDetailsMap = useMemo(() => ({
+    contact: {
+      icon: '📞',
+      label: 'Contact établi',
+      variant: 'info',
+      tooltip: 'Premier contact établi avec le programmateur',
+      step: 1
+    },
+    preaccord: {
+      icon: '✅',
+      label: 'Pré-accord',
+      variant: 'primary',
+      tooltip: 'Accord verbal obtenu, en attente de confirmation',
+      step: 2
+    },
+    contrat: {
+      icon: '📄',
+      label: 'Contrat signé',
+      variant: 'success',
+      tooltip: 'Contrat signé par toutes les parties',
+      step: 3
+    },
+    acompte: {
+      icon: '💸',
+      label: 'Acompte facturé',
+      variant: 'warning',
+      tooltip: 'Acompte facturé, en attente de paiement',
+      step: 4
+    },
+    solde: {
+      icon: '🔁',
+      label: 'Solde facturé',
+      variant: 'secondary',
+      tooltip: 'Solde facturé, concert terminé',
+      step: 5
+    },
+    annule: {
+      icon: '❌',
+      label: 'Annulé',
+      variant: 'danger',
+      tooltip: 'Concert annulé',
+      step: 0
     }
+  }), []);
+  
+  // Correction UI: Fonction optimisée pour récupérer les détails du statut
+  const getStatusDetails = (statut) => {
+    return statusDetailsMap[statut] || {
+      icon: '❓',
+      label: statut || 'Non défini',
+      variant: 'light',
+      tooltip: 'Statut non défini',
+      step: 0
+    };
   };
   
-  // Composant pour afficher le statut avancé avec infos sur les étapes
+  // Correction UI: Composant simplifié pour afficher le statut avec meilleure performance
   const StatusWithInfo = ({ concert }) => {
-    // Déterminer l'action et le message en fonction du statut et des étapes
-    const getStatusDetails = () => {
-      const today = new Date();
-      const concertDate = concert.date ? new Date(concert.date.seconds ? concert.date.seconds * 1000 : concert.date) : null;
-      const isPastDate = concertDate && concertDate < today;
-      
+    const today = new Date();
+    const concertDate = concert.date ? new Date(concert.date.seconds ? concert.date.seconds * 1000 : concert.date) : null;
+    const isPastDate = concertDate && concertDate < today;
+    
+    const statusMessage = (() => {
       switch (concert.statut) {
         case 'contact':
           if (!hasForm(concert.id) && concert.programmateurId) 
@@ -299,28 +297,27 @@ const ConcertsList = () => {
         default:
           return { message: concert.statut || 'Non défini', action: 'unknown', variant: 'light' };
       }
-    };
+    })();
     
-    const statusInfo = getStatusDetails();
     const statusDetails = getStatusDetails(concert.statut);
     
     return (
       <div className="status-advanced-container">
         <div className="status-message-container">
-          {/* // Correction UI : Amélioration contraste avec classes standardisées et stockage du résultat dans une variable */}
+          {/* Correction UI: Utilisation de classes CSS standardisées */}
           <div className={`status-message status-message-${statusDetails.variant}`}>
-            {statusInfo.message}
+            {statusMessage.message}
           </div>
         </div>
         {!hasForm(concert.id) && concert.programmateurId && (
           <div className="action-reminder">
-            <i className="bi bi-exclamation-circle me-1"></i>
+            <i className="bi bi-exclamation-circle"></i>
             <span>Formulaire à envoyer</span>
           </div>
         )}
         {hasUnvalidatedForm(concert.id) && (
           <div className="action-reminder">
-            <i className="bi bi-exclamation-circle me-1"></i>
+            <i className="bi bi-exclamation-circle"></i>
             <span>Formulaire à valider</span>
           </div>
         )}
@@ -365,12 +362,12 @@ const ConcertsList = () => {
       <div className="d-flex justify-content-between align-items-center mb-4 header-container">
         <h2 className="fs-4 fw-bold text-primary mb-0">Liste des concerts</h2>
         <Link to="/concerts/nouveau" className="btn btn-primary d-flex align-items-center gap-2 px-3 py-2 rounded-3">
-          <i className="bi bi-plus-lg me-1"></i>
+          <i className="bi bi-plus-lg"></i>
           Ajouter un concert
         </Link>
       </div>
 
-      <div className="search-filter-container mb-4">
+      <div className="search-filter-container">
         <div className="search-bar bg-white rounded-3 shadow-sm">
           <div className="input-group border-0">
             <span className="input-group-text bg-transparent border-0">
@@ -395,16 +392,16 @@ const ConcertsList = () => {
         </div>
       </div>
   
-      <div className="status-filter-tabs mb-4 d-flex gap-2 flex-wrap">
-        {/* Correction : harmonisation UI des boutons avec marges et espacements cohérents */}
+      <div className="status-filter-tabs">
+        {/* Correction UI: Utilisation de classes standardisées pour les filtres */}
         <button 
           className={`btn ${statusFilter === 'tous' ? 'btn-primary' : 'btn-light'} rounded-pill px-3 py-2`}
           onClick={() => setStatusFilter('tous')}
         >
           Tous les concerts
         </button>
-        {['contact', 'preaccord', 'contrat', 'acompte', 'solde'].map(status => {
-          const statusInfo = getStatusDetails(status);
+        {Object.keys(statusDetailsMap).map(status => {
+          const statusInfo = statusDetailsMap[status];
           return (
             <button 
               key={status}
@@ -478,7 +475,7 @@ const ConcertsList = () => {
                   <td className="concert-artist-cell align-middle">
                     {concert.artisteNom ? (
                       <span className="artist-name">
-                        <i className="bi bi-music-note me-1"></i>
+                        <i className="bi bi-music-note"></i>
                         {concert.artisteNom}
                       </span>
                     ) : (
@@ -489,7 +486,7 @@ const ConcertsList = () => {
                     <div className="concert-artist-cell">
                       {concert.programmateurNom ? (
                         <span className="programmateur-name" title={concert.programmateurNom}>
-                          <i className="bi bi-person-fill me-1"></i>
+                          <i className="bi bi-person-fill"></i>
                           {concert.programmateurNom}
                         </span>
                       ) : (
@@ -499,7 +496,7 @@ const ConcertsList = () => {
                   </td>
                   <td className="montant-column text-end align-middle">
                     {concert.montant ? (
-                      <span className="montant-value fw-medium">
+                      <span className="montant-value">
                         {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(concert.montant)}
                       </span>
                     ) : (
@@ -507,26 +504,7 @@ const ConcertsList = () => {
                     )}
                   </td>
                   <td className="status-column align-middle">
-                    <div className="status-advanced-container">
-                      <div className="status-message-container">
-                        {/* Correction : amélioration contraste fond/texte */}
-                        <div className={`status-message rounded-pill px-3 py-1 d-inline-flex align-items-center ${getStatusDetails(concert.statut).variant === 'light' ? 'bg-secondary bg-opacity-10 text-dark' : `bg-${getStatusDetails(concert.statut).variant} bg-opacity-10 text-${getStatusDetails(concert.statut).variant}`}`}>
-                          {getStatusDetails(concert.statut).label}
-                        </div>
-                      </div>
-                      {!hasForm(concert.id) && concert.programmateurId && (
-                        <div className="action-reminder mt-2 small text-warning d-flex align-items-center justify-content-center">
-                          <i className="bi bi-exclamation-circle me-1"></i>
-                          <span>Formulaire à envoyer</span>
-                        </div>
-                      )}
-                      {hasUnvalidatedForm(concert.id) && (
-                        <div className="action-reminder mt-2 small text-warning d-flex align-items-center justify-content-center">
-                          <i className="bi bi-exclamation-circle me-1"></i>
-                          <span>Formulaire à valider</span>
-                        </div>
-                      )}
-                    </div>
+                    <StatusWithInfo concert={concert} />
                   </td>
                   <td onClick={(e) => e.stopPropagation()} className="align-middle">
                     <div className="d-flex gap-2 justify-content-center">
@@ -537,9 +515,8 @@ const ConcertsList = () => {
                             tooltip="Voir le formulaire" 
                             icon={<i className="bi bi-file-text"></i>} 
                             variant="light"
-                            className="rounded-3 p-2 d-flex align-items-center justify-content-center"
                           />
-                          {/* // Correction UI : Remplacement du style inline par une classe CSS */}
+                          {/* Correction UI: Utilisation d'une classe CSS plutôt qu'un style inline */}
                           {hasUnvalidatedForm(concert.id) && (
                             <span className="tc-notification-badge" title="Formulaire mis à jour"></span>
                           )}
@@ -550,7 +527,6 @@ const ConcertsList = () => {
                           tooltip="Envoyer formulaire" 
                           icon={<i className="bi bi-envelope"></i>} 
                           variant="light"
-                          className="rounded-3 p-2 d-flex align-items-center justify-content-center"
                           onClick={() => navigate(`/concerts/${concert.id}?openFormGenerator=true`)}
                         />
                       )}
@@ -570,7 +546,7 @@ const ConcertsList = () => {
                             ? `/contrats/${concertsWithContracts[concert.id].id}` 
                             : `/contrats/generate/${concert.id}`}
                           onClick={(e) => e.stopPropagation()}
-                          className={`btn btn-${getContractButtonVariant(concert.id)} rounded-3 p-2 d-flex align-items-center justify-content-center`}
+                          className={`btn btn-${getContractButtonVariant(concert.id)} action-button`}
                         >
                           <i className="bi bi-file-earmark-text"></i>
                         </Link>

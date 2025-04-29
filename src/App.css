@@ -14,53 +14,97 @@ a:hover {
   text-decoration: none; /* Modification: désactive le soulignement pour tous les liens au survol */
 }
 
-/* Styles de base pour la sidebar */
+/* Layout et Sidebar */
+.layout-container {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
 .sidebar {
+  width: 250px;
+  min-width: 250px; /* Ajout pour empêcher la sidebar de rétrécir */
   background-color: var(--tc-sidebar-bg-color);
   color: var(--tc-sidebar-text-color);
   height: 100vh;
-  transition: all 0.3s;
+  position: fixed; /* Fixe la sidebar sur l'écran */
+  left: 0;
+  top: 0;
+  overflow-y: auto; /* Permet le défilement si le contenu est trop long */
+  z-index: 1000; /* S'assure que la sidebar est au-dessus d'autres éléments */
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1); /* Ombre légère pour la profondeur */
+  transition: all 0.3s ease;
 }
 
+.content {
+  flex: 1;
+  margin-left: 250px; /* Correspond à la largeur de la sidebar */
+  padding: 20px;
+  min-height: 100vh;
+  background-color: var(--tc-content-bg-color);
+}
+
+/* Styles pour les éléments de la sidebar */
 .sidebar-header {
   padding: 20px;
   border-bottom: 1px solid var(--tc-sidebar-border-color);
+  text-align: center;
 }
 
-.sidebar-menu {
+.sidebar-content {
+  padding: 10px 0;
+}
+
+.nav-links {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.sidebar-menu-item {
-  padding: 10px 20px;
+.nav-links li {
+  margin-bottom: 5px;
 }
 
-.sidebar-menu-item a {
+.nav-links a {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
   color: var(--tc-sidebar-text-color);
   text-decoration: none;
-  display: block;
+  transition: background-color 0.2s;
 }
 
-.sidebar-menu-item a:hover {
-  text-decoration: none; /* Désactive le soulignement au survol pour les liens de la sidebar */
-  color: var(--tc-sidebar-text-color); /* Conserve la couleur de texte de la sidebar */
-}
-
-.sidebar-menu-item:hover {
+.nav-links a:hover {
   background-color: var(--tc-sidebar-hover-bg-color);
+  color: var(--tc-sidebar-text-color);
 }
 
-.sidebar-menu-item.active {
+.nav-links a.active {
   background-color: var(--tc-sidebar-active-bg-color);
+  border-left: 4px solid var(--tc-primary-color);
 }
 
-/* Styles pour le contenu principal */
-.main-content {
-  background-color: var(--tc-content-bg-color);
-  min-height: 100vh;
+.nav-links a i {
+  margin-right: 10px;
+  font-size: 1.2em;
+}
+
+.sidebar-footer {
+  margin-top: auto;
   padding: 20px;
+  border-top: 1px solid var(--tc-sidebar-border-color);
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.user-email {
+  margin-bottom: 10px;
+  word-break: break-word;
+  text-align: center;
 }
 
 /* Styles pour le header */

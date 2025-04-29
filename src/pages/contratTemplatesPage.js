@@ -261,11 +261,12 @@ const ContratTemplatesPage = () => {
                     </div>
                   </td>
                   <td>
-                    <div className="d-flex align-items-center gap-2">
+                    <div className="d-flex align-items-center justify-content-start gap-2 flex-wrap">
                       <Button 
                         variant="outline-primary" 
                         size="sm"
-                        className="action-button"
+                        className="action-button mb-1"
+                        style={{ minWidth: '85px', marginRight: '8px' }}
                         onClick={() => {
                           console.log("Bouton Modifier cliqué pour template:", template.id);
                           handleEditTemplate(template);
@@ -278,7 +279,8 @@ const ContratTemplatesPage = () => {
                         <Button 
                           variant="outline-success" 
                           size="sm"
-                          className="action-button"
+                          className="action-button mb-1"
+                          style={{ minWidth: '85px', marginRight: '8px' }}
                           onClick={() => handleSetDefault(template.id)}
                         >
                           <i className="bi bi-star me-1"></i> Par défaut
@@ -287,7 +289,8 @@ const ContratTemplatesPage = () => {
                       <Button 
                         variant="outline-danger" 
                         size="sm"
-                        className="action-button"
+                        className="action-button mb-1"
+                        style={{ minWidth: '85px' }}
                         onClick={() => handleDelete(template.id)}
                         disabled={template.isDefault}
                       >

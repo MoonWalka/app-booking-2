@@ -1,20 +1,20 @@
 /* Styles pour les tableaux */
-.table {
+.tc-table {
   width: 100%;
   margin-bottom: 1rem;
   color: var(--tc-text-color);
   border-collapse: collapse;
 }
 
-.table th,
-.table td {
+.tc-table th,
+.tc-table td {
   padding: 0.75rem;
   vertical-align: top;
   border-top: 1px solid var(--tc-table-border-color);
   text-align: left;
 }
 
-.table thead th {
+.tc-table thead th {
   vertical-align: bottom;
   border-bottom: 2px solid var(--tc-table-border-color);
   background-color: var(--tc-table-header-bg);
@@ -22,39 +22,39 @@
   font-weight: 600;
 }
 
-.table tbody + tbody {
+.tc-table tbody + tbody {
   border-top: 2px solid var(--tc-table-border-color);
 }
 
 /* Table variations */
-.table-sm th,
-.table-sm td {
+.tc-table-sm th,
+.tc-table-sm td {
   padding: 0.3rem;
 }
 
-.table-bordered {
+.tc-table-bordered {
   border: 1px solid var(--tc-table-border-color);
 }
 
-.table-bordered th,
-.table-bordered td {
+.tc-table-bordered th,
+.tc-table-bordered td {
   border: 1px solid var(--tc-table-border-color);
 }
 
-.table-striped tbody tr:nth-of-type(odd) {
+.tc-table-striped tbody tr:nth-of-type(odd) {
   background-color: var(--tc-table-striped-bg);
 }
 
 /* Animation du survol des lignes de tableau */
-.table-hover tbody tr {
+.tc-table-hover tbody tr {
   transition: background-color var(--tc-transition);
 }
 
-.table-hover tbody tr:hover {
+.tc-table-hover tbody tr:hover {
   background-color: var(--tc-hover-bg);
 }
 
-.table-responsive {
+.tc-table-responsive {
   display: block;
   width: 100%;
   overflow-x: auto;
@@ -62,7 +62,7 @@
 }
 
 /* Table captions */
-.table caption {
+.tc-table caption {
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
   color: var(--tc-text-muted);
@@ -71,65 +71,65 @@
 }
 
 /* Contextual classes */
-.table .table-active {
+.tc-table .tc-table-active {
   background-color: var(--tc-table-active-bg);
 }
 
-.table .table-primary {
+.tc-table .tc-table-primary {
   background-color: var(--tc-primary-light);
 }
 
-.table .table-secondary {
+.tc-table .tc-table-secondary {
   background-color: var(--tc-secondary-light);
 }
 
-.table .table-success {
+.tc-table .tc-table-success {
   background-color: var(--tc-success-light);
 }
 
-.table .table-info {
+.tc-table .tc-table-info {
   background-color: var(--tc-info-light);
 }
 
-.table .table-warning {
+.tc-table .tc-table-warning {
   background-color: var(--tc-warning-light);
 }
 
-.table .table-danger {
+.tc-table .tc-table-danger {
   background-color: var(--tc-danger-light);
 }
 
 /* Table avec statut des lignes */
-.table tr.inactive {
+.tc-table tr.inactive {
   opacity: 0.7;
 }
 
-.table tr.canceled {
+.tc-table tr.canceled {
   text-decoration: line-through;
   opacity: 0.6;
 }
 
 /* Utilisation d'un sélecteur plus spécifique pour éviter !important */
-.table tr.highlighted,
-.table-striped tbody tr.highlighted:nth-of-type(odd),
-.table-hover tbody tr.highlighted:hover {
+.tc-table tr.highlighted,
+.tc-table-striped tbody tr.highlighted:nth-of-type(odd),
+.tc-table-hover tbody tr.highlighted:hover {
   background-color: var(--tc-highlight-bg);
 }
 
 /* Table avec actions */
-.table .action-cell {
+.tc-table .action-cell {
   white-space: nowrap;
   width: 1%;
   text-align: right;
 }
 
-.table .table-actions {
+.tc-table .tc-table-actions {
   display: flex;
   gap: 0.5rem;
   justify-content: flex-end;
 }
 
-.table .table-action-button {
+.tc-table .tc-table-action-button {
   background: transparent;
   border: none;
   color: var(--tc-text-muted);
@@ -139,21 +139,21 @@
   transition: var(--tc-transition);
 }
 
-.table .table-action-button:hover {
+.tc-table .tc-table-action-button:hover {
   background-color: var(--tc-hover-bg);
   color: var(--tc-primary-color);
 }
 
-.table .table-action-edit:hover {
+.tc-table .tc-table-action-edit:hover {
   color: var(--tc-info-color);
 }
 
-.table .table-action-delete:hover {
+.tc-table .tc-table-action-delete:hover {
   color: var(--tc-danger-color);
 }
 
 /* Pagination pour tableaux */
-.table-pagination {
+.tc-table-pagination {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -204,24 +204,24 @@
 
 /* Responsive pour petits écrans */
 @media (max-width: 768px) {
-  .table-responsive-stack th,
-  .table-responsive-stack td {
+  .tc-table-responsive-stack th,
+  .tc-table-responsive-stack td {
     display: block;
     width: 100%;
   }
   
-  .table-responsive-stack tr {
+  .tc-table-responsive-stack tr {
     display: block;
     margin-bottom: 1rem;
     border: 1px solid var(--tc-table-border-color);
     border-radius: var(--tc-border-radius);
   }
   
-  .table-responsive-stack thead {
+  .tc-table-responsive-stack thead {
     display: none;
   }
   
-  .table-responsive-stack td {
+  .tc-table-responsive-stack td {
     position: relative;
     padding-left: 40%;
     text-align: left;
@@ -230,11 +230,11 @@
     border-bottom: 1px solid var(--tc-table-border-color);
   }
   
-  .table-responsive-stack td:last-child {
+  .tc-table-responsive-stack td:last-child {
     border-bottom: none;
   }
   
-  .table-responsive-stack td::before {
+  .tc-table-responsive-stack td::before {
     content: attr(data-label);
     position: absolute;
     left: 0.75rem;

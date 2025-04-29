@@ -129,7 +129,7 @@ body.contrat-print-mode {
 .contrat-print-mode select, 
 .contrat-print-mode .menu, 
 .contrat-print-mode .tabs, 
-.contrat-print-mode .toolbar {
+.contrat-print-mode .tc-toolbar {
   display: none !important;
 }
 

@@ -1,7 +1,7 @@
 /* src/styles/components/modals.css */
 
 /* Styles pour les modales */
-.modal-overlay {
+.tc-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -16,7 +16,7 @@
   padding: 1.5rem;
 }
 
-.modal {
+.tc-modal {
   background-color: var(--tc-card-bg);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow-modal);
@@ -33,7 +33,7 @@
   to { opacity: 1; transform: scale(1); }
 }
 
-.modal-header {
+.tc-modal-header {
   padding: 1rem 1.5rem;
   border-bottom: 1px solid var(--tc-border-color);
   display: flex;
@@ -41,14 +41,14 @@
   justify-content: space-between;
 }
 
-.modal-title {
+.tc-modal-title {
   font-size: 1.25rem;
   font-weight: 600;
   color: var(--tc-text-color);
   margin: 0;
 }
 
-.modal-close {
+.tc-modal-close {
   background: transparent;
   border: none;
   color: var(--tc-text-muted);
@@ -59,17 +59,17 @@
   transition: var(--tc-transition);
 }
 
-.modal-close:hover {
+.tc-modal-close:hover {
   color: var(--tc-danger-color);
 }
 
-.modal-body {
+.tc-modal-body {
   padding: 1.5rem;
   overflow-y: auto;
   max-height: 60vh;
 }
 
-.modal-footer {
+.tc-modal-footer {
   padding: 1rem 1.5rem;
   border-top: 1px solid var(--tc-border-color);
   display: flex;
@@ -78,47 +78,47 @@
 }
 
 /* Tailles de modales */
-.modal-sm {
+.tc-modal-sm {
   max-width: 400px;
 }
 
-.modal-lg {
+.tc-modal-lg {
   max-width: 800px;
 }
 
-.modal-xl {
+.tc-modal-xl {
   max-width: 1100px;
 }
 
-.modal-full {
+.tc-modal-full {
   max-width: 95%;
   height: 90vh;
 }
 
 /* Modales avec formulaires */
-.modal-form .modal-body {
+.tc-modal-form .tc-modal-body {
   padding-top: 1rem;
   padding-bottom: 1rem;
 }
 
 /* Animation pour modales */
-.modal-enter {
+.tc-modal-enter {
   opacity: 0;
   transform: scale(0.95);
 }
 
-.modal-enter-active {
+.tc-modal-enter-active {
   opacity: 1;
   transform: scale(1);
   transition: opacity 200ms, transform 200ms;
 }
 
-.modal-exit {
+.tc-modal-exit {
   opacity: 1;
   transform: scale(1);
 }
 
-.modal-exit-active {
+.tc-modal-exit-active {
   opacity: 0;
   transform: scale(0.95);
   transition: opacity 200ms, transform 200ms;
@@ -126,20 +126,20 @@
 
 /* Responsive pour modales */
 @media (max-width: 768px) {
-  .modal {
+  .tc-modal {
     width: 95%;
     max-height: 80vh;
   }
   
-  .modal-body {
+  .tc-modal-body {
     max-height: 50vh;
   }
   
-  .modal-footer {
+  .tc-modal-footer {
     flex-direction: column;
   }
   
-  .modal-footer .btn {
+  .tc-modal-footer .tc-btn {
     width: 100%;
   }
 }

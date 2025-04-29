@@ -8,7 +8,7 @@ button {
   transition: var(--tc-transition);
 }
 
-.btn {
+.tc-btn {
   /* On garde les styles Bootstrap normaux pour les boutons avec la classe .btn */
 }
 

@@ -1,5 +1,5 @@
 /* Styles pour les cartes de l'interface */
-.card {
+.tc-card {
   background: #fff;
   border: none;
   border-radius: 1.2rem;
@@ -9,12 +9,12 @@
   transition: all 0.25s ease;
 }
 
-.card:hover {
+.tc-card:hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 20px rgba(44, 62, 80, 0.12);
 }
 
-.card-header {
+.tc-card-header {
   background: linear-gradient(to right, #f7faff, #edf3fb);
   padding: 1.1rem 1.5rem;
   display: flex;
@@ -26,68 +26,68 @@
   border-bottom: 1px solid #dce3ed;
 }
 
-.card-header h5,
-.card-header h4 {
+.tc-card-header h5,
+.tc-card-header h4 {
   margin: 0;
   font-size: 1.28rem;
   font-weight: 600;
   color: #225ea8;
 }
 
-.card-body {
+.tc-card-body {
   padding: 1.8rem 1.7rem 1.3rem 1.7rem;
 }
 
-.card-footer {
+.tc-card-footer {
   padding: 1rem 1.5rem;
   background: #f7faff;
   border-top: 1px solid #dce3ed;
 }
 
 /* Card Variations */
-.card-compact {
+.tc-card-compact {
   margin-bottom: 0.75rem;
 }
 
-.card-compact .card-header {
+.tc-card-compact .tc-card-header {
   padding: 0.75rem;
 }
 
-.card-compact .card-body {
+.tc-card-compact .tc-card-body {
   padding: 0.75rem;
 }
 
-.card-compact .card-footer {
+.tc-card-compact .tc-card-footer {
   padding: 0.5rem 0.75rem;
 }
 
-.card-hover:hover {
+.tc-card-hover:hover {
   transform: translateY(-5px);
   box-shadow: var(--tc-shadow-hover);
   transition: var(--tc-transition);
 }
 
 /* Styles pour les tableaux dans les cartes */
-.card-table {
+.tc-card-table {
   margin: 0;
 }
 
-.card-table th {
+.tc-card-table th {
   background-color: var(--tc-table-header-bg);
   font-weight: 500;
 }
 
-.card-table th,
-.card-table td {
+.tc-card-table th,
+.tc-card-table td {
   padding: 0.75rem 1rem;
   border-bottom: 1px solid var(--tc-border-color);
 }
 
-.card-table tr:last-child td {
+.tc-card-table tr:last-child td {
   border-bottom: none;
 }
 
-.card-table tr:hover {
+.tc-card-table tr:hover {
   background-color: var(--tc-hover-bg);
 }
 
@@ -99,7 +99,7 @@
   flex-direction: column;
 }
 
-.dashboard-card .card-body {
+.dashboard-card .tc-card-body {
   flex: 1;
 }
 
@@ -120,32 +120,32 @@
 }
 
 /* Cartes avec états */
-.card-inactive {
+.tc-card-inactive {
   opacity: 0.7;
 }
 
-.card-disabled {
+.tc-card-disabled {
   opacity: 0.5;
   pointer-events: none;
 }
 
 /* Cartes avec media */
-.card-with-media .card-media {
+.tc-card-with-media .tc-card-media {
   width: 100%;
   height: 200px;
   object-fit: cover;
 }
 
-.card-with-media .card-media-small {
+.tc-card-with-media .tc-card-media-small {
   height: 150px;
 }
 
-.card-with-media .card-media-large {
+.tc-card-with-media .tc-card-media-large {
   height: 250px;
 }
 
 /* Cartes en grille */
-.card-grid {
+.tc-card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 1.5rem;
@@ -153,29 +153,29 @@
 
 /* Cartes Responsive */
 @media (max-width: 576px) {
-  .card-header, 
-  .card-body, 
-  .card-footer {
+  .tc-card-header, 
+  .tc-card-body, 
+  .tc-card-footer {
     padding: 0.75rem;
   }
   
-  .card-table th,
-  .card-table td {
+  .tc-card-table th,
+  .tc-card-table td {
     padding: 0.5rem 0.75rem;
   }
   
-  .card-grid {
+  .tc-card-grid {
     grid-template-columns: 1fr;
   }
 }
 
 /* Cartes avec actions */
-.card-actions {
+.tc-card-actions {
   display: flex;
   gap: 0.5rem;
 }
 
-.card-action-button {
+.tc-card-action-button {
   background: transparent;
   border: none;
   color: var(--tc-text-muted);
@@ -185,15 +185,15 @@
   transition: var(--tc-transition);
 }
 
-.card-action-button:hover {
+.tc-card-action-button:hover {
   background-color: var(--tc-hover-bg);
   color: var(--tc-primary-color);
 }
 
-.card-action-button.card-action-edit:hover {
+.tc-card-action-button.tc-card-action-edit:hover {
   color: var(--tc-info-color);
 }
 
-.card-action-button.card-action-delete:hover {
+.tc-card-action-button.tc-card-action-delete:hover {
   color: var(--tc-danger-color);
 }

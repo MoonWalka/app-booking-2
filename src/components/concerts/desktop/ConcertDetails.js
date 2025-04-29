@@ -1852,23 +1852,23 @@ const ConcertDetails = () => {
   
         {/* Modale de confirmation de suppression */}
         {showDeleteConfirm && (
-          <div className="modal-overlay">
-            <div className="modal-confirm">
-              <div className="modal-header">
+          <div className="tc-modal-overlay">
+            <div className="tc-modal-confirm">
+              <div className="tc-modal-header">
                 <h5>Confirmation de suppression</h5>
               </div>
-              <div className="modal-body">
+              <div className="tc-modal-body">
                 <p>Êtes-vous sûr de vouloir supprimer ce concert ? Cette action est irréversible.</p>
               </div>
-              <div className="modal-footer">
+              <div className="tc-modal-footer">
                 <button 
-                  className="btn btn-secondary"
+                  className="tc-btn tc-btn-secondary"
                   onClick={() => setShowDeleteConfirm(false)}
                 >
                   Annuler
                 </button>
                 <button 
-                  className="btn btn-danger" 
+                  className="tc-btn tc-btn-danger" 
                   onClick={handleDelete}
                   disabled={isSubmitting}
                 >

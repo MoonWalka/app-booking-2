@@ -5,6 +5,8 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import ContratVariable from '@/components/contrats/ContratVariable';
 import '@/styles/index.css';
+// Import de la feuille de style spécifique pour l'impression des contrats
+import '@/styles/components/contrat-print.css';
 
 const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) => {
   console.log("============ CONTRAT TEMPLATE EDITOR CHARGÉ ============");
@@ -1430,7 +1432,7 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
                         onChange={setBodyContent}
                         modules={editorModules}
                         style={{ height: '400px', marginBottom: '50px' }}
-                        className="body-editor"
+                        className="body-editor contrat-print-mode"
                       />
                     </div>
                   </div>
@@ -1603,7 +1605,7 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
                           onChange={setHeaderContent}
                           modules={editorModules}
                           style={{ height: '150px', marginBottom: '50px' }}
-                          className="header-editor"
+                          className="header-editor contrat-print-mode"
                         />
                       </div>
                     </div>
@@ -1682,7 +1684,7 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
                           onChange={setFooterContent}
                           modules={editorModules}
                           style={{ height: '150px', marginBottom: '50px' }}
-                          className="footer-editor"
+                          className="footer-editor contrat-print-mode"
                         />
                       </div>
                     </div>

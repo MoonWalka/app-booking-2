@@ -23,7 +23,7 @@ const ContratTemplateEditorModal = ({
   // Utiliser createPortal pour rendre la modale directement dans le body
   return ReactDOM.createPortal(
     <div 
-      className="modal-overlay" 
+      className="tc-modal-overlay" 
       style={{
         position: 'fixed',
         top: 0,
@@ -39,7 +39,7 @@ const ContratTemplateEditorModal = ({
       onClick={onClose}
     >
       <div 
-        className="modal-content template-editor-modal" 
+        className="tc-modal-content template-editor-modal" 
         style={{
           backgroundColor: 'white',
           borderRadius: '8px',

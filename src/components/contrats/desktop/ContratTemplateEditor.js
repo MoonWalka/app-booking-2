@@ -4,9 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import ContratVariable from '@/components/contrats/ContratVariable';
+import ContratPDFWrapper from '@/components/contrats/ContratPDFWrapper.js';
 import '@/styles/index.css';
 // Import de la feuille de style spécifique pour l'impression des contrats
 import '@/styles/components/contrat-print.css';
+// Import des styles dédiés à l'éditeur de modèle de contrat
+import '@/styles/components/contrat-editor.css';
 
 const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) => {
   console.log("============ CONTRAT TEMPLATE EDITOR CHARGÉ ============");
@@ -67,593 +70,7 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
     </div>`
   );
   
-  // Référence pour les éditeurs quill
-  const bodyEditorRef = useRef();
-  const headerEditorRef = useRef();
-  const footerEditorRef = useRef();
-
-  // Module personnalisé pour les sauts de page
-  const PageBreak = () => {
-    const Quill = ReactQuill.Quill;
-    const BlockEmbed = Quill.import('blots/block/embed');
-
-    class PageBreakBlot extends BlockEmbed {
-      static create(value) {
-        const node = super.create();
-        node.setAttribute('class', 'page-break');
-        return node;
-      }
-    }
-
-    PageBreakBlot.blotName = 'pageBreak';
-    PageBreakBlot.tagName = 'hr'; // Utilise une balise HR pour représenter visuellement
-
-    Quill.register(PageBreakBlot);
-    
-    // Ajouter le style CSS pour les sauts de page
-    useEffect(() => {
-      const style = document.createElement('style');
-      style.innerHTML = `
-        .page-break {
-          display: block;
-          width: 100%;
-          margin: 10px 0;
-          border: none;
-          height: 5px;
-          background: repeating-linear-gradient(
-            to right,
-            #ccc,
-            #ccc 5px,
-            transparent 5px,
-            transparent 10px
-          );
-          position: relative;
-        }
-        .page-break::after {
-          content: "SAUT DE PAGE";
-          position: absolute;
-          top: -8px;
-          left: 50%;
-          transform: translateX(-50%);
-          background: white;
-          padding: 0 10px;
-          font-size: 10px;
-          color: #666;
-        }
-      `;
-      document.head.appendChild(style);
-      
-      return () => {
-        document.head.removeChild(style);
-      };
-    }, []);
-
-    return null;
-  };
-
-  // Définition et enregistrement des formats personnalisés pour les encadrés
-  const CustomFormats = () => {
-    const Quill = ReactQuill.Quill;
-    
-    // Import des classes Quill nécessaires
-    const BlockEmbed = Quill.import('blots/block/embed');
-    const Inline = Quill.import('blots/inline');
-    
-    // 1. Format pour les encadrés en ligne (sélection de texte)
-    class InlineBoxBlot extends Inline {
-      static create(value) {
-        const node = super.create();
-        node.setAttribute('class', `inline-box inline-box-${value.style || 'standard'}`);
-        return node;
-      }
-      
-      static formats(node) {
-        const className = node.getAttribute('class') || '';
-        const styleMatch = className.match(/inline-box-(\w+)/);
-        if (styleMatch) {
-          return { style: styleMatch[1] };
-        }
-        return { style: 'standard' };
-      }
-    }
-    
-    InlineBoxBlot.blotName = 'inlineBox';
-    InlineBoxBlot.tagName = 'span';
-    
-    // 2. Format pour les encadrés en bloc (bloc complet)
-    class CustomBoxBlot extends BlockEmbed {
-      static create(value) {
-        const node = super.create();
-        node.setAttribute('class', `custom-box custom-box-${value.style || 'standard'}`);
-        
-        // Ajouter du contenu éditable dans l'encadré
-        const contentNode = document.createElement('div');
-        contentNode.className = 'box-content';
-        contentNode.contentEditable = 'true';
-        contentNode.innerHTML = value.content || '<p>Votre texte ici</p>';
-        
-        // Centrer le texte si demandé
-        if (value.centered) {
-          contentNode.style.textAlign = 'center';
-        }
-        
-        node.appendChild(contentNode);
-        return node;
-      }
-      
-      static value(node) {
-        const contentNode = node.querySelector('.box-content');
-        const className = node.getAttribute('class') || '';
-        const styleMatch = className.match(/custom-box-(\w+)/);
-        
-        return {
-          content: contentNode ? contentNode.innerHTML : '',
-          style: styleMatch ? styleMatch[1] : 'standard',
-          centered: contentNode && contentNode.style.textAlign === 'center'
-        };
-      }
-    }
-    
-    CustomBoxBlot.blotName = 'customBox';
-    CustomBoxBlot.tagName = 'div';
-    
-    // Enregistrer les formats auprès de Quill
-    Quill.register(InlineBoxBlot);
-    Quill.register(CustomBoxBlot);
-    
-    // Ajouter les styles CSS pour les encadrés
-    useEffect(() => {
-      const style = document.createElement('style');
-      style.innerHTML = `
-        /* Styles pour les encadrés en ligne */
-        .inline-box {
-          padding: 2px 5px;
-          border-radius: 3px;
-        }
-        
-        .inline-box-standard {
-          background-color: #f8f9fa;
-          border: 1px solid #dee2e6;
-        }
-        
-        .inline-box-success {
-          background-color: #d4edda;
-          border: 1px solid #c3e6cb;
-        }
-        
-        .inline-box-danger {
-          background-color: #f8d7da;
-          border: 1px solid #f5c6cb;
-        }
-        
-        /* Styles pour les encadrés en bloc */
-        .custom-box {
-          width: 100%;
-          margin: 15px 0;
-          padding: 15px;
-          border-radius: 5px;
-          position: relative;
-        }
-        
-        .custom-box-standard {
-          background-color: #f8f9fa;
-          border: 1px solid #dee2e6;
-        }
-        
-        .custom-box-standard-line {
-          background-color: #f8f9fa;
-          border: 1px solid #dee2e6;
-        }
-        
-        .custom-box-success {
-          background-color: #d4edda;
-          border: 1px solid #c3e6cb;
-        }
-        
-        .custom-box-danger {
-          background-color: #f8d7da;
-          border: 1px solid #f5c6cb;
-        }
-        
-        .box-content {
-          outline: none;
-        }
-        
-        /* S'assurer que les encadrés restent visibles dans l'éditeur */
-        .ql-editor .custom-box {
-          display: block !important;
-        }
-        
-        .ql-editor .inline-box {
-          display: inline !important;
-        }
-      `;
-      document.head.appendChild(style);
-      
-      return () => {
-        document.head.removeChild(style);
-      };
-    }, []);
-    
-    return null;
-  };
-
-  // Appeler les composants pour enregistrer les formats personnalisés
-  PageBreak();
-  CustomFormats();
-
-  // Créer un module personnalisé pour Quill avec gestion des encadrés uniquement
-  useEffect(() => {
-    // ID unique pour ce composant, utilisé pour les dropdowns
-    const componentId = `quill-box-dropdown-${Math.random().toString(36).substring(2, 9)}`;
-    
-    // Créer le bouton et l'icône d'encadrés
-    const createCustomButtons = () => {
-      // Nettoyer d'abord les anciens dropdowns qui pourraient être restés
-      document.querySelectorAll('.box-style-dropdown').forEach(el => {
-        el.remove();
-      });
-      
-      // S'assurer que nous ne créons les boutons qu'une seule fois
-      if (document.querySelector('.ql-box')) return;
-      
-      // Trouver la barre d'outils de chaque éditeur Quill
-      document.querySelectorAll('.ql-toolbar').forEach((toolbar, index) => {
-        // Vérifier si la barre d'outils a déjà le bouton
-        if (toolbar.querySelector('.ql-box')) return;
-        
-        // Trouver le groupe de boutons où ajouter notre bouton (avant 'clean')
-        const cleanButton = toolbar.querySelector('.ql-clean');
-        if (cleanButton && cleanButton.parentNode) {
-          // Créer le bouton d'encadré
-          const boxButton = document.createElement('button');
-          boxButton.className = 'ql-box';
-          boxButton.type = 'button';
-          boxButton.title = 'Insérer un encadré';
-          boxButton.setAttribute('data-editor-id', `${componentId}-editor-${index}`);
-          
-          // Créer le dropdown pour les styles d'encadrés avec un ID unique
-          const boxDropdown = document.createElement('div');
-          boxDropdown.className = 'box-style-dropdown';
-          boxDropdown.id = `${componentId}-dropdown-${index}`;
-          boxDropdown.setAttribute('data-editor-id', `${componentId}-editor-${index}`);
-          
-          // Ajouter les options d'encadrés
-          boxDropdown.innerHTML = `
-            <div class="box-style-item" data-style="standard" data-type="inline">
-              <div class="box-style-color standard"></div>
-              Encadré standard (sélection)
-            </div>
-            <div class="box-style-item" data-style="standard-line" data-type="block">
-              <div class="box-style-color standard-line"></div>
-              Encadré standard (ligne complète)
-            </div>
-            <div class="box-style-item" data-style="success" data-type="inline">
-              <div class="box-style-color success"></div>
-              Information (vert)
-            </div>
-            <div class="box-style-item" data-style="danger" data-type="inline">
-              <div class="box-style-color danger"></div>
-              Danger (rouge)
-            </div>
-            <div class="box-style-options" id="block-box-options-${index}" style="display:none;">
-              <div class="box-style-option">
-                <input type="checkbox" id="box-centered-${index}" />
-                <label for="box-centered-${index}">Centrer le texte</label>
-              </div>
-            </div>
-          `;
-          
-          // Insérer le bouton avant le bouton clean
-          cleanButton.parentNode.insertBefore(boxButton, cleanButton);
-          
-          // Ajouter le dropdown au body
-          document.body.appendChild(boxDropdown);
-          
-          // Ajouter l'écouteur d'événement pour ouvrir/fermer le dropdown des encadrés
-          boxButton.addEventListener('click', (e) => {
-            e.stopPropagation();
-            
-            // Fermer tous les autres dropdowns d'abord
-            document.querySelectorAll('.box-style-dropdown.show').forEach(dropdown => {
-              if (dropdown.id !== boxDropdown.id) {
-                dropdown.classList.remove('show');
-              }
-            });
-            
-            // Positionner le dropdown par rapport au bouton
-            const rect = boxButton.getBoundingClientRect();
-            boxDropdown.style.top = `${rect.bottom + window.scrollY}px`;
-            boxDropdown.style.left = `${rect.left + window.scrollX}px`;
-            
-            // Afficher/masquer le dropdown
-            boxDropdown.classList.toggle('show');
-          });
-          
-          // Gérer les clics sur les options du dropdown
-          boxDropdown.querySelectorAll('.box-style-item').forEach(item => {
-            item.addEventListener('click', () => {
-              const style = item.getAttribute('data-style');
-              const type = item.getAttribute('data-type');
-              
-              // Trouver l'éditeur Quill associé
-              const editorContainer = toolbar.closest('.quill');
-              if (!editorContainer) return;
-              
-              // Déterminer quel éditeur utiliser
-              let editor;
-              if (editorContainer.classList.contains('body-editor')) {
-                editor = bodyEditorRef.current?.getEditor();
-              } else if (editorContainer.classList.contains('header-editor')) {
-                editor = headerEditorRef.current?.getEditor();
-              } else if (editorContainer.classList.contains('footer-editor')) {
-                editor = footerEditorRef.current?.getEditor();
-              }
-              
-              if (editor) {
-                const range = editor.getSelection(true);
-                
-                // Afficher/masquer les options supplémentaires pour les encadrés en bloc
-                const blockOptions = document.getElementById(`block-box-options-${index}`);
-                if (type === 'block') {
-                  blockOptions.style.display = 'block';
-                  
-                  // Obtenir l'état du checkbox
-                  const isCentered = document.getElementById(`box-centered-${index}`).checked;
-                  
-                  // Créer un encadré en bloc
-                  editor.insertEmbed(range.index, 'customBox', {
-                    style: style,
-                    centered: isCentered,
-                    content: '<p>Votre texte ici</p>'
-                  }, 'user');
-                  
-                  // Mettre le focus dans le contenu de l'encadré
-                  setTimeout(() => {
-                    const boxContent = editorContainer.querySelector('.box-content');
-                    if (boxContent) {
-                      boxContent.focus();
-                      // Sélectionner tout le contenu
-                      const selection = window.getSelection();
-                      const range = document.createRange();
-                      range.selectNodeContents(boxContent);
-                      selection.removeAllRanges();
-                      selection.addRange(range);
-                    }
-                  }, 10);
-                } else {
-                  if (blockOptions) blockOptions.style.display = 'none';
-                  
-                  // Appliquer un encadré en ligne au texte sélectionné
-                  if (range.length > 0) {
-                    editor.formatText(range.index, range.length, 'inlineBox', { style: style }, 'user');
-                  } else {
-                    // Si aucun texte n'est sélectionné, insérer un espace avec le format
-                    editor.insertText(range.index, ' ', { 'inlineBox': { style: style } }, 'user');
-                    editor.setSelection(range.index + 1, 0);
-                  }
-                }
-                
-                // Fermer le dropdown
-                boxDropdown.classList.remove('show');
-              }
-            });
-          });
-        }
-      });
-      
-      // Fermer tous les dropdowns au clic à l'extérieur
-      document.addEventListener('click', handleOutsideClick);
-    };
-    
-    // Gestionnaire pour fermer les dropdowns au clic extérieur
-    const handleOutsideClick = (e) => {
-      document.querySelectorAll('.box-style-dropdown.show').forEach(dropdown => {
-        const editorId = dropdown.getAttribute('data-editor-id');
-        const relatedButton = document.querySelector(`.ql-box[data-editor-id="${editorId}"]`);
-        
-        if (!dropdown.contains(e.target) && (!relatedButton || !relatedButton.contains(e.target))) {
-          dropdown.classList.remove('show');
-        }
-      });
-    };
-    
-    // Observer les changements dans le DOM pour détecter quand les éditeurs sont chargés
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach(mutation => {
-        if (mutation.addedNodes.length) {
-          // Vérifier si les éditeurs sont prêts
-          if (document.querySelector('.ql-toolbar')) {
-            createCustomButtons();
-          }
-        }
-      });
-    });
-    
-    observer.observe(document.body, { 
-      childList: true, 
-      subtree: true 
-    });
-    
-    // Créer les boutons immédiatement si les éditeurs sont déjà chargés
-    setTimeout(createCustomButtons, 500);
-    
-    // Nettoyage lors du démontage du composant
-    return () => {
-      observer.disconnect();
-      document.removeEventListener('click', handleOutsideClick);
-      
-      // Supprimer tous les dropdowns créés par ce composant
-      document.querySelectorAll(`[data-editor-id^="${componentId}"]`).forEach(el => {
-        el.remove();
-      });
-      
-      // Pour être vraiment certain, supprimer aussi tous les anciens dropdowns
-      document.querySelectorAll('.box-style-dropdown').forEach(el => {
-        el.remove();
-      });
-    };
-  }, []);
-
-  // Ajout d'un style pour les menus déroulants
-  useEffect(() => {
-    const style = document.createElement('style');
-    style.innerHTML = `
-      .variables-dropdown {
-        position: absolute;
-        z-index: 1000;
-        display: block;
-        min-width: 10rem;
-        margin: 0.125rem 0 0;
-        color: #212529;
-        text-align: left;
-        background-color: #fff;
-        background-clip: padding-box;
-        border: 1px solid rgba(0, 0, 0, 0.15);
-        border-radius: 0.25rem;
-        max-height: 300px;
-        overflow-y: auto;
-      }
-      
-      .variables-dropdown .dropdown-item {
-        display: block;
-        width: 100%;
-        padding: 0.25rem 1.5rem;
-        clear: both;
-        font-weight: 400;
-        color: #212529;
-        text-align: inherit;
-        white-space: nowrap;
-        background-color: transparent;
-        border: 0;
-        cursor: pointer;
-      }
-      
-      .variables-dropdown .dropdown-item:hover,
-      .variables-dropdown .dropdown-item:focus {
-        color: #16181b;
-        text-decoration: none;
-        background-color: #f8f9fa;
-      }
-      
-      .variables-dropdown .dropdown-header {
-        display: block;
-        padding: 0.5rem 1.5rem;
-        margin-bottom: 0;
-        font-size: 0.875rem;
-        color: #6c757d;
-        white-space: nowrap;
-      }
-      
-      .variables-dropdown .dropdown-divider {
-        height: 0;
-        margin: 0.5rem 0;
-        overflow: hidden;
-        border-top: 1px solid #e9ecef;
-      }
-      
-      .variables-button-container {
-        position: relative;
-      }
-      
-      /* Masquer les boutons de saut de page dans la barre d'outils */
-      .ql-pagebreak {
-        display: none !important;
-      }
-      
-      /* Style pour le bouton d'encadré */
-      .ql-box {
-        position: relative;
-        display: inline-block;
-        width: 18px;
-        height: 18px;
-      }
-      
-      .ql-box:before {
-        content: "";
-        position: absolute;
-        top: 3px;
-        left: 3px;
-        right: 3px;
-        bottom: 3px;
-        border: 1px solid #444;
-        border-radius: 2px;
-      }
-      
-      /* Centrer le contenu dans le bouton d'alignement */
-      .ql-align {
-        text-align: center !important;
-      }
-      
-      /* Style pour le dropdown des encadrés */
-      .box-style-dropdown {
-        display: none !important; /* Utiliser !important pour s'assurer que c'est masqué */
-        position: absolute;
-        z-index: 1001;
-        background: white;
-        border: 1px solid #ddd;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-        border-radius: 4px;
-        padding: 8px 0;
-        min-width: 180px;
-        visibility: hidden; /* Double sécurité pour éviter que ça ne s'affiche */
-        opacity: 0;
-      }
-      
-      .box-style-dropdown.show {
-        display: block !important;
-        visibility: visible;
-        opacity: 1;
-      }
-      
-      .box-style-item {
-        padding: 6px 12px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        font-size: 14px;
-      }
-      
-      .box-style-item:hover {
-        background-color: #f5f5f5;
-      }
-      
-      .box-style-color {
-        width: 16px;
-        height: 16px;
-        margin-right: 8px;
-        border-radius: 2px;
-        border: 1px solid #ddd;
-      }
-      
-      .box-style-color.standard {
-        background-color: #f8f9fa;
-        border: 1px solid #dee2e6;
-      }
-      
-      .box-style-color.standard-line {
-        background-color: #f8f9fa;
-        border: 1px solid #dee2e6;
-      }
-      
-      .box-style-color.success {
-        background-color: #d4edda;
-        border: 1px solid #c3e6cb;
-      }
-      
-      .box-style-color.danger {
-        background-color: #f8d7da;
-        border: 1px solid #f5c6cb;
-      }
-    `;
-    document.head.appendChild(style);
-    
-    return () => {
-      document.head.removeChild(style);
-    };
-  }, []);
-
-  // Ajout d'un style pour la fenêtre modale avec en-tête et pied de page fixes
+  // Style CSS pour la modale
   useEffect(() => {
     if (!isModalContext) return;
     
@@ -663,17 +80,42 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
         position: sticky;
         top: 0;
         background-color: white;
-        z-index: 10;
-        margin: -1px -1px 0 -1px; /* Pour éviter les espaces */
+        z-index: 1000;
+        margin: -1px -1px 0 -1px;
         border-bottom: 1px solid #eee;
+      }
+      
+      .tc-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 1.5rem;
+      }
+      
+      .tc-modal-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      
+      .tc-modal-close {
+        background: transparent;
+        border: none;
+        font-size: 1.25rem;
+        cursor: pointer;
+        color: #6c757d;
+      }
+      
+      .tc-modal-close:hover {
+        color: #dc3545;
       }
       
       .tc-modal-fixed-footer {
         position: sticky;
         bottom: 0;
         background-color: white;
-        z-index: 10;
-        margin: 0 -1px -1px -1px; /* Pour éviter les espaces */
+        z-index: 1000;
+        margin: 0 -1px -1px -1px;
         border-top: 1px solid #eee;
         box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
       }
@@ -684,7 +126,6 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
         box-sizing: border-box;
       }
       
-      /* Pour s'assurer que le contenu ne passe pas sous le pied de page */
       .template-editor-container {
         display: flex;
         flex-direction: column;
@@ -693,11 +134,95 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
         overflow: hidden;
       }
       
-      /* Pour que le contenu principal prenne l'espace disponible et soit défilable */
       .tc-modal-body {
         flex: 1;
         overflow: auto;
-        padding: 0 !important;
+        padding: 0;
+      }
+      
+      .content-textarea {
+        width: 100%;
+        min-height: 300px;
+        padding: 10px;
+        font-family: Arial, sans-serif;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        line-height: 1.5;
+      }
+      
+      .header-textarea, .footer-textarea {
+        width: 100%;
+        min-height: 100px;
+        padding: 10px;
+        font-family: Arial, sans-serif;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        line-height: 1.5;
+      }
+      
+      .variable-badge {
+        display: inline-block;
+        padding: 2px 5px;
+        margin: 2px;
+        background-color: #f0f0f0;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+        font-size: 12px;
+        cursor: pointer;
+      }
+      
+      .variables-guide {
+        background-color: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 4px;
+        padding: 10px;
+        margin-bottom: 10px;
+      }
+      
+      .variables-guide h6 {
+        margin-top: 0;
+        margin-bottom: 5px;
+      }
+      
+      .variables-badge-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+      }
+      
+      /* Style pour l'aperçu */
+      .preview-container {
+        border: 1px solid #ddd;
+        background-color: white;
+        border-radius: 4px;
+        margin-bottom: 20px;
+        width: 100%;
+        min-height: 500px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      }
+      
+      .preview-header {
+        background-color: #f8f9fa;
+        padding: 10px 15px;
+        border-bottom: 1px solid #ddd;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      
+      .preview-content {
+        padding: 20px;
+        min-height: 500px;
+      }
+      
+      .a4-preview {
+        width: 100%;
+        max-width: 210mm;
+        min-height: 297mm;
+        margin: 0 auto;
+        background: white;
+        padding: 20mm;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
       }
     `;
     document.head.appendChild(style);
@@ -730,157 +255,136 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
     };
   }, []);
 
-  // Fonction pour insérer une variable dans un éditeur spécifique
-  const handleInsertVariable = (variable, targetEditor) => {
-    let editor;
+  // Fonction pour insérer une variable dans un textarea
+  const insertVariable = (variable, targetId) => {
+    const textarea = document.getElementById(targetId);
+    if (!textarea) return;
     
-    switch (targetEditor) {
-      case 'header':
-        editor = headerEditorRef.current?.getEditor();
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    
+    let newValue;
+    switch (targetId) {
+      case 'bodyContent':
+        newValue = bodyContent.substring(0, start) + `{${variable}}` + bodyContent.substring(end);
+        setBodyContent(newValue);
+        setBodyVarsOpen(false);
+        break;
+      case 'headerContent':
+        newValue = headerContent.substring(0, start) + `{${variable}}` + headerContent.substring(end);
+        setHeaderContent(newValue);
         setHeaderVarsOpen(false);
         break;
-      case 'footer':
-        editor = footerEditorRef.current?.getEditor();
+      case 'footerContent':
+        newValue = footerContent.substring(0, start) + `{${variable}}` + footerContent.substring(end);
+        setFooterContent(newValue);
         setFooterVarsOpen(false);
         break;
-      case 'signature':
+      case 'signatureTemplate':
+        newValue = signatureTemplate.substring(0, start) + `{${variable}}` + signatureTemplate.substring(end);
+        setSignatureTemplate(newValue);
         setSignatureVarsOpen(false);
-        // Pour le champ signature (textarea)
-        const textArea = document.querySelector('textarea[value="' + signatureTemplate + '"]');
-        if (textArea) {
-          const start = textArea.selectionStart;
-          const end = textArea.selectionEnd;
-          const newValue = signatureTemplate.substring(0, start) + 
-                          `{${variable}}` + 
-                          signatureTemplate.substring(end);
-          setSignatureTemplate(newValue);
-          // Remettre le focus et la position du curseur
-          setTimeout(() => {
-            textArea.focus();
-            textArea.setSelectionRange(start + variable.length + 2, start + variable.length + 2);
-          }, 50);
-          return;
-        }
         break;
-      case 'body':
       default:
-        editor = bodyEditorRef.current?.getEditor();
-        setBodyVarsOpen(false);
+        break;
     }
     
-    if (editor) {
-      const range = editor.getSelection(true);
-      if (range) {
-        editor.insertText(range.index, `{${variable}}`, 'user');
-      } else {
-        const length = editor.getLength();
-        editor.insertText(length - 1, `{${variable}}`, 'user');
-      }
-    }
+    // Remettre le focus et la position du curseur
+    setTimeout(() => {
+      textarea.focus();
+      textarea.setSelectionRange(start + variable.length + 2, start + variable.length + 2);
+    }, 50);
   };
 
-  // Version améliorée du menu déroulant des variables
-  const VariablesDropdown = ({ isOpen, targetEditor, variables }) => {
-    if (!isOpen) return null;
-    
-    return (
-      <div className="variables-dropdown" style={{ 
-        position: 'absolute', 
-        top: '100%', 
-        right: '0',
-        zIndex: 1000
-      }}>
-        {variables.map((group, groupIndex) => (
-          <React.Fragment key={groupIndex}>
-            {group.header && <h6 className="dropdown-header">{group.header}</h6>}
-            {group.items.map((item, itemIndex) => (
-              <button 
-                key={itemIndex}
-                className="dropdown-item" 
-                onClick={() => handleInsertVariable(item.value, targetEditor)}
+  // Composant pour afficher les variables disponibles pour chaque section
+  const VariablesDropdown = ({ isOpen, variables, targetId, buttonRef }) => (
+    <div ref={buttonRef} className="dropdown-container" style={{ position: 'relative', marginBottom: '10px' }}>
+      <button
+        className="btn btn-outline-secondary"
+        type="button"
+        onClick={() => {
+          switch (targetId) {
+            case 'headerContent':
+              setHeaderVarsOpen(!headerVarsOpen);
+              break;
+            case 'bodyContent':
+              setBodyVarsOpen(!bodyVarsOpen);
+              break;
+            case 'footerContent':
+              setFooterVarsOpen(!footerVarsOpen);
+              break;
+            case 'signatureTemplate':
+              setSignatureVarsOpen(!signatureVarsOpen);
+              break;
+            default:
+              break;
+          }
+        }}
+      >
+        <i className="bi bi-braces me-1"></i>
+        Insérer une variable
+      </button>
+      
+      {isOpen && (
+        <div 
+          className="variables-dropdown"
+          style={{
+            position: 'absolute',
+            top: '100%',
+            left: 0,
+            zIndex: 1000,
+            width: '280px',
+            backgroundColor: 'white',
+            border: '1px solid #ddd',
+            borderRadius: '4px',
+            boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+            padding: '10px',
+            marginTop: '5px'
+          }}
+        >
+          <h6 className="mb-2">Variables disponibles</h6>
+          <div className="variables-badge-container">
+            {variables.map((variable, index) => (
+              <span 
+                key={index} 
+                className="variable-badge"
+                style={{
+                  cursor: 'pointer',
+                  display: 'inline-block',
+                  padding: '3px 8px',
+                  margin: '2px',
+                  backgroundColor: '#f0f0f0',
+                  border: '1px solid #ddd',
+                  borderRadius: '3px',
+                  fontSize: '0.85rem'
+                }}
+                onClick={() => insertVariable(variable, targetId)}
               >
-                {item.label || item.value}
-              </button>
+                {`{${variable}}`}
+              </span>
             ))}
-            {groupIndex < variables.length - 1 && <div className="dropdown-divider"></div>}
-          </React.Fragment>
-        ))}
-      </div>
-    );
-  };
+          </div>
+        </div>
+      )}
+    </div>
+  );
 
   // Définition des variables disponibles
   const bodyVariables = [
-    {
-      header: "Programmateur",
-      items: [
-        { value: "programmateur_nom" },
-        { value: "programmateur_structure" }, 
-        { value: "programmateur_email" },
-        { value: "programmateur_siret" }
-      ]
-    },
-    {
-      header: "Artiste",
-      items: [
-        { value: "artiste_nom" },
-        { value: "artiste_genre" }
-      ]
-    },
-    {
-      header: "Concert",
-      items: [
-        { value: "concert_titre" },
-        { value: "concert_date" },
-        { value: "concert_montant" }
-      ]
-    },
-    {
-      header: "Lieu",
-      items: [
-        { value: "lieu_nom" },
-        { value: "lieu_adresse" },
-        { value: "lieu_code_postal" },
-        { value: "lieu_ville" },
-        { value: "lieu_capacite" }
-      ]
-    },
-    {
-      header: "Date",
-      items: [
-        { value: "date_jour" },
-        { value: "date_mois" },
-        { value: "date_annee" },
-        { value: "date_complete" }
-      ]
-    }
+    "programmateur_nom", "programmateur_structure", "programmateur_email", "programmateur_siret",
+    "artiste_nom", "artiste_genre",
+    "concert_titre", "concert_date", "concert_montant",
+    "lieu_nom", "lieu_adresse", "lieu_code_postal", "lieu_ville", "lieu_capacite",
+    "date_jour", "date_mois", "date_annee", "date_complete"
   ];
 
   const headerFooterVariables = [
-    {
-      items: [
-        { value: "programmateur_nom" },
-        { value: "programmateur_structure" },
-        { value: "programmateur_email" },
-        { value: "programmateur_siret" },
-        { value: "artiste_nom" }
-      ]
-    }
+    "programmateur_nom", "programmateur_structure", "programmateur_email", "programmateur_siret", "artiste_nom"
   ];
 
   const signatureVariables = [
-    {
-      items: [
-        { value: "programmateur_nom" },
-        { value: "programmateur_structure" },
-        { value: "artiste_nom" },
-        { value: "lieu_ville" },
-        { value: "date_jour" },
-        { value: "date_mois" },
-        { value: "date_annee" },
-        { value: "date_complete" }
-      ]
-    }
+    "programmateur_nom", "programmateur_structure", "artiste_nom", "lieu_ville",
+    "date_jour", "date_mois", "date_annee", "date_complete"
   ];
 
   // Définition des types de modèles pour le select
@@ -891,18 +395,6 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
     { value: 'residence', label: 'Résidence artistique' },
     { value: 'atelier', label: 'Atelier / Workshop' }
   ];
-  
-  // Configuration des modules pour les éditeurs ReactQuill
-  const editorModules = {
-    toolbar: [
-      [{ 'header': [1, 2, 3, false] }],
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-      [{ 'indent': '-1'}, { 'indent': '+1' }],
-      [{ 'align': [] }],
-      ['link', 'clean']
-    ]
-  };
 
   // Fonction pour uploader un logo
   const handleLogoUpload = (event) => {
@@ -960,6 +452,113 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
     
     console.log("Sauvegarde du modèle avec les données:", modelData);
     onSave(modelData);
+  };
+
+  // Fonction pour estimer approximativement la quantité de pages nécessaires
+  const countEstimatedPages = (content, hasTitle = true, hasSignature = true) => {
+    if (!content) return 1;
+    
+    // Compter les sauts de page explicites
+    const explicitBreaks = (content.match(/\[SAUT_DE_PAGE\]/g) || []).length;
+    
+    // Si des sauts de page sont définis, on utilise ce nombre + 1
+    if (explicitBreaks > 0) {
+      return explicitBreaks + 1;
+    }
+    
+    // Estimation très approximative basée sur le nombre de caractères
+    // Une page A4 standard contient environ 3000 caractères (avec marges et taille de police standard)
+    const contentLength = content.length;
+    
+    // Tenir compte de l'espace pris par le titre et la signature
+    let totalLength = contentLength;
+    if (hasTitle) totalLength += 200; // Espace approximatif du titre
+    if (hasSignature) totalLength += 500; // Espace approximatif de la signature
+    
+    const estimatedPages = Math.max(1, Math.ceil(totalLength / 3000));
+    
+    return estimatedPages;
+  };
+
+  // Ajout d'une fonction pour générer dynamiquement l'aperçu avec plusieurs pages
+  const generateMultiPagePreview = () => {
+    // Nombre total de pages (au minimum 1)
+    const totalPages = Math.max(1, countEstimatedPages(bodyContent));
+    
+    // Séparation du contenu en pages
+    const contentByPage = bodyContent.split('[SAUT_DE_PAGE]');
+    
+    // Préparation des pages
+    let pageElements = '';
+    
+    // Génération de chaque page
+    for (let i = 0; i < totalPages; i++) {
+      const isLastPage = i === totalPages - 1;
+      const pageContent = contentByPage[i] || '';
+      
+      pageElements += `
+        <div class="page">
+          <div class="page-content">
+            <div class="header">
+              ${logoUrl ? `<div class="logo-container"><img src="${logoUrl}" alt="Logo" /></div>` : ''}
+              ${headerContent.replace(/{programmateur_nom}/g, 'Jean Dupont')
+                .replace(/{programmateur_structure}/g, 'Association Culturelle XYZ')
+                .replace(/{programmateur_email}/g, 'contact@asso-xyz.fr')
+                .replace(/{programmateur_siret}/g, '123 456 789 00012')}
+            </div>
+            
+            ${i === 0 ? `
+              <h1 style="text-align: center; margin-bottom: 20px;">
+                ${titleTemplate.replace(/{concert_titre}/g, 'Concert de printemps')
+                  .replace(/{artiste_nom}/g, 'Les Rockeurs du Dimanche')}
+              </h1>
+            ` : ''}
+            
+            <div>
+              ${pageContent.replace(/{programmateur_nom}/g, 'Jean Dupont')
+                .replace(/{programmateur_structure}/g, 'Association Culturelle XYZ')
+                .replace(/{programmateur_email}/g, 'contact@asso-xyz.fr')
+                .replace(/{artiste_nom}/g, 'Les Rockeurs du Dimanche')
+                .replace(/{artiste_genre}/g, 'Rock Alternatif')
+                .replace(/{concert_titre}/g, 'Concert de printemps')
+                .replace(/{concert_date}/g, '15/05/2025')
+                .replace(/{concert_montant}/g, '800')
+                .replace(/{lieu_nom}/g, 'Salle des fêtes')
+                .replace(/{lieu_adresse}/g, '123 rue Principale')
+                .replace(/{lieu_code_postal}/g, '75001')
+                .replace(/{lieu_ville}/g, 'Paris')
+                .replace(/{lieu_capacite}/g, '200')
+                .replace(/{date_jour}/g, '30')
+                .replace(/{date_mois}/g, '04')
+                .replace(/{date_annee}/g, '2025')}
+            </div>
+            
+            ${isLastPage ? `
+              <div>
+                ${signatureTemplate.replace(/{programmateur_nom}/g, 'Jean Dupont')
+                  .replace(/{programmateur_structure}/g, 'Association Culturelle XYZ')
+                  .replace(/{artiste_nom}/g, 'Les Rockeurs du Dimanche')
+                  .replace(/{lieu_ville}/g, 'Paris')
+                  .replace(/{date_jour}/g, '30')
+                  .replace(/{date_mois}/g, '04')
+                  .replace(/{date_annee}/g, '2025')}
+              </div>
+            ` : ''}
+            
+            <div class="footer">
+              ${footerContent.replace(/{programmateur_nom}/g, 'Jean Dupont')
+                .replace(/{programmateur_structure}/g, 'Association Culturelle XYZ')
+                .replace(/{programmateur_email}/g, 'contact@asso-xyz.fr')
+                .replace(/{programmateur_siret}/g, '123 456 789 00012')}
+            </div>
+            
+            <div class="page-number">${i + 1} / ${totalPages}</div>
+          </div>
+        </div>
+      `;
+    }
+    
+    return pageElements;
   };
 
   // Générer un aperçu avec des données fictives
@@ -1059,27 +658,21 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
       .replace(/{date_mois}/g, (new Date().getMonth() + 1).toString())
       .replace(/{date_annee}/g, new Date().getFullYear().toString())
       // Remplacer les sauts de page par des visualisations
-      .replace(/<hr\s+class=["|']page-break["|'][^>]*>/gi, 
-        '<div class="page-break"></div>');
+      .replace(/\[SAUT_DE_PAGE\]/g, '<div class="page-break"></div>');
     
     content += processedBodyContent;
     
     // Simuler la zone de signature
-    content += `
-      <div style="display: flex; justify-content: space-between; margin-top: 30px;">
-        <div style="width: 45%;">
-          <div style="margin-bottom: 50px;"><strong>Pour l'Organisateur:</strong></div>
-          <div>Jean Dupont</div>
-          <div style="border-top: 1px solid #000; margin-top: 5px;"></div>
-        </div>
-        <div style="width: 45%;">
-          <div style="margin-bottom: 50px;"><strong>Pour l'Artiste:</strong></div>
-          <div>Les Rockeurs du Dimanche</div>
-          <div style="border-top: 1px solid #000; margin-top: 5px;"></div>
-        </div>
-      </div>
-    `;
+    let processedSignatureTemplate = signatureTemplate
+      .replace(/{programmateur_nom}/g, 'Jean Dupont')
+      .replace(/{programmateur_structure}/g, 'Association Culturelle XYZ')
+      .replace(/{artiste_nom}/g, 'Les Rockeurs du Dimanche')
+      .replace(/{lieu_ville}/g, 'Paris')
+      .replace(/{date_jour}/g, new Date().getDate().toString())
+      .replace(/{date_mois}/g, (new Date().getMonth() + 1).toString())
+      .replace(/{date_annee}/g, new Date().getFullYear().toString());
     
+    content += processedSignatureTemplate;
     content += `</div>`;
     
     // Ajouter le pied de page
@@ -1154,9 +747,9 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
           <h4>3. Utiliser les variables</h4>
           <p>Les variables sont remplacées par les vraies données lors de la génération du contrat :</p>
           <ul>
-            <li>Cliquez sur le menu "Variables" pour voir celles disponibles</li>
-            <li>Sélectionnez une variable pour l'insérer à l'endroit du curseur</li>
-            <li>Par exemple, {'{programmateur_nom}'} sera remplacé par le nom du programmateur</li>
+            <li>Cliquez sur une variable dans la liste pour l'insérer à l'endroit du curseur</li>
+            <li>Les variables sont indiquées entre accolades, par exemple {'{programmateur_nom}'}</li>
+            <li>Lors de la génération, {'{programmateur_nom}'} sera remplacé par le nom du programmateur</li>
           </ul>
         </div>
         
@@ -1164,10 +757,9 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
           <h4>4. Gestion des sauts de page</h4>
           <p>Pour éviter qu'un article soit coupé entre deux pages :</p>
           <ul>
-            <li>Utilisez le bouton <strong>Saut de page</strong> pour forcer un changement de page</li>
+            <li>Insérez la balise <strong>[SAUT_DE_PAGE]</strong> là où vous voulez forcer un saut de page</li>
             <li>Placez les sauts de page entre vos articles ou sections principales</li>
             <li>Vérifiez le rendu dans l'aperçu avant de finaliser votre modèle</li>
-            <li>Pour les articles courts, regroupez-les sur une même page</li>
           </ul>
           <p><strong>Astuce</strong> : Dans l'aperçu, les sauts de page sont représentés par une ligne pointillée.</p>
         </div>
@@ -1195,12 +787,45 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
     }
   };
 
+  // Configuration des modules pour les éditeurs ReactQuill
+  const editorModules = {
+    toolbar: [
+      [{ 'header': [1, 2, 3, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      [{ 'indent': '-1'}, { 'indent': '+1' }],
+      [{ 'size': ['small', false, 'large', 'huge'] }],  // Options de taille standards
+      [{ 'color': [] }, { 'background': [] }],  // Ajout des options de couleur
+      [{ 'align': [] }],
+      ['link', 'clean']
+    ]
+  };
+
+  // Ajout de CSS personnalisé pour les classes de taille
+  useEffect(() => {
+    const styleElement = document.createElement('style');
+    styleElement.textContent = `
+      .ql-size-small { font-size: 10px; }
+      .ql-size-large { font-size: 18px; }
+      .ql-size-huge { font-size: 32px; }
+    `;
+    document.head.appendChild(styleElement);
+    
+    return () => {
+      document.head.removeChild(styleElement);
+    };
+  }, []);
+
+  // Références pour les éditeurs quill
+  const bodyEditorRef = useRef();
+  const headerEditorRef = useRef();
+  const footerEditorRef = useRef();
+
   return (
     <div className="template-editor-container">
       {!isModalContext ? (
         <div className="editor-header">
           <div className="breadcrumb-container">
-            {/* Correction : ajout accessibilité (role/button + tabIndex) */}
             <span 
               className="breadcrumb-item" 
               onClick={() => navigate('/parametres/contrats')} 
@@ -1245,36 +870,23 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
         </div>
       ) : (
         <div className="tc-modal-fixed-header">
-          <div 
-            className="modal-header" 
-            style={{
-              padding: '15px 20px',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center'
-            }}
-          >
-            <h3 style={{ margin: 0 }}>
+          <div className="modal-header tc-modal-header">
+            <h3 className="tc-modal-title">
               {template?.id ? 'Modifier le modèle' : 'Créer un nouveau modèle'}
             </h3>
-            <div style={{ display: 'flex', gap: '10px' }}>
+            <div className="tc-modal-actions" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <button 
                 className="btn btn-sm btn-outline-info" 
                 onClick={() => setShowGuide(!showGuide)}
+                style={{ padding: '0.375rem 0.75rem' }}
               >
                 <i className="bi bi-question-circle me-1"></i>
                 {showGuide ? 'Masquer l\'aide' : 'Aide'}
               </button>
               <button 
-                className="btn btn-sm btn-outline-secondary" 
+                className="tc-modal-close" 
                 onClick={handleCancel}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  fontSize: '20px',
-                  cursor: 'pointer',
-                  color: '#999'
-                }}
+                style={{ fontSize: '20px', padding: '0.25rem' }}
               >
                 <i className="bi bi-x-lg"></i>
               </button>
@@ -1297,10 +909,280 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
                   <h3>Aperçu du contrat</h3>
                   <small className="text-muted">Avec des données fictives d'exemple</small>
                 </div>
-                <div 
-                  className="preview-content" 
-                  dangerouslySetInnerHTML={{ __html: getPreviewContent() }}
-                />
+                <div className="preview-content">
+                  <div className="multi-page-preview-wrapper">
+                    <iframe
+                      srcDoc={`
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                          <meta charset="utf-8">
+                          <title>Aperçu du contrat</title>
+                          <style>
+                            @page {
+                              size: A4;
+                              margin: 0;
+                            }
+                            body {
+                              margin: 0;
+                              padding: 0;
+                              background-color: #f5f5f5;
+                              font-family: Arial, sans-serif;
+                            }
+                            .contrat-preview {
+                              margin: 0 auto;
+                              width: 100%;
+                              max-width: 800px;
+                              padding: 20px;
+                            }
+                            .page {
+                              width: 100%;
+                              height: 267mm; /* Taille A4 moins marges */
+                              box-sizing: border-box;
+                              background-color: #fff;
+                              box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+                              margin-bottom: 20px;
+                              position: relative;
+                              overflow: hidden;
+                              page-break-after: always;
+                            }
+                            .page:last-child {
+                              page-break-after: avoid;
+                            }
+                            .page-content {
+                              padding: 20mm;
+                              position: relative;
+                              height: 100%;
+                            }
+                            .header {
+                              border-bottom: 1px solid #eee;
+                              margin-bottom: ${headerBottomMargin}mm;
+                              height: ${headerHeight}mm;
+                              position: relative;
+                            }
+                            .footer {
+                              border-top: 1px solid #eee;
+                              margin-top: ${footerTopMargin}mm;
+                              height: ${footerHeight}mm;
+                              position: relative;
+                            }
+                            .logo-container {
+                              position: absolute;
+                              top: 0;
+                              left: 0;
+                              max-height: ${headerHeight}mm;
+                              max-width: 30%;
+                            }
+                            .logo-container img {
+                              max-height: 100%;
+                              max-width: 100%;
+                            }
+                            .page-number {
+                              position: absolute;
+                              bottom: 5mm;
+                              text-align: center;
+                              width: 100%;
+                              font-size: 10px;
+                              color: #666;
+                            }
+                          </style>
+                          <script>
+                            // Cette fonction s'exécute au chargement de la page
+                            window.onload = function() {
+                              // Récupérer tous les éléments de page
+                              const pages = document.querySelectorAll('.page');
+                              const totalPages = pages.length;
+                              
+                              // Mettre à jour tous les numéros de page
+                              pages.forEach((page, index) => {
+                                const pageNumber = page.querySelector('.page-number');
+                                if (pageNumber) {
+                                  pageNumber.textContent = (index + 1) + ' / ' + totalPages;
+                                }
+                              });
+                            }
+                          </script>
+                        </head>
+                        <body>
+                          <div class="contrat-preview">
+                            ${(() => {
+                              // Déterminer le nombre de pages nécessaires
+                              let pageCount = 1;
+                              const explicitBreaks = (bodyContent.match(/\[SAUT_DE_PAGE\]/g) || []).length;
+                              if (explicitBreaks > 0) {
+                                pageCount = explicitBreaks + 1;
+                                
+                                // Diviser le contenu par les sauts de page
+                                const contentByPage = bodyContent.split('[SAUT_DE_PAGE]');
+                                
+                                // Générer le HTML pour chaque page
+                                return contentByPage.map((pageContent, index) => {
+                                  const isFirstPage = index === 0;
+                                  const isLastPage = index === contentByPage.length - 1;
+                                  
+                                  return `
+                                    <div class="page">
+                                      <div class="page-content">
+                                        <div class="header">
+                                          ${logoUrl ? `<div class="logo-container"><img src="${logoUrl}" alt="Logo" /></div>` : ''}
+                                          ${headerContent
+                                            .replace(/{programmateur_nom}/g, 'Jean Dupont')
+                                            .replace(/{programmateur_structure}/g, 'Association Culturelle XYZ')
+                                            .replace(/{programmateur_email}/g, 'contact@asso-xyz.fr')
+                                            .replace(/{programmateur_siret}/g, '123 456 789 00012')}
+                                        </div>
+                                        
+                                        ${isFirstPage ? `
+                                          <h1 style="text-align: center; margin-bottom: 1.5em;">
+                                            ${titleTemplate
+                                              .replace(/{concert_titre}/g, 'Concert de printemps')
+                                              .replace(/{artiste_nom}/g, 'Les Rockeurs du Dimanche')}
+                                          </h1>
+                                        ` : ''}
+                                        
+                                        <div>
+                                          ${pageContent
+                                            .replace(/{programmateur_nom}/g, 'Jean Dupont')
+                                            .replace(/{programmateur_structure}/g, 'Association Culturelle XYZ')
+                                            .replace(/{programmateur_email}/g, 'contact@asso-xyz.fr')
+                                            .replace(/{artiste_nom}/g, 'Les Rockeurs du Dimanche')
+                                            .replace(/{artiste_genre}/g, 'Rock Alternatif')
+                                            .replace(/{concert_titre}/g, 'Concert de printemps')
+                                            .replace(/{concert_date}/g, '15/05/2025')
+                                            .replace(/{concert_montant}/g, '800')
+                                            .replace(/{lieu_nom}/g, 'Salle des fêtes')
+                                            .replace(/{lieu_adresse}/g, '123 rue Principale')
+                                            .replace(/{lieu_code_postal}/g, '75001')
+                                            .replace(/{lieu_ville}/g, 'Paris')
+                                            .replace(/{lieu_capacite}/g, '200')
+                                            .replace(/{date_jour}/g, '30')
+                                            .replace(/{date_mois}/g, '04')
+                                            .replace(/{date_annee}/g, '2025')}
+                                        </div>
+                                        
+                                        ${isLastPage ? `
+                                          <div class="signature-section">
+                                            ${signatureTemplate
+                                              .replace(/{programmateur_nom}/g, 'Jean Dupont')
+                                              .replace(/{programmateur_structure}/g, 'Association Culturelle XYZ')
+                                              .replace(/{artiste_nom}/g, 'Les Rockeurs du Dimanche')
+                                              .replace(/{lieu_ville}/g, 'Paris')
+                                              .replace(/{date_jour}/g, '30')
+                                              .replace(/{date_mois}/g, '04')
+                                              .replace(/{date_annee}/g, '2025')}
+                                          </div>
+                                        ` : ''}
+                                        
+                                        <div class="footer">
+                                          ${footerContent
+                                            .replace(/{programmateur_nom}/g, 'Jean Dupont')
+                                            .replace(/{programmateur_structure}/g, 'Association Culturelle XYZ')
+                                            .replace(/{programmateur_email}/g, 'contact@asso-xyz.fr')
+                                            .replace(/{programmateur_siret}/g, '123 456 789 00012')}
+                                        </div>
+                                        
+                                        <div class="page-number">${index + 1} / ${contentByPage.length}</div>
+                                      </div>
+                                    </div>
+                                  `;
+                                }).join('');
+                              } else {
+                                // Estimation du nombre de pages en l'absence de sauts de page explicites
+                                const estimatedPages = countEstimatedPages(bodyContent);
+                                
+                                // Créer au moins une page, ou même plusieurs pages vides si nécessaire
+                                let pagesHtml = '';
+                                
+                                for (let i = 0; i < estimatedPages; i++) {
+                                  const isFirstPage = i === 0;
+                                  const isLastPage = i === estimatedPages - 1;
+                                  
+                                  pagesHtml += `
+                                    <div class="page">
+                                      <div class="page-content">
+                                        <div class="header">
+                                          ${logoUrl ? `<div class="logo-container"><img src="${logoUrl}" alt="Logo" /></div>` : ''}
+                                          ${headerContent
+                                            .replace(/{programmateur_nom}/g, 'Jean Dupont')
+                                            .replace(/{programmateur_structure}/g, 'Association Culturelle XYZ')
+                                            .replace(/{programmateur_email}/g, 'contact@asso-xyz.fr')
+                                            .replace(/{programmateur_siret}/g, '123 456 789 00012')}
+                                        </div>
+                                        
+                                        ${isFirstPage ? `
+                                          <h1 style="text-align: center; margin-bottom: 1.5em;">
+                                            ${titleTemplate
+                                              .replace(/{concert_titre}/g, 'Concert de printemps')
+                                              .replace(/{artiste_nom}/g, 'Les Rockeurs du Dimanche')}
+                                          </h1>
+                                          
+                                          <div>
+                                            ${bodyContent
+                                              .replace(/{programmateur_nom}/g, 'Jean Dupont')
+                                              .replace(/{programmateur_structure}/g, 'Association Culturelle XYZ')
+                                              .replace(/{programmateur_email}/g, 'contact@asso-xyz.fr')
+                                              .replace(/{artiste_nom}/g, 'Les Rockeurs du Dimanche')
+                                              .replace(/{artiste_genre}/g, 'Rock Alternatif')
+                                              .replace(/{concert_titre}/g, 'Concert de printemps')
+                                              .replace(/{concert_date}/g, '15/05/2025')
+                                              .replace(/{concert_montant}/g, '800')
+                                              .replace(/{lieu_nom}/g, 'Salle des fêtes')
+                                              .replace(/{lieu_adresse}/g, '123 rue Principale')
+                                              .replace(/{lieu_code_postal}/g, '75001')
+                                              .replace(/{lieu_ville}/g, 'Paris')
+                                              .replace(/{lieu_capacite}/g, '200')
+                                              .replace(/{date_jour}/g, '30')
+                                              .replace(/{date_mois}/g, '04')
+                                              .replace(/{date_annee}/g, '2025')}
+                                          </div>
+                                        ` : ''}
+                                        
+                                        ${isLastPage ? `
+                                          <div class="signature-section">
+                                            ${signatureTemplate
+                                              .replace(/{programmateur_nom}/g, 'Jean Dupont')
+                                              .replace(/{programmateur_structure}/g, 'Association Culturelle XYZ')
+                                              .replace(/{artiste_nom}/g, 'Les Rockeurs du Dimanche')
+                                              .replace(/{lieu_ville}/g, 'Paris')
+                                              .replace(/{date_jour}/g, '30')
+                                              .replace(/{date_mois}/g, '04')
+                                              .replace(/{date_annee}/g, '2025')}
+                                          </div>
+                                        ` : ''}
+                                        
+                                        <div class="footer">
+                                          ${footerContent
+                                            .replace(/{programmateur_nom}/g, 'Jean Dupont')
+                                            .replace(/{programmateur_structure}/g, 'Association Culturelle XYZ')
+                                            .replace(/{programmateur_email}/g, 'contact@asso-xyz.fr')
+                                            .replace(/{programmateur_siret}/g, '123 456 789 00012')}
+                                        </div>
+                                        
+                                        <div class="page-number">${i + 1} / ${estimatedPages}</div>
+                                      </div>
+                                    </div>
+                                  `;
+                                }
+                                
+                                return pagesHtml;
+                              }
+                            })()}
+                          </div>
+                        </body>
+                        </html>
+                      `}
+                      title="Aperçu du contrat"
+                      className="html-preview-frame"
+                      style={{ 
+                        width: '100%', 
+                        minHeight: '700px',
+                        border: 'none',
+                        backgroundColor: 'transparent'
+                      }}
+                      scrolling="yes"
+                    />
+                  </div>
+                </div>
               </div>
             ) : (
               <>
@@ -1351,7 +1233,7 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
                   </div>
                 </div>
                 
-                {/* Titre du document - Avec gestion du collapse */}
+                {/* Titre du document */}
                 <div className="card mb-4">
                   <div className="card-header d-flex justify-content-between align-items-center">
                     <h3 className="card-title h5 mb-0">Titre du document</h3>
@@ -1389,56 +1271,22 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
                   </div>
                   <div className="card-body">
                     <div className="form-group">
-                      <div className="d-flex justify-content-between align-items-center mb-2">
-                        <label>Contenu du contrat</label>
-                        <div className="d-flex">
-                          <button 
-                            className="btn btn-sm btn-outline-secondary me-2" 
-                            type="button"
-                            onClick={() => {
-                              const editor = bodyEditorRef.current?.getEditor();
-                              if (editor) {
-                                const range = editor.getSelection(true);
-                                editor.insertEmbed(range.index, 'pageBreak', true, 'user');
-                                editor.setSelection(range.index + 1, 0);
-                              }
-                            }}
-                            title="Insérer un saut de page"
-                          >
-                            <i className="bi bi-file-break"></i>
-                            Saut de page
-                          </button>
-                          <div className="variables-button-container" ref={bodyVarsRef}>
-                            <button 
-                              className="btn btn-sm btn-outline-secondary dropdown-toggle" 
-                              type="button"
-                              onClick={() => setBodyVarsOpen(!bodyVarsOpen)}
-                            >
-                              <i className="bi bi-code-square me-1"></i>
-                              Variables
-                            </button>
-                            <VariablesDropdown 
-                              isOpen={bodyVarsOpen} 
-                              targetEditor="body" 
-                              variables={bodyVariables} 
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <ReactQuill
+                      <label>Contenu du contrat</label>
+                      <VariablesDropdown isOpen={bodyVarsOpen} variables={bodyVariables} targetId="bodyContent" buttonRef={bodyVarsRef} />
+                      <p className="text-muted mb-2">
+                        Utilisez la syntaxe <strong>[SAUT_DE_PAGE]</strong> pour insérer un saut de page.
+                      </p>
+                      <ReactQuill 
                         ref={bodyEditorRef}
-                        theme="snow"
                         value={bodyContent}
                         onChange={setBodyContent}
                         modules={editorModules}
-                        style={{ height: '400px', marginBottom: '50px' }}
-                        className="body-editor contrat-print-mode"
                       />
                     </div>
                   </div>
                 </div>
                 
-                {/* Zone de signature - Avec gestion du collapse */}
+                {/* Zone de signature */}
                 <div className="card mb-4">
                   <div className="card-header d-flex justify-content-between align-items-center">
                     <h3 className="card-title h5 mb-0">Zone de signature</h3>
@@ -1453,34 +1301,19 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
                   {!signatureCollapsed && (
                     <div className="card-body">
                       <div className="form-group">
-                        <div className="d-flex justify-content-between align-items-center mb-2">
-                          <label>Format de la zone de signature</label>
-                          <div className="variables-button-container" ref={signatureVarsRef}>
-                            <button 
-                              className="btn btn-sm btn-outline-secondary dropdown-toggle" 
-                              type="button"
-                              onClick={() => setSignatureVarsOpen(!signatureVarsOpen)}
-                            >
-                              <i className="bi bi-code-square me-1"></i>
-                              Variables
-                            </button>
-                            <VariablesDropdown 
-                              isOpen={signatureVarsOpen} 
-                              targetEditor="signature" 
-                              variables={signatureVariables} 
-                            />
-                          </div>
-                        </div>
+                        <label>Format de la zone de signature</label>
+                        <VariablesDropdown isOpen={signatureVarsOpen} variables={signatureVariables} targetId="signatureTemplate" buttonRef={signatureVarsRef} />
                         <p className="text-muted mb-2">
                           Vous pouvez inclure la date et le lieu de signature directement dans cette zone.
                         </p>
                         <textarea
-                          className="form-control"
-                          rows="6"
+                          id="signatureTemplate"
+                          className="content-textarea"
                           value={signatureTemplate}
                           onChange={(e) => setSignatureTemplate(e.target.value)}
+                          rows={8}
                           style={{ fontFamily: 'monospace' }}
-                        />
+                        ></textarea>
                         <small className="text-muted">
                           Format HTML pour définir l'apparence de la zone de signature.
                         </small>
@@ -1489,7 +1322,7 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
                   )}
                 </div>
                 
-                {/* En-tête du contrat - Avec gestion du collapse - Déplacé entre zone de signature et pied de page */}
+                {/* En-tête du contrat */}
                 <div className="card mb-4">
                   <div className="card-header d-flex justify-content-between align-items-center">
                     <h3 className="card-title h5 mb-0">En-tête du contrat</h3>
@@ -1580,39 +1413,20 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
                       
                       {/* Contenu de l'en-tête */}
                       <div className="form-group">
-                        <div className="d-flex justify-content-between align-items-center mb-2">
-                          <label>Contenu de l'en-tête</label>
-                          <div className="variables-button-container" ref={headerVarsRef}>
-                            <button 
-                              className="btn btn-sm btn-outline-secondary dropdown-toggle" 
-                              type="button"
-                              onClick={() => setHeaderVarsOpen(!headerVarsOpen)}
-                            >
-                              <i className="bi bi-code-square me-1"></i>
-                              Variables
-                            </button>
-                            <VariablesDropdown 
-                              isOpen={headerVarsOpen} 
-                              targetEditor="header" 
-                              variables={headerFooterVariables} 
-                            />
-                          </div>
-                        </div>
-                        <ReactQuill
+                        <label>Contenu de l'en-tête</label>
+                        <VariablesDropdown isOpen={headerVarsOpen} variables={headerFooterVariables} targetId="headerContent" buttonRef={headerVarsRef} />
+                        <ReactQuill 
                           ref={headerEditorRef}
-                          theme="snow"
                           value={headerContent}
                           onChange={setHeaderContent}
                           modules={editorModules}
-                          style={{ height: '150px', marginBottom: '50px' }}
-                          className="header-editor contrat-print-mode"
                         />
                       </div>
                     </div>
                   )}
                 </div>
                 
-                {/* Pied de page du contrat - Avec gestion du collapse */}
+                {/* Pied de page du contrat */}
                 <div className="card mb-4">
                   <div className="card-header d-flex justify-content-between align-items-center">
                     <h3 className="card-title h5 mb-0">Pied de page du contrat</h3>
@@ -1659,32 +1473,13 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
                       
                       {/* Contenu du pied de page */}
                       <div className="form-group">
-                        <div className="d-flex justify-content-between align-items-center mb-2">
-                          <label>Contenu du pied de page</label>
-                          <div className="variables-button-container" ref={footerVarsRef}>
-                            <button 
-                              className="btn btn-sm btn-outline-secondary dropdown-toggle" 
-                              type="button"
-                              onClick={() => setFooterVarsOpen(!footerVarsOpen)}
-                            >
-                              <i className="bi bi-code-square me-1"></i>
-                              Variables
-                            </button>
-                            <VariablesDropdown 
-                              isOpen={footerVarsOpen} 
-                              targetEditor="footer" 
-                              variables={headerFooterVariables} 
-                            />
-                          </div>
-                        </div>
-                        <ReactQuill
+                        <label>Contenu du pied de page</label>
+                        <VariablesDropdown isOpen={footerVarsOpen} variables={headerFooterVariables} targetId="footerContent" buttonRef={footerVarsRef} />
+                        <ReactQuill 
                           ref={footerEditorRef}
-                          theme="snow"
                           value={footerContent}
                           onChange={setFooterContent}
                           modules={editorModules}
-                          style={{ height: '150px', marginBottom: '50px' }}
-                          className="footer-editor contrat-print-mode"
                         />
                       </div>
                     </div>
@@ -1699,15 +1494,7 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
       {/* Pied de page en mode modal */}
       {isModalContext && (
         <div className={isModalContext ? "tc-modal-footer" : ""}>
-          <div 
-            className="modal-footer" 
-            style={{
-              padding: '15px 20px',
-              display: 'flex',
-              justifyContent: 'flex-end',
-              gap: '10px'
-            }}
-          >
+          <div className="modal-footer tc-modal-footer">
             <button 
               className="btn btn-outline-secondary" 
               onClick={handleCancel}

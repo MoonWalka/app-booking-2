@@ -386,7 +386,7 @@ const renderPublicForm = () => {
         <h3>Formulaire déjà complété</h3>
         <p>Vous avez déjà complété ce formulaire. Merci pour votre participation.</p>
         <button 
-          className="btn btn-primary mt-3"
+          className="tc-btn-primary mt-3"
           onClick={() => setCompleted(false)} // Permet de revenir au formulaire
         >
           <i className="bi bi-pencil-square me-2"></i>
@@ -468,7 +468,7 @@ const renderPublicForm = () => {
         <div className="alert alert-danger">
           <h3>Erreur</h3>
           <p>{error}</p>
-          <button className="btn btn-primary mt-3" onClick={() => navigate('/concerts')}>
+          <button className="tc-btn-primary mt-3" onClick={() => navigate('/concerts')}>
             Retour à la liste des concerts
           </button>
         </div>
@@ -493,10 +493,10 @@ const renderPublicForm = () => {
             {/* ... */}
             
             <div className="mt-4">
-              <button className="btn btn-secondary me-2" onClick={() => navigate('/concerts')}>
+              <button className="tc-btn-secondary me-2" onClick={() => navigate('/concerts')}>
                 Retour
               </button>
-              <button className="btn btn-primary">
+              <button className="tc-btn-primary">
                 Valider les informations
               </button>
             </div>

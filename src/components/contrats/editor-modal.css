@@ -1,0 +1,196 @@
+/* styles spécifiques pour la modale d'éditeur de contrat */
+.editor-modal-overlay {
+  z-index: 1050;
+}
+
+.editor-modal-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 90vh;
+}
+
+/* Meilleur positionnement pour les boutons d'action dans l'en-tête */
+.editor-modal-container .tc-modal-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+.editor-modal-container .tc-modal-header {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 15px 20px !important;
+  border-bottom: 1px solid #dee2e6 !important;
+}
+
+.editor-modal-container .tc-modal-close {
+  padding: 5px !important;
+  background: transparent !important;
+  border: none !important;
+  font-size: 20px !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  color: #6c757d !important;
+  transition: color 0.15s ease-in-out !important;
+}
+
+.editor-modal-container .tc-modal-close:hover {
+  color: #dc3545 !important;
+}
+
+.editor-modal-container .btn-outline-info {
+  color: #17a2b8 !important;
+  border-color: #17a2b8 !important;
+  background-color: transparent !important;
+  padding: 0.25rem 0.5rem !important;
+  font-size: 0.875rem !important;
+  line-height: 1.5 !important;
+  border-radius: 0.2rem !important;
+}
+
+.editor-modal-container .btn-outline-info:hover {
+  color: #fff !important;
+  background-color: #17a2b8 !important;
+  border-color: #17a2b8 !important;
+}
+
+/* Force l'affichage des barres d'outils de ReactQuill */
+.editor-modal-container .ql-toolbar.ql-snow {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  background-color: white !important;
+  border: 1px solid #ccc !important;
+  border-bottom: 1px solid #ccc !important;
+  border-top-left-radius: 4px !important;
+  border-top-right-radius: 4px !important;
+  padding: 8px !important;
+  box-sizing: border-box !important;
+  font-family: inherit !important;
+}
+
+.editor-modal-container .ql-toolbar.ql-snow .ql-formats {
+  display: inline-flex !important;
+  margin-right: 15px !important;
+  vertical-align: middle !important;
+}
+
+.editor-modal-container .ql-toolbar.ql-snow button {
+  background: none !important;
+  border: none !important;
+  cursor: pointer !important;
+  display: inline-block !important;
+  height: 24px !important;
+  width: 28px !important;
+  padding: 3px 5px !important;
+  margin: 0 1px !important;
+}
+
+.editor-modal-container .ql-toolbar.ql-snow button.ql-active,
+.editor-modal-container .ql-toolbar.ql-snow button:hover {
+  color: #06c !important;
+  background-color: rgba(0,0,0,0.04) !important;
+  border-radius: 3px !important;
+}
+
+.editor-modal-container .ql-toolbar.ql-snow .ql-picker {
+  display: inline-block !important;
+  position: relative !important;
+  vertical-align: middle !important;
+}
+
+/* Style pour le container de l'éditeur */
+.editor-modal-container .ql-container.ql-snow {
+  border: 1px solid #ccc !important;
+  border-top: 0 !important;
+  border-bottom-left-radius: 4px !important;
+  border-bottom-right-radius: 4px !important;
+  height: auto !important;
+  min-height: 150px !important;
+}
+
+.editor-modal-container .ql-editor {
+  min-height: 150px !important;
+  font-size: 14px !important;
+  line-height: 1.42 !important;
+  padding: 12px 15px !important;
+  tab-size: 4 !important;
+  overflow-y: auto !important;
+  outline: none !important;
+}
+
+/* Améliorations pour la modale complète */
+.editor-modal-container .template-editor-container {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+}
+
+.editor-modal-container .tc-modal-body {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  padding: 0 !important;
+}
+
+.editor-modal-container .tc-modal-scrollable-content {
+  padding: 1.5rem !important;
+}
+
+/* S'assurer que les boutons d'actions et les sections sont bien affichés */
+.editor-modal-container .card {
+  margin-bottom: 1.5rem !important;
+  border: 1px solid rgba(0,0,0,.125) !important;
+  border-radius: .25rem !important;
+}
+
+.editor-modal-container .card-header {
+  padding: .75rem 1.25rem !important;
+  background-color: rgba(0,0,0,.03) !important;
+  border-bottom: 1px solid rgba(0,0,0,.125) !important;
+}
+
+.editor-modal-container .card-body {
+  padding: 1.25rem !important;
+}
+
+.editor-modal-container .form-group {
+  margin-bottom: 1rem !important;
+}
+
+/* Styles pour garantir l'affichage des popup et tooltips de l'éditeur */
+.editor-modal-container .ql-tooltip {
+  z-index: 2000 !important;
+  position: absolute !important;
+  transform: translateY(10px) !important;
+  background-color: #fff !important;
+  border: 1px solid #ccc !important;
+  box-shadow: 0px 0px 5px rgba(0,0,0,.2) !important;
+  border-radius: 3px !important;
+  padding: 5px 12px !important;
+  white-space: nowrap !important;
+}
+
+/* S'assurer que les menus déroulants sont visibles */
+.editor-modal-container .ql-picker-options {
+  display: none !important;
+  position: absolute !important;
+  min-width: 100% !important;
+  padding: 4px 8px !important;
+  background-color: #fff !important;
+  border: 1px solid #ccc !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,.15) !important;
+  border-radius: 3px !important;
+  z-index: 2000 !important;
+  white-space: nowrap !important;
+}
+
+.editor-modal-container .ql-picker.ql-expanded .ql-picker-options {
+  display: block !important;
+}
+
+/* Force l'affichage des éditeurs même avec les styles existants */
+.editor-modal-container .quill {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+}

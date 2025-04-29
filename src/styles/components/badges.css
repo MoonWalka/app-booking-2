@@ -205,3 +205,29 @@
 .tc-badge-with-icon svg {
   font-size: 0.85em;
 }
+
+/* Statuts personnalisés pour les concerts */
+.status-contrat {
+  background-color: var(--tc-primary-dark, #2c3e50);
+  color: var(--tc-text-light, #ffffff);
+}
+
+.status-preaccord {
+  background-color: var(--tc-warning-color, #f0ad4e);
+  color: #212529;
+}
+
+.status-acompte {
+  background-color: var(--tc-info-color, #17a2b8);
+  color: #fff;
+}
+
+.status-solde {
+  background-color: var(--tc-success-color, #28a745);
+  color: #fff;
+}
+
+.status-contact {
+  background-color: var(--tc-secondary-color, #6c757d);
+  color: #fff;
+}

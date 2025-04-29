@@ -132,7 +132,7 @@ const LoginPage = () => {
                 <div className="d-grid">
                   <button
                     type="submit"
-                    className="btn btn-primary"
+                    className="tc-btn-primary"
                     disabled={loading}
                   >
                     {loading ? 'Connexion en cours...' : 'Se connecter'}

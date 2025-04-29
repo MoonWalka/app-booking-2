@@ -126,7 +126,7 @@ const ContratTemplatesEditPage = () => {
         <p>{error}</p>
         <div className="mt-3">
           <button 
-            className="btn btn-outline-primary"
+            className="tc-btn-outline-primary"
             onClick={() => navigate('/parametres/contrats')}
           >
             Retour à la liste des modèles
@@ -154,7 +154,7 @@ const ContratTemplatesEditPage = () => {
         <p>Le modèle demandé n'a pas pu être chargé.</p>
         <div className="mt-3">
           <button 
-            className="btn btn-outline-primary"
+            className="tc-btn-outline-primary"
             onClick={() => navigate('/parametres/contrats')}
           >
             Retour à la liste des modèles
@@ -168,7 +168,7 @@ const ContratTemplatesEditPage = () => {
     <div className="template-edit-container">
       <div className="mb-4">
         <button 
-          className="btn btn-outline-secondary"
+          className="tc-btn-outline-secondary"
           onClick={() => navigate('/parametres/contrats')}
         >
           <i className="bi bi-arrow-left me-2"></i>

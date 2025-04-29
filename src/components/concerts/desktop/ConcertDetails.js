@@ -1508,10 +1508,13 @@ const ConcertDetails = () => {
                 <div className="card-header">
                   <i className="bi bi-geo-alt"></i>
                   <h3>Lieu</h3>
-                  <Link to={`/lieux/${lieu.id}`} className="tc-btn-outline-primary btn-sm card-header-action">
+                  <button
+                    onClick={() => navigate(`/lieux/${lieu.id}`)}
+                    className="tc-btn-outline-primary btn-sm card-header-action"
+                  >
                     <i className="bi bi-eye"></i>
                     <span>Voir détails</span>
-                  </Link>
+                  </button>
                 </div>
                 <div className="card-body">
                   <div className="row">
@@ -1571,10 +1574,13 @@ const ConcertDetails = () => {
                 <i className="bi bi-person-badge"></i>
                 <h3>Programmateur</h3>
                 {programmateur && (
-                  <Link to={`/programmateurs/${programmateur.id}`} className="tc-btn-outline-primary btn-sm card-header-action">
+                  <button
+                    onClick={() => navigate(`/programmateurs/${programmateur.id}`)}
+                    className="tc-btn-outline-primary btn-sm card-header-action"
+                  >
                     <i className="bi bi-eye"></i>
                     <span>Voir détails</span>
-                  </Link>
+                  </button>
                 )}
               </div>
               <div className="card-body">
@@ -1763,10 +1769,13 @@ const ConcertDetails = () => {
                 <div className="card-header">
                   <i className="bi bi-music-note-beamed"></i>
                   <h3>Artiste</h3>
-                  <Link to={`/artistes/${artiste.id}`} className="tc-btn-outline-primary btn-sm card-header-action">
+                  <button
+                    onClick={() => navigate(`/artistes/${artiste.id}`)}
+                    className="tc-btn-outline-primary btn-sm card-header-action"
+                  >
                     <i className="bi bi-eye"></i>
                     <span>Voir détails</span>
-                  </Link>
+                  </button>
                 </div>
                 <div className="card-body">
                   <div className="row">

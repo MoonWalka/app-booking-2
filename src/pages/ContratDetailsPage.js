@@ -485,7 +485,7 @@ const ContratDetailsPage = () => {
                     ) : (
                       <div className="text-center p-5">
                         <button 
-                          className="btn btn-primary" 
+                          className="tc-btn-primary" 
                           onClick={generatePDFPreview}
                           disabled={isGeneratingPdfPreview}
                         >

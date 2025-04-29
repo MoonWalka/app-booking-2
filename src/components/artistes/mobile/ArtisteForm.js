@@ -301,7 +301,7 @@ const ArtisteFormMobile = () => {
             />
             <button 
               type="button" 
-              className="btn btn-primary"
+              className="tc-btn-primary"
               onClick={ajouterMembre}
             >
               <i className="bi bi-plus-lg"></i> Ajouter
@@ -330,13 +330,13 @@ const ArtisteFormMobile = () => {
         
         {/* Boutons d'action */}
         <div className="form-actions mt-4 d-grid gap-2">
-          <button type="submit" className="btn btn-primary btn-lg">
+          <button type="submit" className="tc-btn-primary btn-lg">
             <i className="bi bi-check-lg me-2"></i>
             {id !== 'nouveau' ? 'Enregistrer' : 'Créer l\'artiste'}
           </button>
           <button 
             type="button" 
-            className="btn btn-outline-secondary btn-lg"
+            className="tc-btn-outline-secondary btn-lg"
             onClick={handleCancel}
           >
             Annuler

@@ -24,31 +24,10 @@ const ContratTemplateEditorModal = ({
   return ReactDOM.createPortal(
     <div 
       className="tc-modal-overlay" 
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        zIndex: 1050
-      }}
       onClick={onClose}
     >
       <div 
-        className="tc-modal-content template-editor-modal" 
-        style={{
-          backgroundColor: 'white',
-          borderRadius: '8px',
-          width: '90%',
-          maxWidth: '1200px',
-          maxHeight: '90vh',
-          overflow: 'auto',
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)'
-        }}
+        className="tc-modal tc-modal-full" 
         onClick={(e) => e.stopPropagation()}
       >
         {/* Utilisation du composant ContratTemplateEditor réutilisable */}

@@ -188,7 +188,7 @@ const StructuresList = () => {
       <div className="card-header d-flex justify-content-between align-items-center">
         <h2 className="mb-0">Structures</h2>
         <div>
-          <Link to="/structures/nouveau" className="btn btn-primary">
+          <Link to="/structures/nouveau" className="tc-btn-primary">
             <i className="bi bi-plus-circle me-2"></i>
             Ajouter une structure
           </Link>
@@ -351,7 +351,7 @@ const StructuresList = () => {
         {hasMore && !loading && filteredStructures.length > 0 && (
           <div className="text-center mt-3">
             <button 
-              className="btn btn-outline-primary" 
+              className="tc-btn-outline-primary" 
               onClick={loadMore}
               disabled={loading}
             >

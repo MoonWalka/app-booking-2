@@ -92,7 +92,7 @@ const Modal = ({
             }}
           >{title}</h3>
           <button 
-            className="btn btn-light btn-sm"
+            className="tc-btn-light btn-sm"
             onClick={onClose}
           >
             <i className="bi bi-x-lg"></i>

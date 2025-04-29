@@ -215,6 +215,33 @@
   border-bottom-right-radius: var(--tc-border-radius);
 }
 
+/* Fix pour les boutons Variables et Aide */
+.dropdown-container {
+  margin-bottom: 10px !important;
+  margin-right: 10px !important;
+  position: relative !important;
+  float: right !important;
+  vertical-align: top !important;
+}
+
+/* Aligner le contenu du bouton Variables correctement */
+.variables-btn {
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+}
+
+/* Assurer que le dropdown reste visible */
+.variables-dropdown {
+  z-index: 1050 !important;
+  max-height: 400px !important;
+  overflow-y: auto !important;
+  min-width: 300px !important;
+  /* Modification pour orienter le dropdown vers l'intérieur de la page */
+  right: 0 !important; 
+  left: auto !important;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .tc-modal-full {

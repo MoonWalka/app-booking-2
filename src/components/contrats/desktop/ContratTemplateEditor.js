@@ -298,9 +298,9 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
 
   // Composant pour afficher les variables disponibles pour chaque section
   const VariablesDropdown = ({ isOpen, variables, targetId, buttonRef }) => (
-    <div ref={buttonRef} className="dropdown-container" style={{ position: 'relative', marginBottom: '10px' }}>
+    <div ref={buttonRef} className="dropdown-container" style={{ position: 'relative', display: 'inline-block', marginBottom: '10px', marginRight: '10px' }}>
       <button
-        className="btn btn-outline-secondary"
+        className="btn btn-sm btn-outline-secondary variables-btn"
         type="button"
         onClick={() => {
           switch (targetId) {
@@ -320,9 +320,21 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
               break;
           }
         }}
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '5px',
+          padding: '5px 10px',
+          borderRadius: '4px',
+          backgroundColor: '#f8f9fa',
+          borderColor: '#dee2e6',
+          color: '#495057',
+          fontWeight: 500,
+          fontSize: '0.875rem'
+        }}
       >
         <i className="bi bi-braces me-1"></i>
-        Insérer une variable
+        Variables
       </button>
       
       {isOpen && (
@@ -332,18 +344,22 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
             position: 'absolute',
             top: '100%',
             left: 0,
-            zIndex: 1000,
-            width: '280px',
+            zIndex: 1050,
+            width: '320px',
             backgroundColor: 'white',
-            border: '1px solid #ddd',
-            borderRadius: '4px',
-            boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-            padding: '10px',
-            marginTop: '5px'
+            border: '1px solid #dee2e6',
+            borderRadius: '6px',
+            boxShadow: '0 3px 12px rgba(0,0,0,0.15)',
+            padding: '12px',
+            marginTop: '5px',
+            maxHeight: '400px',
+            overflowY: 'auto'
           }}
         >
-          <h6 className="mb-2">Variables disponibles</h6>
-          <div className="variables-badge-container">
+          <h6 className="mb-3" style={{ borderBottom: '1px solid #eee', paddingBottom: '8px', fontSize: '0.9rem', fontWeight: 600, color: '#495057' }}>
+            Variables disponibles
+          </h6>
+          <div className="variables-badge-container" style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
             {variables.map((variable, index) => (
               <span 
                 key={index} 
@@ -351,12 +367,23 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
                 style={{
                   cursor: 'pointer',
                   display: 'inline-block',
-                  padding: '3px 8px',
+                  padding: '4px 10px',
                   margin: '2px',
-                  backgroundColor: '#f0f0f0',
-                  border: '1px solid #ddd',
-                  borderRadius: '3px',
-                  fontSize: '0.85rem'
+                  backgroundColor: '#f0f6ff',
+                  border: '1px solid #d0e0ff',
+                  borderRadius: '4px',
+                  fontSize: '0.85rem',
+                  color: '#0055cc',
+                  transition: 'all 0.2s ease',
+                  fontFamily: 'monospace'
+                }}
+                onMouseOver={(e) => {
+                  e.target.style.backgroundColor = '#e0efff';
+                  e.target.style.borderColor = '#a0c0ff';
+                }}
+                onMouseOut={(e) => {
+                  e.target.style.backgroundColor = '#f0f6ff';
+                  e.target.style.borderColor = '#d0e0ff';
                 }}
                 onClick={() => insertVariable(variable, targetId)}
               >

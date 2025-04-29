@@ -197,6 +197,7 @@ const getContratHTML = (data, title = 'Contrat', forPreview = false) => {
   const bodyContent = replaceVariables(safeData.template.bodyContent || '', variables);
   const footerContent = replaceVariables(safeData.template.footerContent || '', variables);
   const signatureContent = replaceVariables(safeData.template.signatureTemplate || '', variables);
+  // Conserver titleContent pour les métadonnées du document, mais ne pas l'afficher
   const titleContent = replaceVariables(safeData.template.titleTemplate || title, variables);
   
   // Traitement des sauts de page pour l'aperçu
@@ -564,10 +565,8 @@ const getContratHTML = (data, title = 'Contrat', forPreview = false) => {
     htmlContent += `<div class="header-content">${headerContent}</div></div>`;
   }
 
-  // Ajouter le titre
-  if (titleContent) {
-    htmlContent += `<div class="title">${titleContent}</div>`;
-  }
+  // Ne plus ajouter le titre ici, il sera directement intégré dans le modèle si nécessaire
+  // Supprimer la ligne: htmlContent += `<div class="title">${titleContent}</div>`;
 
   // Ajouter le corps du document
   htmlContent += `<div class="body-content">${bodyContentProcessed}</div>`;
@@ -723,17 +722,21 @@ const ContratHTMLPreview = ({ data, title = 'Contrat' }) => {
   }
   
   return (
-    <iframe
-      srcDoc={htmlContent}
-      title="Aperçu du contrat"
-      className="html-preview-frame"
-      style={{ 
-        width: '100%', 
-        height: '700px',
-        border: '1px solid #ddd',
-        borderRadius: '4px'
-      }}
-    />
+    <div className="html-preview-container" style={{ width: '100%', overflow: 'auto' }}>
+      <iframe
+        srcDoc={htmlContent}
+        title="Aperçu du contrat"
+        className="html-preview-frame"
+        style={{ 
+          width: '100%', 
+          height: '1000px',
+          border: '1px solid #ddd',
+          borderRadius: '4px',
+          backgroundColor: '#f0f0f0',
+          maxWidth: '100%'
+        }}
+      />
+    </div>
   );
 };
 
@@ -770,11 +773,6 @@ const ContratPDFWrapper = ({
     <Document>
       <Page size="A4" style={styles.page}>
         <View style={styles.content}>
-          <Text style={styles.defaultTitle}>
-            {replaceVariables(effectiveTemplate.titleTemplate || 'Contrat', 
-              prepareContractVariables({template: effectiveTemplate, ...safeData}))}
-          </Text>
-          
           <Text style={styles.message}>
             Prévisualisation du contrat avec mise en page simplifiée.
             Utilisez l'aperçu HTML pour un rendu plus fidèle.

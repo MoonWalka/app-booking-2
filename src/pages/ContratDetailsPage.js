@@ -213,7 +213,8 @@ const ContratDetailsPage = () => {
       };
       
       // Utiliser la nouvelle méthode ajoutée au ContratPDFWrapper pour générer un aperçu PDF
-      const url = await ContratPDFWrapper.generatePDFPreview(data, `Aperçu_${concert.titre || 'Concert'}`);
+      // Passons un titre vide pour ne pas ajouter "Contrat - [titre du concert]" dans l'aperçu
+      const url = await ContratPDFWrapper.generatePDFPreview(data, "");
       setPdfPreviewUrl(url);
       setPreviewType('pdf');
     } catch (error) {

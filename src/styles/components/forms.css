@@ -118,6 +118,12 @@
   color: var(--tc-danger-color);
 }
 
+/* Style pour indicateur de champ requis */
+.tc-required {
+  color: var(--tc-danger-color);
+  margin-left: 0.125rem;
+}
+
 /* Styles pour les select et multiselect */
 select.form-control {
   padding-right: 2rem;

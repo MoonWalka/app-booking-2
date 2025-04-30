@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './Dashboard.module.css';
 
 // Imports modifiés de la branche refacto-structure-scriptshell - pour implémentation future
 {/* 
@@ -97,41 +98,33 @@ const DashboardPage = () => {
   return (
     <div className="container mt-4">
       <h1>Dashboard</h1>
-      <div className="row mt-4">
-        <div className="col-md-3 mb-4">
-          <div className="card bg-primary text-white">
-            <div className="card-body">
-              <h5 className="card-title">Concerts</h5>
-              <p className="card-text display-4">0</p>
-              <p className="card-text">Concerts à venir</p>
-            </div>
+      <div className={styles.dashboardStats}>
+        <div className={styles.statCard}>
+          <div className="card-body">
+            <h5 className="card-title">Concerts</h5>
+            <p className={styles.statValue}>0</p>
+            <p className="card-text">Concerts à venir</p>
           </div>
         </div>
-        <div className="col-md-3 mb-4">
-          <div className="card bg-success text-white">
-            <div className="card-body">
-              <h5 className="card-title">Programmateurs</h5>
-              <p className="card-text display-4">1</p>
-              <p className="card-text">Programmateurs actifs</p>
-            </div>
+        <div className={styles.statCard}>
+          <div className="card-body">
+            <h5 className="card-title">Programmateurs</h5>
+            <p className={styles.statValue}>1</p>
+            <p className="card-text">Programmateurs actifs</p>
           </div>
         </div>
-        <div className="col-md-3 mb-4">
-          <div className="card bg-info text-white">
-            <div className="card-body">
-              <h5 className="card-title">Lieux</h5>
-              <p className="card-text display-4">1</p>
-              <p className="card-text">Lieux disponibles</p>
-            </div>
+        <div className={styles.statCard}>
+          <div className="card-body">
+            <h5 className="card-title">Lieux</h5>
+            <p className={styles.statValue}>1</p>
+            <p className="card-text">Lieux disponibles</p>
           </div>
         </div>
-        <div className="col-md-3 mb-4">
-          <div className="card bg-warning text-dark">
-            <div className="card-body">
-              <h5 className="card-title">Contrats</h5>
-              <p className="card-text display-4">0</p>
-              <p className="card-text">Contrats en cours</p>
-            </div>
+        <div className={styles.statCard}>
+          <div className="card-body">
+            <h5 className="card-title">Contrats</h5>
+            <p className={styles.statValue}>0</p>
+            <p className="card-text">Contrats en cours</p>
           </div>
         </div>
       </div>

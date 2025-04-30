@@ -73,7 +73,8 @@
     outline: none;
   }
   
-  .form-public .required {
+  /* Classe .required supprimée - utiliser .tc-required de forms.css à la place */
+  .form-public .tc-required {
     color: #e74c3c;
   }
   

@@ -193,10 +193,7 @@
   display: block;
 }
 
-.required {
-  color: var(--tc-danger-color, #dc3545);
-  margin-left: 0.125rem;
-}
+/* Classe .required supprimée - remplacée par .tc-required dans forms.css */
 
 .optional {
   color: var(--tc-text-muted, #6c757d);

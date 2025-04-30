@@ -1,0 +1,31 @@
+Analyse des composants UI potentiels sans import CSS...
+======================================================
+Chemin du projet analysé : /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2
+
+[Potentiel UI sans CSS] /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/concerts/ConcertsList.js
+[Potentiel UI sans CSS] /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/concerts/ConcertForm.js
+[Potentiel UI sans CSS] /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/concerts/mobile/ConcertForm.js
+[Potentiel UI sans CSS] /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/concerts/ConcertDetails.js
+[Potentiel UI sans CSS] /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/forms/desktop/FormValidationInterface.js
+[Potentiel UI sans CSS] /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/forms/FormGenerator.js
+[Potentiel UI sans CSS] /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/forms/FormValidationInterface.js
+[Potentiel UI sans CSS] /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/structures/StructuresList.js
+[Potentiel UI sans CSS] /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/structures/StructureDetails.js
+[Potentiel UI sans CSS] /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/lieux/LieuxList.js
+[Potentiel UI sans CSS] /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/lieux/LieuForm.js
+[Potentiel UI sans CSS] /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/lieux/LieuDetails.js
+[Potentiel UI sans CSS] /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/programmateurs/ProgrammateurForm.js
+[Potentiel UI sans CSS] /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/programmateurs/ProgrammateursList.js
+[Potentiel UI sans CSS] /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/programmateurs/ProgrammateurDetails.js
+[Potentiel UI sans CSS] /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/common/Layout.js
+[Potentiel UI sans CSS] /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/common/layout/MobileLayout.js
+[Potentiel UI sans CSS] /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/common/PublicFormLayout.js
+[Potentiel UI sans CSS] /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/contrats/ContratTemplateEditor.js
+[Potentiel UI sans CSS] /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/contrats/ContratGenerator.js
+[Potentiel UI sans CSS] /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/artistes/ArtisteDetail.js
+[Potentiel UI sans CSS] /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/artistes/ArtistesList.js
+[Potentiel UI sans CSS] /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/artistes/ArtisteForm.js
+
+Analyse terminée. Les fichiers listés sont des candidats potentiels à vérifier.
+Ils semblent être des composants React mais n'importent aucun fichier .css ou .module.css.
+Vérifiez manuellement s'ils nécessitent des styles et un fichier .module.css dédié.

@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { collection, query, where, getDocs, getDoc, doc, updateDoc, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/firebase';
 import { useLocationIQ } from '@/hooks/useLocationIQ';
-import ProgrammateurForm from '@/components/forms/ProgrammateurForm.js';
+import ProgrammateurForm from '@/components/programmateurs/ProgrammateurForm.js';
 import '@styles/pages/formPublic.css';
 import { formatDateFr, formatDateFrSlash } from '../utils/dateUtils';
 

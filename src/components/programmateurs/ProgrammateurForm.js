@@ -4,8 +4,8 @@ import { useResponsiveComponent } from '@/hooks/useResponsiveComponent';
 
 function ProgrammateurForm(props) {
   const ResponsiveComponent = useResponsiveComponent({
-    desktopPath: 'forms/desktop/ProgrammateurForm',
-    mobilePath: 'forms/mobile/ProgrammateurForm'
+    desktopPath: 'programmateurs/desktop/ProgrammateurForm',
+    mobilePath: 'programmateurs/mobile/ProgrammateurForm'
   });
   
   return <ResponsiveComponent {...props} />;

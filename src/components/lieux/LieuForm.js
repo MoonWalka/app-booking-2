@@ -8,8 +8,8 @@ function LieuForm(props) {
   const customFallback = <Spinner message="Chargement du formulaire..." contentOnly={true} />;
   
   const ResponsiveComponent = useResponsiveComponent({
-    desktopPath: 'forms/desktop/LieuForm',
-    mobilePath: 'forms/mobile/LieuForm',
+    desktopPath: 'lieux/desktop/LieuForm',
+    mobilePath: 'lieux/mobile/LieuForm',
     fallback: customFallback // Utiliser notre spinner standardisé comme fallback
   });
   

@@ -30,7 +30,7 @@ import {
   serverTimestamp
 } from '@/firebase';
 import { PDFDownloadLink } from '@react-pdf/renderer';
-import ContratPDFWrapper from '@/components/contrats/ContratPDFWrapper.js';
+import ContratPDFWrapper from '@/components/pdf/ContratPDFWrapper.js';
 import '@/styles/index.css';
 
 const ContratGenerator = ({ concert, programmateur, artiste, lieu }) => {

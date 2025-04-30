@@ -6,7 +6,7 @@ import { db } from '@/firebase';
 import { doc, getDoc, updateDoc, deleteDoc, Timestamp } from 'firebase/firestore';
 
 import { FaDownload, FaEnvelope, FaFileSignature } from 'react-icons/fa';
-import ContratPDFWrapper from '@/components/contrats/ContratPDFWrapper.js';
+import ContratPDFWrapper from '@/components/pdf/ContratPDFWrapper.js';
 import { PDFViewer } from '@react-pdf/renderer';
 import '@/styles/index.css';
 

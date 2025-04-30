@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import ContratVariable from '@/components/contrats/ContratVariable';
-import ContratPDFWrapper from '@/components/contrats/ContratPDFWrapper.js';
+import ContratPDFWrapper from '@/components/pdf/ContratPDFWrapper.js';
 import '@/styles/index.css';
 // Import de la feuille de style spécifique pour l'impression des contrats
 import '@/styles/components/contrat-print.css';

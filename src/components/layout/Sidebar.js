@@ -1,64 +1,61 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { APP_NAME } from '../../config.js';
+import styles from './Sidebar.module.css';
 
 const Sidebar = () => {
   console.log("Le composant Sidebar est rendu"); // Ce log devrait apparaître dans la console
   return (
-    <div className="bg-dark text-white p-3 sidebar">
-      <h5 className="mb-3">{APP_NAME}</h5>
-      <ul className="nav flex-column">
-        <li className="nav-item">
-          <Link className="nav-link text-white" to="/">
-            <i className="bi bi-speedometer2 me-2"></i>
-            Dashboard
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link className="nav-link text-white" to="/concerts">
-            <i className="bi bi-music-note-list me-2"></i>
-            Concerts
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link className="nav-link text-white" to="/programmateurs">
-            <i className="bi bi-person-lines-fill me-2"></i>
-            Programmateurs
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link className="nav-link text-white" to="/lieux">
-            <i className="bi bi-geo-alt-fill me-2"></i>
-            Lieux
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link className="nav-link text-white" to="/artistes">
-            <i className="bi bi-music-note-beamed me-2"></i>
-            Artistes
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link className="nav-link text-white" to="/contrats">
-            <i className="bi bi-file-earmark-text me-2"></i>
-            Contrats
-          </Link>
-        </li>
-        {/* Nouvel élément de menu pour les paramètres */}
-        <li className="nav-item">
-          <Link className="nav-link text-white" to="/parametres">
-            <i className="bi bi-gear me-2"></i>
-            Paramètres
-          </Link>
-        </li>
-        {/* Élément Paramètres avec style distinctif pour vérifier s'il est rendu */}
-        <li className="nav-item" style={{border: '2px solid red'}}>
-          <Link className="nav-link text-white" to="/parametres">
-            <i className="bi bi-gear me-2"></i>
-            Paramètres
-          </Link>
-        </li>
-      </ul>
+    <div className={styles.sidebar}>
+      <div className={styles.sidebarHeader}>
+        <h5>{APP_NAME}</h5>
+      </div>
+      <div className={styles.sidebarContent}>
+        <ul className={styles.navLinks}>
+          <li>
+            <Link to="/" className={window.location.pathname === '/' ? styles.active : ''}>
+              <i className="bi bi-speedometer2"></i>
+              Dashboard
+            </Link>
+          </li>
+          <li>
+            <Link to="/concerts" className={window.location.pathname.includes('/concerts') ? styles.active : ''}>
+              <i className="bi bi-music-note-list"></i>
+              Concerts
+            </Link>
+          </li>
+          <li>
+            <Link to="/programmateurs" className={window.location.pathname.includes('/programmateurs') ? styles.active : ''}>
+              <i className="bi bi-person-lines-fill"></i>
+              Programmateurs
+            </Link>
+          </li>
+          <li>
+            <Link to="/lieux" className={window.location.pathname.includes('/lieux') ? styles.active : ''}>
+              <i className="bi bi-geo-alt-fill"></i>
+              Lieux
+            </Link>
+          </li>
+          <li>
+            <Link to="/artistes" className={window.location.pathname.includes('/artistes') ? styles.active : ''}>
+              <i className="bi bi-music-note-beamed"></i>
+              Artistes
+            </Link>
+          </li>
+          <li>
+            <Link to="/contrats" className={window.location.pathname.includes('/contrats') ? styles.active : ''}>
+              <i className="bi bi-file-earmark-text"></i>
+              Contrats
+            </Link>
+          </li>
+          <li>
+            <Link to="/parametres" className={window.location.pathname.includes('/parametres') ? styles.active : ''}>
+              <i className="bi bi-gear"></i>
+              Paramètres
+            </Link>
+          </li>
+        </ul>
+      </div>
     </div>
   );
 };

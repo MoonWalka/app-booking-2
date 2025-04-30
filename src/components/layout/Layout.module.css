@@ -1,0 +1,22 @@
+/* Layout.module.css - Styles pour le composant layout principal */
+
+.layoutContainer {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.content {
+  flex: 1;
+  margin-left: 250px; /* Correspond à la largeur de la sidebar */
+  padding: 20px;
+  min-height: 100vh;
+  background-color: var(--tc-content-bg-color);
+}
+
+/* Styles pour le header */
+.header {
+  background-color: var(--tc-header-bg-color);
+  padding: 15px 20px;
+  box-shadow: var(--tc-card-shadow);
+}

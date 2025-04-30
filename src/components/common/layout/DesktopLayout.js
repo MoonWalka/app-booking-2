@@ -3,7 +3,8 @@ import React from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext.js';
 import { APP_NAME } from '../../../config.js';
-// Import redondant supprimé - les styles sont déjà chargés dans App.js
+import layoutStyles from '../../../components/layout/Layout.module.css';
+import sidebarStyles from '../../../components/layout/Sidebar.module.css';
 
 function DesktopLayout() {
   const { currentUser, logout } = useAuth();
@@ -19,57 +20,57 @@ function DesktopLayout() {
   };
 
   return (
-    <div className="layout-container">
-      <nav className="sidebar">
-        <div className="sidebar-header">
+    <div className={layoutStyles.layoutContainer}>
+      <nav className={sidebarStyles.sidebar}>
+        <div className={sidebarStyles.sidebarHeader}>
           <h3>{APP_NAME}</h3>
         </div>
-        <div className="sidebar-content">
-          <ul className="nav-links">
+        <div className={sidebarStyles.sidebarContent}>
+          <ul className={sidebarStyles.navLinks}>
             <li>
-              <NavLink to="/" end>
+              <NavLink to="/" end className={({ isActive }) => isActive ? sidebarStyles.active : ''}>
                 <i className="bi bi-speedometer2"></i>
                 <span>Dashboard</span>
               </NavLink>
             </li>
             <li>
-              <NavLink to="/concerts">
+              <NavLink to="/concerts" className={({ isActive }) => isActive ? sidebarStyles.active : ''}>
                 <i className="bi bi-calendar-event"></i>
                 <span>Concerts</span>
               </NavLink>
             </li>
             <li>
-              <NavLink to="/programmateurs">
+              <NavLink to="/programmateurs" className={({ isActive }) => isActive ? sidebarStyles.active : ''}>
                 <i className="bi bi-person-badge"></i>
                 <span>Programmateurs</span>
               </NavLink>
             </li>
             <li>
-              <NavLink to="/lieux">
+              <NavLink to="/lieux" className={({ isActive }) => isActive ? sidebarStyles.active : ''}>
                 <i className="bi bi-geo-alt"></i>
                 <span>Lieux</span>
               </NavLink>
             </li>
             <li>
-              <NavLink to="/structures">
+              <NavLink to="/structures" className={({ isActive }) => isActive ? sidebarStyles.active : ''}>
                 <i className="bi bi-building"></i>
                 <span>Structures</span>
               </NavLink>
             </li>
             <li>
-              <NavLink to="/contrats">
+              <NavLink to="/contrats" className={({ isActive }) => isActive ? sidebarStyles.active : ''}>
                 <i className="bi bi-file-earmark-text"></i>
                 <span>Contrats</span>
               </NavLink>
             </li>
             <li>
-              <NavLink to="/artistes">
+              <NavLink to="/artistes" className={({ isActive }) => isActive ? sidebarStyles.active : ''}>
                 <i className="bi bi-music-note-beamed"></i>
                 <span>Artistes</span>
               </NavLink>
             </li>
             <li>
-              <NavLink to="/parametres">
+              <NavLink to="/parametres" className={({ isActive }) => isActive ? sidebarStyles.active : ''}>
                 <i className="bi bi-gear"></i>
                 <span>Paramètres</span>
               </NavLink>
@@ -77,10 +78,10 @@ function DesktopLayout() {
             {/* Autres liens de navigation */}
           </ul>
         </div>
-        <div className="sidebar-footer">
+        <div className={sidebarStyles.sidebarFooter}>
           {currentUser && (
-            <div className="user-info">
-              <div className="user-email">{currentUser.email}</div>
+            <div className={sidebarStyles.userInfo}>
+              <div className={sidebarStyles.userEmail}>{currentUser.email}</div>
               <button onClick={handleLogout} className="btn btn-sm btn-outline-light">
                 <i className="bi bi-box-arrow-right me-2"></i>
                 Déconnexion
@@ -89,7 +90,7 @@ function DesktopLayout() {
           )}
         </div>
       </nav>
-      <main className="content">
+      <main className={layoutStyles.content}>
         <Outlet />
       </main>
     </div>

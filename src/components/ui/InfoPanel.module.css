@@ -1,0 +1,9 @@
+/* InfoPanel.module.css - Styles pour les panneaux d'information */
+
+.infoPanel {
+  background-color: #e3f2fd;
+  border-left: 4px solid #2196f3;
+  padding: 15px;
+  margin: 20px 0;
+  border-radius: 4px;
+}

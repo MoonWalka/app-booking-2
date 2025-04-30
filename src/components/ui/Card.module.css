@@ -1,0 +1,19 @@
+/* Card.module.css - Styles pour les cartes UI */
+
+.card {
+  background-color: var(--tc-card-bg);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-shadow);
+  margin-bottom: 20px;
+}
+
+.cardHeader {
+  padding: 15px;
+  border-bottom: 1px solid var(--tc-border-color);
+  font-weight: bold;
+}
+
+.cardTitle {
+  margin: 0;
+  color: var(--tc-primary-color);
+}

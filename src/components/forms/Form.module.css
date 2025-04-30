@@ -1,0 +1,24 @@
+/* Form.module.css - Styles pour les formulaires et validations */
+
+/* Styles pour les formulaires multi-étapes */
+.concertFormContainer {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Styles pour les erreurs de validation */
+.inputError {
+  border-color: #e74c3c !important;
+  background-color: #fdf7f7;
+}
+
+.selectError {
+  border-color: #e74c3c !important;
+  background-color: #fdf7f7;
+}
+
+.errorMessage {
+  color: #e74c3c;
+  font-size: 14px;
+  margin-top: 5px;
+}

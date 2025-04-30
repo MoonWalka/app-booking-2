@@ -2,6 +2,7 @@
 import React from 'react';
 import { Spinner as BootstrapSpinner } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import styles from '../../components/ui/Spinner.module.css';
 
 /**
  * Composant Spinner unifié pour toute l'application
@@ -41,22 +42,20 @@ const Spinner = ({
   
   let containerClass;
   if (fullPage) {
-    containerClass = 'spinner-fullpage-container';
+    containerClass = styles.spinnerContainer;
   } else if (contentOnly) {
-    containerClass = 'spinner-content-container position-relative';
+    containerClass = `${styles.spinnerContainer} position-relative`;
   } else {
-    containerClass = 'spinner-container';
+    containerClass = styles.spinnerContainer;
   }
 
-  const overlayClass = transparent ? "spinner-overlay spinner-overlay-transparent" : "spinner-overlay";
+  const spinnerClass = size === 'sm' ? styles.spinnerSmall : styles.spinner;
 
   return (
     <div className={`${containerClass} ${className}`}>
-      <div className={contentOnly ? "position-relative" : overlayClass}>
-        <BootstrapSpinner 
-          animation="border" 
-          variant={variant} 
-          size={size}
+      <div className={contentOnly ? "position-relative" : ""}>
+        <div 
+          className={spinnerClass}
           role="status" 
         />
         {message && <p className="spinner-message">{message}</p>}

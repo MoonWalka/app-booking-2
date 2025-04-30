@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Card, Alert } from 'react-bootstrap';
+import styles from './ParametresNotifications.module.css';
 import { useParametres } from '@/context/ParametresContext';
 
 const ParametresNotifications = () => {
@@ -46,40 +47,42 @@ const ParametresNotifications = () => {
     <Card>
       <Card.Body>
         <h3 className="mb-3">Notifications</h3>
-        {success && <Alert variant="success">{success}</Alert>}
+        {success && <Alert variant="success" className={styles.successMessage}>{success}</Alert>}
         
         <Form onSubmit={handleSubmit}>
-          <Form.Group className="mb-3">
-            <Form.Check 
-              type="switch"
-              id="notification-email"
-              label="Notifications par email"
-              name="email"
-              checked={localState.email}
-              onChange={handleChange}
-            />
-            <Form.Text className="text-muted">
-              Recevoir les notifications importantes par email
-            </Form.Text>
-          </Form.Group>
+          <div className={styles.notificationSection}>
+            <Form.Group className={styles.notificationGroup}>
+              <Form.Check 
+                type="switch"
+                id="notification-email"
+                label="Notifications par email"
+                name="email"
+                checked={localState.email}
+                onChange={handleChange}
+              />
+              <Form.Text className="text-muted">
+                Recevoir les notifications importantes par email
+              </Form.Text>
+            </Form.Group>
 
-          <Form.Group className="mb-3">
-            <Form.Check 
-              type="switch"
-              id="notification-push"
-              label="Notifications push"
-              name="notification_push"
-              checked={localState.notification_push}
-              onChange={handleChange}
-            />
-            <Form.Text className="text-muted">
-              Recevoir les notifications push dans le navigateur
-            </Form.Text>
-          </Form.Group>
+            <Form.Group className={styles.notificationGroup}>
+              <Form.Check 
+                type="switch"
+                id="notification-push"
+                label="Notifications push"
+                name="notification_push"
+                checked={localState.notification_push}
+                onChange={handleChange}
+              />
+              <Form.Text className="text-muted">
+                Recevoir les notifications push dans le navigateur
+              </Form.Text>
+            </Form.Group>
+          </div>
 
-          <h5 className="mt-4 mb-3">Types de notifications</h5>
+          <h5 className={styles.notificationTypeTitle}>Types de notifications</h5>
 
-          <Form.Group className="mb-3">
+          <Form.Group className={styles.notificationGroup}>
             <Form.Check 
               type="switch"
               id="notification-concerts"
@@ -90,7 +93,7 @@ const ParametresNotifications = () => {
             />
           </Form.Group>
 
-          <Form.Group className="mb-3">
+          <Form.Group className={styles.notificationGroup}>
             <Form.Check 
               type="switch"
               id="notification-contrats"
@@ -101,7 +104,7 @@ const ParametresNotifications = () => {
             />
           </Form.Group>
 
-          <Form.Group className="mb-3">
+          <Form.Group className={styles.notificationGroup}>
             <Form.Check 
               type="switch"
               id="notification-artistes"
@@ -112,7 +115,7 @@ const ParametresNotifications = () => {
             />
           </Form.Group>
 
-          <Form.Group className="mb-3">
+          <Form.Group className={styles.notificationGroup}>
             <Form.Check 
               type="switch"
               id="notification-programmateurs"
@@ -123,7 +126,7 @@ const ParametresNotifications = () => {
             />
           </Form.Group>
 
-          <Form.Group className="mb-3">
+          <Form.Group className={styles.notificationGroup}>
             <Form.Check 
               type="switch"
               id="notification-lieux"
@@ -134,7 +137,7 @@ const ParametresNotifications = () => {
             />
           </Form.Group>
 
-          <div className="d-flex justify-content-end">
+          <div className={styles.formActions}>
             <Button type="submit" variant="primary">
               Enregistrer les préférences
             </Button>

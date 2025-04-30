@@ -1,0 +1,129 @@
+/* Styles pour StructuresList version mobile */
+
+.structuresListMobile {
+  padding: 1rem;
+}
+
+.structuresHeaderMobile {
+  margin-bottom: 1.5rem;
+}
+
+.structuresTitleMobile {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.structuresTitleMobile h1 {
+  font-size: 1.5rem;
+  margin: 0;
+  font-weight: 600;
+}
+
+.structuresFiltersMobile {
+  margin-bottom: 1rem;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--tc-gray-500, #adb5bd);
+}
+
+.emptyState i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: var(--tc-gray-400, #ced4da);
+}
+
+.emptyState p {
+  margin-bottom: 1.5rem;
+  color: var(--tc-gray-600, #6c757d);
+}
+
+.structuresCard {
+  background-color: white;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.structureInfo {
+  flex: 1;
+  padding-right: 0.5rem;
+}
+
+.structureName {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--tc-text-primary, #212529);
+}
+
+.structureType {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--tc-gray-600, #6c757d);
+  margin-bottom: 0.5rem;
+}
+
+.structureContact {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--tc-gray-600, #6c757d);
+  margin-bottom: 0.25rem;
+}
+
+.structureContact i {
+  color: var(--tc-primary, #007bff);
+  font-size: 0.9rem;
+}
+
+.structureActions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.structureActionBtn {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.badgeMobile {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 1rem;
+  background-color: var(--tc-gray-200, #e9ecef);
+  color: var(--tc-gray-700, #495057);
+}
+
+.badgeProgrammateurs {
+  background-color: var(--tc-primary-light, #cfe2ff);
+  color: var(--tc-primary, #007bff);
+}
+
+.mobileLoadMore {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+}

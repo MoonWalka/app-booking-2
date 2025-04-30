@@ -12,6 +12,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/firebaseInit';
 import { Form, Button, InputGroup } from 'react-bootstrap';
+import styles from './StructuresList.module.css';
 
 const StructuresList = () => {
   const [structures, setStructures] = useState([]);
@@ -148,9 +149,9 @@ const StructuresList = () => {
   };
 
   return (
-    <div className="structures-list-mobile">
-      <div className="structures-header-mobile">
-        <div className="structures-title-mobile">
+    <div className={styles.structuresListMobile}>
+      <div className={styles.structuresHeaderMobile}>
+        <div className={styles.structuresTitleMobile}>
           <h1>Structures</h1>
           <Button 
             variant="primary" 
@@ -162,7 +163,7 @@ const StructuresList = () => {
           </Button>
         </div>
         
-        <div className="structures-filters-mobile">
+        <div className={styles.structuresFiltersMobile}>
           <InputGroup>
             <InputGroup.Text>
               <i className="bi bi-search"></i>
@@ -205,7 +206,7 @@ const StructuresList = () => {
           </div>
         </div>
       ) : filteredStructures.length === 0 ? (
-        <div className="empty-state">
+        <div className={styles.emptyState}>
           <i className="bi bi-building"></i>
           <p>Aucune structure trouvée</p>
           <Button 
@@ -221,44 +222,44 @@ const StructuresList = () => {
           {filteredStructures.map(structure => (
             <div 
               key={structure.id}
-              className="structures-card"
+              className={styles.structuresCard}
               onClick={() => handleStructureClick(structure.id)}
             >
-              <div className="structure-info">
-                <h3 className="structure-name">{structure.nom || structure.raisonSociale}</h3>
+              <div className={styles.structureInfo}>
+                <h3 className={styles.structureName}>{structure.nom || structure.raisonSociale}</h3>
                 {structure.type && (
-                  <div className="structure-type">
+                  <div className={styles.structureType}>
                     {renderTypeIcon(structure.type)} {getTypeLabel(structure.type)}
                   </div>
                 )}
                 {structure.ville && (
-                  <div className="structure-contact">
+                  <div className={styles.structureContact}>
                     <i className="bi bi-geo-alt"></i>
                     <span>{structure.ville}</span>
                   </div>
                 )}
                 {structure.telephone && (
-                  <div className="structure-contact">
+                  <div className={styles.structureContact}>
                     <i className="bi bi-telephone"></i>
                     <span>{structure.telephone}</span>
                   </div>
                 )}
                 {structure.programmateursAssocies?.length > 0 && (
-                  <span className="badge-mobile badge-programmateurs">
+                  <span className={`${styles.badgeMobile} ${styles.badgeProgrammateurs}`}>
                     {structure.programmateursAssocies.length}
                   </span>
                 )}
               </div>
-              <div className="structure-actions">
+              <div className={styles.structureActions}>
                 <Link 
                   to={`/structures/${structure.id}/edit`}
-                  className="btn btn-sm btn-outline-secondary structure-action-btn"
+                  className={`btn btn-sm btn-outline-secondary ${styles.structureActionBtn}`}
                   onClick={(e) => e.stopPropagation()}
                 >
                   <i className="bi bi-pencil"></i>
                 </Link>
                 <button
-                  className="btn btn-sm btn-outline-danger structure-action-btn"
+                  className={`btn btn-sm btn-outline-danger ${styles.structureActionBtn}`}
                   onClick={(e) => handleDelete(structure.id, e)}
                 >
                   <i className="bi bi-trash"></i>
@@ -268,7 +269,7 @@ const StructuresList = () => {
           ))}
 
           {hasMore && (
-            <div className="mobile-load-more">
+            <div className={styles.mobileLoadMore}>
               <Button 
                 variant="outline-primary" 
                 onClick={loadMore}

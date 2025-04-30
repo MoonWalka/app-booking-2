@@ -1,0 +1,83 @@
+/* Styles pour le formulaire d'artiste en version desktop */
+
+.artisteFormDesktop {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.desktopFormHeader {
+  margin-bottom: 30px;
+}
+
+.desktopFormHeader h1 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.stepFormContainer {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  padding: 25px;
+  margin-bottom: 30px;
+}
+
+.stepForm {
+  margin-bottom: 20px;
+}
+
+.stepFormGroup {
+  margin-bottom: 20px;
+}
+
+.stepFormGroup label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #333;
+}
+
+.stepFormGroup input,
+.stepFormGroup textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.stepFormGroup textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.stepFormActions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+
+.addMembreContainer {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.addMembreContainer input {
+  flex-grow: 1;
+}
+
+.membresList {
+  margin-top: 15px;
+}
+
+.loadingIndicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  font-size: 18px;
+  color: #6c757d;
+}

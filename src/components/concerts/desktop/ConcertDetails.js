@@ -1129,18 +1129,18 @@ const ConcertDetails = () => {
                           {lieuResults.map(lieu => (
                             <div 
                               key={lieu.id} 
-                              className="dropdown-item lieu-item"
+                              className={`dropdown-item ${styles.lieuItem}`}
                               onClick={() => handleSelectLieu(lieu)}
                             >
-                              <div className="lieu-name">{lieu.nom}</div>
-                              <div className="lieu-details">
+                              <div className={styles.lieuName}>{lieu.nom}</div>
+                              <div className={styles.lieuDetails}>
                                 {lieu.adresse && lieu.ville && (
-                                  <span className="lieu-address">
+                                  <span className={styles.lieuAddress}>
                                     {lieu.adresse}, {lieu.codePostal} {lieu.ville}
                                   </span>
                                 )}
                                 {lieu.capacite && (
-                                  <span className="lieu-capacity">
+                                  <span className={styles.lieuCapacity}>
                                     Capacité: {lieu.capacite} personnes
                                   </span>
                                 )}
@@ -1193,7 +1193,7 @@ const ConcertDetails = () => {
                 </div>
               </div>
             </div>
-  
+
             {/* Carte - Programmateur */}
             <div className={styles.formCard}>
               <div className={styles.cardHeader}>
@@ -1239,13 +1239,13 @@ const ConcertDetails = () => {
                           {progResults.map(prog => (
                             <div 
                               key={prog.id} 
-                              className="dropdown-item programmateur-item"
+                              className={`dropdown-item ${styles.programmateurItem}`}
                               onClick={() => handleSelectProgrammateur(prog)}
                             >
-                              <div className="programmateur-name">{prog.nom}</div>
-                              <div className="programmateur-details">
-                                {prog.structure && <span className="programmateur-structure">{prog.structure}</span>}
-                                {prog.email && <span className="programmateur-email">{prog.email}</span>}
+                              <div className={styles.programmateurName}>{prog.nom}</div>
+                              <div className={styles.programmateurDetails}>
+                                {prog.structure && <span className={styles.programmateurStructure}>{prog.structure}</span>}
+                                {prog.email && <span className={styles.programmateurContactItem}>{prog.email}</span>}
                               </div>
                             </div>
                           ))}
@@ -1299,7 +1299,7 @@ const ConcertDetails = () => {
                 </div>
               </div>
             </div>
-  
+
             {/* Carte - Artiste */}
             <div className={styles.formCard}>
               <div className={styles.cardHeader}>
@@ -1345,12 +1345,12 @@ const ConcertDetails = () => {
                           {artisteResults.map(artiste => (
                             <div 
                               key={artiste.id} 
-                              className="dropdown-item artiste-item"
+                              className={`dropdown-item ${styles.artisteItem}`}
                               onClick={() => handleSelectArtiste(artiste)}
                             >
-                              <div className="artiste-name">{artiste.nom}</div>
-                              <div className="artiste-details">
-                                {artiste.genre && <span className="artiste-genre">{artiste.genre}</span>}
+                              <div className={styles.artisteName}>{artiste.nom}</div>
+                              <div className={styles.artisteDetails}>
+                                {artiste.genre && <span className={styles.artisteGenre}>{artiste.genre}</span>}
                               </div>
                             </div>
                           ))}

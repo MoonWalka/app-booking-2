@@ -1,0 +1,19 @@
+/* Styles pour le composant ParametresGeneraux */
+
+.submitButton {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.languageSelect {
+  max-width: 200px;
+}
+
+.successAlert {
+  margin-bottom: 15px;
+}
+
+.formSection {
+  margin-bottom: 15px;
+}

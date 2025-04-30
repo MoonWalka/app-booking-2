@@ -1,0 +1,348 @@
+/* Styles pour le composant ArtisteDetail - Version mobile */
+
+.artisteDetailMobile {
+  padding: 16px;
+}
+
+.mobileHeaderBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.backButton {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--tc-border-color, #dee2e6);
+  background-color: var(--tc-light-color, #f8f9fa);
+  color: var(--tc-text-color, #212529);
+}
+
+.editButton {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--tc-primary-color, #007bff);
+  color: white;
+  border: none;
+}
+
+.artisteProfile {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.artisteImageContainer {
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  position: relative;
+}
+
+.artisteImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.placeholderPhoto {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--tc-gray-200, #e9ecef);
+  color: var(--tc-gray-500, #adb5bd);
+}
+
+.placeholderPhoto i {
+  font-size: 48px;
+}
+
+.artisteInfo {
+  padding: 1rem;
+}
+
+.artisteName {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.artisteGenre {
+  color: var(--tc-text-secondary, #6c757d);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.artisteStats {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.statItem {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--tc-text-secondary, #6c757d);
+  font-size: 0.9rem;
+}
+
+.statItem i {
+  color: var(--tc-primary-color, #007bff);
+}
+
+.mobileTabs {
+  display: flex;
+  overflow-x: auto;
+  margin-bottom: 1rem;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+}
+
+.mobileTabs::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+.tabButton {
+  flex: 1;
+  min-width: 80px;
+  padding: 10px 16px;
+  text-align: center;
+  border: none;
+  background-color: transparent;
+  color: var(--tc-text-secondary, #6c757d);
+  font-size: 0.9rem;
+  border-bottom: 2px solid transparent;
+}
+
+.tabButton i {
+  display: block;
+  font-size: 1.2rem;
+  margin-bottom: 4px;
+}
+
+.tabButton.active {
+  color: var(--tc-primary-color, #007bff);
+  border-bottom-color: var(--tc-primary-color, #007bff);
+}
+
+.mobileTabContent {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  min-height: 200px;
+}
+
+/* Styles pour l'onglet Infos */
+.infoContent .infoSection {
+  margin-bottom: 1.5rem;
+}
+
+.infoContent .infoSection h3 {
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+  color: var(--tc-text-color, #212529);
+  border-bottom: 1px solid var(--tc-border-color, #dee2e6);
+  padding-bottom: 0.5rem;
+}
+
+.infoContent .membresList {
+  list-style-type: none;
+  padding-left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.infoContent .membresList li {
+  padding: 8px 12px;
+  background-color: var(--tc-gray-100, #f8f9fa);
+  border-radius: 4px;
+}
+
+.contactsGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.contactItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid var(--tc-border-color, #dee2e6);
+  text-decoration: none;
+  color: var(--tc-text-color, #212529);
+}
+
+.contactItem i {
+  color: var(--tc-primary-color, #007bff);
+  font-size: 1.1rem;
+}
+
+/* Styles pour l'onglet Concerts */
+.concertsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.concertsHeader h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.concertsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.concertItem {
+  background-color: var(--tc-gray-100, #f8f9fa);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.concertDate {
+  color: var(--tc-text-secondary, #6c757d);
+  font-size: 0.8rem;
+  margin-bottom: 4px;
+}
+
+.concertLieu {
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.concertProgrammateur {
+  color: var(--tc-text-secondary, #6c757d);
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+}
+
+.concertMontant {
+  font-weight: 600;
+  text-align: right;
+}
+
+/* Styles pour l'onglet Contrats */
+.contratsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.contratItem {
+  background-color: var(--tc-gray-100, #f8f9fa);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.contratDate {
+  color: var(--tc-text-secondary, #6c757d);
+  font-size: 0.8rem;
+  margin-bottom: 4px;
+}
+
+.contratConcert {
+  font-weight: 500;
+}
+
+.contratActions {
+  margin-top: 8px;
+  text-align: right;
+}
+
+/* Styles pour l'onglet Stats */
+.statsCards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.statCard {
+  background-color: var(--tc-gray-100, #f8f9fa);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.statIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--tc-primary-light, #cfe2ff);
+  color: var(--tc-primary-color, #007bff);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+}
+
+.statContent {
+  flex: 1;
+}
+
+.statContent h4 {
+  font-size: 0.9rem;
+  color: var(--tc-text-secondary, #6c757d);
+  margin: 0 0 4px 0;
+}
+
+.statValue {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* État vide */
+.emptyState {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: var(--tc-text-secondary, #6c757d);
+}
+
+.emptyState i {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: var(--tc-gray-400, #ced4da);
+}
+
+.emptyState p {
+  margin-bottom: 1rem;
+}
+
+/* États de chargement et d'erreur */
+.loadingContainer, 
+.errorContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  padding: 1rem;
+  text-align: center;
+}
+
+.errorContainer {
+  color: var(--tc-danger, #dc3545);
+}

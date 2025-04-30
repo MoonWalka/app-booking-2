@@ -1,6 +1,7 @@
 // src/components/artistes/desktop/ArtisteForm.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import styles from './ArtisteForm.module.css';
 import { 
   doc, 
   getDoc, 
@@ -28,8 +29,8 @@ const BasicInfoStep = ({ data, onNext, onBack }) => {
   };
   
   return (
-    <div className="step-form">
-      <div className="step-form-group">
+    <div className={styles.stepForm}>
+      <div className={styles.stepFormGroup}>
         <label htmlFor="nom">Nom de l'artiste *</label>
         <input
           type="text"
@@ -41,7 +42,7 @@ const BasicInfoStep = ({ data, onNext, onBack }) => {
         />
       </div>
       
-      <div className="step-form-group">
+      <div className={styles.stepFormGroup}>
         <label htmlFor="genre">Genre musical</label>
         <input
           type="text"
@@ -52,7 +53,7 @@ const BasicInfoStep = ({ data, onNext, onBack }) => {
         />
       </div>
       
-      <div className="step-form-group">
+      <div className={styles.stepFormGroup}>
         <label htmlFor="description">Description</label>
         <textarea
           id="description"
@@ -63,7 +64,7 @@ const BasicInfoStep = ({ data, onNext, onBack }) => {
         ></textarea>
       </div>
       
-      <div className="step-form-actions">
+      <div className={styles.stepFormActions}>
         <button
           type="button"
           className="btn btn-primary"
@@ -90,8 +91,8 @@ const ContactStep = ({ data, onNext, onBack }) => {
   };
   
   return (
-    <div className="step-form">
-      <div className="step-form-group">
+    <div className={styles.stepForm}>
+      <div className={styles.stepFormGroup}>
         <label htmlFor="email">Email</label>
         <input
           type="email"
@@ -102,7 +103,7 @@ const ContactStep = ({ data, onNext, onBack }) => {
         />
       </div>
       
-      <div className="step-form-group">
+      <div className={styles.stepFormGroup}>
         <label htmlFor="telephone">Téléphone</label>
         <input
           type="tel"
@@ -113,7 +114,7 @@ const ContactStep = ({ data, onNext, onBack }) => {
         />
       </div>
       
-      <div className="step-form-group">
+      <div className={styles.stepFormGroup}>
         <label htmlFor="siteWeb">Site web</label>
         <input
           type="url"
@@ -124,7 +125,7 @@ const ContactStep = ({ data, onNext, onBack }) => {
         />
       </div>
       
-      <div className="step-form-group">
+      <div className={styles.stepFormGroup}>
         <label htmlFor="instagram">Instagram</label>
         <input
           type="text"
@@ -135,7 +136,7 @@ const ContactStep = ({ data, onNext, onBack }) => {
         />
       </div>
       
-      <div className="step-form-group">
+      <div className={styles.stepFormGroup}>
         <label htmlFor="facebook">Facebook</label>
         <input
           type="text"
@@ -146,7 +147,7 @@ const ContactStep = ({ data, onNext, onBack }) => {
         />
       </div>
       
-      <div className="step-form-actions">
+      <div className={styles.stepFormActions}>
         <button
           type="button"
           className="btn btn-primary"
@@ -182,10 +183,10 @@ const MembersStep = ({ data, onNext, onBack }) => {
   };
   
   return (
-    <div className="step-form">
-      <div className="step-form-group">
+    <div className={styles.stepForm}>
+      <div className={styles.stepFormGroup}>
         <label>Membres du groupe</label>
-        <div className="add-membre-container">
+        <div className={styles.addMembreContainer}>
           <input
             type="text"
             value={nouveauMembre}
@@ -201,7 +202,7 @@ const MembersStep = ({ data, onNext, onBack }) => {
           </button>
         </div>
         
-        <div className="membres-list">
+        <div className={styles.membresList}>
           {membres.length === 0 ? (
             <div className="text-muted small">Aucun membre ajouté</div>
           ) : (
@@ -223,7 +224,7 @@ const MembersStep = ({ data, onNext, onBack }) => {
         </div>
       </div>
       
-      <div className="step-form-actions">
+      <div className={styles.stepFormActions}>
         <button
           type="button"
           className="btn btn-primary"
@@ -294,7 +295,7 @@ const ArtisteFormDesktop = () => {
   };
   
   if (loading) {
-    return <div className="loading-indicator">Chargement...</div>;
+    return <div className={styles.loadingIndicator}>Chargement...</div>;
   }
   
   // Définir les étapes du formulaire
@@ -314,13 +315,13 @@ const ArtisteFormDesktop = () => {
   ];
   
   return (
-    <div className="artiste-form-desktop">
-      <div className="desktop-form-header">
+    <div className={styles.artisteFormDesktop}>
+      <div className={styles.desktopFormHeader}>
         <h1>{id !== 'nouveau' ? 'Modifier l\'artiste' : 'Nouvel artiste'}</h1>
       </div>
       
       {/* Remplaçons le composant StepNavigation */}
-      <div className="step-form-container">
+      <div className={styles.stepFormContainer}>
         <h2>Formulaire d'artiste</h2>
         <p>Ce formulaire est en cours de développement. Utilisez la version desktop pour le moment.</p>
         <button

@@ -1,6 +1,7 @@
 // Imports React
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import styles from './ArtistesList.module.css';
 import {
   collection,
   getDocs,
@@ -215,9 +216,9 @@ const ArtistesList = () => {
       {/* Cartes de statistiques */}
       <div className="row mb-4">
         <div className="col-lg-4 mb-3 mb-lg-0">
-          <div className="card stats-card h-100 border-0 shadow-sm">
+          <div className={`card ${styles.statsCard} h-100 border-0 shadow-sm`}>
             <div className="card-body d-flex align-items-center p-4">
-              <div className="stats-icon text-primary me-3">
+              <div className={`${styles.statsIcon} text-primary me-3`}>
                 <i className="bi bi-people-fill fs-2"></i>
               </div>
               <div>
@@ -228,9 +229,9 @@ const ArtistesList = () => {
           </div>
         </div>
         <div className="col-lg-4 mb-3 mb-lg-0">
-          <div className="card stats-card h-100 border-0 shadow-sm">
+          <div className={`card ${styles.statsCard} h-100 border-0 shadow-sm`}>
             <div className="card-body d-flex align-items-center p-4">
-              <div className="stats-icon text-success me-3">
+              <div className={`${styles.statsIcon} text-success me-3`}>
                 <i className="bi bi-calendar-check fs-2"></i>
               </div>
               <div>
@@ -241,9 +242,9 @@ const ArtistesList = () => {
           </div>
         </div>
         <div className="col-lg-4">
-          <div className="card stats-card h-100 border-0 shadow-sm">
+          <div className={`card ${styles.statsCard} h-100 border-0 shadow-sm`}>
             <div className="card-body d-flex align-items-center p-4">
-              <div className="stats-icon text-warning me-3">
+              <div className={`${styles.statsIcon} text-warning me-3`}>
                 <i className="bi bi-calendar-x fs-2"></i>
               </div>
               <div>
@@ -286,11 +287,11 @@ const ArtistesList = () => {
               
               {/* Dropdown qui apparaît lors de la recherche */}
               {showDropdown && (
-                <div className="search-results-dropdown position-absolute w-100 mt-1 shadow-sm">
+                <div className={`${styles.searchResultsDropdown} position-absolute w-100 mt-1 shadow-sm`}>
                   {/* Correction : ajout accessibilité (role/button + tabIndex) */}
                   {noResults ? (
                     <div 
-                      className="search-create-item p-3" 
+                      className={styles.searchCreateItem} 
                       onClick={handleCreateArtiste} 
                       role="button" 
                       tabIndex={0}
@@ -302,12 +303,12 @@ const ArtistesList = () => {
                     </div>
                   ) : (
                     filteredArtistes.slice(0, 5).map(artiste => (
-                      <Link to={`/artistes/${artiste.id}`} key={artiste.id} className="search-result-item">
-                        <div className="search-result-avatar">
+                      <Link to={`/artistes/${artiste.id}`} key={artiste.id} className={styles.searchResultItem}>
+                        <div className={styles.searchResultAvatar}>
                           {artiste.photoPrincipale ? (
                             <img src={artiste.photoPrincipale} alt={artiste.nom} className="img-fluid" />
                           ) : (
-                            <div className="placeholder-avatar">
+                            <div className={styles.placeholderAvatar}>
                               <i className="bi bi-music-note"></i>
                             </div>
                           )}
@@ -404,8 +405,8 @@ const ArtistesList = () => {
       ) : (
         <>
           {/* Nouvelle liste des artistes en format tableau */}
-          <Card className="artistes-list-container">
-            <Table hover responsive className="artistes-table mb-0">
+          <Card className={styles.artistesListContainer}>
+            <Table hover responsive className={styles.artistesTable + " mb-0"}>
               <thead>
                 <tr>
                   <th className="w-40">Artiste</th>
@@ -417,14 +418,14 @@ const ArtistesList = () => {
               </thead>
               <tbody>
                 {filteredArtistes.map(artiste => (
-                  <tr key={artiste.id} className={artiste.estGroupeFavori ? 'favorite-artiste-row' : ''}>
-                    <td className="artiste-name-cell">
+                  <tr key={artiste.id} className={artiste.estGroupeFavori ? styles.favoriteArtisteRow : ''}>
+                    <td className={styles.artisteNameCell}>
                       <Link to={`/artistes/${artiste.id}`} className="d-flex align-items-center text-decoration-none">
-                        <div className="artiste-avatar me-3">
+                        <div className={styles.artisteAvatar + " me-3"}>
                           {artiste.photoPrincipale ? (
                             <img src={artiste.photoPrincipale} alt={artiste.nom} className="img-fluid" />
                           ) : (
-                            <div className="placeholder-avatar">
+                            <div className={styles.placeholderAvatar}>
                               <i className="bi bi-music-note"></i>
                             </div>
                           )}

@@ -384,15 +384,15 @@ const ProgrammateurDetails = () => {
 
   if (error) {
     return (
-      <div className="alert alert-danger my-5">
-        <i className="bi bi-exclamation-triangle-fill me-2"></i>
+      <div className={styles.alertWrapper}>
+        <i className={`bi bi-exclamation-triangle-fill ${styles.alertIcon}`}></i>
         {error}
       </div>
     );
   }
 
   if (!programmateur) {
-    return <div className="alert alert-warning my-5">Programmateur non trouvé</div>;
+    return <div className={styles.alertWrapper}>Programmateur non trouvé</div>;
   }
   
   // Extraire les données de contact et structure de l'objet programmateur
@@ -423,15 +423,14 @@ const ProgrammateurDetails = () => {
   const { contact, structure } = extractData();
   
   return (
-    <div className="container-fluid p-4">
-      <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
-        <div>
-          <nav aria-label="breadcrumb" className="mb-2">
-            <ol className="breadcrumb">
-              <li className="breadcrumb-item"><a href="#" onClick={(e) => { e.preventDefault(); navigate('/programmateurs'); }} className="text-decoration-none">Programmateurs</a></li>
-              <li className="breadcrumb-item active" aria-current="page">{programmateur.nom}</li>
-            </ol>
-          </nav>
+    <div className={styles.container}>
+      <div className={styles.detailsHeaderContainer}>
+        <div className={styles.titleContainer}>
+          <div className={styles.breadcrumb}>
+            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/programmateurs'); }} className={styles.breadcrumbItem}>Programmateurs</a>
+            <i className={`bi bi-chevron-right ${styles.breadcrumbDivider}`}></i>
+            <span className={styles.breadcrumbItem}>{programmateur.nom}</span>
+          </div>
           <h2 className={styles.headerTitle}>
             {programmateur.nom}
             {programmateur.structure && <span className="badge bg-light text-dark ms-2 fs-6">{programmateur.structure}</span>}
@@ -501,19 +500,16 @@ const ProgrammateurDetails = () => {
         // MODE ÉDITION
         <form onSubmit={handleSubmit}>
           {/* Section Informations du contact */}
-          <div className="card mb-4 shadow-sm">
-            <div className="card-header bg-light d-flex align-items-center">
-              <i className="fa fa-user-circle text-primary" style={{ 
-                // Harmonisation : taille standardisée
-                fontSize: "var(--tc-font-size-lg)" 
-              }}></i>
-              <h5 className="mb-0 ms-2">Informations du contact</h5>
+          <div className={styles.cardWrapper}>
+            <div className={styles.cardHeader}>
+              <i className="bi bi-person-vcard text-primary"></i>
+              <h5 className="mb-0">Informations du contact</h5>
             </div>
-            <div className="card-body p-4">
+            <div className={styles.cardBody}>
               <div className="row g-3 mb-3">
                 <div className="col-md-6">
-                  <div className="form-group mb-3">
-                    <label htmlFor="contact.nom" className="form-label fw-medium">Nom <span className="text-danger">*</span></label>
+                  <div className={styles.formGroup}>
+                    <label htmlFor="contact.nom" className={styles.cardLabel}>Nom <span className="text-danger">*</span></label>
                     <input
                       type="text"
                       className="form-control"
@@ -527,8 +523,8 @@ const ProgrammateurDetails = () => {
                   </div>
                 </div>
                 <div className="col-md-6">
-                  <div className="form-group mb-3">
-                    <label htmlFor="contact.prenom" className="form-label fw-medium">Prénom</label>
+                  <div className={styles.formGroup}>
+                    <label htmlFor="contact.prenom" className={styles.cardLabel}>Prénom</label>
                     <input
                       type="text"
                       className="form-control"
@@ -542,8 +538,8 @@ const ProgrammateurDetails = () => {
                 </div>
               </div>
 
-              <div className="form-group mb-4">
-                <label htmlFor="contact.fonction" className="form-label fw-medium">Fonction</label>
+              <div className={styles.formGroup}>
+                <label htmlFor="contact.fonction" className={styles.cardLabel}>Fonction</label>
                 <input
                   type="text"
                   className="form-control"
@@ -557,8 +553,8 @@ const ProgrammateurDetails = () => {
 
               <div className="row g-3">
                 <div className="col-md-6">
-                  <div className="form-group mb-3">
-                    <label htmlFor="contact.email" className="form-label fw-medium">Email</label>
+                  <div className={styles.formGroup}>
+                    <label htmlFor="contact.email" className={styles.cardLabel}>Email</label>
                     <div className="input-group">
                       <span className="input-group-text"><i className="bi bi-envelope"></i></span>
                       <input
@@ -574,8 +570,8 @@ const ProgrammateurDetails = () => {
                   </div>
                 </div>
                 <div className="col-md-6">
-                  <div className="form-group mb-3">
-                    <label htmlFor="contact.telephone" className="form-label fw-medium">Téléphone</label>
+                  <div className={styles.formGroup}>
+                    <label htmlFor="contact.telephone" className={styles.cardLabel}>Téléphone</label>
                     <div className="input-group">
                       <span className="input-group-text"><i className="bi bi-telephone"></i></span>
                       <input
@@ -595,20 +591,20 @@ const ProgrammateurDetails = () => {
           </div>
 
           {/* Section Structure juridique */}
-          <div className="bootstrap-card">
-            <div className="card-header">
-              <i className="bi bi-building me-2"></i>
+          <div className={styles.cardWrapper}>
+            <div className={styles.cardHeader}>
+              <i className="bi bi-building text-primary"></i>
               <h5 className="mb-0">Structure juridique</h5>
             </div>
-            <div className="card-body">
+            <div className={styles.cardBody}>
               {/* Première ligne: Raison sociale et Type */}
               <div className="row mb-4">
                 <div className="col-md-7">
-                  <div className="mb-3">
-                    <label htmlFor="structure.raisonSociale" className="card-label">Raison sociale</label>
+                  <div className={styles.formGroup}>
+                    <label htmlFor="structure.raisonSociale" className={styles.cardLabel}>Raison sociale</label>
                     <input
                       type="text"
-                      className="form-control form-control-lg"
+                      className="form-control"
                       id="structure.raisonSociale"
                       name="structure.raisonSociale"
                       value={formData.structure.raisonSociale}
@@ -618,8 +614,8 @@ const ProgrammateurDetails = () => {
                   </div>
                 </div>
                 <div className="col-md-5">
-                  <div className="mb-3">
-                    <label htmlFor="structure.type" className="card-label">Type de structure</label>
+                  <div className={styles.formGroup}>
+                    <label htmlFor="structure.type" className={styles.cardLabel}>Type de structure</label>
                     <select
                       className="form-select"
                       id="structure.type"
@@ -639,8 +635,8 @@ const ProgrammateurDetails = () => {
               </div>
 
               {/* Adresse complète */}
-              <div className="mb-4">
-                <label htmlFor="structure.adresse" className="card-label">Adresse complète</label>
+              <div className={styles.formGroup}>
+                <label htmlFor="structure.adresse" className={styles.cardLabel}>Adresse complète</label>
                 <input
                   type="text"
                   className="form-control"
@@ -655,8 +651,8 @@ const ProgrammateurDetails = () => {
               {/* Code postal, Ville, Pays */}
               <div className="row mb-4">
                 <div className="col-md-4">
-                  <div className="mb-0">
-                    <label htmlFor="structure.codePostal" className="card-label">Code postal</label>
+                  <div className={styles.formGroup}>
+                    <label htmlFor="structure.codePostal" className={styles.cardLabel}>Code postal</label>
                     <input
                       type="text"
                       className="form-control"
@@ -669,8 +665,8 @@ const ProgrammateurDetails = () => {
                   </div>
                 </div>
                 <div className="col-md-5">
-                  <div className="mb-0">
-                    <label htmlFor="structure.ville" className="card-label">Ville</label>
+                  <div className={styles.formGroup}>
+                    <label htmlFor="structure.ville" className={styles.cardLabel}>Ville</label>
                     <input
                       type="text"
                       className="form-control"
@@ -683,8 +679,8 @@ const ProgrammateurDetails = () => {
                   </div>
                 </div>
                 <div className="col-md-3">
-                  <div className="mb-0">
-                    <label htmlFor="structure.pays" className="card-label">Pays</label>
+                  <div className={styles.formGroup}>
+                    <label htmlFor="structure.pays" className={styles.cardLabel}>Pays</label>
                     <input
                       type="text"
                       className="form-control"
@@ -700,11 +696,11 @@ const ProgrammateurDetails = () => {
               {/* SIRET et TVA */}
               <div className="row">
                 <div className="col-md-6">
-                  <div className="mb-md-0 mb-3">
-                    <label htmlFor="structure.siret" className="card-label">SIRET</label>
+                  <div className={styles.formGroup}>
+                    <label htmlFor="structure.siret" className={styles.cardLabel}>SIRET</label>
                     <input
                       type="text"
-                      className="form-control card-value-code"
+                      className={`form-control ${styles.cardValueCode}`}
                       id="structure.siret"
                       name="structure.siret"
                       value={formData.structure.siret}
@@ -714,13 +710,13 @@ const ProgrammateurDetails = () => {
                   </div>
                 </div>
                 <div className="col-md-6">
-                  <div className="mb-0">
-                    <label htmlFor="structure.tva" className="card-label">
-                      N° TVA intracommunautaire <span className="optional-text">(facultatif)</span>
+                  <div className={styles.formGroup}>
+                    <label htmlFor="structure.tva" className={styles.cardLabel}>
+                      N° TVA intracommunautaire <span className={styles.optionalText}>(facultatif)</span>
                     </label>
                     <input
                       type="text"
-                      className="form-control card-value-code"
+                      className={`form-control ${styles.cardValueCode}`}
                       id="structure.tva"
                       name="structure.tva"
                       value={formData.structure.tva}
@@ -734,12 +730,12 @@ const ProgrammateurDetails = () => {
           </div>
           
           {/* Concerts associés en édition (lecture seule) */}
-          <div className="card mb-4 shadow-sm">
-            <div className="card-header bg-light d-flex align-items-center">
-              <i className="bi bi-music-note-list me-2"></i>
+          <div className={styles.cardWrapper}>
+            <div className={styles.cardHeader}>
+              <i className="bi bi-music-note-list text-primary"></i>
               <h5 className="mb-0">Concerts associés</h5>
             </div>
-            <div className="card-body p-4">
+            <div className={styles.cardBody}>
               <div>
                 <h5 className="mb-3">
                   {formData.concertsAssocies?.length > 0 
@@ -748,9 +744,9 @@ const ProgrammateurDetails = () => {
                 </h5>
                 
                 {formData.concertsAssocies?.length > 0 ? (
-                  <div className="list-group">
+                  <div className={styles.listGroup}>
                     {formData.concertsAssocies.map(concert => (
-                      <div key={concert.id} className="list-group-item list-group-item-action p-3">
+                      <div key={concert.id} className={styles.listGroupItem}>
                         <div className="d-flex justify-content-between align-items-center">
                           <div>
                             <h6 className="mb-1">
@@ -779,16 +775,16 @@ const ProgrammateurDetails = () => {
                     ))}
                   </div>
                 ) : (
-                  <div className="alert alert-info">
-                    <i className="bi bi-info-circle me-2"></i>
-                    Aucun concert n'est associé à ce programmateur.
+                  <div className={styles.alertWrapper}>
+                    <i className={`bi bi-info-circle ${styles.alertIcon}`}></i>
+                    <p className="mb-0">Aucun concert n'est associé à ce programmateur.</p>
                   </div>
                 )}
               </div>
             </div>
           </div>
           
-          <div className="d-flex justify-content-end gap-3 mb-4">
+          <div className={styles.formActions}>
             <button
               type="button"
               className="btn btn-outline-secondary"
@@ -821,36 +817,36 @@ const ProgrammateurDetails = () => {
         // MODE AFFICHAGE
         <>
           {/* Section Informations du contact */}
-          <div className="card mb-4 shadow-sm">
-            <div className="card-header bg-light d-flex align-items-center">
-              <i className="bi bi-person-vcard me-2"></i>
+          <div className={styles.cardWrapper}>
+            <div className={styles.cardHeader}>
+              <i className="bi bi-person-vcard text-primary"></i>
               <h5 className="mb-0">Informations du contact</h5>
             </div>
-            <div className="card-body p-4">
+            <div className={styles.cardBody}>
               <div className="row g-3">
                 <div className="col-md-6">
-                  <div className="mb-3">
-                    <label className="form-label fw-bold text-secondary fs-6">Nom</label>
+                  <div className={styles.formGroup}>
+                    <label className={styles.cardLabel}>Nom</label>
                     <p className="mb-0 fs-5">{formatValue(contact.nom)}</p>
                   </div>
                 </div>
                 <div className="col-md-6">
-                  <div className="mb-3">
-                    <label className="form-label fw-bold text-secondary fs-6">Prénom</label>
+                  <div className={styles.formGroup}>
+                    <label className={styles.cardLabel}>Prénom</label>
                     <p className="mb-0 fs-5">{formatValue(contact.prenom)}</p>
                   </div>
                 </div>
               </div>
 
-              <div className="mb-4">
-                <label className="form-label fw-bold text-secondary fs-6">Fonction</label>
+              <div className={styles.formSection}>
+                <label className={styles.cardLabel}>Fonction</label>
                 <p className="mb-0">{formatValue(contact.fonction)}</p>
               </div>
 
               <div className="row g-3">
                 <div className="col-md-6">
-                  <div className="mb-3">
-                    <label className="form-label fw-bold text-secondary fs-6">Email</label>
+                  <div className={styles.formGroup}>
+                    <label className={styles.cardLabel}>Email</label>
                     <p className="mb-0">
                       {contact.email ? (
                         <a href={`mailto:${contact.email}`} className="text-decoration-none">
@@ -858,14 +854,14 @@ const ProgrammateurDetails = () => {
                           {contact.email}
                         </a>
                       ) : (
-                        <span className="text-muted">Non spécifié</span>
+                        <span className={styles.fieldEmpty}>Non spécifié</span>
                       )}
                     </p>
                   </div>
                 </div>
                 <div className="col-md-6">
-                  <div className="mb-3">
-                    <label className="form-label fw-bold text-secondary fs-6">Téléphone</label>
+                  <div className={styles.formGroup}>
+                    <label className={styles.cardLabel}>Téléphone</label>
                     <p className="mb-0">
                       {contact.telephone ? (
                         <a href={`tel:${contact.telephone}`} className="text-decoration-none">
@@ -873,7 +869,7 @@ const ProgrammateurDetails = () => {
                           {contact.telephone}
                         </a>
                       ) : (
-                        <span className="text-muted">Non spécifié</span>
+                        <span className={styles.fieldEmpty}>Non spécifié</span>
                       )}
                     </p>
                   </div>
@@ -883,22 +879,22 @@ const ProgrammateurDetails = () => {
           </div>
 
           {/* Section Structure juridique */}
-          <div className="card mb-4 shadow-sm">
-            <div className="card-header">
-              <i className="fa fa-building text-primary"></i>
-              <h5 className="mb-0 ms-2">Structure juridique</h5>
+          <div className={styles.cardWrapper}>
+            <div className={styles.cardHeader}>
+              <i className="bi bi-building text-primary"></i>
+              <h5 className="mb-0">Structure juridique</h5>
             </div>
-            <div className="card-body p-4">
+            <div className={styles.cardBody}>
               <div className="row mb-4">
                 <div className="col-md-7">
-                  <div className="mb-3">
-                    <label className="form-label fw-bold text-secondary">Raison sociale</label>
+                  <div className={styles.formGroup}>
+                    <label className={styles.cardLabel}>Raison sociale</label>
                     <p className="form-control-plaintext">{formatValue(structure.raisonSociale)}</p>
                   </div>
                 </div>
                 <div className="col-md-5">
-                  <div className="mb-3">
-                    <label className="form-label fw-bold text-secondary">Type de structure</label>
+                  <div className={styles.formGroup}>
+                    <label className={styles.cardLabel}>Type de structure</label>
                     <p className="form-control-plaintext">
                       {formatValue(structure.type ? (
                         <span>
@@ -914,27 +910,27 @@ const ProgrammateurDetails = () => {
                 </div>
               </div>
 
-              <div className="mb-4">
-                <label className="form-label fw-bold text-secondary">Adresse complète</label>
+              <div className={styles.formSection}>
+                <label className={styles.cardLabel}>Adresse complète</label>
                 <p className="form-control-plaintext">{formatValue(structure.adresse)}</p>
               </div>
 
               <div className="row mb-4">
                 <div className="col-md-4">
-                  <div className="mb-3">
-                    <label className="form-label fw-bold text-secondary">Code postal</label>
+                  <div className={styles.formGroup}>
+                    <label className={styles.cardLabel}>Code postal</label>
                     <p className="form-control-plaintext">{formatValue(structure.codePostal)}</p>
                   </div>
                 </div>
                 <div className="col-md-5">
-                  <div className="mb-3">
-                    <label className="form-label fw-bold text-secondary">Ville</label>
+                  <div className={styles.formGroup}>
+                    <label className={styles.cardLabel}>Ville</label>
                     <p className="form-control-plaintext">{formatValue(structure.ville)}</p>
                   </div>
                 </div>
                 <div className="col-md-3">
-                  <div className="mb-3">
-                    <label className="form-label fw-bold text-secondary">Pays</label>
+                  <div className={styles.formGroup}>
+                    <label className={styles.cardLabel}>Pays</label>
                     <p className="form-control-plaintext">{formatValue(structure.pays)}</p>
                   </div>
                 </div>
@@ -942,14 +938,14 @@ const ProgrammateurDetails = () => {
 
               <div className="row">
                 <div className="col-md-6">
-                  <div className="mb-3">
-                    <label className="form-label fw-bold text-secondary">SIRET</label>
+                  <div className={styles.formGroup}>
+                    <label className={styles.cardLabel}>SIRET</label>
                     <p className="form-control-plaintext">{formatValue(structure.siret)}</p>
                   </div>
                 </div>
                 <div className="col-md-6">
-                  <div className="mb-3">
-                    <label className="form-label fw-bold text-secondary">N° TVA intracommunautaire</label>
+                  <div className={styles.formGroup}>
+                    <label className={styles.cardLabel}>N° TVA intracommunautaire</label>
                     <p className="form-control-plaintext">{formatValue(structure.tva)}</p>
                   </div>
                 </div>
@@ -958,12 +954,12 @@ const ProgrammateurDetails = () => {
           </div>
 
           {/* Section Concerts associés */}
-          <div className="card mb-4 shadow-sm">
-            <div className="card-header bg-light d-flex align-items-center">
-              <i className="fa fa-music text-primary"></i>
-              <h5 className="mb-0 ms-2">Concerts associés</h5>
+          <div className={styles.cardWrapper}>
+            <div className={styles.cardHeader}>
+              <i className="bi bi-music-note-list text-primary"></i>
+              <h5 className="mb-0">Concerts associés</h5>
             </div>
-            <div className="card-body p-4">
+            <div className={styles.cardBody}>
               <div>
                 <div className="d-flex justify-content-between align-items-center mb-3">
                   <h5 className="mb-0">
@@ -986,7 +982,7 @@ const ProgrammateurDetails = () => {
                 
                 {/* Section de recherche de concerts */}
                 {showConcertSearch && (
-                  <div className="mb-4" ref={concertSearchRef}>
+                  <div className={styles.searchSection} ref={concertSearchRef}>
                     <div className="input-group mb-2">
                       <input
                         type="text"
@@ -1008,9 +1004,9 @@ const ProgrammateurDetails = () => {
                     
                     {/* Résultats de recherche pour les concerts */}
                     {showConcertResults && (
-                      <div className="dropdown-menu show w-100">
+                      <div className={styles.dropdownMenu}>
                         {isSearchingConcerts ? (
-                          <div className="dropdown-item text-center">
+                          <div className={styles.dropdownItem}>
                             <div className="spinner-border spinner-border-sm me-2" role="status">
                               <span className="visually-hidden">Recherche en cours...</span>
                             </div>
@@ -1020,7 +1016,7 @@ const ProgrammateurDetails = () => {
                           concertResults.map(concert => (
                             <div 
                               key={concert.id} 
-                              className="dropdown-item"
+                              className={styles.dropdownItem}
                               onClick={() => handleSelectConcert(concert)}
                             >
                               <div className="d-flex justify-content-between align-items-center">
@@ -1054,9 +1050,9 @@ const ProgrammateurDetails = () => {
                             </div>
                           ))
                         ) : concertSearchTerm.length >= 2 ? (
-                          <div className="dropdown-item text-muted">Aucun concert trouvé</div>
+                          <div className={styles.dropdownItem}>Aucun concert trouvé</div>
                         ) : (
-                          <div className="dropdown-item text-muted">Commencez à taper pour rechercher</div>
+                          <div className={styles.dropdownItem}>Commencez à taper pour rechercher</div>
                         )}
                       </div>
                     )}
@@ -1064,9 +1060,9 @@ const ProgrammateurDetails = () => {
                 )}
                 
                 {programmateur.concertsAssocies?.length > 0 ? (
-                  <div className="list-group">
+                  <div className={styles.listGroup}>
                     {programmateur.concertsAssocies.map(concert => (
-                      <div key={concert.id} className="list-group-item list-group-item-action p-3">
+                      <div key={concert.id} className={styles.listGroupItem}>
                         <div className="d-flex justify-content-between align-items-center">
                           <div>
                             <h6 className="mb-1">
@@ -1095,9 +1091,9 @@ const ProgrammateurDetails = () => {
                     ))}
                   </div>
                 ) : (
-                  <div className="alert alert-info">
-                    <i className="bi bi-info-circle me-2"></i>
-                    Aucun concert n'est associé à ce programmateur.
+                  <div className={styles.alertWrapper}>
+                    <i className={`bi bi-info-circle ${styles.alertIcon}`}></i>
+                    <p className="mb-0">Aucun concert n'est associé à ce programmateur.</p>
                   </div>
                 )}
               </div>

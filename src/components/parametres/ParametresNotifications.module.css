@@ -1,0 +1,26 @@
+/* Styles pour le composant ParametresNotifications */
+
+.notificationSection {
+  margin-bottom: 20px;
+}
+
+.notificationGroup {
+  margin-bottom: 15px;
+}
+
+.notificationTypeTitle {
+  margin-top: 25px;
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 25px;
+}
+
+.successMessage {
+  margin-bottom: 20px;
+}

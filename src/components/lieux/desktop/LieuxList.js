@@ -2,9 +2,8 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import firebase from '../../../firebaseInit';
 import { OverlayTrigger, Tooltip, Badge, Card, Dropdown } from 'react-bootstrap';
-import '@styles/index.css';
-import '@styles/pages/lieux.css';
 import Spinner from '@/components/common/Spinner';
+import styles from './LieuxList.module.css';
 
 const LieuxList = () => {
   const navigate = useNavigate();
@@ -263,11 +262,11 @@ const LieuxList = () => {
   }
 
   return (
-    <div className="lieux-container shadow-sm">
-      <div className="header-container mb-3">
+    <div className={styles.lieuxContainer}>
+      <div className={styles.headerContainer}>
         <h2 className="fs-4 fw-bold text-primary mb-0">Liste des lieux</h2>
         <button 
-          className="btn btn-primary d-flex align-items-center gap-2 px-3 py-2 rounded-3"
+          className={`btn btn-primary d-flex align-items-center gap-2 ${styles.addButton}`}
           onClick={() => navigate('/lieux/nouveau')}
         >
           <i className="bi bi-plus-lg"></i>
@@ -275,8 +274,8 @@ const LieuxList = () => {
         </button>
       </div>
       
-      <div className="search-filter-container d-flex flex-wrap gap-3 align-items-center">
-        <div className="search-bar flex-grow-1">
+      <div className={styles.searchFilterContainer}>
+        <div className={styles.searchBar}>
           <div className="input-group">
             <span className="input-group-text">
               <i className="bi bi-search"></i>
@@ -284,7 +283,7 @@ const LieuxList = () => {
             <input
               ref={searchInputRef}
               type="text"
-              className="form-control search-input"
+              className={`form-control ${styles.searchInput}`}
               placeholder="Rechercher un lieu par nom, ville, adresse... (Ctrl+F)"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -292,7 +291,7 @@ const LieuxList = () => {
             />
             {searchTerm && (
               <button 
-                className="btn btn-outline-secondary clear-search" 
+                className={`btn btn-outline-secondary ${styles.clearSearch}`} 
                 onClick={() => setSearchTerm('')}
                 aria-label="Effacer la recherche"
               >
@@ -301,7 +300,7 @@ const LieuxList = () => {
             )}
           </div>
           {searchTerm && (
-            <div className="results-count">
+            <div className={styles.resultsCount}>
               {filteredLieux.length} résultat{filteredLieux.length !== 1 ? 's' : ''} trouvé{filteredLieux.length !== 1 ? 's' : ''}
             </div>
           )}
@@ -309,7 +308,7 @@ const LieuxList = () => {
         
         <div className="d-flex gap-2">
           <Dropdown>
-            <Dropdown.Toggle variant="outline-secondary" id="filter-dropdown" className="modern-filter-btn">
+            <Dropdown.Toggle variant="outline-secondary" id="filter-dropdown" className={styles.modernFilterBtn}>
               <i className="bi bi-funnel me-2"></i>
               {filterType === 'tous' ? 'Tous les lieux' : 
                filterType === 'avec-concerts' ? 'Avec concerts' :
@@ -347,7 +346,7 @@ const LieuxList = () => {
           </Dropdown>
           
           <Dropdown>
-            <Dropdown.Toggle variant="outline-secondary" id="sort-dropdown" className="modern-sort-btn">
+            <Dropdown.Toggle variant="outline-secondary" id="sort-dropdown" className={styles.modernSortBtn}>
               <i className="bi bi-sort-alpha-down me-2"></i>
               {sortOption === 'nom-asc' ? 'Nom (A-Z)' :
                sortOption === 'nom-desc' ? 'Nom (Z-A)' :
@@ -392,7 +391,7 @@ const LieuxList = () => {
       </div>
 
       {filteredLieux.length === 0 ? (
-        <div className="modern-alert alert d-flex align-items-center">
+        <div className={styles.modernAlert}>
           <i className="bi bi-info-circle me-3 fs-4"></i>
           <div>
             {searchTerm || filterType !== 'tous' ? 
@@ -401,8 +400,8 @@ const LieuxList = () => {
           </div>
         </div>
       ) : (
-        <div className="modern-table-container">
-          <table className="table table-hover modern-table">
+        <div className={styles.modernTableContainer}>
+          <table className={`table table-hover ${styles.modernTable}`}>
             <thead>
               <tr>
                 <th>Nom</th>
@@ -417,7 +416,7 @@ const LieuxList = () => {
               {filteredLieux.map(lieu => (
                 <tr 
                   key={lieu.id} 
-                  className="clickable-row table-row-animate"
+                  className={`${styles.clickableRow} ${styles.tableRowAnimate}`}
                   onClick={() => handleRowClick(lieu.id)}
                 >
                   <td className="fw-medium">
@@ -428,7 +427,7 @@ const LieuxList = () => {
                   </td>
                   <td>
                     {lieu.type ? (
-                      <span className={`type-badge bg-${getTypeBadgeColor(lieu.type)}`}>
+                      <span className={`${styles.typeBadge} bg-${getTypeBadgeColor(lieu.type)}`}>
                         {formatType(lieu.type)}
                       </span>
                     ) : (
@@ -437,7 +436,7 @@ const LieuxList = () => {
                   </td>
                   <td>
                     {lieu.ville ? (
-                      <span className="ville-badge">
+                      <span className={styles.villeBadge}>
                         {lieu.ville}
                         {lieu.codePostal && ` (${lieu.codePostal})`}
                       </span>
@@ -447,8 +446,8 @@ const LieuxList = () => {
                   </td>
                   <td>
                     {lieu.jauge ? (
-                      <span className={`jauge-badge bg-${getJaugeColor(lieu.jauge)}`}>
-                        {lieu.jauge} places <span className="jauge-type">({getJaugeLabel(lieu.jauge)})</span>
+                      <span className={`${styles.jaugeBadge} bg-${getJaugeColor(lieu.jauge)}`}>
+                        {lieu.jauge} places <span className={styles.jaugeType}>({getJaugeLabel(lieu.jauge)})</span>
                       </span>
                     ) : (
                       <span className="text-muted">Non spécifiée</span>
@@ -456,7 +455,7 @@ const LieuxList = () => {
                   </td>
                   <td>
                     {lieu.concertsAssocies && lieu.concertsAssocies.length > 0 ? (
-                      <span className="concert-count">
+                      <span className={styles.concertCount}>
                         <i className="bi bi-music-note-beamed me-1"></i>
                         {lieu.concertsAssocies.length} concert{lieu.concertsAssocies.length > 1 ? 's' : ''}
                       </span>
@@ -465,15 +464,14 @@ const LieuxList = () => {
                     )}
                   </td>
                   <td className="text-end">
-                    <div className="action-buttons">
+                    <div className={styles.actionButtons}>
                       <OverlayTrigger
                         placement="top"
                         overlay={<Tooltip>Voir le lieu</Tooltip>}
                       >
                         <Link 
                           to={`/lieux/${lieu.id}`} 
-                          // Harmonisation : ajout classe selon l'action
-                          className="btn btn-secondary modern-btn"
+                          className={`btn btn-secondary ${styles.modernBtn}`}
                           onClick={handleActionClick}
                         >
                           <i className="bi bi-eye"></i>
@@ -485,7 +483,7 @@ const LieuxList = () => {
                       >
                         <Link 
                           to={`/lieux/edit/${lieu.id}`} 
-                          className="btn btn-outline-primary modern-btn"
+                          className={`btn btn-outline-primary ${styles.modernBtn}`}
                           onClick={handleActionClick}
                         >
                           <i className="bi bi-pencil"></i>
@@ -497,8 +495,7 @@ const LieuxList = () => {
                       >
                         <button 
                           onClick={(e) => { handleDeleteLieu(lieu.id, e); handleActionClick(e); }} 
-                          // Harmonisation : ajout classe selon l'action
-                          className="btn btn-danger modern-btn"
+                          className={`btn btn-danger ${styles.modernBtn}`}
                         >
                           <i className="bi bi-trash"></i>
                         </button>

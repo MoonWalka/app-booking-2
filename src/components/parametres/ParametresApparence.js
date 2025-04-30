@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Card, Row, Col, Alert } from 'react-bootstrap';
+import styles from './ParametresApparence.module.css';
 import { useParametres } from '@/context/ParametresContext';
 
 const ParametresApparence = () => {
@@ -110,15 +111,12 @@ const ParametresApparence = () => {
             <Col md={6}>
               <Form.Group className="mb-3">
                 <Form.Label>Couleur principale</Form.Label>
-                <div className="d-flex align-items-center">
-                  <div id="colorPreview" style={{ 
-                    backgroundColor: localState.couleurPrincipale, 
-                    width: '40px', 
-                    height: '40px', 
-                    borderRadius: '4px',
-                    marginRight: '10px',
-                    border: '1px solid #dee2e6'
-                  }} />
+                <div className={styles.colorPreviewContainer}>
+                  <div 
+                    id="colorPreview" 
+                    className={styles.colorPreview} 
+                    style={{ backgroundColor: localState.couleurPrincipale }}
+                  />
                   <Form.Control
                     type="color"
                     name="couleurPrincipale"
@@ -132,7 +130,7 @@ const ParametresApparence = () => {
                     onChange={handleChange}
                     name="couleurPrincipale"
                     pattern="^#[0-9A-Fa-f]{6}$"
-                    style={{ width: '120px' }}
+                    className={styles.colorInput}
                   />
                 </div>
               </Form.Group>
@@ -143,7 +141,7 @@ const ParametresApparence = () => {
             <Col md={6}>
               <Form.Group className="mb-3">
                 <Form.Label>Taille de police (px)</Form.Label>
-                <div className="d-flex align-items-center">
+                <div className={styles.fontSizeContainer}>
                   <Form.Range
                     name="taillePolicePx"
                     value={localState.taillePolicePx}
@@ -151,7 +149,7 @@ const ParametresApparence = () => {
                     min="12"
                     max="24"
                     step="1"
-                    className="me-2"
+                    className={styles.fontSizeSlider}
                   />
                   <span>{localState.taillePolicePx}px</span>
                 </div>
@@ -201,8 +199,8 @@ const ParametresApparence = () => {
             </Form.Text>
           </Form.Group>
 
-          <div className="d-flex justify-content-between">
-            <div>
+          <div className={styles.actionButtons}>
+            <div className={styles.resetButtonsGroup}>
               <Button 
                 variant="outline-secondary" 
                 type="button"

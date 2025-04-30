@@ -14,6 +14,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/firebaseInit';
 import { Button, Alert, Modal } from 'react-bootstrap';
+import styles from './StructureDetails.module.css';
 
 const StructureDetails = () => {
   const { id } = useParams();
@@ -131,7 +132,7 @@ const StructureDetails = () => {
   if (loading) {
     return (
       <div className="text-center p-5">
-        <div className="spinner-border" role="status">
+        <div className={styles.spinner} role="status">
           <span className="visually-hidden">Chargement...</span>
         </div>
       </div>
@@ -140,134 +141,135 @@ const StructureDetails = () => {
 
   if (error) {
     return (
-      <Alert variant="danger">
-        <i className="bi bi-exclamation-triangle me-2"></i>
+      <div className={styles.alertInfo}>
+        <i className="bi bi-exclamation-triangle"></i>
         {error}
-      </Alert>
+      </div>
     );
   }
 
   return (
-    <div className="structure-details-container">
-      <div className="details-header">
-        <div className="header-title">
+    <div className={styles.detailsContainer}>
+      <div className={styles.detailsHeader}>
+        <div className={styles.headerTitle}>
           <h2>
-            <i className="bi bi-building me-2"></i>
+            <i className="bi bi-building"></i>
             {structure.nom || structure.raisonSociale}
           </h2>
           {structure.type && (
-            <span className={`badge bg-${getTypeColor(structure.type)} ms-2`}>
+            <span className={`${styles.headerBadge} ${getBadgeClass(structure.type)}`}>
               {getTypeLabel(structure.type)}
             </span>
           )}
         </div>
-        <div className="header-actions">
+        <div className={styles.headerActions}>
           <Button
             variant="outline-primary"
-            className="me-2"
+            className={`${styles.actionButton} ${styles.primaryOutlineButton}`}
             onClick={() => navigate(`/structures/${id}/edit`)}
           >
-            <i className="bi bi-pencil me-2"></i>
+            <i className="bi bi-pencil"></i>
             Modifier
           </Button>
           <Button
             variant="outline-danger"
+            className={`${styles.actionButton} ${styles.dangerOutlineButton}`}
             onClick={() => setShowDeleteModal(true)}
           >
-            <i className="bi bi-trash me-2"></i>
+            <i className="bi bi-trash"></i>
             Supprimer
           </Button>
         </div>
       </div>
 
-      <div className="details-content">
-        <div className="details-card">
-          <div className="card-header">
+      <div className={styles.detailsContent}>
+        <div className={styles.detailsCard}>
+          <div className={styles.cardHeader}>
             <i className="bi bi-info-circle"></i>
             <h3>Informations de base</h3>
           </div>
-          <div className="card-body">
+          <div className={styles.cardBody}>
             <div className="row">
               <div className="col-md-6">
-                <div className="info-group">
-                  <div className="info-label">Nom</div>
-                  <div className="info-value">{formatValue(structure.nom)}</div>
+                <div className={styles.infoGroup}>
+                  <div className={styles.infoLabel}>Nom</div>
+                  <div className={styles.infoValue}>{formatValue(structure.nom)}</div>
                 </div>
               </div>
               <div className="col-md-6">
-                <div className="info-group">
-                  <div className="info-label">Raison sociale</div>
-                  <div className="info-value">{formatValue(structure.raisonSociale)}</div>
-                </div>
-              </div>
-            </div>
-            <div className="row mt-3">
-              <div className="col-md-6">
-                <div className="info-group">
-                  <div className="info-label">Type</div>
-                  <div className="info-value">{structure.type ? getTypeLabel(structure.type) : 'Non spécifié'}</div>
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div className="info-group">
-                  <div className="info-label">SIRET</div>
-                  <div className="info-value">{formatValue(structure.siret)}</div>
+                <div className={styles.infoGroup}>
+                  <div className={styles.infoLabel}>Raison sociale</div>
+                  <div className={styles.infoValue}>{formatValue(structure.raisonSociale)}</div>
                 </div>
               </div>
             </div>
             <div className="row mt-3">
               <div className="col-md-6">
-                <div className="info-group">
-                  <div className="info-label">TVA Intracommunautaire</div>
-                  <div className="info-value">{formatValue(structure.tva)}</div>
+                <div className={styles.infoGroup}>
+                  <div className={styles.infoLabel}>Type</div>
+                  <div className={styles.infoValue}>{structure.type ? getTypeLabel(structure.type) : 'Non spécifié'}</div>
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className={styles.infoGroup}>
+                  <div className={styles.infoLabel}>SIRET</div>
+                  <div className={styles.infoValue}>{formatValue(structure.siret)}</div>
+                </div>
+              </div>
+            </div>
+            <div className="row mt-3">
+              <div className="col-md-6">
+                <div className={styles.infoGroup}>
+                  <div className={styles.infoLabel}>TVA Intracommunautaire</div>
+                  <div className={styles.infoValue}>{formatValue(structure.tva)}</div>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="details-card">
-          <div className="card-header">
+        <div className={styles.detailsCard}>
+          <div className={styles.cardHeader}>
             <i className="bi bi-geo-alt"></i>
             <h3>Coordonnées</h3>
           </div>
-          <div className="card-body">
+          <div className={styles.cardBody}>
             <div className="row">
               <div className="col-md-12">
-                <div className="info-group">
-                  <div className="info-label">Adresse</div>
-                  <div className="info-value">{formatValue(structure.adresse)}</div>
+                <div className={styles.infoGroup}>
+                  <div className={styles.infoLabel}>Adresse</div>
+                  <div className={styles.infoValue}>{formatValue(structure.adresse)}</div>
                 </div>
               </div>
             </div>
             <div className="row mt-3">
               <div className="col-md-4">
-                <div className="info-group">
-                  <div className="info-label">Code postal</div>
-                  <div className="info-value">{formatValue(structure.codePostal)}</div>
+                <div className={styles.infoGroup}>
+                  <div className={styles.infoLabel}>Code postal</div>
+                  <div className={styles.infoValue}>{formatValue(structure.codePostal)}</div>
                 </div>
               </div>
               <div className="col-md-4">
-                <div className="info-group">
-                  <div className="info-label">Ville</div>
-                  <div className="info-value">{formatValue(structure.ville)}</div>
+                <div className={styles.infoGroup}>
+                  <div className={styles.infoLabel}>Ville</div>
+                  <div className={styles.infoValue}>{formatValue(structure.ville)}</div>
                 </div>
               </div>
               <div className="col-md-4">
-                <div className="info-group">
-                  <div className="info-label">Pays</div>
-                  <div className="info-value">{formatValue(structure.pays)}</div>
+                <div className={styles.infoGroup}>
+                  <div className={styles.infoLabel}>Pays</div>
+                  <div className={styles.infoValue}>{formatValue(structure.pays)}</div>
                 </div>
               </div>
             </div>
             <div className="row mt-3">
               <div className="col-md-4">
-                <div className="info-group">
-                  <div className="info-label">Téléphone</div>
-                  <div className="info-value">
+                <div className={styles.infoGroup}>
+                  <div className={styles.infoLabel}>Téléphone</div>
+                  <div className={styles.infoValue}>
                     {structure.telephone ? (
-                      <a href={`tel:${structure.telephone}`} className="contact-link">
-                        <i className="bi bi-telephone me-1"></i>
+                      <a href={`tel:${structure.telephone}`} className={styles.contactLink}>
+                        <i className="bi bi-telephone"></i>
                         {structure.telephone}
                       </a>
                     ) : (
@@ -277,12 +279,12 @@ const StructureDetails = () => {
                 </div>
               </div>
               <div className="col-md-4">
-                <div className="info-group">
-                  <div className="info-label">Email</div>
-                  <div className="info-value">
+                <div className={styles.infoGroup}>
+                  <div className={styles.infoLabel}>Email</div>
+                  <div className={styles.infoValue}>
                     {structure.email ? (
-                      <a href={`mailto:${structure.email}`} className="contact-link">
-                        <i className="bi bi-envelope me-1"></i>
+                      <a href={`mailto:${structure.email}`} className={styles.contactLink}>
+                        <i className="bi bi-envelope"></i>
                         {structure.email}
                       </a>
                     ) : (
@@ -292,12 +294,12 @@ const StructureDetails = () => {
                 </div>
               </div>
               <div className="col-md-4">
-                <div className="info-group">
-                  <div className="info-label">Site web</div>
-                  <div className="info-value">
+                <div className={styles.infoGroup}>
+                  <div className={styles.infoLabel}>Site web</div>
+                  <div className={styles.infoValue}>
                     {structure.siteWeb ? (
-                      <a href={structure.siteWeb} target="_blank" rel="noopener noreferrer" className="contact-link">
-                        <i className="bi bi-globe me-1"></i>
+                      <a href={structure.siteWeb} target="_blank" rel="noopener noreferrer" className={styles.contactLink}>
+                        <i className="bi bi-globe"></i>
                         {structure.siteWeb}
                       </a>
                     ) : (
@@ -310,34 +312,34 @@ const StructureDetails = () => {
           </div>
         </div>
 
-        <div className="details-card">
-          <div className="card-header">
+        <div className={styles.detailsCard}>
+          <div className={styles.cardHeader}>
             <i className="bi bi-person"></i>
             <h3>Contact principal</h3>
           </div>
-          <div className="card-body">
+          <div className={styles.cardBody}>
             <div className="row">
               <div className="col-md-6">
-                <div className="info-group">
-                  <div className="info-label">Nom</div>
-                  <div className="info-value">{formatValue(structure.contact?.nom)}</div>
+                <div className={styles.infoGroup}>
+                  <div className={styles.infoLabel}>Nom</div>
+                  <div className={styles.infoValue}>{formatValue(structure.contact?.nom)}</div>
                 </div>
               </div>
               <div className="col-md-6">
-                <div className="info-group">
-                  <div className="info-label">Fonction</div>
-                  <div className="info-value">{formatValue(structure.contact?.fonction)}</div>
+                <div className={styles.infoGroup}>
+                  <div className={styles.infoLabel}>Fonction</div>
+                  <div className={styles.infoValue}>{formatValue(structure.contact?.fonction)}</div>
                 </div>
               </div>
             </div>
             <div className="row mt-3">
               <div className="col-md-6">
-                <div className="info-group">
-                  <div className="info-label">Téléphone</div>
-                  <div className="info-value">
+                <div className={styles.infoGroup}>
+                  <div className={styles.infoLabel}>Téléphone</div>
+                  <div className={styles.infoValue}>
                     {structure.contact?.telephone ? (
-                      <a href={`tel:${structure.contact.telephone}`} className="contact-link">
-                        <i className="bi bi-telephone me-1"></i>
+                      <a href={`tel:${structure.contact.telephone}`} className={styles.contactLink}>
+                        <i className="bi bi-telephone"></i>
                         {structure.contact.telephone}
                       </a>
                     ) : (
@@ -347,12 +349,12 @@ const StructureDetails = () => {
                 </div>
               </div>
               <div className="col-md-6">
-                <div className="info-group">
-                  <div className="info-label">Email</div>
-                  <div className="info-value">
+                <div className={styles.infoGroup}>
+                  <div className={styles.infoLabel}>Email</div>
+                  <div className={styles.infoValue}>
                     {structure.contact?.email ? (
-                      <a href={`mailto:${structure.contact.email}`} className="contact-link">
-                        <i className="bi bi-envelope me-1"></i>
+                      <a href={`mailto:${structure.contact.email}`} className={styles.contactLink}>
+                        <i className="bi bi-envelope"></i>
                         {structure.contact.email}
                       </a>
                     ) : (
@@ -365,37 +367,37 @@ const StructureDetails = () => {
           </div>
         </div>
 
-        <div className="details-card">
-          <div className="card-header">
+        <div className={styles.detailsCard}>
+          <div className={styles.cardHeader}>
             <i className="bi bi-person-badge"></i>
             <h3>Programmateurs associés</h3>
           </div>
-          <div className="card-body">
+          <div className={styles.cardBody}>
             {loadingProgrammateurs ? (
               <div className="text-center p-3">
-                <div className="spinner-border spinner-border-sm" role="status">
+                <div className={`${styles.spinner} ${styles.spinnerSmall}`} role="status">
                   <span className="visually-hidden">Chargement...</span>
                 </div>
               </div>
             ) : programmateurs.length > 0 ? (
-              <div className="programmateurs-list">
+              <div className={styles.programmateursList}>
                 {programmateurs.map(prog => (
-                  <div key={prog.id} className="programmateur-card">
-                    <div className="programmateur-info">
-                      <h4 className="programmateur-name">
-                        <i className="bi bi-person-badge me-2"></i>
+                  <div key={prog.id} className={styles.programmateurCard}>
+                    <div className={styles.programmateurInfo}>
+                      <h4 className={styles.programmateurName}>
+                        <i className="bi bi-person-badge"></i>
                         <Link to={`/programmateurs/${prog.id}`}>{prog.nom}</Link>
                       </h4>
-                      <div className="programmateur-details">
+                      <div className={styles.programmateurDetails}>
                         {prog.email && (
-                          <div className="detail-item">
-                            <i className="bi bi-envelope me-1"></i>
+                          <div className={styles.detailItem}>
+                            <i className="bi bi-envelope"></i>
                             <a href={`mailto:${prog.email}`}>{prog.email}</a>
                           </div>
                         )}
                         {prog.telephone && (
-                          <div className="detail-item">
-                            <i className="bi bi-telephone me-1"></i>
+                          <div className={styles.detailItem}>
+                            <i className="bi bi-telephone"></i>
                             <a href={`tel:${prog.telephone}`}>{prog.telephone}</a>
                           </div>
                         )}
@@ -405,8 +407,8 @@ const StructureDetails = () => {
                 ))}
               </div>
             ) : (
-              <div className="alert alert-info">
-                <i className="bi bi-info-circle me-2"></i>
+              <div className={styles.alertInfo}>
+                <i className="bi bi-info-circle"></i>
                 Aucun programmateur n'est associé à cette structure.
               </div>
             )}
@@ -414,13 +416,13 @@ const StructureDetails = () => {
         </div>
 
         {structure.notes && (
-          <div className="details-card">
-            <div className="card-header">
+          <div className={styles.detailsCard}>
+            <div className={styles.cardHeader}>
               <i className="bi bi-sticky"></i>
               <h3>Notes</h3>
             </div>
-            <div className="card-body">
-              <div className="notes-content">
+            <div className={styles.cardBody}>
+              <div className={styles.notesContent}>
                 {structure.notes.split('\n').map((line, index) => (
                   <p key={index}>{line}</p>
                 ))}
@@ -472,19 +474,19 @@ const StructureDetails = () => {
   );
 };
 
-// Fonction pour obtenir la couleur du badge selon le type de structure
-const getTypeColor = (type) => {
+// Fonction pour obtenir la classe du badge selon le type de structure
+const getBadgeClass = (type) => {
   switch (type) {
     case 'association':
-      return 'success';
+      return styles.badgeSuccess;
     case 'entreprise':
-      return 'primary';
+      return styles.badgePrimary;
     case 'administration':
-      return 'info';
+      return styles.badgeInfo;
     case 'collectivite':
-      return 'warning';
+      return styles.badgeWarning;
     default:
-      return 'secondary';
+      return styles.badgeSecondary;
   }
 };
 

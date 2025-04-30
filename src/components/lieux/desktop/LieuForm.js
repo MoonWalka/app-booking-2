@@ -4,8 +4,8 @@ import firebase from '@/firebaseInit';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useLocationIQ } from '../../../hooks/useLocationIQ';
-import '@/styles/index.css'; // Correction du chemin d'importation
 import Spinner from '../../../components/common/Spinner';
+import styles from './LieuForm.module.css';
 
 import L from 'leaflet';
 
@@ -537,31 +537,31 @@ useEffect(() => {
   }
 
   return (
-    <div className="lieu-form-container">
-      <div className="form-header-container">
-        <h2 className="modern-title">
+    <div className={styles.lieuFormContainer}>
+      <div className={styles.formHeaderContainer}>
+        <h2 className={styles.modernTitle}>
           {id === 'nouveau' ? 'Créer un nouveau lieu' : 'Modifier le lieu'}
         </h2>
-        <div className="breadcrumb-container">
+        <div className={styles.breadcrumbContainer}>
           {/* Correction : ajout accessibilité (role/button + tabIndex) */}
-          <span className="breadcrumb-item" onClick={() => navigate('/lieux')} role="button" tabIndex={0}>Lieux</span>
+          <span className={styles.breadcrumbItem} onClick={() => navigate('/lieux')} role="button" tabIndex={0}>Lieux</span>
           <i className="bi bi-chevron-right"></i>
-          <span className="breadcrumb-item active">
+          <span className={`${styles.breadcrumbItem} ${styles.active}`}>
             {id === 'nouveau' ? 'Nouveau lieu' : lieu.nom}
           </span>
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="modern-form">
+      <form onSubmit={handleSubmit} className={styles.modernForm}>
         {/* Première carte - Informations principales */}
-        <div className="form-card">
-          <div className="card-header">
+        <div className={styles.formCard}>
+          <div className={styles.cardHeader}>
             <i className="bi bi-building"></i>
             <h3>Informations principales</h3>
           </div>
-          <div className="card-body">
+          <div className={styles.cardBody}>
             <div className="mb-3">
-              <label htmlFor="nom" className="form-label">Nom du lieu <span className="required">*</span></label>
+              <label htmlFor="nom" className="form-label">Nom du lieu <span className={styles.required}>*</span></label>
               <input
                 type="text"
                 className="form-control"
@@ -610,14 +610,14 @@ useEffect(() => {
         </div>
 
         {/* Deuxième carte - Adresse */}
-        <div className="form-card">
-          <div className="card-header">
+        <div className={styles.formCard}>
+          <div className={styles.cardHeader}>
             <i className="bi bi-geo-alt"></i>
             <h3>Adresse</h3>
           </div>
-          <div className="card-body">
+          <div className={styles.cardBody}>
             <div className="mb-3 address-search-container">
-              <label htmlFor="adresse" className="form-label">Adresse <span className="required">*</span></label>
+              <label htmlFor="adresse" className="form-label">Adresse <span className={styles.required}>*</span></label>
               <div className="input-group">
                 <input
                   type="text"
@@ -653,20 +653,20 @@ useEffect(() => {
               
               {/* Suggestions d'adresse */}
               {addressSuggestions && addressSuggestions.length > 0 && (
-                <div className="address-suggestions" ref={suggestionsRef}>
+                <div className={styles.addressSuggestions} ref={suggestionsRef}>
                   {addressSuggestions.map((suggestion, index) => (
                     <div
                       key={index}
-                      className="address-suggestion-item"
+                      className={styles.addressSuggestionItem}
                       onClick={() => handleSelectAddress(suggestion)}
                     >
-                      <div className="suggestion-icon">
+                      <div className={styles.suggestionIcon}>
                         <i className="bi bi-geo-alt-fill"></i>
                       </div>
-                      <div className="suggestion-text">
-                        <div className="suggestion-name">{suggestion.display_name}</div>
+                      <div className={styles.suggestionText}>
+                        <div className={styles.suggestionName}>{suggestion.display_name}</div>
                         {suggestion.address && (
-                          <div className="suggestion-details">
+                          <div className={styles.suggestionDetails}>
                             {suggestion.address.postcode && suggestion.address.city && (
                               <span>{suggestion.address.postcode} {suggestion.address.city}</span>
                             )}
@@ -680,7 +680,7 @@ useEffect(() => {
               
               {/* Indicateur de recherche */}
               {isSearchingAddress && (
-                <div className="address-searching">
+                <div className={styles.addressSearching}>
                   <div className="spinner-border spinner-border-sm text-primary" role="status">
                     <span className="visually-hidden">Recherche en cours...</span>
                   </div>
@@ -692,7 +692,7 @@ useEffect(() => {
             <div className="row mb-3">
               <div className="col-md-4">
                 <div className="mb-md-0">
-                  <label htmlFor="codePostal" className="form-label">Code postal <span className="required">*</span></label>
+                  <label htmlFor="codePostal" className="form-label">Code postal <span className={styles.required}>*</span></label>
                   <input
                     type="text"
                     className="form-control"
@@ -707,7 +707,7 @@ useEffect(() => {
               </div>
               <div className="col-md-8">
                 <div className="mb-md-0">
-                  <label htmlFor="ville" className="form-label">Ville <span className="required">*</span></label>
+                  <label htmlFor="ville" className="form-label">Ville <span className={styles.required}>*</span></label>
                   <input
                     type="text"
                     className="form-control"
@@ -723,7 +723,7 @@ useEffect(() => {
             </div>
 
             <div className="mb-3">
-              <label htmlFor="pays" className="form-label">Pays <span className="required">*</span></label>
+              <label htmlFor="pays" className="form-label">Pays <span className={styles.required}>*</span></label>
               <input
                 type="text"
                 className="form-control"
@@ -737,8 +737,8 @@ useEffect(() => {
             
             {/* Carte interactive */}
             {showMap && (
-              <div className="map-preview mt-3">
-                <div className="interactive-map-container">
+              <div className={styles.mapPreview}>
+                <div className={styles.interactiveMapContainer}>
                   <MapContainer 
                     center={[lieu.latitude, lieu.longitude]} 
                     zoom={15} 
@@ -765,17 +765,17 @@ useEffect(() => {
         </div>
 
         {/* Nouvelle carte - Programmateur */}
-        <div className="form-card">
-          <div className="card-header">
+        <div className={styles.formCard}>
+          <div className={styles.cardHeader}>
             <i className="bi bi-person-badge"></i>
             <h3>Programmateur</h3>
           </div>
-          <div className="card-body">
+          <div className={styles.cardBody}>
             <div className="mb-3">
               <label className="form-label">Associer un programmateur</label>
               
               {!selectedProgrammateur ? (
-                <div className="programmateur-search-container" ref={dropdownRef}>
+                <div className={styles.programmateurSearchContainer} ref={dropdownRef}>
                   <div className="input-group">
                     <span className="input-group-text"><i className="bi bi-search"></i></span>
                     <input
@@ -795,7 +795,7 @@ useEffect(() => {
                   </div>
                   
                   {isSearching && (
-                    <div className="dropdown-menu show w-100">
+                    <div className={`dropdown-menu show w-100 ${styles.dropdownMenu}`}>
                       <div className="dropdown-item text-center">
                         <div className="spinner-border spinner-border-sm text-primary" role="status">
                           <span className="visually-hidden">Recherche en cours...</span>
@@ -805,16 +805,16 @@ useEffect(() => {
                   )}
                   
                   {searchResults.length > 0 && (
-                    <div className="dropdown-menu show w-100">
+                    <div className={`dropdown-menu show w-100 ${styles.dropdownMenu}`}>
                       {searchResults.map(prog => (
                         <div 
                           key={prog.id} 
-                          className="dropdown-item programmateur-item"
+                          className={`dropdown-item ${styles.programmateurItem}`}
                           onClick={() => handleSelectProgrammateur(prog)}
                         >
-                          <div className="programmateur-name">{prog.nom}</div>
-                          <div className="programmateur-details">
-                            {prog.structure && <span className="programmateur-structure">{prog.structure}</span>}
+                          <div className={styles.programmateurName}>{prog.nom}</div>
+                          <div className={styles.programmateurDetails}>
+                            {prog.structure && <span className={styles.programmateurStructure}>{prog.structure}</span>}
                             {prog.email && <span className="programmateur-email">{prog.email}</span>}
                           </div>
                         </div>
@@ -823,7 +823,7 @@ useEffect(() => {
                   )}
                   
                   {searchTerm.length >= 2 && searchResults.length === 0 && !isSearching && (
-                    <div className="dropdown-menu show w-100">
+                    <div className={`dropdown-menu show w-100 ${styles.dropdownMenu}`}>
                       <div className="dropdown-item text-center text-muted">
                         Aucun programmateur trouvé
                       </div>
@@ -831,21 +831,21 @@ useEffect(() => {
                   )}
                 </div>
               ) : (
-                <div className="selected-programmateur">
-                  <div className="programmateur-card">
-                    <div className="programmateur-info">
-                      <span className="programmateur-name">{selectedProgrammateur.nom}</span>
+                <div className={styles.selectedProgrammateur}>
+                  <div className={styles.programmateurCard}>
+                    <div className={styles.programmateurInfo}>
+                      <span className={styles.programmateurName}>{selectedProgrammateur.nom}</span>
                       {selectedProgrammateur.structure && (
-                        <span className="programmateur-structure">{selectedProgrammateur.structure}</span>
+                        <span className={styles.programmateurStructure}>{selectedProgrammateur.structure}</span>
                       )}
-                      <div className="programmateur-contacts">
+                      <div className={styles.programmateurContacts}>
                         {selectedProgrammateur.email && (
-                          <span className="programmateur-contact-item">
+                          <span className={styles.programmateurContactItem}>
                             <i className="bi bi-envelope"></i> {selectedProgrammateur.email}
                           </span>
                         )}
                         {selectedProgrammateur.telephone && (
-                          <span className="programmateur-contact-item">
+                          <span className={styles.programmateurContactItem}>
                             <i className="bi bi-telephone"></i> {selectedProgrammateur.telephone}
                           </span>
                         )}
@@ -870,13 +870,13 @@ useEffect(() => {
           </div>
         </div>
 
-              {/* Carte - Informations de contact */}
-              <div className="form-card">
-          <div className="card-header">
+        {/* Carte - Informations de contact */}
+        <div className={styles.formCard}>
+          <div className={styles.cardHeader}>
             <i className="bi bi-person-lines-fill"></i>
             <h3>Informations de contact</h3>
           </div>
-          <div className="card-body">
+          <div className={styles.cardBody}>
             <div className="mb-3">
               <label htmlFor="contact.nom" className="form-label">Personne à contacter</label>
               <input
@@ -929,7 +929,7 @@ useEffect(() => {
           </div>
         </div>
 
-        <div className="form-actions">
+        <div className={styles.formActions}>
           <button
             type="button"
             className="btn btn-outline-secondary"

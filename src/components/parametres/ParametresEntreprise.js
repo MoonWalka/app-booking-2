@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Row, Col, Form, Button, Card, InputGroup, Badge } from 'react-bootstrap';
+import styles from './ParametresEntreprise.module.css';
 import { useParametres } from '@/context/ParametresContext';
 import { useLocationIQ } from '@/hooks/useLocationIQ';
 
@@ -260,34 +261,6 @@ const ParametresEntreprise = () => {
     return <div className="text-center"><div className="spinner-border" role="status"></div></div>;
   }
 
-  // Styles CSS pour les suggestions
-  const suggestionsStyle = {
-    position: 'absolute',
-    width: '100%',
-    maxHeight: '200px',
-    overflow: 'auto',
-    zIndex: 1000,
-    backgroundColor: 'white',
-    border: '1px solid #ced4da',
-    borderRadius: '0 0 4px 4px',
-    boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
-    marginTop: '-1px'
-  };
-
-  const suggestionItemStyle = {
-    padding: '10px 15px',
-    display: 'flex',
-    alignItems: 'center',
-    cursor: 'pointer',
-    transition: 'background-color 0.2s',
-    borderBottom: '1px solid #f0f0f0'
-  };
-
-  const suggestionIconStyle = {
-    marginRight: '10px',
-    color: '#007bff'
-  };
-
   return (
     <Card>
       <Card.Body>
@@ -303,7 +276,7 @@ const ParametresEntreprise = () => {
         {/* Options de recherche d'entreprise */}
         <div className="mb-4">
           <h5>Comment souhaitez-vous renseigner votre entreprise ?</h5>
-          <div className="d-flex gap-2 mb-3">
+          <div className={styles.searchTypeButtons}>
             <Button 
               variant={searchType === 'manual' ? 'primary' : 'outline-primary'} 
               onClick={() => setSearchType('manual')}
@@ -329,7 +302,7 @@ const ParametresEntreprise = () => {
           
           {/* Champ de recherche si mode nom ou SIRET */}
           {(searchType === 'name' || searchType === 'siret') && (
-            <div className="position-relative mb-4">
+            <div className={styles.searchBox}>
               <div className="input-group">
                 <span className="input-group-text">
                   <i className={`bi ${searchType === 'name' ? 'bi-building' : 'bi-upc'}`}></i>
@@ -360,33 +333,22 @@ const ParametresEntreprise = () => {
               
               {/* Résultats de la recherche d'entreprise */}
               {searchResults.length > 0 && (
-                <div ref={companySearchResultsRef} style={suggestionsStyle}>
+                <div ref={companySearchResultsRef} className={styles.suggestionsList}>
                   {searchResults.map((company, index) => (
                     <div
                       key={index}
-                      style={suggestionItemStyle}
-                      onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#f8f9fa'}
-                      onMouseOut={(e) => e.currentTarget.style.backgroundColor = ''}
+                      className={styles.suggestionItem}
                       onClick={() => handleSelectCompany(company)}
-                      className="company-suggestion-item"
                     >
-                      <div style={suggestionIconStyle}>
+                      <div className={styles.suggestionIcon}>
                         <i className="bi bi-building-fill"></i>
                       </div>
-                      <div style={{ flex: 1 }}>
-                        <div style={{ fontWeight: 'bold' }}>{company.nom}</div>
-                        <div style={{ 
-                          // Harmonisation : taille standardisée
-                          fontSize: 'var(--tc-font-size-sm)', 
-                          color: '#6c757d' 
-                        }}>
+                      <div className={styles.suggestionContent}>
+                        <div className={styles.suggestionTitle}>{company.nom}</div>
+                        <div className={styles.suggestionSubtitle}>
                           {company.adresse && `${company.adresse}, `}{company.codePostal} {company.ville}
                         </div>
-                        <div style={{ 
-                          // Harmonisation : taille standardisée
-                          fontSize: 'var(--tc-font-size-sm)', 
-                          color: '#6c757d' 
-                        }}>
+                        <div className={styles.suggestionDetails}>
                           {company.siren && `SIREN: ${company.siren} • `}
                           {company.siret && `SIRET: ${company.siret} • `}
                           {company.codeAPE && `APE: ${company.codeAPE} `}
@@ -406,7 +368,7 @@ const ParametresEntreprise = () => {
               
               {/* Message si aucun résultat */}
               {searchTerm.length >= 3 && searchResults.length === 0 && !isSearchingCompany && (
-                <div className="alert alert-info mt-2">
+                <div className={`alert alert-info ${styles.noResultsAlert}`}>
                   <i className="bi bi-info-circle-fill me-2"></i>
                   Aucune entreprise trouvée. Vérifiez votre saisie ou essayez avec des termes différents.
                 </div>
@@ -474,27 +436,20 @@ const ParametresEntreprise = () => {
                 
                 {/* Suggestions d'adresse (uniquement en mode manuel) */}
                 {searchType === 'manual' && addressSuggestions && addressSuggestions.length > 0 && (
-                  <div ref={suggestionsRef} style={suggestionsStyle}>
+                  <div ref={suggestionsRef} className={styles.suggestionsList}>
                     {addressSuggestions.map((suggestion, index) => (
                       <div
                         key={index}
-                        style={suggestionItemStyle}
-                        onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#f8f9fa'}
-                        onMouseOut={(e) => e.currentTarget.style.backgroundColor = ''}
+                        className={styles.suggestionItem}
                         onMouseDown={() => handleSelectAddress(suggestion)}
-                        className="address-suggestion-item"
                       >
-                        <div style={suggestionIconStyle}>
+                        <div className={styles.suggestionIcon}>
                           <i className="bi bi-geo-alt-fill"></i>
                         </div>
-                        <div>
-                          <div style={{ fontWeight: 'bold' }}>{suggestion.display_name}</div>
+                        <div className={styles.suggestionContent}>
+                          <div className={styles.suggestionTitle}>{suggestion.display_name}</div>
                           {suggestion.address && suggestion.address.postcode && suggestion.address.city && (
-                            <div style={{ 
-                              // Harmonisation : taille standardisée
-                              fontSize: "var(--tc-font-size-sm)", 
-                              color: '#6c757d' 
-                            }}>
+                            <div className={styles.suggestionSubtitle}>
                               {suggestion.address.postcode} {suggestion.address.city}
                             </div>
                           )}
@@ -506,7 +461,7 @@ const ParametresEntreprise = () => {
                 
                 {/* Indicateur de recherche d'adresse */}
                 {searchType === 'manual' && isSearchingAddress && (
-                  <div style={{ position: 'absolute', top: '100%', width: '100%', padding: '10px', backgroundColor: 'white', borderRadius: '0 0 4px 4px', border: '1px solid #ced4da', borderTop: 'none', boxShadow: '0 4px 8px rgba(0,0,0,0.1)', zIndex: 1000, display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <div className={styles.searchingIndicator}>
                     <div className="spinner-border spinner-border-sm text-primary" role="status">
                       <span className="visually-hidden">Recherche en cours...</span>
                     </div>

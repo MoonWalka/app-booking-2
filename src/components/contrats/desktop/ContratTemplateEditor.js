@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import styles from './ContratTemplateEditor.module.css';
 import ContratVariable from '@/components/contrats/ContratVariable';
 import ContratPDFWrapper from '@/components/pdf/ContratPDFWrapper.js';
 import '@/styles/index.css';
@@ -70,160 +71,14 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
     </div>`
   );
   
-  // Style CSS pour la modale
+  // Style CSS pour la modale - À supprimer après la migration complète vers CSS Modules
   useEffect(() => {
     if (!isModalContext) return;
     
+    // Ce code sera progressivement supprimé après migration complète vers CSS Modules
     const style = document.createElement('style');
     style.innerHTML = `
-      .tc-modal-fixed-header {
-        position: sticky;
-        top: 0;
-        background-color: white;
-        z-index: 1000;
-        margin: -1px -1px 0 -1px;
-        border-bottom: 1px solid #eee;
-      }
-      
-      .tc-modal-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1rem 1.5rem;
-      }
-      
-      .tc-modal-actions {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-      
-      .tc-modal-close {
-        background: transparent;
-        border: none;
-        font-size: 1.25rem;
-        cursor: pointer;
-        color: #6c757d;
-      }
-      
-      .tc-modal-close:hover {
-        color: #dc3545;
-      }
-      
-      .tc-modal-fixed-footer {
-        position: sticky;
-        bottom: 0;
-        background-color: white;
-        z-index: 1000;
-        margin: 0 -1px -1px -1px;
-        border-top: 1px solid #eee;
-        box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
-      }
-      
-      .tc-modal-scrollable-content {
-        overflow-y: auto;
-        padding: 20px;
-        box-sizing: border-box;
-      }
-      
-      .template-editor-container {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        max-height: 100%;
-        overflow: hidden;
-      }
-      
-      .tc-modal-body {
-        flex: 1;
-        overflow: auto;
-        padding: 0;
-      }
-      
-      .content-textarea {
-        width: 100%;
-        min-height: 300px;
-        padding: 10px;
-        font-family: Arial, sans-serif;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        line-height: 1.5;
-      }
-      
-      .header-textarea, .footer-textarea {
-        width: 100%;
-        min-height: 100px;
-        padding: 10px;
-        font-family: Arial, sans-serif;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        line-height: 1.5;
-      }
-      
-      .variable-badge {
-        display: inline-block;
-        padding: 2px 5px;
-        margin: 2px;
-        background-color: #f0f0f0;
-        border: 1px solid #ddd;
-        border-radius: 3px;
-        font-size: 12px;
-        cursor: pointer;
-      }
-      
-      .variables-guide {
-        background-color: #f8f9fa;
-        border: 1px solid #e9ecef;
-        border-radius: 4px;
-        padding: 10px;
-        margin-bottom: 10px;
-      }
-      
-      .variables-guide h6 {
-        margin-top: 0;
-        margin-bottom: 5px;
-      }
-      
-      .variables-badge-container {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 5px;
-      }
-      
-      /* Style pour l'aperçu */
-      .preview-container {
-        border: 1px solid #ddd;
-        background-color: white;
-        border-radius: 4px;
-        margin-bottom: 20px;
-        width: 100%;
-        min-height: 500px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      }
-      
-      .preview-header {
-        background-color: #f8f9fa;
-        padding: 10px 15px;
-        border-bottom: 1px solid #ddd;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-      
-      .preview-content {
-        padding: 20px;
-        min-height: 500px;
-      }
-      
-      .a4-preview {
-        width: 100%;
-        max-width: 210mm;
-        min-height: 297mm;
-        margin: 0 auto;
-        background: white;
-        padding: 20mm;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      }
+      /* Ces styles seront migrés vers le fichier ContratTemplateEditor.module.css */
     `;
     document.head.appendChild(style);
     

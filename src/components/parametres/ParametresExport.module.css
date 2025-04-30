@@ -1,0 +1,38 @@
+/* Styles pour le composant ParametresExport */
+
+.sectionTitle {
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.exportSection {
+  margin-bottom: 25px;
+}
+
+.exportButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.exportProgress {
+  margin-top: 15px;
+}
+
+.exportStatus {
+  margin-bottom: 5px;
+  color: #6c757d;
+}
+
+.backupSection {
+  margin-bottom: 25px;
+}
+
+.formActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}

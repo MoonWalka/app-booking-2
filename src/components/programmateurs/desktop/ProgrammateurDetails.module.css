@@ -1,201 +1,134 @@
-/* Styles pour les détails d'un programmateur en version desktop */
+/* Complément de styles pour ProgrammateurDetails */
 
-.detailsContainer {
-  padding: 1.5rem;
-  background-color: #fff;
-  border-radius: 0.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
 }
 
-.headerSection {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.cardWrapper {
   margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #f0f0f0;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  background-color: white;
+  overflow: hidden;
 }
 
-.headerTitle {
+.cardHeader {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  background-color: var(--tc-bg-light);
+  border-bottom: 1px solid var(--tc-border-light);
 }
 
-.headerIcon {
+.cardBody {
+  padding: 1.5rem;
+}
+
+.cardLabel {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: var(--tc-text-secondary);
+}
+
+.cardValueCode {
+  font-family: var(--tc-font-mono);
+  letter-spacing: 0.5px;
+}
+
+.formSection {
+  margin-bottom: 1.5rem;
+}
+
+.breadcrumb {
   display: flex;
-  justify-content: center;
   align-items: center;
-  width: 48px;
-  height: 48px;
-  background-color: var(--tc-primary-color-lightest, #e7f1ff);
-  color: var(--tc-primary-color, #007bff);
-  border-radius: 50%;
-  font-size: 1.5rem;
-}
-
-.headerActions {
-  display: flex;
   gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
 }
 
-.infoSection {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
+.breadcrumbItem {
+  color: var(--tc-text-secondary);
+  text-decoration: none;
 }
 
-.sectionTitle {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid #f0f0f0;
-  color: var(--tc-primary-color, #007bff);
+.breadcrumbItem:hover {
+  color: var(--tc-primary);
+  text-decoration: underline;
 }
 
-.contactInfo,
-.structureInfo {
-  margin-bottom: 1.5rem;
+.breadcrumbDivider {
+  color: var(--tc-text-tertiary);
 }
 
-.infoItem {
-  margin-bottom: 1rem;
+.listGroup {
   display: flex;
   flex-direction: column;
-}
-
-.infoLabel {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #6c757d;
-  margin-bottom: 0.25rem;
-}
-
-.infoValue {
-  font-size: 1rem;
-}
-
-.fieldEmpty {
-  color: #adb5bd;
-  font-style: italic;
-  font-size: 0.875rem;
-}
-
-.concertsSection {
-  margin-top: 2rem;
-}
-
-.concertsList {
-  margin-top: 1rem;
-}
-
-.concertItem {
-  display: flex;
-  align-items: center;
-  padding: 0.75rem;
-  border-radius: 0.375rem;
-  background-color: #f8f9fa;
-  margin-bottom: 0.5rem;
-  transition: background-color 0.2s ease;
-}
-
-.concertItem:hover {
-  background-color: #f0f0f0;
-}
-
-.concertDate {
-  min-width: 100px;
-  font-weight: 500;
-}
-
-.concertTitle {
-  flex-grow: 1;
-  margin-left: 1rem;
-}
-
-.concertActions {
-  display: flex;
   gap: 0.5rem;
 }
 
-.searchSection {
-  margin-top: 1rem;
-  position: relative;
+.listGroupItem {
+  padding: 1rem;
+  background-color: white;
+  border: 1px solid var(--tc-border-light);
+  border-radius: 0.375rem;
+  transition: box-shadow 0.2s ease;
 }
 
-.searchInput {
-  position: relative;
-  margin-bottom: 0.5rem;
+.listGroupItem:hover {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
 }
 
-.searchResults {
-  position: absolute;
+.dropdownMenu {
   width: 100%;
+  background-color: white;
+  border: 1px solid var(--tc-border-light);
+  border-radius: 0.375rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   max-height: 300px;
   overflow-y: auto;
-  background-color: #fff;
-  border: 1px solid #dee2e6;
-  border-radius: 0.25rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  z-index: 10;
+  margin-top: 0.25rem;
+  z-index: 1050;
 }
 
-.searchResultItem {
+.dropdownItem {
   padding: 0.75rem 1rem;
-  border-bottom: 1px solid #f0f0f0;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.searchResultItem:hover {
-  background-color: #f8f9fa;
-}
-
-.createConcertOption {
-  padding: 0.75rem 1rem;
-  text-align: center;
-  border-top: 1px solid #f0f0f0;
-  color: var(--tc-primary-color, #007bff);
-  font-weight: 500;
+  border-bottom: 1px solid var(--tc-border-light);
   cursor: pointer;
 }
 
-.createConcertOption:hover {
-  background-color: #f8f9fa;
+.dropdownItem:hover {
+  background-color: var(--tc-bg-light);
 }
 
-.editModeForm {
-  margin-top: 1rem;
-}
-
-.formGroup {
-  margin-bottom: 1rem;
-}
-
-.formActions {
+.dropdownItemText {
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
   gap: 0.5rem;
-  margin-top: 1.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid #f0f0f0;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .headerSection {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
-  
-  .headerActions {
-    align-self: flex-end;
-  }
-  
-  .infoSection {
-    grid-template-columns: 1fr;
-  }
+.optionalText {
+  font-size: 0.8rem;
+  color: var(--tc-text-tertiary);
+  font-style: italic;
+}
+
+.alertWrapper {
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 0.375rem;
+  border-left: 4px solid #4dabf7;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.alertIcon {
+  font-size: 1.25rem;
+  color: #4dabf7;
 }

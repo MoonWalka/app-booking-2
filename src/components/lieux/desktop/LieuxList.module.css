@@ -1,0 +1,167 @@
+.lieuxContainer {
+  background-color: var(--bg-color-primary);
+  border-radius: 10px;
+  padding: 1.5rem;
+  width: 100%;
+}
+
+.headerContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.addButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+}
+
+.searchFilterContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.searchBar {
+  flex-grow: 1;
+  position: relative;
+}
+
+.searchInput {
+  padding-right: 40px;
+  background-color: var(--input-bg);
+  border: 1px solid var(--border-color);
+}
+
+.searchInput:focus {
+  background-color: var(--input-bg-focus);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem rgba(var(--primary-rgb), 0.25);
+}
+
+.clearSearch {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  border: none;
+  background: transparent;
+  padding: 0 10px;
+  cursor: pointer;
+}
+
+.resultsCount {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+  padding-left: 0.5rem;
+}
+
+.modernFilterBtn,
+.modernSortBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.modernTableContainer {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  margin-top: 1rem;
+}
+
+.modernTable {
+  width: 100%;
+  margin-bottom: 0;
+}
+
+.modernTable th {
+  background-color: var(--table-header-bg);
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.clickableRow {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.clickableRow:hover {
+  background-color: var(--hover-bg);
+}
+
+.tableRowAnimate {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0.4; }
+  to { opacity: 1; }
+}
+
+.typeBadge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: white;
+}
+
+.villeBadge {
+  font-weight: 500;
+}
+
+.jaugeBadge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: white;
+}
+
+.jaugeType {
+  opacity: 0.8;
+  font-size: 0.7rem;
+}
+
+.concertCount {
+  display: inline-flex;
+  align-items: center;
+  font-weight: 500;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.modernBtn {
+  padding: 0.3rem 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  border-radius: 4px;
+}
+
+.modernAlert {
+  background-color: var(--alert-info-bg);
+  border-left: 4px solid var(--alert-info-border);
+  padding: 1rem;
+  margin-top: 1rem;
+  border-radius: 4px;
+}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Card, Alert, Row, Col, ProgressBar } from 'react-bootstrap';
+import styles from './ParametresExport.module.css';
 import { useParametres } from '@/context/ParametresContext';
 import { db } from '@/firebaseInit';
 import { collection, query, getDocs } from 'firebase/firestore';
@@ -115,8 +116,8 @@ const ParametresExport = () => {
         {error && <Alert variant="danger">{error}</Alert>}
         {success && <Alert variant="success">{success}</Alert>}
         
-        <div className="mb-4">
-          <h5>Export des données</h5>
+        <div className={styles.exportSection}>
+          <h5 className={styles.sectionTitle}>Export des données</h5>
           <Form>
             <Form.Group className="mb-3">
               <Form.Label>Format d'export</Form.Label>
@@ -131,43 +132,38 @@ const ParametresExport = () => {
               </Form.Select>
             </Form.Group>
 
-            <Row className="mb-3">
-              <Col>
-                <Button 
-                  variant="outline-primary" 
-                  onClick={() => exportData('concerts')}
-                  className="me-2 mb-2"
-                >
-                  Exporter les concerts
-                </Button>
-                <Button 
-                  variant="outline-primary"
-                  onClick={() => exportData('contrats')}
-                  className="me-2 mb-2"
-                >
-                  Exporter les contrats
-                </Button>
-                <Button 
-                  variant="outline-primary"
-                  onClick={() => exportData('artistes')}
-                  className="me-2 mb-2"
-                >
-                  Exporter les artistes
-                </Button>
-              </Col>
-            </Row>
+            <div className={styles.exportButtons}>
+              <Button 
+                variant="outline-primary" 
+                onClick={() => exportData('concerts')}
+              >
+                Exporter les concerts
+              </Button>
+              <Button 
+                variant="outline-primary"
+                onClick={() => exportData('contrats')}
+              >
+                Exporter les contrats
+              </Button>
+              <Button 
+                variant="outline-primary"
+                onClick={() => exportData('artistes')}
+              >
+                Exporter les artistes
+              </Button>
+            </div>
 
             {exportStatus && (
-              <div className="mb-3">
-                <small className="text-muted">{exportStatus}</small>
+              <div className={styles.exportProgress}>
+                <small className={styles.exportStatus}>{exportStatus}</small>
                 <ProgressBar now={exportProgress} label={`${exportProgress}%`} />
               </div>
             )}
           </Form>
         </div>
 
-        <div className="mb-4">
-          <h5>Sauvegarde automatique</h5>
+        <div className={styles.backupSection}>
+          <h5 className={styles.sectionTitle}>Sauvegarde automatique</h5>
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3">
               <Form.Check 
@@ -195,7 +191,7 @@ const ParametresExport = () => {
               </Form.Select>
             </Form.Group>
 
-            <div className="d-flex justify-content-between align-items-center">
+            <div className={styles.formActions}>
               <Button 
                 variant="warning" 
                 type="button"

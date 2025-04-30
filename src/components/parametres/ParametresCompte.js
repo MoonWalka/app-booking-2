@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Button, Card, Alert } from 'react-bootstrap';
+import styles from './ParametresCompte.module.css';
 import { useAuth } from '@/context/AuthContext';
 import { updateEmail, updatePassword } from 'firebase/auth';
 
@@ -72,12 +73,12 @@ const ParametresCompte = () => {
   return (
     <Card>
       <Card.Body>
-        <h3 className="mb-3">Compte utilisateur</h3>
-        {error && <Alert variant="danger">{error}</Alert>}
-        {success && <Alert variant="success">{success}</Alert>}
+        <h3 className={styles.formTitle}>Compte utilisateur</h3>
+        {error && <Alert variant="danger" className={styles.errorAlert}>{error}</Alert>}
+        {success && <Alert variant="success" className={styles.successAlert}>{success}</Alert>}
         
         <Form onSubmit={handleSubmit}>
-          <Form.Group className="mb-3">
+          <Form.Group className={styles.formSection}>
             <Form.Label>Email</Form.Label>
             <Form.Control
               type="email"
@@ -88,7 +89,7 @@ const ParametresCompte = () => {
             />
           </Form.Group>
 
-          <Form.Group className="mb-3">
+          <Form.Group className={styles.formSection}>
             <Form.Label>Mot de passe actuel</Form.Label>
             <Form.Control
               type="password"
@@ -99,20 +100,22 @@ const ParametresCompte = () => {
             />
           </Form.Group>
 
-          <Form.Group className="mb-3">
+          <Form.Group className={styles.formSection}>
             <Form.Label>Nouveau mot de passe</Form.Label>
-            <Form.Control
-              type="password"
-              name="newPassword"
-              value={formData.newPassword}
-              onChange={handleChange}
-            />
-            <Form.Text className="text-muted">
-              Laissez vide si vous ne souhaitez pas changer de mot de passe
-            </Form.Text>
+            <div className={styles.passwordField}>
+              <Form.Control
+                type="password"
+                name="newPassword"
+                value={formData.newPassword}
+                onChange={handleChange}
+              />
+              <Form.Text className={styles.passwordHint}>
+                Laissez vide si vous ne souhaitez pas changer de mot de passe
+              </Form.Text>
+            </div>
           </Form.Group>
 
-          <Form.Group className="mb-3">
+          <Form.Group className={styles.formSection}>
             <Form.Label>Confirmer le nouveau mot de passe</Form.Label>
             <Form.Control
               type="password"
@@ -123,7 +126,7 @@ const ParametresCompte = () => {
             />
           </Form.Group>
 
-          <div className="d-flex justify-content-between align-items-center">
+          <div className={styles.formActions}>
             <Button
               variant="danger"
               type="button"

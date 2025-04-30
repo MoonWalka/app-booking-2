@@ -1,122 +1,88 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
   collection, 
   query, 
-  orderBy, 
-  limit, 
-  getDocs, 
-  startAfter,
   where, 
-  deleteDoc, 
+  orderBy, 
+  startAfter, 
+  limit, 
+  getDocs,
+  deleteDoc,
   doc 
 } from 'firebase/firestore';
 import { db } from '@/firebaseInit';
-import { Button, Form, InputGroup } from 'react-bootstrap';
+import { Modal, Button, Form, InputGroup } from 'react-bootstrap';
+import styles from './StructuresList.module.css';
 
 const StructuresList = () => {
+  const navigate = useNavigate();
   const [structures, setStructures] = useState([]);
-  const [filteredStructures, setFilteredStructures] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [typeFilter, setTypeFilter] = useState('tous');
-  const [sortBy, setSortBy] = useState('nom');
-  const [sortDirection, setSortDirection] = useState('asc');
-  const [stats, setStats] = useState({
-    total: 0,
-    avecLiaisonProg: 0,
-    sansProg: 0
-  });
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [error, setError] = useState(null);
   const [lastVisible, setLastVisible] = useState(null);
   const [hasMore, setHasMore] = useState(true);
-  const searchInputRef = useRef(null);
-  const navigate = useNavigate();
-  const pageSize = 20;
+  const [searchTerm, setSearchTerm] = useState('');
+  const [typeFilter, setTypeFilter] = useState('');
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [structureToDelete, setStructureToDelete] = useState(null);
+  const [deleting, setDeleting] = useState(false);
+  const [sortBy, setSortBy] = useState('nom');
+  const [sortDirection, setSortDirection] = useState('asc');
 
   // Fonction pour charger les structures
-  const fetchStructures = async (reset = true) => {
-    if (reset) {
-      setLoading(true);
-      setLastVisible(null);
-    }
-    
+  const fetchStructures = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+
     try {
-      let q;
-      if (reset || !lastVisible) {
-        // Première charge ou réinitialisation
-        q = query(collection(db, 'structures'), orderBy(sortBy, sortDirection), limit(pageSize));
-      } else {
-        // Chargement de la page suivante
+      let q = query(collection(db, 'structures'), orderBy('nom'), limit(20));
+
+      if (lastVisible) {
         q = query(
           collection(db, 'structures'),
-          orderBy(sortBy, sortDirection),
+          orderBy('nom'),
           startAfter(lastVisible),
-          limit(pageSize)
+          limit(20)
         );
       }
-      
+
       const structuresSnapshot = await getDocs(q);
-      
-      if (structuresSnapshot.empty && reset) {
-        setStructures([]);
-        setFilteredStructures([]);
+
+      if (structuresSnapshot.empty) {
         setHasMore(false);
         setLoading(false);
         return;
       }
-      
+
       const structuresData = structuresSnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       }));
-      
-      // Mise à jour de l'état
-      if (reset) {
-        setStructures(structuresData);
-      } else {
-        setStructures(prev => [...prev, ...structuresData]);
-      }
-      
-      // Mise à jour du dernier document visible pour la pagination
+
+      setStructures(prev => [...prev, ...structuresData]);
+
       const lastDoc = structuresSnapshot.docs[structuresSnapshot.docs.length - 1];
       setLastVisible(lastDoc);
-      setHasMore(structuresSnapshot.docs.length === pageSize);
-      
-      // Calculer les statistiques
-      if (reset) {
-        const statsSnapshot = await getDocs(collection(db, 'structures'));
-        const allStructures = statsSnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
-        
-        setStats({
-          total: allStructures.length,
-          avecLiaisonProg: allStructures.filter(s => s.programmateursAssocies?.length > 0).length,
-          sansProg: allStructures.filter(s => !s.programmateursAssocies || s.programmateursAssocies.length === 0).length
-        });
-      }
+      setHasMore(structuresSnapshot.docs.length === 20);
     } catch (error) {
       console.error('Erreur lors du chargement des structures:', error);
+      setError('Une erreur est survenue lors du chargement des structures.');
     } finally {
       setLoading(false);
     }
-  };
+  }, [lastVisible]);
 
   // Chargement initial
   useEffect(() => {
     fetchStructures();
-  }, [sortBy, sortDirection]);
-
-  // Appliquer les filtres quand les structures ou les filtres changent
-  useEffect(() => {
-    filterStructures();
-  }, [structures, searchTerm, typeFilter]);
+  }, [fetchStructures]);
 
   // Fonction pour filtrer les structures
   const filterStructures = () => {
     let result = [...structures];
-    
+
     // Filtre de recherche
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
@@ -127,44 +93,42 @@ const StructuresList = () => {
         structure.siret?.includes(term)
       );
     }
-    
+
     // Filtre par type
-    if (typeFilter !== 'tous') {
+    if (typeFilter) {
       result = result.filter(structure => structure.type === typeFilter);
     }
-    
-    setFilteredStructures(result);
+
+    return result;
   };
 
   // Fonction pour charger plus de structures
-  const loadMore = () => {
-    if (hasMore && !loading) {
-      fetchStructures(false);
+  const loadMoreStructures = () => {
+    if (hasMore && !loadingMore) {
+      setLoadingMore(true);
+      fetchStructures();
     }
   };
 
   // Fonction pour gérer la suppression d'une structure
-  const handleDelete = async (id) => {
-    if (window.confirm('Êtes-vous sûr de vouloir supprimer cette structure ?')) {
-      try {
-        await deleteDoc(doc(db, 'structures', id));
-        setStructures(structures.filter(structure => structure.id !== id));
-        setFilteredStructures(filteredStructures.filter(structure => structure.id !== id));
-      } catch (error) {
-        console.error('Erreur lors de la suppression de la structure:', error);
-        alert('Une erreur est survenue lors de la suppression de la structure');
-      }
+  const handleDeleteClick = (structure) => {
+    setShowDeleteModal(true);
+    setStructureToDelete(structure);
+  };
+
+  const handleDelete = async () => {
+    setDeleting(true);
+    setShowDeleteModal(false);
+
+    try {
+      await deleteDoc(doc(db, 'structures', structureToDelete.id));
+      setStructures(structures.filter(structure => structure.id !== structureToDelete.id));
+    } catch (error) {
+      console.error('Erreur lors de la suppression de la structure:', error);
+      alert('Une erreur est survenue lors de la suppression de la structure');
+    } finally {
+      setDeleting(false);
     }
-  };
-
-  // Fonction pour naviguer vers la fiche de la structure
-  const handleRowClick = (structureId) => {
-    navigate(`/structures/${structureId}`);
-  };
-
-  // Gestionnaire pour empêcher la propagation des clics sur les liens et boutons dans les lignes
-  const handleActionClick = (e) => {
-    e.stopPropagation();
   };
 
   // Fonction pour trier les données
@@ -178,56 +142,48 @@ const StructuresList = () => {
   };
 
   // Rendu des flèches de tri
-  const renderSortArrow = (column) => {
+  const renderSortIcon = (column) => {
     if (sortBy !== column) return null;
-    return sortDirection === 'asc' ? ' ▲' : ' ▼';
+    return sortDirection === 'asc' ? <i className="bi bi-chevron-up"></i> : <i className="bi bi-chevron-down"></i>;
   };
 
   return (
-    <div className="card">
-      <div className="card-header d-flex justify-content-between align-items-center">
-        <h2 className="mb-0">Structures</h2>
-        <div>
-          <Link to="/structures/nouveau" className="tc-btn-primary">
-            <i className="bi bi-plus-circle me-2"></i>
-            Ajouter une structure
-          </Link>
-        </div>
+    <div className={styles.listContainer}>
+      <div className={styles.header}>
+        <h2 className={styles.title}>Structures</h2>
+        <Link to="/structures/new" className={styles.addButton}>
+          <i className="bi bi-plus-circle"></i>
+          Ajouter une structure
+        </Link>
       </div>
 
-      <div className="card-body">
-        <div className="d-flex flex-wrap gap-3 mb-4">
-          <InputGroup className="flex-grow-1" style={{ minWidth: '250px' }}>
+      <div className={styles.content}>
+        <div className={styles.searchBar}>
+          <InputGroup className={styles.searchInput}>
             <InputGroup.Text>
               <i className="bi bi-search"></i>
             </InputGroup.Text>
             <Form.Control
-              ref={searchInputRef}
-              type="text"
-              placeholder="Rechercher par nom, raison sociale, ville ou SIRET..."
+              placeholder="Rechercher une structure..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
             {searchTerm && (
               <Button 
                 variant="outline-secondary" 
-                onClick={() => {
-                  setSearchTerm('');
-                  searchInputRef.current.focus();
-                }}
+                onClick={() => setSearchTerm('')}
               >
-                <i className="bi bi-x-lg"></i>
+                <i className="bi bi-x"></i>
               </Button>
             )}
           </InputGroup>
 
-          <Form.Select
-            className="w-auto"
-            style={{ minWidth: '200px' }}
+          <Form.Select 
+            className={styles.typeFilter}
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
           >
-            <option value="tous">Tous les types</option>
+            <option value="">Tous les types</option>
             <option value="association">Association</option>
             <option value="entreprise">Entreprise</option>
             <option value="administration">Administration</option>
@@ -236,165 +192,223 @@ const StructuresList = () => {
           </Form.Select>
         </div>
 
-        {searchTerm && (
-          <p className="results-count">
-            {filteredStructures.length} résultat{filteredStructures.length !== 1 ? 's' : ''} trouvé{filteredStructures.length !== 1 ? 's' : ''}
-          </p>
-        )}
+        <div className={styles.resultsCount}>
+          {structures.length} structure(s) trouvée(s)
+        </div>
 
-        {filteredStructures.length === 0 ? (
-          <div className="alert alert-info modern-alert">
-            {searchTerm || typeFilter !== 'tous' ? (
-              <div className="d-flex align-items-center">
-                <i className="bi bi-info-circle me-3"></i>
-                <p className="mb-0">Aucune structure ne correspond à votre recherche.</p>
-              </div>
+        {loading ? (
+          <div className="text-center p-5">
+            <div className={styles.spinner} role="status">
+              <span className="visually-hidden">Chargement...</span>
+            </div>
+          </div>
+        ) : error ? (
+          <div className="alert alert-danger">
+            <i className="bi bi-exclamation-triangle me-2"></i>
+            {error}
+          </div>
+        ) : structures.length === 0 ? (
+          <div className={styles.emptyState}>
+            <i className={`bi bi-building ${styles.emptyStateIcon}`}></i>
+            <p className={styles.emptyStateText}>
+              {searchTerm || typeFilter 
+                ? "Aucune structure ne correspond à votre recherche"
+                : "Aucune structure n'a été créée pour le moment"}
+            </p>
+            {searchTerm || typeFilter ? (
+              <Button variant="outline-secondary" onClick={() => {
+                setSearchTerm('');
+                setTypeFilter('');
+              }}>
+                Réinitialiser les filtres
+              </Button>
             ) : (
-              <div className="d-flex align-items-center">
-                <i className="bi bi-info-circle me-3"></i>
-                <p className="mb-0">Aucune structure n'a été ajoutée. Cliquez sur "Ajouter une structure" pour commencer.</p>
-              </div>
+              <Link to="/structures/new" className="btn btn-primary">
+                <i className="bi bi-plus-circle me-2"></i>
+                Créer ma première structure
+              </Link>
             )}
           </div>
         ) : (
-          <div className="table-responsive">
-            <table className="data-table">
+          <>
+            <table className={styles.dataTable}>
               <thead>
                 <tr>
-                  <th onClick={() => handleSort('nom')} style={{ cursor: 'pointer' }}>
-                    Nom {renderSortArrow('nom')}
+                  <th className={styles.sortable} onClick={() => handleSort('nom')}>
+                    Nom
+                    {renderSortIcon('nom')}
                   </th>
-                  <th onClick={() => handleSort('type')} style={{ cursor: 'pointer' }}>
-                    Type {renderSortArrow('type')}
+                  <th className={styles.sortable} onClick={() => handleSort('type')}>
+                    Type
+                    {renderSortIcon('type')}
                   </th>
-                  <th onClick={() => handleSort('ville')} style={{ cursor: 'pointer' }}>
-                    Ville {renderSortArrow('ville')}
+                  <th>Ville</th>
+                  <th>Contact</th>
+                  <th className={styles.sortable} onClick={() => handleSort('updatedAt')}>
+                    Dernière modification
+                    {renderSortIcon('updatedAt')}
                   </th>
-                  <th>SIRET</th>
-                  <th>Programmateurs</th>
-                  <th style={{ width: '120px', textAlign: 'right' }}>Actions</th>
+                  <th style={{ width: '100px' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {filteredStructures.map(structure => (
-                  <tr key={structure.id} onClick={() => handleRowClick(structure.id)} style={{ cursor: 'pointer' }}>
+                {structures.map((structure) => (
+                  <tr 
+                    key={structure.id} 
+                    className={styles.tableRow}
+                    onClick={() => navigate(`/structures/${structure.id}`)}
+                  >
                     <td>
-                      <div className="d-flex align-items-center">
-                        <i className="bi bi-building me-2 text-muted"></i>
-                        <span>{structure.nom || structure.raisonSociale}</span>
+                      <div className={styles.iconText}>
+                        <i className={`bi bi-building ${styles.rowIcon}`}></i>
+                        <span>{structure.nom || structure.raisonSociale || <span className={styles.muted}>Sans nom</span>}</span>
                       </div>
                     </td>
                     <td>
                       {structure.type ? (
-                        <span className={`badge bg-${getTypeColor(structure.type)}`}>
+                        <span className={`${styles.badge} ${getBadgeClass(structure.type)}`}>
                           {getTypeLabel(structure.type)}
                         </span>
                       ) : (
-                        <span className="text-muted">-</span>
+                        <span className={styles.muted}>Non spécifié</span>
                       )}
                     </td>
                     <td>
                       {structure.ville ? (
-                        <div className="d-flex align-items-center">
-                          <i className="bi bi-geo-alt text-muted me-2"></i>
-                          {structure.ville}
+                        <div className={styles.iconText}>
+                          <i className={`bi bi-geo-alt ${styles.rowIcon}`}></i>
+                          <span>{structure.ville}</span>
                         </div>
                       ) : (
-                        <span className="text-muted">-</span>
+                        <span className={styles.muted}>Non spécifié</span>
                       )}
                     </td>
                     <td>
-                      {structure.siret || <span className="text-muted">-</span>}
-                    </td>
-                    <td>
-                      {structure.programmateursAssocies?.length > 0 ? (
-                        <div className="d-flex align-items-center">
-                          <i className="bi bi-person-badge text-muted me-2"></i>
-                          {structure.programmateursAssocies.length}
+                      {structure.contact?.nom ? (
+                        <div className={styles.iconText}>
+                          <i className={`bi bi-person ${styles.rowIcon}`}></i>
+                          <span>{structure.contact.nom}</span>
                         </div>
                       ) : (
-                        <span className="text-muted">0</span>
+                        <span className={styles.muted}>Aucun contact</span>
                       )}
                     </td>
-                    <td style={{ textAlign: 'right' }}>
-                      <Link 
-                        to={`/structures/${structure.id}`} 
-                        className="btn btn-sm btn-outline-primary me-1"
-                        onClick={handleActionClick}
-                      >
-                        <i className="bi bi-eye"></i>
-                      </Link>
-                      <Link 
-                        to={`/structures/${structure.id}/edit`} 
-                        className="btn btn-sm btn-outline-secondary me-1"
-                        onClick={handleActionClick}
-                      >
-                        <i className="bi bi-pencil"></i>
-                      </Link>
-                      <button 
-                        className="btn btn-sm btn-outline-danger"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDelete(structure.id);
-                        }}
-                      >
-                        <i className="bi bi-trash"></i>
-                      </button>
+                    <td>
+                      {structure.updatedAt ? (
+                        formatDate(structure.updatedAt.toDate())
+                      ) : (
+                        <span className={styles.muted}>Inconnue</span>
+                      )}
+                    </td>
+                    <td onClick={(e) => e.stopPropagation()}>
+                      <div className={styles.actionButtons}>
+                        <button 
+                          className={`${styles.actionButton} ${styles.actionButtonPrimary}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/structures/${structure.id}/edit`);
+                          }}
+                          title="Modifier"
+                        >
+                          <i className="bi bi-pencil"></i>
+                        </button>
+                        <button 
+                          className={`${styles.actionButton} ${styles.actionButtonDanger}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteClick(structure);
+                          }}
+                          title="Supprimer"
+                        >
+                          <i className="bi bi-trash"></i>
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-          </div>
-        )}
 
-        {hasMore && !loading && filteredStructures.length > 0 && (
-          <div className="text-center mt-3">
-            <button 
-              className="tc-btn-outline-primary" 
-              onClick={loadMore}
-              disabled={loading}
-            >
-              {loading ? (
-                <>
-                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                  Chargement...
-                </>
-              ) : (
-                <>
-                  <i className="bi bi-arrow-down-circle me-2"></i>
-                  Afficher plus
-                </>
-              )}
-            </button>
-          </div>
-        )}
-
-        {loading && !hasMore && (
-          <div className="text-center mt-3">
-            <div className="spinner-border" role="status">
-              <span className="visually-hidden">Chargement...</span>
-            </div>
-          </div>
+            {hasMore && (
+              <div className="text-center mt-4">
+                <button 
+                  className={styles.loadMoreButton}
+                  onClick={loadMoreStructures}
+                  disabled={loadingMore}
+                >
+                  {loadingMore ? (
+                    <>
+                      <span className={styles.spinner} role="status" aria-hidden="true"></span>
+                      Chargement...
+                    </>
+                  ) : (
+                    <>
+                      <i className="bi bi-arrow-down-circle"></i>
+                      Charger plus
+                    </>
+                  )}
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
+
+      {/* Modal de confirmation de suppression */}
+      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirmer la suppression</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Êtes-vous sûr de vouloir supprimer cette structure ?</p>
+          {structureToDelete?.programmateursAssocies?.length > 0 && (
+            <div className="alert alert-warning">
+              <i className="bi bi-exclamation-triangle me-2"></i>
+              Cette structure est associée à {structureToDelete.programmateursAssocies.length} programmateur(s).
+              La suppression retirera ces associations.
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+            Annuler
+          </Button>
+          <Button 
+            variant="danger" 
+            onClick={handleDelete}
+            disabled={deleting}
+          >
+            {deleting ? (
+              <>
+                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                Suppression...
+              </>
+            ) : (
+              <>
+                <i className="bi bi-trash me-2"></i>
+                Supprimer
+              </>
+            )}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
 
-// Fonction pour obtenir la couleur du badge selon le type de structure
-const getTypeColor = (type) => {
+// Fonction pour obtenir la classe du badge selon le type de structure
+const getBadgeClass = (type) => {
   switch (type) {
     case 'association':
-      return 'success';
+      return styles.badgeSuccess;
     case 'entreprise':
-      return 'primary';
+      return styles.badgePrimary;
     case 'administration':
-      return 'info';
+      return styles.badgeInfo;
     case 'collectivite':
-      return 'warning';
+      return styles.badgeWarning;
     default:
-      return 'secondary';
+      return styles.badgeSecondary;
   }
 };
 
@@ -412,6 +426,14 @@ const getTypeLabel = (type) => {
     default:
       return 'Autre';
   }
+};
+
+// Fonction pour formater les dates
+const formatDate = (date) => {
+  if (!date) return '';
+  
+  const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+  return date.toLocaleDateString('fr-FR', options);
 };
 
 export default StructuresList;

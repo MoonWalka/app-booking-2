@@ -1,0 +1,38 @@
+/* Styles pour le composant ParametresApparence */
+
+.colorPreviewContainer {
+  display: flex;
+  align-items: center;
+}
+
+.colorPreview {
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  margin-right: 10px;
+  border: 1px solid #dee2e6;
+}
+
+.colorInput {
+  width: 120px;
+}
+
+.fontSizeContainer {
+  display: flex;
+  align-items: center;
+}
+
+.fontSizeSlider {
+  margin-right: 10px;
+}
+
+.actionButtons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.resetButtonsGroup {
+  display: flex;
+  gap: 10px;
+}

@@ -16,7 +16,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../../../firebaseInit';
 import { Badge } from 'react-bootstrap';
-import '@styles/index.css';
+import styles from './LieuDetails.module.css';
 import { handleDelete } from './handlers/deleteHandler';
 import Spinner from '@/components/common/Spinner';
 import { useLocationIQ } from '@/hooks/useLocationIQ';
@@ -49,7 +49,7 @@ const ConcertItem = ({ concertId, lieuId, onConcertRemoved }) => {
 
   if (loading) {
     return (
-      <div className="concert-item loading">
+      <div className={`${styles.concertItem} loading`}>
         <div className="spinner-border spinner-border-sm" role="status">
           <span className="visually-hidden">Chargement...</span>
         </div>
@@ -59,7 +59,7 @@ const ConcertItem = ({ concertId, lieuId, onConcertRemoved }) => {
 
   if (!concert) {
     return (
-      <div className="concert-item error">
+      <div className={`${styles.concertItem} error`}>
         <div className="alert alert-warning mb-0">
           <i className="bi bi-exclamation-triangle me-2"></i>
           Ce concert n'existe plus ou n'a pas pu être chargé.
@@ -83,19 +83,19 @@ const ConcertItem = ({ concertId, lieuId, onConcertRemoved }) => {
   };
 
   return (
-    <div className="concert-item">
-      <div className="concert-details">
-        <div className="concert-header">
-          <Link to={`/concerts/${concert.id}`} className="concert-title" onClick={(e) => e.stopPropagation()}>
+    <div className={styles.concertItem}>
+      <div className={styles.concertDetails}>
+        <div className={styles.concertHeader}>
+          <Link to={`/concerts/${concert.id}`} className={styles.concertTitle} onClick={(e) => e.stopPropagation()}>
             {concert.titre || 'Concert sans titre'}
           </Link>
-          <span className="concert-date">
+          <span className={styles.concertDate}>
             <i className="bi bi-calendar3 me-1"></i>
             {formatDate(concert.date)}
           </span>
         </div>
         {concert.artistes && concert.artistes.length > 0 && (
-          <div className="concert-artistes">
+          <div className={styles.concertArtistes}>
             <i className="bi bi-music-note-beamed me-1"></i>
             {concert.artistes.map(artiste => artiste.nom).join(', ')}
           </div>
@@ -491,7 +491,7 @@ const LieuDetails = () => {
         variant = 'secondary';
     }
     
-    return <Badge bg={variant} className="type-badge">{type}</Badge>;
+    return <Badge bg={variant} className={styles.typeBadge}>{type}</Badge>;
   };
 
   // Effet pour la recherche d'adresse
@@ -619,7 +619,7 @@ const LieuDetails = () => {
 
   if (!lieu) {
     return (
-      <div className="lieu-details-container">
+      <div className={styles.lieuDetailsContainer}>
         <div className="alert alert-danger modern-alert">
           <i className="bi bi-exclamation-triangle me-2"></i>
           Lieu non trouvé
@@ -635,28 +635,27 @@ const LieuDetails = () => {
   }
 
   return (
-    <div className="lieu-details-container">
-      <div className="details-header-container">
-        <div className="title-container">
-          <div className="breadcrumb-container mb-2">
+    <div className={styles.lieuDetailsContainer}>
+      <div className={styles.detailsHeaderContainer}>
+        <div className={styles.titleContainer}>
+          <div className={styles.breadcrumbContainer}>
             {/* Correction : ajout accessibilité (role/button + tabIndex) */}
-            <span className="breadcrumb-item" onClick={() => navigate('/lieux')} role="button" tabIndex={0}>Lieux</span>
+            <span className={styles.breadcrumbItem} onClick={() => navigate('/lieux')} role="button" tabIndex={0}>Lieux</span>
             <i className="bi bi-chevron-right"></i>
-            <span className="breadcrumb-item active">{lieu.nom}</span>
+            <span className={`${styles.breadcrumbItem} ${styles.active}`}>{lieu.nom}</span>
           </div>
-          <h2 className="modern-title">
+          <h2 className={styles.modernTitle}>
             {lieu.nom}
             {lieu.type && <TypeBadge type={lieu.type} />}
           </h2>
         </div>
-        <div className="action-buttons">
+        <div className={styles.actionButtons}>
           {isEditing ? (
             <>
               {/* Boutons en mode édition */}
               <button 
                 onClick={handleSubmit} 
-                // Harmonisation : ajout classe selon l'action
-                className="btn btn-success action-btn"
+                className={`btn btn-success ${styles.actionBtn}`}
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
@@ -674,8 +673,7 @@ const LieuDetails = () => {
               
               <button 
                 onClick={toggleEditMode} 
-                // Harmonisation : ajout classe selon l'action
-                className="btn btn-danger action-btn"
+                className={`btn btn-danger ${styles.actionBtn}`}
               >
                 <i className="bi bi-x-circle"></i>
                 <span className="btn-text">Annuler</span>
@@ -683,8 +681,7 @@ const LieuDetails = () => {
               
               <button 
                 onClick={handleDelete} 
-                // Harmonisation : ajout classe selon l'action
-                className="btn btn-danger action-btn"
+                className={`btn btn-danger ${styles.actionBtn}`}
               >
                 <i className="bi bi-trash"></i>
                 <span className="btn-text">Supprimer</span>
@@ -695,8 +692,7 @@ const LieuDetails = () => {
               {/* Boutons en mode affichage */}
               <button 
                 onClick={() => navigate('/lieux')} 
-                // Harmonisation : ajout classe selon l'action
-                className="btn btn-secondary action-btn"
+                className={`btn btn-secondary ${styles.actionBtn}`}
               >
                 <i className="bi bi-arrow-left"></i>
                 <span className="btn-text">Retour</span>
@@ -704,7 +700,7 @@ const LieuDetails = () => {
               
               <button 
                 onClick={toggleEditMode} 
-                className="btn btn-outline-primary action-btn"
+                className={`btn btn-outline-primary ${styles.actionBtn}`}
               >
                 <i className="bi bi-pencil"></i>
                 <span className="btn-text">Modifier</span>
@@ -714,16 +710,16 @@ const LieuDetails = () => {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="modern-form">
+      <form onSubmit={handleSubmit} className={styles.modernForm}>
         {/* Première carte - Informations principales */}
-        <div className="form-card">
-          <div className="card-header">
+        <div className={styles.formCard}>
+          <div className={styles.cardHeader}>
             <i className="bi bi-building"></i>
             <h3>Informations principales</h3>
           </div>
-          <div className="card-body">
-            <div className="form-group">
-              <label htmlFor="nom" className="form-label">Nom du lieu {isEditing && <span className="required">*</span>}</label>
+          <div className={styles.cardBody}>
+            <div className={styles.formGroup}>
+              <label htmlFor="nom" className={styles.formLabel}>Nom du lieu {isEditing && <span className={styles.required}>*</span>}</label>
               {isEditing ? (
                 <input
                   type="text"
@@ -736,12 +732,12 @@ const LieuDetails = () => {
                   placeholder="Ex: Le Café des Artistes"
                 />
               ) : (
-                <div className="form-control-static">{lieu.nom}</div>
+                <div className={styles.formControlStatic}>{lieu.nom}</div>
               )}
             </div>
             
-            <div className="form-group">
-              <label htmlFor="type" className="form-label">Type de lieu</label>
+            <div className={styles.formGroup}>
+              <label htmlFor="type" className={styles.formLabel}>Type de lieu</label>
               {isEditing ? (
                 <select
                   className="form-select"
@@ -758,14 +754,14 @@ const LieuDetails = () => {
                   <option value="autre">Autre</option>
                 </select>
               ) : (
-                <div className="form-control-static">
-                  {lieu.type ? <TypeBadge type={lieu.type} /> : <span className="text-empty">Non spécifié</span>}
+                <div className={styles.formControlStatic}>
+                  {lieu.type ? <TypeBadge type={lieu.type} /> : <span className={styles.textEmpty}>Non spécifié</span>}
                 </div>
               )}
             </div>
             
-            <div className="form-group">
-              <label htmlFor="capacite" className="form-label">Capacité</label>
+            <div className={styles.formGroup}>
+              <label htmlFor="capacite" className={styles.formLabel}>Capacité</label>
               {isEditing ? (
                 <>
                   <input
@@ -780,8 +776,8 @@ const LieuDetails = () => {
                   <small className="form-text text-muted">Nombre maximum de personnes que le lieu peut accueillir</small>
                 </>
               ) : (
-                <div className="form-control-static">
-                  {lieu.capacite ? `${lieu.capacite} personnes` : <span className="text-empty">Non spécifiée</span>}
+                <div className={styles.formControlStatic}>
+                  {lieu.capacite ? `${lieu.capacite} personnes` : <span className={styles.textEmpty}>Non spécifiée</span>}
                 </div>
               )}
             </div>
@@ -789,16 +785,16 @@ const LieuDetails = () => {
         </div>
 
         {/* Deuxième carte - Adresse */}
-        <div className="form-card">
-          <div className="card-header">
+        <div className={styles.formCard}>
+          <div className={styles.cardHeader}>
             <i className="bi bi-geo-alt"></i>
             <h3>Adresse</h3>
           </div>
-          <div className="card-body">
-            <div className="form-group">
-              <label htmlFor="adresse" className="form-label">Adresse {isEditing && <span className="required">*</span>}</label>
+          <div className={styles.cardBody}>
+            <div className={styles.formGroup}>
+              <label htmlFor="adresse" className={styles.formLabel}>Adresse {isEditing && <span className={styles.required}>*</span>}</label>
               {isEditing ? (
-                <div className="address-search-container">
+                <div className={styles.addressSearchContainer}>
                   <div className="input-group">
                     <input
                       type="text"
@@ -827,20 +823,20 @@ const LieuDetails = () => {
                   
                   {/* Suggestions d'adresse */}
                   {addressSuggestions && addressSuggestions.length > 0 && (
-                    <div className="address-suggestions" ref={suggestionsRef}>
+                    <div className={styles.addressSuggestions} ref={suggestionsRef}>
                       {addressSuggestions.map((suggestion, index) => (
                         <div
                           key={index}
-                          className="address-suggestion-item"
+                          className={styles.addressSuggestionItem}
                           onClick={() => handleSelectAddress(suggestion)}
                         >
-                          <div className="suggestion-icon">
+                          <div className={styles.suggestionIcon}>
                             <i className="bi bi-geo-alt-fill"></i>
                           </div>
-                          <div className="suggestion-text">
-                            <div className="suggestion-name">{suggestion.display_name}</div>
+                          <div className={styles.suggestionText}>
+                            <div className={styles.suggestionName}>{suggestion.display_name}</div>
                             {suggestion.address && (
-                              <div className="suggestion-details">
+                              <div className={styles.suggestionDetails}>
                                 {suggestion.address.postcode && suggestion.address.city && (
                                   <span>{suggestion.address.postcode} {suggestion.address.city}</span>
                                 )}
@@ -854,7 +850,7 @@ const LieuDetails = () => {
                   
                   {/* Indicateur de recherche */}
                   {isSearchingAddress && (
-                    <div className="address-searching">
+                    <div className={styles.addressSearching}>
                       <Spinner 
                         size="sm" 
                         variant="primary" 
@@ -865,14 +861,14 @@ const LieuDetails = () => {
                   )}
                 </div>
               ) : (
-                <div className="form-control-static">{lieu.adresse}</div>
+                <div className={styles.formControlStatic}>{lieu.adresse}</div>
               )}
             </div>
 
             <div className="row">
               <div className="col-md-4">
-                <div className="form-group">
-                  <label htmlFor="codePostal" className="form-label">Code postal {isEditing && <span className="required">*</span>}</label>
+                <div className={styles.formGroup}>
+                  <label htmlFor="codePostal" className={styles.formLabel}>Code postal {isEditing && <span className={styles.required}>*</span>}</label>
                   {isEditing ? (
                     <input
                       type="text"
@@ -885,13 +881,13 @@ const LieuDetails = () => {
                       placeholder="Ex: 75001"
                     />                     
                   ) : (
-                    <div className="form-control-static">{lieu.codePostal}</div>
+                    <div className={styles.formControlStatic}>{lieu.codePostal}</div>
                   )}
                 </div>
               </div>
               <div className="col-md-8">
-                <div className="form-group">
-                  <label htmlFor="ville" className="form-label">Ville {isEditing && <span className="required">*</span>}</label>
+                <div className={styles.formGroup}>
+                  <label htmlFor="ville" className={styles.formLabel}>Ville {isEditing && <span className={styles.required}>*</span>}</label>
                   {isEditing ? (
                     <input
                       type="text"
@@ -904,14 +900,14 @@ const LieuDetails = () => {
                       placeholder="Ex: Paris"
                     />
                   ) : (
-                    <div className="form-control-static">{lieu.ville}</div>
+                    <div className={styles.formControlStatic}>{lieu.ville}</div>
                   )}
                 </div>
               </div>
             </div>
 
-            <div className="form-group">
-              <label htmlFor="pays" className="form-label">Pays {isEditing && <span className="required">*</span>}</label>
+            <div className={styles.formGroup}>
+              <label htmlFor="pays" className={styles.formLabel}>Pays {isEditing && <span className={styles.required}>*</span>}</label>
               {isEditing ? (
                 <input
                   type="text"
@@ -923,14 +919,14 @@ const LieuDetails = () => {
                   required
                 />
               ) : (
-                <div className="form-control-static">{lieu.pays}</div>
+                <div className={styles.formControlStatic}>{lieu.pays}</div>
               )}
             </div>
             
             {/* Affichage de la carte uniquement en mode visualisation */}
             {!isEditing && lieu.adresse && (
-              <div className="map-preview mt-4">
-                <div className="map-container mb-3">
+              <div className={`${styles.mapPreview} mt-4`}>
+                <div className={`${styles.mapContainer} mb-3`}>
                   <iframe 
                     src={`https://maps.google.com/maps?q=${encodeURIComponent(`${lieu.adresse}, ${lieu.codePostal} ${lieu.ville}`)}&z=14&output=embed`}
                     width="100%" 
@@ -958,18 +954,18 @@ const LieuDetails = () => {
         </div>
 
         {/* Carte - Programmateur */}
-        <div className="form-card">
-          <div className="card-header">
+        <div className={styles.formCard}>
+          <div className={styles.cardHeader}>
             <i className="bi bi-person-badge"></i>
             <h3>Programmateur</h3>
           </div>
-          <div className="card-body">
+          <div className={styles.cardBody}>
             {isEditing ? (
-              <div className="form-group">
-                <label className="form-label">Associer un programmateur</label>
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel}>Associer un programmateur</label>
                 
                 {!selectedProgrammateur ? (
-                  <div className="programmateur-search-container" ref={dropdownRef}>
+                  <div className={styles.programmateurSearchContainer} ref={dropdownRef}>
                     <div className="input-group">
                       <span className="input-group-text"><i className="bi bi-search"></i></span>
                       <input
@@ -989,7 +985,7 @@ const LieuDetails = () => {
                     </div>
                     
                     {isSearching && (
-                      <div className="dropdown-menu show w-100">
+                      <div className={`dropdown-menu show w-100 ${styles.dropdownMenu}`}>
                         <div className="dropdown-item text-center">
                           <div className="spinner-border spinner-border-sm text-primary" role="status">
                             <span className="visually-hidden">Recherche en cours...</span>
@@ -999,16 +995,16 @@ const LieuDetails = () => {
                     )}
                     
                     {searchResults.length > 0 && (
-                      <div className="dropdown-menu show w-100">
+                      <div className={`dropdown-menu show w-100 ${styles.dropdownMenu}`}>
                         {searchResults.map(prog => (
                           <div 
                             key={prog.id} 
-                            className="dropdown-item programmateur-item"
+                            className={`dropdown-item ${styles.programmateurItem}`}
                             onClick={() => handleSelectProgrammateur(prog)}
                           >
-                            <div className="programmateur-name">{prog.nom}</div>
-                            <div className="programmateur-details">
-                              {prog.structure && <span className="programmateur-structure">{prog.structure}</span>}
+                            <div className={styles.programmateurName}>{prog.nom}</div>
+                            <div className={styles.programmateurDetails}>
+                              {prog.structure && <span className={styles.programmateurStructure}>{prog.structure}</span>}
                               {prog.email && <span className="programmateur-email">{prog.email}</span>}
                             </div>
                           </div>
@@ -1017,7 +1013,7 @@ const LieuDetails = () => {
                     )}
                     
                     {searchTerm.length >= 2 && searchResults.length === 0 && !isSearching && (
-                      <div className="dropdown-menu show w-100">
+                      <div className={`dropdown-menu show w-100 ${styles.dropdownMenu}`}>
                         <div className="dropdown-item text-center text-muted">
                           Aucun programmateur trouvé
                         </div>
@@ -1025,21 +1021,21 @@ const LieuDetails = () => {
                     )}
                   </div>
                 ) : (
-                  <div className="selected-programmateur">
-                    <div className="programmateur-card">
-                      <div className="programmateur-info">
-                        <span className="programmateur-name">{selectedProgrammateur.nom}</span>
+                  <div className={styles.selectedProgrammateur}>
+                    <div className={styles.programmateurCard}>
+                      <div className={styles.programmateurInfo}>
+                        <span className={styles.programmateurName}>{selectedProgrammateur.nom}</span>
                         {selectedProgrammateur.structure && (
-                          <span className="programmateur-structure">{selectedProgrammateur.structure}</span>
+                          <span className={styles.programmateurStructure}>{selectedProgrammateur.structure}</span>
                         )}
-                        <div className="programmateur-contacts">
+                        <div className={styles.programmateurContacts}>
                           {selectedProgrammateur.email && (
-                            <span className="programmateur-contact-item">
+                            <span className={styles.programmateurContactItem}>
                               <i className="bi bi-envelope"></i> {selectedProgrammateur.email}
                             </span>
                           )}
                           {selectedProgrammateur.telephone && (
-                            <span className="programmateur-contact-item">
+                            <span className={styles.programmateurContactItem}>
                               <i className="bi bi-telephone"></i> {selectedProgrammateur.telephone}
                             </span>
                           )}
@@ -1071,50 +1067,50 @@ const LieuDetails = () => {
                       </div>
                     </div>
                   ) : programmateur ? (
-                    <div className="programmateur-display">
-                      <div className="info-row">
-                        <div className="info-label">
+                    <div className={styles.programmateurDisplay}>
+                      <div className={styles.infoRow}>
+                        <div className={styles.infoLabel}>
                           <i className="bi bi-person text-primary"></i>
                           Nom
                         </div>
-                        <div className="info-value highlight">
-                          <Link to={`/programmateurs/${programmateur.id}`} className="programmateur-link">
+                        <div className={`${styles.infoValue} ${styles.highlight}`}>
+                          <Link to={`/programmateurs/${programmateur.id}`} className={styles.programmateurLink}>
                             {programmateur.nom}
                           </Link>
                         </div>
                       </div>
                       
                       {programmateur.structure && (
-                        <div className="info-row">
-                          <div className="info-label">
+                        <div className={styles.infoRow}>
+                          <div className={styles.infoLabel}>
                             <i className="bi bi-building text-primary"></i>
                             Structure
                           </div>
-                          <div className="info-value">{programmateur.structure}</div>
+                          <div className={styles.infoValue}>{programmateur.structure}</div>
                         </div>
                       )}
                       
                       {programmateur.telephone && (
-                        <div className="info-row">
-                          <div className="info-label">
+                        <div className={styles.infoRow}>
+                          <div className={styles.infoLabel}>
                             <i className="bi bi-telephone text-primary"></i>
                             Téléphone
                           </div>
-                          <div className="info-value">
-                            <a href={`tel:${programmateur.telephone}`} className="contact-link">
+                          <div className={styles.infoValue}>
+                            <a href={`tel:${programmateur.telephone}`} className={styles.contactLink}>
                               {programmateur.telephone}
                             </a>
                           </div>
                         </div>
                       )}
-                                            {programmateur.email && (
-                        <div className="info-row">
-                          <div className="info-label">
+                      {programmateur.email && (
+                        <div className={styles.infoRow}>
+                          <div className={styles.infoLabel}>
                             <i className="bi bi-envelope text-primary"></i>
                             Email
                           </div>
-                          <div className="info-value">
-                            <a href={`mailto:${programmateur.email}`} className="contact-link">
+                          <div className={styles.infoValue}>
+                            <a href={`mailto:${programmateur.email}`} className={styles.contactLink}>
                               {programmateur.email}
                             </a>
                           </div>
@@ -1128,7 +1124,7 @@ const LieuDetails = () => {
                     </div>
                   )
                 ) : (
-                  <div className="text-empty">Aucun programmateur associé à ce lieu.</div>
+                  <div className={styles.textEmpty}>Aucun programmateur associé à ce lieu.</div>
                 )}
               </>
             )}
@@ -1136,16 +1132,16 @@ const LieuDetails = () => {
         </div>
 
         {/* Carte - Informations de contact */}
-        <div className="form-card">
-          <div className="card-header">
+        <div className={styles.formCard}>
+          <div className={styles.cardHeader}>
             <i className="bi bi-person-lines-fill"></i>
             <h3>Informations de contact</h3>
           </div>
-          <div className="card-body">
+          <div className={styles.cardBody}>
             {isEditing ? (
               <>
-                <div className="form-group">
-                  <label htmlFor="contact.nom" className="form-label">Personne à contacter</label>
+                <div className={styles.formGroup}>
+                  <label htmlFor="contact.nom" className={styles.formLabel}>Personne à contacter</label>
                   <input
                     type="text"
                     className="form-control"
@@ -1159,8 +1155,8 @@ const LieuDetails = () => {
 
                 <div className="row">
                   <div className="col-md-6">
-                    <div className="form-group">
-                      <label htmlFor="contact.telephone" className="form-label">Téléphone</label>
+                    <div className={styles.formGroup}>
+                      <label htmlFor="contact.telephone" className={styles.formLabel}>Téléphone</label>
                       <div className="input-group">
                         <span className="input-group-text"><i className="bi bi-telephone"></i></span>
                         <input
@@ -1176,8 +1172,8 @@ const LieuDetails = () => {
                     </div>
                   </div>
                   <div className="col-md-6">
-                    <div className="form-group">
-                      <label htmlFor="contact.email" className="form-label">Email</label>
+                    <div className={styles.formGroup}>
+                      <label htmlFor="contact.email" className={styles.formLabel}>Email</label>
                       <div className="input-group">
                         <span className="input-group-text"><i className="bi bi-envelope"></i></span>
                         <input
@@ -1198,35 +1194,35 @@ const LieuDetails = () => {
               lieu.contact && (lieu.contact.nom || lieu.contact.telephone || lieu.contact.email) ? (
                 <>
                   {lieu.contact.nom && (
-                    <div className="info-row">
-                      <div className="info-label">
+                    <div className={styles.infoRow}>
+                      <div className={styles.infoLabel}>
                         <i className="bi bi-person text-primary"></i>
                         Personne à contacter
                       </div>
-                      <div className="info-value">{lieu.contact.nom}</div>
+                      <div className={styles.infoValue}>{lieu.contact.nom}</div>
                     </div>
                   )}
                   {lieu.contact.telephone && (
-                    <div className="info-row">
-                      <div className="info-label">
+                    <div className={styles.infoRow}>
+                      <div className={styles.infoLabel}>
                         <i className="bi bi-telephone text-primary"></i>
                         Téléphone
                       </div>
-                      <div className="info-value">
-                        <a href={`tel:${lieu.contact.telephone}`} className="contact-link">
+                      <div className={styles.infoValue}>
+                        <a href={`tel:${lieu.contact.telephone}`} className={styles.contactLink}>
                           {lieu.contact.telephone}
                         </a>
                       </div>
                     </div>
                   )}
                   {lieu.contact.email && (
-                    <div className="info-row">
-                      <div className="info-label">
+                    <div className={styles.infoRow}>
+                      <div className={styles.infoLabel}>
                         <i className="bi bi-envelope text-primary"></i>
                         Email
                       </div>
-                      <div className="info-value">
-                        <a href={`mailto:${lieu.contact.email}`} className="contact-link">
+                      <div className={styles.infoValue}>
+                        <a href={`mailto:${lieu.contact.email}`} className={styles.contactLink}>
                           {lieu.contact.email}
                         </a>
                       </div>
@@ -1234,7 +1230,7 @@ const LieuDetails = () => {
                   )}
                 </>
               ) : (
-                <div className="text-empty">Aucune information de contact renseignée pour ce lieu.</div>
+                <div className={styles.textEmpty}>Aucune information de contact renseignée pour ce lieu.</div>
               )
             )}
           </div>
@@ -1242,75 +1238,74 @@ const LieuDetails = () => {
 
 
         {/* Carte - Informations supplémentaires (toujours visible, non-éditable) */}
-        <div className="form-card">
-          <div className="card-header">
+        <div className={styles.formCard}>
+          <div className={styles.cardHeader}>
             <i className="bi bi-info-circle"></i>
             <h3>Informations supplémentaires</h3>
           </div>
-          <div className="card-body">
-            <div className="info-row">
-              <div className="info-label">
+          <div className={styles.cardBody}>
+            <div className={styles.infoRow}>
+              <div className={styles.infoLabel}>
                 <i className="bi bi-calendar-check text-primary"></i>
                 Créé le
               </div>
-              <div className="info-value">
+              <div className={styles.infoValue}>
                 {lieu.createdAt ? new Date(lieu.createdAt.seconds * 1000).toLocaleDateString('fr-FR') : 'Non disponible'}
               </div>
             </div>
             
-            <div className="info-row">
-              <div className="info-label">
+            <div className={styles.infoRow}>
+              <div className={styles.infoLabel}>
                 <i className="bi bi-calendar-plus text-primary"></i>
                 Dernière modification
               </div>
-              <div className="info-value">
+              <div className={styles.infoValue}>
                 {lieu.updatedAt ? new Date(lieu.updatedAt.seconds * 1000).toLocaleDateString('fr-FR') : 'Non disponible'}
               </div>
             </div>
           </div>
         </div>
-{/* Carte - Concerts associés */}
-<div className="form-card">
-  <div className="card-header">
-    <i className="bi bi-calendar-event"></i>
-    <h3>Concerts associés</h3>
-    {!isEditing && (
-      <div className="header-actions">
-        <Link 
-          to={`/concerts/nouveau?lieuId=${lieu.id}&lieuNom=${encodeURIComponent(lieu.nom)}`} 
-          className="btn btn-sm btn-outline-primary"
-        >
-          <i className="bi bi-plus-circle me-1"></i>
-          Ajouter un concert
-        </Link>
-      </div>
-    )}
-  </div>
-  <div className="card-body">
-    {!isEditing ? (
-      <>
-        {lieu.concertsAssocies && lieu.concertsAssocies.length > 0 ? (
-          <div className="concerts-list">
-            {lieu.concertsAssocies.map((concertId, index) => (
-              <ConcertItem key={concertId} concertId={concertId} lieuId={lieu.id} onConcertRemoved={handleConcertRemoved} />
-            ))}
+        
+        {/* Carte - Concerts associés */}
+        <div className={styles.formCard}>
+          <div className={styles.cardHeader}>
+            <i className="bi bi-calendar-event"></i>
+            <h3>Concerts associés</h3>
+            {!isEditing && (
+              <div className={styles.headerActions}>
+                <Link 
+                  to={`/concerts/nouveau?lieuId=${lieu.id}&lieuNom=${encodeURIComponent(lieu.nom)}`} 
+                  className="btn btn-sm btn-outline-primary"
+                >
+                  <i className="bi bi-plus-circle me-1"></i>
+                  Ajouter un concert
+                </Link>
+              </div>
+            )}
           </div>
-        ) : (
-          <div className="text-empty">
-            Aucun concert n'est associé à ce lieu.
+          <div className={styles.cardBody}>
+            {!isEditing ? (
+              <>
+                {lieu.concertsAssocies && lieu.concertsAssocies.length > 0 ? (
+                  <div className={styles.concertsListContainer}>
+                    {lieu.concertsAssocies.map((concertId, index) => (
+                      <ConcertItem key={concertId} concertId={concertId} lieuId={lieu.id} onConcertRemoved={handleConcertRemoved} />
+                    ))}
+                  </div>
+                ) : (
+                  <div className={styles.textEmpty}>
+                    Aucun concert n'est associé à ce lieu.
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="alert alert-info">
+                <i className="bi bi-info-circle me-2"></i>
+                Pour associer des concerts à ce lieu, utilisez la page de détails du lieu après avoir enregistré les modifications.
+              </div>
+            )}
           </div>
-        )}
-      </>
-    ) : (
-      <div className="alert alert-info">
-        <i className="bi bi-info-circle me-2"></i>
-        Pour associer des concerts à ce lieu, utilisez la page de détails du lieu après avoir enregistré les modifications.
-      </div>
-    )}
-  </div>
-</div>
-
-        {/* Suppression des boutons d'action en bas du formulaire */}
+        </div>
       </form>
     </div>
   );

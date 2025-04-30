@@ -10,6 +10,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../../../firebaseInit';
 import { Form, Button, Alert } from 'react-bootstrap';
+import styles from './StructureForm.module.css';
 
 const StructureForm = () => {
   const { id } = useParams();
@@ -155,7 +156,7 @@ const StructureForm = () => {
   if (loading) {
     return (
       <div className="text-center p-5">
-        <div className="spinner-border" role="status">
+        <div className={styles.spinner} role="status">
           <span className="visually-hidden">Chargement...</span>
         </div>
       </div>
@@ -163,16 +164,15 @@ const StructureForm = () => {
   }
 
   return (
-    <div className="structure-form-mobile">
-      <div className="mb-3 p-2 bg-white sticky-top d-flex justify-content-between align-items-center">
-        <Button 
-          variant="link" 
-          className="text-muted p-0"
+    <div className={styles.structureFormMobile}>
+      <div className={styles.formHeader}>
+        <button 
+          className={styles.backButton}
           onClick={() => navigate(isEditMode ? `/structures/${id}` : '/structures')}
         >
-          <i className="bi bi-arrow-left fs-4"></i>
-        </Button>
-        <h1 className="fs-5 m-0">
+          <i className="bi bi-arrow-left"></i>
+        </button>
+        <h1 className={styles.formTitle}>
           {isEditMode ? 'Modifier la structure' : 'Nouvelle structure'}
         </h1>
         <div style={{ width: '24px' }}></div> {/* Placeholder pour équilibrer */}
@@ -186,15 +186,16 @@ const StructureForm = () => {
       )}
 
       <Form noValidate validated={validated} onSubmit={handleSubmit}>
-        <div className="form-section">
-          <div className="form-section-title">
-            <i className="bi bi-info-circle me-2"></i>
+        <div className={styles.formSection}>
+          <div className={styles.formSectionTitle}>
+            <i className="bi bi-info-circle"></i>
             Informations de base
           </div>
           
           <Form.Group className="mb-3">
-            <Form.Label>Nom</Form.Label>
+            <Form.Label className={styles.formLabel}>Nom</Form.Label>
             <Form.Control
+              className={styles.formControl}
               type="text"
               name="nom"
               value={formData.nom}
@@ -208,8 +209,9 @@ const StructureForm = () => {
           </Form.Group>
           
           <Form.Group className="mb-3">
-            <Form.Label>Raison sociale</Form.Label>
+            <Form.Label className={styles.formLabel}>Raison sociale</Form.Label>
             <Form.Control
+              className={styles.formControl}
               type="text"
               name="raisonSociale"
               value={formData.raisonSociale}
@@ -219,8 +221,9 @@ const StructureForm = () => {
           </Form.Group>
           
           <Form.Group className="mb-3">
-            <Form.Label>Type de structure</Form.Label>
+            <Form.Label className={styles.formLabel}>Type de structure</Form.Label>
             <Form.Select
+              className={styles.formControl}
               name="type"
               value={formData.type}
               onChange={handleChange}
@@ -239,8 +242,9 @@ const StructureForm = () => {
           </Form.Group>
           
           <Form.Group className="mb-3">
-            <Form.Label>SIRET</Form.Label>
+            <Form.Label className={styles.formLabel}>SIRET</Form.Label>
             <Form.Control
+              className={styles.formControl}
               type="text"
               name="siret"
               value={formData.siret}
@@ -254,8 +258,9 @@ const StructureForm = () => {
           </Form.Group>
           
           <Form.Group className="mb-3">
-            <Form.Label>TVA Intracommunautaire</Form.Label>
+            <Form.Label className={styles.formLabel}>TVA Intracommunautaire</Form.Label>
             <Form.Control
+              className={styles.formControl}
               type="text"
               name="tva"
               value={formData.tva}
@@ -265,15 +270,16 @@ const StructureForm = () => {
           </Form.Group>
         </div>
 
-        <div className="form-section">
-          <div className="form-section-title">
-            <i className="bi bi-geo-alt me-2"></i>
+        <div className={styles.formSection}>
+          <div className={styles.formSectionTitle}>
+            <i className="bi bi-geo-alt"></i>
             Coordonnées
           </div>
           
           <Form.Group className="mb-3">
-            <Form.Label>Adresse</Form.Label>
+            <Form.Label className={styles.formLabel}>Adresse</Form.Label>
             <Form.Control
+              className={styles.formControl}
               type="text"
               name="adresse"
               value={formData.adresse}
@@ -283,8 +289,9 @@ const StructureForm = () => {
           </Form.Group>
           
           <Form.Group className="mb-3">
-            <Form.Label>Code postal</Form.Label>
+            <Form.Label className={styles.formLabel}>Code postal</Form.Label>
             <Form.Control
+              className={styles.formControl}
               type="text"
               name="codePostal"
               value={formData.codePostal}
@@ -294,8 +301,9 @@ const StructureForm = () => {
           </Form.Group>
           
           <Form.Group className="mb-3">
-            <Form.Label>Ville</Form.Label>
+            <Form.Label className={styles.formLabel}>Ville</Form.Label>
             <Form.Control
+              className={styles.formControl}
               type="text"
               name="ville"
               value={formData.ville}
@@ -305,8 +313,9 @@ const StructureForm = () => {
           </Form.Group>
           
           <Form.Group className="mb-3">
-            <Form.Label>Pays</Form.Label>
+            <Form.Label className={styles.formLabel}>Pays</Form.Label>
             <Form.Control
+              className={styles.formControl}
               type="text"
               name="pays"
               value={formData.pays}
@@ -316,8 +325,9 @@ const StructureForm = () => {
           </Form.Group>
           
           <Form.Group className="mb-3">
-            <Form.Label>Téléphone</Form.Label>
+            <Form.Label className={styles.formLabel}>Téléphone</Form.Label>
             <Form.Control
+              className={styles.formControl}
               type="tel"
               name="telephone"
               value={formData.telephone}
@@ -327,8 +337,9 @@ const StructureForm = () => {
           </Form.Group>
           
           <Form.Group className="mb-3">
-            <Form.Label>Email</Form.Label>
+            <Form.Label className={styles.formLabel}>Email</Form.Label>
             <Form.Control
+              className={styles.formControl}
               type="email"
               name="email"
               value={formData.email}
@@ -338,8 +349,9 @@ const StructureForm = () => {
           </Form.Group>
           
           <Form.Group className="mb-3">
-            <Form.Label>Site web</Form.Label>
+            <Form.Label className={styles.formLabel}>Site web</Form.Label>
             <Form.Control
+              className={styles.formControl}
               type="url"
               name="siteWeb"
               value={formData.siteWeb}
@@ -349,15 +361,16 @@ const StructureForm = () => {
           </Form.Group>
         </div>
 
-        <div className="form-section">
-          <div className="form-section-title">
-            <i className="bi bi-person me-2"></i>
+        <div className={styles.formSection}>
+          <div className={styles.formSectionTitle}>
+            <i className="bi bi-person"></i>
             Contact principal
           </div>
           
           <Form.Group className="mb-3">
-            <Form.Label>Nom et prénom</Form.Label>
+            <Form.Label className={styles.formLabel}>Nom et prénom</Form.Label>
             <Form.Control
+              className={styles.formControl}
               type="text"
               name="contact.nom"
               value={formData.contact.nom}
@@ -367,8 +380,9 @@ const StructureForm = () => {
           </Form.Group>
           
           <Form.Group className="mb-3">
-            <Form.Label>Fonction</Form.Label>
+            <Form.Label className={styles.formLabel}>Fonction</Form.Label>
             <Form.Control
+              className={styles.formControl}
               type="text"
               name="contact.fonction"
               value={formData.contact.fonction}
@@ -378,8 +392,9 @@ const StructureForm = () => {
           </Form.Group>
           
           <Form.Group className="mb-3">
-            <Form.Label>Téléphone direct</Form.Label>
+            <Form.Label className={styles.formLabel}>Téléphone direct</Form.Label>
             <Form.Control
+              className={styles.formControl}
               type="tel"
               name="contact.telephone"
               value={formData.contact.telephone}
@@ -389,8 +404,9 @@ const StructureForm = () => {
           </Form.Group>
           
           <Form.Group className="mb-3">
-            <Form.Label>Email direct</Form.Label>
+            <Form.Label className={styles.formLabel}>Email direct</Form.Label>
             <Form.Control
+              className={styles.formControl}
               type="email"
               name="contact.email"
               value={formData.contact.email}
@@ -400,15 +416,16 @@ const StructureForm = () => {
           </Form.Group>
         </div>
 
-        <div className="form-section">
-          <div className="form-section-title">
-            <i className="bi bi-sticky me-2"></i>
+        <div className={styles.formSection}>
+          <div className={styles.formSectionTitle}>
+            <i className="bi bi-sticky"></i>
             Notes
           </div>
           
           <Form.Group className="mb-3">
-            <Form.Label>Notes supplémentaires</Form.Label>
+            <Form.Label className={styles.formLabel}>Notes supplémentaires</Form.Label>
             <Form.Control
+              className={styles.formControl}
               as="textarea"
               rows={4}
               name="notes"
@@ -420,32 +437,32 @@ const StructureForm = () => {
         </div>
 
         {/* Pour éviter que les boutons d'action cachent le contenu */}
-        <div style={{ height: '70px' }}></div>
+        <div className={styles.spacer}></div>
 
-        <div className="form-actions">
+        <div className={styles.formActions}>
           <Button
             variant="outline-secondary"
-            className="flex-fill"
+            className={styles.actionButton}
             onClick={() => navigate(isEditMode ? `/structures/${id}` : '/structures')}
             disabled={submitting}
           >
-            <i className="bi bi-x-circle me-2"></i>
+            <i className="bi bi-x-circle"></i>
             Annuler
           </Button>
           <Button 
             variant="primary" 
             type="submit"
-            className="flex-fill"
+            className={styles.actionButton}
             disabled={submitting}
           >
             {submitting ? (
               <>
-                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                <span className={styles.spinner} role="status" aria-hidden="true"></span>
                 Enregistrement...
               </>
             ) : (
               <>
-                <i className="bi bi-check-circle me-2"></i>
+                <i className="bi bi-check-circle"></i>
                 {isEditMode ? 'Mettre à jour' : 'Enregistrer'}
               </>
             )}

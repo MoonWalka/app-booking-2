@@ -719,7 +719,7 @@ const ConcertForm = () => {
   };
 
   if (loading) {
-    return <div className="text-center my-5 loading-spinner">Chargement du concert...</div>;
+    return <div className={styles.loadingSpinner}>Chargement du concert...</div>;
   }
 
   return (
@@ -748,7 +748,7 @@ const ConcertForm = () => {
       <div className={styles.actionButtons}>
         <Link to="/concerts" className={`btn btn-outline-secondary ${styles.actionBtn}`}>
           <i className="bi bi-arrow-left"></i>
-          <span className="btn-text">Retour</span>
+          <span className={styles.btnText}>Retour</span>
         </Link>
         
         {id && id !== 'nouveau' && (
@@ -758,7 +758,7 @@ const ConcertForm = () => {
             disabled={isSubmitting}
           >
             <i className="bi bi-trash"></i>
-            <span className="btn-text">Supprimer</span>
+            <span className={styles.btnText}>Supprimer</span>
           </button>
         )}
       </div>
@@ -1222,13 +1222,13 @@ const ConcertForm = () => {
             </div>
             <div className={styles.tcModalFooter}>
               <button 
-                className="tc-btn tc-btn-secondary"
+                className={`btn btn-secondary ${styles.tcBtn} ${styles.tcBtnSecondary}`}
                 onClick={() => setShowDeleteConfirm(false)}
               >
                 Annuler
               </button>
               <button 
-                className="tc-btn tc-btn-danger" 
+                className={`btn btn-danger ${styles.tcBtn} ${styles.tcBtnDanger}`}
                 onClick={handleDelete}
                 disabled={isSubmitting}
               >

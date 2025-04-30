@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Card, Alert } from 'react-bootstrap';
+import styles from './ParametresGeneraux.module.css';
 import { useParametres } from '@/context/ParametresContext';
 
 const ParametresGeneraux = () => {
@@ -44,18 +45,19 @@ const ParametresGeneraux = () => {
         <h3 className="mb-3">Paramètres généraux</h3>
         
         {success && (
-          <Alert variant="success" className="mb-3">
+          <Alert variant="success" className={styles.successAlert}>
             {success}
           </Alert>
         )}
         
         <Form onSubmit={handleSubmit}>
-          <Form.Group className="mb-3">
+          <Form.Group className={styles.formSection}>
             <Form.Label>Langue</Form.Label>
             <Form.Select
               name="langue"
               value={localState.langue}
               onChange={handleChange}
+              className={styles.languageSelect}
             >
               <option value="fr">Français</option>
               <option value="en">English</option>
@@ -67,7 +69,7 @@ const ParametresGeneraux = () => {
             </Form.Text>
           </Form.Group>
 
-          <div className="d-flex justify-content-end">
+          <div className={styles.submitButton}>
             <Button type="submit" variant="primary">
               Enregistrer les modifications
             </Button>

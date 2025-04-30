@@ -186,7 +186,7 @@ const ConcertsList = () => {
       {to ? (
         <Link 
           to={to} 
-          className={`btn btn-${variant} action-button`}
+          className={`btn btn-${variant} ${styles.actionButton}`}
           onClick={(e) => e.stopPropagation()}
         >
           {icon}
@@ -197,7 +197,7 @@ const ConcertsList = () => {
             e.stopPropagation();
             onClick(); 
           }} 
-          className={`btn btn-${variant} action-button`}
+          className={`btn btn-${variant} ${styles.actionButton}`}
         >
           {icon}
         </button>
@@ -358,7 +358,7 @@ const ConcertsList = () => {
 
   return (
     <div className={`${styles.concertsContainer} p-4`}>
-      <div className="d-flex justify-content-between align-items-center mb-4 headerContainer">
+      <div className={`d-flex justify-content-between align-items-center mb-4 ${styles.headerContainer}`}>
         <h2 className="fs-4 fw-bold text-primary mb-0">Liste des concerts</h2>
         <Link to="/concerts/nouveau" className="btn btn-primary d-flex align-items-center gap-2 px-3 py-2 rounded-3">
           <i className="bi bi-plus-lg"></i>
@@ -456,12 +456,12 @@ const ConcertsList = () => {
                       <span className={styles.dateYear}>{formatDateFr(concert.date).split('-')[2]}</span>
                     </div>
                   </td>
-                  <td className="concert-venue-name align-middle">
+                  <td className={`${styles.concertVenueName} align-middle`}>
                     <div className={styles.textTruncateContainer} title={concert.lieuNom || "-"}>
                       {concert.lieuNom || "-"}
                     </div>
                   </td>
-                  <td className="concert-venue-location align-middle">
+                  <td className={`${styles.concertVenueLocation} align-middle`}>
                     <div className={styles.textTruncateContainer} title={concert.lieuVille && concert.lieuCodePostal ? 
                       `${concert.lieuVille} (${concert.lieuCodePostal})` : 
                       concert.lieuVille || concert.lieuCodePostal || "-"}>
@@ -471,7 +471,7 @@ const ConcertsList = () => {
                       }
                     </div>
                   </td>
-                  <td className="concert-artist-cell align-middle">
+                  <td className={`${styles.concertArtistCell} align-middle`}>
                     {concert.artisteNom ? (
                       <span className={styles.artistName}>
                         <i className="bi bi-music-note"></i>
@@ -482,7 +482,7 @@ const ConcertsList = () => {
                     )}
                   </td>
                   <td className="align-middle">
-                    <div className="concert-artist-cell">
+                    <div className={styles.concertArtistCell}>
                       {concert.programmateurNom ? (
                         <span className={styles.programmateurName} title={concert.programmateurNom}>
                           <i className="bi bi-person-fill"></i>
@@ -502,7 +502,7 @@ const ConcertsList = () => {
                       <span className="text-muted">-</span>
                     )}
                   </td>
-                  <td className="status-column align-middle">
+                  <td className={`${styles.statusColumn} align-middle`}>
                     <StatusWithInfo concert={concert} />
                   </td>
                   <td onClick={(e) => e.stopPropagation()} className="align-middle">

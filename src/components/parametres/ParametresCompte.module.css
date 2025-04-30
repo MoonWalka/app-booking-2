@@ -1,0 +1,33 @@
+/* Styles pour le composant ParametresCompte */
+
+.formSection {
+  margin-bottom: 20px;
+}
+
+.formActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 25px;
+}
+
+.passwordField {
+  position: relative;
+}
+
+.passwordHint {
+  margin-top: 5px;
+  font-size: 0.875rem;
+}
+
+.successAlert {
+  margin-bottom: 20px;
+}
+
+.errorAlert {
+  margin-bottom: 20px;
+}
+
+.formTitle {
+  margin-bottom: 20px;
+}

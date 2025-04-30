@@ -1,6 +1,6 @@
 // src/components/contrats/ContratGenerator.js
 import React, { useState, useEffect } from 'react';
-
+import styles from './ContratGenerator.module.css';
 import { Button, Form, Alert, Card, Spinner } from 'react-bootstrap';
 import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '@/firebaseInit';
@@ -301,11 +301,11 @@ const ContratGenerator = ({ concert, programmateur, artiste, lieu }) => {
 
   if (loading) {
     return (
-      <div className="text-center p-4">
+      <div className={styles.spinnerContainer}>
         <div className="spinner-border" role="status">
           <span className="visually-hidden">Chargement...</span>
         </div>
-        <p className="mt-2">Chargement des modèles de contrat...</p>
+        <p className={styles.loadingText}>Chargement des modèles de contrat...</p>
       </div>
     );
   }
@@ -363,10 +363,10 @@ const ContratGenerator = ({ concert, programmateur, artiste, lieu }) => {
         
         {selectedTemplate && (
           <>
-            <div className="template-preview mt-3">
+            <div className={styles.templatePreview}>
               <h6>Aperçu du modèle</h6>
               {selectedTemplate.bodyContent ? (
-                <div className="template-body-preview">
+                <div className={styles.templateBodyPreview}>
                   <p className="text-muted small">Ce modèle utilise le format avec en-tête, corps et pied de page.</p>
                 </div>
               ) : (
@@ -466,7 +466,7 @@ const ContratGenerator = ({ concert, programmateur, artiste, lieu }) => {
         )}
         
         {/* Bouton de débogage */}
-        <div className="mt-4">
+        <div className={styles.debugToggle}>
           <Button 
             variant="outline-secondary" 
             size="sm"
@@ -479,8 +479,8 @@ const ContratGenerator = ({ concert, programmateur, artiste, lieu }) => {
         
         {/* Section de débogage */}
         {showDebugInfo && (
-          <div className="card mt-3">
-            <div className="card-header d-flex justify-content-between align-items-center">
+          <div className={styles.debugCard}>
+            <div className={styles.debugHeader}>
               <h5 className="mb-0">Informations de débogage</h5>
               <button 
                 className="btn btn-sm btn-outline-secondary"
@@ -491,32 +491,32 @@ const ContratGenerator = ({ concert, programmateur, artiste, lieu }) => {
             </div>
             <div className="card-body">
               <h6>Modèle sélectionné</h6>
-              <pre className="bg-light p-2" style={{maxHeight: '200px', overflow: 'auto'}}>
+              <pre className={styles.debugPre}>
                 {JSON.stringify(selectedTemplate, null, 2)}
               </pre>
               
               <h6>Données du concert</h6>
-              <pre className="bg-light p-2" style={{maxHeight: '200px', overflow: 'auto'}}>
+              <pre className={styles.debugPre}>
                 {JSON.stringify(concert, null, 2)}
               </pre>
               
               <h6>Données du programmateur</h6>
-              <pre className="bg-light p-2" style={{maxHeight: '200px', overflow: 'auto'}}>
+              <pre className={styles.debugPre}>
                 {JSON.stringify(programmateur, null, 2)}
               </pre>
               
               <h6>Données de l'artiste</h6>
-              <pre className="bg-light p-2" style={{maxHeight: '200px', overflow: 'auto'}}>
+              <pre className={styles.debugPre}>
                 {JSON.stringify(artiste, null, 2)}
               </pre>
               
               <h6>Données du lieu</h6>
-              <pre className="bg-light p-2" style={{maxHeight: '200px', overflow: 'auto'}}>
+              <pre className={styles.debugPre}>
                 {JSON.stringify(lieu, null, 2)}
               </pre>
               
               <h6>Informations d'entreprise</h6>
-              <pre className="bg-light p-2" style={{maxHeight: '200px', overflow: 'auto'}}>
+              <pre className={styles.debugPre}>
                 {JSON.stringify(entrepriseInfo, null, 2)}
               </pre>
             </div>

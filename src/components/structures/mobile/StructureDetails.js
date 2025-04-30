@@ -8,6 +8,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../../../firebaseInit';
 import { Button, Alert, Modal } from 'react-bootstrap';
+import styles from './StructureDetails.module.css';
 
 const StructureDetails = () => {
   const { id } = useParams();
@@ -126,7 +127,7 @@ const StructureDetails = () => {
   if (loading) {
     return (
       <div className="text-center p-5">
-        <div className="spinner-border" role="status">
+        <div className={styles.spinner} role="status">
           <span className="visually-hidden">Chargement...</span>
         </div>
       </div>
@@ -143,103 +144,103 @@ const StructureDetails = () => {
   }
 
   return (
-    <div className="structure-detail-mobile">
-      <div className="structure-detail-header">
-        <div className="structure-detail-title">
-          <i className="bi bi-building me-2"></i>
+    <div className={styles.structureDetailMobile}>
+      <div className={styles.structureDetailHeader}>
+        <div className={styles.structureDetailTitle}>
+          <i className="bi bi-building"></i>
           {structure.nom || structure.raisonSociale}
         </div>
         {structure.type && (
-          <div className="structure-detail-subtitle">
+          <div className={styles.structureDetailSubtitle}>
             {getTypeLabel(structure.type)}
           </div>
         )}
       </div>
 
-      <div className="d-flex mb-3">
+      <div className={styles.tabsContainer}>
         <button 
-          className={`btn ${activeTab === 'infos' ? 'btn-primary' : 'btn-outline-primary'} flex-fill`}
+          className={`btn ${activeTab === 'infos' ? 'btn-primary' : 'btn-outline-primary'} ${styles.tabButton}`}
           onClick={() => setActiveTab('infos')}
         >
-          <i className="bi bi-info-circle me-1"></i>
+          <i className="bi bi-info-circle"></i>
           Infos
         </button>
         <button 
-          className={`btn ${activeTab === 'contact' ? 'btn-primary' : 'btn-outline-primary'} flex-fill`}
+          className={`btn ${activeTab === 'contact' ? 'btn-primary' : 'btn-outline-primary'} ${styles.tabButton}`}
           onClick={() => setActiveTab('contact')}
         >
-          <i className="bi bi-person me-1"></i>
+          <i className="bi bi-person"></i>
           Contact
         </button>
         <button 
-          className={`btn ${activeTab === 'programmateurs' ? 'btn-primary' : 'btn-outline-primary'} flex-fill`}
+          className={`btn ${activeTab === 'programmateurs' ? 'btn-primary' : 'btn-outline-primary'} ${styles.tabButton}`}
           onClick={() => setActiveTab('programmateurs')}
         >
-          <i className="bi bi-person-badge me-1"></i>
+          <i className="bi bi-person-badge"></i>
           Programmateurs
         </button>
       </div>
 
       {activeTab === 'infos' && (
         <>
-          <div className="structure-detail-section">
-            <h3><i className="bi bi-info-circle me-2"></i> Informations de base</h3>
+          <div className={styles.structureDetailSection}>
+            <h3><i className="bi bi-info-circle"></i> Informations de base</h3>
             
-            <div className="structure-detail-item">
-              <div className="structure-detail-label">Nom</div>
-              <div className="structure-detail-value">{formatValue(structure.nom)}</div>
+            <div className={styles.structureDetailItem}>
+              <div className={styles.structureDetailLabel}>Nom</div>
+              <div className={styles.structureDetailValue}>{formatValue(structure.nom)}</div>
             </div>
             
-            <div className="structure-detail-item">
-              <div className="structure-detail-label">Raison sociale</div>
-              <div className="structure-detail-value">{formatValue(structure.raisonSociale)}</div>
+            <div className={styles.structureDetailItem}>
+              <div className={styles.structureDetailLabel}>Raison sociale</div>
+              <div className={styles.structureDetailValue}>{formatValue(structure.raisonSociale)}</div>
             </div>
             
-            <div className="structure-detail-item">
-              <div className="structure-detail-label">Type</div>
-              <div className="structure-detail-value">{structure.type ? getTypeLabel(structure.type) : 'Non spécifié'}</div>
+            <div className={styles.structureDetailItem}>
+              <div className={styles.structureDetailLabel}>Type</div>
+              <div className={styles.structureDetailValue}>{structure.type ? getTypeLabel(structure.type) : 'Non spécifié'}</div>
             </div>
             
-            <div className="structure-detail-item">
-              <div className="structure-detail-label">SIRET</div>
-              <div className="structure-detail-value">{formatValue(structure.siret)}</div>
+            <div className={styles.structureDetailItem}>
+              <div className={styles.structureDetailLabel}>SIRET</div>
+              <div className={styles.structureDetailValue}>{formatValue(structure.siret)}</div>
             </div>
             
-            <div className="structure-detail-item">
-              <div className="structure-detail-label">TVA Intracommunautaire</div>
-              <div className="structure-detail-value">{formatValue(structure.tva)}</div>
+            <div className={styles.structureDetailItem}>
+              <div className={styles.structureDetailLabel}>TVA Intracommunautaire</div>
+              <div className={styles.structureDetailValue}>{formatValue(structure.tva)}</div>
             </div>
           </div>
 
-          <div className="structure-detail-section">
-            <h3><i className="bi bi-geo-alt me-2"></i> Adresse</h3>
+          <div className={styles.structureDetailSection}>
+            <h3><i className="bi bi-geo-alt"></i> Adresse</h3>
             
-            <div className="structure-detail-item">
-              <div className="structure-detail-label">Adresse</div>
-              <div className="structure-detail-value">{formatValue(structure.adresse)}</div>
+            <div className={styles.structureDetailItem}>
+              <div className={styles.structureDetailLabel}>Adresse</div>
+              <div className={styles.structureDetailValue}>{formatValue(structure.adresse)}</div>
             </div>
             
-            <div className="structure-detail-item">
-              <div className="structure-detail-label">Code postal</div>
-              <div className="structure-detail-value">{formatValue(structure.codePostal)}</div>
+            <div className={styles.structureDetailItem}>
+              <div className={styles.structureDetailLabel}>Code postal</div>
+              <div className={styles.structureDetailValue}>{formatValue(structure.codePostal)}</div>
             </div>
             
-            <div className="structure-detail-item">
-              <div className="structure-detail-label">Ville</div>
-              <div className="structure-detail-value">{formatValue(structure.ville)}</div>
+            <div className={styles.structureDetailItem}>
+              <div className={styles.structureDetailLabel}>Ville</div>
+              <div className={styles.structureDetailValue}>{formatValue(structure.ville)}</div>
             </div>
             
-            <div className="structure-detail-item">
-              <div className="structure-detail-label">Pays</div>
-              <div className="structure-detail-value">{formatValue(structure.pays)}</div>
+            <div className={styles.structureDetailItem}>
+              <div className={styles.structureDetailLabel}>Pays</div>
+              <div className={styles.structureDetailValue}>{formatValue(structure.pays)}</div>
             </div>
           </div>
 
           {structure.notes && (
-            <div className="structure-detail-section">
-              <h3><i className="bi bi-sticky me-2"></i> Notes</h3>
-              <div className="structure-detail-item">
-                <div className="structure-detail-value">
+            <div className={styles.structureDetailSection}>
+              <h3><i className="bi bi-sticky"></i> Notes</h3>
+              <div className={styles.structureDetailItem}>
+                <div className={styles.structureDetailValue}>
                   {structure.notes.split('\n').map((line, index) => (
                     <p key={index} className="mb-1">{line}</p>
                   ))}
@@ -252,15 +253,15 @@ const StructureDetails = () => {
 
       {activeTab === 'contact' && (
         <>
-          <div className="structure-detail-section">
-            <h3><i className="bi bi-telephone me-2"></i> Coordonnées</h3>
+          <div className={styles.structureDetailSection}>
+            <h3><i className="bi bi-telephone"></i> Coordonnées</h3>
             
-            <div className="structure-detail-item">
-              <div className="structure-detail-label">Téléphone</div>
-              <div className="structure-detail-value">
+            <div className={styles.structureDetailItem}>
+              <div className={styles.structureDetailLabel}>Téléphone</div>
+              <div className={styles.structureDetailValue}>
                 {structure.telephone ? (
                   <a href={`tel:${structure.telephone}`}>
-                    <i className="bi bi-telephone me-1"></i>
+                    <i className="bi bi-telephone"></i>
                     {structure.telephone}
                   </a>
                 ) : (
@@ -269,12 +270,12 @@ const StructureDetails = () => {
               </div>
             </div>
             
-            <div className="structure-detail-item">
-              <div className="structure-detail-label">Email</div>
-              <div className="structure-detail-value">
+            <div className={styles.structureDetailItem}>
+              <div className={styles.structureDetailLabel}>Email</div>
+              <div className={styles.structureDetailValue}>
                 {structure.email ? (
                   <a href={`mailto:${structure.email}`}>
-                    <i className="bi bi-envelope me-1"></i>
+                    <i className="bi bi-envelope"></i>
                     {structure.email}
                   </a>
                 ) : (
@@ -283,12 +284,12 @@ const StructureDetails = () => {
               </div>
             </div>
             
-            <div className="structure-detail-item">
-              <div className="structure-detail-label">Site web</div>
-              <div className="structure-detail-value">
+            <div className={styles.structureDetailItem}>
+              <div className={styles.structureDetailLabel}>Site web</div>
+              <div className={styles.structureDetailValue}>
                 {structure.siteWeb ? (
                   <a href={structure.siteWeb} target="_blank" rel="noopener noreferrer">
-                    <i className="bi bi-globe me-1"></i>
+                    <i className="bi bi-globe"></i>
                     {structure.siteWeb}
                   </a>
                 ) : (
@@ -298,25 +299,25 @@ const StructureDetails = () => {
             </div>
           </div>
 
-          <div className="structure-detail-section">
-            <h3><i className="bi bi-person me-2"></i> Contact principal</h3>
+          <div className={styles.structureDetailSection}>
+            <h3><i className="bi bi-person"></i> Contact principal</h3>
             
-            <div className="structure-detail-item">
-              <div className="structure-detail-label">Nom</div>
-              <div className="structure-detail-value">{formatValue(structure.contact?.nom)}</div>
+            <div className={styles.structureDetailItem}>
+              <div className={styles.structureDetailLabel}>Nom</div>
+              <div className={styles.structureDetailValue}>{formatValue(structure.contact?.nom)}</div>
             </div>
             
-            <div className="structure-detail-item">
-              <div className="structure-detail-label">Fonction</div>
-              <div className="structure-detail-value">{formatValue(structure.contact?.fonction)}</div>
+            <div className={styles.structureDetailItem}>
+              <div className={styles.structureDetailLabel}>Fonction</div>
+              <div className={styles.structureDetailValue}>{formatValue(structure.contact?.fonction)}</div>
             </div>
             
-            <div className="structure-detail-item">
-              <div className="structure-detail-label">Téléphone</div>
-              <div className="structure-detail-value">
+            <div className={styles.structureDetailItem}>
+              <div className={styles.structureDetailLabel}>Téléphone</div>
+              <div className={styles.structureDetailValue}>
                 {structure.contact?.telephone ? (
                   <a href={`tel:${structure.contact.telephone}`}>
-                    <i className="bi bi-telephone me-1"></i>
+                    <i className="bi bi-telephone"></i>
                     {structure.contact.telephone}
                   </a>
                 ) : (
@@ -325,12 +326,12 @@ const StructureDetails = () => {
               </div>
             </div>
             
-            <div className="structure-detail-item">
-              <div className="structure-detail-label">Email</div>
-              <div className="structure-detail-value">
+            <div className={styles.structureDetailItem}>
+              <div className={styles.structureDetailLabel}>Email</div>
+              <div className={styles.structureDetailValue}>
                 {structure.contact?.email ? (
                   <a href={`mailto:${structure.contact.email}`}>
-                    <i className="bi bi-envelope me-1"></i>
+                    <i className="bi bi-envelope"></i>
                     {structure.contact.email}
                   </a>
                 ) : (
@@ -343,34 +344,34 @@ const StructureDetails = () => {
       )}
 
       {activeTab === 'programmateurs' && (
-        <div className="structure-detail-section">
-          <h3><i className="bi bi-person-badge me-2"></i> Programmateurs associés</h3>
+        <div className={styles.structureDetailSection}>
+          <h3><i className="bi bi-person-badge"></i> Programmateurs associés</h3>
           
           {loadingProgrammateurs ? (
             <div className="text-center p-3">
-              <div className="spinner-border spinner-border-sm" role="status">
+              <div className={styles.spinner} role="status">
                 <span className="visually-hidden">Chargement...</span>
               </div>
             </div>
           ) : programmateurs.length > 0 ? (
-            <div className="programmateurs-list-mobile">
+            <div className={styles.programmateursListMobile}>
               {programmateurs.map(prog => (
-                <div key={prog.id} className="associated-item">
-                  <div className="associated-item-info">
-                    <div className="associated-item-name">
-                      <i className="bi bi-person-badge me-2"></i>
+                <div key={prog.id} className={styles.associatedItem}>
+                  <div className={styles.associatedItemInfo}>
+                    <div className={styles.associatedItemName}>
+                      <i className="bi bi-person-badge"></i>
                       {prog.nom}
                     </div>
-                    <div className="associated-item-details">
+                    <div className={styles.associatedItemDetails}>
                       {prog.email && (
-                        <a href={`mailto:${prog.email}`} className="me-2">
-                          <i className="bi bi-envelope me-1"></i>
+                        <a href={`mailto:${prog.email}`}>
+                          <i className="bi bi-envelope"></i>
                           {prog.email}
                         </a>
                       )}
                       {prog.telephone && (
                         <a href={`tel:${prog.telephone}`}>
-                          <i className="bi bi-telephone me-1"></i>
+                          <i className="bi bi-telephone"></i>
                           {prog.telephone}
                         </a>
                       )}
@@ -394,7 +395,7 @@ const StructureDetails = () => {
         </div>
       )}
 
-      <div className="structure-actions-mobile">
+      <div className={styles.structureActionsMobile}>
         <Button
           variant="outline-primary"
           className="flex-fill"

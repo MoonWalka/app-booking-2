@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../../../firebaseInit';
 import '@styles/index.css';
+import styles from './ArtisteDetail.module.css';
 
 const ArtisteDetail = () => {
   const { id } = useParams();
@@ -37,27 +38,27 @@ const ArtisteDetail = () => {
   }, [id, navigate]);
 
   if (loading) {
-    return <div className="loading-container-mobile">Chargement...</div>;
+    return <div className={styles.loadingContainer}>Chargement...</div>;
   }
 
   if (!artiste) {
-    return <div className="error-container-mobile">Artiste non trouvé</div>;
+    return <div className={styles.errorContainer}>Artiste non trouvé</div>;
   }
 
   return (
-    <div className="artiste-detail-mobile">
+    <div className={styles.artisteDetailMobile}>
       {/* En-tête avec image et infos de base */}
-      <div className="mobile-header-container">
+      <div className={styles.mobileHeaderBar}>
         <button 
-          className="back-button" 
+          className={styles.backButton} 
           onClick={() => navigate('/artistes')}
         >
           <i className="bi bi-arrow-left"></i>
         </button>
         
-        <div className="mobile-edit-button">
+        <div className={styles.desktopEditButton}>
           <button 
-            className="edit-btn"
+            className={styles.editButton}
             onClick={() => navigate(`/artistes/${id}/modifier`)}
           >
             <i className="bi bi-pencil"></i>
@@ -65,28 +66,28 @@ const ArtisteDetail = () => {
         </div>
       </div>
       
-      <div className="mobile-artiste-profile">
-        <div className="mobile-artiste-image">
+      <div className={styles.artisteProfile}>
+        <div className={styles.artisteImageContainer}>
           {artiste.photoPrincipale ? (
-            <img src={artiste.photoPrincipale} alt={artiste.nom} />
+            <img className={styles.artisteImage} src={artiste.photoPrincipale} alt={artiste.nom} />
           ) : (
-            <div className="mobile-placeholder-photo">
+            <div className={styles.placeholderPhoto}>
               <i className="bi bi-music-note-beamed"></i>
             </div>
           )}
         </div>
         
-        <div className="mobile-artiste-info">
-          <h1>{artiste.nom}</h1>
-          {artiste.genre && <p className="genre">{artiste.genre}</p>}
+        <div className={styles.artisteInfo}>
+          <h1 className={styles.artisteName}>{artiste.nom}</h1>
+          {artiste.genre && <p className={styles.artisteGenre}>{artiste.genre}</p>}
           
-          <div className="artiste-stats-mobile">
-            <div className="stat-item">
+          <div className={styles.artisteStats}>
+            <div className={styles.statItem}>
               <i className="bi bi-calendar-event"></i>
               <span>{artiste.concertsAssocies?.length || 0} concerts</span>
             </div>
             {artiste.cachetMoyen && (
-              <div className="stat-item">
+              <div className={styles.statItem}>
                 <i className="bi bi-cash"></i>
                 <span>{new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(artiste.cachetMoyen)}</span>
               </div>
@@ -96,30 +97,30 @@ const ArtisteDetail = () => {
       </div>
 
       {/* Onglets pour la navigation mobile */}
-      <div className="mobile-tabs">
+      <div className={styles.mobileTabs}>
         <button 
-          className={`tab-button ${activeTab === 'infos' ? 'active' : ''}`}
+          className={`${styles.tabButton} ${activeTab === 'infos' ? styles.active : ''}`}
           onClick={() => setActiveTab('infos')}
         >
           <i className="bi bi-info-circle"></i>
           <span>Infos</span>
         </button>
         <button 
-          className={`tab-button ${activeTab === 'concerts' ? 'active' : ''}`}
+          className={`${styles.tabButton} ${activeTab === 'concerts' ? styles.active : ''}`}
           onClick={() => setActiveTab('concerts')}
         >
           <i className="bi bi-calendar-event"></i>
           <span>Concerts</span>
         </button>
         <button 
-          className={`tab-button ${activeTab === 'contrats' ? 'active' : ''}`}
+          className={`${styles.tabButton} ${activeTab === 'contrats' ? styles.active : ''}`}
           onClick={() => setActiveTab('contrats')}
         >
           <i className="bi bi-file-earmark-text"></i>
           <span>Contrats</span>
         </button>
         <button 
-          className={`tab-button ${activeTab === 'stats' ? 'active' : ''}`}
+          className={`${styles.tabButton} ${activeTab === 'stats' ? styles.active : ''}`}
           onClick={() => setActiveTab('stats')}
         >
           <i className="bi bi-graph-up"></i>
@@ -128,20 +129,20 @@ const ArtisteDetail = () => {
       </div>
 
       {/* Contenu de l'onglet sélectionné */}
-      <div className="mobile-tab-content">
+      <div className={styles.mobileTabContent}>
         {activeTab === 'infos' && (
-          <div className="info-content">
+          <div className={styles.infoContent}>
             {artiste.description && (
-              <div className="info-section">
+              <div className={styles.infoSection}>
                 <h3>Description</h3>
                 <p>{artiste.description}</p>
               </div>
             )}
 
             {artiste.membres && artiste.membres.length > 0 && (
-              <div className="info-section">
+              <div className={styles.infoSection}>
                 <h3>Membres</h3>
-                <ul className="membres-list">
+                <ul className={styles.membresList}>
                   {artiste.membres.map((membre, index) => (
                     <li key={index}>{membre}</li>
                   ))}
@@ -149,35 +150,35 @@ const ArtisteDetail = () => {
               </div>
             )}
 
-            <div className="info-section">
+            <div className={styles.infoSection}>
               <h3>Contacts</h3>
-              <div className="contacts-grid-mobile">
+              <div className={styles.contactsGrid}>
                 {artiste.contacts?.email && (
-                  <a href={`mailto:${artiste.contacts.email}`} className="contact-item">
+                  <a href={`mailto:${artiste.contacts.email}`} className={styles.contactItem}>
                     <i className="bi bi-envelope"></i>
                     <span>{artiste.contacts.email}</span>
                   </a>
                 )}
                 {artiste.contacts?.telephone && (
-                  <a href={`tel:${artiste.contacts.telephone}`} className="contact-item">
+                  <a href={`tel:${artiste.contacts.telephone}`} className={styles.contactItem}>
                     <i className="bi bi-telephone"></i>
                     <span>{artiste.contacts.telephone}</span>
                   </a>
                 )}
                 {artiste.contacts?.siteWeb && (
-                  <a href={artiste.contacts.siteWeb} target="_blank" rel="noopener noreferrer" className="contact-item">
+                  <a href={artiste.contacts.siteWeb} target="_blank" rel="noopener noreferrer" className={styles.contactItem}>
                     <i className="bi bi-globe"></i>
                     <span>Site web</span>
                   </a>
                 )}
                 {artiste.contacts?.instagram && (
-                  <a href={`https://instagram.com/${artiste.contacts.instagram}`} target="_blank" rel="noopener noreferrer" className="contact-item">
+                  <a href={`https://instagram.com/${artiste.contacts.instagram}`} target="_blank" rel="noopener noreferrer" className={styles.contactItem}>
                     <i className="bi bi-instagram"></i>
                     <span>Instagram</span>
                   </a>
                 )}
                 {artiste.contacts?.facebook && (
-                  <a href={artiste.contacts.facebook} target="_blank" rel="noopener noreferrer" className="contact-item">
+                  <a href={artiste.contacts.facebook} target="_blank" rel="noopener noreferrer" className={styles.contactItem}>
                     <i className="bi bi-facebook"></i>
                     <span>Facebook</span>
                   </a>
@@ -188,9 +189,9 @@ const ArtisteDetail = () => {
         )}
 
         {activeTab === 'concerts' && (
-          <div className="concerts-content">
+          <div className={styles.concertsContent}>
             {(!artiste.concertsAssocies || artiste.concertsAssocies.length === 0) ? (
-              <div className="empty-state-mobile">
+              <div className={styles.emptyState}>
                 <i className="bi bi-calendar-x"></i>
                 <p>Aucun concert associé à cet artiste</p>
                 <button 
@@ -203,7 +204,7 @@ const ArtisteDetail = () => {
               </div>
             ) : (
               <>
-                <div className="concerts-header-mobile">
+                <div className={styles.concertsHeader}>
                   <h3>Concerts ({artiste.concertsAssocies.length})</h3>
                   <button 
                     className="btn btn-sm btn-outline-primary"
@@ -213,21 +214,21 @@ const ArtisteDetail = () => {
                   </button>
                 </div>
                 
-                <div className="concerts-list-mobile">
+                <div className={styles.concertsList}>
                   {artiste.concertsAssocies.map(concert => (
                     <div 
                       key={concert.id}
-                      className="concert-item"
+                      className={styles.concertItem}
                       onClick={() => navigate(`/concerts/${concert.id}`)}
                     >
-                      <div className="concert-date">
+                      <div className={styles.concertDate}>
                         {new Date(concert.date).toLocaleDateString('fr-FR')}
                       </div>
-                      <div className="concert-details">
-                        <div className="concert-lieu">{concert.lieu || 'Lieu non spécifié'}</div>
-                        <div className="concert-programmateur">{concert.programmateurNom || '-'}</div>
+                      <div className={styles.concertDetails}>
+                        <div className={styles.concertLieu}>{concert.lieu || 'Lieu non spécifié'}</div>
+                        <div className={styles.concertProgrammateur}>{concert.programmateurNom || '-'}</div>
                       </div>
-                      <div className="concert-montant">
+                      <div className={styles.concertMontant}>
                         {concert.montant ? 
                           new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(concert.montant) : 
                           '-'
@@ -242,33 +243,33 @@ const ArtisteDetail = () => {
         )}
 
         {activeTab === 'contrats' && (
-          <div className="contrats-content">
+          <div className={styles.contratsContent}>
             {(!artiste.contrats || artiste.contrats.length === 0) ? (
-              <div className="empty-state-mobile">
+              <div className={styles.emptyState}>
                 <i className="bi bi-file-earmark-x"></i>
                 <p>Aucun contrat associé à cet artiste</p>
               </div>
             ) : (
               <>
-                <div className="contrats-header-mobile">
+                <div className={styles.concertsHeader}>
                   <h3>Contrats ({artiste.contrats.length})</h3>
                 </div>
                 
-                <div className="contrats-list-mobile">
+                <div className={styles.contratsList}>
                   {artiste.contrats.map(contrat => (
                     <div 
                       key={contrat.id}
-                      className="contrat-item"
+                      className={styles.contratItem}
                     >
-                      <div className="contrat-date">
+                      <div className={styles.contratDate}>
                         {new Date(contrat.dateSignature).toLocaleDateString('fr-FR')}
                       </div>
-                      <div className="contrat-details">
-                        <div className="contrat-concert">
+                      <div className={styles.contratDetails}>
+                        <div className={styles.contratConcert}>
                           {artiste.concertsAssocies?.find(c => c.id === contrat.concertId)?.lieu || 'Concert inconnu'}
                         </div>
                       </div>
-                      <div className="contrat-actions">
+                      <div className={styles.contratActions}>
                         {contrat.url ? (
                           <a href={contrat.url} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-outline-primary">
                             <i className="bi bi-file-earmark-pdf"></i>
@@ -286,37 +287,37 @@ const ArtisteDetail = () => {
         )}
 
         {activeTab === 'stats' && (
-          <div className="stats-content">
-            <div className="stats-cards-mobile">
-              <div className="stat-card">
-                <div className="stat-icon">
+          <div className={styles.statsContent}>
+            <div className={styles.statsCards}>
+              <div className={styles.statCard}>
+                <div className={styles.statIcon}>
                   <i className="bi bi-calendar-check"></i>
                 </div>
-                <div className="stat-content">
+                <div className={styles.statContent}>
                   <h4>Concerts</h4>
-                  <p className="stat-value">{artiste.stats?.nombreConcerts || 0}</p>
+                  <p className={styles.statValue}>{artiste.stats?.nombreConcerts || 0}</p>
                 </div>
               </div>
-              <div className="stat-card">
-                <div className="stat-icon">
+              <div className={styles.statCard}>
+                <div className={styles.statIcon}>
                   <i className="bi bi-cash-stack"></i>
                 </div>
-                <div className="stat-content">
+                <div className={styles.statContent}>
                   <h4>Montant total</h4>
-                  <p className="stat-value">
+                  <p className={styles.statValue}>
                     {artiste.stats?.montantTotal 
                       ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(artiste.stats.montantTotal) 
                       : '0 €'}
                   </p>
                 </div>
               </div>
-              <div className="stat-card">
-                <div className="stat-icon">
+              <div className={styles.statCard}>
+                <div className={styles.statIcon}>
                   <i className="bi bi-cash"></i>
                 </div>
-                <div className="stat-content">
+                <div className={styles.statContent}>
                   <h4>Cachet moyen</h4>
-                  <p className="stat-value">
+                  <p className={styles.statValue}>
                     {artiste.cachetMoyen 
                       ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(artiste.cachetMoyen) 
                       : '0 €'}

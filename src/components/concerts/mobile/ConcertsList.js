@@ -150,7 +150,7 @@ const ConcertsListMobile = () => {
 
       {/* Barre de recherche */}
       <div className={styles.mobileSearchContainer}>
-        <InputGroup>
+        <InputGroup className={styles.searchInputGroup}>
           <InputGroup.Text>
             <i className="bi bi-search"></i>
           </InputGroup.Text>
@@ -159,6 +159,7 @@ const ConcertsListMobile = () => {
             placeholder="Rechercher un concert..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            className={styles.searchInput}
           />
           {searchTerm && (
             <Button 
@@ -176,7 +177,7 @@ const ConcertsListMobile = () => {
       <div className={styles.mobileFiltersContainer}>
         {/* Correction UI: Utilisation des filtres standardisés depuis statusDetailsMap */}
         <button 
-          className={`btn ${statusFilter === 'tous' ? 'btn-primary' : 'btn-outline-primary'} btn-sm me-2 px-3 py-2 rounded-pill`}
+          className={`btn ${statusFilter === 'tous' ? 'btn-primary' : 'btn-outline-primary'} btn-sm me-2 px-3 py-2 rounded-pill ${styles.filterButton}`}
           onClick={() => setStatusFilter('tous')}
         >
           Tous
@@ -184,11 +185,11 @@ const ConcertsListMobile = () => {
         {Object.keys(statusDetailsMap).map(status => (
           <button 
             key={status}
-            className={`btn ${statusFilter === status ? 'btn-primary' : 'btn-outline-primary'} btn-sm me-2 px-3 py-2 rounded-pill d-inline-flex align-items-center`}
+            className={`btn ${statusFilter === status ? 'btn-primary' : 'btn-outline-primary'} btn-sm me-2 px-3 py-2 rounded-pill d-inline-flex align-items-center ${styles.filterButton}`}
             onClick={() => setStatusFilter(status)}
           >
             <span className={styles.filterIcon}>{statusDetailsMap[status].icon}</span> 
-            <span className="ms-1">{statusDetailsMap[status].label}</span>
+            <span className={`ms-1 ${styles.filterLabel}`}>{statusDetailsMap[status].label}</span>
           </button>
         ))}
       </div>
@@ -208,6 +209,7 @@ const ConcertsListMobile = () => {
           <Button 
             variant="primary"
             onClick={() => navigate('/concerts/nouveau')}
+            className={styles.addConcertButton}
           >
             <i className="bi bi-plus-circle me-2"></i>
             Ajouter un concert

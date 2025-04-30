@@ -1,6 +1,6 @@
 import React from 'react';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import '@/styles/index.css';
+import styles from './ContratVariable.module.css';
 
 /**
  * Composant responsive pour afficher et insérer une variable de contrat
@@ -16,28 +16,28 @@ const ContratVariable = ({ name, description, onInsert }) => {
     return (
       /* Correction : ajout accessibilité (role/button + tabIndex) */
       <div 
-        className="variable-item" 
+        className={styles.mobileVariableItem} 
         onClick={() => onInsert(name)} 
         role="button" 
         tabIndex={0}
       >
-        <div className="variable-name">{`{${name}}`}</div>
-        <div className="variable-description">{description}</div>
+        <div className={styles.variableName}>{`{${name}}`}</div>
+        <div className={styles.variableDescription}>{description}</div>
       </div>
     );
   }
   
   // Version desktop (plus sophistiquée avec bouton et icône)
   return (
-    <div className="variable-item">
+    <div className={styles.variableItem}>
       <button 
         type="button"
         className="btn btn-sm btn-outline-secondary"
         onClick={() => onInsert(name)}
       >
         <div>
-          <span className="variable-name">{`{${name}}`}</span>
-          <small className="variable-description">{description}</small>
+          <span className={styles.variableName}>{`{${name}}`}</span>
+          <small className={styles.variableDescription}>{description}</small>
         </div>
         <i className="bi bi-plus-circle-dotted"></i>
       </button>

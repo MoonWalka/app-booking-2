@@ -1,6 +1,6 @@
-// src/components/common/StepNavigation.js
+// src/components/common/steps/StepNavigation.js
 import React, { useState } from 'react';
-import '@styles/index.css';
+import styles from './StepNavigation.module.css';
 
 const StepNavigation = ({ 
   steps, 
@@ -36,14 +36,14 @@ const StepNavigation = ({
   const stepTitle = steps[currentStep].title || `Étape ${currentStep + 1}`;
   
   return (
-    <div className="step-navigation-container">
+    <div className={styles.stepNavigationContainer}>
       {/* Barre de progression */}
-      <div className="step-progress">
-        <div className="step-progress-dots">
+      <div className={styles.stepProgress}>
+        <div className={styles.stepProgressDots}>
           {steps.map((step, index) => (
             <div 
               key={index} 
-              className={`step-dot ${index === currentStep ? 'active' : ''} ${index < currentStep ? 'completed' : ''}`}
+              className={`${styles.stepDot} ${index === currentStep ? styles.active : ''} ${index < currentStep ? styles.completed : ''}`}
               onClick={() => index < currentStep && setCurrentStep(index)}
             >
               {index < currentStep ? (
@@ -54,19 +54,19 @@ const StepNavigation = ({
             </div>
           ))}
         </div>
-        <div className="step-progress-bar">
+        <div className={styles.stepProgressBar}>
           <div 
-            className="step-progress-fill" 
+            className={styles.stepProgressFill}
             style={{ width: `${(currentStep / (steps.length - 1)) * 100}%` }}
           ></div>
         </div>
       </div>
       
       {/* Titre de l'étape */}
-      <div className="step-title">{stepTitle}</div>
+      <div className={styles.stepTitle}>{stepTitle}</div>
       
       {/* Contenu de l'étape */}
-      <div className="step-content">
+      <div className={styles.stepContent}>
         <CurrentStepComponent 
           data={stepData} 
           onNext={goToNextStep} 
@@ -75,7 +75,7 @@ const StepNavigation = ({
       </div>
       
       {/* Boutons de navigation */}
-      <div className="step-buttons">
+      <div className={styles.stepButtons}>
         <button 
           type="button" 
           className="btn btn-outline-secondary" 

@@ -6,7 +6,7 @@ import { db } from '../../../firebaseInit';
 import { useLocationIQ } from '@/hooks/useLocationIQ';
 import StepNavigation from '../../common/steps/StepNavigation.js';
 import Spinner from '@/components/common/Spinner';
-import '@styles/index.css';
+import styles from './LieuForm.module.css';
 
 // Étape 1: Informations de base
 const BasicInfoStep = ({ data, onNext, onBack }) => {
@@ -23,8 +23,8 @@ const BasicInfoStep = ({ data, onNext, onBack }) => {
   };
   
   return (
-    <div className="step-form">
-      <div className="step-form-group">
+    <div className={styles.stepForm}>
+      <div className={styles.stepFormGroup}>
         <label htmlFor="nom">Nom du lieu *</label>
         <input
           type="text"
@@ -36,7 +36,7 @@ const BasicInfoStep = ({ data, onNext, onBack }) => {
         />
       </div>
       
-      <div className="step-form-group">
+      <div className={styles.stepFormGroup}>
         <label htmlFor="capacite">Capacité (en personnes)</label>
         <input
           type="number"
@@ -47,7 +47,7 @@ const BasicInfoStep = ({ data, onNext, onBack }) => {
         />
       </div>
       
-      <div className="step-form-actions">
+      <div className={styles.stepFormActions}>
         <button
           type="button"
           className="btn btn-primary"
@@ -113,8 +113,8 @@ const AddressStep = ({ data, onNext, onBack }) => {
   };
   
   return (
-    <div className="step-form">
-      <div className="step-form-group">
+    <div className={styles.stepForm}>
+      <div className={styles.stepFormGroup}>
         <label htmlFor="search">Rechercher une adresse</label>
         <input
           type="text"
@@ -123,14 +123,14 @@ const AddressStep = ({ data, onNext, onBack }) => {
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="Ex: 10 rue de la paix, Paris"
         />
-        {searching && <div className="searching-indicator">Recherche en cours...</div>}
+        {searching && <div className={styles.searchingIndicator}>Recherche en cours...</div>}
         
         {addressResults.length > 0 && (
-          <div className="address-results">
+          <div className={styles.addressResults}>
             {addressResults.map((result, index) => (
               <div 
                 key={index} 
-                className="address-result-item"
+                className={styles.addressResultItem}
                 onClick={() => handleSelectAddress(result)}
               >
                 {result.display_name}
@@ -140,7 +140,7 @@ const AddressStep = ({ data, onNext, onBack }) => {
         )}
       </div>
       
-      <div className="step-form-group">
+      <div className={styles.stepFormGroup}>
         <label htmlFor="adresse">Adresse</label>
         <input
           type="text"
@@ -151,7 +151,7 @@ const AddressStep = ({ data, onNext, onBack }) => {
         />
       </div>
       
-      <div className="step-form-group">
+      <div className={styles.stepFormGroup}>
         <label htmlFor="codePostal">Code postal</label>
         <input
           type="text"
@@ -162,7 +162,7 @@ const AddressStep = ({ data, onNext, onBack }) => {
         />
       </div>
       
-      <div className="step-form-group">
+      <div className={styles.stepFormGroup}>
         <label htmlFor="ville">Ville</label>
         <input
           type="text"
@@ -173,7 +173,7 @@ const AddressStep = ({ data, onNext, onBack }) => {
         />
       </div>
       
-      <div className="step-form-group">
+      <div className={styles.stepFormGroup}>
         <label htmlFor="pays">Pays</label>
         <input
           type="text"
@@ -184,7 +184,7 @@ const AddressStep = ({ data, onNext, onBack }) => {
         />
       </div>
       
-      <div className="step-form-actions">
+      <div className={styles.stepFormActions}>
         <button
           type="button"
           className="btn btn-primary"
@@ -208,8 +208,8 @@ const ContactStep = ({ data, onNext, onBack }) => {
   };
   
   return (
-    <div className="step-form">
-      <div className="step-form-group">
+    <div className={styles.stepForm}>
+      <div className={styles.stepFormGroup}>
         <label htmlFor="email">Email</label>
         <input
           type="email"
@@ -220,7 +220,7 @@ const ContactStep = ({ data, onNext, onBack }) => {
         />
       </div>
       
-      <div className="step-form-group">
+      <div className={styles.stepFormGroup}>
         <label htmlFor="telephone">Téléphone</label>
         <input
           type="tel"
@@ -231,7 +231,7 @@ const ContactStep = ({ data, onNext, onBack }) => {
         />
       </div>
       
-      <div className="step-form-group">
+      <div className={styles.stepFormGroup}>
         <label htmlFor="siteWeb">Site web</label>
         <input
           type="url"
@@ -242,7 +242,7 @@ const ContactStep = ({ data, onNext, onBack }) => {
         />
       </div>
       
-      <div className="step-form-actions">
+      <div className={styles.stepFormActions}>
         <button
           type="button"
           className="btn btn-primary"
@@ -334,8 +334,8 @@ const LieuFormMobile = () => {
   ];
   
   return (
-    <div className="lieu-form-mobile">
-      <div className="mobile-form-header">
+    <div className={styles.lieuFormMobile}>
+      <div className={styles.mobileFormHeader}>
         <h1>{id !== 'nouveau' ? 'Modifier le lieu' : 'Nouveau lieu'}</h1>
       </div>
       

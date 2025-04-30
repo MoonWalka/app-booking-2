@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../../../firebaseInit';
 import { doc, getDoc, updateDoc, collection, query, where, getDocs, addDoc, Timestamp } from 'firebase/firestore';
 import { Button, Badge, Spinner } from 'react-bootstrap';
-import '@styles/index.css';
+import styles from './FormValidationInterface.module.css';
 
 
 const FormValidationInterfaceMobile = () => {
@@ -169,7 +169,7 @@ const FormValidationInterfaceMobile = () => {
 
   if (loading) {
     return (
-      <div className="loading-container">
+      <div className={styles.loadingContainer}>
         <Spinner animation="border" variant="primary" />
         <p>Chargement du formulaire...</p>
       </div>
@@ -178,7 +178,7 @@ const FormValidationInterfaceMobile = () => {
 
   if (error) {
     return (
-      <div className="error-container">
+      <div className={styles.errorContainer}>
         <i className="bi bi-exclamation-triangle-fill"></i>
         <p>{error}</p>
         <Button 
@@ -193,10 +193,10 @@ const FormValidationInterfaceMobile = () => {
 
   if (!formData || !formData.reponses) {
     return (
-      <div className="empty-state">
+      <div className={styles.emptyState}>
         <i className="bi bi-file-earmark-x"></i>
         <p>Le formulaire n'a pas encore été rempli par le programmateur.</p>
-        <div className="action-buttons">
+        <div className={styles.actionButtons}>
           <Button 
             variant="outline-secondary"
             onClick={() => navigate(`/concerts/${id}`)}
@@ -215,52 +215,52 @@ const FormValidationInterfaceMobile = () => {
   }
 
   return (
-    <div className="form-validation-mobile">
-      <div className="mobile-header-bar">
+    <div className={styles.formValidationMobile}>
+      <div className={styles.mobileHeaderBar}>
         <button 
-          className="back-button" 
+          className={styles.backButton} 
           onClick={() => navigate(`/concerts/${id}`)}
         >
           <i className="bi bi-arrow-left"></i>
         </button>
-        <div className="mobile-title-container">
+        <div className={styles.mobileTitleContainer}>
           <h1>Formulaire de concert</h1>
         </div>
       </div>
 
-      <div className="form-status-container">
-        <div className="form-status">
-          <span className="status-label">Statut:</span>
+      <div className={styles.formStatusContainer}>
+        <div className={styles.formStatus}>
+          <span className={styles.statusLabel}>Statut:</span>
           <Badge bg={validated ? 'success' : 'warning'}>
             {validated ? 'Validé' : 'À valider'}
           </Badge>
         </div>
         
-        <div className="form-info">
-          <div className="info-item">
-            <span className="info-label">Date de réponse:</span>
-            <span className="info-value">{formatDate(formData.dateReponse || formData.dateCreation)}</span>
+        <div className={styles.formInfo}>
+          <div className={styles.infoItem}>
+            <span className={styles.infoLabel}>Date de réponse:</span>
+            <span className={styles.infoValue}>{formatDate(formData.dateReponse || formData.dateCreation)}</span>
           </div>
         </div>
       </div>
 
-      <div className="form-tabs">
+      <div className={styles.formTabs}>
         <button 
-          className={`tab-button ${activeSection === 'programmateur' ? 'active' : ''}`}
+          className={`${styles.tabButton} ${activeSection === 'programmateur' ? styles.active : ''}`}
           onClick={() => setActiveSection('programmateur')}
         >
           <i className="bi bi-person-badge"></i>
           <span>Programmateur</span>
         </button>
         <button 
-          className={`tab-button ${activeSection === 'lieu' ? 'active' : ''}`}
+          className={`${styles.tabButton} ${activeSection === 'lieu' ? styles.active : ''}`}
           onClick={() => setActiveSection('lieu')}
         >
           <i className="bi bi-geo-alt"></i>
           <span>Lieu</span>
         </button>
         <button 
-          className={`tab-button ${activeSection === 'technique' ? 'active' : ''}`}
+          className={`${styles.tabButton} ${activeSection === 'technique' ? styles.active : ''}`}
           onClick={() => setActiveSection('technique')}
         >
           <i className="bi bi-tools"></i>
@@ -268,14 +268,14 @@ const FormValidationInterfaceMobile = () => {
         </button>
       </div>
 
-      <div className="form-content">
+      <div className={styles.formContent}>
         {activeSection === 'programmateur' && (
-          <div className="form-section">
+          <div className={styles.formSection}>
             <h3>Informations du programmateur</h3>
             
-            <div className="form-field">
-              <div className="field-label">Nom</div>
-              <div className="field-value">
+            <div className={styles.formField}>
+              <div className={styles.fieldLabel}>Nom</div>
+              <div className={styles.fieldValue}>
                 {formData.reponses.nom || '-'}
                 <ValidationCheckbox 
                   field="nom"
@@ -287,9 +287,9 @@ const FormValidationInterfaceMobile = () => {
               </div>
             </div>
             
-            <div className="form-field">
-              <div className="field-label">Prénom</div>
-              <div className="field-value">
+            <div className={styles.formField}>
+              <div className={styles.fieldLabel}>Prénom</div>
+              <div className={styles.fieldValue}>
                 {formData.reponses.prenom || '-'}
                 <ValidationCheckbox 
                   field="prenom"
@@ -301,9 +301,9 @@ const FormValidationInterfaceMobile = () => {
               </div>
             </div>
             
-            <div className="form-field">
-              <div className="field-label">Email</div>
-              <div className="field-value">
+            <div className={styles.formField}>
+              <div className={styles.fieldLabel}>Email</div>
+              <div className={styles.fieldValue}>
                 {formData.reponses.email || '-'}
                 <ValidationCheckbox 
                   field="email"
@@ -315,9 +315,9 @@ const FormValidationInterfaceMobile = () => {
               </div>
             </div>
             
-            <div className="form-field">
-              <div className="field-label">Téléphone</div>
-              <div className="field-value">
+            <div className={styles.formField}>
+              <div className={styles.fieldLabel}>Téléphone</div>
+              <div className={styles.fieldValue}>
                 {formData.reponses.telephone || '-'}
                 <ValidationCheckbox 
                   field="telephone"
@@ -329,9 +329,9 @@ const FormValidationInterfaceMobile = () => {
               </div>
             </div>
             
-            <div className="form-field">
-              <div className="field-label">Structure</div>
-              <div className="field-value">
+            <div className={styles.formField}>
+              <div className={styles.fieldLabel}>Structure</div>
+              <div className={styles.fieldValue}>
                 {formData.reponses.structure || '-'}
                 <ValidationCheckbox 
                   field="structure"
@@ -343,9 +343,9 @@ const FormValidationInterfaceMobile = () => {
               </div>
             </div>
             
-            <div className="form-field">
-              <div className="field-label">SIRET</div>
-              <div className="field-value">
+            <div className={styles.formField}>
+              <div className={styles.fieldLabel}>SIRET</div>
+              <div className={styles.fieldValue}>
                 {formData.reponses.siret || '-'}
                 <ValidationCheckbox 
                   field="siret"
@@ -360,12 +360,12 @@ const FormValidationInterfaceMobile = () => {
         )}
 
         {activeSection === 'lieu' && (
-          <div className="form-section">
+          <div className={styles.formSection}>
             <h3>Informations du lieu</h3>
             
-            <div className="form-field">
-              <div className="field-label">Nom</div>
-              <div className="field-value">
+            <div className={styles.formField}>
+              <div className={styles.fieldLabel}>Nom</div>
+              <div className={styles.fieldValue}>
                 {formData.reponses.lieuNom || '-'}
                 <ValidationCheckbox 
                   field="lieuNom"
@@ -377,9 +377,9 @@ const FormValidationInterfaceMobile = () => {
               </div>
             </div>
             
-            <div className="form-field">
-              <div className="field-label">Adresse</div>
-              <div className="field-value">
+            <div className={styles.formField}>
+              <div className={styles.fieldLabel}>Adresse</div>
+              <div className={styles.fieldValue}>
                 {formData.reponses.lieuAdresse || '-'}
                 <ValidationCheckbox 
                   field="lieuAdresse"
@@ -391,9 +391,9 @@ const FormValidationInterfaceMobile = () => {
               </div>
             </div>
             
-            <div className="form-field">
-              <div className="field-label">Code postal</div>
-              <div className="field-value">
+            <div className={styles.formField}>
+              <div className={styles.fieldLabel}>Code postal</div>
+              <div className={styles.fieldValue}>
                 {formData.reponses.lieuCodePostal || '-'}
                 <ValidationCheckbox 
                   field="lieuCodePostal"
@@ -405,9 +405,9 @@ const FormValidationInterfaceMobile = () => {
               </div>
             </div>
             
-            <div className="form-field">
-              <div className="field-label">Ville</div>
-              <div className="field-value">
+            <div className={styles.formField}>
+              <div className={styles.fieldLabel}>Ville</div>
+              <div className={styles.fieldValue}>
                 {formData.reponses.lieuVille || '-'}
                 <ValidationCheckbox 
                   field="lieuVille"
@@ -419,9 +419,9 @@ const FormValidationInterfaceMobile = () => {
               </div>
             </div>
             
-            <div className="form-field">
-              <div className="field-label">Capacité</div>
-              <div className="field-value">
+            <div className={styles.formField}>
+              <div className={styles.fieldLabel}>Capacité</div>
+              <div className={styles.fieldValue}>
                 {formData.reponses.lieuCapacite || '-'}
                 <ValidationCheckbox 
                   field="lieuCapacite"
@@ -436,12 +436,12 @@ const FormValidationInterfaceMobile = () => {
         )}
 
         {activeSection === 'technique' && (
-          <div className="form-section">
+          <div className={styles.formSection}>
             <h3>Informations techniques</h3>
             
-            <div className="form-field">
-              <div className="field-label">Heure d'arrivée</div>
-              <div className="field-value">
+            <div className={styles.formField}>
+              <div className={styles.fieldLabel}>Heure d'arrivée</div>
+              <div className={styles.fieldValue}>
                 {formData.reponses.heureArrivee || '-'}
                 <ValidationCheckbox 
                   field="heureArrivee"
@@ -453,9 +453,9 @@ const FormValidationInterfaceMobile = () => {
               </div>
             </div>
             
-            <div className="form-field">
-              <div className="field-label">Heure de balance</div>
-              <div className="field-value">
+            <div className={styles.formField}>
+              <div className={styles.fieldLabel}>Heure de balance</div>
+              <div className={styles.fieldValue}>
                 {formData.reponses.heureBalance || '-'}
                 <ValidationCheckbox 
                   field="heureBalance"
@@ -467,9 +467,9 @@ const FormValidationInterfaceMobile = () => {
               </div>
             </div>
             
-            <div className="form-field">
-              <div className="field-label">Heure d'ouverture</div>
-              <div className="field-value">
+            <div className={styles.formField}>
+              <div className={styles.fieldLabel}>Heure d'ouverture</div>
+              <div className={styles.fieldValue}>
                 {formData.reponses.heureOuverture || '-'}
                 <ValidationCheckbox 
                   field="heureOuverture"
@@ -481,9 +481,9 @@ const FormValidationInterfaceMobile = () => {
               </div>
             </div>
             
-            <div className="form-field">
-              <div className="field-label">Heure de début</div>
-              <div className="field-value">
+            <div className={styles.formField}>
+              <div className={styles.fieldLabel}>Heure de début</div>
+              <div className={styles.fieldValue}>
                 {formData.reponses.heureDebut || '-'}
                 <ValidationCheckbox 
                   field="heureDebut"
@@ -495,9 +495,9 @@ const FormValidationInterfaceMobile = () => {
               </div>
             </div>
             
-            <div className="form-field">
-              <div className="field-label">Durée du concert</div>
-              <div className="field-value">
+            <div className={styles.formField}>
+              <div className={styles.fieldLabel}>Durée du concert</div>
+              <div className={styles.fieldValue}>
                 {formData.reponses.dureeConcert || '-'}
                 <ValidationCheckbox 
                   field="dureeConcert"
@@ -509,10 +509,10 @@ const FormValidationInterfaceMobile = () => {
               </div>
             </div>
             
-            <div className="form-field">
-              <div className="field-label">Besoins techniques</div>
-              <div className="field-value">
-                <div className="long-text">
+            <div className={styles.formField}>
+              <div className={styles.fieldLabel}>Besoins techniques</div>
+              <div className={styles.fieldValue}>
+                <div className={styles.longText}>
                   {formData.reponses.besoinsTechniques || '-'}
                 </div>
                 <ValidationCheckbox 
@@ -529,7 +529,7 @@ const FormValidationInterfaceMobile = () => {
       </div>
 
       {!validated && (
-        <div className="form-actions">
+        <div className={styles.formActions}>
           <Button 
             variant="primary"
             onClick={handleValidateForm}
@@ -553,7 +553,7 @@ const FormValidationInterfaceMobile = () => {
 // Composant pour les cases à cocher de validation
 const ValidationCheckbox = ({ field, value, validated, onValidate, disabled }) => {
   return (
-    <div className="validation-checkbox">
+    <div className={styles.validationCheckbox}>
       <input
         type="checkbox"
         id={`validate-${field}`}
@@ -561,7 +561,7 @@ const ValidationCheckbox = ({ field, value, validated, onValidate, disabled }) =
         onChange={(e) => onValidate(field, value, e.target.checked)}
         disabled={disabled}
       />
-      <label htmlFor={`validate-${field}`} className={disabled ? 'disabled' : ''}>
+      <label htmlFor={`validate-${field}`} className={disabled ? styles.disabled : ''}>
         {validated ? (
           <i className="bi bi-check-circle-fill text-success"></i>
         ) : (

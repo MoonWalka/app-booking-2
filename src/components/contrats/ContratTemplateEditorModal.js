@@ -2,6 +2,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ContratTemplateEditor from './desktop/ContratTemplateEditor';
+import styles from './ContratTemplateEditorModal.module.css';
 
 const ContratTemplateEditorModal = ({ 
   isOpen, 
@@ -23,11 +24,11 @@ const ContratTemplateEditorModal = ({
   // Utiliser createPortal pour rendre la modale directement dans le body
   return ReactDOM.createPortal(
     <div 
-      className="tc-modal-overlay" 
+      className={styles.modalOverlay} 
       onClick={onClose}
     >
       <div 
-        className="tc-modal tc-modal-full" 
+        className={styles.modalContent} 
         onClick={(e) => e.stopPropagation()}
       >
         {/* Utilisation du composant ContratTemplateEditor réutilisable */}

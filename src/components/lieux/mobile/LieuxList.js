@@ -3,8 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { collection, getDocs, query, orderBy, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../../../firebaseInit';
 import { Button, Form, InputGroup, Card, Badge } from 'react-bootstrap';
-import '@styles/index.css';
-import '@styles/pages/lieux.css';
+import styles from './LieuxList.module.css';
 import Spinner from '@/components/common/Spinner';
 
 const LieuxListMobile = () => {
@@ -93,13 +92,13 @@ const LieuxListMobile = () => {
   }
 
   return (
-    <div className="lieux-mobile-container p-2">
+    <div className={styles.mobileContainer}>
       {/* En-tête avec titre et bouton d'ajout */}
-      <div className="header-container d-flex justify-content-between align-items-center mb-3">
-        <h5 className="modern-title mb-0">Lieux</h5>
+      <div className={`${styles.headerContainer} d-flex justify-content-between align-items-center mb-3`}>
+        <h5 className={styles.modernTitle}>Lieux</h5>
         <Button 
           variant="primary"
-          className="modern-add-btn d-flex align-items-center justify-content-center"
+          className={styles.modernAddBtn}
           onClick={() => navigate('/lieux/nouveau')}
         >
           <i className="bi bi-plus-lg"></i>
@@ -107,15 +106,15 @@ const LieuxListMobile = () => {
       </div>
 
       {/* Barre de recherche */}
-      <div className="search-filter-container mb-3">
-        <div className="search-bar">
+      <div className={styles.searchFilterContainer}>
+        <div className={styles.searchBar}>
           <InputGroup>
-            <InputGroup.Text className="input-group-text">
+            <InputGroup.Text className={styles.inputGroupText}>
               <i className="bi bi-search"></i>
             </InputGroup.Text>
             <Form.Control
               type="text"
-              className="search-input"
+              className={styles.searchInput}
               placeholder="Rechercher un lieu..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -123,7 +122,7 @@ const LieuxListMobile = () => {
             {searchTerm && (
               <Button 
                 variant="outline-secondary"
-                className="clear-search"
+                className={styles.clearSearch}
                 onClick={() => setSearchTerm('')}
               >
                 <i className="bi bi-x"></i>
@@ -131,7 +130,7 @@ const LieuxListMobile = () => {
             )}
           </InputGroup>
           {searchTerm && (
-            <div className="results-count">
+            <div className={styles.resultsCount}>
               {filteredLieux.length} résultat{filteredLieux.length !== 1 ? 's' : ''} trouvé{filteredLieux.length !== 1 ? 's' : ''}
             </div>
           )}
@@ -140,12 +139,12 @@ const LieuxListMobile = () => {
 
       {/* Liste de lieux */}
       {filteredLieux.length === 0 ? (
-        <div className="empty-state">
+        <div className={styles.emptyState}>
           <i className="bi bi-geo-alt"></i>
           <p>{searchTerm ? "Aucun lieu ne correspond à votre recherche" : "Aucun lieu n'a été ajouté"}</p>
           <Button 
             variant="primary"
-            className="modern-add-btn"
+            className={styles.modernAddBtn}
             onClick={() => navigate('/lieux/nouveau')}
           >
             <i className="bi bi-plus-circle me-2"></i>
@@ -153,63 +152,63 @@ const LieuxListMobile = () => {
           </Button>
         </div>
       ) : (
-        <div className="lieu-cards-container">
+        <div className={styles.lieuCardsContainer}>
           {filteredLieux.map(lieu => (
             <Card 
               key={lieu.id}
-              className="lieu-card shadow-sm"
+              className={styles.lieuCard}
               onClick={() => navigate(`/lieux/${lieu.id}`)}
             >
-              <div className="lieu-card-header">
-                <h6 className="lieu-card-title d-flex align-items-center">
+              <div className={styles.lieuCardHeader}>
+                <h6 className={styles.lieuCardTitle}>
                   <i className="bi bi-geo-alt text-primary me-2"></i>
                   {lieu.nom}
                 </h6>
               </div>
-              <Card.Body className="lieu-card-body">
+              <Card.Body className={styles.lieuCardBody}>
                 {lieu.adresse && (
-                  <div className="lieu-info-item">
-                    <div className="lieu-info-icon">
+                  <div className={styles.lieuInfoItem}>
+                    <div className={styles.lieuInfoIcon}>
                       <i className="bi bi-geo-alt"></i>
                     </div>
-                    <div className="lieu-info-text">
+                    <div className={styles.lieuInfoText}>
                       {lieu.adresse}<br />
                       {lieu.codePostal} {lieu.ville}
                     </div>
                   </div>
                 )}
                 {lieu.jauge && (
-                  <div className="lieu-info-item">
-                    <div className="lieu-info-icon">
+                  <div className={styles.lieuInfoItem}>
+                    <div className={styles.lieuInfoIcon}>
                       <i className="bi bi-people"></i>
                     </div>
-                    <div className="lieu-info-text">
-                      <span className={`jauge-badge bg-${getJaugeColor(lieu.jauge)}`}>
-                        {lieu.jauge} places <span className="jauge-type">({getJaugeLabel(lieu.jauge)})</span>
+                    <div className={styles.lieuInfoText}>
+                      <span className={`${styles.jaugeBadge} bg-${getJaugeColor(lieu.jauge)}`}>
+                        {lieu.jauge} places <span className={styles.jaugeType}>({getJaugeLabel(lieu.jauge)})</span>
                       </span>
                     </div>
                   </div>
                 )}
                 
                 {lieu.email && (
-                  <div className="lieu-info-item">
-                    <div className="lieu-info-icon">
+                  <div className={styles.lieuInfoItem}>
+                    <div className={styles.lieuInfoIcon}>
                       <i className="bi bi-envelope"></i>
                     </div>
-                    <div className="lieu-info-text">
-                      <a href={`mailto:${lieu.email}`} className="lieu-contact-link" onClick={(e) => e.stopPropagation()}>
+                    <div className={styles.lieuInfoText}>
+                      <a href={`mailto:${lieu.email}`} className={styles.lieuContactLink} onClick={(e) => e.stopPropagation()}>
                         {lieu.email}
                       </a>
                     </div>
                   </div>
                 )}
                 {lieu.telephone && (
-                  <div className="lieu-info-item">
-                    <div className="lieu-info-icon">
+                  <div className={styles.lieuInfoItem}>
+                    <div className={styles.lieuInfoIcon}>
                       <i className="bi bi-telephone"></i>
                     </div>
-                    <div className="lieu-info-text">
-                      <a href={`tel:${lieu.telephone}`} className="lieu-contact-link" onClick={(e) => e.stopPropagation()}>
+                    <div className={styles.lieuInfoText}>
+                      <a href={`tel:${lieu.telephone}`} className={styles.lieuContactLink} onClick={(e) => e.stopPropagation()}>
                         {lieu.telephone}
                       </a>
                     </div>
@@ -217,26 +216,24 @@ const LieuxListMobile = () => {
                 )}
                 {lieu.concertsAssocies && lieu.concertsAssocies.length > 0 && (
                   <div className="mt-2">
-                    <Badge bg="primary" className="concert-count">
+                    <Badge bg="primary" className={styles.concertCount}>
                       <i className="bi bi-music-note-beamed me-1"></i>
                       {lieu.concertsAssocies.length} concert{lieu.concertsAssocies.length > 1 ? 's' : ''}
                     </Badge>
                   </div>
                 )}
               </Card.Body>
-              <div className="lieu-card-actions">
+              <div className={styles.lieuCardActions}>
                 <Link 
                   to={`/lieux/edit/${lieu.id}`}
-                  // Harmonisation : ajout classe selon l'action
-                  className="btn btn-outline-primary lieu-action-btn"
+                  className={`btn btn-outline-primary ${styles.lieuActionBtn}`}
                   onClick={(e) => e.stopPropagation()}
                 >
                   <i className="bi bi-pencil"></i>
                 </Link>
                 <Button
-                  // Harmonisation : ajout classe selon l'action
                   variant="danger"
-                  className="lieu-action-btn"
+                  className={styles.lieuActionBtn}
                   onClick={(e) => handleDelete(lieu.id, e)}
                 >
                   <i className="bi bi-trash"></i>

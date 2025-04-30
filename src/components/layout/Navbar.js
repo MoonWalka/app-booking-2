@@ -1,15 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { APP_NAME } from '../../config.js';
-
+import styles from './Navbar.module.css';
 
 const Navbar = () => {
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-      <div className="container-fluid">
-        <Link className="navbar-brand" to="/">{APP_NAME}</Link>
+    <nav className={`${styles.navbar} ${styles.navbarDark} ${styles.navbarExpand}`}>
+      <div className={styles.containerFluid}>
+        <Link className={styles.navbarBrand} to="/">{APP_NAME}</Link>
         <button 
-          className="navbar-toggler" 
+          className={styles.navbarToggler} 
           type="button" 
           data-bs-toggle="collapse" 
           data-bs-target="#navbarNav" 
@@ -17,29 +17,29 @@ const Navbar = () => {
           aria-expanded="false" 
           aria-label="Toggle navigation"
         >
-          <span className="navbar-toggler-icon"></span>
+          <span className={styles.navbarTogglerIcon}></span>
         </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav me-auto">
-            <li className="nav-item">
-              <Link className="nav-link" to="/">Dashboard</Link>
+        <div className={styles.navbarCollapse} id="navbarNav">
+          <ul className={`${styles.navbarNav} ${styles.meAuto}`}>
+            <li className={styles.navItem}>
+              <Link className={styles.navLink} to="/">Dashboard</Link>
             </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/concerts">Concerts</Link>
+            <li className={styles.navItem}>
+              <Link className={styles.navLink} to="/concerts">Concerts</Link>
             </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/programmateurs">Programmateurs</Link>
+            <li className={styles.navItem}>
+              <Link className={styles.navLink} to="/programmateurs">Programmateurs</Link>
             </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/lieux">Lieux</Link>
+            <li className={styles.navItem}>
+              <Link className={styles.navLink} to="/lieux">Lieux</Link>
             </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/contrats">Contrats</Link>
+            <li className={styles.navItem}>
+              <Link className={styles.navLink} to="/contrats">Contrats</Link>
             </li>
           </ul>
-          <div className="d-flex">
-            <span className="navbar-text me-3">Utilisateur test</span>
-            <Link className="btn btn-outline-light btn-sm" to="/login">Déconnexion</Link>
+          <div className={styles.dFlex}>
+            <span className={`${styles.navbarText} ${styles.me3}`}>Utilisateur test</span>
+            <Link className={styles.btnOutlineLight} to="/login">Déconnexion</Link>
           </div>
         </div>
       </div>

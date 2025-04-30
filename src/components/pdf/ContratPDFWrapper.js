@@ -1,4 +1,4 @@
-// src/components/contrats/ContratPDFWrapper.js
+// src/components/pdf/ContratPDFWrapper.js
 import React, { useState, useEffect } from 'react';
 import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import { format } from 'date-fns';
@@ -6,9 +6,11 @@ import { fr } from 'date-fns/locale';
 import pdfService from '../../services/pdfService';
 // Import du fichier CSS dédié à l'impression - Ce fichier sera utilisé pour les styles
 import '@/styles/components/contrat-print.css';
+// Import du fichier CSS modulaire pour les styles spécifiques au composant
+import styles from './ContratPDFWrapper.module.css';
 
 // Styles pour le PDF de fallback (mode prévisualisation simple)
-const styles = StyleSheet.create({
+const pdfStyles = StyleSheet.create({
   page: {
     padding: 30,
     fontFamily: 'Helvetica',
@@ -203,6 +205,217 @@ const getContratHTML = (data, title = 'Contrat', forPreview = false) => {
   // Traitement des sauts de page pour l'aperçu
   let bodyContentProcessed = forPreview ? processPageBreaks(bodyContent) : bodyContent;
   
+  // CSS intégré directement dans le HTML pour s'assurer qu'il est disponible lors de la génération PDF
+  const printCss = `
+    /* ===== RÉGLAGES DE BASE DU DOCUMENT ===== */
+    @page {
+      size: A4;
+      margin: 25mm 20mm 25mm 20mm;
+    }
+
+    /* ===== STYLES GÉNÉRAUX ===== */
+    body.contrat-print-mode {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 11pt;
+      line-height: 1.5;
+      color: #000000;
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto;
+      background-color: white;
+      background-image: none;
+    }
+
+    /* ===== TITRES ===== */
+    .contrat-print-mode h1, 
+    .contrat-print-mode h2, 
+    .contrat-print-mode h3, 
+    .contrat-print-mode h4, 
+    .contrat-print-mode h5, 
+    .contrat-print-mode h6 {
+      page-break-after: avoid;
+      page-break-inside: avoid;
+      margin-top: 1.5em;
+      margin-bottom: 0.75em;
+      color: #000000;
+    }
+
+    .contrat-print-mode h1 {
+      font-size: 18pt;
+      margin-top: 0;
+      text-align: center;
+    }
+
+    .contrat-print-mode h2 { font-size: 16pt; }
+    .contrat-print-mode h3 { font-size: 14pt; }
+    .contrat-print-mode h4, 
+    .contrat-print-mode h5, 
+    .contrat-print-mode h6 { font-size: 12pt; }
+
+    /* ===== PARAGRAPHES ET TEXTE ===== */
+    .contrat-print-mode p {
+      margin-bottom: 0.75em;
+      text-align: justify;
+    }
+
+    .contrat-print-mode strong, .contrat-print-mode b { font-weight: bold; }
+    .contrat-print-mode em, .contrat-print-mode i { font-style: italic; }
+
+    .contrat-print-mode ul, .contrat-print-mode ol {
+      margin: 0.75em 0;
+      padding-left: 2em;
+    }
+
+    .contrat-print-mode li { margin-bottom: 0.5em; }
+
+    /* ===== TABLEAUX ===== */
+    .contrat-print-mode table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5em 0;
+      page-break-inside: avoid;
+    }
+
+    .contrat-print-mode table, 
+    .contrat-print-mode th, 
+    .contrat-print-mode td {
+      border: 1px solid #000000;
+    }
+
+    .contrat-print-mode th, .contrat-print-mode td {
+      padding: 0.5em;
+      text-align: left;
+    }
+
+    .contrat-print-mode th { 
+      background-color: #f2f2f2;
+      font-weight: bold;
+    }
+
+    /* ===== GESTION DES SAUTS DE PAGE ===== */
+    .contrat-print-mode .page-break {
+      page-break-after: always;
+      border: none;
+      height: 0;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Éviter les sauts au milieu des éléments importants */
+    .contrat-print-mode table, 
+    .contrat-print-mode figure, 
+    .contrat-print-mode blockquote {
+      page-break-inside: avoid;
+    }
+
+    /* ===== STRUCTURE ET LAYOUT DU DOCUMENT ===== */
+    .contrat-container {
+      width: 100%;
+      max-width: 210mm;
+      margin: 0 auto;
+    }
+
+    .contrat-print-mode .header {
+      margin-bottom: 20mm;
+      position: relative;
+      min-height: 20mm;
+    }
+
+    .contrat-print-mode .header-content { width: 100%; }
+    .contrat-print-mode .body-content { margin-bottom: 20mm; }
+
+    .contrat-print-mode .footer {
+      margin-top: 15mm;
+      position: relative;
+      min-height: 15mm;
+    }
+
+    /* ===== LOGO ET ÉLÉMENTS GRAPHIQUES ===== */
+    .contrat-print-mode .logo-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      max-height: 20mm;
+      max-width: 30%;
+    }
+
+    .contrat-print-mode .logo-container img {
+      max-height: 100%;
+      max-width: 100%;
+    }
+
+    /* ===== SECTIONS SPÉCIFIQUES DU CONTRAT ===== */
+    .contrat-print-mode .signature-section {
+      margin-top: 30mm;
+      page-break-inside: avoid;
+    }
+
+    /* ===== UTILITAIRES ===== */
+    .contrat-print-mode .text-center { text-align: center; }
+    .contrat-print-mode .text-right { text-align: right; }
+    .contrat-print-mode .text-left { text-align: left; }
+
+    /* ===== SUPPORT ReactQuill ===== */
+    .contrat-print-mode .ql-align-center, 
+    .contrat-print-mode p[style*="text-align: center"] {
+      text-align: center;
+    }
+    .contrat-print-mode .ql-align-right, 
+    .contrat-print-mode p[style*="text-align: right"] {
+      text-align: right;
+    }
+    .contrat-print-mode .ql-align-justify, 
+    .contrat-print-mode p[style*="text-align: justify"] {
+      text-align: justify;
+    }
+
+    /* ===== APERÇU SEULEMENT ===== */
+    @media screen {
+      .contrat-print-mode {
+        background-color: #f8f9fa;
+        padding: 20px;
+      }
+      
+      .contrat-print-mode .contrat-container {
+        padding: 30px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        background-color: white;
+      }
+      
+      .contrat-print-mode .page-break {
+        border-top: 2px dashed #999;
+        margin: 20px 0;
+        position: relative;
+        height: 20px;
+      }
+      
+      .contrat-print-mode .page-break::after {
+        content: "⟿ SAUT DE PAGE ⟿";
+        position: absolute;
+        top: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: white;
+        padding: 0 10px;
+        font-size: 10px;
+        color: #666;
+        display: block !important;
+      }
+      
+      .contrat-print-mode .preview-note {
+        display: block !important;
+        background-color: #fff3cd;
+        color: #856404;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ffeeba;
+        border-radius: 4px;
+        font-size: 0.9em;
+        text-align: center;
+      }
+    }
+  `;
+  
   // Construire le contenu HTML complet
   let htmlContent = `
     <!DOCTYPE html>
@@ -210,7 +423,9 @@ const getContratHTML = (data, title = 'Contrat', forPreview = false) => {
     <head>
       <meta charset="UTF-8">
       <title>${titleContent}</title>
-      <link rel="stylesheet" href="/styles/components/contrat-print.css">
+      <style>
+        ${printCss}
+      </style>
     </head>
     <body class="contrat-print-mode">
   `;
@@ -436,9 +651,9 @@ const ContratPDFWrapper = ({
 
   return (
     <Document>
-      <Page size="A4" style={styles.page}>
-        <View style={styles.content}>
-          <Text style={styles.message}>
+      <Page size="A4" style={pdfStyles.page}>
+        <View style={pdfStyles.content}>
+          <Text style={pdfStyles.message}>
             Prévisualisation du contrat avec mise en page simplifiée.
             Utilisez l'aperçu HTML pour un rendu plus fidèle.
           </Text>

@@ -16,8 +16,8 @@ import {
 } from 'firebase/firestore';
 import { db } from '../../../firebaseInit';
 import { Badge } from 'react-bootstrap';
-// Remplacer les imports de l'ancien système par le nouveau système modulaire
-import '@styles/index.css';
+// Remplacer l'import CSS non-module par le CSS Module
+import styles from './LieuDetails.module.css';
 import { handleDelete } from './handlers/deleteHandler';
 
 // Composant pour afficher concert associé (identique à la version desktop)
@@ -460,10 +460,10 @@ const LieuDetails = () => {
 
   if (loading) {
     return (
-      <div className="lieu-details-container mobile">
-        <div className="spinner-container position-relative">
-          <div className="spinner"></div>
-          <p className="spinner-text">Chargement du lieu...</p>
+      <div className={styles.lieuDetailsContainer}>
+        <div className={styles.spinnerContainer}>
+          <div className={styles.spinner}></div>
+          <p className={styles.spinnerText}>Chargement du lieu...</p>
         </div>
       </div>
     );
@@ -471,7 +471,7 @@ const LieuDetails = () => {
 
   if (!lieu) {
     return (
-      <div className="lieu-details-container mobile">
+      <div className={styles.lieuDetailsContainer}>
         <div className="alert alert-danger modern-alert">
           <i className="bi bi-exclamation-triangle me-2"></i>
           Lieu non trouvé
@@ -487,25 +487,25 @@ const LieuDetails = () => {
   }
 
   return (
-    <div className="lieu-details-container mobile">
+    <div className={styles.lieuDetailsContainer}>
       {/* Header avec navigation et actions */}
-      <div className="details-header-container">
-        <div className="breadcrumb-container mb-2">
+      <div className={styles.detailsHeaderContainer}>
+        <div className={`${styles.breadcrumbContainer} mb-2`}>
           {/* Correction : ajout accessibilité (role/button + tabIndex) */}
-          <span className="breadcrumb-item" onClick={() => navigate('/lieux')} role="button" tabIndex={0}>Lieux</span>
+          <span className={styles.breadcrumbItem} onClick={() => navigate('/lieux')} role="button" tabIndex={0}>Lieux</span>
           <i className="bi bi-chevron-right"></i>
-          <span className="breadcrumb-item active">{lieu.nom}</span>
+          <span className={`${styles.breadcrumbItem} ${styles.active}`}>{lieu.nom}</span>
         </div>
         
-        <div className="title-container">
-          <h2 className="modern-title">
+        <div className={styles.titleContainer}>
+          <h2 className={styles.modernTitle}>
             {lieu.nom}
             {lieu.type && <TypeBadge type={lieu.type} />}
           </h2>
         </div>
         
         {/* Boutons flottants pour les actions principales */}
-        <div className="floating-action-buttons">
+        <div className={styles.floatingActionButtons}>
           {isEditing ? (
             <div className="d-flex align-items-center gap-2">
             <button 
@@ -539,14 +539,13 @@ const LieuDetails = () => {
             <>
               <button 
                 onClick={toggleEditMode} 
-                className="floating-action-btn edit"
+                className={`${styles.floatingActionBtn} ${styles.edit}`}
               >
                 <i className="bi bi-pencil"></i>
               </button>
               <button 
                 onClick={() => setShowConfirmDelete(true)} 
-                // Harmonisation : ajout classe selon l'action
-                className="floating-action-btn delete btn-danger"
+                className={`${styles.floatingActionBtn} ${styles.delete}`}
               >
                 <i className="bi bi-trash"></i>
               </button>
@@ -557,29 +556,27 @@ const LieuDetails = () => {
 
       {/* Popup de confirmation pour la suppression */}
       {showConfirmDelete && (
-        <div className="confirmation-modal">
-          <div className="confirmation-dialog">
-            <div className="confirmation-header">
+        <div className={styles.confirmationModal}>
+          <div className={styles.confirmationDialog}>
+            <div className={styles.confirmationHeader}>
               <h4>Confirmation de suppression</h4>
               <button 
                 className="btn-close" 
                 onClick={() => setShowConfirmDelete(false)}
               ></button>
             </div>
-            <div className="confirmation-body">
+            <div className={styles.confirmationBody}>
               <p>Êtes-vous sûr de vouloir supprimer ce lieu ?</p>
               <p className="text-danger">Cette action est irréversible.</p>
             </div>
-            <div className="confirmation-footer">
+            <div className={styles.confirmationFooter}>
               <button 
-                // Harmonisation : ajout classe selon l'action
                 className="btn btn-secondary" 
                 onClick={() => setShowConfirmDelete(false)}
               >
                 Annuler
               </button>
               <button 
-                // Harmonisation : ajout classe selon l'action
                 className="btn btn-danger" 
                 onClick={handleDeleteConfirm}
               >
@@ -592,14 +589,14 @@ const LieuDetails = () => {
 
       <form onSubmit={handleSubmit} className="modern-form mobile">
         {/* Carte - Informations principales */}
-        <div className="form-card">
-          <div className="card-header">
+        <div className={styles.formCard}>
+          <div className={styles.cardHeader}>
             <i className="bi bi-building"></i>
             <h3>Informations principales</h3>
           </div>
-          <div className="card-body">
-            <div className="form-group">
-              <label htmlFor="nom" className="form-label">Nom du lieu {isEditing && <span className="required">*</span>}</label>
+          <div className={styles.cardBody}>
+            <div className={styles.formGroup}>
+              <label htmlFor="nom" className={styles.formLabel}>Nom du lieu {isEditing && <span className={styles.required}>*</span>}</label>
               {isEditing ? (
                 <input
                   type="text"
@@ -612,12 +609,12 @@ const LieuDetails = () => {
                   placeholder="Ex: Le Café des Artistes"
                 />
               ) : (
-                <div className="form-control-static">{lieu.nom}</div>
+                <div className={styles.formControlStatic}>{lieu.nom}</div>
               )}
             </div>
             
-            <div className="form-group">
-              <label htmlFor="type" className="form-label">Type de lieu</label>
+            <div className={styles.formGroup}>
+              <label htmlFor="type" className={styles.formLabel}>Type de lieu</label>
               {isEditing ? (
                 <select
                   className="form-select"
@@ -634,14 +631,14 @@ const LieuDetails = () => {
                   <option value="autre">Autre</option>
                 </select>
               ) : (
-                <div className="form-control-static">
-                  {lieu.type ? <TypeBadge type={lieu.type} /> : <span className="text-empty">Non spécifié</span>}
+                <div className={styles.formControlStatic}>
+                  {lieu.type ? <TypeBadge type={lieu.type} /> : <span className={styles.textEmpty}>Non spécifié</span>}
                 </div>
               )}
             </div>
             
-            <div className="form-group">
-              <label htmlFor="capacite" className="form-label">Capacité</label>
+            <div className={styles.formGroup}>
+              <label htmlFor="capacite" className={styles.formLabel}>Capacité</label>
               {isEditing ? (
                 <>
                   <input
@@ -656,8 +653,8 @@ const LieuDetails = () => {
                   <small className="form-text text-muted">Nombre maximum de personnes que le lieu peut accueillir</small>
                 </>
               ) : (
-                <div className="form-control-static">
-                  {lieu.capacite ? `${lieu.capacite} personnes` : <span className="text-empty">Non spécifiée</span>}
+                <div className={styles.formControlStatic}>
+                  {lieu.capacite ? `${lieu.capacite} personnes` : <span className={styles.textEmpty}>Non spécifiée</span>}
                 </div>
               )}
             </div>

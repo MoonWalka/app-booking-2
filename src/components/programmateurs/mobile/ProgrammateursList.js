@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { collection, getDocs, query, orderBy, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '@/firebaseInit';
 import { Button, Form, InputGroup, Spinner } from 'react-bootstrap';
-import '@styles/index.css';
+import styles from './ProgrammateursList.module.css';
 import { handleDelete } from './handlers/deleteHandler';
 
 
@@ -71,13 +71,13 @@ const ProgrammateursListMobile = () => {
   };
 
   return (
-    <div className="programmateurs-mobile-container">
+    <div className={styles.programmateursMobileContainer}>
       {/* En-tête avec titre et bouton d'ajout */}
-      <div className="programmateurs-header">
+      <div className={styles.programmateursHeader}>
         <h1>Programmateurs</h1>
         <Button 
           variant="primary"
-          className="programmateurs-add-btn"
+          className={styles.programmateursAddBtn}
           onClick={() => navigate('/programmateurs/nouveau')}
         >
           <i className="bi bi-plus-lg"></i>
@@ -85,7 +85,7 @@ const ProgrammateursListMobile = () => {
       </div>
 
       {/* Barre de recherche */}
-      <div className="programmateurs-search-container">
+      <div className={styles.programmateursSearchContainer}>
         <InputGroup>
           <InputGroup.Text>
             <i className="bi bi-search"></i>
@@ -109,12 +109,12 @@ const ProgrammateursListMobile = () => {
 
       {/* Liste de programmateurs */}
       {loading ? (
-        <div className="loading-container">
+        <div className={styles.loadingContainer}>
           <Spinner animation="border" variant="primary" />
           <p>Chargement des programmateurs...</p>
         </div>
       ) : filteredProgrammateurs.length === 0 ? (
-        <div className="empty-state">
+        <div className={styles.emptyState}>
           <i className="bi bi-person-badge"></i>
           <p>Aucun programmateur trouvé</p>
           <Button 
@@ -126,45 +126,45 @@ const ProgrammateursListMobile = () => {
           </Button>
         </div>
       ) : (
-        <div className="programmateurs-list-mobile">
+        <div className={styles.programmateursListMobile}>
           {filteredProgrammateurs.map(prog => (
             <div 
               key={prog.id}
-              className="programmateur-card"
+              className={styles.programmateurCard}
               onClick={() => navigate(`/programmateurs/${prog.id}`)}
             >
-              <div className="programmateur-info">
-                <h3 className="programmateur-name">{prog.nom}</h3>
+              <div className={styles.programmateurInfo}>
+                <h3 className={styles.programmateurName}>{prog.nom}</h3>
                 {prog.structure && (
-                  <div className="programmateur-structure">{prog.structure}</div>
+                  <div className={styles.programmateurStructure}>{prog.structure}</div>
                 )}
                 {prog.email && (
-                  <div className="programmateur-contact">
+                  <div className={styles.programmateurContact}>
                     <i className="bi bi-envelope"></i>
                     <span>{prog.email}</span>
                   </div>
                 )}
                 {prog.telephone && (
-                  <div className="programmateur-contact">
+                  <div className={styles.programmateurContact}>
                     <i className="bi bi-telephone"></i>
                     <span>{prog.telephone}</span>
                   </div>
                 )}
-                <div className="programmateur-concerts">
+                <div className={styles.programmateurConcerts}>
                   <i className="bi bi-calendar-event"></i>
-                  <span className="concert-count">{prog.concertsAssocies?.length || 0} concerts</span>
+                  <span className={styles.concertCount}>{prog.concertsAssocies?.length || 0} concerts</span>
                 </div>
               </div>
-              <div className="programmateur-actions">
+              <div className={styles.programmateurActions}>
                 <Link 
                   to={`/programmateurs/edit/${prog.id}`}
-                  className="btn btn-sm btn-outline-secondary programmateur-action-btn"
+                  className={`btn btn-sm btn-outline-secondary ${styles.programmateurActionBtn}`}
                   onClick={(e) => e.stopPropagation()}
                 >
                   <i className="bi bi-pencil"></i>
                 </Link>
                 <button
-                  className="btn btn-sm btn-outline-danger programmateur-action-btn"
+                  className={`btn btn-sm btn-outline-danger ${styles.programmateurActionBtn}`}
                   onClick={(e) => handleDelete(prog.id, e)}
                 >
                   <i className="bi bi-trash"></i>

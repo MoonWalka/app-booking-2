@@ -12,13 +12,13 @@ import {
   deleteDoc
 } from 'firebase/firestore';
 import { db } from '@/firebaseInit';
-import '@styles/index.css';
+import styles from './ArtistesList.module.css';
 import { Button, Form, InputGroup } from 'react-bootstrap';
 import Spinner from '@/components/common/Spinner';
 import { getNbConcerts, filteredArtistes } from '@/components/artistes/mobile/utils/concertUtils';
 import { handleDelete } from '@/components/artistes/mobile/handlers/deleteHandler';
 import { handleLoadMore } from '@/components/artistes/mobile/handlers/paginationHandler';
-// Nouveau fichier CSS spécifique au mobile
+// CSS module est déjà importé
 
 const ArtistesList = () => {
   const [artistes, setArtistes] = useState([]);
@@ -125,21 +125,21 @@ const ArtistesList = () => {
   const filteredArtistesList = getFilteredArtistes();
 
   return (
-    <div className="artistes-mobile-container">
+    <div className={styles.artistesMobileContainer}>
       {/* Entête simplifié */}
-      <div className="mobile-header-container">
+      <div className={styles.mobileHeaderContainer}>
         <h1>Artistes</h1>
         <Button 
           variant="primary"
           onClick={() => navigate('/artistes/nouveau')}
-          className="mobile-add-btn"
+          className={styles.mobileAddBtn}
         >
           <i className="bi bi-plus-lg"></i>
         </Button>
       </div>
 
       {/* Barre de recherche */}
-      <div className="mobile-search-container" ref={searchInputRef}>
+      <div className={styles.mobileSearchContainer} ref={searchInputRef}>
         <InputGroup>
           <InputGroup.Text><i className="bi bi-search"></i></InputGroup.Text>
           <Form.Control
@@ -164,21 +164,21 @@ const ArtistesList = () => {
       </div>
 
       {/* Filtres simplifiés en menu horizontal scrollable */}
-      <div className="mobile-filters-container">
+      <div className={styles.mobileFiltersContainer}>
         <button 
-          className={`filter-pill ${filter === 'tous' ? 'active' : ''}`}
+          className={`${styles.filterPill} ${filter === 'tous' ? styles.active : ''}`}
           onClick={() => setFilter('tous')}
         >
           Tous
         </button>
         <button 
-          className={`filter-pill ${filter === 'avecConcerts' ? 'active' : ''}`}
+          className={`${styles.filterPill} ${filter === 'avecConcerts' ? styles.active : ''}`}
           onClick={() => setFilter('avecConcerts')}
         >
           Avec concerts
         </button>
         <button 
-          className={`filter-pill ${filter === 'sansConcerts' ? 'active' : ''}`}
+          className={`${styles.filterPill} ${filter === 'sansConcerts' ? styles.active : ''}`}
           onClick={() => setFilter('sansConcerts')}
         >
           Sans concerts
@@ -186,11 +186,11 @@ const ArtistesList = () => {
       </div>
 
       {/* Liste d'artistes en cards adaptées au mobile */}
-      <div className="mobile-artistes-grid">
+      <div className={styles.mobileArtistesGrid}>
         {loading && artistes.length === 0 ? (
           <Spinner message="Chargement des artistes..." />
         ) : filteredArtistesList.length === 0 ? (
-          <div className="empty-state-mobile">
+          <div className={styles.emptyStateMobile}>
             <i className="bi bi-music-note-list"></i>
             <p>Aucun artiste trouvé</p>
             <Button
@@ -204,34 +204,34 @@ const ArtistesList = () => {
           filteredArtistesList.map(artiste => (
             <div 
               key={artiste.id} 
-              className="artiste-card-mobile"
+              className={styles.artisteCardMobile}
               onClick={() => navigate(`/artistes/${artiste.id}`)}
             >
-              <div className="artiste-card-header">
+              <div className={styles.artisteCardHeader}>
                 {artiste.photoPrincipale ? (
                   <img src={artiste.photoPrincipale} alt={artiste.nom} />
                 ) : (
-                  <div className="placeholder-photo-mobile">
+                  <div className={styles.placeholderPhotoMobile}>
                     <i className="bi bi-music-note"></i>
                   </div>
                 )}
                 {/* Badges simplifiés */}
-                <div className="artiste-badges-mobile">
+                <div className={styles.artisteBadgesMobile}>
                   {getNbConcerts(artiste) > 0 && (
-                    <span className="badge-mobile badge-concerts">
+                    <span className={`${styles.badgeMobile} ${styles.badgeConcerts}`}>
                       {getNbConcerts(artiste)}
                     </span>
                   )}
                 </div>
               </div>
-              <div className="artiste-card-content">
+              <div className={styles.artisteCardContent}>
                 <h3>{artiste.nom}</h3>
-                {artiste.genre && <p className="genre">{artiste.genre}</p>}
+                {artiste.genre && <p className={styles.genre}>{artiste.genre}</p>}
                 
                 {/* Boutons d'action en bas de la carte */}
-                <div className="artiste-actions-mobile">
+                <div className={styles.artisteActionsMobile}>
                   <button 
-                    className="action-btn view"
+                    className={`${styles.actionBtn} ${styles.view}`}
                     onClick={(e) => {
                       e.stopPropagation();
                       navigate(`/artistes/${artiste.id}`);
@@ -240,7 +240,7 @@ const ArtistesList = () => {
                     <i className="bi bi-eye"></i>
                   </button>
                   <button 
-                    className="action-btn edit"
+                    className={`${styles.actionBtn} ${styles.edit}`}
                     onClick={(e) => {
                       e.stopPropagation();
                       navigate(`/artistes/${artiste.id}/modifier`);
@@ -249,7 +249,7 @@ const ArtistesList = () => {
                     <i className="bi bi-pencil"></i>
                   </button>
                   <button 
-                    className="action-btn delete"
+                    className={`${styles.actionBtn} ${styles.delete}`}
                     onClick={(e) => handleDeleteArtiste(artiste.id, e)}
                   >
                     <i className="bi bi-trash"></i>
@@ -263,12 +263,12 @@ const ArtistesList = () => {
 
       {/* Bouton "Charger plus" en bas de page */}
       {hasMore && !searchTerm && (
-        <div className="load-more-container-mobile">
+        <div className={styles.loadMoreContainerMobile}>
           <Button 
             variant="outline-primary"
             onClick={loadMoreData}
             disabled={loading}
-            className="load-more-btn-mobile"
+            className={styles.loadMoreBtnMobile}
           >
             {loading ? (
               <Spinner inline />

@@ -1,0 +1,139 @@
+/* ProgrammateursList.module.css */
+.programmateursMobileContainer {
+  padding: 1rem;
+  background-color: var(--tc-bg-color, #fff);
+}
+
+.programmateursHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--tc-border-color, #eee);
+}
+
+.programmateursHeader h1 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--tc-text-color, #333);
+  margin: 0;
+}
+
+.programmateursAddBtn {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  padding: 0;
+}
+
+.programmateursSearchContainer {
+  margin-bottom: 1.5rem;
+}
+
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 0;
+  color: var(--tc-text-muted, #6c757d);
+  text-align: center;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 0;
+  text-align: center;
+  color: var(--tc-text-muted, #6c757d);
+}
+
+.emptyState i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.programmateursListMobile {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.programmateurCard {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  background-color: var(--tc-bg-color, #fff);
+  border: 1px solid var(--tc-border-color, #eee);
+  border-radius: var(--tc-border-radius, 0.5rem);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.programmateurCard:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.programmateurInfo {
+  flex: 1;
+}
+
+.programmateurName {
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin: 0 0 0.5rem 0;
+  color: var(--tc-text-color, #344767);
+}
+
+.programmateurStructure {
+  font-size: 0.9rem;
+  color: var(--tc-text-muted, #6c757d);
+  margin-bottom: 0.5rem;
+}
+
+.programmateurContact {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--tc-text-muted, #6c757d);
+  margin-bottom: 0.25rem;
+}
+
+.programmateurConcerts {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--tc-primary-color, #3a86ff);
+  margin-top: 0.5rem;
+}
+
+.concertCount {
+  font-weight: 500;
+}
+
+.programmateurActions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.programmateurActionBtn {
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

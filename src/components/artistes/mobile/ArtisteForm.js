@@ -10,7 +10,7 @@ import {
   Timestamp 
 } from 'firebase/firestore';
 import { db } from '../../../firebaseInit';
-import '@styles/index.css';
+import styles from './ArtisteForm.module.css';
 
 // Version mobile simplifiée du formulaire d'artiste
 const ArtisteFormMobile = () => {
@@ -156,7 +156,7 @@ const ArtisteFormMobile = () => {
   
   if (loading) {
     return (
-      <div className="loading-container">
+      <div className={styles.loadingContainer}>
         <div className="spinner-border text-primary" role="status">
           <span className="visually-hidden">Chargement...</span>
         </div>
@@ -165,16 +165,16 @@ const ArtisteFormMobile = () => {
   }
   
   return (
-    <div className="artiste-form-mobile">
-      <div className="mobile-form-header">
+    <div className={styles.artisteFormMobile}>
+      <div className={styles.mobileFormHeader}>
         <h1 className="mb-3">{id !== 'nouveau' ? 'Modifier l\'artiste' : 'Nouvel artiste'}</h1>
         <p className="text-muted small">Tous les champs avec * sont obligatoires</p>
       </div>
       
-      <form onSubmit={handleSubmit} className="mobile-form">
+      <form onSubmit={handleSubmit} className={styles.mobileForm}>
         {/* Section Informations de base */}
-        <div className="form-section">
-          <h3 className="section-title">Informations de base</h3>
+        <div className={styles.formSection}>
+          <h3 className={styles.sectionTitle}>Informations de base</h3>
           
           <div className="form-floating mb-3">
             <input
@@ -218,8 +218,8 @@ const ArtisteFormMobile = () => {
         </div>
         
         {/* Section Contacts */}
-        <div className="form-section">
-          <h3 className="section-title">Coordonnées</h3>
+        <div className={styles.formSection}>
+          <h3 className={styles.sectionTitle}>Coordonnées</h3>
           
           <div className="form-floating mb-3">
             <input
@@ -288,8 +288,8 @@ const ArtisteFormMobile = () => {
         </div>
         
         {/* Section Membres */}
-        <div className="form-section">
-          <h3 className="section-title">Membres</h3>
+        <div className={styles.formSection}>
+          <h3 className={styles.sectionTitle}>Membres</h3>
           
           <div className="input-group mb-3">
             <input
@@ -311,9 +311,9 @@ const ArtisteFormMobile = () => {
           {formData.membres.length === 0 ? (
             <div className="text-muted text-center my-3">Aucun membre ajouté</div>
           ) : (
-            <div className="membres-list mb-3">
+            <div className={styles.membresList}>
               {formData.membres.map((membre, index) => (
-                <div key={index} className="membre-item d-flex justify-content-between align-items-center p-2 mb-2 border rounded">
+                <div key={index} className={styles.membreItem}>
                   <span>{membre}</span>
                   <button 
                     type="button" 
@@ -329,7 +329,7 @@ const ArtisteFormMobile = () => {
         </div>
         
         {/* Boutons d'action */}
-        <div className="form-actions mt-4 d-grid gap-2">
+        <div className={styles.formActions}>
           <button type="submit" className="tc-btn-primary btn-lg">
             <i className="bi bi-check-lg me-2"></i>
             {id !== 'nouveau' ? 'Enregistrer' : 'Créer l\'artiste'}

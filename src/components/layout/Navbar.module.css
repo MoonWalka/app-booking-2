@@ -1,0 +1,157 @@
+/* Navbar.module.css */
+
+.navbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  background-color: var(--tc-dark, #343a40) !important;
+}
+
+.navbarDark {
+  color: #fff;
+}
+
+.navbarExpand {
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+}
+
+.containerFluid {
+  display: flex;
+  flex-wrap: inherit;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.navbarBrand {
+  display: inline-block;
+  padding-top: 0.3125rem;
+  padding-bottom: 0.3125rem;
+  margin-right: 1rem;
+  font-size: 1.25rem;
+  line-height: inherit;
+  white-space: nowrap;
+  color: #fff;
+  text-decoration: none;
+}
+
+.navbarToggler {
+  padding: 0.25rem 0.75rem;
+  font-size: 1.25rem;
+  line-height: 1;
+  background-color: transparent;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 0.25rem;
+  color: rgba(255,255,255,.5);
+}
+
+.navbarTogglerIcon {
+  display: inline-block;
+  width: 1.5em;
+  height: 1.5em;
+  vertical-align: middle;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.5%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100%;
+}
+
+.navbarCollapse {
+  flex-basis: 100%;
+  flex-grow: 1;
+  align-items: center;
+}
+
+.navbarNav {
+  display: flex;
+  flex-direction: column;
+  padding-left: 0;
+  margin-bottom: 0;
+  list-style: none;
+}
+
+.navItem {
+  margin-bottom: 0;
+}
+
+.navLink {
+  display: block;
+  padding: 0.5rem 1rem;
+  color: rgba(255,255,255,.55);
+  text-decoration: none;
+  transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out;
+}
+
+.navLink:hover, .navLink:focus {
+  color: rgba(255,255,255,.75);
+}
+
+.meAuto {
+  margin-right: auto !important;
+}
+
+.dFlex {
+  display: flex !important;
+}
+
+.navbarText {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  color: rgba(255,255,255,.55);
+}
+
+.me3 {
+  margin-right: 1rem !important;
+}
+
+.btnOutlineLight {
+  color: #f8f9fa;
+  border-color: #f8f9fa;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  border-radius: 0.2rem;
+  display: inline-block;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  background-color: transparent;
+  border: 1px solid;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.btnOutlineLight:hover {
+  color: #000;
+  background-color: #f8f9fa;
+  border-color: #f8f9fa;
+}
+
+@media (min-width: 992px) {
+  .navbarExpand {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+  }
+  
+  .navbarCollapse {
+    display: flex !important;
+    flex-basis: auto;
+  }
+  
+  .navbarNav {
+    flex-direction: row;
+  }
+  
+  .navItem {
+    margin-right: 0.5rem;
+  }
+}

@@ -1,0 +1,48 @@
+/* GenericList.module.css */
+
+.container {
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--tc-title-color, #212529);
+  margin: 0;
+}
+
+.controls {
+  margin-bottom: 1.5rem;
+}
+
+.filterTabs :global(.nav-tabs) {
+  border-bottom: 1px solid var(--tc-border-color, #dee2e6);
+}
+
+.filterIcon {
+  margin-right: 0.25rem;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 3rem 1rem;
+}
+
+.table {
+  width: 100%;
+  margin-bottom: 1rem;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.loadMoreContainer {
+  text-align: center;
+  margin-top: 1.5rem;
+}

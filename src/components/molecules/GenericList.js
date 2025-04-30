@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Form, InputGroup, Table, Button, Tabs, Tab, Spinner } from 'react-bootstrap';
-import { handleLoadMore } from './handlers/paginationHandler';
-
+import styles from './GenericList.module.css';
 
 const GenericList = ({
   title,
@@ -58,16 +57,16 @@ const GenericList = ({
   }, []);
 
   // Gérer le chargement de plus d'éléments
-  const handleLoadMore = useCallback(() => {
+  const handleLoadMoreFn = useCallback(() => {
     if (onLoadMore && !loading && hasMore) {
       onLoadMore();
     }
   }, [onLoadMore, loading, hasMore]);
 
   return (
-    <div className="generic-list-container">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2 className="modern-title">{title}</h2>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h2 className={styles.title}>{title}</h2>
         {addButtonText && addButtonLink && (
           <Link to={addButtonLink} className="btn btn-primary">
             <i className="bi bi-plus-circle me-2"></i>
@@ -76,7 +75,7 @@ const GenericList = ({
         )}
       </div>
 
-      <div className="list-controls mb-4">
+      <div className={styles.controls}>
         {searchFields.length > 0 && (
           <InputGroup className="mb-3">
             <InputGroup.Text>
@@ -102,7 +101,7 @@ const GenericList = ({
           <Tabs
             activeKey={activeFilter}
             onSelect={handleFilterChange}
-            className="mb-3 filter-tabs"
+            className={`mb-3 ${styles.filterTabs}`}
           >
             <Tab eventKey="all" title="Tous" />
             {filterOptions.map(option => (
@@ -111,7 +110,7 @@ const GenericList = ({
                 eventKey={option.value} 
                 title={
                   <span>
-                    {option.icon && <span className="filter-icon me-1">{option.icon}</span>}
+                    {option.icon && <span className={styles.filterIcon}>{option.icon}</span>}
                     {option.label}
                   </span>
                 }
@@ -127,14 +126,14 @@ const GenericList = ({
           <p className="mt-2">Chargement...</p>
         </div>
       ) : filteredItems.length === 0 ? (
-        <div className="text-center my-5 empty-state">
+        <div className={styles.emptyState}>
           <i className="bi bi-inbox fs-1 text-muted"></i>
           <p className="mt-2 text-muted">{emptyMessage}</p>
         </div>
       ) : (
         <>
           <div className="table-responsive">
-            <Table hover className="modern-table">
+            <Table hover className={styles.table}>
               <tbody>
                 {filteredItems.map(renderItem)}
               </tbody>
@@ -142,10 +141,10 @@ const GenericList = ({
           </div>
 
           {hasMore && (
-            <div className="text-center mt-4">
+            <div className={styles.loadMoreContainer}>
               <Button 
                 variant="outline-primary" 
-                onClick={handleLoadMore}
+                onClick={handleLoadMoreFn}
                 disabled={loading}
               >
                 {loading ? (

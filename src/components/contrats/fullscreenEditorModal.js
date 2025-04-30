@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 // Modifié l'ordre d'importation pour que les styles de Quill aient priorité
-import '@/styles/index.css';
+import styles from './FullscreenEditorModal.module.css';
 
 const FullscreenEditorModal = ({ 
   isOpen, 
@@ -74,9 +74,9 @@ const FullscreenEditorModal = ({
   };
 
   return (
-    <div className="tc-modal-overlay" onClick={handleBackdropClick} role="button" tabIndex={0}>
-      <div className="tc-modal-content fullscreen-editor-modal" ref={modalRef}>
-        <div className="tc-modal-header">
+    <div className={styles.modalOverlay} onClick={handleBackdropClick} role="button" tabIndex={0}>
+      <div className={styles.modalContent} ref={modalRef}>
+        <div className={styles.modalHeader}>
           <h3>{sectionTitle ? `Édition de la section "${sectionTitle}"` : 'Édition de section'}</h3>
           <button
             type="button"
@@ -94,9 +94,9 @@ const FullscreenEditorModal = ({
           </button>
         </div>
 
-        <div className="tc-modal-body">
+        <div className={styles.modalBody}>
           {!isPreviewMode ? (
-            <div className="tc-quill-editor-wrapper fullscreen">
+            <div className={styles.quillEditorWrapper}>
               <ReactQuill
                 ref={editorRef}
                 theme="snow"
@@ -107,13 +107,13 @@ const FullscreenEditorModal = ({
               />
             </div>
           ) : (
-            <div className="tc-quill-preview">
+            <div className={styles.quillPreview}>
               <div dangerouslySetInnerHTML={{ __html: content }} />
             </div>
           )}
         </div>
 
-        <div className="tc-modal-footer">
+        <div className={styles.modalFooter}>
           <button 
             type="button"
             className="tc-btn tc-btn-outline-secondary" 

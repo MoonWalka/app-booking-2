@@ -18,6 +18,7 @@ import { Button, Spinner as BootstrapSpinner, Alert } from 'react-bootstrap';
 import { formatDateFr } from '@/utils/dateUtils';
 import Modal from '@/components/common/Modal';
 import FormGenerator from '@/components/forms/FormGenerator';
+import styles from './ConcertDetails.module.css';
 
 
 
@@ -913,32 +914,32 @@ const ConcertDetails = () => {
     const statusInfo = getStatusInfo();
   
     return (
-      <div className="concert-details-container">
+      <div className={styles.concertDetailsContainer}>
         {/* En-tête du formulaire */}
-        <div className="form-header-container">
-          <h2 className="modern-title">
+        <div className={styles.formHeaderContainer}>
+          <h2 className={styles.modernTitle}>
             {concert.titre || `Concert du ${formatDate(concert.date)}`}
           </h2>
-          <div className="breadcrumb-container">
+          <div className={styles.breadcrumbContainer}>
             {/* Transformé en bouton avec classes standards */}
           <button className="tc-btn-light btn-sm" onClick={() => navigate('/concerts')}>
               Concerts
             </button>
             <i className="bi bi-chevron-right"></i>
-            <span className="breadcrumb-item active">
+            <span className={`${styles.breadcrumbItem} ${styles.active}`}>
               {concert.titre || formatDate(concert.date)}
             </span>
           </div>
         </div>
     
         {/* Boutons d'action */}
-        <div className="action-buttons">
+        <div className={styles.actionButtons}>
           {isEditMode ? (
             <>
               {/* Boutons en mode édition */}
               <button
                 type="button"
-                className="tc-btn-primary action-btn"
+                className={`tc-btn-primary ${styles.actionBtn}`}
                 onClick={handleSubmit}
                 disabled={isSubmitting || !validateForm()}
               >
@@ -957,7 +958,7 @@ const ConcertDetails = () => {
               
               <button 
                 onClick={toggleEditMode} 
-                className="tc-btn-outline-secondary action-btn"
+                className={`tc-btn-outline-secondary ${styles.actionBtn}`}
               >
                 <i className="bi bi-x-circle"></i>
                 <span className="btn-text">Annuler</span>
@@ -965,7 +966,7 @@ const ConcertDetails = () => {
               
               <button 
                 onClick={() => setShowDeleteConfirm(true)} 
-                className="tc-btn-outline-danger action-btn"
+                className={`tc-btn-outline-danger ${styles.actionBtn}`}
               >
                 <i className="bi bi-trash"></i>
                 <span className="btn-text">Supprimer</span>
@@ -976,7 +977,7 @@ const ConcertDetails = () => {
               {/* Boutons en mode affichage */}
               <button 
                 onClick={() => navigate('/concerts')} 
-                className="tc-btn-outline-secondary action-btn"
+                className={`tc-btn-outline-secondary ${styles.actionBtn}`}
               >
                 <i className="bi bi-arrow-left"></i>
                 <span className="btn-text">Retour</span>
@@ -984,7 +985,7 @@ const ConcertDetails = () => {
               
               <button
                 onClick={toggleEditMode}
-                className="tc-btn-outline-primary action-btn"
+                className={`tc-btn-outline-primary ${styles.actionBtn}`}
               >
                 <i className="bi bi-pencil"></i>
                 <span className="btn-text">Modifier</span>
@@ -997,14 +998,14 @@ const ConcertDetails = () => {
           /* Mode édition */
           <form className="modern-form">
             {/* Carte - Informations principales du concert */}
-            <div className="form-card">
-              <div className="card-header">
+            <div className={styles.formCard}>
+              <div className={styles.cardHeader}>
                 <i className="bi bi-info-circle"></i>
                 <h3>Informations générales</h3>
               </div>
-              <div className="card-body">
-                <div className="form-group">
-                  <label htmlFor="titre" className="form-label">Titre du concert</label>
+              <div className={styles.cardBody}>
+                <div className={styles.formGroup}>
+                  <label htmlFor="titre" className={styles.formLabel}>Titre du concert</label>
                   <input
                     type="text"
                     className="form-control"
@@ -1018,8 +1019,8 @@ const ConcertDetails = () => {
   
                 <div className="row">
                   <div className="col-md-6">
-                    <div className="form-group">
-                      <label htmlFor="date" className="form-label">Date du concert <span className="required">*</span></label>
+                    <div className={styles.formGroup}>
+                      <label htmlFor="date" className={styles.formLabel}>Date du concert <span className={styles.required}>*</span></label>
                       <input
                         type="date"
                         className="form-control"
@@ -1032,8 +1033,8 @@ const ConcertDetails = () => {
                     </div>
                   </div>
                   <div className="col-md-6">
-                    <div className="form-group">
-                      <label htmlFor="montant" className="form-label">Montant (€) <span className="required">*</span></label>
+                    <div className={styles.formGroup}>
+                      <label htmlFor="montant" className={styles.formLabel}>Montant (€) <span className={styles.required}>*</span></label>
                       <input
                         type="number"
                         className="form-control"
@@ -1047,8 +1048,8 @@ const ConcertDetails = () => {
                   </div>
                 </div>
   
-                <div className="form-group">
-                  <label htmlFor="statut" className="form-label">Statut</label>
+                <div className={styles.formGroup}>
+                  <label htmlFor="statut" className={styles.formLabel}>Statut</label>
                   <select
                     className="form-select"
                     id="statut"
@@ -1068,8 +1069,8 @@ const ConcertDetails = () => {
                   </select>
                 </div>
                 
-                <div className="form-group">
-                  <label htmlFor="notes" className="form-label">Notes</label>
+                <div className={styles.formGroup}>
+                  <label htmlFor="notes" className={styles.formLabel}>Notes</label>
                   <textarea
                     className="form-control"
                     id="notes"
@@ -1084,17 +1085,17 @@ const ConcertDetails = () => {
             </div>
   
             {/* Carte - Lieu */}
-            <div className="form-card">
-              <div className="card-header">
+            <div className={styles.formCard}>
+              <div className={styles.cardHeader}>
                 <i className="bi bi-geo-alt"></i>
-                <h3>Lieu <span className="required">*</span></h3>
+                <h3>Lieu <span className={styles.required}>*</span></h3>
               </div>
-              <div className="card-body">
-                <div className="form-group" ref={lieuDropdownRef}>
-                  <label className="form-label">Rechercher un lieu</label>
+              <div className={styles.cardBody}>
+                <div className={styles.formGroup} ref={lieuDropdownRef}>
+                  <label className={styles.formLabel}>Rechercher un lieu</label>
                   
                   {!selectedLieu ? (
-                    <div className="lieu-search-container">
+                    <div className={styles.lieuSearchContainer}>
                       <div className="input-group">
                         <span className="input-group-text"><i className="bi bi-search"></i></span>
                         <input
@@ -1158,18 +1159,18 @@ const ConcertDetails = () => {
                       )}
                     </div>
                   ) : (
-                    <div className="selected-lieu">
-                      <div className="lieu-card">
-                        <div className="lieu-info">
-                          <span className="lieu-name">{selectedLieu.nom}</span>
+                    <div className={styles.selectedLieu}>
+                      <div className={styles.lieuCard}>
+                        <div className={styles.lieuInfo}>
+                          <span className={styles.lieuName}>{selectedLieu.nom}</span>
                           {selectedLieu.adresse && (
-                            <div className="lieu-address">
+                            <div className={styles.lieuAddress}>
                               <i className="bi bi-geo-alt-fill"></i> {selectedLieu.adresse}<br />
                               {selectedLieu.codePostal} {selectedLieu.ville}
                             </div>
                           )}
                           {selectedLieu.capacite && (
-                            <div className="lieu-capacity">
+                            <div className={styles.lieuCapacity}>
                               <i className="bi bi-people-fill"></i> Capacité: {selectedLieu.capacite} personnes
                             </div>
                           )}
@@ -1194,17 +1195,17 @@ const ConcertDetails = () => {
             </div>
   
             {/* Carte - Programmateur */}
-            <div className="form-card">
-              <div className="card-header">
+            <div className={styles.formCard}>
+              <div className={styles.cardHeader}>
                 <i className="bi bi-person-badge"></i>
                 <h3>Programmateur</h3>
               </div>
-              <div className="card-body">
-                <div className="form-group" ref={progDropdownRef}>
-                  <label className="form-label">Associer un programmateur</label>
+              <div className={styles.cardBody}>
+                <div className={styles.formGroup} ref={progDropdownRef}>
+                  <label className={styles.formLabel}>Associer un programmateur</label>
                   
                   {!selectedProgrammateur ? (
-                    <div className="programmateur-search-container">
+                    <div className={styles.programmateurSearchContainer}>
                       <div className="input-group">
                         <span className="input-group-text"><i className="bi bi-search"></i></span>
                         <input
@@ -1260,21 +1261,21 @@ const ConcertDetails = () => {
                       )}
                     </div>
                   ) : (
-                    <div className="selected-programmateur">
-                      <div className="programmateur-card">
-                        <div className="programmateur-info">
-                          <span className="programmateur-name">{selectedProgrammateur.nom}</span>
+                    <div className={styles.selectedProgrammateur}>
+                      <div className={styles.programmateurCard}>
+                        <div className={styles.programmateurInfo}>
+                          <span className={styles.programmateurName}>{selectedProgrammateur.nom}</span>
                           {selectedProgrammateur.structure && (
-                            <span className="programmateur-structure">{selectedProgrammateur.structure}</span>
+                            <span className={styles.programmateurStructure}>{selectedProgrammateur.structure}</span>
                           )}
-                          <div className="programmateur-contacts">
+                          <div className={styles.programmateurContacts}>
                             {selectedProgrammateur.email && (
-                              <span className="programmateur-contact-item">
+                              <span className={styles.programmateurContactItem}>
                                 <i className="bi bi-envelope"></i> {selectedProgrammateur.email}
                               </span>
                             )}
                             {selectedProgrammateur.telephone && (
-                              <span className="programmateur-contact-item">
+                              <span className={styles.programmateurContactItem}>
                                 <i className="bi bi-telephone"></i> {selectedProgrammateur.telephone}
                               </span>
                             )}
@@ -1300,17 +1301,17 @@ const ConcertDetails = () => {
             </div>
   
             {/* Carte - Artiste */}
-            <div className="form-card">
-              <div className="card-header">
+            <div className={styles.formCard}>
+              <div className={styles.cardHeader}>
                 <i className="bi bi-music-note-beamed"></i>
                 <h3>Artiste</h3>
               </div>
-              <div className="card-body">
-                <div className="form-group" ref={artisteDropdownRef}>
-                  <label className="form-label">Associer un artiste</label>
+              <div className={styles.cardBody}>
+                <div className={styles.formGroup} ref={artisteDropdownRef}>
+                  <label className={styles.formLabel}>Associer un artiste</label>
                   
                   {!selectedArtiste ? (
-                    <div className="artiste-search-container">
+                    <div className={styles.artisteSearchContainer}>
                       <div className="input-group">
                         <span className="input-group-text"><i className="bi bi-search"></i></span>
                         <input
@@ -1365,15 +1366,15 @@ const ConcertDetails = () => {
                       )}
                     </div>
                   ) : (
-                    <div className="selected-artiste">
-                      <div className="artiste-card">
-                        <div className="artiste-info">
-                          <span className="artiste-name">{selectedArtiste.nom}</span>
+                    <div className={styles.selectedArtiste}>
+                      <div className={styles.artisteCard}>
+                        <div className={styles.artisteInfo}>
+                          <span className={styles.artisteName}>{selectedArtiste.nom}</span>
                           {selectedArtiste.genre && (
-                            <span className="artiste-genre">Genre: {selectedArtiste.genre}</span>
+                            <span className={styles.artisteGenre}>Genre: {selectedArtiste.genre}</span>
                           )}
                           {selectedArtiste.description && (
-                            <p className="artiste-description">{selectedArtiste.description}</p>
+                            <p className={styles.artisteDescription}>{selectedArtiste.description}</p>
                           )}
                         </div>
                         <button 
@@ -1399,12 +1400,12 @@ const ConcertDetails = () => {
           /* Mode vue */
           <>
             {/* Carte - Informations principales */}
-            <div className="form-card">
-              <div className="card-header">
+            <div className={styles.formCard}>
+              <div className={styles.cardHeader}>
                 <i className="bi bi-info-circle"></i>
                 <h3>Informations générales</h3>
               </div>
-              <div className="card-body">
+              <div className={styles.cardBody}>
                 <div className="row">
                   <div className="col-md-6">
                     <div className="mb-3">
@@ -1439,7 +1440,7 @@ const ConcertDetails = () => {
                     </div>
                     <div className="mb-3">
                       <div className="fw-bold">Statut:</div>
-                      <div className="status-display d-flex align-items-center">
+                      <div className={styles.statusDisplay}>
                         <span className={`badge ${
                           concert.statut === 'contrat' ? 'bg-success' :
                           concert.statut === 'preaccord' ? 'bg-primary' :
@@ -1451,7 +1452,7 @@ const ConcertDetails = () => {
                           {concert.statut || 'Non défini'}
                         </span>
                         {statusInfo.actionNeeded && (
-                          <div className="action-needed ms-2">
+                          <div className={styles.actionNeeded}>
                             <i className="bi bi-exclamation-circle text-warning me-1"></i>
                             {statusInfo.message}
                           </div>
@@ -1492,7 +1493,7 @@ const ConcertDetails = () => {
                     <div className="col-12">
                       <div className="mb-3">
                         <div className="fw-bold">Notes:</div>
-                        <div className="mt-2 p-2 bg-light rounded notes-content">
+                        <div className={`mt-2 p-2 bg-light rounded ${styles.notesContent}`}>
                           {concert.notes}
                         </div>
                       </div>
@@ -1504,19 +1505,19 @@ const ConcertDetails = () => {
   
             {/* Carte - Lieu */}
             {lieu && (
-              <div className="form-card">
-                <div className="card-header">
+              <div className={styles.formCard}>
+                <div className={styles.cardHeader}>
                   <i className="bi bi-geo-alt"></i>
                   <h3>Lieu</h3>
                   <button
                     onClick={() => navigate(`/lieux/${lieu.id}`)}
-                    className="tc-btn-outline-primary btn-sm card-header-action"
+                    className={`tc-btn-outline-primary btn-sm ${styles.cardHeaderAction}`}
                   >
                     <i className="bi bi-eye"></i>
                     <span>Voir détails</span>
                   </button>
                 </div>
-                <div className="card-body">
+                <div className={styles.cardBody}>
                   <div className="row">
                     <div className="col-md-6">
                       <div className="mb-3">
@@ -1543,7 +1544,7 @@ const ConcertDetails = () => {
                   </div>
                   {/* Intégration de la carte Google Maps */}
                   <div className="mt-3">
-                    <div className="map-container mb-3">
+                    <div className={`mb-3 ${styles.mapContainer}`}>
                       <iframe 
                         src={`https://maps.google.com/maps?q=${encodeURIComponent(`${lieu.adresse}, ${lieu.codePostal} ${lieu.ville}`)}&z=6&output=embed`}
                         width="100%" 
@@ -1569,21 +1570,21 @@ const ConcertDetails = () => {
             )}
   
             {/* Carte - Programmateur */}
-            <div className="form-card">
-              <div className="card-header">
+            <div className={styles.formCard}>
+              <div className={styles.cardHeader}>
                 <i className="bi bi-person-badge"></i>
                 <h3>Programmateur</h3>
                 {programmateur && (
                   <button
                     onClick={() => navigate(`/programmateurs/${programmateur.id}`)}
-                    className="tc-btn-outline-primary btn-sm card-header-action"
+                    className={`tc-btn-outline-primary btn-sm ${styles.cardHeaderAction}`}
                   >
                     <i className="bi bi-eye"></i>
                     <span>Voir détails</span>
                   </button>
                 )}
               </div>
-              <div className="card-body">
+              <div className={styles.cardBody}>
                 {programmateur ? (
                   <>
                     <div className="row">
@@ -1604,7 +1605,7 @@ const ConcertDetails = () => {
                           <div className="mb-3">
                             <div className="fw-bold">Email:</div>
                             <div>
-                              <a href={`mailto:${programmateur.email}`} className="contact-link">
+                              <a href={`mailto:${programmateur.email}`} className={styles.contactLink}>
                                 <i className="bi bi-envelope me-1"></i>
                                 {programmateur.email}
                               </a>
@@ -1615,7 +1616,7 @@ const ConcertDetails = () => {
                           <div className="mb-3">
                             <div className="fw-bold">Téléphone:</div>
                             <div>
-                              <a href={`tel:${programmateur.telephone}`} className="contact-link">
+                              <a href={`tel:${programmateur.telephone}`} className={styles.contactLink}>
                                 <i className="bi bi-telephone me-1"></i>
                                 {programmateur.telephone}
                               </a>
@@ -1687,7 +1688,7 @@ const ConcertDetails = () => {
                                 <i className="bi bi-clipboard me-1"></i> Copier
                               </button>
                             </div>
-                            <div className="form-sharing-options mt-3 mb-3">
+                            <div className={styles.formSharingOptions}>
                               <div className="d-flex gap-2">
                                 <a 
                                   href={`mailto:${programmateur?.email || ''}?subject=Formulaire pour le concert du ${formatDate(concert.date)}&body=Bonjour,%0D%0A%0D%0AVeuillez remplir le formulaire pour le concert prévu le ${formatDate(concert.date)} en cliquant sur ce lien : ${generatedFormLink}%0D%0A%0D%0AMerci.`} 
@@ -1765,19 +1766,19 @@ const ConcertDetails = () => {
   
             {/* Carte - Artiste */}
             {artiste && (
-              <div className="form-card">
-                <div className="card-header">
+              <div className={styles.formCard}>
+                <div className={styles.cardHeader}>
                   <i className="bi bi-music-note-beamed"></i>
                   <h3>Artiste</h3>
                   <button
                     onClick={() => navigate(`/artistes/${artiste.id}`)}
-                    className="tc-btn-outline-primary btn-sm card-header-action"
+                    className={`tc-btn-outline-primary btn-sm ${styles.cardHeaderAction}`}
                   >
                     <i className="bi bi-eye"></i>
                     <span>Voir détails</span>
                   </button>
                 </div>
-                <div className="card-body">
+                <div className={styles.cardBody}>
                   <div className="row">
                     <div className="col-md-6">
                       <div className="mb-3">
@@ -1806,7 +1807,7 @@ const ConcertDetails = () => {
                             <div className="mb-3">
                               <div className="fw-bold">Email:</div>
                               <div>
-                                <a href={`mailto:${artiste.contacts.email}`} className="contact-link">
+                                <a href={`mailto:${artiste.contacts.email}`} className={styles.contactLink}>
                                   <i className="bi bi-envelope me-1"></i>
                                   {artiste.contacts.email}
                                 </a>
@@ -1817,7 +1818,7 @@ const ConcertDetails = () => {
                             <div className="mb-3">
                               <div className="fw-bold">Téléphone:</div>
                               <div>
-                                <a href={`tel:${artiste.contacts.telephone}`} className="contact-link">
+                                <a href={`tel:${artiste.contacts.telephone}`} className={styles.contactLink}>
                                   <i className="bi bi-telephone me-1"></i>
                                   {artiste.contacts.telephone}
                                 </a>
@@ -1861,15 +1862,15 @@ const ConcertDetails = () => {
   
         {/* Modale de confirmation de suppression */}
         {showDeleteConfirm && (
-          <div className="tc-modal-overlay">
-            <div className="tc-modal-confirm">
-              <div className="tc-modal-header">
+          <div className={styles.tcModalOverlay}>
+            <div className={styles.tcModalConfirm}>
+              <div className={styles.tcModalHeader}>
                 <h5>Confirmation de suppression</h5>
               </div>
-              <div className="tc-modal-body">
+              <div className={styles.tcModalBody}>
                 <p>Êtes-vous sûr de vouloir supprimer ce concert ? Cette action est irréversible.</p>
               </div>
-              <div className="tc-modal-footer">
+              <div className={styles.tcModalFooter}>
                 <button 
                   className="tc-btn-secondary"
                   onClick={() => setShowDeleteConfirm(false)}

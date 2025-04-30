@@ -1,0 +1,325 @@
+/* Styles pour ConcertForm - extraits des fichiers CSS globaux */
+
+/* Container principal */
+.concertFormContainer {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* En-tête du formulaire */
+.formHeaderContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+/* Titre moderne */
+.modernTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--tc-primary-color, #007bff);
+  margin-bottom: 0.5rem;
+}
+
+/* Container du fil d'Ariane */
+.breadcrumbContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+/* Élément du fil d'Ariane */
+.breadcrumbItem {
+  color: var(--tc-text-color, #333);
+  cursor: pointer;
+}
+
+.breadcrumbItem:hover {
+  text-decoration: underline;
+}
+
+.breadcrumbItem.active {
+  color: var(--tc-text-secondary, #6c757d);
+  cursor: default;
+}
+
+.breadcrumbItem.active:hover {
+  text-decoration: none;
+}
+
+/* Boutons d'action */
+.actionButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 1.5rem;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+}
+
+.actionBtn {
+  margin: 0;
+  position: static;
+  min-width: 130px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.2s ease-in-out;
+  font-weight: 500;
+}
+
+/* Formulaire moderne */
+.modernForm {
+  background-color: transparent;
+}
+
+/* Carte de formulaire */
+.formCard {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.cardHeader i {
+  margin-right: 0.5rem;
+  color: var(--tc-primary-color, #007bff);
+}
+
+.cardHeader h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.cardBody {
+  padding: 1.5rem;
+}
+
+/* Champs de formulaire */
+.formGroup {
+  margin-bottom: 1.25rem;
+}
+
+.formLabel {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.required {
+  color: #dc3545;
+  margin-left: 3px;
+}
+
+/* Recherche de lieu/programmateur/artiste */
+.lieuSearchContainer,
+.programmateurSearchContainer,
+.artisteSearchContainer {
+  position: relative;
+}
+
+.selectedLieu,
+.selectedProgrammateur,
+.selectedArtiste {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.lieuCard,
+.programmateurCard,
+.artisteCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.lieuInfo,
+.programmateurInfo,
+.artisteInfo {
+  flex-grow: 1;
+}
+
+.lieuName,
+.programmateurName,
+.artisteName {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.lieuAddress,
+.lieuCapacity {
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  margin-top: 0.25rem;
+  color: #666;
+}
+
+.lieuAddress i,
+.lieuCapacity i {
+  margin-right: 0.375rem;
+}
+
+.programmateurStructure {
+  font-size: 0.875rem;
+  display: block;
+  margin-bottom: 0.25rem;
+  color: #666;
+}
+
+.programmateurContacts {
+  margin-top: 0.5rem;
+}
+
+.programmateurContactItem {
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
+}
+
+.programmateurContactItem i {
+  margin-right: 0.375rem;
+  color: #666;
+}
+
+.artisteGenre {
+  font-size: 0.875rem;
+  display: block;
+  margin-bottom: 0.25rem;
+  color: #666;
+}
+
+.artisteDescription {
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+/* Items de dropdown */
+.lieuItem,
+.programmateurItem,
+.artisteItem {
+  padding: 0.75rem;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.lieuItem:hover,
+.programmateurItem:hover,
+.artisteItem:hover {
+  background-color: #f8f9fa;
+}
+
+.lieuDetails,
+.programmateurDetails,
+.artisteDetails {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+  color: #6c757d;
+  margin-top: 0.25rem;
+}
+
+/* Actions de formulaire en bas */
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+/* Modal */
+.tcModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.tcModalConfirm {
+  background-color: #fff;
+  border-radius: 0.5rem;
+  width: 450px;
+  max-width: 90vw;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.tcModalHeader {
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.tcModalHeader h5 {
+  margin: 0;
+  font-weight: 600;
+}
+
+.tcModalBody {
+  padding: 1.5rem;
+}
+
+.tcModalFooter {
+  padding: 1rem;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+/* Media queries */
+@media (max-width: 768px) {
+  .formHeaderContainer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .cardBody {
+    padding: 1rem;
+  }
+  
+  .actionButtons {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .actionBtn {
+    width: 100%;
+  }
+  
+  .formActions {
+    flex-direction: column;
+  }
+  
+  .formActions button {
+    width: 100%;
+  }
+}

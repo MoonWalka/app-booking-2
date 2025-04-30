@@ -4,8 +4,8 @@ import firebase from '@/firebaseInit';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Spinner from '@/components/common/Spinner';
 import { formatDateFr } from '@/utils/dateUtils';
-// Correction UI: Import du fichier CSS centralisé pour les concerts
-import '@/styles/components/concerts.css';
+// Remplacer l'import CSS global par le CSS Module
+import styles from './ConcertsList.module.css';
 
 const ConcertsList = () => {
   const navigate = useNavigate();
@@ -302,21 +302,20 @@ const ConcertsList = () => {
     const statusDetails = getStatusDetails(concert.statut);
     
     return (
-      <div className="status-advanced-container">
-        <div className="status-message-container">
-          {/* Correction UI: Utilisation de classes CSS standardisées */}
-          <div className={`status-message status-message-${statusDetails.variant}`}>
+      <div className={styles.statusAdvancedContainer}>
+        <div className={styles.statusMessageContainer}>
+          <div className={`${styles.statusMessage} ${styles['statusMessage' + statusDetails.variant.charAt(0).toUpperCase() + statusDetails.variant.slice(1)]}`}>
             {statusMessage.message}
           </div>
         </div>
         {!hasForm(concert.id) && concert.programmateurId && (
-          <div className="action-reminder">
+          <div className={styles.actionReminder}>
             <i className="bi bi-exclamation-circle"></i>
             <span>Formulaire à envoyer</span>
           </div>
         )}
         {hasUnvalidatedForm(concert.id) && (
-          <div className="action-reminder">
+          <div className={styles.actionReminder}>
             <i className="bi bi-exclamation-circle"></i>
             <span>Formulaire à valider</span>
           </div>
@@ -348,7 +347,7 @@ const ConcertsList = () => {
 
   if (error) {
     return (
-      <div className="concerts-container">
+      <div className={styles.concertsContainer}>
         <div className="alert alert-danger modern-alert">
           <i className="bi bi-exclamation-triangle-fill me-2"></i>
           {error}
@@ -358,8 +357,8 @@ const ConcertsList = () => {
   }
 
   return (
-    <div className="concerts-container p-4">
-      <div className="d-flex justify-content-between align-items-center mb-4 header-container">
+    <div className={`${styles.concertsContainer} p-4`}>
+      <div className="d-flex justify-content-between align-items-center mb-4 headerContainer">
         <h2 className="fs-4 fw-bold text-primary mb-0">Liste des concerts</h2>
         <Link to="/concerts/nouveau" className="btn btn-primary d-flex align-items-center gap-2 px-3 py-2 rounded-3">
           <i className="bi bi-plus-lg"></i>
@@ -367,15 +366,15 @@ const ConcertsList = () => {
         </Link>
       </div>
 
-      <div className="search-filter-container">
-        <div className="search-bar bg-white rounded-3 shadow-sm">
+      <div className={styles.searchFilterContainer}>
+        <div className={`${styles.searchBar} bg-white rounded-3 shadow-sm`}>
           <div className="input-group border-0">
             <span className="input-group-text bg-transparent border-0">
               <i className="bi bi-search text-primary"></i>
             </span>
             <input
               type="text"
-              className="form-control border-0 py-2 search-input"
+              className={`form-control border-0 py-2 ${styles.searchInput}`}
               placeholder="Rechercher un concert..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -392,8 +391,8 @@ const ConcertsList = () => {
         </div>
       </div>
   
-      <div className="status-filter-tabs">
-        {/* Correction UI: Utilisation de classes standardisées pour les filtres */}
+      <div className={styles.statusFilterTabs}>
+        {/* Filtres de statut */}
         <button 
           className={`btn ${statusFilter === 'tous' ? 'btn-primary' : 'btn-light'} rounded-pill px-3 py-2`}
           onClick={() => setStatusFilter('tous')}
@@ -408,7 +407,7 @@ const ConcertsList = () => {
               className={`btn ${statusFilter === status ? 'btn-primary' : 'btn-light'} rounded-pill px-3 py-2 d-flex align-items-center gap-2`}
               onClick={() => setStatusFilter(status)}
             >
-              <span className="status-icon">{statusInfo.icon}</span>
+              <span className={styles.statusIcon}>{statusInfo.icon}</span>
               {statusInfo.label}
             </button>
           );
@@ -428,7 +427,7 @@ const ConcertsList = () => {
         </div>
       ) : (
         <div className="table-responsive bg-white rounded-4 shadow-sm p-3">
-          <table className="table table-hover concerts-table">
+          <table className={`table table-hover ${styles.concertsTable}`}>
             <thead>
               <tr className="text-secondary border-bottom">
                 <th className="fw-medium text-center">Date</th>
@@ -445,25 +444,25 @@ const ConcertsList = () => {
               {filteredConcerts.map(concert => (
                 <tr 
                   key={concert.id} 
-                  className={`tc-clickable-row border-bottom ${isDatePassed(concert.date) ? 'past-concert' : ''}`}
+                  className={`${styles.clickableRow} border-bottom ${isDatePassed(concert.date) ? styles.pastConcert : ''}`}
                   onClick={() => handleRowClick(concert.id)}
                 >
-                  <td className={`concert-date-cell text-center align-middle ${isDatePassed(concert.date) ? 'past-date' : ''}`}>
-                    <div className="date-box">
-                      <span className="date-day">{formatDateFr(concert.date).split('-')[0]}</span>
-                      <span className="date-separator">/</span>
-                      <span className="date-month">{formatDateFr(concert.date).split('-')[1]}</span>
-                      <span className="date-separator">/</span>
-                      <span className="date-year">{formatDateFr(concert.date).split('-')[2]}</span>
+                  <td className={`${styles.concertDateCell} text-center align-middle ${isDatePassed(concert.date) ? styles.pastDate : ''}`}>
+                    <div className={styles.dateBox}>
+                      <span className={styles.dateDay}>{formatDateFr(concert.date).split('-')[0]}</span>
+                      <span className={styles.dateSeparator}>/</span>
+                      <span className={styles.dateMonth}>{formatDateFr(concert.date).split('-')[1]}</span>
+                      <span className={styles.dateSeparator}>/</span>
+                      <span className={styles.dateYear}>{formatDateFr(concert.date).split('-')[2]}</span>
                     </div>
                   </td>
                   <td className="concert-venue-name align-middle">
-                    <div className="text-truncate-container" title={concert.lieuNom || "-"}>
+                    <div className={styles.textTruncateContainer} title={concert.lieuNom || "-"}>
                       {concert.lieuNom || "-"}
                     </div>
                   </td>
                   <td className="concert-venue-location align-middle">
-                    <div className="text-truncate-container" title={concert.lieuVille && concert.lieuCodePostal ? 
+                    <div className={styles.textTruncateContainer} title={concert.lieuVille && concert.lieuCodePostal ? 
                       `${concert.lieuVille} (${concert.lieuCodePostal})` : 
                       concert.lieuVille || concert.lieuCodePostal || "-"}>
                       {concert.lieuVille && concert.lieuCodePostal ? 
@@ -474,7 +473,7 @@ const ConcertsList = () => {
                   </td>
                   <td className="concert-artist-cell align-middle">
                     {concert.artisteNom ? (
-                      <span className="artist-name">
+                      <span className={styles.artistName}>
                         <i className="bi bi-music-note"></i>
                         {concert.artisteNom}
                       </span>
@@ -485,7 +484,7 @@ const ConcertsList = () => {
                   <td className="align-middle">
                     <div className="concert-artist-cell">
                       {concert.programmateurNom ? (
-                        <span className="programmateur-name" title={concert.programmateurNom}>
+                        <span className={styles.programmateurName} title={concert.programmateurNom}>
                           <i className="bi bi-person-fill"></i>
                           {concert.programmateurNom}
                         </span>
@@ -494,9 +493,9 @@ const ConcertsList = () => {
                       )}
                     </div>
                   </td>
-                  <td className="montant-column text-end align-middle">
+                  <td className={`${styles.montantColumn} text-end align-middle`}>
                     {concert.montant ? (
-                      <span className="montant-value">
+                      <span className={styles.montantValue}>
                         {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(concert.montant)}
                       </span>
                     ) : (
@@ -509,16 +508,15 @@ const ConcertsList = () => {
                   <td onClick={(e) => e.stopPropagation()} className="align-middle">
                     <div className="d-flex gap-2 justify-content-center">
                       {hasForm(concert.id) && (
-                        <div className="tc-notification-container">
+                        <div className={styles.notificationContainer}>
                           <ActionButton 
                             to={`/concerts/${concert.id}/form`} 
                             tooltip="Voir le formulaire" 
                             icon={<i className="bi bi-file-text"></i>} 
                             variant="light"
                           />
-                          {/* Correction UI: Utilisation d'une classe CSS plutôt qu'un style inline */}
                           {hasUnvalidatedForm(concert.id) && (
-                            <span className="tc-notification-badge" title="Formulaire mis à jour"></span>
+                            <span className={styles.notificationBadge} title="Formulaire mis à jour"></span>
                           )}
                         </div>
                       )}
@@ -546,7 +544,7 @@ const ConcertsList = () => {
                             ? `/contrats/${concertsWithContracts[concert.id].id}` 
                             : `/contrats/generate/${concert.id}`}
                           onClick={(e) => e.stopPropagation()}
-                          className={`btn btn-${getContractButtonVariant(concert.id)} action-button`}
+                          className={`btn btn-${getContractButtonVariant(concert.id)} ${styles.actionButton}`}
                         >
                           <i className="bi bi-file-earmark-text"></i>
                         </Link>

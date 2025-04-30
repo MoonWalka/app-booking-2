@@ -6,6 +6,7 @@ import {
   arrayUnion, arrayRemove, query, where, orderBy, limit, serverTimestamp
 } from 'firebase/firestore';
 import { handleDelete } from './handlers/deleteHandler';
+import styles from './ConcertForm.module.css';
 
 
 const ConcertForm = () => {
@@ -722,30 +723,30 @@ const ConcertForm = () => {
   }
 
   return (
-    <div className="concert-form-container">
+    <div className={styles.concertFormContainer}>
       {/* En-tête du formulaire sans les boutons d'action */}
-      <div className="form-header-container">
-        <h2 className="modern-title">
+      <div className={styles.formHeaderContainer}>
+        <h2 className={styles.modernTitle}>
           {id === 'nouveau' ? 'Créer un nouveau concert' : 'Modifier le concert'}
         </h2>
-        <div className="breadcrumb-container">
+        <div className={styles.breadcrumbContainer}>
           {/* Correction : ajout accessibilité (role/button + tabIndex) */}
           <span 
-            className="breadcrumb-item" 
+            className={styles.breadcrumbItem}
             onClick={() => navigate('/concerts')} 
             role="button" 
             tabIndex={0}
           >Concerts</span>
           <i className="bi bi-chevron-right"></i>
-          <span className="breadcrumb-item active">
+          <span className={`${styles.breadcrumbItem} ${styles.active}`}>
             {id === 'nouveau' ? 'Nouveau concert' : formData.titre || 'Concert'}
           </span>
         </div>
       </div>
   
       {/* Boutons d'action déplacés ici, avant le formulaire */}
-      <div className="action-buttons">
-        <Link to="/concerts" className="btn btn-outline-secondary action-btn">
+      <div className={styles.actionButtons}>
+        <Link to="/concerts" className={`btn btn-outline-secondary ${styles.actionBtn}`}>
           <i className="bi bi-arrow-left"></i>
           <span className="btn-text">Retour</span>
         </Link>
@@ -753,7 +754,7 @@ const ConcertForm = () => {
         {id && id !== 'nouveau' && (
           <button 
             onClick={() => setShowDeleteConfirm(true)} 
-            className="btn btn-outline-danger action-btn"
+            className={`btn btn-outline-danger ${styles.actionBtn}`}
             disabled={isSubmitting}
           >
             <i className="bi bi-trash"></i>
@@ -762,16 +763,16 @@ const ConcertForm = () => {
         )}
       </div>
 
-      <form onSubmit={handleSubmit} className="modern-form">
+      <form onSubmit={handleSubmit} className={styles.modernForm}>
         {/* Carte - Informations principales du concert */}
-        <div className="form-card">
-          <div className="card-header">
+        <div className={styles.formCard}>
+          <div className={styles.cardHeader}>
             <i className="bi bi-calendar-event"></i>
             <h3>Informations principales</h3>
           </div>
-          <div className="card-body">
-            <div className="form-group">
-              <label htmlFor="titre" className="form-label">Titre du concert</label>
+          <div className={styles.cardBody}>
+            <div className={styles.formGroup}>
+              <label htmlFor="titre" className={styles.formLabel}>Titre du concert</label>
               <input
                 type="text"
                 className="form-control"
@@ -785,8 +786,8 @@ const ConcertForm = () => {
 
             <div className="row">
               <div className="col-md-6">
-                <div className="form-group">
-                  <label htmlFor="date" className="form-label">Date du concert <span className="required">*</span></label>
+                <div className={styles.formGroup}>
+                  <label htmlFor="date" className={styles.formLabel}>Date du concert <span className={styles.required}>*</span></label>
                   <input
                     type="date"
                     className="form-control"
@@ -799,8 +800,8 @@ const ConcertForm = () => {
                 </div>
               </div>
               <div className="col-md-6">
-                <div className="form-group">
-                  <label htmlFor="montant" className="form-label">Montant (€) <span className="required">*</span></label>
+                <div className={styles.formGroup}>
+                  <label htmlFor="montant" className={styles.formLabel}>Montant (€) <span className={styles.required}>*</span></label>
                   <input
                     type="number"
                     className="form-control"
@@ -814,8 +815,8 @@ const ConcertForm = () => {
               </div>
             </div>
 
-            <div className="form-group">
-              <label htmlFor="statut" className="form-label">Statut</label>
+            <div className={styles.formGroup}>
+              <label htmlFor="statut" className={styles.formLabel}>Statut</label>
               <select
                 className="form-select"
                 id="statut"
@@ -833,17 +834,17 @@ const ConcertForm = () => {
         </div>
 
         {/* Carte - Lieu */}
-        <div className="form-card">
-          <div className="card-header">
+        <div className={styles.formCard}>
+          <div className={styles.cardHeader}>
             <i className="bi bi-geo-alt"></i>
-            <h3>Lieu <span className="required">*</span></h3>
+            <h3>Lieu <span className={styles.required}>*</span></h3>
           </div>
-          <div className="card-body">
-            <div className="form-group" ref={lieuDropdownRef}>
-              <label className="form-label">Rechercher un lieu</label>
+          <div className={styles.cardBody}>
+            <div className={styles.formGroup} ref={lieuDropdownRef}>
+              <label className={styles.formLabel}>Rechercher un lieu</label>
               
               {!selectedLieu ? (
-                <div className="lieu-search-container">
+                <div className={styles.lieuSearchContainer}>
                   <div className="input-group">
                     <span className="input-group-text"><i className="bi bi-search"></i></span>
                     <input
@@ -877,18 +878,18 @@ const ConcertForm = () => {
                       {lieuResults.map(lieu => (
                         <div 
                           key={lieu.id} 
-                          className="dropdown-item lieu-item"
+                          className={`dropdown-item ${styles.lieuItem}`}
                           onClick={() => handleSelectLieu(lieu)}
                         >
-                          <div className="lieu-name">{lieu.nom}</div>
-                          <div className="lieu-details">
+                          <div className={styles.lieuName}>{lieu.nom}</div>
+                          <div className={styles.lieuDetails}>
                             {lieu.adresse && lieu.ville && (
-                              <span className="lieu-address">
+                              <span className={styles.lieuAddress}>
                                 {lieu.adresse}, {lieu.codePostal} {lieu.ville}
                               </span>
                             )}
                             {lieu.capacite && (
-                              <span className="lieu-capacity">
+                              <span className={styles.lieuCapacity}>
                                 Capacité: {lieu.capacite} personnes
                               </span>
                             )}
@@ -907,18 +908,18 @@ const ConcertForm = () => {
                   )}
                 </div>
               ) : (
-                <div className="selected-lieu">
-                  <div className="lieu-card">
-                    <div className="lieu-info">
-                      <span className="lieu-name">{selectedLieu.nom}</span>
+                <div className={styles.selectedLieu}>
+                  <div className={styles.lieuCard}>
+                    <div className={styles.lieuInfo}>
+                      <span className={styles.lieuName}>{selectedLieu.nom}</span>
                       {selectedLieu.adresse && (
-                        <div className="lieu-address">
+                        <div className={styles.lieuAddress}>
                           <i className="bi bi-geo-alt-fill"></i> {selectedLieu.adresse}<br />
                           {selectedLieu.codePostal} {selectedLieu.ville}
                         </div>
                       )}
                       {selectedLieu.capacite && (
-                        <div className="lieu-capacity">
+                        <div className={styles.lieuCapacity}>
                           <i className="bi bi-people-fill"></i> Capacité: {selectedLieu.capacite} personnes
                         </div>
                       )}
@@ -943,17 +944,17 @@ const ConcertForm = () => {
         </div>
 
         {/* Carte - Programmateur */}
-        <div className="form-card">
-          <div className="card-header">
+        <div className={styles.formCard}>
+          <div className={styles.cardHeader}>
             <i className="bi bi-person-badge"></i>
             <h3>Programmateur</h3>
           </div>
-          <div className="card-body">
-            <div className="form-group" ref={progDropdownRef}>
-              <label className="form-label">Associer un programmateur</label>
+          <div className={styles.cardBody}>
+            <div className={styles.formGroup} ref={progDropdownRef}>
+              <label className={styles.formLabel}>Associer un programmateur</label>
               
               {!selectedProgrammateur ? (
-                <div className="programmateur-search-container">
+                <div className={styles.programmateurSearchContainer}>
                   <div className="input-group">
                     <span className="input-group-text"><i className="bi bi-search"></i></span>
                     <input
@@ -987,13 +988,13 @@ const ConcertForm = () => {
                       {progResults.map(prog => (
                         <div 
                           key={prog.id} 
-                          className="dropdown-item programmateur-item"
+                          className={`dropdown-item ${styles.programmateurItem}`}
                           onClick={() => handleSelectProgrammateur(prog)}
                         >
-                          <div className="programmateur-name">{prog.nom}</div>
-                          <div className="programmateur-details">
-                            {prog.structure && <span className="programmateur-structure">{prog.structure}</span>}
-                            {prog.email && <span className="programmateur-email">{prog.email}</span>}
+                          <div className={styles.programmateurName}>{prog.nom}</div>
+                          <div className={styles.programmateurDetails}>
+                            {prog.structure && <span className={styles.programmateurStructure}>{prog.structure}</span>}
+                            {prog.email && <span className={styles.programmateurContactItem}>{prog.email}</span>}
                           </div>
                         </div>
                       ))}
@@ -1009,21 +1010,21 @@ const ConcertForm = () => {
                   )}
                 </div>
               ) : (
-                <div className="selected-programmateur">
-                  <div className="programmateur-card">
-                    <div className="programmateur-info">
-                      <span className="programmateur-name">{selectedProgrammateur.nom}</span>
+                <div className={styles.selectedProgrammateur}>
+                  <div className={styles.programmateurCard}>
+                    <div className={styles.programmateurInfo}>
+                      <span className={styles.programmateurName}>{selectedProgrammateur.nom}</span>
                       {selectedProgrammateur.structure && (
-                        <span className="programmateur-structure">{selectedProgrammateur.structure}</span>
+                        <span className={styles.programmateurStructure}>{selectedProgrammateur.structure}</span>
                       )}
-                      <div className="programmateur-contacts">
+                      <div className={styles.programmateurContacts}>
                         {selectedProgrammateur.email && (
-                          <span className="programmateur-contact-item">
+                          <span className={styles.programmateurContactItem}>
                             <i className="bi bi-envelope"></i> {selectedProgrammateur.email}
                           </span>
                         )}
                         {selectedProgrammateur.telephone && (
-                          <span className="programmateur-contact-item">
+                          <span className={styles.programmateurContactItem}>
                             <i className="bi bi-telephone"></i> {selectedProgrammateur.telephone}
                           </span>
                         )}
@@ -1049,17 +1050,17 @@ const ConcertForm = () => {
         </div>
 
         {/* Carte - Artiste */}
-        <div className="form-card">
-          <div className="card-header">
+        <div className={styles.formCard}>
+          <div className={styles.cardHeader}>
             <i className="bi bi-music-note-beamed"></i>
             <h3>Artiste</h3>
           </div>
-          <div className="card-body">
-            <div className="form-group" ref={artisteDropdownRef}>
-              <label className="form-label">Associer un artiste</label>
+          <div className={styles.cardBody}>
+            <div className={styles.formGroup} ref={artisteDropdownRef}>
+              <label className={styles.formLabel}>Associer un artiste</label>
               
               {!selectedArtiste ? (
-                <div className="artiste-search-container">
+                <div className={styles.artisteSearchContainer}>
                   <div className="input-group">
                     <span className="input-group-text"><i className="bi bi-search"></i></span>
                     <input
@@ -1093,12 +1094,12 @@ const ConcertForm = () => {
                       {artisteResults.map(artiste => (
                         <div 
                           key={artiste.id} 
-                          className="dropdown-item artiste-item"
+                          className={`dropdown-item ${styles.artisteItem}`}
                           onClick={() => handleSelectArtiste(artiste)}
                         >
-                          <div className="artiste-name">{artiste.nom}</div>
-                          <div className="artiste-details">
-                            {artiste.genre && <span className="artiste-genre">{artiste.genre}</span>}
+                          <div className={styles.artisteName}>{artiste.nom}</div>
+                          <div className={styles.artisteDetails}>
+                            {artiste.genre && <span className={styles.artisteGenre}>{artiste.genre}</span>}
                           </div>
                         </div>
                       ))}
@@ -1114,15 +1115,15 @@ const ConcertForm = () => {
                   )}
                 </div>
               ) : (
-                <div className="selected-artiste">
-                  <div className="artiste-card">
-                    <div className="artiste-info">
-                      <span className="artiste-name">{selectedArtiste.nom}</span>
+                <div className={styles.selectedArtiste}>
+                  <div className={styles.artisteCard}>
+                    <div className={styles.artisteInfo}>
+                      <span className={styles.artisteName}>{selectedArtiste.nom}</span>
                       {selectedArtiste.genre && (
-                        <span className="artiste-genre">Genre: {selectedArtiste.genre}</span>
+                        <span className={styles.artisteGenre}>Genre: {selectedArtiste.genre}</span>
                       )}
                       {selectedArtiste.description && (
-                        <p className="artiste-description">{selectedArtiste.description}</p>
+                        <p className={styles.artisteDescription}>{selectedArtiste.description}</p>
                       )}
                     </div>
                     <button 
@@ -1145,13 +1146,13 @@ const ConcertForm = () => {
         </div>
 
         {/* Carte - Notes */}
-        <div className="form-card">
-          <div className="card-header">
+        <div className={styles.formCard}>
+          <div className={styles.cardHeader}>
             <i className="bi bi-journal-text"></i>
             <h3>Notes</h3>
           </div>
-          <div className="card-body">
-            <div className="form-group">
+          <div className={styles.cardBody}>
+            <div className={styles.formGroup}>
               <textarea
                 className="form-control"
                 id="notes"
@@ -1166,7 +1167,7 @@ const ConcertForm = () => {
         </div>
 
         {/* Boutons d'action en bas de formulaire */}
-        <div className="form-actions">
+        <div className={styles.formActions}>
           <button
             type="button"
             className="btn btn-outline-secondary"
@@ -1211,15 +1212,15 @@ const ConcertForm = () => {
       
       {/* Modale de confirmation de suppression */}
       {showDeleteConfirm && (
-        <div className="tc-modal-overlay">
-          <div className="tc-modal-confirm">
-            <div className="tc-modal-header">
+        <div className={styles.tcModalOverlay}>
+          <div className={styles.tcModalConfirm}>
+            <div className={styles.tcModalHeader}>
               <h5>Confirmation de suppression</h5>
             </div>
-            <div className="tc-modal-body">
+            <div className={styles.tcModalBody}>
               <p>Êtes-vous sûr de vouloir supprimer ce concert ? Cette action est irréversible.</p>
             </div>
-            <div className="tc-modal-footer">
+            <div className={styles.tcModalFooter}>
               <button 
                 className="tc-btn tc-btn-secondary"
                 onClick={() => setShowDeleteConfirm(false)}

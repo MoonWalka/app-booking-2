@@ -3,28 +3,6 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 // Modifié l'ordre d'importation pour que les styles de Quill aient priorité
 import '@/styles/index.css';
-import '@/styles/components/contrat-print.css';
-
-// Ajout d'un style spécifique pour protéger la toolbar de Quill
-const editorStyles = {
-  quillContainer: {
-    height: 'calc(60vh - 50px)',
-    marginBottom: '40px', // Espace pour la toolbar
-  },
-  // Style qui garantit que la toolbar reste visible
-  quillToolbar: {
-    '& .ql-toolbar': {
-      display: 'flex !important',
-      flexWrap: 'wrap',
-      justifyContent: 'flex-start',
-      background: '#fff',
-      borderRadius: '3px',
-      border: '1px solid #ccc',
-      boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
-      zIndex: 10,
-    }
-  }
-};
 
 const FullscreenEditorModal = ({ 
   isOpen, 
@@ -33,9 +11,6 @@ const FullscreenEditorModal = ({
   initialContent, 
   onSave 
 }) => {
-  console.log("============ FULLSCREEN EDITOR MODAL CHARGÉE ============");
-  console.log("Section titre:", sectionTitle);
-  console.log("Contenu initial reçu:", initialContent);
   
   const [content, setContent] = useState('');
   const [isPreviewMode, setIsPreviewMode] = useState(false);
@@ -45,7 +20,6 @@ const FullscreenEditorModal = ({
   // Initialiser le contenu lorsque la modale s'ouvre ou que le contenu initial change
   useEffect(() => {
     if (isOpen && initialContent !== undefined) {
-      console.log("Initialisation du contenu dans l'éditeur:", initialContent);
       setContent(initialContent);
     }
   }, [isOpen, initialContent]);
@@ -79,9 +53,8 @@ const FullscreenEditorModal = ({
     }
   };
   
-  // Fonction de sauvegarde avec log
+  // Fonction de sauvegarde
   const handleSave = () => {
-    console.log("Sauvegarde du contenu:", content);
     onSave(content);
     onClose();
   };
@@ -123,7 +96,7 @@ const FullscreenEditorModal = ({
 
         <div className="tc-modal-body">
           {!isPreviewMode ? (
-            <div className="quill-editor-container" style={editorStyles.quillContainer}>
+            <div className="tc-quill-editor-wrapper fullscreen">
               <ReactQuill
                 ref={editorRef}
                 theme="snow"
@@ -134,7 +107,7 @@ const FullscreenEditorModal = ({
               />
             </div>
           ) : (
-            <div className="preview-container contrat-print-mode">
+            <div className="tc-quill-preview">
               <div dangerouslySetInnerHTML={{ __html: content }} />
             </div>
           )}

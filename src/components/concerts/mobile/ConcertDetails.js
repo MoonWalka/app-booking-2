@@ -7,6 +7,7 @@ import { Button, Modal, Badge } from 'react-bootstrap';
 import FormGenerator from '../../forms/FormGenerator.js';
 import '@/styles/index.css';
 import { handleDelete } from './handlers/deleteHandler';
+import styles from './ConcertDetails.module.css';
 
 
 const ConcertDetailsMobile = () => {
@@ -154,27 +155,27 @@ const ConcertDetailsMobile = () => {
   };
 
   if (loading) {
-    return <div className="loading-container">Chargement du concert...</div>;
+    return <div className={styles.loadingContainer}>Chargement du concert...</div>;
   }
 
   if (!concert) {
-    return <div className="error-container">Concert non trouvé</div>;
+    return <div className={styles.errorContainer}>Concert non trouvé</div>;
   }
 
   return (
-    <div className="concert-details-mobile">
+    <div className={styles.concertDetailsMobile}>
       {/* En-tête avec actions */}
-      <div className="mobile-header-bar">
+      <div className={styles.mobileHeaderBar}>
         <button 
-          className="btn btn-light btn-sm back-button" 
+          className={`btn btn-light btn-sm ${styles.backButton}`}
           onClick={() => navigate('/concerts')}
         >
           <i className="bi bi-arrow-left"></i>
         </button>
-        <div className="mobile-title-container">
+        <div className={styles.mobileTitleContainer}>
           <h1>{concert.titre || `Concert du ${formatDate(concert.date)}`}</h1>
         </div>
-        <div className="mobile-actions">
+        <div className={styles.mobileActions}>
           <button 
             className="btn btn-outline-primary btn-sm me-2"
             onClick={() => navigate(`/concerts/${id}/edit`)}
@@ -191,7 +192,7 @@ const ConcertDetailsMobile = () => {
       </div>
 
       {/* Onglets pour la navigation mobile */}
-      <div className="mobile-tabs">
+      <div className={styles.mobileTabs}>
         <button 
           className={`btn ${activeTab === 'infos' ? 'btn-primary' : 'btn-outline-primary'} btn-sm m-1`}
           onClick={() => setActiveTab('infos')}
@@ -223,30 +224,30 @@ const ConcertDetailsMobile = () => {
       </div>
 
       {/* Contenu de l'onglet sélectionné */}
-      <div className="mobile-tab-content">
+      <div className={styles.mobileTabContent}>
         {activeTab === 'infos' && (
-          <div className="info-tab-content">
-            <div className="info-card">
-              <div className="info-item">
-                <span className="info-label">Date:</span>
-                <span className="info-value">{formatDate(concert.date)}</span>
+          <div className={styles.infoTabContent}>
+            <div className={styles.infoCard}>
+              <div className={styles.infoItem}>
+                <span className={styles.infoLabel}>Date:</span>
+                <span className={styles.infoValue}>{formatDate(concert.date)}</span>
               </div>
-              <div className="info-item">
-                <span className="info-label">Montant:</span>
-                <span className="info-value">{formatMontant(concert.montant)}</span>
+              <div className={styles.infoItem}>
+                <span className={styles.infoLabel}>Montant:</span>
+                <span className={styles.infoValue}>{formatMontant(concert.montant)}</span>
               </div>
-              <div className="info-item">
-                <span className="info-label">Statut:</span>
-                <span className="info-value">
+              <div className={styles.infoItem}>
+                <span className={styles.infoLabel}>Statut:</span>
+                <span className={styles.infoValue}>
                   <Badge bg={getStatusColor(concert.statut)}>
                     {concert.statut || 'Non défini'}
                   </Badge>
                 </span>
               </div>
               {concert.notes && (
-                <div className="info-item notes">
-                  <span className="info-label">Notes:</span>
-                  <p className="info-value notes-content">{concert.notes}</p>
+                <div className={`${styles.infoItem} ${styles.notes}`}>
+                  <span className={styles.infoLabel}>Notes:</span>
+                  <p className={`${styles.infoValue} ${styles.notesContent}`}>{concert.notes}</p>
                 </div>
               )}
             </div>
@@ -254,13 +255,13 @@ const ConcertDetailsMobile = () => {
         )}
 
         {activeTab === 'lieu' && (
-          <div className="lieu-tab-content">
+          <div className={styles.lieuTabContent}>
             {lieu ? (
-              <div className="lieu-card">
-                <h3 className="lieu-name">{lieu.nom}</h3>
+              <div className={styles.lieuCard}>
+                <h3 className={styles.lieuName}>{lieu.nom}</h3>
                 
                 {lieu.adresse && (
-                  <div className="lieu-address">
+                  <div className={styles.lieuAddress}>
                     <i className="bi bi-geo-alt"></i>
                     <div>
                       {lieu.adresse}<br />
@@ -270,21 +271,21 @@ const ConcertDetailsMobile = () => {
                 )}
                 
                 {lieu.capacite && (
-                  <div className="lieu-capacity">
+                  <div className={styles.lieuCapacity}>
                     <i className="bi bi-people"></i>
                     <span>Capacité: {lieu.capacite} personnes</span>
                   </div>
                 )}
                 
                 {lieu.email && (
-                  <div className="lieu-contact">
+                  <div className={styles.lieuContact}>
                     <i className="bi bi-envelope"></i>
                     <a href={`mailto:${lieu.email}`}>{lieu.email}</a>
                   </div>
                 )}
                 
                 {lieu.telephone && (
-                  <div className="lieu-contact">
+                  <div className={styles.lieuContact}>
                     <i className="bi bi-telephone"></i>
                     <a href={`tel:${lieu.telephone}`}>{lieu.telephone}</a>
                   </div>
@@ -292,297 +293,296 @@ const ConcertDetailsMobile = () => {
                 
                 {/* Carte */}
                 {lieu.adresse && lieu.ville && (
-                  <div className="lieu-map">
+                  <div className={styles.lieuMap}>
                     <iframe 
                       src={`https://maps.google.com/maps?q=${encodeURIComponent(`${lieu.adresse}, ${lieu.codePostal} ${lieu.ville}`)}&z=15&output=embed`}
                       width="100%" 
                       height="200" 
-                     
-                     frameBorder="0"
-                     style={{ borderRadius: '8px', border: '1px solid #dee2e6' }}
-                     allowFullScreen=""
-                     aria-hidden="false"
-                     tabIndex="0"
-                   ></iframe>
-                 </div>
-               )}
-               
-               <div className="lieu-actions">
-                 <Link 
-                   to={`/lieux/${lieu.id}`}
-                   className="btn btn-outline-primary btn-sm"
-                 >
-                   <i className="bi bi-eye me-1"></i>
-                   Voir les détails
-                 </Link>
-               </div>
-             </div>
-           ) : (
-             <div className="empty-state">
-               <i className="bi bi-geo-alt"></i>
-               <p>Aucun lieu associé à ce concert</p>
-             </div>
-           )}
-         </div>
-       )}
+                      frameBorder="0"
+                      style={{ borderRadius: '8px', border: '1px solid #dee2e6' }}
+                      allowFullScreen=""
+                      aria-hidden="false"
+                      tabIndex="0"
+                    ></iframe>
+                  </div>
+                )}
+                
+                <div className={styles.lieuActions}>
+                  <Link 
+                    to={`/lieux/${lieu.id}`}
+                    className="btn btn-outline-primary btn-sm"
+                  >
+                    <i className="bi bi-eye me-1"></i>
+                    Voir les détails
+                  </Link>
+                </div>
+              </div>
+            ) : (
+              <div className={styles.emptyState}>
+                <i className="bi bi-geo-alt"></i>
+                <p>Aucun lieu associé à ce concert</p>
+              </div>
+            )}
+          </div>
+        )}
 
-       {activeTab === 'programmateur' && (
-         <div className="programmateur-tab-content">
-           {programmateur ? (
-             <div className="programmateur-card">
-               <h3 className="programmateur-name">{programmateur.nom}</h3>
-               
-               {programmateur.structure && (
-                 <div className="programmateur-structure">
-                   <i className="bi bi-building"></i>
-                   <span>{programmateur.structure}</span>
-                 </div>
-               )}
-               
-               {programmateur.email && (
-                 <div className="programmateur-contact">
-                   <i className="bi bi-envelope"></i>
-                   <a href={`mailto:${programmateur.email}`}>{programmateur.email}</a>
-                 </div>
-               )}
-               
-               {programmateur.telephone && (
-                 <div className="programmateur-contact">
-                   <i className="bi bi-telephone"></i>
-                   <a href={`tel:${programmateur.telephone}`}>{programmateur.telephone}</a>
-                 </div>
-               )}
-               
-               {/* Formulaire */}
-               <div className="form-section">
-                 <h4>Formulaire</h4>
-                 
-                 {formData ? (
-                   <div className="form-info">
-                     <div className="form-status">
-                       <Badge bg={formData.statut === 'valide' ? 'success' : 'warning'}>
-                         {formData.statut === 'valide' ? 'Validé' : 'En attente'}
-                       </Badge>
-                     </div>
-                     
-                     <Link 
-                       to={`/concerts/${id}/form`}
-                       className="btn btn-outline-primary btn-sm mt-2"
-                     >
-                       <i className="bi bi-file-text me-1"></i>
-                       Voir le formulaire
-                     </Link>
-                   </div>
-                 ) : (
-                   <div className="form-action">
-                     <p>Aucun formulaire envoyé.</p>
-                     <Button 
-                       variant="primary" 
-                       size="sm"
-                       onClick={() => setShowFormGenerator(true)}
-                     >
-                       <i className="bi bi-envelope me-1"></i>
-                       Envoyer un formulaire
-                     </Button>
-                   </div>
-                 )}
-               </div>
-               
-               <div className="programmateur-actions">
-                 <Link 
-                   to={`/programmateurs/${programmateur.id}`}
-                   className="btn btn-outline-primary btn-sm"
-                 >
-                   <i className="bi bi-eye me-1"></i>
-                   Voir les détails
-                 </Link>
-               </div>
-             </div>
-           ) : (
-             <div className="empty-state">
-               <i className="bi bi-person-badge"></i>
-               <p>Aucun programmateur associé à ce concert</p>
-             </div>
-           )}
-         </div>
-       )}
+        {activeTab === 'programmateur' && (
+          <div className={styles.programmateurTabContent}>
+            {programmateur ? (
+              <div className={styles.programmateurCard}>
+                <h3 className={styles.programmateurName}>{programmateur.nom}</h3>
+                
+                {programmateur.structure && (
+                  <div className={styles.programmateurStructure}>
+                    <i className="bi bi-building"></i>
+                    <span>{programmateur.structure}</span>
+                  </div>
+                )}
+                
+                {programmateur.email && (
+                  <div className={styles.programmateurContact}>
+                    <i className="bi bi-envelope"></i>
+                    <a href={`mailto:${programmateur.email}`}>{programmateur.email}</a>
+                  </div>
+                )}
+                
+                {programmateur.telephone && (
+                  <div className={styles.programmateurContact}>
+                    <i className="bi bi-telephone"></i>
+                    <a href={`tel:${programmateur.telephone}`}>{programmateur.telephone}</a>
+                  </div>
+                )}
+                
+                {/* Formulaire */}
+                <div className={styles.formSection}>
+                  <h4>Formulaire</h4>
+                  
+                  {formData ? (
+                    <div className={styles.formInfo}>
+                      <div className={styles.formStatus}>
+                        <Badge bg={formData.statut === 'valide' ? 'success' : 'warning'}>
+                          {formData.statut === 'valide' ? 'Validé' : 'En attente'}
+                        </Badge>
+                      </div>
+                      
+                      <Link 
+                        to={`/concerts/${id}/form`}
+                        className="btn btn-outline-primary btn-sm mt-2"
+                      >
+                        <i className="bi bi-file-text me-1"></i>
+                        Voir le formulaire
+                      </Link>
+                    </div>
+                  ) : (
+                    <div className={styles.formAction}>
+                      <p>Aucun formulaire envoyé.</p>
+                      <Button 
+                        variant="primary" 
+                        size="sm"
+                        onClick={() => setShowFormGenerator(true)}
+                      >
+                        <i className="bi bi-envelope me-1"></i>
+                        Envoyer un formulaire
+                      </Button>
+                    </div>
+                  )}
+                </div>
+                
+                <div className={styles.programmateurActions}>
+                  <Link 
+                    to={`/programmateurs/${programmateur.id}`}
+                    className="btn btn-outline-primary btn-sm"
+                  >
+                    <i className="bi bi-eye me-1"></i>
+                    Voir les détails
+                  </Link>
+                </div>
+              </div>
+            ) : (
+              <div className={styles.emptyState}>
+                <i className="bi bi-person-badge"></i>
+                <p>Aucun programmateur associé à ce concert</p>
+              </div>
+            )}
+          </div>
+        )}
 
-       {activeTab === 'artiste' && (
-         <div className="artiste-tab-content">
-           {artiste ? (
-             <div className="artiste-card">
-               <h3 className="artiste-name">{artiste.nom}</h3>
-               
-               {artiste.genre && (
-                 <div className="artiste-genre">
-                   <i className="bi bi-music-note"></i>
-                   <span>{artiste.genre}</span>
-                 </div>
-               )}
-               
-               {artiste.description && (
-                 <div className="artiste-description">
-                   <p>{artiste.description}</p>
-                 </div>
-               )}
-               
-               {artiste.contacts && (
-                 <div className="artiste-contacts">
-                   {artiste.contacts.email && (
-                     <div className="artiste-contact">
-                       <i className="bi bi-envelope"></i>
-                       <a href={`mailto:${artiste.contacts.email}`}>{artiste.contacts.email}</a>
-                     </div>
-                   )}
-                   
-                   {artiste.contacts.telephone && (
-                     <div className="artiste-contact">
-                       <i className="bi bi-telephone"></i>
-                       <a href={`tel:${artiste.contacts.telephone}`}>{artiste.contacts.telephone}</a>
-                     </div>
-                   )}
-                 </div>
-               )}
-               
-               <div className="artiste-actions">
-                 <Link 
-                   to={`/artistes/${artiste.id}`}
-                   className="btn btn-outline-primary btn-sm"
-                 >
-                   <i className="bi bi-eye me-1"></i>
-                   Voir les détails
-                 </Link>
-               </div>
-             </div>
-           ) : (
-             <div className="empty-state">
-               <i className="bi bi-music-note-beamed"></i>
-               <p>Aucun artiste associé à ce concert</p>
-             </div>
-           )}
-         </div>
-       )}
-     </div>
+        {activeTab === 'artiste' && (
+          <div className={styles.artisteTabContent}>
+            {artiste ? (
+              <div className={styles.artisteCard}>
+                <h3 className={styles.artisteName}>{artiste.nom}</h3>
+                
+                {artiste.genre && (
+                  <div className={styles.artisteGenre}>
+                    <i className="bi bi-music-note"></i>
+                    <span>{artiste.genre}</span>
+                  </div>
+                )}
+                
+                {artiste.description && (
+                  <div className={styles.artisteDescription}>
+                    <p>{artiste.description}</p>
+                  </div>
+                )}
+                
+                {artiste.contacts && (
+                  <div className={styles.artisteContacts}>
+                    {artiste.contacts.email && (
+                      <div className={styles.artisteContact}>
+                        <i className="bi bi-envelope"></i>
+                        <a href={`mailto:${artiste.contacts.email}`}>{artiste.contacts.email}</a>
+                      </div>
+                    )}
+                    
+                    {artiste.contacts.telephone && (
+                      <div className={styles.artisteContact}>
+                        <i className="bi bi-telephone"></i>
+                        <a href={`tel:${artiste.contacts.telephone}`}>{artiste.contacts.telephone}</a>
+                      </div>
+                    )}
+                  </div>
+                )}
+                
+                <div className={styles.artisteActions}>
+                  <Link 
+                    to={`/artistes/${artiste.id}`}
+                    className="btn btn-outline-primary btn-sm"
+                  >
+                    <i className="bi bi-eye me-1"></i>
+                    Voir les détails
+                  </Link>
+                </div>
+              </div>
+            ) : (
+              <div className={styles.emptyState}>
+                <i className="bi bi-music-note-beamed"></i>
+                <p>Aucun artiste associé à ce concert</p>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
 
-     {/* Modal de confirmation de suppression */}
-     <Modal 
-       show={showDeleteModal} 
-       onHide={() => setShowDeleteModal(false)}
-       centered
-     >
-       <Modal.Header closeButton>
-         <Modal.Title>Confirmation de suppression</Modal.Title>
-       </Modal.Header>
-       <Modal.Body>
-         Êtes-vous sûr de vouloir supprimer ce concert ? Cette action est irréversible.
-       </Modal.Body>
-       <Modal.Footer>
-         <Button 
-           variant="secondary" 
-           onClick={() => setShowDeleteModal(false)}
-           disabled={deleting}
-         >
-           Annuler
-         </Button>
-         <Button 
-           variant="danger" 
-           onClick={handleDelete}
-           disabled={deleting}
-         >
-           {deleting ? 'Suppression...' : 'Supprimer'}
-         </Button>
-       </Modal.Footer>
-     </Modal>
+      {/* Modal de confirmation de suppression */}
+      <Modal 
+        show={showDeleteModal} 
+        onHide={() => setShowDeleteModal(false)}
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Confirmation de suppression</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Êtes-vous sûr de vouloir supprimer ce concert ? Cette action est irréversible.
+        </Modal.Body>
+        <Modal.Footer>
+          <Button 
+            variant="secondary" 
+            onClick={() => setShowDeleteModal(false)}
+            disabled={deleting}
+          >
+            Annuler
+          </Button>
+          <Button 
+            variant="danger" 
+            onClick={handleDelete}
+            disabled={deleting}
+          >
+            {deleting ? 'Suppression...' : 'Supprimer'}
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
-     {/* Modal du générateur de formulaire */}
-     <Modal 
-       show={showFormGenerator} 
-       onHide={() => {
-         setShowFormGenerator(false);
-         setGeneratedFormLink(null);
-       }}
-       centered
-     >
-       <Modal.Header closeButton>
-         <Modal.Title>
-           {generatedFormLink ? 'Formulaire généré' : 'Générer un formulaire'}
-         </Modal.Title>
-       </Modal.Header>
-       <Modal.Body>
-         {generatedFormLink ? (
-           <div>
-             <p>Voici le lien du formulaire à envoyer au programmateur :</p>
-             <div className="input-group mb-3">
-               <input
-                 type="text"
-                 className="form-control"
-                 value={generatedFormLink}
-                 readOnly
-               />
-               <Button 
-                 variant="outline-primary"
-                 onClick={() => copyToClipboard(generatedFormLink)}
-               >
-                 <i className="bi bi-clipboard"></i>
-               </Button>
-             </div>
-             
-             <div className="form-sharing-options mt-3">
-               <p>Partager via :</p>
-               <div className="d-flex gap-2">
-                 <a 
-                   href={`mailto:${programmateur?.email || ''}?subject=Formulaire pour le concert du ${formatDate(concert.date)}&body=Bonjour,%0D%0A%0D%0AVeuillez remplir le formulaire pour le concert prévu le ${formatDate(concert.date)} en cliquant sur ce lien : ${generatedFormLink}%0D%0A%0D%0AMerci.`} 
-                   className="btn btn-outline-secondary"
-                   target="_blank"
-                   rel="noopener noreferrer"
-                 >
-                   <i className="bi bi-envelope me-1"></i>
-                   Email
-                 </a>
-                 <a 
-                   href={`https://wa.me/?text=Formulaire pour le concert du ${formatDate(concert.date)} : ${generatedFormLink}`} 
-                   className="btn btn-outline-success"
-                   target="_blank"
-                   rel="noopener noreferrer"
-                 >
-                   <i className="bi bi-whatsapp me-1"></i>
-                   WhatsApp
-                 </a>
-               </div>
-             </div>
-           </div>
-         ) : (
-           <FormGenerator
-             concertId={id}
-             programmateurId={concert.programmateurId}
-             onFormGenerated={handleFormGenerated}
-           />
-         )}
-       </Modal.Body>
-       <Modal.Footer>
-         <Button 
-           variant="secondary" 
-           onClick={() => {
-             setShowFormGenerator(false);
-             setGeneratedFormLink(null);
-           }}
-         >
-           Fermer
-         </Button>
-         {generatedFormLink && (
-           <Button 
-             variant="primary" 
-             onClick={() => {
-               setGeneratedFormLink(null);
-             }}
-           >
-             Générer un nouveau lien
-           </Button>
-         )}
-       </Modal.Footer>
-     </Modal>
-   </div>
- );
+      {/* Modal du générateur de formulaire */}
+      <Modal 
+        show={showFormGenerator} 
+        onHide={() => {
+          setShowFormGenerator(false);
+          setGeneratedFormLink(null);
+        }}
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>
+            {generatedFormLink ? 'Formulaire généré' : 'Générer un formulaire'}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {generatedFormLink ? (
+            <div>
+              <p>Voici le lien du formulaire à envoyer au programmateur :</p>
+              <div className="input-group mb-3">
+                <input
+                  type="text"
+                  className="form-control"
+                  value={generatedFormLink}
+                  readOnly
+                />
+                <Button 
+                  variant="outline-primary"
+                  onClick={() => copyToClipboard(generatedFormLink)}
+                >
+                  <i className="bi bi-clipboard"></i>
+                </Button>
+              </div>
+              
+              <div className="form-sharing-options mt-3">
+                <p>Partager via :</p>
+                <div className="d-flex gap-2">
+                  <a 
+                    href={`mailto:${programmateur?.email || ''}?subject=Formulaire pour le concert du ${formatDate(concert.date)}&body=Bonjour,%0D%0A%0D%0AVeuillez remplir le formulaire pour le concert prévu le ${formatDate(concert.date)} en cliquant sur ce lien : ${generatedFormLink}%0D%0A%0D%0AMerci.`} 
+                    className="btn btn-outline-secondary"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <i className="bi bi-envelope me-1"></i>
+                    Email
+                  </a>
+                  <a 
+                    href={`https://wa.me/?text=Formulaire pour le concert du ${formatDate(concert.date)} : ${generatedFormLink}`} 
+                    className="btn btn-outline-success"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <i className="bi bi-whatsapp me-1"></i>
+                    WhatsApp
+                  </a>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <FormGenerator
+              concertId={id}
+              programmateurId={concert.programmateurId}
+              onFormGenerated={handleFormGenerated}
+            />
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button 
+            variant="secondary" 
+            onClick={() => {
+              setShowFormGenerator(false);
+              setGeneratedFormLink(null);
+            }}
+          >
+            Fermer
+          </Button>
+          {generatedFormLink && (
+            <Button 
+              variant="primary" 
+              onClick={() => {
+                setGeneratedFormLink(null);
+              }}
+            >
+              Générer un nouveau lien
+            </Button>
+          )}
+        </Modal.Footer>
+      </Modal>
+    </div>
+  );
 };
 
 export default ConcertDetailsMobile;

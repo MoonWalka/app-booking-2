@@ -6,9 +6,8 @@ import { db } from '../../../firebaseInit';
 import { Badge, Button, Form, InputGroup } from 'react-bootstrap';
 import Spinner from '../../common/Spinner';
 import { formatDateFrSlash } from '@/utils/dateUtils';
-// Correction UI: Import des fichiers CSS centralisés
-import '@/styles/components/concerts.css';
-import '@/styles/components/concerts-mobile.css';
+// Import du module CSS
+import styles from './ConcertsList.module.css';
 
 const ConcertsListMobile = () => {
   const navigate = useNavigate();
@@ -135,9 +134,9 @@ const ConcertsListMobile = () => {
   };
 
   return (
-    <div className="concerts-mobile-container">
+    <div className={styles.concertsMobileContainer}>
       {/* En-tête avec titre et bouton d'ajout */}
-      <div className="mobile-header">
+      <div className={styles.mobileHeader}>
         <h1 className="fs-4 fw-bold text-primary mb-0">Concerts</h1>
         <Button 
           variant="primary"
@@ -150,7 +149,7 @@ const ConcertsListMobile = () => {
       </div>
 
       {/* Barre de recherche */}
-      <div className="mobile-search-container">
+      <div className={styles.mobileSearchContainer}>
         <InputGroup>
           <InputGroup.Text>
             <i className="bi bi-search"></i>
@@ -165,7 +164,7 @@ const ConcertsListMobile = () => {
             <Button 
               variant="outline-secondary"
               onClick={() => setSearchTerm('')}
-              className="clear-search-btn"
+              className={styles.clearSearchBtn}
             >
               <i className="bi bi-x"></i>
             </Button>
@@ -174,7 +173,7 @@ const ConcertsListMobile = () => {
       </div>
 
       {/* Filtres par statut */}
-      <div className="mobile-filters-container">
+      <div className={styles.mobileFiltersContainer}>
         {/* Correction UI: Utilisation des filtres standardisés depuis statusDetailsMap */}
         <button 
           className={`btn ${statusFilter === 'tous' ? 'btn-primary' : 'btn-outline-primary'} btn-sm me-2 px-3 py-2 rounded-pill`}
@@ -188,8 +187,8 @@ const ConcertsListMobile = () => {
             className={`btn ${statusFilter === status ? 'btn-primary' : 'btn-outline-primary'} btn-sm me-2 px-3 py-2 rounded-pill d-inline-flex align-items-center`}
             onClick={() => setStatusFilter(status)}
           >
-            <span className="filter-icon me-1">{statusDetailsMap[status].icon}</span> 
-            {statusDetailsMap[status].label}
+            <span className={styles.filterIcon}>{statusDetailsMap[status].icon}</span> 
+            <span className="ms-1">{statusDetailsMap[status].label}</span>
           </button>
         ))}
       </div>
@@ -198,12 +197,12 @@ const ConcertsListMobile = () => {
       {loading ? (
         <Spinner message="Chargement des concerts..." />
       ) : error ? (
-        <div className="error-container">
+        <div className={styles.errorContainer}>
           <i className="bi bi-exclamation-triangle-fill"></i>
           <p>{error}</p>
         </div>
       ) : filteredConcerts.length === 0 ? (
-        <div className="empty-container">
+        <div className={styles.emptyContainer}>
           <i className="bi bi-calendar-x"></i>
           <p>Aucun concert trouvé</p>
           <Button 
@@ -215,61 +214,60 @@ const ConcertsListMobile = () => {
           </Button>
         </div>
       ) : (
-        <div className="concerts-list-mobile">
+        <div className={styles.concertsListMobile}>
           {filteredConcerts.map(concert => (
             <div 
               key={concert.id} 
-              className="concert-card"
+              className={styles.concertCard}
               onClick={() => navigate(`/concerts/${concert.id}`)}
             >
-              {/* Correction UI: Amélioration de l'affichage des dates */}
-              <div className={`concert-card-date ${isDatePassed(concert.date) ? 'past-date' : ''}`}>
-                <div className="date-day">{formatDateFrSlash(concert.date).split('/')[0]}</div>
-                <div className="date-month">{formatDateFrSlash(concert.date).split('/')[1]}</div>
-                <div className="date-year">{formatDateFrSlash(concert.date).split('/')[2]}</div>
+              {/* Date du concert */}
+              <div className={`${styles.concertCardDate} ${isDatePassed(concert.date) ? styles.pastDate : ''}`}>
+                <div className={styles.dateDay}>{formatDateFrSlash(concert.date).split('/')[0]}</div>
+                <div className={styles.dateMonth}>{formatDateFrSlash(concert.date).split('/')[1]}</div>
+                <div className={styles.dateYear}>{formatDateFrSlash(concert.date).split('/')[2]}</div>
               </div>
               
-              <div className="concert-details">
-                <h3 className="concert-card-title">{concert.titre || concert.artisteNom || "Concert sans titre"}</h3>
+              <div className={styles.concertDetails}>
+                <h3 className={styles.concertCardTitle}>{concert.titre || concert.artisteNom || "Concert sans titre"}</h3>
                 
-                <div className="concert-info">
+                <div className={styles.concertInfo}>
                   {concert.lieuNom && (
-                    <div className="info-item">
+                    <div className={styles.infoItem}>
                       <i className="bi bi-geo-alt"></i>
-                      <span className="concert-venue-name">{concert.lieuNom}</span>
+                      <span className={styles.concertVenueName}>{concert.lieuNom}</span>
                       {concert.lieuVille && (
-                        <span className="concert-venue-location">{concert.lieuVille}</span>
+                        <span className={styles.concertVenueLocation}>{concert.lieuVille}</span>
                       )}
                     </div>
                   )}
                   
                   {concert.artisteNom && (
-                    <div className="info-item">
+                    <div className={styles.infoItem}>
                       <i className="bi bi-music-note"></i>
-                      <span className="artist-tag">{concert.artisteNom}</span>
+                      <span className={styles.artistTag}>{concert.artisteNom}</span>
                     </div>
                   )}
                   
                   {concert.montant && (
-                    <div className="info-item montant">
+                    <div className={`${styles.infoItem} ${styles.montant}`}>
                       <i className="bi bi-cash"></i>
                       <span>{new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(concert.montant)}</span>
                     </div>
                   )}
                 </div>
                 
-                <div className="concert-status">
-                  {/* Correction UI: Utilisation de classes personnalisées pour améliorer le contraste */}
-                  <Badge bg={getStatusColor(concert.statut)} className="concert-status-badge">
+                <div className={styles.concertStatus}>
+                  <Badge bg={getStatusColor(concert.statut)} className={styles.concertStatusBadge}>
                     {getStatusInfo(concert.statut).label}
                   </Badge>
                 </div>
               </div>
               
-              <div className="concert-actions">
+              <div className={styles.concertActions}>
                 <Link 
                   to={`/concerts/${concert.id}`}
-                  className="action-btn view concert-action-button"
+                  className={`${styles.actionBtn} ${styles.view} ${styles.concertActionButton}`}
                   onClick={(e) => e.stopPropagation()}
                   aria-label="Voir le détail"
                 >
@@ -277,7 +275,7 @@ const ConcertsListMobile = () => {
                 </Link>
                 <Link 
                   to={`/concerts/${concert.id}/edit`}
-                  className="action-btn edit concert-action-button"
+                  className={`${styles.actionBtn} ${styles.edit} ${styles.concertActionButton}`}
                   onClick={(e) => e.stopPropagation()}
                   aria-label="Modifier le concert"
                 >

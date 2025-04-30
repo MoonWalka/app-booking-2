@@ -15,8 +15,8 @@ import {
   limit
 } from 'firebase/firestore';
 import { db } from '@/firebaseInit';
-import '@styles/index.css';
 import Spinner from '@/components/common/Spinner';
+import styles from './ProgrammateurDetails.module.css';
 
 
 const ProgrammateurDetails = () => {
@@ -432,14 +432,13 @@ const ProgrammateurDetails = () => {
               <li className="breadcrumb-item active" aria-current="page">{programmateur.nom}</li>
             </ol>
           </nav>
-          <h2 className="fw-bold mb-0">
+          <h2 className={styles.headerTitle}>
             {programmateur.nom}
-            {/* Correction : amélioration contraste fond/texte */}
             {programmateur.structure && <span className="badge bg-light text-dark ms-2 fs-6">{programmateur.structure}</span>}
           </h2>
         </div>
         
-        <div className="d-flex gap-2 mt-3 mt-md-0">
+        <div className={styles.headerActions}>
           {isEditing ? (
             <>
               {/* Boutons en mode édition */}

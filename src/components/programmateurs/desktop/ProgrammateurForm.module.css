@@ -1,0 +1,141 @@
+/* ProgrammateurForm.module.css */
+.formContainer {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.formCard {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+
+.cardHeader {
+  background-color: #f8f9fa;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e9ecef;
+  display: flex;
+  align-items: center;
+}
+
+.cardIcon {
+  margin-right: 12px;
+  font-size: 1.2rem;
+  color: #007bff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background-color: rgba(0, 123, 255, 0.1);
+  border-radius: 6px;
+}
+
+.cardHeader h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.cardBody {
+  padding: 20px;
+}
+
+.formGroup {
+  margin-bottom: 18px;
+}
+
+.formLabel {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #333;
+}
+
+.requiredField {
+  color: #dc3545;
+  margin-left: 4px;
+}
+
+.optionalText {
+  color: #6c757d;
+  font-size: 0.85rem;
+  font-weight: normal;
+  margin-left: 4px;
+}
+
+.searchOptionsContainer {
+  margin-bottom: 24px;
+  padding: 16px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.searchOptionsTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.searchButtonsGroup {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.searchButton {
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.searchButton:hover {
+  transform: translateY(-1px);
+}
+
+.searchResultItem {
+  cursor: pointer;
+  padding: 12px;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s ease;
+}
+
+.searchResultItem:hover {
+  background-color: #f8f9fa;
+}
+
+.suggestionContainer {
+  position: absolute;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  background-color: white;
+  border: 1px solid #ced4da;
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: -1px;
+}
+
+.suggestionItem {
+  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.suggestionItem:hover {
+  background-color: #f8f9fa;
+}
+
+.formActions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}

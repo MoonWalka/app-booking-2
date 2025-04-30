@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import firebase from '@/firebaseInit';
-import '@styles/index.css';
-import '@styles/components/lists.css';
 import { collection, query, getDocs, orderBy, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '@/firebaseInit';
 import Spinner from '@/components/common/Spinner';
+import styles from './ProgrammateursList.module.css';
 
 const ProgrammateursList = () => {
   const navigate = useNavigate();
@@ -107,7 +106,7 @@ const ProgrammateursList = () => {
 
   return (
     <div className="container-fluid p-4">
-      <div className="header-container mb-4">
+      <div className={styles.headerContainer}>
         <h2 className="fs-4 fw-bold text-primary mb-0">Liste des programmateurs</h2>
         <Link 
           to="/programmateurs/nouveau" 
@@ -118,7 +117,7 @@ const ProgrammateursList = () => {
         </Link>
       </div>
 
-      <form className="search-bar" autoComplete="off">
+      <form className={styles.searchBar} autoComplete="off">
         <div className="input-group shadow-sm">
           <span className="input-group-text bg-white"><i className="bi bi-search"></i></span>
           <input
@@ -179,7 +178,7 @@ const ProgrammateursList = () => {
               {filteredProgrammateurs.map(prog => (
                 <tr 
                   key={prog.id} 
-                  className="cursor-pointer"
+                  className={styles.cursorPointer}
                   onClick={() => handleRowClick(prog.id)}
                 >
                   <td title={prog.nom} style={{
@@ -192,9 +191,9 @@ const ProgrammateursList = () => {
                   </td>
                   <td>
                     {prog.structure ? (
-                      <span className="structure-badge">{prog.structure}</span>
+                      <span className={styles.structureBadge}>{prog.structure}</span>
                     ) : (
-                      <span className="field-empty"><i className="bi bi-dash-circle"></i> non spécifié</span>
+                      <span className={styles.fieldEmpty}><i className="bi bi-dash-circle"></i> non spécifié</span>
                     )}
                   </td>
                   <td>
@@ -208,7 +207,7 @@ const ProgrammateursList = () => {
                         {prog.email}
                       </a>
                     ) : (
-                      <span className="field-empty"><i className="bi bi-dash-circle"></i> non spécifié</span>
+                      <span className={styles.fieldEmpty}><i className="bi bi-dash-circle"></i> non spécifié</span>
                     )}
                   </td>
                   <td>
@@ -222,11 +221,11 @@ const ProgrammateursList = () => {
                         {prog.telephone}
                       </a>
                     ) : (
-                      <span className="field-empty"><i className="bi bi-dash-circle"></i> non spécifié</span>
+                      <span className={styles.fieldEmpty}><i className="bi bi-dash-circle"></i> non spécifié</span>
                     )}
                   </td>
                   <td>
-                    <div className="table-actions d-flex">
+                    <div className={styles.tableActions}>
                       <Link 
                         to={`/programmateurs/edit/${prog.id}`} 
                         className="btn btn-light me-2"

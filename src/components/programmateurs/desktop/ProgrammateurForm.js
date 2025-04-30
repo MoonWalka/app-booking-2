@@ -5,6 +5,7 @@ import { db } from '@/firebaseInit';
 import { useLocationIQ } from '@/hooks/useLocationIQ';
 import '@styles/index.css';
 import { useNavigate } from 'react-router-dom';
+import styles from './ProgrammateurForm.module.css';
 
 
 const ProgrammateurForm = ({ token, concertId, formLinkId, initialLieuData, onSubmitSuccess }) => {
@@ -676,7 +677,7 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, initialLieuData, onSu
   };
 
   return (
-    <Form onSubmit={handleSubmit} className="programmer-form">
+    <Form onSubmit={handleSubmit} className={styles.formContainer}>
       {error && (
         <Alert variant="danger" className="mb-4">
           <i className="bi bi-exclamation-triangle-fill me-2"></i>
@@ -685,15 +686,20 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, initialLieuData, onSu
       )}
       
       {/* Section des informations de contact */}
-      <div className="card mb-4">
-        <div className="card-header">
+      <div className={styles.formCard}>
+        <div className={styles.cardHeader}>
+          <div className={styles.cardIcon}>
+            <i className="bi bi-person-lines-fill"></i>
+          </div>
           <h3>Informations de contact</h3>
         </div>
-        <div className="card-body">
+        <div className={styles.cardBody}>
           <Row>
             <Col md={6}>
-              <Form.Group className="mb-3">
-                <Form.Label>Nom <span className="text-danger">*</span></Form.Label>
+              <Form.Group className={styles.formGroup}>
+                <Form.Label className={styles.formLabel}>
+                  Nom <span className={styles.requiredField}>*</span>
+                </Form.Label>
                 <Form.Control
                   type="text"
                   name="nom"
@@ -708,8 +714,10 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, initialLieuData, onSu
               </Form.Group>
             </Col>
             <Col md={6}>
-              <Form.Group className="mb-3">
-                <Form.Label>Prénom <span className="text-danger">*</span></Form.Label>
+              <Form.Group className={styles.formGroup}>
+                <Form.Label className={styles.formLabel}>
+                  Prénom <span className={styles.requiredField}>*</span>
+                </Form.Label>
                 <Form.Control
                   type="text"
                   name="prenom"
@@ -725,8 +733,10 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, initialLieuData, onSu
             </Col>
           </Row>
           
-          <Form.Group className="mb-3">
-            <Form.Label>Fonction</Form.Label>
+          <Form.Group className={styles.formGroup}>
+            <Form.Label className={styles.formLabel}>
+              Fonction <span className={styles.optionalText}>(facultatif)</span>
+            </Form.Label>
             <Form.Control
               type="text"
               name="fonction"
@@ -738,8 +748,8 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, initialLieuData, onSu
           
           <Row>
             <Col md={6}>
-              <Form.Group className="mb-3">
-                <Form.Label>Email</Form.Label>
+              <Form.Group className={styles.formGroup}>
+                <Form.Label className={styles.formLabel}>Email</Form.Label>
                 <Form.Control
                   type="email"
                   name="email"
@@ -756,8 +766,8 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, initialLieuData, onSu
               </Form.Group>
             </Col>
             <Col md={6}>
-              <Form.Group className="mb-3">
-                <Form.Label>Téléphone</Form.Label>
+              <Form.Group className={styles.formGroup}>
+                <Form.Label className={styles.formLabel}>Téléphone</Form.Label>
                 <Form.Control
                   type="tel"
                   name="telephone"
@@ -771,19 +781,23 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, initialLieuData, onSu
       </div>
       
       {/* Section Structure juridique avec recherche d'entreprise intégrée */}
-      <div className="card mb-4">
-        <div className="card-header">
+      <div className={styles.formCard}>
+        <div className={styles.cardHeader}>
+          <div className={styles.cardIcon}>
+            <i className="bi bi-building"></i>
+          </div>
           <h3>Structure juridique</h3>
         </div>
-        <div className="card-body">
+        <div className={styles.cardBody}>
           {/* Options de recherche d'entreprise */}
-          <div className="mb-4">
-            <h5>Comment souhaitez-vous renseigner votre structure ?</h5>
-            <div className="d-flex gap-2 mb-3">
+          <div className={styles.searchOptionsContainer}>
+            <h5 className={styles.searchOptionsTitle}>Comment souhaitez-vous renseigner votre structure ?</h5>
+            <div className={styles.searchButtonsGroup}>
               <Button 
                 variant={searchType === 'manual' ? 'primary' : 'outline-primary'} 
                 onClick={() => setSearchType('manual')}
                 size="sm"
+                className={styles.searchButton}
               >
                 <i className="bi bi-pencil-fill me-2"></i>
                 Saisie manuelle
@@ -792,6 +806,7 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, initialLieuData, onSu
                 variant={searchType === 'name' ? 'primary' : 'outline-primary'} 
                 onClick={() => setSearchType('name')}
                 size="sm"
+                className={styles.searchButton}
               >
                 <i className="bi bi-search me-2"></i>
                 Rechercher par nom
@@ -800,6 +815,7 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, initialLieuData, onSu
                 variant={searchType === 'siret' ? 'primary' : 'outline-primary'} 
                 onClick={() => setSearchType('siret')}
                 size="sm"
+                className={styles.searchButton}
               >
                 <i className="bi bi-upc-scan me-2"></i>
                 Rechercher par SIREN/SIRET
@@ -1037,15 +1053,18 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, initialLieuData, onSu
       </div>
       
       {/* Section d'édition des informations du lieu */}
-      <div className="card mb-4">
-        <div className="card-header">
+      <div className={styles.formCard}>
+        <div className={styles.cardHeader}>
+          <div className={styles.cardIcon}>
+            <i className="bi bi-geo-alt-fill"></i>
+          </div>
           <h3>Informations sur le lieu</h3>
         </div>
-        <div className="card-body">
+        <div className={styles.cardBody}>
           <p className="text-muted mb-3">Si vous disposez d'informations supplémentaires concernant le lieu du concert, vous pouvez les renseigner ici.</p>
           
-          <Form.Group className="mb-3">
-            <Form.Label>Nom du lieu</Form.Label>
+          <Form.Group className={styles.formGroup}>
+            <Form.Label className={styles.formLabel}>Nom du lieu</Form.Label>
             <Form.Control
               type="text"
               name="nomLieu"
@@ -1055,8 +1074,8 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, initialLieuData, onSu
             />
           </Form.Group>
           
-          <Form.Group className="mb-3 position-relative">
-            <Form.Label>Adresse</Form.Label>
+          <Form.Group className={`${styles.formGroup} position-relative`}>
+            <Form.Label className={styles.formLabel}>Adresse</Form.Label>
             <div className="input-group">
               <Form.Control
                 type="text"
@@ -1078,22 +1097,20 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, initialLieuData, onSu
             
             {/* Suggestions d'adresse pour le lieu */}
             {lieuAddressSuggestions.length > 0 && (
-              <div ref={lieuSuggestionsRef} style={suggestionsStyle}>
+              <div ref={lieuSuggestionsRef} className={styles.suggestionContainer}>
                 {lieuAddressSuggestions.map((suggestion, index) => (
                   <div
                     key={index}
-                    style={suggestionItemStyle}
-                    onMouseOver={(e) => e.target.style.backgroundColor = '#f8f9fa'}
-                    onMouseOut={(e) => e.target.style.backgroundColor = ''}
+                    className={styles.suggestionItem}
                     onMouseDown={() => handleSelectLieuAddress(suggestion)}
                   >
-                    <div style={suggestionIconStyle}>
+                    <div className="me-2 text-primary">
                       <i className="bi bi-geo-alt-fill"></i>
                     </div>
                     <div>
-                      <div style={{ fontWeight: 'bold' }}>{suggestion.display_name}</div>
+                      <div className="fw-bold">{suggestion.display_name}</div>
                       {suggestion.address && (
-                        <div style={{ fontSize: '0.85em', color: '#6c757d' }}>
+                        <div className="small text-muted">
                           {suggestion.address.postcode} {suggestion.address.city}
                         </div>
                       )}
@@ -1106,8 +1123,8 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, initialLieuData, onSu
           
           <Row>
             <Col md={4}>
-              <Form.Group className="mb-3">
-                <Form.Label>Code postal</Form.Label>
+              <Form.Group className={styles.formGroup}>
+                <Form.Label className={styles.formLabel}>Code postal</Form.Label>
                 <Form.Control
                   type="text"
                   name="codePostalLieu"
@@ -1117,8 +1134,8 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, initialLieuData, onSu
               </Form.Group>
             </Col>
             <Col md={8}>
-              <Form.Group className="mb-3">
-                <Form.Label>Ville</Form.Label>
+              <Form.Group className={styles.formGroup}>
+                <Form.Label className={styles.formLabel}>Ville</Form.Label>
                 <Form.Control
                   type="text"
                   name="villeLieu"
@@ -1129,8 +1146,8 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, initialLieuData, onSu
             </Col>
           </Row>
           
-          <Form.Group className="mb-3">
-            <Form.Label>Capacité</Form.Label>
+          <Form.Group className={styles.formGroup}>
+            <Form.Label className={styles.formLabel}>Capacité</Form.Label>
             <Form.Control
               type="number"
               name="capaciteLieu"
@@ -1142,32 +1159,33 @@ const ProgrammateurForm = ({ token, concertId, formLinkId, initialLieuData, onSu
         </div>
       </div>
       
-      <div className="form-actions">
-          <button 
-            type="button" 
-            className="btn btn-outline-secondary d-flex align-items-center gap-2"
+      <div className={styles.formActions}>
+          <Button 
+            variant="outline-secondary"
+            className="d-flex align-items-center gap-2"
             onClick={handleCancel}
           >
-            <i className="bi bi-x-circle me-1"></i>
+            <i className="bi bi-x-circle"></i>
             Annuler
-          </button>
-          <button 
+          </Button>
+          <Button 
             type="submit" 
-            className="btn btn-primary d-flex align-items-center gap-2"
+            variant="primary"
+            className="d-flex align-items-center gap-2"
             disabled={submitting}
           >
             {submitting ? (
               <>
-                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                 Enregistrement...
               </>
             ) : (
               <>
-                <i className="bi bi-check-circle me-1"></i>
+                <i className="bi bi-check-circle"></i>
                 Enregistrer
               </>
             )}
-          </button>
+          </Button>
         </div>
     </Form>
   );

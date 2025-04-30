@@ -10,7 +10,7 @@ import {
   deleteDoc, 
   doc 
 } from 'firebase/firestore';
-import { db } from '@/firebase';
+import { db } from '@/firebaseInit';
 import { Form, Button, InputGroup } from 'react-bootstrap';
 
 const StructuresList = () => {

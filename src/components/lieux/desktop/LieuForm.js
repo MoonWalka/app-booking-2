@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import firebase from '@/firebase';
+import firebase from '@/firebaseInit';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useLocationIQ } from '../../../hooks/useLocationIQ';
@@ -21,7 +21,7 @@ import {
   setDoc,
   serverTimestamp
 } from 'firebase/firestore';
-import { db } from '@/firebase';
+import { db } from '@/firebaseInit';
 
 // Correction pour les icônes Leaflet
 delete L.Icon.Default.prototype._getIconUrl;

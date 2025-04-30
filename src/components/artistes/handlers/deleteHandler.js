@@ -1,4 +1,4 @@
-import firebase from '@/firebase';
+import firebase from '@/firebaseInit';
 
 export const handleDelete = async (id) => {
   if (window.confirm('Êtes-vous sûr de vouloir supprimer cet artiste ?')) {

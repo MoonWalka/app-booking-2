@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import firebase from '@/firebase';
+import firebase from '@/firebaseInit';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Spinner from '@/components/common/Spinner';
 import { formatDateFr } from '@/utils/dateUtils';

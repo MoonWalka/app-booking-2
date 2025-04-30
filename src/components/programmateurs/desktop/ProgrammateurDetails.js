@@ -14,7 +14,7 @@ import {
   orderBy,
   limit
 } from 'firebase/firestore';
-import { db } from '@/firebase';
+import { db } from '@/firebaseInit';
 import '@styles/index.css';
 import Spinner from '@/components/common/Spinner';
 

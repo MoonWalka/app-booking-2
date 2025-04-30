@@ -11,7 +11,7 @@ import {
   doc,
   deleteDoc
 } from 'firebase/firestore';
-import { db } from '@/firebase';
+import { db } from '@/firebaseInit';
 import '@styles/index.css';
 import { Button, Form, InputGroup } from 'react-bootstrap';
 import Spinner from '@/components/common/Spinner';

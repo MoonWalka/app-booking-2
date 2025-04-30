@@ -9,7 +9,7 @@ import {
   collection, 
   Timestamp 
 } from 'firebase/firestore';
-import { db } from '@/firebase';
+import { db } from '@/firebaseInit';
 import '@styles/index.css';
 
 // Composant pour l'étape 1 : Informations de base

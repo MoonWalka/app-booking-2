@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { collection, query, where, getDocs, getDoc, doc, updateDoc, addDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '@/firebase';
+import { db } from '@/firebaseInit';
 import { useLocationIQ } from '@/hooks/useLocationIQ';
 import ProgrammateurForm from '@/components/programmateurs/ProgrammateurForm.js';
 import '@styles/pages/formPublic.css';
@@ -11,8 +11,8 @@ import { formatDateFr, formatDateFrSlash } from '../utils/dateUtils';
 {/* 
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { collection, query, where, getDocs, getDoc, doc, updateDoc, addDoc, serverTimestamp } from '@firebase';
-import { db } from '@firebase';
+import { collection, query, where, getDocs, getDoc, doc, updateDoc, addDoc, serverTimestamp } from '@/firebaseInit';
+import { db } from '@/firebaseInit';
 import { useLocationIQ } from '@hooks/useLocationIQ';
 import ProgrammateurForm from '@components/forms/ProgrammateurForm.js';
 import '@styles/index.css';

@@ -2,7 +2,7 @@
 // Un outil pour analyser et nettoyer les templates de contrat
 
 import { collection, getDocs, doc, writeBatch } from 'firebase/firestore';
-import { db } from './firebase';
+import { db } from './firebaseInit';
 
 /**
  * Analyser tous les templates pour détecter les problèmes potentiels

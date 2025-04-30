@@ -1,4 +1,4 @@
-import firebase from '../../../firebase';
+import firebase from '../../../firebaseInit';
 
 export const getNbConcerts = async (artisteId) => {
   try {

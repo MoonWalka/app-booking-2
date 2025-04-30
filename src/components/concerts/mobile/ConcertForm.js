@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { collection, doc, getDoc, setDoc, updateDoc, serverTimestamp, arrayUnion, arrayRemove } from 'firebase/firestore';
-import { db } from '../../../firebase';
+import { db } from '../../../firebaseInit';
 import StepNavigation from '../../common/steps/StepNavigation.js';
 import { query, where, limit, getDocs } from 'firebase/firestore';
 

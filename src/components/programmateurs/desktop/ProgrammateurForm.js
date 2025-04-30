@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Form, Button, Row, Col, Alert } from 'react-bootstrap';
 import { collection, addDoc, query, where, getDocs, doc, getDoc, serverTimestamp, updateDoc } from 'firebase/firestore';
-import { db } from '@/firebase';
+import { db } from '@/firebaseInit';
 import { useLocationIQ } from '@/hooks/useLocationIQ';
 import '@styles/index.css';
 import { useNavigate } from 'react-router-dom';

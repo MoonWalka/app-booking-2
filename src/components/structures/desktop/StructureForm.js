@@ -8,7 +8,7 @@ import {
   collection, 
   Timestamp 
 } from 'firebase/firestore';
-import { db } from '@/firebase';
+import { db } from '@/firebaseInit';
 import { Form, Button, Row, Col, Alert } from 'react-bootstrap';
 
 const StructureForm = () => {

@@ -1,7 +1,7 @@
 // src/components/forms/mobile/FormValidationInterface.js
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { db } from '../../../firebase';
+import { db } from '../../../firebaseInit';
 import { doc, getDoc, updateDoc, collection, query, where, getDocs, addDoc, Timestamp } from 'firebase/firestore';
 import { Button, Badge, Spinner } from 'react-bootstrap';
 import '@styles/index.css';

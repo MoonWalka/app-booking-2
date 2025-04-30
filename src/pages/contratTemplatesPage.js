@@ -1,7 +1,7 @@
 // src/pages/contratTemplatesPage.js - MODIFIÉ
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { db, collection, getDocs, doc, deleteDoc, query, where, orderBy, addDoc, updateDoc, serverTimestamp } from '@/firebase';
+import { db, collection, getDocs, doc, deleteDoc, query, where, orderBy, addDoc, updateDoc, serverTimestamp } from '@/firebaseInit';
 import '@styles/index.css';
 
 // Imports

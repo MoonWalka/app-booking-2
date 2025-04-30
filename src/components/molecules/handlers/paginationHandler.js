@@ -1,4 +1,4 @@
-import firebase from '../../../firebase';
+import firebase from '../../../firebaseInit';
 
 export const handleLoadMore = async (collectionName, lastDoc, pageSize = 10) => {
   try {

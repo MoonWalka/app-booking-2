@@ -14,7 +14,7 @@ import {
   limit,
   setDoc
 } from 'firebase/firestore';
-import { db } from '../../../firebase';
+import { db } from '../../../firebaseInit';
 import { Badge } from 'react-bootstrap';
 // Remplacer les imports de l'ancien système par le nouveau système modulaire
 import '@styles/index.css';

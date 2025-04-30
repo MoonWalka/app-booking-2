@@ -1,6 +1,6 @@
 // src/hooks/useLocationIQ.js
 import { useState, useEffect, useCallback } from 'react';
-import { query, limit } from '@/firebase';
+import { query, limit } from '@/firebaseInit';
 
 
 /**

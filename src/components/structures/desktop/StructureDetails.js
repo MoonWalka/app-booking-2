@@ -12,7 +12,7 @@ import {
   arrayUnion,
   arrayRemove
 } from 'firebase/firestore';
-import { db } from '@/firebase';
+import { db } from '@/firebaseInit';
 import { Button, Alert, Modal } from 'react-bootstrap';
 
 const StructureDetails = () => {

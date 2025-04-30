@@ -12,7 +12,7 @@ import {
   doc,
   deleteDoc
 } from 'firebase/firestore';
-import { db } from '@/firebase';
+import { db } from '@/firebaseInit';
 import { Button, Form, InputGroup, Spinner, Card, Table, Badge } from 'react-bootstrap';
 import '@styles/index.css';
 

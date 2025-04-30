@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import firebase from '../../../firebase';
+import firebase from '../../../firebaseInit';
 import { OverlayTrigger, Tooltip, Badge, Card, Dropdown } from 'react-bootstrap';
 import '@styles/index.css';
 import '@styles/pages/lieux.css';

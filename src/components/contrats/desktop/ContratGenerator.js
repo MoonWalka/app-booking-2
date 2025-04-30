@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 
 import { Button, Form, Alert, Card, Spinner } from 'react-bootstrap';
 import { useParams, useNavigate } from 'react-router-dom';
-import { db } from '@/firebase';
+import { db } from '@/firebaseInit';
 
 // import { 
 //   collection, 
@@ -28,7 +28,7 @@ import {
   addDoc,
   updateDoc,
   serverTimestamp
-} from '@/firebase';
+} from '@/firebaseInit';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import ContratPDFWrapper from '@/components/pdf/ContratPDFWrapper.js';
 import '@/styles/index.css';

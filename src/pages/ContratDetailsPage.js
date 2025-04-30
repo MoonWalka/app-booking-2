@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Card, Alert, Badge, Nav } from 'react-bootstrap';
-import { db } from '@/firebase';
+import { db } from '@/firebaseInit';
 import { doc, getDoc, updateDoc, deleteDoc, Timestamp } from 'firebase/firestore';
 
 import { FaDownload, FaEnvelope, FaFileSignature } from 'react-icons/fa';

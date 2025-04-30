@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { collection, getDocs, query, orderBy, deleteDoc, doc } from 'firebase/firestore';
-import { db } from '@/firebase';
+import { db } from '@/firebaseInit';
 import { Button, Form, InputGroup, Spinner } from 'react-bootstrap';
 import '@styles/index.css';
 import { handleDelete } from './handlers/deleteHandler';

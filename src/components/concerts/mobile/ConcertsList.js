@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { collection, query, orderBy, getDocs } from 'firebase/firestore';
-import { db } from '../../../firebase';
+import { db } from '../../../firebaseInit';
 import { Badge, Button, Form, InputGroup } from 'react-bootstrap';
 import Spinner from '../../common/Spinner';
 import { formatDateFrSlash } from '@/utils/dateUtils';

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { formatDate } from '@/utils/dateUtils';
-import { concertService } from '@/services/firebaseService.js';
+import { concertService } from '@/services/firestoreService.js';
 
 export function useConcertsList() {
   const [concerts, setConcerts] = useState([]);

@@ -2,7 +2,7 @@
 # Étape 9: Script de renommage des fichiers (firebase.js, firebaseService.js)
 
 # Définir le répertoire racine du projet
-PROJECT_DIR="/home/ubuntu/app-booking-2"
+PROJECT_DIR="$(pwd)"
 SRC_DIR="$PROJECT_DIR/src"
 
 echo "Début du script de renommage..."
@@ -19,7 +19,7 @@ if [ -f "$OLD_FIREBASE_PATH" ]; then
   echo "Mise à jour des imports pour firebase.js -> firebaseInit.js..."
   # Recherche et remplacement dans tous les fichiers JS
   # Attention: Gère les alias (@/firebase) et les chemins relatifs (./firebase, ../firebase)
-  find "$SRC_DIR" -type f -name "*.js" -exec sed -i 
+  find "$SRC_DIR" -type f -name "*.js" -exec sed -i '' \
     -e "s|from '@/firebase'|from '@/firebaseInit'|g" \
     -e "s|from '@firebase'|from '@/firebaseInit'|g" \
     -e "s|from './firebase'|from './firebaseInit'|g" \
@@ -46,7 +46,7 @@ if [ -f "$OLD_SERVICE_PATH" ]; then
 
   echo "Mise à jour des imports pour firebaseService.js -> firestoreService.js..."
   # Recherche et remplacement dans tous les fichiers JS
-  find "$SRC_DIR" -type f -name "*.js" -exec sed -i 
+  find "$SRC_DIR" -type f -name "*.js" -exec sed -i '' \
     -e "s|from '@/services/firebaseService.js'|from '@/services/firestoreService.js'|g" \
     -e "s|from '@/services/firebaseService'|from '@/services/firestoreService'|g" \
     -e "s|from '../../services/firebaseService.js'|from '../../services/firestoreService.js'|g" \
@@ -65,4 +65,3 @@ fi
 echo ""
 echo "Script de renommage terminé."
 echo "Vérification manuelle des imports et un test de build sont recommandés."
-

@@ -1,4 +1,4 @@
-import { collection, query, where, getDocs, db } from '@/firebase';
+import { collection, query, where, getDocs, db } from '@/firebaseInit';
 
 export const getNbConcerts = async (artisteId) => {
   try {

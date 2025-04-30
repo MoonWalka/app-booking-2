@@ -1,8 +1,8 @@
 // src/pages/ContratsPage.js
 import React, { useState, useEffect, Suspense } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import { collection, getDocs, query, orderBy, where } from '@/firebase';
-import { db } from '@/firebase';
+import { collection, getDocs, query, orderBy, where } from '@/firebaseInit';
+import { db } from '@/firebaseInit';
 import { Table, Badge, Button, Container, Row, Col, Card } from 'react-bootstrap';
 import ContratGenerationPage from '@pages/ContratGenerationPage.js';
 import ContratDetailsPage from '@pages/ContratDetailsPage.js';

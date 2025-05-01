@@ -1,0 +1,55 @@
+/* Styles pour ConcertForm */
+.concertFormContainer {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.loadingSpinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.modernForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* TODO: Migrer les autres styles du composant original */
+
+/* Styles pour le formulaire de concert */
+
+.formContainer {
+  padding: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.form {
+  margin-top: 1rem;
+}
+
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 500px;
+}
+
+.loadingText {
+  margin-top: 1rem;
+  font-size: 1.1rem;
+  color: #6c757d;
+}
+
+@media screen and (max-width: 768px) {
+  .formContainer {
+    padding: 1rem;
+  }
+}

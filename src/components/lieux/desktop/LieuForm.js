@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import firebase from '@/firebaseInit';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import { useLocationIQ } from '../../../hooks/useLocationIQ';
+import { useLocationIQ } from '@/hooks/common/useLocationIQ';
 import Spinner from '../../../components/common/Spinner';
 import styles from './LieuForm.module.css';
 

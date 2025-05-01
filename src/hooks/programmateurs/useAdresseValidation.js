@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useLocationIQ } from '@/hooks/useLocationIQ';
+import { useLocationIQ } from '@/hooks/common/useLocationIQ';
 
 const useAdresseValidation = (adresseData) => {
   const [isValidating, setIsValidating] = useState(false);

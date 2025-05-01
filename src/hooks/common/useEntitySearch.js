@@ -6,23 +6,44 @@ import {
   limit, 
   getDocs,
   doc,
-  setDoc
+  setDoc,
+  orderBy,
+  serverTimestamp
 } from 'firebase/firestore';
 import { db } from '@/firebaseInit';
 
 /**
- * Hook générique pour la recherche d'entités (lieux, programmateurs, artistes, etc.)
- * @param {string} entityType - Type d'entité à rechercher ('lieux', 'programmateurs', 'artistes')
- * @param {string} searchField - Champ sur lequel effectuer la recherche (généralement 'nom')
- * @param {number} maxResults - Nombre maximum de résultats à retourner
+ * Hook générique pour la recherche d'entités (lieux, programmateurs, artistes, concerts, etc.)
+ * @param {Object} options - Options de configuration du hook
+ * @param {string} options.entityType - Type d'entité à rechercher ('lieux', 'programmateurs', 'artistes', 'concerts')
+ * @param {string} options.searchField - Champ sur lequel effectuer la recherche principale (par défaut: 'nom')
+ * @param {string[]} options.additionalSearchFields - Champs supplémentaires pour la recherche (optionnel)
+ * @param {number} options.maxResults - Nombre maximum de résultats à retourner (par défaut: 10)
+ * @param {Function} options.onSelect - Callback appelé quand une entité est sélectionnée (optionnel)
+ * @param {Function} options.filterResults - Fonction pour filtrer les résultats (optionnel)
+ * @param {boolean} options.allowCreate - Permet la création de nouvelles entités si true (par défaut: true)
+ * @param {Function} options.customSearchFunction - Fonction personnalisée pour la recherche (optionnel)
  */
-export const useEntitySearch = (entityType, searchField = 'nom', maxResults = 10) => {
+export const useEntitySearch = (options) => {
+  const {
+    entityType, 
+    searchField = 'nom',
+    additionalSearchFields = [],
+    maxResults = 10,
+    onSelect = null,
+    filterResults = null,
+    allowCreate = true,
+    customSearchFunction = null
+  } = options;
+
+  // États de base pour la recherche
   const [searchTerm, setSearchTerm] = useState('');
   const [results, setResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [selectedEntity, setSelectedEntity] = useState(null);
   
+  // Références pour la gestion du debounce et du dropdown
   const searchTimeoutRef = useRef(null);
   const dropdownRef = useRef(null);
 
@@ -66,26 +87,90 @@ export const useEntitySearch = (entityType, searchField = 'nom', maxResults = 10
   // Fonction de recherche dans Firestore
   const performSearch = async () => {
     try {
+      // Si une fonction de recherche personnalisée est fournie, l'utiliser
+      if (customSearchFunction) {
+        const customResults = await customSearchFunction(searchTerm);
+        setResults(customResults);
+        setShowResults(customResults.length > 0);
+        setIsSearching(false);
+        return;
+      }
+      
       const termLower = searchTerm.toLowerCase();
       
+      // Construction de la requête de base
       const entitiesRef = collection(db, entityType);
-      const searchQuery = query(
-        entitiesRef,
-        where(searchField, '>=', termLower),
-        where(searchField, '<=', termLower + '\uf8ff'),
-        limit(maxResults)
-      );
+      
+      // Recherche par le champ principal
+      let searchQuery;
+      
+      // Vérifier si le terme de recherche est une date (pour les concerts)
+      const isDateFormat = /^\d{4}-\d{2}-\d{2}$/.test(searchTerm);
+      
+      if (isDateFormat && entityType === 'concerts') {
+        // Recherche exacte sur le champ date
+        searchQuery = query(
+          entitiesRef,
+          where('date', '==', searchTerm),
+          limit(maxResults)
+        );
+      } else if (searchField === 'nom' || searchField.endsWith('Lowercase')) {
+        // Recherche avec préfixe pour les champs de type nom
+        const queryField = searchField === 'nom' ? 'nomLowercase' : searchField;
+        searchQuery = query(
+          entitiesRef,
+          where(queryField, '>=', termLower),
+          where(queryField, '<=', termLower + '\uf8ff'),
+          orderBy(queryField),
+          limit(maxResults)
+        );
+      } else {
+        // Recherche générale ordonnée par date de création décroissante
+        searchQuery = query(
+          entitiesRef,
+          orderBy('createdAt', 'desc'),
+          limit(maxResults * 2) // Récupérer plus de résultats pour permettre le filtrage local
+        );
+      }
       
       const snapshot = await getDocs(searchQuery);
-      const entitiesData = snapshot.docs.map(doc => ({
+      let entitiesData = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       }));
       
+      // Filtrage local pour les requêtes non spécifiques
+      if (!isDateFormat && !(searchField === 'nom' || searchField.endsWith('Lowercase'))) {
+        entitiesData = entitiesData.filter(entity => {
+          // Recherche dans le champ principal
+          if (entity[searchField] && 
+              typeof entity[searchField] === 'string' &&
+              entity[searchField].toLowerCase().includes(termLower)) {
+            return true;
+          }
+          
+          // Recherche dans les champs additionnels
+          return additionalSearchFields.some(field => 
+            entity[field] && 
+            typeof entity[field] === 'string' &&
+            entity[field].toLowerCase().includes(termLower)
+          );
+        });
+        
+        // Limiter aux maxResults après filtrage
+        entitiesData = entitiesData.slice(0, maxResults);
+      }
+      
+      // Appliquer un filtre personnalisé si fourni
+      if (filterResults) {
+        entitiesData = filterResults(entitiesData);
+      }
+      
       setResults(entitiesData);
-      setShowResults(true);
+      setShowResults(entitiesData.length > 0);
     } catch (error) {
       console.error(`Erreur lors de la recherche de ${entityType}:`, error);
+      setResults([]);
     } finally {
       setIsSearching(false);
     }
@@ -94,18 +179,31 @@ export const useEntitySearch = (entityType, searchField = 'nom', maxResults = 10
   // Fonction pour sélectionner une entité
   const handleSelect = (entity) => {
     setSelectedEntity(entity);
-    setSearchTerm(entity[searchField]);
+    setSearchTerm(entity[searchField] || '');
     setShowResults(false);
+    
+    if (onSelect) {
+      onSelect(entity);
+    }
   };
 
   // Fonction pour supprimer l'entité sélectionnée
   const handleRemove = () => {
     setSelectedEntity(null);
     setSearchTerm('');
+    
+    if (onSelect) {
+      onSelect(null);
+    }
   };
 
   // Fonction pour créer une nouvelle entité
   const handleCreate = async (additionalData = {}) => {
+    if (!allowCreate) {
+      console.warn(`Création non autorisée pour le type d'entité: ${entityType}`);
+      return null;
+    }
+    
     if (!searchTerm.trim()) {
       alert(`Veuillez saisir un nom avant de créer un nouveau ${entityType.slice(0, -1)}.`);
       return null;
@@ -116,46 +214,76 @@ export const useEntitySearch = (entityType, searchField = 'nom', maxResults = 10
       let entityData = {
         nom: searchTerm.trim(),
         nomLowercase: searchTerm.trim().toLowerCase(),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
         ...additionalData
       };
       
       // Données spécifiques selon le type d'entité
-      if (entityType === 'lieux') {
-        entityData = {
-          ...entityData,
-          adresse: '',
-          codePostal: '',
-          ville: '',
-          capacite: '',
-          ...additionalData
-        };
-      } else if (entityType === 'programmateurs') {
-        entityData = {
-          ...entityData,
-          email: '',
-          telephone: '',
-          structure: '',
-          concertsAssocies: [],
-          ...additionalData
-        };
-      } else if (entityType === 'artistes') {
-        entityData = {
-          ...entityData,
-          description: '',
-          genre: '',
-          membres: [],
-          contacts: {
+      switch (entityType) {
+        case 'lieux':
+          entityData = {
+            ...entityData,
+            adresse: '',
+            codePostal: '',
+            ville: '',
+            capacite: '',
+            ...additionalData
+          };
+          break;
+        case 'programmateurs':
+          entityData = {
+            ...entityData,
             email: '',
             telephone: '',
-            siteWeb: '',
-            instagram: '',
-            facebook: '',
-            ...additionalData.contacts
-          },
-          ...additionalData
-        };
+            structure: '',
+            concertsAssocies: [],
+            ...additionalData
+          };
+          break;
+        case 'artistes':
+          entityData = {
+            ...entityData,
+            description: '',
+            genre: '',
+            membres: [],
+            contacts: {
+              email: '',
+              telephone: '',
+              siteWeb: '',
+              instagram: '',
+              facebook: '',
+              ...additionalData.contacts
+            },
+            ...additionalData
+          };
+          break;
+        case 'concerts':
+          entityData = {
+            ...entityData,
+            titre: searchTerm.trim(),
+            date: new Date().toISOString().split('T')[0],
+            lieuId: null,
+            lieuNom: null,
+            artisteId: null,
+            artisteNom: null,
+            ...additionalData
+          };
+          break;
+        case 'structures':
+          entityData = {
+            ...entityData,
+            adresse: '',
+            codePostal: '',
+            ville: '',
+            siren: '',
+            siret: '',
+            ...additionalData
+          };
+          break;
+        default:
+          // Ne pas ajouter de champs spécifiques pour les autres types d'entité
+          break;
       }
       
       // Créer le document dans Firestore
@@ -171,6 +299,10 @@ export const useEntitySearch = (entityType, searchField = 'nom', maxResults = 10
       // Définir comme entité sélectionnée
       setSelectedEntity(newEntityWithId);
       setShowResults(false);
+      
+      if (onSelect) {
+        onSelect(newEntityWithId);
+      }
       
       return newEntityWithId;
     } catch (error) {
@@ -192,6 +324,7 @@ export const useEntitySearch = (entityType, searchField = 'nom', maxResults = 10
     handleSelect,
     handleRemove,
     handleCreate,
+    performSearch,
     dropdownRef
   };
 };

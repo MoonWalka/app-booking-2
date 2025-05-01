@@ -1,10 +1,10 @@
 // src/components/common/layout/DesktopLayout.js
 import React from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../../context/AuthContext.js';
-import { APP_NAME } from '../../../config.js';
-import layoutStyles from '../../../components/layout/Layout.module.css';
-import sidebarStyles from '../../../components/layout/Sidebar.module.css';
+import { useAuth } from '@/context/AuthContext.js';
+import { APP_NAME } from '@/config.js';
+import layoutStyles from '@/components/layout/Layout.module.css';
+import sidebarStyles from '@/components/layout/Sidebar.module.css';
 
 function DesktopLayout() {
   const { currentUser, logout } = useAuth();

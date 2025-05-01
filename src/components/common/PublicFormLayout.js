@@ -1,6 +1,6 @@
 // components/common/PublicFormLayout.jsx
 import React from 'react';
-import { APP_NAME } from '../../config.js';
+import { APP_NAME } from '@/config.js';
 
 function PublicFormLayout({ children }) {
   return (

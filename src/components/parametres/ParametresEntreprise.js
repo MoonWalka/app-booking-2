@@ -3,9 +3,9 @@ import { Card, Form } from 'react-bootstrap';
 import styles from './ParametresEntreprise.module.css';
 
 // Import custom hooks
-import useEntrepriseForm from '../../hooks/parametres/useEntrepriseForm';
-import useCompanySearch from '../../hooks/parametres/useCompanySearch';
-import useAddressSearch from '../../hooks/parametres/useAddressSearch';
+import useEntrepriseForm from '@/hooks/parametres/useEntrepriseForm';
+import useCompanySearch from '@/hooks/parametres/useCompanySearch';
+import useAddressSearch from '@/hooks/parametres/useAddressSearch';
 
 // Import subcomponents
 import EntrepriseHeader from './sections/EntrepriseHeader';

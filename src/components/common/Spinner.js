@@ -2,7 +2,7 @@
 import React from 'react';
 import { Spinner as BootstrapSpinner } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import styles from '../../components/ui/Spinner.module.css';
+import styles from '@/components/ui/Spinner.module.css';
 
 /**
  * Composant Spinner unifié pour toute l'application

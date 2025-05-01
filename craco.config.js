@@ -3,6 +3,8 @@ const path = require('path');
 module.exports = {
   webpack: {
     alias: {
+      // Les alias suivants sont dépréciés et seront progressivement remplacés par @/
+      // À terme, seul @/ sera conservé comme standard d'imports
       '@components': path.resolve(__dirname, 'src/components'),
       '@hooks': path.resolve(__dirname, 'src/hooks'),
       '@context': path.resolve(__dirname, 'src/context'),
@@ -10,6 +12,7 @@ module.exports = {
       '@styles': path.resolve(__dirname, 'src/styles'),
       '@services': path.resolve(__dirname, 'src/services'),
       '@pages': path.resolve(__dirname, 'src/pages'),
+      // Alias standard à utiliser pour tous les nouveaux imports
       '@': path.resolve(__dirname, 'src')
     },
     configure: (webpackConfig, { env }) => {

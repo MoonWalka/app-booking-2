@@ -9,7 +9,7 @@ import {
   collection, 
   Timestamp 
 } from 'firebase/firestore';
-import { db } from '../../../firebaseInit';
+import { db } from '@/firebaseInit';
 import styles from './ArtisteForm.module.css';
 
 // Version mobile simplifiée du formulaire d'artiste

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import pdfService from '../../services/pdfService';
+import pdfService from '@/services/pdfService';
 // Import du fichier CSS dédié à l'impression - Ce fichier sera utilisé pour les styles
 import '@/styles/components/contrat-print.css';
 // Import du fichier CSS modulaire pour les styles spécifiques au composant

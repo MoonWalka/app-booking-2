@@ -1,285 +1,328 @@
 // src/components/artistes/mobile/ArtistesList.js
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Container, Spinner, Card, Button, Badge, Form, InputGroup } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import { 
-  collection, 
-  query, 
-  orderBy, 
-  limit, 
-  getDocs, 
-  startAfter,
-  doc,
-  deleteDoc
-} from 'firebase/firestore';
-import { db } from '@/firebaseInit';
 import styles from './ArtistesList.module.css';
-import { Button, Form, InputGroup } from 'react-bootstrap';
-import Spinner from '@/components/common/Spinner';
-import { getNbConcerts, filteredArtistes } from '@/components/artistes/mobile/utils/concertUtils';
-import { handleDelete } from '@/components/artistes/mobile/handlers/deleteHandler';
-import { handleLoadMore } from '@/components/artistes/mobile/handlers/paginationHandler';
-// CSS module est déjà importé
 
-const ArtistesList = () => {
-  const [artistes, setArtistes] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filter, setFilter] = useState('tous');
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [lastVisible, setLastVisible] = useState(null);
-  const [hasMore, setHasMore] = useState(true);
-  const searchInputRef = useRef(null);
+// Import custom hooks - reusing the same hooks from desktop version
+import useArtistesList from '@/hooks/artistes/useArtistesList';
+import useSearchAndFilter from '@/hooks/artistes/useSearchAndFilter';
+import useHandleDeleteArtist from '@/hooks/artistes/useHandleDeleteArtist';
+
+/**
+ * Mobile version of the artists list component
+ */
+const MobileArtistesList = () => {
   const navigate = useNavigate();
-  const pageSize = 10; // Nombre d'artistes à charger par page (réduit pour le mobile)
+  const [sortByField, setSortByField] = useState('nom');
+  const [sortDirection, setSortDirection] = useState('asc');
 
-  // Même logique de chargement des données que la version desktop
+  // Reusing the same hooks from desktop version
+  const {
+    artistes,
+    loading,
+    stats,
+    hasMore,
+    loadMoreArtistes,
+    setArtistes
+  } = useArtistesList(10, sortByField, sortDirection); // Smaller page size for mobile
+
+  const {
+    searchTerm,
+    setSearchTerm,
+    filter,
+    setFilter,
+    showDropdown,
+    setShowDropdown,
+    sortBy,
+    setSortBy,
+    searchInputRef,
+    handleSearchChange,
+    handleSortChange,
+    handleCreateArtiste,
+    filteredArtistes,
+    noResults
+  } = useSearchAndFilter(artistes);
+
+  const { handleDelete } = useHandleDeleteArtist(setArtistes, stats);
+
+  // Effect to fetch artists when sort parameters change
   useEffect(() => {
-    const loadArtistes = async () => {
-      setLoading(true);
-      try {
-        const artistesRef = collection(db, 'artistes');
-        const q = query(
-          artistesRef,
-          orderBy('nom'),
-          limit(pageSize)
-        );
-        
-        const querySnapshot = await getDocs(q);
-        const artistesList = [];
-        
-        for (const doc of querySnapshot.docs) {
-          const artisteData = { id: doc.id, ...doc.data() };
-          // Récupération du nombre de concerts pour chaque artiste
-          const nbConcerts = await getNbConcerts(doc.id);
-          artisteData.nbConcerts = nbConcerts;
-          artistesList.push(artisteData);
-        }
-        
-        setArtistes(artistesList);
-        setLastVisible(querySnapshot.docs[querySnapshot.docs.length - 1]);
-        setHasMore(querySnapshot.docs.length === pageSize);
-      } catch (error) {
-        console.error("Erreur lors du chargement des artistes:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadArtistes();
-  }, []);
-
-  // Fonction pour charger plus d'artistes
-  const loadMoreData = async () => {
-    if (!hasMore || loading) return;
-    
-    setLoading(true);
-    try {
-      const result = await handleLoadMore('artistes', lastVisible, 'nom', pageSize);
-      if (result.newDocs.length > 0) {
-        // Ajouter les infos de concerts pour chaque nouvel artiste
-        const artistesWithConcerts = await Promise.all(
-          result.newDocs.map(async (artiste) => {
-            const nbConcerts = await getNbConcerts(artiste.id);
-            return { ...artiste, nbConcerts };
-          })
-        );
-        
-        setArtistes(prev => [...prev, ...artistesWithConcerts]);
-        setLastVisible(result.lastVisible);
-        setHasMore(result.hasMore);
-      } else {
-        setHasMore(false);
-      }
-    } catch (error) {
-      console.error("Erreur lors du chargement des artistes supplémentaires:", error);
-    } finally {
-      setLoading(false);
+    if (sortBy !== sortByField || sortDirection !== sortDirection) {
+      setSortByField(sortBy);
+      setSortDirection(sortDirection);
     }
+  }, [sortBy, sortDirection]);
+
+  // Handle clearing search
+  const handleClearSearch = () => {
+    setSearchTerm('');
+    setShowDropdown(false);
   };
 
-  // Gestion de la suppression d'un artiste
-  const handleDeleteArtiste = async (artisteId, e) => {
-    e.stopPropagation(); // Éviter la navigation
-    const success = await handleDelete('artistes', artisteId, 'Êtes-vous sûr de vouloir supprimer cet artiste ?');
-    if (success) {
-      setArtistes(prev => prev.filter(artiste => artiste.id !== artisteId));
-    }
-  };
-
-  // Appliquer le filtre aux artistes
-  const getFilteredArtistes = () => {
-    // D'abord, filtrer par recherche
-    let filtered = filteredArtistes(artistes, searchTerm);
+  // Mobile renderers 
+  const renderArtistCard = (artiste) => {
+    const nbConcerts = artiste.concertsAssocies?.length || 0;
     
-    // Ensuite, appliquer le filtre de concerts
-    if (filter === 'avecConcerts') {
-      filtered = filtered.filter(artiste => artiste.nbConcerts > 0);
-    } else if (filter === 'sansConcerts') {
-      filtered = filtered.filter(artiste => artiste.nbConcerts === 0);
-    }
-    
-    return filtered;
-  };
-  
-  // Obtenir la liste filtrée
-  const filteredArtistesList = getFilteredArtistes();
-
-  return (
-    <div className={styles.artistesMobileContainer}>
-      {/* Entête simplifié */}
-      <div className={styles.mobileHeaderContainer}>
-        <h1>Artistes</h1>
-        <Button 
-          variant="primary"
-          onClick={() => navigate('/artistes/nouveau')}
-          className={styles.mobileAddBtn}
-        >
-          <i className="bi bi-plus-lg"></i>
-        </Button>
-      </div>
-
-      {/* Barre de recherche */}
-      <div className={styles.mobileSearchContainer} ref={searchInputRef}>
-        <InputGroup>
-          <InputGroup.Text><i className="bi bi-search"></i></InputGroup.Text>
-          <Form.Control
-            type="text"
-            placeholder="Rechercher..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            onFocus={() => setShowDropdown(searchTerm.length > 0)}
-          />
-          {searchTerm && (
-            <Button 
-              variant="outline-secondary"
-              onClick={() => setSearchTerm('')}
-            >
-              <i className="bi bi-x"></i>
-            </Button>
-          )}
-        </InputGroup>
-
-        {/* Dropdown de résultats de recherche */}
-        {/* ... */}
-      </div>
-
-      {/* Filtres simplifiés en menu horizontal scrollable */}
-      <div className={styles.mobileFiltersContainer}>
-        <button 
-          className={`${styles.filterPill} ${filter === 'tous' ? styles.active : ''}`}
-          onClick={() => setFilter('tous')}
-        >
-          Tous
-        </button>
-        <button 
-          className={`${styles.filterPill} ${filter === 'avecConcerts' ? styles.active : ''}`}
-          onClick={() => setFilter('avecConcerts')}
-        >
-          Avec concerts
-        </button>
-        <button 
-          className={`${styles.filterPill} ${filter === 'sansConcerts' ? styles.active : ''}`}
-          onClick={() => setFilter('sansConcerts')}
-        >
-          Sans concerts
-        </button>
-      </div>
-
-      {/* Liste d'artistes en cards adaptées au mobile */}
-      <div className={styles.mobileArtistesGrid}>
-        {loading && artistes.length === 0 ? (
-          <Spinner message="Chargement des artistes..." />
-        ) : filteredArtistesList.length === 0 ? (
-          <div className={styles.emptyStateMobile}>
-            <i className="bi bi-music-note-list"></i>
-            <p>Aucun artiste trouvé</p>
-            <Button
-              variant="primary"
-              onClick={() => navigate('/artistes/nouveau')}
-            >
-              Ajouter un artiste
-            </Button>
-          </div>
-        ) : (
-          filteredArtistesList.map(artiste => (
-            <div 
-              key={artiste.id} 
-              className={styles.artisteCardMobile}
-              onClick={() => navigate(`/artistes/${artiste.id}`)}
-            >
-              <div className={styles.artisteCardHeader}>
+    return (
+      <Card key={artiste.id} className={styles.artisteCard}>
+        <Card.Body>
+          <div className={styles.artisteHeader}>
+            <div className={styles.artisteInfo}>
+              <div className={styles.artisteAvatar}>
                 {artiste.photoPrincipale ? (
                   <img src={artiste.photoPrincipale} alt={artiste.nom} />
                 ) : (
-                  <div className={styles.placeholderPhotoMobile}>
+                  <div className={styles.placeholderAvatar}>
                     <i className="bi bi-music-note"></i>
                   </div>
                 )}
-                {/* Badges simplifiés */}
-                <div className={styles.artisteBadgesMobile}>
-                  {getNbConcerts(artiste) > 0 && (
-                    <span className={`${styles.badgeMobile} ${styles.badgeConcerts}`}>
-                      {getNbConcerts(artiste)}
-                    </span>
-                  )}
-                </div>
               </div>
-              <div className={styles.artisteCardContent}>
-                <h3>{artiste.nom}</h3>
-                {artiste.genre && <p className={styles.genre}>{artiste.genre}</p>}
-                
-                {/* Boutons d'action en bas de la carte */}
-                <div className={styles.artisteActionsMobile}>
-                  <button 
-                    className={`${styles.actionBtn} ${styles.view}`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      navigate(`/artistes/${artiste.id}`);
-                    }}
-                  >
-                    <i className="bi bi-eye"></i>
-                  </button>
-                  <button 
-                    className={`${styles.actionBtn} ${styles.edit}`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      navigate(`/artistes/${artiste.id}/modifier`);
-                    }}
-                  >
-                    <i className="bi bi-pencil"></i>
-                  </button>
-                  <button 
-                    className={`${styles.actionBtn} ${styles.delete}`}
-                    onClick={(e) => handleDeleteArtiste(artiste.id, e)}
-                  >
-                    <i className="bi bi-trash"></i>
-                  </button>
-                </div>
+              <div>
+                <h3 className={styles.artisteName}>
+                  {artiste.nom}
+                  {artiste.estGroupeFavori && (
+                    <i className="bi bi-star-fill text-warning ms-2"></i>
+                  )}
+                </h3>
+                {artiste.genre && <div className={styles.artisteGenre}>{artiste.genre}</div>}
               </div>
             </div>
-          ))
-        )}
-      </div>
+            <Badge 
+              bg={nbConcerts > 0 ? "primary" : "secondary"}
+              className={styles.concertsBadge}
+            >
+              <i className="bi bi-music-note-beamed me-1"></i>
+              {nbConcerts}
+            </Badge>
+          </div>
 
-      {/* Bouton "Charger plus" en bas de page */}
-      {hasMore && !searchTerm && (
-        <div className={styles.loadMoreContainerMobile}>
+          <div className={styles.artisteDetails}>
+            {artiste.ville && (
+              <div className={styles.artisteDetail}>
+                <i className="bi bi-geo-alt text-muted"></i>
+                <span>{artiste.ville}</span>
+              </div>
+            )}
+            {artiste.cachetMoyen && (
+              <div className={styles.artisteDetail}>
+                <i className="bi bi-cash text-muted"></i>
+                <span>{new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(artiste.cachetMoyen)}</span>
+              </div>
+            )}
+          </div>
+
+          <div className={styles.artisteActions}>
+            <Button 
+              as={Link} 
+              to={`/artistes/${artiste.id}`} 
+              variant="outline-primary" 
+              className={styles.actionButton}
+            >
+              <i className="bi bi-eye"></i>
+            </Button>
+            <Button 
+              as={Link} 
+              to={`/artistes/${artiste.id}/modifier`} 
+              variant="outline-secondary" 
+              className={styles.actionButton}
+            >
+              <i className="bi bi-pencil"></i>
+            </Button>
+            <Button 
+              variant="outline-danger"
+              onClick={(e) => handleDelete(artiste.id, e)}
+              className={styles.actionButton}
+            >
+              <i className="bi bi-trash"></i>
+            </Button>
+          </div>
+        </Card.Body>
+      </Card>
+    );
+  };
+
+  // Loading state
+  if (loading && artistes.length === 0) {
+    return (
+      <Container className="py-5 text-center">
+        <Spinner animation="border" role="status" variant="primary" className="me-2" />
+        <span>Chargement des artistes...</span>
+      </Container>
+    );
+  }
+
+  return (
+    <Container className="py-3">
+      {/* Header */}
+      <div className={styles.mobileHeader}>
+        <h1 className={styles.pageTitle}>
+          <i className="bi bi-music-note-list me-2"></i>
+          Artistes
+        </h1>
+        <Button 
+          variant="primary"
+          onClick={() => navigate('/artistes/nouveau')}
+          className={styles.addButton}
+        >
+          <i className="bi bi-plus-circle"></i>
+        </Button>
+      </div>
+      
+      {/* Stats Summary */}
+      <div className={styles.statsRow}>
+        <div className={styles.statItem}>
+          <div className={styles.statValue}>{stats.total}</div>
+          <div className={styles.statLabel}>Total</div>
+        </div>
+        <div className={styles.statItem}>
+          <div className={styles.statValue}>{stats.avecConcerts}</div>
+          <div className={styles.statLabel}>Avec concerts</div>
+        </div>
+        <div className={styles.statItem}>
+          <div className={styles.statValue}>{stats.sansConcerts}</div>
+          <div className={styles.statLabel}>Sans concerts</div>
+        </div>
+      </div>
+      
+      {/* Search and Filter */}
+      <div className={styles.searchFilterContainer}>
+        <div className={styles.searchContainer} ref={searchInputRef}>
+          <InputGroup className="mb-3">
+            <InputGroup.Text>
+              <i className="bi bi-search"></i>
+            </InputGroup.Text>
+            <Form.Control
+              type="text"
+              placeholder="Rechercher..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
+            {searchTerm && (
+              <Button 
+                variant="outline-secondary"
+                onClick={handleClearSearch}
+              >
+                <i className="bi bi-x-circle"></i>
+              </Button>
+            )}
+          </InputGroup>
+          
+          {/* Dropdown search results (mobile optimized) */}
+          {showDropdown && (
+            <div className={styles.mobileSearchDropdown}>
+              {noResults ? (
+                <div 
+                  className={styles.searchCreateItem} 
+                  onClick={handleCreateArtiste} 
+                  role="button" 
+                  tabIndex={0}
+                >
+                  <i className="bi bi-plus-circle me-2"></i>
+                  <span>Créer "{searchTerm}"</span>
+                </div>
+              ) : (
+                filteredArtistes.slice(0, 5).map(artiste => (
+                  <Link to={`/artistes/${artiste.id}`} key={artiste.id} className={styles.searchResultItem}>
+                    <div className={styles.searchResultAvatar}>
+                      {artiste.photoPrincipale ? (
+                        <img src={artiste.photoPrincipale} alt={artiste.nom} className="img-fluid" />
+                      ) : (
+                        <i className="bi bi-music-note"></i>
+                      )}
+                    </div>
+                    <div>{artiste.nom}</div>
+                  </Link>
+                ))
+              )}
+            </div>
+          )}
+        </div>
+
+        <Form.Select 
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          className="mb-3"
+        >
+          <option value="tous">Tous les artistes</option>
+          <option value="avecConcerts">Avec concerts</option>
+          <option value="sansConcerts">Sans concerts</option>
+        </Form.Select>
+        
+        <div className={styles.sortButtons}>
           <Button 
-            variant="outline-primary"
-            onClick={loadMoreData}
-            disabled={loading}
-            className={styles.loadMoreBtnMobile}
+            variant={sortBy === 'nom' ? 'primary' : 'outline-secondary'}
+            size="sm"
+            onClick={() => handleSortChange('nom')}
+            className="mb-2"
           >
-            {loading ? (
-              <Spinner inline />
-            ) : (
-              <i className="bi bi-plus-circle"></i>
+            <i className="bi bi-sort-alpha-down me-1"></i>
+            Nom {sortBy === 'nom' && (
+              <i className={`bi bi-sort-${sortDirection === 'asc' ? 'down' : 'up'} ms-1`}></i>
+            )}
+          </Button>
+          <Button 
+            variant={sortBy === 'createdAt' ? 'primary' : 'outline-secondary'}
+            size="sm"
+            onClick={() => handleSortChange('createdAt')}
+            className="mb-2"
+          >
+            <i className="bi bi-calendar me-1"></i>
+            Date {sortBy === 'createdAt' && (
+              <i className={`bi bi-sort-${sortDirection === 'asc' ? 'down' : 'up'} ms-1`}></i>
             )}
           </Button>
         </div>
+      </div>
+      
+      {/* Artists List or Empty State */}
+      {filteredArtistes.length > 0 ? (
+        <div className={styles.artistesList}>
+          {filteredArtistes.map(artiste => renderArtistCard(artiste))}
+          
+          {/* Load More Button */}
+          {hasMore && (
+            <Button 
+              variant="outline-primary" 
+              onClick={loadMoreArtistes} 
+              disabled={loading}
+              className={styles.loadMoreButton}
+            >
+              {loading ? (
+                <><Spinner size="sm" animation="border" className="me-2" /> Chargement...</>
+              ) : (
+                <><i className="bi bi-plus-circle me-2"></i> Charger plus</>
+              )}
+            </Button>
+          )}
+        </div>
+      ) : (
+        <Card className={styles.emptyCard}>
+          <Card.Body className="text-center py-5">
+            <i className="bi bi-music-note-list display-4 text-muted mb-3"></i>
+            <h3 className="h5">Aucun artiste trouvé</h3>
+            {searchTerm ? (
+              <p className="text-muted">
+                Aucun résultat pour "{searchTerm}"
+              </p>
+            ) : (
+              <p className="text-muted">
+                Vous n'avez pas encore ajouté d'artistes
+              </p>
+            )}
+            <Button 
+              variant="primary"
+              onClick={() => navigate('/artistes/nouveau')}
+              className="mt-3"
+            >
+              <i className="bi bi-plus-circle me-2"></i>
+              Ajouter un artiste
+            </Button>
+          </Card.Body>
+        </Card>
       )}
-    </div>
+    </Container>
   );
 };
 
-export default ArtistesList;
+export default MobileArtistesList;

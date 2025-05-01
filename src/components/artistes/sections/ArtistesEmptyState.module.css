@@ -1,0 +1,22 @@
+/* ArtistesEmptyState.module.css */
+.emptyContainer {
+  padding: 3rem 1rem;
+  text-align: center;
+}
+
+.emptyIcon {
+  font-size: 3rem;
+  color: #6c757d;
+  margin-bottom: 1rem;
+}
+
+.emptyTitle {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.emptyText {
+  color: #6c757d;
+  margin-bottom: 1.5rem;
+}

@@ -1,0 +1,7 @@
+.selectorContainer {
+  margin-bottom: 1rem;
+}
+
+.selectorContainer select {
+  max-width: 400px;
+}

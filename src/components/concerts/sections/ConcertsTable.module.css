@@ -1,0 +1,33 @@
+.tableContainer {
+  margin-top: 1rem;
+}
+
+.concertsTable {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.concertsTable thead th {
+  border-top: none;
+  background-color: #f8f9fa;
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #495057;
+}
+
+.concertsTable tbody td {
+  padding: 1rem;
+  vertical-align: middle;
+}
+
+.noResults {
+  text-align: center;
+  padding: 2rem;
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  color: #6c757d;
+  font-size: 1rem;
+}

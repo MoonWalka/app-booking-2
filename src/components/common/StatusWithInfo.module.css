@@ -1,0 +1,15 @@
+.statusBadge {
+  padding: 0.5rem 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+
+.statusIcon {
+  font-size: 0.9rem;
+}
+
+.additionalInfo {
+  font-size: 0.8rem;
+  opacity: 0.8;
+  margin-left: 0.25rem;
+}

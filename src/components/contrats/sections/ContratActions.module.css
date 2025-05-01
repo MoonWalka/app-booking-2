@@ -1,0 +1,13 @@
+.actionsContainer {
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .actionsContainer > div {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.5rem;
+  }
+}

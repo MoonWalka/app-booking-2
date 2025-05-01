@@ -1,0 +1,24 @@
+.pdfViewerContainer {
+  margin-bottom: 2rem;
+  scroll-margin-top: 1rem;
+}
+
+.htmlPreview {
+  border: 1px solid #dee2e6;
+  border-radius: 0.25rem;
+  padding: 2rem;
+  background-color: white;
+}
+
+.reactPdfPreview {
+  min-height: 600px;
+}
+
+.pdfExactPreview {
+  min-height: 600px;
+}
+
+.pdfContainer {
+  display: flex;
+  flex-direction: column;
+}

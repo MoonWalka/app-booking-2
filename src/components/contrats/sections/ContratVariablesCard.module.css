@@ -1,0 +1,32 @@
+.contractVariablesCard {
+  margin-bottom: 2rem;
+}
+
+.variablesContainer {
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid #e9ecef;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+}
+
+.variableItem {
+  display: flex;
+  padding: 0.5rem;
+  border-bottom: 1px solid #f8f9fa;
+}
+
+.variableItem:last-child {
+  border-bottom: none;
+}
+
+.variableName {
+  font-weight: 500;
+  width: 30%;
+  padding-right: 1rem;
+}
+
+.variableValue {
+  width: 70%;
+  word-break: break-word;
+}

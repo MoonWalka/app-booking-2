@@ -1,0 +1,56 @@
+/* ArtisteSearchBar.module.css */
+.searchResultsDropdown {
+  border: 1px solid #e0e0e0;
+  border-radius: 0.25rem;
+  background-color: white;
+  z-index: 10;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.searchResultItem {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+  color: inherit;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.searchResultItem:hover {
+  background-color: #f8f9fa;
+}
+
+.searchResultAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 1rem;
+  flex-shrink: 0;
+}
+
+.placeholderAvatar {
+  width: 100%;
+  height: 100%;
+  background-color: #e9ecef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6c757d;
+  font-size: 1.25rem;
+}
+
+.searchCreateItem {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: #007bff;
+  background-color: rgba(0, 123, 255, 0.05);
+}
+
+.searchCreateItem:hover {
+  background-color: rgba(0, 123, 255, 0.1);
+}

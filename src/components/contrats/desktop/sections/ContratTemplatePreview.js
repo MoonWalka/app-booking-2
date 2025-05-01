@@ -4,23 +4,21 @@ import styles from './ContratTemplatePreview.module.css';
 /**
  * Composant d'aperçu du modèle de contrat
  */
-const ContratTemplatePreview = ({ previewHtml }) => {
+const ContratTemplatePreview = ({ selectedTemplate }) => {
+  if (!selectedTemplate) {
+    return null;
+  }
+  
   return (
     <div className={styles.templatePreview}>
-      <div className={styles.previewHeader}>
-        <h3>Aperçu du contrat</h3>
-        <small className="text-muted">Avec des données fictives d'exemple</small>
-      </div>
-      <div className={styles.previewContent}>
-        <div className={styles.multiPagePreviewWrapper}>
-          <iframe
-            srcDoc={previewHtml}
-            title="Aperçu du contrat"
-            className={styles.htmlPreviewFrame}
-            scrolling="yes"
-          />
+      <h6>Aperçu du modèle</h6>
+      {selectedTemplate.bodyContent ? (
+        <div className={styles.templateBodyPreview}>
+          <p className="text-muted small">Ce modèle utilise le format avec en-tête, corps et pied de page.</p>
         </div>
-      </div>
+      ) : (
+        <p className="text-danger">Attention: Ce modèle ne contient pas de contenu principal.</p>
+      )}
     </div>
   );
 };

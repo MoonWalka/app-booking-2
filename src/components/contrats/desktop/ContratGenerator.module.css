@@ -1,72 +1,11 @@
 /* Styles pour le générateur de contrat */
 
-.templatePreview {
-  margin-top: 1rem;
-  border: 1px solid #eaeaea;
-  border-radius: 0.25rem;
-  padding: 1rem;
-  background-color: #f8f9fa;
+/* Styles de base pour le conteneur principal */
+.contratGeneratorContainer {
+  width: 100%;
 }
 
-.templateBodyPreview {
-  max-height: 150px;
-  overflow-y: auto;
-  padding: 0.75rem;
-  background-color: white;
-  border: 1px solid #dee2e6;
-  border-radius: 0.25rem;
-  margin-top: 0.5rem;
-}
-
-.spinnerContainer {
-  text-align: center;
-  padding: 1.5rem;
-}
-
-.centerSpinner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 150px;
-}
-
-.loadingText {
-  margin-top: 0.5rem;
-  font-size: 0.9rem;
-  color: #6c757d;
-}
-
-.actionButtons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-
-.debugSection {
-  margin-top: 1rem;
-}
-
-.debugToggle {
-  margin-top: 1rem;
-}
-
-.debugCard {
-  margin-top: 0.75rem;
-}
-
-.debugHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.debugPre {
-  max-height: 200px;
-  overflow: auto;
-  background-color: #f8f9fa;
-  padding: 0.5rem;
-  border-radius: 0.25rem;
-  font-size: 0.85rem;
+/* Styles pour les espaces entre les sections */
+.sectionSpacer {
+  margin-bottom: 1.5rem;
 }

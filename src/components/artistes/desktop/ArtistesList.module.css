@@ -136,3 +136,22 @@
 .favoriteArtisteRow:hover {
   background-color: #fff3d1;
 }
+
+.artistesContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.spinnerContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  flex-direction: column;
+}
+
+.paginationContainer {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}

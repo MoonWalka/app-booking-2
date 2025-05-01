@@ -3,8 +3,8 @@ import React from 'react';
 import { useResponsiveComponent } from '@/hooks/useResponsiveComponent';
 
 /**
- * Wrapper pour la liste des artistes qui affiche la version mobile ou desktop
- * selon la taille de l'écran
+ * Wrapper for the artist list page that displays either the mobile or desktop version 
+ * depending on screen size
  */
 const ArtistesList = (props) => {
   const ResponsiveComponent = useResponsiveComponent({

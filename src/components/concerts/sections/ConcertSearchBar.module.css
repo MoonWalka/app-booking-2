@@ -1,0 +1,11 @@
+.searchFilterContainer {
+  margin-bottom: 1.5rem;
+}
+
+.searchBar {
+  max-width: 450px;
+}
+
+.searchInput:focus {
+  box-shadow: none;
+}

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { concertService, lieuService, programmateurService } from '../../services/firestoreService.js';
+import { concertService, lieuService, programmateurService } from '@/services/firestoreService.js';
 
 export function useConcertForm(concertId) {
   const navigate = useNavigate();

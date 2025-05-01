@@ -1,128 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
-import { 
-  doc, 
-  getDoc, 
-  updateDoc, 
-  deleteDoc 
-} from 'firebase/firestore';
-import { db } from '../../../firebaseInit';
+import React, { useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
 import { Button, Alert, Modal } from 'react-bootstrap';
 import styles from './StructureDetails.module.css';
 
+// Import du hook partagé contenant la logique commune
+import useStructureDetailsCore from '../core/useStructureDetails';
+
 const StructureDetails = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
-  const [structure, setStructure] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [deleting, setDeleting] = useState(false);
-  const [programmateurs, setProgrammateurs] = useState([]);
-  const [loadingProgrammateurs, setLoadingProgrammateurs] = useState(false);
+  // Utilisation du hook partagé pour toute la logique
+  const {
+    structure,
+    loading,
+    error,
+    showDeleteModal,
+    setShowDeleteModal,
+    deleting,
+    programmateurs,
+    loadingProgrammateurs,
+    formatValue,
+    getTypeLabel,
+    handleDelete,
+    navigateToEdit
+  } = useStructureDetailsCore(id);
+  
+  // État local spécifique à la version mobile (non partagé)
   const [activeTab, setActiveTab] = useState('infos');
-
-  // Chargement des données de la structure
-  useEffect(() => {
-    const fetchStructure = async () => {
-      setLoading(true);
-      try {
-        const structureDoc = await getDoc(doc(db, 'structures', id));
-        if (structureDoc.exists()) {
-          setStructure({
-            id: structureDoc.id,
-            ...structureDoc.data()
-          });
-          
-          // Charger les programmateurs associés si nécessaire
-          if (structureDoc.data().programmateursAssocies?.length > 0) {
-            fetchProgrammateurs(structureDoc.data().programmateursAssocies);
-          }
-        } else {
-          setError('Structure non trouvée');
-          navigate('/structures');
-        }
-      } catch (error) {
-        console.error('Erreur lors du chargement de la structure:', error);
-        setError('Une erreur est survenue lors du chargement des données');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchStructure();
-  }, [id, navigate]);
-
-  // Chargement des programmateurs associés
-  const fetchProgrammateurs = async (programmateursIds) => {
-    setLoadingProgrammateurs(true);
-    try {
-      const programmateursData = [];
-      
-      for (const progId of programmateursIds) {
-        const progDoc = await getDoc(doc(db, 'programmateurs', progId));
-        if (progDoc.exists()) {
-          programmateursData.push({
-            id: progDoc.id,
-            ...progDoc.data()
-          });
-        }
-      }
-      
-      setProgrammateurs(programmateursData);
-    } catch (error) {
-      console.error('Erreur lors du chargement des programmateurs:', error);
-    } finally {
-      setLoadingProgrammateurs(false);
-    }
-  };
-
-  // Gestion de la suppression
-  const handleDelete = async () => {
-    setDeleting(true);
-    try {
-      // Vérifier s'il y a des associations avec des programmateurs
-      if (structure.programmateursAssocies?.length > 0) {
-        // Mise à jour des programmateurs pour retirer la référence à cette structure
-        for (const progId of structure.programmateursAssocies) {
-          const progRef = doc(db, 'programmateurs', progId);
-          const progDoc = await getDoc(progRef);
-          
-          if (progDoc.exists()) {
-            const progData = progDoc.data();
-            
-            // Si le programmateur a une structureId correspondant à cette structure,
-            // mettre à jour pour enlever cette référence
-            if (progData.structureId === id) {
-              await updateDoc(progRef, {
-                structureId: null,
-                structureNom: null,
-                updatedAt: new Date().toISOString()
-              });
-            }
-          }
-        }
-      }
-      
-      // Supprimer la structure
-      await deleteDoc(doc(db, 'structures', id));
-      navigate('/structures');
-    } catch (error) {
-      console.error('Erreur lors de la suppression de la structure:', error);
-      alert('Une erreur est survenue lors de la suppression');
-    } finally {
-      setDeleting(false);
-      setShowDeleteModal(false);
-    }
-  };
-
-  // Formatage des valeurs pour l'affichage
-  const formatValue = (value) => {
-    if (value === undefined || value === null || value === '') {
-      return 'Non spécifié';
-    }
-    return value;
-  };
 
   if (loading) {
     return (
@@ -399,7 +302,7 @@ const StructureDetails = () => {
         <Button
           variant="outline-primary"
           className="flex-fill"
-          onClick={() => navigate(`/structures/${id}/edit`)}
+          onClick={navigateToEdit}
         >
           <i className="bi bi-pencil me-2"></i>
           Modifier
@@ -454,22 +357,6 @@ const StructureDetails = () => {
       </Modal>
     </div>
   );
-};
-
-// Fonction pour obtenir le libellé correspondant au type de structure
-const getTypeLabel = (type) => {
-  switch (type) {
-    case 'association':
-      return 'Association';
-    case 'entreprise':
-      return 'Entreprise';
-    case 'administration':
-      return 'Administration';
-    case 'collectivite':
-      return 'Collectivité';
-    default:
-      return 'Autre';
-  }
 };
 
 export default StructureDetails;

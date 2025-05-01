@@ -1,0 +1,73 @@
+.signatureSectionContent {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sectionInfo {
+  color: #6c757d;
+  font-size: 0.875rem;
+  margin-bottom: 8px;
+}
+
+.editorContainer {
+  margin-top: 8px;
+}
+
+.editorHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.signatureContentInput {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  font-family: monospace;
+  min-height: 150px;
+}
+
+.signatureContentInput:focus {
+  border-color: #86b7fe;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.signatureTips {
+  margin-top: 16px;
+  background-color: #f0f7ff;
+  border-radius: 6px;
+  padding: 16px;
+  border-left: 4px solid #7eb6ff;
+}
+
+.tipsTitle {
+  font-size: 0.95rem;
+  margin-bottom: 10px;
+  color: #1a56db;
+  font-weight: 500;
+}
+
+.signatureExample {
+  background-color: rgba(255, 255, 255, 0.5);
+  padding: 12px;
+  border-radius: 5px;
+  border: 1px solid #d1e3ff;
+  white-space: pre-wrap;
+  font-size: 0.85rem;
+  color: #333740;
+  font-family: monospace;
+  margin-bottom: 12px;
+}
+
+.tipText {
+  color: #476582;
+  font-size: 0.85rem;
+  margin-top: 8px;
+  margin-bottom: 0;
+}

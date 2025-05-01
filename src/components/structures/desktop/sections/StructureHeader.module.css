@@ -1,0 +1,105 @@
+.detailsHeader {
+  background-color: var(--surface-background);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.breadcrumbLink {
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.breadcrumbLink:hover {
+  color: var(--primary-color);
+}
+
+.breadcrumbSeparator {
+  margin: 0 8px;
+}
+
+.breadcrumbCurrent {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.headerTitle {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.headerTitle h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin: 0;
+  margin-right: 10px;
+  color: var(--text-primary);
+}
+
+.headerBadge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.headerActions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.actionButton {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 500;
+}
+
+/* Badge styles */
+.badgePrimary {
+  background-color: var(--primary-color-light);
+  color: var(--primary-color);
+}
+
+.badgeSuccess {
+  background-color: var(--success-color-light);
+  color: var(--success-color);
+}
+
+.badgeInfo {
+  background-color: var(--info-color-light);
+  color: var(--info-color);
+}
+
+.badgeWarning {
+  background-color: var(--warning-color-light);
+  color: var(--warning-color);
+}
+
+.badgeSecondary {
+  background-color: var(--secondary-color-light);
+  color: var(--secondary-color);
+}
+
+/* Button styles */
+.primaryOutlineButton:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.dangerOutlineButton:hover {
+  background-color: var(--danger-color);
+  color: white;
+}

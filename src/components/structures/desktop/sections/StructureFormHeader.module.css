@@ -1,0 +1,36 @@
+.formHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.formHeader h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--primary-color, #0d6efd);
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  gap: 0.5rem;
+  border: 1px solid #dee2e6;
+  border-radius: 0.25rem;
+  background-color: transparent;
+  color: #6c757d;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+}
+
+.backButton:hover {
+  background-color: #f8f9fa;
+  color: #495057;
+}
+
+.backButton i {
+  margin-right: 0.25rem;
+}

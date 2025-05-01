@@ -1,430 +1,45 @@
-/* LieuDetails Module CSS */
-
 .lieuDetailsContainer {
-  width: 100%;
-  max-width: 1200px;
+  padding: 20px;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 1.5rem;
 }
 
-.detailsHeaderContainer {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 2rem;
+.twoColumnsLayout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 20px;
 }
 
-.titleContainer {
-  flex: 1;
-}
-
-.modernTitle {
-  font-size: 1.75rem;
-  margin-bottom: 0.75rem;
-  font-weight: 600;
-  color: var(--tc-text-primary);
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.breadcrumbContainer {
-  display: flex;
-  align-items: center;
-  font-size: 0.9rem;
-  color: var(--tc-text-secondary);
-  margin-bottom: 1rem;
-}
-
-.breadcrumbItem {
-  cursor: pointer;
-  transition: color 0.2s;
-}
-
-.breadcrumbItem:hover {
-  color: var(--tc-primary);
-  text-decoration: underline;
-}
-
-.breadcrumbItem.active {
-  color: var(--tc-primary);
-  font-weight: 500;
-}
-
-.actionButtons {
-  display: flex;
-  gap: 0.75rem;
-}
-
-.actionBtn {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  font-weight: 500;
-}
-
-.modernForm {
+.leftColumn {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
 }
 
-.formCard {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
-  transition: box-shadow 0.2s;
-}
-
-.formCard:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.cardHeader {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1rem 1.5rem;
-  background-color: var(--tc-bg-light);
-  border-bottom: 1px solid var(--tc-border-light);
-  position: relative;
-}
-
-.cardHeader i {
-  font-size: 1.2rem;
-  color: var(--tc-primary);
-}
-
-.cardHeader h3 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin: 0;
-  color: var(--tc-text-primary);
-}
-
-.headerActions {
-  margin-left: auto;
-}
-
-.cardBody {
-  padding: 1.5rem;
-}
-
-.formGroup {
-  margin-bottom: 1.5rem;
-}
-
-.formGroup:last-child {
-  margin-bottom: 0;
-}
-
-.formLabel {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-  color: var(--tc-text-primary);
-}
-
-.formControlStatic {
-  padding: 0.5rem 0;
-  min-height: 38px;
-}
-
-.required {
-  color: var(--tc-danger);
-  margin-left: 0.25rem;
-}
-
-.mapPreview {
-  margin-top: 1rem;
-}
-
-.mapContainer {
-  border: 1px solid var(--tc-border-light);
-  border-radius: 8px;
-  overflow: hidden;
-  margin-bottom: 0.75rem;
-}
-
-/* Suggestions d'adresse */
-.addressSearchContainer {
-  position: relative;
-}
-
-.addressSuggestions {
-  position: absolute;
-  background-color: white;
-  width: 100%;
-  max-height: 250px;
-  overflow-y: auto;
-  z-index: 1050;
-  border: 1px solid var(--tc-border-light);
-  border-radius: 4px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  margin-top: 5px;
-}
-
-.addressSuggestionItem {
-  display: flex;
-  align-items: flex-start;
-  padding: 0.75rem 1rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.addressSuggestionItem:hover {
-  background-color: var(--tc-bg-light);
-}
-
-.suggestionIcon {
-  margin-right: 0.75rem;
-  color: var(--tc-primary);
-  padding-top: 0.25rem;
-}
-
-.suggestionText {
-  flex: 1;
-}
-
-.suggestionName {
-  font-weight: 500;
-  margin-bottom: 0.25rem;
-}
-
-.suggestionDetails {
-  font-size: 0.85rem;
-  color: var(--tc-text-secondary);
-}
-
-.addressSearching {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-  color: var(--tc-text-secondary);
-  font-size: 0.9rem;
-}
-
-/* Programmateur */
-.programmateurSearchContainer {
-  position: relative;
-}
-
-.dropdownMenu {
-  position: absolute;
-  z-index: 1000;
-  background-color: white;
-  width: 100%;
-  max-height: 300px;
-  overflow-y: auto;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  margin-top: 0.25rem;
-  border-radius: 4px;
-  border: 1px solid var(--tc-border-light);
-}
-
-.programmateurItem {
-  padding: 0.75rem 1rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.programmateurItem:hover {
-  background-color: var(--tc-bg-light);
-}
-
-.programmateurName {
-  font-weight: 500;
-  margin-bottom: 0.25rem;
-}
-
-.programmateurDetails {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  font-size: 0.85rem;
-  color: var(--tc-text-secondary);
-}
-
-.programmateurStructure {
-  background-color: var(--tc-bg-light);
-  color: var(--tc-text-secondary);
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.8rem;
-}
-
-.selectedProgrammateur {
-  margin-top: 0.5rem;
-}
-
-.programmateurCard {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: var(--tc-bg-light);
-  border: 1px solid var(--tc-border-light);
-  border-radius: 6px;
-  padding: 1rem;
-}
-
-.programmateurInfo {
+.rightColumn {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
 }
 
-.programmateurContacts {
+.spinnerContainer {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-top: 0.25rem;
-  font-size: 0.9rem;
-  color: var(--tc-text-secondary);
-}
-
-.programmateurContactItem {
-  display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 0.35rem;
+  height: 400px;
 }
 
-.programmateurDisplay {
+.errorContainer {
+  max-width: 800px;
+  margin: 100px auto;
+  text-align: center;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-}
-
-.infoRow {
-  display: flex;
+  gap: 16px;
   align-items: center;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid var(--tc-border-light);
 }
 
-.infoRow:last-child {
-  border-bottom: none;
-}
-
-.infoLabel {
-  width: 180px;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.infoValue {
-  flex: 1;
-}
-
-.infoValue.highlight {
-  font-weight: 500;
-  color: var(--tc-primary);
-}
-
-.programmateurLink, .contactLink {
-  color: var(--tc-primary);
-  text-decoration: none;
-  transition: color 0.2s;
-}
-
-.programmateurLink:hover, .contactLink:hover {
-  color: var(--tc-primary-darker);
-  text-decoration: underline;
-}
-
-.textEmpty {
-  color: var(--tc-text-tertiary);
-  font-style: italic;
-}
-
-.typeBadge {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  border-radius: 50px;
-  font-size: 0.8rem;
-  font-weight: 500;
-  margin-left: 0.75rem;
-}
-
-/* Concerts associés */
-.concertsListContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.concertItem {
-  display: flex;
-  padding: 1rem;
-  border: 1px solid var(--tc-border-light);
-  border-radius: 8px;
-  background-color: white;
-  margin-bottom: 0.75rem;
-  transition: box-shadow 0.2s, transform 0.2s;
-}
-
-.concertItem:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transform: translateY(-2px);
-}
-
-.concertDetails {
-  flex: 1;
-}
-
-.concertHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5rem;
-}
-
-.concertTitle {
-  font-weight: 600;
-  color: var(--tc-primary);
-  text-decoration: none;
-}
-
-.concertTitle:hover {
-  text-decoration: underline;
-}
-
-.concertDate {
-  font-size: 0.9rem;
-  color: var(--tc-text-secondary);
-}
-
-.concertArtistes {
-  font-size: 0.9rem;
-  color: var(--tc-text-secondary);
-}
-
-.modernAlert {
-  display: flex;
-  align-items: center;
-  padding: 1.5rem;
-  border-radius: 8px;
-  background-color: white;
-  border-left: 4px solid var(--tc-info);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-/* Media queries */
-@media (max-width: 768px) {
-  .detailsHeaderContainer {
-    flex-direction: column;
-    gap: 1rem;
-  }
-  
-  .actionButtons {
-    align-self: flex-end;
-  }
-  
-  .infoLabel {
-    width: 140px;
+@media (max-width: 992px) {
+  .twoColumnsLayout {
+    grid-template-columns: 1fr;
   }
 }

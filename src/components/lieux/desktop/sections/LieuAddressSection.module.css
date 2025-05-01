@@ -1,0 +1,146 @@
+.formCard {
+  border: 1px solid var(--bs-border-color);
+  border-radius: 8px;
+  background-color: var(--bs-white);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.cardHeader {
+  background-color: var(--bs-light);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--bs-border-color);
+}
+
+.cardHeader i {
+  margin-right: 10px;
+  color: var(--bs-primary);
+  font-size: 1.2rem;
+}
+
+.cardHeader h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  flex-grow: 1;
+}
+
+.cardBody {
+  padding: 20px;
+}
+
+.formGroup {
+  margin-bottom: 1.5rem;
+}
+
+.formGroup:last-child {
+  margin-bottom: 0;
+}
+
+.formLabel {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  display: block;
+  color: var(--bs-gray-700);
+}
+
+.formControlStatic {
+  padding: 0.375rem 0;
+  color: var(--bs-gray-800);
+  word-break: break-word;
+}
+
+.required {
+  color: var(--bs-danger);
+  margin-left: 0.25rem;
+}
+
+.addressSearchContainer {
+  position: relative;
+}
+
+.addressSuggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  max-height: 300px;
+  overflow-y: auto;
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 0.25rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.175);
+  margin-top: 0.25rem;
+}
+
+.addressSuggestionItem {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.addressSuggestionItem:last-child {
+  border-bottom: none;
+}
+
+.addressSuggestionItem:hover {
+  background-color: var(--bs-light);
+}
+
+.suggestionIcon {
+  margin-right: 10px;
+  color: var(--bs-primary);
+}
+
+.suggestionText {
+  flex: 1;
+}
+
+.suggestionName {
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.suggestionDetails {
+  font-size: 0.85em;
+  color: var(--bs-gray-600);
+}
+
+.addressSearching {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 0.25rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.175);
+  margin-top: 0.25rem;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mapPreview {
+  margin-top: 20px;
+}
+
+.mapContainer {
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.textEmpty {
+  color: var(--bs-gray-500);
+  font-style: italic;
+}

@@ -1,0 +1,78 @@
+.detailsHeaderContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.titleContainer {
+  flex: 1;
+  min-width: 250px;
+}
+
+.breadcrumbContainer {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  color: var(--bs-gray-600);
+}
+
+.breadcrumbItem {
+  cursor: pointer;
+  color: var(--bs-primary);
+  transition: color 0.2s;
+}
+
+.breadcrumbItem:hover {
+  color: var(--bs-primary-hover);
+  text-decoration: underline;
+}
+
+.breadcrumbItem.active {
+  color: var(--bs-gray-700);
+  font-weight: 500;
+  cursor: default;
+}
+
+.breadcrumbItem.active:hover {
+  text-decoration: none;
+}
+
+.breadcrumbContainer i {
+  margin: 0 8px;
+  font-size: 0.75rem;
+}
+
+.modernTitle {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--bs-gray-800);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.actionBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.typeBadge {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  padding: 4px 8px;
+}

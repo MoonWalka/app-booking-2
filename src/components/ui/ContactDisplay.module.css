@@ -1,0 +1,83 @@
+.contactDefault {
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #dee2e6;
+}
+
+.contactCompact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.75rem;
+  background-color: #f8f9fa;
+  border-radius: 0.25rem;
+  margin-bottom: 0.5rem;
+  border: 1px solid #dee2e6;
+}
+
+.contactInline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+.contactName {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.contactFunction {
+  font-weight: normal;
+  font-style: italic;
+  margin-left: 0.5rem;
+  color: #6c757d;
+}
+
+.contactItem {
+  display: flex;
+  align-items: center;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.contactLink {
+  color: #0d6efd;
+  text-decoration: none;
+}
+
+.contactLink:hover {
+  text-decoration: underline;
+}
+
+.contactEmpty {
+  color: #6c757d;
+  display: flex;
+  align-items: center;
+  margin-top: 0.5rem;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+/* Ajustements pour la variante compact */
+.contactCompact .contactName {
+  margin-bottom: 0;
+}
+
+.contactCompact .contactItem {
+  margin-top: 0;
+}
+
+/* Ajustements pour la variante inline */
+.contactInline .contactName {
+  margin-bottom: 0;
+}
+
+.contactInline .contactItem {
+  margin-top: 0;
+}

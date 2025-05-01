@@ -7,7 +7,7 @@ import styles from './ConcertDetails.module.css';
 
 // Import des hooks personnalisés
 import { useConcertDetails } from '@/hooks/concerts/useConcertDetails';
-import { useConcertForm } from '@/hooks/concerts/useConcertForm';
+import useConcertForm from '@/hooks/concerts/useConcertForm';
 import { useEntitySearch } from '@/hooks/common/useEntitySearch';
 
 // Import des composants

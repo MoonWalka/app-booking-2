@@ -29,7 +29,7 @@ const useAddressSearch = (initialAddress = null, onAddressChange = null) => {
   const dropdownRef = useRef(null);
   
   // Hook pour utiliser l'API LocationIQ
-  const { searchAddresses } = useLocationIQ();
+  const { searchAddress } = useLocationIQ();
 
   // Effet pour gérer les clics en dehors du menu déroulant
   useEffect(() => {
@@ -73,7 +73,7 @@ const useAddressSearch = (initialAddress = null, onAddressChange = null) => {
 
     setIsSearching(true);
     try {
-      const results = await searchAddresses(searchTerm);
+      const results = await searchAddress(searchTerm);
       setAddressResults(results);
       setShowResults(true);
     } catch (error) {

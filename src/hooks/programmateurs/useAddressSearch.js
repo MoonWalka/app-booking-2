@@ -1,14 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
-
-/**
- * useAddressSearch - Description du hook
- */
-const useAddressSearch = (/* paramètres */) => {
-  // État et logique du hook
-  
-  return {
-    // Valeurs et fonctions à retourner
-  };
-};
-
+// src/hooks/programmateurs/useAddressSearch.js
+// Re-export the common implementation for backward compatibility
+import useAddressSearch from '../common/useAddressSearch';
 export default useAddressSearch;

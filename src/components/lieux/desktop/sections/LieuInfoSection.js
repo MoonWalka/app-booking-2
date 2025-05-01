@@ -1,52 +1,61 @@
 import React from 'react';
 import styles from './LieuInfoSection.module.css';
 
-/**
- * Additional information section for a venue
- */
-const LieuInfoSection = ({ lieu }) => {
-  // Fonction pour formater une date Firestore
-  const formatDate = (firestoreDate) => {
-    if (!firestoreDate) return 'Non disponible';
-    
-    // Si c'est un timestamp Firestore (avec seconds)
-    if (firestoreDate.seconds) {
-      return new Date(firestoreDate.seconds * 1000).toLocaleDateString('fr-FR');
-    }
-    
-    // Si c'est une date JavaScript ou une chaîne ISO
-    try {
-      return new Date(firestoreDate).toLocaleDateString('fr-FR');
-    } catch (e) {
-      return 'Format de date invalide';
-    }
-  };
-
+const LieuInfoSection = ({ lieu, handleChange }) => {
   return (
     <div className={styles.formCard}>
       <div className={styles.cardHeader}>
-        <i className="bi bi-info-circle"></i>
-        <h3>Informations supplémentaires</h3>
+        <i className="bi bi-building"></i>
+        <h3>Informations principales</h3>
       </div>
       <div className={styles.cardBody}>
-        <div className={styles.infoRow}>
-          <div className={styles.infoLabel}>
-            <i className="bi bi-calendar-check text-primary"></i>
-            Créé le
-          </div>
-          <div className={styles.infoValue}>
-            {formatDate(lieu.createdAt)}
-          </div>
+        <div className="mb-3">
+          <label htmlFor="nom" className="form-label">
+            Nom du lieu <span className={styles.required}>*</span>
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="nom"
+            name="nom"
+            value={lieu.nom}
+            onChange={handleChange}
+            required
+            placeholder="Ex: Le Café des Artistes"
+          />
         </div>
         
-        <div className={styles.infoRow}>
-          <div className={styles.infoLabel}>
-            <i className="bi bi-calendar-plus text-primary"></i>
-            Dernière modification
-          </div>
-          <div className={styles.infoValue}>
-            {formatDate(lieu.updatedAt)}
-          </div>
+        <div className="mb-3">
+          <label htmlFor="type" className="form-label">Type de lieu</label>
+          <select
+            className="form-select"
+            id="type"
+            name="type"
+            value={lieu.type || ''}
+            onChange={handleChange}
+          >
+            <option value="">Sélectionnez un type</option>
+            <option value="bar">Bar</option>
+            <option value="festival">Festival</option>
+            <option value="salle">Salle</option>
+            <option value="plateau">Plateau</option>
+            <option value="autre">Autre</option>
+          </select>
+        </div>
+        
+        <div className="mb-3">
+          <label htmlFor="capacite" className="form-label">Capacité</label>
+          <input
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            className="form-control"
+            id="capacite"
+            name="capacite"
+            value={lieu.capacite}
+            onChange={handleChange}
+            placeholder="Nombre maximum de personnes que le lieu peut accueillir"
+          />
         </div>
       </div>
     </div>

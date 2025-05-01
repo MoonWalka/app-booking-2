@@ -1,4 +1,4 @@
-/* Styles for LieuInfoSection */
+/* Styles for LieuFormActions */
 
 .formCard {
   background-color: white;
@@ -34,4 +34,10 @@
 
 .required {
   color: #dc3545;
+}
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
 }

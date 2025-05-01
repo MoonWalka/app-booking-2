@@ -1,0 +1,14 @@
+.inputIcon {
+  color: #6c757d;
+}
+
+.formLabel {
+  font-weight: 500;
+}
+
+.invalidFeedback {
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.875em;
+  color: #dc3545;
+}

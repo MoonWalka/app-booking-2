@@ -1,0 +1,23 @@
+.searchTypeButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.searchTypeButtons button {
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .searchTypeButtons {
+    flex-direction: column;
+  }
+  
+  .searchTypeButtons button {
+    width: 100%;
+    justify-content: center;
+  }
+}

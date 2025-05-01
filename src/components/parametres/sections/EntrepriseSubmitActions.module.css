@@ -1,0 +1,29 @@
+.actionBar {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #dee2e6;
+}
+
+.saveButton {
+  display: flex;
+  align-items: center;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.saveButton i {
+  font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+  .actionBar {
+    flex-direction: column;
+  }
+
+  .saveButton {
+    width: 100%;
+    justify-content: center;
+  }
+}

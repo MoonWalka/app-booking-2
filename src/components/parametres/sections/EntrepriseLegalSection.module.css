@@ -1,0 +1,17 @@
+.sectionTitle {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  color: #495057;
+  border-bottom: 1px solid #dee2e6;
+  padding-bottom: 0.75rem;
+}
+
+.legalTextarea {
+  font-size: 0.9rem;
+  resize: vertical;
+}
+
+.legalTextarea:focus {
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+}

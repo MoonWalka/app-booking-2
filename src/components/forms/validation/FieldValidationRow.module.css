@@ -1,0 +1,84 @@
+/* FieldValidationRow Styles */
+.container {
+  /* Base container styles */
+}
+
+.row {
+  vertical-align: middle;
+  border-bottom: 1px solid var(--bs-gray-300, #dee2e6);
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.fieldName {
+  font-weight: 600;
+  padding: 0.75rem;
+  max-width: 150px;
+}
+
+.existingValue, .formValue {
+  font-family: monospace;
+  white-space: pre-wrap;
+  padding: 0.75rem;
+  max-width: 250px;
+  overflow-wrap: break-word;
+}
+
+.emptyValue {
+  color: var(--bs-gray-500, #adb5bd);
+  font-style: italic;
+  font-weight: normal;
+}
+
+.actionCell {
+  width: 60px;
+  text-align: center;
+  vertical-align: middle;
+  padding: 0.75rem;
+}
+
+.copyButton {
+  background: none;
+  border: 1px solid var(--bs-primary, #0d6efd);
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.copyButton:hover:not(:disabled) {
+  background-color: var(--bs-primary-subtle, #cfe2ff);
+}
+
+.copyButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-color: var(--bs-gray-400, #ced4da);
+}
+
+.finalValueCell {
+  padding: 0.75rem;
+  width: 25%;
+}
+
+.finalValueInput {
+  width: 100%;
+  padding: 0.375rem 0.75rem;
+  font-family: monospace;
+  border: 1px solid var(--bs-gray-400, #ced4da);
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.finalValueInput:focus {
+  border-color: var(--bs-primary, #0d6efd);
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  outline: 0;
+}
+
+.finalValueInput:disabled {
+  background-color: var(--bs-gray-200, #e9ecef);
+  opacity: 1;
+}

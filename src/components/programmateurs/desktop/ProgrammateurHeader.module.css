@@ -1,0 +1,61 @@
+.container {
+  /* Base styles for ProgrammateurHeader */
+  margin-bottom: 1rem;
+}
+
+.detailsHeaderContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.titleContainer {
+  flex: 1;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.breadcrumbItem {
+  color: var(--bs-gray-600);
+  text-decoration: none;
+}
+
+.breadcrumbDivider {
+  margin: 0 0.5rem;
+  font-size: 0.8rem;
+  color: var(--bs-gray-500);
+}
+
+.headerTitle {
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.headerActions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .detailsHeaderContainer {
+    flex-direction: column;
+  }
+
+  .headerActions {
+    width: 100%;
+    justify-content: flex-start;
+    margin-top: 0.5rem;
+  }
+}

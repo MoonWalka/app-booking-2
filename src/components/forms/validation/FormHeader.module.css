@@ -1,0 +1,52 @@
+/* FormHeader Styles */
+.container {
+  /* Base container styles */
+  margin-bottom: 1.5rem;
+}
+
+.headerWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.titleWrapper {
+  flex: 1;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+.actionsWrapper {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: transparent;
+  border: 1px solid var(--bs-gray-400, #ced4da);
+  border-radius: 0.25rem;
+  color: var(--bs-gray-700, #495057);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.backButton:hover {
+  background-color: var(--bs-gray-100, #f8f9fa);
+  border-color: var(--bs-gray-500, #adb5bd);
+}
+
+.divider {
+  border: 0;
+  border-top: 1px solid var(--bs-gray-300, #dee2e6);
+  margin: 1rem 0;
+}

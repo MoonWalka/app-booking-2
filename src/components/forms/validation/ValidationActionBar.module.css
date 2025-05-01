@@ -1,0 +1,57 @@
+/* ValidationActionBar Styles */
+.container {
+  /* Base container styles */
+  margin: 2rem 0;
+}
+
+.content {
+  display: flex;
+  justify-content: center;
+}
+
+.validateButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  background-color: var(--bs-primary, #0d6efd);
+  border: none;
+  border-radius: 0.375rem;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  min-width: 350px;
+}
+
+.validateButton:hover:not(:disabled) {
+  background-color: var(--bs-primary-hover, #0b5ed7);
+}
+
+.validateButton:disabled {
+  background-color: var(--bs-gray-500, #adb5bd);
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.icon {
+  font-size: 1.25rem;
+}
+
+.spinner {
+  display: inline-block;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 0.2em solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spinner-border .75s linear infinite;
+}
+
+@keyframes spinner-border {
+  to {
+    transform: rotate(360deg);
+  }
+}

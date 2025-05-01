@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './StructureAddressSection.module.css';
+import useStructureAddressSection from '../../core/useStructureAddressSection';
 
 /**
  * Component for displaying address information of a structure
@@ -9,7 +10,13 @@ import styles from './StructureAddressSection.module.css';
  * @param {Function} props.formatValue - Function to format display values
  */
 const StructureAddressSection = ({ structure, formatValue }) => {
-  if (!structure) return null;
+  // Utiliser le hook partagé pour obtenir les données et la logique
+  const { hasData, addressData, contactLinks } = useStructureAddressSection({ 
+    structure, 
+    formatValue 
+  });
+  
+  if (!hasData) return null;
   
   return (
     <div className={styles.detailsCard}>
@@ -22,7 +29,7 @@ const StructureAddressSection = ({ structure, formatValue }) => {
           <div className="col-md-12">
             <div className={styles.infoGroup}>
               <div className={styles.infoLabel}>Adresse</div>
-              <div className={styles.infoValue}>{formatValue(structure.adresse)}</div>
+              <div className={styles.infoValue}>{addressData.adresse}</div>
             </div>
           </div>
         </div>
@@ -30,19 +37,19 @@ const StructureAddressSection = ({ structure, formatValue }) => {
           <div className="col-md-4">
             <div className={styles.infoGroup}>
               <div className={styles.infoLabel}>Code postal</div>
-              <div className={styles.infoValue}>{formatValue(structure.codePostal)}</div>
+              <div className={styles.infoValue}>{addressData.codePostal}</div>
             </div>
           </div>
           <div className="col-md-4">
             <div className={styles.infoGroup}>
               <div className={styles.infoLabel}>Ville</div>
-              <div className={styles.infoValue}>{formatValue(structure.ville)}</div>
+              <div className={styles.infoValue}>{addressData.ville}</div>
             </div>
           </div>
           <div className="col-md-4">
             <div className={styles.infoGroup}>
               <div className={styles.infoLabel}>Pays</div>
-              <div className={styles.infoValue}>{formatValue(structure.pays)}</div>
+              <div className={styles.infoValue}>{addressData.pays}</div>
             </div>
           </div>
         </div>
@@ -51,10 +58,10 @@ const StructureAddressSection = ({ structure, formatValue }) => {
             <div className={styles.infoGroup}>
               <div className={styles.infoLabel}>Téléphone</div>
               <div className={styles.infoValue}>
-                {structure.telephone ? (
-                  <a href={`tel:${structure.telephone}`} className={styles.contactLink}>
-                    <i className="bi bi-telephone me-1"></i>
-                    {structure.telephone}
+                {contactLinks.telephone ? (
+                  <a href={contactLinks.telephone.href} className={styles.contactLink}>
+                    <i className={`bi bi-${contactLinks.telephone.icon} me-1`}></i>
+                    {contactLinks.telephone.value}
                   </a>
                 ) : (
                   'Non spécifié'
@@ -66,10 +73,10 @@ const StructureAddressSection = ({ structure, formatValue }) => {
             <div className={styles.infoGroup}>
               <div className={styles.infoLabel}>Email</div>
               <div className={styles.infoValue}>
-                {structure.email ? (
-                  <a href={`mailto:${structure.email}`} className={styles.contactLink}>
-                    <i className="bi bi-envelope me-1"></i>
-                    {structure.email}
+                {contactLinks.email ? (
+                  <a href={contactLinks.email.href} className={styles.contactLink}>
+                    <i className={`bi bi-${contactLinks.email.icon} me-1`}></i>
+                    {contactLinks.email.value}
                   </a>
                 ) : (
                   'Non spécifié'
@@ -81,10 +88,15 @@ const StructureAddressSection = ({ structure, formatValue }) => {
             <div className={styles.infoGroup}>
               <div className={styles.infoLabel}>Site web</div>
               <div className={styles.infoValue}>
-                {structure.siteWeb ? (
-                  <a href={structure.siteWeb} target="_blank" rel="noopener noreferrer" className={styles.contactLink}>
-                    <i className="bi bi-globe me-1"></i>
-                    {structure.siteWeb}
+                {contactLinks.siteWeb ? (
+                  <a 
+                    href={contactLinks.siteWeb.href} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className={styles.contactLink}
+                  >
+                    <i className={`bi bi-${contactLinks.siteWeb.icon} me-1`}></i>
+                    {contactLinks.siteWeb.value}
                   </a>
                 ) : (
                   'Non spécifié'

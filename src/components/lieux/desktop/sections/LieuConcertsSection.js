@@ -1,87 +1,50 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { getDoc, doc } from 'firebase/firestore';
-import { db } from '../../../../firebaseInit';
+import { Link, useNavigate } from 'react-router-dom';
+import { collection, getDocs, query, where, limit } from 'firebase/firestore';
+import { db } from '@/firebaseInit';
 import styles from './LieuConcertsSection.module.css';
 
 /**
- * Component to display an associated concert item
+ * Concert item component
  */
-const ConcertItem = ({ concertId, lieuId, onConcertRemoved }) => {
-  const [concert, setConcert] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchConcert = async () => {
-      try {
-        const concertDoc = await getDoc(doc(db, 'concerts', concertId));
-        if (concertDoc.exists()) {
-          setConcert({
-            id: concertDoc.id,
-            ...concertDoc.data()
-          });
-        }
-      } catch (error) {
-        console.error(`Erreur lors du chargement du concert ${concertId}:`, error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchConcert();
-  }, [concertId]);
-
-  if (loading) {
-    return (
-      <div className={`${styles.concertItem} loading`}>
-        <div className="spinner-border spinner-border-sm" role="status">
-          <span className="visually-hidden">Chargement...</span>
-        </div>
-      </div>
-    );
-  }
-
-  if (!concert) {
-    return (
-      <div className={`${styles.concertItem} error`}>
-        <div className="alert alert-warning mb-0">
-          <i className="bi bi-exclamation-triangle me-2"></i>
-          Ce concert n'existe plus ou n'a pas pu être chargé.
-        </div>
-      </div>
-    );
-  }
-
-  // Formater la date du concert
+const ConcertItem = ({ concert }) => {
+  const navigate = useNavigate();
+  
   const formatDate = (date) => {
     if (!date) return 'Date non spécifiée';
-    const d = date.toDate ? date.toDate() : new Date(date);
-    return d.toLocaleDateString('fr-FR', { 
-      weekday: 'long', 
-      day: 'numeric', 
-      month: 'long', 
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+    
+    if (date.seconds) {
+      return new Date(date.seconds * 1000).toLocaleDateString('fr-FR');
+    }
+    
+    try {
+      return new Date(date).toLocaleDateString('fr-FR');
+    } catch (e) {
+      return 'Date invalide';
+    }
   };
-
+  
+  const handleClick = () => {
+    navigate(`/concerts/${concert.id}`);
+  };
+  
   return (
-    <div className={styles.concertItem}>
+    <div className={styles.concertItem} onClick={handleClick}>
       <div className={styles.concertDetails}>
         <div className={styles.concertHeader}>
           <Link to={`/concerts/${concert.id}`} className={styles.concertTitle} onClick={(e) => e.stopPropagation()}>
             {concert.titre || 'Concert sans titre'}
           </Link>
-          <span className={styles.concertDate}>
-            <i className="bi bi-calendar3 me-1"></i>
+          <div className={styles.concertDate}>
+            <i className="bi bi-calendar-event me-1"></i>
             {formatDate(concert.date)}
-          </span>
+          </div>
         </div>
+        
         {concert.artistes && concert.artistes.length > 0 && (
           <div className={styles.concertArtistes}>
-            <i className="bi bi-music-note-beamed me-1"></i>
-            {concert.artistes.map(artiste => artiste.nom).join(', ')}
+            <i className="bi bi-music-note-list me-1"></i>
+            {concert.artistes.map(a => a.nom).join(', ')}
           </div>
         )}
       </div>
@@ -90,61 +53,131 @@ const ConcertItem = ({ concertId, lieuId, onConcertRemoved }) => {
 };
 
 /**
- * Section component for associated concerts
+ * Concerts section component for venue details
  */
 const LieuConcertsSection = ({ lieu, isEditing }) => {
-  const handleConcertRemoved = (concertId) => {
-    // Cette fonction sera invoquée si on implémente la suppression des concerts depuis cette vue
+  const navigate = useNavigate();
+  const [concerts, setConcerts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  useEffect(() => {
+    const fetchConcerts = async () => {
+      if (!lieu || !lieu.id) return;
+      
+      try {
+        const q = query(
+          collection(db, 'concerts'),
+          where('lieuId', '==', lieu.id),
+          limit(5)
+        );
+        
+        const querySnapshot = await getDocs(q);
+        const concertsData = [];
+        
+        querySnapshot.forEach((doc) => {
+          concertsData.push({
+            id: doc.id,
+            ...doc.data()
+          });
+        });
+        
+        // Tri par date (du plus récent au plus ancien)
+        concertsData.sort((a, b) => {
+          const dateA = a.date?.seconds || 0;
+          const dateB = b.date?.seconds || 0;
+          return dateB - dateA;
+        });
+        
+        setConcerts(concertsData);
+      } catch (err) {
+        console.error('Erreur lors du chargement des concerts:', err);
+        setError('Impossible de charger les concerts associés à ce lieu.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchConcerts();
+  }, [lieu]);
+  
+  const handleCreateConcert = () => {
+    navigate('/concerts/nouveau', { 
+      state: { 
+        preselectedLieu: {
+          id: lieu.id,
+          nom: lieu.nom
+        }
+      }
+    });
   };
-
+  
   return (
     <div className={styles.formCard}>
       <div className={styles.cardHeader}>
-        <div className="d-flex align-items-center">
+        <div>
           <i className="bi bi-calendar-event"></i>
           <h3>Concerts associés</h3>
         </div>
+        
         {!isEditing && (
           <div className={styles.headerActions}>
-            <Link 
-              to={`/concerts/nouveau?lieuId=${lieu.id}&lieuNom=${encodeURIComponent(lieu.nom)}`} 
-              className="btn btn-sm btn-outline-primary"
+            <button 
+              onClick={() => navigate('/concerts', { state: { filterLieuId: lieu.id } })}
+              className="btn btn-sm btn-outline-secondary"
+              title="Voir tous les concerts"
             >
-              <i className="bi bi-plus-circle me-1"></i>
-              Ajouter un concert
-            </Link>
+              <i className="bi bi-list"></i>
+              <span className="d-none d-sm-inline ms-1">Tout voir</span>
+            </button>
+            <button 
+              onClick={handleCreateConcert}
+              className="btn btn-sm btn-outline-primary"
+              title="Ajouter un concert à ce lieu"
+            >
+              <i className="bi bi-plus-lg"></i>
+              <span className="d-none d-sm-inline ms-1">Ajouter</span>
+            </button>
           </div>
         )}
       </div>
       <div className={styles.cardBody}>
-        {!isEditing ? (
-          <>
-            {lieu.concertsAssocies && lieu.concertsAssocies.length > 0 ? (
-              <div className={styles.concertsListContainer}>
-                {lieu.concertsAssocies.map(concertId => (
-                  <ConcertItem 
-                    key={concertId} 
-                    concertId={concertId}
-                    lieuId={lieu.id}
-                    onConcertRemoved={handleConcertRemoved}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className={styles.textEmpty}>
-                Aucun concert n'est associé à ce lieu.
+        {loading ? (
+          <div className={`${styles.concertItem} ${styles.loading}`}>
+            <div className="spinner-border spinner-border-sm text-primary" role="status">
+              <span className="visually-hidden">Chargement des concerts...</span>
+            </div>
+          </div>
+        ) : error ? (
+          <div className={`${styles.concertItem} ${styles.error}`}>
+            <div className="alert alert-warning m-0 p-3">
+              <i className="bi bi-exclamation-triangle me-2"></i>
+              {error}
+            </div>
+          </div>
+        ) : concerts.length > 0 ? (
+          <div className={styles.concertsListContainer}>
+            {concerts.map(concert => (
+              <ConcertItem key={concert.id} concert={concert} />
+            ))}
+            
+            {concerts.length >= 5 && (
+              <div className="text-center mt-2">
+                <button 
+                  className="btn btn-link" 
+                  onClick={() => navigate('/concerts', { state: { filterLieuId: lieu.id } })}
+                >
+                  Voir tous les concerts ({lieu.concertsCount || '?'})
+                </button>
               </div>
             )}
-          </>
-        ) : (
-          <div className="alert alert-info">
-            <i className="bi bi-info-circle me-2"></i>
-            Pour associer des concerts à ce lieu, utilisez la page de détails du lieu après avoir enregistré les modifications.
           </div>
+        ) : (
+          <div className={styles.textEmpty}>Aucun concert associé à ce lieu.</div>
         )}
       </div>
     </div>
   );
 };
 
-export { LieuConcertsSection, ConcertItem };
+export { ConcertItem, LieuConcertsSection };

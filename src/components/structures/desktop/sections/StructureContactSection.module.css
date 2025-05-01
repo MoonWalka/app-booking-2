@@ -1,0 +1,97 @@
+.formCard {
+  background-color: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+
+.detailsCard {
+  background-color: var(--surface-background);
+  border-radius: 8px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: var(--card-header-bg);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.cardHeader i {
+  font-size: 1.2rem;
+  color: var(--primary-color);
+  margin-right: 10px;
+}
+
+.cardHeader h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.cardBody {
+  padding: 20px;
+}
+
+.formGroup {
+  margin-bottom: 1.25rem;
+}
+
+.infoGroup {
+  margin-bottom: 10px;
+}
+
+.formLabel {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.infoLabel {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.formControl {
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.95rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.formControl:focus {
+  border-color: #86b7fe;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.infoValue {
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+.contactLink {
+  display: inline-flex;
+  align-items: center;
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.contactLink:hover {
+  color: var(--primary-color-darker);
+  text-decoration: underline;
+}
+
+.contactLink i {
+  margin-right: 5px;
+}

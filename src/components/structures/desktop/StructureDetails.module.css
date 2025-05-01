@@ -2,6 +2,9 @@
 
 .detailsContainer {
   width: 100%;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .header {
@@ -120,6 +123,22 @@
   border-bottom: 1px solid var(--tc-border-color, #f0f0f0);
   font-weight: 600;
   color: var(--tc-text-primary, #333);
+  padding: 15px 20px;
+  background-color: var(--card-header-bg);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.cardHeader h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.cardHeader i {
+  margin-right: 10px;
+  color: var(--primary-color);
+  font-size: 1.2rem;
 }
 
 .cardHeaderIcon {
@@ -128,6 +147,7 @@
 
 .cardBody {
   padding: 1.5rem;
+  padding: 20px;
 }
 
 .cardFooter {
@@ -318,14 +338,49 @@
 
 .spinner {
   display: inline-block;
-  width: 2rem;
-  height: 2rem;
-  border: 0.25em solid rgba(0, 0, 0, 0.1);
-  border-right-color: var(--tc-primary-color, #007bff);
+  width: 3rem;
+  height: 3rem;
+  vertical-align: text-bottom;
+  border: 0.25em solid currentColor;
+  border-right-color: transparent;
   border-radius: 50%;
-  animation: spinner-border 0.75s linear infinite;
+  animation: spinner-border .75s linear infinite;
+  color: var(--primary-color);
 }
 
 @keyframes spinner-border {
   to { transform: rotate(360deg); }
+}
+
+.detailsContent {
+  margin-top: 20px;
+}
+
+.detailsCard {
+  background-color: var(--surface-background);
+  border-radius: 8px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+
+.notesContent {
+  white-space: pre-wrap;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+.notesContent p {
+  margin-bottom: 0.5rem;
+}
+
+.alertInfo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 20px;
+  border-radius: 8px;
+  background-color: var(--warning-color-light);
+  color: var(--warning-color);
+  margin-bottom: 20px;
 }

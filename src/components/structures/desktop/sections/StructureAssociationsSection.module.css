@@ -1,0 +1,127 @@
+.detailsCard {
+  background-color: var(--surface-background);
+  border-radius: 8px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: var(--card-header-bg);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.cardHeader h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.cardHeader i {
+  color: var(--primary-color);
+  font-size: 1.2rem;
+}
+
+.cardBody {
+  padding: 20px;
+}
+
+.programmateursList {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.programmateurCard {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  transition: all 0.2s ease;
+}
+
+.programmateurCard:hover {
+  box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+  border-color: var(--primary-color-light);
+}
+
+.programmateurInfo {
+  flex: 1;
+}
+
+.programmateurName {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin: 0 0 10px 0;
+  display: flex;
+  align-items: center;
+}
+
+.programmateurName a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.programmateurName a:hover {
+  color: var(--primary-color-darker);
+  text-decoration: underline;
+}
+
+.programmateurDetails {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.detailItem {
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.detailItem a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.detailItem a:hover {
+  color: var(--primary-color);
+  text-decoration: underline;
+}
+
+.alertInfo {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border-radius: 6px;
+  background-color: var(--info-color-light);
+  color: var(--info-color);
+  font-size: 0.95rem;
+}
+
+.alertInfo i {
+  font-size: 1.1rem;
+}
+
+.spinner {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-width: 0.25rem;
+  border-color: var(--primary-color-light);
+  border-right-color: var(--primary-color);
+  margin: 0 auto;
+}
+
+.spinnerSmall {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-width: 0.2rem;
+}

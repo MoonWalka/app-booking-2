@@ -1,40 +1,40 @@
 .lieuxContainer {
-  background-color: var(--bg-color-primary);
-  border-radius: 10px;
-  padding: 1.5rem;
-  width: 100%;
+  padding: 1.25rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .headerContainer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .addButton {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
 }
 
 .searchFilterContainer {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
+  justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .searchBar {
-  flex-grow: 1;
+  flex: 1;
+  max-width: 600px;
   position: relative;
 }
 
 .searchInput {
-  padding-right: 40px;
+  padding-right: 2.5rem;
   background-color: var(--input-bg);
   border: 1px solid var(--border-color);
 }
@@ -51,14 +51,14 @@
   top: 0;
   height: 100%;
   border: none;
-  background: transparent;
+  background: none;
   padding: 0 10px;
   cursor: pointer;
 }
 
 .resultsCount {
   font-size: 0.8rem;
-  color: var(--text-muted);
+  color: #6c757d;
   margin-top: 0.25rem;
   padding-left: 0.5rem;
 }
@@ -67,17 +67,14 @@
 .modernSortBtn {
   display: flex;
   align-items: center;
+  white-space: nowrap;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
   border-radius: 6px;
-  white-space: nowrap;
 }
 
 .modernTableContainer {
   overflow-x: auto;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
-  margin-top: 1rem;
 }
 
 .modernTable {
@@ -86,19 +83,19 @@
 }
 
 .modernTable th {
-  background-color: var(--table-header-bg);
-  padding: 0.75rem 1rem;
   font-weight: 600;
-  border-bottom: 2px solid var(--border-color);
+  color: #495057;
+  border-bottom: 2px solid #dee2e6;
+  padding: 0.75rem 1rem;
 }
 
 .clickableRow {
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.15s ease;
 }
 
 .clickableRow:hover {
-  background-color: var(--hover-bg);
+  background-color: rgba(0, 123, 255, 0.05);
 }
 
 .tableRowAnimate {
@@ -106,41 +103,52 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0.4; }
-  to { opacity: 1; }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .typeBadge {
   display: inline-block;
   padding: 0.25rem 0.5rem;
-  border-radius: 4px;
   font-size: 0.75rem;
   font-weight: 600;
-  color: white;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.25rem;
+  color: #fff;
+  text-transform: capitalize;
 }
 
 .villeBadge {
-  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.875rem;
+  color: #495057;
 }
 
 .jaugeBadge {
   display: inline-block;
   padding: 0.25rem 0.5rem;
-  border-radius: 4px;
   font-size: 0.75rem;
   font-weight: 600;
-  color: white;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.25rem;
+  color: #fff;
 }
 
 .jaugeType {
   opacity: 0.8;
-  font-size: 0.7rem;
+  font-weight: normal;
 }
 
 .concertCount {
   display: inline-flex;
   align-items: center;
-  font-weight: 500;
+  font-size: 0.875rem;
+  color: #0d6efd;
 }
 
 .actionButtons {
@@ -150,18 +158,21 @@
 }
 
 .modernBtn {
-  padding: 0.3rem 0.5rem;
-  display: inline-flex;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 32px;
-  border-radius: 4px;
+  border-radius: 6px;
 }
 
 .modernAlert {
-  background-color: var(--alert-info-bg);
-  border-left: 4px solid var(--alert-info-border);
-  padding: 1rem;
-  margin-top: 1rem;
-  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  padding: 1.25rem;
+  border-radius: 6px;
+  background-color: #f8f9fa;
+  color: #6c757d;
+  border: 1px solid #dee2e6;
 }

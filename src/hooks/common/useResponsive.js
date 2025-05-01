@@ -34,6 +34,8 @@ export const useResponsive = (options = {}) => {
     width: typeof window !== 'undefined' ? window.innerWidth : 0,
     height: typeof window !== 'undefined' ? window.innerHeight : 0
   });
+  // État pour gérer le chargement des erreurs dans les composants responsives
+  const [errorLoading, setErrorLoading] = useState(false);
 
   // Mettre à jour les dimensions de la fenêtre
   const updateDimensions = useCallback(() => {
@@ -90,6 +92,17 @@ export const useResponsive = (options = {}) => {
     };
   }, [breakpoint, forceDesktop]);
 
+  // Effet pour réessayer le chargement en cas d'erreur
+  useEffect(() => {
+    if (errorLoading) {
+      const timer = setTimeout(() => {
+        window.location.reload();
+      }, 5000); // Tentative de rechargement après 5 secondes
+      
+      return () => clearTimeout(timer);
+    }
+  }, [errorLoading]);
+
   /**
    * Fonction pour générer un composant responsive
    * @param {Object} componentOptions - Options du composant
@@ -99,8 +112,6 @@ export const useResponsive = (options = {}) => {
    * @returns {React.Component} - Composant responsive
    */
   const getResponsiveComponent = useCallback(({ desktopPath, mobilePath, fallback = null }) => {
-    const [errorLoading, setErrorLoading] = useState(false);
-    
     // Import dynamique avec meilleure gestion des erreurs
     const Component = lazy(() => {
       // Utiliser le chemin mobile ou desktop selon l'état isMobile
@@ -137,17 +148,6 @@ export const useResponsive = (options = {}) => {
     
     // Composant enveloppé dans Suspense avec fallback
     const ResponsiveComponent = (props) => {
-      // Utiliser un effet pour réessayer le chargement en cas d'erreur
-      useEffect(() => {
-        if (errorLoading) {
-          const timer = setTimeout(() => {
-            window.location.reload();
-          }, 5000); // Tentative de rechargement après 5 secondes
-          
-          return () => clearTimeout(timer);
-        }
-      }, [errorLoading]);
-      
       // Le fallback par défaut unifié et centré
       const defaultFallback = (
         <div className="loading-container d-flex justify-content-center align-items-center" style={{ minHeight: '300px' }}>
@@ -168,7 +168,7 @@ export const useResponsive = (options = {}) => {
     };
     
     return ResponsiveComponent;
-  }, [isMobile, forceDesktop]);
+  }, [isMobile, forceDesktop, setErrorLoading]);
 
   return {
     isMobile,

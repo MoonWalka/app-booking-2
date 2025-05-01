@@ -1,247 +1,43 @@
-/* LieuForm Module CSS */
-
 .lieuFormContainer {
-  width: 100%;
+  margin: 20px;
   max-width: 1200px;
-  margin: 0 auto;
-  padding: 1.5rem;
+}
+
+.modernForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .formHeaderContainer {
-  margin-bottom: 2rem;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
 .modernTitle {
   font-size: 1.75rem;
-  margin-bottom: 0.75rem;
   font-weight: 600;
-  color: var(--tc-text-primary);
+  margin-bottom: 10px;
+  color: #333;
 }
 
 .breadcrumbContainer {
   display: flex;
   align-items: center;
   font-size: 0.9rem;
-  color: var(--tc-text-secondary);
-  margin-bottom: 1rem;
+  color: #6c757d;
 }
 
 .breadcrumbItem {
   cursor: pointer;
-  transition: color 0.2s;
 }
 
 .breadcrumbItem:hover {
-  color: var(--tc-primary);
-  text-decoration: underline;
+  color: #0d6efd;
 }
 
 .breadcrumbItem.active {
-  color: var(--tc-primary);
+  color: #0d6efd;
   font-weight: 500;
-}
-
-.modernForm {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.formCard {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
-  transition: box-shadow 0.2s;
-}
-
-.formCard:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.cardHeader {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1rem 1.5rem;
-  background-color: var(--tc-bg-light);
-  border-bottom: 1px solid var(--tc-border-light);
-}
-
-.cardHeader i {
-  font-size: 1.2rem;
-  color: var(--tc-primary);
-}
-
-.cardHeader h3 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin: 0;
-  color: var(--tc-text-primary);
-}
-
-.cardBody {
-  padding: 1.5rem;
-}
-
-.required {
-  color: var(--tc-danger);
-  margin-left: 0.25rem;
-}
-
-.formActions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.mapPreview {
-  margin-top: 1rem;
-}
-
-.interactiveMapContainer {
-  border: 1px solid var(--tc-border-light);
-  border-radius: 4px;
-  overflow: hidden;
-  margin-bottom: 0.5rem;
-}
-
-/* Suggestions d'adresse */
-.addressSuggestions {
-  position: absolute;
-  background-color: white;
-  width: 100%;
-  max-height: 250px;
-  overflow-y: auto;
-  z-index: 1050;
-  border: 1px solid var(--tc-border-light);
-  border-radius: 4px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  margin-top: 5px;
-}
-
-.addressSuggestionItem {
-  display: flex;
-  align-items: flex-start;
-  padding: 0.75rem 1rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.addressSuggestionItem:hover {
-  background-color: var(--tc-bg-light);
-}
-
-.suggestionIcon {
-  margin-right: 0.75rem;
-  color: var(--tc-primary);
-  padding-top: 0.25rem;
-}
-
-.suggestionText {
-  flex: 1;
-}
-
-.suggestionName {
-  font-weight: 500;
-  margin-bottom: 0.25rem;
-}
-
-.suggestionDetails {
-  font-size: 0.85rem;
-  color: var(--tc-text-secondary);
-}
-
-.addressSearching {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-  color: var(--tc-text-secondary);
-  font-size: 0.9rem;
-}
-
-/* Programmateur */
-.programmateurSearchContainer {
-  position: relative;
-}
-
-.dropdownMenu {
-  position: absolute;
-  z-index: 1000;
-  background-color: white;
-  width: 100%;
-  max-height: 300px;
-  overflow-y: auto;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  margin-top: 0.25rem;
-  border-radius: 4px;
-  border: 1px solid var(--tc-border-light);
-}
-
-.programmateurItem {
-  padding: 0.75rem 1rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.programmateurItem:hover {
-  background-color: var(--tc-bg-light);
-}
-
-.programmateurName {
-  font-weight: 500;
-  margin-bottom: 0.25rem;
-}
-
-.programmateurDetails {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  font-size: 0.85rem;
-  color: var(--tc-text-secondary);
-}
-
-.programmateurStructure {
-  background-color: var(--tc-bg-light);
-  color: var(--tc-text-secondary);
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.8rem;
-}
-
-.selectedProgrammateur {
-  margin-top: 0.5rem;
-}
-
-.programmateurCard {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: var(--tc-bg-light);
-  border: 1px solid var(--tc-border-light);
-  border-radius: 6px;
-  padding: 1rem;
-}
-
-.programmateurInfo {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.programmateurContacts {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-top: 0.25rem;
-  font-size: 0.9rem;
-  color: var(--tc-text-secondary);
-}
-
-.programmateurContactItem {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
 }

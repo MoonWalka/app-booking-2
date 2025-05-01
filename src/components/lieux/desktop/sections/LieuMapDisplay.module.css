@@ -1,4 +1,4 @@
-/* Styles for LieuInfoSection */
+/* Styles for LieuMapDisplay */
 
 .formCard {
   background-color: white;
@@ -34,4 +34,14 @@
 
 .required {
   color: #dc3545;
+}
+.mapPreview {
+  margin-top: 20px;
+}
+
+.interactiveMapContainer {
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid #ced4da;
+  margin-bottom: 10px;
 }

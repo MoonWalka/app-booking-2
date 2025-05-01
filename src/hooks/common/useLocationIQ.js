@@ -1,129 +1,97 @@
-// src/hooks/common/useLocationIQ.js
-import { useState, useEffect, useCallback } from 'react';
+import { useState } from 'react';
+import axios from 'axios';
+
+// API constants
+const API_KEY = process.env.REACT_APP_LOCATIONIQ_API_KEY || '***REMOVED***';
+const BASE_URL = 'https://eu1.locationiq.com/v1';
 
 /**
- * Hook personnalisé pour la géolocalisation et l'autocomplétion d'adresse
- * Utilise l'API Adresse du gouvernement français (sans clé API)
- * et OpenStreetMap pour les cartes (sans clé API)
+ * Custom hook to interact with the LocationIQ API for geocoding
+ * @returns {Object} Functions and state for LocationIQ API interaction
  */
-export function useLocationIQ() {
+export const useLocationIQ = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  
-  // Cache des requêtes
-  const [requestCache, setRequestCache] = useState({});
-  
-  // Initialisation
-  useEffect(() => {
-    console.log("Hook de géolocalisation initialisé");
-    setIsLoading(false);
-  }, []);
-  
-  // Fonction pour générer un identifiant de cache
-  const getCacheKey = useCallback((query) => {
-    const timestamp = Math.floor(Date.now() / (30 * 1000)); // Change toutes les 30 secondes
-    return `${query}_${timestamp}`;
-  }, []);
-  
+
   /**
-   * Recherche des adresses à partir d'un texte
-   * Utilise l'API Adresse du gouvernement français
-   * Ne nécessite pas de clé API
+   * Search for addresses based on a query string
+   * @param {string} query - The address to search for
+   * @returns {Promise<Array>} Array of address results
    */
-  const searchAddress = useCallback(async (query) => {
-    console.log("Recherche d'adresse pour:", query);
-    
+  const searchAddress = async (query) => {
     if (!query || query.length < 3) {
-      console.log("Requête trop courte");
+      console.log('Query too short for LocationIQ API');
       return [];
     }
-    
+
+    setIsLoading(true);
+    setError(null);
+
     try {
-      // Vérifier le cache pour éviter des requêtes inutiles
-      const cacheKey = getCacheKey(query);
-      if (requestCache[cacheKey]) {
-        console.log("Utilisation des résultats en cache");
-        return requestCache[cacheKey];
-      }
+      console.log(`Searching for address: ${query}`);
       
-      // Important: Ne pas modifier l'état isLoading ici pour éviter le sursaut de l'interface
-      
-      // Appel à l'API Adresse du gouvernement français
-      const response = await fetch(
-        `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(query)}&limit=5`
-      );
-      
-      if (!response.ok) {
-        throw new Error(`Erreur API (${response.status}): ${response.statusText}`);
-      }
-      
-      const data = await response.json();
-      
-      // Transformer les résultats au format attendu par l'application
-      const transformedResults = data.features.map(feature => ({
-        place_id: feature.properties.id,
-        display_name: feature.properties.label,
-        lat: feature.geometry.coordinates[1],
-        lon: feature.geometry.coordinates[0],
-        address: {
-          house_number: feature.properties.housenumber || '',
-          road: feature.properties.street || '',
-          postcode: feature.properties.postcode || '',
-          city: feature.properties.city || '',
-          country: 'France'
+      const response = await axios.get(`${BASE_URL}/search.php`, {
+        params: {
+          key: API_KEY,
+          q: query,
+          format: 'json',
+          addressdetails: 1,
+          limit: 5,
+          countrycodes: 'fr'
         }
-      }));
-      
-      console.log(`${transformedResults.length} résultats trouvés`);
-      
-      // Mettre en cache les résultats
-      setRequestCache(prev => ({
-        ...prev,
-        [cacheKey]: transformedResults
-      }));
-      
-      return transformedResults;
+      });
+
+      console.log(`Found ${response.data.length} results for: ${query}`);
+      return response.data;
     } catch (err) {
-      console.error("Erreur lors de la recherche d'adresse:", err);
-      setError(err.message);
+      console.error('Error searching for address:', err);
+      setError(err.message || 'Failed to search for address');
       return [];
+    } finally {
+      setIsLoading(false);
     }
-  }, [getCacheKey, requestCache]);
-  
+  };
+
   /**
-   * Génère une URL pour afficher une carte statique d'OpenStreetMap
-   * Ne nécessite pas de clé API
+   * Get detailed information about a location based on coordinates
+   * @param {number} lat - Latitude
+   * @param {number} lon - Longitude
+   * @returns {Promise<Object>} Location details
    */
-  const getStaticMapUrl = useCallback((lat, lon, zoom = 15, width = 600, height = 300) => {
-    // Solution sans clé API avec OpenStreetMap
-    return `https://staticmap.openstreetmap.de/staticmap.php?center=${lat},${lon}&zoom=${zoom}&size=${width}x${height}&markers=${lat},${lon}`;
-  }, []);
-  
-  /**
-   * Génère une URL pour un iframe OpenStreetMap
-   * Ne nécessite pas de clé API
-   */
-  const getMapEmbedUrl = useCallback((lat, lon, zoom = 15) => {
-    // URL pour intégrer OpenStreetMap dans un iframe
-    return `https://www.openstreetmap.org/export/embed.html?bbox=${lon-0.01},${lat-0.01},${lon+0.01},${lat+0.01}&layer=mapnik&marker=${lat},${lon}`;
-  }, []);
-  
-  /**
-   * Génère une URL pour ouvrir OpenStreetMap dans un nouvel onglet
-   * Ne nécessite pas de clé API
-   */
-  const getMapLinkUrl = useCallback((lat, lon, zoom = 15) => {
-    return `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=${zoom}/${lat}/${lon}`;
-  }, []);
-  
+  const reverseGeocode = async (lat, lon) => {
+    if (!lat || !lon) {
+      return null;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await axios.get(`${BASE_URL}/reverse.php`, {
+        params: {
+          key: API_KEY,
+          lat,
+          lon,
+          format: 'json',
+          addressdetails: 1
+        }
+      });
+
+      return response.data;
+    } catch (err) {
+      setError(err.message || 'Failed to reverse geocode');
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return {
     isLoading,
     error,
     searchAddress,
-    getStaticMapUrl,
-    getMapEmbedUrl,
-    getMapLinkUrl
+    reverseGeocode
   };
-}
+};
 
 export default useLocationIQ;

@@ -1,17 +1,18 @@
 // src/hooks/useIsMobile.js
-import { useState, useEffect } from 'react';
-
 /**
- * @deprecated Use the isMobile property from useResponsive() from './common/useResponsive' instead
+ * @deprecated Ce hook est déprécié. Veuillez utiliser la propriété isMobile de useResponsive() depuis 
+ * '@/hooks/common/useResponsive' à la place. Ce fichier sera supprimé dans une future version.
  */
-export const useIsMobile = (breakpoint = 768) => {
-  // TODO: Réactiver le mode mobile plus tard.
-  // Pour l'instant, on retourne toujours false pour forcer l'affichage desktop
-  return false;
+import { useResponsive } from './common';
 
-  /* 
-  // Si on veut réactiver le code normal plus tard:
-  const { isMobile } = require('./common/useResponsive').default({ breakpoint });
+export const useIsMobile = (breakpoint = 768) => {
+  console.warn(
+    'Avertissement: useIsMobile est déprécié. ' +
+    'Veuillez utiliser useResponsive().isMobile depuis @/hooks/common à la place.'
+  );
+  
+  const { isMobile } = useResponsive({ breakpoint });
   return isMobile;
-  */
 };
+
+export default useIsMobile;

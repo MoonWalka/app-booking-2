@@ -28,7 +28,7 @@ const ConcertFormActions = ({ id, isSubmitting, onDelete, onSubmit, navigate, po
           onClick={() => navigate('/concerts')}
           disabled={isSubmitting}
         >
-          <i className="bi bi-arrow-left me-1"></i>
+          <i className="bi bi-arrow-left me-2"></i>
           Retour
         </button>
         

@@ -116,27 +116,33 @@ const ProgrammateurContactSection = ({
               <div className="col-md-6">
                 <div className={styles.formGroup}>
                   <label className={styles.cardLabel}>Nom</label>
-                  <p className="mb-0 fs-5">{formatValue ? formatValue(contact.nom) : contact.nom || 'Non spécifié'}</p>
+                  <p className={`${styles.fieldValue} ${styles.fieldValueHighlight}`}>
+                    {formatValue ? formatValue(contact.nom) : contact.nom || 'Non spécifié'}
+                  </p>
                 </div>
               </div>
               <div className="col-md-6">
                 <div className={styles.formGroup}>
                   <label className={styles.cardLabel}>Prénom</label>
-                  <p className="mb-0 fs-5">{formatValue ? formatValue(contact.prenom) : contact.prenom || 'Non spécifié'}</p>
+                  <p className={`${styles.fieldValue} ${styles.fieldValueHighlight}`}>
+                    {formatValue ? formatValue(contact.prenom) : contact.prenom || 'Non spécifié'}
+                  </p>
                 </div>
               </div>
             </div>
 
             <div className={styles.formSection}>
               <label className={styles.cardLabel}>Fonction</label>
-              <p className="mb-0">{formatValue ? formatValue(contact.fonction) : contact.fonction || 'Non spécifié'}</p>
+              <p className={styles.fieldValue}>
+                {formatValue ? formatValue(contact.fonction) : contact.fonction || 'Non spécifié'}
+              </p>
             </div>
 
             <div className="row g-3">
               <div className="col-md-6">
                 <div className={styles.formGroup}>
                   <label className={styles.cardLabel}>Email</label>
-                  <p className="mb-0">
+                  <p className={styles.fieldValue}>
                     {contact.email ? (
                       <a href={`mailto:${contact.email}`} className="text-decoration-none">
                         <i className="bi bi-envelope me-1"></i>
@@ -151,7 +157,7 @@ const ProgrammateurContactSection = ({
               <div className="col-md-6">
                 <div className={styles.formGroup}>
                   <label className={styles.cardLabel}>Téléphone</label>
-                  <p className="mb-0">
+                  <p className={styles.fieldValue}>
                     {contact.telephone ? (
                       <a href={`tel:${contact.telephone}`} className="text-decoration-none">
                         <i className="bi bi-telephone me-1"></i>

@@ -49,6 +49,16 @@ L'application de gestion de booking pour concerts présentait plusieurs problèm
 
 Ces modifications permettent de maintenir la synchronisation des données tout en améliorant significativement les performances et l'expérience utilisateur en évitant les rafraîchissements intempestifs.
 
+### 5. Problème d'espacement entre les icônes et le texte des boutons
+
+**Problème** : Les boutons "retour" et "modifier" dans l'interface d'édition des concerts présentaient un espacement insuffisant entre les icônes et le texte, rendant l'interface moins lisible et moins confortable pour l'utilisateur.
+
+**Composants corrigés** :
+- `ConcertFormActions.js` : Bouton "retour" (et autres) 
+- `ConcertHeader.js` : Boutons "retour", "modifier", "enregistrer", "annuler" et "supprimer"
+
+**Solution** : Augmentation de l'espacement entre les icônes et le texte en remplaçant la classe `me-1` par `me-2` pour tous les boutons concernés. La classe `me-2` correspond à une marge à droite de 0.5rem (environ 8px), offrant un meilleur confort visuel.
+
 ## Composants du système
 
 ### Composant LieuProgrammateurSection
@@ -153,6 +163,28 @@ const concertData = {
 };
 ```
 
+### 4. Correction de l'espacement des icônes dans les boutons
+
+```javascript
+// Avant (ConcertFormActions.js)
+<i className="bi bi-arrow-left me-1"></i>
+
+// Après 
+<i className="bi bi-arrow-left me-2"></i>
+
+// Avant (ConcertHeader.js - boutons en mode affichage)
+<i className="bi bi-arrow-left"></i>
+<span className="btn-text">Retour</span>
+<i className="bi bi-pencil"></i>
+<span className="btn-text">Modifier</span>
+
+// Après
+<i className="bi bi-arrow-left me-2"></i>
+<span className="btn-text">Retour</span>
+<i className="bi bi-pencil me-2"></i>
+<span className="btn-text">Modifier</span>
+```
+
 ## Recommandations pour les corrections futures
 
 1. **Débogage de la création de concerts** : Investiguer pourquoi les concerts créés ne s'affichent pas dans la liste malgré la correction du format de date. Vérifier si d'autres problèmes existent dans le composant `ConcertForm.js` ou dans la façon dont les données sont stockées et récupérées.
@@ -162,6 +194,8 @@ const concertData = {
 3. **Tests unitaires** : Ajouter des tests unitaires pour chaque composant afin de détecter rapidement les problèmes similaires à l'avenir.
 
 4. **Gestion des erreurs** : Améliorer la gestion des erreurs dans l'application pour faciliter le débogage.
+
+5. **Standardisation de l'espacement dans les boutons** : Standardiser l'espacement entre les icônes et le texte dans tous les boutons de l'application pour garantir une expérience utilisateur cohérente. Envisager la création d'un composant Button réutilisable qui applique automatiquement le bon espacement.
 
 ## Conclusion
 

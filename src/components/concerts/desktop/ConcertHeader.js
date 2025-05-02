@@ -51,7 +51,7 @@ const ConcertHeader = ({
                 </>
               ) : (
                 <>
-                  <i className="bi bi-check-circle"></i>
+                  <i className="bi bi-check-circle me-2"></i>
                   <span className="btn-text">Enregistrer</span>
                 </>
               )}
@@ -61,7 +61,7 @@ const ConcertHeader = ({
               onClick={onCancel} 
               className={`tc-btn-outline-secondary ${styles.actionBtn}`}
             >
-              <i className="bi bi-x-circle"></i>
+              <i className="bi bi-x-circle me-2"></i>
               <span className="btn-text">Annuler</span>
             </button>
             
@@ -69,7 +69,7 @@ const ConcertHeader = ({
               onClick={onDelete} 
               className={`tc-btn-outline-danger ${styles.actionBtn}`}
             >
-              <i className="bi bi-trash"></i>
+              <i className="bi bi-trash me-2"></i>
               <span className="btn-text">Supprimer</span>
             </button>
           </>
@@ -80,7 +80,7 @@ const ConcertHeader = ({
               onClick={navigateToList} 
               className={`tc-btn-outline-secondary ${styles.actionBtn}`}
             >
-              <i className="bi bi-arrow-left"></i>
+              <i className="bi bi-arrow-left me-2"></i>
               <span className="btn-text">Retour</span>
             </button>
             
@@ -88,7 +88,7 @@ const ConcertHeader = ({
               onClick={onEdit}
               className={`tc-btn-outline-primary ${styles.actionBtn}`}
             >
-              <i className="bi bi-pencil"></i>
+              <i className="bi bi-pencil me-2"></i>
               <span className="btn-text">Modifier</span>
             </button>
           </>

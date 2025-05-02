@@ -50,7 +50,10 @@ const ConcertRow = ({
         <div>
           <span className={styles.locationName}>{concert.lieuNom || 'Lieu non spécifié'}</span>
           {concert.lieuVille && (
-            <span className={styles.locationCity}>{concert.lieuVille}</span>
+            <span className={styles.locationCity}>
+              {concert.lieuVille}
+              {concert.lieuCodePostal && concert.lieuCodePostal.length >= 2 && ` (${concert.lieuCodePostal.substring(0, 2)})`}
+            </span>
           )}
         </div>
       </td>

@@ -44,6 +44,35 @@
   border-top: 1px solid #dce3ed;
 }
 
+/* Animation pour toutes les cartes en mode visualisation */
+/* Utilisation de sélecteurs plus spécifiques pour éviter !important */
+html body .card, 
+html body .card-wrapper, 
+html body .cardWrapper, 
+html body .detail-card, 
+html body .detailCard, 
+html body [class*="card-wrapper"], 
+html body [class*="cardWrapper"],
+html body .tc-detail-card,
+html body .form-card:not(.editing),
+html body .details-card {
+  transition: all 0.3s ease;
+}
+
+html body .card:hover, 
+html body .card-wrapper:hover, 
+html body .cardWrapper:hover, 
+html body .detail-card:hover, 
+html body .detailCard:hover, 
+html body [class*="card-wrapper"]:hover, 
+html body [class*="cardWrapper"]:hover,
+html body .tc-detail-card:hover,
+html body .form-card:not(.editing):hover,
+html body .details-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
 /* Card Variations */
 .tc-card-compact {
   margin-bottom: 0.75rem;

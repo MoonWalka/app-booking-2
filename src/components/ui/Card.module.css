@@ -1,19 +1,106 @@
 /* Card.module.css - Styles pour les cartes UI */
 
+/* Styles de base pour la carte */
 .card {
-  background-color: var(--tc-card-bg);
-  border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-shadow);
-  margin-bottom: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  transition: all 0.3s ease;
 }
 
+/* Animation au survol pour les cartes (uniquement quand elles ne sont pas en mode édition) */
+.cardHoverable:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+/* Styles pour l'en-tête de carte */
 .cardHeader {
-  padding: 15px;
-  border-bottom: 1px solid var(--tc-border-color);
-  font-weight: bold;
+  background-color: #f8f9fa;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.headerTitleSection {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.cardIcon {
+  color: var(--tc-primary-color, #0d6efd);
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
 }
 
 .cardTitle {
   margin: 0;
-  color: var(--tc-primary-color);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.headerActions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* Styles pour le corps de carte */
+.cardBody {
+  padding: 1.5rem;
+}
+
+/* Styles pour le pied de carte */
+.cardFooter {
+  background-color: rgba(248, 249, 250, 0.7);
+  border-top: 1px solid #dee2e6;
+  padding: 0.75rem 1.5rem;
+}
+
+/* Styles pour les différentes variantes */
+.cardPrimary {
+  border-left: 4px solid var(--tc-primary-color, #0d6efd);
+}
+
+.cardSuccess {
+  border-left: 4px solid var(--tc-success-color, #198754);
+}
+
+.cardWarning {
+  border-left: 4px solid var(--tc-warning-color, #ffc107);
+}
+
+.cardDanger {
+  border-left: 4px solid var(--tc-danger-color, #dc3545);
+}
+
+.cardInfo {
+  border-left: 4px solid var(--tc-info-color, #0dcaf0);
+}
+
+/* Styles spécifiques au mode édition */
+.cardEditing {
+  border: 1px dashed #dee2e6;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.cardEditing .cardHeader {
+  background-color: rgba(13, 110, 253, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .cardBody {
+    padding: 1rem;
+  }
+  
+  .cardHeader {
+    padding: 0.75rem 1rem;
+  }
 }

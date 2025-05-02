@@ -1,74 +1,19 @@
-import { useState, useEffect } from 'react';
-import { 
-  doc, 
-  getDoc, 
-  collection, 
-  query, 
-  where, 
-  getDocs,
-  updateDoc,
-  deleteDoc,
-  arrayUnion
-} from 'firebase/firestore';
+import { useState, useEffect, useCallback } from 'react';
+import { doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '@/firebaseInit';
 import { useNavigate } from 'react-router-dom';
-import { formatDateFr } from '@/utils/dateUtils';
+
+// Import des hooks personnalisés
 import { useEntitySearch } from '@/hooks/common/useEntitySearch';
+import useConcertStatus from '@/hooks/concerts/useConcertStatus';
+import useConcertFormsManagement from '@/hooks/concerts/useConcertFormsManagement';
+import useConcertAssociations from '@/hooks/concerts/useConcertAssociations';
+
+// Import des utilitaires
+import { formatDate, formatMontant, isDatePassed, copyToClipboard, getCacheKey } from '@/utils/formatters';
 
 /**
- * Fonctions utilitaires
- */
-
-// Formater la date pour l'affichage
-const formatDate = (dateValue) => {
-  if (!dateValue) return 'Date non spécifiée';
-  
-  // Si c'est un timestamp Firestore
-  if (dateValue.seconds) {
-    return new Date(dateValue.seconds * 1000).toLocaleDateString('fr-FR');
-  }
-  
-  // Si c'est une chaîne de date
-  try {
-    return new Date(dateValue).toLocaleDateString('fr-FR');
-  } catch (e) {
-    return dateValue;
-  }
-};
-
-// Formater le montant
-const formatMontant = (montant) => {
-  if (!montant) return '0,00 €';
-  return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(montant);
-};
-
-// Vérifier si la date est passée
-const isDatePassed = (dateValue) => {
-  if (!dateValue) return false;
-  
-  const today = new Date();
-  const concertDate = dateValue.seconds ? 
-    new Date(dateValue.seconds * 1000) : 
-    new Date(dateValue);
-  
-  return concertDate < today;
-};
-
-// Fonction pour copier le lien dans le presse-papiers
-const copyToClipboard = (text) => {
-  navigator.clipboard.writeText(text)
-    .then(() => {
-      alert('Lien copié dans le presse-papiers !');
-    })
-    .catch(err => {
-      console.error('Erreur lors de la copie dans le presse-papiers:', err);
-    });
-};
-
-/**
- * Hook pour gérer les détails d'un concert
- * Gère le chargement des informations du concert, du lieu, du programmateur et de l'artiste
- * Ainsi que les fonctionnalités d'enregistrement, mise à jour et suppression
+ * Hook refactorisé pour gérer les détails d'un concert
  */
 export const useConcertDetails = (id, location) => {
   const navigate = useNavigate();
@@ -77,20 +22,10 @@ export const useConcertDetails = (id, location) => {
   const [concert, setConcert] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  // États pour le formulaire
-  const [formData, setFormData] = useState(null);
-  const [showFormGenerator, setShowFormGenerator] = useState(false);
-  const [generatedFormLink, setGeneratedFormLink] = useState(null);
+  const [cacheKey, setCacheKey] = useState(getCacheKey(id));
   
   // États pour le mode d'édition
   const [isEditMode, setIsEditMode] = useState(false);
-
-  // Gestion des entités associées (pour la mise à jour des relations)
-  const [initialProgrammateurId, setInitialProgrammateurId] = useState(null);
-  const [initialArtisteId, setInitialArtisteId] = useState(null);
-
-  // État pour le formulaire d'édition
   const [formState, setFormState] = useState({
     date: '',
     montant: '',
@@ -99,31 +34,30 @@ export const useConcertDetails = (id, location) => {
     notes: ''
   });
 
-  // État pour le statut du formulaire
-  const [formDataStatus, setFormDataStatus] = useState({
-    exists: false,
-    isValidated: false
-  });
+  // Gestion des entités associées (pour la mise à jour des relations)
+  const [initialProgrammateurId, setInitialProgrammateurId] = useState(null);
+  const [initialArtisteId, setInitialArtisteId] = useState(null);
 
-  /**
-   * Utilisation des hooks communs pour la recherche d'entités
-   */
+  // Utilisation des hooks personnalisés
+  const concertForms = useConcertFormsManagement(id);
+  const concertStatus = useConcertStatus();
+  const concertAssociations = useConcertAssociations();
   
-  // Hook pour la recherche de lieux
+  /**
+   * Hooks pour la recherche d'entités
+   */
   const lieuSearch = useEntitySearch({
     entityType: 'lieux',
     searchField: 'nom',
     additionalSearchFields: ['ville', 'codePostal', 'adresse']
   });
 
-  // Hook pour la recherche de programmateurs
   const programmateurSearch = useEntitySearch({
     entityType: 'programmateurs',
     searchField: 'nom',
     additionalSearchFields: ['structure', 'email']
   });
 
-  // Hook pour la recherche d'artistes
   const artisteSearch = useEntitySearch({
     entityType: 'artistes',
     searchField: 'nom',
@@ -144,15 +78,18 @@ export const useConcertDetails = (id, location) => {
    * Sous-fonctions pour la récupération des données
    */
 
-  // Récupération des données de base du concert
+  // Récupération des données de base du concert avec cache-busting
   const fetchConcertData = async () => {
     try {
+      console.log(`Récupération des données du concert ${id} (cache key: ${cacheKey})`);
       const concertDoc = await getDoc(doc(db, 'concerts', id));
       if (concertDoc.exists()) {
         const concertData = {
           id: concertDoc.id,
           ...concertDoc.data()
         };
+        
+        console.log('Données du concert récupérées:', concertData);
         setConcert(concertData);
         
         // Initialiser le formulaire d'édition avec les données du concert
@@ -239,56 +176,25 @@ export const useConcertDetails = (id, location) => {
     }
   };
 
-  // Récupération des données du formulaire associé
-  const fetchFormData = async (concertData) => {
+  // Fonction pour forcer le rafraîchissement des données
+  const refreshConcert = useCallback(async () => {
+    // Mise à jour du cacheKey pour éviter la mise en cache
+    setCacheKey(getCacheKey(id));
+    
+    // Refetch all data
+    await fetchConcert();
+    
+    // Émettre un événement personnalisé pour informer d'autres composants
     try {
-      if (concertData.formId) {
-        // Cas 1: Le concert a un formId référencé
-        const formDoc = await getDoc(doc(db, 'formulaires', concertData.formId));
-        if (formDoc.exists()) {
-          updateFormDataState(formDoc);
-        }
-      } else {
-        // Cas 2: Recherche d'un formulaire associé au concert par son ID
-        const formsQuery = query(
-          collection(db, 'formulaires'), 
-          where('concertId', '==', id)
-        );
-        const formsSnapshot = await getDocs(formsQuery);
-        
-        if (!formsSnapshot.empty) {
-          const formDoc = formsSnapshot.docs[0];
-          updateFormDataState(formDoc);
-          
-          // Mise à jour du concert avec l'ID du formulaire
-          await updateDoc(doc(db, 'concerts', id), {
-            formId: formDoc.id
-          });
-        }
-      }
-    } catch (error) {
-      console.error('Erreur lors de la récupération des données du formulaire:', error);
+      const event = new CustomEvent('concertDataRefreshed', { 
+        detail: { id, timestamp: Date.now() } 
+      });
+      window.dispatchEvent(event);
+      console.log('Événement concertDataRefreshed émis pour concert', id);
+    } catch (e) {
+      console.warn('Impossible de déclencher l\'événement de rafraîchissement', e);
     }
-  };
-
-  // Mise à jour des états liés au formulaire
-  const updateFormDataState = (formDoc) => {
-    const formDataObj = {
-      id: formDoc.id,
-      ...formDoc.data()
-    };
-    setFormData(formDataObj);
-    
-    // Déterminer si le formulaire contient des données
-    const hasData = formDataObj.programmateurData || 
-      (formDataObj.data && Object.keys(formDataObj.data).length > 0);
-    
-    setFormDataStatus({
-      exists: true,
-      isValidated: formDataObj.status === 'validated',
-      hasData: hasData
-    });
-  };
+  }, [id]);
 
   // Fonction principale pour charger toutes les données
   const fetchConcert = async () => {
@@ -302,7 +208,7 @@ export const useConcertDetails = (id, location) => {
         fetchLieuData(concertData),
         fetchProgrammateurData(concertData),
         fetchArtisteData(concertData),
-        fetchFormData(concertData)
+        concertForms.fetchFormData(concertData)
       ]);
       
     } catch (error) {
@@ -323,92 +229,6 @@ export const useConcertDetails = (id, location) => {
       ...prev,
       [name]: value
     }));
-  };
-
-  // Mise à jour des associations programmateur-concert
-  const updateProgrammateurAssociation = async (concertId, concertData, newProgrammateurId, oldProgrammateurId, currentLieu) => {
-    try {
-      // Si un nouveau programmateur est sélectionné
-      if (newProgrammateurId) {
-        const progRef = doc(db, 'programmateurs', newProgrammateurId);
-        
-        // Ajouter le concert à la liste des concerts associés du programmateur
-        const concertReference = {
-          id: concertId,
-          titre: concertData.titre || 'Sans titre',
-          date: concertData.date || null,
-          lieu: currentLieu?.nom || null
-        };
-        
-        await updateDoc(progRef, {
-          concertsAssocies: arrayUnion(concertReference),
-          updatedAt: new Date().toISOString()
-        });
-      }
-      
-      // Si un ancien programmateur était associé et a changé
-      if (oldProgrammateurId && oldProgrammateurId !== newProgrammateurId) {
-        const oldProgRef = doc(db, 'programmateurs', oldProgrammateurId);
-        const oldProgDoc = await getDoc(oldProgRef);
-        
-        if (oldProgDoc.exists()) {
-          // Récupérer la liste actuelle et supprimer ce concert
-          const oldProgData = oldProgDoc.data();
-          const updatedConcerts = (oldProgData.concertsAssocies || [])
-            .filter(c => c.id !== concertId);
-          
-          await updateDoc(oldProgRef, {
-            concertsAssocies: updatedConcerts,
-            updatedAt: new Date().toISOString()
-          });
-        }
-      }
-    } catch (error) {
-      console.error('Erreur lors de la mise à jour des associations programmateur-concert:', error);
-    }
-  };
-
-  // Mise à jour des associations artiste-concert
-  const updateArtisteAssociation = async (concertId, concertData, newArtisteId, oldArtisteId, currentLieu) => {
-    try {
-      // Si un nouvel artiste est sélectionné
-      if (newArtisteId) {
-        const artisteRef = doc(db, 'artistes', newArtisteId);
-        
-        // Ajouter le concert à la liste des concerts de l'artiste
-        const concertReference = {
-          id: concertId,
-          titre: concertData.titre || 'Sans titre',
-          date: concertData.date || null,
-          lieu: currentLieu?.nom || null
-        };
-        
-        await updateDoc(artisteRef, {
-          concerts: arrayUnion(concertReference),
-          updatedAt: new Date().toISOString()
-        });
-      }
-      
-      // Si un ancien artiste était associé et a changé
-      if (oldArtisteId && oldArtisteId !== newArtisteId) {
-        const oldArtisteRef = doc(db, 'artistes', oldArtisteId);
-        const oldArtisteDoc = await getDoc(oldArtisteRef);
-        
-        if (oldArtisteDoc.exists()) {
-          // Récupérer la liste actuelle et supprimer ce concert
-          const oldArtisteData = oldArtisteDoc.data();
-          const updatedConcerts = (oldArtisteData.concerts || [])
-            .filter(c => c.id !== concertId);
-          
-          await updateDoc(oldArtisteRef, {
-            concerts: updatedConcerts,
-            updatedAt: new Date().toISOString()
-          });
-        }
-      }
-    } catch (error) {
-      console.error('Erreur lors de la mise à jour des associations artiste-concert:', error);
-    }
   };
 
   // Validation du formulaire
@@ -447,12 +267,15 @@ export const useConcertDetails = (id, location) => {
         updatedAt: new Date().toISOString()
       };
       
+      console.log('Mise à jour du concert avec les données:', concertData);
+      
       // Mise à jour du concert
       await updateDoc(doc(db, 'concerts', id), concertData);
+      console.log('Concert mis à jour dans Firestore, id:', id);
       
-      // Mises à jour bidirectionnelles
+      // Mises à jour bidirectionnelles en utilisant le hook d'associations
       if (programmateur?.id || initialProgrammateurId) {
-        await updateProgrammateurAssociation(
+        await concertAssociations.updateProgrammateurAssociation(
           id,
           concertData,
           programmateur?.id || null,
@@ -462,7 +285,7 @@ export const useConcertDetails = (id, location) => {
       }
       
       if (artiste?.id || initialArtisteId) {
-        await updateArtisteAssociation(
+        await concertAssociations.updateArtisteAssociation(
           id,
           concertData,
           artiste?.id || null,
@@ -471,11 +294,9 @@ export const useConcertDetails = (id, location) => {
         );
       }
       
-      // Mettre à jour les données locales
-      setConcert({
-        ...concert,
-        ...concertData
-      });
+      // Mettre à jour les données locales en récupérant les données fraîches
+      console.log('Rafraîchissement des données après mise à jour...');
+      await refreshConcert();
       
       // Retour au mode vue
       setIsEditMode(false);
@@ -483,6 +304,21 @@ export const useConcertDetails = (id, location) => {
       // Mettre à jour les IDs initiaux pour la prochaine édition
       setInitialProgrammateurId(programmateur?.id || null);
       setInitialArtisteId(artiste?.id || null);
+      
+      // Émettre un événement personnalisé pour notifier les autres composants
+      try {
+        const event = new CustomEvent('concertUpdated', { 
+          detail: { 
+            id, 
+            status: concertData.statut,
+            data: concertData
+          } 
+        });
+        window.dispatchEvent(event);
+        console.log('Événement concertUpdated émis pour concert', id);
+      } catch (e) {
+        console.warn('Impossible de déclencher l\'événement de mise à jour', e);
+      }
       
     } catch (error) {
       console.error('Erreur lors de l\'enregistrement du concert:', error);
@@ -499,40 +335,38 @@ export const useConcertDetails = (id, location) => {
       
       // Mise à jour du programmateur
       if (programmateur?.id) {
-        const progRef = doc(db, 'programmateurs', programmateur.id);
-        const progDoc = await getDoc(progRef);
-        
-        if (progDoc.exists()) {
-          const progData = progDoc.data();
-          const updatedConcerts = (progData.concertsAssocies || [])
-            .filter(c => c.id !== id);
-          
-          await updateDoc(progRef, {
-            concertsAssocies: updatedConcerts,
-            updatedAt: new Date().toISOString()
-          });
-        }
+        await concertAssociations.updateProgrammateurAssociation(
+          id,
+          concert,
+          null,
+          programmateur.id,
+          lieu
+        );
       }
       
       // Mise à jour de l'artiste
       if (artiste?.id) {
-        const artisteRef = doc(db, 'artistes', artiste.id);
-        const artisteDoc = await getDoc(artisteRef);
-        
-        if (artisteDoc.exists()) {
-          const artisteData = artisteDoc.data();
-          const updatedConcerts = (artisteData.concerts || [])
-            .filter(c => c.id !== id);
-          
-          await updateDoc(artisteRef, {
-            concerts: updatedConcerts,
-            updatedAt: new Date().toISOString()
-          });
-        }
+        await concertAssociations.updateArtisteAssociation(
+          id,
+          concert,
+          null,
+          artiste.id,
+          lieu
+        );
       }
       
       // Supprimer le concert
       await deleteDoc(doc(db, 'concerts', id));
+      
+      // Notifier les autres composants
+      try {
+        const event = new CustomEvent('concertDeleted', { detail: { id } });
+        window.dispatchEvent(event);
+        console.log('Événement concertDeleted émis pour concert', id);
+      } catch (e) {
+        console.warn('Impossible de déclencher l\'événement de suppression', e);
+      }
+      
       navigate('/concerts');
       
       return true;
@@ -561,38 +395,12 @@ export const useConcertDetails = (id, location) => {
     setIsEditMode(!isEditMode);
   };
 
-  /**
-   * Gestion du formulaire externe
-   */
-
-  // Gestionnaire pour le formulaire généré
-  const handleFormGenerated = async (formId, formUrl) => {
-    console.log('Formulaire généré:', formId, formUrl);
-    
-    // Stocker le lien généré
-    setGeneratedFormLink(formUrl);
-    
-    // Mettre à jour le concert avec l'ID du formulaire
-    try {
-      await updateDoc(doc(db, 'concerts', id), {
-        formId: formId
-      });
-      
-      // Recharger les données du formulaire
-      const formDoc = await getDoc(doc(db, 'formulaires', formId));
-      if (formDoc.exists()) {
-        updateFormDataState(formDoc);
-      }
-    } catch (error) {
-      console.error('Erreur lors de la mise à jour du concert:', error);
-    }
-  };
-
   // Fonction pour obtenir les informations sur le statut et les actions requises
   const getStatusInfo = () => {
     if (!concert) return { message: '', actionNeeded: false };
     
     const isPastDate = isDatePassed(concert.date);
+    const { formData, formDataStatus } = concertForms;
     
     switch (concert.statut) {
       case 'contact':
@@ -625,18 +433,32 @@ export const useConcertDetails = (id, location) => {
     }
   };
 
-  // Effet pour charger les données initiales
+  // Effet pour charger les données initiales et écouter les événements
   useEffect(() => {
     fetchConcert();
     
     // Vérifier si on doit afficher le générateur de formulaire
-    const queryParams = new URLSearchParams(location.search);
+    const queryParams = new URLSearchParams(location?.search || '');
     const shouldOpenFormGenerator = queryParams.get('openFormGenerator') === 'true';
     
     if (shouldOpenFormGenerator) {
-      setShowFormGenerator(true);
+      concertForms.setShowFormGenerator(true);
     }
-  }, [id, navigate, location.search]);
+    
+    // Écouter les événements pour rafraîchir les données si nécessaire
+    const handleConcertUpdate = (event) => {
+      if (event.detail && event.detail.id === id) {
+        console.log(`Événement de mise à jour reçu pour le concert ${id}, rafraîchissement des données...`);
+        refreshConcert();
+      }
+    };
+    
+    window.addEventListener('concertUpdated', handleConcertUpdate);
+    
+    return () => {
+      window.removeEventListener('concertUpdated', handleConcertUpdate);
+    };
+  }, [id, navigate, location, cacheKey, refreshConcert]);
 
   // API publique du hook
   return {
@@ -649,12 +471,12 @@ export const useConcertDetails = (id, location) => {
     isSubmitting,
     
     // États du formulaire
-    formData,
-    formDataStatus,
-    showFormGenerator,
-    setShowFormGenerator,
-    generatedFormLink,
-    setGeneratedFormLink,
+    formData: concertForms.formData,
+    formDataStatus: concertForms.formDataStatus,
+    showFormGenerator: concertForms.showFormGenerator,
+    setShowFormGenerator: concertForms.setShowFormGenerator,
+    generatedFormLink: concertForms.generatedFormLink,
+    setGeneratedFormLink: concertForms.setGeneratedFormLink,
     
     // Mode d'édition
     isEditMode,
@@ -671,7 +493,9 @@ export const useConcertDetails = (id, location) => {
     handleDelete,
     toggleEditMode,
     validateForm,
-    handleFormGenerated,
+    handleFormGenerated: concertForms.handleFormGenerated,
+    validateProgrammatorForm: concertForms.validateForm,
+    refreshConcert,
     
     // Fonctions utilitaires
     copyToClipboard,

@@ -34,6 +34,21 @@ L'application de gestion de booking pour concerts présentait plusieurs problèm
 
 **Solution** : Création des composants manquants avec des fonctionnalités de base pour permettre à l'application de démarrer correctement.
 
+### 4. Actualisation excessive de la page des concerts
+
+**Problème** : La page de l'onglet des concerts s'actualisait complètement à une intervalle courte, entraînant une expérience utilisateur désagréable. Le problème était causé par le hook `useConcertListData.js` qui effectuait des rechargements de données trop fréquents.
+
+**Composant corrigé** : `src/hooks/concerts/useConcertListData.js`
+
+**Solution** : Plusieurs optimisations ont été apportées au hook `useConcertListData.js` :
+
+1. Ajout d'un système de limitation de fréquence (debounce) pour éviter les rechargements trop rapprochés
+2. Augmentation de l'intervalle de rafraîchissement automatique de 60 secondes à 5 minutes
+3. Optimisation des gestionnaires d'événements pour éviter les rechargements multiples
+4. Utilisation d'une référence (`useRef`) pour suivre la dernière mise à jour et imposer un délai minimum entre les rechargements
+
+Ces modifications permettent de maintenir la synchronisation des données tout en améliorant significativement les performances et l'expérience utilisateur en évitant les rafraîchissements intempestifs.
+
 ## Composants du système
 
 ### Composant LieuProgrammateurSection

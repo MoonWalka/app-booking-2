@@ -88,16 +88,6 @@ const LieuHeader = ({
             </Button>
             
             <Button 
-              onClick={onCancel} 
-              variant="danger"
-              className={styles.actionBtn}
-              disabled={isSubmitting}
-              icon={<i className="bi bi-x-circle"></i>}
-            >
-              Annuler
-            </Button>
-            
-            <Button 
               onClick={onDelete} 
               variant="danger"
               className={styles.actionBtn}
@@ -105,6 +95,16 @@ const LieuHeader = ({
               icon={<i className="bi bi-trash"></i>}
             >
               Supprimer
+            </Button>
+            
+            <Button 
+              onClick={onCancel} 
+              variant="danger"
+              className={styles.actionBtn}
+              disabled={isSubmitting}
+              icon={<i className="bi bi-x-circle"></i>}
+            >
+              Annuler
             </Button>
           </>
         ) : (

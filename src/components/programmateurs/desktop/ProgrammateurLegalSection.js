@@ -20,6 +20,17 @@ const ProgrammateurLegalSection = ({
     tva: programmateur?.tva || ''
   };
 
+  // Fonction pour formater le type de structure
+  const formatStructureType = (type) => {
+    switch(type) {
+      case 'association': return 'Association';
+      case 'mairie': return 'Mairie / Collectivité';
+      case 'entreprise': return 'Entreprise';
+      case 'auto-entrepreneur': return 'Auto-entrepreneur';
+      default: return type || '';
+    }
+  };
+
   return (
     <div className={styles.cardWrapper}>
       <div className={styles.cardHeader}>
@@ -167,22 +178,16 @@ const ProgrammateurLegalSection = ({
               <div className="col-md-7">
                 <div className={styles.formGroup}>
                   <label className={styles.cardLabel}>Raison sociale</label>
-                  <p className="form-control-plaintext">{formatValue ? formatValue(structure.raisonSociale) : structure.raisonSociale || 'Non spécifié'}</p>
+                  <p className={`${styles.fieldValue} ${styles.fieldValueHighlight}`}>
+                    {formatValue ? formatValue(structure.raisonSociale) : structure.raisonSociale || 'Non spécifié'}
+                  </p>
                 </div>
               </div>
               <div className="col-md-5">
                 <div className={styles.formGroup}>
                   <label className={styles.cardLabel}>Type de structure</label>
-                  <p className="form-control-plaintext">
-                    {formatValue ? formatValue(structure.type ? (
-                      <span>
-                        {structure.type === 'association' ? 'Association' :
-                         structure.type === 'mairie' ? 'Mairie / Collectivité' :
-                         structure.type === 'entreprise' ? 'Entreprise' :
-                         structure.type === 'auto-entrepreneur' ? 'Auto-entrepreneur' :
-                         structure.type}
-                      </span>
-                    ) : '') : (structure.type || 'Non spécifié')}
+                  <p className={styles.fieldValue}>
+                    {formatStructureType(structure.type) || 'Non spécifié'}
                   </p>
                 </div>
               </div>
@@ -190,26 +195,34 @@ const ProgrammateurLegalSection = ({
 
             <div className={styles.formSection}>
               <label className={styles.cardLabel}>Adresse complète</label>
-              <p className="form-control-plaintext">{formatValue ? formatValue(structure.adresse) : structure.adresse || 'Non spécifié'}</p>
+              <p className={styles.fieldValue}>
+                {formatValue ? formatValue(structure.adresse) : structure.adresse || 'Non spécifié'}
+              </p>
             </div>
 
             <div className="row mb-4">
               <div className="col-md-4">
                 <div className={styles.formGroup}>
                   <label className={styles.cardLabel}>Code postal</label>
-                  <p className="form-control-plaintext">{formatValue ? formatValue(structure.codePostal) : structure.codePostal || 'Non spécifié'}</p>
+                  <p className={styles.fieldValue}>
+                    {formatValue ? formatValue(structure.codePostal) : structure.codePostal || 'Non spécifié'}
+                  </p>
                 </div>
               </div>
               <div className="col-md-5">
                 <div className={styles.formGroup}>
                   <label className={styles.cardLabel}>Ville</label>
-                  <p className="form-control-plaintext">{formatValue ? formatValue(structure.ville) : structure.ville || 'Non spécifié'}</p>
+                  <p className={styles.fieldValue}>
+                    {formatValue ? formatValue(structure.ville) : structure.ville || 'Non spécifié'}
+                  </p>
                 </div>
               </div>
               <div className="col-md-3">
                 <div className={styles.formGroup}>
                   <label className={styles.cardLabel}>Pays</label>
-                  <p className="form-control-plaintext">{formatValue ? formatValue(structure.pays) : structure.pays || 'Non spécifié'}</p>
+                  <p className={styles.fieldValue}>
+                    {formatValue ? formatValue(structure.pays) : structure.pays || 'Non spécifié'}
+                  </p>
                 </div>
               </div>
             </div>
@@ -218,13 +231,17 @@ const ProgrammateurLegalSection = ({
               <div className="col-md-6">
                 <div className={styles.formGroup}>
                   <label className={styles.cardLabel}>SIRET</label>
-                  <p className="form-control-plaintext">{formatValue ? formatValue(structure.siret) : structure.siret || 'Non spécifié'}</p>
+                  <p className={`${styles.fieldValue} ${styles.cardValueCode}`}>
+                    {formatValue ? formatValue(structure.siret) : structure.siret || 'Non spécifié'}
+                  </p>
                 </div>
               </div>
               <div className="col-md-6">
                 <div className={styles.formGroup}>
                   <label className={styles.cardLabel}>N° TVA intracommunautaire</label>
-                  <p className="form-control-plaintext">{formatValue ? formatValue(structure.tva) : structure.tva || 'Non spécifié'}</p>
+                  <p className={`${styles.fieldValue} ${styles.cardValueCode}`}>
+                    {formatValue ? formatValue(structure.tva) : structure.tva || 'Non spécifié'}
+                  </p>
                 </div>
               </div>
             </div>

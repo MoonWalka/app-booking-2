@@ -34,6 +34,40 @@ L'application de gestion de booking pour concerts présentait plusieurs problèm
 
 **Solution** : Création des composants manquants avec des fonctionnalités de base pour permettre à l'application de démarrer correctement.
 
+## Composants du système
+
+### Composant LieuProgrammateurSection
+
+Le composant `LieuProgrammateurSection` est utilisé dans le formulaire de lieu pour permettre l'association d'un programmateur à un lieu. Ce composant fait partie de la structure modulaire des formulaires de l'application.
+
+**Fonctionnalités :**
+- Recherche de programmateurs avec suggestions dynamiques
+- Sélection d'un programmateur dans la liste des résultats
+- Affichage du programmateur sélectionné
+- Possibilité de retirer le programmateur associé
+
+**Intégration :**
+- Utilisé dans le composant `LieuForm` pour la section de recherche et sélection de programmateur
+- Exploite un hook personnalisé `useProgrammateurSearch` via la prop `programmateurSearch`
+
+**Structure du composant :**
+```jsx
+<LieuProgrammateurSection 
+  programmateurSearch={programmateurSearch} 
+/>
+```
+
+**Exemple d'utilisation :**
+```jsx
+// Dans LieuForm.js
+const programmateurSearch = useProgrammateurSearch();
+
+// Plus tard dans le rendu
+<LieuProgrammateurSection programmateurSearch={programmateurSearch} />
+```
+
+Ce composant suit le modèle de conception par composition, en déléguant la logique métier au hook `useProgrammateurSearch` et en se concentrant uniquement sur la présentation des données.
+
 ## État actuel de l'application
 
 ### Fonctionnalités opérationnelles

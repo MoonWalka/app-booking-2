@@ -2,18 +2,13 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      // Les alias suivants sont dépréciés et seront supprimés dans une future version
-      // Utiliser uniquement @/ pour tous les imports internes
       "@components/*": ["src/components/*"],
       "@hooks/*": ["src/hooks/*"],
       "@context/*": ["src/context/*"],
       "@utils/*": ["src/utils/*"],
-      "@styles/*": [
-        "src/styles/*"
-      ],
+      "@styles/*": ["src/styles/*"],
       "@services/*": ["src/services/*"],
       "@pages/*": ["src/pages/*"],
-      // Standard recommandé pour tous les imports internes
       "@/*": ["src/*"]
     },
     "checkJs": false,

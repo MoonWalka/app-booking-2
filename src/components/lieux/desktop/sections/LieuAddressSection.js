@@ -3,18 +3,19 @@ import Button from '@/components/ui/Button';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import styles from '../LieuForm.module.css';
 
-const LieuAddressSection = ({ lieu, handleChange, addressSearch }) => {
+const LieuAddressSection = ({ lieu, handleChange, addressSearch = {} }) => {
+  // Add default empty object to prevent destructuring errors
   const {
-    query,
-    setQuery,
-    suggestions,
-    isLoading,
-    handleSearch,
-    selectAddress,
-    geocodeCurrentAddress
-  } = addressSearch;
+    query = '',
+    setQuery = () => {},
+    suggestions = [],
+    isLoading = false,
+    handleSearch = () => {},
+    selectAddress = () => {},
+    geocodeCurrentAddress = () => {}
+  } = addressSearch || {};
 
-  const hasCoordinates = lieu.latitude && lieu.longitude;
+  const hasCoordinates = lieu?.latitude && lieu?.longitude;
   const mapPosition = hasCoordinates ? [lieu.latitude, lieu.longitude] : [46.603354, 1.888334]; // Centre de la France
 
   return (
@@ -56,7 +57,7 @@ const LieuAddressSection = ({ lieu, handleChange, addressSearch }) => {
             id="adresse"
             className={styles.formInput}
             name="adresse"
-            value={lieu.adresse}
+            value={lieu?.adresse || ''}
             onChange={handleChange}
             placeholder="Rue, numéro"
             required
@@ -69,7 +70,7 @@ const LieuAddressSection = ({ lieu, handleChange, addressSearch }) => {
             id="codePostal"
             className={styles.formInput}
             name="codePostal"
-            value={lieu.codePostal}
+            value={lieu?.codePostal || ''}
             onChange={handleChange}
             placeholder="Code postal"
             required
@@ -82,7 +83,7 @@ const LieuAddressSection = ({ lieu, handleChange, addressSearch }) => {
             id="ville"
             className={styles.formInput}
             name="ville"
-            value={lieu.ville}
+            value={lieu?.ville || ''}
             onChange={handleChange}
             placeholder="Ville"
             required
@@ -95,7 +96,7 @@ const LieuAddressSection = ({ lieu, handleChange, addressSearch }) => {
             id="pays"
             className={styles.formInput}
             name="pays"
-            value={lieu.pays}
+            value={lieu?.pays || ''}
             onChange={handleChange}
             placeholder="Pays"
             required
@@ -108,7 +109,7 @@ const LieuAddressSection = ({ lieu, handleChange, addressSearch }) => {
           type="button"
           variant="secondary"
           onClick={geocodeCurrentAddress}
-          disabled={!lieu.adresse || !lieu.ville || isLoading}
+          disabled={!lieu?.adresse || !lieu?.ville || isLoading}
         >
           <i className="bi bi-geo-alt"></i> Géolocaliser cette adresse
         </Button>

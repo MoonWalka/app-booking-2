@@ -20,6 +20,7 @@ import LieuOrganizerSection from './sections/LieuOrganizerSection';
 import LieuContactSection from './sections/LieuContactSection';
 import LieuInfoSection from './sections/LieuInfoSection';
 import { LieuConcertsSection } from './sections/LieuConcertsSection';
+import { LieuStructuresSection } from './sections/LieuStructuresSection';
 import DeleteLieuModal from './sections/DeleteLieuModal';
 
 // Import styles
@@ -212,6 +213,9 @@ const LieuDetails = () => {
 
           {/* Associated concerts section */}
           <LieuConcertsSection lieu={lieu} isEditing={isEditing} />
+          
+          {/* Associated structures section - New section */}
+          <LieuStructuresSection lieu={lieu} isEditing={isEditing} />
         </div>
       </div>
 

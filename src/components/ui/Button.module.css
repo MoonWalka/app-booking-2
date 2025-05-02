@@ -108,20 +108,30 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 0.5rem; /* Utilisation de gap pour un espacement cohérent */
 }
 
 .iconWrapper {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  line-height: 1;
 }
 
-.iconWrapper + .textContent {
+.textContent {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+
+/* On peut supprimer ces règles car on utilise gap maintenant */
+/* .iconWrapper + .textContent {
   margin-left: 0.5rem;
 }
 
 .textContent + .iconWrapper {
   margin-left: 0.5rem;
-}
+} */
 
 .iconOnly {
   display: flex;

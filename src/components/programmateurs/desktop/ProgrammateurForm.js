@@ -13,7 +13,7 @@ import ProgrammateurFormActions from '../sections/ProgrammateurFormActions';
 // Import des hooks personnalisés
 import useProgrammateurForm from '@/hooks/programmateurs/useProgrammateurForm';
 import useCompanySearch from '@/hooks/programmateurs/useCompanySearch';
-import useAddressSearch from '@/hooks/programmateurs/useAddressSearch';
+import { useAddressSearch } from '@/hooks/common';
 
 const ProgrammateurForm = ({ token, concertId, formLinkId, initialLieuData, onSubmitSuccess }) => {
   // États de base du formulaire

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Button, Card, Alert } from 'react-bootstrap';
+import { Form, Card, Alert } from 'react-bootstrap';
+import Button from '@/components/ui/Button';
 import styles from './ParametresNotifications.module.css';
 import { useParametres } from '@/context/ParametresContext';
 
@@ -138,7 +139,11 @@ const ParametresNotifications = () => {
           </Form.Group>
 
           <div className={styles.formActions}>
-            <Button type="submit" variant="primary">
+            <Button 
+              type="submit" 
+              variant="primary"
+              icon={<i className="bi bi-save"></i>}
+            >
               Enregistrer les préférences
             </Button>
           </div>

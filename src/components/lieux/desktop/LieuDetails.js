@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { db } from '@/firebaseInit';
 import Spinner from '@/components/common/Spinner';
+import Button from '@/components/ui/Button';
 
 // Import custom hooks
 import useLieuDetails from './hooks/useLieuDetails';
@@ -115,10 +116,13 @@ const LieuDetails = () => {
           <i className="bi bi-exclamation-triangle-fill me-2"></i>
           {error}
         </div>
-        <button className="btn btn-primary" onClick={() => navigate('/lieux')}>
-          <i className="bi bi-arrow-left me-2"></i>
+        <Button 
+          variant="primary" 
+          onClick={() => navigate('/lieux')}
+          icon={<i className="bi bi-arrow-left"></i>}
+        >
           Retour à la liste des lieux
-        </button>
+        </Button>
       </div>
     );
   }
@@ -131,10 +135,13 @@ const LieuDetails = () => {
           <i className="bi bi-exclamation-triangle-fill me-2"></i>
           Ce lieu n'existe pas ou n'a pas pu être chargé.
         </div>
-        <button className="btn btn-primary" onClick={() => navigate('/lieux')}>
-          <i className="bi bi-arrow-left me-2"></i>
+        <Button 
+          variant="primary" 
+          onClick={() => navigate('/lieux')}
+          icon={<i className="bi bi-arrow-left"></i>}
+        >
           Retour à la liste des lieux
-        </button>
+        </Button>
       </div>
     );
   }

@@ -13,6 +13,57 @@ import {
 import { db } from '@/firebaseInit';
 import { useNavigate } from 'react-router-dom';
 import { formatDateFr } from '@/utils/dateUtils';
+import { useEntitySearch } from '@/hooks/common/useEntitySearch';
+
+/**
+ * Fonctions utilitaires
+ */
+
+// Formater la date pour l'affichage
+const formatDate = (dateValue) => {
+  if (!dateValue) return 'Date non spécifiée';
+  
+  // Si c'est un timestamp Firestore
+  if (dateValue.seconds) {
+    return new Date(dateValue.seconds * 1000).toLocaleDateString('fr-FR');
+  }
+  
+  // Si c'est une chaîne de date
+  try {
+    return new Date(dateValue).toLocaleDateString('fr-FR');
+  } catch (e) {
+    return dateValue;
+  }
+};
+
+// Formater le montant
+const formatMontant = (montant) => {
+  if (!montant) return '0,00 €';
+  return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(montant);
+};
+
+// Vérifier si la date est passée
+const isDatePassed = (dateValue) => {
+  if (!dateValue) return false;
+  
+  const today = new Date();
+  const concertDate = dateValue.seconds ? 
+    new Date(dateValue.seconds * 1000) : 
+    new Date(dateValue);
+  
+  return concertDate < today;
+};
+
+// Fonction pour copier le lien dans le presse-papiers
+const copyToClipboard = (text) => {
+  navigator.clipboard.writeText(text)
+    .then(() => {
+      alert('Lien copié dans le presse-papiers !');
+    })
+    .catch(err => {
+      console.error('Erreur lors de la copie dans le presse-papiers:', err);
+    });
+};
 
 /**
  * Hook pour gérer les détails d'un concert
@@ -24,9 +75,6 @@ export const useConcertDetails = (id, location) => {
   
   // États pour les données
   const [concert, setConcert] = useState(null);
-  const [lieu, setLieu] = useState(null);
-  const [programmateur, setProgrammateur] = useState(null);
-  const [artiste, setArtiste] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   
@@ -57,9 +105,47 @@ export const useConcertDetails = (id, location) => {
     isValidated: false
   });
 
-  // Fonction pour charger les données du concert et des entités associées
-  const fetchConcert = async () => {
-    setLoading(true);
+  /**
+   * Utilisation des hooks communs pour la recherche d'entités
+   */
+  
+  // Hook pour la recherche de lieux
+  const lieuSearch = useEntitySearch({
+    entityType: 'lieux',
+    searchField: 'nom',
+    additionalSearchFields: ['ville', 'codePostal', 'adresse']
+  });
+
+  // Hook pour la recherche de programmateurs
+  const programmateurSearch = useEntitySearch({
+    entityType: 'programmateurs',
+    searchField: 'nom',
+    additionalSearchFields: ['structure', 'email']
+  });
+
+  // Hook pour la recherche d'artistes
+  const artisteSearch = useEntitySearch({
+    entityType: 'artistes',
+    searchField: 'nom',
+    additionalSearchFields: ['genre', 'description']
+  });
+
+  // Accesseurs pour les entités sélectionnées
+  const lieu = lieuSearch.selectedEntity;
+  const programmateur = programmateurSearch.selectedEntity;
+  const artiste = artisteSearch.selectedEntity;
+  
+  // Setters pour les entités sélectionnées
+  const setLieu = lieuSearch.setSelectedEntity;
+  const setProgrammateur = programmateurSearch.setSelectedEntity;
+  const setArtiste = artisteSearch.setSelectedEntity;
+
+  /**
+   * Sous-fonctions pour la récupération des données
+   */
+
+  // Récupération des données de base du concert
+  const fetchConcertData = async () => {
     try {
       const concertDoc = await getDoc(doc(db, 'concerts', id));
       if (concertDoc.exists()) {
@@ -87,108 +173,148 @@ export const useConcertDetails = (id, location) => {
           setInitialArtisteId(concertData.artisteId);
         }
         
-        // Récupérer les données du lieu
-        if (concertData.lieuId) {
-          const lieuDoc = await getDoc(doc(db, 'lieux', concertData.lieuId));
-          if (lieuDoc.exists()) {
-            const lieuData = {
-              id: lieuDoc.id,
-              ...lieuDoc.data()
-            };
-            setLieu(lieuData);
-          }
-        }
-        
-        // Récupérer les données du programmateur
-        if (concertData.programmateurId) {
-          const progDoc = await getDoc(doc(db, 'programmateurs', concertData.programmateurId));
-          if (progDoc.exists()) {
-            const progData = {
-              id: progDoc.id,
-              ...progDoc.data()
-            };
-            setProgrammateur(progData);
-          }
-        }
-        
-        // Récupérer les données de l'artiste
-        if (concertData.artisteId) {
-          const artisteDoc = await getDoc(doc(db, 'artistes', concertData.artisteId));
-          if (artisteDoc.exists()) {
-            const artisteData = {
-              id: artisteDoc.id,
-              ...artisteDoc.data()
-            };
-            setArtiste(artisteData);
-          }
-        }
-        
-        // Vérifier si un formulaire existe déjà pour ce concert
-        if (concertData.formId) {
-          try {
-            const formDoc = await getDoc(doc(db, 'formulaires', concertData.formId));
-            if (formDoc.exists()) {
-              const formDataObj = {
-                id: formDoc.id,
-                ...formDoc.data()
-              };
-              setFormData(formDataObj);
-              
-              // Mettre à jour le statut du formulaire
-              const hasData = formDataObj.programmateurData || 
-                (formDataObj.data && Object.keys(formDataObj.data).length > 0);
-              
-              setFormDataStatus({
-                exists: true,
-                isValidated: formDataObj.status === 'validated',
-                hasData: hasData
-              });
-            }
-          } catch (error) {
-            console.error('Erreur lors de la récupération du formulaire:', error);
-          }
-        } else {
-          // Si pas de formId, chercher dans la collection formulaires
-          const formsQuery = query(
-            collection(db, 'formulaires'), 
-            where('concertId', '==', id)
-          );
-          const formsSnapshot = await getDocs(formsQuery);
-          
-          if (!formsSnapshot.empty) {
-            const formDoc = formsSnapshot.docs[0];
-            const formDataObj = {
-              id: formDoc.id,
-              ...formDoc.data()
-            };
-            setFormData(formDataObj);
-            
-            // Mettre à jour le statut du formulaire
-            const hasData = formDataObj.programmateurData || 
-              (formDataObj.data && Object.keys(formDataObj.data).length > 0);
-            
-            setFormDataStatus({
-              exists: true,
-              isValidated: formDataObj.status === 'validated',
-              hasData: hasData
-            });
-            
-            // Mettre à jour le concert avec l'ID du formulaire
-            await updateDoc(doc(db, 'concerts', id), {
-              formId: formDoc.id
-            });
-          }
-        }
+        return concertData;
       } else {
         console.error('Concert non trouvé');
         navigate('/concerts');
+        return null;
       }
+    } catch (error) {
+      console.error('Erreur lors de la récupération des données du concert:', error);
+      return null;
+    }
+  };
+
+  // Récupération des données du lieu associé
+  const fetchLieuData = async (concertData) => {
+    if (!concertData || !concertData.lieuId) return;
+    
+    try {
+      const lieuDoc = await getDoc(doc(db, 'lieux', concertData.lieuId));
+      if (lieuDoc.exists()) {
+        const lieuData = {
+          id: lieuDoc.id,
+          ...lieuDoc.data()
+        };
+        setLieu(lieuData);
+      }
+    } catch (error) {
+      console.error('Erreur lors de la récupération des données du lieu:', error);
+    }
+  };
+
+  // Récupération des données du programmateur associé
+  const fetchProgrammateurData = async (concertData) => {
+    if (!concertData || !concertData.programmateurId) return;
+    
+    try {
+      const progDoc = await getDoc(doc(db, 'programmateurs', concertData.programmateurId));
+      if (progDoc.exists()) {
+        const progData = {
+          id: progDoc.id,
+          ...progDoc.data()
+        };
+        setProgrammateur(progData);
+      }
+    } catch (error) {
+      console.error('Erreur lors de la récupération des données du programmateur:', error);
+    }
+  };
+
+  // Récupération des données de l'artiste associé
+  const fetchArtisteData = async (concertData) => {
+    if (!concertData || !concertData.artisteId) return;
+    
+    try {
+      const artisteDoc = await getDoc(doc(db, 'artistes', concertData.artisteId));
+      if (artisteDoc.exists()) {
+        const artisteData = {
+          id: artisteDoc.id,
+          ...artisteDoc.data()
+        };
+        setArtiste(artisteData);
+      }
+    } catch (error) {
+      console.error('Erreur lors de la récupération des données de l\'artiste:', error);
+    }
+  };
+
+  // Récupération des données du formulaire associé
+  const fetchFormData = async (concertData) => {
+    try {
+      if (concertData.formId) {
+        // Cas 1: Le concert a un formId référencé
+        const formDoc = await getDoc(doc(db, 'formulaires', concertData.formId));
+        if (formDoc.exists()) {
+          updateFormDataState(formDoc);
+        }
+      } else {
+        // Cas 2: Recherche d'un formulaire associé au concert par son ID
+        const formsQuery = query(
+          collection(db, 'formulaires'), 
+          where('concertId', '==', id)
+        );
+        const formsSnapshot = await getDocs(formsQuery);
+        
+        if (!formsSnapshot.empty) {
+          const formDoc = formsSnapshot.docs[0];
+          updateFormDataState(formDoc);
+          
+          // Mise à jour du concert avec l'ID du formulaire
+          await updateDoc(doc(db, 'concerts', id), {
+            formId: formDoc.id
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Erreur lors de la récupération des données du formulaire:', error);
+    }
+  };
+
+  // Mise à jour des états liés au formulaire
+  const updateFormDataState = (formDoc) => {
+    const formDataObj = {
+      id: formDoc.id,
+      ...formDoc.data()
+    };
+    setFormData(formDataObj);
+    
+    // Déterminer si le formulaire contient des données
+    const hasData = formDataObj.programmateurData || 
+      (formDataObj.data && Object.keys(formDataObj.data).length > 0);
+    
+    setFormDataStatus({
+      exists: true,
+      isValidated: formDataObj.status === 'validated',
+      hasData: hasData
+    });
+  };
+
+  // Fonction principale pour charger toutes les données
+  const fetchConcert = async () => {
+    setLoading(true);
+    try {
+      const concertData = await fetchConcertData();
+      if (!concertData) return;
+      
+      // Chargement parallèle des données associées
+      await Promise.all([
+        fetchLieuData(concertData),
+        fetchProgrammateurData(concertData),
+        fetchArtisteData(concertData),
+        fetchFormData(concertData)
+      ]);
+      
     } catch (error) {
       console.error('Erreur lors de la récupération du concert:', error);
     } finally {
       setLoading(false);
     }
   };
+
+  /**
+   * Gestion du formulaire et des modifications
+   */
 
   // Changement de valeur dans le formulaire
   const handleChange = (e) => {
@@ -291,7 +417,7 @@ export const useConcertDetails = (id, location) => {
   };
 
   // Sauvegarde des modifications
-  const handleSubmit = async (e, selectedLieu, selectedProgrammateur, selectedArtiste) => {
+  const handleSubmit = async (e) => {
     if (e) e.preventDefault();
     
     if (!validateForm()) {
@@ -305,18 +431,18 @@ export const useConcertDetails = (id, location) => {
       // Créer l'objet de données du concert
       const concertData = {
         ...formState,
-        lieuId: selectedLieu?.id || null,
-        lieuNom: selectedLieu?.nom || null,
-        lieuAdresse: selectedLieu?.adresse || null,
-        lieuCodePostal: selectedLieu?.codePostal || null,
-        lieuVille: selectedLieu?.ville || null,
-        lieuCapacite: selectedLieu?.capacite || null,
+        lieuId: lieu?.id || null,
+        lieuNom: lieu?.nom || null,
+        lieuAdresse: lieu?.adresse || null,
+        lieuCodePostal: lieu?.codePostal || null,
+        lieuVille: lieu?.ville || null,
+        lieuCapacite: lieu?.capacite || null,
         
-        programmateurId: selectedProgrammateur?.id || null,
-        programmateurNom: selectedProgrammateur?.nom || null,
+        programmateurId: programmateur?.id || null,
+        programmateurNom: programmateur?.nom || null,
         
-        artisteId: selectedArtiste?.id || null,
-        artisteNom: selectedArtiste?.nom || null,
+        artisteId: artiste?.id || null,
+        artisteNom: artiste?.nom || null,
         
         updatedAt: new Date().toISOString()
       };
@@ -325,23 +451,23 @@ export const useConcertDetails = (id, location) => {
       await updateDoc(doc(db, 'concerts', id), concertData);
       
       // Mises à jour bidirectionnelles
-      if (selectedProgrammateur?.id || initialProgrammateurId) {
+      if (programmateur?.id || initialProgrammateurId) {
         await updateProgrammateurAssociation(
           id,
           concertData,
-          selectedProgrammateur?.id || null,
+          programmateur?.id || null,
           initialProgrammateurId,
-          selectedLieu
+          lieu
         );
       }
       
-      if (selectedArtiste?.id || initialArtisteId) {
+      if (artiste?.id || initialArtisteId) {
         await updateArtisteAssociation(
           id,
           concertData,
-          selectedArtiste?.id || null,
+          artiste?.id || null,
           initialArtisteId,
-          selectedLieu
+          lieu
         );
       }
       
@@ -351,16 +477,12 @@ export const useConcertDetails = (id, location) => {
         ...concertData
       });
       
-      setLieu(selectedLieu);
-      setProgrammateur(selectedProgrammateur);
-      setArtiste(selectedArtiste);
-      
       // Retour au mode vue
       setIsEditMode(false);
       
       // Mettre à jour les IDs initiaux pour la prochaine édition
-      setInitialProgrammateurId(selectedProgrammateur?.id || null);
-      setInitialArtisteId(selectedArtiste?.id || null);
+      setInitialProgrammateurId(programmateur?.id || null);
+      setInitialArtisteId(artiste?.id || null);
       
     } catch (error) {
       console.error('Erreur lors de l\'enregistrement du concert:', error);
@@ -439,6 +561,10 @@ export const useConcertDetails = (id, location) => {
     setIsEditMode(!isEditMode);
   };
 
+  /**
+   * Gestion du formulaire externe
+   */
+
   // Gestionnaire pour le formulaire généré
   const handleFormGenerated = async (formId, formUrl) => {
     console.log('Formulaire généré:', formId, formUrl);
@@ -455,68 +581,11 @@ export const useConcertDetails = (id, location) => {
       // Recharger les données du formulaire
       const formDoc = await getDoc(doc(db, 'formulaires', formId));
       if (formDoc.exists()) {
-        const formDataObj = {
-          id: formDoc.id,
-          ...formDoc.data()
-        };
-        setFormData(formDataObj);
-        
-        // Mettre à jour le statut du formulaire
-        setFormDataStatus({
-          exists: true,
-          isValidated: formDataObj.status === 'validated',
-          hasData: false
-        });
+        updateFormDataState(formDoc);
       }
     } catch (error) {
       console.error('Erreur lors de la mise à jour du concert:', error);
     }
-  };
-
-  // Fonction pour copier le lien dans le presse-papiers
-  const copyToClipboard = (text) => {
-    navigator.clipboard.writeText(text)
-      .then(() => {
-        alert('Lien copié dans le presse-papiers !');
-      })
-      .catch(err => {
-        console.error('Erreur lors de la copie dans le presse-papiers:', err);
-      });
-  };
-
-  // Formater la date pour l'affichage
-  const formatDate = (dateValue) => {
-    if (!dateValue) return 'Date non spécifiée';
-    
-    // Si c'est un timestamp Firestore
-    if (dateValue.seconds) {
-      return new Date(dateValue.seconds * 1000).toLocaleDateString('fr-FR');
-    }
-    
-    // Si c'est une chaîne de date
-    try {
-      return new Date(dateValue).toLocaleDateString('fr-FR');
-    } catch (e) {
-      return dateValue;
-    }
-  };
-
-  // Formater le montant
-  const formatMontant = (montant) => {
-    if (!montant) return '0,00 €';
-    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(montant);
-  };
-
-  // Vérifier si la date est passée
-  const isDatePassed = (dateValue) => {
-    if (!dateValue) return false;
-    
-    const today = new Date();
-    const concertDate = dateValue.seconds ? 
-      new Date(dateValue.seconds * 1000) : 
-      new Date(dateValue);
-    
-    return concertDate < today;
   };
 
   // Fonction pour obtenir les informations sur le statut et les actions requises
@@ -569,27 +638,42 @@ export const useConcertDetails = (id, location) => {
     }
   }, [id, navigate, location.search]);
 
+  // API publique du hook
   return {
+    // Données principales
     concert,
     lieu,
     programmateur,
     artiste,
     loading,
     isSubmitting,
+    
+    // États du formulaire
     formData,
     formDataStatus,
     showFormGenerator,
     setShowFormGenerator,
     generatedFormLink,
     setGeneratedFormLink,
+    
+    // Mode d'édition
     isEditMode,
     formState,
+    
+    // Recherche d'entités
+    lieuSearch,
+    programmateurSearch,
+    artisteSearch,
+    
+    // Fonctions de gestion
     handleChange,
     handleSubmit,
     handleDelete,
     toggleEditMode,
     validateForm,
     handleFormGenerated,
+    
+    // Fonctions utilitaires
     copyToClipboard,
     formatDate,
     formatMontant,

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Badge } from 'react-bootstrap';
+import Button from '@/components/ui/Button';
 import styles from './LieuHeader.module.css';
 
 /**
@@ -69,59 +70,62 @@ const LieuHeader = ({
       <div className={styles.actionButtons}>
         {isEditing ? (
           <>
-            <button 
+            <Button 
               onClick={onSave} 
-              className={`btn btn-success ${styles.actionBtn}`}
+              variant="success"
+              className={styles.actionBtn}
               disabled={isSubmitting}
+              icon={<i className="bi bi-check-circle"></i>}
             >
               {isSubmitting ? (
                 <>
                   <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                  <span className="btn-text">Enregistrement...</span>
+                  Enregistrement...
                 </>
               ) : (
-                <>
-                  <i className="bi bi-check-circle"></i>
-                  <span className="btn-text">Enregistrer</span>
-                </>
+                'Enregistrer'
               )}
-            </button>
+            </Button>
             
-            <button 
+            <Button 
               onClick={onCancel} 
-              className={`btn btn-danger ${styles.actionBtn}`}
+              variant="danger"
+              className={styles.actionBtn}
               disabled={isSubmitting}
+              icon={<i className="bi bi-x-circle"></i>}
             >
-              <i className="bi bi-x-circle"></i>
-              <span className="btn-text">Annuler</span>
-            </button>
+              Annuler
+            </Button>
             
-            <button 
+            <Button 
               onClick={onDelete} 
-              className={`btn btn-danger ${styles.actionBtn}`}
+              variant="danger"
+              className={styles.actionBtn}
               disabled={isSubmitting}
+              icon={<i className="bi bi-trash"></i>}
             >
-              <i className="bi bi-trash"></i>
-              <span className="btn-text">Supprimer</span>
-            </button>
+              Supprimer
+            </Button>
           </>
         ) : (
           <>
-            <button 
+            <Button 
               onClick={() => navigate('/lieux')} 
-              className={`btn btn-secondary ${styles.actionBtn}`}
+              variant="secondary"
+              className={styles.actionBtn}
+              icon={<i className="bi bi-arrow-left"></i>}
             >
-              <i className="bi bi-arrow-left"></i>
-              <span className="btn-text">Retour</span>
-            </button>
+              Retour
+            </Button>
             
-            <button 
+            <Button 
               onClick={onEdit} 
-              className={`btn btn-outline-primary ${styles.actionBtn}`}
+              variant="outline-primary"
+              className={styles.actionBtn}
+              icon={<i className="bi bi-pencil"></i>}
             >
-              <i className="bi bi-pencil"></i>
-              <span className="btn-text">Modifier</span>
-            </button>
+              Modifier
+            </Button>
           </>
         )}
       </div>

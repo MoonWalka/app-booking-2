@@ -1,9 +1,10 @@
-import React from 'react';
+import ActionButton from '../common/ActionButton';
 
-import styles from './ActionButton.module.css';
-
-const ActionButton = (props) => {
-  return <div className={styles.container}>ActionButton Placeholder</div>;
-};
+/**
+ * This file re-exports the ActionButton from the common directory.
+ * We're standardizing on a single ActionButton implementation.
+ * 
+ * @deprecated Use import from '../common/ActionButton' instead
+ */
 
 export default ActionButton;

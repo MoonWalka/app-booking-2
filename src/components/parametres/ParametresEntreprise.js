@@ -4,8 +4,7 @@ import styles from './ParametresEntreprise.module.css';
 
 // Import custom hooks
 import useEntrepriseForm from '@/hooks/parametres/useEntrepriseForm';
-import useCompanySearch from '@/hooks/parametres/useCompanySearch';
-import useAddressSearch from '@/hooks/parametres/useAddressSearch';
+import { useCompanySearch, useAddressSearch } from '@/hooks/common';
 
 // Import subcomponents
 import EntrepriseHeader from './sections/EntrepriseHeader';
@@ -43,8 +42,11 @@ const ParametresEntreprise = () => {
     searchResultsRef
   } = useCompanySearch();
 
-  // Address search hook
-  const addressSearch = useAddressSearch(formData, updateFormData);
+  // Address search hook - mise à jour pour utiliser le format d'options
+  const addressSearch = useAddressSearch({
+    formData,
+    updateFormData
+  });
 
   // Handle clicks outside of search results to close them
   useEffect(() => {

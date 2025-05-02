@@ -3,6 +3,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { Spinner, Alert, Tab, Nav } from 'react-bootstrap';
 import FormGenerator from '@/components/forms/FormGenerator';
 import styles from './ConcertDetails.module.css';
+import Button from '@/components/ui/Button';
 
 // Import des hooks personnalisés
 import { useConcertDetails } from '@/hooks/concerts/useConcertDetails';
@@ -182,12 +183,14 @@ const ConcertDetails = () => {
     return (
       <div className={styles.errorContainer}>
         <Alert variant="danger">Concert non trouvé</Alert>
-        <button 
-          className={styles.backButton}
+        <Button 
+          variant="primary"
           onClick={() => navigate('/concerts')}
+          icon={<i className="bi bi-arrow-left"></i>}
+          className={styles.backButton}
         >
           Retour à la liste
-        </button>
+        </Button>
       </div>
     );
   }

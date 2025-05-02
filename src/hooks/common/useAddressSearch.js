@@ -2,14 +2,25 @@ import { useState, useEffect, useRef } from 'react';
 import useLocationIQ from './useLocationIQ';
 
 /**
- * useAddressSearch - Hook personnalisé pour gérer la recherche et la sélection d'adresses
+ * useAddressSearch - Hook personnalisé consolidé pour gérer la recherche et la sélection d'adresses
  * Utilise l'API LocationIQ pour rechercher des adresses et gérer leur sélection
+ * Version consolidée qui fusionne les fonctionnalités des différentes implémentations
  * 
- * @param {Object} initialAddress - Adresse initiale (optionnel)
- * @param {Function} onAddressChange - Callback appelé quand l'adresse sélectionnée change (optionnel)
+ * @param {Object} options - Options pour le hook
+ * @param {Object} options.initialAddress - Adresse initiale (optionnel)
+ * @param {Function} options.onAddressChange - Callback appelé quand l'adresse change (optionnel)
+ * @param {Object} options.formData - Données du formulaire contenant l'adresse (optionnel)
+ * @param {Function} options.updateFormData - Fonction pour mettre à jour les données du formulaire (optionnel)
  * @returns {Object} - État et fonctions pour gérer la recherche et la sélection d'adresses
  */
-const useAddressSearch = (initialAddress = null, onAddressChange = null) => {
+const useAddressSearch = (options = {}) => {
+  const {
+    initialAddress = null,
+    onAddressChange = null,
+    formData = null, 
+    updateFormData = null
+  } = options;
+
   // État pour le terme de recherche
   const [searchTerm, setSearchTerm] = useState('');
   
@@ -24,12 +35,21 @@ const useAddressSearch = (initialAddress = null, onAddressChange = null) => {
   
   // État pour indiquer si une recherche est en cours
   const [isSearching, setIsSearching] = useState(false);
+
+  // État pour indiquer si le champ d'adresse est actif (pour le mode formData)
+  const [addressFieldActive, setAddressFieldActive] = useState(false);
   
   // Référence pour le menu déroulant des résultats
   const dropdownRef = useRef(null);
   
+  // Référence pour le champ d'adresse
+  const addressInputRef = useRef(null);
+  
+  // Référence pour le délai de debounce
+  const searchTimeoutRef = useRef(null);
+  
   // Hook pour utiliser l'API LocationIQ
-  const { searchAddress } = useLocationIQ();
+  const { searchAddress, error: apiError } = useLocationIQ();
 
   // Effet pour gérer les clics en dehors du menu déroulant
   useEffect(() => {
@@ -47,16 +67,27 @@ const useAddressSearch = (initialAddress = null, onAddressChange = null) => {
 
   // Effet pour déclencher la recherche lorsque le terme de recherche change
   useEffect(() => {
-    const delayDebounce = setTimeout(() => {
-      if (searchTerm.trim().length > 2) {
-        handleSearch();
-      } else if (searchTerm.trim().length === 0) {
-        setAddressResults([]);
-      }
-    }, 500);
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
 
-    return () => clearTimeout(delayDebounce);
-  }, [searchTerm]);
+    if ((searchTerm && searchTerm.trim().length > 2) || 
+        (formData?.adresse && formData.adresse.trim().length > 2 && addressFieldActive)) {
+      setIsSearching(true);
+      searchTimeoutRef.current = setTimeout(() => {
+        handleSearch();
+      }, 500);
+    } else {
+      setAddressResults([]);
+      setIsSearching(false);
+    }
+
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, [searchTerm, formData?.adresse, addressFieldActive]);
 
   // Effet pour notifier du changement d'adresse sélectionnée
   useEffect(() => {
@@ -69,11 +100,16 @@ const useAddressSearch = (initialAddress = null, onAddressChange = null) => {
    * Recherche des adresses via l'API LocationIQ
    */
   const handleSearch = async () => {
-    if (searchTerm.trim().length < 3) return;
+    // Détermine le terme de recherche selon le mode d'utilisation
+    const query = formData ? formData.adresse : searchTerm;
+    
+    if (!query || query.trim().length < 3) {
+      setIsSearching(false);
+      return;
+    }
 
-    setIsSearching(true);
     try {
-      const results = await searchAddress(searchTerm);
+      const results = await searchAddress(query);
       setAddressResults(results);
       setShowResults(true);
     } catch (error) {
@@ -89,9 +125,46 @@ const useAddressSearch = (initialAddress = null, onAddressChange = null) => {
    * @param {Object} address - L'adresse sélectionnée
    */
   const handleSelectAddress = (address) => {
-    setSelectedAddress(address);
+    if (formData && updateFormData) {
+      // Mode formulaire: extraction des composants d'adresse et mise à jour du formulaire
+      let codePostal = '';
+      let ville = '';
+      let adresse = '';
+      let pays = 'France';
+      
+      // Extract address components
+      if (address.address) {
+        // Extract postal code
+        codePostal = address.address.postcode || '';
+        
+        // Extract city
+        ville = address.address.city || address.address.town || address.address.village || '';
+        
+        // Extract country
+        pays = address.address.country || pays;
+        
+        // Build street address
+        const houseNumber = address.address.house_number || '';
+        const road = address.address.road || '';
+        adresse = `${houseNumber} ${road}`.trim();
+      }
+      
+      // Update form with address information
+      updateFormData({
+        adresse: adresse || address.display_name.split(',')[0],
+        codePostal,
+        ville,
+        pays,
+        latitude: address.lat,
+        longitude: address.lon
+      });
+    } else {
+      // Mode standard: mise à jour de l'adresse sélectionnée
+      setSelectedAddress(address);
+      setSearchTerm('');
+    }
+    
     setShowResults(false);
-    setSearchTerm('');
   };
 
   /**
@@ -152,6 +225,20 @@ const useAddressSearch = (initialAddress = null, onAddressChange = null) => {
     return parts.join(', ');
   };
 
+  // Retourne différentes interfaces selon le mode d'utilisation (formulaire ou standard)
+  if (formData && updateFormData) {
+    return {
+      addressResults,
+      isSearching,
+      addressFieldActive,
+      setAddressFieldActive,
+      addressInputRef,
+      dropdownRef,
+      handleSelectAddress,
+      apiError
+    };
+  }
+
   return {
     searchTerm,
     setSearchTerm,
@@ -162,10 +249,12 @@ const useAddressSearch = (initialAddress = null, onAddressChange = null) => {
     setShowResults,
     isSearching,
     dropdownRef,
+    addressInputRef,
     handleSearch,
     handleSelectAddress,
     handleRemoveAddress,
-    formatAddress
+    formatAddress,
+    apiError
   };
 };
 

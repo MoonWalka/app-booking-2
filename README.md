@@ -34,10 +34,19 @@ app-booking/
 ├── public/
 └── src/
     ├── components/
-    │   └── common/
-    │       └── Layout.js
+    │   ├── ui/           # Composants UI réutilisables (Button, Badge, etc.)
+    │   ├── common/       # Composants partagés (Layout, etc.)
+    │   └── [entity]/     # Composants spécifiques aux entités
+    │       ├── desktop/  # Version desktop
+    │       ├── mobile/   # Version mobile
+    │       └── sections/ # Sections de page
     ├── context/
     │   └── AuthContext.js
+    ├── hooks/
+    │   ├── common/       # Hooks partagés et standardisés
+    │   └── [entity]/     # Hooks spécifiques aux entités
+    ├── docs/             # Documentation interne
+    │   └── hooks/        # Documentation des standards pour les hooks
     ├── pages/
     │   ├── Dashboard.js
     │   ├── ConcertsPage.js
@@ -49,6 +58,20 @@ app-booking/
     ├── firebase.js
     └── index.js
 ```
+
+## Directives de développement
+
+### Hooks standardisés
+
+Depuis Mai 2025, les hooks de recherche d'adresse et d'entreprise ont été standardisés. Consultez la [documentation de standardisation des hooks](./src/docs/hooks/StandardisationHooks.md) pour plus de détails. Principes clés :
+
+- Les hooks partagés sont dans `/hooks/common/`
+- Importez toujours depuis `@/hooks/common` pour les hooks communs
+- Ne dupliquez pas la logique des hooks communs dans des hooks spécifiques
+
+### Composants UI
+
+Les composants UI réutilisables se trouvent dans `/components/ui/`.
 
 ## Technologies utilisées
 

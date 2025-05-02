@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Button from '@/components/ui/Button';
 
 // Imports modifiés de la branche refacto-structure-scriptshell - pour implémentation future
 {/* 
@@ -130,13 +131,15 @@ const LoginPage = () => {
                   />
                 </div>
                 <div className="d-grid">
-                  <button
+                  <Button
                     type="submit"
-                    className="tc-btn-primary"
+                    variant="primary"
                     disabled={loading}
+                    icon={loading ? null : <i className="bi bi-key"></i>}
+                    className="w-100"
                   >
                     {loading ? 'Connexion en cours...' : 'Se connecter'}
-                  </button>
+                  </Button>
                 </div>
               </form>
               <div className="mt-3 text-center">

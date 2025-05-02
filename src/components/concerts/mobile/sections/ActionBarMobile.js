@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from 'react-bootstrap';
+import Button from '@/components/ui/Button';
 import styles from './ActionBarMobile.module.css';
 
 /**
@@ -25,6 +25,7 @@ const ActionBarMobile = ({
             onClick={onCancel}
             disabled={isSubmitting}
             className={styles.cancelButton}
+            icon={<i className="bi bi-x-lg"></i>}
           >
             Annuler
           </Button>
@@ -33,6 +34,7 @@ const ActionBarMobile = ({
             onClick={onSave}
             disabled={isSubmitting || !canSave}
             className={styles.saveButton}
+            icon={isSubmitting ? null : <i className="bi bi-check-lg"></i>}
           >
             {isSubmitting ? (
               <>
@@ -40,10 +42,7 @@ const ActionBarMobile = ({
                 Sauvegarde...
               </>
             ) : (
-              <>
-                <i className="bi bi-check-lg me-1"></i>
-                Sauvegarder
-              </>
+              'Sauvegarder'
             )}
           </Button>
         </div>
@@ -54,16 +53,16 @@ const ActionBarMobile = ({
             variant="danger"
             onClick={onDelete}
             className={styles.deleteButton}
+            icon={<i className="bi bi-trash"></i>}
           >
-            <i className="bi bi-trash me-1"></i>
             Supprimer
           </Button>
           <Button
             variant="primary"
             onClick={onEdit}
             className={styles.editButton}
+            icon={<i className="bi bi-pencil"></i>}
           >
-            <i className="bi bi-pencil me-1"></i>
             Modifier
           </Button>
         </div>

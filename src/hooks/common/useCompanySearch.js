@@ -1,25 +1,33 @@
 import { useState, useRef, useEffect } from 'react';
 
 /**
- * Hook personnalisé pour la recherche d'entreprises via l'API Entreprise
+ * Hook personnalisé consolidé pour la recherche d'entreprises via l'API Entreprise
  * Permet de rechercher des entreprises par SIRET ou par nom
  * 
- * @param {Function} onCompanySelect - Callback appelé quand une entreprise est sélectionnée (optionnel)
+ * @param {Object} options - Options pour le hook
+ * @param {Function} options.onCompanySelect - Callback appelé quand une entreprise est sélectionnée (optionnel)
+ * @param {Object} options.initialData - Données initiales pour l'entreprise (optionnel)
  * @returns {Object} - État et fonctions pour gérer la recherche d'entreprises
  */
-const useCompanySearch = (onCompanySelect = null) => {
-  // Type de recherche: 'siret' ou 'name'
+const useCompanySearch = (options = {}) => {
+  const { onCompanySelect = null, initialData = null } = options;
+
+  // Type de recherche: 'manual', 'siret' ou 'name'
   const [searchType, setSearchType] = useState('manual');
   // Terme de recherche
   const [searchTerm, setSearchTerm] = useState('');
   // Résultats de recherche
   const [searchResults, setSearchResults] = useState([]);
+  // Entreprise sélectionnée
+  const [selectedCompany, setSelectedCompany] = useState(initialData);
   // État de chargement
   const [isSearchingCompany, setIsSearchingCompany] = useState(false);
   // Référence pour le cache des requêtes
   const requestCache = useRef({});
   // Référence pour le délai de debounce
   const searchTimeoutRef = useRef(null);
+  // Référence pour le menu déroulant des résultats
+  const searchResultsRef = useRef(null);
 
   // Effet pour gérer la recherche avec debounce
   useEffect(() => {
@@ -45,7 +53,30 @@ const useCompanySearch = (onCompanySelect = null) => {
     };
   }, [searchTerm, searchType]);
 
-  // Fonction de recherche d'entreprise
+  // Effet pour gérer les clics en dehors du menu déroulant
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchResultsRef.current && !searchResultsRef.current.contains(event.target)) {
+        setSearchResults([]);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  // Notification de l'entreprise sélectionnée
+  useEffect(() => {
+    if (onCompanySelect && selectedCompany) {
+      onCompanySelect(selectedCompany);
+    }
+  }, [selectedCompany, onCompanySelect]);
+
+  /**
+   * Fonction de recherche d'entreprise
+   */
   const searchCompany = async () => {
     try {
       // Construire la clé de cache
@@ -65,7 +96,7 @@ const useCompanySearch = (onCompanySelect = null) => {
         apiUrl = `https://recherche-entreprises.api.gouv.fr/search?q=${encodeURIComponent(searchTerm)}&per_page=5`;
       } else {
         // Recherche par nom
-        apiUrl = `https://recherche-entreprises.api.gouv.fr/search?q=${encodeURIComponent(searchTerm)}&per_page=5`;
+        apiUrl = `https://recherche-entreprises.api.gouv.fr/search?q=${encodeURIComponent(searchTerm)}&per_page=10`;
       }
       
       const response = await fetch(apiUrl);
@@ -115,12 +146,42 @@ const useCompanySearch = (onCompanySelect = null) => {
    * @param {Object} company - L'entreprise sélectionnée
    */
   const handleSelectCompany = (company) => {
+    setSelectedCompany(company);
+    
     if (onCompanySelect) {
       onCompanySelect(company);
     }
     
     setSearchTerm('');
     setSearchResults([]);
+  };
+
+  /**
+   * Réinitialiser la recherche et l'entreprise sélectionnée
+   */
+  const resetSearch = () => {
+    setSearchTerm('');
+    setSearchResults([]);
+    setSelectedCompany(null);
+    setSearchType('manual');
+  };
+
+  /**
+   * Formate les informations d'une entreprise pour l'affichage
+   * @param {Object} company - L'entreprise à formater
+   * @returns {Object} - Informations formatées
+   */
+  const formatCompanyInfo = (company) => {
+    if (!company) return null;
+    
+    return {
+      displayName: company.nom,
+      address: `${company.adresse}, ${company.codePostal} ${company.ville}`.trim(),
+      siretFormatted: company.siret ? company.siret.replace(/(\d{3})(?=\d)/g, '$1 ') : '',
+      apeInfo: company.codeAPE ? `${company.codeAPE} - ${company.libelleAPE}` : '',
+      statusClass: company.active ? 'text-success' : 'text-danger',
+      statusLabel: company.active ? 'Active' : 'Inactive'
+    };
   };
 
   return {
@@ -130,8 +191,13 @@ const useCompanySearch = (onCompanySelect = null) => {
     setSearchTerm,
     searchResults,
     isSearchingCompany,
+    selectedCompany,
+    setSelectedCompany,
+    searchResultsRef,
     handleSelectCompany,
-    searchCompany
+    searchCompany,
+    resetSearch,
+    formatCompanyInfo
   };
 };
 

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useLocationIQ } from '@/hooks/useLocationIQ';
+import { useLocationIQ } from '@/hooks/common';
 
 /**
  * Hook to manage lieu (venue) form state with address autocompletion

@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useLocationIQ } from '@/hooks/useLocationIQ';
+import { useState, useRef, useEffect } from 'react';
+import { useLocationIQ } from '@/hooks/common';
 
 /**
  * Custom hook for address search functionality using LocationIQ API

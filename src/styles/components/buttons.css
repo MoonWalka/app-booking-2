@@ -8,6 +8,15 @@ button {
   transition: var(--tc-transition);
 }
 
+/* Correctif pour l'alignement des icônes dans les boutons Bootstrap standard */
+.btn i {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  transform: translateY(-1px); /* Légère correction verticale pour un meilleur alignement */
+  line-height: 1;
+}
+
 .tc-btn {
   /* On garde les styles Bootstrap normaux pour les boutons avec la classe .btn */
 }

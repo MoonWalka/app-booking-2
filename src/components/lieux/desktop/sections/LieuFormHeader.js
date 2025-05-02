@@ -1,28 +1,24 @@
 import React from 'react';
-import styles from './LieuFormHeader.module.css';
+import Button from '@/components/ui/Button';
+import styles from '../LieuForm.module.css';
 
 const LieuFormHeader = ({ id, lieuNom, navigate }) => {
   const isNewLieu = id === 'nouveau';
+  const title = isNewLieu ? 'Ajouter un lieu' : `Modifier ${lieuNom || 'le lieu'}`;
 
   return (
-    <div className={styles.formHeaderContainer}>
-      <h2 className={styles.modernTitle}>
-        {isNewLieu ? 'Créer un nouveau lieu' : 'Modifier le lieu'}
-      </h2>
-      <div className={styles.breadcrumbContainer}>
-        <span 
-          className={styles.breadcrumbItem} 
-          onClick={() => navigate('/lieux')} 
-          role="button" 
-          tabIndex={0}
-        >
-          Lieux
-        </span>
-        <i className="bi bi-chevron-right"></i>
-        <span className={`${styles.breadcrumbItem} ${styles.active}`}>
-          {isNewLieu ? 'Nouveau lieu' : lieuNom}
-        </span>
+    <div className={styles.formHeader}>
+      <div className={styles.headerTitleContainer}>
+        <h2 className={styles.formTitle}>{title}</h2>
       </div>
+      <Button 
+        type="button"
+        variant="outline"
+        onClick={() => navigate('/lieux')}
+        icon="arrow-left"
+      >
+        Retour
+      </Button>
     </div>
   );
 };

@@ -1,60 +1,62 @@
 import React from 'react';
-import styles from './LieuInfoSection.module.css';
+import styles from '../LieuForm.module.css';
 
 const LieuInfoSection = ({ lieu, handleChange }) => {
+  const typeOptions = [
+    { value: '', label: 'Sélectionner un type' },
+    { value: 'salle', label: 'Salle de concert' },
+    { value: 'bar', label: 'Bar' },
+    { value: 'plein_air', label: 'Plein air' },
+    { value: 'theatre', label: 'Théâtre' },
+    { value: 'mjo', label: 'MJO/MJC' },
+    { value: 'autre', label: 'Autre' }
+  ];
+
   return (
-    <div className={styles.formCard}>
-      <div className={styles.cardHeader}>
-        <i className="bi bi-building"></i>
-        <h3>Informations principales</h3>
-      </div>
-      <div className={styles.cardBody}>
-        <div className="mb-3">
-          <label htmlFor="nom" className="form-label">
-            Nom du lieu <span className={styles.required}>*</span>
-          </label>
+    <div className={styles.formSection}>
+      <h3 className={styles.sectionTitle}>Informations générales</h3>
+      
+      <div className={styles.formGrid}>
+        <div className={styles.formGroup}>
+          <label htmlFor="nom" className={styles.formLabel}>Nom du lieu *</label>
           <input
-            type="text"
-            className="form-control"
             id="nom"
+            className={styles.formInput}
             name="nom"
             value={lieu.nom}
             onChange={handleChange}
+            placeholder="Nom du lieu"
             required
-            placeholder="Ex: Le Café des Artistes"
           />
         </div>
         
-        <div className="mb-3">
-          <label htmlFor="type" className="form-label">Type de lieu</label>
+        <div className={styles.formGroup}>
+          <label htmlFor="type" className={styles.formLabel}>Type de lieu</label>
           <select
-            className="form-select"
             id="type"
+            className={styles.formInput}
             name="type"
-            value={lieu.type || ''}
+            value={lieu.type}
             onChange={handleChange}
           >
-            <option value="">Sélectionnez un type</option>
-            <option value="bar">Bar</option>
-            <option value="festival">Festival</option>
-            <option value="salle">Salle</option>
-            <option value="plateau">Plateau</option>
-            <option value="autre">Autre</option>
+            {typeOptions.map(option => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
           </select>
         </div>
         
-        <div className="mb-3">
-          <label htmlFor="capacite" className="form-label">Capacité</label>
+        <div className={styles.formGroup}>
+          <label htmlFor="capacite" className={styles.formLabel}>Capacité</label>
           <input
-            type="text"
-            inputMode="numeric"
-            pattern="[0-9]*"
-            className="form-control"
             id="capacite"
+            className={styles.formInput}
             name="capacite"
             value={lieu.capacite}
             onChange={handleChange}
-            placeholder="Nombre maximum de personnes que le lieu peut accueillir"
+            placeholder="Nombre de personnes"
+            type="number"
           />
         </div>
       </div>

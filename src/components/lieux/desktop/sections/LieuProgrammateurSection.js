@@ -1,123 +1,68 @@
 import React from 'react';
-import styles from './LieuProgrammateurSection.module.css';
+import Button from '@/components/ui/Button';
+import styles from '../LieuForm.module.css';
 
 const LieuProgrammateurSection = ({ programmateurSearch }) => {
   const {
-    searchTerm,
-    setSearchTerm,
-    searchResults,
-    isSearching,
-    selectedProgrammateur,
-    dropdownRef,
-    handleSelectProgrammateur,
-    handleRemoveProgrammateur,
-    handleCreateProgrammateur
+    query,
+    setQuery,
+    programmateurs,
+    isLoading,
+    handleSearch,
+    selectProgrammateur,
+    removeProgrammateur
   } = programmateurSearch;
 
   return (
-    <div className={styles.formCard}>
-      <div className={styles.cardHeader}>
-        <i className="bi bi-person-badge"></i>
-        <h3>Programmateur</h3>
+    <div className={styles.formSection}>
+      <h3 className={styles.sectionTitle}>Programmateur associé</h3>
+      
+      <div className={styles.searchContainer}>
+        <input
+          type="text"
+          className={styles.searchInput}
+          placeholder="Rechercher un programmateur..."
+          value={query}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            handleSearch(e.target.value);
+          }}
+        />
+        {isLoading && <div className={styles.spinner}></div>}
+        
+        {programmateurs.length > 0 && (
+          <ul className={styles.searchSuggestions}>
+            {programmateurs.map(programmateur => (
+              <li 
+                key={programmateur.id}
+                onClick={() => selectProgrammateur(programmateur)}
+                className={styles.suggestionItem}
+              >
+                {programmateur.nom}
+                <span className={styles.suggestionSubtext}>
+                  {programmateur.structure || 'Aucune structure'}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
-      <div className={styles.cardBody}>
-        <div className="mb-3">
-          <label className="form-label">Associer un programmateur</label>
-          
-          {!selectedProgrammateur ? (
-            <div className={styles.programmateurSearchContainer} ref={dropdownRef}>
-              <div className="input-group">
-                <span className="input-group-text"><i className="bi bi-search"></i></span>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Rechercher un programmateur par nom..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-                <button
-                  type="button"
-                  className="btn btn-outline-secondary"
-                  onClick={handleCreateProgrammateur}
-                >
-                  Créer un programmateur
-                </button>
-              </div>
-              
-              {isSearching && (
-                <div className={`dropdown-menu show w-100 ${styles.dropdownMenu}`}>
-                  <div className="dropdown-item text-center">
-                    <div className="spinner-border spinner-border-sm text-primary" role="status">
-                      <span className="visually-hidden">Recherche en cours...</span>
-                    </div>
-                  </div>
-                </div>
-              )}
-              
-              {searchResults.length > 0 && (
-                <div className={`dropdown-menu show w-100 ${styles.dropdownMenu}`}>
-                  {searchResults.map(prog => (
-                    <div 
-                      key={prog.id} 
-                      className={`dropdown-item ${styles.programmateurItem}`}
-                      onClick={() => handleSelectProgrammateur(prog)}
-                    >
-                      <div className={styles.programmateurName}>{prog.nom}</div>
-                      <div className={styles.programmateurDetails}>
-                        {prog.structure && <span className={styles.programmateurStructure}>{prog.structure}</span>}
-                        {prog.email && <span className="programmateur-email">{prog.email}</span>}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-              
-              {searchTerm.length >= 2 && searchResults.length === 0 && !isSearching && (
-                <div className={`dropdown-menu show w-100 ${styles.dropdownMenu}`}>
-                  <div className="dropdown-item text-center text-muted">
-                    Aucun programmateur trouvé
-                  </div>
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className={styles.selectedProgrammateur}>
-              <div className={styles.programmateurCard}>
-                <div className={styles.programmateurInfo}>
-                  <span className={styles.programmateurName}>{selectedProgrammateur.nom}</span>
-                  {selectedProgrammateur.structure && (
-                    <span className={styles.programmateurStructure}>{selectedProgrammateur.structure}</span>
-                  )}
-                  <div className={styles.programmateurContacts}>
-                    {selectedProgrammateur.email && (
-                      <span className={styles.programmateurContactItem}>
-                        <i className="bi bi-envelope"></i> {selectedProgrammateur.email}
-                      </span>
-                    )}
-                    {selectedProgrammateur.telephone && (
-                      <span className={styles.programmateurContactItem}>
-                        <i className="bi bi-telephone"></i> {selectedProgrammateur.telephone}
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <button 
-                  type="button" 
-                  className="btn btn-sm btn-outline-danger" 
-                  onClick={handleRemoveProgrammateur}
-                  aria-label="Supprimer ce programmateur"
-                >
-                  <i className="bi bi-x-lg"></i>
-                </button>
-              </div>
-            </div>
-          )}
-          
-          <small className="form-text text-muted">
-            Tapez au moins 2 caractères pour rechercher un programmateur par nom.
-          </small>
+
+      {programmateurSearch.programmateurId && (
+        <div className={styles.selectedProgrammateur}>
+          <div className={styles.selectedProgrammateurInfo}>
+            <h4>{programmateurSearch.programmateurNom}</h4>
+          </div>
+          <Button 
+            type="button"
+            variant="danger"
+            size="small"
+            onClick={removeProgrammateur}
+          >
+            <i className="bi bi-x-circle"></i> Retirer
+          </Button>
         </div>
-      </div>
+      )}
     </div>
   );
 };

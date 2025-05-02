@@ -12,6 +12,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/firebaseInit';
 import { useNavigate } from 'react-router-dom';
+import { formatDateFr } from '@/utils/dateUtils';
 
 /**
  * Hook pour gérer les détails d'un concert
@@ -48,6 +49,12 @@ export const useConcertDetails = (id, location) => {
     statut: 'En attente',
     titre: '',
     notes: ''
+  });
+
+  // État pour le statut du formulaire
+  const [formDataStatus, setFormDataStatus] = useState({
+    exists: false,
+    isValidated: false
   });
 
   // Fonction pour charger les données du concert et des entités associées
@@ -121,9 +128,20 @@ export const useConcertDetails = (id, location) => {
           try {
             const formDoc = await getDoc(doc(db, 'formulaires', concertData.formId));
             if (formDoc.exists()) {
-              setFormData({
+              const formDataObj = {
                 id: formDoc.id,
                 ...formDoc.data()
+              };
+              setFormData(formDataObj);
+              
+              // Mettre à jour le statut du formulaire
+              const hasData = formDataObj.programmateurData || 
+                (formDataObj.data && Object.keys(formDataObj.data).length > 0);
+              
+              setFormDataStatus({
+                exists: true,
+                isValidated: formDataObj.status === 'validated',
+                hasData: hasData
               });
             }
           } catch (error) {
@@ -139,9 +157,20 @@ export const useConcertDetails = (id, location) => {
           
           if (!formsSnapshot.empty) {
             const formDoc = formsSnapshot.docs[0];
-            setFormData({
+            const formDataObj = {
               id: formDoc.id,
               ...formDoc.data()
+            };
+            setFormData(formDataObj);
+            
+            // Mettre à jour le statut du formulaire
+            const hasData = formDataObj.programmateurData || 
+              (formDataObj.data && Object.keys(formDataObj.data).length > 0);
+            
+            setFormDataStatus({
+              exists: true,
+              isValidated: formDataObj.status === 'validated',
+              hasData: hasData
             });
             
             // Mettre à jour le concert avec l'ID du formulaire
@@ -426,9 +455,17 @@ export const useConcertDetails = (id, location) => {
       // Recharger les données du formulaire
       const formDoc = await getDoc(doc(db, 'formulaires', formId));
       if (formDoc.exists()) {
-        setFormData({
+        const formDataObj = {
           id: formDoc.id,
           ...formDoc.data()
+        };
+        setFormData(formDataObj);
+        
+        // Mettre à jour le statut du formulaire
+        setFormDataStatus({
+          exists: true,
+          isValidated: formDataObj.status === 'validated',
+          hasData: false
         });
       }
     } catch (error) {
@@ -445,6 +482,78 @@ export const useConcertDetails = (id, location) => {
       .catch(err => {
         console.error('Erreur lors de la copie dans le presse-papiers:', err);
       });
+  };
+
+  // Formater la date pour l'affichage
+  const formatDate = (dateValue) => {
+    if (!dateValue) return 'Date non spécifiée';
+    
+    // Si c'est un timestamp Firestore
+    if (dateValue.seconds) {
+      return new Date(dateValue.seconds * 1000).toLocaleDateString('fr-FR');
+    }
+    
+    // Si c'est une chaîne de date
+    try {
+      return new Date(dateValue).toLocaleDateString('fr-FR');
+    } catch (e) {
+      return dateValue;
+    }
+  };
+
+  // Formater le montant
+  const formatMontant = (montant) => {
+    if (!montant) return '0,00 €';
+    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(montant);
+  };
+
+  // Vérifier si la date est passée
+  const isDatePassed = (dateValue) => {
+    if (!dateValue) return false;
+    
+    const today = new Date();
+    const concertDate = dateValue.seconds ? 
+      new Date(dateValue.seconds * 1000) : 
+      new Date(dateValue);
+    
+    return concertDate < today;
+  };
+
+  // Fonction pour obtenir les informations sur le statut et les actions requises
+  const getStatusInfo = () => {
+    if (!concert) return { message: '', actionNeeded: false };
+    
+    const isPastDate = isDatePassed(concert.date);
+    
+    switch (concert.statut) {
+      case 'contact':
+        if (!formData) return { message: 'Formulaire à envoyer', actionNeeded: true, action: 'form' };
+        if (formData && (!formData.programmateurData && (!formData.data || Object.keys(formData.data).length === 0))) 
+          return { message: 'Formulaire envoyé, en attente de réponse', actionNeeded: false };
+        if (formData && (formData.programmateurData || (formData.data && Object.keys(formData.data).length > 0)) && formData.status !== 'validated') 
+          return { message: 'Formulaire à valider', actionNeeded: true, action: 'validate_form' };
+        if (formData && formData.status === 'validated')
+          return { message: 'Contrat à préparer', actionNeeded: true, action: 'prepare_contract' };
+        return { message: 'Contact établi', actionNeeded: false };
+        
+      case 'preaccord':
+        if (formData && formData.status === 'validated')
+          return { message: 'Contrat à envoyer', actionNeeded: true, action: 'send_contract' };
+        return { message: 'Contrat à préparer', actionNeeded: true, action: 'contract' };
+        
+      case 'contrat':
+        return { message: 'Facture acompte à envoyer', actionNeeded: true, action: 'invoice' };
+        
+      case 'acompte':
+        return { message: 'En attente du concert', actionNeeded: false };
+        
+      case 'solde':
+        if (isPastDate) return { message: 'Concert terminé', actionNeeded: false };
+        return { message: 'Facture solde envoyée', actionNeeded: false };
+        
+      default:
+        return { message: 'Statut non défini', actionNeeded: false };
+    }
   };
 
   // Effet pour charger les données initiales
@@ -468,6 +577,7 @@ export const useConcertDetails = (id, location) => {
     loading,
     isSubmitting,
     formData,
+    formDataStatus,
     showFormGenerator,
     setShowFormGenerator,
     generatedFormLink,
@@ -480,7 +590,11 @@ export const useConcertDetails = (id, location) => {
     toggleEditMode,
     validateForm,
     handleFormGenerated,
-    copyToClipboard
+    copyToClipboard,
+    formatDate,
+    formatMontant,
+    isDatePassed,
+    getStatusInfo
   };
 };
 

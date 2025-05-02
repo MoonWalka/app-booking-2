@@ -181,6 +181,19 @@ const LieuDetails = () => {
             setAddressFieldActive={setAddressFieldActive}
           />
 
+          {/* Additional information section (created/updated) */}
+          <LieuInfoSection lieu={lieu} />
+        </div>
+
+        <div className={styles.rightColumn}>
+          {/* Contact information section */}
+          <LieuContactSection
+            lieu={lieu}
+            formData={formData}
+            isEditing={isEditing}
+            handleChange={handleChange}
+          />
+
           {/* Programmateur section */}
           <LieuOrganizerSection
             isEditing={isEditing}
@@ -196,19 +209,6 @@ const LieuDetails = () => {
             handleRemoveProgrammateur={handleRemoveProgrammateur}
             handleCreateProgrammateur={handleCreateProgrammateur}
           />
-        </div>
-
-        <div className={styles.rightColumn}>
-          {/* Contact information section */}
-          <LieuContactSection
-            lieu={lieu}
-            formData={formData}
-            isEditing={isEditing}
-            handleChange={handleChange}
-          />
-
-          {/* Additional information section (created/updated) */}
-          <LieuInfoSection lieu={lieu} />
 
           {/* Associated concerts section */}
           <LieuConcertsSection lieu={lieu} isEditing={isEditing} />

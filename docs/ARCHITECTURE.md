@@ -89,6 +89,17 @@ Les composants spécifiques à un type d'appareil sont organisés dans des dossi
 - `/desktop` : Composants optimisés pour les écrans larges
 - `/mobile` : Composants optimisés pour les écrans mobiles
 
+### Mode "En construction" pour les composants mobiles
+
+À partir du 3 mai 2025, les composants mobiles ont été temporairement mis en pause et remplacés par un composant uniforme "UnderConstruction" qui informe les utilisateurs que la version mobile est en cours de développement. Ce choix permet de :
+
+- Maintenir la structure responsive du projet
+- Informer clairement les utilisateurs de l'indisponibilité temporaire de la version mobile
+- Faciliter le développement futur des fonctionnalités mobiles
+- Unifier l'expérience utilisateur sur mobile
+
+Le composant `UnderConstruction` est implémenté dans `src/components/common/UnderConstruction.js` et est utilisé dans tous les composants mobiles principaux.
+
 ### Chargement conditionnel avec hooks
 
 Le hook `useResponsiveComponent` permet de charger dynamiquement le composant approprié :

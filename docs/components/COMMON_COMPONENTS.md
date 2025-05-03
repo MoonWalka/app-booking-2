@@ -205,6 +205,31 @@ function SearchResults({ results, query, resetSearch }) {
 }
 ```
 
+### UnderConstruction
+
+**But :** Afficher un message indiquant que la version mobile est en cours de développement
+
+**Props :** Aucun - Composant sans état
+
+**Dépendances :** 
+- Styles CSS inline
+
+**Exemple d'utilisation :**
+
+```jsx
+import UnderConstruction from '../components/common/UnderConstruction';
+
+function MobileComponent() {
+  return <UnderConstruction />;
+}
+```
+
+**Description :**
+Ce composant a été introduit le 3 mai 2025 pour remplacer temporairement tous les composants mobiles en développement. Il affiche un message clair avec une icône d'outils, un titre "Version mobile en construction" et un texte explicatif invitant les utilisateurs à utiliser la version desktop.
+
+**Implémentation :**
+Le composant est implémenté avec des styles CSS inline pour faciliter son intégration sans dépendances externes. Il utilise les icônes Bootstrap pour l'affichage de l'icône d'outils.
+
 ## Composants de notification
 
 ### AlertMessage

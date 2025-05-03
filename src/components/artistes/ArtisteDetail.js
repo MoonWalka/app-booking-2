@@ -1,18 +1,23 @@
 // src/components/artistes/ArtisteDetail.js
 import React from 'react';
-import { useResponsiveComponent } from '@/hooks/useResponsiveComponent';
+import { useParams } from 'react-router-dom';
+import { useResponsive } from '@/hooks/common/useResponsive'; // Utilisation du hook recommandé
 
 /**
- * Wrapper pour la page de détail d'un artiste qui affiche la version mobile ou desktop
- * selon la taille de l'écran
+ * Composant conteneur pour les détails d'un artiste
+ * Utilise le hook useResponsive pour afficher soit la version desktop, soit la version mobile
  */
-const ArtisteDetail = (props) => {
-  const ResponsiveComponent = useResponsiveComponent({
-    desktopPath: 'artistes/desktop/ArtisteDetail',
-    mobilePath: 'artistes/mobile/ArtisteDetail'
+const ArtisteDetail = () => {
+  const { id } = useParams();
+  const responsive = useResponsive();
+  
+  // Obtenir le composant approprié selon la taille de l'écran
+  const ArtisteView = responsive.getResponsiveComponent({
+    desktopPath: 'artistes/desktop/ArtisteView',
+    mobilePath: 'artistes/mobile/ArtisteView'
   });
   
-  return <ResponsiveComponent {...props} />;
+  return <ArtisteView id={id} />;
 };
 
 export default ArtisteDetail;

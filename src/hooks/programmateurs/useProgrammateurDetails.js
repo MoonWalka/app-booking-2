@@ -36,6 +36,7 @@ const useProgrammateurDetails = (id) => {
       siret: '',
       tva: ''
     },
+    structureId: '', // Nouvel ajout : ID de la structure associée
     concertsAssocies: []
   });
 
@@ -71,6 +72,7 @@ const useProgrammateurDetails = (id) => {
               siret: progData.siret || '',
               tva: progData.tva || ''
             },
+            structureId: progData.structureId || '', // Récupération de l'ID de la structure
             concertsAssocies: progData.concertsAssocies || []
           });
         } else {
@@ -111,6 +113,7 @@ const useProgrammateurDetails = (id) => {
           siret: programmateur.siret || '',
           tva: programmateur.tva || ''
         },
+        structureId: programmateur.structureId || '', // Réinitialisation de l'ID de la structure
         concertsAssocies: programmateur.concertsAssocies || []
       });
     }
@@ -165,6 +168,9 @@ const useProgrammateurDetails = (id) => {
         flattenedData[`structure${key.charAt(0).toUpperCase() + key.slice(1)}`] = formData.structure[key];
       });
       
+      // Keep or update structureId
+      flattenedData.structureId = formData.structureId;
+      
       // Add update timestamp
       flattenedData.updatedAt = serverTimestamp();
       
@@ -179,6 +185,29 @@ const useProgrammateurDetails = (id) => {
         id,
         ...flattenedData
       });
+      
+      // Si une structure est associée et a un ID, mettre à jour la référence bidirectionnelle
+      if (formData.structureId) {
+        try {
+          const structureRef = doc(db, 'structures', formData.structureId);
+          const structureDoc = await getDoc(structureRef);
+          
+          if (structureDoc.exists()) {
+            const structureData = structureDoc.data();
+            const programmateursList = structureData.programmateurs || [];
+            
+            // Ajouter ce programmateur à la liste des programmateurs de la structure si pas déjà présent
+            if (!programmateursList.includes(id)) {
+              await updateDoc(structureRef, {
+                programmateurs: [...programmateursList, id]
+              });
+            }
+          }
+        } catch (error) {
+          console.error('Erreur lors de la mise à jour de la structure associée:', error);
+          // On continue quand même car l'erreur n'est pas bloquante pour l'utilisateur
+        }
+      }
       
       // Exit edit mode
       setIsEditing(false);
@@ -195,6 +224,26 @@ const useProgrammateurDetails = (id) => {
   const handleDelete = async () => {
     if (window.confirm('Êtes-vous sûr de vouloir supprimer ce programmateur ?')) {
       try {
+        // Si une structure est associée, supprimer la référence au programmateur
+        if (programmateur.structureId) {
+          try {
+            const structureRef = doc(db, 'structures', programmateur.structureId);
+            const structureDoc = await getDoc(structureRef);
+            
+            if (structureDoc.exists()) {
+              const structureData = structureDoc.data();
+              const programmateurs = structureData.programmateurs || [];
+              
+              // Filtrer ce programmateur de la liste
+              await updateDoc(structureRef, {
+                programmateurs: programmateurs.filter(progId => progId !== id)
+              });
+            }
+          } catch (error) {
+            console.error('Erreur lors de la mise à jour de la structure associée:', error);
+          }
+        }
+        
         await deleteDoc(doc(db, 'programmateurs', id));
         navigate('/programmateurs');
       } catch (error) {

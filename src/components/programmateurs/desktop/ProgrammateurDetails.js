@@ -12,6 +12,7 @@ import ProgrammateurAddressSection from './ProgrammateurAddressSection';
 import ProgrammateurLegalSection from './ProgrammateurLegalSection';
 import ProgrammateurContactSection from './ProgrammateurContactSection';
 import ProgrammateurLieuxSection from './ProgrammateurLieuxSection';
+import ProgrammateurStructuresSection from './ProgrammateurStructuresSection';
 import DeleteProgrammateurModal from './DeleteProgrammateurModal';
 
 // Import common components
@@ -111,6 +112,10 @@ const ProgrammateurDetails = () => {
           <ProgrammateurLegalSection
             programmateur={programmateur}
             isEditing={false}
+          />
+          
+          <ProgrammateurStructuresSection
+            programmateur={programmateur}
           />
           
           <ProgrammateurLieuxSection

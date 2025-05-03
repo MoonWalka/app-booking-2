@@ -200,3 +200,154 @@ const concertData = {
 ## Conclusion
 
 L'application a été partiellement corrigée et est maintenant fonctionnelle pour la création de lieux et de programmateurs. Cependant, des problèmes persistent avec la création de concerts, ce qui empêche de tester complètement le flux de travail. Les corrections apportées ont permis de résoudre les problèmes d'imports Firebase directs et d'améliorer la gestion du format de date, mais d'autres investigations sont nécessaires pour résoudre tous les problèmes.
+
+# Refactorisation de la documentation (Mai 2025)
+
+## Objectifs et justification
+
+La documentation du projet TourCraft était initialement centralisée dans un unique fichier `PROJECT_DOC.md`, ce qui posait plusieurs problèmes :
+- Difficulté à naviguer dans un document très long (plus de 200 lignes)
+- Complexité pour trouver rapidement des informations spécifiques
+- Maintenance difficile lors de la mise à jour de sections spécifiques
+- Manque de modularité empêchant l'organisation par domaines fonctionnels
+
+Une refactorisation complète de la documentation a donc été entreprise pour répondre à ces problèmes.
+
+## Structure de documentation adoptée
+
+La documentation a été restructurée selon les principes suivants :
+1. **Organisation par domaine fonctionnel** : Séparation des documents selon les grandes fonctionnalités du système
+2. **Hiérarchie de dossiers claire** : Création d'une structure de dossiers reflétant l'architecture du code
+3. **Navigation croisée** : Ajout de liens entre documents pour faciliter l'exploration
+4. **Point d'entrée centralisé** : Un fichier README.md principal servant de "table des matières"
+
+### Nouvelle structure de dossiers
+
+```
+docs/
+├── README.md                        # Page d'accueil avec introduction et navigation
+├── ARCHITECTURE.md                  # Vue d'ensemble de l'architecture
+├── DOCUMENTATION_CORRECTIONS.md     # Document des corrections et améliorations
+├── components/                      # Documentation des composants
+│   ├── COMPONENTS.md                # Vue d'ensemble des composants
+│   ├── UI_COMPONENTS.md             # Documentation des composants UI
+│   ├── COMMON_COMPONENTS.md         # Documentation des composants communs
+│   ├── LAYOUT_COMPONENTS.md         # Documentation des composants de mise en page
+│   ├── FORM_COMPONENTS.md           # Documentation des composants de formulaires
+│   └── PDF_COMPONENTS.md            # Documentation des composants PDF
+├── hooks/                           # Documentation des hooks
+│   ├── HOOKS.md                     # Vue d'ensemble des hooks
+│   ├── COMMON_HOOKS.md              # Documentation des hooks communs
+│   ├── CONCERT_HOOKS.md             # Documentation des hooks liés aux concerts
+│   ├── CONTRAT_HOOKS.md             # Documentation des hooks liés aux contrats
+│   └── ARTISTE_HOOKS.md             # Documentation des hooks liés aux artistes
+├── contexts/                        # Documentation des contextes
+│   └── CONTEXTS.md                  # Documentation des contextes React
+├── services/                        # Documentation des services
+│   └── SERVICES.md                  # Documentation des services d'API 
+├── utils/                           # Documentation des utilitaires
+│   └── UTILS.md                     # Documentation des fonctions utilitaires
+└── workflows/                       # Documentation des flux de travail
+    ├── WORKFLOWS.md                 # Vue d'ensemble des flux de travail
+    ├── CONCERT_WORKFLOW.md          # Flux de travail des concerts
+    ├── CONTRAT_WORKFLOW.md          # Flux de travail des contrats
+    └── ASSOCIATION_WORKFLOW.md      # Flux de travail des associations entre entités
+```
+
+## Détail des actions réalisées
+
+1. **Création de la structure de dossiers** : Établissement d'une arborescence logique pour organiser les différents aspects de la documentation
+2. **Découpage du fichier PROJECT_DOC.md** : Division du contenu en sections thématiques et migration vers les fichiers appropriés
+3. **Mise à jour des liens** : Ajout de liens de navigation entre les documents pour faciliter l'exploration
+4. **Enrichissement du contenu** : Ajout d'informations manquantes, d'exemples et de clarifications dans certaines sections
+5. **Suppression du fichier source** : Après vérification complète de la migration, suppression de l'ancien fichier `PROJECT_DOC.md`
+6. **Mise à jour du README principal** : Configuration du fichier README.md comme point d'entrée central avec liens vers toutes les sections
+
+## Avantages de la nouvelle structure
+
+1. **Navigation facilitée** : L'utilisateur peut rapidement accéder aux informations recherchées via la table des matières ou les liens de navigation
+2. **Maintenance simplifiée** : La mise à jour d'un aspect spécifique ne nécessite de modifier qu'un seul fichier
+3. **Évolutivité** : La structure modulaire permet d'ajouter facilement de nouvelles sections sans perturber l'ensemble
+4. **Cohérence** : L'organisation de la documentation reflète l'architecture du code, facilitant la compréhension
+5. **Collaboration** : Plusieurs développeurs peuvent travailler simultanément sur différentes sections de la documentation
+
+## Recommandations pour les prochaines étapes
+
+1. **Automatisation de la documentation** : Envisager l'utilisation d'outils comme JSDoc pour générer automatiquement la documentation des API
+2. **Illustrations** : Ajouter des diagrammes et captures d'écran pour faciliter la compréhension visuelle
+3. **Exemples de code** : Enrichir la documentation avec plus d'exemples d'utilisation concrets
+4. **Maintenir la navigation croisée** : Lors de l'ajout de nouveaux documents, veiller à maintenir les liens de navigation entre sections
+5. **Standard de documentation** : Établir un template standard pour assurer l'uniformité des nouveaux documents créés
+
+Cette refactorisation de la documentation s'inscrit dans une démarche d'amélioration continue de la maintenabilité et de l'accessibilité du projet TourCraft, facilitant l'intégration de nouveaux développeurs et la compréhension globale du système.
+
+# Analyse des composants à documenter
+
+Ce document identifie les composants et sous-composants de l'application qui mériteraient une documentation améliorée, classés par priorité et par domaine fonctionnel.
+
+## Composants prioritaires à documenter
+
+### 1. Composants de relation bidirectionnelle
+
+Ces composants sont cruciaux car ils gèrent les associations entre différentes entités du système et garantissent l'intégrité des données.
+
+- **`StructureInfoSection`** : Ce composant gère l'association entre programmateurs et structures mais n'est que très sommairement documenté. Il faudrait détailler :
+  - Le mécanisme de recherche et sélection d'une structure existante
+  - Le processus d'association bidirectionnelle
+  - La gestion des champs en lecture seule lorsqu'une structure est associée
+  - La validation des données
+
+- **Autres composants d'association** à documenter de manière similaire :
+  - `CompanySearchSection` (association avec entreprises)
+  - `LieuInfoSection` (association avec lieux)
+  - Composants équivalents dans les formulaires d'artistes et concerts
+
+### 2. Architecture responsive multi-device
+
+Le projet utilise une architecture séparée pour les versions mobile et desktop, mais cette approche n'est pas suffisamment documentée :
+
+- **Structure de dossiers** : Explication du pattern `/desktop` et `/mobile` et comment les composants sont conditionnellement chargés
+- **Hooks de responsive design** : Documentation du fonctionnement de `useIsMobile` et `useResponsiveComponent`
+- **Stratégie de partage de code** entre versions desktop et mobile
+
+### 3. Composants de validation des formulaires
+
+La validation des formulaires est critique pour l'intégrité des données mais manque de documentation :
+
+- **Composants dans `/validation`** : Documenter l'approche de validation, les règles métier et les retours utilisateur
+- **Schémas de validation** : Documenter les schémas Formik/Yup et leur lien avec le modèle de données
+- **Gestion des erreurs** : Documenter comment les erreurs sont propagées et affichées
+
+## Documentation par domaine fonctionnel
+
+### Domaine Programmateurs
+
+- **`ProgrammateurForm.js`** : Documenter la structure du formulaire, ses sections et le flux de données
+- **`ProgrammateurDetails.js`** : Expliquer le pattern d'affichage des détails et les actions disponibles
+- **`sections/`** : Documenter le rôle de chaque section et leurs interactions
+
+### Domaine Structures
+
+- **`StructureDetails.js`** : Documenter l'affichage des programmateurs associés et autres relations
+- **Composants core/** : Documenter les composants de base réutilisés dans différentes vues
+
+### Domaine Contrats
+
+Les composants liés aux contrats semblent complexes et nécessitent une documentation détaillée :
+- **Génération de PDF** : Documenter le workflow complet de création de contrat
+- **Templates de contrat** : Expliquer le système de templates et personnalisation
+
+### Domaine Lieux
+
+- **Composants de géolocalisation** : Documentation de l'intégration avec les services de géolocalisation
+- **Affichage cartographique** : Documentation des composants d'affichage de cartes
+
+## Recommandations pour l'amélioration de la documentation
+
+1. **Documentation dans le code** : Ajouter des commentaires JSDoc à tous les composants clés
+2. **Documentation de l'architecture** : Créer un schéma des relations entre composants par domaine
+3. **Guides par fonctionnalité** : Créer des guides d'utilisation pour les fonctionnalités complexes
+4. **Documentation des hooks personnalisés** : Documenter tous les hooks custom et leur utilisation
+5. **Documentation des flux de données** : Créer des diagrammes montrant les flux de données entre composants et services
+
+Cette analyse devrait servir de base pour établir un plan d'amélioration progressive de la documentation du projet.

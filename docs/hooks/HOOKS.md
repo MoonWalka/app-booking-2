@@ -18,6 +18,9 @@ Hooks dédiés à la génération et à la gestion des contrats, incluant les te
 ### [Hooks pour les artistes](ARTISTE_HOOKS.md)
 Hooks pour la gestion des artistes, incluant la recherche et le filtrage.
 
+### [Hooks pour les programmateurs](PROGRAMMATEUR_HOOKS.md)
+Hooks pour la gestion des programmateurs, incluant les détails, la liste et les relations avec les concerts.
+
 ### [Hooks pour les paramétrages](PARAMETRE_HOOKS.md)
 Hooks pour la gestion des paramètres de l'application et des informations d'entreprise.
 
@@ -31,3 +34,4 @@ Hooks pour la gestion des paramètres de l'application et des informations d'ent
 ## Navigation
 - [Retour à l'accueil](../README.md)
 - [Voir les hooks communs](COMMON_HOOKS.md)
+- [Voir les hooks pour programmateurs](PROGRAMMATEUR_HOOKS.md)

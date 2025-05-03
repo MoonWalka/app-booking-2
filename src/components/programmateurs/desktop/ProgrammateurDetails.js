@@ -1,22 +1,13 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import styles from './ProgrammateurDetails.module.css';
-
-// Import custom hooks
-import useProgrammateurDetails from '@/hooks/programmateurs/useProgrammateurDetails';
-
-// Import component modules
-import ProgrammateurHeader from './ProgrammateurHeader';
-import ProgrammateurGeneralInfo from './ProgrammateurGeneralInfo';
-import ProgrammateurAddressSection from './ProgrammateurAddressSection';
-import ProgrammateurLegalSection from './ProgrammateurLegalSection';
+import { Container, Row, Col, Button } from 'react-bootstrap';
+import { useProgrammateurDetails } from '@/hooks/programmateurs';
 import ProgrammateurContactSection from './ProgrammateurContactSection';
-import ProgrammateurLieuxSection from './ProgrammateurLieuxSection';
-import ProgrammateurStructuresSection from './ProgrammateurStructuresSection';
-import DeleteProgrammateurModal from './DeleteProgrammateurModal';
-
-// Import common components
-import Spinner from '@/components/common/Spinner';
+import ProgrammateurLegalSection from './ProgrammateurLegalSection';
+import ProgrammateurConcertsSection from './ProgrammateurConcertsSection';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import ErrorMessage from '@/components/ui/ErrorMessage';
+import styles from './ProgrammateurDetails.module.css';
 
 const ProgrammateurDetails = () => {
   const { id } = useParams();
@@ -25,111 +16,121 @@ const ProgrammateurDetails = () => {
     loading, 
     error, 
     isEditing, 
-    setIsEditing,
-    formData,
+    toggleEditMode, 
+    formData, 
+    setFormData, 
     handleChange,
     handleSubmit,
     handleDelete,
-    isSubmitting
+    isSubmitting,
+    formatValue,
+    structureCreated
   } = useProgrammateurDetails(id);
-
+  
   if (loading) {
-    return <Spinner message="Chargement des données..." contentOnly={true} />;
+    return <LoadingSpinner />;
   }
-
+  
   if (error) {
-    return <div className={styles.alertWrapper}>{error}</div>;
+    return <ErrorMessage message={error} />;
   }
-
+  
+  if (!programmateur) {
+    return <ErrorMessage message="Programmateur introuvable" />;
+  }
+  
   return (
-    <div className={styles.container}>
-      <ProgrammateurHeader
-        programmateur={programmateur}
-        isEditing={isEditing}
-        setIsEditing={setIsEditing}
-        handleSubmit={handleSubmit}
-        handleDelete={handleDelete}
-        isSubmitting={isSubmitting}
-      />
+    <Container className={styles.programmateurDetails}>
+      <div className={styles.header}>
+        <h2>
+          {programmateur.nom}
+          {programmateur.fonction && (
+            <span className={styles.fonction}> - {programmateur.fonction}</span>
+          )}
+        </h2>
+        <div className={styles.actions}>
+          {isEditing ? (
+            <>
+              <Button 
+                variant="primary" 
+                onClick={handleSubmit}
+                disabled={isSubmitting}
+                className={styles.actionButton}
+              >
+                {isSubmitting ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Enregistrement...
+                  </>
+                ) : (
+                  <>
+                    <i className="bi bi-check-lg me-2"></i>
+                    Enregistrer les modifications
+                  </>
+                )}
+              </Button>
+              <Button 
+                variant="outline-secondary" 
+                onClick={toggleEditMode}
+                disabled={isSubmitting}
+                className={styles.actionButton}
+              >
+                <i className="bi bi-x-lg me-2"></i>
+                Annuler
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button 
+                variant="outline-primary" 
+                onClick={toggleEditMode}
+                className={styles.actionButton}
+              >
+                <i className="bi bi-pencil me-2"></i>
+                Modifier
+              </Button>
+              <Button 
+                variant="outline-danger" 
+                onClick={handleDelete}
+                className={styles.actionButton}
+              >
+                <i className="bi bi-trash me-2"></i>
+                Supprimer
+              </Button>
+            </>
+          )}
+        </div>
+      </div>
       
-      {isEditing ? (
-        // Edit Mode
-        <form onSubmit={handleSubmit}>
+      <Row className="mt-4">
+        <Col md={5}>
           <ProgrammateurContactSection
-            formData={formData}
-            handleChange={handleChange}
-            isEditing={true}
-          />
-          
-          <ProgrammateurLegalSection
-            formData={formData}
-            handleChange={handleChange}
-            isEditing={true}
-          />
-          
-          <ProgrammateurLieuxSection
             programmateur={programmateur}
-            isEditing={true}
+            formData={formData}
+            handleChange={handleChange}
+            isEditing={isEditing}
+            formatValue={formatValue}
+          />
+        </Col>
+        <Col md={7}>
+          <ProgrammateurLegalSection
+            programmateur={programmateur}
+            formData={formData}
+            handleChange={handleChange}
+            isEditing={isEditing}
+            formatValue={formatValue}
+            structureCreated={structureCreated}
           />
           
-          <div className={styles.formActions}>
-            <button
-              type="button"
-              className="btn btn-outline-secondary"
-              onClick={() => setIsEditing(false)}
-              disabled={isSubmitting}
-            >
-              <i className="bi bi-x-circle me-2"></i>
-              Annuler
-            </button>
-            <button
-              type="submit"
-              className="btn btn-primary"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? (
-                <>
-                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                  Enregistrement...
-                </>
-              ) : (
-                <>
-                  <i className="bi bi-check-circle me-2"></i>
-                  Enregistrer les modifications
-                </>
-              )}
-            </button>
+          <div className="mt-4">
+            <ProgrammateurConcertsSection
+              concertsAssocies={programmateur.concertsAssocies || []}
+              isEditing={false}
+            />
           </div>
-        </form>
-      ) : (
-        // View Mode
-        <>
-          <ProgrammateurContactSection
-            programmateur={programmateur}
-            isEditing={false}
-          />
-          
-          <ProgrammateurLegalSection
-            programmateur={programmateur}
-            isEditing={false}
-          />
-          
-          <ProgrammateurStructuresSection
-            programmateur={programmateur}
-          />
-          
-          <ProgrammateurLieuxSection
-            programmateur={programmateur}
-            isEditing={false}
-          />
-        </>
-      )}
-      
-      <DeleteProgrammateurModal
-        programmateur={programmateur}
-        handleDelete={handleDelete}
-      />
-    </div>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

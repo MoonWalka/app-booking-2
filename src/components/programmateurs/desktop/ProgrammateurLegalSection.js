@@ -1,251 +1,204 @@
 import React from 'react';
+import { Form, Row, Col, Badge } from 'react-bootstrap';
 import styles from './ProgrammateurLegalSection.module.css';
 
-const ProgrammateurLegalSection = ({
-  programmateur,
-  formData,
-  handleChange,
-  isEditing,
-  formatValue
+const ProgrammateurLegalSection = ({ 
+  programmateur = {}, 
+  formData = {}, 
+  handleChange = () => {}, 
+  isEditing = false,
+  formatValue = (val) => val,
+  structureCreated = false
 }) => {
-  // Get structure info from programmateur when in view mode
-  const structure = isEditing ? null : {
-    raisonSociale: programmateur?.structure || '',
-    type: programmateur?.structureType || '',
-    adresse: programmateur?.structureAdresse || '',
-    codePostal: programmateur?.structureCodePostal || '',
-    ville: programmateur?.structureVille || '',
-    pays: programmateur?.structurePays || 'France',
-    siret: programmateur?.siret || '',
-    tva: programmateur?.tva || ''
-  };
-
-  // Fonction pour formater le type de structure
-  const formatStructureType = (type) => {
-    switch(type) {
-      case 'association': return 'Association';
-      case 'mairie': return 'Mairie / Collectivité';
-      case 'entreprise': return 'Entreprise';
-      case 'auto-entrepreneur': return 'Auto-entrepreneur';
-      default: return type || '';
-    }
-  };
+  // Determine if there's a structure linked
+  const hasStructure = isEditing 
+    ? !!formData?.structureId 
+    : !!programmateur?.structureId;
 
   return (
-    <div className={styles.cardWrapper}>
-      <div className={styles.cardHeader}>
-        <i className="bi bi-building text-primary"></i>
-        <h5 className="mb-0">Structure juridique</h5>
+    <div className={styles.legalSection}>
+      <div className={styles.sectionHeader}>
+        <h3>Informations juridiques</h3>
+        {hasStructure && (
+          <Badge bg="info" className={styles.structureBadge}>
+            <i className="bi bi-link-45deg me-1"></i>
+            Structure associée
+          </Badge>
+        )}
       </div>
-      <div className={styles.cardBody}>
+
+      {structureCreated && (
+        <div className="alert alert-success mb-3" role="alert">
+          <i className="bi bi-check-circle me-2"></i>
+          Structure créée et associée avec succès ! Ces informations sont maintenant disponibles dans l'espace Structures.
+        </div>
+      )}
+      
+      <div className={styles.sectionContent}>
         {isEditing ? (
-          // Edit mode
-          <>
-            {/* Première ligne: Raison sociale et Type */}
-            <div className="row mb-4">
-              <div className="col-md-7">
-                <div className={styles.formGroup}>
-                  <label htmlFor="structure.raisonSociale" className={styles.cardLabel}>Raison sociale</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="structure.raisonSociale"
+          // Edit Mode
+          <Form>
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label htmlFor="structureRaisonSociale">Raison sociale</Form.Label>
+                  <Form.Control
+                    id="structureRaisonSociale"
                     name="structure.raisonSociale"
-                    value={formData.structure.raisonSociale}
+                    type="text"
+                    value={formData?.structure?.raisonSociale || ''}
                     onChange={handleChange}
-                    placeholder="Ex: Association Culturelle XYZ"
+                    placeholder="Nom de l'organisation"
                   />
-                </div>
-              </div>
-              <div className="col-md-5">
-                <div className={styles.formGroup}>
-                  <label htmlFor="structure.type" className={styles.cardLabel}>Type de structure</label>
-                  <select
-                    className="form-select"
-                    id="structure.type"
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label htmlFor="structureType">Type de structure</Form.Label>
+                  <Form.Select
+                    id="structureType"
                     name="structure.type"
-                    value={formData.structure.type}
+                    value={formData?.structure?.type || ''}
                     onChange={handleChange}
                   >
-                    <option value="">Sélectionnez un type</option>
+                    <option value="">Sélectionner un type</option>
                     <option value="association">Association</option>
-                    <option value="mairie">Mairie / Collectivité</option>
-                    <option value="entreprise">Entreprise</option>
-                    <option value="auto-entrepreneur">Auto-entrepreneur</option>
+                    <option value="sarl">SARL</option>
+                    <option value="eurl">EURL</option>
+                    <option value="sas">SAS</option>
+                    <option value="collectivite">Collectivité territoriale</option>
                     <option value="autre">Autre</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            {/* Adresse complète */}
-            <div className={styles.formGroup}>
-              <label htmlFor="structure.adresse" className={styles.cardLabel}>Adresse complète</label>
-              <input
-                type="text"
-                className="form-control"
-                id="structure.adresse"
-                name="structure.adresse"
-                value={formData.structure.adresse}
-                onChange={handleChange}
-                placeholder="Numéro et nom de rue"
-              />
-            </div>
-
-            {/* Code postal, Ville, Pays */}
-            <div className="row mb-4">
-              <div className="col-md-4">
-                <div className={styles.formGroup}>
-                  <label htmlFor="structure.codePostal" className={styles.cardLabel}>Code postal</label>
-                  <input
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+            </Row>
+            
+            <Row>
+              <Col md={12}>
+                <Form.Group className="mb-3">
+                  <Form.Label htmlFor="structureAdresse">Adresse</Form.Label>
+                  <Form.Control
+                    id="structureAdresse"
+                    name="structure.adresse"
                     type="text"
-                    className="form-control"
-                    id="structure.codePostal"
+                    value={formData?.structure?.adresse || ''}
+                    onChange={handleChange}
+                    placeholder="Adresse complète"
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            
+            <Row>
+              <Col md={4}>
+                <Form.Group className="mb-3">
+                  <Form.Label htmlFor="structureCodePostal">Code postal</Form.Label>
+                  <Form.Control
+                    id="structureCodePostal"
                     name="structure.codePostal"
-                    value={formData.structure.codePostal}
-                    onChange={handleChange}
-                    placeholder="Ex: 75001"
-                  />
-                </div>
-              </div>
-              <div className="col-md-5">
-                <div className={styles.formGroup}>
-                  <label htmlFor="structure.ville" className={styles.cardLabel}>Ville</label>
-                  <input
                     type="text"
-                    className="form-control"
-                    id="structure.ville"
+                    value={formData?.structure?.codePostal || ''}
+                    onChange={handleChange}
+                    placeholder="Code postal"
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={8}>
+                <Form.Group className="mb-3">
+                  <Form.Label htmlFor="structureVille">Ville</Form.Label>
+                  <Form.Control
+                    id="structureVille"
                     name="structure.ville"
-                    value={formData.structure.ville}
-                    onChange={handleChange}
-                    placeholder="Ex: Paris"
-                  />
-                </div>
-              </div>
-              <div className="col-md-3">
-                <div className={styles.formGroup}>
-                  <label htmlFor="structure.pays" className={styles.cardLabel}>Pays</label>
-                  <input
                     type="text"
-                    className="form-control"
-                    id="structure.pays"
+                    value={formData?.structure?.ville || ''}
+                    onChange={handleChange}
+                    placeholder="Ville"
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label htmlFor="structurePays">Pays</Form.Label>
+                  <Form.Control
+                    id="structurePays"
                     name="structure.pays"
-                    value={formData.structure.pays}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* SIRET et TVA */}
-            <div className="row">
-              <div className="col-md-6">
-                <div className={styles.formGroup}>
-                  <label htmlFor="structure.siret" className={styles.cardLabel}>SIRET</label>
-                  <input
                     type="text"
-                    className={`form-control ${styles.cardValueCode}`}
-                    id="structure.siret"
+                    value={formData?.structure?.pays || 'France'}
+                    onChange={handleChange}
+                    placeholder="Pays"
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label htmlFor="structureSiret">SIRET</Form.Label>
+                  <Form.Control
+                    id="structureSiret"
                     name="structure.siret"
-                    value={formData.structure.siret}
-                    onChange={handleChange}
-                    placeholder="Ex: 123 456 789 00012"
-                  />
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div className={styles.formGroup}>
-                  <label htmlFor="structure.tva" className={styles.cardLabel}>
-                    N° TVA intracommunautaire <span className={styles.optionalText}>(facultatif)</span>
-                  </label>
-                  <input
                     type="text"
-                    className={`form-control ${styles.cardValueCode}`}
-                    id="structure.tva"
-                    name="structure.tva"
-                    value={formData.structure.tva}
+                    value={formData?.structure?.siret || ''}
                     onChange={handleChange}
-                    placeholder="Ex: FR123456789"
+                    placeholder="Numéro SIRET"
                   />
-                </div>
-              </div>
-            </div>
-          </>
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label htmlFor="structureTva">TVA Intracommunautaire</Form.Label>
+                  <Form.Control
+                    id="structureTva"
+                    name="structure.tva"
+                    type="text"
+                    value={formData?.structure?.tva || ''}
+                    onChange={handleChange}
+                    placeholder="Numéro de TVA"
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+          </Form>
         ) : (
-          // View mode
-          <>
-            <div className="row mb-4">
-              <div className="col-md-7">
-                <div className={styles.formGroup}>
-                  <label className={styles.cardLabel}>Raison sociale</label>
-                  <p className={`${styles.fieldValue} ${styles.fieldValueHighlight}`}>
-                    {formatValue ? formatValue(structure.raisonSociale) : structure.raisonSociale || 'Non spécifié'}
-                  </p>
-                </div>
-              </div>
-              <div className="col-md-5">
-                <div className={styles.formGroup}>
-                  <label className={styles.cardLabel}>Type de structure</label>
-                  <p className={styles.fieldValue}>
-                    {formatStructureType(structure.type) || 'Non spécifié'}
-                  </p>
-                </div>
-              </div>
+          // View Mode
+          <div className={styles.infoGrid}>
+            <div className={styles.infoGroup}>
+              <p className={styles.infoLabel}>Raison sociale</p>
+              <p className={styles.infoValue}>{formatValue(programmateur?.structure)}</p>
             </div>
-
-            <div className={styles.formSection}>
-              <label className={styles.cardLabel}>Adresse complète</label>
-              <p className={styles.fieldValue}>
-                {formatValue ? formatValue(structure.adresse) : structure.adresse || 'Non spécifié'}
-              </p>
+            <div className={styles.infoGroup}>
+              <p className={styles.infoLabel}>Type de structure</p>
+              <p className={styles.infoValue}>{formatValue(programmateur?.structureType)}</p>
             </div>
-
-            <div className="row mb-4">
-              <div className="col-md-4">
-                <div className={styles.formGroup}>
-                  <label className={styles.cardLabel}>Code postal</label>
-                  <p className={styles.fieldValue}>
-                    {formatValue ? formatValue(structure.codePostal) : structure.codePostal || 'Non spécifié'}
-                  </p>
-                </div>
-              </div>
-              <div className="col-md-5">
-                <div className={styles.formGroup}>
-                  <label className={styles.cardLabel}>Ville</label>
-                  <p className={styles.fieldValue}>
-                    {formatValue ? formatValue(structure.ville) : structure.ville || 'Non spécifié'}
-                  </p>
-                </div>
-              </div>
-              <div className="col-md-3">
-                <div className={styles.formGroup}>
-                  <label className={styles.cardLabel}>Pays</label>
-                  <p className={styles.fieldValue}>
-                    {formatValue ? formatValue(structure.pays) : structure.pays || 'Non spécifié'}
-                  </p>
-                </div>
-              </div>
+            <div className={styles.infoGroup}>
+              <p className={styles.infoLabel}>Adresse</p>
+              <p className={styles.infoValue}>{formatValue(programmateur?.structureAdresse)}</p>
             </div>
-
-            <div className="row">
-              <div className="col-md-6">
-                <div className={styles.formGroup}>
-                  <label className={styles.cardLabel}>SIRET</label>
-                  <p className={`${styles.fieldValue} ${styles.cardValueCode}`}>
-                    {formatValue ? formatValue(structure.siret) : structure.siret || 'Non spécifié'}
-                  </p>
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div className={styles.formGroup}>
-                  <label className={styles.cardLabel}>N° TVA intracommunautaire</label>
-                  <p className={`${styles.fieldValue} ${styles.cardValueCode}`}>
-                    {formatValue ? formatValue(structure.tva) : structure.tva || 'Non spécifié'}
-                  </p>
-                </div>
-              </div>
+            <div className={styles.infoGroup}>
+              <p className={styles.infoLabel}>Code postal</p>
+              <p className={styles.infoValue}>{formatValue(programmateur?.structureCodePostal)}</p>
             </div>
-          </>
+            <div className={styles.infoGroup}>
+              <p className={styles.infoLabel}>Ville</p>
+              <p className={styles.infoValue}>{formatValue(programmateur?.structureVille)}</p>
+            </div>
+            <div className={styles.infoGroup}>
+              <p className={styles.infoLabel}>Pays</p>
+              <p className={styles.infoValue}>{formatValue(programmateur?.structurePays || 'France')}</p>
+            </div>
+            <div className={styles.infoGroup}>
+              <p className={styles.infoLabel}>SIRET</p>
+              <p className={styles.infoValue}>{formatValue(programmateur?.structureSiret)}</p>
+            </div>
+            <div className={styles.infoGroup}>
+              <p className={styles.infoLabel}>TVA Intracommunautaire</p>
+              <p className={styles.infoValue}>{formatValue(programmateur?.structureTva)}</p>
+            </div>
+          </div>
         )}
       </div>
     </div>

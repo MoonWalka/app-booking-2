@@ -302,6 +302,90 @@ function DeleteConfirmationModal({ open, onClose, onConfirm, itemName }) {
 }
 ```
 
+### LoadingSpinner
+
+Le composant LoadingSpinner affiche un indicateur de chargement avec un message optionnel.
+
+#### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `message` | `string` | `'Chargement en cours...'` | Message à afficher sous l'indicateur de chargement |
+
+#### Exemple d'utilisation
+
+```jsx
+import { LoadingSpinner } from '../components/ui/LoadingSpinner';
+
+function DataLoadingSection() {
+  return (
+    <div className="data-container">
+      {isLoading ? (
+        <LoadingSpinner message="Chargement des données..." />
+      ) : (
+        <DataTable data={data} />
+      )}
+    </div>
+  );
+}
+```
+
+### ErrorMessage
+
+Le composant ErrorMessage affiche un message d'erreur avec une icône d'alerte.
+
+#### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `message` | `string` | `'Une erreur est survenue.'` | Message d'erreur à afficher |
+| `variant` | `'danger'`\|`'warning'`\|`'info'` | `'danger'` | Style visuel du message d'erreur |
+
+#### Exemple d'utilisation
+
+```jsx
+import { ErrorMessage } from '../components/ui/ErrorMessage';
+
+function DataFetchingComponent() {
+  return (
+    <div className="data-container">
+      {error ? (
+        <ErrorMessage message={`Impossible de charger les données: ${error.message}`} />
+      ) : (
+        <DataTable data={data} />
+      )}
+    </div>
+  );
+}
+```
+
+## Composants spécifiques
+
+### ProgrammateurConcertsSection
+
+Le composant ProgrammateurConcertsSection affiche une liste de concerts associés à un programmateur.
+
+#### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `concertsAssocies` | `array` | `[]` | Liste des concerts associés au programmateur |
+
+#### Exemple d'utilisation
+
+```jsx
+import { ProgrammateurConcertsSection } from '../components/programmateurs/desktop/ProgrammateurConcertsSection';
+
+function ProgrammateurDetails({ programmateur }) {
+  return (
+    <div className="programmateur-details">
+      {/* Autres sections du programmateur */}
+      <ProgrammateurConcertsSection concertsAssocies={programmateur.concerts} />
+    </div>
+  );
+}
+```
+
 ## Bonnes pratiques d'utilisation
 
 ### Composition des composants

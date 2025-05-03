@@ -8,7 +8,7 @@ import styles from './CompanySearchSection.module.css';
  */
 const CompanySearchSection = ({ 
   searchCompany, 
-  companyResults, 
+  companyResults = [], // Valeur par défaut pour éviter les erreurs
   isSearching, 
   selectedCompany, 
   setSelectedCompany 
@@ -87,7 +87,7 @@ const CompanySearchSection = ({
               </div>
             </Form>
 
-            {companyResults.length > 0 && (
+            {companyResults && companyResults.length > 0 && (
               <div className={styles.resultsContainer}>
                 <h4 className={styles.resultsTitle}>Résultats de recherche</h4>
                 <ul className={styles.resultsList}>

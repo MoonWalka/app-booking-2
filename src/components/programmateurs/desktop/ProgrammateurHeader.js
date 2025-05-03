@@ -19,11 +19,11 @@ const ProgrammateurHeader = ({
         <div className={styles.breadcrumb}>
           <a href="#" onClick={(e) => { e.preventDefault(); navigate('/programmateurs'); }} className={styles.breadcrumbItem}>Programmateurs</a>
           <i className={`bi bi-chevron-right ${styles.breadcrumbDivider}`}></i>
-          <span className={styles.breadcrumbItem}>{programmateur?.nom}</span>
+          <span className={styles.breadcrumbItem}>Détails</span>
         </div>
         <h2 className={styles.headerTitle}>
-          {programmateur?.nom}
-          {programmateur?.structure && <span className="badge bg-light text-dark ms-2 fs-6">{programmateur.structure}</span>}
+          Fiche Programmateur
+          {/* Nom du programmateur supprimé car informations déjà présentes dans les fiches ci-dessous */}
         </h2>
       </div>
       

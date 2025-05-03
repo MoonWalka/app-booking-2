@@ -2,15 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { Form, Row, Col, Button, Dropdown } from 'react-bootstrap';
 import { collection, query, where, getDocs, limit, doc, getDoc } from 'firebase/firestore';
 import { db } from '@/firebaseInit';
+import structureService from '@/services/structureService';
 import styles from './StructureInfoSection.module.css';
 
 /**
  * StructureInfoSection - Section contenant les informations sur la structure du programmateur
+ * Permet également de rechercher et sélectionner une structure existante
  */
 const StructureInfoSection = ({ 
-  formik, 
-  touched, 
-  errors, 
+  formik = {}, // Valeur par défaut pour éviter les erreurs
+  touched = {}, 
+  errors = {}, 
   isReadOnly = false 
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -18,6 +20,20 @@ const StructureInfoSection = ({
   const [showResults, setShowResults] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const [selectedStructure, setSelectedStructure] = useState(null);
+
+  // S'assurer que formik.values existe, sinon initialiser avec une structure vide
+  const formikValues = formik.values || { 
+    structure: { 
+      raisonSociale: '',
+      type: '',
+      adresse: '',
+      codePostal: '',
+      ville: '',
+      siret: '',
+      tva: ''
+    },
+    structureId: ''
+  };
 
   // Rechercher une structure existante
   const searchStructure = async () => {
@@ -65,7 +81,7 @@ const StructureInfoSection = ({
   // Charger les données d'une structure si un ID est déjà présent
   useEffect(() => {
     const loadStructure = async () => {
-      if (formik.values.structureId) {
+      if (formik && formik.values && formik.values.structureId) {
         try {
           const structureDoc = await getDoc(doc(db, 'structures', formik.values.structureId));
           if (structureDoc.exists()) {
@@ -85,7 +101,7 @@ const StructureInfoSection = ({
     };
     
     loadStructure();
-  }, [formik.values.structureId]);
+  }, [formik?.values?.structureId]);
 
   // Sélectionner une structure dans la liste de recherche
   const handleSelectStructure = (structure) => {
@@ -94,24 +110,37 @@ const StructureInfoSection = ({
     setSearchTerm(structure.nom || structure.raisonSociale || '');
     
     // Mettre à jour les données du formulaire
-    formik.setFieldValue('structure.nom', structure.nom || structure.raisonSociale || '');
-    formik.setFieldValue('structure.type', structure.type || '');
-    formik.setFieldValue('structure.adresse', structure.adresse || '');
-    formik.setFieldValue('structure.codePostal', structure.codePostal || '');
-    formik.setFieldValue('structure.ville', structure.ville || '');
-    formik.setFieldValue('structure.siret', structure.siret || '');
-    formik.setFieldValue('structure.ape', structure.ape || '');
-    
-    // Stocker l'ID de la structure pour l'association
-    formik.setFieldValue('structureId', structure.id);
+    if (formik && formik.setFieldValue) {
+      // Mettre à jour les champs informatifs
+      formik.setFieldValue('structure.raisonSociale', structure.nom || structure.raisonSociale || '');
+      formik.setFieldValue('structure.type', structure.type || '');
+      formik.setFieldValue('structure.adresse', structure.adresse || '');
+      formik.setFieldValue('structure.codePostal', structure.codePostal || '');
+      formik.setFieldValue('structure.ville', structure.ville || '');
+      formik.setFieldValue('structure.siret', structure.siret || '');
+      formik.setFieldValue('structure.tva', structure.tva || '');
+      
+      // Stocker l'ID de la structure pour l'association
+      formik.setFieldValue('structureId', structure.id);
+    }
   };
 
   // Effacer la structure sélectionnée
   const handleClearStructure = () => {
     setSelectedStructure(null);
     setSearchTerm('');
-    formik.setFieldValue('structureId', '');
+    if (formik && formik.setFieldValue) {
+      formik.setFieldValue('structureId', '');
+    }
   };
+
+  // Accéder aux valeurs de structure de manière sécurisée
+  const structureValues = formikValues.structure || {};
+  const touchedStructure = touched?.structure || {};
+  const errorsStructure = errors?.structure || {};
+
+  // Déterminer si le formulaire est en mode édition ou lecture seule
+  const isFormReadOnly = isReadOnly || (selectedStructure !== null);
 
   return (
     <div className={styles.structureInfoSection}>
@@ -169,12 +198,6 @@ const StructureInfoSection = ({
                 ) : (
                   <div className={styles.noResults}>
                     Aucune structure trouvée
-                    <div className={styles.createNew}>
-                      <a href="/structures/nouvelle" target="_blank" rel="noopener noreferrer">
-                        <i className="bi bi-plus-lg me-1"></i>
-                        Créer une nouvelle structure
-                      </a>
-                    </div>
                   </div>
                 )}
               </Dropdown.Menu>
@@ -196,21 +219,21 @@ const StructureInfoSection = ({
       <Row>
         <Col md={6}>
           <Form.Group className="mb-3">
-            <Form.Label htmlFor="structureName">Raison sociale *</Form.Label>
+            <Form.Label htmlFor="structureRaisonSociale">Raison sociale *</Form.Label>
             <Form.Control
-              id="structureName"
-              name="structure.nom"
+              id="structureRaisonSociale"
+              name="structure.raisonSociale"
               type="text"
-              value={formik.values.structure.nom}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              isInvalid={touched?.structure?.nom && errors?.structure?.nom}
-              disabled={isReadOnly || selectedStructure !== null}
+              value={structureValues.raisonSociale || ''}
+              onChange={formik.handleChange || (() => {})}
+              onBlur={formik.handleBlur || (() => {})}
+              isInvalid={touchedStructure.raisonSociale && errorsStructure.raisonSociale}
+              disabled={isFormReadOnly}
               placeholder="Nom de la structure"
               className={styles.formInput}
             />
             <Form.Control.Feedback type="invalid">
-              {errors?.structure?.nom}
+              {errorsStructure.raisonSociale}
             </Form.Control.Feedback>
           </Form.Group>
         </Col>
@@ -221,10 +244,10 @@ const StructureInfoSection = ({
             <Form.Select
               id="structureType"
               name="structure.type"
-              value={formik.values.structure.type}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              disabled={isReadOnly || selectedStructure !== null}
+              value={structureValues.type || ''}
+              onChange={formik.handleChange || (() => {})}
+              onBlur={formik.handleBlur || (() => {})}
+              disabled={isFormReadOnly}
               className={styles.formInput}
             >
               <option value="">Sélectionner un type</option>
@@ -242,15 +265,15 @@ const StructureInfoSection = ({
       <Row>
         <Col md={12}>
           <Form.Group className="mb-3">
-            <Form.Label htmlFor="structureAddress">Adresse</Form.Label>
+            <Form.Label htmlFor="structureAdresse">Adresse</Form.Label>
             <Form.Control
-              id="structureAddress"
+              id="structureAdresse"
               name="structure.adresse"
               type="text"
-              value={formik.values.structure.adresse}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              disabled={isReadOnly || selectedStructure !== null}
+              value={structureValues.adresse || ''}
+              onChange={formik.handleChange || (() => {})}
+              onBlur={formik.handleBlur || (() => {})}
+              disabled={isFormReadOnly}
               placeholder="Adresse de la structure"
               className={styles.formInput}
             />
@@ -261,15 +284,15 @@ const StructureInfoSection = ({
       <Row>
         <Col md={4}>
           <Form.Group className="mb-3">
-            <Form.Label htmlFor="structurePostalCode">Code postal</Form.Label>
+            <Form.Label htmlFor="structureCodePostal">Code postal</Form.Label>
             <Form.Control
-              id="structurePostalCode"
+              id="structureCodePostal"
               name="structure.codePostal"
               type="text"
-              value={formik.values.structure.codePostal}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              disabled={isReadOnly || selectedStructure !== null}
+              value={structureValues.codePostal || ''}
+              onChange={formik.handleChange || (() => {})}
+              onBlur={formik.handleBlur || (() => {})}
+              disabled={isFormReadOnly}
               placeholder="Code postal"
               className={styles.formInput}
             />
@@ -278,15 +301,15 @@ const StructureInfoSection = ({
         
         <Col md={8}>
           <Form.Group className="mb-3">
-            <Form.Label htmlFor="structureCity">Ville</Form.Label>
+            <Form.Label htmlFor="structureVille">Ville</Form.Label>
             <Form.Control
-              id="structureCity"
+              id="structureVille"
               name="structure.ville"
               type="text"
-              value={formik.values.structure.ville}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              disabled={isReadOnly || selectedStructure !== null}
+              value={structureValues.ville || ''}
+              onChange={formik.handleChange || (() => {})}
+              onBlur={formik.handleBlur || (() => {})}
+              disabled={isFormReadOnly}
               placeholder="Ville"
               className={styles.formInput}
             />
@@ -302,10 +325,10 @@ const StructureInfoSection = ({
               id="structureSiret"
               name="structure.siret"
               type="text"
-              value={formik.values.structure.siret}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              disabled={isReadOnly || selectedStructure !== null}
+              value={structureValues.siret || ''}
+              onChange={formik.handleChange || (() => {})}
+              onBlur={formik.handleBlur || (() => {})}
+              disabled={isFormReadOnly}
               placeholder="Numéro SIRET"
               className={styles.formInput}
             />
@@ -314,16 +337,16 @@ const StructureInfoSection = ({
         
         <Col md={6}>
           <Form.Group className="mb-3">
-            <Form.Label htmlFor="structureApe">Code APE</Form.Label>
+            <Form.Label htmlFor="structureTva">TVA Intracommunautaire</Form.Label>
             <Form.Control
-              id="structureApe"
-              name="structure.ape"
+              id="structureTva"
+              name="structure.tva"
               type="text"
-              value={formik.values.structure.ape}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              disabled={isReadOnly || selectedStructure !== null}
-              placeholder="Code APE/NAF"
+              value={structureValues.tva || ''}
+              onChange={formik.handleChange || (() => {})}
+              onBlur={formik.handleBlur || (() => {})}
+              disabled={isFormReadOnly}
+              placeholder="Numéro de TVA"
               className={styles.formInput}
             />
           </Form.Group>
@@ -334,7 +357,7 @@ const StructureInfoSection = ({
       <input 
         type="hidden" 
         name="structureId" 
-        value={formik.values.structureId || ''}
+        value={(formikValues.structureId || '')}
       />
     </div>
   );

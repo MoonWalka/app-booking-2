@@ -3,3 +3,135 @@
   /* Styles de base */
 }
 
+.structureInfoSection {
+  background-color: var(--bs-white);
+  border-radius: var(--tc-border-radius);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--tc-card-shadow);
+}
+
+.sectionTitle {
+  margin-bottom: 1.5rem;
+  font-size: 1.25rem;
+  color: var(--tc-primary-dark);
+  font-weight: 500;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--bs-gray-200);
+}
+
+.formInput {
+  background-color: var(--bs-white);
+  border: 1px solid var(--bs-gray-300);
+  transition: all 0.2s ease;
+  padding: 0.5rem;
+}
+
+.formInput:focus {
+  box-shadow: 0 0 0 0.15rem rgba(var(--bs-primary-rgb), 0.25);
+  border-color: var(--bs-primary);
+}
+
+/* Styles pour la recherche de structures */
+.structureSearch {
+  background-color: rgba(var(--bs-info-rgb), 0.05);
+  padding: 1rem;
+  border-radius: var(--tc-border-radius);
+  margin-bottom: 1.5rem;
+  border: 1px dashed rgba(var(--bs-info-rgb), 0.3);
+}
+
+.searchContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchInput {
+  padding-right: 2.5rem;
+}
+
+.clearButton {
+  position: absolute;
+  right: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  color: var(--bs-gray-600);
+  background: none;
+  border: none;
+}
+
+.clearButton:hover {
+  color: var(--bs-danger);
+  background: none;
+  border: none;
+}
+
+.resultsDropdown {
+  width: 100%;
+  max-height: 250px;
+  overflow-y: auto;
+  margin-top: 0.25rem;
+  box-shadow: var(--tc-dropdown-shadow);
+  z-index: 1000;
+}
+
+.resultItem {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--bs-gray-200);
+  cursor: pointer;
+}
+
+.resultItem:last-child {
+  border-bottom: none;
+}
+
+.structureName {
+  font-weight: 500;
+}
+
+.structureLocation {
+  font-size: 0.8rem;
+  color: var(--bs-gray-600);
+  margin-top: 0.25rem;
+  display: flex;
+  align-items: center;
+}
+
+.loadingResults {
+  padding: 1rem;
+  text-align: center;
+  color: var(--bs-gray-600);
+}
+
+.noResults {
+  padding: 1rem;
+  text-align: center;
+  color: var(--bs-gray-600);
+}
+
+.createNew {
+  margin-top: 0.5rem;
+}
+
+.createNew a {
+  color: var(--bs-primary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+.createNew a:hover {
+  text-decoration: underline;
+}
+
+.selectedStructureInfo {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  background-color: rgba(var(--bs-success-rgb), 0.1);
+  color: var(--bs-success);
+  display: flex;
+  align-items: center;
+}
+

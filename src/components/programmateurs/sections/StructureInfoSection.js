@@ -1,5 +1,7 @@
-import React from 'react';
-import { Form, Row, Col } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import { Form, Row, Col, Button, Dropdown } from 'react-bootstrap';
+import { collection, query, where, getDocs, limit, doc, getDoc } from 'firebase/firestore';
+import { db } from '@/firebaseInit';
 import styles from './StructureInfoSection.module.css';
 
 /**
@@ -11,9 +13,185 @@ const StructureInfoSection = ({
   errors, 
   isReadOnly = false 
 }) => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searching, setSearching] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
+  const [selectedStructure, setSelectedStructure] = useState(null);
+
+  // Rechercher une structure existante
+  const searchStructure = async () => {
+    if (!searchTerm.trim() || searchTerm.length < 2) return;
+    
+    setSearching(true);
+    try {
+      const structuresRef = collection(db, 'structures');
+      const q = query(
+        structuresRef,
+        where('nom', '>=', searchTerm),
+        where('nom', '<=', searchTerm + '\uf8ff'),
+        limit(5)
+      );
+      
+      const querySnapshot = await getDocs(q);
+      const results = [];
+      querySnapshot.forEach((doc) => {
+        results.push({
+          id: doc.id,
+          ...doc.data()
+        });
+      });
+      
+      setSearchResults(results);
+      setShowResults(true);
+    } catch (error) {
+      console.error('Erreur lors de la recherche de structures:', error);
+    } finally {
+      setSearching(false);
+    }
+  };
+
+  // Gérer le timing de recherche avec debounce
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (searchTerm.trim().length >= 2) {
+        searchStructure();
+      }
+    }, 300);
+    
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  // Charger les données d'une structure si un ID est déjà présent
+  useEffect(() => {
+    const loadStructure = async () => {
+      if (formik.values.structureId) {
+        try {
+          const structureDoc = await getDoc(doc(db, 'structures', formik.values.structureId));
+          if (structureDoc.exists()) {
+            const structureData = structureDoc.data();
+            setSelectedStructure({
+              id: structureDoc.id,
+              ...structureData
+            });
+            
+            // Mettre à jour le champ de recherche
+            setSearchTerm(structureData.nom || structureData.raisonSociale || '');
+          }
+        } catch (error) {
+          console.error('Erreur lors du chargement de la structure:', error);
+        }
+      }
+    };
+    
+    loadStructure();
+  }, [formik.values.structureId]);
+
+  // Sélectionner une structure dans la liste de recherche
+  const handleSelectStructure = (structure) => {
+    setSelectedStructure(structure);
+    setShowResults(false);
+    setSearchTerm(structure.nom || structure.raisonSociale || '');
+    
+    // Mettre à jour les données du formulaire
+    formik.setFieldValue('structure.nom', structure.nom || structure.raisonSociale || '');
+    formik.setFieldValue('structure.type', structure.type || '');
+    formik.setFieldValue('structure.adresse', structure.adresse || '');
+    formik.setFieldValue('structure.codePostal', structure.codePostal || '');
+    formik.setFieldValue('structure.ville', structure.ville || '');
+    formik.setFieldValue('structure.siret', structure.siret || '');
+    formik.setFieldValue('structure.ape', structure.ape || '');
+    
+    // Stocker l'ID de la structure pour l'association
+    formik.setFieldValue('structureId', structure.id);
+  };
+
+  // Effacer la structure sélectionnée
+  const handleClearStructure = () => {
+    setSelectedStructure(null);
+    setSearchTerm('');
+    formik.setFieldValue('structureId', '');
+  };
+
   return (
     <div className={styles.structureInfoSection}>
       <h4 className={styles.sectionTitle}>Informations sur la structure</h4>
+      
+      {!isReadOnly && (
+        <div className={styles.structureSearch}>
+          <Form.Group className="mb-3">
+            <Form.Label>Rechercher une structure existante</Form.Label>
+            <div className={styles.searchContainer}>
+              <Form.Control
+                type="text"
+                placeholder="Nom de la structure"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onFocus={() => searchTerm.length >= 2 && setShowResults(true)}
+                disabled={isReadOnly}
+                className={styles.searchInput}
+              />
+              {selectedStructure && (
+                <Button 
+                  variant="outline-secondary"
+                  size="sm"
+                  className={styles.clearButton}
+                  onClick={handleClearStructure}
+                >
+                  <i className="bi bi-x-lg"></i>
+                </Button>
+              )}
+            </div>
+            
+            {showResults && (
+              <Dropdown.Menu show={true} className={styles.resultsDropdown}>
+                {searching ? (
+                  <div className={styles.loadingResults}>
+                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Recherche en cours...
+                  </div>
+                ) : searchResults.length > 0 ? (
+                  searchResults.map(structure => (
+                    <Dropdown.Item 
+                      key={structure.id}
+                      onClick={() => handleSelectStructure(structure)}
+                      className={styles.resultItem}
+                    >
+                      <div className={styles.structureName}>{structure.nom || structure.raisonSociale}</div>
+                      {structure.ville && (
+                        <div className={styles.structureLocation}>
+                          <i className="bi bi-geo-alt me-1"></i>
+                          {structure.ville}
+                        </div>
+                      )}
+                    </Dropdown.Item>
+                  ))
+                ) : (
+                  <div className={styles.noResults}>
+                    Aucune structure trouvée
+                    <div className={styles.createNew}>
+                      <a href="/structures/nouvelle" target="_blank" rel="noopener noreferrer">
+                        <i className="bi bi-plus-lg me-1"></i>
+                        Créer une nouvelle structure
+                      </a>
+                    </div>
+                  </div>
+                )}
+              </Dropdown.Menu>
+            )}
+            
+            {selectedStructure && (
+              <div className={styles.selectedStructureInfo}>
+                <i className="bi bi-link-45deg me-1"></i>
+                Structure associée: 
+                <strong className="ms-1">
+                  {selectedStructure.nom || selectedStructure.raisonSociale}
+                </strong>
+              </div>
+            )}
+          </Form.Group>
+        </div>
+      )}
       
       <Row>
         <Col md={6}>
@@ -27,7 +205,7 @@ const StructureInfoSection = ({
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               isInvalid={touched?.structure?.nom && errors?.structure?.nom}
-              disabled={isReadOnly}
+              disabled={isReadOnly || selectedStructure !== null}
               placeholder="Nom de la structure"
               className={styles.formInput}
             />
@@ -46,7 +224,7 @@ const StructureInfoSection = ({
               value={formik.values.structure.type}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              disabled={isReadOnly}
+              disabled={isReadOnly || selectedStructure !== null}
               className={styles.formInput}
             >
               <option value="">Sélectionner un type</option>
@@ -72,7 +250,7 @@ const StructureInfoSection = ({
               value={formik.values.structure.adresse}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              disabled={isReadOnly}
+              disabled={isReadOnly || selectedStructure !== null}
               placeholder="Adresse de la structure"
               className={styles.formInput}
             />
@@ -91,7 +269,7 @@ const StructureInfoSection = ({
               value={formik.values.structure.codePostal}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              disabled={isReadOnly}
+              disabled={isReadOnly || selectedStructure !== null}
               placeholder="Code postal"
               className={styles.formInput}
             />
@@ -108,7 +286,7 @@ const StructureInfoSection = ({
               value={formik.values.structure.ville}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              disabled={isReadOnly}
+              disabled={isReadOnly || selectedStructure !== null}
               placeholder="Ville"
               className={styles.formInput}
             />
@@ -127,7 +305,7 @@ const StructureInfoSection = ({
               value={formik.values.structure.siret}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              disabled={isReadOnly}
+              disabled={isReadOnly || selectedStructure !== null}
               placeholder="Numéro SIRET"
               className={styles.formInput}
             />
@@ -144,13 +322,20 @@ const StructureInfoSection = ({
               value={formik.values.structure.ape}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              disabled={isReadOnly}
+              disabled={isReadOnly || selectedStructure !== null}
               placeholder="Code APE/NAF"
               className={styles.formInput}
             />
           </Form.Group>
         </Col>
       </Row>
+      
+      {/* Champ caché pour stocker l'ID de structure */}
+      <input 
+        type="hidden" 
+        name="structureId" 
+        value={formik.values.structureId || ''}
+      />
     </div>
   );
 };

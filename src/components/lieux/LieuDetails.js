@@ -1,14 +1,36 @@
 // src/components/lieux/LieuDetails.js
 import React from 'react';
-import { useResponsiveComponent } from '@/hooks/useResponsiveComponent';
+import { useParams, useLocation } from 'react-router-dom';
+import { useResponsive } from '@/hooks/common/useResponsive'; // Utilisation du hook recommandé
+import LieuForm from '@/components/lieux/LieuForm';
 
-function LieuDetails(props) {
-  const ResponsiveComponent = useResponsiveComponent({
-    desktopPath: 'lieux/desktop/LieuDetails',
-    mobilePath: 'lieux/mobile/LieuDetails'
+// Import custom hooks
+import useLieuDetails from '@/components/lieux/desktop/hooks/useLieuDetails';
+
+/**
+ * Composant conteneur pour les détails d'un lieu
+ * Décide d'afficher soit la vue, soit le formulaire d'édition
+ */
+function LieuDetails() {
+  const { id } = useParams();
+  const location = useLocation();
+  const responsive = useResponsive();
+  
+  // Utilisation du hook useLieuDetails pour gérer l'état global
+  const { isEditing } = useLieuDetails(id);
+  
+  // En mode édition, afficher le formulaire
+  if (isEditing) {
+    return <LieuForm id={id} />;
+  }
+  
+  // En mode visualisation, afficher la vue responsive
+  const LieuView = responsive.getResponsiveComponent({
+    desktopPath: 'lieux/desktop/LieuView',
+    mobilePath: 'lieux/mobile/LieuView'
   });
   
-  return <ResponsiveComponent {...props} />;
+  return <LieuView id={id} />;
 }
 
 export default LieuDetails;

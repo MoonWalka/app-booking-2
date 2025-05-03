@@ -1,0 +1,84 @@
+/* src/components/lieux/mobile/LieuView.module.css */
+
+.lieuContainer {
+  padding: 1rem;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.section {
+  margin-bottom: 1.25rem;
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #eaeaea;
+}
+
+.spinnerContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+}
+
+.errorContainer {
+  padding: 1rem;
+}
+
+/* Style pour les listes de données */
+.dataList {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.dataItem {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.dataItem:last-child {
+  border-bottom: none;
+}
+
+/* Styles pour les boutons d'action */
+.actionButtons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Styles pour les concerts associés */
+.concertItem {
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.concertItem:hover {
+  background-color: #f0f0f0;
+}
+
+.concertInfo {
+  flex: 1;
+}
+
+.concertDate {
+  font-size: 0.8rem;
+  color: #666;
+}

@@ -37,6 +37,7 @@ export const useConcertDetails = (id, location) => {
   // Gestion des entités associées (pour la mise à jour des relations)
   const [initialProgrammateurId, setInitialProgrammateurId] = useState(null);
   const [initialArtisteId, setInitialArtisteId] = useState(null);
+  const [initialStructureId, setInitialStructureId] = useState(null);
 
   // Utilisation des hooks personnalisés
   const concertForms = useConcertFormsManagement(id);
@@ -64,15 +65,23 @@ export const useConcertDetails = (id, location) => {
     additionalSearchFields: ['genre', 'description']
   });
 
+  const structureSearch = useEntitySearch({
+    entityType: 'structures',
+    searchField: 'nom',
+    additionalSearchFields: ['raisonSociale', 'ville', 'siret']
+  });
+
   // Accesseurs pour les entités sélectionnées
   const lieu = lieuSearch.selectedEntity;
   const programmateur = programmateurSearch.selectedEntity;
   const artiste = artisteSearch.selectedEntity;
+  const structure = structureSearch.selectedEntity;
   
   // Setters pour les entités sélectionnées
   const setLieu = lieuSearch.setSelectedEntity;
   const setProgrammateur = programmateurSearch.setSelectedEntity;
   const setArtiste = artisteSearch.setSelectedEntity;
+  const setStructure = structureSearch.setSelectedEntity;
 
   /**
    * Sous-fonctions pour la récupération des données
@@ -108,6 +117,10 @@ export const useConcertDetails = (id, location) => {
         
         if (concertData.artisteId) {
           setInitialArtisteId(concertData.artisteId);
+        }
+        
+        if (concertData.structureId) {
+          setInitialStructureId(concertData.structureId);
         }
         
         return concertData;
@@ -176,6 +189,59 @@ export const useConcertDetails = (id, location) => {
     }
   };
 
+  // Récupération des données de la structure associée
+  const fetchStructureData = async (concertData) => {
+    if (!concertData || !concertData.structureId) {
+      // Si le concert a un programmateur avec une structure associée, récupérer cette structure
+      if (concertData && concertData.programmateurId) {
+        try {
+          const progDoc = await getDoc(doc(db, 'programmateurs', concertData.programmateurId));
+          if (progDoc.exists()) {
+            const progData = progDoc.data();
+            if (progData.structureId) {
+              const structureDoc = await getDoc(doc(db, 'structures', progData.structureId));
+              if (structureDoc.exists()) {
+                const structureData = {
+                  id: structureDoc.id,
+                  ...structureDoc.data()
+                };
+                setStructure(structureData);
+                
+                // Mettre à jour le concert avec cette structureId si elle n'est pas déjà définie
+                if (!concertData.structureId) {
+                  await updateDoc(doc(db, 'concerts', concertData.id), {
+                    structureId: structureData.id,
+                    structureNom: structureData.nom || structureData.raisonSociale,
+                    updatedAt: new Date().toISOString()
+                  });
+                  
+                  // Mettre à jour l'ID initial pour la prochaine édition
+                  setInitialStructureId(structureData.id);
+                }
+              }
+            }
+          }
+        } catch (error) {
+          console.error('Erreur lors de la récupération indirecte de la structure via programmateur:', error);
+        }
+      }
+      return;
+    }
+    
+    try {
+      const structureDoc = await getDoc(doc(db, 'structures', concertData.structureId));
+      if (structureDoc.exists()) {
+        const structureData = {
+          id: structureDoc.id,
+          ...structureDoc.data()
+        };
+        setStructure(structureData);
+      }
+    } catch (error) {
+      console.error('Erreur lors de la récupération des données de la structure:', error);
+    }
+  };
+
   // Fonction pour forcer le rafraîchissement des données
   const refreshConcert = useCallback(async () => {
     // Mise à jour du cacheKey pour éviter la mise en cache
@@ -208,6 +274,7 @@ export const useConcertDetails = (id, location) => {
         fetchLieuData(concertData),
         fetchProgrammateurData(concertData),
         fetchArtisteData(concertData),
+        fetchStructureData(concertData),
         concertForms.fetchFormData(concertData)
       ]);
       
@@ -264,6 +331,9 @@ export const useConcertDetails = (id, location) => {
         artisteId: artiste?.id || null,
         artisteNom: artiste?.nom || null,
         
+        structureId: structure?.id || null,
+        structureNom: structure ? (structure.nom || structure.raisonSociale) : null,
+        
         updatedAt: new Date().toISOString()
       };
       
@@ -294,6 +364,16 @@ export const useConcertDetails = (id, location) => {
         );
       }
       
+      if (structure?.id || initialStructureId) {
+        await concertAssociations.updateStructureAssociation(
+          id,
+          concertData,
+          structure?.id || null,
+          initialStructureId,
+          lieu
+        );
+      }
+      
       // Mettre à jour les données locales en récupérant les données fraîches
       console.log('Rafraîchissement des données après mise à jour...');
       await refreshConcert();
@@ -304,6 +384,7 @@ export const useConcertDetails = (id, location) => {
       // Mettre à jour les IDs initiaux pour la prochaine édition
       setInitialProgrammateurId(programmateur?.id || null);
       setInitialArtisteId(artiste?.id || null);
+      setInitialStructureId(structure?.id || null);
       
       // Émettre un événement personnalisé pour notifier les autres composants
       try {
@@ -351,6 +432,17 @@ export const useConcertDetails = (id, location) => {
           concert,
           null,
           artiste.id,
+          lieu
+        );
+      }
+      
+      // Mise à jour de la structure
+      if (structure?.id) {
+        await concertAssociations.updateStructureAssociation(
+          id,
+          concert,
+          null,
+          structure.id,
           lieu
         );
       }
@@ -467,6 +559,7 @@ export const useConcertDetails = (id, location) => {
     lieu,
     programmateur,
     artiste,
+    structure,
     loading,
     isSubmitting,
     
@@ -486,6 +579,7 @@ export const useConcertDetails = (id, location) => {
     lieuSearch,
     programmateurSearch,
     artisteSearch,
+    structureSearch,
     
     // Fonctions de gestion
     handleChange,

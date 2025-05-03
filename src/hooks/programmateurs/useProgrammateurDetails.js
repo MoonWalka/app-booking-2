@@ -8,6 +8,7 @@ import {
   serverTimestamp 
 } from 'firebase/firestore';
 import { db } from '@/firebaseInit';
+import structureService from '@/services/structureService';
 
 const useProgrammateurDetails = (id) => {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ const useProgrammateurDetails = (id) => {
   const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [structureCreated, setStructureCreated] = useState(false);
   
   // Form data state
   const [formData, setFormData] = useState({
@@ -36,7 +38,7 @@ const useProgrammateurDetails = (id) => {
       siret: '',
       tva: ''
     },
-    structureId: '', // Nouvel ajout : ID de la structure associée
+    structureId: '', // ID de la structure associée
     concertsAssocies: []
   });
 
@@ -141,6 +143,55 @@ const useProgrammateurDetails = (id) => {
     }
   };
   
+  /**
+   * Utilise le service centralisé pour créer ou mettre à jour une entité Structure
+   * @returns {Promise<string|null>} L'ID de la structure créée/mise à jour ou null
+   */
+  const handleStructureEntity = async () => {
+    // Ne rien faire si la raison sociale n'est pas renseignée
+    if (!formData.structure.raisonSociale) return null;
+    
+    const initialStructureId = formData.structureId;
+    const hadInitialStructureId = !!initialStructureId;
+    
+    try {
+      // Utiliser le service structureService pour gérer l'entité Structure
+      const structureId = await structureService.ensureStructureEntity({
+        id: id, // ID du programmateur
+        structure: formData.structure.raisonSociale,
+        structureType: formData.structure.type,
+        structureAdresse: formData.structure.adresse,
+        structureCodePostal: formData.structure.codePostal,
+        structureVille: formData.structure.ville,
+        structurePays: formData.structure.pays,
+        structureSiret: formData.structure.siret,
+        structureTva: formData.structure.tva,
+        structureId: formData.structureId // ID existant si disponible
+      });
+      
+      // Mise à jour de l'état local avec l'ID de la structure
+      if (structureId) {
+        setFormData(prevState => ({
+          ...prevState,
+          structureId: structureId
+        }));
+        
+        // Afficher une notification si une nouvelle structure a été créée
+        if (!hadInitialStructureId && structureId) {
+          setStructureCreated(true);
+          setTimeout(() => {
+            setStructureCreated(false);
+          }, 3000);
+        }
+      }
+      
+      return structureId;
+    } catch (error) {
+      console.error('Erreur lors de la gestion de l\'entité Structure:', error);
+      return null;
+    }
+  };
+  
   // Handle form submission
   const handleSubmit = async (e) => {
     if (e) e.preventDefault();
@@ -152,6 +203,12 @@ const useProgrammateurDetails = (id) => {
         alert('Le nom est obligatoire');
         setIsSubmitting(false);
         return;
+      }
+      
+      // Créer ou mettre à jour l'entité Structure automatiquement via le service
+      let structureId = null;
+      if (formData.structure.raisonSociale) {
+        structureId = await handleStructureEntity();
       }
       
       // Prepare data
@@ -168,8 +225,8 @@ const useProgrammateurDetails = (id) => {
         flattenedData[`structure${key.charAt(0).toUpperCase() + key.slice(1)}`] = formData.structure[key];
       });
       
-      // Keep or update structureId
-      flattenedData.structureId = formData.structureId;
+      // Set the structureId
+      flattenedData.structureId = structureId;
       
       // Add update timestamp
       flattenedData.updatedAt = serverTimestamp();
@@ -185,29 +242,6 @@ const useProgrammateurDetails = (id) => {
         id,
         ...flattenedData
       });
-      
-      // Si une structure est associée et a un ID, mettre à jour la référence bidirectionnelle
-      if (formData.structureId) {
-        try {
-          const structureRef = doc(db, 'structures', formData.structureId);
-          const structureDoc = await getDoc(structureRef);
-          
-          if (structureDoc.exists()) {
-            const structureData = structureDoc.data();
-            const programmateursList = structureData.programmateurs || [];
-            
-            // Ajouter ce programmateur à la liste des programmateurs de la structure si pas déjà présent
-            if (!programmateursList.includes(id)) {
-              await updateDoc(structureRef, {
-                programmateurs: [...programmateursList, id]
-              });
-            }
-          }
-        } catch (error) {
-          console.error('Erreur lors de la mise à jour de la structure associée:', error);
-          // On continue quand même car l'erreur n'est pas bloquante pour l'utilisateur
-        }
-      }
       
       // Exit edit mode
       setIsEditing(false);
@@ -232,11 +266,11 @@ const useProgrammateurDetails = (id) => {
             
             if (structureDoc.exists()) {
               const structureData = structureDoc.data();
-              const programmateurs = structureData.programmateurs || [];
+              const programmateurs = structureData.programmateursAssocies || [];
               
               // Filtrer ce programmateur de la liste
               await updateDoc(structureRef, {
-                programmateurs: programmateurs.filter(progId => progId !== id)
+                programmateursAssocies: programmateurs.filter(progId => progId !== id)
               });
             }
           } catch (error) {
@@ -302,7 +336,8 @@ const useProgrammateurDetails = (id) => {
     handleDelete,
     isSubmitting,
     formatValue,
-    extractData
+    extractData,
+    structureCreated
   };
 };
 

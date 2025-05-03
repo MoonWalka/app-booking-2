@@ -351,3 +351,159 @@ Les composants liés aux contrats semblent complexes et nécessitent une documen
 5. **Documentation des flux de données** : Créer des diagrammes montrant les flux de données entre composants et services
 
 Cette analyse devrait servir de base pour établir un plan d'amélioration progressive de la documentation du projet.
+
+# Implémentation de la bidirectionnalité entre structures et concerts (Mai 2025)
+
+## Contexte et problème identifié
+
+L'application TourCraft présentait une lacune dans ses relations bidirectionnelles : bien que les programmateurs soient correctement associés aux structures et que les concerts soient associés aux programmateurs, il n'existait pas de relation directe entre les concerts et les structures.
+
+**Problème constaté** : Une structure associée à un concert (via un programmateur) n'apparaissait pas dans le domaine "Structures". Cela créait une incohérence dans la navigation et le suivi des activités liées aux structures.
+
+## Solution mise en œuvre
+
+L'implémentation d'une relation bidirectionnelle complète entre structures et concerts a nécessité plusieurs modifications :
+
+### 1. Ajout d'une fonction d'association dans `useConcertAssociations.js`
+
+Création d'une nouvelle fonction `updateStructureAssociation` qui gère :
+- L'ajout d'un concert à la liste des concerts associés d'une structure
+- La suppression d'un concert de la liste des concerts associés lors d'un changement
+- La mise à jour des références dans les deux directions
+
+```javascript
+const updateStructureAssociation = async (concertId, concertData, newStructureId, oldStructureId, currentLieu) => {
+  try {
+    // Ajout du concert à la liste des concerts associés de la nouvelle structure
+    if (newStructureId) {
+      const structureRef = doc(db, 'structures', newStructureId);
+      // ...
+      await updateDoc(structureRef, {
+        concertsAssocies: arrayUnion(concertReference),
+        updatedAt: new Date().toISOString()
+      });
+    }
+    
+    // Suppression du concert de la liste des concerts associés de l'ancienne structure
+    if (oldStructureId && oldStructureId !== newStructureId) {
+      // ...
+    }
+  } catch (error) {
+    console.error('Erreur lors de la mise à jour des associations structure-concert:', error);
+  }
+};
+```
+
+### 2. Mise à jour du hook `useConcertDetails.js`
+
+Modification du hook pour supporter les structures :
+- Ajout d'un état pour l'ID de la structure initiale
+- Ajout d'un hook de recherche pour les structures
+- Implémentation de `fetchStructureData` pour récupérer les structures
+- Logique intelligente pour récupérer la structure via le programmateur si nécessaire
+
+```javascript
+// Nouveaux états pour gérer les structures
+const [initialStructureId, setInitialStructureId] = useState(null);
+const structureSearch = useEntitySearch({
+  entityType: 'structures',
+  searchField: 'nom',
+  additionalSearchFields: ['raisonSociale', 'ville', 'siret']
+});
+const structure = structureSearch.selectedEntity;
+const setStructure = structureSearch.setSelectedEntity;
+
+// Récupération des données de la structure associée
+const fetchStructureData = async (concertData) => {
+  if (!concertData || !concertData.structureId) {
+    // Recherche de la structure via le programmateur si non définie directement
+    if (concertData && concertData.programmateurId) {
+      // ...logique pour récupérer la structure via programmateur...
+    }
+    return;
+  }
+  
+  // Récupération directe de la structure
+  // ...code de récupération...
+};
+```
+
+### 3. Création d'un composant `ConcertStructureSection.js`
+
+Nouveau composant pour afficher et gérer les structures dans les détails d'un concert :
+- Interface de recherche et sélection de structure
+- Affichage des informations de la structure associée
+- Gestion des actions (voir détails, ajouter, supprimer)
+
+```jsx
+const ConcertStructureSection = ({
+  concertId,
+  structure,
+  isEditMode,
+  // ...autres props
+}) => {
+  // Interface similaire aux autres sections (programmateur, artiste, lieu)
+  return (
+    <div className={styles.formCard}>
+      {/* Contenu du composant */}
+    </div>
+  );
+};
+```
+
+### 4. Intégration dans `ConcertDetails.js`
+
+Mise à jour du composant principal pour incorporer la nouvelle section :
+- Import du nouveau composant
+- Ajout dans les modes vue et édition
+- Passage des props nécessaires
+
+```jsx
+// Ajout du import
+import ConcertStructureSection from './ConcertStructureSection';
+
+// Dans le JSX (mode édition)
+<ConcertStructureSection 
+  concertId={id}
+  structure={structure}
+  isEditMode={isEditMode}
+  selectedStructure={structureSearch.selectedEntity}
+  // ...autres props
+/>
+
+// Dans le JSX (mode vue)
+<ConcertStructureSection 
+  concertId={id}
+  structure={structure}
+  isEditMode={isEditMode}
+  navigateToStructureDetails={(structureId) => navigate(`/structures/${structureId}`)}
+/>
+```
+
+## Améliorations et fonctionnalités ajoutées
+
+1. **Association automatique** : Le système détecte automatiquement une structure liée à un programmateur et l'associe au concert si aucune structure n'est déjà associée.
+
+2. **Mise à jour synchronisée** : Lors d'une modification d'association, les deux côtés (concert et structure) sont mis à jour simultanément pour maintenir la cohérence des données.
+
+3. **Interface utilisateur intuitive** : Une nouvelle section dans les détails des concerts permet de visualiser et gérer l'association avec une structure, similaire aux sections existantes pour programmateurs et artistes.
+
+## Avantages de l'implémentation
+
+1. **Cohérence des données** : Garantit que toutes les relations entre entités sont correctement maintenues dans les deux directions.
+
+2. **Amélioration de la navigation** : Permet de naviguer facilement des concerts vers les structures et vice-versa.
+
+3. **Meilleure visibilité** : Les structures peuvent maintenant voir tous les concerts qui leur sont associés, directement ou via un programmateur.
+
+4. **Architecture évolutive** : L'approche modulaire facilite l'ajout de nouvelles relations entre entités à l'avenir.
+
+## Recommandations pour les prochaines étapes
+
+1. **Mise à jour de la mobile UI** : Adapter les mêmes fonctionnalités pour l'interface mobile (`src/components/concerts/mobile/`).
+
+2. **Tests** : Ajouter des tests unitaires et d'intégration spécifiques pour valider le fonctionnement correct de la bidirectionnalité.
+
+3. **Documentation utilisateur** : Mettre à jour le guide utilisateur pour expliquer la nouvelle relation entre structures et concerts.
+
+4. **Optimisations de performance** : Envisager des optimisations pour les opérations de mise à jour en masse si le nombre d'associations devient important.

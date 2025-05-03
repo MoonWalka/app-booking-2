@@ -7,12 +7,15 @@ import styles from './LieuInfoSection.module.css';
  * Permet de gérer les informations de base sur la salle (jauge, adresse, etc.)
  */
 const LieuInfoSection = ({ 
-  formData, 
-  handleChange, 
-  errors, 
-  lieuxOptions,
-  setShowLieuModal
+  formData = {}, // Valeur par défaut pour éviter les erreurs
+  handleChange = () => {}, // Valeur par défaut en cas de non-transmission
+  errors = {}, 
+  lieuxOptions = [],
+  setShowLieuModal = () => {}
 }) => {
+  // S'assurer que formData.lieu existe pour éviter les erreurs
+  const lieuData = formData.lieu || {};
+  
   return (
     <div className={styles.formCard}>
       <div className={styles.cardHeader}>
@@ -66,7 +69,7 @@ const LieuInfoSection = ({
                     <Form.Control
                       type="url"
                       name="lieu.siteWeb"
-                      value={formData.lieu?.siteWeb || ''}
+                      value={lieuData.siteWeb || ''}
                       onChange={handleChange}
                       placeholder="https://www.example.com"
                     />
@@ -80,7 +83,7 @@ const LieuInfoSection = ({
                     <Form.Control
                       type="number"
                       name="lieu.jauge"
-                      value={formData.lieu?.jauge || ''}
+                      value={lieuData.jauge || ''}
                       onChange={handleChange}
                       placeholder="Ex: 500"
                     />
@@ -96,7 +99,7 @@ const LieuInfoSection = ({
                     </Form.Label>
                     <Form.Select
                       name="lieu.type"
-                      value={formData.lieu?.type || ''}
+                      value={lieuData.type || ''}
                       onChange={handleChange}
                     >
                       <option value="">Sélectionner un type</option>
@@ -118,7 +121,7 @@ const LieuInfoSection = ({
                     </Form.Label>
                     <Form.Select
                       name="lieu.accessibilite"
-                      value={formData.lieu?.accessibilite || ''}
+                      value={lieuData.accessibilite || ''}
                       onChange={handleChange}
                     >
                       <option value="">Sélectionner</option>
@@ -138,7 +141,7 @@ const LieuInfoSection = ({
                   as="textarea"
                   rows={3}
                   name="lieu.notes"
-                  value={formData.lieu?.notes || ''}
+                  value={lieuData.notes || ''}
                   onChange={handleChange}
                   placeholder="Informations complémentaires sur le lieu"
                 />

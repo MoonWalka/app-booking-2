@@ -18,6 +18,7 @@ const StructuresPage = () => {
     <Routes>
       <Route path="/" element={isMobile ? <MobileStructuresList /> : <StructuresList />} />
       <Route path="/nouveau" element={isMobile ? <MobileStructureForm /> : <StructureForm />} />
+      <Route path="/new" element={isMobile ? <MobileStructureForm /> : <StructureForm />} /> {/* Ajout de route pour supporter /structures/new */}
       <Route path="/:id" element={isMobile ? <MobileStructureDetails /> : <StructureDetails />} />
       <Route path="/:id/edit" element={isMobile ? <MobileStructureForm /> : <StructureForm />} />
       <Route path="*" element={<Navigate to="/structures" replace />} />

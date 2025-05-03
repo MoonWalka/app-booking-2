@@ -91,9 +91,56 @@ const useConcertAssociations = () => {
     }
   };
 
+  // Mise à jour des associations structure-concert
+  const updateStructureAssociation = async (concertId, concertData, newStructureId, oldStructureId, currentLieu) => {
+    try {
+      // Si une nouvelle structure est sélectionnée
+      if (newStructureId) {
+        const structureRef = doc(db, 'structures', newStructureId);
+        const structureDoc = await getDoc(structureRef);
+        
+        if (structureDoc.exists()) {
+          // Ajouter le concert à la liste des concerts associés de la structure
+          const concertReference = {
+            id: concertId,
+            titre: concertData.titre || 'Sans titre',
+            date: concertData.date || null,
+            lieu: currentLieu?.nom || null
+          };
+          
+          await updateDoc(structureRef, {
+            concertsAssocies: arrayUnion(concertReference),
+            updatedAt: new Date().toISOString()
+          });
+        }
+      }
+      
+      // Si une ancienne structure était associée et a changé
+      if (oldStructureId && oldStructureId !== newStructureId) {
+        const oldStructureRef = doc(db, 'structures', oldStructureId);
+        const oldStructureDoc = await getDoc(oldStructureRef);
+        
+        if (oldStructureDoc.exists()) {
+          // Récupérer la liste actuelle et supprimer ce concert
+          const oldStructureData = oldStructureDoc.data();
+          const updatedConcerts = (oldStructureData.concertsAssocies || [])
+            .filter(c => c.id !== concertId);
+          
+          await updateDoc(oldStructureRef, {
+            concertsAssocies: updatedConcerts,
+            updatedAt: new Date().toISOString()
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour des associations structure-concert:', error);
+    }
+  };
+
   return {
     updateProgrammateurAssociation,
-    updateArtisteAssociation
+    updateArtisteAssociation,
+    updateStructureAssociation
   };
 };
 

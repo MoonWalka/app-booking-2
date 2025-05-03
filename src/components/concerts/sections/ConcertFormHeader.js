@@ -15,7 +15,7 @@ const ConcertFormHeader = ({ id, formData, navigate }) => {
   return (
     <div className={styles.formHeader}>
       <h2 className={styles.pageTitle}>
-        {isNewConcert ? 'Créer un nouveau concert' : 'Modifier le concert'}
+        {isNewConcert ? 'Ajouter un concert' : 'Modifier le concert'}
       </h2>
       
       <div className={styles.breadcrumbContainer}>

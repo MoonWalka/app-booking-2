@@ -16,6 +16,7 @@ import ConcertGeneralInfo from './ConcertGeneralInfo';
 import ConcertLocationSection from './ConcertLocationSection';
 import ConcertOrganizerSection from './ConcertOrganizerSection';
 import ConcertArtistSection from './ConcertArtistSection';
+import ConcertStructureSection from './ConcertStructureSection';
 import DeleteConcertModal from './DeleteConcertModal';
 
 const ConcertDetails = () => {
@@ -32,6 +33,7 @@ const ConcertDetails = () => {
     lieu,
     programmateur,
     artiste,
+    structure,
     loading,
     isSubmitting,
     formData,
@@ -39,11 +41,15 @@ const ConcertDetails = () => {
     formState,
     handleChange,
     handleSubmit,
-    handleDelete,
     toggleEditMode,
     validateForm,
     handleFormGenerated,
-    copyToClipboard
+    copyToClipboard,
+    handleDelete,
+    lieuSearch,
+    programmateurSearch,
+    artisteSearch,
+    structureSearch
   } = useConcertDetails(id, location);
 
   const {
@@ -54,11 +60,6 @@ const ConcertDetails = () => {
     setGeneratedFormLink
   } = useConcertForm(id, programmateur?.id);
 
-  // Hooks pour la recherche d'entités
-  const lieuSearch = useEntitySearch('lieux');
-  const programmateursSearch = useEntitySearch('programmateurs');
-  const artistesSearch = useEntitySearch('artistes');
-
   // Fonction pour initialiser les valeurs de recherche
   React.useEffect(() => {
     if (lieu && !lieuSearch.selectedEntity) {
@@ -66,16 +67,21 @@ const ConcertDetails = () => {
       lieuSearch.setSearchTerm(lieu.nom);
     }
     
-    if (programmateur && !programmateursSearch.selectedEntity) {
-      programmateursSearch.setSelectedEntity(programmateur);
-      programmateursSearch.setSearchTerm(programmateur.nom);
+    if (programmateur && !programmateurSearch.selectedEntity) {
+      programmateurSearch.setSelectedEntity(programmateur);
+      programmateurSearch.setSearchTerm(programmateur.nom);
     }
     
-    if (artiste && !artistesSearch.selectedEntity) {
-      artistesSearch.setSelectedEntity(artiste);
-      artistesSearch.setSearchTerm(artiste.nom);
+    if (artiste && !artisteSearch.selectedEntity) {
+      artisteSearch.setSelectedEntity(artiste);
+      artisteSearch.setSearchTerm(artiste.nom);
     }
-  }, [lieu, programmateur, artiste]);
+
+    if (structure && !structureSearch.selectedEntity) {
+      structureSearch.setSelectedEntity(structure);
+      structureSearch.setSearchTerm(structure.nom || structure.raisonSociale || '');
+    }
+  }, [lieu, programmateur, artiste, structure]);
 
   // Formater la date pour l'affichage
   const formatDate = (dateValue) => {
@@ -151,12 +157,8 @@ const ConcertDetails = () => {
 
   // Fonction pour soumettre le formulaire
   const handleFormSubmit = (e) => {
-    handleSubmit(
-      e, 
-      lieuSearch.selectedEntity, 
-      programmateursSearch.selectedEntity, 
-      artistesSearch.selectedEntity
-    );
+    if (e) e.preventDefault();
+    handleSubmit(e);
   };
 
   if (loading) {
@@ -196,7 +198,7 @@ const ConcertDetails = () => {
 
       {isEditMode ? (
         /* Mode édition */
-        <form className="modern-form">
+        <form className="modern-form" onSubmit={handleFormSubmit}>
           {/* Informations générales */}
           <ConcertGeneralInfo 
             concert={concert}
@@ -233,15 +235,15 @@ const ConcertDetails = () => {
             concertId={id}
             programmateur={programmateur}
             isEditMode={isEditMode}
-            selectedProgrammateur={programmateursSearch.selectedEntity}
-            progSearchTerm={programmateursSearch.searchTerm}
-            setProgSearchTerm={programmateursSearch.setSearchTerm}
-            showProgResults={programmateursSearch.showResults}
-            progResults={programmateursSearch.results}
-            isSearchingProgs={programmateursSearch.isSearching}
-            handleSelectProgrammateur={programmateursSearch.handleSelect}
-            handleRemoveProgrammateur={programmateursSearch.handleRemove}
-            handleCreateProgrammateur={programmateursSearch.handleCreate}
+            selectedProgrammateur={programmateurSearch.selectedEntity}
+            progSearchTerm={programmateurSearch.searchTerm}
+            setProgSearchTerm={programmateurSearch.setSearchTerm}
+            showProgResults={programmateurSearch.showResults}
+            progResults={programmateurSearch.results}
+            isSearchingProgs={programmateurSearch.isSearching}
+            handleSelectProgrammateur={programmateurSearch.handleSelect}
+            handleRemoveProgrammateur={programmateurSearch.handleRemove}
+            handleCreateProgrammateur={programmateurSearch.handleCreate}
             navigateToProgrammateurDetails={(progId) => navigate(`/programmateurs/${progId}`)}
             formData={formData}
             showFormGenerator={showFormGenerator}
@@ -254,20 +256,37 @@ const ConcertDetails = () => {
             concert={concert}
           />
 
+          {/* Structure */}
+          <ConcertStructureSection 
+            concertId={id}
+            structure={structure}
+            isEditMode={isEditMode}
+            selectedStructure={structureSearch.selectedEntity}
+            structureSearchTerm={structureSearch.searchTerm}
+            setStructureSearchTerm={structureSearch.setSearchTerm}
+            showStructureResults={structureSearch.showResults}
+            structureResults={structureSearch.results}
+            isSearchingStructures={structureSearch.isSearching}
+            handleSelectStructure={structureSearch.handleSelect}
+            handleRemoveStructure={structureSearch.handleRemove}
+            handleCreateStructure={() => navigate('/structures/new')}
+            navigateToStructureDetails={(structureId) => navigate(`/structures/${structureId}`)}
+          />
+
           {/* Artiste */}
           <ConcertArtistSection 
             concertId={id}
             artiste={artiste}
             isEditMode={isEditMode}
-            selectedArtiste={artistesSearch.selectedEntity}
-            artisteSearchTerm={artistesSearch.searchTerm}
-            setArtisteSearchTerm={artistesSearch.setSearchTerm}
-            showArtisteResults={artistesSearch.showResults}
-            artisteResults={artistesSearch.results}
-            isSearchingArtistes={artistesSearch.isSearching}
-            handleSelectArtiste={artistesSearch.handleSelect}
-            handleRemoveArtiste={artistesSearch.handleRemove}
-            handleCreateArtiste={artistesSearch.handleCreate}
+            selectedArtiste={artisteSearch.selectedEntity}
+            artisteSearchTerm={artisteSearch.searchTerm}
+            setArtisteSearchTerm={artisteSearch.setSearchTerm}
+            showArtisteResults={artisteSearch.showResults}
+            artisteResults={artisteSearch.results}
+            isSearchingArtistes={artisteSearch.isSearching}
+            handleSelectArtiste={artisteSearch.handleSelect}
+            handleRemoveArtiste={artisteSearch.handleRemove}
+            handleCreateArtiste={artisteSearch.handleCreate}
             navigateToArtisteDetails={(artisteId) => navigate(`/artistes/${artisteId}`)}
           />
         </form>
@@ -309,6 +328,14 @@ const ConcertDetails = () => {
             copyToClipboard={copyToClipboard}
             formatDate={formatDate}
             concert={concert}
+          />
+
+          {/* Structure */}
+          <ConcertStructureSection 
+            concertId={id}
+            structure={structure}
+            isEditMode={isEditMode}
+            navigateToStructureDetails={(structureId) => navigate(`/structures/${structureId}`)}
           />
 
           {/* Artiste */}

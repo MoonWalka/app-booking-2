@@ -4,12 +4,14 @@ import { db } from '@/firebaseInit';
 /**
  * Service pour gérer la synchronisation entre les informations descriptives de structure
  * et les entités Structure à part entière
+ * Note temporaire: La gestion bidirectionnelle a été désactivée pour diagnostic
  */
 const structureService = {
   /**
    * Assure qu'un programmateur avec des informations de structure est correctement lié à une entité Structure
    * - Si un structureId existe déjà, vérifie que l'entité existe et la met à jour si nécessaire
    * - Si aucun structureId n'existe mais qu'il y a des informations de structure, crée une nouvelle entité
+   * NOTE: La gestion bidirectionnelle a été temporairement désactivée
    * 
    * @param {Object} programmateur - L'objet programmateur complet ou formData
    * @returns {Promise<string|null>} - L'ID de l'entité Structure associée ou null
@@ -33,6 +35,8 @@ const structureService = {
     }
     
     try {
+      console.log("[DIAGNOSTIC] Début de ensureStructureEntity avec désactivation bidirectionnelle");
+      
       // Cas 1: Le programmateur a déjà un structureId
       if (structureId) {
         // Vérifier que l'entité existe
@@ -86,6 +90,7 @@ const structureService = {
             needsUpdate = true;
           }
           
+          /* DÉSACTIVATION TEMPORAIRE DE LA GESTION BIDIRECTIONNELLE
           // Si programmateur ID fourni, s'assurer qu'il est dans la liste des programmateurs associés
           if (programmId) {
             const programmateursAssocies = structureData.programmateursAssocies || [];
@@ -94,12 +99,23 @@ const structureService = {
               needsUpdate = true;
             }
           }
+          */
           
           if (needsUpdate) {
             updates.updatedAt = new Date().toISOString();
             await updateDoc(structureRef, updates);
             console.log(`Structure ${structureId} mise à jour via structureService`);
           }
+          
+          /* DÉSACTIVATION TEMPORAIRE DE LA GESTION BIDIRECTIONNELLE
+          // Si un ID de programmateur est fourni, mettre à jour sa référence vers cette structure
+          if (programmId) {
+            await updateDoc(doc(db, 'programmateurs', programmId), {
+              structureId: structureId,
+              updatedAt: new Date().toISOString()
+            });
+          }
+          */
           
           return structureId;
         } else {
@@ -120,6 +136,7 @@ const structureService = {
           // Utiliser la première structure trouvée
           const existingStructure = existingStructures.docs[0];
           const newStructureId = existingStructure.id;
+          
           console.log(`Structure existante trouvée avec le nom "${structureName}": ${newStructureId}`);
           
           // Mettre à jour les données de la structure si nécessaire
@@ -157,6 +174,7 @@ const structureService = {
             needsUpdate = true;
           }
           
+          /* DÉSACTIVATION TEMPORAIRE DE LA GESTION BIDIRECTIONNELLE
           // Si programmateur ID fourni, s'assurer qu'il est dans la liste des programmateurs associés
           if (programmId) {
             const programmateursAssocies = structureData.programmateursAssocies || [];
@@ -165,6 +183,7 @@ const structureService = {
               needsUpdate = true;
             }
           }
+          */
           
           if (needsUpdate) {
             updates.updatedAt = new Date().toISOString();
@@ -172,6 +191,7 @@ const structureService = {
             console.log(`Structure existante ${newStructureId} mise à jour via structureService`);
           }
           
+          /* DÉSACTIVATION TEMPORAIRE DE LA GESTION BIDIRECTIONNELLE
           // Si un ID de programmateur est fourni, mettre à jour sa référence vers cette structure
           if (programmId) {
             await updateDoc(doc(db, 'programmateurs', programmId), {
@@ -180,6 +200,7 @@ const structureService = {
             });
             console.log(`Programmateur ${programmId} associé à la structure ${newStructureId}`);
           }
+          */
           
           return newStructureId;
         }
@@ -199,16 +220,19 @@ const structureService = {
         updatedAt: new Date().toISOString(),
       };
       
+      /* DÉSACTIVATION TEMPORAIRE DE LA GESTION BIDIRECTIONNELLE
       // Ajouter le programmateur à la liste des programmateurs associés si ID fourni
       if (programmId) {
         structureData.programmateursAssocies = [programmId];
       }
+      */
       
       // Créer la nouvelle entité
       const newStructureRef = doc(collection(db, 'structures'));
       await setDoc(newStructureRef, structureData);
       console.log(`Nouvelle structure créée: ${newStructureRef.id} via structureService`);
       
+      /* DÉSACTIVATION TEMPORAIRE DE LA GESTION BIDIRECTIONNELLE
       // Si un ID de programmateur est fourni, mettre à jour sa référence vers cette structure
       if (programmId) {
         await updateDoc(doc(db, 'programmateurs', programmId), {
@@ -217,6 +241,7 @@ const structureService = {
         });
         console.log(`Programmateur ${programmId} associé à la nouvelle structure ${newStructureRef.id}`);
       }
+      */
       
       return newStructureRef.id;
     } catch (error) {
@@ -228,10 +253,14 @@ const structureService = {
   /**
    * Synchronise les changements apportés à une entité Structure vers les informations descriptives
    * dans les programmateurs associés
+   * NOTE: Temporairement désactivée pour diagnostic
+   * 
    * @param {string} structureId - L'ID de la structure
    * @returns {Promise<void>}
    */
   syncStructureToAssociatedProgrammateurs: async (structureId) => {
+    console.log("[DIAGNOSTIC] syncStructureToAssociatedProgrammateurs désactivée temporairement");
+    /* DÉSACTIVATION TEMPORAIRE DE LA FONCTION COMPLÈTE
     try {
       // Récupérer la structure
       const structureDoc = await getDoc(doc(db, 'structures', structureId));
@@ -269,6 +298,7 @@ const structureService = {
     } catch (error) {
       console.error(`Erreur lors de la synchronisation des programmateurs avec la structure ${structureId}:`, error);
     }
+    */
   }
 };
 

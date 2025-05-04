@@ -6,7 +6,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import { db } from '@/firebaseInit';
 
 /**
- * Custom hook to manage venue details 
+ * Custom hook pour gérer les détails d'un lieu
+ * Déplacé depuis components/lieux/desktop/hooks vers hooks/lieux pour standardisation
+ * 
+ * @param {string} lieuId - Identifiant du lieu à gérer
+ * @returns {Object} - État et méthodes pour gérer les détails du lieu
  */
 const useLieuDetails = (lieuId) => {
   const navigate = useNavigate();
@@ -18,8 +22,10 @@ const useLieuDetails = (lieuId) => {
   const [formData, setFormData] = useState({});
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [programmateur, setProgrammateur] = useState(null);
+  const [loadingProgrammateur, setLoadingProgrammateur] = useState(false);
 
-  // Fetch venue details
+  // Récupération des détails du lieu
   useEffect(() => {
     const fetchLieu = async () => {
       if (!lieuId) {
@@ -37,6 +43,11 @@ const useLieuDetails = (lieuId) => {
           };
           setLieu(lieuData);
           setFormData(lieuData);
+          
+          // Si le lieu a un programmateur associé, récupérer ses détails
+          if (lieuData.programmateurId) {
+            fetchProgrammateur(lieuData.programmateurId);
+          }
         } else {
           setError('Le lieu demandé n\'existe pas.');
         }
@@ -50,12 +61,33 @@ const useLieuDetails = (lieuId) => {
 
     fetchLieu();
   }, [lieuId]);
+  
+  // Récupération des détails du programmateur associé au lieu
+  const fetchProgrammateur = async (programmateurId) => {
+    if (!programmateurId) return;
+    
+    setLoadingProgrammateur(true);
+    
+    try {
+      const programmateurDoc = await getDoc(doc(db, 'programmateurs', programmateurId));
+      if (programmateurDoc.exists()) {
+        setProgrammateur({
+          id: programmateurDoc.id,
+          ...programmateurDoc.data()
+        });
+      }
+    } catch (err) {
+      console.error('Erreur lors du chargement du programmateur:', err);
+    } finally {
+      setLoadingProgrammateur(false);
+    }
+  };
 
-  // Handle form field changes
+  // Gestion des changements de champs du formulaire
   const handleChange = useCallback((e) => {
     const { name, value } = e.target;
     
-    // Handle nested properties (like contact.email)
+    // Gestion des propriétés imbriquées (comme contact.email)
     if (name.includes('.')) {
       const [parent, child] = name.split('.');
       setFormData((prev) => ({
@@ -73,19 +105,19 @@ const useLieuDetails = (lieuId) => {
     }
   }, []);
 
-  // Toggle edit mode
+  // Activer le mode édition
   const handleEdit = () => {
     setIsEditing(true);
     setFormData(lieu);
   };
 
-  // Cancel edit mode and reset form
+  // Annuler le mode édition et réinitialiser le formulaire
   const handleCancel = () => {
     setIsEditing(false);
     setFormData(lieu);
   };
 
-  // Save changes
+  // Sauvegarder les modifications
   const handleSave = async () => {
     // Validation
     if (!formData.nom?.trim()) {
@@ -125,17 +157,17 @@ const useLieuDetails = (lieuId) => {
     }
   };
 
-  // Open delete confirmation modal
+  // Ouvrir la modale de confirmation de suppression
   const handleDeleteClick = () => {
     setShowDeleteModal(true);
   };
 
-  // Close delete confirmation modal
+  // Fermer la modale de confirmation de suppression
   const handleCloseDeleteModal = () => {
     setShowDeleteModal(false);
   };
 
-  // Confirm and process deletion
+  // Confirmer et effectuer la suppression
   const handleConfirmDelete = async () => {
     setIsDeleting(true);
     
@@ -151,7 +183,7 @@ const useLieuDetails = (lieuId) => {
     }
   };
 
-  // Check if the venue has associated concerts
+  // Vérifier si le lieu a des concerts associés
   const hasAssociatedConcerts = lieu?.concertsAssocies?.length > 0;
 
   return {
@@ -164,6 +196,8 @@ const useLieuDetails = (lieuId) => {
     isDeleting,
     showDeleteModal,
     hasAssociatedConcerts,
+    programmateur,
+    loadingProgrammateur,
     setFormData,
     handleChange,
     handleEdit,

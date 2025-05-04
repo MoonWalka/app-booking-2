@@ -1,9 +1,11 @@
 // src/components/forms/ProgrammateurForm.js
 import React from 'react';
-import { useResponsiveComponent } from '@/hooks/useResponsiveComponent';
+import { useResponsive } from '@/hooks/common/useResponsive'; // Utilisation du hook recommandé
 
 function ProgrammateurForm(props) {
-  const ResponsiveComponent = useResponsiveComponent({
+  const responsive = useResponsive();
+  
+  const ResponsiveComponent = responsive.getResponsiveComponent({
     desktopPath: 'programmateurs/desktop/ProgrammateurForm',
     mobilePath: 'programmateurs/mobile/ProgrammateurForm'
   });

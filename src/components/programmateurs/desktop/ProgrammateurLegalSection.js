@@ -10,17 +10,22 @@ const ProgrammateurLegalSection = ({
   formatValue = (val) => val,
   structureCreated = false
 }) => {
-  // Determine if there's a structure linked
-  const hasStructure = isEditing 
-    ? !!formData?.structureId 
-    : !!programmateur?.structureId;
+  // Forcer l'affichage sans condition (pour déboguer)
+  // Avant: const hasStructure = isEditing ? !!formData?.structureId : !!programmateur?.structureId;
+  const hasStructure = true; // Forcer à true pour voir si la section s'affiche
+
+  console.log("[DIAGNOSTIC] ProgrammateurLegalSection - isEditing:", isEditing);
+  console.log("[DIAGNOSTIC] ProgrammateurLegalSection - programmateur:", programmateur);
+  console.log("[DIAGNOSTIC] ProgrammateurLegalSection - formData:", formData);
+  console.log("[DIAGNOSTIC] ProgrammateurLegalSection - structureId:", isEditing ? formData?.structureId : programmateur?.structureId);
+  console.log("[DIAGNOSTIC] ProgrammateurLegalSection - hasStructure forcé à:", hasStructure);
 
   return (
-    <div className={styles.legalSection}>
-      <div className={styles.sectionHeader}>
-        <h3>Informations juridiques</h3>
+    <div className={styles.cardWrapper}>
+      <div className={styles.cardHeader}>
+        <h3 className={styles.cardTitle}>Informations juridiques</h3>
         {hasStructure && (
-          <Badge bg="info" className={styles.structureBadge}>
+          <Badge bg="info" className="ms-2">
             <i className="bi bi-link-45deg me-1"></i>
             Structure associée
           </Badge>
@@ -34,7 +39,7 @@ const ProgrammateurLegalSection = ({
         </div>
       )}
       
-      <div className={styles.sectionContent}>
+      <div className={styles.cardBody}>
         {isEditing ? (
           // Edit Mode
           <Form>
@@ -167,36 +172,36 @@ const ProgrammateurLegalSection = ({
           // View Mode
           <div className={styles.infoGrid}>
             <div className={styles.infoGroup}>
-              <p className={styles.infoLabel}>Raison sociale</p>
-              <p className={styles.infoValue}>{formatValue(programmateur?.structure)}</p>
+              <p className={styles.cardLabel}>Raison sociale</p>
+              <p className={styles.fieldValue}>{formatValue(programmateur?.structure)}</p>
             </div>
             <div className={styles.infoGroup}>
-              <p className={styles.infoLabel}>Type de structure</p>
-              <p className={styles.infoValue}>{formatValue(programmateur?.structureType)}</p>
+              <p className={styles.cardLabel}>Type de structure</p>
+              <p className={styles.fieldValue}>{formatValue(programmateur?.structureType)}</p>
             </div>
             <div className={styles.infoGroup}>
-              <p className={styles.infoLabel}>Adresse</p>
-              <p className={styles.infoValue}>{formatValue(programmateur?.structureAdresse)}</p>
+              <p className={styles.cardLabel}>Adresse</p>
+              <p className={styles.fieldValue}>{formatValue(programmateur?.structureAdresse)}</p>
             </div>
             <div className={styles.infoGroup}>
-              <p className={styles.infoLabel}>Code postal</p>
-              <p className={styles.infoValue}>{formatValue(programmateur?.structureCodePostal)}</p>
+              <p className={styles.cardLabel}>Code postal</p>
+              <p className={styles.fieldValue}>{formatValue(programmateur?.structureCodePostal)}</p>
             </div>
             <div className={styles.infoGroup}>
-              <p className={styles.infoLabel}>Ville</p>
-              <p className={styles.infoValue}>{formatValue(programmateur?.structureVille)}</p>
+              <p className={styles.cardLabel}>Ville</p>
+              <p className={styles.fieldValue}>{formatValue(programmateur?.structureVille)}</p>
             </div>
             <div className={styles.infoGroup}>
-              <p className={styles.infoLabel}>Pays</p>
-              <p className={styles.infoValue}>{formatValue(programmateur?.structurePays || 'France')}</p>
+              <p className={styles.cardLabel}>Pays</p>
+              <p className={styles.fieldValue}>{formatValue(programmateur?.structurePays || 'France')}</p>
             </div>
             <div className={styles.infoGroup}>
-              <p className={styles.infoLabel}>SIRET</p>
-              <p className={styles.infoValue}>{formatValue(programmateur?.structureSiret)}</p>
+              <p className={styles.cardLabel}>SIRET</p>
+              <p className={styles.fieldValue}>{formatValue(programmateur?.structureSiret)}</p>
             </div>
             <div className={styles.infoGroup}>
-              <p className={styles.infoLabel}>TVA Intracommunautaire</p>
-              <p className={styles.infoValue}>{formatValue(programmateur?.structureTva)}</p>
+              <p className={styles.cardLabel}>TVA Intracommunautaire</p>
+              <p className={styles.fieldValue}>{formatValue(programmateur?.structureTva)}</p>
             </div>
           </div>
         )}

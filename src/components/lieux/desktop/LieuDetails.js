@@ -7,10 +7,10 @@ import { db } from '@/firebaseInit';
 import Spinner from '@/components/common/Spinner';
 import Button from '@/components/ui/Button';
 
-// Import custom hooks
-import useLieuDetails from './hooks/useLieuDetails';
-import useProgrammateurSearch from './hooks/useProgrammateurSearch';
-import useAddressSearch from './hooks/useAddressSearch';
+// Import custom hooks depuis les emplacements standardisés
+import { useLieuDetails } from '@/hooks/lieux';
+import { useProgrammateurSearch } from '@/hooks/programmateurs';
+import { useAddressSearch } from '@/hooks/common';
 
 // Import section components
 import { LieuHeader } from './sections/LieuHeader';

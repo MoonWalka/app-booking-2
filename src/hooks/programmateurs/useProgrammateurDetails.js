@@ -3,16 +3,22 @@ import { useNavigate } from 'react-router-dom';
 import { 
   doc, 
   getDoc, 
-  deleteDoc, 
   updateDoc, 
-  serverTimestamp 
+  deleteDoc, 
+  serverTimestamp
 } from 'firebase/firestore';
 import { db } from '@/firebaseInit';
 import structureService from '@/services/structureService';
 
+/**
+ * Hook pour gérer les détails d'un programmateur
+ * @param {string} id - ID du programmateur
+ * @returns {Object} - Données et fonctions pour la gestion du programmateur
+ */
 const useProgrammateurDetails = (id) => {
   const navigate = useNavigate();
   const [programmateur, setProgrammateur] = useState(null);
+  const [structure, setStructure] = useState(null);  // Nouvel état pour stocker la structure associée
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -38,7 +44,7 @@ const useProgrammateurDetails = (id) => {
       siret: '',
       tva: ''
     },
-    structureId: '', // ID de la structure associée
+    structureId: '',
     concertsAssocies: []
   });
 
@@ -51,11 +57,33 @@ const useProgrammateurDetails = (id) => {
         if (progDoc.exists()) {
           const progData = progDoc.data();
           setProgrammateur({
-            id: progDoc.id,
+            id,
             ...progData
           });
+
+          // Chargement de la structure associée si elle existe
+          if (progData.structureId) {
+            try {
+              const structureDoc = await getDoc(doc(db, 'structures', progData.structureId));
+              if (structureDoc.exists()) {
+                setStructure({
+                  id: structureDoc.id,
+                  ...structureDoc.data()
+                });
+              } else {
+                // La structure référencée n'existe pas, corriger la référence
+                console.warn(`Structure ${progData.structureId} référencée mais non trouvée. Correction de la référence.`);
+                await updateDoc(doc(db, 'programmateurs', id), {
+                  structureId: null,
+                  updatedAt: new Date().toISOString()
+                });
+              }
+            } catch (error) {
+              console.error('Erreur lors du chargement de la structure associée:', error);
+            }
+          }
           
-          // Initialize formData for editing
+          // Mise à jour de l'état du formulaire avec les données du programmateur
           setFormData({
             contact: {
               nom: progData.nom?.split(' ')[0] || '',
@@ -155,6 +183,7 @@ const useProgrammateurDetails = (id) => {
     const hadInitialStructureId = !!initialStructureId;
     
     try {
+      console.log("Préparation de la création/mise à jour de structure via service centralisé");
       // Utiliser le service structureService pour gérer l'entité Structure
       const structureId = await structureService.ensureStructureEntity({
         id: id, // ID du programmateur
@@ -171,6 +200,7 @@ const useProgrammateurDetails = (id) => {
       
       // Mise à jour de l'état local avec l'ID de la structure
       if (structureId) {
+        console.log(`Structure ID obtenu: ${structureId}`);
         setFormData(prevState => ({
           ...prevState,
           structureId: structureId
@@ -178,11 +208,14 @@ const useProgrammateurDetails = (id) => {
         
         // Afficher une notification si une nouvelle structure a été créée
         if (!hadInitialStructureId && structureId) {
+          console.log("Nouvelle structure créée, affichage de la notification");
           setStructureCreated(true);
           setTimeout(() => {
             setStructureCreated(false);
           }, 3000);
         }
+      } else {
+        console.warn("Aucun ID de structure n'a été retourné par le service");
       }
       
       return structureId;
@@ -209,6 +242,7 @@ const useProgrammateurDetails = (id) => {
       let structureId = null;
       if (formData.structure.raisonSociale) {
         structureId = await handleStructureEntity();
+        console.log(`Structure ID après handleStructureEntity: ${structureId}`);
       }
       
       // Prepare data
@@ -227,6 +261,7 @@ const useProgrammateurDetails = (id) => {
       
       // Set the structureId
       flattenedData.structureId = structureId;
+      console.log(`StructureId sauvegardé dans programmateur: ${flattenedData.structureId}`);
       
       // Add update timestamp
       flattenedData.updatedAt = serverTimestamp();
@@ -242,6 +277,21 @@ const useProgrammateurDetails = (id) => {
         id,
         ...flattenedData
       });
+      
+      // Mettre à jour l'état de la structure
+      if (structureId) {
+        try {
+          const structureDoc = await getDoc(doc(db, 'structures', structureId));
+          if (structureDoc.exists()) {
+            setStructure({
+              id: structureId,
+              ...structureDoc.data()
+            });
+          }
+        } catch (error) {
+          console.error("Erreur lors de la mise à jour de l'état de la structure:", error);
+        }
+      }
       
       // Exit edit mode
       setIsEditing(false);
@@ -301,22 +351,22 @@ const useProgrammateurDetails = (id) => {
     
     // Create contact and structure objects from programmateur data
     const contact = {
-      nom: programmateur.nom?.split(' ')[0] || '',
-      prenom: programmateur.prenom || (programmateur.nom?.includes(' ') ? programmateur.nom.split(' ').slice(1).join(' ') : ''),
-      fonction: programmateur.fonction || '',
-      email: programmateur.email || '',
-      telephone: programmateur.telephone || ''
+      nom: programmateur.nom,
+      prenom: programmateur.prenom,
+      fonction: programmateur.fonction,
+      email: programmateur.email,
+      telephone: programmateur.telephone
     };
     
     const structure = {
-      raisonSociale: programmateur.structure || '',
-      type: programmateur.structureType || '',
-      adresse: programmateur.structureAdresse || '',
-      codePostal: programmateur.structureCodePostal || '',
-      ville: programmateur.structureVille || '',
-      pays: programmateur.structurePays || 'France',
-      siret: programmateur.siret || '',
-      tva: programmateur.tva || ''
+      raisonSociale: programmateur.structure,
+      type: programmateur.structureType,
+      adresse: programmateur.structureAdresse,
+      codePostal: programmateur.structureCodePostal,
+      ville: programmateur.structureVille,
+      pays: programmateur.structurePays,
+      siret: programmateur.siret,
+      tva: programmateur.tva
     };
     
     return { contact, structure };
@@ -324,10 +374,10 @@ const useProgrammateurDetails = (id) => {
 
   return {
     programmateur,
+    structure,  // Exposer la structure récupérée
     loading,
     error,
     isEditing,
-    setIsEditing,
     toggleEditMode,
     formData,
     setFormData,

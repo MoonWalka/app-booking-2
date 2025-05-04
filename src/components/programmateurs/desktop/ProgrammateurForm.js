@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Alert } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { Form, Alert, Container, Row, Col, Card, Button } from 'react-bootstrap';
+import { useNavigate, useParams } from 'react-router-dom';
 import styles from './ProgrammateurForm.module.css';
 
 // Import des sous-composants
@@ -8,277 +8,366 @@ import ContactInfoSection from '../sections/ContactInfoSection';
 import StructureInfoSection from '../sections/StructureInfoSection';
 import LieuInfoSection from '../sections/LieuInfoSection';
 import CompanySearchSection from '../sections/CompanySearchSection';
-import ProgrammateurFormActions from '../sections/ProgrammateurFormActions';
+import ProgrammateurLegalSection from './ProgrammateurLegalSection';
+import ProgrammateurConcertsSection from './ProgrammateurConcertsSection';
+import ProgrammateurLieuxSection from './ProgrammateurLieuxSection';
 
 // Import des hooks personnalisés
-import useProgrammateurForm from '@/hooks/programmateurs/useProgrammateurForm';
+import { useProgrammateurDetails } from '@/hooks/programmateurs';
 import useCompanySearch from '@/hooks/programmateurs/useCompanySearch';
 import { useAddressSearch } from '@/hooks/common';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import ErrorMessage from '@/components/ui/ErrorMessage';
 
-const ProgrammateurForm = ({ token, concertId, formLinkId, initialLieuData, onSubmitSuccess }) => {
-  // États de base du formulaire
-  const [formData, setFormData] = useState({
-    nom: '',
-    prenom: '',
-    fonction: '',
-    email: '',
-    telephone: '',
-    structure: '',
-    structureType: '',
-    structureAdresse: '',
-    structureCodePostal: '',
-    structureVille: '',
-    structurePays: 'France',
-    siret: '',
-    codeAPE: ''
-  });
-  
-  // États pour les informations du lieu
-  const [lieuData, setLieuData] = useState({
-    nom: '',
-    adresse: '',
-    codePostal: '',
-    ville: '',
-    capacite: '',
-    latitude: null,
-    longitude: null
-  });
-
-  // États pour la gestion du formulaire
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
-  const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [existingProgrammId, setExistingProgrammId] = useState(null);
+/**
+ * Formulaire d'édition d'un programmateur - Version Desktop harmonisée avec ProgrammateurView
+ * Utilise la même structure en cartes que la vue mais en mode édition
+ */
+const ProgrammateurForm = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
 
-  // Utiliser les hooks personnalisés pour la recherche d'entreprise et d'adresses
+  // Utiliser le même hook que ProgrammateurView pour la consistance
   const { 
-    searchType, 
-    setSearchType,
-    searchTerm, 
-    setSearchTerm,
-    searchResults,
-    isSearchingCompany,
-    handleSelectCompany
-  } = useCompanySearch(setFormData);
-
-  const {
-    addressSuggestions,
-    isSearchingAddress,
-    addressFieldActive, 
-    setAddressFieldActive,
-    handleSelectAddress,
-    lieuAddressSuggestions,
-    isSearchingLieuAddress,
-    lieuAddressFieldActive, 
-    setLieuAddressFieldActive,
-    handleSelectLieuAddress
-  } = useAddressSearch(formData, setFormData, lieuData, setLieuData);
+    programmateur, 
+    structure,
+    loading, 
+    error,
+    isEditing,
+    formData,
+    setFormData,
+    handleChange,
+    handleSubmit,
+    handleDelete,
+    isSubmitting,
+    formatValue
+  } = useProgrammateurDetails(id);
   
-  // Logique d'initialisation et de récupération des données existantes
-  useEffect(() => {
-    if (initialLieuData && Object.keys(initialLieuData).length > 0) {
-      setLieuData(prev => ({
-        ...prev,
-        ...initialLieuData
-      }));
-    }
-  }, [initialLieuData]);
+  // État local pour contrôler l'affichage des sections
+  const [sections, setSections] = useState({
+    contactVisible: true,
+    legalVisible: true,
+    structureVisible: true,
+    lieuxVisible: true,
+    concertsVisible: true
+  });
   
-  // Chercher si ce formulaire a déjà été rempli pour pré-remplir les données
-  useEffect(() => {
-    const fetchPreviousData = async () => {
-      // Cette logique devrait idéalement être déplacée vers un hook personnalisé comme useFormInitialization
-      // Ici, on maintient simplement l'existant pour l'exemple
-      setLoading(false); // Terminer le chargement après initialisation
-    };
-    
-    if (concertId) {
-      fetchPreviousData();
-    } else {
-      setLoading(false);
-    }
-  }, [concertId]);
-
-  // Gestionnaire de changement de champ
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
-    
-    // Réinitialiser l'erreur pour ce champ
-    if (errors[name]) {
-      setErrors(prevErrors => ({
-        ...prevErrors,
-        [name]: null
-      }));
-    }
-  };
-
-  // Gestionnaire pour les changements de données du lieu
-  const handleLieuChange = (e) => {
-    const { name, value } = e.target;
-    setLieuData(prevState => ({
-      ...prevState,
-      [name]: value
+  // Gestion du toggle des sections
+  const toggleSection = (sectionName) => {
+    setSections(prev => ({
+      ...prev,
+      [sectionName]: !prev[sectionName]
     }));
   };
+
+  // Hooks pour la recherche d'entreprise et d'adresses
+  const companySearch = useCompanySearch(setFormData);
+
+  const addressSearch = useAddressSearch(
+    formData, 
+    setFormData, 
+    { nom: '', adresse: '', codePostal: '', ville: '', capacite: '', latitude: null, longitude: null }, 
+    () => {}
+  );
   
-  // Valider le formulaire
-  const validateForm = () => {
-    const newErrors = {};
-    
-    // Validation des champs requis
-    if (!formData.nom.trim()) newErrors.nom = 'Le nom est requis';
-    if (!formData.prenom.trim()) newErrors.prenom = 'Le prénom est requis';
-    
-    // L'email n'est plus requis, mais on valide quand même son format s'il est fourni
-    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Format d'adresse email invalide";
-    }
-    
-    if (!formData.structure.trim()) newErrors.structure = 'Le nom de la structure est requis';
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  // Soumettre le formulaire
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (submitting) return;
-    
-    if (!validateForm()) {
-      return;
-    }
-    
-    setSubmitting(true);
-    setError(null);
-    
-    try {
-      // Logique de soumission - à déplacer vers useFormSubmission
-      setSuccess(true);
-      if (onSubmitSuccess) onSubmitSuccess();
-    } catch (error) {
-      console.error('Erreur lors de la soumission du formulaire:', error);
-      setError('Une erreur est survenue lors de la soumission. Veuillez réessayer plus tard.');
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
   // Fonction pour gérer l'annulation du formulaire
   const handleCancel = () => {
-    if (onSubmitSuccess) {
-      onSubmitSuccess();
-    } else {
-      navigate('/programmateurs');
-    }
+    navigate(`/programmateurs/${id}`);
   };
-
+  
   if (loading) {
-    return (
-      <div className="text-center my-4">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Chargement...</span>
-        </div>
-        <p className="mt-2">Chargement du formulaire...</p>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
-
-  if (success) {
-    return (
-      <div className="form-success text-center my-4">
-        <div className="icon-container mb-3">
-          <i className="bi bi-check-circle-fill text-success" style={{ fontSize: '4rem' }}></i>
-        </div>
-        <h2 className="mb-3">Merci pour votre soumission !</h2>
-        <p className="mb-4">Vos informations ont été enregistrées avec succès.</p>
-        {!onSubmitSuccess && (
-          <button 
-            className="btn btn-outline-primary"
-            onClick={() => setSuccess(false)}
-          >
-            <i className="bi bi-pencil me-2"></i>
-            Modifier mes informations
-          </button>
-        )}
-      </div>
-    );
+  
+  if (error) {
+    return <ErrorMessage message={error} />;
+  }
+  
+  if (!programmateur && id !== 'nouveau') {
+    return <ErrorMessage message="Programmateur introuvable" />;
   }
 
   return (
-    <Form onSubmit={handleSubmit} className={styles.formContainer}>
-      {error && (
-        <Alert variant="danger" className="mb-4">
-          <i className="bi bi-exclamation-triangle-fill me-2"></i>
-          {error}
-        </Alert>
-      )}
-      
-      {/* Section des informations de contact */}
-      <ContactInfoSection 
-        formData={formData}
-        handleChange={handleChange}
-        errors={errors}
-      />
-      
-      {/* Section Structure juridique avec recherche d'entreprise intégrée */}
-      <div className={styles.formCard}>
-        <div className={styles.cardHeader}>
-          <div className={styles.cardIcon}>
-            <i className="bi bi-building"></i>
-          </div>
-          <h3>Structure juridique</h3>
-        </div>
-        <div className={styles.cardBody}>
-          {/* Options de recherche d'entreprise */}
-          <CompanySearchSection 
-            searchType={searchType}
-            setSearchType={setSearchType}
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            searchResults={searchResults}
-            isSearchingCompany={isSearchingCompany}
-            handleSelectCompany={handleSelectCompany}
-          />
-          
-          {/* Formulaire de structure juridique */}
-          <StructureInfoSection 
-            formData={formData}
-            handleChange={handleChange}
-            errors={errors}
-            addressSuggestions={addressSuggestions} 
-            isSearchingAddress={isSearchingAddress}
-            addressFieldActive={addressFieldActive}
-            setAddressFieldActive={setAddressFieldActive}
-            handleSelectAddress={handleSelectAddress}
-          />
-        </div>
-      </div>
-      
-      {/* Section d'édition des informations du lieu */}
-      <LieuInfoSection 
-        lieuData={lieuData}
-        setLieuData={setLieuData}
-        handleLieuChange={handleLieuChange}
-        lieuAddressSuggestions={lieuAddressSuggestions}
-        isSearchingLieuAddress={isSearchingLieuAddress}
-        lieuAddressFieldActive={lieuAddressFieldActive}
-        setLieuAddressFieldActive={setLieuAddressFieldActive}
-        handleSelectLieuAddress={handleSelectLieuAddress}
-      />
-      
-      {/* Boutons d'action */}
-      <ProgrammateurFormActions 
-        handleCancel={handleCancel}
-        submitting={submitting}
-      />
+    <Form onSubmit={handleSubmit}>
+      <Container className={styles.programmateurForm}>
+        {/* En-tête avec titre et actions */}
+        <Card className="mb-4 bg-light">
+          <Card.Body>
+            <div className="d-flex justify-content-between align-items-center">
+              <div>
+                <h2 className="mb-0">
+                  {id === 'nouveau' ? 'Nouveau programmateur' : `Éditer: ${programmateur?.nom || 'Programmateur'}`}
+                  {programmateur?.fonction && <span className="text-muted fs-5"> ({programmateur.fonction})</span>}
+                </h2>
+              </div>
+              <div>
+                <Button 
+                  variant="primary" 
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="me-2"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                      Enregistrement...
+                    </>
+                  ) : (
+                    <>
+                      <i className="bi bi-check-lg me-2"></i>
+                      Enregistrer
+                    </>
+                  )}
+                </Button>
+                <Button 
+                  variant="outline-secondary" 
+                  onClick={handleCancel}
+                  disabled={isSubmitting}
+                  type="button"
+                >
+                  <i className="bi bi-x-lg me-2"></i>
+                  Annuler
+                </Button>
+              </div>
+            </div>
+          </Card.Body>
+        </Card>
+        
+        {/* Message d'erreur global si nécessaire */}
+        {error && (
+          <Alert variant="danger" className="mb-4">
+            <i className="bi bi-exclamation-triangle-fill me-2"></i>
+            {error}
+          </Alert>
+        )}
+        
+        {/* Disposition en une seule colonne */}
+        <Row>
+          <Col>
+            {/* Carte Contact */}
+            <Card className="mb-4">
+              <Card.Header className="d-flex justify-content-between align-items-center bg-primary text-white">
+                <h5 className="mb-0">
+                  <i className="bi bi-person-vcard me-2"></i>
+                  Informations de contact
+                </h5>
+                <Button 
+                  variant="link" 
+                  className="p-0 text-white" 
+                  onClick={() => toggleSection('contactVisible')}
+                  type="button"
+                >
+                  {sections.contactVisible ? (
+                    <i className="bi bi-chevron-up"></i>
+                  ) : (
+                    <i className="bi bi-chevron-down"></i>
+                  )}
+                </Button>
+              </Card.Header>
+              
+              {sections.contactVisible && (
+                <Card.Body>
+                  <ContactInfoSection 
+                    formData={formData}
+                    handleChange={handleChange}
+                    errors={{}}
+                  />
+                </Card.Body>
+              )}
+            </Card>
+
+            {/* Carte Informations Légales */}
+            <Card className="mb-4">
+              <Card.Header className="d-flex justify-content-between align-items-center bg-primary text-white">
+                <h5 className="mb-0">
+                  <i className="bi bi-file-earmark-text me-2"></i>
+                  Informations légales
+                </h5>
+                <Button 
+                  variant="link" 
+                  className="p-0 text-white" 
+                  onClick={() => toggleSection('legalVisible')}
+                  type="button"
+                >
+                  {sections.legalVisible ? (
+                    <i className="bi bi-chevron-up"></i>
+                  ) : (
+                    <i className="bi bi-chevron-down"></i>
+                  )}
+                </Button>
+              </Card.Header>
+              
+              {sections.legalVisible && (
+                <Card.Body>
+                  <ProgrammateurLegalSection
+                    programmateur={programmateur}
+                    isEditing={true}
+                    formData={formData}
+                    handleChange={handleChange}
+                  />
+                </Card.Body>
+              )}
+            </Card>
+            
+            {/* Carte Structure */}
+            <Card className="mb-4">
+              <Card.Header className="d-flex justify-content-between align-items-center bg-primary text-white">
+                <h5 className="mb-0">
+                  <i className="bi bi-building me-2"></i>
+                  Structure
+                </h5>
+                <Button 
+                  variant="link" 
+                  className="p-0 text-white" 
+                  onClick={() => toggleSection('structureVisible')}
+                  type="button"
+                >
+                  {sections.structureVisible ? (
+                    <i className="bi bi-chevron-up"></i>
+                  ) : (
+                    <i className="bi bi-chevron-down"></i>
+                  )}
+                </Button>
+              </Card.Header>
+              
+              {sections.structureVisible && (
+                <Card.Body>
+                  {/* Options de recherche d'entreprise */}
+                  <CompanySearchSection 
+                    searchType={companySearch.searchType}
+                    setSearchType={companySearch.setSearchType}
+                    searchTerm={companySearch.searchTerm}
+                    setSearchTerm={companySearch.setSearchTerm}
+                    searchResults={companySearch.searchResults}
+                    isSearchingCompany={companySearch.isSearchingCompany}
+                    handleSelectCompany={companySearch.handleSelectCompany}
+                  />
+                  
+                  {/* Formulaire de structure juridique */}
+                  <StructureInfoSection 
+                    formData={formData}
+                    handleChange={handleChange}
+                    errors={{}}
+                    addressSuggestions={addressSearch.addressSuggestions} 
+                    isSearchingAddress={addressSearch.isSearchingAddress}
+                    addressFieldActive={addressSearch.addressFieldActive}
+                    setAddressFieldActive={addressSearch.setAddressFieldActive}
+                    handleSelectAddress={addressSearch.handleSelectAddress}
+                  />
+                </Card.Body>
+              )}
+            </Card>
+            
+            {/* Carte Lieux */}
+            <Card className="mb-4">
+              <Card.Header className="d-flex justify-content-between align-items-center bg-primary text-white">
+                <h5 className="mb-0">
+                  <i className="bi bi-geo-alt me-2"></i>
+                  Lieux associés
+                </h5>
+                <Button 
+                  variant="link" 
+                  className="p-0 text-white" 
+                  onClick={() => toggleSection('lieuxVisible')}
+                  type="button"
+                >
+                  {sections.lieuxVisible ? (
+                    <i className="bi bi-chevron-up"></i>
+                  ) : (
+                    <i className="bi bi-chevron-down"></i>
+                  )}
+                </Button>
+              </Card.Header>
+              
+              {sections.lieuxVisible && (
+                <Card.Body>
+                  <ProgrammateurLieuxSection
+                    programmateur={programmateur}
+                    isEditing={true}
+                  />
+                </Card.Body>
+              )}
+            </Card>
+
+            {/* Carte Concerts */}
+            <Card className="mb-4">
+              <Card.Header className="d-flex justify-content-between align-items-center bg-primary text-white">
+                <h5 className="mb-0">
+                  <i className="bi bi-calendar-event me-2"></i>
+                  Concerts associés
+                </h5>
+                <Button 
+                  variant="link" 
+                  className="p-0 text-white" 
+                  onClick={() => toggleSection('concertsVisible')}
+                  type="button"
+                >
+                  {sections.concertsVisible ? (
+                    <i className="bi bi-chevron-up"></i>
+                  ) : (
+                    <i className="bi bi-chevron-down"></i>
+                  )}
+                </Button>
+              </Card.Header>
+              
+              {sections.concertsVisible && (
+                <Card.Body>
+                  <ProgrammateurConcertsSection
+                    concertsAssocies={programmateur?.concertsAssocies || []}
+                    isEditing={true}
+                  />
+                </Card.Body>
+              )}
+            </Card>
+            
+            {/* Boutons du formulaire */}
+            <div className="d-flex justify-content-between mt-4 mb-5">
+              <Button 
+                variant="outline-secondary"
+                onClick={handleCancel}
+                disabled={isSubmitting}
+                type="button"
+              >
+                <i className="bi bi-arrow-left me-2"></i>
+                Retour
+              </Button>
+              
+              <div>
+                {id !== 'nouveau' && (
+                  <Button 
+                    variant="outline-danger"
+                    onClick={handleDelete}
+                    disabled={isSubmitting}
+                    className="me-2"
+                    type="button"
+                  >
+                    <i className="bi bi-trash me-2"></i>
+                    Supprimer
+                  </Button>
+                )}
+                
+                <Button 
+                  variant="primary" 
+                  type="submit"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                      Enregistrement...
+                    </>
+                  ) : (
+                    <>
+                      <i className="bi bi-check-lg me-2"></i>
+                      Enregistrer
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          </Col>
+        </Row>
+      </Container>
     </Form>
   );
 };

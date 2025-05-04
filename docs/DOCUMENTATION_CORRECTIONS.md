@@ -849,3 +849,311 @@ Cette solution d'urgence n'est qu'une mesure temporaire pour rendre les fonction
 3. **Documenter les invariants** : Définir clairement les invariants (conditions qui doivent toujours être vraies) pour chaque entité et association, afin de garantir la cohérence des données.
 
 4. **Ajouter des tests automatisés** : Créer des tests qui valident spécifiquement le comportement correct de ces composants avec différents scénarios d'entrée.
+
+# Refactorisation de la page ProgrammateurDetails (4 mai 2025)
+
+## Contexte et problème identifié
+
+La page de détails des programmateurs présentait plusieurs problèmes d'ergonomie et d'organisation visuelle :
+
+1. **Disposition en deux colonnes** : La disposition initiale sur deux colonnes rendait la lecture difficile, particulièrement sur les écrans de taille moyenne.
+2. **Manque de séparation visuelle** : Les différentes sections n'étaient pas clairement délimitées, ce qui rendait la navigation et la compréhension des informations difficiles.
+3. **Incohérence avec les autres pages de détail** : Le style ne correspondait pas aux autres pages de détail de l'application qui utilisent principalement un système de cartes.
+
+## Solution implémentée
+
+Une refactorisation complète de l'interface ProgrammateurView a été réalisée avec les caractéristiques suivantes :
+
+### 1. Nouvelle structure en une seule colonne
+
+La disposition a été modifiée pour présenter toutes les informations empilées verticalement dans une seule colonne, ce qui améliore la lisibilité et la cohérence sur différentes tailles d'écran.
+
+```jsx
+// Avant (Layout en deux colonnes)
+<Row className="mt-4">
+  <Col md={5}>
+    <ProgrammateurContactSection />
+    <div className="mt-4">
+      <ProgrammateurStructuresSection />
+    </div>
+    <div className="mt-4">
+      <ProgrammateurLieuxSection />
+    </div>
+  </Col>
+  <Col md={7}>
+    <ProgrammateurLegalSection />
+    <div className="mt-4">
+      <ProgrammateurConcertsSection />
+    </div>
+  </Col>
+</Row>
+
+// Après (Layout en une seule colonne)
+<Row>
+  <Col>
+    {/* Carte Contact */}
+    <Card className="mb-4">
+      {/* ... */}
+    </Card>
+    
+    {/* Carte Structure */}
+    <Card className="mb-4">
+      {/* ... */}
+    </Card>
+    
+    {/* Carte Lieux */}
+    <Card className="mb-4">
+      {/* ... */}
+    </Card>
+    
+    {/* Carte Concerts */}
+    <Card className="mb-4">
+      {/* ... */}
+    </Card>
+  </Col>
+</Row>
+```
+
+### 2. Système de cartes avec en-têtes distincts
+
+Chaque section a été transformée en carte indépendante avec :
+- Un en-tête coloré et distinctif pour identifier facilement chaque section
+- Une icône représentative du contenu de la section
+- Un bouton pour replier/déplier le contenu de la carte
+
+```jsx
+<Card className="mb-4">
+  <Card.Header className="d-flex justify-content-between align-items-center bg-primary text-white">
+    <h5 className="mb-0">
+      <i className="bi bi-person-vcard me-2"></i>
+      Informations de contact
+    </h5>
+    <Button 
+      variant="link" 
+      className="p-0 text-white" 
+      onClick={() => toggleSection('contactVisible')}
+    >
+      {sections.contactVisible ? (
+        <i className="bi bi-chevron-up"></i>
+      ) : (
+        <i className="bi bi-chevron-down"></i>
+      )}
+    </Button>
+  </Card.Header>
+  
+  {sections.contactVisible && (
+    <Card.Body>
+      {/* Contenu de la section */}
+    </Card.Body>
+  )}
+</Card>
+```
+
+### 3. Sections pliables/dépliables
+
+Un système d'état local a été ajouté pour permettre à l'utilisateur de contrôler l'affichage des sections :
+- Chaque section peut être repliée ou dépliée indépendamment
+- Les préférences d'affichage sont conservées lors de la navigation dans une session
+- Les icônes changent de façon intuitive pour indiquer l'état (chevron vers le haut ou vers le bas)
+
+```jsx
+const [sections, setSections] = useState({
+  contactVisible: true,
+  structureVisible: true,
+  lieuxVisible: true,
+  concertsVisible: true
+});
+
+const toggleSection = (sectionName) => {
+  setSections(prev => ({
+    ...prev,
+    [sectionName]: !prev[sectionName]
+  }));
+};
+```
+
+### 4. Actions contextuelles
+
+Des boutons d'action contextuels ont été ajoutés dans les sections pertinentes :
+- Un bouton "Associer" apparaît si aucune structure n'est associée au programmateur
+- Un bouton "Nouveau concert" est disponible si aucun concert n'est associé au programmateur
+
+```jsx
+{structure ? (
+  <div>
+    <h6>{structure.raisonSociale}</h6>
+    {/* Détails de la structure... */}
+  </div>
+) : (
+  <div className="d-flex justify-content-between align-items-center">
+    <p className="text-muted mb-0">Aucune structure associée</p>
+    <Button 
+      variant="outline-success"
+      size="sm"
+      onClick={handleEditClick}
+    >
+      <i className="bi bi-plus-circle me-1"></i>
+      Associer
+    </Button>
+  </div>
+)}
+```
+
+### 5. Support complet des données
+
+La refactorisation a également inclus la mise à jour du hook `useProgrammateurDetails` pour exposer correctement les données des lieux et concerts associés au programmateur :
+
+- Récupération des lieux associés via une requête Firestore spécifique
+- Extraction des détails des concerts avec enrichissement des données (noms des artistes, des lieux, etc.)
+- Gestion améliorée de la structure associée
+
+## Avantages de la nouvelle interface
+
+1. **Meilleure lisibilité** : Présentation plus claire des informations avec une séparation visuelle distincte
+2. **Réactivité améliorée** : Adaptation plus fluide aux différentes tailles d'écran avec le layout en une seule colonne
+3. **Personnalisation** : L'utilisateur peut replier les sections qui ne l'intéressent pas pour se concentrer sur l'information pertinente
+4. **Cohérence visuelle** : Style uniforme avec les autres pages de l'application qui utilisent également un système de cartes
+5. **Accessibilité** : Meilleur contraste avec les en-têtes colorés et une hiérarchie d'information plus claire
+
+## Recommandations pour les développements futurs
+
+1. **Persistance des préférences** : Enregistrer les préférences d'affichage des sections dans le localStorage pour les conserver entre les sessions
+2. **Harmonisation** : Appliquer le même style aux autres pages de détails qui n'ont pas encore été refactorisées
+3. **Composant réutilisable** : Créer un composant `CollapsibleCard` réutilisable pour standardiser ce pattern dans l'application
+4. **Animations** : Ajouter des transitions fluides pour l'ouverture/fermeture des sections
+5. **Personnalisation supplémentaire** : Permettre à l'utilisateur de réorganiser les sections selon ses préférences
+
+Cette refactorisation s'inscrit dans une démarche plus large d'amélioration de l'expérience utilisateur et de la maintenabilité du code de l'application TourCraft.
+
+# Restauration des fonctionnalités dans la page ProgrammateurView refactorisée (4 mai 2025)
+
+## Contexte et problème identifié
+
+Suite à la refactorisation précédente de la page ProgrammateurDetails avec une nouvelle interface en cartes, certaines fonctionnalités essentielles étaient manquantes. Bien que l'interface visuelle ait été améliorée, les composants originaux qui géraient des logiques métier spécifiques n'étaient pas correctement intégrés, ce qui rendait la page partiellement non fonctionnelle.
+
+**Principaux problèmes constatés** :
+1. Les sections spécialisées comme ProgrammateurLegalSection n'étaient pas incluses
+2. Le contenu des sections était recréé au lieu d'utiliser les composants existants
+3. Certaines fonctionnalités spécifiques des composants originaux étaient perdues
+
+## Solution implémentée
+
+Une approche hybride a été adoptée pour combiner la nouvelle interface visuelle avec les fonctionnalités complètes des composants originaux :
+
+### 1. Réintégration des composants sectionnels originaux
+
+Au lieu de recréer le contenu des sections avec du code directement dans ProgrammateurView, les composants spécialisés ont été réintégrés :
+
+```jsx
+// Avant (recréation du contenu)
+{sections.contactVisible && (
+  <Card.Body>
+    <div>
+      <p className="mb-2">
+        <strong>Email:</strong> {formatValue(programmateur.email)}
+      </p>
+      <p className="mb-0">
+        <strong>Téléphone:</strong> {formatValue(programmateur.telephone)}
+      </p>
+    </div>
+  </Card.Body>
+)}
+
+// Après (utilisation du composant spécialisé)
+{sections.contactVisible && (
+  <Card.Body>
+    <ProgrammateurContactSection
+      programmateur={programmateur}
+      isEditing={false}
+      formatValue={formatValue}
+    />
+  </Card.Body>
+)}
+```
+
+### 2. Ajout de sections manquantes
+
+La section "Informations légales" qui était absente de la première refactorisation a été réintégrée :
+
+```jsx
+{/* Carte Informations Légales */}
+<Card className="mb-4">
+  <Card.Header className="d-flex justify-content-between align-items-center bg-primary text-white">
+    <h5 className="mb-0">
+      <i className="bi bi-file-earmark-text me-2"></i>
+      Informations légales
+    </h5>
+    <Button 
+      variant="link" 
+      className="p-0 text-white" 
+      onClick={() => toggleSection('legalVisible')}
+    >
+      {sections.legalVisible ? (
+        <i className="bi bi-chevron-up"></i>
+      ) : (
+        <i className="bi bi-chevron-down"></i>
+      )}
+    </Button>
+  </Card.Header>
+  
+  {sections.legalVisible && (
+    <Card.Body>
+      <ProgrammateurLegalSection
+        programmateur={programmateur}
+        isEditing={false}
+        formatValue={formatValue}
+      />
+    </Card.Body>
+  )}
+</Card>
+```
+
+### 3. Conservation des paramètres et props corrects
+
+Toutes les propriétés nécessaires ont été correctement transmises aux composants enfants pour garantir leur bon fonctionnement :
+
+```jsx
+<ProgrammateurStructuresSection 
+  programmateur={programmateur}
+  structure={structure}  // Transmission de l'objet structure complet
+/>
+
+<ProgrammateurLieuxSection
+  programmateur={programmateur}
+  isEditing={false}  // Mode affichage uniquement (pas d'édition)
+/>
+
+<ProgrammateurConcertsSection
+  concertsAssocies={programmateur.concertsAssocies || []}
+  isEditing={false}
+/>
+```
+
+### 4. Maintien de la nouvelle interface visuelle
+
+La structure en cartes avec en-têtes colorés et sections pliables/dépliables a été conservée pour améliorer l'expérience utilisateur.
+
+## Résumé des modifications
+
+| Aspect | Avant | Après |
+|--------|-------|-------|
+| **Interface visuelle** | Structure en cartes avec sections pliables | Conservée |
+| **Fonctionnalités** | Partielles, recréation manuelle du contenu | Complètes, utilisation des composants originaux |
+| **Sections** | Contact, Structure, Lieux, Concerts | Toutes les sections (ajout Informations légales) |
+| **Cohérence** | Interface améliorée mais fonctionnalités réduites | Interface améliorée avec fonctionnalités complètes |
+
+## Avantages de cette approche hybride
+
+1. **Respect des fonctionnalités existantes** : Toutes les fonctionnalités spécifiques des composants originaux sont préservées
+2. **Maintenance facilitée** : Les modifications futures des composants sectionnels seront automatiquement reflétées
+3. **Interface améliorée** : Conservation des améliorations visuelles et ergonomiques apportées par la refactorisation
+4. **Séparation des préoccupations** : Chaque composant sectionnel reste responsable de son affichage spécifique
+
+## Recommandations pour l'avenir
+
+1. **Évolution progressive** : Lors de futures refactorisations, privilégier une approche progressive qui modifie d'abord la structure puis les composants internes
+2. **Tests de régression** : Mettre en place des tests automatisés pour vérifier que les fonctionnalités sont préservées lors des refactorisations
+3. **Documentation détaillée** : Documenter la structure et les responsabilités de chaque composant pour faciliter les futures modifications
+4. **Création de composants d'interface réutilisables** : Standardiser des composants comme `CollapsibleCard` pour unifier l'interface tout en permettant l'encapsulation des composants métier
+
+Cette correction illustre l'importance de combiner judicieusement l'amélioration de l'interface utilisateur avec le respect des fonctionnalités existantes, en tirant parti de la modularité des composants React.

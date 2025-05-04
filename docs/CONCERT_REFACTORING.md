@@ -140,7 +140,31 @@ Pour valider cette refactorisation, les scénarios de test suivants sont recomma
 
 ### Correction des imports pour les hooks de Lieux
 
-Les composants `LieuDetails`, `LieuView` (desktop), et `LieuView` (mobile) importaient incorrectement le hook `useLieuDetails` depuis `@/hooks/lieux/useLieuDetails`, alors qu'il se trouve en réalité dans `@/components/lieux/desktop/hooks/useLieuDetails`. Ces imports ont été corrigés.
+Initialement, les composants `LieuDetails`, `LieuView` (desktop), et `LieuView` (mobile) importaient incorrectement le hook `useLieuDetails` depuis `@/hooks/lieux/useLieuDetails`, alors qu'il se trouvait en réalité dans `@/components/lieux/desktop/hooks/useLieuDetails`. Ces imports ont été corrigés.
+
+### Standardisation de l'emplacement du hook useLieuDetails
+
+Pour maintenir la cohérence architecturale du projet, nous avons procédé à la standardisation de l'emplacement du hook `useLieuDetails` :
+
+1. **Création du hook standardisé** : Le hook a été déplacé de `/components/lieux/desktop/hooks/useLieuDetails.js` vers `/hooks/lieux/useLieuDetails.js`, avec une documentation JSDoc améliorée et des fonctionnalités optimisées (comme la gestion du programmateur associé au lieu).
+
+2. **Mise à jour des imports** : Tous les fichiers utilisant ce hook ont été modifiés pour pointer vers le nouvel emplacement :
+   - `/src/components/lieux/LieuDetails.js`
+   - `/src/components/lieux/desktop/LieuView.js`
+   - `/src/components/lieux/mobile/LieuView.js`
+   - `/src/components/lieux/desktop/LieuDetails.js`
+
+3. **Création du fichier index.js** : Un fichier `index.js` a été créé dans le dossier `/hooks/lieux/` pour faciliter l'importation de tous les hooks liés aux lieux :
+   ```javascript
+   export { default as useLieuDetails } from './useLieuDetails';
+   export { default as useLieuForm } from './useLieuForm';
+   // ... autres hooks
+   ```
+
+Cette standardisation permet :
+- Une meilleure cohérence architecturale (tous les hooks dans `/hooks/[entité]`)
+- Des imports plus propres : `import { useLieuDetails } from '@/hooks/lieux'`
+- Une maintenance facilitée pour l'évolution future des hooks
 
 ## Prochaines étapes
 
@@ -151,6 +175,6 @@ Cette refactorisation peut être étendue à d'autres composants de l'applicatio
 
 Il pourrait également être judicieux de :
 
-1. **Standardiser la localisation des hooks** : Envisager de déplacer les hooks spécifiques à chaque entité vers un emplacement standard (`/hooks/[entité]`) pour améliorer la cohérence
+1. **Standardiser la localisation des autres hooks** : Continuer le travail entamé avec `useLieuDetails` en s'assurant que tous les hooks spécifiques aux entités sont dans le dossier approprié `/hooks/[entité]`
 2. **Compléter les versions mobiles** : Finaliser les versions mobiles qui sont actuellement minimalistes (comme pour Programmateur)
 3. **Ajouter des tests unitaires** : Couvrir les nouveaux composants avec des tests automatisés

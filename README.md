@@ -63,15 +63,36 @@ app-booking/
 
 ### Hooks standardisés
 
-Depuis Mai 2025, les hooks de recherche d'adresse et d'entreprise ont été standardisés. Consultez la [documentation de standardisation des hooks](./src/docs/hooks/StandardisationHooks.md) pour plus de détails. Principes clés :
+Depuis Mai 2025, une standardisation complète des hooks a été mise en place. Tous les hooks sont maintenant organisés dans le dossier `/src/hooks/` avec une structure cohérente par entité. Consultez la [documentation de standardisation des hooks](/docs/hooks/STANDARDISATION_HOOKS.md) pour les détails complets.
 
-- Les hooks partagés sont dans `/hooks/common/`
-- Importez toujours depuis `@/hooks/common` pour les hooks communs
-- Ne dupliquez pas la logique des hooks communs dans des hooks spécifiques
+#### Principes clés :
+
+- Les hooks sont organisés par domaine fonctionnel (`/hooks/common/`, `/hooks/lieux/`, etc.)
+- Utilisez les imports via les fichiers index.js : `import { useHookName } from '@/hooks/category'`
+- Ne créez jamais de hooks dans les dossiers de composants
+- Suivez les conventions d'API documentées pour chaque hook
+
+#### Hooks récemment standardisés :
+- `useProgrammateurSearch` - Recherche et sélection de programmateurs
+- `useAddressSearch` - Recherche et sélection d'adresses 
+- `useLieuDetails` - Gestion des détails d'un lieu
+
+### Refactorisation des composants
+
+Une séparation claire entre les composants de vue et d'édition a été implémentée. Voir la [documentation de refactorisation](/docs/CONCERT_REFACTORING.md) pour plus de détails.
 
 ### Composants UI
 
 Les composants UI réutilisables se trouvent dans `/components/ui/`.
+
+## Documentation technique
+
+- [Architecture du projet](/docs/ARCHITECTURE.md)
+- [Standardisation des hooks](/docs/hooks/STANDARDISATION_HOOKS.md)
+- [Refactorisation des composants](/docs/CONCERT_REFACTORING.md)
+- [Documentation des composants communs](/docs/components/COMMON_COMPONENTS.md)
+- [Documentation des hooks](/docs/hooks/HOOKS.md)
+- [Workflows fonctionnels](/docs/workflows/WORKFLOWS.md)
 
 ## Technologies utilisées
 

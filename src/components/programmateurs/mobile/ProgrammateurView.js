@@ -17,7 +17,6 @@ const ProgrammateurView = () => {
     programmateur, 
     loading, 
     error,
-    toggleEditMode,
     handleDelete,
     formatValue
   } = useProgrammateurDetails(id);
@@ -76,8 +75,10 @@ const ProgrammateurView = () => {
     );
   }
 
-  // Option 1: Afficher le composant UnderConstruction pour la version mobile
-  // return <UnderConstruction />;
+  // Fonction pour rediriger vers la page d'édition
+  const handleEditClick = () => {
+    navigate(`/programmateurs/edit/${id}`);
+  };
   
   // Option 2: Afficher une version simplifiée des détails du programmateur
   return (
@@ -98,7 +99,7 @@ const ProgrammateurView = () => {
             variant="outline-primary" 
             size="sm" 
             className="me-2"
-            onClick={toggleEditMode}
+            onClick={handleEditClick}
           >
             <i className="bi bi-pencil me-1"></i>
             Modifier

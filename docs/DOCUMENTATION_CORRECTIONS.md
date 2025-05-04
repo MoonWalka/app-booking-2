@@ -185,6 +185,89 @@ const concertData = {
 <span className="btn-text">Modifier</span>
 ```
 
+### 5. Correction du bouton "Modifier" dans ProgrammateurDetails (Mai 2025)
+
+## Contexte et problème identifié
+
+Un problème a été identifié dans la fonctionnalité du bouton "Modifier" de la vue détaillée des programmateurs. Lorsqu'un utilisateur clique sur ce bouton, l'application ne passe pas correctement en mode édition. L'analyse du code a révélé que le problème provenait d'une incompatibilité entre la logique de navigation et la gestion de l'état d'édition.
+
+## Modifications effectuées
+
+### 1. Changement de l'approche de navigation
+
+Au lieu d'utiliser la fonction `toggleEditMode` du hook `useProgrammateurDetails` qui modifiait uniquement un état local, nous avons implémenté une navigation explicite vers la route d'édition :
+
+```javascript
+// Avant (ProgrammateurView.js) :
+<Button 
+  variant="outline-primary" 
+  onClick={toggleEditMode}
+  className={styles.actionButton}
+>
+  <i className="bi bi-pencil me-2"></i>
+  Modifier
+</Button>
+
+// Après :
+<Button 
+  variant="outline-primary" 
+  onClick={handleEditClick}
+  className={styles.actionButton}
+>
+  <i className="bi bi-pencil me-2"></i>
+  Modifier
+</Button>
+
+// Fonction ajoutée :
+const handleEditClick = () => {
+  navigate(`/programmateurs/edit/${id}`);
+};
+```
+
+### 2. Mise à jour du composant conteneur ProgrammateurDetails
+
+Le composant parent a été modifié pour répondre aux routes d'édition plutôt qu'à un état interne :
+
+```javascript
+// Avant :
+if (isEditing) {
+  return <ProgrammateurForm id={id} />;
+}
+
+// Après :
+if (location.pathname.includes('/edit/')) {
+  return <ProgrammateurForm id={id} />;
+}
+```
+
+### 3. Cohérence mobile et desktop
+
+Les mêmes modifications ont été appliquées aux versions desktop et mobile des composants pour garantir un comportement cohérent sur tous les appareils.
+
+## Limitations et problèmes persistants
+
+**Important** : Ces modifications résolvent uniquement le problème de navigation entre les modes vue et édition. Elles ne règlent pas les problèmes d'affichage sous-jacents qui sont présents à la fois dans le mode vue et le mode édition.
+
+### Problèmes d'affichage persistants
+
+1. **Mode vue** : Certaines sections comme "Informations juridiques" et "Structure associée" peuvent ne pas s'afficher correctement dans la vue détaillée, même si un programmateur est associé à une structure.
+
+2. **Mode édition** : Le formulaire d'édition présente également des problèmes d'affichage, notamment dans les sections liées aux structures et aux informations juridiques.
+
+Ces problèmes semblent liés à la gestion bidirectionnelle des associations entre programmateurs et structures, comme documenté dans les sections précédentes. Des investigations supplémentaires sont nécessaires pour les résoudre complètement.
+
+## Recommandations pour les prochaines étapes
+
+1. **Vérification de la cohérence des données** : S'assurer que les associations entre programmateurs et structures sont correctement enregistrées et récupérées de la base de données.
+
+2. **Débogage des composants d'affichage** : Ajouter des logs temporaires pour comprendre pourquoi certaines sections ne s'affichent pas correctement.
+
+3. **Révision des composants conditionnels** : Revoir la logique conditionnelle qui détermine l'affichage des différentes sections pour s'assurer qu'elle fonctionne correctement.
+
+4. **Tests de bout en bout** : Mettre en place des tests qui valident le fonctionnement correct du flux complet, de la création d'un programmateur à son édition, en passant par l'association avec une structure.
+
+Cette correction partielle permet aux utilisateurs de naviguer entre les modes vue et édition, mais des travaux supplémentaires sont nécessaires pour garantir une expérience utilisateur optimale et une interface entièrement fonctionnelle.
+
 ## Recommandations pour les corrections futures
 
 1. **Débogage de la création de concerts** : Investiguer pourquoi les concerts créés ne s'affichent pas dans la liste malgré la correction du format de date. Vérifier si d'autres problèmes existent dans le composant `ConcertForm.js` ou dans la façon dont les données sont stockées et récupérées.
@@ -507,3 +590,262 @@ import ConcertStructureSection from './ConcertStructureSection';
 3. **Documentation utilisateur** : Mettre à jour le guide utilisateur pour expliquer la nouvelle relation entre structures et concerts.
 
 4. **Optimisations de performance** : Envisager des optimisations pour les opérations de mise à jour en masse si le nombre d'associations devient important.
+
+# Documentation des corrections et mises à jour
+
+## Correction des problèmes d'affichage dans ProgrammateurDetails (Mai 2025)
+
+### Contexte et problème identifié
+
+Suite à la refactorisation de la gestion des structures (voir `REFACTORING_STRUCTURE.md`), des problèmes d'affichage ont été constatés dans la page des détails des programmateurs. Spécifiquement, les sections "Informations juridiques" et "Structure associée" ne s'affichent pas correctement, même lorsqu'un programmateur est associé à une structure.
+
+Ce problème semble être lié à la façon dont les associations bidirectionnelles entre programmateurs et structures sont gérées après la refactorisation qui a centralisé cette logique dans le service `structureService.js`.
+
+### Modifications effectuées
+
+#### 1. Amélioration du hook `useProgrammateurDetails`
+
+Modifications apportées au hook pour une meilleure gestion des références aux structures :
+
+- Ajout d'un état dédié pour stocker la structure associée au programmateur
+- Vérification et correction automatique des références aux structures inexistantes
+- Ajout de logs de débogage pour faciliter le diagnostic
+- Chargement explicite des données de structure au moment de l'initialisation
+
+```javascript
+const useProgrammateurDetails = (id) => {
+  // ...existing code...
+  const [structure, setStructure] = useState(null);  // Nouvel état
+  
+  // Dans useEffect
+  useEffect(() => {
+    const fetchProgrammateur = async () => {
+      // ...existing code...
+      
+      // Chargement de la structure associée si elle existe
+      if (progData.structureId) {
+        try {
+          const structureDoc = await getDoc(doc(db, 'structures', progData.structureId));
+          if (structureDoc.exists()) {
+            setStructure({
+              id: structureDoc.id,
+              ...structureDoc.data()
+            });
+          } else {
+            // Correction de la référence si la structure n'existe pas
+            await updateDoc(doc(db, 'programmateurs', id), {
+              structureId: null,
+              updatedAt: new Date().toISOString()
+            });
+          }
+        } catch (error) {
+          console.error('Erreur lors du chargement de la structure associée:', error);
+        }
+      }
+      
+      // ...existing code...
+    };
+  }, [id, navigate]);
+  
+  // Exposition de la structure dans le retour du hook
+  return {
+    // ...existing code...
+    structure,
+    // ...existing code...
+  };
+};
+```
+
+#### 2. Révision du composant `ProgrammateurStructuresSection`
+
+Adaptation du composant pour utiliser la structure fournie directement par le parent :
+
+```javascript
+const ProgrammateurStructuresSection = ({ programmateur, structure: structureProp }) => {
+  const [loading, setLoading] = useState(true);
+  const [localStructure, setLocalStructure] = useState(null);
+
+  // Si le parent a fourni la structure, on l'utilise directement
+  const structure = structureProp || localStructure;
+
+  useEffect(() => {
+    // Si une structure est déjà fournie par le parent ou si le programmateur n'a pas de structureId
+    if (structureProp || !programmateur || !programmateur.structureId) {
+      setLoading(false);
+      return;
+    }
+
+    // Logique de chargement de la structure si nécessaire
+    // ...existing code...
+  }, [programmateur, structureProp]);
+  
+  // ...existing code...
+};
+```
+
+#### 3. Mise à jour des composants utilisant ces éléments
+
+Transmission de la structure depuis le hook vers les composants appropriés :
+
+```javascript
+// Dans ProgrammateurView.js et ProgrammateurDetails.js
+const { 
+  programmateur, 
+  structure,  // Récupération de la structure du hook
+  // ...existing code...
+} = useProgrammateurDetails(id);
+
+// ...existing code...
+
+<ProgrammateurStructuresSection 
+  programmateur={programmateur}
+  structure={structure}  // Transmission de la structure au composant
+/>
+```
+
+### Solution temporaire proposée
+
+Si les problèmes persistent, une solution temporaire consiste à désactiver l'association bidirectionnelle entre programmateurs et structures. Cette approche permet de vérifier si le problème provient bien de cette fonctionnalité sans compromettre les fonctionnalités essentielles de l'application.
+
+#### Modification temporaire du service structureService.js
+
+```javascript
+ensureStructureEntity: async (programmateur) => {
+  // ...existing code...
+  
+  try {
+    // Cas 1: Le programmateur a déjà un structureId
+    if (structureId) {
+      // Vérifier que l'entité existe mais sans mettre à jour la référence bidirectionnelle
+      const structureRef = doc(db, 'structures', structureId);
+      const structureDoc = await getDoc(structureRef);
+      
+      if (structureDoc.exists()) {
+        return structureId; // Retourner l'ID sans mise à jour bidirectionnelle
+      }
+    }
+    
+    // Cas 2 et 3: Recherche ou création sans mise à jour bidirectionnelle
+    // ...logique similaire mais sans modifier programmateursAssocies
+    
+    return newStructureId || null;
+  } catch (error) {
+    console.error('Erreur lors de la gestion de l\'entité Structure:', error);
+    return null;
+  }
+},
+```
+
+#### Comment activer cette solution temporaire
+
+1. Modifier le fichier `/src/services/structureService.js` comme indiqué ci-dessus
+2. Commenter temporairement les lignes qui modifient le tableau `programmateursAssocies`
+3. Dans `/src/hooks/programmateurs/useProgrammateurDetails.js`, s'assurer que la structure est récupérée de manière indépendante
+
+Cette solution permettra de vérifier si les problèmes d'affichage sont liés à la gestion bidirectionnelle des associations, tout en maintenant les fonctionnalités essentielles de l'application.
+
+### Recommandations pour les prochaines étapes
+
+1. **Tester la solution temporaire** pour valider ou invalider l'hypothèse que les problèmes sont liés à la gestion bidirectionnelle
+2. Si validée, **revoir l'architecture de la refactorisation** pour assurer une meilleure cohérence des données
+3. **Ajouter des logs supplémentaires** aux points critiques pour mieux comprendre le flux de données
+4. Envisager l'ajout d'un **système de vérification périodique des références** pour maintenir l'intégrité des données
+
+Ces recommandations aideront à identifier et résoudre définitivement les problèmes d'affichage, tout en améliorant la robustesse globale de l'application.
+
+# Correction forcée de l'affichage des sections dans ProgrammateurDetails (Mai 2025)
+
+## Contexte et problème observé
+
+Après les tentatives précédentes de correction qui n'ont pas fonctionné, y compris la désactivation de l'association bidirectionnelle entre programmateurs et structures, les sections "Informations juridiques" et "Structure associée" ne s'affichent toujours pas correctement dans la page des détails des programmateurs.
+
+Le problème semble plus fondamental qu'initialement pensé et pourrait être lié à un bug dans la logique conditionnelle d'affichage ou dans la structure CSS des composants.
+
+## Solution d'urgence implémentée
+
+Face à la persistance du problème, une solution radicale a été adoptée : forcer l'affichage des sections indépendamment de la présence réelle d'une structure associée.
+
+### 1. Modification de `ProgrammateurLegalSection.js`
+
+La logique conditionnelle qui déterminait si les informations juridiques devaient être affichées a été remplacée par une valeur forcée à `true` :
+
+```javascript
+// Avant:
+const hasStructure = isEditing ? !!formData?.structureId : !!programmateur?.structureId;
+
+// Après:
+const hasStructure = true; // Forcer à true pour voir si la section s'affiche
+```
+
+Des logs de diagnostic détaillés ont également été ajoutés pour identifier la cause exacte du problème :
+
+```javascript
+console.log("[DIAGNOSTIC] ProgrammateurLegalSection - isEditing:", isEditing);
+console.log("[DIAGNOSTIC] ProgrammateurLegalSection - programmateur:", programmateur);
+console.log("[DIAGNOSTIC] ProgrammateurLegalSection - formData:", formData);
+console.log("[DIAGNOSTIC] ProgrammateurLegalSection - structureId:", 
+           isEditing ? formData?.structureId : programmateur?.structureId);
+console.log("[DIAGNOSTIC] ProgrammateurLegalSection - hasStructure forcé à:", hasStructure);
+```
+
+### 2. Modification de `ProgrammateurStructuresSection.js`
+
+Une approche similaire a été adoptée pour ce composant, mais avec une solution plus sophistiquée :
+
+- Ajout d'une structure fictive (`mockStructure`) qui est utilisée lorsqu'aucune structure réelle n'est disponible
+- Utilisation conditionnelle des liens selon que la structure est réelle ou fictive
+- Ajout de logs de diagnostic détaillés pour suivre le flux de données
+
+```javascript
+// Créer une structure de test si aucune n'est disponible
+const mockStructure = {
+  id: "structure-test-id",
+  nom: "Structure de test",
+  type: "Association",
+  ville: "Paris",
+};
+
+// Utiliser une structure simulée pour s'assurer que l'interface utilisateur s'affiche
+const displayStructure = structure || mockStructure;
+```
+
+Le rendu conditionnel a été modifié pour utiliser cette structure fictive :
+
+```javascript
+{displayStructure.id !== "structure-test-id" ? (
+  <Link to={`/structures/${displayStructure.id}`} className={styles.structureName}>
+    {displayStructure.nom || displayStructure.raisonSociale || "Structure associée"}
+  </Link>
+) : (
+  <span className={styles.structureName}>
+    {programmateur?.structure || "Structure associée"}
+  </span>
+)}
+```
+
+## Impact et résultats attendus
+
+Ces modifications forcent l'affichage des sections, indépendamment des problèmes sous-jacents :
+
+1. La section "Informations juridiques" s'affiche maintenant systématiquement
+2. La section "Structure associée" affiche soit les informations de la structure réelle, soit une structure fictive 
+3. Les logs de diagnostic fournissent des informations cruciales pour comprendre pourquoi les sections ne s'affichaient pas avant
+
+## Plan pour une solution permanente
+
+Cette solution d'urgence n'est qu'une mesure temporaire pour rendre les fonctionnalités accessibles aux utilisateurs. Les étapes suivantes sont prévues :
+
+1. **Analyse des logs de diagnostic** pour comprendre la cause profonde du problème
+2. **Révision complète de l'architecture** des associations entre programmateurs et structures
+3. **Conception d'une solution propre** basée sur les résultats de l'analyse
+4. **Test approfondi** de la nouvelle implémentation sur différents cas d'usage
+
+## Recommandations
+
+1. **Limiter l'association bidirectionnelle** : La gestion bidirectionnelle des associations entre entités semble être source de nombreux problèmes. Il est recommandé de simplifier cette approche en favorisant une relation principale unidirectionnelle avec des associations secondaires plus souples.
+
+2. **Revoir la logique d'affichage conditionnel** : Les composants devraient être conçus pour s'afficher correctement même lorsque certaines données sont manquantes.
+
+3. **Documenter les invariants** : Définir clairement les invariants (conditions qui doivent toujours être vraies) pour chaque entité et association, afin de garantir la cohérence des données.
+
+4. **Ajouter des tests automatisés** : Créer des tests qui valident spécifiquement le comportement correct de ces composants avec différents scénarios d'entrée.

@@ -5,10 +5,10 @@ import Spinner from '@/components/common/Spinner';
 import Button from '@/components/ui/Button';
 import { toast } from 'react-toastify';
 
-// Import custom hooks
-import useLieuDetails from '@/components/lieux/desktop/hooks/useLieuDetails';
+// Import du hook standardisé
+import useLieuDetails from '@/hooks/lieux/useLieuDetails';
 
-// Import styles - créez ce fichier si nécessaire
+// Import styles
 import styles from './LieuView.module.css';
 
 /**

@@ -225,7 +225,7 @@ function App() {
                 } />
                 
                 {/* Routes pour les contrats */}
-                <Route path="/contrats" element={
+                <Route path="/contrats/*" element={
                   <PrivateRoute>
                     <ContratsPage />
                   </PrivateRoute>

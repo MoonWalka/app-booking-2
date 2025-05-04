@@ -5,6 +5,8 @@ import { useProgrammateurDetails } from '@/hooks/programmateurs';
 import ProgrammateurContactSection from './ProgrammateurContactSection';
 import ProgrammateurLegalSection from './ProgrammateurLegalSection';
 import ProgrammateurConcertsSection from './ProgrammateurConcertsSection';
+import ProgrammateurStructuresSection from './ProgrammateurStructuresSection';
+import ProgrammateurLieuxSection from './ProgrammateurLieuxSection';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import ErrorMessage from '@/components/ui/ErrorMessage';
 import styles from './ProgrammateurDetails.module.css';
@@ -13,6 +15,7 @@ const ProgrammateurDetails = () => {
   const { id } = useParams();
   const { 
     programmateur, 
+    structure,  // Récupérer la structure du hook
     loading, 
     error, 
     isEditing, 
@@ -111,6 +114,20 @@ const ProgrammateurDetails = () => {
             isEditing={isEditing}
             formatValue={formatValue}
           />
+          
+          <div className="mt-4">
+            <ProgrammateurStructuresSection 
+              programmateur={programmateur}
+              structure={structure}  // Passer la structure directement
+            />
+          </div>
+          
+          <div className="mt-4">
+            <ProgrammateurLieuxSection
+              programmateur={programmateur}
+              isEditing={isEditing}
+            />
+          </div>
         </Col>
         <Col md={7}>
           <ProgrammateurLegalSection

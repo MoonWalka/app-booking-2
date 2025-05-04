@@ -1,11 +1,12 @@
 // src/components/programmateurs/desktop/ProgrammateurView.js
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { useProgrammateurDetails } from '@/hooks/programmateurs';
 import ProgrammateurContactSection from './ProgrammateurContactSection';
 import ProgrammateurLegalSection from './ProgrammateurLegalSection';
 import ProgrammateurConcertsSection from './ProgrammateurConcertsSection';
+import ProgrammateurStructuresSection from './ProgrammateurStructuresSection';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import ErrorMessage from '@/components/ui/ErrorMessage';
 import styles from './ProgrammateurDetails.module.css';
@@ -16,11 +17,12 @@ import styles from './ProgrammateurDetails.module.css';
  */
 const ProgrammateurView = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { 
     programmateur, 
+    structure,  // Récupérer la structure du hook
     loading, 
     error,
-    toggleEditMode,
     handleDelete,
     isSubmitting,
     formatValue
@@ -38,6 +40,11 @@ const ProgrammateurView = () => {
     return <ErrorMessage message="Programmateur introuvable" />;
   }
   
+  // Fonction pour rediriger vers la page d'édition
+  const handleEditClick = () => {
+    navigate(`/programmateurs/edit/${id}`);
+  };
+  
   return (
     <Container className={styles.programmateurDetails}>
       <div className={styles.header}>
@@ -50,7 +57,7 @@ const ProgrammateurView = () => {
         <div className={styles.actions}>
           <Button 
             variant="outline-primary" 
-            onClick={toggleEditMode}
+            onClick={handleEditClick}
             className={styles.actionButton}
           >
             <i className="bi bi-pencil me-2"></i>
@@ -74,6 +81,13 @@ const ProgrammateurView = () => {
             isEditing={false}
             formatValue={formatValue}
           />
+          
+          <div className="mt-4">
+            <ProgrammateurStructuresSection 
+              programmateur={programmateur}
+              structure={structure}  // Passer la structure directement
+            />
+          </div>
         </Col>
         <Col md={7}>
           <ProgrammateurLegalSection

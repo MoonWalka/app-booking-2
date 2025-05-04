@@ -6,8 +6,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import Spinner from '@/components/common/Spinner';
 import Button from '@/components/ui/Button';
 
-// Import custom hooks
-import useLieuDetails from '@/components/lieux/desktop/hooks/useLieuDetails';
+// Import du hook standardisé
+import useLieuDetails from '@/hooks/lieux/useLieuDetails';
 
 // Import section components
 import { LieuHeader } from './sections/LieuHeader';

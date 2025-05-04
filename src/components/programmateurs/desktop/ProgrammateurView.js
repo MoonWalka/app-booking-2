@@ -1,32 +1,49 @@
 // src/components/programmateurs/desktop/ProgrammateurView.js
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { useProgrammateurDetails } from '@/hooks/programmateurs';
 import ProgrammateurContactSection from './ProgrammateurContactSection';
 import ProgrammateurLegalSection from './ProgrammateurLegalSection';
 import ProgrammateurConcertsSection from './ProgrammateurConcertsSection';
 import ProgrammateurStructuresSection from './ProgrammateurStructuresSection';
+import ProgrammateurLieuxSection from './ProgrammateurLieuxSection';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import ErrorMessage from '@/components/ui/ErrorMessage';
 import styles from './ProgrammateurDetails.module.css';
 
 /**
- * Composant d'affichage des détails d'un programmateur - Version Desktop
- * Séparé du mode édition pour une meilleure séparation des préoccupations
+ * Composant d'affichage des détails d'un programmateur - Version Desktop refactorisée
+ * Structure en cartes tout en conservant les fonctionnalités originales
  */
 const ProgrammateurView = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { 
     programmateur, 
-    structure,  // Récupérer la structure du hook
+    structure,
     loading, 
     error,
     handleDelete,
-    isSubmitting,
     formatValue
   } = useProgrammateurDetails(id);
+  
+  // État local pour contrôler l'affichage des sections
+  const [sections, setSections] = useState({
+    contactVisible: true,
+    legalVisible: true,
+    structureVisible: true,
+    lieuxVisible: true,
+    concertsVisible: true
+  });
+  
+  // Gestion du toggle des sections
+  const toggleSection = (sectionName) => {
+    setSections(prev => ({
+      ...prev,
+      [sectionName]: !prev[sectionName]
+    }));
+  };
   
   if (loading) {
     return <LoadingSpinner />;
@@ -47,61 +64,191 @@ const ProgrammateurView = () => {
   
   return (
     <Container className={styles.programmateurDetails}>
-      <div className={styles.header}>
-        <h2>
-          {programmateur.nom}
-          {programmateur.fonction && (
-            <span className={styles.fonction}> - {programmateur.fonction}</span>
-          )}
-        </h2>
-        <div className={styles.actions}>
-          <Button 
-            variant="outline-primary" 
-            onClick={handleEditClick}
-            className={styles.actionButton}
-          >
-            <i className="bi bi-pencil me-2"></i>
-            Modifier
-          </Button>
-          <Button 
-            variant="outline-danger" 
-            onClick={handleDelete}
-            className={styles.actionButton}
-          >
-            <i className="bi bi-trash me-2"></i>
-            Supprimer
-          </Button>
-        </div>
-      </div>
+      {/* En-tête avec titre et actions */}
+      <Card className="mb-4 bg-light">
+        <Card.Body>
+          <div className="d-flex justify-content-between align-items-center">
+            <div>
+              <h2 className="mb-0">
+                {programmateur.nom || 'Sans nom'} 
+                {programmateur.fonction && <span className="text-muted fs-5"> ({programmateur.fonction})</span>}
+              </h2>
+            </div>
+            <div>
+              <Button 
+                variant="outline-primary" 
+                onClick={handleEditClick}
+                className="me-2"
+              >
+                <i className="bi bi-pencil me-2"></i>
+                Modifier
+              </Button>
+              <Button 
+                variant="outline-danger" 
+                onClick={handleDelete}
+              >
+                <i className="bi bi-trash me-2"></i>
+                Supprimer
+              </Button>
+            </div>
+          </div>
+        </Card.Body>
+      </Card>
       
-      <Row className="mt-4">
-        <Col md={5}>
-          <ProgrammateurContactSection
-            programmateur={programmateur}
-            isEditing={false}
-            formatValue={formatValue}
-          />
+      {/* Disposition en une seule colonne */}
+      <Row>
+        <Col>
+          {/* Carte Contact */}
+          <Card className="mb-4">
+            <Card.Header className="d-flex justify-content-between align-items-center bg-primary text-white">
+              <h5 className="mb-0">
+                <i className="bi bi-person-vcard me-2"></i>
+                Informations de contact
+              </h5>
+              <Button 
+                variant="link" 
+                className="p-0 text-white" 
+                onClick={() => toggleSection('contactVisible')}
+              >
+                {sections.contactVisible ? (
+                  <i className="bi bi-chevron-up"></i>
+                ) : (
+                  <i className="bi bi-chevron-down"></i>
+                )}
+              </Button>
+            </Card.Header>
+            
+            {sections.contactVisible && (
+              <Card.Body>
+                <ProgrammateurContactSection
+                  programmateur={programmateur}
+                  isEditing={false}
+                  formatValue={formatValue}
+                />
+              </Card.Body>
+            )}
+          </Card>
+
+          {/* Carte Informations Légales */}
+          <Card className="mb-4">
+            <Card.Header className="d-flex justify-content-between align-items-center bg-primary text-white">
+              <h5 className="mb-0">
+                <i className="bi bi-file-earmark-text me-2"></i>
+                Informations légales
+              </h5>
+              <Button 
+                variant="link" 
+                className="p-0 text-white" 
+                onClick={() => toggleSection('legalVisible')}
+              >
+                {sections.legalVisible ? (
+                  <i className="bi bi-chevron-up"></i>
+                ) : (
+                  <i className="bi bi-chevron-down"></i>
+                )}
+              </Button>
+            </Card.Header>
+            
+            {sections.legalVisible && (
+              <Card.Body>
+                <ProgrammateurLegalSection
+                  programmateur={programmateur}
+                  isEditing={false}
+                  formatValue={formatValue}
+                />
+              </Card.Body>
+            )}
+          </Card>
           
-          <div className="mt-4">
-            <ProgrammateurStructuresSection 
-              programmateur={programmateur}
-              structure={structure}  // Passer la structure directement
-            />
-          </div>
-        </Col>
-        <Col md={7}>
-          <ProgrammateurLegalSection
-            programmateur={programmateur}
-            isEditing={false}
-            formatValue={formatValue}
-          />
+          {/* Carte Structure */}
+          <Card className="mb-4">
+            <Card.Header className="d-flex justify-content-between align-items-center bg-primary text-white">
+              <h5 className="mb-0">
+                <i className="bi bi-building me-2"></i>
+                Structure
+              </h5>
+              <Button 
+                variant="link" 
+                className="p-0 text-white" 
+                onClick={() => toggleSection('structureVisible')}
+              >
+                {sections.structureVisible ? (
+                  <i className="bi bi-chevron-up"></i>
+                ) : (
+                  <i className="bi bi-chevron-down"></i>
+                )}
+              </Button>
+            </Card.Header>
+            
+            {sections.structureVisible && (
+              <Card.Body>
+                <ProgrammateurStructuresSection 
+                  programmateur={programmateur}
+                  structure={structure}
+                />
+              </Card.Body>
+            )}
+          </Card>
           
-          <div className="mt-4">
-            <ProgrammateurConcertsSection
-              concertsAssocies={programmateur.concertsAssocies || []}
-              isEditing={false}
-            />
-          </div>
+          {/* Carte Lieux */}
+          <Card className="mb-4">
+            <Card.Header className="d-flex justify-content-between align-items-center bg-primary text-white">
+              <h5 className="mb-0">
+                <i className="bi bi-geo-alt me-2"></i>
+                Lieux associés
+              </h5>
+              <Button 
+                variant="link" 
+                className="p-0 text-white" 
+                onClick={() => toggleSection('lieuxVisible')}
+              >
+                {sections.lieuxVisible ? (
+                  <i className="bi bi-chevron-up"></i>
+                ) : (
+                  <i className="bi bi-chevron-down"></i>
+                )}
+              </Button>
+            </Card.Header>
+            
+            {sections.lieuxVisible && (
+              <Card.Body>
+                <ProgrammateurLieuxSection
+                  programmateur={programmateur}
+                  isEditing={false}
+                />
+              </Card.Body>
+            )}
+          </Card>
+
+          {/* Carte Concerts */}
+          <Card className="mb-4">
+            <Card.Header className="d-flex justify-content-between align-items-center bg-primary text-white">
+              <h5 className="mb-0">
+                <i className="bi bi-calendar-event me-2"></i>
+                Concerts associés
+              </h5>
+              <Button 
+                variant="link" 
+                className="p-0 text-white" 
+                onClick={() => toggleSection('concertsVisible')}
+              >
+                {sections.concertsVisible ? (
+                  <i className="bi bi-chevron-up"></i>
+                ) : (
+                  <i className="bi bi-chevron-down"></i>
+                )}
+              </Button>
+            </Card.Header>
+            
+            {sections.concertsVisible && (
+              <Card.Body>
+                <ProgrammateurConcertsSection
+                  concertsAssocies={programmateur.concertsAssocies || []}
+                  isEditing={false}
+                />
+              </Card.Body>
+            )}
+          </Card>
         </Col>
       </Row>
     </Container>

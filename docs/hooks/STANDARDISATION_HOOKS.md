@@ -189,3 +189,64 @@ Pour compléter la standardisation des hooks dans l'ensemble du projet :
 
 - **Mai 2024** : Standardisation initiale des hooks liés aux lieux et programmateurs
 - **4 mai 2025** : Corrections et optimisations, mise à jour de la documentation
+
+## Hooks consolidés récemment (Mai 2025)
+
+| Hook | Location | Description | 
+|------|----------|-------------|
+| `useAddressSearch` | `/hooks/common/` | Recherche et sélection d'adresses |
+| `useCompanySearch` | `/hooks/common/` | Recherche d'entreprises par nom ou SIRET |
+| `useLocationIQ` | `/hooks/common/` | Interface avec l'API LocationIQ |
+| `useTheme` | `/hooks/common/` | Application des thèmes et variables CSS |
+| `useResponsive` | `/hooks/common/` | Gestion responsive (remplace useResponsiveComponent et useIsMobile) |
+| `useSearchAndFilter` | `/hooks/search/` | Filtrage et recherche génériques |
+| `useFormSubmission` | `/hooks/forms/` | Hook générique pour soumission de formulaires |
+| `useConcertSubmission` | `/hooks/concerts/` | Hook spécifique pour les concerts, utilise useFormSubmission |
+| `useArtisteSearch` | `/hooks/artistes/` | Hook spécifique pour la recherche d'artistes, utilise useSearchAndFilter |
+| `useStructureSearch` | `/hooks/structures/` | Recherche de structures par nom, ville ou SIRET |
+
+## Désactivation temporaire du hook useStructureSearch (Mai 2025)
+
+Suite à des problèmes d'initialisation du hook `useStructureSearch` dans le composant `ProgrammateurLegalSection`, une décision temporaire a été prise de désactiver complètement la fonctionnalité de recherche de structures dans ce composant.
+
+### Problème rencontré
+
+L'erreur suivante se produisait lors de l'initialisation du composant :
+```
+Cannot access uninitialized variable.
+default@http://localhost:3000/programmateurs-desktop-ProgrammateurLegalSection.xxx.hot-update.js
+```
+
+Cette erreur était causée par un conflit entre différentes méthodes d'exportation du hook `useStructureSearch`.
+
+### Approche adoptée
+
+Pour permettre à l'application de continuer à fonctionner normalement, la solution suivante a été implémentée :
+
+1. **Simplification du composant ProgrammateurLegalSection** :
+   - Suppression complète de la fonctionnalité de recherche et d'autocomplete pour les structures
+   - Conservation uniquement des fonctionnalités d'édition manuelle des champs relatifs à la structure
+   - Retrait des dépendances vers `useStructureSearch`
+
+2. **Conservation du hook useStructureSearch** :
+   - Le hook a été maintenu dans `/hooks/structures/index.js` pour une utilisation future
+   - Les exports ont été normalisés pour suivre les standards React
+
+### Impact fonctionnel
+
+- Les utilisateurs ne peuvent plus rechercher et sélectionner une structure existante dans le formulaire d'édition des programmateurs
+- Ils doivent saisir manuellement les informations de la structure
+- Toutes les autres fonctionnalités du formulaire d'édition des programmateurs restent opérationnelles
+
+### Plan de résolution future
+
+Une refactorisation plus complète sera nécessaire pour réintégrer cette fonctionnalité. Les étapes suivantes sont prévues :
+
+1. Revoir la structure d'exportation des hooks pour garantir une compatibilité complète
+2. Vérifier l'implémentation du hook `useStructureSearch` et les champs requis par Firestore
+3. Tester l'intégration de ce hook dans d'autres composants avant de le réintégrer dans `ProgrammateurLegalSection`
+4. Documenter correctement son utilisation pour éviter des problèmes similaires à l'avenir
+
+### Date de mise à jour prévue
+
+Cette fonctionnalité sera reimplémentée après la consolidation de l'architecture des hooks et la résolution des problèmes d'indexation dans Firestore, prévue pour Juin 2025.

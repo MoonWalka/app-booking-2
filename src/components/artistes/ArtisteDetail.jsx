@@ -1,9 +1,10 @@
 // src/components/artistes/ArtisteDetail.jsx
-import React, { useState, useEffect } from 'react';
-import { useResponsiveComponent } from '@/hooks/useResponsiveComponent';
+import React from 'react';
+import { useResponsive } from '@/hooks/common/useResponsive';
 
 function ArtisteDetail(props) {
-  const ResponsiveComponent = useResponsiveComponent({
+  const { getResponsiveComponent } = useResponsive();
+  const ResponsiveComponent = getResponsiveComponent({
     desktopPath: 'artistes/desktop/ArtisteDetail',
     mobilePath: 'artistes/mobile/ArtisteDetail'
   });

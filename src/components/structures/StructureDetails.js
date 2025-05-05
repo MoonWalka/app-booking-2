@@ -1,9 +1,10 @@
 // src/components/structures/StructureDetails.js
 import React from 'react';
-import { useResponsiveComponent } from '@/hooks/useResponsiveComponent';
+import { useResponsive } from '@/hooks/common/useResponsive';
 
 function StructureDetails(props) {
-  const ResponsiveComponent = useResponsiveComponent({
+  const { getResponsiveComponent } = useResponsive();
+  const ResponsiveComponent = getResponsiveComponent({
     desktopPath: 'structures/desktop/StructureDetails',
     mobilePath: 'structures/mobile/StructureDetails'
   });

@@ -1,7 +1,7 @@
 # Guide de Migration de useIsMobile vers useResponsive
 
 *Document créé le: 5 mai 2025*
-*Dernière mise à jour: 5 mai 2025*
+*Dernière mise à jour: 6 mai 2025*
 
 Ce guide explique comment migrer du hook déprécié `useIsMobile` vers le hook unifié `useResponsive` qui offre des fonctionnalités plus avancées et une meilleure performance.
 
@@ -30,6 +30,11 @@ Le hook `useResponsive` offre plusieurs avantages par rapport à `useIsMobile` :
 4. **Performance améliorée** :
    - Utilisation de useCallback et useMemo pour optimiser les rendus
    - Debounce intégré pour limiter les appels lors des redimensionnements
+
+5. **Maintenabilité accrue** :
+   - API unifiée et cohérente
+   - Meilleure documentée
+   - Standardisation des approches responsive
 
 ## Exemples de Migration
 
@@ -169,59 +174,170 @@ function MyAdminComponent() {
 }
 ```
 
-## Exemple concret : Migration de ContratGenerator.js
+## Exemples concrets des migrations réalisées dans TourCraft
 
-### Avant :
+### Migration de ContratGenerator.js
+
+#### Avant :
 
 ```javascript
+// src/components/contrats/ContratGenerator.js
+import React from 'react';
 import { useIsMobile } from '@/hooks/useIsMobile';
+import DesktopContratGenerator from './desktop/ContratGenerator';
 
-const ContratGenerator = ({ concertId }) => {
+function ContratGenerator(props) {
+  const isMobile = useIsMobile();
+  
+  return <DesktopContratGenerator {...props} />;
+}
+```
+
+#### Après :
+
+```javascript
+// src/components/contrats/ContratGenerator.js
+import React from 'react';
+import { useResponsive } from '@/hooks/common/useResponsive';
+import DesktopContratGenerator from './desktop/ContratGenerator';
+
+function ContratGenerator(props) {
+  const { isMobile } = useResponsive();
+  
+  return <DesktopContratGenerator {...props} />;
+}
+```
+
+### Migration de ContratTemplateEditor.js
+
+#### Avant :
+
+```javascript
+// src/components/contrats/ContratTemplateEditor.js
+import React from 'react';
+import { useIsMobile } from '@/hooks/useIsMobile';
+import DesktopContratTemplateEditor from './desktop/ContratTemplateEditor';
+
+function ContratTemplateEditor(props) {
+  const { isModal, ...otherProps } = props;
   const isMobile = useIsMobile();
   
   return (
-    <div className={`contrat-generator ${isMobile ? 'mobile' : 'desktop'}`}>
-      {isMobile ? (
-        <div className="mobile-warning">
-          La génération de contrats est optimisée pour ordinateur
-        </div>
-      ) : null}
-      <h2>Générateur de contrat</h2>
-      {/* Contenu du générateur */}
-    </div>
+    <DesktopContratTemplateEditor 
+      {...otherProps} 
+      isModalContext={isModal === true}
+    />
   );
-};
+}
 ```
 
-### Après :
+#### Après :
 
 ```javascript
-import { useResponsive } from '@/hooks/common';
+// src/components/contrats/ContratTemplateEditor.js
+import React from 'react';
+import { useResponsive } from '@/hooks/common/useResponsive';
+import DesktopContratTemplateEditor from './desktop/ContratTemplateEditor';
 
-const ContratGenerator = ({ concertId }) => {
-  const { isMobile, dimensions } = useResponsive();
-  
-  // Utilisation des dimensions pour adapter l'interface
-  const isSmallScreen = dimensions.width < 500;
+function ContratTemplateEditor(props) {
+  const { isModal, ...otherProps } = props;
+  const { isMobile } = useResponsive();
   
   return (
-    <div className={`contrat-generator ${isMobile ? 'mobile' : 'desktop'}`}>
-      {isMobile ? (
-        <div className="mobile-warning">
-          La génération de contrats est optimisée pour ordinateur
-        </div>
-      ) : null}
-      <h2>Générateur de contrat</h2>
-      {/* Adaptation du contenu selon la taille exacte */}
-      {isSmallScreen ? (
-        <SimplifiedContratForm concertId={concertId} />
-      ) : (
-        <FullContratForm concertId={concertId} />
-      )}
-    </div>
+    <DesktopContratTemplateEditor 
+      {...otherProps} 
+      isModalContext={isModal === true}
+    />
   );
-};
+}
 ```
+
+### Migration des composants façades - Mise à jour du 6 mai 2025
+
+Plusieurs composants façades qui utilisaient encore l'ancien hook `useResponsiveComponent` ont été mis à jour pour utiliser `useResponsive().getResponsiveComponent`. Cette migration assure la cohérence du code et élimine les avertissements de dépréciation dans la console.
+
+#### Composants mis à jour:
+
+1. **Modules d'artistes**:
+   - `ArtistesList.js`
+   - `ArtisteDetail.jsx`
+   - `ArtisteForm.js` / `ArtisteForm.jsx`
+
+2. **Modules de structures**:
+   - `StructuresList.js`
+   - `StructureDetails.js`
+
+3. **Modules de lieux**:
+   - `LieuxList.js`
+   - `LieuForm.js`
+
+4. **Modules divers**:
+   - `FormValidationInterface.js`
+   - `ConcertsList.js`
+   - Commentaires mis à jour dans `Layout.js`
+
+#### Exemple de migration:
+
+##### Avant:
+
+```javascript
+// src/components/lieux/LieuxList.js
+import React from 'react';
+import { useResponsiveComponent } from '@/hooks/useResponsiveComponent';
+import Spinner from '@/components/common/Spinner';
+
+function LieuxList(props) {
+  // Create a custom fallback with our standardized Spinner component
+  const customFallback = <Spinner message="Chargement de la liste des lieux..." contentOnly={true} />;
+  
+  const ResponsiveComponent = useResponsiveComponent({
+    desktopPath: 'lieux/desktop/LieuxList',
+    mobilePath: 'lieux/mobile/LieuxList',
+    fallback: customFallback
+  });
+  
+  return <ResponsiveComponent {...props} />;
+}
+```
+
+##### Après:
+
+```javascript
+// src/components/lieux/LieuxList.js
+import React from 'react';
+import { useResponsive } from '@/hooks/common/useResponsive';
+import Spinner from '@/components/common/Spinner';
+
+function LieuxList(props) {
+  // Create a custom fallback with our standardized Spinner component
+  const customFallback = <Spinner message="Chargement de la liste des lieux..." contentOnly={true} />;
+  
+  const { getResponsiveComponent } = useResponsive();
+  const ResponsiveComponent = getResponsiveComponent({
+    desktopPath: 'lieux/desktop/LieuxList',
+    mobilePath: 'lieux/mobile/LieuxList',
+    fallback: customFallback
+  });
+  
+  return <ResponsiveComponent {...props} />;
+}
+```
+
+#### Approches utilisées:
+
+1. **Approche avec destructuration (recommandée)**: 
+   ```javascript
+   const { getResponsiveComponent } = useResponsive();
+   const ResponsiveComponent = getResponsiveComponent({ ... });
+   ```
+
+2. **Approche alternative**:
+   ```javascript
+   const responsive = useResponsive();
+   const ResponsiveComponent = responsive.getResponsiveComponent({ ... });
+   ```
+
+Les deux approches sont valides, mais la première est plus concise et aligne le code sur le style préféré du projet.
 
 ## Options de Configuration
 
@@ -234,36 +350,34 @@ Le hook `useResponsive` accepte un objet de configuration avec les options suiva
 
 ## API complète de useResponsive
 
-Le hook `useResponsive` retourne un objet avec les propriétés suivantes :
+Le hook retourne un objet avec les propriétés et méthodes suivantes :
 
-| Propriété | Type | Description |
-|-----------|------|-------------|
-| `isMobile` | boolean | Indique si l'affichage est en mode mobile |
-| `isDesktop` | boolean | Indique si l'affichage est en mode desktop (inverse de `isMobile`) |
-| `dimensions` | object | Dimensions de l'écran (`{ width: number, height: number }`) |
-| `updateDimensions` | function | Fonction pour mettre à jour manuellement les dimensions |
-| `checkIsMobile` | function | Fonction pour vérifier si une largeur donnée est considérée comme mobile |
-| `getResponsiveComponent` | function | Fonction pour créer un composant dynamiquement chargé selon le mode |
-| `screenWidth` | number | Raccourci pour `dimensions.width` |
-| `screenHeight` | number | Raccourci pour `dimensions.height` |
+| Propriété/Méthode | Type | Description |
+|-------------------|------|-------------|
+| `isMobile` | boolean | Indique si l'écran actuel est considéré comme mobile |
+| `dimensions` | object | Objet contenant la largeur (`width`) et la hauteur (`height`) de la fenêtre |
+| `updateDimensions` | function | Force la mise à jour des dimensions et du statut mobile |
+| `checkIsMobile` | function | Vérifie si une largeur donnée est considérée comme mobile |
+| `getResponsiveComponent` | function | Charge dynamiquement le composant mobile ou desktop approprié |
 
 ## Plan de Transition
 
 Pour faciliter la migration, nous suivons un plan de transition en trois phases :
 
-1. **Phase immédiate (d'ici le 7 mai 2025)** :
+1. **Phase immédiate (d'ici le 7 mai 2025) ✅** :
    - Migration des composants qui utilisent encore activement `useIsMobile`
    - Création de ce guide de migration
    - Mise à jour des tests unitaires
 
-2. **Phase intermédiaire (8-15 mai 2025)** :
+2. **Phase intermédiaire (8-15 mai 2025) 🔄** :
    - `useIsMobile.js` sera transformé en simple wrapper autour de `useResponsive`
    - Surveillance des journaux d'erreur pour détecter des utilisations non documentées
    - Ajout de warnings dans la console pour encourager la migration
 
-3. **Phase finale (après le 15 mai 2025)** :
+3. **Phase finale (après le 15 mai 2025) 📝** :
    - Suppression complète de `useIsMobile.js`
    - Mise à jour de toute la documentation qui pourrait encore y faire référence
+   - Suppression des avertissements obsolètes dans le code
 
 ## Cas particuliers et solutions
 
@@ -285,26 +399,29 @@ const { isMobile } = useResponsive({ breakpoint: 1024 }); // Considère mobile e
 
 ### Problème : Besoin d'accéder au context dans un composant chargé dynamiquement
 
-**Solution :** Encapsuler avec les providers nécessaires :
+**Solution :** Utiliser React.lazy directement avec un contexte explicite :
 
 ```javascript
-const ResponsiveView = getResponsiveComponent({
-  desktopPath: 'path/to/DesktopView',
-  mobilePath: 'path/to/MobileView'
-});
+const ContextualComponent = React.lazy(() => import('./path/to/Component'));
 
-return (
-  <MyContext.Provider value={contextValue}>
-    <ResponsiveView {...props} />
-  </MyContext.Provider>
-);
+function MyComponent() {
+  const { isMobile } = useResponsive();
+  
+  return (
+    <MyContext.Provider value={contextValue}>
+      <React.Suspense fallback={<Spinner />}>
+        {isMobile ? <MobileView /> : <ContextualComponent />}
+      </React.Suspense>
+    </MyContext.Provider>
+  );
+}
 ```
 
 ## Conclusion
 
-La migration de `useIsMobile` vers `useResponsive` offre de nombreux avantages en termes de fonctionnalités et de performances. En suivant ce guide, vous pourrez facilement adapter vos composants pour tirer parti de ces améliorations tout en maintenant la compatibilité avec le code existant.
+La migration vers `useResponsive` permettra une meilleure cohérence dans notre codebase, des performances accrues et une meilleure expérience développeur. N'hésitez pas à consulter l'équipe responsable de la migration si vous avez des questions spécifiques.
 
-Pour toute question ou assistance supplémentaire, contactez l'équipe de développement frontend.
+Si vous rencontrez des obstacles ou des cas d'utilisation non couverts par ce guide, veuillez les signaler à l'équipe Documentation pour que nous puissions enrichir ce document.
 
 ---
 

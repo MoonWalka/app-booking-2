@@ -13,6 +13,7 @@ import Button from '../ui/Button';
  * @param {string} [props.variant='primary'] - Button variant
  * @param {string} [props.size=''] - Button size
  * @param {Function} [props.onClick] - Click handler
+ * @param {ReactNode} [props.children] - Button content (optional for iconOnly buttons)
  */
 const ActionButton = ({ 
   to, 
@@ -21,6 +22,7 @@ const ActionButton = ({
   variant = 'primary',
   size = 'sm',
   onClick,
+  children = '', // Provide a default empty string for children
   ...restProps 
 }) => {
   // Common props for both button types
@@ -31,6 +33,7 @@ const ActionButton = ({
     iconOnly: true,
     tooltip,
     className: `${styles.actionButton}`,
+    children, // Pass the children prop to Button component
     ...restProps
   };
 

@@ -1,7 +1,7 @@
 // src/components/common/Layout.js
 import React, { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
-import { useResponsiveComponent } from '@/hooks/useResponsiveComponent';
+import { useResponsive } from '@/hooks/common/useResponsive';
 
 // Import direct du DesktopLayout pour forcer son utilisation
 import DesktopLayout from './layout/DesktopLayout';
@@ -11,12 +11,13 @@ function Layout() {
   const [retryCount, setRetryCount] = useState(0);
   
   // TODO: Réactiver le mode mobile plus tard.
-  // Pour l'instant, on utilise directement le DesktopLayout au lieu de passer par useResponsiveComponent
+  // Pour l'instant, on utilise directement le DesktopLayout au lieu de passer par useResponsive
   
-  /* Code original commenté pour référence future
+  /* Code mis à jour commenté pour référence future
   // Charger le composant de mise en page responsive avec un fallback personnalisé
-  // qui sera utilisé à la place du fallback par défaut dans useResponsiveComponent
-  const ResponsiveLayout = useResponsiveComponent({
+  // qui sera utilisé à la place du fallback par défaut dans useResponsive
+  const { getResponsiveComponent } = useResponsive();
+  const ResponsiveLayout = getResponsiveComponent({
     desktopPath: 'common/layout/DesktopLayout',
     mobilePath: 'common/layout/MobileLayout',
     breakpoint: 768,

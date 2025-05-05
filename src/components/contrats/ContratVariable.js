@@ -1,5 +1,5 @@
 import React from 'react';
-import { useIsMobile } from '@/hooks/useIsMobile';
+import { useResponsive } from '@/hooks/common/useResponsive';
 import styles from './ContratVariable.module.css';
 
 /**
@@ -8,7 +8,7 @@ import styles from './ContratVariable.module.css';
  */
 const ContratVariable = ({ name, description, onInsert }) => {
   // TODO: Réactiver le mode mobile plus tard.
-  // const isMobile = useIsMobile();
+  // const { isMobile } = useResponsive();
   const isMobile = false; // Force l'utilisation de la version desktop
   
   // Version mobile (simple)

@@ -1,7 +1,7 @@
 # Plan de Consolidation de la Documentation TourCraft
 
 *Document créé le: 5 mai 2025*
-*Mise à jour: 5 mai 2025*
+*Mise à jour: 7 mai 2025*
 *Basé sur l'AUDIT_GLOBAL_DOCUMENTATION.md du 5 mai 2025*
 
 ## État Actuel d'Avancement
@@ -13,6 +13,10 @@ Suite à l'audit global de la documentation, plusieurs actions recommandées ont
 ✅ **Création d'un index de documentation** : Le document README.md central a été mis en place avec une navigation complète vers toutes les sections
 
 ✅ **Archivage des documents obsolètes** : Les documents obsolètes ont été déplacés dans le dossier `/docs/archive/`
+
+✅ **Migration de plusieurs composants clés** : Les composants ContratGenerator.js et ContratTemplateEditor.js ont été migrés vers useResponsive le 7 mai 2025
+
+✅ **Migration de hooks spécifiques vers génériques** : useStructureDetails et useContratDetails ont été migrés vers les hooks génériques le 7 mai 2025
 
 Ce plan révisé se concentre maintenant sur les actions de consolidation restantes.
 
@@ -60,16 +64,22 @@ Ce plan révisé se concentre maintenant sur les actions de consolidation restan
 
 ### Documentation des Plans de Migration/Refactorisation
 
-7. **Plan de Migration Global** (nouveau document consolidé)
-   - État actuel de la migration
-   - Prochaines étapes
-   - Échéances
-   - Responsabilités
+7. ✅ **Plan de Migration Global** (document consolidé existant)
+   - Le document ETAT_MIGRATION_CONSOLIDATION.md a été créé le 5 mai 2025 et mis à jour le 7 mai 2025
+   - Il centralise déjà l'état d'avancement de toutes les initiatives de refactorisation et migration
+   - Il clarifie les incohérences identifiées entre différents documents
+   - Il présente une chronologie unifiée des jalons passés, actuels et futurs
 
-8. **Journal des Migrations** (conserver JOURNAL_MIGRATION_HOOKS.md mais le centraliser)
-   - Chronologie des travaux effectués
-   - Problèmes rencontrés et solutions
-   - Métriques de progression
+8. ✅ **Guide de Migration useIsMobile → useResponsive** (document créé)
+   - Le document GUIDE_MIGRATION_USEMOBILE.md créé le 5 mai 2025 et mis à jour le 7 mai 2025
+   - Contient des exemples concrets des migrations déjà réalisées (ContratGenerator.js, ContratTemplateEditor.js)
+   - Fournit un plan de transition progressif en 3 phases (actuelle: phase 1 complétée)
+   - Explique les avantages et l'API complète du nouveau hook useResponsive
+
+9. **Journal des Migrations** (à centraliser)
+   - Le document JOURNAL_MIGRATION_HOOKS.md sera maintenu mais référencé dans ETAT_MIGRATION_CONSOLIDATION.md
+   - Centraliser les informations de chronologie dans un unique document de suivi
+   - Développer un format standard pour documenter les migrations futures
 
 ## Plan d'Exécution
 

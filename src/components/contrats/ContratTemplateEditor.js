@@ -1,6 +1,6 @@
 // src/components/contrats/ContratTemplateEditor.js
 import React from 'react';
-import { useIsMobile } from '@/hooks/useIsMobile';
+import { useResponsive } from '@/hooks/common/useResponsive';
 import DesktopContratTemplateEditor from './desktop/ContratTemplateEditor';
 
 /**
@@ -10,7 +10,7 @@ import DesktopContratTemplateEditor from './desktop/ContratTemplateEditor';
 function ContratTemplateEditor(props) {
   console.log("ContratTemplateEditor rendu avec props:", props);
   const { isModal, ...otherProps } = props;
-  const isMobile = useIsMobile();
+  const { isMobile } = useResponsive();
   
   // Pour l'instant, utiliser la version desktop dans tous les cas
   // avec une propriété pour indiquer si on est en mode modal

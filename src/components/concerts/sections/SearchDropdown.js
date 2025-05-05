@@ -16,6 +16,7 @@ import styles from './SearchDropdown.module.css';
  * @param {string} props.createButtonText - Texte du bouton de création
  * @param {string} props.emptyResultsText - Texte à afficher lorsqu'il n'y a pas de résultats
  * @param {string} props.entityType - Type d'entité recherchée (lieu, programmateur, artiste)
+ * @param {Function} props.onFocus - Fonction appelée lorsque l'input obtient le focus
  */
 const SearchDropdown = ({
   searchTerm,
@@ -28,7 +29,8 @@ const SearchDropdown = ({
   onCreate,
   createButtonText,
   emptyResultsText,
-  entityType
+  entityType,
+  onFocus
 }) => {
   return (
     <div className={styles.searchContainer}>
@@ -42,6 +44,7 @@ const SearchDropdown = ({
           placeholder={placeholder}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
+          onFocus={onFocus}
         />
         <button
           type="button"

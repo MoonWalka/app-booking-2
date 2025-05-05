@@ -1,5 +1,9 @@
 # Composants UI
 
+*Dernière mise à jour: 4 mai 2025*
+
+Ce document décrit les composants d'interface utilisateur réutilisables disponibles dans le dossier `src/components/ui`.
+
 ## Introduction
 
 Les composants UI constituent les blocs de construction fondamentaux de l'interface utilisateur de TourCraft. Ils sont conçus pour être réutilisables, cohérents et accessibles dans toute l'application.
@@ -384,6 +388,203 @@ function ProgrammateurDetails({ programmateur }) {
     </div>
   );
 }
+```
+
+## LegalInfoSection
+
+Composant générique pour afficher et éditer des informations légales d'une entité (programmateur, structure, entreprise). Ce composant remplace les composants spécifiques comme `ProgrammateurLegalSection` et `EntrepriseLegalSection`.
+
+### Importation
+
+```jsx
+import LegalInfoSection from '@/components/ui/LegalInfoSection';
+```
+
+### Props
+
+| Prop | Type | Défaut | Description |
+|------|------|--------|-------------|
+| data | object | `{}` | Données à afficher/éditer |
+| onChange | function | `() => {}` | Fonction appelée lors des modifications |
+| isEditing | boolean | `false` | Mode édition (true) ou visualisation (false) |
+| formatValue | function | `val => val \|\| 'Non spécifié'` | Fonction pour formater les valeurs en mode visualisation |
+| fieldMapping | object | *Voir ci-dessous* | Mapping des champs standards vers les chemins dans `data` |
+| labels | object | *Voir ci-dessous* | Libellés personnalisés pour les champs |
+| errors | object | `{}` | Erreurs de validation par champ |
+| className | string | `''` | Classes CSS additionnelles |
+| notificationVisible | boolean | `false` | Afficher une notification de succès |
+| notificationText | string | `'Informations enregistrées avec succès'` | Texte de la notification |
+| title | string | `'Informations légales'` | Titre de la section |
+| icon | string | `'bi-building'` | Classe d'icône Bootstrap |
+
+#### Mapping des champs par défaut
+
+```jsx
+{
+  companyName: 'raisonSociale',
+  type: 'type',
+  address: 'adresse',
+  zipCode: 'codePostal',
+  city: 'ville',
+  country: 'pays',
+  siret: 'siret',
+  vat: 'tva'
+}
+```
+
+#### Libellés par défaut
+
+```jsx
+{
+  companyName: 'Raison sociale',
+  type: 'Type de structure',
+  address: 'Adresse',
+  zipCode: 'Code postal',
+  city: 'Ville',
+  country: 'Pays',
+  siret: 'SIRET',
+  vat: 'TVA Intracommunautaire'
+}
+```
+
+### Fonctionnalités
+
+- **Double mode** : Édition et visualisation
+- **Accès aux données imbriquées** : Support pour les chemins comme `structure.raisonSociale`
+- **Validation intégrée** : Affichage des erreurs par champ
+- **Responsive design** : S'adapte aux écrans mobiles et desktop
+- **Personnalisable** : Labels, icônes, et styles adaptables
+
+### Exemples d'utilisation
+
+#### Cas simple (données plates)
+
+```jsx
+<LegalInfoSection
+  data={entrepriseData}
+  onChange={handleChange}
+  isEditing={true}
+  errors={validationErrors}
+/>
+```
+
+#### Avec données imbriquées
+
+```jsx
+<LegalInfoSection
+  data={formData}
+  onChange={handleChange}
+  isEditing={isEditing}
+  fieldMapping={{
+    companyName: 'structure.raisonSociale',
+    siret: 'structure.siret',
+    vat: 'structure.tva',
+    address: 'structure.adresse',
+    zipCode: 'structure.codePostal',
+    city: 'structure.ville'
+  }}
+  errors={formErrors}
+/>
+```
+
+#### Mode visualisation
+
+```jsx
+<LegalInfoSection
+  data={programmateur}
+  isEditing={false}
+  title="Informations de l'entreprise"
+  icon="bi-building-fill"
+  formatValue={(val) => val ? val : 'Information non renseignée'}
+/>
+```
+
+### Notes de migration
+
+Pour migrer depuis `ProgrammateurLegalSection` ou `EntrepriseLegalSection` :
+
+1. Identifiez la structure des données et créez le mapping des champs
+2. Adaptez les gestionnaires d'événements si nécessaire
+3. Ajoutez les erreurs de validation si applicables
+
+Exemples de mappings courants :
+- Pour `ProgrammateurLegalSection` : préfixer les champs avec `structure.`
+- Pour `EntrepriseLegalSection` : utiliser les noms de champs directs
+
+### InfoPanel
+
+Le composant InfoPanel permet d'afficher des messages informatifs, des avertissements ou des alertes de manière contextuelle dans l'application.
+
+#### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `children` | `ReactNode` | `undefined` | Contenu du panneau d'information |
+| `variant` | `'info'`\|`'success'`\|`'warning'`\|`'error'` | `'info'` | Type du message qui détermine la couleur |
+| `title` | `string` | `undefined` | Titre optionnel du panneau |
+
+#### CSS Classes
+
+- `.infoPanel`: Style de base du panneau
+- `.infoPanel.success`: Variante pour les messages de succès
+- `.infoPanel.warning`: Variante pour les messages d'avertissement
+- `.infoPanel.error`: Variante pour les messages d'erreur
+
+#### Exemple d'utilisation
+
+```jsx
+import InfoPanel from '../components/ui/InfoPanel';
+
+function FormWithMessage({ hasSuccess, hasError, errorMessage }) {
+  return (
+    <div className="form-container">
+      {hasSuccess && (
+        <InfoPanel variant="success" title="Opération réussie">
+          <p>Les données ont été enregistrées avec succès.</p>
+        </InfoPanel>
+      )}
+      
+      {hasError && (
+        <InfoPanel variant="error" title="Erreur">
+          <p>{errorMessage}</p>
+        </InfoPanel>
+      )}
+      
+      <form>
+        {/* Contenu du formulaire */}
+      </form>
+      
+      <InfoPanel variant="info">
+        <p>Tous les champs marqués d'un * sont obligatoires.</p>
+      </InfoPanel>
+    </div>
+  );
+}
+```
+
+#### Implémentation
+
+Le composant InfoPanel est disponible mais n'est pas encore utilisé dans l'application. Il est recommandé de l'utiliser pour remplacer les implémentations ad hoc de panneaux d'information.
+
+```jsx
+// Implémentation suggérée pour le composant
+import React from 'react';
+import styles from './InfoPanel.module.css';
+
+function InfoPanel({ children, variant = 'info', title }) {
+  const panelClass = variant !== 'info' 
+    ? `${styles.infoPanel} ${styles[variant]}` 
+    : styles.infoPanel;
+  
+  return (
+    <div className={panelClass}>
+      {title && <h4>{title}</h4>}
+      {children}
+    </div>
+  );
+}
+
+export default InfoPanel;
 ```
 
 ## Bonnes pratiques d'utilisation

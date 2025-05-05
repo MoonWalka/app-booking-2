@@ -1,7 +1,14 @@
-/* src/components/lieux/mobile/LieuView.module.css */
+/*
+ * Styles pour LieuView
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
+ */
+
+
 
 .lieuContainer {
-  padding: 1rem;
+  padding: var(--tc-spacing-3);
   max-width: 100%;
   overflow-x: hidden;
 }
@@ -10,15 +17,15 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.5rem;
+  margin-bottom: var(--tc-spacing-4);
+  padding-bottom: var(--tc-spacing-2);
   border-bottom: 1px solid #eaeaea;
 }
 
 .section {
-  margin-bottom: 1.25rem;
-  padding: 1rem;
-  border-radius: 8px;
+  margin-bottom: var(--tc-font-size-xl);
+  padding: var(--tc-spacing-3);
+  border-radius: var(--tc-radius-md);
   background-color: #ffffff;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   border: 1px solid #eaeaea;
@@ -32,7 +39,7 @@
 }
 
 .errorContainer {
-  padding: 1rem;
+  padding: var(--tc-spacing-3);
 }
 
 /* Style pour les listes de données */
@@ -43,7 +50,7 @@
 }
 
 .dataItem {
-  padding: 0.5rem 0;
+  padding: var(--tc-spacing-2) 0;
   border-bottom: 1px solid #eaeaea;
 }
 
@@ -54,14 +61,14 @@
 /* Styles pour les boutons d'action */
 .actionButtons {
   display: flex;
-  gap: 0.5rem;
+  gap: var(--tc-spacing-2);
 }
 
 /* Styles pour les concerts associés */
 .concertItem {
-  padding: 0.75rem;
+  padding: var(--tc-spacing-2);
   border-radius: 6px;
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--tc-spacing-2);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -79,6 +86,6 @@
 }
 
 .concertDate {
-  font-size: 0.8rem;
-  color: #666;
+  font-size: var(--tc-font-size-xs);
+  color: var(--tc-color-text-secondary, #666);
 }

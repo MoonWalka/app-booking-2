@@ -1,11 +1,24 @@
+/*
+ * Styles pour ContratHeader
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 5 mai 2025
+ */
+
 .contratHeaderContainer {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--tc-spacing-4);
 }
 
 .contratTitle {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  font-weight: 600;
-  color: #333;
+  gap: var(--tc-spacing-2);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-color-title);
+}
+
+/* Styles responsive standardisés */
+@media (max-width: 576px) {
+  .contratHeaderContainer {
+    margin-bottom: var(--tc-spacing-3);
+  }
 }

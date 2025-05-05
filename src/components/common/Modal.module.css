@@ -1,4 +1,8 @@
-/* src/components/common/Modal.module.css */
+/*
+ * Styles pour Modal
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 5 mai 2025
+ */
 
 .modalOverlay {
   position: fixed;
@@ -6,25 +10,25 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--tc-overlay-bg);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1050;
+  z-index: var(--tc-z-index-modal);
   overflow-y: auto;
-  padding: 1.5rem;
+  padding: var(--tc-spacing-4);
 }
 
 .modal {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  background-color: var(--tc-bg-white);
+  border-radius: var(--tc-border-radius-lg);
+  box-shadow: var(--tc-shadow-lg);
   width: 100%;
   max-width: 600px;
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
-  animation: modalFadeIn 0.3s ease;
+  animation: modalFadeIn var(--tc-transition-speed) ease;
 }
 
 .modalSmall {
@@ -45,45 +49,83 @@
 }
 
 .modalHeader {
-  padding: 15px 20px;
-  border-bottom: 1px solid #eee;
+  padding: var(--tc-spacing-4) var(--tc-spacing-5);
+  border-bottom: 1px solid var(--tc-border-ultralight);
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .modalTitle {
-  font-size: var(--tc-font-size-lg, 1.25rem);
-  font-weight: bold;
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-bold);
   margin: 0;
+  color: var(--tc-color-title);
 }
 
 .modalBody {
-  padding: 20px;
+  padding: var(--tc-spacing-5);
   overflow-y: auto;
 }
 
 .modalFooter {
-  padding: 15px 20px;
-  border-top: 1px solid #eee;
+  padding: var(--tc-spacing-4) var(--tc-spacing-5);
+  border-top: 1px solid var(--tc-border-ultralight);
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
+  gap: var(--tc-spacing-2-5);
 }
 
-/* Responsive pour modales */
+/* Styles responsive standardisés */
+@media (max-width: 992px) {
+  .modalLarge {
+    max-width: 700px;
+  }
+}
+
 @media (max-width: 768px) {
+  .modalOverlay {
+    padding: var(--tc-spacing-2);
+  }
+  
   .modal {
     width: 95%;
     max-height: 80vh;
+    border-radius: var(--tc-border-radius-md);
+  }
+  
+  .modalHeader {
+    padding: var(--tc-spacing-3) var(--tc-spacing-4);
   }
   
   .modalBody {
+    padding: var(--tc-spacing-4);
     max-height: 50vh;
   }
   
   .modalFooter {
+    padding: var(--tc-spacing-3) var(--tc-spacing-4);
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 576px) {
+  .modalOverlay {
+    padding: var(--tc-spacing-1);
+  }
+  
+  .modalHeader {
+    padding: var(--tc-spacing-2-5) var(--tc-spacing-3);
+  }
+  
+  .modalBody {
+    padding: var(--tc-spacing-3);
+  }
+  
+  .modalFooter {
+    padding: var(--tc-spacing-2-5) var(--tc-spacing-3);
     flex-direction: column;
+    gap: var(--tc-spacing-2);
   }
   
   .modalFooter button {

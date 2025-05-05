@@ -5,7 +5,7 @@
 }
 
 .nav-pills .nav-link.active {
-  background-color: var(--tc-primary-color);
+  background-color: var(--tc-tc-primary-color);
   color: white;
 }
 

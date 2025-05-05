@@ -1,19 +1,25 @@
+/*
+ * Styles pour AddressDisplay
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 5 mai 2025
+ */
+
 .addressDefault {
-  padding: 1rem;
-  background-color: #f8f9fa;
-  border-radius: 0.5rem;
-  margin-bottom: 1rem;
-  border: 1px solid #dee2e6;
+  padding: var(--tc-spacing-3);
+  background-color: var(--tc-bg-subtle);
+  border-radius: var(--tc-border-radius-md);
+  margin-bottom: var(--tc-spacing-3);
+  border: 1px solid var(--tc-border-light);
 }
 
 .addressCompact {
   display: flex;
   align-items: center;
-  padding: 0.75rem;
-  background-color: #f8f9fa;
-  border-radius: 0.25rem;
-  margin-bottom: 0.5rem;
-  border: 1px solid #dee2e6;
+  padding: var(--tc-spacing-2);
+  background-color: var(--tc-bg-subtle);
+  border-radius: var(--tc-border-radius-sm);
+  margin-bottom: var(--tc-spacing-1-5);
+  border: 1px solid var(--tc-border-light);
 }
 
 .addressInline {
@@ -28,8 +34,8 @@
 }
 
 .addressIcon {
-  margin-right: 0.75rem;
-  color: #0d6efd;
+  margin-right: var(--tc-spacing-2);
+  color: var(--tc-color-primary);
 }
 
 .addressDetails {
@@ -38,41 +44,41 @@
 }
 
 .addressLine {
-  font-weight: 500;
-  margin-bottom: 0.25rem;
+  font-weight: var(--tc-font-weight-medium);
+  margin-bottom: var(--tc-spacing-1);
 }
 
 .addressLocation {
-  color: #6c757d;
-  margin-bottom: 0.25rem;
+  color: var(--tc-color-text-muted);
+  margin-bottom: var(--tc-spacing-1);
 }
 
 .addressCountry {
-  color: #6c757d;
+  color: var(--tc-color-text-muted);
   font-style: italic;
 }
 
 .mapLink {
   display: inline-flex;
   align-items: center;
-  padding: 0.375rem 0.75rem;
-  margin-top: 0.5rem;
-  color: #0d6efd;
+  padding: var(--tc-spacing-1-5) var(--tc-spacing-2);
+  margin-top: var(--tc-spacing-1-5);
+  color: var(--tc-color-primary);
   background-color: transparent;
-  border: 1px solid #0d6efd;
-  border-radius: 0.25rem;
+  border: 1px solid var(--tc-color-primary);
+  border-radius: var(--tc-border-radius-sm);
   text-decoration: none;
-  font-size: 0.875rem;
+  font-size: var(--tc-font-size-sm);
 }
 
 .mapLink:hover {
-  color: #fff;
-  background-color: #0d6efd;
+  color: var(--tc-color-white);
+  background-color: var(--tc-color-primary);
   text-decoration: none;
 }
 
 .empty {
-  color: #6c757d;
+  color: var(--tc-color-text-muted);
   font-style: italic;
   display: flex;
   align-items: center;
@@ -81,14 +87,44 @@
 /* Ajustements pour les variantes */
 .addressCompact .mapLink {
   margin-top: 0;
-  margin-left: 0.75rem;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.75rem;
+  margin-left: var(--tc-spacing-2);
+  padding: var(--tc-spacing-1) var(--tc-spacing-1-5);
+  font-size: var(--tc-font-size-xs);
 }
 
 .addressInline .mapLink {
   margin-top: 0;
-  margin-left: 0.75rem;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.75rem;
+  margin-left: var(--tc-spacing-2);
+  padding: var(--tc-spacing-1) var(--tc-spacing-1-5);
+  font-size: var(--tc-font-size-xs);
+}
+
+/* Styles responsive standardisés */
+@media (max-width: 768px) {
+  .addressContent {
+    align-items: center;
+  }
+}
+
+@media (max-width: 576px) {
+  .addressCompact {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .addressCompact .mapLink {
+    margin-top: var(--tc-spacing-1-5);
+    margin-left: 0;
+    align-self: flex-start;
+  }
+  
+  .addressInline {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .addressInline .mapLink {
+    margin-top: var(--tc-spacing-1-5);
+    margin-left: 0;
+  }
 }

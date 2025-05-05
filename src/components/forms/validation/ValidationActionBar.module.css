@@ -1,7 +1,7 @@
-/* ValidationActionBar Styles */
+/* ValidationActionBar Styles - Standardisés */
 .container {
   /* Base container styles */
-  margin: 2rem 0;
+  margin: var(--tc-spacing-xl, 2rem) 0;
 }
 
 .content {
@@ -13,37 +13,37 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  font-size: 1.125rem;
-  font-weight: 600;
-  background-color: var(--bs-primary, #0d6efd);
+  gap: var(--tc-spacing-xs, 0.5rem);
+  padding: var(--tc-spacing-sm, 0.75rem) var(--tc-spacing-lg, 1.5rem);
+  font-size: var(--tc-font-size-md, 1.125rem);
+  font-weight: var(--tc-font-weight-semibold, 600);
+  background-color: var(--tc-primary-color, #0d6efd);
   border: none;
-  border-radius: 0.375rem;
-  color: white;
+  border-radius: var(--tc-border-radius, 0.375rem);
+  color: var(--tc-color-white, white);
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: var(--tc-transition, background-color 0.2s);
   min-width: 350px;
 }
 
 .validateButton:hover:not(:disabled) {
-  background-color: var(--bs-primary-hover, #0b5ed7);
+  background-color: var(--tc-primary-color-dark, #0b5ed7);
 }
 
 .validateButton:disabled {
-  background-color: var(--bs-gray-500, #adb5bd);
+  background-color: var(--tc-color-gray-500, #adb5bd);
   cursor: not-allowed;
   opacity: 0.8;
 }
 
 .icon {
-  font-size: 1.25rem;
+  font-size: var(--tc-font-size-lg, 1.25rem);
 }
 
 .spinner {
   display: inline-block;
-  width: 1.25rem;
-  height: 1.25rem;
+  width: var(--tc-font-size-lg, 1.25rem);
+  height: var(--tc-font-size-lg, 1.25rem);
   border: 0.2em solid currentColor;
   border-right-color: transparent;
   border-radius: 50%;
@@ -53,5 +53,25 @@
 @keyframes spinner-border {
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* Support responsive */
+@media (max-width: 768px) {
+  .validateButton {
+    min-width: 280px;
+    font-size: var(--tc-font-size-base, 1rem);
+    padding: var(--tc-spacing-xs, 0.5rem) var(--tc-spacing-md, 1rem);
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    margin: var(--tc-spacing-md, 1rem) 0;
+  }
+  
+  .validateButton {
+    min-width: 100%;
+    width: 100%;
   }
 }

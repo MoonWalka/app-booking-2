@@ -1,63 +1,69 @@
 .container {
   /* Base styles for ProgrammateurAddressSection */
-  margin-bottom: 1rem;
+  margin-bottom: var(--tc-spacing-md, 1rem);
 }
 
 .cardWrapper {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  margin-bottom: 1.5rem;
+  background-color: var(--tc-color-white, white);
+  border-radius: var(--tc-border-radius, 8px);
+  box-shadow: var(--tc-box-shadow, 0 2px 4px rgba(0, 0, 0, 0.05));
+  margin-bottom: var(--tc-spacing-lg, 1.5rem);
   overflow: hidden;
+  transition: var(--tc-transition, all 0.3s ease);
+}
+
+.cardWrapper:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--tc-box-shadow-lg, 0 5px 15px rgba(0, 0, 0, 0.08));
 }
 
 .cardHeader {
-  background-color: #f8f9fa;
-  padding: 1rem;
+  background-color: var(--tc-color-gray-100, #f8f9fa);
+  padding: var(--tc-spacing-md, 1rem);
   display: flex;
   align-items: center;
-  border-bottom: 1px solid #eee;
-  gap: 0.75rem;
+  border-bottom: var(--tc-border-width, 1px) solid var(--tc-border-color, #eee);
+  gap: var(--tc-spacing-sm, 0.75rem);
 }
 
 .cardBody {
-  padding: 1.5rem;
+  padding: var(--tc-spacing-lg, 1.5rem);
 }
 
 .formGroup {
-  margin-bottom: 1.25rem;
+  margin-bottom: var(--tc-spacing-md, 1.25rem);
 }
 
 .cardLabel {
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: var(--bs-gray-700);
+  font-weight: var(--tc-font-weight-bold, 600);
+  margin-bottom: var(--tc-spacing-sm, 0.5rem);
+  color: var(--tc-text-color-secondary, var(--tc-bs-gray-700));
   display: block;
 }
 
 .suggestionsContainer {
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  border: var(--tc-border-width, 1px) solid var(--tc-border-color-light, #e0e0e0);
+  border-radius: var(--tc-border-radius-sm, 4px);
+  margin-top: var(--tc-spacing-md, 1rem);
+  margin-bottom: var(--tc-spacing-md, 1rem);
   max-height: 250px;
   overflow-y: auto;
 }
 
 .suggestionsList {
-  padding: 0.5rem 0;
+  padding: var(--tc-spacing-sm, 0.5rem) 0;
 }
 
 .suggestionItem {
-  padding: 0.75rem 1rem;
+  padding: var(--tc-spacing-sm, 0.75rem) var(--tc-spacing-md, 1rem);
   cursor: pointer;
   display: flex;
   align-items: center;
-  transition: background-color 0.2s;
+  transition: background-color var(--tc-transition-duration, 0.2s);
 }
 
 .suggestionItem:hover {
-  background-color: #f0f7ff;
+  background-color: var(--tc-color-primary-light, #f0f7ff);
 }
 
 .addressDisplay {
@@ -65,8 +71,28 @@
   flex-direction: column;
 }
 
+/* Responsive design - medium devices */
 @media (max-width: 768px) {
   .cardBody {
-    padding: 1rem;
+    padding: var(--tc-spacing-md, 1rem);
+  }
+  
+  .cardWrapper:hover {
+    transform: translateY(-2px);
+  }
+}
+
+/* Additional responsive support for small screens */
+@media (max-width: 576px) {
+  .cardHeader {
+    padding: var(--tc-spacing-sm, 0.75rem);
+  }
+  
+  .suggestionItem {
+    padding: var(--tc-spacing-sm, 0.5rem);
+  }
+  
+  .cardWrapper:hover {
+    transform: none;
   }
 }

@@ -1,112 +1,118 @@
-/* Styles pour ConcertInfoSection */
+/* 
+ * Styles pour ConcertInfoSection
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 5 mai 2025
+ */
+
 .container {
-  /* TODO: Ajouter les styles */
+  /* Conteneur principal standardisé */
+  width: 100%;
 }
 
 .formCard {
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  margin-bottom: 1.5rem;
-  border: 1px solid #e9ecef;
+  background-color: var(--tc-bg-card);
+  border-radius: var(--tc-border-radius-lg);
+  box-shadow: var(--tc-shadow-sm);
+  margin-bottom: var(--tc-spacing-4);
+  border: 1px solid var(--tc-border-light);
   overflow: hidden;
 }
 
 .cardHeader {
   display: flex;
   align-items: center;
-  padding: 1rem 1.5rem;
-  background-color: #f8f9fa;
-  border-bottom: 1px solid #e9ecef;
+  padding: var(--tc-spacing-3) var(--tc-spacing-4);
+  background-color: var(--tc-bg-subtle);
+  border-bottom: 1px solid var(--tc-border-light);
 }
 
 .cardIcon {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background-color: #e7f1ff;
-  color: #0d6efd;
+  width: var(--tc-icon-size-md);
+  height: var(--tc-icon-size-md);
+  border-radius: var(--tc-border-radius-md);
+  background-color: var(--tc-bg-primary-subtle);
+  color: var(--tc-color-primary);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.1rem;
-  margin-right: 1rem;
+  font-size: var(--tc-font-size-md);
+  margin-right: var(--tc-spacing-3);
 }
 
 .cardTitle {
   margin: 0;
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #344767;
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-color-title);
 }
 
 .cardBody {
-  padding: 1.5rem;
+  padding: var(--tc-spacing-4);
 }
 
 .formGroup {
-  margin-bottom: 1.25rem;
+  margin-bottom: var(--tc-spacing-3-5);
 }
 
 .formRow {
   display: flex;
   flex-wrap: wrap;
-  margin: 0 -0.75rem;
+  margin: 0 calc(-1 * var(--tc-spacing-2));
 }
 
 .formRow .formGroup {
   flex: 1;
-  padding: 0 0.75rem;
+  padding: 0 var(--tc-spacing-2);
   min-width: 250px;
 }
 
 .formLabel {
   display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-  color: #344767;
+  margin-bottom: var(--tc-spacing-1-5);
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-color-title);
 }
 
 .formControl {
   display: block;
   width: 100%;
-  padding: 0.5rem 0.75rem;
-  font-size: 1rem;
-  line-height: 1.5;
-  border: 1px solid #d2d6da;
-  border-radius: 0.375rem;
+  padding: var(--tc-spacing-1-5) var(--tc-spacing-2);
+  font-size: var(--tc-font-size-base);
+  line-height: var(--tc-line-height-base);
+  border: 1px solid var(--tc-border-input);
+  border-radius: var(--tc-border-radius-sm);
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
 .formControl:focus {
-  border-color: #86b7fe;
-  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  border-color: var(--tc-focus-border);
+  box-shadow: var(--tc-focus-shadow);
 }
 
 .formSelect {
   display: block;
   width: 100%;
-  padding: 0.5rem 2rem 0.5rem 0.75rem;
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.5;
-  background-position: right 0.75rem center;
+  padding: var(--tc-spacing-1-5) var(--tc-spacing-5) var(--tc-spacing-1-5) var(--tc-spacing-2);
+  font-size: var(--tc-font-size-base);
+  font-weight: var(--tc-font-weight-regular);
+  line-height: var(--tc-line-height-base);
+  background-position: right var(--tc-spacing-2) center;
   background-size: 16px 12px;
-  border: 1px solid #d2d6da;
-  border-radius: 0.375rem;
+  border: 1px solid var(--tc-border-input);
+  border-radius: var(--tc-border-radius-sm);
   appearance: none;
 }
 
 .formHelpText {
   display: block;
-  margin-top: 0.25rem;
-  font-size: 0.875rem;
-  color: #6c757d;
+  margin-top: var(--tc-spacing-0-5);
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-color-text-muted);
 }
 
 .requiredField {
-  color: #dc3545;
-  margin-left: 0.25rem;
+  color: var(--tc-color-danger);
+  margin-left: var(--tc-spacing-0-5);
 }
 
 .inputGroup {
@@ -119,17 +125,24 @@
 .inputGroupAddon {
   display: flex;
   align-items: center;
-  padding: 0.5rem 0.75rem;
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.5;
-  color: #212529;
+  padding: var(--tc-spacing-1-5) var(--tc-spacing-2);
+  font-size: var(--tc-font-size-base);
+  font-weight: var(--tc-font-weight-regular);
+  line-height: var(--tc-line-height-base);
+  color: var(--tc-color-text);
   text-align: center;
   white-space: nowrap;
-  background-color: #e9ecef;
-  border: 1px solid #d2d6da;
+  background-color: var(--tc-bg-subtle);
+  border: 1px solid var(--tc-border-input);
   border-left: 0;
-  border-radius: 0 0.375rem 0.375rem 0;
+  border-radius: 0 var(--tc-border-radius-sm) var(--tc-border-radius-sm) 0;
+}
+
+/* Styles responsive standardisés */
+@media (max-width: 992px) {
+  .cardBody {
+    padding: var(--tc-spacing-3);
+  }
 }
 
 @media (max-width: 768px) {
@@ -138,6 +151,30 @@
   }
   
   .formRow .formGroup {
-    margin-bottom: 1rem;
+    margin-bottom: var(--tc-spacing-3);
+  }
+  
+  .cardHeader {
+    padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  }
+}
+
+@media (max-width: 576px) {
+  .cardIcon {
+    width: var(--tc-icon-size-sm);
+    height: var(--tc-icon-size-sm);
+    font-size: var(--tc-font-size-sm);
+  }
+  
+  .cardTitle {
+    font-size: var(--tc-font-size-md);
+  }
+  
+  .cardBody {
+    padding: var(--tc-spacing-2);
+  }
+  
+  .formControl, .formSelect, .inputGroupAddon {
+    font-size: var(--tc-font-size-sm);
   }
 }

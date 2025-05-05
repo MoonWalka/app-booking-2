@@ -1,33 +1,49 @@
 .tableContainer {
-  margin-top: 1rem;
+  margin-top: var(--tc-spacing-md, 1rem);
 }
 
 .concertsTable {
-  background-color: white;
-  border-radius: 0.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  background-color: var(--tc-color-white, white);
+  border-radius: var(--tc-border-radius-md, 0.5rem);
+  box-shadow: var(--tc-box-shadow, 0 2px 4px rgba(0, 0, 0, 0.05));
 }
 
 .concertsTable thead th {
   border-top: none;
-  background-color: #f8f9fa;
-  padding: 0.75rem 1rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #495057;
+  background-color: var(--tc-color-gray-100, #f8f9fa);
+  padding: var(--tc-spacing-sm, 0.75rem) var(--tc-spacing-md, 1rem);
+  font-size: var(--tc-font-size-sm, 0.9rem);
+  font-weight: var(--tc-font-weight-semibold, 600);
+  color: var(--tc-text-color-primary, #495057);
 }
 
 .concertsTable tbody td {
-  padding: 1rem;
+  padding: var(--tc-spacing-md, 1rem);
   vertical-align: middle;
 }
 
 .noResults {
   text-align: center;
-  padding: 2rem;
-  background-color: white;
-  border-radius: 0.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  color: #6c757d;
-  font-size: 1rem;
+  padding: var(--tc-spacing-xl, 2rem);
+  background-color: var(--tc-color-white, white);
+  border-radius: var(--tc-border-radius-md, 0.5rem);
+  box-shadow: var(--tc-box-shadow, 0 2px 4px rgba(0, 0, 0, 0.05));
+  color: var(--tc-text-color-secondary, #6c757d);
+  font-size: var(--tc-font-size-base, 1rem);
+}
+
+/* Ajout de styles pour la responsivité */
+@media (max-width: 768px) {
+  .concertsTable thead th,
+  .concertsTable tbody td {
+    padding: var(--tc-spacing-sm, 0.75rem) var(--tc-spacing-sm, 0.5rem);
+  }
+  
+  .concertsTable {
+    min-width: 700px; /* Pour assurer que la table puisse défiler horizontalement */
+  }
+  
+  .tableContainer {
+    overflow-x: auto;
+  }
 }

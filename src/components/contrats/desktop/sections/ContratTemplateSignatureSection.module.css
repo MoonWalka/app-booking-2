@@ -1,73 +1,110 @@
+/*
+ * Styles pour ContratTemplateSignatureSection
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 5 mai 2025
+ */
+
 .signatureSectionContent {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--tc-spacing-4);
 }
 
 .sectionInfo {
-  color: #6c757d;
-  font-size: 0.875rem;
-  margin-bottom: 8px;
+  color: var(--tc-color-text-muted);
+  font-size: var(--tc-font-size-sm);
+  margin-bottom: var(--tc-spacing-2);
 }
 
 .editorContainer {
-  margin-top: 8px;
+  margin-top: var(--tc-spacing-2);
 }
 
 .editorHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: var(--tc-spacing-2);
 }
 
 .signatureContentInput {
   width: 100%;
-  padding: 8px 12px;
-  font-size: 0.9rem;
-  border: 1px solid #ced4da;
-  border-radius: 4px;
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-  font-family: monospace;
+  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  font-size: var(--tc-font-size-sm);
+  border: 1px solid var(--tc-border-input);
+  border-radius: var(--tc-border-radius-sm);
+  transition: border-color var(--tc-transition-speed) ease-in-out, box-shadow var(--tc-transition-speed) ease-in-out;
+  font-family: var(--tc-font-family-monospace);
   min-height: 150px;
 }
 
 .signatureContentInput:focus {
-  border-color: #86b7fe;
+  border-color: var(--tc-focus-border);
   outline: 0;
-  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  box-shadow: var(--tc-focus-shadow);
 }
 
 .signatureTips {
-  margin-top: 16px;
-  background-color: #f0f7ff;
-  border-radius: 6px;
-  padding: 16px;
-  border-left: 4px solid #7eb6ff;
+  margin-top: var(--tc-spacing-4);
+  background-color: var(--tc-bg-info-subtle);
+  border-radius: var(--tc-border-radius-md);
+  padding: var(--tc-spacing-4);
+  border-left: 4px solid var(--tc-color-info-highlight);
 }
 
 .tipsTitle {
-  font-size: 0.95rem;
-  margin-bottom: 10px;
-  color: #1a56db;
-  font-weight: 500;
+  font-size: var(--tc-font-size-base);
+  margin-bottom: var(--tc-spacing-2-5);
+  color: var(--tc-color-info-text);
+  font-weight: var(--tc-font-weight-medium);
 }
 
 .signatureExample {
-  background-color: rgba(255, 255, 255, 0.5);
-  padding: 12px;
-  border-radius: 5px;
-  border: 1px solid #d1e3ff;
+  background-color: var(--tc-bg-white-translucent);
+  padding: var(--tc-spacing-3);
+  border-radius: var(--tc-border-radius-sm);
+  border: 1px solid var(--tc-border-info-subtle);
   white-space: pre-wrap;
-  font-size: 0.85rem;
-  color: #333740;
-  font-family: monospace;
-  margin-bottom: 12px;
+  font-size: var(--tc-font-size-xs);
+  color: var(--tc-color-text-dark);
+  font-family: var(--tc-font-family-monospace);
+  margin-bottom: var(--tc-spacing-3);
 }
 
 .tipText {
-  color: #476582;
-  font-size: 0.85rem;
-  margin-top: 8px;
+  color: var(--tc-color-info-text-muted);
+  font-size: var(--tc-font-size-xs);
+  margin-top: var(--tc-spacing-2);
   margin-bottom: 0;
+}
+
+/* Styles responsive standardisés */
+@media (max-width: 768px) {
+  .signatureSectionContent {
+    gap: var(--tc-spacing-3);
+  }
+  
+  .signatureTips {
+    padding: var(--tc-spacing-3);
+  }
+}
+
+@media (max-width: 576px) {
+  .editorHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--tc-spacing-1);
+  }
+  
+  .signatureContentInput {
+    min-height: 120px;
+  }
+  
+  .signatureTips {
+    padding: var(--tc-spacing-2);
+  }
+  
+  .signatureExample {
+    padding: var(--tc-spacing-2);
+  }
 }

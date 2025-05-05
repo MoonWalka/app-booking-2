@@ -1,11 +1,18 @@
+/*
+ * Styles pour ValidationActionBar
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
+ */
+
 .actionBarContainer {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  background: white;
-  padding: 0.75rem 1rem;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  background: var(--tc-bg-default, white);
+  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  box-shadow: var(--tc-shadow-lg, 0 -2px 10px rgba(0, 0, 0, 0.1));
   z-index: 1000;
   display: flex;
   justify-content: center;
@@ -13,6 +20,6 @@
 
 .validateButton {
   width: 100%;
-  padding: 0.75rem;
-  font-weight: 500;
+  padding: var(--tc-spacing-2);
+  font-weight: var(--tc-font-weight-medium);
 }

@@ -1,30 +1,30 @@
 .lieuxContainer {
-  padding: 1.25rem;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: var(--tc-spacing-md, 1.25rem);
+  background-color: var(--tc-color-white, #fff);
+  border-radius: var(--tc-border-radius, 8px);
+  box-shadow: var(--tc-box-shadow, 0 1px 3px rgba(0, 0, 0, 0.1));
 }
 
 .headerContainer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--tc-spacing-lg, 1.5rem);
 }
 
 .addButton {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--tc-spacing-sm, 0.5rem);
 }
 
 .searchFilterContainer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: var(--tc-spacing-md, 1rem);
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: var(--tc-spacing-md, 1rem);
 }
 
 .searchBar {
@@ -35,14 +35,14 @@
 
 .searchInput {
   padding-right: 2.5rem;
-  background-color: var(--input-bg);
-  border: 1px solid var(--border-color);
+  background-color: var(--tc-input-bg, var(--tc-color-white, #fff));
+  border: var(--tc-border-width, 1px) solid var(--tc-border-color, #dee2e6);
 }
 
 .searchInput:focus {
-  background-color: var(--input-bg-focus);
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 0.2rem rgba(var(--primary-rgb), 0.25);
+  background-color: var(--tc-input-bg-focus, var(--tc-color-white, #fff));
+  border-color: var(--tc-primary-color, #0d6efd);
+  box-shadow: var(--tc-focus-ring-shadow, 0 0 0 0.2rem rgba(13, 110, 253, 0.25));
 }
 
 .clearSearch {
@@ -52,15 +52,15 @@
   height: 100%;
   border: none;
   background: none;
-  padding: 0 10px;
+  padding: 0 var(--tc-spacing-sm, 10px);
   cursor: pointer;
 }
 
 .resultsCount {
-  font-size: 0.8rem;
-  color: #6c757d;
-  margin-top: 0.25rem;
-  padding-left: 0.5rem;
+  font-size: var(--tc-font-size-xs, 0.8rem);
+  color: var(--tc-text-color-secondary, #6c757d);
+  margin-top: var(--tc-spacing-xs, 0.25rem);
+  padding-left: var(--tc-spacing-sm, 0.5rem);
 }
 
 .modernFilterBtn,
@@ -68,9 +68,9 @@
   display: flex;
   align-items: center;
   white-space: nowrap;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
+  gap: var(--tc-spacing-sm, 0.5rem);
+  padding: var(--tc-spacing-sm, 0.5rem) var(--tc-spacing-md, 1rem);
+  border-radius: var(--tc-border-radius, 6px);
 }
 
 .modernTableContainer {
@@ -83,23 +83,23 @@
 }
 
 .modernTable th {
-  font-weight: 600;
-  color: #495057;
-  border-bottom: 2px solid #dee2e6;
-  padding: 0.75rem 1rem;
+  font-weight: var(--tc-font-weight-semibold, 600);
+  color: var(--tc-text-color-primary, #495057);
+  border-bottom: 2px solid var(--tc-border-color, #dee2e6);
+  padding: var(--tc-spacing-sm, 0.75rem) var(--tc-spacing-md, 1rem);
 }
 
 .clickableRow {
   cursor: pointer;
-  transition: background-color 0.15s ease;
+  transition: background-color var(--tc-transition-duration-fast, 0.15s) ease;
 }
 
 .clickableRow:hover {
-  background-color: rgba(0, 123, 255, 0.05);
+  background-color: var(--tc-primary-color-05, rgba(0, 123, 255, 0.05));
 }
 
 .tableRowAnimate {
-  animation: fadeIn 0.3s ease-in-out;
+  animation: fadeIn var(--tc-transition-duration, 0.3s) ease-in-out;
 }
 
 @keyframes fadeIn {
@@ -109,51 +109,51 @@
 
 .typeBadge {
   display: inline-block;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 600;
+  padding: var(--tc-spacing-xs, 0.25rem) var(--tc-spacing-sm, 0.5rem);
+  font-size: var(--tc-font-size-xs, 0.75rem);
+  font-weight: var(--tc-font-weight-semibold, 600);
   text-align: center;
   white-space: nowrap;
   vertical-align: baseline;
-  border-radius: 0.25rem;
-  color: #fff;
+  border-radius: var(--tc-border-radius, 0.25rem);
+  color: var(--tc-color-white, #fff);
   text-transform: capitalize;
 }
 
 .villeBadge {
   display: inline-flex;
   align-items: center;
-  font-size: 0.875rem;
-  color: #495057;
+  font-size: var(--tc-font-size-sm, 0.875rem);
+  color: var(--tc-text-color-primary, #495057);
 }
 
 .jaugeBadge {
   display: inline-block;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 600;
+  padding: var(--tc-spacing-xs, 0.25rem) var(--tc-spacing-sm, 0.5rem);
+  font-size: var(--tc-font-size-xs, 0.75rem);
+  font-weight: var(--tc-font-weight-semibold, 600);
   text-align: center;
   white-space: nowrap;
   vertical-align: baseline;
-  border-radius: 0.25rem;
-  color: #fff;
+  border-radius: var(--tc-border-radius, 0.25rem);
+  color: var(--tc-color-white, #fff);
 }
 
 .jaugeType {
   opacity: 0.8;
-  font-weight: normal;
+  font-weight: var(--tc-font-weight-normal, normal);
 }
 
 .concertCount {
   display: inline-flex;
   align-items: center;
-  font-size: 0.875rem;
-  color: #0d6efd;
+  font-size: var(--tc-font-size-sm, 0.875rem);
+  color: var(--tc-primary-color, #0d6efd);
 }
 
 .actionButtons {
   display: flex;
-  gap: 0.5rem;
+  gap: var(--tc-spacing-sm, 0.5rem);
   justify-content: flex-end;
 }
 
@@ -164,15 +164,56 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 6px;
+  border-radius: var(--tc-border-radius, 6px);
 }
 
 .modernAlert {
   display: flex;
   align-items: center;
-  padding: 1.25rem;
-  border-radius: 6px;
-  background-color: #f8f9fa;
-  color: #6c757d;
-  border: 1px solid #dee2e6;
+  padding: var(--tc-spacing-md, 1.25rem);
+  border-radius: var(--tc-border-radius, 6px);
+  background-color: var(--tc-color-gray-100, #f8f9fa);
+  color: var(--tc-text-color-secondary, #6c757d);
+  border: var(--tc-border-width, 1px) solid var(--tc-border-color, #dee2e6);
+}
+
+/* Support responsive */
+@media (max-width: 992px) {
+  .searchFilterContainer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .searchBar {
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .headerContainer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--tc-spacing-md, 1rem);
+  }
+  
+  .modernTable th,
+  .modernTable td {
+    padding: var(--tc-spacing-xs, 0.5rem) var(--tc-spacing-sm, 0.75rem);
+  }
+  
+  .actionButtons {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 576px) {
+  .lieuxContainer {
+    padding: var(--tc-spacing-sm, 0.75rem);
+  }
+  
+  .addButton {
+    width: 100%;
+    justify-content: center;
+  }
 }

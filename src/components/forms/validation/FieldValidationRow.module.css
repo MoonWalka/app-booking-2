@@ -1,11 +1,11 @@
-/* FieldValidationRow Styles */
+/* FieldValidationRow Styles - Standardisés */
 .container {
   /* Base container styles */
 }
 
 .row {
   vertical-align: middle;
-  border-bottom: 1px solid var(--bs-gray-300, #dee2e6);
+  border-bottom: var(--tc-border-width, 1px) solid var(--tc-border-color-light, #dee2e6);
 }
 
 .row:last-child {
@@ -13,21 +13,21 @@
 }
 
 .fieldName {
-  font-weight: 600;
-  padding: 0.75rem;
+  font-weight: var(--tc-font-weight-semibold, 600);
+  padding: var(--tc-spacing-sm, 0.75rem);
   max-width: 150px;
 }
 
 .existingValue, .formValue {
-  font-family: monospace;
+  font-family: var(--tc-font-family-monospace, monospace);
   white-space: pre-wrap;
-  padding: 0.75rem;
+  padding: var(--tc-spacing-sm, 0.75rem);
   max-width: 250px;
   overflow-wrap: break-word;
 }
 
 .emptyValue {
-  color: var(--bs-gray-500, #adb5bd);
+  color: var(--tc-color-gray-500, #adb5bd);
   font-style: italic;
   font-weight: normal;
 }
@@ -36,49 +36,98 @@
   width: 60px;
   text-align: center;
   vertical-align: middle;
-  padding: 0.75rem;
+  padding: var(--tc-spacing-sm, 0.75rem);
 }
 
 .copyButton {
   background: none;
-  border: 1px solid var(--bs-primary, #0d6efd);
-  border-radius: 4px;
-  padding: 0.25rem 0.5rem;
+  border: var(--tc-border-width, 1px) solid var(--tc-primary-color, #0d6efd);
+  border-radius: var(--tc-border-radius-sm, 4px);
+  padding: var(--tc-spacing-xs, 0.25rem) var(--tc-spacing-xs, 0.5rem);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--tc-transition, all 0.2s ease);
 }
 
 .copyButton:hover:not(:disabled) {
-  background-color: var(--bs-primary-subtle, #cfe2ff);
+  background-color: var(--tc-primary-color-10, #cfe2ff);
 }
 
 .copyButton:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-  border-color: var(--bs-gray-400, #ced4da);
+  border-color: var(--tc-color-gray-400, #ced4da);
 }
 
 .finalValueCell {
-  padding: 0.75rem;
+  padding: var(--tc-spacing-sm, 0.75rem);
   width: 25%;
 }
 
 .finalValueInput {
   width: 100%;
-  padding: 0.375rem 0.75rem;
-  font-family: monospace;
-  border: 1px solid var(--bs-gray-400, #ced4da);
-  border-radius: 0.25rem;
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  padding: var(--tc-spacing-xs, 0.375rem) var(--tc-spacing-sm, 0.75rem);
+  font-family: var(--tc-font-family-monospace, monospace);
+  border: var(--tc-border-width, 1px) solid var(--tc-color-gray-400, #ced4da);
+  border-radius: var(--tc-border-radius-sm, 0.25rem);
+  transition: var(--tc-transition, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out);
 }
 
 .finalValueInput:focus {
-  border-color: var(--bs-primary, #0d6efd);
-  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  border-color: var(--tc-primary-color, #0d6efd);
+  box-shadow: var(--tc-focus-shadow, 0 0 0 0.25rem rgba(13, 110, 253, 0.25));
   outline: 0;
 }
 
 .finalValueInput:disabled {
-  background-color: var(--bs-gray-200, #e9ecef);
+  background-color: var(--tc-color-gray-200, #e9ecef);
   opacity: 1;
+}
+
+/* Support responsive */
+@media (max-width: 992px) {
+  .fieldName,
+  .existingValue,
+  .formValue {
+    max-width: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .fieldName {
+    max-width: 120px;
+    font-size: var(--tc-font-size-sm, 0.875rem);
+  }
+  
+  .existingValue,
+  .formValue {
+    max-width: 180px;
+    font-size: var(--tc-font-size-sm, 0.875rem);
+  }
+  
+  .finalValueInput {
+    font-size: var(--tc-font-size-sm, 0.875rem);
+  }
+}
+
+@media (max-width: 576px) {
+  /* Sur mobile, organiser la table différemment */
+  .row {
+    display: flex;
+    flex-direction: column;
+    padding: var(--tc-spacing-xs, 0.5rem) 0;
+  }
+  
+  .fieldName,
+  .existingValue,
+  .formValue,
+  .finalValueCell {
+    max-width: none;
+    width: 100%;
+    padding: var(--tc-spacing-xs, 0.5rem);
+  }
+  
+  .actionCell {
+    width: 100%;
+    text-align: right;
+  }
 }

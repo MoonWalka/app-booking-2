@@ -1,28 +1,35 @@
-/* Styles pour StructuresList version mobile */
+/*
+ * Styles pour StructuresList
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
+ */
+
+
 
 .structuresListMobile {
-  padding: 1rem;
+  padding: var(--tc-spacing-3);
 }
 
 .structuresHeaderMobile {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--tc-spacing-4);
 }
 
 .structuresTitleMobile {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: var(--tc-spacing-3);
 }
 
 .structuresTitleMobile h1 {
-  font-size: 1.5rem;
+  font-size: var(--tc-spacing-4);
   margin: 0;
-  font-weight: 600;
+  font-weight: var(--tc-font-weight-semibold);
 }
 
 .structuresFiltersMobile {
-  margin-bottom: 1rem;
+  margin-bottom: var(--tc-spacing-3);
 }
 
 .emptyState {
@@ -31,26 +38,26 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 2rem 1rem;
-  color: var(--tc-gray-500, #adb5bd);
+  padding: var(--tc-spacing-8) var(--tc-spacing-3);
+  color: var(--tc-tc-gray-var(--tc-font-weight-medium), #adb5bd);
 }
 
 .emptyState i {
   font-size: 3rem;
-  margin-bottom: 1rem;
-  color: var(--tc-gray-400, #ced4da);
+  margin-bottom: var(--tc-spacing-3);
+  color: var(--tc-tc-gray-var(--tc-font-weight-normal), #ced4da);
 }
 
 .emptyState p {
-  margin-bottom: 1.5rem;
-  color: var(--tc-gray-600, #6c757d);
+  margin-bottom: var(--tc-spacing-4);
+  color: var(--tc-tc-gray-var(--tc-font-weight-semibold), var(--tc-color-text-secondary, #6c757d));
 }
 
 .structuresCard {
-  background-color: white;
+  background-color: var(--tc-bg-default, white);
   border-radius: 10px;
-  padding: 1rem;
-  margin-bottom: 1rem;
+  padding: var(--tc-spacing-3);
+  margin-bottom: var(--tc-spacing-3);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   display: flex;
   justify-content: space-between;
@@ -59,43 +66,43 @@
 
 .structureInfo {
   flex: 1;
-  padding-right: 0.5rem;
+  padding-right: var(--tc-spacing-2);
 }
 
 .structureName {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: var(--tc-text-primary, #212529);
+  font-size: 1.var(--tc-spacing-3);
+  font-weight: var(--tc-font-weight-semibold);
+  margin-bottom: var(--tc-spacing-2);
+  color: var(--tc-tc-text-primary, #212529);
 }
 
 .structureType {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
-  color: var(--tc-gray-600, #6c757d);
-  margin-bottom: 0.5rem;
+  gap: var(--tc-spacing-2);
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-tc-gray-var(--tc-font-weight-semibold), var(--tc-color-text-secondary, #6c757d));
+  margin-bottom: var(--tc-spacing-2);
 }
 
 .structureContact {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.85rem;
-  color: var(--tc-gray-600, #6c757d);
-  margin-bottom: 0.25rem;
+  gap: var(--tc-spacing-2);
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-tc-gray-var(--tc-font-weight-semibold), var(--tc-color-text-secondary, #6c757d));
+  margin-bottom: var(--tc-spacing-1);
 }
 
 .structureContact i {
-  color: var(--tc-primary, #007bff);
-  font-size: 0.9rem;
+  color: var(--tc-tc-primary, #007bff);
+  font-size: var(--tc-font-size-sm);
 }
 
 .structureActions {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--tc-spacing-2);
 }
 
 .structureActionBtn {
@@ -109,21 +116,21 @@
 
 .badgeMobile {
   display: inline-block;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-  border-radius: 1rem;
-  background-color: var(--tc-gray-200, #e9ecef);
-  color: var(--tc-gray-700, #495057);
+  padding: var(--tc-spacing-1) var(--tc-spacing-2);
+  font-size: var(--tc-spacing-2);
+  font-weight: var(--tc-font-weight-medium);
+  border-radius: var(--tc-spacing-3);
+  background-color: var(--tc-tc-gray-200, #e9ecef);
+  color: var(--tc-tc-gray-var(--tc-font-weight-bold), #495057);
 }
 
 .badgeProgrammateurs {
-  background-color: var(--tc-primary-light, #cfe2ff);
-  color: var(--tc-primary, #007bff);
+  background-color: var(--tc-tc-primary-light, #cfe2ff);
+  color: var(--tc-tc-primary, #007bff);
 }
 
 .mobileLoadMore {
   display: flex;
   justify-content: center;
-  margin: 1.5rem 0;
+  margin: var(--tc-spacing-4) 0;
 }

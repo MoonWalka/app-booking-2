@@ -7,8 +7,8 @@ import styles from './ProgrammateurStructuresSection.module.css';
 /**
  * Composant pour afficher la structure associée à un programmateur
  * @param {Object} props - Propriétés du composant
- * @param {Object} props.programmateur - Données du programmateur
- * @param {Object} props.structure - Données de la structure (optionnel, si fourni par le parent)
+ * @param {Object} props.programmateur - Données du programmateur avec structureCache et structureId
+ * @param {Object} props.structure - Données complètes de la structure (optionnel, si fourni par le parent)
  */
 const ProgrammateurStructuresSection = ({ programmateur, structure: structureProp }) => {
   const [loading, setLoading] = useState(true);
@@ -16,23 +16,17 @@ const ProgrammateurStructuresSection = ({ programmateur, structure: structurePro
 
   // Si le parent a fourni la structure, on l'utilise directement
   const structure = structureProp || localStructure;
-
-  // DIAGNOSTIC: Créer une structure de test si aucune n'est disponible
-  const mockStructure = {
-    id: "structure-test-id",
-    nom: "Structure de test",
-    type: "Association",
-    ville: "Paris",
+  
+  // Données à afficher : priorité à la structure complète, puis au cache, puis valeurs par défaut
+  const structureData = {
+    id: structure?.id || programmateur?.structureId,
+    raisonSociale: structure?.raisonSociale || programmateur?.structureCache?.raisonSociale || "Structure associée",
+    type: structure?.type || programmateur?.structureCache?.type,
+    ville: structure?.ville || programmateur?.structureCache?.ville
   };
 
-  // Utiliser une structure simulée pour s'assurer que l'interface utilisateur s'affiche
-  const displayStructure = structure || mockStructure;
-
-  console.log("[DIAGNOSTIC] ProgrammateurStructuresSection - programmateur:", programmateur);
-  console.log("[DIAGNOSTIC] ProgrammateurStructuresSection - structureProp:", structureProp);
-  console.log("[DIAGNOSTIC] ProgrammateurStructuresSection - localStructure:", localStructure);
-  console.log("[DIAGNOSTIC] ProgrammateurStructuresSection - structureId:", programmateur?.structureId);
-  console.log("[DIAGNOSTIC] ProgrammateurStructuresSection - displayStructure:", displayStructure);
+  // Est-ce que nous avons une vraie structure (avec ID) ou juste des données en cache
+  const hasRealStructure = !!programmateur?.structureId;
 
   useEffect(() => {
     // Si une structure est déjà fournie par le parent, on s'arrête là
@@ -46,22 +40,16 @@ const ProgrammateurStructuresSection = ({ programmateur, structure: structurePro
       setLoading(true);
       try {
         if (programmateur && programmateur.structureId) {
-          console.log(`[DIAGNOSTIC] Chargement de la structure ${programmateur.structureId}`);
           const structureDoc = await getDoc(doc(db, 'structures', programmateur.structureId));
           if (structureDoc.exists()) {
             setLocalStructure({
               id: structureDoc.id,
               ...structureDoc.data()
             });
-            console.log(`[DIAGNOSTIC] Structure chargée avec succès:`, structureDoc.data());
-          } else {
-            console.warn(`[DIAGNOSTIC] La structure ${programmateur.structureId} n'existe pas`);
           }
-        } else {
-          console.log("[DIAGNOSTIC] Aucun structureId disponible");
         }
       } catch (error) {
-        console.error('[DIAGNOSTIC] Erreur lors du chargement de la structure:', error);
+        console.error('Erreur lors du chargement de la structure:', error);
       } finally {
         setLoading(false);
       }
@@ -90,35 +78,34 @@ const ProgrammateurStructuresSection = ({ programmateur, structure: structurePro
           <div className={styles.structureItem}>
             <div className={styles.structureInfo}>
               {/* Utiliser Link seulement si on a un ID réel, sinon utiliser un span */}
-              {displayStructure.id !== "structure-test-id" ? (
-                <Link to={`/structures/${displayStructure.id}`} className={styles.structureName}>
-                  {displayStructure.nom || displayStructure.raisonSociale || "Structure associée"}
+              {hasRealStructure ? (
+                <Link to={`/structures/${structureData.id}`} className={styles.structureName}>
+                  {structureData.raisonSociale}
                 </Link>
               ) : (
                 <span className={styles.structureName}>
-                  {programmateur?.structure || "Structure associée"}
+                  {structureData.raisonSociale}
                 </span>
               )}
               <div className={styles.structureDetails}>
-                {displayStructure.type && (
-                  <span className={styles.typeBadge}>{displayStructure.type}</span>
+                {structureData.type && (
+                  <span className={styles.typeBadge}>{structureData.type}</span>
                 )}
-                {displayStructure.ville && (
+                {structureData.ville && (
                   <span className={styles.structureLocation}>
                     <i className="bi bi-geo-alt me-1"></i>
-                    {displayStructure.ville}
+                    {structureData.ville}
                   </span>
                 )}
               </div>
             </div>
             <div className={styles.structureActions}>
-              {displayStructure.id !== "structure-test-id" && (
-                <Link to={`/structures/${displayStructure.id}`} className="btn btn-sm btn-outline-primary">
+              {hasRealStructure ? (
+                <Link to={`/structures/${structureData.id}`} className="btn btn-sm btn-outline-primary">
                   <i className="bi bi-eye me-1"></i>
                   Voir
                 </Link>
-              )}
-              {displayStructure.id === "structure-test-id" && (
+              ) : (
                 <Link 
                   to="/structures/nouvelle" 
                   state={{ 

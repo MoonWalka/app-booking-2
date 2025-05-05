@@ -7,19 +7,19 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: var(--tc-modal-overlay-bg);
+  background-color: var(--tc-tc-modal-overlay-bg);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: var(--tc-z-index-modal);
+  z-index: var(--tc-tc-z-index-modal);
   overflow-y: auto;
   padding: 1.5rem;
 }
 
 .tc-modal {
-  background-color: var(--tc-card-bg);
-  border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-shadow-modal);
+  background-color: var(--tc-tc-card-bg);
+  border-radius: var(--tc-tc-border-radius);
+  box-shadow: var(--tc-tc-shadow-modal);
   width: 100%;
   max-width: 600px;
   max-height: 90vh;
@@ -30,9 +30,9 @@
 
 /* Style pour le contenu de la modale */
 .tc-modal-content {
-  background-color: var(--tc-card-bg);
-  border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-shadow-modal);
+  background-color: var(--tc-tc-card-bg);
+  border-radius: var(--tc-tc-border-radius);
+  box-shadow: var(--tc-tc-shadow-modal);
   width: 100%;
   max-width: 600px;
   max-height: 90vh;
@@ -52,7 +52,7 @@
   height: 100vh;
   max-width: none;
   margin: 0;
-  background: var(--tc-card-bg);
+  background: var(--tc-tc-card-bg);
   border-radius: 0;
   box-shadow: none;
   display: flex;
@@ -62,7 +62,7 @@
 
 .tc-modal-header {
   padding: 1rem 1.5rem;
-  border-bottom: 1px solid var(--tc-border-color);
+  border-bottom: 1px solid var(--tc-tc-border-color);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -71,23 +71,23 @@
 .tc-modal-title {
   font-size: 1.25rem;
   font-weight: 600;
-  color: var(--tc-text-color);
+  color: var(--tc-tc-text-color);
   margin: 0;
 }
 
 .tc-modal-close {
   background: transparent;
   border: none;
-  color: var(--tc-text-muted);
+  color: var(--tc-tc-text-muted);
   font-size: 1.5rem;
   line-height: 1;
   padding: 0;
   cursor: pointer;
-  transition: var(--tc-transition);
+  transition: var(--tc-tc-transition);
 }
 
 .tc-modal-close:hover {
-  color: var(--tc-danger-color);
+  color: var(--tc-tc-danger-color);
 }
 
 .tc-modal-body {
@@ -98,7 +98,7 @@
 
 .tc-modal-footer {
   padding: 1rem 1.5rem;
-  border-top: 1px solid var(--tc-border-color);
+  border-top: 1px solid var(--tc-tc-border-color);
   display: flex;
   justify-content: flex-end;
   gap: 0.75rem;
@@ -124,7 +124,7 @@
   flex-direction: column;
   position: relative;
   background-color: white;
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-tc-border-radius);
   overflow: hidden;
 }
 
@@ -135,7 +135,7 @@
   right: 0;
   z-index: 20;
   background-color: white;
-  border-bottom: 1px solid var(--tc-border-color);
+  border-bottom: 1px solid var(--tc-tc-border-color);
   padding: 1rem 1.5rem;
   display: flex;
   justify-content: space-between;
@@ -149,7 +149,7 @@
   right: 0;
   z-index: 20;
   background-color: white;
-  border-top: 1px solid var(--tc-border-color);
+  border-top: 1px solid var(--tc-tc-border-color);
   padding: 1rem 1.5rem;
   display: flex;
   justify-content: flex-end;
@@ -190,12 +190,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--tc-text-muted);
+  color: var(--tc-tc-text-muted);
   transition: color 0.15s ease-in-out;
 }
 
 .tc-modal-full .tc-modal-close:hover {
-  color: var(--tc-danger-color);
+  color: var(--tc-tc-danger-color);
 }
 
 /* Styles spécifiques pour l'éditeur ReactQuill dans la modale */
@@ -258,15 +258,15 @@
 /* Styles pour les sections collapsibles */
 .tc-modal-full .card {
   margin-bottom: 1.5rem;
-  border: 1px solid var(--tc-border-color);
-  border-radius: var(--tc-border-radius);
+  border: 1px solid var(--tc-tc-border-color);
+  border-radius: var(--tc-tc-border-radius);
   background-color: white;
 }
 
 .tc-modal-full .card-header {
   padding: 0.75rem 1.25rem;
   background-color: rgba(0, 0, 0, 0.03);
-  border-bottom: 1px solid var(--tc-border-color);
+  border-bottom: 1px solid var(--tc-tc-border-color);
 }
 
 .tc-modal-full .card-body {

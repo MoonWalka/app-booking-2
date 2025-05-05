@@ -1,51 +1,51 @@
-/* Styles pour le formulaire d'artiste en version desktop */
+/* Styles standardisés pour le formulaire d'artiste en version desktop */
 
 .artisteFormDesktop {
   max-width: 800px;
   margin: 0 auto;
-  padding: 20px;
+  padding: var(--tc-spacing-md, 20px);
 }
 
 .desktopFormHeader {
-  margin-bottom: 30px;
+  margin-bottom: var(--tc-spacing-xl, 30px);
 }
 
 .desktopFormHeader h1 {
-  font-size: 1.8rem;
-  font-weight: 600;
-  color: #333;
+  font-size: var(--tc-font-size-xl, 1.8rem);
+  font-weight: var(--tc-font-weight-semibold, 600);
+  color: var(--tc-text-color-primary, #333);
 }
 
 .stepFormContainer {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  padding: 25px;
-  margin-bottom: 30px;
+  background-color: var(--tc-color-white, white);
+  border-radius: var(--tc-border-radius, 8px);
+  box-shadow: var(--tc-box-shadow, 0 2px 4px rgba(0,0,0,0.05));
+  padding: var(--tc-spacing-lg, 25px);
+  margin-bottom: var(--tc-spacing-xl, 30px);
 }
 
 .stepForm {
-  margin-bottom: 20px;
+  margin-bottom: var(--tc-spacing-md, 20px);
 }
 
 .stepFormGroup {
-  margin-bottom: 20px;
+  margin-bottom: var(--tc-spacing-md, 20px);
 }
 
 .stepFormGroup label {
   display: block;
-  margin-bottom: 8px;
-  font-weight: 500;
-  color: #333;
+  margin-bottom: var(--tc-spacing-xs, 8px);
+  font-weight: var(--tc-font-weight-medium, 500);
+  color: var(--tc-text-color-primary, #333);
 }
 
 .stepFormGroup input,
 .stepFormGroup textarea {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
+  padding: var(--tc-spacing-sm, 10px);
+  border: var(--tc-border-width, 1px) solid var(--tc-border-color, #ddd);
+  border-radius: var(--tc-border-radius-sm, 4px);
+  font-size: var(--tc-font-size-sm, 14px);
 }
 
 .stepFormGroup textarea {
@@ -56,13 +56,13 @@
 .stepFormActions {
   display: flex;
   justify-content: space-between;
-  margin-top: 30px;
+  margin-top: var(--tc-spacing-xl, 30px);
 }
 
 .addMembreContainer {
   display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
+  gap: var(--tc-spacing-sm, 10px);
+  margin-bottom: var(--tc-spacing-md, 15px);
 }
 
 .addMembreContainer input {
@@ -70,7 +70,7 @@
 }
 
 .membresList {
-  margin-top: 15px;
+  margin-top: var(--tc-spacing-md, 15px);
 }
 
 .loadingIndicator {
@@ -78,6 +78,40 @@
   justify-content: center;
   align-items: center;
   min-height: 200px;
-  font-size: 18px;
-  color: #6c757d;
+  font-size: var(--tc-font-size-md, 18px);
+  color: var(--tc-text-color-secondary, #6c757d);
+}
+
+/* Support responsive */
+@media (max-width: 768px) {
+  .artisteFormDesktop {
+    padding: var(--tc-spacing-sm, 15px);
+  }
+  
+  .stepFormContainer {
+    padding: var(--tc-spacing-md, 20px);
+  }
+  
+  .stepFormActions {
+    flex-direction: column;
+    gap: var(--tc-spacing-sm, 10px);
+  }
+  
+  .stepFormActions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .artisteFormDesktop {
+    padding: var(--tc-spacing-xs, 10px);
+  }
+  
+  .stepFormContainer {
+    padding: var(--tc-spacing-sm, 15px);
+  }
+  
+  .addMembreContainer {
+    flex-direction: column;
+  }
 }

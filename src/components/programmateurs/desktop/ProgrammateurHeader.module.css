@@ -1,15 +1,15 @@
 .container {
   /* Base styles for ProgrammateurHeader */
-  margin-bottom: 1rem;
+  margin-bottom: var(--tc-spacing-md, 1rem);
 }
 
 .detailsHeaderContainer {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--tc-spacing-lg, 1.5rem);
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: var(--tc-spacing-md, 1rem);
 }
 
 .titleContainer {
@@ -19,19 +19,19 @@
 .breadcrumb {
   display: flex;
   align-items: center;
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
+  margin-bottom: var(--tc-spacing-sm, 0.5rem);
+  font-size: var(--tc-font-size-sm, 0.9rem);
 }
 
 .breadcrumbItem {
-  color: var(--bs-gray-600);
+  color: var(--tc-text-secondary, #6c757d);
   text-decoration: none;
 }
 
 .breadcrumbDivider {
-  margin: 0 0.5rem;
-  font-size: 0.8rem;
-  color: var(--bs-gray-500);
+  margin: 0 var(--tc-spacing-sm, 0.5rem);
+  font-size: var(--tc-font-size-xs, 0.8rem);
+  color: var(--tc-text-tertiary, #adb5bd);
 }
 
 .headerTitle {
@@ -39,12 +39,12 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: var(--tc-spacing-sm, 0.5rem);
 }
 
 .headerActions {
   display: flex;
-  gap: 0.5rem;
+  gap: var(--tc-spacing-sm, 0.5rem);
   align-items: center;
 }
 
@@ -56,6 +56,21 @@
   .headerActions {
     width: 100%;
     justify-content: flex-start;
-    margin-top: 0.5rem;
+    margin-top: var(--tc-spacing-sm, 0.5rem);
+  }
+
+  .breadcrumb {
+    font-size: var(--tc-font-size-xs, 0.8rem);
+  }
+}
+
+@media (max-width: 576px) {
+  .headerActions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .container {
+    margin-bottom: var(--tc-spacing-sm, 0.5rem);
   }
 }

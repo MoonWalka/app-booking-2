@@ -1,14 +1,14 @@
-/* FormHeader Styles */
+/* FormHeader Styles - Standardisés */
 .container {
   /* Base container styles */
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--tc-spacing-lg, 1.5rem);
 }
 
 .headerWrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: var(--tc-spacing-md, 1rem);
 }
 
 .titleWrapper {
@@ -17,36 +17,70 @@
 
 .title {
   margin: 0;
-  font-size: 1.75rem;
-  font-weight: 600;
+  font-size: var(--tc-font-size-xl, 1.75rem);
+  font-weight: var(--tc-font-weight-semibold, 600);
 }
 
 .actionsWrapper {
   display: flex;
-  gap: 0.5rem;
+  gap: var(--tc-spacing-xs, 0.5rem);
 }
 
 .backButton {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
+  gap: var(--tc-spacing-xs, 0.5rem);
+  padding: var(--tc-spacing-xs, 0.5rem) var(--tc-spacing-md, 1rem);
   background-color: transparent;
-  border: 1px solid var(--bs-gray-400, #ced4da);
-  border-radius: 0.25rem;
-  color: var(--bs-gray-700, #495057);
-  font-weight: 500;
+  border: var(--tc-border-width, 1px) solid var(--tc-border-color, #ced4da);
+  border-radius: var(--tc-border-radius-sm, 0.25rem);
+  color: var(--tc-text-color-secondary, #495057);
+  font-weight: var(--tc-font-weight-medium, 500);
   cursor: pointer;
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+  transition: var(--tc-transition, background-color 0.2s, color 0.2s, border-color 0.2s);
 }
 
 .backButton:hover {
-  background-color: var(--bs-gray-100, #f8f9fa);
-  border-color: var(--bs-gray-500, #adb5bd);
+  background-color: var(--tc-color-gray-100, #f8f9fa);
+  border-color: var(--tc-color-gray-500, #adb5bd);
 }
 
 .divider {
   border: 0;
-  border-top: 1px solid var(--bs-gray-300, #dee2e6);
-  margin: 1rem 0;
+  border-top: var(--tc-border-width, 1px) solid var(--tc-border-color-light, #dee2e6);
+  margin: var(--tc-spacing-md, 1rem) 0;
+}
+
+/* Support responsive */
+@media (max-width: 768px) {
+  .headerWrapper {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--tc-spacing-sm, 0.75rem);
+  }
+  
+  .actionsWrapper {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  
+  .title {
+    font-size: var(--tc-font-size-lg, 1.5rem);
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    margin-bottom: var(--tc-spacing-md, 1rem);
+  }
+  
+  .actionsWrapper {
+    flex-wrap: wrap;
+    gap: var(--tc-spacing-xs, 0.5rem);
+  }
+  
+  .backButton {
+    width: 100%;
+    justify-content: center;
+  }
 }

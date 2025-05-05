@@ -1,6 +1,149 @@
-# Hooks communs
+# Hooks Communs
 
-Cette section documente les hooks utilitaires réutilisables à travers l'application TourCraft.
+*Dernière mise à jour: 4 mai 2025*
+
+Ce document décrit les hooks partagés et réutilisables disponibles dans le dossier `src/hooks/common`.
+
+## useGenericEntityForm
+
+Hook générique qui simplifie la gestion des formulaires d'entités (création, édition, validation, soumission). Il remplace et unifie les multiples hooks de formulaires spécifiques à chaque entité.
+
+### Importation
+
+```jsx
+import { useGenericEntityForm } from '@/hooks/common';
+// ou 
+import { useEntityForm } from '@/hooks/common'; // Alias plus court
+```
+
+### Paramètres
+
+```tsx
+useGenericEntityForm({
+  entityType: string,         // Type d'entité (ex: 'concerts', 'structures')
+  entityId: string | null,    // ID de l'entité (ou 'nouveau' pour création)
+  initialData: object,        // Données initiales du formulaire
+  collectionName: string,     // Nom de la collection Firestore 
+  validateForm: function,     // Fonction de validation
+  transformData: function,    // Transformation avant sauvegarde
+  onSuccess: function,        // Callback après sauvegarde réussie
+  relatedEntities: array      // Configuration des entités liées
+})
+```
+
+#### Configuration des entités liées
+
+```jsx
+const relatedEntities = [
+  { 
+    name: 'lieu',              // Nom de la relation
+    collection: 'lieux',       // Collection Firestore pour l'entité liée
+    idField: 'lieuId',         // Champ d'ID dans l'entité principale
+    nameField: 'lieuNom'       // Champ facultatif pour stocker le nom
+  }
+]
+```
+
+### Valeurs retournées
+
+```tsx
+{
+  formData: object,                     // État actuel du formulaire
+  setFormData: function,                // Mise à jour directe de formData
+  loading: boolean,                     // Indicateur de chargement
+  submitting: boolean,                  // Indicateur de soumission
+  error: string | null,                 // Message d'erreur global
+  formErrors: object,                   // Erreurs par champ
+  handleChange: function,               // Gestion des changements
+  handleSubmit: function,               // Soumission du formulaire
+  resetForm: function,                  // Réinitialisation du formulaire
+  relatedData: object,                  // Données des entités liées
+  handleSelectRelatedEntity: function,  // Sélection d'entité liée
+  hasChanges: function,                 // Vérification des modifications
+  initialEntityData: object | null      // Données initiales
+}
+```
+
+### Fonctionnalités
+
+- **Gestion uniforme des formulaires** - Même comportement et API pour tous les types d'entités
+- **Gestion des champs imbriqués** - Support pour les chemins comme `contact.nom` dans les formulaires
+- **Chargement automatique des données** - Récupération des données depuis Firestore pour les entités existantes
+- **Validation configurable** - Interface uniforme pour la validation des formulaires
+- **Gestion des entités liées** - Chargement et liaison des entités associées (comme les lieux pour un concert)
+- **Détection des changements** - Suivi des champs modifiés
+- **Gestion des erreurs** - Par champ et globales
+
+### Exemple d'utilisation
+
+```jsx
+function ConcertForm({ concertId }) {
+  // Configuration pour les concerts
+  const {
+    formData,
+    loading,
+    error,
+    formErrors,
+    handleChange,
+    handleSubmit,
+    relatedData
+  } = useGenericEntityForm({
+    entityType: 'concerts',
+    entityId: concertId,
+    initialData: { 
+      titre: '',
+      date: '',
+      montant: ''
+    },
+    collectionName: 'concerts',
+    validateForm: (data) => {
+      const errors = {};
+      if (!data.titre) errors.titre = 'Le titre est obligatoire';
+      return { isValid: Object.keys(errors).length === 0, errors };
+    }
+  });
+
+  if (loading) return <p>Chargement...</p>;
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label>Titre</label>
+        <input
+          name="titre"
+          value={formData.titre}
+          onChange={handleChange}
+        />
+        {formErrors.titre && <p className="error">{formErrors.titre}</p>}
+      </div>
+      
+      {/* Autres champs du formulaire */}
+      
+      <button type="submit">Enregistrer</button>
+    </form>
+  );
+}
+```
+
+### Remplacement des hooks existants
+
+Ce hook générique est conçu pour remplacer progressivement les hooks spécifiques d'entités suivants :
+
+- `useConcertForm` - Déjà mis à jour pour utiliser le hook générique
+- `useStructureForm`
+- `useLieuForm`
+- `useProgrammateurForm`
+- `useEntrepriseForm`
+
+### Notes de migration
+
+Pour migrer un hook de formulaire existant vers `useGenericEntityForm` :
+
+1. Identifiez les données initiales, la logique de validation et les transformations spécifiques
+2. Configurez ces paramètres dans l'appel à `useGenericEntityForm`
+3. Assurez-vous de renvoyer les mêmes propriétés que le hook original pour la compatibilité
+
+Voir `src/hooks/concerts/useConcertForm.js` pour un exemple complet de migration.
 
 ## hooks/common/useEntitySearch.js
 

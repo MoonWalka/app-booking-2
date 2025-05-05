@@ -1,0 +1,106 @@
+/* ProgrammateurForm.module.css */
+.programmateursFormMobile {
+  padding: 1rem;
+  background-color: var(--tc-tc-bg-color, #fff);
+}
+
+.mobileFormHeader {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--tc-tc-border-color, #eee);
+}
+
+.mobileFormHeader h1 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--tc-tc-text-color, #333);
+  margin: 0;
+}
+
+.stepForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.stepFormGroup {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.stepFormGroup label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--tc-tc-label-color, #344767);
+}
+
+.stepFormGroup input, 
+.stepFormGroup select, 
+.stepFormGroup textarea {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--tc-tc-text-color, #344767);
+  background-color: var(--tc-tc-input-bg, #fff);
+  background-clip: padding-box;
+  border: 1px solid var(--tc-tc-input-border-color, #d2d6da);
+  border-radius: var(--tc-tc-border-radius, 0.5rem);
+  transition: all 0.2s ease;
+}
+
+.stepFormGroup input:focus, 
+.stepFormGroup select:focus, 
+.stepFormGroup textarea:focus {
+  border-color: var(--tc-tc-primary-color, #3a86ff);
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(58, 134, 255, 0.25);
+}
+
+.stepFormActions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--tc-tc-border-color-light, #f8f9fa);
+}
+
+.searchingIndicator {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--tc-tc-text-muted, #6c757d);
+}
+
+.addressResults {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: var(--tc-tc-bg-color, #fff);
+  border: 1px solid var(--tc-tc-border-color, #d2d6da);
+  border-radius: var(--tc-tc-border-radius, 0.5rem);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+}
+
+.addressResultItem {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  border-bottom: 1px solid var(--tc-tc-border-color-light, #f8f9fa);
+}
+
+.addressResultItem:hover {
+  background-color: var(--tc-tc-hover-bg, #f8f9fa);
+}
+
+.loadingIndicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  color: var(--tc-tc-text-muted, #6c757d);
+}

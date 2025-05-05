@@ -1,12 +1,32 @@
+/*
+ * Styles pour ConcertStatusTabs
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 5 mai 2025
+ */
+
 .statusFilterTabs {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
+  gap: var(--tc-spacing-1-5);
+  margin-bottom: var(--tc-spacing-4);
 }
 
 .statusIcon {
-  font-size: 1rem;
+  font-size: var(--tc-font-size-base);
   display: flex;
   align-items: center;
+}
+
+/* Styles responsive standardisés */
+@media (max-width: 768px) {
+  .statusFilterTabs {
+    gap: var(--tc-spacing-1);
+    margin-bottom: var(--tc-spacing-3);
+  }
+}
+
+@media (max-width: 576px) {
+  .statusFilterTabs {
+    justify-content: center;
+  }
 }

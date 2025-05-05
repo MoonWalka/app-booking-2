@@ -1,29 +1,45 @@
+/*
+ * Styles pour EntrepriseSubmitActions
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 5 mai 2025
+ */
+
 .actionBar {
   display: flex;
   justify-content: flex-end;
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid #dee2e6;
+  margin-top: var(--tc-spacing-5);
+  padding-top: var(--tc-spacing-4);
+  border-top: 1px solid var(--tc-border-light);
 }
 
 .saveButton {
   display: flex;
   align-items: center;
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
+  padding-left: var(--tc-spacing-4);
+  padding-right: var(--tc-spacing-4);
 }
 
 .saveButton i {
-  font-size: 1rem;
+  font-size: var(--tc-font-size-base);
 }
 
+/* Styles responsive standardisés */
 @media (max-width: 768px) {
   .actionBar {
     flex-direction: column;
+    margin-top: var(--tc-spacing-4);
+    padding-top: var(--tc-spacing-3);
   }
 
   .saveButton {
     width: 100%;
     justify-content: center;
+  }
+}
+
+@media (max-width: 576px) {
+  .actionBar {
+    margin-top: var(--tc-spacing-3);
+    padding-top: var(--tc-spacing-2);
   }
 }

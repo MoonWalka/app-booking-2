@@ -4,7 +4,7 @@
   padding: 0.75rem 1.25rem;
   margin-bottom: 1rem;
   border: 1px solid transparent;
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-tc-border-radius);
   display: flex;
   align-items: center;
 }
@@ -38,7 +38,7 @@
   margin-left: 0.75rem;
   font-size: 1.25rem;
   cursor: pointer;
-  transition: var(--tc-transition);
+  transition: var(--tc-tc-transition);
 }
 
 .alert-close:hover {
@@ -47,39 +47,39 @@
 
 /* Variantes d'alertes */
 .alert-primary {
-  color: var(--tc-primary-text);
-  background-color: var(--tc-primary-light);
-  border-color: var(--tc-primary-color);
+  color: var(--tc-tc-primary-text);
+  background-color: var(--tc-tc-primary-light);
+  border-color: var(--tc-tc-primary-color);
 }
 
 .alert-secondary {
-  color: var(--tc-secondary-text);
-  background-color: var(--tc-secondary-light);
-  border-color: var(--tc-secondary-color);
+  color: var(--tc-tc-secondary-text);
+  background-color: var(--tc-tc-secondary-light);
+  border-color: var(--tc-tc-secondary-color);
 }
 
 .alert-success {
-  color: var(--tc-success-text);
-  background-color: var(--tc-success-light);
-  border-color: var(--tc-success-color);
+  color: var(--tc-tc-success-text);
+  background-color: var(--tc-tc-success-light);
+  border-color: var(--tc-tc-success-color);
 }
 
 .alert-info {
-  color: var(--tc-info-text);
-  background-color: var(--tc-info-light);
-  border-color: var(--tc-info-color);
+  color: var(--tc-tc-info-text);
+  background-color: var(--tc-tc-info-light);
+  border-color: var(--tc-tc-info-color);
 }
 
 .alert-warning {
-  color: var(--tc-warning-text);
-  background-color: var(--tc-warning-light);
-  border-color: var(--tc-warning-color);
+  color: var(--tc-tc-warning-text);
+  background-color: var(--tc-tc-warning-light);
+  border-color: var(--tc-tc-warning-color);
 }
 
 .alert-danger {
-  color: var(--tc-danger-text);
-  background-color: var(--tc-danger-light);
-  border-color: var(--tc-danger-color);
+  color: var(--tc-tc-danger-text);
+  background-color: var(--tc-tc-danger-light);
+  border-color: var(--tc-tc-danger-color);
 }
 
 /* Alertes avec bordure latérale */
@@ -89,19 +89,19 @@
 
 /* Alertes avec fond gradient */
 .alert-gradient-primary {
-  background-image: linear-gradient(to right, var(--tc-primary-color), var(--tc-primary-light));
+  background-image: linear-gradient(to right, var(--tc-tc-primary-color), var(--tc-tc-primary-light));
   color: white;
   border: none;
 }
 
 .alert-gradient-success {
-  background-image: linear-gradient(to right, var(--tc-success-color), var(--tc-success-light));
+  background-image: linear-gradient(to right, var(--tc-tc-success-color), var(--tc-tc-success-light));
   color: white;
   border: none;
 }
 
 .alert-gradient-danger {
-  background-image: linear-gradient(to right, var(--tc-danger-color), var(--tc-danger-light));
+  background-image: linear-gradient(to right, var(--tc-tc-danger-color), var(--tc-tc-danger-light));
   color: white;
   border: none;
 }
@@ -109,7 +109,7 @@
 /* Toast notifications */
 .toast-container {
   position: fixed;
-  z-index: var(--tc-z-index-toast);
+  z-index: var(--tc-tc-z-index-toast);
   padding: 1rem;
 }
 
@@ -137,9 +137,9 @@
   position: relative;
   min-width: 250px;
   max-width: 350px;
-  background-color: var(--tc-card-bg);
-  border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-shadow-toast);
+  background-color: var(--tc-tc-card-bg);
+  border-radius: var(--tc-tc-border-radius);
+  box-shadow: var(--tc-tc-shadow-toast);
   margin-bottom: 0.75rem;
   overflow: hidden;
   animation: toastFadeIn 0.3s ease;
@@ -154,9 +154,9 @@
   display: flex;
   align-items: center;
   padding: 0.5rem 0.75rem;
-  color: var(--tc-text-color);
-  background-color: var(--tc-card-header-bg-color);
-  border-bottom: 1px solid var(--tc-border-color);
+  color: var(--tc-tc-text-color);
+  background-color: var(--tc-tc-card-header-bg-color);
+  border-bottom: 1px solid var(--tc-tc-border-color);
 }
 
 .toast-body {
@@ -168,7 +168,7 @@
   bottom: 0;
   left: 0;
   height: 4px;
-  background-color: var(--tc-primary-color);
+  background-color: var(--tc-tc-primary-color);
   animation: toastProgress linear forwards;
 }
 
@@ -179,21 +179,21 @@
 
 /* Toast par type */
 .toast-primary .toast-progress {
-  background-color: var(--tc-primary-color);
+  background-color: var(--tc-tc-primary-color);
 }
 
 .toast-success .toast-progress {
-  background-color: var(--tc-success-color);
+  background-color: var(--tc-tc-success-color);
 }
 
 .toast-warning .toast-progress {
-  background-color: var(--tc-warning-color);
+  background-color: var(--tc-tc-warning-color);
 }
 
 .toast-danger .toast-progress {
-  background-color: var(--tc-danger-color);
+  background-color: var(--tc-tc-danger-color);
 }
 
 .toast-info .toast-progress {
-  background-color: var(--tc-info-color);
+  background-color: var(--tc-tc-info-color);
 }

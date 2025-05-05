@@ -56,6 +56,7 @@ const ArtisteSearchSection = ({
                 createButtonText="Nouvel artiste"
                 emptyResultsText="Aucun artiste trouvé"
                 entityType="artiste"
+                onFocus={() => artisteSearchTerm.length >= 2 && !showArtisteResults && setArtisteSearchTerm(artisteSearchTerm)}
               />
               <small className={styles.formHelpText}>
                 Tapez au moins 2 caractères pour rechercher un artiste par nom.

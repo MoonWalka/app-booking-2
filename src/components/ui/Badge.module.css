@@ -2,27 +2,82 @@
 
 .badge {
   display: inline-block;
-  padding: 0.25em 0.4em;
-  font-size: 75%;
-  font-weight: 700;
+  padding: var(--tc-spacing-xs, 0.25em) var(--tc-spacing-sm, 0.4em);
+  font-size: var(--tc-font-size-xs, 75%);
+  font-weight: var(--tc-font-weight-bold, 700);
   line-height: 1;
   text-align: center;
   white-space: nowrap;
   vertical-align: baseline;
-  border-radius: 0.25rem;
+  border-radius: var(--tc-border-radius-sm, 0.25rem);
+}
+
+.badgePill {
+  border-radius: var(--tc-border-radius-pill, 50rem);
 }
 
 .warning {
-  background-color: var(--tc-warning-color);
-  color: white;
+  background-color: var(--tc-warning-color, #ffc107);
+  color: var(--tc-warning-text, #212529);
 }
 
 .success {
-  background-color: var(--tc-success-color);
-  color: white;
+  background-color: var(--tc-success-color, #28a745);
+  color: var(--tc-text-light, white);
 }
 
 .danger {
-  background-color: var(--tc-danger-color);
-  color: white;
+  background-color: var(--tc-danger-color, #dc3545);
+  color: var(--tc-text-light, white);
+}
+
+.primary {
+  background-color: var(--tc-primary-color, #4a6da7);
+  color: var(--tc-text-light, white);
+}
+
+.secondary {
+  background-color: var(--tc-secondary-color, #6c757d);
+  color: var(--tc-text-light, white);
+}
+
+.info {
+  background-color: var(--tc-info-color, #17a2b8);
+  color: var(--tc-text-light, white);
+}
+
+/* Variantes avec bordure */
+.outlineWarning {
+  background-color: transparent;
+  border: 1px solid var(--tc-warning-color, #ffc107);
+  color: var(--tc-warning-color, #ffc107);
+}
+
+.outlineSuccess {
+  background-color: transparent;
+  border: 1px solid var(--tc-success-color, #28a745);
+  color: var(--tc-success-color, #28a745);
+}
+
+.outlineDanger {
+  background-color: transparent;
+  border: 1px solid var(--tc-danger-color, #dc3545);
+  color: var(--tc-danger-color, #dc3545);
+}
+
+.outlinePrimary {
+  background-color: transparent;
+  border: 1px solid var(--tc-primary-color, #4a6da7);
+  color: var(--tc-primary-color, #4a6da7);
+}
+
+/* Tailles de badge */
+.badgeSm {
+  font-size: var(--tc-font-size-xs, 65%);
+  padding: 0.2em 0.3em;
+}
+
+.badgeLg {
+  font-size: var(--tc-font-size-sm, 85%);
+  padding: 0.3em 0.5em;
 }

@@ -1,17 +1,23 @@
+/*
+ * Styles pour AddressInput
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 5 mai 2025
+ */
+
 .container {
   position: relative;
-  margin-bottom: 1rem;
+  margin-bottom: var(--tc-spacing-3);
 }
 
 .label {
   display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
+  margin-bottom: var(--tc-spacing-1-5);
+  font-weight: var(--tc-font-weight-medium);
 }
 
 .required {
-  color: #dc3545;
-  margin-left: 0.25rem;
+  color: var(--tc-color-danger);
+  margin-left: var(--tc-spacing-1);
 }
 
 .inputWrapper {
@@ -22,36 +28,36 @@
 
 .input {
   width: 100%;
-  padding: 0.375rem 0.75rem;
-  padding-left: 2.25rem;
-  font-size: 1rem;
+  padding: var(--tc-spacing-1-5) var(--tc-spacing-2);
+  padding-left: var(--tc-spacing-5-5);
+  font-size: var(--tc-font-size-base);
   line-height: 1.5;
-  color: #212529;
-  background-color: #fff;
+  color: var(--tc-color-text);
+  background-color: var(--tc-bg-white);
   background-clip: padding-box;
-  border: 1px solid #ced4da;
-  border-radius: 0.25rem;
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  border: 1px solid var(--tc-border-input);
+  border-radius: var(--tc-border-radius-sm);
+  transition: border-color var(--tc-transition-speed) ease-in-out, box-shadow var(--tc-transition-speed) ease-in-out;
 }
 
 .input:focus {
-  color: #212529;
-  background-color: #fff;
-  border-color: #86b7fe;
+  color: var(--tc-color-text);
+  background-color: var(--tc-bg-white);
+  border-color: var(--tc-color-primary-light);
   outline: 0;
-  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  box-shadow: var(--tc-input-focus-shadow);
 }
 
 .icon {
   position: absolute;
-  left: 0.75rem;
-  color: #6c757d;
+  left: var(--tc-spacing-2);
+  color: var(--tc-color-text-muted);
 }
 
 .loadingIndicator {
   position: absolute;
-  right: 0.75rem;
-  color: #6c757d;
+  right: var(--tc-spacing-2);
+  color: var(--tc-color-text-muted);
 }
 
 .suggestions {
@@ -59,20 +65,20 @@
   width: 100%;
   max-height: 300px;
   overflow-y: auto;
-  margin-top: 0.25rem;
-  background-color: white;
-  border: 1px solid #ced4da;
-  border-radius: 0.25rem;
-  z-index: 1000;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  margin-top: var(--tc-spacing-1);
+  background-color: var(--tc-bg-white);
+  border: 1px solid var(--tc-border-input);
+  border-radius: var(--tc-border-radius-sm);
+  z-index: var(--tc-z-index-dropdown);
+  box-shadow: var(--tc-shadow-md);
 }
 
 .suggestionItem {
   display: flex;
   align-items: flex-start;
-  padding: 0.75rem;
+  padding: var(--tc-spacing-2);
   cursor: pointer;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--tc-border-ultralight);
 }
 
 .suggestionItem:last-child {
@@ -80,12 +86,12 @@
 }
 
 .suggestionItem:hover {
-  background-color: #f8f9fa;
+  background-color: var(--tc-bg-hover);
 }
 
 .suggestionIcon {
-  margin-right: 0.75rem;
-  color: #0d6efd;
+  margin-right: var(--tc-spacing-2);
+  color: var(--tc-color-primary);
 }
 
 .suggestionText {
@@ -93,20 +99,47 @@
 }
 
 .suggestionName {
-  font-weight: 500;
+  font-weight: var(--tc-font-weight-medium);
 }
 
 .suggestionDetails {
-  font-size: 0.875rem;
-  color: #6c757d;
-  margin-top: 0.25rem;
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-color-text-muted);
+  margin-top: var(--tc-spacing-1);
 }
 
 .searchingIndicator {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  color: #6c757d;
-  margin-top: 0.5rem;
-  font-size: 0.875rem;
+  gap: var(--tc-spacing-1-5);
+  color: var(--tc-color-text-muted);
+  margin-top: var(--tc-spacing-1-5);
+  font-size: var(--tc-font-size-sm);
+}
+
+/* Styles responsive standardisés */
+@media (max-width: 768px) {
+  .suggestions {
+    max-height: 250px;
+  }
+  
+  .suggestionItem {
+    padding: var(--tc-spacing-1-5);
+  }
+}
+
+@media (max-width: 576px) {
+  .input {
+    padding: var(--tc-spacing-1) var(--tc-spacing-1-5);
+    padding-left: var(--tc-spacing-5);
+    font-size: var(--tc-font-size-sm);
+  }
+  
+  .icon {
+    left: var(--tc-spacing-1-5);
+  }
+  
+  .loadingIndicator {
+    right: var(--tc-spacing-1-5);
+  }
 }

@@ -12,7 +12,7 @@ import EntrepriseSearchOptions from './sections/EntrepriseSearchOptions';
 import EntrepriseSearchResults from './sections/EntrepriseSearchResults';
 import EntrepriseFormFields from './sections/EntrepriseFormFields';
 import EntrepriseContactFields from './sections/EntrepriseContactFields';
-import EntrepriseLegalSection from './sections/EntrepriseLegalSection';
+import StructureLegalSection from '@/components/structures/desktop/StructureLegalSection';
 import EntrepriseSubmitActions from './sections/EntrepriseSubmitActions';
 
 /**
@@ -98,9 +98,11 @@ const ParametresEntreprise = () => {
               handleChange={handleChange} 
             />
 
-            <EntrepriseLegalSection 
-              formData={formData} 
-              handleChange={handleChange} 
+            <StructureLegalSection 
+              structure={formData}
+              formData={formData}
+              handleChange={handleChange}
+              isEditing={true}
             />
 
             <EntrepriseSubmitActions 

@@ -1,20 +1,44 @@
-/* ArtistesStatsCards.module.css */
+/*
+ * Styles pour ArtistesStatsCards
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 5 mai 2025
+ */
+
 .statsCard {
-  transition: transform 0.2s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: transform var(--tc-transition-speed) ease;
+  box-shadow: var(--tc-shadow-sm);
 }
 
 .statsCard:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--tc-shadow-md);
 }
 
 .statsIcon {
   width: 50px;
   height: 50px;
-  border-radius: 10px;
+  border-radius: var(--tc-border-radius-lg);
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(0, 123, 255, 0.1);
+  background-color: var(--tc-bg-primary-subtle);
+}
+
+/* Styles responsive standardisés */
+@media (max-width: 768px) {
+  .statsIcon {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 576px) {
+  .statsCard:hover {
+    transform: none;
+  }
+  
+  .statsIcon {
+    width: 36px;
+    height: 36px;
+  }
 }

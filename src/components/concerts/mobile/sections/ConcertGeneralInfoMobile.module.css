@@ -1,15 +1,22 @@
+/*
+ * Styles pour ConcertGeneralInfoMobile
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
+ */
+
 .generalInfoContainer {
-  margin-bottom: 1rem;
+  margin-bottom: var(--tc-spacing-3);
 }
 
 .infoCard {
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  border-radius: var(--tc-radius-md);
+  box-shadow: var(--tc-shadow-sm);
 }
 
 /* Styles pour le mode édition */
 .formGroup {
-  margin-bottom: 1rem;
+  margin-bottom: var(--tc-spacing-3);
 }
 
 .formGroup:last-child {
@@ -17,48 +24,48 @@
 }
 
 .formLabel {
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: #555;
-  margin-bottom: 0.25rem;
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-color-text-secondary, #555);
+  margin-bottom: var(--tc-spacing-1);
 }
 
 .textareaField {
   min-height: 100px;
-  font-size: 0.9rem;
+  font-size: var(--tc-font-size-sm);
 }
 
 /* Styles pour le mode affichage */
 .statusContainer {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid #eee;
+  gap: var(--tc-spacing-2);
+  margin-bottom: var(--tc-spacing-3);
+  padding-bottom: var(--tc-spacing-2);
+  border-bottom: 1px solid var(--tc-color-border, #eee);
 }
 
 .statusBadge {
   display: inline-block;
-  font-size: 0.8rem;
-  font-weight: 500;
-  padding: 0.35rem 0.5rem;
+  font-size: var(--tc-font-size-xs);
+  font-weight: var(--tc-font-weight-medium);
+  padding: var(--tc-spacing-1) var(--tc-spacing-2);
 }
 
 .actionNeeded {
   display: flex;
   align-items: center;
-  font-size: 0.85rem;
-  color: #dc3545;
-  background-color: rgba(220, 53, 69, 0.1);
-  padding: 0.5rem;
-  border-radius: 4px;
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-color-error);
+  background-color: var(--tc-color-error-light, rgba(220, 53, 69, 0.1));
+  padding: var(--tc-spacing-2);
+  border-radius: var(--tc-radius-sm);
 }
 
 .infoGroup {
-  margin-bottom: 0.75rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid #eee;
+  margin-bottom: var(--tc-spacing-2);
+  padding-bottom: var(--tc-spacing-2);
+  border-bottom: 1px solid var(--tc-color-border, #eee);
   display: flex;
   flex-direction: column;
 }
@@ -68,49 +75,49 @@
 }
 
 .infoLabel {
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: #666;
-  margin-bottom: 0.25rem;
+  font-size: var(--tc-font-size-xs);
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-color-text-secondary, #666);
+  margin-bottom: var(--tc-spacing-1);
 }
 
 .infoValue {
-  font-size: 1rem;
+  font-size: var(--tc-font-size-md);
 }
 
 .passedDate {
-  color: #dc3545;
+  color: var(--tc-color-error);
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
 .passedBadge {
-  font-size: 0.75rem;
-  padding: 0.2rem 0.4rem;
-  background-color: #dc3545;
+  font-size: var(--tc-font-size-xs);
+  padding: var(--tc-spacing-1) var(--tc-spacing-1);
+  background-color: var(--tc-color-error);
   color: white;
-  border-radius: 3px;
+  border-radius: var(--tc-radius-sm);
 }
 
 .notesGroup {
-  margin-top: 0.5rem;
+  margin-top: var(--tc-spacing-2);
 }
 
 .notesContent {
-  background-color: #f8f9fa;
-  padding: 0.75rem;
-  border-radius: 4px;
-  font-size: 0.9rem;
+  background-color: var(--tc-bg-light, #f8f9fa);
+  padding: var(--tc-spacing-2);
+  border-radius: var(--tc-radius-sm);
+  font-size: var(--tc-font-size-sm);
   white-space: pre-wrap;
 }
 
 .formStatusIndicator {
-  margin-top: 1rem;
-  padding: 0.5rem;
-  background-color: #f8f9fa;
-  border-radius: 4px;
-  font-size: 0.85rem;
+  margin-top: var(--tc-spacing-3);
+  padding: var(--tc-spacing-2);
+  background-color: var(--tc-bg-light, #f8f9fa);
+  border-radius: var(--tc-radius-sm);
+  font-size: var(--tc-font-size-sm);
   display: flex;
   align-items: center;
 }

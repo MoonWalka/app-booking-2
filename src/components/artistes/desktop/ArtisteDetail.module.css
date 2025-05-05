@@ -1,51 +1,51 @@
-/* Styles pour le composant ArtisteDetail - Version desktop */
+/* Styles standardisés pour le composant ArtisteDetail - Version desktop */
 
 .artisteDetailDesktop {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: var(--tc-spacing-md, 20px);
 }
 
 .desktopHeaderContainer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: var(--tc-spacing-xl, 2rem);
 }
 
 .backButton {
-  padding: 8px 12px;
-  background-color: var(--tc-light-color, #f8f9fa);
-  border: 1px solid var(--tc-border-color, #dee2e6);
-  border-radius: 4px;
+  padding: var(--tc-spacing-xs, 8px) var(--tc-spacing-sm, 12px);
+  background-color: var(--tc-color-gray-100, #f8f9fa);
+  border: var(--tc-border-width, 1px) solid var(--tc-border-color, #dee2e6);
+  border-radius: var(--tc-border-radius-sm, 4px);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--tc-transition, all 0.2s ease);
 }
 
 .backButton:hover {
-  background-color: var(--tc-gray-200, #e9ecef);
+  background-color: var(--tc-color-gray-200, #e9ecef);
 }
 
 .desktopEditButton .editBtn {
-  padding: 8px 16px;
+  padding: var(--tc-spacing-xs, 8px) var(--tc-spacing-md, 16px);
   background-color: var(--tc-primary-color, #007bff);
-  color: white;
+  color: var(--tc-color-white, white);
   border: none;
-  border-radius: 4px;
+  border-radius: var(--tc-border-radius-sm, 4px);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--tc-transition, all 0.2s ease);
 }
 
 .desktopEditButton .editBtn:hover {
-  background-color: var(--tc-primary-dark, #0069d9);
+  background-color: var(--tc-primary-color-dark, #0069d9);
 }
 
 .desktopArtisteProfile {
   display: flex;
-  margin-bottom: 2rem;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: var(--tc-spacing-xl, 2rem);
+  background-color: var(--tc-color-white, white);
+  border-radius: var(--tc-border-radius, 8px);
+  box-shadow: var(--tc-box-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
   overflow: hidden;
 }
 
@@ -53,7 +53,7 @@
   width: 240px;
   height: 240px;
   overflow: hidden;
-  background-color: var(--tc-light-color, #f8f9fa);
+  background-color: var(--tc-color-gray-100, #f8f9fa);
 }
 
 .desktopArtisteImage img {
@@ -68,42 +68,42 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--tc-gray-200, #e9ecef);
-  color: var(--tc-gray-500, #adb5bd);
+  background-color: var(--tc-color-gray-200, #e9ecef);
+  color: var(--tc-color-gray-500, #adb5bd);
 }
 
 .desktopPlaceholderPhoto i {
-  font-size: 64px;
+  font-size: var(--tc-font-size-xxl, 64px);
 }
 
 .desktopArtisteInfo {
   flex: 1;
-  padding: 20px;
+  padding: var(--tc-spacing-md, 20px);
 }
 
 .desktopArtisteInfo h1 {
   margin-top: 0;
-  margin-bottom: 0.5rem;
-  font-size: 1.75rem;
-  color: var(--tc-text-color, #212529);
+  margin-bottom: var(--tc-spacing-sm, 0.5rem);
+  font-size: var(--tc-font-size-xl, 1.75rem);
+  color: var(--tc-text-color-primary, #212529);
 }
 
 .desktopArtisteInfo .genre {
-  color: var(--tc-text-secondary, #6c757d);
-  margin-bottom: 1rem;
+  color: var(--tc-text-color-secondary, #6c757d);
+  margin-bottom: var(--tc-spacing-md, 1rem);
 }
 
 .artisteStatsDesktop {
   display: flex;
-  gap: 1.5rem;
-  margin-top: 1rem;
+  gap: var(--tc-spacing-lg, 1.5rem);
+  margin-top: var(--tc-spacing-md, 1rem);
 }
 
 .artisteStatsDesktop .statItem {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  color: var(--tc-text-secondary, #6c757d);
+  gap: var(--tc-spacing-sm, 0.5rem);
+  color: var(--tc-text-color-secondary, #6c757d);
 }
 
 .artisteStatsDesktop .statItem i {
@@ -112,27 +112,27 @@
 
 .desktopTabs {
   display: flex;
-  margin-bottom: 1.5rem;
-  border-bottom: 1px solid var(--tc-border-color, #dee2e6);
+  margin-bottom: var(--tc-spacing-lg, 1.5rem);
+  border-bottom: var(--tc-border-width, 1px) solid var(--tc-border-color, #dee2e6);
 }
 
 .tabButton {
-  padding: 12px 16px;
+  padding: var(--tc-spacing-sm, 12px) var(--tc-spacing-md, 16px);
   background-color: transparent;
   border: none;
   border-bottom: 2px solid transparent;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-weight: 500;
-  color: var(--tc-text-secondary, #6c757d);
-  transition: all 0.2s ease;
+  gap: var(--tc-spacing-xs, 8px);
+  font-weight: var(--tc-font-weight-medium, 500);
+  color: var(--tc-text-color-secondary, #6c757d);
+  transition: var(--tc-transition, all 0.2s ease);
 }
 
 .tabButton:hover {
   color: var(--tc-primary-color, #007bff);
-  background-color: var(--tc-gray-100, #f8f9fa);
+  background-color: var(--tc-color-gray-100, #f8f9fa);
 }
 
 .tabButton.active {
@@ -141,23 +141,23 @@
 }
 
 .desktopTabContent {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+  background-color: var(--tc-color-white, white);
+  border-radius: var(--tc-border-radius, 8px);
+  box-shadow: var(--tc-box-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
+  padding: var(--tc-spacing-md, 20px);
 }
 
 /* Styles pour l'onglet Infos */
 .infoContent .infoSection {
-  margin-bottom: 2rem;
+  margin-bottom: var(--tc-spacing-xl, 2rem);
 }
 
 .infoContent .infoSection h3 {
-  font-size: 1.1rem;
-  margin-bottom: 0.75rem;
-  color: var(--tc-text-color, #212529);
-  border-bottom: 1px solid var(--tc-border-color, #dee2e6);
-  padding-bottom: 0.5rem;
+  font-size: var(--tc-font-size-md, 1.1rem);
+  margin-bottom: var(--tc-spacing-sm, 0.75rem);
+  color: var(--tc-text-color-primary, #212529);
+  border-bottom: var(--tc-border-width, 1px) solid var(--tc-border-color, #dee2e6);
+  padding-bottom: var(--tc-spacing-sm, 0.5rem);
 }
 
 .infoContent .membresList {
@@ -165,41 +165,41 @@
   padding-left: 0;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 0.5rem;
+  gap: var(--tc-spacing-sm, 0.5rem);
 }
 
 .infoContent .membresList li {
-  padding: 8px 12px;
-  background-color: var(--tc-gray-100, #f8f9fa);
-  border-radius: 4px;
+  padding: var(--tc-spacing-xs, 8px) var(--tc-spacing-sm, 12px);
+  background-color: var(--tc-color-gray-100, #f8f9fa);
+  border-radius: var(--tc-border-radius-sm, 4px);
 }
 
 .contactsGridDesktop {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1rem;
+  gap: var(--tc-spacing-md, 1rem);
 }
 
 .contactItem {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid var(--tc-border-color, #dee2e6);
+  padding: var(--tc-spacing-sm, 10px);
+  border-radius: var(--tc-border-radius, 6px);
+  border: var(--tc-border-width, 1px) solid var(--tc-border-color, #dee2e6);
   text-decoration: none;
-  color: var(--tc-text-color, #212529);
-  transition: all 0.2s ease;
+  color: var(--tc-text-color-primary, #212529);
+  transition: var(--tc-transition, all 0.2s ease);
 }
 
 .contactItem:hover {
   border-color: var(--tc-primary-color, #007bff);
-  background-color: var(--tc-light-blue, #f0f7ff);
+  background-color: var(--tc-primary-color-05, #f0f7ff);
 }
 
 .contactItem i {
   color: var(--tc-primary-color, #007bff);
-  font-size: 1.1rem;
+  font-size: var(--tc-font-size-md, 1.1rem);
 }
 
 /* Styles pour les onglets Concerts et Contrats */
@@ -208,42 +208,42 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: var(--tc-spacing-md, 1rem);
 }
 
 .concertsHeaderDesktop h3,
 .contratsHeaderDesktop h3 {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: var(--tc-font-size-md, 1.1rem);
 }
 
 .concertsListDesktop,
 .contratsListDesktop {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: var(--tc-spacing-sm, 0.75rem);
 }
 
 .concertItem,
 .contratItem {
   display: flex;
   align-items: center;
-  padding: 15px;
-  border-radius: 6px;
-  background-color: var(--tc-gray-100, #f8f9fa);
+  padding: var(--tc-spacing-md, 15px);
+  border-radius: var(--tc-border-radius, 6px);
+  background-color: var(--tc-color-gray-100, #f8f9fa);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--tc-transition, all 0.2s ease);
 }
 
 .concertItem:hover,
 .contratItem:hover {
-  background-color: var(--tc-gray-200, #e9ecef);
+  background-color: var(--tc-color-gray-200, #e9ecef);
 }
 
 .concertDate,
 .contratDate {
   width: 100px;
-  font-weight: 500;
+  font-weight: var(--tc-font-weight-medium, 500);
 }
 
 .concertDetails,
@@ -253,81 +253,95 @@
 
 .concertLieu,
 .contratConcert {
-  font-weight: 500;
+  font-weight: var(--tc-font-weight-medium, 500);
   margin-bottom: 4px;
 }
 
 .concertProgrammateur {
-  color: var(--tc-text-secondary, #6c757d);
-  font-size: 0.9rem;
+  color: var(--tc-text-color-secondary, #6c757d);
+  font-size: var(--tc-font-size-sm, 0.9rem);
 }
 
 .concertMontant,
 .contratActions {
   text-align: right;
-  font-weight: 500;
+  font-weight: var(--tc-font-weight-medium, 500);
 }
 
 /* Styles pour l'onglet Stats */
 .statsCardsDesktop {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 1.5rem;
+  gap: var(--tc-spacing-lg, 1.5rem);
 }
 
 .statCard {
-  padding: 20px;
-  border-radius: 8px;
-  background-color: var(--tc-gray-100, #f8f9fa);
-  border: 1px solid var(--tc-border-color, #dee2e6);
+  padding: var(--tc-spacing-md, 20px);
+  border-radius: var(--tc-border-radius, 8px);
+  background-color: var(--tc-color-gray-100, #f8f9fa);
+  border: var(--tc-border-width, 1px) solid var(--tc-border-color, #dee2e6);
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: var(--tc-spacing-md, 15px);
 }
 
 .statIcon {
   width: 50px;
   height: 50px;
-  background-color: var(--tc-primary-light, #cfe2ff);
+  background-color: var(--tc-primary-color-10, #cfe2ff);
   color: var(--tc-primary-color, #007bff);
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.5rem;
+  font-size: var(--tc-font-size-lg, 1.5rem);
 }
 
 .statContent h4 {
   margin: 0 0 6px 0;
-  font-size: 1rem;
-  color: var(--tc-text-secondary, #6c757d);
+  font-size: var(--tc-font-size-base, 1rem);
+  color: var(--tc-text-color-secondary, #6c757d);
 }
 
 .statValue {
   margin: 0;
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--tc-text-color, #212529);
+  font-size: var(--tc-font-size-lg, 1.5rem);
+  font-weight: var(--tc-font-weight-bold, 700);
+  color: var(--tc-text-color-primary, #212529);
 }
 
 /* État vide */
 .emptyStateDesktop {
   padding: 40px 20px;
   text-align: center;
-  color: var(--tc-text-secondary, #6c757d);
+  color: var(--tc-text-color-secondary, #6c757d);
 }
 
 .emptyStateDesktop i {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-  color: var(--tc-gray-400, #ced4da);
+  font-size: var(--tc-font-size-xxl, 3rem);
+  margin-bottom: var(--tc-spacing-md, 1rem);
+  color: var(--tc-color-gray-400, #ced4da);
 }
 
 .emptyStateDesktop p {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--tc-spacing-lg, 1.5rem);
 }
 
 /* Responsive adaptations */
+@media (max-width: 992px) {
+  .desktopTabContent {
+    padding: var(--tc-spacing-sm, 15px);
+  }
+  
+  .statCard {
+    padding: var(--tc-spacing-sm, 15px);
+  }
+  
+  .statsCardsDesktop {
+    gap: var(--tc-spacing-md, 1rem);
+  }
+}
+
 @media (max-width: 768px) {
   .desktopArtisteProfile {
     flex-direction: column;
@@ -340,7 +354,44 @@
   
   .artisteStatsDesktop {
     flex-direction: column;
-    gap: 0.5rem;
+    gap: var(--tc-spacing-sm, 0.5rem);
+  }
+  
+  .contactsGridDesktop {
+    grid-template-columns: 1fr;
+  }
+  
+  .tabButton {
+    padding: var(--tc-spacing-sm, 10px) var(--tc-spacing-sm, 10px);
+  }
+}
+
+@media (max-width: 576px) {
+  .artisteDetailDesktop {
+    padding: var(--tc-spacing-sm, 10px);
+  }
+  
+  .desktopTabContent {
+    padding: var(--tc-spacing-sm, 10px);
+  }
+  
+  .concertItem,
+  .contratItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--tc-spacing-xs, 8px);
+  }
+  
+  .concertDate,
+  .contratDate {
+    width: 100%;
+  }
+  
+  .concertMontant,
+  .contratActions {
+    width: 100%;
+    text-align: left;
+    margin-top: var(--tc-spacing-xs, 8px);
   }
 }
 
@@ -351,10 +402,10 @@
   justify-content: center;
   align-items: center;
   min-height: 300px;
-  padding: 2rem;
+  padding: var(--tc-spacing-xl, 2rem);
   text-align: center;
 }
 
 .errorContainerDesktop {
-  color: var(--tc-danger, #dc3545);
+  color: var(--tc-danger-color, #dc3545);
 }

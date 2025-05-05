@@ -1,3 +1,9 @@
+/*
+ * Styles pour ActionButton
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 5 mai 2025
+ */
+
 .actionButton {
   width: 32px;
   height: 32px;
@@ -5,8 +11,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
-  margin: 0 2px;
+  border-radius: var(--tc-border-radius-sm);
+  margin: 0 var(--tc-spacing-0-5);
 }
 
 .actionLink {
@@ -16,4 +22,13 @@
 
 .actionLink:hover {
   text-decoration: none;
+}
+
+/* Styles responsive standardisés */
+@media (max-width: 576px) {
+  .actionButton {
+    width: 36px;
+    height: 36px;
+    margin: 0 var(--tc-spacing-1);
+  }
 }

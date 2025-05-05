@@ -56,8 +56,8 @@
     --tc-focus-ring-width: 3px;
     
     /* Input styling */
-    --tc-input-focus-shadow: 0 0 0 0.25rem rgba(var(--tc-primary-color-rgb), 0.25);
-    --tc-input-placeholder-color: var(--tc-gray-500);
+    --tc-input-focus-shadow: 0 0 0 0.25rem rgba(var(--tc-tc-primary-color-rgb), 0.25);
+    --tc-input-placeholder-color: var(--tc-tc-gray-500);
     --tc-input-bg: white;
     
     /* Les couleurs sont importées de colors.css,

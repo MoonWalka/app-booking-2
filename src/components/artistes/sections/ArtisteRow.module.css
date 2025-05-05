@@ -1,11 +1,16 @@
-/* ArtisteRow.module.css */
+/*
+ * Styles pour ArtisteRow
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 5 mai 2025
+ */
+
 .artisteNameCell {
   width: 35%;
   max-width: 350px;
 }
 
 .favoriteArtisteRow {
-  background-color: rgba(255, 193, 7, 0.05);
+  background-color: var(--tc-bg-warning-subtle);
 }
 
 .artisteAvatar {
@@ -25,11 +30,30 @@
 .placeholderAvatar {
   width: 100%;
   height: 100%;
-  background-color: #e9ecef;
+  background-color: var(--tc-bg-subtle);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #6c757d;
+  color: var(--tc-color-text-muted);
   border-radius: 50%;
-  font-size: 1.25rem;
+  font-size: var(--tc-font-size-lg);
+}
+
+/* Styles responsive standardisés */
+@media (max-width: 768px) {
+  .artisteNameCell {
+    width: 40%;
+  }
+}
+
+@media (max-width: 576px) {
+  .artisteNameCell {
+    width: 100%;
+    max-width: none;
+  }
+  
+  .artisteAvatar {
+    width: 32px;
+    height: 32px;
+  }
 }

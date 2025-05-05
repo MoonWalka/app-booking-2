@@ -1,9 +1,10 @@
 // src/components/concerts/ConcertsList.js
 import React from 'react';
-import { useResponsiveComponent } from '@/hooks/useResponsiveComponent';
+import { useResponsive } from '@/hooks/common/useResponsive';
 
 function ConcertsList(props) {
-  const ResponsiveComponent = useResponsiveComponent({
+  const { getResponsiveComponent } = useResponsive();
+  const ResponsiveComponent = getResponsiveComponent({
     desktopPath: 'concerts/desktop/ConcertsList',
     mobilePath: 'concerts/mobile/ConcertsList'
   });

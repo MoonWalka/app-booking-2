@@ -1,6 +1,6 @@
 // src/components/contrats/ContratGenerator.js
 import React from 'react';
-import { useIsMobile } from '@/hooks/useIsMobile';
+import { useResponsive } from '@/hooks/common/useResponsive';
 import DesktopContratGenerator from './desktop/ContratGenerator';
 
 /**
@@ -9,7 +9,7 @@ import DesktopContratGenerator from './desktop/ContratGenerator';
  * À l'avenir, une version mobile pourrait être ajoutée si nécessaire
  */
 function ContratGenerator(props) {
-  const isMobile = useIsMobile();
+  const { isMobile } = useResponsive();
   
   // Pour l'instant, utiliser la version desktop dans tous les cas
   // Si une version spécifique pour mobile est nécessaire à l'avenir,

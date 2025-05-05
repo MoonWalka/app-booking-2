@@ -1,7 +1,7 @@
 # État Consolidé des Migrations et Refactorisations TourCraft
 
 *Document créé le: 5 mai 2025*
-*Dernière mise à jour: 5 mai 2025*
+*Dernière mise à jour: 7 mai 2025*
 
 Ce document centralise l'état d'avancement de toutes les initiatives de refactorisation et migration en cours dans le projet TourCraft. Il a été créé suite à l'audit de documentation qui a révélé des incohérences entre différents documents de planification.
 
@@ -10,7 +10,7 @@ Ce document centralise l'état d'avancement de toutes les initiatives de refacto
 | Initiative | État global | Prochaine échéance | Documents associés |
 |------------|------------|-------------------|-------------------|
 | Migration hooks génériques | ✅ **100%** | - (Terminé et archivé le 5 mai 2025) | [Journal Migration](/docs/hooks/JOURNAL_MIGRATION_HOOKS.md), [Plan Migration [ARCHIVÉ]](/docs/hooks/PLAN_MIGRATION_HOOKS_GENERIQUES.md), [Version archivée complète](/docs/archive/PLAN_MIGRATION_HOOKS_GENERIQUES_ARCHIVE.md) |
-| Restructuration des hooks | 🟡 **50%** | 07/05/2025 (migration composants utilisant useIsMobile.js) | [Plan Restructuration](/docs/hooks/PLAN_RESTRUCTURATION_HOOKS.md) |
+| Restructuration des hooks | 🟡 **70%** | 09/05/2025 (finalisation de la Phase 2) | [Plan Restructuration](/docs/hooks/PLAN_RESTRUCTURATION_HOOKS.md) |
 | Refactorisation CSS | 🟡 **55%** | 15/05/2025 (composants médias) | [Plan CSS](/docs/css/PLAN_REFACTORISATION_CSS_PROGRESSIF.md), [Style Guide](/docs/standards/CSS_STYLE_GUIDE.md) |
 | Refactorisation composants | 🟠 **30%** | 20/05/2025 (composants de formulaire) | [Plan Composants](/docs/components/PLAN_REFACTORISATION_COMPOSANTS.md) |
 | Migration Firebase | 🟠 **25%** | 30/05/2025 (migration auth) | [Plan Firebase](/docs/migration/PLAN_MIGRATION_FIREBASE.md) |
@@ -34,13 +34,13 @@ Cette chronologie consolidée présente les jalons passés et futurs de tous les
 - **06/05/2025**: ✅ Migration de useArtisteDetails vers hooks génériques
 - **07/05/2025**: ✅ Migration de useStructureDetails vers hooks génériques
 - **07/05/2025**: ✅ Migration de useContratDetails vers hooks génériques (en avance sur le planning)
+- **07/05/2025**: ✅ Migration des composants ContratGenerator.js et ContratTemplateEditor.js vers useResponsive
+- **07/05/2025**: ✅ Création du guide de migration useIsMobile → useResponsive
 
 ### Jalons actuels/imminents
 
-- **07/05/2025**: 🔄 Migration des composants utilisant encore useIsMobile.js vers useResponsive
-- **07/05/2025**: 🔄 Création d'un guide de migration useIsMobile → useResponsive
-- **09/05/2025**: 📝 Finalisation de la Phase 2 de restructuration des hooks
-- **10/05/2025**: 📝 Tests unitaires pour les hooks migrés
+- **09/05/2025**: 🔄 Finalisation de la Phase 2 de restructuration des hooks
+- **10/05/2025**: 🔄 Tests unitaires pour les hooks migrés
 
 ### Jalons futurs
 
@@ -66,12 +66,12 @@ Les points suivants clarifient les incohérences identifiées dans l'audit de do
 
 2. **Incohérence sur useIsMobile.js**:
    - **État actuel**: Le hook useResponsive.js qui remplace useIsMobile.js est déjà implémenté dans common/
-   - **Clarification**: La tâche actuelle n'est pas de développer un nouveau hook mais de migrer les composants qui utilisent encore useIsMobile.js
+   - **Clarification**: Les composants ContratGenerator.js et ContratTemplateEditor.js qui utilisaient useIsMobile ont été migrés le 7 mai 2025
    - **Plan de transition**: 
-     * Phase immédiate (d'ici le 7 mai): Migration des composants actifs
+     * Phase immédiate (d'ici le 7 mai): ✅ Migration des composants actifs **COMPLÉTÉ**
      * Phase intermédiaire (8-15 mai): Transformation en wrapper
      * Phase finale (après 15 mai): Suppression complète
-   - **Composants concernés**: ContratGenerator.js, ContratTemplateEditor.js utilisent encore activement useIsMobile
+   - **Documentation**: Un guide de migration complet a été créé dans `/docs/hooks/GUIDE_MIGRATION_USEMOBILE.md`
 
 3. **Incohérence de dates pour la Phase 1**:
    - **Clarification**: La date du 01/05/2025 dans le journal correspond à la complétion du hook useGenericEntitySearch
@@ -116,7 +116,8 @@ La migration de useIsMobile vers useResponsive est un cas particulier qui mérit
 ### État actuel
 - Le hook useResponsive est déjà implémenté dans `/src/hooks/common/useResponsive.js`
 - useIsMobile existe toujours à la racine avec un avertissement de dépréciation
-- Certains composants utilisent encore useIsMobile, d'autres ont déjà commenté son utilisation
+- ✅ Les composants qui utilisaient encore useIsMobile (ContratGenerator.js, ContratTemplateEditor.js) ont été migrés
+- ✅ Guide de migration complet avec documentation des cas d'utilisation avancés créé et mis à jour (7 mai 2025)
 
 ### Fonctionnalités additionnelles de useResponsive
 - Configuration avancée (breakpoint personnalisable, force desktop mode)
@@ -126,12 +127,12 @@ La migration de useIsMobile vers useResponsive est un cas particulier qui mérit
 - API plus riche (isMobile, dimensions, updateDimensions, checkIsMobile, getResponsiveComponent)
 
 ### Prochaines étapes
-1. Migration des derniers composants actifs (d'ici le 7 mai)
-2. Documentation des cas d'utilisation avancés de useResponsive
-3. Phase de coexistence avec useIsMobile implémenté comme wrapper (8-15 mai)
-4. Suppression complète du hook déprécié (après le 15 mai)
+1. ✅ Migration des composants actifs (d'ici le 7 mai) **COMPLÉTÉ**
+2. ✅ Documentation des cas d'utilisation avancés de useResponsive **COMPLÉTÉ**
+3. 🔄 Phase de coexistence avec useIsMobile implémenté comme wrapper (8-15 mai) **EN COURS**
+4. 📝 Suppression complète du hook déprécié (après le 15 mai) **PLANIFIÉ**
 
-Pour plus de détails et des exemples de migration, consultez le [Plan de Restructuration des Hooks](/docs/hooks/PLAN_RESTRUCTURATION_HOOKS.md).
+Pour plus de détails et des exemples de migration, consultez le [Guide de Migration useIsMobile → useResponsive](/docs/hooks/GUIDE_MIGRATION_USEMOBILE.md).
 
 ---
 

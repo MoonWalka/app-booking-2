@@ -1,9 +1,10 @@
 // src/components/structures/StructuresList.js
 import React from 'react';
-import { useResponsiveComponent } from '@/hooks/useResponsiveComponent';
+import { useResponsive } from '@/hooks/common/useResponsive';
 
 function StructuresList(props) {
-  const ResponsiveComponent = useResponsiveComponent({
+  const { getResponsiveComponent } = useResponsive();
+  const ResponsiveComponent = getResponsiveComponent({
     desktopPath: 'structures/desktop/StructuresList',
     mobilePath: 'structures/mobile/StructuresList'
   });

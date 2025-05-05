@@ -1,9 +1,10 @@
 // src/components/forms/FormValidationInterface.js (nouveau wrapper)
 import React from 'react';
-import { useResponsiveComponent } from '@/hooks/useResponsiveComponent';
+import { useResponsive } from '@/hooks/common/useResponsive';
 
 function FormValidationInterface(props) {
-  const ResponsiveComponent = useResponsiveComponent({
+  const { getResponsiveComponent } = useResponsive();
+  const ResponsiveComponent = getResponsiveComponent({
     desktopPath: 'forms/desktop/FormValidationInterface',
     mobilePath: 'forms/mobile/FormValidationInterface'
   });

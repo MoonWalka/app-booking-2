@@ -24,6 +24,18 @@ Hooks pour la gestion des programmateurs, incluant les détails, la liste et les
 ### [Hooks pour les paramétrages](PARAMETRE_HOOKS.md)
 Hooks pour la gestion des paramètres de l'application et des informations d'entreprise.
 
+## Plan de migration vers des hooks génériques
+
+Suite au succès de la migration des hooks de formulaire vers `useGenericEntityForm`, un plan de migration plus large a été établi pour standardiser d'autres types de hooks fréquemment utilisés dans l'application.
+
+Un document détaillé [PLAN_MIGRATION_HOOKS_GENERIQUES.md](/docs/hooks/PLAN_MIGRATION_HOOKS_GENERIQUES.md) présente la feuille de route complète pour la mise en œuvre progressive de trois nouveaux hooks génériques :
+
+- **useGenericEntitySearch** (Mai 2025) - Standardisation de la recherche d'entités
+- **useGenericEntityList** (Mai-Juin 2025) - Standardisation de la gestion des listes d'entités
+- **useGenericEntityDetails** (Juin 2025) - Standardisation de la gestion des détails d'entités
+
+Cette initiative s'inscrit dans la démarche globale d'amélioration de l'architecture et de réduction de la duplication de code dans TourCraft.
+
 ## Bonnes pratiques
 
 - Les hooks doivent être nommés avec le préfixe `use` selon la convention React

@@ -1,32 +1,39 @@
+/*
+ * Styles pour ConcertArtistSectionMobile
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
+ */
+
 .artisteContainer {
-  margin-bottom: 1rem;
+  margin-bottom: var(--tc-spacing-3);
 }
 
 .artisteCard {
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  border-radius: var(--tc-radius-md);
+  box-shadow: var(--tc-shadow-sm);
 }
 
 .sectionTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid #eee;
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
+  margin-bottom: var(--tc-spacing-3);
+  padding-bottom: var(--tc-spacing-2);
+  border-bottom: 1px solid var(--tc-color-border, #eee);
 }
 
 /* Mode édition */
 .searchContainer {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--tc-spacing-3);
 }
 
 .formLabel {
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: #555;
-  margin-bottom: 0.25rem;
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-color-text-secondary, #555);
+  margin-bottom: var(--tc-spacing-1);
 }
 
 .searchInputGroup {
@@ -41,91 +48,91 @@
 
 .clearButton {
   position: absolute;
-  right: 0.25rem;
+  right: var(--tc-spacing-1);
   border: none;
   background: transparent;
-  padding: 0.25rem 0.5rem;
+  padding: var(--tc-spacing-1) var(--tc-spacing-2);
 }
 
 .searchResults {
-  margin-top: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 0.25rem;
+  margin-top: var(--tc-spacing-2);
+  border: 1px solid var(--tc-color-border-medium, #ddd);
+  border-radius: var(--tc-radius-sm);
   max-height: 200px;
   overflow-y: auto;
 }
 
 .loadingResults {
-  padding: 0.75rem;
+  padding: var(--tc-spacing-2);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
-  color: #666;
+  gap: var(--tc-spacing-2);
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-color-text-secondary, #666);
 }
 
 .resultsList {
-  border-radius: 0.25rem;
+  border-radius: var(--tc-radius-sm);
 }
 
 .resultItem {
-  padding: 0.5rem 0.75rem;
+  padding: var(--tc-spacing-2) var(--tc-spacing-2);
   cursor: pointer;
 }
 
 .resultName {
-  font-weight: 500;
-  font-size: 0.9rem;
+  font-weight: var(--tc-font-weight-medium);
+  font-size: var(--tc-font-size-sm);
 }
 
 .resultGenre {
-  font-size: 0.8rem;
-  color: #666;
-  margin-top: 0.25rem;
+  font-size: var(--tc-font-size-xs);
+  color: var(--tc-color-text-secondary, #666);
+  margin-top: var(--tc-spacing-1);
 }
 
 .noResults {
-  padding: 0.75rem;
+  padding: var(--tc-spacing-2);
   text-align: center;
-  font-size: 0.9rem;
-  color: #666;
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-color-text-secondary, #666);
 }
 
 .createLink {
   display: block;
-  margin-top: 0.5rem;
+  margin-top: var(--tc-spacing-2);
   text-decoration: underline;
   padding: 0;
-  font-size: 0.85rem;
+  font-size: var(--tc-font-size-sm);
 }
 
 .selectedArtiste {
-  margin-top: 1rem;
+  margin-top: var(--tc-spacing-3);
 }
 
 .selectedArtisteCard {
-  background-color: #f8f9fa;
-  border: 1px solid #dee2e6;
+  background-color: var(--tc-bg-light, #f8f9fa);
+  border: 1px solid var(--tc-color-border-light, #dee2e6);
 }
 
 .artisteName {
-  font-weight: 600;
-  font-size: 1rem;
-  margin-bottom: 0.5rem;
+  font-weight: var(--tc-font-weight-semibold);
+  font-size: var(--tc-font-size-md);
+  margin-bottom: var(--tc-spacing-2);
 }
 
 .artisteGenre {
-  font-size: 0.9rem;
-  margin-bottom: 0.5rem;
+  font-size: var(--tc-font-size-sm);
+  margin-bottom: var(--tc-spacing-2);
   display: flex;
   align-items: center;
-  color: #666;
+  color: var(--tc-color-text-secondary, #666);
 }
 
 .artisteDescription {
-  font-size: 0.85rem;
-  color: #666;
-  margin-top: 0.5rem;
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-color-text-secondary, #666);
+  margin-top: var(--tc-spacing-2);
   font-style: italic;
 }
 
@@ -133,79 +140,79 @@
 .artisteContent {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: var(--tc-spacing-2);
 }
 
 .artisteHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--tc-spacing-2);
 }
 
 .artisteHeader h4 {
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
   margin: 0;
 }
 
 .artisteDetailsButton {
-  padding: 0.25rem 0.5rem;
-  font-size: 0.8rem;
+  padding: var(--tc-spacing-1) var(--tc-spacing-2);
+  font-size: var(--tc-font-size-xs);
 }
 
 .artisteDetail {
   display: flex;
   align-items: center;
-  font-size: 0.9rem;
-  margin-bottom: 0.75rem;
+  font-size: var(--tc-font-size-sm);
+  margin-bottom: var(--tc-spacing-2);
 }
 
 .artisteDetail i {
   width: 20px;
-  color: #666;
+  color: var(--tc-color-text-secondary, #666);
 }
 
 .artisteBio {
-  margin-top: 0.5rem;
+  margin-top: var(--tc-spacing-2);
 }
 
 .bioTitle {
-  font-size: 0.95rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
+  font-size: var(--tc-font-size-md);
+  font-weight: var(--tc-font-weight-semibold);
+  margin-bottom: var(--tc-spacing-2);
 }
 
 .bioText {
-  background-color: #f8f9fa;
-  padding: 0.75rem;
-  border-radius: 4px;
-  font-size: 0.9rem;
+  background-color: var(--tc-bg-light, #f8f9fa);
+  padding: var(--tc-spacing-2);
+  border-radius: var(--tc-radius-sm);
+  font-size: var(--tc-font-size-sm);
   white-space: pre-wrap;
 }
 
 .artisteContact {
-  margin-top: 0.75rem;
-  padding-top: 0.75rem;
-  border-top: 1px solid #eee;
+  margin-top: var(--tc-spacing-2);
+  padding-top: var(--tc-spacing-2);
+  border-top: 1px solid var(--tc-color-border, #eee);
 }
 
 .contactTitle {
-  font-size: 0.95rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
+  font-size: var(--tc-font-size-md);
+  font-weight: var(--tc-font-weight-semibold);
+  margin-bottom: var(--tc-spacing-2);
 }
 
 .contactDetail {
   display: flex;
   align-items: center;
-  font-size: 0.9rem;
-  margin-bottom: 0.5rem;
+  font-size: var(--tc-font-size-sm);
+  margin-bottom: var(--tc-spacing-2);
 }
 
 .contactDetail i {
   width: 20px;
-  color: #666;
+  color: var(--tc-color-text-secondary, #666);
 }
 
 /* État vide */
@@ -214,13 +221,13 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem 1rem;
+  padding: var(--tc-spacing-8) var(--tc-spacing-3);
   text-align: center;
-  color: #6c757d;
+  color: var(--tc-color-text-secondary, #6c757d);
 }
 
 .emptyState i {
   font-size: 2rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--tc-spacing-2);
   opacity: 0.5;
 }

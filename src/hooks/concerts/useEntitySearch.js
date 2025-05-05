@@ -110,12 +110,16 @@ const useEntitySearch = () => {
     
     if (artisteSearchTerm.length >= 2) {
       setIsSearchingArtistes(true);
+      setShowArtisteResults(true); // Montrer immédiatement le dropdown avec l'indicateur de chargement
       artisteSearchTimeoutRef.current = setTimeout(() => {
         searchArtistes(artisteSearchTerm);
       }, 300);
     } else {
       setArtisteResults([]);
       setIsSearchingArtistes(false);
+      if (artisteSearchTerm.length === 0) {
+        setShowArtisteResults(false);
+      }
     }
     
     return () => {
@@ -203,8 +207,16 @@ const useEntitySearch = () => {
       }));
       
       console.log('Résultats de la recherche d\'artistes:', artistesData);
+      
+      // Force le rafraîchissement des résultats et garantit que le dropdown est visible
       setArtisteResults(artistesData);
-      setShowArtisteResults(true);
+      
+      if (artistesData.length > 0) {
+        setShowArtisteResults(true);
+      } else {
+        // Même s'il n'y a pas de résultats, on montre le dropdown pour l'option "Créer"
+        setShowArtisteResults(true);
+      }
     } catch (error) {
       console.error('Erreur lors de la recherche d\'artistes:', error);
     } finally {

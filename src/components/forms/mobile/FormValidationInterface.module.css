@@ -1,4 +1,11 @@
-/* src/components/forms/mobile/FormValidationInterface.module.css */
+/*
+ * Styles pour FormValidationInterface
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
+ */
+
+
 
 .loadingContainer {
   display: flex;
@@ -6,7 +13,7 @@
   align-items: center;
   justify-content: center;
   height: 50vh;
-  padding: 2rem;
+  padding: var(--tc-spacing-8);
   text-align: center;
 }
 
@@ -15,14 +22,14 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: var(--tc-spacing-8);
   text-align: center;
-  gap: 1rem;
+  gap: var(--tc-spacing-3);
 }
 
 .errorContainer i {
   font-size: 3rem;
-  color: var(--tc-danger-color, #dc3545);
+  color: var(--tc-tc-danger-color, var(--tc-color-error));
 }
 
 .emptyState {
@@ -30,24 +37,24 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 3rem 1rem;
+  padding: 3rem var(--tc-spacing-3);
   text-align: center;
 }
 
 .emptyState i {
   font-size: 3rem;
-  color: var(--tc-text-muted, #6c757d);
-  margin-bottom: 1rem;
+  color: var(--tc-tc-text-muted, var(--tc-color-text-secondary, #6c757d));
+  margin-bottom: var(--tc-spacing-3);
   opacity: 0.5;
 }
 
 .actionButtons {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--tc-spacing-2);
   width: 100%;
   max-width: 300px;
-  margin-top: 1.5rem;
+  margin-top: var(--tc-spacing-4);
 }
 
 .formValidationMobile {
@@ -57,9 +64,9 @@
 .mobileHeaderBar {
   display: flex;
   align-items: center;
-  padding: 1rem;
-  background-color: var(--tc-primary-color, #0d6efd);
-  color: white;
+  padding: var(--tc-spacing-3);
+  background-color: var(--tc-tc-primary-color, var(--tc-color-primary, #0d6efd));
+  color: var(--tc-bg-default, white);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -68,11 +75,11 @@
 .backButton {
   background: none;
   border: none;
-  color: white;
-  font-size: 1.25rem;
-  padding: 0.25rem 0.5rem;
-  margin-right: 0.5rem;
-  margin-top: 1rem;
+  color: var(--tc-bg-default, white);
+  font-size: var(--tc-font-size-xl);
+  padding: var(--tc-spacing-1) var(--tc-spacing-2);
+  margin-right: var(--tc-spacing-2);
+  margin-top: var(--tc-spacing-3);
   width: 100%;
   max-width: 250px;
 }
@@ -82,26 +89,26 @@
 }
 
 .mobileTitleContainer h1 {
-  font-size: 1.25rem;
+  font-size: var(--tc-font-size-xl);
   margin: 0;
-  font-weight: 600;
+  font-weight: var(--tc-font-weight-semibold);
 }
 
 .formStatusContainer {
-  padding: 1rem;
-  background-color: var(--tc-bg-light, #f8f9fa);
-  border-bottom: 1px solid var(--tc-border-color, #dee2e6);
+  padding: var(--tc-spacing-3);
+  background-color: var(--tc-tc-bg-light, var(--tc-bg-light, #f8f9fa));
+  border-bottom: 1px solid var(--tc-tc-border-color, var(--tc-color-border-light, #dee2e6));
 }
 
 .formStatus {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
+  gap: var(--tc-spacing-2);
+  margin-bottom: var(--tc-spacing-2);
 }
 
 .statusLabel {
-  font-weight: 500;
+  font-weight: var(--tc-font-weight-medium);
 }
 
 .formInfo {
@@ -110,21 +117,21 @@
 
 .infoItem {
   display: flex;
-  gap: 0.5rem;
+  gap: var(--tc-spacing-2);
 }
 
 .infoLabel {
-  color: var(--tc-text-muted, #6c757d);
+  color: var(--tc-tc-text-muted, var(--tc-color-text-secondary, #6c757d));
 }
 
 .infoValue {
-  font-weight: 500;
+  font-weight: var(--tc-font-weight-medium);
 }
 
 .formTabs {
   display: flex;
-  border-bottom: 1px solid var(--tc-border-color, #dee2e6);
-  background-color: white;
+  border-bottom: 1px solid var(--tc-tc-border-color, var(--tc-color-border-light, #dee2e6));
+  background-color: var(--tc-bg-default, white);
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -137,60 +144,60 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0.75rem 1rem;
-  gap: 0.25rem;
+  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  gap: var(--tc-spacing-1);
   background: none;
   border: none;
-  color: var(--tc-text-muted, #6c757d);
-  white-space: nowrap;
+  color: var(--tc-tc-text-muted, var(--tc-color-text-secondary, #6c757d));
+  var(--tc-bg-default, white)-space: nowrap;
   font-size: 0.875rem;
   border-bottom: 3px solid transparent;
   transition: all 0.2s ease;
 }
 
 .tabButton.active {
-  color: var(--tc-primary-color, #0d6efd);
-  border-bottom-color: var(--tc-primary-color, #0d6efd);
-  font-weight: 500;
+  color: var(--tc-tc-primary-color, var(--tc-color-primary, #0d6efd));
+  border-bottom-color: var(--tc-tc-primary-color, var(--tc-color-primary, #0d6efd));
+  font-weight: var(--tc-font-weight-medium);
 }
 
 .tabButton i {
-  font-size: 1.25rem;
+  font-size: var(--tc-font-size-xl);
 }
 
 .formContent {
-  padding: 1rem;
+  padding: var(--tc-spacing-3);
 }
 
 .formSection {
-  margin-bottom: 2rem;
+  margin-bottom: var(--tc-spacing-8);
 }
 
 .formSection h3 {
-  font-size: 1.1rem;
-  margin-bottom: 1.25rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--tc-border-color, #dee2e6);
+  font-size: 1.var(--tc-spacing-3);
+  margin-bottom: var(--tc-font-size-xl);
+  padding-bottom: var(--tc-spacing-2);
+  border-bottom: 1px solid var(--tc-tc-border-color, var(--tc-color-border-light, #dee2e6));
 }
 
 .formField {
   display: flex;
   flex-direction: column;
-  margin-bottom: 1.25rem;
+  margin-bottom: var(--tc-font-size-xl);
   position: relative;
 }
 
 .fieldLabel {
   font-size: 0.875rem;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
+  font-weight: var(--tc-font-weight-medium);
+  margin-bottom: var(--tc-spacing-2);
 }
 
 .fieldValue {
   position: relative;
-  padding: 0.75rem;
-  background-color: var(--tc-bg-light, #f8f9fa);
-  border-radius: var(--tc-border-radius, 0.375rem);
+  padding: var(--tc-spacing-2);
+  background-color: var(--tc-tc-bg-light, var(--tc-bg-light, #f8f9fa));
+  border-radius: var(--tc-tc-border-radius, 0.375rem);
   min-height: 2.5rem;
   display: flex;
   align-items: center;
@@ -198,7 +205,7 @@
 }
 
 .longText {
-  white-space: pre-wrap;
+  var(--tc-bg-default, white)-space: pre-wrap;
   min-height: 100px;
   max-height: 200px;
   overflow-y: auto;
@@ -207,7 +214,7 @@
 
 .validationCheckbox {
   position: relative;
-  margin-left: 0.5rem;
+  margin-left: var(--tc-spacing-2);
 }
 
 .validationCheckbox input {
@@ -219,7 +226,7 @@
 }
 
 .validationCheckbox label {
-  font-size: 1.5rem;
+  font-size: var(--tc-spacing-4);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -235,28 +242,28 @@
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 1rem;
-  background-color: white;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  padding: var(--tc-spacing-3);
+  background-color: var(--tc-bg-default, white);
+  box-shadow: var(--tc-shadow-lg, 0 -2px 10px rgba(0, 0, 0, 0.1));
   z-index: 100;
   display: flex;
   justify-content: center;
 }
 
 .formValidation {
-  padding: 0.5rem;
+  padding: var(--tc-spacing-2);
   margin-bottom: 60px; /* Space for fixed validation bar at bottom */
 }
 
 /* Header styles */
 .headerContainer {
-  margin-bottom: 1rem;
+  margin-bottom: var(--tc-spacing-3);
 }
 
 .pageTitle {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
+  font-size: var(--tc-font-size-xl);
+  font-weight: var(--tc-font-weight-semibold);
+  margin-bottom: var(--tc-spacing-2);
 }
 
 /* Loading and error states */
@@ -267,64 +274,64 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem 1rem;
+  padding: var(--tc-spacing-8) var(--tc-spacing-3);
   text-align: center;
 }
 
 .loadingText {
-  margin-top: 1rem;
-  font-size: 0.9rem;
-  color: #666;
+  margin-top: var(--tc-spacing-3);
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-color-text-secondary, #666);
 }
 
 /* Section headers */
 .concertSectionHeader {
-  background-color: var(--bs-primary);
-  color: white;
-  border-radius: 4px 4px 0 0;
-  padding: 0.5rem 0.75rem;
-  font-size: 1rem;
-  font-weight: 500;
+  background-color: var(--tc-bs-primary);
+  color: var(--tc-bg-default, white);
+  border-radius: var(--tc-radius-sm) 4px 0 0;
+  padding: var(--tc-spacing-2) var(--tc-spacing-2);
+  font-size: var(--tc-spacing-3);
+  font-weight: var(--tc-font-weight-medium);
 }
 
 .lieuSectionHeader {
-  background-color: var(--bs-info);
-  color: white;
-  border-radius: 4px 4px 0 0;
-  padding: 0.5rem 0.75rem;
-  font-size: 1rem;
-  font-weight: 500;
+  background-color: var(--tc-bs-info);
+  color: var(--tc-bg-default, white);
+  border-radius: var(--tc-radius-sm) 4px 0 0;
+  padding: var(--tc-spacing-2) var(--tc-spacing-2);
+  font-size: var(--tc-spacing-3);
+  font-weight: var(--tc-font-weight-medium);
 }
 
 .contactSectionHeader,
 .structureSectionHeader {
-  background-color: var(--bs-secondary);
-  color: white;
-  border-radius: 4px 4px 0 0;
-  padding: 0.5rem 0.75rem;
-  font-size: 1rem;
-  font-weight: 500;
+  background-color: var(--tc-bs-secondary);
+  color: var(--tc-bg-default, white);
+  border-radius: var(--tc-radius-sm) 4px 0 0;
+  padding: var(--tc-spacing-2) var(--tc-spacing-2);
+  font-size: var(--tc-spacing-3);
+  font-weight: var(--tc-font-weight-medium);
 }
 
 /* Section containers */
 .sectionContainer {
-  margin-bottom: 1.5rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  margin-bottom: var(--tc-spacing-4);
+  border: 1px solid var(--tc-color-border-medium, #ddd);
+  border-radius: var(--tc-radius-sm);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .sectionBody {
-  padding: 0.75rem;
+  padding: var(--tc-spacing-2);
 }
 
 /* Field row */
 .fieldRow {
   display: flex;
   flex-direction: column;
-  margin-bottom: 1rem;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 1rem;
+  margin-bottom: var(--tc-spacing-3);
+  border-bottom: 1px solid var(--tc-color-border, #eee);
+  padding-bottom: var(--tc-spacing-3);
 }
 
 .fieldRow:last-child {
@@ -334,10 +341,10 @@
 }
 
 .fieldLabel {
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: #666;
-  margin-bottom: 0.25rem;
+  font-size: var(--tc-font-size-xs);
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-color-text-secondary, #666);
+  margin-bottom: var(--tc-spacing-1);
 }
 
 .fieldValue {
@@ -347,27 +354,27 @@
 .fieldCompare {
   display: flex;
   flex-direction: column;
-  margin-top: 0.5rem;
+  margin-top: var(--tc-spacing-2);
 }
 
 .formValue {
-  background-color: #f8f9fa;
-  padding: 0.5rem;
-  border-radius: 4px;
-  font-size: 0.9rem;
+  background-color: var(--tc-bg-light, #f8f9fa);
+  padding: var(--tc-spacing-2);
+  border-radius: var(--tc-radius-sm);
+  font-size: var(--tc-font-size-sm);
 }
 
 /* Action buttons in fields */
 .actionButtons {
   display: flex;
-  margin-top: 0.75rem;
-  gap: 0.5rem;
+  margin-top: var(--tc-spacing-2);
+  gap: var(--tc-spacing-2);
 }
 
 .actionButtons button {
   flex: 1;
   padding: 0.375rem;
-  font-size: 0.8rem;
+  font-size: var(--tc-font-size-xs);
 }
 
 /* Fixed validation action bar at bottom */
@@ -376,9 +383,9 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: white;
-  padding: 0.75rem 1rem;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  background: var(--tc-bg-default, white);
+  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  box-shadow: var(--tc-shadow-lg, 0 -2px 10px rgba(0, 0, 0, 0.1));
   z-index: 1000;
   display: flex;
   justify-content: center;

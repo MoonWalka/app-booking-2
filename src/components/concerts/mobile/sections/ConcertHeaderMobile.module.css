@@ -1,36 +1,43 @@
+/*
+ * Styles pour ConcertHeaderMobile
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
+ */
+
 .headerContainer {
   display: flex;
   align-items: center;
-  background: white;
-  padding: 0.75rem 0.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background: var(--tc-bg-default, white);
+  padding: var(--tc-spacing-2) var(--tc-spacing-2);
+  box-shadow: var(--tc-shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.1));
   position: sticky;
   top: 0;
   z-index: 100;
 }
 
 .backButton {
-  color: #333;
-  padding: 0.25rem 0.5rem;
-  margin-right: 0.5rem;
+  color: var(--tc-color-text-primary, #333);
+  padding: var(--tc-spacing-1) var(--tc-spacing-2);
+  margin-right: var(--tc-spacing-2);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .backButton i {
-  font-size: 1.5rem;
+  font-size: var(--tc-font-size-xl);
 }
 
 .headerInfo {
   flex: 1;
   min-width: 0; /* Pour que le texte puisse être tronqué */
-  padding-right: 0.5rem;
+  padding-right: var(--tc-spacing-2);
 }
 
 .headerTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
@@ -38,7 +45,7 @@
 }
 
 .concertDate {
-  font-size: 0.85rem;
-  color: #666;
-  margin-top: 0.25rem;
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-color-text-secondary, #666);
+  margin-top: var(--tc-spacing-1);
 }

@@ -1,19 +1,25 @@
+/*
+ * Styles pour ContratVariablesCard
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 5 mai 2025
+ */
+
 .contractVariablesCard {
-  margin-bottom: 2rem;
+  margin-bottom: var(--tc-spacing-5);
 }
 
 .variablesContainer {
   max-height: 400px;
   overflow-y: auto;
-  border: 1px solid #e9ecef;
-  border-radius: 0.25rem;
-  padding: 0.5rem;
+  border: 1px solid var(--tc-border-light);
+  border-radius: var(--tc-border-radius-sm);
+  padding: var(--tc-spacing-1-5);
 }
 
 .variableItem {
   display: flex;
-  padding: 0.5rem;
-  border-bottom: 1px solid #f8f9fa;
+  padding: var(--tc-spacing-1-5);
+  border-bottom: 1px solid var(--tc-bg-subtle);
 }
 
 .variableItem:last-child {
@@ -21,12 +27,42 @@
 }
 
 .variableName {
-  font-weight: 500;
+  font-weight: var(--tc-font-weight-medium);
   width: 30%;
-  padding-right: 1rem;
+  padding-right: var(--tc-spacing-3);
 }
 
 .variableValue {
   width: 70%;
   word-break: break-word;
+}
+
+/* Styles responsive standardisés */
+@media (max-width: 768px) {
+  .variablesContainer {
+    max-height: 350px;
+  }
+}
+
+@media (max-width: 576px) {
+  .contractVariablesCard {
+    margin-bottom: var(--tc-spacing-3);
+  }
+  
+  .variableItem {
+    flex-direction: column;
+    padding: var(--tc-spacing-1);
+  }
+  
+  .variableName, 
+  .variableValue {
+    width: 100%;
+    padding-right: 0;
+  }
+  
+  .variableName {
+    margin-bottom: var(--tc-spacing-0-5);
+    color: var(--tc-color-text-muted);
+    font-size: var(--tc-font-size-sm);
+  }
 }

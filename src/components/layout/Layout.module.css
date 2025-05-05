@@ -8,15 +8,23 @@
 
 .content {
   flex: 1;
-  margin-left: 250px; /* Correspond à la largeur de la sidebar */
-  padding: 20px;
+  margin-left: var(--tc-sidebar-width, 250px); /* Correspond à la largeur de la sidebar */
+  padding: var(--tc-spacing-lg, 20px);
   min-height: 100vh;
-  background-color: var(--tc-content-bg-color);
+  background-color: var(--tc-content-bg-color, #f8f9fa);
 }
 
 /* Styles pour le header */
 .header {
-  background-color: var(--tc-header-bg-color);
-  padding: 15px 20px;
-  box-shadow: var(--tc-card-shadow);
+  background-color: var(--tc-header-bg-color, white);
+  padding: var(--tc-spacing-md, 15px) var(--tc-spacing-lg, 20px);
+  box-shadow: var(--tc-card-shadow, 0 2px 4px rgba(0, 0, 0, 0.05));
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .content {
+    margin-left: 0;
+    padding: var(--tc-spacing-md, 15px);
+  }
 }

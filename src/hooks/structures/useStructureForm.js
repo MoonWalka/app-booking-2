@@ -1,31 +1,19 @@
-import { useState, useEffect } from 'react';
+import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  doc, 
-  getDoc, 
-  setDoc, 
-  updateDoc, 
-  collection, 
-  Timestamp 
-} from 'firebase/firestore';
-import { db } from '@/firebaseInit';
+import { useGenericEntityForm } from '@/hooks/common/useGenericEntityForm';
 
 /**
- * Hook to manage structure form state and operations
+ * Hook pour la gestion des formulaires de structures
+ * Version migrée basée sur useGenericEntityForm
  * 
- * @param {string} id - Structure ID if editing an existing structure, undefined for new structure
- * @returns {Object} - Form state and operations
+ * @param {string} structureId - ID de la structure ou undefined pour une nouvelle structure
+ * @returns {Object} États et fonctions pour gérer le formulaire de structure
  */
-export const useStructureForm = (id) => {
+const useStructureForm = (structureId) => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState(null);
-  const [validated, setValidated] = useState(false);
-  const isEditMode = !!id;
-
-  // Form state
-  const [formData, setFormData] = useState({
+  
+  // Données initiales du formulaire
+  const initialData = {
     nom: '',
     raisonSociale: '',
     type: '',
@@ -45,143 +33,94 @@ export const useStructureForm = (id) => {
       email: '',
       fonction: ''
     }
+  };
+
+  // Fonction de validation spécifique aux structures
+  const validateStructureForm = (data) => {
+    const errors = {};
+    
+    if (!data.nom) {
+      errors.nom = 'Le nom de la structure est obligatoire';
+    }
+    
+    if (!data.raisonSociale) {
+      errors.raisonSociale = 'La raison sociale est obligatoire';
+    }
+    
+    // Validation conditionnelle du SIRET (si présent, doit avoir le bon format)
+    if (data.siret && !/^\d{14}$/.test(data.siret.replace(/\s/g, ''))) {
+      errors.siret = 'Le numéro SIRET doit contenir 14 chiffres';
+    }
+    
+    // Validation conditionnelle de l'email (si présent, doit avoir le bon format)
+    if (data.email && !/^\S+@\S+\.\S+$/.test(data.email)) {
+      errors.email = 'Format d\'email invalide';
+    }
+    
+    return {
+      isValid: Object.keys(errors).length === 0,
+      errors
+    };
+  };
+
+  // Transformation des données avant sauvegarde
+  const transformStructureData = (data) => {
+    // S'assurer que le champ contact existe toujours
+    const transformedData = {
+      ...data,
+      contact: data.contact || {
+        nom: '',
+        telephone: '',
+        email: '',
+        fonction: ''
+      }
+    };
+    
+    return transformedData;
+  };
+
+  // Callback après sauvegarde réussie
+  const onStructureSaveSuccess = (savedId, savedData) => {
+    console.log(`Structure ${savedId} enregistrée avec succès`, savedData);
+    navigate(`/structures/${savedId}`);
+  };
+
+  // Utiliser le hook générique avec la configuration spécifique aux structures
+  const genericFormHook = useGenericEntityForm({
+    entityType: 'structures',
+    entityId: structureId,
+    initialData,
+    collectionName: 'structures',
+    validateForm: validateStructureForm,
+    transformData: transformStructureData,
+    onSuccess: onStructureSaveSuccess,
+    relatedEntities: [] // Les structures n'ont pas d'entités liées gérées dans ce formulaire
   });
 
-  // Load structure data if in edit mode
-  useEffect(() => {
-    if (isEditMode) {
-      const fetchStructure = async () => {
-        setLoading(true);
-        try {
-          const structureDoc = await getDoc(doc(db, 'structures', id));
-          if (structureDoc.exists()) {
-            const structureData = structureDoc.data();
-            setFormData({
-              nom: structureData.nom || '',
-              raisonSociale: structureData.raisonSociale || '',
-              type: structureData.type || '',
-              adresse: structureData.adresse || '',
-              codePostal: structureData.codePostal || '',
-              ville: structureData.ville || '',
-              pays: structureData.pays || 'France',
-              siret: structureData.siret || '',
-              tva: structureData.tva || '',
-              telephone: structureData.telephone || '',
-              email: structureData.email || '',
-              siteWeb: structureData.siteWeb || '',
-              notes: structureData.notes || '',
-              contact: {
-                nom: structureData.contact?.nom || '',
-                telephone: structureData.contact?.telephone || '',
-                email: structureData.contact?.email || '',
-                fonction: structureData.contact?.fonction || ''
-              }
-            });
-          } else {
-            setError('Structure non trouvée');
-            navigate('/structures');
-          }
-        } catch (error) {
-          console.error('Erreur lors du chargement de la structure:', error);
-          setError('Une erreur est survenue lors du chargement des données');
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      fetchStructure();
-    }
-  }, [id, isEditMode, navigate]);
-
-  // Handle form changes
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    
-    if (name.includes('.')) {
-      // Handle nested fields (like contact.nom)
-      const [parent, child] = name.split('.');
-      setFormData(prev => ({
-        ...prev,
-        [parent]: {
-          ...prev[parent],
-          [child]: value
-        }
-      }));
-    } else {
-      setFormData(prev => ({
-        ...prev,
-        [name]: value
-      }));
-    }
-  };
-
-  // Form validation
-  const validateForm = (form) => {
-    if (form.checkValidity() === false) {
-      setValidated(true);
-      return false;
-    }
-    return true;
-  };
-
-  // Form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    if (!validateForm(e.currentTarget)) {
-      e.stopPropagation();
-      return;
-    }
-    
-    setSubmitting(true);
-    setError(null);
-    
-    try {
-      const structureData = {
-        ...formData,
-        updatedAt: Timestamp.now()
-      };
-      
-      if (!isEditMode) {
-        // Create new structure
-        const newStructureRef = doc(collection(db, 'structures'));
-        structureData.createdAt = Timestamp.now();
-        structureData.programmateursAssocies = [];
-        
-        await setDoc(newStructureRef, structureData);
-        navigate(`/structures/${newStructureRef.id}`);
-      } else {
-        // Update existing structure
-        await updateDoc(doc(db, 'structures', id), structureData);
-        navigate(`/structures/${id}`);
-      }
-    } catch (error) {
-      console.error('Erreur lors de l\'enregistrement de la structure:', error);
-      setError('Une erreur est survenue lors de l\'enregistrement');
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  // Cancel form and navigate back
-  const handleCancel = () => {
-    navigate(isEditMode ? `/structures/${id}` : '/structures');
-  };
+  // Fonction pour annuler et retourner à la liste ou au détail
+  const handleCancel = useCallback(() => {
+    navigate(structureId ? `/structures/${structureId}` : '/structures');
+  }, [navigate, structureId]);
 
   return {
-    id,
-    isEditMode,
-    loading,
-    submitting,
-    error,
-    validated,
-    formData,
-    setFormData,
-    handleChange,
-    handleSubmit,
+    ...genericFormHook,
+    // Ajouter les propriétés spécifiques pour maintenir la compatibilité
+    id: structureId,
+    isEditMode: !!structureId,
+    validated: !!genericFormHook.formErrors && Object.keys(genericFormHook.formErrors).length > 0,
+    setValidated: () => {}, // Fonction vide pour compatibilité API
+    submitting: genericFormHook.submitting,
     handleCancel,
-    validateForm,
-    setValidated
+    // Pour compatibilité avec l'ancien code qui utilise validateForm comme fonction recevant un formulaire DOM
+    validateForm: (form) => {
+      if (form) {
+        const isValid = form.checkValidity();
+        if (!isValid) {
+          return false;
+        }
+      }
+      return validateStructureForm(genericFormHook.formData).isValid;
+    }
   };
 };
 

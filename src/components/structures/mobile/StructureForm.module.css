@@ -1,13 +1,20 @@
-/* Styles pour StructureForm version mobile */
+/*
+ * Styles pour StructureForm
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
+ */
+
+
 
 .structureFormMobile {
-  padding-bottom: 1rem;
+  padding-bottom: var(--tc-spacing-3);
 }
 
 .formHeader {
-  margin-bottom: 1rem;
-  padding: 0.5rem 1rem;
-  background-color: white;
+  margin-bottom: var(--tc-spacing-3);
+  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  background-color: var(--tc-bg-default, white);
   position: sticky;
   top: 0;
   z-index: 10;
@@ -17,50 +24,50 @@
 }
 
 .formTitle {
-  font-size: 1.25rem;
+  font-size: var(--tc-font-size-xl);
   margin: 0;
-  font-weight: 600;
+  font-weight: var(--tc-font-weight-semibold);
 }
 
 .backButton {
-  font-size: 1.5rem;
-  color: var(--tc-gray-600, #6c757d);
+  font-size: var(--tc-spacing-4);
+  color: var(--tc-tc-gray-var(--tc-font-weight-semibold), var(--tc-color-text-secondary, #6c757d));
   padding: 0;
   background: none;
   border: none;
 }
 
 .formSection {
-  background-color: white;
-  margin: 0 1rem 1rem;
-  border-radius: 0.5rem;
-  padding: 1rem;
+  background-color: var(--tc-bg-default, white);
+  margin: 0 var(--tc-spacing-3) var(--tc-spacing-3);
+  border-radius: var(--tc-spacing-2);
+  padding: var(--tc-spacing-3);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .formSectionTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--tc-border-color, #dee2e6);
+  font-size: 1.var(--tc-spacing-3);
+  font-weight: var(--tc-font-weight-semibold);
+  margin-bottom: var(--tc-spacing-3);
+  padding-bottom: var(--tc-spacing-2);
+  border-bottom: 1px solid var(--tc-tc-border-color, var(--tc-color-border-light, #dee2e6));
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--tc-spacing-2);
 }
 
 .formLabel {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--tc-text-secondary, #6c757d);
-  margin-bottom: 0.25rem;
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  margin-bottom: var(--tc-spacing-1);
 }
 
 .formControl {
   border-radius: 0.375rem;
-  border: 1px solid var(--tc-border-color, #dee2e6);
-  padding: 0.5rem 0.75rem;
-  font-size: 1rem;
+  border: 1px solid var(--tc-tc-border-color, var(--tc-color-border-light, #dee2e6));
+  padding: var(--tc-spacing-2) var(--tc-spacing-2);
+  font-size: var(--tc-spacing-3);
 }
 
 .formActions {
@@ -69,10 +76,10 @@
   left: 0;
   right: 0;
   display: flex;
-  gap: 1rem;
-  padding: 0.75rem 1rem;
-  background-color: white;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  gap: var(--tc-spacing-3);
+  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  background-color: var(--tc-bg-default, white);
+  box-shadow: var(--tc-shadow-lg, 0 -2px 10px rgba(0, 0, 0, 0.1));
   z-index: 100;
 }
 
@@ -81,13 +88,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: var(--tc-spacing-2);
 }
 
 .spinner {
   display: inline-block;
-  width: 1rem;
-  height: 1rem;
+  width: var(--tc-spacing-3);
+  height: var(--tc-spacing-3);
   border-radius: 50%;
   border: 2px solid currentColor;
   border-right-color: transparent;

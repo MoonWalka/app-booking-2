@@ -1,5 +1,9 @@
 # Composants Communs
 
+*Dernière mise à jour: 4 mai 2025*
+
+Ce document décrit les composants communs réutilisables dans toute l'application.
+
 ## Introduction
 
 Les composants communs de TourCraft sont des éléments d'interface utilisateur réutilisables qui servent de base à l'application mais ne sont pas spécifiques à un domaine fonctionnel particulier. Ils constituent une couche intermédiaire entre les composants UI de base et les composants spécifiques métier.
@@ -10,6 +14,133 @@ Les composants communs de TourCraft sont des éléments d'interface utilisateur 
 - **Cohérence** : Interface utilisateur uniforme à travers l'application
 - **Extensibilité** : Faciles à modifier ou à étendre pour des besoins spécifiques
 - **Accessibilité** : Conformes aux normes d'accessibilité
+
+## StatutBadge
+
+Le composant `StatutBadge` est un composant générique pour l'affichage des badges de statut pour différentes entités (concerts, contrats, factures, etc.).
+
+### Importation
+
+```jsx
+import StatutBadge from '@/components/ui/StatutBadge';
+```
+
+### Props
+
+| Prop | Type | Défaut | Description |
+|------|------|--------|-------------|
+| status | string | `undefined` | Code du statut à afficher |
+| entityType | string | `'default'` | Type d'entité ('concert', 'contrat', 'facture'...) |
+| text | string | `undefined` | Texte personnalisé (remplace le libellé du statut) |
+| size | string | `'medium'` | Taille du badge ('small', 'medium', 'large') |
+| className | string | `''` | Classes CSS additionnelles |
+
+### Statuts supportés par type d'entité
+
+#### Statuts génériques (`default`)
+
+| Code | Label | Couleur | Icône |
+|------|-------|---------|-------|
+| active | Actif | success | bi-check-circle |
+| inactive | Inactif | secondary | bi-dash-circle |
+| pending | En attente | warning | bi-clock |
+| error | Erreur | danger | bi-exclamation-circle |
+| draft | Brouillon | info | bi-pencil |
+
+#### Statuts de concert (`concert`)
+
+| Code | Label | Couleur | Icône |
+|------|-------|---------|-------|
+| en_negociation | En négociation | info | bi-chat-dots |
+| option | Option | warning | bi-calendar-check |
+| confirme | Confirmé | success | bi-calendar-check-fill |
+| annule | Annulé | danger | bi-calendar-x |
+| termine | Terminé | secondary | bi-calendar-check |
+| contact | Contact | info | bi-person-lines-fill |
+
+#### Statuts de contrat (`contrat`)
+
+| Code | Label | Couleur | Icône |
+|------|-------|---------|-------|
+| brouillon | Brouillon | info | bi-file-earmark |
+| envoye | Envoyé | warning | bi-send |
+| signe | Signé | success | bi-file-earmark-check |
+| annule | Annulé | danger | bi-file-earmark-x |
+| archive | Archivé | secondary | bi-archive |
+
+#### Statuts de facture (`facture`)
+
+| Code | Label | Couleur | Icône |
+|------|-------|---------|-------|
+| brouillon | Brouillon | info | bi-file-earmark |
+| envoyee | Envoyée | warning | bi-send |
+| payee | Payée | success | bi-credit-card |
+| retard | En retard | danger | bi-exclamation-circle |
+| annulee | Annulée | secondary | bi-file-earmark-x |
+
+### Exemples d'utilisation
+
+#### Statut de concert
+
+```jsx
+<StatutBadge status="option" entityType="concert" />
+```
+
+#### Statut de contrat avec taille personnalisée
+
+```jsx
+<StatutBadge status="signe" entityType="contrat" size="large" />
+```
+
+#### Statut avec texte personnalisé
+
+```jsx
+<StatutBadge status="confirme" entityType="concert" text="Tournée confirmée" />
+```
+
+#### Statut générique
+
+```jsx
+<StatutBadge status="active" />
+```
+
+### Personnalisation avancée
+
+Le composant peut être étendu pour prendre en charge des types d'entités supplémentaires en modifiant la configuration des statuts dans le fichier `StatutBadge.js`.
+
+```jsx
+// Exemple d'extension pour un nouveau type d'entité
+const statusConfigs = {
+  // ...configurations existantes
+  
+  // Nouvelle configuration pour les tournées
+  tournee: {
+    en_preparation: { color: 'info', icon: 'bi-tools', label: 'En préparation' },
+    en_cours: { color: 'success', icon: 'bi-truck', label: 'En cours' },
+    terminee: { color: 'secondary', icon: 'bi-flag', label: 'Terminée' }
+  }
+};
+```
+
+### Migration depuis les anciens badges
+
+Si vous utilisez des badges personnalisés ou des composants similaires, voici comment migrer vers le `StatutBadge` :
+
+1. Remplacez vos composants existants par `<StatutBadge />`
+2. Déterminez le type d'entité approprié
+3. Mappez les anciens codes de statut vers les nouveaux codes
+
+Exemple avant:
+```jsx
+<span className={`badge ${getStatusClass(concert.statut)}`}>
+  {getStatusLabel(concert.statut)}
+</span>
+```
+
+Exemple après:
+```jsx
+<StatutBadge status={concert.statut} entityType="concert" />
+```
 
 ## Composants de statut
 

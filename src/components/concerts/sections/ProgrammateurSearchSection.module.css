@@ -1,47 +1,52 @@
-/* Styles pour ProgrammateurSearchSection */
+/*
+ * Styles pour ProgrammateurSearchSection
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 5 mai 2025
+ */
+
 .container {
-  /* TODO: Ajouter les styles */
+  width: 100%;
 }
 
 .formCard {
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  margin-bottom: 1.5rem;
-  border: 1px solid #e9ecef;
+  background-color: var(--tc-bg-card);
+  border-radius: var(--tc-border-radius-lg);
+  box-shadow: var(--tc-shadow-sm);
+  margin-bottom: var(--tc-spacing-4);
+  border: 1px solid var(--tc-border-light);
   overflow: hidden;
 }
 
 .cardHeader {
   display: flex;
   align-items: center;
-  padding: 1rem 1.5rem;
-  background-color: #f8f9fa;
-  border-bottom: 1px solid #e9ecef;
+  padding: var(--tc-spacing-3) var(--tc-spacing-4);
+  background-color: var(--tc-bg-subtle);
+  border-bottom: 1px solid var(--tc-border-light);
 }
 
 .cardIcon {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background-color: #d1e7ff;
-  color: #0d6efd;
+  width: var(--tc-icon-size-md);
+  height: var(--tc-icon-size-md);
+  border-radius: var(--tc-border-radius-md);
+  background-color: var(--tc-bg-primary-subtle);
+  color: var(--tc-color-primary);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.1rem;
-  margin-right: 1rem;
+  font-size: var(--tc-font-size-md);
+  margin-right: var(--tc-spacing-3);
 }
 
 .cardTitle {
   margin: 0;
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #344767;
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-color-title);
 }
 
 .cardBody {
-  padding: 1.5rem;
+  padding: var(--tc-spacing-4);
 }
 
 .searchContainer {
@@ -50,14 +55,48 @@
 
 .formLabel {
   display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-  color: #344767;
+  margin-bottom: var(--tc-spacing-1-5);
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-color-title);
 }
 
 .formHelpText {
   display: block;
-  margin-top: 0.5rem;
-  font-size: 0.875rem;
-  color: #6c757d;
+  margin-top: var(--tc-spacing-1-5);
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-color-text-muted);
+}
+
+/* Styles responsive standardisés */
+@media (max-width: 992px) {
+  .cardBody {
+    padding: var(--tc-spacing-3);
+  }
+}
+
+@media (max-width: 768px) {
+  .cardHeader {
+    padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  }
+}
+
+@media (max-width: 576px) {
+  .cardIcon {
+    width: var(--tc-icon-size-sm);
+    height: var(--tc-icon-size-sm);
+    font-size: var(--tc-font-size-sm);
+    margin-right: var(--tc-spacing-2);
+  }
+  
+  .cardTitle {
+    font-size: var(--tc-font-size-md);
+  }
+  
+  .cardBody {
+    padding: var(--tc-spacing-2);
+  }
+  
+  .formLabel {
+    margin-bottom: var(--tc-spacing-1);
+  }
 }

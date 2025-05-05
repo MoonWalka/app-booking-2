@@ -1,3 +1,23 @@
+/*
+ * Styles pour ConcertsListHeader
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 5 mai 2025
+ */
+
 .headerContainer {
-  padding-bottom: 1rem;
+  padding-bottom: var(--tc-spacing-3);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--tc-spacing-2);
+}
+
+/* Styles responsive standardisés */
+@media (max-width: 576px) {
+  .headerContainer {
+    padding-bottom: var(--tc-spacing-2);
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

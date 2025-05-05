@@ -1,32 +1,39 @@
-/* Styles pour StructureDetails version mobile */
+/*
+ * Styles pour StructureDetails
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
+ */
+
+
 
 .structureDetailMobile {
-  padding: 1rem;
+  padding: var(--tc-spacing-3);
 }
 
 .structureDetailHeader {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--tc-spacing-4);
   text-align: center;
 }
 
 .structureDetailTitle {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
+  font-size: var(--tc-spacing-4);
+  font-weight: var(--tc-font-weight-semibold);
+  margin-bottom: var(--tc-spacing-2);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: var(--tc-spacing-2);
 }
 
 .structureDetailSubtitle {
-  color: var(--tc-text-secondary, #6c757d);
-  font-size: 1rem;
+  color: var(--tc-tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  font-size: var(--tc-spacing-3);
 }
 
 .tabsContainer {
   display: flex;
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--tc-spacing-4);
 }
 
 .tabButton {
@@ -34,63 +41,63 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.5rem;
-  border-radius: 0.25rem;
-  font-size: 0.9rem;
+  gap: var(--tc-spacing-2);
+  padding: var(--tc-spacing-2);
+  border-radius: var(--tc-spacing-1);
+  font-size: var(--tc-font-size-sm);
   transition: all 0.2s ease;
 }
 
 .structureDetailSection {
-  background-color: white;
-  border-radius: 0.5rem;
-  padding: 1rem;
-  margin-bottom: 1rem;
+  background-color: var(--tc-bg-default, white);
+  border-radius: var(--tc-spacing-2);
+  padding: var(--tc-spacing-3);
+  margin-bottom: var(--tc-spacing-3);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .structureDetailSection h3 {
-  font-size: 1.1rem;
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--tc-border-color, #dee2e6);
+  font-size: 1.var(--tc-spacing-3);
+  margin-bottom: var(--tc-spacing-3);
+  padding-bottom: var(--tc-spacing-2);
+  border-bottom: 1px solid var(--tc-tc-border-color, var(--tc-color-border-light, #dee2e6));
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--tc-spacing-2);
 }
 
 .structureDetailItem {
-  margin-bottom: 1rem;
+  margin-bottom: var(--tc-spacing-3);
 }
 
 .structureDetailLabel {
-  font-size: 0.85rem;
-  color: var(--tc-text-secondary, #6c757d);
-  margin-bottom: 0.25rem;
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  margin-bottom: var(--tc-spacing-1);
 }
 
 .structureDetailValue {
-  font-size: 1rem;
+  font-size: var(--tc-spacing-3);
 }
 
 .structureDetailValue a {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--tc-spacing-2);
   text-decoration: none;
-  color: var(--tc-primary, #007bff);
+  color: var(--tc-tc-primary, #007bff);
 }
 
 .programmateursListMobile {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--tc-spacing-3);
 }
 
 .associatedItem {
-  background-color: var(--tc-gray-100, #f8f9fa);
-  border-radius: 0.5rem;
-  padding: 1rem;
+  background-color: var(--tc-tc-gray-100, var(--tc-bg-light, #f8f9fa));
+  border-radius: var(--tc-spacing-2);
+  padding: var(--tc-spacing-3);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -101,39 +108,39 @@
 }
 
 .associatedItemName {
-  font-weight: 600;
-  margin-bottom: 0.5rem;
+  font-weight: var(--tc-font-weight-semibold);
+  margin-bottom: var(--tc-spacing-2);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--tc-spacing-2);
 }
 
 .associatedItemDetails {
-  font-size: 0.85rem;
+  font-size: var(--tc-font-size-sm);
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: var(--tc-spacing-1);
 }
 
 .associatedItemDetails a {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--tc-spacing-2);
   text-decoration: none;
-  color: var(--tc-primary, #007bff);
+  color: var(--tc-tc-primary, #007bff);
 }
 
 .structureActionsMobile {
   display: flex;
-  gap: 1rem;
-  margin-top: 1.5rem;
-  margin-bottom: 2rem;
+  gap: var(--tc-spacing-3);
+  margin-top: var(--tc-spacing-4);
+  margin-bottom: var(--tc-spacing-8);
 }
 
 .spinner {
   display: inline-block;
-  width: 1rem;
-  height: 1rem;
+  width: var(--tc-spacing-3);
+  height: var(--tc-spacing-3);
   border-radius: 50%;
   border: 2px solid currentColor;
   border-right-color: transparent;

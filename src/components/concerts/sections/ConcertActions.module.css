@@ -1,5 +1,19 @@
+/*
+ * Styles pour ConcertActions
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 5 mai 2025
+ */
+
 .actionsContainer {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: var(--tc-spacing-0-5);
+}
+
+/* Styles responsive standardisés */
+@media (max-width: 576px) {
+  .actionsContainer {
+    flex-wrap: wrap;
+    gap: var(--tc-spacing-1);
+  }
 }

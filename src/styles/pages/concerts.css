@@ -43,7 +43,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: var(--tc-transition-standard); /* // Correction UI: Utilisation de la variable standardisée */
+  transition: var(--tc-tc-transition-standard); /* // Correction UI: Utilisation de la variable standardisée */
   font-weight: 500; /* Police plus cohérente */
 }
 
@@ -62,7 +62,7 @@
   padding: 8px 16px;
   border-radius: 6px;
   font-weight: 500;
-  transition: var(--tc-transition-standard);
+  transition: var(--tc-tc-transition-standard);
   min-height: 40px;
   display: inline-flex;
   align-items: center;
@@ -70,25 +70,25 @@
 }
 
 .btn-primary {
-  background-color: var(--tc-primary-color, #007bff);
-  border-color: var(--tc-primary-color, #007bff);
+  background-color: var(--tc-tc-primary-color, #007bff);
+  border-color: var(--tc-tc-primary-color, #007bff);
   color: white;
 }
 
 .btn-secondary {
-  background-color: var(--tc-secondary-color, #6c757d);
-  border-color: var(--tc-secondary-color, #6c757d);
+  background-color: var(--tc-tc-secondary-color, #6c757d);
+  border-color: var(--tc-tc-secondary-color, #6c757d);
   color: white;
 }
 
 .btn-primary:hover {
-  background-color: var(--tc-primary-dark, #0069d9);
-  border-color: var(--tc-primary-dark, #0069d9);
+  background-color: var(--tc-tc-primary-dark, #0069d9);
+  border-color: var(--tc-tc-primary-dark, #0069d9);
 }
 
 .btn-secondary:hover {
-  background-color: var(--tc-secondary-dark, #5a6268);
-  border-color: var(--tc-secondary-dark, #5a6268);
+  background-color: var(--tc-tc-secondary-dark, #5a6268);
+  border-color: var(--tc-tc-secondary-dark, #5a6268);
 }
 
 /* =============================
@@ -97,9 +97,9 @@
 /* Concert details styles */
 .concert-detail-container {
   padding: 20px;
-  background-color: var(--tc-bg-color, #fff);
-  border-radius: var(--tc-border-radius, 8px);
-  box-shadow: var(--tc-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
+  background-color: var(--tc-tc-bg-color, #fff);
+  border-radius: var(--tc-tc-border-radius, 8px);
+  box-shadow: var(--tc-tc-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
   margin-bottom: 20px;
 }
 
@@ -115,21 +115,21 @@
   align-items: flex-start;
   margin-bottom: 20px;
   padding-bottom: 15px;
-  border-bottom: 1px solid var(--tc-border-color-light, #eee);
+  border-bottom: 1px solid var(--tc-tc-border-color-light, #eee);
 }
 
 /* Titre du concert - Desktop */
 .concert-title-desktop {
-  font-size: var(--tc-font-size-xl, 24px); /* // Correction UI: Valeur par défaut ajoutée */
+  font-size: var(--tc-tc-font-size-xl, 24px); /* // Correction UI: Valeur par défaut ajoutée */
   font-weight: bold;
   margin-bottom: 5px;
-  color: var(--tc-text-color, #333);
+  color: var(--tc-tc-text-color, #333);
 }
 
 /* Date du concert - affichage sous le titre */
 .concert-date-display {
-  font-size: var(--tc-font-size-md, 16px); /* // Correction UI: Valeur par défaut ajoutée */
-  color: var(--tc-text-muted, #666);
+  font-size: var(--tc-tc-font-size-md, 16px); /* // Correction UI: Valeur par défaut ajoutée */
+  color: var(--tc-tc-text-muted, #666);
 }
 
 /* // Correction UI: Centralisation des styles de statut, utilisation des classes définies dans badges.css */
@@ -149,7 +149,7 @@
 }
 
 .concerts-title {
-  font-size: var(--tc-font-size-xl, 24px); /* // Correction UI: Valeur par défaut ajoutée */
+  font-size: var(--tc-tc-font-size-xl, 24px); /* // Correction UI: Valeur par défaut ajoutée */
   font-weight: bold;
 }
 
@@ -165,8 +165,8 @@
   gap: 15px;
   margin-bottom: 20px;
   padding: 15px;
-  background-color: var(--tc-bg-light, #f5f5f5);
-  border-radius: var(--tc-border-radius, 8px);
+  background-color: var(--tc-tc-bg-light, #f5f5f5);
+  border-radius: var(--tc-tc-border-radius, 8px);
 }
 
 .filter-group {
@@ -179,25 +179,25 @@
 .filter-label {
   margin-right: 8px;
   font-weight: 500;
-  color: var(--tc-text-color, #333);
+  color: var(--tc-tc-text-color, #333);
   white-space: nowrap; /* // Correction UI: Évite le retour à la ligne du label */
 }
 
 .filter-select {
   padding: 6px 10px;
-  border: 1px solid var(--tc-border-color, #ddd);
+  border: 1px solid var(--tc-tc-border-color, #ddd);
   border-radius: 4px;
   min-width: 120px; /* // Correction UI: Largeur minimale pour meilleur affichage */
 }
 
 /* // Correction UI: Amélioration du style des cartes de concerts */
 .concert-list-card {
-  background-color: var(--tc-bg-color, white);
-  border-radius: var(--tc-border-radius, 8px);
-  box-shadow: var(--tc-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
+  background-color: var(--tc-tc-bg-color, white);
+  border-radius: var(--tc-tc-border-radius, 8px);
+  box-shadow: var(--tc-tc-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
   margin-bottom: 15px;
   overflow: hidden;
-  transition: var(--tc-transition-standard); /* // Correction UI: Transition standardisée */
+  transition: var(--tc-tc-transition-standard); /* // Correction UI: Transition standardisée */
 }
 
 .concert-list-card:hover {
@@ -222,11 +222,11 @@
 }
 
 .concert-form-container .tc-modal-confirm {
-  background-color: var(--tc-bg-color, #fff);
-  border-radius: var(--tc-border-radius, 0.5rem);
+  background-color: var(--tc-tc-bg-color, #fff);
+  border-radius: var(--tc-tc-border-radius, 0.5rem);
   width: 450px;
   max-width: 90vw;
-  box-shadow: var(--tc-shadow-lg, 0 4px 20px rgba(0, 0, 0, 0.15));
+  box-shadow: var(--tc-tc-shadow-lg, 0 4px 20px rgba(0, 0, 0, 0.15));
   overflow: hidden;
 }
 
@@ -242,10 +242,10 @@
 
 /* Titre du concert - Mobile */
 .concert-title-mobile {
-  font-size: var(--tc-font-size-md, 16px); /* // Correction UI: Valeur par défaut ajoutée */
+  font-size: var(--tc-tc-font-size-md, 16px); /* // Correction UI: Valeur par défaut ajoutée */
   font-weight: 600;
-  margin: 0 0 var(--tc-spacing-xs, 5px) 0;
-  color: var(--tc-text-color, #333);
+  margin: 0 0 var(--tc-tc-spacing-xs, 5px) 0;
+  color: var(--tc-tc-text-color, #333);
   /* // Correction UI: Gestion de l'overflow */
   white-space: nowrap;
   overflow: hidden;
@@ -263,10 +263,10 @@
   border-collapse: separate;
   border-spacing: 0;
   width: 100%;
-  background-color: var(--tc-bg-color, #fff);
-  border-radius: var(--tc-border-radius, 8px);
+  background-color: var(--tc-tc-bg-color, #fff);
+  border-radius: var(--tc-tc-border-radius, 8px);
   overflow: hidden;
-  box-shadow: var(--tc-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
+  box-shadow: var(--tc-tc-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 /* // Correction UI: Standardisation des styles de cellules */
@@ -274,13 +274,13 @@
 .concerts-container .concerts-table td {
   padding: 12px;
   vertical-align: middle;
-  border-bottom: 1px solid var(--tc-border-color-light, #f0f0f0);
+  border-bottom: 1px solid var(--tc-tc-border-color-light, #f0f0f0);
 }
 
 .concerts-container .concerts-table th {
   font-weight: 600;
-  color: var(--tc-text-color, #333);
-  background-color: var(--tc-bg-light, #f9f9f9);
+  color: var(--tc-tc-text-color, #333);
+  background-color: var(--tc-tc-bg-light, #f9f9f9);
 }
 
 /* // ...existing code for table components... */
@@ -289,7 +289,7 @@
 .tc-status-message {
   padding: 6px 12px;
   border-radius: 20px;
-  font-size: var(--tc-font-size-xs, 12px); /* // Correction UI: Valeur par défaut ajoutée */
+  font-size: var(--tc-tc-font-size-xs, 12px); /* // Correction UI: Valeur par défaut ajoutée */
   font-weight: 500;
   text-align: center;
   white-space: nowrap;
@@ -413,7 +413,7 @@
   
   /* // Correction UI: Ajustements responsive pour le tableau */
   .concerts-container .concerts-table {
-    font-size: var(--tc-font-size-sm, 14px);
+    font-size: var(--tc-tc-font-size-sm, 14px);
   }
   
   .concerts-container .concerts-table .text-truncate-container {

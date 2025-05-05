@@ -8,7 +8,7 @@
   flex-direction: column;
   position: relative;
   background-color: white;
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-tc-border-radius);
   overflow: hidden;
 }
 
@@ -24,14 +24,14 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--tc-info-color);
-  color: var(--tc-info-color);
+  border: 1px solid var(--tc-tc-info-color);
+  color: var(--tc-tc-info-color);
   background-color: transparent;
   transition: all 0.2s ease-in-out;
 }
 
 .tc-modal-actions .btn-outline-info:hover {
-  background-color: var(--tc-info-color);
+  background-color: var(--tc-tc-info-color);
   color: white;
 }
 
@@ -48,11 +48,11 @@
   font-size: 1.25rem;
   cursor: pointer;
   padding: 0.25rem;
-  color: var(--tc-text-muted);
+  color: var(--tc-tc-text-muted);
 }
 
 .tc-modal-close:hover {
-  color: var(--tc-danger-color);
+  color: var(--tc-tc-danger-color);
 }
 
 /* Styles pour le corps de la modale */
@@ -67,8 +67,8 @@
 .footer-textarea {
   width: 100%;
   font-family: Arial, sans-serif;
-  border: 1px solid var(--tc-border-color);
-  border-radius: var(--tc-border-radius);
+  border: 1px solid var(--tc-tc-border-color);
+  border-radius: var(--tc-tc-border-radius);
   padding: 0.75rem;
   line-height: 1.5;
 }
@@ -85,15 +85,15 @@
 /* Styles pour les sections du modèle */
 .template-info-card {
   background-color: white;
-  border: 1px solid var(--tc-border-color);
-  border-radius: var(--tc-border-radius);
+  border: 1px solid var(--tc-tc-border-color);
+  border-radius: var(--tc-tc-border-radius);
   padding: 1.25rem;
 }
 
 /* Styles pour l'aperçu de contrat */
 .preview-container {
   background-color: white;
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-tc-border-color);
   border-radius: 4px;
   margin-bottom: 1.5rem;
   width: 100%;
@@ -103,8 +103,8 @@
 
 .preview-header {
   padding: 1rem;
-  border-bottom: 1px solid var(--tc-border-color);
-  background-color: var(--tc-light-bg);
+  border-bottom: 1px solid var(--tc-tc-border-color);
+  background-color: var(--tc-tc-light-bg);
 }
 
 .preview-content {
@@ -172,9 +172,9 @@
 
 /* Styles pour les listes de variables */
 .variables-guide {
-  background-color: var(--tc-light-bg);
-  border: 1px solid var(--tc-border-color);
-  border-radius: var(--tc-border-radius);
+  background-color: var(--tc-tc-light-bg);
+  border: 1px solid var(--tc-tc-border-color);
+  border-radius: var(--tc-tc-border-radius);
   padding: 0.75rem;
   margin-bottom: 1rem;
 }
@@ -185,13 +185,13 @@
   margin: 0.25rem;
   background-color: #f0f0f0;
   border: 1px solid #ddd;
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-tc-border-radius-sm);
   font-size: 0.85rem;
   cursor: pointer;
 }
 
 .variable-badge:hover {
-  background-color: var(--tc-light-hover);
+  background-color: var(--tc-tc-light-hover);
 }
 
 .variables-badge-container {
@@ -206,13 +206,13 @@
 }
 
 .ql-toolbar {
-  border-top-left-radius: var(--tc-border-radius);
-  border-top-right-radius: var(--tc-border-radius);
+  border-top-left-radius: var(--tc-tc-border-radius);
+  border-top-right-radius: var(--tc-tc-border-radius);
 }
 
 .ql-container {
-  border-bottom-left-radius: var(--tc-border-radius);
-  border-bottom-right-radius: var(--tc-border-radius);
+  border-bottom-left-radius: var(--tc-tc-border-radius);
+  border-bottom-right-radius: var(--tc-tc-border-radius);
 }
 
 /* Fix pour les boutons Variables et Aide */

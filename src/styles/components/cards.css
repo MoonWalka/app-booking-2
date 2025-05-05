@@ -92,8 +92,8 @@ html body .details-card:hover {
 
 .tc-card-hover:hover {
   transform: translateY(-5px);
-  box-shadow: var(--tc-shadow-hover);
-  transition: var(--tc-transition);
+  box-shadow: var(--tc-tc-shadow-hover);
+  transition: var(--tc-tc-transition);
 }
 
 /* Styles pour les tableaux dans les cartes */
@@ -102,14 +102,14 @@ html body .details-card:hover {
 }
 
 .tc-card-table th {
-  background-color: var(--tc-table-header-bg);
+  background-color: var(--tc-tc-table-header-bg);
   font-weight: 500;
 }
 
 .tc-card-table th,
 .tc-card-table td {
   padding: 0.75rem 1rem;
-  border-bottom: 1px solid var(--tc-border-color);
+  border-bottom: 1px solid var(--tc-tc-border-color);
 }
 
 .tc-card-table tr:last-child td {
@@ -117,12 +117,12 @@ html body .details-card:hover {
 }
 
 .tc-card-table tr:hover {
-  background-color: var(--tc-hover-bg);
+  background-color: var(--tc-tc-hover-bg);
 }
 
 /* Styles de cartes spécifiques */
 .dashboard-card {
-  transition: var(--tc-transition);
+  transition: var(--tc-tc-transition);
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -133,19 +133,19 @@ html body .details-card:hover {
 }
 
 .info-card {
-  border-left: 4px solid var(--tc-primary-color);
+  border-left: 4px solid var(--tc-tc-primary-color);
 }
 
 .warning-card {
-  border-left: 4px solid var(--tc-warning-color);
+  border-left: 4px solid var(--tc-tc-warning-color);
 }
 
 .danger-card {
-  border-left: 4px solid var(--tc-danger-color);
+  border-left: 4px solid var(--tc-tc-danger-color);
 }
 
 .success-card {
-  border-left: 4px solid var(--tc-success-color);
+  border-left: 4px solid var(--tc-tc-success-color);
 }
 
 /* Cartes avec états */
@@ -207,22 +207,22 @@ html body .details-card:hover {
 .tc-card-action-button {
   background: transparent;
   border: none;
-  color: var(--tc-text-muted);
+  color: var(--tc-tc-text-muted);
   cursor: pointer;
   padding: 0.25rem;
-  border-radius: var(--tc-border-radius-sm);
-  transition: var(--tc-transition);
+  border-radius: var(--tc-tc-border-radius-sm);
+  transition: var(--tc-tc-transition);
 }
 
 .tc-card-action-button:hover {
-  background-color: var(--tc-hover-bg);
-  color: var(--tc-primary-color);
+  background-color: var(--tc-tc-hover-bg);
+  color: var(--tc-tc-primary-color);
 }
 
 .tc-card-action-button.tc-card-action-edit:hover {
-  color: var(--tc-info-color);
+  color: var(--tc-tc-info-color);
 }
 
 .tc-card-action-button.tc-card-action-delete:hover {
-  color: var(--tc-danger-color);
+  color: var(--tc-tc-danger-color);
 }

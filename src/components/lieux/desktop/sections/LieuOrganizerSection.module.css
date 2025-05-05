@@ -1,23 +1,23 @@
 .formCard {
-  border: 1px solid var(--bs-border-color);
+  border: 1px solid var(--tc-bs-border-color);
   border-radius: 8px;
-  background-color: var(--bs-white);
+  background-color: var(--tc-bs-white);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   overflow: hidden;
   margin-bottom: 24px;
 }
 
 .cardHeader {
-  background-color: var(--bs-light);
+  background-color: var(--tc-bs-light);
   padding: 16px 20px;
   display: flex;
   align-items: center;
-  border-bottom: 1px solid var(--bs-border-color);
+  border-bottom: 1px solid var(--tc-bs-border-color);
 }
 
 .cardHeader i {
   margin-right: 10px;
-  color: var(--bs-primary);
+  color: var(--tc-bs-primary);
   font-size: 1.2rem;
 }
 
@@ -44,7 +44,7 @@
   font-weight: 500;
   margin-bottom: 0.5rem;
   display: block;
-  color: var(--bs-gray-700);
+  color: var(--tc-bs-gray-700);
 }
 
 .programmateurSearchContainer {
@@ -64,7 +64,7 @@
 }
 
 .programmateurItem:hover {
-  background-color: var(--bs-light);
+  background-color: var(--tc-bs-light);
 }
 
 .programmateurName {
@@ -74,7 +74,7 @@
 
 .programmateurDetails {
   font-size: 0.85em;
-  color: var(--bs-gray-600);
+  color: var(--tc-bs-gray-600);
   display: flex;
   gap: 10px;
 }
@@ -82,7 +82,7 @@
 .programmateurStructure:before {
   content: "|";
   margin-right: 10px;
-  color: var(--bs-gray-400);
+  color: var(--tc-bs-gray-400);
 }
 
 .selectedProgrammateur {
@@ -94,9 +94,9 @@
   justify-content: space-between;
   align-items: start;
   padding: 15px;
-  border: 1px solid var(--bs-border-color);
+  border: 1px solid var(--tc-bs-border-color);
   border-radius: 8px;
-  background-color: var(--bs-light);
+  background-color: var(--tc-bs-light);
 }
 
 .programmateurInfo {
@@ -114,7 +114,7 @@
 
 .programmateurContactItem {
   font-size: 0.9em;
-  color: var(--bs-gray-700);
+  color: var(--tc-bs-gray-700);
 }
 
 .programmateurDisplay {
@@ -131,7 +131,7 @@
 .infoLabel {
   width: 120px;
   font-weight: 500;
-  color: var(--bs-gray-600);
+  color: var(--tc-bs-gray-600);
   display: flex;
   align-items: center;
   gap: 6px;
@@ -148,7 +148,7 @@
 
 .programmateurLink {
   text-decoration: none;
-  color: var(--bs-primary);
+  color: var(--tc-bs-primary);
   position: relative;
 }
 
@@ -158,16 +158,16 @@
 
 .contactLink {
   text-decoration: none;
-  color: var(--bs-primary);
+  color: var(--tc-bs-primary);
   transition: color 0.2s;
 }
 
 .contactLink:hover {
-  color: var(--bs-primary-hover);
+  color: var(--tc-bs-primary-hover);
   text-decoration: underline;
 }
 
 .textEmpty {
-  color: var(--bs-gray-500);
+  color: var(--tc-bs-gray-500);
   font-style: italic;
 }

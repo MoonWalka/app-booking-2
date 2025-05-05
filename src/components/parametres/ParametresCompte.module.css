@@ -1,14 +1,18 @@
-/* Styles pour le composant ParametresCompte */
+/*
+ * Styles pour le composant ParametresCompte
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 5 mai 2025
+ */
 
 .formSection {
-  margin-bottom: 20px;
+  margin-bottom: var(--tc-spacing-5);
 }
 
 .formActions {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 25px;
+  margin-top: var(--tc-spacing-5-5);
 }
 
 .passwordField {
@@ -16,18 +20,45 @@
 }
 
 .passwordHint {
-  margin-top: 5px;
-  font-size: 0.875rem;
+  margin-top: var(--tc-spacing-1-5);
+  font-size: var(--tc-font-size-sm);
 }
 
 .successAlert {
-  margin-bottom: 20px;
+  margin-bottom: var(--tc-spacing-5);
 }
 
 .errorAlert {
-  margin-bottom: 20px;
+  margin-bottom: var(--tc-spacing-5);
 }
 
 .formTitle {
-  margin-bottom: 20px;
+  margin-bottom: var(--tc-spacing-5);
+}
+
+/* Styles responsive standardisés */
+@media (max-width: 768px) {
+  .formSection {
+    margin-bottom: var(--tc-spacing-4);
+  }
+  
+  .formActions {
+    margin-top: var(--tc-spacing-4);
+  }
+  
+  .formTitle {
+    margin-bottom: var(--tc-spacing-4);
+  }
+  
+  .successAlert,
+  .errorAlert {
+    margin-bottom: var(--tc-spacing-4);
+  }
+}
+
+@media (max-width: 576px) {
+  .formActions {
+    flex-direction: column;
+    gap: var(--tc-spacing-3);
+  }
 }

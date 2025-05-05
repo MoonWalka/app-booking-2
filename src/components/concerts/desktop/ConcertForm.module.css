@@ -20,7 +20,7 @@
 .modernTitle {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--tc-primary-color, #007bff);
+  color: var(--tc-tc-primary-color, #007bff);
   margin-bottom: 0.5rem;
 }
 
@@ -34,7 +34,7 @@
 
 /* Élément du fil d'Ariane */
 .breadcrumbItem {
-  color: var(--tc-text-color, #333);
+  color: var(--tc-tc-text-color, #333);
   cursor: pointer;
 }
 
@@ -43,7 +43,7 @@
 }
 
 .breadcrumbItem.active {
-  color: var(--tc-text-secondary, #6c757d);
+  color: var(--tc-tc-text-secondary, #6c757d);
   cursor: default;
 }
 
@@ -98,7 +98,7 @@
 
 .cardHeader i {
   margin-right: 0.5rem;
-  color: var(--tc-primary-color, #007bff);
+  color: var(--tc-tc-primary-color, #007bff);
 }
 
 .cardHeader h3 {

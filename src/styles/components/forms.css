@@ -12,7 +12,7 @@
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
-  color: var(--tc-label-color);
+  color: var(--tc-tc-label-color);
 }
 
 /* // Modifié par Copilot : ajout de .tc-form-label */
@@ -20,7 +20,7 @@
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
-  color: var(--tc-label-color);
+  color: var(--tc-tc-label-color);
 }
 
 .form-control {
@@ -29,12 +29,12 @@
   padding: 0.5rem 0.75rem;
   font-size: 1rem;
   line-height: 1.5;
-  color: var(--tc-text-color);
-  background-color: var(--tc-input-bg);
+  color: var(--tc-tc-text-color);
+  background-color: var(--tc-tc-input-bg);
   background-clip: padding-box;
-  border: 1px solid var(--tc-input-border-color);
-  border-radius: var(--tc-border-radius);
-  transition: var(--tc-transition);
+  border: 1px solid var(--tc-tc-input-border-color);
+  border-radius: var(--tc-tc-border-radius);
+  transition: var(--tc-tc-transition);
 }
 
 /* // Modifié par Copilot : ajout de .tc-form-control */
@@ -44,35 +44,35 @@
   padding: 0.5rem 0.75rem;
   font-size: 1rem;
   line-height: 1.5;
-  color: var(--tc-text-color);
-  background-color: var(--tc-input-bg);
+  color: var(--tc-tc-text-color);
+  background-color: var(--tc-tc-input-bg);
   background-clip: padding-box;
-  border: 1px solid var(--tc-input-border-color);
-  border-radius: var(--tc-border-radius);
-  transition: var(--tc-transition);
+  border: 1px solid var(--tc-tc-input-border-color);
+  border-radius: var(--tc-tc-border-radius);
+  transition: var(--tc-tc-transition);
 }
 
 .form-control:focus {
-  border-color: var(--tc-input-focus-border-color);
+  border-color: var(--tc-tc-input-focus-border-color);
   outline: 0;
-  box-shadow: var(--tc-input-focus-shadow);
+  box-shadow: var(--tc-tc-input-focus-shadow);
 }
 
 /* // Modifié par Copilot : ajout de .tc-form-control:focus */
 .tc-form-control:focus {
-  border-color: var(--tc-input-focus-border-color);
+  border-color: var(--tc-tc-input-focus-border-color);
   outline: 0;
-  box-shadow: var(--tc-input-focus-shadow);
+  box-shadow: var(--tc-tc-input-focus-shadow);
 }
 
 .form-control::placeholder {
-  color: var(--tc-input-placeholder-color);
+  color: var(--tc-tc-input-placeholder-color);
   opacity: 1;
 }
 
 /* // Modifié par Copilot : ajout de .tc-form-control::placeholder */
 .tc-form-control::placeholder {
-  color: var(--tc-input-placeholder-color);
+  color: var(--tc-tc-input-placeholder-color);
   opacity: 1;
 }
 
@@ -80,7 +80,7 @@
   display: block;
   margin-top: 0.25rem;
   font-size: 0.875rem;
-  color: var(--tc-text-muted);
+  color: var(--tc-tc-text-muted);
 }
 
 /* // Modifié par Copilot : ajout de .tc-form-text */
@@ -88,17 +88,17 @@
   display: block;
   margin-top: 0.25rem;
   font-size: 0.875rem;
-  color: var(--tc-text-muted);
+  color: var(--tc-tc-text-muted);
 }
 
 /* Styles pour champs avec erreurs */
 .is-invalid {
-  border-color: var(--tc-danger-color) !important;
+  border-color: var(--tc-tc-danger-color) !important;
 }
 
 /* // Modifié par Copilot : ajout de .tc-is-invalid */
 .tc-is-invalid {
-  border-color: var(--tc-danger-color) !important;
+  border-color: var(--tc-tc-danger-color) !important;
 }
 
 .invalid-feedback {
@@ -106,7 +106,7 @@
   width: 100%;
   margin-top: 0.25rem;
   font-size: 0.875rem;
-  color: var(--tc-danger-color);
+  color: var(--tc-tc-danger-color);
 }
 
 /* // Modifié par Copilot : ajout de .tc-invalid-feedback */
@@ -115,12 +115,12 @@
   width: 100%;
   margin-top: 0.25rem;
   font-size: 0.875rem;
-  color: var(--tc-danger-color);
+  color: var(--tc-tc-danger-color);
 }
 
 /* Style pour indicateur de champ requis */
 .tc-required {
-  color: var(--tc-danger-color);
+  color: var(--tc-tc-danger-color);
   margin-left: 0.125rem;
 }
 
@@ -167,11 +167,11 @@ select.tc-form-control {
   height: 1rem;
   margin-top: 0.25rem;
   vertical-align: top;
-  background-color: var(--tc-input-bg);
+  background-color: var(--tc-tc-input-bg);
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
-  border: 1px solid var(--tc-input-border-color);
+  border: 1px solid var(--tc-tc-input-border-color);
   appearance: none;
 }
 
@@ -183,11 +183,11 @@ select.tc-form-control {
   height: 1rem;
   margin-top: 0.25rem;
   vertical-align: top;
-  background-color: var(--tc-input-bg);
+  background-color: var(--tc-tc-input-bg);
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
-  border: 1px solid var(--tc-input-border-color);
+  border: 1px solid var(--tc-tc-input-border-color);
   appearance: none;
 }
 
@@ -210,14 +210,14 @@ select.tc-form-control {
 }
 
 .form-check-input:checked {
-  background-color: var(--tc-primary-color);
-  border-color: var(--tc-primary-color);
+  background-color: var(--tc-tc-primary-color);
+  border-color: var(--tc-tc-primary-color);
 }
 
 /* // Modifié par Copilot : ajout de .tc-form-check-input:checked */
 .tc-form-check-input:checked {
-  background-color: var(--tc-primary-color);
-  border-color: var(--tc-primary-color);
+  background-color: var(--tc-tc-primary-color);
+  border-color: var(--tc-tc-primary-color);
 }
 
 .form-check-input:checked[type="checkbox"] {
@@ -240,13 +240,13 @@ select.tc-form-control {
 
 .form-check-label {
   margin-bottom: 0;
-  color: var(--tc-text-color);
+  color: var(--tc-tc-text-color);
 }
 
 /* // Modifié par Copilot : ajout de .tc-form-check-label */
 .tc-form-check-label {
   margin-bottom: 0;
-  color: var(--tc-text-color);
+  color: var(--tc-tc-text-color);
 }
 
 /* Styles pour les textarea */

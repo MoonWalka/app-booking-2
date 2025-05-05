@@ -250,3 +250,99 @@ Une refactorisation plus complète sera nécessaire pour réintégrer cette fonc
 ### Date de mise à jour prévue
 
 Cette fonctionnalité sera reimplémentée après la consolidation de l'architecture des hooks et la résolution des problèmes d'indexation dans Firestore, prévue pour Juin 2025.
+
+## Migration vers useGenericEntityForm (Mai 2025)
+
+Dans le cadre de la standardisation des hooks, un effort particulier est en cours pour migrer les différents hooks de formulaire vers l'implémentation générique `useGenericEntityForm`. Cette migration vise à améliorer la maintenabilité du code et à réduire la duplication.
+
+### Hooks concernés par la migration
+
+| Hook | État | Responsable | Date cible | Notes |
+|------|------|------------|-----------|-------|
+| `useConcertForm` | ✅ Terminé | Alice | 30/04/2025 | Implémentation de référence, sert de modèle pour les autres migrations |
+| `useLieuForm` | ✅ Terminé | Copilot | 05/05/2025 | Hook entièrement migré pour utiliser useGenericEntityForm |
+| `useProgrammateurForm` | ✅ Terminé | Copilot | 05/05/2025 | Implémenté à partir de zéro en utilisant directement useGenericEntityForm |
+| `useStructureForm` | ✅ Terminé | Copilot | 05/05/2025 | Migré avec validation améliorée pour les champs spécifiques aux structures |
+| `useEntrepriseForm` | ✅ Terminé | Copilot | 05/05/2025 | Adaptation spéciale pour utiliser le contexte ParametresContext au lieu de Firebase directement |
+
+### Approche de migration
+
+Pour chaque hook à migrer, la méthode suivante est utilisée :
+
+1. **Analyse du hook existant** :
+   - Identifier les données initiales et leur structure
+   - Documenter les fonctions de validation spécifiques
+   - Identifier les transformations de données nécessaires
+   - Lister les entités liées gérées par le hook
+
+2. **Création de la version basée sur useGenericEntityForm** :
+   - Configurer les paramètres pour useGenericEntityForm
+   - Implémenter les fonctions de validation et transformation spécifiques
+   - Configurer correctement les entités liées
+
+3. **Maintien de la compatibilité** :
+   - S'assurer que l'API externe du hook reste identique
+   - Ajouter des mappings si nécessaire pour garantir la rétrocompatibilité
+   - Documenter les nouveaux paramètres/retours disponibles
+
+4. **Tests et validation** :
+   - Tester le hook dans tous les composants qui l'utilisent
+   - Vérifier que toutes les fonctionnalités sont préservées
+
+### Modèle de référence
+
+Le hook `useConcertForm` sert de modèle de référence pour les autres migrations. Les principales caractéristiques de son implémentation sont :
+
+```javascript
+// Configuration des entités liées
+const relatedEntities = [
+  { name: 'lieu', collection: 'lieux', idField: 'lieuId', nameField: 'lieuNom' },
+  // autres entités...
+];
+
+// Validation spécifique aux concerts
+const validateConcertForm = (data) => {
+  // Logique de validation spécifique
+  return { isValid, errors };
+};
+
+// Transformation des données avant sauvegarde
+const transformConcertData = (data) => {
+  // Logique de transformation spécifique
+  return transformedData;
+};
+
+// Utilisation du hook générique
+const genericFormHook = useGenericEntityForm({
+  entityType: 'concerts',
+  entityId: concertId,
+  initialData,
+  collectionName: 'concerts',
+  validateForm: validateConcertForm,
+  transformData: transformConcertData,
+  onSuccess: onConcertSaveSuccess,
+  relatedEntities
+});
+
+// Maintien de l'API compatible
+return {
+  ...genericFormHook,
+  // Propriétés spécifiques pour maintenir la compatibilité
+  selectedLieu: genericFormHook.relatedData.lieu || null,
+  // autres propriétés spécifiques...
+};
+```
+
+### Suivi de l'avancement
+
+Cette section sera mise à jour au fur et à mesure de l'avancement de la migration. Un rapport sera fait après chaque migration réussie pour documenter les difficultés rencontrées et les solutions apportées.
+
+## Futurs Hooks Génériques (Mai-Juin 2025)
+
+Suite au succès de la migration des hooks de formulaire vers `useGenericEntityForm`, un plan de migration plus large a été établi pour standardiser d'autres types de hooks fréquemment utilisés dans l'application. Ce plan, détaillé dans le document [PLAN_MIGRATION_HOOKS_GENERIQUES.md](/docs/hooks/PLAN_MIGRATION_HOOKS_GENERIQUES.md), prévoit l'implémentation progressive de trois nouveaux hooks génériques :
+
+1. **useGenericEntitySearch** - Pour standardiser la recherche d'entités (remplacement de useLieuSearch, useProgrammateurSearch, etc.)
+2. **useGenericEntityList** - Pour standardiser la gestion des listes d'entités (remplacement de useLieuxFilters, useConcertFilters, etc.)
+3. **useGenericEntityDetails** - Pour standardiser la gestion des détails d'entités (remplacement de useLieuDetails, useProgrammateurDetails, etc.)
+
+Ce processus de standardisation s'échelonnera de mai à juin 2025 et permettra de réduire considérablement la duplication de code tout en améliorant la maintenabilité et la cohérence de l'application.

@@ -1,17 +1,30 @@
-import { useState, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { doc, getDoc, setDoc, serverTimestamp, collection } from 'firebase/firestore';
-import { db } from '@/firebaseInit';
+import { useGenericEntityForm } from '@/hooks/common/useGenericEntityForm';
 
 /**
- * Hook to manage the venue form state and operations
+ * Hook pour la gestion des formulaires de lieux
+ * Version migrée basée sur useGenericEntityForm
+ * 
+ * @param {string} lieuId - ID du lieu ou 'nouveau' pour un nouveau lieu
+ * @returns {Object} États et fonctions pour gérer le formulaire de lieu
  */
-export const useLieuForm = () => {
+const useLieuForm = (lieuId) => {
   const { id } = useParams();
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [lieu, setLieu] = useState({
+  const actualLieuId = lieuId || id;
+  
+  // Configuration des entités liées à un lieu
+  const relatedEntities = [
+    { 
+      name: 'programmateur',
+      collection: 'programmateurs',
+      idField: 'programmateurId',
+      nameField: 'programmateurNom'
+    }
+  ];
+
+  // Données initiales du formulaire
+  const initialData = {
     nom: '',
     adresse: '',
     codePostal: '',
@@ -29,108 +42,84 @@ export const useLieuForm = () => {
     latitude: null,
     longitude: null,
     display_name: ''
-  });
+  };
 
-  // Load lieu data if editing an existing lieu
-  useEffect(() => {
-    const fetchLieu = async () => {
-      if (id && id !== 'nouveau') {
-        setLoading(true);
-        setError(null);
-        try {
-          const lieuDoc = await getDoc(doc(db, 'lieux', id));
-          if (lieuDoc.exists()) {
-            const lieuData = lieuDoc.data();
-            
-            // Ensure contact property always exists
-            const lieuWithDefaults = {
-              ...lieuData,
-              contact: lieuData.contact || {
-                nom: '',
-                telephone: '',
-                email: ''
-              }
-            };
-            
-            setLieu(lieuWithDefaults);
-          } else {
-            console.error('Lieu non trouvé');
-            navigate('/lieux');
-          }
-        } catch (err) {
-          console.error('Erreur lors de la récupération du lieu:', err);
-          setError('Une erreur est survenue lors du chargement des données. Veuillez réessayer.');
-        } finally {
-          setLoading(false);
-        }
+  // Fonction de validation spécifique aux lieux
+  const validateLieuForm = (data) => {
+    const errors = {};
+    
+    if (!data.nom) {
+      errors.nom = 'Le nom du lieu est obligatoire';
+    }
+    
+    if (!data.adresse) {
+      errors.adresse = 'L\'adresse du lieu est obligatoire';
+    }
+    
+    if (!data.codePostal) {
+      errors.codePostal = 'Le code postal est obligatoire';
+    }
+    
+    if (!data.ville) {
+      errors.ville = 'La ville est obligatoire';
+    }
+    
+    return {
+      isValid: Object.keys(errors).length === 0,
+      errors
+    };
+  };
+
+  // Transformation des données avant sauvegarde
+  const transformLieuData = (data) => {
+    // Assurez-vous que contact existe toujours
+    const transformedData = {
+      ...data,
+      contact: data.contact || {
+        nom: '',
+        telephone: '',
+        email: ''
       }
     };
-
-    fetchLieu();
-  }, [id, navigate]);
-
-  // Handle form field changes
-  const handleChange = (e) => {
-    const { name, value } = e.target;
     
-    if (name.includes('.')) {
-      const [parent, child] = name.split('.');
-      setLieu(prev => ({
-        ...prev,
-        [parent]: {
-          ...(prev[parent] || {}),
-          [child]: value
-        }
-      }));
-    } else {
-      setLieu(prev => ({
-        ...prev,
-        [name]: value
-      }));
-    }
+    return transformedData;
   };
 
-  // Form validation
-  const validateForm = () => {
-    return lieu.nom && lieu.adresse && lieu.codePostal && lieu.ville && lieu.pays;
+  // Callback après sauvegarde réussie
+  const onLieuSaveSuccess = (savedId, savedData) => {
+    console.log(`Lieu ${savedId} enregistré avec succès`, savedData);
+    // Logique supplémentaire si nécessaire...
   };
 
-  // Form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validateForm()) {
-      alert('Veuillez remplir tous les champs obligatoires');
-      return;
-    }
+  // Utiliser le hook générique avec la configuration spécifique aux lieux
+  const genericFormHook = useGenericEntityForm({
+    entityType: 'lieux',
+    entityId: actualLieuId,
+    initialData,
+    collectionName: 'lieux',
+    validateForm: validateLieuForm,
+    transformData: transformLieuData,
+    onSuccess: onLieuSaveSuccess,
+    relatedEntities
+  });
 
-    setLoading(true);
-    try {
-      const lieuId = id && id !== 'nouveau' ? id : doc(collection(db, 'lieux')).id;
-      const lieuData = {
-        ...lieu,
-        updatedAt: serverTimestamp(),
-        ...(id === 'nouveau' && { createdAt: serverTimestamp() })
-      };
+  // Pour faciliter l'accès au programmateur lié spécifique aux lieux
+  const selectedProgrammateur = genericFormHook.relatedData.programmateur || null;
 
-      await setDoc(doc(db, 'lieux', lieuId), lieuData, { merge: true });
-      navigate('/lieux');
-    } catch (error) {
-      console.error('Erreur lors de l\'enregistrement du lieu:', error);
-      alert('Une erreur est survenue lors de l\'enregistrement du lieu');
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Fonction spécifique pour sélectionner/désélectionner le programmateur
+  const handleSelectProgrammateur = useCallback((programmateur) => {
+    genericFormHook.handleSelectRelatedEntity('programmateur', programmateur);
+  }, [genericFormHook.handleSelectRelatedEntity]);
 
   return {
-    id,
-    lieu,
-    setLieu,
-    loading,
-    error,
-    handleChange,
-    validateForm,
-    handleSubmit
+    ...genericFormHook,
+    // Ajouter les propriétés spécifiques aux lieux pour maintenir la compatibilité avec le code existant
+    lieu: genericFormHook.formData,
+    setLieu: genericFormHook.setFormData,
+    selectedProgrammateur,
+    handleSelectProgrammateur,
+    // Pour compatibilité avec l'ancien code qui utilise validateForm comme fonction
+    validateForm: () => validateLieuForm(genericFormHook.formData).isValid
   };
 };
 

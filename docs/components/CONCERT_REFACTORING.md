@@ -166,6 +166,45 @@ Cette standardisation permet :
 - Des imports plus propres : `import { useLieuDetails } from '@/hooks/lieux'`
 - Une maintenance facilitée pour l'évolution future des hooks
 
+## Problèmes résolus récemment (Mai 2025)
+
+### Correction de la recherche d'artistes dans ConcertForm
+
+Un problème a été identifié dans la fonctionnalité de recherche d'artistes lors de la création d'un nouveau concert :
+
+1. **Problème de recherche d'artistes** :
+   - Le dropdown des résultats de recherche ne s'affichait pas correctement
+   - Seuls les artistes récemment créés étaient trouvés, mais pas les artistes plus anciens
+
+2. **Incompatibilité entre `ConcertForm` et `useConcertForm`** :
+   - Le hook `useConcertForm` n'exposait pas correctement toutes les fonctions nécessaires suite à son passage à `useGenericEntityForm`
+   - Les fonctions de gestion des entités liées n'étaient pas complètes
+
+### Modifications apportées
+
+#### 1. Améliorations au hook useEntitySearch.js
+- Modification de la fonction `searchArtistes` pour garantir que les résultats s'affichent toujours
+- Amélioration de l'effet de recherche pour afficher immédiatement le dropdown avec l'indicateur de chargement
+- Meilleure gestion de l'état d'affichage du dropdown des résultats
+
+#### 2. Mise à jour du composant ArtisteSearchSection.js
+- Ajout d'une fonction `onFocus` pour déclencher une recherche lorsque l'utilisateur clique dans le champ
+- Cette fonction force une nouvelle recherche si le terme a déjà au moins 2 caractères
+
+#### 3. Support de onFocus dans le composant SearchDropdown.js
+- Ajout du support de la propriété `onFocus` pour permettre de déclencher une recherche au clic
+
+#### 4. Correction de l'incompatibilité avec useGenericEntityForm
+- Ajout de fonctions pour désélectionner les entités liées (`handleRemoveLieu`, `handleRemoveProgrammateur`, `handleRemoveArtiste`)
+- Création de wrappers pour les setters préservant la compatibilité API
+- Exposition correcte de toutes les fonctions nécessaires
+
+### Limitation connue
+Pour la recherche d'artistes, le système permet actuellement de trouver les artistes nouvellement créés mais pas systématiquement les artistes plus anciens. Cette limitation est acceptée temporairement pendant la phase de développement et fera l'objet d'une correction ultérieure.
+
+### Documentation
+Les modifications apportées et les limitations connues ont été documentées en détail dans le fichier `/docs/hooks/CONCERT_HOOKS.md`.
+
 ## Prochaines étapes
 
 Cette refactorisation peut être étendue à d'autres composants de l'application qui pourraient bénéficier de la même séparation vue/édition :
@@ -178,3 +217,5 @@ Il pourrait également être judicieux de :
 1. **Standardiser la localisation des autres hooks** : Continuer le travail entamé avec `useLieuDetails` en s'assurant que tous les hooks spécifiques aux entités sont dans le dossier approprié `/hooks/[entité]`
 2. **Compléter les versions mobiles** : Finaliser les versions mobiles qui sont actuellement minimalistes (comme pour Programmateur)
 3. **Ajouter des tests unitaires** : Couvrir les nouveaux composants avec des tests automatisés
+4. **Résoudre la limitation de recherche d'artistes** : Investiguer pourquoi les artistes plus anciens ne sont pas correctement indexés ou retrouvés dans la recherche de Firestore
+5. **Optimiser les autres formulaires de recherche** : Appliquer les mêmes améliorations aux recherches de lieux et de programmateurs si nécessaire

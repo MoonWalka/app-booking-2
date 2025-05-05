@@ -16,37 +16,37 @@
 
 /* // Correction UI: Amélioration du contraste et standardisation des statuts */
 .status-option {
-  background-color: var(--tc-warning-color, #ffc107);
+  background-color: var(--tc-tc-warning-color, #ffc107);
   color: #212529; /* // Correction UI: Couleur plus foncée pour meilleur contraste */
   font-weight: 600;
 }
 
 .status-confirmed {
-  background-color: var(--tc-success-color, #28a745);
+  background-color: var(--tc-tc-success-color, #28a745);
   color: white;
   font-weight: 600;
 }
 
 .status-cancelled {
-  background-color: var(--tc-danger-color, #dc3545);
+  background-color: var(--tc-tc-danger-color, #dc3545);
   color: white;
   font-weight: 600;
 }
 
 .status-pending {
-  background-color: var(--tc-info-color, #17a2b8);
+  background-color: var(--tc-tc-info-color, #17a2b8);
   color: white;
   font-weight: 600;
 }
 
 .status-draft {
-  background-color: var(--tc-secondary-color, #6c757d);
+  background-color: var(--tc-tc-secondary-color, #6c757d);
   color: white;
   font-weight: 600;
 }
 
 .status-declined {
-  background-color: var(--tc-danger-color, #dc3545);
+  background-color: var(--tc-tc-danger-color, #dc3545);
   color: white;
   font-weight: 600;
 }
@@ -63,7 +63,7 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background-color: var(--tc-danger-color, #dc3545);
+  background-color: var(--tc-tc-danger-color, #dc3545);
   position: absolute;
   top: 0;
   right: 0;
@@ -85,26 +85,26 @@
 
 /* // Correction UI: Standardisation des badges principaux et secondaires */
 .badge-primary {
-  background-color: var(--tc-primary-color, #007bff);
-  color: var(--tc-text-light, white);
+  background-color: var(--tc-tc-primary-color, #007bff);
+  color: var(--tc-tc-text-light, white);
 }
 
 .badge-secondary {
-  background-color: var(--tc-secondary-color, #6c757d);
-  color: var(--tc-text-light, white);
+  background-color: var(--tc-tc-secondary-color, #6c757d);
+  color: var(--tc-tc-text-light, white);
 }
 
 /* // Correction UI: Amélioration du contraste pour les badges avec contour */
 .badge-outline-primary {
   background-color: transparent;
-  color: var(--tc-primary-color, #007bff);
-  border: 1px solid var(--tc-primary-color, #007bff);
+  color: var(--tc-tc-primary-color, #007bff);
+  border: 1px solid var(--tc-tc-primary-color, #007bff);
 }
 
 .badge-outline-secondary {
   background-color: transparent;
-  color: var(--tc-secondary-color, #6c757d);
-  border: 1px solid var(--tc-secondary-color, #6c757d);
+  color: var(--tc-tc-secondary-color, #6c757d);
+  border: 1px solid var(--tc-tc-secondary-color, #6c757d);
 }
 
 /* // Correction UI: Amélioration des états interactifs pour meilleure expérience utilisateur */
@@ -114,13 +114,13 @@
 }
 
 .badge-interactive.badge-primary:hover {
-  background-color: var(--tc-primary-dark, #0069d9);
+  background-color: var(--tc-tc-primary-dark, #0069d9);
   transform: translateY(-1px);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .badge-interactive.badge-secondary:hover {
-  background-color: var(--tc-secondary-dark, #5a6268);
+  background-color: var(--tc-tc-secondary-dark, #5a6268);
   transform: translateY(-1px);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
@@ -144,7 +144,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background-color: var(--tc-badge-bg, #007bff);
+  background-color: var(--tc-tc-badge-bg, #007bff);
   color: white;
   width: 20px;
   height: 20px;
@@ -208,26 +208,26 @@
 
 /* Statuts personnalisés pour les concerts */
 .status-contrat {
-  background-color: var(--tc-primary-dark, #2c3e50);
-  color: var(--tc-text-light, #ffffff);
+  background-color: var(--tc-tc-primary-dark, #2c3e50);
+  color: var(--tc-tc-text-light, #ffffff);
 }
 
 .status-preaccord {
-  background-color: var(--tc-warning-color, #f0ad4e);
+  background-color: var(--tc-tc-warning-color, #f0ad4e);
   color: #212529;
 }
 
 .status-acompte {
-  background-color: var(--tc-info-color, #17a2b8);
+  background-color: var(--tc-tc-info-color, #17a2b8);
   color: #fff;
 }
 
 .status-solde {
-  background-color: var(--tc-success-color, #28a745);
+  background-color: var(--tc-tc-success-color, #28a745);
   color: #fff;
 }
 
 .status-contact {
-  background-color: var(--tc-secondary-color, #6c757d);
+  background-color: var(--tc-tc-secondary-color, #6c757d);
   color: #fff;
 }

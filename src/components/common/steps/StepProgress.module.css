@@ -1,13 +1,17 @@
-/* src/components/common/steps/StepProgress.module.css */
+/*
+ * Styles pour StepProgress
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 5 mai 2025
+ */
 
 .stepProgress {
-  margin-bottom: 2rem;
+  margin-bottom: var(--tc-spacing-5);
 }
 
 .stepProgressDots {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--tc-spacing-1-5);
   position: relative;
 }
 
@@ -15,36 +19,36 @@
   width: 2.25rem;
   height: 2.25rem;
   border-radius: 50%;
-  background-color: var(--tc-bg-light, #f8f9fa);
-  border: 1px solid var(--tc-border-color, #dee2e6);
+  background-color: var(--tc-bg-light);
+  border: 1px solid var(--tc-border-light);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 600;
-  font-size: 0.9rem;
-  color: var(--tc-text-muted, #6c757d);
+  font-weight: var(--tc-font-weight-semibold);
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-color-text-muted);
   z-index: 2;
-  transition: all 0.3s ease;
+  transition: all var(--tc-transition-speed) ease;
   position: relative;
 }
 
 .stepDot.active {
-  background-color: var(--tc-primary-color, #0d6efd);
-  color: white;
-  border-color: var(--tc-primary-color, #0d6efd);
+  background-color: var(--tc-color-primary);
+  color: var(--tc-color-white);
+  border-color: var(--tc-color-primary);
 }
 
 .stepDot.completed {
-  background-color: var(--tc-success-color, #198754);
-  color: white;
-  border-color: var(--tc-success-color, #198754);
+  background-color: var(--tc-color-success);
+  color: var(--tc-color-white);
+  border-color: var(--tc-color-success);
 }
 
 .stepProgressBar {
   height: 6px;
-  background-color: var(--tc-bg-light, #f8f9fa);
+  background-color: var(--tc-bg-light);
   border-radius: 3px;
-  margin: 0 1.25rem;
+  margin: 0 var(--tc-spacing-3-5);
   position: relative;
   top: -1.3rem;
   z-index: 1;
@@ -52,9 +56,9 @@
 
 .stepProgressFill {
   height: 100%;
-  background-color: var(--tc-success-color, #198754);
+  background-color: var(--tc-color-success);
   border-radius: 3px;
-  transition: width 0.3s ease;
+  transition: width var(--tc-transition-speed) ease;
 }
 
 .stepLabel {
@@ -62,18 +66,19 @@
   top: 100%;
   left: 50%;
   transform: translateX(-50%);
-  margin-top: 0.5rem;
+  margin-top: var(--tc-spacing-1-5);
   white-space: nowrap;
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: var(--tc-text-muted, #6c757d);
+  font-size: var(--tc-font-size-xs);
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-color-text-muted);
 }
 
+/* Styles responsive standardisés */
 @media (max-width: 768px) {
   .stepDot {
     width: 1.75rem;
     height: 1.75rem;
-    font-size: 0.8rem;
+    font-size: var(--tc-font-size-xs);
   }
   
   .stepProgressBar {
@@ -81,7 +86,24 @@
   }
   
   .stepLabel {
-    font-size: 0.7rem;
-    margin-top: 0.35rem;
+    font-size: var(--tc-font-size-xxs);
+    margin-top: var(--tc-spacing-1);
+  }
+}
+
+@media (max-width: 576px) {
+  .stepProgress {
+    margin-bottom: var(--tc-spacing-4);
+  }
+  
+  .stepDot {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  
+  .stepProgressBar {
+    height: 4px;
+    top: -0.9rem;
+    margin: 0 var(--tc-spacing-2-5);
   }
 }

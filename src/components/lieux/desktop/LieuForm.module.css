@@ -1,32 +1,33 @@
+/* LieuForm.module.css - Standardisé */
 .lieuFormContainer {
-  margin: 20px;
+  margin: var(--tc-spacing-md, 20px);
   max-width: 1200px;
 }
 
 .modernForm {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--tc-spacing-md, 20px);
 }
 
 .formHeaderContainer {
-  margin-bottom: 20px;
+  margin-bottom: var(--tc-spacing-md, 20px);
   display: flex;
   flex-direction: column;
 }
 
 .modernTitle {
-  font-size: 1.75rem;
-  font-weight: 600;
-  margin-bottom: 10px;
-  color: #333;
+  font-size: var(--tc-font-size-xl, 1.75rem);
+  font-weight: var(--tc-font-weight-semibold, 600);
+  margin-bottom: var(--tc-spacing-sm, 10px);
+  color: var(--tc-text-color-primary, #333);
 }
 
 .breadcrumbContainer {
   display: flex;
   align-items: center;
-  font-size: 0.9rem;
-  color: #6c757d;
+  font-size: var(--tc-font-size-sm, 0.9rem);
+  color: var(--tc-text-color-secondary, #6c757d);
 }
 
 .breadcrumbItem {
@@ -34,12 +35,12 @@
 }
 
 .breadcrumbItem:hover {
-  color: #0d6efd;
+  color: var(--tc-primary-color, #0d6efd);
 }
 
 .breadcrumbItem.active {
-  color: #0d6efd;
-  font-weight: 500;
+  color: var(--tc-primary-color, #0d6efd);
+  font-weight: var(--tc-font-weight-medium, 500);
 }
 
 /* Styles pour les sections de formulaire décomposées */
@@ -47,9 +48,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
-  border-bottom: 1px solid #e5e5e5;
-  padding-bottom: 1rem;
+  margin-bottom: var(--tc-spacing-lg, 1.5rem);
+  border-bottom: var(--tc-border-width, 1px) solid var(--tc-border-color-light, #e5e5e5);
+  padding-bottom: var(--tc-spacing-md, 1rem);
 }
 
 .headerTitleContainer {
@@ -58,27 +59,27 @@
 }
 
 .formTitle {
-  font-size: 1.75rem;
-  font-weight: 600;
+  font-size: var(--tc-font-size-xl, 1.75rem);
+  font-weight: var(--tc-font-weight-semibold, 600);
   margin-bottom: 0;
-  color: var(--text-color-primary, #333);
+  color: var(--tc-text-color-primary, #333);
 }
 
 .formSection {
-  background-color: var(--bg-card, white);
-  border-radius: 8px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-  margin-bottom: 1.5rem;
+  background-color: var(--tc-bg-card, var(--tc-color-white, white));
+  border-radius: var(--tc-border-radius, 8px);
+  padding: var(--tc-spacing-lg, 1.5rem);
+  box-shadow: var(--tc-box-shadow, 0 2px 6px rgba(0, 0, 0, 0.04));
+  margin-bottom: var(--tc-spacing-lg, 1.5rem);
 }
 
 .sectionTitle {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 1.5rem;
-  color: var(--text-color-primary, #333);
+  font-size: var(--tc-font-size-lg, 1.25rem);
+  font-weight: var(--tc-font-weight-semibold, 600);
+  margin-bottom: var(--tc-spacing-lg, 1.5rem);
+  color: var(--tc-text-color-primary, #333);
   position: relative;
-  padding-bottom: 0.5rem;
+  padding-bottom: var(--tc-spacing-sm, 0.5rem);
 }
 
 .sectionTitle::after {
@@ -88,70 +89,70 @@
   left: 0;
   height: 3px;
   width: 50px;
-  background-color: var(--primary-color, #0d6efd);
+  background-color: var(--tc-primary-color, #0d6efd);
   border-radius: 3px;
 }
 
 .formGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.25rem;
+  gap: var(--tc-spacing-md, 1.25rem);
 }
 
 .formGroup {
-  margin-bottom: 1rem;
+  margin-bottom: var(--tc-spacing-md, 1rem);
 }
 
 .formLabel {
   display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-  color: var(--text-color-secondary, #4a5568);
-  font-size: 0.95rem;
+  margin-bottom: var(--tc-spacing-sm, 0.5rem);
+  font-weight: var(--tc-font-weight-medium, 500);
+  color: var(--tc-text-color-secondary, #4a5568);
+  font-size: var(--tc-font-size-sm, 0.95rem);
 }
 
 .formInput {
   width: 100%;
-  padding: 0.75rem 1rem;
-  border: 1px solid var(--border-color, #ced4da);
-  border-radius: 6px;
-  background-color: var(--input-bg, #ffffff);
-  font-size: 1rem;
-  transition: all 0.2s ease;
+  padding: var(--tc-spacing-sm, 0.75rem) var(--tc-spacing-md, 1rem);
+  border: var(--tc-border-width, 1px) solid var(--tc-border-color, #ced4da);
+  border-radius: var(--tc-border-radius, 6px);
+  background-color: var(--tc-input-bg, #ffffff);
+  font-size: var(--tc-font-size-base, 1rem);
+  transition: var(--tc-transition, all 0.2s ease);
 }
 
 .formInput:focus {
-  border-color: var(--primary-color, #0d6efd);
+  border-color: var(--tc-primary-color, #0d6efd);
   outline: 0;
-  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
-  background-color: var(--input-bg-focus, #fff);
+  box-shadow: var(--tc-focus-ring-shadow, 0 0 0 0.25rem rgba(13, 110, 253, 0.15));
+  background-color: var(--tc-input-bg-focus, #fff);
 }
 
 .formInput::placeholder {
-  color: #b9bcc0;
+  color: var(--tc-placeholder-color, #b9bcc0);
 }
 
 .searchContainer {
   position: relative;
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--tc-spacing-lg, 1.5rem);
 }
 
 .searchInput {
   width: 100%;
-  padding: 0.75rem 1rem;
+  padding: var(--tc-spacing-sm, 0.75rem) var(--tc-spacing-md, 1rem);
   padding-right: 2.5rem;
-  border: 1px solid var(--border-color, #ced4da);
-  border-radius: 6px;
-  background-color: var(--input-bg, #ffffff);
-  font-size: 1rem;
-  transition: all 0.2s ease;
+  border: var(--tc-border-width, 1px) solid var(--tc-border-color, #ced4da);
+  border-radius: var(--tc-border-radius, 6px);
+  background-color: var(--tc-input-bg, #ffffff);
+  font-size: var(--tc-font-size-base, 1rem);
+  transition: var(--tc-transition, all 0.2s ease);
 }
 
 .searchInput:focus {
-  border-color: var(--primary-color, #0d6efd);
+  border-color: var(--tc-primary-color, #0d6efd);
   outline: 0;
-  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
-  background-color: var(--input-bg-focus, #fff);
+  box-shadow: var(--tc-focus-ring-shadow, 0 0 0 0.25rem rgba(13, 110, 253, 0.15));
+  background-color: var(--tc-input-bg-focus, #fff);
 }
 
 .spinner {
@@ -161,8 +162,8 @@
   transform: translateY(-50%);
   width: 20px;
   height: 20px;
-  border: 2px solid rgba(0, 0, 0, 0.1);
-  border-top-color: var(--primary-color, #0d6efd);
+  border: 2px solid var(--tc-border-color-light, rgba(0, 0, 0, 0.1));
+  border-top-color: var(--tc-primary-color, #0d6efd);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -180,64 +181,64 @@
   right: 0;
   max-height: 300px;
   overflow-y: auto;
-  border: 1px solid var(--border-color, #ced4da);
+  border: var(--tc-border-width, 1px) solid var(--tc-border-color, #ced4da);
   border-top: none;
-  border-radius: 0 0 6px 6px;
-  background-color: white;
+  border-radius: 0 0 var(--tc-border-radius, 6px) var(--tc-border-radius, 6px);
+  background-color: var(--tc-color-white, white);
   z-index: 10;
   list-style: none;
   padding: 0;
   margin: 0;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--tc-dropdown-shadow, 0 5px 10px rgba(0, 0, 0, 0.1));
 }
 
 .suggestionItem {
-  padding: 0.75rem 1rem;
+  padding: var(--tc-spacing-sm, 0.75rem) var(--tc-spacing-md, 1rem);
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color var(--tc-transition-duration, 0.2s);
   display: flex;
   flex-direction: column;
 }
 
 .suggestionItem:hover {
-  background-color: #f8f9fa;
+  background-color: var(--tc-color-gray-100, #f8f9fa);
 }
 
 .suggestionSubtext {
-  font-size: 0.85rem;
-  color: #6c757d;
-  margin-top: 0.25rem;
+  font-size: var(--tc-font-size-xs, 0.85rem);
+  color: var(--tc-text-color-secondary, #6c757d);
+  margin-top: var(--tc-spacing-xs, 0.25rem);
 }
 
 .geolocationActions {
-  margin: 1.5rem 0;
+  margin: var(--tc-spacing-lg, 1.5rem) 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: var(--tc-spacing-md, 1rem);
 }
 
 .mapContainer {
-  margin-top: 1.5rem;
-  border-radius: 8px;
+  margin-top: var(--tc-spacing-lg, 1.5rem);
+  border-radius: var(--tc-border-radius, 8px);
   overflow: hidden;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--tc-box-shadow, 0 2px 6px rgba(0, 0, 0, 0.08));
 }
 
 .coordinatesDisplay {
   display: flex;
   justify-content: space-between;
-  padding: 0.75rem;
-  background-color: #f8f9fa;
-  border-radius: 0 0 8px 8px;
-  font-size: 0.9rem;
-  color: #495057;
+  padding: var(--tc-spacing-sm, 0.75rem);
+  background-color: var(--tc-color-gray-100, #f8f9fa);
+  border-radius: 0 0 var(--tc-border-radius, 8px) var(--tc-border-radius, 8px);
+  font-size: var(--tc-font-size-sm, 0.9rem);
+  color: var(--tc-text-color-primary, #495057);
 }
 
 .selectedProgrammateur {
-  background-color: #f8f9fa;
-  border-radius: 6px;
-  padding: 1rem;
-  margin-bottom: 1rem;
+  background-color: var(--tc-color-gray-100, #f8f9fa);
+  border-radius: var(--tc-border-radius, 6px);
+  padding: var(--tc-spacing-md, 1rem);
+  margin-bottom: var(--tc-spacing-md, 1rem);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -249,15 +250,61 @@
 
 .selectedProgrammateurInfo h4 {
   margin: 0;
-  font-size: 1.1rem;
-  color: var(--text-color-primary, #333);
+  font-size: var(--tc-font-size-md, 1.1rem);
+  color: var(--tc-text-color-primary, #333);
 }
 
 .formActions {
   display: flex;
   justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid #e5e5e5;
+  gap: var(--tc-spacing-md, 1rem);
+  margin-top: var(--tc-spacing-xl, 2rem);
+  padding-top: var(--tc-spacing-lg, 1.5rem);
+  border-top: var(--tc-border-width, 1px) solid var(--tc-border-color-light, #e5e5e5);
+}
+
+/* Support responsive */
+@media (max-width: 992px) {
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .formHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--tc-spacing-md, 1rem);
+  }
+  
+  .formSection {
+    padding: var(--tc-spacing-md, 1rem);
+  }
+  
+  .formActions {
+    flex-direction: column;
+    gap: var(--tc-spacing-sm, 0.75rem);
+  }
+  
+  .formActions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .lieuFormContainer {
+    margin: var(--tc-spacing-sm, 10px);
+  }
+  
+  .modernTitle {
+    font-size: var(--tc-font-size-lg, 1.5rem);
+  }
+  
+  .geolocationActions {
+    flex-direction: column;
+  }
+  
+  .geolocationActions button {
+    width: 100%;
+  }
 }

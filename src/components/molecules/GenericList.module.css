@@ -1,4 +1,8 @@
-/* GenericList.module.css */
+/*
+ * Styles pour GenericList
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 5 mai 2025
+ */
 
 .container {
   width: 100%;
@@ -8,41 +12,68 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--tc-spacing-4);
 }
 
 .title {
-  font-size: 1.75rem;
-  font-weight: 600;
-  color: var(--tc-title-color, #212529);
+  font-size: var(--tc-font-size-xl);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-color-title);
   margin: 0;
 }
 
 .controls {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--tc-spacing-4);
 }
 
 .filterTabs :global(.nav-tabs) {
-  border-bottom: 1px solid var(--tc-border-color, #dee2e6);
+  border-bottom: 1px solid var(--tc-border-light);
 }
 
 .filterIcon {
-  margin-right: 0.25rem;
+  margin-right: var(--tc-spacing-1);
 }
 
 .emptyState {
   text-align: center;
-  padding: 3rem 1rem;
+  padding: var(--tc-spacing-6) var(--tc-spacing-3);
 }
 
 .table {
   width: 100%;
-  margin-bottom: 1rem;
+  margin-bottom: var(--tc-spacing-3);
   border-collapse: separate;
   border-spacing: 0;
 }
 
 .loadMoreContainer {
   text-align: center;
-  margin-top: 1.5rem;
+  margin-top: var(--tc-spacing-4);
+}
+
+/* Styles responsive standardisés */
+@media (max-width: 992px) {
+  .header {
+    margin-bottom: var(--tc-spacing-3);
+  }
+  
+  .title {
+    font-size: var(--tc-font-size-lg);
+  }
+  
+  .controls {
+    margin-bottom: var(--tc-spacing-3);
+  }
+}
+
+@media (max-width: 576px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--tc-spacing-2);
+  }
+  
+  .emptyState {
+    padding: var(--tc-spacing-4) var(--tc-spacing-2);
+  }
 }

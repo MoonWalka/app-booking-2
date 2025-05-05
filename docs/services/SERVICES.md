@@ -1168,6 +1168,6 @@ async function envoyerEmailPersonnalise(options) {
 ```
 
 ## Navigation
-- [Retour à la documentation principale](../README.md)
-- [Documentation des hooks](../hooks/HOOKS.md)
-- [Documentation des contextes](../contexts/CONTEXTS.md)
+- [Retour à la documentation principale](/docs/README.md)
+- [Documentation des hooks](/docs/hooks/HOOKS.md)
+- [Documentation des contextes](/docs/contexts/CONTEXTS.md)

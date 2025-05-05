@@ -1,4 +1,8 @@
-/* Styles pour le composant ParametresApparence */
+/*
+ * Styles pour le composant ParametresApparence
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 5 mai 2025
+ */
 
 .colorPreviewContainer {
   display: flex;
@@ -8,9 +12,9 @@
 .colorPreview {
   width: 40px;
   height: 40px;
-  border-radius: 4px;
-  margin-right: 10px;
-  border: 1px solid #dee2e6;
+  border-radius: var(--tc-border-radius-sm);
+  margin-right: var(--tc-spacing-2-5);
+  border: 1px solid var(--tc-border-light);
 }
 
 .colorInput {
@@ -23,16 +27,49 @@
 }
 
 .fontSizeSlider {
-  margin-right: 10px;
+  margin-right: var(--tc-spacing-2-5);
 }
 
 .actionButtons {
   display: flex;
   justify-content: space-between;
-  margin-top: 20px;
+  margin-top: var(--tc-spacing-5);
 }
 
 .resetButtonsGroup {
   display: flex;
-  gap: 10px;
+  gap: var(--tc-spacing-2-5);
+}
+
+/* Styles responsive standardisés */
+@media (max-width: 768px) {
+  .actionButtons {
+    margin-top: var(--tc-spacing-4);
+  }
+}
+
+@media (max-width: 576px) {
+  .actionButtons {
+    flex-direction: column-reverse;
+    gap: var(--tc-spacing-3);
+  }
+  
+  .resetButtonsGroup {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .colorInput {
+    width: 100%;
+  }
+  
+  .fontSizeContainer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .fontSizeSlider {
+    margin-right: 0;
+    margin-bottom: var(--tc-spacing-2);
+  }
 }

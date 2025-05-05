@@ -1,7 +1,25 @@
+/*
+ * Styles pour ContratTemplateSelector
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 5 mai 2025
+ */
+
 .selectorContainer {
-  margin-bottom: 1rem;
+  margin-bottom: var(--tc-spacing-3);
 }
 
 .selectorContainer select {
   max-width: 400px;
+  width: 100%;
+}
+
+/* Styles responsive standardisés */
+@media (max-width: 576px) {
+  .selectorContainer {
+    margin-bottom: var(--tc-spacing-2);
+  }
+  
+  .selectorContainer select {
+    max-width: 100%;
+  }
 }

@@ -107,6 +107,48 @@ Cette section documente les hooks spécifiques à la gestion des concerts dans l
 
 **Utilisation :** Ce hook est utilisé pour gérer les formulaires à destination des programmateurs.
 
+## Correctifs apportés à la recherche d'artistes (05/05/2025)
+
+### Problème identifié
+Un dysfonctionnement a été identifié dans la recherche d'artistes lors de la création d'un concert. Les résultats de recherche ne s'affichaient pas correctement, empêchant la sélection d'un artiste existant ou la création d'un nouvel artiste.
+
+### Modifications apportées
+
+1. **Dans hooks/concerts/useEntitySearch.js :**
+   - Amélioration de la fonction `searchArtistes` pour garantir que les résultats s'affichent toujours, même en cas d'absence de correspondances
+   - Modification de l'effet de recherche pour afficher immédiatement le dropdown avec l'indicateur de chargement pendant la recherche
+   - Amélioration de la gestion d'état pour s'assurer que le dropdown reste visible dans tous les cas où il devrait l'être
+
+2. **Dans components/concerts/sections/ArtisteSearchSection.js :**
+   - Ajout d'une fonction `onFocus` qui déclenche une nouvelle recherche lorsque l'utilisateur clique dans le champ
+   - Cette fonction force une nouvelle recherche si le terme actuel contient déjà au moins 2 caractères
+
+3. **Dans components/concerts/sections/SearchDropdown.js :**
+   - Ajout du support de la propriété `onFocus` pour permettre de déclencher une recherche au clic dans le champ
+
+### Impact des modifications
+Ces modifications améliorent partiellement la recherche d'artistes dans le contexte de création de concert. La fonctionnalité permet désormais de trouver et sélectionner les nouveaux artistes récemment créés, mais présente encore une limitation pour retrouver certains artistes existants plus anciens dans la base de données.
+
+### Limitation connue
+Le système permet actuellement de trouver les artistes nouvellement créés mais pas systématiquement les artistes plus anciens. Cette limitation est acceptée temporairement pendant la phase de développement et fera l'objet d'une correction ultérieure lors de tests plus approfondis sur la gestion des données.
+
+**Note pour les développeurs:** Une investigation plus approfondie sur la structure des données des artistes et la façon dont ils sont indexés dans Firestore sera nécessaire pour résoudre complètement ce problème.
+
+## Correction de l'incompatibilité entre ConcertForm et useConcertForm (05/05/2025)
+
+### Problème identifié
+En plus du problème de recherche d'artiste, un problème d'incompatibilité a été identifié entre le composant `ConcertForm` et le hook `useConcertForm`. Le hook utilise désormais `useGenericEntityForm` en interne, mais n'exposait pas correctement toutes les fonctions et propriétés nécessaires au composant, ce qui pouvait entraîner des erreurs ou un comportement inattendu lors de la création ou modification de concerts.
+
+### Modifications apportées
+
+Dans le hook `useConcertForm.js` :
+1. Ajout de fonctions spécifiques pour désélectionner les entités liées (`handleRemoveLieu`, `handleRemoveProgrammateur`, `handleRemoveArtiste`)
+2. Création de wrappers pour les setters (`setSelectedLieu`, `setSelectedProgrammateur`, `setSelectedArtiste`) qui maintiennent la compatibilité avec l'API attendue par le composant `ConcertForm`
+3. Exposition correcte de toutes les fonctions et propriétés nécessaires dans l'objet retourné par le hook
+
+### Impact des modifications
+Ces modifications permettent au composant `ConcertForm` de fonctionner correctement avec le hook `useConcertForm` modernisé, tout en préservant la compatibilité API. La page d'ajout de concert devrait maintenant fonctionner correctement, tant pour la recherche d'artistes que pour la manipulation des entités liées.
+
 ## Exemple d'utilisation combinée
 
 Voici un exemple d'utilisation combinée de ces hooks dans un composant de détail de concert :

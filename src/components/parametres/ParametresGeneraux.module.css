@@ -1,9 +1,13 @@
-/* Styles pour le composant ParametresGeneraux */
+/*
+ * Styles pour le composant ParametresGeneraux
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 5 mai 2025
+ */
 
 .submitButton {
   display: flex;
   justify-content: flex-end;
-  margin-top: 20px;
+  margin-top: var(--tc-spacing-5);
 }
 
 .languageSelect {
@@ -11,9 +15,30 @@
 }
 
 .successAlert {
-  margin-bottom: 15px;
+  margin-bottom: var(--tc-spacing-4);
 }
 
 .formSection {
-  margin-bottom: 15px;
+  margin-bottom: var(--tc-spacing-4);
+}
+
+/* Styles responsive standardisés */
+@media (max-width: 768px) {
+  .submitButton {
+    margin-top: var(--tc-spacing-4);
+  }
+}
+
+@media (max-width: 576px) {
+  .submitButton {
+    justify-content: center;
+  }
+  
+  .languageSelect {
+    max-width: 100%;
+  }
+  
+  .formSection {
+    margin-bottom: var(--tc-spacing-3);
+  }
 }

@@ -2,7 +2,7 @@
 import React from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { useResponsive } from '@/hooks/common';
-import { useLieuDetails } from '@/hooks/lieux';
+import { useLieuDetailsV2 } from '@/hooks/lieux';
 import LieuForm from '@/components/lieux/LieuForm';
 
 /**
@@ -15,7 +15,7 @@ function LieuDetails() {
   const responsive = useResponsive();
   
   // Utilisation du hook useLieuDetails pour gérer l'état global
-  const { isEditing } = useLieuDetails(id);
+  const{ isEditing } = useLieuDetailsV2(id);
   
   // En mode édition, afficher le formulaire
   if (isEditing) {

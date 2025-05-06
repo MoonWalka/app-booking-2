@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Spinner from '@/components/common/Spinner';
 import Button from '@/components/ui/Button';
 import { toast } from 'react-toastify';
-import { useLieuDetails } from '@/hooks/lieux';
+import { useLieuDetailsV2 } from '@/hooks/lieux';
 
 // Import styles
 import styles from './LieuView.module.css';
@@ -18,7 +18,7 @@ const LieuView = () => {
   const navigate = useNavigate();
 
   // Use custom hooks
-  const {
+  const{
     lieu,
     loading,
     error,
@@ -26,7 +26,7 @@ const LieuView = () => {
     handleDeleteClick,
     programmateur,
     loadingProgrammateur
-  } = useLieuDetails(lieuId);
+  } = useLieuDetailsV2(lieuId);
 
   // If loading, show a spinner
   if (loading) {

@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
-import { useProgrammateurDetails } from '@/hooks/programmateurs';
+import { useProgrammateurDetailsV2 } from '@/hooks/programmateurs';
 import ProgrammateurContactSection from './ProgrammateurContactSection';
 import ProgrammateurLegalSection from './ProgrammateurLegalSection';
 import ProgrammateurConcertsSection from './ProgrammateurConcertsSection';
@@ -19,14 +19,14 @@ import styles from './ProgrammateurDetails.module.css';
 const ProgrammateurView = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { 
+  const{ 
     programmateur, 
     structure,
     loading, 
     error,
     handleDelete,
     formatValue
-  } = useProgrammateurDetails(id);
+  } = useProgrammateurDetailsV2(id);
   
   // État local pour contrôler l'affichage des sections
   const [sections, setSections] = useState({

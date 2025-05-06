@@ -7,7 +7,7 @@ import styles from './ConcertView.module.css';
 
 // Import des hooks personnalisés
 import { 
-  useConcertDetails, 
+  useConcertDetailsV2, 
   useConcertForm, 
   useConcertStatus 
 } from '@/hooks/concerts';
@@ -34,7 +34,7 @@ const ConcertView = () => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   
   // Utilisation des hooks personnalisés
-  const {
+  const{
     concert,
     lieu,
     programmateur,
@@ -50,7 +50,7 @@ const ConcertView = () => {
     formatMontant,
     isDatePassed,
     getStatusInfo
-  } = useConcertDetails(id, location);
+  } = useConcertDetailsV2(id, location);
 
   const {
     formDataStatus,

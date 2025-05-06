@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Alert } from 'react-bootstrap';
 import Spinner from '@/components/common/Spinner';
-import { useLieuxQuery, useLieuxFilters, useLieuDelete } from '@/hooks/lieux';
+import { useLieuxQuery, useLieuxFiltersV2, useLieuDelete } from '@/hooks/lieux';
 import styles from './LieuxList.module.css';
 
 // Import section components
@@ -18,7 +18,7 @@ import LieuxListEmptyState from './sections/LieuxListEmptyState';
 const LieuxList = () => {
   // Use custom hooks to manage data and state
   const { lieux, loading, error, stats, setLieux } = useLieuxQuery();
-  const { 
+  const{ 
     searchTerm, 
     setSearchTerm, 
     filterType, 
@@ -26,7 +26,7 @@ const LieuxList = () => {
     sortOption, 
     setSortOption, 
     filteredLieux 
-  } = useLieuxFilters(lieux);
+  } = useLieuxFiltersV2(lieux);
 
   // Handle deletion of lieux
   const { handleDeleteLieu } = useLieuDelete((deletedId) => {

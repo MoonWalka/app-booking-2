@@ -8,7 +8,7 @@ import Spinner from '@/components/common/Spinner';
 import Button from '@/components/ui/Button';
 
 // Import custom hooks depuis les emplacements standardisés
-import { useLieuDetails } from '@/hooks/lieux';
+import { useLieuDetailsV2 } from '@/hooks/lieux';
 import { useProgrammateurSearch } from '@/hooks/programmateurs';
 import { useAddressSearch } from '@/hooks/common';
 
@@ -34,7 +34,7 @@ const LieuDetails = () => {
   const navigate = useNavigate();
 
   // Use custom hooks
-  const {
+  const{
     lieu,
     loading,
     error,
@@ -52,7 +52,7 @@ const LieuDetails = () => {
     handleDeleteClick,
     handleCloseDeleteModal,
     handleConfirmDelete
-  } = useLieuDetails(lieuId);
+  } = useLieuDetailsV2(lieuId);
 
   const {
     searchTerm,

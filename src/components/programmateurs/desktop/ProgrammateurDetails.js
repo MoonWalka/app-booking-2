@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { Container, Row, Col, Button } from 'react-bootstrap';
-import { useProgrammateurDetails } from '@/hooks/programmateurs';
+import { useProgrammateurDetailsV2 } from '@/hooks/programmateurs';
 import ProgrammateurContactSection from './ProgrammateurContactSection';
 import ProgrammateurLegalSection from './ProgrammateurLegalSection';
 import ProgrammateurConcertsSection from './ProgrammateurConcertsSection';
@@ -13,7 +13,7 @@ import styles from './ProgrammateurDetails.module.css';
 
 const ProgrammateurDetails = () => {
   const { id } = useParams();
-  const { 
+  const{ 
     programmateur, 
     structure,  // Récupérer la structure du hook
     loading, 
@@ -28,7 +28,7 @@ const ProgrammateurDetails = () => {
     isSubmitting,
     formatValue,
     structureCreated
-  } = useProgrammateurDetails(id);
+  } = useProgrammateurDetailsV2(id);
   
   if (loading) {
     return <LoadingSpinner />;

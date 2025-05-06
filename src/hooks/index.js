@@ -1,5 +1,5 @@
 // src/hooks/index.js
-// Re-export all common hooks to maintain backward compatibility
+// Re-export des hooks communs spécifiques pour maintenir la compatibilité
 export { 
   useAddressSearch,
   useLocationIQ,
@@ -7,5 +7,5 @@ export {
   useResponsiveComponent
 } from './common';
 
-// Re-export useIsMobile from its own file to maintain the force desktop override
-export { useIsMobile } from './useIsMobile';
+// Note: useIsMobile a été supprimé le 6 mai 2025 dans le cadre de la migration vers useResponsive
+// Plus d'informations dans la documentation: /docs/hooks/MIGRATION_USEMOBILE_USERESPONSIVE_COMPLETE.md

@@ -3,10 +3,12 @@ import { Alert } from 'react-bootstrap';
 import Spinner from '@/components/common/Spinner';
 
 // Import custom hooks
-import useConcertListData from '@/hooks/concerts/useConcertListData';
-import { useConcertFilters } from '@/hooks/concerts/useConcertFilters';
-import { useConcertStatus } from '@/hooks/concerts/useConcertStatus';
-import { useConcertActions } from '@/hooks/concerts/useConcertActions';
+import { 
+  useConcertListData,
+  useConcertFilters,
+  useConcertStatus,
+  useConcertActions 
+} from '@/hooks/concerts';
 
 // Import section components
 import ConcertsListHeader from '../sections/ConcertsListHeader';

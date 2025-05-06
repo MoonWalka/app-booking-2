@@ -1,12 +1,8 @@
 import React, { useEffect } from 'react';
 import { Alert } from 'react-bootstrap';
 import Spinner from '@/components/common/Spinner';
+import { useLieuxQuery, useLieuxFilters, useLieuDelete } from '@/hooks/lieux';
 import styles from './LieuxList.module.css';
-
-// Import custom hooks
-import useLieuxQuery from '@/hooks/lieux/useLieuxQuery';
-import useLieuxFilters from '@/hooks/lieux/useLieuxFilters';
-import useLieuDelete from '@/hooks/lieux/useLieuDelete';
 
 // Import section components
 import LieuxListHeader from './sections/LieuxListHeader';

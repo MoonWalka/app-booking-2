@@ -1,6 +1,7 @@
 // src/components/artistes/ArtisteForm.js
 import React from 'react';
-import { useResponsive } from '@/hooks/common/useResponsive';
+import { useResponsive } from '@/hooks/common';
+;
 
 function ArtisteForm(props) {
   const { getResponsiveComponent } = useResponsive();

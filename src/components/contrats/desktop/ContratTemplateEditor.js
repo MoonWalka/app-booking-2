@@ -5,8 +5,10 @@ import 'react-quill/dist/quill.snow.css';
 import styles from './ContratTemplateEditor.module.css';
 
 // Import des hooks personnalisés
-import useContratTemplateEditor from '@/hooks/contrats/useContratTemplateEditor';
-import useContratTemplatePreview from '@/hooks/contrats/useContratTemplatePreview';
+import { 
+  useContratTemplateEditor, 
+  useContratTemplatePreview 
+} from '@/hooks/contrats';
 
 // Import des sous-composants
 import ContratTemplateHeader from './sections/ContratTemplateHeader';

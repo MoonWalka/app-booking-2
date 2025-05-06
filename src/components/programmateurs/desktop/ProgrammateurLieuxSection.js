@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from './ProgrammateurLieuxSection.module.css';
-import useLieuSearch from '@/hooks/programmateurs/useLieuSearch';
+import { useLieuSearch } from '@/hooks/programmateurs';
+;
 
 const ProgrammateurLieuxSection = ({ programmateur, isEditing }) => {
   const {

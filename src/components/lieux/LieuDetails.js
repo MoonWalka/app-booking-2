@@ -1,11 +1,9 @@
 // src/components/lieux/LieuDetails.js
 import React from 'react';
 import { useParams, useLocation } from 'react-router-dom';
-import { useResponsive } from '@/hooks/common/useResponsive'; // Utilisation du hook recommandé
+import { useResponsive } from '@/hooks/common';
+import { useLieuDetails } from '@/hooks/lieux';
 import LieuForm from '@/components/lieux/LieuForm';
-
-// Import du hook standardisé
-import useLieuDetails from '@/hooks/lieux/useLieuDetails';
 
 /**
  * Composant conteneur pour les détails d'un lieu

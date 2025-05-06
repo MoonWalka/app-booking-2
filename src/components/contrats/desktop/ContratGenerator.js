@@ -5,7 +5,7 @@ import styles from './ContratGenerator.module.css';
 import '@/styles/index.css';
 
 // Custom hook
-import { useContratGenerator } from '@/hooks/contrats/useContratGenerator';
+import { useContratGenerator } from '@/hooks/contrats';
 
 // Section Components
 import ContratTemplateSelector from './sections/ContratTemplateSelector';

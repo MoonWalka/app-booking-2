@@ -1,5 +1,5 @@
 import React from 'react';
-import { useResponsive } from '@/hooks/common/useResponsive';
+import { useResponsive } from '@/hooks/common';
 import styles from './ContratVariable.module.css';
 
 /**

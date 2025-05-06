@@ -15,3 +15,9 @@ export { default as useGenericEntitySearch } from './useGenericEntitySearch';
 
 // Import du nouveau hook générique de détails d'entité
 export { default as useGenericEntityDetails } from './useGenericEntityDetails';
+
+// Import du nouveau hook générique de liste d'entités
+export { default as useGenericEntityList } from './useGenericEntityList';
+
+// Import du hook générique de recherche et filtrage
+export { default as useSearchAndFilter } from './useSearchAndFilter';

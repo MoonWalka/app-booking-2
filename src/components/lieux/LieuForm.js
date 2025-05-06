@@ -1,6 +1,6 @@
 // src/components/forms/LieuForm.js
 import React from 'react';
-import { useResponsive } from '@/hooks/common/useResponsive';
+import { useResponsive } from '@/hooks/common';
 import Spinner from '@/components/common/Spinner';
 
 function LieuForm(props) {

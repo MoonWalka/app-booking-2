@@ -1,7 +1,7 @@
 // src/components/artistes/ArtisteDetail.js
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { useResponsive } from '@/hooks/common/useResponsive'; // Utilisation du hook recommandé
+import { useResponsive } from '@/hooks/common'; // Utilisation du hook recommandé
 
 /**
  * Composant conteneur pour les détails d'un artiste

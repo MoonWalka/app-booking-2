@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styles from './ProgrammateurAddressSection.module.css';
-import useAdresseValidation from '@/hooks/programmateurs/useAdresseValidation';
+import { useAdresseValidation } from '@/hooks/programmateurs';
+;
 
 const ProgrammateurAddressSection = ({
   programmateur,

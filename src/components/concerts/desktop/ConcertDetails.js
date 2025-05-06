@@ -1,14 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { formatDateFr } from '@/utils/dateUtils';
-import { Spinner as BootstrapSpinner, Alert } from 'react-bootstrap';
-import FormGenerator from '@/components/forms/FormGenerator';
+import { Alert } from 'react-bootstrap';
 import styles from './ConcertDetails.module.css';
 
-// Import des hooks personnalisés
-import { useConcertDetails } from '@/hooks/concerts/useConcertDetails';
-import useConcertForm from '@/hooks/concerts/useConcertForm';
-import { useEntitySearch } from '@/hooks/common/useEntitySearch';
+// Import des hooks personnalisés - Modification pour utiliser la version V2
+import { useConcertDetailsV2, useConcertForm } from '@/hooks/concerts';
 
 // Import des composants
 import ConcertHeader from './ConcertHeader';
@@ -18,6 +14,7 @@ import ConcertOrganizerSection from './ConcertOrganizerSection';
 import ConcertArtistSection from './ConcertArtistSection';
 import ConcertStructureSection from './ConcertStructureSection';
 import DeleteConcertModal from './DeleteConcertModal';
+import FormGenerator from '@/components/forms/FormGenerator';
 
 const ConcertDetails = () => {
   const { id } = useParams();
@@ -27,30 +24,53 @@ const ConcertDetails = () => {
   // État pour la confirmation de suppression
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   
-  // Utilisation des hooks personnalisés
+  // Utilisation du hook V2 qui est basé sur useGenericEntityDetails
   const {
-    concert,
-    lieu,
-    programmateur,
-    artiste,
-    structure,
-    loading,
+    // Données principales du hook (renommées pour garder la compatibilité)
+    entity: concert,
+    isLoading: loading,
     isSubmitting,
+    error,
+    
+    // Entités liées
+    relatedData: {
+      lieu,
+      programmateur,
+      artiste, 
+      structure
+    },
+    
+    // Données du formulaire
+    formData: formState,
+    isEditing: isEditMode,
+    
+    // Données des formulaires spécifiques aux concerts
     formData,
-    isEditMode,
-    formState,
+    
+    // Fonctions de gestion
     handleChange,
-    handleSubmit,
     toggleEditMode,
-    validateForm,
-    handleFormGenerated,
-    copyToClipboard,
     handleDelete,
+    handleSubmit,
+    validateForm,
+    
+    // Fonctions spécifiques aux concerts
+    handleFormGenerated,
+    getStatusInfo,
+    
+    // Fonctions utilitaires
+    copyToClipboard,
+    formatDate,
+    formatMontant,
+    isDatePassed,
+    
+    // Objets de recherche pour les entités liées
     lieuSearch,
     programmateurSearch,
     artisteSearch,
     structureSearch
-  } = useConcertDetails(id, location);
+    
+  } = useConcertDetailsV2(id, location);
 
   const {
     formDataStatus,
@@ -61,99 +81,27 @@ const ConcertDetails = () => {
   } = useConcertForm(id, programmateur?.id);
 
   // Fonction pour initialiser les valeurs de recherche
-  React.useEffect(() => {
+  useEffect(() => {
     if (lieu && !lieuSearch.selectedEntity) {
       lieuSearch.setSelectedEntity(lieu);
-      lieuSearch.setSearchTerm(lieu.nom);
+      lieuSearch.setSearchTerm && lieuSearch.setSearchTerm(lieu.nom);
     }
     
     if (programmateur && !programmateurSearch.selectedEntity) {
       programmateurSearch.setSelectedEntity(programmateur);
-      programmateurSearch.setSearchTerm(programmateur.nom);
+      programmateurSearch.setSearchTerm && programmateurSearch.setSearchTerm(programmateur.nom);
     }
     
     if (artiste && !artisteSearch.selectedEntity) {
       artisteSearch.setSelectedEntity(artiste);
-      artisteSearch.setSearchTerm(artiste.nom);
+      artisteSearch.setSearchTerm && artisteSearch.setSearchTerm(artiste.nom);
     }
 
     if (structure && !structureSearch.selectedEntity) {
       structureSearch.setSelectedEntity(structure);
-      structureSearch.setSearchTerm(structure.nom || structure.raisonSociale || '');
+      structureSearch.setSearchTerm && structureSearch.setSearchTerm(structure.nom || structure.raisonSociale || '');
     }
-  }, [lieu, programmateur, artiste, structure]);
-
-  // Formater la date pour l'affichage
-  const formatDate = (dateValue) => {
-    if (!dateValue) return 'Date non spécifiée';
-    
-    // Si c'est un timestamp Firestore
-    if (dateValue.seconds) {
-      return new Date(dateValue.seconds * 1000).toLocaleDateString('fr-FR');
-    }
-    
-    // Si c'est une chaîne de date
-    try {
-      return new Date(dateValue).toLocaleDateString('fr-FR');
-    } catch (e) {
-      return dateValue;
-    }
-  };
-
-  // Formater le montant
-  const formatMontant = (montant) => {
-    if (!montant) return '0,00 €';
-    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(montant);
-  };
-
-  // Vérifier si la date est passée
-  const isDatePassed = (dateValue) => {
-    if (!dateValue) return false;
-    
-    const today = new Date();
-    const concertDate = dateValue.seconds ? 
-      new Date(dateValue.seconds * 1000) : 
-      new Date(dateValue);
-    
-    return concertDate < today;
-  };
-
-  // Fonction pour obtenir les informations sur le statut et les actions requises
-  const getStatusInfo = () => {
-    if (!concert) return { message: '', actionNeeded: false };
-    
-    const isPastDate = isDatePassed(concert.date);
-    
-    switch (concert.statut) {
-      case 'contact':
-        if (!formData) return { message: 'Formulaire à envoyer', actionNeeded: true, action: 'form' };
-        if (formData && (!formData.programmateurData && (!formData.data || Object.keys(formData.data).length === 0))) 
-          return { message: 'Formulaire envoyé, en attente de réponse', actionNeeded: false };
-        if (formData && (formData.programmateurData || (formData.data && Object.keys(formData.data).length > 0)) && formData.status !== 'validated') 
-          return { message: 'Formulaire à valider', actionNeeded: true, action: 'validate_form' };
-        if (formData && formData.status === 'validated')
-          return { message: 'Contrat à préparer', actionNeeded: true, action: 'prepare_contract' };
-        return { message: 'Contact établi', actionNeeded: false };
-        
-      case 'preaccord':
-        if (formData && formData.status === 'validated')
-          return { message: 'Contrat à envoyer', actionNeeded: true, action: 'send_contract' };
-        return { message: 'Contrat à préparer', actionNeeded: true, action: 'contract' };
-        
-      case 'contrat':
-        return { message: 'Facture acompte à envoyer', actionNeeded: true, action: 'invoice' };
-        
-      case 'acompte':
-        return { message: 'En attente du concert', actionNeeded: false };
-        
-      case 'solde':
-        if (isPastDate) return { message: 'Concert terminé', actionNeeded: false };
-        return { message: 'Facture solde envoyée', actionNeeded: false };
-        
-      default:
-        return { message: 'Statut non défini', actionNeeded: false };
-    }
-  };
+  }, [lieu, programmateur, artiste, structure, lieuSearch, programmateurSearch, artisteSearch, structureSearch]);
 
   // Fonction pour soumettre le formulaire
   const handleFormSubmit = (e) => {
@@ -179,6 +127,11 @@ const ConcertDetails = () => {
   }
 
   const statusInfo = getStatusInfo();
+
+  // Handle structure deletion
+  const confirmDelete = () => {
+    handleDelete(concert);
+  };
 
   return (
     <div className={styles.concertDetailsContainer}>
@@ -366,7 +319,7 @@ const ConcertDetails = () => {
         show={showDeleteConfirm}
         concertNom={concert.titre || formatDate(concert.date)}
         onClose={() => setShowDeleteConfirm(false)}
-        onConfirm={handleDelete}
+        onConfirm={confirmDelete}
         isDeleting={isSubmitting}
       />
     </div>

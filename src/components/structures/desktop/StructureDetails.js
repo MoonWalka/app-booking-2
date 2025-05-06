@@ -1,11 +1,10 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Alert } from 'react-bootstrap';
 import styles from './StructureDetails.module.css';
 
-// Import custom hooks
-import useStructureDetails from '@/hooks/structures/useStructureDetails';
-import useDeleteStructure from '@/hooks/structures/useDeleteStructure';
+// Import custom hooks - Utilisation de la nouvelle version V2 du hook
+import { useStructureDetailsV2 } from '@/hooks/structures';
+import { useDeleteStructure } from '@/hooks/structures';
 
 // Import section components
 import StructureHeader from './sections/StructureHeader';
@@ -18,20 +17,21 @@ import StructureDeleteModal from './sections/StructureDeleteModal';
 
 /**
  * Component for displaying structure details
+ * Refactorisé pour utiliser le hook générique via useStructureDetailsV2
  */
 const StructureDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   
-  // Use custom hooks
+  // Utilisation du hook migré V2 au lieu du hook déprécié
   const {
-    structure,
-    loading,
+    entity: structure,  // Renommé entity en structure pour compatibilité
+    isLoading: loading, // Renommé isLoading en loading pour compatibilité
     error,
-    programmateurs,
-    loadingProgrammateurs,
+    relatedData: { programmateurs = [] }, // Extraction des données liées
+    loadingRelated: { programmateurs: loadingProgrammateurs = false }, // État de chargement des données liées
     formatValue
-  } = useStructureDetails(id);
+  } = useStructureDetailsV2(id);
   
   const {
     showDeleteModal,
@@ -56,7 +56,7 @@ const StructureDetails = () => {
     return (
       <div className={styles.alertInfo}>
         <i className="bi bi-exclamation-triangle"></i>
-        {error}
+        {error.message || error}
       </div>
     );
   }
@@ -102,7 +102,7 @@ const StructureDetails = () => {
         />
 
         {/* Notes Section - if present */}
-        {structure.notes && <StructureNotesSection notes={structure.notes} />}
+        {structure?.notes && <StructureNotesSection notes={structure.notes} />}
       </div>
 
       {/* Confirmation Modal for Structure Deletion */}

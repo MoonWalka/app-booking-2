@@ -5,9 +5,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Spinner from '@/components/common/Spinner';
 import Button from '@/components/ui/Button';
-
-// Import du hook standardisé
-import useLieuDetails from '@/hooks/lieux/useLieuDetails';
+import { useLieuDetails } from '@/hooks/lieux';
 
 // Import section components
 import { LieuHeader } from './sections/LieuHeader';
@@ -76,8 +74,8 @@ const LieuView = () => {
     );
   }
 
-  // If no lieu or lieu not found, show a message
-  if (!lieu) {
+  // If no lieu or lieu not found after loading is complete, show a message
+  if (!lieu && !loading) {
     return (
       <div className={styles.errorContainer}>
         <div className="alert alert-warning">
@@ -93,6 +91,11 @@ const LieuView = () => {
         </Button>
       </div>
     );
+  }
+
+  // La condition supplémentaire de sécurité pour éviter une erreur si lieu est null
+  if (!lieu) {
+    return null;
   }
 
   return (

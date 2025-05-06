@@ -4,9 +4,11 @@ import { Spinner, Alert, Button } from 'react-bootstrap';
 import styles from './FormValidationInterface.module.css';
 
 // Import custom hooks
-import useFormValidationData from '@/hooks/forms/useFormValidationData';
-import useFieldActions from '@/hooks/forms/useFieldActions';
-import useValidationBatchActions from '@/hooks/forms/useValidationBatchActions';
+import { 
+  useFormValidationData, 
+  useFieldActions, 
+  useValidationBatchActions 
+} from '@/hooks/forms';
 
 // Import components
 import FormHeader from './sections/FormHeader';

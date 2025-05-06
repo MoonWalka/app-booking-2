@@ -1,101 +1,62 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { 
-  doc, 
-  getDoc, 
-  updateDoc, 
-  deleteDoc, 
-  collection, 
-  query, 
-  where, 
-  getDocs
-} from 'firebase/firestore';
-import { db } from '@/firebaseInit';
-
 /**
- * Hook to handle structure details data and operations
+ * @deprecated Ce hook est déprécié et sera supprimé dans une future version.
+ * Veuillez utiliser le hook migré vers les hooks génériques à la place:
+ * import { useStructureDetailsV2 } from '@/hooks/structures';
  * 
- * @param {string} id - Structure ID
- * @returns {Object} Structure data and operations
+ * Hook pour gérer les détails d'un structure
+ * @param {string} id - ID du structure
+ * @returns {Object} - Données et fonctions pour la gestion du structure
  */
-export const useStructureDetails = (id) => {
-  const navigate = useNavigate();
-  const [structure, setStructure] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [programmateurs, setProgrammateurs] = useState([]);
-  const [loadingProgrammateurs, setLoadingProgrammateurs] = useState(false);
-  
-  // Fetch the structure data
+import useStructureDetailsMigrated from './useStructureDetailsMigrated';
+import { useEffect } from 'react';
+
+const useStructureDetails = (id) => {
+  // Afficher un avertissement de dépréciation
   useEffect(() => {
-    const fetchStructure = async () => {
-      setLoading(true);
-      try {
-        const structureDoc = await getDoc(doc(db, 'structures', id));
-        if (structureDoc.exists()) {
-          setStructure({
-            id: structureDoc.id,
-            ...structureDoc.data()
-          });
-          
-          // Load associated programmateurs if any
-          if (structureDoc.data().programmateursAssocies?.length > 0) {
-            fetchProgrammateurs(structureDoc.data().programmateursAssocies);
-          }
-        } else {
-          setError('Structure non trouvée');
-          navigate('/structures');
-        }
-      } catch (error) {
-        console.error('Erreur lors du chargement de la structure:', error);
-        setError('Une erreur est survenue lors du chargement des données');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchStructure();
-  }, [id, navigate]);
-
-  // Fetch associated programmateurs
-  const fetchProgrammateurs = async (programmateursIds) => {
-    setLoadingProgrammateurs(true);
-    try {
-      const programmateursData = [];
-      
-      for (const progId of programmateursIds) {
-        const progDoc = await getDoc(doc(db, 'programmateurs', progId));
-        if (progDoc.exists()) {
-          programmateursData.push({
-            id: progDoc.id,
-            ...progDoc.data()
-          });
-        }
-      }
-      
-      setProgrammateurs(programmateursData);
-    } catch (error) {
-      console.error('Erreur lors du chargement des programmateurs:', error);
-    } finally {
-      setLoadingProgrammateurs(false);
-    }
-  };
-
-  // Format value for display
-  const formatValue = (value) => {
-    if (value === undefined || value === null || value === '') {
-      return 'Non spécifié';
-    }
-    return value;
-  };
-
+    console.warn(
+      'Avertissement: useStructureDetails est déprécié. ' +
+      'Veuillez utiliser useStructureDetailsV2 depuis @/hooks/structures à la place.'
+    );
+  }, []);
+  
+  // Utiliser la version migrée qui est basée sur useGenericEntityDetails
+  const migratedHook = useStructureDetailsMigrated(id);
+  
+  // Adapter l'API pour être compatible avec les composants existants
   return {
-    structure,
-    loading,
-    error,
-    programmateurs,
-    loadingProgrammateurs,
-    formatValue
+    // Propriétés de la version originale
+    structure: migratedHook.entity,
+    loading: migratedHook.isLoading,
+    error: migratedHook.error,
+    isEditing: migratedHook.isEditing,
+    formData: migratedHook.formData,
+    isSubmitting: migratedHook.isSubmitting,
+    
+    // Fonctions de la version originale
+    toggleEditMode: migratedHook.toggleEditMode,
+    setFormData: migratedHook.updateFormData,
+    handleChange: (e) => {
+      const { name, value } = e.target;
+      
+      if (name.includes('.')) {
+        const [section, field] = name.split('.');
+        migratedHook.updateFormData(prevState => ({
+          ...prevState,
+          [section]: {
+            ...prevState[section],
+            [field]: value
+          }
+        }));
+      } else {
+        migratedHook.updateFormData(prevState => ({
+          ...prevState,
+          [name]: value
+        }));
+      }
+    },
+    handleSubmit: migratedHook.saveEntity,
+    handleDelete: migratedHook.deleteEntity,
+    formatValue: migratedHook.formatValue
   };
 };
 

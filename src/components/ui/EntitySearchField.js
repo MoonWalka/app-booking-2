@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import useEntitySearch from '@/hooks/common/useEntitySearch';
+import { useEntitySearch } from '@/hooks/common';
 import styles from './EntitySearchField.module.css';
 
 /**

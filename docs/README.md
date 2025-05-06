@@ -1,6 +1,6 @@
 # Documentation TourCraft
 
-*Document mis à jour le: 5 mai 2025*
+*Document mis à jour le: 6 mai 2025*
 
 Ce dossier contient toute la documentation technique du projet TourCraft. Ce fichier README sert d'index central pour naviguer efficacement dans la documentation disponible.
 
@@ -18,7 +18,6 @@ Ce dossier contient toute la documentation technique du projet TourCraft. Ce fic
 ## 🎨 CSS & Design
 
 - [📝 **Guide de Style CSS**](/docs/standards/CSS_STYLE_GUIDE.md) - Standards et conventions CSS
-- [📋 **Plan de Refactorisation CSS**](/docs/css/PLAN_REFACTORISATION_CSS_PROGRESSIF.md) - Plan de refactorisation progressive du CSS
 - [📑 **Résumé de la Refactorisation CSS**](/docs/css/RESUME_REFACTORISATION_CSS.md) - Résumé des travaux de refactorisation CSS effectués
 - [📊 **Rapport d'audit CSS**](/docs/analyses/css_audit_report.md) - Résultats de l'audit des styles CSS
 - [📊 **Rapport d'audit CSS global**](/docs/analyses/global_css_audit_report.md) - Résultats de l'audit global des styles CSS
@@ -26,7 +25,6 @@ Ce dossier contient toute la documentation technique du projet TourCraft. Ce fic
 ## 🧩 Composants
 
 - [📚 **Guide des Composants Génériques**](/docs/components/GUIDE_COMPOSANTS_GENERIQUES.md) - Guide d'utilisation des composants génériques
-- [📝 **Plan de Refactorisation des Composants**](/docs/components/PLAN_REFACTORISATION_COMPOSANTS.md) - Plan de refactorisation des composants
 - [📋 **Exemple de Composant Générique**](/docs/components/EXEMPLE_COMPOSANT_GENERIQUE.md) - Exemple détaillé d'implémentation d'un composant générique
 - [📝 **Concert Refactoring**](/docs/components/CONCERT_REFACTORING.md) - Plan de refactorisation des composants de concert
 
@@ -41,9 +39,8 @@ Ce dossier contient toute la documentation technique du projet TourCraft. Ce fic
 ## 🪝 Hooks
 
 - [📚 **Guide des Hooks**](/docs/hooks/HOOKS.md) - Guide général d'utilisation des hooks
-- [📝 **Plan de Migration des Hooks Génériques**](/docs/hooks/PLAN_MIGRATION_HOOKS_GENERIQUES.md) - **[ARCHIVÉ]** Plan de migration vers des hooks génériques (voir la [version archivée complète](/docs/archive/PLAN_MIGRATION_HOOKS_GENERIQUES_ARCHIVE.md))
-- [📋 **Journal de Migration des Hooks**](/docs/hooks/JOURNAL_MIGRATION_HOOKS.md) - Journal détaillé de la migration des hooks
 - [📐 **Plan de Restructuration des Hooks**](/docs/hooks/PLAN_RESTRUCTURATION_HOOKS.md) - Plan de restructuration du dossier hooks
+- [📝 **Plan de dépréciation**](/docs/hooks/PLAN_DEPRECIATION_HOOKS.md) - Plan de dépréciation des hooks obsolètes
 
 ### Hooks Spécifiques
 
@@ -55,6 +52,9 @@ Ce dossier contient toute la documentation technique du projet TourCraft. Ce fic
 ## 🔥 Migration Firebase
 
 - [📝 **Plan de Migration Firebase**](/docs/migration/PLAN_MIGRATION_FIREBASE.md) - Plan de migration vers la nouvelle structure Firebase
+- [📝 **Plan de Standardisation Firebase**](/docs/migration/PLAN_STANDARDISATION_FIREBASE.md) - Plan détaillé de standardisation des données Firebase
+- [📋 **Journal de Migration Firebase**](/docs/migration/JOURNAL_MIGRATION_FIREBASE.md) - Journal détaillé de la migration Firebase
+- [📊 **Analyse de la Structure des Données Firebase**](/docs/migration/ANALYSE_STRUCTURE_DONNEES_FIREBASE.md) - Analyse de la structure des données avant migration
 
 ## 🧪 Tests
 
@@ -66,13 +66,26 @@ Ce dossier contient toute la documentation technique du projet TourCraft. Ce fic
 - [📊 **Analyses & Audits**](/docs/analyses/ANALYSES_AUDITS.md) - Synthèse des analyses et audits effectués
 - [📊 **Audit des Composants Similaires**](/docs/analyses/AUDIT_COMPOSANTS_SIMILAIRES.md) - Analyse des composants avec des fonctionnalités similaires
 
+## 📁 Documents Archivés
+
+Les documents suivants ont été archivés car ils concernent des initiatives terminées à 100% :
+
+- [📝 **Plan de Migration des Hooks Génériques**](/docs/archive/PLAN_MIGRATION_HOOKS_GENERIQUES.md) - [ARCHIVÉ] Plan de migration vers des hooks génériques
+- [📋 **Journal de Migration des Hooks**](/docs/archive/JOURNAL_MIGRATION_HOOKS.md) - [ARCHIVÉ] Journal détaillé de la migration des hooks
+- [📈 **Synthèse Migration Hooks**](/docs/archive/SYNTHESE_MIGRATION_HOOKS.md) - [ARCHIVÉ] Synthèse complète de la migration des hooks
+- [📝 **Guide Migration useIsMobile**](/docs/archive/GUIDE_MIGRATION_USEMOBILE.md) - [ARCHIVÉ] Guide de migration de useIsMobile vers useResponsive
+- [📋 **Journal Phase 5 Hooks**](/docs/archive/JOURNAL_PHASE5_NETTOYAGE_FINAL_HOOKS.md) - [ARCHIVÉ] Journal de la phase 5 du nettoyage final des hooks
+- [📝 **Plan Refactorisation CSS**](/docs/archive/PLAN_REFACTORISATION_CSS_PROGRESSIF.md) - [ARCHIVÉ] Plan de refactorisation progressive du CSS
+- [📝 **Plan Refactorisation Composants**](/docs/archive/PLAN_REFACTORISATION_COMPOSANTS.md) - [ARCHIVÉ] Plan de refactorisation des composants
+- [📋 **Inventaire Composants Mobiles**](/docs/archive/INVENTAIRE_REFACTORISATION_COMPOSANTS_MOBILES.md) - [ARCHIVÉ] Inventaire des composants mobiles à refactoriser
+
 ## 📌 Comment Utiliser Cette Documentation
 
 ### Pour les Développeurs
 
 1. **Nouveaux sur le projet**: Commencez par lire l'[Architecture](/docs/architecture/ARCHITECTURE_LEGACY.md) et les guides des [Composants](/docs/components/GUIDE_COMPOSANTS_GENERIQUES.md) et [Hooks](/docs/hooks/HOOKS.md)
 
-2. **Pour contribuer au CSS**: Consultez le [Guide de Style CSS](/docs/standards/CSS_STYLE_GUIDE.md) et le [Plan de Refactorisation CSS](/docs/css/PLAN_REFACTORISATION_CSS_PROGRESSIF.md)
+2. **Pour contribuer au CSS**: Consultez le [Guide de Style CSS](/docs/standards/CSS_STYLE_GUIDE.md)
 
 3. **Pour contribuer aux composants**: Voir le [Guide des Composants Génériques](/docs/components/GUIDE_COMPOSANTS_GENERIQUES.md) et l'[Exemple de Composant Générique](/docs/components/EXEMPLE_COMPOSANT_GENERIQUE.md)
 
@@ -91,8 +104,8 @@ Ce dossier contient toute la documentation technique du projet TourCraft. Ce fic
 - **[archive/](/docs/archive/)** - Documents historiques et obsolètes conservés pour référence
 - **[components/](/docs/components/)** - Documentation des composants et plans de refactorisation
 - **[contexts/](/docs/contexts/)** - Documentation des contextes React
-- **[css/](/docs/css/)** - Plans et résumés de la refactorisation CSS
-- **[hooks/](/docs/hooks/)** - Documentation des hooks React et plans de migration
+- **[css/](/docs/css/)** - Documentation CSS et résultats de la refactorisation CSS (terminée)
+- **[hooks/](/docs/hooks/)** - Documentation des hooks React (migration vers hooks génériques terminée)
 - **[migration/](/docs/migration/)** - Plans et état des migrations (Firebase, etc.)
 - **[services/](/docs/services/)** - Documentation des services
 - **[standards/](/docs/standards/)** - Standards, conventions et guides de style
@@ -109,11 +122,17 @@ Ce dossier contient toute la documentation technique du projet TourCraft. Ce fic
    - Ajouter systématiquement la date de création et de dernière mise à jour
    - Mettre à jour cet index si un nouveau document est créé
 
-3. **Résolution des incohérences**:
+3. **Archivage de documents**:
+   - Les documents concernant des initiatives terminées sont copiés dans le dossier `/docs/archive/`
+   - Le chemin de référence dans ce README est mis à jour pour pointer vers la version archivée
+   - La mention "[ARCHIVÉ]" est ajoutée au début du titre du document
+
+4. **Résolution des incohérences**:
    - Signaler toute incohérence à l'équipe documentation (documentation@tourcraft.com)
    - Ne pas modifier plusieurs documents connexes sans coordination
 
 ---
 
 *Index maintenu par l'équipe Documentation*
+*Dernière mise à jour : 6 mai 2025*
 *Pour toute question: documentation@tourcraft.com*

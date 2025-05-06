@@ -128,8 +128,8 @@ const LieuDetails = () => {
     );
   }
 
-  // If no lieu or lieu not found, show a message
-  if (!lieu) {
+  // If no lieu or lieu not found after loading is complete, show a message
+  if (!lieu && !loading) {
     return (
       <div className={styles.errorContainer}>
         <div className="alert alert-warning">
@@ -145,6 +145,11 @@ const LieuDetails = () => {
         </Button>
       </div>
     );
+  }
+  
+  // La condition supplémentaire de sécurité pour éviter une erreur si lieu est null
+  if (!lieu) {
+    return null;
   }
 
   return (

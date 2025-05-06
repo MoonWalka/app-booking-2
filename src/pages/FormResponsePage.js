@@ -8,10 +8,12 @@ import ProgrammateurForm from '@/components/programmateurs/ProgrammateurForm.js'
 import PublicFormLayout from '@/components/forms/public/PublicFormLayout';
 import PublicFormContainer from '@/components/forms/public/PublicFormContainer';
 import AdminFormValidation from '@/components/forms/public/AdminFormValidation';
+import { useFormTokenValidation } from '@/hooks/forms';
+import { useAdminFormValidation } from '@/hooks/forms';
 
 // Import custom hooks
-import useFormTokenValidation from '@/hooks/forms/useFormTokenValidation';
-import useAdminFormValidation from '@/hooks/forms/useAdminFormValidation';
+;
+;
 
 /**
  * FormResponsePage handles both public form access with token and admin validation

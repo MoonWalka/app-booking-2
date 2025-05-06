@@ -1,15 +1,13 @@
 // src/components/artistes/desktop/ArtistesList.js
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Container, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import styles from './ArtistesList.module.css';
 
-// Import custom hooks
-import useArtistesList from '@/hooks/artistes/useArtistesList';
-import useSearchAndFilter from '@/hooks/artistes/useSearchAndFilter';
-import useHandleDeleteArtist from '@/hooks/artistes/useHandleDeleteArtist';
+// Import des hooks personnalisés - utilisation de la version migrée
+import { useArtistesListV2, useHandleDeleteArtist } from '@/hooks/artistes';
 
-// Import UI components
+// Import des composants UI
 import ArtistesListHeader from '../sections/ArtistesListHeader';
 import ArtistesStatsCards from '../sections/ArtistesStatsCards';
 import ArtisteSearchBar from '../sections/ArtisteSearchBar';
@@ -18,71 +16,79 @@ import ArtistesEmptyState from '../sections/ArtistesEmptyState';
 import ArtistesLoadMore from '../sections/ArtistesLoadMore';
 
 /**
- * Component that displays a list of artists with search, filters, and pagination
+ * Composant qui affiche une liste d'artistes avec recherche, filtres et pagination
+ * Refactorisé pour utiliser useArtistesListV2 basé sur useGenericEntityList
  */
 const ArtistesList = () => {
   const navigate = useNavigate();
-  // State for sorting
-  const [sortByField, setSortByField] = useState('nom');
-  const [sortDirection, setSortDirection] = useState('asc');
+  const [showDropdown, setShowDropdown] = useState(false);
+  const searchInputRef = React.useRef(null);
 
-  // Custom hook for fetching and managing artists data
+  // Utilisation du hook migré V2 qui est basé sur useGenericEntityList
   const {
+    // Données principales
     artistes,
     loading,
     stats,
+    error,
+    
+    // Pagination
     hasMore,
     loadMoreArtistes,
-    fetchArtistes,
-    setArtistes
-  } = useArtistesList(20, sortByField, sortDirection);
-
-  // Custom hook for search and filtering
-  const {
+    
+    // Recherche et filtrage
     searchTerm,
     setSearchTerm,
-    filter,
+    filters,
     setFilter,
-    showDropdown,
-    setShowDropdown,
+    resetFilters,
+    
+    // Tri
     sortBy,
+    sortDirection,
     setSortBy,
-    searchInputRef,
-    handleSearchChange,
-    handleSortChange,
-    handleCreateArtiste,
-    filteredArtistes,
-    noResults
-  } = useSearchAndFilter(artistes);
+    setSortDirection,
 
-  // Custom hook for deleting artists
+    // Actions
+    setArtistes
+  } = useArtistesListV2(20, 'nom', 'asc');
+
+  // Hook pour la gestion des suppressions d'artistes
   const { handleDelete } = useHandleDeleteArtist(setArtistes, stats);
 
-  // Effect to fetch artists when sort parameters change
-  useEffect(() => {
-    if (sortBy !== sortByField || sortDirection !== sortDirection) {
-      setSortByField(sortBy);
-      setSortDirection(sortDirection);
-    }
-  }, [sortBy, sortDirection]);
-
-  // Navigate to the new artist form
+  // Navigation vers le formulaire de création d'artiste
   const handleAddClick = () => {
     navigate('/artistes/nouveau');
   };
 
-  // Handle clearing the search input
+  // Gestion de la recherche
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+    setShowDropdown(!!e.target.value);
+  };
+
+  // Effacement de la recherche
   const handleClearSearch = () => {
     setSearchTerm('');
     setShowDropdown(false);
   };
 
-  // Handle filter change
+  // Gestion du changement de filtre
   const handleFilterChange = (e) => {
-    setFilter(e.target.value);
+    setFilter('status', e.target.value);
   };
 
-  // Loading state
+  // Gestion du changement de tri
+  const handleSortChange = (value) => {
+    setSortBy(value);
+  };
+
+  // Création d'un nouvel artiste depuis la barre de recherche
+  const handleCreateArtiste = () => {
+    navigate('/artistes/nouveau', { state: { initialNom: searchTerm } });
+  };
+
+  // État de chargement
   if (loading && artistes.length === 0) {
     return (
       <Container className="py-5 text-center">
@@ -92,20 +98,35 @@ const ArtistesList = () => {
     );
   }
 
+  // État d'erreur
+  if (error) {
+    return (
+      <Container className="py-5 text-center">
+        <div className="alert alert-danger" role="alert">
+          Une erreur est survenue lors du chargement des artistes : {error.message || error}
+        </div>
+      </Container>
+    );
+  }
+
+  // On peut considérer que tous les artistes sont déjà filtrés par useGenericEntityList
+  const filteredArtistes = artistes;
+  const noResults = searchTerm && filteredArtistes.length === 0;
+
   return (
     <Container className="py-4">
-      {/* Header with title and add button */}
+      {/* En-tête avec titre et bouton d'ajout */}
       <ArtistesListHeader onAddClick={handleAddClick} />
       
-      {/* Statistics cards */}
+      {/* Cartes de statistiques */}
       <ArtistesStatsCards stats={stats} />
       
-      {/* Search and filter bar */}
+      {/* Barre de recherche et de filtrage */}
       <ArtisteSearchBar
         searchTerm={searchTerm}
         onSearchChange={handleSearchChange}
         onClearSearch={handleClearSearch}
-        filter={filter}
+        filter={filters.status || ''}
         onFilterChange={handleFilterChange}
         sortBy={sortBy}
         onSortChange={handleSortChange}
@@ -117,7 +138,7 @@ const ArtistesList = () => {
         searchInputRef={searchInputRef}
       />
       
-      {/* Table or Empty state */}
+      {/* Tableau ou état vide */}
       {filteredArtistes.length > 0 ? (
         <ArtistesTable 
           artistes={filteredArtistes} 
@@ -130,7 +151,7 @@ const ArtistesList = () => {
         />
       )}
       
-      {/* Load more button (when there are more artists to load) */}
+      {/* Bouton "Charger plus" (quand il y a plus d'artistes à charger) */}
       {filteredArtistes.length > 0 && hasMore && (
         <ArtistesLoadMore 
           loading={loading} 

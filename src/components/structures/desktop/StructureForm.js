@@ -1,11 +1,8 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { Form, Alert } from 'react-bootstrap';
+import { useStructureForm, useStructureValidation } from '@/hooks/structures';
 import styles from './StructureForm.module.css';
-
-// Import custom hooks
-import useStructureForm from '@/hooks/structures/useStructureForm';
-import useStructureValidation from '@/hooks/structures/useStructureValidation';
 
 // Import modular section components
 import StructureFormHeader from './sections/StructureFormHeader';

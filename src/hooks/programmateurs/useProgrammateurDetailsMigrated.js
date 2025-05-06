@@ -3,7 +3,17 @@ import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { doc, updateDoc, arrayUnion, arrayRemove, getDoc } from 'firebase/firestore';
+import { 
+  doc, 
+  updateDoc, 
+  arrayUnion, 
+  arrayRemove, 
+  getDoc, 
+  query,
+  collection,
+  where,
+  getDocs
+} from 'firebase/firestore';
 import { db } from '@/firebaseInit';
 import { useGenericEntityDetails } from '@/hooks/common';
 import { validateProgrammateurForm } from '@/utils/validation';

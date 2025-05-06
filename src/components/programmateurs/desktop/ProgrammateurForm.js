@@ -14,7 +14,7 @@ import ProgrammateurLieuxSection from './ProgrammateurLieuxSection';
 
 // Import des hooks personnalisés
 import { useProgrammateurDetails } from '@/hooks/programmateurs';
-import useCompanySearch from '@/hooks/programmateurs/useCompanySearch';
+import { useCompanySearch } from '@/hooks/programmateurs';
 import { useAddressSearch } from '@/hooks/common';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import ErrorMessage from '@/components/ui/ErrorMessage';

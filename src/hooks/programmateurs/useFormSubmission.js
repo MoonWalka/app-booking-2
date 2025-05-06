@@ -1,14 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
-
-/**
- * useFormSubmission - Description du hook
- */
-const useFormSubmission = (/* paramètres */) => {
-  // État et logique du hook
-  
-  return {
-    // Valeurs et fonctions à retourner
-  };
-};
-
+// src/hooks/programmateurs/useFormSubmission.js
+// Re-export the common implementation
+import useFormSubmission from '../common/useFormSubmission';
 export default useFormSubmission;

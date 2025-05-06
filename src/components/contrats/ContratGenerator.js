@@ -1,6 +1,6 @@
 // src/components/contrats/ContratGenerator.js
 import React from 'react';
-import { useResponsive } from '@/hooks/common/useResponsive';
+import { useResponsive } from '@/hooks/common';
 import DesktopContratGenerator from './desktop/ContratGenerator';
 
 /**

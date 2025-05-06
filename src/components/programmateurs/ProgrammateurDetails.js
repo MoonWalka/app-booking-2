@@ -1,11 +1,9 @@
 // src/components/programmateurs/ProgrammateurDetails.js
 import React from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
-import { useResponsive } from '@/hooks/common/useResponsive'; // Utilisation du hook recommandé
+import { useResponsive } from '@/hooks/common';
+import { useProgrammateurDetails } from '@/hooks/programmateurs';
 import ProgrammateurForm from '@/components/programmateurs/ProgrammateurForm';
-
-// Import custom hooks
-import useProgrammateurDetails from '@/hooks/programmateurs/useProgrammateurDetails';
 
 /**
  * Composant conteneur pour les détails d'un programmateur

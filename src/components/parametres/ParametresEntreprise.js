@@ -1,10 +1,8 @@
 import React, { useEffect } from 'react';
 import { Card, Form } from 'react-bootstrap';
 import styles from './ParametresEntreprise.module.css';
-
-// Import custom hooks
-import useEntrepriseForm from '@/hooks/parametres/useEntrepriseForm';
 import { useCompanySearch, useAddressSearch } from '@/hooks/common';
+import { useEntrepriseForm } from '@/hooks/parametres';
 
 // Import subcomponents
 import EntrepriseHeader from './sections/EntrepriseHeader';

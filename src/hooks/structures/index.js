@@ -131,3 +131,12 @@ export {
   useDeleteStructure,
   useStructureSearch
 };
+
+// Export de la version migrée avec son nom original
+export { default as useStructureDetailsMigrated } from './useStructureDetailsMigrated';
+
+/**
+ * @recommended La version migrée du hook useStructureDetails basée sur les hooks génériques.
+ * À utiliser dans les nouveaux développements.
+ */
+export { default as useStructureDetailsV2 } from './useStructureDetailsMigrated';

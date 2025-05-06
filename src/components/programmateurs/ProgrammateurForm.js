@@ -1,6 +1,7 @@
 // src/components/forms/ProgrammateurForm.js
 import React from 'react';
-import { useResponsive } from '@/hooks/common/useResponsive'; // Utilisation du hook recommandé
+import { useResponsive } from '@/hooks/common';
+; // Utilisation du hook recommandé
 
 function ProgrammateurForm(props) {
   const responsive = useResponsive();

@@ -1,186 +1,57 @@
-import { useCallback, useMemo } from 'react';
-import useGenericEntityList from '../common/useGenericEntityList';
-
 /**
- * Hook pour la gestion des lieux avec filtres
- * Version migrée utilisant useGenericEntityList
+ * @deprecated Ce hook est déprécié et sera supprimé dans une future version.
+ * Veuillez utiliser le hook migré vers les hooks génériques à la place:
+ * import { useLieuxFiltersV2 } from '@/hooks/lieux';
  * 
- * @param {Array} lieux - Liste initiale des lieux (facultatif)
- * @returns {Object} API pour la gestion des listes de lieux
+ * Hook pour gérer les filtres et la recherche de lieux
+ * @param {Array} lieux - Liste des lieux à filtrer
+ * @returns {Object} - API de filtrage et recherche de lieux
  */
+import useLieuxFiltersMigrated from './useLieuxFiltersMigrated';
+import { useEffect } from 'react';
+
 const useLieuxFilters = (lieux = []) => {
-  // Configuration des filtres pour les lieux
-  const filterConfig = {
-    ville: {
-      type: 'equals',
-      firestoreOperator: '=='
-    },
-    type: {
-      type: 'equals',
-      firestoreOperator: '=='
-    },
-    capaciteMin: {
-      type: 'range',
-      firestoreOperator: {
-        min: '>='
-      }
-    },
-    capaciteMax: {
-      type: 'range',
-      firestoreOperator: {
-        max: '<='
-      }
-    },
-    actif: {
-      type: 'boolean',
-      firestoreOperator: '=='
-    }
-  };
-
-  // Fonction de filtrage personnalisée pour les lieux fournis en entrée
-  const filterLieux = useCallback((items, filters, searchTerm) => {
-    // S'assurer que items est un tableau
-    if (!Array.isArray(items)) return [];
-    
-    // Utiliser lieux si fourni, sinon utiliser items
-    const lieuxToFilter = lieux?.length ? lieux : items;
-    
-    if (!lieuxToFilter?.length) return [];
-    
-    return lieuxToFilter.filter(lieu => {
-      // Vérifier que lieu n'est pas null ou undefined
-      if (!lieu) return false;
-      
-      // Filtre par type si défini
-      if (filters?.type && lieu.type !== filters.type) {
-        return false;
-      }
-      
-      // Filtre par ville si défini
-      if (filters?.ville && lieu.ville !== filters.ville) {
-        return false;
-      }
-      
-      // Filtre par capacité min si défini
-      if (filters?.capaciteMin && (!lieu.capacite || lieu.capacite < parseInt(filters.capaciteMin))) {
-        return false;
-      }
-      
-      // Filtre par capacité max si défini
-      if (filters?.capaciteMax && (!lieu.capacite || lieu.capacite > parseInt(filters.capaciteMax))) {
-        return false;
-      }
-      
-      // Filtre par terme de recherche
-      if (searchTerm && searchTerm.trim() !== '') {
-        const term = searchTerm.toLowerCase().trim();
-        const nomMatch = lieu.nom && lieu.nom.toLowerCase().includes(term);
-        const villeMatch = lieu.ville && lieu.ville.toLowerCase().includes(term);
-        const adresseMatch = lieu.adresse && lieu.adresse.toLowerCase().includes(term);
-        
-        if (!nomMatch && !villeMatch && !adresseMatch) {
-          return false;
-        }
-      }
-      
-      return true;
-    });
-  }, [lieux]);
-
-  // Fonction utilitaire pour formater le nom d'un lieu
-  const formatLieuName = (lieu) => {
-    if (!lieu) return 'Lieu inconnu';
-    
-    const nom = lieu.nom || '';
-    const ville = lieu.ville ? `(${lieu.ville})` : '';
-    const capacite = lieu.capacite ? `- ${lieu.capacite} places` : '';
-    
-    return `${nom} ${ville} ${capacite}`.trim();
-  };
-
-  // Utiliser le hook générique avec la configuration spécifique aux lieux
-  const listHook = useGenericEntityList({
-    collectionName: 'lieux',
-    filterConfig,
-    searchFields: ['nom', 'ville', 'adresse'],
-    initialSortField: 'nom',
-    initialSortDirection: 'asc',
-    transformItem: (lieu) => ({
-      ...lieu,
-      // Format pour l'affichage dans les listes
-      displayName: formatLieuName(lieu)
-    }),
-    // Par défaut, n'inclure que les lieux actifs
-    defaultFilters: { actif: true },
-    // Pagination avec 20 éléments par page
-    pageSize: 20,
-    // Si des lieux ont été fournis directement, utiliser le mode pagination client
-    paginationMode: Array.isArray(lieux) && lieux.length > 0 ? 'client' : 'server',
-    // Fonction personnalisée pour le filtrage client quand lieux est fourni
-    customFiltering: Array.isArray(lieux) && lieux.length > 0 ? filterLieux : null
-  });
+  // Afficher un avertissement de dépréciation
+  useEffect(() => {
+    console.warn(
+      'Avertissement: useLieuxFilters est déprécié. ' +
+      'Veuillez utiliser useLieuxFiltersV2 depuis @/hooks/lieux à la place.'
+    );
+  }, []);
   
-  // Extraire les types uniques pour les options de filtre
-  const typesOptions = useMemo(() => {
-    if (!Array.isArray(lieux) || !lieux.length) return [];
-    
-    const types = new Set(lieux
-      .filter(lieu => lieu && lieu.type)
-      .map(lieu => lieu.type));
-    
-    return Array.from(types);
-  }, [lieux]);
+  // Utiliser la version migrée qui est basée sur useGenericEntityList
+  const migratedHook = useLieuxFiltersMigrated(lieux);
   
-  // Extraire les villes uniques pour les options de filtre
-  const villesOptions = useMemo(() => {
-    if (!Array.isArray(lieux) || !lieux.length) return [];
-    
-    const villes = new Set(lieux
-      .filter(lieu => lieu && lieu.ville)
-      .map(lieu => lieu.ville));
-    
-    return Array.from(villes);
-  }, [lieux]);
-
-  // Adapter l'API pour maintenir la compatibilité avec le code existant
-  // qui utilise useLieuxFilters
+  // Adapter l'API pour être compatible avec les composants existants
   return {
-    // Les données principales - IMPORTANT : assurer la compatibilité avec LieuxList
-    lieux: listHook.items || [],
-    filteredLieux: listHook.items || [], // Cette propriété attendue par LieuxList
-    loading: listHook.loading || false,
-    error: listHook.error || null,
+    // Propriétés principales (s'assurer que filteredLieux est toujours défini)
+    lieux: migratedHook.lieux || [],
+    filteredLieux: migratedHook.filteredLieux || [],
     
-    // Filtres et recherche
-    filterType: listHook.filters?.type || 'tous',
-    setFilterType: (type) => listHook.setFilter?.('type', type === 'tous' ? '' : type),
-    searchTerm: listHook.searchTerm || '',
-    setSearchTerm: listHook.setSearchTerm || (() => {}),
-    sortOption: listHook.sortField || 'nom',
-    setSortOption: (option) => listHook.setSorting?.(option),
+    // Recherche et filtrage
+    searchTerm: migratedHook.searchTerm || '',
+    setSearchTerm: migratedHook.setSearchTerm,
+    filterType: migratedHook.filterType || 'tous',
+    setFilterType: migratedHook.setFilterType,
+    filterRegion: migratedHook.filterRegion || 'toutes',
+    setFilterRegion: migratedHook.setFilterRegion,
+    filterVille: migratedHook.filterVille || 'toutes',
+    setFilterVille: migratedHook.setFilterVille,
     
-    // Options de filtre basées sur les données disponibles
-    typesOptions,
-    villesOptions,
-    filters: listHook.filters || {},
+    // Options et actions
+    resetFilters: migratedHook.resetFilters,
+    refresh: migratedHook.refresh,
+    types: migratedHook.types || ['tous'],
+    regions: migratedHook.regions || ['toutes'],
+    villes: migratedHook.villes || ['toutes'],
     
-    // Pagination
-    hasMore: listHook.hasMore || false,
-    loadMore: listHook.loadMore || (() => {}),
-    currentPage: listHook.currentPage || 1,
-    setPage: listHook.setPage || (() => {}),
+    // État de chargement et erreurs
+    loading: migratedHook.loading || false,
+    error: migratedHook.error,
     
-    // Tri
-    sortField: listHook.sortField || 'nom',
-    sortDirection: listHook.sortDirection || 'asc',
-    setSorting: listHook.setSorting || (() => {}),
-    
-    // Actions générales
-    refresh: listHook.refresh || (() => {}),
-    
-    // Exposer également l'API complète du hook générique pour les cas où
-    // des fonctionnalités supplémentaires seraient nécessaires
-    genericListHook: listHook || {}
+    // Options de tri (si utilisées)
+    sortOption: migratedHook.sortOption || 'nom_asc',
+    setSortOption: migratedHook.setSortOption || (() => {}),
   };
 };
 

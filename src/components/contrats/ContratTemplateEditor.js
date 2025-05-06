@@ -1,6 +1,6 @@
 // src/components/contrats/ContratTemplateEditor.js
 import React from 'react';
-import { useResponsive } from '@/hooks/common/useResponsive';
+import { useResponsive } from '@/hooks/common';
 import DesktopContratTemplateEditor from './desktop/ContratTemplateEditor';
 
 /**

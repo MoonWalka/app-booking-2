@@ -1,6 +1,7 @@
 // src/components/structures/StructuresList.js
 import React from 'react';
-import { useResponsive } from '@/hooks/common/useResponsive';
+import { useResponsive } from '@/hooks/common';
+;
 
 function StructuresList(props) {
   const { getResponsiveComponent } = useResponsive();

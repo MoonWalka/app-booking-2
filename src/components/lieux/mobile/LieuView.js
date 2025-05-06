@@ -4,9 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Spinner from '@/components/common/Spinner';
 import Button from '@/components/ui/Button';
 import { toast } from 'react-toastify';
-
-// Import du hook standardisé
-import useLieuDetails from '@/hooks/lieux/useLieuDetails';
+import { useLieuDetails } from '@/hooks/lieux';
 
 // Import styles
 import styles from './LieuView.module.css';
@@ -58,8 +56,8 @@ const LieuView = () => {
     );
   }
 
-  // If no lieu or lieu not found, show a message
-  if (!lieu) {
+  // If no lieu or lieu not found after loading is complete, show a message
+  if (!lieu && !loading) {
     return (
       <div className={styles?.errorContainer || "p-3"}>
         <div className="alert alert-warning">
@@ -75,6 +73,11 @@ const LieuView = () => {
         </Button>
       </div>
     );
+  }
+  
+  // La condition supplémentaire de sécurité pour éviter une erreur si lieu est null
+  if (!lieu) {
+    return null;
   }
 
   return (

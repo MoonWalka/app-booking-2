@@ -18,13 +18,13 @@ import { formatDate, formatMontant, isDatePassed, copyToClipboard, getCacheKey }
  * Conserve la compatibilité avec l'API existante tout en tirant parti du hook générique
  * 
  * @param {string} id - ID du concert
- * @param {object} location - Objet location de React Router
+ * @param {object} locationParam - Objet location de React Router (optionnel)
  * @returns {object} - API du hook
  */
-const useConcertDetailsMigrated = (id, location) => {
+const useConcertDetailsMigrated = (id, locationParam) => {
   const navigate = useNavigate();
   const locationData = useLocation();
-  const location = location || locationData;
+  const location = locationParam || locationData;
   
   // États spécifiques au concert qui ne sont pas gérés par le hook générique
   const [cacheKey, setCacheKey] = useState(getCacheKey(id));

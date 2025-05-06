@@ -1,7 +1,7 @@
 // src/components/common/Layout.js
 import React, { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
-import { useResponsive } from '@/hooks/common/useResponsive';
+import { useResponsive } from '@/hooks/common';
 
 // Import direct du DesktopLayout pour forcer son utilisation
 import DesktopLayout from './layout/DesktopLayout';

@@ -1,0 +1,56 @@
+Fichiers supprimés le Wed May  7 00:09:19 CEST 2025
+Suppression de /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/artistes//ArtisteForm.jsx
+/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/artistes//ArtisteForm.jsx
+Suppression de /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/artistes//ArtisteDetail.jsx
+/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/artistes//ArtisteDetail.jsx
+/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/hooks/useLocationIQ.js
+/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/hooks/useTheme.js
+/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/hooks/useResponsiveComponent.js
+/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/hooks/forms/useConcertForm.js
+/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/firebase.js.original
+Suppression de /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/concerts/mobile/sections/DeleteConcertModalMobile.module.css.bak
+/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/concerts/mobile/sections/DeleteConcertModalMobile.module.css.bak
+Suppression de /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/concerts/mobile/sections/ConcertOrganizerSectionMobile.module.css.bak
+/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/concerts/mobile/sections/ConcertOrganizerSectionMobile.module.css.bak
+Suppression de /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/concerts/mobile/ConcertDetails.module.css.bak
+/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/concerts/mobile/ConcertDetails.module.css.bak
+Suppression de /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/concerts/mobile/ConcertsList.module.css.bak
+/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/concerts/mobile/ConcertsList.module.css.bak
+Suppression de /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/concerts/mobile/ConcertView.module.css.bak
+/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/concerts/mobile/ConcertView.module.css.bak
+Suppression de /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/forms/mobile/sections/ValidationActionBar.module.css.bak
+/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/forms/mobile/sections/ValidationActionBar.module.css.bak
+Suppression de /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/forms/mobile/sections/ValidationSection.module.css.bak
+/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/forms/mobile/sections/ValidationSection.module.css.bak
+Suppression de /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/forms/mobile/sections/ValidationModal.module.css.bak
+/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/forms/mobile/sections/ValidationModal.module.css.bak
+Suppression de /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/forms/mobile/sections/ValidationSummary.module.css.bak
+/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/forms/mobile/sections/ValidationSummary.module.css.bak
+Suppression de /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/forms/mobile/sections/FormHeader.module.css.bak
+/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/forms/mobile/sections/FormHeader.module.css.bak
+Suppression de /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/forms/mobile/FormValidationInterface.module.css.bak
+/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/forms/mobile/FormValidationInterface.module.css.bak
+Suppression de /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/structures/mobile/StructureForm.module.css.bak
+/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/structures/mobile/StructureForm.module.css.bak
+Suppression de /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/structures/mobile/StructureDetails.module.css.bak
+/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/structures/mobile/StructureDetails.module.css.bak
+Suppression de /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/structures/mobile/StructuresList.module.css.bak
+/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/structures/mobile/StructuresList.module.css.bak
+Suppression de /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/pdf/ContratPDFWrapper.js.bak
+/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/pdf/ContratPDFWrapper.js.bak
+Suppression de /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/lieux/mobile/LieuView.module.css.bak
+/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/lieux/mobile/LieuView.module.css.bak
+Suppression de /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/lieux/mobile/LieuxList.module.css.bak
+/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/lieux/mobile/LieuxList.module.css.bak
+Suppression de /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/programmateurs/mobile/ProgrammateursList.module.css.bak
+/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/programmateurs/mobile/ProgrammateursList.module.css.bak
+Suppression de /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/programmateurs/mobile/ProgrammateurDetails.module.css.bak
+/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/programmateurs/mobile/ProgrammateurDetails.module.css.bak
+Suppression de /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/programmateurs/mobile/ProgrammateurForm.module.css.bak
+/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/programmateurs/mobile/ProgrammateurForm.module.css.bak
+Suppression de /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/artistes/mobile/ArtisteDetail.module.css.bak
+/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/artistes/mobile/ArtisteDetail.module.css.bak
+Suppression de /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/artistes/mobile/ArtisteForm.module.css.bak
+/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/artistes/mobile/ArtisteForm.module.css.bak
+Suppression de /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/artistes/mobile/ArtistesList.module.css.bak
+/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/artistes/mobile/ArtistesList.module.css.bak

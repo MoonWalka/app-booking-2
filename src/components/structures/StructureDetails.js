@@ -1,6 +1,7 @@
 // src/components/structures/StructureDetails.js
 import React from 'react';
-import { useResponsive } from '@/hooks/common/useResponsive';
+import { useResponsive } from '@/hooks/common';
+;
 
 function StructureDetails(props) {
   const { getResponsiveComponent } = useResponsive();

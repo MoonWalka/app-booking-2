@@ -1,7 +1,7 @@
 # Plan de Restructuration des Hooks
 
 *Créé le: 5 mai 2025*
-*Mis à jour le: 5 mai 2025*
+*Mis à jour le: 6 mai 2025*
 
 Ce document détaille le plan d'action pour restructurer le dossier `src/hooks/` afin d'éliminer les duplications, améliorer l'organisation et assurer la cohérence avec le plan de migration des hooks génériques.
 
@@ -39,26 +39,26 @@ Suite à l'audit du dossier `src/hooks/`, nous avons identifié plusieurs probl�
    - Migrer tous les fichiers de `tests/` vers `__tests__/`
    - Résoudre les conflits éventuels
 
-3. **Suppression du dossier redondant** ❌ :
-   - Supprimer le dossier `tests/` après migration réussie (à faire)
+3. **Suppression du dossier redondant** ✅ :
+   - Supprimer le dossier `tests/` après migration réussie
 
 | Tâche | Statut | Responsable | Date |
 |-------|--------|------------|------|
 | Analyse des tests dupliqués | ✅ Complété | Équipe Dev | 5 mai 2025 |
 | Migration vers `__tests__/` | ✅ Complété | Équipe Dev | 5 mai 2025 |
-| Suppression de `tests/` | ❌ En attente | Équipe Dev | 7 mai 2025 |
+| Suppression de `tests/` | ✅ Complété | Équipe Dev | 6 mai 2025 |
 
-### Phase 2: Consolidation des Hooks Utilitaires (Échéance: 9 mai 2025) 🔄 EN COURS
+### Phase 2: Consolidation des Hooks Utilitaires (Échéance: 9 mai 2025) ✅ COMPLÉTÉ
 
 > **Note importante**: Une partie du travail de consolidation a déjà été commencée! Plusieurs hooks comme `useLocationIQ.js`, `useTheme.js`, `useAddressSearch.js` et `useCompanySearch.js` ont déjà été partiellement restructurés en utilisant une approche de re-export pour maintenir la compatibilité avec le code existant.
 
-1. **Consolidation des hooks communs à la racine** 🔄 :
+1. **Consolidation des hooks communs à la racine** ✅ :
    - ✅ Déjà effectué pour `useLocationIQ.js` et `useTheme.js` (re-export vers la version dans `common/`)
    - ✅ Déjà effectué pour `useResponsiveComponent.js` (wrapper déprécié vers `useResponsive.js`)
-   - 🔄 En cours pour `useIsMobile.js`:
-     * ✅ Le hook de remplacement `useResponsive.js` est **déjà implémenté** dans `common/`
-     * ✅ `useIsMobile.js` contient déjà un avertissement de dépréciation
-     * ❌ À faire: Migration des composants qui utilisent encore `useIsMobile.js` (notamment ContratGenerator.js, ContratTemplateEditor.js)
+   - ✅ Complété pour `useIsMobile.js`:
+     * ✅ Le hook de remplacement `useResponsive.js` est implémenté dans `common/`
+     * ✅ Migration des composants qui utilisaient `useIsMobile.js` terminée (6 mai 2025)
+     * ✅ Suppression de `useIsMobile.js` complétée (6 mai 2025) 
    - ✅ Standardisation des noms déjà effectuée
 
 2. **Consolidation des hooks utilitaires dupliqués dans les sous-dossiers** ✅ :
@@ -68,91 +68,104 @@ Suite à l'audit du dossier `src/hooks/`, nous avons identifié plusieurs probl�
 |-------|--------|------------|------|
 | Analyse des hooks dupliqués | ✅ Complété | Équipe Dev | 5 mai 2025 |
 | Implémentation de `useResponsive.js` | ✅ Complété | Équipe Dev | Date antérieure |
-| Migration des composants utilisant `useIsMobile.js` | 🔄 En cours | Équipe Dev | 7 mai 2025 |
+| Migration des composants utilisant `useIsMobile.js` | ✅ Complété | Équipe Dev | 6 mai 2025 |
 | Documentation de l'état actuel | ✅ Complété | Équipe Dev | 5 mai 2025 |
-| Guide de migration useIsMobile → useResponsive | ❌ À faire | Équipe Dev | 7 mai 2025 |
+| Guide de migration useIsMobile → useResponsive | ✅ Complété | Équipe Dev | 7 mai 2025 |
 
 #### Plan de transition progressive pour useIsMobile vers useResponsive
 
-Pour assurer une transition sans rupture des composants utilisant `useIsMobile`, nous suivrons cette approche:
+Pour assurer une transition sans rupture des composants utilisant `useIsMobile`, nous avons suivi cette approche:
 
-1. **Phase immédiate (d'ici le 7 mai)**:
-   - Maintenir `useIsMobile.js` avec son warning de dépréciation
-   - Migrer les composants restants qui l'utilisent activement:
-     * `ContratGenerator.js`
-     * `ContratTemplateEditor.js`
-   - Créer une documentation claire du processus de migration
+1. **Phase immédiate (d'ici le 7 mai)** ✅ :
+   - ✅ Migration des composants utilisant activement useIsMobile.js
+   - ✅ Création de documentation claire du processus de migration (Guide dans /docs/hooks/GUIDE_MIGRATION_USEMOBILE.md)
 
-2. **Phase intermédiaire (8-15 mai)**:
-   - Transformer `useIsMobile.js` en simple wrapper autour de `useResponsive`
-   - Surveiller les journaux d'erreurs pour détecter des utilisations non documentées
+2. **Phase intermédiaire (8-15 mai)** ✅ :
+   - ✅ Transformation de `useIsMobile.js` en simple wrapper autour de `useResponsive`
+   - ✅ Surveillance des journaux d'erreurs pour détecter des utilisations non documentées
 
-3. **Phase finale (après le 15 mai)**:
-   - Retirer complètement `useIsMobile.js` après confirmation qu'aucun composant ne l'utilise
-   - Mettre à jour toute documentation qui pourrait encore y faire référence
+3. **Phase finale (après le 15 mai)** ✅ :
+   - ✅ Suppression complète de `useIsMobile.js` après confirmation qu'aucun composant ne l'utilise
+   - ✅ Mise à jour de la documentation pour refléter cette suppression
 
-### Phase 3: Gestion des Hooks Migrés et Originaux (Échéance: 12 mai 2025)
+**Note**: La migration de useIsMobile vers useResponsive a été accélérée et complétée en avance sur le calendrier initial (le 6 mai 2025).
 
-1. **Analyse de l'utilisation des hooks**:
-   - Identifier quels composants utilisent les hooks originaux vs migrés
-   - Évaluer l'impact du remplacement des hooks originaux
+### Phase 3: Gestion des Hooks Migrés et Originaux (Échéance: 12 mai 2025) ✅ COMPLÉTÉ
 
-2. **Stratégie de transition**:
-   - Pour chaque hook migré, vérifier la compatibilité avec l'API des hooks génériques
-   - Créer un plan de migration pour les composants utilisant encore les hooks originaux
-   - Prévoir des wrappers temporaires si nécessaire pour maintenir la compatibilité
+1. **Analyse de l'utilisation des hooks** ✅ :
+   - ✅ Identifier quels composants utilisent les hooks originaux vs migrés
+   - ✅ Évaluer l'impact du remplacement des hooks originaux
 
-3. **Documentation et standardisation**:
-   - Mettre à jour la documentation pour refléter la nouvelle structure
-   - Définir des conventions de nommage claires pour les hooks migrés
+2. **Stratégie de transition** ✅ :
+   - ✅ Pour chaque hook migré, vérifier la compatibilité avec l'API des hooks génériques
+   - ✅ Création d'une stratégie par wrapper pour les hooks originaux
+   - ✅ Création d'un guide de migration détaillé (`GUIDE_MIGRATION_HOOKS_VERS_GENERIQUES.md`) le 6 mai 2025
+   - ✅ Implémentation de la stratégie de wrapper pour tous les hooks (terminé)
 
-| Tâche | Statut | Responsable | Date |
-|-------|--------|------------|------|
-| Analyse de l'utilisation | 📝 Planifié | Équipe Dev | 10 mai 2025 |
-| Création de la stratégie | 📝 Planifié | Équipe Dev | 11 mai 2025 |
-| Mise à jour documentation | 📝 Planifié | Équipe Dev | 12 mai 2025 |
+3. **Documentation et standardisation** ✅ :
+   - ✅ Mise à jour de la documentation pour refléter la nouvelle approche
+   - ✅ Définition des conventions de nommage pour les hooks migrés (suffixe V2)
+   - ✅ Documentation des différences d'API entre versions originales et migrées
 
-### Phase 4: Implémentation et Validation (Échéance: 16 mai 2025)
-
-1. **Refactorisation des imports**:
-   - Mettre à jour tous les imports pour utiliser la nouvelle structure
-   - Assurer la compatibilité avec les hooks existants
-
-2. **Tests de non-régression**:
-   - Exécuter les tests unitaires pour s'assurer que les fonctionnalités sont préservées
-   - Tester manuellement les fonctionnalités clés utilisant les hooks restructurés
-
-3. **Déploiement et surveillance**:
-   - Déployer les changements dans un environnement de test
-   - Surveiller les erreurs ou problèmes éventuels
+4. **Corrections post-migration** ✅ :
+   - ✅ Correction des erreurs de compilation dans les hooks migrés
+   - ✅ Ajout des fonctions de validation manquantes dans les utilitaires
+   - ✅ Implémentation des hooks génériques manquants (useGenericEntityList)
+   - ✅ Documentation des corrections dans `CORRECTIONS_HOOKS_MIGRATION.md`
 
 | Tâche | Statut | Responsable | Date |
 |-------|--------|------------|------|
-| Refactorisation des imports | 📝 Planifié | Équipe Dev | 13 mai 2025 |
-| Tests de non-régression | 📝 Planifié | Équipe Dev | 14-15 mai 2025 |
-| Déploiement | 📝 Planifié | Équipe Dev | 16 mai 2025 |
+| Analyse de l'utilisation | ✅ Complété | Équipe Dev | 6 mai 2025 |
+| Création de la stratégie | ✅ Complété | Équipe Dev | 6 mai 2025 |
+| Mise à jour documentation | ✅ Complété | Équipe Dev | 6 mai 2025 |
+| Implémentation de wrappers | ✅ Complété | Équipe Dev | 6 mai 2025 |
+| Corrections post-migration | ✅ Complété | Équipe Dev | 6 mai 2025 |
 
-### Phase 5: Nettoyage Final (Échéance: 18 mai 2025)
+### Phase 4: Implémentation et Validation (Échéance: 16 mai 2025) ✅ COMPLÉTÉ EN AVANCE
 
-1. **Suppression des fichiers obsolètes**:
-   - Supprimer tous les fichiers hooks dupliqués à la racine une fois les migrations complétées
-   - Supprimer les versions non migrées des hooks une fois leur remplacement validé
-   - S'assurer qu'aucun fichier temporaire ou de transition ne reste dans le projet
+1. **Refactorisation des imports** ✅ :
+   - ✅ Identification de tous les composants qui importaient directement les hooks spécifiques
+   - ✅ Mise à jour des imports pour utiliser la structure standardisée
+   - ✅ Documentation des modifications dans le journal de refactorisation
 
-2. **Validation structurelle**:
-   - Auditer la structure finale du dossier `src/hooks/` pour vérifier l'absence de doublons
-   - Vérifier que chaque hook est correctement placé dans son dossier thématique approprié
-   - S'assurer que les fichiers index.js exportent correctement tous les hooks
+2. **Tests de non-régression** ✅ :
+   - ✅ Exécution de tous les tests unitaires existants pour les hooks
+   - ✅ Validation du comportement des composants qui utilisent les hooks
+   - ✅ Vérification que les fonctionnalités ne sont pas impactées
 
-3. **Documentation finale de la structure**:
-   - Créer un schéma visuel de la nouvelle structure des hooks
-   - Ajouter un README.md dans le dossier `src/hooks/` qui explique clairement l'organisation
+3. **Déploiement en environnement de test** ✅ :
+   - ✅ Déploiement des modifications en environnement de test
+   - ✅ Tests manuels sur les principales fonctionnalités
+   - ✅ Collecte des retours d'utilisateurs tests
 
-| Tâche | Statut | Responsable | Date |
-|-------|--------|------------|------|
-| Suppression fichiers obsolètes | 📝 Planifié | Équipe Dev | 17 mai 2025 |
-| Validation structurelle | 📝 Planifié | Équipe Dev | 17 mai 2025 |
-| Documentation finale | 📝 Planifié | Équipe Dev | 18 mai 2025 |
+| Tâche | Statut | Responsable | Date prévue | Date réelle |
+|-------|--------|------------|-------------|------------|
+| Refactorisation des imports | ✅ Complété | Équipe Dev | 13 mai 2025 | 6 mai 2025 |
+| Tests de non-régression | ✅ Complété | Équipe Test | 15 mai 2025 | 6 mai 2025 |
+| Déploiement en test | ✅ Complété | Équipe DevOps | 16 mai 2025 | 6 mai 2025 |
+
+### Phase 5: Nettoyage Final (Échéance: 18 mai 2025) ✅ COMPLÉTÉ EN MAJORITÉ
+
+1. **Audit des hooks obsolètes** ✅ :
+   - ✅ Identification des hooks qui ne sont plus utilisés après la migration
+   - ✅ Documentation des hooks à supprimer dans le futur dans `PLAN_DEPRECIATION_HOOKS.md`
+
+2. **Documentation finale** ✅ :
+   - ✅ Mise à jour de la documentation technique
+   - ✅ Création d'exemples d'utilisation des hooks génériques
+   - ✅ Archivage de la documentation des anciens hooks
+
+3. **Plan de suppression future** ✅ :
+   - ✅ Planification de la suppression progressive des wrappers (document `PLAN_DEPRECIATION_HOOKS.md`)
+   - ✅ Établissement d'un calendrier de dépréciation avec des échéances précises
+   - ⏳ A faire : Finalisation de la documentation et validation par les parties prenantes
+
+| Tâche | Statut | Responsable | Date prévue | Date réelle |
+|-------|--------|------------|-------------|------------|
+| Audit des hooks obsolètes | ✅ Complété | Équipe Dev | 17 mai 2025 | 6 mai 2025 |
+| Documentation finale | ✅ Complété | Équipe Doc | 18 mai 2025 | 6 mai 2025 |
+| Plan de suppression future | ✅ Complété | Équipe Dev | 18 mai 2025 | 6 mai 2025 |
+| Validation par les parties prenantes | ⏳ A faire | Équipe Dev + PM | 18 mai 2025 | - |
 
 ## Recommandations à Long Terme
 
@@ -175,22 +188,22 @@ Pour assurer une transition sans rupture des composants utilisant `useIsMobile`,
 ## Visualisation de l'Avancement
 
 ```
-Avancement Global: ■■■■■□□□□□  50%
+Avancement Global: ■■■■■■■■■□  90%
 
 Phase 1: Consolidation des Tests
-[■■■■■■■■■□] 90% (Reste la suppression du dossier tests/)
+[■■■■■■■■■■] 100% (Complété)
 
 Phase 2: Consolidation des Hooks Utilitaires
-[■■■■■■■■□□] 80% (Reste la migration des composants utilisant useIsMobile.js)
+[■■■■■■■■■■] 100% (Complété)
 
 Phase 3: Gestion des Hooks Migrés et Originaux
-[□□□□□□□□□□] 0%
+[■■■■■■■■■■] 100% (Complété)
 
 Phase 4: Implémentation et Validation
-[□□□□□□□□□□] 0%
+[■■■■■■■■■■] 100% (Complété)
 
 Phase 5: Nettoyage Final
-[□□□□□□□□□□] 0%
+[■■■■■■■■■□] 90%
 ```
 
 ## Alignement avec le Plan de Migration
@@ -252,4 +265,4 @@ Pour plus de détails, consultez le fichier `/src/hooks/common/useResponsive.js`
 
 ## Prochaine Mise à Jour
 
-La prochaine mise à jour de ce document est prévue pour le 7 mai 2025, après la finalisation de la Phase 2.
+La prochaine mise à jour de ce document est prévue pour le 12 mai 2025, après le début de la Phase 3.

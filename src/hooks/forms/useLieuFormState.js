@@ -75,6 +75,21 @@ export const useLieuFormState = (initialLieu = null) => {
     };
   }, [lieuFormData.adresse, isApiLoading, searchAddress]);
 
+  // Hook pour gérer le clic en dehors des suggestions
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (suggestionsRef.current && !suggestionsRef.current.contains(event.target) && 
+          addressInputRef.current && !addressInputRef.current.contains(event.target)) {
+        setAddressSuggestions([]);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   // Handler pour mettre à jour le formulaire
   const handleLieuChange = (e) => {
     const { name, value } = e.target;
@@ -127,23 +142,6 @@ export const useLieuFormState = (initialLieu = null) => {
     };
   };
 
-  // Hook pour gérer le clic en dehors des suggestions
-  const setupOutsideClickHandler = () => {
-    useEffect(() => {
-      const handleClickOutside = (event) => {
-        if (suggestionsRef.current && !suggestionsRef.current.contains(event.target) && 
-            addressInputRef.current && !addressInputRef.current.contains(event.target)) {
-          setAddressSuggestions([]);
-        }
-      };
-      
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
-      };
-    }, []);
-  };
-
   return {
     lieuFormData,
     setLieuFormData,
@@ -153,8 +151,7 @@ export const useLieuFormState = (initialLieu = null) => {
     handleSelectAddress,
     saveLieuChanges,
     addressInputRef,
-    suggestionsRef,
-    setupOutsideClickHandler
+    suggestionsRef
   };
 };
 

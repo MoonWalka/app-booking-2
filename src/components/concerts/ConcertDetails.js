@@ -1,11 +1,9 @@
 // src/components/concerts/ConcertDetails.js
-import React, { useState } from 'react';
+import React from 'react';
 import { useParams, useLocation } from 'react-router-dom';
-import { useResponsive } from '@/hooks/common/useResponsive'; // Utilisation du nouveau hook recommandé
+import { useResponsive } from '@/hooks/common';
+import { useConcertDetails } from '@/hooks/concerts';
 import ConcertForm from '@/components/concerts/ConcertForm';
-
-// Hook pour les détails du concert
-import useConcertDetails from '@/hooks/concerts/useConcertDetails';
 
 /**
  * Composant conteneur pour les détails d'un concert

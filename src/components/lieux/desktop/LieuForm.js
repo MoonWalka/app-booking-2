@@ -5,7 +5,7 @@ import Spinner from '@/components/common/Spinner';
 import styles from './LieuForm.module.css';
 
 // Import du hook complet
-import { useLieuFormComplete } from '@/hooks/lieux/useLieuFormComplete';
+import { useLieuFormComplete } from '@/hooks/lieux';
 
 // Import sections
 import LieuFormHeader from './sections/LieuFormHeader';

@@ -118,6 +118,12 @@ export const useConcertListData = () => {
     const handleConcertDataChange = (event) => {
       if (!isMounted) return;
       
+      // Ignorer les événements concertDataRefreshed pour éviter les boucles infinies
+      if (event.type === 'concertDataRefreshed') {
+        console.log('Événement concertDataRefreshed ignoré pour éviter les boucles infinies');
+        return;
+      }
+      
       console.log(`Événement reçu: ${event.type}`, event.detail);
       
       // Actualiser lastUpdate seulement si suffisamment de temps s'est écoulé
@@ -132,6 +138,7 @@ export const useConcertListData = () => {
     // Enregistrer les écouteurs d'événements
     window.addEventListener('concertUpdated', handleConcertDataChange);
     window.addEventListener('concertDeleted', handleConcertDataChange);
+    // Nous conservons l'écouteur mais filtrons dans le handler pour maintenir la compatibilité
     window.addEventListener('concertDataRefreshed', handleConcertDataChange);
     
     // Intervalle de rafraîchissement (toutes les 5 minutes au lieu de 60 secondes)

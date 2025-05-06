@@ -6,9 +6,11 @@ import FormGenerator from '@/components/forms/FormGenerator';
 import styles from './ConcertView.module.css';
 
 // Import des hooks personnalisés
-import useConcertDetails from '@/hooks/concerts/useConcertDetails';
-import useConcertForm from '@/hooks/concerts/useConcertForm';
-import useConcertStatus from '@/hooks/concerts/useConcertStatus';
+import { 
+  useConcertDetails, 
+  useConcertForm, 
+  useConcertStatus 
+} from '@/hooks/concerts';
 
 // Import des composants mobile spécifiques depuis le répertoire sections
 import ConcertHeaderMobile from './sections/ConcertHeaderMobile';

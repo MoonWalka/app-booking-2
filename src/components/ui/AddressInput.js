@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import useAddressSearch from '@/hooks/common/useAddressSearch';
+import { useAddressSearch } from '@/hooks/common';
 import styles from './AddressInput.module.css';
 
 /**

@@ -1,6 +1,7 @@
 // src/components/forms/FormValidationInterface.js (nouveau wrapper)
 import React from 'react';
-import { useResponsive } from '@/hooks/common/useResponsive';
+import { useResponsive } from '@/hooks/common';
+;
 
 function FormValidationInterface(props) {
   const { getResponsiveComponent } = useResponsive();

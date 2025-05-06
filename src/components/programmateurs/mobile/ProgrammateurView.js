@@ -2,7 +2,7 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Card, Button, Badge, Spinner } from 'react-bootstrap';
-import { useProgrammateurDetails } from '@/hooks/programmateurs';
+import { useProgrammateurDetailsV2 } from '@/hooks/programmateurs';
 import UnderConstruction from '@/components/common/UnderConstruction';
 import styles from './ProgrammateurDetails.module.css';
 
@@ -13,13 +13,13 @@ import styles from './ProgrammateurDetails.module.css';
 const ProgrammateurView = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { 
+  const{ 
     programmateur, 
     loading, 
     error,
     handleDelete,
     formatValue
-  } = useProgrammateurDetails(id);
+  } = useProgrammateurDetailsV2(id);
 
   // Version temporaire plus détaillée qui peut remplacer le composant UnderConstruction
   // Vous pouvez développer ce composant progressivement

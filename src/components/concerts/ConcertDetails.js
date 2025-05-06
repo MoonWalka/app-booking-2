@@ -2,7 +2,7 @@
 import React from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { useResponsive } from '@/hooks/common';
-import { useConcertDetails } from '@/hooks/concerts';
+import { useConcertDetailsV2 } from '@/hooks/concerts';
 import ConcertForm from '@/components/concerts/ConcertForm';
 
 /**
@@ -15,7 +15,7 @@ function ConcertDetails() {
   const responsive = useResponsive();
   
   // Utilisation du hook useConcertDetails pour gérer l'état global
-  const { isEditMode, loading } = useConcertDetails(id, location);
+  const{ isEditMode, loading } = useConcertDetailsV2(id, location);
   
   // En mode édition, afficher le formulaire
   if (isEditMode) {

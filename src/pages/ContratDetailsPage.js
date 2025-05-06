@@ -2,28 +2,28 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Alert, Spinner } from 'react-bootstrap';
-import ContratPDFWrapper from '../components/contrats/ContratPDFWrapper';
+import ContratPDFWrapper from '@/components/contrats/ContratPDFWrapper';
 import styles from './ContratDetailsPage.module.css';
 
 // Import custom hooks
-import useContratDetails from '../hooks/contrats/useContratDetails';
-import useContratActions from '../hooks/contrats/useContratActions';
-import usePdfPreview from '../hooks/contrats/usePdfPreview';
+import { useContratDetailsV2 } from '@/hooks/contrats';
+import useContratActions from '@/hooks/contrats/useContratActions';
+import usePdfPreview from '@/hooks/contrats/usePdfPreview';
 
 // Import UI components 
-import ContratHeader from '../components/contrats/sections/ContratHeader';
-import ContratInfoCard from '../components/contrats/sections/ContratInfoCard';
-import ContratActions from '../components/contrats/sections/ContratActions';
-import ContratPdfTabs from '../components/contrats/sections/ContratPdfTabs';
-import ContratPdfViewer from '../components/contrats/sections/ContratPdfViewer';
-import ContratVariablesCard from '../components/contrats/sections/ContratVariablesCard';
+import ContratHeader from '@/components/contrats/sections/ContratHeader';
+import ContratInfoCard from '@/components/contrats/sections/ContratInfoCard';
+import ContratActions from '@/components/contrats/sections/ContratActions';
+import ContratPdfTabs from '@/components/contrats/sections/ContratPdfTabs';
+import ContratPdfViewer from '@/components/contrats/sections/ContratPdfViewer';
+import ContratVariablesCard from '@/components/contrats/sections/ContratVariablesCard';
 
 const ContratDetailsPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   
   // Use custom hooks to handle data fetching and logic
-  const { 
+  const{ 
     contrat, 
     concert, 
     template, 
@@ -34,7 +34,7 @@ const ContratDetailsPage = () => {
     loading, 
     error,
     setContrat
-  } = useContratDetails(id);
+  } = useContratDetailsV2(id);
   
   // Hook for handling contract actions (mark as sent, signed, delete)
   const {

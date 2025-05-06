@@ -2,7 +2,7 @@
 import React from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { useResponsive } from '@/hooks/common';
-import { useProgrammateurDetails } from '@/hooks/programmateurs';
+import { useProgrammateurDetailsV2 } from '@/hooks/programmateurs';
 import ProgrammateurForm from '@/components/programmateurs/ProgrammateurForm';
 
 /**
@@ -16,7 +16,7 @@ function ProgrammateurDetails() {
   const responsive = useResponsive();
   
   // Utilisation du hook pour gérer l'état global
-  const { isEditing } = useProgrammateurDetails(id);
+  const{ isEditing } = useProgrammateurDetailsV2(id);
   
   // Si on est sur le chemin d'édition, afficher le formulaire
   if (location.pathname.includes('/edit/')) {

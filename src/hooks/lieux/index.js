@@ -1,7 +1,7 @@
 /**
  * Point d'entrée pour les hooks relatifs aux lieux
  * Permet d'importer tous les hooks depuis un seul endroit
- * Exemple: import { useLieuDetails, useLieuSearch } from '@/hooks/lieux';
+ * Exemple: import { useLieuDetailsV2, useLieuSearch } from '@/hooks/lieux';
  */
 
 export { default as useLieuDetails } from './useLieuDetails';

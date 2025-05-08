@@ -16,10 +16,14 @@ import styles from './ProgrammateurDetails.module.css';
  * Composant d'affichage des détails d'un programmateur - Version Desktop refactorisée
  * Structure en cartes tout en conservant les fonctionnalités originales
  */
-const ProgrammateurView = () => {
-  const { id } = useParams();
+const ProgrammateurView = ({ id: propId }) => {
+  // Utiliser l'ID passé en prop s'il existe, sinon utiliser l'ID de l'URL
+  const { id: urlId } = useParams();
+  const id = propId || urlId;
   const navigate = useNavigate();
-  const{ 
+  
+  // Utiliser l'hook pour récupérer les données du programmateur
+  const { 
     programmateur, 
     structure,
     loading, 
@@ -46,11 +50,11 @@ const ProgrammateurView = () => {
   };
   
   if (loading) {
-    return <LoadingSpinner />;
+    return <LoadingSpinner message="Chargement du programmateur..." />;
   }
   
   if (error) {
-    return <ErrorMessage message={error} />;
+    return <ErrorMessage message={error.message || error} />;
   }
   
   if (!programmateur) {

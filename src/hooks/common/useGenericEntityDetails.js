@@ -7,9 +7,16 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/firebaseInit';
 
+// Compteur global pour suivre les instances
+const hookInstances = {
+  count: 0,
+  byEntityType: {}
+};
+
 /**
  * Hook générique pour la gestion des détails d'une entité
  * Centralise les fonctionnalités de chargement, visualisation, édition et suppression
+ * Optimisé pour résister aux cycles de montage/démontage
  * 
  * @param {Object} config - Configuration du hook
  * @returns {Object} États et méthodes pour gérer l'entité
@@ -24,7 +31,7 @@ const useGenericEntityDetails = ({
   
   // Configuration des entités liées
   relatedEntities = [],      // Configuration des entités liées
-  autoLoadRelated = true,    // Charger automatiquement les entités liées
+  autoLoadRelated = false,    // Charger automatiquement les entités liées
   customQueries = {},        // Requêtes personnalisées pour certaines entités liées
   
   // Callbacks et transformateurs
@@ -51,6 +58,15 @@ const useGenericEntityDetails = ({
   realtime = false,          // Utiliser des écouteurs temps réel
   useDeleteModal = true      // Utiliser un modal pour confirmer la suppression
 }) => {
+  // Générer un ID d'instance unique
+  hookInstances.count++;
+  if (!hookInstances.byEntityType[entityType]) {
+    hookInstances.byEntityType[entityType] = 0;
+  }
+  const instanceId = ++hookInstances.byEntityType[entityType];
+  
+  console.log(`[DEBUG-PROBLEME] useGenericEntityDetails #${hookInstances.count} (instance #${instanceId} pour ${entityType}:${id})`);
+  
   // États de base
   const [entity, setEntity] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -72,102 +88,290 @@ const useGenericEntityDetails = ({
   const [relatedData, setRelatedData] = useState({});
   const [loadingRelated, setLoadingRelated] = useState({});
   
-  // Référence pour les listeners Firestore
-  const unsubscribeRef = useRef(null);
+  // Référence pour les listeners Firestore et l'état de montage
+  const refs = useRef({
+    unsubscribe: null,
+    isMounted: true,
+    hasStartedFetch: false,
+    requestCounter: 0,
+    fetchPromise: null,
+    isEntityLoaded: false,
+    lastId: id,
+    entityCache: {} // Cache des entités déjà chargées
+  });
+  
+  // Mettre à jour la référence à l'ID
+  if (id !== refs.current.lastId) {
+    refs.current.lastId = id;
+    refs.current.hasStartedFetch = false;
+    refs.current.isEntityLoaded = false;
+  }
+  
+  // Maintenir un flag de montage pour éviter les mises à jour sur des composants démontés
+  useEffect(() => {
+    refs.current.isMounted = true;
+    
+    console.log(`[DEBUG-PROBLEME] useGenericEntityDetails - composant monté #${instanceId} (${entityType}:${id})`);
+    
+    // Définition de l'état de montage à false lors du démontage
+    return () => {
+      console.log(`[DEBUG-PROBLEME] useGenericEntityDetails - composant démonté #${instanceId} (${entityType}:${id})`);
+      refs.current.isMounted = false;
+      // Nettoyer les écouteurs s'ils existent
+      if (refs.current.unsubscribe) {
+        refs.current.unsubscribe();
+        refs.current.unsubscribe = null;
+      }
+    };
+  }, [entityType, id, instanceId]);
+  
+  // Fonction sécurisée pour mettre à jour les états uniquement si le composant est monté
+  const safeSetState = useCallback((setter, value) => {
+    if (refs.current.isMounted) {
+      setter(value);
+    }
+  }, []);
   
   // Fonction pour charger l'entité principale
   const fetchEntity = useCallback(async () => {
-    if (!id) {
-      setLoading(false);
+    // Vérifier si nous avons déjà commencé à charger cette entité
+    if (refs.current.hasStartedFetch) {
+      console.log(`[DEBUG-PROBLEME] fetchEntity #${instanceId}: Requête déjà en cours pour ${entityType} avec ID ${id}, ignoré`);
+      if (entityType === 'programmateur') {
+        console.log(`[DIAGNOSTIC] fetchEntity: Requête déjà en cours pour ${entityType} avec ID ${id}, ignoré`);
+      }
       return;
     }
     
-    setLoading(true);
-    setError(null);
+    console.log(`[DEBUG-PROBLEME] fetchEntity #${instanceId}: Début du chargement pour ${entityType} avec ID ${id}`);
+    
+    // Marqueur que nous avons commencé à charger
+    refs.current.hasStartedFetch = true;
+    refs.current.requestCounter++;
+    const currentRequest = refs.current.requestCounter;
+    
+    // Log de diagnostic pour tracer les appels de fetch
+    if (entityType === 'programmateur') {
+      console.log(`[DIAGNOSTIC] fetchEntity appelé pour ${entityType} avec ID:`, id, 
+                  `(Requête #${currentRequest})`);
+    }
+    
+    if (!id) {
+      if (entityType === 'programmateur') {
+        console.log(`[DIAGNOSTIC] fetchEntity: ID manquant pour ${entityType}`);
+      }
+      safeSetState(setLoading, false);
+      return;
+    }
+    
+    // Vérifier si cette entité est dans notre cache local
+    if (refs.current.entityCache[id]) {
+      if (entityType === 'programmateur') {
+        console.log(`[DIAGNOSTIC] fetchEntity: Utilisation du cache pour ${entityType} avec ID ${id}`);
+      }
+      
+      const cachedData = refs.current.entityCache[id];
+      safeSetState(setEntity, cachedData);
+      safeSetState(setFormData, cachedData);
+      
+      // Même avec le cache, chargez les entités liées si nécessaire
+      if (autoLoadRelated) {
+        loadAllRelatedEntities(cachedData);
+      }
+      
+      safeSetState(setLoading, false);
+      refs.current.isEntityLoaded = true;
+      return;
+    }
+    
+    safeSetState(setLoading, true);
+    safeSetState(setError, null);
     
     try {
       let entityData;
       
       if (realtime) {
         // Utiliser un listener temps réel
+        if (entityType === 'programmateur') {
+          console.log(`[DIAGNOSTIC] fetchEntity: Configuration d'un écouteur realtime pour ${entityType} ${id}`);
+        }
+        
         const unsubscribe = onSnapshot(doc(db, collectionName, id), (doc) => {
+          // Vérifier que c'est toujours la dernière requête et que le composant est monté
+          if (!refs.current.isMounted || currentRequest !== refs.current.requestCounter) {
+            console.log(`[DIAGNOSTIC] fetchEntity: Ignoré (démonté ou requête périmée) pour ${entityType} ${id}`);
+            return;
+          }
+          
           if (doc.exists()) {
             entityData = { [idField]: doc.id, ...doc.data() };
+            
+            if (entityType === 'programmateur') {
+              console.log(`[DIAGNOSTIC] fetchEntity: Document trouvé en temps réel pour ${entityType} ${id}:`, entityData);
+            }
             
             // Transformer les données si nécessaire
             if (transformData) {
               entityData = transformData(entityData);
             }
             
-            setEntity(entityData);
-            setFormData(entityData);
+            // Mettre en cache
+            refs.current.entityCache[id] = entityData;
+            
+            safeSetState(setEntity, entityData);
+            safeSetState(setFormData, entityData);
+            refs.current.isEntityLoaded = true;
             
             // Charger les entités liées si demandé
             if (autoLoadRelated) {
               loadAllRelatedEntities(entityData);
             }
           } else {
-            setError({ message: `${entityType} non trouvé(e)` });
+            if (entityType === 'programmateur') {
+              console.log(`[DIAGNOSTIC] fetchEntity: Document NON trouvé en temps réel pour ${entityType} ${id}`);
+            }
+            safeSetState(setError, { message: `${entityType} non trouvé(e)` });
           }
           
-          setLoading(false);
+          safeSetState(setLoading, false);
         });
         
-        unsubscribeRef.current = unsubscribe;
+        refs.current.unsubscribe = unsubscribe;
       } else {
         // Utiliser une requête ponctuelle
-        const entityDoc = await getDoc(doc(db, collectionName, id));
+        if (entityType === 'programmateur') {
+          console.log(`[DIAGNOSTIC] fetchEntity: Requête ponctuelle pour ${entityType} ${id} dans collection ${collectionName}`);
+        }
+        
+        const entityDocRef = doc(db, collectionName, id);
+        if (entityType === 'programmateur') {
+          console.log(`[DIAGNOSTIC] fetchEntity: Référence du document:`, entityDocRef);
+        }
+        
+        let fetchPromise = getDoc(entityDocRef);
+        refs.current.fetchPromise = fetchPromise; // Stocker la promesse pour les annulations
+        
+        const entityDoc = await fetchPromise;
+        
+        // Vérifier que c'est toujours la dernière requête et que le composant est monté
+        if (!refs.current.isMounted || refs.current.fetchPromise !== fetchPromise) {
+          console.log(`[DIAGNOSTIC] fetchEntity: Ignoré (démonté ou requête annulée) pour ${entityType} ${id}`);
+          return;
+        }
         
         if (entityDoc.exists()) {
           entityData = { [idField]: entityDoc.id, ...entityDoc.data() };
+          
+          if (entityType === 'programmateur') {
+            console.log(`[DIAGNOSTIC] fetchEntity: Document trouvé pour ${entityType} ${id}:`, entityData);
+          }
           
           // Transformer les données si nécessaire
           if (transformData) {
             entityData = transformData(entityData);
           }
           
-          setEntity(entityData);
-          setFormData(entityData);
+          // Mettre en cache
+          refs.current.entityCache[id] = entityData;
+          
+          safeSetState(setEntity, entityData);
+          safeSetState(setFormData, entityData);
+          refs.current.isEntityLoaded = true;
           
           // Charger les entités liées si demandé
           if (autoLoadRelated) {
             loadAllRelatedEntities(entityData);
           }
         } else {
-          setError({ message: `${entityType} non trouvé(e)` });
+          if (entityType === 'programmateur') {
+            console.log(`[DIAGNOSTIC] fetchEntity: Document NON trouvé pour ${entityType} ${id}`);
+            // Vérification supplémentaire pour voir si l'ID semble valide
+            console.log(`[DIAGNOSTIC] fetchEntity: Format de l'ID reçu:`, 
+              { id, longueur: id?.length, type: typeof id });
+          }
+          
+          safeSetState(setError, { message: `${entityType} non trouvé(e)` });
         }
         
-        setLoading(false);
+        safeSetState(setLoading, false);
       }
     } catch (err) {
+      if (entityType === 'programmateur') {
+        console.error(`[DIAGNOSTIC] fetchEntity: Erreur lors du chargement de ${entityType} ${id}:`, err);
+        console.error(`[DIAGNOSTIC] fetchEntity: Stack trace:`, err.stack);
+      }
       console.error(`Erreur lors du chargement de l'entité ${entityType}:`, err);
-      setError({ message: `Erreur lors du chargement des données: ${err.message}` });
-      setLoading(false);
+      
+      // Vérifier que c'est toujours la dernière requête et que le composant est monté
+      if (refs.current.isMounted && currentRequest === refs.current.requestCounter) {
+        safeSetState(setError, { message: `Erreur lors du chargement des données: ${err.message}` });
+        safeSetState(setLoading, false);
+      }
     }
-  }, [id, collectionName, entityType, idField, transformData, autoLoadRelated, realtime]);
+  }, [id, collectionName, entityType, idField, transformData, autoLoadRelated, realtime, safeSetState, instanceId]);
+
+  // Fonction pour réessayer en cas d'erreur, avec gestion des retries limités
+  const retryFetch = useCallback(() => {
+    if (entityType === 'programmateur') {
+      console.log(`[DIAGNOSTIC] Nouvelle tentative de chargement pour ${entityType} ${id}`);
+    }
+    
+    // Réinitialiser les flags pour permettre une nouvelle tentative
+    refs.current.hasStartedFetch = false;
+    refs.current.isEntityLoaded = false;
+    
+    // Réessayer de charger l'entité
+    fetchEntity();
+  }, [fetchEntity, entityType, id]);
   
   // Chargement initial de l'entité
   useEffect(() => {
+    console.log(`[DEBUG-PROBLEME] useEffect pour chargement initial #${instanceId} (${entityType}:${id})`);
+    
+    if (entityType === 'programmateur') {
+      console.log(`[DIAGNOSTIC] useEffect pour chargement initial de ${entityType} avec ID:`, id);
+    }
+    
     fetchEntity();
     
-    // Nettoyage du listener si nécessaire
+    // Nettoyage automatique lors des démontages
     return () => {
-      if (unsubscribeRef.current) {
-        unsubscribeRef.current();
+      console.log(`[DEBUG-PROBLEME] Nettoyage de l'effet pour #${instanceId} (${entityType}:${id})`);
+      
+      if (entityType === 'programmateur') {
+        console.log(`[DIAGNOSTIC] Nettoyage de l'effet pour ${entityType} avec ID:`, id);
       }
     };
-  }, [fetchEntity]);
+  }, [fetchEntity, entityType, id, instanceId]);
   
   // Fonction pour charger toutes les entités liées
   const loadAllRelatedEntities = useCallback(async (entityData) => {
+    console.log(`[DEBUG] loadAllRelatedEntities appelé pour ${entityType} avec ID: ${id}`, {
+      timestamp: new Date().toISOString(),
+      caller: new Error().stack.split('\n')[2].trim(),
+      entityId: entityData?.[idField],
+      relatedEntitiesCount: relatedEntities?.length || 0
+    });
+    
+    // Protection contre les appels multiples trop rapprochés
+    const now = Date.now();
+    if (!refs.current.lastLoadRelatedCall) {
+      refs.current.lastLoadRelatedCall = now;
+    } else if (now - refs.current.lastLoadRelatedCall < 300) { // 300ms minimum entre les appels
+      console.log(`[DEBUG] loadAllRelatedEntities ignoré - appel trop rapproché (${now - refs.current.lastLoadRelatedCall}ms)`);
+      return;
+    }
+    refs.current.lastLoadRelatedCall = now;
+    
     if (!relatedEntities || relatedEntities.length === 0) return;
+    if (!refs.current.isMounted) return;
     
     // Initialiser les états de chargement
     const loadingStates = {};
     relatedEntities.forEach(rel => {
       loadingStates[rel.name] = true;
     });
-    setLoadingRelated(loadingStates);
+    safeSetState(setLoadingRelated, loadingStates);
     
     // Créer un objet pour stocker les entités liées
     const relatedEntitiesData = {};
@@ -181,16 +385,20 @@ const useGenericEntityDetails = ({
         console.error(`Erreur lors du chargement de l'entité liée ${relatedEntity.name}:`, err);
         relatedEntitiesData[relatedEntity.name] = null;
       } finally {
-        setLoadingRelated(prev => ({
-          ...prev,
-          [relatedEntity.name]: false
-        }));
+        if (refs.current.isMounted) {
+          safeSetState(setLoadingRelated, prev => ({
+            ...prev,
+            [relatedEntity.name]: false
+          }));
+        }
       }
     });
     
     await Promise.all(promises);
-    setRelatedData(relatedEntitiesData);
-  }, [relatedEntities]);
+    if (refs.current.isMounted) {
+      safeSetState(setRelatedData, relatedEntitiesData);
+    }
+  }, [relatedEntities, safeSetState]);
   
   // Fonction pour charger une entité liée spécifique
   const loadRelatedEntity = useCallback(async (relatedConfig, entityData) => {
@@ -202,7 +410,7 @@ const useGenericEntityDetails = ({
     }
     
     // Définir l'état de chargement
-    setLoadingRelated(prev => ({ ...prev, [name]: true }));
+    safeSetState(setLoadingRelated, prev => ({ ...prev, [name]: true }));
     
     try {
       let result;
@@ -249,9 +457,9 @@ const useGenericEntityDetails = ({
       console.error(`Erreur lors du chargement de l'entité liée ${name}:`, err);
       throw err;
     } finally {
-      setLoadingRelated(prev => ({ ...prev, [name]: false }));
+      safeSetState(setLoadingRelated, prev => ({ ...prev, [name]: false }));
     }
-  }, [customQueries, idField]);
+  }, [customQueries, idField, safeSetState]);
   
   // Fonction pour charger une entité liée par son ID
   const loadRelatedEntityById = useCallback(async (name, id) => {
@@ -265,7 +473,7 @@ const useGenericEntityDetails = ({
     }
     
     // Définir l'état de chargement
-    setLoadingRelated(prev => ({ ...prev, [name]: true }));
+    safeSetState(setLoadingRelated, prev => ({ ...prev, [name]: true }));
     
     try {
       // Charger l'entité liée
@@ -275,14 +483,14 @@ const useGenericEntityDetails = ({
         const data = { [idField]: relatedDoc.id, ...relatedDoc.data() };
         
         // Mettre à jour l'état
-        setRelatedData(prev => ({
+        safeSetState(setRelatedData, prev => ({
           ...prev,
           [name]: data
         }));
         
         return data;
       } else {
-        setRelatedData(prev => ({
+        safeSetState(setRelatedData, prev => ({
           ...prev,
           [name]: null
         }));
@@ -293,9 +501,9 @@ const useGenericEntityDetails = ({
       console.error(`Erreur lors du chargement de l'entité liée ${name}:`, err);
       return null;
     } finally {
-      setLoadingRelated(prev => ({ ...prev, [name]: false }));
+      safeSetState(setLoadingRelated, prev => ({ ...prev, [name]: false }));
     }
-  }, [relatedEntities, idField]);
+  }, [relatedEntities, idField, safeSetState]);
   
   // Fonction pour basculer entre les modes d'édition
   const toggleEditMode = useCallback(() => {
@@ -617,7 +825,7 @@ const useGenericEntityDetails = ({
     navigate(path);
   }, [navigate, collectionName]);
   
-  // Retourner l'API du hook
+  // Retourner l'API du hook avec la fonction de réessai
   return {
     // Données et état
     entity,
@@ -655,6 +863,7 @@ const useGenericEntityDetails = ({
     
     // Utilitaires et navigation
     refresh,
+    retryFetch, // Nouvelle fonction pour réessayer en cas d'erreur
     formatDisplayValue,
     navigateToRelated,
     navigateToEdit,

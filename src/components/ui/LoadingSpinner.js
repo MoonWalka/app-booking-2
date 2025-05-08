@@ -1,16 +1,18 @@
 import React from 'react';
+import Spinner from '../common/Spinner';
 
 /**
- * LoadingSpinner - A simple loading spinner component
+ * LoadingSpinner - Redirects to the common Spinner component
+ * 
+ * @deprecated Use the more feature-rich Spinner component from '../common/Spinner' instead
+ * This component is maintained for backward compatibility only
  */
 const LoadingSpinner = ({ message = 'Chargement en cours...' }) => {
   return (
-    <div className="d-flex flex-column align-items-center justify-content-center p-5">
-      <div className="spinner-border text-primary mb-3" role="status">
-        <span className="visually-hidden">Chargement...</span>
-      </div>
-      <p className="text-center text-muted">{message}</p>
-    </div>
+    <Spinner 
+      message={message}
+      contentOnly={true}
+    />
   );
 };
 

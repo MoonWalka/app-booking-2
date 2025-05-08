@@ -7,7 +7,7 @@ import ProgrammateurLegalSection from './ProgrammateurLegalSection';
 import ProgrammateurConcertsSection from './ProgrammateurConcertsSection';
 import ProgrammateurStructuresSection from './ProgrammateurStructuresSection';
 import ProgrammateurLieuxSection from './ProgrammateurLieuxSection';
-import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import Spinner from '@/components/common/Spinner';
 import ErrorMessage from '@/components/ui/ErrorMessage';
 import styles from './ProgrammateurDetails.module.css';
 
@@ -31,7 +31,7 @@ const ProgrammateurDetails = () => {
   } = useProgrammateurDetailsV2(id);
   
   if (loading) {
-    return <LoadingSpinner />;
+    return <Spinner message="Chargement du programmateur..." contentOnly={true} />;
   }
   
   if (error) {

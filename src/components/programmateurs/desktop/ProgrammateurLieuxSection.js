@@ -1,11 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from './ProgrammateurLieuxSection.module.css';
-import { useLieuSearch } from '@/hooks/programmateurs';
-;
+import { useLieuSearchV2 } from '@/hooks/lieux';
 
 const ProgrammateurLieuxSection = ({ programmateur, isEditing }) => {
-  const {
+  const{
     showConcertSearch,
     concertSearchTerm,
     concertResults,
@@ -17,7 +16,7 @@ const ProgrammateurLieuxSection = ({ programmateur, isEditing }) => {
     toggleConcertSearch,
     handleSelectConcert,
     handleCreateConcert
-  } = useLieuSearch(programmateur);
+  } = useLieuSearchV2(programmateur);
   
   return (
     <div className={styles.cardWrapper}>

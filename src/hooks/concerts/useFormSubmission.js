@@ -1,46 +1,13 @@
-// src/hooks/concerts/useFormSubmission.js
 /**
- * ATTENTION: Ce fichier a été remplacé par un re-export vers la version commune
- * dans le cadre de la consolidation des hooks utilitaires.
+ * @deprecated Ce hook est une redirection vers la version centralisée.
+ * Veuillez utiliser directement l'importation depuis @/hooks/common:
+ * import { useFormSubmission } from '@/hooks/common';
  * 
- * L'ancienne implémentation était spécifique aux concerts et gérait:
- * - Les associations avec les programmateurs (updateProgrammateurAssociation)
- * - Les associations avec les artistes (updateArtisteAssociation)
- * - Des formulaires spécifiques aux concerts
- * 
- * Pour recréer cette fonctionnalité spécifique avec le hook générique:
- * 
- * ```
- * const concertFormSubmission = useFormSubmission({
- *   collection: 'concerts',
- *   validate: (data) => {
- *     return !!data.date && !!data.montant && !!selectedLieu;
- *   },
- *   associations: {
- *     programmateur: {
- *       targetCollection: 'programmateurs',
- *       targetField: 'concertIds',
- *       oldValue: initialProgrammateurId,
- *       newValue: selectedProgrammateur?.id
- *     },
- *     artiste: {
- *       targetCollection: 'artistes',
- *       targetField: 'concertIds',
- *       oldValue: initialArtisteId,
- *       newValue: selectedArtiste?.id
- *     }
- *   },
- *   transformData: (data) => ({
- *     ...data,
- *     lieuId: selectedLieu?.id || null,
- *     lieuNom: selectedLieu?.nom || null,
- *     // ...autres transformations
- *   }),
- *   onSuccess: () => navigate('/concerts')
- * });
- * ```
+ * Cette redirection sera supprimée dans une future version (après le 6 novembre 2025).
  */
 
-// Re-export the common implementation
-import useFormSubmission from '../common/useFormSubmission';
+// Import de la version centralisée
+import useFormSubmission from '@/hooks/common/useFormSubmission';
+
+// Export pour maintenir la compatibilité avec le code existant
 export default useFormSubmission;

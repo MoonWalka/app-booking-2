@@ -21,11 +21,11 @@ jest.mock('firebase/firestore', () => ({
   getDocs: jest.fn()
 }));
 
-jest.mock('@/firebaseInit', () => ({
+jest.mock('../../../src/firebaseInit', () => ({
   db: {}
 }));
 
-jest.mock('@/hooks/common', () => {
+jest.mock('../../../src/hooks/common', () => {
   // Implémentation d'un mock pour updateFormData
   const updateFormDataMock = jest.fn();
 
@@ -91,11 +91,11 @@ jest.mock('@/hooks/common', () => {
   };
 });
 
-jest.mock('@/utils/validation', () => ({
+jest.mock('../../../src/utils/validation', () => ({
   validateProgrammateurForm: jest.fn(() => ({ isValid: true }))
 }));
 
-jest.mock('@/utils/toasts', () => ({
+jest.mock('../../../src/utils/toasts', () => ({
   showSuccessToast: jest.fn(),
   showErrorToast: jest.fn()
 }));

@@ -16,6 +16,7 @@ export const useAuth = () => {
 
 // Provider du contexte d'authentification
 export const AuthProvider = ({ children }) => {
+  console.log('[TRACE-UNIQUE][AuthProvider] Provider exécuté !');
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const lastAuthState = useRef(null); // Pour suivre le dernier état d'authentification

@@ -1,12 +1,13 @@
-// src/hooks/search/useSearchAndFilter.js
 /**
- * ATTENTION: Ce fichier a été déplacé vers ../common/useSearchAndFilter.js
- * dans le cadre de la consolidation des hooks utilitaires.
+ * @deprecated Ce hook est une redirection vers la version centralisée.
+ * Veuillez utiliser directement l'importation depuis @/hooks/common:
+ * import { useSearchAndFilter } from '@/hooks/common';
  * 
- * Ce fichier est maintenant un simple re-export pour maintenir la compatibilité.
+ * Cette redirection sera supprimée dans une future version (après le 6 novembre 2025).
  */
 
-import useSearchAndFilter from '../common/useSearchAndFilter';
+// Import de la version centralisée
+import useSearchAndFilter from '@/hooks/common/useSearchAndFilter';
 
-export { useSearchAndFilter };
+// Export pour maintenir la compatibilité avec le code existant
 export default useSearchAndFilter;

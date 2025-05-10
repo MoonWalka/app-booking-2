@@ -32,3 +32,5 @@ export {
   templateTypes,
   replaceVariablesWithMockData 
 } from './contractVariables';
+
+export { default as useContratFormOptimized } from './useContratFormOptimized';

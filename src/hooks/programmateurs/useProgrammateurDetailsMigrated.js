@@ -19,26 +19,15 @@ import { useGenericEntityDetails } from '@/hooks/common';
 import { validateProgrammateurForm } from '@/utils/validation';
 import { showSuccessToast, showErrorToast } from '@/utils/toasts';
 
-// Compteur global pour tracer les instances du hook
-const instanceCount = {
-  count: 0,
-  instances: {}
-};
-
 /**
  * Hook migré pour la gestion des détails d'un programmateur
  * Utilise useGenericEntityDetails comme base avec une gestion spécifique des relations bidirectionnelles
+ * Version améliorée avec suppression des logs de débogage excessifs
  * 
  * @param {string} id - ID du programmateur à afficher/éditer
  * @returns {Object} API pour gérer les détails d'un programmateur
  */
 const useProgrammateurDetailsMigrated = (id) => {
-  // Générer un ID unique pour cette instance du hook
-  const instanceId = (instanceCount.instances[id] = (instanceCount.instances[id] || 0) + 1);
-  instanceCount.count++;
-  
-  console.log(`[DEBUG-PROBLEME] useProgrammateurDetailsMigrated #${instanceCount.count} (instance #${instanceId} pour ID=${id})`);
-  
   const navigate = useNavigate();
 
   // Fonction pour formater les champs date
@@ -50,8 +39,6 @@ const useProgrammateurDetailsMigrated = (id) => {
 
   // Fonction pour transformer les données après chargement
   const transformData = useCallback((data) => {
-    console.log(`[DEBUG-PROBLEME] transformData appelé pour programmateur ID=${id}, instance #${instanceId}`);
-    
     return {
       ...data,
       // Ajouter des champs calculés
@@ -59,7 +46,7 @@ const useProgrammateurDetailsMigrated = (id) => {
       nombreContacts: data.contacts ? data.contacts.length : 0,
       nombreStructures: data.structures ? data.structures.length : 0,
     };
-  }, [id, instanceId]);
+  }, []);
 
   // Requête personnalisée pour charger les structures associées
   const customQueries = {
@@ -155,8 +142,6 @@ const useProgrammateurDetailsMigrated = (id) => {
   }, []);
 
   // Utiliser le hook générique avec la configuration appropriée
-  console.log(`[DEBUG-PROBLEME] Avant appel à useGenericEntityDetails pour programmateur ID=${id}, instance #${instanceId}`);
-  
   const genericDetails = useGenericEntityDetails({
     // Configuration de base
     entityType: 'programmateur',
@@ -196,9 +181,11 @@ const useProgrammateurDetailsMigrated = (id) => {
     navigate,
     returnPath: '/programmateurs',
     editPath: '/programmateurs/:id/edit',
+    
+    // Options avancées
+    // Utilisation de la nouvelle option pour désactiver le cache si nécessaire
+    disableCache: false
   });
-  
-  console.log(`[DEBUG-PROBLEME] Après appel à useGenericEntityDetails pour programmateur ID=${id}, instance #${instanceId}`);
 
   // Fonctionnalités spécifiques aux programmateurs
   

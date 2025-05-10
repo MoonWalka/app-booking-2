@@ -4,7 +4,7 @@ import { Alert } from 'react-bootstrap';
 import styles from './ConcertDetails.module.css';
 
 // Import des hooks personnalisés - Modification pour utiliser la version V2
-import { useConcertDetailsV2, useConcertForm } from '@/hooks/concerts';
+import { useConcertDetailsV2, useConcertFormV2 } from '@/hooks/concerts';
 
 // Import des composants
 import ConcertHeader from './ConcertHeader';
@@ -72,13 +72,13 @@ const ConcertDetails = () => {
     
   } = useConcertDetailsV2(id, location);
 
-  const {
+  const{
     formDataStatus,
     showFormGenerator,
     setShowFormGenerator,
     generatedFormLink,
     setGeneratedFormLink
-  } = useConcertForm(id, programmateur?.id);
+  } = useConcertFormV2(id, programmateur?.id);
 
   // Fonction pour initialiser les valeurs de recherche
   useEffect(() => {

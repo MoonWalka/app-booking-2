@@ -1,58 +1,29 @@
 /**
- * @deprecated Ce hook est déprécié et sera supprimé dans une future version.
- * Veuillez utiliser le hook migré vers les hooks génériques à la place:
- * import { useLieuxFiltersV2 } from '@/hooks/lieux';
+ * @deprecated Ce hook est déprécié et sera supprimé en novembre 2025.
+ * Veuillez utiliser useLieuxFiltersOptimized à la place.
  * 
  * Hook pour gérer les filtres et la recherche de lieux
- * @param {Array} lieux - Liste des lieux à filtrer
+ * @param {Array} lieux - Liste des lieux à filtrer (paramètre ignoré dans la version optimisée)
  * @returns {Object} - API de filtrage et recherche de lieux
  */
-import useLieuxFiltersMigrated from './useLieuxFiltersMigrated';
 import { useEffect } from 'react';
+import { useLieuxFiltersOptimized } from './useLieuxFiltersOptimized';
+import { debugLog } from '@/utils/logUtils';
 
 const useLieuxFilters = (lieux = []) => {
   // Afficher un avertissement de dépréciation
   useEffect(() => {
-    console.warn(
-      'Avertissement: useLieuxFilters est déprécié. ' +
-      'Veuillez utiliser useLieuxFiltersV2 depuis @/hooks/lieux à la place.'
+    debugLog(
+      'Le hook useLieuxFilters est déprécié et sera supprimé en novembre 2025. ' +
+      'Veuillez utiliser useLieuxFiltersOptimized à la place.',
+      'warn',
+      'useLieuxFilters'
     );
   }, []);
   
-  // Utiliser la version migrée qui est basée sur useGenericEntityList
-  const migratedHook = useLieuxFiltersMigrated(lieux);
-  
-  // Adapter l'API pour être compatible avec les composants existants
-  return {
-    // Propriétés principales (s'assurer que filteredLieux est toujours défini)
-    lieux: migratedHook.lieux || [],
-    filteredLieux: migratedHook.filteredLieux || [],
-    
-    // Recherche et filtrage
-    searchTerm: migratedHook.searchTerm || '',
-    setSearchTerm: migratedHook.setSearchTerm,
-    filterType: migratedHook.filterType || 'tous',
-    setFilterType: migratedHook.setFilterType,
-    filterRegion: migratedHook.filterRegion || 'toutes',
-    setFilterRegion: migratedHook.setFilterRegion,
-    filterVille: migratedHook.filterVille || 'toutes',
-    setFilterVille: migratedHook.setFilterVille,
-    
-    // Options et actions
-    resetFilters: migratedHook.resetFilters,
-    refresh: migratedHook.refresh,
-    types: migratedHook.types || ['tous'],
-    regions: migratedHook.regions || ['toutes'],
-    villes: migratedHook.villes || ['toutes'],
-    
-    // État de chargement et erreurs
-    loading: migratedHook.loading || false,
-    error: migratedHook.error,
-    
-    // Options de tri (si utilisées)
-    sortOption: migratedHook.sortOption || 'nom_asc',
-    setSortOption: migratedHook.setSortOption || (() => {}),
-  };
+  // Utiliser directement la version optimisée
+  // Note: le paramètre lieux est ignoré car la version optimisée charge les données depuis Firestore
+  return useLieuxFiltersOptimized();
 };
 
 export default useLieuxFilters;

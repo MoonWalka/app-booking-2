@@ -13,6 +13,8 @@ export const useParametres = () => {
 };
 
 export const ParametresProvider = ({ children }) => {
+  console.log('[TRACE-UNIQUE][ParametresProvider] Provider exécuté !');
+  
   const [parametres, setParametres] = useState({
     entreprise: {},
     generaux: {

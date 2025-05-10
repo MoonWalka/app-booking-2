@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import styles from './ConcertForm.module.css';
 
 // Hooks personnalisés
-import useConcertForm from '../../../hooks/concerts/useConcertForm';
+import { useConcertFormV2 } from '@/hooks/concerts';
 import useEntitySearch from '../../../hooks/concerts/useEntitySearch';
 import useFormSubmission from '../../../hooks/concerts/useFormSubmission';
 
@@ -27,7 +27,7 @@ const ConcertFormDesktop = () => {
   const isNewConcert = id === 'nouveau';
 
   // Hook pour gérer les états du formulaire
-  const {
+  const{
     loading,
     formData,
     handleChange,
@@ -39,7 +39,7 @@ const ConcertFormDesktop = () => {
     setSelectedArtiste,
     initialProgrammateurId,
     initialArtisteId
-  } = useConcertForm(id);
+  } = useConcertFormV2(id);
 
   // Hook pour gérer la recherche d'entités
   const {

@@ -13,6 +13,7 @@
  *   --csv: Génère le rapport au format CSV
  * 
  * Créé le: 6 mai 2025
+ * Mis à jour le: 9 mai 2025 - Amélioration de la détection pour éviter les faux positifs
  */
 
 const fs = require('fs');
@@ -26,14 +27,14 @@ const DEPRECATED_HOOKS = [
   {
     name: 'useResponsiveComponent',
     replacement: 'useResponsive().getResponsiveComponent',
-    pattern: /import\s+[\{\s]*useResponsiveComponent[\s\}]*\s+from\s+['"]@\/hooks\/useResponsiveComponent['"]|import\s+[\{\s]*useResponsiveComponent[\s\}]*\s+from\s+['"]\.\..*\/useResponsiveComponent['"]|const\s+\w+\s*=\s*useResponsiveComponent/g,
+    pattern: /useResponsiveComponent/g,
     severity: 'MEDIUM',
     deadline: '6 août 2025'
   },
   {
     name: 'useTheme (racine)',
     replacement: 'useTheme from \'@/hooks/common\'',
-    pattern: /import\s+[\{\s]*useTheme[\s\}]*\s+from\s+['"]@\/hooks\/useTheme['"]|import\s+[\{\s]*useTheme[\s\}]*\s+from\s+['"]\.\..*\/useTheme['"](?!.*common)/g,
+    pattern: /useTheme/g,
     severity: 'LOW',
     deadline: '6 août 2025'
   },
@@ -41,21 +42,21 @@ const DEPRECATED_HOOKS = [
   {
     name: 'useArtisteDetails',
     replacement: 'useGenericEntityDetails',
-    pattern: /import\s+[\{\s]*useArtisteDetails[\s\}]*|const\s+\w+\s*=\s*useArtisteDetails/g,
+    pattern: /useArtisteDetails/g,
     severity: 'HIGH',
     deadline: '6 novembre 2025'
   },
   {
     name: 'useConcertDetails',
     replacement: 'useGenericEntityDetails',
-    pattern: /import\s+[\{\s]*useConcertDetails[\s\}]*|const\s+\w+\s*=\s*useConcertDetails/g,
+    pattern: /useConcertDetails/g,
     severity: 'HIGH',
     deadline: '6 novembre 2025'
   },
   {
     name: 'useLieuDetails',
     replacement: 'useGenericEntityDetails',
-    pattern: /import\s+[\{\s]*useLieuDetails[\s\}]*|const\s+\w+\s*=\s*useLieuDetails/g,
+    pattern: /useLieuDetails/g,
     severity: 'HIGH',
     deadline: '6 novembre 2025'
   },
@@ -63,14 +64,14 @@ const DEPRECATED_HOOKS = [
   {
     name: 'useLieuSearch',
     replacement: 'useGenericEntitySearch',
-    pattern: /import\s+[\{\s]*useLieuSearch[\s\}]*|const\s+\w+\s*=\s*useLieuSearch/g,
+    pattern: /useLieuSearch/g,
     severity: 'MEDIUM',
     deadline: '6 novembre 2025'
   },
   {
     name: 'useProgrammateurSearch',
     replacement: 'useGenericEntitySearch',
-    pattern: /import\s+[\{\s]*useProgrammateurSearch[\s\}]*|const\s+\w+\s*=\s*useProgrammateurSearch/g,
+    pattern: /useProgrammateurSearch/g,
     severity: 'MEDIUM',
     deadline: '6 novembre 2025'
   },
@@ -78,14 +79,14 @@ const DEPRECATED_HOOKS = [
   {
     name: 'useArtistesList',
     replacement: 'useGenericEntityList',
-    pattern: /import\s+[\{\s]*useArtistesList[\s\}]*|const\s+\w+\s*=\s*useArtistesList/g,
+    pattern: /useArtistesList/g,
     severity: 'MEDIUM',
     deadline: '6 novembre 2025'
   },
   {
     name: 'useLieuxFilters',
     replacement: 'useGenericEntityList',
-    pattern: /import\s+[\{\s]*useLieuxFilters[\s\}]*|const\s+\w+\s*=\s*useLieuxFilters/g,
+    pattern: /useLieuxFilters/g,
     severity: 'MEDIUM',
     deadline: '6 novembre 2025'
   },
@@ -93,16 +94,18 @@ const DEPRECATED_HOOKS = [
   {
     name: 'useConcertForm',
     replacement: 'useGenericEntityForm',
-    pattern: /import\s+[\{\s]*useConcertForm[\s\}]*|const\s+\w+\s*=\s*useConcertForm/g,
+    pattern: /useConcertForm/g,
     severity: 'HIGH',
-    deadline: '6 novembre 2025'
+    deadline: '6 novembre 2025',
+    importExample: "import { useGenericEntityForm } from '@/hooks/common';"
   },
   {
     name: 'useLieuForm',
     replacement: 'useGenericEntityForm',
-    pattern: /import\s+[\{\s]*useLieuForm[\s\}]*|const\s+\w+\s*=\s*useLieuForm/g,
+    pattern: /useLieuForm/g,
     severity: 'HIGH',
-    deadline: '6 novembre 2025'
+    deadline: '6 novembre 2025',
+    importExample: "import { useGenericEntityForm } from '@/hooks/common';"
   }
 ];
 
@@ -131,6 +134,107 @@ const colors = {
   cyan: '\x1b[36m',
   white: '\x1b[37m'
 };
+
+/**
+ * Fonction pour vérifier si un motif détecté est dans un commentaire ou une chaîne de caractères
+ * @param {string} content - Contenu du fichier
+ * @param {number} index - Index où le motif a été trouvé
+ * @returns {boolean} - True si c'est un faux positif, false sinon
+ */
+function isFalsePositive(content, index) {
+  // Extraire une portion du code autour de l'index
+  const start = Math.max(0, index - 500);
+  const contextSize = Math.min(1000, content.length - start);
+  const context = content.substr(start, contextSize);
+  
+  // Position relative dans le contexte
+  const relativeIndex = index - start;
+  
+  // Vérification pour les commentaires mono-ligne (//)
+  const lineStart = context.lastIndexOf('\n', relativeIndex) + 1;
+  const lineBeforeMatch = context.substring(lineStart, relativeIndex);
+  if (lineBeforeMatch.includes('//')) {
+    return true;
+  }
+  
+  // Vérification pour les commentaires multi-lignes (/* */)
+  let commentStart = -1;
+  let searchIndex = 0;
+  
+  while (searchIndex < relativeIndex) {
+    const nextStart = context.indexOf('/*', searchIndex);
+    if (nextStart === -1 || nextStart > relativeIndex) break;
+    
+    commentStart = nextStart;
+    const commentEnd = context.indexOf('*/', commentStart);
+    
+    if (commentEnd === -1 || commentEnd > relativeIndex) {
+      // Dans un commentaire multi-ligne non fermé ou qui contient notre match
+      return true;
+    }
+    
+    // Continuer la recherche après ce commentaire
+    searchIndex = commentEnd + 2;
+  }
+  
+  // Vérifier si nous sommes dans une chaîne de caractères
+  let inSingleQuote = false;
+  let inDoubleQuote = false;
+  let inTemplateLiteral = false;
+  
+  for (let i = 0; i < relativeIndex; i++) {
+    const char = context.charAt(i);
+    
+    // Ignorer les guillemets échappés
+    if (i > 0 && context.charAt(i - 1) === '\\') {
+      continue;
+    }
+    
+    if (char === "'") {
+      inSingleQuote = !inSingleQuote;
+    } else if (char === '"') {
+      inDoubleQuote = !inDoubleQuote;
+    } else if (char === '`') {
+      inTemplateLiteral = !inTemplateLiteral;
+    }
+  }
+  
+  // Si nous sommes dans une chaîne de caractères, c'est un faux positif
+  if (inSingleQuote || inDoubleQuote || inTemplateLiteral) {
+    return true;
+  }
+  
+  // Vérifier si c'est une référence à une version V2 ou Migrated
+  const line = context.substring(lineStart, context.indexOf('\n', relativeIndex) !== -1 ? 
+    context.indexOf('\n', relativeIndex) : context.length);
+  
+  return line.includes('V2') || line.includes('Migrated');
+}
+
+/**
+ * Vérifie si le hook est réellement utilisé (pas juste mentionné)
+ * @param {string} content - Contenu complet du fichier
+ * @param {number} index - Index où le motif a été trouvé
+ * @param {string} hookName - Nom du hook recherché
+ * @returns {boolean} - True si c'est une utilisation réelle
+ */
+function isRealUsage(content, index, hookName) {
+  // Extraire la ligne contenant le hook
+  let lineStart = content.lastIndexOf('\n', index) + 1;
+  let lineEnd = content.indexOf('\n', index);
+  if (lineEnd === -1) lineEnd = content.length;
+  
+  const line = content.substring(lineStart, lineEnd);
+  
+  // Vérifier si c'est une définition de hook ou un import
+  const isDefinition = new RegExp(`const\\s+${hookName}\\s*=`).test(line);
+  const isImport = new RegExp(`import\\s+.*\\{.*${hookName}.*\\}.*from`).test(line);
+  
+  // Vérifier si c'est une utilisation comme appel de fonction
+  const isUsage = new RegExp(`\\=\\s*${hookName}\\(`).test(line);
+  
+  return isDefinition || isImport || isUsage;
+}
 
 // Fonction pour rechercher les hooks dépréciés dans les fichiers
 async function findDeprecatedHooks() {
@@ -171,21 +275,31 @@ async function findDeprecatedHooks() {
       const matches = [...content.matchAll(hook.pattern)];
       
       if (matches.length > 0) {
-        // Obtenir les numéros de ligne pour chaque occurrence
-        const lines = content.split('\n');
+        // Filtrer les matches pour éliminer les faux positifs
         for (const match of matches) {
-          let lineNumber = -1;
-          let lineContent = '';
+          // Ignorer les faux positifs et les références aux versions migrées
+          if (isFalsePositive(content, match.index)) {
+            continue;
+          }
+          
+          // Vérifier si c'est une utilisation réelle du hook
+          if (!isRealUsage(content, match.index, hook.name)) {
+            continue;
+          }
           
           // Trouver le numéro de ligne de l'occurrence
+          let lineNumber = -1;
+          let lineContent = '';
           let position = 0;
+          const lines = content.split('\n');
+          
           for (let i = 0; i < lines.length; i++) {
-            position += lines[i].length + 1; // +1 pour le caractère de nouvelle ligne
-            if (position >= match.index) {
+            if (position <= match.index && match.index < position + lines[i].length + 1) {
               lineNumber = i + 1;
               lineContent = lines[i].trim();
               break;
             }
+            position += lines[i].length + 1; // +1 pour le caractère de nouvelle ligne
           }
           
           results.push({

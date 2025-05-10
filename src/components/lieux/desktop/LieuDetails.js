@@ -9,7 +9,7 @@ import Button from '@/components/ui/Button';
 
 // Import custom hooks depuis les emplacements standardisés
 import { useLieuDetailsV2 } from '@/hooks/lieux';
-import { useProgrammateurSearch } from '@/hooks/programmateurs';
+import { useProgrammateurSearchV2 } from '@/hooks/programmateurs';
 import { useAddressSearch } from '@/hooks/common';
 
 // Import section components
@@ -54,7 +54,7 @@ const LieuDetails = () => {
     handleConfirmDelete
   } = useLieuDetailsV2(lieuId);
 
-  const {
+  const{
     searchTerm,
     setSearchTerm,
     searchResults,
@@ -64,7 +64,7 @@ const LieuDetails = () => {
     selectedProgrammateur,
     handleSelectProgrammateur,
     handleRemoveProgrammateur
-  } = useProgrammateurSearch(lieuId);
+  } = useProgrammateurSearchV2(lieuId);
 
   const {
     addressSuggestions,

@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from '@/firebaseInit';
 import { doc, getDoc, setDoc, updateDoc, collection, Timestamp } from 'firebase/firestore';
+import { debugLog } from '@/utils/logUtils';
 
 /**
  * Hook générique pour la gestion des formulaires d'entités
@@ -27,6 +28,7 @@ export const useGenericEntityForm = ({
   onSuccess = () => {},
   relatedEntities = []
 }) => {
+  debugLog('Hook exécuté !', 'trace', 'useGenericEntityForm');
   const navigate = useNavigate();
   const [formData, setFormData] = useState(initialData);
   const [loading, setLoading] = useState(!!entityId && entityId !== 'nouveau');
@@ -51,7 +53,7 @@ export const useGenericEntityForm = ({
         
         if (entityDoc.exists()) {
           const data = entityDoc.data();
-          console.log(`Données de ${entityType} chargées:`, data);
+          debugLog(`Données de ${entityType} chargées`, 'info', 'useGenericEntityForm', data);
           
           // Stocker les données initiales pour comparaison ultérieure
           setInitialEntityData(data);
@@ -78,18 +80,18 @@ export const useGenericEntityForm = ({
                   };
                 }
               } catch (err) {
-                console.error(`Erreur lors du chargement de ${entity.name}:`, err);
+                debugLog(`Erreur lors du chargement de ${entity.name}`, 'error', 'useGenericEntityForm', err);
               }
             }
           }
           
           setRelatedData(relatedDataResults);
         } else {
-          console.error(`Le ${entityType} demandé n'existe pas`);
+          debugLog(`Le ${entityType} demandé n'existe pas`, 'error', 'useGenericEntityForm');
           setError(`Le ${entityType} demandé n'existe pas`);
         }
       } catch (error) {
-        console.error(`Erreur lors de la récupération du ${entityType}:`, error);
+        debugLog(`Erreur lors de la récupération du ${entityType}`, 'error', 'useGenericEntityForm', error);
         setError(`Une erreur est survenue lors du chargement des données. (${error.message})`);
       } finally {
         setLoading(false);
@@ -169,6 +171,7 @@ export const useGenericEntityForm = ({
       if (!validation.isValid) {
         setFormErrors(validation.errors || {});
         setError(validation.message || 'Le formulaire contient des erreurs.');
+        debugLog('Validation du formulaire échouée', 'warn', 'useGenericEntityForm', validation.errors);
         setSubmitting(false);
         return;
       }
@@ -191,9 +194,11 @@ export const useGenericEntityForm = ({
         const newDocRef = doc(collection(db, collectionName));
         await setDoc(newDocRef, dataToSave);
         savedEntityId = newDocRef.id;
+        debugLog(`Nouvelle entité ${entityType} créée`, 'info', 'useGenericEntityForm', { id: savedEntityId });
       } else {
         // Mise à jour d'une entité existante
         await updateDoc(doc(db, collectionName, entityId), dataToSave);
+        debugLog(`Entité ${entityType} mise à jour`, 'info', 'useGenericEntityForm', { id: entityId });
       }
       
       // Appeler le callback onSuccess
@@ -203,7 +208,7 @@ export const useGenericEntityForm = ({
       navigate(`/${entityType}/${savedEntityId}`);
       
     } catch (error) {
-      console.error('Erreur lors de la soumission du formulaire:', error);
+      debugLog('Erreur lors de la soumission du formulaire', 'error', 'useGenericEntityForm', error);
       setError(`Une erreur est survenue lors de l'enregistrement. ${error.message}`);
     } finally {
       setSubmitting(false);

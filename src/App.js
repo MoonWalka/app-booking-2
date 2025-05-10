@@ -7,6 +7,7 @@ import {
 } from 'react-router-dom';
 import { AuthProvider, useAuth } from '@/context/AuthContext';
 import { ParametresProvider } from '@/context/ParametresContext';
+import { ModalProvider } from '@/context/ModalContext'; // Import du nouveau ModalProvider
 import Layout from '@/components/common/Layout';
 import DashboardPage from '@/pages/DashboardPage';
 import ConcertsPage from '@/pages/ConcertsPage';
@@ -185,87 +186,89 @@ function App() {
       <Router>
         <AuthProvider>
           <ParametresProvider>
-            {/* Intégration du stabilisateur de routeur */}
-            <RouterStabilizer />
-            <Routes>
-              <Route path="/test-buttons" element={<TestButtons />} />
-              {/* Routes publiques pour les formulaires */}
-              <Route path="/formulaire/:concertId/:token" element={<FormResponsePage />} />
-              
-              {/* Routes protégées avec Layout */}
-              <Route element={<Layout />}>
-                <Route path="/" element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
+            <ModalProvider> {/* Ajout du ModalProvider */}
+              {/* Intégration du stabilisateur de routeur */}
+              <RouterStabilizer />
+              <Routes>
+                <Route path="/test-buttons" element={<TestButtons />} />
+                {/* Routes publiques pour les formulaires */}
+                <Route path="/formulaire/:concertId/:token" element={<FormResponsePage />} />
                 
-                {/* Routes pour les concerts */}
-                <Route path="/concerts/*" element={
-                  <PrivateRoute>
-                    <ConcertsPage />
-                  </PrivateRoute>
-                } />
-                
-                {/* Routes pour les programmateurs */}
-                <Route path="/programmateurs/*" element={
-                  <PrivateRoute>
-                    <ProgrammateursPage />
-                  </PrivateRoute>
-                } />
-                
-                {/* Routes pour les lieux */}
-                <Route path="/lieux/*" element={
-                  <PrivateRoute>
-                    <LieuxPage />
-                  </PrivateRoute>
-                } />
-                
-                {/* Routes pour les structures */}
-                <Route path="/structures/*" element={
-                  <PrivateRoute>
-                    <StructuresPage />
-                  </PrivateRoute>
-                } />
-                
-                {/* Routes pour les contrats */}
-                <Route path="/contrats/*" element={
-                  <PrivateRoute>
-                    <ContratsPage />
-                  </PrivateRoute>
-                } />
-                <Route path="/contrats/generate/:concertId" element={
-                  <PrivateRoute>
-                    <Suspense fallback={routeFallback}>
-                      <ContratGenerationPage />
-                    </Suspense>
-                  </PrivateRoute>
-                } />
-                <Route path="/contrats/:contratId" element={
-                  <PrivateRoute>
-                    <Suspense fallback={routeFallback}>
-                      <ContratDetailsPage />
-                    </Suspense>
-                  </PrivateRoute>
-                } />
-                
-                {/* Routes pour les artistes */}
-                <Route path="/artistes/*" element={
-                  <PrivateRoute>
-                    <ArtistesPage />
-                  </PrivateRoute>
-                } />
-                
-                {/* Routes pour les paramètres */}
-                <Route path="/parametres/*" element={
-                  <PrivateRoute>
-                    <ParametresPage />
-                  </PrivateRoute>
-                } />
-                
-                {/* Route pour la validation des formulaires */}
-                <Route path="/formulaire/validation/:id" element={<PrivateRoute><FormResponsePage /></PrivateRoute>} />
-                
-                {/* Redirection par défaut */}
-                <Route path="*" element={<Navigate to="/" />} />
-              </Route>
-            </Routes>
+                {/* Routes protégées avec Layout */}
+                <Route element={<Layout />}>
+                  <Route path="/" element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
+                  
+                  {/* Routes pour les concerts */}
+                  <Route path="/concerts/*" element={
+                    <PrivateRoute>
+                      <ConcertsPage />
+                    </PrivateRoute>
+                  } />
+                  
+                  {/* Routes pour les programmateurs */}
+                  <Route path="/programmateurs/*" element={
+                    <PrivateRoute>
+                      <ProgrammateursPage />
+                    </PrivateRoute>
+                  } />
+                  
+                  {/* Routes pour les lieux */}
+                  <Route path="/lieux/*" element={
+                    <PrivateRoute>
+                      <LieuxPage />
+                    </PrivateRoute>
+                  } />
+                  
+                  {/* Routes pour les structures */}
+                  <Route path="/structures/*" element={
+                    <PrivateRoute>
+                      <StructuresPage />
+                    </PrivateRoute>
+                  } />
+                  
+                  {/* Routes pour les contrats */}
+                  <Route path="/contrats/*" element={
+                    <PrivateRoute>
+                      <ContratsPage />
+                    </PrivateRoute>
+                  } />
+                  <Route path="/contrats/generate/:concertId" element={
+                    <PrivateRoute>
+                      <Suspense fallback={routeFallback}>
+                        <ContratGenerationPage />
+                      </Suspense>
+                    </PrivateRoute>
+                  } />
+                  <Route path="/contrats/:contratId" element={
+                    <PrivateRoute>
+                      <Suspense fallback={routeFallback}>
+                        <ContratDetailsPage />
+                      </Suspense>
+                    </PrivateRoute>
+                  } />
+                  
+                  {/* Routes pour les artistes */}
+                  <Route path="/artistes/*" element={
+                    <PrivateRoute>
+                      <ArtistesPage />
+                    </PrivateRoute>
+                  } />
+                  
+                  {/* Routes pour les paramètres */}
+                  <Route path="/parametres/*" element={
+                    <PrivateRoute>
+                      <ParametresPage />
+                    </PrivateRoute>
+                  } />
+                  
+                  {/* Route pour la validation des formulaires */}
+                  <Route path="/formulaire/validation/:id" element={<PrivateRoute><FormResponsePage /></PrivateRoute>} />
+                  
+                  {/* Redirection par défaut */}
+                  <Route path="*" element={<Navigate to="/" />} />
+                </Route>
+              </Routes>
+            </ModalProvider>
           </ParametresProvider>
         </AuthProvider>
       </Router>

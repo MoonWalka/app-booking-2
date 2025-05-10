@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import firebase from '@/firebaseInit';
+import { doc, deleteDoc } from 'firebase/firestore';
+import { db } from '@/firebaseInit';
 
 /**
  * Custom hook to handle the deletion of a lieu
@@ -18,7 +19,7 @@ const useLieuDelete = (onDeleteSuccess) => {
     if (window.confirm('Êtes-vous sûr de vouloir supprimer ce lieu ?')) {
       setIsDeleting(true);
       try {
-        await firebase.deleteDoc(firebase.doc(firebase.db, 'lieux', id));
+        await deleteDoc(doc(db, 'lieux', id));
         
         // Execute success callback if provided
         if (typeof onDeleteSuccess === 'function') {

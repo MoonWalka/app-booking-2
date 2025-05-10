@@ -19,8 +19,6 @@ Ce dossier contient toute la documentation technique du projet TourCraft. Ce fic
 
 - [📝 **Guide de Style CSS**](/docs/standards/CSS_STYLE_GUIDE.md) - Standards et conventions CSS
 - [📑 **Résumé de la Refactorisation CSS**](/docs/css/RESUME_REFACTORISATION_CSS.md) - Résumé des travaux de refactorisation CSS effectués
-- [📊 **Rapport d'audit CSS**](/docs/analyses/css_audit_report.md) - Résultats de l'audit des styles CSS
-- [📊 **Rapport d'audit CSS global**](/docs/analyses/global_css_audit_report.md) - Résultats de l'audit global des styles CSS
 
 ## 🧩 Composants
 
@@ -49,16 +47,21 @@ Ce dossier contient toute la documentation technique du projet TourCraft. Ce fic
 - [📑 **Hooks Concert**](/docs/hooks/CONCERT_HOOKS.md) - Documentation des hooks liés aux concerts
 - [📑 **Hooks Contrat**](/docs/hooks/CONTRAT_HOOKS.md) - Documentation des hooks liés aux contrats
 
+## 🛠️ Workflows
+
+- [📋 **Workflows Généraux**](/docs/workflows/WORKFLOWS.md)
+- [📄 **Concert Workflow**](/docs/workflows/CONCERT_WORKFLOW.md)
+- [📄 **Contrat Workflow**](/docs/workflows/CONTRAT_WORKFLOW.md)
+- [📄 **Association Workflow**](/docs/workflows/ASSOCIATION_WORKFLOW.md)
+- [📋 **PR Checklist**](/docs/workflows/PR_CHECKLIST.md)
+- [📊 **Logs et Erreurs Runtime**](/docs/workflows/RUNTIME_LOGS_AND_ERRORS.md)
+
 ## 🔥 Migration Firebase
 
 - [📝 **Plan de Migration Firebase**](/docs/migration/PLAN_MIGRATION_FIREBASE.md) - Plan de migration vers la nouvelle structure Firebase
 - [📝 **Plan de Standardisation Firebase**](/docs/migration/PLAN_STANDARDISATION_FIREBASE.md) - Plan détaillé de standardisation des données Firebase
 - [📋 **Journal de Migration Firebase**](/docs/migration/JOURNAL_MIGRATION_FIREBASE.md) - Journal détaillé de la migration Firebase
 - [📊 **Analyse de la Structure des Données Firebase**](/docs/migration/ANALYSE_STRUCTURE_DONNEES_FIREBASE.md) - Analyse de la structure des données avant migration
-
-## 🧪 Tests
-
-- [📋 **Plan de Tests des Hooks Génériques**](/docs/hooks/PLAN_TESTS_GENERIC_ENTITY_LIST.md) - Plan de tests pour les hooks génériques
 
 ## 📊 Analyses & Audits
 
@@ -78,6 +81,8 @@ Les documents suivants ont été archivés car ils concernent des initiatives te
 - [📝 **Plan Refactorisation CSS**](/docs/archive/PLAN_REFACTORISATION_CSS_PROGRESSIF.md) - [ARCHIVÉ] Plan de refactorisation progressive du CSS
 - [📝 **Plan Refactorisation Composants**](/docs/archive/PLAN_REFACTORISATION_COMPOSANTS.md) - [ARCHIVÉ] Plan de refactorisation des composants
 - [📋 **Inventaire Composants Mobiles**](/docs/archive/INVENTAIRE_REFACTORISATION_COMPOSANTS_MOBILES.md) - [ARCHIVÉ] Inventaire des composants mobiles à refactoriser
+- [📊 **Audit CSS**](/docs/archive/css_audit_report.md) - [ARCHIVÉ] Rapport d'audit CSS
+- [📊 **Audit CSS Global**](/docs/archive/global_css_audit_report.md) - [ARCHIVÉ] Rapport d'audit global des styles CSS
 
 ## 📌 Comment Utiliser Cette Documentation
 
@@ -134,5 +139,5 @@ Les documents suivants ont été archivés car ils concernent des initiatives te
 ---
 
 *Index maintenu par l'équipe Documentation*
-*Dernière mise à jour : 6 mai 2025*
+*Dernière mise à jour : 10 mai 2025*
 *Pour toute question: documentation@tourcraft.com*

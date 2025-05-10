@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import firebase from '@/firebaseInit';
+import { collection, query, orderBy, getDocs } from 'firebase/firestore';
+import { db } from '@/firebaseInit';
 
 /**
  * Custom hook to fetch and manage lieux data
@@ -24,8 +25,8 @@ const useLieuxQuery = () => {
     const fetchLieux = async () => {
       setLoading(true);
       try {
-        const q = firebase.query(firebase.collection(firebase.db, 'lieux'), firebase.orderBy('nom'));
-        const querySnapshot = await firebase.getDocs(q);
+        const q = query(collection(db, 'lieux'), orderBy('nom'));
+        const querySnapshot = await getDocs(q);
         const lieuxData = querySnapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data()

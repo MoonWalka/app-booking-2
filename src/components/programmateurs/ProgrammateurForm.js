@@ -3,6 +3,8 @@ import React from 'react';
 import { useResponsive } from '@/hooks/common';
 ; // Utilisation du hook recommandé
 
+console.log('[TRACE-UNIQUE][ProgrammateurForm] Composant exécuté !');
+
 function ProgrammateurForm(props) {
   const responsive = useResponsive();
   

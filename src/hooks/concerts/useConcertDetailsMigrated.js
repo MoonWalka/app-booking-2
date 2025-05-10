@@ -15,7 +15,7 @@ import { formatDate, formatMontant, isDatePassed, copyToClipboard, getCacheKey }
 
 /**
  * Hook de détails de concert basé sur useGenericEntityDetails
- * Conserve la compatibilité avec l'API existante tout en tirant parti du hook générique
+ * Version améliorée pour bénéficier des corrections de stabilité du hook générique
  * 
  * @param {string} id - ID du concert
  * @param {object} locationParam - Objet location de React Router (optionnel)
@@ -70,7 +70,7 @@ const useConcertDetailsMigrated = (id, locationParam) => {
   ];
   
   // Fonction pour transformer les données du concert
-  const transformConcertData = (data) => {
+  const transformConcertData = useCallback((data) => {
     // Stocker les IDs initiaux pour la gestion des relations bidirectionnelles
     if (data.programmateurId) {
       setInitialProgrammateurId(data.programmateurId);
@@ -85,10 +85,10 @@ const useConcertDetailsMigrated = (id, locationParam) => {
     }
     
     return data;
-  };
+  }, []);
   
   // Fonction pour valider le formulaire de concert
-  const validateConcertForm = (formData) => {
+  const validateConcertForm = useCallback((formData) => {
     const errors = {};
     
     if (!formData.date) errors.date = 'La date est obligatoire';
@@ -99,19 +99,17 @@ const useConcertDetailsMigrated = (id, locationParam) => {
       isValid: Object.keys(errors).length === 0,
       errors
     };
-  };
+  }, []);
   
   // Fonction pour formater les valeurs d'affichage
-  const formatConcertValue = (field, value) => {
+  const formatConcertValue = useCallback((field, value) => {
     if (field === 'date') return formatDate(value);
     if (field === 'montant') return formatMontant(value);
     return value;
-  };
+  }, []);
   
   // Callbacks pour les événements de sauvegarde et suppression
-  const handleSaveSuccess = (id, data) => {
-    console.log('Concert mis à jour avec succès:', id, data);
-    
+  const handleSaveSuccess = useCallback((data) => {
     // Mettre à jour les IDs initiaux pour la prochaine édition
     setInitialProgrammateurId(data.programmateurId || null);
     setInitialArtisteId(data.artisteId || null);
@@ -127,44 +125,40 @@ const useConcertDetailsMigrated = (id, locationParam) => {
         } 
       });
       window.dispatchEvent(event);
-      console.log('Événement concertUpdated émis pour concert', id);
     } catch (e) {
       console.warn('Impossible de déclencher l\'événement de mise à jour', e);
     }
     
     // Charger les données du formulaire si nécessaire
     concertForms.fetchFormData(data);
-  };
+  }, [id, concertForms]);
   
-  const handleDeleteSuccess = (id) => {
+  const handleDeleteSuccess = useCallback(() => {
     // Notifier les autres composants
     try {
       const event = new CustomEvent('concertDeleted', { detail: { id } });
       window.dispatchEvent(event);
-      console.log('Événement concertDeleted émis pour concert', id);
     } catch (e) {
       console.warn('Impossible de déclencher l\'événement de suppression', e);
     }
     
     navigate('/concerts');
-  };
+  }, [id, navigate]);
   
   // Vérification de permission pour la suppression
-  const checkDeletePermission = async (concertData) => {
+  const checkDeletePermission = useCallback(async () => {
     // Ajouter des vérifications spécifiques aux concerts ici si nécessaire
-    // Par exemple, vérifier si un concert passé peut être supprimé
-    
-    return { allowed: true };
-  };
+    return true;
+  }, []);
   
-  // Utilisation de useGenericEntityDetails
+  // Utilisation de useGenericEntityDetails avec les améliorations
   const genericDetails = useGenericEntityDetails({
     entityType: 'concert',
     collectionName: 'concerts',
     id,
     relatedEntities,
     transformData: transformConcertData,
-    validateForm: validateConcertForm,
+    validateFormFn: validateConcertForm,
     formatValue: formatConcertValue,
     checkDeletePermission,
     onSaveSuccess: handleSaveSuccess,
@@ -173,7 +167,9 @@ const useConcertDetailsMigrated = (id, locationParam) => {
     returnPath: '/concerts',
     editPath: '/concerts/:id/edit',
     // Options avancées
-    useDeleteModal: true
+    useDeleteModal: true,
+    // Utilisation de la nouvelle option pour gérer le cache
+    disableCache: false
   });
   
   // Fonction pour gérer les mises à jour des relations bidirectionnelles
@@ -215,7 +211,7 @@ const useConcertDetailsMigrated = (id, locationParam) => {
   }, [id, genericDetails.entity, genericDetails.relatedData, initialProgrammateurId, initialArtisteId, initialStructureId, concertAssociations]);
   
   // Extension de handleSubmit pour gérer les relations bidirectionnelles
-  const handleSubmitWithRelations = async (e) => {
+  const handleSubmitWithRelations = useCallback(async (e) => {
     if (e && e.preventDefault) e.preventDefault();
     
     // D'abord soumettre le formulaire via le hook générique
@@ -223,7 +219,7 @@ const useConcertDetailsMigrated = (id, locationParam) => {
     
     // Puis gérer les relations bidirectionnelles
     await handleBidirectionalUpdates();
-  };
+  }, [genericDetails.handleSubmit, handleBidirectionalUpdates]);
   
   // Fonction pour forcer le rafraîchissement des données
   const refreshConcert = useCallback(async () => {
@@ -244,7 +240,6 @@ const useConcertDetailsMigrated = (id, locationParam) => {
         detail: { id, timestamp: Date.now() } 
       });
       window.dispatchEvent(event);
-      console.log('Événement concertDataRefreshed émis pour concert', id);
     } catch (e) {
       console.warn('Impossible de déclencher l\'événement de rafraîchissement', e);
     }
@@ -350,8 +345,6 @@ const useConcertDetailsMigrated = (id, locationParam) => {
     setStructure: (structure) => genericDetails.setRelatedEntity('structure', structure),
     
     // Recherche d'entités (compatibilité avec l'ancien hook)
-    // Note: ces objets sont des stubs pour maintenir la compatibilité d'API
-    // Une meilleure approche serait d'utiliser useGenericEntitySearch pour ces fonctionnalités
     lieuSearch: {
       selectedEntity: genericDetails.relatedData.lieu,
       setSelectedEntity: (lieu) => genericDetails.setRelatedEntity('lieu', lieu)

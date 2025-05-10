@@ -17,6 +17,7 @@ import styles from './ProgrammateurDetails.module.css';
  * Structure en cartes tout en conservant les fonctionnalités originales
  */
 const ProgrammateurView = ({ id: propId }) => {
+  console.log('[TRACE-UNIQUE][ProgrammateurView][desktop] Ce composant est exécuté !');
   // Utiliser l'ID passé en prop s'il existe, sinon utiliser l'ID de l'URL
   const { id: urlId } = useParams();
   const id = propId || urlId;

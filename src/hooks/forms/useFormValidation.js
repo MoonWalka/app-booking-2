@@ -1,5 +1,14 @@
-// Placeholder pour le hook personnalisé
-// Logique à extraire et implémenter ici
+// src/hooks/forms/useFormValidation.js
+/**
+ * @deprecated Ce hook est maintenant un wrapper vers useFormValidationMigrated.
+ * Veuillez utiliser useFormValidationV2 pour les nouveaux développements.
+ */
 
-export const useFormValidation = () => {
+import useFormValidationMigrated from './useFormValidationMigrated';
+
+const useFormValidation = (options) => {
+  // Réutiliser la version migrée
+  return useFormValidationMigrated(options);
 };
+
+export default useFormValidation;

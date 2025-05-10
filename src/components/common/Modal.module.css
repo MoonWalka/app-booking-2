@@ -132,3 +132,159 @@
     width: 100%;
   }
 }
+
+/* Modal.module.css - Styles pour le composant OptimizedModal */
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal {
+  background-color: var(--tc-bg-color, #fff);
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: slideIn 0.3s ease-out;
+  position: relative;
+  z-index: 1060;
+}
+
+.modalSmall {
+  max-width: 480px;
+}
+
+.modalMedium {
+  max-width: 640px;
+}
+
+.modalLarge {
+  max-width: 920px;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--tc-border-color, #e5e5e5);
+  background-color: var(--tc-header-bg, #f8f9fa);
+}
+
+.modalTitle {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--tc-text-color, #333);
+}
+
+.modalBody {
+  padding: 1.5rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--tc-border-color, #e5e5e5);
+  background-color: var(--tc-footer-bg, #f8f9fa);
+}
+
+.closeButton {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+  border-radius: 4px;
+  color: var(--tc-icon-color, #6c757d);
+  transition: all 0.2s ease;
+  font-size: 1.25rem;
+}
+
+.closeButton:hover {
+  color: var(--tc-icon-hover-color, #343a40);
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { 
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Classes utilitaires pour les variants de modales */
+.modalCenter {
+  text-align: center;
+}
+
+.modalAlert {
+  border-top: 4px solid var(--tc-alert-color, #dc3545);
+}
+
+.modalSuccess {
+  border-top: 4px solid var(--tc-success-color, #28a745);
+}
+
+.modalWarning {
+  border-top: 4px solid var(--tc-warning-color, #ffc107);
+}
+
+.modalInfo {
+  border-top: 4px solid var(--tc-info-color, #17a2b8);
+}
+
+/* Support pour l'accessibilité et le focus */
+.modal:focus-visible {
+  outline: 2px solid var(--tc-focus-color, #0d6efd);
+  outline-offset: 2px;
+}
+
+/* Support des media queries pour le responsive */
+@media (max-width: 576px) {
+  .modal {
+    width: 95%;
+    max-width: none !important;
+  }
+  
+  .modalHeader {
+    padding: 0.75rem 1rem;
+  }
+  
+  .modalBody {
+    padding: 1rem;
+  }
+  
+  .modalFooter {
+    padding: 0.75rem 1rem;
+  }
+}

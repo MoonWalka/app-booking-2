@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rapport de détection des hooks dépréciés</title>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 1200px; margin: 0 auto; padding: 20px; }
+    h1 { color: #2c3e50; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+    h2 { color: #3498db; margin-top: 30px; }
+    table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
+    th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+    th { background-color: #f5f5f5; }
+    tr:nth-child(even) { background-color: #f9f9f9; }
+    .high { background-color: #ffdddd; }
+    .medium { background-color: #ffffdd; }
+    .low { background-color: #ddffdd; }
+    .summary { display: flex; justify-content: space-between; margin-bottom: 20px; }
+    .summary-box { border: 1px solid #ddd; padding: 15px; border-radius: 5px; flex: 1; margin: 0 10px; background-color: #f9f9f9; }
+    .summary-box h3 { margin-top: 0; }
+    .code { font-family: monospace; background-color: #f5f5f5; padding: 2px 5px; border-radius: 3px; }
+    .date { font-style: italic; color: #777; }
+  </style>
+</head>
+<body>
+  <h1>Rapport de détection des hooks dépréciés</h1>
+  <p class="date">Généré le 5/9/2025 à 10:32:46 PM</p>
+  
+  <div class="summary">
+    <div class="summary-box">
+      <h3>Total des occurrences</h3>
+      <p><strong>14</strong> hooks dépréciés détectés</p>
+    </div>
+    <div class="summary-box">
+      <h3>Par sévérité</h3>
+      <p><strong>4</strong> haute</p>
+      <p><strong>10</strong> moyenne</p>
+      <p><strong>0</strong> basse</p>
+    </div>
+    <div class="summary-box">
+      <h3>Par hook</h3>
+      <p><strong>3</strong> useLieuForm</p><p><strong>1</strong> useConcertForm</p><p><strong>2</strong> useArtistesList</p><p><strong>3</strong> useLieuSearch</p><p><strong>2</strong> useLieuxFilters</p><p><strong>3</strong> useProgrammateurSearch</p>
+    </div>
+  </div>
+  
+  <h2>Détails des occurrences</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Sévérité</th>
+        <th>Fichier</th>
+        <th>Ligne</th>
+        <th>Hook déprécié</th>
+        <th>Remplacement recommandé</th>
+        <th>Échéance</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+        <tr class="high">
+          <td>HIGH</td>
+          <td>src/components/lieux/desktop/LieuForm.js</td>
+          <td>8</td>
+          <td><span class="code">useLieuForm</span></td>
+          <td><span class="code">useGenericEntityForm</span></td>
+          <td>6 novembre 2025</td>
+        </tr>
+      
+        <tr class="high">
+          <td>HIGH</td>
+          <td>src/components/lieux/desktop/LieuFormOptimized.js</td>
+          <td>2</td>
+          <td><span class="code">useLieuForm</span></td>
+          <td><span class="code">useGenericEntityForm</span></td>
+          <td>6 novembre 2025</td>
+        </tr>
+      
+        <tr class="high">
+          <td>HIGH</td>
+          <td>src/hooks/concerts/useConcertForm.js</td>
+          <td>11</td>
+          <td><span class="code">useConcertForm</span></td>
+          <td><span class="code">useGenericEntityForm</span></td>
+          <td>6 novembre 2025</td>
+        </tr>
+      
+        <tr class="high">
+          <td>HIGH</td>
+          <td>src/hooks/lieux/useLieuForm.js</td>
+          <td>13</td>
+          <td><span class="code">useLieuForm</span></td>
+          <td><span class="code">useGenericEntityForm</span></td>
+          <td>6 novembre 2025</td>
+        </tr>
+      
+        <tr class="medium">
+          <td>MEDIUM</td>
+          <td>src/hooks/artistes/useArtistesList.js</td>
+          <td>12</td>
+          <td><span class="code">useArtistesList</span></td>
+          <td><span class="code">useGenericEntityList</span></td>
+          <td>6 novembre 2025</td>
+        </tr>
+      
+        <tr class="medium">
+          <td>MEDIUM</td>
+          <td>src/hooks/artistes/useArtistesList.js</td>
+          <td>15</td>
+          <td><span class="code">useArtistesList</span></td>
+          <td><span class="code">useGenericEntityList</span></td>
+          <td>6 novembre 2025</td>
+        </tr>
+      
+        <tr class="medium">
+          <td>MEDIUM</td>
+          <td>src/hooks/lieux/useLieuSearch.js</td>
+          <td>5</td>
+          <td><span class="code">useLieuSearch</span></td>
+          <td><span class="code">useGenericEntitySearch</span></td>
+          <td>6 novembre 2025</td>
+        </tr>
+      
+        <tr class="medium">
+          <td>MEDIUM</td>
+          <td>src/hooks/lieux/useLieuxFilters.js</td>
+          <td>10</td>
+          <td><span class="code">useLieuxFilters</span></td>
+          <td><span class="code">useGenericEntityList</span></td>
+          <td>6 novembre 2025</td>
+        </tr>
+      
+        <tr class="medium">
+          <td>MEDIUM</td>
+          <td>src/hooks/lieux/useLieuxFilters.js</td>
+          <td>13</td>
+          <td><span class="code">useLieuxFilters</span></td>
+          <td><span class="code">useGenericEntityList</span></td>
+          <td>6 novembre 2025</td>
+        </tr>
+      
+        <tr class="medium">
+          <td>MEDIUM</td>
+          <td>src/hooks/lieux/useProgrammateurSearch.js</td>
+          <td>8</td>
+          <td><span class="code">useProgrammateurSearch</span></td>
+          <td><span class="code">useGenericEntitySearch</span></td>
+          <td>6 novembre 2025</td>
+        </tr>
+      
+        <tr class="medium">
+          <td>MEDIUM</td>
+          <td>src/hooks/programmateurs/useProgrammateurSearch.js</td>
+          <td>19</td>
+          <td><span class="code">useProgrammateurSearch</span></td>
+          <td><span class="code">useGenericEntitySearch</span></td>
+          <td>6 novembre 2025</td>
+        </tr>
+      
+        <tr class="medium">
+          <td>MEDIUM</td>
+          <td>src/hooks/search/useLieuSearch.js</td>
+          <td>3</td>
+          <td><span class="code">useLieuSearch</span></td>
+          <td><span class="code">useGenericEntitySearch</span></td>
+          <td>6 novembre 2025</td>
+        </tr>
+      
+        <tr class="medium">
+          <td>MEDIUM</td>
+          <td>src/hooks/search/useLieuSearch.js</td>
+          <td>13</td>
+          <td><span class="code">useLieuSearch</span></td>
+          <td><span class="code">useGenericEntitySearch</span></td>
+          <td>6 novembre 2025</td>
+        </tr>
+      
+        <tr class="medium">
+          <td>MEDIUM</td>
+          <td>src/hooks/search/useProgrammateurSearch.js</td>
+          <td>11</td>
+          <td><span class="code">useProgrammateurSearch</span></td>
+          <td><span class="code">useGenericEntitySearch</span></td>
+          <td>6 novembre 2025</td>
+        </tr>
+      
+    </tbody>
+  </table>
+  
+  <h2>Recommandations</h2>
+  <ul>
+    <li>Consultez le <a href="../hooks/PLAN_DEPRECIATION_HOOKS.md">Plan de dépréciation des hooks</a> pour plus d'informations sur les échéances et la stratégie de migration.</li>
+    <li>Prioritisez les migrations des hooks avec une sévérité HAUTE et dont l'échéance est proche.</li>
+    <li>Utilisez les guides de migration disponibles dans la documentation du projet.</li>
+    <li>Pour tout problème ou question, contactez l'équipe responsable de la migration des hooks.</li>
+  </ul>
+</body>
+</html>

@@ -8,7 +8,7 @@ import styles from './ContratDetailsPage.module.css';
 // Import custom hooks
 import { useContratDetailsV2 } from '@/hooks/contrats';
 import useContratActions from '@/hooks/contrats/useContratActions';
-import usePdfPreview from '@/hooks/contrats/usePdfPreview';
+import { usePdfPreview } from '@/hooks/contrats';
 
 // Import UI components 
 import ContratHeader from '@/components/contrats/sections/ContratHeader';

@@ -132,11 +132,21 @@ export {
   useStructureSearch
 };
 
-// Export de la version migrée avec son nom original
+// Export des versions migrées avec leurs noms originaux
 export { default as useStructureDetailsMigrated } from './useStructureDetailsMigrated';
+export { default as useStructureFormMigrated } from './useStructureFormMigrated';
 
 /**
- * @recommended La version migrée du hook useStructureDetails basée sur les hooks génériques.
+ * @recommended Les versions migrées des hooks basées sur les hooks génériques.
  * À utiliser dans les nouveaux développements.
  */
 export { default as useStructureDetailsV2 } from './useStructureDetailsMigrated';
+export { default as useStructureFormV2 } from './useStructureFormMigrated';
+
+/**
+ * @recommended APPROCHE RECOMMANDÉE - Version optimisée du hook pour les formulaires de structures
+ * utilisant directement les hooks génériques.
+ * Cette version est conforme au plan de dépréciation qui prévoit la suppression 
+ * des hooks spécifiques d'ici novembre 2025.
+ */
+export { default as useStructureFormOptimized } from './useStructureFormOptimized';

@@ -4,14 +4,14 @@ import { MemoryRouter } from 'react-router-dom';
 import useConcertDetailsMigrated from '../concerts/useConcertDetailsMigrated';
 
 // Mock des dépendances
-jest.mock('@/hooks/common', () => ({
+jest.mock('../../hooks/common', () => ({
   useGenericEntityDetails: jest.fn()
 }));
 
-jest.mock('@/hooks/concerts/useConcertStatus', () => jest.fn());
-jest.mock('@/hooks/concerts/useConcertFormsManagement', () => jest.fn());
-jest.mock('@/hooks/concerts/useConcertAssociations', () => jest.fn());
-jest.mock('@/utils/formatters', () => ({
+jest.mock('../../hooks/concerts/useConcertStatus', () => jest.fn());
+jest.mock('../../hooks/concerts/useConcertFormsManagement', () => jest.fn());
+jest.mock('../../hooks/concerts/useConcertAssociations', () => jest.fn());
+jest.mock('../../utils/formatters', () => ({
   formatDate: jest.fn((date) => date ? `formatted-date-${date}` : ''),
   formatMontant: jest.fn((montant) => montant ? `formatted-montant-${montant}` : ''),
   isDatePassed: jest.fn((date) => false),
@@ -20,10 +20,10 @@ jest.mock('@/utils/formatters', () => ({
 }));
 
 // Import du hook générique mocké
-import { useGenericEntityDetails } from '@/hooks/common';
-import useConcertStatus from '@/hooks/concerts/useConcertStatus';
-import useConcertFormsManagement from '@/hooks/concerts/useConcertFormsManagement';
-import useConcertAssociations from '@/hooks/concerts/useConcertAssociations';
+import { useGenericEntityDetails } from '../../hooks/common';
+import useConcertStatus from '../../hooks/concerts/useConcertStatus';
+import useConcertFormsManagement from '../../hooks/concerts/useConcertFormsManagement';
+import useConcertAssociations from '../../hooks/concerts/useConcertAssociations';
 
 // Wrapper pour fournir le contexte de routage
 const wrapper = ({ children }) => <MemoryRouter>{children}</MemoryRouter>;

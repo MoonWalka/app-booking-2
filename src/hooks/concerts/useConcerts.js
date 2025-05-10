@@ -3,3 +3,5 @@
 
 export const useConcerts = () => {
 };
+
+export default useConcerts;

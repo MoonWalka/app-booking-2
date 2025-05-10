@@ -1,126 +1,26 @@
-import { useState, useCallback } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useGenericEntityForm } from '@/hooks/common/useGenericEntityForm';
-
 /**
- * Hook pour la gestion des formulaires de lieux
- * Version migrée basée sur useGenericEntityForm
+ * @deprecated Ce hook est déprécié et sera supprimé dans une future version (novembre 2025).
+ * Veuillez utiliser le hook optimisé basé sur les hooks génériques à la place:
+ * import { useLieuFormOptimized } from '@/hooks/lieux';
  * 
+ * Hook pour gérer les formulaires de lieux
  * @param {string} lieuId - ID du lieu ou 'nouveau' pour un nouveau lieu
- * @returns {Object} États et fonctions pour gérer le formulaire de lieu
+ * @returns {Object} - États et fonctions pour gérer le formulaire de lieu
  */
+import useLieuFormOptimized from './useLieuFormOptimized';
+import { useEffect } from 'react';
+
 const useLieuForm = (lieuId) => {
-  const { id } = useParams();
-  const actualLieuId = lieuId || id;
+  // Afficher un avertissement de dépréciation
+  useEffect(() => {
+    console.warn(
+      'Avertissement: useLieuForm est déprécié et sera supprimé en novembre 2025. ' +
+      'Veuillez utiliser useLieuFormOptimized depuis @/hooks/lieux à la place.'
+    );
+  }, []);
   
-  // Configuration des entités liées à un lieu
-  const relatedEntities = [
-    { 
-      name: 'programmateur',
-      collection: 'programmateurs',
-      idField: 'programmateurId',
-      nameField: 'programmateurNom'
-    }
-  ];
-
-  // Données initiales du formulaire
-  const initialData = {
-    nom: '',
-    adresse: '',
-    codePostal: '',
-    ville: '',
-    pays: 'France',
-    capacite: '',
-    type: '',
-    contact: {
-      nom: '',
-      telephone: '',
-      email: ''
-    },
-    programmateurId: null,
-    programmateurNom: null,
-    latitude: null,
-    longitude: null,
-    display_name: ''
-  };
-
-  // Fonction de validation spécifique aux lieux
-  const validateLieuForm = (data) => {
-    const errors = {};
-    
-    if (!data.nom) {
-      errors.nom = 'Le nom du lieu est obligatoire';
-    }
-    
-    if (!data.adresse) {
-      errors.adresse = 'L\'adresse du lieu est obligatoire';
-    }
-    
-    if (!data.codePostal) {
-      errors.codePostal = 'Le code postal est obligatoire';
-    }
-    
-    if (!data.ville) {
-      errors.ville = 'La ville est obligatoire';
-    }
-    
-    return {
-      isValid: Object.keys(errors).length === 0,
-      errors
-    };
-  };
-
-  // Transformation des données avant sauvegarde
-  const transformLieuData = (data) => {
-    // Assurez-vous que contact existe toujours
-    const transformedData = {
-      ...data,
-      contact: data.contact || {
-        nom: '',
-        telephone: '',
-        email: ''
-      }
-    };
-    
-    return transformedData;
-  };
-
-  // Callback après sauvegarde réussie
-  const onLieuSaveSuccess = (savedId, savedData) => {
-    console.log(`Lieu ${savedId} enregistré avec succès`, savedData);
-    // Logique supplémentaire si nécessaire...
-  };
-
-  // Utiliser le hook générique avec la configuration spécifique aux lieux
-  const genericFormHook = useGenericEntityForm({
-    entityType: 'lieux',
-    entityId: actualLieuId,
-    initialData,
-    collectionName: 'lieux',
-    validateForm: validateLieuForm,
-    transformData: transformLieuData,
-    onSuccess: onLieuSaveSuccess,
-    relatedEntities
-  });
-
-  // Pour faciliter l'accès au programmateur lié spécifique aux lieux
-  const selectedProgrammateur = genericFormHook.relatedData.programmateur || null;
-
-  // Fonction spécifique pour sélectionner/désélectionner le programmateur
-  const handleSelectProgrammateur = useCallback((programmateur) => {
-    genericFormHook.handleSelectRelatedEntity('programmateur', programmateur);
-  }, [genericFormHook.handleSelectRelatedEntity]);
-
-  return {
-    ...genericFormHook,
-    // Ajouter les propriétés spécifiques aux lieux pour maintenir la compatibilité avec le code existant
-    lieu: genericFormHook.formData,
-    setLieu: genericFormHook.setFormData,
-    selectedProgrammateur,
-    handleSelectProgrammateur,
-    // Pour compatibilité avec l'ancien code qui utilise validateForm comme fonction
-    validateForm: () => validateLieuForm(genericFormHook.formData).isValid
-  };
+  // Utiliser directement la version optimisée basée sur useGenericEntityForm
+  return useLieuFormOptimized(lieuId);
 };
 
 export default useLieuForm;

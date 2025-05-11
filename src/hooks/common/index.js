@@ -21,3 +21,6 @@ export { default as useGenericEntityList } from './useGenericEntityList';
 
 // Import du hook générique de recherche et filtrage
 export { default as useSearchAndFilter } from './useSearchAndFilter';
+
+// Import du nouveau hook générique de suppression d'entité
+export { default as useGenericEntityDelete } from './useGenericEntityDelete';

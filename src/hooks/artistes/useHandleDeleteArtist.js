@@ -1,5 +1,5 @@
 // src/hooks/artistes/useHandleDeleteArtist.js
-import { doc, deleteDoc } from 'firebase/firestore';
+import { doc, deleteDoc } from '@/firebaseInit';
 import { db } from '@/firebaseInit';
 
 /**

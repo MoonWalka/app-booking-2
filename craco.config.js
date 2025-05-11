@@ -33,7 +33,7 @@ module.exports = {
       '@': path.resolve(__dirname, 'src')
     },
     configure: (webpackConfig, { env }) => {
-      // Ensure chunks are served from root to match dev server static paths
+      // Ensure chunks are served from /static/js/ to match dev server static paths
       webpackConfig.output.publicPath = '/';
       webpackConfig.resolve.fallback = {
         ...webpackConfig.resolve.fallback,

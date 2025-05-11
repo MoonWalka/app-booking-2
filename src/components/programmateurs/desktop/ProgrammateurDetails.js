@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { Container, Row, Col, Button } from 'react-bootstrap';
-import { useProgrammateurDetailsV2 } from '@/hooks/programmateurs';
+import { useProgrammateurDetails } from '@/hooks/programmateurs';
 import ProgrammateurContactSection from './ProgrammateurContactSection';
 import ProgrammateurLegalSection from './ProgrammateurLegalSection';
 import ProgrammateurConcertsSection from './ProgrammateurConcertsSection';
@@ -13,23 +13,24 @@ import styles from './ProgrammateurDetails.module.css';
 
 const ProgrammateurDetails = () => {
   const { id } = useParams();
-  const{ 
-    programmateur, 
-    structure,  // Récupérer la structure du hook
-    loading, 
-    error, 
-    isEditing, 
-    toggleEditMode, 
-    formData, 
-    setFormData, 
+  const { 
+    programmateur,
+    structure,
+    loading,
+    error,
+    isEditing,
+    toggleEditMode,
+    formData,
+    setFormData,
     handleChange,
     handleSubmit,
     handleDelete,
     isSubmitting,
     formatValue,
-    structureCreated
-  } = useProgrammateurDetailsV2(id);
+  } = useProgrammateurDetails(id);
   
+  console.log('[DEBUG][ProgrammateurDetails-desktop] State:', { programmateur, structure, loading, error, isEditing, formData });
+
   if (loading) {
     return <Spinner message="Chargement du programmateur..." contentOnly={true} />;
   }
@@ -39,6 +40,7 @@ const ProgrammateurDetails = () => {
   }
   
   if (!programmateur) {
+    console.warn('[WARN][ProgrammateurDetails-desktop] programmateur est undefined');
     return <ErrorMessage message="Programmateur introuvable" />;
   }
   
@@ -136,7 +138,6 @@ const ProgrammateurDetails = () => {
             handleChange={handleChange}
             isEditing={isEditing}
             formatValue={formatValue}
-            structureCreated={structureCreated}
           />
           
           <div className="mt-4">

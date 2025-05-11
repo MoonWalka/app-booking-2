@@ -1,3 +1,4 @@
+import React from 'react';
 // src/hooks/__tests__/useConcertDetailsMigrated.test.js
 import { renderHook, act } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
@@ -20,7 +21,7 @@ jest.mock('../../utils/formatters', () => ({
 }));
 
 // Import du hook générique mocké
-import { useGenericEntityDetails } from '../../hooks/common';
+import { useGenericEntityDetails } from '@/hooks/common';
 import useConcertStatus from '../../hooks/concerts/useConcertStatus';
 import useConcertFormsManagement from '../../hooks/concerts/useConcertFormsManagement';
 import useConcertAssociations from '../../hooks/concerts/useConcertAssociations';

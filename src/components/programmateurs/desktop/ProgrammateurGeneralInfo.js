@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './ProgrammateurGeneralInfo.module.css';
 
 const ProgrammateurGeneralInfo = ({ programmateur }) => {
+  console.log('[DEBUG][ProgrammateurGeneralInfo] programmateur:', programmateur);
   return (
     <div className={styles.container}>
       <div className={styles.infoCard}>

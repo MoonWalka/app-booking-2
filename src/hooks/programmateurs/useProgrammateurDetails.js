@@ -1,63 +1,347 @@
-/**
- * @deprecated Ce hook est déprécié et sera supprimé dans une future version.
- * Veuillez utiliser le hook migré vers les hooks génériques à la place:
- * import { useProgrammateurDetailsV2 } from '@/hooks/programmateurs';
- * 
- * Hook pour gérer les détails d'un programmateur
- * @param {string} id - ID du programmateur
- * @returns {Object} - Données et fonctions pour la gestion du programmateur
- */
-import useProgrammateurDetailsMigrated from './useProgrammateurDetailsMigrated';
-import { useEffect } from 'react';
+// src/hooks/programmateurs/useProgrammateurDetailsMigrated.js
+import { useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { format } from 'date-fns';
+import { fr } from 'date-fns/locale';
+import {
+  db,
+  doc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+  getDoc,
+  query,
+  collection,
+  where,
+  getDocs
+} from '@/firebaseInit';
+import { useGenericEntityDetails } from '@/hooks/common';
+import { validateProgrammateurForm } from '@/utils/validation';
+import { showSuccessToast, showErrorToast } from '@/utils/toasts';
 
-const useProgrammateurDetails = (id) => {
-  // Afficher un avertissement de dépréciation
-  useEffect(() => {
-    console.warn(
-      'Avertissement: useProgrammateurDetails est déprécié. ' +
-      'Veuillez utiliser useProgrammateurDetailsV2 depuis @/hooks/programmateurs à la place.'
-    );
+/**
+ * Hook migré pour la gestion des détails d'un programmateur
+ * Utilise useGenericEntityDetails comme base avec une gestion spécifique des relations bidirectionnelles
+ * Version améliorée avec suppression des logs de débogage excessifs
+ * 
+ * @param {string} id - ID du programmateur à afficher/éditer
+ * @returns {Object} API pour gérer les détails d'un programmateur
+ */
+const useProgrammateurDetailsMigrated = (id) => {
+  console.log('[TRACE-UNIQUE][useProgrammateurDetailsMigrated] Entrée hook avec id:', id);
+  const navigate = useNavigate();
+
+  // Fonction pour formater les champs date
+  const formatFields = {
+    createdAt: (value) => value ? format(new Date(value), 'PPP à HH:mm', { locale: fr }) : '-',
+    updatedAt: (value) => value ? format(new Date(value), 'PPP à HH:mm', { locale: fr }) : '-',
+    derniereActivite: (value) => value ? format(new Date(value), 'PPP', { locale: fr }) : '-',
+  };
+
+  // Fonction pour transformer les données après chargement
+  const transformData = useCallback((data) => {
+    return {
+      ...data,
+      // Ajouter des champs calculés
+      displayName: data.prenom && data.nom ? `${data.prenom} ${data.nom}` : (data.nom || 'Sans nom'),
+      nombreContacts: data.contacts ? data.contacts.length : 0,
+      nombreStructures: data.structures ? data.structures.length : 0,
+    };
   }, []);
-  
-  // Utiliser la version migrée qui est basée sur useGenericEntityDetails
-  const migratedHook = useProgrammateurDetailsMigrated(id);
-  
-  // Adapter l'API pour être compatible avec les composants existants
-  return {
-    // Propriétés de la version originale
-    programmateur: migratedHook.entity,
-    loading: migratedHook.isLoading,
-    error: migratedHook.error,
-    isEditing: migratedHook.isEditing,
-    formData: migratedHook.formData,
-    isSubmitting: migratedHook.isSubmitting,
-    
-    // Fonctions de la version originale
-    toggleEditMode: migratedHook.toggleEditMode,
-    setFormData: migratedHook.updateFormData,
-    handleChange: (e) => {
-      const { name, value } = e.target;
-      
-      if (name.includes('.')) {
-        const [section, field] = name.split('.');
-        migratedHook.updateFormData(prevState => ({
-          ...prevState,
-          [section]: {
-            ...prevState[section],
-            [field]: value
+
+  // Requête personnalisée pour charger les structures associées
+  const customQueries = {
+    structures: async (programmateurData) => {
+      try {
+        if (!programmateurData.structureIds || programmateurData.structureIds.length === 0) {
+          return [];
+        }
+        const structuresPromises = programmateurData.structureIds.map(async (structureId) => {
+          try {
+            const structureDoc = await getDoc(doc(db, 'structures', structureId));
+            return structureDoc.exists() ? { id: structureDoc.id, ...structureDoc.data() } : null;
+          } catch (err) {
+            console.error('Erreur getDoc structure:', err);
+            return null;
           }
-        }));
-      } else {
-        migratedHook.updateFormData(prevState => ({
-          ...prevState,
-          [name]: value
-        }));
+        });
+        const structures = await Promise.all(structuresPromises);
+        return structures.filter(s => s !== null);
+      } catch (error) {
+        console.error('Erreur customQueries.structures:', error);
+        return [];
       }
-    },
-    handleSubmit: migratedHook.saveEntity,
-    handleDelete: migratedHook.deleteEntity,
-    formatValue: migratedHook.formatValue
+    }
+  };
+
+  // Fonction pour vérifier si la suppression est autorisée
+  const checkDeletePermission = useCallback(async (programmateurId) => {
+    // Vérifier si le programmateur est utilisé dans des lieux
+    const lieuxQuery = query(
+      collection(db, 'lieux'),
+      where('programmateurId', '==', programmateurId)
+    );
+    
+    const lieuxSnapshot = await getDocs(lieuxQuery);
+    if (!lieuxSnapshot.empty) {
+      return false;
+    }
+    
+    // Vérifier si le programmateur est utilisé dans des concerts
+    const concertsQuery = query(
+      collection(db, 'concerts'),
+      where('programmateurId', '==', programmateurId)
+    );
+    
+    const concertsSnapshot = await getDocs(concertsQuery);
+    return concertsSnapshot.empty;
+  }, []);
+
+  // Handler à exécuter avant la soumission pour gérer les relations bidirectionnelles
+  const onBeforeSubmit = useCallback(async (formData, originalData) => {
+    // Vérifier si la structure a changé
+    if (formData.structureId !== originalData.structureId) {
+      // Supprimer de l'ancienne structure
+      if (originalData.structureId) {
+        try {
+          const oldStructureRef = doc(db, 'structures', originalData.structureId);
+          await updateDoc(oldStructureRef, {
+            programmateurIds: arrayRemove(id)
+          });
+        } catch (err) {
+          console.error("Erreur lors de la mise à jour de l'ancienne structure:", err);
+        }
+      }
+      
+      // Ajouter à la nouvelle structure
+      if (formData.structureId) {
+        try {
+          const newStructureRef = doc(db, 'structures', formData.structureId);
+          await updateDoc(newStructureRef, {
+            programmateurIds: arrayUnion(id)
+          });
+        } catch (err) {
+          console.error("Erreur lors de la mise à jour de la nouvelle structure:", err);
+        }
+      }
+    }
+    
+    return formData;
+  }, [id]);
+
+  // Callbacks pour les opérations réussies ou en erreur
+  const onSaveSuccess = useCallback((data) => {
+    showSuccessToast(`Le programmateur ${data.prenom || ''} ${data.nom || ''} a été mis à jour avec succès`);
+  }, []);
+
+  const onSaveError = useCallback((error) => {
+    showErrorToast(`Erreur lors de la sauvegarde du programmateur: ${error.message}`);
+  }, []);
+
+  const onDeleteSuccess = useCallback(() => {
+    showSuccessToast(`Le programmateur a été supprimé avec succès`);
+    navigate('/programmateurs');
+  }, [navigate]);
+
+  const onDeleteError = useCallback((error) => {
+    showErrorToast(`Erreur lors de la suppression du programmateur: ${error.message}`);
+  }, []);
+
+  // Utiliser le hook générique avec la configuration appropriée
+  const genericDetails = useGenericEntityDetails({
+    // Configuration de base
+    entityType: 'programmateur',
+    collectionName: 'programmateurs',
+    id,
+    
+    // Configuration des entités liées
+    relatedEntities: [
+      { 
+        name: 'structure', 
+        idField: 'structureId', 
+        collection: 'structures'
+      },
+      {
+        name: 'structures',
+        idField: 'structureIds',
+        collection: 'structures',
+        type: 'one-to-many'
+      }
+    ],
+    customQueries,
+    
+    // Transformateurs et validations
+    transformData,
+    validateFormFn: validateProgrammateurForm,
+    formatValue: (field, value) => formatFields[field] ? formatFields[field](value) : value,
+    checkDeletePermission,
+    
+    // Callbacks
+    onBeforeSubmit,
+    onSaveSuccess,
+    onSaveError,
+    onDeleteSuccess,
+    onDeleteError,
+    
+    // Navigation
+    navigate,
+    returnPath: '/programmateurs',
+    editPath: '/programmateurs/:id/edit',
+    
+    // Options avancées
+    // Utilisation de la nouvelle option pour désactiver le cache si nécessaire
+    disableCache: false
+  });
+
+  console.log('[TRACE-UNIQUE][useProgrammateurDetailsMigrated] genericDetails:', {
+    loading: genericDetails.loading,
+    entity: genericDetails.entity,
+    error: genericDetails.error,
+    relatedData: genericDetails.relatedData
+  });
+
+  // Fonctionnalités spécifiques aux programmateurs
+  
+  // Gérer le changement de structure principale
+  const handleStructureChange = useCallback(async (newStructure) => {
+    if (!genericDetails.formData) return;
+    
+    try {
+      if (newStructure) {
+        genericDetails.updateFormData({
+          ...genericDetails.formData,
+          structureId: newStructure.id,
+          structure: {
+            id: newStructure.id,
+            nom: newStructure.nom
+          }
+        });
+      } else {
+        genericDetails.updateFormData({
+          ...genericDetails.formData,
+          structureId: null,
+          structure: null
+        });
+      }
+    } catch (error) {
+      console.error("Erreur lors du changement de structure:", error);
+      showErrorToast(`Erreur lors du changement de structure: ${error.message}`);
+    }
+  }, [genericDetails]);
+
+  // Ajouter une structure secondaire
+  const addStructureSecondaire = useCallback(async (structure) => {
+    if (!structure || !structure.id) return;
+    
+    try {
+      // Vérifier si la structure est déjà associée
+      const currentStructureIds = genericDetails.formData.structureIds || [];
+      if (currentStructureIds.includes(structure.id)) {
+        showErrorToast("Cette structure est déjà associée au programmateur");
+        return;
+      }
+      
+      // Mettre à jour le programmateur
+      const newStructureIds = [...currentStructureIds, structure.id];
+      
+      genericDetails.updateFormData({
+        ...genericDetails.formData,
+        structureIds: newStructureIds
+      });
+      
+      // Mettre à jour la structure également (relation bidirectionnelle)
+      const structureRef = doc(db, 'structures', structure.id);
+      await updateDoc(structureRef, {
+        programmateurIds: arrayUnion(id)
+      });
+      
+      // Rafraîchir la liste des structures liées
+      genericDetails.refresh();
+    } catch (error) {
+      console.error("Erreur lors de l'ajout d'une structure secondaire:", error);
+      showErrorToast(`Erreur lors de l'ajout d'une structure: ${error.message}`);
+    }
+  }, [genericDetails, id]);
+
+  // Retirer une structure secondaire
+  const removeStructureSecondaire = useCallback(async (structureId) => {
+    if (!structureId) return;
+    
+    try {
+      // Mettre à jour le programmateur
+      const currentStructureIds = genericDetails.formData.structureIds || [];
+      const newStructureIds = currentStructureIds.filter(id => id !== structureId);
+      
+      genericDetails.updateFormData({
+        ...genericDetails.formData,
+        structureIds: newStructureIds
+      });
+      
+      // Mettre à jour la structure également (relation bidirectionnelle)
+      const structureRef = doc(db, 'structures', structureId);
+      await updateDoc(structureRef, {
+        programmateurIds: arrayRemove(id)
+      });
+      
+      // Rafraîchir la liste des structures liées
+      genericDetails.refresh();
+    } catch (error) {
+      console.error("Erreur lors du retrait d'une structure secondaire:", error);
+      showErrorToast(`Erreur lors du retrait d'une structure: ${error.message}`);
+    }
+  }, [genericDetails, id]);
+
+  // Ajouter un contact
+  const addContact = useCallback((contact) => {
+    const currentContacts = genericDetails.formData.contacts || [];
+    const newContact = { 
+      ...contact, 
+      id: Date.now().toString() 
+    };
+    
+    genericDetails.updateFormData({
+      ...genericDetails.formData,
+      contacts: [...currentContacts, newContact]
+    });
+  }, [genericDetails]);
+
+  // Modifier un contact
+  const updateContact = useCallback((contactId, updatedContact) => {
+    const currentContacts = genericDetails.formData.contacts || [];
+    const updatedContacts = currentContacts.map(contact => 
+      contact.id === contactId ? { ...contact, ...updatedContact } : contact
+    );
+    
+    genericDetails.updateFormData({
+      ...genericDetails.formData,
+      contacts: updatedContacts
+    });
+  }, [genericDetails]);
+
+  // Supprimer un contact
+  const removeContact = useCallback((contactId) => {
+    const currentContacts = genericDetails.formData.contacts || [];
+    const updatedContacts = currentContacts.filter(contact => contact.id !== contactId);
+    
+    genericDetails.updateFormData({
+      ...genericDetails.formData,
+      contacts: updatedContacts
+    });
+  }, [genericDetails]);
+
+  return {
+    // Toutes les fonctionnalités du hook générique
+    ...genericDetails,
+    // Alias pour compatibilité avec les vues existantes
+    programmateur: genericDetails.entity,
+    // Fonctionnalités spécifiques aux programmateurs
+    handleStructureChange,
+    addStructureSecondaire,
+    removeStructureSecondaire,
+    addContact,
+    updateContact,
+    removeContact
   };
 };
 
-export default useProgrammateurDetails;
+export default useProgrammateurDetailsMigrated;

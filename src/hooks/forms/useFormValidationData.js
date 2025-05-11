@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { db } from '@/firebaseInit';
-import { doc, getDoc, collection, query, where, getDocs, updateDoc } from 'firebase/firestore';
+import { db, doc, getDoc, collection, query, where, getDocs, updateDoc } from '@/firebaseInit';
 
 const useFormValidationData = (concertId) => {
   const [formData, setFormData] = useState(null);

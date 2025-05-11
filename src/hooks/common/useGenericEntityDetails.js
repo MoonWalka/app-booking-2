@@ -4,7 +4,7 @@ import {
   doc, getDoc, setDoc, deleteDoc, updateDoc, 
   collection, query, where, getDocs,
   serverTimestamp 
-} from 'firebase/firestore';
+} from '@/firebaseInit';
 import { db } from '@/firebaseInit';
 import { debugLog } from '@/utils/logUtils';
 import useCache from './useCache';
@@ -59,7 +59,8 @@ const useGenericEntityDetails = ({
   cacheEnabled = true,       // Activer le cache pour ce hook
   cacheTTL                   // TTL personnalisé pour ce hook (en ms)
 }) => {
-  debugLog('Hook exécuté !', 'trace', 'useGenericEntityDetails');
+  // debugLog('Hook exécuté !', 'trace', 'useGenericEntityDetails');
+  // console.log('useGenericEntityDetails args:', { entityType, collectionName, id });
   
   // Enregistrer l'instance avec le tracker à la place de la variable globale
   const instanceRef = useRef({
@@ -77,6 +78,8 @@ const useGenericEntityDetails = ({
   const [entity, setEntity] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  // Ajout d'un flag pour éviter les boucles infinies de chargement
+  const hasFetchedRef = useRef(false);
   
   // États d'édition
   const [isEditing, setIsEditing] = useState(initialMode === 'edit');
@@ -112,6 +115,8 @@ const useGenericEntityDetails = ({
   
   // Réinitialisation complète lors d'un changement d'ID
   useEffect(() => {
+    // Ajout log pour traquer les changements d'ID
+    console.log('[LOG useEffect:id/entityType] Nouvelle valeur id:', id, 'entityType:', entityType);
     // Si l'ID change, on doit réinitialiser tous les états
     if (instanceRef.current.lastId !== id) {
       // Annuler les requêtes en cours
@@ -153,6 +158,7 @@ const useGenericEntityDetails = ({
       }
       
       safeSetState(setEntity, transformedData);
+      debugLog(`DEBUG useGenericEntityDetails - entity mis à jour par subscription : ${JSON.stringify(transformedData)}`, 'debug', 'useGenericEntityDetails');
       safeSetState(setFormData, transformedData);
       safeSetState(setLoading, false);
       
@@ -185,6 +191,7 @@ const useGenericEntityDetails = ({
   
   // Fonction pour charger l'entité principale - simplifiée grâce au hook d'abonnement
   const fetchEntity = useCallback(async () => {
+    console.log('Entrée dans fetchEntity');
     debugLog(`fetchEntity appelé pour ${entityType}:${id}`, 'debug', 'useGenericEntityDetails');
     
     // Si le mode realtime est activé et que l'abonnement est actif, ne rien faire
@@ -257,18 +264,24 @@ const useGenericEntityDetails = ({
         return;
       }
       
+      debugLog(`Avant fetchEntity: isMounted=${instanceRef.current.isMounted}`, 'debug', 'useGenericEntityDetails');
+
       if (entityDoc.exists()) {
         const entityData = { [idField]: entityDoc.id, ...entityDoc.data() };
         
         // Transformer les données si une fonction de transformation est fournie
         const transformedData = transformData ? transformData(entityData) : entityData;
         
+        // Log avant safeSetState pour confirmer l'exécution
+        console.log('[DEBUG] Avant safeSetState dans fetchEntity:', transformedData);
+
         // Mettre en cache si le cache est activé
         if (cacheEnabled) {
           cache.set(id, transformedData);
         }
         
         safeSetState(setEntity, transformedData);
+        debugLog(`DEBUG useGenericEntityDetails - entity mis à jour par fetchEntity : ${JSON.stringify(transformedData)}`, 'debug', 'useGenericEntityDetails');
         safeSetState(setFormData, transformedData);
         
         // Charger les entités liées si demandé
@@ -293,7 +306,7 @@ const useGenericEntityDetails = ({
       safeSetState(setLoading, false);
       instanceRef.current.currentlyFetching = false;
     }
-  }, [id, collectionName, entityType, idField, realtime, transformData, autoLoadRelated, safeSetState, cacheEnabled, cache]);
+  }, [id, collectionName, entityType, idField, transformData, autoLoadRelated, safeSetState, cacheEnabled, cache]);
   
   // Fonction pour charger toutes les entités liées
   const loadAllRelatedEntities = useCallback(async (entityData) => {
@@ -753,16 +766,22 @@ const useGenericEntityDetails = ({
   
   // Chargement initial de l'entité
   useEffect(() => {
-    // Ne pas charger si pas d'ID
-    if (!id) return;
-    
+    // Ajout log pour traquer les appels de chargement initial
+    console.log('[LOG useEffect:chargement initial] id:', id, 'entityType:', entityType);
+    // Ne pas charger si pas d'ID ou si déjà fetché
+    if (!id || hasFetchedRef.current) return;
     debugLog(`Chargement initial pour ${entityType}:${id}`, 'info', 'useGenericEntityDetails');
-    
     // Si en mode temps réel, l'abonnement se charge du chargement initial
     if (!realtime) {
-      fetchEntity();
+      fetchEntity().then(() => {
+        hasFetchedRef.current = true;
+      });
     }
   }, [fetchEntity, entityType, id, realtime]);
+  // Remettre à zéro le flag si l'ID change
+  useEffect(() => {
+    hasFetchedRef.current = false;
+  }, [id]);
   
   // Gestion des derniers nettoyages au démontage
   useEffect(() => {

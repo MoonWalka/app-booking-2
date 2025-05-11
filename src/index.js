@@ -5,10 +5,10 @@ import ReactDOM from 'react-dom/client';
 import '@styles/index.css'; // Ajout de l'import des styles CSS
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { initNetworkStabilizer } from './utils/networkStabilizer';
+// import { initNetworkStabilizer } from './utils/networkStabilizer';
 
-// Initialisation du stabilisateur réseau pour prévenir les rechargements intempestifs
-initNetworkStabilizer();
+// Désactivation provisoire du stabilisateur réseau
+// initNetworkStabilizer();
 
 // Vérification des variables d'environnement
 console.log("--- Vérification des variables d'environnement ---");
@@ -21,9 +21,7 @@ console.log("--- Fin de la vérification ---");
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  <App />
 );
 
 // If you want to start measuring performance in your app, pass a function

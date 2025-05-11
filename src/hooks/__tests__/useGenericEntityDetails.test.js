@@ -111,23 +111,25 @@ const setupTest = (config = {}) => {
 
 // Tests réduits en nombre et simplifiés
 describe('useGenericEntityDetails', () => {
-  // Nettoyer après chaque test
+  let hookUtils;
   afterEach(async () => {
     jest.clearAllMocks();
+    if (hookUtils && hookUtils.unmount) {
+      hookUtils.unmount(); // cleanup listeners
+    }
     await cleanupAfterTests();
   });
 
   // Test uniquement s'il se charge sans erreur
   test('devrait se charger sans erreur', async () => {
-    const { result } = setupTest();
+    hookUtils = setupTest();
+    const { result } = hookUtils;
     
     // Vérifier l'état initial
     expect(result.current.loading).toBe(true);
     
     // Attendre la résolution des promesses
     await waitForHookToUpdate();
-    
-    // Vérifier que le chargement est terminé
     expect(result.current.loading).toBe(false);
     expect(result.current.entity).toBeDefined();
   });
@@ -135,7 +137,8 @@ describe('useGenericEntityDetails', () => {
   // Test de mode d'édition simplifié  
   test('devrait pouvoir passer en mode édition', async () => {
     const onModeChange = jest.fn();
-    const { result } = setupTest({ onModeChange });
+    hookUtils = setupTest({ onModeChange });
+    const { result } = hookUtils;
     
     // Attendre la résolution des promesses
     await waitForHookToUpdate();

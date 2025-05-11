@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
-import { useProgrammateurDetailsV2 } from '@/hooks/programmateurs';
+import { useProgrammateurDetails } from '@/hooks/programmateurs';
 import ProgrammateurContactSection from './ProgrammateurContactSection';
 import ProgrammateurLegalSection from './ProgrammateurLegalSection';
 import ProgrammateurConcertsSection from './ProgrammateurConcertsSection';
@@ -16,8 +16,9 @@ import styles from './ProgrammateurDetails.module.css';
  * Composant d'affichage des détails d'un programmateur - Version Desktop refactorisée
  * Structure en cartes tout en conservant les fonctionnalités originales
  */
-const ProgrammateurView = ({ id: propId }) => {
+const ProgrammateurView = ({ id: propId, ...props }) => {
   console.log('[TRACE-UNIQUE][ProgrammateurView][desktop] Ce composant est exécuté !');
+  console.log('[DEBUG][ProgrammateurView-desktop] props:', props);
   // Utiliser l'ID passé en prop s'il existe, sinon utiliser l'ID de l'URL
   const { id: urlId } = useParams();
   const id = propId || urlId;
@@ -29,9 +30,23 @@ const ProgrammateurView = ({ id: propId }) => {
     structure,
     loading, 
     error,
+    isEditMode,
+    formData,
+    toggleEditMode,
+    copyToClipboard,
+    formatDate,
+    formatMontant,
+    isDatePassed,
+    getStatusInfo,
     handleDelete,
     formatValue
-  } = useProgrammateurDetailsV2(id);
+  } = useProgrammateurDetails(id);
+  
+  console.log('[TRACE-UNIQUE][ProgrammateurView] id:', id);
+  console.log('[TRACE-UNIQUE][ProgrammateurView] loading:', loading);
+  console.log('[TRACE-UNIQUE][ProgrammateurView] error:', error);
+  console.log('[TRACE-UNIQUE][ProgrammateurView] programmateur:', programmateur);
+  console.log('[TRACE-UNIQUE][ProgrammateurView] structure:', structure);
   
   // État local pour contrôler l'affichage des sections
   const [sections, setSections] = useState({
@@ -51,14 +66,17 @@ const ProgrammateurView = ({ id: propId }) => {
   };
   
   if (loading) {
+    console.log('[TRACE-UNIQUE][ProgrammateurView] Affichage du spinner de chargement');
     return <LoadingSpinner message="Chargement du programmateur..." />;
   }
   
   if (error) {
+    console.log('[TRACE-UNIQUE][ProgrammateurView] Affichage de l\'erreur:', error);
     return <ErrorMessage message={error.message || error} />;
   }
   
   if (!programmateur) {
+    console.log('[TRACE-UNIQUE][ProgrammateurView] Aucun programmateur trouvé');
     return <ErrorMessage message="Programmateur introuvable" />;
   }
   
@@ -67,6 +85,7 @@ const ProgrammateurView = ({ id: propId }) => {
     navigate(`/programmateurs/edit/${id}`);
   };
   
+  console.log('[TRACE-UNIQUE][ProgrammateurView] Affichage du détail du programmateur');
   return (
     <Container className={styles.programmateurDetails}>
       {/* En-tête avec titre et actions */}

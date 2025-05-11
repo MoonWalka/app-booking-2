@@ -6,7 +6,7 @@
  */
 import { useState, useEffect, useCallback } from 'react';
 import { useGenericEntityList } from '@/hooks/common';
-import { collection, getDocs, query } from 'firebase/firestore';
+import { collection, getDocs, query } from '@/firebaseInit';
 import { db } from '@/firebaseInit';
 
 /**
@@ -88,7 +88,7 @@ export const useArtistesListOptimized = ({
   const refreshWithStats = useCallback(() => {
     entityList.refresh();
     calculateStats();
-  }, [entityList.refresh, calculateStats]);
+  }, [entityList, calculateStats]);
 
   // Filtres spécifiques aux artistes
   const filterByGenre = useCallback((genre) => {
@@ -101,7 +101,7 @@ export const useArtistesListOptimized = ({
         value: genre
       });
     }
-  }, [entityList.applyFilter, entityList.removeFilter]);
+  }, [entityList]);
 
   const filterByHasConcerts = useCallback((hasConcerts = true) => {
     entityList.applyFilter({
@@ -109,7 +109,7 @@ export const useArtistesListOptimized = ({
       operator: '==',
       value: hasConcerts
     });
-  }, [entityList.applyFilter]);
+  }, [entityList]);
 
   return {
     ...entityList,

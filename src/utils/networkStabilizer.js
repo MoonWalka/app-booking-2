@@ -46,6 +46,11 @@ const safeReload = () => {
 
 // Gestionnaire d'erreurs réseau
 const handleNetworkError = (error) => {
+  // Ignore chunk loading errors (lazy-loaded bundles)
+  if (error && error.name === 'ChunkLoadError') {
+    console.warn('ChunkLoadError intercepté, pas de rechargement');
+    return false;
+  }
   console.error('Erreur réseau détectée:', error);
   
   // Analyse l'erreur pour déterminer si elle est liée au réseau
@@ -53,8 +58,7 @@ const handleNetworkError = (error) => {
     error.message?.includes('network') || 
     error.message?.includes('connection') ||
     error.message?.includes('connexion') ||
-    error.code === 'unavailable' ||
-    error.name === 'ChunkLoadError'
+    error.code === 'unavailable'
   );
   
   // Si c'est une erreur réseau, tenter un rechargement contrôlé

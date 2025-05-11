@@ -1,7 +1,7 @@
 // src/hooks/structures/useStructureDetailsMigrated.js
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useGenericEntityDetails } from '../common';
+import { useGenericEntityDetails } from '@/hooks/common';
 import { showSuccessToast, showErrorToast } from '@/utils/toasts';
 
 /**

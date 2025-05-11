@@ -7,7 +7,7 @@ import { db } from '@/firebaseInit';
 import Spinner from '@/components/common/Spinner';
 import styles from './ProgrammateursList.module.css';
 
-const ProgrammateursList = () => {
+const ProgrammateursList = ({ onNavigateToDetails }) => {
   const navigate = useNavigate();
   const [programmateurs, setProgrammateurs] = useState([]);
   const [loading, setLoading] = useState(true);

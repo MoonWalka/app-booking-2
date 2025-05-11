@@ -8,9 +8,9 @@ import {
   doc,
   setDoc,
   orderBy,
-  serverTimestamp
-} from 'firebase/firestore';
-import { db } from '@/firebaseInit';
+  serverTimestamp,
+  db
+} from '@/firebaseInit';
 
 /**
  * Hook générique pour la recherche d'entités (lieux, programmateurs, artistes, concerts, etc.)

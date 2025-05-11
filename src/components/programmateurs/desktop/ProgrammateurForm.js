@@ -13,7 +13,7 @@ import ProgrammateurConcertsSection from './ProgrammateurConcertsSection';
 import ProgrammateurLieuxSection from './ProgrammateurLieuxSection';
 
 // Import des hooks personnalisés
-import { useProgrammateurDetailsV2 } from '@/hooks/programmateurs';
+import { useProgrammateurDetails } from '@/hooks/programmateurs';
 import { useCompanySearch } from '@/hooks/programmateurs';
 import { useAddressSearch } from '@/hooks/common';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
@@ -41,7 +41,7 @@ const ProgrammateurForm = () => {
     handleDelete,
     isSubmitting,
     formatValue
-  } = useProgrammateurDetailsV2(id);
+  } = useProgrammateurDetails(id);
   
   // État local pour contrôler l'affichage des sections
   const [sections, setSections] = useState({

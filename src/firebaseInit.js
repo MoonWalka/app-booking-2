@@ -1,16 +1,18 @@
 import { initializeApp } from 'firebase/app';
 import { 
-  getFirestore, collection, doc, getDoc, getDocs,
+  getFirestore, initializeFirestore, collection, doc, getDoc, getDocs,
   setDoc, addDoc, updateDoc, deleteDoc,
   query, where, orderBy, limit, startAfter,
   serverTimestamp, arrayUnion, arrayRemove,
-  initializeFirestore, connectFirestoreEmulator,
-  CACHE_SIZE_UNLIMITED
+  connectFirestoreEmulator,
+  CACHE_SIZE_UNLIMITED,
+  onSnapshot,
+  Timestamp
 } from 'firebase/firestore';
 import { 
   getAuth, signInWithEmailAndPassword,
   createUserWithEmailAndPassword, signOut,
-  onAuthStateChanged 
+  onAuthStateChanged, signInAnonymously
 } from 'firebase/auth';
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { getRemoteConfig } from 'firebase/remote-config';
@@ -28,16 +30,10 @@ const firebaseConfig = {
 
 // Initialisation Firebase
 const app = initializeApp(firebaseConfig);
-
-// Configuration avancée de Firestore pour résoudre les problèmes de connexion
-// Utilisation forcée du long polling au lieu des WebSockets
+// Toujours utiliser la base Firestore réelle (production)
 const db = initializeFirestore(app, {
-  cacheSizeBytes: CACHE_SIZE_UNLIMITED,
-  experimentalForceLongPolling: true, // Force l'utilisation du long polling
-  experimentalAutoDetectLongPolling: false, // Désactive la détection automatique
-  useFetchStreams: false, // Désactive les flux fetch qui peuvent causer des problèmes
-  ignoreUndefinedProperties: true,
-  timeout: 60000, // Timeout plus long pour les requêtes (60 secondes)
+  experimentalForceLongPolling: false, // désactive le fallback XHR
+  useFetchStreams: true                // active les streams natifs (WebSockets)
 });
 
 // Fonctions de gestion d'erreurs pour les opérations Firestore
@@ -79,16 +75,6 @@ const remoteConfig = getRemoteConfig(app);
 // Configuration du bypass d'authentification pour le développement
 const BYPASS_AUTH = process.env.REACT_APP_BYPASS_AUTH === 'true';
 
-// Utilisation de l'émulateur Firebase en développement
-if (process.env.NODE_ENV === 'development' && process.env.REACT_APP_USE_FIREBASE_EMULATOR === 'true') {
-  try {
-    connectFirestoreEmulator(db, 'localhost', 8080);
-    console.log('Connecté à l\'émulateur Firestore');
-  } catch (e) {
-    console.warn('Erreur lors de la connexion à l\'émulateur Firestore:', e);
-  }
-}
-
 // Création d'un objet firebase avec toutes les fonctions et instances
 const firebase = {
   app,
@@ -114,6 +100,8 @@ const firebase = {
   serverTimestamp,
   arrayUnion,
   arrayRemove,
+  onSnapshot,
+  Timestamp,
   // Fonctions Auth
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -149,6 +137,8 @@ export {
   serverTimestamp,
   arrayUnion,
   arrayRemove,
+  onSnapshot,
+  Timestamp,
   // Auth exports
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,

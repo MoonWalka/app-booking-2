@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 
-import { useGenericEntityDetails } from '../common';
+import { useGenericEntityDetails } from '@/hooks/common';
 import { validateArtisteForm } from '@/utils/validation';
 import { showSuccessToast, showErrorToast } from '@/utils/toasts';
 

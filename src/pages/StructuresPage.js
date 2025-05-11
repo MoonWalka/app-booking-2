@@ -1,17 +1,15 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import StructuresList from '../components/structures/desktop/StructuresList';
-import StructureForm from '../components/structures/desktop/StructureForm';
-import StructureDetails from '../components/structures/desktop/StructureDetails';
-import { useResponsive } from '../hooks/common';
-import MobileStructuresList from '../components/structures/mobile/StructuresList';
-import MobileStructureDetails from '../components/structures/mobile/StructureDetails';
-import MobileStructureForm from '../components/structures/mobile/StructureForm';
+import StructuresList from '@/components/structures/desktop/StructuresList';
+import StructureForm from '@/components/structures/desktop/StructureForm';
+import StructureDetails from '@/components/structures/desktop/StructureDetails';
+import { useResponsive } from '@/hooks/common';
+import MobileStructuresList from '@/components/structures/mobile/StructuresList';
+import MobileStructureDetails from '@/components/structures/mobile/StructureDetails';
+import MobileStructureForm from '@/components/structures/mobile/StructureForm';
 
 const StructuresPage = () => {
-  // TODO: Réactiver le mode mobile plus tard.
-  // const { isMobile } = useResponsive();
-  const isMobile = false; // Force l'utilisation des composants desktop
+  const { isMobile } = useResponsive();
   
   // Utiliser les composants adaptés selon le type d'appareil
   return (

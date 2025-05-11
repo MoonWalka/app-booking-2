@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { collection, query, orderBy, limit, startAfter, getDocs, where } from 'firebase/firestore';
+import { collection, query, orderBy, limit, startAfter, getDocs, where } from '@/firebaseInit';
 import { db } from '@/firebaseInit';
 
 /**
@@ -289,7 +289,23 @@ const useGenericEntityList = ({
     isEmpty: entities.length === 0,
     isFiltered: filters.filter(f => f.enabled !== false).length > 0,
     isSearching: !!search,
+    
+    // Aliases for tests compatibility
+    items: entities,
+    setSearchTerm: setSearch,
+    setFilter: applyFilter,
+    resetFilters: () => { setFilters([]); },
+    setSort: setSorting,
+    pagination: {
+      currentPage,
+      totalPages: Math.ceil(entities.length / pageSize),
+      goToPage: (page) => {
+        const start = (page - 1) * pageSize;
+        setEntities(entities.slice(start, start + pageSize));
+        setCurrentPage(page);
+      }
+    }
   };
-};
+}
 
 export default useGenericEntityList;

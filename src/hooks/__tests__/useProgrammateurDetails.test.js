@@ -1,6 +1,6 @@
 // src/hooks/__tests__/useProgrammateurDetailsMigrated.test.js
 import { renderHook, act } from '@testing-library/react';
-import useProgrammateurDetailsMigrated from '../programmateurs/useProgrammateurDetailsMigrated';
+import useProgrammateurDetails from '../programmateurs/useProgrammateurDetails';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 
 // Mocks
@@ -111,7 +111,7 @@ describe('useProgrammateurDetailsMigrated', () => {
   });
 
   test('devrait initialiser correctement avec l\'ID fourni', () => {
-    const { result } = renderHook(() => useProgrammateurDetailsMigrated('prog-1'));
+    const { result } = renderHook(() => useProgrammateurDetails('prog-1'));
     
     expect(result.current.entity).toBeDefined();
     expect(result.current.entity.id).toBe('prog-1');
@@ -119,7 +119,7 @@ describe('useProgrammateurDetailsMigrated', () => {
   });
 
   test('devrait exposer les fonctions spécifiques aux programmateurs', () => {
-    const { result } = renderHook(() => useProgrammateurDetailsMigrated('prog-1'));
+    const { result } = renderHook(() => useProgrammateurDetails('prog-1'));
     
     // Vérifier que les fonctions spécifiques sont présentes
     expect(typeof result.current.handleStructureChange).toBe('function');
@@ -131,7 +131,7 @@ describe('useProgrammateurDetailsMigrated', () => {
   });
 
   test('handleStructureChange devrait mettre à jour la structure principale', () => {
-    const { result } = renderHook(() => useProgrammateurDetailsMigrated('prog-1'));
+    const { result } = renderHook(() => useProgrammateurDetails('prog-1'));
     
     const newStructure = {
       id: 'struct-3',
@@ -153,7 +153,7 @@ describe('useProgrammateurDetailsMigrated', () => {
   });
 
   test('handleStructureChange devrait effacer la structure principale quand on passe null', () => {
-    const { result } = renderHook(() => useProgrammateurDetailsMigrated('prog-1'));
+    const { result } = renderHook(() => useProgrammateurDetails('prog-1'));
     
     act(() => {
       result.current.handleStructureChange(null);
@@ -167,7 +167,7 @@ describe('useProgrammateurDetailsMigrated', () => {
   });
 
   test('addContact devrait ajouter un nouveau contact', () => {
-    const { result } = renderHook(() => useProgrammateurDetailsMigrated('prog-1'));
+    const { result } = renderHook(() => useProgrammateurDetails('prog-1'));
     
     const newContact = {
       type: 'email',
@@ -188,7 +188,7 @@ describe('useProgrammateurDetailsMigrated', () => {
   });
 
   test('updateContact devrait mettre à jour un contact existant', () => {
-    const { result } = renderHook(() => useProgrammateurDetailsMigrated('prog-1'));
+    const { result } = renderHook(() => useProgrammateurDetails('prog-1'));
     
     const updatedContact = {
       type: 'email',
@@ -208,7 +208,7 @@ describe('useProgrammateurDetailsMigrated', () => {
   });
 
   test('removeContact devrait supprimer un contact existant', () => {
-    const { result } = renderHook(() => useProgrammateurDetailsMigrated('prog-1'));
+    const { result } = renderHook(() => useProgrammateurDetails('prog-1'));
     
     act(() => {
       result.current.removeContact('1');
@@ -222,7 +222,7 @@ describe('useProgrammateurDetailsMigrated', () => {
   });
 
   test('devrait exposer toutes les fonctionnalités du hook générique', () => {
-    const { result } = renderHook(() => useProgrammateurDetailsMigrated('prog-1'));
+    const { result } = renderHook(() => useProgrammateurDetails('prog-1'));
     
     // Vérifier que les fonctions génériques sont présentes
     expect(result.current.toggleEditMode).toBeDefined();

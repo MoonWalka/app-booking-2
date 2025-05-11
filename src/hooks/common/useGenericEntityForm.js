@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from '@/firebaseInit';
-import { doc, getDoc, setDoc, updateDoc, collection, Timestamp } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, collection, Timestamp } from '@/firebaseInit';
 import { debugLog } from '@/utils/logUtils';
 
 /**

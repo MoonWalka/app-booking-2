@@ -13,6 +13,7 @@ import DashboardPage from '@/pages/DashboardPage';
 import ConcertsPage from '@/pages/ConcertsPage';
 import TestButtons from '@/components/debug';
 import ProgrammateursPage from '@/pages/ProgrammateursPage';
+import ProgrammateurDetails from '@/components/programmateurs/ProgrammateurDetails';
 import LieuxPage from '@/pages/LieuxPage';
 import ContratsPage from '@/pages/ContratsPage';
 import ArtistesPage from '@/pages/ArtistesPage';
@@ -22,6 +23,8 @@ import ContratGenerationPage from '@/pages/ContratGenerationPage';
 import ContratDetailsPage from '@/pages/ContratDetailsPage';
 import StructuresPage from '@/pages/StructuresPage';
 import RouterStabilizer from '@/utils/RouterStabilizer';
+import DesktopLayout from '@/components/common/layout/DesktopLayout'; // Importing DesktopLayout
+import ProgrammateursList from '@/components/programmateurs/ProgrammateursList';
 
 // Importer d'abord les styles globaux de base
 import '@/App.css';
@@ -206,11 +209,10 @@ function App() {
                   } />
                   
                   {/* Routes pour les programmateurs */}
-                  <Route path="/programmateurs/*" element={
-                    <PrivateRoute>
-                      <ProgrammateursPage />
-                    </PrivateRoute>
-                  } />
+                  <Route path="/programmateurs/*" element={<PrivateRoute><DesktopLayout><ProgrammateursPage /></DesktopLayout></PrivateRoute>}>
+                    <Route index element={<ProgrammateursList />} />
+                    <Route path=":id" element={<ProgrammateurDetails />} />
+                  </Route>
                   
                   {/* Routes pour les lieux */}
                   <Route path="/lieux/*" element={
@@ -232,18 +234,17 @@ function App() {
                       <ContratsPage />
                     </PrivateRoute>
                   } />
+                  {/* Commentez temporairement le <Suspense> pour désactiver le fallback */}
+                  {/* <Suspense fallback={routeFallback}> ... </Suspense> */}
+                  {/* Remplacez par le composant directement */}
                   <Route path="/contrats/generate/:concertId" element={
                     <PrivateRoute>
-                      <Suspense fallback={routeFallback}>
-                        <ContratGenerationPage />
-                      </Suspense>
+                      <ContratGenerationPage />
                     </PrivateRoute>
                   } />
                   <Route path="/contrats/:contratId" element={
                     <PrivateRoute>
-                      <Suspense fallback={routeFallback}>
-                        <ContratDetailsPage />
-                      </Suspense>
+                      <ContratDetailsPage />
                     </PrivateRoute>
                   } />
                   

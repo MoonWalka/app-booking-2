@@ -1,9 +1,9 @@
 // src/hooks/contrats/useContratDetailsMigrated.js
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc } from '@/firebaseInit';
 import { db } from '@/firebaseInit';
-import { useGenericEntityDetails } from '../common';
+import { useGenericEntityDetails } from '@/hooks/common';
 import { showSuccessToast, showErrorToast } from '@/utils/toasts';
 
 /**

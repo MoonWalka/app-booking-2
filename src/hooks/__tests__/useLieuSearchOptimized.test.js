@@ -3,7 +3,7 @@
  */
 
 import { renderHook, act } from '@testing-library/react';
-import { useGenericEntitySearch } from '../../hooks/common';
+import { useGenericEntitySearch } from '@/hooks/common';
 
 // Mock complet du hook
 jest.mock('../../hooks/lieux/useLieuSearchOptimized', () => ({

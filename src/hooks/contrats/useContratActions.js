@@ -1,7 +1,7 @@
 // src/hooks/contrats/useContratActions.js
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { doc, updateDoc, deleteDoc, Timestamp } from 'firebase/firestore';
+import { doc, updateDoc, deleteDoc, Timestamp } from '@/firebaseInit';
 import { db } from '@/firebaseInit';
 
 /**

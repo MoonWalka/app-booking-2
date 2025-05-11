@@ -1,6 +1,6 @@
 // src/hooks/common/useGenericEntityDelete.js
 import { useState, useCallback } from 'react';
-import { doc, deleteDoc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
+import { doc, deleteDoc, getDoc, collection, query, where, getDocs } from '@/firebaseInit';
 import { db } from '@/firebaseInit';
 import { toast } from 'react-toastify';
 import { debugLog } from '@/utils/logUtils';

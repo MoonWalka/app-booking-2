@@ -1,5 +1,4 @@
-import { doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs } from 'firebase/firestore';
-import { db } from '@/firebaseInit';
+import { db, doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs } from '@/firebaseInit';
 
 /**
  * Service pour gérer la synchronisation entre les informations descriptives de structure

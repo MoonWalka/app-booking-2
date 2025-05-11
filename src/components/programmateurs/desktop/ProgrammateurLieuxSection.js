@@ -4,102 +4,117 @@ import styles from './ProgrammateurLieuxSection.module.css';
 import { useLieuSearchV2 } from '@/hooks/lieux';
 
 const ProgrammateurLieuxSection = ({ programmateur, isEditing }) => {
-  const{
-    showConcertSearch,
-    concertSearchTerm,
-    concertResults,
-    showConcertResults,
-    isSearchingConcerts,
-    concertSearchRef,
-    setConcertSearchTerm,
-    setShowConcertResults,
-    toggleConcertSearch,
-    handleSelectConcert,
-    handleCreateConcert
-  } = useLieuSearchV2(programmateur);
+  const {
+    searchTerm,
+    results,
+    showDropdown,
+    isSearching,
+    setSearchTerm,
+    setShowDropdown,
+    handleInputChange,
+    handleResultClick,
+    handleCreateLieu
+  } = useLieuSearchV2({
+    // Configuration du hook pour la recherche de lieux
+    maxResults: 10,
+    includeDetails: true,
+    onSelect: (lieu) => {
+      // Cette fonction serait à implémenter pour associer un lieu au programmateur
+      console.log("Lieu sélectionné:", lieu);
+      // Logique d'association du lieu au programmateur
+    }
+  });
+  
+  // Gestionnaire pour basculer l'affichage de la recherche
+  const toggleLieuSearch = () => {
+    setShowDropdown(!showDropdown);
+    if (!showDropdown) {
+      setSearchTerm('');
+    }
+  };
   
   return (
     <div className={styles.cardWrapper}>
       <div className={styles.cardHeader}>
-        <i className="bi bi-music-note-list text-primary"></i>
-        <h5 className="mb-0">Concerts associés</h5>
+        <i className="bi bi-geo-alt text-primary"></i>
+        <h5 className="mb-0">Lieux associés</h5>
       </div>
       <div className={styles.cardBody}>
         <div>
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h5 className="mb-0">
-              {programmateur?.concertsAssocies?.length > 0 
-                ? `Concerts associés (${programmateur.concertsAssocies.length})` 
-                : 'Aucun concert associé'}
+              {programmateur?.lieuxAssocies?.length > 0 
+                ? `Lieux associés (${programmateur.lieuxAssocies?.length})` 
+                : 'Aucun lieu associé'}
             </h5>
             
             {!isEditing && (
               <button 
                 className="btn btn-sm btn-outline-primary"
-                onClick={toggleConcertSearch}
+                onClick={toggleLieuSearch}
               >
-                {showConcertSearch ? (
+                {showDropdown ? (
                   <><i className="bi bi-x-lg me-1"></i> Annuler</>
                 ) : (
-                  <><i className="bi bi-plus-circle me-1"></i> Associer un concert</>
+                  <><i className="bi bi-plus-circle me-1"></i> Associer un lieu</>
                 )}
               </button>
             )}
           </div>
           
-          {/* Section de recherche de concerts */}
-          {showConcertSearch && !isEditing && (
-            <div className={styles.searchSection} ref={concertSearchRef}>
+          {/* Section de recherche de lieux */}
+          {showDropdown && !isEditing && (
+            <div className={styles.searchSection}>
               <div className="input-group mb-2">
                 <input
                   type="text"
                   className="form-control"
-                  placeholder="Rechercher un concert par titre, lieu ou date..."
-                  value={concertSearchTerm}
-                  onChange={(e) => setConcertSearchTerm(e.target.value)}
-                  onFocus={() => concertSearchTerm.length >= 2 && setShowConcertResults(true)}
+                  placeholder="Rechercher un lieu par nom, ville ou adresse..."
+                  value={searchTerm}
+                  onChange={handleInputChange}
+                  onFocus={() => searchTerm.length >= 2 && setShowDropdown(true)}
                 />
                 <button
                   type="button"
                   className="btn btn-outline-secondary"
-                  onClick={handleCreateConcert}
+                  onClick={handleCreateLieu}
                 >
                   <i className="bi bi-plus-lg me-1"></i>
-                  Créer un concert
+                  Créer un lieu
                 </button>
               </div>
               
-              {/* Résultats de recherche pour les concerts */}
-              {showConcertResults && (
+              {/* Résultats de recherche pour les lieux */}
+              {showDropdown && (
                 <div className={styles.dropdownMenu}>
-                  {isSearchingConcerts ? (
+                  {isSearching ? (
                     <div className={styles.dropdownItem}>
                       <div className="spinner-border spinner-border-sm me-2" role="status">
                         <span className="visually-hidden">Recherche en cours...</span>
                       </div>
                       Recherche en cours...
                     </div>
-                  ) : concertResults.length > 0 ? (
-                    concertResults.map(concert => (
+                  ) : results.length > 0 ? (
+                    results.map(lieu => (
                       <div 
-                        key={concert.id} 
+                        key={lieu.id} 
                         className={styles.dropdownItem}
-                        onClick={() => handleSelectConcert(concert)}
+                        onClick={() => handleResultClick(lieu)}
                       >
                         <div className="d-flex justify-content-between align-items-center">
                           <div>
-                            <div className="fw-bold">{concert.titre || `Concert du ${concert.date}`}</div>
+                            <div className="fw-bold">{lieu.nom}</div>
                             <div className="small text-muted">
-                              {concert.date && (
+                              {lieu.ville && (
                                 <span className="me-2">
-                                  <i className="bi bi-calendar-event me-1"></i>
-                                  {new Date(concert.date).toLocaleDateString('fr-FR')}
+                                  <i className="bi bi-geo-alt me-1"></i>
+                                  {lieu.ville}
                                 </span>
                               )}
-                              {concert.lieuNom && (
+                              {lieu.codePostal && (
                                 <span>
-                                  <i className="bi bi-geo-alt me-1"></i>
-                                  {concert.lieuNom}
+                                  <i className="bi bi-map me-1"></i>
+                                  {lieu.codePostal}
                                 </span>
                               )}
                             </div>
@@ -108,7 +123,7 @@ const ProgrammateurLieuxSection = ({ programmateur, isEditing }) => {
                             className="btn btn-sm btn-outline-primary"
                             onClick={(e) => {
                               e.stopPropagation();
-                              handleSelectConcert(concert);
+                              handleResultClick(lieu);
                             }}
                           >
                             <i className="bi bi-plus-lg"></i>
@@ -116,8 +131,8 @@ const ProgrammateurLieuxSection = ({ programmateur, isEditing }) => {
                         </div>
                       </div>
                     ))
-                  ) : concertSearchTerm.length >= 2 ? (
-                    <div className={styles.dropdownItem}>Aucun concert trouvé</div>
+                  ) : searchTerm.length >= 2 ? (
+                    <div className={styles.dropdownItem}>Aucun lieu trouvé</div>
                   ) : (
                     <div className={styles.dropdownItem}>Commencez à taper pour rechercher</div>
                   )}
@@ -126,30 +141,34 @@ const ProgrammateurLieuxSection = ({ programmateur, isEditing }) => {
             </div>
           )}
           
-          {/* Liste des concerts associés */}
-          {programmateur?.concertsAssocies?.length > 0 ? (
+          {/* Liste des lieux associés */}
+          {programmateur?.lieuxAssocies?.length > 0 ? (
             <div className={styles.listGroup}>
-              {programmateur.concertsAssocies.map(concert => (
-                <div key={concert.id} className={styles.listGroupItem}>
+              {programmateur.lieuxAssocies.map(lieu => (
+                <div key={lieu.id} className={styles.listGroupItem}>
                   <div className="d-flex justify-content-between align-items-center">
                     <div>
                       <h6 className="mb-1">
-                        <i className="bi bi-music-note me-2"></i>
-                        <Link to={`/concerts/${concert.id}`} className="text-decoration-none">{concert.titre}</Link>
+                        <i className="bi bi-geo-alt me-2"></i>
+                        <Link to={`/lieux/${lieu.id}`} className="text-decoration-none">{lieu.nom}</Link>
                       </h6>
                       <div className="d-flex gap-3 text-muted small">
-                        {concert.date && (
+                        {lieu.ville && (
                           <span>
-                            <i className="bi bi-calendar-event me-1"></i>
-                            {typeof concert.date === 'object' && concert.date.seconds
-                              ? new Date(concert.date.seconds * 1000).toLocaleDateString('fr-FR')
-                              : concert.date}
+                            <i className="bi bi-building me-1"></i>
+                            {lieu.ville}
                           </span>
                         )}
-                        {concert.lieu && (
+                        {lieu.type && (
                           <span>
-                            <i className="bi bi-geo-alt me-1"></i>
-                            {concert.lieu}
+                            <i className="bi bi-tags me-1"></i>
+                            {lieu.type}
+                          </span>
+                        )}
+                        {lieu.jauge && (
+                          <span>
+                            <i className="bi bi-people me-1"></i>
+                            Jauge: {lieu.jauge}
                           </span>
                         )}
                       </div>
@@ -161,7 +180,7 @@ const ProgrammateurLieuxSection = ({ programmateur, isEditing }) => {
           ) : (
             <div className={styles.alertWrapper}>
               <i className={`bi bi-info-circle ${styles.alertIcon}`}></i>
-              <p className="mb-0">Aucun concert n'est associé à ce programmateur.</p>
+              <p className="mb-0">Aucun lieu n'est associé à ce programmateur.</p>
             </div>
           )}
         </div>

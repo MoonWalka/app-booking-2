@@ -209,7 +209,7 @@ function App() {
                   } />
                   
                   {/* Routes pour les programmateurs */}
-                  <Route path="/programmateurs/*" element={<PrivateRoute><DesktopLayout><ProgrammateursPage /></DesktopLayout></PrivateRoute>}>
+                  <Route path="/programmateurs/*" element={<PrivateRoute><ProgrammateursPage /></PrivateRoute>}>
                     <Route index element={<ProgrammateursList />} />
                     <Route path=":id" element={<ProgrammateurDetails />} />
                   </Route>

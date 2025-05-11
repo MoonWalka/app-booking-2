@@ -137,10 +137,54 @@ const useConcertAssociations = () => {
     }
   };
 
+  // Mise à jour des associations lieu-concert
+  const updateLieuAssociation = async (concertId, concertData, newLieuId, oldLieuId) => {
+    try {
+      // Si un nouveau lieu est sélectionné
+      if (newLieuId) {
+        const lieuRef = doc(db, 'lieux', newLieuId);
+        
+        // Ajouter le concert à la liste des concerts associés du lieu
+        const concertReference = {
+          id: concertId,
+          titre: concertData.titre || 'Sans titre',
+          date: concertData.date || null,
+          programmateurNom: concertData.programmateurNom || null
+        };
+        
+        await updateDoc(lieuRef, {
+          concertsAssocies: arrayUnion(concertReference),
+          updatedAt: new Date().toISOString()
+        });
+      }
+      
+      // Si un ancien lieu était associé et a changé
+      if (oldLieuId && oldLieuId !== newLieuId) {
+        const oldLieuRef = doc(db, 'lieux', oldLieuId);
+        const oldLieuDoc = await getDoc(oldLieuRef);
+        
+        if (oldLieuDoc.exists()) {
+          // Récupérer la liste actuelle et supprimer ce concert
+          const oldLieuData = oldLieuDoc.data();
+          const updatedConcerts = (oldLieuData.concertsAssocies || [])
+            .filter(c => c.id !== concertId);
+          
+          await updateDoc(oldLieuRef, {
+            concertsAssocies: updatedConcerts,
+            updatedAt: new Date().toISOString()
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour des associations lieu-concert:', error);
+    }
+  };
+
   return {
     updateProgrammateurAssociation,
     updateArtisteAssociation,
-    updateStructureAssociation
+    updateStructureAssociation,
+    updateLieuAssociation
   };
 };
 

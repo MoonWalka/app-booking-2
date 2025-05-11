@@ -4,7 +4,7 @@ import { useGenericEntityDetails } from '@/hooks/common';
  * Hook pour gérer les détails d'un programmateur en utilisant le hook générique
  */
 export default function useProgrammateurDetailsMigrated(id) {
-  return useGenericEntityDetails({
+  const details = useGenericEntityDetails({
     entityType: 'programmateur',
     collectionName: 'programmateurs',
     id,
@@ -16,4 +16,8 @@ export default function useProgrammateurDetailsMigrated(id) {
     returnPath: '/programmateurs',
     editPath: '/programmateurs/:id/edit'
   });
+  return {
+    ...details,
+    programmateur: details.entity // mapping clé pour compatibilité UI
+  };
 }

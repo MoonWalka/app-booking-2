@@ -8,7 +8,6 @@ import styles from './ConcertView.module.css';
 // Import des hooks personnalisés
 import { 
   useConcertDetailsV2,
-  useConcertFormV2,
   useConcertStatus 
 } from '@/hooks/concerts';
 
@@ -25,16 +24,22 @@ import DeleteConcertModal from './DeleteConcertModal';
  * Composant de vue des détails d'un concert - Version Desktop
  * N'est responsable que de l'affichage et utilise les hooks pour toute la logique
  */
-const ConcertView = () => {
-  const { id } = useParams();
+const ConcertView = ({ id: propId, detailsHook }) => {
+  const { id: urlId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
+  
+  // Utiliser l'ID passé en prop s'il existe, sinon utiliser l'ID de l'URL
+  const id = propId || urlId;
   
   // État pour la confirmation de suppression
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   
-  // Utilisation des hooks personnalisés
-  const{
+  // Toujours appeler les hooks inconditionnellement, même si on n'utilisera pas le résultat
+  const localHook = useConcertDetailsV2(id, location);
+  
+  // Utiliser le hook transmis par le parent s'il existe, sinon utiliser le hook local
+  const {
     concert,
     lieu,
     programmateur,
@@ -43,23 +48,20 @@ const ConcertView = () => {
     loading,
     isSubmitting,
     formData,
+    formDataStatus,
+    showFormGenerator,
+    setShowFormGenerator,
+    generatedFormLink,
+    setGeneratedFormLink,
     toggleEditMode,
     handleDelete,
     copyToClipboard,
     formatDate,
     formatMontant,
     isDatePassed,
-    getStatusInfo
-  } = useConcertDetailsV2(id, location);
-
-  const{
-    formDataStatus,
-    showFormGenerator,
-    setShowFormGenerator,
-    generatedFormLink,
-    setGeneratedFormLink,
+    getStatusInfo,
     handleFormGenerated
-  } = useConcertFormV2(id, programmateur?.id);
+  } = detailsHook || localHook;
   
   // Utiliser directement le hook de statut pour éviter la duplication de code
   const { getStatusInfo: getStatusFromHook } = useConcertStatus();

@@ -1,5 +1,5 @@
 // src/hooks/concerts/useConcertDetailsMigrated.js
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 // Import du hook générique
@@ -31,6 +31,7 @@ const useConcertDetailsMigrated = (id, locationParam) => {
   const [initialProgrammateurId, setInitialProgrammateurId] = useState(null);
   const [initialArtisteId, setInitialArtisteId] = useState(null);
   const [initialStructureId, setInitialStructureId] = useState(null);
+  const [initialLieuId, setInitialLieuId] = useState(null);
   
   // Hooks personnalisés spécifiques aux concerts
   const concertForms = useConcertFormsManagement(id);
@@ -84,6 +85,10 @@ const useConcertDetailsMigrated = (id, locationParam) => {
       setInitialStructureId(data.structureId);
     }
     
+    if (data.lieuId) {
+      setInitialLieuId(data.lieuId);
+    }
+    
     return data;
   }, []);
   
@@ -114,6 +119,7 @@ const useConcertDetailsMigrated = (id, locationParam) => {
     setInitialProgrammateurId(data.programmateurId || null);
     setInitialArtisteId(data.artisteId || null);
     setInitialStructureId(data.structureId || null);
+    setInitialLieuId(data.lieuId || null);
     
     // Émettre un événement personnalisé pour notifier les autres composants
     try {
@@ -157,6 +163,7 @@ const useConcertDetailsMigrated = (id, locationParam) => {
     collectionName: 'concerts',
     id,
     relatedEntities,
+    autoLoadRelated: true, // Activer le chargement automatique des entités liées
     transformData: transformConcertData,
     validateFormFn: validateConcertForm,
     formatValue: formatConcertValue,
@@ -208,7 +215,17 @@ const useConcertDetailsMigrated = (id, locationParam) => {
         relatedData.lieu
       );
     }
-  }, [id, genericDetails.entity, genericDetails.relatedData, initialProgrammateurId, initialArtisteId, initialStructureId, concertAssociations]);
+    
+    // Ajout de la gestion des relations bidirectionnelles pour les lieux
+    if (relatedData.lieu?.id || initialLieuId) {
+      await concertAssociations.updateLieuAssociation(
+        id,
+        entity,
+        relatedData.lieu?.id || null,
+        initialLieuId
+      );
+    }
+  }, [id, genericDetails.entity, genericDetails.relatedData, initialProgrammateurId, initialArtisteId, initialStructureId, initialLieuId, concertAssociations]);
   
   // Extension de handleSubmit pour gérer les relations bidirectionnelles
   const handleSubmitWithRelations = useCallback(async (e) => {
@@ -220,6 +237,21 @@ const useConcertDetailsMigrated = (id, locationParam) => {
     // Puis gérer les relations bidirectionnelles
     await handleBidirectionalUpdates();
   }, [genericDetails.handleSubmit, handleBidirectionalUpdates]);
+  
+  // Effet pour mettre à jour les relations bidirectionnelles au chargement initial
+  useEffect(() => {
+    // Vérifier que l'entité est chargée et que tous les hooks dépendants sont prêts
+    if (genericDetails.entity && !genericDetails.loading && concertAssociations) {
+      // Utiliser un petit délai pour s'assurer que toutes les entités associées sont chargées
+      const timer = setTimeout(() => {
+        // Mise à jour des relations bidirectionnelles au chargement initial
+        handleBidirectionalUpdates();
+      }, 500);
+      
+      // Nettoyage du timer en cas de démontage du composant
+      return () => clearTimeout(timer);
+    }
+  }, [genericDetails.entity, genericDetails.loading, handleBidirectionalUpdates]);
   
   // Fonction pour forcer le rafraîchissement des données
   const refreshConcert = useCallback(async () => {

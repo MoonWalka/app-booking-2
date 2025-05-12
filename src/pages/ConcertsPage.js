@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import ConcertsList from '@/components/concerts/ConcertsList.js';
-import ConcertForm from '@/components/concerts/desktop/ConcertForm';
+import ConcertForm from '@/components/concerts/ConcertForm';
 import ConcertDetails from '@/components/concerts/ConcertDetails';
 import FormValidationInterface from '@/components/forms/desktop/FormValidationInterface';
 

@@ -4,7 +4,7 @@ import { Alert } from 'react-bootstrap';
 import styles from './ConcertDetails.module.css';
 
 // Import des hooks personnalisés - Modification pour utiliser la version V2
-import { useConcertDetailsV2, useConcertFormV2 } from '@/hooks/concerts';
+import { useConcertDetailsV2 } from '@/hooks/concerts';
 
 // Import des composants
 import ConcertHeader from './ConcertHeader';
@@ -14,7 +14,7 @@ import ConcertOrganizerSection from './ConcertOrganizerSection';
 import ConcertArtistSection from './ConcertArtistSection';
 import ConcertStructureSection from './ConcertStructureSection';
 import DeleteConcertModal from './DeleteConcertModal';
-import FormGenerator from '@/components/forms/FormGenerator';
+// import FormGenerator (removed, unused)
 
 const ConcertDetails = () => {
   const { id } = useParams();
@@ -71,14 +71,6 @@ const ConcertDetails = () => {
     structureSearch
     
   } = useConcertDetailsV2(id, location);
-
-  const{
-    formDataStatus,
-    showFormGenerator,
-    setShowFormGenerator,
-    generatedFormLink,
-    setGeneratedFormLink
-  } = useConcertFormV2(id, programmateur?.id);
 
   // Fonction pour initialiser les valeurs de recherche
   useEffect(() => {
@@ -138,181 +130,69 @@ const ConcertDetails = () => {
       {/* En-tête avec titre et boutons d'action */}
       <ConcertHeader 
         concert={concert}
-        onEdit={toggleEditMode}
+        onEdit={() => navigate(`/concerts/${id}/edit`)}
         onDelete={() => setShowDeleteConfirm(true)}
-        isEditMode={isEditMode}
-        onSave={handleFormSubmit}
-        onCancel={toggleEditMode}
+        isEditMode={false}
         isSubmitting={isSubmitting}
-        canSave={validateForm()}
+        canSave={false}
         formatDate={formatDate}
         navigateToList={() => navigate('/concerts')}
       />
 
-      {isEditMode ? (
-        /* Mode édition */
-        <form className="modern-form" onSubmit={handleFormSubmit}>
-          {/* Informations générales */}
-          <ConcertGeneralInfo 
-            concert={concert}
-            isEditMode={isEditMode}
-            formData={formState}
-            onChange={handleChange}
-            formatDate={formatDate}
-            formatMontant={formatMontant}
-            isDatePassed={isDatePassed}
-            statusInfo={statusInfo}
-            artiste={artiste}
-            formDataStatus={formDataStatus}
-          />
+      {/* Always display view mode */}
+      <>
+        {/* Informations générales */}
+        <ConcertGeneralInfo 
+          concert={concert}
+          isEditMode={isEditMode}
+          formatDate={formatDate}
+          formatMontant={formatMontant}
+          isDatePassed={isDatePassed}
+          statusInfo={statusInfo}
+          artiste={artiste}
+        />
 
-          {/* Lieu */}
-          <ConcertLocationSection 
-            concertId={id}
-            lieu={lieu}
-            isEditMode={isEditMode}
-            selectedLieu={lieuSearch.selectedEntity}
-            lieuSearchTerm={lieuSearch.searchTerm}
-            setLieuSearchTerm={lieuSearch.setSearchTerm}
-            showLieuResults={lieuSearch.showResults}
-            lieuResults={lieuSearch.results}
-            isSearchingLieux={lieuSearch.isSearching}
-            handleSelectLieu={lieuSearch.handleSelect}
-            handleRemoveLieu={lieuSearch.handleRemove}
-            handleCreateLieu={lieuSearch.handleCreate}
-            navigateToLieuDetails={(lieuId) => navigate(`/lieux/${lieuId}`)}
-          />
+        {/* Lieu */}
+        <ConcertLocationSection 
+          concertId={id}
+          lieu={lieu}
+          isEditMode={isEditMode}
+          navigateToLieuDetails={(lieuId) => navigate(`/lieux/${lieuId}`)}
+        />
 
-          {/* Programmateur */}
-          <ConcertOrganizerSection 
-            concertId={id}
-            programmateur={programmateur}
-            isEditMode={isEditMode}
-            selectedProgrammateur={programmateurSearch.selectedEntity}
-            progSearchTerm={programmateurSearch.searchTerm}
-            setProgSearchTerm={programmateurSearch.setSearchTerm}
-            showProgResults={programmateurSearch.showResults}
-            progResults={programmateurSearch.results}
-            isSearchingProgs={programmateurSearch.isSearching}
-            handleSelectProgrammateur={programmateurSearch.handleSelect}
-            handleRemoveProgrammateur={programmateurSearch.handleRemove}
-            handleCreateProgrammateur={programmateurSearch.handleCreate}
-            navigateToProgrammateurDetails={(progId) => navigate(`/programmateurs/${progId}`)}
-            formData={formData}
-            showFormGenerator={showFormGenerator}
-            setShowFormGenerator={setShowFormGenerator}
-            generatedFormLink={generatedFormLink}
-            setGeneratedFormLink={setGeneratedFormLink}
-            handleFormGenerated={handleFormGenerated}
-            copyToClipboard={copyToClipboard}
-            formatDate={formatDate}
-            concert={concert}
-          />
+        {/* Programmateur */}
+        <ConcertOrganizerSection 
+          concertId={id}
+          programmateur={programmateur}
+          isEditMode={isEditMode}
+          navigateToProgrammateurDetails={(progId) => navigate(`/programmateurs/${progId}`)}
+          formData={formData}
+          handleFormGenerated={handleFormGenerated}
+          copyToClipboard={copyToClipboard}
+          formatDate={formatDate}
+          concert={concert}
+        />
 
-          {/* Structure */}
-          <ConcertStructureSection 
-            concertId={id}
-            structure={structure}
-            isEditMode={isEditMode}
-            selectedStructure={structureSearch.selectedEntity}
-            structureSearchTerm={structureSearch.searchTerm}
-            setStructureSearchTerm={structureSearch.setSearchTerm}
-            showStructureResults={structureSearch.showResults}
-            structureResults={structureSearch.results}
-            isSearchingStructures={structureSearch.isSearching}
-            handleSelectStructure={structureSearch.handleSelect}
-            handleRemoveStructure={structureSearch.handleRemove}
-            handleCreateStructure={() => navigate('/structures/new')}
-            navigateToStructureDetails={(structureId) => navigate(`/structures/${structureId}`)}
-          />
+        {/* Structure */}
+        <ConcertStructureSection 
+          concertId={id}
+          structure={structure}
+          isEditMode={isEditMode}
+          navigateToStructureDetails={(structureId) => navigate(`/structures/${structureId}`)}
+        />
 
-          {/* Artiste */}
+        {/* Artiste */}
+        {artiste && (
           <ConcertArtistSection 
             concertId={id}
             artiste={artiste}
             isEditMode={isEditMode}
-            selectedArtiste={artisteSearch.selectedEntity}
-            artisteSearchTerm={artisteSearch.searchTerm}
-            setArtisteSearchTerm={artisteSearch.setSearchTerm}
-            showArtisteResults={artisteSearch.showResults}
-            artisteResults={artisteSearch.results}
-            isSearchingArtistes={artisteSearch.isSearching}
-            handleSelectArtiste={artisteSearch.handleSelect}
-            handleRemoveArtiste={artisteSearch.handleRemove}
-            handleCreateArtiste={artisteSearch.handleCreate}
             navigateToArtisteDetails={(artisteId) => navigate(`/artistes/${artisteId}`)}
           />
-        </form>
-      ) : (
-        /* Mode vue */
-        <>
-          {/* Informations générales */}
-          <ConcertGeneralInfo 
-            concert={concert}
-            isEditMode={isEditMode}
-            formatDate={formatDate}
-            formatMontant={formatMontant}
-            isDatePassed={isDatePassed}
-            statusInfo={statusInfo}
-            artiste={artiste}
-            formDataStatus={formDataStatus}
-          />
+        )}
+      </>
 
-          {/* Lieu */}
-          <ConcertLocationSection 
-            concertId={id}
-            lieu={lieu}
-            isEditMode={isEditMode}
-            navigateToLieuDetails={(lieuId) => navigate(`/lieux/${lieuId}`)}
-          />
-
-          {/* Programmateur */}
-          <ConcertOrganizerSection 
-            concertId={id}
-            programmateur={programmateur}
-            isEditMode={isEditMode}
-            navigateToProgrammateurDetails={(progId) => navigate(`/programmateurs/${progId}`)}
-            formData={formData}
-            showFormGenerator={showFormGenerator}
-            setShowFormGenerator={setShowFormGenerator}
-            generatedFormLink={generatedFormLink}
-            setGeneratedFormLink={setGeneratedFormLink}
-            handleFormGenerated={handleFormGenerated}
-            copyToClipboard={copyToClipboard}
-            formatDate={formatDate}
-            concert={concert}
-          />
-
-          {/* Structure */}
-          <ConcertStructureSection 
-            concertId={id}
-            structure={structure}
-            isEditMode={isEditMode}
-            navigateToStructureDetails={(structureId) => navigate(`/structures/${structureId}`)}
-          />
-
-          {/* Artiste */}
-          {artiste && (
-            <ConcertArtistSection 
-              concertId={id}
-              artiste={artiste}
-              isEditMode={isEditMode}
-              navigateToArtisteDetails={(artisteId) => navigate(`/artistes/${artisteId}`)}
-            />
-          )}
-        </>
-      )}
-
-      {/* Composant pour l'envoi de formulaire */}
-      {showFormGenerator && !generatedFormLink && !isEditMode && (
-        <div className="p-3 border rounded mb-3">
-          <FormGenerator
-            concertId={id}
-            programmateurId={concert.programmateurId}
-            onFormGenerated={handleFormGenerated}
-          />
-        </div>
-      )}
+      {/* FormGenerator block removed (unused after unification) */}
 
       {/* Modale de confirmation de suppression */}
       <DeleteConcertModal

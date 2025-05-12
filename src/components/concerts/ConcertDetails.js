@@ -1,6 +1,6 @@
 // src/components/concerts/ConcertDetails.js
 import React, { useMemo } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, Navigate } from 'react-router-dom';
 import { useResponsive } from '@/hooks/common';
 import { useConcertDetailsV2 } from '@/hooks/concerts';
 import ConcertForm from '@/components/concerts/ConcertForm';
@@ -34,7 +34,8 @@ function ConcertDetails() {
   
   // En mode édition, afficher le formulaire
   if (isEditMode) {
-    return <ConcertForm id={id} />;
+    // Naviguer vers la route d'édition dédiée
+    return <Navigate to="edit" replace />;
   }
   
   // Passer tous les hooks au composant enfant pour éviter des recréations

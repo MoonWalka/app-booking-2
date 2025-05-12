@@ -16,12 +16,12 @@
 
 /* Styles pour les erreurs de validation */
 .inputError {
-  border-color: var(--tc-danger-color, #e74c3c) !important;
+  border-color: var(--tc-danger-color, #e74c3c);
   background-color: var(--tc-danger-color-05, #fdf7f7);
 }
 
 .selectError {
-  border-color: var(--tc-danger-color, #e74c3c) !important;
+  border-color: var(--tc-danger-color, #e74c3c);
   background-color: var(--tc-danger-color-05, #fdf7f7);
 }
 

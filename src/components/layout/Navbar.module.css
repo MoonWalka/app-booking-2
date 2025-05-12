@@ -13,7 +13,7 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--tc-spacing-sm, 0.5rem) var(--tc-spacing-md, 1rem);
-  background-color: var(--tc-color-dark, #343a40) !important;
+  background-color: var(--tc-color-dark, #343a40);
 }
 
 .navbarDark {
@@ -101,11 +101,11 @@
 }
 
 .meAuto {
-  margin-right: auto !important;
+  margin-right: auto;
 }
 
 .dFlex {
-  display: flex !important;
+  display: flex;
 }
 
 .navbarText {
@@ -115,7 +115,7 @@
 }
 
 .me3 {
-  margin-right: var(--tc-spacing-md, 1rem) !important;
+  margin-right: var(--tc-spacing-md, 1rem);
 }
 
 .btnOutlineLight {
@@ -151,7 +151,7 @@
   }
   
   .navbarCollapse {
-    display: flex !important;
+    display: flex;
     flex-basis: auto;
   }
   

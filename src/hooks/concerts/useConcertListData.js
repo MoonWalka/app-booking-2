@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { collection, query, orderBy, getDocs } from 'firebase/firestore';
+import { collection, query, orderBy, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db } from '@/firebaseInit';
 
 /**
@@ -13,8 +13,7 @@ export const useConcertListData = () => {
   const [unvalidatedForms, setUnvalidatedForms] = useState([]);
   const [concertsWithContracts, setConcertsWithContracts] = useState({});
   const [lastUpdate, setLastUpdate] = useState(Date.now());
-  
-  // Références pour suivre la dernière mise à jour et limiter la fréquence
+
   const lastFetchRef = useRef(0);
   const isInitialRenderRef = useRef(true); // Déplacé ici au niveau supérieur du hook
 
@@ -38,13 +37,34 @@ export const useConcertListData = () => {
       const q = query(concertsRef, orderBy('date', 'desc'));
       const querySnapshot = await getDocs(q);
 
-      const concertsData = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-
-      console.log(`${concertsData.length} concerts chargés`);
-      setConcerts(concertsData);
+      const concertsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      // Enrichir chaque concert avec les données de lieu et programmateur
+      const enrichedConcerts = await Promise.all(
+        concertsData.map(async (concert) => {
+          const enriched = { ...concert };
+          if (concert.lieuId) {
+            const lieuRef = doc(db, 'lieux', concert.lieuId);
+            const lieuSnap = await getDoc(lieuRef);
+            if (lieuSnap.exists()) {
+              const lieu = lieuSnap.data();
+              enriched.lieuNom = lieu.nom || '';
+              enriched.lieuVille = lieu.ville || '';
+              enriched.lieuCodePostal = lieu.codePostal || '';
+            }
+          }
+          if (concert.programmateurId) {
+            const progRef = doc(db, 'programmateurs', concert.programmateurId);
+            const progSnap = await getDoc(progRef);
+            if (progSnap.exists()) {
+              const prog = progSnap.data();
+              enriched.programmateurNom = prog.nom || prog.raisonSociale || '';
+            }
+          }
+          return enriched;
+        })
+      );
+      console.log(`${enrichedConcerts.length} concerts enrichis chargés`);
+      setConcerts(enrichedConcerts);
 
       // Récupérer les ID des concerts qui ont des formulaires associés
       const formsRef = collection(db, 'formLinks');

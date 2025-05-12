@@ -1,7 +1,7 @@
 /* Styles pour ConcertForm - extraits des fichiers CSS globaux */
 
-/* Container principal */
-.concertFormContainer {
+/* Container principal - avec préfixe desktop pour éviter les collisions */
+.deskConcertFormContainer {
   max-width: 900px;
   margin: 0 auto;
   padding: 20px;
@@ -75,7 +75,7 @@
 }
 
 /* Formulaire moderne */
-.modernForm {
+.deskModernForm {
   background-color: transparent;
 }
 

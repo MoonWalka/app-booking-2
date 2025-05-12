@@ -23,13 +23,11 @@ import ContratGenerationPage from '@/pages/ContratGenerationPage';
 import ContratDetailsPage from '@/pages/ContratDetailsPage';
 import StructuresPage from '@/pages/StructuresPage';
 import RouterStabilizer from '@/utils/RouterStabilizer';
-import DesktopLayout from '@/components/common/layout/DesktopLayout'; // Importing DesktopLayout
+import DesktopLayout from '@/components/common/layout/DesktopLayout';
 import ProgrammateursList from '@/components/programmateurs/ProgrammateursList';
 
-// Importer d'abord les styles globaux de base
-import '@/App.css';
-// Importer ensuite le système de styles modulaire pour qu'il ait priorité
-import '@styles/index.css';
+// Imports CSS gérés dans index.js - ne pas dupliquer ici
+// pour éviter les conflits de styles
 
 // Composant ErrorBoundary pour capturer les erreurs de chargement
 class ErrorBoundary extends React.Component {

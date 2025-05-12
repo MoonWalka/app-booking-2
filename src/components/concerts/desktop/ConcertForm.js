@@ -41,38 +41,56 @@ const ConcertFormDesktop = () => {
     initialArtisteId
   } = useConcertFormV2(id);
 
-  // Hook pour gérer la recherche d'entités
+  // Recherche de lieux
   const {
-    // Termes de recherche
-    lieuSearchTerm, setLieuSearchTerm,
-    progSearchTerm, setProgSearchTerm,
-    artisteSearchTerm, setArtisteSearchTerm,
-    
-    // Résultats de recherche
-    lieuResults,
-    progResults,
-    artisteResults,
-    
-    // États d'affichage
-    showLieuResults, setShowLieuResults,
-    showProgResults, setShowProgResults,
-    showArtisteResults, setShowArtisteResults,
-    
-    // États de chargement
-    isSearchingLieux,
-    isSearchingProgs,
-    isSearchingArtistes,
-    
-    // Références
-    lieuDropdownRef,
-    progDropdownRef,
-    artisteDropdownRef,
-    
-    // Fonctions de création
-    handleCreateLieu,
-    handleCreateProgrammateur,
-    handleCreateArtiste
-  } = useEntitySearch();
+    searchTerm: lieuSearchTerm,
+    setSearchTerm: setLieuSearchTerm,
+    results: lieuResults,
+    showResults: showLieuResults,
+    setShowResults: setShowLieuResults,
+    isSearching: isSearchingLieux,
+    dropdownRef: lieuDropdownRef,
+    handleCreate: handleCreateLieu
+  } = useEntitySearch({
+    entityType: 'lieux',
+    searchField: 'nom',
+    additionalSearchFields: ['ville', 'codePostal'],
+    maxResults: 10
+  });
+
+  // Recherche de programmateurs
+  const {
+    searchTerm: progSearchTerm,
+    setSearchTerm: setProgSearchTerm,
+    results: progResults,
+    showResults: showProgResults,
+    setShowResults: setShowProgResults,
+    isSearching: isSearchingProgs,
+    dropdownRef: progDropdownRef,
+    handleCreate: handleCreateProgrammateur
+  } = useEntitySearch({
+    entityType: 'programmateurs',
+    searchField: 'nom',
+    additionalSearchFields: ['raisonSociale'],
+    maxResults: 10
+  });
+
+  // Recherche d'artistes
+  const {
+    searchTerm: artisteSearchTerm,
+    setSearchTerm: setArtisteSearchTerm,
+    results: artisteResults,
+    showResults: showArtisteResults,
+    setShowResults: setShowArtisteResults,
+    isSearching: isSearchingArtistes,
+    dropdownRef: artisteDropdownRef,
+    handleCreate: handleCreateArtiste
+  } = useEntitySearch({
+    entityType: 'artistes',
+    searchField: 'nom',
+    additionalSearchFields: ['style'],
+    maxResults: 10
+  });
 
   // Hook pour gérer la soumission et la suppression
   const {
@@ -143,7 +161,7 @@ const ConcertFormDesktop = () => {
   }
 
   return (
-    <div className={styles.concertFormContainer}>
+    <div className={styles.deskConcertFormContainer}>
       {/* En-tête du formulaire */}
       <ConcertFormHeader 
         id={id} 
@@ -160,7 +178,7 @@ const ConcertFormDesktop = () => {
         position="top"
       />
       
-      <form onSubmit={handleSubmit} className={styles.modernForm}>
+      <form onSubmit={handleSubmit} className={styles.deskModernForm}>
         {/* Section d'informations principales */}
         <ConcertInfoSection 
           formData={formData}

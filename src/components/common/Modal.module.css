@@ -273,7 +273,7 @@
 @media (max-width: 576px) {
   .modal {
     width: 95%;
-    max-width: none !important;
+    max-width: none;
   }
   
   .modalHeader {

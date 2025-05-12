@@ -1,8 +1,11 @@
 /*
  * Styles pour EntitySearchField
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 5 mai 2025
+ * Dernière mise à jour: 12 mai 2025
  */
+
+/* Import des classes utilitaires pour les points de rupture */
+@import '../../styles/mixins/breakpoints.css';
 
 .container {
   position: relative;
@@ -201,7 +204,7 @@
 }
 
 /* Styles responsive standardisés */
-@media (max-width: 768px) {
+@media (max-width: var(--tc-breakpoint-sm, 768px)) {
   .suggestions {
     max-height: 250px;
   }
@@ -211,7 +214,7 @@
   }
 }
 
-@media (max-width: 576px) {
+@media (max-width: var(--tc-breakpoint-xs, 576px)) {
   .suggestions {
     max-height: 200px;
   }

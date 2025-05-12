@@ -1,4 +1,11 @@
-/* Navbar.module.css */
+/*
+ * Styles pour Navbar
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 12 mai 2025
+ */
+
+/* Import des classes utilitaires pour les points de rupture */
+@import '../../styles/mixins/breakpoints.css';
 
 .navbar {
   display: flex;
@@ -6,11 +13,11 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--tc-spacing-sm, 0.5rem) var(--tc-spacing-md, 1rem);
-  background-color: var(--tc-dark, #343a40) !important;
+  background-color: var(--tc-color-dark, #343a40) !important;
 }
 
 .navbarDark {
-  color: var(--tc-text-light, #fff);
+  color: var(--tc-color-light, #fff);
 }
 
 .navbarExpand {
@@ -136,7 +143,8 @@
   border-color: var(--tc-light, #f8f9fa);
 }
 
-@media (min-width: 992px) {
+/* Styles responsive utilisant les variables standardisées */
+@media (min-width: var(--tc-breakpoint-md, 992px)) {
   .navbarExpand {
     flex-wrap: nowrap;
     justify-content: flex-start;
@@ -157,7 +165,7 @@
 }
 
 /* Styles responsive pour mobile */
-@media (max-width: 991.98px) {
+@media (max-width: calc(var(--tc-breakpoint-md, 992px) - 0.02px)) {
   .navbarCollapse {
     overflow-y: auto;
     max-height: 75vh;

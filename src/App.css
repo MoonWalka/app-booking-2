@@ -2,16 +2,16 @@
 
 /* Styles globaux */
 body {
-  background-color: var(--tc-tc-background-color);
+  background-color: var(--tc-background-color);
 }
 
 a {
-  color: var(--tc-tc-primary-color);
+  color: var(--tc-primary-color);
   text-decoration: none;
 }
 
 a:hover {
-  color: var(--tc-tc-primary-dark);
+  color: var(---tc-primary-dark);
   text-decoration: none; /* Modification: désactive le soulignement pour tous les liens au survol */
 }
 

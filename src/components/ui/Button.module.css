@@ -1,3 +1,12 @@
+/*
+ * Styles pour Button
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 12 mai 2025
+ */
+
+/* Import des classes utilitaires pour les points de rupture */
+@import '../../styles/mixins/breakpoints.css';
+
 /* Button.module.css - Styles pour les boutons */
 
 .btn {
@@ -19,7 +28,7 @@
 .btnPrimary {
   background-color: var(--tc-primary-color, #4a6da7);
   border-color: var(--tc-primary-color, #4a6da7);
-  color: #fff;
+  color: var(--tc-color-light, #fff);
 }
 
 .btnPrimary:hover {
@@ -168,4 +177,25 @@
 .btnLink:hover {
   color: var(--tc-primary-dark, #395582);
   text-decoration: underline;
+}
+
+/* Responsive button styles */
+@media (max-width: var(--tc-breakpoint-xs, 576px)) {
+  .btn {
+    /* Sur les très petits écrans, augmenter la taille pour faciliter le toucher */
+    padding: var(--tc-spacing-sm, 0.5rem) var(--tc-spacing-md, 1rem);
+  }
+  
+  .btnLg {
+    /* Ajuster le padding du grand bouton sur mobile */
+    padding: var(--tc-spacing-md, 0.75rem) var(--tc-spacing-lg, 1.25rem);
+  }
+}
+
+/* Responsive width options */
+@media (max-width: var(--tc-breakpoint-sm, 768px)) {
+  .btnBlock {
+    display: block;
+    width: 100%;
+  }
 }

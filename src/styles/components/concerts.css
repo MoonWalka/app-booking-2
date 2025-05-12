@@ -21,16 +21,16 @@
 }
 
 .concerts-table th {
-  color: var(--tc-tc-text-secondary, #6c757d);
+  color: var(--tc-text-secondary, #6c757d);
   font-weight: 600;
   padding: 1rem 0.75rem;
-  border-bottom: 2px solid var(--tc-tc-border-color, #e9ecef);
+  border-bottom: 2px solid var(--tc-border-color, #e9ecef);
 }
 
 .concerts-table td {
   padding: 1rem 0.75rem;
   vertical-align: middle;
-  border-bottom: 1px solid var(--tc-tc-border-color, #e9ecef);
+  border-bottom: 1px solid var(--tc-border-color, #e9ecef);
 }
 
 /* // Correction UI: Améliorer la lisibilité des lignes cliquables */
@@ -83,16 +83,16 @@
 }
 
 .date-year {
-  color: var(--tc-tc-text-secondary, #6c757d);
+  color: var(--tc-text-secondary, #6c757d);
 }
 
 .date-separator {
   margin: 0 2px;
-  color: var(--tc-tc-text-secondary, #6c757d);
+  color: var(--tc-text-secondary, #6c757d);
 }
 
 .past-date {
-  color: var(--tc-tc-text-secondary, #6c757d);
+  color: var(--tc-text-secondary, #6c757d);
 }
 
 /* // Correction UI: Styles standardisés pour les messages de statut */
@@ -162,7 +162,7 @@
   display: flex;
   align-items: center;
   font-size: 0.75rem;
-  color: var(--tc-tc-warning-color, #ffc107);
+  color: var(--tc-warning-color, #ffc107);
   background-color: rgba(255, 193, 7, 0.1);
   padding: 0.15rem 0.5rem;
   border-radius: 4px;
@@ -233,7 +233,7 @@
 /* // Correction UI: Styles pour les montants */
 .montant-value {
   font-weight: 600;
-  color: var(--tc-tc-text-dark, #212529);
+  color: var(--tc-text-dark, #212529);
 }
 
 /* // Correction UI: Styles pour les artistes et programmateurs */
@@ -248,7 +248,7 @@
 
 .artist-name i, .programmateur-name i {
   margin-right: 0.4rem;
-  color: var(--tc-tc-text-secondary, #6c757d);
+  color: var(--tc-text-secondary, #6c757d);
 }
 
 @media (max-width: 992px) {

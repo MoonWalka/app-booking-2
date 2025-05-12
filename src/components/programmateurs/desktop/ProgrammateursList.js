@@ -183,7 +183,7 @@ const ProgrammateursList = ({ onNavigateToDetails }) => {
                 >
                   <td title={prog.nom} style={{
                     // Harmonisation : taille standardisée
-                    fontSize: "var(--tc-tc-font-size-md)",
+                    fontSize: "var(--tc-font-size-md)",
                     fontWeight: "500"
                   }}>
                     <i className="bi bi-person-circle me-2 text-primary"></i>

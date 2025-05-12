@@ -25,9 +25,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid var(--tc-tc-border-color, var(--tc-color-border-light, #dee2e6));
-  background-color: var(--tc-tc-light-color, var(--tc-bg-light, #f8f9fa));
-  color: var(--tc-tc-text-color, #212529);
+  border: 1px solid var(--tc-border-color, var(--tc-color-border-light, #dee2e6));
+  background-color: var(--tc-light-color, var(--tc-bg-light, #f8f9fa));
+  color: var(--tc-text-color, #212529);
 }
 
 .editButton {
@@ -37,7 +37,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--tc-tc-primary-color, #007bff);
+  background-color: var(--tc-primary-color, #007bff);
   color: var(--tc-bg-default, white);
   border: none;
 }
@@ -69,8 +69,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--tc-tc-gray-200, #e9ecef);
-  color: var(--tc-tc-gray-var(--tc-font-weight-medium), #adb5bd);
+  background-color: var(--tc-gray-200, #e9ecef);
+  color: var(--tc-gray-var(--tc-font-weight-medium), #adb5bd);
 }
 
 .placeholderPhoto i {
@@ -88,7 +88,7 @@
 }
 
 .artisteGenre {
-  color: var(--tc-tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
   font-size: var(--tc-font-size-sm);
   margin-bottom: var(--tc-spacing-3);
 }
@@ -103,12 +103,12 @@
   display: flex;
   align-items: center;
   gap: 5px;
-  color: var(--tc-tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
   font-size: var(--tc-font-size-sm);
 }
 
 .statItem i {
-  color: var(--tc-tc-primary-color, #007bff);
+  color: var(--tc-primary-color, #007bff);
 }
 
 .mobileTabs {
@@ -130,7 +130,7 @@
   text-align: center;
   border: none;
   background-color: transparent;
-  color: var(--tc-tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
   font-size: var(--tc-font-size-sm);
   border-bottom: 2px solid transparent;
 }
@@ -142,8 +142,8 @@
 }
 
 .tabButton.active {
-  color: var(--tc-tc-primary-color, #007bff);
-  border-bottom-color: var(--tc-tc-primary-color, #007bff);
+  color: var(--tc-primary-color, #007bff);
+  border-bottom-color: var(--tc-primary-color, #007bff);
 }
 
 .mobileTabContent {
@@ -162,8 +162,8 @@
 .infoContent .infoSection h3 {
   font-size: var(--tc-spacing-3);
   margin-bottom: var(--tc-spacing-2);
-  color: var(--tc-tc-text-color, #212529);
-  border-bottom: 1px solid var(--tc-tc-border-color, var(--tc-color-border-light, #dee2e6));
+  color: var(--tc-text-color, #212529);
+  border-bottom: 1px solid var(--tc-border-color, var(--tc-color-border-light, #dee2e6));
   padding-bottom: var(--tc-spacing-2);
 }
 
@@ -177,7 +177,7 @@
 
 .infoContent .membresList li {
   padding: 8px 12px;
-  background-color: var(--tc-tc-gray-100, var(--tc-bg-light, #f8f9fa));
+  background-color: var(--tc-gray-100, var(--tc-bg-light, #f8f9fa));
   border-radius: var(--tc-radius-sm);
 }
 
@@ -193,13 +193,13 @@
   gap: 10px;
   padding: 10px;
   border-radius: 6px;
-  border: 1px solid var(--tc-tc-border-color, var(--tc-color-border-light, #dee2e6));
+  border: 1px solid var(--tc-border-color, var(--tc-color-border-light, #dee2e6));
   text-decoration: none;
-  color: var(--tc-tc-text-color, #212529);
+  color: var(--tc-text-color, #212529);
 }
 
 .contactItem i {
-  color: var(--tc-tc-primary-color, #007bff);
+  color: var(--tc-primary-color, #007bff);
   font-size: 1.var(--tc-spacing-3);
 }
 
@@ -223,13 +223,13 @@
 }
 
 .concertItem {
-  background-color: var(--tc-tc-gray-100, var(--tc-bg-light, #f8f9fa));
+  background-color: var(--tc-gray-100, var(--tc-bg-light, #f8f9fa));
   border-radius: var(--tc-radius-md);
   padding: 12px;
 }
 
 .concertDate {
-  color: var(--tc-tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
   font-size: var(--tc-font-size-xs);
   margin-bottom: 4px;
 }
@@ -240,7 +240,7 @@
 }
 
 .concertProgrammateur {
-  color: var(--tc-tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
   font-size: var(--tc-font-size-sm);
   margin-bottom: 8px;
 }
@@ -258,13 +258,13 @@
 }
 
 .contratItem {
-  background-color: var(--tc-tc-gray-100, var(--tc-bg-light, #f8f9fa));
+  background-color: var(--tc-gray-100, var(--tc-bg-light, #f8f9fa));
   border-radius: var(--tc-radius-md);
   padding: 12px;
 }
 
 .contratDate {
-  color: var(--tc-tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
   font-size: var(--tc-font-size-xs);
   margin-bottom: 4px;
 }
@@ -286,7 +286,7 @@
 }
 
 .statCard {
-  background-color: var(--tc-tc-gray-100, var(--tc-bg-light, #f8f9fa));
+  background-color: var(--tc-gray-100, var(--tc-bg-light, #f8f9fa));
   border-radius: var(--tc-radius-md);
   padding: 16px;
   display: flex;
@@ -298,8 +298,8 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: var(--tc-tc-primary-light, #cfe2ff);
-  color: var(--tc-tc-primary-color, #007bff);
+  background-color: var(--tc-primary-light, #cfe2ff);
+  color: var(--tc-primary-color, #007bff);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -312,7 +312,7 @@
 
 .statContent h4 {
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
   margin: 0 0 4px 0;
 }
 
@@ -326,13 +326,13 @@
 .emptyState {
   padding: var(--tc-spacing-8) var(--tc-spacing-3);
   text-align: center;
-  color: var(--tc-tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
 }
 
 .emptyState i {
   font-size: 2.5rem;
   margin-bottom: var(--tc-spacing-3);
-  color: var(--tc-tc-gray-var(--tc-font-weight-normal), #ced4da);
+  color: var(--tc-gray-var(--tc-font-weight-normal), #ced4da);
 }
 
 .emptyState p {
@@ -351,5 +351,5 @@
 }
 
 .errorContainer {
-  color: var(--tc-tc-danger, var(--tc-color-error));
+  color: var(--tc-danger, var(--tc-color-error));
 }

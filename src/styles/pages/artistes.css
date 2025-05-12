@@ -14,9 +14,9 @@
    ============================= */
 .artiste-detail-container {
   padding: 20px;
-  background-color: var(--tc-tc-bg-color, white);
-  border-radius: var(--tc-tc-border-radius, 8px);
-  box-shadow: var(--tc-tc-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
+  background-color: var(--tc-bg-color, white);
+  border-radius: var(--tc-border-radius, 8px);
+  box-shadow: var(--tc-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
   margin-bottom: 20px;
 }
 
@@ -56,7 +56,7 @@
 
 .placeholder-photo i {
   /* Harmonisation : taille standardisée */
-  font-size: var(--tc-tc-font-size-xxl);
+  font-size: var(--tc-font-size-xxl);
 }
 
 .header-info {
@@ -85,7 +85,7 @@
 
 .artiste-name {
   /* Harmonisation : taille standardisée */
-  font-size: var(--tc-tc-font-size-xl);
+  font-size: var(--tc-font-size-xl);
   font-weight: bold;
   margin-bottom: 5px;
 }
@@ -93,16 +93,16 @@
 .artiste-genre {
   display: flex;
   align-items: flex-start;
-  gap: var(--tc-tc-spacing-sm, 8px);
-  margin-bottom: var(--tc-tc-spacing-sm, 10px);
-  color: var(--tc-tc-text-muted, #666);
-  font-size: var(--tc-tc-font-size-sm, 14px);
+  gap: var(--tc-spacing-sm, 8px);
+  margin-bottom: var(--tc-spacing-sm, 10px);
+  color: var(--tc-text-muted, #666);
+  font-size: var(--tc-font-size-sm, 14px);
 }
 
 .artiste-genre i,
 .artiste-contact i {
-  color: var(--tc-tc-primary-color, var(--tc-artiste-color));
-  font-size: var(--tc-tc-font-size-md, 16px);
+  color: var(--tc-primary-color, var(--tc-artiste-color));
+  font-size: var(--tc-font-size-md, 16px);
   width: 20px;
   text-align: center;
 }
@@ -117,7 +117,7 @@
   align-items: center;
   gap: 8px;
   /* Harmonisation : taille standardisée */
-  font-size: var(--tc-tc-font-size-md);
+  font-size: var(--tc-font-size-md);
   color: #495057;
 }
 
@@ -170,7 +170,7 @@
 
 .info-section h3 {
   /* Harmonisation : taille standardisée */
-  font-size: var(--tc-tc-font-size-lg);
+  font-size: var(--tc-font-size-lg);
   font-weight: 600;
   margin-bottom: 15px;
   padding-bottom: 8px;
@@ -181,11 +181,11 @@
 .artiste-contact {
   display: flex;
   align-items: flex-start;
-  gap: var(--tc-tc-spacing-sm, 8px);
-  margin-bottom: var(--tc-tc-spacing-sm, 10px);
-  margin-top: var(--tc-tc-spacing-md, 20px);
-  color: var(--tc-tc-text-muted, #666);
-  font-size: var(--tc-tc-font-size-sm, 14px);
+  gap: var(--tc-spacing-sm, 8px);
+  margin-bottom: var(--tc-spacing-sm, 10px);
+  margin-top: var(--tc-spacing-md, 20px);
+  color: var(--tc-text-muted, #666);
+  font-size: var(--tc-font-size-sm, 14px);
 }
 
 .contact-item {
@@ -197,13 +197,13 @@
 
 .contact-item i {
   /* Harmonisation : taille standardisée */
-  font-size: var(--tc-tc-font-size-lg);
-  color: var(--tc-tc-text-muted, #6c757d);
+  font-size: var(--tc-font-size-lg);
+  color: var(--tc-text-muted, #6c757d);
 }
 
 .contact-item a {
   text-decoration: none;
-  color: var(--tc-tc-primary-color, #007bff);
+  color: var(--tc-primary-color, #007bff);
 }
 
 .contact-item a:hover {
@@ -236,7 +236,7 @@
 
 .empty-state i {
   /* Harmonisation : taille standardisée */
-  font-size: var(--tc-tc-font-size-xxl);
+  font-size: var(--tc-font-size-xxl);
   color: #dee2e6;
   margin-bottom: 15px;
 }
@@ -256,7 +256,7 @@
 .list-header h3 {
   margin: 0;
   /* Harmonisation : taille standardisée */
-  font-size: var(--tc-tc-font-size-lg);
+  font-size: var(--tc-font-size-lg);
   font-weight: 600;
 }
 
@@ -282,21 +282,21 @@
 
 .stat-icon {
   /* Harmonisation : taille standardisée */
-  font-size: var(--tc-tc-font-size-xl);
+  font-size: var(--tc-font-size-xl);
   color: #007bff;
 }
 
 .stat-content h4 {
   margin: 0 0 5px 0;
   /* Harmonisation : taille standardisée */
-  font-size: var(--tc-tc-font-size-sm);
+  font-size: var(--tc-font-size-sm);
   color: #6c757d;
 }
 
 .stat-value {
   margin: 0;
   /* Harmonisation : taille standardisée */
-  font-size: var(--tc-tc-font-size-xl);
+  font-size: var(--tc-font-size-xl);
   font-weight: 600;
 }
 
@@ -308,7 +308,7 @@
 
 .stats-section h3 {
   /* Harmonisation : taille standardisée */
-  font-size: var(--tc-tc-font-size-lg);
+  font-size: var(--tc-font-size-lg);
   font-weight: 600;
   margin-bottom: 15px;
   padding-bottom: 8px;
@@ -332,7 +332,7 @@
 .page-title {
   margin: 0;
   /* Harmonisation : taille standardisée */
-  font-size: var(--tc-tc-font-size-xxl);
+  font-size: var(--tc-font-size-xxl);
   font-weight: 600;
 }
 
@@ -340,7 +340,7 @@
   display: flex;
   align-items: center;
   /* Harmonisation : taille standardisée */
-  font-size: var(--tc-tc-font-size-sm);
+  font-size: var(--tc-font-size-sm);
 }
 
 .breadcrumb-item {
@@ -385,13 +385,13 @@
 .card-header h3 {
   margin: 0;
   /* Harmonisation : taille standardisée */
-  font-size: var(--tc-tc-font-size-lg);
+  font-size: var(--tc-font-size-lg);
   font-weight: 600;
 }
 
 .card-header i {
   /* Harmonisation : taille standardisée */
-  font-size: var(--tc-tc-font-size-lg);
+  font-size: var(--tc-font-size-lg);
   color: #6c757d;
 }
 
@@ -408,7 +408,7 @@
 
 .section-title {
   /* Harmonisation : taille standardisée */
-  font-size: var(--tc-tc-font-size-lg);
+  font-size: var(--tc-font-size-lg);
   font-weight: bold;
   margin-bottom: 15px;
   border-bottom: 1px solid #ddd;
@@ -444,7 +444,7 @@
   border: 1px solid #ddd;
   border-radius: 4px;
   /* Harmonisation : taille standardisée */
-  font-size: var(--tc-tc-font-size-sm);
+  font-size: var(--tc-font-size-sm);
 }
 
 .membres-list {
@@ -499,7 +499,7 @@
 
 .artistes-title {
   /* Harmonisation : taille standardisée */
-  font-size: var(--tc-tc-font-size-xl);
+  font-size: var(--tc-font-size-xl);
   font-weight: bold;
 }
 
@@ -510,9 +510,9 @@
 /* Artiste card - style horizontal (pour les listes) */
 .artiste-list-card {
   display: flex;
-  background-color: var(--tc-tc-bg-color, white);
-  border-radius: var(--tc-tc-border-radius, 8px);
-  box-shadow: var(--tc-tc-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
+  background-color: var(--tc-bg-color, white);
+  border-radius: var(--tc-border-radius, 8px);
+  box-shadow: var(--tc-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
   margin-bottom: 15px;
   overflow: hidden;
   transition: transform 0.2s;
@@ -533,9 +533,9 @@
 .artiste-card {
   display: flex;
   flex-direction: column;
-  gap: var(--tc-tc-spacing-sm, 8px);
-  background-color: var(--tc-tc-bg-color, white);
-  border-radius: var(--tc-tc-border-radius, 8px);
+  gap: var(--tc-spacing-sm, 8px);
+  background-color: var(--tc-bg-color, white);
+  border-radius: var(--tc-border-radius, 8px);
   overflow: hidden;
 }
 
@@ -543,11 +543,11 @@
    ARTISTE TAB CONTENT
    ============================= */
 .artiste-tab-content {
-  background-color: var(--tc-tc-bg-color, white);
-  border-radius: var(--tc-tc-border-radius, 8px);
-  box-shadow: var(--tc-tc-shadow);
-  padding: var(--tc-tc-spacing-md, 16px);
-  margin-bottom: var(--tc-tc-spacing-md, 16px);
+  background-color: var(--tc-bg-color, white);
+  border-radius: var(--tc-border-radius, 8px);
+  box-shadow: var(--tc-shadow);
+  padding: var(--tc-spacing-md, 16px);
+  margin-bottom: var(--tc-spacing-md, 16px);
 }
 
 /* La définition mobile n'est pas nécessaire car elle est identique */
@@ -560,12 +560,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--tc-tc-bg-light, var(--tc-artiste-color-light));
-  color: var(--tc-tc-text-color);
+  background-color: var(--tc-bg-light, var(--tc-artiste-color-light));
+  color: var(--tc-text-color);
   border-radius: 20px;
   padding: 4px 12px;
   margin: 2px auto;
-  font-size: var(--tc-tc-font-size-sm);
+  font-size: var(--tc-font-size-sm);
   max-width: 130px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -581,7 +581,7 @@
   border-radius: 12px;
   color: var(--tc-artiste-color, #6610f2);
   /* Harmonisation : taille standardisée */
-  font-size: var(--tc-tc-font-size-xs);
+  font-size: var(--tc-font-size-xs);
   margin-right: 4px;
 }
 

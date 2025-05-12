@@ -28,11 +28,11 @@
 
 .modalHeader {
   padding: 15px 20px;
-  border-bottom: 1px solid var(--tc-tc-border-color, #dee2e6);
+  border-bottom: 1px solid var(--tc-border-color, #dee2e6);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: var(--tc-tc-primary-color, #0d6efd);
+  background-color: var(--tc-primary-color, #0d6efd);
   color: white;
 }
 
@@ -91,9 +91,9 @@
 
 .modalFooter {
   padding: 15px 20px;
-  border-top: 1px solid var(--tc-tc-border-color, #dee2e6);
+  border-top: 1px solid var(--tc-border-color, #dee2e6);
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  background-color: var(--tc-tc-bg-light, #f8f9fa);
+  background-color: var(--tc-bg-light, #f8f9fa);
 }

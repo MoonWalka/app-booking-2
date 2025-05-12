@@ -8,16 +8,16 @@
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.6;
-  color: var(--tc-tc-text-color);
-  background-color: var(--tc-tc-background-color);
+  color: var(--tc-text-color);
+  background-color: var(--tc-background-color);
 }
 
 a {
   text-decoration: none;
-  color: var(--tc-tc-primary-color);
-  transition: var(--tc-tc-transition);
+  color: var(--tc-primary-color);
+  transition: var(--tc-transition);
 }
 
 a:hover {
-  color: var(--tc-tc-primary-dark);
+  color: var(--tc-primary-dark);
 }

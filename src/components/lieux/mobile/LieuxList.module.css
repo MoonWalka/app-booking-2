@@ -146,7 +146,7 @@
 }
 
 .lieuContactLink {
-  color: var(--tc-tc-primary-color, var(--tc-color-primary, #0d6efd));
+  color: var(--tc-primary-color, var(--tc-color-primary, #0d6efd));
   text-decoration: none;
 }
 
@@ -173,7 +173,7 @@
   display: inline-flex;
   align-items: center;
   background-color: #e9f2ff;
-  color: var(--tc-tc-primary-color, var(--tc-color-primary, #0d6efd));
+  color: var(--tc-primary-color, var(--tc-color-primary, #0d6efd));
   padding: 4px 10px;
   border-radius: 50px;
   font-size: var(--tc-font-size-sm);

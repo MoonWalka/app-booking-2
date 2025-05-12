@@ -1,3 +1,12 @@
+/*
+ * Styles pour Badge
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 12 mai 2025
+ */
+
+/* Import des classes utilitaires pour les points de rupture */
+@import '../../styles/mixins/breakpoints.css';
+
 /* Badge.module.css - Styles pour les badges */
 
 .badge {
@@ -80,4 +89,12 @@
 .badgeLg {
   font-size: var(--tc-font-size-sm, 85%);
   padding: 0.3em 0.5em;
+}
+
+/* Responsive adjustments */
+@media (max-width: var(--tc-breakpoint-xs, 576px)) {
+  .badgeLg {
+    /* Légèrement plus petit sur mobile pour meilleure lisibilité */
+    font-size: var(--tc-font-size-xs, 75%);
+  }
 }

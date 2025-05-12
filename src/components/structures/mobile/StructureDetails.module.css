@@ -27,7 +27,7 @@
 }
 
 .structureDetailSubtitle {
-  color: var(--tc-tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
   font-size: var(--tc-spacing-3);
 }
 
@@ -60,7 +60,7 @@
   font-size: 1.var(--tc-spacing-3);
   margin-bottom: var(--tc-spacing-3);
   padding-bottom: var(--tc-spacing-2);
-  border-bottom: 1px solid var(--tc-tc-border-color, var(--tc-color-border-light, #dee2e6));
+  border-bottom: 1px solid var(--tc-border-color, var(--tc-color-border-light, #dee2e6));
   display: flex;
   align-items: center;
   gap: var(--tc-spacing-2);
@@ -72,7 +72,7 @@
 
 .structureDetailLabel {
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
   margin-bottom: var(--tc-spacing-1);
 }
 
@@ -85,7 +85,7 @@
   align-items: center;
   gap: var(--tc-spacing-2);
   text-decoration: none;
-  color: var(--tc-tc-primary, #007bff);
+  color: var(--tc-primary, #007bff);
 }
 
 .programmateursListMobile {
@@ -95,7 +95,7 @@
 }
 
 .associatedItem {
-  background-color: var(--tc-tc-gray-100, var(--tc-bg-light, #f8f9fa));
+  background-color: var(--tc-gray-100, var(--tc-bg-light, #f8f9fa));
   border-radius: var(--tc-spacing-2);
   padding: var(--tc-spacing-3);
   display: flex;
@@ -127,7 +127,7 @@
   align-items: center;
   gap: var(--tc-spacing-2);
   text-decoration: none;
-  color: var(--tc-tc-primary, #007bff);
+  color: var(--tc-primary, #007bff);
 }
 
 .structureActionsMobile {

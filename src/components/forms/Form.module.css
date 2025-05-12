@@ -1,4 +1,11 @@
-/* Form.module.css - Styles standardisés pour les formulaires et validations */
+/*
+ * Styles pour Form
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 12 mai 2025
+ */
+
+/* Import des classes utilitaires pour les points de rupture */
+@import '../../styles/mixins/breakpoints.css';
 
 /* Styles pour les formulaires multi-étapes */
 .concertFormContainer {
@@ -63,14 +70,14 @@
   gap: var(--tc-spacing-sm, 10px);
 }
 
-/* Support responsive */
-@media (max-width: 992px) {
+/* Support responsive avec points de rupture standardisés */
+@media (max-width: var(--tc-breakpoint-md, 992px)) {
   .concertFormContainer {
     max-width: 100%;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: var(--tc-breakpoint-sm, 768px)) {
   .formActions {
     flex-direction: column-reverse;
     gap: var(--tc-spacing-xs, 5px);
@@ -81,7 +88,7 @@
   }
 }
 
-@media (max-width: 576px) {
+@media (max-width: var(--tc-breakpoint-xs, 576px)) {
   .concertFormContainer {
     padding: var(--tc-spacing-sm, 10px);
   }

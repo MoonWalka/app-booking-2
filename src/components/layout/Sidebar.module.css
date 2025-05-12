@@ -10,8 +10,8 @@
 .sidebar {
   width: var(--tc-sidebar-width, 250px);
   min-width: var(--tc-sidebar-width, 250px); /* Empêche la sidebar de rétrécir */
-  background-color: var(--tc-color-dark, #343a40);
-  color: var(--tc-color-light, #f8f9fa);
+  background-color: var(--tc-sidebar-bg-color);
+  color: var(--tc-sidebar-text-color);
   height: 100vh;
   position: fixed;
   left: 0;

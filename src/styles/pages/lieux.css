@@ -127,11 +127,11 @@
 }
 
 .type-badge.bg-danger {
-  background-color: var(--tc-festival-color) !important;
+  background-color: var(--tc-festival-color);
 }
 
 .type-badge.bg-success {
-  background-color: var(--tc-salle-color) !important;
+  background-color: var(--tc-salle-color);
 }
 
 .type-badge.bg-warning {

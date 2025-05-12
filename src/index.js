@@ -1,8 +1,11 @@
 // Dans index.js
-import 'bootstrap/dist/css/bootstrap.min.css';  // Notez qu'il n'y a pas de './' au début
+// Import des styles dans l'ordre correct: bootstrap → styles globaux
+import 'bootstrap/dist/css/bootstrap.min.css';  // Bootstrap en premier
+import '@styles/index.css'; // Ensuite nos styles (qui incluent déjà reset, variables, etc.)
+import './App.css'; // Styles spécifiques à l'app
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import '@styles/index.css'; // Ajout de l'import des styles CSS
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 // import { initNetworkStabilizer } from './utils/networkStabilizer';

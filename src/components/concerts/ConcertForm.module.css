@@ -1,32 +1,41 @@
 /* Styles standardisés pour ConcertForm */
-.concertFormContainer {
-  padding: var(--tc-spacing-md, 20px);
-  max-width: 1200px;
+
+/* 
+ * STYLES UNIFORMISÉS
+ * Container principal aligné avec la version desktop pour plus de cohérence
+ */
+.formContainer, .concertFormContainer {
+  padding: var(--tc-spacing-lg, 1.5rem);
+  max-width: 1000px; /* Valeur intermédiaire entre 900px et 1200px pour uniformisation */
   margin: 0 auto;
+  background-color: var(--tc-bg-color, #f8f9fa);
 }
 
-.loadingSpinner {
+/* Classes de chargement uniformisées */
+.loadingSpinner, .loadingContainer {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 200px;
-  font-size: var(--tc-font-size-md, 1.2rem);
-  color: var(--tc-text-color-secondary, #666);
+  min-height: 300px;
 }
 
-.modernForm {
+.loadingText {
+  margin-top: var(--tc-spacing-md, 1rem);
+  font-size: var(--tc-font-size-md, 1.1rem);
+  color: var(--tc-text-color-secondary, #6c757d);
+}
+
+/* Classes de formulaire uniformisées */
+.form, .modernForm {
+  margin-top: var(--tc-spacing-md, 1rem);
+  background-color: transparent;
   display: flex;
   flex-direction: column;
   gap: var(--tc-spacing-md, 20px);
 }
 
 /* Styles pour le formulaire de concert */
-
-.formContainer {
-  padding: var(--tc-spacing-lg, 1.5rem);
-  max-width: 1200px;
-  margin: 0 auto;
-}
 
 .form {
   margin-top: var(--tc-spacing-md, 1rem);

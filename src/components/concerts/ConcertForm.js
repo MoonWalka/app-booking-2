@@ -4,8 +4,8 @@ import styles from './ConcertForm.module.css';
 
 // Hooks personnalisés
 import { useConcertFormV2 } from '@/hooks/concerts';
-import useEntitySearch from '../../hooks/concerts/useEntitySearch';
-import useFormSubmission from '../../hooks/concerts/useFormSubmission';
+import useEntitySearch from '@/hooks/concerts/useEntitySearch';
+import useFormSubmission from '@/hooks/concerts/useFormSubmission';
 
 // Sections du formulaire
 import ConcertFormHeader from './sections/ConcertFormHeader';

@@ -2,8 +2,11 @@
  * Styles pour InfoPanel
  * Standardisé selon le Guide de Style CSS de TourCraft
  * Date de création: Inconnue
- * Dernière mise à jour: 5 mai 2025
+ * Dernière mise à jour: 12 mai 2025
  */
+
+/* Import des classes utilitaires pour les points de rupture */
+@import '../../styles/mixins/breakpoints.css';
 
 .infoPanel {
   background-color: var(--tc-color-info-light, #e3f2fd);
@@ -40,7 +43,7 @@
   margin-bottom: 0;
 }
 
-@media (max-width: 576px) {
+@media (max-width: var(--tc-breakpoint-xs, 576px)) {
   .infoPanel {
     padding: var(--tc-spacing-3, 12px);
     margin: var(--tc-spacing-4, 15px) 0;

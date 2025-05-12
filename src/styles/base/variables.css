@@ -45,6 +45,13 @@
     --tc-z-index-tooltip: 1070;
     --tc-z-index-toast: 1080;
     
+    /* Points de rupture (breakpoints) standardisés */
+    --tc-breakpoint-xs: 576px;   /* Smartphones */
+    --tc-breakpoint-sm: 768px;   /* Tablettes */
+    --tc-breakpoint-md: 992px;   /* Petits écrans */
+    --tc-breakpoint-lg: 1200px;  /* Grands écrans */
+    --tc-breakpoint-xl: 1400px;  /* Très grands écrans */
+    
     /* Variables d'interface */
     --tc-header-height: 60px;
     --tc-sidebar-width: 240px;
@@ -56,8 +63,8 @@
     --tc-focus-ring-width: 3px;
     
     /* Input styling */
-    --tc-input-focus-shadow: 0 0 0 0.25rem rgba(var(--tc-tc-primary-color-rgb), 0.25);
-    --tc-input-placeholder-color: var(--tc-tc-gray-500);
+    --tc-input-focus-shadow: 0 0 0 0.25rem rgba(var(--tc-primary-color-rgb), 0.25);
+    --tc-input-placeholder-color: var(--tc-gray-500);
     --tc-input-bg: white;
     
     /* Les couleurs sont importées de colors.css,

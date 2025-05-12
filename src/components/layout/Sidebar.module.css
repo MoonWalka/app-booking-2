@@ -1,17 +1,24 @@
-/* Sidebar.module.css - Styles pour le composant sidebar */
+/*
+ * Styles pour Sidebar
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 12 mai 2025
+ */
+
+/* Import des classes utilitaires pour les points de rupture */
+@import '../../styles/mixins/breakpoints.css';
 
 .sidebar {
   width: var(--tc-sidebar-width, 250px);
   min-width: var(--tc-sidebar-width, 250px); /* Empêche la sidebar de rétrécir */
-  background-color: var(--tc-sidebar-bg-color, #343a40);
-  color: var(--tc-sidebar-text-color, #f8f9fa);
+  background-color: var(--tc-color-dark, #343a40);
+  color: var(--tc-color-light, #f8f9fa);
   height: 100vh;
   position: fixed;
   left: 0;
   top: 0;
   overflow-y: auto;
   z-index: var(--tc-z-index-sidebar, 1000);
-  box-shadow: var(--tc-sidebar-shadow, 2px 0 5px rgba(0,0,0,0.1));
+  box-shadow: var(--tc-shadow, 2px 0 5px rgba(0,0,0,0.1));
   transition: var(--tc-transition, all 0.3s ease);
   display: flex; /* Ajout pour permettre au footer de se positionner en bas */
   flex-direction: column; /* Ajout pour organiser les éléments verticalement */
@@ -42,14 +49,14 @@
   display: flex;
   align-items: center;
   padding: var(--tc-spacing-sm, 10px) var(--tc-spacing-lg, 20px);
-  color: var(--tc-sidebar-text-color, #f8f9fa);
+  color: var(--tc-color-light, #f8f9fa);
   text-decoration: none;
   transition: var(--tc-transition-short, background-color 0.2s);
 }
 
 .navLinks a:hover {
   background-color: var(--tc-sidebar-hover-bg-color, rgba(255,255,255,0.1));
-  color: var(--tc-sidebar-text-color, #f8f9fa);
+  color: var(--tc-color-light, #f8f9fa);
 }
 
 .navLinks a.active {
@@ -80,8 +87,8 @@
   text-align: center;
 }
 
-/* Responsive */
-@media (max-width: 992px) {
+/* Responsive avec points de rupture standardisés */
+@media (max-width: var(--tc-breakpoint-md, 992px)) {
   .sidebar {
     transform: translateX(-100%);
     position: fixed;
@@ -97,7 +104,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: var(--tc-modal-overlay-bg, rgba(0, 0, 0, 0.5));
     z-index: var(--tc-z-index-backdrop, 999);
     display: none;
   }

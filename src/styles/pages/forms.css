@@ -5,7 +5,7 @@
 .form-progress {
   display: flex;
   margin-bottom: 30px;
-  border-radius: var(--tc-tc-border-radius);
+  border-radius: var(--tc-border-radius);
   overflow: hidden;
 }
 
@@ -13,13 +13,13 @@
   flex: 1;
   padding: 10px;
   text-align: center;
-  background-color: var(--tc-tc-light-color);
-  color: var(--tc-tc-text-color);
+  background-color: var(--tc-light-color);
+  color: var(--tc-text-color);
   position: relative;
 }
 
 .progress-step.active {
-  background-color: var(--tc-tc-primary-color);
+  background-color: var(--tc-primary-color);
   color: white;
 }
 
@@ -33,12 +33,12 @@
   height: 0;
   border-top: 10px solid transparent;
   border-bottom: 10px solid transparent;
-  border-left: 10px solid var(--tc-tc-light-color);
+  border-left: 10px solid var(--tc-light-color);
   z-index: 1;
 }
 
 .progress-step.active:not(:last-child)::after {
-  border-left-color: var(--tc-tc-primary-color);
+  border-left-color: var(--tc-primary-color);
 }
 
 /* Styles pour l'interface isolée du formulaire */
@@ -50,7 +50,7 @@
 }
 
 .form-header {
-  background-color: var(--tc-tc-secondary-color);
+  background-color: var(--tc-secondary-color);
   color: white;
   padding: 15px 30px;
   text-align: center;
@@ -69,7 +69,7 @@
 }
 
 .form-footer {
-  background-color: var(--tc-tc-secondary-color);
+  background-color: var(--tc-secondary-color);
   color: white;
   padding: 15px;
   text-align: center;
@@ -80,7 +80,7 @@
   margin-top: 30px;
   padding: 10px;
   background-color: #f8f9fa;
-  border-radius: var(--tc-tc-border-radius);
+  border-radius: var(--tc-border-radius);
   text-align: center;
   font-size: 12px;
   color: #7f8c8d;
@@ -93,7 +93,7 @@
 
 .error-icon {
   font-size: 64px;
-  color: var(--tc-tc-danger-color);
+  color: var(--tc-danger-color);
   margin-bottom: 20px;
 }
 
@@ -107,7 +107,7 @@
   margin-top: 15px;
   padding: 10px;
   background-color: #fff3cd;
-  border-radius: var(--tc-tc-border-radius);
+  border-radius: var(--tc-border-radius);
   color: #856404;
 }
 
@@ -117,7 +117,7 @@
   margin-top: 20px;
   padding: 15px;
   background-color: #d4edda;
-  border-radius: var(--tc-tc-border-radius);
+  border-radius: var(--tc-border-radius);
   color: #155724;
 }
 
@@ -126,7 +126,7 @@
   margin-top: 20px;
   background-color: #f8f9fa;
   padding: 15px;
-  border-radius: var(--tc-tc-border-radius);
+  border-radius: var(--tc-border-radius);
 }
 
 .form-link {
@@ -148,7 +148,7 @@
 
 .success-icon {
   font-size: 64px;
-  color: var(--tc-tc-success-color);
+  color: var(--tc-success-color);
   margin-bottom: 20px;
 }
 
@@ -160,9 +160,9 @@
 
 .validation-card {
   background-color: white;
-  border-radius: var(--tc-tc-border-radius);
+  border-radius: var(--tc-border-radius);
   padding: 20px;
-  box-shadow: var(--tc-tc-shadow);
+  box-shadow: var(--tc-shadow);
   margin-top: 20px;
 }
 
@@ -184,6 +184,6 @@
 .concert-info {
   background-color: #f8f9fa;
   padding: 15px;
-  border-radius: var(--tc-tc-border-radius);
+  border-radius: var(--tc-border-radius);
   margin-top: 15px;
 }

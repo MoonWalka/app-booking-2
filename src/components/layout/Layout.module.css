@@ -1,4 +1,11 @@
-/* Layout.module.css - Styles pour le composant layout principal */
+/*
+ * Styles pour Layout
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 12 mai 2025
+ */
+
+/* Import des classes utilitaires pour les points de rupture */
+@import '../../styles/mixins/breakpoints.css';
 
 .layoutContainer {
   display: flex;
@@ -11,18 +18,18 @@
   margin-left: var(--tc-sidebar-width, 250px); /* Correspond à la largeur de la sidebar */
   padding: var(--tc-spacing-lg, 20px);
   min-height: 100vh;
-  background-color: var(--tc-content-bg-color, #f8f9fa);
+  background-color: var(--tc-background-color, #f8f9fa);
 }
 
 /* Styles pour le header */
 .header {
-  background-color: var(--tc-header-bg-color, white);
+  background-color: var(--tc-card-bg, white);
   padding: var(--tc-spacing-md, 15px) var(--tc-spacing-lg, 20px);
-  box-shadow: var(--tc-card-shadow, 0 2px 4px rgba(0, 0, 0, 0.05));
+  box-shadow: var(--tc-shadow-card, 0 2px 4px rgba(0, 0, 0, 0.05));
 }
 
-/* Responsive */
-@media (max-width: 992px) {
+/* Responsive avec points de rupture standardisés */
+@media (max-width: var(--tc-breakpoint-md, 992px)) {
   .content {
     margin-left: 0;
     padding: var(--tc-spacing-md, 15px);

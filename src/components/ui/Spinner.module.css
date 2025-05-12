@@ -1,3 +1,12 @@
+/*
+ * Styles pour Spinner
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 12 mai 2025
+ */
+
+/* Import des classes utilitaires pour les points de rupture */
+@import '../../styles/mixins/breakpoints.css';
+
 /* Spinner.module.css - Styles pour les indicateurs de chargement */
 
 .spinnerContainer {
@@ -81,4 +90,17 @@
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* Responsive adaptations */
+@media (max-width: var(--tc-breakpoint-xs, 576px)) {
+  .spinnerLarge {
+    width: 50px;
+    height: 50px;
+    border-width: 5px;
+  }
+  
+  .loadingText {
+    font-size: var(--tc-font-size-sm, 0.875rem);
+  }
 }

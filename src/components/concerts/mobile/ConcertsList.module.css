@@ -78,7 +78,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: var(--tc-tc-primary-color, #007bff);
+  background-color: var(--tc-primary-color, #007bff);
   color: #fff;
   padding: var(--tc-spacing-2);
   min-width: 60px;
@@ -121,7 +121,7 @@
   margin-bottom: var(--tc-spacing-2);
   overflow: hidden;
   text-overflow: ellipsis;
-  var(--tc-bg-default, white)-space: nowrap;
+  white-space: nowrap;
 }
 
 /* Informations du concert */
@@ -203,7 +203,7 @@
 }
 
 .actionBtn.view {
-  color: var(--tc-tc-primary-color, #007bff);
+  color: var(--tc-primary-color, #007bff);
 }
 
 .actionBtn.edit {

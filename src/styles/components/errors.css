@@ -12,15 +12,15 @@
 
 .error-container h2 {
   margin-bottom: 1rem;
-  color: var(--tc-tc-secondary-color);
+  color: var(--tc-secondary-color);
 }
 
 .error {
-  border-color: var(--tc-tc-danger-color);
+  border-color: var(--tc-danger-color);
 }
 
 .error-message {
-  color: var(--tc-tc-danger-color);
+  color: var(--tc-danger-color);
   font-size: 12px;
   margin-top: 5px;
 }
@@ -28,15 +28,15 @@
 .retry-button {
   margin-top: 1.5rem;
   padding: 10px 20px;
-  background-color: var(--tc-tc-primary-color);
+  background-color: var(--tc-primary-color);
   color: white;
   border: none;
-  border-radius: var(--tc-tc-border-radius);
+  border-radius: var(--tc-border-radius);
   cursor: pointer;
   font-size: 16px;
   transition: all 0.3s ease;
 }
 
 .retry-button:hover {
-  background-color: var(--tc-tc-primary-dark);
+  background-color: var(--tc-primary-dark);
 }

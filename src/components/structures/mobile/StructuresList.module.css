@@ -39,18 +39,18 @@
   justify-content: center;
   text-align: center;
   padding: var(--tc-spacing-8) var(--tc-spacing-3);
-  color: var(--tc-tc-gray-var(--tc-font-weight-medium), #adb5bd);
+  color: var(--tc-gray-var(--tc-font-weight-medium), #adb5bd);
 }
 
 .emptyState i {
   font-size: 3rem;
   margin-bottom: var(--tc-spacing-3);
-  color: var(--tc-tc-gray-var(--tc-font-weight-normal), #ced4da);
+  color: var(--tc-gray-var(--tc-font-weight-normal), #ced4da);
 }
 
 .emptyState p {
   margin-bottom: var(--tc-spacing-4);
-  color: var(--tc-tc-gray-var(--tc-font-weight-semibold), var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-gray-var(--tc-font-weight-semibold), var(--tc-color-text-secondary, #6c757d));
 }
 
 .structuresCard {
@@ -73,7 +73,7 @@
   font-size: 1.var(--tc-spacing-3);
   font-weight: var(--tc-font-weight-semibold);
   margin-bottom: var(--tc-spacing-2);
-  color: var(--tc-tc-text-primary, #212529);
+  color: var(--tc-text-primary, #212529);
 }
 
 .structureType {
@@ -81,7 +81,7 @@
   align-items: center;
   gap: var(--tc-spacing-2);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-tc-gray-var(--tc-font-weight-semibold), var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-gray-var(--tc-font-weight-semibold), var(--tc-color-text-secondary, #6c757d));
   margin-bottom: var(--tc-spacing-2);
 }
 
@@ -90,12 +90,12 @@
   align-items: center;
   gap: var(--tc-spacing-2);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-tc-gray-var(--tc-font-weight-semibold), var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-gray-var(--tc-font-weight-semibold), var(--tc-color-text-secondary, #6c757d));
   margin-bottom: var(--tc-spacing-1);
 }
 
 .structureContact i {
-  color: var(--tc-tc-primary, #007bff);
+  color: var(--tc-primary, #007bff);
   font-size: var(--tc-font-size-sm);
 }
 
@@ -120,13 +120,13 @@
   font-size: var(--tc-spacing-2);
   font-weight: var(--tc-font-weight-medium);
   border-radius: var(--tc-spacing-3);
-  background-color: var(--tc-tc-gray-200, #e9ecef);
-  color: var(--tc-tc-gray-var(--tc-font-weight-bold), #495057);
+  background-color: var(--tc-gray-200, #e9ecef);
+  color: var(--tc-gray-var(--tc-font-weight-bold), #495057);
 }
 
 .badgeProgrammateurs {
-  background-color: var(--tc-tc-primary-light, #cfe2ff);
-  color: var(--tc-tc-primary, #007bff);
+  background-color: var(--tc-primary-light, #cfe2ff);
+  color: var(--tc-primary, #007bff);
 }
 
 .mobileLoadMore {

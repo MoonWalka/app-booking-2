@@ -1,11 +1,11 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import 'leaflet/dist/leaflet.css';
 import Spinner from '@/components/common/Spinner';
 import styles from './LieuForm.module.css';
 
-// Import du hook complet
-import { useLieuFormComplete } from '@/hooks/lieux';
+// MIGRATION: Utilisation du hook optimisé au lieu du hook complet
+import { useLieuFormOptimized } from '@/hooks/lieux';
 
 // Import sections
 import LieuFormHeader from './sections/LieuFormHeader';
@@ -17,18 +17,19 @@ import LieuFormActions from './sections/LieuFormActions';
 
 const LieuForm = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
   
-  // Utilisation du hook complet
+  // MIGRATION: Utilisation du hook optimisé
   const {
-    id,
     lieu,
     loading,
     error,
     handleChange,
     handleSubmit,
     addressSearch,
-    programmateurSearch
-  } = useLieuFormComplete();
+    programmateurSearch,
+    submitting
+  } = useLieuFormOptimized(id);
 
   if (loading && id !== 'nouveau') {
     return <Spinner message="Chargement du lieu..." contentOnly={true} />;
@@ -65,7 +66,7 @@ const LieuForm = () => {
 
         {/* Form actions */}
         <LieuFormActions 
-          loading={loading}
+          loading={submitting || loading}
           id={id}
           navigate={navigate}
         />

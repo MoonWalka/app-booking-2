@@ -12,36 +12,36 @@ import ProgrammateurLegalSection from './ProgrammateurLegalSection';
 import ProgrammateurConcertsSection from './ProgrammateurConcertsSection';
 import ProgrammateurLieuxSection from './ProgrammateurLieuxSection';
 
-// Import des hooks personnalisés
-import { useProgrammateurDetails } from '@/hooks/programmateurs';
-import { useCompanySearch } from '@/hooks/programmateurs';
+// MIGRATION: Utilisation du hook optimisé
+import { useProgrammateurFormOptimized, useCompanySearch } from '@/hooks/programmateurs';
 import { useAddressSearch } from '@/hooks/common';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import ErrorMessage from '@/components/ui/ErrorMessage';
 
 /**
  * Formulaire d'édition d'un programmateur - Version Desktop harmonisée avec ProgrammateurView
- * Utilise la même structure en cartes que la vue mais en mode édition
+ * MIGRATION: Utilise maintenant le hook optimisé pour une meilleure performance et gestion des erreurs
  */
 const ProgrammateurForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  // Utiliser le même hook que ProgrammateurView pour la consistance
+  // MIGRATION: Utilisation du hook optimisé
   const{ 
     programmateur, 
     structure,
     loading, 
     error,
-    isEditing,
     formData,
     setFormData,
     handleChange,
     handleSubmit,
     handleDelete,
     isSubmitting,
-    formatValue
-  } = useProgrammateurDetails(id);
+    formatValue,
+    handleStructureChange,
+    handleCancel: hookHandleCancel
+  } = useProgrammateurFormOptimized(id);
   
   // État local pour contrôler l'affichage des sections
   const [sections, setSections] = useState({
@@ -61,7 +61,10 @@ const ProgrammateurForm = () => {
   };
 
   // Hooks pour la recherche d'entreprise et d'adresses
-  const companySearch = useCompanySearch(setFormData);
+  const companySearch = useCompanySearch((company) => {
+    // MIGRATION: Utiliser handleStructureChange du hook optimisé
+    handleStructureChange(company);
+  });
 
   const addressSearch = useAddressSearch(
     formData, 
@@ -72,7 +75,7 @@ const ProgrammateurForm = () => {
   
   // Fonction pour gérer l'annulation du formulaire
   const handleCancel = () => {
-    navigate(`/programmateurs/${id}`);
+    hookHandleCancel();
   };
   
   if (loading) {

@@ -4,8 +4,8 @@ import { Container, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import styles from './ArtistesList.module.css';
 
-// Import des hooks personnalisés - utilisation de la version migrée
-import { useArtistesListV2, useHandleDeleteArtist } from '@/hooks/artistes';
+// MIGRATION: Utilisation des hooks optimisés au lieu des versions V2
+import { useArtistesListOptimized, useDeleteArtisteOptimized } from '@/hooks/artistes';
 
 // Import des composants UI
 import ArtistesListHeader from '../sections/ArtistesListHeader';
@@ -17,14 +17,14 @@ import ArtistesLoadMore from '../sections/ArtistesLoadMore';
 
 /**
  * Composant qui affiche une liste d'artistes avec recherche, filtres et pagination
- * Refactorisé pour utiliser useArtistesListV2 basé sur useGenericEntityList
+ * Refactorisé pour utiliser useArtistesListOptimized basé sur hooks génériques optimisés
  */
 const ArtistesList = () => {
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
   const searchInputRef = React.useRef(null);
 
-  // Utilisation du hook migré V2 qui est basé sur useGenericEntityList
+  // MIGRATION: Utilisation du hook optimisé
   const {
     // Données principales
     artistes,
@@ -51,10 +51,19 @@ const ArtistesList = () => {
 
     // Actions
     setArtistes
-  } = useArtistesListV2(20, 'nom', 'asc');
+  } = useArtistesListOptimized({
+    pageSize: 20,
+    initialSortField: 'nom',
+    initialSortDirection: 'asc',
+    cacheEnabled: false // Désactiver le cache pour éviter les problèmes de données obsolètes
+  });
 
-  // Hook pour la gestion des suppressions d'artistes
-  const { handleDelete } = useHandleDeleteArtist(setArtistes, stats);
+  // MIGRATION: Utilisation du hook optimisé pour la suppression
+  const { handleDelete } = useDeleteArtisteOptimized((deletedId) => {
+    // Callback exécuté après une suppression réussie
+    // Mise à jour de la liste locale d'artistes
+    setArtistes(prevArtistes => prevArtistes.filter(a => a.id !== deletedId));
+  });
 
   // Navigation vers le formulaire de création d'artiste
   const handleAddClick = () => {

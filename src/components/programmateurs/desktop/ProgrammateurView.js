@@ -1,8 +1,7 @@
 // src/components/programmateurs/desktop/ProgrammateurView.js
 import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
-import { useProgrammateurDetails } from '@/hooks/programmateurs';
 import ProgrammateurContactSection from './ProgrammateurContactSection';
 import ProgrammateurLegalSection from './ProgrammateurLegalSection';
 import ProgrammateurConcertsSection from './ProgrammateurConcertsSection';
@@ -14,34 +13,24 @@ import styles from './ProgrammateurDetails.module.css';
 
 /**
  * Composant d'affichage des détails d'un programmateur - Version Desktop refactorisée
- * Structure en cartes tout en conservant les fonctionnalités originales
+ * MIGRATION: Utilise maintenant les props passées par le composant parent
  */
-const ProgrammateurView = ({ id: propId }) => {
+const ProgrammateurView = ({
+  programmateur,
+  structure,
+  lieux,
+  concerts,
+  loading,
+  loadingStructure,
+  loadingLieux,
+  loadingConcerts,
+  error,
+  handleDelete,
+  formatValue
+}) => {
   console.log('[TRACE-UNIQUE][ProgrammateurView][desktop] Ce composant est exécuté !');
-  // Utiliser l'ID passé en prop s'il existe, sinon utiliser l'ID de l'URL
-  const { id: urlId } = useParams();
-  const id = propId || urlId;
   const navigate = useNavigate();
   
-  // Utiliser l'hook pour récupérer les données du programmateur
-  const { 
-    programmateur, 
-    structure,
-    loading, 
-    error,
-    isEditMode,
-    formData,
-    toggleEditMode,
-    copyToClipboard,
-    formatDate,
-    formatMontant,
-    isDatePassed,
-    getStatusInfo,
-    handleDelete,
-    formatValue
-  } = useProgrammateurDetails(id);
-  
-  console.log('[TRACE-UNIQUE][ProgrammateurView] id:', id);
   console.log('[TRACE-UNIQUE][ProgrammateurView] loading:', loading);
   console.log('[TRACE-UNIQUE][ProgrammateurView] error:', error);
   console.log('[TRACE-UNIQUE][ProgrammateurView] programmateur:', programmateur);
@@ -81,7 +70,7 @@ const ProgrammateurView = ({ id: propId }) => {
   
   // Fonction pour rediriger vers la page d'édition
   const handleEditClick = () => {
-    navigate(`/programmateurs/edit/${id}`);
+    navigate(`/programmateurs/${programmateur.id}/edit`);
   };
   
   console.log('[TRACE-UNIQUE][ProgrammateurView] Affichage du détail du programmateur');
@@ -108,7 +97,7 @@ const ProgrammateurView = ({ id: propId }) => {
               </Button>
               <Button 
                 variant="outline-danger" 
-                onClick={handleDelete}
+                onClick={() => handleDelete(programmateur.id)}
               >
                 <i className="bi bi-trash me-2"></i>
                 Supprimer
@@ -237,6 +226,7 @@ const ProgrammateurView = ({ id: propId }) => {
               <Card.Body>
                 <ProgrammateurLieuxSection
                   programmateur={programmateur}
+                  lieux={lieux}
                   isEditing={false}
                 />
               </Card.Body>
@@ -266,7 +256,7 @@ const ProgrammateurView = ({ id: propId }) => {
             {sections.concertsVisible && (
               <Card.Body>
                 <ProgrammateurConcertsSection
-                  concertsAssocies={programmateur.concertsAssocies || []}
+                  concertsAssocies={concerts || []}
                   isEditing={false}
                 />
               </Card.Body>

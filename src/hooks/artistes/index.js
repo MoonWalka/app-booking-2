@@ -26,12 +26,16 @@ export { default as useArtistesListMigrated } from './useArtistesListMigrated';
 export { default as useArtistesListV2 } from './useArtistesListMigrated';
 
 /**
- * @recommended APPROCHE RECOMMANDÉE - Version optimisée du hook pour les formulaires d'artistes
+ * @recommended APPROCHE RECOMMANDÉE - Versions optimisées des hooks pour les artistes
  * utilisant directement les hooks génériques.
- * Cette version est conforme au plan de dépréciation qui prévoit la suppression 
+ * Ces versions sont conformes au plan de dépréciation qui prévoit la suppression 
  * des hooks spécifiques d'ici novembre 2025.
  */
 export { default as useArtisteFormOptimized } from './useArtisteFormOptimized';
+export { default as useArtisteDetailsOptimized } from './useArtisteDetailsOptimized';
+export { default as useDeleteArtisteOptimized } from './useDeleteArtisteOptimized';
+export { default as useArtisteSearchOptimized } from './useArtisteSearchOptimized';
+export { default as useArtistesListOptimized } from './useArtistesListOptimized';
 
 // Export des hooks utilitaires supplémentaires
 export { default as useHandleDeleteArtist } from './useHandleDeleteArtist';

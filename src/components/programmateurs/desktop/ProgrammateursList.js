@@ -1,46 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
-import firebase from '@/firebaseInit';
-import { collection, query, getDocs, orderBy, deleteDoc, doc } from 'firebase/firestore';
-import { db } from '@/firebaseInit';
+import { OverlayTrigger, Tooltip, Button, Form, InputGroup } from 'react-bootstrap';
+import { useProgrammateurSearchOptimized, useDeleteProgrammateurOptimized } from '@/hooks/programmateurs';
 import Spinner from '@/components/common/Spinner';
 import styles from './ProgrammateursList.module.css';
 
 const ProgrammateursList = ({ onNavigateToDetails }) => {
   const navigate = useNavigate();
-  const [programmateurs, setProgrammateurs] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filteredProgrammateurs, setFilteredProgrammateurs] = useState([]);
+  const {
+    programmateurs,
+    loading,
+    error,
+    searchTerm,
+    setSearchTerm,
+    searchFilters,
+    setSearchFilters,
+    handleSearch,
+    resetSearch,
+    sortField,
+    setSortField,
+    sortDirection,
+    setSortDirection
+  } = useProgrammateurSearchOptimized();
   
-  // Référence pour le focus de la recherche
+  const { 
+    handleDelete: handleDeleteProgrammateur,
+    isDeleting
+  } = useDeleteProgrammateurOptimized(() => {
+    resetSearch();
+  });
+  
   const searchInputRef = React.useRef(null);
 
   useEffect(() => {
-    const fetchProgrammateurs = async () => {
-      setLoading(true);
-      try {
-        const q = query(collection(db, 'programmateurs'), orderBy('nom'));
-        const querySnapshot = await getDocs(q);
-        const programmateursData = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
-        setProgrammateurs(programmateursData);
-        setFilteredProgrammateurs(programmateursData);
-      } catch (error) {
-        console.error('Erreur lors de la récupération des programmateurs:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProgrammateurs();
-    
-    // Ajouter un raccourci clavier pour la recherche
     const handleKeyDown = (e) => {
-      // Ctrl+F ou Cmd+F (Mac)
       if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
         e.preventDefault();
         if (searchInputRef.current) {
@@ -48,207 +41,201 @@ const ProgrammateursList = ({ onNavigateToDetails }) => {
         }
       }
     };
-    
+
     document.addEventListener('keydown', handleKeyDown);
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
 
-  // Effet pour filtrer les programmateurs avec un léger délai
-  useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
-      if (searchTerm.trim() === '') {
-        setFilteredProgrammateurs(programmateurs);
-      } else {
-        const searchTermLower = searchTerm.toLowerCase();
-        const filtered = programmateurs.filter(prog => 
-          prog.nom?.toLowerCase().includes(searchTermLower) || 
-          prog.structure?.toLowerCase().includes(searchTermLower) ||
-          prog.email?.toLowerCase().includes(searchTermLower)
-        );
-        setFilteredProgrammateurs(filtered);
-      }
-    }, 300); // Délai de 300ms pour éviter trop de rafraîchissements
-
-    return () => clearTimeout(delayDebounceFn);
-  }, [searchTerm, programmateurs]);
-
-  const handleDelete = async (id, e) => {
-    // Empêcher la propagation pour que le clic ne navigue pas vers la fiche
-    e.stopPropagation();
-    
-    if (window.confirm('Êtes-vous sûr de vouloir supprimer ce programmateur ?')) {
-      try {
-        await deleteDoc(doc(db, 'programmateurs', id));
-        setProgrammateurs(programmateurs.filter(prog => prog.id !== id));
-        setFilteredProgrammateurs(filteredProgrammateurs.filter(prog => prog.id !== id));
-      } catch (error) {
-        console.error('Erreur lors de la suppression du programmateur:', error);
-        alert('Une erreur est survenue lors de la suppression du programmateur');
-      }
+  const handleSortClick = (field) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
     }
   };
 
-  // Fonction pour naviguer vers la fiche du programmateur
-  const handleRowClick = (progId) => {
-    navigate(`/programmateurs/${progId}`);
-  };
-
-  // Gestionnaire pour empêcher la propagation des clics sur les liens et boutons dans les lignes
-  const handleActionClick = (e) => {
-    e.stopPropagation();
-  };
-
   if (loading) {
-    return <Spinner message="Chargement des programmateurs..." contentOnly={true} />;
+    return <Spinner message="Chargement des programmateurs..." />;
+  }
+
+  if (error) {
+    return (
+      <div className="alert alert-danger" role="alert">
+        <i className="bi bi-exclamation-triangle-fill me-2"></i>
+        Erreur: {error instanceof Error ? error.message : String(error)}
+      </div>
+    );
   }
 
   return (
-    <div className="container-fluid p-4">
-      <div className={styles.headerContainer}>
-        <h2 className="fs-4 fw-bold text-primary mb-0">Liste des programmateurs</h2>
-        <Link 
-          to="/programmateurs/nouveau" 
-          className="btn btn-primary d-flex align-items-center gap-2 px-3 py-2 rounded-3"
-        >
-          <i className="bi bi-plus-lg me-1"></i>
-          Ajouter un programmateur
-        </Link>
+    <div className={styles.programmateursList}>
+      <div className={styles.header}>
+        <h2>Liste des programmateurs</h2>
+        <div className={styles.actions}>
+          <InputGroup className={styles.searchBox}>
+            <Form.Control
+              ref={searchInputRef}
+              placeholder="Rechercher un programmateur..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            {searchTerm && (
+              <Button variant="outline-secondary" onClick={() => setSearchTerm('')}>
+                <i className="bi bi-x"></i>
+              </Button>
+            )}
+            <Button variant="primary" onClick={handleSearch}>
+              <i className="bi bi-search"></i>
+            </Button>
+          </InputGroup>
+          <Button
+            variant="success"
+            onClick={() => navigate('/programmateurs/nouveau')}
+          >
+            <i className="bi bi-plus-circle me-1"></i>
+            Nouveau programmateur
+          </Button>
+        </div>
       </div>
 
-      <form className={styles.searchBar} autoComplete="off">
-        <div className="input-group shadow-sm">
-          <span className="input-group-text bg-white"><i className="bi bi-search"></i></span>
-          <input
-            ref={searchInputRef}
-            type="text"
-            className="form-control"
-            placeholder="Rechercher un programmateur... (Ctrl+F)"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          {searchTerm && (
-            <button 
-              className="btn" 
-              type="button"
-              onClick={() => setSearchTerm('')}
-              aria-label="Clear search"
-              tabIndex="-1"
-            >
-              <i className="bi bi-x"></i>
-            </button>
-          )}
-        </div>
-      </form>
-
-      {searchTerm && (
-        <p className="small text-muted mb-3">
-          {filteredProgrammateurs.length} résultat{filteredProgrammateurs.length !== 1 ? 's' : ''} trouvé{filteredProgrammateurs.length !== 1 ? 's' : ''}
-        </p>
-      )}
-
-      {filteredProgrammateurs.length === 0 ? (
-        <div className="alert alert-info">
-          {searchTerm ? (
-            <div className="d-flex align-items-center">
-              <i className="bi bi-info-circle me-3"></i>
-              <p className="mb-0">Aucun programmateur ne correspond à votre recherche.</p>
-            </div>
-          ) : (
-            <div className="d-flex align-items-center">
-              <i className="bi bi-info-circle me-3"></i>
-              <p className="mb-0">Aucun programmateur n'a été ajouté. Cliquez sur "Ajouter un programmateur" pour commencer.</p>
-            </div>
-          )}
-        </div>
-      ) : (
-        <div className="table-responsive">
-          <table className="table table-hover align-middle mb-0">
-            <thead>
-              <tr>
-                <th scope="col">Nom</th>
-                <th scope="col">Structure</th>
-                <th scope="col">Email</th>
-                <th scope="col">Téléphone</th>
-                <th scope="col" style={{minWidth: "90px"}}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredProgrammateurs.map(prog => (
-                <tr 
-                  key={prog.id} 
-                  className={styles.cursorPointer}
-                  onClick={() => handleRowClick(prog.id)}
-                >
-                  <td title={prog.nom} style={{
-                    // Harmonisation : taille standardisée
-                    fontSize: "var(--tc-font-size-md)",
-                    fontWeight: "500"
-                  }}>
-                    <i className="bi bi-person-circle me-2 text-primary"></i>
-                    {prog.nom}
-                  </td>
+      <div className={styles.tableContainer}>
+        <table className={styles.programmateurTable}>
+          <thead>
+            <tr>
+              <th className={styles.sortableHeader} onClick={() => handleSortClick('nom')}>
+                <div className={styles.headerContent}>
+                  Nom
+                  {sortField === 'nom' && (
+                    <i className={`bi bi-arrow-${sortDirection === 'asc' ? 'up' : 'down'}`}></i>
+                  )}
+                </div>
+              </th>
+              <th className={styles.sortableHeader} onClick={() => handleSortClick('structure.nom')}>
+                <div className={styles.headerContent}>
+                  Structure
+                  {sortField === 'structure.nom' && (
+                    <i className={`bi bi-arrow-${sortDirection === 'asc' ? 'up' : 'down'}`}></i>
+                  )}
+                </div>
+              </th>
+              <th className={styles.sortableHeader} onClick={() => handleSortClick('email')}>
+                <div className={styles.headerContent}>
+                  Email
+                  {sortField === 'email' && (
+                    <i className={`bi bi-arrow-${sortDirection === 'asc' ? 'up' : 'down'}`}></i>
+                  )}
+                </div>
+              </th>
+              <th className={styles.sortableHeader} onClick={() => handleSortClick('telephone')}>
+                <div className={styles.headerContent}>
+                  Téléphone
+                  {sortField === 'telephone' && (
+                    <i className={`bi bi-arrow-${sortDirection === 'asc' ? 'up' : 'down'}`}></i>
+                  )}
+                </div>
+              </th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {programmateurs.length > 0 ? (
+              programmateurs.map(programmateur => (
+                <tr key={programmateur.id}>
                   <td>
-                    {prog.structure ? (
-                      <span className={styles.structureBadge}>{prog.structure}</span>
-                    ) : (
-                      <span className={styles.fieldEmpty}><i className="bi bi-dash-circle"></i> non spécifié</span>
+                    <Link to={`/programmateurs/${programmateur.id}`} className={styles.programmateurLink}>
+                      {programmateur.nom}
+                      {programmateur.prenom && ` ${programmateur.prenom}`}
+                    </Link>
+                    {programmateur.fonction && (
+                      <div className={styles.fonction}>{programmateur.fonction}</div>
                     )}
                   </td>
                   <td>
-                    {prog.email ? (
-                      <a 
-                        href={`mailto:${prog.email}`} 
-                        className="text-decoration-none"
-                        onClick={handleActionClick}
-                      >
-                        <i className="bi bi-envelope me-1"></i>
-                        {prog.email}
-                      </a>
-                    ) : (
-                      <span className={styles.fieldEmpty}><i className="bi bi-dash-circle"></i> non spécifié</span>
+                    {programmateur.structure?.nom || (
+                      <span className="text-muted">Non spécifiée</span>
                     )}
                   </td>
                   <td>
-                    {prog.telephone ? (
-                      <a 
-                        href={`tel:${prog.telephone}`} 
-                        className="text-decoration-none"
-                        onClick={handleActionClick}
-                      >
-                        <i className="bi bi-telephone me-1"></i>
-                        {prog.telephone}
-                      </a>
+                    {programmateur.email ? (
+                      <a href={`mailto:${programmateur.email}`}>{programmateur.email}</a>
                     ) : (
-                      <span className={styles.fieldEmpty}><i className="bi bi-dash-circle"></i> non spécifié</span>
+                      <span className="text-muted">Non spécifié</span>
                     )}
                   </td>
                   <td>
-                    <div className={styles.tableActions}>
-                      <Link 
-                        to={`/programmateurs/edit/${prog.id}`} 
-                        className="btn btn-light me-2"
-                        onClick={handleActionClick}
-                        title="Modifier le programmateur"
+                    {programmateur.telephone ? (
+                      <a href={`tel:${programmateur.telephone}`}>{programmateur.telephone}</a>
+                    ) : (
+                      <span className="text-muted">Non spécifié</span>
+                    )}
+                  </td>
+                  <td>
+                    <div className={styles.actionButtons}>
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={<Tooltip>Voir les détails</Tooltip>}
                       >
-                        <i className="bi bi-pencil"></i>
-                      </Link>
-                      <button 
-                        onClick={(e) => handleDelete(prog.id, e)}
-                        className="btn btn-light"
-                        title="Supprimer le programmateur"
+                        <button
+                          className={`${styles.actionButton} ${styles.viewButton}`}
+                          onClick={() => onNavigateToDetails(programmateur.id)}
+                        >
+                          <i className="bi bi-eye"></i>
+                        </button>
+                      </OverlayTrigger>
+                      
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={<Tooltip>Modifier</Tooltip>}
                       >
-                        <i className="bi bi-trash"></i>
-                      </button>
+                        <button
+                          className={`${styles.actionButton} ${styles.editButton}`}
+                          onClick={() => navigate(`/programmateurs/${programmateur.id}/edit`)}
+                        >
+                          <i className="bi bi-pencil"></i>
+                        </button>
+                      </OverlayTrigger>
+                      
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={<Tooltip>Supprimer</Tooltip>}
+                      >
+                        <button
+                          className={`${styles.actionButton} ${styles.deleteButton}`}
+                          onClick={() => handleDeleteProgrammateur(programmateur.id)}
+                          disabled={isDeleting}
+                        >
+                          <i className="bi bi-trash"></i>
+                        </button>
+                      </OverlayTrigger>
                     </div>
                   </td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5" className="text-center py-4">
+                  <div className="mb-3">
+                    <i className="bi bi-search fs-1 text-muted"></i>
+                  </div>
+                  <p className="mb-1 text-muted">Aucun programmateur trouvé</p>
+                  {searchTerm && (
+                    <Button 
+                      variant="link" 
+                      onClick={() => setSearchTerm('')}
+                      className="p-0 text-decoration-none"
+                    >
+                      Effacer la recherche
+                    </Button>
+                  )}
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

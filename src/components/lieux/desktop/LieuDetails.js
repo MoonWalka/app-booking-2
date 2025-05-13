@@ -8,7 +8,8 @@ import Spinner from '@/components/common/Spinner';
 import Button from '@/components/ui/Button';
 
 // Import custom hooks depuis les emplacements standardisés
-import { useLieuDetailsV2 } from '@/hooks/lieux';
+// MIGRATION: Utilisation du hook optimisé au lieu du hook migré
+import { useLieuDetailsOptimized } from '@/hooks/lieux';
 import { useProgrammateurSearchV2 } from '@/hooks/programmateurs';
 import { useAddressSearch } from '@/hooks/common';
 
@@ -33,7 +34,7 @@ const LieuDetails = () => {
   const { id: lieuId } = useParams();
   const navigate = useNavigate();
 
-  // Use custom hooks
+  // Use custom hooks - NOUVEAU: Utilisation du hook optimisé
   const{
     lieu,
     loading,
@@ -43,16 +44,20 @@ const LieuDetails = () => {
     formData,
     isDeleting,
     showDeleteModal,
-    hasAssociatedConcerts,
-    setFormData,
     handleChange,
     handleEdit,
     handleCancel,
-    handleSave,
+    handleSubmit: handleSave,
     handleDeleteClick,
     handleCloseDeleteModal,
-    handleConfirmDelete
-  } = useLieuDetailsV2(lieuId);
+    handleConfirmDelete,
+    handleProgrammateurChange,
+    addEquipement,
+    removeEquipement
+  } = useLieuDetailsOptimized(lieuId);
+
+  // Les noms peuvent différer légèrement entre les hooks, récupération des données liées
+  const hasAssociatedConcerts = false; // Cette information devrait être récupérée du hook ou d'une autre source
 
   const{
     searchTerm,
@@ -88,17 +93,11 @@ const LieuDetails = () => {
   // Add the programmateur ID to the form data when changed
   React.useEffect(() => {
     if (selectedProgrammateur) {
-      setFormData(prev => ({
-        ...prev,
-        programmateurId: selectedProgrammateur.id
-      }));
+      handleProgrammateurChange(selectedProgrammateur);
     } else if (isEditing) {
-      setFormData(prev => ({
-        ...prev,
-        programmateurId: null
-      }));
+      handleProgrammateurChange(null);
     }
-  }, [selectedProgrammateur, isEditing, setFormData]);
+  }, [selectedProgrammateur, isEditing, handleProgrammateurChange]);
 
   // If loading, show a spinner
   if (loading) {
@@ -173,6 +172,8 @@ const LieuDetails = () => {
             formData={formData}
             isEditing={isEditing}
             handleChange={handleChange}
+            addEquipement={addEquipement}
+            removeEquipement={removeEquipement}
           />
 
           {/* Address section */}

@@ -1,5 +1,5 @@
 // src/hooks/lieux/useLieuDetailsMigrated.js
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
@@ -15,6 +15,7 @@ import { showSuccessToast, showErrorToast } from '@/utils/toasts';
  * @returns {Object} API pour gérer les détails d'un lieu
  */
 const useLieuDetailsMigrated = (id) => {
+  console.log(`[useLieuDetailsMigrated] Initialisation du hook avec l'ID: ${id}`);
   const navigate = useNavigate();
 
   // Fonction pour formater les champs date
@@ -26,6 +27,12 @@ const useLieuDetailsMigrated = (id) => {
 
   // Fonction pour transformer les données après chargement
   const transformData = (data) => {
+    console.log(`[useLieuDetailsMigrated] Transformation des données:`, data);
+    if (!data) {
+      console.warn(`[useLieuDetailsMigrated] Données nulles reçues pour l'ID: ${id}`);
+      return null;
+    }
+    
     return {
       ...data,
       // Ajouter des champs calculés ici si besoin
@@ -40,6 +47,7 @@ const useLieuDetailsMigrated = (id) => {
   }, []);
 
   const onSaveError = useCallback((error) => {
+    console.error(`[useLieuDetailsMigrated] Erreur de sauvegarde:`, error);
     showErrorToast(`Erreur lors de la sauvegarde du lieu: ${error.message}`);
   }, []);
 
@@ -49,6 +57,7 @@ const useLieuDetailsMigrated = (id) => {
   }, [navigate]);
 
   const onDeleteError = useCallback((error) => {
+    console.error(`[useLieuDetailsMigrated] Erreur de suppression:`, error);
     showErrorToast(`Erreur lors de la suppression du lieu: ${error.message}`);
   }, []);
 
@@ -82,8 +91,26 @@ const useLieuDetailsMigrated = (id) => {
     // Navigation
     navigate,
     returnPath: '/lieux',
-    editPath: '/lieux/:id/edit',
+    // Ne pas utiliser editPath car cela peut causer des redirections incorrectes
+    // editPath: '/lieux/:id/edit', 
+
+    // Options de cache
+    disableCache: true, // Désactiver le cache pour éviter les problèmes de données obsolètes
   });
+
+  // Log des résultats pour débogage
+  useEffect(() => {
+    console.log(`[useLieuDetailsMigrated] État après chargement:`, {
+      id,
+      lieuCharge: Boolean(genericDetails.entity),
+      enChargement: genericDetails.loading,
+      erreur: genericDetails.error
+    });
+
+    if (genericDetails.error) {
+      console.error(`[useLieuDetailsMigrated] Erreur de chargement:`, genericDetails.error);
+    }
+  }, [id, genericDetails.entity, genericDetails.loading, genericDetails.error]);
 
   // Fonctionnalités spécifiques aux lieux
   

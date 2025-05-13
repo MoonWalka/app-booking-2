@@ -39,6 +39,7 @@ function ConcertDetails() {
   
   // En mode édition, afficher le formulaire
   if (isEditMode) {
+    // Redirection vers le formulaire unifié (wrapper responsive)
     return <ConcertForm id={id} />;
   }
   
@@ -96,7 +97,9 @@ Plusieurs problèmes d'importation ont été identifiés et résolus :
 - `/src/components/concerts/ConcertDetails.js` - Transformé en conteneur simple
 - `/src/components/concerts/desktop/ConcertView.js` - Nouveau composant de vue desktop
 - `/src/components/concerts/mobile/ConcertView.js` - Nouveau composant de vue mobile
-- `/src/components/concerts/ConcertForm.js` - Réutilisé pour le mode édition
+- `/src/components/concerts/ConcertForm/index.js` - Wrapper responsive unifié pour le formulaire via `useResponsive`
+- `/src/components/concerts/desktop/ConcertForm.js` - Version desktop, utilise `useConcertFormOptimized` pour gestion édition/création
+- `/src/components/concerts/mobile/ConcertForm.js`  - Version mobile (UnderConstruction ou future implémentation)
 
 ### Composants Artiste
 

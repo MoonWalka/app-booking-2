@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './NotesSection.module.css';
+import Card from '@/components/ui/Card';
 
 /**
  * NotesSection - Section pour les notes du concert
@@ -14,29 +15,24 @@ const NotesSection = ({ notes, onChange }) => {
   };
 
   return (
-    <div className={styles.formCard}>
-      <div className={styles.cardHeader}>
-        <div className={styles.cardIcon}>
-          <i className="bi bi-journal-text"></i>
-        </div>
-        <h3 className={styles.cardTitle}>Notes</h3>
-      </div>
-      
-      <div className={styles.cardBody}>
-        <label htmlFor="notes" className={styles.formLabel}>
-          Notes additionnelles (optionnel)
-        </label>
-        <textarea
-          id="notes"
-          name="notes"
-          className={`form-control ${styles.notesTextarea}`}
-          value={notes || ''}
-          onChange={handleChange}
-          placeholder="Ajoutez ici toutes les informations complémentaires concernant ce concert..."
-          rows={5}
-        ></textarea>
-      </div>
-    </div>
+    <Card
+      title="Notes"
+      icon={<i className="bi bi-journal-text"></i>}
+      className={styles.notesSection}
+    >
+      <label htmlFor="notes" className={styles.formLabel}>
+        Notes additionnelles (optionnel)
+      </label>
+      <textarea
+        id="notes"
+        name="notes"
+        className={`form-control ${styles.notesTextarea}`}
+        value={notes || ''}
+        onChange={handleChange}
+        placeholder="Ajoutez ici toutes les informations complémentaires concernant ce concert..."
+        rows={5}
+      ></textarea>
+    </Card>
   );
 };
 

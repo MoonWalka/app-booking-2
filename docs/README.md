@@ -1,6 +1,6 @@
 # Documentation TourCraft
 
-*Document mis à jour le: 6 mai 2025*
+*Document mis à jour le: 12 mai 2025*
 
 Ce dossier contient toute la documentation technique du projet TourCraft. Ce fichier README sert d'index central pour naviguer efficacement dans la documentation disponible.
 
@@ -135,6 +135,10 @@ Les documents suivants ont été archivés car ils concernent des initiatives te
 4. **Résolution des incohérences**:
    - Signaler toute incohérence à l'équipe documentation (documentation@tourcraft.com)
    - Ne pas modifier plusieurs documents connexes sans coordination
+
+## ✨ Changements Récents
+- Unification du formulaire de concert via `ConcertForm` responsive wrapper.
+- Migration vers `useConcertFormOptimized` pour la gestion création/édition.
 
 ---
 

@@ -9,6 +9,7 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useArtisteFormOptimized } from '@/hooks/artistes';
+import Card from '@/components/ui/Card';
 import '@styles/index.css';
 
 /**
@@ -242,110 +243,110 @@ const ArtisteFormExemple = () => {
     }
   };
   
+  // Définition des actions d'en-tête pour le formulaire principal
+  const headerActions = (
+    <div>
+      <button
+        type="button"
+        className="btn btn-outline-secondary mr-2"
+        onClick={handleCancel}
+      >
+        Annuler
+      </button>
+      <button
+        type="button"
+        className="btn btn-primary"
+        onClick={handleSubmit}
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? 'Enregistrement...' : 'Enregistrer'}
+      </button>
+    </div>
+  );
+  
   return (
     <div className="container artiste-form-exemple">
-      <div className="card">
-        <div className="card-header d-flex justify-content-between align-items-center">
-          <h2>{isNewArtiste ? 'Nouvel artiste' : 'Modifier l\'artiste'}</h2>
-          <div>
-            <button
-              type="button"
-              className="btn btn-outline-secondary mr-2"
-              onClick={handleCancel}
-            >
-              Annuler
-            </button>
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={handleSubmit}
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? 'Enregistrement...' : 'Enregistrer'}
-            </button>
+      <Card
+        title={isNewArtiste ? 'Nouvel artiste' : 'Modifier l\'artiste'}
+        headerActions={headerActions}
+      >
+        <form onSubmit={handleSubmit}>
+          {/* Indicateur d'étapes */}
+          <div className="steps-indicator mb-4">
+            <div className="step-bullets">
+              {etapes.map((etape, index) => (
+                <div
+                  key={index}
+                  className={`step-bullet ${etapeActuelle >= index ? 'active' : ''}`}
+                  onClick={() => setEtapeActuelle(index)}
+                >
+                  {index + 1}
+                </div>
+              ))}
+            </div>
+            <div className="step-names">
+              <span className={etapeActuelle === 0 ? 'active' : ''}>Informations</span>
+              <span className={etapeActuelle === 1 ? 'active' : ''}>Contacts</span>
+              <span className={etapeActuelle === 2 ? 'active' : ''}>Membres</span>
+            </div>
           </div>
-        </div>
-        
-        <div className="card-body">
-          <form onSubmit={handleSubmit}>
-            {/* Indicateur d'étapes */}
-            <div className="steps-indicator mb-4">
-              <div className="step-bullets">
-                {etapes.map((etape, index) => (
-                  <div
-                    key={index}
-                    className={`step-bullet ${etapeActuelle >= index ? 'active' : ''}`}
-                    onClick={() => setEtapeActuelle(index)}
-                  >
-                    {index + 1}
-                  </div>
-                ))}
-              </div>
-              <div className="step-names">
-                <span className={etapeActuelle === 0 ? 'active' : ''}>Informations</span>
-                <span className={etapeActuelle === 1 ? 'active' : ''}>Contacts</span>
-                <span className={etapeActuelle === 2 ? 'active' : ''}>Membres</span>
-              </div>
-            </div>
+          
+          {/* Formulaire de l'étape actuelle */}
+          {renderEtapeForm()}
+          
+          {/* Navigation entre étapes */}
+          <div className="form-navigation mt-4">
+            {etapeActuelle > 0 && (
+              <button
+                type="button"
+                className="btn btn-outline-primary"
+                onClick={goToPreviousStep}
+              >
+                Précédent
+              </button>
+            )}
             
-            {/* Formulaire de l'étape actuelle */}
-            {renderEtapeForm()}
-            
-            {/* Navigation entre étapes */}
-            <div className="form-navigation mt-4">
-              {etapeActuelle > 0 && (
-                <button
-                  type="button"
-                  className="btn btn-outline-primary"
-                  onClick={goToPreviousStep}
-                >
-                  Précédent
-                </button>
-              )}
-              
-              {etapeActuelle < etapes.length - 1 ? (
-                <button
-                  type="button"
-                  className="btn btn-primary ml-auto"
-                  onClick={goToNextStep}
-                >
-                  Suivant
-                </button>
-              ) : (
-                <button
-                  type="submit"
-                  className="btn btn-success ml-auto"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? 'Enregistrement...' : 'Terminer'}
-                </button>
-              )}
-            </div>
-          </form>
-        </div>
-      </div>
+            {etapeActuelle < etapes.length - 1 ? (
+              <button
+                type="button"
+                className="btn btn-primary ml-auto"
+                onClick={goToNextStep}
+              >
+                Suivant
+              </button>
+            ) : (
+              <button
+                type="submit"
+                className="btn btn-success ml-auto"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Enregistrement...' : 'Terminer'}
+              </button>
+            )}
+          </div>
+        </form>
+      </Card>
       
       {/* Aide et documentation */}
-      <div className="card mt-4">
-        <div className="card-header">
-          <h5>Utilisation du hook useArtisteFormOptimized</h5>
-        </div>
-        <div className="card-body">
-          <p>
-            Ce composant démontre l'utilisation du hook <code>useArtisteFormOptimized</code> qui est basé directement
-            sur <code>useGenericEntityForm</code>, conformément au plan de dépréciation officiel.
-          </p>
-          <p>
-            <strong>Avantages :</strong>
-          </p>
-          <ul>
-            <li>Formulaire par étapes avec validation spécifique à chaque champ</li>
-            <li>Gestion optimisée des membres du groupe</li>
-            <li>Connexion directe au hook générique pour une meilleure maintenabilité</li>
-            <li>Gestion simplifiée des contacts via la méthode <code>updateContact</code></li>
-          </ul>
-        </div>
-      </div>
+      <Card
+        title="Utilisation du hook useArtisteFormOptimized"
+        className="mt-4"
+        icon={<i className="bi bi-info-circle"></i>}
+      >
+        <p>
+          Ce composant démontre l'utilisation du hook <code>useArtisteFormOptimized</code> qui est basé directement
+          sur <code>useGenericEntityForm</code>, conformément au plan de dépréciation officiel.
+        </p>
+        <p>
+          <strong>Avantages :</strong>
+        </p>
+        <ul>
+          <li>Formulaire par étapes avec validation spécifique à chaque champ</li>
+          <li>Gestion optimisée des membres du groupe</li>
+          <li>Connexion directe au hook générique pour une meilleure maintenabilité</li>
+          <li>Gestion simplifiée des contacts via la méthode <code>updateContact</code></li>
+        </ul>
+      </Card>
     </div>
   );
 };

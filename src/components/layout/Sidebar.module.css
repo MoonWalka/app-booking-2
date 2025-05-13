@@ -2,102 +2,190 @@
  * Styles pour Sidebar
  * Standardisé selon le Guide de Style CSS de TourCraft
  * Dernière mise à jour: 12 mai 2025
+ *
+ * Ce composant implémente la barre latérale principale de navigation
+ * avec support de la responsivité et des états ouverts/fermés
  */
 
 /* Import des classes utilitaires pour les points de rupture */
 @import '../../styles/mixins/breakpoints.css';
 
+/* 
+ * Container principal
+ * -----------------
+ * Structure en flex column pour permettre le positionnement du footer en bas
+ * Utilise position: fixed pour rester visible pendant le défilement
+ */
 .sidebar {
   width: var(--tc-sidebar-width, 250px);
-  min-width: var(--tc-sidebar-width, 250px); /* Empêche la sidebar de rétrécir */
+  min-width: var(--tc-sidebar-width, 250px); /* Empêche la sidebar de rétrécir dans les flex layouts */
   background-color: var(--tc-sidebar-bg-color);
   color: var(--tc-sidebar-text-color);
   height: 100vh;
   position: fixed;
   left: 0;
   top: 0;
-  overflow-y: auto;
-  z-index: var(--tc-z-index-sidebar, 1000);
+  overflow-y: auto; /* Permet le défilement si le contenu est trop long */
+  z-index: var(--tc-z-index-sidebar, 1000); /* Valeur élevée pour superposer la plupart des éléments */
   box-shadow: var(--tc-shadow, 2px 0 5px rgba(0,0,0,0.1));
   transition: var(--tc-transition, all 0.3s ease);
-  display: flex; /* Ajout pour permettre au footer de se positionner en bas */
-  flex-direction: column; /* Ajout pour organiser les éléments verticalement */
+  /* Structure en flexbox verticale */
+  display: flex;
+  flex-direction: column;
 }
 
-/* Styles pour les éléments de la sidebar */
+/* 
+ * En-tête de la sidebar
+ * ------------------
+ * Contient généralement le logo et peut-être un bouton de toggle
+ */
 .sidebarHeader {
   padding: var(--tc-spacing-lg, 20px);
   border-bottom: var(--tc-border-width, 1px) solid var(--tc-sidebar-border-color, rgba(255,255,255,0.1));
   text-align: center;
 }
 
+/* 
+ * Zone de contenu principal
+ * ----------------------
+ * Contient les liens de navigation et autres éléments interactifs
+ * Pas de padding horizontal pour permettre aux liens de s'étendre sur toute la largeur
+ */
 .sidebarContent {
   padding: var(--tc-spacing-sm, 10px) 0;
 }
 
+/* 
+ * Liste de navigation
+ * ----------------
+ * Reset des styles de liste pour une mise en forme personnalisée
+ */
 .navLinks {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
+/* 
+ * Éléments de liste
+ * --------------
+ * Espacement vertical entre les éléments de navigation
+ */
 .navLinks li {
   margin-bottom: var(--tc-spacing-xs, 5px);
 }
 
+/* 
+ * Liens de navigation
+ * ----------------
+ * Style de base pour tous les liens dans la navigation
+ * Structure en flexbox pour aligner facilement les icônes et le texte
+ */
 .navLinks a {
   display: flex;
   align-items: center;
   padding: var(--tc-spacing-sm, 10px) var(--tc-spacing-lg, 20px);
   color: var(--tc-color-light, #f8f9fa);
   text-decoration: none;
+  /* Transition courte pour une réaction rapide au hover */
   transition: var(--tc-transition-short, background-color 0.2s);
 }
 
+/* 
+ * État de survol des liens
+ * ---------------------
+ * Feedback visuel subtil lors du survol
+ * Conserve la couleur du texte pour maintenir le contraste
+ */
 .navLinks a:hover {
   background-color: var(--tc-sidebar-hover-bg-color, rgba(255,255,255,0.1));
   color: var(--tc-color-light, #f8f9fa);
 }
 
+/* 
+ * État actif des liens
+ * -----------------
+ * Mise en évidence de l'élément de navigation actif
+ * Utilise une bordure gauche colorée comme indicateur visuel principal
+ */
 .navLinks a.active {
   background-color: var(--tc-sidebar-active-bg-color, rgba(255,255,255,0.2));
+  /* La bordure gauche crée un indicateur visuel fort pour la page active */
   border-left: 4px solid var(--tc-primary-color, #4a6da7);
 }
 
+/* 
+ * Icônes dans les liens
+ * ------------------
+ * Espacement et dimensionnement des icônes dans la navigation
+ */
 .navLinks a i {
   margin-right: var(--tc-spacing-sm, 10px);
   font-size: var(--tc-font-size-md, 1.2em);
 }
 
+/* 
+ * Pied de la sidebar
+ * ---------------
+ * Utilise margin-top: auto pour pousser le footer en bas de la sidebar
+ * quelle que soit la hauteur du contenu principal
+ */
 .sidebarFooter {
-  margin-top: auto;
+  margin-top: auto; /* Astuce flexbox pour pousser cet élément tout en bas */
   padding: var(--tc-spacing-lg, 20px);
   border-top: var(--tc-border-width, 1px) solid var(--tc-sidebar-border-color, rgba(255,255,255,0.1));
 }
 
+/* 
+ * Informations utilisateur
+ * ---------------------
+ * Généralement affiché dans le footer de la sidebar
+ */
 .userInfo {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
+/* 
+ * Email de l'utilisateur
+ * -------------------
+ * word-break permet de gérer les emails longs qui pourraient déborder
+ */
 .userEmail {
   margin-bottom: var(--tc-spacing-sm, 10px);
-  word-break: break-word;
+  word-break: break-word; /* Permet aux emails longs de se couper correctement */
   text-align: center;
 }
 
-/* Responsive avec points de rupture standardisés */
+/* 
+ * Comportement responsive
+ * --------------------
+ * ATTENTION: Utilise max-width au lieu de min-width contrairement aux recommandations
+ * À refactoriser pour suivre l'approche mobile-first dans une prochaine version
+ */
 @media (max-width: var(--tc-breakpoint-md, 992px)) {
+  /* 
+   * Sur les petits écrans, la sidebar est cachée par défaut
+   * et apparaît seulement quand elle est activée
+   */
   .sidebar {
-    transform: translateX(-100%);
+    transform: translateX(-100%); /* Cache la sidebar hors de l'écran */
     position: fixed;
   }
   
+  /* 
+   * Classe ajoutée lorsque la sidebar est ouverte
+   * Utilise une transformation CSS pour une animation fluide
+   */
   .sidebarOpen {
     transform: translateX(0);
   }
   
+  /* 
+   * Arrière-plan semi-transparent qui apparaît derrière la sidebar
+   * sur les petits écrans pour indiquer un overlay et permettre une fermeture facile
+   */
   .sidebarBackdrop {
     position: fixed;
     top: 0;
@@ -105,10 +193,14 @@
     right: 0;
     bottom: 0;
     background-color: var(--tc-modal-overlay-bg, rgba(0, 0, 0, 0.5));
-    z-index: var(--tc-z-index-backdrop, 999);
+    z-index: var(--tc-z-index-backdrop, 999); /* Juste en-dessous de la sidebar */
     display: none;
   }
   
+  /* 
+   * État visible du backdrop, contrôlé par JavaScript
+   * en synchronisation avec l'état d'ouverture de la sidebar
+   */
   .sidebarBackdropVisible {
     display: block;
   }

@@ -15,6 +15,12 @@
  */
 export { default as useConcertFormOptimized } from './useConcertFormOptimized';
 
+/**
+ * @recommended APPROCHE RECOMMANDÉE pour les détails de concerts
+ * Hook optimisé utilisant directement useGenericEntityDetails 
+ */
+export { default as useConcertDetailsOptimized } from './useConcertDetailsOptimized';
+
 // ========== HOOKS DE COMPATIBILITÉ (DÉPRÉCIÉS) ==========
 // Ces hooks sont maintenus pour la compatibilité mais seront supprimés en novembre 2025
 
@@ -33,14 +39,34 @@ export { default as useConcertFormV2 } from './useConcertFormMigrated';
  */
 export { default as useConcertFormMigrated } from './useConcertFormMigrated';
 
-// ========== AUTRES HOOKS ==========
-
+/**
+ * @deprecated Sera supprimé en novembre 2025. Utilisez useConcertDetailsOptimized à la place.
+ */
 export { default as useConcertDetails } from './useConcertDetails';
+
+/**
+ * @deprecated Sera supprimé en novembre 2025. Utilisez useConcertDetailsOptimized à la place.
+ */
 export { default as useConcertDetailsMigrated } from './useConcertDetailsMigrated';
+
+/**
+ * @deprecated Sera supprimé en novembre 2025. Utilisez useConcertDetailsOptimized à la place.
+ */
 export { default as useConcertDetailsV2 } from './useConcertDetailsMigrated';
 
+/**
+ * @deprecated Sera supprimé en novembre 2025. Utilisez la version optimisée correspondante.
+ */
 export { default as useConcertStatus } from './useConcertStatus';
+
+/**
+ * @deprecated Sera supprimé en novembre 2025. Utilisez la version optimisée correspondante.
+ */
 export { default as useConcertStatusMigrated } from './useConcertStatusMigrated';
+
+/**
+ * @deprecated Sera supprimé en novembre 2025. Utilisez la version optimisée correspondante.
+ */
 export { default as useConcertStatusV2 } from './useConcertStatusMigrated';
 
 // Exports des autres hooks spécifiques aux concerts

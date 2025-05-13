@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 // Import custom hooks
-import useFormValidationData from '../../../hooks/forms/useFormValidationData';
-import useFieldActions from '../../../hooks/forms/useFieldActions';
-import useValidationBatchActions from '../../../hooks/forms/useValidationBatchActions';
+import { useFormValidationData } from '@/hooks/forms';
+import { useFieldActions } from '@/hooks/forms';
+import { useValidationBatchActions } from '@/hooks/forms';
 
 // Import components
 import FormHeader from './FormHeader';

@@ -139,12 +139,14 @@ Toutes les variables CSS doivent utiliser le préfixe `--tc-` (TourCraft) suivi 
 #### Points de rupture (media queries)
 
 ```css
-/* Points de rupture */
-@media (max-width: 576px) { /* Smartphones */ }
-@media (max-width: 768px) { /* Tablettes */ }
-@media (max-width: 992px) { /* Petits écrans */ }
-@media (max-width: 1200px) { /* Grands écrans */ }
+/* Points de rupture - Approche mobile-first */
+@media (min-width: 576px) { /* Petits appareils et plus */ }
+@media (min-width: 768px) { /* Tablettes et plus */ }
+@media (min-width: 992px) { /* Ordinateurs de bureau et plus */ }
+@media (min-width: 1200px) { /* Grands écrans */ }
 ```
+
+> ⚠️ **Important** : Nous suivons une approche mobile-first, donc utilisez `min-width` et non `max-width` pour les media queries. Les styles de base s'appliquent à tous les appareils, puis nous ajoutons des styles spécifiques pour les écrans plus grands.
 
 ## Modules CSS
 
@@ -266,7 +268,7 @@ Nous utilisons une convention de nommage inspirée de BEM mais adaptée aux modu
 
 ### Mobile-first
 
-Nous adoptons une approche "mobile-first" pour tous les nouveaux composants:
+Nous adoptons une approche "mobile-first" pour tous les composants:
 
 ```css
 /* Styles de base (mobile) */
@@ -281,6 +283,8 @@ Nous adoptons une approche "mobile-first" pour tous les nouveaux composants:
   }
 }
 ```
+
+> **Rappel** : Toujours commencer par le style pour mobile, puis ajouter des styles pour les écrans plus grands avec `min-width`, jamais avec `max-width`.
 
 ### Bonnes pratiques adaptatives pour mobile
 
@@ -366,7 +370,7 @@ Suite à notre refactorisation CSS, nous avons établi une structure standard po
    - États interactifs (hover, focus, active)
    - Media queries pour la responsivité
 
-3. **Support responsive structuré**
+3. **Support responsive structuré selon l'approche mobile-first**
    ```css
    /* Base styles (mobile-first) */
    .component { ... }

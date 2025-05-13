@@ -11,7 +11,7 @@ a {
 }
 
 a:hover {
-  color: var(---tc-primary-dark);
+  color: var(--tc-primary-dark);
   text-decoration: none; /* Modification: désactive le soulignement pour tous les liens au survol */
 }
 

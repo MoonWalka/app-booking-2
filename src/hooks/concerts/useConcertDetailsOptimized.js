@@ -1,4 +1,4 @@
-// src/hooks/concerts/useConcertDetailsMigrated.js
+// src/hooks/concerts/useConcertDetailsOptimized.js
 import { useState, useCallback, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
@@ -16,23 +16,22 @@ import useConcertAssociations from '@/hooks/concerts/useConcertAssociations';
 import { formatDate, formatMontant, isDatePassed, copyToClipboard, getCacheKey } from '@/utils/formatters';
 
 /**
- * Hook de détails de concert basé sur useGenericEntityDetails
- * Version améliorée pour bénéficier des corrections de stabilité du hook générique
+ * Hook optimisé pour les détails de concert
+ * Suit les directives de standardisation et utilise directement useGenericEntityDetails
  * 
  * @param {string} id - ID du concert
  * @param {object} locationParam - Objet location de React Router (optionnel)
  * @returns {object} - API du hook
  */
-const useConcertDetailsMigrated = (id, locationParam) => {
-  console.log(`[useConcertDetailsV2] init: id=${id}, location=${locationParam?.pathname || 'n/a'}`);
-  console.log("[useConcertDetailsMigrated] Hook appelé. ID:", id, "Type ID:", typeof id);
+const useConcertDetailsOptimized = (id, locationParam) => {
+  console.log(`[useConcertDetailsOptimized] init: id=${id}, location=${locationParam?.pathname || 'n/a'}`);
   
   const navigate = useNavigate();
   const locationData = useLocation();
   const location = locationParam || locationData;
   
   // États spécifiques au concert qui ne sont pas gérés par le hook générique
-  const [cacheKey, setCacheKey] = useState(getCacheKey(id));
+  const [cacheKey, setCacheKey] = useState(getCacheKey(id)); // Utilisé dans refreshConcert
   const [initialProgrammateurId, setInitialProgrammateurId] = useState(null);
   const [initialArtisteId, setInitialArtisteId] = useState(null);
   const [initialStructureId, setInitialStructureId] = useState(null);
@@ -40,7 +39,7 @@ const useConcertDetailsMigrated = (id, locationParam) => {
   
   // Hooks personnalisés spécifiques aux concerts
   const concertForms = useConcertFormsManagement(id);
-  const concertStatus = useConcertStatus();
+  const concertStatus = useConcertStatus(); // Gardé pour une utilisation future
   const concertAssociations = useConcertAssociations();
   
   // Configuration pour les entités liées
@@ -75,12 +74,8 @@ const useConcertDetailsMigrated = (id, locationParam) => {
     }
   ];
   
-  console.log("[useConcertDetailsMigrated] Configuration des entités liées:", relatedEntities);
-  
   // Fonction pour transformer les données du concert
   const transformConcertData = useCallback((data) => {
-    console.log("[useConcertDetailsMigrated] transformConcertData appelé avec:", data);
-    
     // Stocker les IDs initiaux pour la gestion des relations bidirectionnelles
     if (data.programmateurId) {
       setInitialProgrammateurId(data.programmateurId);
@@ -122,10 +117,31 @@ const useConcertDetailsMigrated = (id, locationParam) => {
     return value;
   }, []);
   
+  // Utilisation de useGenericEntityDetails avec les améliorations
+  const genericDetails = useGenericEntityDetails({
+    entityType: 'concert',
+    collectionName: 'concerts',
+    id,
+    initialMode: 'view',  // assurer mode consultation par défaut
+    relatedEntities,
+    autoLoadRelated: true, // Activer le chargement automatique des entités liées
+    transformData: transformConcertData,
+    validateFormFn: validateConcertForm,
+    formatValue: formatConcertValue,
+    checkDeletePermission: async () => true,
+    onSaveSuccess: null, // Sera défini ci-dessous
+    onDeleteSuccess: null, // Sera défini ci-dessous
+    navigate,
+    returnPath: '/concerts',
+    // Pas d'editPath pour éviter de forcer le mode édition
+    // Options avancées
+    useDeleteModal: true,
+    disableCache: false
+  });
+  
   // Callbacks pour les événements de sauvegarde et suppression
+  // Défini après l'initialisation de genericDetails pour pouvoir l'utiliser dans la dépendance
   const handleSaveSuccess = useCallback((data) => {
-    console.log("[useConcertDetailsMigrated] handleSaveSuccess appelé avec:", data);
-    
     // Mettre à jour les IDs initiaux pour la prochaine édition
     setInitialProgrammateurId(data.programmateurId || null);
     setInitialArtisteId(data.artisteId || null);
@@ -151,8 +167,6 @@ const useConcertDetailsMigrated = (id, locationParam) => {
   }, [id, concertForms]);
   
   const handleDeleteSuccess = useCallback(() => {
-    console.log("[useConcertDetailsMigrated] handleDeleteSuccess appelé");
-    
     // Notifier les autres composants
     try {
       const event = new CustomEvent('concertDeleted', { detail: { id } });
@@ -164,69 +178,106 @@ const useConcertDetailsMigrated = (id, locationParam) => {
     navigate('/concerts');
   }, [id, navigate]);
   
-  // Vérification de permission pour la suppression
-  const checkDeletePermission = useCallback(async () => {
-    // Ajouter des vérifications spécifiques aux concerts ici si nécessaire
-    return true;
-  }, []);
+  // Mettre à jour les callbacks dans genericDetails
+  useEffect(() => {
+    if (genericDetails) {
+      genericDetails.options = {
+        ...genericDetails.options, 
+        onSaveSuccess: handleSaveSuccess,
+        onDeleteSuccess: handleDeleteSuccess
+      };
+    }
+  }, [genericDetails, handleSaveSuccess, handleDeleteSuccess]);
   
-  // Utilisation de useGenericEntityDetails avec les améliorations
-  const genericDetails = useGenericEntityDetails({
-    entityType: 'concert',
-    collectionName: 'concerts',
-    id,
-    initialMode: 'view',  // assurer mode consultation par défaut
-    relatedEntities,
-    autoLoadRelated: true, // Activer le chargement automatique des entités liées
-    transformData: transformConcertData,
-    validateFormFn: validateConcertForm,
-    formatValue: formatConcertValue,
-    checkDeletePermission,
-    onSaveSuccess: handleSaveSuccess,
-    onDeleteSuccess: handleDeleteSuccess,
-    navigate,
-    returnPath: '/concerts',
-    // editPath non nécessaire ici pour éviter forçage du mode édition
-    // Options avancées
-    useDeleteModal: true,
-    // Utilisation de la nouvelle option pour gérer le cache
-    disableCache: false
-  });
-  
-  console.log('[useConcertDetailsV2] after useGenericEntityDetails:', {
-    loading: genericDetails.loading,
-    entity: genericDetails.entity,
-    error: genericDetails.error
-  });
-  console.log("[useConcertDetailsMigrated] État retourné par useGenericEntityDetails:", {
-    entité: genericDetails.entity,
-    chargement: genericDetails.loading,
-    erreur: genericDetails.error,
-    isEditing: genericDetails.isEditing,
-    id: genericDetails.id
-  });
+  // Fonction pour gérer les mises à jour des relations bidirectionnelles
+  const handleBidirectionalUpdates = useCallback(async () => {
+    const { entity, relatedData } = genericDetails || {};
+    
+    if (!entity || !genericDetails) return;
+    
+    try {
+      console.log("[useConcertDetailsOptimized] Démarrage des mises à jour bidirectionnelles");
+      
+      // Créer un tableau de promesses pour exécuter les mises à jour en parallèle
+      const updatePromises = [];
+      
+      // Mise à jour des relations bidirectionnelles
+      if (relatedData.programmateur?.id || initialProgrammateurId) {
+        updatePromises.push(
+          concertAssociations.updateProgrammateurAssociation(
+            id,
+            entity,
+            relatedData.programmateur?.id || null,
+            initialProgrammateurId,
+            relatedData.lieu
+          )
+        );
+      }
+      
+      if (relatedData.artiste?.id || initialArtisteId) {
+        updatePromises.push(
+          concertAssociations.updateArtisteAssociation(
+            id,
+            entity,
+            relatedData.artiste?.id || null,
+            initialArtisteId,
+            relatedData.lieu
+          )
+        );
+      }
+      
+      if (relatedData.structure?.id || initialStructureId) {
+        updatePromises.push(
+          concertAssociations.updateStructureAssociation(
+            id,
+            entity,
+            relatedData.structure?.id || null,
+            initialStructureId,
+            relatedData.lieu
+          )
+        );
+      }
+      
+      // Ajout de la gestion des relations bidirectionnelles pour les lieux
+      if (relatedData.lieu?.id || initialLieuId) {
+        updatePromises.push(
+          concertAssociations.updateLieuAssociation(
+            id, 
+            entity,
+            relatedData.lieu?.id || null,
+            initialLieuId
+          )
+        );
+      }
+      
+      // Attendre que toutes les mises à jour soient terminées
+      await Promise.all(updatePromises);
+      console.log("[useConcertDetailsOptimized] Mises à jour bidirectionnelles terminées avec succès");
+    } catch (error) {
+      console.error("[useConcertDetailsOptimized] Erreur lors des mises à jour bidirectionnelles:", error);
+      throw error; // Propager l'erreur pour la gestion en amont
+    }
+  }, [id, genericDetails, initialProgrammateurId, initialArtisteId, initialStructureId, initialLieuId, concertAssociations]);
   
   // Fonction pour récupérer les entités nécessaires aux relations bidirectionnelles
   const fetchRelatedEntities = useCallback(async () => {
-    if (!genericDetails.entity || !id) {
-      return false;
-    }
-    
-    const relatedData = genericDetails.relatedData || {};
-    const entityData = genericDetails.entity;
-    const results = {};
+    const { entity, relatedData } = genericDetails || {};
+    if (!entity || !genericDetails) return null;
+  
+    // Charger toutes les entités nécessaires en parallèle
     const promises = [];
-    
+    const results = {};
+  
     // Programmateur
     if (relatedData.programmateur?.id || initialProgrammateurId) {
-      const programmateurId = relatedData.programmateur?.id || initialProgrammateurId;
-      if (programmateurId) {
+      const progId = relatedData.programmateur?.id || initialProgrammateurId;
+      if (progId) {
         promises.push(
           (async () => {
             try {
-              const docRef = doc(db, 'programmateurs', programmateurId);
+              const docRef = doc(db, 'programmateurs', progId);
               const docSnap = await getDoc(docRef);
-              results.programmateur = docSnap.exists() ? { id: programmateurId, ...docSnap.data() } : null;
+              results.programmateur = docSnap.exists() ? { id: progId, ...docSnap.data() } : null;
             } catch (error) {
               console.error("Erreur lors du chargement du programmateur:", error);
               results.programmateur = null;
@@ -296,85 +347,11 @@ const useConcertDetailsMigrated = (id, locationParam) => {
     // Attendre que toutes les promesses se terminent
     await Promise.all(promises);
     return results;
-  }, [id, genericDetails, initialProgrammateurId, initialArtisteId, initialStructureId, initialLieuId]);
-  
-  // Fonction pour gérer les mises à jour des relations bidirectionnelles
-  const handleBidirectionalUpdates = useCallback(async () => {
-    // Définir explicitement entityData et relationData à partir de genericDetails
-    const entityData = genericDetails.entity;
-    const relationData = genericDetails.relatedData;
-    
-    if (!entityData || !id) return;
-    
-    try {
-      console.log("[useConcertDetailsMigrated] Démarrage des mises à jour bidirectionnelles");
-      
-      // Créer un tableau de promesses pour exécuter les mises à jour en parallèle
-      const updatePromises = [];
-      
-      // Mise à jour des relations bidirectionnelles pour le programmateur
-      if (relationData?.programmateur?.id || initialProgrammateurId) {
-        updatePromises.push(
-          concertAssociations.updateProgrammateurAssociation(
-            id,
-            entityData,
-            relationData?.programmateur?.id || null,
-            initialProgrammateurId,
-            relationData?.lieu
-          )
-        );
-      }
-      
-      // Mise à jour des relations bidirectionnelles pour l'artiste
-      if (relationData?.artiste?.id || initialArtisteId) {
-        updatePromises.push(
-          concertAssociations.updateArtisteAssociation(
-            id,
-            entityData,
-            relationData?.artiste?.id || null,
-            initialArtisteId,
-            relationData?.lieu
-          )
-        );
-      }
-      
-      // Mise à jour des relations bidirectionnelles pour la structure
-      if (relationData?.structure?.id || initialStructureId) {
-        updatePromises.push(
-          concertAssociations.updateStructureAssociation(
-            id,
-            entityData,
-            relationData?.structure?.id || null,
-            initialStructureId,
-            relationData?.lieu
-          )
-        );
-      }
-      
-      // Mise à jour des relations bidirectionnelles pour le lieu
-      if (relationData?.lieu?.id || initialLieuId) {
-        updatePromises.push(
-          concertAssociations.updateLieuAssociation(
-            id,
-            entityData,
-            relationData?.lieu?.id || null,
-            initialLieuId
-          )
-        );
-      }
-      
-      // Attendre que toutes les mises à jour soient terminées
-      await Promise.all(updatePromises);
-      console.log("[useConcertDetailsMigrated] Mises à jour bidirectionnelles terminées avec succès");
-    } catch (error) {
-      console.error("[useConcertDetailsMigrated] Erreur lors des mises à jour bidirectionnelles:", error);
-      throw error; // Propager l'erreur pour la gestion en amont
-    }
-  }, [id, genericDetails, initialProgrammateurId, initialArtisteId, initialStructureId, initialLieuId, concertAssociations]);
+  }, [genericDetails, initialProgrammateurId, initialArtisteId, initialStructureId, initialLieuId]);
   
   // Extension de handleSubmit pour gérer les relations bidirectionnelles
   const handleSubmitWithRelations = useCallback(async (e) => {
-    console.log("[useConcertDetailsMigrated] handleSubmitWithRelations appelé");
+    if (!genericDetails) return;
     
     if (e && e.preventDefault) e.preventDefault();
     
@@ -383,47 +360,38 @@ const useConcertDetailsMigrated = (id, locationParam) => {
     
     // Puis gérer les relations bidirectionnelles
     await handleBidirectionalUpdates();
-  }, [genericDetails.handleSubmit, handleBidirectionalUpdates]);
-
-  // Override toggleEditMode to navigate on entering edit
-  const wrappedToggleEditMode = useCallback(() => {
-    if (genericDetails.isEditing) {
-      genericDetails.toggleEditMode();
-    } else {
-      navigate(`/concerts/${id}/edit`);
-    }
-  }, [genericDetails, id, navigate]);
-
+  }, [genericDetails, handleBidirectionalUpdates]);
+  
   // Effet pour mettre à jour les relations bidirectionnelles au chargement initial
   useEffect(() => {
     // Vérifier que l'entité est chargée et que tous les hooks dépendants sont prêts
-    if (genericDetails.entity && !genericDetails.loading && concertAssociations) {
-      console.log("[useConcertDetailsMigrated] useEffect pour relations bidirectionnelles déclenché");
+    if (genericDetails && genericDetails.entity && !genericDetails.loading && concertAssociations) {
+      console.log("[useConcertDetailsOptimized] useEffect pour relations bidirectionnelles déclenché");
       
       // Créer une fonction asynchrone à l'intérieur de l'effet
       const updateBidirectionalRelations = async () => {
         try {
-          console.log("[useConcertDetailsMigrated] Démarrage de la mise à jour des relations bidirectionnelles");
+          console.log("[useConcertDetailsOptimized] Démarrage de la mise à jour des relations bidirectionnelles");
           // Attendre que toutes les entités soient chargées
           const entitiesLoaded = await fetchRelatedEntities();
-          console.log("[useConcertDetailsMigrated] Entités chargées pour les relations bidirectionnelles:", entitiesLoaded);
+          console.log("[useConcertDetailsOptimized] Entités chargées pour les relations bidirectionnelles:", entitiesLoaded);
           
           // Effectuer les mises à jour bidirectionnelles
           await handleBidirectionalUpdates();
-          console.log("[useConcertDetailsMigrated] Mise à jour des relations bidirectionnelles terminée avec succès");
+          console.log("[useConcertDetailsOptimized] Mise à jour des relations bidirectionnelles terminée avec succès");
         } catch (error) {
-          console.error("[useConcertDetailsMigrated] Erreur lors de la mise à jour des relations bidirectionnelles:", error);
+          console.error("[useConcertDetailsOptimized] Erreur lors de la mise à jour des relations bidirectionnelles:", error);
         }
       };
       
       // Exécuter la fonction asynchrone
       updateBidirectionalRelations();
     }
-  }, [genericDetails.entity, genericDetails.loading, handleBidirectionalUpdates, concertAssociations, fetchRelatedEntities]);
+  }, [genericDetails, handleBidirectionalUpdates, concertAssociations, fetchRelatedEntities]);
   
   // Fonction pour forcer le rafraîchissement des données
   const refreshConcert = useCallback(async () => {
-    console.log("[useConcertDetailsMigrated] refreshConcert appelé");
+    if (!genericDetails) return;
     
     // Mise à jour du cacheKey pour éviter la mise en cache
     setCacheKey(getCacheKey(id));
@@ -445,14 +413,14 @@ const useConcertDetailsMigrated = (id, locationParam) => {
     } catch (e) {
       console.warn('Impossible de déclencher l\'événement de rafraîchissement', e);
     }
-  }, [id, genericDetails.refresh, genericDetails.entity, concertForms]);
+  }, [id, genericDetails, concertForms]);
   
   // Fonction pour obtenir les informations sur le statut et les actions requises
   const getStatusInfo = useCallback(() => {
-    if (!genericDetails.entity) return { message: '', actionNeeded: false };
+    if (!genericDetails || !genericDetails.entity) return { message: '', actionNeeded: false };
     
     const isPastDate = isDatePassed(genericDetails.entity.date);
-    const { formData: formDataConcert, formDataStatus } = concertForms;
+    const { formData: formDataConcert, formDataStatus } = concertForms || {};
     
     switch (genericDetails.entity.statut) {
       case 'contact':
@@ -483,52 +451,83 @@ const useConcertDetailsMigrated = (id, locationParam) => {
       default:
         return { message: 'Statut non défini', actionNeeded: false };
     }
-  }, [genericDetails.entity, concertForms]);
+  }, [genericDetails, concertForms]);
   
   // Vérifier si on doit afficher le générateur de formulaire
   useEffect(() => {
-    if (location) {
+    if (location && concertForms && concertForms.setShowFormGenerator) {
       const queryParams = new URLSearchParams(location.search || '');
       const shouldOpenFormGenerator = queryParams.get('openFormGenerator') === 'true';
       if (shouldOpenFormGenerator) {
         concertForms.setShowFormGenerator(true);
       }
     }
-  }, [location, concertForms.setShowFormGenerator]);
+  }, [location, concertForms]);
 
-  const returnValues = {
+  // Log de debug pour vérifier que l'entité est correctement chargée
+  useEffect(() => {
+    if (genericDetails && genericDetails.entity) {
+      console.log("[useConcertDetailsOptimized] Entité chargée:", {
+        id: genericDetails.entity.id,
+        titre: genericDetails.entity.titre,
+        date: genericDetails.entity.date,
+        isLoading: genericDetails.loading,
+        isEditing: genericDetails.isEditing
+      });
+    } else if (!genericDetails?.loading) {
+      console.warn("[useConcertDetailsOptimized] Entité non disponible après chargement");
+    }
+  }, [genericDetails]);
+
+  // Fonction pour basculer entre les modes d'édition
+  const toggleEditMode = useCallback(() => {
+    if (!genericDetails) return;
+    
+    // Si nous sommes déjà en mode édition, utiliser le toggleEditMode du hook générique
+    if (genericDetails.isEditing) {
+      genericDetails.toggleEditMode();
+      return;
+    }
+    
+    // Si nous sommes en mode consultation, naviguer vers la page d'édition
+    console.log(`[useConcertDetailsOptimized] Redirection vers page d'édition pour concert ${id}`);
+    navigate(`/concerts/${id}/edit`);
+  }, [genericDetails, id, navigate]);
+  
+  return {
     // Données principales du hook générique
-    concert: genericDetails.entity,
-    lieu: genericDetails.relatedData.lieu,
-    programmateur: genericDetails.relatedData.programmateur,
-    artiste: genericDetails.relatedData.artiste,
-    structure: genericDetails.relatedData.structure,
-    loading: genericDetails.loading,
-    isSubmitting: genericDetails.isSubmitting,
-    error: genericDetails.error,
+    concert: genericDetails?.entity || null,
+    lieu: genericDetails?.relatedData?.lieu || null,
+    programmateur: genericDetails?.relatedData?.programmateur || null,
+    artiste: genericDetails?.relatedData?.artiste || null,
+    structure: genericDetails?.relatedData?.structure || null,
+    loading: genericDetails?.loading || genericDetails?.isLoading || false, // Pour compatibilité
+    isLoading: genericDetails?.loading || false, 
+    isSubmitting: genericDetails?.isSubmitting || false,
+    error: genericDetails?.error || null,
     
     // Données du formulaire
-    formState: genericDetails.formData,
-    isEditMode: genericDetails.isEditing,
+    formState: genericDetails?.formData || {},
+    isEditMode: genericDetails?.isEditing || false,
     
     // Données des formulaires spécifiques aux concerts
-    formData: concertForms.formData,
-    formDataStatus: concertForms.formDataStatus,
-    showFormGenerator: concertForms.showFormGenerator,
-    setShowFormGenerator: concertForms.setShowFormGenerator,
-    generatedFormLink: concertForms.generatedFormLink,
-    setGeneratedFormLink: concertForms.setGeneratedFormLink,
+    formData: concertForms?.formData || null,
+    formDataStatus: concertForms?.formDataStatus || null,
+    showFormGenerator: concertForms?.showFormGenerator || false,
+    setShowFormGenerator: concertForms?.setShowFormGenerator || (() => {}),
+    generatedFormLink: concertForms?.generatedFormLink || '',
+    setGeneratedFormLink: concertForms?.setGeneratedFormLink || (() => {}),
     
     // Fonctions de gestion génériques
-    handleChange: genericDetails.handleChange,
-    toggleEditMode: wrappedToggleEditMode,
-    handleDelete: genericDetails.handleDelete,
-    handleSubmit: handleSubmitWithRelations, // Version étendue avec gestion des relations
+    handleChange: genericDetails?.handleChange || (() => {}),
+    toggleEditMode,
+    handleDelete: genericDetails?.handleDelete || (() => {}),
+    handleSubmit: handleSubmitWithRelations,
     validateForm: validateConcertForm,
     
     // Fonctions spécifiques aux concerts
-    handleFormGenerated: concertForms.handleFormGenerated,
-    validateProgrammatorForm: concertForms.validateForm,
+    handleFormGenerated: concertForms?.handleFormGenerated || (() => {}),
+    validateProgrammatorForm: concertForms?.validateForm || (() => {}),
     refreshConcert,
     getStatusInfo,
     
@@ -539,47 +538,33 @@ const useConcertDetailsMigrated = (id, locationParam) => {
     isDatePassed,
     
     // Fonctions pour la gestion des entités liées
-    setLieu: (lieu) => genericDetails.setRelatedEntity('lieu', lieu),
-    setProgrammateur: (prog) => genericDetails.setRelatedEntity('programmateur', prog),
-    setArtiste: (artiste) => genericDetails.setRelatedEntity('artiste', artiste),
-    setStructure: (structure) => genericDetails.setRelatedEntity('structure', structure),
+    setLieu: (lieu) => genericDetails?.setRelatedEntity('lieu', lieu),
+    setProgrammateur: (prog) => genericDetails?.setRelatedEntity('programmateur', prog),
+    setArtiste: (artiste) => genericDetails?.setRelatedEntity('artiste', artiste),
+    setStructure: (structure) => genericDetails?.setRelatedEntity('structure', structure),
     
-    // Recherche d'entités (compatibilité avec l'ancien hook)
+    // Recherche d'entités (compatibilité avec les anciens hooks)
     lieuSearch: {
-      selectedEntity: genericDetails.relatedData.lieu,
-      setSelectedEntity: (lieu) => genericDetails.setRelatedEntity('lieu', lieu),
+      selectedEntity: genericDetails?.relatedData?.lieu || null,
+      setSelectedEntity: (lieu) => genericDetails?.setRelatedEntity('lieu', lieu),
       setSearchTerm: () => {} // Stub pour compatibilité
     },
     programmateurSearch: {
-      selectedEntity: genericDetails.relatedData.programmateur,
-      setSelectedEntity: (prog) => genericDetails.setRelatedEntity('programmateur', prog),
+      selectedEntity: genericDetails?.relatedData?.programmateur || null,
+      setSelectedEntity: (prog) => genericDetails?.setRelatedEntity('programmateur', prog),
       setSearchTerm: () => {} // Stub pour compatibilité
     },
     artisteSearch: {
-      selectedEntity: genericDetails.relatedData.artiste,
-      setSelectedEntity: (artiste) => genericDetails.setRelatedEntity('artiste', artiste),
+      selectedEntity: genericDetails?.relatedData?.artiste || null,
+      setSelectedEntity: (artiste) => genericDetails?.setRelatedEntity('artiste', artiste),
       setSearchTerm: () => {} // Stub pour compatibilité
     },
     structureSearch: {
-      selectedEntity: genericDetails.relatedData.structure,
-      setSelectedEntity: (structure) => genericDetails.setRelatedEntity('structure', structure),
+      selectedEntity: genericDetails?.relatedData?.structure || null,
+      setSelectedEntity: (structure) => genericDetails?.setRelatedEntity('structure', structure),
       setSearchTerm: () => {} // Stub pour compatibilité
     }
   };
-
-  console.log("[useConcertDetailsMigrated] Retourne: (résumé)", {
-    concert: returnValues.concert?.id,
-    isEditMode: returnValues.isEditMode,
-    loading: returnValues.loading,
-    relatedData: {
-      lieu: returnValues.lieu?.id,
-      programmateur: returnValues.programmateur?.id, 
-      artiste: returnValues.artiste?.id,
-      structure: returnValues.structure?.id
-    }
-  });
-  
-  return returnValues;
 };
 
-export default useConcertDetailsMigrated;
+export default useConcertDetailsOptimized;

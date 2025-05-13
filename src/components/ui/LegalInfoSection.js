@@ -2,6 +2,7 @@ import React from 'react';
 import { Form, Row, Col } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import styles from './LegalInfoSection.module.css';
+import Card from '@/components/ui/Card';
 
 /**
  * Composant générique pour afficher/éditer des informations légales
@@ -81,28 +82,27 @@ const LegalInfoSection = ({
     { value: 'collectivite', label: 'Collectivité territoriale' },
     { value: 'autre', label: 'Autre' }
   ];
+
+  // Contenu de la notification à afficher si nécessaire
+  const notificationContent = notificationVisible && (
+    <div className="alert alert-success mb-3" role="alert">
+      <i className="bi bi-check-circle me-2"></i>
+      {notificationText}
+    </div>
+  );
   
   return (
-    <div className={`${styles.legalInfoSection} ${className}`}>
-      {/* En-tête de section avec titre et icône */}
-      <div className={styles.sectionHeader}>
-        <div className={styles.headerTitle}>
-          <i className={`bi ${icon} ${styles.headerIcon}`}></i>
-          <h5 className="mb-0">{title}</h5>
-        </div>
-      </div>
-      
+    <Card
+      title={title}
+      icon={<i className={`bi ${icon}`}></i>}
+      className={`${styles.legalInfoSection} ${className}`}
+    >
       {/* Notification de succès */}
-      {notificationVisible && (
-        <div className="alert alert-success mb-3" role="alert">
-          <i className="bi bi-check-circle me-2"></i>
-          {notificationText}
-        </div>
-      )}
+      {notificationContent}
       
       <div className={styles.sectionContent}>
         {isEditing ? (
-          // Mode édition
+          // Mode édition - Formulaire
           <Form>
             <Row className="mb-3">
               <Col md={6}>
@@ -288,7 +288,7 @@ const LegalInfoSection = ({
             </Row>
           </Form>
         ) : (
-          // Mode visualisation
+          // Mode visualisation - Affichage des informations
           <div className={styles.infoGrid}>
             {getNestedValue(data, fieldMapping.companyName) && (
               <div className={styles.infoGroup}>
@@ -365,7 +365,7 @@ const LegalInfoSection = ({
           </div>
         )}
       </div>
-    </div>
+    </Card>
   );
 };
 

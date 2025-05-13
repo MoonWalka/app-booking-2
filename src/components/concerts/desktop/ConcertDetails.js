@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { Alert } from 'react-bootstrap';
+// Import des styles
 import styles from './ConcertDetails.module.css';
 
-// Import des hooks personnalisés - Modification pour utiliser la version V2
-import { useConcertDetailsV2 } from '@/hooks/concerts';
+// Import des hooks personnalisés - Utilisation de la version Optimized
+import { useConcertDetailsOptimized } from '@/hooks/concerts';
 
 // Import des composants
 import ConcertHeader from './ConcertHeader';
@@ -14,45 +14,37 @@ import ConcertOrganizerSection from './ConcertOrganizerSection';
 import ConcertArtistSection from './ConcertArtistSection';
 import ConcertStructureSection from './ConcertStructureSection';
 import DeleteConcertModal from './DeleteConcertModal';
-// import FormGenerator (removed, unused)
 
 const ConcertDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   
+  console.log("[🔍 ConcertDetails] RENDER #1 - id=" + id + ", pathname=" + location.pathname, { time: new Date().toLocaleTimeString() });
+  
   // État pour la confirmation de suppression
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   
-  // Utilisation du hook V2 qui est basé sur useGenericEntityDetails
+  // Utilisation du hook optimisé pour bénéficier des meilleures pratiques
+  // Nous n'utilisons que les propriétés dont nous avons besoin
   const {
-    // Données principales du hook (renommées pour garder la compatibilité)
-    entity: concert,
-    isLoading: loading,
+    // Données principales du hook
+    concert,
+    loading,
     isSubmitting,
     error,
     
     // Entités liées
-    relatedData: {
-      lieu,
-      programmateur,
-      artiste, 
-      structure
-    },
-    
-    // Données du formulaire
-    formData: formState,
-    isEditing: isEditMode,
+    lieu,
+    programmateur,
+    artiste, 
+    structure,
     
     // Données des formulaires spécifiques aux concerts
     formData,
     
     // Fonctions de gestion
-    handleChange,
-    toggleEditMode,
     handleDelete,
-    handleSubmit,
-    validateForm,
     
     // Fonctions spécifiques aux concerts
     handleFormGenerated,
@@ -70,10 +62,33 @@ const ConcertDetails = () => {
     artisteSearch,
     structureSearch
     
-  } = useConcertDetailsV2(id, location);
+  } = useConcertDetailsOptimized(id, location);
+
+  // Redirection vers création si l'ID n'existe pas, après chargement
+  useEffect(() => {
+    console.log('[🔍 ConcertDetails] redirect-check', { id, loading, concert, error });
+    // Redirection vers création uniquement si échec de fetch (404) ou entité absente, et pas un nouveau concert
+    if (
+      id !== 'nouveau' &&
+      !loading &&
+      (error?.status === 404 || !concert)
+    ) {
+      console.log('[🔍 ConcertDetails] REDIRECTION: données manquantes, navigation vers nouveau');
+      navigate('/concerts/nouveau', { replace: true });
+    }
+  }, [id, loading, concert, error, navigate]);
+
+  console.log("[🔍 ConcertDetails] APRÈS HOOK - loading=" + loading, {
+    hasConcert: !!concert,
+    hasError: !!error,
+    currentPath: location.pathname,
+    concertId: concert?.id
+  });
 
   // Fonction pour initialiser les valeurs de recherche
   useEffect(() => {
+    console.log("[🔍 ConcertDetails] useEffect [lieu, programmateur, artiste, structure]. Lieu:", lieu, "Prog:", programmateur, "Artiste:", artiste, "Structure:", structure);
+    
     if (lieu && !lieuSearch.selectedEntity) {
       lieuSearch.setSelectedEntity(lieu);
       lieuSearch.setSearchTerm && lieuSearch.setSearchTerm(lieu.nom);
@@ -95,42 +110,49 @@ const ConcertDetails = () => {
     }
   }, [lieu, programmateur, artiste, structure, lieuSearch, programmateurSearch, artisteSearch, structureSearch]);
 
-  // Fonction pour soumettre le formulaire
-  const handleFormSubmit = (e) => {
-    if (e) e.preventDefault();
-    handleSubmit(e);
-  };
-
-  if (loading) {
+  // Vérification complète des conditions de chargement
+  if (loading || !concert) {
     return (
       <div className="loading-container d-flex justify-content-center align-items-center" style={{ minHeight: '300px' }}>
         <div className="text-center">
           <div className="spinner-border text-primary" role="status">
             <span className="visually-hidden">Chargement du concert...</span>
           </div>
-          <p className="mt-2">Chargement du concert...</p>
+          <p className="mt-2">{loading ? 'Chargement du concert...' : 'Préparation des données...'}</p>
+          {!loading && !concert && (
+            <div className="alert alert-warning mt-3" role="alert">
+              Données non disponibles. <button className="btn btn-sm btn-outline-primary ms-2" onClick={() => navigate('/concerts')}>Retour à la liste</button>
+            </div>
+          )}
         </div>
       </div>
     );
   }
 
-  if (!concert) {
-    return <Alert variant="danger">Concert non trouvé</Alert>;
-  }
-
-  const statusInfo = getStatusInfo();
+  // Obtenir les informations de statut du concert seulement si concert existe
+  const statusInfo = concert ? getStatusInfo() : { message: '', actionNeeded: false };
 
   // Handle structure deletion
   const confirmDelete = () => {
-    handleDelete(concert);
+    if (concert) {
+      handleDelete(concert);
+    } else {
+      console.error("[ConcertDetails] Tentative de suppression d'un concert inexistant");
+      navigate('/concerts');
+    }
   };
 
+  console.log("[🔍 ConcertDetails] JUSTE AVANT LE RENDER FINAL - concert:", !!concert, "id:", concert?.id);
+  
   return (
     <div className={styles.concertDetailsContainer}>
       {/* En-tête avec titre et boutons d'action */}
       <ConcertHeader 
         concert={concert}
-        onEdit={() => navigate(`/concerts/${id}/edit`)}
+        onEdit={() => {
+          console.log("[🔍 ConcertDetails] Clic sur Modifier. Navigation vers /concerts/" + id + "/edit");
+          navigate(`/concerts/${id}/edit`);
+        }}
         onDelete={() => setShowDeleteConfirm(true)}
         isEditMode={false}
         isSubmitting={isSubmitting}
@@ -139,65 +161,65 @@ const ConcertDetails = () => {
         navigateToList={() => navigate('/concerts')}
       />
 
-      {/* Always display view mode */}
-      <>
-        {/* Informations générales */}
-        <ConcertGeneralInfo 
-          concert={concert}
-          isEditMode={isEditMode}
-          formatDate={formatDate}
-          formatMontant={formatMontant}
-          isDatePassed={isDatePassed}
-          statusInfo={statusInfo}
-          artiste={artiste}
-        />
-
-        {/* Lieu */}
-        <ConcertLocationSection 
-          concertId={id}
-          lieu={lieu}
-          isEditMode={isEditMode}
-          navigateToLieuDetails={(lieuId) => navigate(`/lieux/${lieuId}`)}
-        />
-
-        {/* Programmateur */}
-        <ConcertOrganizerSection 
-          concertId={id}
-          programmateur={programmateur}
-          isEditMode={isEditMode}
-          navigateToProgrammateurDetails={(progId) => navigate(`/programmateurs/${progId}`)}
-          formData={formData}
-          handleFormGenerated={handleFormGenerated}
-          copyToClipboard={copyToClipboard}
-          formatDate={formatDate}
-          concert={concert}
-        />
-
-        {/* Structure */}
-        <ConcertStructureSection 
-          concertId={id}
-          structure={structure}
-          isEditMode={isEditMode}
-          navigateToStructureDetails={(structureId) => navigate(`/structures/${structureId}`)}
-        />
-
-        {/* Artiste */}
-        {artiste && (
-          <ConcertArtistSection 
-            concertId={id}
+      {/* Contenu principal - avec vérification de sécurité */}
+      {concert && (
+        <>
+          {/* Informations générales */}
+          <ConcertGeneralInfo 
+            concert={concert}
+            isEditMode={false} /* Forcer le mode lecture seule */
+            formatDate={formatDate}
+            formatMontant={formatMontant}
+            isDatePassed={isDatePassed}
+            statusInfo={statusInfo}
             artiste={artiste}
-            isEditMode={isEditMode}
-            navigateToArtisteDetails={(artisteId) => navigate(`/artistes/${artisteId}`)}
           />
-        )}
-      </>
 
-      {/* FormGenerator block removed (unused after unification) */}
+          {/* Lieu */}
+          <ConcertLocationSection 
+            concertId={id}
+            lieu={lieu}
+            isEditMode={false} /* Forcer le mode lecture seule */
+            navigateToLieuDetails={(lieuId) => navigate(`/lieux/${lieuId}`)}
+          />
+
+          {/* Programmateur */}
+          <ConcertOrganizerSection 
+            concertId={id}
+            programmateur={programmateur}
+            isEditMode={false} /* Forcer le mode lecture seule */
+            navigateToProgrammateurDetails={(progId) => navigate(`/programmateurs/${progId}`)}
+            formData={formData}
+            handleFormGenerated={handleFormGenerated}
+            copyToClipboard={copyToClipboard}
+            formatDate={formatDate}
+            concert={concert}
+          />
+
+          {/* Structure */}
+          <ConcertStructureSection 
+            concertId={id}
+            structure={structure}
+            isEditMode={false} /* Forcer le mode lecture seule */
+            navigateToStructureDetails={(structureId) => navigate(`/structures/${structureId}`)}
+          />
+
+          {/* Artiste */}
+          {artiste && (
+            <ConcertArtistSection 
+              concertId={id}
+              artiste={artiste}
+              isEditMode={false} /* Forcer le mode lecture seule */
+              navigateToArtisteDetails={(artisteId) => navigate(`/artistes/${artisteId}`)}
+            />
+          )}
+        </>
+      )}
 
       {/* Modale de confirmation de suppression */}
       <DeleteConcertModal
         show={showDeleteConfirm}
-        concertNom={concert.titre || formatDate(concert.date)}
+        concertNom={concert?.titre || (concert ? formatDate(concert.date) : 'Concert')}
         onClose={() => setShowDeleteConfirm(false)}
         onConfirm={confirmDelete}
         isDeleting={isSubmitting}

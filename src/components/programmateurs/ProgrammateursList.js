@@ -1,10 +1,9 @@
 // src/components/programmateurs/ProgrammateursList.js
 import React from 'react';
 import { useResponsive } from '@/hooks/common';
-import { useNavigate } from 'react-router-dom'; 
-; // Utilisation du hook recommandé
+import { useNavigate } from 'react-router-dom';
 
-function ProgrammateursList({ programmateurs, ...props }) {
+function ProgrammateursList(props) {
   const responsive = useResponsive();
   const navigate = useNavigate();
   
@@ -17,11 +16,12 @@ function ProgrammateursList({ programmateurs, ...props }) {
     console.log('[TRACE] [ProgrammateursList] Navigation vers les détails du programmateur avec ID:', id);
     navigate(`/programmateurs/${id}`);
   }
-
-  // Ajout du log dans le rendu de la liste
-  console.log('[TRACE] [ProgrammateursList] Liste des programmateurs affichée:', programmateurs);
   
-  return <ResponsiveComponent {...props} onNavigateToDetails={handleNavigateToDetails} />;
+  // Passer les props au composant responsif
+  return <ResponsiveComponent 
+    {...props} 
+    onNavigateToDetails={handleNavigateToDetails} 
+  />;
 }
 
 export default ProgrammateursList;

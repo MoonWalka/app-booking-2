@@ -7,7 +7,8 @@
  * @returns {Object} - API de filtrage et recherche de lieux
  */
 import { useEffect } from 'react';
-import { useLieuxFiltersOptimized } from './useLieuxFiltersOptimized';
+// Correction: import de l'export par défaut
+import useLieuxFiltersOptimized from './useLieuxFiltersOptimized';
 import { debugLog } from '@/utils/logUtils';
 
 const useLieuxFilters = (lieux = []) => {

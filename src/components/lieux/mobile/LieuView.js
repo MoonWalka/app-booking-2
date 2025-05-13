@@ -4,7 +4,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Spinner from '@/components/common/Spinner';
 import Button from '@/components/ui/Button';
 import { toast } from 'react-toastify';
-import { useLieuDetailsV2 } from '@/hooks/lieux';
+// MIGRATION: Utilisation du hook optimisé au lieu du hook V2
+import { useLieuDetailsOptimized } from '@/hooks/lieux';
 
 // Import styles
 import styles from './LieuView.module.css';
@@ -17,16 +18,20 @@ const LieuView = () => {
   const { id: lieuId } = useParams();
   const navigate = useNavigate();
 
-  // Use custom hooks
+  // MIGRATION: Utilisation du hook optimisé
   const{
     lieu,
     loading,
     error,
     handleEdit,
     handleDeleteClick,
-    programmateur,
-    loadingProgrammateur
-  } = useLieuDetailsV2(lieuId);
+    relatedData,
+    loadingRelated
+  } = useLieuDetailsOptimized(lieuId);
+
+  // Récupérer le programmateur depuis les entités liées
+  const programmateur = relatedData?.programmateur;
+  const loadingProgrammateur = loadingRelated?.programmateur;
 
   // If loading, show a spinner
   if (loading) {

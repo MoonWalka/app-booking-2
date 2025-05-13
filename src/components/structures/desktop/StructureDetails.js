@@ -2,9 +2,8 @@ import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import styles from './StructureDetails.module.css';
 
-// Import custom hooks - Utilisation de la nouvelle version V2 du hook
-import { useStructureDetailsV2 } from '@/hooks/structures';
-import { useDeleteStructure } from '@/hooks/structures';
+// MIGRATION: Utilisation des hooks optimisés au lieu des versions V2/déprécié
+import { useStructureDetailsOptimized, useDeleteStructureOptimized } from '@/hooks/structures';
 
 // Import section components
 import StructureHeader from './sections/StructureHeader';
@@ -17,28 +16,31 @@ import StructureDeleteModal from './sections/StructureDeleteModal';
 
 /**
  * Component for displaying structure details
- * Refactorisé pour utiliser le hook générique via useStructureDetailsV2
+ * Refactorisé pour utiliser le hook optimisé
  */
 const StructureDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   
-  // Utilisation du hook migré V2 au lieu du hook déprécié
+  // MIGRATION: Utilisation du hook optimisé
   const {
-    entity: structure,  // Renommé entity en structure pour compatibilité
-    isLoading: loading, // Renommé isLoading en loading pour compatibilité
+    structure,
+    loading,
     error,
-    relatedData: { programmateurs = [] }, // Extraction des données liées
-    loadingRelated: { programmateurs: loadingProgrammateurs = false }, // État de chargement des données liées
+    programmateurs,
+    loadingProgrammateurs,
     formatValue
-  } = useStructureDetailsV2(id);
+  } = useStructureDetailsOptimized(id);
   
   const {
+    deleting,
     showDeleteModal,
     setShowDeleteModal,
-    deleting,
     handleDelete
-  } = useDeleteStructure();
+  } = useDeleteStructureOptimized(() => {
+    // Callback après suppression réussie
+    navigate('/structures');
+  });
 
   // Loading state
   if (loading) {

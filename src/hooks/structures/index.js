@@ -144,9 +144,11 @@ export { default as useStructureDetailsV2 } from './useStructureDetailsMigrated'
 export { default as useStructureFormV2 } from './useStructureFormMigrated';
 
 /**
- * @recommended APPROCHE RECOMMANDÉE - Version optimisée du hook pour les formulaires de structures
+ * @recommended APPROCHE RECOMMANDÉE - Versions optimisées des hooks pour les structures
  * utilisant directement les hooks génériques.
- * Cette version est conforme au plan de dépréciation qui prévoit la suppression 
+ * Ces versions sont conformes au plan de dépréciation qui prévoit la suppression 
  * des hooks spécifiques d'ici novembre 2025.
  */
 export { default as useStructureFormOptimized } from './useStructureFormOptimized';
+export { default as useStructureDetailsOptimized } from './useStructureDetailsOptimized';
+export { default as useDeleteStructureOptimized } from './useDeleteStructureOptimized';

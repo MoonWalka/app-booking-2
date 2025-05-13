@@ -1,7 +1,7 @@
 // src/hooks/programmateurs/index.js
 // Re-export hooks specific to programmateurs
 export { default as useAddressSearch } from './useAddressSearch';
-export { default as useProgrammateurDetails } from './useProgrammateurDetailsMigrated';
+export { default as useProgrammateurDetails } from './useProgrammateurDetails';
 export { default as useProgrammateurSearch } from './useProgrammateurSearch';
 
 // Exporter les hooks migrés avec un nom explicite (pour la transition progressive)
@@ -24,12 +24,15 @@ export { default as useProgrammateurSearchV2 } from './useProgrammateurSearchMig
 export { default as useProgrammateurForm } from './useProgrammateurForm';
 
 /**
- * @recommended APPROCHE RECOMMANDÉE - Version optimisée du hook pour les formulaires de programmateurs
+ * @recommended APPROCHE RECOMMANDÉE - Versions optimisées des hooks pour les programmateurs
  * utilisant directement les hooks génériques.
- * Cette version est conforme au plan de dépréciation qui prévoit la suppression 
+ * Ces versions sont conformes au plan de dépréciation qui prévoit la suppression 
  * des hooks spécifiques d'ici novembre 2025.
  */
 export { default as useProgrammateurFormOptimized } from './useProgrammateurFormOptimized';
+export { default as useProgrammateurDetailsOptimized } from './useProgrammateurDetailsOptimized';
+export { default as useProgrammateurSearchOptimized } from './useProgrammateurSearchOptimized';
+export { default as useDeleteProgrammateurOptimized } from './useDeleteProgrammateurOptimized';
 
 // Exports des autres hooks spécifiques aux programmateurs
 export { default as useAdresseValidation } from './useAdresseValidation';

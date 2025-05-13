@@ -1,189 +1,143 @@
-/**
- * Hook optimisé pour les filtres et la recherche de lieux
- * basé sur useGenericEntityList
- * 
- * Cette implémentation suit l'approche RECOMMANDÉE pour les nouveaux développements
- * en utilisant directement les hooks génériques.
- */
-import { useState, useEffect, useCallback, useMemo } from 'react';
+// src/hooks/lieux/useLieuxFiltersOptimized.js
+import { useState, useMemo, useCallback } from 'react';
 import { useGenericEntityList } from '@/hooks/common';
 
 /**
- * Hook optimisé pour le filtrage et la recherche de lieux
+ * Hook optimisé pour la gestion des filtres et de la recherche de lieux
  * 
- * @param {Object} options - Options de configuration
- * @param {number} [options.pageSize=50] - Nombre de lieux par page
- * @param {string} [options.initialSortField='nom'] - Champ de tri initial
- * @param {string} [options.initialSortDirection='asc'] - Direction de tri initiale
- * @returns {Object} API pour le filtrage et la recherche de lieux
+ * Version améliorée avec une API plus directe et une meilleure performance
+ * 
+ * @param {Array} lieux - Liste de lieux préchargés (optionnel)
+ * @returns {Object} API de filtrage et recherche de lieux
  */
-export const useLieuxFiltersOptimized = ({
-  pageSize = 50,
-  initialSortField = 'nom',
-  initialSortDirection = 'asc'
-} = {}) => {
-  // États pour les filtres spécifiques aux lieux
-  const [filterType, setFilterType] = useState('tous');
-  const [filterRegion, setFilterRegion] = useState('toutes');
-  const [filterVille, setFilterVille] = useState('toutes');
-  const [types, setTypes] = useState(['tous']);
-  const [regions, setRegions] = useState(['toutes']);
-  const [villes, setVilles] = useState(['toutes']);
+const useLieuxFiltersOptimized = (lieux = []) => {
+  // Options de tri disponibles
+  const [sortOption, setSortOption] = useState('nomAsc');
+
+  // Configuration du hook générique
+  const filterConfig = {
+    type: { type: 'equals' },
+    region: { type: 'equals' },
+    ville: { type: 'equals' },
+    actif: { type: 'equals' }
+  };
   
-  // Utilisation du hook générique pour les listes
-  const entityList = useGenericEntityList({
+  // Utiliser useGenericEntityList avec la bonne configuration
+  const {
+    entities: filteredLieux,
+    loading,
+    error,
+    search: searchTerm,
+    setSearch: setSearchTerm,
+    filters,
+    applyFilter,
+    removeFilter,
+    resetFilters: clearAllFilters,
+    refresh
+  } = useGenericEntityList({
+    // Configuration de base
     collectionName: 'lieux',
-    pageSize,
-    sortByField: initialSortField,
-    sortDirection: initialSortDirection,
-    // Transformation des données pour ajouter des champs utiles
-    transformData: (data) => ({
-      ...data,
-      // Ajouter des champs normalisés pour les filtres
-      region: data.region || 'Non spécifiée',
-      type: data.type || 'Non spécifié',
-      // S'assurer que les propriétés essentielles existent
-      ville: data.ville || 'Non spécifiée',
-      // Formater l'adresse complète pour l'affichage
-      adresseComplete: data.adresse ? 
-        `${data.adresse}, ${data.codePostal || ''} ${data.ville || ''}, ${data.pays || 'France'}` : 
-        'Adresse non spécifiée'
-    })
+    initialItems: lieux,
+    paginationMode: lieux.length > 0 ? 'client' : 'server',
+    
+    // Configuration de recherche et filtrage
+    filterConfig,
+    searchFields: ['nom', 'ville', 'adresse', 'codePostal'],
+    
+    // Configuration du tri initiale
+    initialSortField: 'nom',
+    initialSortDirection: 'asc',
+    
+    // Options avancées
+    transformItem: (lieu) => ({
+      ...lieu,
+      displayLabel: lieu.nom ? `${lieu.nom} - ${lieu.ville || 'Ville non spécifiée'}` : 'Lieu sans nom',
+    }),
+    cacheResults: false, // Désactiver le cache pour les performances
   });
-  
-  // Extraire les valeurs uniques pour les options de filtres
-  useEffect(() => {
-    if (entityList.entities.length > 0) {
-      // Extraire les types uniques
-      const uniqueTypes = ['tous', ...new Set(
-        entityList.entities
-          .filter(lieu => lieu.type)
-          .map(lieu => lieu.type)
-      )];
-      setTypes(uniqueTypes);
-      
-      // Extraire les régions uniques
-      const uniqueRegions = ['toutes', ...new Set(
-        entityList.entities
-          .filter(lieu => lieu.region)
-          .map(lieu => lieu.region)
-      )];
-      setRegions(uniqueRegions);
-      
-      // Extraire les villes uniques
-      const uniqueVilles = ['toutes', ...new Set(
-        entityList.entities
-          .filter(lieu => lieu.ville)
-          .map(lieu => lieu.ville)
-      )];
-      setVilles(uniqueVilles);
-    }
-  }, [entityList.entities]);
-  
-  // Appliquer les filtres via le hook générique
-  useEffect(() => {
-    // Réinitialiser les filtres existants
-    entityList.filters.forEach(filter => {
-      entityList.removeFilter(filter.field);
-    });
+
+  // Gestion du tri des lieux
+  const sortedLieux = useMemo(() => {
+    if (!filteredLieux || filteredLieux.length === 0) return [];
     
-    // Ajouter le filtre de type si nécessaire
-    if (filterType !== 'tous') {
-      entityList.applyFilter({
-        field: 'type',
-        operator: '==',
-        value: filterType
-      });
-    }
+    const sorted = [...filteredLieux];
     
-    // Ajouter le filtre de région si nécessaire
-    if (filterRegion !== 'toutes') {
-      entityList.applyFilter({
-        field: 'region',
-        operator: '==',
-        value: filterRegion
-      });
+    switch (sortOption) {
+      case 'nomAsc':
+        return sorted.sort((a, b) => (a.nom || '').localeCompare(b.nom || ''));
+      case 'nomDesc':
+        return sorted.sort((a, b) => (b.nom || '').localeCompare(a.nom || ''));
+      case 'villeAsc':
+        return sorted.sort((a, b) => (a.ville || '').localeCompare(b.ville || ''));
+      case 'villeDesc':
+        return sorted.sort((a, b) => (b.ville || '').localeCompare(a.ville || ''));
+      case 'capaciteAsc':
+        return sorted.sort((a, b) => ((a.capacite || 0) - (b.capacite || 0)));
+      case 'capaciteDesc':
+        return sorted.sort((a, b) => ((b.capacite || 0) - (a.capacite || 0)));
+      case 'dateCreationAsc':
+        return sorted.sort((a, b) => (a.createdAt?.toDate?.() || 0) - (b.createdAt?.toDate?.() || 0));
+      case 'dateCreationDesc':
+        return sorted.sort((a, b) => (b.createdAt?.toDate?.() || 0) - (a.createdAt?.toDate?.() || 0));
+      default:
+        return sorted;
     }
-    
-    // Ajouter le filtre de ville si nécessaire
-    if (filterVille !== 'toutes') {
-      entityList.applyFilter({
-        field: 'ville',
-        operator: '==',
-        value: filterVille
-      });
-    }
-  }, [filterType, filterRegion, filterVille, entityList.applyFilter, entityList.removeFilter]);
+  }, [filteredLieux, sortOption]);
+
+  // Extraction du filtre par type actuel
+  const filterType = useMemo(() => {
+    const typeFilter = filters.find(f => f.field === 'type');
+    return typeFilter ? typeFilter.value : 'tous';
+  }, [filters]);
   
-  // Réinitialiser tous les filtres
+  // Méthode pour définir le filtre par type
+  const setFilterType = useCallback((type) => {
+    if (type === 'tous') {
+      removeFilter('type');
+    } else {
+      applyFilter({ field: 'type', operator: '==', value: type });
+    }
+  }, [applyFilter, removeFilter]);
+
+  // Extraction des options de filtre disponibles
+  const types = useMemo(() => {
+    if (!lieux || !Array.isArray(lieux)) return ['tous'];
+    
+    const uniqueTypes = [...new Set(lieux
+      .map(lieu => lieu?.type)
+      .filter(Boolean))];
+    return ['tous', ...uniqueTypes];
+  }, [lieux]);
+
+  // Fonction de réinitialisation complète
   const resetFilters = useCallback(() => {
-    setFilterType('tous');
-    setFilterRegion('toutes');
-    setFilterVille('toutes');
-    entityList.setSearch('');
-    // Les filtres seront supprimés via l'effet ci-dessus
-  }, [entityList]);
-  
-  // Préparer les options de tri
-  const sortOptions = useMemo(() => [
-    { value: 'nom_asc', label: 'Nom (A-Z)' },
-    { value: 'nom_desc', label: 'Nom (Z-A)' },
-    { value: 'ville_asc', label: 'Ville (A-Z)' },
-    { value: 'ville_desc', label: 'Ville (Z-A)' },
-    { value: 'capacite_asc', label: 'Capacité (croissante)' },
-    { value: 'capacite_desc', label: 'Capacité (décroissante)' }
-  ], []);
-  
-  // État pour l'option de tri actuelle
-  const [sortOption, setSortOptionInternal] = useState(`${initialSortField}_${initialSortDirection}`);
-  
-  // Gérer le changement d'option de tri
-  const setSortOption = useCallback((option) => {
-    setSortOptionInternal(option);
-    const [field, direction] = option.split('_');
-    entityList.setSorting(field, direction);
-  }, [entityList]);
+    clearAllFilters();
+    setSearchTerm('');
+    setSortOption('nomAsc');
+  }, [clearAllFilters, setSearchTerm]);
 
   return {
-    // Renommer entities en lieux pour une meilleure DX
-    lieux: entityList.entities,
-    filteredLieux: entityList.entities, // Pour compatibilité
+    // Données
+    filteredLieux: sortedLieux,
+    loading,
+    error,
     
-    // Propriétés du hook générique
-    loading: entityList.loading,
-    error: entityList.error,
-    refresh: entityList.refresh,
-    loadMore: entityList.loadMore,
-    hasMore: entityList.hasMore,
+    // Recherche
+    searchTerm,
+    setSearchTerm,
     
-    // Filtres spécifiques aux lieux
+    // Filtres
     filterType,
     setFilterType,
-    filterRegion,
-    setFilterRegion,
-    filterVille,
-    setFilterVille,
-    
-    // Listes d'options pour les filtres
     types,
-    regions,
-    villes,
     
-    // Recherche (provenant du hook générique)
-    searchTerm: entityList.search,
-    setSearchTerm: entityList.setSearch,
-    
-    // Options de tri
+    // Tri
     sortOption,
     setSortOption,
-    sortOptions,
     
     // Actions
     resetFilters,
-    
-    // États dérivés
-    isEmpty: entityList.isEmpty,
-    isFiltered: filterType !== 'tous' || filterRegion !== 'toutes' || filterVille !== 'toutes' || entityList.search !== '',
+    refresh
   };
 };
 

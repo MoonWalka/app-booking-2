@@ -5,7 +5,8 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Spinner from '@/components/common/Spinner';
 import Button from '@/components/ui/Button';
-import { useLieuDetailsV2 } from '@/hooks/lieux';
+// MIGRATION: Utilisation du hook optimisé au lieu du hook V2
+import { useLieuDetailsOptimized } from '@/hooks/lieux';
 
 // Import section components
 import { LieuHeader } from './sections/LieuHeader';
@@ -29,7 +30,7 @@ const LieuView = () => {
   const { id: lieuId } = useParams();
   const navigate = useNavigate();
 
-  // Use custom hooks
+  // MIGRATION: Utilisation du hook optimisé
   const{
     lieu,
     loading,
@@ -37,14 +38,20 @@ const LieuView = () => {
     isEditing,
     isDeleting,
     showDeleteModal,
-    hasAssociatedConcerts,
+    relatedData,
+    loadingRelated,
     handleEdit,
     handleDeleteClick,
     handleCloseDeleteModal,
-    handleConfirmDelete,
-    programmateur,
-    loadingProgrammateur
-  } = useLieuDetailsV2(lieuId);
+    handleConfirmDelete
+  } = useLieuDetailsOptimized(lieuId);
+
+  // Récupérer le programmateur depuis les entités liées
+  const programmateur = relatedData?.programmateur;
+  const loadingProgrammateur = loadingRelated?.programmateur;
+
+  // Information sur les concerts associés (à implémenter dans le hook si nécessaire)
+  const hasAssociatedConcerts = lieu?.concerts?.length > 0 || false;
 
   // If loading, show a spinner
   if (loading) {

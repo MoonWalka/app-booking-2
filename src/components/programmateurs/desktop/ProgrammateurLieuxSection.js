@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from './ProgrammateurLieuxSection.module.css';
-import { useLieuSearchV2 } from '@/hooks/lieux';
+// MIGRATION: Utilisation du hook optimisé au lieu du hook V2
+import { useLieuSearchOptimized } from '@/hooks/lieux';
 
 const ProgrammateurLieuxSection = ({ programmateur, isEditing }) => {
   const {
@@ -14,7 +15,7 @@ const ProgrammateurLieuxSection = ({ programmateur, isEditing }) => {
     handleInputChange,
     handleResultClick,
     handleCreateLieu
-  } = useLieuSearchV2({
+  } = useLieuSearchOptimized({
     // Configuration du hook pour la recherche de lieux
     maxResults: 10,
     includeDetails: true,

@@ -5,7 +5,6 @@ import Spinner from '@/components/common/Spinner';
 import ErrorDisplay from '@/components/common/ErrorDisplay';
 import NotFound from '@/components/common/NotFound';
 import ProgrammateurView from '@/components/programmateurs/desktop/ProgrammateurView';
-import { useDeleteProgrammateur } from '@/hooks/programmateurs';
 import { useProgrammateurDetails } from '@/hooks/programmateurs';
 
 // Log après imports (pour respecter import/first)
@@ -14,11 +13,22 @@ console.log('[TEST-TRACE-UNIQUE][ProgrammateurDetails] Ce fichier est bien exéc
 
 /**
  * Composant conteneur pour les détails d'un programmateur
- * Version simplifiée avec structure optimisée et logs réduits
  */
 export default function ProgrammateurDetails() {
   const { id } = useParams();
-  const { programmateur, structure, loading, error, handleDelete, formatValue } = useProgrammateurDetails(id);
+  const {
+    programmateur,
+    structure,
+    loading,
+    error,
+    handleDelete,
+    formatValue,
+    lieux,
+    concerts,
+    loadingStructure,
+    loadingLieux,
+    loadingConcerts
+  } = useProgrammateurDetails(id);
 
   // Compteur de montages pour tracer le cycle de vie
   React.useEffect(() => {
@@ -35,12 +45,18 @@ export default function ProgrammateurDetails() {
 
   if (loading) return <Spinner />;
   if (error) return <ErrorDisplay error={error} />;
+  if (!programmateur) return <NotFound message="Programmateur non trouvé" />;
 
   return (
     <ProgrammateurView
       programmateur={programmateur}
       structure={structure}
+      lieux={lieux}
+      concerts={concerts}
       loading={loading}
+      loadingStructure={loadingStructure}
+      loadingLieux={loadingLieux}
+      loadingConcerts={loadingConcerts}
       error={error}
       handleDelete={handleDelete}
       formatValue={formatValue}

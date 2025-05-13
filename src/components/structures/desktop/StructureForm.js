@@ -1,7 +1,8 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { Form, Alert } from 'react-bootstrap';
-import { useStructureForm, useStructureValidation } from '@/hooks/structures';
+// MIGRATION: Utilisation du hook optimisé au lieu de l'ancien hook
+import { useStructureFormOptimized, useStructureValidation } from '@/hooks/structures';
 import styles from './StructureForm.module.css';
 
 // Import modular section components
@@ -20,7 +21,7 @@ import StructureFormActions from './sections/StructureFormActions';
 const StructureForm = () => {
   const { id } = useParams();
   
-  // Use custom hooks for form state and validation
+  // MIGRATION: Utilisation du hook optimisé
   const {
     isEditMode,
     loading,
@@ -31,7 +32,7 @@ const StructureForm = () => {
     handleChange,
     handleSubmit,
     handleCancel
-  } = useStructureForm(id);
+  } = useStructureFormOptimized(id);
 
   // Use validation hook
   const { errors } = useStructureValidation(formData);

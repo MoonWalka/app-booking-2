@@ -6,10 +6,7 @@ import FormGenerator from '@/components/forms/FormGenerator';
 import styles from './ConcertView.module.css';
 
 // Import des hooks personnalisés
-import { 
-  useConcertDetailsV2,
-  useConcertStatus 
-} from '@/hooks/concerts';
+import { useConcertStatus } from '@/hooks/concerts'; // conserver uniquement pour status si nécessaire
 
 // Import des composants
 import ConcertHeader from './ConcertHeader';
@@ -35,10 +32,7 @@ const ConcertView = ({ id: propId, detailsHook }) => {
   // État pour la confirmation de suppression
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   
-  // Toujours appeler les hooks inconditionnellement, même si on n'utilisera pas le résultat
-  const localHook = useConcertDetailsV2(id, location);
-  
-  // Utiliser le hook transmis par le parent s'il existe, sinon utiliser le hook local
+  // Utiliser uniquement le hook optimisé passé en prop
   const {
     concert,
     lieu,
@@ -60,11 +54,11 @@ const ConcertView = ({ id: propId, detailsHook }) => {
     formatMontant,
     isDatePassed,
     getStatusInfo,
-    handleFormGenerated
-  } = detailsHook || localHook;
-  
-  // Utiliser directement le hook de statut pour éviter la duplication de code
-  const { getStatusInfo: getStatusFromHook } = useConcertStatus();
+    handleFormGenerated,
+    isEditMode
+  } = detailsHook;
+
+  // Optionnel : on peut utiliser detailsHook.getStatusInfo, sinon fallback
 
   if (loading) {
     return (
@@ -84,7 +78,7 @@ const ConcertView = ({ id: propId, detailsHook }) => {
   }
 
   // Utiliser soit getStatusInfo du hook useConcertDetails ou du hook useConcertStatus
-  const statusInfo = getStatusInfo ? getStatusInfo() : getStatusFromHook(concert.statut, concert, formData);
+  const statusInfo = getStatusInfo();
 
   return (
     <div className={styles.concertViewContainer || 'concert-view-container'}>
@@ -93,7 +87,7 @@ const ConcertView = ({ id: propId, detailsHook }) => {
         concert={concert}
         onEdit={toggleEditMode}
         onDelete={() => setShowDeleteConfirm(true)}
-        isEditMode={false}
+        isEditMode={isEditMode} // remplacer false par isEditMode
         formatDate={formatDate}
         navigateToList={() => navigate('/concerts')}
       />
@@ -103,7 +97,7 @@ const ConcertView = ({ id: propId, detailsHook }) => {
         {/* Informations générales */}
         <ConcertGeneralInfo 
           concert={concert}
-          isEditMode={false}
+          isEditMode={isEditMode} // remplacer false
           formatDate={formatDate}
           formatMontant={formatMontant}
           isDatePassed={isDatePassed}
@@ -116,7 +110,7 @@ const ConcertView = ({ id: propId, detailsHook }) => {
         <ConcertLocationSection 
           concertId={id}
           lieu={lieu}
-          isEditMode={false}
+          isEditMode={isEditMode} // remplacer false
           navigateToLieuDetails={(lieuId) => navigate(`/lieux/${lieuId}`)}
         />
 
@@ -124,7 +118,7 @@ const ConcertView = ({ id: propId, detailsHook }) => {
         <ConcertOrganizerSection 
           concertId={id}
           programmateur={programmateur}
-          isEditMode={false}
+          isEditMode={isEditMode} // remplacer false
           navigateToProgrammateurDetails={(progId) => navigate(`/programmateurs/${progId}`)}
           formData={formData}
           showFormGenerator={showFormGenerator}
@@ -141,7 +135,7 @@ const ConcertView = ({ id: propId, detailsHook }) => {
         <ConcertStructureSection 
           concertId={id}
           structure={structure}
-          isEditMode={false}
+          isEditMode={isEditMode} // remplacer false
           navigateToStructureDetails={(structureId) => navigate(`/structures/${structureId}`)}
         />
 
@@ -150,7 +144,7 @@ const ConcertView = ({ id: propId, detailsHook }) => {
           <ConcertArtistSection 
             concertId={id}
             artiste={artiste}
-            isEditMode={false}
+            isEditMode={isEditMode} // remplacer false
             navigateToArtisteDetails={(artisteId) => navigate(`/artistes/${artisteId}`)}
           />
         )}

@@ -16,9 +16,8 @@ import styles from './ProgrammateurDetails.module.css';
  * Composant d'affichage des détails d'un programmateur - Version Desktop refactorisée
  * Structure en cartes tout en conservant les fonctionnalités originales
  */
-const ProgrammateurView = ({ id: propId, ...props }) => {
+const ProgrammateurView = ({ id: propId }) => {
   console.log('[TRACE-UNIQUE][ProgrammateurView][desktop] Ce composant est exécuté !');
-  console.log('[DEBUG][ProgrammateurView-desktop] props:', props);
   // Utiliser l'ID passé en prop s'il existe, sinon utiliser l'ID de l'URL
   const { id: urlId } = useParams();
   const id = propId || urlId;

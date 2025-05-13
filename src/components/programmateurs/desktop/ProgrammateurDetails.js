@@ -29,8 +29,6 @@ const ProgrammateurDetails = () => {
     formatValue,
   } = useProgrammateurDetails(id);
   
-  console.log('[DEBUG][ProgrammateurDetails-desktop] State:', { programmateur, structure, loading, error, isEditing, formData });
-
   if (loading) {
     return <Spinner message="Chargement du programmateur..." contentOnly={true} />;
   }
@@ -40,7 +38,6 @@ const ProgrammateurDetails = () => {
   }
   
   if (!programmateur) {
-    console.warn('[WARN][ProgrammateurDetails-desktop] programmateur est undefined');
     return <ErrorMessage message="Programmateur introuvable" />;
   }
   

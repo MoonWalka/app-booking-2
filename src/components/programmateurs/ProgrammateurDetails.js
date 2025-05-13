@@ -18,7 +18,6 @@ console.log('[TEST-TRACE-UNIQUE][ProgrammateurDetails] Ce fichier est bien exéc
  */
 export default function ProgrammateurDetails() {
   const { id } = useParams();
-  console.log('[DEBUG][ProgrammateurDetails] ID reçu:', id);
   const { programmateur, structure, loading, error, handleDelete, formatValue } = useProgrammateurDetails(id);
 
   // Compteur de montages pour tracer le cycle de vie
@@ -32,14 +31,19 @@ export default function ProgrammateurDetails() {
   console.log('[TRACE-UNIQUE][ProgrammateurDetails] Entrée dans la fonction composant');
 
   // Log d'état pour diagnostic visuel
-  console.log('[DEBUG][ProgrammateurDetails] State:', { loading, error, programmateur, structure });
+  console.log('[DEBUG][ProgrammateurDetails] State:', { loading, error, programmateur });
 
   if (loading) return <Spinner />;
   if (error) return <ErrorDisplay error={error} />;
 
   return (
     <ProgrammateurView
-      {...{ programmateur, structure, loading, error, handleDelete, formatValue }}
+      programmateur={programmateur}
+      structure={structure}
+      loading={loading}
+      error={error}
+      handleDelete={handleDelete}
+      formatValue={formatValue}
     />
   );
 }

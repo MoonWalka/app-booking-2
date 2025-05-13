@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './ArtisteSearchSection.module.css';
 import SearchDropdown from './SearchDropdown';
 import SelectedEntityCard from './SelectedEntityCard';
+import Card from '@/components/ui/Card';
 
 /**
  * ArtisteSearchSection - Section de recherche et sélection d'artiste
@@ -31,67 +32,62 @@ const ArtisteSearchSection = ({
   handleCreateArtiste
 }) => {
   return (
-    <div className={styles.formCard}>
-      <div className={styles.cardHeader}>
-        <div className={styles.cardIcon}>
-          <i className="bi bi-music-note-beamed"></i>
-        </div>
-        <h3 className={styles.cardTitle}>Artiste</h3>
+    <Card
+      title="Artiste"
+      icon={<i className="bi bi-music-note-beamed"></i>}
+      className={styles.artisteSearchSection}
+    >
+      <div className={styles.searchContainer} ref={artisteDropdownRef}>
+        {!selectedArtiste ? (
+          <>
+            <label className={styles.formLabel}>Rechercher un artiste</label>
+            <SearchDropdown
+              searchTerm={artisteSearchTerm}
+              setSearchTerm={setArtisteSearchTerm}
+              results={artisteResults}
+              showResults={showArtisteResults}
+              isSearching={isSearchingArtistes}
+              placeholder="Rechercher un artiste par nom..."
+              onSelect={handleSelectArtiste}
+              onCreate={() => handleCreateArtiste(artisteSearchTerm, handleSelectArtiste)}
+              createButtonText="Nouvel artiste"
+              emptyResultsText="Aucun artiste trouvé"
+              entityType="artiste"
+              onFocus={() => artisteSearchTerm.length >= 2 && !showArtisteResults && setArtisteSearchTerm(artisteSearchTerm)}
+            />
+            <small className={styles.formHelpText}>
+              Tapez au moins 2 caractères pour rechercher un artiste par nom.
+            </small>
+          </>
+        ) : (
+          <>
+            <label className={styles.formLabel}>Artiste sélectionné</label>
+            <SelectedEntityCard
+              entity={selectedArtiste}
+              entityType="artiste"
+              onRemove={handleRemoveArtiste}
+              primaryField="nom"
+              secondaryFields={[
+                { 
+                  icon: "bi-music-note", 
+                  value: selectedArtiste.genre 
+                },
+                { 
+                  icon: "bi-people", 
+                  value: selectedArtiste.nbMembres,
+                  prefix: "Membres: ",
+                  suffix: selectedArtiste.nbMembres > 1 ? " personnes" : " personne"
+                },
+                { 
+                  icon: "bi-envelope", 
+                  value: selectedArtiste.email
+                }
+              ]}
+            />
+          </>
+        )}
       </div>
-      
-      <div className={styles.cardBody}>
-        <div className={styles.searchContainer} ref={artisteDropdownRef}>
-          {!selectedArtiste ? (
-            <>
-              <label className={styles.formLabel}>Rechercher un artiste</label>
-              <SearchDropdown
-                searchTerm={artisteSearchTerm}
-                setSearchTerm={setArtisteSearchTerm}
-                results={artisteResults}
-                showResults={showArtisteResults}
-                isSearching={isSearchingArtistes}
-                placeholder="Rechercher un artiste par nom..."
-                onSelect={handleSelectArtiste}
-                onCreate={() => handleCreateArtiste(artisteSearchTerm, handleSelectArtiste)}
-                createButtonText="Nouvel artiste"
-                emptyResultsText="Aucun artiste trouvé"
-                entityType="artiste"
-                onFocus={() => artisteSearchTerm.length >= 2 && !showArtisteResults && setArtisteSearchTerm(artisteSearchTerm)}
-              />
-              <small className={styles.formHelpText}>
-                Tapez au moins 2 caractères pour rechercher un artiste par nom.
-              </small>
-            </>
-          ) : (
-            <>
-              <label className={styles.formLabel}>Artiste sélectionné</label>
-              <SelectedEntityCard
-                entity={selectedArtiste}
-                entityType="artiste"
-                onRemove={handleRemoveArtiste}
-                primaryField="nom"
-                secondaryFields={[
-                  { 
-                    icon: "bi-music-note", 
-                    value: selectedArtiste.genre 
-                  },
-                  { 
-                    icon: "bi-people", 
-                    value: selectedArtiste.nbMembres,
-                    prefix: "Membres: ",
-                    suffix: selectedArtiste.nbMembres > 1 ? " personnes" : " personne"
-                  },
-                  { 
-                    icon: "bi-envelope", 
-                    value: selectedArtiste.email
-                  }
-                ]}
-              />
-            </>
-          )}
-        </div>
-      </div>
-    </div>
+    </Card>
   );
 };
 

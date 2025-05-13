@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './FormContentWrapper.module.css';
+import Card from '@/components/ui/Card';
 
 /**
  * Wrapper component for form content sections
@@ -11,16 +12,24 @@ const FormContentWrapper = ({
   children, 
   className = ''
 }) => {
+  // Création d'un footer personnalisé si nécessaire (à commenter si non utilisé)
+  // const footerContent = (
+  //   <div className={styles.footerContent}>
+  //     {/* Contenu de footer personnalisé si nécessaire */}
+  //   </div>
+  // );
+
   return (
-    <div className={`${styles.formContainer} card ${className}`}>
-      <div className="card-header">
-        <h3>{title}</h3>
-        {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
-      </div>
-      <div className="card-body">
-        {children}
-      </div>
-    </div>
+    <Card
+      title={title}
+      className={`${styles.formContainer} ${className}`}
+      // Passer le sous-titre comme headerActions
+      headerActions={subtitle && <p className={styles.subtitle}>{subtitle}</p>}
+      // Décommenter si vous avez besoin d'un footer
+      // footerContent={footerContent}
+    >
+      {children}
+    </Card>
   );
 };
 

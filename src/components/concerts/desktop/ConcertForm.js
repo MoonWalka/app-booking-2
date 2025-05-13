@@ -3,9 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import styles from './ConcertForm.module.css';
 
 // Hooks personnalisés
-import { useConcertFormV2 } from '@/hooks/concerts';
-import useEntitySearch from '../../../hooks/concerts/useEntitySearch';
-import useFormSubmission from '../../../hooks/concerts/useFormSubmission';
+import useConcertFormOptimized from '@/hooks/concerts/useConcertFormOptimized';
+import useEntitySearch from '@/hooks/concerts/useEntitySearch';
 
 // Sections du formulaire
 import ConcertFormHeader from '../sections/ConcertFormHeader';
@@ -25,21 +24,46 @@ const ConcertFormDesktop = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const isNewConcert = id === 'nouveau';
+  
+  // Log pour déboguer l'ID passé et le mode édition/création
+  console.log(`[ConcertFormDesktop] id=${id}, isNewConcert=${isNewConcert}`);
+  console.log("[ConcertForm] Monté. ID depuis useParams:", id);
+  console.log("[ConcertForm] isNewConcert (basé sur useParams id === 'nouveau'):", isNewConcert, "ID actuel:", id);
 
-  // Hook pour gérer les états du formulaire
-  const{
+  // Hook optimisé pour gérer état, chargement, soumission, suppression
+  const formHook = useConcertFormOptimized(id);
+  console.log("[ConcertForm] Hook useConcertFormOptimized initialisé. ID passé au hook:", id);
+  
+  const {
     loading,
     formData,
     handleChange,
-    selectedLieu,
-    setSelectedLieu,
-    selectedProgrammateur,
-    setSelectedProgrammateur,
-    selectedArtiste,
-    setSelectedArtiste,
-    initialProgrammateurId,
-    initialArtisteId
-  } = useConcertFormV2(id);
+    handleSubmit,
+    handleDelete,
+    isSubmitting,
+    concert,
+    lieu,
+    artiste,
+    programmateur,
+    handleLieuChange,
+    handleArtisteChange,
+    updateFormData,
+    loadRelatedEntity
+  } = formHook;
+
+  console.log("[ConcertForm] Données du hook: loading:", loading, "formData:", formData, 
+    "concert:", concert, "concert ID:", concert?.id);
+
+  // Gestion programmateur via optimized hook
+  const handleProgrammateurChange = (prog) => {
+    console.log("[ConcertForm] handleProgrammateurChange appelé avec:", prog?.id);
+    if (prog) {
+      updateFormData(prev => ({ ...prev, programmateurId: prog.id, programmateurNom: prog.nom }));
+      loadRelatedEntity('programmateur', prog.id);
+    } else {
+      updateFormData(prev => ({ ...prev, programmateurId: null, programmateurNom: '' }));
+    }
+  };
 
   // Recherche de lieux
   const {
@@ -57,6 +81,8 @@ const ConcertFormDesktop = () => {
     additionalSearchFields: ['ville', 'codePostal'],
     maxResults: 10
   });
+
+  const removeLieu = () => handleLieuChange(null);
 
   // Recherche de programmateurs
   const {
@@ -92,56 +118,8 @@ const ConcertFormDesktop = () => {
     maxResults: 10
   });
 
-  // Hook pour gérer la soumission et la suppression
-  const {
-    isSubmitting,
-    showDeleteConfirm,
-    setShowDeleteConfirm,
-    handleSubmit,
-    handleDelete
-  } = useFormSubmission(
-    id, 
-    formData, 
-    navigate,
-    {
-      selectedLieu,
-      selectedProgrammateur,
-      selectedArtiste,
-      initialProgrammateurId,
-      initialArtisteId
-    }
-  );
-
-  // Gérer la sélection des entités
-  const handleSelectLieu = (lieu) => {
-    setSelectedLieu(lieu);
-    setShowLieuResults(false);
-    setLieuSearchTerm('');
-  };
-
-  const handleRemoveLieu = () => {
-    setSelectedLieu(null);
-  };
-
-  const handleSelectProgrammateur = (programmateur) => {
-    setSelectedProgrammateur(programmateur);
-    setShowProgResults(false);
-    setProgSearchTerm('');
-  };
-
-  const handleRemoveProgrammateur = () => {
-    setSelectedProgrammateur(null);
-  };
-
-  const handleSelectArtiste = (artiste) => {
-    setSelectedArtiste(artiste);
-    setShowArtisteResults(false);
-    setArtisteSearchTerm('');
-  };
-
-  const handleRemoveArtiste = () => {
-    setSelectedArtiste(null);
-  };
+  // Gestion de la modale de suppression locale
+  const [showDeleteConfirm, setShowDeleteConfirm] = React.useState(false);
 
   // Gérer les notes
   const handleNotesChange = (newNotes) => {
@@ -160,6 +138,8 @@ const ConcertFormDesktop = () => {
     );
   }
 
+  console.log("[ConcertForm] Rendu. ID:", id, "isNewConcert (variable locale):", isNewConcert, "formData:", formData);
+  
   return (
     <div className={styles.deskConcertFormContainer}>
       {/* En-tête du formulaire */}
@@ -178,7 +158,10 @@ const ConcertFormDesktop = () => {
         position="top"
       />
       
-      <form onSubmit={handleSubmit} className={styles.deskModernForm}>
+      <form onSubmit={(e) => {
+        console.log("[ConcertForm] Soumission du formulaire. ID:", id, "formData:", formData);
+        handleSubmit(e);
+      }} className={styles.deskModernForm}>
         {/* Section d'informations principales */}
         <ConcertInfoSection 
           formData={formData}
@@ -193,9 +176,9 @@ const ConcertFormDesktop = () => {
           showLieuResults={showLieuResults}
           isSearchingLieux={isSearchingLieux}
           lieuDropdownRef={lieuDropdownRef}
-          selectedLieu={selectedLieu}
-          handleSelectLieu={handleSelectLieu}
-          handleRemoveLieu={handleRemoveLieu}
+          selectedLieu={lieu}
+          handleSelectLieu={handleLieuChange}
+          handleRemoveLieu={removeLieu}
           handleCreateLieu={handleCreateLieu}
         />
         
@@ -207,9 +190,9 @@ const ConcertFormDesktop = () => {
           showProgResults={showProgResults}
           isSearchingProgs={isSearchingProgs}
           progDropdownRef={progDropdownRef}
-          selectedProgrammateur={selectedProgrammateur}
-          handleSelectProgrammateur={handleSelectProgrammateur}
-          handleRemoveProgrammateur={handleRemoveProgrammateur}
+          selectedProgrammateur={programmateur}
+          handleSelectProgrammateur={handleProgrammateurChange}
+          handleRemoveProgrammateur={() => handleProgrammateurChange(null)}
           handleCreateProgrammateur={handleCreateProgrammateur}
         />
         
@@ -221,9 +204,9 @@ const ConcertFormDesktop = () => {
           showArtisteResults={showArtisteResults}
           isSearchingArtistes={isSearchingArtistes}
           artisteDropdownRef={artisteDropdownRef}
-          selectedArtiste={selectedArtiste}
-          handleSelectArtiste={handleSelectArtiste}
-          handleRemoveArtiste={handleRemoveArtiste}
+          selectedArtiste={artiste}
+          handleSelectArtiste={handleArtisteChange}
+          handleRemoveArtiste={() => handleArtisteChange(null)}
           handleCreateArtiste={handleCreateArtiste}
         />
         

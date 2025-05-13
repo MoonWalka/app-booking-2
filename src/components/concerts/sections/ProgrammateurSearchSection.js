@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './ProgrammateurSearchSection.module.css';
 import SearchDropdown from './SearchDropdown';
 import SelectedEntityCard from './SelectedEntityCard';
+import Card from '@/components/ui/Card';
 
 /**
  * ProgrammateurSearchSection - Section de recherche et sélection de programmateur
@@ -31,64 +32,59 @@ const ProgrammateurSearchSection = ({
   handleCreateProgrammateur
 }) => {
   return (
-    <div className={styles.formCard}>
-      <div className={styles.cardHeader}>
-        <div className={styles.cardIcon}>
-          <i className="bi bi-person"></i>
-        </div>
-        <h3 className={styles.cardTitle}>Programmateur</h3>
+    <Card
+      title="Programmateur"
+      icon={<i className="bi bi-person"></i>}
+      className={styles.programmateurSearchSection}
+    >
+      <div className={styles.searchContainer} ref={progDropdownRef}>
+        {!selectedProgrammateur ? (
+          <>
+            <label className={styles.formLabel}>Rechercher un programmateur</label>
+            <SearchDropdown
+              searchTerm={progSearchTerm}
+              setSearchTerm={setProgSearchTerm}
+              results={progResults}
+              showResults={showProgResults}
+              isSearching={isSearchingProgs}
+              placeholder="Rechercher un programmateur par nom..."
+              onSelect={handleSelectProgrammateur}
+              onCreate={() => handleCreateProgrammateur(progSearchTerm, handleSelectProgrammateur)}
+              createButtonText="Nouveau programmateur"
+              emptyResultsText="Aucun programmateur trouvé"
+              entityType="programmateur"
+            />
+            <small className={styles.formHelpText}>
+              Tapez au moins 2 caractères pour rechercher un programmateur par nom.
+            </small>
+          </>
+        ) : (
+          <>
+            <label className={styles.formLabel}>Programmateur sélectionné</label>
+            <SelectedEntityCard
+              entity={selectedProgrammateur}
+              entityType="programmateur"
+              onRemove={handleRemoveProgrammateur}
+              primaryField="nom"
+              secondaryFields={[
+                { 
+                  icon: "bi-building", 
+                  value: selectedProgrammateur.structure 
+                },
+                { 
+                  icon: "bi-envelope", 
+                  value: selectedProgrammateur.email 
+                },
+                { 
+                  icon: "bi-telephone", 
+                  value: selectedProgrammateur.telephone 
+                }
+              ]}
+            />
+          </>
+        )}
       </div>
-      
-      <div className={styles.cardBody}>
-        <div className={styles.searchContainer} ref={progDropdownRef}>
-          {!selectedProgrammateur ? (
-            <>
-              <label className={styles.formLabel}>Rechercher un programmateur</label>
-              <SearchDropdown
-                searchTerm={progSearchTerm}
-                setSearchTerm={setProgSearchTerm}
-                results={progResults}
-                showResults={showProgResults}
-                isSearching={isSearchingProgs}
-                placeholder="Rechercher un programmateur par nom..."
-                onSelect={handleSelectProgrammateur}
-                onCreate={() => handleCreateProgrammateur(progSearchTerm, handleSelectProgrammateur)}
-                createButtonText="Nouveau programmateur"
-                emptyResultsText="Aucun programmateur trouvé"
-                entityType="programmateur"
-              />
-              <small className={styles.formHelpText}>
-                Tapez au moins 2 caractères pour rechercher un programmateur par nom.
-              </small>
-            </>
-          ) : (
-            <>
-              <label className={styles.formLabel}>Programmateur sélectionné</label>
-              <SelectedEntityCard
-                entity={selectedProgrammateur}
-                entityType="programmateur"
-                onRemove={handleRemoveProgrammateur}
-                primaryField="nom"
-                secondaryFields={[
-                  { 
-                    icon: "bi-building", 
-                    value: selectedProgrammateur.structure 
-                  },
-                  { 
-                    icon: "bi-envelope", 
-                    value: selectedProgrammateur.email 
-                  },
-                  { 
-                    icon: "bi-telephone", 
-                    value: selectedProgrammateur.telephone 
-                  }
-                ]}
-              />
-            </>
-          )}
-        </div>
-      </div>
-    </div>
+    </Card>
   );
 };
 

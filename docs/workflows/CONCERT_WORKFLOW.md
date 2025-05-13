@@ -25,6 +25,25 @@ Le flux de travail de gestion des concerts représente le cœur du métier de bo
 - Nouveau document dans la collection `concerts` avec un statut "initial"
 - Associations avec les entités liées (artiste, lieu, programmateur)
 
+### 1.5. Édition du concert
+
+**Description :** Modification des détails d'un concert existant.
+
+**Actions utilisateur :**
+- Cliquer sur le bouton "Modifier" sur la fiche du concert
+- Mettre à jour les informations (date, artiste, lieu, statut, notes, etc.)
+- Enregistrer les modifications
+
+**Composants impliqués :**
+- `components/concerts/ConcertDetails.js` (bouton Modifier)
+- `components/concerts/ConcertForm/index.js` (wrapper responsive)
+- `components/concerts/desktop/ConcertForm.js` ou `components/concerts/mobile/ConcertForm.js`
+- `hooks/concerts/useConcertFormOptimized.js`
+
+**Données modifiées :**
+- Mise à jour du document existant dans la collection `concerts`
+- Mise à jour des associations avec les entités liées
+
 ### 2. Négociation et suivi
 
 **Description :** Échanges avec le programmateur pour finaliser les détails et conditions du concert.

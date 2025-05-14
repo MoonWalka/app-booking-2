@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from '@/firebaseInit';
 import { doc, getDoc, setDoc, updateDoc, collection, Timestamp } from '@/firebaseInit';
@@ -32,6 +32,8 @@ export const useGenericEntityForm = ({
   generateId,
   relatedEntities = []
 }) => {
+  // Guard to avoid running fetch twice (e.g. in StrictMode)
+  const hasFetchedRef = useRef(false);
   console.log("[useGenericEntityForm] Hook appelé. entityType:", entityType, "entityId:", entityId, 
     "mode:", entityId && entityId !== 'nouveau' ? 'édition' : 'création');
   console.log("[useGenericEntityForm] Valeur initiale de entityId:", entityId, "type:", typeof entityId);
@@ -52,6 +54,8 @@ export const useGenericEntityForm = ({
 
   // Charger les données de l'entité et des entités liées
   useEffect(() => {
+    if (hasFetchedRef.current) return;
+    hasFetchedRef.current = true;
     console.log("[useGenericEntityForm] useEffect [entityId, collectionName]. entityId:", entityId, 
       "isNew:", !entityId || entityId === 'nouveau');
       

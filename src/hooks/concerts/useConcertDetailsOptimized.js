@@ -1,5 +1,5 @@
 // src/hooks/concerts/useConcertDetailsOptimized.js
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/firebaseInit';
@@ -36,6 +36,9 @@ const useConcertDetailsOptimized = (id, locationParam) => {
   const [initialArtisteId, setInitialArtisteId] = useState(null);
   const [initialStructureId, setInitialStructureId] = useState(null);
   const [initialLieuId, setInitialLieuId] = useState(null);
+  
+  // Guard pour éviter la double exécution des effets en StrictMode
+  const bidirectionalUpdatesRef = useRef(false);
   
   // Hooks personnalisés spécifiques aux concerts
   const concertForms = useConcertFormsManagement(id);
@@ -364,6 +367,9 @@ const useConcertDetailsOptimized = (id, locationParam) => {
   
   // Effet pour mettre à jour les relations bidirectionnelles au chargement initial
   useEffect(() => {
+    // Guard contre l'exécution en double en StrictMode
+    if (bidirectionalUpdatesRef.current) return;
+    
     // Vérifier que l'entité est chargée et que tous les hooks dépendants sont prêts
     if (genericDetails && genericDetails.entity && !genericDetails.loading && concertAssociations) {
       console.log("[useConcertDetailsOptimized] useEffect pour relations bidirectionnelles déclenché");
@@ -379,6 +385,9 @@ const useConcertDetailsOptimized = (id, locationParam) => {
           // Effectuer les mises à jour bidirectionnelles
           await handleBidirectionalUpdates();
           console.log("[useConcertDetailsOptimized] Mise à jour des relations bidirectionnelles terminée avec succès");
+          
+          // Marquer comme déjà exécuté pour éviter les doubles appels
+          bidirectionalUpdatesRef.current = true;
         } catch (error) {
           console.error("[useConcertDetailsOptimized] Erreur lors de la mise à jour des relations bidirectionnelles:", error);
         }
@@ -388,6 +397,11 @@ const useConcertDetailsOptimized = (id, locationParam) => {
       updateBidirectionalRelations();
     }
   }, [genericDetails, handleBidirectionalUpdates, concertAssociations, fetchRelatedEntities]);
+  
+  // Réinitialiser le guard si l'ID change
+  useEffect(() => {
+    bidirectionalUpdatesRef.current = false;
+  }, [id]);
   
   // Fonction pour forcer le rafraîchissement des données
   const refreshConcert = useCallback(async () => {
@@ -453,6 +467,25 @@ const useConcertDetailsOptimized = (id, locationParam) => {
     }
   }, [genericDetails, concertForms]);
   
+  // Fonction pour gérer l'annulation de l'édition
+  const handleCancel = useCallback(() => {
+    if (!genericDetails) return;
+    
+    console.log("[useConcertDetailsOptimized] Annulation de l'édition");
+    
+    // Utiliser la méthode handleCancel du hook générique si elle existe
+    if (typeof genericDetails.handleCancel === 'function') {
+      genericDetails.handleCancel();
+    } else {
+      // Fallback: désactiver simplement le mode édition
+      if (genericDetails.isEditing) {
+        genericDetails.toggleEditMode();
+      }
+    }
+    
+    // Réinitialiser les états spécifiques au hook si nécessaire
+  }, [genericDetails]);
+
   // Vérifier si on doit afficher le générateur de formulaire
   useEffect(() => {
     if (location && concertForms && concertForms.setShowFormGenerator) {
@@ -524,6 +557,7 @@ const useConcertDetailsOptimized = (id, locationParam) => {
     handleDelete: genericDetails?.handleDelete || (() => {}),
     handleSubmit: handleSubmitWithRelations,
     validateForm: validateConcertForm,
+    handleCancel,
     
     // Fonctions spécifiques aux concerts
     handleFormGenerated: concertForms?.handleFormGenerated || (() => {}),

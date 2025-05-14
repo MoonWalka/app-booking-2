@@ -10,5 +10,6 @@ import ListView from '@/components/programmateurs/ProgrammateursList';
  */
 export default function ProgrammateursPage() {
   const { id } = useParams();
+  console.log('[TRACE-UNIQUE][ProgrammateursPage] mount, route id:', id);
   return id ? <Outlet /> : <ListView />;
 }

@@ -82,14 +82,8 @@ export const useConcertFormOptimized = (concertId) => {
     
     showSuccessToast(message);
     
-    // Si cette sauvegarde provient du formulaire d'édition (/edit), on navigue vers la page détails
-    // Si on est déjà en mode détails (toggleEditMode depuis la vue détails), on reste sur la page
-    if (window.location.pathname.includes('/edit')) {
-      console.log(`[TRACE-UNIQUE][useConcertFormOptimized][onSuccess] navigate to /concerts/${savedId}`);
-      navigate(`/concerts/${savedId}`);
-    } else {
-      console.log(`[TRACE-UNIQUE][useConcertFormOptimized][onSuccess] no navigation (already on details view)`);
-    }
+    // Ne navigue plus automatiquement après sauvegarde pour rester dans /:id/edit
+    // (Supprimez ou ajustez la redirection si nécessaire)
   }, [isNewConcert, navigate]);
 
   const onErrorCallback = useCallback((error) => {

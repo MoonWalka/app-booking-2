@@ -13,7 +13,8 @@ import ProgrammateurConcertsSection from './ProgrammateurConcertsSection';
 import ProgrammateurLieuxSection from './ProgrammateurLieuxSection';
 
 // MIGRATION: Utilisation du hook optimisé
-import { useProgrammateurFormOptimized, useCompanySearch } from '@/hooks/programmateurs';
+import { useProgrammateurFormOptimized } from '@/hooks/programmateurs';
+import { useCompanySearch } from '@/hooks/common';
 import { useAddressSearch } from '@/hooks/common';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import ErrorMessage from '@/components/ui/ErrorMessage';

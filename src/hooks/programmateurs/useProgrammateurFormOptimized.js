@@ -187,6 +187,19 @@ export const useProgrammateurFormOptimized = (programmateurId) => {
     }));
   }, []);
   
+  // Fonction pour gérer l'annulation du formulaire
+  const handleCancel = useCallback(() => {
+    debugLog('Annulation du formulaire programmateur', 'info', 'useProgrammateurFormOptimized');
+    
+    // Si c'est un nouveau programmateur, rediriger vers la liste
+    if (isNewProgrammateur) {
+      navigate('/programmateurs');
+    } else {
+      // Si c'est un programmateur existant, rediriger vers sa vue détails
+      navigate(`/programmateurs/${actualProgrammateurId}`);
+    }
+  }, [navigate, isNewProgrammateur, actualProgrammateurId]);
+  
   // Fonctions pour mettre à jour des objets imbriqués
   const updateContact = useCallback((field, value) => {
     formHook.updateFormData(prev => ({
@@ -218,6 +231,7 @@ export const useProgrammateurFormOptimized = (programmateurId) => {
     toggleSection,
     updateContact,
     updateStructure,
+    handleCancel, // Ajout de la fonction handleCancel
     // Raccourcis pour une meilleure DX
     programmateur: formHook.formData,
     contact: formHook.formData?.contact || {},

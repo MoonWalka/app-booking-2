@@ -14,6 +14,7 @@ import ConcertsPage from '@/pages/ConcertsPage';
 import TestButtons from '@/components/debug';
 import ProgrammateursPage from '@/pages/ProgrammateursPage';
 import ProgrammateurDetails from '@/components/programmateurs/ProgrammateurDetails';
+import ProgrammateurForm from '@/components/programmateurs/ProgrammateurForm';
 import LieuxPage from '@/pages/LieuxPage';
 import ContratsPage from '@/pages/ContratsPage';
 import ArtistesPage from '@/pages/ArtistesPage';
@@ -25,6 +26,9 @@ import StructuresPage from '@/pages/StructuresPage';
 import RouterStabilizer from '@/utils/RouterStabilizer';
 import DesktopLayout from '@/components/common/layout/DesktopLayout';
 import ProgrammateursList from '@/components/programmateurs/ProgrammateursList';
+import ConcertFormWrapper from '@/components/concerts/ConcertForm';
+import ConcertsList from '@/components/concerts/ConcertsList';
+import ConcertDetails from '@/components/concerts/ConcertDetails';
 
 // Imports CSS gérés dans index.js - ne pas dupliquer ici
 // pour éviter les conflits de styles
@@ -204,12 +208,17 @@ function App() {
                     <PrivateRoute>
                       <ConcertsPage />
                     </PrivateRoute>
-                  } />
+                  }>
+                    <Route index element={<ConcertsList />} />
+                    <Route path=":id" element={<ConcertDetails />} />
+                    <Route path=":id/edit" element={<ConcertFormWrapper />} />
+                  </Route>
                   
                   {/* Routes pour les programmateurs */}
                   <Route path="/programmateurs/*" element={<PrivateRoute><ProgrammateursPage /></PrivateRoute>}>
                     <Route index element={<ProgrammateursList />} />
                     <Route path=":id" element={<ProgrammateurDetails />} />
+                    <Route path=":id/edit" element={<ProgrammateurForm />} />
                   </Route>
                   
                   {/* Routes pour les lieux */}

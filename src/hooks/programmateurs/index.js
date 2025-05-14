@@ -34,6 +34,9 @@ export { default as useProgrammateurDetailsOptimized } from './useProgrammateurD
 export { default as useProgrammateurSearchOptimized } from './useProgrammateurSearchOptimized';
 export { default as useDeleteProgrammateurOptimized } from './useDeleteProgrammateurOptimized';
 
+// Add alias for migrated details hook
+export { default as useProgrammateurDetailsMigrated } from './useProgrammateurDetailsMigrated';
+
 // Exports des autres hooks spécifiques aux programmateurs
 export { default as useAdresseValidation } from './useAdresseValidation';
 export { default as useLieuSearch } from './useLieuSearch';

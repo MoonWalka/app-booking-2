@@ -6,10 +6,10 @@ import FormGenerator from '@/components/forms/FormGenerator';
 import styles from './ConcertView.module.css';
 
 // Import des hooks personnalisés
-import { 
-  useConcertDetailsV2,
-  useConcertFormV2,
-  useConcertStatus 
+import {
+  useConcertDetailsOptimized,
+  useConcertFormOptimized,
+  useConcertStatus
 } from '@/hooks/concerts';
 
 // Import des composants mobile spécifiques depuis le répertoire sections
@@ -52,7 +52,7 @@ const ConcertView = () => {
     formatMontant,
     isDatePassed,
     getStatusInfo
-  } = useConcertDetailsV2(id, location);
+  } = useConcertDetailsOptimized(id, location);
 
   const{
     formDataStatus,
@@ -61,7 +61,7 @@ const ConcertView = () => {
     generatedFormLink,
     setGeneratedFormLink,
     handleFormGenerated
-  } = useConcertFormV2(id, programmateur?.id);
+  } = useConcertFormOptimized(id, programmateur?.id);
   
   // Utiliser directement le hook de statut pour éviter la duplication de code
   const { getStatusInfo: getStatusFromHook } = useConcertStatus();

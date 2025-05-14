@@ -143,7 +143,7 @@ const ProgrammateursList = ({ onNavigateToDetails }) => {
           <tbody>
             {programmateurs.length > 0 ? (
               programmateurs.map(programmateur => (
-                <tr key={programmateur.id}>
+                <tr key={programmateur.id} onClick={() => onNavigateToDetails(programmateur.id)} className={styles.clickableRow}>
                   <td>
                     <Link to={`/programmateurs/${programmateur.id}`} className={styles.programmateurLink}>
                       {programmateur.nom}

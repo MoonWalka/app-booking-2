@@ -231,3 +231,7 @@
     gap: var(--tc-spacing-xs, 0.25rem);
   }
 }
+
+.clickableRow {
+  cursor: pointer;
+}

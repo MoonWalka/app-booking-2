@@ -30,16 +30,6 @@ export { default as useConcertDetailsOptimized } from './useConcertDetailsOptimi
 export { default as useConcertForm } from './useConcertForm';
 
 /**
- * @deprecated Sera supprimé en novembre 2025. Utilisez useConcertFormOptimized à la place.
- */
-export { default as useConcertFormV2 } from './useConcertFormMigrated';
-
-/**
- * @deprecated Version intermédiaire pour la migration. Sera supprimée en novembre 2025.
- */
-export { default as useConcertFormMigrated } from './useConcertFormMigrated';
-
-/**
  * @deprecated Sera supprimé en novembre 2025. Utilisez useConcertDetailsOptimized à la place.
  */
 export { default as useConcertDetails } from './useConcertDetails';
@@ -49,10 +39,8 @@ export { default as useConcertDetails } from './useConcertDetails';
  */
 export { default as useConcertDetailsMigrated } from './useConcertDetailsMigrated';
 
-/**
- * @deprecated Sera supprimé en novembre 2025. Utilisez useConcertDetailsOptimized à la place.
- */
-export { default as useConcertDetailsV2 } from './useConcertDetailsMigrated';
+// Supprimer cette exportation redondante
+// export { default as useConcertDetailsV2 } from './useConcertDetailsMigrated';
 
 /**
  * @deprecated Sera supprimé en novembre 2025. Utilisez la version optimisée correspondante.

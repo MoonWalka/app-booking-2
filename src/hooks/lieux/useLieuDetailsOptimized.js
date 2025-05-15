@@ -59,7 +59,8 @@ const useLieuDetailsOptimized = (id) => {
       { 
         name: 'programmateur', 
         idField: 'programmateurId', 
-        collection: 'programmateurs' 
+        collection: 'programmateurs',
+        essential: true // Le programmateur est essentiel pour l'affichage du lieu
       }
     ],
     

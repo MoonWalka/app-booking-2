@@ -1,14 +1,31 @@
 // src/components/common/layout/DesktopLayout.js
-import React from 'react';
-import { Outlet, NavLink, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext.js';
 import { APP_NAME } from '@/config.js';
 import layoutStyles from '@/components/layout/Layout.module.css';
 import sidebarStyles from '@/components/layout/Sidebar.module.css';
 
-function DesktopLayout() {
+function DesktopLayout({ children }) {
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  // État pour suivre si une transition est en cours
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  
+  // Effet pour gérer les transitions entre les routes
+  useEffect(() => {
+    // Marquer le début de la transition
+    setIsTransitioning(true);
+    
+    // Réinitialiser après la transition (court délai)
+    const timer = setTimeout(() => {
+      setIsTransitioning(false);
+    }, 300); // 300ms est généralement suffisant pour une transition fluide
+    
+    return () => clearTimeout(timer);
+  }, [location.pathname]);
 
   const handleLogout = async () => {
     try {
@@ -90,8 +107,8 @@ function DesktopLayout() {
           )}
         </div>
       </nav>
-      <main className={layoutStyles.content}>
-        <Outlet />
+      <main className={`${layoutStyles.content} ${isTransitioning ? "router-transition-active" : ""}`}>
+        {children || <Outlet />}
       </main>
     </div>
   );

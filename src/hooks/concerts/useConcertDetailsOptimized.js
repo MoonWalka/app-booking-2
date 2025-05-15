@@ -52,28 +52,32 @@ const useConcertDetailsOptimized = (id, locationParam) => {
       collection: 'lieux',
       idField: 'lieuId',
       nameField: 'lieuNom',
-      type: 'one-to-one'
+      type: 'one-to-one',
+      essential: true // Le lieu est essentiel pour l'affichage du concert
     },
     {
       name: 'programmateur',
       collection: 'programmateurs',
       idField: 'programmateurId',
       nameField: 'programmateurNom',
-      type: 'one-to-one'
+      type: 'one-to-one',
+      essential: true // Le programmateur est essentiel pour l'affichage du concert
     },
     {
       name: 'artiste',
       collection: 'artistes',
       idField: 'artisteId',
       nameField: 'artisteNom',
-      type: 'one-to-one'
+      type: 'one-to-one',
+      essential: false // L'artiste peut être chargé à la demande
     },
     {
       name: 'structure',
       collection: 'structures',
       idField: 'structureId',
       nameField: 'structureNom',
-      type: 'one-to-one'
+      type: 'one-to-one',
+      essential: false // La structure peut être chargée à la demande
     }
   ];
   

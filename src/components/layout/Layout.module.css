@@ -19,6 +19,25 @@
   padding: var(--tc-spacing-lg, 20px);
   min-height: 100vh;
   background-color: var(--tc-background-color, #f8f9fa);
+  transition: opacity var(--tc-transition-duration, 0.3s) ease-in-out;
+  position: relative;
+}
+
+/* Style pour corriger le problème du flash blanc pendant les transitions */
+:global(.router-transition-active) {
+  position: relative;
+}
+
+:global(.router-transition-active::before) {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--tc-background-color, #f8f9fa);
+  z-index: 1;
+  pointer-events: none; /* Permet toujours les clics à travers */
 }
 
 /* Styles pour le header */

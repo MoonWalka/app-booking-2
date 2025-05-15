@@ -326,50 +326,65 @@ const useGenericEntityDetails = ({
     // Créer un objet pour stocker les entités liées
     const relatedEntitiesData = {};
     
-    // Charger chaque entité liée en parallèle
+    // Identifier les entités liées essentielles vs non essentielles
+    const essentialEntities = relatedEntities.filter(rel => rel.essential === true);
+    const nonEssentialEntities = relatedEntities.filter(rel => rel.essential !== true);
+    
     try {
-      const results = await Promise.all(
-        relatedEntities.map(async (relatedEntity) => {
-          try {
-            const data = await loadRelatedEntity(relatedEntity, entityData);
-            return { name: relatedEntity.name, data };
-          } catch (err) {
-            debugLog(`Erreur lors du chargement de l'entité liée ${relatedEntity.name}: ${err}`, 'error', 'useGenericEntityDetails');
-            return { name: relatedEntity.name, data: null };
-          }
-        })
-      );
-      
-      // Traiter les résultats
-      results.forEach(({ name, data }) => {
-        relatedEntitiesData[name] = data;
+      // Charger d'abord les entités essentielles en parallèle (si configurées comme telles)
+      if (essentialEntities.length > 0) {
+        const essentialResults = await Promise.all(
+          essentialEntities.map(async (relatedEntity) => {
+            try {
+              const data = await loadRelatedEntity(relatedEntity, entityData);
+              return { name: relatedEntity.name, data };
+            } catch (err) {
+              debugLog(`Erreur lors du chargement de l'entité liée ${relatedEntity.name}: ${err}`, 'error', 'useGenericEntityDetails');
+              return { name: relatedEntity.name, data: null };
+            }
+          })
+        );
         
-        // Mettre en cache si activé et si les données sont présentes
-        if (cacheEnabled && data) {
-          if (Array.isArray(data)) {
-            // Pour les relations one-to-many
-            data.forEach(item => {
-              if (item && item.id) {
-                cache.set(`related:${name}:${item.id}`, item);
-              }
-            });
-          } else if (data && data.id) {
-            // Pour les relations one-to-one
-            cache.set(`related:${name}:${data.id}`, data);
+        // Traiter les résultats des entités essentielles
+        essentialResults.forEach(({ name, data }) => {
+          relatedEntitiesData[name] = data;
+          
+          // Mettre en cache si activé et si les données sont présentes
+          if (cacheEnabled && data) {
+            if (Array.isArray(data)) {
+              data.forEach(item => {
+                if (item && item.id) {
+                  cache.set(`related:${name}:${item.id}`, item);
+                }
+              });
+            } else if (data && data.id) {
+              cache.set(`related:${name}:${data.id}`, data);
+            }
           }
-        }
-      });
-      
-      // Mettre à jour l'état avec toutes les données liées
-      if (instanceRef.current.isMounted) {
-        safeSetState(setRelatedData, relatedEntitiesData);
-        
-        // Réinitialiser tous les états de chargement
-        const resetLoadingStates = {};
-        relatedEntities.forEach(rel => {
-          resetLoadingStates[rel.name] = false;
+          
+          // Marquer comme chargé
+          loadingStates[name] = false;
         });
-        safeSetState(setLoadingRelated, resetLoadingStates);
+        
+        // Mettre à jour l'état avec les entités essentielles
+        if (instanceRef.current.isMounted) {
+          safeSetState(setRelatedData, relatedEntitiesData);
+          safeSetState(setLoadingRelated, {...loadingStates});
+        }
+      }
+      
+      // Pour les entités non essentielles, charger avec un délai ou lors d'une action utilisateur
+      if (nonEssentialEntities.length > 0) {
+        // Désactiver le chargement automatique des entités non essentielles au montage initial
+        // Elles seront chargées à la demande par loadRelatedEntityById
+        nonEssentialEntities.forEach(rel => {
+          loadingStates[rel.name] = false;
+        });
+        
+        // Mettre à jour les états de chargement
+        if (instanceRef.current.isMounted) {
+          safeSetState(setLoadingRelated, loadingStates);
+        }
       }
     } catch (err) {
       debugLog(`Erreur globale lors du chargement des entités liées: ${err}`, 'error', 'useGenericEntityDetails');

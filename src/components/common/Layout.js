@@ -1,30 +1,37 @@
 // src/components/common/Layout.js
 import React, { useState, useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { useResponsive } from '@/hooks/common';
 
 // Import direct du DesktopLayout pour forcer son utilisation
 import DesktopLayout from './layout/DesktopLayout';
+import layoutStyles from '@/components/layout/Layout.module.css'; // Import du module CSS existant
 
 function Layout() {
   const [layoutError, setLayoutError] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
+  const location = useLocation();
   
-  // TODO: Réactiver le mode mobile plus tard.
-  // Pour l'instant, on utilise directement le DesktopLayout au lieu de passer par useResponsive
+  // État pour gérer les transitions de page
+  const [isNavigating, setIsNavigating] = useState(false);
+  const [prevOutlet, setPrevOutlet] = useState(null);
   
-  /* Code mis à jour commenté pour référence future
-  // Charger le composant de mise en page responsive avec un fallback personnalisé
-  // qui sera utilisé à la place du fallback par défaut dans useResponsive
-  const { getResponsiveComponent } = useResponsive();
-  const ResponsiveLayout = getResponsiveComponent({
-    desktopPath: 'common/layout/DesktopLayout',
-    mobilePath: 'common/layout/MobileLayout',
-    breakpoint: 768,
-    // Pas de fallback ici - on utilisera celui par défaut du hook
-    // pour éviter les doublons de spinner
-  });
-  */
+  // Détecter les changements de route pour la transition
+  useEffect(() => {
+    // Au changement de route, marquer comme en navigation
+    setIsNavigating(true);
+    
+    // Stocker l'outlet précédent
+    setPrevOutlet(<Outlet />);
+    
+    // Réinitialiser après un court délai pour permettre au nouvel outlet de se charger
+    const timer = setTimeout(() => {
+      setIsNavigating(false);
+      setPrevOutlet(null);
+    }, 300); // Délai court mais suffisant pour la transition
+    
+    return () => clearTimeout(timer);
+  }, [location.pathname]);
   
   // Gestion des erreurs de chargement
   useEffect(() => {
@@ -68,7 +75,7 @@ function Layout() {
   
   // Utiliser un try-catch pour gérer les erreurs de rendu
   try {
-    // Utilisation directe du DesktopLayout au lieu du composant responsif
+    // Utilisation directe du DesktopLayout avec gestion de la transition
     return (
       <DesktopLayout>
         <Outlet />

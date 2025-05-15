@@ -62,20 +62,23 @@ const useArtisteDetailsOptimized = (id) => {
         name: 'structure', 
         collection: 'structures', 
         idField: 'structureId',
-        type: 'one-to-one'
+        type: 'one-to-one',
+        essential: true // La structure est essentielle pour l'affichage de l'artiste
       },
       { 
         name: 'manager', 
         collection: 'managers', 
         idField: 'managerId',
-        type: 'one-to-one'
+        type: 'one-to-one',
+        essential: false // Le manager peut être chargé à la demande
       },
       {
         name: 'concerts',
         collection: 'concerts',
         idField: 'artisteId',
         type: 'one-to-many',
-        isReference: true
+        isReference: true,
+        essential: false // Les concerts peuvent être chargés à la demande
       }
     ],
     

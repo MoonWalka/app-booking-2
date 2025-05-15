@@ -1,120 +1,186 @@
-import { useState, useEffect, useCallback } from 'react';
-import { collection, query, orderBy, limit, startAfter, getDocs, where } from '@/firebaseInit';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { collection, query, where, getDocs, orderBy, limit, startAfter, getCountFromServer } from 'firebase/firestore';
 import { db } from '@/firebaseInit';
 
 /**
- * Hook générique pour récupérer et gérer une liste d'entités avec pagination et filtres
+ * Hook pour gérer une liste générique d'entités depuis Firestore
+ * Version optimisée avec une meilleure gestion du cache et des requêtes
  * 
- * @param {Object} options - Options de configuration
- * @param {string} options.collectionName - Nom de la collection Firestore
- * @param {number} [options.pageSize=20] - Nombre d'éléments par page
- * @param {string} [options.sortByField='nom'] - Champ de tri par défaut
- * @param {string} [options.sortDirection='asc'] - Direction de tri ('asc' ou 'desc')
- * @param {Array} [options.initialFilters=[]] - Filtres initiaux à appliquer
- * @param {Object} [options.searchFields] - Champs sur lesquels effectuer des recherches
- * @param {Function} [options.transformData] - Fonction de transformation des données récupérées
- * @returns {Object} API du hook
+ * @param {Object} options Configuration du hook
+ * @returns {Object} États et fonctions pour gérer la liste d'entités
  */
 const useGenericEntityList = ({
   collectionName,
   pageSize = 20,
-  sortByField = 'nom',
-  sortDirection = 'asc',
-  initialFilters = [],
+  defaultOrderBy = null,
+  defaultOrderDirection = 'asc',
   searchFields = {},
-  transformData = (data) => data
+  transformData = null,
+  customQuery = null,
+  initialFilters = [],
+  autoLoad = true,
+  selectedFields = []
 }) => {
   const [entities, setEntities] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [lastVisible, setLastVisible] = useState(null);
   const [hasMore, setHasMore] = useState(true);
-  const [filters, setFilters] = useState(initialFilters);
-  const [search, setSearch] = useState('');
+  const [totalCount, setTotalCount] = useState(0);
   const [searchLoading, setSearchLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [currentSort, setCurrentSort] = useState({ field: sortByField, direction: sortDirection });
   
-  // Fonction pour construire la requête avec les filtres et le tri
-  const buildQuery = useCallback((lastDoc = null) => {
-    let q = collection(db, collectionName);
+  const lastVisibleRef = useRef(null);
+  const filterRef = useRef(initialFilters);
+  const cacheRef = useRef({
+    entities: {},
+    queries: {},
+    searchResults: {}
+  });
+  const loadedIdsRef = useRef(new Set());
+
+  // Mémoriser les options de requête actuelles
+  const currentQueryOptionsRef = useRef({
+    orderField: defaultOrderBy,
+    orderDirection: defaultOrderDirection,
+    filters: initialFilters
+  });
+
+  // Construit la requête Firestore en fonction de la configuration
+  const buildQuery = useCallback((isFirstPage = false) => {
+    const queryFilters = [];
     
-    // Appliquer tous les filtres actifs
-    if (filters && filters.length > 0) {
-      const activeFilters = filters.filter(f => f.enabled !== false);
-      
-      q = query(q, ...activeFilters.map(filter => {
-        if (filter.operator === '==') {
-          return where(filter.field, '==', filter.value);
-        } else if (filter.operator === '!=') {
-          return where(filter.field, '!=', filter.value);
-        } else if (filter.operator === '>') {
-          return where(filter.field, '>', filter.value);
-        } else if (filter.operator === '>=') {
-          return where(filter.field, '>=', filter.value);
-        } else if (filter.operator === '<') {
-          return where(filter.field, '<', filter.value);
-        } else if (filter.operator === '<=') {
-          return where(filter.field, '<=', filter.value);
-        } else if (filter.operator === 'array-contains') {
-          return where(filter.field, 'array-contains', filter.value);
-        } else if (filter.operator === 'array-contains-any') {
-          return where(filter.field, 'array-contains-any', filter.value);
-        } else if (filter.operator === 'in') {
-          return where(filter.field, 'in', filter.value);
-        } else if (filter.operator === 'not-in') {
-          return where(filter.field, 'not-in', filter.value);
-        }
-        // Par défaut, on utilise l'égalité
-        return where(filter.field, '==', filter.value);
-      }));
+    // Ajouter les filtres personnalisés
+    if (filterRef.current && filterRef.current.length > 0) {
+      filterRef.current.forEach(filter => {
+        queryFilters.push(where(filter.field, filter.operator, filter.value));
+      });
     }
     
-    // Appliquer le tri
-    q = query(q, orderBy(currentSort.field, currentSort.direction));
-    
-    // Appliquer la pagination
-    q = query(q, limit(pageSize));
-    
-    // Si on a un dernier document visible, commencer après lui
-    if (lastDoc) {
-      q = query(q, startAfter(lastDoc));
+    // Tri par défaut
+    if (currentQueryOptionsRef.current.orderField) {
+      queryFilters.push(orderBy(currentQueryOptionsRef.current.orderField, currentQueryOptionsRef.current.orderDirection));
     }
     
-    return q;
-  }, [collectionName, filters, currentSort, pageSize]);
-  
-  // Fonction pour charger les données initiales
-  const loadEntities = useCallback(async (reset = false) => {
+    // Limiter le nombre de résultats
+    queryFilters.push(limit(pageSize));
+    
+    // Pagination
+    if (!isFirstPage && lastVisibleRef.current) {
+      queryFilters.push(startAfter(lastVisibleRef.current));
+    }
+    
+    // Utiliser une requête personnalisée si fournie
+    if (customQuery) {
+      return customQuery(queryFilters, isFirstPage);
+    }
+    
+    return query(collection(db, collectionName), ...queryFilters);
+  }, [collectionName, customQuery, pageSize]);
+
+  // Charge les données depuis Firestore
+  const loadEntities = useCallback(async (resetPagination = false) => {
+    if (loading) return;
+    
     try {
       setLoading(true);
+      setError(null);
       
-      if (reset) {
-        setEntities([]);
-        setLastVisible(null);
-      }
-      
-      const q = buildQuery(reset ? null : lastVisible);
-      const querySnapshot = await getDocs(q);
-      
-      // Vérifier s'il y a plus de résultats
-      const hasMoreResults = querySnapshot.docs.length === pageSize;
-      setHasMore(hasMoreResults);
-      
-      // Stocker le dernier document pour la pagination
-      const lastDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
-      setLastVisible(lastDoc || null);
-      
-      // Traiter les résultats
-      const results = querySnapshot.docs.map(doc => {
-        const data = { id: doc.id, ...doc.data() };
-        return transformData(data);
+      // Générer une clé de cache pour cette requête
+      const cacheKey = JSON.stringify({
+        collection: collectionName,
+        filters: filterRef.current,
+        orderField: currentQueryOptionsRef.current.orderField,
+        orderDirection: currentQueryOptionsRef.current.orderDirection
       });
       
-      // Mettre à jour les données
-      setEntities(prev => reset ? results : [...prev, ...results]);
-      setCurrentPage(reset ? 1 : prev => prev + 1);
-      setError(null);
+      // Réinitialiser la pagination si demandé
+      if (resetPagination) {
+        lastVisibleRef.current = null;
+        if (resetPagination === true) {
+          setEntities([]);
+          loadedIdsRef.current.clear();
+        }
+      }
+      
+      // Construire et exécuter la requête
+      const q = buildQuery(resetPagination);
+      
+      // Vérifier si nous avons des résultats en cache pour cette requête exacte
+      if (resetPagination && cacheRef.current.queries[cacheKey]) {
+        const cachedResults = cacheRef.current.queries[cacheKey];
+        if (cachedResults.timestamp && (Date.now() - cachedResults.timestamp) < 60000) { // Cache valide pendant 1 minute
+          setEntities(cachedResults.data);
+          lastVisibleRef.current = cachedResults.lastVisible;
+          setHasMore(cachedResults.hasMore);
+          setLoading(false);
+          return;
+        }
+      }
+      
+      // Compter le total si c'est la première page
+      if (resetPagination) {
+        try {
+          const countQuery = query(collection(db, collectionName));
+          const countSnapshot = await getCountFromServer(countQuery);
+          setTotalCount(countSnapshot.data().count);
+        } catch (countError) {
+          console.warn('Erreur lors du comptage des entités:', countError);
+        }
+      }
+      
+      // Exécuter la requête principale
+      const snapshot = await getDocs(q);
+      
+      // Mettre à jour le dernier document visible pour la pagination
+      if (!snapshot.empty) {
+        lastVisibleRef.current = snapshot.docs[snapshot.docs.length - 1];
+      }
+      
+      // Convertir les données
+      const newData = snapshot.docs
+        .filter(doc => !loadedIdsRef.current.has(doc.id)) // Éviter les doublons
+        .map(doc => {
+          const data = { id: doc.id, ...doc.data() };
+          
+          // Filtrer les champs si nécessaire
+          let filteredData = data;
+          if (selectedFields && selectedFields.length > 0) {
+            filteredData = { id: data.id };
+            selectedFields.forEach(field => {
+              if (data[field] !== undefined) {
+                filteredData[field] = data[field];
+              }
+            });
+          }
+          
+          // Transformer les données si une fonction est fournie
+          const processedData = transformData ? transformData(filteredData) : filteredData;
+          
+          // Mettre en cache par ID
+          cacheRef.current.entities[doc.id] = processedData;
+          
+          // Marquer comme chargé
+          loadedIdsRef.current.add(doc.id);
+          
+          return processedData;
+        });
+      
+      // Déterminer s'il y a d'autres pages
+      setHasMore(newData.length === pageSize);
+      
+      // Mettre à jour les entités
+      setEntities(prevEntities => {
+        const mergedEntities = resetPagination ? newData : [...prevEntities, ...newData];
+        
+        // Mettre à jour le cache pour cette requête
+        cacheRef.current.queries[cacheKey] = {
+          data: mergedEntities,
+          lastVisible: lastVisibleRef.current,
+          hasMore: newData.length === pageSize,
+          timestamp: Date.now()
+        };
+        
+        return mergedEntities;
+      });
     } catch (err) {
       console.error('Erreur lors du chargement des entités:', err);
       setError(`Une erreur est survenue: ${err.message}`);
@@ -122,13 +188,22 @@ const useGenericEntityList = ({
     } finally {
       setLoading(false);
     }
-  }, [buildQuery, lastVisible, pageSize, transformData]);
+  }, [buildQuery, collectionName, loading, pageSize, selectedFields, transformData]);
   
   // Fonction pour exécuter une recherche
   const performSearch = useCallback(async (searchText) => {
     if (!searchText || searchText.length < 2) {
       // Pas de recherche avec moins de deux caractères
       return loadEntities(true);
+    }
+    
+    // Vérifier le cache de recherche
+    const cacheKey = `${searchText}_${collectionName}`;
+    if (cacheRef.current.searchResults[cacheKey] && 
+        (Date.now() - cacheRef.current.searchResults[cacheKey].timestamp) < 30000) { // Cache valide 30 secondes
+      setEntities(cacheRef.current.searchResults[cacheKey].data);
+      setSearchLoading(false);
+      return;
     }
     
     try {
@@ -179,133 +254,68 @@ const useGenericEntityList = ({
       const searchResults = await Promise.all(searchPromises);
       
       // Fusionner et dédupliquer les résultats
-      const flatResults = searchResults.flat();
-      const uniqueResults = Array.from(
-        new Map(flatResults.map(item => [item.id, item])).values()
+      const allResults = Array.from(
+        new Map(
+          searchResults.flat().map(item => [item.id, item])
+        ).values()
       );
       
-      // Appliquer la transformation et mettre à jour l'état
-      const transformedResults = uniqueResults.map(data => transformData(data));
+      // Transformer les résultats si nécessaire
+      const transformedResults = transformData 
+        ? allResults.map(transformData) 
+        : allResults;
+      
+      // Mettre en cache les résultats de recherche
+      cacheRef.current.searchResults[cacheKey] = {
+        data: transformedResults,
+        timestamp: Date.now()
+      };
+      
       setEntities(transformedResults);
-      setHasMore(false); // Pas de pagination avec la recherche
-      setError(null);
     } catch (err) {
       console.error('Erreur lors de la recherche:', err);
-      setError(`Une erreur est survenue lors de la recherche: ${err.message}`);
-      setEntities([]);
-      setHasMore(false);
+      setError(`Erreur lors de la recherche: ${err.message}`);
     } finally {
       setSearchLoading(false);
     }
-  }, [collectionName, searchFields, pageSize, transformData, loadEntities]);
+  }, [collectionName, loadEntities, pageSize, searchFields, transformData]);
   
-  // Charger les données initiales au montage du composant
-  useEffect(() => {
+  // Fonction pour mettre à jour les filtres
+  const updateFilters = useCallback((filters) => {
+    filterRef.current = filters;
     loadEntities(true);
-  }, [filters, currentSort.field, currentSort.direction]);
-  
-  // Effectuer une recherche lorsque le terme change
-  useEffect(() => {
-    if (search) {
-      performSearch(search);
-    }
-  }, [search, performSearch]);
-  
-  // Fonction pour charger plus de résultats
-  const loadMore = async () => {
-    if (!loading && hasMore) {
-      await loadEntities(false);
-    }
-  };
-  
-  // Fonction pour appliquer un filtre
-  const applyFilter = (filter) => {
-    // Vérifier si un filtre similaire existe déjà
-    const existingFilterIndex = filters.findIndex(f => f.field === filter.field);
-    
-    let newFilters;
-    if (existingFilterIndex >= 0) {
-      // Remplacer l'ancien filtre
-      newFilters = [...filters];
-      newFilters[existingFilterIndex] = filter;
-    } else {
-      // Ajouter un nouveau filtre
-      newFilters = [...filters, filter];
-    }
-    
-    setFilters(newFilters);
-    // Le chargement des données sera déclenché par l'effet
-  };
-  
-  // Fonction pour supprimer un filtre
-  const removeFilter = (fieldName) => {
-    const newFilters = filters.filter(f => f.field !== fieldName);
-    setFilters(newFilters);
-    // Le chargement des données sera déclenché par l'effet
-  };
-  
-  // Fonction pour désactiver/activer un filtre sans le supprimer
-  const toggleFilter = (fieldName, enabled) => {
-    const newFilters = filters.map(f => 
-      f.field === fieldName ? { ...f, enabled } : f
-    );
-    setFilters(newFilters);
-    // Le chargement des données sera déclenché par l'effet
-  };
+  }, [loadEntities]);
   
   // Fonction pour changer le tri
-  const setSorting = (field, direction = 'asc') => {
-    setCurrentSort({ field, direction });
-    // Le chargement des données sera déclenché par l'effet
-  };
-  
-  // Fonction pour rafraîchir les données
-  const refresh = () => {
+  const changeSort = useCallback((field, direction = 'asc') => {
+    currentQueryOptionsRef.current.orderField = field;
+    currentQueryOptionsRef.current.orderDirection = direction;
     loadEntities(true);
-  };
+  }, [loadEntities]);
   
+  // Charger les entités au montage
+  useEffect(() => {
+    if (autoLoad) {
+      loadEntities(true);
+    }
+  }, [autoLoad, loadEntities]);
+
   return {
-    // État
     entities,
     loading,
-    searchLoading,
     error,
     hasMore,
-    currentPage,
-    filters,
-    search,
-    currentSort,
-    
-    // Actions
-    loadMore,
-    refresh,
-    setSearch,
-    applyFilter,
-    removeFilter,
-    toggleFilter,
-    setSorting,
-    
-    // Helpers
-    isEmpty: entities.length === 0,
-    isFiltered: filters.filter(f => f.enabled !== false).length > 0,
-    isSearching: !!search,
-    
-    // Aliases for tests compatibility
-    items: entities,
-    setSearchTerm: setSearch,
-    setFilter: applyFilter,
-    resetFilters: () => { setFilters([]); },
-    setSort: setSorting,
-    pagination: {
-      currentPage,
-      totalPages: Math.ceil(entities.length / pageSize),
-      goToPage: (page) => {
-        const start = (page - 1) * pageSize;
-        setEntities(entities.slice(start, start + pageSize));
-        setCurrentPage(page);
-      }
+    totalCount,
+    loadMore: () => loadEntities(false),
+    refresh: () => loadEntities(true),
+    search: performSearch,
+    searchLoading,
+    updateFilters,
+    changeSort,
+    clearCache: () => {
+      cacheRef.current = { entities: {}, queries: {}, searchResults: {} };
     }
   };
-}
+};
 
 export default useGenericEntityList;

@@ -29,6 +29,8 @@ import ProgrammateursList from '@/components/programmateurs/ProgrammateursList';
 import ConcertFormWrapper from '@/components/concerts/ConcertForm';
 import ConcertsList from '@/components/concerts/ConcertsList';
 import ConcertDetails from '@/components/concerts/ConcertDetails';
+// Import du moniteur de performances (uniquement en développement)
+import PerformanceMonitor from '@/components/debug/PerformanceMonitor';
 
 // Imports CSS gérés dans index.js - ne pas dupliquer ici
 // pour éviter les conflits de styles
@@ -276,6 +278,7 @@ function App() {
                   <Route path="*" element={<Navigate to="/" />} />
                 </Route>
               </Routes>
+              {process.env.NODE_ENV === 'development' && <PerformanceMonitor />}
             </ModalProvider>
           </ParametresProvider>
         </AuthProvider>

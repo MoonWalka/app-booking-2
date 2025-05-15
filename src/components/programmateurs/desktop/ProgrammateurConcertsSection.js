@@ -1,103 +1,112 @@
 import React from 'react';
-import { Card, Table, Badge } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import { formatDate } from '@/utils/dateUtils';
+import styles from './ProgrammateurConcertsSection.module.css';
+import Card from '../../../components/ui/Card';
 
 /**
- * ProgrammateurConcertsSection - Affiche les concerts associés à un programmateur
+ * Composant pour afficher les concerts associés à un programmateur
+ * @param {Object} props - Propriétés du composant
+ * @param {Array} props.concertsAssocies - Liste des concerts associés
+ * @param {boolean} props.isEditing - Mode édition ou visualisation
+ * @param {boolean} props.showCardWrapper - Indique si la structure de carte doit être affichée
  */
-const ProgrammateurConcertsSection = ({ concertsAssocies = [] }) => {
-  if (!concertsAssocies || concertsAssocies.length === 0) {
-    return (
-      <Card className="shadow-sm">
-        <Card.Header className="bg-white">
-          <h5 className="mb-0">Concerts associés</h5>
-        </Card.Header>
-        <Card.Body>
-          <p className="text-muted text-center my-3">
-            Aucun concert associé à ce programmateur
-          </p>
-        </Card.Body>
-      </Card>
-    );
+const ProgrammateurConcertsSection = ({ 
+  concertsAssocies = [], 
+  isEditing = false,
+  showCardWrapper = true 
+}) => {
+  const hasConcerts = concertsAssocies?.length > 0;
+  
+  // Trier les concerts par date (les plus récents en premier)
+  const sortedConcerts = [...concertsAssocies].sort((a, b) => {
+    // Utiliser la date du concert si disponible, sinon utiliser dateCreation
+    const dateA = a.dateConcert ? new Date(a.dateConcert) : (a.dateCreation ? new Date(a.dateCreation) : new Date());
+    const dateB = b.dateConcert ? new Date(b.dateConcert) : (b.dateCreation ? new Date(b.dateCreation) : new Date());
+    return dateB - dateA; // Ordre décroissant
+  });
+
+  // Contenu principal de la section
+  const sectionContent = (
+    <>
+      {!hasConcerts && (
+        <div className={styles.infoMessage}>
+          <i className="bi bi-info-circle me-2"></i>
+          Aucun concert associé à ce programmateur.
+        </div>
+      )}
+      
+      {hasConcerts && (
+        <div className={styles.concertsList}>
+          {sortedConcerts.map((concert) => (
+            <div key={concert.id} className={styles.concertItem}>
+              <div className={styles.concertInfo}>
+                <Link to={`/concerts/${concert.id}`} className={styles.concertName}>
+                  {concert.titre || "Concert sans titre"}
+                </Link>
+                <div className={styles.concertDetails}>
+                  {concert.dateConcert && (
+                    <span className={styles.concertDate}>
+                      <i className="bi bi-calendar-event me-1"></i>
+                      {formatDate(concert.dateConcert)}
+                    </span>
+                  )}
+                  {concert.lieu?.nom && (
+                    <span className={styles.concertLocation}>
+                      <i className="bi bi-geo-alt me-1"></i>
+                      {concert.lieu.nom}
+                    </span>
+                  )}
+                  {concert.statut && (
+                    <span className={`${styles.statusBadge} ${styles[`status-${concert.statut.toLowerCase()}`]}`}>
+                      {concert.statut}
+                    </span>
+                  )}
+                </div>
+              </div>
+              <div className={styles.concertActions}>
+                <Link to={`/concerts/${concert.id}`} className="btn btn-sm btn-outline-primary">
+                  <i className="bi bi-eye me-1"></i>
+                  Voir
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {!isEditing && (
+        <div className={styles.addSection}>
+          <Link 
+            to="/concerts/nouveau" 
+            className="btn btn-sm btn-outline-success"
+          >
+            <i className="bi bi-plus-lg me-1"></i>
+            Ajouter un concert
+          </Link>
+        </div>
+      )}
+    </>
+  );
+
+  // Si on ne veut pas le wrapper de carte, on retourne directement le contenu
+  if (!showCardWrapper) {
+    return sectionContent;
   }
 
+  // Utilisation du composant Card standardisé
   return (
-    <Card className="shadow-sm">
-      <Card.Header className="bg-white">
-        <h5 className="mb-0">
-          Concerts associés
-          <Badge bg="primary" className="ms-2">{concertsAssocies.length}</Badge>
-        </h5>
-      </Card.Header>
-      <Table responsive hover className="mb-0">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Artiste</th>
-            <th>Lieu</th>
-            <th>Statut</th>
-          </tr>
-        </thead>
-        <tbody>
-          {concertsAssocies.map((concert, index) => (
-            <tr key={concert.id || index}>
-              <td>{formatDate(concert.date)}</td>
-              <td>{concert.artisteNom || 'Non spécifié'}</td>
-              <td>{concert.lieuNom || 'Non spécifié'}</td>
-              <td>
-                <Badge bg={getStatusBadgeColor(concert.status)}>
-                  {formatStatus(concert.status)}
-                </Badge>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+    <Card
+      title="Concerts associés"
+      icon={<i className="bi bi-calendar-event"></i>}
+      className={styles.concertsCard}
+      headerActions={
+        <span className={styles.badge}>{concertsAssocies.length}</span>
+      }
+    >
+      {sectionContent}
     </Card>
   );
-};
-
-// Fonction de formatage pour la date
-const formatDate = (dateString) => {
-  if (!dateString) return 'Date non définie';
-  
-  try {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('fr-FR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    });
-  } catch (e) {
-    return 'Date incorrecte';
-  }
-};
-
-// Fonction pour déterminer la couleur du badge de statut
-const getStatusBadgeColor = (status) => {
-  switch (status) {
-    case 'confirmed':
-      return 'success';
-    case 'pending':
-      return 'warning';
-    case 'cancelled':
-      return 'danger';
-    default:
-      return 'secondary';
-  }
-};
-
-// Fonction pour formater le status
-const formatStatus = (status) => {
-  switch (status) {
-    case 'confirmed':
-      return 'Confirmé';
-    case 'pending':
-      return 'En attente';
-    case 'cancelled':
-      return 'Annulé';
-    default:
-      return 'Non défini';
-  }
 };
 
 export default ProgrammateurConcertsSection;

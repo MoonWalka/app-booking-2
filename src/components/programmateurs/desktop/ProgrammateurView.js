@@ -110,7 +110,7 @@ const ProgrammateurView = ({
       {/* Disposition en une seule colonne */}
       <Row>
         <Col>
-          {/* Carte Contact */}
+          {/* Section Contact - structure de carte unique */}
           <Card className="mb-4">
             <Card.Header className="d-flex justify-content-between align-items-center bg-primary text-white">
               <h5 className="mb-0">
@@ -136,12 +136,13 @@ const ProgrammateurView = ({
                   programmateur={programmateur}
                   isEditing={false}
                   formatValue={formatValue}
+                  showCardWrapper={false} // Ajout d'une prop pour ne pas utiliser le wrapper de carte
                 />
               </Card.Body>
             )}
           </Card>
 
-          {/* Carte Informations Légales */}
+          {/* Section Informations Légales - structure de carte unique */}
           <Card className="mb-4">
             <Card.Header className="d-flex justify-content-between align-items-center bg-primary text-white">
               <h5 className="mb-0">
@@ -167,12 +168,13 @@ const ProgrammateurView = ({
                   programmateur={programmateur}
                   isEditing={false}
                   formatValue={formatValue}
+                  showCardWrapper={false} // Ajout d'une prop pour ne pas utiliser le wrapper de carte
                 />
               </Card.Body>
             )}
           </Card>
           
-          {/* Carte Structure */}
+          {/* Section Structure - structure de carte unique */}
           <Card className="mb-4">
             <Card.Header className="d-flex justify-content-between align-items-center bg-primary text-white">
               <h5 className="mb-0">
@@ -197,12 +199,13 @@ const ProgrammateurView = ({
                 <ProgrammateurStructuresSection 
                   programmateur={programmateur}
                   structure={structure}
+                  showCardWrapper={false} // Ajout d'une prop pour ne pas utiliser le wrapper de carte
                 />
               </Card.Body>
             )}
           </Card>
           
-          {/* Carte Lieux */}
+          {/* Section Lieux - structure de carte unique */}
           <Card className="mb-4">
             <Card.Header className="d-flex justify-content-between align-items-center bg-primary text-white">
               <h5 className="mb-0">
@@ -228,12 +231,13 @@ const ProgrammateurView = ({
                   programmateur={programmateur}
                   lieux={lieux}
                   isEditing={false}
+                  showCardWrapper={false} // Ajout d'une prop pour ne pas utiliser le wrapper de carte
                 />
               </Card.Body>
             )}
           </Card>
 
-          {/* Carte Concerts */}
+          {/* Section Concerts - structure de carte unique */}
           <Card className="mb-4">
             <Card.Header className="d-flex justify-content-between align-items-center bg-primary text-white">
               <h5 className="mb-0">
@@ -258,6 +262,7 @@ const ProgrammateurView = ({
                 <ProgrammateurConcertsSection
                   concertsAssocies={concerts || []}
                   isEditing={false}
+                  showCardWrapper={false} // Ajout d'une prop pour ne pas utiliser le wrapper de carte
                 />
               </Card.Body>
             )}

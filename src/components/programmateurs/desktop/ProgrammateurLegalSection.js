@@ -3,6 +3,7 @@ import { Form, Row, Col } from 'react-bootstrap';
 import { Formik, Field, ErrorMessage } from 'formik';
 import { ProgrammateurLegalSectionSchema } from '../../../schemas/ProgrammateurSchemas';
 import styles from './ProgrammateurLegalSection.module.css';
+import Card from '../../../components/ui/Card';
 
 /**
  * Section d'informations légales d'un programmateur, incluant les données de sa structure associée
@@ -14,6 +15,7 @@ import styles from './ProgrammateurLegalSection.module.css';
  * @param {Function} formatValue - Fonction formatant les valeurs pour l'affichage
  * @param {boolean} structureCreated - Indique si une structure vient d'être créée
  * @param {Function} onSubmit - Fonction à appeler lors de la soumission du formulaire validé
+ * @param {boolean} showCardWrapper - Indique si la structure de carte doit être affichée
  */
 const ProgrammateurLegalSection = ({ 
   programmateur = {}, 
@@ -22,7 +24,8 @@ const ProgrammateurLegalSection = ({
   isEditing = false,
   formatValue = (val) => val,
   structureCreated = false,
-  onSubmit = () => {}
+  onSubmit = () => {},
+  showCardWrapper = true // Nouvelle prop avec valeur par défaut à true
 }) => {
   // Préparation des valeurs initiales pour Formik
   const initialValues = {
@@ -55,8 +58,9 @@ const ProgrammateurLegalSection = ({
     setSubmitting(false);
   };
 
-  return (
-    <div className={styles.sectionContent}>
+  // Contenu principal de la section
+  const sectionContent = (
+    <>
       {structureCreated && (
         <div className="alert alert-success mb-3" role="alert">
           <i className="bi bi-check-circle me-2"></i>
@@ -279,7 +283,24 @@ const ProgrammateurLegalSection = ({
           </div>
         </div>
       )}
-    </div>
+    </>
+  );
+
+  // Si on ne veut pas le wrapper de carte, on retourne directement le contenu
+  if (!showCardWrapper) {
+    return sectionContent;
+  }
+
+  // Utilisation du composant Card standardisé au lieu de la structure personnalisée
+  return (
+    <Card
+      title="Informations légales"
+      icon={<i className="bi bi-building"></i>}
+      className={styles.legalCard}
+      isEditing={isEditing}
+    >
+      {sectionContent}
+    </Card>
   );
 };
 

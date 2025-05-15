@@ -1,6 +1,7 @@
 // src/hooks/common/useResponsive.js
-import React, { lazy, Suspense, useState, useEffect, useCallback, useRef } from 'react';
+import React, { /*lazy,*/ Suspense, useState, useEffect, useCallback, useRef } from 'react';
 import { debugLog } from '@/utils/logUtils';
+import { getComponentByPath } from '@/components/componentMapping';
 
 // Fonction debounce pour limiter les appels lors du redimensionnement
 const debounce = (func, wait) => {
@@ -25,7 +26,7 @@ const debounce = (func, wait) => {
  * @param {number} options.transitionDelay - Délai en ms pour la transition entre modes (défaut: 150ms)
  * @returns {Object} - État et fonctions liées à la responsivité
  */
-export const useResponsive = (options = {}) => {
+const useResponsive = (options = {}) => {
   debugLog('Hook exécuté !', 'trace', 'useResponsive');
   const {
     breakpoint = 768,
@@ -139,85 +140,48 @@ export const useResponsive = (options = {}) => {
       return componentCache.current.get(cacheKey);
     }
     
-    // Import dynamique avec gestion d'erreurs améliorée
-    const Component = lazy(() => {
-      // Fonction pour charger un composant avec retry
-      const loadComponentWithRetry = (retryCount = 0) => {
-        return import(/* webpackChunkName: "[request]" */ `@/components/${currentPath}`)
-          .then(module => {
-            // Réinitialiser l'état d'erreur si le chargement réussit
-            setErrorLoading(false);
-            // Si nous avions des tentatives précédentes, réinitialiser le compteur
-            if (retryCounter.current[cacheKey]) {
-              debugLog(`Composant ${currentPath} chargé avec succès après ${retryCount} tentatives.`, 'info');
-              retryCounter.current[cacheKey] = 0;
-            }
-            
-            // Beaucoup de modules ES6 contiennent leur export par défaut dans module.default
-            return { default: module.default || module };
-          })
-          .catch(error => {
-            debugLog(`Chargement du composant ${currentPath} échoué (tentative ${retryCount + 1}/${maxRetries + 1}): ${error}`, 'error');
-            
-            // Incrémenter le compteur de tentatives pour ce composant
-            retryCounter.current[cacheKey] = (retryCounter.current[cacheKey] || 0) + 1;
-            
-            if (retryCount < maxRetries) {
-              // Réessayer avec un délai exponentiel (backoff)
-              const delay = Math.pow(2, retryCount) * 500;
-              debugLog(`Nouvelle tentative dans ${delay}ms...`, 'info');
-              
-              return new Promise(resolve => {
-                setTimeout(() => {
-                  resolve(loadComponentWithRetry(retryCount + 1));
-                }, delay);
-              });
-            }
-            
-            // Après toutes les tentatives, afficher un composant d'erreur
-            setErrorLoading(true);
-            return { 
-              default: (props) => (
-                <div className="component-error p-4 border rounded bg-light">
-                  <h3 className="text-danger">Impossible de charger le composant</h3>
-                  <p>Une erreur est survenue lors du chargement de l'interface après plusieurs tentatives.</p>
-                  <p className="error-path small text-muted">Chemin: @/components/{currentPath}</p>
-                  <div className="mt-3">
-                    <button 
-                      className="btn btn-primary me-2" 
-                      onClick={() => {
-                        // Réinitialiser le compteur et retenter
-                        retryCounter.current[cacheKey] = 0;
-                        // Forcer le rechargement du composant en effaçant le cache
-                        componentCache.current.delete(cacheKey);
-                        // Déclencher un re-render
-                        setErrorLoading(false);
-                      }}
-                    >
-                      Réessayer
-                    </button>
-                    <button 
-                      className="btn btn-outline-secondary" 
-                      onClick={() => window.location.reload()}
-                    >
-                      Rafraîchir la page
-                    </button>
-                  </div>
-                </div>
-              )
-            };
-          });
-      };
+    // LAZY LOADING DÉSACTIVÉ: Utiliser le mapping des composants pour un import direct
+    const Component = (props) => {
+      debugLog(`Chargement synchrone du composant: @/components/${currentPath}`, 'info');
       
-      return loadComponentWithRetry();
-    });
+      try {
+        // Obtenir le composant à partir du mapping
+        const MappedComponent = getComponentByPath(currentPath);
+        
+        if (!MappedComponent) {
+          throw new Error(`Composant non trouvé: ${currentPath}`);
+        }
+        
+        // Rendu direct du composant sans message d'alerte
+        return <MappedComponent {...props} />;
+      } catch (error) {
+        setErrorLoading(true);
+        console.error(`Erreur lors du chargement du composant ${currentPath}:`, error);
+        return (
+          <div className="component-error p-4 border rounded bg-light">
+            <h3 className="text-danger">Impossible de charger le composant</h3>
+            <p>Une erreur est survenue lors du chargement de l'interface.</p>
+            <p className="error-path small text-muted">Chemin: @/components/{currentPath}</p>
+            <p className="error-details small text-danger">{error.message}</p>
+            <div className="mt-3">
+              <button 
+                className="btn btn-outline-secondary" 
+                onClick={() => window.location.reload()}
+              >
+                Rafraîchir la page
+              </button>
+            </div>
+          </div>
+        );
+      }
+    };
     
     // Composant enveloppé dans Suspense avec fallback amélioré
     const ResponsiveComponent = React.memo((props) => {
       // Le fallback par défaut unifié et centré
       const defaultFallback = (
         <div className="loading-container d-flex justify-content-center align-items-center" style={{ minHeight: '300px' }}>
-          {debugLog(`Fallback Suspense affiché pour ${currentPath}`, 'trace', 'useResponsive')}
+          {debugLog(`Fallback affiché pour ${currentPath}`, 'trace', 'useResponsive')}
           <div className="text-center">
             <div className="spinner-border text-primary" role="status">
               <span className="visually-hidden">Chargement de l'interface...</span>
@@ -227,10 +191,12 @@ export const useResponsive = (options = {}) => {
         </div>
       );
       
+      // Sans lazy, on n'a pas besoin de Suspense, mais on le garde pour maintenir la structure
       return (
-        <Suspense fallback={fallback || defaultFallback}>
-          <Component {...props} />
-        </Suspense>
+        // <Suspense fallback={fallback || defaultFallback}>
+        //   <Component {...props} />
+        // </Suspense>
+        <Component {...props} />
       );
     });
     
@@ -262,4 +228,5 @@ export const useResponsive = (options = {}) => {
   };
 };
 
+// Export du hook comme export par défaut uniquement pour plus de cohérence
 export default useResponsive;

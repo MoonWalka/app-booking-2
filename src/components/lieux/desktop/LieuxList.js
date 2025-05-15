@@ -92,7 +92,7 @@ const LieuxList = () => {
         />
       ) : (
         <LieuxListEmptyState 
-          hasSearchQuery={searchTerm.trim().length > 0}
+          hasSearchQuery={searchTerm && typeof searchTerm === 'string' ? searchTerm.trim().length > 0 : false}
           hasFilters={filterType !== 'tous'}
         />
       )}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Alert, Container, Row, Col, Card, Button } from 'react-bootstrap';
+import { Form, Alert, Container, Row, Col, Button } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import styles from './ProgrammateurForm.module.css';
 
@@ -11,6 +11,7 @@ import CompanySearchSection from '../sections/CompanySearchSection';
 import ProgrammateurLegalSection from './ProgrammateurLegalSection';
 import ProgrammateurConcertsSection from './ProgrammateurConcertsSection';
 import ProgrammateurLieuxSection from './ProgrammateurLieuxSection';
+import Card from '../../../components/ui/Card';
 
 // MIGRATION: Utilisation du hook optimisé
 import { useProgrammateurFormOptimized } from '@/hooks/programmateurs';
@@ -95,46 +96,47 @@ const ProgrammateurForm = () => {
     <Form onSubmit={handleSubmit}>
       <Container className={styles.programmateurForm}>
         {/* En-tête avec titre et actions */}
-        <Card className="mb-4 bg-light">
-          <Card.Body>
-            <div className="d-flex justify-content-between align-items-center">
-              <div>
-                <h2 className="mb-0">
-                  {id === 'nouveau' ? 'Nouveau programmateur' : `Éditer: ${programmateur?.nom || 'Programmateur'}`}
-                  {programmateur?.fonction && <span className="text-muted fs-5"> ({programmateur.fonction})</span>}
-                </h2>
-              </div>
-              <div>
-                <Button 
-                  variant="primary" 
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="me-2"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                      Enregistrement...
-                    </>
-                  ) : (
-                    <>
-                      <i className="bi bi-check-lg me-2"></i>
-                      Enregistrer
-                    </>
-                  )}
-                </Button>
-                <Button 
-                  variant="outline-secondary" 
-                  onClick={handleCancel}
-                  disabled={isSubmitting}
-                  type="button"
-                >
-                  <i className="bi bi-x-lg me-2"></i>
-                  Annuler
-                </Button>
-              </div>
+        <Card 
+          className="mb-4"
+          variant="light"
+        >
+          <div className="d-flex justify-content-between align-items-center">
+            <div>
+              <h2 className="mb-0">
+                {id === 'nouveau' ? 'Nouveau programmateur' : `Éditer: ${programmateur?.nom || 'Programmateur'}`}
+                {programmateur?.fonction && <span className="text-muted fs-5"> ({programmateur.fonction})</span>}
+              </h2>
             </div>
-          </Card.Body>
+            <div>
+              <Button 
+                variant="primary" 
+                type="submit"
+                disabled={isSubmitting}
+                className="me-2"
+              >
+                {isSubmitting ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Enregistrement...
+                  </>
+                ) : (
+                  <>
+                    <i className="bi bi-check-lg me-2"></i>
+                    Enregistrer
+                  </>
+                )}
+              </Button>
+              <Button 
+                variant="outline-secondary" 
+                onClick={handleCancel}
+                disabled={isSubmitting}
+                type="button"
+              >
+                <i className="bi bi-x-lg me-2"></i>
+                Annuler
+              </Button>
+            </div>
+          </div>
         </Card>
         
         {/* Message d'erreur global si nécessaire */}
@@ -149,12 +151,12 @@ const ProgrammateurForm = () => {
         <Row>
           <Col>
             {/* Carte Contact */}
-            <Card className="mb-4">
-              <Card.Header className="d-flex justify-content-between align-items-center bg-primary text-white">
-                <h5 className="mb-0">
-                  <i className="bi bi-person-vcard me-2"></i>
-                  Informations de contact
-                </h5>
+            <Card 
+              className="mb-4"
+              title="Informations de contact"
+              icon={<i className="bi bi-person-vcard"></i>}
+              variant="primary"
+              headerActions={
                 <Button 
                   variant="link" 
                   className="p-0 text-white" 
@@ -167,26 +169,24 @@ const ProgrammateurForm = () => {
                     <i className="bi bi-chevron-down"></i>
                   )}
                 </Button>
-              </Card.Header>
-              
+              }
+            >
               {sections.contactVisible && (
-                <Card.Body>
-                  <ContactInfoSection 
-                    formData={formData}
-                    handleChange={handleChange}
-                    errors={{}}
-                  />
-                </Card.Body>
+                <ContactInfoSection 
+                  formData={formData}
+                  handleChange={handleChange}
+                  errors={{}}
+                />
               )}
             </Card>
 
             {/* Carte Informations Légales */}
-            <Card className="mb-4">
-              <Card.Header className="d-flex justify-content-between align-items-center bg-primary text-white">
-                <h5 className="mb-0">
-                  <i className="bi bi-file-earmark-text me-2"></i>
-                  Informations légales
-                </h5>
+            <Card 
+              className="mb-4"
+              title="Informations légales"
+              icon={<i className="bi bi-file-earmark-text"></i>}
+              variant="primary"
+              headerActions={
                 <Button 
                   variant="link" 
                   className="p-0 text-white" 
@@ -199,27 +199,26 @@ const ProgrammateurForm = () => {
                     <i className="bi bi-chevron-down"></i>
                   )}
                 </Button>
-              </Card.Header>
-              
+              }
+            >
               {sections.legalVisible && (
-                <Card.Body>
-                  <ProgrammateurLegalSection
-                    programmateur={programmateur}
-                    isEditing={true}
-                    formData={formData}
-                    handleChange={handleChange}
-                  />
-                </Card.Body>
+                <ProgrammateurLegalSection
+                  programmateur={programmateur}
+                  isEditing={true}
+                  formData={formData}
+                  handleChange={handleChange}
+                  showCardWrapper={false}
+                />
               )}
             </Card>
             
             {/* Carte Structure */}
-            <Card className="mb-4">
-              <Card.Header className="d-flex justify-content-between align-items-center bg-primary text-white">
-                <h5 className="mb-0">
-                  <i className="bi bi-building me-2"></i>
-                  Structure
-                </h5>
+            <Card 
+              className="mb-4"
+              title="Structure"
+              icon={<i className="bi bi-building"></i>}
+              variant="primary"
+              headerActions={
                 <Button 
                   variant="link" 
                   className="p-0 text-white" 
@@ -232,10 +231,10 @@ const ProgrammateurForm = () => {
                     <i className="bi bi-chevron-down"></i>
                   )}
                 </Button>
-              </Card.Header>
-              
+              }
+            >
               {sections.structureVisible && (
-                <Card.Body>
+                <>
                   {/* Options de recherche d'entreprise */}
                   <CompanySearchSection 
                     searchType={companySearch.searchType}
@@ -258,17 +257,17 @@ const ProgrammateurForm = () => {
                     setAddressFieldActive={addressSearch.setAddressFieldActive}
                     handleSelectAddress={addressSearch.handleSelectAddress}
                   />
-                </Card.Body>
+                </>
               )}
             </Card>
             
             {/* Carte Lieux */}
-            <Card className="mb-4">
-              <Card.Header className="d-flex justify-content-between align-items-center bg-primary text-white">
-                <h5 className="mb-0">
-                  <i className="bi bi-geo-alt me-2"></i>
-                  Lieux associés
-                </h5>
+            <Card 
+              className="mb-4"
+              title="Lieux associés"
+              icon={<i className="bi bi-geo-alt"></i>}
+              variant="primary"
+              headerActions={
                 <Button 
                   variant="link" 
                   className="p-0 text-white" 
@@ -281,25 +280,24 @@ const ProgrammateurForm = () => {
                     <i className="bi bi-chevron-down"></i>
                   )}
                 </Button>
-              </Card.Header>
-              
+              }
+            >
               {sections.lieuxVisible && (
-                <Card.Body>
-                  <ProgrammateurLieuxSection
-                    programmateur={programmateur}
-                    isEditing={true}
-                  />
-                </Card.Body>
+                <ProgrammateurLieuxSection
+                  programmateur={programmateur}
+                  isEditing={true}
+                  showCardWrapper={false}
+                />
               )}
             </Card>
 
             {/* Carte Concerts */}
-            <Card className="mb-4">
-              <Card.Header className="d-flex justify-content-between align-items-center bg-primary text-white">
-                <h5 className="mb-0">
-                  <i className="bi bi-calendar-event me-2"></i>
-                  Concerts associés
-                </h5>
+            <Card 
+              className="mb-4"
+              title="Concerts associés"
+              icon={<i className="bi bi-calendar-event"></i>}
+              variant="primary"
+              headerActions={
                 <Button 
                   variant="link" 
                   className="p-0 text-white" 
@@ -312,15 +310,14 @@ const ProgrammateurForm = () => {
                     <i className="bi bi-chevron-down"></i>
                   )}
                 </Button>
-              </Card.Header>
-              
+              }
+            >
               {sections.concertsVisible && (
-                <Card.Body>
-                  <ProgrammateurConcertsSection
-                    concertsAssocies={programmateur?.concertsAssocies || []}
-                    isEditing={true}
-                  />
-                </Card.Body>
+                <ProgrammateurConcertsSection
+                  concertsAssocies={programmateur?.concertsAssocies || []}
+                  isEditing={true}
+                  showCardWrapper={false}
+                />
               )}
             </Card>
             

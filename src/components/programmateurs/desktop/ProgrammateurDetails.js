@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { useProgrammateurDetails } from '@/hooks/programmateurs';
@@ -27,7 +27,26 @@ const ProgrammateurDetails = () => {
     handleDelete,
     isSubmitting,
     formatValue,
+    lieux, // Extraire explicitement les lieux du hook
+    loadingLieux,
+    concerts, // Extraire explicitement les concerts du hook
+    loadingConcerts,
   } = useProgrammateurDetails(id);
+  
+  // LOGS DE DIAGNOSTIC: Vérifier si les données sont bien extraites du hook
+  useEffect(() => {
+    console.log(`[DIAGNOSTIC] ProgrammateurDetails - Lieux reçus du hook:`, {
+      lieuxCount: lieux?.length || 0,
+      lieuxIds: lieux?.map(lieu => lieu.id) || [],
+      loadingLieux,
+    });
+    
+    console.log(`[DIAGNOSTIC] ProgrammateurDetails - Concerts reçus du hook:`, {
+      concertsCount: concerts?.length || 0,
+      concertIds: concerts?.map(concert => concert.id) || [],
+      loadingConcerts,
+    });
+  }, [lieux, loadingLieux, concerts, loadingConcerts]);
   
   if (loading) {
     return <Spinner message="Chargement du programmateur..." contentOnly={true} />;
@@ -124,6 +143,8 @@ const ProgrammateurDetails = () => {
           <div className="mt-4">
             <ProgrammateurLieuxSection
               programmateur={programmateur}
+              lieux={lieux} // Passer explicitement les lieux
+              loadingLieux={loadingLieux} // Ajout du loadingLieux à l'instance existante
               isEditing={isEditing}
             />
           </div>
@@ -139,7 +160,7 @@ const ProgrammateurDetails = () => {
           
           <div className="mt-4">
             <ProgrammateurConcertsSection
-              concertsAssocies={programmateur.concertsAssocies || []}
+              concertsAssocies={concerts || []}
               isEditing={false}
             />
           </div>

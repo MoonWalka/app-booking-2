@@ -29,7 +29,7 @@ const useLieuxFiltersOptimized = (lieux = []) => {
     error,
     search: searchTerm,
     setSearch: setSearchTerm,
-    filters,
+    filters = [], // Added default empty array in case filters is undefined
     applyFilter,
     removeFilter,
     resetFilters: clearAllFilters,
@@ -123,7 +123,7 @@ const useLieuxFiltersOptimized = (lieux = []) => {
     error,
     
     // Recherche
-    searchTerm,
+    searchTerm: searchTerm || '',
     setSearchTerm,
     
     // Filtres

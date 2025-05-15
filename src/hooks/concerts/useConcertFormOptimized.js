@@ -212,10 +212,62 @@ export const useConcertFormOptimized = (concertId) => {
     }));
   }, [formHook]);
 
+  // Fonction pour gérer l'annulation du formulaire
+  const handleCancel = useCallback(() => {
+    debugLog('Annulation du formulaire concert', 'info', 'useConcertFormOptimized');
+    
+    // Si c'est un nouveau concert, rediriger vers la liste
+    if (isNewConcert) {
+      navigate('/concerts');
+    } else {
+      // Si c'est un concert existant, rediriger vers sa vue détails
+      navigate(`/concerts/${concertId}`);
+    }
+  }, [navigate, isNewConcert, concertId]);
+
   // Add debug log before returning
   console.log("[useConcertFormOptimized] Retourne. formData:", formHook.formData, 
     "loading:", formHook.loading, "isNewConcert (variable du hook):", isNewConcert,
-    "concertId:", concertId, "entityId utilisé:", isNewConcert ? null : concertId);
+    "concertId:", concertId, "entityId utilisé:", isNewConcert ? null : concertId,
+    "handleChange fourni:", formHook.handleChange ? "✓" : "✗");
+    
+  // Test explicite de handleChange
+  if (!formHook.handleChange) {
+    console.error("[useConcertFormOptimized] ERREUR: handleChange n'est pas défini dans l'objet retourné par useGenericEntityForm!");
+  }
+
+  // Wrapper pour handleChange qui ajoute des logs détaillés et force la mise à jour de formData si nécessaire
+  const handleChangeWithLogs = useCallback((e) => {
+    console.log("[useConcertFormOptimized] handleChange appelé avec:", e.target.name, e.target.value);
+    
+    // Extraire le nom et la valeur du champ
+    const { name, value, type, checked } = e.target;
+    const fieldValue = type === 'checkbox' ? checked : value;
+    
+    try {
+      // Essayer d'utiliser la fonction handleChange originale
+      if (formHook.handleChange) {
+        formHook.handleChange(e);
+        console.log("[useConcertFormOptimized] Après handleChange, formData:", formHook.formData);
+      } else {
+        // Fallback : mettre à jour directement les données avec updateFormData
+        console.warn("[useConcertFormOptimized] handleChange non défini, utilisation de updateFormData à la place");
+        formHook.updateFormData(prev => ({ 
+          ...prev, 
+          [name]: fieldValue 
+        }));
+      }
+    } catch (error) {
+      // En cas d'erreur, utiliser updateFormData comme fallback
+      console.error("[useConcertFormOptimized] Erreur dans handleChange:", error);
+      console.warn("[useConcertFormOptimized] Tentative de mise à jour avec updateFormData");
+      
+      formHook.updateFormData(prev => ({ 
+        ...prev, 
+        [name]: fieldValue 
+      }));
+    }
+  }, [formHook]);
 
   // Enrichir formData avec l'id de l'entité pour exposer concert.id
   const concertDataWithId = { ...formHook.formData, id: formHook.entityId };
@@ -223,11 +275,14 @@ export const useConcertFormOptimized = (concertId) => {
   // Retourner le hook générique enrichi de fonctionnalités spécifiques
   return {
     ...formHook,
+    // Remplacer handleChange par notre version avec logs détaillés
+    handleChange: handleChangeWithLogs,
     // Propriétés et méthodes spécifiques aux concerts
     handleArtisteChange,
     handleLieuChange,
     handleAddContact,
     handleRemoveContact,
+    handleCancel,
     isNewConcert,
     // Exposer les données du concert enrichies avec l'id pour la DX
     concert: concertDataWithId,

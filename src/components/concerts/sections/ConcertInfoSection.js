@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './ConcertInfoSection.module.css';
+import editStyles from './ConcertInfoSectionEdit.module.css';
 import Card from '@/components/ui/Card';
 
 /**
@@ -14,32 +15,32 @@ const ConcertInfoSection = ({ formData, onChange }) => {
     <Card
       title="Informations principales"
       icon={<i className="bi bi-music-note-beamed"></i>}
-      className={styles.concertInfoSection}
+      className={editStyles.concertInfoSection}
     >
-      <div className={styles.formGroup}>
-        <label htmlFor="titre" className={styles.formLabel}>Titre du concert</label>
+      <div className={editStyles.editFormGroup}>
+        <label htmlFor="titre" className={editStyles.editFormLabel}>Titre du concert</label>
         <input
           type="text"
-          className={`form-control ${styles.formControl}`}
+          className={editStyles.editFormControl}
           id="titre"
           name="titre"
           value={formData.titre || ''}
           onChange={onChange}
           placeholder="Ex: Concert de jazz, Festival d'été, etc."
         />
-        <small className={styles.formHelpText}>
+        <small className={editStyles.editFormHelpText}>
           Un titre descriptif aidera à identifier rapidement ce concert.
         </small>
       </div>
 
-      <div className={styles.formRow}>
-        <div className={styles.formGroup}>
-          <label htmlFor="date" className={styles.formLabel}>
-            Date du concert <span className={styles.requiredField}>*</span>
+      <div className={editStyles.editFormRow}>
+        <div className={editStyles.editFormGroup}>
+          <label htmlFor="date" className={editStyles.editFormLabel}>
+            Date du concert <span className={editStyles.editRequiredField}>*</span>
           </label>
           <input
             type="date"
-            className={`form-control ${styles.formControl}`}
+            className={editStyles.editFormControl}
             id="date"
             name="date"
             value={formData.date || ''}
@@ -48,14 +49,14 @@ const ConcertInfoSection = ({ formData, onChange }) => {
           />
         </div>
         
-        <div className={styles.formGroup}>
-          <label htmlFor="montant" className={styles.formLabel}>
-            Montant (€) <span className={styles.requiredField}>*</span>
+        <div className={editStyles.editFormGroup}>
+          <label htmlFor="montant" className={editStyles.editFormLabel}>
+            Montant (€) <span className={editStyles.editRequiredField}>*</span>
           </label>
-          <div className={styles.inputGroup}>
+          <div className={editStyles.editInputGroup}>
             <input
               type="number"
-              className={`form-control ${styles.formControl}`}
+              className={editStyles.editFormControl}
               id="montant"
               name="montant"
               value={formData.montant || ''}
@@ -65,15 +66,15 @@ const ConcertInfoSection = ({ formData, onChange }) => {
               step="0.01"
               required
             />
-            <span className={styles.inputGroupAddon}>€</span>
+            <span className={editStyles.editInputGroupAddon}>€</span>
           </div>
         </div>
       </div>
 
-      <div className={styles.formGroup}>
-        <label htmlFor="statut" className={styles.formLabel}>Statut</label>
+      <div className={editStyles.editFormGroup}>
+        <label htmlFor="statut" className={editStyles.editFormLabel}>Statut</label>
         <select
-          className={`form-select ${styles.formSelect}`}
+          className={editStyles.editFormSelect}
           id="statut"
           name="statut"
           value={formData.statut || 'En attente'}

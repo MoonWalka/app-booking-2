@@ -9,15 +9,25 @@ import styles from './ConcertFormActions.module.css';
  * @param {boolean} props.isSubmitting - Indique si le formulaire est en cours de soumission
  * @param {Function} props.onDelete - Fonction de rappel pour la suppression
  * @param {Function} props.onSubmit - Fonction de rappel pour la soumission du formulaire
+ * @param {Function} props.onCancel - Fonction de rappel pour l'annulation (ajoutée)
  * @param {Function} props.navigate - Fonction de navigation de react-router
  * @param {string} props.position - Position des boutons (top ou bottom)
  */
-const ConcertFormActions = ({ id, isSubmitting, onDelete, onSubmit, navigate, position }) => {
+const ConcertFormActions = ({ id, isSubmitting, onDelete, onSubmit, onCancel, navigate, position }) => {
   const isNewConcert = id === 'nouveau';
   
   // Déterminer si nous devons afficher tous les boutons ou juste certains en fonction de la position
   const showSaveButton = position === 'bottom';
   const showDeleteButton = !isNewConcert;
+  
+  // Utiliser la fonction onCancel si elle est fournie, sinon utiliser une navigation par défaut
+  const handleCancel = () => {
+    if (typeof onCancel === 'function') {
+      onCancel();
+    } else {
+      navigate('/concerts');
+    }
+  };
   
   return (
     <div className={position === 'top' ? styles.topActionsContainer : styles.bottomActionsContainer}>
@@ -25,7 +35,7 @@ const ConcertFormActions = ({ id, isSubmitting, onDelete, onSubmit, navigate, po
         <button
           type="button"
           className={`btn btn-outline-secondary ${styles.actionButton}`}
-          onClick={() => navigate('/concerts')}
+          onClick={handleCancel}
           disabled={isSubmitting}
         >
           <i className="bi bi-arrow-left me-2"></i>

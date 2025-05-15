@@ -1,0 +1,21 @@
+# Fichiers à ignorer lors de l'analyse ESLint
+
+# Build et fichiers générés
+build/
+coverage/
+*.min.js
+
+# Modules Node
+node_modules/
+
+# Fichiers de test
+**/*.test.js
+**/*.spec.js
+
+# Fichiers de configuration
+craco.config.js
+jest.config.js
+jest.setup.js
+
+# Scripts de migration/audit
+scripts/

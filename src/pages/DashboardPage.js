@@ -1,4 +1,5 @@
 import React from 'react';
+import Card from '@/components/ui/Card';
 import styles from './Dashboard.module.css';
 
 // Imports modifiés de la branche refacto-structure-scriptshell - pour implémentation future
@@ -94,64 +95,58 @@ const DashboardPage = () => {
   );
   */
   
-  // Version actuelle (HTML standard avec classes Bootstrap)
+  // Version actuelle avec composant Card standardisé
   return (
     <div className="container mt-4">
       <h1>Dashboard</h1>
       <div className={styles.dashboardStats}>
         <div className={styles.statCard}>
-          <div className="card-body">
+          <Card>
             <h5 className="card-title">Concerts</h5>
             <p className={styles.statValue}>0</p>
             <p className="card-text">Concerts à venir</p>
-          </div>
+          </Card>
         </div>
         <div className={styles.statCard}>
-          <div className="card-body">
+          <Card>
             <h5 className="card-title">Programmateurs</h5>
             <p className={styles.statValue}>1</p>
             <p className="card-text">Programmateurs actifs</p>
-          </div>
+          </Card>
         </div>
         <div className={styles.statCard}>
-          <div className="card-body">
+          <Card>
             <h5 className="card-title">Lieux</h5>
             <p className={styles.statValue}>1</p>
             <p className="card-text">Lieux disponibles</p>
-          </div>
+          </Card>
         </div>
         <div className={styles.statCard}>
-          <div className="card-body">
+          <Card>
             <h5 className="card-title">Contrats</h5>
             <p className={styles.statValue}>0</p>
             <p className="card-text">Contrats en cours</p>
-          </div>
+          </Card>
         </div>
       </div>
 
       <div className="row mt-4">
         <div className="col-md-6 mb-4">
-          <div className="card">
-            <div className="card-header">
-              Concerts à venir
-            </div>
-            <div className="card-body">
-              <p className="text-center">Aucun concert à venir</p>
-            </div>
-          </div>
+          <Card
+            title="Concerts à venir"
+          >
+            <p className="text-center">Aucun concert à venir</p>
+          </Card>
         </div>
         <div className="col-md-6 mb-4">
-          <div className="card">
-            <div className="card-header">
-              Activité récente
-            </div>
-            <div className="card-body">
-              <ul className="list-group list-group-flush">
-                <li className="list-group-item">Création du lieu "La Cigale"</li>
-                <li className="list-group-item">Création du programmateur "Jean Dupont"</li>
-              </ul>
-            </div>
-          </div>
+          <Card
+            title="Activité récente"
+          >
+            <ul className="list-group list-group-flush">
+              <li className="list-group-item">Création du lieu "La Cigale"</li>
+              <li className="list-group-item">Création du programmateur "Jean Dupont"</li>
+            </ul>
+          </Card>
         </div>
       </div>
     </div>

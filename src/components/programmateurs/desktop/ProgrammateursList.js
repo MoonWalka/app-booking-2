@@ -92,7 +92,7 @@ const ProgrammateursList = ({ onNavigateToDetails }) => {
             </Button>
           </InputGroup>
           <Button
-            variant="success"
+            variant="primary"
             onClick={() => navigate('/programmateurs/nouveau')}
           >
             <i className="bi bi-plus-circle me-1"></i>

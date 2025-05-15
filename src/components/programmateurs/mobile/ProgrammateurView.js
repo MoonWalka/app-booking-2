@@ -1,7 +1,8 @@
 // src/components/programmateurs/mobile/ProgrammateurView.js
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Card, Button, Badge, Spinner } from 'react-bootstrap';
+import { Button, Badge, Spinner } from 'react-bootstrap';
+import Card from '@/components/ui/Card';
 import { useProgrammateurDetails } from '@/hooks/programmateurs';
 import UnderConstruction from '@/components/common/UnderConstruction';
 import styles from './ProgrammateurDetails.module.css';
@@ -37,42 +38,40 @@ const ProgrammateurView = () => {
 
   if (error) {
     return (
-      <Card className="m-3">
-        <Card.Body>
-          <Card.Title className="text-danger">
-            <i className="bi bi-exclamation-triangle me-2"></i>
-            Erreur
-          </Card.Title>
-          <Card.Text>{error}</Card.Text>
-          <Button 
-            variant="primary" 
-            onClick={() => navigate('/programmateurs')}
-          >
-            <i className="bi bi-arrow-left me-2"></i>
-            Retour à la liste
-          </Button>
-        </Card.Body>
+      <Card 
+        className="m-3"
+        title="Erreur"
+        icon={<i className="bi bi-exclamation-triangle"></i>}
+        variant="danger"
+      >
+        <p>{error}</p>
+        <Button 
+          variant="primary" 
+          onClick={() => navigate('/programmateurs')}
+        >
+          <i className="bi bi-arrow-left me-2"></i>
+          Retour à la liste
+        </Button>
       </Card>
     );
   }
 
   if (!programmateur) {
     return (
-      <Card className="m-3">
-        <Card.Body>
-          <Card.Title className="text-warning">
-            <i className="bi bi-question-circle me-2"></i>
-            Programmateur non trouvé
-          </Card.Title>
-          <Card.Text>Le programmateur demandé n'existe pas ou a été supprimé.</Card.Text>
-          <Button 
-            variant="primary" 
-            onClick={() => navigate('/programmateurs')}
-          >
-            <i className="bi bi-arrow-left me-2"></i>
-            Retour à la liste
-          </Button>
-        </Card.Body>
+      <Card 
+        className="m-3"
+        title="Programmateur non trouvé"
+        icon={<i className="bi bi-question-circle"></i>}
+        variant="warning"
+      >
+        <p>Le programmateur demandé n'existe pas ou a été supprimé.</p>
+        <Button 
+          variant="primary" 
+          onClick={() => navigate('/programmateurs')}
+        >
+          <i className="bi bi-arrow-left me-2"></i>
+          Retour à la liste
+        </Button>
       </Card>
     );
   }
@@ -126,95 +125,89 @@ const ProgrammateurView = () => {
       )}
       
       {/* Informations de contact */}
-      <Card className="mb-3">
-        <Card.Header className="bg-light">
-          <i className="bi bi-person-lines-fill me-2"></i>
-          Contact
-        </Card.Header>
-        <Card.Body>
-          <div className="mb-2">
-            {programmateur.email && (
-              <div className="d-flex align-items-center mb-2">
-                <i className="bi bi-envelope me-2 text-muted"></i>
-                <a href={`mailto:${programmateur.email}`}>
-                  {programmateur.email}
-                </a>
-              </div>
-            )}
-            
-            {programmateur.telephone && (
-              <div className="d-flex align-items-center mb-2">
-                <i className="bi bi-telephone me-2 text-muted"></i>
-                <a href={`tel:${programmateur.telephone}`}>
-                  {programmateur.telephone}
-                </a>
-              </div>
-            )}
-          </div>
-        </Card.Body>
+      <Card 
+        className="mb-3"
+        title="Contact"
+        icon={<i className="bi bi-person-lines-fill"></i>}
+      >
+        <div className="mb-2">
+          {programmateur.email && (
+            <div className="d-flex align-items-center mb-2">
+              <i className="bi bi-envelope me-2 text-muted"></i>
+              <a href={`mailto:${programmateur.email}`}>
+                {programmateur.email}
+              </a>
+            </div>
+          )}
+          
+          {programmateur.telephone && (
+            <div className="d-flex align-items-center mb-2">
+              <i className="bi bi-telephone me-2 text-muted"></i>
+              <a href={`tel:${programmateur.telephone}`}>
+                {programmateur.telephone}
+              </a>
+            </div>
+          )}
+        </div>
       </Card>
       
       {/* Structure associée */}
-      <Card className="mb-3">
-        <Card.Header className="bg-light">
-          <i className="bi bi-building me-2"></i>
-          Structure
-        </Card.Header>
-        <Card.Body>
-          {programmateur.structureId ? (
-            <div>
-              <div className="fw-bold">{programmateur.structureNom || "Structure associée"}</div>
-              <small className="text-muted">
-                {programmateur.structureType && `Type : ${programmateur.structureType}`}
-              </small>
-            </div>
-          ) : (
-            <span className="text-muted">Aucune structure associée</span>
-          )}
-        </Card.Body>
+      <Card 
+        className="mb-3"
+        title="Structure"
+        icon={<i className="bi bi-building"></i>}
+      >
+        {programmateur.structureId ? (
+          <div>
+            <div className="fw-bold">{programmateur.structureNom || "Structure associée"}</div>
+            <small className="text-muted">
+              {programmateur.structureType && `Type : ${programmateur.structureType}`}
+            </small>
+          </div>
+        ) : (
+          <span className="text-muted">Aucune structure associée</span>
+        )}
       </Card>
       
       {/* Concerts associés */}
-      <Card className="mb-3">
-        <Card.Header className="bg-light">
-          <i className="bi bi-calendar-event me-2"></i>
-          Concerts
-        </Card.Header>
-        <Card.Body>
-          {programmateur.concertsAssocies && programmateur.concertsAssocies.length > 0 ? (
-            <div className="list-group list-group-flush">
-              {programmateur.concertsAssocies.slice(0, 3).map(concert => (
-                <div 
-                  key={concert.id} 
-                  className="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
-                  onClick={() => navigate(`/concerts/${concert.id}`)}
-                >
-                  <div>
-                    <div className="fw-semibold">{concert.titre || "Concert sans titre"}</div>
-                    <small className="text-muted">
-                      {new Date(concert.date).toLocaleDateString('fr-FR')}
-                      {concert.lieu && ` - ${concert.lieu}`}
-                    </small>
-                  </div>
-                  <i className="bi bi-chevron-right text-muted"></i>
+      <Card 
+        className="mb-3"
+        title="Concerts"
+        icon={<i className="bi bi-calendar-event"></i>}
+      >
+        {programmateur.concertsAssocies && programmateur.concertsAssocies.length > 0 ? (
+          <div className="list-group list-group-flush">
+            {programmateur.concertsAssocies.slice(0, 3).map(concert => (
+              <div 
+                key={concert.id} 
+                className="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                onClick={() => navigate(`/concerts/${concert.id}`)}
+              >
+                <div>
+                  <div className="fw-semibold">{concert.titre || "Concert sans titre"}</div>
+                  <small className="text-muted">
+                    {new Date(concert.date).toLocaleDateString('fr-FR')}
+                    {concert.lieu && ` - ${concert.lieu}`}
+                  </small>
                 </div>
-              ))}
-              
-              {programmateur.concertsAssocies.length > 3 && (
-                <button 
-                  className="list-group-item list-group-item-action text-center text-primary"
-                  onClick={() => navigate(`/concerts?programmateur=${programmateur.id}`)}
-                >
-                  Voir tous les concerts ({programmateur.concertsAssocies.length})
-                </button>
-              )}
-            </div>
-          ) : (
-            <div className="text-muted">
-              Aucun concert associé à ce programmateur
-            </div>
-          )}
-        </Card.Body>
+                <i className="bi bi-chevron-right text-muted"></i>
+              </div>
+            ))}
+            
+            {programmateur.concertsAssocies.length > 3 && (
+              <button 
+                className="list-group-item list-group-item-action text-center text-primary"
+                onClick={() => navigate(`/concerts?programmateur=${programmateur.id}`)}
+              >
+                Voir tous les concerts ({programmateur.concertsAssocies.length})
+              </button>
+            )}
+          </div>
+        ) : (
+          <div className="text-muted">
+            Aucun concert associé à ce programmateur
+          </div>
+        )}
       </Card>
       
       {/* Informations supplémentaires */}

@@ -61,6 +61,22 @@ app-booking/
 
 ## Directives de développement
 
+### Composants standardisés
+
+#### Composant Card
+
+Depuis Mai 2025, une standardisation complète du composant Card a été réalisée. Tous les composants de l'application utilisent désormais le composant Card standardisé. 
+
+- **Import correct** : `import Card from '@/components/ui/Card';`
+- **Documentation** : Pour l'utilisation correcte et les exemples, consultez la [documentation du composant Card](/docs/components/Card.md)
+- **Standards** : Les règles et standards sont détaillés dans [Standards des Composants](/docs/standards/components-standardises.md)
+- **Rapport** : Le processus de migration est documenté dans le [rapport de migration](/card_migration_report.md)
+
+**À ne jamais faire** :
+- Ne créez pas d'implémentations DIY de cartes avec des `<div className="card">`
+- N'importez pas directement le composant Card de React-Bootstrap
+- N'utilisez pas d'anciens chemins d'importation
+
 ### Hooks standardisés
 
 Depuis Mai 2025, une standardisation complète des hooks a été mise en place. Tous les hooks sont maintenant organisés dans le dossier `/src/hooks/` avec une structure cohérente par entité. Consultez la [documentation de standardisation des hooks](/docs/hooks/STANDARDISATION_HOOKS.md) pour les détails complets.
@@ -88,6 +104,8 @@ Les composants UI réutilisables se trouvent dans `/components/ui/`.
 ## Documentation technique
 
 - [Architecture du projet](/docs/ARCHITECTURE.md)
+- [Standardisation des composants](/docs/standards/components-standardises.md)
+- [Documentation du composant Card](/docs/components/Card.md)
 - [Standardisation des hooks](/docs/hooks/STANDARDISATION_HOOKS.md)
 - [Refactorisation des composants](/docs/CONCERT_REFACTORING.md)
 - [Documentation des composants communs](/docs/components/COMMON_COMPONENTS.md)

@@ -36,6 +36,12 @@
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject",
+    "lint": "eslint src --ext .js,.jsx",
+    "lint:fix": "eslint src --ext .js,.jsx --fix",
+    "audit:card": "node scripts/audit_card_usage.js",
+    "card:test-disable": "node scripts/migration/disable_legacy_card.js",
+    "card:test-restore": "node scripts/migration/restore_legacy_card.js", 
+    "card:remove": "node scripts/migration/remove_legacy_card.js",
     "detect-hooks": "node scripts/detect_deprecated_hooks.js --verbose",
     "hooks-report": "node scripts/detect_deprecated_hooks.js --html",
     "hooks-migration-status": "node scripts/monitor_hooks_migration.js"

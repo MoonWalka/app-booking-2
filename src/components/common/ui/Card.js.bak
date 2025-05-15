@@ -3,6 +3,11 @@ import PropTypes from 'prop-types';
 import './Card.css';
 
 /**
+ * @deprecated Ce composant est déprécié en faveur de src/components/ui/Card.js
+ * Veuillez utiliser le composant standardisé qui inclut le support du mode édition.
+ * Consultez la documentation dans docs/components/Card.md pour plus d'informations.
+ * Date de dépréciation: 15 mai 2025
+ * 
  * Composant Card standardisé
  * Un composant de carte modulaire avec des sous-composants pour l'en-tête, le corps, le pied, et les médias
  * 

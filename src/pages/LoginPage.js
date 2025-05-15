@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '@/components/ui/Button';
+import Card from '@/components/ui/Card';
 
 // Imports modifiés de la branche refacto-structure-scriptshell - pour implémentation future
 {/* 
@@ -96,66 +97,61 @@ const LoginPage = () => {
   );
   */
   
-  // Version actuelle (HTML standard avec classes Bootstrap)
+  // Version avec le composant Card standardisé
   return (
     <div className="container">
       <div className="row justify-content-center mt-5">
         <div className="col-md-6">
-          <div className="card">
-            <div className="card-header bg-primary text-white">
-              <h4 className="mb-0">Connexion</h4>
-            </div>
-            <div className="card-body">
-              {error && <div className="alert alert-danger">{error}</div>}
-              <form onSubmit={handleSubmit}>
-                <div className="mb-3">
-                  <label htmlFor="email" className="form-label">Email</label>
-                  <input
-                    type="email"
-                    className="form-control"
-                    id="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="password" className="form-label">Mot de passe</label>
-                  <input
-                    type="password"
-                    className="form-control"
-                    id="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="d-grid">
-                  <Button
-                    type="submit"
-                    variant="primary"
-                    disabled={loading}
-                    icon={loading ? null : <i className="bi bi-key"></i>}
-                    className="w-100"
-                  >
-                    {loading ? 'Connexion en cours...' : 'Se connecter'}
-                  </Button>
-                </div>
-              </form>
-              <div className="mt-3 text-center">
-                <small className="text-muted">
-                  Pour les tests, utilisez: test@example.com / password
-                </small>
+          <Card 
+            title="Connexion"
+            variant="primary"
+          >
+            {error && <div className="alert alert-danger">{error}</div>}
+            <form onSubmit={handleSubmit}>
+              <div className="mb-3">
+                <label htmlFor="email" className="form-label">Email</label>
+                <input
+                  type="email"
+                  className="form-control"
+                  id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
               </div>
+              <div className="mb-3">
+                <label htmlFor="password" className="form-label">Mot de passe</label>
+                <input
+                  type="password"
+                  className="form-control"
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="d-grid">
+                <Button
+                  type="submit"
+                  variant="primary"
+                  disabled={loading}
+                  icon={loading ? null : <i className="bi bi-key"></i>}
+                  className="w-100"
+                >
+                  {loading ? 'Connexion en cours...' : 'Se connecter'}
+                </Button>
+              </div>
+            </form>
+            <div className="mt-3 text-center">
+              <small className="text-muted">
+                Pour les tests, utilisez: test@example.com / password
+              </small>
             </div>
-          </div>
+          </Card>
         </div>
       </div>
     </div>
   );
 };
-
-// Note: La version React Bootstrap utilise les composants React Bootstrap (Container, Row, Col, Card, Form, etc.)
-// au lieu des classes Bootstrap standard, ce qui donne un code plus propre et plus modulaire
 
 export default LoginPage;

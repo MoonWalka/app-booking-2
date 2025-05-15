@@ -135,7 +135,7 @@ const ArtistesList = () => {
         searchTerm={searchTerm}
         onSearchChange={handleSearchChange}
         onClearSearch={handleClearSearch}
-        filter={filters.status || ''}
+        filter={(filters && filters.status) || ''}
         onFilterChange={handleFilterChange}
         sortBy={sortBy}
         onSortChange={handleSortChange}

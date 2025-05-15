@@ -1,5 +1,5 @@
 // src/hooks/programmateurs/useProgrammateurDetailsOptimized.js
-import { useCallback } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
@@ -31,6 +31,16 @@ const useProgrammateurDetailsOptimized = (id) => {
   console.log('[TRACE-UNIQUE][useProgrammateurDetailsOptimized] Entrée hook avec id:', id);
   const navigate = useNavigate();
   
+  // État pour les lieux associés avec chargement personnalisé
+  const [lieux, setLieux] = useState([]);
+  const [loadingLieux, setLoadingLieux] = useState(false);
+  const [errorLieux, setErrorLieux] = useState(null);
+  
+  // États pour les concerts associés avec chargement personnalisé
+  const [concerts, setConcerts] = useState([]);
+  const [loadingConcerts, setLoadingConcerts] = useState(false);
+  const [errorConcerts, setErrorConcerts] = useState(null);
+
   // Fonction pour formater les champs date - IDENTIQUE À L'ORIGINALE
   const formatFields = {
     createdAt: (value) => value ? format(new Date(value), 'PPP à HH:mm', { locale: fr }) : '-',
@@ -173,21 +183,8 @@ const useProgrammateurDetailsOptimized = (id) => {
         idField: 'structureIds',
         collection: 'structures',
         type: 'one-to-many'
-      },
-      { 
-        name: 'lieux', 
-        idField: 'programmateurId',
-        collection: 'lieux',
-        type: 'one-to-many',
-        isReference: true 
-      },
-      {
-        name: 'concerts',
-        idField: 'programmateurId',
-        collection: 'concerts',
-        type: 'one-to-many',
-        isReference: true
       }
+      // Lieux et concerts sont gérés manuellement
     ],
     customQueries,
     
@@ -349,6 +346,152 @@ const useProgrammateurDetailsOptimized = (id) => {
     });
   }, [genericDetails]);
 
+  // Chargement personnalisé des lieux associés
+  useEffect(() => {
+    const fetchLieuxAssocies = async () => {
+      if (!id || !genericDetails.entity) return;
+      
+      try {
+        setLoadingLieux(true);
+        console.log(`[DIAGNOSTIC] useProgrammateurDetailsOptimized - Chargement des lieux pour programmateur ${id}`);
+        
+        // Vérifier d'abord si le programmateur a des lieuxIds ou lieuxAssocies dans ses données
+        if (genericDetails.entity.lieuxIds?.length > 0 || genericDetails.entity.lieuxAssocies?.length > 0) {
+          const lieuxRefs = genericDetails.entity.lieuxIds || genericDetails.entity.lieuxAssocies || [];
+          console.log(`[DIAGNOSTIC] useProgrammateurDetailsOptimized - ${lieuxRefs.length} références de lieux trouvées dans le programmateur`);
+          
+          const lieuxPromises = lieuxRefs.map(lieuRef => {
+            const lieuId = typeof lieuRef === 'object' ? lieuRef.id : lieuRef;
+            return getDoc(doc(db, 'lieux', lieuId)).then(snapshot => {
+              if (snapshot.exists()) {
+                return { id: snapshot.id, ...snapshot.data() };
+              }
+              return null;
+            });
+          });
+          
+          const lieuxResults = await Promise.all(lieuxPromises);
+          const validLieux = lieuxResults.filter(lieu => lieu !== null);
+          console.log(`[DIAGNOSTIC] useProgrammateurDetailsOptimized - ${validLieux.length} lieux chargés depuis les références`);
+          
+          setLieux(validLieux);
+        } else {
+          // Si pas de référence directe, chercher par référence inverse
+          console.log(`[DIAGNOSTIC] useProgrammateurDetailsOptimized - Pas de références directes, recherche par référence inverse`);
+          
+          // Méthode 1: Chercher les lieux avec ce programmateur dans 'programmateurs'
+          let lieuxQuery = query(
+            collection(db, 'lieux'),
+            where('programmateurs', 'array-contains', id)
+          );
+          let querySnapshot = await getDocs(lieuxQuery);
+          let lieuxLoaded = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          
+          // Méthode 2: Si rien trouvé, chercher par programmateurId
+          if (lieuxLoaded.length === 0) {
+            console.log(`[DIAGNOSTIC] useProgrammateurDetailsOptimized - Pas de résultat avec 'programmateurs', essai avec 'programmateurId'`);
+            lieuxQuery = query(
+              collection(db, 'lieux'),
+              where('programmateurId', '==', id)
+            );
+            querySnapshot = await getDocs(lieuxQuery);
+            lieuxLoaded = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          }
+          
+          console.log(`[DIAGNOSTIC] useProgrammateurDetailsOptimized - ${lieuxLoaded.length} lieux trouvés par référence inverse`, { 
+            lieuxIds: lieuxLoaded.map(lieu => lieu.id) 
+          });
+          
+          setLieux(lieuxLoaded);
+        }
+        
+      } catch (error) {
+        console.error('[ERROR] useProgrammateurDetailsOptimized - Erreur lors du chargement des lieux:', error);
+        setErrorLieux(error.message);
+      } finally {
+        setLoadingLieux(false);
+      }
+    };
+    
+    fetchLieuxAssocies();
+  }, [id, genericDetails.entity]);
+  
+  // Chargement personnalisé des concerts associés
+  useEffect(() => {
+    const fetchConcertsAssocies = async () => {
+      if (!id || !genericDetails.entity) return;
+      
+      try {
+        setLoadingConcerts(true);
+        console.log(`[DIAGNOSTIC] useProgrammateurDetailsOptimized - Chargement des concerts pour programmateur ${id}`);
+        
+        // Méthode 1: Vérifier si le programmateur a des concertsIds ou concertsAssocies dans ses données
+        if (genericDetails.entity.concertsIds?.length > 0 || genericDetails.entity.concertsAssocies?.length > 0) {
+          const concertRefs = genericDetails.entity.concertsIds || genericDetails.entity.concertsAssocies || [];
+          console.log(`[DIAGNOSTIC] useProgrammateurDetailsOptimized - ${concertRefs.length} références de concerts trouvées dans le programmateur`);
+          
+          const concertPromises = concertRefs.map(concertRef => {
+            // Si c'est déjà un objet avec ID et des infos basiques, on peut l'utiliser directement
+            if (typeof concertRef === 'object' && concertRef.id && concertRef.titre) {
+              return Promise.resolve(concertRef);
+            }
+            
+            // Sinon on charge les détails complets
+            const concertId = typeof concertRef === 'object' ? concertRef.id : concertRef;
+            return getDoc(doc(db, 'concerts', concertId)).then(snapshot => {
+              if (snapshot.exists()) {
+                return { id: snapshot.id, ...snapshot.data() };
+              }
+              return null;
+            });
+          });
+          
+          const concertResults = await Promise.all(concertPromises);
+          const validConcerts = concertResults.filter(concert => concert !== null);
+          console.log(`[DIAGNOSTIC] useProgrammateurDetailsOptimized - ${validConcerts.length} concerts chargés depuis les références`);
+          
+          setConcerts(validConcerts);
+        } else {
+          // Méthode 2: Chercher par référence inverse dans la collection concerts
+          console.log(`[DIAGNOSTIC] useProgrammateurDetailsOptimized - Pas de références directes, recherche par référence inverse`);
+          
+          // Chercher les concerts avec ce programmateur comme programmateurId
+          let concertsQuery = query(
+            collection(db, 'concerts'),
+            where('programmateurId', '==', id)
+          );
+          let querySnapshot = await getDocs(concertsQuery);
+          let concertsLoaded = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          
+          // Si aucun résultat, essayer avec le champ programmateurs (array-contains)
+          if (concertsLoaded.length === 0) {
+            console.log(`[DIAGNOSTIC] useProgrammateurDetailsOptimized - Pas de résultat avec 'programmateurId', essai avec 'programmateurs'`);
+            concertsQuery = query(
+              collection(db, 'concerts'),
+              where('programmateurs', 'array-contains', id)
+            );
+            querySnapshot = await getDocs(concertsQuery);
+            concertsLoaded = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          }
+          
+          console.log(`[DIAGNOSTIC] useProgrammateurDetailsOptimized - ${concertsLoaded.length} concerts trouvés par référence inverse`, { 
+            concertIds: concertsLoaded.map(concert => concert.id) 
+          });
+          
+          setConcerts(concertsLoaded);
+        }
+        
+      } catch (error) {
+        console.error('[ERROR] useProgrammateurDetailsOptimized - Erreur lors du chargement des concerts:', error);
+        setErrorConcerts(error.message);
+      } finally {
+        setLoadingConcerts(false);
+      }
+    };
+    
+    fetchConcertsAssocies();
+  }, [id, genericDetails.entity]);
+
   // Retourner exactement la même structure que l'originale
   return {
     // Toutes les fonctionnalités du hook générique
@@ -361,7 +504,16 @@ const useProgrammateurDetailsOptimized = (id) => {
     removeStructureSecondaire,
     addContact,
     updateContact,
-    removeContact
+    removeContact,
+    // Ajouter les données des lieux et concerts chargés manuellement
+    lieux,
+    loadingLieux,
+    errorLieux,
+    concerts,
+    loadingConcerts,
+    errorConcerts,
+    // Pour compatibilité avec le composant existant
+    concertsAssocies: concerts
   };
 };
 

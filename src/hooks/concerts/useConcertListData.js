@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { collection, query, orderBy, getDocs, doc, getDoc } from 'firebase/firestore';
+import { collection, query, orderBy, getDocs, doc, getDoc, limit, where } from 'firebase/firestore';
 import { db } from '@/firebaseInit';
 
 /**
  * Hook to fetch concerts, form data, and contracts
+ * Version optimisée pour réduire les requêtes et améliorer les performances
  */
 export const useConcertListData = () => {
   const [concerts, setConcerts] = useState([]);
@@ -15,7 +16,12 @@ export const useConcertListData = () => {
   const [lastUpdate, setLastUpdate] = useState(Date.now());
 
   const lastFetchRef = useRef(0);
-  const isInitialRenderRef = useRef(true); // Déplacé ici au niveau supérieur du hook
+  const isInitialRenderRef = useRef(true);
+  const cacheRef = useRef({
+    concerts: {},
+    lieux: {},
+    programmateurs: {}
+  });
 
   const minTimeBetweenFetches = 10000; // 10 secondes minimum entre deux fetch
 
@@ -32,192 +38,114 @@ export const useConcertListData = () => {
     try {
       console.log('Chargement des données des concerts...');
       setLoading(true);
-      // Récupérer les concerts
+      
+      // Récupérer les concerts avec seulement les champs nécessaires
       const concertsRef = collection(db, 'concerts');
       const q = query(concertsRef, orderBy('date', 'desc'));
       const querySnapshot = await getDocs(q);
 
       const concertsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      
+      // Collecter les IDs uniques pour les lieux et programmateurs
+      const lieuxIds = [...new Set(concertsData.filter(c => c.lieuId).map(c => c.lieuId))];
+      const programmateurIds = [...new Set(concertsData.filter(c => c.programmateurId).map(c => c.programmateurId))];
+      
+      // Charger les lieux et programmateurs en batch (en parallèle)
+      const [lieuxData, programmateursData] = await Promise.all([
+        fetchEntitiesBatch('lieux', lieuxIds, ['id', 'nom', 'ville', 'capacite']),
+        fetchEntitiesBatch('programmateurs', programmateurIds, ['id', 'nom', 'prenom', 'email'])
+      ]);
+      
+      // Mise en cache des lieux et programmateurs
+      lieuxData.forEach(lieu => {
+        if (lieu) cacheRef.current.lieux[lieu.id] = lieu;
+      });
+      
+      programmateursData.forEach(prog => {
+        if (prog) cacheRef.current.programmateurs[prog.id] = prog;
+      });
+      
       // Enrichir chaque concert avec les données de lieu et programmateur
-      const enrichedConcerts = await Promise.all(
-        concertsData.map(async (concert) => {
-          const enriched = { ...concert };
-          if (concert.lieuId) {
-            const lieuRef = doc(db, 'lieux', concert.lieuId);
-            const lieuSnap = await getDoc(lieuRef);
-            if (lieuSnap.exists()) {
-              const lieu = lieuSnap.data();
-              enriched.lieuNom = lieu.nom || '';
-              enriched.lieuVille = lieu.ville || '';
-              enriched.lieuCodePostal = lieu.codePostal || '';
-            }
-          }
-          if (concert.programmateurId) {
-            const progRef = doc(db, 'programmateurs', concert.programmateurId);
-            const progSnap = await getDoc(progRef);
-            if (progSnap.exists()) {
-              const prog = progSnap.data();
-              enriched.programmateurNom = prog.nom || prog.raisonSociale || '';
-            }
-          }
-          return enriched;
-        })
-      );
-      console.log(`${enrichedConcerts.length} concerts enrichis chargés`);
+      const enrichedConcerts = concertsData.map(concert => {
+        const enriched = { ...concert };
+        
+        // Ajouter les données du lieu s'il existe
+        if (concert.lieuId && cacheRef.current.lieux[concert.lieuId]) {
+          enriched.lieu = cacheRef.current.lieux[concert.lieuId];
+        }
+        
+        // Ajouter les données du programmateur s'il existe
+        if (concert.programmateurId && cacheRef.current.programmateurs[concert.programmateurId]) {
+          enriched.programmateur = cacheRef.current.programmateurs[concert.programmateurId];
+        }
+        
+        return enriched;
+      });
+      
       setConcerts(enrichedConcerts);
-
-      // Récupérer les ID des concerts qui ont des formulaires associés
-      const formsRef = collection(db, 'formLinks');
-      const formsSnapshot = await getDocs(formsRef);
       
-      // Créer un Set pour stocker les IDs des concerts avec formulaires
-      const concertsWithFormsSet = new Set();
-      
-      formsSnapshot.forEach(doc => {
-        const formData = doc.data();
-        if (formData.concertId) {
-          concertsWithFormsSet.add(formData.concertId);
-        }
-      });
-      
-      // Récupérer les soumissions de formulaires
-      const formSubmissionsRef = collection(db, 'formSubmissions');
-      const submissionsSnapshot = await getDocs(formSubmissionsRef);
-      
-      // Set pour stocker les IDs des concerts avec formulaires non validés
-      const concertsWithUnvalidatedFormsSet = new Set();
-      
-      submissionsSnapshot.forEach(doc => {
-        const formData = doc.data();
-        if (formData.concertId) {
-          concertsWithFormsSet.add(formData.concertId); // Ajouter aux formulaires existants
-          
-          // Si le formulaire est soumis mais pas encore validé, l'ajouter aux non validés
-          if (formData.status !== 'validated') {
-            concertsWithUnvalidatedFormsSet.add(formData.concertId);
-          }
-        }
-      });
-      
-      setConcertsWithForms(Array.from(concertsWithFormsSet));
-      setUnvalidatedForms(Array.from(concertsWithUnvalidatedFormsSet));
-      
-      // Récupérer les contrats
-      const contratsRef = collection(db, 'contrats');
-      const contratsSnapshot = await getDocs(contratsRef);
-      
-      const contratsData = {};
-      
-      contratsSnapshot.forEach(doc => {
-        const contratData = doc.data();
-        if (contratData.concertId) {
-          contratsData[contratData.concertId] = {
-            id: doc.id,
-            ...contratData
-          };
-        }
-      });
-      
-      setConcertsWithContracts(contratsData);
-      
-      setLoading(false);
-    } catch (error) {
-      console.error('Erreur lors du chargement des données:', error);
-      setError('Impossible de charger les concerts. Veuillez réessayer plus tard.');
+      // Mettre à jour la dernière date de mise à jour
+      setLastUpdate(Date.now());
+    } catch (err) {
+      console.error('Erreur lors du chargement des données des concerts:', err);
+      setError(err.message);
+    } finally {
       setLoading(false);
     }
   }, []);
+  
+  // Fonction utilitaire pour récupérer des entités par lot
+  const fetchEntitiesBatch = async (collectionName, ids, fields) => {
+    if (!ids || ids.length === 0) return [];
+    
+    try {
+      // Filtrer les IDs déjà en cache
+      const cachedEntities = [];
+      const idsToFetch = [];
+      
+      ids.forEach(id => {
+        if (cacheRef.current[collectionName][id]) {
+          cachedEntities.push(cacheRef.current[collectionName][id]);
+        } else {
+          idsToFetch.push(id);
+        }
+      });
+      
+      // Si tous les éléments sont en cache, retourner directement
+      if (idsToFetch.length === 0) {
+        return cachedEntities;
+      }
+      
+      // Utiliser une requête par lots de 10 IDs (limite Firestore)
+      const results = [];
+      
+      // Récupérer par lots de 10 IDs maximum
+      for (let i = 0; i < idsToFetch.length; i += 10) {
+        const batch = idsToFetch.slice(i, i + 10);
+        const q = query(collection(db, collectionName), where('__name__', 'in', batch));
+        const querySnapshot = await getDocs(q);
+        
+        querySnapshot.forEach(doc => {
+          const data = { id: doc.id, ...doc.data() };
+          results.push(data);
+          cacheRef.current[collectionName][doc.id] = data;
+        });
+      }
+      
+      return [...cachedEntities, ...results];
+    } catch (error) {
+      console.error(`Erreur lors du chargement des ${collectionName} par lots:`, error);
+      return [];
+    }
+  };
 
-  // Un seul useEffect pour gérer à la fois le premier chargement, les événements et l'intervalle
+  // Effet initial pour charger les données
   useEffect(() => {
-    let isMounted = true;
-    
-    // Effet initial pour charger les données
-    fetchConcertsAndForms();
-    
-    // Fonction de gestionnaire d'événements avec debounce intégré
-    const handleConcertDataChange = (event) => {
-      if (!isMounted) return;
-      
-      // Ignorer les événements concertDataRefreshed pour éviter les boucles infinies
-      if (event.type === 'concertDataRefreshed') {
-        console.log('Événement concertDataRefreshed ignoré pour éviter les boucles infinies');
-        return;
-      }
-      
-      console.log(`Événement reçu: ${event.type}`, event.detail);
-      
-      // Actualiser lastUpdate seulement si suffisamment de temps s'est écoulé
-      const now = Date.now();
-      if (now - lastFetchRef.current >= minTimeBetweenFetches) {
-        setLastUpdate(now);
-      } else {
-        console.log('Événement ignoré - trop récent depuis le dernier fetch');
-      }
-    };
-    
-    // Enregistrer les écouteurs d'événements
-    window.addEventListener('concertUpdated', handleConcertDataChange);
-    window.addEventListener('concertDeleted', handleConcertDataChange);
-    // Nous conservons l'écouteur mais filtrons dans le handler pour maintenir la compatibilité
-    window.addEventListener('concertDataRefreshed', handleConcertDataChange);
-    
-    // Intervalle de rafraîchissement (toutes les 5 minutes au lieu de 60 secondes)
-    const refreshInterval = setInterval(() => {
-      if (isMounted) {
-        console.log('Rafraîchissement automatique des données de concert');
-        fetchConcertsAndForms();
-      }
-    }, 300000); // 5 minutes
-    
-    return () => {
-      isMounted = false;
-      clearInterval(refreshInterval);
-      
-      // Nettoyer les écouteurs d'événements
-      window.removeEventListener('concertUpdated', handleConcertDataChange);
-      window.removeEventListener('concertDeleted', handleConcertDataChange);
-      window.removeEventListener('concertDataRefreshed', handleConcertDataChange);
-    };
-  }, [fetchConcertsAndForms]);
-
-  // Effet séparé pour les mises à jour manuelles via lastUpdate
-  useEffect(() => {
-    // Ignorer l'effet initial
     if (isInitialRenderRef.current) {
       isInitialRenderRef.current = false;
-      return;
+      fetchConcertsAndForms();
     }
-    
-    // Ne lancer le fetch que pour les mises à jour manuelles
-    console.log(`Rafraîchissement des données à ${new Date(lastUpdate).toLocaleTimeString()}`);
-    fetchConcertsAndForms();
-  }, [lastUpdate, fetchConcertsAndForms]);
-
-  // Fonction pour forcer le rechargement des données
-  const refreshData = () => {
-    console.log('Rafraîchissement manuel des données de concert');
-    setLastUpdate(Date.now());
-  };
-
-  // Helper functions for form and contract status
-  const hasForm = (concertId) => {
-    return concertsWithForms.includes(concertId) || 
-           concerts.find(c => c.id === concertId)?.formId !== undefined;
-  };
-
-  const hasUnvalidatedForm = (concertId) => {
-    return unvalidatedForms.includes(concertId);
-  };
-
-  const hasContract = (concertId) => {
-    return concertsWithContracts[concertId] !== undefined;
-  };
-
-  const getContractStatus = (concertId) => {
-    if (!hasContract(concertId)) return null;
-    return concertsWithContracts[concertId].status || 'generated';
-  };
+  }, [fetchConcertsAndForms]);
 
   return {
     concerts,
@@ -226,12 +154,10 @@ export const useConcertListData = () => {
     concertsWithForms,
     unvalidatedForms,
     concertsWithContracts,
-    hasForm,
-    hasUnvalidatedForm,
-    hasContract,
-    getContractStatus,
-    refreshData
+    lastUpdate,
+    refreshData: fetchConcertsAndForms
   };
 };
 
+// Ajout de l'export par défaut pour la compatibilité avec index.js
 export default useConcertListData;

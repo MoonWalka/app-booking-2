@@ -11,9 +11,6 @@ module.exports = {
 
   // Règles personnalisées pour le projet
   rules: {
-    // Règles personnalisées pour le projet
-  rules: {
-
     // Autres règles personnalisées peuvent être ajoutées ici
-  },
+  }
 };

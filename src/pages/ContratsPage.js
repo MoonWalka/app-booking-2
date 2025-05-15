@@ -6,11 +6,15 @@ import { db } from '@/firebaseInit';
 import { Table, Badge, Button, Container, Row, Col, Card } from 'react-bootstrap';
 import ContratGenerationPage from '@pages/ContratGenerationPage.js';
 import ContratDetailsPage from '@pages/ContratDetailsPage.js';
+// Imports directs au lieu de lazy
+import ContratTemplatesPage from '@pages/contratTemplatesPage.js';
+import ContratTemplatesEditPage from '@pages/contratTemplatesEditPage.js';
 import '@styles/index.css';
 
 // Charger les composants de manière dynamique pour éviter les dépendances circulaires
-const ContratTemplatesPage = React.lazy(() => import('@pages/contratTemplatesPage.js'));
-const ContratTemplatesEditPage = React.lazy(() => import('@pages/contratTemplatesEditPage.js'));
+// LAZY LOADING DÉSACTIVÉ:
+// const ContratTemplatesPage = React.lazy(() => import('@pages/contratTemplatesPage.js'));
+// const ContratTemplatesEditPage = React.lazy(() => import('@pages/contratTemplatesEditPage.js'));
 
 const ContratsPage = () => {
   const [contrats, setContrats] = useState([]);

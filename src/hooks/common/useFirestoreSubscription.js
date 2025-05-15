@@ -1,82 +1,107 @@
 import { useState, useEffect, useRef } from 'react';
-import { doc, onSnapshot } from '@/firebaseInit';
+import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '@/firebaseInit';
-import { debugLog } from '@/utils/logUtils';
-import InstanceTracker from '@/services/InstanceTracker';
 
 /**
- * Hook pour gérer les abonnements Firestore de manière sécurisée
+ * Hook pour s'abonner aux changements d'un document Firestore.
+ * Version optimisée avec moins de logs et sélection de champs.
  * 
- * Gère automatiquement le cycle de vie des abonnements, les états de chargement et les erreurs.
- * 
- * @param {Object} options - Options de configuration
- * @param {string} options.collectionName - Nom de la collection Firestore
- * @param {string} options.id - ID du document
- * @param {Function} options.onData - Callback appelé quand les données sont reçues
- * @param {Function} options.onError - Callback appelé en cas d'erreur
- * @param {boolean} options.enabled - Activer/désactiver l'abonnement
- * @param {Function} options.transform - Transformer les données avant de les passer au callback
- * @returns {Object} - États et méthodes pour gérer l'abonnement
+ * @param {string} collectionName - Nom de la collection
+ * @param {string} id - ID du document
+ * @param {Function} onData - Callback appelé quand les données changent
+ * @param {Function} onError - Callback appelé en cas d'erreur
+ * @param {Function} transform - Transformation à appliquer aux données
+ * @param {Array<string>} selectedFields - Champs à retourner (optionnel, tous par défaut)
+ * @returns {Object} loading, error, lastUpdateTime, refresh
  */
-const useFirestoreSubscription = ({
-  collectionName,
-  id,
-  onData,
-  onError,
-  enabled = true,
+const useFirestoreSubscription = (
+  collectionName, 
+  id, 
+  onData, 
+  onError, 
   transform,
-}) => {
-  const [loading, setLoading] = useState(false);
+  selectedFields
+) => {
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [lastUpdateTime, setLastUpdateTime] = useState(null);
   
-  // Référence pour l'instance
+  // Stocker les références dans un ref pour éviter les problèmes lors du démontage
   const instanceRef = useRef({
-    ...InstanceTracker.register('FirestoreSubscription', { collectionName, id }),
-    unsubscribe: null,
-    isMounted: true,
-    enabled,
+    collectionName,
     id,
-    collectionName
+    isMounted: true,
+    unsubscribe: null,
+    cacheKey: `${collectionName}/${id}`
   });
   
-  // Mettre à jour les valeurs de référence si elles changent
-  useEffect(() => {
-    instanceRef.current.enabled = enabled;
-    instanceRef.current.id = id;
-    instanceRef.current.collectionName = collectionName;
-    
-    // Mettre à jour les métadonnées dans le tracker
-    InstanceTracker.updateMetadata(instanceRef.current.instanceId, {
-      collectionName,
-      id,
-      enabled
-    });
-  }, [enabled, id, collectionName]);
+  // Cache interne des snapshot par ID
+  const cacheRef = useRef({});
   
-  // Fonction pour démarrer l'abonnement
-  const subscribe = () => {
-    // Ne pas s'abonner si désactivé ou si pas d'ID/collection
-    if (!instanceRef.current.enabled || !instanceRef.current.id || !instanceRef.current.collectionName) {
+  // Fonction pour imprimer les logs de debug
+  const debugLog = (message, level = 'info', source = '') => {
+    // Désactiver les logs trop verbeux en production
+    if (process.env.NODE_ENV === 'production' && level !== 'error') return;
+    
+    const prefix = source ? `[${source}] ` : '';
+    switch (level) {
+      case 'error':
+        console.error(`${prefix}${message}`);
+        break;
+      case 'warn':
+        console.warn(`${prefix}${message}`);
+        break;
+      case 'debug':
+        // Ne logger qu'en développement
+        if (process.env.NODE_ENV !== 'production') {
+          console.log(`${prefix}${message}`);
+        }
+        break;
+      default:
+        // Ne logger qu'en développement
+        if (process.env.NODE_ENV !== 'production') {
+          console.log(`${prefix}${message}`);
+        }
+    }
+  };
+
+  // Fonction pour rafraîchir l'abonnement
+  const refresh = () => {
+    if (!instanceRef.current.isMounted) return;
+    
+    // Mettre à jour les props stockées
+    instanceRef.current.collectionName = collectionName;
+    instanceRef.current.id = id;
+    
+    // Si l'ID change, désabonner de l'ancien et réinitialiser l'état
+    if (instanceRef.current.cacheKey !== `${collectionName}/${id}`) {
+      if (instanceRef.current.unsubscribe) {
+        instanceRef.current.unsubscribe();
+        instanceRef.current.unsubscribe = null;
+      }
+      
+      instanceRef.current.cacheKey = `${collectionName}/${id}`;
+      setLoading(true);
+      setError(null);
+    }
+    
+    // Si ID ou collection manquant, ne pas s'abonner
+    if (!collectionName || !id) {
       setLoading(false);
       return;
     }
     
-    // Nettoyer l'abonnement précédent
-    if (instanceRef.current.unsubscribe) {
-      instanceRef.current.unsubscribe();
-      instanceRef.current.unsubscribe = null;
-    }
-    
-    // Démarrer le chargement
-    setLoading(true);
-    setError(null);
-    
     try {
-      debugLog(`Démarrage d'un abonnement Firestore pour ${instanceRef.current.collectionName}/${instanceRef.current.id}`, 'info', 'useFirestoreSubscription');
-      console.log(`[AUDIT] subscribe() démarré pour ${instanceRef.current.collectionName}/${instanceRef.current.id}`);
+      // Désabonner de l'ancien si existant
+      if (instanceRef.current.unsubscribe) {
+        instanceRef.current.unsubscribe();
+        instanceRef.current.unsubscribe = null;
+      }
       
-      // Créer l'abonnement
+      setLoading(true);
+      setError(null);
+      
+      // Créer un nouvel abonnement
       const unsubscribe = onSnapshot(
         doc(db, instanceRef.current.collectionName, instanceRef.current.id),
         (snapshot) => {
@@ -86,18 +111,25 @@ const useFirestoreSubscription = ({
           setLoading(false);
           setLastUpdateTime(Date.now());
           
-          // Ajout d'un log pour confirmer l'appel de onSnapshot
-          console.log(`[DEBUG] onSnapshot appelé pour ${instanceRef.current.collectionName}/${instanceRef.current.id}`);
-          console.log(`[AUDIT] snapshot.exists= ${snapshot.exists()}, data=`, snapshot.data());
-          
           if (snapshot.exists()) {
             const data = { id: snapshot.id, ...snapshot.data() };
             
-            // Transformer les données si une fonction de transformation est fournie
-            const processedData = transform ? transform(data) : data;
+            // Filtrer les champs si une liste est fournie
+            let filteredData = data;
+            if (selectedFields && Array.isArray(selectedFields) && selectedFields.length > 0) {
+              filteredData = { id: data.id };
+              selectedFields.forEach(field => {
+                if (data[field] !== undefined) {
+                  filteredData[field] = data[field];
+                }
+              });
+            }
             
-            // Ajout d'un log pour afficher les données transformées
-            console.log(`[DEBUG] Données transformées pour ${instanceRef.current.collectionName}/${instanceRef.current.id}:`, processedData);
+            // Transformer les données si une fonction de transformation est fournie
+            const processedData = transform ? transform(filteredData) : filteredData;
+            
+            // Mettre en cache
+            cacheRef.current[instanceRef.current.cacheKey] = processedData;
             
             // Appeler le callback avec les données
             if (onData && instanceRef.current.isMounted) {
@@ -114,7 +146,6 @@ const useFirestoreSubscription = ({
           if (!instanceRef.current.isMounted) return;
           
           debugLog(`Erreur dans l'abonnement Firestore pour ${instanceRef.current.collectionName}/${instanceRef.current.id}: ${err}`, 'error', 'useFirestoreSubscription');
-          console.error(`[AUDIT] Erreur Firestore pour ${instanceRef.current.collectionName}/${instanceRef.current.id}`, err);
           
           setLoading(false);
           setError(err);
@@ -131,6 +162,7 @@ const useFirestoreSubscription = ({
       if (!instanceRef.current.isMounted) return;
       
       debugLog(`Erreur lors de la création de l'abonnement: ${err}`, 'error', 'useFirestoreSubscription');
+      
       setLoading(false);
       setError(err);
       
@@ -140,65 +172,22 @@ const useFirestoreSubscription = ({
     }
   };
   
-  // S'abonner/désabonner au montage/démontage ou changement des dépendances
+  // Effet pour gérer le cycle de vie et les changements de props
   useEffect(() => {
-    // Ne s'abonne que si activé et si l'ID est défini
-    if (enabled && id && collectionName) {
-      subscribe();
-    } else {
-      // Si désactivé mais qu'un abonnement existe, le nettoyer
-      if (instanceRef.current.unsubscribe) {
-        instanceRef.current.unsubscribe();
-        instanceRef.current.unsubscribe = null;
-        setLoading(false);
-      }
-    }
+    refresh();
     
-    // Nettoyage à la désactivation ou démontage
-    return () => {
-      if (instanceRef.current.unsubscribe) {
-        debugLog(`Nettoyage de l'abonnement Firestore pour ${collectionName}/${id}`, 'info', 'useFirestoreSubscription');
-        instanceRef.current.unsubscribe();
-        instanceRef.current.unsubscribe = null;
-      }
-    };
-  }, [enabled, id, collectionName]);
-  
-  // Marquer comme démonté lors de la destruction du composant
-  useEffect(() => {
+    // Nettoyage lors du démontage
     return () => {
       instanceRef.current.isMounted = false;
-      // Désenregistrer l'instance du tracker
-      InstanceTracker.unregister(instanceRef.current.instanceId);
-    };
-  }, []);
-  
-  // Fonction pour forcer le rafraîchissement de l'abonnement
-  const refresh = () => {
-    if (instanceRef.current.unsubscribe) {
-      instanceRef.current.unsubscribe();
-      instanceRef.current.unsubscribe = null;
-    }
-    
-    if (instanceRef.current.enabled && instanceRef.current.id && instanceRef.current.collectionName) {
-      subscribe();
-    }
-  };
-  
-  return {
-    loading,
-    error,
-    refresh,
-    lastUpdateTime,
-    instanceId: instanceRef.current.instanceId,
-    unsubscribe: () => {
+      
       if (instanceRef.current.unsubscribe) {
         instanceRef.current.unsubscribe();
         instanceRef.current.unsubscribe = null;
-        setLoading(false);
       }
-    }
-  };
+    };
+  }, [collectionName, id, onData, onError, transform, JSON.stringify(selectedFields)]);
+  
+  return { loading, error, lastUpdateTime, refresh };
 };
 
 export default useFirestoreSubscription;

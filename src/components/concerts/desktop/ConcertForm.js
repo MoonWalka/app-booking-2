@@ -40,6 +40,7 @@ const ConcertFormDesktop = () => {
     handleChange,
     handleSubmit,
     handleDelete,
+    handleCancel, // Extraire handleCancel du hook
     isSubmitting,
     concert,
     lieu,
@@ -142,6 +143,13 @@ const ConcertFormDesktop = () => {
   
   return (
     <div className={styles.deskConcertFormContainer}>
+      {/* DEBUG: Indicateur de mode édition */}
+      <div style={{ background: "#f0f8ff", padding: "10px", marginBottom: "10px", border: "1px solid #ccc" }}>
+        <strong>Mode:</strong> {isNewConcert ? 'Création' : 'Édition'} | 
+        <strong> ID:</strong> {id} | 
+        <strong> formData modifiable:</strong> {formData ? 'Oui' : 'Non'}
+      </div>
+      
       {/* En-tête du formulaire */}
       <ConcertFormHeader 
         id={id} 
@@ -154,6 +162,7 @@ const ConcertFormDesktop = () => {
         id={id}
         isSubmitting={isSubmitting}
         onDelete={() => setShowDeleteConfirm(true)}
+        onCancel={handleCancel}
         navigate={navigate}
         position="top"
       />
@@ -222,6 +231,7 @@ const ConcertFormDesktop = () => {
           isSubmitting={isSubmitting}
           onDelete={() => setShowDeleteConfirm(true)}
           onSubmit={handleSubmit}
+          onCancel={handleCancel}
           navigate={navigate}
           position="bottom"
         />

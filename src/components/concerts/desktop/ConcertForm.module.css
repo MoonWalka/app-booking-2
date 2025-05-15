@@ -12,6 +12,13 @@
   background-color: var(--tc-bg-color, #f8f9fa);
 }
 
+.deskConcertFormContainer {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--tc-spacing-lg, 1.5rem);
+}
+
 /* En-tête du formulaire */
 .formHeaderContainer {
   display: flex;
@@ -88,6 +95,14 @@
   gap: var(--tc-spacing-md, 20px);
 }
 
+.deskModernForm {
+  margin-top: var(--tc-spacing-md, 1rem);
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-spacing-md, 20px);
+}
+
 /* Carte de formulaire */
 .formCard {
   background-color: #fff;
@@ -97,12 +112,28 @@
   overflow: hidden;
 }
 
+.formCard {
+  background-color: var(--tc-color-white, #fff);
+  border-radius: var(--tc-border-radius, 8px);
+  box-shadow: var(--tc-box-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
+  margin-bottom: var(--tc-spacing-lg, 24px);
+  overflow: hidden;
+}
+
 .cardHeader {
   display: flex;
   align-items: center;
   background-color: var(--tc-bg-color, #f8f9fa);
   padding: var(--tc-spacing-md, 1rem);
   border-bottom: 1px solid #eee;
+}
+
+.cardHeader {
+  background-color: var(--tc-color-gray-100, #f8f9fa);
+  padding: var(--tc-spacing-md, 16px) var(--tc-spacing-md, 20px);
+  border-bottom: var(--tc-border-width, 1px) solid var(--tc-border-color, #e9ecef);
+  display: flex;
+  align-items: center;
 }
 
 .cardHeader i {
@@ -117,13 +148,28 @@
   flex-grow: 1;
 }
 
+.cardHeader h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: var(--tc-font-weight-bold, 600);
+  color: var(--tc-text-color, #333);
+}
+
 .cardBody {
   padding: var(--tc-spacing-lg, 1.5rem);
+}
+
+.cardBody {
+  padding: var(--tc-spacing-md, 20px);
 }
 
 /* Champs de formulaire */
 .formGroup {
   margin-bottom: var(--tc-spacing-md, 1.25rem);
+}
+
+.formGroup {
+  margin-bottom: var(--tc-spacing-md, 18px);
 }
 
 .formLabel {
@@ -132,9 +178,102 @@
   font-weight: var(--tc-font-weight-semibold, 500);
 }
 
+.formLabel {
+  display: block;
+  margin-bottom: var(--tc-spacing-xs, 6px);
+  font-weight: var(--tc-font-weight-medium, 500);
+  color: var(--tc-text-color, #333);
+}
+
 .required {
   color: #dc3545;
   margin-left: var(--tc-spacing-xs, 3px);
+}
+
+.formControl {
+  display: block;
+  width: 100%;
+  padding: var(--tc-spacing-sm, 0.5rem);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--tc-text-color, #333);
+  background-color: var(--tc-color-white, #fff);
+  border: 1px solid var(--tc-input-border-color, #ced4da);
+  border-radius: var(--tc-border-radius-sm, 0.25rem);
+  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.formControl:focus {
+  border-color: var(--tc-primary-color, #007bff);
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.formSelect {
+  display: block;
+  width: 100%;
+  padding: var(--tc-spacing-sm, 0.5rem);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--tc-text-color, #333);
+  background-color: var(--tc-color-white, #fff);
+  border: 1px solid var(--tc-input-border-color, #ced4da);
+  border-radius: var(--tc-border-radius-sm, 0.25rem);
+  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.formRow {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -10px;
+  margin-left: -10px;
+  gap: 1rem;
+}
+
+.formRow > .formGroup {
+  flex: 1 0 45%;
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
+.inputGroup {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  width: 100%;
+}
+
+.inputGroupAddon {
+  display: flex;
+  align-items: center;
+  padding: var(--tc-spacing-sm, 0.5rem);
+  margin-bottom: 0;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--tc-text-color, #333);
+  text-align: center;
+  white-space: nowrap;
+  background-color: var(--tc-color-gray-100, #f8f9fa);
+  border: 1px solid var(--tc-input-border-color, #ced4da);
+  border-radius: 0 var(--tc-border-radius-sm, 0.25rem) var(--tc-border-radius-sm, 0.25rem) 0;
+}
+
+.inputGroup .formControl {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.requiredField {
+  color: var(--tc-danger-color, #dc3545);
+  margin-left: var(--tc-spacing-xs, 4px);
+}
+
+.formHelpText {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--tc-text-muted, #6c757d);
 }
 
 /* Recherche de lieu/programmateur/artiste */
@@ -142,6 +281,13 @@
 .programmateurSearchContainer,
 .artisteSearchContainer {
   position: relative;
+}
+
+.lieuSearchContainer,
+.programmateurSearchContainer,
+.artisteSearchContainer {
+  position: relative;
+  margin-bottom: var(--tc-spacing-md, 1rem);
 }
 
 .selectedLieu,
@@ -249,6 +395,31 @@
   margin-top: var(--tc-spacing-xs, 0.25rem);
 }
 
+.suggestionContainer {
+  position: absolute;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  background-color: var(--tc-color-white, white);
+  border: var(--tc-border-width, 1px) solid var(--tc-input-border-color, #ced4da);
+  border-radius: 0 0 var(--tc-border-radius-sm, 4px) var(--tc-border-radius-sm, 4px);
+  box-shadow: var(--tc-dropdown-shadow, 0 4px 8px rgba(0, 0, 0, 0.1));
+  margin-top: -1px;
+}
+
+.suggestionItem {
+  padding: var(--tc-spacing-sm, 10px) var(--tc-spacing-md, 15px);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  border-bottom: var(--tc-border-width, 1px) solid var(--tc-color-gray-200, #f0f0f0);
+}
+
+.suggestionItem:hover {
+  background-color: var(--tc-color-gray-100, #f8f9fa);
+}
+
 /* Actions de formulaire en bas */
 .formActions {
   display: flex;
@@ -257,6 +428,13 @@
   margin-top: var(--tc-spacing-xl, 2rem);
   margin-bottom: var(--tc-spacing-xl, 2rem);
   flex-wrap: wrap;
+}
+
+.formActions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--tc-spacing-lg, 20px);
+  margin-bottom: var(--tc-spacing-xl, 2rem);
 }
 
 /* Modal */
@@ -336,6 +514,38 @@
   
   .formActions {
     flex-direction: column;
+  }
+  
+  .formActions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .formCard {
+    border-radius: var(--tc-border-radius-sm, 4px);
+    margin-bottom: var(--tc-spacing-md, 16px);
+  }
+  
+  .cardHeader {
+    padding: var(--tc-spacing-sm, 12px) var(--tc-spacing-md, 16px);
+  }
+  
+  .cardBody {
+    padding: var(--tc-spacing-sm, 16px);
+  }
+  
+  .formRow {
+    flex-direction: column;
+  }
+  
+  .formRow > .formGroup {
+    flex: 1 0 100%;
+  }
+  
+  .formActions {
+    flex-direction: column;
+    gap: var(--tc-spacing-sm, 10px);
   }
   
   .formActions button {

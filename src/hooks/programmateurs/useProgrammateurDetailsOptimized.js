@@ -176,13 +176,15 @@ const useProgrammateurDetailsOptimized = (id) => {
       { 
         name: 'structure', 
         idField: 'structureId', 
-        collection: 'structures'
+        collection: 'structures',
+        essential: true // La structure principale est essentielle
       },
       {
         name: 'structures',
         idField: 'structureIds',
         collection: 'structures',
-        type: 'one-to-many'
+        type: 'one-to-many',
+        essential: false // Les structures secondaires peuvent être chargées à la demande
       }
       // Lieux et concerts sont gérés manuellement
     ],

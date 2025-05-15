@@ -58,7 +58,7 @@ const ProgrammateursList = ({ onNavigateToDetails }) => {
   };
 
   if (loading) {
-    return <Spinner message="Chargement des programmateurs..." />;
+    return <Spinner message="Chargement des programmateurs..." contentOnly={true} />;
   }
 
   if (error) {

@@ -51,13 +51,15 @@ const useStructureDetailsOptimized = (id) => {
         name: 'programmateurs', 
         collection: 'programmateurs', 
         idField: 'programmateursAssocies',
-        type: 'one-to-many'
+        type: 'one-to-many',
+        essential: true // Les programmateurs sont essentiels pour l'affichage de la structure
       },
       {
         name: 'lieux',
         collection: 'lieux',
         idField: 'lieuxAssocies',
-        type: 'one-to-many'
+        type: 'one-to-many',
+        essential: false // Les lieux peuvent être chargés à la demande
       }
     ],
     

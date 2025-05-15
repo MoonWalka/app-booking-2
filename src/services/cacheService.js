@@ -376,8 +376,11 @@ class CacheService {
       return undefined;
     }
     
-    // Vérifier si le cache est encore valide (défaut 2 minutes)
-    if (Date.now() - cachedItem.timestamp > 120000) {
+    // Utiliser le TTL personnalisé s'il existe, sinon utiliser la valeur par défaut
+    const ttl = cachedItem.ttl || 120000;
+    
+    // Vérifier si le cache est encore valide
+    if (Date.now() - cachedItem.timestamp > ttl) {
       // Cache expiré
       this.stats.misses++;
       delete this.queryCache[key];

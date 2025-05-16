@@ -152,25 +152,6 @@ const firebase = {
 };
 
 // Export des éléments individuels, conditionnés selon le mode
-// Définir les exports conditionnels
-const exportCollection = IS_LOCAL_MODE ? localDB.collection : collection;
-const exportDoc = IS_LOCAL_MODE ? localDB.doc : doc;
-const exportGetDoc = IS_LOCAL_MODE ? localDB.getDoc : enhancedGetDoc;
-const exportGetDocs = IS_LOCAL_MODE ? localDB.getDocs : enhancedGetDocs;
-const exportSetDoc = IS_LOCAL_MODE ? localDB.setDoc : setDoc;
-const exportAddDoc = IS_LOCAL_MODE ? localDB.addDoc : addDoc;
-const exportUpdateDoc = IS_LOCAL_MODE ? localDB.updateDoc : updateDoc;
-const exportDeleteDoc = IS_LOCAL_MODE ? localDB.deleteDoc : deleteDoc;
-const exportQuery = IS_LOCAL_MODE ? localDB.query : query;
-const exportWhere = IS_LOCAL_MODE ? localDB.where : where;
-const exportOrderBy = IS_LOCAL_MODE ? localDB.orderBy : orderBy;
-const exportLimit = IS_LOCAL_MODE ? localDB.limit : limit;
-const exportStartAfter = IS_LOCAL_MODE ? localDB.startAfter : startAfter;
-const exportServerTimestamp = IS_LOCAL_MODE ? localDB.serverTimestamp : serverTimestamp;
-const exportArrayUnion = IS_LOCAL_MODE ? localDB.arrayUnion : arrayUnion;
-const exportArrayRemove = IS_LOCAL_MODE ? localDB.arrayRemove : arrayRemove;
-const exportTimestamp = IS_LOCAL_MODE ? localDB.Timestamp : Timestamp;
-
 export {
   db,
   auth,
@@ -179,23 +160,23 @@ export {
   BYPASS_AUTH,
   IS_LOCAL_MODE,
   // Exporter les bonnes fonctions selon le mode
-  exportCollection as collection,
-  exportDoc as doc,
-  exportGetDoc as getDoc,
-  exportGetDocs as getDocs,
-  exportSetDoc as setDoc,
-  exportAddDoc as addDoc,
-  exportUpdateDoc as updateDoc,
-  exportDeleteDoc as deleteDoc,
-  exportQuery as query,
-  exportWhere as where,
-  exportOrderBy as orderBy,
-  exportLimit as limit,
-  exportStartAfter as startAfter,
-  exportServerTimestamp as serverTimestamp,
-  exportArrayUnion as arrayUnion,
-  exportArrayRemove as arrayRemove,
-  exportTimestamp as Timestamp,
+  IS_LOCAL_MODE ? localDB.collection : collection as collection,
+  IS_LOCAL_MODE ? localDB.doc : doc as doc,
+  IS_LOCAL_MODE ? localDB.getDoc : enhancedGetDoc as getDoc,
+  IS_LOCAL_MODE ? localDB.getDocs : enhancedGetDocs as getDocs,
+  IS_LOCAL_MODE ? localDB.setDoc : setDoc as setDoc,
+  IS_LOCAL_MODE ? localDB.addDoc : addDoc as addDoc,
+  IS_LOCAL_MODE ? localDB.updateDoc : updateDoc as updateDoc,
+  IS_LOCAL_MODE ? localDB.deleteDoc : deleteDoc as deleteDoc,
+  IS_LOCAL_MODE ? localDB.query : query as query,
+  IS_LOCAL_MODE ? localDB.where : where as where,
+  IS_LOCAL_MODE ? localDB.orderBy : orderBy as orderBy,
+  IS_LOCAL_MODE ? localDB.limit : limit as limit,
+  IS_LOCAL_MODE ? localDB.startAfter : startAfter as startAfter,
+  IS_LOCAL_MODE ? localDB.serverTimestamp : serverTimestamp as serverTimestamp,
+  IS_LOCAL_MODE ? localDB.arrayUnion : arrayUnion as arrayUnion,
+  IS_LOCAL_MODE ? localDB.arrayRemove : arrayRemove as arrayRemove,
+  IS_LOCAL_MODE ? localDB.Timestamp : Timestamp as Timestamp,
   // Auth exports
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,

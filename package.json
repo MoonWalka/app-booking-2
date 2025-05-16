@@ -44,7 +44,11 @@
     "card:remove": "node scripts/migration/remove_legacy_card.js",
     "detect-hooks": "node scripts/detect_deprecated_hooks.js --verbose",
     "hooks-report": "node scripts/detect_deprecated_hooks.js --html",
-    "hooks-migration-status": "node scripts/monitor_hooks_migration.js"
+    "hooks-migration-status": "node scripts/monitor_hooks_migration.js",
+    "start:local": "env-cmd -f .env.local -f .env.development craco start",
+    "build:local": "env-cmd -f .env.local -f .env.development craco build",
+    "start:prod": "env-cmd -f .env.local -f .env.production craco start",
+    "build:prod": "env-cmd -f .env.local -f .env.production craco build"
   },
   "eslintConfig": {
     "extends": [
@@ -77,6 +81,7 @@
     "browserify-zlib": "^0.2.0",
     "crypto-browserify": "^3.12.1",
     "css-tree": "^3.1.0",
+    "env-cmd": "^10.1.0",
     "glob": "^11.0.2",
     "https-browserify": "^1.0.0",
     "nth-check": "^2.1.1",

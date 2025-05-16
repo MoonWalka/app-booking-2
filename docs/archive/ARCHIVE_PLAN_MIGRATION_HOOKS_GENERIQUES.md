@@ -1,4 +1,8 @@
-# [ARCHIVÉ] Plan de Migration vers les Hooks Génériques
+# [ARCHIVÉ] # [ARCHIVÉ] Plan de Migration vers les Hooks Génériques
+
+*Document archivé le: 16 May 2025*
+*Ce document a été archivé car il concerne une initiative terminée ou n'est plus à jour.*
+
 
 **⚠️ DOCUMENT ARCHIVÉ - Voir la version archivée complète dans `/docs/archive/PLAN_MIGRATION_HOOKS_GENERIQUES_ARCHIVE.md` ⚠️**
 

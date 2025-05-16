@@ -1,4 +1,8 @@
-# Journal de la Phase 5 : Nettoyage Final des Hooks
+# [ARCHIVÉ] # Journal de la Phase 5 : Nettoyage Final des Hooks
+
+*Document archivé le: 16 May 2025*
+*Ce document a été archivé car il concerne une initiative terminée ou n'est plus à jour.*
+
 
 *Date de début : 6 mai 2025*  
 *Date de fin : 6 mai 2025*  

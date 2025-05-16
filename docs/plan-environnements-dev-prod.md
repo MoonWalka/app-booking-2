@@ -403,25 +403,25 @@ main (production)
 ## 9. Calendrier d'implémentation et checklist
 
 ### Phase 1: Mise en place du mode local (2 semaines)
-- [ ] Compléter l'implémentation du mockStorage.js
-- [ ] Créer les adapters pour simuler toutes les API Firebase nécessaires
-- [ ] Créer un générateur de données de test
-- [ ] Tester l'application en mode 100% local
+- [x] Compléter l'implémentation du mockStorage.js
+- [x] Créer les adapters pour simuler toutes les API Firebase nécessaires
+- [x] Créer un générateur de données de test
+- [x] Tester l'application en mode 100% local
 
 ### Phase 2: Configuration de l'environnement (1 semaine)
-- [ ] Configurer le système de sélection d'environnements (local vs production)
-- [ ] Mettre à jour les fichiers de configuration
-- [ ] Configurer les variables d'environnement
-- [ ] Ajouter les indicateurs visuels pour l'environnement local
+- [x] Configurer le système de sélection d'environnements (local vs production)
+- [x] Mettre à jour les fichiers de configuration
+- [x] Configurer les variables d'environnement
+- [x] Ajouter les indicateurs visuels pour l'environnement local
 
 ### Phase 3: Synchronisation des données (1 semaine)
-- [ ] Implémenter le service de synchronisation (local vers production)
-- [ ] Tester la migration des données du mode local vers la production
-- [ ] Mettre en place une sauvegarde locale des données
+- [x] Implémenter le service de synchronisation (local vers production)
+- [x] Tester la migration des données du mode local vers la production
+- [x] Mettre en place une sauvegarde locale des données
 
 ### Phase 4: Documentation et formation (1 semaine)
-- [ ] Documenter le fonctionnement du mode hors ligne
-- [ ] Créer un guide pour les développeurs
+- [x] Documenter le fonctionnement du mode hors ligne
+- [ ] Créer un guide pour les nouveaux développeurs
 - [ ] Former l'équipe au nouveau workflow
 
 ## 10. Avantages du nouveau plan

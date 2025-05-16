@@ -16,6 +16,11 @@ import {
 } from 'firebase/auth';
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { getRemoteConfig } from 'firebase/remote-config';
+import { localDB } from './mockStorage';
+
+// Détecter le mode d'exécution
+const MODE = process.env.REACT_APP_MODE || 'production';
+const IS_LOCAL_MODE = MODE === 'local';
 
 // Configuration Firebase
 const firebaseConfig = {
@@ -28,13 +33,8 @@ const firebaseConfig = {
   measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
 };
 
-// Initialisation Firebase
-const app = initializeApp(firebaseConfig);
-// Toujours utiliser la base Firestore réelle (production)
-const db = initializeFirestore(app, {
-  experimentalForceLongPolling: false, // désactive le fallback XHR
-  useFetchStreams: true                // active les streams natifs (WebSockets)
-});
+// Variables pour les services Firebase ou leurs mocks
+let app, db, auth, storage, remoteConfig;
 
 // Fonctions de gestion d'erreurs pour les opérations Firestore
 const handleFirestoreError = (error) => {
@@ -66,16 +66,53 @@ const enhancedGetDoc = async (...args) => {
   }
 };
 
-// Même principe pour les autres fonctions Firestore que vous utilisez fréquemment
-
-const auth = getAuth(app);
-const storage = getStorage(app);
-const remoteConfig = getRemoteConfig(app);
+// Initialisation conditionnelle selon le mode
+if (IS_LOCAL_MODE) {
+  console.log('Mode local activé - Utilisation de la base de données locale');
+  db = localDB;
+  
+  // Mock de l'authentification
+  auth = {
+    currentUser: { uid: 'local-user', email: 'local@example.com', displayName: 'Utilisateur Local' },
+    onAuthStateChanged: (callback) => {
+      callback({ uid: 'local-user', email: 'local@example.com', displayName: 'Utilisateur Local' });
+      return () => {}; // fonction de nettoyage
+    },
+    signInWithEmailAndPassword: async () => ({ 
+      user: { uid: 'local-user', email: 'local@example.com', displayName: 'Utilisateur Local' }
+    }),
+    signOut: async () => Promise.resolve(),
+    createUserWithEmailAndPassword: async () => ({
+      user: { uid: 'new-local-user', email: 'new-local@example.com', displayName: 'Nouvel Utilisateur' }
+    })
+  };
+  
+  // Mock du stockage
+  storage = {
+    // Implémenter au besoin pour simuler le stockage
+  };
+  
+  // Mock de remoteConfig
+  remoteConfig = {
+    // Implémenter au besoin
+  };
+} else {
+  // Initialisation normale de Firebase pour la production
+  app = initializeApp(firebaseConfig);
+  db = initializeFirestore(app, {
+    experimentalForceLongPolling: false,
+    useFetchStreams: true
+  });
+  auth = getAuth(app);
+  storage = getStorage(app);
+  remoteConfig = getRemoteConfig(app);
+}
 
 // Configuration du bypass d'authentification pour le développement
 const BYPASS_AUTH = process.env.REACT_APP_BYPASS_AUTH === 'true';
 
-// Création d'un objet firebase avec toutes les fonctions et instances
+// Création d'un objet firebase avec toutes les fonctions et instances,
+// en utilisant les mocks ou les vrais services selon le mode
 const firebase = {
   app,
   db,
@@ -83,62 +120,63 @@ const firebase = {
   storage,
   remoteConfig,
   BYPASS_AUTH,
-  // Fonctions Firestore avec gestion d'erreurs améliorée
-  collection,
-  doc,
-  getDoc: enhancedGetDoc,
-  getDocs: enhancedGetDocs,
-  setDoc,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  query,
-  where,
-  orderBy,
-  limit,
-  startAfter,
-  serverTimestamp,
-  arrayUnion,
-  arrayRemove,
-  onSnapshot,
-  Timestamp,
+  IS_LOCAL_MODE,
+  // Fonctions Firestore avec gestion d'erreurs améliorée ou mocks
+  collection: IS_LOCAL_MODE ? localDB.collection : collection,
+  doc: IS_LOCAL_MODE ? localDB.doc : doc,
+  getDoc: IS_LOCAL_MODE ? localDB.getDoc : enhancedGetDoc,
+  getDocs: IS_LOCAL_MODE ? localDB.getDocs : enhancedGetDocs,
+  setDoc: IS_LOCAL_MODE ? localDB.setDoc : setDoc,
+  addDoc: IS_LOCAL_MODE ? localDB.addDoc : addDoc,
+  updateDoc: IS_LOCAL_MODE ? localDB.updateDoc : updateDoc,
+  deleteDoc: IS_LOCAL_MODE ? localDB.deleteDoc : deleteDoc,
+  query: IS_LOCAL_MODE ? localDB.query : query,
+  where: IS_LOCAL_MODE ? localDB.where : where,
+  orderBy: IS_LOCAL_MODE ? localDB.orderBy : orderBy,
+  limit: IS_LOCAL_MODE ? localDB.limit : limit,
+  startAfter: IS_LOCAL_MODE ? localDB.startAfter : startAfter,
+  serverTimestamp: IS_LOCAL_MODE ? localDB.serverTimestamp : serverTimestamp,
+  arrayUnion: IS_LOCAL_MODE ? localDB.arrayUnion : arrayUnion,
+  arrayRemove: IS_LOCAL_MODE ? localDB.arrayRemove : arrayRemove,
+  Timestamp: IS_LOCAL_MODE ? localDB.Timestamp : Timestamp,
+  onSnapshot: IS_LOCAL_MODE ? () => () => {} : onSnapshot, // Mock simple pour onSnapshot
   // Fonctions Auth
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
-  // Fonctions Storage
-  storageRef,
-  uploadBytes,
-  getDownloadURL
+  signInWithEmailAndPassword: IS_LOCAL_MODE 
+    ? auth.signInWithEmailAndPassword 
+    : signInWithEmailAndPassword,
+  createUserWithEmailAndPassword: IS_LOCAL_MODE 
+    ? auth.createUserWithEmailAndPassword 
+    : createUserWithEmailAndPassword,
+  signOut: IS_LOCAL_MODE ? auth.signOut : signOut,
+  onAuthStateChanged: IS_LOCAL_MODE ? auth.onAuthStateChanged : onAuthStateChanged
 };
 
-// Export des éléments individuels
+// Export des éléments individuels, conditionnés selon le mode
 export {
   db,
   auth,
   storage,
   remoteConfig,
   BYPASS_AUTH,
-  // Firestore exports
-  collection,
-  doc,
-  enhancedGetDoc as getDoc,
-  enhancedGetDocs as getDocs,
-  setDoc,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  query,
-  where,
-  orderBy,
-  limit,
-  startAfter,
-  serverTimestamp,
-  arrayUnion,
-  arrayRemove,
-  onSnapshot,
-  Timestamp,
+  IS_LOCAL_MODE,
+  // Exporter les bonnes fonctions selon le mode
+  IS_LOCAL_MODE ? localDB.collection : collection as collection,
+  IS_LOCAL_MODE ? localDB.doc : doc as doc,
+  IS_LOCAL_MODE ? localDB.getDoc : enhancedGetDoc as getDoc,
+  IS_LOCAL_MODE ? localDB.getDocs : enhancedGetDocs as getDocs,
+  IS_LOCAL_MODE ? localDB.setDoc : setDoc as setDoc,
+  IS_LOCAL_MODE ? localDB.addDoc : addDoc as addDoc,
+  IS_LOCAL_MODE ? localDB.updateDoc : updateDoc as updateDoc,
+  IS_LOCAL_MODE ? localDB.deleteDoc : deleteDoc as deleteDoc,
+  IS_LOCAL_MODE ? localDB.query : query as query,
+  IS_LOCAL_MODE ? localDB.where : where as where,
+  IS_LOCAL_MODE ? localDB.orderBy : orderBy as orderBy,
+  IS_LOCAL_MODE ? localDB.limit : limit as limit,
+  IS_LOCAL_MODE ? localDB.startAfter : startAfter as startAfter,
+  IS_LOCAL_MODE ? localDB.serverTimestamp : serverTimestamp as serverTimestamp,
+  IS_LOCAL_MODE ? localDB.arrayUnion : arrayUnion as arrayUnion,
+  IS_LOCAL_MODE ? localDB.arrayRemove : arrayRemove as arrayRemove,
+  IS_LOCAL_MODE ? localDB.Timestamp : Timestamp as Timestamp,
   // Auth exports
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -148,6 +186,9 @@ export {
 
 // Storage exports
 export { storageRef as ref, uploadBytes, getDownloadURL };
+
+// Exportation de l'information sur le mode courant
+export const CURRENT_MODE = MODE;
 
 // Export par défaut de l'objet firebase
 export default firebase;

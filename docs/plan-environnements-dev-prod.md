@@ -29,10 +29,9 @@ L'application TourCraft est actuellement déployée en production sans séparati
 ## 3. Architecture proposée
 
 ### 3.1 Principe général
-Au lieu de créer deux environnements Firebase distincts, nous allons créer trois modes de fonctionnement :
-1. **Mode local (hors ligne)** : Utilisant IndexedDB et localStorage, sans aucune dépendance à Firebase
-2. **Mode développement** : Utilisant un projet Firebase de développement
-3. **Mode production** : Utilisant le projet Firebase de production existant
+Nous allons créer deux modes de fonctionnement principaux :
+1. **Mode développement local (hors ligne)** : Utilisant IndexedDB et localStorage, sans aucune dépendance à Firebase
+2. **Mode production** : Utilisant le projet Firebase de production existant
 
 ### 3.2 Structure de l'architecture
 
@@ -40,23 +39,20 @@ Au lieu de créer deux environnements Firebase distincts, nous allons créer tro
 TourCraft
 ├── Base de code unique
 │   ├── Configuration pour l'environnement local (hors ligne)
-│   ├── Configuration pour l'environnement de développement
 │   └── Configuration pour l'environnement de production
-├── Storage Local
+├── Storage Local (mode développement)
 │   ├── IndexedDB pour les données
 │   ├── LocalStorage pour la configuration
 │   └── Système d'authentification simulé
-├── Environnement de développement
-│   ├── Projet Firebase "tourcraft-dev"
-│   ├── Base de données Firestore de développement
-│   ├── Stockage Firebase de développement
-│   └── Système d'authentification de développement
 └── Environnement de production
     ├── Projet Firebase "tourcraft-prod" (existant)
     ├── Base de données Firestore de production (existante)
     ├── Stockage Firebase de production (existant)
     └── Système d'authentification de production (existant)
 ```
+
+
+
 
 ## 4. Plan de mise en œuvre
 
@@ -73,42 +69,22 @@ TourCraft
    - Permettre l'initialisation de l'environnement local avec ces données
    - Ajouter un mécanisme pour réinitialiser les données à tout moment
 
-### 4.2 Création d'un projet Firebase de développement (pour le mode en ligne)
+### 4.2 Configuration des variables d'environnement
 
-1. Créer un nouveau projet Firebase "tourcraft-dev"
-2. Configurer Firestore, Authentication et Storage avec des paramètres similaires à la production
-3. Exporter un échantillon des données de production et les importer dans l'environnement de développement (données anonymisées si nécessaire)
-
-### 4.3 Configuration des variables d'environnement
-
-#### 4.3.1 Création des fichiers d'environnement
-Créer trois fichiers de configuration :
-- `.env.local` - Configuration de développement hors ligne
-- `.env.development` - Configuration de développement en ligne
+#### 4.2.1 Création des fichiers d'environnement
+Créer deux fichiers de configuration :
+- `.env.development` - Configuration de développement hors ligne
 - `.env.production` - Configuration de production (existante)
 
-#### 4.3.2 Structure des fichiers d'environnement
+#### 4.2.2 Structure des fichiers d'environnement
 
 ```
-# .env.local
+# .env.development
 REACT_APP_MODE=local
 REACT_APP_BYPASS_AUTH=true
 REACT_APP_USE_EMULATOR=false
 REACT_APP_USE_MOCK_DATA=true
 REACT_APP_DEMO_DATA=true
-```
-
-```
-# .env.development
-REACT_APP_MODE=development
-REACT_APP_FIREBASE_API_KEY=<dev-api-key>
-REACT_APP_FIREBASE_AUTH_DOMAIN=<dev-auth-domain>
-REACT_APP_FIREBASE_PROJECT_ID=<dev-project-id>
-REACT_APP_FIREBASE_STORAGE_BUCKET=<dev-storage-bucket>
-REACT_APP_FIREBASE_MESSAGING_SENDER_ID=<dev-messaging-sender-id>
-REACT_APP_FIREBASE_APP_ID=<dev-app-id>
-REACT_APP_FIREBASE_MEASUREMENT_ID=<dev-measurement-id>
-REACT_APP_BYPASS_AUTH=false
 ```
 
 ```
@@ -124,9 +100,9 @@ REACT_APP_FIREBASE_MEASUREMENT_ID=<prod-measurement-id>
 REACT_APP_BYPASS_AUTH=false
 ```
 
-### 4.4 Création d'un Factory Pattern pour les services Firebase
+### 4.3 Création d'un Factory Pattern pour les services Firebase
 
-Créer un système qui permet de basculer facilement entre les implémentations locales et Firebase :
+Créer un système qui permet de basculer facilement entre l'implémentation locale et Firebase :
 
 ```javascript
 // src/services/firebase/index.js
@@ -141,9 +117,6 @@ export function getServiceImplementation() {
     case 'local':
       console.log('Mode local activé - Utilisation de la base de données locale');
       return mockService;
-    case 'development':
-      console.log('Mode développement activé - Utilisation de Firebase Dev');
-      return firebaseService;
     case 'production':
       return firebaseService;
     default:
@@ -169,9 +142,9 @@ export const {
 } = service;
 ```
 
-### 4.5 Adaptation du code pour prendre en compte les environnements
+### 4.4 Adaptation du code pour prendre en compte les environnements
 
-#### 4.5.1 Modification de firebaseInit.js
+#### 4.4.1 Modification de firebaseInit.js
 
 ```javascript
 // src/firebaseInit.js
@@ -247,7 +220,7 @@ export const IS_OFFLINE_MODE = IS_LOCAL_MODE;
 export const CURRENT_MODE = MODE;
 ```
 
-#### 4.5.2 Ajout d'indicateurs visuels pour l'environnement
+#### 4.4.2 Ajout d'indicateurs visuels pour l'environnement
 
 Créer un composant `EnvironmentBanner.js` pour afficher l'environnement actuel :
 
@@ -274,7 +247,7 @@ const EnvironmentBanner = () => {
 export default EnvironmentBanner;
 ```
 
-### 4.6 Mise à jour des scripts npm
+### 4.5 Mise à jour des scripts npm
 
 Modifier `package.json` pour inclure des scripts adaptés à chaque environnement :
 
@@ -292,7 +265,7 @@ Modifier `package.json` pour inclure des scripts adaptés à chaque environnemen
 }
 ```
 
-### 4.7 Création d'un service de synchronisation pour la migration des données
+### 4.6 Création d'un service de synchronisation pour la migration des données
 
 ```javascript
 // src/services/syncService.js
@@ -347,54 +320,40 @@ export async function importFirebaseDataToLocal(collections = ['concerts', 'lieu
     localStorage.setItem('localDB', JSON.stringify(localData));
     return true;
   } catch (error) {
-    console.error('Erreur lors de l\'importation:', error);
+    console.error('Erreur lors de l'importation:', error);
     return false;
   }
 }
 ```
 
-### 4.8 Processus de déploiement
+### 4.7 Processus de déploiement
 
-1. Configuration de Firebase Hosting avec plusieurs cibles:
+1. Simplification du processus de déploiement :
 ```bash
-firebase target:apply hosting dev tourcraft-dev
 firebase target:apply hosting prod tourcraft-prod
 ```
 
-2. Mise à jour de `firebase.json` pour prendre en charge les différentes cibles:
+2. Mise à jour de `firebase.json` :
 ```json
 {
-  "hosting": [
-    {
-      "target": "dev",
-      "public": "build",
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-      "rewrites": [
-        {
-          "source": "**",
-          "destination": "/index.html"
-        }
-      ]
-    },
-    {
-      "target": "prod",
-      "public": "build",
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-      "rewrites": [
-        {
-          "source": "**",
-          "destination": "/index.html"
-        }
-      ]
-    }
-  ]
+  "hosting": {
+    "public": "build",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
 }
 ```
 
-3. Scripts de déploiement dans `package.json`:
+3. Scripts de déploiement dans `package.json` :
 ```json
-"deploy:dev": "npm run build:dev && firebase deploy --only hosting:dev",
-"deploy:prod": "npm run build:prod && firebase deploy --only hosting:prod"
+"build:dev": "env-cmd -f .env.development craco build",
+"build:prod": "env-cmd -f .env.production craco build",
+"deploy:prod": "npm run build:prod && firebase deploy --only hosting"
 ```
 
 ## 5. Stratégie de gestion du code source
@@ -449,17 +408,16 @@ main (production)
 - [ ] Créer un générateur de données de test
 - [ ] Tester l'application en mode 100% local
 
-### Phase 2: Environnements multiples (1 semaine)
-- [ ] Créer le projet Firebase de développement
-- [ ] Configurer le système de sélection d'environnements
+### Phase 2: Configuration de l'environnement (1 semaine)
+- [ ] Configurer le système de sélection d'environnements (local vs production)
 - [ ] Mettre à jour les fichiers de configuration
 - [ ] Configurer les variables d'environnement
-- [ ] Ajouter les indicateurs visuels
+- [ ] Ajouter les indicateurs visuels pour l'environnement local
 
 ### Phase 3: Synchronisation des données (1 semaine)
-- [ ] Implémenter le service de synchronisation
-- [ ] Tester la migration des données entre les environnements
-- [ ] Configurer les règles de sécurité pour chaque environnement
+- [ ] Implémenter le service de synchronisation (local vers production)
+- [ ] Tester la migration des données du mode local vers la production
+- [ ] Mettre en place une sauvegarde locale des données
 
 ### Phase 4: Documentation et formation (1 semaine)
 - [ ] Documenter le fonctionnement du mode hors ligne
@@ -480,20 +438,20 @@ main (production)
 
 ### Risques identifiés
 1. **Risque**: Modification accidentelle des données de production pendant le développement
-   **Mitigation**: Séparation stricte des projets Firebase et indicateurs visuels clairs
+   **Mitigation**: Séparation stricte entre mode local et production avec indicateurs visuels clairs
 
 2. **Risque**: Complexité accrue dans le cycle de développement
    **Mitigation**: Documentation claire et formation de l'équipe
 
-3. **Risque**: Divergence entre les environnements
+3. **Risque**: Divergence entre le mode local et la production
    **Mitigation**: Processus régulier de synchronisation des schémas
 
 4. **Risque**: Comportement différent entre les modes hors ligne et en ligne
    **Mitigation**: Tests approfondis dans les deux modes et implémentation soignée des adaptateurs
 
-5. **Risque**: Coûts supplémentaires liés à un projet Firebase additionnel
-   **Mitigation**: Surveiller l'utilisation et optimiser les ressources, réduire les coûts grâce au développement local
+5. **Risque**: Perte de données locales en cas de problème avec le navigateur
+   **Mitigation**: Mécanisme d'export/import des données locales et sauvegarde régulière
 
 ## 12. Conclusion
 
-La mise en place d'un mode de développement local hors ligne, combiné à des environnements de développement et production Firebase séparés, permettra une collaboration plus efficace entre les développeurs tout en préservant la stabilité de l'application en production. Ce plan propose une approche progressive et sécurisée pour établir cette séparation sans perturber les utilisateurs actuels de TourCraft, tout en offrant une flexibilité accrue aux développeurs qui pourront travailler efficacement même sans connexion internet.
+La mise en place d'un mode de développement local hors ligne, dissocié de Firebase, permettra une collaboration plus efficace entre les développeurs tout en préservant la stabilité de l'application en production. Ce plan propose une approche progressive et sécurisée pour établir cette séparation sans perturber les utilisateurs actuels de TourCraft, tout en offrant une flexibilité accrue aux développeurs qui pourront travailler efficacement même sans connexion internet.

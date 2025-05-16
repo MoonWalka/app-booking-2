@@ -1,4 +1,8 @@
-# Journal de Migration des Hooks
+# [ARCHIVÉ] # Journal de Migration des Hooks
+
+*Document archivé le: 16 May 2025*
+*Ce document a été archivé car il concerne une initiative terminée ou n'est plus à jour.*
+
 
 *Dernière mise à jour: 6 Mai 2025*
 

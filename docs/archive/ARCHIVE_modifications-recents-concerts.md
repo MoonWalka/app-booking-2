@@ -1,4 +1,8 @@
-# Modifications Récentes - Gestion des Concerts
+# [ARCHIVÉ] # Modifications Récentes - Gestion des Concerts
+
+*Document archivé le: 16 May 2025*
+*Ce document a été archivé car il concerne une initiative terminée ou n'est plus à jour.*
+
 
 Ce document récapitule les récentes évolutions apportées à la gestion des concerts dans l'application.
 

@@ -1,5 +1,17 @@
 # Documentation TourCraft
 
+*Note: Ce README a été mis à jour le 16 May 2025. Certains liens peuvent nécessiter une mise à jour suite à la réorganisation de la documentation.*
+
+
+*Note: Ce README a été mis à jour le 16 May 2025. Certains liens peuvent nécessiter une mise à jour suite à la réorganisation de la documentation.*
+
+
+*Note: Ce README a été mis à jour le 16 May 2025. Certains liens peuvent nécessiter une mise à jour suite à la réorganisation de la documentation.*
+
+
+*Note: Ce README a été mis à jour le 16 May 2025. Certains liens peuvent nécessiter une mise à jour suite à la réorganisation de la documentation.*
+
+
 *Document mis à jour le: 12 mai 2025*
 
 Ce dossier contient toute la documentation technique du projet TourCraft. Ce fichier README sert d'index central pour naviguer efficacement dans la documentation disponible.

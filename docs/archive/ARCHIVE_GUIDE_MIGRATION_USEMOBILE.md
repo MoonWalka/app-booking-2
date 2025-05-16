@@ -1,4 +1,8 @@
-# Guide de Migration de useIsMobile vers useResponsive
+# [ARCHIVÉ] # Guide de Migration de useIsMobile vers useResponsive
+
+*Document archivé le: 16 May 2025*
+*Ce document a été archivé car il concerne une initiative terminée ou n'est plus à jour.*
+
 
 *Document créé le: 5 mai 2025*
 *Dernière mise à jour: 6 mai 2025*

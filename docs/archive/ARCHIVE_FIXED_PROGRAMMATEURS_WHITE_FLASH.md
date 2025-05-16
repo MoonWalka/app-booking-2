@@ -1,4 +1,8 @@
-# Résolution du bug de flash blanc sur la page Programmateurs
+# [ARCHIVÉ] # Résolution du bug de flash blanc sur la page Programmateurs
+
+*Document archivé le: 16 May 2025*
+*Ce document a été archivé car il concerne une initiative terminée ou n'est plus à jour.*
+
 
 **Date de résolution:** 16 mai 2025  
 **Type de bug:** Interface utilisateur  

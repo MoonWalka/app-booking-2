@@ -1,3 +1,9 @@
+/*
+ * Styles pour ContratTemplateTitleSection
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
 .titleSectionContent {
   display: flex;
   flex-direction: column;

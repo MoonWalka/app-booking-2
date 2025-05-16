@@ -1,3 +1,9 @@
+/*
+ * Styles pour ProgrammateurStructuresSection
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
 .sectionContainer {
   background-color: var(--tc-card-bg, #fff);
   border-radius: var(--tc-border-radius, 0.375rem);

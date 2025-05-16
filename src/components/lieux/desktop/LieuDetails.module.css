@@ -1,3 +1,9 @@
+/*
+ * Styles pour LieuDetails
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
 /* LieuDetails.module.css - Standardisé */
 .lieuDetailsContainer {
   padding: var(--tc-spacing-md, 20px);

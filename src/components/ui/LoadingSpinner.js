@@ -1,19 +1,6 @@
-import React from 'react';
-import Spinner from '../common/Spinner';
-
 /**
- * LoadingSpinner - Redirects to the common Spinner component
- * 
- * @deprecated Use the more feature-rich Spinner component from '../common/Spinner' instead
- * This component is maintained for backward compatibility only
+ * @deprecated Ce composant a été remplacé par src/components/common/Spinner.js
+ * Ce fichier est maintenu pour la compatibilité et redirige vers la nouvelle implémentation.
  */
-const LoadingSpinner = ({ message = 'Chargement en cours...' }) => {
-  return (
-    <Spinner 
-      message={message}
-      contentOnly={true}
-    />
-  );
-};
-
-export default LoadingSpinner;
+import Spinner from '../common/Spinner';
+export default Spinner;

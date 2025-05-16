@@ -1,3 +1,9 @@
+/*
+ * Styles pour details
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
 /* Styles pour les sections de détails */
 .details-card {
   background-color: var(--tc-card-bg, #ffffff);

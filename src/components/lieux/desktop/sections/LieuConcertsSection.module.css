@@ -1,3 +1,9 @@
+/*
+ * Styles pour LieuConcertsSection
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
 .formCard {
   border: 1px solid var(--tc-bs-border-color);
   border-radius: 8px;

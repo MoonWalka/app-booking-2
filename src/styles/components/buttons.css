@@ -1,3 +1,9 @@
+/*
+ * Styles pour buttons
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
 /* Harmonisation : appliquer le style de base à tous les boutons */
 button {
   cursor: pointer;

@@ -287,3 +287,56 @@
     width: 100%;
   }
 }
+/* 
+ * Variante Outline - Warning
+ * ---------------------------
+ * Version outline pour les boutons d'avertissement
+ */
+.btnOutlineWarning {
+  background-color: transparent;
+  border-color: var(--tc-warning-color, #ffc107);
+  color: var(--tc-warning-color, #ffc107);
+}
+
+.btnOutlineWarning:hover {
+  background-color: var(--tc-warning-color, #ffc107);
+  color: var(--tc-color-dark, #212529);
+  text-decoration: none;
+}
+
+
+/* 
+ * Variante Outline - Info
+ * -----------------------
+ * Version outline pour les boutons d'information
+ */
+.btnOutlineInfo {
+  background-color: transparent;
+  border-color: var(--tc-info-color, #17a2b8);
+  color: var(--tc-info-color, #17a2b8);
+}
+
+.btnOutlineInfo:hover {
+  background-color: var(--tc-info-color, #17a2b8);
+  color: #fff;
+  text-decoration: none;
+}
+
+
+/* 
+ * Variante Outline - Success
+ * --------------------------
+ * Version outline pour les boutons de succès
+ */
+.btnOutlineSuccess {
+  background-color: transparent;
+  border-color: var(--tc-success-color, #28a745);
+  color: var(--tc-success-color, #28a745);
+}
+
+.btnOutlineSuccess:hover {
+  background-color: var(--tc-success-color, #28a745);
+  color: #fff;
+  text-decoration: none;
+}
+

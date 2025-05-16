@@ -1,0 +1,237 @@
+/* Styles standardisés pour la liste des programmateurs en version desktop */
+
+/* Conteneur principal */
+.programmateursList {
+  width: 100%;
+  padding: var(--tc-spacing-md, 1rem);
+  background-color: white;
+  border-radius: var(--tc-border-radius-lg, 0.5rem);
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+/* En-tête de la liste */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--tc-spacing-lg, 1.5rem);
+  flex-wrap: wrap;
+  gap: var(--tc-spacing-md, 1rem);
+}
+
+.header h2 {
+  margin: 0;
+  color: var(--tc-text-primary, #212529);
+}
+
+/* Actions dans l'en-tête (recherche, boutons) */
+.actions {
+  display: flex;
+  gap: var(--tc-spacing-md, 1rem);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Boîte de recherche */
+.searchBox {
+  width: 300px;
+}
+
+/* Conteneur du tableau */
+.tableContainer {
+  overflow-x: auto;
+  margin-top: var(--tc-spacing-md, 1rem);
+}
+
+/* Style du tableau */
+.programmateurTable {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.programmateurTable th,
+.programmateurTable td {
+  padding: var(--tc-spacing-sm, 0.75rem);
+  border-bottom: 1px solid var(--tc-color-gray-200, #e9ecef);
+  text-align: left;
+}
+
+.programmateurTable th {
+  background-color: var(--tc-color-gray-100, #f8f9fa);
+  font-weight: 600;
+}
+
+.programmateurTable tbody tr:hover {
+  background-color: var(--tc-color-gray-50, #f9fafb);
+}
+
+/* En-têtes de colonne triables */
+.sortableHeader {
+  cursor: pointer;
+}
+
+.headerContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Liens des programmateurs */
+.programmateurLink {
+  color: var(--tc-color-primary, #0d6efd);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.programmateurLink:hover {
+  text-decoration: underline;
+}
+
+/* Fonction du programmateur */
+.fonction {
+  font-size: var(--tc-font-size-sm, 0.875rem);
+  color: var(--tc-text-secondary, #6c757d);
+  margin-top: var(--tc-spacing-xs, 0.25rem);
+}
+
+/* Boutons d'action */
+.actionButtons {
+  display: flex;
+  gap: var(--tc-spacing-sm, 0.5rem);
+}
+
+.actionButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.actionButton:hover {
+  transform: translateY(-1px);
+}
+
+.viewButton {
+  background-color: var(--tc-color-info-light, #cff4fc);
+  color: var(--tc-color-info, #0dcaf0);
+}
+
+.viewButton:hover {
+  background-color: var(--tc-color-info, #0dcaf0);
+  color: white;
+}
+
+.editButton {
+  background-color: var(--tc-color-warning-light, #fff3cd);
+  color: var(--tc-color-warning, #ffc107);
+}
+
+.editButton:hover {
+  background-color: var(--tc-color-warning, #ffc107);
+  color: white;
+}
+
+.deleteButton {
+  background-color: var(--tc-color-danger-light, #f8d7da);
+  color: var(--tc-color-danger, #dc3545);
+}
+
+.deleteButton:hover {
+  background-color: var(--tc-color-danger, #dc3545);
+  color: white;
+}
+
+/* Classes supplémentaires du fichier CSS original */
+.headerContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--tc-spacing-lg, 1.5rem);
+}
+
+.searchBar {
+  max-width: 500px;
+  margin-bottom: var(--tc-spacing-md, 1rem);
+}
+
+.cursorPointer {
+  cursor: pointer;
+}
+
+.structureBadge {
+  display: inline-block;
+  background-color: var(--tc-color-gray-100, #f8f9fa);
+  padding: var(--tc-spacing-xs, 0.25rem) var(--tc-spacing-sm, 0.5rem);
+  border-radius: var(--tc-border-radius, 0.25rem);
+  font-size: var(--tc-font-size-sm, 0.875rem);
+  color: var(--tc-text-secondary, #6c757d);
+}
+
+.fieldEmpty {
+  color: var(--tc-text-secondary, #6c757d);
+  font-style: italic;
+  font-size: var(--tc-font-size-sm, 0.875rem);
+}
+
+.tableActions {
+  display: flex;
+  gap: var(--tc-spacing-sm, 0.5rem);
+}
+
+/* État vide */
+.emptyState {
+  text-align: center;
+  padding: var(--tc-spacing-lg, 2rem);
+  background-color: var(--tc-color-gray-100, #f8f9fa);
+  border-radius: var(--tc-border-radius-md, 0.5rem);
+  margin-top: var(--tc-spacing-md, 1rem);
+}
+
+.emptyState i {
+  font-size: var(--tc-font-size-xl, 2rem);
+  color: var(--tc-text-secondary, #6c757d);
+  margin-bottom: var(--tc-spacing-md, 1rem);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header,
+  .headerContainer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .searchBox,
+  .searchBar {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+/* Support pour petits écrans */
+@media (max-width: 576px) {
+  .emptyState {
+    padding: var(--tc-spacing-md, 1rem);
+  }
+  
+  .tableActions,
+  .actionButtons {
+    flex-direction: column;
+    gap: var(--tc-spacing-xs, 0.25rem);
+  }
+}
+
+.clickableRow {
+  cursor: pointer;
+}

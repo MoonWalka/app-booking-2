@@ -1,3 +1,9 @@
+/*
+ * Styles pour EnvironmentBanner
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
 .environment-banner {
   position: fixed;
   bottom: 0;

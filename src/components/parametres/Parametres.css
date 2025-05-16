@@ -1,3 +1,9 @@
+/*
+ * Styles pour Parametres
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
 .nav-pills .nav-link {
   margin-bottom: var(--tc-spacing-xs, 0.5rem);
   border-radius: var(--tc-border-radius, 0.25rem);

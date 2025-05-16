@@ -14,6 +14,7 @@ import ParametresApparence from '../components/parametres/ParametresApparence';
 import ParametresExport from '../components/parametres/ParametresExport';
 import ContratTemplatesPage from '@pages/contratTemplatesPage'; // Ajustez le chemin selon votre structure
 import ContratTemplatesEditPage from '@pages/contratTemplatesEditPage'; // Ajustez le chemin selon votre structure
+import SyncManager from '../components/parametres/sync/SyncManager'; // Import du nouveau composant
 
 // Import du style global de la branche refacto-structure-scriptshell - pour implémentation future
 import '@styles/index.css';
@@ -38,6 +39,8 @@ const ParametresPage = () => {
       setActiveTab('apparence');
     } else if (path.includes('/parametres/export')) {
       setActiveTab('export');
+    } else if (path.includes('/parametres/sync')) {
+      setActiveTab('sync');
     } else if (path.includes('/parametres/generaux')) {
       setActiveTab('generaux');
     } else if (path.includes('/parametres/entreprise') || path === '/parametres') {
@@ -65,6 +68,9 @@ const ParametresPage = () => {
         break;
       case 'export':
         navigate('/parametres/export');
+        break;
+      case 'sync':
+        navigate('/parametres/sync');
         break;
       case 'generaux':
         navigate('/parametres/generaux');
@@ -98,6 +104,8 @@ const ParametresPage = () => {
         return <ParametresApparence />;
       case 'export':
         return <ParametresExport />;
+      case 'sync':
+        return <SyncManager />;
       case 'contrats':
         return <ContratTemplatesPage />;
       default:
@@ -166,6 +174,15 @@ const ParametresPage = () => {
                 onClick={() => handleTabChange('export')}
               >
                 Export et sauvegarde
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link
+                active={activeTab === 'sync'}
+                onClick={() => handleTabChange('sync')}
+                className="text-primary"
+              >
+                Synchronisation des données
               </Nav.Link>
             </Nav.Item>
           </Nav>

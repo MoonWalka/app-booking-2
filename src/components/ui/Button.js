@@ -32,10 +32,21 @@ const Button = ({
   tooltip = '',
   ...rest
 }) => {
+  // Fonction pour convertir correctement les noms de variantes contenant des tirets en noms de classes CSS
+  const getVariantClassName = (variant) => {
+    if (variant.includes('-')) {
+      // Pour les variantes comme "outline-warning", "outline-info", etc.
+      const parts = variant.split('-');
+      return `btn${parts[0].charAt(0).toUpperCase() + parts[0].slice(1)}${parts[1].charAt(0).toUpperCase() + parts[1].slice(1)}`;
+    }
+    // Pour les variantes simples comme "primary", "secondary", etc.
+    return `btn${variant.charAt(0).toUpperCase() + variant.slice(1)}`;
+  };
+
   // Déterminer les classes CSS à appliquer
   const buttonClasses = [
     styles.btn,
-    styles[`btn${variant.charAt(0).toUpperCase() + variant.slice(1)}`],
+    styles[getVariantClassName(variant)],
     size ? styles[`btn${size.charAt(0).toUpperCase() + size.slice(1)}`] : '',
     iconOnly ? styles.iconOnly : '',
     className

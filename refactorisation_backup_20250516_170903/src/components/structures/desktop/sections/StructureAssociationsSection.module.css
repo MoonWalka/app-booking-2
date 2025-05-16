@@ -1,0 +1,165 @@
+/*
+ * Styles pour StructureAssociationsSection
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
+/* 
+ * Styles pour StructureAssociationsSection
+ * Section d'associations d'une structure avec des programmateurs
+ * Dernière mise à jour: 04/05/2025
+ */
+
+.detailsCard {
+  background-color: var(--tc-color-background, #fff);
+  border-radius: var(--tc-border-radius, 0.375rem);
+  margin-bottom: var(--tc-spacing-md, 1rem);
+  box-shadow: var(--tc-box-shadow-sm, 0 2px 4px rgba(0,0,0,0.05));
+  overflow: hidden;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  padding: var(--tc-spacing-sm, 0.75rem) var(--tc-spacing-md, 1rem);
+  background-color: var(--tc-color-background-secondary, #f8f9fa);
+  border-bottom: 1px solid var(--tc-color-border, #dee2e6);
+}
+
+.cardHeader h3 {
+  font-size: var(--tc-font-size-md, 1.1rem);
+  font-weight: var(--tc-font-weight-bold, 600);
+  margin: 0;
+  color: var(--tc-color-text-primary, #212529);
+}
+
+.cardHeader i {
+  color: var(--tc-color-primary, #0d6efd);
+  font-size: var(--tc-font-size-lg, 1.25rem);
+  margin-right: var(--tc-spacing-sm, 0.5rem);
+}
+
+.cardBody {
+  padding: var(--tc-spacing-md, 1rem);
+}
+
+.programmateursList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-spacing-md, 0.75rem);
+}
+
+.programmateurCard {
+  display: flex;
+  align-items: center;
+  padding: var(--tc-spacing-md, 0.75rem);
+  border-radius: var(--tc-border-radius-sm, 0.375rem);
+  border: 1px solid var(--tc-color-border, #dee2e6);
+  transition: all 0.2s ease;
+}
+
+.programmateurCard:hover {
+  box-shadow: var(--tc-box-shadow-md, 0 3px 8px rgba(0,0,0,0.08));
+  border-color: var(--tc-color-primary-light, #86b7fe);
+}
+
+.programmateurInfo {
+  flex: 1;
+}
+
+.programmateurName {
+  font-size: var(--tc-font-size-md, 1.1rem);
+  font-weight: var(--tc-font-weight-medium, 500);
+  margin: 0 0 var(--tc-spacing-sm, 0.5rem) 0;
+  display: flex;
+  align-items: center;
+}
+
+.programmateurName a {
+  color: var(--tc-color-primary, #0d6efd);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.programmateurName a:hover {
+  color: var(--tc-color-primary-dark, #0b5ed7);
+  text-decoration: underline;
+}
+
+.programmateurDetails {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tc-spacing-md, 0.75rem);
+}
+
+.detailItem {
+  display: flex;
+  align-items: center;
+  font-size: var(--tc-font-size-sm, 0.9rem);
+  color: var(--tc-color-text-muted, #6c757d);
+}
+
+.detailItem i {
+  margin-right: var(--tc-spacing-xs, 0.25rem);
+}
+
+.detailItem a {
+  color: var(--tc-color-text-muted, #6c757d);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.detailItem a:hover {
+  color: var(--tc-color-primary, #0d6efd);
+  text-decoration: underline;
+}
+
+.alertInfo {
+  display: flex;
+  align-items: center;
+  padding: var(--tc-spacing-md, 0.75rem);
+  border-radius: var(--tc-border-radius-sm, 0.375rem);
+  background-color: var(--tc-color-info-light, #cff4fc);
+  color: var(--tc-color-info-dark, #055160);
+  font-size: var(--tc-font-size-sm, 0.95rem);
+}
+
+.alertInfo i {
+  font-size: var(--tc-font-size-md, 1.1rem);
+  margin-right: var(--tc-spacing-sm, 0.5rem);
+}
+
+.spinner {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-width: 0.25rem;
+  border-style: solid;
+  border-color: var(--tc-color-primary-light, #86b7fe);
+  border-right-color: var(--tc-color-primary, #0d6efd);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+.spinnerSmall {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-width: 0.2rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .programmateurDetails {
+    flex-direction: column;
+    gap: var(--tc-spacing-xs, 0.25rem);
+  }
+  
+  .cardBody {
+    padding: var(--tc-spacing-sm, 0.75rem);
+  }
+}

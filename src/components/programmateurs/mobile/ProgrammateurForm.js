@@ -1,7 +1,7 @@
 // src/components/programmateurs/mobile/ProgrammateurForm.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { collection, doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import {  collection, doc, getDoc, setDoc, serverTimestamp  } from '@/firebaseInit';
 import { db } from '../../../firebaseInit';
 import { useLocationIQ } from '@/hooks/common';
 import StepNavigation from '../../common/steps/StepNavigation.js';

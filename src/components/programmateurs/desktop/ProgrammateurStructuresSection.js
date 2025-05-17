@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/firebaseInit';
 import styles from './ProgrammateurStructuresSection.module.css';
 import Card from '../../../components/ui/Card';

@@ -455,3 +455,55 @@ main (production)
 ## 12. Conclusion
 
 La mise en place d'un mode de développement local hors ligne, dissocié de Firebase, permettra une collaboration plus efficace entre les développeurs tout en préservant la stabilité de l'application en production. Ce plan propose une approche progressive et sécurisée pour établir cette séparation sans perturber les utilisateurs actuels de TourCraft, tout en offrant une flexibilité accrue aux développeurs qui pourront travailler efficacement même sans connexion internet.
+
+## 13. Résolution des problèmes de dépendances circulaires
+
+### 13.1 Problématique des dépendances circulaires
+
+Lors de l'implémentation du mode développement local, nous avons rencontré des problèmes de dépendances circulaires entre les fichiers `firebaseInit.js` et `mockStorage.js`. Ces problèmes se manifestaient par une erreur :
+
+```
+Cannot access uninitialized variable.
+where@https://localhost:3000/static/js/bundle.js:344444:63
+```
+
+Cela se produisait car :
+1. `firebaseInit.js` importait `localDB` depuis `mockStorage.js`
+2. `mockStorage.js` utilisait des fonctions comme `where` depuis `firebaseInit.js`
+3. Cette boucle d'importation empêchait l'initialisation correcte des variables
+
+### 13.2 Solution implémentée : Pattern Factory amélioré
+
+Pour résoudre ce problème, nous avons mis en place une architecture évoluée basée sur le pattern Factory préconisé dans ce document :
+
+1. **Création d'une couche d'abstraction dédiée** :
+   - `src/services/firebase-factory.js` : Détermine le mode d'exécution (local ou production)
+   - `src/services/firebase-service.js` : Centralise tous les services Firebase et leurs équivalents mock
+
+2. **Séparation claire des implémentations** :
+   - Renommage des imports Firebase (ex: `collection` → `firestoreCollection`) pour éviter les conflits
+   - Exports conditionnels basés sur le mode courant
+   - Proxies sécurisés pour gérer les cas où les mocks ne seraient pas encore initialisés
+
+3. **Remplacement des méthodes problématiques** :
+   - Implémentation d'alternatives robustes pour les requêtes complexes comme `where(...).in([...])`
+   - Mode de secours pour `fetchEntitiesBatch` dans les hooks comme `useConcertListData`
+
+### 13.3 Leçons apprises et bonnes pratiques
+
+1. **Éviter les dépendances circulaires** :
+   - Placer les fonctions partagées dans un module tiers indépendant
+   - Utiliser l'injection de dépendances plutôt que l'import direct
+   - Préférer les importations conditionnelles ou dynamiques quand nécessaire
+
+2. **Robustesse du code** :
+   - Implémenter des mécanismes de fallback pour les fonctionnalités critiques
+   - Ajouter des logs de débogage stratégiques dans les points sensibles
+   - Gérer gracieusement les cas où des composants ne sont pas encore initialisés
+
+3. **Tests spécifiques au mode local** :
+   - Tester explicitement les fonctionnalités en mode déconnecté
+   - Vérifier les chemins d'exécution alternatifs utilisés en mode local
+   - S'assurer que les composants d'UI gèrent correctement les données mockées
+
+Cette solution garantit que les développeurs peuvent travailler en mode complètement hors ligne sans rencontrer de problèmes d'initialisation ou de dépendances circulaires, tout en conservant une structure de code claire et maintenable.

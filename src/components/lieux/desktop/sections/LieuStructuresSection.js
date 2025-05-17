@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Card from '@/components/ui/Card';
 import { Spinner } from 'react-bootstrap';
-import { collection, getDocs, query, where, limit, doc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 import { db } from '@/firebaseInit';
 import styles from './LieuStructuresSection.module.css';
 

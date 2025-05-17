@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { collection, getDocs, query, where, orderBy, limit, startAfter } from 'firebase/firestore';
+import {  collection, getDocs, query, where, orderBy, limit, startAfter  } from '@/firebaseInit';
 import { db } from '../../firebaseInit';
 import styles from './ListWithFilters.module.css';
 

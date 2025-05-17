@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { collection, getDocs, query, where, limit } from 'firebase/firestore';
 import { db } from '@/firebaseInit';
 import styles from './LieuConcertsSection.module.css';
 

@@ -1,4 +1,4 @@
-import { where } from 'firebase/firestore';
+import {  where  } from '@/firebaseInit';
 // Mock de Firestore pour le développement local
 // Simule les fonctionnalités de base de Firestore sans connexion à Firebase
 
@@ -525,3 +525,13 @@ export const _importRawData = (data) => {
   Object.assign(localData, data);
   saveToLocalStorage();
 };
+
+// Initialiser automatiquement les données de démonstration en mode local
+if (process.env.REACT_APP_MODE === 'local' || process.env.NODE_ENV === 'development') {
+  console.log('Mode développement détecté - Initialisation des données de démonstration');
+  // Vérifier si des données existent déjà
+  const hasData = Object.values(localData).some(collection => Object.keys(collection).length > 0);
+  if (!hasData) {
+    seedLocalData(true);
+  }
+}

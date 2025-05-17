@@ -1,4 +1,3 @@
-import { collection, query, orderBy, startAfter, limit, getDocs } from 'firebase/firestore';
 import { db } from '@/firebaseInit';
 
 export const handleLoadMore = async (collectionName, lastDoc, orderByField = 'nom', pageSize = 10) => {

@@ -1,6 +1,15 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { collection, query, orderBy, getDocs, doc, getDoc, limit, where } from 'firebase/firestore';
-import { db } from '@/firebaseInit';
+import { 
+  collection, 
+  query, 
+  orderBy, 
+  getDocs, 
+  doc, 
+  getDoc, 
+  limit, 
+  where, 
+  db 
+} from '@/firebaseInit';
 
 /**
  * Hook to fetch concerts, form data, and contracts
@@ -94,13 +103,15 @@ export const useConcertListData = () => {
     }
   }, []);
   
-  // Fonction utilitaire pour récupérer des entités par lot
+  // Fonction utilitaire pour récupérer des entités par lot - IMPLÉMENTATION ALTERNATIVE SANS WHERE
   const fetchEntitiesBatch = async (collectionName, ids, fields) => {
     if (!ids || ids.length === 0) return [];
     
+    // Déclarer cachedEntities en dehors du bloc try pour qu'elle soit accessible dans le bloc catch
+    const cachedEntities = [];
+    
     try {
       // Filtrer les IDs déjà en cache
-      const cachedEntities = [];
       const idsToFetch = [];
       
       ids.forEach(id => {
@@ -116,26 +127,35 @@ export const useConcertListData = () => {
         return cachedEntities;
       }
       
-      // Utiliser une requête par lots de 10 IDs (limite Firestore)
+      console.log(`[Debug] Mode sécurisé: Récupération individuelle pour ${collectionName}: ${idsToFetch.length} IDs`);
+      
+      // MÉTHODE ALTERNATIVE: Récupérer les documents un par un
+      // Cette méthode est moins efficace mais plus fiable, surtout en mode développement local
       const results = [];
       
-      // Récupérer par lots de 10 IDs maximum
-      for (let i = 0; i < idsToFetch.length; i += 10) {
-        const batch = idsToFetch.slice(i, i + 10);
-        const q = query(collection(db, collectionName), where('__name__', 'in', batch));
-        const querySnapshot = await getDocs(q);
-        
-        querySnapshot.forEach(doc => {
-          const data = { id: doc.id, ...doc.data() };
-          results.push(data);
-          cacheRef.current[collectionName][doc.id] = data;
-        });
+      for (const id of idsToFetch) {
+        try {
+          console.log(`[Debug] Récupération de ${collectionName}/${id}`);
+          const docRef = doc(db, collectionName, id);
+          const docSnap = await getDoc(docRef);
+          
+          if (docSnap.exists()) {
+            const data = { id: docSnap.id, ...docSnap.data() };
+            results.push(data);
+            // Mettre en cache pour les futures utilisations
+            cacheRef.current[collectionName][docSnap.id] = data;
+          } else {
+            console.log(`[Debug] Document ${collectionName}/${id} n'existe pas`);
+          }
+        } catch (err) {
+          console.error(`[Debug] Erreur lors de la récupération de ${collectionName}/${id}:`, err);
+        }
       }
       
       return [...cachedEntities, ...results];
     } catch (error) {
-      console.error(`Erreur lors du chargement des ${collectionName} par lots:`, error);
-      return [];
+      console.error(`[Debug] Erreur générale lors du chargement des ${collectionName}:`, error);
+      return cachedEntities; // Retourner au moins les entités en cache en cas d'erreur
     }
   };
 

@@ -3,7 +3,6 @@ import { Form, Button, Card, Alert, Row, Col, ProgressBar } from 'react-bootstra
 import styles from './ParametresExport.module.css';
 import { useParametres } from '@/context/ParametresContext';
 import { db } from '@/firebaseInit';
-import { collection, query, getDocs } from 'firebase/firestore';
 
 const ParametresExport = () => {
   const { parametres, sauvegarderParametres, loading } = useParametres();

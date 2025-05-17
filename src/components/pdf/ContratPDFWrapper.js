@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import pdfService from '@/services/pdfService';
 // Import du fichier CSS dédié à l'impression - Ce fichier sera utilisé pour les styles
-import '@/styles/components/contrat-print.css';
+import '@styles/index.css';;
 // Import du fichier CSS modulaire pour les styles spécifiques au composant
 import styles from './ContratPDFWrapper.module.css';
 

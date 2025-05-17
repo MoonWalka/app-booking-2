@@ -53,7 +53,7 @@ const ConcertActions = ({
       )}
       
       {/* Contract Actions */}
-      {['preaccord', 'contrat', 'acompte', 'solde'].includes(concert.statut) && !hasContract && (
+      {!hasContract && (
         <ActionButton
           tooltip="Générer contrat"
           icon={<i className="bi bi-file-earmark-plus"></i>}

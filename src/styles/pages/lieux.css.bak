@@ -1,0 +1,951 @@
+/*
+ * Styles pour lieux.css
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
+ */
+
+
+
+/* Styles pour la page des lieux */
+
+/* =============================
+   VARIABLES SPÉCIFIQUES LIEUX
+   ============================= */
+:root {
+  --lieu-color: #0dcaf0; /* Couleur spécifique pour les lieux */
+  --lieu-color-light: #e9f6fd;
+  --festival-color: var(--tc-color-error);
+  --salle-color: #198754;
+  --bar-color: #0dcaf0;
+  --plateau-color: #ffc107;
+  
+  /* Transitions standardisées */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+  
+  /* Couleurs pour les données vides */
+  --empty-data-bg: var(--tc-bg-light, #f8f9fa);
+  --empty-data-color: var(--tc-color-text-secondary, #6c757d);
+  --empty-data-border: var(--tc-color-border-light, #dee2e6);
+}
+
+/* Style pour les données vides ou non spécifiées */
+.text-empty {
+  color: var(--tc-empty-data-color);
+  font-style: italic;
+  background-color: var(--tc-empty-data-bg);
+  padding: var(--tc-spacing-1) var(--tc-spacing-2);
+  border-radius: var(--tc-radius-sm);
+  font-size: 0.875rem;
+  display: inline-block;
+  border: 1px dashed var(--tc-empty-data-border);
+}
+
+/* Transitions uniformisées */
+.action-btn,
+.modern-btn,
+.btn,
+.card,
+.form-card,
+.detail-card,
+.lieu-card,
+.filter-tag,
+.breadcrumb-item,
+.contact-link,
+.modern-add-btn {
+  transition: all var(--tc-transition-normal);
+}
+
+/* =============================
+   DÉTAILS DES LIEUX
+   ============================= */
+.lieu-details-container {
+  padding: var(--tc-spacing-4);
+  background: var(--tc-bg-color, #fff);
+  border-radius: var(--tc-border-radius, var(--tc-spacing-2));
+  box-shadow: var(--tc-shadow, 0 0.125rem var(--tc-spacing-1) rgba(0, 0, 0, 0.075));
+  transition: all 0.3s ease;
+}
+
+.details-header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--tc-spacing-4);
+  border-bottom: 2px solid var(--tc-border-color-light, #f0f0f0);
+  padding-bottom: var(--tc-font-size-xl);
+}
+
+.title-container {
+  flex: 1;
+}
+
+/* En-tête et titre communs */
+.breadcrumb-container {
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+  color: var(--tc-text-muted, var(--tc-color-text-secondary, #6c757d));
+}
+
+.breadcrumb-item {
+  cursor: pointer;
+}
+
+.breadcrumb-item:hover {
+  color: var(--tc-primary-color);
+  text-decoration: underline;
+}
+
+.breadcrumb-item.active {
+  color: var(--tc-text-color-dark, #343a40);
+  font-weight: var(--tc-font-weight-semibold);
+}
+
+.breadcrumb-container i {
+  margin: 0 var(--tc-spacing-2);
+  font-size: var(--tc-spacing-2);
+}
+
+.modern-title {
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-color, #344767);
+  margin: 0;
+  font-size: 1.75rem;
+  display: flex;
+  align-items: center;
+  gap: var(--tc-spacing-2);
+}
+
+/* Badges de types de lieux uniformisés */
+.type-badge {
+  font-size: var(--tc-spacing-2);
+  padding: 0.35em 0.65em;
+  text-transform: capitalize;
+  vertical-align: middle;
+  font-weight: var(--tc-font-weight-medium);
+  border-radius: var(--tc-radius-sm);
+  display: inline-flex;
+  align-items: center;
+}
+
+.type-badge.bg-info {
+  background-color: var(--tc-bar-color) !important;
+}
+
+.type-badge.bg-danger {
+  background-color: var(--tc-festival-color);
+}
+
+.type-badge.bg-success {
+  background-color: var(--tc-salle-color);
+}
+
+.type-badge.bg-warning {
+  background-color: var(--tc-plateau-color) !important;
+}
+
+/* Boutons d'action uniformisés */
+.action-buttons {
+  display: flex;
+  gap: var(--tc-spacing-2);
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--tc-spacing-2);
+  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  font-weight: var(--tc-font-weight-medium);
+  transition: all 0.3s;
+  border-radius: var(--tc-border-radius, 0.375rem);
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--tc-shadow-md, 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08));
+}
+
+/* Cards et détails */
+.details-content {
+  margin-top: var(--tc-spacing-4);
+}
+
+.detail-card {
+  background-color: var(--tc-bg-color, #fff);
+  border-radius: var(--tc-border-radius, var(--tc-spacing-2));
+  box-shadow: var(--tc-shadow-sm, 0 0.125rem var(--tc-spacing-1) rgba(0, 0, 0, 0.05));
+  margin-bottom: var(--tc-spacing-4);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.detail-card:hover {
+  box-shadow: var(--tc-shadow-md, 0 var(--tc-spacing-2) var(--tc-spacing-3) rgba(0, 0, 0, 0.08));
+}
+
+.card-header {
+  background-color: var(--tc-bg-light, var(--tc-bg-light, #f8f9fa));
+  padding: var(--tc-spacing-3) var(--tc-spacing-4);
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--tc-border-color, #e9ecef);
+}
+
+.card-header i {
+  color: var(--tc-primary-color);
+  font-size: var(--tc-font-size-xl);
+  margin-right: var(--tc-spacing-2);
+}
+
+.card-header h3 {
+  margin: 0;
+  font-size: 1.var(--tc-spacing-3);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-color, #344767);
+}
+
+.card-body {
+  padding: var(--tc-spacing-4);
+}
+
+.card-footer {
+  background-color: var(--tc-bg-light, var(--tc-bg-light, #f8f9fa));
+  padding: var(--tc-spacing-3) var(--tc-spacing-4);
+  border-top: 1px solid var(--tc-border-color, #e9ecef);
+}
+
+/* Styles pour les informations de lieu */
+.info-row {
+  display: flex;
+  margin-bottom: var(--tc-spacing-3);
+  padding-bottom: var(--tc-spacing-2);
+  border-bottom: 1px solid var(--tc-border-color-light, #f0f0f0);
+}
+
+.info-row:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.info-label {
+  flex: 0 0 35%;
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-color, #344767);
+  display: flex;
+  align-items: center;
+  gap: var(--tc-spacing-2);
+}
+
+.info-value {
+  flex: 1;
+  color: var(--tc-text-muted, #495057);
+}
+
+.info-value.highlight {
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-primary-color);
+  font-size: 1.var(--tc-spacing-3);
+}
+
+.contact-link {
+  color: var(--tc-primary-color);
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.contact-link:hover {
+  text-decoration: underline;
+  color: var(--tc-primary-dark, #0a58ca);
+}
+
+/* Animation unifiée */
+@keyframes spin {
+  to { transform: translateX(-50%) rotate(360deg); }
+}
+
+/* =============================
+   LISTE DES LIEUX - DESKTOP
+   ============================= */
+.lieux-container {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+  background: var(--tc-bg-color, #fff);
+  border-radius: var(--tc-border-radius, var(--tc-spacing-2));
+  box-shadow: var(--tc-shadow, 0 0.125rem var(--tc-spacing-1) rgba(0, 0, 0, 0.075));
+  transition: all 0.3s ease;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+  border-bottom: 2px solid var(--tc-border-color-light, #f0f0f0);
+  padding-bottom: var(--tc-spacing-3);
+}
+
+.modern-title {
+  font-size: 1.8rem;
+  font-weight: var(--tc-font-weight-semibold);
+  margin: 0;
+  color: #344767;
+}
+
+.modern-add-btn {
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  border-radius: 6px;
+  font-weight: var(--tc-font-weight-medium);
+  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s;
+}
+
+.modern-add-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* Badges de statistiques */
+.stats-badge {
+  display: inline-flex;
+  align-items: center;
+  background-color: var(--tc-bg-light, #f8f9fa);
+  border-radius: 50px;
+  padding: 4px 12px;
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-color-text-secondary, #6c757d);
+}
+
+.stats-badge.success {
+  background-color: rgba(40, 167, 69, 0.1);
+  color: #28a745;
+}
+
+.stats-badge.warning {
+  background-color: rgba(255, 193, 7, 0.1);
+  color: #ffc107;
+}
+
+.stats-number {
+  font-weight: var(--tc-font-weight-bold);
+  margin-right: 5px;
+}
+
+/* Barre de recherche */
+.search-filter-container {
+  margin-bottom: 24px;
+}
+
+.search-bar {
+  max-width: 600px;
+}
+
+.search-input {
+  height: 45px;
+  border-radius: 0 6px 6px 0;
+  padding-left: 12px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.input-group-text {
+  background-color: #fff;
+  border-radius: 6px 0 0 6px;
+  border-right: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.clear-search {
+  border-left: none;
+  border-radius: 0 6px 6px 0;
+  background-color: #fff;
+}
+
+.results-count {
+  margin-top: 8px;
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-color-text-secondary, #6c757d);
+}
+
+/* Filtres */
+.filters-bar {
+  background-color: var(--tc-bg-light, #f8f9fa);
+  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  border-radius: var(--tc-spacing-2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  box-shadow: 0 0.125rem var(--tc-spacing-1) rgba(0, 0, 0, 0.05);
+  margin-bottom: var(--tc-spacing-3);
+}
+
+.filter-label {
+  font-weight: var(--tc-font-weight-medium);
+  color: #495057;
+}
+
+.filter-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.filter-tag {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 8px 15px;
+  border-radius: 50px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--tc-font-weight-medium);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.filter-tag:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.filter-tag.active {
+  font-weight: var(--tc-font-weight-semibold);
+}
+
+.filter-tag .badge {
+  margin-left: 8px;
+  font-size: 0.7em;
+  padding: 5px 8px;
+  border-radius: 20px;
+}
+
+/* Styles pour les différents types */
+.filter-tag-tous {
+  border: 1px solid var(--tc-color-text-secondary, #6c757d);
+}
+.filter-tag-tous.active {
+  background-color: var(--tc-color-text-secondary, #6c757d);
+  color: var(--tc-bg-default, white);
+}
+
+.filter-tag-bar {
+  border: 1px solid var(--tc-lieu-color);
+}
+.filter-tag-bar.active {
+  background-color: var(--tc-lieu-color);
+  color: var(--tc-bg-default, white);
+}
+
+.filter-tag-festival {
+  border: 1px solid var(--tc-color-error);
+}
+.filter-tag-festival.active {
+  background-color: var(--tc-color-error);
+  color: var(--tc-bg-default, white);
+}
+
+.filter-tag-salle {
+  border: 1px solid #198754;
+}
+.filter-tag-salle.active {
+  background-color: #198754;
+  color: var(--tc-bg-default, white);
+}
+
+.filter-tag-plateau {
+  border: 1px solid #ffc107;
+}
+.filter-tag-plateau.active {
+  background-color: #ffc107;
+  color: var(--tc-bg-default, white);
+}
+
+/* Tableau moderne */
+.modern-table-container {
+  border-radius: var(--tc-radius-md);
+  overflow: hidden;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+  background-color: #fff;
+}
+
+.modern-table {
+  margin-bottom: 0;
+}
+
+.modern-table thead {
+  background-color: var(--tc-bg-light, #f8f9fa);
+}
+
+.modern-table thead th {
+  background-color: var(--tc-bg-light, #f8f9fa);
+  border-top: none;
+  border-bottom: none;
+  color: #344767;
+  font-weight: var(--tc-font-weight-semibold);
+  text-transform: uppercase;
+  font-size: var(--tc-spacing-2);
+  letter-spacing: 0.05rem;
+  padding: 14px 16px;
+}
+
+.modern-table tbody td {
+  padding: 14px 16px;
+  vertical-align: middle;
+}
+
+/* Lignes de tableau */
+.clickable-row {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.clickable-row:hover {
+  background-color: rgba(0, 123, 255, 0.05);
+}
+
+.table-row-animate {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Badges et textes */
+.ville-badge {
+  display: inline-block;
+  background-color: #f0f4ff;
+  color: #3a86ff;
+  padding: 4px 10px;
+  border-radius: var(--tc-radius-sm);
+  font-size: var(--tc-font-size-sm);
+}
+
+.address-text {
+  display: block;
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-color-text-secondary, #6c757d);
+  var(--tc-bg-default, white)-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 250px;
+}
+
+.jauge-badge {
+  display: inline-flex;
+  align-items: center;
+  color: var(--tc-bg-default, white);
+  padding: 4px 10px;
+  border-radius: var(--tc-radius-sm);
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-medium);
+}
+
+.jauge-type {
+  opacity: 0.8;
+  font-size: var(--tc-font-size-xs);
+}
+
+.concert-count {
+  display: inline-flex;
+  align-items: center;
+  background-color: #e9f2ff;
+  color: var(--tc-primary-color);
+  padding: 4px 10px;
+  border-radius: 50px;
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-medium);
+}
+
+.badge {
+  font-weight: var(--tc-font-weight-medium);
+  padding: 0.35em 0.65em;
+}
+
+/* Boutons d'action */
+.action-buttons {
+  display: flex;
+  gap: 5px;
+}
+
+.modern-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: all 0.2s;
+  padding: 0;
+  margin-right: var(--tc-spacing-1);
+}
+
+.modern-btn:hover {
+  background-color: var(--tc-bg-light, #f8f9fa);
+  transform: translateY(-2px);
+}
+
+.modern-btn i {
+  font-size: 0.875rem;
+}
+
+.btn-light {
+  background-color: var(--tc-bg-light, #f8f9fa);
+  border-color: #f0f0f0;
+}
+
+.action-buttons .btn-light:first-child:hover {
+  color: #3b7ddd;
+}
+
+.action-buttons .btn-light:nth-child(2):hover {
+  color: #ffc107;
+}
+
+.action-buttons .btn-light:last-child:hover {
+  color: var(--tc-color-error);
+}
+
+/* État vide / alerte */
+.modern-alert {
+  border-radius: var(--tc-radius-md);
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  border: none;
+  background-color: #e9f6fd;
+  color: #0c5460;
+  border-left: 4px solid var(--tc-primary-color);
+}
+
+.modern-alert i {
+  font-size: var(--tc-spacing-4);
+}
+
+/* État vide et chargement */
+.text-center.py-5 {
+  padding: 60px 20px;
+}
+
+.card.text-center.py-5 {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.bi.display-1 {
+  font-size: 3rem;
+  color: #adb5bd;
+  margin-bottom: 16px;
+}
+
+/* Loading spinner */
+.loading-spinner {
+  padding: 40px;
+  color: var(--tc-color-text-secondary, #6c757d);
+  font-weight: var(--tc-font-weight-medium);
+  font-size: var(--tc-spacing-3);
+  position: relative;
+  padding-top: 3rem;
+}
+
+.loading-spinner:before {
+  content: "";
+  display: block;
+  width: var(--tc-spacing-8);
+  height: var(--tc-spacing-8);
+  border-radius: 50%;
+  border: var(--tc-spacing-1) solid rgba(0, 0, 0, 0.1);
+  border-top-color: #3b7ddd;
+  animation: spin 1s infinite linear;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Bouton Charger plus */
+.text-center.mt-4 {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0 40px;
+}
+
+.px-4.py-2 {
+  padding: 10px 24px;
+  font-weight: var(--tc-font-weight-medium);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  to { transform: translateX(-50%) rotate(360deg); }
+}
+
+/* =============================
+   LISTE DES LIEUX - MOBILE
+   ============================= */
+.lieux-mobile-container {
+  padding: 15px;
+}
+
+/* En-tête de la liste des lieux en mobile */
+.lieux-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.lieux-header h1 {
+  font-size: var(--tc-spacing-4);
+  margin: 0;
+  color: #344767;
+}
+
+/* Bouton d'ajout flottant pour mobile */
+.lieux-add-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11);
+}
+
+/* Conteneur de recherche pour mobile */
+.lieux-search-container {
+  margin-bottom: 15px;
+}
+
+/* Liste des lieux en vue mobile */
+.lieux-list-mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Carte de lieu pour mobile */
+.lieu-card {
+  background-color: var(--tc-bg-default, white);
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.lieu-card-header {
+  padding: 15px;
+  background-color: var(--tc-bg-light, #f8f9fa);
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.lieu-card-title {
+  margin: 0;
+  font-size: 1.var(--tc-spacing-3);
+  font-weight: var(--tc-font-weight-semibold);
+  color: #344767;
+}
+
+.lieu-card-body {
+  padding: 15px;
+}
+
+.lieu-info-item {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.lieu-info-icon {
+  min-width: 30px;
+  display: flex;
+  align-items: center;
+  color: var(--tc-color-text-secondary, #6c757d);
+}
+
+.lieu-info-text {
+  flex: 1;
+}
+
+.lieu-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 15px;
+  background-color: var(--tc-bg-light, #f8f9fa);
+  gap: 10px;
+}
+
+.lieu-action-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--tc-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+/* Styles pour l'état vide en mobile */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 15px;
+  text-align: center;
+}
+
+.empty-state i {
+  font-size: 3rem;
+  color: var(--tc-color-border-light, #dee2e6);
+  margin-bottom: 15px;
+}
+
+.empty-state p {
+  color: var(--tc-color-text-secondary, #6c757d);
+  margin-bottom: 20px;
+}
+
+/* Styles de couleur unifiés pour les lieux */
+.lieu-card .lieu-link,
+.lieu-actions a,
+.view-details-button,
+.add-contact-button,
+.edit-button,
+.delete-button,
+.btn-add-lieu {
+  color: var(--tc-primary-color);
+}
+
+.add-new-button {
+  background-color: var(--tc-primary-color);
+}
+
+/* Styles spécifiques pour les types de lieux */
+.filter-tag-bar.active {
+  background-color: var(--tc-bar-color);
+  color: var(--tc-bg-default, white);
+}
+
+.filter-tag-festival.active {
+  background-color: var(--tc-festival-color);
+  color: var(--tc-bg-default, white);
+}
+
+.filter-tag-salle.active {
+  background-color: var(--tc-salle-color);
+  color: var(--tc-bg-default, white);
+}
+
+.filter-tag-plateau.active {
+  background-color: var(--tc-plateau-color);
+  color: var(--tc-bg-default, white);
+}
+
+/* Adaptation responsive commune */
+@media (max-width: 768px) {
+  .details-header-container,
+  .header-container {
+    flex-direction: column;
+    align-items: flex-start; /* Suppression du !important */
+  }
+  
+  /* Ajouter une classe spécifique pour résoudre les conflits potentiels */
+  .tc-mobile-container .details-header-container,
+  .tc-mobile-container .header-container {
+    align-items: flex-start;
+  }
+  
+  .action-buttons {
+    margin-top: var(--tc-spacing-3);
+    width: 100%;
+  }
+  
+  .action-btn {
+    flex: 1;
+    justify-content: center;
+  }
+  
+  .btn-text {
+    display: none;
+  }
+  
+  .info-row {
+    flex-direction: column;
+  }
+  
+  .info-label {
+    margin-bottom: var(--tc-spacing-2);
+  }
+  
+  .info-value {
+    padding-left: var(--tc-spacing-4); /* Ajout d'une indentation pour un meilleur alignement visuel */
+  }
+  
+  .form-card {
+    margin-bottom: var(--tc-spacing-4);
+  }
+  
+  .summary-card {
+    position: static;
+  }
+}
+
+/* Améliorations pour les formulaires */
+.form-card {
+  background-color: var(--tc-bg-color, #fff);
+  border-radius: var(--tc-border-radius, var(--tc-spacing-2));
+  box-shadow: var(--tc-shadow-sm, 0 0.125rem var(--tc-spacing-1) rgba(0, 0, 0, 0.05));
+  margin-bottom: var(--tc-spacing-4);
+  overflow: hidden;
+}
+
+.form-group {
+  margin-bottom: var(--tc-font-size-xl);
+}
+
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+.form-control-static {
+  padding: 0.375rem 0;
+  min-height: 2.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.form-text {
+  margin-top: var(--tc-spacing-1);
+}
+
+/* Correction pour les formulaires sur mobile */
+@media (max-width: 768px) {
+  .input-group {
+    flex-wrap: nowrap;
+  }
+  
+  .row {
+    margin-bottom: 0;
+  }
+  
+  .row > div[class^="col-"] {
+    margin-bottom: var(--tc-font-size-xl);
+  }
+  
+  .row > div[class^="col-"]:last-child {
+    margin-bottom: 0;
+  }
+}

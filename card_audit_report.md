@@ -1,11 +1,11 @@
 # Rapport d'Audit d'Utilisation du Composant Card
-*Date: 15/05/2025*
+*Date: 17/05/2025*
 
 ## Résumé
 
-- **Fichiers JS/JSX analysés**: 455
-- **Fichiers utilisant Card**: 48
-- **Fichiers avec import correct**: 30 (62.50%)
+- **Fichiers JS/JSX analysés**: 464
+- **Fichiers utilisant Card**: 55
+- **Fichiers avec import correct**: 38 (69.09%)
 - **Fichiers avec import problématique**: 0
 - **Fichiers avec implémentation "DIY"**: 0
 
@@ -39,6 +39,14 @@
 - `components/lieux/desktop/sections/LieuGeneralInfo.js`
 - `components/lieux/desktop/sections/LieuInfoSection.js`
 - `components/lieux/desktop/sections/LieuStructuresSection.js`
+- `components/programmateurs/desktop/ProgrammateurAddressSection.js`
+- `components/programmateurs/desktop/ProgrammateurConcertsSection.js`
+- `components/programmateurs/desktop/ProgrammateurContactSection.js`
+- `components/programmateurs/desktop/ProgrammateurForm.js`
+- `components/programmateurs/desktop/ProgrammateurGeneralInfo.js`
+- `components/programmateurs/desktop/ProgrammateurLegalSection.js`
+- `components/programmateurs/desktop/ProgrammateurLieuxSection.js`
+- `components/programmateurs/desktop/ProgrammateurStructuresSection.js`
 - `components/programmateurs/mobile/ProgrammateurView.js`
 - `components/structures/desktop/sections/StructureGeneralInfo.js`
 - `components/structures/desktop/sections/StructureIdentitySection.js`

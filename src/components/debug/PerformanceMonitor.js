@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import FirestoreService from '../../services/firestoreService';
+import '@styles/index.css';; // Importer les styles typographiques standards
 
 /**
  * Composant pour surveiller les performances des requêtes et l'utilisation du cache
@@ -114,7 +115,6 @@ const PerformanceMonitor = () => {
     alignItems: 'center',
     boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
     cursor: 'pointer',
-    fontSize: '16px',
     zIndex: 9999
   };
   
@@ -159,20 +159,21 @@ const PerformanceMonitor = () => {
         style={floatingButtonStyle}
         onClick={() => setIsOpen(!isOpen)}
         title="Moniteur de performances"
+        className="tc-text-md"
       >
         {stats.hitRate || '...'}
       </div>
       
       <div style={panelStyle}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-          <h3 style={{ margin: '0' }}>Moniteur de performances</h3>
+          <h3 className="tc-h3" style={{ margin: '0' }}>Moniteur de performances</h3>
           <button 
             style={{ 
               border: 'none', 
               background: 'none', 
-              cursor: 'pointer',
-              fontSize: '16px'
+              cursor: 'pointer'
             }}
+            className="tc-text-md"
             onClick={() => setIsOpen(false)}
           >
             ×
@@ -202,19 +203,19 @@ const PerformanceMonitor = () => {
         
         {activeTab === 'cache' && (
           <div>
-            <div style={{ marginBottom: '10px' }}>
+            <div style={{ marginBottom: '10px' }} className="tc-text-md">
               <strong>Taux de cache:</strong> {stats.hitRate || '0%'}
             </div>
-            <div style={{ marginBottom: '10px' }}>
+            <div style={{ marginBottom: '10px' }} className="tc-text-md">
               <strong>Cache hits:</strong> {stats.hits || 0}
             </div>
-            <div style={{ marginBottom: '10px' }}>
+            <div style={{ marginBottom: '10px' }} className="tc-text-md">
               <strong>Cache misses:</strong> {stats.misses || 0}
             </div>
-            <div style={{ marginBottom: '10px' }}>
+            <div style={{ marginBottom: '10px' }} className="tc-text-md">
               <strong>Taille du cache:</strong> {stats.size || 0} éléments
             </div>
-            <div style={{ marginBottom: '10px' }}>
+            <div style={{ marginBottom: '10px' }} className="tc-text-md">
               <strong>Dernier nettoyage:</strong> il y a {stats.timeSinceCleanup || 0} secondes
             </div>
             
@@ -240,15 +241,15 @@ const PerformanceMonitor = () => {
         
         {activeTab === 'requests' && (
           <div>
-            <h4>20 dernières requêtes</h4>
+            <h4 className="tc-h4">20 dernières requêtes</h4>
             <div style={{ maxHeight: '300px', overflow: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
-                  <tr>
-                    <th style={{ textAlign: 'left', padding: '5px' }}>Type</th>
-                    <th style={{ textAlign: 'left', padding: '5px' }}>Collection</th>
-                    <th style={{ textAlign: 'right', padding: '5px' }}>Durée (ms)</th>
-                    <th style={{ textAlign: 'center', padding: '5px' }}>Cache</th>
+                  <tr className="tc-table-header">
+                    <th className="tc-text-left" style={{ padding: '5px' }}>Type</th>
+                    <th className="tc-text-left" style={{ padding: '5px' }}>Collection</th>
+                    <th className="tc-text-right" style={{ padding: '5px' }}>Durée (ms)</th>
+                    <th className="tc-text-center" style={{ padding: '5px' }}>Cache</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -256,8 +257,8 @@ const PerformanceMonitor = () => {
                     <tr key={index} style={{ backgroundColor: req.slow ? '#fff3f3' : 'transparent' }}>
                       <td style={{ padding: '5px' }}>{req.type}</td>
                       <td style={{ padding: '5px' }}>{req.collection}</td>
-                      <td style={{ textAlign: 'right', padding: '5px' }}>{req.duration}</td>
-                      <td style={{ textAlign: 'center', padding: '5px' }}>{req.fromCache ? '✓' : '✗'}</td>
+                      <td className="tc-text-right" style={{ padding: '5px' }}>{req.duration}</td>
+                      <td className="tc-text-center" style={{ padding: '5px' }}>{req.fromCache ? '✓' : '✗'}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -268,15 +269,15 @@ const PerformanceMonitor = () => {
         
         {activeTab === 'slow' && (
           <div>
-            <h4>Requêtes lentes (&gt;300ms)</h4>
+            <h4 className="tc-h4">Requêtes lentes (&gt;300ms)</h4>
             <div style={{ maxHeight: '300px', overflow: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
-                  <tr>
-                    <th style={{ textAlign: 'left', padding: '5px' }}>Type</th>
-                    <th style={{ textAlign: 'left', padding: '5px' }}>Collection</th>
-                    <th style={{ textAlign: 'left', padding: '5px' }}>ID</th>
-                    <th style={{ textAlign: 'right', padding: '5px' }}>Durée (ms)</th>
+                  <tr className="tc-table-header">
+                    <th className="tc-text-left" style={{ padding: '5px' }}>Type</th>
+                    <th className="tc-text-left" style={{ padding: '5px' }}>Collection</th>
+                    <th className="tc-text-left" style={{ padding: '5px' }}>ID</th>
+                    <th className="tc-text-right" style={{ padding: '5px' }}>Durée (ms)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -285,7 +286,7 @@ const PerformanceMonitor = () => {
                       <td style={{ padding: '5px' }}>{req.type}</td>
                       <td style={{ padding: '5px' }}>{req.collection}</td>
                       <td style={{ padding: '5px' }}>{req.id}</td>
-                      <td style={{ textAlign: 'right', padding: '5px', fontWeight: req.duration > 1000 ? 'bold' : 'normal' }}>
+                      <td className="tc-text-right" style={{ padding: '5px' }} className={req.duration > 1000 ? 'tc-font-bold' : 'tc-font-normal'}>
                         {req.duration}
                       </td>
                     </tr>
@@ -294,7 +295,7 @@ const PerformanceMonitor = () => {
               </table>
               
               {slowRequests.length === 0 && (
-                <p style={{ textAlign: 'center', color: '#888' }}>Aucune requête lente détectée</p>
+                <p className="tc-text-center tc-text-muted">Aucune requête lente détectée</p>
               )}
             </div>
           </div>

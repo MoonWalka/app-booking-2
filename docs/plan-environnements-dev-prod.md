@@ -507,3 +507,112 @@ Pour résoudre ce problème, nous avons mis en place une architecture évoluée 
    - S'assurer que les composants d'UI gèrent correctement les données mockées
 
 Cette solution garantit que les développeurs peuvent travailler en mode complètement hors ligne sans rencontrer de problèmes d'initialisation ou de dépendances circulaires, tout en conservant une structure de code claire et maintenable.
+
+## 14. Corrections des problèmes d'affichage entre environnements (mai 2025)
+
+### 14.1 Problématiques rencontrées
+
+Lors de l'utilisation de l'application en environnement de production, plusieurs problèmes d'affichage ont été identifiés par rapport à l'environnement de développement :
+
+1. **Boutons manquants dans la liste des concerts** : Les boutons pour accéder aux formulaires et générer des contrats n'apparaissaient pas en production, bien qu'ils fonctionnent correctement en développement.
+
+2. **Erreur lors de la génération de contrats** : Lorsqu'un utilisateur cliquait sur le bouton "Générer contrat", une erreur React apparaissait, indiquant un problème d'import de composant.
+
+### 14.2 Causes identifiées
+
+Après analyse, les causes suivantes ont été identifiées :
+
+1. **Fonctions manquantes dans useConcertListData** : Le hook `useConcertListData` n'exposait pas les fonctions `hasForm`, `hasUnvalidatedForm` et `hasContract` nécessaires pour l'affichage conditionnel des boutons, alors que le composant `ConcertsList` s'attendait à les recevoir.
+
+2. **Absence de récupération des données de formulaires et contrats** : La fonction `fetchConcertsAndForms` du hook `useConcertListData` récupérait les concerts mais pas les formulaires ni les contrats associés.
+
+3. **Conditions d'affichage trop restrictives** : Le bouton "Générer contrat" avait une condition d'affichage qui le limitait à certains statuts de concerts spécifiques.
+
+4. **Problème de routage pour la page de génération de contrats** : Les routes pour les contrats dans `App.js` présentaient des conflits qui empêchaient la navigation vers la page de génération de contrats.
+
+5. **Fichier manquant** : Le fichier `ContratGenerationPage.js` était vide ou manquant dans le répertoire de travail, causant une erreur d'importation.
+
+### 14.3 Solutions implémentées
+
+Pour résoudre ces problèmes, les modifications suivantes ont été apportées :
+
+1. **Amélioration du hook useConcertListData** :
+   - Ajout des fonctions manquantes `hasForm`, `hasUnvalidatedForm` et `hasContract` pour vérifier si un concert a un formulaire ou un contrat associé
+   - Implémentation de la récupération des données de formulaires et contrats dans la fonction `fetchConcertsAndForms`
+
+```javascript
+// Fonction pour vérifier si un concert a un formulaire associé
+const hasForm = useCallback((concertId) => {
+  return concertsWithForms.includes(concertId) || 
+         concerts.find(c => c.id === concertId)?.formId !== undefined;
+}, [concerts, concertsWithForms]);
+
+// Fonction pour vérifier si un concert a un formulaire non validé
+const hasUnvalidatedForm = useCallback((concertId) => {
+  return unvalidatedForms.includes(concertId);
+}, [unvalidatedForms]);
+
+// Fonction pour vérifier si un concert a un contrat associé
+const hasContract = useCallback((concertId) => {
+  return concertsWithContracts[concertId] !== undefined;
+}, [concertsWithContracts]);
+```
+
+2. **Assouplissement des conditions d'affichage des boutons** :
+   - Modification de la condition d'affichage du bouton "Générer contrat" pour qu'il s'affiche dès qu'aucun contrat n'est associé au concert, indépendamment du statut
+
+```javascript
+// Avant
+{['preaccord', 'contrat', 'acompte', 'solde'].includes(concert.statut) && !hasContract && (
+  <ActionButton /* ... */ />
+)}
+
+// Après
+{!hasContract && (
+  <ActionButton /* ... */ />
+)}
+```
+
+3. **Correction du routage dans App.js** :
+   - Restructuration des routes liées aux contrats pour résoudre les conflits de routage
+
+```javascript
+// Routes pour les contrats
+<Route path="/contrats/*" element={
+  <PrivateRoute>
+    <Routes>
+      <Route index element={<ContratsPage />} />
+      <Route path="generate/:concertId" element={<ContratGenerationPage />} />
+      <Route path=":contratId" element={<ContratDetailsPage />} />
+    </Routes>
+  </PrivateRoute>
+} />
+```
+
+4. **Restauration du fichier manquant** :
+   - Le fichier `ContratGenerationPage.js` a été restauré à partir d'une sauvegarde récente
+
+### 14.4 Impact des corrections
+
+Ces corrections ont résolu les problèmes suivants :
+
+1. Les boutons de formulaires et de contrats apparaissent désormais correctement dans la liste des concerts en production.
+2. Le bouton "Générer contrat" apparaît maintenant pour tous les concerts qui n'ont pas encore de contrat associé.
+3. La navigation vers la page de génération de contrats fonctionne correctement sans erreur d'importation.
+
+### 14.5 Leçons apprises et recommandations
+
+1. **Cohérence entre les hooks et les composants** :
+   - S'assurer que les interfaces (props, fonctions retournées) sont cohérentes entre les hooks et les composants qui les utilisent
+   - Documenter clairement les interfaces attendues pour faciliter la maintenance
+
+2. **Gestion des routes dans React Router v6** :
+   - Éviter les routes qui se chevauchent au même niveau
+   - Utiliser les routes imbriquées (`<Routes>` à l'intérieur d'un `element`) pour gérer les sous-routes
+   - Tester soigneusement la navigation, particulièrement pour les routes paramétrées
+
+3. **Tests entre environnements** :
+   - Tester régulièrement l'application dans les différents environnements (développement et production)
+   - Mettre en place des tests automatisés qui vérifient le comportement des composants dans les différents environnements
+
+Ces corrections garantissent que l'expérience utilisateur est cohérente entre les environnements de développement et de production, particulièrement en ce qui concerne l'affichage des boutons et la navigation dans l'application.

@@ -1,8 +1,13 @@
 /*
- * Styles pour artistes
+ * Styles pour artistes.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
  */
+
+
+
+
 
 /* Styles pour la page des artistes */
 /* Styles for all artiste-related components */
@@ -20,7 +25,7 @@
    ============================= */
 .artiste-detail-container {
   padding: 20px;
-  background-color: var(--tc-bg-color, white);
+  background-color: var(--tc-bg-color, var(--tc-bg-default, var(--tc-bg-default, white)));
   border-radius: var(--tc-border-radius, 8px);
   box-shadow: var(--tc-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
   margin-bottom: 20px;
@@ -40,7 +45,7 @@
 .header-image {
   width: 150px;
   height: 150px;
-  border-radius: 8px;
+  border-radius: var(--tc-radius-md);
   overflow: hidden;
 }
 
@@ -57,7 +62,7 @@
   width: 100%;
   height: 100%;
   background-color: #e9ecef;
-  color: #6c757d;
+  color: var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d));
 }
 
 .placeholder-photo i {
@@ -101,7 +106,7 @@
   align-items: flex-start;
   gap: var(--tc-spacing-sm, 8px);
   margin-bottom: var(--tc-spacing-sm, 10px);
-  color: var(--tc-text-muted, #666);
+  color: var(--tc-text-muted, var(--tc-color-text-secondary, var(--tc-color-text-secondary, #666)));
   font-size: var(--tc-font-size-sm, 14px);
 }
 
@@ -135,7 +140,7 @@
 
 .detail-tabs {
   display: flex;
-  border-bottom: 1px solid #dee2e6;
+  border-bottom: 1px solid var(--tc-color-border-light, var(--tc-color-border-light, #dee2e6));
   margin-bottom: 20px;
 }
 
@@ -150,18 +155,18 @@
 }
 
 .tab-item:hover {
-  background-color: #f8f9fa;
+  background-color: var(--tc-bg-light, var(--tc-bg-light, #f8f9fa));
 }
 
 .tab-item.active {
   border-bottom-color: #007bff;
   color: #007bff;
-  font-weight: 500;
+  font-weight: var(--tc-font-weight-medium);
 }
 
 .detail-content {
   background-color: #fff;
-  border-radius: 8px;
+  border-radius: var(--tc-radius-md);
   border: 1px solid #e0e0e0;
   overflow: hidden;
 }
@@ -177,7 +182,7 @@
 .info-section h3 {
   /* Harmonisation : taille standardisée */
   font-size: var(--tc-font-size-lg);
-  font-weight: 600;
+  font-weight: var(--tc-font-weight-semibold);
   margin-bottom: 15px;
   padding-bottom: 8px;
   border-bottom: 1px solid #e0e0e0;
@@ -190,7 +195,7 @@
   gap: var(--tc-spacing-sm, 8px);
   margin-bottom: var(--tc-spacing-sm, 10px);
   margin-top: var(--tc-spacing-md, 20px);
-  color: var(--tc-text-muted, #666);
+  color: var(--tc-text-muted, var(--tc-color-text-secondary, var(--tc-color-text-secondary, #666)));
   font-size: var(--tc-font-size-sm, 14px);
 }
 
@@ -204,7 +209,7 @@
 .contact-item i {
   /* Harmonisation : taille standardisée */
   font-size: var(--tc-font-size-lg);
-  color: var(--tc-text-muted, #6c757d);
+  color: var(--tc-text-muted, var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d)));
 }
 
 .contact-item a {
@@ -243,12 +248,12 @@
 .empty-state i {
   /* Harmonisation : taille standardisée */
   font-size: var(--tc-font-size-xxl);
-  color: #dee2e6;
+  color: var(--tc-color-border-light, var(--tc-color-border-light, #dee2e6));
   margin-bottom: 15px;
 }
 
 .empty-state p {
-  color: #6c757d;
+  color: var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d));
   margin-bottom: 20px;
 }
 
@@ -263,7 +268,7 @@
   margin: 0;
   /* Harmonisation : taille standardisée */
   font-size: var(--tc-font-size-lg);
-  font-weight: 600;
+  font-weight: var(--tc-font-weight-semibold);
 }
 
 .stats-container {
@@ -278,8 +283,8 @@
 }
 
 .stat-card {
-  background-color: #f8f9fa;
-  border-radius: 8px;
+  background-color: var(--tc-bg-light, var(--tc-bg-light, #f8f9fa));
+  border-radius: var(--tc-radius-md);
   padding: 20px;
   display: flex;
   align-items: center;
@@ -296,14 +301,14 @@
   margin: 0 0 5px 0;
   /* Harmonisation : taille standardisée */
   font-size: var(--tc-font-size-sm);
-  color: #6c757d;
+  color: var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d));
 }
 
 .stat-value {
   margin: 0;
   /* Harmonisation : taille standardisée */
   font-size: var(--tc-font-size-xl);
-  font-weight: 600;
+  font-weight: var(--tc-font-weight-semibold);
 }
 
 .stats-sections {
@@ -315,7 +320,7 @@
 .stats-section h3 {
   /* Harmonisation : taille standardisée */
   font-size: var(--tc-font-size-lg);
-  font-weight: 600;
+  font-weight: var(--tc-font-weight-semibold);
   margin-bottom: 15px;
   padding-bottom: 8px;
   border-bottom: 1px solid #e0e0e0;
@@ -339,7 +344,7 @@
   margin: 0;
   /* Harmonisation : taille standardisée */
   font-size: var(--tc-font-size-xxl);
-  font-weight: 600;
+  font-weight: var(--tc-font-weight-semibold);
 }
 
 .breadcrumb {
@@ -356,12 +361,12 @@
 
 .breadcrumb-separator {
   margin: 0 8px;
-  color: #6c757d;
+  color: var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d));
 }
 
 .breadcrumb-current {
-  color: #6c757d;
-  font-weight: 500;
+  color: var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  font-weight: var(--tc-font-weight-medium);
 }
 
 .artiste-form {
@@ -374,7 +379,7 @@
 
 .form-card {
   border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  border-radius: var(--tc-radius-md);
   overflow: hidden;
   background-color: #fff;
 }
@@ -384,7 +389,7 @@
   align-items: center;
   gap: 10px;
   padding: 15px;
-  background-color: #f8f9fa;
+  background-color: var(--tc-bg-light, var(--tc-bg-light, #f8f9fa));
   border-bottom: 1px solid #e0e0e0;
 }
 
@@ -392,13 +397,13 @@
   margin: 0;
   /* Harmonisation : taille standardisée */
   font-size: var(--tc-font-size-lg);
-  font-weight: 600;
+  font-weight: var(--tc-font-weight-semibold);
 }
 
 .card-header i {
   /* Harmonisation : taille standardisée */
   font-size: var(--tc-font-size-lg);
-  color: #6c757d;
+  color: var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d));
 }
 
 .card-body {
@@ -409,7 +414,7 @@
   margin-bottom: 30px;
   padding: 20px;
   background-color: #f9f9f9;
-  border-radius: 8px;
+  border-radius: var(--tc-radius-md);
 }
 
 .section-title {
@@ -417,7 +422,7 @@
   font-size: var(--tc-font-size-lg);
   font-weight: bold;
   margin-bottom: 15px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--tc-color-border-medium, var(--tc-color-border-medium, #ddd));
   padding-bottom: 10px;
 }
 
@@ -441,14 +446,14 @@
 .form-label {
   display: block;
   margin-bottom: 5px;
-  font-weight: 500;
+  font-weight: var(--tc-font-weight-medium);
 }
 
 .form-control {
   width: 100%;
   padding: 8px 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  border: 1px solid var(--tc-color-border-medium, var(--tc-color-border-medium, #ddd));
+  border-radius: var(--tc-radius-sm);
   /* Harmonisation : taille standardisée */
   font-size: var(--tc-font-size-sm);
 }
@@ -516,7 +521,7 @@
 /* Artiste card - style horizontal (pour les listes) */
 .artiste-list-card {
   display: flex;
-  background-color: var(--tc-bg-color, white);
+  background-color: var(--tc-bg-color, var(--tc-bg-default, var(--tc-bg-default, white)));
   border-radius: var(--tc-border-radius, 8px);
   box-shadow: var(--tc-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
   margin-bottom: 15px;
@@ -540,7 +545,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--tc-spacing-sm, 8px);
-  background-color: var(--tc-bg-color, white);
+  background-color: var(--tc-bg-color, var(--tc-bg-default, var(--tc-bg-default, white)));
   border-radius: var(--tc-border-radius, 8px);
   overflow: hidden;
 }
@@ -549,7 +554,7 @@
    ARTISTE TAB CONTENT
    ============================= */
 .artiste-tab-content {
-  background-color: var(--tc-bg-color, white);
+  background-color: var(--tc-bg-color, var(--tc-bg-default, var(--tc-bg-default, white)));
   border-radius: var(--tc-border-radius, 8px);
   box-shadow: var(--tc-shadow);
   padding: var(--tc-spacing-md, 16px);
@@ -595,7 +600,7 @@
 .artiste-link {
   color: var(--tc-artiste-color, #6610f2);
   text-decoration: none;
-  font-weight: 500;
+  font-weight: var(--tc-font-weight-medium);
 }
 
 .artiste-link:hover {

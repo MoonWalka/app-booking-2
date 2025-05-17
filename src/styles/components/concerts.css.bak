@@ -1,0 +1,309 @@
+/*
+ * Styles pour concerts.css
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
+ */
+
+
+
+/* Fichier de styles pour les composants concerts
+ * Centralise tous les styles spécifiques aux concerts pour éviter les styles inline
+ * et assurer la cohérence visuelle
+ */
+
+/* // Correction UI: Styles pour la liste des concerts */
+.concerts-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header-container {
+  margin-bottom: var(--tc-spacing-8);
+}
+
+/* // Correction UI: Styles pour le tableau des concerts avec amélioration de lisibilité */
+.concerts-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.concerts-table th {
+  color: var(--tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  font-weight: var(--tc-font-weight-semibold);
+  padding: var(--tc-spacing-3) var(--tc-spacing-2);
+  border-bottom: 2px solid var(--tc-border-color, #e9ecef);
+}
+
+.concerts-table td {
+  padding: var(--tc-spacing-3) var(--tc-spacing-2);
+  vertical-align: middle;
+  border-bottom: 1px solid var(--tc-border-color, #e9ecef);
+}
+
+/* // Correction UI: Améliorer la lisibilité des lignes cliquables */
+.tc-clickable-row {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.tc-clickable-row:hover {
+  background-color: rgba(0, 123, 255, 0.05);
+}
+
+.past-concert {
+  opacity: 0.75;
+}
+
+/* // Correction UI: Meilleure gestion de l'overflow du texte */
+.text-truncate-container {
+  max-width: 180px;
+  var(--tc-bg-default, white)-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 992px) {
+  .text-truncate-container {
+    max-width: 140px;
+  }
+}
+
+@media (max-width: 768px) {
+  .text-truncate-container {
+    max-width: 100px;
+  }
+}
+
+/* // Correction UI: Amélioration des styles pour les dates */
+.concert-date-cell {
+  var(--tc-bg-default, white)-space: nowrap;
+  font-weight: var(--tc-font-weight-semibold);
+}
+
+.date-box {
+  display: inline-flex;
+  align-items: center;
+}
+
+.date-day, .date-month {
+  font-weight: var(--tc-font-weight-semibold);
+}
+
+.date-year {
+  color: var(--tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
+}
+
+.date-separator {
+  margin: 0 2px;
+  color: var(--tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
+}
+
+.past-date {
+  color: var(--tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
+}
+
+/* // Correction UI: Styles standardisés pour les messages de statut */
+.status-message {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--tc-spacing-1) var(--tc-spacing-2);
+  border-radius: 50px;
+  font-weight: var(--tc-font-weight-semibold);
+  font-size: var(--tc-font-size-sm);
+  min-width: 120px;
+  var(--tc-bg-default, white)-space: nowrap;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* // Correction UI: Amélioration du contraste pour les messages de statut */
+.status-message-primary {
+  background-color: rgba(0, 123, 255, 0.15);
+  color: #0056b3;
+}
+
+.status-message-success {
+  background-color: rgba(40, 167, 69, 0.15);
+  color: #155724;
+}
+
+.status-message-info {
+  background-color: rgba(23, 162, 184, 0.15);
+  color: #0c5460;
+}
+
+.status-message-warning {
+  background-color: rgba(255, 193, 7, 0.15);
+  color: #856404;
+}
+
+.status-message-danger {
+  background-color: rgba(220, 53, 69, 0.15);
+  color: #721c24;
+}
+
+.status-message-secondary {
+  background-color: rgba(108, 117, 125, 0.15);
+  color: #383d41;
+}
+
+.status-message-light {
+  background-color: rgba(248, 249, 250, 0.8);
+  color: #383d41;
+  border: 1px solid rgba(108, 117, 125, 0.2);
+}
+
+/* // Correction UI: Container pour les status avancés */
+.status-advanced-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.status-message-container {
+  margin-bottom: 0.3rem;
+}
+
+/* // Correction UI: Styles pour les rappels d'action */
+.action-reminder {
+  display: flex;
+  align-items: center;
+  font-size: var(--tc-spacing-2);
+  color: var(--tc-warning-color, #ffc107);
+  background-color: rgba(255, 193, 7, 0.1);
+  padding: 0.15rem var(--tc-spacing-2);
+  border-radius: var(--tc-radius-sm);
+  margin-top: var(--tc-spacing-1);
+}
+
+.action-reminder i {
+  margin-right: 0.3rem;
+}
+
+/* // Correction UI: Conteneur pour les notifications */
+.tc-notification-container {
+  position: relative;
+}
+
+/* // Correction UI: Styles pour les icônes de statut */
+.status-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: var(--tc-spacing-1);
+  font-size: var(--tc-spacing-3);
+}
+
+/* // Correction UI: Styles pour les filtres de statut */
+.status-filter-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tc-spacing-2);
+  margin-bottom: var(--tc-spacing-4);
+}
+
+@media (max-width: 768px) {
+  .status-filter-tabs {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: var(--tc-spacing-2);
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .status-filter-tabs::-webkit-scrollbar {
+    height: 4px;
+  }
+  
+  .status-filter-tabs::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: var(--tc-radius-sm);
+  }
+}
+
+/* // Correction UI: Styles pour la recherche */
+.search-filter-container {
+  margin-bottom: var(--tc-spacing-4);
+}
+
+.search-bar {
+  transition: box-shadow 0.2s ease;
+}
+
+.search-bar:focus-within {
+  box-shadow: 0 0 0 0.var(--tc-spacing-8) rgba(0, 123, 255, 0.25) !important;
+}
+
+.search-input:focus {
+  box-shadow: none;
+}
+
+/* // Correction UI: Styles pour les montants */
+.montant-value {
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-dark, #212529);
+}
+
+/* // Correction UI: Styles pour les artistes et programmateurs */
+.artist-name, .programmateur-name {
+  display: flex;
+  align-items: center;
+  var(--tc-bg-default, white)-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+}
+
+.artist-name i, .programmateur-name i {
+  margin-right: 0.4rem;
+  color: var(--tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
+}
+
+@media (max-width: 992px) {
+  .artist-name, .programmateur-name {
+    max-width: 140px;
+  }
+}
+
+/* // Correction UI: Amélioration des styles responsive */
+@media (max-width: 768px) {
+  .concerts-container {
+    padding: var(--tc-spacing-3);
+  }
+  
+  .concerts-table th,
+  .concerts-table td {
+    padding: var(--tc-spacing-2) var(--tc-spacing-2);
+  }
+  
+  .artist-name, .programmateur-name {
+    max-width: 100px;
+  }
+  
+  .montant-column {
+    font-size: var(--tc-font-size-sm);
+  }
+  
+  .status-message {
+    padding: 0.var(--tc-spacing-8) var(--tc-spacing-2);
+    font-size: var(--tc-spacing-2);
+    min-width: 90px;
+  }
+}
+
+/* // Correction UI: Styles pour les boutons d'action */
+.action-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--tc-radius-md);
+  transition: all 0.2s ease-in-out;
+}
+
+.action-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}

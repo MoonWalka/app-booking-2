@@ -1,20 +1,25 @@
 /*
- * Styles pour tables
+ * Styles pour tables.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
  */
+
+
+
+
 
 /* Styles pour les tableaux */
 .tc-table {
   width: 100%;
-  margin-bottom: 1rem;
+  margin-bottom: var(--tc-spacing-3);
   color: var(--tc-text-color);
   border-collapse: collapse;
 }
 
 .tc-table th,
 .tc-table td {
-  padding: 0.75rem;
+  padding: var(--tc-spacing-2);
   vertical-align: top;
   border-top: 1px solid var(--tc-table-border-color);
   text-align: left;
@@ -25,7 +30,7 @@
   border-bottom: 2px solid var(--tc-table-border-color);
   background-color: var(--tc-table-header-bg);
   color: var(--tc-table-header-color);
-  font-weight: 600;
+  font-weight: var(--tc-font-weight-semibold);
 }
 
 .tc-table tbody + tbody {
@@ -69,8 +74,8 @@
 
 /* Table captions */
 .tc-table caption {
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
+  padding-top: var(--tc-spacing-2);
+  padding-bottom: var(--tc-spacing-2);
   color: var(--tc-text-muted);
   text-align: left;
   caption-side: bottom;
@@ -131,7 +136,7 @@
 
 .tc-table .tc-table-actions {
   display: flex;
-  gap: 0.5rem;
+  gap: var(--tc-spacing-2);
   justify-content: flex-end;
 }
 
@@ -140,7 +145,7 @@
   border: none;
   color: var(--tc-text-muted);
   cursor: pointer;
-  padding: 0.25rem;
+  padding: var(--tc-spacing-1);
   border-radius: var(--tc-border-radius-sm);
   transition: var(--tc-transition);
 }
@@ -163,7 +168,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 1rem;
+  margin-top: var(--tc-spacing-3);
 }
 
 .page-info {
@@ -178,15 +183,15 @@
 }
 
 .pagination-item {
-  margin: 0 0.25rem;
+  margin: 0 var(--tc-spacing-1);
 }
 
 .pagination-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
+  width: var(--tc-spacing-8);
+  height: var(--tc-spacing-8);
   border-radius: var(--tc-border-radius-sm);
   background-color: var(--tc-card-bg);
   color: var(--tc-text-color);
@@ -200,12 +205,12 @@
 
 .pagination-link.active {
   background-color: var(--tc-primary-color);
-  color: white;
+  color: var(--tc-bg-default, var(--tc-bg-default, white));
 }
 
 .pagination-prev,
 .pagination-next {
-  font-size: 1.25rem;
+  font-size: var(--tc-font-size-xl);
 }
 
 /* Responsive pour petits écrans */
@@ -218,7 +223,7 @@
   
   .tc-table-responsive-stack tr {
     display: block;
-    margin-bottom: 1rem;
+    margin-bottom: var(--tc-spacing-3);
     border: 1px solid var(--tc-table-border-color);
     border-radius: var(--tc-border-radius);
   }
@@ -231,7 +236,7 @@
     position: relative;
     padding-left: 40%;
     text-align: left;
-    min-height: 1.5rem;
+    min-height: var(--tc-spacing-4);
     border-top: none;
     border-bottom: 1px solid var(--tc-table-border-color);
   }
@@ -243,10 +248,10 @@
   .tc-table-responsive-stack td::before {
     content: attr(data-label);
     position: absolute;
-    left: 0.75rem;
+    left: var(--tc-spacing-2);
     width: 35%;
     white-space: nowrap;
-    font-weight: 600;
+    font-weight: var(--tc-font-weight-semibold);
     color: var(--tc-text-muted);
   }
 }

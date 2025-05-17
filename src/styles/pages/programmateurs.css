@@ -1,8 +1,13 @@
 /*
- * Styles pour programmateurs
+ * Styles pour programmateurs.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
  */
+
+
+
+
 
 /* Styles pour la page des programmateurs */
 /* Styles for all programmateur-related components */
@@ -43,7 +48,7 @@
 }
 
 .programmateur-organization {
-  color: var(--tc-text-muted, #666);
+  color: var(--tc-text-muted, var(--tc-color-text-secondary, var(--tc-color-text-secondary, #666)));
   margin-bottom: 10px;
 }
 
@@ -64,7 +69,7 @@
   margin-top: 20px;
   padding: 15px;
   background-color: #fff9e6;
-  border-radius: 8px;
+  border-radius: var(--tc-radius-md);
   border-left: 4px solid #f0c674;
 }
 
@@ -87,32 +92,32 @@
 }
 
 .programmateur-form-container {
-  padding: 1.5rem;
+  padding: var(--tc-spacing-4);
   background: var(--tc-bg-color, #fff);
-  border-radius: var(--tc-border-radius, 0.5rem);
-  box-shadow: var(--tc-shadow, 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075));
+  border-radius: var(--tc-border-radius, var(--tc-spacing-2));
+  box-shadow: var(--tc-shadow, 0 0.125rem var(--tc-spacing-1) rgba(0, 0, 0, 0.075));
   transition: all 0.3s ease;
 }
 
 /* En-tête du formulaire */
 .form-header-container {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--tc-spacing-4);
   border-bottom: 2px solid var(--tc-border-color-light, #f0f0f0);
-  padding-bottom: 1rem;
+  padding-bottom: var(--tc-spacing-3);
 }
 
 .modern-title {
-  font-weight: 600;
+  font-weight: var(--tc-font-weight-semibold);
   color: var(--tc-text-color, #344767);
-  margin: 0 0 0.5rem 0;
-  font-size: 1.5rem;
+  margin: 0 0 var(--tc-spacing-2) 0;
+  font-size: var(--tc-spacing-4);
 }
 
 .breadcrumb-container {
   display: flex;
   align-items: center;
   font-size: 0.875rem;
-  color: var(--tc-text-muted, #6c757d);
+  color: var(--tc-text-muted, var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d)));
 }
 
 .breadcrumb-item {
@@ -120,56 +125,56 @@
 }
 
 .breadcrumb-item:hover {
-  color: var(--tc-primary-color, #0d6efd);
+  color: var(--tc-primary-color, var(--tc-color-primary, var(--tc-color-primary, #0d6efd)));
   text-decoration: underline;
 }
 
 .breadcrumb-item.active {
   color: var(--tc-text-color-dark, #343a40);
-  font-weight: 600;
+  font-weight: var(--tc-font-weight-semibold);
 }
 
 .breadcrumb-container i {
-  margin: 0 0.5rem;
-  font-size: 0.75rem;
+  margin: 0 var(--tc-spacing-2);
+  font-size: var(--tc-spacing-2);
 }
 
 /* Cartes de formulaire */
 .modern-form {
-  margin-top: 1.5rem;
+  margin-top: var(--tc-spacing-4);
 }
 
 .form-card {
   background-color: var(--tc-bg-color, #fff);
-  border-radius: var(--tc-border-radius, 0.5rem);
-  box-shadow: var(--tc-shadow-sm, 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05));
-  margin-bottom: 1.5rem;
+  border-radius: var(--tc-border-radius, var(--tc-spacing-2));
+  box-shadow: var(--tc-shadow-sm, 0 0.125rem var(--tc-spacing-1) rgba(0, 0, 0, 0.05));
+  margin-bottom: var(--tc-spacing-4);
   overflow: hidden;
   transition: all 0.3s ease;
 }
 
 .form-card:hover {
-  box-shadow: var(--tc-shadow-md, 0 0.5rem 1rem rgba(0, 0, 0, 0.08));
+  box-shadow: var(--tc-shadow-md, 0 var(--tc-spacing-2) var(--tc-spacing-3) rgba(0, 0, 0, 0.08));
   transform: translateY(-2px);
 }
 
 /* En-tête de carte unifiée */
 .card-header {
-  background-color: var(--tc-bg-light, #f8f9fa);
-  padding: 1rem 1.5rem;
+  background-color: var(--tc-bg-light, var(--tc-bg-light, var(--tc-bg-light, #f8f9fa)));
+  padding: var(--tc-spacing-3) var(--tc-spacing-4);
   display: flex;
   align-items: center;
   border-bottom: 1px solid var(--tc-border-color, #e9ecef);
 }
 
 .card-header i {
-  font-size: 1.25rem;
-  margin-right: 0.75rem;
+  font-size: var(--tc-font-size-xl);
+  margin-right: var(--tc-spacing-2);
 }
 
 /* Couleurs différentes pour chaque section */
 .card-header i.bi-person-vcard {
-  color: var(--tc-primary-color, #0d6efd);
+  color: var(--tc-primary-color, var(--tc-color-primary, var(--tc-color-primary, #0d6efd)));
 }
 
 .card-header i.bi-building,
@@ -179,48 +184,48 @@
 
 .card-header h3 {
   margin: 0;
-  font-size: 1.5rem;
-  font-weight: 600;
+  font-size: var(--tc-spacing-4);
+  font-weight: var(--tc-font-weight-semibold);
   color: var(--tc-text-color, #344767);
 }
 
 .card-body {
-  padding: 1.5rem;
+  padding: var(--tc-spacing-4);
 }
 
 .form-group {
-  margin-bottom: 1.25rem;
+  margin-bottom: var(--tc-font-size-xl);
 }
 
 .form-label {
-  font-weight: 500;
+  font-weight: var(--tc-font-weight-medium);
   color: var(--tc-text-color, #344767);
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--tc-spacing-2);
   display: block;
 }
 
 /* Classe .required supprimée - remplacée par .tc-required dans forms.css */
 
 .optional {
-  color: var(--tc-text-muted, #6c757d);
-  font-size: 0.8rem;
+  color: var(--tc-text-muted, var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d)));
+  font-size: var(--tc-font-size-xs);
   font-weight: normal;
 }
 
 /* Styles pour le mode affichage des détails */
 .form-display {
-  font-size: 1rem;
-  padding: 0.5rem 0;
+  font-size: var(--tc-spacing-3);
+  padding: var(--tc-spacing-2) 0;
   margin-bottom: 0;
   min-height: 2.5rem;
   display: flex;
   align-items: center;
-  color: var(--tc-text-color, #333);
+  color: var(--tc-text-color, var(--tc-color-text-primary, var(--tc-color-text-primary, #333)));
 }
 
 .email-link, .phone-link {
   text-decoration: none;
-  color: var(--tc-primary-color, #0d6efd);
+  color: var(--tc-primary-color, var(--tc-color-primary, var(--tc-color-primary, #0d6efd)));
   transition: color 0.2s;
 }
 
@@ -234,20 +239,20 @@
 .action-btn {
   display: flex;
   align-items: center;
-  padding: 0.5rem 1rem;
-  font-weight: 500;
+  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  font-weight: var(--tc-font-weight-medium);
 }
 
 .action-btn i {
-  margin-right: 0.5rem;
+  margin-right: var(--tc-spacing-2);
 }
 
 .form-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+  gap: var(--tc-spacing-3);
+  margin-top: var(--tc-spacing-8);
+  margin-bottom: var(--tc-spacing-8);
 }
 
 /* =============================
@@ -277,7 +282,7 @@
   margin-bottom: 20px;
   padding: 15px;
   background-color: var(--tc-bg-light, #f5f5f5);
-  border-radius: 8px;
+  border-radius: var(--tc-radius-md);
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
@@ -290,12 +295,12 @@
 
 .filter-option label {
   margin-right: 10px;
-  font-weight: 500;
+  font-weight: var(--tc-font-weight-medium);
 }
 
 /* Style de carte pour les listes de programmateurs */
 .programmateur-list-card {
-  background-color: var(--tc-bg-color, white);
+  background-color: var(--tc-bg-color, var(--tc-bg-default, var(--tc-bg-default, white)));
   border-radius: var(--tc-border-radius, 8px);
   box-shadow: var(--tc-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
   margin-bottom: 15px;
@@ -321,7 +326,7 @@
 }
 
 .programmateur-card-organization {
-  color: var(--tc-text-muted, #666);
+  color: var(--tc-text-muted, var(--tc-color-text-secondary, var(--tc-color-text-secondary, #666)));
   margin-bottom: 10px;
 }
 
@@ -350,7 +355,7 @@
 .tag {
   padding: 4px 8px;
   background-color: var(--tc-bg-light, #e3f2fd);
-  border-radius: 4px;
+  border-radius: var(--tc-radius-sm);
   font-size: 12px;
   color: var(--tc-primary-dark, #0d47a1);
 }
@@ -368,9 +373,9 @@
 /* Styles pour la carte programmateur - Déplacés depuis lieux.css */
 .detail-card .spinner-border {
   color: var(--tc-primary-color);
-  width: 1.5rem;
-  height: 1.5rem;
-  margin: 0.5rem 0;
+  width: var(--tc-spacing-4);
+  height: var(--tc-spacing-4);
+  margin: var(--tc-spacing-2) 0;
 }
 
 /* Style pour mettre en évidence l'icône du programmateur */
@@ -397,18 +402,18 @@
 /* Styles pour la recherche de programmateurs */
 .programmateur-search-container {
   position: relative;
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--tc-spacing-2);
 }
 
 .dropdown-menu {
   max-height: 250px;
   overflow-y: auto;
-  padding: 0.5rem 0;
+  padding: var(--tc-spacing-2) 0;
   z-index: 1050;
 }
 
 .programmateur-item {
-  padding: 0.75rem 1rem;
+  padding: var(--tc-spacing-2) var(--tc-spacing-3);
   cursor: pointer;
   transition: background-color 0.2s;
   border-bottom: 1px solid var(--tc-border-color-light, #f0f0f0);
@@ -425,20 +430,20 @@
 .programmateur-details {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
-  font-size: 0.8rem;
-  color: var(--tc-text-muted, #6c757d);
+  gap: var(--tc-spacing-2);
+  font-size: var(--tc-font-size-xs);
+  color: var(--tc-text-muted, var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d)));
 }
 
 .programmateur-email, 
 .programmateur-structure {
   display: block;
-  color: var(--tc-text-muted, #6c757d);
-  font-size: 0.8rem;
+  color: var(--tc-text-muted, var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d)));
+  font-size: var(--tc-font-size-xs);
 }
 
 .selected-programmateur {
-  margin-bottom: 1rem;
+  margin-bottom: var(--tc-spacing-3);
 }
 
 /* Styles pour l'affichage d'un programmateur sélectionné */
@@ -446,42 +451,42 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: var(--tc-bg-light, #f8f9fa);
-  border: 1px solid var(--tc-border-color, #dee2e6);
+  background-color: var(--tc-bg-light, var(--tc-bg-light, var(--tc-bg-light, #f8f9fa)));
+  border: 1px solid var(--tc-border-color, var(--tc-color-border-light, var(--tc-color-border-light, #dee2e6)));
   border-radius: var(--tc-border-radius, 0.375rem);
-  padding: 0.75rem 1rem;
+  padding: var(--tc-spacing-2) var(--tc-spacing-3);
   transition: all 0.3s ease;
 }
 
 .programmateur-card:hover {
-  box-shadow: var(--tc-shadow, 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075));
+  box-shadow: var(--tc-shadow, 0 0.125rem var(--tc-spacing-1) rgba(0, 0, 0, 0.075));
   transform: translateY(-1px);
 }
 
 .programmateur-contacts {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
-  margin-top: 0.25rem;
+  gap: var(--tc-spacing-3);
+  margin-top: var(--tc-spacing-1);
 }
 
 .programmateur-contact-item {
   display: flex;
   align-items: center;
   gap: 0.375rem;
-  font-size: 0.8rem;
-  color: var(--tc-text-muted, #6c757d);
+  font-size: var(--tc-font-size-xs);
+  color: var(--tc-text-muted, var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d)));
 }
 
 .programmateur-contact-item i {
   color: var(--tc-primary-color);
-  font-size: 0.85rem;
+  font-size: var(--tc-font-size-sm);
 }
 
 .programmateur-link {
   color: var(--tc-primary-color);
   text-decoration: none;
-  font-weight: 500;
+  font-weight: var(--tc-font-weight-medium);
 }
 
 .programmateur-link:hover {
@@ -492,30 +497,30 @@
    STRUCTURE JURIDIQUE - AMÉLIORATIONS
    ============================= */
 .structure-card .card-body {
-  padding: 1.5rem;
+  padding: var(--tc-spacing-4);
 }
 
 .structure-card .data-label {
-  font-size: 0.75rem;
-  color: #6c757d;
-  margin-bottom: 0.25rem;
+  font-size: var(--tc-spacing-2);
+  color: var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  margin-bottom: var(--tc-spacing-1);
   display: block;
 }
 
 .structure-card .data-value {
-  font-weight: 500;
-  font-size: 1rem;
-  margin-bottom: 1rem;
-  color: #333;
+  font-weight: var(--tc-font-weight-medium);
+  font-size: var(--tc-spacing-3);
+  margin-bottom: var(--tc-spacing-3);
+  color: var(--tc-color-text-primary, var(--tc-color-text-primary, #333));
 }
 
 .structure-card .raison-sociale {
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: var(--tc-font-size-xl);
+  font-weight: var(--tc-font-weight-semibold);
 }
 
 .structure-card .row-spacing {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--tc-spacing-4);
 }
 
 .structure-card .code-value {
@@ -524,30 +529,30 @@
 }
 
 .structure-card .row + .row {
-  margin-top: 1.25rem;
+  margin-top: var(--tc-font-size-xl);
 }
 
 .structure-card .type-badge {
   display: inline-block;
   padding: 0.35rem 0.65rem;
-  font-size: 0.85rem;
-  font-weight: 500;
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-medium);
   line-height: 1;
   color: #495057;
-  background-color: #f8f9fa;
-  border-radius: 0.25rem;
+  background-color: var(--tc-bg-light, var(--tc-bg-light, #f8f9fa));
+  border-radius: var(--tc-spacing-1);
 }
 
 /* Input styles for structure card */
 .structure-card .form-control-lg {
   height: calc(2.5rem + 2px);
-  font-size: 1.1rem;
+  font-size: 1.var(--tc-spacing-3);
 }
 
 .structure-card .input-label {
-  font-size: 0.75rem;
-  color: #6c757d;
-  margin-bottom: 0.25rem;
+  font-size: var(--tc-spacing-2);
+  color: var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  margin-bottom: var(--tc-spacing-1);
   display: block;
 }
 
@@ -555,6 +560,6 @@
   font-size: 0.7rem;
   color: #999;
   font-style: italic;
-  margin-left: 0.25rem;
+  margin-left: var(--tc-spacing-1);
   font-weight: normal;
 }

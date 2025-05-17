@@ -1,39 +1,44 @@
 /*
- * Styles pour forms
+ * Styles pour forms.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
  */
+
+
+
+
 
 /* Styles généraux pour les formulaires */
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--tc-spacing-4);
 }
 
 /* // Modifié par Copilot : ajout de .tc-form-group */
 .tc-form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--tc-spacing-4);
 }
 
 .form-label {
   display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
+  margin-bottom: var(--tc-spacing-2);
+  font-weight: var(--tc-font-weight-medium);
   color: var(--tc-label-color);
 }
 
 /* // Modifié par Copilot : ajout de .tc-form-label */
 .tc-form-label {
   display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
+  margin-bottom: var(--tc-spacing-2);
+  font-weight: var(--tc-font-weight-medium);
   color: var(--tc-label-color);
 }
 
 .form-control {
   display: block;
   width: 100%;
-  padding: 0.5rem 0.75rem;
-  font-size: 1rem;
+  padding: var(--tc-spacing-2) var(--tc-spacing-2);
+  font-size: var(--tc-spacing-3);
   line-height: 1.5;
   color: var(--tc-text-color);
   background-color: var(--tc-input-bg);
@@ -47,8 +52,8 @@
 .tc-form-control {
   display: block;
   width: 100%;
-  padding: 0.5rem 0.75rem;
-  font-size: 1rem;
+  padding: var(--tc-spacing-2) var(--tc-spacing-2);
+  font-size: var(--tc-spacing-3);
   line-height: 1.5;
   color: var(--tc-text-color);
   background-color: var(--tc-input-bg);
@@ -84,7 +89,7 @@
 
 .form-text {
   display: block;
-  margin-top: 0.25rem;
+  margin-top: var(--tc-spacing-1);
   font-size: 0.875rem;
   color: var(--tc-text-muted);
 }
@@ -92,7 +97,7 @@
 /* // Modifié par Copilot : ajout de .tc-form-text */
 .tc-form-text {
   display: block;
-  margin-top: 0.25rem;
+  margin-top: var(--tc-spacing-1);
   font-size: 0.875rem;
   color: var(--tc-text-muted);
 }
@@ -110,7 +115,7 @@
 .invalid-feedback {
   display: block;
   width: 100%;
-  margin-top: 0.25rem;
+  margin-top: var(--tc-spacing-1);
   font-size: 0.875rem;
   color: var(--tc-danger-color);
 }
@@ -119,7 +124,7 @@
 .tc-invalid-feedback {
   display: block;
   width: 100%;
-  margin-top: 0.25rem;
+  margin-top: var(--tc-spacing-1);
   font-size: 0.875rem;
   color: var(--tc-danger-color);
 }
@@ -132,46 +137,46 @@
 
 /* Styles pour les select et multiselect */
 select.form-control {
-  padding-right: 2rem;
+  padding-right: var(--tc-spacing-8);
   appearance: none;
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 0.75rem center;
+  background-position: right var(--tc-spacing-2) center;
   background-size: 16px 12px;
 }
 
 /* // Modifié par Copilot : ajout de select.tc-form-control */
 select.tc-form-control {
-  padding-right: 2rem;
+  padding-right: var(--tc-spacing-8);
   appearance: none;
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 0.75rem center;
+  background-position: right var(--tc-spacing-2) center;
   background-size: 16px 12px;
 }
 
 /* Styles pour les checkboxes et radios */
 .form-check {
   display: block;
-  min-height: 1.5rem;
-  padding-left: 1.5rem;
+  min-height: var(--tc-spacing-4);
+  padding-left: var(--tc-spacing-4);
   margin-bottom: 0.125rem;
 }
 
 /* // Modifié par Copilot : ajout de .tc-form-check */
 .tc-form-check {
   display: block;
-  min-height: 1.5rem;
-  padding-left: 1.5rem;
+  min-height: var(--tc-spacing-4);
+  padding-left: var(--tc-spacing-4);
   margin-bottom: 0.125rem;
 }
 
 .form-check-input {
   float: left;
-  margin-left: -1.5rem;
-  width: 1rem;
-  height: 1rem;
-  margin-top: 0.25rem;
+  margin-left: -var(--tc-spacing-4);
+  width: var(--tc-spacing-3);
+  height: var(--tc-spacing-3);
+  margin-top: var(--tc-spacing-1);
   vertical-align: top;
   background-color: var(--tc-input-bg);
   background-repeat: no-repeat;
@@ -184,10 +189,10 @@ select.tc-form-control {
 /* // Modifié par Copilot : ajout de .tc-form-check-input */
 .tc-form-check-input {
   float: left;
-  margin-left: -1.5rem;
-  width: 1rem;
-  height: 1rem;
-  margin-top: 0.25rem;
+  margin-left: -var(--tc-spacing-4);
+  width: var(--tc-spacing-3);
+  height: var(--tc-spacing-3);
+  margin-top: var(--tc-spacing-1);
   vertical-align: top;
   background-color: var(--tc-input-bg);
   background-repeat: no-repeat;
@@ -198,12 +203,12 @@ select.tc-form-control {
 }
 
 .form-check-input[type="checkbox"] {
-  border-radius: 0.25rem;
+  border-radius: var(--tc-spacing-1);
 }
 
 /* // Modifié par Copilot : ajout de .tc-form-check-input[type="checkbox"] */
 .tc-form-check-input[type="checkbox"] {
-  border-radius: 0.25rem;
+  border-radius: var(--tc-spacing-1);
 }
 
 .form-check-input[type="radio"] {
@@ -278,21 +283,21 @@ textarea.tc-form-control {
 }
 
 .form-switch .form-check-input {
-  width: 2rem;
+  width: var(--tc-spacing-8);
   margin-left: -2.5rem;
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3E%3Ccircle r='3' fill='%23fff'/%3E%3C/svg%3E");
   background-position: left center;
-  border-radius: 2rem;
+  border-radius: var(--tc-spacing-8);
   transition: background-position .15s ease-in-out;
 }
 
 /* // Modifié par Copilot : ajout de .tc-form-switch .tc-form-check-input */
 .tc-form-switch .tc-form-check-input {
-  width: 2rem;
+  width: var(--tc-spacing-8);
   margin-left: -2.5rem;
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3E%3Ccircle r='3' fill='%23fff'/%3E%3C/svg%3E");
   background-position: left center;
-  border-radius: 2rem;
+  border-radius: var(--tc-spacing-8);
   transition: background-position .15s ease-in-out;
 }
 

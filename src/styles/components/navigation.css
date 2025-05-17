@@ -1,8 +1,13 @@
 /*
- * Styles pour navigation
+ * Styles pour navigation.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
  */
+
+
+
+
 
 /* Styles pour la navigation */
 
@@ -32,7 +37,7 @@
 .navigation-item a:hover,
 .navigation-item a.active {
   background-color: var(--tc-primary-color);
-  color: white;
+  color: var(--tc-bg-default, var(--tc-bg-default, white));
 }
 
 /* Styles pour la navigation secondaire */
@@ -54,7 +59,7 @@
 .sub-navigation-item a {
   color: var(--tc-text-muted);
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: var(--tc-font-size-sm);
   transition: var(--tc-transition);
 }
 
@@ -80,7 +85,7 @@
   align-items: center;
   justify-content: center;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: var(--tc-font-weight-medium);
   border: 2px solid var(--tc-gray-300);
   transition: var(--tc-transition);
   position: relative;
@@ -89,13 +94,13 @@
 
 .step-dot.active {
   background-color: var(--tc-primary-color);
-  color: white;
+  color: var(--tc-bg-default, var(--tc-bg-default, white));
   border-color: var(--tc-primary-color);
 }
 
 .step-dot.completed {
   background-color: var(--tc-success-color);
-  color: white;
+  color: var(--tc-bg-default, var(--tc-bg-default, white));
   border-color: var(--tc-success-color);
 }
 
@@ -124,7 +129,7 @@
   left: 50%;
   transform: translateX(-50%);
   background-color: var(--tc-gray-800);
-  color: white;
+  color: var(--tc-bg-default, var(--tc-bg-default, white));
   padding: 5px 10px;
   border-radius: var(--tc-border-radius-sm);
   font-size: 12px;

@@ -1,14 +1,19 @@
 /*
- * Styles pour cards
+ * Styles pour cards.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
  */
+
+
+
+
 
 /* Styles pour les cartes de l'interface */
 .tc-card {
   background: #fff;
   border: none;
-  border-radius: 1.2rem;
+  border-radius: var(--tc-spacing-8);
   box-shadow: 0 4px 12px rgba(44, 62, 80, 0.08);
   margin-bottom: 2.3rem;
   overflow: hidden;
@@ -22,12 +27,12 @@
 
 .tc-card-header {
   background: linear-gradient(to right, #f7faff, #edf3fb);
-  padding: 1.1rem 1.5rem;
+  padding: var(--tc-spacing-3) var(--tc-spacing-4);
   display: flex;
   align-items: center;
-  gap: 0.8rem;
-  font-weight: 700;
-  font-size: 1.25rem;
+  gap: var(--tc-font-size-xs);
+  font-weight: var(--tc-font-weight-bold);
+  font-size: var(--tc-font-size-xl);
   color: #225ea8;
   border-bottom: 1px solid #dce3ed;
 }
@@ -36,7 +41,7 @@
 .tc-card-header h4 {
   margin: 0;
   font-size: 1.28rem;
-  font-weight: 600;
+  font-weight: var(--tc-font-weight-semibold);
   color: #225ea8;
 }
 
@@ -45,7 +50,7 @@
 }
 
 .tc-card-footer {
-  padding: 1rem 1.5rem;
+  padding: var(--tc-spacing-3) var(--tc-spacing-4);
   background: #f7faff;
   border-top: 1px solid #dce3ed;
 }
@@ -81,19 +86,19 @@ html body .details-card:hover {
 
 /* Card Variations */
 .tc-card-compact {
-  margin-bottom: 0.75rem;
+  margin-bottom: var(--tc-spacing-2);
 }
 
 .tc-card-compact .tc-card-header {
-  padding: 0.75rem;
+  padding: var(--tc-spacing-2);
 }
 
 .tc-card-compact .tc-card-body {
-  padding: 0.75rem;
+  padding: var(--tc-spacing-2);
 }
 
 .tc-card-compact .tc-card-footer {
-  padding: 0.5rem 0.75rem;
+  padding: var(--tc-spacing-2) var(--tc-spacing-2);
 }
 
 .tc-card-hover:hover {
@@ -109,12 +114,12 @@ html body .details-card:hover {
 
 .tc-card-table th {
   background-color: var(--tc-table-header-bg);
-  font-weight: 500;
+  font-weight: var(--tc-font-weight-medium);
 }
 
 .tc-card-table th,
 .tc-card-table td {
-  padding: 0.75rem 1rem;
+  padding: var(--tc-spacing-2) var(--tc-spacing-3);
   border-bottom: 1px solid var(--tc-border-color);
 }
 
@@ -183,7 +188,7 @@ html body .details-card:hover {
 .tc-card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 1.5rem;
+  gap: var(--tc-spacing-4);
 }
 
 /* Cartes Responsive */
@@ -191,12 +196,12 @@ html body .details-card:hover {
   .tc-card-header, 
   .tc-card-body, 
   .tc-card-footer {
-    padding: 0.75rem;
+    padding: var(--tc-spacing-2);
   }
   
   .tc-card-table th,
   .tc-card-table td {
-    padding: 0.5rem 0.75rem;
+    padding: var(--tc-spacing-2) var(--tc-spacing-2);
   }
   
   .tc-card-grid {
@@ -207,7 +212,7 @@ html body .details-card:hover {
 /* Cartes avec actions */
 .tc-card-actions {
   display: flex;
-  gap: 0.5rem;
+  gap: var(--tc-spacing-2);
 }
 
 .tc-card-action-button {
@@ -215,7 +220,7 @@ html body .details-card:hover {
   border: none;
   color: var(--tc-text-muted);
   cursor: pointer;
-  padding: 0.25rem;
+  padding: var(--tc-spacing-1);
   border-radius: var(--tc-border-radius-sm);
   transition: var(--tc-transition);
 }

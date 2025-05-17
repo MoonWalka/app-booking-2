@@ -1,8 +1,13 @@
 /*
- * Styles pour theme
+ * Styles pour theme.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
  */
+
+
+
+
 
 /* Ce fichier contient les styles d'application des variables et les utilitaires généraux */
 
@@ -132,7 +137,7 @@ body {
 }
 
 .suggestion-item {
-  padding: 0.5rem 1rem;
+  padding: var(--tc-spacing-2) var(--tc-spacing-3);
   cursor: pointer;
   transition: var(--tc-transition);
 }
@@ -153,31 +158,31 @@ body {
 .badge-secondary,
 .bg-secondary {
   background-color: var(--tc-secondary-color) !important;
-  color: white;
+  color: var(--tc-bg-default, var(--tc-bg-default, white));
 }
 
 .badge-success,
 .bg-success {
   background-color: var(--tc-success-color) !important;
-  color: white;
+  color: var(--tc-bg-default, var(--tc-bg-default, white));
 }
 
 .badge-danger,
 .bg-danger {
   background-color: var(--tc-danger-color) !important;
-  color: white;
+  color: var(--tc-bg-default, var(--tc-bg-default, white));
 }
 
 .badge-warning,
 .bg-warning {
   background-color: var(--tc-warning-color) !important;
-  color: white;
+  color: var(--tc-bg-default, var(--tc-bg-default, white));
 }
 
 .badge-info,
 .bg-info {
   background-color: var(--tc-info-color) !important;
-  color: white;
+  color: var(--tc-bg-default, var(--tc-bg-default, white));
 }
 
 /* Textes colorés */

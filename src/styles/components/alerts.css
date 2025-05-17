@@ -1,14 +1,19 @@
 /*
- * Styles pour alerts
+ * Styles pour alerts.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
  */
+
+
+
+
 
 /* Styles pour les alertes et notifications */
 .alert {
   position: relative;
-  padding: 0.75rem 1.25rem;
-  margin-bottom: 1rem;
+  padding: var(--tc-spacing-2) var(--tc-font-size-xl);
+  margin-bottom: var(--tc-spacing-3);
   border: 1px solid transparent;
   border-radius: var(--tc-border-radius);
   display: flex;
@@ -16,8 +21,8 @@
 }
 
 .alert-icon {
-  margin-right: 0.75rem;
-  font-size: 1.25rem;
+  margin-right: var(--tc-spacing-2);
+  font-size: var(--tc-font-size-xl);
   display: flex;
   align-items: center;
 }
@@ -27,8 +32,8 @@
 }
 
 .alert-title {
-  font-weight: 600;
-  margin-bottom: 0.25rem;
+  font-weight: var(--tc-font-weight-semibold);
+  margin-bottom: var(--tc-spacing-1);
 }
 
 .alert-message {
@@ -41,8 +46,8 @@
   color: inherit;
   opacity: 0.7;
   padding: 0;
-  margin-left: 0.75rem;
-  font-size: 1.25rem;
+  margin-left: var(--tc-spacing-2);
+  font-size: var(--tc-font-size-xl);
   cursor: pointer;
   transition: var(--tc-transition);
 }
@@ -96,19 +101,19 @@
 /* Alertes avec fond gradient */
 .alert-gradient-primary {
   background-image: linear-gradient(to right, var(--tc-primary-color), var(--tc-primary-light));
-  color: white;
+  color: var(--tc-bg-default, var(--tc-bg-default, white));
   border: none;
 }
 
 .alert-gradient-success {
   background-image: linear-gradient(to right, var(--tc-success-color), var(--tc-success-light));
-  color: white;
+  color: var(--tc-bg-default, var(--tc-bg-default, white));
   border: none;
 }
 
 .alert-gradient-danger {
   background-image: linear-gradient(to right, var(--tc-danger-color), var(--tc-danger-light));
-  color: white;
+  color: var(--tc-bg-default, var(--tc-bg-default, white));
   border: none;
 }
 
@@ -116,7 +121,7 @@
 .toast-container {
   position: fixed;
   z-index: var(--tc-z-index-toast);
-  padding: 1rem;
+  padding: var(--tc-spacing-3);
 }
 
 .toast-container.top-right {
@@ -146,7 +151,7 @@
   background-color: var(--tc-card-bg);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow-toast);
-  margin-bottom: 0.75rem;
+  margin-bottom: var(--tc-spacing-2);
   overflow: hidden;
   animation: toastFadeIn 0.3s ease;
 }
@@ -159,14 +164,14 @@
 .toast-header {
   display: flex;
   align-items: center;
-  padding: 0.5rem 0.75rem;
+  padding: var(--tc-spacing-2) var(--tc-spacing-2);
   color: var(--tc-text-color);
   background-color: var(--tc-card-header-bg-color);
   border-bottom: 1px solid var(--tc-border-color);
 }
 
 .toast-body {
-  padding: 0.75rem;
+  padding: var(--tc-spacing-2);
 }
 
 .toast-progress {

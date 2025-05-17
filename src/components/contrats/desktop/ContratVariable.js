@@ -1,5 +1,5 @@
 import React from 'react';
-import '@/styles/index.css';
+import '@styles/index.css';;
 
 // Version avec bouton moderne et icône
 const ContratVariable = ({ name, description, onInsert }) => {

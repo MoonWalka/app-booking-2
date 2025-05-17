@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { db, getDoc, doc, collection, setDoc, serverTimestamp } from '@/firebaseInit';
 import ContratTemplateEditor from '@/components/contrats/ContratTemplateEditor';
-import '@/styles/index.css';
+import '@styles/index.css';;
 
 const ContratTemplatesEditPage = () => {
   const { id } = useParams();

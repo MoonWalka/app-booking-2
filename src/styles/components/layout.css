@@ -1,8 +1,13 @@
 /*
- * Styles pour layout
+ * Styles pour layout.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
  */
+
+
+
+
 
 /* Styles de layout unifiés - Combinaison de components/layout.css et pages/layout.css */
 
@@ -50,8 +55,8 @@
 
 .sidebar-header h3 {
   margin: 0;
-  font-size: 1.2rem;
-  font-weight: 600;
+  font-size: 1.var(--tc-spacing-8);
+  font-weight: var(--tc-font-weight-semibold);
 }
 
 .sidebar-header p {
@@ -87,7 +92,7 @@
 }
 
 .sidebar-footer .user-email {
-  font-size: 0.85rem;
+  font-size: var(--tc-font-size-sm);
   opacity: 0.8;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -99,7 +104,7 @@
 .sidebar-footer .btn {
   width: 100%;
   padding: 6px 12px;
-  font-size: 0.85rem;
+  font-size: var(--tc-font-size-sm);
 }
 
 /* Navigation - support des différents styles */
@@ -130,13 +135,13 @@
 .menu-item.active {
   background-color: var(--tc-sidebar-active-bg-color);
   color: var(--tc-sidebar-text-color);
-  font-weight: 500;
+  font-weight: var(--tc-font-weight-medium);
 }
 
 .sidebar-nav a span,
 .menu-icon {
   margin-right: 10px;
-  font-size: 1.1rem;
+  font-size: 1.var(--tc-spacing-3);
 }
 
 .menu-text {
@@ -160,7 +165,7 @@
   padding: 10px 15px;
   color: var(--tc-sidebar-text-color);
   text-decoration: none;
-  border-radius: 4px;
+  border-radius: var(--tc-radius-sm);
   transition: var(--tc-transition);
 }
 
@@ -172,12 +177,12 @@
 .nav-links a.active {
   background-color: rgba(255, 255, 255, 0.2);
   color: var(--tc-sidebar-text-color);
-  font-weight: 500;
+  font-weight: var(--tc-font-weight-medium);
 }
 
 .nav-links i {
   margin-right: 10px;
-  font-size: 1.1rem;
+  font-size: 1.var(--tc-spacing-3);
 }
 
 /* Contenu principal - styles combinés */
@@ -188,7 +193,7 @@
   background-color: var(--tc-content-bg-color);
   min-height: 100vh;
   margin-left: var(--tc-sidebar-width, 240px);
-  padding: var(--tc-spacing-lg, 1.5rem);
+  padding: var(--tc-spacing-lg, var(--tc-spacing-4));
 }
 
 .content,
@@ -230,12 +235,14 @@
 
 .user-name,
 .user-email {
-  font-size: 0.9rem;
+  font-size: var(--tc-font-size-sm);
   opacity: 0.8;
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-weight: 500;
+  white-space: nowrap;
+  width: 100%;
+  text-align: center;
+  font-weight: var(--tc-font-weight-medium);
 }
 
 .user-role {
@@ -258,9 +265,9 @@
 /* Définition unifiée du sélecteur main */
 main {
   flex: 1 1 auto;
-  padding: var(--tc-spacing-lg, 1.5rem);
+  padding: var(--tc-spacing-lg, var(--tc-spacing-4));
   overflow-y: auto;
-  background-color: var(--tc-background-color, #f8f9fa);
+  background-color: var(--tc-background-color, var(--tc-bg-light, var(--tc-bg-light, #f8f9fa)));
 }
 
 /* Styles pour la marque */
@@ -271,14 +278,14 @@ main {
 }
 
 .main-brand {
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-size: var(--tc-spacing-4);
+  font-weight: var(--tc-font-weight-bold);
   letter-spacing: 0.5px;
 }
 
 .sub-brand {
   font-size: 0.7rem;
-  font-weight: 400;
+  font-weight: var(--tc-font-weight-normal);
   letter-spacing: 0.3px;
   opacity: 0.8;
 }
@@ -319,7 +326,7 @@ main {
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background-color: var(--tc-white-overlay-20);
+  background-color: var(--tc-var(--tc-bg-default, var(--tc-bg-default, white))-overlay-20);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -452,7 +459,7 @@ main {
   }
   
   main {
-    padding: var(--tc-spacing-md, 1rem);
+    padding: var(--tc-spacing-md, var(--tc-spacing-3));
   }
   
   .details-grid {

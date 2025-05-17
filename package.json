@@ -32,6 +32,9 @@
     "yup": "^1.6.1"
   },
   "scripts": {
+    "start:test-css": "REACT_APP_CSS_TEST_MODE=true npm start",
+    "css:fix": "node scripts/check-css-vars.js --fix",
+    "bootstrap:fix": "node scripts/audit-bootstrap.js --fix",
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
@@ -48,7 +51,13 @@
     "start:local": "env-cmd -f .env.local -f .env.development craco start",
     "build:local": "env-cmd -f .env.local -f .env.development craco build",
     "start:prod": "env-cmd -f .env.local -f .env.production craco start",
-    "build:prod": "env-cmd -f .env.local -f .env.production craco build"
+    "build:prod": "env-cmd -f .env.local -f .env.production craco build",
+    "audit:css": "node scripts/check-css-vars.js",
+    "audit:css:fix": "node scripts/check-css-vars.js --fix",
+    "audit:bootstrap": "node scripts/audit-bootstrap.js",
+    "audit:bootstrap:fix": "node scripts/audit-bootstrap.js --fix",
+    "audit:all": "npm run audit:css && npm run audit:bootstrap && npm run audit:card",
+    "audit:report": "node scripts/generate-audit-report.js"
   },
   "eslintConfig": {
     "extends": [

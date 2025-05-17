@@ -1,8 +1,13 @@
 /*
- * Styles pour lists
+ * Styles pour lists.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
  */
+
+
+
+
 
 /* Styles des listes et tableaux pour TourCraft */
 
@@ -11,13 +16,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 2.2rem 0 1.7rem 0;
+  margin: 2.var(--tc-spacing-8) 0 1.7rem 0;
   flex-wrap: wrap;
 }
 
 .section-header h2 {
   font-size: 2.05rem;
-  font-weight: 700;
+  font-weight: var(--tc-font-weight-bold);
   color: #324265;
   margin: 0;
   letter-spacing: 0.2px;
@@ -29,8 +34,8 @@
   color: #fff;
   border: none;
   border-radius: 6px;
-  font-weight: 500;
-  font-size: 1rem;
+  font-weight: var(--tc-font-weight-medium);
+  font-size: var(--tc-spacing-3);
   box-shadow: 0 1px 7px rgba(47, 54, 100, 0.04);
   padding: 10px 20px;
   transition: background .15s;
@@ -57,7 +62,7 @@
 }
 
 .search-bar .form-control {
-  border-radius: 8px 0 0 8px;
+  border-radius: var(--tc-radius-md) 0 0 8px;
   box-shadow: none;
   background: #f6f9fc;
   border: 1px solid #e2e8f0;
@@ -103,7 +108,7 @@
 
 .tc-table th {
   color: #3f4c65;
-  font-weight: 700;
+  font-weight: var(--tc-font-weight-bold);
   letter-spacing: 0.08em;
   border-bottom: 2px solid #e2e8f0;
   padding: 13px 16px;
@@ -123,7 +128,7 @@
   border-bottom: 1px solid #f0f3fa;
   color: #222d3a;
   padding: 11px 16px;
-  font-weight: 400;
+  font-weight: var(--tc-font-weight-normal);
 }
 
 /* ===== BADGES & FIELD VALUES ===== */
@@ -133,7 +138,7 @@
   font-size: 0.98rem;
   padding: 4px 13px;
   border-radius: 15px;
-  font-weight: 700;
+  font-weight: var(--tc-font-weight-bold);
   letter-spacing: .023em;
   display: inline-block;
 }
@@ -147,7 +152,7 @@
 .list-view .field-empty i {
   color: #bfc8dc;
   font-style: italic;
-  font-size: 1rem;
+  font-size: var(--tc-spacing-3);
 }
 
 /* ===== ACTIONS BUTTONS ===== */
@@ -165,7 +170,7 @@
 
 .table-actions .tc-btn i {
   color: inherit;
-  font-size: 1rem;
+  font-size: var(--tc-spacing-3);
   margin-right: 4px;
 }
 
@@ -179,7 +184,7 @@
 /* ===== RESPONSIVE ===== */
 @media (max-width: 600px) {
   .section-header h2 {
-    font-size: 1.25rem;
+    font-size: var(--tc-font-size-xl);
   }
   
   .tc-table thead {
@@ -196,7 +201,7 @@
   .tc-table tr {
     margin-bottom: 12px;
     display: block;
-    border-radius: 8px;
+    border-radius: var(--tc-radius-md);
     box-shadow: 0 1px 3px rgba(40, 50, 90, 0.05);
   }
 }

@@ -10,6 +10,7 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useConcertFormOptimized } from '@/hooks/concerts';
 import { format } from 'date-fns';
+import '@styles/index.css';; // Importer les styles typographiques standards
 
 // Styles communs pour le formulaire
 const formStyles = {
@@ -208,8 +209,8 @@ const ConcertFormExemple = () => {
   if (isLoading) {
     return (
       <div style={formStyles.container}>
-        <div style={{ textAlign: 'center', padding: '40px 0' }}>
-          <h3>Chargement du concert...</h3>
+        <div className="tc-text-center" style={{ padding: '40px 0' }}>
+          <h3 className="tc-h3">Chargement du concert...</h3>
           <p>Veuillez patienter pendant le chargement des données.</p>
         </div>
       </div>
@@ -220,7 +221,7 @@ const ConcertFormExemple = () => {
     <div style={formStyles.container}>
       {/* En-tête du formulaire */}
       <div style={formStyles.header}>
-        <h1 style={formStyles.title}>
+        <h1 className="tc-h1" style={{ margin: 0 }}>
           {isNewConcert ? 'Nouveau Concert' : `Concert: ${concert.titre || 'Sans titre'}`}
         </h1>
         <span style={{
@@ -234,12 +235,12 @@ const ConcertFormExemple = () => {
       <form onSubmit={handleSubmit}>
         {/* Section Informations générales */}
         <div style={formStyles.section}>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '15px' }}>
+          <h3 className="tc-section-title">
             Informations générales
           </h3>
           
           <div style={formStyles.field}>
-            <label htmlFor="titre" style={formStyles.label}>Titre du concert *</label>
+            <label htmlFor="titre" className="tc-form-label">Titre du concert *</label>
             <input
               id="titre"
               type="text"
@@ -248,12 +249,12 @@ const ConcertFormExemple = () => {
               onChange={(e) => updateFormData(prev => ({ ...prev, titre: e.target.value }))}
               placeholder="Titre du concert"
             />
-            {formErrors.titre && <p style={formStyles.error}>{formErrors.titre}</p>}
+            {formErrors.titre && <p className="tc-error-text">{formErrors.titre}</p>}
           </div>
           
           <div style={formStyles.twoColumns}>
             <div style={formStyles.field}>
-              <label htmlFor="dateConcert" style={formStyles.label}>Date du concert *</label>
+              <label htmlFor="dateConcert" className="tc-form-label">Date du concert *</label>
               <input
                 id="dateConcert"
                 type="date"
@@ -261,11 +262,11 @@ const ConcertFormExemple = () => {
                 value={dateConcertFormatted || ''}
                 onChange={(e) => setDateConcert(e.target.value)}
               />
-              {formErrors.date && <p style={formStyles.error}>{formErrors.date}</p>}
+              {formErrors.date && <p className="tc-error-text">{formErrors.date}</p>}
             </div>
             
             <div style={formStyles.field}>
-              <label htmlFor="heureConcert" style={formStyles.label}>Heure du concert *</label>
+              <label htmlFor="heureConcert" className="tc-form-label">Heure du concert *</label>
               <input
                 id="heureConcert"
                 type="time"
@@ -273,12 +274,12 @@ const ConcertFormExemple = () => {
                 value={heureConcertFormatted || ''}
                 onChange={(e) => setHeureConcert(e.target.value)}
               />
-              {formErrors.heure && <p style={formStyles.error}>{formErrors.heure}</p>}
+              {formErrors.heure && <p className="tc-error-text">{formErrors.heure}</p>}
             </div>
           </div>
           
           <div style={formStyles.field}>
-            <label htmlFor="description" style={formStyles.label}>Description</label>
+            <label htmlFor="description" className="tc-form-label">Description</label>
             <textarea
               id="description"
               style={formStyles.textarea}
@@ -290,7 +291,7 @@ const ConcertFormExemple = () => {
           </div>
           
           <div style={formStyles.field}>
-            <label htmlFor="prixBillet" style={formStyles.label}>Prix du billet (€)</label>
+            <label htmlFor="prixBillet" className="tc-form-label">Prix du billet (€)</label>
             <input
               id="prixBillet"
               type="number"
@@ -304,7 +305,7 @@ const ConcertFormExemple = () => {
           </div>
           
           <div style={formStyles.field}>
-            <label htmlFor="lienBilletterie" style={formStyles.label}>Lien de billetterie</label>
+            <label htmlFor="lienBilletterie" className="tc-form-label">Lien de billetterie</label>
             <input
               id="lienBilletterie"
               type="url"
@@ -318,7 +319,7 @@ const ConcertFormExemple = () => {
         
         {/* Section Artiste */}
         <div style={formStyles.section}>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '15px' }}>
+          <h3 className="tc-section-title">
             Artiste principal
           </h3>
           
@@ -361,12 +362,12 @@ const ConcertFormExemple = () => {
               </button>
             </div>
           )}
-          {formErrors.artisteId && <p style={formStyles.error}>{formErrors.artisteId}</p>}
+          {formErrors.artisteId && <p className="tc-error-text">{formErrors.artisteId}</p>}
         </div>
         
         {/* Section Lieu */}
         <div style={formStyles.section}>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '15px' }}>
+          <h3 className="tc-section-title">
             Lieu du concert
           </h3>
           
@@ -410,12 +411,12 @@ const ConcertFormExemple = () => {
               </button>
             </div>
           )}
-          {formErrors.lieuId && <p style={formStyles.error}>{formErrors.lieuId}</p>}
+          {formErrors.lieuId && <p className="tc-error-text">{formErrors.lieuId}</p>}
         </div>
         
         {/* Section Styles musicaux */}
         <div style={formStyles.section}>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '15px' }}>
+          <h3 className="tc-section-title">
             Styles musicaux
           </h3>
           
@@ -475,7 +476,7 @@ const ConcertFormExemple = () => {
         
         {/* Section Affiche */}
         <div style={formStyles.section}>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '15px' }}>
+          <h3 className="tc-section-title">
             Affiche du concert
           </h3>
           
@@ -535,7 +536,7 @@ const ConcertFormExemple = () => {
         
         {/* Section Partenaires */}
         <div style={formStyles.section}>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '15px' }}>
+          <h3 className="tc-section-title">
             Partenaires
           </h3>
           
@@ -568,7 +569,7 @@ const ConcertFormExemple = () => {
                   }}
                 >
                   <div style={formStyles.field}>
-                    <label htmlFor={`partenaire-${index}-nom`} style={formStyles.label}>Nom *</label>
+                    <label htmlFor={`partenaire-${index}-nom`} className="tc-form-label">Nom *</label>
                     <input
                       id={`partenaire-${index}-nom`}
                       type="text"
@@ -580,7 +581,7 @@ const ConcertFormExemple = () => {
                   </div>
                   
                   <div style={formStyles.field}>
-                    <label htmlFor={`partenaire-${index}-type`} style={formStyles.label}>Type de partenariat</label>
+                    <label htmlFor={`partenaire-${index}-type`} className="tc-form-label">Type de partenariat</label>
                     <select
                       id={`partenaire-${index}-type`}
                       style={formStyles.select}
@@ -595,7 +596,7 @@ const ConcertFormExemple = () => {
                   </div>
                   
                   <div style={formStyles.field}>
-                    <label htmlFor={`partenaire-${index}-site`} style={formStyles.label}>Site web</label>
+                    <label htmlFor={`partenaire-${index}-site`} className="tc-form-label">Site web</label>
                     <input
                       id={`partenaire-${index}-site`}
                       type="url"

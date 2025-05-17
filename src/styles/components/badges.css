@@ -1,8 +1,13 @@
 /*
- * Styles pour badges
+ * Styles pour badges.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
  */
+
+
+
+
 
 /* Styles pour les badges de statut */
 .status-badge {
@@ -10,7 +15,7 @@
   padding: 5px 10px;
   border-radius: 20px;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: var(--tc-font-weight-semibold);
   text-align: center;
   min-width: 80px;
   white-space: nowrap;
@@ -24,37 +29,37 @@
 .status-option {
   background-color: var(--tc-warning-color, #ffc107);
   color: #212529; /* // Correction UI: Couleur plus foncée pour meilleur contraste */
-  font-weight: 600;
+  font-weight: var(--tc-font-weight-semibold);
 }
 
 .status-confirmed {
   background-color: var(--tc-success-color, #28a745);
-  color: white;
-  font-weight: 600;
+  color: var(--tc-bg-default, var(--tc-bg-default, white));
+  font-weight: var(--tc-font-weight-semibold);
 }
 
 .status-cancelled {
-  background-color: var(--tc-danger-color, #dc3545);
-  color: white;
-  font-weight: 600;
+  background-color: var(--tc-danger-color, var(--tc-color-error));
+  color: var(--tc-bg-default, var(--tc-bg-default, white));
+  font-weight: var(--tc-font-weight-semibold);
 }
 
 .status-pending {
   background-color: var(--tc-info-color, #17a2b8);
-  color: white;
-  font-weight: 600;
+  color: var(--tc-bg-default, var(--tc-bg-default, white));
+  font-weight: var(--tc-font-weight-semibold);
 }
 
 .status-draft {
-  background-color: var(--tc-secondary-color, #6c757d);
-  color: white;
-  font-weight: 600;
+  background-color: var(--tc-secondary-color, var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d)));
+  color: var(--tc-bg-default, var(--tc-bg-default, white));
+  font-weight: var(--tc-font-weight-semibold);
 }
 
 .status-declined {
-  background-color: var(--tc-danger-color, #dc3545);
-  color: white;
-  font-weight: 600;
+  background-color: var(--tc-danger-color, var(--tc-color-error));
+  color: var(--tc-bg-default, var(--tc-bg-default, white));
+  font-weight: var(--tc-font-weight-semibold);
 }
 
 /* // Correction UI: Ajout d'état hover pour les badges de statut */
@@ -69,12 +74,12 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background-color: var(--tc-danger-color, #dc3545);
+  background-color: var(--tc-danger-color, var(--tc-color-error));
   position: absolute;
   top: 0;
   right: 0;
   transform: translate(40%, -40%);
-  box-shadow: 0 0 0 2px white;
+  box-shadow: 0 0 0 2px var(--tc-bg-default, var(--tc-bg-default, white));
   animation: pulse 1.5s infinite;
 }
 
@@ -92,12 +97,12 @@
 /* // Correction UI: Standardisation des badges principaux et secondaires */
 .badge-primary {
   background-color: var(--tc-primary-color, #007bff);
-  color: var(--tc-text-light, white);
+  color: var(--tc-text-light, var(--tc-bg-default, var(--tc-bg-default, white)));
 }
 
 .badge-secondary {
-  background-color: var(--tc-secondary-color, #6c757d);
-  color: var(--tc-text-light, white);
+  background-color: var(--tc-secondary-color, var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d)));
+  color: var(--tc-text-light, var(--tc-bg-default, var(--tc-bg-default, white)));
 }
 
 /* // Correction UI: Amélioration du contraste pour les badges avec contour */
@@ -109,8 +114,8 @@
 
 .badge-outline-secondary {
   background-color: transparent;
-  color: var(--tc-secondary-color, #6c757d);
-  border: 1px solid var(--tc-secondary-color, #6c757d);
+  color: var(--tc-secondary-color, var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d)));
+  border: 1px solid var(--tc-secondary-color, var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d)));
 }
 
 /* // Correction UI: Amélioration des états interactifs pour meilleure expérience utilisateur */
@@ -151,11 +156,11 @@
   justify-content: center;
   border-radius: 50%;
   background-color: var(--tc-badge-bg, #007bff);
-  color: white;
+  color: var(--tc-bg-default, var(--tc-bg-default, white));
   width: 20px;
   height: 20px;
   font-size: 10px;
-  font-weight: 600;
+  font-weight: var(--tc-font-weight-semibold);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
@@ -234,6 +239,6 @@
 }
 
 .status-contact {
-  background-color: var(--tc-secondary-color, #6c757d);
+  background-color: var(--tc-secondary-color, var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d)));
   color: #fff;
 }

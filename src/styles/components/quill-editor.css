@@ -1,8 +1,13 @@
 /*
- * Styles pour quill-editor
+ * Styles pour quill-editor.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
  */
+
+
+
+
 
 /* =============================
    STYLES POUR REACT-QUILL
@@ -96,11 +101,11 @@
 .tc-quill-preview h1, 
 .tc-quill-preview h2, 
 .tc-quill-preview h3 {
-  margin-bottom: 1rem;
+  margin-bottom: var(--tc-spacing-3);
   color: var(--tc-text-color);
 }
 
 .tc-quill-preview p {
-  margin-bottom: 1rem;
+  margin-bottom: var(--tc-spacing-3);
   line-height: 1.5;
 }

@@ -1,8 +1,13 @@
 /*
- * Styles pour formPublic
+ * Styles pour formPublic.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
  */
+
+
+
+
 
 /* formPublic.css */
 .form-public-container {
@@ -22,13 +27,13 @@
   .form-public-container h1, 
   .form-public-container h2, 
   .form-public-container h3 {
-    color: #333;
+    color: var(--tc-color-text-primary, var(--tc-color-text-primary, #333));
     margin-bottom: 20px;
   }
   
   .form-public .form-section {
     background-color: #fff;
-    border-radius: 8px;
+    border-radius: var(--tc-radius-md);
     padding: 25px;
     margin-bottom: 30px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -38,21 +43,21 @@
     display: flex;
     align-items: center;
     padding: 15px 20px;
-    background-color: #f8f9fa;
+    background-color: var(--tc-bg-light, var(--tc-bg-light, #f8f9fa));
     border-bottom: 1px solid #eaeaea;
-    border-radius: 8px 8px 0 0;
+    border-radius: var(--tc-radius-md) 8px 0 0;
   }
   
   .form-public .card-header i {
-    font-size: 1.2rem;
+    font-size: 1.var(--tc-spacing-8);
     margin-right: 10px;
     color: #4a90e2;
   }
   
   .form-public .card-header h3 {
     margin: 0;
-    font-size: 1.25rem;
-    font-weight: 600;
+    font-size: var(--tc-font-size-xl);
+    font-weight: var(--tc-font-weight-semibold);
   }
   
   .form-public .card-body {
@@ -60,16 +65,16 @@
   }
   
   .form-public .form-label {
-    color: #555;
-    font-weight: 600;
+    color: var(--tc-color-text-secondary, var(--tc-color-text-secondary, #555));
+    font-weight: var(--tc-font-weight-semibold);
     margin-bottom: 8px;
   }
   
   .form-public .form-control {
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    border: 1px solid var(--tc-color-border-medium, var(--tc-color-border-medium, #ddd));
+    border-radius: var(--tc-radius-sm);
     padding: 10px 12px;
-    font-size: 1rem;
+    font-size: var(--tc-spacing-3);
     transition: border-color 0.3s, box-shadow 0.3s;
   }
   
@@ -86,14 +91,14 @@
   
   .form-public .optional {
     color: #95a5a6;
-    font-size: 0.9rem;
+    font-size: var(--tc-font-size-sm);
     font-style: italic;
   }
   
   .form-public .input-group-text {
-    background-color: #f8f9fa;
-    border-color: #ddd;
-    color: #6c757d;
+    background-color: var(--tc-bg-light, var(--tc-bg-light, #f8f9fa));
+    border-color: var(--tc-color-border-medium, var(--tc-color-border-medium, #ddd));
+    color: var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d));
   }
   
   .form-public .form-actions {
@@ -103,11 +108,11 @@
   
   .form-public .btn-submit-public {
     background-color: #4a90e2;
-    color: white;
+    color: var(--tc-bg-default, var(--tc-bg-default, white));
     border: none;
-    border-radius: 4px;
+    border-radius: var(--tc-radius-sm);
     padding: 12px 30px;
-    font-size: 1rem;
+    font-size: var(--tc-spacing-3);
     cursor: pointer;
     transition: background-color 0.3s;
   }
@@ -126,11 +131,11 @@
     text-align: center;
     padding: 15px;
     color: #888;
-    font-size: 0.9rem;
+    font-size: var(--tc-font-size-sm);
   }
   
   .form-public .alert {
-    border-radius: 8px;
+    border-radius: var(--tc-radius-md);
     padding: 15px;
   }
   
@@ -151,19 +156,19 @@
 }
 
 .badge.bg-warning {
-  font-size: 0.75rem;
+  font-size: var(--tc-spacing-2);
   font-weight: normal;
   vertical-align: middle;
 }
 
 .comparison-table .field-name {
-  font-weight: 600;
+  font-weight: var(--tc-font-weight-semibold);
 }
 
 .comparison-table .existing-value, 
 .comparison-table .form-value {
   font-family: monospace;
-  white-space: pre-wrap;
+  var(--tc-bg-default, var(--tc-bg-default, white))-space: pre-wrap;
 }
 
 .comparison-table .action-cell {

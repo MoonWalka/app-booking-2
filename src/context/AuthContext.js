@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import firebase from '@/firebaseInit';
+import firebase, { IS_LOCAL_MODE, CURRENT_MODE } from '@/firebaseInit';
 
 // Créer le contexte
 export const AuthContext = createContext(null);
@@ -16,7 +16,7 @@ export const useAuth = () => {
 
 // Provider du contexte d'authentification
 export const AuthProvider = ({ children }) => {
-  console.log('[TRACE-UNIQUE][AuthProvider] Provider exécuté !');
+  console.log('[TRACE-UNIQUE][AuthProvider] Provider exécuté ! Mode:', CURRENT_MODE, 'Local:', IS_LOCAL_MODE);
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const lastAuthState = useRef(null); // Pour suivre le dernier état d'authentification
@@ -43,8 +43,8 @@ export const AuthProvider = ({ children }) => {
     }
     
     // Mode développement avec bypass d'authentification
-    if (firebase.BYPASS_AUTH) {
-      console.log('Mode développement : authentification bypassed');
+    if (IS_LOCAL_MODE || process.env.REACT_APP_BYPASS_AUTH === 'true') {
+      console.log('Mode développement local ou bypass d\'authentification activé');
       const devUser = { uid: 'dev-user', email: 'dev@example.com' };
       setCurrentUser(devUser);
       setLoading(false);

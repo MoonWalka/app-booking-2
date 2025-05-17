@@ -167,6 +167,28 @@ export const useConcertListData = () => {
     }
   }, [fetchConcertsAndForms]);
 
+  // Fonction pour vérifier si un concert a un formulaire associé
+  const hasForm = useCallback((concertId) => {
+    return concertsWithForms.includes(concertId) || 
+           concerts.find(c => c.id === concertId)?.formId !== undefined;
+  }, [concerts, concertsWithForms]);
+
+  // Fonction pour vérifier si un concert a un formulaire non validé
+  const hasUnvalidatedForm = useCallback((concertId) => {
+    return unvalidatedForms.includes(concertId);
+  }, [unvalidatedForms]);
+
+  // Fonction pour vérifier si un concert a un contrat associé
+  const hasContract = useCallback((concertId) => {
+    return concertsWithContracts[concertId] !== undefined;
+  }, [concertsWithContracts]);
+
+  // Fonction pour obtenir le statut d'un contrat
+  const getContractStatus = useCallback((concertId) => {
+    const contract = concertsWithContracts[concertId];
+    return contract ? contract.status : null;
+  }, [concertsWithContracts]);
+
   return {
     concerts,
     loading,
@@ -175,7 +197,11 @@ export const useConcertListData = () => {
     unvalidatedForms,
     concertsWithContracts,
     lastUpdate,
-    refreshData: fetchConcertsAndForms
+    refreshData: fetchConcertsAndForms,
+    hasForm,
+    hasUnvalidatedForm,
+    hasContract,
+    getContractStatus
   };
 };
 

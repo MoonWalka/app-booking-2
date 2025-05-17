@@ -93,6 +93,60 @@ export const useConcertListData = () => {
       
       setConcerts(enrichedConcerts);
       
+      // Récupérer les données des formulaires et des contrats
+      try {
+        console.log('Chargement des formulaires et contrats...');
+        
+        // 1. Récupération des formulaires
+        const formsRef = collection(db, 'formulaires');
+        const formsQuery = query(formsRef);
+        const formsSnapshot = await getDocs(formsQuery);
+        
+        const formsData = formsSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        
+        // Identifier les concerts avec formulaires
+        const concertsWithFormsIds = [];
+        const unvalidatedFormsIds = [];
+        
+        formsData.forEach(form => {
+          if (form.concertId) {
+            concertsWithFormsIds.push(form.concertId);
+            
+            // Si le formulaire n'est pas validé
+            if (form.statut === 'en_attente' || form.statut === 'non_valide') {
+              unvalidatedFormsIds.push(form.concertId);
+            }
+          }
+        });
+        
+        setConcertsWithForms(concertsWithFormsIds);
+        setUnvalidatedForms(unvalidatedFormsIds);
+        
+        // 2. Récupération des contrats
+        const contractsRef = collection(db, 'contrats');
+        const contractsQuery = query(contractsRef);
+        const contractsSnapshot = await getDocs(contractsQuery);
+        
+        const contractsMap = {};
+        
+        contractsSnapshot.docs.forEach(doc => {
+          const contract = { id: doc.id, ...doc.data() };
+          if (contract.concertId) {
+            contractsMap[contract.concertId] = contract;
+          }
+        });
+        
+        setConcertsWithContracts(contractsMap);
+        console.log(`Récupération de ${Object.keys(contractsMap).length} contrats`);
+        
+      } catch (err) {
+        console.error('Erreur lors du chargement des formulaires et contrats:', err);
+        // Ne pas bloquer le chargement des concerts en cas d'erreur sur les formulaires/contrats
+      }
+      
       // Mettre à jour la dernière date de mise à jour
       setLastUpdate(Date.now());
     } catch (err) {

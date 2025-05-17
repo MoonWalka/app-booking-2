@@ -1,8 +1,13 @@
 /*
- * Styles pour structures
+ * Styles pour structures.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
  */
+
+
+
+
 
 /* Styles spécifiques aux structures qui ne sont pas couverts par les styles génériques */
 
@@ -10,10 +15,10 @@
 .structure-type-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
-  font-size: 0.75rem;
+  gap: var(--tc-spacing-1);
+  padding: var(--tc-spacing-1) var(--tc-spacing-2);
+  border-radius: var(--tc-spacing-1);
+  font-size: var(--tc-spacing-2);
 }
 
 /* Couleurs spécifiques pour les types de structures */
@@ -24,7 +29,7 @@
 
 .type-festival {
   background-color: rgba(13, 110, 253, 0.1);
-  color: #0d6efd;
+  color: var(--tc-color-primary, var(--tc-color-primary, #0d6efd));
 }
 
 .type-association {
@@ -34,12 +39,12 @@
 
 .type-mairie {
   background-color: rgba(108, 117, 125, 0.1);
-  color: #6c757d;
+  color: var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d));
 }
 
 .type-autre {
   background-color: rgba(248, 249, 250, 0.6);
-  color: #6c757d;
+  color: var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d));
 }
 
 /* Classes spécifiques pour le cas mobile */
@@ -49,10 +54,10 @@
   left: 0;
   right: 0;
   background-color: #fff;
-  padding: 1rem;
+  padding: var(--tc-spacing-3);
   display: flex;
-  gap: 1rem;
-  box-shadow: 0 -0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  gap: var(--tc-spacing-3);
+  box-shadow: 0 -0.125rem var(--tc-spacing-1) rgba(0, 0, 0, 0.075);
   z-index: 1000;
 }
 
@@ -81,8 +86,8 @@
   position: relative;
   background-color: var(--tc-card-bg);
   border-radius: var(--tc-border-radius);
-  padding: 1rem;
-  margin-bottom: 1rem;
+  padding: var(--tc-spacing-3);
+  margin-bottom: var(--tc-spacing-3);
   box-shadow: var(--tc-shadow);
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -99,18 +104,18 @@
 /* Badge pour le nombre de programmateurs */
 .badge-mobile {
   position: absolute;
-  top: -0.5rem;
-  right: -0.5rem;
-  min-width: 1.5rem;
-  height: 1.5rem;
-  border-radius: 0.75rem;
+  top: -var(--tc-spacing-2);
+  right: -var(--tc-spacing-2);
+  min-width: var(--tc-spacing-4);
+  height: var(--tc-spacing-4);
+  border-radius: var(--tc-spacing-2);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.75rem;
+  font-size: var(--tc-spacing-2);
   font-weight: bold;
-  color: white;
-  padding: 0 0.5rem;
+  color: var(--tc-bg-default, var(--tc-bg-default, white));
+  padding: 0 var(--tc-spacing-2);
 }
 
 .badge-programmateurs {

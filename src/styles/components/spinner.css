@@ -1,8 +1,13 @@
 /*
- * Styles pour spinner
+ * Styles pour spinner.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
  */
+
+
+
+
 
 /* src/styles/components/spinner.css */
 /* Styles pour le spinner de chargement */
@@ -93,7 +98,7 @@
   align-items: center;
   background-color: rgba(255, 255, 255, 0.9); /* Plus opaque pour une meilleure visibilité */
   z-index: 9999; /* Augmenté pour être sûr qu'il est au-dessus de tout */
-  border-radius: var(--tc-border-radius, 0.5rem);
+  border-radius: var(--tc-border-radius, var(--tc-spacing-2));
 }
 
 /* Spinner transparent */
@@ -109,16 +114,16 @@
   align-items: center;
   background-color: rgba(255, 255, 255, 0.7); /* Fond semi-transparent */
   z-index: 9999; /* Augmenté pour cohérence avec les autres z-index de spinners */
-  border-radius: var(--tc-border-radius, 0.5rem);
+  border-radius: var(--tc-border-radius, var(--tc-spacing-2));
 }
 
 /* Message de spinner */
 .spinner-message {
   margin-top: 15px;
-  color: var(--tc-text-color, #333);
+  color: var(--tc-text-color, var(--tc-color-text-primary, var(--tc-color-text-primary, #333)));
   font-size: 16px;
   text-align: center;
-  font-weight: 500; /* Légèrement plus gras pour une meilleure lisibilité */
+  font-weight: var(--tc-font-weight-medium); /* Légèrement plus gras pour une meilleure lisibilité */
 }
 
 /* Support pour les spinners dans différents contextes */

@@ -1,8 +1,13 @@
 /*
- * Styles pour concerts
+ * Styles pour concerts.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
  */
+
+
+
+
 
 /* Styles pour la page des concerts */
 /* Styles for all concert-related components */
@@ -34,7 +39,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 12px; /* Espacement standardisé */
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--tc-spacing-4);
   justify-content: flex-start;
   align-items: center;
   width: 100%;
@@ -50,16 +55,16 @@
   justify-content: center;
   align-items: center;
   transition: var(--tc-transition-standard); /* // Correction UI: Utilisation de la variable standardisée */
-  font-weight: 500; /* Police plus cohérente */
+  font-weight: var(--tc-font-weight-medium); /* Police plus cohérente */
 }
 
 /* Form actions styles unifiés */
 .concert-form-container .form-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+  gap: var(--tc-spacing-3);
+  margin-top: var(--tc-spacing-8);
+  margin-bottom: var(--tc-spacing-8);
   flex-wrap: wrap;
 }
 
@@ -67,7 +72,7 @@
 .btn-primary, .btn-secondary {
   padding: 8px 16px;
   border-radius: 6px;
-  font-weight: 500;
+  font-weight: var(--tc-font-weight-medium);
   transition: var(--tc-transition-standard);
   min-height: 40px;
   display: inline-flex;
@@ -78,13 +83,13 @@
 .btn-primary {
   background-color: var(--tc-primary-color, #007bff);
   border-color: var(--tc-primary-color, #007bff);
-  color: white;
+  color: var(--tc-bg-default, var(--tc-bg-default, white));
 }
 
 .btn-secondary {
-  background-color: var(--tc-secondary-color, #6c757d);
-  border-color: var(--tc-secondary-color, #6c757d);
-  color: white;
+  background-color: var(--tc-secondary-color, var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d)));
+  border-color: var(--tc-secondary-color, var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d)));
+  color: var(--tc-bg-default, var(--tc-bg-default, white));
 }
 
 .btn-primary:hover {
@@ -121,7 +126,7 @@
   align-items: flex-start;
   margin-bottom: 20px;
   padding-bottom: 15px;
-  border-bottom: 1px solid var(--tc-border-color-light, #eee);
+  border-bottom: 1px solid var(--tc-border-color-light, var(--tc-color-border, var(--tc-color-border, #eee)));
 }
 
 /* Titre du concert - Desktop */
@@ -129,13 +134,13 @@
   font-size: var(--tc-font-size-xl, 24px); /* // Correction UI: Valeur par défaut ajoutée */
   font-weight: bold;
   margin-bottom: 5px;
-  color: var(--tc-text-color, #333);
+  color: var(--tc-text-color, var(--tc-color-text-primary, var(--tc-color-text-primary, #333)));
 }
 
 /* Date du concert - affichage sous le titre */
 .concert-date-display {
   font-size: var(--tc-font-size-md, 16px); /* // Correction UI: Valeur par défaut ajoutée */
-  color: var(--tc-text-muted, #666);
+  color: var(--tc-text-muted, var(--tc-color-text-secondary, var(--tc-color-text-secondary, #666)));
 }
 
 /* // Correction UI: Centralisation des styles de statut, utilisation des classes définies dans badges.css */
@@ -184,21 +189,21 @@
 
 .filter-label {
   margin-right: 8px;
-  font-weight: 500;
-  color: var(--tc-text-color, #333);
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-text-color, var(--tc-color-text-primary, var(--tc-color-text-primary, #333)));
   white-space: nowrap; /* // Correction UI: Évite le retour à la ligne du label */
 }
 
 .filter-select {
   padding: 6px 10px;
-  border: 1px solid var(--tc-border-color, #ddd);
-  border-radius: 4px;
+  border: 1px solid var(--tc-border-color, var(--tc-color-border-medium, var(--tc-color-border-medium, #ddd)));
+  border-radius: var(--tc-radius-sm);
   min-width: 120px; /* // Correction UI: Largeur minimale pour meilleur affichage */
 }
 
 /* // Correction UI: Amélioration du style des cartes de concerts */
 .concert-list-card {
-  background-color: var(--tc-bg-color, white);
+  background-color: var(--tc-bg-color, var(--tc-bg-default, var(--tc-bg-default, white)));
   border-radius: var(--tc-border-radius, 8px);
   box-shadow: var(--tc-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
   margin-bottom: 15px;
@@ -229,7 +234,7 @@
 
 .concert-form-container .tc-modal-confirm {
   background-color: var(--tc-bg-color, #fff);
-  border-radius: var(--tc-border-radius, 0.5rem);
+  border-radius: var(--tc-border-radius, var(--tc-spacing-2));
   width: 450px;
   max-width: 90vw;
   box-shadow: var(--tc-shadow-lg, 0 4px 20px rgba(0, 0, 0, 0.15));
@@ -249,9 +254,9 @@
 /* Titre du concert - Mobile */
 .concert-title-mobile {
   font-size: var(--tc-font-size-md, 16px); /* // Correction UI: Valeur par défaut ajoutée */
-  font-weight: 600;
+  font-weight: var(--tc-font-weight-semibold);
   margin: 0 0 var(--tc-spacing-xs, 5px) 0;
-  color: var(--tc-text-color, #333);
+  color: var(--tc-text-color, var(--tc-color-text-primary, var(--tc-color-text-primary, #333)));
   /* // Correction UI: Gestion de l'overflow */
   white-space: nowrap;
   overflow: hidden;
@@ -284,8 +289,8 @@
 }
 
 .concerts-container .concerts-table th {
-  font-weight: 600;
-  color: var(--tc-text-color, #333);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-color, var(--tc-color-text-primary, var(--tc-color-text-primary, #333)));
   background-color: var(--tc-bg-light, #f9f9f9);
 }
 
@@ -296,7 +301,7 @@
   padding: 6px 12px;
   border-radius: 20px;
   font-size: var(--tc-font-size-xs, 12px); /* // Correction UI: Valeur par défaut ajoutée */
-  font-weight: 500;
+  font-weight: var(--tc-font-weight-medium);
   text-align: center;
   white-space: nowrap;
   display: inline-flex;
@@ -338,7 +343,7 @@
 
 .tc-status-message-light {
   background-color: rgba(108, 117, 125, 0.1);
-  color: #333;
+  color: var(--tc-color-text-primary, var(--tc-color-text-primary, #333));
 }
 
 /* // Correction UI: Amélioration des rappels d'action */

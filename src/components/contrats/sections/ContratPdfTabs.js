@@ -24,7 +24,7 @@ const ContratPdfTabs = ({
         <Nav.Link eventKey="html" className="d-flex align-items-center">
           <i className="bi bi-file-earmark-code me-2"></i>
           Aperçu HTML
-          <span className="badge bg-success ms-2" style={{ fontSize: '0.7em' }}>Recommandé</span>
+          <span className="badge bg-success ms-2 tc-text-xs">Recommandé</span>
         </Nav.Link>
       </Nav.Item>
       
@@ -55,7 +55,7 @@ const ContratPdfTabs = ({
           ) : (
             <>
               Aperçu PDF exact
-              {hasPdfPreview && <span className="badge bg-info ms-2" style={{ fontSize: '0.7em' }}>Prêt</span>}
+              {hasPdfPreview && <span className="badge bg-info ms-2 tc-text-xs">Prêt</span>}
             </>
           )}
         </Nav.Link>

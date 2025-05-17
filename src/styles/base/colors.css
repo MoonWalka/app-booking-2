@@ -1,8 +1,13 @@
 /*
- * Styles pour colors
+ * Styles pour colors.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
  */
+
+
+
+
 
 /* 
  * SYSTÈME DE COULEURS CENTRALISÉ - TourCraft
@@ -10,7 +15,7 @@
  * 
  * RÈGLES IMPORTANTES:
  * 1. TOUTES les couleurs de l'application doivent être définies ici
- * 2. NE JAMAIS utiliser de valeurs hexadécimales codées en dur (#0d6efd, #2c3e50, etc.) dans les autres fichiers CSS
+ * 2. NE JAMAIS utiliser de valeurs hexadécimales codées en dur (var(--tc-color-primary, var(--tc-color-primary, #0d6efd)), #2c3e50, etc.) dans les autres fichiers CSS
  * 3. TOUJOURS utiliser les variables CSS (var(--tc-primary-color), var(--tc-secondary-color), etc.)
  * 4. Pour les effets de transparence, utiliser les variables RGB (exemple: rgba(var(--tc-primary-color-rgb), 0.1))
  * 
@@ -136,7 +141,7 @@
   /* Utilisation: Effet hover sur éléments neutres */
   
   /* Variables de transparence */
-  --tc-white-overlay-20: rgba(255, 255, 255, 0.2);
+  --tc-bg-default-overlay-20: rgba(255, 255, 255, 0.2);
   /* Utilisation: Overlay blanc léger comme dans les menus de la sidebar, éléments actifs */
   
   --tc-white-overlay-50: rgba(255, 255, 255, 0.5);
@@ -223,7 +228,7 @@
   --tc-btn-secondary-active-bg: var(--tc-secondary-dark);
   /* Utilisation: Arrière-plan des boutons secondaires actifs */
   
-  --tc-btn-secondary-focus-shadow: 0 0 0 0.25rem rgba(var(--tc-secondary-color-rgb), 0.25);
+  --tc-btn-secondary-focus-shadow: 0 0 0 var(--tc-spacing-1) rgba(var(--tc-secondary-color-rgb), 0.25);
   /* Utilisation: Ombre au focus des boutons secondaires */
   
   --tc-btn-success-bg: var(--tc-success-color);
@@ -251,10 +256,10 @@
   --tc-input-focus-border-color: var(--tc-primary-light);
   /* Utilisation: Bordure des champs de formulaire au focus */
   
-  --tc-input-focus-shadow: 0 0 0 0.25rem rgba(var(--tc-primary-color-rgb), 0.25);
+  --tc-input-focus-shadow: 0 0 0 var(--tc-spacing-1) rgba(var(--tc-primary-color-rgb), 0.25);
   /* Utilisation: Ombre autour des champs de formulaire au focus */
   
-  --tc-input-placeholder-color: var(--tc-gray-500);
+  --tc-input-placeholder-color: var(--tc-gray-var(--tc-font-weight-medium));
   /* Utilisation: Couleur du texte placeholder dans les inputs */
   
   --tc-label-color: var(--tc-text-color);

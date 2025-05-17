@@ -2,11 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db, collection, getDocs, doc, deleteDoc, query, where, orderBy, addDoc, updateDoc, serverTimestamp } from '@/firebaseInit';
-import '@/styles/index.css';
-
-// Imports
+import '@styles/index.css';
 import { Button, Table, Badge } from 'react-bootstrap';
-// Importer uniquement le composant dédié qui fonctionne
 import ContratTemplateEditorModal from '@/components/contrats/ContratTemplateEditorModal';
 
 const ContratTemplatesPage = () => {

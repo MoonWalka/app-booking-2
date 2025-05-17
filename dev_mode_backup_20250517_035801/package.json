@@ -1,0 +1,120 @@
+{
+  "name": "app-booking",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@react-pdf/renderer": "^3.4.5",
+    "@testing-library/dom": "^9.3.1",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^13.5.0",
+    "axios": "^1.9.0",
+    "bootstrap": "^5.3.0",
+    "chalk": "^5.4.1",
+    "date-fns": "^2.30.0",
+    "firebase": "^10.9.0",
+    "formik": "^2.4.6",
+    "framer-motion": "^12.7.4",
+    "html-react-parser": "^5.2.3",
+    "leaflet": "^1.9.4",
+    "react": "^18.2.0",
+    "react-bootstrap": "^2.10.9",
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.10.1",
+    "react-leaflet": "^4.2.1",
+    "react-pdf-html": "^2.1.3",
+    "react-quill": "^2.0.0",
+    "react-router-dom": "^6.11.2",
+    "react-scripts": "5.0.1",
+    "react-toastify": "^11.0.5",
+    "uuid": "^9.0.0",
+    "web-vitals": "^2.1.4",
+    "yup": "^1.6.1"
+  },
+  "scripts": {
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test",
+    "eject": "react-scripts eject",
+    "lint": "eslint src --ext .js,.jsx",
+    "lint:fix": "eslint src --ext .js,.jsx --fix",
+    "audit:card": "node scripts/audit_card_usage.js",
+    "card:test-disable": "node scripts/migration/disable_legacy_card.js",
+    "card:test-restore": "node scripts/migration/restore_legacy_card.js",
+    "card:remove": "node scripts/migration/remove_legacy_card.js",
+    "detect-hooks": "node scripts/detect_deprecated_hooks.js --verbose",
+    "hooks-report": "node scripts/detect_deprecated_hooks.js --html",
+    "hooks-migration-status": "node scripts/monitor_hooks_migration.js",
+    "start:local": "env-cmd -f .env.local -f .env.development craco start",
+    "build:local": "env-cmd -f .env.local -f .env.development craco build",
+    "start:prod": "env-cmd -f .env.local -f .env.production craco start",
+    "build:prod": "env-cmd -f .env.local -f .env.production craco build",
+    "audit:css": "node scripts/check-css-vars.js",
+    "audit:css:fix": "node scripts/check-css-vars.js --fix",
+    "audit:bootstrap": "node scripts/audit-bootstrap.js",
+    "audit:bootstrap:fix": "node scripts/audit-bootstrap.js --fix",
+    "audit:all": "npm run audit:css && npm run audit:bootstrap && npm run audit:card",
+    "audit:report": "node scripts/generate-audit-report.js"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@craco/craco": "^7.1.0",
+    "@types/babel__core": "^7.20.5",
+    "@types/babel__generator": "^7.27.0",
+    "@types/babel__template": "^7.4.4",
+    "@types/babel__traverse": "^7.20.7",
+    "@types/bonjour": "^3.5.13",
+    "@types/estree": "^1.0.7",
+    "assert": "^2.1.0",
+    "babel-plugin-module-resolver": "^4.1.0",
+    "browserify-zlib": "^0.2.0",
+    "crypto-browserify": "^3.12.1",
+    "css-tree": "^3.1.0",
+    "env-cmd": "^10.1.0",
+    "glob": "^11.0.2",
+    "https-browserify": "^1.0.0",
+    "nth-check": "^2.1.1",
+    "path-browserify": "^1.0.1",
+    "postcss": "^8.5.3",
+    "postcss-scss": "^4.0.9",
+    "postcss-selector-parser": "^7.1.0",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
+    "url": "^0.11.4",
+    "util": "^0.12.5"
+  },
+  "overrides": {
+    "nth-check": "^2.1.1",
+    "css-select": {
+      "nth-check": "^2.1.1"
+    },
+    "svgo": {
+      "css-select": {
+        "nth-check": "^2.1.1"
+      }
+    },
+    "resolve-url-loader": {
+      "postcss": "^8.4.31"
+    },
+    "quill": "^2.0.0",
+    "@grpc/grpc-js": "^1.8.22",
+    "undici": "^6.21.2"
+  }
+}

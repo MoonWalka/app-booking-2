@@ -1,8 +1,13 @@
 /*
- * Styles pour dropdowns
+ * Styles pour dropdowns.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
  */
+
+
+
+
 
 /* Dropdown component styles */
 
@@ -32,8 +37,8 @@
     right: 0;
     z-index: 20;
     min-width: 180px;
-    background-color: white;
-    border-radius: 4px;
+    background-color: var(--tc-bg-default, var(--tc-bg-default, white));
+    border-radius: var(--tc-radius-sm);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     margin-top: 5px;
     overflow: hidden;
@@ -68,12 +73,12 @@
   
   .dropdown-item-icon {
     margin-right: 10px;
-    color: #666;
+    color: var(--tc-color-text-secondary, var(--tc-color-text-secondary, #666));
   }
   
   .dropdown-divider {
     height: 1px;
-    background-color: #eee;
+    background-color: var(--tc-color-border, var(--tc-color-border, #eee));
     margin: 5px 0;
   }
   
@@ -87,8 +92,8 @@
     width: 100%;
     padding: 8px 12px;
     padding-right: 35px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    border: 1px solid var(--tc-color-border-medium, var(--tc-color-border-medium, #ddd));
+    border-radius: var(--tc-radius-sm);
     font-size: 14px;
   }
   
@@ -105,8 +110,8 @@
     top: 100%;
     left: 0;
     right: 0;
-    background-color: white;
-    border: 1px solid #ddd;
+    background-color: var(--tc-bg-default, var(--tc-bg-default, white));
+    border: 1px solid var(--tc-color-border-medium, var(--tc-color-border-medium, #ddd));
     border-top: none;
     border-radius: 0 0 4px 4px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -117,7 +122,7 @@
   
   .search-result-item {
     padding: 10px 15px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--tc-color-border, var(--tc-color-border, #eee));
     cursor: pointer;
     transition: background-color 0.2s;
   }
@@ -133,13 +138,13 @@
   .search-no-results {
     padding: 15px;
     text-align: center;
-    color: #666;
+    color: var(--tc-color-text-secondary, var(--tc-color-text-secondary, #666));
   }
   
   .search-loading {
     padding: 15px;
     text-align: center;
-    color: #666;
+    color: var(--tc-color-text-secondary, var(--tc-color-text-secondary, #666));
   }
   
   /* Filter dropdown styles */
@@ -151,8 +156,8 @@
   .filter-toggle {
     padding: 6px 12px;
     background-color: #f5f5f5;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    border: 1px solid var(--tc-color-border-medium, var(--tc-color-border-medium, #ddd));
+    border-radius: var(--tc-radius-sm);
     font-size: 14px;
     cursor: pointer;
     display: flex;
@@ -173,8 +178,8 @@
     left: 0;
     margin-top: 5px;
     min-width: 200px;
-    background-color: white;
-    border-radius: 4px;
+    background-color: var(--tc-bg-default, var(--tc-bg-default, white));
+    border-radius: var(--tc-radius-sm);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     padding: 10px;
     z-index: 10;
@@ -190,12 +195,12 @@
     justify-content: space-between;
     align-items: center;
     padding-bottom: 10px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--tc-color-border, var(--tc-color-border, #eee));
     margin-bottom: 10px;
   }
   
   .filter-title {
-    font-weight: 500;
+    font-weight: var(--tc-font-weight-medium);
   }
   
   .filter-clear {
@@ -212,7 +217,7 @@
     display: flex;
     justify-content: flex-end;
     margin-top: 10px;
-    border-top: 1px solid #eee;
+    border-top: 1px solid var(--tc-color-border, var(--tc-color-border, #eee));
     padding-top: 10px;
   }
   

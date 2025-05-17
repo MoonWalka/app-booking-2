@@ -1,8 +1,13 @@
 /*
- * Styles pour details
+ * Styles pour details.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
  */
+
+
+
+
 
 /* Styles pour les sections de détails */
 .details-card {
@@ -45,7 +50,7 @@
 }
 
 .detail-value {
-  font-weight: 500;
+  font-weight: var(--tc-font-weight-medium);
 }
 
 /* En-têtes de détails */

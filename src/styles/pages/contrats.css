@@ -1,8 +1,13 @@
 /*
- * Styles pour contrats
+ * Styles pour contrats.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
  */
+
+
+
+
 
 /* Styles pour la page des contrats */
 .contrats-page-container {
@@ -17,7 +22,7 @@
   justify-content: space-between;
   
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: var(--tc-spacing-8);
 }
 
 /* Grille pour les cartes de contrat */
@@ -40,7 +45,7 @@
 
 .no-contrats-message i {
   font-size: 3rem;
-  color: var(--tc-gray-500);
+  color: var(--tc-gray-var(--tc-font-weight-medium));
   display: block;
   margin-bottom: 20px;
 }
@@ -60,7 +65,7 @@
 
 .nav-tabs .nav-link.active {
   color: var(--tc-primary-color);
-  font-weight: 600;
+  font-weight: var(--tc-font-weight-semibold);
   background-color: transparent;
   border: none;
 }
@@ -103,7 +108,7 @@
   padding: 8px 12px;
   margin-bottom: 5px;
   border-radius: var(--tc-border-radius-sm);
-  background-color: white;
+  background-color: var(--tc-bg-default, var(--tc-bg-default, white));
   display: flex;
   align-items: center;
   border: 1px solid var(--tc-gray-200);
@@ -116,14 +121,14 @@
   width: 24px;
   height: 24px;
   background-color: var(--tc-primary-color);
-  color: white;
+  color: var(--tc-bg-default, var(--tc-bg-default, white));
   border-radius: 50%;
   font-size: 12px;
   margin-right: 10px;
 }
 
 .section-title {
-  font-weight: 500;
+  font-weight: var(--tc-font-weight-medium);
 }
 
 /* Styles pour le PDF Viewer */

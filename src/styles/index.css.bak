@@ -1,0 +1,43 @@
+/*
+ * Styles pour index.css
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
+ */
+
+
+
+/* 
+* Fichier CSS global qui importe tous les autres fichiers CSS
+*/
+
+/* Base - Ordre important: d'abord le reset, puis les couleurs, puis les variables */
+@import './base/reset.css';
+@import './base/colors.css';  /* Définition des couleurs centralisées */
+@import './base/variables.css'; /* Variables globales faisant référence aux couleurs */
+
+/* Composants */
+@import './components/badges.css';
+@import './components/buttons.css';
+@import './components/cards.css';
+@import './components/details.css';  /* Styles pour les pages de détails */
+@import './components/dropdowns.css';
+@import './components/errors.css';  /* Styles pour les messages d'erreur */
+@import './components/forms.css';
+@import './components/layout.css';
+@import './components/modals.css';
+@import './components/navigation.css'; /* Styles de navigation (étapes, onglets, pagination, fil d'Ariane) */
+@import './components/spinner.css';
+@import './components/tables.css';
+
+/* Pages */
+@import './pages/artistes.css';
+@import './pages/concerts.css';
+@import './pages/contrats.css';
+@import './pages/forms.css';
+@import './pages/lieux.css';
+@import './pages/programmateurs.css';
+@import './pages/structures.css';
+
+/* Thème global - Appliqué en dernier pour ne pas écraser les styles spécifiques */
+@import './theme.css';

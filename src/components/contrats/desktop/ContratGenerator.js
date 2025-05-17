@@ -2,7 +2,7 @@
 import React from 'react';
 import Card from '@/components/ui/Card';
 import styles from './ContratGenerator.module.css';
-import '@/styles/index.css';
+import '@styles/index.css';;
 
 // Custom hook
 import { useContratGenerator } from '@/hooks/contrats';

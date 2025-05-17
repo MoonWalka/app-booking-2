@@ -1,4 +1,3 @@
-import { doc, deleteDoc } from 'firebase/firestore';
 import { db } from '@/firebaseInit';
 
 export const handleDelete = async (collection, id, confirmMessage = 'Êtes-vous sûr de vouloir supprimer cet élément ?') => {

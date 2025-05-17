@@ -1,7 +1,7 @@
 // src/hooks/__tests__/useProgrammateurDetailsMigrated.test.js
 import { renderHook, act } from '@testing-library/react';
 import useProgrammateurDetails from '../programmateurs/useProgrammateurDetails';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import {  collection, query, where, getDocs  } from '@/firebaseInit';
 
 // Mocks
 jest.mock('react-router-dom', () => ({

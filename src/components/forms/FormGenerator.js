@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, addDoc, serverTimestamp, doc, updateDoc, getDoc } from 'firebase/firestore';
+import {  collection, addDoc, serverTimestamp, doc, updateDoc, getDoc  } from '@/firebaseInit';
 import { db } from '../../firebaseInit';
 import { v4 as uuidv4 } from 'uuid';
 import Card from '@/components/ui/Card';

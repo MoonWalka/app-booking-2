@@ -381,26 +381,32 @@ const useProgrammateurDetailsOptimized = (id) => {
           // Si pas de référence directe, chercher par référence inverse
           console.log(`[DIAGNOSTIC] useProgrammateurDetailsOptimized - Pas de références directes, recherche par référence inverse`);
           
-          // Méthode 1: Chercher les lieux avec ce programmateur dans 'programmateurs'
-          let lieuxQuery = query(
-            collection(db, 'lieux'),
-            where('programmateurs', 'array-contains', id)
-          );
-          let querySnapshot = await getDocs(lieuxQuery);
-          let lieuxLoaded = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          // MÉTHODE ALTERNATIVE SANS UTILISER WHERE - Mode robuste compatible mode local
+          // Au lieu d'utiliser where, on récupère tous les lieux et on filtre manuellement
+          console.log('[DIAGNOSTIC] useProgrammateurDetailsOptimized - Utilisation du mode robuste pour récupérer les lieux');
           
-          // Méthode 2: Si rien trouvé, chercher par programmateurId
-          if (lieuxLoaded.length === 0) {
-            console.log(`[DIAGNOSTIC] useProgrammateurDetailsOptimized - Pas de résultat avec 'programmateurs', essai avec 'programmateurId'`);
-            lieuxQuery = query(
-              collection(db, 'lieux'),
-              where('programmateurId', '==', id)
-            );
-            querySnapshot = await getDocs(lieuxQuery);
-            lieuxLoaded = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-          }
+          // Récupérer tous les lieux (en production, on pourrait limiter le nombre)
+          const lieuxCollectionRef = collection(db, 'lieux');
+          const allLieuxSnapshot = await getDocs(lieuxCollectionRef);
           
-          console.log(`[DIAGNOSTIC] useProgrammateurDetailsOptimized - ${lieuxLoaded.length} lieux trouvés par référence inverse`, { 
+          // Filtrer manuellement les lieux qui correspondent aux critères
+          const lieuxLoaded = allLieuxSnapshot.docs
+            .map(doc => ({ id: doc.id, ...doc.data() }))
+            .filter(lieu => {
+              // Condition 1: Vérifier si le lieu a ce programmateur dans son tableau programmateurs
+              if (Array.isArray(lieu.programmateurs) && lieu.programmateurs.includes(id)) {
+                return true;
+              }
+              
+              // Condition 2: Vérifier si le lieu a ce programmateur comme programmateurId
+              if (lieu.programmateurId === id) {
+                return true;
+              }
+              
+              return false;
+            });
+          
+          console.log(`[DIAGNOSTIC] useProgrammateurDetailsOptimized - ${lieuxLoaded.length} lieux trouvés par filtrage manuel`, { 
             lieuxIds: lieuxLoaded.map(lieu => lieu.id) 
           });
           
@@ -457,26 +463,32 @@ const useProgrammateurDetailsOptimized = (id) => {
           // Méthode 2: Chercher par référence inverse dans la collection concerts
           console.log(`[DIAGNOSTIC] useProgrammateurDetailsOptimized - Pas de références directes, recherche par référence inverse`);
           
-          // Chercher les concerts avec ce programmateur comme programmateurId
-          let concertsQuery = query(
-            collection(db, 'concerts'),
-            where('programmateurId', '==', id)
-          );
-          let querySnapshot = await getDocs(concertsQuery);
-          let concertsLoaded = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          // MÉTHODE ALTERNATIVE SANS UTILISER WHERE - Mode robuste compatible mode local
+          // Au lieu d'utiliser where, on récupère tous les concerts et on filtre manuellement
+          console.log('[DIAGNOSTIC] useProgrammateurDetailsOptimized - Utilisation du mode robuste pour récupérer les concerts');
           
-          // Si aucun résultat, essayer avec le champ programmateurs (array-contains)
-          if (concertsLoaded.length === 0) {
-            console.log(`[DIAGNOSTIC] useProgrammateurDetailsOptimized - Pas de résultat avec 'programmateurId', essai avec 'programmateurs'`);
-            concertsQuery = query(
-              collection(db, 'concerts'),
-              where('programmateurs', 'array-contains', id)
-            );
-            querySnapshot = await getDocs(concertsQuery);
-            concertsLoaded = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-          }
+          // Récupérer tous les concerts (en production, on pourrait limiter le nombre)
+          const concertsCollectionRef = collection(db, 'concerts');
+          const allConcertsSnapshot = await getDocs(concertsCollectionRef);
           
-          console.log(`[DIAGNOSTIC] useProgrammateurDetailsOptimized - ${concertsLoaded.length} concerts trouvés par référence inverse`, { 
+          // Filtrer manuellement les concerts qui correspondent aux critères
+          const concertsLoaded = allConcertsSnapshot.docs
+            .map(doc => ({ id: doc.id, ...doc.data() }))
+            .filter(concert => {
+              // Condition 1: Vérifier si le concert a ce programmateur comme programmateurId
+              if (concert.programmateurId === id) {
+                return true;
+              }
+              
+              // Condition 2: Vérifier si le concert a ce programmateur dans son tableau programmateurs
+              if (Array.isArray(concert.programmateurs) && concert.programmateurs.includes(id)) {
+                return true;
+              }
+              
+              return false;
+            });
+          
+          console.log(`[DIAGNOSTIC] useProgrammateurDetailsOptimized - ${concertsLoaded.length} concerts trouvés par filtrage manuel`, { 
             concertIds: concertsLoaded.map(concert => concert.id) 
           });
           

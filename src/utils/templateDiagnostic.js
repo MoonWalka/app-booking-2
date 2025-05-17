@@ -1,7 +1,7 @@
 // templateDiagnostic.js
 // Un outil pour analyser et nettoyer les templates de contrat
 
-import { collection, getDocs, doc, writeBatch } from 'firebase/firestore';
+import {  collection, getDocs, doc, writeBatch  } from '@/firebaseInit';
 import { db } from './firebaseInit';
 
 /**

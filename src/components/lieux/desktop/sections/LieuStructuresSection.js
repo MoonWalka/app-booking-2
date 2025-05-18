@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Card from '@/components/ui/Card';
 import { Spinner } from 'react-bootstrap';
 import { db } from '@/firebaseInit';
+import { doc, collection, query, limit, getDocs, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 import styles from './LieuStructuresSection.module.css';
 
 /**

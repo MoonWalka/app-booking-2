@@ -1,13 +1,7 @@
-/*
- * Styles pour variables.css
- * Standardisé selon le Guide de Style CSS de TourCraft
- * Date de création: Inconnue
- * Dernière mise à jour: 5 mai 2025
+/* 
+ * TourCraft CSS Variables
+ * Updated: 17 May 2025
  */
-
-
-
-
 
 /* Variables globales CSS */
 :root {
@@ -32,43 +26,53 @@
     --tc-line-height-base: 1.5;
 
     /* Couleurs principales */
-    --tc-primary-color: var(--tc-color-primary, var(--tc-color-primary, #0d6efd));
+    --tc-primary-color: var(--tc-color-primary);
     --tc-primary-light: #4d94ff;
     --tc-primary-dark: #0b5ed7;
-    --tc-secondary-color: var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d));
+    --tc-secondary-color: var(--tc-color-text-secondary);
     --tc-secondary-light: #868e96;
     --tc-secondary-dark: #5a6268;
     --tc-success-color: #28a745;
     --tc-success-light: #48c564;
-    --tc-success-dark: #198754;
+    --tc-success-dark: var(--tc-success-color);
     --tc-danger-color: var(--tc-color-error);
     --tc-danger-light: #e35d6a;
     --tc-danger-dark: #c82333;
-    --tc-warning-color: #ffc107;
+    --tc-warning-color: var(--tc-warning-color);
     --tc-warning-light: #ffcd39;
     --tc-warning-dark: #e0a800;
-    --tc-info-color: #17a2b8;
+    --tc-info-color: var(--tc-info-color);
     --tc-info-light: #31c8e0;
     --tc-info-dark: #0dcaf0;
 
     /* Couleurs de fond et de texte */
-    --tc-bg-color: var(--tc-bg-light, var(--tc-bg-light, #f8f9fa));
-    --tc-text-color: #212529;
-    --tc-text-muted: var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d));
+    --tc-bg-color: var(--tc-bg-light);
+    --tc-text-color: var(--tc-gray-900);
+    --tc-text-muted: var(--tc-color-text-secondary);
     --tc-card-bg: #ffffff;
-    --tc-hover-bg: #f0f0f0;
-    --tc-active-bg: #e9ecef;
+    --tc-hover-bg: var(--tc-gray-100);
+    --tc-active-bg: var(--tc-gray-200);
 
     /* Bordures */
-    --tc-border-color: var(--tc-color-border-light, var(--tc-color-border-light, #dee2e6));
+    --tc-border-color: var(--tc-color-border-light);
     --tc-border-radius: 0.375rem;
 
     /* Espacements */
-    --tc-spacing-xs: var(--tc-spacing-1);
-    --tc-spacing-sm: var(--tc-spacing-2);
-    --tc-spacing-md: var(--tc-spacing-3);
-    --tc-spacing-lg: var(--tc-spacing-4);
-    --tc-spacing-xl: 3rem;
+    /* Variables d'espacement intermédiaires */
+    --tc-spacing-0: 0;
+    --tc-spacing-1: 4px;
+    --tc-spacing-1-25: 5px; /* Ajouté pour la standardisation */
+    --tc-spacing-2: 8px;
+    --tc-spacing-2-5: 10px; /* Ajouté pour la standardisation */
+    --tc-spacing-3: 12px;
+    --tc-spacing-3-75: 15px; /* Ajouté pour la standardisation */
+    --tc-spacing-4: 16px;
+    --tc-spacing-5: 20px;
+    --tc-spacing-6: 24px;
+    --tc-spacing-8: 32px;
+    --tc-spacing-10: 40px;
+    --tc-spacing-12: 48px;
+    --tc-spacing-16: 64px;
 
     /* Transitions */
     --tc-transition-duration: 0.3s;
@@ -89,23 +93,23 @@
     --tc-btn-padding-x: var(--tc-spacing-2);
     /* Couleurs des boutons */
     --tc-btn-primary-bg: var(--tc-primary-color);
-    --tc-btn-primary-text: var(--tc-bg-default, var(--tc-bg-default, white));
+    --tc-btn-primary-text: var(--tc-bg-default);
     --tc-btn-primary-border: var(--tc-primary-color);
     --tc-btn-primary-hover-bg: var(--tc-primary-dark);
     --tc-btn-secondary-bg: var(--tc-secondary-color);
-    --tc-btn-secondary-text: var(--tc-bg-default, var(--tc-bg-default, white));
+    --tc-btn-secondary-text: var(--tc-bg-default);
     --tc-btn-secondary-border: var(--tc-secondary-color);
     --tc-btn-secondary-hover-bg: var(--tc-secondary-dark);
     --tc-btn-success-bg: var(--tc-success-color);
-    --tc-btn-success-text: var(--tc-bg-default, var(--tc-bg-default, white));
+    --tc-btn-success-text: var(--tc-bg-default);
     --tc-btn-success-border: var(--tc-success-color);
     --tc-btn-success-hover-bg: var(--tc-success-dark);
     --tc-btn-danger-bg: var(--tc-danger-color);
-    --tc-btn-danger-text: var(--tc-bg-default, var(--tc-bg-default, white));
+    --tc-btn-danger-text: var(--tc-bg-default);
     --tc-btn-danger-border: var(--tc-danger-color);
     --tc-btn-danger-hover-bg: var(--tc-danger-dark);
     --tc-btn-info-bg: var(--tc-info-color);
-    --tc-btn-info-text: var(--tc-bg-default, var(--tc-bg-default, white));
+    --tc-btn-info-text: var(--tc-bg-default);
     --tc-btn-info-border: var(--tc-info-color);
     --tc-btn-info-hover-bg: var(--tc-info-dark);
 
@@ -118,7 +122,7 @@
 
     /* Badge */
     --tc-badge-bg: var(--tc-primary-color);
-    --tc-badge-text: var(--tc-bg-default, var(--tc-bg-default, white));
+    --tc-badge-text: var(--tc-bg-default);
 
     /* Tables */
     --tc-table-border: var(--tc-border-color);
@@ -153,8 +157,6 @@
     
     /* Espacement */
     --tc-spacing-unit: var(--tc-spacing-3);
-    
-    /* Z-index */
     --tc-z-index-toast: 1080;
     
     /* Points de rupture (breakpoints) standardisés */
@@ -170,27 +172,27 @@
     --tc-focus-ring-width: 3px;
     
     /* Input styling */
-    --tc-input-focus-shadow: 0 0 0 var(--tc-spacing-1) rgba(var(--tc-primary-color-rgb), 0.25);
-    --tc-input-placeholder-color: var(--tc-gray-var(--tc-font-weight-medium));
+    --tc-input-focus-shadow: 0 0 0 var(--tc-spacing-1) rgba(var(--tc-primary-color-rgb), 0.5);
+    --tc-input-placeholder-color: var(--tc-gray-600);
     
     /* Les couleurs sont importées de colors.css,
      * mais elles sont référencées ici pour documentation et autocomplétion
      * 
      * Principales variables de couleur:
-     * --tc-primary-color: #2c3e50
+     * --tc-primary-color: var(--tc-primary-color);
      * --tc-primary-color-rgb: 44, 62, 80
-     * --tc-primary-light: #3498db
-     * --tc-primary-dark: #1e2b38
-     * --tc-secondary-color: #2980b9
-     * --tc-success-color: #27ae60
-     * --tc-warning-color: #f39c12
-     * --tc-danger-color: #e74c3c
-     * --tc-info-color: #3498db
-     * --tc-text-color: #344767
-     * --tc-text-muted: var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d))
-     * --tc-background-color: #f5f7fa
+     * --tc-primary-light: var(--tc-primary-light);
+     * --tc-primary-dark: var(--tc-primary-dark);
+     * --tc-secondary-color: var(--tc-secondary-color);
+     * --tc-success-color: var(--tc-success-color);
+     * --tc-warning-color: var(--tc-warning-color);
+     * --tc-danger-color: var(--tc-danger-color);
+     * --tc-info-color: var(--tc-primary-light);
+     * --tc-text-color: var(--tc-text-color);
+     * --tc-text-muted: var(--tc-color-text-secondary);
+     * --tc-background-color: var(--tc-background-color);
      * --tc-card-bg: #ffffff
-     * --tc-border-color: var(--tc-color-border-medium, var(--tc-color-border-medium, #ddd))
+     * --tc-border-color: var(--tc-color-border-medium);
      * etc.
      */
 }
@@ -205,7 +207,7 @@
 @media (max-width: 768px) {
     :root {
         --tc-spacing-unit: var(--tc-spacing-2);
-        --tc-sidebar-width: 100%;  /* Sidebar prend toute la largeur en mobile */
+        --tc-sidebar-width: 100%; /* Sidebar prend toute la largeur en mobile */
     }
 }
 
@@ -213,9 +215,9 @@
 [data-theme="dark"] {
     /* Ces variables seront activées quand le thème sombre sera implémenté */
     --tc-bg-color: #121212;
-    --tc-text-color: #e0e0e0;
+    --tc-text-color: var(--tc-gray-300);
     --tc-card-bg: #1e1e1e;
-    --tc-border-color: var(--tc-color-text-primary, var(--tc-color-text-primary, #333));
+    --tc-border-color: var(--tc-color-text-primary);
     --tc-hover-bg: #2a2a2a;
     --tc-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
     --tc-input-bg: #2a2a2a;

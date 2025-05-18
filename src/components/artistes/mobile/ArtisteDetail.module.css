@@ -25,9 +25,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid var(--tc-border-color, var(--tc-color-border-light, #dee2e6));
-  background-color: var(--tc-light-color, var(--tc-bg-light, #f8f9fa));
-  color: var(--tc-text-color, #212529);
+  border: 1px solid var(--tc-border-color);
+  background-color: var(--tc-light-color);
+  color: var(--tc-text-color);
 }
 
 .editButton {
@@ -37,8 +37,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--tc-primary-color, #007bff);
-  color: var(--tc-bg-default, white);
+  background-color: var(--tc-primary-color);
+  color: var(--tc-bg-default);
   border: none;
 }
 

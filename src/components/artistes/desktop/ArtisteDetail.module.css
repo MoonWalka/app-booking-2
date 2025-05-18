@@ -9,35 +9,35 @@
 .artisteDetailDesktop {
   max-width: 1200px;
   margin: 0 auto;
-  padding: var(--tc-spacing-md, 20px);
+  padding: var(--tc-spacing-md);
 }
 
 .desktopHeaderContainer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--tc-spacing-xl, 2rem);
+  margin-bottom: var(--tc-spacing-xl);
 }
 
 .backButton {
-  padding: var(--tc-spacing-xs, 8px) var(--tc-spacing-sm, 12px);
-  background-color: var(--tc-color-gray-100, #f8f9fa);
-  border: var(--tc-border-width, 1px) solid var(--tc-border-color, #dee2e6);
-  border-radius: var(--tc-border-radius-sm, 4px);
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  background-color: var(--tc-color-gray-100);
+  border: var(--tc-border-width) solid var(--tc-border-color);
+  border-radius: var(--tc-border-radius-sm);
   cursor: pointer;
-  transition: var(--tc-transition, all 0.2s ease);
+  transition: var(--tc-transition);
 }
 
 .backButton:hover {
-  background-color: var(--tc-color-gray-200, #e9ecef);
+  background-color: var(--tc-color-gray-200);
 }
 
 .desktopEditButton .editBtn {
-  padding: var(--tc-spacing-xs, 8px) var(--tc-spacing-md, 16px);
-  background-color: var(--tc-primary-color, #007bff);
-  color: var(--tc-color-white, white);
+  padding: var(--tc-spacing-xs) var(--tc-spacing-md);
+  background-color: var(--tc-primary-color);
+  color: var(--tc-color-white);
   border: none;
-  border-radius: var(--tc-border-radius-sm, 4px);
+  border-radius: var(--tc-border-radius-sm);
   cursor: pointer;
   transition: var(--tc-transition, all 0.2s ease);
 }

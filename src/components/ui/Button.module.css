@@ -19,18 +19,18 @@
  */
 .btn {
   display: inline-block;
-  font-weight: var(--tc-font-weight-normal, 400);
+  font-weight: var(--tc-font-weight-normal);
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
   user-select: none;
-  border: var(--tc-border-width, 1px) solid transparent;
-  padding: var(--tc-spacing-sm, 0.375rem) var(--tc-spacing-md, 0.75rem);
-  font-size: var(--tc-font-size-base, 1rem);
-  line-height: var(--tc-line-height-base, 1.5);
-  border-radius: var(--tc-border-radius, 0.375rem);
+  border: var(--tc-border-width) solid transparent;
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  font-size: var(--tc-font-size-base);
+  line-height: var(--tc-line-height-base);
+  border-radius: var(--tc-border-radius);
   /* Transition sur toutes les propriétés pour des effets visuels fluides */
-  transition: var(--tc-transition, all 0.15s ease-in-out);
+  transition: var(--tc-transition);
   cursor: pointer;
 }
 

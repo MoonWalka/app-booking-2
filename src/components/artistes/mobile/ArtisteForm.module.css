@@ -15,13 +15,13 @@
 
 .artisteFormMobile {
   padding: var(--tc-spacing-3);
-  background-color: var(--tc-bg-color, #fff);
+  background-color: var(--tc-bg-color);
 }
 
 .mobileFormHeader {
   margin-bottom: var(--tc-spacing-4);
   padding-bottom: var(--tc-spacing-3);
-  border-bottom: 1px solid var(--tc-border-color, var(--tc-color-border, #eee));
+  border-bottom: 1px solid var(--tc-border-color);
 }
 
 .mobileForm {
@@ -31,8 +31,8 @@
 }
 
 .formSection {
-  background-color: var(--tc-bg-color, #fff);
-  border-radius: var(--tc-border-radius, var(--tc-spacing-2));
+  background-color: var(--tc-bg-color);
+  border-radius: var(--tc-border-radius);
   padding: var(--tc-font-size-xl);
   margin-bottom: var(--tc-spacing-4);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);

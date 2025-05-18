@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '@/firebaseInit';
+import { doc, getDoc } from 'firebase/firestore';
 import '@styles/index.css';
 import styles from './ArtisteDetail.module.css'; // Réutilisation des styles existants
 

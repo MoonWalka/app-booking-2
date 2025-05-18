@@ -8,7 +8,7 @@
 
 .artistesMobileContainer {
   padding: var(--tc-spacing-3);
-  background-color: var(--tc-bg-color, #fff);
+  background-color: var(--tc-bg-color);
 }
 
 .mobileHeaderContainer {
@@ -17,13 +17,13 @@
   align-items: center;
   margin-bottom: var(--tc-spacing-4);
   padding-bottom: var(--tc-spacing-2);
-  border-bottom: 1px solid var(--tc-border-color, var(--tc-color-border, #eee));
+  border-bottom: 1px solid var(--tc-border-color);
 }
 
 .mobileHeaderContainer h1 {
   font-size: 1.75rem;
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-color, var(--tc-color-text-primary, #333));
+  color: var(--tc-text-color);
   margin: 0;
 }
 

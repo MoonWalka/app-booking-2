@@ -193,7 +193,7 @@ export const useContratTemplatePreview = (
               </div>
               
               ${isFirstPage ? `
-                <h1 style="text-align: center; margin-bottom: 1.5em;">
+                <h1 style="; margin-bottom: 1.5em;" class="tc-text-center">
                   ${replaceVariables(titleTemplate)}
                 </h1>
               ` : ''}
@@ -239,7 +239,7 @@ export const useContratTemplatePreview = (
               </div>
               
               ${isFirstPage ? `
-                <h1 style="text-align: center; margin-bottom: 1.5em;">
+                <h1 style="; margin-bottom: 1.5em;" class="tc-text-center">
                   ${replaceVariables(titleTemplate)}
                 </h1>
                 

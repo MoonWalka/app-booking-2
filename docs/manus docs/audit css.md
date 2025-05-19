@@ -104,7 +104,9 @@ Dans `ArtisteForm.module.css`, malgré l'utilisation de variables, on trouve des
 }
 ```
 
-Ces valeurs de secours peuvent créer des incohérences si les variables ne sont pas chargées correctement.
+Ces valeurs de secours pouvaient créer des incohérences si les variables n'étaient pas chargées correctement.
+
+**Mise à jour (20 mai 2025)** : Ce problème a été résolu par l'exécution des scripts de correction qui ont éliminé tous les fallbacks codés en dur dans les fichiers CSS. Les sauvegardes des fichiers originaux ont été conservées au cas où une restauration serait nécessaire.
 
 ### 3. Imports CSS multiples et potentiellement conflictuels
 
@@ -143,9 +145,9 @@ Le problème de "micro chargement qui fait changer de couleur rapidement" mentio
 
 ### 2. Éliminer les valeurs CSS codées en dur
 
-- **Supprimer les valeurs de secours** dans les fichiers CSS modulaires
-- **Créer un linter CSS personnalisé** pour détecter les valeurs codées en dur
-- **Standardiser l'utilisation des variables** dans tous les fichiers CSS
+- [x] **Supprimer les valeurs de secours** dans les fichiers CSS modulaires (Complété le 20 mai 2025)
+- [ ] **Créer un linter CSS personnalisé** pour détecter les valeurs codées en dur
+- [ ] **Standardiser l'utilisation des variables** dans tous les fichiers CSS
 
 ### 3. Optimiser la structure d'import CSS
 
@@ -360,9 +362,13 @@ L'implémentation de ces recommandations permettrait d'améliorer significativem
 - [x] **2.5** Tester les composants après standardisation pour détecter d'éventuels problèmes
 
 ### Phase 3 : Correction des styles codés en dur (Sprint 2-3)
-- [ ] **3.1** Exécuter prefix_css_vars.py sur tous les fichiers CSS
-- [ ] **3.2** Supprimer les fallbacks codés en dur dans les fichiers CSS (j'ai commencé de faire tout le dossier styles et UI))
-- [ ] **3.3** Remplacer les styles inline par des classes standards de typography.css
+- [x] **3.1** Exécuter prefix_css_vars.py sur tous les fichiers CSS
+- [x] **3.2** Supprimer les fallbacks codés en dur dans les fichiers CSS 
+  - [x] **3.2.1** Exécuter fix_css_var_fallbacks.sh pour supprimer les fallbacks de variables CSS
+  - [x] **3.2.2** Exécuter fix_css_missing_parenthesis.sh pour corriger les problèmes de parenthèses manquantes
+  - [x] **3.2.3** Exécuter fix_css_cascade_fallbacks.sh pour supprimer les fallbacks en cascade
+  - [x] **3.2.4** Exécuter fix_css_inconsistent_spaces.sh pour corriger les espaces inconsistants dans les déclarations
+- [x] **3.3** Remplacer les styles inline par des classes standards de typography.css
 - [ ] **3.4** Standardiser les couleurs avec les variables de colors.css
 - [ ] **3.5** Standardiser les espacements avec les variables d'espacement
 
@@ -402,3 +408,30 @@ L'implémentation de ces recommandations permettrait d'améliorer significativem
 - [ ] **8.5** Mettre à jour la documentation au fil de l'évolution du système
 
 Ce plan d'action structuré permettra d'aborder méthodiquement les problèmes identifiés dans l'audit CSS, avec des étapes claires et mesurables pour améliorer la cohérence et la maintenabilité du code CSS de l'application TourCraft.
+
+## Mise à jour des progrès (20 mai 2025)
+
+### Points clés des améliorations réalisées
+
+1. **Élimination complète des fallbacks CSS**
+   - Tous les scripts de correction ont fonctionné parfaitement sur les fichiers actifs du projet.
+   - Les quatre types de problèmes ciblés ont été résolus :
+     - Variables CSS avec fallbacks (fix_css_var_fallbacks.sh)
+     - Parenthèses manquantes (fix_css_missing_parenthesis.sh)
+     - Fallbacks en cascade (fix_css_cascade_fallbacks.sh)
+     - Espaces inconsistants dans les déclarations (fix_css_inconsistent_spaces.sh)
+   - Des sauvegardes ont été créées pour tous les fichiers modifiés
+
+2. **Standardisation des importations CSS**
+   - Méthode d'import unifiée à travers le projet
+   - Alias configurés correctement dans jsconfig.json
+
+3. **Remplacement des styles inline par des classes standardisées**
+   - Script inline_to_typography_classes.js créé et exécuté avec succès
+   - 3 fichiers modifiés pour remplacer les styles inline par des classes tc-text-*
+   - Sauvegardes (.bak) créées pour tous les fichiers modifiés
+
+4. **Prochaines étapes prioritaires**
+   - Standardiser les couleurs avec les variables de colors.css
+   - Standardiser les espacements avec les variables d'espacement
+   - Commencer la migration des composants UI pour utiliser les composants standardisés

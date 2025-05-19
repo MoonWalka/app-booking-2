@@ -280,16 +280,16 @@ const generatePuppeteerPdf = async (title, data) => {
     const options = {
       displayHeaderFooter: true,
       headerTemplate: safeData.template.headerContent ? `
-        <div style="; padding: 5px 30px; width: 100%;" class="tc-text-xs">
+        <div style="font-size: 9pt; padding: 5px 30px; width: 100%;">
           ${replaceVariables(safeData.template.headerContent, prepareContractVariables(safeData))}
         </div>
       ` : '',
       footerTemplate: safeData.template.footerContent ? `
-        <div style="; padding: 5px 30px; width: 100%;" class="tc-text-xs">
+        <div style="font-size: 9pt; padding: 5px 30px; width: 100%;">
           ${replaceVariables(safeData.template.footerContent, prepareContractVariables(safeData))}
-          <div style="; ;" class="tc-text-xs tc-text-center"><span class="pageNumber"></span> / <span class="totalPages"></span></div>
+          <div style="text-align: center; font-size: 8pt;"><span class="pageNumber"></span> / <span class="totalPages"></span></div>
         </div>
-      ` : '<div style="; ; padding: 5px 30px; width: 100%;" class="tc-text-xs tc-text-center"><span class="pageNumber"></span> / <span class="totalPages"></span></div>',
+      ` : '<div style="text-align: center; font-size: 8pt; padding: 5px 30px; width: 100%;"><span class="pageNumber"></span> / <span class="totalPages"></span></div>',
       margin: {
         top: safeData.template.headerContent ? '60px' : '30px',
         bottom: safeData.template.footerContent ? '60px' : '30px',
@@ -325,16 +325,16 @@ const generatePDFPreview = async (data, title = 'Aperçu Contrat') => {
     const options = {
       displayHeaderFooter: true,
       headerTemplate: safeData.template.headerContent ? `
-        <div style="; padding: 5px 30px; width: 100%;" class="tc-text-xs">
+        <div style="font-size: 9pt; padding: 5px 30px; width: 100%;">
           ${replaceVariables(safeData.template.headerContent, prepareContractVariables(safeData))}
         </div>
       ` : '',
       footerTemplate: safeData.template.footerContent ? `
-        <div style="; padding: 5px 30px; width: 100%;" class="tc-text-xs">
+        <div style="font-size: 9pt; padding: 5px 30px; width: 100%;">
           ${replaceVariables(safeData.template.footerContent, prepareContractVariables(safeData))}
-          <div style="; ;" class="tc-text-xs tc-text-center"><span class="pageNumber"></span> / <span class="totalPages"></span></div>
+          <div style="text-align: center; font-size: 8pt;"><span class="pageNumber"></span> / <span class="totalPages"></span></div>
         </div>
-      ` : '<div style="; ; padding: 5px 30px; width: 100%;" class="tc-text-xs tc-text-center"><span class="pageNumber"></span> / <span class="totalPages"></span></div>',
+      ` : '<div style="text-align: center; font-size: 8pt; padding: 5px 30px; width: 100%;"><span class="pageNumber"></span> / <span class="totalPages"></span></div>',
       margin: {
         top: safeData.template.headerContent ? '60px' : '30px',
         bottom: safeData.template.footerContent ? '60px' : '30px',

@@ -5,7 +5,7 @@
  */
 
 .legalInfoSection {
-  background-color: var(--tc-bg-white);
+  background-color: var(--tc-bg-default);
   border-radius: var(--tc-border-radius-lg);
   box-shadow: var(--tc-shadow-sm);
   overflow: hidden;

@@ -28,7 +28,7 @@
 
 /* Sidebar commune */
 .sidebar {
-  width: var(--tc-sidebar-width, 240px);
+  width: var(--tc-sidebar-width);
   background-color: var(--tc-sidebar-bg-color);
   color: var(--tc-sidebar-text-color);
   padding: 20px 0;
@@ -37,7 +37,7 @@
   height: 100vh;
   overflow-y: auto;
   transition: var(--tc-transition);
-  min-width: var(--tc-sidebar-width, 240px);
+  min-width: var(--tc-sidebar-width);
   position: sticky;
   top: 0;
 }
@@ -55,7 +55,7 @@
 
 .sidebar-header h3 {
   margin: 0;
-  font-size: 1.var(--tc-spacing-8);
+  font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-semibold);
 }
 
@@ -141,7 +141,7 @@
 .sidebar-nav a span,
 .menu-icon {
   margin-right: 10px;
-  font-size: 1.var(--tc-spacing-3);
+  font-size: var(--tc-font-size-md);
 }
 
 .menu-text {
@@ -182,7 +182,7 @@
 
 .nav-links i {
   margin-right: 10px;
-  font-size: 1.var(--tc-spacing-3);
+  font-size: var(--tc-font-size-md);
 }
 
 /* Contenu principal - styles combinés */
@@ -192,8 +192,8 @@
   flex-direction: column;
   background-color: var(--tc-content-bg-color);
   min-height: 100vh;
-  margin-left: var(--tc-sidebar-width, 240px);
-  padding: var(--tc-spacing-lg, var(--tc-spacing-4));
+  margin-left: var(--tc-sidebar-width);
+  padding: var(--tc-spacing-lg);
 }
 
 .content,
@@ -265,9 +265,9 @@
 /* Définition unifiée du sélecteur main */
 main {
   flex: 1 1 auto;
-  padding: var(--tc-spacing-lg, var(--tc-spacing-4));
+  padding: var(--tc-spacing-lg);
   overflow-y: auto;
-  background-color: var(--tc-background-color, var(--tc-bg-light, var(--tc-bg-light, #f8f9fa)));
+  background-color: var(--tc-background-color);
 }
 
 /* Styles pour la marque */
@@ -326,7 +326,7 @@ main {
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background-color: var(--tc-var(--tc-bg-default, var(--tc-bg-default, white))-overlay-20);
+  background-color: var(--tc-overlay-bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -459,7 +459,7 @@ main {
   }
   
   main {
-    padding: var(--tc-spacing-md, var(--tc-spacing-3));
+    padding: var(--tc-spacing-md);
   }
   
   .details-grid {

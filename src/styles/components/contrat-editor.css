@@ -18,7 +18,7 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  background-color: var(--tc-bg-default, var(--tc-bg-default, white));
+  background-color: var(--tc-bg-default);
   border-radius: var(--tc-border-radius);
   overflow: hidden;
 }
@@ -43,7 +43,7 @@
 
 .tc-modal-actions .btn-outline-info:hover {
   background-color: var(--tc-info-color);
-  color: var(--tc-bg-default, var(--tc-bg-default, white));
+  color: var(--tc-bg-default);
 }
 
 .tc-modal-header {
@@ -95,7 +95,7 @@
 
 /* Styles pour les sections du modèle */
 .template-info-card {
-  background-color: var(--tc-bg-default, var(--tc-bg-default, white));
+  background-color: var(--tc-bg-default);
   border: 1px solid var(--tc-border-color);
   border-radius: var(--tc-border-radius);
   padding: var(--tc-font-size-xl);
@@ -103,7 +103,7 @@
 
 /* Styles pour l'aperçu de contrat */
 .preview-container {
-  background-color: var(--tc-bg-default, var(--tc-bg-default, white));
+  background-color: var(--tc-bg-default);
   border: 1px solid var(--tc-border-color);
   border-radius: var(--tc-radius-sm);
   margin-bottom: var(--tc-spacing-4);
@@ -135,14 +135,14 @@
   margin: 0 auto;
   padding: 20mm;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  background-color: var(--tc-bg-default, var(--tc-bg-default, white));
+  background-color: var(--tc-bg-default);
 }
 
 /* Style pour améliorer l'aperçu avec des séparations de page */
 .html-preview-frame {
   width: 100%;
   height: 700px;
-  border: 1px solid var(--tc-color-border-medium, var(--tc-color-border-medium, #ddd));
+  border: 1px solid var(--tc-color-border-medium);
   border-radius: var(--tc-radius-sm);
   background-color: #f0f0f0;
 }
@@ -170,10 +170,10 @@
 .html-preview-frame {
   width: 100%;
   height: auto;
-  border: 1px solid var(--tc-color-border-medium, var(--tc-color-border-medium, #ddd));
+  border: 1px solid var(--tc-color-border-medium);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   overflow: visible;
-  background-color: var(--tc-bg-default, var(--tc-bg-default, white));
+  background-color: var(--tc-bg-default);
 }
 
 /* Ajouter un style CSS qui sera injecté dans l'iframe pour montrer les séparations de page */
@@ -195,7 +195,7 @@
   padding: var(--tc-spacing-1) var(--tc-spacing-2);
   margin: var(--tc-spacing-1);
   background-color: #f0f0f0;
-  border: 1px solid var(--tc-color-border-medium, var(--tc-color-border-medium, #ddd));
+  border: 1px solid var(--tc-color-border-medium);
   border-radius: var(--tc-border-radius-sm);
   font-size: var(--tc-font-size-sm);
   cursor: pointer;

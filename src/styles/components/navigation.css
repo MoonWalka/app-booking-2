@@ -37,7 +37,7 @@
 .navigation-item a:hover,
 .navigation-item a.active {
   background-color: var(--tc-primary-color);
-  color: var(--tc-bg-default, var(--tc-bg-default, white));
+  color: var(--tc-bg-default);
 }
 
 /* Styles pour la navigation secondaire */
@@ -94,13 +94,13 @@
 
 .step-dot.active {
   background-color: var(--tc-primary-color);
-  color: var(--tc-bg-default, var(--tc-bg-default, white));
+  color: var(--tc-bg-default);
   border-color: var(--tc-primary-color);
 }
 
 .step-dot.completed {
   background-color: var(--tc-success-color);
-  color: var(--tc-bg-default, var(--tc-bg-default, white));
+  color: var(--tc-bg-default);
   border-color: var(--tc-success-color);
 }
 
@@ -128,8 +128,8 @@
   bottom: 40px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: var(--tc-gray-800);
-  color: var(--tc-bg-default, var(--tc-bg-default, white));
+  background-color: var(--tc-tooltip-bg);
+  color: var(--tc-bg-default);
   padding: 5px 10px;
   border-radius: var(--tc-border-radius-sm);
   font-size: 12px;

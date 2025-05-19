@@ -37,7 +37,7 @@
 .form-control {
   display: block;
   width: 100%;
-  padding: var(--tc-spacing-2) var(--tc-spacing-2);
+  padding: var(--tc-spacing-2);
   font-size: var(--tc-spacing-3);
   line-height: 1.5;
   color: var(--tc-text-color);
@@ -52,7 +52,7 @@
 .tc-form-control {
   display: block;
   width: 100%;
-  padding: var(--tc-spacing-2) var(--tc-spacing-2);
+  padding: var(--tc-spacing-2);
   font-size: var(--tc-spacing-3);
   line-height: 1.5;
   color: var(--tc-text-color);
@@ -91,7 +91,7 @@
   display: block;
   margin-top: var(--tc-spacing-1);
   font-size: 0.875rem;
-  color: var(--tc-text-muted);
+  color: var(--tc-color-text-muted);
 }
 
 /* // Modifié par Copilot : ajout de .tc-form-text */
@@ -99,7 +99,7 @@
   display: block;
   margin-top: var(--tc-spacing-1);
   font-size: 0.875rem;
-  color: var(--tc-text-muted);
+  color: var(--tc-color-text-muted);
 }
 
 /* Styles pour champs avec erreurs */

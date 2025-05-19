@@ -25,9 +25,9 @@
    ============================= */
 .artiste-detail-container {
   padding: 20px;
-  background-color: var(--tc-bg-color, var(--tc-bg-default, var(--tc-bg-default, white)));
-  border-radius: var(--tc-border-radius, 8px);
-  box-shadow: var(--tc-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
+  background-color: var(--tc-bg-color);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-shadow);
   margin-bottom: 20px;
 }
 
@@ -62,7 +62,7 @@
   width: 100%;
   height: 100%;
   background-color: #e9ecef;
-  color: var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-color-text-secondary);
 }
 
 .placeholder-photo i {
@@ -104,16 +104,16 @@
 .artiste-genre {
   display: flex;
   align-items: flex-start;
-  gap: var(--tc-spacing-sm, 8px);
-  margin-bottom: var(--tc-spacing-sm, 10px);
-  color: var(--tc-text-muted, var(--tc-color-text-secondary, var(--tc-color-text-secondary, #666)));
-  font-size: var(--tc-font-size-sm, 14px);
+  gap: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-spacing-sm);
+  color: var(--tc-text-muted, var(--tc-color-text-secondary));
+  font-size: var(--tc-font-size-sm);
 }
 
 .artiste-genre i,
 .artiste-contact i {
-  color: var(--tc-primary-color, var(--tc-artiste-color));
-  font-size: var(--tc-font-size-md, 16px);
+  color: var(--tc-primary-color);
+  font-size: var(--tc-font-size-md);
   width: 20px;
   text-align: center;
 }
@@ -140,7 +140,7 @@
 
 .detail-tabs {
   display: flex;
-  border-bottom: 1px solid var(--tc-color-border-light, var(--tc-color-border-light, #dee2e6));
+  border-bottom: 1px solid var(--tc-color-border-light);
   margin-bottom: 20px;
 }
 
@@ -155,7 +155,7 @@
 }
 
 .tab-item:hover {
-  background-color: var(--tc-bg-light, var(--tc-bg-light, #f8f9fa));
+  background-color: var(--tc-bg-light);
 }
 
 .tab-item.active {
@@ -192,11 +192,11 @@
 .artiste-contact {
   display: flex;
   align-items: flex-start;
-  gap: var(--tc-spacing-sm, 8px);
-  margin-bottom: var(--tc-spacing-sm, 10px);
-  margin-top: var(--tc-spacing-md, 20px);
-  color: var(--tc-text-muted, var(--tc-color-text-secondary, var(--tc-color-text-secondary, #666)));
-  font-size: var(--tc-font-size-sm, 14px);
+  gap: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-spacing-sm);
+  margin-top: var(--tc-spacing-md);
+  color: var(--tc-text-muted, var(--tc-color-text-secondary));
+  font-size: var(--tc-font-size-sm);
 }
 
 .contact-item {
@@ -209,12 +209,12 @@
 .contact-item i {
   /* Harmonisation : taille standardisée */
   font-size: var(--tc-font-size-lg);
-  color: var(--tc-text-muted, var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d)));
+  color: var(--tc-text-muted, var(--tc-color-text-secondary));
 }
 
 .contact-item a {
   text-decoration: none;
-  color: var(--tc-primary-color, #007bff);
+  color: var(--tc-primary-color);
 }
 
 .contact-item a:hover {
@@ -248,12 +248,12 @@
 .empty-state i {
   /* Harmonisation : taille standardisée */
   font-size: var(--tc-font-size-xxl);
-  color: var(--tc-color-border-light, var(--tc-color-border-light, #dee2e6));
+  color: var(--tc-color-border-light);
   margin-bottom: 15px;
 }
 
 .empty-state p {
-  color: var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-color-text-secondary);
   margin-bottom: 20px;
 }
 
@@ -283,7 +283,7 @@
 }
 
 .stat-card {
-  background-color: var(--tc-bg-light, var(--tc-bg-light, #f8f9fa));
+  background-color: var(--tc-bg-light);
   border-radius: var(--tc-radius-md);
   padding: 20px;
   display: flex;
@@ -301,7 +301,7 @@
   margin: 0 0 5px 0;
   /* Harmonisation : taille standardisée */
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-color-text-secondary);
 }
 
 .stat-value {
@@ -361,11 +361,11 @@
 
 .breadcrumb-separator {
   margin: 0 8px;
-  color: var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-color-text-secondary);
 }
 
 .breadcrumb-current {
-  color: var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-color-text-secondary);
   font-weight: var(--tc-font-weight-medium);
 }
 
@@ -378,7 +378,7 @@
 }
 
 .form-card {
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--tc-color-border-medium);
   border-radius: var(--tc-radius-md);
   overflow: hidden;
   background-color: #fff;
@@ -389,7 +389,7 @@
   align-items: center;
   gap: 10px;
   padding: 15px;
-  background-color: var(--tc-bg-light, var(--tc-bg-light, #f8f9fa));
+  background-color: var(--tc-bg-light);
   border-bottom: 1px solid #e0e0e0;
 }
 
@@ -403,7 +403,7 @@
 .card-header i {
   /* Harmonisation : taille standardisée */
   font-size: var(--tc-font-size-lg);
-  color: var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-color-text-secondary);
 }
 
 .card-body {
@@ -422,7 +422,7 @@
   font-size: var(--tc-font-size-lg);
   font-weight: bold;
   margin-bottom: 15px;
-  border-bottom: 1px solid var(--tc-color-border-medium, var(--tc-color-border-medium, #ddd));
+  border-bottom: 1px solid var(--tc-color-border-medium);
   padding-bottom: 10px;
 }
 
@@ -452,7 +452,7 @@
 .form-control {
   width: 100%;
   padding: 8px 12px;
-  border: 1px solid var(--tc-color-border-medium, var(--tc-color-border-medium, #ddd));
+  border: 1px solid var(--tc-color-border-medium);
   border-radius: var(--tc-radius-sm);
   /* Harmonisation : taille standardisée */
   font-size: var(--tc-font-size-sm);
@@ -521,9 +521,9 @@
 /* Artiste card - style horizontal (pour les listes) */
 .artiste-list-card {
   display: flex;
-  background-color: var(--tc-bg-color, var(--tc-bg-default, var(--tc-bg-default, white)));
-  border-radius: var(--tc-border-radius, 8px);
-  box-shadow: var(--tc-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
+  background-color: var(--tc-bg-color);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-shadow);
   margin-bottom: 15px;
   overflow: hidden;
   transition: transform 0.2s;
@@ -544,9 +544,9 @@
 .artiste-card {
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-sm, 8px);
-  background-color: var(--tc-bg-color, var(--tc-bg-default, var(--tc-bg-default, white)));
-  border-radius: var(--tc-border-radius, 8px);
+  gap: var(--tc-spacing-sm);
+  background-color: var(--tc-bg-color);
+  border-radius: var(--tc-border-radius);
   overflow: hidden;
 }
 
@@ -554,11 +554,11 @@
    ARTISTE TAB CONTENT
    ============================= */
 .artiste-tab-content {
-  background-color: var(--tc-bg-color, var(--tc-bg-default, var(--tc-bg-default, white)));
-  border-radius: var(--tc-border-radius, 8px);
+  background-color: var(--tc-bg-color);
+  border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow);
-  padding: var(--tc-spacing-md, 16px);
-  margin-bottom: var(--tc-spacing-md, 16px);
+  padding: var(--tc-spacing-md);
+  margin-bottom: var(--tc-spacing-md);
 }
 
 /* La définition mobile n'est pas nécessaire car elle est identique */
@@ -571,7 +571,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--tc-bg-light, var(--tc-artiste-color-light));
+  background-color: var(--tc-bg-light);
   color: var(--tc-text-color);
   border-radius: 20px;
   padding: 4px 12px;
@@ -588,9 +588,9 @@
   display: inline-flex;
   align-items: center;
   padding: 2px 8px;
-  background-color: var(--tc-artiste-color-light, #f0e6ff);
+  background-color: var(--tc-artiste-color-light);
   border-radius: 12px;
-  color: var(--tc-artiste-color, #6610f2);
+  color: var(--tc-artiste-color);
   /* Harmonisation : taille standardisée */
   font-size: var(--tc-font-size-xs);
   margin-right: 4px;
@@ -598,7 +598,7 @@
 
 /* Styles de lien pour les artistes */
 .artiste-link {
-  color: var(--tc-artiste-color, #6610f2);
+  color: var(--tc-artiste-color);
   text-decoration: none;
   font-weight: var(--tc-font-weight-medium);
 }

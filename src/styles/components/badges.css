@@ -34,31 +34,31 @@
 
 .status-confirmed {
   background-color: var(--tc-success-color, #28a745);
-  color: var(--tc-bg-default, var(--tc-bg-default, white));
+  color: var(--tc-bg-default);
   font-weight: var(--tc-font-weight-semibold);
 }
 
 .status-cancelled {
   background-color: var(--tc-danger-color, var(--tc-color-error));
-  color: var(--tc-bg-default, var(--tc-bg-default, white));
+  color: var(--tc-bg-default);
   font-weight: var(--tc-font-weight-semibold);
 }
 
 .status-pending {
   background-color: var(--tc-info-color, #17a2b8);
-  color: var(--tc-bg-default, var(--tc-bg-default, white));
+  color: var(--tc-bg-default);
   font-weight: var(--tc-font-weight-semibold);
 }
 
 .status-draft {
   background-color: var(--tc-secondary-color, var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d)));
-  color: var(--tc-bg-default, var(--tc-bg-default, white));
+  color: var(--tc-bg-default);
   font-weight: var(--tc-font-weight-semibold);
 }
 
 .status-declined {
   background-color: var(--tc-danger-color, var(--tc-color-error));
-  color: var(--tc-bg-default, var(--tc-bg-default, white));
+  color: var(--tc-bg-default);
   font-weight: var(--tc-font-weight-semibold);
 }
 
@@ -79,7 +79,7 @@
   top: 0;
   right: 0;
   transform: translate(40%, -40%);
-  box-shadow: 0 0 0 2px var(--tc-bg-default, var(--tc-bg-default, white));
+  box-shadow: 0 0 0 2px var(--tc-bg-default);
   animation: pulse 1.5s infinite;
 }
 
@@ -97,12 +97,12 @@
 /* // Correction UI: Standardisation des badges principaux et secondaires */
 .badge-primary {
   background-color: var(--tc-primary-color, #007bff);
-  color: var(--tc-text-light, var(--tc-bg-default, var(--tc-bg-default, white)));
+  color: var(--tc-text-light);
 }
 
 .badge-secondary {
   background-color: var(--tc-secondary-color, var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d)));
-  color: var(--tc-text-light, var(--tc-bg-default, var(--tc-bg-default, white)));
+  color: var(--tc-text-light);
 }
 
 /* // Correction UI: Amélioration du contraste pour les badges avec contour */
@@ -156,7 +156,7 @@
   justify-content: center;
   border-radius: 50%;
   background-color: var(--tc-badge-bg, #007bff);
-  color: var(--tc-bg-default, var(--tc-bg-default, white));
+  color: var(--tc-bg-default);
   width: 20px;
   height: 20px;
   font-size: 10px;

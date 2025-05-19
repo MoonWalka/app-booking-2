@@ -1,0 +1,145 @@
+{
+  "date": "2025-05-18T23:36:24.984Z",
+  "statistics": {
+    "filesProcessed": 255,
+    "filesWithFallbacks": 141,
+    "totalFallbacks": 2114
+  },
+  "categories": {
+    "simple": {
+      "count": 1980,
+      "examples": [
+        {
+          "example": "var(--tc-warning-color, #ffc107)",
+          "file": "src/styles/test-mode.css"
+        },
+        {
+          "example": "var(--tc-dark-color, #212529)",
+          "file": "src/styles/test-mode.css"
+        },
+        {
+          "example": "var(--tc-bg-color, #fff)",
+          "file": "src/styles/pages/programmateurs.css"
+        },
+        {
+          "example": "var(--tc-border-radius, 8px)",
+          "file": "src/styles/pages/programmateurs.css"
+        },
+        {
+          "example": "var(--tc-shadow, 0 2px 4px rgba(0, 0, 0, 0.1)",
+          "file": "src/styles/pages/programmateurs.css"
+        },
+        {
+          "example": "var(--tc-shadow, 0 0.125rem var(--tc-spacing-1)",
+          "file": "src/styles/pages/programmateurs.css"
+        },
+        {
+          "example": "var(--tc-border-color-light, #f0f0f0)",
+          "file": "src/styles/pages/programmateurs.css"
+        },
+        {
+          "example": "var(--tc-text-color, #344767)",
+          "file": "src/styles/pages/programmateurs.css"
+        },
+        {
+          "example": "var(--tc-text-color-dark, #343a40)",
+          "file": "src/styles/pages/programmateurs.css"
+        },
+        {
+          "example": "var(--tc-shadow-sm, 0 0.125rem var(--tc-spacing-1)",
+          "file": "src/styles/pages/programmateurs.css"
+        }
+      ]
+    },
+    "nested": {
+      "count": 22,
+      "examples": [
+        {
+          "example": "var(--tc-border-radius, var(--tc-spacing-2)",
+          "file": "src/styles/pages/programmateurs.css"
+        },
+        {
+          "example": "var(--tc-border-radius, var(--tc-spacing-2)",
+          "file": "src/styles/pages/lieux.css"
+        },
+        {
+          "example": "var(--tc-border-radius, var(--tc-spacing-2)",
+          "file": "src/styles/pages/concerts.css"
+        },
+        {
+          "example": "var(--tc-primary-color, var(--tc-artiste-color)",
+          "file": "src/styles/pages/artistes.css"
+        },
+        {
+          "example": "var(--tc-bg-light, var(--tc-artiste-color-light)",
+          "file": "src/styles/pages/artistes.css"
+        },
+        {
+          "example": "var(--tc-border-radius, var(--tc-spacing-2)",
+          "file": "src/styles/components/spinner.css"
+        },
+        {
+          "example": "var(--tc-spacing-lg, var(--tc-spacing-4)",
+          "file": "src/styles/components/layout.css"
+        },
+        {
+          "example": "var(--tc-spacing-md, var(--tc-spacing-3)",
+          "file": "src/styles/components/layout.css"
+        },
+        {
+          "example": "var(--tc-danger-color, var(--tc-color-error)",
+          "file": "src/styles/components/concerts-mobile.css"
+        },
+        {
+          "example": "var(--tc-btn-padding-x, var(--tc-spacing-2)",
+          "file": "src/styles/components/buttons.css"
+        }
+      ]
+    },
+    "complex": {
+      "count": 112,
+      "examples": [
+        {
+          "example": "var(--tc-bg-default, var(--tc-bg-default, white)",
+          "file": "src/styles/theme.css"
+        },
+        {
+          "example": "var(--tc-color-primary, var(--tc-color-primary, #0d6efd)",
+          "file": "src/styles/pages/structures.css"
+        },
+        {
+          "example": "var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d)",
+          "file": "src/styles/pages/structures.css"
+        },
+        {
+          "example": "var(--tc-bg-default, var(--tc-bg-default, white)",
+          "file": "src/styles/pages/structures.css"
+        },
+        {
+          "example": "var(--tc-text-muted, var(--tc-color-text-secondary, var(--tc-color-text-secondary, #666)",
+          "file": "src/styles/pages/programmateurs.css"
+        },
+        {
+          "example": "var(--tc-text-muted, var(--tc-color-text-secondary, var(--tc-color-text-secondary, #6c757d)",
+          "file": "src/styles/pages/programmateurs.css"
+        },
+        {
+          "example": "var(--tc-primary-color, var(--tc-color-primary, var(--tc-color-primary, #0d6efd)",
+          "file": "src/styles/pages/programmateurs.css"
+        },
+        {
+          "example": "var(--tc-bg-light, var(--tc-bg-light, var(--tc-bg-light, #f8f9fa)",
+          "file": "src/styles/pages/programmateurs.css"
+        },
+        {
+          "example": "var(--tc-text-color, var(--tc-color-text-primary, var(--tc-color-text-primary, #333)",
+          "file": "src/styles/pages/programmateurs.css"
+        },
+        {
+          "example": "var(--tc-bg-color, var(--tc-bg-default, var(--tc-bg-default, white)",
+          "file": "src/styles/pages/programmateurs.css"
+        }
+      ]
+    }
+  }
+}

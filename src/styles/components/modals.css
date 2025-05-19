@@ -124,7 +124,7 @@
 .tc-modal-full .quill {
   height: auto;
   min-height: 200px;
-  border: 1px solid var(--tc-gray-300);
+  border: 1px solid var(--tc-border-color);
   border-radius: var(--tc-border-radius-sm);
   background: var(--tc-card-bg);
 }
@@ -132,7 +132,7 @@
 .tc-modal-full .ql-toolbar.ql-snow {
   z-index: 10;
   border-top: none;
-  border-bottom: 1px solid var(--tc-gray-300);
+  border-bottom: 1px solid var(--tc-border-color);
   padding: var(--tc-spacing-2);
   flex-wrap: wrap;
   justify-content: flex-start;
@@ -141,6 +141,7 @@
 .tc-modal-full .ql-container.ql-snow {
   border-top: 0;
   min-height: 150px;
+  border: 1px solid var(--tc-border-color);
 }
 
 .tc-modal-full .ql-toolbar button {
@@ -158,7 +159,7 @@
 
 .tc-modal-full .card-header {
   padding: var(--tc-spacing-2) var(--tc-font-size-xl);
-  background-color: rgba(0, 0, 0, 0.03);
+  background-color: var(--tc-card-header-bg);
 }
 
 .tc-modal-full .card-body {

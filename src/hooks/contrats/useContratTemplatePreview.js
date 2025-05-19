@@ -117,7 +117,7 @@ const useContratTemplatePreview = (templateData) => {
         </div>
         
         <div class="content">
-          <h1 style="text-align: center; margin-bottom: 20px;">
+          <h1 style="; margin-bottom: 20px;" class="tc-text-center">
             ${replaceVariablesWithMockData(titleTemplate)}
           </h1>
           
@@ -265,7 +265,7 @@ const useContratTemplatePreview = (templateData) => {
                       </div>
                       
                       ${isFirstPage ? `
-                        <h1 style="text-align: center; margin-bottom: 1.5em;">
+                        <h1 style="; margin-bottom: 1.5em;" class="tc-text-center">
                           ${replaceVariablesWithMockData(titleTemplate)}
                         </h1>
                       ` : ''}
@@ -306,7 +306,7 @@ const useContratTemplatePreview = (templateData) => {
                       </div>
                       
                       ${isFirstPage ? `
-                        <h1 style="text-align: center; margin-bottom: 1.5em;">
+                        <h1 style="; margin-bottom: 1.5em;" class="tc-text-center">
                           ${replaceVariablesWithMockData(titleTemplate)}
                         </h1>
                         

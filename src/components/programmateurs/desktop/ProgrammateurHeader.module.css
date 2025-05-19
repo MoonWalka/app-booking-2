@@ -6,16 +6,16 @@
 
 .container {
   /* Base styles for ProgrammateurHeader */
-  margin-bottom: var(--tc-spacing-md, 1rem);
+  margin-bottom: var(--tc-spacing-md);
 }
 
 .detailsHeaderContainer {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: var(--tc-spacing-lg, 1.5rem);
+  margin-bottom: var(--tc-spacing-lg);
   flex-wrap: wrap;
-  gap: var(--tc-spacing-md, 1rem);
+  gap: var(--tc-spacing-md);
 }
 
 .titleContainer {
@@ -25,19 +25,19 @@
 .breadcrumb {
   display: flex;
   align-items: center;
-  margin-bottom: var(--tc-spacing-sm, 0.5rem);
-  font-size: var(--tc-font-size-sm, 0.9rem);
+  margin-bottom: var(--tc-spacing-sm);
+  font-size: var(--tc-font-size-sm);
 }
 
 .breadcrumbItem {
-  color: var(--tc-text-secondary, #6c757d);
+  color: var(--tc-text-secondary);
   text-decoration: none;
 }
 
 .breadcrumbDivider {
-  margin: 0 var(--tc-spacing-sm, 0.5rem);
-  font-size: var(--tc-font-size-xs, 0.8rem);
-  color: var(--tc-text-tertiary, #adb5bd);
+  margin: 0 var(--tc-spacing-sm);
+  font-size: var(--tc-font-size-xs);
+  color: var(--tc-text-tertiary);
 }
 
 .headerTitle {
@@ -45,12 +45,12 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: var(--tc-spacing-sm, 0.5rem);
+  gap: var(--tc-spacing-sm);
 }
 
 .headerActions {
   display: flex;
-  gap: var(--tc-spacing-sm, 0.5rem);
+  gap: var(--tc-spacing-sm);
   align-items: center;
 }
 
@@ -62,11 +62,11 @@
   .headerActions {
     width: 100%;
     justify-content: flex-start;
-    margin-top: var(--tc-spacing-sm, 0.5rem);
+    margin-top: var(--tc-spacing-sm);
   }
 
   .breadcrumb {
-    font-size: var(--tc-font-size-xs, 0.8rem);
+    font-size: var(--tc-font-size-xs);
   }
 }
 
@@ -77,6 +77,6 @@
   }
 
   .container {
-    margin-bottom: var(--tc-spacing-sm, 0.5rem);
+    margin-bottom: var(--tc-spacing-sm);
   }
 }

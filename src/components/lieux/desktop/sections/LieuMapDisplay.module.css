@@ -1,57 +1,51 @@
 /*
  * Styles pour LieuMapDisplay
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
- */
-
-/* 
- * Styles pour LieuMapDisplay
- * Affichage de carte pour un lieu
- * Dernière mise à jour: 04/05/2025
+ * Dernière mise à jour: 19 May 2025
  */
 
 .formCard {
-  background-color: var(--tc-color-background, #fff);
-  border-radius: var(--tc-border-radius, 0.5rem);
-  box-shadow: var(--tc-box-shadow-sm, 0 2px 4px rgba(0, 0, 0, 0.1));
+  background-color: var(--tc-bg-default);
+  border-radius: var(--tc-radius-lg);
+  box-shadow: var(--tc-shadow-sm);
   overflow: hidden;
-  margin-bottom: var(--tc-spacing-md, 1.25rem);
+  margin-bottom: var(--tc-spacing-4);
 }
 
 .cardHeader {
   display: flex;
   align-items: center;
-  padding: var(--tc-spacing-md, 1rem) var(--tc-spacing-md, 1.25rem);
-  background-color: var(--tc-color-background-secondary, #f8f9fa);
-  border-bottom: 1px solid var(--tc-color-border-light, #e9ecef);
-  gap: var(--tc-spacing-sm, 0.625rem);
+  padding: var(--tc-spacing-4) var(--tc-spacing-4);
+  background-color: var(--tc-bg-light);
+  border-bottom: 1px solid var(--tc-border-light);
+  gap: var(--tc-spacing-2);
 }
 
 .cardHeader h3 {
   margin: 0;
-  font-size: var(--tc-font-size-md, 1.2rem);
-  font-weight: var(--tc-font-weight-bold, 600);
-  color: var(--tc-color-text-primary, #212529);
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-color-secondary-dark);
 }
 
 .cardHeader i {
-  font-size: var(--tc-font-size-md, 1.2rem);
-  color: var(--tc-color-primary, #0d6efd);
+  font-size: var(--tc-font-size-lg);
+  color: var(--tc-color-primary);
 }
 
 .cardBody {
-  padding: var(--tc-spacing-md, 1.25rem);
+  padding: var(--tc-spacing-4);
 }
 
 .mapPreview {
-  margin-top: var(--tc-spacing-md, 1.25rem);
+  margin-top: var(--tc-spacing-4);
 }
 
 .interactiveMapContainer {
-  border-radius: var(--tc-border-radius-sm, 0.25rem);
+  border-radius: var(--tc-radius-md);
   overflow: hidden;
-  border: 1px solid var(--tc-color-border, #ced4da);
-  margin-bottom: var(--tc-spacing-sm, 0.625rem);
+  border: 1px solid var(--tc-border-light);
+  margin-bottom: var(--tc-spacing-2);
   height: 400px;
 }
 
@@ -59,58 +53,58 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: var(--tc-spacing-sm, 0.625rem);
+  margin-top: var(--tc-spacing-2);
   flex-wrap: wrap;
-  gap: var(--tc-spacing-sm, 0.625rem);
+  gap: var(--tc-spacing-2);
 }
 
 .mapZoomControls {
   display: flex;
-  gap: var(--tc-spacing-xs, 0.375rem);
+  gap: var(--tc-spacing-1);
 }
 
 .mapButton {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--tc-color-background, #fff);
-  border: 1px solid var(--tc-color-border, #ced4da);
-  border-radius: var(--tc-border-radius-sm, 0.25rem);
-  padding: var(--tc-spacing-xs, 0.375rem);
+  background-color: var(--tc-bg-default);
+  border: 1px solid var(--tc-border-light);
+  border-radius: var(--tc-radius-md);
+  padding: var(--tc-spacing-1);
   cursor: pointer;
-  color: var(--tc-color-text-primary, #212529);
-  transition: all 0.2s ease;
+  color: var(--tc-color-secondary-dark);
+  transition: all var(--tc-transition-fast) var(--tc-transition-timing);
 }
 
 .mapButton:hover {
-  background-color: var(--tc-color-background-secondary, #f8f9fa);
-  border-color: var(--tc-color-border-dark, #adb5bd);
+  background-color: var(--tc-bg-light);
+  border-color: var(--tc-border-medium);
 }
 
 .mapButton i {
-  font-size: var(--tc-font-size-md, 1.1rem);
+  font-size: var(--tc-font-size-md);
 }
 
 .mapError {
-  padding: var(--tc-spacing-md, 1.25rem);
-  background-color: var(--tc-color-danger-light, #f8d7da);
-  border-radius: var(--tc-border-radius-sm, 0.25rem);
-  color: var(--tc-color-danger, #dc3545);
-  margin-top: var(--tc-spacing-md, 1.25rem);
+  padding: var(--tc-spacing-4);
+  background-color: rgba(var(--tc-color-error-rgb), 0.1);
+  border-radius: var(--tc-radius-md);
+  color: var(--tc-color-error);
+  margin-top: var(--tc-spacing-4);
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-sm, 0.625rem);
+  gap: var(--tc-spacing-2);
 }
 
 .required {
-  color: var(--tc-color-danger, #dc3545);
-  margin-left: var(--tc-spacing-xs, 0.25rem);
+  color: var(--tc-color-error);
+  margin-left: var(--tc-spacing-1);
 }
 
 /* Responsive styles */
 @media (max-width: 768px) {
   .cardBody {
-    padding: var(--tc-spacing-sm, 1rem);
+    padding: var(--tc-spacing-3);
   }
   
   .interactiveMapContainer {

@@ -60,7 +60,7 @@
 .btnSecondary {
   background-color: var(--tc-secondary-color);
   border-color: var(--tc-secondary-color);
-  color: #fff;
+  color: var(--tc-white);
 }
 
 .btnSecondary:hover {
@@ -84,7 +84,7 @@
 .btnOutlinePrimary:hover {
   /* Animation intéressante: le bouton se remplit à l'interaction */
   background-color: var(--tc-primary-color);
-  color: #fff;
+  color: var(--tc-white);
   text-decoration: none;
 }
 
@@ -101,7 +101,7 @@
 
 .btnOutlineSecondary:hover {
   background-color: var(--tc-secondary-color);
-  color: #fff;
+  color: var(--tc-white);
   text-decoration: none;
 }
 
@@ -113,7 +113,7 @@
 .btnDanger {
   background-color: var(--tc-danger-color);
   border-color: var(--tc-danger-color);
-  color: #fff;
+  color: var(--tc-white);
 }
 
 .btnDanger:hover {
@@ -130,7 +130,7 @@
 .btnSuccess {
   background-color: var(--tc-success-color);
   border-color: var(--tc-success-color);
-  color: #fff;
+  color: var(--tc-white);
 }
 
 .btnSuccess:hover {

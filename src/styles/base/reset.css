@@ -2,12 +2,11 @@
  * Styles pour reset.css
  * Standardisé selon le Guide de Style CSS de TourCraft
  * Date de création: Inconnue
- * Dernière mise à jour: 5 mai 2025
+ * Dernière mise à jour: 19 mai 2025
  */
 
-
-
-
+/* Import des variables CSS pour accéder aux variables utilisées ci-dessous */
+@import '@styles/base/variables.css';
 
 /* Reset et styles de base */
 *, ::before, ::after {

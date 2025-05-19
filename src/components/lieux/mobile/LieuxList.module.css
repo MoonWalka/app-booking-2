@@ -2,9 +2,8 @@
  * Styles pour LieuxList
  * Standardisé selon le Guide de Style CSS de TourCraft
  * Date de création: Inconnue
- * Dernière mise à jour: 5 mai 2025
+ * Dernière mise à jour: 19 mai 2025
  */
-
 
 .mobileContainer {
   padding: var(--tc-spacing-2);
@@ -20,18 +19,18 @@
 .modernTitle {
   font-size: var(--tc-spacing-4);
   margin: 0;
-  color: #344767;
+  color: var(--tc-color-secondary-dark);
 }
 
 .modernAddBtn {
   width: 40px;
   height: 40px;
-  border-radius: 50%;
+  border-radius: var(--tc-radius-pill);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0;
-  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11);
+  box-shadow: var(--tc-shadow-md);
 }
 
 .searchFilterContainer {
@@ -40,34 +39,34 @@
 
 .searchBar {
   max-width: 410px;
-  margin-bottom: 1.8rem;
+  margin-bottom: var(--tc-spacing-6);
 }
 
 .searchInput {
   height: 45px;
-  border-radius: 0 6px 6px 0;
-  padding-left: 12px;
-  background-color: #fff;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  border-radius: 0 var(--tc-radius-md) var(--tc-radius-md) 0;
+  padding-left: var(--tc-spacing-3);
+  background-color: var(--tc-bg-default);
+  box-shadow: var(--tc-shadow-sm);
 }
 
 .inputGroupText {
-  background-color: #fff;
-  border-radius: 6px 0 0 6px;
+  background-color: var(--tc-bg-default);
+  border-radius: var(--tc-radius-md) 0 0 var(--tc-radius-md);
   border-right: none;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--tc-shadow-sm);
 }
 
 .clearSearch {
   border-left: none;
-  border-radius: 0 6px 6px 0;
-  background-color: #fff;
+  border-radius: 0 var(--tc-radius-md) var(--tc-radius-md) 0;
+  background-color: var(--tc-bg-default);
 }
 
 .resultsCount {
-  margin-top: 8px;
+  margin-top: var(--tc-spacing-2);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-color-text-secondary, #6c757d);
+  color: var(--tc-color-secondary);
 }
 
 .emptyState {
@@ -75,70 +74,70 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 40px 15px;
+  padding: var(--tc-spacing-10) var(--tc-spacing-4);
   text-align: center;
 }
 
 .emptyState i {
-  font-size: 3rem;
-  color: var(--tc-color-border-light, #dee2e6);
-  margin-bottom: 15px;
+  font-size: var(--tc-font-size-2xl);
+  color: var(--tc-border-light);
+  margin-bottom: var(--tc-spacing-4);
 }
 
 .emptyState p {
-  color: var(--tc-color-text-secondary, #6c757d);
-  margin-bottom: 20px;
+  color: var(--tc-color-secondary);
+  margin-bottom: var(--tc-spacing-5);
 }
 
 .lieuCardsContainer {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: var(--tc-spacing-4);
 }
 
 .lieuCard {
-  background-color: var(--tc-bg-default, white);
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  background-color: var(--tc-bg-default);
+  border-radius: var(--tc-radius-lg);
+  box-shadow: var(--tc-shadow-md);
   overflow: hidden;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--tc-transition-normal) var(--tc-transition-timing);
 }
 
 .lieuCard:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--tc-shadow-lg);
 }
 
 .lieuCardHeader {
-  padding: 15px;
-  background-color: var(--tc-bg-light, #f8f9fa);
-  border-bottom: 1px solid #f0f0f0;
+  padding: var(--tc-spacing-4);
+  background-color: var(--tc-bg-light);
+  border-bottom: 1px solid var(--tc-border-light);
 }
 
 .lieuCardTitle {
   margin: 0;
-  font-size: 1.var(--tc-spacing-3);
+  font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-semibold);
-  color: #344767;
+  color: var(--tc-color-secondary-dark);
   display: flex;
   align-items: center;
 }
 
 .lieuCardBody {
-  padding: 15px;
+  padding: var(--tc-spacing-4);
 }
 
 .lieuInfoItem {
   display: flex;
-  margin-bottom: 10px;
+  margin-bottom: var(--tc-spacing-2);
 }
 
 .lieuInfoIcon {
   min-width: 30px;
   display: flex;
   align-items: center;
-  color: var(--tc-color-text-secondary, #6c757d);
+  color: var(--tc-color-secondary);
 }
 
 .lieuInfoText {
@@ -146,7 +145,7 @@
 }
 
 .lieuContactLink {
-  color: var(--tc-primary-color, var(--tc-color-primary, #0d6efd));
+  color: var(--tc-color-primary);
   text-decoration: none;
 }
 
@@ -157,9 +156,9 @@
 .jaugeBadge {
   display: inline-flex;
   align-items: center;
-  color: var(--tc-bg-default, white);
-  padding: 4px 10px;
-  border-radius: var(--tc-radius-sm);
+  color: var(--tc-bg-default);
+  padding: var(--tc-spacing-1) var(--tc-spacing-2);
+  border-radius: var(--tc-radius-md);
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
 }
@@ -172,10 +171,10 @@
 .concertCount {
   display: inline-flex;
   align-items: center;
-  background-color: #e9f2ff;
-  color: var(--tc-primary-color, var(--tc-color-primary, #0d6efd));
-  padding: 4px 10px;
-  border-radius: 50px;
+  background-color: rgba(var(--tc-color-primary-rgb), 0.1);
+  color: var(--tc-color-primary);
+  padding: var(--tc-spacing-1) var(--tc-spacing-2);
+  border-radius: var(--tc-radius-pill);
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
 }
@@ -183,15 +182,15 @@
 .lieuCardActions {
   display: flex;
   justify-content: flex-end;
-  padding: 10px 15px;
-  background-color: var(--tc-bg-light, #f8f9fa);
-  gap: 10px;
+  padding: var(--tc-spacing-2) var(--tc-spacing-4);
+  background-color: var(--tc-bg-light);
+  gap: var(--tc-spacing-2);
 }
 
 .lieuActionBtn {
   width: 36px;
   height: 36px;
-  border-radius: var(--tc-radius-sm);
+  border-radius: var(--tc-radius-md);
   display: flex;
   align-items: center;
   justify-content: center;

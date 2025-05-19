@@ -1,7 +1,7 @@
 /*
  * Styles pour ContratGenerator
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Dernière mise à jour: 19 May 2025
  */
 
 /* Styles standardisés pour le générateur de contrat */
@@ -11,29 +11,29 @@
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
-  padding: var(--tc-spacing-md, 1rem);
+  padding: var(--tc-spacing-4);
 }
 
 /* Styles pour les espaces entre les sections */
 .sectionSpacer {
-  margin-bottom: var(--tc-spacing-lg, 1.5rem);
+  margin-bottom: var(--tc-spacing-6);
 }
 
 /* Ajout de styles pour améliorer la présentation et le support responsive */
 .generatorHeader {
-  margin-bottom: var(--tc-spacing-lg, 1.5rem);
+  margin-bottom: var(--tc-spacing-6);
 }
 
 .generatorHeader h1 {
-  font-size: var(--tc-font-size-xl, 1.75rem);
-  font-weight: var(--tc-font-weight-semibold, 600);
-  color: var(--tc-text-color-primary, #333);
-  margin-bottom: var(--tc-spacing-xs, 0.25rem);
+  font-size: var(--tc-font-size-2xl);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-color-secondary-dark);
+  margin-bottom: var(--tc-spacing-1);
 }
 
 .generatorHeader p {
-  color: var(--tc-text-color-secondary, #6c757d);
-  font-size: var(--tc-font-size-sm, 0.875rem);
+  color: var(--tc-color-secondary);
+  font-size: var(--tc-font-size-sm);
 }
 
 .generatorSection {

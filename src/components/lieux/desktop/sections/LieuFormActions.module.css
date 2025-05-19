@@ -1,63 +1,57 @@
 /*
  * Styles pour LieuFormActions
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
- */
-
-/* 
- * Styles pour LieuFormActions
- * Barre d'actions des formulaires de lieu
- * Dernière mise à jour: 05/05/2025
+ * Dernière mise à jour: 19 May 2025
  */
 
 .formActions {
   display: flex;
   justify-content: flex-end;
-  gap: var(--tc-spacing-md, 1rem);
-  margin-top: var(--tc-spacing-lg, 2rem);
-  margin-bottom: var(--tc-spacing-md, 1rem);
+  gap: var(--tc-spacing-4);
+  margin-top: var(--tc-spacing-8);
+  margin-bottom: var(--tc-spacing-4);
 }
 
 .cancelButton {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-xs, 0.5rem);
-  border: 1px solid var(--tc-color-border, #dee2e6);
-  padding: var(--tc-spacing-sm, 0.625rem) var(--tc-spacing-md, 1.25rem);
-  border-radius: var(--tc-border-radius-sm, 0.25rem);
+  gap: var(--tc-spacing-1);
+  border: 1px solid var(--tc-border-light);
+  padding: var(--tc-spacing-2) var(--tc-spacing-4);
+  border-radius: var(--tc-radius-md);
   background-color: transparent;
-  color: var(--tc-color-text-muted, #6c757d);
-  font-size: var(--tc-font-size-sm, 0.9375rem);
-  transition: all 0.2s;
+  color: var(--tc-color-secondary);
+  font-size: var(--tc-font-size-sm);
+  transition: all var(--tc-transition-fast) var(--tc-transition-timing);
   cursor: pointer;
 }
 
 .cancelButton:hover:not(:disabled) {
-  background-color: var(--tc-color-background-secondary, #f8f9fa);
-  color: var(--tc-color-text-secondary, #343a40);
-  border-color: var(--tc-color-border-dark, #c6c7c8);
+  background-color: var(--tc-bg-light);
+  color: var(--tc-color-secondary-dark);
+  border-color: var(--tc-border-medium);
 }
 
 .cancelButton i {
-  font-size: var(--tc-font-size-base, 1rem);
+  font-size: var(--tc-font-size-md);
 }
 
 .submitButton {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-xs, 0.5rem);
-  padding: var(--tc-spacing-sm, 0.625rem) var(--tc-spacing-md, 1.25rem);
-  border-radius: var(--tc-border-radius-sm, 0.25rem);
-  background-color: var(--tc-color-primary, #0d6efd);
-  color: var(--tc-color-background, white);
+  gap: var(--tc-spacing-1);
+  padding: var(--tc-spacing-2) var(--tc-spacing-4);
+  border-radius: var(--tc-radius-md);
+  background-color: var(--tc-color-primary);
+  color: var(--tc-bg-default);
   border: none;
-  font-size: var(--tc-font-size-sm, 0.9375rem);
-  transition: all 0.2s;
+  font-size: var(--tc-font-size-sm);
+  transition: all var(--tc-transition-fast) var(--tc-transition-timing);
   cursor: pointer;
 }
 
 .submitButton:hover:not(:disabled) {
-  background-color: var(--tc-color-primary-dark, #0b5ed7);
+  background-color: var(--tc-color-primary-dark);
 }
 
 .submitButton:disabled {

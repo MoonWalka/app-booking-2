@@ -7,86 +7,86 @@
 .badge {
   display: inline-flex;
   align-items: center;
-  padding: var(--tc-spacing-1) var(--tc-spacing-2);
-  border-radius: 50rem;
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  border-radius: var(--tc-border-radius-pill);
   font-weight: var(--tc-font-weight-medium);
   line-height: 1;
   white-space: nowrap;
   text-align: center;
   vertical-align: middle;
-  background-color: var(--tc-bg-subtle);
-  color: var(--tc-color-text-dark);
-  box-shadow: var(--tc-shadow-xs);
+  background-color: var(--tc-hover-bg);
+  color: var(--tc-text-color);
+  box-shadow: var(--tc-shadow-sm);
 }
 
 /* Tailles du badge */
 .small {
-  font-size: var(--tc-font-size-xxs);
-  padding: var(--tc-spacing-0-5) var(--tc-spacing-1-5);
+  font-size: var(--tc-font-size-xs);
+  padding: var(--tc-spacing-xs) var(--tc-spacing-xs);
 }
 
 .medium {
-  font-size: var(--tc-font-size-xs);
-  padding: var(--tc-spacing-1) var(--tc-spacing-2);
+  font-size: var(--tc-font-size-sm);
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
 }
 
 .large {
-  font-size: var(--tc-font-size-sm);
-  padding: var(--tc-spacing-1-5) var(--tc-spacing-3);
+  font-size: var(--tc-font-size-base);
+  padding: var(--tc-spacing-xs) var(--tc-spacing-md);
 }
 
 /* Couleurs de badge */
 .primary {
-  background-color: var(--tc-bg-primary-subtle);
-  color: var(--tc-color-primary);
+  background-color: rgba(var(--tc-primary-color-rgb), 0.1);
+  color: var(--tc-primary-color);
 }
 
 .secondary {
-  background-color: var(--tc-bg-subtle);
-  color: var(--tc-color-text-dark);
+  background-color: var(--tc-hover-bg);
+  color: var(--tc-text-color);
 }
 
 .success {
-  background-color: var(--tc-bg-success-subtle);
-  color: var(--tc-color-success);
+  background-color: rgba(var(--tc-success-color-rgb), 0.1);
+  color: var(--tc-success-color);
 }
 
 .info {
-  background-color: var(--tc-bg-info-subtle);
-  color: var(--tc-color-info);
+  background-color: rgba(var(--tc-info-color-rgb), 0.1);
+  color: var(--tc-info-color);
 }
 
 .warning {
-  background-color: var(--tc-bg-warning-subtle);
-  color: var(--tc-color-warning-dark);
+  background-color: rgba(var(--tc-warning-color-rgb), 0.1);
+  color: var(--tc-warning-color);
 }
 
 .danger {
-  background-color: var(--tc-bg-danger-subtle);
-  color: var(--tc-color-danger);
+  background-color: rgba(var(--tc-danger-color-rgb), 0.1);
+  color: var(--tc-danger-color);
 }
 
 /* Icône */
 .icon {
-  margin-right: var(--tc-spacing-1);
+  margin-right: var(--tc-spacing-xs);
   font-size: 0.9em;
 }
 
 /* Styles responsive standardisés */
-@media (max-width: 576px) {
+@media (max-width: var(--tc-breakpoint-sm)) {
   .small {
-    font-size: var(--tc-font-size-xxs);
-    padding: var(--tc-spacing-0-25) var(--tc-spacing-1);
+    font-size: var(--tc-font-size-xs);
+    padding: calc(var(--tc-spacing-xs) / 2) var(--tc-spacing-xs);
   }
 
   .medium {
-    font-size: var(--tc-font-size-xxs);
-    padding: var(--tc-spacing-0-5) var(--tc-spacing-1-5);
+    font-size: var(--tc-font-size-xs);
+    padding: var(--tc-spacing-xs) var(--tc-spacing-xs);
   }
   
   .large {
-    font-size: var(--tc-font-size-xs);
-    padding: var(--tc-spacing-1) var(--tc-spacing-2);
+    font-size: var(--tc-font-size-sm);
+    padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
   }
 }
 

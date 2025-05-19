@@ -1,0 +1,113 @@
+/*
+ * Styles pour DeleteConfirmModal
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 5 mai 2025
+ */
+
+.container {
+  width: 100%;
+}
+
+.modalBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--tc-bg-backdrop);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: var(--tc-z-index-modal);
+}
+
+.modalContent {
+  background-color: var(--tc-bg-card);
+  width: 90%;
+  max-width: 500px;
+  border-radius: var(--tc-border-radius-lg);
+  box-shadow: var(--tc-shadow-lg);
+  overflow: hidden;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--tc-spacing-3) var(--tc-spacing-4);
+  border-bottom: 1px solid var(--tc-border-light);
+}
+
+.modalTitle {
+  margin: 0;
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-color-title);
+}
+
+.closeButton {
+  border: none;
+  background: transparent;
+  font-size: var(--tc-font-size-lg);
+  color: var(--tc-color-text-muted);
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  transition: color var(--tc-transition-speed) ease;
+}
+
+.closeButton:hover {
+  color: var(--tc-color-text);
+}
+
+.modalBody {
+  padding: var(--tc-spacing-4);
+  text-align: center;
+}
+
+.warningIcon {
+  font-size: var(--tc-icon-size-xl);
+  color: var(--tc-color-warning);
+  margin-bottom: var(--tc-spacing-3);
+}
+
+.warningText {
+  color: var(--tc-color-danger);
+  font-size: var(--tc-font-size-sm);
+  margin-top: var(--tc-spacing-3);
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--tc-spacing-2);
+  padding: var(--tc-spacing-3) var(--tc-spacing-4);
+  border-top: 1px solid var(--tc-border-light);
+}
+
+/* Styles responsive standardisés */
+@media (max-width: 768px) {
+  .modalContent {
+    width: 95%;
+  }
+}
+
+@media (max-width: 576px) {
+  .modalHeader, .modalBody, .modalFooter {
+    padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  }
+  
+  .modalFooter {
+    flex-direction: column;
+    gap: var(--tc-spacing-1-5);
+  }
+  
+  .modalFooter button {
+    width: 100%;
+  }
+  
+  .warningIcon {
+    font-size: var(--tc-icon-size-lg);
+  }
+}

@@ -8,7 +8,7 @@
 
 .programmateursMobileContainer {
   padding: var(--tc-spacing-3);
-  background-color: var(--tc-bg-color, #fff);
+  background-color: var(--tc-bg-color);
 }
 
 .programmateursHeader {
@@ -17,13 +17,13 @@
   align-items: center;
   margin-bottom: var(--tc-spacing-4);
   padding-bottom: var(--tc-spacing-3);
-  border-bottom: 1px solid var(--tc-border-color, var(--tc-color-border, #eee));
+  border-bottom: 1px solid var(--tc-border-color));
 }
 
 .programmateursHeader h1 {
   font-size: 1.75rem;
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-color, var(--tc-color-text-primary, #333));
+  color: var(--tc-text-color));
   margin: 0;
 }
 
@@ -48,7 +48,7 @@
   align-items: center;
   justify-content: center;
   padding: 3rem 0;
-  color: var(--tc-text-muted, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-text-muted));
   text-align: center;
 }
 
@@ -59,7 +59,7 @@
   justify-content: center;
   padding: 3rem 0;
   text-align: center;
-  color: var(--tc-text-muted, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-text-muted));
 }
 
 .emptyState i {
@@ -78,9 +78,9 @@
   display: flex;
   justify-content: space-between;
   padding: var(--tc-spacing-3);
-  background-color: var(--tc-bg-color, #fff);
-  border: 1px solid var(--tc-border-color, var(--tc-color-border, #eee));
-  border-radius: var(--tc-border-radius, var(--tc-spacing-2));
+  background-color: var(--tc-bg-color);
+  border: 1px solid var(--tc-border-color));
+  border-radius: var(--tc-border-radius));
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
   cursor: pointer;
@@ -99,12 +99,12 @@
   font-weight: var(--tc-font-weight-semibold);
   font-size: 1.var(--tc-spacing-3);
   margin: 0 0 var(--tc-spacing-2) 0;
-  color: var(--tc-text-color, #344767);
+  color: var(--tc-text-color);
 }
 
 .programmateurStructure {
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-text-muted, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-text-muted));
   margin-bottom: var(--tc-spacing-2);
 }
 
@@ -113,7 +113,7 @@
   align-items: center;
   gap: var(--tc-spacing-2);
   font-size: 0.875rem;
-  color: var(--tc-text-muted, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-text-muted));
   margin-bottom: var(--tc-spacing-1);
 }
 
@@ -122,7 +122,7 @@
   align-items: center;
   gap: var(--tc-spacing-2);
   font-size: 0.875rem;
-  color: var(--tc-primary-color, #3a86ff);
+  color: var(--tc-primary-color);
   margin-top: var(--tc-spacing-2);
 }
 

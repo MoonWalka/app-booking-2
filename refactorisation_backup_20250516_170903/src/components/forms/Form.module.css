@@ -11,76 +11,76 @@
 .concertFormContainer {
   max-width: 800px;
   margin: 0 auto;
-  padding: var(--tc-spacing-md, 20px);
+  padding: var(--tc-spacing-md);
 }
 
 /* Styles pour les erreurs de validation */
 .inputError {
-  border-color: var(--tc-danger-color, #e74c3c);
-  background-color: var(--tc-danger-color-05, #fdf7f7);
+  border-color: var(--tc-danger-color);
+  background-color: var(--tc-danger-color-05);
 }
 
 .selectError {
-  border-color: var(--tc-danger-color, #e74c3c);
-  background-color: var(--tc-danger-color-05, #fdf7f7);
+  border-color: var(--tc-danger-color);
+  background-color: var(--tc-danger-color-05);
 }
 
 .errorMessage {
-  color: var(--tc-danger-color, #e74c3c);
-  font-size: var(--tc-font-size-sm, 14px);
-  margin-top: var(--tc-spacing-xs, 5px);
+  color: var(--tc-danger-color);
+  font-size: var(--tc-font-size-sm);
+  margin-top: var(--tc-spacing-xs);
 }
 
 /* Styles pour les formulaires standards */
 .formGroup {
-  margin-bottom: var(--tc-spacing-md, 20px);
+  margin-bottom: var(--tc-spacing-md);
 }
 
 .formLabel {
   display: block;
-  margin-bottom: var(--tc-spacing-xs, 5px);
-  font-weight: var(--tc-font-weight-medium, 500);
-  color: var(--tc-text-color-primary, #333);
+  margin-bottom: var(--tc-spacing-xs);
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-text-color-primary);
 }
 
 .formControl {
   display: block;
   width: 100%;
-  padding: var(--tc-spacing-sm, 10px);
-  font-size: var(--tc-font-size-base, 16px);
+  padding: var(--tc-spacing-sm);
+  font-size: var(--tc-font-size-base);
   line-height: 1.5;
-  color: var(--tc-text-color-primary, #333);
-  background-color: var(--tc-color-white, #fff);
+  color: var(--tc-text-color-primary);
+  background-color: var(--tc-color-white);
   background-clip: padding-box;
-  border: var(--tc-border-width, 1px) solid var(--tc-border-color, #ccc);
-  border-radius: var(--tc-border-radius-sm, 4px);
-  transition: var(--tc-transition, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out);
+  border: var(--tc-border-width) solid var(--tc-border-color);
+  border-radius: var(--tc-border-radius-sm);
+  transition: var(--tc-transition);
 }
 
 .formControl:focus {
-  border-color: var(--tc-primary-color, #3f51b5);
-  box-shadow: var(--tc-focus-shadow, 0 0 0 0.2rem rgba(63, 81, 181, 0.25));
+  border-color: var(--tc-primary-color);
+  box-shadow: var(--tc-focus-shadow));
   outline: 0;
 }
 
 .formActions {
   display: flex;
   justify-content: flex-end;
-  margin-top: var(--tc-spacing-lg, 25px);
-  gap: var(--tc-spacing-sm, 10px);
+  margin-top: var(--tc-spacing-lg);
+  gap: var(--tc-spacing-sm);
 }
 
 /* Support responsive avec points de rupture standardisés */
-@media (max-width: var(--tc-breakpoint-md, 992px)) {
+@media (max-width: var(--tc-breakpoint-md)) {
   .concertFormContainer {
     max-width: 100%;
   }
 }
 
-@media (max-width: var(--tc-breakpoint-sm, 768px)) {
+@media (max-width: var(--tc-breakpoint-sm)) {
   .formActions {
     flex-direction: column-reverse;
-    gap: var(--tc-spacing-xs, 5px);
+    gap: var(--tc-spacing-xs);
   }
   
   .formActions button {
@@ -88,12 +88,12 @@
   }
 }
 
-@media (max-width: var(--tc-breakpoint-xs, 576px)) {
+@media (max-width: var(--tc-breakpoint-xs)) {
   .concertFormContainer {
-    padding: var(--tc-spacing-sm, 10px);
+    padding: var(--tc-spacing-sm);
   }
   
   .formGroup {
-    margin-bottom: var(--tc-spacing-sm, 15px);
+    margin-bottom: var(--tc-spacing-sm);
   }
 }

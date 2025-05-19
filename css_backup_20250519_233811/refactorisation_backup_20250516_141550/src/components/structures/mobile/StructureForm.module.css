@@ -1,0 +1,110 @@
+/*
+ * Styles pour StructureForm
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
+ */
+
+
+
+.structureFormMobile {
+  padding-bottom: var(--tc-spacing-3);
+}
+
+.formHeader {
+  margin-bottom: var(--tc-spacing-3);
+  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  background-color: var(--tc-bg-default, white);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.formTitle {
+  font-size: var(--tc-font-size-xl);
+  margin: 0;
+  font-weight: var(--tc-font-weight-semibold);
+}
+
+.backButton {
+  font-size: var(--tc-spacing-4);
+  color: var(--tc-gray-var(--tc-font-weight-semibold), var(--tc-color-text-secondary, #6c757d));
+  padding: 0;
+  background: none;
+  border: none;
+}
+
+.formSection {
+  background-color: var(--tc-bg-default, white);
+  margin: 0 var(--tc-spacing-3) var(--tc-spacing-3);
+  border-radius: var(--tc-spacing-2);
+  padding: var(--tc-spacing-3);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.formSectionTitle {
+  font-size: 1.var(--tc-spacing-3);
+  font-weight: var(--tc-font-weight-semibold);
+  margin-bottom: var(--tc-spacing-3);
+  padding-bottom: var(--tc-spacing-2);
+  border-bottom: 1px solid var(--tc-border-color);
+  display: flex;
+  align-items: center;
+  gap: var(--tc-spacing-2);
+}
+
+.formLabel {
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-text-secondary);
+  margin-bottom: var(--tc-spacing-1);
+}
+
+.formControl {
+  border-radius: 0.375rem;
+  border: 1px solid var(--tc-border-color);
+  padding: var(--tc-spacing-2) var(--tc-spacing-2);
+  font-size: var(--tc-spacing-3);
+}
+
+.formActions {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  gap: var(--tc-spacing-3);
+  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  background-color: var(--tc-bg-default, white);
+  box-shadow: var(--tc-shadow-lg, 0 -2px 10px rgba(0, 0, 0, 0.1));
+  z-index: 100;
+}
+
+.actionButton {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--tc-spacing-2);
+}
+
+.spinner {
+  display: inline-block;
+  width: var(--tc-spacing-3);
+  height: var(--tc-spacing-3);
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  animation: spin 0.75s linear infinite;
+}
+
+.spacer {
+  height: 70px; /* Pour éviter que le contenu soit caché par les boutons d'action */
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

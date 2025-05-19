@@ -1,0 +1,42 @@
+.searchFilterContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.searchBar {
+  flex: 1;
+  max-width: 600px;
+  position: relative;
+}
+
+.searchInput {
+  padding-right: 2.5rem;
+}
+
+.clearSearch {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.resultsCount {
+  font-size: 0.8rem;
+  color: #6c757d;
+  margin-top: 0.25rem;
+  padding-left: 0.5rem;
+}
+
+.modernFilterBtn, .modernSortBtn {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  gap: 0.25rem;
+}

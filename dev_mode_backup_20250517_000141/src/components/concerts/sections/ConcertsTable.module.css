@@ -13,7 +13,7 @@
  * Ajoute un espacement au-dessus du tableau et gère le défilement horizontal sur mobile
  */
 .tableContainer {
-  margin-top: var(--tc-spacing-md, 1rem);
+  margin-top: var(--tc-spacing-md);
 }
 
 /* 
@@ -23,9 +23,9 @@
  * pour une apparence moderne et professionnelle
  */
 .concertsTable {
-  background-color: var(--tc-color-white, white);
-  border-radius: var(--tc-border-radius-md, 0.5rem);
-  box-shadow: var(--tc-box-shadow, 0 2px 4px rgba(0, 0, 0, 0.05));
+  background-color: var(--tc-color-white);
+  border-radius: var(--tc-border-radius-md);
+  box-shadow: var(--tc-box-shadow));
 }
 
 /* 
@@ -36,11 +36,11 @@
  */
 .concertsTable thead th {
   border-top: none; /* Supprime la bordure supérieure pour un look plus propre */
-  background-color: var(--tc-color-gray-100, #f8f9fa);
-  padding: var(--tc-spacing-sm, 0.75rem) var(--tc-spacing-md, 1rem);
-  font-size: var(--tc-font-size-sm, 0.9rem);
-  font-weight: var(--tc-font-weight-semibold, 600);
-  color: var(--tc-text-color-primary, #495057);
+  background-color: var(--tc-color-gray-100);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-color-primary);
 }
 
 /* 
@@ -50,7 +50,7 @@
  * avec les icônes et les badges qui peuvent apparaître dans les cellules
  */
 .concertsTable tbody td {
-  padding: var(--tc-spacing-md, 1rem);
+  padding: var(--tc-spacing-md);
   vertical-align: middle; /* Crucial pour aligner correctement le contenu mixte */
 }
 
@@ -62,12 +62,12 @@
  */
 .noResults {
   text-align: center;
-  padding: var(--tc-spacing-xl, 2rem);
-  background-color: var(--tc-color-white, white);
-  border-radius: var(--tc-border-radius-md, 0.5rem);
-  box-shadow: var(--tc-box-shadow, 0 2px 4px rgba(0, 0, 0, 0.05));
-  color: var(--tc-text-color-secondary, #6c757d);
-  font-size: var(--tc-font-size-base, 1rem);
+  padding: var(--tc-spacing-xl);
+  background-color: var(--tc-color-white);
+  border-radius: var(--tc-border-radius-md);
+  box-shadow: var(--tc-box-shadow));
+  color: var(--tc-text-color-secondary);
+  font-size: var(--tc-font-size-base);
 }
 
 /* 
@@ -85,7 +85,7 @@
   /* Reduce padding in table cells for mobile */
   .concertsTable thead th,
   .concertsTable tbody td {
-    padding: var(--tc-spacing-sm, 0.75rem) var(--tc-spacing-sm, 0.5rem);
+    padding: var(--tc-spacing-sm) var(--tc-spacing-sm);
   }
   
   /* 

@@ -1,0 +1,104 @@
+/*
+ * Styles pour ProgrammateurAddressSection
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
+.container {
+  /* Base styles for ProgrammateurAddressSection */
+  margin-bottom: var(--tc-spacing-md);
+}
+
+.cardWrapper {
+  background-color: var(--tc-color-white);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-box-shadow);
+  margin-bottom: var(--tc-spacing-lg);
+  overflow: hidden;
+  transition: var(--tc-transition);
+}
+
+.cardWrapper:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--tc-box-shadow-lg);
+}
+
+.cardHeader {
+  background-color: var(--tc-color-gray-100);
+  padding: var(--tc-spacing-md);
+  display: flex;
+  align-items: center;
+  border-bottom: var(--tc-border-width) solid var(--tc-border-color);
+  gap: var(--tc-spacing-sm);
+}
+
+.cardBody {
+  padding: var(--tc-spacing-lg);
+}
+
+.formGroup {
+  margin-bottom: var(--tc-spacing-md);
+}
+
+.cardLabel {
+  font-weight: var(--tc-font-weight-bold);
+  margin-bottom: var(--tc-spacing-sm);
+  color: var(--tc-text-color-secondary);
+  display: block;
+}
+
+.suggestionsContainer {
+  border: var(--tc-border-width) solid var(--tc-border-color-light);
+  border-radius: var(--tc-border-radius-sm);
+  margin-top: var(--tc-spacing-md);
+  margin-bottom: var(--tc-spacing-md);
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.suggestionsList {
+  padding: var(--tc-spacing-sm) 0;
+}
+
+.suggestionItem {
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background-color var(--tc-transition-duration);
+}
+
+.suggestionItem:hover {
+  background-color: var(--tc-color-primary-light);
+}
+
+.addressDisplay {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Responsive design - medium devices */
+@media (max-width: 768px) {
+  .cardBody {
+    padding: var(--tc-spacing-md);
+  }
+  
+  .cardWrapper:hover {
+    transform: translateY(-2px);
+  }
+}
+
+/* Additional responsive support for small screens */
+@media (max-width: 576px) {
+  .cardHeader {
+    padding: var(--tc-spacing-sm);
+  }
+  
+  .suggestionItem {
+    padding: var(--tc-spacing-sm);
+  }
+  
+  .cardWrapper:hover {
+    transform: none;
+  }
+}

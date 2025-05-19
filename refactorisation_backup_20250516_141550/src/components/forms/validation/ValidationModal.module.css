@@ -18,17 +18,17 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: var(--tc-modal-overlay-bg, rgba(0, 0, 0, 0.5));
+  background-color: var(--tc-modal-overlay-bg));
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: var(--tc-z-index-modal, 1050);
+  z-index: var(--tc-z-index-modal);
 }
 
 .modalContent {
-  background-color: var(--tc-card-bg, white);
-  border-radius: var(--tc-border-radius, 0.5rem);
-  box-shadow: var(--tc-shadow-modal, 0 0.5rem 1rem rgba(0, 0, 0, 0.15));
+  background-color: var(--tc-card-bg);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-shadow-modal));
   width: 100%;
   max-width: 500px;
   animation: modalFadeIn 0.3s;
@@ -49,78 +49,78 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--tc-spacing-md, 1rem);
-  border-bottom: var(--tc-border-width, 1px) solid var(--tc-border-color, #dee2e6);
+  padding: var(--tc-spacing-md);
+  border-bottom: var(--tc-border-width) solid var(--tc-border-color);
 }
 
 .modalTitle {
   margin: 0;
-  font-size: var(--tc-font-size-lg, 1.25rem);
-  font-weight: var(--tc-font-weight-semibold, 600);
-  color: var(--tc-text-color, #343a40);
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-color);
 }
 
 .closeButton {
   background: none;
   border: none;
-  font-size: var(--tc-font-size-xl, 1.5rem);
+  font-size: var(--tc-font-size-xl);
   line-height: 1;
-  color: var(--tc-text-muted, #6c757d);
+  color: var(--tc-text-muted);
   cursor: pointer;
   padding: 0;
   margin: 0;
 }
 
 .closeButton:hover:not(:disabled) {
-  color: var(--tc-text-color, #343a40);
+  color: var(--tc-text-color);
 }
 
 .modalBody {
-  padding: var(--tc-spacing-lg, 1.5rem);
+  padding: var(--tc-spacing-lg);
 }
 
 .message {
   margin: 0;
-  color: var(--tc-text-color, #495057);
+  color: var(--tc-text-color);
 }
 
 .modalFooter {
   display: flex;
   justify-content: flex-end;
-  padding: var(--tc-spacing-md, 1rem);
-  border-top: var(--tc-border-width, 1px) solid var(--tc-border-color, #dee2e6);
-  gap: var(--tc-spacing-sm, 0.5rem);
+  padding: var(--tc-spacing-md);
+  border-top: var(--tc-border-width) solid var(--tc-border-color);
+  gap: var(--tc-spacing-sm);
 }
 
 .cancelButton {
-  padding: var(--tc-spacing-sm, 0.5rem) var(--tc-spacing-md, 1rem);
-  background-color: var(--tc-bg-light, #e9ecef);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  background-color: var(--tc-bg-light);
   border: none;
-  border-radius: var(--tc-border-radius-sm, 0.25rem);
-  color: var(--tc-text-color, #495057);
+  border-radius: var(--tc-border-radius-sm);
+  color: var(--tc-text-color);
   cursor: pointer;
-  font-weight: var(--tc-font-weight-medium, 500);
+  font-weight: var(--tc-font-weight-medium);
 }
 
 .cancelButton:hover:not(:disabled) {
-  background-color: var(--tc-border-color, #dee2e6);
+  background-color: var(--tc-border-color);
 }
 
 .confirmButton {
-  padding: var(--tc-spacing-sm, 0.5rem) var(--tc-spacing-md, 1rem);
-  background-color: var(--tc-primary-color, #0d6efd);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  background-color: var(--tc-primary-color);
   border: none;
-  border-radius: var(--tc-border-radius-sm, 0.25rem);
-  color: var(--tc-color-light, white);
+  border-radius: var(--tc-border-radius-sm);
+  color: var(--tc-color-light);
   cursor: pointer;
-  font-weight: var(--tc-font-weight-medium, 500);
+  font-weight: var(--tc-font-weight-medium);
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-sm, 0.5rem);
+  gap: var(--tc-spacing-sm);
 }
 
 .confirmButton:hover:not(:disabled) {
-  background-color: var(--tc-primary-dark, #0b5ed7);
+  background-color: var(--tc-primary-dark);
 }
 
 .confirmButton:disabled, .cancelButton:disabled {
@@ -130,8 +130,8 @@
 
 .spinner {
   display: inline-block;
-  width: var(--tc-spacing-md, 1rem);
-  height: var(--tc-spacing-md, 1rem);
+  width: var(--tc-spacing-md);
+  height: var(--tc-spacing-md);
   border: 0.2em solid currentColor;
   border-right-color: transparent;
   border-radius: 50%;
@@ -145,14 +145,14 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: var(--tc-breakpoint-xs, 576px)) {
+@media (max-width: var(--tc-breakpoint-xs)) {
   .modalContent {
     max-width: 90%;
-    margin: var(--tc-spacing-sm, 0.5rem);
+    margin: var(--tc-spacing-sm);
   }
   
   .modalBody {
-    padding: var(--tc-spacing-md, 1rem);
+    padding: var(--tc-spacing-md);
   }
   
   .modalFooter {
@@ -161,6 +161,6 @@
   
   .cancelButton, .confirmButton {
     width: 100%;
-    margin-top: var(--tc-spacing-xs, 0.25rem);
+    margin-top: var(--tc-spacing-xs);
   }
 }

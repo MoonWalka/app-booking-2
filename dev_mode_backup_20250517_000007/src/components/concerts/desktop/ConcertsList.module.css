@@ -10,7 +10,7 @@
 .concertsContainer {
   max-width: 1400px;
   margin: 0 auto;
-  padding: var(--tc-spacing-md, 1rem);
+  padding: var(--tc-spacing-md);
 }
 
 /* En-tête de la liste */
@@ -18,9 +18,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--tc-spacing-lg, 1.5rem);
+  margin-bottom: var(--tc-spacing-lg);
   flex-wrap: wrap;
-  gap: var(--tc-spacing-md, 1rem);
+  gap: var(--tc-spacing-md);
 }
 
 .headerLeft {
@@ -29,49 +29,49 @@
 }
 
 .pageTitle {
-  font-size: var(--tc-font-size-xl, 1.75rem);
-  font-weight: var(--tc-font-weight-semibold, 600);
-  color: var(--tc-text-color-primary, #333);
-  margin: 0 0 var(--tc-spacing-xs, 0.25rem) 0;
+  font-size: var(--tc-font-size-xl);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-color-primary);
+  margin: 0 0 var(--tc-spacing-xs) 0;
 }
 
 .pageSubtitle {
-  color: var(--tc-text-color-secondary, #6c757d);
-  font-size: var(--tc-font-size-sm, 0.875rem);
+  color: var(--tc-text-color-secondary);
+  font-size: var(--tc-font-size-sm);
 }
 
 .headerRight {
   display: flex;
-  gap: var(--tc-spacing-sm, 0.5rem);
+  gap: var(--tc-spacing-sm);
 }
 
 .addButton {
   display: inline-flex;
   align-items: center;
-  gap: var(--tc-spacing-sm, 0.5rem);
-  padding: var(--tc-spacing-sm, 0.5rem) var(--tc-spacing-md, 1rem);
-  background-color: var(--tc-primary-color, #007bff);
-  color: var(--tc-color-white, white);
+  gap: var(--tc-spacing-sm);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  background-color: var(--tc-primary-color);
+  color: var(--tc-color-white);
   border: none;
-  border-radius: var(--tc-border-radius, 0.25rem);
-  font-weight: var(--tc-font-weight-medium, 500);
-  transition: background-color var(--tc-transition-duration, 0.2s);
+  border-radius: var(--tc-border-radius);
+  font-weight: var(--tc-font-weight-medium);
+  transition: background-color var(--tc-transition-duration);
 }
 
 .addButton:hover {
-  background-color: var(--tc-primary-color-dark, #0069d9);
+  background-color: var(--tc-primary-color-dark);
 }
 
 /* Conteneur de filtres */
 .filterContainer {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--tc-spacing-md, 1rem);
-  margin-bottom: var(--tc-spacing-lg, 1.5rem);
-  padding: var(--tc-spacing-md, 1rem);
-  background-color: var(--tc-color-gray-50, #f8f9fa);
-  border-radius: var(--tc-border-radius, 0.25rem);
-  border: var(--tc-border-width, 1px) solid var(--tc-border-color, #e9ecef);
+  gap: var(--tc-spacing-md);
+  margin-bottom: var(--tc-spacing-lg);
+  padding: var(--tc-spacing-md);
+  background-color: var(--tc-color-gray-50);
+  border-radius: var(--tc-border-radius);
+  border: var(--tc-border-width) solid var(--tc-border-color);
 }
 
 .filterGroup {
@@ -81,16 +81,16 @@
 
 .filterLabel {
   display: block;
-  margin-bottom: var(--tc-spacing-xs, 0.25rem);
-  font-size: var(--tc-font-size-sm, 0.875rem);
-  color: var(--tc-text-color-secondary, #6c757d);
+  margin-bottom: var(--tc-spacing-xs);
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-text-color-secondary);
 }
 
 /* Conteneur de tableau */
 .tableContainer {
-  background-color: var(--tc-color-white, white);
-  border-radius: var(--tc-border-radius, 0.25rem);
-  box-shadow: var(--tc-box-shadow, 0 1px 3px rgba(0, 0, 0, 0.1));
+  background-color: var(--tc-color-white);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-box-shadow));
   overflow: hidden;
 }
 
@@ -100,26 +100,26 @@
 }
 
 .concertsTable th {
-  background-color: var(--tc-color-gray-100, #f8f9fa);
-  padding: var(--tc-spacing-sm, 0.75rem) var(--tc-spacing-md, 1rem);
+  background-color: var(--tc-color-gray-100);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
   text-align: left;
-  font-weight: var(--tc-font-weight-semibold, 600);
-  color: var(--tc-text-color-secondary, #6c757d);
-  border-bottom: var(--tc-border-width, 1px) solid var(--tc-border-color, #dee2e6);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-color-secondary);
+  border-bottom: var(--tc-border-width) solid var(--tc-border-color);
 }
 
 .concertsTable td {
-  padding: var(--tc-spacing-sm, 0.75rem) var(--tc-spacing-md, 1rem);
-  border-bottom: var(--tc-border-width, 1px) solid var(--tc-border-color, #dee2e6);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  border-bottom: var(--tc-border-width) solid var(--tc-border-color);
 }
 
 .tableRow {
   cursor: pointer;
-  transition: background-color var(--tc-transition-duration-fast, 0.15s);
+  transition: background-color var(--tc-transition-duration-fast);
 }
 
 .tableRow:hover {
-  background-color: var(--tc-primary-color-05, rgba(0, 123, 255, 0.05));
+  background-color: var(--tc-primary-color-05));
 }
 
 /* État vide */
@@ -128,26 +128,26 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--tc-spacing-xl, 3rem) var(--tc-spacing-lg, 1.5rem);
+  padding: var(--tc-spacing-xl) var(--tc-spacing-lg);
   text-align: center;
 }
 
 .emptyIcon {
-  font-size: var(--tc-font-size-xxl, 3rem);
-  color: var(--tc-text-color-muted, #adb5bd);
-  margin-bottom: var(--tc-spacing-md, 1rem);
+  font-size: var(--tc-font-size-xxl);
+  color: var(--tc-text-color-muted);
+  margin-bottom: var(--tc-spacing-md);
 }
 
 .emptyTitle {
-  font-size: var(--tc-font-size-lg, 1.25rem);
-  color: var(--tc-text-color-primary, #333);
-  margin-bottom: var(--tc-spacing-sm, 0.5rem);
+  font-size: var(--tc-font-size-lg);
+  color: var(--tc-text-color-primary);
+  margin-bottom: var(--tc-spacing-sm);
 }
 
 .emptyText {
-  font-size: var(--tc-font-size-base, 1rem);
-  color: var(--tc-text-color-secondary, #6c757d);
-  margin-bottom: var(--tc-spacing-lg, 1.5rem);
+  font-size: var(--tc-font-size-base);
+  color: var(--tc-text-color-secondary);
+  margin-bottom: var(--tc-spacing-lg);
   max-width: 500px;
 }
 
@@ -156,15 +156,15 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  padding: var(--tc-spacing-sm, 0.75rem) var(--tc-spacing-md, 1rem);
-  background-color: var(--tc-color-gray-50, #f8f9fa);
-  border-top: var(--tc-border-width, 1px) solid var(--tc-border-color, #dee2e6);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  background-color: var(--tc-color-gray-50);
+  border-top: var(--tc-border-width) solid var(--tc-border-color);
 }
 
 /* Media queries for responsive layouts */
 @media (max-width: 992px) {
   .concertsContainer {
-    padding: var(--tc-spacing-md, 1rem);
+    padding: var(--tc-spacing-md);
   }
   
   .filterContainer {
@@ -174,7 +174,7 @@
 
 @media (max-width: 768px) {
   .concertsContainer {
-    padding: var(--tc-spacing-sm, 0.75rem);
+    padding: var(--tc-spacing-sm);
   }
   
   .listHeader {

@@ -15,11 +15,11 @@
   align-items: center;
   height: 100%;
   width: 100%;
-  background-color: var(--tc-background-color, rgba(255, 255, 255, 0.8));
+  background-color: var(--tc-background-color));
   position: fixed;
   top: 0;
   left: 0;
-  z-index: var(--tc-z-index-spinner, 1000);
+  z-index: var(--tc-z-index-spinner);
 }
 
 .spinnerInline {
@@ -27,36 +27,36 @@
   justify-content: center;
   align-items: center;
   position: relative;
-  margin: var(--tc-spacing-xs, 0.25rem);
+  margin: var(--tc-spacing-xs);
 }
 
 .spinner {
-  border: 5px solid var(--tc-spinner-border-color, #f3f3f3);
+  border: 5px solid var(--tc-spinner-border-color);
   border-radius: 50%;
-  border-top: 5px solid var(--tc-secondary-color, #6c757d);
+  border-top: 5px solid var(--tc-secondary-color);
   width: 50px;
   height: 50px;
   animation: spin 1s linear infinite;
 }
 
 .spinnerPrimary {
-  border-top-color: var(--tc-primary-color, #4a6da7);
+  border-top-color: var(--tc-primary-color);
 }
 
 .spinnerSuccess {
-  border-top-color: var(--tc-success-color, #28a745);
+  border-top-color: var(--tc-success-color);
 }
 
 .spinnerWarning {
-  border-top-color: var(--tc-warning-color, #ffc107);
+  border-top-color: var(--tc-warning-color);
 }
 
 .spinnerDanger {
-  border-top-color: var(--tc-danger-color, #dc3545);
+  border-top-color: var(--tc-danger-color);
 }
 
 .spinnerInfo {
-  border-top-color: var(--tc-info-color, #17a2b8);
+  border-top-color: var(--tc-info-color);
 }
 
 .spinnerSmall {
@@ -82,9 +82,9 @@
 }
 
 .loadingText {
-  margin-top: var(--tc-spacing-md, 1rem);
-  color: var(--tc-text-muted, #6c757d);
-  font-size: var(--tc-font-size-md, 1rem);
+  margin-top: var(--tc-spacing-md);
+  color: var(--tc-text-muted);
+  font-size: var(--tc-font-size-md);
 }
 
 @keyframes spin {
@@ -93,7 +93,7 @@
 }
 
 /* Responsive adaptations */
-@media (max-width: var(--tc-breakpoint-xs, 576px)) {
+@media (max-width: var(--tc-breakpoint-xs)) {
   .spinnerLarge {
     width: 50px;
     height: 50px;
@@ -101,6 +101,6 @@
   }
   
   .loadingText {
-    font-size: var(--tc-font-size-sm, 0.875rem);
+    font-size: var(--tc-font-size-sm);
   }
 }

@@ -1,0 +1,126 @@
+/*
+ * Styles pour ConcertArtistSection
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
+/* Styles pour le composant ConcertArtistSection */
+
+.formCard {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.cardHeader i {
+  margin-right: 0.5rem;
+  color: var(--tc-primary-color, #007bff);
+}
+
+.cardHeader h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.cardHeaderAction {
+  margin-left: auto;
+}
+
+.cardBody {
+  padding: 1.5rem;
+}
+
+.formGroup {
+  margin-bottom: 1.25rem;
+}
+
+.formLabel {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.artisteSearchContainer {
+  position: relative;
+}
+
+.selectedArtiste {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.artisteCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.artisteInfo {
+  flex-grow: 1;
+}
+
+.artisteName {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.artisteGenre {
+  font-size: 0.875rem;
+  display: block;
+  margin-bottom: 0.25rem;
+  color: #666;
+}
+
+.artisteDescription {
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+.artisteItem {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.artisteItem:hover {
+  background-color: #f8f9fa;
+}
+
+.artisteDetails {
+  font-size: 0.8rem;
+  color: #666;
+  display: flex;
+  flex-direction: column;
+}
+
+.contactLink {
+  color: var(--tc-primary-color, #007bff);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.contactLink:hover {
+  text-decoration: underline;
+}
+
+/* Media queries */
+@media (max-width: 768px) {
+  .cardBody {
+    padding: 1rem;
+  }
+}

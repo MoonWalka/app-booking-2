@@ -1,0 +1,111 @@
+/*
+ * Styles pour quill-editor.css
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
+ */
+
+
+
+
+
+/* =============================
+   STYLES POUR REACT-QUILL
+   ============================= */
+
+/* Wrapper principal pour l'éditeur */
+.tc-quill-editor-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Style de la barre d'outils pour qu'elle reste visible */
+.tc-quill-editor-wrapper .ql-toolbar {
+  display: flex !important;
+  flex-wrap: wrap;
+  background: var(--tc-bg-default);
+  border-radius: 3px;
+  border: 1px solid var(--tc-border-color);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+/* Style du conteneur d'édition */
+.tc-quill-editor-wrapper .ql-container {
+  font-size: 16px;
+  border: 1px solid var(--tc-border-color);
+  border-top: none;
+}
+
+/* Style pour l'éditeur en plein écran */
+.tc-quill-editor-wrapper.fullscreen {
+  height: calc(90vh - 140px); /* Prend toute la hauteur moins la hauteur du header/footer */
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  margin-bottom: 0;
+}
+
+.tc-quill-editor-wrapper.fullscreen .ql-container {
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+/* Style pour les boutons de la barre d'outils */
+.tc-quill-editor-wrapper .ql-toolbar button {
+  height: 28px;
+  width: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+/* Style pour les formats de texte */
+.tc-quill-editor-wrapper .ql-editor h1 {
+  font-size: 2em;
+  margin-bottom: 0.5em;
+}
+
+.tc-quill-editor-wrapper .ql-editor h2 {
+  font-size: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+.tc-quill-editor-wrapper .ql-editor p {
+  margin-bottom: 1em;
+}
+
+/* Style pour le texte dans l'éditeur */
+.tc-quill-editor-wrapper .ql-editor {
+  min-height: 200px;
+  padding: 12px;
+}
+
+/* Style pour le mode aperçu */
+.tc-quill-preview {
+  width: 100%;
+  padding: 20px;
+  border: 1px solid var(--tc-border-color);
+  border-radius: 6px;
+  background-color: var(--tc-bg-default);
+  min-height: 200px;
+  overflow-y: auto;
+  max-height: calc(90vh - 140px); /* Même hauteur que l'éditeur en plein écran */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.tc-quill-preview h1, 
+.tc-quill-preview h2, 
+.tc-quill-preview h3 {
+  margin-bottom: var(--tc-spacing-3);
+  color: var(--tc-text-color);
+}
+
+.tc-quill-preview p {
+  margin-bottom: var(--tc-spacing-3);
+  line-height: 1.5;
+}

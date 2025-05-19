@@ -1,0 +1,15 @@
+/*
+ * Styles pour ConcertInfoSection
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
+.concertInfo {
+  border: 1px solid #e9ecef;
+  border-radius: 0.25rem;
+}
+
+.concertInfo h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0;
+}

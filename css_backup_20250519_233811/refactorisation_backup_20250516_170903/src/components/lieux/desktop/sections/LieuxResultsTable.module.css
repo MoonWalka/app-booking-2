@@ -1,0 +1,122 @@
+/*
+ * Styles pour LieuxResultsTable
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
+/* 
+ * Styles pour LieuxResultsTable
+ * Tableau de résultats pour la liste des lieux
+ * Dernière mise à jour: 04/05/2025
+ */
+
+.tableContainer {
+  overflow-x: auto;
+  margin-bottom: var(--tc-spacing-md, 1rem);
+  border-radius: var(--tc-border-radius, 0.375rem);
+  box-shadow: var(--tc-box-shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.1));
+  background-color: var(--tc-color-background, #fff);
+}
+
+.modernTable {
+  width: 100%;
+  margin-bottom: 0;
+  border-collapse: collapse;
+}
+
+.modernTable th {
+  font-weight: var(--tc-font-weight-bold, 600);
+  color: var(--tc-color-text-secondary, #495057);
+  border-bottom: 2px solid var(--tc-color-border, #dee2e6);
+  padding: var(--tc-spacing-sm, 0.75rem) var(--tc-spacing-md, 1rem);
+  text-align: left;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  background-color: var(--tc-color-background, #fff);
+  z-index: 1;
+}
+
+.modernTable td {
+  padding: var(--tc-spacing-sm, 0.75rem) var(--tc-spacing-md, 1rem);
+  border-bottom: 1px solid var(--tc-color-border-light, #e9ecef);
+  vertical-align: middle;
+}
+
+.modernTable tbody tr:hover {
+  background-color: var(--tc-color-background-hover, #f8f9fa);
+}
+
+.modernTable tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.colName {
+  min-width: 200px;
+}
+
+.colType {
+  min-width: 120px;
+}
+
+.colLocation {
+  min-width: 180px;
+}
+
+.colCapacity {
+  min-width: 100px;
+}
+
+.colConcerts {
+  min-width: 100px;
+}
+
+.colActions {
+  width: 100px;
+  text-align: right;
+}
+
+.tableFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--tc-spacing-sm, 0.75rem) var(--tc-spacing-md, 1rem);
+  background-color: var(--tc-color-background-secondary, #f8f9fa);
+  border-top: 1px solid var(--tc-color-border-light, #e9ecef);
+}
+
+.paginationInfo {
+  color: var(--tc-color-text-muted, #6c757d);
+  font-size: var(--tc-font-size-sm, 0.875rem);
+}
+
+.paginationControls {
+  display: flex;
+  gap: var(--tc-spacing-xs, 0.25rem);
+}
+
+/* Responsive styles */
+@media (max-width: 992px) {
+  .colType, .colCapacity {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .colLocation {
+    display: none;
+  }
+
+  .modernTable td, .modernTable th {
+    padding: var(--tc-spacing-xs, 0.5rem) var(--tc-spacing-sm, 0.75rem);
+  }
+}
+
+@media (max-width: 576px) {
+  .tableContainer {
+    margin-left: calc(var(--tc-spacing-sm, 0.5rem) * -1);
+    margin-right: calc(var(--tc-spacing-sm, 0.5rem) * -1);
+    width: calc(100% + var(--tc-spacing-md, 1rem));
+    border-radius: 0;
+  }
+}

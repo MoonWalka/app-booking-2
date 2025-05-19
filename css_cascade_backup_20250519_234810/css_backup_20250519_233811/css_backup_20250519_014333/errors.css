@@ -1,0 +1,53 @@
+/*
+ * Styles pour errors.css
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
+ */
+
+
+
+
+
+/* Styles pour ErrorBoundary et gestion des erreurs */
+.error-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+  padding: var(--tc-spacing-8);
+  background-color: var(--tc-bg-light);
+}
+
+.error-container h2 {
+  margin-bottom: var(--tc-spacing-3);
+  color: var(--tc-secondary-color);
+}
+
+.error {
+  border-color: var(--tc-danger-color);
+}
+
+.error-message {
+  color: var(--tc-danger-color);
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.retry-button {
+  margin-top: var(--tc-spacing-4);
+  padding: 10px 20px;
+  background-color: var(--tc-primary-color);
+  color: var(--tc-bg-default);
+  border: none;
+  border-radius: var(--tc-border-radius);
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.retry-button:hover {
+  background-color: var(--tc-primary-dark);
+}

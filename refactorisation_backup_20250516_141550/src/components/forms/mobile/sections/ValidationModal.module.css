@@ -23,7 +23,7 @@
 
 .messageContainer i {
   font-size: var(--tc-font-size-xl);
-  color: var(--tc-color-text-secondary, #6c757d);
+  color: var(--tc-color-text-secondary);
   margin-right: var(--tc-spacing-2);
   margin-top: 0.var(--tc-spacing-3);
 }

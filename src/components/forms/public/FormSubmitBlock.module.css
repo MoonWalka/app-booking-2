@@ -16,7 +16,7 @@
 
 .formFooter {
   margin-top: 1.5rem;
-  color: #6c757d;
+  color: var(--tc-color-6c757d, #6c757d);
   font-size: 0.9rem;
 }
 

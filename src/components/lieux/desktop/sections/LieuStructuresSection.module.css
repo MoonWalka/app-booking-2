@@ -79,7 +79,7 @@
 }
 
 .typeBadge {
-  background-color: rgba(var(--tc-info-color-rgb), 0.1);
+  background-color: var(--tc-info-color-light);
   color: var(--tc-info-color);
   padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
   border-radius: var(--tc-border-radius);
@@ -109,9 +109,9 @@
   align-items: center;
   padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
   margin-bottom: var(--tc-spacing-xs);
-  background-color: rgba(var(--tc-primary-color-rgb), 0.05);
+  background-color: var(--tc-primary-color-lightest);
   border-radius: var(--tc-border-radius);
-  border: var(--tc-border-width) solid rgba(var(--tc-primary-color-rgb), 0.1);
+  border: var(--tc-border-width) solid var(--tc-primary-color-light);
 }
 
 /* Styles pour l'état vide */

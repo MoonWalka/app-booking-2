@@ -189,7 +189,7 @@
 .contactItem {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--tc-spacing-xs);
   padding: var(--tc-spacing-sm);
   border-radius: var(--tc-border-radius);
   border: var(--tc-border-width) solid var(--tc-border-color);
@@ -200,7 +200,7 @@
 
 .contactItem:hover {
   border-color: var(--tc-primary-color);
-  background-color: rgba(var(--tc-primary-color-rgb), 0.05);
+  background-color: var(--tc-primary-color-light);
 }
 
 .contactItem i {
@@ -260,7 +260,7 @@
 .concertLieu,
 .contratConcert {
   font-weight: var(--tc-font-weight-medium);
-  margin-bottom: 4px;
+  margin-bottom: var(--tc-spacing-xxs);
 }
 
 .concertProgrammateur {
@@ -294,7 +294,7 @@
 .statIcon {
   width: 50px;
   height: 50px;
-  background-color: rgba(var(--tc-primary-color-rgb), 0.1);
+  background-color: var(--tc-primary-color-lighter);
   color: var(--tc-primary-color);
   border-radius: 50%;
   display: flex;
@@ -304,7 +304,7 @@
 }
 
 .statContent h4 {
-  margin: 0 0 6px 0;
+  margin: 0 0 var(--tc-spacing-xxs) 0;
   font-size: var(--tc-font-size-base);
   color: var(--tc-text-muted);
 }
@@ -318,7 +318,7 @@
 
 /* État vide */
 .emptyStateDesktop {
-  padding: 40px 20px;
+  padding: var(--tc-spacing-xl) var(--tc-spacing-md);
   text-align: center;
   color: var(--tc-text-muted);
 }
@@ -326,7 +326,7 @@
 .emptyStateDesktop i {
   font-size: var(--tc-font-size-xxl);
   margin-bottom: var(--tc-spacing-md);
-  color: var(--tc-gray-400);
+  color: var(--tc-color-gray-400);
 }
 
 .emptyStateDesktop p {

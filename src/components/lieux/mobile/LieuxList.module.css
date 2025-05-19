@@ -171,7 +171,7 @@
 .concertCount {
   display: inline-flex;
   align-items: center;
-  background-color: rgba(var(--tc-color-primary-rgb), 0.1);
+  background-color: var(--tc-primary-color-lightest);
   color: var(--tc-color-primary);
   padding: var(--tc-spacing-1) var(--tc-spacing-2);
   border-radius: var(--tc-radius-pill);

@@ -11,11 +11,11 @@
 .header h1 {
   font-size: 2rem;
   margin-bottom: 0.5rem;
-  color: #212529;
+  color: var(--tc-color-212529, #212529);
 }
 
 .subtitle {
   font-size: 1.1rem;
-  color: #6c757d;
+  color: var(--tc-color-6c757d, #6c757d);
   margin-bottom: 0;
 }

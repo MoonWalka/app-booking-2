@@ -219,6 +219,6 @@
     --tc-card-bg: var(--tc-dark-theme-card);
     --tc-border-color: var(--tc-dark-theme-border);
     --tc-hover-bg: var(--tc-dark-theme-surface);
-    --tc-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    --tc-shadow: 0 2px 10px var(--tc-color-rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3));
     --tc-input-bg: var(--tc-dark-theme-input);
 }

@@ -32,7 +32,7 @@
 
 .errorMessage {
   color: var(--tc-color-error);
-  background-color: rgba(var(--tc-color-error-rgb), 0.1);
+  background-color: var(--tc-error-bg-color);
   padding: var(--tc-spacing-3);
   border-radius: var(--tc-radius-md);
   margin: var(--tc-spacing-3) 0;

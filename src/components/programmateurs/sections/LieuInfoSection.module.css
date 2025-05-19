@@ -44,7 +44,7 @@
 .searchInput:focus {
   border-color: var(--tc-color-primary-light);
   outline: none;
-  box-shadow: 0 0 0 0.25rem rgba(var(--tc-color-primary-rgb), 0.25);
+  box-shadow: var(--tc-primary-color-shadow);
 }
 
 .searchResults {
@@ -135,7 +135,7 @@
 }
 
 .removeButton:hover {
-  background-color: rgba(var(--tc-color-danger-rgb), 0.1);
+  background-color: var(--tc-danger-color-lighter);
 }
 
 .loadingSpinner {

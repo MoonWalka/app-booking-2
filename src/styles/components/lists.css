@@ -36,7 +36,7 @@
   border-radius: 6px;
   font-weight: var(--tc-font-weight-medium);
   font-size: var(--tc-spacing-3);
-  box-shadow: 0 1px 7px rgba(47, 54, 100, 0.04);
+  box-shadow: 0 1px 7px var(--tc-color-rgba(47, 54, 100, 0.04), rgba(47, 54, 100, 0.04));
   padding: 10px 20px;
   transition: background .15s;
   text-decoration: none;
@@ -85,7 +85,7 @@
 .table-responsive {
   background: var(--tc-bg-default);
   border-radius: 16px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 12px var(--tc-color-rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.04));
   overflow-x: auto;
   margin-bottom: 2.5rem;
 }
@@ -95,8 +95,8 @@
 }
 
 .tc-table thead {
-  background: #f6f9fc;
-  border-top: 1px solid #e2e8f0;
+  background: var(--tc-color-f6f9fc, #f6f9fc);
+  border-top: 1px solid var(--tc-color-e2e8f0, #e2e8f0);
 }
 
 .tc-table th, 
@@ -202,6 +202,6 @@
     margin-bottom: 12px;
     display: block;
     border-radius: var(--tc-border-radius-md);
-    box-shadow: 0 1px 3px rgba(40, 50, 90, 0.05);
+    box-shadow: 0 1px 3px var(--tc-color-rgba(40, 50, 90, 0.05), rgba(40, 50, 90, 0.05));
   }
 }

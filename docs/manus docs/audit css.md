@@ -369,8 +369,8 @@ L'implémentation de ces recommandations permettrait d'améliorer significativem
   - [x] **3.2.3** Exécuter fix_css_cascade_fallbacks.sh pour supprimer les fallbacks en cascade
   - [x] **3.2.4** Exécuter fix_css_inconsistent_spaces.sh pour corriger les espaces inconsistants dans les déclarations
 - [x] **3.3** Remplacer les styles inline par des classes standards de typography.css
-- [ ] **3.4** Standardiser les couleurs avec les variables de colors.css
-- [ ] **3.5** Standardiser les espacements avec les variables d'espacement
+- [x] **3.4** Standardiser les couleurs avec les variables de colors.css
+- [x] **3.5** Standardiser les espacements avec les variables d'espacement
 
 ### Phase 4 : Migration vers les composants UI standardisés (Sprint 3-4)
 - [ ] **4.1** Refactoriser l'utilisation des boutons (btn → tc-btn)
@@ -431,7 +431,15 @@ Ce plan d'action structuré permettra d'aborder méthodiquement les problèmes i
    - 3 fichiers modifiés pour remplacer les styles inline par des classes tc-text-*
    - Sauvegardes (.bak) créées pour tous les fichiers modifiés
 
-4. **Prochaines étapes prioritaires**
-   - Standardiser les couleurs avec les variables de colors.css
-   - Standardiser les espacements avec les variables d'espacement
-   - Commencer la migration des composants UI pour utiliser les composants standardisés
+4. **Standardisation des couleurs et espacements**
+   - Exécution du script check-css-vars.js avec l'option --fix
+   - Analyse de 254 fichiers CSS dont 230 présentaient des problèmes
+   - Correction de 501 couleurs codées en dur et 1612 valeurs de taille non standardisées
+   - Correction manuelle des erreurs de syntaxe RGBA dans les fichiers CSS problématiques
+   - Correction des parenthèses superflues dans les définitions box-shadow
+   - Tous les problèmes de standardisation des couleurs et espacements sont maintenant résolus
+
+5. **Prochaines étapes prioritaires**
+   - Commencer la Phase 4: Migration vers les composants UI standardisés
+   - Refactoriser l'utilisation des boutons (btn → tc-btn)
+   - Migrer les cartes personnalisées vers le composant Card standardisé

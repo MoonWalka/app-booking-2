@@ -63,7 +63,7 @@
 .stepFormGroup textarea:focus {
   border-color: var(--tc-primary-color);
   outline: 0;
-  box-shadow: 0 0 0 0.var(--tc-spacing-8) rgba(58, 134, 255, 0.25);
+  box-shadow: 0 0 0 0.var(--tc-spacing-8) var(--tc-color-rgba(58, 134, 255, 0.25), rgba(58, 134, 255, 0.25));
 }
 
 .stepFormActions {
@@ -90,7 +90,7 @@
   background-color: var(--tc-bg-color);
   border: 1px solid var(--tc-border-color);
   border-radius: var(--tc-border-radius));
-  box-shadow: 0 var(--tc-spacing-2) var(--tc-spacing-3) rgba(0, 0, 0, 0.15);
+  box-shadow: 0 var(--tc-spacing-2) var(--tc-spacing-3) var(--tc-color-rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15));
   z-index: 1000;
 }
 

@@ -109,7 +109,7 @@
   margin-bottom: var(--tc-spacing-4);
   width: 100%;
   min-height: 500px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 5px var(--tc-color-rgba(0,0,0,0.1), rgba(0,0,0,0.1));
 }
 
 .preview-header {
@@ -123,7 +123,7 @@
   display: flex;
   justify-content: center;
   width: 100%;
-  background-color: #f0f0f0;
+  background-color: var(--tc-color-f0f0f0, #f0f0f0);
   min-height: calc(100vh - 200px);
 }
 
@@ -134,7 +134,7 @@
   min-height: 297mm;
   margin: 0 auto;
   padding: 20mm;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: 0 0 10px var(--tc-color-rgba(0,0,0,0.1), rgba(0,0,0,0.1));
   background-color: var(--tc-bg-default);
 }
 
@@ -144,12 +144,12 @@
   height: 700px;
   border: 1px solid var(--tc-color-border-medium);
   border-radius: var(--tc-radius-sm);
-  background-color: #f0f0f0;
+  background-color: var(--tc-color-f0f0f0, #f0f0f0);
 }
 
 /* Ajout du style pour la visualisation des pages A4 séparées */
 .template-preview .preview-content {
-  background-color: #f0f0f0;
+  background-color: var(--tc-color-f0f0f0, #f0f0f0);
   padding: 20px;
   overflow-y: auto;
   max-height: 80vh;
@@ -171,7 +171,7 @@
   width: 100%;
   height: auto;
   border: 1px solid var(--tc-color-border-medium);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 5px var(--tc-color-rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
   overflow: visible;
   background-color: var(--tc-bg-default);
 }
@@ -194,7 +194,7 @@
   display: inline-block;
   padding: var(--tc-spacing-1) var(--tc-spacing-2);
   margin: var(--tc-spacing-1);
-  background-color: #f0f0f0;
+  background-color: var(--tc-color-f0f0f0, #f0f0f0);
   border: 1px solid var(--tc-color-border-medium);
   border-radius: var(--tc-border-radius-sm);
   font-size: var(--tc-font-size-sm);

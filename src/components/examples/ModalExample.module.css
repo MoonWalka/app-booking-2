@@ -12,7 +12,7 @@
 
 .exampleTitle {
   margin-bottom: 1.5rem;
-  color: var(--text-primary);
+  color: var(--tc-text-primary);
   font-size: 1.5rem;
 }
 
@@ -24,7 +24,7 @@
 
 .button {
   padding: 0.75rem 1.25rem;
-  background-color: var(--primary-color);
+  background-color: var(--tc-primary-color);
   color: white;
   border: none;
   border-radius: 4px;
@@ -34,7 +34,7 @@
 }
 
 .button:hover {
-  background-color: var(--primary-color-dark);
+  background-color: var(--tc-primary-color-dark);
 }
 
 .modalContent {
@@ -44,13 +44,13 @@
 
 .modalTitle {
   margin-bottom: 1rem;
-  color: var(--text-primary);
+  color: var(--tc-text-primary);
   font-size: 1.2rem;
 }
 
 .modalMessage {
   margin-bottom: 1.5rem;
-  color: var(--text-secondary);
+  color: var(--tc-text-secondary);
   line-height: 1.5;
 }
 
@@ -63,7 +63,7 @@
 
 .modalButton {
   padding: 0.5rem 1rem;
-  background-color: var(--primary-color);
+  background-color: var(--tc-primary-color);
   color: white;
   border: none;
   border-radius: 4px;
@@ -73,14 +73,14 @@
 }
 
 .modalButton:hover {
-  background-color: var(--primary-color-dark);
+  background-color: var(--tc-primary-color-dark);
 }
 
 .modalButtonSecondary {
   padding: 0.5rem 1rem;
   background-color: transparent;
-  color: var(--text-secondary);
-  border: 1px solid #d4d4d4;
+  color: var(--tc-text-secondary);
+  border: 1px solid var(--tc-color-d4d4d4, #d4d4d4);
   border-radius: 4px;
   cursor: pointer;
   font-weight: 500;
@@ -88,7 +88,7 @@
 }
 
 .modalButtonSecondary:hover {
-  background-color: #f5f5f5;
+  background-color: var(--tc-color-f5f5f5, #f5f5f5);
 }
 
 .form {
@@ -106,12 +106,12 @@
 .label {
   font-size: 0.9rem;
   font-weight: 500;
-  color: var(--text-secondary);
+  color: var(--tc-text-secondary);
 }
 
 .input {
   padding: 0.75rem;
-  border: 1px solid #d4d4d4;
+  border: 1px solid var(--tc-color-d4d4d4, #d4d4d4);
   border-radius: 4px;
   font-size: 1rem;
   transition: border-color 0.2s;
@@ -119,6 +119,6 @@
 
 .input:focus {
   outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+  border-color: var(--tc-primary-color);
+  box-shadow: 0 0 0 2px var(--tc-color-rgba(74, 144, 226, 0.2), rgba(74, 144, 226, 0.2));
 }

@@ -17,7 +17,7 @@
   align-items: center;
   padding: var(--tc-spacing-4) var(--tc-spacing-4);
   background-color: var(--tc-bg-light);
-  border-bottom: 1px solid var(--tc-border-light);
+  border-bottom: var(--tc-border-width) solid var(--tc-border-light);
   gap: var(--tc-spacing-2);
 }
 
@@ -44,7 +44,7 @@
 .interactiveMapContainer {
   border-radius: var(--tc-radius-md);
   overflow: hidden;
-  border: 1px solid var(--tc-border-light);
+  border: var(--tc-border-width) solid var(--tc-border-light);
   margin-bottom: var(--tc-spacing-2);
   height: 400px;
 }
@@ -68,7 +68,7 @@
   align-items: center;
   justify-content: center;
   background-color: var(--tc-bg-default);
-  border: 1px solid var(--tc-border-light);
+  border: var(--tc-border-width) solid var(--tc-border-light);
   border-radius: var(--tc-radius-md);
   padding: var(--tc-spacing-1);
   cursor: pointer;
@@ -87,7 +87,7 @@
 
 .mapError {
   padding: var(--tc-spacing-4);
-  background-color: rgba(var(--tc-color-error-rgb), 0.1);
+  background-color: var(--tc-error-bg-color);
   border-radius: var(--tc-radius-md);
   color: var(--tc-color-error);
   margin-top: var(--tc-spacing-4);

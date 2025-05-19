@@ -5,12 +5,12 @@
  */
 
 .userGuide {
-  background-color: #f8f9fa;
+  background-color: var(--tc-color-f8f9fa, #f8f9fa);
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px var(--tc-color-rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
   margin-bottom: 20px;
   padding: 20px;
-  border: 1px solid #e9ecef;
+  border: 1px solid var(--tc-color-e9ecef, #e9ecef);
 }
 
 .guideHeader {
@@ -19,18 +19,18 @@
   align-items: center;
   margin-bottom: 15px;
   padding-bottom: 10px;
-  border-bottom: 1px solid #dee2e6;
+  border-bottom: 1px solid var(--tc-color-dee2e6, #dee2e6);
 }
 
 .guideTitle {
   margin: 0;
-  color: #344767;
+  color: var(--tc-color-344767, #344767);
   font-weight: 600;
   font-size: 1.125rem;
 }
 
 .guideContent {
-  color: #495057;
+  color: var(--tc-color-495057, #495057);
 }
 
 .guideSection {
@@ -38,7 +38,7 @@
 }
 
 .guideSection h4 {
-  color: #344767;
+  color: var(--tc-color-344767, #344767);
   font-size: 1rem;
   font-weight: 600;
   margin-bottom: 8px;

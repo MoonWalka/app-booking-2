@@ -43,8 +43,8 @@
 }
 
 .formInput:focus {
-  box-shadow: 0 0 0 0.15rem rgba(var(--tc-bs-primary-rgb), 0.25);
-  border-color: var(--tc-bs-primary);
+  box-shadow: 0 0 0 0.15rem var(--tc-primary-color-shadow);
+  border-color: var(--tc-primary-color);
 }
 
 .formGroup {
@@ -74,11 +74,11 @@
 
 /* Styles pour la recherche de structures */
 .structureSearch {
-  background-color: rgba(var(--tc-bs-info-rgb), 0.05);
+  background-color: var(--tc-info-color-lightest);
   padding: 1rem;
   border-radius: var(--tc-border-radius);
   margin-bottom: 1.5rem;
-  border: 1px dashed rgba(var(--tc-bs-info-rgb), 0.3);
+  border: 1px dashed var(--tc-info-color-light);
 }
 
 .searchContainer {
@@ -206,8 +206,8 @@
   margin-top: 0.5rem;
   padding: 0.5rem;
   border-radius: 0.25rem;
-  background-color: rgba(var(--tc-bs-success-rgb), 0.1);
-  color: var(--tc-bs-success);
+  background-color: var(--tc-success-color-lightest);
+  color: var(--tc-success-color);
   display: flex;
   align-items: center;
 }

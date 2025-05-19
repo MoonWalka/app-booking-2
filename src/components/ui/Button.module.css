@@ -318,7 +318,7 @@
 
 .btnOutlineInfo:hover {
   background-color: var(--tc-info-color);
-  color: #fff;
+  color: var(--tc-color-fff, #fff);
   text-decoration: none;
 }
 
@@ -336,6 +336,6 @@
 
 .btnOutlineSuccess:hover {
   background-color: var(--tc-success-color);
-  color: #fff;
+  color: var(--tc-color-fff, #fff);
   text-decoration: none;
 }

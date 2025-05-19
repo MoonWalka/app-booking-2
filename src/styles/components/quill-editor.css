@@ -27,7 +27,7 @@
   background: var(--tc-bg-default);
   border-radius: 3px;
   border: 1px solid var(--tc-border-color);
-  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 2px var(--tc-color-rgba(0,0,0,0.1), rgba(0,0,0,0.1));
   position: sticky;
   top: 0;
   z-index: 10;
@@ -95,7 +95,7 @@
   min-height: 200px;
   overflow-y: auto;
   max-height: calc(90vh - 140px); /* Même hauteur que l'éditeur en plein écran */
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px var(--tc-color-rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
 }
 
 .tc-quill-preview h1, 

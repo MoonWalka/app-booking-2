@@ -22,13 +22,13 @@
   overflow: hidden;
   text-overflow: ellipsis;
   transition: transform 0.2s ease; /* // Correction UI: Ajout de transition pour interaction */
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); /* // Correction UI: Ajout d'ombre légère pour meilleure perception visuelle */
+  box-shadow: 0 1px 3px var(--tc-color-rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.12)); /* // Correction UI: Ajout d'ombre légère pour meilleure perception visuelle */
 }
 
 /* // Correction UI: Amélioration du contraste et standardisation des statuts */
 .status-option {
   background-color: var(--tc-warning-color);
-  color: #212529; /* // Correction UI: Couleur plus foncée pour meilleur contraste */
+  color: var(--tc-color-212529, #212529); /* // Correction UI: Couleur plus foncée pour meilleur contraste */
   font-weight: var(--tc-font-weight-semibold);
 }
 
@@ -65,7 +65,7 @@
 /* // Correction UI: Ajout d'état hover pour les badges de statut */
 .status-badge:hover {
   transform: translateY(-1px);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 5px var(--tc-color-rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
 }
 
 /* Badge de notification pour les alertes et indicateurs */
@@ -127,13 +127,13 @@
 .badge-interactive.badge-primary:hover {
   background-color: var(--tc-primary-dark);
   transform: translateY(-1px);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 5px var(--tc-color-rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
 }
 
 .badge-interactive.badge-secondary:hover {
   background-color: var(--tc-secondary-dark);
   transform: translateY(-1px);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 5px var(--tc-color-rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
 }
 
 /* // Correction UI: Standardisation des tailles de badge */
@@ -161,7 +161,7 @@
   height: 20px;
   font-size: 10px;
   font-weight: var(--tc-font-weight-semibold);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 3px var(--tc-color-rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
 }
 
 /* // Correction UI: Ajout des variantes de compteur */
@@ -225,20 +225,20 @@
 
 .status-preaccord {
   background-color: var(--tc-warning-color);
-  color: #212529;
+  color: var(--tc-color-212529, #212529);
 }
 
 .status-acompte {
   background-color: var(--tc-info-color);
-  color: #fff;
+  color: var(--tc-color-fff, #fff);
 }
 
 .status-solde {
   background-color: var(--tc-success-color);
-  color: #fff;
+  color: var(--tc-color-fff, #fff);
 }
 
 .status-contact {
   background-color: var(--tc-secondary-color)));
-  color: #fff;
+  color: var(--tc-color-fff, #fff);
 }

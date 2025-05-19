@@ -19,7 +19,7 @@
 
 .cardWrapper:hover {
   transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 5px 15px var(--tc-color-rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.08));
 }
 
 .cardHeader {

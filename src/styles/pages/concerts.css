@@ -16,17 +16,17 @@
    VARIABLES SPÉCIFIQUES CONCERTS
    ============================= */
 :root {
-  --concert-color: #5e72e4; /* Couleur spécifique pour les concerts */
-  --concert-color-light: #eef0fd;
+  --concert-color: var(--tc-color-5e72e4, #5e72e4); /* Couleur spécifique pour les concerts */
+  --concert-color-light: var(--tc-color-eef0fd, #eef0fd);
   /* // Correction UI: Amélioration du contraste des couleurs de statut */
-  --concert-status-confirmed-bg: rgba(40, 167, 69, 0.15);
-  --concert-status-confirmed-color: #176639; /* Plus foncé pour meilleur contraste */
-  --concert-status-pending-bg: rgba(255, 193, 7, 0.15);
-  --concert-status-pending-color: #964B00; /* Orange foncé pour meilleur contraste */
-  --concert-status-cancelled-bg: rgba(220, 53, 69, 0.15);
-  --concert-status-cancelled-color: #a71d2a; /* Plus foncé pour meilleur contraste */
-  --concert-status-draft-bg: rgba(108, 117, 125, 0.15);
-  --concert-status-draft-color: #45494e; /* Plus foncé pour meilleur contraste */
+  --concert-status-confirmed-bg: var(--tc-color-rgba(40, 167, 69, 0.15), rgba(40, 167, 69, 0.15));
+  --concert-status-confirmed-color: var(--tc-color-176639, #176639); /* Plus foncé pour meilleur contraste */
+  --concert-status-pending-bg: var(--tc-color-rgba(255, 193, 7, 0.15), rgba(255, 193, 7, 0.15));
+  --concert-status-pending-color: var(--tc-color-964b00, #964B00); /* Orange foncé pour meilleur contraste */
+  --concert-status-cancelled-bg: var(--tc-color-rgba(220, 53, 69, 0.15), rgba(220, 53, 69, 0.15));
+  --concert-status-cancelled-color: var(--tc-color-a71d2a, #a71d2a); /* Plus foncé pour meilleur contraste */
+  --concert-status-draft-bg: var(--tc-color-rgba(108, 117, 125, 0.15), rgba(108, 117, 125, 0.15));
+  --concert-status-draft-color: var(--tc-color-45494e, #45494e); /* Plus foncé pour meilleur contraste */
   /* // Correction UI: Ajout d'une variable de transition standardisée */
   --tc-transition-standard: all 0.2s ease-in-out;
 }
@@ -213,7 +213,7 @@
 
 .concert-list-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 8px var(--tc-color-rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15));
 }
 
 /* // ...existing code for concert-card components... */
@@ -225,7 +225,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--tc-color-rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
   display: flex;
   justify-content: center;
   align-items: center;
@@ -312,37 +312,37 @@
 
 /* // Correction UI: Amélioration du contraste des messages de statut */
 .tc-status-message-warning {
-  background-color: rgba(255, 193, 7, 0.15);
-  color: #964B00; /* Orange foncé pour meilleur contraste */
+  background-color: var(--tc-color-rgba(255, 193, 7, 0.15), rgba(255, 193, 7, 0.15));
+  color: var(--tc-color-964b00, #964B00); /* Orange foncé pour meilleur contraste */
 }
 
 .tc-status-message-info {
-  background-color: rgba(23, 162, 184, 0.15);
-  color: #0a6c7e;
+  background-color: var(--tc-color-rgba(23, 162, 184, 0.15), rgba(23, 162, 184, 0.15));
+  color: var(--tc-color-0a6c7e, #0a6c7e);
 }
 
 .tc-status-message-primary {
-  background-color: rgba(0, 123, 255, 0.15);
-  color: #0056b3;
+  background-color: var(--tc-color-rgba(0, 123, 255, 0.15), rgba(0, 123, 255, 0.15));
+  color: var(--tc-color-0056b3, #0056b3);
 }
 
 .tc-status-message-success {
-  background-color: rgba(40, 167, 69, 0.15);
-  color: #176639;
+  background-color: var(--tc-color-rgba(40, 167, 69, 0.15), rgba(40, 167, 69, 0.15));
+  color: var(--tc-color-176639, #176639);
 }
 
 .tc-status-message-secondary {
-  background-color: rgba(108, 117, 125, 0.15);
-  color: #45494e;
+  background-color: var(--tc-color-rgba(108, 117, 125, 0.15), rgba(108, 117, 125, 0.15));
+  color: var(--tc-color-45494e, #45494e);
 }
 
 .tc-status-message-danger {
-  background-color: rgba(220, 53, 69, 0.15);
-  color: #a71d2a;
+  background-color: var(--tc-color-rgba(220, 53, 69, 0.15), rgba(220, 53, 69, 0.15));
+  color: var(--tc-color-a71d2a, #a71d2a);
 }
 
 .tc-status-message-light {
-  background-color: rgba(108, 117, 125, 0.1);
+  background-color: var(--tc-color-rgba(108, 117, 125, 0.1), rgba(108, 117, 125, 0.1));
   color: var(--tc-text-color);
 }
 
@@ -355,9 +355,9 @@
   justify-content: center;
   gap: 4px;
   padding: 3px 8px;
-  background-color: rgba(255, 193, 7, 0.1);
+  background-color: var(--tc-color-rgba(255, 193, 7, 0.1), rgba(255, 193, 7, 0.1));
   border-radius: 12px;
-  color: #964B00; /* Meilleur contraste */
+  color: var(--tc-color-964b00, #964B00); /* Meilleur contraste */
 }
 
 /* // ...existing code for loading and error states... */
@@ -366,17 +366,17 @@
 @keyframes pulse {
   0% {
     transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+    box-shadow: 0 0 0 0 var(--tc-color-rgba(220, 53, 69, 0.7), rgba(220, 53, 69, 0.7));
   }
   
   70% {
     transform: scale(1.1);
-    box-shadow: 0 0 0 5px rgba(220, 53, 69, 0);
+    box-shadow: 0 0 0 5px var(--tc-color-rgba(220, 53, 69, 0), rgba(220, 53, 69, 0));
   }
   
   100% {
     transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
+    box-shadow: 0 0 0 0 var(--tc-color-rgba(220, 53, 69, 0), rgba(220, 53, 69, 0));
   }
 }
 

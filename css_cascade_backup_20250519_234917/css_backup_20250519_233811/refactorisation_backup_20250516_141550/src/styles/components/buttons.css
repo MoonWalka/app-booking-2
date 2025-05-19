@@ -82,7 +82,7 @@ button {
 
 .tc-btn-warning {
   background-color: var(--tc-warning-color);
-  color: var(--tc-text-dark, #212529);
+  color: var(--tc-text-dark);
   border: 1px solid var(--tc-warning-color);
 }
 
@@ -191,7 +191,7 @@ button {
 
 .tc-btn-outline-warning:hover {
   background-color: var(--tc-warning-color);
-  color: var(--tc-text-dark, #212529);
+  color: var(--tc-text-dark);
 }
 
 .tc-btn-outline-info {

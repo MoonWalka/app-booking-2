@@ -6,51 +6,51 @@
 
 .container {
   /* Base styles for ProgrammateurContactSection */
-  margin-bottom: var(--tc-spacing-md, 1rem);
+  margin-bottom: var(--tc-spacing-md);
 }
 
 /* ProgrammateurContactSection styles */
 
 .cardWrapper {
-  background-color: var(--tc-card-bg, #fff);
-  border-radius: var(--tc-border-radius-lg, 8px);
-  box-shadow: var(--tc-box-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
-  margin-bottom: var(--tc-spacing-lg, 20px);
+  background-color: var(--tc-card-bg);
+  border-radius: var(--tc-border-radius-lg);
+  box-shadow: var(--tc-box-shadow);
+  margin-bottom: var(--tc-spacing-lg);
   overflow: hidden;
-  transition: var(--tc-transition, all 0.2s ease);
+  transition: var(--tc-transition);
 }
 
 .cardWrapper:hover {
   transform: translateY(-3px);
-  box-shadow: var(--tc-box-shadow-lg, 0 5px 15px rgba(0, 0, 0, 0.08));
+  box-shadow: var(--tc-box-shadow-lg);
 }
 
 .cardHeader {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-sm, 10px);
-  background-color: var(--tc-bg-light, #f8f9fa);
-  padding: var(--tc-spacing-md, 15px) var(--tc-spacing-lg, 20px);
-  border-bottom: var(--tc-border-width, 1px) solid var(--tc-border-light, #e9ecef);
+  gap: var(--tc-spacing-sm);
+  background-color: var(--tc-bg-light);
+  padding: var(--tc-spacing-md) var(--tc-spacing-lg);
+  border-bottom: var(--tc-border-width) solid var(--tc-border-light);
 }
 
 .cardBody {
-  padding: var(--tc-spacing-lg, 20px);
+  padding: var(--tc-spacing-lg);
 }
 
 .formGroup {
-  margin-bottom: var(--tc-spacing-md, 15px);
+  margin-bottom: var(--tc-spacing-md);
 }
 
 .formSection {
-  margin-bottom: var(--tc-spacing-lg, 20px);
+  margin-bottom: var(--tc-spacing-lg);
 }
 
 .cardLabel {
-  font-size: var(--tc-font-size-xs, 0.85rem);
-  font-weight: var(--tc-font-weight-semibold, 600);
-  color: var(--tc-text-secondary, #6c757d);
-  margin-bottom: var(--tc-spacing-xs, 8px);
+  font-size: var(--tc-font-size-xs);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-secondary);
+  margin-bottom: var(--tc-spacing-xs);
   display: block;
 }
 
@@ -58,37 +58,37 @@
   display: block;
   width: 100%;
   min-height: calc(1.5em + 0.75rem + 2px);
-  padding: var(--tc-spacing-xs, 0.375rem) var(--tc-spacing-sm, 0.75rem);
-  background-color: var(--tc-bg-light-alpha, rgba(248, 249, 250, 0.5));
-  border: var(--tc-border-width, 1px) solid var(--tc-border-light-alpha, rgba(206, 212, 218, 0.5));
-  border-radius: var(--tc-border-radius, 0.25rem);
-  font-size: var(--tc-font-size-base, 1rem);
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  background-color: var(--tc-bg-light-alpha);
+  border: var(--tc-border-width) solid var(--tc-border-light-alpha);
+  border-radius: var(--tc-border-radius);
+  font-size: var(--tc-font-size-base);
   line-height: 1.5;
   margin-bottom: 0;
 }
 
 .fieldValueHighlight {
-  font-weight: var(--tc-font-weight-medium, 500);
+  font-weight: var(--tc-font-weight-medium);
 }
 
 .fieldEmpty {
-  color: var(--tc-text-tertiary, #adb5bd);
+  color: var(--tc-text-tertiary);
   font-style: italic;
 }
 
 @media (max-width: 768px) {
   .cardBody {
-    padding: var(--tc-spacing-md, 1rem);
+    padding: var(--tc-spacing-md);
   }
   
   .cardHeader {
-    padding: var(--tc-spacing-sm, 10px) var(--tc-spacing-md, 15px);
+    padding: var(--tc-spacing-sm) var(--tc-spacing-md);
   }
 }
 
 @media (max-width: 576px) {
   .cardWrapper {
-    margin-bottom: var(--tc-spacing-md, 15px);
+    margin-bottom: var(--tc-spacing-md);
   }
   
   .cardWrapper:hover {

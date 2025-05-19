@@ -10,9 +10,9 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: var(--tc-bg-default, white);
+  background-color: var(--tc-bg-default);
   padding: var(--tc-spacing-2) var(--tc-spacing-3);
-  box-shadow: var(--tc-shadow-lg, 0 -2px 10px rgba(0, 0, 0, 0.1));
+  box-shadow: var(--tc-shadow-lg);
   z-index: 1000;
 }
 

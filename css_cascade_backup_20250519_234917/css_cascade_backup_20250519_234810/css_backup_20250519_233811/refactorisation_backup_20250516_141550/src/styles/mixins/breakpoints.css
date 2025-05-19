@@ -9,7 +9,7 @@
 /* Classes utilitaires pour les média queries - à utiliser avec @import */
 
 /* Point de rupture XS (Smartphones) */
-@media (max-width: var(--tc-breakpoint-xs, 576px)) {
+@media (max-width: var(--tc-breakpoint-xs)) {
   .xs\:hidden {
     display: none !important;
   }
@@ -36,7 +36,7 @@
 }
 
 /* Point de rupture SM (Tablettes) */
-@media (max-width: var(--tc-breakpoint-sm, 768px)) {
+@media (max-width: var(--tc-breakpoint-sm)) {
   .sm\:hidden {
     display: none !important;
   }
@@ -63,7 +63,7 @@
 }
 
 /* Point de rupture MD (Petits écrans) */
-@media (max-width: var(--tc-breakpoint-md, 992px)) {
+@media (max-width: var(--tc-breakpoint-md)) {
   .md\:hidden {
     display: none !important;
   }
@@ -90,7 +90,7 @@
 }
 
 /* Point de rupture LG (Grands écrans) */
-@media (max-width: var(--tc-breakpoint-lg, 1200px)) {
+@media (max-width: var(--tc-breakpoint-lg)) {
   .lg\:hidden {
     display: none !important;
   }
@@ -117,7 +117,7 @@
 }
 
 /* Min-width variants (Mobile-first) */
-@media (min-width: var(--tc-breakpoint-sm, 768px)) {
+@media (min-width: var(--tc-breakpoint-sm)) {
   .min-sm\:hidden {
     display: none !important;
   }
@@ -135,7 +135,7 @@
   }
 }
 
-@media (min-width: var(--tc-breakpoint-md, 992px)) {
+@media (min-width: var(--tc-breakpoint-md)) {
   .min-md\:hidden {
     display: none !important;
   }
@@ -166,7 +166,7 @@
  * 3. Pour les composants qui utilisent des selectors complexes,
  *    référencez directement les variables de breakpoint:
  * 
- *    @media (max-width: var(--tc-breakpoint-sm, 768px)) {
+ *    @media (max-width: var(--tc-breakpoint-sm)) {
  *      .myComponent {
  *        // styles spécifiques pour appareils mobiles
  *      }

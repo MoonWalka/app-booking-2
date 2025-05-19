@@ -1,0 +1,25 @@
+.submitBlock {
+  margin-top: 2rem;
+}
+
+.submitActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1.5rem;
+}
+
+.formFooter {
+  margin-top: 1.5rem;
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.completedBlock {
+  margin-top: 2rem;
+  padding: 1.5rem;
+}
+
+.completedBlock h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+}

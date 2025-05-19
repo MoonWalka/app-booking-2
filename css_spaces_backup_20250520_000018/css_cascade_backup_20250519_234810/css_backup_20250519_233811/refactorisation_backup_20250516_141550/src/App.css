@@ -1,0 +1,23 @@
+/* App.css - Style principal de l'application */
+
+/* Styles globaux */
+body {
+  background-color: var(--tc-background-color);
+}
+
+a {
+  color: var(--tc-primary-color);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--tc-primary-dark);
+  text-decoration: none; /* Modification: désactive le soulignement pour tous les liens au survol */
+}
+
+/* Règle générale pour tous les éléments interactifs */
+button:hover, 
+.tc-btn:hover, 
+[role="button"]:hover {
+  text-decoration: none;
+}

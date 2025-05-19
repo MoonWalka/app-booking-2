@@ -1,0 +1,197 @@
+/*
+ * Styles pour ArtistesList
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
+/* Styles standardisés pour la liste des artistes en version desktop */
+
+.statsCard {
+  transition: transform var(--tc-transition-duration) ease;
+}
+
+.statsCard:hover {
+  transform: translateY(-3px);
+}
+
+.statsIcon {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: var(--tc-primary-color-10));
+}
+
+.searchResultsDropdown {
+  background-color: var(--tc-color-white);
+  border: var(--tc-border-width) solid var(--tc-border-color);
+  border-radius: var(--tc-border-radius);
+  z-index: var(--tc-z-index-dropdown);
+  overflow: hidden;
+  box-shadow: var(--tc-box-shadow));
+}
+
+.searchResultItem {
+  display: flex;
+  align-items: center;
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  text-decoration: none;
+  color: var(--tc-text-color-primary);
+  transition: background-color var(--tc-transition-duration-fast) ease-in-out;
+  border-bottom: var(--tc-border-width) solid var(--tc-border-color-light);
+}
+
+.searchResultItem:hover {
+  background-color: var(--tc-color-gray-100);
+}
+
+.searchResultItem:last-child {
+  border-bottom: none;
+}
+
+.searchResultAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: var(--tc-spacing-md);
+  overflow: hidden;
+  background-color: var(--tc-color-gray-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.searchResultAvatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.searchCreateItem {
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  cursor: pointer;
+  transition: background-color var(--tc-transition-duration-fast) ease-in-out;
+  color: var(--tc-primary-color);
+}
+
+.searchCreateItem:hover {
+  background-color: var(--tc-primary-color-05);
+}
+
+.placeholderAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--tc-color-gray-200);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--tc-font-size-lg);
+  color: var(--tc-text-color-secondary);
+}
+
+.artistesListContainer {
+  border-radius: var(--tc-border-radius-md);
+  overflow: hidden;
+  border: none;
+  box-shadow: var(--tc-box-shadow));
+}
+
+.artistesTable th {
+  border-top: none;
+  background-color: var(--tc-color-gray-100);
+  padding: var(--tc-spacing-md) var(--tc-spacing-lg);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-color-primary);
+}
+
+.artistesTable td {
+  padding: var(--tc-spacing-md) var(--tc-spacing-lg);
+  vertical-align: middle;
+}
+
+.artisteNameCell {
+  min-width: 250px;
+}
+
+.artisteAvatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: var(--tc-color-gray-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.artisteAvatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.favoriteArtisteRow {
+  background-color: var(--tc-warning-color-10);
+}
+
+.favoriteArtisteRow:hover {
+  background-color: var(--tc-warning-color-20);
+}
+
+.artistesContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--tc-spacing-md);
+}
+
+.spinnerContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  flex-direction: column;
+}
+
+.paginationContainer {
+  margin-top: var(--tc-spacing-xl);
+  display: flex;
+  justify-content: center;
+}
+
+/* Support responsive */
+@media (max-width: 992px) {
+  .artistesTable th,
+  .artistesTable td {
+    padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  }
+}
+
+@media (max-width: 768px) {
+  .artistesContainer {
+    padding: var(--tc-spacing-sm);
+  }
+  
+  .artistesTable {
+    min-width: 700px; /* Pour permettre le défilement horizontal */
+  }
+  
+  .artistesListContainer {
+    overflow-x: auto;
+  }
+  
+  .paginationContainer {
+    margin-top: var(--tc-spacing-lg);
+  }
+}
+
+@media (max-width: 576px) {
+  .artistesTable th,
+  .artistesTable td {
+    padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  }
+}

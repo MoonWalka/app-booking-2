@@ -14,7 +14,7 @@
 .formHeader {
   margin-bottom: var(--tc-spacing-3);
   padding: var(--tc-spacing-2) var(--tc-spacing-3);
-  background-color: var(--tc-bg-default, white);
+  background-color: var(--tc-bg-default);
   position: sticky;
   top: 0;
   z-index: 10;
@@ -31,14 +31,14 @@
 
 .backButton {
   font-size: var(--tc-spacing-4);
-  color: var(--tc-gray-var(--tc-font-weight-semibold), var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-gray-var(--tc-font-weight-semibold), var(--tc-color-text-secondary));
   padding: 0;
   background: none;
   border: none;
 }
 
 .formSection {
-  background-color: var(--tc-bg-default, white);
+  background-color: var(--tc-bg-default);
   margin: 0 var(--tc-spacing-3) var(--tc-spacing-3);
   border-radius: var(--tc-spacing-2);
   padding: var(--tc-spacing-3);
@@ -78,8 +78,8 @@
   display: flex;
   gap: var(--tc-spacing-3);
   padding: var(--tc-spacing-2) var(--tc-spacing-3);
-  background-color: var(--tc-bg-default, white);
-  box-shadow: var(--tc-shadow-lg, 0 -2px 10px rgba(0, 0, 0, 0.1));
+  background-color: var(--tc-bg-default);
+  box-shadow: var(--tc-shadow-lg);
   z-index: 100;
 }
 

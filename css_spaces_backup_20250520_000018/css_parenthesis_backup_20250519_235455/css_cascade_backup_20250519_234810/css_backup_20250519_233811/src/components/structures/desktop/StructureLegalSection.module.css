@@ -1,0 +1,50 @@
+/*
+ * Styles pour StructureLegalSection
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
+/* Styles standardisés pour StructureLegalSection */
+
+.sectionContent {
+  margin-bottom: var(--tc-spacing-lg);
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: var(--tc-spacing-lg);
+}
+
+.infoGroup {
+  margin-bottom: var(--tc-spacing-md);
+}
+
+.cardLabel {
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-color-secondary);
+  margin-bottom: var(--tc-spacing-xs);
+}
+
+.fieldValue {
+  font-size: var(--tc-font-size-base);
+  color: var(--tc-text-color-primary);
+  margin-bottom: 0;
+  word-break: break-word;
+}
+
+/* Ajout de styles responsive améliorés */
+@media (max-width: var(--tc-breakpoint-sm)) {
+  .infoGrid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--tc-spacing-md);
+  }
+}
+
+@media (max-width: var(--tc-breakpoint-xs)) {
+  .infoGrid {
+    grid-template-columns: 1fr;
+    gap: var(--tc-spacing-sm);
+  }
+}

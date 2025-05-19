@@ -1,0 +1,308 @@
+/*
+ * Styles pour forms
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
+/* Styles généraux pour les formulaires */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+/* // Modifié par Copilot : ajout de .tc-form-group */
+.tc-form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--tc-label-color);
+}
+
+/* // Modifié par Copilot : ajout de .tc-form-label */
+.tc-form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--tc-label-color);
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--tc-text-color);
+  background-color: var(--tc-input-bg);
+  background-clip: padding-box;
+  border: 1px solid var(--tc-input-border-color);
+  border-radius: var(--tc-border-radius);
+  transition: var(--tc-transition);
+}
+
+/* // Modifié par Copilot : ajout de .tc-form-control */
+.tc-form-control {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--tc-text-color);
+  background-color: var(--tc-input-bg);
+  background-clip: padding-box;
+  border: 1px solid var(--tc-input-border-color);
+  border-radius: var(--tc-border-radius);
+  transition: var(--tc-transition);
+}
+
+.form-control:focus {
+  border-color: var(--tc-input-focus-border-color);
+  outline: 0;
+  box-shadow: var(--tc-input-focus-shadow);
+}
+
+/* // Modifié par Copilot : ajout de .tc-form-control:focus */
+.tc-form-control:focus {
+  border-color: var(--tc-input-focus-border-color);
+  outline: 0;
+  box-shadow: var(--tc-input-focus-shadow);
+}
+
+.form-control::placeholder {
+  color: var(--tc-input-placeholder-color);
+  opacity: 1;
+}
+
+/* // Modifié par Copilot : ajout de .tc-form-control::placeholder */
+.tc-form-control::placeholder {
+  color: var(--tc-input-placeholder-color);
+  opacity: 1;
+}
+
+.form-text {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--tc-text-muted);
+}
+
+/* // Modifié par Copilot : ajout de .tc-form-text */
+.tc-form-text {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--tc-text-muted);
+}
+
+/* Styles pour champs avec erreurs */
+.is-invalid {
+  border-color: var(--tc-danger-color) !important;
+}
+
+/* // Modifié par Copilot : ajout de .tc-is-invalid */
+.tc-is-invalid {
+  border-color: var(--tc-danger-color) !important;
+}
+
+.invalid-feedback {
+  display: block;
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--tc-danger-color);
+}
+
+/* // Modifié par Copilot : ajout de .tc-invalid-feedback */
+.tc-invalid-feedback {
+  display: block;
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--tc-danger-color);
+}
+
+/* Style pour indicateur de champ requis */
+.tc-required {
+  color: var(--tc-danger-color);
+  margin-left: 0.125rem;
+}
+
+/* Styles pour les select et multiselect */
+select.form-control {
+  padding-right: 2rem;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px 12px;
+}
+
+/* // Modifié par Copilot : ajout de select.tc-form-control */
+select.tc-form-control {
+  padding-right: 2rem;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px 12px;
+}
+
+/* Styles pour les checkboxes et radios */
+.form-check {
+  display: block;
+  min-height: 1.5rem;
+  padding-left: 1.5rem;
+  margin-bottom: 0.125rem;
+}
+
+/* // Modifié par Copilot : ajout de .tc-form-check */
+.tc-form-check {
+  display: block;
+  min-height: 1.5rem;
+  padding-left: 1.5rem;
+  margin-bottom: 0.125rem;
+}
+
+.form-check-input {
+  float: left;
+  margin-left: -1.5rem;
+  width: 1rem;
+  height: 1rem;
+  margin-top: 0.25rem;
+  vertical-align: top;
+  background-color: var(--tc-input-bg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  border: 1px solid var(--tc-input-border-color);
+  appearance: none;
+}
+
+/* // Modifié par Copilot : ajout de .tc-form-check-input */
+.tc-form-check-input {
+  float: left;
+  margin-left: -1.5rem;
+  width: 1rem;
+  height: 1rem;
+  margin-top: 0.25rem;
+  vertical-align: top;
+  background-color: var(--tc-input-bg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  border: 1px solid var(--tc-input-border-color);
+  appearance: none;
+}
+
+.form-check-input[type="checkbox"] {
+  border-radius: 0.25rem;
+}
+
+/* // Modifié par Copilot : ajout de .tc-form-check-input[type="checkbox"] */
+.tc-form-check-input[type="checkbox"] {
+  border-radius: 0.25rem;
+}
+
+.form-check-input[type="radio"] {
+  border-radius: 50%;
+}
+
+/* // Modifié par Copilot : ajout de .tc-form-check-input[type="radio"] */
+.tc-form-check-input[type="radio"] {
+  border-radius: 50%;
+}
+
+.form-check-input:checked {
+  background-color: var(--tc-primary-color);
+  border-color: var(--tc-primary-color);
+}
+
+/* // Modifié par Copilot : ajout de .tc-form-check-input:checked */
+.tc-form-check-input:checked {
+  background-color: var(--tc-primary-color);
+  border-color: var(--tc-primary-color);
+}
+
+.form-check-input:checked[type="checkbox"] {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23fff' d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3E%3C/svg%3E");
+}
+
+/* // Modifié par Copilot : ajout de .tc-form-check-input:checked[type="checkbox"] */
+.tc-form-check-input:checked[type="checkbox"] {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23fff' d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3E%3C/svg%3E");
+}
+
+.form-check-input:checked[type="radio"] {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='3' fill='%23fff'/%3E%3C/svg%3E");
+}
+
+/* // Modifié par Copilot : ajout de .tc-form-check-input:checked[type="radio"] */
+.tc-form-check-input:checked[type="radio"] {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='3' fill='%23fff'/%3E%3C/svg%3E");
+}
+
+.form-check-label {
+  margin-bottom: 0;
+  color: var(--tc-text-color);
+}
+
+/* // Modifié par Copilot : ajout de .tc-form-check-label */
+.tc-form-check-label {
+  margin-bottom: 0;
+  color: var(--tc-text-color);
+}
+
+/* Styles pour les textarea */
+textarea.form-control {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* // Modifié par Copilot : ajout de textarea.tc-form-control */
+textarea.tc-form-control {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Styles pour les switchs */
+.form-switch {
+  padding-left: 2.5rem;
+}
+
+/* // Modifié par Copilot : ajout de .tc-form-switch */
+.tc-form-switch {
+  padding-left: 2.5rem;
+}
+
+.form-switch .form-check-input {
+  width: 2rem;
+  margin-left: -2.5rem;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3E%3Ccircle r='3' fill='%23fff'/%3E%3C/svg%3E");
+  background-position: left center;
+  border-radius: 2rem;
+  transition: background-position .15s ease-in-out;
+}
+
+/* // Modifié par Copilot : ajout de .tc-form-switch .tc-form-check-input */
+.tc-form-switch .tc-form-check-input {
+  width: 2rem;
+  margin-left: -2.5rem;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3E%3Ccircle r='3' fill='%23fff'/%3E%3C/svg%3E");
+  background-position: left center;
+  border-radius: 2rem;
+  transition: background-position .15s ease-in-out;
+}
+
+.form-switch .form-check-input:checked {
+  background-position: right center;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3E%3Ccircle r='3' fill='%23fff'/%3E%3C/svg%3E");
+}
+
+/* // Modifié par Copilot : ajout de .tc-form-switch .tc-form-check-input:checked */
+.tc-form-switch .tc-form-check-input:checked {
+  background-position: right center;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3E%3Ccircle r='3' fill='%23fff'/%3E%3C/svg%3E");
+}

@@ -1,0 +1,32 @@
+/*
+ * Styles pour index.css
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
+ */
+
+
+
+
+
+/* 
+ * Fichier d'index centralisant toutes les variables CSS
+ * Importez ce fichier unique pour avoir accès à toutes les variables
+ */
+
+/* Importer d'abord le reset CSS */
+@import './reset.css';
+
+/* Ensuite les couleurs */
+@import './colors.css';
+
+/* Puis les variables générales */
+@import './variables.css';
+
+/* Et le système de typographie */
+@import './typography.css';
+
+/* 
+ * Pour utiliser ces variables dans un composant, importez simplement ce fichier :
+ * @import '@styles/base/index.css';
+ */

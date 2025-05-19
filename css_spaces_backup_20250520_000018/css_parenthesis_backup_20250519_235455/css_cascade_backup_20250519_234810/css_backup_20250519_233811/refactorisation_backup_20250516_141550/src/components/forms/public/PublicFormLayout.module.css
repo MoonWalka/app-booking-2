@@ -1,0 +1,40 @@
+.formIsolatedContainer {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.formHeader {
+  background-color: #fff;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #e9ecef;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.formLogo {
+  text-align: center;
+}
+
+.formLogo h2 {
+  margin: 0;
+  color: #212529;
+}
+
+.formContent {
+  flex-grow: 1;
+  padding: 2rem;
+  background-color: #fff;
+}
+
+.formFooter {
+  padding: 1rem 2rem;
+  background-color: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+  text-align: center;
+  color: #6c757d;
+  font-size: 0.9rem;
+}

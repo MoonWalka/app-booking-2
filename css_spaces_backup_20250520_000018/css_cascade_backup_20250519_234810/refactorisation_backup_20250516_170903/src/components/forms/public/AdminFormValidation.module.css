@@ -1,0 +1,22 @@
+/*
+ * Styles pour AdminFormValidation
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
+.validationContainer {
+  padding: 1rem 0;
+}
+
+.validationContainer h2 {
+  margin-bottom: 1.5rem;
+  font-size: 1.75rem;
+}
+
+.formDataPreview {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 0.25rem;
+  border: 1px solid #e9ecef;
+}

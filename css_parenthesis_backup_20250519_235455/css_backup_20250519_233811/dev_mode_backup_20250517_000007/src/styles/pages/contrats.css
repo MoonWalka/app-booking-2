@@ -1,0 +1,140 @@
+/*
+ * Styles pour contrats
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
+/* Styles pour la page des contrats */
+.contrats-page-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* En-tête de la page contrats */
+.contrats-header {
+  display: flex;
+  justify-content: space-between;
+  
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+/* Grille pour les cartes de contrat */
+.contrats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* Message "pas de contrats" */
+.no-contrats-message {
+  text-align: center;
+  padding: 50px 20px;
+  color: var(--tc-text-muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.no-contrats-message i {
+  font-size: 3rem;
+  color: var(--tc-gray-500);
+  display: block;
+  margin-bottom: 20px;
+}
+
+/* Styles pour les onglets */
+.nav-tabs {
+  margin-bottom: 25px;
+  border-bottom: 2px solid var(--tc-border-color);
+}
+
+.nav-tabs .nav-link {
+  border: none;
+  color: var(--tc-text-muted);
+  position: relative;
+  padding: 10px 20px;
+}
+
+.nav-tabs .nav-link.active {
+  color: var(--tc-primary-color);
+  font-weight: 600;
+  background-color: transparent;
+  border: none;
+}
+
+.nav-tabs .nav-link.active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 3px;
+  background-color: var(--tc-primary-color);
+}
+
+/* Styles pour l'affichage des détails de contrat */
+.contrat-details {
+  padding: 15px;
+}
+
+.contrat-details h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+/* Styles pour l'aperçu du template */
+.template-preview {
+  background-color: var(--tc-hover-bg);
+  border-radius: var(--tc-border-radius);
+  padding: 15px;
+  margin-top: 20px;
+}
+
+.template-sections-list {
+  margin-top: 10px;
+}
+
+.template-section-item {
+  padding: 8px 12px;
+  margin-bottom: 5px;
+  border-radius: var(--tc-border-radius-sm);
+  background-color: white;
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--tc-gray-200);
+}
+
+.section-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background-color: var(--tc-primary-color);
+  color: white;
+  border-radius: 50%;
+  font-size: 12px;
+  margin-right: 10px;
+}
+
+.section-title {
+  font-weight: 500;
+}
+
+/* Styles pour le PDF Viewer */
+.pdf-viewer-container {
+  margin-top: 20px;
+  border-radius: var(--tc-border-radius);
+  overflow: hidden;
+}
+
+.pdf-viewer {
+  height: 600px;
+  border: 1px solid var(--tc-border-color);
+  border-radius: var(--tc-border-radius-sm);
+}

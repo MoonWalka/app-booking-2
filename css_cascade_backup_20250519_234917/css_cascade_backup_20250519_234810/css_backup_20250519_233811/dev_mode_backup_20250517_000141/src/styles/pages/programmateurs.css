@@ -20,9 +20,9 @@
    ============================= */
 .programmateur-detail-container {
   padding: 20px;
-  background-color: var(--tc-bg-color, #fff);
-  border-radius: var(--tc-border-radius, 8px);
-  box-shadow: var(--tc-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
+  background-color: var(--tc-bg-color);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-shadow);
   margin-bottom: 20px;
 }
 
@@ -43,7 +43,7 @@
 }
 
 .programmateur-organization {
-  color: var(--tc-text-muted, #666);
+  color: var(--tc-text-muted);
   margin-bottom: 10px;
 }
 
@@ -88,22 +88,22 @@
 
 .programmateur-form-container {
   padding: 1.5rem;
-  background: var(--tc-bg-color, #fff);
-  border-radius: var(--tc-border-radius, 0.5rem);
-  box-shadow: var(--tc-shadow, 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075));
+  background: var(--tc-bg-color);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-shadow);
   transition: all 0.3s ease;
 }
 
 /* En-tête du formulaire */
 .form-header-container {
   margin-bottom: 1.5rem;
-  border-bottom: 2px solid var(--tc-border-color-light, #f0f0f0);
+  border-bottom: 2px solid var(--tc-border-color-light);
   padding-bottom: 1rem;
 }
 
 .modern-title {
   font-weight: 600;
-  color: var(--tc-text-color, #344767);
+  color: var(--tc-text-color);
   margin: 0 0 0.5rem 0;
   font-size: 1.5rem;
 }
@@ -112,7 +112,7 @@
   display: flex;
   align-items: center;
   font-size: 0.875rem;
-  color: var(--tc-text-muted, #6c757d);
+  color: var(--tc-text-muted);
 }
 
 .breadcrumb-item {
@@ -120,12 +120,12 @@
 }
 
 .breadcrumb-item:hover {
-  color: var(--tc-primary-color, #0d6efd);
+  color: var(--tc-primary-color);
   text-decoration: underline;
 }
 
 .breadcrumb-item.active {
-  color: var(--tc-text-color-dark, #343a40);
+  color: var(--tc-text-color-dark);
   font-weight: 600;
 }
 
@@ -140,26 +140,26 @@
 }
 
 .form-card {
-  background-color: var(--tc-bg-color, #fff);
-  border-radius: var(--tc-border-radius, 0.5rem);
-  box-shadow: var(--tc-shadow-sm, 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05));
+  background-color: var(--tc-bg-color);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-shadow-sm);
   margin-bottom: 1.5rem;
   overflow: hidden;
   transition: all 0.3s ease;
 }
 
 .form-card:hover {
-  box-shadow: var(--tc-shadow-md, 0 0.5rem 1rem rgba(0, 0, 0, 0.08));
+  box-shadow: var(--tc-shadow-md);
   transform: translateY(-2px);
 }
 
 /* En-tête de carte unifiée */
 .card-header {
-  background-color: var(--tc-bg-light, #f8f9fa);
+  background-color: var(--tc-bg-light);
   padding: 1rem 1.5rem;
   display: flex;
   align-items: center;
-  border-bottom: 1px solid var(--tc-border-color, #e9ecef);
+  border-bottom: 1px solid var(--tc-border-color);
 }
 
 .card-header i {
@@ -169,19 +169,19 @@
 
 /* Couleurs différentes pour chaque section */
 .card-header i.bi-person-vcard {
-  color: var(--tc-primary-color, #0d6efd);
+  color: var(--tc-primary-color);
 }
 
 .card-header i.bi-building,
 .card-header i.bi-person-badge {
-  color: var(--tc-programmateur-color, #6f42c1);
+  color: var(--tc-programmateur-color);
 }
 
 .card-header h3 {
   margin: 0;
   font-size: 1.5rem;
   font-weight: 600;
-  color: var(--tc-text-color, #344767);
+  color: var(--tc-text-color);
 }
 
 .card-body {
@@ -194,7 +194,7 @@
 
 .form-label {
   font-weight: 500;
-  color: var(--tc-text-color, #344767);
+  color: var(--tc-text-color);
   margin-bottom: 0.5rem;
   display: block;
 }
@@ -202,7 +202,7 @@
 /* Classe .required supprimée - remplacée par .tc-required dans forms.css */
 
 .optional {
-  color: var(--tc-text-muted, #6c757d);
+  color: var(--tc-text-muted);
   font-size: 0.8rem;
   font-weight: normal;
 }
@@ -215,17 +215,17 @@
   min-height: 2.5rem;
   display: flex;
   align-items: center;
-  color: var(--tc-text-color, #333);
+  color: var(--tc-text-color);
 }
 
 .email-link, .phone-link {
   text-decoration: none;
-  color: var(--tc-primary-color, #0d6efd);
+  color: var(--tc-primary-color);
   transition: color 0.2s;
 }
 
 .email-link:hover, .phone-link:hover {
-  color: var(--tc-primary-dark, #0a58ca);
+  color: var(--tc-primary-dark);
   text-decoration: underline;
 }
 
@@ -276,7 +276,7 @@
 .filter-options {
   margin-bottom: 20px;
   padding: 15px;
-  background-color: var(--tc-bg-light, #f5f5f5);
+  background-color: var(--tc-bg-light);
   border-radius: 8px;
   display: flex;
   flex-wrap: wrap;
@@ -295,9 +295,9 @@
 
 /* Style de carte pour les listes de programmateurs */
 .programmateur-list-card {
-  background-color: var(--tc-bg-color, white);
-  border-radius: var(--tc-border-radius, 8px);
-  box-shadow: var(--tc-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
+  background-color: var(--tc-bg-color);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-shadow);
   margin-bottom: 15px;
   overflow: hidden;
   transition: transform 0.2s;
@@ -310,7 +310,7 @@
 
 .programmateur-card-header {
   padding: 15px;
-  background-color: var(--tc-bg-light, #f5f5f5);
+  background-color: var(--tc-bg-light);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -321,7 +321,7 @@
 }
 
 .programmateur-card-organization {
-  color: var(--tc-text-muted, #666);
+  color: var(--tc-text-muted);
   margin-bottom: 10px;
 }
 
@@ -337,7 +337,7 @@
 
 .contact-icon {
   margin-right: 8px;
-  color: var(--tc-primary-color, #4a90e2);
+  color: var(--tc-primary-color);
 }
 
 .programmateur-card-tags {
@@ -349,17 +349,17 @@
 
 .tag {
   padding: 4px 8px;
-  background-color: var(--tc-bg-light, #e3f2fd);
+  background-color: var(--tc-bg-light);
   border-radius: 4px;
   font-size: 12px;
-  color: var(--tc-primary-dark, #0d47a1);
+  color: var(--tc-primary-dark);
 }
 
 .programmateur-card-footer {
   display: flex;
   justify-content: flex-end;
   padding: 10px 15px;
-  background-color: var(--tc-bg-light, #f9f9f9);
+  background-color: var(--tc-bg-light);
 }
 
 /* =============================
@@ -375,12 +375,12 @@
 
 /* Style pour mettre en évidence l'icône du programmateur */
 .card-header i.bi-person-badge {
-  color: var(--tc-programmateur-color, #6f42c1);
+  color: var(--tc-programmateur-color);
 }
 
 /* Couleur de fond légèrement différente pour la carte programmateur */
 .detail-card:has(.card-header i.bi-person-badge) {
-  border-left: 3px solid var(--tc-programmateur-color, #6f42c1);
+  border-left: 3px solid var(--tc-programmateur-color);
 }
 
 /* Animation pour le chargement du programmateur */
@@ -411,7 +411,7 @@
   padding: 0.75rem 1rem;
   cursor: pointer;
   transition: background-color 0.2s;
-  border-bottom: 1px solid var(--tc-border-color-light, #f0f0f0);
+  border-bottom: 1px solid var(--tc-border-color-light);
 }
 
 .programmateur-item:last-child {
@@ -419,7 +419,7 @@
 }
 
 .programmateur-item:hover {
-  background-color: rgba(var(--tc-primary-rgb, 13, 110, 253), 0.1);
+  background-color: rgba(var(--tc-primary-rgb), 0.1);
 }
 
 .programmateur-details {
@@ -427,13 +427,13 @@
   flex-wrap: wrap;
   gap: 0.75rem;
   font-size: 0.8rem;
-  color: var(--tc-text-muted, #6c757d);
+  color: var(--tc-text-muted);
 }
 
 .programmateur-email, 
 .programmateur-structure {
   display: block;
-  color: var(--tc-text-muted, #6c757d);
+  color: var(--tc-text-muted);
   font-size: 0.8rem;
 }
 
@@ -446,15 +446,15 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: var(--tc-bg-light, #f8f9fa);
-  border: 1px solid var(--tc-border-color, #dee2e6);
-  border-radius: var(--tc-border-radius, 0.375rem);
+  background-color: var(--tc-bg-light);
+  border: 1px solid var(--tc-border-color);
+  border-radius: var(--tc-border-radius);
   padding: 0.75rem 1rem;
   transition: all 0.3s ease;
 }
 
 .programmateur-card:hover {
-  box-shadow: var(--tc-shadow, 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075));
+  box-shadow: var(--tc-shadow);
   transform: translateY(-1px);
 }
 
@@ -470,7 +470,7 @@
   align-items: center;
   gap: 0.375rem;
   font-size: 0.8rem;
-  color: var(--tc-text-muted, #6c757d);
+  color: var(--tc-text-muted);
 }
 
 .programmateur-contact-item i {
@@ -519,7 +519,7 @@
 }
 
 .structure-card .code-value {
-  font-family: var(--tc-font-monospace, monospace);
+  font-family: var(--tc-font-monospace);
   letter-spacing: 0.5px;
 }
 

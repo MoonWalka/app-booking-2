@@ -1,0 +1,67 @@
+/*
+ * Styles pour details.css
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
+ */
+
+
+
+
+
+/* Styles pour les sections de détails */
+.details-card {
+  background-color: var(--tc-card-bg);
+  border-radius: var(--tc-border-radius);
+  padding: var(--tc-spacing-4);
+  box-shadow: var(--tc-shadow);
+  margin-top: var(--tc-spacing-4);
+}
+
+.details-section {
+  margin-bottom: var(--tc-spacing-5);
+}
+
+.details-section:last-child {
+  margin-bottom: 0;
+}
+
+.details-section h3 {
+  margin-bottom: var(--tc-spacing-3);
+  padding-bottom: var(--tc-spacing-2);
+  border-bottom: 1px solid var(--tc-border-color);
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-label {
+  font-size: 12px;
+  color: var(--tc-color-text-muted);
+  margin-bottom: 5px;
+}
+
+.detail-value {
+  font-weight: var(--tc-font-weight-medium);
+}
+
+/* En-têtes de détails */
+.details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--tc-spacing-4);
+}
+
+/* Actions rapides */
+.quick-actions {
+  margin-top: var(--tc-spacing-6);
+}

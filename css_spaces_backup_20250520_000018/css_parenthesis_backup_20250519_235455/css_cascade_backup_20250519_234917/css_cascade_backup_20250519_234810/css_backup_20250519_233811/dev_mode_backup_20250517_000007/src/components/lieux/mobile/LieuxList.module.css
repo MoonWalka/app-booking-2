@@ -1,0 +1,199 @@
+/*
+ * Styles pour LieuxList
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
+ */
+
+
+.mobileContainer {
+  padding: var(--tc-spacing-2);
+}
+
+.headerContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--tc-spacing-2);
+}
+
+.modernTitle {
+  font-size: var(--tc-spacing-4);
+  margin: 0;
+  color: #344767;
+}
+
+.modernAddBtn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11);
+}
+
+.searchFilterContainer {
+  margin-bottom: var(--tc-spacing-2);
+}
+
+.searchBar {
+  max-width: 410px;
+  margin-bottom: 1.8rem;
+}
+
+.searchInput {
+  height: 45px;
+  border-radius: 0 6px 6px 0;
+  padding-left: 12px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.inputGroupText {
+  background-color: #fff;
+  border-radius: 6px 0 0 6px;
+  border-right: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.clearSearch {
+  border-left: none;
+  border-radius: 0 6px 6px 0;
+  background-color: #fff;
+}
+
+.resultsCount {
+  margin-top: 8px;
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-color-text-secondary, #6c757d);
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 15px;
+  text-align: center;
+}
+
+.emptyState i {
+  font-size: 3rem;
+  color: var(--tc-color-border-light, #dee2e6);
+  margin-bottom: 15px;
+}
+
+.emptyState p {
+  color: var(--tc-color-text-secondary, #6c757d);
+  margin-bottom: 20px;
+}
+
+.lieuCardsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.lieuCard {
+  background-color: var(--tc-bg-default, white);
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.lieuCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.lieuCardHeader {
+  padding: 15px;
+  background-color: var(--tc-bg-light, #f8f9fa);
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.lieuCardTitle {
+  margin: 0;
+  font-size: 1.var(--tc-spacing-3);
+  font-weight: var(--tc-font-weight-semibold);
+  color: #344767;
+  display: flex;
+  align-items: center;
+}
+
+.lieuCardBody {
+  padding: 15px;
+}
+
+.lieuInfoItem {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.lieuInfoIcon {
+  min-width: 30px;
+  display: flex;
+  align-items: center;
+  color: var(--tc-color-text-secondary, #6c757d);
+}
+
+.lieuInfoText {
+  flex: 1;
+}
+
+.lieuContactLink {
+  color: var(--tc-primary-color, var(--tc-color-primary, #0d6efd));
+  text-decoration: none;
+}
+
+.lieuContactLink:hover {
+  text-decoration: underline;
+}
+
+.jaugeBadge {
+  display: inline-flex;
+  align-items: center;
+  color: var(--tc-bg-default, white);
+  padding: 4px 10px;
+  border-radius: var(--tc-radius-sm);
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-medium);
+}
+
+.jaugeType {
+  opacity: 0.8;
+  font-size: var(--tc-font-size-xs);
+}
+
+.concertCount {
+  display: inline-flex;
+  align-items: center;
+  background-color: #e9f2ff;
+  color: var(--tc-primary-color, var(--tc-color-primary, #0d6efd));
+  padding: 4px 10px;
+  border-radius: 50px;
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-medium);
+}
+
+.lieuCardActions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 15px;
+  background-color: var(--tc-bg-light, #f8f9fa);
+  gap: 10px;
+}
+
+.lieuActionBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--tc-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}

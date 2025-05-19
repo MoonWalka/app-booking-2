@@ -1,0 +1,27 @@
+/*
+ * Styles pour EnvironmentBanner
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
+.environment-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 8px;
+  text-align: center;
+  font-weight: bold;
+  z-index: 9999;
+  font-size: 14px;
+}
+
+.environment-local {
+  background-color: #ff9800;
+  color: #000;
+}
+
+.environment-development {
+  background-color: #2196f3;
+  color: #fff;
+}

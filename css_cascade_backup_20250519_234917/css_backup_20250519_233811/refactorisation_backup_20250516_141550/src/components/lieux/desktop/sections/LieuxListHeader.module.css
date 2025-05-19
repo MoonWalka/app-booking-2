@@ -8,76 +8,76 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--tc-spacing-lg, 1.5rem);
+  margin-bottom: var(--tc-spacing-lg);
   flex-wrap: wrap;
-  gap: var(--tc-spacing-md, 1rem);
+  gap: var(--tc-spacing-md);
 }
 
 .headerTitle {
   margin: 0;
-  color: var(--tc-color-text-primary, #212529);
-  font-size: var(--tc-font-size-xl, 1.75rem);
-  font-weight: var(--tc-font-weight-bold, 700);
+  color: var(--tc-color-text-primary);
+  font-size: var(--tc-font-size-xl);
+  font-weight: var(--tc-font-weight-bold);
 }
 
 .headerDescription {
-  margin-top: var(--tc-spacing-xs, 0.25rem);
-  color: var(--tc-color-text-muted, #6c757d);
-  font-size: var(--tc-font-size-sm, 0.875rem);
+  margin-top: var(--tc-spacing-xs);
+  color: var(--tc-color-text-muted);
+  font-size: var(--tc-font-size-sm);
 }
 
 .headerActions {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-sm, 0.5rem);
+  gap: var(--tc-spacing-sm);
 }
 
 .addButton {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-xs, 0.5rem);
-  font-weight: var(--tc-font-weight-medium, 500);
-  background-color: var(--tc-color-primary, #0d6efd);
-  color: var(--tc-color-background, #fff);
+  gap: var(--tc-spacing-xs);
+  font-weight: var(--tc-font-weight-medium);
+  background-color: var(--tc-color-primary);
+  color: var(--tc-color-background);
   border: none;
-  border-radius: var(--tc-border-radius-sm, 0.25rem);
-  padding: var(--tc-spacing-sm, 0.5rem) var(--tc-spacing-md, 1rem);
-  font-size: var(--tc-font-size-base, 1rem);
+  border-radius: var(--tc-border-radius-sm);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  font-size: var(--tc-font-size-base);
   cursor: pointer;
   transition: background-color 0.2s;
 }
 
 .addButton:hover {
-  background-color: var(--tc-color-primary-dark, #0b5ed7);
+  background-color: var(--tc-color-primary-dark);
 }
 
 .addButton i {
-  font-size: var(--tc-font-size-base, 1rem);
+  font-size: var(--tc-font-size-base);
 }
 
 .viewToggle {
   display: flex;
-  border: 1px solid var(--tc-color-border, #dee2e6);
-  border-radius: var(--tc-border-radius-sm, 0.25rem);
+  border: 1px solid var(--tc-color-border);
+  border-radius: var(--tc-border-radius-sm);
   overflow: hidden;
 }
 
 .viewToggleButton {
-  background-color: var(--tc-color-background, #fff);
+  background-color: var(--tc-color-background);
   border: none;
-  padding: var(--tc-spacing-xs, 0.375rem) var(--tc-spacing-sm, 0.75rem);
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
   cursor: pointer;
-  color: var(--tc-color-text-muted, #6c757d);
+  color: var(--tc-color-text-muted);
   transition: all 0.2s;
 }
 
 .viewToggleButton.active {
-  background-color: var(--tc-color-primary, #0d6efd);
-  color: var(--tc-color-background, #fff);
+  background-color: var(--tc-color-primary);
+  color: var(--tc-color-background);
 }
 
 .viewToggleButton:hover:not(.active) {
-  background-color: var(--tc-color-background-secondary, #f8f9fa);
+  background-color: var(--tc-color-background-secondary);
 }
 
 /* Responsive styles */
@@ -85,7 +85,7 @@
   .headerContainer {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--tc-spacing-md, 1rem);
+    gap: var(--tc-spacing-md);
   }
   
   .headerActions {
@@ -94,6 +94,6 @@
   }
   
   .headerTitle {
-    font-size: var(--tc-font-size-lg, 1.5rem);
+    font-size: var(--tc-font-size-lg);
   }
 }

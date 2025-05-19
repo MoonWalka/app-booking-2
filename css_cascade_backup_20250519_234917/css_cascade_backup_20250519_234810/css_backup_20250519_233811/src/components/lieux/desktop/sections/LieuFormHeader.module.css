@@ -44,7 +44,7 @@
 }
 
 .backButton i {
-  margin-right: var(--tc-spacing-xs, 0.25rem);
+  margin-right: var(--tc-spacing-xs);
 }
 
 .formCard {

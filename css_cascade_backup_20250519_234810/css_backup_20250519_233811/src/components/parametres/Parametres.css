@@ -5,55 +5,55 @@
  */
 
 .nav-pills .nav-link {
-  margin-bottom: var(--tc-spacing-xs, 0.5rem);
-  border-radius: var(--tc-border-radius, 0.25rem);
-  color: var(--tc-gray-700, #495057);
+  margin-bottom: var(--tc-spacing-xs);
+  border-radius: var(--tc-border-radius);
+  color: var(--tc-gray-700);
 }
 
 .nav-pills .nav-link.active {
   background-color: var(--tc-primary-color);
-  color: var(--tc-white, white);
+  color: var(--tc-white);
 }
 
 .card {
-  box-shadow: var(--tc-shadow-sm, 0 2px 4px rgba(0, 0, 0, 0.1));
+  box-shadow: var(--tc-shadow-sm);
 }
 
 .card-body {
-  padding: var(--tc-spacing-xl, 2rem);
+  padding: var(--tc-spacing-xl);
 }
 
 .form-group {
-  margin-bottom: var(--tc-spacing-lg, 1.5rem);
+  margin-bottom: var(--tc-spacing-lg);
 }
 
 .form-label {
-  font-weight: var(--tc-font-weight-medium, 500);
-  margin-bottom: var(--tc-spacing-xs, 0.5rem);
+  font-weight: var(--tc-font-weight-medium);
+  margin-bottom: var(--tc-spacing-xs);
 }
 
 .btn-group {
-  margin-bottom: var(--tc-spacing-md, 1rem);
+  margin-bottom: var(--tc-spacing-md);
 }
 
 .color-picker {
-  width: var(--tc-input-width-sm, 100px);
-  height: var(--tc-input-height, 38px);
-  padding: var(--tc-spacing-xxs, 2px);
+  width: var(--tc-input-width-sm);
+  height: var(--tc-input-height);
+  padding: var(--tc-spacing-xxs);
 }
 
 .export-buttons {
   display: flex;
-  gap: var(--tc-spacing-md, 1rem);
+  gap: var(--tc-spacing-md);
   flex-wrap: wrap;
 }
 
-@media (max-width: var(--tc-breakpoint-sm, 768px)) {
+@media (max-width: var(--tc-breakpoint-sm)) {
   .card-body {
-    padding: var(--tc-spacing-md, 1rem);
+    padding: var(--tc-spacing-md);
   }
   
   .nav-pills {
-    margin-bottom: var(--tc-spacing-lg, 1.5rem);
+    margin-bottom: var(--tc-spacing-lg);
   }
 }

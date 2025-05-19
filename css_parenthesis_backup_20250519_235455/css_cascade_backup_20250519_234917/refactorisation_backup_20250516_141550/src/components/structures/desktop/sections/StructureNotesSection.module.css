@@ -1,0 +1,113 @@
+/* 
+ * Styles pour StructureNotesSection
+ * Section de notes d'une structure
+ * Dernière mise à jour: 04/05/2025
+ */
+
+.formCard {
+  background-color: var(--tc-color-background);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-box-shadow-sm));
+  margin-bottom: var(--tc-spacing-lg);
+  overflow: hidden;
+}
+
+.detailsCard {
+  background-color: var(--tc-color-background);
+  border-radius: var(--tc-border-radius);
+  margin-bottom: var(--tc-spacing-md);
+  box-shadow: var(--tc-box-shadow-sm));
+  overflow: hidden;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  background-color: var(--tc-color-background-secondary);
+  border-bottom: 1px solid var(--tc-color-border);
+}
+
+.cardHeader i {
+  font-size: var(--tc-font-size-lg);
+  color: var(--tc-color-primary);
+  margin-right: var(--tc-spacing-sm);
+}
+
+.cardHeader h3 {
+  font-size: var(--tc-font-size-md);
+  font-weight: var(--tc-font-weight-bold);
+  margin: 0;
+  color: var(--tc-color-text-primary);
+}
+
+.cardBody {
+  padding: var(--tc-spacing-md);
+}
+
+.notesContent {
+  white-space: pre-wrap;
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-color-text-primary);
+  line-height: 1.5;
+}
+
+.notesContent p {
+  margin-bottom: var(--tc-spacing-xs);
+}
+
+.notesContent p:last-child {
+  margin-bottom: 0;
+}
+
+.emptyNotes {
+  font-style: italic;
+  color: var(--tc-color-text-muted);
+  font-size: var(--tc-font-size-sm);
+}
+
+.formGroup {
+  margin-bottom: var(--tc-spacing-md);
+}
+
+.formLabel {
+  font-weight: var(--tc-font-weight-medium);
+  margin-bottom: var(--tc-spacing-xs);
+  font-size: var(--tc-font-size-sm);
+  display: block;
+}
+
+.formControl {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--tc-color-border);
+  border-radius: var(--tc-border-radius-sm);
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  font-size: var(--tc-font-size-sm);
+  line-height: 1.5;
+  color: var(--tc-color-text-primary);
+  background-color: var(--tc-color-background);
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.formControl:focus {
+  border-color: var(--tc-color-primary-light);
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(var(--tc-color-primary-rgb), 0.25);
+}
+
+.formTextarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .cardBody {
+    padding: var(--tc-spacing-sm);
+  }
+  
+  .formTextarea {
+    min-height: 100px;
+  }
+}

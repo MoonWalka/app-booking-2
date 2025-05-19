@@ -1,0 +1,161 @@
+/*
+ * Styles pour SearchDropdown
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 5 mai 2025
+ */
+
+.searchContainer {
+  position: relative;
+  width: 100%;
+}
+
+.inputGroup {
+  display: flex;
+  position: relative;
+}
+
+.inputGroupText {
+  display: flex;
+  align-items: center;
+  padding: var(--tc-spacing-1) var(--tc-spacing-2);
+  background-color: var(--tc-bg-subtle);
+  border: 1px solid var(--tc-border-input);
+  border-right: none;
+  border-radius: var(--tc-border-radius-sm) 0 0 var(--tc-border-radius-sm);
+  color: var(--tc-color-text-muted);
+}
+
+.searchInput {
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+  flex: 1;
+}
+
+.createButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tc-spacing-1-5);
+  white-space: nowrap;
+  border-radius: 0 var(--tc-border-radius-sm) var(--tc-border-radius-sm) 0;
+}
+
+.resultsDropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 300px;
+  overflow-y: auto;
+  background-color: var(--tc-bg-card);
+  border: 1px solid var(--tc-border-input);
+  border-radius: 0 0 var(--tc-border-radius-sm) var(--tc-border-radius-sm);
+  box-shadow: var(--tc-shadow-md);
+  z-index: var(--tc-z-index-dropdown);
+  margin-top: -1px;
+}
+
+.loadingContainer {
+  padding: var(--tc-spacing-2);
+  display: flex;
+  align-items: center;
+  gap: var(--tc-spacing-1-5);
+  justify-content: center;
+}
+
+.loadingText {
+  color: var(--tc-color-text-muted);
+  font-size: var(--tc-font-size-sm);
+}
+
+.resultsList {
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.resultItem {
+  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  border-bottom: 1px solid var(--tc-border-light);
+  cursor: pointer;
+  transition: background-color var(--tc-transition-speed) ease;
+}
+
+.resultItem:hover {
+  background-color: var(--tc-bg-hover);
+}
+
+.itemName {
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-color-text);
+  margin-bottom: var(--tc-spacing-0-5);
+}
+
+.itemDetail {
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-color-text-muted);
+  margin-top: var(--tc-spacing-0-25);
+}
+
+.noResultsContainer {
+  padding: var(--tc-spacing-3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--tc-spacing-2);
+  text-align: center;
+}
+
+.noResultsMessage {
+  color: var(--tc-color-text-muted);
+  font-style: italic;
+  margin-bottom: var(--tc-spacing-1-5);
+}
+
+.tipContainer {
+  padding: var(--tc-spacing-2);
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-color-text-muted);
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--tc-spacing-1-5);
+}
+
+/* Styles responsive standardisés */
+@media (max-width: 768px) {
+  .resultItem {
+    padding: var(--tc-spacing-1-5) var(--tc-spacing-2);
+  }
+  
+  .resultsDropdown {
+    max-height: 250px;
+  }
+}
+
+@media (max-width: 576px) {
+  .inputGroup {
+    flex-direction: column;
+  }
+  
+  .inputGroupText {
+    border-right: 1px solid var(--tc-border-input);
+    border-bottom: none;
+    border-radius: var(--tc-border-radius-sm) var(--tc-border-radius-sm) 0 0;
+  }
+  
+  .searchInput {
+    border-left: 1px solid var(--tc-border-input);
+    border-top: none;
+    border-bottom: none;
+    border-radius: 0;
+  }
+  
+  .createButton {
+    border-radius: 0 0 var(--tc-border-radius-sm) var(--tc-border-radius-sm);
+  }
+  
+  .tipContainer, .loadingContainer {
+    flex-direction: column;
+  }
+}

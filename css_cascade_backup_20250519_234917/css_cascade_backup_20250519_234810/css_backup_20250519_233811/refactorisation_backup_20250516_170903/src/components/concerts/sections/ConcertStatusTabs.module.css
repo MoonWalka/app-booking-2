@@ -21,14 +21,14 @@
 }
 
 /* Styles responsive standardisés */
-@media (max-width: var(--tc-breakpoint-sm, 768px)) {
+@media (max-width: var(--tc-breakpoint-sm)) {
   .statusFilterTabs {
     gap: var(--tc-spacing-1);
     margin-bottom: var(--tc-spacing-3);
   }
 }
 
-@media (max-width: var(--tc-breakpoint-xs, 576px)) {
+@media (max-width: var(--tc-breakpoint-xs)) {
   .statusFilterTabs {
     justify-content: center;
   }

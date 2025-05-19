@@ -15,7 +15,7 @@
  * 
  * RÈGLES IMPORTANTES:
  * 1. TOUTES les couleurs de l'application doivent être définies ici
- * 2. NE JAMAIS utiliser de valeurs hexadécimales codées en dur (var(--tc-color-primary, var(--tc-color-primary, #0d6efd)), #2c3e50, etc.) dans les autres fichiers CSS
+ * 2. NE JAMAIS utiliser de valeurs hexadécimales codées en dur (var(--tc-color-primary), #2c3e50, etc.) dans les autres fichiers CSS
  * 3. TOUJOURS utiliser les variables CSS (var(--tc-primary-color), var(--tc-secondary-color), etc.)
  * 4. Pour les effets de transparence, utiliser les variables RGB (exemple: rgba(var(--tc-primary-color-rgb), 0.1))
  * 
@@ -278,7 +278,7 @@
   --tc-table-row-even-bg: var(--tc-bg-color);
   /* Utilisation: Lignes paires dans les tableaux */
   
-  --tc-table-row-odd-bg: var(--tc-gray-50, #fafbfc);
+  --tc-table-row-odd-bg: var(--tc-gray-50);
   /* Utilisation: Lignes impaires dans les tableaux */
   
   /* Badges */

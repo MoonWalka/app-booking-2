@@ -10,7 +10,7 @@
 /* Container principal */
 .concertsMobileContainer {
   padding: var(--tc-spacing-3);
-  background-color: var(--tc-bg-light, #f8f9fa);
+  background-color: var(--tc-bg-light);
   min-height: calc(100vh - 56px);
 }
 
@@ -78,7 +78,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: var(--tc-primary-color, #007bff);
+  background-color: var(--tc-primary-color);
   color: #fff;
   padding: var(--tc-spacing-2);
   min-width: 60px;
@@ -86,7 +86,7 @@
 }
 
 .pastDate {
-  background-color: var(--tc-color-text-secondary, #6c757d);
+  background-color: var(--tc-color-text-secondary);
 }
 
 .dateDay {
@@ -137,11 +137,11 @@
   align-items: center;
   gap: var(--tc-spacing-2);
   font-size: 0.875rem;
-  color: var(--tc-color-text-secondary, #555);
+  color: var(--tc-color-text-secondary);
 }
 
 .infoItem i {
-  color: var(--tc-color-text-secondary, #6c757d);
+  color: var(--tc-color-text-secondary);
   font-size: 0.875rem;
   width: 16px;
 }
@@ -157,7 +157,7 @@
 }
 
 .artistTag {
-  background-color: var(--tc-bg-light, #f8f9fa);
+  background-color: var(--tc-bg-light);
   border-radius: var(--tc-radius-sm);
   padding: 0.125rem 0.375rem;
   font-size: var(--tc-spacing-2);
@@ -192,18 +192,18 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  color: var(--tc-color-text-secondary, #6c757d);
+  color: var(--tc-color-text-secondary);
   padding: var(--tc-spacing-2);
   transition: background-color 0.2s ease;
   flex: 1;
 }
 
 .actionBtn:hover {
-  background-color: var(--tc-bg-light, #f8f9fa);
+  background-color: var(--tc-bg-light);
 }
 
 .actionBtn.view {
-  color: var(--tc-primary-color, #007bff);
+  color: var(--tc-primary-color);
 }
 
 .actionBtn.edit {
@@ -223,7 +223,7 @@
   justify-content: center;
   text-align: center;
   padding: var(--tc-spacing-8);
-  color: var(--tc-color-text-secondary, #6c757d);
+  color: var(--tc-color-text-secondary);
 }
 
 .emptyContainer i {

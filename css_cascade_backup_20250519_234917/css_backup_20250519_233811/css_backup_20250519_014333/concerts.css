@@ -81,8 +81,8 @@
 }
 
 .btn-primary {
-  background-color: var(--tc-primary-color, #007bff);
-  border-color: var(--tc-primary-color, #007bff);
+  background-color: var(--tc-primary-color);
+  border-color: var(--tc-primary-color);
   color: var(--tc-bg-default);
 }
 
@@ -93,13 +93,13 @@
 }
 
 .btn-primary:hover {
-  background-color: var(--tc-primary-dark, #0069d9);
-  border-color: var(--tc-primary-dark, #0069d9);
+  background-color: var(--tc-primary-dark);
+  border-color: var(--tc-primary-dark);
 }
 
 .btn-secondary:hover {
-  background-color: var(--tc-secondary-dark, #5a6268);
-  border-color: var(--tc-secondary-dark, #5a6268);
+  background-color: var(--tc-secondary-dark);
+  border-color: var(--tc-secondary-dark);
 }
 
 /* =============================
@@ -108,9 +108,9 @@
 /* Concert details styles */
 .concert-detail-container {
   padding: 20px;
-  background-color: var(--tc-bg-color, #fff);
-  border-radius: var(--tc-border-radius, 8px);
-  box-shadow: var(--tc-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
+  background-color: var(--tc-bg-color);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-shadow);
   margin-bottom: 20px;
 }
 
@@ -131,7 +131,7 @@
 
 /* Titre du concert - Desktop */
 .concert-title-desktop {
-  font-size: var(--tc-font-size-xl, 24px); /* // Correction UI: Valeur par défaut ajoutée */
+  font-size: var(--tc-font-size-xl); /* // Correction UI: Valeur par défaut ajoutée */
   font-weight: bold;
   margin-bottom: 5px;
   color: var(--tc-text-color));
@@ -139,7 +139,7 @@
 
 /* Date du concert - affichage sous le titre */
 .concert-date-display {
-  font-size: var(--tc-font-size-md, 16px); /* // Correction UI: Valeur par défaut ajoutée */
+  font-size: var(--tc-font-size-md); /* // Correction UI: Valeur par défaut ajoutée */
   color: var(--tc-text-muted));
 }
 
@@ -160,7 +160,7 @@
 }
 
 .concerts-title {
-  font-size: var(--tc-font-size-xl, 24px); /* // Correction UI: Valeur par défaut ajoutée */
+  font-size: var(--tc-font-size-xl); /* // Correction UI: Valeur par défaut ajoutée */
   font-weight: bold;
 }
 
@@ -176,8 +176,8 @@
   gap: 15px;
   margin-bottom: 20px;
   padding: 15px;
-  background-color: var(--tc-bg-light, #f5f5f5);
-  border-radius: var(--tc-border-radius, 8px);
+  background-color: var(--tc-bg-light);
+  border-radius: var(--tc-border-radius);
 }
 
 .filter-group {
@@ -204,8 +204,8 @@
 /* // Correction UI: Amélioration du style des cartes de concerts */
 .concert-list-card {
   background-color: var(--tc-bg-color));
-  border-radius: var(--tc-border-radius, 8px);
-  box-shadow: var(--tc-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-shadow);
   margin-bottom: 15px;
   overflow: hidden;
   transition: var(--tc-transition-standard); /* // Correction UI: Transition standardisée */
@@ -233,11 +233,11 @@
 }
 
 .concert-form-container .tc-modal-confirm {
-  background-color: var(--tc-bg-color, #fff);
-  border-radius: var(--tc-border-radius, var(--tc-spacing-2));
+  background-color: var(--tc-bg-color);
+  border-radius: var(--tc-border-radius);
   width: 450px;
   max-width: 90vw;
-  box-shadow: var(--tc-shadow-lg, 0 4px 20px rgba(0, 0, 0, 0.15));
+  box-shadow: var(--tc-shadow-lg);
   overflow: hidden;
 }
 
@@ -253,9 +253,9 @@
 
 /* Titre du concert - Mobile */
 .concert-title-mobile {
-  font-size: var(--tc-font-size-md, 16px); /* // Correction UI: Valeur par défaut ajoutée */
+  font-size: var(--tc-font-size-md); /* // Correction UI: Valeur par défaut ajoutée */
   font-weight: var(--tc-font-weight-semibold);
-  margin: 0 0 var(--tc-spacing-xs, 5px) 0;
+  margin: 0 0 var(--tc-spacing-xs) 0;
   color: var(--tc-text-color));
   /* // Correction UI: Gestion de l'overflow */
   white-space: nowrap;
@@ -274,10 +274,10 @@
   border-collapse: separate;
   border-spacing: 0;
   width: 100%;
-  background-color: var(--tc-bg-color, #fff);
-  border-radius: var(--tc-border-radius, 8px);
+  background-color: var(--tc-bg-color);
+  border-radius: var(--tc-border-radius);
   overflow: hidden;
-  box-shadow: var(--tc-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
+  box-shadow: var(--tc-shadow);
 }
 
 /* // Correction UI: Standardisation des styles de cellules */
@@ -285,13 +285,13 @@
 .concerts-container .concerts-table td {
   padding: 12px;
   vertical-align: middle;
-  border-bottom: 1px solid var(--tc-border-color-light, #f0f0f0);
+  border-bottom: 1px solid var(--tc-border-color-light);
 }
 
 .concerts-container .concerts-table th {
   font-weight: var(--tc-font-weight-semibold);
   color: var(--tc-text-color));
-  background-color: var(--tc-bg-light, #f9f9f9);
+  background-color: var(--tc-bg-light);
 }
 
 /* // ...existing code for table components... */
@@ -300,7 +300,7 @@
 .tc-status-message {
   padding: 6px 12px;
   border-radius: 20px;
-  font-size: var(--tc-font-size-xs, 12px); /* // Correction UI: Valeur par défaut ajoutée */
+  font-size: var(--tc-font-size-xs); /* // Correction UI: Valeur par défaut ajoutée */
   font-weight: var(--tc-font-weight-medium);
   text-align: center;
   white-space: nowrap;
@@ -424,7 +424,7 @@
   
   /* // Correction UI: Ajustements responsive pour le tableau */
   .concerts-container .concerts-table {
-    font-size: var(--tc-font-size-sm, 14px);
+    font-size: var(--tc-font-size-sm);
   }
   
   .concerts-container .concerts-table .text-truncate-container {

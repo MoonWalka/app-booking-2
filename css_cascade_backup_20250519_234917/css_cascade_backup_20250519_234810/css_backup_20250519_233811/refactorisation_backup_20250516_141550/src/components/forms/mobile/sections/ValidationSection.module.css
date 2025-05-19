@@ -13,7 +13,7 @@
 }
 
 .defaultHeader {
-  background-color: var(--tc-bg-light, #f8f9fa);
+  background-color: var(--tc-bg-light);
   font-weight: var(--tc-font-weight-semibold);
   font-size: var(--tc-spacing-3);
   display: flex;
@@ -40,7 +40,7 @@
 /* Styles pour les champs à valider */
 .fieldContainer {
   padding: var(--tc-spacing-2) 0;
-  border-bottom: 1px solid var(--tc-color-border, #eee);
+  border-bottom: 1px solid var(--tc-color-border);
 }
 
 .fieldContainer:last-child {
@@ -57,7 +57,7 @@
 
 .fieldLabel {
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-color-text-primary, #333);
+  color: var(--tc-color-text-primary);
   font-size: 0.95rem;
 }
 
@@ -73,27 +73,27 @@
 }
 
 .existingValue, .formValue {
-  background-color: var(--tc-bg-light, #f8f9fa);
+  background-color: var(--tc-bg-light);
   border-radius: 6px;
   padding: var(--tc-spacing-2);
   position: relative;
 }
 
 .existingValue {
-  border-left: 3px solid var(--tc-color-text-secondary, #6c757d);
+  border-left: 3px solid var(--tc-color-text-secondary);
 }
 
 .formValue {
-  border-left: 3px solid var(--tc-color-primary, #0d6efd);
+  border-left: 3px solid var(--tc-color-primary);
 }
 
 .valueLabel {
   position: absolute;
   top: -8px;
   left: 8px;
-  background-color: var(--tc-bg-default, white);
+  background-color: var(--tc-bg-default);
   font-size: 0.7rem;
-  color: var(--tc-color-text-secondary, #6c757d);
+  color: var(--tc-color-text-secondary);
   padding: 0 var(--tc-spacing-1);
 }
 

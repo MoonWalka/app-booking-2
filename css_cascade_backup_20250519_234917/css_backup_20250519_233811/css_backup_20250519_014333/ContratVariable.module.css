@@ -47,13 +47,13 @@
 .mobileVariableItem {
   padding: 12px;
   border-radius: 4px;
-  background-color: var(--tc-bg-light, #f8f9fa);
-  border: 1px solid var(--tc-border-color, #dee2e6);
+  background-color: var(--tc-bg-light);
+  border: 1px solid var(--tc-border-color);
   margin-bottom: 8px;
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
 
 .mobileVariableItem:hover {
-  background-color: var(--tc-primary-bg-subtle, #cfe2ff);
+  background-color: var(--tc-primary-bg-subtle);
 }

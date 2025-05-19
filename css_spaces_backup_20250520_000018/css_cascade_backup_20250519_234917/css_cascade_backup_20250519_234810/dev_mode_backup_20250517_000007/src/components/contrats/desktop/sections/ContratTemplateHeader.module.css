@@ -1,0 +1,83 @@
+/*
+ * Styles pour ContratTemplateHeader
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
+.editorHeader {
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.breadcrumbContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+.breadcrumbItem {
+  cursor: pointer;
+  color: #0d6efd;
+}
+
+.breadcrumbItem:hover {
+  text-decoration: underline;
+}
+
+.breadcrumbItemActive {
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.editorTitle {
+  margin-bottom: 16px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #212529;
+}
+
+.editorActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Styles pour le mode modal */
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.modalTitle {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.modalActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.modalClose {
+  background: transparent;
+  border: none;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: #6c757d;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  transition: color 0.15s ease-in-out;
+}
+
+.modalClose:hover {
+  color: #000;
+}

@@ -909,7 +909,7 @@
 .form-card {
   background-color: var(--tc-bg-color);
   border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-shadow-sm, 0 0.125rem var(--tc-spacing-1) rgba(0, 0, 0, 0.05));
+  box-shadow: var(--tc-shadow-sm));
   margin-bottom: var(--tc-spacing-4);
   overflow: hidden;
 }

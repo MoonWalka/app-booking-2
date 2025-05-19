@@ -14,15 +14,15 @@
 .deskConcertFormContainer, .concertFormContainer {
   max-width: 1000px; /* Uniformisé à 1000px */
   margin: 0 auto;
-  padding: var(--tc-spacing-lg, 1.5rem);
-  background-color: var(--tc-bg-color, #f8f9fa);
+  padding: var(--tc-spacing-lg);
+  background-color: var(--tc-bg-color);
 }
 
 .deskConcertFormContainer {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: var(--tc-spacing-lg, 1.5rem);
+  padding: var(--tc-spacing-lg);
 }
 
 /* En-tête du formulaire */
@@ -30,29 +30,29 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--tc-spacing-lg, 1.5rem);
+  margin-bottom: var(--tc-spacing-lg);
   flex-wrap: wrap;
 }
 
 /* Titre moderne */
 .modernTitle {
-  font-size: var(--tc-font-size-xl, 1.5rem);
-  font-weight: var(--tc-font-weight-bold, 700);
-  color: var(--tc-primary-color, #007bff);
-  margin-bottom: var(--tc-spacing-sm, 0.5rem);
+  font-size: var(--tc-font-size-xl);
+  font-weight: var(--tc-font-weight-bold);
+  color: var(--tc-primary-color);
+  margin-bottom: var(--tc-spacing-sm);
 }
 
 /* Container du fil d'Ariane */
 .breadcrumbContainer {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-sm, 0.5rem);
-  font-size: var(--tc-font-size-sm, 0.875rem);
+  gap: var(--tc-spacing-sm);
+  font-size: var(--tc-font-size-sm);
 }
 
 /* Élément du fil d'Ariane */
 .breadcrumbItem {
-  color: var(--tc-text-color, #333);
+  color: var(--tc-text-color);
   cursor: pointer;
 }
 
@@ -61,7 +61,7 @@
 }
 
 .breadcrumbItem.active {
-  color: var(--tc-text-secondary, #6c757d);
+  color: var(--tc-text-secondary);
   cursor: default;
 }
 
@@ -73,8 +73,8 @@
 .actionButtons {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--tc-spacing-sm, 0.75rem);
-  margin-bottom: var(--tc-spacing-lg, 1.5rem);
+  gap: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-spacing-lg);
   justify-content: flex-start;
   align-items: center;
   width: 100%;
@@ -88,25 +88,25 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: var(--tc-transition, all 0.2s ease-in-out);
-  font-weight: var(--tc-font-weight-semibold, 500);
+  transition: var(--tc-transition);
+  font-weight: var(--tc-font-weight-semibold);
 }
 
 /* Formulaire moderne - utilisation des styles unifiés */
 .deskModernForm, .modernForm {
-  margin-top: var(--tc-spacing-md, 1rem);
+  margin-top: var(--tc-spacing-md);
   background-color: transparent;
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-md, 20px);
+  gap: var(--tc-spacing-md);
 }
 
 .deskModernForm {
-  margin-top: var(--tc-spacing-md, 1rem);
+  margin-top: var(--tc-spacing-md);
   background-color: transparent;
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-md, 20px);
+  gap: var(--tc-spacing-md);
 }
 
 /* Carte de formulaire */
@@ -114,42 +114,42 @@
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: var(--tc-spacing-lg, 1.5rem);
+  margin-bottom: var(--tc-spacing-lg);
   overflow: hidden;
 }
 
 .formCard {
-  background-color: var(--tc-color-white, #fff);
-  border-radius: var(--tc-border-radius, 8px);
-  box-shadow: var(--tc-box-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
-  margin-bottom: var(--tc-spacing-lg, 24px);
+  background-color: var(--tc-color-white);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-box-shadow);
+  margin-bottom: var(--tc-spacing-lg);
   overflow: hidden;
 }
 
 .cardHeader {
   display: flex;
   align-items: center;
-  background-color: var(--tc-bg-color, #f8f9fa);
-  padding: var(--tc-spacing-md, 1rem);
+  background-color: var(--tc-bg-color);
+  padding: var(--tc-spacing-md);
   border-bottom: 1px solid #eee;
 }
 
 .cardHeader {
-  background-color: var(--tc-color-gray-100, #f8f9fa);
-  padding: var(--tc-spacing-md, 16px) var(--tc-spacing-md, 20px);
-  border-bottom: var(--tc-border-width, 1px) solid var(--tc-border-color, #e9ecef);
+  background-color: var(--tc-color-gray-100);
+  padding: var(--tc-spacing-md) var(--tc-spacing-md);
+  border-bottom: var(--tc-border-width) solid var(--tc-border-color);
   display: flex;
   align-items: center;
 }
 
 .cardHeader i {
-  margin-right: var(--tc-spacing-sm, 0.5rem);
-  color: var(--tc-primary-color, #007bff);
+  margin-right: var(--tc-spacing-sm);
+  color: var(--tc-primary-color);
 }
 
 .cardHeader h3 {
-  font-size: var(--tc-font-size-lg, 1.1rem);
-  font-weight: var(--tc-font-weight-semibold, 600);
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
   margin: 0;
   flex-grow: 1;
 }
@@ -157,60 +157,60 @@
 .cardHeader h3 {
   margin: 0;
   font-size: 1.25rem;
-  font-weight: var(--tc-font-weight-bold, 600);
-  color: var(--tc-text-color, #333);
+  font-weight: var(--tc-font-weight-bold);
+  color: var(--tc-text-color);
 }
 
 .cardBody {
-  padding: var(--tc-spacing-lg, 1.5rem);
+  padding: var(--tc-spacing-lg);
 }
 
 .cardBody {
-  padding: var(--tc-spacing-md, 20px);
+  padding: var(--tc-spacing-md);
 }
 
 /* Champs de formulaire */
 .formGroup {
-  margin-bottom: var(--tc-spacing-md, 1.25rem);
+  margin-bottom: var(--tc-spacing-md);
 }
 
 .formGroup {
-  margin-bottom: var(--tc-spacing-md, 18px);
+  margin-bottom: var(--tc-spacing-md);
 }
 
 .formLabel {
   display: block;
-  margin-bottom: var(--tc-spacing-sm, 0.5rem);
-  font-weight: var(--tc-font-weight-semibold, 500);
+  margin-bottom: var(--tc-spacing-sm);
+  font-weight: var(--tc-font-weight-semibold);
 }
 
 .formLabel {
   display: block;
-  margin-bottom: var(--tc-spacing-xs, 6px);
-  font-weight: var(--tc-font-weight-medium, 500);
-  color: var(--tc-text-color, #333);
+  margin-bottom: var(--tc-spacing-xs);
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-text-color);
 }
 
 .required {
   color: #dc3545;
-  margin-left: var(--tc-spacing-xs, 3px);
+  margin-left: var(--tc-spacing-xs);
 }
 
 .formControl {
   display: block;
   width: 100%;
-  padding: var(--tc-spacing-sm, 0.5rem);
+  padding: var(--tc-spacing-sm);
   font-size: 1rem;
   line-height: 1.5;
-  color: var(--tc-text-color, #333);
-  background-color: var(--tc-color-white, #fff);
-  border: 1px solid var(--tc-input-border-color, #ced4da);
-  border-radius: var(--tc-border-radius-sm, 0.25rem);
+  color: var(--tc-text-color);
+  background-color: var(--tc-color-white);
+  border: 1px solid var(--tc-input-border-color);
+  border-radius: var(--tc-border-radius-sm);
   transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
 
 .formControl:focus {
-  border-color: var(--tc-primary-color, #007bff);
+  border-color: var(--tc-primary-color);
   outline: 0;
   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
@@ -218,13 +218,13 @@
 .formSelect {
   display: block;
   width: 100%;
-  padding: var(--tc-spacing-sm, 0.5rem);
+  padding: var(--tc-spacing-sm);
   font-size: 1rem;
   line-height: 1.5;
-  color: var(--tc-text-color, #333);
-  background-color: var(--tc-color-white, #fff);
-  border: 1px solid var(--tc-input-border-color, #ced4da);
-  border-radius: var(--tc-border-radius-sm, 0.25rem);
+  color: var(--tc-text-color);
+  background-color: var(--tc-color-white);
+  border: 1px solid var(--tc-input-border-color);
+  border-radius: var(--tc-border-radius-sm);
   transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
 
@@ -253,17 +253,17 @@
 .inputGroupAddon {
   display: flex;
   align-items: center;
-  padding: var(--tc-spacing-sm, 0.5rem);
+  padding: var(--tc-spacing-sm);
   margin-bottom: 0;
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
-  color: var(--tc-text-color, #333);
+  color: var(--tc-text-color);
   text-align: center;
   white-space: nowrap;
-  background-color: var(--tc-color-gray-100, #f8f9fa);
-  border: 1px solid var(--tc-input-border-color, #ced4da);
-  border-radius: 0 var(--tc-border-radius-sm, 0.25rem) var(--tc-border-radius-sm, 0.25rem) 0;
+  background-color: var(--tc-color-gray-100);
+  border: 1px solid var(--tc-input-border-color);
+  border-radius: 0 var(--tc-border-radius-sm) var(--tc-border-radius-sm) 0;
 }
 
 .inputGroup .formControl {
@@ -272,14 +272,14 @@
 }
 
 .requiredField {
-  color: var(--tc-danger-color, #dc3545);
-  margin-left: var(--tc-spacing-xs, 4px);
+  color: var(--tc-danger-color);
+  margin-left: var(--tc-spacing-xs);
 }
 
 .formHelpText {
   margin-top: 0.25rem;
   font-size: 0.875rem;
-  color: var(--tc-text-muted, #6c757d);
+  color: var(--tc-text-muted);
 }
 
 /* Recherche de lieu/programmateur/artiste */
@@ -293,7 +293,7 @@
 .programmateurSearchContainer,
 .artisteSearchContainer {
   position: relative;
-  margin-bottom: var(--tc-spacing-md, 1rem);
+  margin-bottom: var(--tc-spacing-md);
 }
 
 .selectedLieu,
@@ -301,8 +301,8 @@
 .selectedArtiste {
   border: 1px solid #ddd;
   border-radius: 6px;
-  padding: var(--tc-spacing-lg, 1rem);
-  margin-bottom: var(--tc-spacing-sm, 0.75rem);
+  padding: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-spacing-sm);
 }
 
 .lieuCard,
@@ -322,65 +322,65 @@
 .lieuName,
 .programmateurName,
 .artisteName {
-  font-weight: var(--tc-font-weight-semibold, 600);
+  font-weight: var(--tc-font-weight-semibold);
   display: block;
-  margin-bottom: var(--tc-spacing-sm, 0.5rem);
+  margin-bottom: var(--tc-spacing-sm);
 }
 
 .lieuAddress,
 .lieuCapacity {
-  font-size: var(--tc-font-size-sm, 0.875rem);
+  font-size: var(--tc-font-size-sm);
   display: flex;
   align-items: center;
-  margin-top: var(--tc-spacing-xs, 0.25rem);
+  margin-top: var(--tc-spacing-xs);
   color: #666;
 }
 
 .lieuAddress i,
 .lieuCapacity i {
-  margin-right: var(--tc-spacing-xs, 0.375rem);
+  margin-right: var(--tc-spacing-xs);
 }
 
 .programmateurStructure {
-  font-size: var(--tc-font-size-sm, 0.875rem);
+  font-size: var(--tc-font-size-sm);
   display: block;
-  margin-bottom: var(--tc-spacing-xs, 0.25rem);
+  margin-bottom: var(--tc-spacing-xs);
   color: #666;
 }
 
 .programmateurContacts {
-  margin-top: var(--tc-spacing-sm, 0.5rem);
+  margin-top: var(--tc-spacing-sm);
 }
 
 .programmateurContactItem {
   display: flex;
   align-items: center;
-  font-size: var(--tc-font-size-sm, 0.875rem);
-  margin-bottom: var(--tc-spacing-xs, 0.25rem);
+  font-size: var(--tc-font-size-sm);
+  margin-bottom: var(--tc-spacing-xs);
 }
 
 .programmateurContactItem i {
-  margin-right: var(--tc-spacing-xs, 0.375rem);
+  margin-right: var(--tc-spacing-xs);
   color: #666;
 }
 
 .artisteGenre {
-  font-size: var(--tc-font-size-sm, 0.875rem);
+  font-size: var(--tc-font-size-sm);
   display: block;
-  margin-bottom: var(--tc-spacing-xs, 0.25rem);
+  margin-bottom: var(--tc-spacing-xs);
   color: #666;
 }
 
 .artisteDescription {
-  font-size: var(--tc-font-size-sm, 0.875rem);
-  margin-top: var(--tc-spacing-sm, 0.5rem);
+  font-size: var(--tc-font-size-sm);
+  margin-top: var(--tc-spacing-sm);
 }
 
 /* Items de dropdown */
 .lieuItem,
 .programmateurItem,
 .artisteItem {
-  padding: var(--tc-spacing-md, 0.75rem);
+  padding: var(--tc-spacing-md);
   cursor: pointer;
   border-bottom: 1px solid #f0f0f0;
 }
@@ -388,7 +388,7 @@
 .lieuItem:hover,
 .programmateurItem:hover,
 .artisteItem:hover {
-  background-color: var(--tc-bg-color, #f8f9fa);
+  background-color: var(--tc-bg-color);
 }
 
 .lieuDetails,
@@ -396,9 +396,9 @@
 .artisteDetails {
   display: flex;
   flex-direction: column;
-  font-size: var(--tc-font-size-xs, 0.85rem);
+  font-size: var(--tc-font-size-xs);
   color: #6c757d;
-  margin-top: var(--tc-spacing-xs, 0.25rem);
+  margin-top: var(--tc-spacing-xs);
 }
 
 .suggestionContainer {
@@ -407,40 +407,40 @@
   max-height: 200px;
   overflow-y: auto;
   z-index: 1000;
-  background-color: var(--tc-color-white, white);
-  border: var(--tc-border-width, 1px) solid var(--tc-input-border-color, #ced4da);
-  border-radius: 0 0 var(--tc-border-radius-sm, 4px) var(--tc-border-radius-sm, 4px);
-  box-shadow: var(--tc-dropdown-shadow, 0 4px 8px rgba(0, 0, 0, 0.1));
+  background-color: var(--tc-color-white);
+  border: var(--tc-border-width) solid var(--tc-input-border-color);
+  border-radius: 0 0 var(--tc-border-radius-sm) var(--tc-border-radius-sm);
+  box-shadow: var(--tc-dropdown-shadow);
   margin-top: -1px;
 }
 
 .suggestionItem {
-  padding: var(--tc-spacing-sm, 10px) var(--tc-spacing-md, 15px);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
   display: flex;
   align-items: center;
   cursor: pointer;
-  border-bottom: var(--tc-border-width, 1px) solid var(--tc-color-gray-200, #f0f0f0);
+  border-bottom: var(--tc-border-width) solid var(--tc-color-gray-200);
 }
 
 .suggestionItem:hover {
-  background-color: var(--tc-color-gray-100, #f8f9fa);
+  background-color: var(--tc-color-gray-100);
 }
 
 /* Actions de formulaire en bas */
 .formActions {
   display: flex;
   justify-content: flex-end;
-  gap: var(--tc-spacing-md, 1rem);
-  margin-top: var(--tc-spacing-xl, 2rem);
-  margin-bottom: var(--tc-spacing-xl, 2rem);
+  gap: var(--tc-spacing-md);
+  margin-top: var(--tc-spacing-xl);
+  margin-bottom: var(--tc-spacing-xl);
   flex-wrap: wrap;
 }
 
 .formActions {
   display: flex;
   justify-content: space-between;
-  margin-top: var(--tc-spacing-lg, 20px);
-  margin-bottom: var(--tc-spacing-xl, 2rem);
+  margin-top: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-spacing-xl);
 }
 
 /* Modal */
@@ -467,25 +467,25 @@
 }
 
 .tcModalHeader {
-  padding: var(--tc-spacing-md, 1rem);
+  padding: var(--tc-spacing-md);
   border-bottom: 1px solid #eee;
 }
 
 .tcModalHeader h5 {
   margin: 0;
-  font-weight: var(--tc-font-weight-semibold, 600);
+  font-weight: var(--tc-font-weight-semibold);
 }
 
 .tcModalBody {
-  padding: var(--tc-spacing-lg, 1.5rem);
+  padding: var(--tc-spacing-lg);
 }
 
 .tcModalFooter {
-  padding: var(--tc-spacing-md, 1rem);
+  padding: var(--tc-spacing-md);
   border-top: 1px solid #eee;
   display: flex;
   justify-content: flex-end;
-  gap: var(--tc-spacing-sm, 0.5rem);
+  gap: var(--tc-spacing-sm);
 }
 
 /* Classes de chargement uniformisées */
@@ -495,7 +495,7 @@
   justify-content: center;
   align-items: center;
   min-height: 300px;
-  color: var(--tc-text-color-secondary, #666);
+  color: var(--tc-text-color-secondary);
 }
 
 /* Media queries */
@@ -506,7 +506,7 @@
   }
   
   .cardBody {
-    padding: var(--tc-spacing-md, 1rem);
+    padding: var(--tc-spacing-md);
   }
   
   .actionButtons {
@@ -529,16 +529,16 @@
 
 @media (max-width: 768px) {
   .formCard {
-    border-radius: var(--tc-border-radius-sm, 4px);
-    margin-bottom: var(--tc-spacing-md, 16px);
+    border-radius: var(--tc-border-radius-sm);
+    margin-bottom: var(--tc-spacing-md);
   }
   
   .cardHeader {
-    padding: var(--tc-spacing-sm, 12px) var(--tc-spacing-md, 16px);
+    padding: var(--tc-spacing-sm) var(--tc-spacing-md);
   }
   
   .cardBody {
-    padding: var(--tc-spacing-sm, 16px);
+    padding: var(--tc-spacing-sm);
   }
   
   .formRow {
@@ -551,7 +551,7 @@
   
   .formActions {
     flex-direction: column;
-    gap: var(--tc-spacing-sm, 10px);
+    gap: var(--tc-spacing-sm);
   }
   
   .formActions button {

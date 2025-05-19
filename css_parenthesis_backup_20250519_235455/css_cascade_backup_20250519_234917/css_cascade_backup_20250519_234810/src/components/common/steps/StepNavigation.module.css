@@ -1,0 +1,121 @@
+/*
+ * Styles pour StepNavigation
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 5 mai 2025
+ */
+
+.stepNavigationContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.stepProgress {
+  margin-bottom: var(--tc-spacing-5);
+}
+
+.stepProgressDots {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--tc-spacing-1-5);
+}
+
+.stepDot {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-color: var(--tc-bg-light);
+  border: 1px solid var(--tc-border-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-color-text-muted);
+  z-index: 1;
+  transition: all var(--tc-transition-speed) ease;
+}
+
+.stepDot.active {
+  background-color: var(--tc-color-primary);
+  color: var(--tc-color-white);
+  border-color: var(--tc-color-primary);
+}
+
+.stepDot.completed {
+  background-color: var(--tc-color-success);
+  color: var(--tc-color-white);
+  border-color: var(--tc-color-success);
+  cursor: pointer;
+}
+
+.stepProgressBar {
+  height: 6px;
+  background-color: var(--tc-bg-light);
+  border-radius: 3px;
+  margin: 0 var(--tc-spacing-3);
+  position: relative;
+  top: -1.25rem;
+  z-index: 0;
+}
+
+.stepProgressFill {
+  height: 100%;
+  background-color: var(--tc-color-success);
+  border-radius: 3px;
+  transition: width var(--tc-transition-speed) ease;
+}
+
+.stepTitle {
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
+  text-align: center;
+  margin-bottom: var(--tc-spacing-4);
+  color: var(--tc-color-text);
+}
+
+.stepContent {
+  margin-bottom: var(--tc-spacing-5);
+}
+
+.stepButtons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--tc-spacing-3);
+}
+
+/* Styles responsive standardisés */
+@media (max-width: 768px) {
+  .stepProgress {
+    margin-bottom: var(--tc-spacing-4);
+  }
+  
+  .stepTitle {
+    margin-bottom: var(--tc-spacing-3);
+  }
+  
+  .stepContent {
+    margin-bottom: var(--tc-spacing-4);
+  }
+}
+
+@media (max-width: 576px) {
+  .stepNavigationContainer {
+    padding: 0 var(--tc-spacing-3);
+  }
+  
+  .stepProgressDots {
+    margin: 0 var(--tc-spacing-1-5) var(--tc-spacing-1-5);
+  }
+  
+  .stepDot {
+    width: 1.75rem;
+    height: 1.75rem;
+    font-size: var(--tc-font-size-xs);
+  }
+  
+  .stepTitle {
+    font-size: var(--tc-font-size-md);
+  }
+}

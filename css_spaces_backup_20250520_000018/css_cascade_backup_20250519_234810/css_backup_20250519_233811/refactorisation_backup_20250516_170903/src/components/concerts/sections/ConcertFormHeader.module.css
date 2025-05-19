@@ -1,0 +1,69 @@
+/*
+ * Styles pour ConcertFormHeader
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 5 mai 2025
+ */
+
+.container {
+  width: 100%;
+}
+
+.formHeader {
+  margin-bottom: var(--tc-spacing-4);
+}
+
+.pageTitle {
+  font-size: var(--tc-font-size-xl);
+  font-weight: var(--tc-font-weight-bold);
+  color: var(--tc-color-title);
+  margin-bottom: var(--tc-spacing-1-5);
+}
+
+.breadcrumbContainer {
+  display: flex;
+  align-items: center;
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-color-text-muted);
+}
+
+.breadcrumbItem {
+  cursor: pointer;
+  transition: color var(--tc-transition-speed) ease;
+}
+
+.breadcrumbItem:hover:not(.active) {
+  color: var(--tc-color-primary);
+  text-decoration: underline;
+}
+
+.breadcrumbSeparator {
+  margin: 0 var(--tc-spacing-1-5);
+  font-size: var(--tc-font-size-xs);
+}
+
+.active {
+  color: var(--tc-color-text);
+  font-weight: var(--tc-font-weight-semibold);
+  cursor: default;
+}
+
+/* Styles responsive standardisés */
+@media (max-width: 768px) {
+  .formHeader {
+    margin-bottom: var(--tc-spacing-3);
+  }
+}
+
+@media (max-width: 576px) {
+  .pageTitle {
+    font-size: var(--tc-font-size-lg);
+  }
+  
+  .breadcrumbContainer {
+    font-size: var(--tc-font-size-xs);
+  }
+  
+  .breadcrumbSeparator {
+    margin: 0 var(--tc-spacing-1);
+  }
+}

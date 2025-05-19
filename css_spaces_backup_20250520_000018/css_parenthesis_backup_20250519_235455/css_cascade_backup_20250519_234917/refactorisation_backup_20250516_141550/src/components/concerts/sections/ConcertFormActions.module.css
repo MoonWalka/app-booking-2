@@ -1,0 +1,70 @@
+/*
+ * Styles pour ConcertFormActions
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 5 mai 2025
+ */
+
+.topActionsContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--tc-spacing-4);
+  padding: var(--tc-spacing-1-5) 0;
+}
+
+.bottomActionsContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--tc-spacing-4);
+  border-top: 1px solid var(--tc-border-light);
+  padding-top: var(--tc-spacing-4);
+}
+
+.leftButtons {
+  display: flex;
+  gap: var(--tc-spacing-2);
+}
+
+.rightButtons {
+  display: flex;
+  gap: var(--tc-spacing-2);
+}
+
+.actionButton {
+  display: flex;
+  align-items: center;
+}
+
+/* Styles responsive standardisés */
+@media (max-width: 768px) {
+  .topActionsContainer,
+  .bottomActionsContainer {
+    padding: var(--tc-spacing-1) 0;
+  }
+}
+
+@media (max-width: 576px) {
+  .topActionsContainer,
+  .bottomActionsContainer {
+    flex-direction: column;
+    gap: var(--tc-spacing-2);
+  }
+  
+  .leftButtons,
+  .rightButtons {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .leftButtons {
+    order: 2;
+  }
+  
+  .rightButtons {
+    order: 1;
+  }
+  
+  .actionButton {
+    flex: 1;
+    justify-content: center;
+  }
+}

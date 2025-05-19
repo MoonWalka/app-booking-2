@@ -1,0 +1,85 @@
+/*
+ * Styles pour ArtisteSearchBar
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 5 mai 2025
+ */
+
+.searchResultsDropdown {
+  border: 1px solid var(--tc-border-light);
+  border-radius: var(--tc-border-radius-sm);
+  background-color: var(--tc-bg-card);
+  z-index: var(--tc-z-index-dropdown);
+  box-shadow: var(--tc-shadow-md);
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.searchResultItem {
+  display: flex;
+  align-items: center;
+  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  text-decoration: none;
+  color: inherit;
+  border-bottom: 1px solid var(--tc-border-ultralight);
+}
+
+.searchResultItem:hover {
+  background-color: var(--tc-bg-hover);
+}
+
+.searchResultAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: var(--tc-spacing-3);
+  flex-shrink: 0;
+}
+
+.placeholderAvatar {
+  width: 100%;
+  height: 100%;
+  background-color: var(--tc-bg-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--tc-color-text-muted);
+  font-size: var(--tc-font-size-lg);
+}
+
+.searchCreateItem {
+  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: var(--tc-color-primary);
+  background-color: var(--tc-bg-primary-subtle);
+}
+
+.searchCreateItem:hover {
+  background-color: var(--tc-bg-primary-highlight);
+}
+
+/* Styles responsive standardisés */
+@media (max-width: 768px) {
+  .searchResultsDropdown {
+    max-height: 250px;
+  }
+  
+  .searchResultItem,
+  .searchCreateItem {
+    padding: var(--tc-spacing-1-5) var(--tc-spacing-2);
+  }
+}
+
+@media (max-width: 576px) {
+  .searchResultAvatar {
+    width: 32px;
+    height: 32px;
+    margin-right: var(--tc-spacing-2);
+  }
+  
+  .placeholderAvatar {
+    font-size: var(--tc-font-size-md);
+  }
+}

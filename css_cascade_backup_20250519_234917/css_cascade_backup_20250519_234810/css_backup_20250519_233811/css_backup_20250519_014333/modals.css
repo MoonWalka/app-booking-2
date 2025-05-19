@@ -134,7 +134,7 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  background-color: var(--tc-bg-default, var(--tc-bg-default, white));
+  background-color: var(--tc-bg-default);
   border-radius: var(--tc-border-radius);
   overflow: hidden;
 }
@@ -145,7 +145,7 @@
   left: 0;
   right: 0;
   z-index: 20;
-  background-color: var(--tc-bg-default, var(--tc-bg-default, white));
+  background-color: var(--tc-bg-default);
   border-bottom: 1px solid var(--tc-border-color);
   padding: var(--tc-spacing-3) var(--tc-spacing-4);
   display: flex;
@@ -159,13 +159,13 @@
   left: 0;
   right: 0;
   z-index: 20;
-  background-color: var(--tc-bg-default, var(--tc-bg-default, white));
+  background-color: var(--tc-bg-default);
   border-top: 1px solid var(--tc-border-color);
   padding: var(--tc-spacing-3) var(--tc-spacing-4);
   display: flex;
   justify-content: flex-end;
   gap: var(--tc-spacing-2);
-  box-shadow: var(--tc-shadow-lg, 0 -2px 10px rgba(0, 0, 0, 0.1));
+  box-shadow: var(--tc-shadow-lg);
 }
 
 .tc-modal-full .tc-modal-body {
@@ -217,14 +217,14 @@
   min-height: 200px;
   border: 1px solid #ccc;
   border-radius: var(--tc-radius-sm);
-  background: var(--tc-bg-default, var(--tc-bg-default, white));
+  background: var(--tc-bg-default);
 }
 
 .tc-modal-full .ql-toolbar.ql-snow {
   position: relative;
   top: 0;
   z-index: 10;
-  background-color: var(--tc-bg-default, var(--tc-bg-default, white));
+  background-color: var(--tc-bg-default);
   border-top: none;
   border-bottom: 1px solid #ccc;
   padding: 8px;
@@ -271,7 +271,7 @@
   margin-bottom: var(--tc-spacing-4);
   border: 1px solid var(--tc-border-color);
   border-radius: var(--tc-border-radius);
-  background-color: var(--tc-bg-default, var(--tc-bg-default, white));
+  background-color: var(--tc-bg-default);
 }
 
 .tc-modal-full .card-header {

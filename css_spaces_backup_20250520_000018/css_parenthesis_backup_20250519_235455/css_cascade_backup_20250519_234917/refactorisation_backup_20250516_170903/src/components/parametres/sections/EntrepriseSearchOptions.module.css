@@ -1,0 +1,39 @@
+/*
+ * Styles pour EntrepriseSearchOptions
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 5 mai 2025
+ */
+
+.searchTypeButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tc-spacing-2-5);
+  margin-top: var(--tc-spacing-4);
+}
+
+.searchTypeButtons button {
+  transition: all var(--tc-transition-speed) ease;
+  display: flex;
+  align-items: center;
+}
+
+/* Styles responsive standardisés */
+@media (max-width: 768px) {
+  .searchTypeButtons {
+    flex-direction: column;
+    gap: var(--tc-spacing-2);
+    margin-top: var(--tc-spacing-3);
+  }
+  
+  .searchTypeButtons button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 576px) {
+  .searchTypeButtons {
+    margin-top: var(--tc-spacing-2);
+    gap: var(--tc-spacing-1-5);
+  }
+}

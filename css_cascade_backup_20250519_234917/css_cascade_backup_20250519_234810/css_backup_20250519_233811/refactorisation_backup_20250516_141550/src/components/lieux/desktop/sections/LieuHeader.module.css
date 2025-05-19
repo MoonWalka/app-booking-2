@@ -1,0 +1,103 @@
+/* 
+ * Styles pour LieuHeader
+ * En-tête de la page détails d'un lieu
+ * Dernière mise à jour: 04/05/2025
+ */
+
+.detailsHeaderContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--tc-spacing-lg, 1.5rem);
+  flex-wrap: wrap;
+  gap: var(--tc-spacing-md, 1rem);
+}
+
+.titleContainer {
+  flex: 1;
+  min-width: 250px;
+}
+
+.breadcrumbContainer {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--tc-spacing-xs, 0.5rem);
+  font-size: var(--tc-font-size-sm, 0.9rem);
+  color: var(--tc-color-text-muted, #6c757d);
+}
+
+.breadcrumbItem {
+  cursor: pointer;
+  color: var(--tc-color-primary, #0d6efd);
+  transition: color 0.2s;
+}
+
+.breadcrumbItem:hover {
+  color: var(--tc-color-primary-dark, #0b5ed7);
+  text-decoration: underline;
+}
+
+.breadcrumbItem.active {
+  color: var(--tc-color-text-secondary, #495057);
+  font-weight: var(--tc-font-weight-medium, 500);
+  cursor: default;
+}
+
+.breadcrumbItem.active:hover {
+  text-decoration: none;
+}
+
+.breadcrumbContainer i {
+  margin: 0 var(--tc-spacing-xs, 0.5rem);
+  font-size: var(--tc-font-size-xs, 0.75rem);
+}
+
+.modernTitle {
+  margin: 0;
+  font-size: var(--tc-font-size-xl, 1.75rem);
+  font-weight: var(--tc-font-weight-bold, 600);
+  color: var(--tc-color-text-primary, #212529);
+  display: flex;
+  align-items: center;
+  gap: var(--tc-spacing-sm, 0.75rem);
+  flex-wrap: wrap;
+}
+
+.actionButtons {
+  display: flex;
+  gap: var(--tc-spacing-xs, 0.5rem);
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.actionBtn {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-spacing-xxs, 0.375rem);
+}
+
+.typeBadge {
+  font-size: var(--tc-font-size-xs, 0.75rem);
+  text-transform: uppercase;
+  padding: var(--tc-spacing-xxs, 0.25rem) var(--tc-spacing-xs, 0.5rem);
+  border-radius: var(--tc-border-radius-sm, 0.25rem);
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .detailsHeaderContainer {
+    flex-direction: column;
+    gap: var(--tc-spacing-sm, 0.5rem);
+  }
+  
+  .actionButtons {
+    width: 100%;
+    justify-content: flex-start;
+    margin-top: var(--tc-spacing-sm, 0.5rem);
+  }
+  
+  .modernTitle {
+    font-size: var(--tc-font-size-lg, 1.5rem);
+  }
+}

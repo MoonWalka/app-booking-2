@@ -59,8 +59,8 @@
 
 .filterPill {
   padding: var(--tc-spacing-2) var(--tc-spacing-3);
-  background-color: var(--tc-bg-light, var(--tc-bg-light, #f8f9fa));
-  border: 1px solid var(--tc-border-color, var(--tc-color-border-light, #dee2e6));
+  background-color: var(--tc-bg-light));
+  border: 1px solid var(--tc-border-color));
   border-radius: var(--tc-spacing-8);
   white-space: nowrap;
   font-size: 0.875rem;
@@ -69,9 +69,9 @@
 }
 
 .filterPill.active {
-  background-color: var(--tc-primary-color, var(--tc-color-primary, #0d6efd));
-  color: var(--tc-bg-default, white);
-  border-color: var(--tc-primary-color, var(--tc-color-primary, #0d6efd));
+  background-color: var(--tc-primary-color));
+  color: var(--tc-bg-default);
+  border-color: var(--tc-primary-color));
 }
 
 .mobileArtistesGrid {
@@ -81,8 +81,8 @@
 }
 
 .artisteCardMobile {
-  background-color: var(--tc-bg-color, #fff);
-  border-radius: var(--tc-border-radius, var(--tc-spacing-2));
+  background-color: var(--tc-bg-color);
+  border-radius: var(--tc-border-radius));
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
@@ -97,7 +97,7 @@
 .artisteCardHeader {
   position: relative;
   height: 120px;
-  background-color: var(--tc-bg-light, var(--tc-bg-light, #f8f9fa));
+  background-color: var(--tc-bg-light));
   overflow: hidden;
 }
 
@@ -113,8 +113,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--tc-bg-light, var(--tc-bg-light, #f8f9fa));
-  color: var(--tc-text-muted, var(--tc-color-text-secondary, #6c757d));
+  background-color: var(--tc-bg-light));
+  color: var(--tc-text-muted));
 }
 
 .placeholderPhotoMobile i {
@@ -138,8 +138,8 @@
 }
 
 .badgeConcerts {
-  background-color: var(--tc-primary-color, var(--tc-color-primary, #0d6efd));
-  color: var(--tc-bg-default, white);
+  background-color: var(--tc-primary-color));
+  color: var(--tc-bg-default);
 }
 
 .artisteCardContent {
@@ -150,11 +150,11 @@
   margin: 0 0 var(--tc-spacing-2) 0;
   font-size: 1.var(--tc-spacing-3);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-color, var(--tc-color-text-primary, #333));
+  color: var(--tc-text-color));
 }
 
 .genre {
-  color: var(--tc-text-muted, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-text-muted));
   font-size: 0.875rem;
   margin-bottom: var(--tc-spacing-2);
 }
@@ -179,18 +179,18 @@
 }
 
 .actionBtn.view {
-  background-color: var(--tc-info-color, #0dcaf0);
-  color: var(--tc-bg-default, white);
+  background-color: var(--tc-info-color);
+  color: var(--tc-bg-default);
 }
 
 .actionBtn.edit {
-  background-color: var(--tc-warning-color, #ffc107);
-  color: var(--tc-bg-default, white);
+  background-color: var(--tc-warning-color);
+  color: var(--tc-bg-default);
 }
 
 .actionBtn.delete {
-  background-color: var(--tc-danger-color, var(--tc-color-error));
-  color: var(--tc-bg-default, white);
+  background-color: var(--tc-danger-color));
+  color: var(--tc-bg-default);
 }
 
 .emptyStateMobile {
@@ -204,7 +204,7 @@
 
 .emptyStateMobile i {
   font-size: 3rem;
-  color: var(--tc-text-muted, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-text-muted));
   margin-bottom: var(--tc-spacing-3);
   opacity: 0.5;
 }
@@ -255,7 +255,7 @@
   display: flex;
   justify-content: space-between;
   margin-bottom: var(--tc-spacing-3);
-  background-color: var(--tc-bg-light, #f8f9fa);
+  background-color: var(--tc-bg-light);
   border-radius: var(--tc-spacing-2);
   padding: var(--tc-spacing-2) var(--tc-spacing-2);
 }
@@ -268,12 +268,12 @@
 .statValue {
   font-size: var(--tc-font-size-xl);
   font-weight: var(--tc-font-weight-bold);
-  color: var(--tc-color-primary, #0d6efd);
+  color: var(--tc-color-primary);
 }
 
 .statLabel {
   font-size: var(--tc-spacing-2);
-  color: var(--tc-color-text-secondary, #6c757d);
+  color: var(--tc-color-text-secondary);
 }
 
 .searchFilterContainer {
@@ -289,8 +289,8 @@
   left: 0;
   right: 0;
   top: 100%;
-  background-color: var(--tc-bg-default, white);
-  border: 1px solid var(--tc-color-border-light, #dee2e6);
+  background-color: var(--tc-bg-default);
+  border: 1px solid var(--tc-color-border-light);
   border-radius: 0.375rem;
   z-index: 1000;
   box-shadow: 0 var(--tc-spacing-2) var(--tc-spacing-3) rgba(0, 0, 0, 0.15);
@@ -323,7 +323,7 @@
 .searchCreateItem {
   padding: var(--tc-spacing-2) var(--tc-spacing-3);
   cursor: pointer;
-  color: var(--tc-color-primary, #0d6efd);
+  color: var(--tc-color-primary);
   background-color: rgba(13, 110, 253, 0.05);
 }
 
@@ -378,7 +378,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--tc-color-text-secondary, #6c757d);
+  color: var(--tc-color-text-secondary);
 }
 
 .artisteName {
@@ -391,7 +391,7 @@
 
 .artisteGenre {
   font-size: 0.875rem;
-  color: var(--tc-color-text-secondary, #6c757d);
+  color: var(--tc-color-text-secondary);
 }
 
 .concertsBadge {

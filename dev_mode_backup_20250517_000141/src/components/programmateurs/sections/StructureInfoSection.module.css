@@ -11,11 +11,11 @@
  */
 
 .container {
-  margin-bottom: var(--tc-spacing-lg, 1.5rem);
-  padding: var(--tc-spacing-md, 1rem);
-  background-color: var(--tc-color-background-secondary, #f8f9fa);
-  border-radius: var(--tc-border-radius, 0.375rem);
-  box-shadow: var(--tc-box-shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.12));
+  margin-bottom: var(--tc-spacing-lg);
+  padding: var(--tc-spacing-md);
+  background-color: var(--tc-color-background-secondary);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-box-shadow-sm));
 }
 
 .structureInfoSection {
@@ -27,12 +27,12 @@
 }
 
 .sectionTitle {
-  font-size: var(--tc-font-size-lg, 1.25rem);
-  font-weight: var(--tc-font-weight-bold, 600);
-  margin-bottom: var(--tc-spacing-md, 1rem);
-  color: var(--tc-color-text-primary, #212529);
-  border-bottom: 1px solid var(--tc-color-border-light, #dee2e6);
-  padding-bottom: var(--tc-spacing-sm, 0.5rem);
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-bold);
+  margin-bottom: var(--tc-spacing-md);
+  color: var(--tc-color-text-primary);
+  border-bottom: 1px solid var(--tc-color-border-light);
+  padding-bottom: var(--tc-spacing-sm);
 }
 
 .formInput {
@@ -48,27 +48,27 @@
 }
 
 .formGroup {
-  margin-bottom: var(--tc-spacing-md, 1rem);
+  margin-bottom: var(--tc-spacing-md);
 }
 
 .formLabel {
   display: block;
-  font-weight: var(--tc-font-weight-medium, 500);
-  margin-bottom: var(--tc-spacing-xs, 0.25rem);
-  color: var(--tc-color-text-secondary, #495057);
+  font-weight: var(--tc-font-weight-medium);
+  margin-bottom: var(--tc-spacing-xs);
+  color: var(--tc-color-text-secondary);
 }
 
 .formControl {
   display: block;
   width: 100%;
-  padding: var(--tc-spacing-sm, 0.5rem);
-  font-size: var(--tc-font-size-base, 1rem);
+  padding: var(--tc-spacing-sm);
+  font-size: var(--tc-font-size-base);
   line-height: 1.5;
-  color: var(--tc-color-text-primary, #212529);
-  background-color: var(--tc-color-background, #fff);
+  color: var(--tc-color-text-primary);
+  background-color: var(--tc-color-background);
   background-clip: padding-box;
-  border: 1px solid var(--tc-color-border, #ced4da);
-  border-radius: var(--tc-border-radius, 0.375rem);
+  border: 1px solid var(--tc-color-border);
+  border-radius: var(--tc-border-radius);
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
@@ -85,7 +85,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  margin-bottom: var(--tc-spacing-md, 1rem);
+  margin-bottom: var(--tc-spacing-md);
 }
 
 .searchInput {
@@ -122,17 +122,17 @@
   left: 0;
   right: 0;
   z-index: 10;
-  background-color: var(--tc-color-background, #fff);
-  border: 1px solid var(--tc-color-border, #ced4da);
-  border-radius: var(--tc-border-radius, 0.375rem);
-  box-shadow: var(--tc-box-shadow-md, 0 4px 6px rgba(0, 0, 0, 0.1));
+  background-color: var(--tc-color-background);
+  border: 1px solid var(--tc-color-border);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-box-shadow-md));
   max-height: 300px;
   overflow-y: auto;
 }
 
 .resultItem {
-  padding: var(--tc-spacing-sm, 0.5rem);
-  border-bottom: 1px solid var(--tc-color-border-light, #dee2e6);
+  padding: var(--tc-spacing-sm);
+  border-bottom: 1px solid var(--tc-color-border-light);
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
@@ -142,12 +142,12 @@
 }
 
 .resultItem:hover {
-  background-color: var(--tc-color-background-hover, #e9ecef);
+  background-color: var(--tc-color-background-hover);
 }
 
 .structureName {
-  font-weight: var(--tc-font-weight-medium, 500);
-  margin-bottom: var(--tc-spacing-xs, 0.25rem);
+  font-weight: var(--tc-font-weight-medium);
+  margin-bottom: var(--tc-spacing-xs);
 }
 
 .structureLocation {
@@ -187,19 +187,19 @@
 }
 
 .createNewButton {
-  margin-top: var(--tc-spacing-sm, 0.5rem);
-  padding: var(--tc-spacing-xs, 0.25rem) var(--tc-spacing-sm, 0.5rem);
-  color: var(--tc-color-primary, #0d6efd);
+  margin-top: var(--tc-spacing-sm);
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  color: var(--tc-color-primary);
   background-color: transparent;
-  border: 1px solid var(--tc-color-primary, #0d6efd);
-  border-radius: var(--tc-border-radius, 0.375rem);
+  border: 1px solid var(--tc-color-primary);
+  border-radius: var(--tc-border-radius);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .createNewButton:hover {
-  color: var(--tc-color-background, #fff);
-  background-color: var(--tc-color-primary, #0d6efd);
+  color: var(--tc-color-background);
+  background-color: var(--tc-color-primary);
 }
 
 .selectedStructureInfo {
@@ -213,18 +213,18 @@
 }
 
 .selectedStructure {
-  padding: var(--tc-spacing-sm, 0.5rem);
-  background-color: var(--tc-color-background-light, #e9ecef);
-  border: 1px solid var(--tc-color-border, #ced4da);
-  border-radius: var(--tc-border-radius, 0.375rem);
-  margin-bottom: var(--tc-spacing-md, 1rem);
+  padding: var(--tc-spacing-sm);
+  background-color: var(--tc-color-background-light);
+  border: 1px solid var(--tc-color-border);
+  border-radius: var(--tc-border-radius);
+  margin-bottom: var(--tc-spacing-md);
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .removeButton {
-  color: var(--tc-color-danger, #dc3545);
+  color: var(--tc-color-danger);
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -232,15 +232,15 @@
 }
 
 .removeButton:hover {
-  color: var(--tc-color-danger-dark, #b02a37);
+  color: var(--tc-color-danger-dark);
 }
 
 .notification {
-  margin-top: var(--tc-spacing-sm, 0.5rem);
-  padding: var(--tc-spacing-sm, 0.5rem);
-  background-color: var(--tc-color-success-light, #d1e7dd);
-  color: var(--tc-color-success-dark, #0f5132);
-  border-radius: var(--tc-border-radius, 0.375rem);
+  margin-top: var(--tc-spacing-sm);
+  padding: var(--tc-spacing-sm);
+  background-color: var(--tc-color-success-light);
+  color: var(--tc-color-success-dark);
+  border-radius: var(--tc-border-radius);
   animation: fadeOut 3s forwards;
 }
 
@@ -262,6 +262,6 @@
   }
   
   .removeButton {
-    margin-top: var(--tc-spacing-sm, 0.5rem);
+    margin-top: var(--tc-spacing-sm);
   }
 }

@@ -26,7 +26,7 @@
 .formLabel {
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-color-text-secondary, #555);
+  color: var(--tc-color-text-secondary);
   margin-bottom: var(--tc-spacing-1);
 }
 
@@ -42,7 +42,7 @@
   gap: var(--tc-spacing-2);
   margin-bottom: var(--tc-spacing-3);
   padding-bottom: var(--tc-spacing-2);
-  border-bottom: 1px solid var(--tc-color-border, #eee);
+  border-bottom: 1px solid var(--tc-color-border);
 }
 
 .statusBadge {
@@ -57,7 +57,7 @@
   align-items: center;
   font-size: var(--tc-font-size-sm);
   color: var(--tc-color-error);
-  background-color: var(--tc-color-error-light, rgba(220, 53, 69, 0.1));
+  background-color: var(--tc-color-error-light));
   padding: var(--tc-spacing-2);
   border-radius: var(--tc-radius-sm);
 }
@@ -65,7 +65,7 @@
 .infoGroup {
   margin-bottom: var(--tc-spacing-2);
   padding-bottom: var(--tc-spacing-2);
-  border-bottom: 1px solid var(--tc-color-border, #eee);
+  border-bottom: 1px solid var(--tc-color-border);
   display: flex;
   flex-direction: column;
 }
@@ -77,7 +77,7 @@
 .infoLabel {
   font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-color-text-secondary, #666);
+  color: var(--tc-color-text-secondary);
   margin-bottom: var(--tc-spacing-1);
 }
 
@@ -105,7 +105,7 @@
 }
 
 .notesContent {
-  background-color: var(--tc-bg-light, #f8f9fa);
+  background-color: var(--tc-bg-light);
   padding: var(--tc-spacing-2);
   border-radius: var(--tc-radius-sm);
   font-size: var(--tc-font-size-sm);
@@ -115,7 +115,7 @@
 .formStatusIndicator {
   margin-top: var(--tc-spacing-3);
   padding: var(--tc-spacing-2);
-  background-color: var(--tc-bg-light, #f8f9fa);
+  background-color: var(--tc-bg-light);
   border-radius: var(--tc-radius-sm);
   font-size: var(--tc-font-size-sm);
   display: flex;

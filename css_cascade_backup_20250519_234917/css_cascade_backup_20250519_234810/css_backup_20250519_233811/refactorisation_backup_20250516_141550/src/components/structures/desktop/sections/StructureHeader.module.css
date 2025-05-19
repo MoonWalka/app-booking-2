@@ -1,0 +1,150 @@
+/* 
+ * Styles pour StructureHeader
+ * En-tête de la page détails d'une structure
+ * Dernière mise à jour: 04/05/2025
+ */
+
+.detailsHeader {
+  background-color: var(--tc-color-background, #fff);
+  border-radius: var(--tc-border-radius, 0.375rem);
+  padding: var(--tc-spacing-md, 1rem);
+  margin-bottom: var(--tc-spacing-md, 1rem);
+  box-shadow: var(--tc-box-shadow-sm, 0 2px 4px rgba(0,0,0,0.05));
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--tc-spacing-sm, 0.75rem);
+  font-size: var(--tc-font-size-sm, 0.875rem);
+  color: var(--tc-color-text-muted, #6c757d);
+}
+
+.breadcrumbLink {
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.breadcrumbLink:hover {
+  color: var(--tc-color-primary, #0d6efd);
+}
+
+.breadcrumbSeparator {
+  margin: 0 var(--tc-spacing-xs, 0.5rem);
+}
+
+.breadcrumbCurrent {
+  font-weight: var(--tc-font-weight-medium, 500);
+  color: var(--tc-color-text-primary, #212529);
+}
+
+.headerTitle {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--tc-spacing-sm, 0.75rem);
+}
+
+.headerTitle h2 {
+  font-size: var(--tc-font-size-xl, 1.75rem);
+  font-weight: var(--tc-font-weight-bold, 600);
+  margin: 0;
+  margin-right: var(--tc-spacing-sm, 0.5rem);
+  color: var(--tc-color-text-primary, #212529);
+}
+
+.headerBadge {
+  display: inline-block;
+  padding: var(--tc-spacing-xs, 0.25rem) var(--tc-spacing-sm, 0.5rem);
+  border-radius: var(--tc-border-radius-sm, 0.25rem);
+  font-size: var(--tc-font-size-xs, 0.75rem);
+  font-weight: var(--tc-font-weight-medium, 500);
+}
+
+.headerActions {
+  display: flex;
+  gap: var(--tc-spacing-sm, 0.5rem);
+  margin-top: var(--tc-spacing-sm, 0.5rem);
+}
+
+.actionButton {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-spacing-xs, 0.25rem);
+  font-weight: var(--tc-font-weight-medium, 500);
+}
+
+/* Badge styles */
+.badgePrimary {
+  background-color: var(--tc-color-primary-light, #cfe2ff);
+  color: var(--tc-color-primary-dark, #0a58ca);
+}
+
+.badgeSuccess {
+  background-color: var(--tc-color-success-light, #d1e7dd);
+  color: var(--tc-color-success-dark, #146c43);
+}
+
+.badgeInfo {
+  background-color: var(--tc-color-info-light, #cff4fc);
+  color: var(--tc-color-info-dark, #087990);
+}
+
+.badgeWarning {
+  background-color: var(--tc-color-warning-light, #fff3cd);
+  color: var(--tc-color-warning-dark, #997404);
+}
+
+.badgeSecondary {
+  background-color: var(--tc-color-secondary-light, #e2e3e5);
+  color: var(--tc-color-secondary-dark, #41464b);
+}
+
+/* Button styles */
+.primaryOutlineButton {
+  color: var(--tc-color-primary, #0d6efd);
+  border: 1px solid var(--tc-color-primary, #0d6efd);
+  background-color: transparent;
+  border-radius: var(--tc-border-radius, 0.375rem);
+  padding: var(--tc-spacing-xs, 0.25rem) var(--tc-spacing-md, 1rem);
+  transition: all 0.2s ease;
+}
+
+.primaryOutlineButton:hover {
+  background-color: var(--tc-color-primary, #0d6efd);
+  color: var(--tc-color-background, #fff);
+}
+
+.dangerOutlineButton {
+  color: var(--tc-color-danger, #dc3545);
+  border: 1px solid var(--tc-color-danger, #dc3545);
+  background-color: transparent;
+  border-radius: var(--tc-border-radius, 0.375rem);
+  padding: var(--tc-spacing-xs, 0.25rem) var(--tc-spacing-md, 1rem);
+  transition: all 0.2s ease;
+}
+
+.dangerOutlineButton:hover {
+  background-color: var(--tc-color-danger, #dc3545);
+  color: var(--tc-color-background, #fff);
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .headerTitle {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .headerTitle h2 {
+    margin-right: 0;
+    margin-bottom: var(--tc-spacing-xs, 0.25rem);
+  }
+  
+  .headerActions {
+    flex-wrap: wrap;
+  }
+  
+  .actionButton {
+    font-size: var(--tc-font-size-sm, 0.875rem);
+  }
+}

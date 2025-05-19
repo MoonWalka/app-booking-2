@@ -1,0 +1,47 @@
+.userGuide {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  padding: 20px;
+  border: 1px solid #e9ecef;
+}
+
+.guideHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.guideTitle {
+  margin: 0;
+  color: #344767;
+  font-weight: 600;
+  font-size: 1.125rem;
+}
+
+.guideContent {
+  color: #495057;
+}
+
+.guideSection {
+  margin-bottom: 16px;
+}
+
+.guideSection h4 {
+  color: #344767;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.guideSection ul {
+  padding-left: 1.25rem;
+}
+
+.guideSection li {
+  margin-bottom: 4px;
+}

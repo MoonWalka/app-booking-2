@@ -1,0 +1,73 @@
+/*
+ * Styles pour ArtisteForm
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
+ */
+
+
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+.artisteFormMobile {
+  padding: var(--tc-spacing-3);
+  background-color: var(--tc-bg-color, #fff);
+}
+
+.mobileFormHeader {
+  margin-bottom: var(--tc-spacing-4);
+  padding-bottom: var(--tc-spacing-3);
+  border-bottom: 1px solid var(--tc-border-color, var(--tc-color-border, #eee));
+}
+
+.mobileForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-spacing-4);
+}
+
+.formSection {
+  background-color: var(--tc-bg-color, #fff);
+  border-radius: var(--tc-border-radius, var(--tc-spacing-2));
+  padding: var(--tc-font-size-xl);
+  margin-bottom: var(--tc-spacing-4);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.sectionTitle {
+  font-size: var(--tc-font-size-xl);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-color, #344767);
+  margin-bottom: var(--tc-font-size-xl);
+  padding-bottom: var(--tc-spacing-2);
+  border-bottom: 1px solid var(--tc-border-color-light, #f0f0f0);
+}
+
+.membresList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-spacing-2);
+}
+
+.membreItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--tc-spacing-2);
+  background-color: var(--tc-bg-light, var(--tc-bg-light, #f8f9fa));
+  border-radius: var(--tc-border-radius, var(--tc-spacing-2));
+  border: 1px solid var(--tc-border-color, var(--tc-color-border-light, #dee2e6));
+}
+
+.formActions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-spacing-2);
+  margin-top: var(--tc-spacing-4);
+  padding-top: var(--tc-spacing-3);
+  border-top: 1px solid var(--tc-border-color-light, #f0f0f0);
+}

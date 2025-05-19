@@ -9,23 +9,23 @@
 .dashboardStats {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--tc-spacing-md, 20px);
-  margin: var(--tc-spacing-md, 20px) 0;
+  gap: var(--tc-spacing-md);
+  margin: var(--tc-spacing-md) 0;
 }
 
 .statCard {
-  background-color: var(--tc-white, white);
-  padding: var(--tc-spacing-md, 20px);
-  border-radius: var(--tc-border-radius, 5px);
-  box-shadow: var(--tc-shadow-sm, 0 2px 5px rgba(0, 0, 0, 0.1));
+  background-color: var(--tc-white);
+  padding: var(--tc-spacing-md);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-shadow-sm));
   flex: 1;
-  min-width: var(--tc-min-width-md, 200px);
+  min-width: var(--tc-min-width-md);
   text-align: center;
 }
 
 .statValue {
-  font-size: var(--tc-font-size-xxl, 36px);
-  font-weight: var(--tc-font-weight-bold, bold);
-  color: var(--tc-primary-color, #3498db);
-  margin: var(--tc-spacing-sm, 10px) 0;
+  font-size: var(--tc-font-size-xxl);
+  font-weight: var(--tc-font-weight-bold);
+  color: var(--tc-primary-color);
+  margin: var(--tc-spacing-sm) 0;
 }

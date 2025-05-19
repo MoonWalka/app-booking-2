@@ -8,16 +8,16 @@
 .headerContainer {
   display: flex;
   align-items: center;
-  background: var(--tc-bg-default, white);
+  background: var(--tc-bg-default);
   padding: var(--tc-spacing-2) var(--tc-spacing-2);
-  box-shadow: var(--tc-shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.1));
+  box-shadow: var(--tc-shadow-sm));
   position: sticky;
   top: 0;
   z-index: 100;
 }
 
 .backButton {
-  color: var(--tc-color-text-primary, #333);
+  color: var(--tc-color-text-primary);
   padding: var(--tc-spacing-1) var(--tc-spacing-2);
   margin-right: var(--tc-spacing-2);
   display: flex;
@@ -46,6 +46,6 @@
 
 .concertDate {
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-color-text-secondary, #666);
+  color: var(--tc-color-text-secondary);
   margin-top: var(--tc-spacing-1);
 }

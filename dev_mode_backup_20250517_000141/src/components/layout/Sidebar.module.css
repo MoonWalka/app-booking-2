@@ -17,8 +17,8 @@
  * Utilise position: fixed pour rester visible pendant le défilement
  */
 .sidebar {
-  width: var(--tc-sidebar-width, 250px);
-  min-width: var(--tc-sidebar-width, 250px); /* Empêche la sidebar de rétrécir dans les flex layouts */
+  width: var(--tc-sidebar-width);
+  min-width: var(--tc-sidebar-width); /* Empêche la sidebar de rétrécir dans les flex layouts */
   background-color: var(--tc-sidebar-bg-color);
   color: var(--tc-sidebar-text-color);
   height: 100vh;
@@ -26,9 +26,9 @@
   left: 0;
   top: 0;
   overflow-y: auto; /* Permet le défilement si le contenu est trop long */
-  z-index: var(--tc-z-index-sidebar, 1000); /* Valeur élevée pour superposer la plupart des éléments */
-  box-shadow: var(--tc-shadow, 2px 0 5px rgba(0,0,0,0.1));
-  transition: var(--tc-transition, all 0.3s ease);
+  z-index: var(--tc-z-index-sidebar); /* Valeur élevée pour superposer la plupart des éléments */
+  box-shadow: var(--tc-shadow));
+  transition: var(--tc-transition);
   /* Structure en flexbox verticale */
   display: flex;
   flex-direction: column;
@@ -40,8 +40,8 @@
  * Contient généralement le logo et peut-être un bouton de toggle
  */
 .sidebarHeader {
-  padding: var(--tc-spacing-lg, 20px);
-  border-bottom: var(--tc-border-width, 1px) solid var(--tc-sidebar-border-color, rgba(255,255,255,0.1));
+  padding: var(--tc-spacing-lg);
+  border-bottom: var(--tc-border-width) solid var(--tc-sidebar-border-color));
   text-align: center;
 }
 
@@ -52,7 +52,7 @@
  * Pas de padding horizontal pour permettre aux liens de s'étendre sur toute la largeur
  */
 .sidebarContent {
-  padding: var(--tc-spacing-sm, 10px) 0;
+  padding: var(--tc-spacing-sm) 0;
 }
 
 /* 
@@ -72,7 +72,7 @@
  * Espacement vertical entre les éléments de navigation
  */
 .navLinks li {
-  margin-bottom: var(--tc-spacing-xs, 5px);
+  margin-bottom: var(--tc-spacing-xs);
 }
 
 /* 
@@ -84,11 +84,11 @@
 .navLinks a {
   display: flex;
   align-items: center;
-  padding: var(--tc-spacing-sm, 10px) var(--tc-spacing-lg, 20px);
-  color: var(--tc-color-light, #f8f9fa);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-lg);
+  color: var(--tc-color-light);
   text-decoration: none;
   /* Transition courte pour une réaction rapide au hover */
-  transition: var(--tc-transition-short, background-color 0.2s);
+  transition: var(--tc-transition-short);
 }
 
 /* 
@@ -98,8 +98,8 @@
  * Conserve la couleur du texte pour maintenir le contraste
  */
 .navLinks a:hover {
-  background-color: var(--tc-sidebar-hover-bg-color, rgba(255,255,255,0.1));
-  color: var(--tc-color-light, #f8f9fa);
+  background-color: var(--tc-sidebar-hover-bg-color));
+  color: var(--tc-color-light);
 }
 
 /* 
@@ -109,9 +109,9 @@
  * Utilise une bordure gauche colorée comme indicateur visuel principal
  */
 .navLinks a.active {
-  background-color: var(--tc-sidebar-active-bg-color, rgba(255,255,255,0.2));
+  background-color: var(--tc-sidebar-active-bg-color));
   /* La bordure gauche crée un indicateur visuel fort pour la page active */
-  border-left: 4px solid var(--tc-primary-color, #4a6da7);
+  border-left: 4px solid var(--tc-primary-color);
 }
 
 /* 
@@ -120,8 +120,8 @@
  * Espacement et dimensionnement des icônes dans la navigation
  */
 .navLinks a i {
-  margin-right: var(--tc-spacing-sm, 10px);
-  font-size: var(--tc-font-size-md, 1.2em);
+  margin-right: var(--tc-spacing-sm);
+  font-size: var(--tc-font-size-md);
 }
 
 /* 
@@ -132,8 +132,8 @@
  */
 .sidebarFooter {
   margin-top: auto; /* Astuce flexbox pour pousser cet élément tout en bas */
-  padding: var(--tc-spacing-lg, 20px);
-  border-top: var(--tc-border-width, 1px) solid var(--tc-sidebar-border-color, rgba(255,255,255,0.1));
+  padding: var(--tc-spacing-lg);
+  border-top: var(--tc-border-width) solid var(--tc-sidebar-border-color));
 }
 
 /* 
@@ -153,7 +153,7 @@
  * word-break permet de gérer les emails longs qui pourraient déborder
  */
 .userEmail {
-  margin-bottom: var(--tc-spacing-sm, 10px);
+  margin-bottom: var(--tc-spacing-sm);
   word-break: break-word; /* Permet aux emails longs de se couper correctement */
   text-align: center;
 }
@@ -164,7 +164,7 @@
  * ATTENTION: Utilise max-width au lieu de min-width contrairement aux recommandations
  * À refactoriser pour suivre l'approche mobile-first dans une prochaine version
  */
-@media (max-width: var(--tc-breakpoint-md, 992px)) {
+@media (max-width: var(--tc-breakpoint-md)) {
   /* 
    * Sur les petits écrans, la sidebar est cachée par défaut
    * et apparaît seulement quand elle est activée
@@ -192,8 +192,8 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: var(--tc-modal-overlay-bg, rgba(0, 0, 0, 0.5));
-    z-index: var(--tc-z-index-backdrop, 999); /* Juste en-dessous de la sidebar */
+    background-color: var(--tc-modal-overlay-bg));
+    z-index: var(--tc-z-index-backdrop); /* Juste en-dessous de la sidebar */
     display: none;
   }
   

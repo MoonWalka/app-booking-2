@@ -1,0 +1,502 @@
+/*
+ * Styles pour layout
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
+/* Styles de layout unifiés - Combinaison de components/layout.css et pages/layout.css */
+
+/* Layouts de base - Desktop */
+.app-container,
+.desktop-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Intégration de l'ancien layout-container pour maintenir la compatibilité */
+.layout-container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Sidebar commune */
+.sidebar {
+  width: var(--tc-sidebar-width, 240px);
+  background-color: var(--tc-sidebar-bg-color);
+  color: var(--tc-sidebar-text-color);
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow-y: auto;
+  transition: var(--tc-transition);
+  min-width: var(--tc-sidebar-width, 240px);
+  position: sticky;
+  top: 0;
+}
+
+.sidebar-header {
+  padding: 0 20px 20px;
+  border-bottom: 1px solid var(--tc-sidebar-border-color);
+  display: flex;
+  align-items: center;
+}
+
+.sidebar-header h2 {
+  margin-bottom: 5px;
+}
+
+.sidebar-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.sidebar-header p {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.sidebar-logo {
+  max-width: 160px;
+  height: auto;
+}
+
+/* Elements de sidebar */
+.sidebar-content {
+  flex: 1;
+  padding: 15px 0;
+}
+
+.sidebar-footer {
+  padding: 15px 20px;
+  border-top: 1px solid var(--tc-sidebar-border-color);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+}
+
+/* Style amélioré pour la zone utilisateur en bas de la sidebar */
+.sidebar-footer .user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.sidebar-footer .user-email {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+  text-align: center;
+}
+
+.sidebar-footer .btn {
+  width: 100%;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+}
+
+/* Navigation - support des différents styles */
+.sidebar-nav,
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+}
+
+.sidebar-nav a,
+.menu-item {
+  color: var(--tc-sidebar-text-color);
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  transition: var(--tc-transition);
+  text-decoration: none;
+}
+
+.sidebar-nav a:hover,
+.menu-item:hover {
+  background-color: var(--tc-sidebar-hover-bg-color);
+  color: var(--tc-sidebar-text-color);
+}
+
+.sidebar-nav a.active,
+.menu-item.active {
+  background-color: var(--tc-sidebar-active-bg-color);
+  color: var(--tc-sidebar-text-color);
+  font-weight: 500;
+}
+
+.sidebar-nav a span,
+.menu-icon {
+  margin-right: 10px;
+  font-size: 1.1rem;
+}
+
+.menu-text {
+  font-size: 14px;
+}
+
+/* Navigation style ancien */
+.nav-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-links li {
+  margin-bottom: 5px;
+}
+
+.nav-links a {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  color: var(--tc-sidebar-text-color);
+  text-decoration: none;
+  border-radius: 4px;
+  transition: var(--tc-transition);
+}
+
+.nav-links a:hover {
+  background-color: var(--tc-sidebar-hover-bg-color);
+  color: var(--tc-sidebar-text-color);
+}
+
+.nav-links a.active {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: var(--tc-sidebar-text-color);
+  font-weight: 500;
+}
+
+.nav-links i {
+  margin-right: 10px;
+  font-size: 1.1rem;
+}
+
+/* Contenu principal - styles combinés */
+.main-content {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--tc-content-bg-color);
+  min-height: 100vh;
+  margin-left: var(--tc-sidebar-width, 240px);
+  padding: var(--tc-spacing-lg, 1.5rem);
+}
+
+.content,
+.content-wrapper {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  background-color: var(--tc-content-bg-color);
+}
+
+.main-header,
+.top-bar {
+  background-color: var(--tc-header-bg-color);
+  padding: 15px 30px;
+  box-shadow: var(--tc-card-shadow);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.page-title {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* Informations utilisateur - styles combinés */
+.user-info,
+.user-menu {
+  display: flex;
+  align-items: center;
+}
+
+.user-info {
+  margin-right: 15px;
+}
+
+.user-name,
+.user-email {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+}
+
+.user-role {
+  font-size: 12px;
+  color: var(--tc-text-muted);
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--tc-light-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: var(--tc-text-muted);
+}
+
+/* Définition unifiée du sélecteur main */
+main {
+  flex: 1 1 auto;
+  padding: var(--tc-spacing-lg, 1.5rem);
+  overflow-y: auto;
+  background-color: var(--tc-background-color, #f8f9fa);
+}
+
+/* Styles pour la marque */
+.brand-container {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.main-brand {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.sub-brand {
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+  opacity: 0.8;
+}
+
+/* Mobile layout spécifique */
+.mobile-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.mobile-header {
+  background-color: var(--tc-sidebar-bg-color);
+  color: var(--tc-sidebar-text-color);
+  padding: 12px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.menu-toggle {
+  border: none;
+  background: none;
+  color: var(--tc-text-light);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.mobile-logo {
+  height: 30px;
+}
+
+.mobile-user-menu {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: var(--tc-white-overlay-20);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--tc-text-light);
+}
+
+.mobile-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 80%;
+  max-width: 300px;
+  height: 100vh;
+  background-color: var(--tc-sidebar-bg-color);
+  color: var(--tc-sidebar-text-color);
+  z-index: 30;
+  transform: translateX(-100%);
+  transition: var(--tc-transition);
+  overflow-y: auto;
+}
+
+.mobile-sidebar.open {
+  transform: translateX(0);
+}
+
+.sidebar-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: var(--tc-text-light);
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.mobile-sidebar-header {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid var(--tc-sidebar-border-color);
+}
+
+.mobile-sidebar-menu {
+  padding: 15px 0;
+}
+
+.mobile-menu-item {
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  color: var(--tc-sidebar-text-color);
+  text-decoration: none;
+  transition: var(--tc-transition);
+}
+
+.mobile-menu-item:hover {
+  background-color: var(--tc-sidebar-hover-bg-color);
+  color: var(--tc-sidebar-text-color);
+}
+
+.mobile-menu-item.active {
+  background-color: var(--tc-sidebar-active-bg-color);
+  color: var(--tc-sidebar-text-color);
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--tc-modal-overlay-bg);
+  z-index: 25;
+  display: none;
+}
+
+.overlay.visible {
+  display: block;
+}
+
+.mobile-content {
+  flex: 1;
+  padding: 15px;
+  background-color: var(--tc-content-bg-color);
+}
+
+.mobile-footer {
+  background-color: var(--tc-header-bg-color);
+  padding: 10px;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  font-size: 12px;
+  color: var(--tc-text-muted);
+}
+
+/* Responsive layout - combiné des deux approches */
+@media (max-width: 768px) {
+  .app-container,
+  .desktop-layout {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    width: 100%;
+    padding: 10px 0;
+  }
+  
+  .main-content {
+    margin-left: 0;
+  }
+  
+  .sidebar-nav,
+  .sidebar-menu {
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 10px 0;
+  }
+  
+  .sidebar-nav a,
+  .menu-item {
+    padding: 8px 15px;
+    white-space: nowrap;
+  }
+  
+  .main-header,
+  .top-bar {
+    padding: 10px 15px;
+  }
+  
+  main {
+    padding: var(--tc-spacing-md, 1rem);
+  }
+  
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  /* Responsive de l'ancien style - Modifié pour corriger l'affichage */
+  .layout-container .sidebar {
+    width: 70px;
+    min-width: 70px;
+  }
+  
+  /* Préserver l'affichage du menu utilisateur en bas */
+  .layout-container .nav-links a span {
+    display: none;
+  }
+  
+  .layout-container .sidebar-header h3 {
+    display: none;
+  }
+  
+  .layout-container .nav-links i {
+    margin-right: 0;
+    font-size: 1.3rem;
+  }
+  
+  .layout-container .nav-links a {
+    justify-content: center;
+  }
+  
+  /* Fix pour le bas de la sidebar en mode mobile */
+  .layout-container .sidebar-footer .btn {
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .layout-container .sidebar-footer .btn i {
+    margin-right: 0;
+  }
+  
+  .layout-container .sidebar-footer .btn-text,
+  .layout-container .sidebar-footer .me-2 {
+    display: none;
+  }
+}

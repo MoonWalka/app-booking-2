@@ -101,19 +101,19 @@
 /* Alertes avec fond gradient */
 .alert-gradient-primary {
   background-image: linear-gradient(to right, var(--tc-primary-color), var(--tc-primary-light));
-  color: var(--tc-bg-default, var(--tc-bg-default, white));
+  color: var(--tc-bg-default);
   border: none;
 }
 
 .alert-gradient-success {
   background-image: linear-gradient(to right, var(--tc-success-color), var(--tc-success-light));
-  color: var(--tc-bg-default, var(--tc-bg-default, white));
+  color: var(--tc-bg-default);
   border: none;
 }
 
 .alert-gradient-danger {
   background-image: linear-gradient(to right, var(--tc-danger-color), var(--tc-danger-light));
-  color: var(--tc-bg-default, var(--tc-bg-default, white));
+  color: var(--tc-bg-default);
   border: none;
 }
 

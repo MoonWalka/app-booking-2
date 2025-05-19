@@ -1,5 +1,5 @@
 .structure-card {
-  font-family: var(--tc-font-monospace, monospace);
+  font-family: var(--tc-font-monospace);
   letter-spacing: 0.5px;
   white-space: nowrap;
 }

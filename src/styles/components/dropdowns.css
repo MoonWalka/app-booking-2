@@ -37,7 +37,7 @@
     right: 0;
     z-index: 20;
     min-width: 180px;
-    background-color: var(--tc-bg-default, var(--tc-bg-default, white));
+    background-color: var(--tc-bg-default);
     border-radius: var(--tc-radius-sm);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     margin-top: 5px;
@@ -68,17 +68,17 @@
   }
   
   .dropdown-item:hover {
-    background-color: #f5f5f5;
+    background-color: var(--tc-bg-hover);
   }
   
   .dropdown-item-icon {
     margin-right: 10px;
-    color: var(--tc-color-text-secondary, var(--tc-color-text-secondary, #666));
+    color: var(--tc-color-text-secondary);
   }
   
   .dropdown-divider {
     height: 1px;
-    background-color: var(--tc-color-border, var(--tc-color-border, #eee));
+    background-color: var(--tc-color-border);
     margin: 5px 0;
   }
   
@@ -92,7 +92,7 @@
     width: 100%;
     padding: 8px 12px;
     padding-right: 35px;
-    border: 1px solid var(--tc-color-border-medium, var(--tc-color-border-medium, #ddd));
+    border: 1px solid var(--tc-color-border-medium);
     border-radius: var(--tc-radius-sm);
     font-size: 14px;
   }
@@ -102,7 +102,7 @@
     right: 10px;
     top: 50%;
     transform: translateY(-50%);
-    color: #999;
+    color: var(--tc-color-text-muted);
   }
   
   .search-results {
@@ -110,8 +110,8 @@
     top: 100%;
     left: 0;
     right: 0;
-    background-color: var(--tc-bg-default, var(--tc-bg-default, white));
-    border: 1px solid var(--tc-color-border-medium, var(--tc-color-border-medium, #ddd));
+    background-color: var(--tc-bg-default);
+    border: 1px solid var(--tc-color-border-medium);
     border-top: none;
     border-radius: 0 0 4px 4px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -122,13 +122,13 @@
   
   .search-result-item {
     padding: 10px 15px;
-    border-bottom: 1px solid var(--tc-color-border, var(--tc-color-border, #eee));
+    border-bottom: 1px solid var(--tc-color-border);
     cursor: pointer;
     transition: background-color 0.2s;
   }
   
   .search-result-item:hover {
-    background-color: #f5f5f5;
+    background-color: var(--tc-bg-hover);
   }
   
   .search-result-item:last-child {
@@ -138,13 +138,13 @@
   .search-no-results {
     padding: 15px;
     text-align: center;
-    color: var(--tc-color-text-secondary, var(--tc-color-text-secondary, #666));
+    color: var(--tc-color-text-secondary);
   }
   
   .search-loading {
     padding: 15px;
     text-align: center;
-    color: var(--tc-color-text-secondary, var(--tc-color-text-secondary, #666));
+    color: var(--tc-color-text-secondary);
   }
   
   /* Filter dropdown styles */
@@ -155,8 +155,8 @@
   
   .filter-toggle {
     padding: 6px 12px;
-    background-color: #f5f5f5;
-    border: 1px solid var(--tc-color-border-medium, var(--tc-color-border-medium, #ddd));
+    background-color: var(--tc-bg-hover);
+    border: 1px solid var(--tc-color-border-medium);
     border-radius: var(--tc-radius-sm);
     font-size: 14px;
     cursor: pointer;
@@ -165,7 +165,7 @@
   }
   
   .filter-toggle:hover {
-    background-color: #e8e8e8;
+    background-color: var(--tc-bg-hover-alt);
   }
   
   .filter-icon {
@@ -178,7 +178,7 @@
     left: 0;
     margin-top: 5px;
     min-width: 200px;
-    background-color: var(--tc-bg-default, var(--tc-bg-default, white));
+    background-color: var(--tc-bg-default);
     border-radius: var(--tc-radius-sm);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     padding: 10px;
@@ -195,7 +195,7 @@
     justify-content: space-between;
     align-items: center;
     padding-bottom: 10px;
-    border-bottom: 1px solid var(--tc-color-border, var(--tc-color-border, #eee));
+    border-bottom: 1px solid var(--tc-color-border);
     margin-bottom: 10px;
   }
   
@@ -205,7 +205,7 @@
   
   .filter-clear {
     font-size: 12px;
-    color: #4a90e2;
+    color: var(--tc-primary-color);
     cursor: pointer;
   }
   
@@ -217,15 +217,15 @@
     display: flex;
     justify-content: flex-end;
     margin-top: 10px;
-    border-top: 1px solid var(--tc-color-border, var(--tc-color-border, #eee));
+    border-top: 1px solid var(--tc-color-border);
     padding-top: 10px;
   }
   
   .filter-badge {
     display: inline-flex;
     align-items: center;
-    background-color: #e3f2fd;
-    color: #0d47a1;
+    background-color: var(--tc-primary-light);
+    color: var(--tc-primary-dark);
     border-radius: 20px;
     padding: 2px 8px;
     font-size: 12px;

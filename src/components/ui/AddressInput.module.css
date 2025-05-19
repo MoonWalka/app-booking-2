@@ -118,7 +118,7 @@
 }
 
 /* Styles responsive standardisés */
-@media (max-width: 768px) {
+@media (max-width: var(--tc-breakpoint-sm)) {
   .suggestions {
     max-height: 250px;
   }
@@ -128,7 +128,7 @@
   }
 }
 
-@media (max-width: 576px) {
+@media (max-width: var(--tc-breakpoint-xs)) {
   .input {
     padding: var(--tc-spacing-1) var(--tc-spacing-1-5);
     padding-left: var(--tc-spacing-5);

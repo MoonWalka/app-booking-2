@@ -361,7 +361,7 @@ L'implémentation de ces recommandations permettrait d'améliorer significativem
 
 ### Phase 3 : Correction des styles codés en dur (Sprint 2-3)
 - [ ] **3.1** Exécuter prefix_css_vars.py sur tous les fichiers CSS
-- [ ] **3.2** Supprimer les fallbacks codés en dur dans les fichiers CSS
+- [ ] **3.2** Supprimer les fallbacks codés en dur dans les fichiers CSS (j'ai commencé de faire tout le dossier styles et UI))
 - [ ] **3.3** Remplacer les styles inline par des classes standards de typography.css
 - [ ] **3.4** Standardiser les couleurs avec les variables de colors.css
 - [ ] **3.5** Standardiser les espacements avec les variables d'espacement

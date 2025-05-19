@@ -81,7 +81,7 @@ button {
 /* Exception pour les boutons light et warning qui ont du texte foncé */
 .tc-btn-light,
 .tc-btn-warning {
-  color: var(--tc-text-dark, #212529);
+  color: var(--tc-text-dark);
 }
 
 /* Styles spécifiques pour chaque variante */
@@ -198,7 +198,7 @@ button {
 }
 
 .tc-btn-outline-warning:hover {
-  color: var(--tc-text-dark, #212529);
+  color: var(--tc-text-dark);
 }
 
 /* Couleurs de fond au hover pour chaque variante outline */

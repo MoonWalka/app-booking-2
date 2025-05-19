@@ -89,7 +89,7 @@
 }
 
 /* Styles responsive standardisés */
-@media (max-width: 576px) {
+@media (max-width: var(--tc-breakpoint-xs)) {
   .contactDefault {
     padding: var(--tc-spacing-2);
   }

@@ -108,7 +108,7 @@
   padding: 8px 12px;
   margin-bottom: 5px;
   border-radius: var(--tc-border-radius-sm);
-  background-color: var(--tc-bg-default, var(--tc-bg-default, white));
+  background-color: var(--tc-bg-default);
   display: flex;
   align-items: center;
   border: 1px solid var(--tc-gray-200);
@@ -121,7 +121,7 @@
   width: 24px;
   height: 24px;
   background-color: var(--tc-primary-color);
-  color: var(--tc-bg-default, var(--tc-bg-default, white));
+  color: var(--tc-bg-default);
   border-radius: 50%;
   font-size: 12px;
   margin-right: 10px;

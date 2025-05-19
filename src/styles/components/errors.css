@@ -18,7 +18,7 @@
   height: 100vh;
   text-align: center;
   padding: var(--tc-spacing-8);
-  background-color: var(--tc-bg-light, var(--tc-bg-light, #f8f9fa));
+  background-color: var(--tc-bg-light);
 }
 
 .error-container h2 {
@@ -40,7 +40,7 @@
   margin-top: var(--tc-spacing-4);
   padding: 10px 20px;
   background-color: var(--tc-primary-color);
-  color: var(--tc-bg-default, var(--tc-bg-default, white));
+  color: var(--tc-bg-default);
   border: none;
   border-radius: var(--tc-border-radius);
   cursor: pointer;

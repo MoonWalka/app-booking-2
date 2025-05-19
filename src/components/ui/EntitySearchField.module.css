@@ -204,7 +204,7 @@
 }
 
 /* Styles responsive standardisés */
-@media (max-width: var(--tc-breakpoint-sm, 768px)) {
+@media (max-width: var(--tc-breakpoint-sm)) {
   .suggestions {
     max-height: 250px;
   }
@@ -214,7 +214,7 @@
   }
 }
 
-@media (max-width: var(--tc-breakpoint-xs, 576px)) {
+@media (max-width: var(--tc-breakpoint-xs)) {
   .suggestions {
     max-height: 200px;
   }

@@ -205,7 +205,7 @@
 
 .pagination-link.active {
   background-color: var(--tc-primary-color);
-  color: var(--tc-bg-default, var(--tc-bg-default, white));
+  color: var(--tc-bg-default);
 }
 
 .pagination-prev,

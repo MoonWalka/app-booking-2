@@ -100,13 +100,13 @@
 }
 
 /* Styles responsive standardisés */
-@media (max-width: 768px) {
+@media (max-width: var(--tc-breakpoint-sm)) {
   .addressContent {
     align-items: center;
   }
 }
 
-@media (max-width: 576px) {
+@media (max-width: var(--tc-breakpoint-xs)) {
   .addressCompact {
     flex-direction: column;
     align-items: flex-start;

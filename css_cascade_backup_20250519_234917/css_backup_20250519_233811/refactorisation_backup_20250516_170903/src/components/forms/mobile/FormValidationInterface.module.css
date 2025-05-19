@@ -29,7 +29,7 @@
 
 .errorContainer i {
   font-size: 3rem;
-  color: var(--tc-danger-color, var(--tc-color-error));
+  color: var(--tc-danger-color);
 }
 
 .emptyState {
@@ -66,7 +66,7 @@
   align-items: center;
   padding: var(--tc-spacing-3);
   background-color: var(--tc-primary-color);
-  color: var(--tc-bg-default, white);
+  color: var(--tc-bg-default);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -75,7 +75,7 @@
 .backButton {
   background: none;
   border: none;
-  color: var(--tc-bg-default, white);
+  color: var(--tc-bg-default);
   font-size: var(--tc-font-size-xl);
   padding: var(--tc-spacing-1) var(--tc-spacing-2);
   margin-right: var(--tc-spacing-2);
@@ -131,7 +131,7 @@
 .formTabs {
   display: flex;
   border-bottom: 1px solid var(--tc-border-color);
-  background-color: var(--tc-bg-default, white);
+  background-color: var(--tc-bg-default);
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -197,7 +197,7 @@
   position: relative;
   padding: var(--tc-spacing-2);
   background-color: var(--tc-bg-light);
-  border-radius: var(--tc-border-radius, 0.375rem);
+  border-radius: var(--tc-border-radius);
   min-height: 2.5rem;
   display: flex;
   align-items: center;
@@ -243,8 +243,8 @@
   left: 0;
   right: 0;
   padding: var(--tc-spacing-3);
-  background-color: var(--tc-bg-default, white);
-  box-shadow: var(--tc-shadow-lg, 0 -2px 10px rgba(0, 0, 0, 0.1));
+  background-color: var(--tc-bg-default);
+  box-shadow: var(--tc-shadow-lg);
   z-index: 100;
   display: flex;
   justify-content: center;
@@ -281,13 +281,13 @@
 .loadingText {
   margin-top: var(--tc-spacing-3);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-color-text-secondary, #666);
+  color: var(--tc-color-text-secondary);
 }
 
 /* Section headers */
 .concertSectionHeader {
   background-color: var(--tc-bs-primary);
-  color: var(--tc-bg-default, white);
+  color: var(--tc-bg-default);
   border-radius: var(--tc-radius-sm) 4px 0 0;
   padding: var(--tc-spacing-2) var(--tc-spacing-2);
   font-size: var(--tc-spacing-3);
@@ -296,7 +296,7 @@
 
 .lieuSectionHeader {
   background-color: var(--tc-bs-info);
-  color: var(--tc-bg-default, white);
+  color: var(--tc-bg-default);
   border-radius: var(--tc-radius-sm) 4px 0 0;
   padding: var(--tc-spacing-2) var(--tc-spacing-2);
   font-size: var(--tc-spacing-3);
@@ -306,7 +306,7 @@
 .contactSectionHeader,
 .structureSectionHeader {
   background-color: var(--tc-bs-secondary);
-  color: var(--tc-bg-default, white);
+  color: var(--tc-bg-default);
   border-radius: var(--tc-radius-sm) 4px 0 0;
   padding: var(--tc-spacing-2) var(--tc-spacing-2);
   font-size: var(--tc-spacing-3);
@@ -316,7 +316,7 @@
 /* Section containers */
 .sectionContainer {
   margin-bottom: var(--tc-spacing-4);
-  border: 1px solid var(--tc-color-border-medium, #ddd);
+  border: 1px solid var(--tc-color-border-medium);
   border-radius: var(--tc-radius-sm);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
@@ -330,7 +330,7 @@
   display: flex;
   flex-direction: column;
   margin-bottom: var(--tc-spacing-3);
-  border-bottom: 1px solid var(--tc-color-border, #eee);
+  border-bottom: 1px solid var(--tc-color-border);
   padding-bottom: var(--tc-spacing-3);
 }
 
@@ -343,7 +343,7 @@
 .fieldLabel {
   font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-color-text-secondary, #666);
+  color: var(--tc-color-text-secondary);
   margin-bottom: var(--tc-spacing-1);
 }
 
@@ -358,7 +358,7 @@
 }
 
 .formValue {
-  background-color: var(--tc-bg-light, #f8f9fa);
+  background-color: var(--tc-bg-light);
   padding: var(--tc-spacing-2);
   border-radius: var(--tc-radius-sm);
   font-size: var(--tc-font-size-sm);
@@ -383,9 +383,9 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: var(--tc-bg-default, white);
+  background: var(--tc-bg-default);
   padding: var(--tc-spacing-2) var(--tc-spacing-3);
-  box-shadow: var(--tc-shadow-lg, 0 -2px 10px rgba(0, 0, 0, 0.1));
+  box-shadow: var(--tc-shadow-lg);
   z-index: 1000;
   display: flex;
   justify-content: center;

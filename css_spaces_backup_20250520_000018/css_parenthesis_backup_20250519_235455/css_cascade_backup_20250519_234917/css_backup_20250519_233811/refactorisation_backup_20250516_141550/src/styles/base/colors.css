@@ -1,0 +1,295 @@
+/* 
+ * SYSTÈME DE COULEURS CENTRALISÉ - TourCraft
+ * ==========================================
+ * 
+ * RÈGLES IMPORTANTES:
+ * 1. TOUTES les couleurs de l'application doivent être définies ici
+ * 2. NE JAMAIS utiliser de valeurs hexadécimales codées en dur (#0d6efd, #2c3e50, etc.) dans les autres fichiers CSS
+ * 3. TOUJOURS utiliser les variables CSS (var(--tc-primary-color), var(--tc-secondary-color), etc.)
+ * 4. Pour les effets de transparence, utiliser les variables RGB (exemple: rgba(var(--tc-primary-color-rgb), 0.1))
+ * 
+ * POURQUOI:
+ * - Assure une cohérence visuelle dans toute l'application
+ * - Permet de changer facilement le thème avec un seul fichier
+ * - Évite les conflits et écrasements de styles
+ * - Facilite la maintenance à long terme
+ */
+
+:root {
+  /* =========================================== */
+  /* COULEURS DE BASE                           */
+  /* =========================================== */
+
+  /* Couleurs principales */
+  --tc-primary-color: #2c3e50;  /* Bleu foncé (préféré) */
+  /* Utilisation: Barre latérale, boutons principaux, liens actifs, en-têtes, badges */
+  
+  --tc-primary-color-rgb: 44, 62, 80;  /* Valeurs RGB pour les effets de transparence */
+  /* Utilisation: Ombres, overlays, effets de hover sur éléments principaux */
+  
+  --tc-primary-light: #3498db;  /* Ancienne couleur principale, utilisable comme variante claire */
+  /* Utilisation: Liens, boutons secondaires, focus sur inputs, icônes */
+  
+  --tc-primary-light-rgb: 52, 152, 219;
+  /* Utilisation: Effets de transparence sur éléments clairs */
+  
+  --tc-primary-dark: #1e2b38;   /* Version encore plus foncée pour contraste */
+  /* Utilisation: Hover sur boutons principaux, éléments actifs, footer */
+  
+  --tc-primary-dark-rgb: 30, 43, 56;
+  /* Utilisation: Effets de transparence sur éléments foncés */
+  
+  /* Couleurs secondaires */
+  --tc-secondary-color: #2980b9;
+  /* Utilisation: Boutons secondaires, en-têtes de tableaux, badges secondaires */
+  
+  --tc-secondary-color-rgb: 41, 128, 185;
+  /* Utilisation: Valeurs RGB pour les effets de transparence des éléments secondaires */
+  
+  --tc-secondary-light: #3498db;
+  /* Utilisation: Hover sur boutons secondaires, notifications, liens au survol (réservé pour usages futurs) */
+  
+  --tc-secondary-dark: #1f618d;
+  /* Utilisation: Éléments actifs secondaires, états actifs des liens (réservé pour usages futurs) */
+  
+  /* Autres couleurs fonctionnelles */
+  --tc-success-color: #27ae60;
+  /* Utilisation: Messages de succès, badges de confirmation, boutons de validation */
+  
+  --tc-warning-color: #f39c12;
+  /* Utilisation: Alertes, notifications, badges d'état "en attente" */
+  
+  --tc-danger-color: #e74c3c;
+  /* Utilisation: Erreurs, boutons de suppression, alertes importantes */
+  
+  --tc-info-color: #3498db;
+  /* Utilisation: Messages d'information, badges d'état "info", tooltips */
+  
+  /* Couleurs neutres */
+  --tc-dark-color: #2c3e50;
+  /* Utilisation: Texte principal, titres, icônes importantes */
+  
+  --tc-light-color: #ecf0f1;
+  /* Utilisation: Arrière-plans clairs, texte sur fond sombre, bordures légères */
+  
+  --tc-gray-50: #fafbfc;  /* Utilisation: Lignes impaires dans les tableaux */
+  --tc-gray-100: #f8f9fa;
+  /* Utilisation: Arrière-plans, en-têtes de cartes, hover sur tableaux */
+  
+  --tc-gray-200: #e9ecef;
+  /* Utilisation: Bordures, séparateurs, fond des inputs désactivés */
+  
+  --tc-gray-300: #dee2e6;
+  /* Utilisation: Bordures des inputs, séparateurs plus visibles */
+  
+  --tc-gray-400: #ced4da;
+  /* Utilisation: Icônes secondaires, texte désactivé */
+  
+  --tc-gray-500: #adb5bd;
+  /* Utilisation: Placeholder des inputs, texte secondaire */
+  
+  --tc-gray-600: #6c757d;
+  /* Utilisation: Texte secondaire, labels, info complémentaire */
+  
+  --tc-gray-700: #495057;
+  /* Utilisation: Texte des formulaires, sous-titres */
+  
+  --tc-gray-800: #343a40;
+  /* Utilisation: En-têtes, titres importants */
+  
+  --tc-gray-900: #212529;
+  /* Utilisation: Texte très important, titres principaux */
+  
+  /* Couleurs de texte et fond */
+  --tc-text-color: #344767;
+  /* Utilisation: Texte principal dans toute l'application */
+  
+  --tc-text-muted: #6c757d;
+  /* Utilisation: Texte secondaire, info complémentaire, pied de page */
+  
+  --tc-text-light: #ffffff; 
+  /* Utilisation: Texte sur fond sombre, comme les boutons, la sidebar, etc. */
+  
+  --tc-background-color: #f5f7fa;
+  /* Utilisation: Arrière-plan principal de l'application */
+  
+  --tc-card-bg: #ffffff;
+  /* Utilisation: Arrière-plan des cartes, formulaires, modales */
+  
+  --tc-border-color: #ddd;
+  /* Utilisation: Bordures pour cartes, tableaux, séparateurs */
+  
+  /* Variables spécifiques au thème clair (par défaut) */
+  --tc-bg-color: #ffffff;
+  /* Utilisation: Arrière-plan des conteneurs principaux */
+  
+  --tc-input-bg: #ffffff;
+  /* Utilisation: Arrière-plan des champs de formulaire */
+  
+  --tc-hover-bg: #f8f9fa;
+  /* Utilisation: Effet hover sur éléments neutres */
+  
+  /* Variables de transparence */
+  --tc-white-overlay-20: rgba(255, 255, 255, 0.2);
+  /* Utilisation: Overlay blanc léger comme dans les menus de la sidebar, éléments actifs */
+  
+  --tc-white-overlay-50: rgba(255, 255, 255, 0.5);
+  /* Utilisation: Texte semi-transparent, éléments visuels secondaires */
+  
+  --tc-shadow-light: 0 -2px 4px rgba(0, 0, 0, 0.05);
+  /* Utilisation: Ombres légères pour les footers, séparateurs */
+  
+  /* Ces variables peuvent être redéfinies dans un thème sombre si nécessaire */
+  
+  /* =========================================== */
+  /* VARIABLES SPÉCIFIQUES AUX COMPOSANTS       */
+  /* =========================================== */
+  
+  /* Layout et navigation */
+  --tc-sidebar-bg-color: var(--tc-primary-color);
+  /* Utilisation: Arrière-plan de la barre latérale dans DesktopLayout.js et MobileLayout.js */
+  
+  --tc-sidebar-text-color: var(--tc-text-light);
+  /* Utilisation: Texte dans la barre latérale, liens de navigation */
+  
+  --tc-sidebar-hover-bg-color: rgba(255, 255, 255, 0.1);
+  /* Utilisation: Effet hover sur les liens de la barre latérale */
+  
+  --tc-sidebar-active-bg-color: var(--tc-primary-color);
+  /* Utilisation: Élément actif dans la barre latérale */
+  
+  --tc-sidebar-border-color: rgba(255, 255, 255, 0.1);
+  /* Utilisation: Séparateurs et bordures dans la barre latérale */
+  
+  --tc-header-bg-color: var(--tc-bg-color);
+  /* Utilisation: Arrière-plan de l'en-tête principal dans Layout.js */
+  
+  --tc-header-text-color: var(--tc-text-color);
+  /* Utilisation: Texte dans l'en-tête principal */
+  
+  --tc-header-border-color: var(--tc-gray-200);
+  /* Utilisation: Bordure inférieure de l'en-tête */
+  
+  --tc-content-bg-color: var(--tc-background-color);
+  /* Utilisation: Arrière-plan de la zone de contenu principal */
+  
+  /* Cartes et conteneurs */
+  --tc-card-bg-color: var(--tc-card-bg);
+  /* Utilisation: Arrière-plan des cartes dans DashboardPage.js, detail-card dans LieuDetails.js */
+  
+  --tc-card-border-color: var(--tc-border-color);
+  /* Utilisation: Bordures des cartes et conteneurs */
+  
+  --tc-card-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  /* Utilisation: Ombre portée sur cartes, conteneurs, dropdowns */
+  
+  --tc-card-header-bg-color: var(--tc-gray-100);
+  /* Utilisation: En-tête des cartes, comme dans LieuDetails.js */
+  
+  --tc-card-header-text-color: var(--tc-text-color);
+  /* Utilisation: Texte des en-têtes de cartes */
+  
+  /* Boutons */
+  --tc-btn-primary-bg: var(--tc-primary-color);
+  /* Utilisation: Boutons principaux dans tous les formulaires et actions principales */
+  
+  --tc-btn-primary-text: var(--tc-text-light);
+  /* Utilisation: Texte des boutons principaux */
+  
+  --tc-btn-primary-border: var(--tc-primary-color);
+  /* Utilisation: Bordure des boutons principaux */
+  
+  --tc-btn-primary-hover-bg: var(--tc-primary-dark);
+  /* Utilisation: Arrière-plan au survol des boutons principaux */
+  
+  --tc-btn-secondary-bg: var(--tc-secondary-color);
+  /* Utilisation: Boutons secondaires comme Annuler, Retour */
+  
+  --tc-btn-secondary-text: var(--tc-text-light);
+  /* Utilisation: Texte des boutons secondaires */
+  
+  --tc-btn-secondary-border: var(--tc-secondary-color);
+  /* Utilisation: Bordure des boutons secondaires */
+  
+  --tc-btn-secondary-hover-bg: var(--tc-secondary-dark);
+  /* Utilisation: Arrière-plan au survol des boutons secondaires */
+  
+  --tc-btn-secondary-active-bg: var(--tc-secondary-dark);
+  /* Utilisation: Arrière-plan des boutons secondaires actifs */
+  
+  --tc-btn-secondary-focus-shadow: 0 0 0 0.25rem rgba(var(--tc-secondary-color-rgb), 0.25);
+  /* Utilisation: Ombre au focus des boutons secondaires */
+  
+  --tc-btn-success-bg: var(--tc-success-color);
+  /* Utilisation: Boutons de confirmation, validation */
+  
+  --tc-btn-success-text: var(--tc-text-light);
+  /* Utilisation: Texte des boutons de confirmation */
+  
+  --tc-btn-danger-bg: var(--tc-danger-color);
+  /* Utilisation: Boutons de suppression, comme dans LieuxList.js */
+  
+  --tc-btn-danger-text: var(--tc-text-light);
+  /* Utilisation: Texte des boutons de suppression */
+  
+  --tc-btn-info-bg: var(--tc-info-color);
+  /* Utilisation: Boutons d'information, aide */
+  
+  --tc-btn-info-text: var(--tc-text-light);
+  /* Utilisation: Texte des boutons d'information */
+  
+  /* Formulaires */
+  --tc-input-border-color: var(--tc-gray-300);
+  /* Utilisation: Bordures des champs de formulaire dans ArtisteForm.js, LieuForm.js */
+  
+  --tc-input-focus-border-color: var(--tc-primary-light);
+  /* Utilisation: Bordure des champs de formulaire au focus */
+  
+  --tc-input-focus-shadow: 0 0 0 0.25rem rgba(var(--tc-primary-color-rgb), 0.25);
+  /* Utilisation: Ombre autour des champs de formulaire au focus */
+  
+  --tc-input-placeholder-color: var(--tc-gray-500);
+  /* Utilisation: Couleur du texte placeholder dans les inputs */
+  
+  --tc-label-color: var(--tc-text-color);
+  /* Utilisation: Libellés des champs de formulaire */
+  
+  /* Tables */
+  --tc-table-header-bg: var(--tc-gray-100);
+  /* Utilisation: Arrière-plan des en-têtes de tableau dans LieuxList.js, ConcertsList.js */
+  
+  --tc-table-border-color: var(--tc-gray-300);
+  /* Utilisation: Bordures des cellules de tableau */
+  
+  --tc-table-hover-bg: var(--tc-gray-100);
+  /* Utilisation: Effet hover sur les lignes de tableau */
+  
+  --tc-table-row-even-bg: var(--tc-bg-color);
+  /* Utilisation: Lignes paires dans les tableaux */
+  
+  --tc-table-row-odd-bg: var(--tc-gray-50, #fafbfc);
+  /* Utilisation: Lignes impaires dans les tableaux */
+  
+  /* Badges */
+  --tc-badge-bg: var(--tc-primary-color);
+  /* Utilisation: Badges standards, comme dans LieuxPage.js */
+  
+  --tc-badge-text: var(--tc-text-light);
+  /* Utilisation: Texte des badges */
+  
+  /* Modales */
+  --tc-modal-bg: var(--tc-bg-color);
+  /* Utilisation: Arrière-plan des fenêtres modales, comme ContratTemplateEditorModal.js */
+  
+  --tc-modal-header-bg: var(--tc-gray-100);
+  /* Utilisation: En-tête des fenêtres modales */
+  
+  --tc-modal-border-color: var(--tc-gray-300);
+  /* Utilisation: Bordures des fenêtres modales */
+  
+  --tc-modal-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  /* Utilisation: Ombre portée des fenêtres modales */
+  
+  --tc-modal-overlay-bg: rgba(0, 0, 0, 0.5);
+  /* Utilisation: Arrière-plan semi-transparent derrière les modales */
+}

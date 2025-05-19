@@ -1,0 +1,87 @@
+/*
+ * Styles pour LieuxTableRow
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
+.tableRow {
+  vertical-align: middle;
+}
+
+.clickableRow {
+  cursor: pointer;
+  transition: background-color var(--tc-transition-duration) ease;
+}
+
+.clickableRow:hover {
+  background-color: rgba(var(--tc-primary-color-rgb), 0.05);
+}
+
+.tableRowAnimate {
+  animation: fadeIn var(--tc-transition-duration) ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.typeBadge {
+  display: inline-block;
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  font-size: var(--tc-font-size-xs);
+  font-weight: var(--tc-font-weight-semibold);
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: var(--tc-border-radius-sm);
+  color: var(--tc-white);
+  text-transform: capitalize;
+}
+
+.villeBadge {
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-text-color);
+}
+
+.jaugeBadge {
+  display: inline-block;
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  font-size: var(--tc-font-size-xs);
+  font-weight: var(--tc-font-weight-semibold);
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: var(--tc-border-radius-sm);
+  color: var(--tc-white);
+}
+
+.jaugeType {
+  opacity: 0.8;
+  font-weight: var(--tc-font-weight-normal);
+}
+
+.concertCount {
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-primary-color);
+}
+
+.actionButtons {
+  display: flex;
+  gap: var(--tc-spacing-sm);
+  justify-content: flex-end;
+}
+
+.actionButton {
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--tc-border-radius);
+}

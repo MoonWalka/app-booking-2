@@ -1,0 +1,69 @@
+/*
+ * Styles pour DeleteLieuModal
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
+.modalHeader {
+  border-bottom: 1px solid var(--tc-bs-border-color);
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  background-color: var(--tc-bs-danger-subtle);
+  color: var(--tc-bs-danger);
+}
+
+.modalTitle {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.warningIcon {
+  color: var(--tc-bs-danger);
+  font-size: 1.2rem;
+}
+
+.modalBody {
+  padding: 1.25rem;
+}
+
+.modalBody p {
+  margin-bottom: 1rem;
+}
+
+.concertsWarning {
+  background-color: var(--tc-bs-warning-subtle);
+  border-left: 4px solid var(--tc-bs-warning);
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  margin: 1rem 0;
+}
+
+.modalFooter {
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  border-top: 1px solid var(--tc-bs-border-color);
+}
+
+.deleteBtn {
+  background-color: var(--tc-bs-danger);
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.deleteBtn:hover {
+  background-color: var(--tc-bs-danger-dark);
+}

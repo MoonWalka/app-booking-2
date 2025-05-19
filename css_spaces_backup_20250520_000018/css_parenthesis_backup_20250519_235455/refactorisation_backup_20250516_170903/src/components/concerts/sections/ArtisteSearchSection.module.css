@@ -1,0 +1,102 @@
+/*
+ * Styles pour ArtisteSearchSection
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 5 mai 2025
+ */
+
+.container {
+  width: 100%;
+}
+
+.formCard {
+  background-color: var(--tc-bg-card);
+  border-radius: var(--tc-border-radius-lg);
+  box-shadow: var(--tc-shadow-sm);
+  margin-bottom: var(--tc-spacing-4);
+  border: 1px solid var(--tc-border-light);
+  overflow: hidden;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  padding: var(--tc-spacing-3) var(--tc-spacing-4);
+  background-color: var(--tc-bg-subtle);
+  border-bottom: 1px solid var(--tc-border-light);
+}
+
+.cardIcon {
+  width: var(--tc-icon-size-md);
+  height: var(--tc-icon-size-md);
+  border-radius: var(--tc-border-radius-md);
+  background-color: var(--tc-bg-purple-subtle);
+  color: var(--tc-color-purple);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--tc-font-size-md);
+  margin-right: var(--tc-spacing-3);
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-color-title);
+}
+
+.cardBody {
+  padding: var(--tc-spacing-4);
+}
+
+.searchContainer {
+  position: relative;
+}
+
+.formLabel {
+  display: block;
+  margin-bottom: var(--tc-spacing-1-5);
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-color-title);
+}
+
+.formHelpText {
+  display: block;
+  margin-top: var(--tc-spacing-1-5);
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-color-text-muted);
+}
+
+/* Styles responsive standardisés */
+@media (max-width: 992px) {
+  .cardBody {
+    padding: var(--tc-spacing-3);
+  }
+}
+
+@media (max-width: 768px) {
+  .cardHeader {
+    padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  }
+}
+
+@media (max-width: 576px) {
+  .cardIcon {
+    width: var(--tc-icon-size-sm);
+    height: var(--tc-icon-size-sm);
+    font-size: var(--tc-font-size-sm);
+    margin-right: var(--tc-spacing-2);
+  }
+  
+  .cardTitle {
+    font-size: var(--tc-font-size-md);
+  }
+  
+  .cardBody {
+    padding: var(--tc-spacing-2);
+  }
+  
+  .formLabel {
+    margin-bottom: var(--tc-spacing-1);
+  }
+}

@@ -1,0 +1,103 @@
+/*
+ * Styles pour LieuHeader
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 19 May 2025
+ */
+
+.detailsHeaderContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--tc-spacing-6);
+  flex-wrap: wrap;
+  gap: var(--tc-spacing-4);
+}
+
+.titleContainer {
+  flex: 1;
+  min-width: 250px;
+}
+
+.breadcrumbContainer {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--tc-spacing-1);
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-color-secondary);
+}
+
+.breadcrumbItem {
+  cursor: pointer;
+  color: var(--tc-color-primary);
+  transition: color var(--tc-transition-fast) var(--tc-transition-timing);
+}
+
+.breadcrumbItem:hover {
+  color: var(--tc-color-primary-dark);
+  text-decoration: underline;
+}
+
+.breadcrumbItem.active {
+  color: var(--tc-color-secondary-dark);
+  font-weight: var(--tc-font-weight-medium);
+  cursor: default;
+}
+
+.breadcrumbItem.active:hover {
+  text-decoration: none;
+}
+
+.breadcrumbContainer i {
+  margin: 0 var(--tc-spacing-1);
+  font-size: var(--tc-font-size-xs);
+}
+
+.modernTitle {
+  margin: 0;
+  font-size: var(--tc-font-size-2xl);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-color-secondary-dark);
+  display: flex;
+  align-items: center;
+  gap: var(--tc-spacing-2);
+  flex-wrap: wrap;
+}
+
+.actionButtons {
+  display: flex;
+  gap: var(--tc-spacing-1);
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.actionBtn {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-spacing-1);
+}
+
+.typeBadge {
+  font-size: var(--tc-font-size-xs);
+  text-transform: uppercase;
+  padding: var(--tc-spacing-1) var(--tc-spacing-2);
+  border-radius: var(--tc-radius-md);
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .detailsHeaderContainer {
+    flex-direction: column;
+    gap: var(--tc-spacing-2);
+  }
+  
+  .actionButtons {
+    width: 100%;
+    justify-content: flex-start;
+    margin-top: var(--tc-spacing-2);
+  }
+  
+  .modernTitle {
+    font-size: var(--tc-font-size-xl);
+  }
+}

@@ -36,7 +36,7 @@
 }
 
 .warningNote {
-  color: var(--tc-color-text-secondary, #6c757d);
+  color: var(--tc-color-text-secondary);
   display: block;
   margin-top: var(--tc-spacing-2);
 }
@@ -44,7 +44,7 @@
 .modalFooter {
   display: flex;
   justify-content: space-between;
-  border-top: 1px solid var(--tc-color-border-light, #dee2e6);
+  border-top: 1px solid var(--tc-color-border-light);
   padding: var(--tc-spacing-2) var(--tc-spacing-3);
 }
 

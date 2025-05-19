@@ -1,0 +1,52 @@
+/*
+ * Styles pour ContratPdfViewer
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 5 mai 2025
+ */
+
+.pdfViewerContainer {
+  margin-bottom: var(--tc-spacing-5);
+  scroll-margin-top: var(--tc-spacing-3);
+}
+
+.htmlPreview {
+  border: 1px solid var(--tc-border-light);
+  border-radius: var(--tc-border-radius-sm);
+  padding: var(--tc-spacing-5);
+  background-color: var(--tc-bg-white);
+}
+
+.reactPdfPreview {
+  min-height: 600px;
+}
+
+.pdfExactPreview {
+  min-height: 600px;
+}
+
+.pdfContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Styles responsive standardisés */
+@media (max-width: 992px) {
+  .htmlPreview {
+    padding: var(--tc-spacing-4);
+  }
+}
+
+@media (max-width: 576px) {
+  .pdfViewerContainer {
+    margin-bottom: var(--tc-spacing-3);
+  }
+  
+  .htmlPreview {
+    padding: var(--tc-spacing-2);
+  }
+  
+  .reactPdfPreview,
+  .pdfExactPreview {
+    min-height: 400px;
+  }
+}

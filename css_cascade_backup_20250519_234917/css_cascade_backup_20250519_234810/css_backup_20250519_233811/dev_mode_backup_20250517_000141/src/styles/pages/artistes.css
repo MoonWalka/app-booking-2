@@ -20,9 +20,9 @@
    ============================= */
 .artiste-detail-container {
   padding: 20px;
-  background-color: var(--tc-bg-color, white);
-  border-radius: var(--tc-border-radius, 8px);
-  box-shadow: var(--tc-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
+  background-color: var(--tc-bg-color);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-shadow);
   margin-bottom: 20px;
 }
 
@@ -99,16 +99,16 @@
 .artiste-genre {
   display: flex;
   align-items: flex-start;
-  gap: var(--tc-spacing-sm, 8px);
-  margin-bottom: var(--tc-spacing-sm, 10px);
-  color: var(--tc-text-muted, #666);
-  font-size: var(--tc-font-size-sm, 14px);
+  gap: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-spacing-sm);
+  color: var(--tc-text-muted);
+  font-size: var(--tc-font-size-sm);
 }
 
 .artiste-genre i,
 .artiste-contact i {
-  color: var(--tc-primary-color, var(--tc-artiste-color));
-  font-size: var(--tc-font-size-md, 16px);
+  color: var(--tc-primary-color);
+  font-size: var(--tc-font-size-md);
   width: 20px;
   text-align: center;
 }
@@ -187,11 +187,11 @@
 .artiste-contact {
   display: flex;
   align-items: flex-start;
-  gap: var(--tc-spacing-sm, 8px);
-  margin-bottom: var(--tc-spacing-sm, 10px);
-  margin-top: var(--tc-spacing-md, 20px);
-  color: var(--tc-text-muted, #666);
-  font-size: var(--tc-font-size-sm, 14px);
+  gap: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-spacing-sm);
+  margin-top: var(--tc-spacing-md);
+  color: var(--tc-text-muted);
+  font-size: var(--tc-font-size-sm);
 }
 
 .contact-item {
@@ -204,12 +204,12 @@
 .contact-item i {
   /* Harmonisation : taille standardisée */
   font-size: var(--tc-font-size-lg);
-  color: var(--tc-text-muted, #6c757d);
+  color: var(--tc-text-muted);
 }
 
 .contact-item a {
   text-decoration: none;
-  color: var(--tc-primary-color, #007bff);
+  color: var(--tc-primary-color);
 }
 
 .contact-item a:hover {
@@ -516,9 +516,9 @@
 /* Artiste card - style horizontal (pour les listes) */
 .artiste-list-card {
   display: flex;
-  background-color: var(--tc-bg-color, white);
-  border-radius: var(--tc-border-radius, 8px);
-  box-shadow: var(--tc-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
+  background-color: var(--tc-bg-color);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-shadow);
   margin-bottom: 15px;
   overflow: hidden;
   transition: transform 0.2s;
@@ -539,9 +539,9 @@
 .artiste-card {
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-sm, 8px);
-  background-color: var(--tc-bg-color, white);
-  border-radius: var(--tc-border-radius, 8px);
+  gap: var(--tc-spacing-sm);
+  background-color: var(--tc-bg-color);
+  border-radius: var(--tc-border-radius);
   overflow: hidden;
 }
 
@@ -549,11 +549,11 @@
    ARTISTE TAB CONTENT
    ============================= */
 .artiste-tab-content {
-  background-color: var(--tc-bg-color, white);
-  border-radius: var(--tc-border-radius, 8px);
+  background-color: var(--tc-bg-color);
+  border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow);
-  padding: var(--tc-spacing-md, 16px);
-  margin-bottom: var(--tc-spacing-md, 16px);
+  padding: var(--tc-spacing-md);
+  margin-bottom: var(--tc-spacing-md);
 }
 
 /* La définition mobile n'est pas nécessaire car elle est identique */
@@ -566,7 +566,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--tc-bg-light, var(--tc-artiste-color-light));
+  background-color: var(--tc-bg-light);
   color: var(--tc-text-color);
   border-radius: 20px;
   padding: 4px 12px;
@@ -583,9 +583,9 @@
   display: inline-flex;
   align-items: center;
   padding: 2px 8px;
-  background-color: var(--tc-artiste-color-light, #f0e6ff);
+  background-color: var(--tc-artiste-color-light);
   border-radius: 12px;
-  color: var(--tc-artiste-color, #6610f2);
+  color: var(--tc-artiste-color);
   /* Harmonisation : taille standardisée */
   font-size: var(--tc-font-size-xs);
   margin-right: 4px;
@@ -593,7 +593,7 @@
 
 /* Styles de lien pour les artistes */
 .artiste-link {
-  color: var(--tc-artiste-color, #6610f2);
+  color: var(--tc-artiste-color);
   text-decoration: none;
   font-weight: 500;
 }

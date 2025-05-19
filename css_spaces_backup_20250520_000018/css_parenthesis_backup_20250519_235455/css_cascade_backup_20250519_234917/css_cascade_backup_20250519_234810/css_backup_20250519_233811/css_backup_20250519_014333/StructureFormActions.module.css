@@ -1,0 +1,101 @@
+/*
+ * Styles pour StructureFormActions
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
+/* 
+ * Styles pour StructureFormActions
+ * Barre d'actions des formulaires de structure
+ * Dernière mise à jour: 04/05/2025
+ */
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--tc-spacing-md, 1rem);
+  margin-top: var(--tc-spacing-lg, 2rem);
+  margin-bottom: var(--tc-spacing-md, 1rem);
+}
+
+.cancelButton {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-spacing-xs, 0.5rem);
+  border: 1px solid var(--tc-color-border, #dee2e6);
+  padding: var(--tc-spacing-sm, 0.625rem) var(--tc-spacing-md, 1.25rem);
+  border-radius: var(--tc-border-radius-sm, 0.25rem);
+  background-color: transparent;
+  color: var(--tc-color-text-muted, #6c757d);
+  font-size: var(--tc-font-size-sm, 0.9375rem);
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.cancelButton:hover:not(:disabled) {
+  background-color: var(--tc-color-background-secondary, #f8f9fa);
+  color: var(--tc-color-text-secondary, #343a40);
+  border-color: var(--tc-color-border-dark, #c6c7c8);
+}
+
+.cancelButton i {
+  font-size: var(--tc-font-size-base, 1rem);
+}
+
+.submitButton {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-spacing-xs, 0.5rem);
+  padding: var(--tc-spacing-sm, 0.625rem) var(--tc-spacing-md, 1.25rem);
+  border-radius: var(--tc-border-radius-sm, 0.25rem);
+  background-color: var(--tc-color-primary, #0d6efd);
+  color: var(--tc-color-background, white);
+  border: none;
+  font-size: var(--tc-font-size-sm, 0.9375rem);
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.submitButton:hover:not(:disabled) {
+  background-color: var(--tc-color-primary-dark, #0b5ed7);
+}
+
+.submitButton:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.submitButton i {
+  font-size: var(--tc-font-size-base, 1rem);
+}
+
+.spinner {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  margin-right: var(--tc-spacing-xs, 0.375rem);
+  border: 0.15em solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spinner-border .75s linear infinite;
+}
+
+@keyframes spinner-border {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .formActions {
+    flex-direction: column-reverse;
+    gap: var(--tc-spacing-sm, 0.5rem);
+  }
+  
+  .cancelButton,
+  .submitButton {
+    width: 100%;
+    justify-content: center;
+  }
+}

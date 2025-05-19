@@ -1,0 +1,31 @@
+/*
+ * Styles pour Dashboard
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
+/* Dashboard.module.css - Styles pour les composants du tableau de bord */
+
+.dashboardStats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tc-spacing-md);
+  margin: var(--tc-spacing-md) 0;
+}
+
+.statCard {
+  background-color: var(--tc-white);
+  padding: var(--tc-spacing-md);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-shadow-sm));
+  flex: 1;
+  min-width: var(--tc-min-width-md);
+  text-align: center;
+}
+
+.statValue {
+  font-size: var(--tc-font-size-xxl);
+  font-weight: var(--tc-font-weight-bold);
+  color: var(--tc-primary-color);
+  margin: var(--tc-spacing-sm) 0;
+}

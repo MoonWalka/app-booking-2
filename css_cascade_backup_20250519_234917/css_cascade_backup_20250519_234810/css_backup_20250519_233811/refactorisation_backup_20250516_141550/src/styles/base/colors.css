@@ -267,7 +267,7 @@
   --tc-table-row-even-bg: var(--tc-bg-color);
   /* Utilisation: Lignes paires dans les tableaux */
   
-  --tc-table-row-odd-bg: var(--tc-gray-50, #fafbfc);
+  --tc-table-row-odd-bg: var(--tc-gray-50);
   /* Utilisation: Lignes impaires dans les tableaux */
   
   /* Badges */

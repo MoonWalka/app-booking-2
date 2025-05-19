@@ -5,36 +5,36 @@
  */
 
 .container {
-  margin-bottom: var(--tc-spacing-lg, 1.5rem);
+  margin-bottom: var(--tc-spacing-lg);
 }
 
 .infoCard {
-  background-color: var(--tc-bg-light, #f8f9fa);
-  border-radius: var(--tc-border-radius-lg, 8px);
-  padding: var(--tc-spacing-md-plus, 1.25rem);
-  box-shadow: var(--tc-box-shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.05));
+  background-color: var(--tc-bg-light);
+  border-radius: var(--tc-border-radius-lg);
+  padding: var(--tc-spacing-md-plus);
+  box-shadow: var(--tc-box-shadow-sm);
 }
 
 .infoHeader {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: var(--tc-spacing-sm, 0.75rem);
-  margin-bottom: var(--tc-spacing-md, 1rem);
+  gap: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-spacing-md);
 }
 
 .name {
-  font-size: var(--tc-font-size-xl, 1.5rem);
-  font-weight: var(--tc-font-weight-semibold, 600);
+  font-size: var(--tc-font-size-xl);
+  font-weight: var(--tc-font-weight-semibold);
   margin: 0;
 }
 
 .structureBadge {
-  background-color: var(--tc-border-light, #e9ecef);
-  color: var(--tc-text-dark, #495057);
-  font-size: var(--tc-font-size-sm, 0.875rem);
-  padding: var(--tc-spacing-xs, 0.25rem) var(--tc-spacing-sm, 0.75rem);
-  border-radius: var(--tc-border-radius-pill, 50px);
+  background-color: var(--tc-border-light);
+  color: var(--tc-text-dark);
+  font-size: var(--tc-font-size-sm);
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  border-radius: var(--tc-border-radius-pill);
   display: inline-flex;
   align-items: center;
 }
@@ -42,23 +42,23 @@
 .infoDetails {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--tc-spacing-md, 1rem);
-  margin-bottom: var(--tc-spacing-md, 1rem);
+  gap: var(--tc-spacing-md);
+  margin-bottom: var(--tc-spacing-md);
 }
 
 .infoItem {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-sm, 0.5rem);
-  color: var(--tc-text-dark, #495057);
+  gap: var(--tc-spacing-sm);
+  color: var(--tc-text-dark);
 }
 
 .infoItem i {
-  color: var(--tc-text-secondary, #6c757d);
+  color: var(--tc-text-secondary);
 }
 
 .infoItem a {
-  color: var(--tc-primary-color, #0d6efd);
+  color: var(--tc-primary-color);
   text-decoration: none;
 }
 
@@ -69,22 +69,22 @@
 .concertCount {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-sm, 0.5rem);
-  color: var(--tc-text-secondary, #6c757d);
-  font-size: var(--tc-font-size-sm, 0.875rem);
-  border-top: var(--tc-border-width, 1px) solid var(--tc-border-light, #dee2e6);
-  padding-top: var(--tc-spacing-md, 1rem);
-  margin-top: var(--tc-spacing-sm, 0.5rem);
+  gap: var(--tc-spacing-sm);
+  color: var(--tc-text-secondary);
+  font-size: var(--tc-font-size-sm);
+  border-top: var(--tc-border-width) solid var(--tc-border-light);
+  padding-top: var(--tc-spacing-md);
+  margin-top: var(--tc-spacing-sm);
 }
 
 @media (max-width: 768px) {
   .infoDetails {
     flex-direction: column;
-    gap: var(--tc-spacing-sm, 0.75rem);
+    gap: var(--tc-spacing-sm);
   }
   
   .infoCard {
-    padding: var(--tc-spacing-md, 1rem);
+    padding: var(--tc-spacing-md);
   }
 }
 
@@ -92,10 +92,10 @@
   .infoHeader {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--tc-spacing-xs, 0.25rem);
+    gap: var(--tc-spacing-xs);
   }
   
   .structureBadge {
-    margin-top: var(--tc-spacing-xs, 0.25rem);
+    margin-top: var(--tc-spacing-xs);
   }
 }

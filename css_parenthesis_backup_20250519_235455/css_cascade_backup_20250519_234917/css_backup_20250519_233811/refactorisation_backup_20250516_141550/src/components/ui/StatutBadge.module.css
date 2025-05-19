@@ -1,0 +1,108 @@
+/*
+ * Styles pour StatutBadge
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 5 mai 2025
+ */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--tc-spacing-1) var(--tc-spacing-2);
+  border-radius: 50rem;
+  font-weight: var(--tc-font-weight-medium);
+  line-height: 1;
+  white-space: nowrap;
+  text-align: center;
+  vertical-align: middle;
+  background-color: var(--tc-bg-subtle);
+  color: var(--tc-color-text-dark);
+  box-shadow: var(--tc-shadow-xs);
+}
+
+/* Tailles du badge */
+.small {
+  font-size: var(--tc-font-size-xxs);
+  padding: var(--tc-spacing-0-5) var(--tc-spacing-1-5);
+}
+
+.medium {
+  font-size: var(--tc-font-size-xs);
+  padding: var(--tc-spacing-1) var(--tc-spacing-2);
+}
+
+.large {
+  font-size: var(--tc-font-size-sm);
+  padding: var(--tc-spacing-1-5) var(--tc-spacing-3);
+}
+
+/* Couleurs de badge */
+.primary {
+  background-color: var(--tc-bg-primary-subtle);
+  color: var(--tc-color-primary);
+}
+
+.secondary {
+  background-color: var(--tc-bg-subtle);
+  color: var(--tc-color-text-dark);
+}
+
+.success {
+  background-color: var(--tc-bg-success-subtle);
+  color: var(--tc-color-success);
+}
+
+.info {
+  background-color: var(--tc-bg-info-subtle);
+  color: var(--tc-color-info);
+}
+
+.warning {
+  background-color: var(--tc-bg-warning-subtle);
+  color: var(--tc-color-warning-dark);
+}
+
+.danger {
+  background-color: var(--tc-bg-danger-subtle);
+  color: var(--tc-color-danger);
+}
+
+/* Icône */
+.icon {
+  margin-right: var(--tc-spacing-1);
+  font-size: 0.9em;
+}
+
+/* Styles responsive standardisés */
+@media (max-width: 576px) {
+  .small {
+    font-size: var(--tc-font-size-xxs);
+    padding: var(--tc-spacing-0-25) var(--tc-spacing-1);
+  }
+
+  .medium {
+    font-size: var(--tc-font-size-xxs);
+    padding: var(--tc-spacing-0-5) var(--tc-spacing-1-5);
+  }
+  
+  .large {
+    font-size: var(--tc-font-size-xs);
+    padding: var(--tc-spacing-1) var(--tc-spacing-2);
+  }
+}
+
+/* Animation optionnelle pour les badges actifs */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate {
+  animation: pulse 2s infinite ease-in-out;
+}

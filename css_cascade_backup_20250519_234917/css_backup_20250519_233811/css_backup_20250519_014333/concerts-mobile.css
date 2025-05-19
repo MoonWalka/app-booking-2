@@ -39,7 +39,7 @@
 .mobile-search-container .input-group-text {
   background-color: var(--tc-bg-default);
   border: none;
-  color: var(--tc-primary-color, #007bff);
+  color: var(--tc-primary-color);
 }
 
 .mobile-search-container .form-control {
@@ -113,7 +113,7 @@
   align-items: center;
   justify-content: center;
   min-width: 70px;
-  background-color: var(--tc-primary-color, #007bff);
+  background-color: var(--tc-primary-color);
   color: var(--tc-bg-default);
   padding: var(--tc-spacing-2) var(--tc-spacing-2);
   text-align: center;
@@ -150,7 +150,7 @@
   font-size: var(--tc-spacing-3);
   font-weight: var(--tc-font-weight-semibold);
   margin-bottom: var(--tc-spacing-2);
-  color: var(--tc-text-dark, #212529);
+  color: var(--tc-text-dark);
   var(--tc-bg-default)-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -199,7 +199,7 @@
 
 .artist-tag {
   background-color: rgba(0, 123, 255, 0.1);
-  color: var(--tc-primary-color, #007bff);
+  color: var(--tc-primary-color);
   padding: 0.15rem var(--tc-spacing-2);
   border-radius: var(--tc-radius-sm);
   font-size: var(--tc-font-size-xs);
@@ -258,7 +258,7 @@
 }
 
 .action-btn.view {
-  color: var(--tc-primary-color, #007bff);
+  color: var(--tc-primary-color);
 }
 
 .action-btn.edit {
@@ -286,7 +286,7 @@
 }
 
 .error-container i {
-  color: var(--tc-danger-color, var(--tc-color-error));
+  color: var(--tc-danger-color);
 }
 
 .empty-container p, .error-container p {

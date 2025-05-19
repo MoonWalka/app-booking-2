@@ -7,7 +7,7 @@
 /* ValidationActionBar Styles - Standardisés */
 .container {
   /* Base container styles */
-  margin: var(--tc-spacing-xl, 2rem) 0;
+  margin: var(--tc-spacing-xl) 0;
 }
 
 .content {
@@ -19,37 +19,37 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--tc-spacing-xs, 0.5rem);
-  padding: var(--tc-spacing-sm, 0.75rem) var(--tc-spacing-lg, 1.5rem);
-  font-size: var(--tc-font-size-md, 1.125rem);
-  font-weight: var(--tc-font-weight-semibold, 600);
-  background-color: var(--tc-primary-color, #0d6efd);
+  gap: var(--tc-spacing-xs);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-lg);
+  font-size: var(--tc-font-size-md);
+  font-weight: var(--tc-font-weight-semibold);
+  background-color: var(--tc-primary-color);
   border: none;
-  border-radius: var(--tc-border-radius, 0.375rem);
-  color: var(--tc-color-white, white);
+  border-radius: var(--tc-border-radius);
+  color: var(--tc-color-white);
   cursor: pointer;
-  transition: var(--tc-transition, background-color 0.2s);
+  transition: var(--tc-transition);
   min-width: 350px;
 }
 
 .validateButton:hover:not(:disabled) {
-  background-color: var(--tc-primary-color-dark, #0b5ed7);
+  background-color: var(--tc-primary-color-dark);
 }
 
 .validateButton:disabled {
-  background-color: var(--tc-color-gray-500, #adb5bd);
+  background-color: var(--tc-color-gray-500);
   cursor: not-allowed;
   opacity: 0.8;
 }
 
 .icon {
-  font-size: var(--tc-font-size-lg, 1.25rem);
+  font-size: var(--tc-font-size-lg);
 }
 
 .spinner {
   display: inline-block;
-  width: var(--tc-font-size-lg, 1.25rem);
-  height: var(--tc-font-size-lg, 1.25rem);
+  width: var(--tc-font-size-lg);
+  height: var(--tc-font-size-lg);
   border: 0.2em solid currentColor;
   border-right-color: transparent;
   border-radius: 50%;
@@ -66,14 +66,14 @@
 @media (max-width: 768px) {
   .validateButton {
     min-width: 280px;
-    font-size: var(--tc-font-size-base, 1rem);
-    padding: var(--tc-spacing-xs, 0.5rem) var(--tc-spacing-md, 1rem);
+    font-size: var(--tc-font-size-base);
+    padding: var(--tc-spacing-xs) var(--tc-spacing-md);
   }
 }
 
 @media (max-width: 576px) {
   .container {
-    margin: var(--tc-spacing-md, 1rem) 0;
+    margin: var(--tc-spacing-md) 0;
   }
   
   .validateButton {

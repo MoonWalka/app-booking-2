@@ -106,7 +106,7 @@
   align-items: flex-start;
   gap: var(--tc-spacing-sm);
   margin-bottom: var(--tc-spacing-sm);
-  color: var(--tc-text-muted, var(--tc-color-text-secondary));
+  color: var(--tc-text-muted);
   font-size: var(--tc-font-size-sm);
 }
 
@@ -195,7 +195,7 @@
   gap: var(--tc-spacing-sm);
   margin-bottom: var(--tc-spacing-sm);
   margin-top: var(--tc-spacing-md);
-  color: var(--tc-text-muted, var(--tc-color-text-secondary));
+  color: var(--tc-text-muted);
   font-size: var(--tc-font-size-sm);
 }
 
@@ -209,7 +209,7 @@
 .contact-item i {
   /* Harmonisation : taille standardisée */
   font-size: var(--tc-font-size-lg);
-  color: var(--tc-text-muted, var(--tc-color-text-secondary));
+  color: var(--tc-text-muted);
 }
 
 .contact-item a {

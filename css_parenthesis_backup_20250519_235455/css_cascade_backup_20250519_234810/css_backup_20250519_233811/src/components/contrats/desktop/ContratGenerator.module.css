@@ -1,0 +1,102 @@
+/*
+ * Styles pour ContratGenerator
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 19 May 2025
+ */
+
+/* Styles standardisés pour le générateur de contrat */
+
+/* Styles de base pour le conteneur principal */
+.contratGeneratorContainer {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: var(--tc-spacing-4);
+}
+
+/* Styles pour les espaces entre les sections */
+.sectionSpacer {
+  margin-bottom: var(--tc-spacing-6);
+}
+
+/* Ajout de styles pour améliorer la présentation et le support responsive */
+.generatorHeader {
+  margin-bottom: var(--tc-spacing-6);
+}
+
+.generatorHeader h1 {
+  font-size: var(--tc-font-size-2xl);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-color-secondary-dark);
+  margin-bottom: var(--tc-spacing-1);
+}
+
+.generatorHeader p {
+  color: var(--tc-color-secondary);
+  font-size: var(--tc-font-size-sm);
+}
+
+.generatorSection {
+  background-color: var(--tc-color-white, white);
+  border-radius: var(--tc-border-radius, 8px);
+  box-shadow: var(--tc-box-shadow);
+  padding: var(--tc-spacing-lg, 1.5rem);
+  margin-bottom: var(--tc-spacing-lg, 1.5rem);
+}
+
+.generatorSection h2 {
+  font-size: var(--tc-font-size-lg, 1.25rem);
+  font-weight: var(--tc-font-weight-semibold, 600);
+  margin-top: 0;
+  margin-bottom: var(--tc-spacing-md, 1rem);
+  color: var(--tc-text-color-primary, #333);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--tc-spacing-md, 1rem);
+}
+
+.actionsContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--tc-spacing-lg, 1.5rem);
+  gap: var(--tc-spacing-md, 1rem);
+}
+
+/* Support responsive */
+@media (max-width: 992px) {
+  .generatorSection {
+    padding: var(--tc-spacing-md, 1rem);
+  }
+}
+
+@media (max-width: 768px) {
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .actionsContainer {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .actionsContainer button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .contratGeneratorContainer {
+    padding: var(--tc-spacing-sm, 0.75rem);
+  }
+  
+  .generatorSection {
+    padding: var(--tc-spacing-sm, 0.75rem);
+  }
+  
+  .generatorHeader h1 {
+    font-size: var(--tc-font-size-lg, 1.25rem);
+  }
+}

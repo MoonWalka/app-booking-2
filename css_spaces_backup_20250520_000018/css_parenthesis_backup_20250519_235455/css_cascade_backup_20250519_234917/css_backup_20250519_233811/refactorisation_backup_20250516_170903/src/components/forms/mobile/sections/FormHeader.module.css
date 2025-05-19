@@ -1,0 +1,41 @@
+/*
+ * Styles pour FormHeader
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
+ */
+
+.headerContainer {
+  margin-bottom: var(--tc-spacing-3);
+  padding: var(--tc-spacing-2) 0;
+  border-bottom: 1px solid var(--tc-color-border-light, #dee2e6);
+}
+
+.titleContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--tc-spacing-2);
+}
+
+.title {
+  font-size: var(--tc-font-size-xl);
+  font-weight: var(--tc-font-weight-semibold);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.backButton {
+  font-size: var(--tc-font-size-xs);
+  padding: var(--tc-spacing-1) var(--tc-spacing-2);
+}
+
+@media (max-width: 576px) {
+  .headerContainer {
+    padding: var(--tc-spacing-2) 0;
+  }
+  
+  .title {
+    font-size: 1.var(--tc-spacing-3);
+  }
+}

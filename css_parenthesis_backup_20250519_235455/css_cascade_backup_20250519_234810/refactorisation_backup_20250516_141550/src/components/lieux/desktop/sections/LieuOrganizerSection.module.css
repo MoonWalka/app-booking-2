@@ -1,0 +1,173 @@
+.formCard {
+  border: 1px solid var(--tc-bs-border-color);
+  border-radius: 8px;
+  background-color: var(--tc-bs-white);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.cardHeader {
+  background-color: var(--tc-bs-light);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--tc-bs-border-color);
+}
+
+.cardHeader i {
+  margin-right: 10px;
+  color: var(--tc-bs-primary);
+  font-size: 1.2rem;
+}
+
+.cardHeader h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  flex-grow: 1;
+}
+
+.cardBody {
+  padding: 20px;
+}
+
+.formGroup {
+  margin-bottom: 1.5rem;
+}
+
+.formGroup:last-child {
+  margin-bottom: 0;
+}
+
+.formLabel {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  display: block;
+  color: var(--tc-bs-gray-700);
+}
+
+.programmateurSearchContainer {
+  position: relative;
+}
+
+.dropdownMenu {
+  margin-top: 4px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.programmateurItem {
+  cursor: pointer;
+  padding: 10px 15px;
+  transition: background-color 0.2s;
+}
+
+.programmateurItem:hover {
+  background-color: var(--tc-bs-light);
+}
+
+.programmateurName {
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.programmateurDetails {
+  font-size: 0.85em;
+  color: var(--tc-bs-gray-600);
+  display: flex;
+  gap: 10px;
+}
+
+.programmateurStructure:before {
+  content: "|";
+  margin-right: 10px;
+  color: var(--tc-bs-gray-400);
+}
+
+.selectedProgrammateur {
+  margin-top: 10px;
+}
+
+.programmateurCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  padding: 15px;
+  border: 1px solid var(--tc-bs-border-color);
+  border-radius: 8px;
+  background-color: var(--tc-bs-light);
+}
+
+.programmateurInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.programmateurContacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 5px;
+}
+
+.programmateurContactItem {
+  font-size: 0.9em;
+  color: var(--tc-bs-gray-700);
+}
+
+.programmateurDisplay {
+  padding: 0;
+}
+
+.infoRow {
+  display: flex;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.infoLabel {
+  width: 120px;
+  font-weight: 500;
+  color: var(--tc-bs-gray-600);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.infoValue {
+  flex: 1;
+  min-width: 200px;
+}
+
+.highlight {
+  font-weight: 500;
+}
+
+.programmateurLink {
+  text-decoration: none;
+  color: var(--tc-bs-primary);
+  position: relative;
+}
+
+.programmateurLink:hover {
+  text-decoration: underline;
+}
+
+.contactLink {
+  text-decoration: none;
+  color: var(--tc-bs-primary);
+  transition: color 0.2s;
+}
+
+.contactLink:hover {
+  color: var(--tc-bs-primary-hover);
+  text-decoration: underline;
+}
+
+.textEmpty {
+  color: var(--tc-bs-gray-500);
+  font-style: italic;
+}

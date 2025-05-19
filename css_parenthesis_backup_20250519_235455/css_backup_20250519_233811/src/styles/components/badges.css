@@ -1,0 +1,244 @@
+/*
+ * Styles pour badges.css
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
+ */
+
+
+
+
+
+/* Styles pour les badges de statut */
+.status-badge {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: var(--tc-font-weight-semibold);
+  text-align: center;
+  min-width: 80px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: transform 0.2s ease; /* // Correction UI: Ajout de transition pour interaction */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); /* // Correction UI: Ajout d'ombre légère pour meilleure perception visuelle */
+}
+
+/* // Correction UI: Amélioration du contraste et standardisation des statuts */
+.status-option {
+  background-color: var(--tc-warning-color, #ffc107);
+  color: #212529; /* // Correction UI: Couleur plus foncée pour meilleur contraste */
+  font-weight: var(--tc-font-weight-semibold);
+}
+
+.status-confirmed {
+  background-color: var(--tc-success-color, #28a745);
+  color: var(--tc-bg-default);
+  font-weight: var(--tc-font-weight-semibold);
+}
+
+.status-cancelled {
+  background-color: var(--tc-danger-color);
+  color: var(--tc-bg-default);
+  font-weight: var(--tc-font-weight-semibold);
+}
+
+.status-pending {
+  background-color: var(--tc-info-color, #17a2b8);
+  color: var(--tc-bg-default);
+  font-weight: var(--tc-font-weight-semibold);
+}
+
+.status-draft {
+  background-color: var(--tc-secondary-color));
+  color: var(--tc-bg-default);
+  font-weight: var(--tc-font-weight-semibold);
+}
+
+.status-declined {
+  background-color: var(--tc-danger-color);
+  color: var(--tc-bg-default);
+  font-weight: var(--tc-font-weight-semibold);
+}
+
+/* // Correction UI: Ajout d'état hover pour les badges de statut */
+.status-badge:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Badge de notification pour les alertes et indicateurs */
+.tc-notification-badge {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--tc-danger-color);
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(40%, -40%);
+  box-shadow: 0 0 0 2px var(--tc-bg-default);
+  animation: pulse 1.5s infinite;
+}
+
+/* // Correction UI: Standardisation des variantes de taille de badge de notification */
+.tc-notification-badge-sm {
+  width: 8px;
+  height: 8px;
+}
+
+.tc-notification-badge-lg {
+  width: 12px;
+  height: 12px;
+}
+
+/* // Correction UI: Standardisation des badges principaux et secondaires */
+.badge-primary {
+  background-color: var(--tc-primary-color, #007bff);
+  color: var(--tc-text-light);
+}
+
+.badge-secondary {
+  background-color: var(--tc-secondary-color));
+  color: var(--tc-text-light);
+}
+
+/* // Correction UI: Amélioration du contraste pour les badges avec contour */
+.badge-outline-primary {
+  background-color: transparent;
+  color: var(--tc-primary-color, #007bff);
+  border: 1px solid var(--tc-primary-color, #007bff);
+}
+
+.badge-outline-secondary {
+  background-color: transparent;
+  color: var(--tc-secondary-color));
+  border: 1px solid var(--tc-secondary-color));
+}
+
+/* // Correction UI: Amélioration des états interactifs pour meilleure expérience utilisateur */
+.badge-interactive {
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.badge-interactive.badge-primary:hover {
+  background-color: var(--tc-primary-dark, #0069d9);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.badge-interactive.badge-secondary:hover {
+  background-color: var(--tc-secondary-dark, #5a6268);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* // Correction UI: Standardisation des tailles de badge */
+.badge-sm {
+  padding: 3px 8px;
+  font-size: 10px;
+  min-width: 60px;
+}
+
+.badge-lg {
+  padding: 6px 12px;
+  font-size: 14px;
+  min-width: 100px;
+}
+
+/* // Correction UI: Amélioration visuelle du badge compteur */
+.tc-counter-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: var(--tc-badge-bg, #007bff);
+  color: var(--tc-bg-default);
+  width: 20px;
+  height: 20px;
+  font-size: 10px;
+  font-weight: var(--tc-font-weight-semibold);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* // Correction UI: Ajout des variantes de compteur */
+.tc-counter-badge-sm {
+  width: 16px;
+  height: 16px;
+  font-size: 9px;
+}
+
+.tc-counter-badge-lg {
+  width: 24px;
+  height: 24px;
+  font-size: 12px;
+}
+
+/* Animation pour notification badge */
+@keyframes pulse {
+  0% { opacity: 0.7; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.1); }
+  100% { opacity: 0.7; transform: scale(1); }
+}
+
+/* // Correction UI: Amélioration responsive pour les badges */
+@media (max-width: 576px) {
+  .status-badge {
+    padding: 3px 8px;
+    font-size: 11px;
+    min-width: 70px;
+  }
+  
+  .badge-lg {
+    padding: 5px 10px;
+    font-size: 12px;
+    min-width: 90px;
+  }
+  
+  .tc-counter-badge {
+    width: 18px;
+    height: 18px;
+    font-size: 9px;
+  }
+}
+
+/* // Correction UI: Ajout de styles pour les badges avec icônes */
+.tc-badge-with-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tc-badge-with-icon i, 
+.tc-badge-with-icon svg {
+  font-size: 0.85em;
+}
+
+/* Statuts personnalisés pour les concerts */
+.status-contrat {
+  background-color: var(--tc-primary-dark, #2c3e50);
+  color: var(--tc-text-light, #ffffff);
+}
+
+.status-preaccord {
+  background-color: var(--tc-warning-color, #f0ad4e);
+  color: #212529;
+}
+
+.status-acompte {
+  background-color: var(--tc-info-color, #17a2b8);
+  color: #fff;
+}
+
+.status-solde {
+  background-color: var(--tc-success-color, #28a745);
+  color: #fff;
+}
+
+.status-contact {
+  background-color: var(--tc-secondary-color));
+  color: #fff;
+}

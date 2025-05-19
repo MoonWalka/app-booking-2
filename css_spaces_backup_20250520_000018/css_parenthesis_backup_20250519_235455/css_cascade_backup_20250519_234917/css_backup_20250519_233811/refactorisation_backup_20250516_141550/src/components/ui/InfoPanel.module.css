@@ -1,0 +1,51 @@
+/*
+ * Styles pour InfoPanel
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Date de création: Inconnue
+ * Dernière mise à jour: 12 mai 2025
+ */
+
+/* Import des classes utilitaires pour les points de rupture */
+@import '../../styles/mixins/breakpoints.css';
+
+.infoPanel {
+  background-color: var(--tc-color-info-light, #e3f2fd);
+  border-left: 4px solid var(--tc-color-info, #2196f3);
+  padding: var(--tc-spacing-4, 15px);
+  margin: var(--tc-spacing-5, 20px) 0;
+  border-radius: var(--tc-radius-sm, 4px);
+}
+
+.infoPanel.success {
+  background-color: var(--tc-color-success-light, #d1e7dd);
+  border-left-color: var(--tc-color-success, #198754);
+}
+
+.infoPanel.warning {
+  background-color: var(--tc-color-warning-light, #fff3cd);
+  border-left-color: var(--tc-color-warning, #ffc107);
+}
+
+.infoPanel.error {
+  background-color: var(--tc-color-error-light, #f8d7da);
+  border-left-color: var(--tc-color-error, #dc3545);
+}
+
+.infoPanel h4 {
+  color: var(--tc-color-text-primary, #333);
+  margin-top: 0;
+  margin-bottom: var(--tc-spacing-2, 8px);
+  font-weight: var(--tc-font-weight-medium, 500);
+}
+
+.infoPanel p {
+  color: var(--tc-color-text-secondary, #555);
+  margin-bottom: 0;
+}
+
+@media (max-width: var(--tc-breakpoint-xs, 576px)) {
+  .infoPanel {
+    padding: var(--tc-spacing-3, 12px);
+    margin: var(--tc-spacing-4, 15px) 0;
+  }
+}

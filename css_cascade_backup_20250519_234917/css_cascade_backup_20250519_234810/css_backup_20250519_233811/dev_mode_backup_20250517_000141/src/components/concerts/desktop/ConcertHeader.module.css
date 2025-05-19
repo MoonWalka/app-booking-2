@@ -17,7 +17,7 @@
 .modernTitle {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--tc-primary-color, #007bff);
+  color: var(--tc-primary-color);
   margin-bottom: 0.5rem;
 }
 
@@ -29,7 +29,7 @@
 }
 
 .breadcrumbItem {
-  color: var(--tc-text-color, #333);
+  color: var(--tc-text-color);
   cursor: pointer;
 }
 
@@ -38,7 +38,7 @@
 }
 
 .breadcrumbItem.active {
-  color: var(--tc-text-secondary, #6c757d);
+  color: var(--tc-text-secondary);
   cursor: default;
 }
 

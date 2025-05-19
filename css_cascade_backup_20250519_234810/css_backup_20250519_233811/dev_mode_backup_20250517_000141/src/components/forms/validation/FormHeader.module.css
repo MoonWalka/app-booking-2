@@ -10,14 +10,14 @@
 /* FormHeader Styles - Standardisés */
 .container {
   /* Base container styles */
-  margin-bottom: var(--tc-spacing-lg, 1.5rem);
+  margin-bottom: var(--tc-spacing-lg);
 }
 
 .headerWrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--tc-spacing-md, 1rem);
+  margin-bottom: var(--tc-spacing-md);
 }
 
 .titleWrapper {
@@ -26,46 +26,46 @@
 
 .title {
   margin: 0;
-  font-size: var(--tc-font-size-xl, 1.75rem);
-  font-weight: var(--tc-font-weight-semibold, 600);
+  font-size: var(--tc-font-size-xl);
+  font-weight: var(--tc-font-weight-semibold);
 }
 
 .actionsWrapper {
   display: flex;
-  gap: var(--tc-spacing-xs, 0.5rem);
+  gap: var(--tc-spacing-xs);
 }
 
 .backButton {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-xs, 0.5rem);
-  padding: var(--tc-spacing-xs, 0.5rem) var(--tc-spacing-md, 1rem);
+  gap: var(--tc-spacing-xs);
+  padding: var(--tc-spacing-xs) var(--tc-spacing-md);
   background-color: transparent;
-  border: var(--tc-border-width, 1px) solid var(--tc-border-color, #ced4da);
-  border-radius: var(--tc-border-radius-sm, 0.25rem);
-  color: var(--tc-text-color-secondary, #495057);
-  font-weight: var(--tc-font-weight-medium, 500);
+  border: var(--tc-border-width) solid var(--tc-border-color);
+  border-radius: var(--tc-border-radius-sm);
+  color: var(--tc-text-color-secondary);
+  font-weight: var(--tc-font-weight-medium);
   cursor: pointer;
-  transition: var(--tc-transition, background-color 0.2s, color 0.2s, border-color 0.2s);
+  transition: var(--tc-transition);
 }
 
 .backButton:hover {
-  background-color: var(--tc-color-gray-100, #f8f9fa);
-  border-color: var(--tc-color-gray-500, #adb5bd);
+  background-color: var(--tc-color-gray-100);
+  border-color: var(--tc-color-gray-500);
 }
 
 .divider {
   border: 0;
-  border-top: var(--tc-border-width, 1px) solid var(--tc-border-color-light, #dee2e6);
-  margin: var(--tc-spacing-md, 1rem) 0;
+  border-top: var(--tc-border-width) solid var(--tc-border-color-light);
+  margin: var(--tc-spacing-md) 0;
 }
 
 /* Support responsive avec variables standardisées */
-@media (max-width: var(--tc-breakpoint-sm, 768px)) {
+@media (max-width: var(--tc-breakpoint-sm)) {
   .headerWrapper {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--tc-spacing-sm, 0.75rem);
+    gap: var(--tc-spacing-sm);
   }
   
   .actionsWrapper {
@@ -74,18 +74,18 @@
   }
   
   .title {
-    font-size: var(--tc-font-size-lg, 1.5rem);
+    font-size: var(--tc-font-size-lg);
   }
 }
 
-@media (max-width: var(--tc-breakpoint-xs, 576px)) {
+@media (max-width: var(--tc-breakpoint-xs)) {
   .container {
-    margin-bottom: var(--tc-spacing-md, 1rem);
+    margin-bottom: var(--tc-spacing-md);
   }
   
   .actionsWrapper {
     flex-wrap: wrap;
-    gap: var(--tc-spacing-xs, 0.5rem);
+    gap: var(--tc-spacing-xs);
   }
   
   .backButton {

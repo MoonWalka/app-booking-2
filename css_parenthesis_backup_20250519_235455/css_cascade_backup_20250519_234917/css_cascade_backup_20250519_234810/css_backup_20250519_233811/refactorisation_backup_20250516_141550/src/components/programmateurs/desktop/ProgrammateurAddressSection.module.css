@@ -1,0 +1,98 @@
+.container {
+  /* Base styles for ProgrammateurAddressSection */
+  margin-bottom: var(--tc-spacing-md, 1rem);
+}
+
+.cardWrapper {
+  background-color: var(--tc-color-white, white);
+  border-radius: var(--tc-border-radius, 8px);
+  box-shadow: var(--tc-box-shadow);
+  margin-bottom: var(--tc-spacing-lg, 1.5rem);
+  overflow: hidden;
+  transition: var(--tc-transition, all 0.3s ease);
+}
+
+.cardWrapper:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--tc-box-shadow-lg);
+}
+
+.cardHeader {
+  background-color: var(--tc-color-gray-100, #f8f9fa);
+  padding: var(--tc-spacing-md, 1rem);
+  display: flex;
+  align-items: center;
+  border-bottom: var(--tc-border-width, 1px) solid var(--tc-border-color, #eee);
+  gap: var(--tc-spacing-sm, 0.75rem);
+}
+
+.cardBody {
+  padding: var(--tc-spacing-lg, 1.5rem);
+}
+
+.formGroup {
+  margin-bottom: var(--tc-spacing-md, 1.25rem);
+}
+
+.cardLabel {
+  font-weight: var(--tc-font-weight-bold, 600);
+  margin-bottom: var(--tc-spacing-sm, 0.5rem);
+  color: var(--tc-text-color-secondary);
+  display: block;
+}
+
+.suggestionsContainer {
+  border: var(--tc-border-width, 1px) solid var(--tc-border-color-light, #e0e0e0);
+  border-radius: var(--tc-border-radius-sm, 4px);
+  margin-top: var(--tc-spacing-md, 1rem);
+  margin-bottom: var(--tc-spacing-md, 1rem);
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.suggestionsList {
+  padding: var(--tc-spacing-sm, 0.5rem) 0;
+}
+
+.suggestionItem {
+  padding: var(--tc-spacing-sm, 0.75rem) var(--tc-spacing-md, 1rem);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background-color var(--tc-transition-duration, 0.2s);
+}
+
+.suggestionItem:hover {
+  background-color: var(--tc-color-primary-light, #f0f7ff);
+}
+
+.addressDisplay {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Responsive design - medium devices */
+@media (max-width: 768px) {
+  .cardBody {
+    padding: var(--tc-spacing-md, 1rem);
+  }
+  
+  .cardWrapper:hover {
+    transform: translateY(-2px);
+  }
+}
+
+/* Additional responsive support for small screens */
+@media (max-width: 576px) {
+  .cardHeader {
+    padding: var(--tc-spacing-sm, 0.75rem);
+  }
+  
+  .suggestionItem {
+    padding: var(--tc-spacing-sm, 0.5rem);
+  }
+  
+  .cardWrapper:hover {
+    transform: none;
+  }
+}

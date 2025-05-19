@@ -81,7 +81,7 @@
   padding: 30px;
   background-color: rgba(255, 255, 255, 0.7);
   text-align: center;
-  border-radius: var(--tc-border-radius, 8px);
+  border-radius: var(--tc-border-radius);
   position: relative; /* Ajout pour assurer que les éléments absolus se positionnent par rapport à ce conteneur */
 }
 
@@ -98,7 +98,7 @@
   align-items: center;
   background-color: rgba(255, 255, 255, 0.9); /* Plus opaque pour une meilleure visibilité */
   z-index: 9999; /* Augmenté pour être sûr qu'il est au-dessus de tout */
-  border-radius: var(--tc-border-radius, var(--tc-spacing-2));
+  border-radius: var(--tc-border-radius);
 }
 
 /* Spinner transparent */
@@ -114,7 +114,7 @@
   align-items: center;
   background-color: rgba(255, 255, 255, 0.7); /* Fond semi-transparent */
   z-index: 9999; /* Augmenté pour cohérence avec les autres z-index de spinners */
-  border-radius: var(--tc-border-radius, var(--tc-spacing-2));
+  border-radius: var(--tc-border-radius);
 }
 
 /* Message de spinner */

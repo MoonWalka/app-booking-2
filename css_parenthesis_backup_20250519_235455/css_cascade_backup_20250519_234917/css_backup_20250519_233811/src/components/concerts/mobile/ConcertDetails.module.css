@@ -1,0 +1,416 @@
+/*
+ * Styles pour ConcertDetails
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
+ */
+
+
+
+/* Container principal */
+.concertDetailsMobile {
+  padding: 0;
+  background-color: var(--tc-bg-light, #f8f9fa);
+  height: calc(100vh - 56px);
+  overflow-y: auto;
+  padding-bottom: 70px; /* Espace pour la barre d'action fixe en bas */
+}
+
+/* Barre d'en-tête mobile */
+.mobileHeaderBar {
+  display: flex;
+  align-items: center;
+  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.backButton {
+  margin-right: 12px;
+  padding: 0.375rem var(--tc-spacing-2);
+  line-height: 1;
+  margin-top: var(--tc-spacing-3);
+  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  border: none;
+  background-color: var(--tc-color-primary, #0d6efd);
+  color: var(--tc-bg-default, white);
+  border-radius: var(--tc-radius-sm);
+  font-weight: var(--tc-font-weight-medium);
+}
+
+.mobileTitleContainer {
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+.mobileTitleContainer h1 {
+  font-size: 1.var(--tc-spacing-3);
+  margin: 0;
+  var(--tc-bg-default, white)-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: var(--tc-font-weight-semibold);
+}
+
+.mobileActions {
+  display: flex;
+  gap: var(--tc-spacing-2);
+}
+
+/* Onglets pour navigation mobile */
+.mobileTabs {
+  display: flex;
+  overflow-x: auto;
+  padding: var(--tc-spacing-2);
+  background-color: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 56px;
+  z-index: 9;
+}
+
+/* Contenu de l'onglet sélectionné */
+.mobileTabContent {
+  padding: var(--tc-spacing-3);
+}
+
+/* Styles pour les onglets */
+
+/* Onglet Infos */
+.infoTabContent {
+  margin-bottom: var(--tc-spacing-3);
+}
+
+.infoCard {
+  background-color: #fff;
+  border-radius: var(--tc-radius-md);
+  padding: var(--tc-spacing-3);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.infoItem {
+  margin-bottom: var(--tc-spacing-2);
+  padding-bottom: var(--tc-spacing-2);
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.infoItem:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.infoLabel {
+  display: block;
+  font-weight: var(--tc-font-weight-semibold);
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-color-text-secondary, #6c757d);
+  margin-bottom: var(--tc-spacing-1);
+}
+
+.infoValue {
+  font-size: var(--tc-spacing-3);
+}
+
+.notes {
+  padding-top: var(--tc-spacing-2);
+}
+
+.notesContent {
+  background-color: var(--tc-bg-light, #f8f9fa);
+  padding: var(--tc-spacing-2);
+  border-radius: 6px;
+  margin-top: var(--tc-spacing-2);
+  var(--tc-bg-default, white)-space: pre-wrap;
+}
+
+/* Onglet Lieu */
+.lieuTabContent {
+  margin-bottom: var(--tc-spacing-3);
+}
+
+.lieuCard {
+  background-color: #fff;
+  border-radius: var(--tc-radius-md);
+  padding: var(--tc-spacing-3);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.lieuName {
+  font-size: 1.var(--tc-spacing-8);
+  font-weight: var(--tc-font-weight-semibold);
+  margin-bottom: var(--tc-spacing-3);
+}
+
+.lieuAddress,
+.lieuCapacity,
+.lieuContact {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: var(--tc-spacing-2);
+}
+
+.lieuAddress i,
+.lieuCapacity i,
+.lieuContact i {
+  margin-right: var(--tc-spacing-2);
+  margin-top: var(--tc-spacing-1);
+  min-width: 16px;
+  color: var(--tc-color-text-secondary, #6c757d);
+}
+
+.lieuMap {
+  margin: var(--tc-spacing-3) 0;
+  border-radius: var(--tc-radius-md);
+  overflow: hidden;
+}
+
+.lieuActions {
+  margin-top: var(--tc-spacing-3);
+  display: flex;
+  justify-content: center;
+}
+
+/* Onglet Programmateur */
+.programmateurTabContent {
+  margin-bottom: var(--tc-spacing-3);
+}
+
+.programmateurCard {
+  background-color: #fff;
+  border-radius: var(--tc-radius-md);
+  padding: var(--tc-spacing-3);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.programmateurName {
+  font-size: 1.var(--tc-spacing-8);
+  font-weight: var(--tc-font-weight-semibold);
+  margin-bottom: var(--tc-spacing-3);
+}
+
+.programmateurStructure,
+.programmateurContact {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--tc-spacing-2);
+}
+
+.programmateurStructure i,
+.programmateurContact i {
+  margin-right: var(--tc-spacing-2);
+  min-width: 16px;
+  color: var(--tc-color-text-secondary, #6c757d);
+}
+
+.formSection {
+  margin-top: var(--tc-spacing-4);
+  border-top: 1px solid #f0f0f0;
+  padding-top: var(--tc-spacing-3);
+}
+
+.formSection h4 {
+  font-size: var(--tc-spacing-3);
+  font-weight: var(--tc-font-weight-semibold);
+  margin-bottom: var(--tc-spacing-2);
+}
+
+.formInfo {
+  margin-bottom: var(--tc-spacing-3);
+}
+
+.formStatus {
+  margin-bottom: var(--tc-spacing-2);
+}
+
+.formAction {
+  margin-bottom: var(--tc-spacing-3);
+}
+
+.formSharingOptions {
+  margin-top: var(--tc-spacing-3);
+}
+
+.programmateurActions {
+  margin-top: var(--tc-spacing-3);
+  display: flex;
+  justify-content: center;
+}
+
+/* Onglet Artiste */
+.artisteTabContent {
+  margin-bottom: var(--tc-spacing-3);
+}
+
+.artisteCard {
+  background-color: #fff;
+  border-radius: var(--tc-radius-md);
+  padding: var(--tc-spacing-3);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.artisteName {
+  font-size: 1.var(--tc-spacing-8);
+  font-weight: var(--tc-font-weight-semibold);
+  margin-bottom: var(--tc-spacing-3);
+}
+
+.artisteGenre {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--tc-spacing-2);
+}
+
+.artisteGenre i {
+  margin-right: var(--tc-spacing-2);
+  min-width: 16px;
+  color: var(--tc-color-text-secondary, #6c757d);
+}
+
+.artisteDescription {
+  margin: var(--tc-spacing-3) 0;
+  padding: var(--tc-spacing-2);
+  background-color: var(--tc-bg-light, #f8f9fa);
+  border-radius: 6px;
+}
+
+.artisteContacts {
+  margin-top: var(--tc-spacing-3);
+}
+
+.artisteContact {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--tc-spacing-2);
+}
+
+.artisteContact i {
+  margin-right: var(--tc-spacing-2);
+  min-width: 16px;
+  color: var(--tc-color-text-secondary, #6c757d);
+}
+
+.artisteActions {
+  margin-top: var(--tc-spacing-3);
+  display: flex;
+  justify-content: center;
+}
+
+/* État vide */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--tc-spacing-8);
+  background-color: #fff;
+  border-radius: var(--tc-radius-md);
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.emptyState i {
+  font-size: 2.5rem;
+  color: var(--tc-color-border-light, #dee2e6);
+  margin-bottom: var(--tc-spacing-3);
+}
+
+.emptyState p {
+  color: var(--tc-color-text-secondary, #6c757d);
+  margin-bottom: 0;
+}
+
+/* État de chargement */
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 56px);
+  color: var(--tc-color-text-secondary, #6c757d);
+  flex-direction: column;
+  height: 50vh;
+  padding: var(--tc-spacing-3);
+  text-align: center;
+}
+
+.loadingText {
+  margin-top: var(--tc-spacing-3);
+  color: var(--tc-color-text-secondary, #555);
+  font-size: var(--tc-font-size-sm);
+}
+
+/* État d'erreur */
+.errorContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 56px);
+  color: var(--tc-color-error);
+  flex-direction: column;
+  padding: var(--tc-spacing-8) var(--tc-spacing-3);
+  text-align: center;
+}
+
+/* Navigation par onglets mobile */
+.mobileNavTabs {
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  var(--tc-bg-default, white)-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  margin-bottom: 0;
+}
+
+.mobileNavTabs::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.navTab {
+  font-size: var(--tc-font-size-sm);
+  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  text-align: center;
+}
+
+/* Contenu des onglets */
+.tabContent {
+  padding: var(--tc-spacing-3);
+  background-color: #fff;
+}
+
+/* Conteneur pour le générateur de formulaire */
+.formGeneratorContainer {
+  margin-top: var(--tc-spacing-3);
+  padding: var(--tc-spacing-3);
+  background-color: var(--tc-bg-light, #f8f9fa);
+  border-radius: var(--tc-spacing-2);
+  border: 1px solid var(--tc-color-border-light, #dee2e6);
+}
+
+/* Utilitaires */
+.mt-3 {
+  margin-top: var(--tc-spacing-3);
+}
+
+.mb-3 {
+  margin-bottom: var(--tc-spacing-3);
+}
+
+.p-3 {
+  padding: var(--tc-spacing-3);
+}
+
+/* Styles spécifiques pour les petits écrans */
+@media (max-width: 576px) {
+  .tabContent {
+    padding: var(--tc-spacing-2) var(--tc-spacing-2);
+  }
+  
+  .navTab {
+    padding: var(--tc-spacing-2) var(--tc-spacing-2);
+    font-size: var(--tc-font-size-sm);
+  }
+}

@@ -1,6 +1,6 @@
 /* LieuDetails.module.css - Standardisé */
 .lieuDetailsContainer {
-  padding: var(--tc-spacing-md, 20px);
+  padding: var(--tc-spacing-md);
   max-width: 1280px;
   margin: 0 auto;
 }
@@ -8,8 +8,8 @@
 .twoColumnsLayout {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--tc-spacing-lg, 24px);
-  margin-top: var(--tc-spacing-md, 20px);
+  gap: var(--tc-spacing-lg);
+  margin-top: var(--tc-spacing-md);
 }
 
 .leftColumn {
@@ -31,11 +31,11 @@
 
 .errorContainer {
   max-width: 800px;
-  margin: var(--tc-spacing-xl, 100px) auto;
+  margin: var(--tc-spacing-xl) auto;
   text-align: center;
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-md, 16px);
+  gap: var(--tc-spacing-md);
   align-items: center;
 }
 
@@ -48,22 +48,22 @@
 
 @media (max-width: 768px) {
   .lieuDetailsContainer {
-    padding: var(--tc-spacing-sm, 16px);
+    padding: var(--tc-spacing-sm);
   }
   
   .twoColumnsLayout {
-    gap: var(--tc-spacing-md, 16px);
-    margin-top: var(--tc-spacing-sm, 16px);
+    gap: var(--tc-spacing-md);
+    margin-top: var(--tc-spacing-sm);
   }
 }
 
 @media (max-width: 576px) {
   .lieuDetailsContainer {
-    padding: var(--tc-spacing-sm, 12px);
+    padding: var(--tc-spacing-sm);
   }
   
   .errorContainer {
-    margin: var(--tc-spacing-lg, 50px) auto;
-    gap: var(--tc-spacing-sm, 12px);
+    margin: var(--tc-spacing-lg) auto;
+    gap: var(--tc-spacing-sm);
   }
 }

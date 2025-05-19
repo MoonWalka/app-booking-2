@@ -1,0 +1,195 @@
+/*
+ * Styles pour forms
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
+/* 
+ * Formulaire multi-étapes 
+ * Ces styles sont utilisés pour la navigation entre les étapes d'un formulaire
+ */
+.form-progress {
+  display: flex;
+  margin-bottom: 30px;
+  border-radius: var(--tc-border-radius);
+  overflow: hidden;
+}
+
+.progress-step {
+  flex: 1;
+  padding: 10px;
+  text-align: center;
+  background-color: var(--tc-light-color);
+  color: var(--tc-text-color);
+  position: relative;
+}
+
+.progress-step.active {
+  background-color: var(--tc-primary-color);
+  color: white;
+}
+
+.progress-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 10px solid var(--tc-light-color);
+  z-index: 1;
+}
+
+.progress-step.active:not(:last-child)::after {
+  border-left-color: var(--tc-primary-color);
+}
+
+/* Styles pour l'interface isolée du formulaire */
+.form-isolated-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f5f7fa;
+}
+
+.form-header {
+  background-color: var(--tc-secondary-color);
+  color: white;
+  padding: 15px 30px;
+  text-align: center;
+}
+
+.form-logo h2 {
+  margin: 0;
+}
+
+.form-content {
+  flex: 1;
+  padding: 30px;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.form-footer {
+  background-color: var(--tc-secondary-color);
+  color: white;
+  padding: 15px;
+  text-align: center;
+  font-size: 12px;
+}
+
+.form-security-notice {
+  margin-top: 30px;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: var(--tc-border-radius);
+  text-align: center;
+  font-size: 12px;
+  color: #7f8c8d;
+}
+
+.form-error {
+  text-align: center;
+  padding: 50px 20px;
+}
+
+.error-icon {
+  font-size: 64px;
+  color: var(--tc-danger-color);
+  margin-bottom: 20px;
+}
+
+.error-help {
+  margin-top: 20px;
+  font-style: italic;
+}
+
+/* Styles pour les avertissements d'expiration */
+.form-expired-warning {
+  margin-top: 15px;
+  padding: 10px;
+  background-color: #fff3cd;
+  border-radius: var(--tc-border-radius);
+  color: #856404;
+}
+
+/* Styles pour les informations de soumission */
+.form-submitted-info, 
+.form-validated-info {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #d4edda;
+  border-radius: var(--tc-border-radius);
+  color: #155724;
+}
+
+/* Styles pour les liens de formulaire */
+.form-link-container {
+  margin-top: 20px;
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: var(--tc-border-radius);
+}
+
+.form-link {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.form-link input {
+  flex: 1;
+  background-color: white;
+}
+
+/* Styles pour le succès du formulaire */
+.form-success {
+  text-align: center;
+  padding: 50px 20px;
+}
+
+.success-icon {
+  font-size: 64px;
+  color: var(--tc-success-color);
+  margin-bottom: 20px;
+}
+
+/* Styles pour la validation */
+.form-validation {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.validation-card {
+  background-color: white;
+  border-radius: var(--tc-border-radius);
+  padding: 20px;
+  box-shadow: var(--tc-shadow);
+  margin-top: 20px;
+}
+
+.validation-success {
+  text-align: center;
+  padding: 50px 20px;
+}
+
+/* Formulaire de programmateur */
+.programmateur-form {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.form-intro {
+  margin-bottom: 30px;
+}
+
+.concert-info {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: var(--tc-border-radius);
+  margin-top: 15px;
+}

@@ -1,0 +1,103 @@
+/*
+ * Styles pour LieuGeneralInfo
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 19 May 2025
+ */
+
+.formCard {
+  border: 1px solid var(--tc-border-light);
+  border-radius: var(--tc-radius-lg);
+  background-color: var(--tc-bg-default);
+  box-shadow: var(--tc-shadow-sm);
+  overflow: hidden;
+  margin-bottom: var(--tc-spacing-6);
+}
+
+.cardHeader {
+  background-color: var(--tc-bg-light);
+  padding: var(--tc-spacing-4) var(--tc-spacing-4);
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--tc-border-light);
+}
+
+.cardHeader i {
+  margin-right: var(--tc-spacing-2);
+  color: var(--tc-color-primary);
+  font-size: var(--tc-font-size-xl);
+}
+
+.cardHeader h3 {
+  margin: 0;
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
+  flex-grow: 1;
+  color: var(--tc-color-secondary-dark);
+}
+
+.cardBody {
+  padding: var(--tc-spacing-4);
+}
+
+.formRow {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: calc(var(--tc-spacing-2) * -1);
+  margin-left: calc(var(--tc-spacing-2) * -1);
+  gap: var(--tc-spacing-2);
+}
+
+.formCol {
+  flex: 1 0 0%;
+  min-width: 250px;
+  padding-right: var(--tc-spacing-2);
+  padding-left: var(--tc-spacing-2);
+}
+
+.formGroup {
+  margin-bottom: var(--tc-spacing-6);
+}
+
+.formGroup:last-child {
+  margin-bottom: 0;
+}
+
+.formLabel {
+  font-weight: var(--tc-font-weight-medium);
+  margin-bottom: var(--tc-spacing-1);
+  display: block;
+  color: var(--tc-color-secondary-dark);
+}
+
+.formControlStatic {
+  padding: var(--tc-spacing-1) 0;
+  color: var(--tc-color-secondary-dark);
+  word-break: break-word;
+}
+
+.required {
+  color: var(--tc-color-error);
+  margin-left: var(--tc-spacing-1);
+}
+
+.textEmpty {
+  color: var(--tc-color-secondary);
+  font-style: italic;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .formRow {
+    flex-direction: column;
+  }
+  
+  .formCol {
+    width: 100%;
+    padding-right: 0;
+    padding-left: 0;
+  }
+  
+  .cardBody {
+    padding: var(--tc-spacing-3);
+  }
+}

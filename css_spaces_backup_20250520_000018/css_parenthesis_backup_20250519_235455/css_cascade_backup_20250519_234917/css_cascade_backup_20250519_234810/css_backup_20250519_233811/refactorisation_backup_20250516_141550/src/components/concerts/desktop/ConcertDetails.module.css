@@ -1,0 +1,348 @@
+/* Styles standardisés pour le composant ConcertDetails */
+
+/* Container principal */
+.concertDetailsContainer {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--tc-spacing-md, 20px);
+}
+
+/* En-tête du formulaire */
+.formHeaderContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--tc-spacing-lg, 1.5rem);
+  flex-wrap: wrap;
+}
+
+/* Titre moderne */
+.modernTitle {
+  font-size: var(--tc-font-size-lg, 1.5rem);
+  font-weight: var(--tc-font-weight-bold, 700);
+  color: var(--tc-primary-color, #007bff);
+  margin-bottom: var(--tc-spacing-sm, 0.5rem);
+}
+
+/* Container du fil d'Ariane */
+.breadcrumbContainer {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-spacing-sm, 0.5rem);
+  font-size: var(--tc-font-size-sm, 0.875rem);
+}
+
+/* Élément du fil d'Ariane */
+.breadcrumbItem {
+  color: var(--tc-text-color-primary, #333);
+  cursor: pointer;
+}
+
+.breadcrumbItem:hover {
+  text-decoration: underline;
+}
+
+.breadcrumbItem.active {
+  color: var(--tc-text-color-secondary, #6c757d);
+  cursor: default;
+}
+
+.breadcrumbItem.active:hover {
+  text-decoration: none;
+}
+
+/* Boutons d'action */
+.actionButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tc-spacing-sm, 12px);
+  margin-bottom: var(--tc-spacing-lg, 1.5rem);
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+}
+
+.actionBtn {
+  min-width: 130px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: var(--tc-transition, all 0.2s ease-in-out);
+  font-weight: var(--tc-font-weight-medium, 500);
+}
+
+/* Carte de formulaire */
+.formCard {
+  background-color: var(--tc-color-white, #fff);
+  border-radius: var(--tc-border-radius, 8px);
+  box-shadow: var(--tc-box-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
+  margin-bottom: var(--tc-spacing-lg, 1.5rem);
+  overflow: hidden;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  background-color: var(--tc-color-gray-100, #f8f9fa);
+  padding: var(--tc-spacing-md, 1rem);
+  border-bottom: var(--tc-border-width, 1px) solid var(--tc-border-color-light, #eee);
+}
+
+.cardHeader i {
+  margin-right: var(--tc-spacing-sm, 0.5rem);
+  color: var(--tc-primary-color, #007bff);
+}
+
+.cardHeader h3 {
+  font-size: var(--tc-font-size-md, 1.1rem);
+  font-weight: var(--tc-font-weight-semibold, 600);
+  margin: 0;
+  flex-grow: 1;
+}
+
+.cardHeaderAction {
+  margin-left: auto;
+}
+
+.cardBody {
+  padding: var(--tc-spacing-lg, 1.5rem);
+}
+
+/* Champs de formulaire */
+.formGroup {
+  margin-bottom: var(--tc-spacing-md, 1.25rem);
+}
+
+.formLabel {
+  display: block;
+  margin-bottom: var(--tc-spacing-sm, 0.5rem);
+  font-weight: var(--tc-font-weight-medium, 500);
+}
+
+.required {
+  color: var(--tc-danger-color, #dc3545);
+  margin-left: 3px;
+}
+
+/* Statut display */
+.statusDisplay {
+  display: flex;
+  align-items: center;
+}
+
+.actionNeeded {
+  display: flex;
+  align-items: center;
+  font-size: var(--tc-font-size-xs, 0.85rem);
+  color: var(--tc-warning-color, #ffc107);
+}
+
+.actionNeeded i {
+  margin-right: var(--tc-spacing-xs, 0.25rem);
+}
+
+/* Notes content */
+.notesContent {
+  white-space: pre-line;
+}
+
+/* Items de détails */
+.contactLink {
+  color: var(--tc-primary-color, #007bff);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.contactLink:hover {
+  text-decoration: underline;
+}
+
+/* Recherche de lieu/programmateur/artiste */
+.lieuSearchContainer,
+.programmateurSearchContainer,
+.artisteSearchContainer {
+  position: relative;
+}
+
+.selectedLieu,
+.selectedProgrammateur,
+.selectedArtiste {
+  border: var(--tc-border-width, 1px) solid var(--tc-border-color, #ddd);
+  border-radius: var(--tc-border-radius, 6px);
+  padding: var(--tc-spacing-md, 1rem);
+  margin-bottom: var(--tc-spacing-sm, 0.75rem);
+}
+
+.lieuCard,
+.programmateurCard,
+.artisteCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.lieuInfo,
+.programmateurInfo,
+.artisteInfo {
+  flex-grow: 1;
+}
+
+.lieuName,
+.programmateurName,
+.artisteName {
+  font-weight: var(--tc-font-weight-semibold, 600);
+  display: block;
+  margin-bottom: var(--tc-spacing-sm, 0.5rem);
+}
+
+.lieuAddress,
+.lieuCapacity {
+  font-size: var(--tc-font-size-sm, 0.875rem);
+  display: flex;
+  align-items: center;
+  margin-top: var(--tc-spacing-xs, 0.25rem);
+  color: var(--tc-text-color-secondary, #666);
+}
+
+.lieuAddress i,
+.lieuCapacity i {
+  margin-right: var(--tc-spacing-xs, 0.375rem);
+}
+
+.programmateurStructure {
+  font-size: var(--tc-font-size-sm, 0.875rem);
+  display: block;
+  margin-bottom: var(--tc-spacing-xs, 0.25rem);
+  color: var(--tc-text-color-secondary, #666);
+}
+
+.programmateurContacts {
+  margin-top: var(--tc-spacing-sm, 0.5rem);
+}
+
+.programmateurContactItem {
+  display: flex;
+  align-items: center;
+  font-size: var(--tc-font-size-sm, 0.875rem);
+  margin-bottom: var(--tc-spacing-xs, 0.25rem);
+}
+
+.programmateurContactItem i {
+  margin-right: var(--tc-spacing-xs, 0.375rem);
+  color: var(--tc-text-color-secondary, #666);
+}
+
+.artisteGenre {
+  font-size: var(--tc-font-size-sm, 0.875rem);
+  display: block;
+  margin-bottom: var(--tc-spacing-xs, 0.25rem);
+  color: var(--tc-text-color-secondary, #666);
+}
+
+.artisteDescription {
+  font-size: var(--tc-font-size-sm, 0.875rem);
+  margin-top: var(--tc-spacing-sm, 0.5rem);
+}
+
+/* Map container */
+.mapContainer {
+  width: 100%;
+  border-radius: var(--tc-border-radius, 6px);
+  overflow: hidden;
+  border: var(--tc-border-width, 1px) solid var(--tc-border-color, #ddd);
+}
+
+/* Form sharing options */
+.formSharingOptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tc-spacing-sm, 0.5rem);
+}
+
+/* Modal */
+.tcModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--tc-overlay-color, rgba(0, 0, 0, 0.5));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: var(--tc-z-index-modal, 1000);
+}
+
+.tcModalConfirm {
+  background-color: var(--tc-color-white, #fff);
+  border-radius: var(--tc-border-radius-md, 0.5rem);
+  width: 450px;
+  max-width: 90vw;
+  box-shadow: var(--tc-box-shadow-lg, 0 4px 20px rgba(0, 0, 0, 0.15));
+  overflow: hidden;
+}
+
+.tcModalHeader {
+  padding: var(--tc-spacing-md, 1rem);
+  border-bottom: var(--tc-border-width, 1px) solid var(--tc-border-color-light, #eee);
+}
+
+.tcModalHeader h5 {
+  margin: 0;
+  font-weight: var(--tc-font-weight-semibold, 600);
+}
+
+.tcModalBody {
+  padding: var(--tc-spacing-lg, 1.5rem);
+}
+
+.tcModalFooter {
+  padding: var(--tc-spacing-md, 1rem);
+  border-top: var(--tc-border-width, 1px) solid var(--tc-border-color-light, #eee);
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--tc-spacing-sm, 0.5rem);
+}
+
+/* Media queries */
+@media (max-width: 992px) {
+  .concertDetailsContainer {
+    padding: var(--tc-spacing-sm, 16px);
+  }
+}
+
+@media (max-width: 768px) {
+  .formHeaderContainer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .cardBody {
+    padding: var(--tc-spacing-md, 1rem);
+  }
+  
+  .actionButtons {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .actionBtn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .modernTitle {
+    font-size: var(--tc-font-size-md, 1.25rem);
+  }
+  
+  .tcModalConfirm {
+    max-width: 95vw;
+  }
+  
+  .tcModalBody {
+    padding: var(--tc-spacing-md, 1rem);
+  }
+}

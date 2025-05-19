@@ -1,0 +1,101 @@
+/*
+ * Styles pour ValidationSummary
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
+/* ValidationSummary Styles - Standardisés */
+.container {
+  margin-bottom: var(--tc-spacing-lg, 1.5rem);
+  border: var(--tc-border-width, 1px) solid var(--tc-success-color, #28a745);
+  border-radius: var(--tc-border-radius, 0.375rem);
+  background-color: var(--tc-success-color-10, #d1e7dd);
+  overflow: hidden;
+}
+
+.content {
+  padding: var(--tc-spacing-lg, 1.5rem);
+  text-align: center;
+}
+
+.iconWrapper {
+  margin-bottom: var(--tc-spacing-md, 1rem);
+}
+
+.iconWrapper i {
+  font-size: var(--tc-font-size-xxl, 3rem);
+  color: var(--tc-success-color, #28a745);
+}
+
+.title {
+  font-size: var(--tc-font-size-lg, 1.5rem);
+  font-weight: var(--tc-font-weight-semibold, 600);
+  margin-bottom: var(--tc-spacing-sm, 0.75rem);
+  color: var(--tc-success-color-dark, #0f5132);
+}
+
+.message {
+  color: var(--tc-success-color-darker, #0a3622);
+  margin-bottom: 0;
+}
+
+/* Variante pour les erreurs */
+.containerError {
+  border-color: var(--tc-danger-color, #dc3545);
+  background-color: var(--tc-danger-color-10, #f8d7da);
+}
+
+.containerError .iconWrapper i {
+  color: var(--tc-danger-color, #dc3545);
+}
+
+.containerError .title {
+  color: var(--tc-danger-color-dark, #842029);
+}
+
+.containerError .message {
+  color: var(--tc-danger-color-darker, #58151c);
+}
+
+/* Variante pour les avertissements */
+.containerWarning {
+  border-color: var(--tc-warning-color, #ffc107);
+  background-color: var(--tc-warning-color-10, #fff3cd);
+}
+
+.containerWarning .iconWrapper i {
+  color: var(--tc-warning-color, #ffc107);
+}
+
+.containerWarning .title {
+  color: var(--tc-warning-color-dark, #664d03);
+}
+
+.containerWarning .message {
+  color: var(--tc-warning-color-darker, #513c01);
+}
+
+/* Support responsive */
+@media (max-width: 768px) {
+  .content {
+    padding: var(--tc-spacing-md, 1rem);
+  }
+  
+  .iconWrapper i {
+    font-size: var(--tc-font-size-xl, 2.5rem);
+  }
+  
+  .title {
+    font-size: var(--tc-font-size-md, 1.25rem);
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    margin-bottom: var(--tc-spacing-md, 1rem);
+  }
+  
+  .content {
+    padding: var(--tc-spacing-sm, 0.75rem);
+  }
+}

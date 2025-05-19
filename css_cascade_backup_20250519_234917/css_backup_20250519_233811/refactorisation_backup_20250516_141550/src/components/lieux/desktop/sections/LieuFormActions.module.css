@@ -7,51 +7,51 @@
 .formActions {
   display: flex;
   justify-content: flex-end;
-  gap: var(--tc-spacing-md, 1rem);
-  margin-top: var(--tc-spacing-lg, 2rem);
-  margin-bottom: var(--tc-spacing-md, 1rem);
+  gap: var(--tc-spacing-md);
+  margin-top: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-spacing-md);
 }
 
 .cancelButton {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-xs, 0.5rem);
-  border: 1px solid var(--tc-color-border, #dee2e6);
-  padding: var(--tc-spacing-sm, 0.625rem) var(--tc-spacing-md, 1.25rem);
-  border-radius: var(--tc-border-radius-sm, 0.25rem);
+  gap: var(--tc-spacing-xs);
+  border: 1px solid var(--tc-color-border);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  border-radius: var(--tc-border-radius-sm);
   background-color: transparent;
-  color: var(--tc-color-text-muted, #6c757d);
-  font-size: var(--tc-font-size-sm, 0.9375rem);
+  color: var(--tc-color-text-muted);
+  font-size: var(--tc-font-size-sm);
   transition: all 0.2s;
   cursor: pointer;
 }
 
 .cancelButton:hover:not(:disabled) {
-  background-color: var(--tc-color-background-secondary, #f8f9fa);
-  color: var(--tc-color-text-secondary, #343a40);
-  border-color: var(--tc-color-border-dark, #c6c7c8);
+  background-color: var(--tc-color-background-secondary);
+  color: var(--tc-color-text-secondary);
+  border-color: var(--tc-color-border-dark);
 }
 
 .cancelButton i {
-  font-size: var(--tc-font-size-base, 1rem);
+  font-size: var(--tc-font-size-base);
 }
 
 .submitButton {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-xs, 0.5rem);
-  padding: var(--tc-spacing-sm, 0.625rem) var(--tc-spacing-md, 1.25rem);
-  border-radius: var(--tc-border-radius-sm, 0.25rem);
-  background-color: var(--tc-color-primary, #0d6efd);
-  color: var(--tc-color-background, white);
+  gap: var(--tc-spacing-xs);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  border-radius: var(--tc-border-radius-sm);
+  background-color: var(--tc-color-primary);
+  color: var(--tc-color-background);
   border: none;
-  font-size: var(--tc-font-size-sm, 0.9375rem);
+  font-size: var(--tc-font-size-sm);
   transition: all 0.2s;
   cursor: pointer;
 }
 
 .submitButton:hover:not(:disabled) {
-  background-color: var(--tc-color-primary-dark, #0b5ed7);
+  background-color: var(--tc-color-primary-dark);
 }
 
 .submitButton:disabled {
@@ -60,33 +60,33 @@
 }
 
 .submitButton i {
-  font-size: var(--tc-font-size-base, 1rem);
+  font-size: var(--tc-font-size-base);
 }
 
 .deleteButton {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-xs, 0.5rem);
-  padding: var(--tc-spacing-sm, 0.625rem) var(--tc-spacing-md, 1.25rem);
-  border-radius: var(--tc-border-radius-sm, 0.25rem);
-  background-color: var(--tc-color-danger, #dc3545);
-  color: var(--tc-color-background, white);
+  gap: var(--tc-spacing-xs);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  border-radius: var(--tc-border-radius-sm);
+  background-color: var(--tc-color-danger);
+  color: var(--tc-color-background);
   border: none;
-  font-size: var(--tc-font-size-sm, 0.9375rem);
+  font-size: var(--tc-font-size-sm);
   transition: all 0.2s;
   margin-right: auto;
   cursor: pointer;
 }
 
 .deleteButton:hover:not(:disabled) {
-  background-color: var(--tc-color-danger-dark, #c82333);
+  background-color: var(--tc-color-danger-dark);
 }
 
 .spinner {
   display: inline-block;
   width: 1rem;
   height: 1rem;
-  margin-right: var(--tc-spacing-xs, 0.375rem);
+  margin-right: var(--tc-spacing-xs);
   border: 0.15em solid currentColor;
   border-right-color: transparent;
   border-radius: 50%;
@@ -103,7 +103,7 @@
 @media (max-width: 768px) {
   .formActions {
     flex-direction: column-reverse;
-    gap: var(--tc-spacing-sm, 0.5rem);
+    gap: var(--tc-spacing-sm);
   }
   
   .cancelButton,
@@ -114,7 +114,7 @@
   }
   
   .deleteButton {
-    margin-top: var(--tc-spacing-md, 1rem);
+    margin-top: var(--tc-spacing-md);
     order: -1;
   }
 }

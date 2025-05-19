@@ -1,0 +1,124 @@
+/*
+ * Styles pour LieuMapDisplay
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
+/* 
+ * Styles pour LieuMapDisplay
+ * Affichage de carte pour un lieu
+ * Dernière mise à jour: 04/05/2025
+ */
+
+.formCard {
+  background-color: var(--tc-color-background, #fff);
+  border-radius: var(--tc-border-radius, 0.5rem);
+  box-shadow: var(--tc-box-shadow-sm);
+  overflow: hidden;
+  margin-bottom: var(--tc-spacing-md, 1.25rem);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  padding: var(--tc-spacing-md, 1rem) var(--tc-spacing-md, 1.25rem);
+  background-color: var(--tc-color-background-secondary, #f8f9fa);
+  border-bottom: 1px solid var(--tc-color-border-light, #e9ecef);
+  gap: var(--tc-spacing-sm, 0.625rem);
+}
+
+.cardHeader h3 {
+  margin: 0;
+  font-size: var(--tc-font-size-md, 1.2rem);
+  font-weight: var(--tc-font-weight-bold, 600);
+  color: var(--tc-color-text-primary, #212529);
+}
+
+.cardHeader i {
+  font-size: var(--tc-font-size-md, 1.2rem);
+  color: var(--tc-color-primary, #0d6efd);
+}
+
+.cardBody {
+  padding: var(--tc-spacing-md, 1.25rem);
+}
+
+.mapPreview {
+  margin-top: var(--tc-spacing-md, 1.25rem);
+}
+
+.interactiveMapContainer {
+  border-radius: var(--tc-border-radius-sm, 0.25rem);
+  overflow: hidden;
+  border: 1px solid var(--tc-color-border, #ced4da);
+  margin-bottom: var(--tc-spacing-sm, 0.625rem);
+  height: 400px;
+}
+
+.mapControls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--tc-spacing-sm, 0.625rem);
+  flex-wrap: wrap;
+  gap: var(--tc-spacing-sm, 0.625rem);
+}
+
+.mapZoomControls {
+  display: flex;
+  gap: var(--tc-spacing-xs, 0.375rem);
+}
+
+.mapButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--tc-color-background, #fff);
+  border: 1px solid var(--tc-color-border, #ced4da);
+  border-radius: var(--tc-border-radius-sm, 0.25rem);
+  padding: var(--tc-spacing-xs, 0.375rem);
+  cursor: pointer;
+  color: var(--tc-color-text-primary, #212529);
+  transition: all 0.2s ease;
+}
+
+.mapButton:hover {
+  background-color: var(--tc-color-background-secondary, #f8f9fa);
+  border-color: var(--tc-color-border-dark, #adb5bd);
+}
+
+.mapButton i {
+  font-size: var(--tc-font-size-md, 1.1rem);
+}
+
+.mapError {
+  padding: var(--tc-spacing-md, 1.25rem);
+  background-color: var(--tc-color-danger-light, #f8d7da);
+  border-radius: var(--tc-border-radius-sm, 0.25rem);
+  color: var(--tc-color-danger, #dc3545);
+  margin-top: var(--tc-spacing-md, 1.25rem);
+  display: flex;
+  align-items: center;
+  gap: var(--tc-spacing-sm, 0.625rem);
+}
+
+.required {
+  color: var(--tc-color-danger, #dc3545);
+  margin-left: var(--tc-spacing-xs, 0.25rem);
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .cardBody {
+    padding: var(--tc-spacing-sm, 1rem);
+  }
+  
+  .interactiveMapContainer {
+    height: 300px;
+  }
+  
+  .mapControls {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

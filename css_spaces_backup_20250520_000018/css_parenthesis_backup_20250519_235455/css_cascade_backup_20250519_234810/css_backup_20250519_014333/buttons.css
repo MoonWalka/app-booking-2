@@ -1,0 +1,323 @@
+/*
+ * Styles pour buttons.css
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
+ */
+
+
+
+/* Harmonisation : appliquer le style de base à tous les boutons */
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: var(--tc-border-radius);
+  padding: 8px 16px;
+  font-size: 14px;
+  transition: var(--tc-transition);
+}
+
+/* Correctif pour l'alignement des icônes dans les boutons Bootstrap standard */
+.btn i {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  transform: translateY(-1px); /* Légère correction verticale pour un meilleur alignement */
+  line-height: 1;
+}
+
+/* ========================================
+   STYLES DE BASE POUR TOUS LES BOUTONS
+   ======================================== */
+
+.tc-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: var(--tc-font-weight-normal);
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  user-select: none;
+  padding: var(--tc-btn-padding-y) var(--tc-btn-padding-x));
+  font-size: var(--tc-font-size-sm);
+  line-height: 1.5;
+  border-radius: var(--tc-border-radius);
+  transition: var(--tc-transition);
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+
+/* Désactiver les effets de hover quand le bouton est disabled */
+.tc-btn:disabled,
+.tc-btn.disabled {
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+/* Focus commun pour tous les boutons */
+.tc-btn:focus {
+  outline: 0;
+  box-shadow: 0 0 0 var(--tc-spacing-1) rgba(var(--tc-primary-color-rgb), 0.25);
+}
+
+/* ========================================
+   STYLES POUR LES BOUTONS CLASSIQUES
+   ======================================== */
+
+/* Styles de base pour tous les boutons de couleur (non-outline) */
+.tc-btn[class*="-primary"],
+.tc-btn[class*="-secondary"],
+.tc-btn[class*="-success"],
+.tc-btn[class*="-danger"],
+.tc-btn[class*="-warning"],
+.tc-btn[class*="-info"],
+.tc-btn[class*="-light"],
+.tc-btn[class*="-dark"] {
+  color: var(--tc-text-light);
+}
+
+/* Exception pour les boutons light et warning qui ont du texte foncé */
+.tc-btn-light,
+.tc-btn-warning {
+  color: var(--tc-text-dark);
+}
+
+/* Styles spécifiques pour chaque variante */
+.tc-btn-primary {
+  background-color: var(--tc-primary-color);
+  border-color: var(--tc-btn-primary-border);
+}
+
+.tc-btn-primary:hover,
+.tc-btn-primary:active {
+  background-color: var(--tc-primary-dark);
+}
+
+.tc-btn-secondary {
+  background-color: var(--tc-secondary-color);
+  border-color: var(--tc-btn-secondary-border);
+}
+
+.tc-btn-secondary:hover,
+.tc-btn-secondary:active {
+  background-color: var(--tc-secondary-dark);
+}
+
+.tc-btn-success {
+  background-color: var(--tc-success-color);
+  border-color: var(--tc-success-color);
+}
+
+.tc-btn-danger {
+  background-color: var(--tc-danger-color);
+  border-color: var(--tc-danger-color);
+}
+
+.tc-btn-warning {
+  background-color: var(--tc-warning-color);
+  border-color: var(--tc-warning-color);
+}
+
+.tc-btn-info {
+  background-color: var(--tc-info-color);
+  border-color: var(--tc-info-color);
+}
+
+.tc-btn-light {
+  background-color: var(--tc-light-color);
+  border-color: var(--tc-light-color);
+}
+
+.tc-btn-dark {
+  background-color: var(--tc-dark-color);
+  border-color: var(--tc-dark-color);
+}
+
+/* Style de hover commun pour les boutons colorés (sauf primary et secondary) */
+.tc-btn-success:hover,
+.tc-btn-danger:hover,
+.tc-btn-warning:hover,
+.tc-btn-info:hover,
+.tc-btn-dark:hover {
+  filter: brightness(90%);
+}
+
+.tc-btn-light:hover {
+  background-color: var(--tc-gray-200);
+}
+
+/* ========================================
+   STYLES POUR LES BOUTONS OUTLINE
+   ======================================== */
+
+/* Styles de base pour tous les boutons outline */
+.tc-btn[class*="outline-"] {
+  background-color: transparent;
+}
+
+/* Styles spécifiques pour chaque variante outline */
+.tc-btn-outline-primary {
+  color: var(--tc-primary-color);
+  border-color: var(--tc-primary-color);
+}
+
+.tc-btn-outline-secondary {
+  color: var(--tc-secondary-color);
+  border-color: var(--tc-secondary-color);
+}
+
+.tc-btn-outline-success {
+  color: var(--tc-success-color);
+  border-color: var(--tc-success-color);
+}
+
+.tc-btn-outline-danger {
+  color: var(--tc-danger-color);
+  border-color: var(--tc-danger-color);
+}
+
+.tc-btn-outline-warning {
+  color: var(--tc-warning-color);
+  border-color: var(--tc-warning-color);
+}
+
+.tc-btn-outline-info {
+  color: var(--tc-info-color);
+  border-color: var(--tc-info-color);
+}
+
+/* Styles hover communs pour les boutons outline */
+.tc-btn-outline-primary:hover,
+.tc-btn-outline-secondary:hover,
+.tc-btn-outline-success:hover,
+.tc-btn-outline-danger:hover,
+.tc-btn-outline-info:hover {
+  color: var(--tc-text-light);
+}
+
+.tc-btn-outline-warning:hover {
+  color: var(--tc-text-dark);
+}
+
+/* Couleurs de fond au hover pour chaque variante outline */
+.tc-btn-outline-primary:hover {
+  background-color: var(--tc-primary-color);
+}
+
+.tc-btn-outline-secondary:hover {
+  background-color: var(--tc-secondary-light);
+}
+
+.tc-btn-outline-success:hover {
+  background-color: var(--tc-success-color);
+}
+
+.tc-btn-outline-danger:hover {
+  background-color: var(--tc-danger-color);
+}
+
+.tc-btn-outline-warning:hover {
+  background-color: var(--tc-warning-color);
+}
+
+.tc-btn-outline-info:hover {
+  background-color: var(--tc-info-color);
+}
+
+/* ========================================
+   STYLES POUR LES BOUTONS D'ACTION
+   ======================================== */
+
+.tc-btn-action {
+  background-color: var(--tc-primary-color);
+  color: var(--tc-text-light);
+  padding: 6px 12px;
+  border-radius: var(--tc-border-radius);
+  font-size: 12px;
+}
+
+.tc-btn-action:hover {
+  background-color: var(--tc-primary-dark);
+  color: var(--tc-text-light);
+}
+
+/* ========================================
+   CONTENEURS DE BOUTONS
+   ======================================== */
+
+/* Boutons d'action groupés */
+.tc-action-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+/* CORRECTIFS POUR LES PROBLÈMES DE POSITIONNEMENT DES BOUTONS */
+
+/* Boutons en mode édition */
+.edit-mode .tc-action-buttons {
+  display: flex;
+  justify-content: flex-end; /* Aligne les boutons à droite */
+  gap: 10px;
+  margin-top: 15px;
+  position: relative; /* Établit un contexte de positionnement */
+  z-index: 5; /* Assure que les boutons sont au-dessus des autres éléments */
+}
+
+/* Correction pour les boutons dans les formulaires */
+.form-container .tc-action-buttons {
+  flex-wrap: wrap; /* Permet aux boutons de passer à la ligne sur les petits écrans */
+  margin-bottom: 20px; /* Ajoute de l'espace en bas */
+}
+
+/* Prévention de la superposition des boutons dans les cartes */
+.tc-card-footer .tc-action-buttons {
+  position: static; /* Annule tout positionnement absolu hérité */
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Alignement des boutons dans les modales */
+.tc-modal-footer .tc-action-buttons {
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* Éviter que les boutons ne débordent de leur conteneur */
+.tc-card .tc-action-buttons,
+.form-group .tc-action-buttons,
+.tc-modal-body .tc-action-buttons {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* Amélioration de la disposition des boutons sur mobile */
+@media (max-width: 768px) {
+  .tc-action-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .tc-card-footer .tc-action-buttons,
+  .tc-modal-footer .tc-action-buttons {
+    flex-direction: row;
+    justify-content: space-around;
+  }
+}
+
+/* ========================================
+   TAILLES DE BOUTONS 
+   ======================================== */
+
+.tc-btn-sm {
+  padding: var(--tc-spacing-1) var(--tc-spacing-2);
+  font-size: var(--tc-font-size-xs);
+}
+
+.tc-btn-lg {
+  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  font-size: var(--tc-font-size-lg);
+}

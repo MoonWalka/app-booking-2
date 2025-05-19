@@ -28,7 +28,7 @@
 }
 
 /* Styles responsive standardisés */
-@media (max-width: var(--tc-breakpoint-xs, 576px)) {
+@media (max-width: var(--tc-breakpoint-xs)) {
   .actionButton {
     width: 36px;
     height: 36px;

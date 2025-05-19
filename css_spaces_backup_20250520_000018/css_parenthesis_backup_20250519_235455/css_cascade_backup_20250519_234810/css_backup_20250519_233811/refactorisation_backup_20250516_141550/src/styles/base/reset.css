@@ -1,0 +1,25 @@
+/* Reset et styles de base */
+*, ::before, ::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--bs-body-font-family, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif);
+  font-size: var(--tc-font-size-base, 1rem);
+  font-weight: var(--bs-body-font-weight, 400);
+  line-height: var(--bs-body-line-height, 1.5);
+  color: var(--tc-text-color, #212529);
+  background-color: var(--tc-background-color, #f8f9fa);
+}
+
+a {
+  text-decoration: none;
+  color: var(--tc-primary-color);
+  transition: var(--tc-transition);
+}
+
+a:hover {
+  color: var(--tc-primary-dark);
+}

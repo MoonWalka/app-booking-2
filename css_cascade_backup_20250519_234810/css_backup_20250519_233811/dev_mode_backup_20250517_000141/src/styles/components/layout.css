@@ -23,7 +23,7 @@
 
 /* Sidebar commune */
 .sidebar {
-  width: var(--tc-sidebar-width, 240px);
+  width: var(--tc-sidebar-width);
   background-color: var(--tc-sidebar-bg-color);
   color: var(--tc-sidebar-text-color);
   padding: 20px 0;
@@ -32,7 +32,7 @@
   height: 100vh;
   overflow-y: auto;
   transition: var(--tc-transition);
-  min-width: var(--tc-sidebar-width, 240px);
+  min-width: var(--tc-sidebar-width);
   position: sticky;
   top: 0;
 }
@@ -187,8 +187,8 @@
   flex-direction: column;
   background-color: var(--tc-content-bg-color);
   min-height: 100vh;
-  margin-left: var(--tc-sidebar-width, 240px);
-  padding: var(--tc-spacing-lg, 1.5rem);
+  margin-left: var(--tc-sidebar-width);
+  padding: var(--tc-spacing-lg);
 }
 
 .content,
@@ -258,9 +258,9 @@
 /* Définition unifiée du sélecteur main */
 main {
   flex: 1 1 auto;
-  padding: var(--tc-spacing-lg, 1.5rem);
+  padding: var(--tc-spacing-lg);
   overflow-y: auto;
-  background-color: var(--tc-background-color, #f8f9fa);
+  background-color: var(--tc-background-color);
 }
 
 /* Styles pour la marque */
@@ -452,7 +452,7 @@ main {
   }
   
   main {
-    padding: var(--tc-spacing-md, 1rem);
+    padding: var(--tc-spacing-md);
   }
   
   .details-grid {

@@ -1,0 +1,106 @@
+/*
+ * Styles pour Spinner
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 12 mai 2025
+ */
+
+/* Import des classes utilitaires pour les points de rupture */
+@import '../../styles/mixins/breakpoints.css';
+
+/* Spinner.module.css - Styles pour les indicateurs de chargement */
+
+.spinnerContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  background-color: var(--tc-background-color);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--tc-z-index-spinner, 1000);
+}
+
+.spinnerInline {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin: var(--tc-spacing-xs, 0.25rem);
+}
+
+.spinner {
+  border: 5px solid var(--tc-spinner-border-color, #f3f3f3);
+  border-radius: 50%;
+  border-top: 5px solid var(--tc-secondary-color, #6c757d);
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+.spinnerPrimary {
+  border-top-color: var(--tc-primary-color, #4a6da7);
+}
+
+.spinnerSuccess {
+  border-top-color: var(--tc-success-color, #28a745);
+}
+
+.spinnerWarning {
+  border-top-color: var(--tc-warning-color, #ffc107);
+}
+
+.spinnerDanger {
+  border-top-color: var(--tc-danger-color, #dc3545);
+}
+
+.spinnerInfo {
+  border-top-color: var(--tc-info-color, #17a2b8);
+}
+
+.spinnerSmall {
+  width: 20px;
+  height: 20px;
+  border-width: 3px;
+}
+
+.spinnerMedium {
+  width: 35px;
+  height: 35px;
+  border-width: 4px;
+}
+
+.spinnerLarge {
+  width: 70px;
+  height: 70px;
+  border-width: 6px;
+}
+
+.spinnerWithText {
+  flex-direction: column;
+}
+
+.loadingText {
+  margin-top: var(--tc-spacing-md, 1rem);
+  color: var(--tc-text-muted, #6c757d);
+  font-size: var(--tc-font-size-md, 1rem);
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive adaptations */
+@media (max-width: var(--tc-breakpoint-xs, 576px)) {
+  .spinnerLarge {
+    width: 50px;
+    height: 50px;
+    border-width: 5px;
+  }
+  
+  .loadingText {
+    font-size: var(--tc-font-size-sm, 0.875rem);
+  }
+}

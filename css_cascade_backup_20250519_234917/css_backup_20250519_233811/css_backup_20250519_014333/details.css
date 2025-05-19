@@ -11,7 +11,7 @@
 
 /* Styles pour les sections de détails */
 .details-card {
-  background-color: var(--tc-card-bg, #ffffff);
+  background-color: var(--tc-card-bg);
   border-radius: var(--tc-border-radius);
   padding: 20px;
   box-shadow: var(--tc-shadow);

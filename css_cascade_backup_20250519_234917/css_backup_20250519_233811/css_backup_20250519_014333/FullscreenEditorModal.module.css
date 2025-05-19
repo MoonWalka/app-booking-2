@@ -97,9 +97,9 @@
 
 .modalFooter {
   padding: 15px 20px;
-  border-top: 1px solid var(--tc-border-color, #dee2e6);
+  border-top: 1px solid var(--tc-border-color);
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  background-color: var(--tc-bg-light, #f8f9fa);
+  background-color: var(--tc-bg-light);
 }

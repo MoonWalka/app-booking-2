@@ -1,7 +1,7 @@
 /* Styles standardisés pour la liste des artistes en version desktop */
 
 .statsCard {
-  transition: transform var(--tc-transition-duration, 0.2s) ease;
+  transition: transform var(--tc-transition-duration) ease;
 }
 
 .statsCard:hover {
@@ -15,30 +15,30 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background-color: var(--tc-primary-color-10, rgba(13, 110, 253, 0.1));
+  background-color: var(--tc-primary-color-10);
 }
 
 .searchResultsDropdown {
-  background-color: var(--tc-color-white, white);
-  border: var(--tc-border-width, 1px) solid var(--tc-border-color, #dee2e6);
-  border-radius: var(--tc-border-radius, 0.375rem);
-  z-index: var(--tc-z-index-dropdown, 1000);
+  background-color: var(--tc-color-white);
+  border: var(--tc-border-width) solid var(--tc-border-color);
+  border-radius: var(--tc-border-radius);
+  z-index: var(--tc-z-index-dropdown);
   overflow: hidden;
-  box-shadow: var(--tc-box-shadow, 0 0.5rem 1rem rgba(0, 0, 0, 0.15));
+  box-shadow: var(--tc-box-shadow);
 }
 
 .searchResultItem {
   display: flex;
   align-items: center;
-  padding: var(--tc-spacing-sm, 0.75rem) var(--tc-spacing-md, 1rem);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
   text-decoration: none;
-  color: var(--tc-text-color-primary, #212529);
-  transition: background-color var(--tc-transition-duration-fast, 0.15s) ease-in-out;
-  border-bottom: var(--tc-border-width, 1px) solid var(--tc-border-color-light, #f0f0f0);
+  color: var(--tc-text-color-primary);
+  transition: background-color var(--tc-transition-duration-fast) ease-in-out;
+  border-bottom: var(--tc-border-width) solid var(--tc-border-color-light);
 }
 
 .searchResultItem:hover {
-  background-color: var(--tc-color-gray-100, #f8f9fa);
+  background-color: var(--tc-color-gray-100);
 }
 
 .searchResultItem:last-child {
@@ -49,9 +49,9 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  margin-right: var(--tc-spacing-md, 1rem);
+  margin-right: var(--tc-spacing-md);
   overflow: hidden;
-  background-color: var(--tc-color-gray-100, #f8f9fa);
+  background-color: var(--tc-color-gray-100);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -65,45 +65,45 @@
 }
 
 .searchCreateItem {
-  padding: var(--tc-spacing-sm, 0.75rem) var(--tc-spacing-md, 1rem);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
   cursor: pointer;
-  transition: background-color var(--tc-transition-duration-fast, 0.15s) ease-in-out;
-  color: var(--tc-primary-color, #0d6efd);
+  transition: background-color var(--tc-transition-duration-fast) ease-in-out;
+  color: var(--tc-primary-color);
 }
 
 .searchCreateItem:hover {
-  background-color: var(--tc-primary-color-05, #f0f8ff);
+  background-color: var(--tc-primary-color-05);
 }
 
 .placeholderAvatar {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: var(--tc-color-gray-200, #e9ecef);
+  background-color: var(--tc-color-gray-200);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--tc-font-size-lg, 1.25rem);
-  color: var(--tc-text-color-secondary, #6c757d);
+  font-size: var(--tc-font-size-lg);
+  color: var(--tc-text-color-secondary);
 }
 
 .artistesListContainer {
-  border-radius: var(--tc-border-radius-md, 0.5rem);
+  border-radius: var(--tc-border-radius-md);
   overflow: hidden;
   border: none;
-  box-shadow: var(--tc-box-shadow, 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075));
+  box-shadow: var(--tc-box-shadow);
 }
 
 .artistesTable th {
   border-top: none;
-  background-color: var(--tc-color-gray-100, #f8f9fa);
-  padding: var(--tc-spacing-md, 1rem) var(--tc-spacing-lg, 1.5rem);
-  font-weight: var(--tc-font-weight-semibold, 600);
-  color: var(--tc-text-color-primary, #495057);
+  background-color: var(--tc-color-gray-100);
+  padding: var(--tc-spacing-md) var(--tc-spacing-lg);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-color-primary);
 }
 
 .artistesTable td {
-  padding: var(--tc-spacing-md, 1rem) var(--tc-spacing-lg, 1.5rem);
+  padding: var(--tc-spacing-md) var(--tc-spacing-lg);
   vertical-align: middle;
 }
 
@@ -116,7 +116,7 @@
   height: 48px;
   border-radius: 50%;
   overflow: hidden;
-  background-color: var(--tc-color-gray-100, #f8f9fa);
+  background-color: var(--tc-color-gray-100);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -130,17 +130,17 @@
 }
 
 .favoriteArtisteRow {
-  background-color: var(--tc-warning-color-10, #fff8e8);
+  background-color: var(--tc-warning-color-10);
 }
 
 .favoriteArtisteRow:hover {
-  background-color: var(--tc-warning-color-20, #fff3d1);
+  background-color: var(--tc-warning-color-20);
 }
 
 .artistesContainer {
   max-width: 1200px;
   margin: 0 auto;
-  padding: var(--tc-spacing-md, 1rem);
+  padding: var(--tc-spacing-md);
 }
 
 .spinnerContainer {
@@ -152,7 +152,7 @@
 }
 
 .paginationContainer {
-  margin-top: var(--tc-spacing-xl, 2rem);
+  margin-top: var(--tc-spacing-xl);
   display: flex;
   justify-content: center;
 }
@@ -161,13 +161,13 @@
 @media (max-width: 992px) {
   .artistesTable th,
   .artistesTable td {
-    padding: var(--tc-spacing-sm, 0.75rem) var(--tc-spacing-md, 1rem);
+    padding: var(--tc-spacing-sm) var(--tc-spacing-md);
   }
 }
 
 @media (max-width: 768px) {
   .artistesContainer {
-    padding: var(--tc-spacing-sm, 0.75rem);
+    padding: var(--tc-spacing-sm);
   }
   
   .artistesTable {
@@ -179,13 +179,13 @@
   }
   
   .paginationContainer {
-    margin-top: var(--tc-spacing-lg, 1.5rem);
+    margin-top: var(--tc-spacing-lg);
   }
 }
 
 @media (max-width: 576px) {
   .artistesTable th,
   .artistesTable td {
-    padding: var(--tc-spacing-xs, 0.5rem) var(--tc-spacing-sm, 0.75rem);
+    padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
   }
 }

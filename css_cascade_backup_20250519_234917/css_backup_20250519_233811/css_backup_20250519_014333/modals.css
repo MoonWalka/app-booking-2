@@ -165,7 +165,7 @@
   display: flex;
   justify-content: flex-end;
   gap: var(--tc-spacing-2);
-  box-shadow: var(--tc-shadow-lg, 0 -2px 10px rgba(0, 0, 0, 0.1));
+  box-shadow: var(--tc-shadow-lg);
 }
 
 .tc-modal-full .tc-modal-body {

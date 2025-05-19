@@ -8,18 +8,18 @@
   width: 100%;
   max-width: 1000px;
   margin: 0 auto;
-  padding: var(--tc-spacing-md, 20px);
+  padding: var(--tc-spacing-md);
 }
 
 /* Support responsive */
 @media (max-width: 768px) {
   .formContainer {
-    padding: var(--tc-spacing-sm, 15px);
+    padding: var(--tc-spacing-sm);
   }
 }
 
 @media (max-width: 576px) {
   .formContainer {
-    padding: var(--tc-spacing-xs, 10px);
+    padding: var(--tc-spacing-xs);
   }
 }

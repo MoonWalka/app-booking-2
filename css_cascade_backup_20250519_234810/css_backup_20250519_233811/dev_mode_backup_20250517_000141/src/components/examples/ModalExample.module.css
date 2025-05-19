@@ -24,7 +24,7 @@
 
 .button {
   padding: 0.75rem 1.25rem;
-  background-color: var(--primary-color, #4a90e2);
+  background-color: var(--primary-color);
   color: white;
   border: none;
   border-radius: 4px;
@@ -34,7 +34,7 @@
 }
 
 .button:hover {
-  background-color: var(--primary-color-dark, #3a7bc8);
+  background-color: var(--primary-color-dark);
 }
 
 .modalContent {
@@ -63,7 +63,7 @@
 
 .modalButton {
   padding: 0.5rem 1rem;
-  background-color: var(--primary-color, #4a90e2);
+  background-color: var(--primary-color);
   color: white;
   border: none;
   border-radius: 4px;
@@ -73,7 +73,7 @@
 }
 
 .modalButton:hover {
-  background-color: var(--primary-color-dark, #3a7bc8);
+  background-color: var(--primary-color-dark);
 }
 
 .modalButtonSecondary {
@@ -119,6 +119,6 @@
 
 .input:focus {
   outline: none;
-  border-color: var(--primary-color, #4a90e2);
+  border-color: var(--primary-color);
   box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
 }

@@ -147,14 +147,14 @@
 .form-card {
   background-color: var(--tc-bg-color);
   border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-shadow-sm, 0 0.125rem var(--tc-spacing-1) rgba(0, 0, 0, 0.05));
+  box-shadow: var(--tc-shadow-sm));
   margin-bottom: var(--tc-spacing-4);
   overflow: hidden;
   transition: all 0.3s ease;
 }
 
 .form-card:hover {
-  box-shadow: var(--tc-shadow-md, 0 var(--tc-spacing-2) var(--tc-spacing-3) rgba(0, 0, 0, 0.08));
+  box-shadow: var(--tc-shadow-md) rgba(0, 0, 0, 0.08));
   transform: translateY(-2px);
 }
 
@@ -424,7 +424,7 @@
 }
 
 .programmateur-item:hover {
-  background-color: rgba(var(--tc-primary-rgb, 13, 110, 253), 0.1);
+  background-color: rgba(var(--tc-primary-rgb), 0.1);
 }
 
 .programmateur-details {

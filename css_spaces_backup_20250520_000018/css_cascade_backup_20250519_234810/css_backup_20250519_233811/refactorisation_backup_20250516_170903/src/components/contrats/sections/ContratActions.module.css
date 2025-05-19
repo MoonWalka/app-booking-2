@@ -1,0 +1,27 @@
+/*
+ * Styles pour ContratActions
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 5 mai 2025
+ */
+
+.actionsContainer {
+  margin-bottom: var(--tc-spacing-4);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tc-spacing-2);
+}
+
+/* Styles responsive standardisés */
+@media (max-width: 768px) {
+  .actionsContainer > div {
+    flex-direction: column;
+    width: 100%;
+    gap: var(--tc-spacing-1-5);
+  }
+}
+
+@media (max-width: 576px) {
+  .actionsContainer {
+    margin-bottom: var(--tc-spacing-3);
+  }
+}

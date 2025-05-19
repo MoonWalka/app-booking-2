@@ -1,0 +1,119 @@
+/*
+ * Styles pour LieuConcertsSection
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
+.formCard {
+  border: 1px solid var(--tc-bs-border-color);
+  border-radius: 8px;
+  background-color: var(--tc-bs-white);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.cardHeader {
+  background-color: var(--tc-bs-light);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--tc-bs-border-color);
+  justify-content: space-between;
+}
+
+.cardHeader h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.cardHeader i {
+  margin-right: 10px;
+  color: var(--tc-bs-primary);
+  font-size: 1.2rem;
+}
+
+.headerActions {
+  display: flex;
+  gap: 8px;
+}
+
+.cardBody {
+  padding: 20px;
+}
+
+.concertsListContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.concertItem {
+  border: 1px solid var(--tc-bs-border-color);
+  border-radius: 8px;
+  padding: 15px;
+  background-color: var(--tc-bs-light);
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.concertItem:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.concertDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.concertHeader {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 5px;
+}
+
+.concertTitle {
+  font-weight: 600;
+  color: var(--tc-bs-primary);
+  text-decoration: none;
+  font-size: 1.05rem;
+}
+
+.concertTitle:hover {
+  text-decoration: underline;
+}
+
+.concertDate {
+  color: var(--tc-bs-gray-600);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+}
+
+.concertArtistes {
+  font-size: 0.9rem;
+  color: var(--tc-bs-gray-700);
+  display: flex;
+  align-items: center;
+}
+
+.concertItem.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60px;
+}
+
+.concertItem.error {
+  border-color: var(--tc-bs-warning);
+}
+
+.textEmpty {
+  color: var(--tc-bs-gray-500);
+  font-style: italic;
+}

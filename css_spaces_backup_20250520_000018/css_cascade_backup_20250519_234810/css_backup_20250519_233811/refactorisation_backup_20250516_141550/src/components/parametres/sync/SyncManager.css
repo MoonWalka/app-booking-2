@@ -1,0 +1,56 @@
+.sync-manager {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.sync-manager .card-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.sync-manager .nav-tabs .nav-link {
+  color: #495057;
+  font-weight: 500;
+}
+
+.sync-manager .nav-tabs .nav-link.active {
+  font-weight: 600;
+  border-bottom: 2px solid #007bff;
+}
+
+.sync-manager .tab-content {
+  background-color: #fff;
+  border-radius: 0 0 4px 4px;
+}
+
+.sync-manager .progress {
+  height: 10px;
+}
+
+/* Styles pour les icônes d'environnement */
+.sync-manager .badge {
+  font-weight: 500;
+  padding: 6px 10px;
+  border-radius: 4px;
+}
+
+/* Colorisation contextuelle */
+.environment-local .badge {
+  background-color: #17a2b8;
+}
+
+.environment-development .badge {
+  background-color: #ffc107;
+}
+
+/* Animation de synchronisation */
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.sync-manager .fa-sync.rotating {
+  animation: rotate 2s linear infinite;
+}

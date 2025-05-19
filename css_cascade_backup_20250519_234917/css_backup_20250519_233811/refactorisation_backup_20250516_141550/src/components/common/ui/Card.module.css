@@ -10,17 +10,17 @@
   overflow: hidden;
   box-sizing: border-box;
   background-color: white;
-  color: var(--text-primary, #333);
+  color: var(--text-primary);
 }
 
 /* Variantes */
 .card-default {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  border: 1px solid var(--border-color, #e0e0e0);
+  border: 1px solid var(--border-color);
 }
 
 .card-outlined {
-  border: 1px solid var(--border-color, #e0e0e0);
+  border: 1px solid var(--border-color);
 }
 
 .card-elevated {
@@ -59,7 +59,7 @@
 }
 
 .headerWithBorder {
-  border-bottom: 1px solid var(--border-color, #e0e0e0);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .headerContent {
@@ -75,7 +75,7 @@
 .subtitle {
   margin-top: 0.25rem;
   font-size: 0.875rem;
-  color: var(--text-secondary, #666);
+  color: var(--text-secondary);
 }
 
 .avatar {
@@ -121,7 +121,7 @@
 }
 
 .footerWithBorder {
-  border-top: 1px solid var(--border-color, #e0e0e0);
+  border-top: 1px solid var(--border-color);
 }
 
 .footerContent {
@@ -138,7 +138,7 @@
   position: relative;
   width: 100%;
   overflow: hidden;
-  background-color: var(--background-secondary, #f5f5f5);
+  background-color: var(--background-secondary);
 }
 
 .mediaItem {

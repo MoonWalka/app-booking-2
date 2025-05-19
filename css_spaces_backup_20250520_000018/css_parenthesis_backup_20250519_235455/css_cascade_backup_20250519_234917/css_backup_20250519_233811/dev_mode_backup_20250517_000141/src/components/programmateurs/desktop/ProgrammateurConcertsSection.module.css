@@ -1,0 +1,154 @@
+/*
+ * Styles pour ProgrammateurConcertsSection
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
+/* Styles pour le composant ProgrammateurConcertsSection */
+
+/* Structure de la carte */
+.cardWrapper {
+  border: 1px solid var(--bs-border-color);
+  border-radius: 0.375rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.5rem;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--bs-primary);
+  color: white;
+  padding: 0.75rem 1rem;
+  border-top-left-radius: 0.375rem;
+  border-top-right-radius: 0.375rem;
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cardBody {
+  padding: 1rem;
+}
+
+/* Informations des concerts */
+.concertsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.concertItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 0.375rem;
+  background-color: #fff;
+}
+
+.concertInfo {
+  flex: 1;
+}
+
+.concertName {
+  font-weight: 500;
+  color: var(--bs-primary);
+  text-decoration: none;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.concertName:hover {
+  text-decoration: underline;
+}
+
+.concertDetails {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+  color: var(--bs-gray-600);
+}
+
+.concertDate, .concertLocation {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.statusBadge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.status-confirme {
+  background-color: rgba(25, 135, 84, 0.1);
+  color: #198754;
+}
+
+.status-option {
+  background-color: rgba(255, 193, 7, 0.1);
+  color: #ffc107;
+}
+
+.status-annule {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
+}
+
+.status-attente {
+  background-color: rgba(13, 110, 253, 0.1);
+  color: #0d6efd;
+}
+
+.concertActions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Messages d'information */
+.infoMessage {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem;
+  background-color: rgba(13, 110, 253, 0.05);
+  border: 1px solid rgba(13, 110, 253, 0.1);
+  border-radius: 0.375rem;
+  color: var(--bs-gray-700);
+}
+
+/* Section pour ajouter */
+.addSection {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+/* Gestion des badges */
+.badge {
+  background-color: rgba(13, 110, 253, 0.1);
+  color: var(--bs-primary);
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 1rem;
+  margin-left: 0.5rem;
+}
+
+/* Loading container */
+.loadingContainer {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  color: var(--bs-gray-600);
+}

@@ -281,7 +281,7 @@ h6, .tc-h6 {
 }
 
 .tc-input-placeholder {
-  color: var(--tc-input-placeholder-color, var(--tc-gray-500));
+  color: var(--tc-input-placeholder-color);
 }
 
 /* Styles pour les tableaux */

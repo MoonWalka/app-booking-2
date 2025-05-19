@@ -1,0 +1,239 @@
+/*
+ * Styles pour cards.css
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
+ */
+
+
+
+
+
+/* Styles pour les cartes de l'interface */
+.tc-card {
+  background: #fff;
+  border: none;
+  border-radius: var(--tc-spacing-8);
+  box-shadow: 0 4px 12px rgba(44, 62, 80, 0.08);
+  margin-bottom: 2.3rem;
+  overflow: hidden;
+  transition: all 0.25s ease;
+}
+
+.tc-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(44, 62, 80, 0.12);
+}
+
+.tc-card-header {
+  background: linear-gradient(to right, #f7faff, #edf3fb);
+  padding: var(--tc-spacing-3) var(--tc-spacing-4);
+  display: flex;
+  align-items: center;
+  gap: var(--tc-font-size-xs);
+  font-weight: var(--tc-font-weight-bold);
+  font-size: var(--tc-font-size-xl);
+  color: #225ea8;
+  border-bottom: 1px solid #dce3ed;
+}
+
+.tc-card-header h5,
+.tc-card-header h4 {
+  margin: 0;
+  font-size: 1.28rem;
+  font-weight: var(--tc-font-weight-semibold);
+  color: #225ea8;
+}
+
+.tc-card-body {
+  padding: 1.8rem 1.7rem 1.3rem 1.7rem;
+}
+
+.tc-card-footer {
+  padding: var(--tc-spacing-3) var(--tc-spacing-4);
+  background: #f7faff;
+  border-top: 1px solid #dce3ed;
+}
+
+/* Animation pour toutes les cartes en mode visualisation */
+/* Utilisation de sélecteurs plus spécifiques pour éviter !important */
+html body .card, 
+html body .card-wrapper, 
+html body .cardWrapper, 
+html body .detail-card, 
+html body .detailCard, 
+html body [class*="card-wrapper"], 
+html body [class*="cardWrapper"],
+html body .tc-detail-card,
+html body .form-card:not(.editing),
+html body .details-card {
+  transition: all 0.3s ease;
+}
+
+html body .card:hover, 
+html body .card-wrapper:hover, 
+html body .cardWrapper:hover, 
+html body .detail-card:hover, 
+html body .detailCard:hover, 
+html body [class*="card-wrapper"]:hover, 
+html body [class*="cardWrapper"]:hover,
+html body .tc-detail-card:hover,
+html body .form-card:not(.editing):hover,
+html body .details-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+/* Card Variations */
+.tc-card-compact {
+  margin-bottom: var(--tc-spacing-2);
+}
+
+.tc-card-compact .tc-card-header {
+  padding: var(--tc-spacing-2);
+}
+
+.tc-card-compact .tc-card-body {
+  padding: var(--tc-spacing-2);
+}
+
+.tc-card-compact .tc-card-footer {
+  padding: var(--tc-spacing-2) var(--tc-spacing-2);
+}
+
+.tc-card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--tc-shadow-hover);
+  transition: var(--tc-transition);
+}
+
+/* Styles pour les tableaux dans les cartes */
+.tc-card-table {
+  margin: 0;
+}
+
+.tc-card-table th {
+  background-color: var(--tc-table-header-bg);
+  font-weight: var(--tc-font-weight-medium);
+}
+
+.tc-card-table th,
+.tc-card-table td {
+  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  border-bottom: 1px solid var(--tc-border-color);
+}
+
+.tc-card-table tr:last-child td {
+  border-bottom: none;
+}
+
+.tc-card-table tr:hover {
+  background-color: var(--tc-hover-bg);
+}
+
+/* Styles de cartes spécifiques */
+.dashboard-card {
+  transition: var(--tc-transition);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-card .tc-card-body {
+  flex: 1;
+}
+
+.info-card {
+  border-left: 4px solid var(--tc-primary-color);
+}
+
+.warning-card {
+  border-left: 4px solid var(--tc-warning-color);
+}
+
+.danger-card {
+  border-left: 4px solid var(--tc-danger-color);
+}
+
+.success-card {
+  border-left: 4px solid var(--tc-success-color);
+}
+
+/* Cartes avec états */
+.tc-card-inactive {
+  opacity: 0.7;
+}
+
+.tc-card-disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Cartes avec media */
+.tc-card-with-media .tc-card-media {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.tc-card-with-media .tc-card-media-small {
+  height: 150px;
+}
+
+.tc-card-with-media .tc-card-media-large {
+  height: 250px;
+}
+
+/* Cartes en grille */
+.tc-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: var(--tc-spacing-4);
+}
+
+/* Cartes Responsive */
+@media (max-width: 576px) {
+  .tc-card-header, 
+  .tc-card-body, 
+  .tc-card-footer {
+    padding: var(--tc-spacing-2);
+  }
+  
+  .tc-card-table th,
+  .tc-card-table td {
+    padding: var(--tc-spacing-2) var(--tc-spacing-2);
+  }
+  
+  .tc-card-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Cartes avec actions */
+.tc-card-actions {
+  display: flex;
+  gap: var(--tc-spacing-2);
+}
+
+.tc-card-action-button {
+  background: transparent;
+  border: none;
+  color: var(--tc-text-muted);
+  cursor: pointer;
+  padding: var(--tc-spacing-1);
+  border-radius: var(--tc-border-radius-sm);
+  transition: var(--tc-transition);
+}
+
+.tc-card-action-button:hover {
+  background-color: var(--tc-hover-bg);
+  color: var(--tc-primary-color);
+}
+
+.tc-card-action-button.tc-card-action-edit:hover {
+  color: var(--tc-info-color);
+}
+
+.tc-card-action-button.tc-card-action-delete:hover {
+  color: var(--tc-danger-color);
+}

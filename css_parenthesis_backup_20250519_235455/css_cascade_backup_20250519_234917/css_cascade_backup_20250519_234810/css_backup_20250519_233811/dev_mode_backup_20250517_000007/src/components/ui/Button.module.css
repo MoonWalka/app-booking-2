@@ -1,0 +1,342 @@
+/*
+ * Styles pour Button
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 12 mai 2025
+ *
+ * Ce fichier implémente le système de boutons unifié pour TourCraft
+ * avec différentes variantes, tailles et états.
+ * Il suit l'approche mobile-first et assure une bonne accessibilité.
+ */
+
+/* Import des classes utilitaires pour les points de rupture */
+@import '../../styles/mixins/breakpoints.css';
+
+/* 
+ * Classe de base du bouton
+ * -----------------------------
+ * Établit les fondations pour tous les boutons avec des valeurs par défaut
+ * qui peuvent être remplacées par les modificateurs
+ */
+.btn {
+  display: inline-block;
+  font-weight: var(--tc-font-weight-normal, 400);
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  user-select: none;
+  border: var(--tc-border-width, 1px) solid transparent;
+  padding: var(--tc-spacing-sm, 0.375rem) var(--tc-spacing-md, 0.75rem);
+  font-size: var(--tc-font-size-base, 1rem);
+  line-height: var(--tc-line-height-base, 1.5);
+  border-radius: var(--tc-border-radius, 0.375rem);
+  /* Transition sur toutes les propriétés pour des effets visuels fluides */
+  transition: var(--tc-transition, all 0.15s ease-in-out);
+  cursor: pointer;
+}
+
+/* 
+ * Variantes de couleur - Primary
+ * ------------------------------
+ * Utilise la couleur primaire pour mettre en évidence les actions principales
+ */
+.btnPrimary {
+  background-color: var(--tc-primary-color, #4a6da7);
+  border-color: var(--tc-primary-color, #4a6da7);
+  color: var(--tc-color-light, #fff);
+}
+
+.btnPrimary:hover {
+  /* Utilise une version plus foncée pour l'état de survol */
+  background-color: var(--tc-primary-dark, #395582);
+  border-color: var(--tc-primary-dark, #395582);
+  text-decoration: none;
+}
+
+/* 
+ * Variantes de couleur - Secondary
+ * -------------------------------
+ * Pour les actions secondaires ou moins importantes
+ */
+.btnSecondary {
+  background-color: var(--tc-secondary-color, #6c757d);
+  border-color: var(--tc-secondary-color, #6c757d);
+  color: #fff;
+}
+
+.btnSecondary:hover {
+  background-color: var(--tc-secondary-dark, #5a6268);
+  border-color: var(--tc-secondary-dark, #5a6268);
+  text-decoration: none;
+}
+
+/*
+ * Variantes Outline - Primary
+ * ---------------------------
+ * Version plus subtile qui inverse les couleurs (fond transparent, bordure colorée)
+ * Transforme à l'état hover pour montrer la relation avec la variante pleine
+ */
+.btnOutlinePrimary {
+  background-color: transparent;
+  border-color: var(--tc-primary-color, #4a6da7);
+  color: var(--tc-primary-color, #4a6da7);
+}
+
+.btnOutlinePrimary:hover {
+  /* Animation intéressante: le bouton se remplit à l'interaction */
+  background-color: var(--tc-primary-color, #4a6da7);
+  color: #fff;
+  text-decoration: none;
+}
+
+/* 
+ * Variantes Outline - Secondary
+ * ----------------------------
+ * Même concept que pour outline primary mais avec les couleurs secondaires
+ */
+.btnOutlineSecondary {
+  background-color: transparent;
+  border-color: var(--tc-secondary-color, #6c757d);
+  color: var(--tc-secondary-color, #6c757d);
+}
+
+.btnOutlineSecondary:hover {
+  background-color: var(--tc-secondary-color, #6c757d);
+  color: #fff;
+  text-decoration: none;
+}
+
+/* 
+ * Bouton Danger
+ * ------------
+ * Signale une action destructive ou qui nécessite une attention particulière
+ */
+.btnDanger {
+  background-color: var(--tc-danger-color, #dc3545);
+  border-color: var(--tc-danger-color, #dc3545);
+  color: #fff;
+}
+
+.btnDanger:hover {
+  background-color: var(--tc-danger-dark, #c82333);
+  border-color: var(--tc-danger-dark, #c82333);
+  text-decoration: none;
+}
+
+/* 
+ * Bouton Success
+ * -------------
+ * Pour les actions positives, confirmations, ou opérations réussies
+ */
+.btnSuccess {
+  background-color: var(--tc-success-color, #28a745);
+  border-color: var(--tc-success-color, #28a745);
+  color: #fff;
+}
+
+.btnSuccess:hover {
+  background-color: var(--tc-success-dark, #218838);
+  border-color: var(--tc-success-dark, #218838);
+  text-decoration: none;
+}
+
+/* 
+ * Tailles de bouton
+ * ----------------
+ * Variantes de taille pour différents contextes d'utilisation
+ * Note: les border-radius sont proportionnels à la taille du bouton
+ */
+.btnSm {
+  padding: var(--tc-spacing-xs, 0.25rem) var(--tc-spacing-sm, 0.5rem);
+  font-size: var(--tc-font-size-sm, 0.875rem);
+  line-height: var(--tc-line-height-base, 1.5);
+  /* Rayon légèrement réduit pour les petits boutons */
+  border-radius: calc(var(--tc-border-radius, 0.375rem) * 0.8);
+}
+
+.btnLg {
+  padding: var(--tc-spacing-sm, 0.5rem) var(--tc-spacing-md, 1rem);
+  font-size: var(--tc-font-size-lg, 1.25rem);
+  line-height: var(--tc-line-height-base, 1.5);
+  /* Rayon légèrement augmenté pour les grands boutons */
+  border-radius: calc(var(--tc-border-radius, 0.375rem) * 1.2);
+}
+
+/* 
+ * Gestion des icônes dans les boutons
+ * ----------------------------------
+ * Structure flexible permettant de combiner texte et icônes
+ */
+.buttonContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Utilisation de gap pour un espacement cohérent et plus moderne que margin */
+  gap: var(--tc-spacing-sm, 0.5rem); 
+}
+
+.iconWrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.textContent {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+
+/* 
+ * NOTE: Code commenté conservé pour référence historique
+ * Ancienne approche utilisant margin remplacée par gap
+ * pour une gestion plus flexible de l'espacement
+ */
+/* .iconWrapper + .textContent {
+  margin-left: 0.5rem;
+}
+
+.textContent + .iconWrapper {
+  margin-left: 0.5rem;
+} */
+
+/* 
+ * Boutons icône uniquement
+ * ----------------------
+ * Configuration spéciale pour les boutons qui ne contiennent qu'une icône
+ * Utilise aspect-ratio pour garantir une forme carrée parfaite
+ */
+.iconOnly {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--tc-spacing-sm, 0.375rem);
+  /* Garantit que le bouton reste carré quelle que soit sa taille */
+  aspect-ratio: 1 / 1;
+}
+
+/* Ajustement des paddings pour les boutons icône uniquement selon la taille */
+.btnSm.iconOnly {
+  padding: var(--tc-spacing-xs, 0.25rem);
+}
+
+.btnLg.iconOnly {
+  padding: var(--tc-spacing-sm, 0.5rem);
+}
+
+/* 
+ * État désactivé
+ * ------------
+ * Style commun pour tous les boutons désactivés
+ * pointer-events: none empêche toute interaction avec le bouton
+ */
+.btn:disabled {
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+/* 
+ * Boutons lien
+ * ----------
+ * Apparence de lien mais comportement de bouton
+ * Utile pour les actions secondaires ou tertiaires
+ */
+.btnLink {
+  font-weight: var(--tc-font-weight-normal, 400);
+  color: var(--tc-primary-color, #4a6da7);
+  text-decoration: none;
+  background-color: transparent;
+  /* Suppression des bordures et padding pour ressembler à un lien */
+  border: none;
+  padding: 0;
+}
+
+.btnLink:hover {
+  color: var(--tc-primary-dark, #395582);
+  text-decoration: underline;
+}
+
+/* 
+ * Styles responsive
+ * ---------------
+ * ATTENTION: Utilise max-width contrairement à la recommandation mobile-first
+ * Cette partie devrait être refactorisée pour utiliser min-width
+ * À conserver tel quel temporairement pour compatibilité
+ */
+@media (max-width: var(--tc-breakpoint-xs, 576px)) {
+  .btn {
+    /* Sur les très petits écrans, augmenter la taille pour faciliter le toucher */
+    padding: var(--tc-spacing-sm, 0.5rem) var(--tc-spacing-md, 1rem);
+  }
+  
+  .btnLg {
+    /* Ajuster le padding du grand bouton sur mobile */
+    padding: var(--tc-spacing-md, 0.75rem) var(--tc-spacing-lg, 1.25rem);
+  }
+}
+
+/* 
+ * Option pleine largeur
+ * ------------------
+ * REFACTORISATION NÉCESSAIRE: Changer en min-width selon l'approche mobile-first
+ * Cette media query va être inverséee dans une prochaine version
+ */
+@media (max-width: var(--tc-breakpoint-sm, 768px)) {
+  .btnBlock {
+    display: block;
+    width: 100%;
+  }
+}
+/* 
+ * Variante Outline - Warning
+ * ---------------------------
+ * Version outline pour les boutons d'avertissement
+ */
+.btnOutlineWarning {
+  background-color: transparent;
+  border-color: var(--tc-warning-color, #ffc107);
+  color: var(--tc-warning-color, #ffc107);
+}
+
+.btnOutlineWarning:hover {
+  background-color: var(--tc-warning-color, #ffc107);
+  color: var(--tc-color-dark, #212529);
+  text-decoration: none;
+}
+
+
+/* 
+ * Variante Outline - Info
+ * -----------------------
+ * Version outline pour les boutons d'information
+ */
+.btnOutlineInfo {
+  background-color: transparent;
+  border-color: var(--tc-info-color, #17a2b8);
+  color: var(--tc-info-color, #17a2b8);
+}
+
+.btnOutlineInfo:hover {
+  background-color: var(--tc-info-color, #17a2b8);
+  color: #fff;
+  text-decoration: none;
+}
+
+
+/* 
+ * Variante Outline - Success
+ * --------------------------
+ * Version outline pour les boutons de succès
+ */
+.btnOutlineSuccess {
+  background-color: transparent;
+  border-color: var(--tc-success-color, #28a745);
+  color: var(--tc-success-color, #28a745);
+}
+
+.btnOutlineSuccess:hover {
+  background-color: var(--tc-success-color, #28a745);
+  color: #fff;
+  text-decoration: none;
+}
+

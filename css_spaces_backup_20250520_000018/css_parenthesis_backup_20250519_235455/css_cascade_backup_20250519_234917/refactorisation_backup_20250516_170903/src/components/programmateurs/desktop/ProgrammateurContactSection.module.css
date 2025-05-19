@@ -1,0 +1,97 @@
+/*
+ * Styles pour ProgrammateurContactSection
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
+.container {
+  /* Base styles for ProgrammateurContactSection */
+  margin-bottom: var(--tc-spacing-md);
+}
+
+/* ProgrammateurContactSection styles */
+
+.cardWrapper {
+  background-color: var(--tc-card-bg);
+  border-radius: var(--tc-border-radius-lg);
+  box-shadow: var(--tc-box-shadow));
+  margin-bottom: var(--tc-spacing-lg);
+  overflow: hidden;
+  transition: var(--tc-transition);
+}
+
+.cardWrapper:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--tc-box-shadow-lg));
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-spacing-sm);
+  background-color: var(--tc-bg-light);
+  padding: var(--tc-spacing-md) var(--tc-spacing-lg);
+  border-bottom: var(--tc-border-width) solid var(--tc-border-light);
+}
+
+.cardBody {
+  padding: var(--tc-spacing-lg);
+}
+
+.formGroup {
+  margin-bottom: var(--tc-spacing-md);
+}
+
+.formSection {
+  margin-bottom: var(--tc-spacing-lg);
+}
+
+.cardLabel {
+  font-size: var(--tc-font-size-xs);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-secondary);
+  margin-bottom: var(--tc-spacing-xs);
+  display: block;
+}
+
+.fieldValue {
+  display: block;
+  width: 100%;
+  min-height: calc(1.5em + 0.75rem + 2px);
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  background-color: var(--tc-bg-light-alpha));
+  border: var(--tc-border-width) solid var(--tc-border-light-alpha));
+  border-radius: var(--tc-border-radius);
+  font-size: var(--tc-font-size-base);
+  line-height: 1.5;
+  margin-bottom: 0;
+}
+
+.fieldValueHighlight {
+  font-weight: var(--tc-font-weight-medium);
+}
+
+.fieldEmpty {
+  color: var(--tc-text-tertiary);
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .cardBody {
+    padding: var(--tc-spacing-md);
+  }
+  
+  .cardHeader {
+    padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  }
+}
+
+@media (max-width: 576px) {
+  .cardWrapper {
+    margin-bottom: var(--tc-spacing-md);
+  }
+  
+  .cardWrapper:hover {
+    transform: none; /* Désactive l'effet de survol sur mobile */
+  }
+}

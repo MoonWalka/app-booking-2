@@ -1,7 +1,7 @@
 /*
  * Styles pour ContratPDFWrapper
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 5 mai 2025
+ * Dernière mise à jour: 19 mai 2025
  */
 
 .container {
@@ -19,24 +19,24 @@
   width: 100%;
   height: 1000px;
   border: 1px solid var(--tc-border-light);
-  border-radius: var(--tc-border-radius-sm);
-  background-color: var(--tc-bg-subtle);
+  border-radius: var(--tc-radius-md);
+  background-color: var(--tc-bg-light);
 }
 
 .loading {
   text-align: center;
   padding: var(--tc-spacing-5);
   font-style: italic;
-  color: var(--tc-color-text-muted);
+  color: var(--tc-color-secondary);
 }
 
 .errorMessage {
-  color: var(--tc-color-danger);
-  background-color: var(--tc-bg-danger-subtle);
-  padding: var(--tc-spacing-2-5);
-  border-radius: var(--tc-border-radius-sm);
-  margin: var(--tc-spacing-2-5) 0;
-  border-left: 4px solid var(--tc-color-danger);
+  color: var(--tc-color-error);
+  background-color: rgba(var(--tc-color-error-rgb), 0.1);
+  padding: var(--tc-spacing-3);
+  border-radius: var(--tc-radius-md);
+  margin: var(--tc-spacing-3) 0;
+  border-left: 4px solid var(--tc-color-error);
 }
 
 /* Styles responsive standardisés */

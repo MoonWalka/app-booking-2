@@ -2,7 +2,7 @@
  * Styles pour index.css
  * Standardisé selon le Guide de Style CSS de TourCraft
  * Date de création: Inconnue
- * Dernière mise à jour: 5 mai 2025
+ * Dernière mise à jour: 19 mai 2025
  */
 
 
@@ -14,32 +14,32 @@
 */
 
 /* Base - Ordre important: d'abord le reset, puis les couleurs, puis les variables */
-@import './base/reset.css';
-@import './base/colors.css';  /* Définition des couleurs centralisées */
-@import './base/variables.css'; /* Variables globales faisant référence aux couleurs */
+@import '@styles/base/reset.css';
+@import '@styles/base/colors.css';  /* Définition des couleurs centralisées */
+@import '@styles/base/variables.css'; /* Variables globales faisant référence aux couleurs */
 
 /* Composants */
-@import './components/badges.css';
-@import './components/buttons.css';
-@import './components/cards.css';
-@import './components/details.css';  /* Styles pour les pages de détails */
-@import './components/dropdowns.css';
-@import './components/errors.css';  /* Styles pour les messages d'erreur */
-@import './components/forms.css';
-@import './components/layout.css';
-@import './components/modals.css';
-@import './components/navigation.css'; /* Styles de navigation (étapes, onglets, pagination, fil d'Ariane) */
-@import './components/spinner.css';
-@import './components/tables.css';
+@import '@styles/components/badges.css';
+@import '@styles/components/buttons.css';
+@import '@styles/components/cards.css';
+@import '@styles/components/details.css';  /* Styles pour les pages de détails */
+@import '@styles/components/dropdowns.css';
+@import '@styles/components/errors.css';  /* Styles pour les messages d'erreur */
+@import '@styles/components/forms.css';
+@import '@styles/components/layout.css';
+@import '@styles/components/modals.css';
+@import '@styles/components/navigation.css'; /* Styles de navigation (étapes, onglets, pagination, fil d'Ariane) */
+@import '@styles/components/spinner.css';
+@import '@styles/components/tables.css';
 
 /* Pages */
-@import './pages/artistes.css';
-@import './pages/concerts.css';
-@import './pages/contrats.css';
-@import './pages/forms.css';
-@import './pages/lieux.css';
-@import './pages/programmateurs.css';
-@import './pages/structures.css';
+@import '@styles/pages/artistes.css';
+@import '@styles/pages/concerts.css';
+@import '@styles/pages/contrats.css';
+@import '@styles/pages/forms.css';
+@import '@styles/pages/lieux.css';
+@import '@styles/pages/programmateurs.css';
+@import '@styles/pages/structures.css';
 
 /* Thème global - Appliqué en dernier pour ne pas écraser les styles spécifiques */
-@import './theme.css';
+@import '@styles/theme.css';

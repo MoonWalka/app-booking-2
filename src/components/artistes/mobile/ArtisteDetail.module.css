@@ -2,13 +2,11 @@
  * Styles pour ArtisteDetail
  * Standardisé selon le Guide de Style CSS de TourCraft
  * Date de création: Inconnue
- * Dernière mise à jour: 5 mai 2025
+ * Dernière mise à jour: 19 mai 2025
  */
 
-
-
 .artisteDetailMobile {
-  padding: 16px;
+  padding: var(--tc-spacing-4);
 }
 
 .mobileHeaderBar {
@@ -21,19 +19,19 @@
 .backButton {
   width: 36px;
   height: 36px;
-  border-radius: 50%;
+  border-radius: var(--tc-radius-pill);
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid var(--tc-border-color);
-  background-color: var(--tc-light-color);
+  border: var(--tc-border-width) solid var(--tc-border-color);
+  background-color: var(--tc-white-color);
   color: var(--tc-text-color);
 }
 
 .editButton {
   width: 36px;
   height: 36px;
-  border-radius: 50%;
+  border-radius: var(--tc-radius-pill);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -43,9 +41,9 @@
 }
 
 .artisteProfile {
-  background-color: var(--tc-bg-default, white);
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: var(--tc-bg-default);
+  border-radius: var(--tc-radius-lg);
+  box-shadow: var(--tc-shadow-md);
   overflow: hidden;
   margin-bottom: var(--tc-spacing-4);
 }
@@ -69,12 +67,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--tc-gray-200, #e9ecef);
-  color: var(--tc-gray-var(--tc-font-weight-medium), #adb5bd);
+  background-color: var(--tc-gray-200);
+  color: var(--tc-gray-500);
 }
 
 .placeholderPhoto i {
-  font-size: 48px;
+  font-size: var(--tc-font-size-xl);
 }
 
 .artisteInfo {
@@ -82,13 +80,13 @@
 }
 
 .artisteName {
-  font-size: var(--tc-spacing-4);
+  font-size: var(--tc-font-size-xl);
   font-weight: var(--tc-font-weight-semibold);
   margin-bottom: var(--tc-spacing-2);
 }
 
 .artisteGenre {
-  color: var(--tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-text-secondary);
   font-size: var(--tc-font-size-sm);
   margin-bottom: var(--tc-spacing-3);
 }
@@ -102,13 +100,13 @@
 .statItem {
   display: flex;
   align-items: center;
-  gap: 5px;
-  color: var(--tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  gap: var(--tc-spacing-1);
+  color: var(--tc-text-secondary);
   font-size: var(--tc-font-size-sm);
 }
 
 .statItem i {
-  color: var(--tc-primary-color, #007bff);
+  color: var(--tc-primary-color);
 }
 
 .mobileTabs {
@@ -126,30 +124,30 @@
 .tabButton {
   flex: 1;
   min-width: 80px;
-  padding: 10px 16px;
+  padding: var(--tc-spacing-2) var(--tc-spacing-4);
   text-align: center;
   border: none;
   background-color: transparent;
-  color: var(--tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-text-secondary);
   font-size: var(--tc-font-size-sm);
-  border-bottom: 2px solid transparent;
+  border-bottom: var(--tc-border-width) solid transparent;
 }
 
 .tabButton i {
   display: block;
-  font-size: 1.var(--tc-spacing-8);
-  margin-bottom: 4px;
+  font-size: var(--tc-font-size-lg);
+  margin-bottom: var(--tc-spacing-1);
 }
 
 .tabButton.active {
-  color: var(--tc-primary-color, #007bff);
-  border-bottom-color: var(--tc-primary-color, #007bff);
+  color: var(--tc-primary-color);
+  border-bottom-color: var(--tc-primary-color);
 }
 
 .mobileTabContent {
-  background-color: var(--tc-bg-default, white);
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: var(--tc-bg-default);
+  border-radius: var(--tc-radius-lg);
+  box-shadow: var(--tc-shadow-md);
   padding: var(--tc-spacing-3);
   min-height: 200px;
 }
@@ -160,10 +158,10 @@
 }
 
 .infoContent .infoSection h3 {
-  font-size: var(--tc-spacing-3);
+  font-size: var(--tc-font-size-md);
   margin-bottom: var(--tc-spacing-2);
-  color: var(--tc-text-color, #212529);
-  border-bottom: 1px solid var(--tc-border-color, var(--tc-color-border-light, #dee2e6));
+  color: var(--tc-text-color);
+  border-bottom: var(--tc-border-width) solid var(--tc-border-color);
   padding-bottom: var(--tc-spacing-2);
 }
 
@@ -176,8 +174,8 @@
 }
 
 .infoContent .membresList li {
-  padding: 8px 12px;
-  background-color: var(--tc-gray-100, var(--tc-bg-light, #f8f9fa));
+  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  background-color: var(--tc-bg-light);
   border-radius: var(--tc-radius-sm);
 }
 
@@ -190,17 +188,17 @@
 .contactItem {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid var(--tc-border-color, var(--tc-color-border-light, #dee2e6));
+  gap: var(--tc-spacing-2);
+  padding: var(--tc-spacing-2);
+  border-radius: var(--tc-radius-md);
+  border: var(--tc-border-width) solid var(--tc-border-color);
   text-decoration: none;
-  color: var(--tc-text-color, #212529);
+  color: var(--tc-text-color);
 }
 
 .contactItem i {
-  color: var(--tc-primary-color, #007bff);
-  font-size: 1.var(--tc-spacing-3);
+  color: var(--tc-primary-color);
+  font-size: var(--tc-font-size-lg);
 }
 
 /* Styles pour l'onglet Concerts */
@@ -213,7 +211,7 @@
 
 .concertsHeader h3 {
   margin: 0;
-  font-size: var(--tc-spacing-3);
+  font-size: var(--tc-font-size-md);
 }
 
 .concertsList {
@@ -223,26 +221,26 @@
 }
 
 .concertItem {
-  background-color: var(--tc-gray-100, var(--tc-bg-light, #f8f9fa));
+  background-color: var(--tc-bg-light);
   border-radius: var(--tc-radius-md);
-  padding: 12px;
+  padding: var(--tc-spacing-3);
 }
 
 .concertDate {
-  color: var(--tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-text-secondary);
   font-size: var(--tc-font-size-xs);
-  margin-bottom: 4px;
+  margin-bottom: var(--tc-spacing-1);
 }
 
 .concertLieu {
   font-weight: var(--tc-font-weight-medium);
-  margin-bottom: 4px;
+  margin-bottom: var(--tc-spacing-1);
 }
 
 .concertProgrammateur {
-  color: var(--tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-text-secondary);
   font-size: var(--tc-font-size-sm);
-  margin-bottom: 8px;
+  margin-bottom: var(--tc-spacing-2);
 }
 
 .concertMontant {
@@ -258,15 +256,15 @@
 }
 
 .contratItem {
-  background-color: var(--tc-gray-100, var(--tc-bg-light, #f8f9fa));
+  background-color: var(--tc-bg-light);
   border-radius: var(--tc-radius-md);
-  padding: 12px;
+  padding: var(--tc-spacing-3);
 }
 
 .contratDate {
-  color: var(--tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-text-secondary);
   font-size: var(--tc-font-size-xs);
-  margin-bottom: 4px;
+  margin-bottom: var(--tc-spacing-1);
 }
 
 .contratConcert {
@@ -274,7 +272,7 @@
 }
 
 .contratActions {
-  margin-top: 8px;
+  margin-top: var(--tc-spacing-2);
   text-align: right;
 }
 
@@ -286,24 +284,24 @@
 }
 
 .statCard {
-  background-color: var(--tc-gray-100, var(--tc-bg-light, #f8f9fa));
+  background-color: var(--tc-bg-light);
   border-radius: var(--tc-radius-md);
-  padding: 16px;
+  padding: var(--tc-spacing-4);
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--tc-spacing-3);
 }
 
 .statIcon {
   width: 40px;
   height: 40px;
-  border-radius: 50%;
-  background-color: var(--tc-primary-light, #cfe2ff);
-  color: var(--tc-primary-color, #007bff);
+  border-radius: var(--tc-radius-pill);
+  background-color: rgba(var(--tc-primary-color-rgb), 0.1);
+  color: var(--tc-primary-color);
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.var(--tc-spacing-8);
+  font-size: var(--tc-font-size-lg);
 }
 
 .statContent {
@@ -312,12 +310,12 @@
 
 .statContent h4 {
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
-  margin: 0 0 4px 0;
+  color: var(--tc-text-secondary);
+  margin: 0 0 var(--tc-spacing-1) 0;
 }
 
 .statValue {
-  font-size: 1.var(--tc-spacing-8);
+  font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-semibold);
   margin: 0;
 }
@@ -326,13 +324,13 @@
 .emptyState {
   padding: var(--tc-spacing-8) var(--tc-spacing-3);
   text-align: center;
-  color: var(--tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-text-secondary);
 }
 
 .emptyState i {
-  font-size: 2.5rem;
+  font-size: var(--tc-font-size-2xl);
   margin-bottom: var(--tc-spacing-3);
-  color: var(--tc-gray-var(--tc-font-weight-normal), #ced4da);
+  color: var(--tc-gray-400);
 }
 
 .emptyState p {
@@ -351,5 +349,5 @@
 }
 
 .errorContainer {
-  color: var(--tc-danger, var(--tc-color-error));
+  color: var(--tc-danger-color);
 }

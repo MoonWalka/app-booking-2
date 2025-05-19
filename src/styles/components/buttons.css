@@ -2,7 +2,7 @@
  * Styles pour buttons.css
  * Standardisé selon le Guide de Style CSS de TourCraft
  * Date de création: Inconnue
- * Dernière mise à jour: 5 mai 2025
+ * Dernière mise à jour: 19 mai 2025
  */
 
 
@@ -11,10 +11,10 @@
 button {
   cursor: pointer;
   border: none;
-  border-radius: var(--tc-border-radius);
-  padding: 8px 16px;
-  font-size: 14px;
-  transition: var(--tc-transition);
+  border-radius: var(--tc-radius-md);
+  padding: var(--tc-spacing-2) var(--tc-spacing-4);
+  font-size: var(--tc-font-size-sm);
+  transition: all var(--tc-transition-normal) var(--tc-transition-timing);
 }
 
 /* Correctif pour l'alignement des icônes dans les boutons Bootstrap standard */
@@ -34,7 +34,7 @@ button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: var(--tc-spacing-2);
   font-weight: var(--tc-font-weight-normal);
   text-align: center;
   white-space: nowrap;
@@ -43,8 +43,8 @@ button {
   padding: var(--tc-btn-padding-y, 0.375rem) var(--tc-btn-padding-x, var(--tc-spacing-2));
   font-size: var(--tc-font-size-sm);
   line-height: 1.5;
-  border-radius: var(--tc-border-radius);
-  transition: var(--tc-transition);
+  border-radius: var(--tc-radius-md);
+  transition: all var(--tc-transition-normal) var(--tc-transition-timing);
   border: 1px solid transparent;
   cursor: pointer;
 }
@@ -59,7 +59,7 @@ button {
 /* Focus commun pour tous les boutons */
 .tc-btn:focus {
   outline: 0;
-  box-shadow: 0 0 0 var(--tc-spacing-1) rgba(var(--tc-primary-color-rgb), 0.25);
+  box-shadow: 0 0 0 var(--tc-spacing-1) rgba(var(--tc-color-primary-rgb), 0.25);
 }
 
 /* ========================================
@@ -231,11 +231,11 @@ button {
    ======================================== */
 
 .tc-btn-action {
-  background-color: var(--tc-primary-color);
+  background-color: var(--tc-color-primary);
   color: var(--tc-text-light);
-  padding: 6px 12px;
-  border-radius: var(--tc-border-radius);
-  font-size: 12px;
+  padding: var(--tc-spacing-1) var(--tc-spacing-3);
+  border-radius: var(--tc-radius-md);
+  font-size: var(--tc-font-size-xs);
 }
 
 .tc-btn-action:hover {
@@ -250,8 +250,8 @@ button {
 /* Boutons d'action groupés */
 .tc-action-buttons {
   display: flex;
-  gap: 10px;
-  margin-top: 15px;
+  gap: var(--tc-spacing-2);
+  margin-top: var(--tc-spacing-4);
 }
 
 /* CORRECTIFS POUR LES PROBLÈMES DE POSITIONNEMENT DES BOUTONS */
@@ -260,8 +260,8 @@ button {
 .edit-mode .tc-action-buttons {
   display: flex;
   justify-content: flex-end; /* Aligne les boutons à droite */
-  gap: 10px;
-  margin-top: 15px;
+  gap: var(--tc-spacing-2);
+  margin-top: var(--tc-spacing-4);
   position: relative; /* Établit un contexte de positionnement */
   z-index: 5; /* Assure que les boutons sont au-dessus des autres éléments */
 }
@@ -269,7 +269,7 @@ button {
 /* Correction pour les boutons dans les formulaires */
 .form-container .tc-action-buttons {
   flex-wrap: wrap; /* Permet aux boutons de passer à la ligne sur les petits écrans */
-  margin-bottom: 20px; /* Ajoute de l'espace en bas */
+  margin-bottom: var(--tc-spacing-5); /* Ajoute de l'espace en bas */
 }
 
 /* Prévention de la superposition des boutons dans les cartes */
@@ -277,7 +277,7 @@ button {
   position: static; /* Annule tout positionnement absolu hérité */
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
+  gap: var(--tc-spacing-2);
 }
 
 /* Alignement des boutons dans les modales */

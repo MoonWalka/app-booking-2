@@ -5,19 +5,20 @@
  */
 
 /* Import des classes utilitaires pour les points de rupture */
-@import '../../styles/mixins/breakpoints.css';
+@import '@styles/mixins/breakpoints.css';
+@import '@styles/base/variables.css';
 
 .navbar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  padding: var(--tc-spacing-sm, 0.5rem) var(--tc-spacing-md, 1rem);
-  background-color: var(--tc-color-dark, #343a40);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  background-color: var(--tc-color-dark);
 }
 
 .navbarDark {
-  color: var(--tc-color-light, #fff);
+  color: var(--tc-color-light);
 }
 
 .navbarExpand {
@@ -31,8 +32,8 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding-right: var(--tc-spacing-md, 15px);
-  padding-left: var(--tc-spacing-md, 15px);
+  padding-right: var(--tc-spacing-md);
+  padding-left: var(--tc-spacing-md);
   margin-right: auto;
   margin-left: auto;
 }
@@ -41,21 +42,21 @@
   display: inline-block;
   padding-top: 0.3125rem;
   padding-bottom: 0.3125rem;
-  margin-right: var(--tc-spacing-md, 1rem);
-  font-size: var(--tc-font-size-lg, 1.25rem);
+  margin-right: var(--tc-spacing-md);
+  font-size: var(--tc-font-size-lg);
   line-height: inherit;
   white-space: nowrap;
-  color: var(--tc-text-light, #fff);
+  color: var(--tc-text-light);
   text-decoration: none;
 }
 
 .navbarToggler {
   padding: 0.25rem 0.75rem;
-  font-size: var(--tc-font-size-lg, 1.25rem);
+  font-size: var(--tc-font-size-lg);
   line-height: 1;
   background-color: transparent;
-  border: var(--tc-border-width, 1px) solid rgba(255,255,255,.1);
-  border-radius: var(--tc-border-radius, 0.25rem);
+  border: var(--tc-border-width) solid rgba(255,255,255,.1);
+  border-radius: var(--tc-border-radius);
   color: rgba(255,255,255,.5);
 }
 
@@ -90,10 +91,10 @@
 
 .navLink {
   display: block;
-  padding: var(--tc-spacing-sm, 0.5rem) var(--tc-spacing-md, 1rem);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
   color: rgba(255,255,255,.55);
   text-decoration: none;
-  transition: var(--tc-transition, color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out);
+  transition: var(--tc-transition);
 }
 
 .navLink:hover, .navLink:focus {
@@ -109,42 +110,42 @@
 }
 
 .navbarText {
-  padding-top: var(--tc-spacing-sm, 0.5rem);
-  padding-bottom: var(--tc-spacing-sm, 0.5rem);
+  padding-top: var(--tc-spacing-sm);
+  padding-bottom: var(--tc-spacing-sm);
   color: rgba(255,255,255,.55);
 }
 
 .me3 {
-  margin-right: var(--tc-spacing-md, 1rem);
+  margin-right: var(--tc-spacing-md);
 }
 
 .btnOutlineLight {
-  color: var(--tc-light, #f8f9fa);
-  border-color: var(--tc-light, #f8f9fa);
-  padding: var(--tc-spacing-xs, 0.25rem) var(--tc-spacing-sm, 0.5rem);
-  font-size: var(--tc-font-size-sm, 0.875rem);
-  border-radius: var(--tc-border-radius-sm, 0.2rem);
+  color: var(--tc-light);
+  border-color: var(--tc-light);
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  font-size: var(--tc-font-size-sm);
+  border-radius: var(--tc-border-radius-sm);
   display: inline-block;
-  font-weight: var(--tc-font-weight-normal, 400);
-  line-height: var(--tc-line-height-base, 1.5);
+  font-weight: var(--tc-font-weight-normal);
+  line-height: var(--tc-line-height-base);
   text-align: center;
   text-decoration: none;
   vertical-align: middle;
   cursor: pointer;
   user-select: none;
   background-color: transparent;
-  border: var(--tc-border-width, 1px) solid;
-  transition: var(--tc-transition, color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out);
+  border: var(--tc-border-width) solid;
+  transition: var(--tc-transition);
 }
 
 .btnOutlineLight:hover {
-  color: var(--tc-dark, #000);
-  background-color: var(--tc-light, #f8f9fa);
-  border-color: var(--tc-light, #f8f9fa);
+  color: var(--tc-dark);
+  background-color: var(--tc-light);
+  border-color: var(--tc-light);
 }
 
 /* Styles responsive utilisant les variables standardisées */
-@media (min-width: var(--tc-breakpoint-md, 992px)) {
+@media (min-width: var(--tc-breakpoint-md)) {
   .navbarExpand {
     flex-wrap: nowrap;
     justify-content: flex-start;
@@ -160,22 +161,22 @@
   }
   
   .navItem {
-    margin-right: var(--tc-spacing-sm, 0.5rem);
+    margin-right: var(--tc-spacing-sm);
   }
 }
 
 /* Styles responsive pour mobile */
-@media (max-width: calc(var(--tc-breakpoint-md, 992px) - 0.02px)) {
+@media (max-width: calc(var(--tc-breakpoint-md) - 0.02px)) {
   .navbarCollapse {
     overflow-y: auto;
     max-height: 75vh;
   }
   
   .navbarNav {
-    padding: var(--tc-spacing-sm, 0.5rem) 0;
+    padding: var(--tc-spacing-sm) 0;
   }
   
   .navItem {
-    margin: var(--tc-spacing-xs, 0.25rem) 0;
+    margin: var(--tc-spacing-xs) 0;
   }
 }

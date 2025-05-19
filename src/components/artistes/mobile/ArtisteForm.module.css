@@ -2,7 +2,7 @@
  * Styles pour ArtisteForm
  * Standardisé selon le Guide de Style CSS de TourCraft
  * Date de création: Inconnue
- * Dernière mise à jour: 5 mai 2025
+ * Dernière mise à jour: 19 mai 2025
  */
 
 
@@ -21,7 +21,7 @@
 .mobileFormHeader {
   margin-bottom: var(--tc-spacing-4);
   padding-bottom: var(--tc-spacing-3);
-  border-bottom: 1px solid var(--tc-border-color);
+  border-bottom: var(--tc-border-width) solid var(--tc-border-color);
 }
 
 .mobileForm {
@@ -33,18 +33,18 @@
 .formSection {
   background-color: var(--tc-bg-color);
   border-radius: var(--tc-border-radius);
-  padding: var(--tc-font-size-xl);
+  padding: var(--tc-spacing-4);
   margin-bottom: var(--tc-spacing-4);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--tc-shadow-sm);
 }
 
 .sectionTitle {
   font-size: var(--tc-font-size-xl);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-color, #344767);
-  margin-bottom: var(--tc-font-size-xl);
+  color: var(--tc-text-color);
+  margin-bottom: var(--tc-spacing-4);
   padding-bottom: var(--tc-spacing-2);
-  border-bottom: 1px solid var(--tc-border-color-light, #f0f0f0);
+  border-bottom: var(--tc-border-width) solid var(--tc-border-color-light);
 }
 
 .membresList {
@@ -58,9 +58,9 @@
   justify-content: space-between;
   align-items: center;
   padding: var(--tc-spacing-2);
-  background-color: var(--tc-bg-light, var(--tc-bg-light, #f8f9fa));
-  border-radius: var(--tc-border-radius, var(--tc-spacing-2));
-  border: 1px solid var(--tc-border-color, var(--tc-color-border-light, #dee2e6));
+  background-color: var(--tc-bg-light);
+  border-radius: var(--tc-border-radius);
+  border: var(--tc-border-width) solid var(--tc-border-color);
 }
 
 .formActions {
@@ -69,5 +69,5 @@
   gap: var(--tc-spacing-2);
   margin-top: var(--tc-spacing-4);
   padding-top: var(--tc-spacing-3);
-  border-top: 1px solid var(--tc-border-color-light, #f0f0f0);
+  border-top: var(--tc-border-width) solid var(--tc-border-color-light);
 }

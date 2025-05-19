@@ -9,43 +9,43 @@
 @import '../../styles/mixins/breakpoints.css';
 
 .infoPanel {
-  background-color: var(--tc-color-info-light);
-  border-left: 4px solid var(--tc-color-info);
-  padding: var(--tc-spacing-4);
-  margin: var(--tc-spacing-5) 0;
-  border-radius: var(--tc-radius-sm);
+  background-color: rgba(var(--tc-info-color-rgb), 0.1);
+  border-left: 4px solid var(--tc-info-color);
+  padding: var(--tc-spacing-md);
+  margin: var(--tc-spacing-lg) 0;
+  border-radius: var(--tc-border-radius-sm);
 }
 
 .infoPanel.success {
-  background-color: var(--tc-color-success-light);
-  border-left-color: var(--tc-color-success);
+  background-color: rgba(var(--tc-success-color-rgb), 0.1);
+  border-left-color: var(--tc-success-color);
 }
 
 .infoPanel.warning {
-  background-color: var(--tc-color-warning-light);
-  border-left-color: var(--tc-color-warning);
+  background-color: rgba(var(--tc-warning-color-rgb), 0.1);
+  border-left-color: var(--tc-warning-color);
 }
 
 .infoPanel.error {
-  background-color: var(--tc-color-error-light);
-  border-left-color: var(--tc-color-error);
+  background-color: rgba(var(--tc-danger-color-rgb), 0.1);
+  border-left-color: var(--tc-danger-color);
 }
 
 .infoPanel h4 {
-  color: var(--tc-color-text-primary);
+  color: var(--tc-text-color);
   margin-top: 0;
-  margin-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-spacing-sm);
   font-weight: var(--tc-font-weight-medium);
 }
 
 .infoPanel p {
-  color: var(--tc-color-text-secondary);
+  color: var(--tc-text-muted);
   margin-bottom: 0;
 }
 
 @media (max-width: var(--tc-breakpoint-xs)) {
   .infoPanel {
-    padding: var(--tc-spacing-3);
-    margin: var(--tc-spacing-4) 0;
+    padding: var(--tc-spacing-sm);
+    margin: var(--tc-spacing-md) 0;
   }
 }

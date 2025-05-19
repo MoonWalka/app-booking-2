@@ -18,8 +18,7 @@
   padding: var(--tc-spacing-md);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow-sm);
-  flex: 1;
-  min-width: var(--tc-min-width-md);
+  flex: 1 1 200px; /* flex-grow, flex-shrink, flex-basis */
   text-align: center;
 }
 

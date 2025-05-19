@@ -27,7 +27,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 15px 20px;
-  border-bottom: 1px solid #dee2e6;
+  border-bottom: 1px solid var(--tc-color-dee2e6, #dee2e6);
 }
 
 .editor-modal-container .tc-modal-close {
@@ -37,17 +37,17 @@
   font-size: 20px;
   line-height: 1;
   cursor: pointer;
-  color: #6c757d;
+  color: var(--tc-color-6c757d, #6c757d);
   transition: color 0.15s ease-in-out;
 }
 
 .editor-modal-container .tc-modal-close:hover {
-  color: #dc3545;
+  color: var(--tc-color-dc3545, #dc3545);
 }
 
 .editor-modal-container .btn-outline-info {
-  color: #17a2b8;
-  border-color: #17a2b8;
+  color: var(--tc-color-17a2b8, #17a2b8);
+  border-color: var(--tc-color-17a2b8, #17a2b8);
   background-color: transparent;
   padding: 0.25rem 0.5rem;
   font-size: 0.875rem;
@@ -56,9 +56,9 @@
 }
 
 .editor-modal-container .btn-outline-info:hover {
-  color: #fff;
-  background-color: #17a2b8;
-  border-color: #17a2b8;
+  color: var(--tc-color-fff, #fff);
+  background-color: var(--tc-color-17a2b8, #17a2b8);
+  border-color: var(--tc-color-17a2b8, #17a2b8);
 }
 
 /* Force l'affichage des barres d'outils de ReactQuill */
@@ -66,8 +66,8 @@
   display: flex;
   flex-wrap: wrap;
   background-color: white;
-  border: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
+  border: 1px solid var(--tc-color-ccc, #ccc);
+  border-bottom: 1px solid var(--tc-color-ccc, #ccc);
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
   padding: 8px;
@@ -94,8 +94,8 @@
 
 .editor-modal-container .ql-toolbar.ql-snow button.ql-active,
 .editor-modal-container .ql-toolbar.ql-snow button:hover {
-  color: #06c;
-  background-color: rgba(0,0,0,0.04);
+  color: var(--tc-color-06c, #06c);
+  background-color: var(--tc-color-rgba(0,0,0,0.04), rgba(0,0,0,0.04));
   border-radius: 3px;
 }
 
@@ -107,7 +107,7 @@
 
 /* Style pour le container de l'éditeur */
 .editor-modal-container .ql-container.ql-snow {
-  border: 1px solid #ccc;
+  border: 1px solid var(--tc-color-ccc, #ccc);
   border-top: 0;
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
@@ -145,14 +145,14 @@
 /* S'assurer que les boutons d'actions et les sections sont bien affichés */
 .editor-modal-container .card {
   margin-bottom: 1.5rem;
-  border: 1px solid rgba(0,0,0,.125);
+  border: 1px solid var(--tc-color-rgba(0,0,0,.125), rgba(0,0,0,.125));
   border-radius: .25rem;
 }
 
 .editor-modal-container .card-header {
   padding: .75rem 1.25rem;
-  background-color: rgba(0,0,0,.03);
-  border-bottom: 1px solid rgba(0,0,0,.125);
+  background-color: var(--tc-color-rgba(0,0,0,.03), rgba(0,0,0,.03));
+  border-bottom: 1px solid var(--tc-color-rgba(0,0,0,.125), rgba(0,0,0,.125));
 }
 
 .editor-modal-container .card-body {
@@ -168,9 +168,9 @@
   z-index: 2000;
   position: absolute;
   transform: translateY(10px);
-  background-color: #fff;
-  border: 1px solid #ccc;
-  box-shadow: 0px 0px 5px rgba(0,0,0,.2);
+  background-color: var(--tc-color-fff, #fff);
+  border: 1px solid var(--tc-color-ccc, #ccc);
+  box-shadow: 0px 0px 5px var(--tc-color-rgba(0,0,0,.2), rgba(0,0,0,.2));
   border-radius: 3px;
   padding: 5px 12px;
   white-space: nowrap;
@@ -182,9 +182,9 @@
   position: absolute;
   min-width: 100%;
   padding: 4px 8px;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  box-shadow: 0 2px 8px rgba(0,0,0,.15);
+  background-color: var(--tc-color-fff, #fff);
+  border: 1px solid var(--tc-color-ccc, #ccc);
+  box-shadow: 0 2px 8px var(--tc-color-rgba(0,0,0,.15), rgba(0,0,0,.15));
   border-radius: 3px;
   z-index: 2000;
   white-space: nowrap;

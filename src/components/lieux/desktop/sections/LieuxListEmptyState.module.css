@@ -9,8 +9,8 @@
   align-items: center;
   padding: 1.25rem;
   border-radius: 6px;
-  background-color: #f8f9fa;
-  color: #6c757d;
-  border: 1px solid #dee2e6;
+  background-color: var(--tc-color-f8f9fa, #f8f9fa);
+  color: var(--tc-color-6c757d, #6c757d);
+  border: 1px solid var(--tc-color-dee2e6, #dee2e6);
   margin-top: 1rem;
 }

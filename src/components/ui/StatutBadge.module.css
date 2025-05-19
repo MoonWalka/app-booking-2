@@ -37,7 +37,7 @@
 
 /* Couleurs de badge */
 .primary {
-  background-color: rgba(var(--tc-primary-color-rgb), 0.1);
+  background-color: var(--tc-primary-color-lightest);
   color: var(--tc-primary-color);
 }
 
@@ -47,22 +47,22 @@
 }
 
 .success {
-  background-color: rgba(var(--tc-success-color-rgb), 0.1);
+  background-color: var(--tc-success-color-lightest);
   color: var(--tc-success-color);
 }
 
 .info {
-  background-color: rgba(var(--tc-info-color-rgb), 0.1);
+  background-color: var(--tc-info-color-lightest);
   color: var(--tc-info-color);
 }
 
 .warning {
-  background-color: rgba(var(--tc-warning-color-rgb), 0.1);
+  background-color: var(--tc-warning-color-lightest);
   color: var(--tc-warning-color);
 }
 
 .danger {
-  background-color: rgba(var(--tc-danger-color-rgb), 0.1);
+  background-color: var(--tc-danger-color-lightest);
   color: var(--tc-danger-color);
 }
 

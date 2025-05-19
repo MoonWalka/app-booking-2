@@ -16,34 +16,34 @@
   overflow: hidden;
   box-sizing: border-box;
   background-color: white;
-  color: var(--text-primary);
+  color: var(--tc-text-primary);
 }
 
 /* Variantes */
 .card-default {
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 5px var(--tc-color-rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
+  border: 1px solid var(--tc-border-color);
 }
 
 .card-outlined {
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--tc-border-color);
 }
 
 .card-elevated {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px var(--tc-color-rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15));
 }
 
 /* Niveaux d'élévation */
 .elevation-low {
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 4px var(--tc-color-rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.08));
 }
 
 .elevation-medium {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 8px var(--tc-color-rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.12));
 }
 
 .elevation-high {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 8px 16px var(--tc-color-rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.18));
 }
 
 /* Tailles */
@@ -65,7 +65,7 @@
 }
 
 .headerWithBorder {
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--tc-border-color);
 }
 
 .headerContent {
@@ -81,7 +81,7 @@
 .subtitle {
   margin-top: 0.25rem;
   font-size: 0.875rem;
-  color: var(--text-secondary);
+  color: var(--tc-text-secondary);
 }
 
 .avatar {
@@ -127,7 +127,7 @@
 }
 
 .footerWithBorder {
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--tc-border-color);
 }
 
 .footerContent {
@@ -144,7 +144,7 @@
   position: relative;
   width: 100%;
   overflow: hidden;
-  background-color: var(--background-secondary);
+  background-color: var(--tc-background-secondary);
 }
 
 .mediaItem {

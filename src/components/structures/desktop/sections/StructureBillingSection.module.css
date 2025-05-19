@@ -13,7 +13,7 @@
 .formCard {
   background-color: var(--tc-color-background);
   border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-box-shadow-sm));
+  box-shadow: var(--tc-box-shadow-sm);
   margin-bottom: var(--tc-spacing-lg);
   overflow: hidden;
 }

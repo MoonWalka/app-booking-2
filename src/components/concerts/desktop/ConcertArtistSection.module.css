@@ -7,9 +7,9 @@
 /* Styles pour le composant ConcertArtistSection */
 
 .formCard {
-  background-color: #fff;
+  background-color: var(--tc-color-fff, #fff);
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px var(--tc-color-rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
   margin-bottom: 1.5rem;
   overflow: hidden;
 }
@@ -17,9 +17,9 @@
 .cardHeader {
   display: flex;
   align-items: center;
-  background-color: #f8f9fa;
+  background-color: var(--tc-color-f8f9fa, #f8f9fa);
   padding: 1rem;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--tc-color-eee, #eee);
 }
 
 .cardHeader i {
@@ -57,7 +57,7 @@
 }
 
 .selectedArtiste {
-  border: 1px solid #ddd;
+  border: 1px solid var(--tc-color-ddd, #ddd);
   border-radius: 6px;
   padding: 1rem;
   margin-bottom: 0.75rem;
@@ -83,7 +83,7 @@
   font-size: 0.875rem;
   display: block;
   margin-bottom: 0.25rem;
-  color: #666;
+  color: var(--tc-color-666, #666);
 }
 
 .artisteDescription {
@@ -97,12 +97,12 @@
 }
 
 .artisteItem:hover {
-  background-color: #f8f9fa;
+  background-color: var(--tc-color-f8f9fa, #f8f9fa);
 }
 
 .artisteDetails {
   font-size: 0.8rem;
-  color: #666;
+  color: var(--tc-color-666, #666);
   display: flex;
   flex-direction: column;
 }

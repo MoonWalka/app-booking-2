@@ -15,12 +15,12 @@
    VARIABLES SPÉCIFIQUES LIEUX
    ============================= */
 :root {
-  --lieu-color: #0dcaf0; /* Couleur spécifique pour les lieux */
-  --lieu-color-light: #e9f6fd;
+  --lieu-color: var(--tc-color-0dcaf0, #0dcaf0); /* Couleur spécifique pour les lieux */
+  --lieu-color-light: var(--tc-color-e9f6fd, #e9f6fd);
   --festival-color: var(--tc-color-error);
-  --salle-color: #198754;
-  --bar-color: #0dcaf0;
-  --plateau-color: #ffc107;
+  --salle-color: var(--tc-color-198754, #198754);
+  --bar-color: var(--tc-color-0dcaf0, #0dcaf0);
+  --plateau-color: var(--tc-color-ffc107, #ffc107);
   
   /* Transitions standardisées */
   --transition-fast: 0.2s ease;
@@ -307,13 +307,13 @@
   align-items: center;
   border-radius: 6px;
   font-weight: var(--tc-font-weight-medium);
-  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 6px var(--tc-color-rgba(50, 50, 93, 0.11), rgba(50, 50, 93, 0.11)), 0 1px 3px var(--tc-color-rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.08));
   transition: all 0.2s;
 }
 
 .modern-add-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 7px 14px var(--tc-color-rgba(50, 50, 93, 0.1), rgba(50, 50, 93, 0.1)), 0 3px 6px var(--tc-color-rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.08));
 }
 
 /* Badges de statistiques */
@@ -328,13 +328,13 @@
 }
 
 .stats-badge.success {
-  background-color: rgba(40, 167, 69, 0.1);
-  color: #28a745;
+  background-color: var(--tc-color-rgba(40, 167, 69, 0.1), rgba(40, 167, 69, 0.1));
+  color: var(--tc-color-28a745, #28a745);
 }
 
 .stats-badge.warning {
-  background-color: rgba(255, 193, 7, 0.1);
-  color: #ffc107;
+  background-color: var(--tc-color-rgba(255, 193, 7, 0.1), rgba(255, 193, 7, 0.1));
+  color: var(--tc-color-ffc107, #ffc107);
 }
 
 .stats-number {
@@ -356,14 +356,14 @@
   border-radius: 0 6px 6px 0;
   padding-left: 12px;
   background-color: var(--tc-bg-default);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 5px var(--tc-color-rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05));
 }
 
 .input-group-text {
   background-color: var(--tc-bg-default);
   border-radius: 6px 0 0 6px;
   border-right: none;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 5px var(--tc-color-rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05));
 }
 
 .clear-search {
@@ -387,13 +387,13 @@
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  box-shadow: 0 0.125rem var(--tc-spacing-1) rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0.125rem var(--tc-spacing-1) var(--tc-color-rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05));
   margin-bottom: var(--tc-spacing-3);
 }
 
 .filter-label {
   font-weight: var(--tc-font-weight-medium);
-  color: #495057;
+  color: var(--tc-color-495057, #495057);
 }
 
 .filter-tags {
@@ -413,12 +413,12 @@
   align-items: center;
   justify-content: center;
   font-weight: var(--tc-font-weight-medium);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px var(--tc-color-rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05));
 }
 
 .filter-tag:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px var(--tc-color-rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
 }
 
 .filter-tag.active {
@@ -458,18 +458,18 @@
 }
 
 .filter-tag-salle {
-  border: 1px solid #198754;
+  border: 1px solid var(--tc-color-198754, #198754);
 }
 .filter-tag-salle.active {
-  background-color: #198754;
+  background-color: var(--tc-color-198754, #198754);
   color: var(--tc-bg-default);
 }
 
 .filter-tag-plateau {
-  border: 1px solid #ffc107;
+  border: 1px solid var(--tc-color-ffc107, #ffc107);
 }
 .filter-tag-plateau.active {
-  background-color: #ffc107;
+  background-color: var(--tc-color-ffc107, #ffc107);
   color: var(--tc-bg-default);
 }
 
@@ -477,7 +477,7 @@
 .modern-table-container {
   border-radius: var(--tc-radius-md);
   overflow: hidden;
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 15px var(--tc-color-rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05));
   background-color: var(--tc-bg-default);
 }
 
@@ -513,7 +513,7 @@
 }
 
 .clickable-row:hover {
-  background-color: rgba(0, 123, 255, 0.05);
+  background-color: var(--tc-color-rgba(0, 123, 255, 0.05), rgba(0, 123, 255, 0.05));
 }
 
 .table-row-animate {
@@ -523,8 +523,8 @@
 /* Badges et textes */
 .ville-badge {
   display: inline-block;
-  background-color: #f0f4ff;
-  color: #3a86ff;
+  background-color: var(--tc-color-f0f4ff, #f0f4ff);
+  color: var(--tc-color-3a86ff, #3a86ff);
   padding: 4px 10px;
   border-radius: var(--tc-radius-sm);
   font-size: var(--tc-font-size-sm);
@@ -558,7 +558,7 @@
 .concert-count {
   display: inline-flex;
   align-items: center;
-  background-color: #e9f2ff;
+  background-color: var(--tc-color-e9f2ff, #e9f2ff);
   color: var(--tc-primary-color);
   padding: 4px 10px;
   border-radius: 50px;
@@ -600,15 +600,15 @@
 
 .btn-light {
   background-color: var(--tc-bg-light);
-  border-color: #f0f0f0;
+  border-color: var(--tc-color-f0f0f0, #f0f0f0);
 }
 
 .action-buttons .btn-light:first-child:hover {
-  color: #3b7ddd;
+  color: var(--tc-color-3b7ddd, #3b7ddd);
 }
 
 .action-buttons .btn-light:nth-child(2):hover {
-  color: #ffc107;
+  color: var(--tc-color-ffc107, #ffc107);
 }
 
 .action-buttons .btn-light:last-child:hover {
@@ -619,10 +619,10 @@
 .modern-alert {
   border-radius: var(--tc-radius-md);
   padding: 20px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 10px var(--tc-color-rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05));
   border: none;
-  background-color: #e9f6fd;
-  color: #0c5460;
+  background-color: var(--tc-color-e9f6fd, #e9f6fd);
+  color: var(--tc-color-0c5460, #0c5460);
   border-left: 4px solid var(--tc-primary-color);
 }
 
@@ -639,12 +639,12 @@
   max-width: 500px;
   margin: 0 auto;
   padding: 40px 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 12px var(--tc-color-rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05));
 }
 
 .bi.display-1 {
   font-size: 3rem;
-  color: #adb5bd;
+  color: var(--tc-color-adb5bd, #adb5bd);
   margin-bottom: 16px;
 }
 
@@ -664,8 +664,8 @@
   width: var(--tc-spacing-8);
   height: var(--tc-spacing-8);
   border-radius: 50%;
-  border: var(--tc-spacing-1) solid rgba(0, 0, 0, 0.1);
-  border-top-color: #3b7ddd;
+  border: var(--tc-spacing-1) solid var(--tc-color-rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
+  border-top-color: var(--tc-color-3b7ddd, #3b7ddd);
   animation: spin 1s infinite linear;
   position: absolute;
   top: 0;
@@ -725,7 +725,7 @@
   align-items: center;
   justify-content: center;
   padding: 0;
-  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11);
+  box-shadow: 0 4px 6px var(--tc-color-rgba(50, 50, 93, 0.11), rgba(50, 50, 93, 0.11));
 }
 
 /* Conteneur de recherche pour mobile */
@@ -744,14 +744,14 @@
 .lieu-card {
   background-color: var(--tc-bg-default);
   border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 10px var(--tc-color-rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.08));
   overflow: hidden;
 }
 
 .lieu-card-header {
   padding: 15px;
   background-color: var(--tc-bg-light);
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--tc-color-f0f0f0, #f0f0f0);
 }
 
 .lieu-card-title {
@@ -909,7 +909,7 @@
 .form-card {
   background-color: var(--tc-bg-color);
   border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-shadow-sm) rgba(0, 0, 0, 0.05));
+  box-shadow: var(--tc-shadow-sm) var(--tc-color-rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05)));
   margin-bottom: var(--tc-spacing-4);
   overflow: hidden;
 }

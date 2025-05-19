@@ -15,7 +15,7 @@
     margin: 0 auto;
     padding: 40px 20px;
     font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
+    background-color: var(--tc-color-f9f9f9, #f9f9f9);
     min-height: 100vh;
   }
   
@@ -32,11 +32,11 @@
   }
   
   .form-public .form-section {
-    background-color: #fff;
+    background-color: var(--tc-color-fff, #fff);
     border-radius: var(--tc-radius-md);
     padding: 25px;
     margin-bottom: 30px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 10px var(--tc-color-rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
   }
   
   .form-public .card-header {
@@ -44,14 +44,14 @@
     align-items: center;
     padding: 15px 20px;
     background-color: var(--tc-bg-light);
-    border-bottom: 1px solid #eaeaea;
+    border-bottom: 1px solid var(--tc-color-eaeaea, #eaeaea);
     border-radius: var(--tc-radius-md) 8px 0 0;
   }
   
   .form-public .card-header i {
     font-size: 1.var(--tc-spacing-8);
     margin-right: 10px;
-    color: #4a90e2;
+    color: var(--tc-color-4a90e2, #4a90e2);
   }
   
   .form-public .card-header h3 {
@@ -79,18 +79,18 @@
   }
   
   .form-public .form-control:focus {
-    border-color: #4a90e2;
-    box-shadow: 0 0 5px rgba(74, 144, 226, 0.2);
+    border-color: var(--tc-color-4a90e2, #4a90e2);
+    box-shadow: 0 0 5px var(--tc-color-rgba(74, 144, 226, 0.2), rgba(74, 144, 226, 0.2));
     outline: none;
   }
   
   /* Classe .required supprimée - utiliser .tc-required de forms.css à la place */
   .form-public .tc-required {
-    color: #e74c3c;
+    color: var(--tc-color-e74c3c, #e74c3c);
   }
   
   .form-public .optional {
-    color: #95a5a6;
+    color: var(--tc-color-95a5a6, #95a5a6);
     font-size: var(--tc-font-size-sm);
     font-style: italic;
   }
@@ -107,7 +107,7 @@
   }
   
   .form-public .btn-submit-public {
-    background-color: #4a90e2;
+    background-color: var(--tc-color-4a90e2, #4a90e2);
     color: var(--tc-bg-default);
     border: none;
     border-radius: var(--tc-radius-sm);
@@ -118,11 +118,11 @@
   }
   
   .form-public .btn-submit-public:hover {
-    background-color: #3a7bc8;
+    background-color: var(--tc-color-3a7bc8, #3a7bc8);
   }
   
   .form-public .btn-submit-public:disabled {
-    background-color: #cccccc;
+    background-color: var(--tc-color-cccccc, #cccccc);
     cursor: not-allowed;
   }
   
@@ -130,7 +130,7 @@
     margin-top: 40px;
     text-align: center;
     padding: 15px;
-    color: #888;
+    color: var(--tc-color-888, #888);
     font-size: var(--tc-font-size-sm);
   }
   
@@ -140,9 +140,9 @@
   }
   
   .form-public .alert-info {
-    background-color: rgba(74, 144, 226, 0.1);
-    border-color: rgba(74, 144, 226, 0.2);
-    color: #4a90e2;
+    background-color: var(--tc-color-rgba(74, 144, 226, 0.1), rgba(74, 144, 226, 0.1));
+    border-color: var(--tc-color-rgba(74, 144, 226, 0.2), rgba(74, 144, 226, 0.2));
+    color: var(--tc-color-4a90e2, #4a90e2);
   }
   
   .form-public .alert i {
@@ -150,8 +150,8 @@
   }
   /* Ajoutez ces styles à la fin de votre fichier CSS existant */
 .form-value.updated {
-  background-color: #fff3cd;
-  border-left: 3px solid #ffc107;
+  background-color: var(--tc-color-fff, #fff)3cd;
+  border-left: 3px solid var(--tc-color-ffc107, #ffc107);
   padding-left: 8px;
 }
 

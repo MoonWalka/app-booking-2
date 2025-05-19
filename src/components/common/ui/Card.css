@@ -10,15 +10,15 @@
   --tc-card-border-radius: 8px;
   --tc-card-padding: 1rem;
   --tc-card-margin: 0 0 1rem 0;
-  --tc-card-bg-color: #ffffff;
-  --tc-card-border-color: #e0e0e0;
-  --tc-card-shadow-low: 0 2px 4px rgba(0, 0, 0, 0.05);
-  --tc-card-shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.1);
-  --tc-card-shadow-high: 0 8px 16px rgba(0, 0, 0, 0.15);
+  --tc-card-bg-color: var(--tc-color-ffffff, #ffffff);
+  --tc-card-border-color: var(--tc-color-e0e0e0, #e0e0e0);
+  --tc-card-shadow-low: 0 2px 4px var(--tc-color-rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05));
+  --tc-card-shadow-medium: 0 4px 8px var(--tc-color-rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
+  --tc-card-shadow-high: 0 8px 16px var(--tc-color-rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15));
   --tc-card-header-bg-color: transparent;
-  --tc-card-footer-bg-color: #f9f9f9;
-  --tc-card-title-color: #333333;
-  --tc-card-subtitle-color: #666666;
+  --tc-card-footer-bg-color: var(--tc-color-f9f9f9, #f9f9f9);
+  --tc-card-title-color: var(--tc-color-333333, #333333);
+  --tc-card-subtitle-color: var(--tc-color-666666, #666666);
 }
 
 /* Styles de base de la Card */

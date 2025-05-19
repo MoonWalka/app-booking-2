@@ -79,7 +79,7 @@
   padding: 15px 20px;
   border-top: 1px solid var(--tc-sidebar-border-color);
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--tc-color-rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5));
   text-align: center;
 }
 
@@ -175,7 +175,7 @@
 }
 
 .nav-links a.active {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: var(--tc-color-rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2));
   color: var(--tc-sidebar-text-color);
   font-weight: var(--tc-font-weight-medium);
 }
@@ -418,7 +418,7 @@ main {
 .mobile-footer {
   background-color: var(--tc-header-bg-color);
   padding: 10px;
-  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 -2px 4px var(--tc-color-rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05));
   text-align: center;
   font-size: 12px;
   color: var(--tc-text-muted);

@@ -51,7 +51,7 @@
 }
 
 .tc-clickable-row:hover {
-  background-color: rgba(0, 123, 255, 0.05);
+  background-color: var(--tc-color-rgba(0, 123, 255, 0.05), rgba(0, 123, 255, 0.05));
 }
 
 .past-concert {
@@ -117,44 +117,44 @@
   font-size: var(--tc-font-size-sm);
   min-width: 120px;
   white-space: nowrap;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 2px var(--tc-color-rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
 }
 
 /* // Correction UI: Amélioration du contraste pour les messages de statut */
 .status-message-primary {
-  background-color: rgba(0, 123, 255, 0.15);
-  color: #0056b3;
+  background-color: var(--tc-color-rgba(0, 123, 255, 0.15), rgba(0, 123, 255, 0.15));
+  color: var(--tc-color-0056b3, #0056b3);
 }
 
 .status-message-success {
-  background-color: rgba(40, 167, 69, 0.15);
-  color: #155724;
+  background-color: var(--tc-color-rgba(40, 167, 69, 0.15), rgba(40, 167, 69, 0.15));
+  color: var(--tc-color-155724, #155724);
 }
 
 .status-message-info {
-  background-color: rgba(23, 162, 184, 0.15);
-  color: #0c5460;
+  background-color: var(--tc-color-rgba(23, 162, 184, 0.15), rgba(23, 162, 184, 0.15));
+  color: var(--tc-color-0c5460, #0c5460);
 }
 
 .status-message-warning {
-  background-color: rgba(255, 193, 7, 0.15);
-  color: #856404;
+  background-color: var(--tc-color-rgba(255, 193, 7, 0.15), rgba(255, 193, 7, 0.15));
+  color: var(--tc-color-856404, #856404);
 }
 
 .status-message-danger {
-  background-color: rgba(220, 53, 69, 0.15);
-  color: #721c24;
+  background-color: var(--tc-color-rgba(220, 53, 69, 0.15), rgba(220, 53, 69, 0.15));
+  color: var(--tc-color-721c24, #721c24);
 }
 
 .status-message-secondary {
-  background-color: rgba(108, 117, 125, 0.15);
-  color: #383d41;
+  background-color: var(--tc-color-rgba(108, 117, 125, 0.15), rgba(108, 117, 125, 0.15));
+  color: var(--tc-color-383d41, #383d41);
 }
 
 .status-message-light {
-  background-color: rgba(248, 249, 250, 0.8);
-  color: #383d41;
-  border: 1px solid rgba(108, 117, 125, 0.2);
+  background-color: var(--tc-color-rgba(248, 249, 250, 0.8), rgba(248, 249, 250, 0.8));
+  color: var(--tc-color-383d41, #383d41);
+  border: 1px solid var(--tc-color-rgba(108, 117, 125, 0.2), rgba(108, 117, 125, 0.2));
 }
 
 /* // Correction UI: Container pour les status avancés */
@@ -174,7 +174,7 @@
   align-items: center;
   font-size: var(--tc-spacing-2);
   color: var(--tc-warning-color);
-  background-color: rgba(255, 193, 7, 0.1);
+  background-color: var(--tc-color-rgba(255, 193, 7, 0.1), rgba(255, 193, 7, 0.1));
   padding: 0.15rem var(--tc-spacing-2);
   border-radius: var(--tc-radius-sm);
   margin-top: var(--tc-spacing-1);
@@ -219,7 +219,7 @@
   }
   
   .status-filter-tabs::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: var(--tc-color-rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
     border-radius: var(--tc-radius-sm);
   }
 }
@@ -234,7 +234,7 @@
 }
 
 .search-bar:focus-within {
-  box-shadow: 0 0 0 var(--tc-spacing-8) rgba(0, 123, 255, 0.25) !important;
+  box-shadow: 0 0 0 var(--tc-spacing-8) var(--tc-color-rgba(0, 123, 255, 0.25), rgba(0, 123, 255, 0.25)) !important;
 }
 
 .search-input:focus {
@@ -307,5 +307,5 @@
 
 .action-button:hover {
   transform: translateY(-1px);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 5px var(--tc-color-rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
 }

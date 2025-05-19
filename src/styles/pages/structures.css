@@ -23,27 +23,27 @@
 
 /* Couleurs spécifiques pour les types de structures */
 .type-salle {
-  background-color: rgba(13, 202, 240, 0.1);
-  color: #0dcaf0;
+  background-color: var(--tc-color-rgba(13, 202, 240, 0.1), rgba(13, 202, 240, 0.1));
+  color: var(--tc-color-0dcaf0, #0dcaf0);
 }
 
 .type-festival {
-  background-color: rgba(13, 110, 253, 0.1);
+  background-color: var(--tc-color-rgba(13, 110, 253, 0.1), rgba(13, 110, 253, 0.1));
   color: var(--tc-color-primary);
 }
 
 .type-association {
-  background-color: rgba(25, 135, 84, 0.1);
-  color: #198754;
+  background-color: var(--tc-color-rgba(25, 135, 84, 0.1), rgba(25, 135, 84, 0.1));
+  color: var(--tc-color-198754, #198754);
 }
 
 .type-mairie {
-  background-color: rgba(108, 117, 125, 0.1);
+  background-color: var(--tc-color-rgba(108, 117, 125, 0.1), rgba(108, 117, 125, 0.1));
   color: var(--tc-color-text-secondary);
 }
 
 .type-autre {
-  background-color: rgba(248, 249, 250, 0.6);
+  background-color: var(--tc-color-rgba(248, 249, 250, 0.6), rgba(248, 249, 250, 0.6));
   color: var(--tc-color-text-secondary);
 }
 
@@ -57,7 +57,7 @@
   padding: var(--tc-spacing-3);
   display: flex;
   gap: var(--tc-spacing-3);
-  box-shadow: 0 -0.125rem var(--tc-spacing-1) rgba(0, 0, 0, 0.075);
+  box-shadow: 0 -0.125rem var(--tc-spacing-1) var(--tc-color-rgba(0, 0, 0, 0.075), rgba(0, 0, 0, 0.075));
   z-index: 1000;
 }
 

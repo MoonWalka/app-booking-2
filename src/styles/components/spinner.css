@@ -15,7 +15,7 @@
   display: inline-block;
   width: 50px;
   height: 50px;
-  border: 5px solid rgba(var(--tc-primary-color-rgb), 0.2);
+  border: 5px solid var(--tc-color-rgba(var(--tc-primary-color-rgb), rgba(var(--tc-primary-color-rgb)), 0.2);
   border-radius: 50%;
   border-top-color: var(--tc-primary-color);
   animation: spin 1s ease-in-out infinite;
@@ -64,7 +64,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: var(--tc-color-rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7));
   z-index: 9999;
   text-align: center;
 }
@@ -79,7 +79,7 @@
   height: 100%;
   min-height: 300px;
   padding: 30px;
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: var(--tc-color-rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7));
   text-align: center;
   border-radius: var(--tc-border-radius);
   position: relative; /* Ajout pour assurer que les éléments absolus se positionnent par rapport à ce conteneur */
@@ -96,7 +96,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.9); /* Plus opaque pour une meilleure visibilité */
+  background-color: var(--tc-color-rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)); /* Plus opaque pour une meilleure visibilité */
   z-index: 9999; /* Augmenté pour être sûr qu'il est au-dessus de tout */
   border-radius: var(--tc-border-radius);
 }
@@ -112,7 +112,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.7); /* Fond semi-transparent */
+  background-color: var(--tc-color-rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)); /* Fond semi-transparent */
   z-index: 9999; /* Augmenté pour cohérence avec les autres z-index de spinners */
   border-radius: var(--tc-border-radius));
 }

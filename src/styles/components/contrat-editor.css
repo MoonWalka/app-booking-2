@@ -30,7 +30,7 @@
   gap: 12px;
 }
 
-.tc-modal-actions .btn-outline-info {
+.tc-modal-actions .tc-btn.tc-btn-outline-info {
   padding: 0.375rem var(--tc-spacing-2);
   display: inline-flex;
   align-items: center;
@@ -41,7 +41,7 @@
   transition: all 0.2s ease-in-out;
 }
 
-.tc-modal-actions .btn-outline-info:hover {
+.tc-modal-actions .tc-btn.tc-btn-outline-info:hover {
   background-color: var(--tc-info-color);
   color: var(--tc-bg-default);
 }

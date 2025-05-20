@@ -1,9 +1,11 @@
 // src/components/artistes/desktop/ArtisteDetail.js
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '@/firebaseInit';
 import '@styles/index.css';
 import styles from './ArtisteDetail.module.css';
+import Button from '@/components/ui/Button';
+import ActionButton from '@/components/common/ActionButton';
 
 const ArtisteDetail = () => {
   const { id } = useParams();
@@ -48,20 +50,21 @@ const ArtisteDetail = () => {
     <div className={styles.artisteDetailDesktop}>
       {/* En-tête avec image et infos de base */}
       <div className={styles.desktopHeaderContainer}>
-        <button 
-          className={styles.backButton}
+        <Button 
+          variant="outline-secondary"
+          icon={<i className="bi bi-arrow-left"></i>}
           onClick={() => navigate('/artistes')}
-        >
-          <i className="bi bi-arrow-left"></i>
-        </button>
+          tooltip="Retour à la liste"
+          iconOnly
+        />
         
         <div className={styles.desktopEditButton}>
-          <button 
-            className={styles.editBtn}
+          <ActionButton 
+            tooltip="Modifier l'artiste"
+            icon={<i className="bi bi-pencil"></i>}
+            variant="primary"
             onClick={() => navigate(`/artistes/${id}/modifier`)}
-          >
-            <i className="bi bi-pencil"></i>
-          </button>
+          />
         </div>
       </div>
       
@@ -98,34 +101,38 @@ const ArtisteDetail = () => {
 
       {/* Onglets pour la navigation desktop */}
       <div className={styles.desktopTabs}>
-        <button 
-          className={`${styles.tabButton} ${activeTab === 'infos' ? styles.active : ''}`}
+        <Button 
+          variant={activeTab === 'infos' ? 'primary' : 'outline-secondary'}
+          className={styles.tabButton}
           onClick={() => setActiveTab('infos')}
+          icon={<i className="bi bi-info-circle"></i>}
         >
-          <i className="bi bi-info-circle"></i>
-          <span>Infos</span>
-        </button>
-        <button 
-          className={`${styles.tabButton} ${activeTab === 'concerts' ? styles.active : ''}`}
+          Infos
+        </Button>
+        <Button 
+          variant={activeTab === 'concerts' ? 'primary' : 'outline-secondary'}
+          className={styles.tabButton}
           onClick={() => setActiveTab('concerts')}
+          icon={<i className="bi bi-calendar-event"></i>}
         >
-          <i className="bi bi-calendar-event"></i>
-          <span>Concerts</span>
-        </button>
-        <button 
-          className={`${styles.tabButton} ${activeTab === 'contrats' ? styles.active : ''}`}
+          Concerts
+        </Button>
+        <Button 
+          variant={activeTab === 'contrats' ? 'primary' : 'outline-secondary'}
+          className={styles.tabButton}
           onClick={() => setActiveTab('contrats')}
+          icon={<i className="bi bi-file-earmark-text"></i>}
         >
-          <i className="bi bi-file-earmark-text"></i>
-          <span>Contrats</span>
-        </button>
-        <button 
-          className={`${styles.tabButton} ${activeTab === 'stats' ? styles.active : ''}`}
+          Contrats
+        </Button>
+        <Button 
+          variant={activeTab === 'stats' ? 'primary' : 'outline-secondary'}
+          className={styles.tabButton}
           onClick={() => setActiveTab('stats')}
+          icon={<i className="bi bi-graph-up"></i>}
         >
-          <i className="bi bi-graph-up"></i>
-          <span>Stats</span>
-        </button>
+          Stats
+        </Button>
       </div>
 
       {/* Contenu de l'onglet sélectionné */}

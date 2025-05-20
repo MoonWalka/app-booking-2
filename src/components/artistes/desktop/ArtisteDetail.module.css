@@ -19,33 +19,6 @@
   margin-bottom: var(--tc-spacing-xl);
 }
 
-.backButton {
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
-  background-color: var(--tc-color-gray-100);
-  border: var(--tc-border-width) solid var(--tc-border-color);
-  border-radius: var(--tc-border-radius-sm);
-  cursor: pointer;
-  transition: var(--tc-transition);
-}
-
-.backButton:hover {
-  background-color: var(--tc-color-gray-200);
-}
-
-.desktopEditButton .editBtn {
-  padding: var(--tc-spacing-xs) var(--tc-spacing-md);
-  background-color: var(--tc-primary-color);
-  color: var(--tc-color-white);
-  border: none;
-  border-radius: var(--tc-border-radius-sm);
-  cursor: pointer;
-  transition: var(--tc-transition);
-}
-
-.desktopEditButton .editBtn:hover {
-  background-color: var(--tc-primary-color-dark);
-}
-
 .desktopArtisteProfile {
   display: flex;
   margin-bottom: var(--tc-spacing-xl);
@@ -120,30 +93,6 @@
   display: flex;
   margin-bottom: var(--tc-spacing-lg);
   border-bottom: var(--tc-border-width) solid var(--tc-border-color);
-}
-
-.tabButton {
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
-  background-color: transparent;
-  border: none;
-  border-bottom: 2px solid transparent;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: var(--tc-spacing-xs);
-  font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-text-secondary);
-  transition: var(--tc-transition);
-}
-
-.tabButton:hover {
-  color: var(--tc-primary-color);
-  background-color: var(--tc-hover-bg);
-}
-
-.tabButton.active {
-  color: var(--tc-primary-color);
-  border-bottom-color: var(--tc-primary-color);
 }
 
 .desktopTabContent {
@@ -365,10 +314,6 @@
   
   .contactsGridDesktop {
     grid-template-columns: 1fr;
-  }
-  
-  .tabButton {
-    padding: var(--tc-spacing-sm) var(--tc-spacing-sm);
   }
 }
 

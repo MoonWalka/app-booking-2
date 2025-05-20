@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect, Suspense } from 'react';
+import '@styles/index.css';
 import { 
   BrowserRouter as Router, 
   Routes, 

@@ -42,7 +42,7 @@ const ContratTemplateHeader = ({
         
         <div className={styles.editorActions}>
           <button 
-            className="btn btn-outline-info d-flex align-items-center gap-2"
+            className="tc-btn tc-btn-outline-info d-flex align-items-center gap-2"
             onClick={onToggleGuide}
           >
             <i className="bi bi-question-circle me-1"></i>
@@ -50,7 +50,7 @@ const ContratTemplateHeader = ({
           </button>
           
           <button 
-            className="btn btn-outline-secondary d-flex align-items-center gap-2"
+            className="tc-btn tc-btn-outline-secondary d-flex align-items-center gap-2"
             onClick={onCancel}
           >
             <i className="bi bi-x-circle me-1"></i>
@@ -58,7 +58,7 @@ const ContratTemplateHeader = ({
           </button>
           
           <button 
-            className="btn btn-outline-primary d-flex align-items-center gap-2"
+            className="tc-btn tc-btn-outline-primary d-flex align-items-center gap-2"
             onClick={onTogglePreview}
           >
             <i className={`bi bi-${previewMode ? 'pencil' : 'eye'} me-1`}></i>
@@ -66,7 +66,7 @@ const ContratTemplateHeader = ({
           </button>
           
           <button 
-            className="btn btn-primary d-flex align-items-center gap-2"
+            className="tc-btn tc-btn-primary d-flex align-items-center gap-2"
             onClick={onSave}
           >
             <i className="bi bi-check-circle me-1"></i>
@@ -85,7 +85,7 @@ const ContratTemplateHeader = ({
       </h3>
       <div className={styles.modalActions}>
         <button 
-          className="btn btn-sm btn-outline-info" 
+          className="tc-btn tc-btn-sm tc-btn-outline-info" 
           onClick={onToggleGuide}
         >
           <i className="bi bi-question-circle me-1"></i>

@@ -76,24 +76,26 @@ const ConcertsList = () => {
   }
 
   return (
-    <div className={`${styles.concertsContainer} p-4`}>
-      {/* Header with title and add button */}
-      <ConcertsListHeader />
-      
-      {/* Search bar */}
-      <ConcertSearchBar 
-        searchTerm={searchTerm} 
-        setSearchTerm={setSearchTerm} 
-      />
-      
-      {/* Status filter tabs */}
-      <ConcertStatusTabs 
-        statusFilter={statusFilter} 
-        setStatusFilter={setStatusFilter} 
-        statusDetailsMap={statusDetailsMap}
-      />
-      
-      {/* Table with concert rows */}
+    <div className={`${styles.concertsContainer} p-4 bg-[var(--tc-light-color)]`}>
+      <div className="flex items-center justify-between mb-6">
+        <ConcertsListHeader />
+      </div>
+
+      <div className="mb-4">
+        <ConcertSearchBar 
+          searchTerm={searchTerm} 
+          setSearchTerm={setSearchTerm} 
+        />
+      </div>
+
+      <div className="mb-4">
+        <ConcertStatusTabs 
+          statusFilter={statusFilter} 
+          setStatusFilter={setStatusFilter} 
+          statusDetailsMap={statusDetailsMap}
+        />
+      </div>
+
       <ConcertsTable
         concerts={filteredConcerts}
         getStatusDetails={getStatusDetails}

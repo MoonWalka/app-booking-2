@@ -1,15 +1,12 @@
 /*
- * Styles pour LieuxStatsCards
+ * Styles pour LieuxStatsCards.module.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
-/* 
- * Styles pour LieuxStatsCards
- * Cartes de statistiques pour la liste des lieux
- * Dernière mise à jour: 04/05/2025
- */
-
+/* =============================
+   CONTENEUR DE STATISTIQUES
+   ============================= */
 .statsContainer {
   display: flex;
   flex-wrap: wrap;
@@ -17,6 +14,9 @@
   margin-bottom: var(--tc-spacing-lg);
 }
 
+/* =============================
+   CARTE DE STATISTIQUE
+   ============================= */
 .statCard {
   flex: 1;
   min-width: 150px;
@@ -27,7 +27,8 @@
   display: flex;
   align-items: center;
   gap: var(--tc-spacing-md);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: var(--tc-transition);
+  border: 1px solid var(--tc-border-color);
 }
 
 .statCard:hover {
@@ -35,10 +36,13 @@
   box-shadow: var(--tc-shadow);
 }
 
+/* =============================
+   ICÔNE DE STATISTIQUE
+   ============================= */
 .statIcon {
   width: 48px;
   height: 48px;
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-border-radius);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -46,30 +50,33 @@
 }
 
 .total .statIcon {
-  background-color: var(--tc-primary-color-lightest);
+  background-color: rgba(var(--tc-primary-color-rgb), 0.1);
   color: var(--tc-primary-color);
 }
 
 .avecConcerts .statIcon {
-  background-color: var(--tc-success-color-lightest);
+  background-color: rgba(var(--tc-success-color-rgb), 0.1);
   color: var(--tc-success-color);
 }
 
 .sansConcerts .statIcon {
-  background-color: var(--tc-secondary-color-lightest);
+  background-color: rgba(var(--tc-secondary-color-rgb), 0.1);
   color: var(--tc-secondary-color);
 }
 
 .festivals .statIcon {
-  background-color: var(--tc-danger-color-lightest);
+  background-color: rgba(var(--tc-danger-color-rgb), 0.1);
   color: var(--tc-danger-color);
 }
 
 .salles .statIcon {
-  background-color: var(--tc-warning-color-lightest);
+  background-color: rgba(var(--tc-warning-color-rgb), 0.1);
   color: var(--tc-warning-color);
 }
 
+/* =============================
+   CONTENU DE STATISTIQUE
+   ============================= */
 .statContent {
   display: flex;
   flex-direction: column;
@@ -77,19 +84,21 @@
 
 .statValue {
   font-size: var(--tc-font-size-xl);
-  font-weight: var(--tc-font-weight-bold);
-  line-height: 1;
+  font-weight: var(--tc-font-weight-semibold);
+  line-height: 1.2;
   color: var(--tc-text-color);
 }
 
 .statLabel {
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-text-muted);
+  color: var(--tc-gray-600);
   margin-top: var(--tc-spacing-xs);
 }
 
-/* Responsive styles */
-@media (max-width: 992px) {
+/* =============================
+   RESPONSIVE DESIGN
+   ============================= */
+@media (max-width: var(--tc-breakpoint-lg)) {
   .statsContainer {
     gap: var(--tc-spacing-sm);
   }
@@ -98,9 +107,15 @@
     padding: var(--tc-spacing-sm);
     gap: var(--tc-spacing-sm);
   }
+  
+  .statIcon {
+    width: 40px;
+    height: 40px;
+    font-size: var(--tc-font-size-lg);
+  }
 }
 
-@media (max-width: 768px) {
+@media (max-width: var(--tc-breakpoint-md)) {
   .statsContainer {
     flex-wrap: wrap;
   }
@@ -109,9 +124,13 @@
     flex-basis: calc(50% - var(--tc-spacing-sm));
     min-width: 140px;
   }
+  
+  .statValue {
+    font-size: var(--tc-font-size-lg);
+  }
 }
 
-@media (max-width: 576px) {
+@media (max-width: var(--tc-breakpoint-sm)) {
   .statCard {
     flex-basis: 100%;
   }

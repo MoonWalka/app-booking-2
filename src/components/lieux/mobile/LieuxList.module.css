@@ -1,107 +1,196 @@
 /*
- * Styles pour LieuxList
+ * Styles pour LieuxListMobile.module.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Date de création: Inconnue
- * Dernière mise à jour: 19 mai 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
+/* =============================
+   CONTENEUR PRINCIPAL MOBILE
+   ============================= */
 .mobileContainer {
-  padding: var(--tc-spacing-2);
+  padding: var(--tc-spacing-sm);
+  background-color: var(--tc-gray-50);
+  min-height: 100vh;
 }
 
+/* =============================
+   EN-TÊTE
+   ============================= */
 .headerContainer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-spacing-sm);
+  padding-bottom: var(--tc-spacing-sm);
+  border-bottom: 1px solid var(--tc-gray-200);
 }
 
 .modernTitle {
-  font-size: var(--tc-spacing-4);
+  font-size: var(--tc-font-size-lg);
   margin: 0;
-  color: var(--tc-color-secondary-dark);
+  color: var(--tc-text-color);
+  font-weight: var(--tc-font-weight-semibold);
+  line-height: 1.2;
 }
 
 .modernAddBtn {
   width: 40px;
   height: 40px;
-  border-radius: var(--tc-radius-pill);
+  border-radius: var(--tc-border-radius-pill);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0;
-  box-shadow: var(--tc-shadow-md);
+  box-shadow: var(--tc-shadow);
+  background-color: var(--tc-primary-color);
+  color: var(--tc-light-color);
+  border: none;
+  cursor: pointer;
+  transition: var(--tc-transition);
 }
 
+.modernAddBtn:hover {
+  background-color: var(--tc-primary-dark);
+  transform: translateY(-2px);
+}
+
+/* =============================
+   RECHERCHE ET FILTRES
+   ============================= */
 .searchFilterContainer {
-  margin-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-spacing-sm);
 }
 
 .searchBar {
   max-width: 410px;
-  margin-bottom: var(--tc-spacing-6);
+  margin-bottom: var(--tc-spacing-lg);
+  position: relative;
 }
 
 .searchInput {
   height: 45px;
-  border-radius: 0 var(--tc-radius-md) var(--tc-radius-md) 0;
-  padding-left: var(--tc-spacing-3);
-  background-color: var(--tc-bg-default);
+  border-radius: 0 var(--tc-border-radius) var(--tc-border-radius) 0;
+  padding-left: var(--tc-spacing-md);
+  background-color: var(--tc-bg-color);
   box-shadow: var(--tc-shadow-sm);
+  border: 1px solid var(--tc-border-color);
+  border-left: none;
+  width: 100%;
+  color: var(--tc-text-color);
+  font-size: var(--tc-font-size-base);
+  transition: var(--tc-transition);
+}
+
+.searchInput:focus {
+  outline: none;
+  box-shadow: var(--tc-input-focus-shadow);
+  border-color: var(--tc-primary-color);
 }
 
 .inputGroupText {
-  background-color: var(--tc-bg-default);
-  border-radius: var(--tc-radius-md) 0 0 var(--tc-radius-md);
+  background-color: var(--tc-bg-color);
+  border-radius: var(--tc-border-radius) 0 0 var(--tc-border-radius);
+  border: 1px solid var(--tc-border-color);
   border-right: none;
   box-shadow: var(--tc-shadow-sm);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  color: var(--tc-gray-600);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .clearSearch {
-  border-left: none;
-  border-radius: 0 var(--tc-radius-md) var(--tc-radius-md) 0;
-  background-color: var(--tc-bg-default);
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  border: none;
+  background: none;
+  padding: 0 var(--tc-spacing-sm);
+  cursor: pointer;
+  color: var(--tc-gray-600);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--tc-transition-duration);
+}
+
+.clearSearch:hover {
+  color: var(--tc-gray-800);
 }
 
 .resultsCount {
-  margin-top: var(--tc-spacing-2);
+  margin-top: var(--tc-spacing-sm);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-color-secondary);
+  color: var(--tc-gray-600);
+  padding-left: var(--tc-spacing-sm);
 }
 
+/* =============================
+   ÉTAT VIDE
+   ============================= */
 .emptyState {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--tc-spacing-10) var(--tc-spacing-4);
+  padding: var(--tc-spacing-xl) var(--tc-spacing-md);
   text-align: center;
+  background-color: var(--tc-bg-color);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-shadow-sm);
+  border: 1px solid var(--tc-gray-200);
+  margin: var(--tc-spacing-xl) 0;
 }
 
-.emptyState i {
-  font-size: var(--tc-font-size-2xl);
-  color: var(--tc-border-light);
-  margin-bottom: var(--tc-spacing-4);
+.emptyStateIcon {
+  font-size: var(--tc-font-size-xxl);
+  color: var(--tc-gray-300);
+  margin-bottom: var(--tc-spacing-md);
 }
 
-.emptyState p {
-  color: var(--tc-color-secondary);
-  margin-bottom: var(--tc-spacing-5);
+.emptyStateText {
+  color: var(--tc-gray-600);
+  margin-bottom: var(--tc-spacing-lg);
+  font-size: var(--tc-font-size-base);
 }
 
+.emptyStateButton {
+  background-color: var(--tc-primary-color);
+  color: var(--tc-light-color);
+  border: none;
+  padding: var(--tc-spacing-sm) var(--tc-spacing-lg);
+  border-radius: var(--tc-border-radius);
+  font-weight: var(--tc-font-weight-medium);
+  cursor: pointer;
+  transition: var(--tc-transition);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tc-spacing-sm);
+}
+
+.emptyStateButton:hover {
+  background-color: var(--tc-primary-dark);
+}
+
+/* =============================
+   CARTES DE LIEU
+   ============================= */
 .lieuCardsContainer {
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-4);
+  gap: var(--tc-spacing-md);
 }
 
 .lieuCard {
-  background-color: var(--tc-bg-default);
-  border-radius: var(--tc-radius-lg);
-  box-shadow: var(--tc-shadow-md);
+  background-color: var(--tc-bg-color);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-shadow);
   overflow: hidden;
   cursor: pointer;
-  transition: all var(--tc-transition-normal) var(--tc-transition-timing);
+  transition: var(--tc-transition);
+  border: 1px solid var(--tc-gray-200);
 }
 
 .lieuCard:hover {
@@ -110,57 +199,70 @@
 }
 
 .lieuCardHeader {
-  padding: var(--tc-spacing-4);
-  background-color: var(--tc-bg-light);
-  border-bottom: 1px solid var(--tc-border-light);
+  padding: var(--tc-spacing-md);
+  background-color: var(--tc-gray-50);
+  border-bottom: 1px solid var(--tc-gray-200);
 }
 
 .lieuCardTitle {
   margin: 0;
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-color-secondary-dark);
+  color: var(--tc-text-color);
   display: flex;
   align-items: center;
+  line-height: 1.3;
 }
 
 .lieuCardBody {
-  padding: var(--tc-spacing-4);
+  padding: var(--tc-spacing-md);
 }
 
 .lieuInfoItem {
   display: flex;
-  margin-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-spacing-sm);
+  align-items: flex-start;
 }
 
 .lieuInfoIcon {
   min-width: 30px;
   display: flex;
   align-items: center;
-  color: var(--tc-color-secondary);
+  color: var(--tc-gray-600);
+  font-size: var(--tc-font-size-lg);
 }
 
 .lieuInfoText {
   flex: 1;
+  color: var(--tc-text-color);
+  font-size: var(--tc-font-size-base);
+  line-height: var(--tc-line-height-base);
 }
 
 .lieuContactLink {
-  color: var(--tc-color-primary);
+  color: var(--tc-primary-color);
   text-decoration: none;
+  transition: color var(--tc-transition-duration);
 }
 
 .lieuContactLink:hover {
   text-decoration: underline;
+  color: var(--tc-primary-dark);
 }
 
+/* =============================
+   BADGES ET INDICATEURS
+   ============================= */
 .jaugeBadge {
   display: inline-flex;
   align-items: center;
-  color: var(--tc-bg-default);
-  padding: var(--tc-spacing-1) var(--tc-spacing-2);
-  border-radius: var(--tc-radius-md);
+  color: var(--tc-light-color);
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  border-radius: var(--tc-border-radius);
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
+  gap: var(--tc-spacing-xs);
+  line-height: 1;
 }
 
 .jaugeType {
@@ -171,28 +273,82 @@
 .concertCount {
   display: inline-flex;
   align-items: center;
-  background-color: var(--tc-primary-color-lightest);
-  color: var(--tc-color-primary);
-  padding: var(--tc-spacing-1) var(--tc-spacing-2);
-  border-radius: var(--tc-radius-pill);
+  background-color: rgba(var(--tc-primary-color-rgb), 0.1);
+  color: var(--tc-primary-color);
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  border-radius: var(--tc-border-radius-pill);
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
+  gap: var(--tc-spacing-xs);
 }
 
+.concertCountIcon {
+  font-size: var(--tc-font-size-sm);
+}
+
+/* =============================
+   ACTIONS
+   ============================= */
 .lieuCardActions {
   display: flex;
   justify-content: flex-end;
-  padding: var(--tc-spacing-2) var(--tc-spacing-4);
-  background-color: var(--tc-bg-light);
-  gap: var(--tc-spacing-2);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  background-color: var(--tc-gray-50);
+  gap: var(--tc-spacing-sm);
+  border-top: 1px solid var(--tc-gray-200);
 }
 
 .lieuActionBtn {
   width: 36px;
   height: 36px;
-  border-radius: var(--tc-radius-md);
+  border-radius: var(--tc-border-radius);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0;
+  background-color: var(--tc-bg-color);
+  border: 1px solid var(--tc-gray-300);
+  color: var(--tc-gray-700);
+  cursor: pointer;
+  transition: var(--tc-transition);
+}
+
+.lieuActionBtn:hover {
+  background-color: var(--tc-gray-100);
+}
+
+.lieuActionEdit:hover {
+  color: var(--tc-primary-color);
+  border-color: var(--tc-primary-color);
+}
+
+.lieuActionDelete:hover {
+  color: var(--tc-danger-color);
+  border-color: var(--tc-danger-color);
+}
+
+/* =============================
+   RESPONSIVE DESIGN
+   ============================= */
+@media (max-width: var(--tc-breakpoint-sm)) {
+  .lieuCardHeader {
+    padding: var(--tc-spacing-sm);
+  }
+  
+  .lieuCardBody {
+    padding: var(--tc-spacing-sm);
+  }
+  
+  .lieuCardTitle {
+    font-size: var(--tc-font-size-md);
+  }
+  
+  .lieuCardActions {
+    padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  }
+  
+  .lieuActionBtn {
+    width: 32px;
+    height: 32px;
+  }
 }

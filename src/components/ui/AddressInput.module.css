@@ -1,18 +1,26 @@
 /*
- * Styles pour AddressInput
+ * Styles pour AddressInput.module.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 5 mai 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
+/* =============================
+   CONTENEUR PRINCIPAL
+   ============================= */
 .container {
   position: relative;
   margin-bottom: var(--tc-spacing-md);
 }
 
+/* =============================
+   ÉTIQUETTE ET INDICATEURS
+   ============================= */
 .label {
   display: block;
   margin-bottom: var(--tc-spacing-xs);
   font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-text-color);
+  font-size: var(--tc-font-size-sm);
 }
 
 .required {
@@ -20,6 +28,9 @@
   margin-left: var(--tc-spacing-xs);
 }
 
+/* =============================
+   CHAMP DE SAISIE
+   ============================= */
 .inputWrapper {
   position: relative;
   display: flex;
@@ -28,15 +39,15 @@
 
 .input {
   width: 100%;
-  padding: var(--tc-spacing-sm) var(--tc-spacing-sm);
+  padding: var(--tc-spacing-sm);
   padding-left: var(--tc-spacing-lg);
   font-size: var(--tc-font-size-base);
-  line-height: 1.5;
+  line-height: var(--tc-line-height-base);
   color: var(--tc-text-color);
   background-color: var(--tc-bg-color);
   background-clip: padding-box;
   border: 1px solid var(--tc-border-color);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-border-radius);
   transition: var(--tc-transition);
 }
 
@@ -51,15 +62,19 @@
 .icon {
   position: absolute;
   left: var(--tc-spacing-sm);
-  color: var(--tc-text-muted);
+  color: var(--tc-gray-600);
+  font-size: var(--tc-font-size-md);
 }
 
 .loadingIndicator {
   position: absolute;
   right: var(--tc-spacing-sm);
-  color: var(--tc-text-muted);
+  color: var(--tc-gray-600);
 }
 
+/* =============================
+   SUGGESTIONS
+   ============================= */
 .suggestions {
   position: absolute;
   width: 100%;
@@ -68,7 +83,7 @@
   margin-top: var(--tc-spacing-xs);
   background-color: var(--tc-bg-color);
   border: 1px solid var(--tc-border-color);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-border-radius);
   z-index: var(--tc-z-index-dropdown);
   box-shadow: var(--tc-shadow);
 }
@@ -78,7 +93,8 @@
   align-items: flex-start;
   padding: var(--tc-spacing-sm);
   cursor: pointer;
-  border-bottom: 1px solid var(--tc-border-color);
+  border-bottom: 1px solid var(--tc-gray-200);
+  transition: background-color var(--tc-transition-duration);
 }
 
 .suggestionItem:last-child {
@@ -86,12 +102,13 @@
 }
 
 .suggestionItem:hover {
-  background-color: var(--tc-hover-bg);
+  background-color: var(--tc-gray-100);
 }
 
 .suggestionIcon {
   margin-right: var(--tc-spacing-sm);
   color: var(--tc-primary-color);
+  font-size: var(--tc-font-size-md);
 }
 
 .suggestionText {
@@ -100,11 +117,12 @@
 
 .suggestionName {
   font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-text-color);
 }
 
 .suggestionDetails {
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-text-muted);
+  color: var(--tc-gray-600);
   margin-top: var(--tc-spacing-xs);
 }
 
@@ -112,13 +130,16 @@
   display: flex;
   align-items: center;
   gap: var(--tc-spacing-xs);
-  color: var(--tc-text-muted);
+  color: var(--tc-gray-600);
   margin-top: var(--tc-spacing-xs);
   font-size: var(--tc-font-size-sm);
+  padding: var(--tc-spacing-sm);
 }
 
-/* Styles responsive standardisés */
-@media (max-width: var(--tc-breakpoint-sm)) {
+/* =============================
+   RESPONSIVE DESIGN
+   ============================= */
+@media (max-width: var(--tc-breakpoint-md)) {
   .suggestions {
     max-height: 250px;
   }
@@ -128,9 +149,9 @@
   }
 }
 
-@media (max-width: var(--tc-breakpoint-xs)) {
+@media (max-width: var(--tc-breakpoint-sm)) {
   .input {
-    padding: var(--tc-spacing-xs) var(--tc-spacing-xs);
+    padding: var(--tc-spacing-xs);
     padding-left: var(--tc-spacing-lg);
     font-size: var(--tc-font-size-sm);
   }

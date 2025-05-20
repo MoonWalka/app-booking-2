@@ -1,41 +1,129 @@
 /*
- * Styles pour LieuInfoSection
+ * Styles pour LieuInfoSection.module.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 19 May 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
+/* =============================
+   CARTE D'INFORMATION
+   ============================= */
 .formCard {
-  background-color: var(--tc-bg-default);
-  border-radius: var(--tc-radius-lg);
+  background-color: var(--tc-bg-color);
+  border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow-sm);
   overflow: hidden;
-  margin-bottom: var(--tc-spacing-5);
+  margin-bottom: var(--tc-spacing-lg);
+  border: 1px solid var(--tc-border-color);
+  transition: var(--tc-transition);
 }
 
+/* =============================
+   EN-TÊTE DE CARTE
+   ============================= */
 .cardHeader {
   display: flex;
   align-items: center;
-  padding: var(--tc-spacing-4) var(--tc-spacing-5);
-  background-color: var(--tc-bg-light);
-  border-bottom: 1px solid var(--tc-border-light);
-  gap: var(--tc-spacing-2);
+  padding: var(--tc-spacing-md) var(--tc-spacing-lg);
+  background-color: var(--tc-gray-100);
+  border-bottom: 1px solid var(--tc-gray-300);
+  gap: var(--tc-spacing-sm);
 }
 
-.cardHeader h3 {
+.cardTitle {
   margin: 0;
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-color);
+  line-height: 1.3;
 }
 
-.cardHeader i {
+.cardIcon {
   font-size: var(--tc-font-size-lg);
-  color: var(--tc-color-primary);
+  color: var(--tc-primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+/* =============================
+   CORPS DE CARTE
+   ============================= */
 .cardBody {
-  padding: var(--tc-spacing-5);
+  padding: var(--tc-spacing-lg);
 }
 
+/* =============================
+   ÉLÉMENTS DE FORMULAIRE
+   ============================= */
 .required {
-  color: var(--tc-color-error);
+  color: var(--tc-danger-color);
+  margin-left: var(--tc-spacing-xs);
+}
+
+.formGroup {
+  margin-bottom: var(--tc-spacing-md);
+}
+
+.formLabel {
+  display: block;
+  margin-bottom: var(--tc-spacing-sm);
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-text-color);
+  font-size: var(--tc-font-size-sm);
+}
+
+.formControl {
+  width: 100%;
+  padding: var(--tc-spacing-sm);
+  border: 1px solid var(--tc-border-color);
+  border-radius: var(--tc-border-radius);
+  font-size: var(--tc-font-size-base);
+  color: var(--tc-text-color);
+  background-color: var(--tc-bg-color);
+  transition: var(--tc-transition);
+}
+
+.formControl:focus {
+  border-color: var(--tc-primary-color);
+  outline: none;
+  box-shadow: var(--tc-input-focus-shadow);
+}
+
+.formText {
+  margin-top: var(--tc-spacing-xs);
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-gray-600);
+}
+
+.formError {
+  margin-top: var(--tc-spacing-xs);
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-danger-color);
+}
+
+/* =============================
+   RESPONSIVE DESIGN
+   ============================= */
+@media (max-width: var(--tc-breakpoint-md)) {
+  .cardHeader {
+    padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  }
+  
+  .cardBody {
+    padding: var(--tc-spacing-md);
+  }
+  
+  .cardTitle {
+    font-size: var(--tc-font-size-md);
+  }
+}
+
+@media (max-width: var(--tc-breakpoint-sm)) {
+  .formCard {
+    margin-bottom: var(--tc-spacing-md);
+  }
+  
+  .cardBody {
+    padding: var(--tc-spacing-sm);
+  }
 }

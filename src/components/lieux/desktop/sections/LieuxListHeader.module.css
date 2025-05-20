@@ -1,9 +1,12 @@
 /*
- * Styles pour LieuxListHeader
+ * Styles pour LieuxListHeader.module.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 19 mai 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
+/* =============================
+   CONTENEUR D'EN-TÊTE
+   ============================= */
 .headerContainer {
   display: flex;
   justify-content: space-between;
@@ -13,19 +16,27 @@
   gap: var(--tc-spacing-md);
 }
 
+/* =============================
+   TITRE ET DESCRIPTION
+   ============================= */
 .headerTitle {
   margin: 0;
-  color: var(--tc-text-color-primary);
+  color: var(--tc-text-color);
   font-size: var(--tc-font-size-xl);
-  font-weight: var(--tc-font-weight-bold);
+  font-weight: var(--tc-font-weight-semibold);
+  line-height: 1.2;
 }
 
 .headerDescription {
   margin-top: var(--tc-spacing-xs);
-  color: var(--tc-text-muted);
+  color: var(--tc-gray-600);
   font-size: var(--tc-font-size-sm);
+  line-height: var(--tc-line-height-base);
 }
 
+/* =============================
+   ACTIONS
+   ============================= */
 .headerActions {
   display: flex;
   align-items: center;
@@ -38,13 +49,13 @@
   gap: var(--tc-spacing-xs);
   font-weight: var(--tc-font-weight-medium);
   background-color: var(--tc-primary-color);
-  color: var(--tc-white-color);
+  color: var(--tc-light-color);
   border: none;
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-border-radius);
   padding: var(--tc-spacing-sm) var(--tc-spacing-md);
   font-size: var(--tc-font-size-base);
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: var(--tc-transition);
 }
 
 .addButton:hover {
@@ -55,33 +66,42 @@
   font-size: var(--tc-font-size-base);
 }
 
+/* =============================
+   BASCULEMENT DE VUE
+   ============================= */
 .viewToggle {
   display: flex;
-  border: var(--tc-border-width) solid var(--tc-border-color);
-  border-radius: var(--tc-border-radius-sm);
+  border: 1px solid var(--tc-border-color);
+  border-radius: var(--tc-border-radius);
   overflow: hidden;
 }
 
 .viewToggleButton {
-  background-color: var(--tc-bg-default);
+  background-color: var(--tc-bg-color);
   border: none;
   padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
   cursor: pointer;
-  color: var(--tc-text-muted);
-  transition: all 0.2s;
+  color: var(--tc-gray-600);
+  transition: var(--tc-transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
 }
 
 .viewToggleButton.active {
   background-color: var(--tc-primary-color);
-  color: var(--tc-white-color);
+  color: var(--tc-light-color);
 }
 
 .viewToggleButton:hover:not(.active) {
-  background-color: var(--tc-bg-light);
+  background-color: var(--tc-gray-100);
 }
 
-/* Responsive styles */
-@media (max-width: 768px) {
+/* =============================
+   RESPONSIVE DESIGN
+   ============================= */
+@media (max-width: var(--tc-breakpoint-md)) {
   .headerContainer {
     flex-direction: column;
     align-items: flex-start;
@@ -95,5 +115,27 @@
   
   .headerTitle {
     font-size: var(--tc-font-size-lg);
+  }
+}
+
+@media (max-width: var(--tc-breakpoint-sm)) {
+  .headerActions {
+    flex-wrap: wrap;
+    gap: var(--tc-spacing-sm);
+  }
+  
+  .addButton {
+    width: 100%;
+    justify-content: center;
+    order: -1;
+    margin-bottom: var(--tc-spacing-xs);
+  }
+  
+  .viewToggle {
+    width: 100%;
+  }
+  
+  .viewToggleButton {
+    flex: 1;
   }
 }

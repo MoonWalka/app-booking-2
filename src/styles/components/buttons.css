@@ -1,323 +1,446 @@
 /*
  * Styles pour buttons.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Date de création: Inconnue
- * Dernière mise à jour: 19 mai 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
+@import '@styles/base/variables.css';
 
-
-/* Harmonisation : appliquer le style de base à tous les boutons */
+/* RESET DE BASE */
 button {
   cursor: pointer;
   border: none;
-  border-radius: var(--tc-radius-md);
-  padding: var(--tc-spacing-2) var(--tc-spacing-4);
-  font-size: var(--tc-font-size-sm);
-  transition: all var(--tc-transition-normal) var(--tc-transition-timing);
+  border-radius: var(--tc-border-radius);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  font-size: var(--tc-font-size-base);
+  font-family: var(--tc-font-family-base);
+  transition: var(--tc-transition);
+  appearance: none;
 }
 
-/* Correctif pour l'alignement des icônes dans les boutons Bootstrap standard */
-.btn i {
-  display: inline-flex;
-  align-items: center;
-  vertical-align: middle;
-  transform: translateY(-1px); /* Légère correction verticale pour un meilleur alignement */
-  line-height: 1;
-}
-
-/* ========================================
-   STYLES DE BASE POUR TOUS LES BOUTONS
-   ======================================== */
-
+/* STYLES DE BASE */
 .tc-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--tc-spacing-2);
-  font-weight: var(--tc-font-weight-normal);
+  gap: var(--tc-spacing-xs);
+  font-weight: var(--tc-font-weight-medium);
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
   user-select: none;
-  padding: var(--tc-btn-padding-y) var(--tc-btn-padding-x);
-  font-size: var(--tc-font-size-sm);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  font-size: var(--tc-font-size-base);
   line-height: 1.5;
-  border-radius: var(--tc-radius-md);
-  transition: all var(--tc-transition-normal) var(--tc-transition-timing);
+  border-radius: var(--tc-border-radius);
+  transition: var(--tc-transition);
   border: 1px solid transparent;
   cursor: pointer;
+  position: relative;
+  overflow: hidden;
 }
 
-/* Désactiver les effets de hover quand le bouton est disabled */
+/* État désactivé */
 .tc-btn:disabled,
-.tc-btn.disabled {
+.tc-btn.tc-disabled {
   opacity: 0.65;
   pointer-events: none;
+  cursor: not-allowed;
 }
 
-/* Focus commun pour tous les boutons */
-.tc-btn:focus {
+/* Focus commun */
+.tc-btn:focus,
+.tc-btn:focus-visible {
   outline: 0;
-  box-shadow: 0 0 0 var(--tc-spacing-1) rgba(var(--tc-color-primary-rgb), 0.25);
+  box-shadow: 0 0 0 3px rgba(var(--tc-primary-color-rgb), 0.25);
 }
 
-/* ========================================
-   STYLES POUR LES BOUTONS CLASSIQUES
-   ======================================== */
-
-/* Styles de base pour tous les boutons de couleur (non-outline) */
-.tc-btn[class*="-primary"],
-.tc-btn[class*="-secondary"],
-.tc-btn[class*="-success"],
-.tc-btn[class*="-danger"],
-.tc-btn[class*="-warning"],
-.tc-btn[class*="-info"],
-.tc-btn[class*="-light"],
-.tc-btn[class*="-dark"] {
-  color: var(--tc-text-light);
+/* Alignement des icônes */
+.tc-btn i,
+.tc-btn svg {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9em;
+  margin-inline: -0.2em;
 }
 
-/* Exception pour les boutons light et warning qui ont du texte foncé */
-.tc-btn-light,
-.tc-btn-warning {
-  color: var(--tc-text-dark);
-}
-
-/* Styles spécifiques pour chaque variante */
+/* VARIANTES DE COULEUR */
 .tc-btn-primary {
   background-color: var(--tc-primary-color);
-  border-color: var(--tc-btn-primary-border);
+  border-color: var(--tc-primary-color);
+  color: var(--tc-white);
 }
 
 .tc-btn-primary:hover,
 .tc-btn-primary:active {
   background-color: var(--tc-primary-dark);
+  border-color: var(--tc-primary-dark);
 }
 
 .tc-btn-secondary {
   background-color: var(--tc-secondary-color);
-  border-color: var(--tc-btn-secondary-border);
+  border-color: var(--tc-secondary-color);
+  color: var(--tc-white);
 }
 
 .tc-btn-secondary:hover,
 .tc-btn-secondary:active {
   background-color: var(--tc-secondary-dark);
+  border-color: var(--tc-secondary-dark);
 }
 
 .tc-btn-success {
   background-color: var(--tc-success-color);
   border-color: var(--tc-success-color);
+  color: var(--tc-white);
+}
+
+.tc-btn-success:hover,
+.tc-btn-success:active {
+  background-color: var(--tc-success-dark);
+  border-color: var(--tc-success-dark);
 }
 
 .tc-btn-danger {
   background-color: var(--tc-danger-color);
   border-color: var(--tc-danger-color);
+  color: var(--tc-white);
+}
+
+.tc-btn-danger:hover,
+.tc-btn-danger:active {
+  background-color: var(--tc-danger-dark);
+  border-color: var(--tc-danger-dark);
 }
 
 .tc-btn-warning {
   background-color: var(--tc-warning-color);
   border-color: var(--tc-warning-color);
+  color: var(--tc-gray-900);
+}
+
+.tc-btn-warning:hover,
+.tc-btn-warning:active {
+  background-color: var(--tc-warning-dark);
+  border-color: var(--tc-warning-dark);
 }
 
 .tc-btn-info {
   background-color: var(--tc-info-color);
   border-color: var(--tc-info-color);
+  color: var(--tc-white);
+}
+
+.tc-btn-info:hover,
+.tc-btn-info:active {
+  background-color: var(--tc-info-dark);
+  border-color: var(--tc-info-dark);
 }
 
 .tc-btn-light {
-  background-color: var(--tc-light-color);
-  border-color: var(--tc-light-color);
+  background-color: var(--tc-gray-100);
+  border-color: var(--tc-gray-200);
+  color: var(--tc-gray-900);
+}
+
+.tc-btn-light:hover,
+.tc-btn-light:active {
+  background-color: var(--tc-gray-200);
+  border-color: var(--tc-gray-300);
 }
 
 .tc-btn-dark {
-  background-color: var(--tc-dark-color);
-  border-color: var(--tc-dark-color);
+  background-color: var(--tc-gray-800);
+  border-color: var(--tc-gray-800);
+  color: var(--tc-white);
 }
 
-/* Style de hover commun pour les boutons colorés (sauf primary et secondary) */
-.tc-btn-success:hover,
-.tc-btn-danger:hover,
-.tc-btn-warning:hover,
-.tc-btn-info:hover,
-.tc-btn-dark:hover {
-  filter: brightness(90%);
+.tc-btn-dark:hover,
+.tc-btn-dark:active {
+  background-color: var(--tc-gray-900);
+  border-color: var(--tc-gray-900);
 }
 
-.tc-btn-light:hover {
-  background-color: var(--tc-gray-200);
-}
-
-/* ========================================
-   STYLES POUR LES BOUTONS OUTLINE
-   ======================================== */
-
-/* Styles de base pour tous les boutons outline */
-.tc-btn[class*="outline-"] {
+/* VARIANTES OUTLINE */
+.tc-btn-outline {
   background-color: transparent;
 }
 
-/* Styles spécifiques pour chaque variante outline */
 .tc-btn-outline-primary {
   color: var(--tc-primary-color);
+  border-color: var(--tc-primary-color);
+  background-color: transparent;
+}
+
+.tc-btn-outline-primary:hover,
+.tc-btn-outline-primary:active {
+  color: var(--tc-white);
+  background-color: var(--tc-primary-color);
   border-color: var(--tc-primary-color);
 }
 
 .tc-btn-outline-secondary {
   color: var(--tc-secondary-color);
   border-color: var(--tc-secondary-color);
+  background-color: transparent;
+}
+
+.tc-btn-outline-secondary:hover,
+.tc-btn-outline-secondary:active {
+  color: var(--tc-white);
+  background-color: var(--tc-secondary-color);
+  border-color: var(--tc-secondary-color);
 }
 
 .tc-btn-outline-success {
   color: var(--tc-success-color);
+  border-color: var(--tc-success-color);
+  background-color: transparent;
+}
+
+.tc-btn-outline-success:hover,
+.tc-btn-outline-success:active {
+  color: var(--tc-white);
+  background-color: var(--tc-success-color);
   border-color: var(--tc-success-color);
 }
 
 .tc-btn-outline-danger {
   color: var(--tc-danger-color);
   border-color: var(--tc-danger-color);
+  background-color: transparent;
 }
 
-.tc-btn-outline-warning {
-  color: var(--tc-warning-color);
-  border-color: var(--tc-warning-color);
-}
-
-.tc-btn-outline-info {
-  color: var(--tc-info-color);
-  border-color: var(--tc-info-color);
-}
-
-/* Styles hover communs pour les boutons outline */
-.tc-btn-outline-primary:hover,
-.tc-btn-outline-secondary:hover,
-.tc-btn-outline-success:hover,
 .tc-btn-outline-danger:hover,
-.tc-btn-outline-info:hover {
-  color: var(--tc-text-light);
-}
-
-.tc-btn-outline-warning:hover {
-  color: var(--tc-text-dark);
-}
-
-/* Couleurs de fond au hover pour chaque variante outline */
-.tc-btn-outline-primary:hover {
-  background-color: var(--tc-primary-color);
-}
-
-.tc-btn-outline-secondary:hover {
-  background-color: var(--tc-secondary-light);
-}
-
-.tc-btn-outline-success:hover {
-  background-color: var(--tc-success-color);
-}
-
-.tc-btn-outline-danger:hover {
+.tc-btn-outline-danger:active {
+  color: var(--tc-white);
   background-color: var(--tc-danger-color);
+  border-color: var(--tc-danger-color);
 }
 
-.tc-btn-outline-warning:hover {
-  background-color: var(--tc-warning-color);
+/* BOUTONS TEXTE SEULEMENT */
+.tc-btn-text {
+  background-color: transparent;
+  border-color: transparent;
+  color: var(--tc-primary-color);
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
 }
 
-.tc-btn-outline-info:hover {
-  background-color: var(--tc-info-color);
+.tc-btn-text:hover,
+.tc-btn-text:active {
+  background-color: rgba(var(--tc-primary-color-rgb), 0.05);
+  color: var(--tc-primary-dark);
 }
 
-/* ========================================
-   STYLES POUR LES BOUTONS D'ACTION
-   ======================================== */
-
-.tc-btn-action {
-  background-color: var(--tc-color-primary);
-  color: var(--tc-text-light);
-  padding: var(--tc-spacing-1) var(--tc-spacing-3);
-  border-radius: var(--tc-radius-md);
-  font-size: var(--tc-font-size-xs);
+.tc-btn-text-secondary {
+  color: var(--tc-secondary-color);
 }
 
-.tc-btn-action:hover {
-  background-color: var(--tc-primary-dark);
-  color: var(--tc-text-light);
+.tc-btn-text-secondary:hover,
+.tc-btn-text-secondary:active {
+  background-color: rgba(var(--tc-secondary-color-rgb), 0.05);
+  color: var(--tc-secondary-dark);
 }
 
-/* ========================================
-   CONTENEURS DE BOUTONS
-   ======================================== */
+.tc-btn-text-danger {
+  color: var(--tc-danger-color);
+}
 
-/* Boutons d'action groupés */
+.tc-btn-text-danger:hover,
+.tc-btn-text-danger:active {
+  background-color: rgba(var(--tc-danger-color-rgb), 0.05);
+  color: var(--tc-danger-dark);
+}
+
+/* BOUTONS SPÉCIAUX */
+.tc-btn-float {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--tc-shadow-lg);
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1000;
+}
+
+.tc-btn-float i,
+.tc-btn-float svg {
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.tc-btn-icon {
+  padding: var(--tc-spacing-xs);
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tc-btn-icon i,
+.tc-btn-icon svg {
+  font-size: 1.25rem;
+  margin: 0;
+}
+
+.tc-btn-circle {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tc-btn-circle.tc-btn-sm {
+  width: 32px;
+  height: 32px;
+}
+
+.tc-btn-circle.tc-btn-lg {
+  width: 48px;
+  height: 48px;
+}
+
+/* CONTENEURS DE BOUTONS */
+.tc-btn-group {
+  display: inline-flex;
+  position: relative;
+}
+
+.tc-btn-group .tc-btn {
+  position: relative;
+  flex: 0 1 auto;
+}
+
+.tc-btn-group .tc-btn:not(:first-child) {
+  margin-left: -1px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.tc-btn-group .tc-btn:not(:last-child) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
 .tc-action-buttons {
   display: flex;
-  gap: var(--tc-spacing-2);
-  margin-top: var(--tc-spacing-4);
+  gap: var(--tc-spacing-sm);
+  margin-top: var(--tc-spacing-md);
 }
 
-/* CORRECTIFS POUR LES PROBLÈMES DE POSITIONNEMENT DES BOUTONS */
-
-/* Boutons en mode édition */
-.edit-mode .tc-action-buttons {
-  display: flex;
-  justify-content: flex-end; /* Aligne les boutons à droite */
-  gap: var(--tc-spacing-2);
-  margin-top: var(--tc-spacing-4);
-  position: relative; /* Établit un contexte de positionnement */
-  z-index: 5; /* Assure que les boutons sont au-dessus des autres éléments */
-}
-
-/* Correction pour les boutons dans les formulaires */
-.form-container .tc-action-buttons {
-  flex-wrap: wrap; /* Permet aux boutons de passer à la ligne sur les petits écrans */
-  margin-bottom: var(--tc-spacing-5); /* Ajoute de l'espace en bas */
-}
-
-/* Prévention de la superposition des boutons dans les cartes */
-.tc-card-footer .tc-action-buttons {
-  position: static; /* Annule tout positionnement absolu hérité */
-  display: flex;
-  justify-content: flex-end;
-  gap: var(--tc-spacing-2);
-}
-
-/* Alignement des boutons dans les modales */
+.tc-card-footer .tc-action-buttons,
 .tc-modal-footer .tc-action-buttons {
+  justify-content: flex-end;
+  margin-top: 0;
+}
+
+.tc-action-buttons-between {
   justify-content: space-between;
   width: 100%;
 }
 
-/* Éviter que les boutons ne débordent de leur conteneur */
-.tc-card .tc-action-buttons,
-.form-group .tc-action-buttons,
-.tc-modal-body .tc-action-buttons {
-  max-width: 100%;
-  overflow: hidden;
+.tc-action-buttons-center {
+  justify-content: center;
 }
 
-/* Amélioration de la disposition des boutons sur mobile */
-@media (max-width: 768px) {
+/* TAILLES DE BOUTONS */
+.tc-btn-sm {
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  font-size: var(--tc-font-size-xs);
+  line-height: 1.4;
+}
+
+.tc-btn-lg {
+  padding: var(--tc-spacing-sm) var(--tc-spacing-lg);
+  font-size: var(--tc-font-size-md);
+  line-height: 1.5;
+}
+
+/* ÉTATS ACTIFS ET LOADING */
+.tc-btn.tc-active {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+
+.tc-btn-loading {
+  position: relative;
+  pointer-events: none;
+  color: transparent !important;
+}
+
+.tc-btn-loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1em;
+  height: 1em;
+  margin-top: -0.5em;
+  margin-left: -0.5em;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  animation: tc-btn-spinner 0.75s linear infinite;
+}
+
+@keyframes tc-btn-spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: var(--tc-breakpoint-md)) {
   .tc-action-buttons {
     flex-direction: column;
     width: 100%;
   }
   
-  .tc-card-footer .tc-action-buttons,
-  .tc-modal-footer .tc-action-buttons {
-    flex-direction: row;
-    justify-content: space-around;
+  .tc-card-footer .tc-action-buttons:not(.tc-action-buttons-keep-row),
+  .tc-modal-footer .tc-action-buttons:not(.tc-action-buttons-keep-row) {
+    flex-direction: column-reverse;
+  }
+  
+  .tc-btn-float {
+    width: 48px;
+    height: 48px;
+    right: 16px;
+    bottom: 16px;
+  }
+  
+  .tc-btn-float i,
+  .tc-btn-float svg {
+    font-size: 1.25rem;
   }
 }
 
-/* ========================================
-   TAILLES DE BOUTONS 
-   ======================================== */
-
-.tc-btn-sm {
-  padding: var(--tc-spacing-1) var(--tc-spacing-2);
-  font-size: var(--tc-font-size-xs);
+/* ACCESSIBILITÉ */
+.tc-btn:focus:not(:focus-visible) {
+  box-shadow: none;
 }
 
-.tc-btn-lg {
-  padding: var(--tc-spacing-2) var(--tc-spacing-3);
-  font-size: var(--tc-font-size-lg);
+.tc-btn:focus-visible {
+  box-shadow: 0 0 0 3px rgba(var(--tc-primary-color-rgb), 0.4);
+  outline: none;
+}
+
+.tc-btn .visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }

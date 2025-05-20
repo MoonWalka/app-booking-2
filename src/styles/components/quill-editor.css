@@ -2,59 +2,50 @@
  * Styles pour quill-editor.css
  * Standardisé selon le Guide de Style CSS de TourCraft
  * Date de création: Inconnue
- * Dernière mise à jour: 5 mai 2025
+ * Dernière mise à jour: 19 mai 2025
+ *
+ * OBJECTIF:
+ * - Définir les styles pour l'éditeur de texte riche React-Quill
+ * - Assurer une intégration visuelle cohérente avec le reste de l'application
+ * - Standardiser les différentes variantes et états de l'éditeur
  */
 
+/* Import des variables CSS */
+@import '@styles/base/variables.css';
 
+/* ========================================
+   WRAPPER PRINCIPAL DE L'ÉDITEUR
+   ======================================== */
 
-
-
-/* =============================
-   STYLES POUR REACT-QUILL
-   ============================= */
-
-/* Wrapper principal pour l'éditeur */
 .tc-quill-editor-wrapper {
   display: flex;
   flex-direction: column;
   width: 100%;
+  border-radius: var(--tc-border-radius);
+  overflow: hidden;
+  background-color: var(--tc-white);
+  margin-bottom: var(--tc-spacing-md);
 }
 
-/* Style de la barre d'outils pour qu'elle reste visible */
+/* ========================================
+   BARRE D'OUTILS
+   ======================================== */
+
 .tc-quill-editor-wrapper .ql-toolbar {
   display: flex !important;
   flex-wrap: wrap;
-  background: var(--tc-bg-default);
-  border-radius: 3px;
-  border: 1px solid var(--tc-border-color);
-  box-shadow: 0 1px 2px var(--tc-color-rgba(0,0,0,0.1), rgba(0,0,0,0.1));
+  background-color: var(--tc-gray-50);
+  border-top-left-radius: var(--tc-border-radius);
+  border-top-right-radius: var(--tc-border-radius);
+  border: 1px solid var(--tc-border-light);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   position: sticky;
   top: 0;
   z-index: 10;
+  padding: var(--tc-spacing-xs);
 }
 
-/* Style du conteneur d'édition */
-.tc-quill-editor-wrapper .ql-container {
-  font-size: 16px;
-  border: 1px solid var(--tc-border-color);
-  border-top: none;
-}
-
-/* Style pour l'éditeur en plein écran */
-.tc-quill-editor-wrapper.fullscreen {
-  height: calc(90vh - 140px); /* Prend toute la hauteur moins la hauteur du header/footer */
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  margin-bottom: 0;
-}
-
-.tc-quill-editor-wrapper.fullscreen .ql-container {
-  flex-grow: 1;
-  overflow-y: auto;
-}
-
-/* Style pour les boutons de la barre d'outils */
+/* Boutons de la barre d'outils */
 .tc-quill-editor-wrapper .ql-toolbar button {
   height: 28px;
   width: 28px;
@@ -62,50 +53,366 @@
   align-items: center;
   justify-content: center;
   padding: 0;
+  border-radius: var(--tc-border-radius-sm);
+  transition: all var(--tc-transition-duration);
 }
 
-/* Style pour les formats de texte */
+.tc-quill-editor-wrapper .ql-toolbar button:hover {
+  background-color: var(--tc-gray-100);
+}
+
+.tc-quill-editor-wrapper .ql-toolbar button.ql-active {
+  background-color: var(--tc-primary-color);
+  color: var(--tc-white);
+}
+
+.tc-quill-editor-wrapper .ql-toolbar .ql-picker {
+  height: 28px;
+}
+
+.tc-quill-editor-wrapper .ql-toolbar .ql-picker-label {
+  padding: 0 var(--tc-spacing-xs);
+  border-radius: var(--tc-border-radius-sm);
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.tc-quill-editor-wrapper .ql-toolbar .ql-picker-label:hover {
+  background-color: var(--tc-gray-100);
+}
+
+.tc-quill-editor-wrapper .ql-toolbar .ql-picker-options {
+  border-radius: var(--tc-border-radius-sm);
+  border: 1px solid var(--tc-border-light);
+  box-shadow: var(--tc-shadow);
+  background-color: var(--tc-white);
+  padding: var(--tc-spacing-xs) 0;
+}
+
+.tc-quill-editor-wrapper .ql-toolbar .ql-picker-item {
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  transition: all var(--tc-transition-duration);
+}
+
+.tc-quill-editor-wrapper .ql-toolbar .ql-picker-item:hover {
+  background-color: var(--tc-gray-100);
+  color: var(--tc-primary-color);
+}
+
+/* ========================================
+   CONTENEUR D'ÉDITION
+   ======================================== */
+
+.tc-quill-editor-wrapper .ql-container {
+  font-family: var(--tc-font-family-base);
+  font-size: var(--tc-font-size-base);
+  border: 1px solid var(--tc-border-light);
+  border-top: none;
+  border-bottom-left-radius: var(--tc-border-radius);
+  border-bottom-right-radius: var(--tc-border-radius);
+}
+
+.tc-quill-editor-wrapper .ql-editor {
+  min-height: 200px;
+  padding: var(--tc-spacing-sm);
+  color: var(--tc-gray-900);
+  line-height: 1.6;
+}
+
+/* Focus styles */
+.tc-quill-editor-wrapper .ql-container.ql-focused {
+  border-color: var(--tc-primary-color);
+  box-shadow: 0 0 0 2px rgba(var(--tc-primary-color-rgb), 0.1);
+}
+
+/* ========================================
+   FORMATS DE TEXTE DANS L'ÉDITEUR
+   ======================================== */
+
 .tc-quill-editor-wrapper .ql-editor h1 {
-  font-size: 2em;
-  margin-bottom: 0.5em;
+  font-size: var(--tc-font-size-xxl);
+  font-weight: var(--tc-font-weight-bold);
+  margin-bottom: var(--tc-spacing-md);
+  color: var(--tc-gray-900);
+  line-height: 1.2;
 }
 
 .tc-quill-editor-wrapper .ql-editor h2 {
-  font-size: 1.5em;
-  margin-bottom: 0.5em;
+  font-size: var(--tc-font-size-xl);
+  font-weight: var(--tc-font-weight-semibold);
+  margin-bottom: var(--tc-spacing-sm);
+  color: var(--tc-gray-900);
+  line-height: 1.3;
+}
+
+.tc-quill-editor-wrapper .ql-editor h3 {
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
+  margin-bottom: var(--tc-spacing-sm);
+  color: var(--tc-gray-800);
+  line-height: 1.4;
 }
 
 .tc-quill-editor-wrapper .ql-editor p {
-  margin-bottom: 1em;
+  margin-bottom: var(--tc-spacing-sm);
+  line-height: 1.6;
 }
 
-/* Style pour le texte dans l'éditeur */
-.tc-quill-editor-wrapper .ql-editor {
-  min-height: 200px;
-  padding: 12px;
+.tc-quill-editor-wrapper .ql-editor a {
+  color: var(--tc-primary-color);
+  text-decoration: underline;
+  transition: color var(--tc-transition-duration);
 }
 
-/* Style pour le mode aperçu */
+.tc-quill-editor-wrapper .ql-editor a:hover {
+  color: var(--tc-primary-dark);
+}
+
+.tc-quill-editor-wrapper .ql-editor blockquote {
+  border-left: 4px solid var(--tc-gray-300);
+  padding-left: var(--tc-spacing-sm);
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: var(--tc-spacing-sm);
+  color: var(--tc-gray-700);
+}
+
+.tc-quill-editor-wrapper .ql-editor code {
+  background-color: var(--tc-gray-100);
+  padding: 0.2em 0.4em;
+  border-radius: var(--tc-border-radius-sm);
+  font-family: monospace;
+  color: var(--tc-gray-800);
+}
+
+.tc-quill-editor-wrapper .ql-editor pre {
+  background-color: var(--tc-gray-100);
+  border-radius: var(--tc-border-radius);
+  padding: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-spacing-sm);
+  overflow-x: auto;
+}
+
+.tc-quill-editor-wrapper .ql-editor ul, 
+.tc-quill-editor-wrapper .ql-editor ol {
+  padding-left: var(--tc-spacing-md);
+  margin-bottom: var(--tc-spacing-sm);
+}
+
+.tc-quill-editor-wrapper .ql-editor li {
+  margin-bottom: var(--tc-spacing-xs);
+}
+
+/* ========================================
+   STYLES PLEIN ÉCRAN
+   ======================================== */
+
+.tc-quill-editor-wrapper.tc-fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--tc-z-index-modal);
+  margin: 0;
+  border-radius: 0;
+  background-color: var(--tc-white);
+  padding: var(--tc-spacing-md);
+  display: flex;
+  flex-direction: column;
+}
+
+.tc-quill-editor-wrapper.tc-fullscreen .ql-container {
+  flex-grow: 1;
+  overflow-y: auto;
+  border-radius: 0;
+}
+
+.tc-quill-editor-wrapper.tc-fullscreen .ql-toolbar {
+  border-radius: 0;
+}
+
+/* Compatibilité avec l'ancien nom de classe */
+.tc-quill-editor-wrapper.fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--tc-z-index-modal);
+  margin: 0;
+  border-radius: 0;
+  background-color: var(--tc-white);
+  padding: var(--tc-spacing-md);
+  display: flex;
+  flex-direction: column;
+}
+
+.tc-quill-editor-wrapper.fullscreen .ql-container {
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+/* ========================================
+   VARIANTES ET ÉTATS
+   ======================================== */
+
+/* Éditeur compact */
+.tc-quill-editor-wrapper.tc-compact .ql-editor {
+  min-height: 120px;
+}
+
+/* Éditeur désactivé */
+.tc-quill-editor-wrapper.tc-disabled .ql-toolbar,
+.tc-quill-editor-wrapper.tc-disabled .ql-container {
+  opacity: 0.7;
+  pointer-events: none;
+  background-color: var(--tc-gray-50);
+}
+
+/* Éditeur en lecture seule */
+.tc-quill-editor-wrapper.tc-readonly .ql-toolbar {
+  display: none !important;
+}
+
+.tc-quill-editor-wrapper.tc-readonly .ql-container {
+  border-top: 1px solid var(--tc-border-light);
+  border-radius: var(--tc-border-radius);
+}
+
+/* Éditeur avec erreur */
+.tc-quill-editor-wrapper.tc-invalid .ql-container {
+  border-color: var(--tc-danger-color);
+}
+
+.tc-quill-editor-wrapper.tc-invalid .ql-editor {
+  background-color: rgba(var(--tc-danger-color-rgb), 0.02);
+}
+
+/* ========================================
+   MODE APERÇU
+   ======================================== */
+
 .tc-quill-preview {
   width: 100%;
-  padding: 20px;
-  border: 1px solid var(--tc-border-color);
-  border-radius: 6px;
-  background-color: var(--tc-bg-default);
+  padding: var(--tc-spacing-md);
+  border: 1px solid var(--tc-border-light);
+  border-radius: var(--tc-border-radius);
+  background-color: var(--tc-white);
   min-height: 200px;
   overflow-y: auto;
-  max-height: calc(90vh - 140px); /* Même hauteur que l'éditeur en plein écran */
-  box-shadow: 0 1px 3px var(--tc-color-rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
+  max-height: 600px;
+  box-shadow: var(--tc-shadow-sm);
+  line-height: 1.6;
+  color: var(--tc-gray-900);
 }
 
-.tc-quill-preview h1, 
-.tc-quill-preview h2, 
+.tc-quill-preview h1 {
+  font-size: var(--tc-font-size-xxl);
+  font-weight: var(--tc-font-weight-bold);
+  margin-bottom: var(--tc-spacing-md);
+  color: var(--tc-gray-900);
+  line-height: 1.2;
+}
+
+.tc-quill-preview h2 {
+  font-size: var(--tc-font-size-xl);
+  font-weight: var(--tc-font-weight-semibold);
+  margin-bottom: var(--tc-spacing-sm);
+  color: var(--tc-gray-900);
+  line-height: 1.3;
+}
+
 .tc-quill-preview h3 {
-  margin-bottom: var(--tc-spacing-3);
-  color: var(--tc-text-color);
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
+  margin-bottom: var(--tc-spacing-sm);
+  color: var(--tc-gray-800);
+  line-height: 1.4;
 }
 
 .tc-quill-preview p {
-  margin-bottom: var(--tc-spacing-3);
-  line-height: 1.5;
+  margin-bottom: var(--tc-spacing-md);
+  line-height: 1.6;
+}
+
+.tc-quill-preview a {
+  color: var(--tc-primary-color);
+  text-decoration: underline;
+  transition: color var(--tc-transition-duration);
+}
+
+.tc-quill-preview a:hover {
+  color: var(--tc-primary-dark);
+}
+
+.tc-quill-preview blockquote {
+  border-left: 4px solid var(--tc-gray-300);
+  padding-left: var(--tc-spacing-sm);
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: var(--tc-spacing-sm);
+  color: var(--tc-gray-700);
+}
+
+.tc-quill-preview code {
+  background-color: var(--tc-gray-100);
+  padding: 0.2em 0.4em;
+  border-radius: var(--tc-border-radius-sm);
+  font-family: monospace;
+  color: var(--tc-gray-800);
+}
+
+.tc-quill-preview pre {
+  background-color: var(--tc-gray-100);
+  border-radius: var(--tc-border-radius);
+  padding: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-spacing-sm);
+  overflow-x: auto;
+}
+
+.tc-quill-preview ul, 
+.tc-quill-preview ol {
+  padding-left: var(--tc-spacing-md);
+  margin-bottom: var(--tc-spacing-md);
+}
+
+.tc-quill-preview li {
+  margin-bottom: var(--tc-spacing-xs);
+}
+
+.tc-quill-preview img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--tc-border-radius);
+  margin-bottom: var(--tc-spacing-sm);
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 768px) {
+  .tc-quill-editor-wrapper .ql-toolbar {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: var(--tc-spacing-xs);
+  }
+  
+  .tc-quill-editor-wrapper .ql-editor {
+    font-size: var(--tc-font-size-sm);
+  }
+  
+  .tc-quill-preview {
+    font-size: var(--tc-font-size-sm);
+    padding: var(--tc-spacing-sm);
+  }
+  
+  .tc-quill-editor-wrapper.tc-fullscreen,
+  .tc-quill-editor-wrapper.fullscreen {
+    padding: var(--tc-spacing-sm);
+  }
 }

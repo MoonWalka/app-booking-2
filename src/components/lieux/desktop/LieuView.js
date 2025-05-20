@@ -3,10 +3,14 @@ import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Spinner from '@/components/common/Spinner';
-import Button from '@/components/ui/Button';
+
+// Import des composants UI standardisés
+import LoadingSpinner from '@components/ui/LoadingSpinner';
+import Button from '@components/ui/Button';
+import ErrorMessage from '@components/ui/ErrorMessage';
+
 // MIGRATION: Utilisation du hook optimisé au lieu du hook V2
-import { useLieuDetailsOptimized } from '@/hooks/lieux';
+import { useLieuDetailsOptimized } from '@hooks/lieux';
 
 // Import section components
 import { LieuHeader } from './sections/LieuHeader';
@@ -19,7 +23,7 @@ import { LieuConcertsSection } from './sections/LieuConcertsSection';
 import { LieuStructuresSection } from './sections/LieuStructuresSection';
 import DeleteLieuModal from './sections/DeleteLieuModal';
 
-// Import styles
+// Import des styles CSS Module
 import styles from './LieuDetails.module.css';
 
 /**
@@ -31,7 +35,7 @@ const LieuView = () => {
   const navigate = useNavigate();
 
   // MIGRATION: Utilisation du hook optimisé
-  const{
+  const {
     lieu,
     loading,
     error,
@@ -57,7 +61,7 @@ const LieuView = () => {
   if (loading) {
     return (
       <div className={styles.spinnerContainer}>
-        <Spinner variant="primary" message="Chargement du lieu..." />
+        <LoadingSpinner variant="primary" message="Chargement du lieu..." />
       </div>
     );
   }
@@ -66,14 +70,13 @@ const LieuView = () => {
   if (error) {
     return (
       <div className={styles.errorContainer}>
-        <div className="alert alert-danger">
-          <i className="bi bi-exclamation-triangle-fill me-2"></i>
+        <ErrorMessage variant="danger" icon="exclamation-triangle-fill">
           {error}
-        </div>
+        </ErrorMessage>
         <Button 
           variant="primary" 
           onClick={() => navigate('/lieux')}
-          icon={<i className="bi bi-arrow-left"></i>}
+          iconStart="arrow-left"
         >
           Retour à la liste des lieux
         </Button>
@@ -85,14 +88,13 @@ const LieuView = () => {
   if (!lieu && !loading) {
     return (
       <div className={styles.errorContainer}>
-        <div className="alert alert-warning">
-          <i className="bi bi-exclamation-triangle-fill me-2"></i>
+        <ErrorMessage variant="warning" icon="exclamation-triangle-fill">
           Ce lieu n'existe pas ou n'a pas pu être chargé.
-        </div>
+        </ErrorMessage>
         <Button 
           variant="primary" 
           onClick={() => navigate('/lieux')}
-          icon={<i className="bi bi-arrow-left"></i>}
+          iconStart="arrow-left"
         >
           Retour à la liste des lieux
         </Button>

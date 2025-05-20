@@ -1,7 +1,7 @@
 /*
  * Styles pour le composant ParametresEntreprise
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 5 mai 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
 .suggestionsList {
@@ -10,24 +10,24 @@
   max-height: 200px;
   overflow: auto;
   z-index: var(--tc-z-index-dropdown);
-  background-color: var(--tc-bg-white);
-  border: 1px solid var(--tc-border-input);
+  background-color: var(--tc-bg-color);
+  border: 1px solid var(--tc-border-color);
   border-radius: 0 0 var(--tc-border-radius-sm) var(--tc-border-radius-sm);
-  box-shadow: var(--tc-shadow-md);
+  box-shadow: var(--tc-shadow-sm);
   margin-top: -1px;
 }
 
 .suggestionItem {
-  padding: var(--tc-spacing-2-5) var(--tc-spacing-4);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
   display: flex;
   align-items: center;
   cursor: pointer;
-  transition: background-color var(--tc-transition-speed);
-  border-bottom: 1px solid var(--tc-border-ultralight);
+  transition: var(--tc-transition-fast);
+  border-bottom: 1px solid var(--tc-gray-200);
 }
 
 .suggestionItem:hover {
-  background-color: var(--tc-bg-hover);
+  background-color: var(--tc-hover-bg);
 }
 
 .suggestionItem:last-child {
@@ -35,8 +35,8 @@
 }
 
 .suggestionIcon {
-  margin-right: var(--tc-spacing-2-5);
-  color: var(--tc-color-primary);
+  margin-right: var(--tc-spacing-sm);
+  color: var(--tc-primary-color);
 }
 
 .suggestionContent {
@@ -49,59 +49,59 @@
 
 .suggestionSubtitle {
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-color-text-muted);
+  color: var(--tc-text-muted);
 }
 
 .suggestionDetails {
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-color-text-muted);
+  color: var(--tc-text-muted);
 }
 
 .searchingIndicator {
   position: absolute;
   top: 100%;
   width: 100%;
-  padding: var(--tc-spacing-2-5);
-  background-color: var(--tc-bg-white);
+  padding: var(--tc-spacing-sm);
+  background-color: var(--tc-bg-color);
   border-radius: 0 0 var(--tc-border-radius-sm) var(--tc-border-radius-sm);
-  border: 1px solid var(--tc-border-input);
+  border: 1px solid var(--tc-border-color);
   border-top: none;
-  box-shadow: var(--tc-shadow-md);
+  box-shadow: var(--tc-shadow-sm);
   z-index: var(--tc-z-index-dropdown);
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-2-5);
+  gap: var(--tc-spacing-sm);
 }
 
 .searchTypeButtons {
   display: flex;
-  gap: var(--tc-spacing-2-5);
-  margin-bottom: var(--tc-spacing-3);
+  gap: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-spacing-md);
 }
 
 .searchBox {
   position: relative;
-  margin-bottom: var(--tc-spacing-4);
+  margin-bottom: var(--tc-spacing-md);
 }
 
 .noResultsAlert {
-  margin-top: var(--tc-spacing-1-5);
+  margin-top: var(--tc-spacing-xs);
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: var(--tc-spacing-3);
+  padding: var(--tc-spacing-md);
 }
 
 .formCard {
   border-radius: var(--tc-border-radius-lg);
-  box-shadow: var(--tc-shadow-md);
-  margin-bottom: var(--tc-spacing-5);
+  box-shadow: var(--tc-shadow);
+  margin-bottom: var(--tc-spacing-lg);
 }
 
 .form {
-  margin-top: var(--tc-spacing-4);
+  margin-top: var(--tc-spacing-md);
 }
 
 /* Styles responsive standardisés */
@@ -113,12 +113,12 @@
 
 @media (max-width: 768px) {
   .container {
-    padding: var(--tc-spacing-2);
+    padding: var(--tc-spacing-sm);
   }
   
   .formCard {
-    border-radius: var(--tc-border-radius-md);
-    margin-bottom: var(--tc-spacing-4);
+    border-radius: var(--tc-border-radius);
+    margin-bottom: var(--tc-spacing-md);
   }
   
   .searchTypeButtons {
@@ -128,15 +128,15 @@
 
 @media (max-width: 576px) {
   .container {
-    padding: var(--tc-spacing-1-5);
+    padding: var(--tc-spacing-xs);
   }
   
   .suggestionItem {
-    padding: var(--tc-spacing-2) var(--tc-spacing-3);
+    padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
   }
   
   .searchTypeButtons {
-    gap: var(--tc-spacing-1);
-    margin-bottom: var(--tc-spacing-2);
+    gap: var(--tc-spacing-xs);
+    margin-bottom: var(--tc-spacing-sm);
   }
 }

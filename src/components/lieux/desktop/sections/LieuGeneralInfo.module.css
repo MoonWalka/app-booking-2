@@ -1,61 +1,80 @@
 /*
- * Styles pour LieuGeneralInfo
+ * Styles pour LieuGeneralInfo.module.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 19 May 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
+/* =============================
+   CARTE D'INFORMATION
+   ============================= */
 .formCard {
-  border: 1px solid var(--tc-border-light);
-  border-radius: var(--tc-radius-lg);
-  background-color: var(--tc-bg-default);
+  border: 1px solid var(--tc-gray-300);
+  border-radius: var(--tc-border-radius);
+  background-color: var(--tc-bg-color);
   box-shadow: var(--tc-shadow-sm);
   overflow: hidden;
-  margin-bottom: var(--tc-spacing-6);
+  margin-bottom: var(--tc-spacing-lg);
 }
 
+/* =============================
+   EN-TÊTE DE CARTE
+   ============================= */
 .cardHeader {
-  background-color: var(--tc-bg-light);
-  padding: var(--tc-spacing-4) var(--tc-spacing-4);
+  background-color: var(--tc-gray-100);
+  padding: var(--tc-spacing-md);
   display: flex;
   align-items: center;
-  border-bottom: 1px solid var(--tc-border-light);
+  border-bottom: 1px solid var(--tc-gray-300);
+  gap: var(--tc-spacing-sm);
 }
 
-.cardHeader i {
-  margin-right: var(--tc-spacing-2);
-  color: var(--tc-color-primary);
+.cardIcon {
+  color: var(--tc-primary-color);
   font-size: var(--tc-font-size-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.cardHeader h3 {
+.cardTitle {
   margin: 0;
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-semibold);
   flex-grow: 1;
-  color: var(--tc-color-secondary-dark);
+  color: var(--tc-text-color);
+  line-height: 1.3;
 }
 
+/* =============================
+   CORPS DE CARTE
+   ============================= */
 .cardBody {
-  padding: var(--tc-spacing-4);
+  padding: var(--tc-spacing-md);
 }
 
+/* =============================
+   DISPOSITION EN GRILLE
+   ============================= */
 .formRow {
   display: flex;
   flex-wrap: wrap;
-  margin-right: calc(var(--tc-spacing-2) * -1);
-  margin-left: calc(var(--tc-spacing-2) * -1);
-  gap: var(--tc-spacing-2);
+  margin-right: calc(var(--tc-spacing-sm) * -1);
+  margin-left: calc(var(--tc-spacing-sm) * -1);
+  gap: var(--tc-spacing-md);
 }
 
 .formCol {
   flex: 1 0 0%;
   min-width: 250px;
-  padding-right: var(--tc-spacing-2);
-  padding-left: var(--tc-spacing-2);
+  padding-right: var(--tc-spacing-sm);
+  padding-left: var(--tc-spacing-sm);
 }
 
+/* =============================
+   GROUPES DE FORMULAIRE
+   ============================= */
 .formGroup {
-  margin-bottom: var(--tc-spacing-6);
+  margin-bottom: var(--tc-spacing-lg);
 }
 
 .formGroup:last-child {
@@ -64,31 +83,38 @@
 
 .formLabel {
   font-weight: var(--tc-font-weight-medium);
-  margin-bottom: var(--tc-spacing-1);
+  margin-bottom: var(--tc-spacing-xs);
   display: block;
-  color: var(--tc-color-secondary-dark);
+  color: var(--tc-gray-700);
+  font-size: var(--tc-font-size-sm);
 }
 
 .formControlStatic {
-  padding: var(--tc-spacing-1) 0;
-  color: var(--tc-color-secondary-dark);
+  padding: var(--tc-spacing-xs) 0;
+  color: var(--tc-text-color);
   word-break: break-word;
+  font-size: var(--tc-font-size-base);
+  line-height: var(--tc-line-height-base);
 }
 
 .required {
-  color: var(--tc-color-error);
-  margin-left: var(--tc-spacing-1);
+  color: var(--tc-danger-color);
+  margin-left: var(--tc-spacing-xs);
 }
 
 .textEmpty {
-  color: var(--tc-color-secondary);
+  color: var(--tc-gray-600);
   font-style: italic;
+  font-size: var(--tc-font-size-sm);
 }
 
-/* Responsive styles */
-@media (max-width: 768px) {
+/* =============================
+   RESPONSIVE DESIGN
+   ============================= */
+@media (max-width: var(--tc-breakpoint-md)) {
   .formRow {
     flex-direction: column;
+    gap: var(--tc-spacing-sm);
   }
   
   .formCol {
@@ -98,6 +124,20 @@
   }
   
   .cardBody {
-    padding: var(--tc-spacing-3);
+    padding: var(--tc-spacing-md);
+  }
+  
+  .formGroup {
+    margin-bottom: var(--tc-spacing-md);
+  }
+}
+
+@media (max-width: var(--tc-breakpoint-sm)) {
+  .cardHeader {
+    padding: var(--tc-spacing-sm);
+  }
+  
+  .cardBody {
+    padding: var(--tc-spacing-sm);
   }
 }

@@ -1,459 +1,404 @@
 /*
  * Styles pour concerts.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Date de création: Inconnue
- * Dernière mise à jour: 5 mai 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
+@import '@styles/base/variables.css';
 
-
-
-
-/* Styles pour la page des concerts */
-/* Styles for all concert-related components */
-
-/* =============================
-   VARIABLES SPÉCIFIQUES CONCERTS
-   ============================= */
+/* VARIABLES SPÉCIFIQUES AUX CONCERTS */
 :root {
-  --concert-color: var(--tc-color-5e72e4, #5e72e4); /* Couleur spécifique pour les concerts */
-  --concert-color-light: var(--tc-color-eef0fd, #eef0fd);
-  /* // Correction UI: Amélioration du contraste des couleurs de statut */
-  --concert-status-confirmed-bg: var(--tc-color-rgba(40, 167, 69, 0.15), rgba(40, 167, 69, 0.15));
-  --concert-status-confirmed-color: var(--tc-color-176639, #176639); /* Plus foncé pour meilleur contraste */
-  --concert-status-pending-bg: var(--tc-color-rgba(255, 193, 7, 0.15), rgba(255, 193, 7, 0.15));
-  --concert-status-pending-color: var(--tc-color-964b00, #964B00); /* Orange foncé pour meilleur contraste */
-  --concert-status-cancelled-bg: var(--tc-color-rgba(220, 53, 69, 0.15), rgba(220, 53, 69, 0.15));
-  --concert-status-cancelled-color: var(--tc-color-a71d2a, #a71d2a); /* Plus foncé pour meilleur contraste */
-  --concert-status-draft-bg: var(--tc-color-rgba(108, 117, 125, 0.15), rgba(108, 117, 125, 0.15));
-  --concert-status-draft-color: var(--tc-color-45494e, #45494e); /* Plus foncé pour meilleur contraste */
-  /* // Correction UI: Ajout d'une variable de transition standardisée */
-  --tc-transition-standard: all 0.2s ease-in-out;
+  --tc-concert-color: #5e72e4; /* Couleur spécifique pour les concerts */
+  --tc-concert-color-rgb: 94, 114, 228;
+  --tc-concert-color-light: #eef0fd;
+  --tc-concert-color-light-rgb: 238, 240, 253;
+  
+  /* Couleurs de statut */
+  --tc-concert-status-confirmed-bg: rgba(var(--tc-success-color-rgb), 0.15);
+  --tc-concert-status-confirmed-color: #176639;
+  
+  --tc-concert-status-pending-bg: rgba(var(--tc-warning-color-rgb), 0.15);
+  --tc-concert-status-pending-color: #964b00;
+  
+  --tc-concert-status-cancelled-bg: rgba(var(--tc-danger-color-rgb), 0.15);
+  --tc-concert-status-cancelled-color: #a71d2a;
+  
+  --tc-concert-status-draft-bg: rgba(var(--tc-gray-600-rgb), 0.15);
+  --tc-concert-status-draft-color: #45494e;
 }
 
-/* =============================
-   STYLES DE FORMULAIRE CONCERT
-   ============================= */
-/* // Correction UI: Standardisation des boutons et espacements */
-.concert-form-container .action-buttons {
+/* STYLES DE FORMULAIRE CONCERT */
+.tc-concert-form-container .tc-action-buttons {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px; /* Espacement standardisé */
-  margin-bottom: var(--tc-spacing-4);
+  gap: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-spacing-md);
   justify-content: flex-start;
   align-items: center;
   width: 100%;
 }
 
-.concert-form-container .action-buttons .action-btn,
-.concert-form-container .action-buttons .btn {
-  margin: 0;
-  position: static;
-  min-width: 130px; /* Largeur standard pour tous les boutons */
-  height: 40px; /* Hauteur standard */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: var(--tc-transition-standard); /* // Correction UI: Utilisation de la variable standardisée */
-  font-weight: var(--tc-font-weight-medium); /* Police plus cohérente */
-}
-
-/* Form actions styles unifiés */
-.concert-form-container .form-actions {
+.tc-concert-form-container .tc-form-actions {
   display: flex;
   justify-content: flex-end;
-  gap: var(--tc-spacing-3);
-  margin-top: var(--tc-spacing-8);
-  margin-bottom: var(--tc-spacing-8);
+  gap: var(--tc-spacing-sm);
+  margin-top: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-spacing-md);
   flex-wrap: wrap;
 }
 
-/* // Correction UI: Standardisation des boutons primaires et secondaires */
-.btn-primary, .btn-secondary {
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-weight: var(--tc-font-weight-medium);
-  transition: var(--tc-transition-standard);
-  min-height: 40px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.btn-primary {
-  background-color: var(--tc-primary-color);
-  border-color: var(--tc-primary-color);
-  color: var(--tc-bg-default);
-}
-
-.btn-secondary {
-  background-color: var(--tc-secondary-color);
-  border-color: var(--tc-secondary-color);
-  color: var(--tc-bg-default);
-}
-
-.btn-primary:hover {
-  background-color: var(--tc-primary-dark);
-  border-color: var(--tc-primary-dark);
-}
-
-.btn-secondary:hover {
-  background-color: var(--tc-secondary-dark);
-  border-color: var(--tc-secondary-dark);
-}
-
-/* =============================
-   DÉTAILS DU CONCERT
-   ============================= */
-/* Concert details styles */
-.concert-detail-container {
-  padding: 20px;
+/* DÉTAILS DU CONCERT */
+.tc-concert-detail-container {
+  padding: var(--tc-spacing-md);
   background-color: var(--tc-bg-color);
   border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-shadow));
-  margin-bottom: 20px;
+  box-shadow: var(--tc-shadow);
+  margin-bottom: var(--tc-spacing-md);
 }
 
-.concert-details-container {
+.tc-concert-details-container {
   max-width: 900px;
   margin: 0 auto;
-  padding: 20px;
+  padding: var(--tc-spacing-md);
 }
 
-.concert-header {
+.tc-concert-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 20px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid var(--tc-border-color-light);
+  margin-bottom: var(--tc-spacing-md);
+  padding-bottom: var(--tc-spacing-sm);
+  border-bottom: 1px solid var(--tc-border-color);
 }
 
-/* Titre du concert - Desktop */
-.concert-title-desktop {
-  font-size: var(--tc-font-size-xl); /* // Correction UI: Valeur par défaut ajoutée */
-  font-weight: bold;
-  margin-bottom: 5px;
+.tc-concert-title {
+  font-size: var(--tc-font-size-xl);
+  font-weight: var(--tc-font-weight-bold);
+  margin-bottom: var(--tc-spacing-xs);
   color: var(--tc-text-color);
 }
 
-/* Date du concert - affichage sous le titre */
-.concert-date-display {
-  font-size: var(--tc-font-size-md); /* // Correction UI: Valeur par défaut ajoutée */
+.tc-concert-date-display {
+  font-size: var(--tc-font-size-md);
   color: var(--tc-text-muted);
 }
 
-/* // Correction UI: Centralisation des styles de statut, utilisation des classes définies dans badges.css */
-/* =============================
-   LISTE DES CONCERTS
-   ============================= */
-/* Styles généraux pour la liste desktop */
-.concerts-list-container {
-  padding: 20px;
+/* LISTE DES CONCERTS */
+.tc-concerts-list-container {
+  padding: var(--tc-spacing-md);
 }
 
-.concerts-header {
+.tc-concerts-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: var(--tc-spacing-md);
 }
 
-.concerts-title {
-  font-size: var(--tc-font-size-xl); /* // Correction UI: Valeur par défaut ajoutée */
-  font-weight: bold;
+.tc-concerts-title {
+  font-size: var(--tc-font-size-xl);
+  font-weight: var(--tc-font-weight-bold);
+  color: var(--tc-text-color);
 }
 
-.concerts-actions {
+.tc-concerts-actions {
   display: flex;
-  gap: 10px; /* // Correction UI: Espacement standardisé */
+  gap: var(--tc-spacing-sm);
 }
 
-/* // Correction UI: Amélioration du responsive des filtres */
-.filter-bar {
+/* FILTRES */
+.tc-filter-bar {
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
-  margin-bottom: 20px;
-  padding: 15px;
-  background-color: var(--tc-bg-light);
+  gap: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-spacing-md);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  background-color: var(--tc-gray-50);
   border-radius: var(--tc-border-radius);
 }
 
-.filter-group {
+.tc-filter-group {
   display: flex;
   align-items: center;
-  margin-bottom: 5px; /* // Correction UI: Espacement pour responsive */
-  min-width: 200px; /* // Correction UI: Largeur minimale pour éviter compression excessive */
+  margin-bottom: var(--tc-spacing-xs);
+  min-width: 200px;
 }
 
-.filter-label {
-  margin-right: 8px;
+.tc-filter-label {
+  margin-right: var(--tc-spacing-xs);
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-text-color);
-  white-space: nowrap; /* // Correction UI: Évite le retour à la ligne du label */
+  color: var(--tc-gray-700);
+  white-space: nowrap;
 }
 
-.filter-select {
-  padding: 6px 10px;
+.tc-filter-select {
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
   border: 1px solid var(--tc-border-color);
-  border-radius: var(--tc-radius-sm);
-  min-width: 120px; /* // Correction UI: Largeur minimale pour meilleur affichage */
+  border-radius: var(--tc-border-radius-sm);
+  min-width: 120px;
 }
 
-/* // Correction UI: Amélioration du style des cartes de concerts */
-.concert-list-card {
+/* CARTES DE CONCERT */
+.tc-concert-list-card {
   background-color: var(--tc-bg-color);
   border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-shadow));
-  margin-bottom: 15px;
+  box-shadow: var(--tc-shadow);
+  margin-bottom: var(--tc-spacing-sm);
   overflow: hidden;
-  transition: var(--tc-transition-standard); /* // Correction UI: Transition standardisée */
+  transition: var(--tc-transition);
+  border: 1px solid var(--tc-border-color);
 }
 
-.concert-list-card:hover {
+.tc-concert-list-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 4px 8px var(--tc-color-rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15));
+  box-shadow: var(--tc-shadow-lg);
 }
 
-/* // ...existing code for concert-card components... */
-
-/* // Correction UI: Standardisation des modals */
-.concert-form-container .tc-modal-overlay {
+/* MODALES */
+.tc-concert-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--tc-color-rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: var(--tc-z-index-modal);
 }
 
-.concert-form-container .tc-modal-confirm {
+.tc-concert-modal {
   background-color: var(--tc-bg-color);
   border-radius: var(--tc-border-radius);
   width: 450px;
   max-width: 90vw;
-  box-shadow: var(--tc-shadow-lg));
+  box-shadow: var(--tc-shadow-lg);
   overflow: hidden;
 }
 
-/* =============================
-   MOBILE CONCERT STYLES
-   ============================= */
-/* // Correction UI: Amélioration des styles mobiles */
-.concert-details-mobile {
+/* AFFICHAGE MOBILE */
+.tc-concert-details-mobile {
   display: flex;
   flex-direction: column;
   height: 100%;
 }
 
-/* Titre du concert - Mobile */
-.concert-title-mobile {
-  font-size: var(--tc-font-size-md); /* // Correction UI: Valeur par défaut ajoutée */
+.tc-concert-title-mobile {
+  font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-semibold);
   margin: 0 0 var(--tc-spacing-xs) 0;
   color: var(--tc-text-color);
-  /* // Correction UI: Gestion de l'overflow */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
 }
 
-/* // ...existing code for mobile components... */
-
-/* =============================
-   TABLE DES CONCERTS
-   ============================= */
-/* // Correction UI: Amélioration des styles de table */
-.concerts-container .concerts-table {
+/* TABLEAUX DE CONCERTS */
+.tc-concerts-table {
   border-collapse: separate;
   border-spacing: 0;
   width: 100%;
   background-color: var(--tc-bg-color);
   border-radius: var(--tc-border-radius);
   overflow: hidden;
-  box-shadow: var(--tc-shadow));
+  box-shadow: var(--tc-shadow);
 }
 
-/* // Correction UI: Standardisation des styles de cellules */
-.concerts-container .concerts-table th,
-.concerts-container .concerts-table td {
-  padding: 12px;
+.tc-concerts-table th,
+.tc-concerts-table td {
+  padding: var(--tc-spacing-sm);
   vertical-align: middle;
-  border-bottom: 1px solid var(--tc-border-color-light);
+  border-bottom: 1px solid var(--tc-border-color);
 }
 
-.concerts-container .concerts-table th {
+.tc-concerts-table th {
   font-weight: var(--tc-font-weight-semibold);
   color: var(--tc-text-muted);
-  background-color: var(--tc-bg-light);
+  background-color: var(--tc-table-header-bg);
 }
 
-/* // ...existing code for table components... */
+/* COMPOSANTS DE STATUT */
+.tc-concert-status {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  border-radius: var(--tc-border-radius-pill);
+  font-size: var(--tc-font-size-xs);
+  font-weight: var(--tc-font-weight-medium);
+  gap: var(--tc-spacing-xs);
+}
 
-/* // Correction UI: Centralisation des styles de status-message */
+.tc-concert-status-confirmed {
+  background-color: var(--tc-concert-status-confirmed-bg);
+  color: var(--tc-concert-status-confirmed-color);
+}
+
+.tc-concert-status-pending {
+  background-color: var(--tc-concert-status-pending-bg);
+  color: var(--tc-concert-status-pending-color);
+}
+
+.tc-concert-status-cancelled {
+  background-color: var(--tc-concert-status-cancelled-bg);
+  color: var(--tc-concert-status-cancelled-color);
+}
+
+.tc-concert-status-draft {
+  background-color: var(--tc-concert-status-draft-bg);
+  color: var(--tc-concert-status-draft-color);
+}
+
+/* Messages de statut standardisés */
 .tc-status-message {
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: var(--tc-font-size-xs); /* // Correction UI: Valeur par défaut ajoutée */
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  border-radius: var(--tc-border-radius-pill);
+  font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-medium);
   text-align: center;
   white-space: nowrap;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: var(--tc-spacing-xs);
 }
 
-/* // Correction UI: Amélioration du contraste des messages de statut */
 .tc-status-message-warning {
-  background-color: var(--tc-color-rgba(255, 193, 7, 0.15), rgba(255, 193, 7, 0.15));
-  color: var(--tc-color-964b00, #964B00); /* Orange foncé pour meilleur contraste */
+  background-color: rgba(var(--tc-warning-color-rgb), 0.15);
+  color: #964b00;
 }
 
 .tc-status-message-info {
-  background-color: var(--tc-color-rgba(23, 162, 184, 0.15), rgba(23, 162, 184, 0.15));
-  color: var(--tc-color-0a6c7e, #0a6c7e);
+  background-color: rgba(var(--tc-info-color-rgb), 0.15);
+  color: #0a6c7e;
 }
 
 .tc-status-message-primary {
-  background-color: var(--tc-color-rgba(0, 123, 255, 0.15), rgba(0, 123, 255, 0.15));
-  color: var(--tc-color-0056b3, #0056b3);
+  background-color: rgba(var(--tc-primary-color-rgb), 0.15);
+  color: #0056b3;
 }
 
 .tc-status-message-success {
-  background-color: var(--tc-color-rgba(40, 167, 69, 0.15), rgba(40, 167, 69, 0.15));
-  color: var(--tc-color-176639, #176639);
+  background-color: rgba(var(--tc-success-color-rgb), 0.15);
+  color: #176639;
 }
 
 .tc-status-message-secondary {
-  background-color: var(--tc-color-rgba(108, 117, 125, 0.15), rgba(108, 117, 125, 0.15));
-  color: var(--tc-color-45494e, #45494e);
+  background-color: rgba(var(--tc-gray-600-rgb), 0.15);
+  color: #45494e;
 }
 
 .tc-status-message-danger {
-  background-color: var(--tc-color-rgba(220, 53, 69, 0.15), rgba(220, 53, 69, 0.15));
-  color: var(--tc-color-a71d2a, #a71d2a);
+  background-color: rgba(var(--tc-danger-color-rgb), 0.15);
+  color: #a71d2a;
 }
 
 .tc-status-message-light {
-  background-color: var(--tc-color-rgba(108, 117, 125, 0.1), rgba(108, 117, 125, 0.1));
+  background-color: rgba(var(--tc-gray-600-rgb), 0.1);
   color: var(--tc-text-color);
 }
 
-/* // Correction UI: Amélioration des rappels d'action */
+/* Rappels d'action */
 .tc-action-reminder {
-  margin-top: 4px;
-  font-size: 11px;
+  margin-top: var(--tc-spacing-xs);
+  font-size: var(--tc-font-size-xs);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  padding: 3px 8px;
-  background-color: var(--tc-color-rgba(255, 193, 7, 0.1), rgba(255, 193, 7, 0.1));
-  border-radius: 12px;
-  color: var(--tc-color-964b00, #964B00); /* Meilleur contraste */
+  gap: var(--tc-spacing-xs);
+  padding: 3px var(--tc-spacing-xs);
+  background-color: rgba(var(--tc-warning-color-rgb), 0.1);
+  border-radius: var(--tc-border-radius-pill);
+  color: #964b00;
 }
 
-/* // ...existing code for loading and error states... */
-
-/* // Correction UI: Standardisation de l'animation de notification */
-@keyframes pulse {
+/* ANIMATIONS */
+@keyframes tc-pulse {
   0% {
     transform: scale(1);
-    box-shadow: 0 0 0 0 var(--tc-color-rgba(220, 53, 69, 0.7), rgba(220, 53, 69, 0.7));
+    box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7);
   }
   
   70% {
     transform: scale(1.1);
-    box-shadow: 0 0 0 5px var(--tc-color-rgba(220, 53, 69, 0), rgba(220, 53, 69, 0));
+    box-shadow: 0 0 0 5px rgba(231, 76, 60, 0);
   }
   
   100% {
     transform: scale(1);
-    box-shadow: 0 0 0 0 var(--tc-color-rgba(220, 53, 69, 0), rgba(220, 53, 69, 0));
+    box-shadow: 0 0 0 0 rgba(231, 76, 60, 0);
   }
 }
 
-/* =============================
-   STYLES PARTAGÉS ET UTILITAIRES
-   ============================= */
-/* // ...existing code for dropdowns and menus... */
+.tc-pulse-animation {
+  animation: tc-pulse 1.5s infinite;
+}
 
-/* // Correction UI: Amélioration responsive */
-@media (max-width: 768px) {
-  .concert-header {
+/* RESPONSIVE DESIGN */
+@media (max-width: var(--tc-breakpoint-md)) {
+  .tc-concert-header {
     flex-direction: column;
     align-items: flex-start;
   }
   
-  .concert-info-wrapper {
+  .tc-concert-info-wrapper {
     flex-direction: column;
   }
   
-  .info-section {
-    margin: 0 0 20px;
+  .tc-info-section {
+    margin: 0 0 var(--tc-spacing-md);
     width: 100%;
   }
   
-  /* // Correction UI: Ajustements responsive pour les filtres */
-  .filter-bar {
-    padding: 10px;
+  .tc-filter-bar {
+    padding: var(--tc-spacing-xs);
     flex-direction: column;
   }
   
-  .filter-group {
+  .tc-filter-group {
     width: 100%;
     flex-wrap: wrap;
   }
   
-  .filter-label {
+  .tc-filter-label {
     width: 100%;
-    margin-bottom: 5px;
+    margin-bottom: var(--tc-spacing-xs);
   }
   
-  .filter-select {
+  .tc-filter-select {
     width: 100%;
     max-width: none;
   }
   
-  /* // Correction UI: Ajustements responsive pour le tableau */
-  .concerts-container .concerts-table {
-    font-size: var(--tc-font-size-sm);
+  .tc-concerts-table {
+    font-size: var(--tc-font-size-xs);
   }
   
-  .concerts-container .concerts-table .text-truncate-container {
+  .tc-concerts-table .tc-text-truncate-container {
     max-width: 120px;
   }
   
-  .concerts-container .concerts-table .lieu-nom,
-  .concerts-container .concerts-table .artist-name,
-  .concerts-container .concerts-table .programmateur-name {
+  .tc-concerts-table .tc-lieu-nom,
+  .tc-concerts-table .tc-artist-name,
+  .tc-concerts-table .tc-programmateur-name {
     max-width: 120px;
   }
 }
 
-/* // Correction UI: Ajout de classes utilitaires pour la gestion des badges */
-/* Classe pour aligner les badges et textes verticalement */
+/* CLASSES UTILITAIRES */
 .tc-badge-wrapper {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: var(--tc-spacing-xs);
 }
 
-/* Classe pour badge avec icône */
 .tc-badge-with-icon {
   display: inline-flex;
   align-items: center;
   gap: 4px;
 }
 
-/* // Correction UI: Classes pour aligner les éléments */
 .tc-align-center {
   display: flex;
   align-items: center;
@@ -472,14 +417,12 @@
   justify-content: flex-end;
 }
 
-/* // Correction UI: Pour les problèmes d'overflow de texte dans les cellules */
 .tc-text-ellipsis {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* // Correction UI: Pour la gestion standardisée des icônes dans les badges */
 .tc-badge-icon {
   font-size: 0.85em;
 }

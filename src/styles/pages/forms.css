@@ -1,40 +1,34 @@
 /*
  * Styles pour forms.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Date de création: Inconnue
- * Dernière mise à jour: 5 mai 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
+@import '@styles/base/variables.css';
 
-
-
-
-/* 
- * Formulaire multi-étapes 
- * Ces styles sont utilisés pour la navigation entre les étapes d'un formulaire
- */
-.form-progress {
+/* FORMULAIRE MULTI-ÉTAPES */
+.tc-form-progress {
   display: flex;
-  margin-bottom: 30px;
+  margin-bottom: var(--tc-spacing-lg);
   border-radius: var(--tc-border-radius);
   overflow: hidden;
 }
 
-.progress-step {
+.tc-progress-step {
   flex: 1;
-  padding: 10px;
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
   text-align: center;
-  background-color: var(--tc-light-color);
+  background-color: var(--tc-gray-100);
   color: var(--tc-text-color);
   position: relative;
 }
 
-.progress-step.active {
+.tc-progress-step.tc-active {
   background-color: var(--tc-primary-color);
-  color: var(--tc-bg-default);
+  color: var(--tc-white);
 }
 
-.progress-step:not(:last-child)::after {
+.tc-progress-step:not(:last-child)::after {
   content: '';
   position: absolute;
   top: 50%;
@@ -44,157 +38,157 @@
   height: 0;
   border-top: 10px solid transparent;
   border-bottom: 10px solid transparent;
-  border-left: 10px solid var(--tc-light-color);
+  border-left: 10px solid var(--tc-gray-100);
   z-index: 1;
 }
 
-.progress-step.active:not(:last-child)::after {
+.tc-progress-step.tc-active:not(:last-child)::after {
   border-left-color: var(--tc-primary-color);
 }
 
-/* Styles pour l'interface isolée du formulaire */
-.form-isolated-container {
+/* INTERFACE ISOLÉE DU FORMULAIRE */
+.tc-form-isolated-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--tc-color-f5f7fa, #f5f7fa);
+  background-color: var(--tc-gray-50);
 }
 
-.form-header {
+.tc-form-header {
   background-color: var(--tc-secondary-color);
-  color: var(--tc-bg-default);
-  padding: 15px 30px;
+  color: var(--tc-white);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-lg);
   text-align: center;
 }
 
-.form-logo h2 {
+.tc-form-logo h2 {
   margin: 0;
 }
 
-.form-content {
+.tc-form-content {
   flex: 1;
-  padding: 30px;
+  padding: var(--tc-spacing-lg);
   max-width: 800px;
   margin: 0 auto;
   width: 100%;
 }
 
-.form-footer {
+.tc-form-footer {
   background-color: var(--tc-secondary-color);
-  color: var(--tc-bg-default);
-  padding: 15px;
+  color: var(--tc-white);
+  padding: var(--tc-spacing-sm);
   text-align: center;
-  font-size: 12px;
+  font-size: var(--tc-font-size-xs);
 }
 
-.form-security-notice {
-  margin-top: 30px;
-  padding: 10px;
-  background-color: var(--tc-bg-light);
+.tc-form-security-notice {
+  margin-top: var(--tc-spacing-lg);
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  background-color: var(--tc-gray-50);
   border-radius: var(--tc-border-radius);
   text-align: center;
-  font-size: 12px;
-  color: var(--tc-color-7f8c8d, #7f8c8d);
+  font-size: var(--tc-font-size-xs);
+  color: var(--tc-text-muted);
 }
 
-.form-error {
+/* MESSAGES D'ERREUR */
+.tc-form-error {
   text-align: center;
-  padding: 50px 20px;
+  padding: var(--tc-spacing-xl) var(--tc-spacing-md);
 }
 
-.error-icon {
-  font-size: 64px;
+.tc-error-icon {
+  font-size: var(--tc-font-size-xxl);
   color: var(--tc-danger-color);
-  margin-bottom: 20px;
+  margin-bottom: var(--tc-spacing-md);
 }
 
-.error-help {
-  margin-top: 20px;
+.tc-error-help {
+  margin-top: var(--tc-spacing-md);
   font-style: italic;
 }
 
-/* Styles pour les avertissements d'expiration */
-.form-expired-warning {
-  margin-top: 15px;
-  padding: 10px;
-  background-color: var(--tc-warning-bg);
+/* AVERTISSEMENTS ET INFORMATIONS */
+.tc-form-expired-warning {
+  margin-top: var(--tc-spacing-sm);
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  background-color: rgba(var(--tc-warning-color-rgb), 0.1);
   border-radius: var(--tc-border-radius);
-  color: var(--tc-warning-text);
+  color: var(--tc-warning-color);
 }
 
-/* Styles pour les informations de soumission */
-.form-submitted-info, 
-.form-validated-info {
-  margin-top: 20px;
-  padding: 15px;
-  background-color: var(--tc-success-bg);
+.tc-form-submitted-info, 
+.tc-form-validated-info {
+  margin-top: var(--tc-spacing-md);
+  padding: var(--tc-spacing-sm);
+  background-color: rgba(var(--tc-success-color-rgb), 0.1);
   border-radius: var(--tc-border-radius);
-  color: var(--tc-success-text);
-}
-
-/* Styles pour les liens de formulaire */
-.form-link-container {
-  margin-top: 20px;
-  background-color: var(--tc-bg-light);
-  padding: 15px;
-  border-radius: var(--tc-border-radius);
-}
-
-.form-link {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.form-link input {
-  flex: 1;
-  background-color: var(--tc-bg-default);
-}
-
-/* Styles pour le succès du formulaire */
-.form-success {
-  text-align: center;
-  padding: 50px 20px;
-}
-
-.success-icon {
-  font-size: 64px;
   color: var(--tc-success-color);
-  margin-bottom: 20px;
 }
 
-/* Styles pour la validation */
-.form-validation {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.validation-card {
-  background-color: var(--tc-bg-default);
+/* LIENS DE FORMULAIRE */
+.tc-form-link-container {
+  margin-top: var(--tc-spacing-md);
+  background-color: var(--tc-gray-50);
+  padding: var(--tc-spacing-sm);
   border-radius: var(--tc-border-radius);
-  padding: 20px;
-  box-shadow: var(--tc-shadow);
-  margin-top: 20px;
 }
 
-.validation-success {
+.tc-form-link {
+  display: flex;
+  gap: var(--tc-spacing-xs);
+  margin-top: var(--tc-spacing-xs);
+}
+
+.tc-form-link input {
+  flex: 1;
+  background-color: var(--tc-bg-color);
+}
+
+/* SUCCÈS DU FORMULAIRE */
+.tc-form-success {
   text-align: center;
-  padding: 50px 20px;
+  padding: var(--tc-spacing-xl) var(--tc-spacing-md);
 }
 
-/* Formulaire de programmateur */
-.programmateur-form {
+.tc-success-icon {
+  font-size: var(--tc-font-size-xxl);
+  color: var(--tc-success-color);
+  margin-bottom: var(--tc-spacing-md);
+}
+
+/* VALIDATION */
+.tc-form-validation {
   max-width: 800px;
   margin: 0 auto;
 }
 
-.form-intro {
-  margin-bottom: 30px;
+.tc-validation-card {
+  background-color: var(--tc-bg-color);
+  border-radius: var(--tc-border-radius);
+  padding: var(--tc-spacing-md);
+  box-shadow: var(--tc-shadow);
+  margin-top: var(--tc-spacing-md);
 }
 
-.concert-info {
-  background-color: var(--tc-bg-light);
-  padding: 15px;
+.tc-validation-success {
+  text-align: center;
+  padding: var(--tc-spacing-xl) var(--tc-spacing-md);
+}
+
+/* FORMULAIRE DE PROGRAMMATEUR */
+.tc-programmateur-form {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.tc-form-intro {
+  margin-bottom: var(--tc-spacing-lg);
+}
+
+.tc-concert-info {
+  background-color: var(--tc-gray-50);
+  padding: var(--tc-spacing-sm);
   border-radius: var(--tc-border-radius);
-  margin-top: 15px;
+  margin-top: var(--tc-spacing-sm);
 }

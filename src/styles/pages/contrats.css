@@ -1,76 +1,72 @@
 /*
  * Styles pour contrats.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Date de création: Inconnue
- * Dernière mise à jour: 5 mai 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
+@import '@styles/base/variables.css';
 
-
-
-
-/* Styles pour la page des contrats */
-.contrats-page-container {
-  padding: 20px;
+/* CONTENEUR PRINCIPAL */
+.tc-contrats-page-container {
+  padding: var(--tc-spacing-md);
   max-width: 1200px;
   margin: 0 auto;
 }
 
-/* En-tête de la page contrats */
-.contrats-header {
+/* EN-TÊTE DE LA PAGE */
+.tc-contrats-header {
   display: flex;
   justify-content: space-between;
-  
   align-items: center;
-  margin-bottom: var(--tc-spacing-8);
+  margin-bottom: var(--tc-spacing-xl);
 }
 
-/* Grille pour les cartes de contrat */
-.contrats-grid {
+/* GRILLE DE CONTRATS */
+.tc-contrats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
+  gap: var(--tc-spacing-md);
 }
 
-/* Message "pas de contrats" */
-.no-contrats-message {
+/* MESSAGE "PAS DE CONTRATS" */
+.tc-no-contrats-message {
   text-align: center;
-  padding: 50px 20px;
+  padding: var(--tc-spacing-xl) var(--tc-spacing-md);
   color: var(--tc-text-muted);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 15px;
+  gap: var(--tc-spacing-sm);
 }
 
-.no-contrats-message i {
+.tc-no-contrats-message i {
   font-size: 3rem;
-  color: var(--tc-gray-var(--tc-font-weight-medium));
+  color: var(--tc-gray-400);
   display: block;
-  margin-bottom: 20px;
+  margin-bottom: var(--tc-spacing-md);
 }
 
-/* Styles pour les onglets */
-.nav-tabs {
-  margin-bottom: 25px;
+/* ONGLETS */
+.tc-nav-tabs {
+  margin-bottom: var(--tc-spacing-lg);
   border-bottom: 2px solid var(--tc-border-color);
 }
 
-.nav-tabs .nav-link {
+.tc-nav-tabs .tc-nav-link {
   border: none;
   color: var(--tc-text-muted);
   position: relative;
-  padding: 10px 20px;
+  padding: var(--tc-spacing-xs) var(--tc-spacing-md);
 }
 
-.nav-tabs .nav-link.active {
+.tc-nav-tabs .tc-nav-link.tc-active {
   color: var(--tc-primary-color);
   font-weight: var(--tc-font-weight-semibold);
   background-color: transparent;
   border: none;
 }
 
-.nav-tabs .nav-link.active::after {
+.tc-nav-tabs .tc-nav-link.tc-active::after {
   content: '';
   position: absolute;
   left: 0;
@@ -80,65 +76,65 @@
   background-color: var(--tc-primary-color);
 }
 
-/* Styles pour l'affichage des détails de contrat */
-.contrat-details {
-  padding: 15px;
+/* DÉTAILS DE CONTRAT */
+.tc-contrat-details {
+  padding: var(--tc-spacing-sm);
 }
 
-.contrat-details h2 {
+.tc-contrat-details h2 {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-spacing-md);
 }
 
-/* Styles pour l'aperçu du template */
-.template-preview {
+/* APERÇU DU TEMPLATE */
+.tc-template-preview {
   background-color: var(--tc-hover-bg);
   border-radius: var(--tc-border-radius);
-  padding: 15px;
-  margin-top: 20px;
+  padding: var(--tc-spacing-sm);
+  margin-top: var(--tc-spacing-md);
 }
 
-.template-sections-list {
-  margin-top: 10px;
+.tc-template-sections-list {
+  margin-top: var(--tc-spacing-xs);
 }
 
-.template-section-item {
-  padding: 8px 12px;
-  margin-bottom: 5px;
+.tc-template-section-item {
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  margin-bottom: var(--tc-spacing-xs);
   border-radius: var(--tc-border-radius-sm);
-  background-color: var(--tc-bg-default);
+  background-color: var(--tc-bg-color);
   display: flex;
   align-items: center;
   border: 1px solid var(--tc-gray-200);
 }
 
-.section-number {
+.tc-section-number {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 24px;
   height: 24px;
   background-color: var(--tc-primary-color);
-  color: var(--tc-bg-default);
+  color: var(--tc-white);
   border-radius: 50%;
-  font-size: 12px;
-  margin-right: 10px;
+  font-size: var(--tc-font-size-xs);
+  margin-right: var(--tc-spacing-xs);
 }
 
-.section-title {
+.tc-section-title {
   font-weight: var(--tc-font-weight-medium);
 }
 
-/* Styles pour le PDF Viewer */
-.pdf-viewer-container {
-  margin-top: 20px;
+/* PDF VIEWER */
+.tc-pdf-viewer-container {
+  margin-top: var(--tc-spacing-md);
   border-radius: var(--tc-border-radius);
   overflow: hidden;
 }
 
-.pdf-viewer {
+.tc-pdf-viewer {
   height: 600px;
   border: 1px solid var(--tc-border-color);
   border-radius: var(--tc-border-radius-sm);

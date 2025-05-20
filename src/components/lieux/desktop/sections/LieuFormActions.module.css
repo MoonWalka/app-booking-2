@@ -1,57 +1,76 @@
 /*
- * Styles pour LieuFormActions
+ * Styles pour LieuFormActions.module.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 19 May 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
+/* =============================
+   ACTIONS DE FORMULAIRE
+   ============================= */
 .formActions {
   display: flex;
   justify-content: flex-end;
-  gap: var(--tc-spacing-4);
-  margin-top: var(--tc-spacing-8);
-  margin-bottom: var(--tc-spacing-4);
+  gap: var(--tc-spacing-md);
+  margin-top: var(--tc-spacing-xl);
+  margin-bottom: var(--tc-spacing-md);
 }
 
+/* =============================
+   BOUTON D'ANNULATION
+   ============================= */
 .cancelButton {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-1);
-  border: 1px solid var(--tc-border-light);
-  padding: var(--tc-spacing-2) var(--tc-spacing-4);
-  border-radius: var(--tc-radius-md);
+  gap: var(--tc-spacing-xs);
+  border: 1px solid var(--tc-gray-300);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  border-radius: var(--tc-border-radius);
   background-color: transparent;
-  color: var(--tc-color-secondary);
+  color: var(--tc-gray-600);
   font-size: var(--tc-font-size-sm);
-  transition: all var(--tc-transition-fast) var(--tc-transition-timing);
+  transition: var(--tc-transition);
   cursor: pointer;
+  font-weight: var(--tc-font-weight-medium);
 }
 
 .cancelButton:hover:not(:disabled) {
-  background-color: var(--tc-bg-light);
-  color: var(--tc-color-secondary-dark);
-  border-color: var(--tc-border-medium);
+  background-color: var(--tc-gray-100);
+  color: var(--tc-gray-800);
+  border-color: var(--tc-gray-400);
 }
 
-.cancelButton i {
+.cancelButton:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.cancelButtonIcon {
   font-size: var(--tc-font-size-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+/* =============================
+   BOUTON DE SOUMISSION
+   ============================= */
 .submitButton {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-1);
-  padding: var(--tc-spacing-2) var(--tc-spacing-4);
-  border-radius: var(--tc-radius-md);
-  background-color: var(--tc-color-primary);
-  color: var(--tc-bg-default);
+  gap: var(--tc-spacing-xs);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  border-radius: var(--tc-border-radius);
+  background-color: var(--tc-primary-color);
+  color: var(--tc-light-color);
   border: none;
   font-size: var(--tc-font-size-sm);
-  transition: all var(--tc-transition-fast) var(--tc-transition-timing);
+  transition: var(--tc-transition);
   cursor: pointer;
+  font-weight: var(--tc-font-weight-medium);
 }
 
 .submitButton:hover:not(:disabled) {
-  background-color: var(--tc-color-primary-dark);
+  background-color: var(--tc-primary-dark);
 }
 
 .submitButton:disabled {
@@ -59,29 +78,51 @@
   cursor: not-allowed;
 }
 
-.submitButton i {
+.submitButtonIcon {
   font-size: var(--tc-font-size-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+/* =============================
+   BOUTON DE SUPPRESSION
+   ============================= */
 .deleteButton {
   display: flex;
   align-items: center;
   gap: var(--tc-spacing-xs);
   padding: var(--tc-spacing-sm) var(--tc-spacing-md);
-  border-radius: var(--tc-border-radius-sm);
-  background-color: var(--tc-color-danger);
-  color: var(--tc-color-background);
+  border-radius: var(--tc-border-radius);
+  background-color: var(--tc-danger-color);
+  color: var(--tc-light-color);
   border: none;
   font-size: var(--tc-font-size-sm);
-  transition: all 0.2s;
+  transition: var(--tc-transition);
   margin-right: auto;
   cursor: pointer;
+  font-weight: var(--tc-font-weight-medium);
 }
 
 .deleteButton:hover:not(:disabled) {
-  background-color: var(--tc-color-danger-dark);
+  background-color: var(--tc-danger-dark);
 }
 
+.deleteButton:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.deleteButtonIcon {
+  font-size: var(--tc-font-size-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =============================
+   INDICATEUR DE CHARGEMENT
+   ============================= */
 .spinner {
   display: inline-block;
   width: 1rem;
@@ -99,8 +140,10 @@
   }
 }
 
-/* Responsive styles */
-@media (max-width: 768px) {
+/* =============================
+   RESPONSIVE DESIGN
+   ============================= */
+@media (max-width: var(--tc-breakpoint-md)) {
   .formActions {
     flex-direction: column-reverse;
     gap: var(--tc-spacing-sm);

@@ -1,26 +1,26 @@
 /*
  * Styles pour EntrepriseHeader
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 5 mai 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
 .headerTitle {
   font-size: var(--tc-font-size-xl);
-  margin-bottom: var(--tc-spacing-3);
+  margin-bottom: var(--tc-spacing-sm);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-color-title);
+  color: var(--tc-gray-900);
 }
 
 .headerDescription {
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-color-text-muted);
-  margin-bottom: var(--tc-spacing-4);
+  color: var(--tc-text-muted);
+  margin-bottom: var(--tc-spacing-md);
 }
 
 .successAlert {
-  margin-top: var(--tc-spacing-3);
-  margin-bottom: var(--tc-spacing-4);
-  animation: fadeIn var(--tc-transition-speed) ease-in;
+  margin-top: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-spacing-md);
+  animation: fadeIn var(--tc-transition-duration) ease-in;
 }
 
 @keyframes fadeIn {
@@ -32,17 +32,17 @@
 @media (max-width: 768px) {
   .headerTitle {
     font-size: var(--tc-font-size-lg);
-    margin-bottom: var(--tc-spacing-2-5);
+    margin-bottom: var(--tc-spacing-xs);
   }
   
   .headerDescription {
-    margin-bottom: var(--tc-spacing-3);
+    margin-bottom: var(--tc-spacing-sm);
   }
 }
 
 @media (max-width: 576px) {
   .successAlert {
-    margin-top: var(--tc-spacing-2);
-    margin-bottom: var(--tc-spacing-3);
+    margin-top: var(--tc-spacing-xs);
+    margin-bottom: var(--tc-spacing-sm);
   }
 }

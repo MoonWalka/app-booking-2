@@ -1,26 +1,23 @@
 /*
  * Styles pour breakpoints.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Date de création: Inconnue
- * Dernière mise à jour: 5 mai 2025
+ * Date de création: Mai 2025
+ * Dernière mise à jour: 20 mai 2025
  */
-
-
-
-
 
 /*
- * MIXINS POUR MEDIA QUERIES STANDARDISÉS
+ * CLASSES UTILITAIRES POUR MEDIA QUERIES
  * =====================================
- * Utilisation simplifiée des points de rupture dans les composants
- * via les classes utilitaires importables
- * Dernière mise à jour: 12 mai 2025
+ * Système de classes utilitaires responsive pour l'approche mobile-first
+ * Utilisation: <div className="tc-card xs:flex-col md:flex-row">
  */
 
-/* Classes utilitaires pour les média queries - à utiliser avec @import */
+/* =============================
+   CLASSES POUR MAX-WIDTH (DESKTOP-FIRST)
+   ============================= */
 
-/* Point de rupture XS (Smartphones) */
-@media (max-width: var(--tc-breakpoint-xs)) {
+/* Point de rupture XS (<576px - Smartphones) */
+@media (max-width: var(--tc-breakpoint-sm)) {
   .xs\:hidden {
     display: none !important;
   }
@@ -46,8 +43,8 @@
   }
 }
 
-/* Point de rupture SM (Tablettes) */
-@media (max-width: var(--tc-breakpoint-sm)) {
+/* Point de rupture SM (<768px - Tablettes) */
+@media (max-width: var(--tc-breakpoint-md)) {
   .sm\:hidden {
     display: none !important;
   }
@@ -73,8 +70,8 @@
   }
 }
 
-/* Point de rupture MD (Petits écrans) */
-@media (max-width: var(--tc-breakpoint-md)) {
+/* Point de rupture MD (<992px - Petits écrans) */
+@media (max-width: var(--tc-breakpoint-lg)) {
   .md\:hidden {
     display: none !important;
   }
@@ -100,8 +97,8 @@
   }
 }
 
-/* Point de rupture LG (Grands écrans) */
-@media (max-width: var(--tc-breakpoint-lg)) {
+/* Point de rupture LG (<1200px - Grands écrans) */
+@media (max-width: var(--tc-breakpoint-xl)) {
   .lg\:hidden {
     display: none !important;
   }
@@ -127,8 +124,12 @@
   }
 }
 
-/* Min-width variants (Mobile-first) */
-@media (min-width: var(--tc-breakpoint-sm)) {
+/* =============================
+   CLASSES POUR MIN-WIDTH (MOBILE-FIRST)
+   ============================= */
+
+/* À partir des tablettes (≥768px) */
+@media (min-width: var(--tc-breakpoint-md)) {
   .min-sm\:hidden {
     display: none !important;
   }
@@ -146,7 +147,8 @@
   }
 }
 
-@media (min-width: var(--tc-breakpoint-md)) {
+/* À partir des petits écrans (≥992px) */
+@media (min-width: var(--tc-breakpoint-lg)) {
   .min-md\:hidden {
     display: none !important;
   }
@@ -165,21 +167,29 @@
 }
 
 /*
- * GUIDE D'UTILISATION DES MIXINS
- * =============================
+ * GUIDE D'UTILISATION
+ * ==================
  * 
- * 1. Importez ce fichier dans votre CSS module:
- *    @import '../../styles/mixins/breakpoints.css';
+ * 1. Importer ce fichier dans un composant:
+ *    @import '@styles/breakpoints.css';
  * 
- * 2. Utilisez les classes utilitaires dans votre JSX:
- *    <div className={`${styles.container} xs:flex-col xs:w-full md:flex-row`}>
+ * 2. Utiliser les classes utilitaires dans votre JSX:
+ *    <div className="tc-card xs:flex-col md:flex-row">
  * 
- * 3. Pour les composants qui utilisent des selectors complexes,
- *    référencez directement les variables de breakpoint:
- * 
- *    @media (max-width: var(--tc-breakpoint-sm)) {
+ * 3. Pour les CSS Modules avec sélecteurs complexes:
+ *    @media (max-width: var(--tc-breakpoint-md)) {
  *      .myComponent {
- *        // styles spécifiques pour appareils mobiles
+ *        // Styles spécifiques pour tablettes et mobiles
+ *      }
+ *    }
+ *
+ * 4. L'approche mobile-first est recommandée:
+ *    .myComponent {
+ *      // Styles de base pour mobile
+ *    }
+ *    @media (min-width: var(--tc-breakpoint-md)) {
+ *      .myComponent {
+ *        // Adaptations pour écrans plus grands
  *      }
  *    }
  */

@@ -1,16 +1,23 @@
 /*
- * Styles pour LieuxList
+ * Styles pour LieuxList.module.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
+/* =============================
+   CONTENEUR PRINCIPAL
+   ============================= */
 .lieuxContainer {
   padding: var(--tc-spacing-md);
-  background-color: var(--tc-white);
+  background-color: var(--tc-bg-color);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow);
+  border: 1px solid var(--tc-border-color);
 }
 
+/* =============================
+   EN-TÊTE DE LISTE
+   ============================= */
 .headerContainer {
   display: flex;
   justify-content: space-between;
@@ -24,6 +31,9 @@
   gap: var(--tc-spacing-sm);
 }
 
+/* =============================
+   BARRE DE RECHERCHE ET FILTRES
+   ============================= */
 .searchFilterContainer {
   display: flex;
   justify-content: space-between;
@@ -40,15 +50,22 @@
 }
 
 .searchInput {
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
   padding-right: 2.5rem;
   background-color: var(--tc-bg-color);
-  border: var(--tc-border-width) solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-color);
+  border-radius: var(--tc-border-radius);
+  width: 100%;
+  font-size: var(--tc-font-size-base);
+  color: var(--tc-text-color);
+  transition: var(--tc-transition);
 }
 
 .searchInput:focus {
   background-color: var(--tc-bg-color);
   border-color: var(--tc-primary-color);
   box-shadow: var(--tc-input-focus-shadow);
+  outline: none;
 }
 
 .clearSearch {
@@ -60,11 +77,20 @@
   background: none;
   padding: 0 var(--tc-spacing-sm);
   cursor: pointer;
+  color: var(--tc-gray-600);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--tc-transition-duration);
+}
+
+.clearSearch:hover {
+  color: var(--tc-gray-800);
 }
 
 .resultsCount {
   font-size: var(--tc-font-size-xs);
-  color: var(--tc-text-muted);
+  color: var(--tc-gray-600);
   margin-top: var(--tc-spacing-xs);
   padding-left: var(--tc-spacing-sm);
 }
@@ -77,15 +103,42 @@
   gap: var(--tc-spacing-sm);
   padding: var(--tc-spacing-sm) var(--tc-spacing-md);
   border-radius: var(--tc-border-radius);
+  background-color: var(--tc-bg-color);
+  border: 1px solid var(--tc-gray-300);
+  color: var(--tc-gray-700);
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-medium);
+  cursor: pointer;
+  transition: var(--tc-transition);
 }
 
+.modernFilterBtn:hover,
+.modernSortBtn:hover {
+  background-color: var(--tc-gray-100);
+  border-color: var(--tc-gray-400);
+}
+
+.modernFilterBtn.active,
+.modernSortBtn.active {
+  background-color: rgba(var(--tc-primary-color-rgb), 0.1);
+  border-color: var(--tc-primary-color);
+  color: var(--tc-primary-color);
+}
+
+/* =============================
+   TABLEAU
+   ============================= */
 .modernTableContainer {
   overflow-x: auto;
+  margin-bottom: var(--tc-spacing-md);
+  border: 1px solid var(--tc-gray-200);
+  border-radius: var(--tc-border-radius);
 }
 
 .modernTable {
   width: 100%;
   margin-bottom: 0;
+  border-collapse: collapse;
 }
 
 .modernTable th {
@@ -93,15 +146,28 @@
   color: var(--tc-text-color);
   border-bottom: 2px solid var(--tc-border-color);
   padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  text-align: left;
+  font-size: var(--tc-font-size-sm);
+  position: sticky;
+  top: 0;
+  background-color: var(--tc-bg-color);
+  z-index: 1;
+}
+
+.modernTable td {
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  border-bottom: 1px solid var(--tc-gray-200);
+  vertical-align: middle;
+  font-size: var(--tc-font-size-sm);
 }
 
 .clickableRow {
   cursor: pointer;
-  transition: background-color var(--tc-transition-duration) ease;
+  transition: background-color var(--tc-transition-duration);
 }
 
 .clickableRow:hover {
-  background-color: var(--tc-primary-color-lightest);
+  background-color: rgba(var(--tc-primary-color-rgb), 0.1);
 }
 
 .tableRowAnimate {
@@ -113,17 +179,23 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* =============================
+   BADGES ET INDICATEURS
+   ============================= */
 .typeBadge {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
   font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-semibold);
   text-align: center;
   white-space: nowrap;
   vertical-align: baseline;
-  border-radius: var(--tc-border-radius-sm);
-  color: var(--tc-white);
+  border-radius: var(--tc-border-radius);
+  color: var(--tc-light-color);
   text-transform: capitalize;
+  line-height: 1;
 }
 
 .villeBadge {
@@ -131,23 +203,28 @@
   align-items: center;
   font-size: var(--tc-font-size-sm);
   color: var(--tc-text-color);
+  gap: var(--tc-spacing-xs);
 }
 
 .jaugeBadge {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
   font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-semibold);
   text-align: center;
   white-space: nowrap;
   vertical-align: baseline;
-  border-radius: var(--tc-border-radius-sm);
-  color: var(--tc-white);
+  border-radius: var(--tc-border-radius);
+  color: var(--tc-light-color);
+  line-height: 1;
 }
 
 .jaugeType {
   opacity: 0.8;
   font-weight: var(--tc-font-weight-normal);
+  margin-left: var(--tc-spacing-xs);
 }
 
 .concertCount {
@@ -155,8 +232,13 @@
   align-items: center;
   font-size: var(--tc-font-size-sm);
   color: var(--tc-primary-color);
+  font-weight: var(--tc-font-weight-medium);
+  gap: var(--tc-spacing-xs);
 }
 
+/* =============================
+   BOUTONS D'ACTION
+   ============================= */
 .actionButtons {
   display: flex;
   gap: var(--tc-spacing-sm);
@@ -171,20 +253,55 @@
   align-items: center;
   justify-content: center;
   border-radius: var(--tc-border-radius);
+  background-color: var(--tc-bg-color);
+  border: 1px solid var(--tc-gray-300);
+  color: var(--tc-gray-700);
+  cursor: pointer;
+  transition: var(--tc-transition);
 }
 
+.modernBtn:hover {
+  background-color: var(--tc-gray-100);
+  border-color: var(--tc-gray-400);
+  color: var(--tc-primary-color);
+}
+
+.modernBtn.edit:hover {
+  color: var(--tc-primary-color);
+}
+
+.modernBtn.delete:hover {
+  color: var(--tc-danger-color);
+}
+
+/* =============================
+   ALERTES ET NOTIFICATIONS
+   ============================= */
 .modernAlert {
   display: flex;
   align-items: center;
   padding: var(--tc-spacing-md);
   border-radius: var(--tc-border-radius);
-  background-color: var(--tc-hover-bg);
-  color: var(--tc-text-muted);
-  border: var(--tc-border-width) solid var(--tc-border-color);
+  background-color: var(--tc-gray-100);
+  color: var(--tc-gray-700);
+  border: 1px solid var(--tc-border-color);
+  margin-bottom: var(--tc-spacing-md);
+  gap: var(--tc-spacing-sm);
 }
 
-/* Support responsive */
-@media (max-width: 992px) {
+.alertIcon {
+  font-size: var(--tc-font-size-lg);
+  color: var(--tc-gray-600);
+}
+
+.alertContent {
+  flex: 1;
+}
+
+/* =============================
+   RESPONSIVE DESIGN
+   ============================= */
+@media (max-width: var(--tc-breakpoint-lg)) {
   .searchFilterContainer {
     flex-direction: column;
     align-items: flex-start;
@@ -193,10 +310,11 @@
   .searchBar {
     max-width: 100%;
     width: 100%;
+    margin-bottom: var(--tc-spacing-sm);
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: var(--tc-breakpoint-md)) {
   .headerContainer {
     flex-direction: column;
     align-items: flex-start;
@@ -211,9 +329,15 @@
   .actionButtons {
     flex-wrap: wrap;
   }
+  
+  .modernFilterBtn,
+  .modernSortBtn {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
-@media (max-width: 576px) {
+@media (max-width: var(--tc-breakpoint-sm)) {
   .lieuxContainer {
     padding: var(--tc-spacing-sm);
   }
@@ -221,5 +345,16 @@
   .addButton {
     width: 100%;
     justify-content: center;
+  }
+  
+  .typeBadge,
+  .jaugeBadge {
+    font-size: calc(var(--tc-font-size-xs) * 0.9);
+    padding: calc(var(--tc-spacing-xs) * 0.8) var(--tc-spacing-xs);
+  }
+  
+  .modernBtn {
+    width: 32px;
+    height: 32px;
   }
 }

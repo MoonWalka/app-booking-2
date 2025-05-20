@@ -7,6 +7,8 @@
 
 
 
+
+
 /* Styles des listes et tableaux pour TourCraft */
 
 /* ===== SECTION HEADER ===== */
@@ -14,27 +16,27 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 2.var(--tc-spacing-8) 0 1.7rem 0;
+  margin: var(--tc-spacing-8) 0 1.7rem 0;
   flex-wrap: wrap;
 }
 
 .section-header h2 {
   font-size: 2.05rem;
   font-weight: var(--tc-font-weight-bold);
-  color: #324265;
+  color: var(--tc-heading-color);
   margin: 0;
   letter-spacing: 0.2px;
 }
 
 /* ===== BOUTON D'AJOUT ===== */
 .btn-add {
-  background: #2048c3;
-  color: #fff;
+  background: var(--tc-primary-color);
+  color: var(--tc-bg-default);
   border: none;
   border-radius: 6px;
   font-weight: var(--tc-font-weight-medium);
   font-size: var(--tc-spacing-3);
-  box-shadow: 0 1px 7px rgba(47, 54, 100, 0.04);
+  box-shadow: 0 1px 7px var(--tc-color-rgba(47, 54, 100, 0.04), rgba(47, 54, 100, 0.04));
   padding: 10px 20px;
   transition: background .15s;
   text-decoration: none;
@@ -48,8 +50,8 @@
 
 .btn-add:hover,
 .btn-add:focus {
-  background: #14377b;
-  color: #fff;
+  background: var(--tc-primary-dark);
+  color: var(--tc-bg-default);
   text-decoration: none;
 }
 
@@ -60,30 +62,30 @@
 }
 
 .search-bar .form-control {
-  border-radius: var(--tc-radius-md) 0 0 8px;
+  border-radius: var(--tc-border-radius-md) 0 0 8px;
   box-shadow: none;
-  background: #f6f9fc;
-  border: 1px solid #e2e8f0;
+  background: var(--tc-input-bg);
+  border: 1px solid var(--tc-border-color);
   font-size: 1.05rem;
 }
 
 .search-bar .tc-btn {
   border-radius: 0 8px 8px 0;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--tc-border-color);
   border-left: none;
-  background: #f0f4fa;
-  color: #565e74;
+  background: var(--tc-button-alt-bg);
+  color: var(--tc-button-alt-color);
 }
 
 .search-bar .tc-btn:active {
-  background: #e3e8f1;
+  background: var(--tc-button-alt-bg-active);
 }
 
 /* ===== TABLE STYLES ===== */
 .table-responsive {
-  background: #fff;
+  background: var(--tc-bg-default);
   border-radius: 16px;
-  box-shadow: 0 2px 12px rgba(61, 86, 118, .06);
+  box-shadow: 0 2px 12px var(--tc-color-rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.04));
   overflow-x: auto;
   margin-bottom: 2.5rem;
 }
@@ -93,8 +95,8 @@
 }
 
 .tc-table thead {
-  background: #f6f9fc;
-  border-top: 1px solid #e2e8f0;
+  background: var(--tc-color-f6f9fc, #f6f9fc);
+  border-top: 1px solid var(--tc-color-e2e8f0, #e2e8f0);
 }
 
 .tc-table th, 
@@ -105,12 +107,12 @@
 }
 
 .tc-table th {
-  color: #3f4c65;
+  color: var(--tc-heading-color);
   font-weight: var(--tc-font-weight-bold);
   letter-spacing: 0.08em;
-  border-bottom: 2px solid #e2e8f0;
+  border-bottom: 2px solid var(--tc-border-color);
   padding: 13px 16px;
-  background: #f6f9fc;
+  background: var(--tc-table-header-bg);
 }
 
 .tc-table tbody tr {
@@ -119,20 +121,20 @@
 }
 
 .tc-table tbody tr:hover {
-  background: #f2f6fa;
+  background: var(--tc-hover-bg);
 }
 
 .tc-table td {
-  border-bottom: 1px solid #f0f3fa;
-  color: #222d3a;
+  border-bottom: 1px solid var(--tc-border-light);
+  color: var(--tc-text-color);
   padding: 11px 16px;
   font-weight: var(--tc-font-weight-normal);
 }
 
 /* ===== BADGES & FIELD VALUES ===== */
 .structure-badge {
-  background: #e7f1ff;
-  color: #144d8b;
+  background: var(--tc-badge-bg);
+  color: var(--tc-badge-color);
   font-size: 0.98rem;
   padding: 4px 13px;
   border-radius: 15px;
@@ -148,7 +150,7 @@
 .list-view .field-empty,
 .list-view .field-empty span,
 .list-view .field-empty i {
-  color: #bfc8dc;
+  color: var(--tc-muted-color);
   font-style: italic;
   font-size: var(--tc-spacing-3);
 }
@@ -156,13 +158,13 @@
 /* ===== ACTIONS BUTTONS ===== */
 
 .table-actions .tc-btn {
-  color: #5c6791;
-  background: #f6f8fd;
+  color: var(--tc-button-color);
+  background: var(--tc-button-bg);
   border-radius: 5px;
   margin-right: 6px;
   border: none;
   font-size: 1.05rem;
-  transition: background .13s;
+  transition: background .13s, color .13s;
   padding: 7px 10px;
 }
 
@@ -175,8 +177,8 @@
 .table-actions .tc-btn:hover,
 .table-actions .tc-btn:focus, 
 .table-actions .tc-btn:active {
-  background: #e6f0ff;
-  color: #1573e1;
+  background: var(--tc-button-hover-bg);
+  color: var(--tc-button-hover-color);
 }
 
 /* ===== RESPONSIVE ===== */
@@ -199,7 +201,7 @@
   .tc-table tr {
     margin-bottom: 12px;
     display: block;
-    border-radius: var(--tc-radius-md);
-    box-shadow: 0 1px 3px rgba(40, 50, 90, 0.05);
+    border-radius: var(--tc-border-radius-md);
+    box-shadow: 0 1px 3px var(--tc-color-rgba(40, 50, 90, 0.05), rgba(40, 50, 90, 0.05));
   }
 }

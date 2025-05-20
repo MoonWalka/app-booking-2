@@ -1,154 +1,238 @@
-/* filepath: /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/styles/theme.css */
-/* Ce fichier contient les styles d'application des variables et les utilitaires généraux */
+/*
+ * Styles pour theme.css
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 20 mai 2025
+ */
 
-@import url('./base/variables.css');
-/* Application des variables */
-/* Toutes les variables sont maintenant définies dans variables.css */
-body  {
+/* Import des variables avec l'alias standardisé */
+@import '@styles/base/variables.css';
+
+/* =============================
+   STYLES DE BASE
+   ============================= */
+body {
   background-color: var(--tc-bg-color);
   color: var(--tc-text-color);
+  font-family: var(--tc-font-family-base);
   font-size: var(--tc-font-size-base);
+  line-height: var(--tc-line-height-base);
   transition: var(--tc-transition);
 }
-/* Classes utilitaires */
-.tc-card  {
+
+/* =============================
+   COMPOSANTS DE BASE
+   ============================= */
+.tc-card {
   background-color: var(--tc-card-bg);
   border: 1px solid var(--tc-border-color);
-  box-shadow: var(--tc-bs-box-shadow-sm);
+  box-shadow: var(--tc-shadow-sm);
   border-radius: var(--tc-border-radius);
+  padding: var(--tc-spacing-md);
 }
-.form-control  {
+
+.tc-form-control {
   background-color: var(--tc-input-bg);
   border: 1px solid var(--tc-input-border);
   color: var(--tc-input-color);
+  border-radius: var(--tc-border-radius);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  font-size: var(--tc-font-size-base);
+  transition: var(--tc-transition);
 }
-.tc-btn  {
-  /* Base button styles */
+
+.tc-form-control:focus {
+  border-color: var(--tc-input-focus-border);
+  box-shadow: var(--tc-input-focus-shadow);
+  outline: none;
 }
-.tc-btn-primary  {
+
+/* =============================
+   BOUTONS
+   ============================= */
+.tc-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  font-size: var(--tc-font-size-base);
+  font-weight: var(--tc-font-weight-medium);
+  border-radius: var(--tc-border-radius);
+  cursor: pointer;
+  transition: var(--tc-transition);
+  border: 1px solid transparent;
+}
+
+/* Bouton primaire */
+.tc-btn-primary {
   background-color: var(--tc-btn-primary-bg);
   border-color: var(--tc-btn-primary-border);
   color: var(--tc-btn-primary-text);
 }
+
 .tc-btn-primary:hover, 
 .tc-btn-primary:focus, 
 .tc-btn-primary:active,
-.tc-btn-primary.active  {
+.tc-btn-primary.tc-active {
   background-color: var(--tc-btn-primary-hover-bg);
   border-color: var(--tc-btn-primary-hover-bg);
 }
-.tc-btn-secondary  {
+
+/* Bouton secondaire */
+.tc-btn-secondary {
   background-color: var(--tc-btn-secondary-bg);
   color: var(--tc-btn-secondary-text);
   border-color: var(--tc-btn-secondary-border);
 }
+
 .tc-btn-secondary:hover,
 .tc-btn-secondary:focus,
 .tc-btn-secondary:active,
-.tc-btn-secondary.active  {
+.tc-btn-secondary.tc-active {
   background-color: var(--tc-secondary-dark);
   border-color: var(--tc-secondary-dark);
 }
-.tc-btn-success  {
-  background-color: var(--tc-btn-success-bg);
-  color: var(--tc-btn-success-text);
-  border-color: var(--tc-btn-success-border);
+
+/* Bouton succès */
+.tc-btn-success {
+  background-color: var(--tc-success-color);
+  color: var(--tc-light-color);
+  border-color: var(--tc-success-color);
 }
+
 .tc-btn-success:hover,
 .tc-btn-success:focus,
 .tc-btn-success:active,
-.tc-btn-success.active  {
+.tc-btn-success.tc-active {
   background-color: var(--tc-success-dark);
   border-color: var(--tc-success-dark);
-  filter: none;
 }
-.tc-btn-danger  {
-  background-color: var(--tc-btn-danger-bg);
-  color: var(--tc-btn-danger-text);
-  border-color: var(--tc-btn-danger-border);
+
+/* Bouton danger */
+.tc-btn-danger {
+  background-color: var(--tc-danger-color);
+  color: var(--tc-light-color);
+  border-color: var(--tc-danger-color);
 }
+
 .tc-btn-danger:hover,
 .tc-btn-danger:focus,
 .tc-btn-danger:active,
-.tc-btn-danger.active  {
+.tc-btn-danger.tc-active {
   background-color: var(--tc-danger-dark);
   border-color: var(--tc-danger-dark);
 }
-.tc-btn-info  {
-  background-color: var(--tc-btn-info-bg);
-  color: var(--tc-btn-info-text);
-  border-color: var(--tc-btn-info-border);
+
+/* Bouton info */
+.tc-btn-info {
+  background-color: var(--tc-info-color);
+  color: var(--tc-light-color);
+  border-color: var(--tc-info-color);
 }
+
 .tc-btn-info:hover,
 .tc-btn-info:focus,
 .tc-btn-info:active,
-.tc-btn-info.active  {
+.tc-btn-info.tc-active {
   background-color: var(--tc-info-dark);
   border-color: var(--tc-info-dark);
 }
-/* Animations désactivées */
-[data-animations="false"] *  {
+
+/* =============================
+   UTILITAIRES
+   ============================= */
+/* Désactivation des animations */
+[data-animations="false"] * {
   transition: none !important;
 }
-/* Styles spécifiques aux paramètres */
-.address-suggestions  {
+
+/* Suggestions d'adresse */
+.tc-address-suggestions {
   position: absolute;
   z-index: var(--tc-z-index-dropdown);
   width: 100%;
   max-height: 200px;
   overflow-y: auto;
   margin-top: var(--tc-spacing-xs);
+  background-color: var(--tc-bg-color);
+  border: 1px solid var(--tc-border-color);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-shadow);
 }
-.suggestion-item  {
-  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+
+.tc-suggestion-item {
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
   cursor: pointer;
 }
-.suggestion-item:hover  {
+
+.tc-suggestion-item:hover {
   background-color: var(--tc-hover-bg);
 }
-/* CORRECTIFS POUR LES PROBLÈMES DE COULEURS */
-/* Badge et étiquettes */
-.badge-primary,
-.bg-primary  {
-  background-color: var(--tc-badge-bg) !important;
-  color: var(--tc-badge-text);
+
+/* =============================
+   BADGES ET ÉTIQUETTES
+   ============================= */
+.tc-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  font-size: var(--tc-font-size-xs);
+  font-weight: var(--tc-font-weight-semibold);
+  border-radius: var(--tc-border-radius-pill);
+  line-height: 1;
 }
-.badge-secondary,
-.bg-secondary  {
-  background-color: var(--tc-secondary-color) !important;
-  color: var(--tc-bg-default);
+
+.tc-badge-primary {
+  background-color: var(--tc-primary-color);
+  color: var(--tc-light-color);
 }
-.badge-success,
-.bg-success  {
-  background-color: var(--tc-success-color) !important;
+
+.tc-badge-secondary {
+  background-color: var(--tc-secondary-color);
+  color: var(--tc-light-color);
 }
-.badge-danger,
-.bg-danger  {
-  background-color: var(--tc-danger-color) !important;
+
+.tc-badge-success {
+  background-color: var(--tc-success-color);
+  color: var(--tc-light-color);
 }
-.badge-warning,
-.bg-warning  {
-  background-color: var(--tc-warning-color) !important;
+
+.tc-badge-danger {
+  background-color: var(--tc-danger-color);
+  color: var(--tc-light-color);
 }
-.badge-info,
-.bg-info  {
-  background-color: var(--tc-info-color) !important;
+
+.tc-badge-warning {
+  background-color: var(--tc-warning-color);
+  color: var(--tc-dark-color);
 }
-/* Textes colorés */
-.text-primary { color: var(--tc-primary-color) !important; }
-.text-secondary { color: var(--tc-secondary-color) !important; }
-.text-success { color: var(--tc-success-color) !important; }
-.text-danger { color: var(--tc-danger-color) !important; }
-.text-warning { color: var(--tc-warning-color) !important; }
-.text-info { color: var(--tc-info-color) !important; }
-.text-muted { color: var(--tc-text-muted) !important; }
-/* Liens */
-a  {
-  color: var(--tc-primary-light);
+
+.tc-badge-info {
+  background-color: var(--tc-info-color);
+  color: var(--tc-light-color);
+}
+
+/* =============================
+   TEXTES COLORÉS
+   ============================= */
+.tc-text-primary { color: var(--tc-primary-color); }
+.tc-text-secondary { color: var(--tc-secondary-color); }
+.tc-text-success { color: var(--tc-success-color); }
+.tc-text-danger { color: var(--tc-danger-color); }
+.tc-text-warning { color: var(--tc-warning-color); }
+.tc-text-info { color: var(--tc-info-color); }
+.tc-text-muted { color: var(--tc-text-muted); }
+
+/* =============================
+   LIENS
+   ============================= */
+a, .tc-link {
+  color: var(--tc-primary-color);
   text-decoration: none;
   transition: color var(--tc-transition-duration);
 }
-a:hover  {
-  color: var(--tc-primary-color);
+
+a:hover, .tc-link:hover {
+  color: var(--tc-primary-dark);
   text-decoration: underline;
 }

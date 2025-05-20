@@ -1,4 +1,3 @@
-/* filepath: /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/styles/base/colors.css */
 /*
  * SYSTÈME DE COULEURS CENTRALISÉ - TourCraft
  * ==========================================
@@ -19,58 +18,106 @@
   /* =========================================== */
   /* COULEURS DE BASE                           */
   
-  /* Couleurs principales */
-  --tc-primary-color: var(--tc-color-1e3a5f, #1e3a5f); /* Bleu foncé (barre latérale) */
+  /* Couleurs principales - BLEU FONCÉ */
+  --tc-primary-color: #1e3a5f; /* Bleu foncé (barre latérale) */
   --tc-primary-color-rgb: 30, 58, 95; /* Valeurs RGB pour les effets de transparence */
-  --tc-primary-light: var(--tc-color-2d4b72, #2d4b72); /* Version plus claire pour hover */
+  --tc-primary-light: #2d4b72; /* Version plus claire pour hover */
   --tc-primary-light-rgb: 45, 75, 114;
-  --tc-primary-dark: var(--tc-color-132740, #132740); /* Variante foncée pour contraste */
+  --tc-primary-dark: #132740; /* Variante foncée pour contraste */
   --tc-primary-dark-rgb: 19, 39, 64;
   
-  /* Couleurs secondaires */
-  --tc-secondary-color: var(--tc-color-3498db, #3498db); /* Bleu clair pour accents */
+  /* Couleurs secondaires - BLEU VIF */
+  --tc-secondary-color: #3498db; /* Bleu clair pour accents */
   --tc-secondary-color-rgb: 52, 152, 219;
-  --tc-secondary-light: var(--tc-color-4aa3de, #4aa3de);
-  --tc-secondary-dark: var(--tc-color-2980b9, #2980b9);
+  --tc-secondary-light: #4aa3de; /* Plus clair pour hover */
+  --tc-secondary-light-rgb: 74, 163, 222;
+  --tc-secondary-dark: #2980b9; /* Plus foncé pour contraste/active */
+  --tc-secondary-dark-rgb: 41, 128, 185;
   
-  /* Couleurs fonctionnelles */
-  --tc-success-color: var(--tc-color-2ecc71, #2ecc71); /* Vert pour validations/succès */
+  /* Couleurs fonctionnelles - SÉMANTIQUES */
+  --tc-success-color: #2ecc71; /* Vert pour validations/succès */
   --tc-success-color-rgb: 46, 204, 113;
-  --tc-warning-color: var(--tc-color-f39c12, #f39c12); /* Orange pour avertissements */
+  --tc-success-light: #40d47e; /* Variante plus claire */
+  --tc-success-dark: #27ae60; /* Variante plus foncée */
+  
+  --tc-warning-color: #f39c12; /* Orange pour avertissements */
   --tc-warning-color-rgb: 243, 156, 18;
-  --tc-danger-color: var(--tc-color-e74c3c, #e74c3c); /* Rouge pour erreurs/suppressions */
+  --tc-warning-light: #f5ab35; /* Variante plus claire */
+  --tc-warning-dark: #d68910; /* Variante plus foncée */
+  
+  --tc-danger-color: #e74c3c; /* Rouge pour erreurs/suppressions */
   --tc-danger-color-rgb: 231, 76, 60;
-  --tc-info-color: var(--tc-color-3498db, #3498db); /* Bleu clair */
+  --tc-danger-light: #eb6254; /* Variante plus claire */
+  --tc-danger-dark: #c0392b; /* Variante plus foncée */
+  
+  --tc-info-color: #3498db; /* Même que secondary pour cohérence */
   --tc-info-color-rgb: 52, 152, 219;
+  --tc-info-light: #4aa3de; /* Variante plus claire */
+  --tc-info-dark: #2980b9; /* Variante plus foncée */
   
-  /* Couleurs neutres */
-  --tc-dark-color: var(--tc-color-343a40, #343a40); /* Texte foncé */
-  --tc-light-color: var(--tc-color-f8f9fa, #f8f9fa); /* Fond clair */
+  /* Couleurs neutres - CONTRASTE CLAIR/FONCÉ */
+  --tc-dark-color: #343a40; /* Texte foncé */
+  --tc-dark-color-rgb: 52, 58, 64;
+  --tc-light-color: #f8f9fa; /* Fond clair */
+  --tc-light-color-rgb: 248, 249, 250;
   
-  /* Échelle de gris */
-  --tc-white: var(--tc-color-ffffff, #ffffff);
-  --tc-gray-50: var(--tc-color-fafbfc, #fafbfc);
-  --tc-gray-100: var(--tc-color-f8f9fa, #f8f9fa);
-  --tc-gray-200: var(--tc-color-e9ecef, #e9ecef);
-  --tc-gray-300: var(--tc-color-dee2e6, #dee2e6);
-  --tc-gray-400: var(--tc-color-ced4da, #ced4da);
-  --tc-gray-500: var(--tc-color-adb5bd, #adb5bd);
-  --tc-gray-600: var(--tc-color-6c757d, #6c757d);
-  --tc-gray-700: var(--tc-color-495057, #495057);
-  --tc-gray-800: var(--tc-color-343a40, #343a40);
-  --tc-gray-900: var(--tc-color-212529, #212529);
-  --tc-black: var(--tc-color-000000, #000000);
+  /* Échelle de gris - COHÉRENTE ET COMPLÈTE */
+  --tc-white: #ffffff;
+  --tc-white-rgb: 255, 255, 255;
   
-  /* Couleur de texte et bordures */
-  --tc-text-color: var(--tc-color-343a40, #343a40); /* Texte principal */
-  --tc-text-secondary: var(--tc-color-6c757d, #6c757d); /* Texte secondaire */
-  --tc-border-light: var(--tc-color-dee2e6, #dee2e6); /* Bordures */
-  --tc-border-medium: var(--tc-color-c8c8c8, #c8c8c8);
+  --tc-gray-50: #fafbfc;  /* Fond très subtil */
+  --tc-gray-50-rgb: 250, 251, 252;
+  
+  --tc-gray-100: #f8f9fa; /* Fond subtil, hover très léger */
+  --tc-gray-100-rgb: 248, 249, 250;
+  
+  --tc-gray-200: #e9ecef; /* Bordures très claires, hover léger */
+  --tc-gray-200-rgb: 233, 236, 239;
+  
+  --tc-gray-300: #dee2e6; /* Bordures standards */
+  --tc-gray-300-rgb: 222, 226, 230;
+  
+  --tc-gray-400: #ced4da; /* Bordures foncées, texte très léger */
+  --tc-gray-400-rgb: 206, 212, 218;
+  
+  --tc-gray-500: #adb5bd; /* Texte désactivé, icônes légères */
+  --tc-gray-500-rgb: 173, 181, 189;
+  
+  --tc-gray-600: #6c757d; /* Texte secondaire */
+  --tc-gray-600-rgb: 108, 117, 125;
+  
+  --tc-gray-700: #495057; /* Texte principal moins foncé */
+  --tc-gray-700-rgb: 73, 80, 87;
+  
+  --tc-gray-800: #343a40; /* Texte principal */
+  --tc-gray-800-rgb: 52, 58, 64;
+  
+  --tc-gray-900: #212529; /* Texte très foncé, titres */
+  --tc-gray-900-rgb: 33, 37, 41;
+  
+  --tc-black: #000000;
+  --tc-black-rgb: 0, 0, 0;
+  
+  /* Couleur de texte et bordures - RÉUTILISABLES */
+  --tc-text-color: var(--tc-gray-900); /* Texte principal */
+  --tc-text-secondary: var(--tc-gray-600); /* Texte secondaire */
+  --tc-border-light: var(--tc-gray-300); /* Bordures légères */
+  --tc-border-medium: var(--tc-gray-400); /* Bordures moyennes */
+  --tc-border-dark: var(--tc-gray-500); /* Bordures foncées */
   
   /* Variables spécifiques au thème sombre */
-  --tc-dark-theme-bg: var(--tc-color-121212, #121212);
-  --tc-dark-theme-card: var(--tc-color-1e1e1e, #1e1e1e);
-  --tc-dark-theme-border: var(--tc-color-444444, #444444);
-  --tc-dark-theme-surface: var(--tc-color-2a2a2a, #2a2a2a);
-  --tc-dark-theme-input: var(--tc-color-2a2a2a, #2a2a2a);
+  --tc-dark-theme-bg: #121212; /* Fond principal en mode sombre */
+  --tc-dark-theme-bg-rgb: 18, 18, 18;
+  
+  --tc-dark-theme-card: #1e1e1e; /* Fond de carte en mode sombre */
+  --tc-dark-theme-card-rgb: 30, 30, 30;
+  
+  --tc-dark-theme-border: #444444; /* Bordures en mode sombre */
+  --tc-dark-theme-border-rgb: 68, 68, 68;
+  
+  --tc-dark-theme-surface: #2a2a2a; /* Surface secondaire en mode sombre */
+  --tc-dark-theme-surface-rgb: 42, 42, 42;
+  
+  --tc-dark-theme-input: #2a2a2a; /* Fond des formulaires en mode sombre */
+  --tc-dark-theme-input-rgb: 42, 42, 42;
 }

@@ -1,59 +1,312 @@
 /*
- * Styles pour Parametres
+ * Styles pour Parametres.module.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
-.nav-pills .nav-link {
-  margin-bottom: var(--tc-spacing-xs);
-  border-radius: var(--tc-border-radius);
-  color: var(--tc-gray-700);
-}
-
-.nav-pills .nav-link.active {
-  background-color: var(--tc-primary-color);
-  color: var(--tc-white);
-}
-
-.card {
-  box-shadow: var(--tc-shadow-sm));
-}
-
-.card-body {
-  padding: var(--tc-spacing-xl);
-}
-
-.form-group {
-  margin-bottom: var(--tc-spacing-lg);
-}
-
-.form-label {
-  font-weight: var(--tc-font-weight-medium);
-  margin-bottom: var(--tc-spacing-xs);
-}
-
-.btn-group {
+/* =============================
+   NAVIGATION PAR ONGLETS
+   ============================= */
+.navPills {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-spacing-xs);
   margin-bottom: var(--tc-spacing-md);
 }
 
-.color-picker {
-  width: var(--tc-input-width-sm);
-  height: var(--tc-input-height);
-  padding: var(--tc-spacing-xxs);
+.navLink {
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  border-radius: var(--tc-border-radius);
+  color: var(--tc-gray-700);
+  text-decoration: none;
+  font-weight: var(--tc-font-weight-medium);
+  transition: var(--tc-transition);
+  display: flex;
+  align-items: center;
+  gap: var(--tc-spacing-sm);
 }
 
-.export-buttons {
+.navLink:hover {
+  background-color: var(--tc-hover-bg);
+  color: var(--tc-gray-900);
+}
+
+.navLinkActive {
+  background-color: var(--tc-primary-color);
+  color: var(--tc-light-color);
+}
+
+.navLinkActive:hover {
+  background-color: var(--tc-primary-dark);
+  color: var(--tc-light-color);
+}
+
+.navIcon {
+  font-size: var(--tc-font-size-md);
   display: flex;
-  gap: var(--tc-spacing-md);
+  align-items: center;
+  justify-content: center;
+}
+
+/* =============================
+   CARTE DE PARAMÈTRES
+   ============================= */
+.card {
+  background-color: var(--tc-card-bg);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-shadow);
+  border: 1px solid var(--tc-border-color);
+  margin-bottom: var(--tc-spacing-lg);
+}
+
+.cardHeader {
+  padding: var(--tc-spacing-md);
+  background-color: var(--tc-card-header-bg);
+  border-bottom: 1px solid var(--tc-border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-card-header-text);
+}
+
+.cardBody {
+  padding: var(--tc-spacing-xl);
+}
+
+/* =============================
+   FORMULAIRE DE PARAMÈTRES
+   ============================= */
+.formGroup {
+  margin-bottom: var(--tc-spacing-lg);
+}
+
+.formLabel {
+  font-weight: var(--tc-font-weight-medium);
+  margin-bottom: var(--tc-spacing-xs);
+  display: block;
+  color: var(--tc-label-color);
+  font-size: var(--tc-font-size-sm);
+}
+
+.formControl {
+  width: 100%;
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  border: 1px solid var(--tc-input-border);
+  border-radius: var(--tc-border-radius);
+  font-size: var(--tc-font-size-base);
+  color: var(--tc-input-color);
+  background-color: var(--tc-input-bg);
+  transition: var(--tc-transition);
+}
+
+.formControl:focus {
+  border-color: var(--tc-input-focus-border);
+  outline: none;
+  box-shadow: var(--tc-input-focus-shadow);
+}
+
+.formText {
+  margin-top: var(--tc-spacing-xs);
+  font-size: var(--tc-font-size-xs);
+  color: var(--tc-text-muted);
+}
+
+/* =============================
+   GROUPES DE BOUTONS
+   ============================= */
+.btnGroup {
+  display: flex;
+  gap: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-spacing-md);
   flex-wrap: wrap;
 }
 
-@media (max-width: var(--tc-breakpoint-sm)) {
-  .card-body {
+.btn {
+  padding: var(--tc-btn-padding-y) var(--tc-btn-padding-x);
+  border-radius: var(--tc-border-radius);
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-medium);
+  cursor: pointer;
+  transition: var(--tc-transition);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tc-spacing-xs);
+}
+
+.btnPrimary {
+  background-color: var(--tc-btn-primary-bg);
+  color: var(--tc-btn-primary-text);
+  border: none;
+}
+
+.btnPrimary:hover {
+  background-color: var(--tc-btn-primary-hover-bg);
+}
+
+.btnSecondary {
+  background-color: var(--tc-btn-secondary-bg);
+  color: var(--tc-btn-secondary-text);
+  border: 1px solid var(--tc-btn-secondary-border);
+}
+
+.btnSecondary:hover {
+  background-color: var(--tc-btn-secondary-hover-bg);
+}
+
+.btnSuccess {
+  background-color: var(--tc-btn-success-bg);
+  color: var(--tc-btn-success-text);
+  border: none;
+}
+
+.btnSuccess:hover {
+  background-color: var(--tc-btn-success-hover-bg);
+}
+
+.btnDanger {
+  background-color: var(--tc-btn-danger-bg);
+  color: var(--tc-btn-danger-text);
+  border: none;
+}
+
+.btnDanger:hover {
+  background-color: var(--tc-btn-danger-hover-bg);
+}
+
+/* =============================
+   SÉLECTEUR DE COULEUR
+   ============================= */
+.colorPicker {
+  width: 50px;
+  height: 40px;
+  padding: 2px;
+  border: 1px solid var(--tc-border-color);
+  border-radius: var(--tc-border-radius);
+  cursor: pointer;
+}
+
+.colorPickerContainer {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-spacing-md);
+  margin-top: var(--tc-spacing-sm);
+}
+
+.colorValue {
+  font-family: monospace;
+  color: var(--tc-text-muted);
+  font-size: var(--tc-font-size-sm);
+}
+
+/* =============================
+   BOUTONS D'EXPORTATION
+   ============================= */
+.exportButtons {
+  display: flex;
+  gap: var(--tc-spacing-md);
+  flex-wrap: wrap;
+  margin-top: var(--tc-spacing-lg);
+}
+
+.exportButton {
+  flex: 1;
+  min-width: 200px;
+  padding: var(--tc-spacing-md);
+  border-radius: var(--tc-border-radius);
+  border: 1px solid var(--tc-border-color);
+  background-color: var(--tc-bg-color);
+  text-align: center;
+  cursor: pointer;
+  transition: var(--tc-transition);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--tc-spacing-sm);
+}
+
+.exportButton:hover {
+  border-color: var(--tc-primary-color);
+  background-color: rgba(var(--tc-primary-color-rgb), 0.05);
+  transform: translateY(-2px);
+}
+
+.exportIcon {
+  font-size: var(--tc-font-size-xl);
+  color: var(--tc-primary-color);
+  margin-bottom: var(--tc-spacing-xs);
+}
+
+.exportTitle {
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-color);
+  margin-bottom: var(--tc-spacing-xs);
+}
+
+.exportDescription {
+  font-size: var(--tc-font-size-xs);
+  color: var(--tc-text-muted);
+}
+
+/* =============================
+   RESPONSIVE DESIGN
+   ============================= */
+@media (max-width: 992px) { /* Utiliser des px fixes pour compatibilité */
+  .card {
+    margin-bottom: var(--tc-spacing-md);
+  }
+}
+
+@media (max-width: 768px) {
+  .cardBody {
     padding: var(--tc-spacing-md);
   }
   
-  .nav-pills {
+  .navPills {
     margin-bottom: var(--tc-spacing-lg);
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  .navLink {
+    flex: 1;
+    justify-content: center;
+    padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+    font-size: var(--tc-font-size-sm);
+  }
+  
+  .exportButton {
+    min-width: 150px;
+  }
+}
+
+@media (max-width: 576px) {
+  .cardBody {
+    padding: var(--tc-spacing-sm);
+  }
+  
+  .formGroup {
+    margin-bottom: var(--tc-spacing-md);
+  }
+  
+  .navPills {
+    flex-direction: column;
+  }
+  
+  .navLink {
+    width: 100%;
+  }
+  
+  .exportButtons {
+    flex-direction: column;
+  }
+  
+  .exportButton {
+    width: 100%;
   }
 }

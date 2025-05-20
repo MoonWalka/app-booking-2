@@ -7,6 +7,8 @@
 
 
 
+
+
 /* Fichier de styles pour les composants concerts
  * Centralise tous les styles spécifiques aux concerts pour éviter les styles inline
  * et assurer la cohérence visuelle
@@ -30,16 +32,16 @@
 }
 
 .concerts-table th {
-  color: var(--tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-text-secondary);
   font-weight: var(--tc-font-weight-semibold);
   padding: var(--tc-spacing-3) var(--tc-spacing-2);
-  border-bottom: 2px solid var(--tc-border-color, #e9ecef);
+  border-bottom: 2px solid var(--tc-border-color);
 }
 
 .concerts-table td {
   padding: var(--tc-spacing-3) var(--tc-spacing-2);
   vertical-align: middle;
-  border-bottom: 1px solid var(--tc-border-color, #e9ecef);
+  border-bottom: 1px solid var(--tc-border-color);
 }
 
 /* // Correction UI: Améliorer la lisibilité des lignes cliquables */
@@ -49,7 +51,7 @@
 }
 
 .tc-clickable-row:hover {
-  background-color: rgba(0, 123, 255, 0.05);
+  background-color: var(--tc-color-rgba(0, 123, 255, 0.05), rgba(0, 123, 255, 0.05));
 }
 
 .past-concert {
@@ -59,7 +61,7 @@
 /* // Correction UI: Meilleure gestion de l'overflow du texte */
 .text-truncate-container {
   max-width: 180px;
-  var(--tc-bg-default, white)-space: nowrap;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -78,7 +80,7 @@
 
 /* // Correction UI: Amélioration des styles pour les dates */
 .concert-date-cell {
-  var(--tc-bg-default, white)-space: nowrap;
+  white-space: nowrap;
   font-weight: var(--tc-font-weight-semibold);
 }
 
@@ -92,16 +94,16 @@
 }
 
 .date-year {
-  color: var(--tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-text-secondary);
 }
 
 .date-separator {
   margin: 0 2px;
-  color: var(--tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-text-secondary);
 }
 
 .past-date {
-  color: var(--tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-text-secondary);
 }
 
 /* // Correction UI: Styles standardisés pour les messages de statut */
@@ -114,45 +116,45 @@
   font-weight: var(--tc-font-weight-semibold);
   font-size: var(--tc-font-size-sm);
   min-width: 120px;
-  var(--tc-bg-default, white)-space: nowrap;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+  box-shadow: 0 1px 2px var(--tc-color-rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
 }
 
 /* // Correction UI: Amélioration du contraste pour les messages de statut */
 .status-message-primary {
-  background-color: rgba(0, 123, 255, 0.15);
-  color: #0056b3;
+  background-color: var(--tc-color-rgba(0, 123, 255, 0.15), rgba(0, 123, 255, 0.15));
+  color: var(--tc-color-0056b3, #0056b3);
 }
 
 .status-message-success {
-  background-color: rgba(40, 167, 69, 0.15);
-  color: #155724;
+  background-color: var(--tc-color-rgba(40, 167, 69, 0.15), rgba(40, 167, 69, 0.15));
+  color: var(--tc-color-155724, #155724);
 }
 
 .status-message-info {
-  background-color: rgba(23, 162, 184, 0.15);
-  color: #0c5460;
+  background-color: var(--tc-color-rgba(23, 162, 184, 0.15), rgba(23, 162, 184, 0.15));
+  color: var(--tc-color-0c5460, #0c5460);
 }
 
 .status-message-warning {
-  background-color: rgba(255, 193, 7, 0.15);
-  color: #856404;
+  background-color: var(--tc-color-rgba(255, 193, 7, 0.15), rgba(255, 193, 7, 0.15));
+  color: var(--tc-color-856404, #856404);
 }
 
 .status-message-danger {
-  background-color: rgba(220, 53, 69, 0.15);
-  color: #721c24;
+  background-color: var(--tc-color-rgba(220, 53, 69, 0.15), rgba(220, 53, 69, 0.15));
+  color: var(--tc-color-721c24, #721c24);
 }
 
 .status-message-secondary {
-  background-color: rgba(108, 117, 125, 0.15);
-  color: #383d41;
+  background-color: var(--tc-color-rgba(108, 117, 125, 0.15), rgba(108, 117, 125, 0.15));
+  color: var(--tc-color-383d41, #383d41);
 }
 
 .status-message-light {
-  background-color: rgba(248, 249, 250, 0.8);
-  color: #383d41;
-  border: 1px solid rgba(108, 117, 125, 0.2);
+  background-color: var(--tc-color-rgba(248, 249, 250, 0.8), rgba(248, 249, 250, 0.8));
+  color: var(--tc-color-383d41, #383d41);
+  border: 1px solid var(--tc-color-rgba(108, 117, 125, 0.2), rgba(108, 117, 125, 0.2));
 }
 
 /* // Correction UI: Container pour les status avancés */
@@ -171,8 +173,8 @@
   display: flex;
   align-items: center;
   font-size: var(--tc-spacing-2);
-  color: var(--tc-warning-color, #ffc107);
-  background-color: rgba(255, 193, 7, 0.1);
+  color: var(--tc-warning-color);
+  background-color: var(--tc-color-rgba(255, 193, 7, 0.1), rgba(255, 193, 7, 0.1));
   padding: 0.15rem var(--tc-spacing-2);
   border-radius: var(--tc-radius-sm);
   margin-top: var(--tc-spacing-1);
@@ -217,7 +219,7 @@
   }
   
   .status-filter-tabs::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: var(--tc-color-rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
     border-radius: var(--tc-radius-sm);
   }
 }
@@ -232,7 +234,7 @@
 }
 
 .search-bar:focus-within {
-  box-shadow: 0 0 0 0.var(--tc-spacing-8) rgba(0, 123, 255, 0.25) !important;
+  box-shadow: 0 0 0 var(--tc-spacing-8) var(--tc-color-rgba(0, 123, 255, 0.25), rgba(0, 123, 255, 0.25)) !important;
 }
 
 .search-input:focus {
@@ -242,14 +244,14 @@
 /* // Correction UI: Styles pour les montants */
 .montant-value {
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-dark, #212529);
+  color: var(--tc-text-dark);
 }
 
 /* // Correction UI: Styles pour les artistes et programmateurs */
 .artist-name, .programmateur-name {
   display: flex;
   align-items: center;
-  var(--tc-bg-default, white)-space: nowrap;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 180px;
@@ -257,7 +259,7 @@
 
 .artist-name i, .programmateur-name i {
   margin-right: 0.4rem;
-  color: var(--tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-text-secondary);
 }
 
 @media (max-width: 992px) {
@@ -286,7 +288,7 @@
   }
   
   .status-message {
-    padding: 0.var(--tc-spacing-8) var(--tc-spacing-2);
+    padding: var(--tc-spacing-1) var(--tc-spacing-2);
     font-size: var(--tc-spacing-2);
     min-width: 90px;
   }
@@ -305,5 +307,5 @@
 
 .action-button:hover {
   transform: translateY(-1px);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 5px var(--tc-color-rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
 }

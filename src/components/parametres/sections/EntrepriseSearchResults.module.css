@@ -1,31 +1,31 @@
 /*
  * Styles pour EntrepriseSearchResults
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 5 mai 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
 .searchBox {
-  margin-bottom: var(--tc-spacing-4);
+  margin-bottom: var(--tc-spacing-md);
 }
 
 .suggestionsList {
-  margin-top: var(--tc-spacing-2);
-  border: 1px solid var(--tc-border-light);
+  margin-top: var(--tc-spacing-xs);
+  border: 1px solid var(--tc-border-color);
   border-radius: var(--tc-border-radius-sm);
   max-height: 300px;
   overflow-y: auto;
-  box-shadow: var(--tc-shadow-md);
+  box-shadow: var(--tc-shadow);
   z-index: var(--tc-z-index-dropdown);
-  background-color: var(--tc-bg-white);
+  background-color: var(--tc-bg-color);
 }
 
 .suggestionItem {
-  padding: var(--tc-spacing-2);
-  border-bottom: 1px solid var(--tc-border-light);
+  padding: var(--tc-spacing-xs);
+  border-bottom: 1px solid var(--tc-border-color);
   cursor: pointer;
   display: flex;
   align-items: flex-start;
-  transition: background-color var(--tc-transition-speed);
+  transition: var(--tc-transition-fast);
 }
 
 .suggestionItem:last-child {
@@ -33,13 +33,13 @@
 }
 
 .suggestionItem:hover {
-  background-color: var(--tc-bg-hover);
+  background-color: var(--tc-hover-bg);
 }
 
 .suggestionIcon {
-  margin-right: var(--tc-spacing-2);
+  margin-right: var(--tc-spacing-xs);
   font-size: var(--tc-font-size-lg);
-  color: var(--tc-color-text-muted);
+  color: var(--tc-text-muted);
 }
 
 .suggestionContent {
@@ -48,23 +48,23 @@
 
 .suggestionTitle {
   font-weight: var(--tc-font-weight-medium);
-  margin-bottom: var(--tc-spacing-1);
+  margin-bottom: var(--tc-spacing-xs);
 }
 
 .suggestionSubtitle {
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-color-text-dark);
-  margin-bottom: var(--tc-spacing-1);
+  color: var(--tc-gray-800);
+  margin-bottom: var(--tc-spacing-xs);
 }
 
 .suggestionDetails {
   font-size: var(--tc-font-size-xs);
-  color: var(--tc-color-text-muted);
+  color: var(--tc-text-muted);
 }
 
 .noResultsAlert {
-  margin-top: var(--tc-spacing-2);
-  padding: var(--tc-spacing-2);
+  margin-top: var(--tc-spacing-xs);
+  padding: var(--tc-spacing-xs);
   font-size: var(--tc-font-size-sm);
 }
 
@@ -77,11 +77,11 @@
 
 @media (max-width: 576px) {
   .searchBox {
-    margin-bottom: var(--tc-spacing-3);
+    margin-bottom: var(--tc-spacing-sm);
   }
   
   .suggestionItem {
-    padding: var(--tc-spacing-1-5);
+    padding: var(--tc-spacing-xs);
   }
   
   .suggestionIcon {

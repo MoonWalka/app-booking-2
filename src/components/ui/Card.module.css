@@ -1,36 +1,41 @@
 /*
- * Styles pour Card
+ * Styles pour Card.module.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 12 mai 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
-/* Import des classes utilitaires pour les points de rupture */
-@import '../../styles/mixins/breakpoints.css';
+/* Import des variables et des classes utilitaires pour les points de rupture */
+@import '@styles/base/variables.css';
+@import '@styles/mixins/breakpoints.css';
 
-/* Styles de base pour la carte */
+/* =============================
+   STRUCTURE DE BASE
+   ============================= */
 .card {
-  background-color: var(--tc-card-bg);
+  background-color: var(--tc-bg-color);
   border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-shadow-card);
+  box-shadow: var(--tc-shadow);
   margin-bottom: var(--tc-spacing-lg);
   overflow: hidden;
   transition: var(--tc-transition);
+  border: 1px solid var(--tc-border-color);
 }
 
-/* Animation au survol pour les cartes (uniquement quand elles ne sont pas en mode édition) */
 .cardHoverable:hover {
   transform: translateY(-3px);
   box-shadow: var(--tc-shadow-hover);
 }
 
-/* Styles pour l'en-tête de carte */
+/* =============================
+   EN-TÊTE DE CARTE
+   ============================= */
 .cardHeader {
-  background-color: var(--tc-hover-bg);
+  background-color: var(--tc-gray-100);
   padding: var(--tc-spacing-md);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: var(--tc-border-width) solid var(--tc-border-color);
+  border-bottom: var(--tc-border-width, 1px) solid var(--tc-border-color);
 }
 
 .headerTitleSection {
@@ -41,15 +46,18 @@
 
 .cardIcon {
   color: var(--tc-primary-color);
-  font-size: var(--tc-font-size-md);
+  font-size: var(--tc-font-size-lg);
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .cardTitle {
   margin: 0;
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-color);
+  line-height: 1.3;
 }
 
 .headerActions {
@@ -58,21 +66,35 @@
   align-items: center;
 }
 
-/* Styles pour le corps de carte */
+/* =============================
+   CORPS DE CARTE
+   ============================= */
 .cardBody {
   padding: var(--tc-spacing-lg);
 }
 
-/* Styles pour le pied de carte */
+/* =============================
+   PIED DE CARTE
+   ============================= */
 .cardFooter {
-  background-color: var(--tc-hover-bg);
-  border-top: var(--tc-border-width) solid var(--tc-border-color);
+  background-color: var(--tc-gray-100);
+  border-top: var(--tc-border-width, 1px) solid var(--tc-border-color);
   padding: var(--tc-spacing-sm) var(--tc-spacing-lg);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--tc-spacing-sm);
 }
 
-/* Styles pour les différentes variantes */
+/* =============================
+   VARIANTES DE COULEUR
+   ============================= */
 .cardPrimary {
   border-left: 4px solid var(--tc-primary-color);
+}
+
+.cardSecondary {
+  border-left: 4px solid var(--tc-secondary-color);
 }
 
 .cardSuccess {
@@ -91,18 +113,22 @@
   border-left: 4px solid var(--tc-info-color);
 }
 
-/* Styles spécifiques au mode édition */
+/* =============================
+   MODE ÉDITION
+   ============================= */
 .cardEditing {
-  border: var(--tc-border-width) dashed var(--tc-border-color);
-  box-shadow: var(--tc-shadow);
+  border: var(--tc-border-width, 1px) dashed var(--tc-border-color);
+  box-shadow: var(--tc-shadow-sm);
 }
 
 .cardEditing .cardHeader {
   background-color: rgba(var(--tc-primary-color-rgb), 0.1);
 }
 
-/* Responsive avec variables standardisées */
-@media (max-width: var(--tc-breakpoint-sm)) {
+/* =============================
+   RESPONSIVE DESIGN
+   ============================= */
+@media (max-width: var(--tc-breakpoint-md)) {
   .cardBody {
     padding: var(--tc-spacing-md);
   }
@@ -110,10 +136,13 @@
   .cardHeader {
     padding: var(--tc-spacing-sm) var(--tc-spacing-md);
   }
+  
+  .cardFooter {
+    padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  }
 }
 
-/* Styles responsive additionnels pour petits écrans */
-@media (max-width: var(--tc-breakpoint-xs)) {
+@media (max-width: var(--tc-breakpoint-sm)) {
   .headerTitleSection {
     flex-direction: column;
     align-items: flex-start;
@@ -122,5 +151,9 @@
   
   .headerActions {
     margin-top: var(--tc-spacing-xs);
+  }
+  
+  .cardBody {
+    padding: var(--tc-spacing-sm);
   }
 }

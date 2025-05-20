@@ -1,16 +1,87 @@
 /*
- * Styles pour LieuxListEmptyState
+ * Styles pour LieuxListEmptyState.module.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
+/* =============================
+   ALERTE D'ÉTAT VIDE
+   ============================= */
 .modernAlert {
   display: flex;
   align-items: center;
-  padding: 1.25rem;
-  border-radius: 6px;
-  background-color: var(--tc-color-f8f9fa, #f8f9fa);
-  color: var(--tc-color-6c757d, #6c757d);
-  border: 1px solid var(--tc-color-dee2e6, #dee2e6);
-  margin-top: 1rem;
+  padding: var(--tc-spacing-md);
+  border-radius: var(--tc-border-radius);
+  background-color: var(--tc-gray-100);
+  color: var(--tc-gray-600);
+  border: 1px solid var(--tc-gray-300);
+  margin-top: var(--tc-spacing-md);
+  gap: var(--tc-spacing-sm);
+}
+
+.alertIcon {
+  font-size: var(--tc-font-size-lg);
+  color: var(--tc-gray-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.alertContent {
+  flex: 1;
+}
+
+.alertTitle {
+  font-weight: var(--tc-font-weight-semibold);
+  font-size: var(--tc-font-size-md);
+  margin-bottom: var(--tc-spacing-xs);
+  color: var(--tc-text-color);
+}
+
+.alertMessage {
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-gray-600);
+  line-height: var(--tc-line-height-base);
+}
+
+.actionButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  background-color: var(--tc-primary-color);
+  color: var(--tc-light-color);
+  border: none;
+  border-radius: var(--tc-border-radius);
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-medium);
+  cursor: pointer;
+  transition: var(--tc-transition);
+  margin-top: var(--tc-spacing-sm);
+  gap: var(--tc-spacing-xs);
+}
+
+.actionButton:hover {
+  background-color: var(--tc-primary-dark);
+}
+
+/* =============================
+   RESPONSIVE DESIGN
+   ============================= */
+@media (max-width: var(--tc-breakpoint-sm)) {
+  .modernAlert {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: center;
+    padding: var(--tc-spacing-sm);
+  }
+  
+  .alertIcon {
+    margin-bottom: var(--tc-spacing-sm);
+    align-self: center;
+  }
+  
+  .actionButton {
+    width: 100%;
+  }
 }

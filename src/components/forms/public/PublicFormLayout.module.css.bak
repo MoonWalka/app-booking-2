@@ -1,0 +1,46 @@
+/*
+ * Styles pour PublicFormLayout
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
+.formIsolatedContainer {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--tc-color-f8f9fa, #f8f9fa);
+  max-width: 1200px;
+  margin: 0 auto;
+  box-shadow: 0 0 20px var(--tc-color-rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
+}
+
+.formHeader {
+  background-color: var(--tc-color-fff, #fff);
+  padding: 1rem 2rem;
+  border-bottom: 1px solid var(--tc-color-e9ecef, #e9ecef);
+  box-shadow: 0 2px 4px var(--tc-color-rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05));
+}
+
+.formLogo {
+  text-align: center;
+}
+
+.formLogo h2 {
+  margin: 0;
+  color: var(--tc-color-212529, #212529);
+}
+
+.formContent {
+  flex-grow: 1;
+  padding: 2rem;
+  background-color: var(--tc-color-fff, #fff);
+}
+
+.formFooter {
+  padding: 1rem 2rem;
+  background-color: var(--tc-color-f8f9fa, #f8f9fa);
+  border-top: 1px solid var(--tc-color-e9ecef, #e9ecef);
+  text-align: center;
+  color: var(--tc-color-6c757d, #6c757d);
+  font-size: 0.9rem;
+}

@@ -10,11 +10,11 @@
 }
 
 .formCard {
-  background-color: var(--tc-color-ffffff, var(--tc-color-fff, #fff)fff); /* var(--tc-bg-card) */
+  background-color: var(--tc-color-ffffff, var(--tc-text-color)fff); /* var(--tc-bg-card) */
   border-radius: 8px; /* var(--tc-border-radius-lg) */
   box-shadow: 0 2px 4px var(--tc-color-rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)); /* var(--tc-shadow-sm) */
   margin-bottom: 1.5rem; /* var(--tc-spacing-4) */
-  border: 1px solid var(--tc-color-e9ecef, #e9ecef); /* var(--tc-border-light) */
+  border: 1px solid var(--tc-text-color); /* var(--tc-border-light) */
   overflow: hidden;
 }
 
@@ -22,8 +22,8 @@
   display: flex;
   align-items: center;
   padding: 1rem 1.25rem; /* var(--tc-spacing-3) var(--tc-spacing-4) */
-  background-color: var(--tc-color-f8f9fa, #f8f9fa); /* var(--tc-bg-subtle) */
-  border-bottom: 1px solid var(--tc-color-e9ecef, #e9ecef); /* var(--tc-border-light) */
+  background-color: var(--tc-text-color); /* var(--tc-bg-subtle) */
+  border-bottom: 1px solid var(--tc-text-color); /* var(--tc-border-light) */
 }
 
 .cardIcon {
@@ -31,7 +31,7 @@
   height: 32px; /* var(--tc-icon-size-md) */
   border-radius: 6px; /* var(--tc-border-radius-md) */
   background-color: var(--tc-color-rgba(0, 123, 255, 0.1), rgba(0, 123, 255, 0.1)); /* var(--tc-bg-primary-subtle) */
-  color: var(--tc-color-007bff, #007bff); /* var(--tc-color-primary) */
+  color: var(--tc-text-color); /* var(--tc-color-primary) */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -43,7 +43,7 @@
   margin: 0;
   font-size: 1.25rem; /* var(--tc-font-size-lg) */
   font-weight: 600; /* var(--tc-font-weight-semibold) */
-  color: var(--tc-color-333333, #333333); /* var(--tc-color-title) */
+  color: var(--tc-text-color); /* var(--tc-color-title) */
 }
 
 .cardBody {
@@ -71,7 +71,7 @@
   display: block;
   margin-bottom: 0.5rem; /* var(--tc-spacing-1-5) */
   font-weight: 500; /* var(--tc-font-weight-medium) */
-  color: var(--tc-color-333333, #333333); /* var(--tc-color-title) */
+  color: var(--tc-text-color); /* var(--tc-color-title) */
 }
 
 .formControl {
@@ -80,14 +80,14 @@
   padding: 0.5rem 0.75rem; /* var(--tc-spacing-1-5) var(--tc-spacing-2) */
   font-size: 1rem; /* var(--tc-font-size-base) */
   line-height: 1.5; /* var(--tc-line-height-base) */
-  border: 1px solid var(--tc-color-ced4da, #ced4da); /* var(--tc-border-input) */
+  border: 1px solid var(--tc-text-color); /* var(--tc-border-input) */
   border-radius: 0.25rem; /* var(--tc-border-radius-sm) */
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-  background-color: var(--tc-color-fff, #fff);
+  background-color: var(--tc-text-color);
 }
 
 .formControl:focus {
-  border-color: var(--tc-color-86b7fe, #86b7fe); /* var(--tc-focus-border) */
+  border-color: var(--tc-text-color); /* var(--tc-focus-border) */
   box-shadow: 0 0 0 0.25rem var(--tc-color-rgba(13, 110, 253, 0.25), rgba(13, 110, 253, 0.25)); /* var(--tc-focus-shadow) */
   outline: 0;
 }
@@ -101,10 +101,10 @@
   line-height: 1.5; /* var(--tc-line-height-base) */
   background-position: right 0.75rem center;
   background-size: 16px 12px;
-  border: 1px solid var(--tc-color-ced4da, #ced4da); /* var(--tc-border-input) */
+  border: 1px solid var(--tc-text-color); /* var(--tc-border-input) */
   border-radius: 0.25rem; /* var(--tc-border-radius-sm) */
   appearance: none;
-  background-color: var(--tc-color-fff, #fff);
+  background-color: var(--tc-text-color);
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
   background-repeat: no-repeat;
 }
@@ -113,11 +113,11 @@
   display: block;
   margin-top: 0.25rem; /* var(--tc-spacing-0-5) */
   font-size: 0.875rem; /* var(--tc-font-size-sm) */
-  color: var(--tc-color-6c757d, #6c757d); /* var(--tc-color-text-muted) */
+  color: var(--tc-text-color); /* var(--tc-color-text-muted) */
 }
 
 .requiredField {
-  color: var(--tc-color-dc3545, #dc3545); /* var(--tc-color-danger) */
+  color: var(--tc-text-color); /* var(--tc-color-danger) */
   margin-left: 0.25rem; /* var(--tc-spacing-0-5) */
 }
 
@@ -135,11 +135,11 @@
   font-size: 1rem; /* var(--tc-font-size-base) */
   font-weight: 400; /* var(--tc-font-weight-regular) */
   line-height: 1.5; /* var(--tc-line-height-base) */
-  color: var(--tc-color-212529, #212529); /* var(--tc-color-text) */
+  color: var(--tc-text-color); /* var(--tc-color-text) */
   text-align: center;
   white-space: nowrap;
-  background-color: var(--tc-color-f8f9fa, #f8f9fa); /* var(--tc-bg-subtle) */
-  border: 1px solid var(--tc-color-ced4da, #ced4da); /* var(--tc-border-input) */
+  background-color: var(--tc-text-color); /* var(--tc-bg-subtle) */
+  border: 1px solid var(--tc-text-color); /* var(--tc-border-input) */
   border-left: 0;
   border-radius: 0 0.25rem 0.25rem 0; /* 0 var(--tc-border-radius-sm) var(--tc-border-radius-sm) 0 */
 }

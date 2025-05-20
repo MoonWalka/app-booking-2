@@ -1,9 +1,12 @@
 /*
- * Styles pour EntitySelector
+ * Styles pour EntitySelector.module.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
+/* =============================
+   CONTENEUR PRINCIPAL
+   ============================= */
 .container {
   margin-bottom: var(--tc-spacing-md);
   width: 100%;
@@ -14,6 +17,7 @@
   margin-bottom: var(--tc-spacing-sm);
   font-weight: var(--tc-font-weight-medium);
   color: var(--tc-text-color);
+  font-size: var(--tc-font-size-sm);
 }
 
 .required {
@@ -21,12 +25,15 @@
   margin-left: var(--tc-spacing-xs);
 }
 
+/* =============================
+   SÉLECTEUR
+   ============================= */
 .selector {
   position: relative;
   width: 100%;
-  border: var(--tc-border-width) solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-color);
   border-radius: var(--tc-border-radius);
-  background-color: var(--tc-input-bg);
+  background-color: var(--tc-bg-color);
   cursor: pointer;
   transition: var(--tc-transition);
 }
@@ -37,7 +44,7 @@
 
 .selector.open {
   border-color: var(--tc-primary-color);
-  box-shadow: var(--tc-focus-shadow);
+  box-shadow: var(--tc-input-focus-shadow);
 }
 
 .selector.error {
@@ -45,28 +52,28 @@
 }
 
 .selector.disabled {
-  background-color: var(--tc-disabled-bg);
-  opacity: var(--tc-disabled-opacity);
+  background-color: var(--tc-gray-100);
+  opacity: 0.7;
   cursor: not-allowed;
 }
 
 .selectedValue {
-  padding: var(--tc-input-padding-y) var(--tc-input-padding-x);
-  min-height: var(--tc-input-height);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  min-height: 40px;
   display: flex;
   align-items: center;
   gap: var(--tc-spacing-sm);
 }
 
 .icon {
-  color: var(--tc-secondary-color);
-  font-size: var(--tc-font-size-sm);
+  color: var(--tc-gray-600);
+  font-size: var(--tc-font-size-md);
 }
 
 .arrow {
   margin-left: auto;
-  color: var(--tc-secondary-color);
-  transition: var(--tc-transition-short);
+  color: var(--tc-gray-600);
+  transition: transform var(--tc-transition-duration);
 }
 
 .arrow.up {
@@ -74,7 +81,8 @@
 }
 
 .placeholder {
-  color: var(--tc-placeholder-color);
+  color: var(--tc-gray-500);
+  font-style: italic;
 }
 
 .clearButton {
@@ -82,7 +90,7 @@
   background: none;
   border: none;
   font-size: var(--tc-font-size-base);
-  color: var(--tc-secondary-color);
+  color: var(--tc-gray-600);
   cursor: pointer;
   padding: 0;
   display: flex;
@@ -91,23 +99,27 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
+  transition: var(--tc-transition);
 }
 
 .clearButton:hover {
-  background-color: var(--tc-light-gray);
-  color: var(--tc-dark-gray);
+  background-color: var(--tc-gray-200);
+  color: var(--tc-gray-800);
 }
 
+/* =============================
+   MENU DÉROULANT
+   ============================= */
 .dropdown {
   position: absolute;
   top: 100%;
   left: 0;
   right: 0;
   margin-top: var(--tc-spacing-xs);
-  background-color: var(--tc-dropdown-bg);
-  border: var(--tc-border-width) solid var(--tc-border-color);
+  background-color: var(--tc-bg-color);
+  border: 1px solid var(--tc-border-color);
   border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-dropdown-shadow);
+  box-shadow: var(--tc-shadow);
   z-index: var(--tc-z-index-dropdown);
   max-height: 300px;
   display: flex;
@@ -117,9 +129,12 @@
 .search {
   padding: var(--tc-spacing-sm);
   border: none;
-  border-bottom: var(--tc-border-width) solid var(--tc-border-color);
+  border-bottom: 1px solid var(--tc-gray-300);
   width: 100%;
   outline: none;
+  font-size: var(--tc-font-size-base);
+  color: var(--tc-text-color);
+  transition: border-color var(--tc-transition-duration);
 }
 
 .search:focus {
@@ -137,51 +152,59 @@
   display: flex;
   align-items: center;
   gap: var(--tc-spacing-sm);
-  transition: var(--tc-transition-short);
+  transition: background-color var(--tc-transition-duration);
+  color: var(--tc-text-color);
 }
 
 .item:hover {
-  background-color: var(--tc-hover-bg);
+  background-color: var(--tc-gray-100);
 }
 
 .item.active {
-  background-color: var(--tc-primary-light-alpha);
+  background-color: rgba(var(--tc-primary-color-rgb), 0.1);
   color: var(--tc-primary-color);
 }
 
 .itemIcon {
-  color: var(--tc-secondary-color);
-  font-size: var(--tc-font-size-sm);
+  color: var(--tc-gray-600);
+  font-size: var(--tc-font-size-md);
 }
 
+/* =============================
+   ÉTATS SPÉCIAUX
+   ============================= */
 .loading,
 .noResults {
   padding: var(--tc-spacing-md);
   text-align: center;
-  color: var(--tc-secondary-color);
+  color: var(--tc-gray-600);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--tc-spacing-sm);
+  font-size: var(--tc-font-size-sm);
 }
 
 .loading i,
 .noResults i {
   font-size: var(--tc-font-size-lg);
+  color: var(--tc-primary-color);
 }
 
 .helperText {
   margin-top: var(--tc-spacing-xs);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-helper-text-color);
+  color: var(--tc-gray-600);
 }
 
 .errorText {
   color: var(--tc-danger-color);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+/* =============================
+   RESPONSIVE DESIGN
+   ============================= */
+@media (max-width: var(--tc-breakpoint-md)) {
   .dropdown {
     position: fixed;
     top: auto;
@@ -192,11 +215,20 @@
     margin-top: 0;
     border-radius: var(--tc-border-radius) var(--tc-border-radius) 0 0;
     max-height: 70vh;
-    box-shadow: var(--tc-modal-shadow);
+    box-shadow: var(--tc-shadow-lg);
     z-index: var(--tc-z-index-modal);
   }
   
   .itemsList {
     max-height: calc(70vh - 50px);
+  }
+  
+  .search {
+    padding: var(--tc-spacing-md);
+    font-size: var(--tc-font-size-md);
+  }
+  
+  .item {
+    padding: var(--tc-spacing-md);
   }
 }

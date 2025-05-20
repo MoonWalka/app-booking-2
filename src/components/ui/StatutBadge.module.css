@@ -1,12 +1,16 @@
 /*
- * Styles pour StatutBadge
+ * Styles pour StatutBadge.module.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 5 mai 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
+/* =============================
+   BADGE - CLASSE DE BASE
+   ============================= */
 .badge {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
   border-radius: var(--tc-border-radius-pill);
   font-weight: var(--tc-font-weight-medium);
@@ -14,12 +18,16 @@
   white-space: nowrap;
   text-align: center;
   vertical-align: middle;
-  background-color: var(--tc-hover-bg);
+  background-color: var(--tc-gray-100);
   color: var(--tc-text-color);
   box-shadow: var(--tc-shadow-sm);
+  transition: var(--tc-transition);
+  gap: var(--tc-spacing-xs);
 }
 
-/* Tailles du badge */
+/* =============================
+   VARIANTES DE TAILLE
+   ============================= */
 .small {
   font-size: var(--tc-font-size-xs);
   padding: var(--tc-spacing-xs) var(--tc-spacing-xs);
@@ -35,44 +43,74 @@
   padding: var(--tc-spacing-xs) var(--tc-spacing-md);
 }
 
-/* Couleurs de badge */
+/* =============================
+   VARIANTES DE COULEUR
+   ============================= */
 .primary {
-  background-color: var(--tc-primary-color-lightest);
+  background-color: rgba(var(--tc-primary-color-rgb), 0.1);
   color: var(--tc-primary-color);
 }
 
 .secondary {
-  background-color: var(--tc-hover-bg);
-  color: var(--tc-text-color);
+  background-color: var(--tc-gray-100);
+  color: var(--tc-gray-800);
 }
 
 .success {
-  background-color: var(--tc-success-color-lightest);
+  background-color: rgba(var(--tc-success-color-rgb), 0.1);
   color: var(--tc-success-color);
 }
 
 .info {
-  background-color: var(--tc-info-color-lightest);
+  background-color: rgba(var(--tc-info-color-rgb), 0.1);
   color: var(--tc-info-color);
 }
 
 .warning {
-  background-color: var(--tc-warning-color-lightest);
+  background-color: rgba(var(--tc-warning-color-rgb), 0.1);
   color: var(--tc-warning-color);
 }
 
 .danger {
-  background-color: var(--tc-danger-color-lightest);
+  background-color: rgba(var(--tc-danger-color-rgb), 0.1);
   color: var(--tc-danger-color);
 }
 
-/* Icône */
+/* =============================
+   ICÔNE
+   ============================= */
 .icon {
-  margin-right: var(--tc-spacing-xs);
   font-size: 0.9em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Styles responsive standardisés */
+/* =============================
+   ANIMATION
+   ============================= */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate {
+  animation: pulse 2s infinite ease-in-out;
+}
+
+/* =============================
+   RESPONSIVE DESIGN
+   ============================= */
 @media (max-width: var(--tc-breakpoint-sm)) {
   .small {
     font-size: var(--tc-font-size-xs);
@@ -88,21 +126,4 @@
     font-size: var(--tc-font-size-sm);
     padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
   }
-}
-
-/* Animation optionnelle pour les badges actifs */
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-.animate {
-  animation: pulse 2s infinite ease-in-out;
 }

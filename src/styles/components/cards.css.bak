@@ -7,12 +7,14 @@
 
 
 
+
+
 /* Styles pour les cartes de l'interface */
 .tc-card {
-  background: #fff;
+  background: var(--tc-color-fff, #fff);
   border: none;
-  border-radius: 1.var(--tc-spacing-8);
-  box-shadow: 0 4px 12px rgba(44, 62, 80, 0.08);
+  border-radius: var(--tc-spacing-8);
+  box-shadow: 0 4px 12px var(--tc-color-rgba(44, 62, 80, 0.08), rgba(44, 62, 80, 0.08));
   margin-bottom: 2.3rem;
   overflow: hidden;
   transition: all 0.25s ease;
@@ -20,19 +22,19 @@
 
 .tc-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(44, 62, 80, 0.12);
+  box-shadow: 0 6px 20px var(--tc-color-rgba(44, 62, 80, 0.12), rgba(44, 62, 80, 0.12));
 }
 
 .tc-card-header {
-  background: linear-gradient(to right, #f7faff, #edf3fb);
-  padding: 1.var(--tc-spacing-3) var(--tc-spacing-4);
+  background: linear-gradient(to right, var(--tc-color-f7faff, #f7faff), var(--tc-color-edf3fb, #edf3fb));
+  padding: var(--tc-spacing-3) var(--tc-spacing-4);
   display: flex;
   align-items: center;
   gap: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-bold);
   font-size: var(--tc-font-size-xl);
-  color: #225ea8;
-  border-bottom: 1px solid #dce3ed;
+  color: var(--tc-color-225ea8, #225ea8);
+  border-bottom: 1px solid var(--tc-color-dce3ed, #dce3ed);
 }
 
 .tc-card-header h5,
@@ -40,7 +42,7 @@
   margin: 0;
   font-size: 1.28rem;
   font-weight: var(--tc-font-weight-semibold);
-  color: #225ea8;
+  color: var(--tc-color-225ea8, #225ea8);
 }
 
 .tc-card-body {
@@ -49,8 +51,8 @@
 
 .tc-card-footer {
   padding: var(--tc-spacing-3) var(--tc-spacing-4);
-  background: #f7faff;
-  border-top: 1px solid #dce3ed;
+  background: var(--tc-color-f7faff, #f7faff);
+  border-top: 1px solid var(--tc-color-dce3ed, #dce3ed);
 }
 
 /* Animation pour toutes les cartes en mode visualisation */
@@ -79,7 +81,7 @@ html body .tc-detail-card:hover,
 html body .form-card:not(.editing):hover,
 html body .details-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 5px 15px var(--tc-color-rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.08));
 }
 
 /* Card Variations */

@@ -1,23 +1,24 @@
 /*
- * Styles pour LieuxResultsTable
+ * Styles pour LieuxResultsTable.module.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
-/* 
- * Styles pour LieuxResultsTable
- * Tableau de résultats pour la liste des lieux
- * Dernière mise à jour: 04/05/2025
- */
-
+/* =============================
+   CONTENEUR DE TABLEAU
+   ============================= */
 .tableContainer {
   overflow-x: auto;
   margin-bottom: var(--tc-spacing-md);
   border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-box-shadow-sm));
-  background-color: var(--tc-color-background);
+  box-shadow: var(--tc-shadow-sm);
+  background-color: var(--tc-bg-color);
+  border: 1px solid var(--tc-border-color);
 }
 
+/* =============================
+   TABLEAU PRINCIPAL
+   ============================= */
 .modernTable {
   width: 100%;
   margin-bottom: 0;
@@ -25,32 +26,47 @@
 }
 
 .modernTable th {
-  font-weight: var(--tc-font-weight-bold);
-  color: var(--tc-color-text-secondary);
-  border-bottom: 2px solid var(--tc-color-border);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-gray-700);
+  border-bottom: 2px solid var(--tc-gray-300);
   padding: var(--tc-spacing-sm) var(--tc-spacing-md);
   text-align: left;
   white-space: nowrap;
   position: sticky;
   top: 0;
-  background-color: var(--tc-color-background);
+  background-color: var(--tc-bg-color);
   z-index: 1;
+  font-size: var(--tc-font-size-sm);
+  transition: background-color var(--tc-transition-duration);
+}
+
+.modernTable th:hover {
+  background-color: var(--tc-gray-100);
 }
 
 .modernTable td {
   padding: var(--tc-spacing-sm) var(--tc-spacing-md);
-  border-bottom: 1px solid var(--tc-color-border-light);
+  border-bottom: 1px solid var(--tc-gray-200);
   vertical-align: middle;
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-text-color);
+}
+
+.modernTable tbody tr {
+  transition: background-color var(--tc-transition-duration);
 }
 
 .modernTable tbody tr:hover {
-  background-color: var(--tc-color-background-hover);
+  background-color: var(--tc-gray-100);
 }
 
 .modernTable tbody tr:last-child td {
   border-bottom: none;
 }
 
+/* =============================
+   COLONNES AVEC LARGEURS MINIMALES
+   ============================= */
 .colName {
   min-width: 200px;
 }
@@ -76,17 +92,20 @@
   text-align: right;
 }
 
+/* =============================
+   PIED DE TABLEAU
+   ============================= */
 .tableFooter {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: var(--tc-spacing-sm) var(--tc-spacing-md);
-  background-color: var(--tc-color-background-secondary);
-  border-top: 1px solid var(--tc-color-border-light);
+  background-color: var(--tc-gray-100);
+  border-top: 1px solid var(--tc-gray-200);
 }
 
 .paginationInfo {
-  color: var(--tc-color-text-muted);
+  color: var(--tc-gray-600);
   font-size: var(--tc-font-size-sm);
 }
 
@@ -95,14 +114,47 @@
   gap: var(--tc-spacing-xs);
 }
 
-/* Responsive styles */
-@media (max-width: 992px) {
+.paginationButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  border: 1px solid var(--tc-gray-300);
+  border-radius: var(--tc-border-radius);
+  background-color: var(--tc-bg-color);
+  color: var(--tc-gray-700);
+  font-size: var(--tc-font-size-sm);
+  cursor: pointer;
+  transition: var(--tc-transition);
+}
+
+.paginationButton:hover {
+  background-color: var(--tc-gray-100);
+  border-color: var(--tc-gray-400);
+}
+
+.paginationButton.active {
+  background-color: var(--tc-primary-color);
+  color: var(--tc-light-color);
+  border-color: var(--tc-primary-color);
+}
+
+.paginationButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* =============================
+   RESPONSIVE DESIGN
+   ============================= */
+@media (max-width: var(--tc-breakpoint-lg)) {
   .colType, .colCapacity {
     display: none;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: var(--tc-breakpoint-md)) {
   .colLocation {
     display: none;
   }
@@ -112,11 +164,21 @@
   }
 }
 
-@media (max-width: 576px) {
+@media (max-width: var(--tc-breakpoint-sm)) {
   .tableContainer {
     margin-left: calc(var(--tc-spacing-sm) * -1);
     margin-right: calc(var(--tc-spacing-sm) * -1);
-    width: calc(100% + var(--tc-spacing-md));
+    width: calc(100% + (var(--tc-spacing-sm) * 2));
     border-radius: 0;
+  }
+  
+  .tableFooter {
+    flex-direction: column;
+    gap: var(--tc-spacing-sm);
+  }
+  
+  .paginationControls {
+    width: 100%;
+    justify-content: center;
   }
 }

@@ -1,16 +1,19 @@
 /*
- * Styles pour LieuHeader
+ * Styles pour LieuHeader.module.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 19 May 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
+/* =============================
+   CONTENEUR PRINCIPAL
+   ============================= */
 .detailsHeaderContainer {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: var(--tc-spacing-6);
+  margin-bottom: var(--tc-spacing-lg);
   flex-wrap: wrap;
-  gap: var(--tc-spacing-4);
+  gap: var(--tc-spacing-md);
 }
 
 .titleContainer {
@@ -18,27 +21,30 @@
   min-width: 250px;
 }
 
+/* =============================
+   FIL D'ARIANE
+   ============================= */
 .breadcrumbContainer {
   display: flex;
   align-items: center;
-  margin-bottom: var(--tc-spacing-1);
+  margin-bottom: var(--tc-spacing-xs);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-color-secondary);
+  color: var(--tc-secondary-color);
 }
 
 .breadcrumbItem {
   cursor: pointer;
-  color: var(--tc-color-primary);
-  transition: color var(--tc-transition-fast) var(--tc-transition-timing);
+  color: var(--tc-primary-color);
+  transition: color var(--tc-transition-duration);
 }
 
 .breadcrumbItem:hover {
-  color: var(--tc-color-primary-dark);
+  color: var(--tc-primary-dark);
   text-decoration: underline;
 }
 
 .breadcrumbItem.active {
-  color: var(--tc-color-secondary-dark);
+  color: var(--tc-gray-700);
   font-weight: var(--tc-font-weight-medium);
   cursor: default;
 }
@@ -48,24 +54,32 @@
 }
 
 .breadcrumbContainer i {
-  margin: 0 var(--tc-spacing-1);
+  margin: 0 var(--tc-spacing-xs);
   font-size: var(--tc-font-size-xs);
+  color: var(--tc-gray-500);
 }
 
+/* =============================
+   TITRE
+   ============================= */
 .modernTitle {
   margin: 0;
-  font-size: var(--tc-font-size-2xl);
+  font-size: var(--tc-font-size-xxl);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-color-secondary-dark);
+  color: var(--tc-text-color);
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-2);
+  gap: var(--tc-spacing-sm);
   flex-wrap: wrap;
+  line-height: 1.2;
 }
 
+/* =============================
+   BOUTONS D'ACTION
+   ============================= */
 .actionButtons {
   display: flex;
-  gap: var(--tc-spacing-1);
+  gap: var(--tc-spacing-xs);
   align-items: center;
   justify-content: flex-end;
   flex-wrap: wrap;
@@ -74,30 +88,53 @@
 .actionBtn {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-1);
+  gap: var(--tc-spacing-xs);
 }
 
+/* =============================
+   BADGE DE TYPE
+   ============================= */
 .typeBadge {
   font-size: var(--tc-font-size-xs);
   text-transform: uppercase;
-  padding: var(--tc-spacing-1) var(--tc-spacing-2);
-  border-radius: var(--tc-radius-md);
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  border-radius: var(--tc-border-radius);
+  font-weight: var(--tc-font-weight-medium);
+  background-color: var(--tc-gray-100);
+  color: var(--tc-gray-700);
 }
 
-/* Responsive styles */
-@media (max-width: 768px) {
+/* =============================
+   RESPONSIVE DESIGN
+   ============================= */
+@media (max-width: var(--tc-breakpoint-md)) {
   .detailsHeaderContainer {
     flex-direction: column;
-    gap: var(--tc-spacing-2);
+    gap: var(--tc-spacing-sm);
   }
   
   .actionButtons {
     width: 100%;
     justify-content: flex-start;
-    margin-top: var(--tc-spacing-2);
+    margin-top: var(--tc-spacing-sm);
   }
   
   .modernTitle {
     font-size: var(--tc-font-size-xl);
+  }
+}
+
+@media (max-width: var(--tc-breakpoint-sm)) {
+  .breadcrumbContainer {
+    font-size: var(--tc-font-size-xs);
+  }
+  
+  .modernTitle {
+    font-size: var(--tc-font-size-lg);
+  }
+  
+  .typeBadge {
+    font-size: calc(var(--tc-font-size-xs) * 0.9);
+    padding: calc(var(--tc-spacing-xs) * 0.8) var(--tc-spacing-xs);
   }
 }

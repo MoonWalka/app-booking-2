@@ -200,7 +200,7 @@ const ArtisteView = () => {
                 <i className="bi bi-calendar-x"></i>
                 <p>Aucun concert associé à cet artiste</p>
                 <button 
-                  className="btn btn-primary"
+                  className="tc-btn tc-btn-primary"
                   onClick={() => navigate('/concerts/nouveau')}
                 >
                   <i className="bi bi-plus-circle me-2"></i>
@@ -212,7 +212,7 @@ const ArtisteView = () => {
                 <div className={styles.concertsHeaderDesktop}>
                   <h3>Concerts ({artiste.concertsAssocies.length})</h3>
                   <button 
-                    className="btn btn-sm btn-outline-primary"
+                    className="tc-btn tc-btn-sm tc-btn-outline-primary"
                     onClick={() => navigate('/concerts/nouveau')}
                   >
                     <i className="bi bi-plus-circle"></i>
@@ -276,7 +276,7 @@ const ArtisteView = () => {
                       </div>
                       <div className={styles.contratActions}>
                         {contrat.url ? (
-                          <a href={contrat.url} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-outline-primary">
+                          <a href={contrat.url} target="_blank" rel="noopener noreferrer" className="tc-btn tc-btn-sm tc-btn-outline-primary">
                             <i className="bi bi-file-earmark-pdf"></i>
                           </a>
                         ) : (

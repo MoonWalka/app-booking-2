@@ -25,7 +25,7 @@ const ExampleCard = ({ title, description, link, tags, icon }) => {
           <span key={index} className="badge badge-pill badge-info mr-2">{tag}</span>
         ))}
       </div>
-      <Link to={link} className="btn btn-primary">
+      <Link to={link} className="tc-btn tc-btn-primary">
         Voir l'exemple
       </Link>
     </Card>
@@ -202,7 +202,7 @@ const FormulairesOptimisesIndex = () => {
         </ul>
         
         <div className="text-center mt-4">
-          <Link to="/docs/hooks/formulaires" className="btn btn-outline-primary">
+          <Link to="/docs/hooks/formulaires" className="tc-btn tc-btn-outline-primary">
             Consulter la documentation complète des hooks
           </Link>
         </div>

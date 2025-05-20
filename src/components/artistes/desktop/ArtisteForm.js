@@ -67,7 +67,7 @@ const BasicInfoStep = ({ data, onNext, onBack }) => {
       <div className={styles.stepFormActions}>
         <button
           type="button"
-          className="btn btn-primary"
+          className="tc-btn tc-btn-primary"
           onClick={handleNext}
         >
           Suivant
@@ -150,7 +150,7 @@ const ContactStep = ({ data, onNext, onBack }) => {
       <div className={styles.stepFormActions}>
         <button
           type="button"
-          className="btn btn-primary"
+          className="tc-btn tc-btn-primary"
           onClick={handleNext}
         >
           Suivant
@@ -195,7 +195,7 @@ const MembersStep = ({ data, onNext, onBack }) => {
           />
           <button 
             type="button" 
-            className="btn btn-sm btn-outline-primary"
+            className="tc-btn tc-btn-sm tc-btn-outline-primary"
             onClick={ajouterMembre}
           >
             <i className="bi bi-plus-lg"></i>
@@ -212,7 +212,7 @@ const MembersStep = ({ data, onNext, onBack }) => {
                   {membre}
                   <button 
                     type="button" 
-                    className="btn btn-sm btn-outline-danger"
+                    className="tc-btn tc-btn-sm tc-btn-outline-danger"
                     onClick={() => supprimerMembre(index)}
                   >
                     <i className="bi bi-trash"></i>
@@ -227,7 +227,7 @@ const MembersStep = ({ data, onNext, onBack }) => {
       <div className={styles.stepFormActions}>
         <button
           type="button"
-          className="btn btn-primary"
+          className="tc-btn tc-btn-primary"
           onClick={handleNext}
         >
           Terminer
@@ -325,7 +325,7 @@ const ArtisteFormDesktop = () => {
         <h2>Formulaire d'artiste</h2>
         <p>Ce formulaire est en cours de développement. Utilisez la version desktop pour le moment.</p>
         <button
-          className="btn btn-primary"
+          className="tc-btn tc-btn-primary"
           onClick={() => navigate('/artistes')}
         >
           Retour à la liste

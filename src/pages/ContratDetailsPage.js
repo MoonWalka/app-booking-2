@@ -103,7 +103,7 @@ const ContratDetailsPage = () => {
           <p>{error || "Ce contrat n'existe pas ou n'a pas pu être chargé"}</p>
         </Alert>
         <button 
-          className="btn btn-primary"
+          className="tc-btn tc-btn-primary"
           onClick={handleNavigateBack}
         >
           <i className="bi bi-arrow-left me-2"></i>

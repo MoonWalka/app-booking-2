@@ -10,8 +10,8 @@ export default function RenderedView({ entity }) {
       <p><strong>Email:</strong> {email ? <a href={`mailto:${email}`}>{email}</a> : 'Non spécifié'}</p>
       <p><strong>Téléphone:</strong> {telephone ? <a href={`tel:${telephone}`}>{telephone}</a> : 'Non spécifié'}</p>
       <div className="mt-4">
-        <Link to={`/programmateurs/edit/${id}`} className="btn btn-primary me-2">Modifier</Link>
-        <Link to="/programmateurs" className="btn btn-secondary">Retour à la liste</Link>
+        <Link to={`/programmateurs/edit/${id}`} className="tc-btn tc-btn-primary me-2">Modifier</Link>
+        <Link to="/programmateurs" className="tc-btn tc-btn-secondary">Retour à la liste</Link>
       </div>
     </div>
   );

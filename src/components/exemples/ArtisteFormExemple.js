@@ -208,7 +208,7 @@ const ArtisteFormExemple = () => {
                 <div className="input-group-append">
                   <button
                     type="button"
-                    className="btn btn-outline-primary"
+                    className="tc-btn tc-btn-outline-primary"
                     onClick={handleAjouterMembre}
                   >
                     <i className="bi bi-plus-lg"></i> Ajouter
@@ -248,14 +248,14 @@ const ArtisteFormExemple = () => {
     <div>
       <button
         type="button"
-        className="btn btn-outline-secondary mr-2"
+        className="tc-btn tc-btn-outline-secondary mr-2"
         onClick={handleCancel}
       >
         Annuler
       </button>
       <button
         type="button"
-        className="btn btn-primary"
+        className="tc-btn tc-btn-primary"
         onClick={handleSubmit}
         disabled={isSubmitting}
       >
@@ -299,7 +299,7 @@ const ArtisteFormExemple = () => {
             {etapeActuelle > 0 && (
               <button
                 type="button"
-                className="btn btn-outline-primary"
+                className="tc-btn tc-btn-outline-primary"
                 onClick={goToPreviousStep}
               >
                 Précédent
@@ -309,7 +309,7 @@ const ArtisteFormExemple = () => {
             {etapeActuelle < etapes.length - 1 ? (
               <button
                 type="button"
-                className="btn btn-primary ml-auto"
+                className="tc-btn tc-btn-primary ml-auto"
                 onClick={goToNextStep}
               >
                 Suivant
@@ -317,7 +317,7 @@ const ArtisteFormExemple = () => {
             ) : (
               <button
                 type="submit"
-                className="btn btn-success ml-auto"
+                className="tc-btn tc-btn-success ml-auto"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? 'Enregistrement...' : 'Terminer'}

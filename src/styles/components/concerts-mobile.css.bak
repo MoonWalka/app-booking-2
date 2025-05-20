@@ -7,6 +7,8 @@
 
 
 
+
+
 /* Styles spécifiques pour la version mobile des concerts 
  * Compléments au fichier concerts.css pour adapter l'UI aux mobiles
  */
@@ -29,15 +31,15 @@
 }
 
 .mobile-search-container .input-group {
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 5px var(--tc-color-rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.08));
   border-radius: var(--tc-radius-md);
   overflow: hidden;
 }
 
 .mobile-search-container .input-group-text {
-  background-color: var(--tc-bg-default, white);
+  background-color: var(--tc-bg-default);
   border: none;
-  color: var(--tc-primary-color, #007bff);
+  color: var(--tc-primary-color);
 }
 
 .mobile-search-container .form-control {
@@ -69,7 +71,7 @@
 }
 
 .mobile-filters-container::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: var(--tc-color-rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
   border-radius: var(--tc-radius-sm);
 }
 
@@ -89,9 +91,9 @@
 
 .concert-card {
   display: flex;
-  background-color: var(--tc-bg-default, white);
+  background-color: var(--tc-bg-default);
   border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 10px var(--tc-color-rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.08));
   overflow: hidden;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   position: relative;
@@ -101,7 +103,7 @@
 .concert-card:hover, 
 .concert-card:active {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 12px var(--tc-color-rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.12));
 }
 
 /* // Correction UI: Amélioration de l'affichage des dates sur mobile */
@@ -111,8 +113,8 @@
   align-items: center;
   justify-content: center;
   min-width: 70px;
-  background-color: var(--tc-primary-color, #007bff);
-  color: var(--tc-bg-default, white);
+  background-color: var(--tc-primary-color);
+  color: var(--tc-bg-default);
   padding: var(--tc-spacing-2) var(--tc-spacing-2);
   text-align: center;
 }
@@ -148,8 +150,8 @@
   font-size: var(--tc-spacing-3);
   font-weight: var(--tc-font-weight-semibold);
   margin-bottom: var(--tc-spacing-2);
-  color: var(--tc-text-dark, #212529);
-  var(--tc-bg-default, white)-space: nowrap;
+  color: var(--tc-text-dark);
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -165,7 +167,7 @@
   display: flex;
   align-items: center;
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-text-secondary);
 }
 
 .info-item i {
@@ -180,7 +182,7 @@
   margin-right: 0.35rem;
   font-weight: var(--tc-font-weight-medium);
   max-width: 120px;
-  var(--tc-bg-default, white)-space: nowrap;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -188,7 +190,7 @@
 .concert-venue-location {
   font-size: var(--tc-font-size-xs);
   opacity: 0.9;
-  var(--tc-bg-default, white)-space: nowrap;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   display: inline-block;
@@ -196,14 +198,14 @@
 }
 
 .artist-tag {
-  background-color: rgba(0, 123, 255, 0.1);
-  color: var(--tc-primary-color, #007bff);
+  background-color: var(--tc-color-rgba(0, 123, 255, 0.1), rgba(0, 123, 255, 0.1));
+  color: var(--tc-primary-color);
   padding: 0.15rem var(--tc-spacing-2);
   border-radius: var(--tc-radius-sm);
   font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-medium);
   max-width: 180px;
-  var(--tc-bg-default, white)-space: nowrap;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -229,7 +231,7 @@
   flex-direction: column;
   justify-content: space-around;
   padding: var(--tc-spacing-1);
-  background-color: rgba(0, 0, 0, 0.03);
+  background-color: var(--tc-color-rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.03));
 }
 
 .concert-action-button {
@@ -239,16 +241,16 @@
   align-items: center;
   justify-content: center;
   border-radius: var(--tc-radius-md);
-  color: var(--tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
-  background-color: var(--tc-bg-default, white);
+  color: var(--tc-text-secondary);
+  background-color: var(--tc-bg-default);
   margin-bottom: var(--tc-spacing-1);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 3px var(--tc-color-rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.08));
   transition: all 0.2s ease;
 }
 
 .concert-action-button:hover {
   transform: translateY(-1px);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 5px var(--tc-color-rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15));
 }
 
 .concert-action-button:last-child {
@@ -256,11 +258,11 @@
 }
 
 .action-btn.view {
-  color: var(--tc-primary-color, #007bff);
+  color: var(--tc-primary-color);
 }
 
 .action-btn.edit {
-  color: var(--tc-secondary-color, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-secondary-color);
 }
 
 /* // Correction UI: Styles pour les états vides et erreurs */
@@ -271,60 +273,60 @@
   justify-content: center;
   text-align: center;
   padding: var(--tc-spacing-8) var(--tc-spacing-3);
-  background-color: var(--tc-bg-default, white);
+  background-color: var(--tc-bg-default);
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px var(--tc-color-rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.08));
   margin-top: var(--tc-spacing-3);
 }
 
 .empty-container i, .error-container i {
   font-size: 2.5rem;
   margin-bottom: var(--tc-spacing-3);
-  color: var(--tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-text-secondary);
 }
 
 .error-container i {
-  color: var(--tc-danger-color, var(--tc-color-error));
+  color: var(--tc-danger-color);
 }
 
 .empty-container p, .error-container p {
   margin-bottom: var(--tc-spacing-4);
-  color: var(--tc-text-secondary, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-text-secondary);
 }
 
 /* // Correction UI: Styles spécifiques pour différents statuts avec amélioration de contraste */
 .concert-status-badge.bg-info {
-  background-color: rgba(23, 162, 184, 0.2) !important;
-  color: #0c5460 !important;
+  background-color: var(--tc-color-rgba(23, 162, 184, 0.2), rgba(23, 162, 184, 0.2)) !important;
+  color: var(--tc-color-0c5460, #0c5460) !important;
 }
 
 .concert-status-badge.bg-primary {
-  background-color: rgba(0, 123, 255, 0.2) !important;
-  color: #004085 !important;
+  background-color: var(--tc-color-rgba(0, 123, 255, 0.2), rgba(0, 123, 255, 0.2)) !important;
+  color: var(--tc-color-004085, #004085) !important;
 }
 
 .concert-status-badge.bg-success {
-  background-color: rgba(40, 167, 69, 0.2) !important;
-  color: #155724 !important;
+  background-color: var(--tc-color-rgba(40, 167, 69, 0.2), rgba(40, 167, 69, 0.2)) !important;
+  color: var(--tc-color-155724, #155724) !important;
 }
 
 .concert-status-badge.bg-warning {
-  background-color: rgba(255, 193, 7, 0.2) !important;
-  color: #856404 !important;
+  background-color: var(--tc-color-rgba(255, 193, 7, 0.2), rgba(255, 193, 7, 0.2)) !important;
+  color: var(--tc-color-856404, #856404) !important;
 }
 
 .concert-status-badge.bg-secondary {
-  background-color: rgba(108, 117, 125, 0.2) !important;
-  color: #383d41 !important;
+  background-color: var(--tc-color-rgba(108, 117, 125, 0.2), rgba(108, 117, 125, 0.2)) !important;
+  color: var(--tc-color-383d41, #383d41) !important;
 }
 
 .concert-status-badge.bg-danger {
-  background-color: rgba(220, 53, 69, 0.2) !important;
-  color: #721c24 !important;
+  background-color: var(--tc-color-rgba(220, 53, 69, 0.2), rgba(220, 53, 69, 0.2)) !important;
+  color: var(--tc-color-721c24, #721c24) !important;
 }
 
 .concert-status-badge.bg-light {
-  background-color: rgba(248, 249, 250, 0.8) !important;
-  color: #212529 !important;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: var(--tc-color-rgba(248, 249, 250, 0.8), rgba(248, 249, 250, 0.8)) !important;
+  color: var(--tc-color-212529, #212529) !important;
+  border: 1px solid var(--tc-color-rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
 }

@@ -1,11 +1,11 @@
 /*
  * Styles pour EntrepriseContactFields
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 5 mai 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
 .inputIcon {
-  color: var(--tc-color-text-muted);
+  color: var(--tc-text-muted);
 }
 
 .formLabel {
@@ -14,7 +14,7 @@
 
 .invalidFeedback {
   width: 100%;
-  margin-top: var(--tc-spacing-1);
+  margin-top: var(--tc-spacing-xs);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-color-danger);
+  color: var(--tc-danger-color);
 }

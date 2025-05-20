@@ -1,565 +1,317 @@
 /*
  * Styles pour programmateurs.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Date de création: Inconnue
- * Dernière mise à jour: 5 mai 2025
+ * Date de création: Mai 2025
+ * Dernière mise à jour: 20 mai 2025
  */
-
-
-
-
-
-/* Styles pour la page des programmateurs */
-/* Styles for all programmateur-related components */
 
 /* =============================
    VARIABLES SPÉCIFIQUES PROGRAMMATEURS
    ============================= */
 :root {
-  --programmateur-color: var(--tc-color-6f42c1, #6f42c1); /* Violet pour les programmateurs */
-  --programmateur-color-light: var(--tc-color-f0e6fa, #f0e6fa);
+  --tc-programmateur-color: #6f42c1; /* Violet pour les programmateurs */
+  --tc-programmateur-color-light: #f0e6fa;
+  --tc-programmateur-color-rgb: 111, 66, 193;
 }
 
 /* =============================
    DÉTAILS DU PROGRAMMATEUR
    ============================= */
-.programmateur-detail-container {
-  padding: 20px;
+.tc-programmateur-container {
+  padding: var(--tc-spacing-md);
   background-color: var(--tc-bg-color);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow);
-  margin-bottom: 20px;
+  margin-bottom: var(--tc-spacing-md);
 }
 
-.programmateur-header {
+.tc-programmateur-header {
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: var(--tc-spacing-md);
 }
 
-.programmateur-info {
+.tc-programmateur-info {
   flex: 1;
 }
 
-.programmateur-name {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 5px;
+.tc-programmateur-name {
+  font-size: var(--tc-font-size-xl);
+  font-weight: var(--tc-font-weight-bold);
+  margin-bottom: var(--tc-spacing-xs);
 }
 
-.programmateur-organization {
+.tc-programmateur-organization {
   color: var(--tc-text-muted);
-  margin-bottom: 10px;
+  margin-bottom: var(--tc-spacing-sm);
 }
 
-.programmateur-actions {
+.tc-programmateur-actions {
   display: flex;
-  gap: 10px;
+  gap: var(--tc-spacing-sm);
 }
 
-.programmateur-contact {
-  margin-top: 20px;
-}
-
-.contact-list {
-  margin-top: 15px;
-}
-
-.notes-section {
-  margin-top: 20px;
-  padding: 15px;
-  background-color: var(--tc-bg-warning-light);
-  border-radius: var(--tc-radius-md);
-  border-left: 4px solid var(--tc-border-warning);
-}
-
-.notes-title {
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.notes-content {
-  white-space: pre-line;
+.tc-notes-section {
+  margin-top: var(--tc-spacing-md);
+  padding: var(--tc-spacing-sm);
+  background-color: rgba(var(--tc-warning-color-rgb), 0.1);
+  border-radius: var(--tc-border-radius);
+  border-left: 4px solid var(--tc-warning-color);
 }
 
 /* =============================
    FORMULAIRE DU PROGRAMMATEUR
    ============================= */
-/* Styles unifiés pour tous les formulaires */
-.programmateur-form {
+.tc-programmateur-form {
   max-width: 800px;
   margin: 0 auto;
 }
 
-.programmateur-form-container {
-  padding: var(--tc-spacing-4);
-  background: var(--tc-bg-color);
-  border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-shadow);
-  transition: all 0.3s ease;
+.tc-form-header {
+  margin-bottom: var(--tc-spacing-md);
+  border-bottom: 1px solid var(--tc-border-color);
+  padding-bottom: var(--tc-spacing-sm);
 }
 
-/* En-tête du formulaire */
-.form-header-container {
-  margin-bottom: var(--tc-spacing-4);
-  border-bottom: 2px solid var(--tc-border-color-light);
-  padding-bottom: var(--tc-spacing-3);
-}
-
-.modern-title {
+.tc-modern-title {
   font-weight: var(--tc-font-weight-semibold);
   color: var(--tc-text-color);
-  margin: 0 0 var(--tc-spacing-2) 0;
-  font-size: var(--tc-spacing-4);
+  margin: 0 0 var(--tc-spacing-sm) 0;
+  font-size: var(--tc-font-size-lg);
 }
 
-.breadcrumb-container {
+.tc-breadcrumb {
   display: flex;
   align-items: center;
-  font-size: 0.875rem;
+  font-size: var(--tc-font-size-sm);
   color: var(--tc-text-muted);
 }
 
-.breadcrumb-item {
-  cursor: pointer;
-}
-
-.breadcrumb-item:hover {
-  color: var(--tc-primary-color);
-  text-decoration: underline;
-}
-
-.breadcrumb-item.active {
-  color: var(--tc-text-color-dark);
-  font-weight: var(--tc-font-weight-semibold);
-}
-
-.breadcrumb-container i {
-  margin: 0 var(--tc-spacing-2);
-  font-size: var(--tc-spacing-2);
-}
-
-/* Cartes de formulaire */
-.modern-form {
-  margin-top: var(--tc-spacing-4);
-}
-
-.form-card {
+.tc-form-card {
   background-color: var(--tc-bg-color);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow-sm);
-  margin-bottom: var(--tc-spacing-4);
+  margin-bottom: var(--tc-spacing-md);
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: all var(--tc-transition-duration);
 }
 
-.form-card:hover {
+.tc-form-card:hover {
   box-shadow: var(--tc-shadow-md);
   transform: translateY(-2px);
 }
 
-/* En-tête de carte unifiée */
-.card-header {
-  background-color: var(--tc-bg-light);
-  padding: var(--tc-spacing-3) var(--tc-spacing-4);
+.tc-card-header {
+  background-color: var(--tc-gray-100);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
   display: flex;
   align-items: center;
   border-bottom: 1px solid var(--tc-border-color);
 }
 
-.card-header i {
-  font-size: var(--tc-font-size-xl);
-  margin-right: var(--tc-spacing-2);
-}
-
-/* Couleurs différentes pour chaque section */
-.card-header i.bi-person-vcard {
-  color: var(--tc-primary-color);
-}
-
-.card-header i.bi-building,
-.card-header i.bi-person-badge {
+.tc-card-header i.bi-person-badge {
   color: var(--tc-programmateur-color);
+  margin-right: var(--tc-spacing-sm);
+  font-size: var(--tc-font-size-lg);
 }
 
-.card-header h3 {
-  margin: 0;
-  font-size: var(--tc-spacing-4);
-  font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-color);
+.tc-card-body {
+  padding: var(--tc-spacing-md);
 }
 
-.card-body {
-  padding: var(--tc-spacing-4);
+.tc-form-group {
+  margin-bottom: var(--tc-spacing-md);
 }
 
-.form-group {
-  margin-bottom: var(--tc-font-size-xl);
-}
-
-.form-label {
+.tc-form-label {
   font-weight: var(--tc-font-weight-medium);
   color: var(--tc-text-color);
-  margin-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-spacing-sm);
   display: block;
 }
 
-/* Classe .required supprimée - remplacée par .tc-required dans forms.css */
-
-.optional {
+.tc-optional {
   color: var(--tc-text-muted);
   font-size: var(--tc-font-size-xs);
-  font-weight: normal;
+  font-weight: var(--tc-font-weight-normal);
 }
 
-/* Styles pour le mode affichage des détails */
-.form-display {
-  font-size: var(--tc-spacing-3);
-  padding: var(--tc-spacing-2) 0;
-  margin-bottom: 0;
+.tc-form-display {
+  padding: var(--tc-spacing-sm) 0;
   min-height: 2.5rem;
   display: flex;
   align-items: center;
   color: var(--tc-text-color);
 }
 
-.email-link, .phone-link {
+.tc-email-link, .tc-phone-link {
   text-decoration: none;
   color: var(--tc-primary-color);
-  transition: color 0.2s;
+  transition: color var(--tc-transition-duration);
 }
 
-.email-link:hover, .phone-link:hover {
+.tc-email-link:hover, .tc-phone-link:hover {
   color: var(--tc-primary-dark);
   text-decoration: underline;
 }
 
-/* Styles pour les boutons d'action */
-/* Séparation des styles du bouton et de l'icône pour meilleure cohérence */
-.action-btn {
-  display: flex;
-  align-items: center;
-  padding: var(--tc-spacing-2) var(--tc-spacing-3);
-  font-weight: var(--tc-font-weight-medium);
-}
-
-.action-btn i {
-  margin-right: var(--tc-spacing-2);
-}
-
-.form-actions {
+.tc-form-actions {
   display: flex;
   justify-content: flex-end;
-  gap: var(--tc-spacing-3);
-  margin-top: var(--tc-spacing-8);
-  margin-bottom: var(--tc-spacing-8);
+  gap: var(--tc-spacing-sm);
+  margin-top: var(--tc-spacing-lg);
 }
 
 /* =============================
    LISTE DES PROGRAMMATEURS
    ============================= */
-.programmateurs-list-container {
-  padding: 20px;
-}
-
-.programmateurs-header {
+.tc-programmateurs-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: var(--tc-spacing-md);
 }
 
-.programmateurs-title {
-  font-size: 24px;
-  font-weight: bold;
-}
-
-.programmateurs-actions {
-  display: flex;
-}
-
-.filter-options {
-  margin-bottom: 20px;
-  padding: 15px;
-  background-color: var(--tc-bg-light);
-  border-radius: var(--tc-radius-md);
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-}
-
-.filter-option {
-  display: flex;
-  align-items: center;
-}
-
-.filter-option label {
-  margin-right: 10px;
-  font-weight: var(--tc-font-weight-medium);
-}
-
-/* Style de carte pour les listes de programmateurs */
-.programmateur-list-card {
+.tc-programmateur-list-card {
   background-color: var(--tc-bg-color);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow);
-  margin-bottom: 15px;
+  margin-bottom: var(--tc-spacing-sm);
   overflow: hidden;
-  transition: transform 0.2s;
+  transition: transform var(--tc-transition-duration);
 }
 
-.programmateur-list-card:hover {
+.tc-programmateur-list-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--tc-shadow-lg);
 }
 
-.programmateur-card-header {
-  padding: 15px;
-  background-color: var(--tc-bg-light);
+.tc-programmateur-card-header {
+  padding: var(--tc-spacing-sm);
+  background-color: var(--tc-gray-100);
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.programmateur-card-body {
-  padding: 15px;
+.tc-programmateur-card-body {
+  padding: var(--tc-spacing-sm);
 }
 
-.programmateur-card-organization {
-  color: var(--tc-text-muted);
-  margin-bottom: 10px;
-}
-
-.programmateur-card-contacts {
-  margin-top: 10px;
-}
-
-.programmateur-card-contact {
-  display: flex;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.contact-icon {
-  margin-right: 8px;
-  color: var(--tc-primary-color);
-}
-
-.programmateur-card-tags {
+.tc-programmateur-card-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 10px;
+  gap: var(--tc-spacing-xs);
+  margin-top: var(--tc-spacing-sm);
 }
 
-.tag {
-  padding: 4px 8px;
-  background-color: var(--tc-bg-light);
-  border-radius: var(--tc-radius-sm);
-  font-size: 12px;
+.tc-tag {
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  background-color: var(--tc-gray-100);
+  border-radius: var(--tc-border-radius-sm);
+  font-size: var(--tc-font-size-xs);
   color: var(--tc-primary-dark);
-}
-
-.programmateur-card-footer {
-  display: flex;
-  justify-content: flex-end;
-  padding: 10px 15px;
-  background-color: var(--tc-bg-light);
 }
 
 /* =============================
    COMPOSANTS DE SÉLECTION
    ============================= */
-/* Styles pour la carte programmateur - Déplacés depuis lieux.css */
-.detail-card .spinner-border {
-  color: var(--tc-primary-color);
-  width: var(--tc-spacing-4);
-  height: var(--tc-spacing-4);
-  margin: var(--tc-spacing-2) 0;
-}
-
-/* Style pour mettre en évidence l'icône du programmateur */
-.card-header i.bi-person-badge {
-  color: var(--tc-programmateur-color);
-}
-
-/* Couleur de fond légèrement différente pour la carte programmateur */
-.detail-card:has(.card-header i.bi-person-badge) {
+.tc-detail-card {
   border-left: 3px solid var(--tc-programmateur-color);
 }
 
-/* Animation pour le chargement du programmateur */
-@keyframes pulse {
-  0% { opacity: 0.6; }
-  50% { opacity: 1; }
-  100% { opacity: 0.6; }
-}
-
-.text-center.py-3 {
-  animation: pulse 1.5s infinite;
-}
-
-/* Styles pour la recherche de programmateurs */
-.programmateur-search-container {
+.tc-programmateur-search {
   position: relative;
-  margin-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-spacing-sm);
 }
 
-.dropdown-menu {
+.tc-dropdown-menu {
   max-height: 250px;
   overflow-y: auto;
-  padding: var(--tc-spacing-2) 0;
-  z-index: 1050;
+  padding: var(--tc-spacing-sm) 0;
+  z-index: var(--tc-z-index-dropdown);
 }
 
-.programmateur-item {
-  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+.tc-programmateur-item {
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
   cursor: pointer;
-  transition: background-color 0.2s;
-  border-bottom: 1px solid var(--tc-border-color-light);
+  transition: background-color var(--tc-transition-duration);
+  border-bottom: 1px solid var(--tc-gray-200);
 }
 
-.programmateur-item:last-child {
-  border-bottom: none;
+.tc-programmateur-item:hover {
+  background-color: rgba(var(--tc-primary-color-rgb), 0.1);
 }
 
-.programmateur-item:hover {
-  background-color: rgba(var(--tc-primary-rgb), 0.1);
-}
-
-.programmateur-details {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--tc-spacing-2);
-  font-size: var(--tc-font-size-xs);
-  color: var(--tc-text-muted);
-}
-
-.programmateur-email, 
-.programmateur-structure {
-  display: block;
-  color: var(--tc-text-muted);
-  font-size: var(--tc-font-size-xs);
-}
-
-.selected-programmateur {
-  margin-bottom: var(--tc-spacing-3);
-}
-
-/* Styles pour l'affichage d'un programmateur sélectionné */
-.programmateur-card {
+.tc-programmateur-card {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: var(--tc-bg-light);
+  background-color: var(--tc-gray-100);
   border: 1px solid var(--tc-border-color);
   border-radius: var(--tc-border-radius);
-  padding: var(--tc-spacing-2) var(--tc-spacing-3);
-  transition: all 0.3s ease;
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  transition: all var(--tc-transition-duration);
 }
 
-.programmateur-card:hover {
-  box-shadow: var(--tc-shadow);
-  transform: translateY(-1px);
-}
-
-.programmateur-contacts {
+.tc-programmateur-contacts {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--tc-spacing-3);
-  margin-top: var(--tc-spacing-1);
+  gap: var(--tc-spacing-sm);
+  margin-top: var(--tc-spacing-xs);
 }
 
-.programmateur-contact-item {
+.tc-programmateur-contact-item {
   display: flex;
   align-items: center;
-  gap: 0.375rem;
+  gap: var(--tc-spacing-xs);
   font-size: var(--tc-font-size-xs);
   color: var(--tc-text-muted);
 }
 
-.programmateur-contact-item i {
-  color: var(--tc-primary-color);
-  font-size: var(--tc-font-size-sm);
-}
-
-.programmateur-link {
+.tc-programmateur-link {
   color: var(--tc-primary-color);
   text-decoration: none;
   font-weight: var(--tc-font-weight-medium);
 }
 
-.programmateur-link:hover {
+.tc-programmateur-link:hover {
   text-decoration: underline;
 }
 
 /* =============================
-   STRUCTURE JURIDIQUE - AMÉLIORATIONS
+   STRUCTURE JURIDIQUE
    ============================= */
-.structure-card .card-body {
-  padding: var(--tc-spacing-4);
-}
-
-.structure-card .data-label {
-  font-size: var(--tc-spacing-2);
-  color: var(--tc-color-text-secondary);
-  margin-bottom: var(--tc-spacing-1);
+.tc-structure-card .tc-data-label {
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-gray-600);
+  margin-bottom: var(--tc-spacing-xs);
   display: block;
 }
 
-.structure-card .data-value {
+.tc-structure-card .tc-data-value {
   font-weight: var(--tc-font-weight-medium);
-  font-size: var(--tc-spacing-3);
-  margin-bottom: var(--tc-spacing-3);
-  color: var(--tc-color-text-primary);
+  margin-bottom: var(--tc-spacing-sm);
+  color: var(--tc-text-color);
 }
 
-.structure-card .raison-sociale {
-  font-size: var(--tc-font-size-xl);
+.tc-structure-card .tc-raison-sociale {
+  font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-semibold);
 }
 
-.structure-card .row-spacing {
-  margin-bottom: var(--tc-spacing-4);
-}
-
-.structure-card .code-value {
-  font-family: var(--tc-font-monospace);
+.tc-structure-card .tc-code-value {
+  font-family: monospace;
   letter-spacing: 0.5px;
 }
 
-.structure-card .row + .row {
-  margin-top: var(--tc-font-size-xl);
-}
-
-.structure-card .type-badge {
+.tc-structure-card .tc-type-badge {
   display: inline-block;
-  padding: 0.35rem 0.65rem;
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
   line-height: 1;
-  color: var(--tc-color-495057, #495057);
-  background-color: var(--tc-bg-light);
-  border-radius: var(--tc-spacing-1);
-}
-
-/* Input styles for structure card */
-.structure-card .form-control-lg {
-  height: calc(2.5rem + 2px);
-  font-size: var(--tc-font-size-xl);
-}
-
-.structure-card .input-label {
-  font-size: var(--tc-spacing-2);
-  color: var(--tc-color-text-secondary);
-  margin-bottom: var(--tc-spacing-1);
-  display: block;
-}
-
-.structure-card .optional-text {
-  font-size: 0.7rem;
-  color: var(--tc-color-text-muted);
-  font-style: italic;
-  margin-left: var(--tc-spacing-1);
-  font-weight: normal;
+  color: var(--tc-gray-700);
+  background-color: var(--tc-gray-100);
+  border-radius: var(--tc-border-radius-sm);
 }

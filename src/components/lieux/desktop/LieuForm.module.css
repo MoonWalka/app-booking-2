@@ -1,13 +1,17 @@
 /*
- * Styles pour LieuForm
+ * Styles pour LieuForm.module.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
-/* LieuForm.module.css - Standardisé */
+/* =============================
+   CONTENEUR PRINCIPAL
+   ============================= */
 .lieuFormContainer {
   margin: var(--tc-spacing-md);
   max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .modernForm {
@@ -16,6 +20,9 @@
   gap: var(--tc-spacing-md);
 }
 
+/* =============================
+   EN-TÊTE DE FORMULAIRE
+   ============================= */
 .formHeaderContainer {
   margin-bottom: var(--tc-spacing-md);
   display: flex;
@@ -27,17 +34,20 @@
   font-weight: var(--tc-font-weight-semibold);
   margin-bottom: var(--tc-spacing-sm);
   color: var(--tc-text-color);
+  line-height: 1.2;
 }
 
 .breadcrumbContainer {
   display: flex;
   align-items: center;
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-text-muted);
+  color: var(--tc-gray-600);
+  gap: var(--tc-spacing-xs);
 }
 
 .breadcrumbItem {
   cursor: pointer;
+  transition: color var(--tc-transition-duration);
 }
 
 .breadcrumbItem:hover {
@@ -49,13 +59,20 @@
   font-weight: var(--tc-font-weight-medium);
 }
 
-/* Styles pour les sections de formulaire décomposées */
+.breadcrumbSeparator {
+  color: var(--tc-gray-400);
+  font-size: var(--tc-font-size-xs);
+}
+
+/* =============================
+   SECTION DE FORMULAIRE
+   ============================= */
 .formHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: var(--tc-spacing-lg);
-  border-bottom: var(--tc-border-width) solid var(--tc-border-color);
+  border-bottom: 1px solid var(--tc-border-color);
   padding-bottom: var(--tc-spacing-md);
 }
 
@@ -69,14 +86,22 @@
   font-weight: var(--tc-font-weight-semibold);
   margin-bottom: 0;
   color: var(--tc-text-color);
+  line-height: 1.2;
+}
+
+.formSubtitle {
+  margin-top: var(--tc-spacing-xs);
+  color: var(--tc-gray-600);
+  font-size: var(--tc-font-size-sm);
 }
 
 .formSection {
-  background-color: var(--tc-card-bg);
+  background-color: var(--tc-bg-color);
   border-radius: var(--tc-border-radius);
   padding: var(--tc-spacing-lg);
   box-shadow: var(--tc-shadow);
   margin-bottom: var(--tc-spacing-lg);
+  border: 1px solid var(--tc-border-color);
 }
 
 .sectionTitle {
@@ -86,6 +111,7 @@
   color: var(--tc-text-color);
   position: relative;
   padding-bottom: var(--tc-spacing-sm);
+  line-height: 1.3;
 }
 
 .sectionTitle::after {
@@ -99,6 +125,9 @@
   border-radius: 3px;
 }
 
+/* =============================
+   GRILLE DE FORMULAIRE
+   ============================= */
 .formGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -113,18 +142,19 @@
   display: block;
   margin-bottom: var(--tc-spacing-sm);
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-text-muted);
+  color: var(--tc-gray-700);
   font-size: var(--tc-font-size-sm);
 }
 
 .formInput {
   width: 100%;
   padding: var(--tc-spacing-sm) var(--tc-spacing-md);
-  border: var(--tc-border-width) solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-color);
   border-radius: var(--tc-border-radius);
   background-color: var(--tc-bg-color);
   font-size: var(--tc-font-size-base);
   transition: var(--tc-transition);
+  color: var(--tc-text-color);
 }
 
 .formInput:focus {
@@ -135,9 +165,12 @@
 }
 
 .formInput::placeholder {
-  color: var(--tc-input-placeholder-color);
+  color: var(--tc-gray-500);
 }
 
+/* =============================
+   RECHERCHE ET SUGGESTIONS
+   ============================= */
 .searchContainer {
   position: relative;
   margin-bottom: var(--tc-spacing-lg);
@@ -147,18 +180,19 @@
   width: 100%;
   padding: var(--tc-spacing-sm) var(--tc-spacing-md);
   padding-right: 2.5rem;
-  border: var(--tc-border-width) solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-color);
   border-radius: var(--tc-border-radius);
   background-color: var(--tc-bg-color);
   font-size: var(--tc-font-size-base);
   transition: var(--tc-transition);
+  color: var(--tc-text-color);
 }
 
 .searchInput:focus {
   border-color: var(--tc-primary-color);
   outline: 0;
-  box-shadow: var(--tc-focus-ring-shadow);
-  background-color: var(--tc-input-bg-focus);
+  box-shadow: var(--tc-input-focus-shadow);
+  background-color: var(--tc-bg-color);
 }
 
 .spinner {
@@ -168,7 +202,7 @@
   transform: translateY(-50%);
   width: 20px;
   height: 20px;
-  border: 2px solid var(--tc-border-color-light);
+  border: 2px solid var(--tc-gray-300);
   border-top-color: var(--tc-primary-color);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
@@ -187,15 +221,15 @@
   right: 0;
   max-height: 300px;
   overflow-y: auto;
-  border: var(--tc-border-width) solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-color);
   border-top: none;
   border-radius: 0 0 var(--tc-border-radius) var(--tc-border-radius);
-  background-color: var(--tc-color-white);
-  z-index: 10;
+  background-color: var(--tc-bg-color);
+  z-index: var(--tc-z-index-dropdown);
   list-style: none;
   padding: 0;
   margin: 0;
-  box-shadow: var(--tc-dropdown-shadow);
+  box-shadow: var(--tc-shadow);
 }
 
 .suggestionItem {
@@ -204,18 +238,26 @@
   transition: background-color var(--tc-transition-duration);
   display: flex;
   flex-direction: column;
+  border-bottom: 1px solid var(--tc-gray-200);
+}
+
+.suggestionItem:last-child {
+  border-bottom: none;
 }
 
 .suggestionItem:hover {
-  background-color: var(--tc-color-gray-100);
+  background-color: var(--tc-gray-100);
 }
 
 .suggestionSubtext {
   font-size: var(--tc-font-size-xs);
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-gray-600);
   margin-top: var(--tc-spacing-xs);
 }
 
+/* =============================
+   GÉOLOCALISATION
+   ============================= */
 .geolocationActions {
   margin: var(--tc-spacing-lg) 0;
   display: flex;
@@ -227,56 +269,115 @@
   margin-top: var(--tc-spacing-lg);
   border-radius: var(--tc-border-radius);
   overflow: hidden;
-  box-shadow: var(--tc-box-shadow);
+  box-shadow: var(--tc-shadow);
+  border: 1px solid var(--tc-border-color);
+  height: 400px;
 }
 
 .coordinatesDisplay {
   display: flex;
   justify-content: space-between;
   padding: var(--tc-spacing-sm);
-  background-color: var(--tc-color-gray-100);
+  background-color: var(--tc-gray-100);
   border-radius: 0 0 var(--tc-border-radius) var(--tc-border-radius);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-text-color-primary);
+  color: var(--tc-text-color);
+  border-top: 1px solid var(--tc-gray-200);
+  font-family: var(--tc-font-family-mono, monospace);
 }
 
+/* =============================
+   PROGRAMMATEUR SÉLECTIONNÉ
+   ============================= */
 .selectedProgrammateur {
-  background-color: var(--tc-color-gray-100);
+  background-color: var(--tc-gray-100);
   border-radius: var(--tc-border-radius);
   padding: var(--tc-spacing-md);
   margin-bottom: var(--tc-spacing-md);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border: 1px solid var(--tc-gray-300);
 }
 
 .selectedProgrammateurInfo {
   flex: 1;
 }
 
-.selectedProgrammateurInfo h4 {
+.selectedProgrammateurName {
   margin: 0;
   font-size: var(--tc-font-size-md);
-  color: var(--tc-text-color-primary);
+  color: var(--tc-text-color);
+  font-weight: var(--tc-font-weight-medium);
 }
 
+.selectedProgrammateurDetails {
+  margin-top: var(--tc-spacing-xs);
+  color: var(--tc-gray-600);
+  font-size: var(--tc-font-size-sm);
+}
+
+/* =============================
+   ACTIONS DE FORMULAIRE
+   ============================= */
 .formActions {
   display: flex;
   justify-content: flex-end;
   gap: var(--tc-spacing-md);
   margin-top: var(--tc-spacing-xl);
   padding-top: var(--tc-spacing-lg);
-  border-top: var(--tc-border-width) solid var(--tc-border-color-light);
+  border-top: 1px solid var(--tc-gray-300);
 }
 
-/* Support responsive */
-@media (max-width: 992px) {
+.submitButton {
+  background-color: var(--tc-primary-color);
+  color: var(--tc-light-color);
+  border: none;
+  padding: var(--tc-spacing-sm) var(--tc-spacing-lg);
+  border-radius: var(--tc-border-radius);
+  font-weight: var(--tc-font-weight-medium);
+  font-size: var(--tc-font-size-base);
+  cursor: pointer;
+  transition: var(--tc-transition);
+  display: flex;
+  align-items: center;
+  gap: var(--tc-spacing-xs);
+}
+
+.submitButton:hover {
+  background-color: var(--tc-primary-dark);
+}
+
+.cancelButton {
+  background-color: var(--tc-bg-color);
+  color: var(--tc-gray-700);
+  border: 1px solid var(--tc-border-color);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-lg);
+  border-radius: var(--tc-border-radius);
+  font-weight: var(--tc-font-weight-medium);
+  font-size: var(--tc-font-size-base);
+  cursor: pointer;
+  transition: var(--tc-transition);
+}
+
+.cancelButton:hover {
+  background-color: var(--tc-gray-100);
+}
+
+/* =============================
+   RESPONSIVE DESIGN
+   ============================= */
+@media (max-width: var(--tc-breakpoint-lg)) {
   .formGrid {
     grid-template-columns: 1fr;
   }
+  
+  .mapContainer {
+    height: 300px;
+  }
 }
 
-@media (max-width: 768px) {
+@media (max-width: var(--tc-breakpoint-md)) {
   .formHeader {
     flex-direction: column;
     align-items: flex-start;
@@ -292,12 +393,13 @@
     gap: var(--tc-spacing-sm);
   }
   
-  .formActions button {
+  .submitButton, .cancelButton {
     width: 100%;
+    justify-content: center;
   }
 }
 
-@media (max-width: 576px) {
+@media (max-width: var(--tc-breakpoint-sm)) {
   .lieuFormContainer {
     margin: var(--tc-spacing-sm);
   }
@@ -306,11 +408,25 @@
     font-size: var(--tc-font-size-lg);
   }
   
+  .formSection {
+    padding: var(--tc-spacing-sm);
+  }
+  
   .geolocationActions {
     flex-direction: column;
   }
   
   .geolocationActions button {
     width: 100%;
+  }
+  
+  .selectedProgrammateur {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--tc-spacing-sm);
+  }
+  
+  .mapContainer {
+    height: 250px;
   }
 }

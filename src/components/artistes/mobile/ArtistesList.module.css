@@ -59,8 +59,8 @@
 
 .filterPill {
   padding: var(--tc-spacing-2) var(--tc-spacing-3);
-  background-color: var(--tc-bg-light));
-  border: 1px solid var(--tc-border-color));
+  background-color: var(--tc-border-radius);
+  border: 1px solid var(--tc-border-radius);
   border-radius: var(--tc-spacing-8);
   white-space: nowrap;
   font-size: 0.875rem;
@@ -69,9 +69,9 @@
 }
 
 .filterPill.active {
-  background-color: var(--tc-primary-color));
+  background-color: var(--tc-border-radius);
   color: var(--tc-bg-default);
-  border-color: var(--tc-primary-color));
+  border-color: var(--tc-border-radius);
 }
 
 .mobileArtistesGrid {
@@ -82,7 +82,7 @@
 
 .artisteCardMobile {
   background-color: var(--tc-bg-color);
-  border-radius: var(--tc-border-radius));
+  border-radius: var(--tc-border-radius);
   overflow: hidden;
   box-shadow: 0 2px 4px var(--tc-color-rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05));
   transition: all 0.3s ease;
@@ -97,7 +97,7 @@
 .artisteCardHeader {
   position: relative;
   height: 120px;
-  background-color: var(--tc-bg-light));
+  background-color: var(--tc-border-radius);
   overflow: hidden;
 }
 
@@ -113,8 +113,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--tc-bg-light));
-  color: var(--tc-text-muted));
+  background-color: var(--tc-border-radius);
+  color: var(--tc-border-radius);
 }
 
 .placeholderPhotoMobile i {
@@ -138,7 +138,7 @@
 }
 
 .badgeConcerts {
-  background-color: var(--tc-primary-color));
+  background-color: var(--tc-border-radius);
   color: var(--tc-bg-default);
 }
 
@@ -150,11 +150,11 @@
   margin: 0 0 var(--tc-spacing-2) 0;
   font-size: 1.var(--tc-spacing-3);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-color));
+  color: var(--tc-border-radius);
 }
 
 .genre {
-  color: var(--tc-text-muted));
+  color: var(--tc-border-radius);
   font-size: 0.875rem;
   margin-bottom: var(--tc-spacing-2);
 }
@@ -189,7 +189,7 @@
 }
 
 .actionBtn.delete {
-  background-color: var(--tc-danger-color));
+  background-color: var(--tc-border-radius);
   color: var(--tc-bg-default);
 }
 
@@ -204,7 +204,7 @@
 
 .emptyStateMobile i {
   font-size: 3rem;
-  color: var(--tc-text-muted));
+  color: var(--tc-border-radius);
   margin-bottom: var(--tc-spacing-3);
   opacity: 0.5;
 }
@@ -303,8 +303,8 @@
   align-items: center;
   padding: var(--tc-spacing-2) var(--tc-spacing-3);
   text-decoration: none;
-  color: var(--tc-color-212529, #212529);
-  border-bottom: 1px solid var(--tc-color-f0f0f0, #f0f0f0);
+  color: var(--tc-text-color);
+  border-bottom: 1px solid var(--tc-text-color);
 }
 
 .searchResultAvatar {
@@ -317,7 +317,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--tc-color-e9ecef, #e9ecef);
+  background-color: var(--tc-text-color);
 }
 
 .searchCreateItem {
@@ -374,7 +374,7 @@
 .placeholderAvatar {
   width: 100%;
   height: 100%;
-  background-color: var(--tc-color-e9ecef, #e9ecef);
+  background-color: var(--tc-text-color);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -403,8 +403,8 @@
 }
 
 .artisteDetails {
-  border-top: 1px solid var(--tc-color-f0f0f0, #f0f0f0);
-  border-bottom: 1px solid var(--tc-color-f0f0f0, #f0f0f0);
+  border-top: 1px solid var(--tc-text-color);
+  border-bottom: 1px solid var(--tc-text-color);
   padding: var(--tc-spacing-2) 0;
   margin-bottom: var(--tc-spacing-2);
 }

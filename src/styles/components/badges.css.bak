@@ -7,6 +7,8 @@
 
 
 
+
+
 /* Styles pour les badges de statut */
 .status-badge {
   display: inline-block;
@@ -16,54 +18,54 @@
   font-weight: var(--tc-font-weight-semibold);
   text-align: center;
   min-width: 80px;
-  var(--tc-bg-default, white)-space: nowrap;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   transition: transform 0.2s ease; /* // Correction UI: Ajout de transition pour interaction */
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); /* // Correction UI: Ajout d'ombre légère pour meilleure perception visuelle */
+  box-shadow: 0 1px 3px var(--tc-color-rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.12)); /* // Correction UI: Ajout d'ombre légère pour meilleure perception visuelle */
 }
 
 /* // Correction UI: Amélioration du contraste et standardisation des statuts */
 .status-option {
-  background-color: var(--tc-warning-color, #ffc107);
-  color: #212529; /* // Correction UI: Couleur plus foncée pour meilleur contraste */
+  background-color: var(--tc-warning-color);
+  color: var(--tc-color-212529, #212529); /* // Correction UI: Couleur plus foncée pour meilleur contraste */
   font-weight: var(--tc-font-weight-semibold);
 }
 
 .status-confirmed {
-  background-color: var(--tc-success-color, #28a745);
-  color: var(--tc-bg-default, white);
+  background-color: var(--tc-success-color);
+  color: var(--tc-bg-default);
   font-weight: var(--tc-font-weight-semibold);
 }
 
 .status-cancelled {
-  background-color: var(--tc-danger-color, var(--tc-color-error));
-  color: var(--tc-bg-default, white);
+  background-color: var(--tc-danger-color));
+  color: var(--tc-bg-default);
   font-weight: var(--tc-font-weight-semibold);
 }
 
 .status-pending {
-  background-color: var(--tc-info-color, #17a2b8);
-  color: var(--tc-bg-default, white);
+  background-color: var(--tc-info-color);
+  color: var(--tc-bg-default);
   font-weight: var(--tc-font-weight-semibold);
 }
 
 .status-draft {
-  background-color: var(--tc-secondary-color, var(--tc-color-text-secondary, #6c757d));
-  color: var(--tc-bg-default, white);
+  background-color: var(--tc-secondary-color)));
+  color: var(--tc-bg-default);
   font-weight: var(--tc-font-weight-semibold);
 }
 
 .status-declined {
-  background-color: var(--tc-danger-color, var(--tc-color-error));
-  color: var(--tc-bg-default, white);
+  background-color: var(--tc-danger-color));
+  color: var(--tc-bg-default);
   font-weight: var(--tc-font-weight-semibold);
 }
 
 /* // Correction UI: Ajout d'état hover pour les badges de statut */
 .status-badge:hover {
   transform: translateY(-1px);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 5px var(--tc-color-rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
 }
 
 /* Badge de notification pour les alertes et indicateurs */
@@ -72,12 +74,12 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background-color: var(--tc-danger-color, var(--tc-color-error));
+  background-color: var(--tc-danger-color));
   position: absolute;
   top: 0;
   right: 0;
   transform: translate(40%, -40%);
-  box-shadow: 0 0 0 2px var(--tc-bg-default, white);
+  box-shadow: 0 0 0 2px var(--tc-bg-default);
   animation: pulse 1.5s infinite;
 }
 
@@ -94,26 +96,26 @@
 
 /* // Correction UI: Standardisation des badges principaux et secondaires */
 .badge-primary {
-  background-color: var(--tc-primary-color, #007bff);
-  color: var(--tc-text-light, var(--tc-bg-default, white));
+  background-color: var(--tc-primary-color);
+  color: var(--tc-text-light);
 }
 
 .badge-secondary {
-  background-color: var(--tc-secondary-color, var(--tc-color-text-secondary, #6c757d));
-  color: var(--tc-text-light, var(--tc-bg-default, white));
+  background-color: var(--tc-secondary-color)));
+  color: var(--tc-text-light);
 }
 
 /* // Correction UI: Amélioration du contraste pour les badges avec contour */
 .badge-outline-primary {
   background-color: transparent;
-  color: var(--tc-primary-color, #007bff);
-  border: 1px solid var(--tc-primary-color, #007bff);
+  color: var(--tc-primary-color);
+  border: 1px solid var(--tc-primary-color);
 }
 
 .badge-outline-secondary {
   background-color: transparent;
-  color: var(--tc-secondary-color, var(--tc-color-text-secondary, #6c757d));
-  border: 1px solid var(--tc-secondary-color, var(--tc-color-text-secondary, #6c757d));
+  color: var(--tc-secondary-color)));
+  border: 1px solid var(--tc-secondary-color)));
 }
 
 /* // Correction UI: Amélioration des états interactifs pour meilleure expérience utilisateur */
@@ -123,15 +125,15 @@
 }
 
 .badge-interactive.badge-primary:hover {
-  background-color: var(--tc-primary-dark, #0069d9);
+  background-color: var(--tc-primary-dark);
   transform: translateY(-1px);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 5px var(--tc-color-rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
 }
 
 .badge-interactive.badge-secondary:hover {
-  background-color: var(--tc-secondary-dark, #5a6268);
+  background-color: var(--tc-secondary-dark);
   transform: translateY(-1px);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 5px var(--tc-color-rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
 }
 
 /* // Correction UI: Standardisation des tailles de badge */
@@ -153,13 +155,13 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background-color: var(--tc-badge-bg, #007bff);
-  color: var(--tc-bg-default, white);
+  background-color: var(--tc-badge-bg);
+  color: var(--tc-bg-default);
   width: 20px;
   height: 20px;
   font-size: 10px;
   font-weight: var(--tc-font-weight-semibold);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 3px var(--tc-color-rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
 }
 
 /* // Correction UI: Ajout des variantes de compteur */
@@ -217,26 +219,26 @@
 
 /* Statuts personnalisés pour les concerts */
 .status-contrat {
-  background-color: var(--tc-primary-dark, #2c3e50);
-  color: var(--tc-text-light, #ffffff);
+  background-color: var(--tc-primary-dark);
+  color: var(--tc-text-light);
 }
 
 .status-preaccord {
-  background-color: var(--tc-warning-color, #f0ad4e);
-  color: #212529;
+  background-color: var(--tc-warning-color);
+  color: var(--tc-color-212529, #212529);
 }
 
 .status-acompte {
-  background-color: var(--tc-info-color, #17a2b8);
-  color: #fff;
+  background-color: var(--tc-info-color);
+  color: var(--tc-color-fff, #fff);
 }
 
 .status-solde {
-  background-color: var(--tc-success-color, #28a745);
-  color: #fff;
+  background-color: var(--tc-success-color);
+  color: var(--tc-color-fff, #fff);
 }
 
 .status-contact {
-  background-color: var(--tc-secondary-color, var(--tc-color-text-secondary, #6c757d));
-  color: #fff;
+  background-color: var(--tc-secondary-color)));
+  color: var(--tc-color-fff, #fff);
 }

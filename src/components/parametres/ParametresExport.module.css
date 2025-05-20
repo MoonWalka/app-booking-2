@@ -1,73 +1,73 @@
 /*
  * Styles pour le composant ParametresExport
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 5 mai 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
 .sectionTitle {
-  margin-bottom: var(--tc-spacing-4);
+  margin-bottom: var(--tc-spacing-md);
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-color-title);
+  color: var(--tc-gray-900);
 }
 
 .exportSection {
-  margin-bottom: var(--tc-spacing-5-5);
+  margin-bottom: var(--tc-spacing-lg);
 }
 
 .exportButtons {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--tc-spacing-2-5);
-  margin-bottom: var(--tc-spacing-4);
+  gap: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-spacing-md);
 }
 
 .exportProgress {
-  margin-top: var(--tc-spacing-4);
+  margin-top: var(--tc-spacing-md);
 }
 
 .exportStatus {
-  margin-bottom: var(--tc-spacing-1-5);
-  color: var(--tc-color-text-muted);
+  margin-bottom: var(--tc-spacing-xs);
+  color: var(--tc-text-muted);
 }
 
 .backupSection {
-  margin-bottom: var(--tc-spacing-5-5);
+  margin-bottom: var(--tc-spacing-lg);
 }
 
 .formActions {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: var(--tc-spacing-5);
+  margin-top: var(--tc-spacing-lg);
 }
 
 /* Styles responsive standardisés */
 @media (max-width: 768px) {
   .exportSection,
   .backupSection {
-    margin-bottom: var(--tc-spacing-4);
+    margin-bottom: var(--tc-spacing-md);
   }
   
   .formActions {
-    margin-top: var(--tc-spacing-4);
+    margin-top: var(--tc-spacing-md);
   }
   
   .exportButtons {
-    margin-bottom: var(--tc-spacing-3);
+    margin-bottom: var(--tc-spacing-sm);
   }
 }
 
 @media (max-width: 576px) {
   .formActions {
     flex-direction: column;
-    gap: var(--tc-spacing-3);
+    gap: var(--tc-spacing-sm);
     align-items: stretch;
   }
   
   .exportButtons {
     flex-direction: column;
-    gap: var(--tc-spacing-2);
+    gap: var(--tc-spacing-xs);
     width: 100%;
   }
   

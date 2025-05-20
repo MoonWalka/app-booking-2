@@ -1,60 +1,112 @@
 /*
  * Styles pour spinner.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Date de création: Inconnue
- * Dernière mise à jour: 5 mai 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
+@import '@styles/base/variables.css';
 
-
-
-
-/* src/styles/components/spinner.css */
-/* Styles pour le spinner de chargement */
-.loading-spinner {
+/* SPINNER DE BASE */
+.tc-spinner {
   display: inline-block;
-  width: 50px;
-  height: 50px;
-  border: 5px solid var(--tc-color-rgba(var(--tc-primary-color-rgb), rgba(var(--tc-primary-color-rgb)), 0.2);
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(var(--tc-primary-color-rgb), 0.2);
   border-radius: 50%;
   border-top-color: var(--tc-primary-color);
-  animation: spin 1s ease-in-out infinite;
-  margin: 20px auto;
+  animation: tc-spin 1s ease-in-out infinite;
 }
 
-@keyframes spin {
+@keyframes tc-spin {
   to { transform: rotate(360deg); }
 }
 
-.loading {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 200px;
-  font-size: 18px;
-  color: var(--tc-primary-color);
+/* VARIANTES DE TAILLE */
+.tc-spinner-xs {
+  width: 16px;
+  height: 16px;
+  border-width: 2px;
 }
 
-/* CORRECTIFS POUR LES SPINNERS NON CENTRÉS */
-
-/* Styles pour les spinners Bootstrap */
-.spinner-border, .spinner-grow {
-  display: inline-block;
-  margin: 0 auto;
+.tc-spinner-sm {
+  width: 24px;
+  height: 24px;
+  border-width: 3px;
 }
 
-/* Classe de conteneur pour centrer n'importe quel spinner */
-.spinner-container {
+.tc-spinner-md {
+  width: 40px;
+  height: 40px;
+  border-width: 4px;
+}
+
+.tc-spinner-lg {
+  width: 60px;
+  height: 60px;
+  border-width: 5px;
+}
+
+.tc-spinner-xl {
+  width: 80px;
+  height: 80px;
+  border-width: 6px;
+}
+
+/* VARIANTES DE COULEUR */
+.tc-spinner-primary {
+  border-color: rgba(var(--tc-primary-color-rgb), 0.2);
+  border-top-color: var(--tc-primary-color);
+}
+
+.tc-spinner-secondary {
+  border-color: rgba(var(--tc-secondary-color-rgb), 0.2);
+  border-top-color: var(--tc-secondary-color);
+}
+
+.tc-spinner-success {
+  border-color: rgba(var(--tc-success-color-rgb), 0.2);
+  border-top-color: var(--tc-success-color);
+}
+
+.tc-spinner-warning {
+  border-color: rgba(var(--tc-warning-color-rgb), 0.2);
+  border-top-color: var(--tc-warning-color);
+}
+
+.tc-spinner-danger {
+  border-color: rgba(var(--tc-danger-color-rgb), 0.2);
+  border-top-color: var(--tc-danger-color);
+}
+
+.tc-spinner-light {
+  border-color: rgba(255, 255, 255, 0.2);
+  border-top-color: var(--tc-white);
+}
+
+.tc-spinner-dark {
+  border-color: rgba(var(--tc-gray-800-rgb), 0.2);
+  border-top-color: var(--tc-gray-800);
+}
+
+/* CONTENEURS DE SPINNER */
+.tc-spinner-container {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   min-height: 100px;
-  text-align: center; /* Assure le centrage du texte sous le spinner */
+  text-align: center;
 }
 
-/* Spinner en pleine page - style manquant */
-.spinner-fullpage-container {
+.tc-spinner-container-with-message {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--tc-spacing-sm);
+}
+
+.tc-spinner-fullpage {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -64,13 +116,11 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--tc-color-rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7));
-  z-index: 9999;
-  text-align: center;
+  background-color: rgba(var(--tc-bg-color-rgb), 0.9);
+  z-index: var(--tc-z-index-modal);
 }
 
-/* Spinner uniquement dans la zone de contenu (préserve la sidebar) */
-.spinner-content-container {
+.tc-spinner-content {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -78,16 +128,16 @@
   width: 100%;
   height: 100%;
   min-height: 300px;
-  padding: 30px;
-  background-color: var(--tc-color-rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7));
+  padding: var(--tc-spacing-lg);
+  background-color: rgba(var(--tc-bg-color-rgb), 0.7);
   text-align: center;
   border-radius: var(--tc-border-radius);
-  position: relative; /* Ajout pour assurer que les éléments absolus se positionnent par rapport à ce conteneur */
+  position: relative;
 }
 
-/* Classe de base pour les overlays de spinner */
-.spinner-overlay {
-  position: fixed; /* Changé de absolute à fixed pour assurer une couverture complète */
+/* OVERLAYS DE SPINNER */
+.tc-spinner-overlay {
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -96,101 +146,177 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: var(--tc-color-rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)); /* Plus opaque pour une meilleure visibilité */
-  z-index: 9999; /* Augmenté pour être sûr qu'il est au-dessus de tout */
+  background-color: rgba(var(--tc-bg-color-rgb), 0.9);
+  z-index: var(--tc-z-index-modal);
   border-radius: var(--tc-border-radius);
 }
 
-/* Spinner transparent */
-.spinner-overlay-transparent {
-  position: fixed; /* Changé de absolute à fixed pour cohérence avec spinner-overlay */
+.tc-spinner-overlay-transparent {
+  background-color: rgba(var(--tc-bg-color-rgb), 0.6);
+}
+
+.tc-spinner-overlay-local {
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+  background-color: rgba(var(--tc-bg-color-rgb), 0.8);
+  z-index: 100;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: var(--tc-color-rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)); /* Fond semi-transparent */
-  z-index: 9999; /* Augmenté pour cohérence avec les autres z-index de spinners */
-  border-radius: var(--tc-border-radius));
+  border-radius: inherit;
 }
 
-/* Message de spinner */
-.spinner-message {
-  margin-top: 15px;
+/* MESSAGES DE SPINNER */
+.tc-spinner-message {
+  margin-top: var(--tc-spacing-sm);
   color: var(--tc-text-color);
-  font-size: 16px;
+  font-size: var(--tc-font-size-sm);
   text-align: center;
-  font-weight: var(--tc-font-weight-medium); /* Légèrement plus gras pour une meilleure lisibilité */
+  font-weight: var(--tc-font-weight-medium);
+  max-width: 300px;
 }
 
-/* Support pour les spinners dans différents contextes */
-.card .spinner-border,
-.modal-body .spinner-border,
-.form-container .spinner-border,
-.page-container .spinner-border {
-  display: block;
-  margin: 20px auto;
+.tc-spinner-message-lg {
+  font-size: var(--tc-font-size-md);
+  max-width: 400px;
 }
 
-/* Compatibilité avec les classes Bootstrap */
-.text-center .spinner-border,
-.text-center .spinner-grow {
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* Centrage du spinner dans les conteneurs flex */
-div[role="status"] {
+/* ÉTATS DE CHARGEMENT */
+.tc-loading {
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 200px;
+  font-size: var(--tc-font-size-md);
+  color: var(--tc-primary-color);
 }
 
-/* Centrage horizontal pour les conteneurs de tout type */
-.text-center .spinner-border,
-.text-center .spinner-grow,
-div.text-center > .spinner-border,
-div.text-center > .spinner-grow {
+.tc-loading-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tc-spacing-xs);
+  color: var(--tc-text-muted);
+  font-size: var(--tc-font-size-sm);
+}
+
+/* ANIMATIONS SUPPLÉMENTAIRES */
+.tc-spinner-pulse {
+  animation: tc-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes tc-pulse {
+  0% { transform: scale(0.95); opacity: 0.7; }
+  50% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.7; }
+}
+
+.tc-spinner-bounce {
+  animation: tc-bounce 1s ease infinite;
+}
+
+@keyframes tc-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* SPINNERS AVEC POINTS DE CHARGEMENT */
+.tc-spinner-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.tc-spinner-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--tc-primary-color);
+  border-radius: 50%;
+  animation: tc-dot-pulse 1.5s ease-in-out infinite;
+}
+
+.tc-spinner-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.tc-spinner-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes tc-dot-pulse {
+  0%, 100% { transform: scale(0.7); opacity: 0.5; }
+  50% { transform: scale(1); opacity: 1; }
+}
+
+/* SPINNER LINÉAIRE (PROGRESS BAR) */
+.tc-spinner-linear {
+  width: 100%;
+  height: 4px;
+  background-color: rgba(var(--tc-primary-color-rgb), 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.tc-spinner-linear::after {
+  content: '';
   display: block;
-  margin-left: auto;
-  margin-right: auto;
+  position: absolute;
+  left: -50%;
+  width: 50%;
+  height: 100%;
+  background-color: var(--tc-primary-color);
+  animation: tc-linear-progress 1.5s ease-in-out infinite;
 }
 
-/* Correction pour les spinners qui sont des enfants directs de composants */
-.card-body > .spinner-border,
-.modal-body > .spinner-border,
-.container > .spinner-border,
-.row > .spinner-border,
-.col > .spinner-border {
-  display: block;
-  margin: 40px auto;
+@keyframes tc-linear-progress {
+  0% { left: -50%; }
+  100% { left: 150%; }
 }
 
-/* Spinners dans les conteneurs spécifiques de TourCraft */
-.concert-list-container .spinner-border,
-.artiste-list-container .spinner-border,
-.lieu-list-container .spinner-border,
-.programmateur-list-container .spinner-border,
-.contrat-list-container .spinner-border,
-.structure-list-container .spinner-border {
-  display: block;
-  margin: 40px auto;
-  text-align: center;
+/* UTILITAIRES ET CONTEXTES SPÉCIFIQUES */
+.tc-center-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
-/* Spinners dans les vues mobiles */
-.mobile-view .spinner-border,
-.mobile-tab-content .spinner-border {
-  display: block;
-  margin: 30px auto;
+.tc-table-container .tc-spinner,
+.tc-list-container .tc-spinner,
+.tc-card-container .tc-spinner {
+  margin: var(--tc-spacing-lg) auto;
 }
 
-/* Style spécifique pour le spinner dans le mode édition des lieux */
-.lieu-form-container .spinner-border {
-  width: 3rem;
-  height: 3rem;
-  border-width: 0.25em;
+.tc-table-loading {
+  min-height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: var(--tc-breakpoint-md)) {
+  .tc-spinner-fullpage .tc-spinner,
+  .tc-spinner-overlay .tc-spinner {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .tc-spinner-message {
+    font-size: var(--tc-font-size-xs);
+    max-width: 250px;
+  }
+  
+  .tc-spinner-dots {
+    gap: 4px;
+  }
+  
+  .tc-spinner-dot {
+    width: 6px;
+    height: 6px;
+  }
 }

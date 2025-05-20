@@ -1,18 +1,18 @@
 /*
  * Styles pour le composant ParametresCompte
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 5 mai 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
 .formSection {
-  margin-bottom: var(--tc-spacing-5);
+  margin-bottom: var(--tc-spacing-md);
 }
 
 .formActions {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: var(--tc-spacing-5-5);
+  margin-top: var(--tc-spacing-lg);
 }
 
 .passwordField {
@@ -20,45 +20,46 @@
 }
 
 .passwordHint {
-  margin-top: var(--tc-spacing-1-5);
+  margin-top: var(--tc-spacing-xs);
   font-size: var(--tc-font-size-sm);
+  color: var(--tc-text-secondary);
 }
 
 .successAlert {
-  margin-bottom: var(--tc-spacing-5);
+  margin-bottom: var(--tc-spacing-md);
 }
 
 .errorAlert {
-  margin-bottom: var(--tc-spacing-5);
+  margin-bottom: var(--tc-spacing-md);
 }
 
 .formTitle {
-  margin-bottom: var(--tc-spacing-5);
+  margin-bottom: var(--tc-spacing-md);
 }
 
 /* Styles responsive standardisés */
 @media (max-width: 768px) {
   .formSection {
-    margin-bottom: var(--tc-spacing-4);
+    margin-bottom: var(--tc-spacing-sm);
   }
   
   .formActions {
-    margin-top: var(--tc-spacing-4);
+    margin-top: var(--tc-spacing-md);
   }
   
   .formTitle {
-    margin-bottom: var(--tc-spacing-4);
+    margin-bottom: var(--tc-spacing-md);
   }
   
   .successAlert,
   .errorAlert {
-    margin-bottom: var(--tc-spacing-4);
+    margin-bottom: var(--tc-spacing-md);
   }
 }
 
 @media (max-width: 576px) {
   .formActions {
     flex-direction: column;
-    gap: var(--tc-spacing-3);
+    gap: var(--tc-spacing-sm);
   }
 }

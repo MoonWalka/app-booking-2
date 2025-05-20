@@ -1,16 +1,21 @@
 /*
- * Styles pour LieuDetails
+ * Styles pour LieuDetails.module.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
-/* LieuDetails.module.css - Standardisé */
+/* =============================
+   CONTENEUR PRINCIPAL
+   ============================= */
 .lieuDetailsContainer {
   padding: var(--tc-spacing-md);
   max-width: 1280px;
   margin: 0 auto;
 }
 
+/* =============================
+   DISPOSITION EN DEUX COLONNES
+   ============================= */
 .twoColumnsLayout {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -21,13 +26,18 @@
 .leftColumn {
   display: flex;
   flex-direction: column;
+  gap: var(--tc-spacing-md);
 }
 
 .rightColumn {
   display: flex;
   flex-direction: column;
+  gap: var(--tc-spacing-md);
 }
 
+/* =============================
+   ÉTATS DE CHARGEMENT ET D'ERREUR
+   ============================= */
 .spinnerContainer {
   display: flex;
   justify-content: center;
@@ -43,16 +53,59 @@
   flex-direction: column;
   gap: var(--tc-spacing-md);
   align-items: center;
+  padding: var(--tc-spacing-lg);
+  background-color: var(--tc-bg-color);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-shadow-sm);
+  border: 1px solid var(--tc-gray-200);
 }
 
-/* Support responsive amélioré */
-@media (max-width: 992px) {
+.errorIcon {
+  font-size: var(--tc-font-size-xxl);
+  color: var(--tc-danger-color);
+  margin-bottom: var(--tc-spacing-sm);
+}
+
+.errorTitle {
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-color);
+  margin-bottom: var(--tc-spacing-sm);
+}
+
+.errorMessage {
+  color: var(--tc-gray-700);
+  margin-bottom: var(--tc-spacing-md);
+}
+
+.errorButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tc-spacing-xs);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  background-color: var(--tc-primary-color);
+  color: var(--tc-light-color);
+  border: none;
+  border-radius: var(--tc-border-radius);
+  font-weight: var(--tc-font-weight-medium);
+  cursor: pointer;
+  transition: var(--tc-transition);
+}
+
+.errorButton:hover {
+  background-color: var(--tc-primary-dark);
+}
+
+/* =============================
+   RESPONSIVE DESIGN
+   ============================= */
+@media (max-width: var(--tc-breakpoint-lg)) {
   .twoColumnsLayout {
     grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: var(--tc-breakpoint-md)) {
   .lieuDetailsContainer {
     padding: var(--tc-spacing-sm);
   }
@@ -61,15 +114,28 @@
     gap: var(--tc-spacing-md);
     margin-top: var(--tc-spacing-sm);
   }
+  
+  .spinnerContainer {
+    height: 300px;
+  }
 }
 
-@media (max-width: 576px) {
+@media (max-width: var(--tc-breakpoint-sm)) {
   .lieuDetailsContainer {
-    padding: var(--tc-spacing-sm);
+    padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
   }
   
   .errorContainer {
     margin: var(--tc-spacing-lg) auto;
     gap: var(--tc-spacing-sm);
+    padding: var(--tc-spacing-md);
+  }
+  
+  .leftColumn, .rightColumn {
+    gap: var(--tc-spacing-sm);
+  }
+  
+  .spinnerContainer {
+    height: 200px;
   }
 }

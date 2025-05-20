@@ -1,20 +1,23 @@
 /*
- * Styles pour LieuxTableRow
+ * Styles pour LieuxTableRow.module.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
+/* =============================
+   LIGNE DE TABLEAU
+   ============================= */
 .tableRow {
   vertical-align: middle;
 }
 
 .clickableRow {
   cursor: pointer;
-  transition: background-color var(--tc-transition-duration) ease;
+  transition: background-color var(--tc-transition-duration);
 }
 
 .clickableRow:hover {
-  background-color: var(--tc-primary-color-lightest);
+  background-color: rgba(var(--tc-primary-color-rgb), 0.1);
 }
 
 .tableRowAnimate {
@@ -22,21 +25,33 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { 
+    opacity: 0; 
+    transform: translateY(10px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
 }
 
+/* =============================
+   BADGES ET ÉTIQUETTES
+   ============================= */
 .typeBadge {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
   font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-semibold);
   text-align: center;
   white-space: nowrap;
   vertical-align: baseline;
-  border-radius: var(--tc-border-radius-sm);
-  color: var(--tc-white);
+  border-radius: var(--tc-border-radius);
+  color: var(--tc-light-color);
   text-transform: capitalize;
+  line-height: 1;
 }
 
 .villeBadge {
@@ -44,32 +59,45 @@
   align-items: center;
   font-size: var(--tc-font-size-sm);
   color: var(--tc-text-color);
+  gap: var(--tc-spacing-xs);
 }
 
 .jaugeBadge {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
   font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-semibold);
   text-align: center;
   white-space: nowrap;
   vertical-align: baseline;
-  border-radius: var(--tc-border-radius-sm);
-  color: var(--tc-white);
+  border-radius: var(--tc-border-radius);
+  color: var(--tc-light-color);
+  line-height: 1;
 }
 
 .jaugeType {
   opacity: 0.8;
   font-weight: var(--tc-font-weight-normal);
+  margin-left: var(--tc-spacing-xs);
 }
 
+/* =============================
+   COMPTEURS ET INDICATEURS
+   ============================= */
 .concertCount {
   display: inline-flex;
   align-items: center;
   font-size: var(--tc-font-size-sm);
   color: var(--tc-primary-color);
+  gap: var(--tc-spacing-xs);
+  font-weight: var(--tc-font-weight-medium);
 }
 
+/* =============================
+   BOUTONS D'ACTION
+   ============================= */
 .actionButtons {
   display: flex;
   gap: var(--tc-spacing-sm);
@@ -84,4 +112,37 @@
   align-items: center;
   justify-content: center;
   border-radius: var(--tc-border-radius);
+  background-color: transparent;
+  border: 1px solid var(--tc-gray-300);
+  color: var(--tc-gray-700);
+  transition: var(--tc-transition);
+}
+
+.actionButton:hover {
+  background-color: var(--tc-gray-100);
+  color: var(--tc-primary-color);
+  border-color: var(--tc-gray-400);
+}
+
+/* =============================
+   ÉTATS ET VARIANTES
+   ============================= */
+.inactive {
+  opacity: 0.7;
+}
+
+/* =============================
+   RESPONSIVE DESIGN
+   ============================= */
+@media (max-width: var(--tc-breakpoint-md)) {
+  .actionButton {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .typeBadge,
+  .jaugeBadge {
+    font-size: calc(var(--tc-font-size-xs) * 0.9);
+    padding: calc(var(--tc-spacing-xs) * 0.8) var(--tc-spacing-xs);
+  }
 }

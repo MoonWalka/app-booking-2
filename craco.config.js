@@ -13,7 +13,8 @@ module.exports = {
           '@utils': path.resolve(__dirname, 'src/utils'),
           '@styles': path.resolve(__dirname, 'src/styles'),
           '@services': path.resolve(__dirname, 'src/services'),
-          '@pages': path.resolve(__dirname, 'src/pages')
+          '@pages': path.resolve(__dirname, 'src/pages'),
+          '@ui': path.resolve(__dirname, 'src/components/ui')
         }
       }]
     ]
@@ -29,6 +30,7 @@ module.exports = {
       '@styles': path.resolve(__dirname, 'src/styles'),
       '@services': path.resolve(__dirname, 'src/services'),
       '@pages': path.resolve(__dirname, 'src/pages'),
+      '@ui': path.resolve(__dirname, 'src/components/ui'),
       // Alias standard à utiliser pour tous les nouveaux imports
       '@': path.resolve(__dirname, 'src')
     },

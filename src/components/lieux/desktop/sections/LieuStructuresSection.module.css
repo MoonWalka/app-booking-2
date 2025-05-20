@@ -1,28 +1,50 @@
 /*
- * Styles pour LieuStructuresSection
+ * Styles pour LieuStructuresSection.module.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
+/* =============================
+   CONTENEUR PRINCIPAL
+   ============================= */
 .structuresCard {
   margin-bottom: var(--tc-spacing-lg);
+  background-color: var(--tc-bg-color);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-shadow-sm);
+  border: 1px solid var(--tc-border-color);
+  overflow: hidden;
 }
 
+/* =============================
+   ÉTATS DE CHARGEMENT
+   ============================= */
 .loadingContainer {
   display: flex;
   align-items: center;
   gap: var(--tc-spacing-sm);
   padding: var(--tc-spacing-md) 0;
-  color: var(--tc-text-muted);
+  color: var(--tc-gray-600);
   justify-content: center;
+  font-size: var(--tc-font-size-sm);
 }
 
+.loadingContainer i {
+  color: var(--tc-primary-color);
+}
+
+/* =============================
+   ACTIONS D'EN-TÊTE
+   ============================= */
 .headerActions {
   display: flex;
   gap: var(--tc-spacing-xs);
+  align-items: center;
 }
 
-/* Styles pour la recherche */
+/* =============================
+   RECHERCHE DE STRUCTURE
+   ============================= */
 .structureSearchContainer {
   position: relative;
   margin-bottom: var(--tc-spacing-md);
@@ -31,13 +53,22 @@
 .dropdownMenu {
   max-height: 300px;
   overflow-y: auto;
+  border: 1px solid var(--tc-gray-300);
+  border-radius: var(--tc-border-radius);
+  background-color: var(--tc-bg-color);
+  box-shadow: var(--tc-shadow);
+  z-index: var(--tc-z-index-dropdown);
+  margin-top: var(--tc-spacing-xs);
 }
 
-/* Styles pour la liste des structures en mode visualisation */
+/* =============================
+   LISTE DES STRUCTURES
+   ============================= */
 .structuresList {
   display: flex;
   flex-direction: column;
   gap: var(--tc-spacing-md);
+  padding: var(--tc-spacing-md);
 }
 
 .structureItem {
@@ -45,7 +76,7 @@
   justify-content: space-between;
   align-items: flex-start;
   padding: var(--tc-spacing-sm) 0;
-  border-bottom: var(--tc-border-width) solid var(--tc-border-color);
+  border-bottom: 1px solid var(--tc-gray-200);
 }
 
 .structureItem:last-child {
@@ -63,28 +94,31 @@
   text-decoration: none;
   color: var(--tc-primary-color);
   margin-bottom: var(--tc-spacing-xs);
+  transition: color var(--tc-transition-duration);
 }
 
 .structureName:hover {
   text-decoration: underline;
+  color: var(--tc-primary-dark);
 }
 
 .structureDetails {
   display: flex;
   align-items: center;
   gap: var(--tc-spacing-md);
-  color: var(--tc-text-muted);
+  color: var(--tc-gray-600);
   font-size: var(--tc-font-size-sm);
   flex-wrap: wrap;
 }
 
 .typeBadge {
-  background-color: var(--tc-info-color-light);
+  background-color: rgba(var(--tc-info-color-rgb), 0.1);
   color: var(--tc-info-color);
   padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
   border-radius: var(--tc-border-radius);
   font-size: var(--tc-font-size-xs);
   text-transform: capitalize;
+  font-weight: var(--tc-font-weight-medium);
 }
 
 .structureLocation, 
@@ -96,9 +130,13 @@
 
 .structureActions {
   white-space: nowrap;
+  display: flex;
+  gap: var(--tc-spacing-xs);
 }
 
-/* Styles pour les structures associées en mode édition */
+/* =============================
+   STRUCTURES ASSOCIÉES
+   ============================= */
 .associatedStructures {
   margin-top: var(--tc-spacing-lg);
 }
@@ -109,38 +147,54 @@
   align-items: center;
   padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
   margin-bottom: var(--tc-spacing-xs);
-  background-color: var(--tc-primary-color-lightest);
+  background-color: rgba(var(--tc-primary-color-rgb), 0.1);
   border-radius: var(--tc-border-radius);
-  border: var(--tc-border-width) solid var(--tc-primary-color-light);
+  border: 1px solid rgba(var(--tc-primary-color-rgb), 0.3);
 }
 
-/* Styles pour l'état vide */
+/* =============================
+   ÉTAT VIDE
+   ============================= */
 .emptyState {
   text-align: center;
   padding: var(--tc-spacing-xl) 0;
-  color: var(--tc-text-light);
+  color: var(--tc-gray-500);
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: var(--tc-spacing-sm);
 }
 
 .emptyState i {
   font-size: var(--tc-font-size-xl);
   margin-bottom: var(--tc-spacing-xs);
+  color: var(--tc-gray-400);
 }
 
+/* =============================
+   ÉLÉMENTS DE FORMULAIRE
+   ============================= */
 .formLabel {
   display: block;
   font-weight: var(--tc-font-weight-medium);
   margin-bottom: var(--tc-spacing-xs);
+  color: var(--tc-text-color);
+  font-size: var(--tc-font-size-sm);
 }
 
 .formGroup {
   margin-bottom: var(--tc-spacing-md);
 }
 
-/* Media queries pour le responsive */
-@media (max-width: 768px) {
+.required {
+  color: var(--tc-danger-color);
+  margin-left: var(--tc-spacing-xs);
+}
+
+/* =============================
+   RESPONSIVE DESIGN
+   ============================= */
+@media (max-width: var(--tc-breakpoint-md)) {
   .structureItem {
     flex-direction: column;
     gap: var(--tc-spacing-sm);
@@ -148,5 +202,21 @@
   
   .structureActions {
     align-self: flex-start;
+    margin-top: var(--tc-spacing-xs);
+  }
+  
+  .structureDetails {
+    gap: var(--tc-spacing-sm);
+  }
+}
+
+@media (max-width: var(--tc-breakpoint-sm)) {
+  .dropdownMenu {
+    max-height: 250px;
+  }
+  
+  .structuresList {
+    gap: var(--tc-spacing-sm);
+    padding: var(--tc-spacing-sm);
   }
 }

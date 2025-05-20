@@ -1,19 +1,24 @@
 /*
- * Styles pour ListWithFilters
+ * Styles pour ListWithFilters.module.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
-/* Styles pour le composant ListWithFilters */
-
+/* =============================
+   CONTENEUR PRINCIPAL
+   ============================= */
 .container {
-  background-color: var(--tc-card-bg);
-  border-radius: var(--tc-border-radius-lg);
-  box-shadow: var(--tc-box-shadow);
+  background-color: var(--tc-bg-color);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-shadow);
   padding: var(--tc-spacing-lg);
   margin-bottom: var(--tc-spacing-xl);
+  border: 1px solid var(--tc-border-color);
 }
 
+/* =============================
+   EN-TÊTE ET ACTIONS
+   ============================= */
 .header {
   display: flex;
   justify-content: space-between;
@@ -25,7 +30,7 @@
   margin: 0;
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-dark);
+  color: var(--tc-text-color);
 }
 
 .actionsWrapper {
@@ -35,27 +40,31 @@
 
 .refreshButton {
   background-color: transparent;
-  border: var(--tc-border-width) solid var(--tc-border-light);
-  color: var(--tc-text-secondary);
+  border: 1px solid var(--tc-gray-300);
+  color: var(--tc-gray-600);
   border-radius: var(--tc-border-radius);
   padding: var(--tc-spacing-sm);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: var(--tc-transition-short);
+  transition: var(--tc-transition);
 }
 
 .refreshButton:hover {
-  background-color: var(--tc-bg-hover);
+  background-color: var(--tc-gray-100);
   color: var(--tc-primary-color);
 }
 
+/* =============================
+   FILTRES
+   ============================= */
 .filtersContainer {
   margin-bottom: var(--tc-spacing-lg);
   padding: var(--tc-spacing-md);
-  background-color: var(--tc-bg-light);
+  background-color: var(--tc-gray-100);
   border-radius: var(--tc-border-radius);
+  border: 1px solid var(--tc-gray-200);
 }
 
 .filters {
@@ -72,17 +81,28 @@
 .filterLabel {
   display: block;
   margin-bottom: var(--tc-spacing-sm);
-  color: var(--tc-text-secondary);
+  color: var(--tc-gray-700);
   font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-medium);
 }
 
 .filterInput, 
 .filterSelect {
   width: 100%;
   padding: var(--tc-spacing-sm);
-  border: var(--tc-border-width) solid var(--tc-border-medium);
+  border: 1px solid var(--tc-gray-400);
   border-radius: var(--tc-border-radius);
   font-size: var(--tc-font-size-sm);
+  color: var(--tc-text-color);
+  background-color: var(--tc-bg-color);
+  transition: var(--tc-transition);
+}
+
+.filterInput:focus,
+.filterSelect:focus {
+  border-color: var(--tc-primary-color);
+  outline: none;
+  box-shadow: var(--tc-input-focus-shadow);
 }
 
 .filterActions {
@@ -93,13 +113,14 @@
 
 .applyButton {
   background-color: var(--tc-primary-color);
-  color: var(--tc-text-light);
+  color: var(--tc-light-color);
   border: none;
   border-radius: var(--tc-border-radius);
   padding: var(--tc-spacing-sm) var(--tc-spacing-md);
   cursor: pointer;
   font-size: var(--tc-font-size-sm);
-  transition: var(--tc-transition-short);
+  font-weight: var(--tc-font-weight-medium);
+  transition: var(--tc-transition);
 }
 
 .applyButton:hover {
@@ -108,8 +129,8 @@
 
 .resetButton {
   background-color: transparent;
-  border: var(--tc-border-width) solid var(--tc-border-medium);
-  color: var(--tc-text-secondary);
+  border: 1px solid var(--tc-gray-400);
+  color: var(--tc-gray-600);
   border-radius: var(--tc-border-radius);
   padding: var(--tc-spacing-sm) var(--tc-spacing-md);
   cursor: pointer;
@@ -118,13 +139,17 @@
 }
 
 .resetButton:hover {
-  background-color: var(--tc-error-light);
+  background-color: rgba(var(--tc-danger-color-rgb), 0.1);
   color: var(--tc-danger-color);
-  border-color: var(--tc-error-light);
+  border-color: var(--tc-danger-color);
 }
 
+/* =============================
+   TABLEAU
+   ============================= */
 .tableWrapper {
   overflow-x: auto;
+  margin-bottom: var(--tc-spacing-md);
 }
 
 .table {
@@ -135,19 +160,20 @@
 .tableHeader {
   text-align: left;
   padding: var(--tc-spacing-sm) var(--tc-spacing-md);
-  background-color: var(--tc-bg-light);
-  border-bottom: 2px solid var(--tc-border-medium);
-  color: var(--tc-text-secondary);
+  background-color: var(--tc-gray-100);
+  border-bottom: 2px solid var(--tc-gray-300);
+  color: var(--tc-gray-700);
   font-weight: var(--tc-font-weight-semibold);
   font-size: var(--tc-font-size-sm);
 }
 
 .sortable {
   cursor: pointer;
+  transition: background-color var(--tc-transition-duration);
 }
 
 .sortable:hover {
-  background-color: var(--tc-bg-hover);
+  background-color: var(--tc-gray-200);
 }
 
 .headerContent {
@@ -159,27 +185,34 @@
 .sortIcon {
   margin-left: var(--tc-spacing-sm);
   font-size: var(--tc-font-size-xs);
+  color: var(--tc-primary-color);
 }
 
 .tableRow {
-  border-bottom: var(--tc-border-width) solid var(--tc-border-light);
-  transition: var(--tc-transition-short);
+  border-bottom: 1px solid var(--tc-gray-200);
+  transition: background-color var(--tc-transition-duration);
   cursor: pointer;
 }
 
 .tableRow:hover {
-  background-color: var(--tc-bg-hover);
+  background-color: var(--tc-gray-100);
 }
 
 .tableCell {
   padding: var(--tc-spacing-sm) var(--tc-spacing-md);
-  color: var(--tc-text-dark);
+  color: var(--tc-text-color);
   font-size: var(--tc-font-size-sm);
 }
 
+/* =============================
+   ÉTATS SPÉCIAUX
+   ============================= */
 .noData {
   padding: var(--tc-spacing-xl);
   text-align: center;
+  color: var(--tc-gray-600);
+  font-size: var(--tc-font-size-md);
+  font-style: italic;
 }
 
 .loading, 
@@ -187,11 +220,15 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: var(--tc-spacing-lg);
   gap: var(--tc-spacing-sm);
-  color: var(--tc-text-secondary);
+  color: var(--tc-gray-600);
   font-size: var(--tc-font-size-sm);
 }
 
+/* =============================
+   PAGINATION
+   ============================= */
 .loadingMoreContainer,
 .loadMoreContainer {
   display: flex;
@@ -201,29 +238,33 @@
 
 .loadMoreButton {
   background-color: transparent;
-  border: var(--tc-border-width) solid var(--tc-border-medium);
-  color: var(--tc-text-secondary);
+  border: 1px solid var(--tc-gray-400);
+  color: var(--tc-gray-700);
   border-radius: var(--tc-border-radius);
   padding: var(--tc-spacing-sm) var(--tc-spacing-md);
   cursor: pointer;
   font-size: var(--tc-font-size-sm);
-  transition: var(--tc-transition-short);
+  font-weight: var(--tc-font-weight-medium);
+  transition: var(--tc-transition);
 }
 
 .loadMoreButton:hover {
-  background-color: var(--tc-bg-hover);
+  background-color: var(--tc-gray-100);
+  color: var(--tc-primary-color);
 }
 
 .loadingMoreContainer {
   display: flex;
   align-items: center;
   gap: var(--tc-spacing-sm);
-  color: var(--tc-text-secondary);
+  color: var(--tc-gray-600);
   font-size: var(--tc-font-size-sm);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+/* =============================
+   RESPONSIVE DESIGN
+   ============================= */
+@media (max-width: var(--tc-breakpoint-md)) {
   .container {
     padding: var(--tc-spacing-md);
   }
@@ -257,12 +298,18 @@
     width: 100%;
     padding: var(--tc-spacing-sm);
   }
+}
 
+@media (max-width: var(--tc-breakpoint-sm)) {
   .table {
     font-size: var(--tc-font-size-xs);
   }
 
   .tableHeader, .tableCell {
     padding: var(--tc-spacing-xs);
+  }
+  
+  .filtersContainer {
+    padding: var(--tc-spacing-sm);
   }
 }

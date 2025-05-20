@@ -1,5 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Button, Card, Row, Col, Alert } from 'react-bootstrap';
+// Import des composants UI standards de TourCraft
+import Card from '@components/ui/Card';
+import Button from '@components/ui/Button';
+import ErrorMessage from '@components/ui/ErrorMessage';
+// Import des composants React Bootstrap
+import { Form, Row, Col } from 'react-bootstrap';
+
+/* 
+ * Note: les importations ont été mises à jour le 20/05/2025
+ * Les anciens imports de @ui/... ont été remplacés par:
+ * 1. @components/ui/... pour les composants UI personnalisés TourCraft
+ * 2. react-bootstrap pour les composants de formulaire standards
+ */
+
+// Import de votre CSS module
 import styles from './ParametresApparence.module.css';
 import { useParametres } from '@/context/ParametresContext';
 
@@ -8,7 +22,7 @@ const ParametresApparence = () => {
   const [originalAppearance, setOriginalAppearance] = useState(null);
   const [localState, setLocalState] = useState(parametres.apparence || {
     theme: 'light',
-    couleurPrincipale: '#2c3e50',
+    couleurPrincipale: '#1e3a5f', // Utilisez la valeur par défaut de --tc-primary-color
     taillePolicePx: 16,
     animations: true,
     compactMode: false,
@@ -16,7 +30,6 @@ const ParametresApparence = () => {
   });
   const [success, setSuccess] = useState('');
   
-  // Sauvegarde les paramètres initiaux lors du premier chargement
   useEffect(() => {
     if (parametres.apparence && !originalAppearance) {
       setOriginalAppearance({
@@ -33,9 +46,7 @@ const ParametresApparence = () => {
       [name]: type === 'checkbox' ? checked : value
     }));
     
-    // Pour la prévisualisation du sélecteur de couleur uniquement
     if (name === 'couleurPrincipale') {
-      // Met à jour la couleur du sélecteur sans affecter toute l'application
       const colorPicker = document.getElementById('colorPreview');
       if (colorPicker) {
         colorPicker.style.backgroundColor = value;
@@ -48,19 +59,34 @@ const ParametresApparence = () => {
     const success = await sauvegarderParametres('apparence', localState);
     if (success) {
       setSuccess('Préférences d\'apparence mises à jour avec succès');
-      // Appliquer les changements immédiatement
+      
+      // Appliquer les changements aux variables CSS globales
       document.documentElement.style.setProperty('--tc-primary-color', localState.couleurPrincipale);
       document.documentElement.style.setProperty('--tc-font-size-base', `${localState.taillePolicePx}px`);
       document.body.setAttribute('data-theme', localState.theme);
+      
+      // Mettre à jour les variables dérivées
+      const primaryRGB = hexToRgb(localState.couleurPrincipale);
+      if (primaryRGB) {
+        document.documentElement.style.setProperty('--tc-primary-color-rgb', primaryRGB);
+      }
+      
       setOriginalAppearance(localState);
       setTimeout(() => setSuccess(''), 3000);
     }
   };
 
+  // Fonction utilitaire pour convertir HEX en RGB
+  const hexToRgb = (hex) => {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? 
+      `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : null;
+  };
+
   const handleReset = () => {
     const defaultState = {
       theme: 'light',
-      couleurPrincipale: '#2c3e50',
+      couleurPrincipale: '#1e3a5f', // Valeur par défaut de --tc-primary-color
       taillePolicePx: 16,
       animations: true,
       compactMode: false,
@@ -69,48 +95,47 @@ const ParametresApparence = () => {
     setLocalState(defaultState);
   };
   
-  // Fonction pour annuler les changements non sauvegardés
   const handleCancel = () => {
     if (originalAppearance) {
-      // Restaure les paramètres originaux
       setLocalState(originalAppearance);
-      
-      // Réapplique les styles CSS originaux
       document.documentElement.style.setProperty('--tc-primary-color', originalAppearance.couleurPrincipale);
       document.documentElement.style.setProperty('--tc-font-size-base', `${originalAppearance.taillePolicePx}px`);
     }
   };
 
   if (loading) {
-    return <div>Chargement...</div>;
+    return <div className="tc-loading">Chargement...</div>;
   }
 
   return (
-    <Card>
-      <Card.Body>
-        <h3 className="mb-3">Apparence</h3>
-        {success && <Alert variant="success">{success}</Alert>}
+    <Card className={styles.card}>
+      <Card.Header className={styles.cardHeader}>
+        <Card.Title className={styles.cardTitle}>Apparence</Card.Title>
+      </Card.Header>
+      <Card.Body className={styles.cardBody}>
+        {success && <ErrorMessage variant="success" className={styles.successAlert}>{success}</ErrorMessage>}
         
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit} className={styles.form}>
           <Row>
             <Col md={6}>
-              <Form.Group className="mb-3">
-                <Form.Label>Thème</Form.Label>
+              <Form.Group className={styles.formGroup}>
+                <Form.Label className={styles.formLabel}>Thème</Form.Label>
                 <Form.Select
                   name="theme"
                   value={localState.theme}
                   onChange={handleChange}
+                  className={styles.formControl}
                 >
-                  <option value="light">Clair</option>
-                  <option value="dark">Sombre</option>
-                  <option value="system">Système</option>
-                </Form.Select>
-              </Form.Group>
+              <option value="light">Clair</option>
+              <option value="dark">Sombre</option>
+              <option value="system">Système</option>
+            </Form.Select>
+          </Form.Group>
             </Col>
             
             <Col md={6}>
-              <Form.Group className="mb-3">
-                <Form.Label>Couleur principale</Form.Label>
+              <Form.Group className={styles.formGroup}>
+                <Form.Label className={styles.formLabel}>Couleur principale</Form.Label>
                 <div className={styles.colorPreviewContainer}>
                   <div 
                     id="colorPreview" 
@@ -122,7 +147,7 @@ const ParametresApparence = () => {
                     name="couleurPrincipale"
                     value={localState.couleurPrincipale}
                     onChange={handleChange}
-                    className="me-2"
+                    className={styles.colorPicker}
                   />
                   <Form.Control
                     type="text"
@@ -139,8 +164,8 @@ const ParametresApparence = () => {
 
           <Row>
             <Col md={6}>
-              <Form.Group className="mb-3">
-                <Form.Label>Taille de police (px)</Form.Label>
+              <Form.Group className={styles.formGroup}>
+                <Form.Label className={styles.formLabel}>Taille de police (px)</Form.Label>
                 <div className={styles.fontSizeContainer}>
                   <Form.Range
                     name="taillePolicePx"
@@ -151,18 +176,19 @@ const ParametresApparence = () => {
                     step="1"
                     className={styles.fontSizeSlider}
                   />
-                  <span>{localState.taillePolicePx}px</span>
+                  <span className={styles.fontSizeValue}>{localState.taillePolicePx}px</span>
                 </div>
               </Form.Group>
             </Col>
             
             <Col md={6}>
-              <Form.Group className="mb-3">
-                <Form.Label>Position du menu</Form.Label>
+              <Form.Group className={styles.formGroup}>
+                <Form.Label className={styles.formLabel}>Position du menu</Form.Label>
                 <Form.Select
                   name="menuPosition"
                   value={localState.menuPosition}
                   onChange={handleChange}
+                  className={styles.formControl}
                 >
                   <option value="left">Gauche</option>
                   <option value="top">Haut</option>
@@ -171,7 +197,7 @@ const ParametresApparence = () => {
             </Col>
           </Row>
 
-          <Form.Group className="mb-3">
+          <Form.Group className={styles.formGroup}>
             <Form.Check 
               type="switch"
               id="animations"
@@ -179,13 +205,14 @@ const ParametresApparence = () => {
               name="animations"
               checked={localState.animations}
               onChange={handleChange}
+              className={styles.formCheck}
             />
-            <Form.Text className="text-muted">
+            <Form.Text className={styles.formText}>
               Activer/désactiver les animations de l'interface
             </Form.Text>
           </Form.Group>
 
-          <Form.Group className="mb-3">
+          <Form.Group className={styles.formGroup}>
             <Form.Check 
               type="switch"
               id="compactMode"
@@ -193,8 +220,9 @@ const ParametresApparence = () => {
               name="compactMode"
               checked={localState.compactMode}
               onChange={handleChange}
+              className={styles.formCheck}
             />
-            <Form.Text className="text-muted">
+            <Form.Text className={styles.formText}>
               Réduire l'espacement entre les éléments
             </Form.Text>
           </Form.Group>
@@ -202,22 +230,25 @@ const ParametresApparence = () => {
           <div className={styles.actionButtons}>
             <div className={styles.resetButtonsGroup}>
               <Button 
-                variant="outline-secondary" 
-                type="button"
+                variant="secondary"
                 onClick={handleReset}
-                className="me-2"
+                className={styles.resetButton}
               >
                 Réinitialiser
               </Button>
               <Button 
-                variant="outline-secondary" 
-                type="button"
+                variant="secondary"
                 onClick={handleCancel}
+                className={styles.resetButton}
               >
                 Annuler
               </Button>
             </div>
-            <Button type="submit" variant="primary">
+            <Button 
+              type="submit" 
+              variant="primary"
+              className={styles.saveButton}
+            >
               Enregistrer les préférences
             </Button>
           </div>

@@ -1,18 +1,24 @@
 /*
- * Styles pour LieuxListSearchFilter
+ * Styles pour LieuxListSearchFilter.module.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
+/* =============================
+   CONTENEUR DE RECHERCHE
+   ============================= */
 .searchFilterContainer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: var(--tc-spacing-md);
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: var(--tc-spacing-md);
 }
 
+/* =============================
+   BARRE DE RECHERCHE
+   ============================= */
 .searchBar {
   flex: 1;
   max-width: 600px;
@@ -20,29 +26,108 @@
 }
 
 .searchInput {
-  padding-right: 2.5rem;
+  width: 100%;
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  padding-right: calc(var(--tc-spacing-lg) + var(--tc-spacing-sm));
+  border: 1px solid var(--tc-gray-300);
+  border-radius: var(--tc-border-radius);
+  font-size: var(--tc-font-size-base);
+  color: var(--tc-text-color);
+  background-color: var(--tc-bg-color);
+  transition: var(--tc-transition);
+}
+
+.searchInput:focus {
+  border-color: var(--tc-primary-color);
+  outline: none;
+  box-shadow: var(--tc-input-focus-shadow);
 }
 
 .clearSearch {
   position: absolute;
-  right: 0;
-  top: 0;
-  height: 100%;
+  right: var(--tc-spacing-sm);
+  top: 50%;
+  transform: translateY(-50%);
   border: none;
   background: none;
   cursor: pointer;
+  color: var(--tc-gray-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--tc-spacing-xs);
+  transition: color var(--tc-transition-duration);
+}
+
+.clearSearch:hover {
+  color: var(--tc-gray-700);
 }
 
 .resultsCount {
-  font-size: 0.8rem;
-  color: var(--tc-color-6c757d, #6c757d);
-  margin-top: 0.25rem;
-  padding-left: 0.5rem;
+  font-size: var(--tc-font-size-xs);
+  color: var(--tc-gray-600);
+  margin-top: var(--tc-spacing-xs);
+  padding-left: var(--tc-spacing-sm);
 }
 
-.modernFilterBtn, .modernSortBtn {
+/* =============================
+   BOUTONS DE FILTRE ET TRI
+   ============================= */
+.modernFilterBtn, 
+.modernSortBtn {
   display: flex;
   align-items: center;
   white-space: nowrap;
-  gap: 0.25rem;
+  gap: var(--tc-spacing-xs);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  border: 1px solid var(--tc-gray-300);
+  border-radius: var(--tc-border-radius);
+  background-color: var(--tc-bg-color);
+  color: var(--tc-gray-700);
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-medium);
+  cursor: pointer;
+  transition: var(--tc-transition);
+}
+
+.modernFilterBtn:hover, 
+.modernSortBtn:hover {
+  background-color: var(--tc-gray-100);
+  border-color: var(--tc-gray-400);
+}
+
+.modernFilterBtn i, 
+.modernSortBtn i {
+  font-size: var(--tc-font-size-md);
+  color: var(--tc-primary-color);
+}
+
+.modernFilterBtn.active, 
+.modernSortBtn.active {
+  background-color: rgba(var(--tc-primary-color-rgb), 0.1);
+  border-color: var(--tc-primary-color);
+  color: var(--tc-primary-color);
+}
+
+/* =============================
+   RESPONSIVE DESIGN
+   ============================= */
+@media (max-width: var(--tc-breakpoint-md)) {
+  .searchFilterContainer {
+    gap: var(--tc-spacing-sm);
+  }
+  
+  .searchBar {
+    width: 100%;
+    max-width: none;
+    order: -1;
+  }
+}
+
+@media (max-width: var(--tc-breakpoint-sm)) {
+  .modernFilterBtn, 
+  .modernSortBtn {
+    flex: 1;
+    justify-content: center;
+  }
 }

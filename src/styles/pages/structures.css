@@ -1,123 +1,130 @@
 /*
  * Styles pour structures.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Date de création: Inconnue
- * Dernière mise à jour: 5 mai 2025
+ * Date de création: Mai 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
-
-
-
-
-/* Styles spécifiques aux structures qui ne sont pas couverts par les styles génériques */
-
-/* Badges spécifiques pour les différents types de structures */
-.structure-type-badge {
+/* =============================
+   BADGES DE TYPE DE STRUCTURE
+   ============================= */
+.tc-structure-type-badge {
   display: inline-flex;
   align-items: center;
-  gap: var(--tc-spacing-1);
-  padding: var(--tc-spacing-1) var(--tc-spacing-2);
-  border-radius: var(--tc-spacing-1);
-  font-size: var(--tc-spacing-2);
+  gap: var(--tc-spacing-xs);
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  border-radius: var(--tc-border-radius-sm);
+  font-size: var(--tc-font-size-xs);
+  font-weight: var(--tc-font-weight-medium);
 }
 
-/* Couleurs spécifiques pour les types de structures */
-.type-salle {
-  background-color: var(--tc-color-rgba(13, 202, 240, 0.1), rgba(13, 202, 240, 0.1));
-  color: var(--tc-color-0dcaf0, #0dcaf0);
+/* Variantes par type de structure */
+.tc-type-salle {
+  background-color: rgba(var(--tc-info-color-rgb), 0.1);
+  color: var(--tc-info-color);
 }
 
-.type-festival {
-  background-color: var(--tc-color-rgba(13, 110, 253, 0.1), rgba(13, 110, 253, 0.1));
-  color: var(--tc-color-primary);
+.tc-type-festival {
+  background-color: rgba(var(--tc-primary-color-rgb), 0.1);
+  color: var(--tc-primary-color);
 }
 
-.type-association {
-  background-color: var(--tc-color-rgba(25, 135, 84, 0.1), rgba(25, 135, 84, 0.1));
-  color: var(--tc-color-198754, #198754);
+.tc-type-association {
+  background-color: rgba(var(--tc-success-color-rgb), 0.1);
+  color: var(--tc-success-color);
 }
 
-.type-mairie {
-  background-color: var(--tc-color-rgba(108, 117, 125, 0.1), rgba(108, 117, 125, 0.1));
-  color: var(--tc-color-text-secondary);
+.tc-type-mairie {
+  background-color: rgba(var(--tc-gray-600-rgb), 0.1);
+  color: var(--tc-gray-600);
 }
 
-.type-autre {
-  background-color: var(--tc-color-rgba(248, 249, 250, 0.6), rgba(248, 249, 250, 0.6));
-  color: var(--tc-color-text-secondary);
+.tc-type-autre {
+  background-color: rgba(var(--tc-gray-100-rgb), 0.6);
+  color: var(--tc-gray-600);
 }
 
-/* Classes spécifiques pour le cas mobile */
-.structure-actions-mobile {
+/* =============================
+   INTERFACE MOBILE
+   ============================= */
+.tc-structure-actions-mobile {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: var(--tc-bg-default);
-  padding: var(--tc-spacing-3);
+  background-color: var(--tc-bg-color);
+  padding: var(--tc-spacing-md);
   display: flex;
-  gap: var(--tc-spacing-3);
-  box-shadow: 0 -0.125rem var(--tc-spacing-1) var(--tc-color-rgba(0, 0, 0, 0.075), rgba(0, 0, 0, 0.075));
-  z-index: 1000;
+  gap: var(--tc-spacing-md);
+  box-shadow: 0 -2px 4px rgba(var(--tc-black-rgb), 0.075);
+  z-index: var(--tc-z-index-modal);
 }
 
-.structure-detail-mobile {
+.tc-structure-detail-mobile {
   padding-bottom: 70px; /* Espace pour les boutons d'action fixes en bas */
 }
 
-/* Classes d'extension pour la table de données */
-.data-table.structures-table .action-column {
+/* =============================
+   TABLEAUX DE DONNÉES
+   ============================= */
+.tc-data-table.tc-structures-table .tc-action-column {
   width: 100px;
   text-align: right;
 }
 
-/* Styles pour afficher les informations de contact */
-.structure-contact-link {
+/* =============================
+   LIENS DE CONTACT
+   ============================= */
+.tc-structure-contact-link {
   color: var(--tc-primary-color);
   text-decoration: none;
+  transition: color var(--tc-transition-duration);
 }
 
-.structure-contact-link:hover {
+.tc-structure-contact-link:hover {
   text-decoration: underline;
+  color: var(--tc-primary-dark);
 }
 
-/* Mobile - card de structure */
-.structures-card {
+/* =============================
+   CARTES STRUCTURE (MOBILE)
+   ============================= */
+.tc-structures-card {
   position: relative;
-  background-color: var(--tc-card-bg);
+  background-color: var(--tc-bg-color);
   border-radius: var(--tc-border-radius);
-  padding: var(--tc-spacing-3);
-  margin-bottom: var(--tc-spacing-3);
+  padding: var(--tc-spacing-md);
+  margin-bottom: var(--tc-spacing-md);
   box-shadow: var(--tc-shadow);
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: var(--tc-transition);
 }
 
-.structures-card:active {
+.tc-structures-card:active {
   transform: scale(0.98);
 }
 
-.structures-card:hover {
+.tc-structures-card:hover {
   box-shadow: var(--tc-shadow-hover);
 }
 
 /* Badge pour le nombre de programmateurs */
-.badge-mobile {
+.tc-badge-mobile {
   position: absolute;
-  top: -var(--tc-spacing-2);
-  right: -var(--tc-spacing-2);
-  min-width: var(--tc-spacing-4);
-  height: var(--tc-spacing-4);
-  border-radius: var(--tc-spacing-2);
+  top: calc(-1 * var(--tc-spacing-sm));
+  right: calc(-1 * var(--tc-spacing-sm));
+  min-width: var(--tc-spacing-md);
+  height: var(--tc-spacing-md);
+  border-radius: var(--tc-spacing-sm);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--tc-spacing-2);
-  font-weight: bold;
-  color: var(--tc-bg-default);
-  padding: 0 var(--tc-spacing-2);
+  font-size: var(--tc-font-size-xs);
+  font-weight: var(--tc-font-weight-bold);
+  color: var(--tc-light-color);
+  padding: 0 var(--tc-spacing-sm);
 }
 
-.badge-programmateurs {
+.tc-badge-programmateurs {
   background-color: var(--tc-success-color);
 }

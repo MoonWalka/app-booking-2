@@ -1,313 +1,457 @@
 /*
  * Styles pour forms.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Date de création: Inconnue
- * Dernière mise à jour: 5 mai 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
+@import '@styles/base/variables.css';
 
-
-
-
-/* Styles généraux pour les formulaires */
-.form-group {
-  margin-bottom: var(--tc-spacing-4);
+/* STRUCTURE DE BASE DES FORMULAIRES */
+.tc-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-spacing-md);
 }
 
-/* // Modifié par Copilot : ajout de .tc-form-group */
+.tc-form-horizontal {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: var(--tc-spacing-md);
+  align-items: start;
+}
+
+.tc-form-section {
+  margin-bottom: var(--tc-spacing-lg);
+  border-bottom: 1px solid var(--tc-border-color);
+  padding-bottom: var(--tc-spacing-md);
+}
+
+.tc-form-section-title {
+  font-size: var(--tc-font-size-md);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-color);
+  margin-bottom: var(--tc-spacing-sm);
+}
+
+/* GROUPES DE CHAMPS */
 .tc-form-group {
-  margin-bottom: var(--tc-spacing-4);
+  margin-bottom: var(--tc-spacing-md);
+  position: relative;
 }
 
-.form-label {
-  display: block;
-  margin-bottom: var(--tc-spacing-2);
-  font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-label-color);
+.tc-form-row {
+  display: flex;
+  gap: var(--tc-spacing-md);
+  margin-bottom: var(--tc-spacing-md);
 }
 
-/* // Modifié par Copilot : ajout de .tc-form-label */
+.tc-form-col {
+  flex: 1;
+}
+
+/* ÉTIQUETTES ET LÉGENDES */
 .tc-form-label {
   display: block;
-  margin-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-spacing-xs);
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-label-color);
-}
-
-.form-control {
-  display: block;
-  width: 100%;
-  padding: var(--tc-spacing-2);
-  font-size: var(--tc-spacing-3);
-  line-height: 1.5;
   color: var(--tc-text-color);
-  background-color: var(--tc-input-bg);
-  background-clip: padding-box;
-  border: 1px solid var(--tc-input-border-color);
-  border-radius: var(--tc-border-radius);
-  transition: var(--tc-transition);
+  font-size: var(--tc-font-size-sm);
 }
 
-/* // Modifié par Copilot : ajout de .tc-form-control */
+.tc-form-text {
+  display: block;
+  margin-top: var(--tc-spacing-xs);
+  font-size: var(--tc-font-size-xs);
+  color: var(--tc-text-muted);
+}
+
+.tc-form-required {
+  color: var(--tc-danger-color);
+  margin-left: 2px;
+}
+
+/* CHAMPS DE TEXTE ET SÉLECTION */
 .tc-form-control {
   display: block;
   width: 100%;
-  padding: var(--tc-spacing-2);
-  font-size: var(--tc-spacing-3);
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  font-family: var(--tc-font-family-base);
+  font-size: var(--tc-font-size-base);
   line-height: 1.5;
   color: var(--tc-text-color);
-  background-color: var(--tc-input-bg);
+  background-color: var(--tc-bg-color);
   background-clip: padding-box;
-  border: 1px solid var(--tc-input-border-color);
+  border: 1px solid var(--tc-border-color);
   border-radius: var(--tc-border-radius);
+  transition: var(--tc-transition);
+  height: 40px;
+}
+
+.tc-form-control:focus {
+  border-color: var(--tc-primary-color);
+  outline: 0;
+  box-shadow: 0 0 0 3px rgba(var(--tc-primary-color-rgb), 0.15);
+}
+
+.tc-form-control::placeholder {
+  color: var(--tc-gray-500);
+  opacity: 1;
+}
+
+.tc-form-control:disabled,
+.tc-form-control[readonly] {
+  background-color: var(--tc-gray-100);
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* TEXTAREA */
+textarea.tc-form-control {
+  min-height: 100px;
+  height: auto;
+  resize: vertical;
+}
+
+/* SELECT */
+select.tc-form-control {
+  appearance: none;
+  padding-right: 30px;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--tc-spacing-sm) center;
+  background-size: 16px 12px;
+}
+
+select.tc-form-control[multiple] {
+  height: auto;
+  min-height: 100px;
+  background-image: none;
+  padding-right: var(--tc-spacing-sm);
+}
+
+select.tc-form-control option {
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+}
+
+select.tc-form-control optgroup {
+  font-weight: var(--tc-font-weight-semibold);
+}
+
+/* CASES À COCHER ET BOUTONS RADIO */
+.tc-form-check {
+  display: block;
+  min-height: 24px;
+  padding-left: 28px;
+  margin-bottom: var(--tc-spacing-xs);
+  position: relative;
+}
+
+.tc-form-check-input {
+  position: absolute;
+  left: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 3px;
+  background-color: var(--tc-bg-color);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  border: 1px solid var(--tc-border-color);
+  appearance: none;
   transition: var(--tc-transition);
 }
 
-.form-control:focus {
-  border-color: var(--tc-input-focus-border-color);
-  outline: 0;
-  box-shadow: var(--tc-input-focus-shadow);
-}
-
-/* // Modifié par Copilot : ajout de .tc-form-control:focus */
-.tc-form-control:focus {
-  border-color: var(--tc-input-focus-border-color);
-  outline: 0;
-  box-shadow: var(--tc-input-focus-shadow);
-}
-
-.form-control::placeholder {
-  color: var(--tc-input-placeholder-color);
-  opacity: 1;
-}
-
-/* // Modifié par Copilot : ajout de .tc-form-control::placeholder */
-.tc-form-control::placeholder {
-  color: var(--tc-input-placeholder-color);
-  opacity: 1;
-}
-
-.form-text {
-  display: block;
-  margin-top: var(--tc-spacing-1);
-  font-size: 0.875rem;
-  color: var(--tc-color-text-muted);
-}
-
-/* // Modifié par Copilot : ajout de .tc-form-text */
-.tc-form-text {
-  display: block;
-  margin-top: var(--tc-spacing-1);
-  font-size: 0.875rem;
-  color: var(--tc-color-text-muted);
-}
-
-/* Styles pour champs avec erreurs */
-.is-invalid {
-  border-color: var(--tc-danger-color) !important;
-}
-
-/* // Modifié par Copilot : ajout de .tc-is-invalid */
-.tc-is-invalid {
-  border-color: var(--tc-danger-color) !important;
-}
-
-.invalid-feedback {
-  display: block;
-  width: 100%;
-  margin-top: var(--tc-spacing-1);
-  font-size: 0.875rem;
-  color: var(--tc-danger-color);
-}
-
-/* // Modifié par Copilot : ajout de .tc-invalid-feedback */
-.tc-invalid-feedback {
-  display: block;
-  width: 100%;
-  margin-top: var(--tc-spacing-1);
-  font-size: 0.875rem;
-  color: var(--tc-danger-color);
-}
-
-/* Style pour indicateur de champ requis */
-.tc-required {
-  color: var(--tc-danger-color);
-  margin-left: 0.125rem;
-}
-
-/* Styles pour les select et multiselect */
-select.form-control {
-  padding-right: var(--tc-spacing-8);
-  appearance: none;
-  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right var(--tc-spacing-2) center;
-  background-size: 16px 12px;
-}
-
-/* // Modifié par Copilot : ajout de select.tc-form-control */
-select.tc-form-control {
-  padding-right: var(--tc-spacing-8);
-  appearance: none;
-  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right var(--tc-spacing-2) center;
-  background-size: 16px 12px;
-}
-
-/* Styles pour les checkboxes et radios */
-.form-check {
-  display: block;
-  min-height: var(--tc-spacing-4);
-  padding-left: var(--tc-spacing-4);
-  margin-bottom: 0.125rem;
-}
-
-/* // Modifié par Copilot : ajout de .tc-form-check */
-.tc-form-check {
-  display: block;
-  min-height: var(--tc-spacing-4);
-  padding-left: var(--tc-spacing-4);
-  margin-bottom: 0.125rem;
-}
-
-.form-check-input {
-  float: left;
-  margin-left: -var(--tc-spacing-4);
-  width: var(--tc-spacing-3);
-  height: var(--tc-spacing-3);
-  margin-top: var(--tc-spacing-1);
-  vertical-align: top;
-  background-color: var(--tc-input-bg);
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-  border: 1px solid var(--tc-input-border-color);
-  appearance: none;
-}
-
-/* // Modifié par Copilot : ajout de .tc-form-check-input */
-.tc-form-check-input {
-  float: left;
-  margin-left: -var(--tc-spacing-4);
-  width: var(--tc-spacing-3);
-  height: var(--tc-spacing-3);
-  margin-top: var(--tc-spacing-1);
-  vertical-align: top;
-  background-color: var(--tc-input-bg);
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-  border: 1px solid var(--tc-input-border-color);
-  appearance: none;
-}
-
-.form-check-input[type="checkbox"] {
-  border-radius: var(--tc-spacing-1);
-}
-
-/* // Modifié par Copilot : ajout de .tc-form-check-input[type="checkbox"] */
 .tc-form-check-input[type="checkbox"] {
-  border-radius: var(--tc-spacing-1);
+  border-radius: var(--tc-border-radius-sm);
 }
 
-.form-check-input[type="radio"] {
-  border-radius: 50%;
-}
-
-/* // Modifié par Copilot : ajout de .tc-form-check-input[type="radio"] */
 .tc-form-check-input[type="radio"] {
   border-radius: 50%;
 }
 
-.form-check-input:checked {
-  background-color: var(--tc-primary-color);
-  border-color: var(--tc-primary-color);
-}
-
-/* // Modifié par Copilot : ajout de .tc-form-check-input:checked */
 .tc-form-check-input:checked {
   background-color: var(--tc-primary-color);
   border-color: var(--tc-primary-color);
 }
 
-.form-check-input:checked[type="checkbox"] {
-  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23fff' d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3E%3C/svg%3E");
-}
-
-/* // Modifié par Copilot : ajout de .tc-form-check-input:checked[type="checkbox"] */
 .tc-form-check-input:checked[type="checkbox"] {
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23fff' d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3E%3C/svg%3E");
 }
 
-.form-check-input:checked[type="radio"] {
-  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='3' fill='%23fff'/%3E%3C/svg%3E");
-}
-
-/* // Modifié par Copilot : ajout de .tc-form-check-input:checked[type="radio"] */
 .tc-form-check-input:checked[type="radio"] {
-  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='3' fill='%23fff'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='4' fill='%23fff'/%3E%3C/svg%3E");
 }
 
-.form-check-label {
-  margin-bottom: 0;
-  color: var(--tc-text-color);
+.tc-form-check-input:focus {
+  border-color: var(--tc-primary-color);
+  box-shadow: 0 0 0 2px rgba(var(--tc-primary-color-rgb), 0.15);
+  outline: 0;
 }
 
-/* // Modifié par Copilot : ajout de .tc-form-check-label */
 .tc-form-check-label {
+  display: inline-block;
   margin-bottom: 0;
+  font-size: var(--tc-font-size-sm);
   color: var(--tc-text-color);
+  cursor: pointer;
 }
 
-/* Styles pour les textarea */
-textarea.form-control {
-  min-height: 100px;
-  resize: vertical;
+.tc-form-check-inline {
+  display: inline-flex;
+  align-items: center;
+  margin-right: var(--tc-spacing-md);
+  margin-bottom: 0;
 }
 
-/* // Modifié par Copilot : ajout de textarea.tc-form-control */
-textarea.tc-form-control {
-  min-height: 100px;
-  resize: vertical;
-}
-
-/* Styles pour les switchs */
-.form-switch {
-  padding-left: 2.5rem;
-}
-
-/* // Modifié par Copilot : ajout de .tc-form-switch */
+/* TOGGLE SWITCH */
 .tc-form-switch {
-  padding-left: 2.5rem;
+  padding-left: 48px;
+  min-height: 24px;
 }
 
-.form-switch .form-check-input {
-  width: var(--tc-spacing-8);
-  margin-left: -2.5rem;
-  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3E%3Ccircle r='3' fill='%23fff'/%3E%3C/svg%3E");
-  background-position: left center;
-  border-radius: var(--tc-spacing-8);
-  transition: background-position .15s ease-in-out;
-}
-
-/* // Modifié par Copilot : ajout de .tc-form-switch .tc-form-check-input */
 .tc-form-switch .tc-form-check-input {
-  width: var(--tc-spacing-8);
-  margin-left: -2.5rem;
+  width: 36px;
+  height: 20px;
+  left: 0;
+  margin-top: 2px;
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3E%3Ccircle r='3' fill='%23fff'/%3E%3C/svg%3E");
   background-position: left center;
-  border-radius: var(--tc-spacing-8);
+  border-radius: 20px;
   transition: background-position .15s ease-in-out;
 }
 
-.form-switch .form-check-input:checked {
-  background-position: right center;
-  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3E%3Ccircle r='3' fill='%23fff'/%3E%3C/svg%3E");
-}
-
-/* // Modifié par Copilot : ajout de .tc-form-switch .tc-form-check-input:checked */
 .tc-form-switch .tc-form-check-input:checked {
   background-position: right center;
-  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3E%3Ccircle r='3' fill='%23fff'/%3E%3C/svg%3E");
+}
+
+/* VALIDATION ET ÉTATS */
+.tc-form-control.tc-is-invalid {
+  border-color: var(--tc-danger-color);
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23dc3545' d='M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--tc-spacing-sm) center;
+  background-size: 18px 18px;
+  padding-right: 40px;
+}
+
+select.tc-form-control.tc-is-invalid {
+  background-position: right calc(var(--tc-spacing-sm) + 22px) center;
+}
+
+.tc-invalid-feedback {
+  display: block;
+  width: 100%;
+  margin-top: var(--tc-spacing-xs);
+  font-size: var(--tc-font-size-xs);
+  color: var(--tc-danger-color);
+}
+
+.tc-form-control.tc-is-valid {
+  border-color: var(--tc-success-color);
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%2328a745' d='M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--tc-spacing-sm) center;
+  background-size: 18px 18px;
+  padding-right: 40px;
+}
+
+.tc-valid-feedback {
+  display: block;
+  width: 100%;
+  margin-top: var(--tc-spacing-xs);
+  font-size: var(--tc-font-size-xs);
+  color: var(--tc-success-color);
+}
+
+/* TAILLES DE CHAMPS */
+.tc-form-control-sm {
+  height: 32px;
+  padding: 0.25rem 0.5rem;
+  font-size: var(--tc-font-size-xs);
+  border-radius: var(--tc-border-radius-sm);
+}
+
+.tc-form-control-lg {
+  height: 48px;
+  padding: 0.5rem 1rem;
+  font-size: var(--tc-font-size-md);
+  border-radius: var(--tc-border-radius-lg);
+}
+
+textarea.tc-form-control-sm {
+  height: auto;
+  min-height: 60px;
+}
+
+textarea.tc-form-control-lg {
+  height: auto;
+  min-height: 120px;
+}
+
+/* CHAMPS DE RECHERCHE */
+.tc-form-search {
+  position: relative;
+}
+
+.tc-form-search .tc-form-control {
+  padding-left: 36px;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23adb5bd' d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left var(--tc-spacing-sm) center;
+  background-size: 16px 16px;
+}
+
+.tc-form-search-button {
+  position: absolute;
+  right: 2px;
+  top: 2px;
+  bottom: 2px;
+  border: none;
+  background-color: var(--tc-primary-color);
+  color: var(--tc-white);
+  border-radius: 0 var(--tc-border-radius) var(--tc-border-radius) 0;
+  padding: 0 var(--tc-spacing-sm);
+  cursor: pointer;
+  transition: var(--tc-transition);
+}
+
+.tc-form-search-button:hover {
+  background-color: var(--tc-primary-dark);
+}
+
+/* GROUPES DE FORMULAIRE AVEC ADD-ONS */
+.tc-input-group {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  width: 100%;
+}
+
+.tc-input-group-text {
+  display: flex;
+  align-items: center;
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  font-size: var(--tc-font-size-sm);
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--tc-gray-700);
+  text-align: center;
+  white-space: nowrap;
+  background-color: var(--tc-gray-100);
+  border: 1px solid var(--tc-border-color);
+}
+
+.tc-input-group > .tc-input-group-text:first-child {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.tc-input-group > .tc-input-group-text:last-child {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.tc-input-group > .tc-form-control:not(:first-child) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.tc-input-group > .tc-form-control:not(:last-child) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/* CHAMPS DE FICHIER */
+.tc-form-file {
+  position: relative;
+}
+
+.tc-form-file-input {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  width: 0.1px;
+  height: 0.1px;
+  overflow: hidden;
+}
+
+.tc-form-file-label {
+  display: inline-block;
+  cursor: pointer;
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  border: 1px dashed var(--tc-border-color);
+  border-radius: var(--tc-border-radius);
+  background-color: var(--tc-gray-50);
+  text-align: center;
+  width: 100%;
+  transition: var(--tc-transition);
+}
+
+.tc-form-file-label:hover {
+  border-color: var(--tc-primary-color);
+  background-color: rgba(var(--tc-primary-color-rgb), 0.05);
+}
+
+.tc-form-file-icon {
+  display: block;
+  font-size: 1.5rem;
+  margin-bottom: var(--tc-spacing-xs);
+  color: var(--tc-gray-500);
+}
+
+.tc-form-file-text {
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-gray-700);
+}
+
+.tc-form-file-help {
+  display: block;
+  font-size: var(--tc-font-size-xs);
+  color: var(--tc-text-muted);
+  margin-top: var(--tc-spacing-xs);
+}
+
+/* BOUTONS DE FORMULAIRE */
+.tc-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--tc-spacing-lg);
+  gap: var(--tc-spacing-sm);
+}
+
+.tc-form-actions-start { justify-content: flex-start; }
+.tc-form-actions-center { justify-content: center; }
+.tc-form-actions-between { justify-content: space-between; }
+
+/* RESPONSIVE DESIGN */
+@media (max-width: var(--tc-breakpoint-md)) {
+  .tc-form-row {
+    flex-direction: column;
+    gap: var(--tc-spacing-sm);
+  }
+  
+  .tc-form-horizontal {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .tc-form-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .tc-input-group {
+    flex-direction: column;
+  }
+  
+  .tc-input-group > * {
+    border-radius: var(--tc-border-radius) !important;
+    margin-bottom: var(--tc-spacing-xs);
+  }
+  
+  .tc-input-group > *:last-child {
+    margin-bottom: 0;
+  }
 }

@@ -1,20 +1,20 @@
 /*
  * Styles pour le composant ParametresNotifications
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 5 mai 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
 .notificationSection {
-  margin-bottom: var(--tc-spacing-5);
+  margin-bottom: var(--tc-spacing-lg);
 }
 
 .notificationGroup {
-  margin-bottom: var(--tc-spacing-4);
+  margin-bottom: var(--tc-spacing-md);
 }
 
 .notificationTypeTitle {
-  margin-top: var(--tc-spacing-5-5);
-  margin-bottom: var(--tc-spacing-4);
+  margin-top: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-spacing-md);
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-medium);
 }
@@ -22,32 +22,32 @@
 .formActions {
   display: flex;
   justify-content: flex-end;
-  margin-top: var(--tc-spacing-5-5);
+  margin-top: var(--tc-spacing-lg);
 }
 
 .successMessage {
-  margin-bottom: var(--tc-spacing-5);
+  margin-bottom: var(--tc-spacing-lg);
 }
 
 /* Styles responsive standardisés */
 @media (max-width: 768px) {
   .notificationTypeTitle {
-    margin-top: var(--tc-spacing-4);
-    margin-bottom: var(--tc-spacing-3);
+    margin-top: var(--tc-spacing-md);
+    margin-bottom: var(--tc-spacing-sm);
   }
   
   .formActions {
-    margin-top: var(--tc-spacing-4);
+    margin-top: var(--tc-spacing-md);
   }
 }
 
 @media (max-width: 576px) {
   .notificationSection {
-    margin-bottom: var(--tc-spacing-4);
+    margin-bottom: var(--tc-spacing-md);
   }
   
   .notificationGroup {
-    margin-bottom: var(--tc-spacing-3);
+    margin-bottom: var(--tc-spacing-sm);
   }
   
   .formActions {
@@ -55,6 +55,6 @@
   }
   
   .successMessage {
-    margin-bottom: var(--tc-spacing-4);
+    margin-bottom: var(--tc-spacing-md);
   }
 }

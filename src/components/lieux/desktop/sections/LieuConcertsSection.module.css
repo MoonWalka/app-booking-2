@@ -1,108 +1,136 @@
 /*
- * Styles pour LieuConcertsSection
+ * Styles pour LieuConcertsSection.module.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 19 May 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
+/* =============================
+   CARTE DE SECTION CONCERTS
+   ============================= */
 .formCard {
-  border: 1px solid var(--tc-border-light);
-  border-radius: var(--tc-radius-lg);
-  background-color: var(--tc-bg-default);
+  border: 1px solid var(--tc-gray-300);
+  border-radius: var(--tc-border-radius);
+  background-color: var(--tc-bg-color);
   box-shadow: var(--tc-shadow-sm);
   overflow: hidden;
-  margin-bottom: var(--tc-spacing-6);
+  margin-bottom: var(--tc-spacing-lg);
 }
 
+/* =============================
+   EN-TÊTE DE CARTE
+   ============================= */
 .cardHeader {
-  background-color: var(--tc-bg-light);
-  padding: var(--tc-spacing-4) var(--tc-spacing-5);
+  background-color: var(--tc-gray-100);
+  padding: var(--tc-spacing-md) var(--tc-spacing-lg);
   display: flex;
   align-items: center;
-  border-bottom: 1px solid var(--tc-border-light);
+  border-bottom: 1px solid var(--tc-gray-300);
   justify-content: space-between;
 }
 
-.cardHeader h3 {
+.headerTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-spacing-sm);
+}
+
+.cardTitle {
   margin: 0;
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-color);
+  line-height: 1.3;
 }
 
-.cardHeader i {
-  margin-right: var(--tc-spacing-2);
-  color: var(--tc-color-primary);
+.cardIcon {
+  color: var(--tc-primary-color);
   font-size: var(--tc-font-size-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .headerActions {
   display: flex;
-  gap: var(--tc-spacing-2);
+  gap: var(--tc-spacing-sm);
 }
 
+/* =============================
+   CORPS DE CARTE
+   ============================= */
 .cardBody {
-  padding: var(--tc-spacing-5);
+  padding: var(--tc-spacing-lg);
 }
 
+/* =============================
+   LISTE DES CONCERTS
+   ============================= */
 .concertsListContainer {
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-3);
+  gap: var(--tc-spacing-md);
 }
 
 .concertItem {
-  border: 1px solid var(--tc-border-light);
-  border-radius: var(--tc-radius-lg);
-  padding: var(--tc-spacing-4);
-  background-color: var(--tc-bg-light);
-  transition: transform var(--tc-transition-fast) var(--tc-transition-timing), 
-              box-shadow var(--tc-transition-fast) var(--tc-transition-timing);
+  border: 1px solid var(--tc-gray-300);
+  border-radius: var(--tc-border-radius);
+  padding: var(--tc-spacing-md);
+  background-color: var(--tc-gray-50);
+  transition: var(--tc-transition);
   cursor: pointer;
 }
 
 .concertItem:hover {
   transform: translateY(-2px);
-  box-shadow: var(--tc-shadow-md);
+  box-shadow: var(--tc-shadow);
 }
 
 .concertDetails {
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-2);
+  gap: var(--tc-spacing-sm);
 }
 
 .concertHeader {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: var(--tc-spacing-2);
-  margin-bottom: var(--tc-spacing-1);
+  gap: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-spacing-xs);
 }
 
 .concertTitle {
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-color-primary);
+  color: var(--tc-primary-color);
   text-decoration: none;
   font-size: var(--tc-font-size-md);
+  transition: color var(--tc-transition-duration);
 }
 
 .concertTitle:hover {
   text-decoration: underline;
+  color: var(--tc-primary-dark);
 }
 
 .concertDate {
-  color: var(--tc-color-secondary);
+  color: var(--tc-gray-600);
   font-size: var(--tc-font-size-sm);
   display: flex;
   align-items: center;
+  gap: var(--tc-spacing-xs);
 }
 
 .concertArtistes {
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-color-secondary-dark);
+  color: var(--tc-gray-700);
   display: flex;
   align-items: center;
+  gap: var(--tc-spacing-xs);
 }
 
+/* =============================
+   ÉTATS SPÉCIAUX
+   ============================= */
 .concertItem.loading {
   display: flex;
   justify-content: center;
@@ -111,10 +139,51 @@
 }
 
 .concertItem.error {
-  border-color: var(--tc-color-warning);
+  border-color: var(--tc-warning-color);
+  background-color: rgba(var(--tc-warning-color-rgb), 0.05);
 }
 
 .textEmpty {
-  color: var(--tc-color-secondary);
+  color: var(--tc-gray-600);
   font-style: italic;
+  font-size: var(--tc-font-size-sm);
+  padding: var(--tc-spacing-md);
+  text-align: center;
+}
+
+/* =============================
+   RESPONSIVE DESIGN
+   ============================= */
+@media (max-width: var(--tc-breakpoint-md)) {
+  .cardHeader {
+    padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--tc-spacing-sm);
+  }
+  
+  .headerActions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+  
+  .cardBody {
+    padding: var(--tc-spacing-md);
+  }
+  
+  .concertItem {
+    padding: var(--tc-spacing-sm);
+  }
+}
+
+@media (max-width: var(--tc-breakpoint-sm)) {
+  .headerTitle {
+    width: 100%;
+  }
+  
+  .concertHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--tc-spacing-xs);
+  }
 }

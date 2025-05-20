@@ -1,42 +1,59 @@
 /*
- * Styles pour LieuContactSection
+ * Styles pour LieuContactSection.module.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 19 mai 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
+/* =============================
+   CARTE DE CONTACT
+   ============================= */
 .formCard {
-  background-color: var(--tc-bg-default);
+  background-color: var(--tc-bg-color);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow-sm);
   overflow: hidden;
   margin-bottom: var(--tc-spacing-md);
+  border: 1px solid var(--tc-border-color);
 }
 
+/* =============================
+   EN-TÊTE DE CARTE
+   ============================= */
 .cardHeader {
   display: flex;
   align-items: center;
-  padding: var(--tc-spacing-md) var(--tc-spacing-md);
-  background-color: var(--tc-bg-light);
-  border-bottom: var(--tc-border-width) solid var(--tc-border-color-light);
+  padding: var(--tc-spacing-md);
+  background-color: var(--tc-gray-100);
+  border-bottom: 1px solid var(--tc-gray-300);
   gap: var(--tc-spacing-sm);
 }
 
-.cardHeader h3 {
+.cardTitle {
   margin: 0;
   font-size: var(--tc-font-size-md);
-  font-weight: var(--tc-font-weight-bold);
-  color: var(--tc-text-color-primary);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-color);
+  line-height: 1.3;
 }
 
-.cardHeader i {
+.cardIcon {
   font-size: var(--tc-font-size-md);
   color: var(--tc-primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+/* =============================
+   CORPS DE CARTE
+   ============================= */
 .cardBody {
   padding: var(--tc-spacing-md);
 }
 
+/* =============================
+   FORMULAIRE
+   ============================= */
 .formGroup {
   margin-bottom: var(--tc-spacing-md);
 }
@@ -60,48 +77,56 @@
   display: block;
   margin-bottom: var(--tc-spacing-xs);
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-text-color-primary);
+  color: var(--tc-text-color);
+  font-size: var(--tc-font-size-sm);
 }
 
 .formControl {
   display: block;
   width: 100%;
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  padding: var(--tc-spacing-sm);
   font-size: var(--tc-font-size-base);
-  line-height: 1.5;
-  color: var(--tc-text-color-primary);
-  background-color: var(--tc-bg-default);
+  line-height: var(--tc-line-height-base);
+  color: var(--tc-text-color);
+  background-color: var(--tc-bg-color);
   background-clip: padding-box;
-  border: var(--tc-border-width) solid var(--tc-border-color);
-  border-radius: var(--tc-border-radius-sm);
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  border: 1px solid var(--tc-border-color);
+  border-radius: var(--tc-border-radius);
+  transition: var(--tc-transition);
 }
 
 .formControl:focus {
-  color: var(--tc-text-color-primary);
-  background-color: var(--tc-bg-default);
-  border-color: var(--tc-primary-light);
+  color: var(--tc-text-color);
+  background-color: var(--tc-bg-color);
+  border-color: var(--tc-primary-color);
   outline: 0;
-  box-shadow: 0 0 0 0.25rem var(--tc-color-rgba(var(--tc-primary-color-rgb), rgba(var(--tc-primary-color-rgb)), 0.25);
+  box-shadow: var(--tc-input-focus-shadow);
 }
 
+/* =============================
+   ÉLÉMENTS DE CONTACT
+   ============================= */
 .contactItem {
   display: flex;
   align-items: center;
   margin-bottom: var(--tc-spacing-sm);
 }
 
-.contactItem i {
+.contactIcon {
   margin-right: var(--tc-spacing-sm);
   color: var(--tc-primary-color);
   width: 1.5rem;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--tc-font-size-md);
 }
 
 .contactLink {
   color: var(--tc-primary-color);
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition: color var(--tc-transition-duration);
 }
 
 .contactLink:hover {
@@ -114,8 +139,10 @@
   margin-left: var(--tc-spacing-xs);
 }
 
-/* Responsive styles */
-@media (max-width: 768px) {
+/* =============================
+   RESPONSIVE DESIGN
+   ============================= */
+@media (max-width: var(--tc-breakpoint-md)) {
   .formRow {
     flex-direction: column;
     gap: var(--tc-spacing-sm);
@@ -129,5 +156,15 @@
   
   .cardBody {
     padding: var(--tc-spacing-sm);
+  }
+}
+
+@media (max-width: var(--tc-breakpoint-sm)) {
+  .cardHeader {
+    padding: var(--tc-spacing-sm);
+  }
+  
+  .contactItem {
+    flex-wrap: wrap;
   }
 }

@@ -1,25 +1,27 @@
 /*
- * Styles pour Spinner
+ * Styles pour Spinner.module.css
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 12 mai 2025
+ * Dernière mise à jour: 20 mai 2025
  */
 
-/* Import des classes utilitaires pour les points de rupture */
-@import '../../styles/mixins/breakpoints.css';
+/* Import des classes utilitaires pour les points de rupture avec alias standardisé */
+@import '@styles/mixins/breakpoints.css';
 
-/* Spinner.module.css - Styles pour les indicateurs de chargement */
-
+/* =============================
+   CONTENEURS
+   ============================= */
 .spinnerContainer {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
   width: 100%;
-  background-color: var(--tc-background-color);
+  background-color: rgba(var(--tc-bg-color-rgb), 0.8);
   position: fixed;
   top: 0;
   left: 0;
-  z-index: var(--tc-z-index-spinner);
+  z-index: var(--tc-z-index-modal);
+  padding: var(--tc-spacing-md);
 }
 
 .spinnerInline {
@@ -30,17 +32,32 @@
   margin: var(--tc-spacing-xs);
 }
 
+.spinnerWithText {
+  flex-direction: column;
+  gap: var(--tc-spacing-md);
+}
+
+/* =============================
+   SPINNER DE BASE
+   ============================= */
 .spinner {
-  border: 5px solid var(--tc-spinner-border-color);
+  border: 4px solid rgba(var(--tc-gray-300-rgb), 0.3);
   border-radius: 50%;
-  border-top: 5px solid var(--tc-secondary-color);
-  width: 50px;
-  height: 50px;
+  border-top: 4px solid var(--tc-secondary-color);
+  width: 40px;
+  height: 40px;
   animation: spin 1s linear infinite;
 }
 
+/* =============================
+   VARIANTES DE COULEUR
+   ============================= */
 .spinnerPrimary {
   border-top-color: var(--tc-primary-color);
+}
+
+.spinnerSecondary {
+  border-top-color: var(--tc-secondary-color);
 }
 
 .spinnerSuccess {
@@ -59,48 +76,61 @@
   border-top-color: var(--tc-info-color);
 }
 
+/* =============================
+   VARIANTES DE TAILLE
+   ============================= */
 .spinnerSmall {
   width: 20px;
   height: 20px;
-  border-width: 3px;
+  border-width: 2px;
 }
 
 .spinnerMedium {
-  width: 35px;
-  height: 35px;
+  width: 40px;
+  height: 40px;
   border-width: 4px;
 }
 
 .spinnerLarge {
-  width: 70px;
-  height: 70px;
-  border-width: 6px;
+  width: 64px;
+  height: 64px;
+  border-width: 5px;
 }
 
-.spinnerWithText {
-  flex-direction: column;
-}
-
+/* =============================
+   TEXTE DE CHARGEMENT
+   ============================= */
 .loadingText {
   margin-top: var(--tc-spacing-md);
-  color: var(--tc-text-muted);
+  color: var(--tc-gray-700);
   font-size: var(--tc-font-size-md);
+  font-weight: var(--tc-font-weight-medium);
+  text-align: center;
 }
 
+/* =============================
+   ANIMATION
+   ============================= */
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
 
-/* Responsive adaptations */
-@media (max-width: var(--tc-breakpoint-xs)) {
+/* =============================
+   RESPONSIVE DESIGN
+   ============================= */
+@media (max-width: var(--tc-breakpoint-sm)) {
   .spinnerLarge {
-    width: 50px;
-    height: 50px;
-    border-width: 5px;
+    width: 48px;
+    height: 48px;
+    border-width: 4px;
   }
   
   .loadingText {
     font-size: var(--tc-font-size-sm);
+  }
+  
+  .spinnerWithText {
+    gap: var(--tc-spacing-sm);
   }
 }

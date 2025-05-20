@@ -43,7 +43,7 @@ const StyleTestPage = () => {
             Cette page permet de tester l'apparence des composants UI et de vérifier les corrections CSS.
           </p>
           <div className="mb-3">
-            <Link to="/" className="btn btn-secondary mr-2">Retour à l'accueil</Link>
+            <Link to="/" className="tc-btn tc-btn-secondary mr-2">Retour à l'accueil</Link>
             <Button variant="outline-primary" onClick={toggleGrid} className="mx-2">
               {showGrid ? 'Masquer' : 'Afficher'} la grille
             </Button>

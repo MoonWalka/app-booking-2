@@ -199,6 +199,16 @@
     --tc-header-bg-color: var(--tc-bg-color);
     --tc-header-border-color: var(--tc-gray-200);
     --tc-content-bg-color: var(--tc-bg-color);
+    
+    /* Page Paramètres */
+    --tc-color-picker-width: 50px;
+    --tc-color-picker-height: 40px;
+    --tc-color-picker-padding: 2px;
+    --tc-color-preview-width: 40px;
+    --tc-color-preview-height: 40px;
+    --tc-color-input-width: 120px;
+    --tc-export-button-min-width: 200px;
+    --tc-hover-translateY: -2px;
 }    /* Mode compact - définition en dehors de :root pour permettre la surcharge via data-attributes */
 [data-compact="true"] {
     --tc-spacing-unit: var(--tc-spacing-sm);

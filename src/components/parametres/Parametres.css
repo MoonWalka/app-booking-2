@@ -120,72 +120,24 @@
 /* =============================
    GROUPES DE BOUTONS
    ============================= */
-.btnGroup {
+.tc-btn-group {
   display: flex;
   gap: var(--tc-spacing-xs);
   margin-bottom: var(--tc-spacing-md);
   flex-wrap: wrap;
 }
 
-.btn {
-  padding: var(--tc-btn-padding-y) var(--tc-btn-padding-x);
-  border-radius: var(--tc-border-radius);
-  font-size: var(--tc-font-size-sm);
-  font-weight: var(--tc-font-weight-medium);
-  cursor: pointer;
-  transition: var(--tc-transition);
-  display: inline-flex;
-  align-items: center;
-  gap: var(--tc-spacing-xs);
-}
-
-.btnPrimary {
-  background-color: var(--tc-btn-primary-bg);
-  color: var(--tc-btn-primary-text);
-  border: none;
-}
-
-.btnPrimary:hover {
-  background-color: var(--tc-btn-primary-hover-bg);
-}
-
-.btnSecondary {
-  background-color: var(--tc-btn-secondary-bg);
-  color: var(--tc-btn-secondary-text);
-  border: 1px solid var(--tc-btn-secondary-border);
-}
-
-.btnSecondary:hover {
-  background-color: var(--tc-btn-secondary-hover-bg);
-}
-
-.btnSuccess {
-  background-color: var(--tc-btn-success-bg);
-  color: var(--tc-btn-success-text);
-  border: none;
-}
-
-.btnSuccess:hover {
-  background-color: var(--tc-btn-success-hover-bg);
-}
-
-.btnDanger {
-  background-color: var(--tc-btn-danger-bg);
-  color: var(--tc-btn-danger-text);
-  border: none;
-}
-
-.btnDanger:hover {
-  background-color: var(--tc-btn-danger-hover-bg);
-}
+/* Note: Ces classes ne sont conservées que pour la compatibilité avec les composants
+   qui n'ont pas encore été migrés vers le système de boutons TourCraft.
+   Utilisez les classes tc-btn et tc-btn-* pour les nouveaux composants. */
 
 /* =============================
    SÉLECTEUR DE COULEUR
    ============================= */
 .colorPicker {
-  width: 50px;
-  height: 40px;
-  padding: 2px;
+  width: var(--tc-color-picker-width, 50px);
+  height: var(--tc-color-picker-height, 40px);
+  padding: var(--tc-color-picker-padding, 2px);
   border: 1px solid var(--tc-border-color);
   border-radius: var(--tc-border-radius);
   cursor: pointer;
@@ -216,7 +168,7 @@
 
 .exportButton {
   flex: 1;
-  min-width: 200px;
+  min-width: var(--tc-export-button-min-width, 200px);
   padding: var(--tc-spacing-md);
   border-radius: var(--tc-border-radius);
   border: 1px solid var(--tc-border-color);
@@ -233,7 +185,7 @@
 .exportButton:hover {
   border-color: var(--tc-primary-color);
   background-color: rgba(var(--tc-primary-color-rgb), 0.05);
-  transform: translateY(-2px);
+  transform: translateY(var(--tc-hover-translateY, -2px));
 }
 
 .exportIcon {

@@ -164,10 +164,7 @@ const useResponsive = (options = {}) => {
             <p className="error-path small text-muted">Chemin: @/components/{currentPath}</p>
             <p className="error-details small text-danger">{error.message}</p>
             <div className="mt-3">
-              <button 
-                className="btn btn-outline-secondary" 
-                onClick={() => window.location.reload()}
-              >
+              <button className="tc-btn tc-btn-outline-secondary" onClick={() => window.location.reload()}>
                 Rafraîchir la page
               </button>
             </div>

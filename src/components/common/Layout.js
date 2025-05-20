@@ -63,7 +63,7 @@ function Layout() {
           <h2>Problème de chargement</h2>
           <p>Nous rencontrons des difficultés à charger l'interface de l'application.</p>
           <button 
-            className="btn btn-primary mt-3"
+            className="tc-btn tc-btn-primary mt-3"
             onClick={() => window.location.reload()}
           >
             Réessayer

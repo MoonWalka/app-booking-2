@@ -18,7 +18,7 @@ Remplacer les classes Bootstrap par les classes standardisées TourCraft :
 
 **Exemple avant** :
 ```jsx
-<button className="btn btn-primary">Enregistrer</button>
+<button className="tc-btn tc-btn-primary">Enregistrer</button>
 ```
 
 **Exemple après** :

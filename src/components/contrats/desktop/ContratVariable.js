@@ -7,7 +7,7 @@ const ContratVariable = ({ name, description, onInsert }) => {
     <div className="variable-item">
       <button 
         type="button"
-        className="btn btn-sm btn-outline-secondary"
+        className="tc-btn tc-btn-sm tc-btn-outline-secondary"
         onClick={() => onInsert(name)}
       >
         <div>

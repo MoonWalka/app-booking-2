@@ -175,6 +175,7 @@ const ConcertFormDesktop = () => {
         <ConcertInfoSection 
           formData={formData}
           onChange={handleChange}
+          formErrors={formHook.formErrors}
         />
         
         {/* Section de recherche de lieu */}

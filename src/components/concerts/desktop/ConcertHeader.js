@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './ConcertHeader.module.css';
+import Button from '@/components/ui/Button';
 
 /**
  * Composant d'en-tête pour la page de détails d'un concert
@@ -24,9 +25,9 @@ const ConcertHeader = ({
           {concert.titre || `Concert du ${formatDate(concert.date)}`}
         </h2>
         <div className={styles.breadcrumbContainer}>
-          <button className="tc-btn-light btn-sm" onClick={navigateToList}>
+          <Button variant="light" size="sm" className="tc-btn-light btn-sm" onClick={navigateToList}>
             Concerts
-          </button>
+          </Button>
           <i className="bi bi-chevron-right"></i>
           <span className={`${styles.breadcrumbItem} ${styles.active}`}>
             {concert.titre || formatDate(concert.date)}
@@ -38,8 +39,9 @@ const ConcertHeader = ({
         {isEditMode ? (
           <>
             {/* Boutons en mode édition */}
-            <button
+            <Button
               type="button"
+              variant="primary"
               className={`tc-btn-primary ${styles.actionBtn}`}
               onClick={onSave}
               disabled={isSubmitting || !canSave}
@@ -55,42 +57,46 @@ const ConcertHeader = ({
                   <span className="btn-text">Enregistrer</span>
                 </>
               )}
-            </button>
+            </Button>
             
-            <button 
+            <Button 
               onClick={onCancel} 
+              variant="outline-secondary"
               className={`tc-btn-outline-secondary ${styles.actionBtn}`}
             >
               <i className="bi bi-x-circle me-2"></i>
               <span className="btn-text">Annuler</span>
-            </button>
+            </Button>
             
-            <button 
+            <Button 
               onClick={onDelete} 
+              variant="outline-danger"
               className={`tc-btn-outline-danger ${styles.actionBtn}`}
             >
               <i className="bi bi-trash me-2"></i>
               <span className="btn-text">Supprimer</span>
-            </button>
+            </Button>
           </>
         ) : (
           <>
             {/* Boutons en mode affichage */}
-            <button 
+            <Button 
               onClick={navigateToList} 
+              variant="outline-secondary"
               className={`tc-btn-outline-secondary ${styles.actionBtn}`}
             >
               <i className="bi bi-arrow-left me-2"></i>
               <span className="btn-text">Retour</span>
-            </button>
+            </Button>
             
-            <button
+            <Button
               onClick={onEdit}
+              variant="outline-primary"
               className={`tc-btn-outline-primary ${styles.actionBtn}`}
             >
               <i className="bi bi-pencil me-2"></i>
               <span className="btn-text">Modifier</span>
-            </button>
+            </Button>
           </>
         )}
       </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './DeleteConcertModal.module.css';
+import Button from '@/components/ui/Button';
 
 /**
  * Modal de confirmation pour la suppression d'un concert
@@ -17,15 +18,17 @@ const DeleteConcertModal = ({ show, concertNom, onClose, onConfirm, isDeleting }
           <p>Êtes-vous sûr de vouloir supprimer le concert <strong>{concertNom}</strong> ? Cette action est irréversible.</p>
         </div>
         <div className={styles.modalFooter}>
-          <button 
+          <Button 
             className="tc-btn-secondary"
+            variant="secondary"
             onClick={onClose}
             disabled={isDeleting}
           >
             Annuler
-          </button>
-          <button 
-            className="tc-btn-danger" 
+          </Button>
+          <Button 
+            className="tc-btn-danger"
+            variant="danger"
             onClick={onConfirm}
             disabled={isDeleting}
           >
@@ -35,7 +38,7 @@ const DeleteConcertModal = ({ show, concertNom, onClose, onConfirm, isDeleting }
                 Suppression...
               </>
             ) : 'Supprimer'}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

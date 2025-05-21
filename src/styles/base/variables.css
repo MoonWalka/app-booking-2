@@ -164,6 +164,7 @@
     --tc-input-focus-border: var(--tc-primary-color);
     --tc-input-focus-box-shadow: 0 0 0 var(--tc-spacing-xs) rgba(var(--tc-primary-color-rgb), 0.25);
     --tc-input-placeholder-color: var(--tc-gray-500);
+    --tc-text-placeholder: var(--tc-gray-500);
     --tc-input-focus-shadow: 0 0 0 var(--tc-spacing-xs) rgba(var(--tc-primary-color-rgb), 0.5);
     --tc-label-color: var(--tc-text-color);
     

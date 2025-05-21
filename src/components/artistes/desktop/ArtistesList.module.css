@@ -21,7 +21,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background-color: var(--tc-primary-color-10));
+  background-color: var(--tc-primary-color-10);
 }
 
 .searchResultsDropdown {
@@ -144,9 +144,9 @@
 }
 
 .artistesContainer {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-spacing-lg) var(--tc-spacing-md);
 }
 
 .spinnerContainer {

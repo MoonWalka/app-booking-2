@@ -13,29 +13,32 @@
    ============================= */
 .card {
   background-color: var(--tc-bg-color);
-  border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-shadow);
-  margin-bottom: var(--tc-spacing-lg);
-  overflow: hidden;
-  transition: var(--tc-transition);
+  border-radius: var(--tc-border-radius-lg);
+  box-shadow: var(--tc-shadow-sm);
   border: 1px solid var(--tc-border-color);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+  margin-bottom: var(--tc-spacing-lg);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .cardHoverable:hover {
   transform: translateY(-3px);
-  box-shadow: var(--tc-shadow-hover);
+  box-shadow: var(--tc-shadow-md);
 }
 
 /* =============================
    EN-TÊTE DE CARTE
    ============================= */
 .cardHeader {
-  background-color: var(--tc-gray-100);
   padding: var(--tc-spacing-md);
+  border-bottom: 1px solid var(--tc-border-color);
+  background-color: var(--tc-gray-50);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: var(--tc-border-width, 1px) solid var(--tc-border-color);
 }
 
 .headerTitleSection {
@@ -70,19 +73,19 @@
    CORPS DE CARTE
    ============================= */
 .cardBody {
-  padding: var(--tc-spacing-lg);
+  padding: var(--tc-spacing-md);
+  flex-grow: 1;
 }
 
 /* =============================
    PIED DE CARTE
    ============================= */
 .cardFooter {
-  background-color: var(--tc-gray-100);
-  border-top: var(--tc-border-width, 1px) solid var(--tc-border-color);
-  padding: var(--tc-spacing-sm) var(--tc-spacing-lg);
+  padding: var(--tc-spacing-md);
+  border-top: 1px solid var(--tc-border-color);
+  background-color: var(--tc-color-white);
   display: flex;
   justify-content: flex-end;
-  align-items: center;
   gap: var(--tc-spacing-sm);
 }
 

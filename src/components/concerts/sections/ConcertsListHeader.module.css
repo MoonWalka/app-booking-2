@@ -1,7 +1,7 @@
 /*
  * Styles pour ConcertsListHeader
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 5 mai 2025
+ * Dernière mise à jour: 21 mai 2025
  */
 
 .headerContainer {
@@ -11,6 +11,33 @@
   justify-content: space-between;
   align-items: center;
   gap: var(--tc-spacing-2);
+  width: 100%;
+}
+
+.sectionTitle {
+  font-size: var(--tc-font-size-xl);
+  font-weight: var(--tc-font-weight-bold);
+  color: var(--tc-text-color-primary);
+  margin: 0;
+}
+
+.addButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--tc-secondary-color);
+  color: var(--tc-white);
+  border: none;
+  border-radius: var(--tc-border-radius);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  font-weight: var(--tc-font-weight-medium);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.addButton:hover {
+  background-color: var(--tc-secondary-dark);
 }
 
 /* Styles responsive standardisés */

@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import styles from './ConcertOrganizerSection.module.css';
+import Button from '@/components/ui/Button';
 
 /**
  * Composant pour la section Programmateur du détail d'un concert
@@ -37,13 +38,15 @@ const ConcertOrganizerSection = ({
         <i className="bi bi-person-badge"></i>
         <h3>Programmateur</h3>
         {programmateur && !isEditMode && (
-          <button
+          <Button
             onClick={() => navigateToProgrammateurDetails(programmateur.id)}
+            variant="outline-primary"
+            size="sm"
             className={`tc-btn-outline-primary btn-sm ${styles.cardHeaderAction}`}
           >
             <i className="bi bi-eye"></i>
             <span>Voir détails</span>
-          </button>
+          </Button>
         )}
       </div>
       <div className={styles.cardBody}>
@@ -62,13 +65,14 @@ const ConcertOrganizerSection = ({
                     value={progSearchTerm}
                     onChange={(e) => setProgSearchTerm(e.target.value)}
                   />
-                  <button
+                  <Button
                     type="button"
+                    variant="outline-secondary"
                     className="tc-btn-outline-secondary"
                     onClick={handleCreateProgrammateur}
                   >
                     Créer un programmateur
-                  </button>
+                  </Button>
                 </div>
                 
                 {isSearchingProgs && (
@@ -128,14 +132,16 @@ const ConcertOrganizerSection = ({
                       )}
                     </div>
                   </div>
-                  <button 
+                  <Button 
                     type="button" 
-                    className="tc-btn-outline-danger btn-sm" 
+                    variant="outline-danger"
+                    size="sm"
+                    className="tc-btn-outline-danger btn-sm"
                     onClick={handleRemoveProgrammateur}
                     aria-label="Supprimer ce programmateur"
                   >
                     <i className="bi bi-x-lg"></i>
-                  </button>
+                  </Button>
                 </div>
               </div>
             )}
@@ -191,13 +197,14 @@ const ConcertOrganizerSection = ({
                 <h5>Formulaire</h5>
                 {!formData ? (
                   <div className="mb-3">
-                    <button
+                    <Button
                       onClick={() => setShowFormGenerator(true)}
+                      variant="outline-primary"
                       className="tc-btn-outline-primary"
                     >
                       <i className="bi bi-file-earmark-text me-1"></i>
                       Générer un formulaire
-                    </button>
+                    </Button>
                     <p className="text-muted small mt-2">
                       Envoyez un formulaire au programmateur pour recueillir les informations nécessaires.
                     </p>
@@ -225,13 +232,15 @@ const ConcertOrganizerSection = ({
                     </div>
 
                     <div className={styles.formSharingOptions}>
-                      <button
+                      <Button
                         onClick={() => copyToClipboard(formData.publicUrl || formData.url)}
+                        size="sm"
+                        variant="outline-primary"
                         className="tc-btn-sm tc-btn-outline-primary"
                       >
                         <i className="bi bi-clipboard me-1"></i>
                         Copier le lien
-                      </button>
+                      </Button>
 
                       <a
                         href={formData.publicUrl || formData.url}
@@ -244,12 +253,14 @@ const ConcertOrganizerSection = ({
                       </a>
 
                       {formData.status !== 'validated' && formData.programmateurData && (
-                        <button
+                        <Button
                           className="tc-btn-sm tc-btn-outline-success"
+                          size="sm"
+                          variant="outline-success"
                         >
                           <i className="bi bi-check-circle me-1"></i>
                           Valider les informations
-                        </button>
+                        </Button>
                       )}
                     </div>
                   </div>

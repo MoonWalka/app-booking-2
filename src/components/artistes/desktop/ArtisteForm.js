@@ -12,6 +12,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/firebaseInit';
 import '@styles/index.css';
+import Button from '@/components/ui/Button';
 
 // Composant pour l'étape 1 : Informations de base
 const BasicInfoStep = ({ data, onNext, onBack }) => {
@@ -65,13 +66,14 @@ const BasicInfoStep = ({ data, onNext, onBack }) => {
       </div>
       
       <div className={styles.stepFormActions}>
-        <button
+        <Button
           type="button"
+          variant="primary"
           className="tc-btn tc-btn-primary"
           onClick={handleNext}
         >
           Suivant
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -148,13 +150,14 @@ const ContactStep = ({ data, onNext, onBack }) => {
       </div>
       
       <div className={styles.stepFormActions}>
-        <button
+        <Button
           type="button"
+          variant="primary"
           className="tc-btn tc-btn-primary"
           onClick={handleNext}
         >
           Suivant
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -193,13 +196,15 @@ const MembersStep = ({ data, onNext, onBack }) => {
             onChange={(e) => setNouveauMembre(e.target.value)}
             placeholder="Nom du membre"
           />
-          <button 
+          <Button 
             type="button" 
+            variant="outline-primary"
+            size="sm"
             className="tc-btn tc-btn-sm tc-btn-outline-primary"
             onClick={ajouterMembre}
           >
             <i className="bi bi-plus-lg"></i>
-          </button>
+          </Button>
         </div>
         
         <div className={styles.membresList}>
@@ -210,13 +215,15 @@ const MembersStep = ({ data, onNext, onBack }) => {
               {membres.map((membre, index) => (
                 <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
                   {membre}
-                  <button 
+                  <Button 
                     type="button" 
+                    variant="outline-danger"
+                    size="sm"
                     className="tc-btn tc-btn-sm tc-btn-outline-danger"
                     onClick={() => supprimerMembre(index)}
                   >
                     <i className="bi bi-trash"></i>
-                  </button>
+                  </Button>
                 </li>
               ))}
             </ul>
@@ -225,13 +232,14 @@ const MembersStep = ({ data, onNext, onBack }) => {
       </div>
       
       <div className={styles.stepFormActions}>
-        <button
+        <Button
           type="button"
+          variant="primary"
           className="tc-btn tc-btn-primary"
           onClick={handleNext}
         >
           Terminer
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -324,12 +332,13 @@ const ArtisteFormDesktop = () => {
       <div className={styles.stepFormContainer}>
         <h2>Formulaire d'artiste</h2>
         <p>Ce formulaire est en cours de développement. Utilisez la version desktop pour le moment.</p>
-        <button
+        <Button
           className="tc-btn tc-btn-primary"
+          variant="primary"
           onClick={() => navigate('/artistes')}
         >
           Retour à la liste
-        </button>
+        </Button>
       </div>
     </div>
   );

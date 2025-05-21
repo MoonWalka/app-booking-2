@@ -1,35 +1,68 @@
 /*
  * Styles pour ConcertStatusTabs
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 12 mai 2025
+ * Dernière mise à jour: 21 mai 2025
  */
 
-/* Import des classes utilitaires pour les points de rupture */
-@import '../../../styles/mixins/breakpoints.css';
-
-.statusFilterTabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--tc-spacing-1-5);
-  margin-bottom: var(--tc-spacing-4);
-}
-
-.statusIcon {
-  font-size: var(--tc-font-size-base);
+.sectionNav {
   display: flex;
   align-items: center;
+  gap: var(--tc-spacing-sm); /* Espacement horizontal régulier */
+  background-color: transparent;
+  border-radius: 0;
+  padding: 0;
+  margin-bottom: var(--tc-spacing-lg);
+  overflow-x: auto;
+  width: 100%;
 }
 
-/* Styles responsive standardisés */
-@media (max-width: var(--tc-breakpoint-sm)) {
-  .statusFilterTabs {
-    gap: var(--tc-spacing-1);
-    margin-bottom: var(--tc-spacing-3);
-  }
+.sectionNavLink {
+  color: var(--tc-text-color-secondary);
+  background-color: var(--tc-gray-50);
+  padding: var(--tc-spacing-xs) var(--tc-spacing-lg);
+  border-radius: var(--tc-border-radius-md);
+  font-weight: var(--tc-font-weight-regular);
+  font-size: var(--tc-font-size-base);
+  transition: none;
+  white-space: nowrap;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  border: none;
+  box-shadow: none;
 }
 
-@media (max-width: var(--tc-breakpoint-xs)) {
-  .statusFilterTabs {
-    justify-content: center;
-  }
+.sectionNavLink:hover,
+.sectionNavLink:focus {
+  background-color: var(--tc-gray-50);
+  color: var(--tc-text-color-secondary);
+}
+
+.sectionNavLink.active {
+  background-color: var(--tc-white);
+  color: var(--tc-primary-color);
+  font-weight: var(--tc-font-weight-bold);
+  box-shadow: 0 1px 4px 0 var(--tc-shadow-color-sm, rgba(0,0,0,0.04));
+  border: 1px solid var(--tc-border-color);
+  z-index: 1;
+}
+
+/* Désactive l'effet hover sur l'actif */
+.sectionNavLink.active:hover,
+.sectionNavLink.active:focus {
+  background-color: var(--tc-white);
+  color: var(--tc-primary-color);
+}
+
+.statusCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--tc-gray-200);
+  color: var(--tc-gray-600);
+  border-radius: var(--tc-border-radius-pill); /* Utiliser la variable pour border-radius */
+  padding: calc(var(--tc-spacing-xs) / 2) var(--tc-spacing-xs); /* Équivalent à 2px 8px */
+  font-size: var(--tc-font-size-xs);
+  margin-left: var(--tc-spacing-xs);
 }

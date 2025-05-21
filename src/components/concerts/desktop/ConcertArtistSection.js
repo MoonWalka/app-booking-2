@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import styles from './ConcertArtistSection.module.css';
+import Button from '@/components/ui/Button';
 
 /**
  * Composant pour la section Artiste du détail d'un concert
@@ -28,13 +29,15 @@ const ConcertArtistSection = ({
         <i className="bi bi-music-note"></i>
         <h3>Artiste</h3>
         {artiste && !isEditMode && (
-          <button
+          <Button
             onClick={() => navigateToArtisteDetails(artiste.id)}
+            variant="outline-primary"
+            size="sm"
             className={`tc-btn-outline-primary btn-sm ${styles.cardHeaderAction}`}
           >
             <i className="bi bi-eye"></i>
             <span>Voir détails</span>
-          </button>
+          </Button>
         )}
       </div>
       <div className={styles.cardBody}>
@@ -53,13 +56,14 @@ const ConcertArtistSection = ({
                     value={artisteSearchTerm}
                     onChange={(e) => setArtisteSearchTerm(e.target.value)}
                   />
-                  <button
+                  <Button
                     type="button"
+                    variant="outline-secondary"
                     className="tc-btn-outline-secondary"
                     onClick={handleCreateArtiste}
                   >
                     Créer un artiste
-                  </button>
+                  </Button>
                 </div>
                 
                 {isSearchingArtistes && (
@@ -109,14 +113,16 @@ const ConcertArtistSection = ({
                       <div className={styles.artisteDescription}>{selectedArtiste.description}</div>
                     )}
                   </div>
-                  <button 
+                  <Button 
                     type="button" 
-                    className="tc-btn-outline-danger btn-sm" 
+                    variant="outline-danger"
+                    size="sm"
+                    className="tc-btn-outline-danger btn-sm"
                     onClick={handleRemoveArtiste}
                     aria-label="Supprimer cet artiste"
                   >
                     <i className="bi bi-x-lg"></i>
-                  </button>
+                  </Button>
                 </div>
               </div>
             )}

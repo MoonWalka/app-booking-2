@@ -1,103 +1,125 @@
 /*
  * Styles pour ConcertsTable
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 12 mai 2025
- *
- * Ce fichier implémente les styles pour le tableau des concerts
- * avec support responsive et affichage des données complexes
+ * Dernière mise à jour: 21 mai 2025 (ajustements finaux)
  */
 
 /* 
  * Conteneur du tableau
  * ------------------
- * Ajoute un espacement au-dessus du tableau et gère le défilement horizontal sur mobile
  */
 .tableContainer {
+  background-color: var(--tc-white);
+  border-radius: var(--tc-border-radius-lg);
+  overflow: hidden;
   margin-top: var(--tc-spacing-md);
+  border: 1px solid var(--tc-border-color);
+  border-top: none;
+  box-shadow: none;
 }
 
 /* 
  * Tableau principal des concerts
  * ---------------------------
- * Design avec bordures légères et ombres subtiles
- * pour une apparence moderne et professionnelle
  */
 .concertsTable {
-  background-color: var(--tc-color-white);
-  border-radius: var(--tc-border-radius-md);
-  box-shadow: var(--tc-box-shadow));
+  background-color: var(--tc-white);
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-bottom: 0;
 }
 
 /* 
  * En-têtes de colonnes
  * -----------------
- * Style distinct pour les en-têtes avec un fond légèrement grisé
- * pour différencier visuellement les en-têtes du contenu
  */
+.concertsTable thead {
+  background-color: transparent;
+}
+
 .concertsTable thead th {
-  border-top: none; /* Supprime la bordure supérieure pour un look plus propre */
-  background-color: var(--tc-color-gray-100);
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
-  font-size: var(--tc-font-size-sm);
+  border-top: none;
+  background-color: var(--tc-white);
+  padding: var(--tc-spacing-md) var(--tc-spacing-md);
+  text-align: left;
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-color-primary);
+  color: var(--tc-text-color-secondary);
+  border-bottom: 1px solid var(--tc-border-color);
+  font-size: var(--tc-font-size-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+}
+
+.concertsTable thead th:first-child {
+  border-top-left-radius: 0;
+  border-left: none;
+}
+
+.concertsTable thead th:last-child {
+  border-top-right-radius: 0;
+  border-right: none;
 }
 
 /* 
  * Cellules de données
  * ----------------
- * Alignement vertical au milieu pour une meilleure lisibilité
- * avec les icônes et les badges qui peuvent apparaître dans les cellules
  */
 .concertsTable tbody td {
   padding: var(--tc-spacing-md);
-  vertical-align: middle; /* Crucial pour aligner correctement le contenu mixte */
+  vertical-align: middle;
+  border-bottom: 1px solid var(--tc-border-color);
+  background-color: var(--tc-white);
+  color: var(--tc-text-color-base);
+  font-size: var(--tc-font-size-base);
+}
+
+.concertsTable tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.concertsTable tbody tr {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.concertsTable tbody tr:hover {
+  background-color: var(--tc-hover-bg);
 }
 
 /* 
  * Message "aucun résultat"
  * ---------------------
- * Style spécifique pour l'état vide du tableau
- * Utilise un design similaire au tableau pour la cohérence visuelle
  */
 .noResults {
   text-align: center;
   padding: var(--tc-spacing-xl);
-  background-color: var(--tc-color-white);
-  border-radius: var(--tc-border-radius-md);
-  box-shadow: var(--tc-box-shadow));
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-gray-500);
   font-size: var(--tc-font-size-base);
+}
+
+.actions {
+  display: flex;
+  gap: var(--tc-spacing-xs);
+  justify-content: flex-end;
 }
 
 /* 
  * Adaptations responsives
  * --------------------
- * ATTENTION: Utilise max-width au lieu de min-width
- * Cette approche devrait être refactorisée selon l'approche mobile-first
- *
- * Solution de contournement pour tableaux complexes sur mobile:
- * 1. Réduction du padding pour économiser l'espace
- * 2. Largeur minimale fixe + overflow pour permettre le défilement horizontal
- * 3. Conteneur avec overflow-x: auto pour créer une zone défilante
  */
 @media (max-width: 768px) {
-  /* Reduce padding in table cells for mobile */
   .concertsTable thead th,
   .concertsTable tbody td {
     padding: var(--tc-spacing-sm) var(--tc-spacing-sm);
   }
-  
-  /* 
-   * Technique de tableau responsive avec défilement horizontal
-   * Préféré à un redesign complet car préserve la structure informative du tableau
-   */
   .concertsTable {
-    min-width: 700px; /* Force une largeur minimale pour assurer la lisibilité */
+    min-width: 700px;
   }
-  
-  /* Crée un conteneur défilant sans affecter la mise en page globale */
   .tableContainer {
-    overflow-x: auto; /* Permet le défilement horizontal sur petits écrans */
+    overflow-x: auto;
   }
 }

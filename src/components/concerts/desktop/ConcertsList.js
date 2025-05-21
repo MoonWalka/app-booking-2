@@ -11,10 +11,10 @@ import {
 } from '@/hooks/concerts';
 
 // Import section components
-import ConcertsListHeader from '../sections/ConcertsListHeader';
-import ConcertSearchBar from '../sections/ConcertSearchBar';
-import ConcertStatusTabs from '../sections/ConcertStatusTabs';
-import ConcertsTable from '../sections/ConcertsTable';
+import ConcertsListHeader from '@/components/concerts/sections/ConcertsListHeader';
+import ConcertSearchBar from '@/components/concerts/sections/ConcertSearchBar';
+import ConcertStatusTabs from '@/components/concerts/sections/ConcertStatusTabs';
+import ConcertsTable from '@/components/concerts/sections/ConcertsTable';
 
 // Import styles
 import styles from './ConcertsList.module.css';
@@ -23,7 +23,7 @@ import styles from './ConcertsList.module.css';
  * ConcertsList component displays a filterable, searchable list of concerts
  */
 const ConcertsList = () => {
-  // Use custom hooks for data, filtering, status and actions
+  // Tous vos hooks existants - ne rien changer ici
   const { 
     concerts, 
     loading, 
@@ -42,6 +42,10 @@ const ConcertsList = () => {
     filteredConcerts,
     isDatePassed
   } = useConcertFilters(concerts);
+
+  // Debug: log filtered concerts and current status filter
+  console.log('ConcertsList - statusFilter:', statusFilter);
+  console.log('ConcertsList - filteredConcerts:', filteredConcerts);
 
   const {
     statusDetailsMap,
@@ -76,40 +80,40 @@ const ConcertsList = () => {
   }
 
   return (
-    <div className={`${styles.concertsContainer} p-4 bg-[var(--tc-light-color)]`}>
-      <div className="flex items-center justify-between mb-6">
-        <ConcertsListHeader />
-      </div>
-
-      <div className="mb-4">
-        <ConcertSearchBar 
-          searchTerm={searchTerm} 
-          setSearchTerm={setSearchTerm} 
-        />
-      </div>
-
-      <div className="mb-4">
-        <ConcertStatusTabs 
-          statusFilter={statusFilter} 
-          setStatusFilter={setStatusFilter} 
-          statusDetailsMap={statusDetailsMap}
-        />
-      </div>
-
-      <ConcertsTable
-        concerts={filteredConcerts}
-        getStatusDetails={getStatusDetails}
-        hasForm={hasForm}
-        hasUnvalidatedForm={hasUnvalidatedForm}
-        hasContract={hasContract}
-        getContractStatus={getContractStatus}
-        isDatePassed={isDatePassed}
-        handleViewConcert={handleViewConcert}
-        handleSendForm={handleSendForm}
-        handleViewForm={handleViewForm}
-        handleGenerateContract={handleGenerateContract}
-        handleViewContract={handleViewContract}
+    <div className={styles.concertsContainer}>
+      {/* Section d'en-tête avec titre et bouton d'ajout */}
+      <ConcertsListHeader />
+      
+      {/* Navigation par onglets de statut */}
+      <ConcertStatusTabs 
+        statusFilter={statusFilter} 
+        setStatusFilter={setStatusFilter} 
+        statusDetailsMap={statusDetailsMap}
       />
+      
+      {/* Barre de recherche et filtres */}
+      <ConcertSearchBar 
+        searchTerm={searchTerm} 
+        setSearchTerm={setSearchTerm} 
+      />
+
+      {/* Tableau des concerts */}
+      <div className={styles.tableContainer}>
+        <ConcertsTable
+          concerts={filteredConcerts}
+          getStatusDetails={getStatusDetails}
+          hasForm={hasForm}
+          hasUnvalidatedForm={hasUnvalidatedForm}
+          hasContract={hasContract}
+          getContractStatus={getContractStatus}
+          isDatePassed={isDatePassed}
+          handleViewConcert={handleViewConcert}
+          handleSendForm={handleSendForm}
+          handleViewForm={handleViewForm}
+          handleGenerateContract={handleGenerateContract}
+          handleViewContract={handleViewContract}
+        />
+      </div>
     </div>
   );
 };

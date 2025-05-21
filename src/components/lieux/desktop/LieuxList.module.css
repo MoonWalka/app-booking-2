@@ -9,7 +9,7 @@
    ============================= */
 .lieuxContainer {
   padding: var(--tc-spacing-md);
-  background-color: var(--tc-bg-color);
+  background-color: var(--tc-bg-color-light);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow);
   border: 1px solid var(--tc-border-color);
@@ -52,7 +52,7 @@
 .searchInput {
   padding: var(--tc-spacing-sm) var(--tc-spacing-md);
   padding-right: 2.5rem;
-  background-color: var(--tc-bg-color);
+  background-color: var(--tc-bg-color-light);
   border: 1px solid var(--tc-border-color);
   border-radius: var(--tc-border-radius);
   width: 100%;
@@ -62,8 +62,8 @@
 }
 
 .searchInput:focus {
-  background-color: var(--tc-bg-color);
-  border-color: var(--tc-primary-color);
+  background-color: var(--tc-bg-color-light);
+  border-color: var(--tc-color-primary);
   box-shadow: var(--tc-input-focus-shadow);
   outline: none;
 }
@@ -77,7 +77,7 @@
   background: none;
   padding: 0 var(--tc-spacing-sm);
   cursor: pointer;
-  color: var(--tc-gray-600);
+  color: var(--tc-text-color-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -85,12 +85,12 @@
 }
 
 .clearSearch:hover {
-  color: var(--tc-gray-800);
+  color: var(--tc-text-color);
 }
 
 .resultsCount {
   font-size: var(--tc-font-size-xs);
-  color: var(--tc-gray-600);
+  color: var(--tc-text-color-secondary);
   margin-top: var(--tc-spacing-xs);
   padding-left: var(--tc-spacing-sm);
 }

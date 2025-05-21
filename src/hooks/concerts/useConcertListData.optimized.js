@@ -20,12 +20,6 @@ import cacheService from '@/services/cacheService';
  * Version optimisée avec pagination pour améliorer les performances
  */
 export const useConcertListData = () => {
-  console.time('⏱️ Initialisation états useConcertListData');
-  
-  // Mesurer le temps d'initialisation du hook
-  const hookStartTime = performance.now();
-  logger.log('🔄 Initialisation du hook useConcertListData');
-  
   const [concerts, setConcerts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -35,8 +29,6 @@ export const useConcertListData = () => {
   const [concertsWithContracts, setConcertsWithContracts] = useState({});
   const [lastUpdate, setLastUpdate] = useState(Date.now());
   const [hasMore, setHasMore] = useState(true);
-  
-  console.timeEnd('⏱️ Initialisation états useConcertListData');
   
   // Référence au dernier document pour la pagination
   const lastVisibleRef = useRef(null);
@@ -315,20 +307,8 @@ export const useConcertListData = () => {
   // Effet initial pour charger les données
   useEffect(() => {
     if (isInitialRenderRef.current) {
-      console.time('⏱️ Premier chargement des concerts');
-      logger.log('🔄 Effet initial - déclenchement du premier chargement');
       isInitialRenderRef.current = false;
-      
-      // Utiliser Promise pour pouvoir mesurer le temps total
-      fetchConcertsAndForms()
-        .then(() => {
-          console.timeEnd('⏱️ Premier chargement des concerts');
-          logger.performance('Temps total initialisation hook', performance.now() - hookStartTime);
-        })
-        .catch(err => {
-          console.timeEnd('⏱️ Premier chargement des concerts');
-          logger.error('Erreur dans le chargement initial', err);
-        });
+      fetchConcertsAndForms();
     }
   }, [fetchConcertsAndForms]);
 

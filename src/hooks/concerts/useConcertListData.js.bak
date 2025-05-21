@@ -1,4 +1,3 @@
-// src/hooks/concerts/useConcertListData.optimized.js
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { 
   collection, 
@@ -12,20 +11,12 @@ import {
   where, 
   db 
 } from '@/firebaseInit';
-import logger from '@/services/loggerService';
-import cacheService from '@/services/cacheService';
 
 /**
  * Hook to fetch concerts, form data, and contracts
  * Version optimisée avec pagination pour améliorer les performances
  */
 export const useConcertListData = () => {
-  console.time('⏱️ Initialisation états useConcertListData');
-  
-  // Mesurer le temps d'initialisation du hook
-  const hookStartTime = performance.now();
-  logger.log('🔄 Initialisation du hook useConcertListData');
-  
   const [concerts, setConcerts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -35,8 +26,6 @@ export const useConcertListData = () => {
   const [concertsWithContracts, setConcertsWithContracts] = useState({});
   const [lastUpdate, setLastUpdate] = useState(Date.now());
   const [hasMore, setHasMore] = useState(true);
-  
-  console.timeEnd('⏱️ Initialisation états useConcertListData');
   
   // Référence au dernier document pour la pagination
   const lastVisibleRef = useRef(null);
@@ -56,16 +45,13 @@ export const useConcertListData = () => {
     // Éviter les rechargements trop fréquents sauf pour le chargement de plus d'éléments
     const now = Date.now();
     if (!loadMore && now - lastFetchRef.current < minTimeBetweenFetches) {
-      logger.log('Ignorer le rechargement - trop récent');
+      console.log('Ignorer le rechargement - trop récent');
       return;
     }
     
     lastFetchRef.current = now;
     
     try {
-      // Marquer le début du chargement pour les mesures de performance
-      const startLoadingTime = logger.mark('concertsLoading');
-      
       if (loadMore) {
         setLoadingMore(true);
       } else {
@@ -75,7 +61,7 @@ export const useConcertListData = () => {
         setHasMore(true);
       }
       
-      logger.startLoading(`concerts (${loadMore ? 'page suivante' : 'première page'})`);
+      console.log(`Chargement des données des concerts... (${loadMore ? 'page suivante' : 'première page'})`);
       
       // Récupérer les concerts avec seulement les champs nécessaires
       const concertsRef = collection(db, 'concerts');
@@ -85,7 +71,7 @@ export const useConcertListData = () => {
       if (loadMore && lastVisibleRef.current) {
         q = query(concertsRef, orderBy('date', 'desc'), startAfter(lastVisibleRef.current), limit(pageSize));
       } else if (loadMore && !lastVisibleRef.current) {
-        logger.warn('Impossible de charger plus - pas de référence au dernier document');
+        console.log('Impossible de charger plus - pas de référence au dernier document');
         setLoadingMore(false);
         return;
       }
@@ -103,30 +89,40 @@ export const useConcertListData = () => {
 
       const concertsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       
+      // Mettre à jour la référence du dernier document visible
+      lastVisibleRef.current = querySnapshot.docs[querySnapshot.docs.length - 1];
+      
       // Collecter les IDs uniques pour les lieux et programmateurs
       const lieuxIds = [...new Set(concertsData.filter(c => c.lieuId).map(c => c.lieuId))];
       const programmateurIds = [...new Set(concertsData.filter(c => c.programmateurId).map(c => c.programmateurId))];
       
       // Charger les lieux et programmateurs en batch (en parallèle)
       const [lieuxData, programmateursData] = await Promise.all([
-        fetchEntitiesBatch('lieux', lieuxIds),
-        fetchEntitiesBatch('programmateurs', programmateurIds)
+        fetchEntitiesBatch('lieux', lieuxIds, ['id', 'nom', 'ville', 'capacite']),
+        fetchEntitiesBatch('programmateurs', programmateurIds, ['id', 'nom', 'prenom', 'email'])
       ]);
+      
+      // Mise en cache des lieux et programmateurs
+      lieuxData.forEach(lieu => {
+        if (lieu) cacheRef.current.lieux[lieu.id] = lieu;
+      });
+      
+      programmateursData.forEach(prog => {
+        if (prog) cacheRef.current.programmateurs[prog.id] = prog;
+      });
       
       // Enrichir chaque concert avec les données de lieu et programmateur
       const enrichedConcerts = concertsData.map(concert => {
         const enriched = { ...concert };
         
         // Ajouter les données du lieu s'il existe
-        if (concert.lieuId) {
-          const lieu = lieuxData.find(l => l.id === concert.lieuId);
-          if (lieu) enriched.lieu = lieu;
+        if (concert.lieuId && cacheRef.current.lieux[concert.lieuId]) {
+          enriched.lieu = cacheRef.current.lieux[concert.lieuId];
         }
         
         // Ajouter les données du programmateur s'il existe
-        if (concert.programmateurId) {
-          const prog = programmateursData.find(p => p.id === concert.programmateurId);
-          if (prog) enriched.programmateur = prog;
+        if (concert.programmateurId && cacheRef.current.programmateurs[concert.programmateurId]) {
+          enriched.programmateur = cacheRef.current.programmateurs[concert.programmateurId];
         }
         
         return enriched;
@@ -135,10 +131,11 @@ export const useConcertListData = () => {
       setConcerts(prevConcerts => loadMore ? [...prevConcerts, ...enrichedConcerts] : enrichedConcerts);
       
       // N'effectuer les requêtes pour les formulaires et contrats que si on a des concerts
+      // Nous enregistrons également le temps de début pour mesurer la performance
       if (concertsData.length > 0) {
         try {
-          const formsStartTime = performance.now();
-          logger.startLoading('formulaires et contrats');
+          const startTime = performance.now();
+          console.log('📥 Chargement des formulaires et contrats pour les concerts spécifiques...');
           
           // Obtenir la liste des IDs de concerts
           const concertIds = concertsData.map(concert => concert.id);
@@ -188,11 +185,11 @@ export const useConcertListData = () => {
           setConcertsWithContracts(contractsMap);
           
           // Log de performance pour le chargement des formulaires et contrats
-          const formsEndTime = performance.now();
-          logger.performance("Requête formulaires et contrats", formsEndTime - formsStartTime);
+          const endTime = performance.now();
+          console.log(`🕒 Requête formulaires et contrats: ${(endTime - startTime).toFixed(2)}ms`);
           
         } catch (err) {
-          logger.error('Erreur lors du chargement des formulaires et contrats:', err);
+          console.error('Erreur lors du chargement des formulaires et contrats:', err);
           // Ne pas bloquer le chargement des concerts en cas d'erreur sur les formulaires/contrats
         }
       } else {
@@ -204,12 +201,8 @@ export const useConcertListData = () => {
       
       // Mettre à jour la dernière date de mise à jour
       setLastUpdate(Date.now());
-      
-      // Mesurer le temps total de chargement
-      logger.endLoading(`concerts (${loadMore ? 'page suivante' : 'première page'})`, performance.now() - startLoadingTime);
-      
     } catch (err) {
-      logger.error('Erreur lors du chargement des données des concerts:', err);
+      console.error('Erreur lors du chargement des données des concerts:', err);
       setError(err.message);
     } finally {
       setLoading(false);
@@ -217,25 +210,21 @@ export const useConcertListData = () => {
     }
   }, []);
   
-  // Fonction utilitaire pour récupérer des entités par lot en utilisant le service de cache
-  const fetchEntitiesBatch = async (collectionName, ids) => {
+  // Fonction utilitaire pour récupérer des entités par lot - IMPLÉMENTATION OPTIMISÉE
+  const fetchEntitiesBatch = async (collectionName, ids, fields) => {
     if (!ids || ids.length === 0) return [];
     
     // Filtrer les IDs déjà en cache
     const cachedEntities = [];
     const idsToFetch = [];
     
-    for (const id of ids) {
-      // Essayer d'utiliser le cacheService au lieu du cache local
-      const cacheKey = `entity_${collectionName}_${id}`;
-      const cachedItem = cacheService.get(cacheKey);
-      
-      if (cachedItem) {
-        cachedEntities.push(cachedItem);
+    ids.forEach(id => {
+      if (cacheRef.current[collectionName][id]) {
+        cachedEntities.push(cacheRef.current[collectionName][id]);
       } else {
         idsToFetch.push(id);
       }
-    }
+    });
     
     // Si tous les éléments sont en cache, retourner directement
     if (idsToFetch.length === 0) {
@@ -244,7 +233,6 @@ export const useConcertListData = () => {
     
     // Mesure de performance
     const startTime = performance.now();
-    logger.startLoading(`batch ${collectionName} (${idsToFetch.length} items)`);
     
     try {
       // Firestore limite les requêtes 'in' à 10 éléments max
@@ -269,12 +257,10 @@ export const useConcertListData = () => {
           ...doc.data()
         }));
         
-        // Mettre en cache avec le cacheService
+        // Mettre en cache pour les futures utilisations
         results.forEach(item => {
           if (item && item.id) {
-            const cacheKey = `entity_${collectionName}_${item.id}`;
-            const cacheTTL = cacheService.CACHE_DURATIONS?.[collectionName] || cacheService.CACHE_DURATIONS?.default;
-            cacheService.set(cacheKey, item, cacheTTL);
+            cacheRef.current[collectionName][item.id] = item;
           }
         });
         
@@ -283,13 +269,14 @@ export const useConcertListData = () => {
       
       // Log de performance
       const endTime = performance.now();
-      logger.performance(`Requête batch ${collectionName}`, endTime - startTime, { count: idsToFetch.length });
+      console.log(`🕒 Requête batch ${collectionName} (${idsToFetch.length} items): ${(endTime - startTime).toFixed(2)}ms`);
       
       return [...cachedEntities, ...batchResults];
     } catch (error) {
-      logger.error(`Erreur lors du chargement batch des ${collectionName}:`, error);
+      console.error(`[Debug] Erreur générale lors du chargement des ${collectionName}:`, error);
       
       // En cas d'erreur avec la méthode batch, on revient à la méthode document par document
+      // mais sans les logs verbeux pour améliorer les performances
       const results = [];
       for (const id of idsToFetch) {
         try {
@@ -297,11 +284,7 @@ export const useConcertListData = () => {
           if (docSnap.exists()) {
             const data = { id: docSnap.id, ...docSnap.data() };
             results.push(data);
-            
-            // Mettre en cache
-            const cacheKey = `entity_${collectionName}_${id}`;
-            const cacheTTL = cacheService.CACHE_DURATIONS?.[collectionName] || cacheService.CACHE_DURATIONS?.default;
-            cacheService.set(cacheKey, data, cacheTTL);
+            cacheRef.current[collectionName][id] = data;
           }
         } catch (e) {
           // Silencieux pour éviter de remplir la console d'erreurs
@@ -315,20 +298,8 @@ export const useConcertListData = () => {
   // Effet initial pour charger les données
   useEffect(() => {
     if (isInitialRenderRef.current) {
-      console.time('⏱️ Premier chargement des concerts');
-      logger.log('🔄 Effet initial - déclenchement du premier chargement');
       isInitialRenderRef.current = false;
-      
-      // Utiliser Promise pour pouvoir mesurer le temps total
-      fetchConcertsAndForms()
-        .then(() => {
-          console.timeEnd('⏱️ Premier chargement des concerts');
-          logger.performance('Temps total initialisation hook', performance.now() - hookStartTime);
-        })
-        .catch(err => {
-          console.timeEnd('⏱️ Premier chargement des concerts');
-          logger.error('Erreur dans le chargement initial', err);
-        });
+      fetchConcertsAndForms();
     }
   }, [fetchConcertsAndForms]);
 

@@ -1,7 +1,7 @@
 /*
  * Styles pour ConcertDetails
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Dernière mise à jour: 21 mai 2025
  */
 
 /* Styles standardisés pour le composant ConcertDetails */
@@ -26,7 +26,7 @@
 .modernTitle {
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-bold);
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   margin-bottom: var(--tc-spacing-sm);
 }
 
@@ -80,9 +80,9 @@
 
 /* Carte de formulaire */
 .formCard {
-  background-color: var(--tc-color-white);
+  background-color: var(--tc-bg-color-light);
   border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-box-shadow));
+  box-shadow: var(--tc-shadow-md);
   margin-bottom: var(--tc-spacing-lg);
   overflow: hidden;
 }
@@ -90,14 +90,14 @@
 .cardHeader {
   display: flex;
   align-items: center;
-  background-color: var(--tc-color-gray-100);
+  background-color: var(--tc-bg-color-dark);
   padding: var(--tc-spacing-md);
-  border-bottom: var(--tc-border-width) solid var(--tc-border-color-light);
+  border-bottom: var(--tc-border-width) solid var(--tc-border-color);
 }
 
 .cardHeader i {
   margin-right: var(--tc-spacing-sm);
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
 }
 
 .cardHeader h3 {
@@ -127,8 +127,8 @@
 }
 
 .required {
-  color: var(--tc-danger-color);
-  margin-left: 3px;
+  color: var(--tc-color-danger);
+  margin-left: var(--tc-spacing-xs);
 }
 
 /* Statut display */
@@ -141,7 +141,7 @@
   display: flex;
   align-items: center;
   font-size: var(--tc-font-size-xs);
-  color: var(--tc-warning-color);
+  color: var(--tc-color-warning);
 }
 
 .actionNeeded i {
@@ -155,7 +155,7 @@
 
 /* Items de détails */
 .contactLink {
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
@@ -274,7 +274,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--tc-overlay-color));
+  background-color: var(--tc-overlay-color);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -282,11 +282,11 @@
 }
 
 .tcModalConfirm {
-  background-color: var(--tc-color-white);
+  background-color: var(--tc-bg-color-light);
   border-radius: var(--tc-border-radius-md);
   width: 450px;
   max-width: 90vw;
-  box-shadow: var(--tc-box-shadow-lg));
+  box-shadow: var(--tc-shadow-lg);
   overflow: hidden;
 }
 
@@ -313,13 +313,13 @@
 }
 
 /* Media queries */
-@media (max-width: 992px) {
+@media (max-width: var(--tc-breakpoint-lg)) {
   .concertDetailsContainer {
     padding: var(--tc-spacing-sm);
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: var(--tc-breakpoint-md)) {
   .formHeaderContainer {
     flex-direction: column;
     align-items: flex-start;
@@ -339,7 +339,7 @@
   }
 }
 
-@media (max-width: 576px) {
+@media (max-width: var(--tc-breakpoint-sm)) {
   .modernTitle {
     font-size: var(--tc-font-size-md);
   }

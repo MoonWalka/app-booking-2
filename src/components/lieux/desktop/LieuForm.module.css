@@ -41,7 +41,7 @@
   display: flex;
   align-items: center;
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-gray-600);
+  color: var(--tc-text-color-secondary);
   gap: var(--tc-spacing-xs);
 }
 
@@ -51,16 +51,16 @@
 }
 
 .breadcrumbItem:hover {
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
 }
 
 .breadcrumbItem.active {
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   font-weight: var(--tc-font-weight-medium);
 }
 
 .breadcrumbSeparator {
-  color: var(--tc-gray-400);
+  color: var(--tc-text-color-muted);
   font-size: var(--tc-font-size-xs);
 }
 
@@ -91,12 +91,12 @@
 
 .formSubtitle {
   margin-top: var(--tc-spacing-xs);
-  color: var(--tc-gray-600);
+  color: var(--tc-text-color-secondary);
   font-size: var(--tc-font-size-sm);
 }
 
 .formSection {
-  background-color: var(--tc-bg-color);
+  background-color: var(--tc-bg-color-light);
   border-radius: var(--tc-border-radius);
   padding: var(--tc-spacing-lg);
   box-shadow: var(--tc-shadow);
@@ -202,8 +202,8 @@
   transform: translateY(-50%);
   width: 20px;
   height: 20px;
-  border: 2px solid var(--tc-gray-300);
-  border-top-color: var(--tc-primary-color);
+  border: 2px solid var(--tc-border-color);
+  border-top-color: var(--tc-color-primary);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -238,7 +238,7 @@
   transition: background-color var(--tc-transition-duration);
   display: flex;
   flex-direction: column;
-  border-bottom: 1px solid var(--tc-gray-200);
+  border-bottom: 1px solid var(--tc-border-color);
 }
 
 .suggestionItem:last-child {
@@ -246,7 +246,7 @@
 }
 
 .suggestionItem:hover {
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-bg-color-dark);
 }
 
 .suggestionSubtext {

@@ -9,7 +9,7 @@
    ============================= */
 .mobileContainer {
   padding: var(--tc-spacing-sm);
-  background-color: var(--tc-gray-50);
+  background-color: var(--tc-bg-color-dark);
   min-height: 100vh;
 }
 
@@ -22,7 +22,7 @@
   align-items: center;
   margin-bottom: var(--tc-spacing-sm);
   padding-bottom: var(--tc-spacing-sm);
-  border-bottom: 1px solid var(--tc-gray-200);
+  border-bottom: 1px solid var(--tc-border-color);
 }
 
 .modernTitle {
@@ -42,8 +42,8 @@
   justify-content: center;
   padding: 0;
   box-shadow: var(--tc-shadow);
-  background-color: var(--tc-primary-color);
-  color: var(--tc-light-color);
+  background-color: var(--tc-color-primary);
+  color: var(--tc-bg-color-light);
   border: none;
   cursor: pointer;
   transition: var(--tc-transition);
@@ -71,7 +71,7 @@
   height: 45px;
   border-radius: 0 var(--tc-border-radius) var(--tc-border-radius) 0;
   padding-left: var(--tc-spacing-md);
-  background-color: var(--tc-bg-color);
+  background-color: var(--tc-bg-color-light);
   box-shadow: var(--tc-shadow-sm);
   border: 1px solid var(--tc-border-color);
   border-left: none;
@@ -88,13 +88,13 @@
 }
 
 .inputGroupText {
-  background-color: var(--tc-bg-color);
+  background-color: var(--tc-bg-color-light);
   border-radius: var(--tc-border-radius) 0 0 var(--tc-border-radius);
   border: 1px solid var(--tc-border-color);
   border-right: none;
   box-shadow: var(--tc-shadow-sm);
   padding: var(--tc-spacing-sm) var(--tc-spacing-md);
-  color: var(--tc-gray-600);
+  color: var(--tc-text-color-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -109,7 +109,7 @@
   background: none;
   padding: 0 var(--tc-spacing-sm);
   cursor: pointer;
-  color: var(--tc-gray-600);
+  color: var(--tc-text-color-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -117,13 +117,13 @@
 }
 
 .clearSearch:hover {
-  color: var(--tc-gray-800);
+  color: var(--tc-text-color);
 }
 
 .resultsCount {
   margin-top: var(--tc-spacing-sm);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-gray-600);
+  color: var(--tc-text-color-secondary);
   padding-left: var(--tc-spacing-sm);
 }
 
@@ -137,28 +137,28 @@
   justify-content: center;
   padding: var(--tc-spacing-xl) var(--tc-spacing-md);
   text-align: center;
-  background-color: var(--tc-bg-color);
+  background-color: var(--tc-bg-color-light);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow-sm);
-  border: 1px solid var(--tc-gray-200);
+  border: 1px solid var(--tc-border-color);
   margin: var(--tc-spacing-xl) 0;
 }
 
 .emptyStateIcon {
   font-size: var(--tc-font-size-xxl);
-  color: var(--tc-gray-300);
+  color: var(--tc-border-color);
   margin-bottom: var(--tc-spacing-md);
 }
 
 .emptyStateText {
-  color: var(--tc-gray-600);
+  color: var(--tc-text-color-secondary);
   margin-bottom: var(--tc-spacing-lg);
   font-size: var(--tc-font-size-base);
 }
 
 .emptyStateButton {
-  background-color: var(--tc-primary-color);
-  color: var(--tc-light-color);
+  background-color: var(--tc-color-primary);
+  color: var(--tc-bg-color-light);
   border: none;
   padding: var(--tc-spacing-sm) var(--tc-spacing-lg);
   border-radius: var(--tc-border-radius);
@@ -184,13 +184,13 @@
 }
 
 .lieuCard {
-  background-color: var(--tc-bg-color);
+  background-color: var(--tc-bg-color-light);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow);
   overflow: hidden;
   cursor: pointer;
   transition: var(--tc-transition);
-  border: 1px solid var(--tc-gray-200);
+  border: 1px solid var(--tc-border-color);
 }
 
 .lieuCard:hover {
@@ -200,8 +200,8 @@
 
 .lieuCardHeader {
   padding: var(--tc-spacing-md);
-  background-color: var(--tc-gray-50);
-  border-bottom: 1px solid var(--tc-gray-200);
+  background-color: var(--tc-bg-color-dark);
+  border-bottom: 1px solid var(--tc-border-color);
 }
 
 .lieuCardTitle {
@@ -228,7 +228,7 @@
   min-width: 30px;
   display: flex;
   align-items: center;
-  color: var(--tc-gray-600);
+  color: var(--tc-text-color-secondary);
   font-size: var(--tc-font-size-lg);
 }
 

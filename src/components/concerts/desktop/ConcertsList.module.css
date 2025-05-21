@@ -8,7 +8,7 @@
   width: 100%;
   margin: 0;
   padding: var(--tc-spacing-lg) var(--tc-spacing-xl);
-  background-color: var(--tc-light-color);
+  background-color: var(--tc-bg-color-light);
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -18,7 +18,7 @@
 /* Conteneur du tableau - Assurer qu'il prend toute la largeur */
 .tableContainer {
   width: 100%;
-  background-color: var(--tc-white);
+  background-color: var(--tc-bg-color-light);
   border-radius: var(--tc-border-radius-lg);
   border: 1px solid var(--tc-border-color);
   overflow: hidden;
@@ -26,24 +26,7 @@
 }
 
 /* Responsive */
-@media (max-width: 768px) {
-  .concertsContainer {
-    padding: var(--tc-spacing-md);
-  }
-}
-
-/* Conteneur du tableau - Assurer qu'il prend toute la largeur */
-.tableContainer {
-  width: 100%;
-  background-color: var(--tc-white);
-  border-radius: var(--tc-border-radius-lg);
-  border: 1px solid var(--tc-border-color);
-  overflow: hidden;
-  box-shadow: var(--tc-shadow-sm);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
+@media (max-width: var(--tc-breakpoint-md)) {
   .concertsContainer {
     padding: var(--tc-spacing-md);
   }

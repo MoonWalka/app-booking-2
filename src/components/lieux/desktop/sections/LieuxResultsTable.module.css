@@ -27,26 +27,26 @@
 
 .modernTable th {
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-gray-700);
-  border-bottom: 2px solid var(--tc-gray-300);
+  color: var(--tc-text-color-primary);
+  border-bottom: 2px solid var(--tc-border-color);
   padding: var(--tc-spacing-sm) var(--tc-spacing-md);
   text-align: left;
   white-space: nowrap;
   position: sticky;
   top: 0;
-  background-color: var(--tc-bg-color);
+  background-color: var(--tc-bg-color-light);
   z-index: 1;
   font-size: var(--tc-font-size-sm);
   transition: background-color var(--tc-transition-duration);
 }
 
 .modernTable th:hover {
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-bg-color-dark);
 }
 
 .modernTable td {
   padding: var(--tc-spacing-sm) var(--tc-spacing-md);
-  border-bottom: 1px solid var(--tc-gray-200);
+  border-bottom: 1px solid var(--tc-border-color);
   vertical-align: middle;
   font-size: var(--tc-font-size-sm);
   color: var(--tc-text-color);

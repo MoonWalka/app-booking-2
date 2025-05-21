@@ -101,6 +101,18 @@
   font-size: var(--tc-font-size-base);
 }
 
+/* 
+ * Message "Aucun concert trouvé"
+ * ------------------
+ */
+.noResults {
+  padding: var(--tc-spacing-xl);
+  text-align: center;
+  color: var(--tc-gray-600);
+  font-size: var(--tc-font-size-md);
+  border-top: 1px solid var(--tc-border-color);
+}
+
 .actions {
   display: flex;
   gap: var(--tc-spacing-xs);

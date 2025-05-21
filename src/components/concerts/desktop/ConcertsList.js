@@ -1,6 +1,8 @@
 import React from 'react';
 import { Alert } from 'react-bootstrap';
 import Spinner from '@/components/common/Spinner';
+import PerformanceMonitor from '@/components/common/PerformanceMonitor';
+import DebugPerformanceMonitor from '@/components/debug/PerformanceMonitorEnhanced';
 
 // Import custom hooks
 import { 
@@ -15,25 +17,43 @@ import ConcertsListHeader from '@/components/concerts/sections/ConcertsListHeade
 import ConcertSearchBar from '@/components/concerts/sections/ConcertSearchBar';
 import ConcertStatusTabs from '@/components/concerts/sections/ConcertStatusTabs';
 import ConcertsTable from '@/components/concerts/sections/ConcertsTable';
+import ConcertsLoadMore from '@/components/concerts/sections/ConcertsLoadMore';
 
 // Import styles
 import styles from './ConcertsList.module.css';
 
 /**
  * ConcertsList component displays a filterable, searchable list of concerts
+ * with pagination support
  */
 const ConcertsList = () => {
-  // Tous vos hooks existants - ne rien changer ici
+  // Mesure du temps de montage du composant
+  React.useEffect(() => {
+    const mountTime = performance.now();
+    console.log('⏱️ Début du montage ConcertsList:', mountTime);
+    
+    return () => {
+      console.log('⏱️ Durée de vie du composant ConcertsList:', performance.now() - mountTime, 'ms');
+    };
+  }, []);
+  
+  // Hooks avec support de pagination
+  console.time('⏱️ Initialisation hooks ConcertsList');
   const { 
     concerts, 
     loading, 
+    loadingMore,
     error, 
+    hasMore,
+    loadMore,
     hasForm, 
     hasUnvalidatedForm, 
     hasContract,
     getContractStatus
   } = useConcertListData();
+  console.timeEnd('⏱️ Initialisation hooks ConcertListData');
 
+  console.time('⏱️ Initialisation ConcertFilters');
   const {
     searchTerm,
     setSearchTerm,
@@ -42,10 +62,16 @@ const ConcertsList = () => {
     filteredConcerts,
     isDatePassed
   } = useConcertFilters(concerts);
+  console.timeEnd('⏱️ Initialisation ConcertFilters');
 
-  // Debug: log filtered concerts and current status filter
-  console.log('ConcertsList - statusFilter:', statusFilter);
-  console.log('ConcertsList - filteredConcerts:', filteredConcerts);
+  // Mesurer le temps de filtrage
+  React.useEffect(() => {
+    if (concerts.length > 0) {
+      console.time('⏱️ Filtrage des concerts');
+      console.log(`Concerts initiaux: ${concerts.length}, Filtrés: ${filteredConcerts.length}`);
+      console.timeEnd('⏱️ Filtrage des concerts');
+    }
+  }, [filteredConcerts, concerts.length]);
 
   const {
     statusDetailsMap,
@@ -79,8 +105,42 @@ const ConcertsList = () => {
     );
   }
 
+  // Fonction pour activer le diagnostic de performance
+  const activateDiagnostic = () => {
+    if (window.performanceDiagnostic) {
+      window.performanceDiagnostic.start();
+      alert('Diagnostic de performance activé. Utilisez la console et performanceDiagnostic.stop() pour voir les résultats.');
+    } else {
+      alert('Outil de diagnostic non disponible.');
+    }
+  };
+
   return (
     <div className={styles.concertsContainer}>
+      {/* Moniteurs de performance en mode développement */}
+      <PerformanceMonitor enabled={process.env.NODE_ENV === 'development'} />
+      <DebugPerformanceMonitor enabled={process.env.NODE_ENV === 'development'} />
+      
+      {/* Bouton de diagnostic (visible uniquement en développement) */}
+      {process.env.NODE_ENV === 'development' && (
+        <div style={{ position: 'fixed', bottom: '20px', left: '20px', zIndex: 9999 }}>
+          <button 
+            onClick={activateDiagnostic}
+            style={{
+              background: '#6200ee', 
+              color: 'white', 
+              border: 'none', 
+              padding: '8px 16px',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '12px'
+            }}
+          >
+            Activer Diagnostic
+          </button>
+        </div>
+      )}
+      
       {/* Section d'en-tête avec titre et bouton d'ajout */}
       <ConcertsListHeader />
       
@@ -114,6 +174,15 @@ const ConcertsList = () => {
           handleViewContract={handleViewContract}
         />
       </div>
+      
+      {/* Bouton "Charger plus" seulement si on n'est pas en train de filtrer */}
+      {!searchTerm && statusFilter === 'all' && (
+        <ConcertsLoadMore 
+          loading={loadingMore} 
+          hasMore={hasMore} 
+          onLoadMore={loadMore} 
+        />
+      )}
     </div>
   );
 };

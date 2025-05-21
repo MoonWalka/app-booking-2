@@ -54,15 +54,15 @@
   gap: var(--tc-spacing-md);
   align-items: center;
   padding: var(--tc-spacing-lg);
-  background-color: var(--tc-bg-color);
+  background-color: var(--tc-bg-color-light);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow-sm);
-  border: 1px solid var(--tc-gray-200);
+  border: 1px solid var(--tc-border-color);
 }
 
 .errorIcon {
   font-size: var(--tc-font-size-xxl);
-  color: var(--tc-danger-color);
+  color: var(--tc-color-danger);
   margin-bottom: var(--tc-spacing-sm);
 }
 
@@ -74,7 +74,7 @@
 }
 
 .errorMessage {
-  color: var(--tc-gray-700);
+  color: var(--tc-text-color-secondary);
   margin-bottom: var(--tc-spacing-md);
 }
 
@@ -83,8 +83,8 @@
   align-items: center;
   gap: var(--tc-spacing-xs);
   padding: var(--tc-spacing-sm) var(--tc-spacing-md);
-  background-color: var(--tc-primary-color);
-  color: var(--tc-light-color);
+  background-color: var(--tc-color-primary);
+  color: var(--tc-bg-color-light);
   border: none;
   border-radius: var(--tc-border-radius);
   font-weight: var(--tc-font-weight-medium);

@@ -8,9 +8,9 @@
    CARTE DE SECTION CONCERTS
    ============================= */
 .formCard {
-  border: 1px solid var(--tc-gray-300);
+  border: 1px solid var(--tc-border-color);
   border-radius: var(--tc-border-radius);
-  background-color: var(--tc-bg-color);
+  background-color: var(--tc-bg-color-light);
   box-shadow: var(--tc-shadow-sm);
   overflow: hidden;
   margin-bottom: var(--tc-spacing-lg);
@@ -20,11 +20,11 @@
    EN-TÊTE DE CARTE
    ============================= */
 .cardHeader {
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-bg-color-dark);
   padding: var(--tc-spacing-md) var(--tc-spacing-lg);
   display: flex;
   align-items: center;
-  border-bottom: 1px solid var(--tc-gray-300);
+  border-bottom: 1px solid var(--tc-border-color);
   justify-content: space-between;
 }
 
@@ -43,7 +43,7 @@
 }
 
 .cardIcon {
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   font-size: var(--tc-font-size-xl);
   display: flex;
   align-items: center;

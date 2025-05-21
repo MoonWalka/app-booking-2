@@ -8,7 +8,7 @@
    CARTE D'INFORMATION
    ============================= */
 .formCard {
-  background-color: var(--tc-bg-color);
+  background-color: var(--tc-bg-color-light);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow-sm);
   overflow: hidden;
@@ -24,8 +24,8 @@
   display: flex;
   align-items: center;
   padding: var(--tc-spacing-md) var(--tc-spacing-lg);
-  background-color: var(--tc-gray-100);
-  border-bottom: 1px solid var(--tc-gray-300);
+  background-color: var(--tc-bg-color-dark);
+  border-bottom: 1px solid var(--tc-border-color);
   gap: var(--tc-spacing-sm);
 }
 
@@ -39,7 +39,7 @@
 
 .cardIcon {
   font-size: var(--tc-font-size-lg);
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   display: flex;
   align-items: center;
   justify-content: center;

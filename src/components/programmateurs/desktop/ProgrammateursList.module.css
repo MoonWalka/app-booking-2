@@ -57,17 +57,18 @@
 .programmateurTable th,
 .programmateurTable td {
   padding: var(--tc-spacing-sm);
-  border-bottom: 1px solid var(--tc-color-gray-200);
+  border-bottom: 1px solid var(--tc-table-border-color);
   text-align: left;
 }
 
 .programmateurTable th {
-  background-color: var(--tc-color-gray-100);
-  font-weight: 600;
+  background-color: var(--tc-primary-color);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-white);
 }
 
 .programmateurTable tbody tr:hover {
-  background-color: var(--tc-color-gray-50);
+  background-color: var(--tc-table-hover-bg);
 }
 
 /* En-têtes de colonne triables */
@@ -83,9 +84,9 @@
 
 /* Liens des programmateurs */
 .programmateurLink {
-  color: var(--tc-color-primary);
+  color: var(--tc-secondary-color);
   text-decoration: none;
-  font-weight: 500;
+  font-weight: var(--tc-font-weight-medium);
 }
 
 .programmateurLink:hover {
@@ -114,11 +115,11 @@
   border-radius: 50%;
   border: none;
   cursor: pointer;
-  transition: background-color 0.2s, transform 0.1s;
+  transition: background-color var(--tc-transition-duration), transform var(--tc-transition-duration);
 }
 
 .actionButton:hover {
-  transform: translateY(-1px);
+  transform: translateY(calc(-1 * var(--tc-spacing-xxs)));
 }
 
 .viewButton {
@@ -170,15 +171,15 @@
 
 .structureBadge {
   display: inline-block;
-  background-color: var(--tc-color-gray-100);
+  background-color: var(--tc-gray-100);
   padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
   border-radius: var(--tc-border-radius);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-text-secondary);
+  color: var(--tc-text-muted);
 }
 
 .fieldEmpty {
-  color: var(--tc-text-secondary);
+  color: var(--tc-text-muted);
   font-style: italic;
   font-size: var(--tc-font-size-sm);
 }

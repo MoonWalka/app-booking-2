@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { formatDateFr } from '@/utils/dateUtils';
 import ConcertStatusBadge from './ConcertStatusBadge';
 import ConcertActions from './ConcertActions';
 import styles from './ConcertRow.module.css';
 
-const ConcertRow = ({ 
+// Mémoïsation du composant pour éviter des rendus inutiles
+const ConcertRow = memo(({ 
   concert, 
   getStatusDetails, 
   hasForm, 
@@ -84,6 +85,6 @@ const ConcertRow = ({
       </td>
     </tr>
   );
-};
+});
 
 export default ConcertRow;

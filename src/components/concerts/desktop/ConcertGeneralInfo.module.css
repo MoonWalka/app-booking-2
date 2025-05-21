@@ -1,56 +1,56 @@
 /*
  * Styles pour ConcertGeneralInfo
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Dernière mise à jour: 21 mai 2025
  */
 
 /* Styles pour le composant ConcertGeneralInfo */
 
 .formCard {
-  background-color: var(--tc-color-fff, #fff);
-  border-radius: 8px;
-  box-shadow: 0 2px 4px var(--tc-color-rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
-  margin-bottom: 1.5rem;
+  background-color: var(--tc-bg-color-light);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-shadow-sm);
+  margin-bottom: var(--tc-spacing-lg);
   overflow: hidden;
 }
 
 .cardHeader {
   display: flex;
   align-items: center;
-  background-color: var(--tc-color-f8f9fa, #f8f9fa);
-  padding: 1rem;
-  border-bottom: 1px solid var(--tc-color-eee, #eee);
+  background-color: var(--tc-bg-color-dark);
+  padding: var(--tc-spacing-md);
+  border-bottom: 1px solid var(--tc-border-color);
 }
 
 .cardHeader i {
-  margin-right: 0.5rem;
-  color: var(--tc-primary-color);
+  margin-right: var(--tc-spacing-sm);
+  color: var(--tc-color-primary);
 }
 
 .cardHeader h3 {
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-size: var(--tc-font-size-md);
+  font-weight: var(--tc-font-weight-semibold);
   margin: 0;
   flex-grow: 1;
 }
 
 .cardBody {
-  padding: 1.5rem;
+  padding: var(--tc-spacing-lg);
 }
 
 .formGroup {
-  margin-bottom: 1.25rem;
+  margin-bottom: var(--tc-spacing-md);
 }
 
 .formLabel {
   display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
+  margin-bottom: var(--tc-spacing-sm);
+  font-weight: var(--tc-font-weight-medium);
 }
 
 .required {
-  color: var(--tc-color-dc3545, #dc3545);
-  margin-left: 3px;
+  color: var(--tc-color-danger);
+  margin-left: var(--tc-spacing-xs);
 }
 
 .statusDisplay {
@@ -61,12 +61,12 @@
 .actionNeeded {
   display: flex;
   align-items: center;
-  font-size: 0.85rem;
-  color: var(--tc-color-ffc107, #ffc107);
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-color-warning);
 }
 
 .actionNeeded i {
-  margin-right: 0.25rem;
+  margin-right: var(--tc-spacing-xs);
 }
 
 .notesContent {
@@ -74,8 +74,8 @@
 }
 
 /* Media queries */
-@media (max-width: 768px) {
+@media (max-width: var(--tc-breakpoint-md)) {
   .cardBody {
-    padding: 1rem;
+    padding: var(--tc-spacing-md);
   }
 }

@@ -1,7 +1,7 @@
 /* filepath: /Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/styles/base/variables.css */
 /* 
  * TourCraft CSS Variables
- * Updated: 19 Mai 2025
+ * Updated: 21 Mai 2025
  *
  * ARCHITECTURE CSS:
  * Ce fichier importe colors.css et définit toutes les variables dérivées.
@@ -114,10 +114,19 @@
     --tc-hover-bg: var(--tc-gray-100);
     --tc-active-bg: var(--tc-gray-200);
     
+    /* Alias standardisés pour les couleurs principales selon le Guide CSS V2 */
+    --tc-color-primary: var(--tc-primary-color);
+    --tc-color-secondary: var(--tc-secondary-color);
+    --tc-color-success: var(--tc-success-color);
+    --tc-color-danger: var(--tc-danger-color);
+    --tc-color-warning: var(--tc-warning-color);
+    --tc-color-info: var(--tc-info-color);
+    
     /* Overlay et transparence */
-    --tc-bg-overlay-20: rgba(255, 255, 255, 0.2);
-    --tc-bg-overlay-50: rgba(255, 255, 255, 0.5);
-    --tc-modal-overlay-bg: rgba(0, 0, 0, 0.5);
+    --tc-overlay-light-20: rgba(255, 255, 255, 0.2);
+    --tc-overlay-light-50: rgba(255, 255, 255, 0.5);
+    --tc-overlay-dark-50: rgba(0, 0, 0, 0.5);
+    --tc-overlay-color: var(--tc-overlay-dark-50);
     
     /* ===== COMPOSANTS ===== */
     
@@ -126,51 +135,51 @@
     --tc-btn-padding-x: var(--tc-spacing-sm);
     
     /* Bouton primaire */
-    --tc-btn-primary-bg: var(--tc-primary-color);
-    --tc-btn-primary-text: var(--tc-light-color);
-    --tc-btn-primary-border: var(--tc-primary-color);
+    --tc-btn-primary-bg: var(--tc-color-primary);
+    --tc-btn-primary-text: var(--tc-bg-color-light);
+    --tc-btn-primary-border: var(--tc-color-primary);
     --tc-btn-primary-hover-bg: var(--tc-primary-dark);
     
     /* Bouton secondaire */
-    --tc-btn-secondary-bg: var(--tc-secondary-color);
-    --tc-btn-secondary-text: var(--tc-light-color);
-    --tc-btn-secondary-border: var(--tc-secondary-color);
+    --tc-btn-secondary-bg: var(--tc-color-secondary);
+    --tc-btn-secondary-text: var(--tc-bg-color-light);
+    --tc-btn-secondary-border: var(--tc-color-secondary);
     --tc-btn-secondary-hover-bg: var(--tc-secondary-dark);
     --tc-btn-secondary-active-bg: var(--tc-secondary-dark);
     --tc-btn-secondary-focus-shadow: 0 0 0 var(--tc-spacing-xs) rgba(var(--tc-secondary-color-rgb), 0.5);
     
     /* Bouton success */
-    --tc-btn-success-bg: var(--tc-success-color);
-    --tc-btn-success-text: var(--tc-light-color);
-    --tc-btn-success-border: var(--tc-success-color);
-    --tc-btn-success-hover-bg: var(--tc-success-color);
+    --tc-btn-success-bg: var(--tc-color-success);
+    --tc-btn-success-text: var(--tc-bg-color-light);
+    --tc-btn-success-border: var(--tc-color-success);
+    --tc-btn-success-hover-bg: var(--tc-success-dark);
     
     /* Bouton danger */
-    --tc-btn-danger-bg: var(--tc-danger-color);
-    --tc-btn-danger-text: var(--tc-light-color);
-    --tc-btn-danger-border: var(--tc-danger-color);
-    --tc-btn-danger-hover-bg: var(--tc-danger-color);
+    --tc-btn-danger-bg: var(--tc-color-danger);
+    --tc-btn-danger-text: var(--tc-bg-color-light);
+    --tc-btn-danger-border: var(--tc-color-danger);
+    --tc-btn-danger-hover-bg: var(--tc-danger-dark);
     
     /* Bouton info */
-    --tc-btn-info-bg: var(--tc-info-color);
-    --tc-btn-info-text: var(--tc-light-color);
-    --tc-btn-info-border: var(--tc-info-color);
-    --tc-btn-info-hover-bg: var(--tc-info-color);
+    --tc-btn-info-bg: var(--tc-color-info);
+    --tc-btn-info-text: var(--tc-bg-color-light);
+    --tc-btn-info-border: var(--tc-color-info);
+    --tc-btn-info-hover-bg: var(--tc-info-dark);
     
     /* Formulaires */
-    --tc-input-bg: var(--tc-white);
-    --tc-input-color: var(--tc-text-color);
+    --tc-input-bg: var(--tc-bg-color-light);
+    --tc-input-color: var(--tc-text-color-primary);
     --tc-input-border: var(--tc-border-color);
-    --tc-input-focus-border: var(--tc-primary-color);
+    --tc-input-focus-border: var(--tc-color-primary);
     --tc-input-focus-box-shadow: 0 0 0 var(--tc-spacing-xs) rgba(var(--tc-primary-color-rgb), 0.25);
-    --tc-input-placeholder-color: var(--tc-gray-500);
-    --tc-text-placeholder: var(--tc-gray-500);
+    --tc-input-placeholder-color: var(--tc-text-color-muted);
+    --tc-text-placeholder: var(--tc-text-color-muted);
     --tc-input-focus-shadow: 0 0 0 var(--tc-spacing-xs) rgba(var(--tc-primary-color-rgb), 0.5);
-    --tc-label-color: var(--tc-text-color);
+    --tc-label-color: var(--tc-text-color-primary);
     
     /* Badge */
-    --tc-badge-bg: var(--tc-primary-color);
-    --tc-badge-text: var(--tc-light-color);
+    --tc-badge-bg: var(--tc-color-primary);
+    --tc-badge-text: var(--tc-bg-color-light);
     
     /* Tables */
     --tc-table-header-bg: var(--tc-gray-100);
@@ -230,6 +239,6 @@
     --tc-card-bg: var(--tc-dark-theme-card);
     --tc-border-color: var(--tc-dark-theme-border);
     --tc-hover-bg: var(--tc-dark-theme-surface);
-    --tc-shadow: 0 2px 10px var(--tc-color-rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3));
+    --tc-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
     --tc-input-bg: var(--tc-dark-theme-input);
 }

@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { memo, useEffect } from 'react';
 import { Table } from 'react-bootstrap';
 import ConcertRow from './ConcertRow';
 import styles from './ConcertsTable.module.css';
 
-const ConcertsTable = ({ 
+// Utilisation du mémoïsation pour éviter des rendus inutiles
+const ConcertsTable = memo(({ 
   concerts, 
   getStatusDetails,
   hasForm,
@@ -17,6 +18,14 @@ const ConcertsTable = ({
   handleGenerateContract,
   handleViewContract
 }) => {
+  // Mesurer le temps de rendu du tableau
+  useEffect(() => {
+    console.time('⏱️ Rendu ConcertsTable');
+    
+    return () => {
+      console.timeEnd('⏱️ Rendu ConcertsTable');
+    };
+  });
   return (
     <div className={styles.tableContainer}>
       {concerts && concerts.length > 0 ? (
@@ -56,6 +65,6 @@ const ConcertsTable = ({
       )}
     </div>
   );
-};
+});
 
 export default ConcertsTable;

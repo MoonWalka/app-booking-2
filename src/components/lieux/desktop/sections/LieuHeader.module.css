@@ -29,12 +29,12 @@
   align-items: center;
   margin-bottom: var(--tc-spacing-xs);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-secondary-color);
+  color: var(--tc-color-secondary);
 }
 
 .breadcrumbItem {
   cursor: pointer;
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   transition: color var(--tc-transition-duration);
 }
 

@@ -29,16 +29,16 @@
   width: 100%;
   padding: var(--tc-spacing-sm) var(--tc-spacing-md);
   padding-right: calc(var(--tc-spacing-lg) + var(--tc-spacing-sm));
-  border: 1px solid var(--tc-gray-300);
+  border: 1px solid var(--tc-border-color);
   border-radius: var(--tc-border-radius);
   font-size: var(--tc-font-size-base);
   color: var(--tc-text-color);
-  background-color: var(--tc-bg-color);
+  background-color: var(--tc-bg-color-light);
   transition: var(--tc-transition);
 }
 
 .searchInput:focus {
-  border-color: var(--tc-primary-color);
+  border-color: var(--tc-color-primary);
   outline: none;
   box-shadow: var(--tc-input-focus-shadow);
 }

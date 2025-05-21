@@ -6,7 +6,7 @@ import { formatDateFr } from '@/utils/dateUtils';
  */
 export const useConcertFilters = (concerts) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('tous');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [filteredConcerts, setFilteredConcerts] = useState([]);
 
   // Effect to filter concerts based on search term and status
@@ -18,9 +18,12 @@ export const useConcertFilters = (concerts) => {
     
     let results = [...concerts];
     
-    // Filter by status
-    if (statusFilter !== 'tous') {
-      results = results.filter(concert => concert.statut === statusFilter);
+    // Filter by status (ignore accents, case-insensitive), treat 'all' as no filter
+    if (statusFilter && statusFilter !== 'all') {
+      const normalize = str => str
+        ? str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+        : '';
+      results = results.filter(concert => normalize(concert.statut) === statusFilter);
     }
     
     // Filter by search term

@@ -1,5 +1,5 @@
 import React from 'react';
-import ActionButton from '@/components/common/ActionButton';
+import { Link } from 'react-router-dom';
 import styles from './ConcertActions.module.css';
 
 const ConcertActions = ({ 
@@ -17,59 +17,93 @@ const ConcertActions = ({
   return (
     <div className={styles.actionsContainer} onClick={(e) => e.stopPropagation()}>
       {/* View Concert Button */}
-      <ActionButton
-        to={`/concerts/${concert.id}`}
-        tooltip="Voir les détails du concert"
-        icon={<i className="bi bi-eye"></i>}
-        variant="outline-primary"
-      />
+      <button 
+        className={`${styles.actionButton} ${styles.viewButton}`}
+        onClick={(e) => {
+          e.stopPropagation();
+          handleViewConcert(concert.id);
+        }}
+        title="Voir les détails"
+      >
+        <i className="bi bi-eye"></i>
+      </button>
       
       {/* Form Actions */}
       {concert.statut === 'contact' && concert.programmateurId && !hasForm && (
-        <ActionButton
-          tooltip="Envoyer formulaire"
-          icon={<i className="bi bi-envelope"></i>}
-          variant="outline-warning"
-          onClick={() => handleSendForm(concert.id)}
-        />
+        <button 
+          className={`${styles.actionButton} ${styles.formButton}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleSendForm(concert.id);
+          }}
+          title="Envoyer formulaire"
+        >
+          <i className="bi bi-envelope"></i>
+        </button>
       )}
       
       {hasUnvalidatedForm && (
-        <ActionButton
-          tooltip="Formulaire à valider"
-          icon={<i className="bi bi-check2-circle"></i>}
-          variant="outline-warning"
-          onClick={() => handleViewForm(concert.id)}
-        />
+        <button 
+          className={`${styles.actionButton} ${styles.formButton}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleViewForm(concert.id);
+          }}
+          title="Formulaire à valider"
+        >
+          <i className="bi bi-check2-circle"></i>
+        </button>
       )}
       
       {hasForm && !hasUnvalidatedForm && (
-        <ActionButton
-          tooltip="Voir formulaire"
-          icon={<i className="bi bi-file-text"></i>}
-          variant="outline-info"
-          onClick={() => handleViewForm(concert.id)}
-        />
+        <button 
+          className={`${styles.actionButton} ${styles.formButton}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleViewForm(concert.id);
+          }}
+          title="Voir formulaire"
+        >
+          <i className="bi bi-file-text"></i>
+        </button>
       )}
       
       {/* Contract Actions */}
       {!hasContract && (
-        <ActionButton
-          tooltip="Générer contrat"
-          icon={<i className="bi bi-file-earmark-plus"></i>}
-          variant="outline-primary"
-          onClick={() => handleGenerateContract(concert.id)}
-        />
+        <button 
+          className={`${styles.actionButton} ${styles.contractButton}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleGenerateContract(concert.id);
+          }}
+          title="Générer contrat"
+        >
+          <i className="bi bi-file-earmark-plus"></i>
+        </button>
       )}
       
       {hasContract && (
-        <ActionButton
-          tooltip={contractStatus === 'signed' ? 'Contrat signé' : 'Voir contrat'}
-          icon={<i className="bi bi-file-earmark-text"></i>}
-          variant={contractStatus === 'signed' ? 'success' : 'outline-success'}
-          onClick={() => handleViewContract(concert.id)}
-        />
+        <button 
+          className={`${styles.actionButton} ${styles.contractButton}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleViewContract(concert.id);
+          }}
+          title={contractStatus === 'signed' ? 'Contrat signé' : 'Voir contrat'}
+        >
+          <i className="bi bi-file-earmark-text"></i>
+        </button>
       )}
+      
+      {/* Edit Concert Button */}
+      <Link 
+        to={`/concerts/${concert.id}/edit`}
+        className={`${styles.actionButton} ${styles.editButton}`}
+        onClick={(e) => e.stopPropagation()}
+        title="Modifier"
+      >
+        <i className="bi bi-pencil"></i>
+      </Link>
     </div>
   );
 };

@@ -12,13 +12,10 @@ import Card from '@/components/ui/Card';
 const ConcertInfoSection = ({ formData, onChange }) => {
   return (
     <div className={styles.container}>
-      <div className={styles.formCard}>
-        <div className={styles.cardHeader}>
-          <div className={styles.cardIcon}>
-            <i className="bi bi-music-note-beamed"></i>
-          </div>
-          <h3 className={styles.cardTitle}>Informations principales</h3>
-        </div>
+      <Card
+        title="Informations principales"
+        icon={<i className="bi bi-music-note-beamed"></i>}
+      >
         <div className={styles.cardBody}>
           <div className={styles.formGroup}>
             <label htmlFor="titre" className={styles.formLabel}>Titre du concert</label>
@@ -90,7 +87,7 @@ const ConcertInfoSection = ({ formData, onChange }) => {
             </select>
           </div>
         </div>
-      </div>
+      </Card>
     </div>
   );
 };

@@ -2,28 +2,38 @@ import React from 'react';
 import styles from './ConcertStatusTabs.module.css';
 
 const ConcertStatusTabs = ({ statusFilter, setStatusFilter, statusDetailsMap }) => {
+  // Créez un tableau des onglets à afficher basé sur votre statusDetailsMap
+  // ou utilisez une liste statique comme dans la maquette
+  const tabs = [
+    { id: 'all', label: 'Tous les concerts' },
+    { id: 'contact-etabli', label: 'Contact établi' },
+    { id: 'pre-accord', label: 'Pré-accord' },
+    { id: 'contrat-signe', label: 'Contrat signé' },
+    { id: 'acompte-facture', label: 'Acompte facturé' },
+    { id: 'solde-facture', label: 'Soldé facturé' },
+    { id: 'annule', label: 'Annulé' },
+  ];
+
   return (
-    <div className={styles.statusFilterTabs}>
-      <button 
-        className={`btn ${statusFilter === 'tous' ? 'btn-primary' : 'btn-light'} rounded-pill px-3 py-2`}
-        onClick={() => setStatusFilter('tous')}
-      >
-        Tous les concerts
-      </button>
-      
-      {Object.keys(statusDetailsMap).map(status => {
-        const statusInfo = statusDetailsMap[status];
-        return (
-          <button 
-            key={status}
-            className={`btn ${statusFilter === status ? 'btn-primary' : 'btn-light'} rounded-pill px-3 py-2 d-flex align-items-center gap-2`}
-            onClick={() => setStatusFilter(status)}
-          >
-            <span className={styles.statusIcon}>{statusInfo.icon}</span>
-            {statusInfo.label}
-          </button>
-        );
-      })}
+    <div className={styles.sectionNav}>
+      {tabs.map(tab => (
+        <a
+          key={tab.id}
+          href="#"
+          className={`${styles.sectionNavLink} ${statusFilter === tab.id ? styles.active : ''}`}
+          onClick={(e) => {
+            e.preventDefault();
+            setStatusFilter(tab.id);
+          }}
+        >
+          {tab.label}
+          {statusDetailsMap && statusDetailsMap[tab.id] && (
+            <span className={styles.statusCount}>
+              {statusDetailsMap[tab.id].count || 0}
+            </span>
+          )}
+        </a>
+      ))}
     </div>
   );
 };

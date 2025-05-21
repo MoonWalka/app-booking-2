@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import styles from './ConcertLocationSection.module.css';
+import Button from '@/components/ui/Button';
 
 /**
  * Composant pour la section Lieu du détail d'un concert
@@ -28,13 +29,15 @@ const ConcertLocationSection = ({
         <i className="bi bi-geo-alt"></i>
         <h3>Lieu {isEditMode && <span className={styles.required}>*</span>}</h3>
         {lieu && !isEditMode && (
-          <button
+          <Button
             onClick={() => navigateToLieuDetails(lieu.id)}
+            variant="outline-primary"
+            size="sm"
             className={`tc-btn-outline-primary btn-sm ${styles.cardHeaderAction}`}
           >
             <i className="bi bi-eye"></i>
             <span>Voir détails</span>
-          </button>
+          </Button>
         )}
       </div>
       <div className={styles.cardBody}>
@@ -53,13 +56,14 @@ const ConcertLocationSection = ({
                     value={lieuSearchTerm}
                     onChange={(e) => setLieuSearchTerm(e.target.value)}
                   />
-                  <button
+                  <Button
                     type="button"
+                    variant="outline-secondary"
                     className="tc-btn-outline-secondary"
                     onClick={handleCreateLieu}
                   >
                     Créer un lieu
-                  </button>
+                  </Button>
                 </div>
                 
                 {isSearchingLieux && (
@@ -123,14 +127,16 @@ const ConcertLocationSection = ({
                       </div>
                     )}
                   </div>
-                  <button 
+                  <Button 
                     type="button" 
-                    className="tc-btn-outline-danger btn-sm" 
+                    variant="outline-danger"
+                    size="sm"
+                    className="tc-btn-outline-danger btn-sm"
                     onClick={handleRemoveLieu}
                     aria-label="Supprimer ce lieu"
                   >
                     <i className="bi bi-x-lg"></i>
-                  </button>
+                  </Button>
                 </div>
               </div>
             )}

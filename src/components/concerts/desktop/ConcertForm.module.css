@@ -121,7 +121,7 @@
 .formCard {
   background-color: var(--tc-color-white);
   border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-box-shadow));
+  box-shadow: var(--tc-box-shadow);
   margin-bottom: var(--tc-spacing-lg);
   overflow: hidden;
 }
@@ -207,6 +207,11 @@
   border: 1px solid var(--tc-input-border-color);
   border-radius: var(--tc-border-radius-sm);
   transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.formControl::placeholder {
+  color: var(--tc-text-placeholder);
+  opacity: 1;
 }
 
 .formControl:focus {
@@ -382,7 +387,7 @@
 .artisteItem {
   padding: var(--tc-spacing-md);
   cursor: pointer;
-  border-bottom: 1px solid var(--tc-color-f0f0f0, #f0f0f0);
+  border-bottom: 1px solid var(--tc-color-f0f0f0);
 }
 
 .lieuItem:hover,
@@ -397,7 +402,7 @@
   display: flex;
   flex-direction: column;
   font-size: var(--tc-font-size-xs);
-  color: var(--tc-color-6c757d, #6c757d);
+  color: var(--tc-color-6c757d);
   margin-top: var(--tc-spacing-xs);
 }
 
@@ -410,7 +415,7 @@
   background-color: var(--tc-color-white);
   border: var(--tc-border-width) solid var(--tc-input-border-color);
   border-radius: 0 0 var(--tc-border-radius-sm) var(--tc-border-radius-sm);
-  box-shadow: var(--tc-dropdown-shadow));
+  box-shadow: var(--tc-dropdown-shadow);
   margin-top: -1px;
 }
 

@@ -12,7 +12,7 @@
   align-items: center;
   justify-content: center;
   padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
-  border-radius: var(--tc-border-radius-pill);
+  border-radius: 4px; /* Modifié: remplace border-radius-pill par une valeur fixe */
   font-weight: var(--tc-font-weight-medium);
   line-height: 1;
   white-space: nowrap;
@@ -20,7 +20,7 @@
   vertical-align: middle;
   background-color: var(--tc-gray-100);
   color: var(--tc-text-color);
-  box-shadow: var(--tc-shadow-sm);
+  box-shadow: none; /* Modifié: suppression de l'ombre portée */
   transition: var(--tc-transition);
   gap: var(--tc-spacing-xs);
 }
@@ -30,17 +30,17 @@
    ============================= */
 .small {
   font-size: var(--tc-font-size-xs);
-  padding: var(--tc-spacing-xs) var(--tc-spacing-xs);
+  padding: 2px 6px; /* Modifié: valeurs précises pour correspondre à la maquette */
 }
 
 .medium {
-  font-size: var(--tc-font-size-sm);
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  font-size: var(--tc-font-size-xs); /* Modifié: taille réduite */
+  padding: 4px 8px; /* Modifié: valeurs précises pour correspondre à la maquette */
 }
 
 .large {
-  font-size: var(--tc-font-size-base);
-  padding: var(--tc-spacing-xs) var(--tc-spacing-md);
+  font-size: var(--tc-font-size-sm);
+  padding: 6px 10px; /* Modifié: valeurs précises pour correspondre à la maquette */
 }
 
 /* =============================
@@ -52,8 +52,8 @@
 }
 
 .secondary {
-  background-color: var(--tc-gray-100);
-  color: var(--tc-gray-800);
+  background-color: rgba(158, 158, 158, 0.1); /* Modifié: couleur plus transparente */
+  color: var(--tc-gray-600); /* Modifié: couleur plus foncée pour la lisibilité */
 }
 
 .success {
@@ -84,6 +84,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  margin-right: 4px; /* Ajouté: espace entre l'icône et le texte */
 }
 
 /* =============================

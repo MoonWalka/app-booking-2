@@ -201,24 +201,27 @@ const ArtisteDetail = () => {
               <div className={styles.emptyStateDesktop}>
                 <i className="bi bi-calendar-x"></i>
                 <p>Aucun concert associé à cet artiste</p>
-                <button 
+                <Button 
                   className="tc-btn tc-btn-primary"
+                  variant="primary"
                   onClick={() => navigate('/concerts/nouveau')}
                 >
                   <i className="bi bi-plus-circle me-2"></i>
                   Créer un concert
-                </button>
+                </Button>
               </div>
             ) : (
               <>
                 <div className={styles.concertsHeaderDesktop}>
                   <h3>Concerts ({artiste.concertsAssocies.length})</h3>
-                  <button 
+                  <Button 
                     className="tc-btn tc-btn-sm tc-btn-outline-primary"
+                    variant="outline-primary"
+                    size="sm"
                     onClick={() => navigate('/concerts/nouveau')}
                   >
                     <i className="bi bi-plus-circle"></i>
-                  </button>
+                  </Button>
                 </div>
                 
                 <div className={styles.concertsListDesktop}>

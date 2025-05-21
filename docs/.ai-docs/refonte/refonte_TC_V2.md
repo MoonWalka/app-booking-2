@@ -3,7 +3,7 @@
 ## Analyse comparative et plan d'intégration
 
 Ce document présente une stratégie de refonte pour aligner l'interface actuelle de TourCraft avec la version map de référence, tout en minimisant les changements structurels.
-
+capture du rendu final: /Users/meltinrecordz/Desktop/design webUI
 ## 1. Écarts majeurs identifiés
 
 ### 1.1 Sidebar et navigation

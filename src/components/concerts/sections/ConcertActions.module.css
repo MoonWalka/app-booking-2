@@ -1,13 +1,79 @@
 /*
  * Styles pour ConcertActions
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 5 mai 2025
+ * Dernière mise à jour: 21 mai 2025
  */
 
 .actionsContainer {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-0-5);
+  gap: var(--tc-spacing-xs);
+  justify-content: flex-end;
+}
+
+.actionButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--tc-border-radius);
+  transition: all 0.2s ease;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.viewButton {
+  color: var(--tc-info-color);
+}
+
+.viewButton:hover {
+  background-color: rgba(var(--tc-info-color-rgb), 0.1);
+}
+
+.editButton {
+  color: var(--tc-success-color);
+}
+
+.editButton:hover {
+  background-color: rgba(var(--tc-success-color-rgb), 0.1);
+}
+
+.deleteButton {
+  color: var(--tc-danger-color);
+}
+
+.deleteButton:hover {
+  background-color: rgba(var(--tc-danger-color-rgb), 0.1);
+}
+
+.formButton {
+  color: var(--tc-warning-color);
+}
+
+.formButton:hover {
+  background-color: rgba(var(--tc-warning-color-rgb), 0.1);
+}
+
+.contractButton {
+  color: var(--tc-secondary-color);
+}
+
+.contractButton:hover {
+  background-color: rgba(var(--tc-secondary-color-rgb), 0.1);
+}
+
+/* Styles responsive standardisés */
+@media (max-width: 576px) {
+  .actionsContainer {
+    flex-wrap: wrap;
+    gap: var(--tc-spacing-1);
+  }
+}
+
+.contractButton:hover {
+  background-color: rgba(30, 136, 229, 0.1);
 }
 
 /* Styles responsive standardisés */

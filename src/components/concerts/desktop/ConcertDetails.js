@@ -14,6 +14,7 @@ import ConcertOrganizerSection from './ConcertOrganizerSection';
 import ConcertArtistSection from './ConcertArtistSection';
 import ConcertStructureSection from './ConcertStructureSection';
 import DeleteConcertModal from './DeleteConcertModal';
+import Button from '@/components/ui/Button';
 
 const ConcertDetails = () => {
   const { id } = useParams();
@@ -121,7 +122,7 @@ const ConcertDetails = () => {
           <p className="mt-2">{loading ? 'Chargement du concert...' : 'Préparation des données...'}</p>
           {!loading && !concert && (
             <div className="alert alert-warning mt-3" role="alert">
-              Données non disponibles. <button className="btn btn-sm btn-outline-primary ms-2" onClick={() => navigate('/concerts')}>Retour à la liste</button>
+              Données non disponibles. <Button variant="outline-primary" size="sm" className="ms-2" onClick={() => navigate('/concerts')}>Retour à la liste</Button>
             </div>
           )}
         </div>

@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import styles from './ConcertStructureSection.module.css';
+import Button from '@/components/ui/Button';
 
 /**
  * Composant pour la section Structure du détail d'un concert
@@ -28,13 +29,15 @@ const ConcertStructureSection = ({
         <i className="bi bi-building"></i>
         <h3>Structure</h3>
         {structure && !isEditMode && (
-          <button
+          <Button
             onClick={() => navigateToStructureDetails(structure.id)}
+            variant="outline-primary"
+            size="sm"
             className={`tc-btn-outline-primary btn-sm ${styles.cardHeaderAction}`}
           >
             <i className="bi bi-eye"></i>
             <span>Voir détails</span>
-          </button>
+          </Button>
         )}
       </div>
       <div className={styles.cardBody}>
@@ -53,13 +56,14 @@ const ConcertStructureSection = ({
                     value={structureSearchTerm}
                     onChange={(e) => setStructureSearchTerm(e.target.value)}
                   />
-                  <button
+                  <Button
                     type="button"
+                    variant="outline-secondary"
                     className="tc-btn-outline-secondary"
                     onClick={handleCreateStructure}
                   >
                     Créer une structure
-                  </button>
+                  </Button>
                 </div>
                 
                 {isSearchingStructures && (
@@ -124,14 +128,16 @@ const ConcertStructureSection = ({
                       )}
                     </div>
                   </div>
-                  <button 
+                  <Button 
                     type="button" 
-                    className="tc-btn-outline-danger btn-sm" 
+                    variant="outline-danger"
+                    size="sm"
+                    className="tc-btn-outline-danger btn-sm"
                     onClick={handleRemoveStructure}
                     aria-label="Supprimer cette structure"
                   >
                     <i className="bi bi-x-lg"></i>
-                  </button>
+                  </Button>
                 </div>
               </div>
             )}

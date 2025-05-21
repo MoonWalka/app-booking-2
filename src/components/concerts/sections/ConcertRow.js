@@ -33,7 +33,6 @@ const ConcertRow = ({
       <td className={styles.dateColumn}>
         <div className={styles.dateContainer}>
           <span className={styles.date}>{displayDate}</span>
-          {isPastDate && <span className={styles.pastDateIndicator}>Passé</span>}
         </div>
       </td>
       

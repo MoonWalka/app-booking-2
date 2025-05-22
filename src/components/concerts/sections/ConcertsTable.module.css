@@ -75,7 +75,7 @@
 }
 
 .concertsTable tbody tr:hover {
-  background-color: var(--tc-bg-color-light, #f4f6fa);
+  background-color: var(--tc-gray-100);
 }
 
 .concertsTable tbody tr:last-child td {
@@ -110,6 +110,58 @@
   display: flex;
   gap: var(--tc-spacing-xs);
   justify-content: flex-end;
+}
+
+.actions button, .actions a {
+  border: none;
+  background: var(--tc-gray-200);
+  color: var(--tc-text-color);
+  font-size: 1.1rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s;
+  margin-left: var(--tc-spacing-xs);
+}
+.actions button:hover, .actions a:hover {
+  background: var(--tc-primary-color);
+  color: #fff;
+}
+.actions .viewButton {
+  background: var(--tc-gray-300);
+  color: var(--tc-primary-color);
+}
+.actions .viewButton:hover {
+  background: var(--tc-primary-color);
+  color: #fff;
+}
+.actions .editButton {
+  background: var(--tc-warning-color-light);
+  color: var(--tc-warning-color);
+}
+.actions .editButton:hover {
+  background: var(--tc-warning-color);
+  color: #fff;
+}
+.actions .contractButton, .actions .formButton {
+  background: var(--tc-info-color-light);
+  color: var(--tc-info-color);
+}
+.actions .contractButton:hover, .actions .formButton:hover {
+  background: var(--tc-info-color);
+  color: #fff;
+}
+.actions .deleteButton {
+  background: var(--tc-danger-color-light);
+  color: var(--tc-danger-color);
+}
+.actions .deleteButton:hover {
+  background: var(--tc-danger-color);
+  color: #fff;
 }
 
 /* 

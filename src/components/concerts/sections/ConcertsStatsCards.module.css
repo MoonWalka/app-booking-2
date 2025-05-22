@@ -1,0 +1,38 @@
+/* Styles harmonisés avec LieuxStatsCards */
+.statsCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--tc-spacing-md);
+  margin-bottom: var(--tc-spacing-lg);
+  width: 100%;
+}
+.statCard {
+  background: var(--tc-bg-color);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-shadow-sm);
+  padding: var(--tc-spacing-lg) var(--tc-spacing-xl);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--tc-spacing-md);
+  border: 1.5px solid var(--tc-border-color);
+  min-width: 0;
+}
+.statText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+.statValue {
+  font-size: 2.2rem;
+  font-weight: var(--tc-font-weight-bold);
+  color: var(--tc-primary-color);
+  line-height: 1.1;
+}
+.statLabel {
+  font-size: 1rem;
+  color: var(--tc-text-muted);
+  margin-top: 0.15em;
+  line-height: 1.1;
+} 

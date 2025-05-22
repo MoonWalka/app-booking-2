@@ -11,7 +11,7 @@ const statusTabs = [
   { id: 'annule', label: 'Annulé' },
 ];
 
-const ConcertSearchBar = ({ searchTerm, setSearchTerm, statusFilter, setStatusFilter, statusDetailsMap }) => {
+const ConcertSearchBar = ({ searchTerm, setSearchTerm, statusFilter, setStatusFilter, statusDetailsMap, filteredCount, totalCount }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -39,9 +39,10 @@ const ConcertSearchBar = ({ searchTerm, setSearchTerm, statusFilter, setStatusFi
         <input
           type="text"
           className={styles.searchInput}
-          placeholder="Rechercher un concert..."
+          placeholder="Rechercher un concert par titre, lieu, programmateur..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
+          style={{ maxWidth: 600 }}
         />
         {searchTerm && (
           <button
@@ -87,6 +88,14 @@ const ConcertSearchBar = ({ searchTerm, setSearchTerm, statusFilter, setStatusFi
               </button>
             ))}
           </div>
+        )}
+      </div>
+      <button className={styles.sortButton} type="button">
+        <i className="bi bi-sort-alpha-down"></i> Trier par
+      </button>
+      <div className={styles.resultsCount}>
+        {filteredCount !== undefined && totalCount !== undefined && (
+          <span>{filteredCount} / {totalCount} résultats</span>
         )}
       </div>
     </div>

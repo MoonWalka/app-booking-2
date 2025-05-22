@@ -20,7 +20,6 @@
   overflow-x: auto;
   margin-top: var(--tc-spacing-md);
   border: 1px solid var(--tc-border-color);
-  padding: var(--tc-spacing-md);
 }
 
 /* 

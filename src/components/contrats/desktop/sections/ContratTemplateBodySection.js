@@ -1,5 +1,5 @@
-import React from 'react';
-import VariablesDropdown from './VariablesDropdown';
+import React, { useEffect, useRef } from 'react';
+import VariablesPanel from './VariablesPanel';
 import styles from './ContratTemplateBodySection.module.css';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -13,10 +13,29 @@ const ContratTemplateBodySection = ({
   bodyVarsOpen,
   bodyVarsRef,
   bodyVariables,
-  toggleVariablesMenu,
+  toggleDropdown,
   insertVariable,
-  editorModules
+  previewMode
 }) => {
+  const quillRef = useRef();
+
+  useEffect(() => {
+    if (!previewMode && quillRef.current) {
+      const editor = quillRef.current.getEditor();
+      if (editor && bodyContent !== editor.root.innerHTML) {
+        editor.root.innerHTML = bodyContent || '';
+      }
+    }
+  }, [previewMode, bodyContent]);
+
+  useEffect(() => {
+    console.log("🖊️ Render ContratTemplateBodySection, bodyContent =", bodyContent);
+  }, [bodyContent]);
+
+  if (!bodyContent) {
+    console.warn("⚠️ ATTENTION : bodyContent est vide au rendu");
+  }
+
   return (
     <div className={styles.bodySection}>
       <div className={styles.bodySectionHeader}>
@@ -24,12 +43,10 @@ const ContratTemplateBodySection = ({
           Corps du contrat
         </h3>
         <div className={styles.sectionActions}>
-          <VariablesDropdown
-            isOpen={bodyVarsOpen}
+          <VariablesPanel
             variables={bodyVariables}
             targetId="bodyContent"
             buttonRef={bodyVarsRef}
-            onToggle={() => toggleVariablesMenu('bodyContent')}
             onSelectVariable={(variable, targetId) => 
               insertVariable(variable, targetId)
             }
@@ -45,11 +62,13 @@ const ContratTemplateBodySection = ({
       
       <div className={styles.bodyEditorWrapper}>
         <ReactQuill
+          ref={quillRef}
+          key={previewMode ? 'preview' : 'edit'}
           id="bodyContent"
           className={styles.bodyContentEditor}
-          value={bodyContent || ''}
+          value={bodyContent}
           onChange={setBodyContent}
-          modules={editorModules || { toolbar: [['bold', 'italic', 'underline'], [{ list: 'ordered' }, { list: 'bullet' }], ['clean']] }}
+          modules={{ toolbar: [['bold', 'italic', 'underline'], [{ list: 'ordered' }, { list: 'bullet' }], ['clean']] }}
           placeholder="Entrez ici le contenu principal de votre contrat..."
           theme="snow"
           style={{ minHeight: 300, height: '100%' }}

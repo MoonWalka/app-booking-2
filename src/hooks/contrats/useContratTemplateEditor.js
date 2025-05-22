@@ -13,8 +13,37 @@ import { useState, useEffect, useRef } from 'react';
  * @returns {Object} État et fonctions pour l'éditeur de modèles
  */
 const useContratTemplateEditor = (template, onSave, isModalContext, onClose, navigate) => {
+  // Fonction utilitaire pour transformer les variables en format complet
+  const createVariablesMap = (variables) => {
+    const labelsMap = {
+      "programmateur_nom": "Nom du programmateur",
+      "programmateur_structure": "Structure du programmateur", 
+      "programmateur_email": "Email du programmateur",
+      "programmateur_siret": "SIRET du programmateur",
+      "artiste_nom": "Nom de l'artiste",
+      "artiste_genre": "Genre musical",
+      "concert_titre": "Titre du concert",
+      "concert_date": "Date du concert",
+      "concert_montant": "Montant du contrat",
+      "lieu_nom": "Nom du lieu",
+      "lieu_adresse": "Adresse du lieu",
+      "lieu_code_postal": "Code postal",
+      "lieu_ville": "Ville",
+      "lieu_capacite": "Capacité du lieu",
+      "date_jour": "Jour (format numérique)",
+      "date_mois": "Mois (format texte)",
+      "date_annee": "Année",
+      "date_complete": "Date complète"
+    };
+    
+    return variables.map(variable => ({
+      value: variable,
+      label: labelsMap[variable] || variable
+    }));
+  };
+
   // Définition des variables disponibles
-  const bodyVariables = [
+  const bodyVariablesRaw = [
     "programmateur_nom", "programmateur_structure", "programmateur_email", "programmateur_siret",
     "artiste_nom", "artiste_genre",
     "concert_titre", "concert_date", "concert_montant",
@@ -22,14 +51,19 @@ const useContratTemplateEditor = (template, onSave, isModalContext, onClose, nav
     "date_jour", "date_mois", "date_annee", "date_complete"
   ];
 
-  const headerFooterVariables = [
+  const headerFooterVariablesRaw = [
     "programmateur_nom", "programmateur_structure", "programmateur_email", "programmateur_siret", "artiste_nom"
   ];
 
-  const signatureVariables = [
+  const signatureVariablesRaw = [
     "programmateur_nom", "programmateur_structure", "artiste_nom", "lieu_ville",
     "date_jour", "date_mois", "date_annee", "date_complete"
   ];
+
+  // Variables formatées pour les nouveaux composants
+  const bodyVariables = createVariablesMap(bodyVariablesRaw);
+  const headerFooterVariables = createVariablesMap(headerFooterVariablesRaw);
+  const signatureVariables = createVariablesMap(signatureVariablesRaw);
 
   // Définition des types de modèles pour le select
   const templateTypes = [
@@ -92,6 +126,39 @@ const useContratTemplateEditor = (template, onSave, isModalContext, onClose, nav
     </div>`
   );
   
+  // Synchroniser les états locaux quand le template change
+  useEffect(() => {
+    if (template) {
+      console.log("🔄 Synchronisation des états avec le template:", template);
+      setName(template.name || 'Nouveau modèle');
+      setIsDefault(template.isDefault || false);
+      setTemplateType(template.type || 'session');
+      setBodyContent(template.bodyContent || '');
+      setHeaderContent(template.headerContent || '');
+      setHeaderHeight(template.headerHeight || 20);
+      setHeaderBottomMargin(template.headerBottomMargin || 10);
+      setFooterContent(template.footerContent || '');
+      setFooterHeight(template.footerHeight || 15);
+      setFooterTopMargin(template.footerTopMargin || 10);
+      setLogoUrl(template.logoUrl || '');
+      setTitleTemplate(template.titleTemplate || 'Contrat - {concert_titre}');
+      setSignatureTemplate(template.signatureTemplate || 
+        `<div style="display: flex; justify-content: space-between; margin-top: 30px;">
+          <div style="width: 45%;">
+            <div style="margin-bottom: 50px;"><strong>Pour l'Organisateur:</strong></div>
+            <div>{programmateur_nom}</div>
+            <div style="border-top: 1px solid #000; margin-top: 5px;"></div>
+          </div>
+          <div style="width: 45%;">
+            <div style="margin-bottom: 50px;"><strong>Pour l'Artiste:</strong></div>
+            <div>{artiste_nom}</div>
+            <div style="border-top: 1px solid #000; margin-top: 5px;"></div>
+          </div>
+        </div>`
+      );
+    }
+  }, [template]);
+
   // Gestion du clic à l'extérieur pour fermer les dropdowns
   useEffect(() => {
     function handleClickOutside(event) {
@@ -115,45 +182,92 @@ const useContratTemplateEditor = (template, onSave, isModalContext, onClose, nav
     };
   }, []);
 
-  // Fonction pour insérer une variable dans un textarea
+  // Fonction pour insérer une variable dans ReactQuill
   const insertVariable = (variable, targetId) => {
-    const textarea = document.getElementById(targetId);
-    if (!textarea) return;
+    // Chercher le conteneur ReactQuill par ID
+    const container = document.getElementById(targetId);
+    if (!container) {
+      console.warn(`Élément avec ID ${targetId} non trouvé`);
+      return;
+    }
+
+    // Chercher l'éditeur Quill dans le conteneur ou ses enfants
+    let quillEditor = null;
     
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    
-    let newValue;
+    // Vérifier si l'élément est directement un éditeur Quill
+    if (container.classList.contains('ql-editor')) {
+      quillEditor = container;
+    } else {
+      // Chercher l'éditeur Quill dans les enfants
+      quillEditor = container.querySelector('.ql-editor');
+    }
+
+    if (quillEditor) {
+      // Insertion directe dans ReactQuill
+      const variableText = `{${variable}}`;
+      
+      // Obtenir la position actuelle du curseur ou ajouter à la fin
+      const selection = window.getSelection();
+      let range;
+      
+      if (selection.rangeCount > 0 && quillEditor.contains(selection.focusNode)) {
+        // Il y a une sélection dans l'éditeur
+        range = selection.getRangeAt(0);
+      } else {
+        // Pas de sélection, créer une range à la fin du contenu
+        range = document.createRange();
+        range.selectNodeContents(quillEditor);
+        range.collapse(false); // false = fin du contenu
+      }
+      
+      // Insérer la variable
+      range.deleteContents();
+      const textNode = document.createTextNode(variableText);
+      range.insertNode(textNode);
+      
+      // Placer le curseur après la variable insérée
+      range.setStartAfter(textNode);
+      range.collapse(true);
+      
+      // Mettre à jour la sélection
+      selection.removeAllRanges();
+      selection.addRange(range);
+      
+      // Focus sur l'éditeur
+      quillEditor.focus();
+      
+      // Déclencher les événements pour que ReactQuill détecte le changement
+      const inputEvent = new Event('input', { bubbles: true, cancelable: true });
+      quillEditor.dispatchEvent(inputEvent);
+      
+      console.log(`Variable {${variable}} insérée dans ${targetId}`);
+      return;
+    }
+
+    // Fallback : Si ce n'est pas ReactQuill, essayer la méthode directe via les setters
+    const variableText = `{${variable}}`;
     switch (targetId) {
       case 'bodyContent':
-        newValue = bodyContent.substring(0, start) + `{${variable}}` + bodyContent.substring(end);
-        setBodyContent(newValue);
-        setBodyVarsOpen(false);
+        setBodyContent(prev => (prev || '') + variableText);
         break;
       case 'headerContent':
-        newValue = headerContent.substring(0, start) + `{${variable}}` + headerContent.substring(end);
-        setHeaderContent(newValue);
-        setHeaderVarsOpen(false);
+        setHeaderContent(prev => (prev || '') + variableText);
         break;
       case 'footerContent':
-        newValue = footerContent.substring(0, start) + `{${variable}}` + footerContent.substring(end);
-        setFooterContent(newValue);
-        setFooterVarsOpen(false);
+        setFooterContent(prev => (prev || '') + variableText);
+        break;
+      case 'titleTemplate':
+        setTitleTemplate(prev => (prev || '') + variableText);
         break;
       case 'signatureTemplate':
-        newValue = signatureTemplate.substring(0, start) + `{${variable}}` + signatureTemplate.substring(end);
-        setSignatureTemplate(newValue);
-        setSignatureVarsOpen(false);
+        setSignatureTemplate(prev => (prev || '') + variableText);
         break;
       default:
+        console.warn(`TargetId ${targetId} non reconnu pour l'insertion de variable`);
         break;
     }
     
-    // Remettre le focus et la position du curseur
-    setTimeout(() => {
-      textarea.focus();
-      textarea.setSelectionRange(start + variable.length + 2, start + variable.length + 2);
-    }, 50);
+    console.log(`Variable {${variable}} insérée via setter dans ${targetId}`);
   };
 
   // Fonction pour gérer l'ouverture/fermeture des menus variables

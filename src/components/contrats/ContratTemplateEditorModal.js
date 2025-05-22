@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import ContratTemplateEditor from './desktop/ContratTemplateEditor';
 import styles from './ContratTemplateEditorModal.module.css';
 
+
 const ContratTemplateEditorModal = ({ 
   isOpen, 
   onClose, 
@@ -11,8 +12,13 @@ const ContratTemplateEditorModal = ({
   onSave 
 }) => {
   const [showSuccess, setShowSuccess] = useState(false);
+  
+
+  
   useEffect(() => {
-    if (isOpen) setShowSuccess(false);
+    if (isOpen) {
+      setShowSuccess(false);
+    }
   }, [isOpen]);
   console.log('ContratTemplateEditorModal', { isOpen, template });
 
@@ -23,6 +29,7 @@ const ContratTemplateEditorModal = ({
   const handleSave = (modelData) => {
     onSave(modelData);
     setShowSuccess(true);
+    console.log("💾 Sauvegarde effectuée avec succès");
   };
 
   // Utiliser createPortal pour rendre la modale directement dans le body

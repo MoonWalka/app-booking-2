@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import CollapsibleSection from './CollapsibleSection';
-import VariablesDropdown from './VariablesDropdown';
+import VariablesPanel from './VariablesPanel';
 import styles from './ContratTemplateHeaderSection.module.css';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -116,14 +116,12 @@ const ContratTemplateHeaderSection = ({
         <div className={styles.editorContainer}>
           <div className={styles.editorHeader}>
             <label htmlFor="headerContent">Contenu de l'en-tête</label>
-            <VariablesDropdown
-              isOpen={headerVarsOpen}
+            <VariablesPanel
               variables={headerFooterVariables}
               targetId="headerContent"
               buttonRef={headerVarsRef}
-              onToggle={toggleDropdown}
               onSelectVariable={(variable, targetId) => 
-                insertVariable(variable, targetId, setHeaderContent, headerContent)
+                insertVariable(variable, targetId)
               }
             />
           </div>

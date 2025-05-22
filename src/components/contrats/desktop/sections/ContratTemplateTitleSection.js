@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import CollapsibleSection from './CollapsibleSection';
-import VariablesDropdown from './VariablesDropdown';
+import VariablesPanel from './VariablesPanel';
 import styles from './ContratTemplateTitleSection.module.css';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -45,14 +45,12 @@ const ContratTemplateTitleSection = ({
         <div className={styles.formGroup}>
           <div className={styles.inputActions}>
             <label htmlFor="titleTemplate">Format du titre</label>
-            <VariablesDropdown
-              isOpen={signatureVarsOpen}
+            <VariablesPanel
               variables={signatureVariables}
               targetId="titleTemplate"
               buttonRef={signatureVarsRef}
-              onToggle={toggleDropdown}
               onSelectVariable={(variable, targetId) => 
-                insertVariable(variable, targetId, setTitleTemplate, titleTemplate)
+                insertVariable(variable, targetId)
               }
             />
           </div>

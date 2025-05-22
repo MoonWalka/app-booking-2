@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import VariablesDropdown from './VariablesDropdown';
 import styles from './ContratTemplateBodySection.module.css';
 import ReactQuill from 'react-quill';
@@ -13,29 +13,10 @@ const ContratTemplateBodySection = ({
   bodyVarsOpen,
   bodyVarsRef,
   bodyVariables,
-  toggleDropdown,
+  toggleVariablesMenu,
   insertVariable,
-  previewMode
+  editorModules
 }) => {
-  const quillRef = useRef();
-
-  useEffect(() => {
-    if (!previewMode && quillRef.current) {
-      const editor = quillRef.current.getEditor();
-      if (editor && bodyContent !== editor.root.innerHTML) {
-        editor.root.innerHTML = bodyContent || '';
-      }
-    }
-  }, [previewMode, bodyContent]);
-
-  useEffect(() => {
-    console.log("🖊️ Render ContratTemplateBodySection, bodyContent =", bodyContent);
-  }, [bodyContent]);
-
-  if (!bodyContent) {
-    console.warn("⚠️ ATTENTION : bodyContent est vide au rendu");
-  }
-
   return (
     <div className={styles.bodySection}>
       <div className={styles.bodySectionHeader}>
@@ -48,9 +29,9 @@ const ContratTemplateBodySection = ({
             variables={bodyVariables}
             targetId="bodyContent"
             buttonRef={bodyVarsRef}
-            onToggle={toggleDropdown}
+            onToggle={() => toggleVariablesMenu('bodyContent')}
             onSelectVariable={(variable, targetId) => 
-              insertVariable(variable, targetId, setBodyContent, bodyContent)
+              insertVariable(variable, targetId)
             }
           />
           <div className={styles.instructionsText}>
@@ -64,13 +45,11 @@ const ContratTemplateBodySection = ({
       
       <div className={styles.bodyEditorWrapper}>
         <ReactQuill
-          ref={quillRef}
-          key={previewMode ? 'preview' : 'edit'}
           id="bodyContent"
           className={styles.bodyContentEditor}
-          value={bodyContent}
+          value={bodyContent || ''}
           onChange={setBodyContent}
-          modules={{ toolbar: [['bold', 'italic', 'underline'], [{ list: 'ordered' }, { list: 'bullet' }], ['clean']] }}
+          modules={editorModules || { toolbar: [['bold', 'italic', 'underline'], [{ list: 'ordered' }, { list: 'bullet' }], ['clean']] }}
           placeholder="Entrez ici le contenu principal de votre contrat..."
           theme="snow"
           style={{ minHeight: 300, height: '100%' }}

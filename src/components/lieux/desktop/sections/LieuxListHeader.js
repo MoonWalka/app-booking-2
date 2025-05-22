@@ -10,7 +10,7 @@ const LieuxListHeader = () => {
 
   return (
     <div className={styles.headerContainer}>
-      <h2 className="fs-4 fw-bold text-primary mb-0">Liste des lieux</h2>
+      <h2 className={styles.headerTitle}>Liste des lieux</h2>
       <button 
         className={`btn btn-primary d-flex align-items-center gap-2 ${styles.addButton}`}
         onClick={() => navigate('/lieux/nouveau')}

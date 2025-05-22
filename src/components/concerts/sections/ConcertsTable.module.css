@@ -4,18 +4,23 @@
  * Dernière mise à jour: 21 mai 2025 (ajustements finaux)
  */
 
+/*
+ * Harmonisation du tableau concerts avec les autres listes (programmateurs, lieux)
+ * Header clair, texte foncé, sticky, padding large, ombre douce, arrondis
+ */
+
 /* 
  * Conteneur du tableau
  * ------------------
  */
 .tableContainer {
-  background-color: var(--tc-white);
-  border-radius: var(--tc-border-radius-lg);
-  overflow: hidden;
+  background-color: var(--tc-bg-color, #f8f9fa);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-shadow-sm);
+  overflow-x: auto;
   margin-top: var(--tc-spacing-md);
   border: 1px solid var(--tc-border-color);
-  border-top: none;
-  box-shadow: none;
+  padding: var(--tc-spacing-md);
 }
 
 /* 
@@ -23,9 +28,9 @@
  * ---------------------------
  */
 .concertsTable {
-  background-color: var(--tc-white);
+  background-color: transparent;
   width: 100%;
-  border-collapse: separate;
+  border-collapse: collapse;
   border-spacing: 0;
   margin-bottom: 0;
 }
@@ -34,60 +39,47 @@
  * En-têtes de colonnes
  * -----------------
  */
-.concertsTable thead {
-  background-color: transparent;
-}
-
 .concertsTable thead th {
-  border-top: none;
-  background-color: var(--tc-white);
-  padding: var(--tc-spacing-md) var(--tc-spacing-md);
-  text-align: left;
+  background-color: var(--tc-bg-color-light, #f4f6fa);
+  color: var(--tc-text-color-primary, #222);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-color-secondary);
-  border-bottom: 1px solid var(--tc-border-color);
+  border-bottom: 2px solid var(--tc-border-color);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  text-align: left;
   font-size: var(--tc-font-size-sm);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
   border-radius: 0;
-  border-left: none;
-  border-right: none;
+  border-top: none;
 }
 
-.concertsTable thead th:first-child {
-  border-top-left-radius: 0;
-  border-left: none;
+.concertsTable th:first-child {
+  border-top-left-radius: var(--tc-border-radius);
 }
-
-.concertsTable thead th:last-child {
-  border-top-right-radius: 0;
-  border-right: none;
+.concertsTable th:last-child {
+  border-top-right-radius: var(--tc-border-radius);
 }
 
 /* 
  * Cellules de données
  * ----------------
  */
-.concertsTable tbody td {
-  padding: var(--tc-spacing-md);
-  vertical-align: middle;
+.concertsTable td {
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
   border-bottom: 1px solid var(--tc-border-color);
-  background-color: var(--tc-white);
-  color: var(--tc-text-color-base);
+  vertical-align: middle;
   font-size: var(--tc-font-size-base);
+  background: var(--tc-bg-color, #fff);
+  color: var(--tc-text-color-base, #222);
+}
+
+.concertsTable tbody tr:hover {
+  background-color: var(--tc-bg-color-light, #f4f6fa);
 }
 
 .concertsTable tbody tr:last-child td {
   border-bottom: none;
-}
-
-.concertsTable tbody tr {
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.concertsTable tbody tr:hover {
-  background-color: var(--tc-hover-bg);
 }
 
 /* 
@@ -97,8 +89,9 @@
 .noResults {
   text-align: center;
   padding: var(--tc-spacing-xl);
-  color: var(--tc-gray-500);
-  font-size: var(--tc-font-size-base);
+  color: var(--tc-gray-600);
+  font-size: var(--tc-font-size-md);
+  border-top: 1px solid var(--tc-border-color);
 }
 
 /* 
@@ -126,12 +119,92 @@
 @media (max-width: 768px) {
   .concertsTable thead th,
   .concertsTable tbody td {
-    padding: var(--tc-spacing-sm) var(--tc-spacing-sm);
+    padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
   }
   .concertsTable {
     min-width: 700px;
   }
   .tableContainer {
     overflow-x: auto;
+  }
+}
+
+.searchBox {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  align-items: center;
+  background: var(--tc-bg-color-light);
+  border-radius: var(--tc-border-radius);
+  border: 1px solid var(--tc-border-color);
+  padding-left: 2.5rem;
+}
+.searchInput {
+  width: 100%;
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  padding-left: 0.5rem;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  font-size: var(--tc-font-size-base);
+  color: var(--tc-text-color);
+  border-radius: var(--tc-border-radius);
+  box-shadow: none;
+}
+.searchBox .searchIcon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--tc-text-color-secondary);
+  font-size: 1.1rem;
+  pointer-events: none;
+}
+.clearSearch {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--tc-text-color-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  transition: color var(--tc-transition-duration);
+}
+.clearSearch:hover {
+  color: var(--tc-text-color);
+}
+
+.filtersCol, .searchFilterRow button, .searchFilterRow select {
+  height: 40px;
+  border-radius: var(--tc-border-radius);
+  border: 1px solid var(--tc-border-color);
+  background: var(--tc-bg-color-light);
+  color: var(--tc-text-color);
+  font-size: var(--tc-font-size-base);
+  padding: 0 var(--tc-spacing-md);
+  margin-left: var(--tc-spacing-xs);
+  transition: background var(--tc-transition-duration), border-color var(--tc-transition-duration);
+  display: flex;
+  align-items: center;
+}
+.searchFilterRow button:hover, .searchFilterRow select:focus {
+  background: var(--tc-bg-color);
+  border-color: var(--tc-primary-color);
+}
+@media (max-width: 768px) {
+  .searchBox {
+    max-width: 100%;
+  }
+  .filtersCol, .searchFilterRow button, .searchFilterRow select {
+    width: 100%;
+    margin-left: 0;
+    margin-top: var(--tc-spacing-xs);
   }
 }

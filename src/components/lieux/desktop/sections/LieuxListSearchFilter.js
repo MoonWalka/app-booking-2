@@ -36,7 +36,7 @@ const LieuxListSearchFilter = ({
           />
           {searchTerm && (
             <button 
-              className={`btn btn-outline-secondary ${styles.clearSearch}`} 
+              className={styles.clearSearch}
               onClick={() => setSearchTerm('')}
               aria-label="Effacer la recherche"
             >

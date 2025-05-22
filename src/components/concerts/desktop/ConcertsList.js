@@ -15,7 +15,6 @@ import {
 // Import section components
 import ConcertsListHeader from '@/components/concerts/sections/ConcertsListHeader';
 import ConcertSearchBar from '@/components/concerts/sections/ConcertSearchBar';
-import ConcertStatusTabs from '@/components/concerts/sections/ConcertStatusTabs';
 import ConcertsTable from '@/components/concerts/sections/ConcertsTable';
 import ConcertsLoadMore from '@/components/concerts/sections/ConcertsLoadMore';
 
@@ -144,17 +143,13 @@ const ConcertsList = () => {
       {/* Section d'en-tête avec titre et bouton d'ajout */}
       <ConcertsListHeader />
       
-      {/* Navigation par onglets de statut */}
-      <ConcertStatusTabs 
-        statusFilter={statusFilter} 
-        setStatusFilter={setStatusFilter} 
-        statusDetailsMap={statusDetailsMap}
-      />
-      
-      {/* Barre de recherche et filtres */}
+      {/* Barre de recherche et filtres (statuts inclus dans le menu du bouton Filtrer) */}
       <ConcertSearchBar 
         searchTerm={searchTerm} 
-        setSearchTerm={setSearchTerm} 
+        setSearchTerm={setSearchTerm}
+        statusFilter={statusFilter}
+        setStatusFilter={setStatusFilter}
+        statusDetailsMap={statusDetailsMap}
       />
 
       {/* Tableau des concerts */}

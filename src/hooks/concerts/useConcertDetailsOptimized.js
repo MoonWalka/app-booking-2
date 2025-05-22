@@ -530,6 +530,9 @@ const useConcertDetailsOptimized = (id, locationParam) => {
     navigate(`/concerts/${id}/edit`);
   }, [genericDetails, id, navigate]);
   
+  // Ajouter un log avant de retourner le hook
+  console.log("[useConcertDetailsOptimized] handleDelete présent dans genericDetails:", !!genericDetails?.handleDelete);
+  
   return {
     // Données principales du hook générique
     concert: genericDetails?.entity || null,

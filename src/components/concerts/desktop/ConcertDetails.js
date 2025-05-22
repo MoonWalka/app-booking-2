@@ -15,6 +15,7 @@ import ConcertArtistSection from './ConcertArtistSection';
 import ConcertStructureSection from './ConcertStructureSection';
 import DeleteConcertModal from './DeleteConcertModal';
 import Button from '@/components/ui/Button';
+import NotesSection from '../sections/NotesSection';
 
 const ConcertDetails = () => {
   const { id } = useParams();
@@ -133,10 +134,12 @@ const ConcertDetails = () => {
   // Obtenir les informations de statut du concert seulement si concert existe
   const statusInfo = concert ? getStatusInfo() : { message: '', actionNeeded: false };
 
-  // Handle structure deletion
+  // Handle concert deletion
   const confirmDelete = () => {
     if (concert) {
-      handleDelete(concert);
+      console.log("[ConcertDetails] Suppression du concert avec ID:", concert.id);
+      // Passer seulement l'ID du concert au lieu de l'objet entier
+      handleDelete(concert.id);
     } else {
       console.error("[ConcertDetails] Tentative de suppression d'un concert inexistant");
       navigate('/concerts');
@@ -214,6 +217,9 @@ const ConcertDetails = () => {
               navigateToArtisteDetails={(artisteId) => navigate(`/artistes/${artisteId}`)}
             />
           )}
+
+          {/* Notes */}
+          <NotesSection notes={concert?.notes || ''} onChange={() => {}} />
         </>
       )}
 

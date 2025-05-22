@@ -977,6 +977,7 @@ const useGenericEntityDetails = ({
     // États d'édition et formulaire
     isEditing,
     formData,
+    setFormData, // <-- expose setFormData for consumers
     isDirty,
     dirtyFields,
     errors: formErrors,
@@ -988,6 +989,7 @@ const useGenericEntityDetails = ({
     
     // Actions de base
     toggleEditMode,
+    handleEdit: toggleEditMode,
     handleChange,
     handleSubmit,
     handleDelete,
@@ -1014,10 +1016,13 @@ const useGenericEntityDetails = ({
     getStats,
     invalidateCache: invalidateEntityCache,
     cacheEnabled,
-    
+
     // Infos sur l'instance
     instanceId: instanceRef.current.instanceId,
-    instanceNumber: instanceRef.current.instanceNumber
+    instanceNumber: instanceRef.current.instanceNumber,
+
+    // Expose setFormData for external use
+    setFormData
   };
 };
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from './ConcertGeneralInfo.module.css';
+import CardSection from '@/components/ui/CardSection';
 
 /**
  * Composant d'informations générales d'un concert
@@ -18,11 +19,12 @@ const ConcertGeneralInfo = ({
   formDataStatus
 }) => {
   return (
-    <div className={styles.formCard}>
-      <div className={styles.cardHeader}>
-        <i className="bi bi-info-circle"></i>
-        <h3>Informations générales</h3>
-      </div>
+    <CardSection
+      title="Informations générales"
+      icon={<i className="bi bi-info-circle"></i>}
+      isEditing={isEditMode}
+      className={styles.formCard}
+    >
       <div className={styles.cardBody}>
         {isEditMode ? (
           <>
@@ -203,7 +205,7 @@ const ConcertGeneralInfo = ({
           </>
         )}
       </div>
-    </div>
+    </CardSection>
   );
 };
 

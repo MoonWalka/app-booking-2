@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './ProgrammateurSearchSection.module.css';
 import SearchDropdown from './SearchDropdown';
 import SelectedEntityCard from './SelectedEntityCard';
-import Card from '@/components/ui/Card';
+import CardSection from '@/components/ui/CardSection';
 
 /**
  * ProgrammateurSearchSection - Section de recherche et sélection de programmateur
@@ -32,12 +32,12 @@ const ProgrammateurSearchSection = ({
   handleCreateProgrammateur
 }) => {
   return (
-    <Card
+    <CardSection
       title="Programmateur"
       icon={<i className="bi bi-person"></i>}
-      className={styles.programmateurSearchSection}
+      isEditing={true}
     >
-      <div className={styles.searchContainer} ref={progDropdownRef}>
+      <div className={styles.cardBody} ref={progDropdownRef}>
         {!selectedProgrammateur ? (
           <>
             <label className={styles.formLabel}>Rechercher un programmateur</label>
@@ -84,7 +84,7 @@ const ProgrammateurSearchSection = ({
           </>
         )}
       </div>
-    </Card>
+    </CardSection>
   );
 };
 

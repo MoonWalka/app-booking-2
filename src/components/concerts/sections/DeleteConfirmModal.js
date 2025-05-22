@@ -54,7 +54,7 @@ const DeleteConfirmModal = ({ isSubmitting, onCancel, onConfirm }) => {
                 Suppression...
               </>
             ) : (
-              'Supprimer définitivement'
+              'Supprimer'
             )}
           </button>
         </div>

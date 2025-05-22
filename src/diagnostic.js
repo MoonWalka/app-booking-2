@@ -1,5 +1,5 @@
 // diagnostic.js - Outil de diagnostic pour identifier les problèmes de performance
-import logger from './src/services/loggerService';
+import logger from './services/loggerService';
 
 /**
  * Cet outil analyse les logs de performance pour identifier les sources de lenteur

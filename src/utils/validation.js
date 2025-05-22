@@ -127,36 +127,21 @@ export const validateArtisteForm = (data) => {
 export const validateConcertForm = (data) => {
   const errors = {};
   
-  // Validation du nom
-  if (!data.nom) {
-    errors.nom = 'Le nom du concert est obligatoire';
+  // Validation du titre
+  if (!data.titre) {
+    errors.titre = 'Le titre du concert est obligatoire';
   }
   
   // Validation de la date
   if (!data.date) {
     errors.date = 'La date du concert est obligatoire';
   }
-  
-  // Validation du lieu
-  if (!data.lieuId) {
-    errors.lieuId = 'Un lieu doit être sélectionné pour le concert';
+
+  // Validation du montant
+  if (data.montant === undefined || data.montant === null || data.montant === '' || isNaN(parseFloat(data.montant))) {
+    errors.montant = 'Le montant est obligatoire et doit être un nombre valide';
   }
-  
-  // Validation de l'artiste
-  if (!data.artisteId) {
-    errors.artisteId = 'Un artiste doit être sélectionné pour le concert';
-  }
-  
-  // Validation du prix (si présent)
-  if (data.prix && isNaN(parseFloat(data.prix))) {
-    errors.prix = 'Le prix doit être un nombre valide';
-  }
-  
-  // Validation de la capacité (si présent)
-  if (data.capacité && isNaN(parseInt(data.capacité))) {
-    errors.capacité = 'La capacité doit être un nombre entier';
-  }
-  
+
   return {
     isValid: Object.keys(errors).length === 0,
     errors

@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './LieuSearchSection.module.css';
 import SearchDropdown from './SearchDropdown';
 import SelectedEntityCard from './SelectedEntityCard';
-import Card from '@/components/ui/Card';
+import CardSection from '@/components/ui/CardSection';
 
 /**
  * LieuSearchSection - Section de recherche et sélection de lieu
@@ -32,12 +32,13 @@ const LieuSearchSection = ({
   handleCreateLieu
 }) => {
   return (
-    <Card
+    <CardSection
       title="Lieu"
       icon={<i className="bi bi-geo-alt"></i>}
-      className={styles.lieuSearchSection}
+      isEditing={true}
     >
-      <div className={styles.searchContainer} ref={lieuDropdownRef}>
+      <div className={styles.cardBody} ref={lieuDropdownRef}>
+        {console.log('[LieuSearchSection] selectedLieu à ce rendu :', selectedLieu)}
         {!selectedLieu ? (
           <>
             <label className={styles.formLabel}>Rechercher un lieu</label>
@@ -85,7 +86,7 @@ const LieuSearchSection = ({
           </>
         )}
       </div>
-    </Card>
+    </CardSection>
   );
 };
 

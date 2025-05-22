@@ -83,7 +83,10 @@ const ConcertFormDesktop = () => {
     maxResults: 10
   });
 
-  const removeLieu = () => handleLieuChange(null);
+  const removeLieu = () => {
+    handleLieuChange(null);
+    console.log('[ConcertFormDesktop] Lieu supprimé, selectedLieu est maintenant null');
+  };
 
   // Recherche de programmateurs
   const {
@@ -149,6 +152,14 @@ const ConcertFormDesktop = () => {
         <strong> ID:</strong> {id} | 
         <strong> formData modifiable:</strong> {formData ? 'Oui' : 'Non'}
       </div>
+
+      {/* Affichage d'une erreur de validation */}
+      {formHook.error && (
+        <div className="alert alert-danger" style={{ marginBottom: 20 }}>
+          <i className="bi bi-exclamation-triangle-fill me-2"></i>
+          {formHook.error}
+        </div>
+      )}
       
       {/* En-tête du formulaire */}
       <ConcertFormHeader 
@@ -186,7 +197,7 @@ const ConcertFormDesktop = () => {
           showLieuResults={showLieuResults}
           isSearchingLieux={isSearchingLieux}
           lieuDropdownRef={lieuDropdownRef}
-          selectedLieu={lieu}
+          selectedLieu={formData.lieuId ? lieu : null}
           handleSelectLieu={handleLieuChange}
           handleRemoveLieu={removeLieu}
           handleCreateLieu={handleCreateLieu}
@@ -200,12 +211,11 @@ const ConcertFormDesktop = () => {
           showProgResults={showProgResults}
           isSearchingProgs={isSearchingProgs}
           progDropdownRef={progDropdownRef}
-          selectedProgrammateur={programmateur}
+          selectedProgrammateur={formData.programmateurId ? programmateur : null}
           handleSelectProgrammateur={handleProgrammateurChange}
           handleRemoveProgrammateur={() => handleProgrammateurChange(null)}
           handleCreateProgrammateur={handleCreateProgrammateur}
         />
-        
         {/* Section de recherche d'artiste */}
         <ArtisteSearchSection 
           artisteSearchTerm={artisteSearchTerm}
@@ -214,7 +224,7 @@ const ConcertFormDesktop = () => {
           showArtisteResults={showArtisteResults}
           isSearchingArtistes={isSearchingArtistes}
           artisteDropdownRef={artisteDropdownRef}
-          selectedArtiste={artiste}
+          selectedArtiste={formData.artisteId ? artiste : null}
           handleSelectArtiste={handleArtisteChange}
           handleRemoveArtiste={() => handleArtisteChange(null)}
           handleCreateArtiste={handleCreateArtiste}

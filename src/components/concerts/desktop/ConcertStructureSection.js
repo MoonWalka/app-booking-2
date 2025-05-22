@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import styles from './ConcertStructureSection.module.css';
 import Button from '@/components/ui/Button';
+import CardSection from '@/components/ui/CardSection';
 
 /**
  * Composant pour la section Structure du détail d'un concert
@@ -24,22 +25,22 @@ const ConcertStructureSection = ({
   const structureDropdownRef = useRef(null);
 
   return (
-    <div className={styles.formCard}>
-      <div className={styles.cardHeader}>
-        <i className="bi bi-building"></i>
-        <h3>Structure</h3>
-        {structure && !isEditMode && (
-          <Button
-            onClick={() => navigateToStructureDetails(structure.id)}
-            variant="outline-primary"
-            size="sm"
-            className={`tc-btn-outline-primary btn-sm ${styles.cardHeaderAction}`}
-          >
-            <i className="bi bi-eye"></i>
-            <span>Voir détails</span>
-          </Button>
-        )}
-      </div>
+    <CardSection
+      title="Structure"
+      icon={<i className="bi bi-building"></i>}
+      headerActions={structure && !isEditMode ? (
+        <Button
+          onClick={() => navigateToStructureDetails(structure.id)}
+          variant="outline-primary"
+          size="sm"
+          className={`tc-btn-outline-primary btn-sm ${styles.cardHeaderAction}`}
+        >
+          <i className="bi bi-eye"></i>
+          <span>Voir détails</span>
+        </Button>
+      ) : null}
+      className={styles.formCard}
+    >
       <div className={styles.cardBody}>
         {isEditMode ? (
           <div className={styles.formGroup} ref={structureDropdownRef}>
@@ -215,7 +216,7 @@ const ConcertStructureSection = ({
           </div>
         )}
       </div>
-    </div>
+    </CardSection>
   );
 };
 

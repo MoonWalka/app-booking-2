@@ -41,7 +41,10 @@ const SelectedEntityCard = ({
         <button
           type="button"
           className={styles.removeButton}
-          onClick={onRemove}
+          onClick={() => {
+            console.log('[SelectedEntityCard] Bouton remove activé pour', entityType, entity?.id || entity?.nom);
+            onRemove();
+          }}
           aria-label={`Supprimer ce ${entityType}`}
         >
           <i className="bi bi-x-lg"></i>

@@ -6,11 +6,6 @@ import {
   Route, 
   Navigate
 } from 'react-router-dom';
-
-// Import de l'outil de diagnostic en mode développement uniquement
-if (process.env.NODE_ENV === 'development') {
-  import('./diagnostic').catch(err => console.error('Erreur lors du chargement du diagnostic:', err));
-}
 import { AuthProvider, useAuth } from '@/context/AuthContext';
 import { ParametresProvider } from '@/context/ParametresContext';
 import { ModalProvider } from '@/context/ModalContext'; // Import du nouveau ModalProvider
@@ -38,8 +33,10 @@ import ConcertDetails from '@/components/concerts/ConcertDetails';
 // Import du moniteur de performances (uniquement en développement)
 import PerformanceMonitor from '@/components/debug/PerformanceMonitor';
 
-// Imports CSS gérés dans index.js - ne pas dupliquer ici
-// pour éviter les conflits de styles
+// Import de l'outil de diagnostic en mode développement uniquement
+if (process.env.NODE_ENV === 'development') {
+  import('./diagnostic').catch(err => console.error('Erreur lors du chargement du diagnostic:', err));
+}
 
 // Composant ErrorBoundary pour capturer les erreurs de chargement
 class ErrorBoundary extends React.Component {

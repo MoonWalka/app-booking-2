@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import styles from './ConcertArtistSection.module.css';
 import Button from '@/components/ui/Button';
+import CardSection from '@/components/ui/CardSection';
 
 /**
  * Composant pour la section Artiste du détail d'un concert
@@ -24,22 +25,22 @@ const ConcertArtistSection = ({
   const artisteDropdownRef = useRef(null);
 
   return (
-    <div className={styles.formCard}>
-      <div className={styles.cardHeader}>
-        <i className="bi bi-music-note"></i>
-        <h3>Artiste</h3>
-        {artiste && !isEditMode && (
-          <Button
-            onClick={() => navigateToArtisteDetails(artiste.id)}
-            variant="outline-primary"
-            size="sm"
-            className={`tc-btn-outline-primary btn-sm ${styles.cardHeaderAction}`}
-          >
-            <i className="bi bi-eye"></i>
-            <span>Voir détails</span>
-          </Button>
-        )}
-      </div>
+    <CardSection
+      title="Artiste"
+      icon={<i className="bi bi-music-note"></i>}
+      headerActions={artiste && !isEditMode ? (
+        <Button
+          onClick={() => navigateToArtisteDetails(artiste.id)}
+          variant="outline-primary"
+          size="sm"
+          className={`tc-btn-outline-primary btn-sm ${styles.cardHeaderAction}`}
+        >
+          <i className="bi bi-eye"></i>
+          <span>Voir détails</span>
+        </Button>
+      ) : null}
+      className={styles.formCard}
+    >
       <div className={styles.cardBody}>
         {isEditMode ? (
           <div className={styles.formGroup} ref={artisteDropdownRef}>
@@ -251,7 +252,7 @@ const ConcertArtistSection = ({
           </div>
         )}
       </div>
-    </div>
+    </CardSection>
   );
 };
 

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db, collection, getDocs, doc, deleteDoc, query, where, orderBy, addDoc, updateDoc, serverTimestamp } from '@/firebaseInit';
 import '@styles/index.css';
-import { Button, Table, Badge } from 'react-bootstrap';
+import { Button, Table, Badge, Alert } from 'react-bootstrap';
 import ContratTemplateEditorModal from '@/components/contrats/ContratTemplateEditorModal';
 
 const ContratTemplatesPage = () => {
@@ -15,6 +15,17 @@ const ContratTemplatesPage = () => {
   const [showEditorModal, setShowEditorModal] = useState(false);
   const [currentTemplate, setCurrentTemplate] = useState(null);
   const [isNewTemplate, setIsNewTemplate] = useState(false);
+
+  // État pour les notifications
+  const [notification, setNotification] = useState(null);
+
+  // Fonction pour afficher une notification
+  const showNotification = (message, type = 'success') => {
+    setNotification({ message, type });
+    setTimeout(() => {
+      setNotification(null);
+    }, 3000); // Disparaît après 3 secondes
+  };
 
   useEffect(() => {
     const fetchTemplates = async () => {
@@ -151,6 +162,7 @@ const ContratTemplatesPage = () => {
           updatedAt: { seconds: Date.now() / 1000 }
         };
         setTemplates([newTemplate, ...templates]);
+        showNotification(`✅ Nouveau modèle "${templateData.name}" créé avec succès !`);
       } else {
         // Mise à jour d'un modèle existant
         await updateDoc(doc(db, 'contratTemplates', currentTemplate.id), {
@@ -173,17 +185,37 @@ const ContratTemplatesPage = () => {
               } 
             : template
         ));
+        showNotification(`✅ Modèle "${templateData.name}" sauvegardé avec succès !`);
       }
       // Ne plus fermer la modale automatiquement ici
       // handleCloseEditor();
     } catch (error) {
       console.error('❌ [Firestore] Erreur lors de la sauvegarde du modèle:', error);
-      alert('Une erreur est survenue lors de la sauvegarde du modèle.');
+      showNotification('❌ Erreur lors de la sauvegarde du modèle', 'danger');
     }
   };
 
   return (
     <div className="contrat-templates-container">
+      {/* Notification en haut de page */}
+      {notification && (
+        <Alert 
+          variant={notification.type} 
+          className="mb-3"
+          style={{ 
+            position: 'fixed', 
+            top: '20px', 
+            left: '50%', 
+            transform: 'translateX(-50%)', 
+            zIndex: 9999,
+            minWidth: '300px',
+            textAlign: 'center'
+          }}
+        >
+          {notification.message}
+        </Alert>
+      )}
+      
       <div className="templates-header">
         <h2>Modèles de contrats</h2>
         <Button 

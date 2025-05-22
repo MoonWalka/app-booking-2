@@ -95,22 +95,31 @@ const useLieuDetailsOptimized = (id) => {
   
   // Gestion du programmateur
   const handleProgrammateurChange = useCallback((newProgrammateur) => {
+    console.log('[LOG][useLieuDetailsOptimized] handleProgrammateurChange appelé', newProgrammateur);
     if (newProgrammateur) {
-      detailsHook.setFormData(prev => ({
-        ...prev,
-        programmateurId: newProgrammateur.id,
-        programmateur: {
-          id: newProgrammateur.id,
-          nom: newProgrammateur.nom,
-          prenom: newProgrammateur.prenom
-        }
-      }));
+      detailsHook.setFormData(prev => {
+        const updated = {
+          ...prev,
+          programmateurId: newProgrammateur.id,
+          programmateur: {
+            id: newProgrammateur.id,
+            nom: newProgrammateur.nom,
+            prenom: newProgrammateur.prenom
+          }
+        };
+        console.log('[LOG][useLieuDetailsOptimized] setFormData (programmateur)', updated);
+        return updated;
+      });
     } else {
-      detailsHook.setFormData(prev => ({
-        ...prev,
-        programmateurId: null,
-        programmateur: null
-      }));
+      detailsHook.setFormData(prev => {
+        const updated = {
+          ...prev,
+          programmateurId: null,
+          programmateur: null
+        };
+        console.log('[LOG][useLieuDetailsOptimized] setFormData (programmateur null)', updated);
+        return updated;
+      });
     }
   }, [detailsHook]);
   
@@ -139,6 +148,21 @@ const useLieuDetailsOptimized = (id) => {
     }));
   }, [detailsHook]);
   
+  // Ajout log pour la suppression
+  const handleDeleteClick = useCallback(() => {
+    console.log('[LOG][useLieuDetailsOptimized] handleDeleteClick appelé');
+    if (detailsHook.handleDelete) {
+      detailsHook.handleDelete();
+    }
+  }, [detailsHook]);
+  
+  // Fonction pour annuler l'édition et revenir en mode vue
+  const handleCancel = useCallback(() => {
+    if (detailsHook.isEditing) {
+      detailsHook.toggleEditMode();
+    }
+  }, [detailsHook]);
+  
   // Retourner les fonctionnalités combinées
   return {
     // Base du hook générique
@@ -149,6 +173,8 @@ const useLieuDetailsOptimized = (id) => {
     updateCoordinates,
     addEquipement,
     removeEquipement,
+    handleDeleteClick,
+    handleCancel,
     
     // Raccourcis pour une meilleure expérience développeur
     lieu: detailsHook.entity,
@@ -156,7 +182,9 @@ const useLieuDetailsOptimized = (id) => {
     error: detailsHook.error,
     isEditing: detailsHook.isEditing,
     formData: detailsHook.formData,
-    hasChanges: detailsHook.isDirty
+    hasChanges: detailsHook.isDirty,
+    // Ajout log pour chaque retour de hook
+    _debug: { formData: detailsHook.formData, entity: detailsHook.entity }
   };
 };
 

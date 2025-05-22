@@ -117,45 +117,20 @@ const LieuView = () => {
         onDelete={handleDeleteClick}
       />
 
-      <div className={styles.twoColumnsLayout}>
-        <div className={styles.leftColumn}>
-          {/* General information section */}
-          <LieuGeneralInfo
-            lieu={lieu}
-            isEditing={false}
-          />
-
-          {/* Address section */}
-          <LieuAddressSection
-            lieu={lieu}
-            isEditing={false}
-          />
-
-          {/* Additional information section (created/updated) */}
-          <LieuInfoSection lieu={lieu} />
-        </div>
-
-        <div className={styles.rightColumn}>
-          {/* Contact information section */}
-          <LieuContactSection
-            lieu={lieu}
-            isEditing={false}
-          />
-
-          {/* Programmateur section */}
-          <LieuOrganizerSection
-            isEditing={false}
-            programmateur={programmateur}
-            loadingProgrammateur={loadingProgrammateur}
-            lieu={lieu}
-          />
-
-          {/* Associated concerts section */}
-          <LieuConcertsSection lieu={lieu} isEditing={false} />
-          
-          {/* Associated structures section */}
-          <LieuStructuresSection lieu={lieu} isEditing={false} />
-        </div>
+      {/* Nouvelle structure : sections empilées verticalement */}
+      <div className={styles.sectionsStack}>
+        <LieuGeneralInfo lieu={lieu} isEditing={false} />
+        <LieuAddressSection lieu={lieu} isEditing={false} />
+        <LieuInfoSection lieu={lieu} />
+        <LieuContactSection lieu={lieu} isEditing={false} />
+        <LieuOrganizerSection
+          isEditing={false}
+          programmateur={programmateur}
+          loadingProgrammateur={loadingProgrammateur}
+          lieu={lieu}
+        />
+        <LieuConcertsSection lieu={lieu} isEditing={false} />
+        <LieuStructuresSection lieu={lieu} isEditing={false} />
       </div>
 
       {/* Delete confirmation modal */}

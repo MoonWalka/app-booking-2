@@ -13,6 +13,7 @@ import {
 import { db } from '@/firebaseInit';
 import '@styles/index.css';
 import Button from '@/components/ui/Button';
+import useDeleteArtisteOptimized from '@/hooks/artistes/useDeleteArtisteOptimized';
 
 // Composant pour l'étape 1 : Informations de base
 const BasicInfoStep = ({ data, onNext, onBack }) => {
@@ -252,6 +253,12 @@ const ArtisteFormDesktop = () => {
   const [loading, setLoading] = useState(!!id && id !== 'nouveau');
   const [initialData, setInitialData] = useState({});
   
+  // Ajout du hook de suppression optimisé
+  const {
+    isDeleting,
+    handleDelete
+  } = useDeleteArtisteOptimized(() => navigate('/artistes'));
+  
   useEffect(() => {
     const fetchArtiste = async () => {
       if (id && id !== 'nouveau') {
@@ -326,6 +333,26 @@ const ArtisteFormDesktop = () => {
     <div className={styles.artisteFormDesktop}>
       <div className={styles.desktopFormHeader}>
         <h1>{id !== 'nouveau' ? 'Modifier l\'artiste' : 'Nouvel artiste'}</h1>
+        {id !== 'nouveau' && (
+          <Button
+            variant="danger"
+            className="ms-3"
+            onClick={() => handleDelete(id)}
+            disabled={isDeleting}
+          >
+            {isDeleting ? (
+              <>
+                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                Suppression...
+              </>
+            ) : (
+              <>
+                <i className="bi bi-trash me-2"></i>
+                Supprimer
+              </>
+            )}
+          </Button>
+        )}
       </div>
       
       {/* Remplaçons le composant StepNavigation */}

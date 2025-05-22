@@ -6,6 +6,7 @@ import styles from './LieuForm.module.css';
 
 // MIGRATION: Utilisation du hook optimisé au lieu du hook complet
 import { useLieuFormOptimized } from '@/hooks/lieux';
+import useLieuDeleteOptimized from '@/hooks/lieux/useLieuDeleteOptimized';
 
 // Import sections
 import LieuFormHeader from './sections/LieuFormHeader';
@@ -31,6 +32,12 @@ const LieuForm = () => {
     submitting
   } = useLieuFormOptimized(id);
 
+  // Ajout du hook de suppression optimisé
+  const {
+    isDeleting,
+    handleDeleteLieu
+  } = useLieuDeleteOptimized(() => navigate('/lieux'));
+
   if (loading && id !== 'nouveau') {
     return <Spinner message="Chargement du lieu..." contentOnly={true} />;
   }
@@ -40,43 +47,47 @@ const LieuForm = () => {
       <LieuFormHeader id={id} lieuNom={lieu.nom} navigate={navigate} />
 
       <form onSubmit={handleSubmit} className={styles.modernForm}>
-        {/* Main venue information */}
-        <LieuInfoSection 
-          lieu={lieu} 
-          handleChange={handleChange} 
-        />
+        <div className={styles.sectionsStack}>
+          {/* Main venue information */}
+          <LieuInfoSection 
+            lieu={lieu} 
+            handleChange={handleChange} 
+          />
 
-        {/* Address and map */}
-        <LieuAddressSection 
-          lieu={lieu}
-          handleChange={handleChange}
-          addressSearch={addressSearch}
-        />
+          {/* Address and map */}
+          <LieuAddressSection 
+            lieu={lieu}
+            handleChange={handleChange}
+            addressSearch={addressSearch}
+          />
 
-        {/* Programmateur */}
-        <LieuProgrammateurSection 
-          programmateurSearch={programmateurSearch}
-        />
+          {/* Programmateur */}
+          <LieuProgrammateurSection 
+            programmateurSearch={programmateurSearch}
+          />
 
-        {/* Contact information */}
-        <LieuContactSection 
-          contact={lieu.contact} 
-          handleChange={handleChange} 
-        />
+          {/* Contact information */}
+          <LieuContactSection 
+            contact={lieu.contact} 
+            handleChange={handleChange} 
+          />
 
-        {/* Form actions */}
-        <LieuFormActions 
-          loading={submitting || loading}
-          id={id}
-          navigate={navigate}
-        />
+          {/* Form actions */}
+          <LieuFormActions 
+            loading={submitting || loading || isDeleting}
+            id={id}
+            navigate={navigate}
+            onDelete={id !== 'nouveau' ? () => handleDeleteLieu(id) : undefined}
+            isDeleting={isDeleting}
+          />
 
-        {error && (
-          <div className="alert alert-danger d-flex align-items-center gap-2 shadow-sm rounded-3 mb-4">
-            <i className="bi bi-exclamation-triangle-fill fs-5 text-danger me-2"></i>
-            <div>{error}</div>
-          </div>
-        )}
+          {error && (
+            <div className="alert alert-danger d-flex align-items-center gap-2 shadow-sm rounded-3 mb-4">
+              <i className="bi bi-exclamation-triangle-fill fs-5 text-danger me-2"></i>
+              <div>{error}</div>
+            </div>
+          )}
+        </div>
       </form>
     </div>
   );

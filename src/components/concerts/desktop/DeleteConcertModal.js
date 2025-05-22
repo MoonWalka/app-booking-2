@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './DeleteConcertModal.module.css';
 import Button from '@/components/ui/Button';
 
@@ -6,6 +6,14 @@ import Button from '@/components/ui/Button';
  * Modal de confirmation pour la suppression d'un concert
  */
 const DeleteConcertModal = ({ show, concertNom, onClose, onConfirm, isDeleting }) => {
+  useEffect(() => {
+    if (show) {
+      console.log('[LOG][DeleteConcertModal] Modale affichée');
+    } else {
+      console.log('[LOG][DeleteConcertModal] Modale masquée');
+    }
+  }, [show]);
+
   if (!show) return null;
   
   return (
@@ -26,11 +34,15 @@ const DeleteConcertModal = ({ show, concertNom, onClose, onConfirm, isDeleting }
           >
             Annuler
           </Button>
-          <Button 
-            className="tc-btn-danger"
-            variant="danger"
-            onClick={onConfirm}
-            disabled={isDeleting}
+          <button 
+            type="button"
+            className="btn btn-danger"
+            onClick={() => {
+              alert('Bouton cliqué!');
+              console.log('[TEST] Bouton standard cliqué');
+              onConfirm();
+            }}
+            style={{cursor: 'pointer'}}
           >
             {isDeleting ? (
               <>
@@ -38,7 +50,7 @@ const DeleteConcertModal = ({ show, concertNom, onClose, onConfirm, isDeleting }
                 Suppression...
               </>
             ) : 'Supprimer définitivement'}
-          </Button>
+          </button>
         </div>
       </div>
     </div>

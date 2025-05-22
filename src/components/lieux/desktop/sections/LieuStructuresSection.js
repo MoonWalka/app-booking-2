@@ -176,175 +176,47 @@ export const LieuStructuresSection = ({ lieu, isEditing = false }) => {
   return (
     <Card
       title="Structures associées"
-      icon={<i className="bi bi-building"></i>}
+      icon={<i className="bi bi-diagram-3"></i>}
       isEditing={isEditing}
       isHoverable={!isEditing}
       headerActions={
-        !isEditing ? (
+        isEditing ? (
           <div className={styles.headerActions}>
-            <button 
-              onClick={() => navigate('/structures', { state: { filterLieuId: lieu.id } })}
-              className="btn btn-sm btn-outline-secondary"
-              title="Voir toutes les structures"
-            >
-              <i className="bi bi-list"></i>
-              <span className="d-none d-sm-inline ms-1">Tout voir</span>
-            </button>
-            <button 
-              onClick={handleCreateStructure}
+            <button
               className="btn btn-sm btn-outline-primary"
-              title="Ajouter une structure à ce lieu"
+              onClick={handleCreateStructure}
+              title="Associer une structure à ce lieu"
             >
               <i className="bi bi-plus-lg"></i>
-              <span className="d-none d-sm-inline ms-1">Ajouter</span>
+              <span className="d-none d-sm-inline ms-1">Associer une structure</span>
             </button>
           </div>
         ) : null
       }
     >
-      {isEditing ? (
-        <div className={styles.formGroup}>
-          <label className={styles.formLabel}>Associer des structures</label>
-          
-          <div className={styles.structureSearchContainer} ref={dropdownRef}>
-            <div className="input-group">
-              <span className="input-group-text"><i className="bi bi-search"></i></span>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Rechercher une structure par nom..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              <button
-                type="button"
-                className="btn btn-outline-secondary"
-                onClick={handleCreateStructure}
-              >
-                Créer une structure
-              </button>
-            </div>
-            
-            {isSearching && (
-              <div className={`dropdown-menu show w-100 ${styles.dropdownMenu}`}>
-                <div className="dropdown-item text-center">
-                  <div className="spinner-border spinner-border-sm text-primary" role="status">
-                    <span className="visually-hidden">Recherche en cours...</span>
-                  </div>
-                </div>
-              </div>
-            )}
-            
-            {searchResults.length > 0 && (
-              <div className={`dropdown-menu show w-100 ${styles.dropdownMenu}`}>
-                {searchResults.map(structure => (
-                  <div 
-                    key={structure.id} 
-                    className={`dropdown-item ${styles.structureItem}`}
-                    onClick={() => handleSelectStructure(structure)}
-                  >
-                    <div className={styles.structureName}>{structure.nom}</div>
-                    <div className={styles.structureDetails}>
-                      {structure.type && <span className={styles.typeBadge}>{structure.type}</span>}
-                      {structure.ville && <span className={styles.structureLocation}>{structure.ville}</span>}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-            
-            {searchTerm.length >= 2 && searchResults.length === 0 && !isSearching && (
-              <div className={`dropdown-menu show w-100 ${styles.dropdownMenu}`}>
-                <div className="dropdown-item text-center text-muted">
-                  Aucune structure trouvée
-                </div>
-              </div>
-            )}
-          </div>
-          
-          <small className="form-text text-muted">
-            Tapez au moins 2 caractères pour rechercher une structure par nom.
-          </small>
-          
-          {/* Liste des structures déjà associées */}
-          {structures.length > 0 && (
-            <div className={styles.associatedStructures}>
-              <label className={styles.formLabel}>Structures associées</label>
-              {structures.map(structure => (
-                <div key={structure.id} className={styles.associatedStructureItem}>
-                  <div className={styles.structureInfo}>
-                    <span className={styles.structureName}>{structure.nom}</span>
-                    {structure.type && <span className={styles.typeBadge}>{structure.type}</span>}
-                  </div>
+      {loading ? (
+        <Spinner animation="border" size="sm" />
+      ) : (
+        <div className={styles.structuresListContainer}>
+          {structures.length > 0 ? (
+            structures.map(structure => (
+              <div key={structure.id} className={styles.structureItem}>
+                <Link to={`/structures/${structure.id}`}>{structure.nom}</Link>
+                {isEditing && (
                   <button
-                    type="button"
-                    className="btn btn-sm btn-outline-danger"
+                    className="btn btn-sm btn-outline-danger ms-2"
                     onClick={() => handleRemoveStructure(structure.id)}
-                    aria-label="Retirer cette structure"
+                    title="Retirer cette structure du lieu"
                   >
                     <i className="bi bi-x-lg"></i>
                   </button>
-                </div>
-              ))}
-            </div>
+                )}
+              </div>
+            ))
+          ) : (
+            <div className={styles.textEmpty}>Aucune structure associée.</div>
           )}
         </div>
-      ) : (
-        <>
-          {loading ? (
-            <div className={styles.loadingContainer}>
-              <Spinner animation="border" variant="primary" size="sm" />
-              <span>Chargement des structures associées...</span>
-            </div>
-          ) : structures.length > 0 ? (
-            <div className={styles.structuresList}>
-              {structures.map(structure => (
-                <div key={structure.id} className={styles.structureItem}>
-                  <div className={styles.structureInfo}>
-                    <Link to={`/structures/${structure.id}`} className={styles.structureName}>
-                      {structure.nom}
-                    </Link>
-                    <div className={styles.structureDetails}>
-                      {structure.type && (
-                        <span className={styles.typeBadge}>{structure.type}</span>
-                      )}
-                      {structure.ville && (
-                        <span className={styles.structureLocation}>
-                          <i className="bi bi-geo-alt me-1"></i>
-                          {structure.ville}
-                        </span>
-                      )}
-                      {structure.programmateurs && structure.programmateurs.length > 0 && (
-                        <span className={styles.structureProgrammateurs}>
-                          <i className="bi bi-people me-1"></i>
-                          {structure.programmateurs.length} programmateur{structure.programmateurs.length > 1 ? 's' : ''}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  <div className={styles.structureActions}>
-                    <Link to={`/structures/${structure.id}`} className="btn btn-sm btn-outline-primary">
-                      <i className="bi bi-eye me-1"></i>
-                      Voir
-                    </Link>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className={styles.emptyState}>
-              <i className="bi bi-exclamation-circle"></i>
-              <p>Aucune structure associée à ce lieu</p>
-              <button 
-                className="btn btn-sm btn-outline-primary mt-2"
-                onClick={handleCreateStructure}
-              >
-                <i className="bi bi-plus-lg me-1"></i>
-                Associer une structure
-              </button>
-            </div>
-          )}
-        </>
       )}
     </Card>
   );

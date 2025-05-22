@@ -4,6 +4,7 @@ import styles from './ConcertForm.module.css';
 
 // Hooks personnalisés
 import useConcertFormOptimized from '@/hooks/concerts/useConcertFormOptimized';
+import useConcertDeleteOptimized from '@/hooks/concerts/useConcertDeleteOptimized';
 import { useEntitySearch } from '@/hooks/common';
 
 // Sections du formulaire
@@ -30,17 +31,22 @@ const ConcertFormDesktop = () => {
   console.log("[ConcertForm] Monté. ID depuis useParams:", id);
   console.log("[ConcertForm] isNewConcert (basé sur useParams id === 'nouveau'):", isNewConcert, "ID actuel:", id);
 
-  // Hook optimisé pour gérer état, chargement, soumission, suppression
+  // Hook optimisé pour gérer état, chargement, soumission
   const formHook = useConcertFormOptimized(id);
   console.log("[ConcertForm] Hook useConcertFormOptimized initialisé. ID passé au hook:", id);
+  
+  // Hook optimisé pour gérer la suppression
+  const {
+    isDeleting,
+    handleDeleteConcert
+  } = useConcertDeleteOptimized(() => navigate('/concerts'));
   
   const {
     loading,
     formData,
     handleChange,
     handleSubmit,
-    handleDelete,
-    handleCancel, // Extraire handleCancel du hook
+    handleCancel,
     isSubmitting,
     concert,
     lieu,
@@ -146,13 +152,6 @@ const ConcertFormDesktop = () => {
   
   return (
     <div className={styles.deskConcertFormContainer}>
-      {/* DEBUG: Indicateur de mode édition */}
-      <div style={{ background: "#f0f8ff", padding: "10px", marginBottom: "10px", border: "1px solid #ccc" }}>
-        <strong>Mode:</strong> {isNewConcert ? 'Création' : 'Édition'} | 
-        <strong> ID:</strong> {id} | 
-        <strong> formData modifiable:</strong> {formData ? 'Oui' : 'Non'}
-      </div>
-
       {/* Affichage d'une erreur de validation */}
       {formHook.error && (
         <div className="alert alert-danger" style={{ marginBottom: 20 }}>
@@ -171,8 +170,8 @@ const ConcertFormDesktop = () => {
       {/* Actions en haut du formulaire */}
       <ConcertFormActions
         id={id}
-        isSubmitting={isSubmitting}
-        onDelete={() => setShowDeleteConfirm(true)}
+        isSubmitting={isSubmitting || isDeleting}
+        onDelete={id !== 'nouveau' ? () => setShowDeleteConfirm(true) : undefined}
         onCancel={handleCancel}
         navigate={navigate}
         position="top"
@@ -239,8 +238,8 @@ const ConcertFormDesktop = () => {
         {/* Actions en bas du formulaire */}
         <ConcertFormActions
           id={id}
-          isSubmitting={isSubmitting}
-          onDelete={() => setShowDeleteConfirm(true)}
+          isSubmitting={isSubmitting || isDeleting}
+          onDelete={id !== 'nouveau' ? () => setShowDeleteConfirm(true) : undefined}
           onSubmit={handleSubmit}
           onCancel={handleCancel}
           navigate={navigate}
@@ -251,9 +250,13 @@ const ConcertFormDesktop = () => {
       {/* Modal de confirmation de suppression */}
       {showDeleteConfirm && (
         <DeleteConfirmModal
-          isSubmitting={isSubmitting}
+          isSubmitting={isSubmitting || isDeleting}
           onCancel={() => setShowDeleteConfirm(false)}
-          onConfirm={handleDelete}
+          onConfirm={() => {
+            console.log('[ConcertForm] Appel de handleDeleteConcert avec ID:', id);
+            handleDeleteConcert(id);
+            setShowDeleteConfirm(false);
+          }}
         />
       )}
     </div>

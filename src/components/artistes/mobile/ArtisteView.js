@@ -1,6 +1,6 @@
 // src/components/artistes/mobile/ArtisteView.js
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { db } from '@/firebaseInit';
 import { doc, getDoc } from 'firebase/firestore';
 import '@styles/index.css';
@@ -10,8 +10,7 @@ import styles from './ArtisteDetail.module.css'; // Réutilisation des styles ex
  * Composant de vue pour les détails d'un artiste - Version Mobile
  * Séparé du composant d'édition pour une meilleure séparation des préoccupations
  */
-const ArtisteView = () => {
-  const { id } = useParams();
+const ArtisteView = ({ id }) => {
   const navigate = useNavigate();
   const [artiste, setArtiste] = useState(null);
   const [loading, setLoading] = useState(true);

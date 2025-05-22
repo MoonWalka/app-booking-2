@@ -9,9 +9,11 @@ import styles from './StructureFormActions.module.css';
  * @param {boolean} props.isEditMode - Whether the form is in edit mode
  * @param {boolean} props.submitting - Whether the form is submitting
  * @param {Function} props.handleCancel - Cancel handler
+ * @param {Function} props.onDelete - Delete handler
+ * @param {boolean} props.isDeleting - Whether the form is deleting
  * @returns {JSX.Element} - Rendered component
  */
-const StructureFormActions = ({ isEditMode, submitting, handleCancel }) => {
+const StructureFormActions = ({ isEditMode, submitting, handleCancel, onDelete, isDeleting }) => {
   return (
     <div className={styles.formActions}>
       <Button
@@ -23,6 +25,26 @@ const StructureFormActions = ({ isEditMode, submitting, handleCancel }) => {
         <i className="bi bi-x-circle"></i>
         Annuler
       </Button>
+      {isEditMode && onDelete && (
+        <Button
+          variant="outline-danger"
+          className={styles.cancelButton}
+          onClick={onDelete}
+          disabled={submitting || isDeleting}
+        >
+          {isDeleting ? (
+            <>
+              <span className={styles.spinner} role="status" aria-hidden="true"></span>
+              Suppression...
+            </>
+          ) : (
+            <>
+              <i className="bi bi-trash"></i>
+              Supprimer
+            </>
+          )}
+        </Button>
+      )}
       <Button 
         variant="primary" 
         type="submit"

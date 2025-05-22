@@ -65,3 +65,6 @@ export { default as useConcerts } from './useConcerts';
 export { default as useConcertAssociations } from './useConcertAssociations';
 export { default as useEntitySearch } from './useEntitySearch';
 export { default as useFormSubmission } from './useFormSubmission';
+
+// Exports pour la gestion de la suppression de concerts
+export { default as useConcertDeleteOptimized } from './useConcertDeleteOptimized';

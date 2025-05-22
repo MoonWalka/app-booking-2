@@ -674,8 +674,8 @@ const useGenericEntityDetails = ({
   
   // Fonction pour confirmer et exécuter la suppression
   const handleConfirmDelete = useCallback(async () => {
+    console.log('[LOG][useGenericEntityDetails] handleConfirmDelete appelé');
     setIsDeleting(true);
-    
     try {
       // Vérifier si l'entité peut être supprimée
       if (checkDeletePermission && !skipPermissionCheck) {
@@ -706,6 +706,7 @@ const useGenericEntityDetails = ({
       }
       
       // Fermer le modal
+      console.log('[LOG][useGenericEntityDetails] setShowDeleteModal(false) après suppression');
       setShowDeleteModal(false);
       
       // Appeler le callback si fourni
@@ -721,6 +722,7 @@ const useGenericEntityDetails = ({
       debugLog(`Erreur lors de la suppression de ${entityType}: ${err}`, 'error', 'useGenericEntityDetails');
       
       // Fermer le modal
+      console.log('[LOG][useGenericEntityDetails] setShowDeleteModal(false) après erreur');
       setShowDeleteModal(false);
       
       // Appeler le callback d'erreur si fourni
@@ -736,12 +738,15 @@ const useGenericEntityDetails = ({
   
   // Fonction pour annuler la suppression (fermer le modal)
   const handleCancelDelete = useCallback(() => {
+    console.log('[LOG][useGenericEntityDetails] handleCancelDelete appelé, setShowDeleteModal(false)');
     setShowDeleteModal(false);
   }, []);
   
   // Fonction pour déclencher le processus de suppression
   const handleDelete = useCallback(() => {
+    console.log('[LOG][useGenericEntityDetails] handleDelete appelé, useDeleteModal:', useDeleteModal);
     if (useDeleteModal) {
+      console.log('[LOG][useGenericEntityDetails] setShowDeleteModal(true)');
       setShowDeleteModal(true);
     } else {
       handleConfirmDelete();

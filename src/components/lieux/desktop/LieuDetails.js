@@ -92,11 +92,11 @@ const LieuDetails = () => {
   // Add the programmateur ID to the form data when changed
   React.useEffect(() => {
     if (selectedProgrammateur) {
+      console.log('[LOG][LieuDetails] Appel handleProgrammateurChange(selectedProgrammateur)', selectedProgrammateur);
       handleProgrammateurChange(selectedProgrammateur);
-    } else if (isEditing) {
-      handleProgrammateurChange(null);
     }
-  }, [selectedProgrammateur, isEditing, handleProgrammateurChange]);
+    // Ne rien faire si pas de programmateur sélectionné : on laisse le champ vide
+  }, [selectedProgrammateur, handleProgrammateurChange]);
 
   // If loading, show a spinner
   if (loading) {
@@ -163,65 +163,53 @@ const LieuDetails = () => {
         onDelete={handleDeleteClick}
       />
 
-      <div className={styles.twoColumnsLayout}>
-        <div className={styles.leftColumn}>
-          {/* General information section */}
-          <LieuGeneralInfo
-            lieu={lieu}
-            formData={formData}
-            isEditing={isEditing}
-            handleChange={handleChange}
-            addEquipement={addEquipement}
-            removeEquipement={removeEquipement}
-          />
+      <div className={styles.sectionsStack}>
+        {/* General information section */}
+        <LieuGeneralInfo
+          lieu={lieu}
+          formData={formData}
+          isEditing={isEditing}
+          handleChange={handleChange}
+          addEquipement={addEquipement}
+          removeEquipement={removeEquipement}
+        />
 
-          {/* Address section */}
-          <LieuAddressSection
-            lieu={lieu}
-            formData={formData}
-            isEditing={isEditing}
-            handleChange={handleChange}
-            addressSuggestions={addressSuggestions}
-            isSearchingAddress={isSearchingAddress}
-            handleSelectAddress={handleSelectAddress}
-            setAddressFieldActive={setAddressFieldActive}
-          />
+        {/* Address section */}
+        <LieuAddressSection
+          lieu={lieu}
+          formData={formData}
+          isEditing={isEditing}
+          handleChange={handleChange}
+          addressSuggestions={addressSuggestions}
+          isSearchingAddress={isSearchingAddress}
+          handleSelectAddress={handleSelectAddress}
+          setAddressFieldActive={setAddressFieldActive}
+        />
 
-          {/* Additional information section (created/updated) */}
-          <LieuInfoSection lieu={lieu} />
-        </div>
+        {/* Programmateur section */}
+        <LieuOrganizerSection
+          isEditing={isEditing}
+          programmateur={programmateur}
+          loadingProgrammateur={loadingProgrammateur}
+          selectedProgrammateur={selectedProgrammateur}
+          lieu={lieu}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          searchResults={searchResults}
+          isSearching={isSearching}
+          handleSelectProgrammateur={handleSelectProgrammateur}
+          handleRemoveProgrammateur={handleRemoveProgrammateur}
+          handleCreateProgrammateur={handleCreateProgrammateur}
+        />
 
-        <div className={styles.rightColumn}>
-          {/* Contact information section */}
-          <LieuContactSection
-            lieu={lieu}
-            formData={formData}
-            isEditing={isEditing}
-            handleChange={handleChange}
-          />
+        {/* Associated concerts section */}
+        <LieuConcertsSection lieu={lieu} isEditing={isEditing} />
+        
+        {/* Associated structures section - New section */}
+        <LieuStructuresSection lieu={lieu} isEditing={isEditing} />
 
-          {/* Programmateur section */}
-          <LieuOrganizerSection
-            isEditing={isEditing}
-            programmateur={programmateur}
-            loadingProgrammateur={loadingProgrammateur}
-            selectedProgrammateur={selectedProgrammateur}
-            lieu={lieu}
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            searchResults={searchResults}
-            isSearching={isSearching}
-            handleSelectProgrammateur={handleSelectProgrammateur}
-            handleRemoveProgrammateur={handleRemoveProgrammateur}
-            handleCreateProgrammateur={handleCreateProgrammateur}
-          />
-
-          {/* Associated concerts section */}
-          <LieuConcertsSection lieu={lieu} isEditing={isEditing} />
-          
-          {/* Associated structures section - New section */}
-          <LieuStructuresSection lieu={lieu} isEditing={isEditing} />
-        </div>
+        {/* Additional information section (created/updated) */}
+        <LieuInfoSection lieu={lieu} />
       </div>
 
       {/* Delete confirmation modal */}

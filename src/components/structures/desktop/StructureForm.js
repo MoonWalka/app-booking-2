@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Form, Alert } from 'react-bootstrap';
 // MIGRATION: Utilisation du hook optimisé au lieu de l'ancien hook
 import { useStructureFormOptimized, useStructureValidation } from '@/hooks/structures';
+import useDeleteStructureOptimized from '@/hooks/structures/useDeleteStructureOptimized';
 import styles from './StructureForm.module.css';
 
 // Import modular section components
@@ -36,6 +37,12 @@ const StructureForm = () => {
 
   // Use validation hook
   const { errors } = useStructureValidation(formData);
+
+  // Ajout du hook de suppression optimisé
+  const {
+    isDeleting,
+    handleDelete
+  } = useDeleteStructureOptimized(() => window.location.assign('/structures'));
 
   // Show loading state
   if (loading) {
@@ -100,8 +107,10 @@ const StructureForm = () => {
         {/* Form actions (buttons) */}
         <StructureFormActions 
           isEditMode={isEditMode}
-          submitting={submitting}
+          submitting={submitting || isDeleting}
           handleCancel={handleCancel}
+          onDelete={id !== 'nouveau' ? () => handleDelete(id) : undefined}
+          isDeleting={isDeleting}
         />
       </Form>
     </div>

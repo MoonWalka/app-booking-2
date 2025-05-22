@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { db } from '@/firebaseInit';
 import { collection, query, where, limit, getDocs } from 'firebase/firestore';
 import styles from './LieuConcertsSection.module.css';
+import Card from '@/components/ui/Card';
 
 /**
  * Concert item component
@@ -113,14 +114,9 @@ const LieuConcertsSection = ({ lieu, isEditing }) => {
   };
   
   return (
-    <div className={styles.formCard}>
-      <div className={styles.cardHeader}>
-        <div>
-          <i className="bi bi-calendar-event"></i>
-          <h3>Concerts associés</h3>
-        </div>
-        
-        {!isEditing && (
+    <Card title="Concerts associés" icon={<i className="bi bi-calendar-event"></i>} 
+      headerActions={
+        isEditing ? (
           <div className={styles.headerActions}>
             <button 
               onClick={() => navigate('/concerts', { state: { filterLieuId: lieu.id } })}
@@ -139,44 +135,42 @@ const LieuConcertsSection = ({ lieu, isEditing }) => {
               <span className="d-none d-sm-inline ms-1">Ajouter</span>
             </button>
           </div>
-        )}
-      </div>
-      <div className={styles.cardBody}>
-        {loading ? (
-          <div className={`${styles.concertItem} ${styles.loading}`}>
-            <div className="spinner-border spinner-border-sm text-primary" role="status">
-              <span className="visually-hidden">Chargement des concerts...</span>
+        ) : null
+      }
+    >
+      {loading ? (
+        <div className={`${styles.concertItem} ${styles.loading}`}>
+          <div className="spinner-border spinner-border-sm text-primary" role="status">
+            <span className="visually-hidden">Chargement des concerts...</span>
+          </div>
+        </div>
+      ) : error ? (
+        <div className={`${styles.concertItem} ${styles.error}`}>
+          <div className="alert alert-warning m-0 p-3">
+            <i className="bi bi-exclamation-triangle me-2"></i>
+            {error}
+          </div>
+        </div>
+      ) : concerts.length > 0 ? (
+        <div className={styles.concertsListContainer}>
+          {concerts.map(concert => (
+            <ConcertItem key={concert.id} concert={concert} />
+          ))}
+          {concerts.length >= 5 && isEditing && (
+            <div className="text-center mt-2">
+              <button 
+                className="btn btn-link" 
+                onClick={() => navigate('/concerts', { state: { filterLieuId: lieu.id } })}
+              >
+                Voir tous les concerts ({lieu.concertsCount || '?'})
+              </button>
             </div>
-          </div>
-        ) : error ? (
-          <div className={`${styles.concertItem} ${styles.error}`}>
-            <div className="alert alert-warning m-0 p-3">
-              <i className="bi bi-exclamation-triangle me-2"></i>
-              {error}
-            </div>
-          </div>
-        ) : concerts.length > 0 ? (
-          <div className={styles.concertsListContainer}>
-            {concerts.map(concert => (
-              <ConcertItem key={concert.id} concert={concert} />
-            ))}
-            
-            {concerts.length >= 5 && (
-              <div className="text-center mt-2">
-                <button 
-                  className="btn btn-link" 
-                  onClick={() => navigate('/concerts', { state: { filterLieuId: lieu.id } })}
-                >
-                  Voir tous les concerts ({lieu.concertsCount || '?'})
-                </button>
-              </div>
-            )}
-          </div>
-        ) : (
-          <div className={styles.textEmpty}>Aucun concert associé à ce lieu.</div>
-        )}
-      </div>
-    </div>
+          )}
+        </div>
+      ) : (
+        <div className={styles.textEmpty}>Aucun concert associé à ce lieu.</div>
+      )}
+    </Card>
   );
 };
 

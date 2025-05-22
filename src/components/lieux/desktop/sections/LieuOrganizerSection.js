@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './LieuOrganizerSection.module.css';
+import Card from '@/components/ui/Card';
 
 /**
  * Organizer section component for venue details
@@ -38,11 +39,7 @@ const LieuOrganizerSection = ({
   }, [isEditing]);
 
   return (
-    <div className={styles.formCard}>
-      <div className={styles.cardHeader}>
-        <i className="bi bi-person-badge"></i>
-        <h3>Programmateur</h3>
-      </div>
+    <Card title="Programmateur" icon={<i className="bi bi-person-badge"></i>}>
       <div className={styles.cardBody}>
         {isEditing ? (
           <div className={styles.formGroup}>
@@ -213,7 +210,7 @@ const LieuOrganizerSection = ({
           </>
         )}
       </div>
-    </div>
+    </Card>
   );
 };
 

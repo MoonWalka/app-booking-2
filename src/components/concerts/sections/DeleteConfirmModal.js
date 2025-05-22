@@ -45,8 +45,12 @@ const DeleteConfirmModal = ({ isSubmitting, onCancel, onConfirm }) => {
           <button
             type="button"
             className="btn btn-danger"
-            onClick={onConfirm}
+            onClick={() => {
+              console.log('[LOG][DeleteConfirmModal] Bouton SUPPRIMER cliqué');
+              onConfirm();
+            }}
             disabled={isSubmitting}
+            style={{cursor: 'pointer'}}
           >
             {isSubmitting ? (
               <>

@@ -44,7 +44,10 @@ const DeleteConcertModal = ({
         </Button>
         <Button 
           variant="danger" 
-          onClick={onConfirm}
+          onClick={() => {
+            console.log('[LOG][DeleteConcertModalMobile] Bouton SUPPRIMER cliqué');
+            onConfirm();
+          }}
           disabled={isDeleting}
           className={styles.confirmButton}
         >

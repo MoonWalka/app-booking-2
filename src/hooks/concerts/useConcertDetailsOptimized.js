@@ -173,6 +173,7 @@ const useConcertDetailsOptimized = (id, locationParam) => {
   }, [id, concertForms]);
   
   const handleDeleteSuccess = useCallback(() => {
+    console.log('[LOG][useConcertDetailsOptimized] handleDeleteSuccess (redirection)');
     // Notifier les autres composants
     try {
       const event = new CustomEvent('concertDeleted', { detail: { id } });
@@ -180,13 +181,13 @@ const useConcertDetailsOptimized = (id, locationParam) => {
     } catch (e) {
       console.warn('Impossible de déclencher l\'événement de suppression', e);
     }
-    
     navigate('/concerts');
   }, [id, navigate]);
   
   // Mettre à jour les callbacks dans genericDetails
   useEffect(() => {
     if (genericDetails) {
+      console.log('[LOG][useConcertDetailsOptimized] genericDetails initialisé, handleDelete:', typeof genericDetails.handleDelete);
       genericDetails.options = {
         ...genericDetails.options, 
         onSaveSuccess: handleSaveSuccess,
@@ -530,8 +531,16 @@ const useConcertDetailsOptimized = (id, locationParam) => {
     navigate(`/concerts/${id}/edit`);
   }, [genericDetails, id, navigate]);
   
-  // Ajouter un log avant de retourner le hook
-  console.log("[useConcertDetailsOptimized] handleDelete présent dans genericDetails:", !!genericDetails?.handleDelete);
+  // Ajout log pour la suppression
+  const handleDeleteClick = useCallback(() => {
+    console.log('[LOG][useConcertDetailsOptimized] handleDeleteClick appelé');
+    if (genericDetails.handleDelete) {
+      console.log('[LOG][useConcertDetailsOptimized] genericDetails.handleDelete existe, appel');
+      genericDetails.handleDelete();
+    } else {
+      console.warn('[LOG][useConcertDetailsOptimized] genericDetails.handleDelete est undefined');
+    }
+  }, [genericDetails]);
   
   return {
     // Données principales du hook générique
@@ -603,7 +612,8 @@ const useConcertDetailsOptimized = (id, locationParam) => {
       selectedEntity: genericDetails?.relatedData?.structure || null,
       setSelectedEntity: (structure) => genericDetails?.setRelatedEntity('structure', structure),
       setSearchTerm: () => {} // Stub pour compatibilité
-    }
+    },
+    handleDeleteClick
   };
 };
 

@@ -15,7 +15,7 @@ const LieuFormHeader = ({ id, lieuNom, navigate }) => {
         type="button"
         variant="outline"
         onClick={() => navigate('/lieux')}
-        icon="arrow-left"
+        icon={<i className="bi bi-arrow-left"></i>}
       >
         Retour
       </Button>

@@ -19,6 +19,7 @@ import { useCompanySearch } from '@/hooks/common';
 import { useAddressSearch } from '@/hooks/common';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import ErrorMessage from '@/components/ui/ErrorMessage';
+import useDeleteProgrammateurOptimized from '@/hooks/programmateurs/useDeleteProgrammateurOptimized';
 
 /**
  * Formulaire d'édition d'un programmateur - Version Desktop harmonisée avec ProgrammateurView
@@ -38,7 +39,6 @@ const ProgrammateurForm = () => {
     setFormData,
     handleChange,
     handleSubmit,
-    handleDelete,
     isSubmitting,
     formatValue,
     handleStructureChange,
@@ -74,6 +74,12 @@ const ProgrammateurForm = () => {
     { nom: '', adresse: '', codePostal: '', ville: '', capacite: '', latitude: null, longitude: null }, 
     () => {}
   );
+  
+  // Ajout du hook de suppression optimisé
+  const {
+    isDeleting,
+    handleDelete
+  } = useDeleteProgrammateurOptimized(() => navigate('/programmateurs'));
   
   // Fonction pour gérer l'annulation du formulaire
   const handleCancel = () => {
@@ -337,13 +343,22 @@ const ProgrammateurForm = () => {
                 {id !== 'nouveau' && (
                   <Button 
                     variant="outline-danger"
-                    onClick={handleDelete}
-                    disabled={isSubmitting}
+                    onClick={() => handleDelete(id)}
+                    disabled={isSubmitting || isDeleting}
                     className="me-2"
                     type="button"
                   >
-                    <i className="bi bi-trash me-2"></i>
-                    Supprimer
+                    {isDeleting ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        Suppression...
+                      </>
+                    ) : (
+                      <>
+                        <i className="bi bi-trash me-2"></i>
+                        Supprimer
+                      </>
+                    )}
                   </Button>
                 )}
                 

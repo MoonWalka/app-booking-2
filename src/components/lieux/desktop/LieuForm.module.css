@@ -430,3 +430,13 @@
     height: 250px;
   }
 }
+
+/* =============================
+   STACK VERTICAL DES SECTIONS (formulaire)
+   ============================= */
+.sectionsStack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-spacing-lg);
+  margin-top: var(--tc-spacing-md);
+}

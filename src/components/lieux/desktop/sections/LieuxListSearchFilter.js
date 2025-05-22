@@ -30,7 +30,7 @@ const LieuxListSearchFilter = ({
             type="text"
             className={`form-control ${styles.searchInput}`}
             placeholder="Rechercher un lieu par nom, ville, adresse... (Ctrl+F)"
-            value={searchTerm}
+            value={typeof searchTerm === "string" || typeof searchTerm === "number" ? searchTerm : ""}
             onChange={(e) => setSearchTerm(e.target.value)}
             autoComplete="off"
           />

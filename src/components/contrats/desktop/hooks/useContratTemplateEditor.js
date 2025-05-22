@@ -32,20 +32,7 @@ export const useContratTemplateEditor = (template, onSave, isModalContext, onClo
   
   // Nouveaux états pour les éléments hardcodés
   const [titleTemplate, setTitleTemplate] = useState(template?.titleTemplate || 'Contrat - {concert_titre}');
-  const [signatureTemplate, setSignatureTemplate] = useState(template?.signatureTemplate || 
-    `<div style="display: flex; justify-content: space-between; margin-top: 30px;">
-      <div style="width: 45%;">
-        <div style="margin-bottom: 50px;"><strong>Pour l'Organisateur:</strong></div>
-        <div>{programmateur_nom}</div>
-        <div style="border-top: 1px solid #000; margin-top: 5px;"></div>
-      </div>
-      <div style="width: 45%;">
-        <div style="margin-bottom: 50px;"><strong>Pour l'Artiste:</strong></div>
-        <div>{artiste_nom}</div>
-        <div style="border-top: 1px solid #000; margin-top: 5px;"></div>
-      </div>
-    </div>`
-  );
+  const [signatureTemplate, setSignatureTemplate] = useState(template?.signatureTemplate || '');
   
   // Définition des types de modèles pour le select
   const templateTypes = [
@@ -133,6 +120,22 @@ export const useContratTemplateEditor = (template, onSave, isModalContext, onClo
     console.log("Sauvegarde du modèle avec les données:", modelData);
     onSave(modelData);
   };
+  
+  // Synchronisation protégée des états locaux avec le template reçu
+  useEffect(() => {
+    console.log("🔁 Synchronisation des champs avec le template :", template);
+    if (!template) return;
+    if (typeof template.bodyContent !== 'undefined' && template.bodyContent !== bodyContent) setBodyContent(template.bodyContent);
+    if (typeof template.headerContent !== 'undefined' && template.headerContent !== headerContent) setHeaderContent(template.headerContent);
+    if (typeof template.headerHeight !== 'undefined' && template.headerHeight !== headerHeight) setHeaderHeight(template.headerHeight);
+    if (typeof template.headerBottomMargin !== 'undefined' && template.headerBottomMargin !== headerBottomMargin) setHeaderBottomMargin(template.headerBottomMargin);
+    if (typeof template.footerContent !== 'undefined' && template.footerContent !== footerContent) setFooterContent(template.footerContent);
+    if (typeof template.footerHeight !== 'undefined' && template.footerHeight !== footerHeight) setFooterHeight(template.footerHeight);
+    if (typeof template.footerTopMargin !== 'undefined' && template.footerTopMargin !== footerTopMargin) setFooterTopMargin(template.footerTopMargin);
+    if (typeof template.logoUrl !== 'undefined' && template.logoUrl !== logoUrl) setLogoUrl(template.logoUrl);
+    if (typeof template.titleTemplate !== 'undefined' && template.titleTemplate !== titleTemplate) setTitleTemplate(template.titleTemplate);
+    if (typeof template.signatureTemplate !== 'undefined' && template.signatureTemplate !== signatureTemplate) setSignatureTemplate(template.signatureTemplate);
+  }, [template]);
   
   return {
     name,

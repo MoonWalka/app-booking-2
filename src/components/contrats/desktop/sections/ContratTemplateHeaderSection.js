@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import CollapsibleSection from './CollapsibleSection';
 import VariablesDropdown from './VariablesDropdown';
 import styles from './ContratTemplateHeaderSection.module.css';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 /**
  * Composant pour la configuration de l'en-tête du contrat
@@ -22,8 +24,20 @@ const ContratTemplateHeaderSection = ({
   headerVarsRef,
   headerFooterVariables,
   toggleDropdown,
-  insertVariable
+  insertVariable,
+  previewMode
 }) => {
+  const quillRef = useRef();
+
+  useEffect(() => {
+    if (!previewMode && quillRef.current) {
+      const editor = quillRef.current.getEditor();
+      if (editor && headerContent !== editor.root.innerHTML) {
+        editor.root.innerHTML = headerContent || '';
+      }
+    }
+  }, [previewMode, headerContent]);
+
   return (
     <CollapsibleSection
       title="En-tête du contrat"
@@ -115,13 +129,17 @@ const ContratTemplateHeaderSection = ({
           </div>
           
           {/* Dans un cas réel, on utiliserait ReactQuill ici */}
-          <textarea
+          <ReactQuill
+            ref={quillRef}
+            key={previewMode ? 'preview' : 'edit'}
             id="headerContent"
             className={styles.headerContentInput}
             value={headerContent}
-            onChange={(e) => setHeaderContent(e.target.value)}
+            onChange={setHeaderContent}
+            modules={{ toolbar: [['bold', 'italic', 'underline'], [{ list: 'ordered' }, { list: 'bullet' }], ['clean']] }}
             placeholder="Contenu de l'en-tête..."
-            rows={5}
+            theme="snow"
+            style={{ minHeight: 100, height: '100%' }}
           />
         </div>
       </div>

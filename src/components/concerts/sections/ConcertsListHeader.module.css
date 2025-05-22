@@ -25,15 +25,24 @@
 .addButton {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: var(--tc-spacing-xs);
+  font-weight: var(--tc-font-weight-medium);
+  background-color: var(--tc-color-primary);
+  color: var(--tc-light-color);
   border: none;
   border-radius: var(--tc-border-radius);
-  font-weight: var(--tc-font-weight-medium);
-  transition: all 0.2s ease;
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  font-size: var(--tc-font-size-base);
   cursor: pointer;
-  text-decoration: none;
-  padding: 0;
+  transition: var(--tc-transition);
+}
+
+.addButton:hover {
+  background-color: var(--tc-primary-dark);
+}
+
+.addButton i {
+  font-size: var(--tc-font-size-base);
 }
 
 /* Styles responsive standardisés */

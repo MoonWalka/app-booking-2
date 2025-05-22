@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import CollapsibleSection from './CollapsibleSection';
 import VariablesDropdown from './VariablesDropdown';
 import styles from './ContratTemplateFooterSection.module.css';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 /**
  * Composant pour la configuration du pied de page du contrat
@@ -19,8 +21,20 @@ const ContratTemplateFooterSection = ({
   footerVarsRef,
   headerFooterVariables,
   toggleDropdown,
-  insertVariable
+  insertVariable,
+  previewMode
 }) => {
+  const quillRef = useRef();
+
+  useEffect(() => {
+    if (!previewMode && quillRef.current) {
+      const editor = quillRef.current.getEditor();
+      if (editor && footerContent !== editor.root.innerHTML) {
+        editor.root.innerHTML = footerContent || '';
+      }
+    }
+  }, [previewMode, footerContent]);
+
   return (
     <CollapsibleSection
       title="Pied de page du contrat"
@@ -76,13 +90,17 @@ const ContratTemplateFooterSection = ({
           </div>
           
           {/* Dans un cas réel, on utiliserait ReactQuill ici */}
-          <textarea
+          <ReactQuill
+            ref={quillRef}
+            key={previewMode ? 'preview' : 'edit'}
             id="footerContent"
             className={styles.footerContentInput}
             value={footerContent}
-            onChange={(e) => setFooterContent(e.target.value)}
+            onChange={setFooterContent}
+            modules={{ toolbar: [['bold', 'italic', 'underline'], [{ list: 'ordered' }, { list: 'bullet' }], ['clean']] }}
             placeholder="Contenu du pied de page..."
-            rows={4}
+            theme="snow"
+            style={{ minHeight: 100, height: '100%' }}
           />
           
           <div className={styles.exampleFooter}>

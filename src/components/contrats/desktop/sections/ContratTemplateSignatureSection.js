@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import CollapsibleSection from './CollapsibleSection';
 import VariablesDropdown from './VariablesDropdown';
 import styles from './ContratTemplateSignatureSection.module.css';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 /**
  * Composant pour la configuration de la section de signature du contrat
@@ -15,8 +17,20 @@ const ContratTemplateSignatureSection = ({
   signatureVarsOpen,
   signatureVarsRef,
   toggleDropdown,
-  insertVariable
+  insertVariable,
+  previewMode
 }) => {
+  const quillRef = useRef();
+
+  useEffect(() => {
+    if (!previewMode && quillRef.current) {
+      const editor = quillRef.current.getEditor();
+      if (editor && signatureTemplate !== editor.root.innerHTML) {
+        editor.root.innerHTML = signatureTemplate || '';
+      }
+    }
+  }, [previewMode, signatureTemplate]);
+
   return (
     <CollapsibleSection
       title="Section de signature"
@@ -45,13 +59,17 @@ const ContratTemplateSignatureSection = ({
           </div>
           
           {/* Dans un cas réel, on utiliserait ReactQuill ici */}
-          <textarea
+          <ReactQuill
+            ref={quillRef}
+            key={previewMode ? 'preview' : 'edit'}
             id="signatureTemplate"
             className={styles.signatureContentInput}
             value={signatureTemplate}
-            onChange={(e) => setSignatureTemplate(e.target.value)}
+            onChange={setSignatureTemplate}
+            modules={{ toolbar: [['bold', 'italic', 'underline'], [{ list: 'ordered' }, { list: 'bullet' }], ['clean']] }}
             placeholder="Format de la section de signature..."
-            rows={8}
+            theme="snow"
+            style={{ minHeight: 150, height: '100%' }}
           />
         </div>
         

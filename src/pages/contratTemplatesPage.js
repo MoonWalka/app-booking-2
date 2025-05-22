@@ -82,7 +82,7 @@ const ContratTemplatesPage = () => {
 
   // Fonctions pour la gestion de la modale
   const handleEditTemplate = (template) => {
-    console.log("handleEditTemplate appelé avec template:", template);
+    console.log("🟢 Template passé à la modale :", template);
     setCurrentTemplate(template);
     setIsNewTemplate(false);
     setShowEditorModal(true);
@@ -134,7 +134,7 @@ const ContratTemplatesPage = () => {
   };
   
   const handleSaveTemplate = async (templateData) => {
-    console.log("handleSaveTemplate appelé avec data:", templateData);
+    console.warn('⚡️ [Firestore] Début de la sauvegarde Firestore (modal)', templateData);
     try {
       if (isNewTemplate) {
         // Création d'un nouveau modèle
@@ -143,14 +143,13 @@ const ContratTemplatesPage = () => {
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp()
         });
-        
+        console.warn('✅ [Firestore] Nouveau modèle créé avec addDoc, id:', docRef.id);
         const newTemplate = {
           id: docRef.id,
           ...templateData,
           createdAt: { seconds: Date.now() / 1000 },
           updatedAt: { seconds: Date.now() / 1000 }
         };
-        
         setTemplates([newTemplate, ...templates]);
       } else {
         // Mise à jour d'un modèle existant
@@ -158,23 +157,27 @@ const ContratTemplatesPage = () => {
           ...templateData,
           updatedAt: serverTimestamp()
         });
-        
+        console.warn('✅ [Firestore] Modèle mis à jour avec updateDoc, id:', currentTemplate.id);
         // Mettre à jour l'état local
         setTemplates(templates.map(template => 
           template.id === currentTemplate.id 
             ? { 
                 ...template, 
-                ...templateData, 
+                ...templateData,
+                // Harmonisation des clés pour la liste locale
+                bodyContent: templateData.bodyContent,
+                headerContent: templateData.headerContent,
+                footerContent: templateData.footerContent,
+                signatureTemplate: templateData.signatureTemplate,
                 updatedAt: { seconds: Date.now() / 1000 } 
               } 
             : template
         ));
       }
-      
-      // Fermer la modale après sauvegarde
-      handleCloseEditor();
+      // Ne plus fermer la modale automatiquement ici
+      // handleCloseEditor();
     } catch (error) {
-      console.error('Erreur lors de la sauvegarde du modèle:', error);
+      console.error('❌ [Firestore] Erreur lors de la sauvegarde du modèle:', error);
       alert('Une erreur est survenue lors de la sauvegarde du modèle.');
     }
   };

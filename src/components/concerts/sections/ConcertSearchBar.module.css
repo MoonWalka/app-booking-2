@@ -55,3 +55,59 @@
 .filterButton:hover {
   background-color: var(--tc-gray-50);
 }
+
+.filterDropdownWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.filterDropdownMenu {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  min-width: 220px;
+  background: var(--tc-white);
+  border: 1px solid var(--tc-border-color);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-shadow-md);
+  z-index: 10;
+  padding: 0.25rem 0;
+  margin-top: 0.25rem;
+}
+
+.filterDropdownItem {
+  width: 100%;
+  background: none;
+  border: none;
+  color: var(--tc-text-color);
+  text-align: left;
+  padding: var(--tc-spacing-sm) var(--tc-spacing-lg);
+  font-size: var(--tc-font-size-base);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background 0.15s;
+}
+
+.filterDropdownItem:hover,
+.filterDropdownItem:focus {
+  background: var(--tc-bg-color-light);
+  color: var(--tc-primary-color);
+}
+
+.filterDropdownItem.active {
+  background: var(--tc-primary-color);
+  color: var(--tc-white);
+  font-weight: var(--tc-font-weight-bold);
+}
+
+.statusCount {
+  margin-left: var(--tc-spacing-xs);
+  background: var(--tc-gray-200);
+  color: var(--tc-gray-600);
+  border-radius: var(--tc-border-radius-pill);
+  padding: 2px 8px;
+  font-size: var(--tc-font-size-xs);
+  display: inline-flex;
+  align-items: center;
+}

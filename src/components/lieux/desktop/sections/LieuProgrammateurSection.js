@@ -3,15 +3,16 @@ import Button from '@/components/ui/Button';
 import styles from '../LieuForm.module.css';
 
 const LieuProgrammateurSection = ({ programmateurSearch }) => {
+  // Defensive: fallback to empty array and no-op if undefined
   const {
-    query,
-    setQuery,
-    programmateurs,
-    isLoading,
-    handleSearch,
-    selectProgrammateur,
-    removeProgrammateur
-  } = programmateurSearch;
+    query = '',
+    setQuery = () => {},
+    programmateurs = [],
+    isLoading = false,
+    handleSearch = () => {},
+    selectProgrammateur = () => {},
+    removeProgrammateur = () => {}
+  } = programmateurSearch || {};
 
   return (
     <div className={styles.formSection}>

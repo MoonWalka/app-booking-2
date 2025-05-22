@@ -672,20 +672,6 @@ const useGenericEntityDetails = ({
     }
   }, [id, formData, validateForm, entityType, collectionName, onSaveSuccess, onSaveError, cacheEnabled, cache]);
   
-  // Fonction pour supprimer l'entité
-  const handleDelete = useCallback(() => {
-    if (useDeleteModal) {
-      setShowDeleteModal(true);
-    } else {
-      handleConfirmDelete();
-    }
-  }, [useDeleteModal]);
-  
-  // Fonction pour annuler la suppression (fermer le modal)
-  const handleCancelDelete = useCallback(() => {
-    setShowDeleteModal(false);
-  }, []);
-  
   // Fonction pour confirmer et exécuter la suppression
   const handleConfirmDelete = useCallback(async () => {
     setIsDeleting(true);
@@ -747,6 +733,20 @@ const useGenericEntityDetails = ({
       setIsDeleting(false);
     }
   }, [id, entity, checkDeletePermission, skipPermissionCheck, collectionName, entityType, onDeleteSuccess, onDeleteError, navigate, returnPath, cacheEnabled, cache, relatedEntities]);
+  
+  // Fonction pour annuler la suppression (fermer le modal)
+  const handleCancelDelete = useCallback(() => {
+    setShowDeleteModal(false);
+  }, []);
+  
+  // Fonction pour déclencher le processus de suppression
+  const handleDelete = useCallback(() => {
+    if (useDeleteModal) {
+      setShowDeleteModal(true);
+    } else {
+      handleConfirmDelete();
+    }
+  }, [useDeleteModal, handleConfirmDelete]);
   
   // Fonction pour rafraîchir les données
   const refresh = useCallback(() => {
@@ -977,7 +977,7 @@ const useGenericEntityDetails = ({
     // États d'édition et formulaire
     isEditing,
     formData,
-    setFormData, // <-- expose setFormData for consumers
+    setFormData, // Exposé pour les consommateurs
     isDirty,
     dirtyFields,
     errors: formErrors,
@@ -1019,10 +1019,7 @@ const useGenericEntityDetails = ({
 
     // Infos sur l'instance
     instanceId: instanceRef.current.instanceId,
-    instanceNumber: instanceRef.current.instanceNumber,
-
-    // Expose setFormData for external use
-    setFormData
+    instanceNumber: instanceRef.current.instanceNumber
   };
 };
 

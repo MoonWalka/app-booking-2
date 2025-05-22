@@ -12,7 +12,7 @@ const ConcertsListHeader = () => {
         variant="primary"
         size="lg"
         onClick={() => navigate('/concerts/nouveau')}
-        icon={<i className="bi bi-plus-lg"></i>}
+        icon={<i className="bi bi-plus-lg" style={{ fontSize: '1.2em', marginRight: '0.5em', display: 'inline-block', verticalAlign: 'middle' }}></i>}
         iconPosition="left"
         className={styles.addButton}
       >

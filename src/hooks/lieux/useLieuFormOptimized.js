@@ -1,4 +1,5 @@
 import { useGenericEntityForm } from '@/hooks/common';
+import useProgrammateurSearch from '@/hooks/lieux/useProgrammateurSearch';
 
 /**
  * Hook optimisé pour les formulaires de lieux utilisant directement le hook générique
@@ -83,14 +84,17 @@ export const useLieuFormOptimized = (lieuId) => {
       }));
     }
   };
-  
+
   const removeEquipement = (equipement) => {
     formHook.setFormData(prev => ({
       ...prev,
       equipements: prev.equipements.filter(e => e !== equipement)
     }));
   };
-  
+
+  // Toujours appeler le hook à ce niveau pour respecter les règles de React
+  const programmateurSearch = useProgrammateurSearch(formHook.formData, formHook.setFormData);
+
   // Retourner le hook générique enrichi de fonctionnalités spécifiques
   return {
     ...formHook, // Toutes les fonctionnalités du hook générique
@@ -99,7 +103,8 @@ export const useLieuFormOptimized = (lieuId) => {
     removeEquipement,
     // Raccourcis pour une meilleure DX
     lieu: formHook.formData,
-    programmateur: formHook.relatedData?.programmateur
+    programmateur: formHook.relatedData?.programmateur,
+    programmateurSearch // toujours présent
   };
 };
 

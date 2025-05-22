@@ -17,6 +17,8 @@ import ConcertsListHeader from '@/components/concerts/sections/ConcertsListHeade
 import ConcertSearchBar from '@/components/concerts/sections/ConcertSearchBar';
 import ConcertsTable from '@/components/concerts/sections/ConcertsTable';
 import ConcertsLoadMore from '@/components/concerts/sections/ConcertsLoadMore';
+import ConcertsEmptyState from '@/components/concerts/sections/ConcertsEmptyState';
+import ConcertsStatsCards from '@/components/concerts/sections/ConcertsStatsCards';
 
 // Import styles
 import styles from './ConcertsList.module.css';
@@ -115,7 +117,7 @@ const ConcertsList = () => {
   };
 
   return (
-    <div className={styles.concertsContainer}>
+    <div className={styles.tableContainer}>
       {/* Moniteurs de performance en mode développement */}
       <PerformanceMonitor enabled={process.env.NODE_ENV === 'development'} />
       <DebugPerformanceMonitor enabled={process.env.NODE_ENV === 'development'} />
@@ -142,6 +144,7 @@ const ConcertsList = () => {
       
       {/* Section d'en-tête avec titre et bouton d'ajout */}
       <ConcertsListHeader />
+      <ConcertsStatsCards stats={{ total: concerts.length, aVenir: concerts.filter(c => !isDatePassed(c.date)).length, passes: concerts.filter(c => isDatePassed(c.date)).length }} />
       
       {/* Barre de recherche et filtres (statuts inclus dans le menu du bouton Filtrer) */}
       <ConcertSearchBar 
@@ -150,25 +153,34 @@ const ConcertsList = () => {
         statusFilter={statusFilter}
         setStatusFilter={setStatusFilter}
         statusDetailsMap={statusDetailsMap}
+        filteredCount={filteredConcerts.length}
+        totalCount={concerts.length}
       />
 
       {/* Tableau des concerts */}
-      <div className={styles.tableContainer}>
-        <ConcertsTable
-          concerts={filteredConcerts}
-          getStatusDetails={getStatusDetails}
-          hasForm={hasForm}
-          hasUnvalidatedForm={hasUnvalidatedForm}
-          hasContract={hasContract}
-          getContractStatus={getContractStatus}
-          isDatePassed={isDatePassed}
-          handleViewConcert={handleViewConcert}
-          handleSendForm={handleSendForm}
-          handleViewForm={handleViewForm}
-          handleGenerateContract={handleGenerateContract}
-          handleViewContract={handleViewContract}
+      {filteredConcerts.length > 0 ? (
+        <div className={styles.modernTableContainer}>
+          <ConcertsTable
+            concerts={filteredConcerts}
+            getStatusDetails={getStatusDetails}
+            hasForm={hasForm}
+            hasUnvalidatedForm={hasUnvalidatedForm}
+            hasContract={hasContract}
+            getContractStatus={getContractStatus}
+            isDatePassed={isDatePassed}
+            handleViewConcert={handleViewConcert}
+            handleSendForm={handleSendForm}
+            handleViewForm={handleViewForm}
+            handleGenerateContract={handleGenerateContract}
+            handleViewContract={handleViewContract}
+          />
+        </div>
+      ) : (
+        <ConcertsEmptyState 
+          hasSearchQuery={!!searchTerm}
+          hasFilters={statusFilter !== 'all'}
         />
-      </div>
+      )}
       
       {/* Bouton "Charger plus" seulement si on n'est pas en train de filtrer */}
       {!searchTerm && statusFilter === 'all' && (

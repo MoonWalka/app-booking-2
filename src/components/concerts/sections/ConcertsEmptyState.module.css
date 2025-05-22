@@ -1,0 +1,49 @@
+/*
+ * Styles pour ConcertsEmptyState.module.css
+ * Harmonisé avec LieuxListEmptyState.module.css
+ */
+
+.modernAlert {
+  display: flex;
+  align-items: center;
+  padding: var(--tc-spacing-md);
+  border-radius: var(--tc-border-radius);
+  background-color: var(--tc-bg-color-light);
+  color: var(--tc-text-color-secondary);
+  border: 1px solid var(--tc-border-color);
+  margin-top: var(--tc-spacing-md);
+  gap: var(--tc-spacing-sm);
+}
+
+.actionButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  background-color: var(--tc-color-primary);
+  color: var(--tc-bg-color-light);
+  border: none;
+  border-radius: var(--tc-border-radius);
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-medium);
+  cursor: pointer;
+  transition: var(--tc-transition);
+  margin-top: var(--tc-spacing-sm);
+  gap: var(--tc-spacing-xs);
+}
+
+.actionButton:hover {
+  background-color: var(--tc-primary-dark);
+}
+
+@media (max-width: var(--tc-breakpoint-sm)) {
+  .modernAlert {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: center;
+    padding: var(--tc-spacing-sm);
+  }
+  .actionButton {
+    width: 100%;
+  }
+} 

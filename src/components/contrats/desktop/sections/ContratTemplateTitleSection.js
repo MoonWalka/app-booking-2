@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import CollapsibleSection from './CollapsibleSection';
 import VariablesDropdown from './VariablesDropdown';
 import styles from './ContratTemplateTitleSection.module.css';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 /**
  * Composant pour la configuration du titre du contrat
@@ -17,6 +19,17 @@ const ContratTemplateTitleSection = ({
   toggleDropdown,
   insertVariable
 }) => {
+  const quillRef = useRef();
+
+  useEffect(() => {
+    if (quillRef.current) {
+      const editor = quillRef.current.getEditor();
+      if (editor && titleTemplate !== editor.root.innerHTML) {
+        editor.root.innerHTML = titleTemplate || '';
+      }
+    }
+  }, [titleTemplate]);
+
   return (
     <CollapsibleSection
       title="Titre du contrat"
@@ -44,13 +57,15 @@ const ContratTemplateTitleSection = ({
             />
           </div>
           
-          <textarea
+          <ReactQuill
+            ref={quillRef}
             id="titleTemplate"
             className={styles.titleInput}
             value={titleTemplate}
-            onChange={(e) => setTitleTemplate(e.target.value)}
+            onChange={setTitleTemplate}
+            modules={{ toolbar: [['bold', 'italic', 'underline'], ['clean']] }}
             placeholder="Ex: Contrat de prestation - {concert_titre}"
-            rows={2}
+            theme="snow"
           />
           
           <div className={styles.examplePreview}>

@@ -15,6 +15,7 @@ import ParametresExport from '../components/parametres/ParametresExport';
 import ContratTemplatesPage from '@pages/contratTemplatesPage'; // Ajustez le chemin selon votre structure
 import ContratTemplatesEditPage from '@pages/contratTemplatesEditPage'; // Ajustez le chemin selon votre structure
 import SyncManager from '../components/parametres/sync/SyncManager'; // Import du nouveau composant
+import TabNavigation from '../components/common/TabNavigation';
 
 // Import du style global de la branche refacto-structure-scriptshell - pour implémentation future
 import '@styles/index.css';
@@ -113,79 +114,32 @@ const ParametresPage = () => {
     }
   };
 
+  const tabList = [
+    { label: 'Entreprise', key: 'entreprise' },
+    { label: 'Paramètres généraux', key: 'generaux' },
+    { label: 'Compte utilisateur', key: 'compte' },
+    { label: 'Notifications', key: 'notifications' },
+    { label: 'Apparence', key: 'apparence' },
+    { label: 'Modèles de contrats', key: 'contrats' },
+    { label: 'Export et sauvegarde', key: 'export' },
+    { label: 'Synchronisation des données', key: 'sync' }
+  ];
+  const tabIndex = tabList.findIndex(tab => tab.key === activeTab);
+
   return (
     <Container fluid className="p-4">
       <h2 className="mb-4">Paramètres</h2>
       <Row>
         <Col md={3}>
-          <Nav variant="pills" className="flex-column">
-            <Nav.Item>
-              <Nav.Link
-                active={activeTab === 'entreprise'}
-                onClick={() => handleTabChange('entreprise')}
-              >
-                Entreprise
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link
-                active={activeTab === 'generaux'}
-                onClick={() => handleTabChange('generaux')}
-              >
-                Paramètres généraux
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link
-                active={activeTab === 'compte'}
-                onClick={() => handleTabChange('compte')}
-              >
-                Compte utilisateur
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link
-                active={activeTab === 'notifications'}
-                onClick={() => handleTabChange('notifications')}
-              >
-                Notifications
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link
-                active={activeTab === 'apparence'}
-                onClick={() => handleTabChange('apparence')}
-              >
-                Apparence
-              </Nav.Link>
-            </Nav.Item>
-            {/* Nouvel onglet pour les modèles de contrats */}
-            <Nav.Item>
-              <Nav.Link
-                active={activeTab === 'contrats'}
-                onClick={() => handleTabChange('contrats')}
-              >
-                Modèles de contrats
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link
-                active={activeTab === 'export'}
-                onClick={() => handleTabChange('export')}
-              >
-                Export et sauvegarde
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link
-                active={activeTab === 'sync'}
-                onClick={() => handleTabChange('sync')}
-                className="text-primary"
-              >
-                Synchronisation des données
-              </Nav.Link>
-            </Nav.Item>
-          </Nav>
+          <TabNavigation
+            tabs={tabList.map(tab => ({
+              label: tab.label,
+              content: null
+            }))}
+            activeTab={tabIndex}
+            onTabChange={idx => handleTabChange(tabList[idx].key)}
+            vertical={true}
+          />
         </Col>
         <Col md={9}>
           {renderActiveComponent()}

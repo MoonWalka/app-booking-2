@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { db, getDoc, doc, collection, setDoc, serverTimestamp } from '@/firebaseInit';
 import ContratTemplateEditor from '@/components/contrats/ContratTemplateEditor';
+import ContratTemplateEditorModal from '@/components/contrats/ContratTemplateEditorModal';
 import '@styles/index.css';;
 
 const ContratTemplatesEditPage = () => {
@@ -10,6 +11,7 @@ const ContratTemplatesEditPage = () => {
   const [template, setTemplate] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const fetchTemplate = async () => {
@@ -56,14 +58,11 @@ const ContratTemplatesEditPage = () => {
           console.log("Attempting to fetch template document with ID:", id);
           const templateRef = doc(db, 'contratTemplates', id);
           console.log("Template reference created:", templateRef);
-          
           const templateDoc = await getDoc(templateRef);
           console.log("Template document fetched, exists:", templateDoc.exists());
-          
           if (templateDoc.exists()) {
             const templateData = templateDoc.data();
-            console.log("Template data:", templateData);
-            
+            console.log("🧾 Données du contrat Firestore :", { id: templateDoc.id, ...templateData });
             setTemplate({
               id: templateDoc.id,
               ...templateData
@@ -84,6 +83,12 @@ const ContratTemplatesEditPage = () => {
 
     fetchTemplate();
   }, [id, navigate]);
+
+  useEffect(() => {
+    if (template) {
+      console.log("🧾 Contenu complet du template Firestore :", JSON.stringify(template, null, 2));
+    }
+  }, [template]);
 
   const handleSave = async (updatedTemplate) => {
     try {
@@ -164,6 +169,8 @@ const ContratTemplatesEditPage = () => {
     );
   }
 
+  console.log('showModal:', showModal, 'template:', template);
+
   return (
     <div className="template-edit-container">
       <div className="mb-4">
@@ -179,8 +186,23 @@ const ContratTemplatesEditPage = () => {
       <h2 className="mb-4">
         {id === 'nouveau' ? 'Créer un nouveau modèle' : 'Modifier le modèle'}
       </h2>
-      
-      <ContratTemplateEditor template={template} onSave={handleSave} />
+      {console.log('template avant bouton:', template)}
+      <button
+        className="tc-btn tc-btn-primary mb-3"
+        onClick={() => {
+          console.log('Bouton Éditer cliqué');
+          setShowModal(true);
+        }}
+        disabled={!template}
+      >
+        Éditer le modèle
+      </button>
+      <ContratTemplateEditorModal
+        isOpen={showModal && !!template}
+        onClose={() => setShowModal(false)}
+        template={template}
+        onSave={handleSave}
+      />
     </div>
   );
 };

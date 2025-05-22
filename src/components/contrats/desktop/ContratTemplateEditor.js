@@ -1,5 +1,5 @@
 // components/contrats/desktop/ContratTemplateEditor.js
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'react-quill/dist/quill.snow.css';
 import styles from './ContratTemplateEditor.module.css';
@@ -53,21 +53,43 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
   // Utiliser le hook de prévisualisation
   const preview = useContratTemplatePreview(previewData);
 
+  useEffect(() => {
+    console.log("🟢 ContratTemplateEditor monté avec template :", template);
+    return () => console.log("🔴 ContratTemplateEditor démonté");
+  }, []);
+
   return (
     <div className={styles.templateEditorContainer}>
       {/* En-tête avec boutons d'action */}
-      <ContratTemplateHeader 
-        template={template}
-        isModalContext={isModalContext}
-        name={editor.name}
-        showGuide={editor.showGuide}
-        previewMode={editor.previewMode}
-        setShowGuide={editor.setShowGuide}
-        setPreviewMode={editor.setPreviewMode}
-        handleCancel={editor.handleCancel}
-        handleSave={editor.handleSave}
-        navigate={navigate}
-      />
+      {isModalContext ? (
+        <div className={styles.tcModalHeader}>
+          <h3 className={styles.modalTitle}>
+            {template?.id ? 'Modifier le modèle' : 'Créer un nouveau modèle'}
+          </h3>
+          <div className={styles.modalActions}>
+            <button
+              className={styles.modalClose}
+              onClick={onClose}
+              aria-label="Fermer la modale"
+            >
+              <i className="bi bi-x-lg"></i>
+            </button>
+          </div>
+        </div>
+      ) : (
+        <ContratTemplateHeader 
+          template={template}
+          isModalContext={isModalContext}
+          name={editor.name}
+          showGuide={editor.showGuide}
+          previewMode={editor.previewMode}
+          setShowGuide={editor.setShowGuide}
+          setPreviewMode={editor.setPreviewMode}
+          handleCancel={editor.handleCancel}
+          handleSave={editor.handleSave}
+          navigate={navigate}
+        />
+      )}
       
       {/* Corps principal */}
       <div className={isModalContext ? styles.tcModalBody : ""}>
@@ -79,7 +101,14 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
           <div className={styles.editorContent}>
             {editor.previewMode ? (
               <ContratTemplatePreview 
-                generateMultiPagePreviewHtml={preview.generateMultiPagePreviewHtml}
+                selectedTemplate={{
+                  bodyContent: editor.bodyContent,
+                  headerContent: editor.headerContent,
+                  footerContent: editor.footerContent,
+                  titleTemplate: editor.titleTemplate,
+                  signatureTemplate: editor.signatureTemplate,
+                  logoUrl: editor.logoUrl
+                }}
               />
             ) : (
               <>
@@ -180,7 +209,7 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
           <div className={styles.modalFooter}>
             <button 
               className="btn btn-outline-secondary" 
-              onClick={editor.handleCancel}
+              onClick={onClose}
             >
               <i className="bi bi-x-circle me-2"></i>Annuler
             </button>

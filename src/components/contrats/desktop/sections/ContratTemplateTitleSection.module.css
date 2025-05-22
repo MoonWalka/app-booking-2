@@ -45,7 +45,7 @@
 }
 
 .examplePreview {
-  background-color: var(--tc-text-color);
+  background-color: #f8f9fa;
   border-radius: 4px;
   padding: 8px 12px;
   margin-top: 8px;
@@ -53,13 +53,13 @@
 
 .exampleLabel {
   display: block;
-  color: var(--tc-text-color);
+  color: #6c757d;
   font-size: 0.75rem;
   margin-bottom: 4px;
 }
 
 .exampleContent {
   font-weight: bold;
-  color: var(--tc-text-color);
+  color: #212529;
   font-size: 1rem;
 }

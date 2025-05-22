@@ -8,16 +8,13 @@ const ConcertsListHeader = () => {
   return (
     <div className={styles.headerContainer}>
       <h2 className={styles.headerTitle}>Liste des concerts</h2>
-      <Button
-        variant="primary"
-        size="lg"
-        onClick={() => navigate('/concerts/nouveau')}
-        icon={<i className="bi bi-plus-lg" style={{ fontSize: '1.2em', marginRight: '0.5em', display: 'inline-block', verticalAlign: 'middle' }}></i>}
-        iconPosition="left"
+      <button
         className={styles.addButton}
+        onClick={() => navigate('/concerts/nouveau')}
       >
+        <i className="bi bi-plus-lg"></i>
         Ajouter un concert
-      </Button>
+      </button>
     </div>
   );
 };

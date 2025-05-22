@@ -24,7 +24,7 @@
   white-space: nowrap;
   vertical-align: middle;
   user-select: none;
-  border: var(--tc-border-width, 1px) solid transparent;
+  border: none;
   padding: var(--tc-spacing-sm) var(--tc-spacing-md);
   font-size: var(--tc-font-size-base);
   line-height: var(--tc-line-height-base);
@@ -169,7 +169,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--tc-spacing-sm);
+  gap: var(--tc-spacing-xs);
 }
 
 .iconWrapper {
@@ -177,6 +177,7 @@
   align-items: center;
   justify-content: center;
   line-height: 1;
+  font-size: var(--tc-font-size-base);
 }
 
 .textContent {

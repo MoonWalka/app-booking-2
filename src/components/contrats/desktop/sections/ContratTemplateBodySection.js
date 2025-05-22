@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import VariablesDropdown from './VariablesDropdown';
 import styles from './ContratTemplateBodySection.module.css';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 /**
  * Composant pour la section principale (corps) du contrat
@@ -12,8 +14,28 @@ const ContratTemplateBodySection = ({
   bodyVarsRef,
   bodyVariables,
   toggleDropdown,
-  insertVariable
+  insertVariable,
+  previewMode
 }) => {
+  const quillRef = useRef();
+
+  useEffect(() => {
+    if (!previewMode && quillRef.current) {
+      const editor = quillRef.current.getEditor();
+      if (editor && bodyContent !== editor.root.innerHTML) {
+        editor.root.innerHTML = bodyContent || '';
+      }
+    }
+  }, [previewMode, bodyContent]);
+
+  useEffect(() => {
+    console.log("🖊️ Render ContratTemplateBodySection, bodyContent =", bodyContent);
+  }, [bodyContent]);
+
+  if (!bodyContent) {
+    console.warn("⚠️ ATTENTION : bodyContent est vide au rendu");
+  }
+
   return (
     <div className={styles.bodySection}>
       <div className={styles.bodySectionHeader}>
@@ -41,14 +63,17 @@ const ContratTemplateBodySection = ({
       </div>
       
       <div className={styles.bodyEditorWrapper}>
-        {/* Dans un cas réel, on utiliserait ReactQuill ici */}
-        <textarea
+        <ReactQuill
+          ref={quillRef}
+          key={previewMode ? 'preview' : 'edit'}
           id="bodyContent"
           className={styles.bodyContentEditor}
           value={bodyContent}
-          onChange={(e) => setBodyContent(e.target.value)}
+          onChange={setBodyContent}
+          modules={{ toolbar: [['bold', 'italic', 'underline'], [{ list: 'ordered' }, { list: 'bullet' }], ['clean']] }}
           placeholder="Entrez ici le contenu principal de votre contrat..."
-          rows={20}
+          theme="snow"
+          style={{ minHeight: 300, height: '100%' }}
         />
       </div>
       

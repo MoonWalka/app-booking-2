@@ -1,5 +1,5 @@
 // components/contrats/desktop/ContratTemplateEditor.js
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'react-quill/dist/quill.snow.css';
 import styles from './ContratTemplateEditor.module.css';
@@ -53,11 +53,6 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
   // Utiliser le hook de prévisualisation
   const preview = useContratTemplatePreview(previewData);
 
-  useEffect(() => {
-    console.log("🟢 ContratTemplateEditor monté avec template :", template);
-    return () => console.log("🔴 ContratTemplateEditor démonté");
-  }, []);
-
   return (
     <div className={styles.templateEditorContainer}>
       {/* En-tête avec boutons d'action */}
@@ -100,16 +95,7 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
           
           <div className={styles.editorContent}>
             {editor.previewMode ? (
-              <ContratTemplatePreview 
-                selectedTemplate={{
-                  bodyContent: editor.bodyContent,
-                  headerContent: editor.headerContent,
-                  footerContent: editor.footerContent,
-                  titleTemplate: editor.titleTemplate,
-                  signatureTemplate: editor.signatureTemplate,
-                  logoUrl: editor.logoUrl
-                }}
-              />
+              <ContratTemplatePreview selectedTemplate={previewData} />
             ) : (
               <>
                 {/* Informations générales */}
@@ -138,10 +124,8 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
                   bodyVarsOpen={editor.bodyVarsOpen}
                   bodyVariables={editor.bodyVariables}
                   bodyVarsRef={editor.bodyVarsRef}
-                  toggleVariablesMenu={editor.toggleVariablesMenu}
+                  toggleDropdown={() => editor.toggleVariablesMenu('bodyContent')}
                   insertVariable={editor.insertVariable}
-                  editorModules={editor.editorModules}
-                  editorRef={bodyEditorRef}
                 />
                 
                 {/* Zone de signature */}

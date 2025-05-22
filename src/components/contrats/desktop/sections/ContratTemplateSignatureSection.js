@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import CollapsibleSection from './CollapsibleSection';
-import VariablesDropdown from './VariablesDropdown';
+import VariablesPanel from './VariablesPanel';
 import styles from './ContratTemplateSignatureSection.module.css';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -46,14 +46,12 @@ const ContratTemplateSignatureSection = ({
         <div className={styles.editorContainer}>
           <div className={styles.editorHeader}>
             <label htmlFor="signatureTemplate">Format de la section de signature</label>
-            <VariablesDropdown
-              isOpen={signatureVarsOpen}
+            <VariablesPanel
               variables={signatureVariables}
               targetId="signatureTemplate"
               buttonRef={signatureVarsRef}
-              onToggle={toggleDropdown}
               onSelectVariable={(variable, targetId) => 
-                insertVariable(variable, targetId, setSignatureTemplate, signatureTemplate)
+                insertVariable(variable, targetId)
               }
             />
           </div>

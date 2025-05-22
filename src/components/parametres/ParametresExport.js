@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Form, Button, Card, Alert, Row, Col, ProgressBar } from 'react-bootstrap';
 import styles from './ParametresExport.module.css';
 import { useParametres } from '@/context/ParametresContext';
-import { db } from '@/firebaseInit';
+import { db, collection, getDocs, query } from '@/firebaseInit';
 
 const ParametresExport = () => {
   const { parametres, sauvegarderParametres, loading } = useParametres();

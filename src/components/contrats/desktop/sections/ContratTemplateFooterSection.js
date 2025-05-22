@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import CollapsibleSection from './CollapsibleSection';
-import VariablesDropdown from './VariablesDropdown';
+import VariablesPanel from './VariablesPanel';
 import styles from './ContratTemplateFooterSection.module.css';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -77,14 +77,12 @@ const ContratTemplateFooterSection = ({
         <div className={styles.editorContainer}>
           <div className={styles.editorHeader}>
             <label htmlFor="footerContent">Contenu du pied de page</label>
-            <VariablesDropdown
-              isOpen={footerVarsOpen}
+            <VariablesPanel
               variables={headerFooterVariables}
               targetId="footerContent"
               buttonRef={footerVarsRef}
-              onToggle={toggleDropdown}
               onSelectVariable={(variable, targetId) => 
-                insertVariable(variable, targetId, setFooterContent, footerContent)
+                insertVariable(variable, targetId)
               }
             />
           </div>

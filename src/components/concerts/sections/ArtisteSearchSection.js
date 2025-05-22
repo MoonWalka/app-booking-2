@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './ArtisteSearchSection.module.css';
 import SearchDropdown from './SearchDropdown';
 import SelectedEntityCard from './SelectedEntityCard';
-import Card from '@/components/ui/Card';
+import CardSection from '@/components/ui/CardSection';
 
 /**
  * ArtisteSearchSection - Section de recherche et sélection d'artiste
@@ -32,12 +32,12 @@ const ArtisteSearchSection = ({
   handleCreateArtiste
 }) => {
   return (
-    <Card
+    <CardSection
       title="Artiste"
       icon={<i className="bi bi-music-note-beamed"></i>}
-      className={styles.artisteSearchSection}
+      isEditing={true}
     >
-      <div className={styles.searchContainer} ref={artisteDropdownRef}>
+      <div className={styles.cardBody} ref={artisteDropdownRef}>
         {!selectedArtiste ? (
           <>
             <label className={styles.formLabel}>Rechercher un artiste</label>
@@ -87,7 +87,7 @@ const ArtisteSearchSection = ({
           </>
         )}
       </div>
-    </Card>
+    </CardSection>
   );
 };
 

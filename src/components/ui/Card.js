@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Card as BootstrapCard } from 'react-bootstrap';
 import classNames from 'classnames';
@@ -18,6 +18,9 @@ import styles from './Card.module.css';
  * @param {ReactNode} [props.headerActions] - Actions à afficher dans l'en-tête (côté droit)
  * @param {ReactNode} [props.footerContent] - Contenu du pied de page (si nécessaire)
  * @param {Function} [props.onClick] - Fonction appelée au clic sur la carte
+ * @param {boolean} [props.collapsible=false] - Indique si la carte peut être réduite/agrandie
+ * @param {boolean} [props.defaultCollapsed=false] - État initial de la carte (réduite ou non)
+ * @param {Function} [props.onCollapseToggle] - Fonction appelée lors du changement d'état de réduction
  */
 const Card = ({
   children,
@@ -30,6 +33,9 @@ const Card = ({
   headerActions,
   footerContent,
   onClick,
+  collapsible = false,
+  defaultCollapsed = false,
+  onCollapseToggle,
   ...rest
 }) => {
   // Déterminer les classes CSS à appliquer
@@ -47,6 +53,13 @@ const Card = ({
     className
   );
 
+  const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
+  const handleCollapseToggle = () => {
+    const newState = !isCollapsed;
+    setIsCollapsed(newState);
+    if (onCollapseToggle) onCollapseToggle(newState);
+  };
+
   const handleClick = (e) => {
     if (onClick) onClick(e);
   };
@@ -57,24 +70,31 @@ const Card = ({
       onClick={handleClick}
       {...rest}
     >
-      {(title || icon || headerActions) && (
+      {(title || icon || headerActions || collapsible) && (
         <BootstrapCard.Header className={classNames(styles.cardHeader, 'tc-card-header')}>
           <div className={styles.headerTitleSection}>
             {icon && <span className={styles.cardIcon}>{icon}</span>}
             {title && <BootstrapCard.Title className={styles.cardTitle}>{title}</BootstrapCard.Title>}
           </div>
           
-          {headerActions && (
+          {(collapsible || headerActions) && (
             <div className={styles.headerActions}>
+              {collapsible && (
+                <button onClick={handleCollapseToggle} className={styles.collapseButton}>
+                  {isCollapsed ? '▸' : '▾'}
+                </button>
+              )}
               {headerActions}
             </div>
           )}
         </BootstrapCard.Header>
       )}
 
-      <BootstrapCard.Body className={classNames(styles.cardBody, 'tc-card-body')}>
-        {children}
-      </BootstrapCard.Body>
+      {!isCollapsed && (
+        <BootstrapCard.Body className={classNames(styles.cardBody, 'tc-card-body')}>
+          {children}
+        </BootstrapCard.Body>
+      )}
 
       {footerContent && (
         <BootstrapCard.Footer className={classNames(styles.cardFooter, 'tc-card-footer')}>
@@ -95,7 +115,10 @@ Card.propTypes = {
   variant: PropTypes.string,
   headerActions: PropTypes.node,
   footerContent: PropTypes.node,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  collapsible: PropTypes.bool,
+  defaultCollapsed: PropTypes.bool,
+  onCollapseToggle: PropTypes.func
 };
 
 // Sous-composants pour une API cohérente

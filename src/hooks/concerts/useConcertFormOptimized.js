@@ -51,10 +51,10 @@ export const useConcertFormOptimized = (concertId) => {
     
     const transformedData = {
       ...data,
-      // Normalisation du nom
-      nom: data.nom ? data.nom.trim() : '',
-      // Conversion du prix en nombre
-      prix: data.prix ? parseFloat(data.prix) : 0,
+      // Normalisation du titre
+      titre: data.titre ? data.titre.trim() : '',
+      // Harmonisation : prix = montant (pour la base de données)
+      prix: data.montant ? parseFloat(data.montant) : 0,
       // Conversion de la capacité en nombre entier
       capacité: data.capacité ? parseInt(data.capacité, 10) : 0,
       // Ajout de la date de mise à jour
@@ -77,8 +77,8 @@ export const useConcertFormOptimized = (concertId) => {
     console.log(`[TRACE-UNIQUE][useConcertFormOptimized][onSuccess] at ${new Date().toISOString()} - savedId=${savedId}, isNewConcert=${isNewConcert}`);
     
     const message = isNewConcert
-      ? `Le concert ${savedData.nom || ''} a été créé avec succès`
-      : `Le concert ${savedData.nom || ''} a été mis à jour avec succès`;
+      ? `Le concert ${savedData.titre || ''} a été créé avec succès`
+      : `Le concert ${savedData.titre || ''} a été mis à jour avec succès`;
     
     showSuccessToast(message);
     
@@ -105,7 +105,7 @@ export const useConcertFormOptimized = (concertId) => {
     collectionName: 'concerts',
     initialData: {
       // Valeurs par défaut pour un nouveau concert
-      nom: '',
+      titre: '',
       date: null,
       heure: '',
       statut: 'planifié',

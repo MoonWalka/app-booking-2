@@ -37,7 +37,7 @@ const DeleteConcertModal = ({ show, concertNom, onClose, onConfirm, isDeleting }
                 <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                 Suppression...
               </>
-            ) : 'Supprimer'}
+            ) : 'Supprimer définitivement'}
           </Button>
         </div>
       </div>

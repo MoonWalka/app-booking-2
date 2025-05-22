@@ -47,7 +47,7 @@
   width: 100%;
   max-height: 300px;
   overflow-y: auto;
-  background-color: var(--tc-bg-card);
+  background-color: #fff; /* Correction : fond blanc opaque pour la dropdown */
   border: 1px solid var(--tc-border-input);
   border-radius: 0 0 var(--tc-border-radius-sm) var(--tc-border-radius-sm);
   box-shadow: var(--tc-shadow-md);

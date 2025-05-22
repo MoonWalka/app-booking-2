@@ -1,113 +1,123 @@
-/*
- * Styles pour DeleteConfirmModal
- * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 5 mai 2025
- */
-
-.container {
-  width: 100%;
-}
-
 .modalBackdrop {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: var(--tc-bg-backdrop);
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: var(--tc-z-index-modal, 1050);
   display: flex;
-  justify-content: center;
   align-items: center;
-  z-index: var(--tc-z-index-modal);
+  justify-content: center;
 }
 
 .modalContent {
-  background-color: var(--tc-bg-card);
-  width: 90%;
-  max-width: 500px;
-  border-radius: var(--tc-border-radius-lg);
-  box-shadow: var(--tc-shadow-lg);
-  overflow: hidden;
+  background: var(--tc-bg-white, #fff);
+  border-radius: var(--tc-border-radius-lg, 1rem);
+  box-shadow: var(--tc-shadow-lg, 0 10px 15px rgba(0,0,0,0.1));
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
 }
 
 .modalHeader {
+  padding: var(--tc-spacing-4, 1rem) var(--tc-spacing-5, 1.5rem);
+  border-bottom: 1px solid var(--tc-border-ultralight, #e0e0e0);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--tc-spacing-3) var(--tc-spacing-4);
-  border-bottom: 1px solid var(--tc-border-light);
+  background: var(--tc-bg-light, #faf9f9);
 }
 
 .modalTitle {
+  font-size: var(--tc-font-size-lg, 1.25rem);
+  font-weight: var(--tc-font-weight-bold, 700);
+  color: var(--tc-color-title, #222);
   margin: 0;
-  font-size: var(--tc-font-size-lg);
-  font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-color-title);
 }
 
 .closeButton {
-  border: none;
   background: transparent;
-  font-size: var(--tc-font-size-lg);
-  color: var(--tc-color-text-muted);
-  cursor: pointer;
+  border: none;
+  color: var(--tc-text-muted, #888);
+  font-size: var(--tc-spacing-4, 1rem);
+  line-height: 1;
   padding: 0;
-  display: flex;
-  align-items: center;
-  transition: color var(--tc-transition-speed) ease;
+  border-radius: var(--tc-border-radius-sm, 0.25rem);
+  cursor: pointer;
+  transition: color var(--tc-transition-fast, 0.15s);
 }
-
 .closeButton:hover {
-  color: var(--tc-color-text);
+  color: var(--tc-danger-color, #c22);
+  background: var(--tc-bg-light, #f8f9fa);
 }
 
 .modalBody {
-  padding: var(--tc-spacing-4);
-  text-align: center;
+  background: var(--tc-bg-white, #fff);
+  padding: var(--tc-spacing-5, 1.5rem);
+  color: var(--tc-text-color, #2d2d2d);
+  font-size: var(--tc-font-size-md, 1rem);
 }
 
 .warningIcon {
-  font-size: var(--tc-icon-size-xl);
-  color: var(--tc-color-warning);
-  margin-bottom: var(--tc-spacing-3);
+  color: var(--tc-warning-color, #ffc107);
+  font-size: 2.7rem;
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--tc-spacing-3, 0.5rem);
 }
 
 .warningText {
-  color: var(--tc-color-danger);
-  font-size: var(--tc-font-size-sm);
-  margin-top: var(--tc-spacing-3);
+  color: var(--tc-danger-color, #b20000);
+  font-weight: var(--tc-font-weight-semibold, 600);
+  margin-top: var(--tc-spacing-3, 0.5rem);
+  margin-bottom: 0;
+  font-size: var(--tc-font-size-md, 1rem);
 }
 
 .modalFooter {
   display: flex;
   justify-content: flex-end;
-  gap: var(--tc-spacing-2);
-  padding: var(--tc-spacing-3) var(--tc-spacing-4);
-  border-top: 1px solid var(--tc-border-light);
+  gap: var(--tc-spacing-2-5, 0.7rem);
+  padding: var(--tc-spacing-4, 1rem) var(--tc-spacing-5, 1.5rem);
+  border-top: 1px solid var(--tc-border-ultralight, #e0e0e0);
+  background: var(--tc-bg-light, #faf9f9);
 }
 
-/* Styles responsive standardisés */
 @media (max-width: 768px) {
   .modalContent {
-    width: 95%;
+    max-width: 95vw;
+    border-radius: var(--tc-border-radius-md, 0.5rem);
+  }
+  .modalBody {
+    padding: var(--tc-spacing-4, 1rem);
+    max-height: 50vh;
+  }
+  .modalFooter {
+    flex-direction: column;
+    gap: var(--tc-spacing-2, 0.5rem);
+    padding: var(--tc-spacing-3, 0.75rem) var(--tc-spacing-4, 1rem);
+  }
+  .modalFooter button {
+    width: 100%;
   }
 }
 
 @media (max-width: 576px) {
-  .modalHeader, .modalBody, .modalFooter {
-    padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  .modalContent {
+    max-width: 98vw;
   }
-  
+  .modalHeader {
+    padding: var(--tc-spacing-2-5, 0.7rem) var(--tc-spacing-3, 0.8rem);
+  }
+  .modalBody {
+    padding: var(--tc-spacing-3, 0.8rem);
+  }
   .modalFooter {
-    flex-direction: column;
-    gap: var(--tc-spacing-1-5);
-  }
-  
-  .modalFooter button {
-    width: 100%;
-  }
-  
-  .warningIcon {
-    font-size: var(--tc-icon-size-lg);
+    padding: var(--tc-spacing-2-5, 0.7rem) var(--tc-spacing-3, 0.8rem);
   }
 }

@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import styles from './ConcertLocationSection.module.css';
 import Button from '@/components/ui/Button';
+import CardSection from '@/components/ui/CardSection';
 
 /**
  * Composant pour la section Lieu du détail d'un concert
@@ -24,22 +25,22 @@ const ConcertLocationSection = ({
   const lieuDropdownRef = useRef(null);
 
   return (
-    <div className={styles.formCard}>
-      <div className={styles.cardHeader}>
-        <i className="bi bi-geo-alt"></i>
-        <h3>Lieu {isEditMode && <span className={styles.required}>*</span>}</h3>
-        {lieu && !isEditMode && (
-          <Button
-            onClick={() => navigateToLieuDetails(lieu.id)}
-            variant="outline-primary"
-            size="sm"
-            className={`tc-btn-outline-primary btn-sm ${styles.cardHeaderAction}`}
-          >
-            <i className="bi bi-eye"></i>
-            <span>Voir détails</span>
-          </Button>
-        )}
-      </div>
+    <CardSection
+      title={isEditMode ? 'Lieu *' : 'Lieu'}
+      icon={<i className="bi bi-geo-alt"></i>}
+      headerActions={lieu && !isEditMode ? (
+        <Button
+          onClick={() => navigateToLieuDetails(lieu.id)}
+          variant="outline-primary"
+          size="sm"
+          className={`tc-btn-outline-primary btn-sm ${styles.cardHeaderAction}`}
+        >
+          <i className="bi bi-eye"></i>
+          <span>Voir détails</span>
+        </Button>
+      ) : null}
+      className={styles.formCard}
+    >
       <div className={styles.cardBody}>
         {isEditMode ? (
           <div className={styles.formGroup} ref={lieuDropdownRef}>
@@ -202,7 +203,7 @@ const ConcertLocationSection = ({
           </div>
         )}
       </div>
-    </div>
+    </CardSection>
   );
 };
 

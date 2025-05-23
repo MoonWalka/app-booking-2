@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { OverlayTrigger, Tooltip, Button, Form, InputGroup } from 'react-bootstrap';
-import { useProgrammateurSearch, useDeleteProgrammateurOptimized } from '@/hooks/programmateurs';
+import { useProgrammateurSearch, useDeleteProgrammateur } from '@/hooks/programmateurs';
 import Spinner from '@/components/common/Spinner';
 import styles from './ProgrammateursList.module.css';
 import Table from '@/components/ui/Table';
@@ -32,7 +32,7 @@ const ProgrammateursList = ({ onNavigateToDetails }) => {
   const { 
     handleDelete: handleDeleteProgrammateur,
     isDeleting
-  } = useDeleteProgrammateurOptimized(() => {
+  } = useDeleteProgrammateur(() => {
     resetSearch();
   });
   

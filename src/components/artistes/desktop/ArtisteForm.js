@@ -13,7 +13,7 @@ import {
 import { db } from '@/firebaseInit';
 import '@styles/index.css';
 import Button from '@/components/ui/Button';
-import useDeleteArtisteOptimized from '@/hooks/artistes/useDeleteArtisteOptimized';
+import useDeleteArtiste from '@/hooks/artistes/useDeleteArtiste';
 
 // Composant pour l'étape 1 : Informations de base
 const BasicInfoStep = ({ data, onNext, onBack }) => {
@@ -257,7 +257,7 @@ const ArtisteFormDesktop = () => {
   const {
     isDeleting,
     handleDelete
-  } = useDeleteArtisteOptimized(() => navigate('/artistes'));
+  } = useDeleteArtiste(() => navigate('/artistes'));
   
   useEffect(() => {
     const fetchArtiste = async () => {

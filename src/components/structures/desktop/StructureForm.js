@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Form, Alert } from 'react-bootstrap';
 // MIGRATION: Utilisation du hook optimisé au lieu de l'ancien hook
 import { useStructureForm, useStructureValidation } from '@/hooks/structures';
-import useDeleteStructureOptimized from '@/hooks/structures/useDeleteStructureOptimized';
+import useDeleteStructure from '@/hooks/structures/useDeleteStructure';
 import styles from './StructureForm.module.css';
 
 // Import modular section components
@@ -42,7 +42,7 @@ const StructureForm = () => {
   const {
     isDeleting,
     handleDelete
-  } = useDeleteStructureOptimized(() => window.location.assign('/structures'));
+  } = useDeleteStructure(() => window.location.assign('/structures'));
 
   // Show loading state
   if (loading) {

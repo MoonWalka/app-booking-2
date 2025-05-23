@@ -1,17 +1,17 @@
-// src/hooks/structures/useDeleteStructureOptimized.js
+// src/hooks/artistes/useDeleteArtiste.js
 import { useCallback } from 'react';
 import { useGenericEntityDelete } from '@/hooks/common';
 import { showSuccessToast, showErrorToast } from '@/utils/toasts';
 
 /**
- * Hook optimisé pour la suppression des structures
+ * Hook optimisé pour la suppression des artistes
  * Version améliorée utilisant le hook générique useGenericEntityDelete
  * 
  * @param {Function} onDeleteSuccess - Callback appelé après suppression réussie
  * @returns {Object} États et méthodes pour gérer la suppression
  */
-const useDeleteStructureOptimized = (onDeleteSuccess) => {
-  // Utiliser le hook générique avec configuration spécifique aux structures
+const useDeleteArtiste = (onDeleteSuccess) => {
+  // Utiliser le hook générique avec configuration spécifique aux artistes
   const {
     isDeleting,
     hasRelatedEntities,
@@ -21,29 +21,29 @@ const useDeleteStructureOptimized = (onDeleteSuccess) => {
     showConfirmationDialog,
     closeConfirmationDialog
   } = useGenericEntityDelete({
-    entityType: 'structure',
-    collectionName: 'structures',
+    entityType: 'artiste',
+    collectionName: 'artistes',
     
     // Messages personnalisés
-    confirmationTitle: 'Supprimer cette structure',
-    confirmationMessage: 'Êtes-vous sûr de vouloir supprimer cette structure ? Cette action est irréversible.',
-    successMessage: 'La structure a été supprimée avec succès',
+    confirmationTitle: 'Supprimer cet artiste',
+    confirmationMessage: 'Êtes-vous sûr de vouloir supprimer cet artiste ? Cette action est irréversible.',
+    successMessage: 'L\'artiste a été supprimé avec succès',
     
     // Entités liées à vérifier
     relatedEntities: [
       {
-        collection: 'programmateurs',
-        field: 'structureId',
+        collection: 'concerts',
+        field: 'artisteId',
         referenceType: 'direct',
-        message: 'Cette structure ne peut pas être supprimée car des programmateurs y sont associés.',
-        detailsField: 'nom',
+        message: 'Cet artiste ne peut pas être supprimé car il a des concerts associés.',
+        detailsField: 'titre',
         detailsLimit: 5
       },
       {
-        collection: 'lieux',
-        field: 'structureId',
-        referenceType: 'direct',
-        message: 'Cette structure ne peut pas être supprimée car des lieux y sont associés.',
+        collection: 'evenements',
+        field: 'artistesId',
+        referenceType: 'array',
+        message: 'Cet artiste ne peut pas être supprimé car il est utilisé dans des événements.',
         detailsField: 'nom',
         detailsLimit: 5
       }
@@ -51,11 +51,11 @@ const useDeleteStructureOptimized = (onDeleteSuccess) => {
     
     // Callbacks
     onSuccess: (id) => {
-      showSuccessToast('La structure a été supprimée avec succès');
+      showSuccessToast('L\'artiste a été supprimé avec succès');
       if (onDeleteSuccess) onDeleteSuccess(id);
     },
     onError: (error) => {
-      console.error('[useDeleteStructureOptimized] Erreur de suppression:', error);
+      console.error('[useDeleteArtiste] Erreur de suppression:', error);
       showErrorToast(`Erreur lors de la suppression: ${error.message}`);
     },
     
@@ -70,34 +70,34 @@ const useDeleteStructureOptimized = (onDeleteSuccess) => {
     cacheResults: false         // Ne pas mettre en cache les résultats de validation
   });
 
-  // Fonction adaptée pour la suppression d'une structure spécifique
-  const handleDeleteStructure = useCallback((structure) => {
-    if (!structure) return Promise.reject(new Error('Structure non définie'));
+  // Fonction adaptée pour la suppression d'un artiste spécifique
+  const handleDeleteArtiste = useCallback((artiste) => {
+    if (!artiste) return Promise.reject(new Error('Artiste non défini'));
     
-    // On peut passer l'objet structure complet ou juste l'ID
-    const structureId = typeof structure === 'object' ? structure.id : structure;
+    // On peut passer l'objet artiste complet ou juste l'ID
+    const artisteId = typeof artiste === 'object' ? artiste.id : artiste;
     
-    if (!structureId) {
-      showErrorToast('ID de structure manquant, impossible de supprimer');
+    if (!artisteId) {
+      showErrorToast('ID d\'artiste manquant, impossible de supprimer');
       return Promise.reject(new Error('ID manquant'));
     }
     
-    return handleDelete(structureId);
+    return handleDelete(artisteId);
   }, [handleDelete]);
 
-  // Fonction pour vérifier si une structure peut être supprimée
-  const canDeleteStructure = useCallback(async (structureId) => {
-    if (!structureId) return { canDelete: false, reason: 'ID manquant' };
+  // Fonction pour vérifier si un artiste peut être supprimé
+  const canDeleteArtiste = useCallback(async (artisteId) => {
+    if (!artisteId) return { canDelete: false, reason: 'ID manquant' };
     
     try {
-      const result = await checkRelatedEntities(structureId);
+      const result = await checkRelatedEntities(artisteId);
       return { 
         canDelete: !result.hasRelatedEntities, 
         reason: result.hasRelatedEntities ? result.message : null,
         details: result.relatedEntitiesDetails 
       };
     } catch (error) {
-      console.error('[useDeleteStructureOptimized] Erreur de vérification:', error);
+      console.error('[useDeleteArtiste] Erreur de vérification:', error);
       return { canDelete: false, reason: error.message };
     }
   }, [checkRelatedEntities]);
@@ -114,9 +114,9 @@ const useDeleteStructureOptimized = (onDeleteSuccess) => {
     setShowDeleteModal: showConfirmationDialog,
     
     // Actions
-    handleDelete: handleDeleteStructure,
-    handleDeleteStructure,
-    canDeleteStructure,
+    handleDelete: handleDeleteArtiste,
+    handleDeleteArtiste,
+    canDeleteArtiste,
     
     // Gestion du dialogue de confirmation
     showConfirmationDialog,
@@ -124,4 +124,4 @@ const useDeleteStructureOptimized = (onDeleteSuccess) => {
   };
 };
 
-export default useDeleteStructureOptimized;
+export default useDeleteArtiste;

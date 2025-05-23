@@ -19,7 +19,7 @@ import { useCompanySearch } from '@/hooks/common';
 import { useAddressSearch } from '@/hooks/common';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import ErrorMessage from '@/components/ui/ErrorMessage';
-import useDeleteProgrammateurOptimized from '@/hooks/programmateurs/useDeleteProgrammateurOptimized';
+import useDeleteProgrammateur from '@/hooks/programmateurs/useDeleteProgrammateur';
 
 /**
  * Formulaire d'édition d'un programmateur - Version Desktop harmonisée avec ProgrammateurView
@@ -79,7 +79,7 @@ const ProgrammateurForm = () => {
   const {
     isDeleting,
     handleDelete
-  } = useDeleteProgrammateurOptimized(() => navigate('/programmateurs'));
+  } = useDeleteProgrammateur(() => navigate('/programmateurs'));
   
   // Fonction pour gérer l'annulation du formulaire
   const handleCancel = () => {

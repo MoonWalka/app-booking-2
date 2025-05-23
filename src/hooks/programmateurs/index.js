@@ -13,7 +13,6 @@ export { default as useProgrammateurSearch } from './useProgrammateurSearch';
 // Exports des hooks de formulaire
 export { default as useProgrammateurForm } from './useProgrammateurForm';
 
-export { default as useDeleteProgrammateurOptimized } from './useDeleteProgrammateurOptimized';
 
 // Add alias for migrated details hook
 

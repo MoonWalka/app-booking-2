@@ -28,7 +28,7 @@ export { default as useArtisteDetails } from './useArtisteDetails';
  * des hooks spécifiques d'ici novembre 2025.
  */
 export { default as useArtisteForm } from './useArtisteForm';
-export { default as useDeleteArtisteOptimized } from './useDeleteArtisteOptimized';
+export { default as useDeleteArtiste } from './useDeleteArtiste';
 
 // Export des hooks utilitaires supplémentaires
 export { default as useHandleDeleteArtist } from './useHandleDeleteArtist';

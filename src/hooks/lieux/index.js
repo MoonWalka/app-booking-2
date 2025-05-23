@@ -41,4 +41,3 @@ export { default as useLieuxFiltersV2 } from './useLieuxFiltersMigrated';
 
 export { default as useLieuxQuery } from './useLieuxQuery';
 export { default as useAddressSearch } from './useAddressSearch';
-export { default as useProgrammateurSearch } from './useProgrammateurSearch';

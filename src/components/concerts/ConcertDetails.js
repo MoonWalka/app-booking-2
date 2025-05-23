@@ -2,7 +2,7 @@
 import React, { useMemo, useEffect } from 'react';
 import { useParams, useLocation, Navigate } from 'react-router-dom';
 import { useResponsive } from '@/hooks/common';
-import { useConcertDetailsOptimized } from '@/hooks/concerts';
+import { useConcertDetails } from '@/hooks/concerts';
 
 /**
  * Composant conteneur pour les détails d'un concert
@@ -22,7 +22,7 @@ function ConcertDetails() {
   });
   
   // Utilisation du hook useConcertDetails pour gérer l'état global
-  const concertDetailsHook = useConcertDetailsOptimized(id, location);
+  const concertDetailsHook = useConcertDetails(id, location);
   const { isEditMode, loading, entity: concert, error, toggleEditMode } = concertDetailsHook;
   
   console.log(`[🔍 ConcertDetails] APRÈS HOOK - isEditMode=${isEditMode}, loading=${loading}`, {

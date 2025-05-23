@@ -4,7 +4,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import styles from './ConcertDetails.module.css';
 
 // Import des hooks personnalisés - Utilisation de la version Optimized
-import { useConcertDetailsOptimized } from '@/hooks/concerts';
+import { useConcertDetails } from '@/hooks/concerts';
 
 // Import des composants
 import ConcertHeader from './ConcertHeader';
@@ -64,7 +64,7 @@ const ConcertDetails = () => {
     artisteSearch,
     structureSearch
     
-  } = useConcertDetailsOptimized(id, location);
+  } = useConcertDetails(id, location);
 
   // Redirection vers création si l'ID n'existe pas, après chargement
   useEffect(() => {

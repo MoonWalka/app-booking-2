@@ -7,7 +7,7 @@ import styles from './ConcertView.module.css';
 
 // Import des hooks personnalisés
 import {
-  useConcertDetailsOptimized,
+  useConcertDetails,
   useConcertFormOptimized,
   useConcertStatus
 } from '@/hooks/concerts';
@@ -53,7 +53,7 @@ const ConcertView = () => {
     isDatePassed,
     getStatusInfo,
     isEditMode
-  } = useConcertDetailsOptimized(id, location);
+  } = useConcertDetails(id, location);
 
   const{
     formDataStatus,

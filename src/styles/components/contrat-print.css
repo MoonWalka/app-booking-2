@@ -42,6 +42,57 @@ body.contrat-print-mode {
   background-image: none;
 }
 
+/* ===== GESTION DES POLICES GOOGLE DOCS ===== */
+.contrat-print-mode * {
+  /* Normaliser toutes les polices vers une police d'impression standard */
+  font-family: Arial, Helvetica, sans-serif !important;
+}
+
+.contrat-print-mode [style*="font-family"] {
+  /* Forcer l'utilisation d'Arial pour tous les éléments avec des polices inline */
+  font-family: Arial, Helvetica, sans-serif !important;
+}
+
+/* ===== GESTION DES COULEURS GOOGLE DOCS ===== */
+.contrat-print-mode * {
+  /* Normaliser les couleurs de texte */
+  color: #000000 !important;
+}
+
+.contrat-print-mode [style*="color"] {
+  /* Forcer le noir pour tout le texte coloré */
+  color: #000000 !important;
+}
+
+.contrat-print-mode [style*="background-color"] {
+  /* Supprimer les couleurs de fond */
+  background-color: transparent !important;
+}
+
+/* ===== GESTION DES ESPACEMENTS GOOGLE DOCS ===== */
+.contrat-print-mode [style*="margin"],
+.contrat-print-mode [style*="padding"] {
+  /* Normaliser les espacements excessive de Google Docs */
+  margin: 0.5em 0 !important;
+  padding: 0 !important;
+}
+
+.contrat-print-mode p[style*="margin"] {
+  margin-bottom: 0.75em !important;
+  margin-top: 0.25em !important;
+}
+
+.contrat-print-mode br + br {
+  /* Éviter les doubles sauts de ligne */
+  display: none;
+}
+
+.contrat-print-mode p:empty,
+.contrat-print-mode div:empty {
+  /* Masquer les paragraphes vides */
+  display: none;
+}
+
 /* ===== TITRES ===== */
 .contrat-print-mode h1, 
 .contrat-print-mode h2, 
@@ -54,6 +105,7 @@ body.contrat-print-mode {
   margin-top: 1.5em;
   margin-bottom: 0.75em;
   color: var(--tc-color-000000, var(--tc-gray-800)000);
+  font-weight: bold !important;
 }
 
 .contrat-print-mode h1 {
@@ -80,6 +132,7 @@ body.contrat-print-mode {
 .contrat-print-mode p {
   margin-bottom: 0.75em;
   text-align: justify;
+  line-height: 1.5 !important;
 }
 
 .contrat-print-mode strong, 
@@ -92,39 +145,187 @@ body.contrat-print-mode {
   font-style: italic;
 }
 
+/* ===== LISTES AMÉLIORÉES (GOOGLE DOCS) ===== */
 .contrat-print-mode ul, 
 .contrat-print-mode ol {
   margin: 0.75em 0;
   padding-left: 2em;
+  page-break-inside: avoid;
 }
 
 .contrat-print-mode li {
   margin-bottom: 0.5em;
+  line-height: 1.4;
+  page-break-inside: avoid;
 }
 
-/* ===== TABLEAUX ===== */
+/* Listes imbriquées */
+.contrat-print-mode ul ul,
+.contrat-print-mode ol ol,
+.contrat-print-mode ul ol,
+.contrat-print-mode ol ul {
+  margin: 0.25em 0;
+  padding-left: 1.5em;
+}
+
+.contrat-print-mode ul ul li,
+.contrat-print-mode ol ol li {
+  margin-bottom: 0.25em;
+}
+
+/* Styles de puces personnalisés Google Docs */
+.contrat-print-mode ul {
+  list-style-type: disc;
+}
+
+.contrat-print-mode ul ul {
+  list-style-type: circle;
+}
+
+.contrat-print-mode ul ul ul {
+  list-style-type: square;
+}
+
+.contrat-print-mode ol {
+  list-style-type: decimal;
+}
+
+.contrat-print-mode ol ol {
+  list-style-type: lower-alpha;
+}
+
+.contrat-print-mode ol ol ol {
+  list-style-type: lower-roman;
+}
+
+/* ===== TABLEAUX AMÉLIORÉS ===== */
 .contrat-print-mode table {
   width: 100%;
   border-collapse: collapse;
   margin: 1.5em 0;
   page-break-inside: avoid;
+  font-size: 10pt; /* Légèrement plus petit pour les tableaux */
 }
 
 .contrat-print-mode table, 
 .contrat-print-mode th, 
 .contrat-print-mode td {
-  border: 1px solid var(--tc-color-000000, var(--tc-gray-800)000);
+  border: 1px solid #000000;
 }
 
 .contrat-print-mode th, 
 .contrat-print-mode td {
   padding: 0.5em;
   text-align: left;
+  vertical-align: top;
 }
 
 .contrat-print-mode th {
-  background-color: var(--tc-table-header-bg);
+  background-color: #f0f0f0;
   font-weight: bold;
+}
+
+/* Tableaux sans bordures (style Google Docs) */
+.contrat-print-mode table[style*="border: none"],
+.contrat-print-mode table.borderless {
+  border: none;
+}
+
+.contrat-print-mode table[style*="border: none"] td,
+.contrat-print-mode table[style*="border: none"] th,
+.contrat-print-mode table.borderless td,
+.contrat-print-mode table.borderless th {
+  border: none;
+}
+
+/* ===== IMAGES (GOOGLE DOCS) ===== */
+.contrat-print-mode img {
+  max-width: 100% !important;
+  height: auto !important;
+  page-break-inside: avoid;
+  margin: 0.5em 0;
+}
+
+/* Images alignées */
+.contrat-print-mode img[style*="float: left"],
+.contrat-print-mode .image-left {
+  float: left;
+  margin: 0 1em 1em 0;
+  max-width: 50%;
+}
+
+.contrat-print-mode img[style*="float: right"],
+.contrat-print-mode .image-right {
+  float: right;
+  margin: 0 0 1em 1em;
+  max-width: 50%;
+}
+
+.contrat-print-mode img[style*="display: block"],
+.contrat-print-mode .image-center {
+  display: block;
+  margin: 1em auto;
+  max-width: 80%;
+}
+
+/* ===== CITATIONS ET ENCADRÉS ===== */
+.contrat-print-mode blockquote {
+  margin: 1em 2em;
+  padding: 0.5em 1em;
+  border-left: 3px solid #666;
+  font-style: italic;
+  page-break-inside: avoid;
+}
+
+.contrat-print-mode .highlight,
+.contrat-print-mode [style*="background-color: yellow"] {
+  background-color: #ffffcc !important;
+  padding: 0.1em 0.2em;
+}
+
+/* ===== LIENS ===== */
+.contrat-print-mode a {
+  color: #000000 !important;
+  text-decoration: underline;
+}
+
+.contrat-print-mode a::after {
+  /* Afficher l'URL après le lien en impression */
+  content: " (" attr(href) ")";
+  font-size: 0.8em;
+  font-style: italic;
+}
+
+/* ===== DIVS ET SPANS GOOGLE DOCS ===== */
+.contrat-print-mode div[style],
+.contrat-print-mode span[style] {
+  /* Normaliser les styles inline de Google Docs */
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.contrat-print-mode span[style*="font-weight: 700"],
+.contrat-print-mode span[style*="font-weight: bold"] {
+  font-weight: bold !important;
+}
+
+.contrat-print-mode span[style*="font-style: italic"] {
+  font-style: italic !important;
+}
+
+.contrat-print-mode span[style*="text-decoration: underline"] {
+  text-decoration: underline !important;
+}
+
+/* ===== GESTION DES PAGEBREAKS GOOGLE DOCS ===== */
+.contrat-print-mode [style*="page-break-before"],
+.contrat-print-mode .page-break-before {
+  page-break-before: always;
+}
+
+.contrat-print-mode [style*="page-break-after"],
+.contrat-print-mode .page-break-after {
+  page-break-after: always;
 }
 
 /* ===== ÉLÉMENTS D'INTERFACE À MASQUER ===== */

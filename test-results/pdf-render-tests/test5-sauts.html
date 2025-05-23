@@ -1,0 +1,62 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contrat avec Sauts de Page</title>
+  <link rel="stylesheet" href="/src/styles/components/contrat-print.css">
+  <style>
+    /* Styles additionnels pour le test */
+    body { margin: 0; padding: 0; }
+    .test-container {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto;
+      background: white;
+    }
+  </style>
+</head>
+<body class="contrat-print-mode">
+  <div class="test-container">
+    <div class="contrat-container">
+      
+      <h1>Contrat Complet - Multi-Dates</h1>
+      
+      <h2>Page 1 - Informations générales</h2>
+      <p>Contenu de la première page avec informations de base sur le contrat de prestation artistique.</p>
+      <p>L'artiste s'engage à respecter les conditions ci-après détaillées.</p>
+      
+      <div class="page-break"></div>
+      
+      <h2>Page 2 - Conditions techniques</h2>
+      <p>Spécifications techniques détaillées pour la réalisation de la prestation.</p>
+      
+      <table>
+        <tr><th>Date</th><th>Lieu</th><th>Cachets</th></tr>
+        <tr><td>15/06/2025</td><td>Salle A</td><td>1500€</td></tr>
+        <tr><td>16/06/2025</td><td>Salle B</td><td>1800€</td></tr>
+      </table>
+      
+      <div style="page-break-before: always;"></div>
+      
+      <h2>Page 3 - Signatures</h2>
+      <div class="signature-section">
+        <div class="signature-block-left">
+          <p><strong>Pour l'organisateur :</strong></p>
+          <p>Jean Dupont</p>
+          <div class="signature-line"></div>
+        </div>
+        
+        <div class="signature-block-right">
+          <p><strong>Pour l'artiste :</strong></p>
+          <p>Marie Martin</p>
+          <div class="signature-line"></div>
+        </div>
+      </div>
+    
+    </div>
+  </div>
+</body>
+</html>
+  

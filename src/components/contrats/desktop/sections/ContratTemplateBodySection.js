@@ -3,6 +3,7 @@ import VariablesPanel from './VariablesPanel';
 import styles from './ContratTemplateBodySection.module.css';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { CompactToolbarModule } from '@/components/contrats/QuillPageBreakModule';
 
 /**
  * Composant pour la section principale (corps) du contrat
@@ -68,7 +69,7 @@ const ContratTemplateBodySection = ({
           className={styles.bodyContentEditor}
           value={bodyContent}
           onChange={setBodyContent}
-          modules={{ toolbar: [['bold', 'italic', 'underline'], [{ list: 'ordered' }, { list: 'bullet' }], ['clean']] }}
+          modules={CompactToolbarModule}
           placeholder="Entrez ici le contenu principal de votre contrat..."
           theme="snow"
           style={{ minHeight: 300, height: '100%' }}

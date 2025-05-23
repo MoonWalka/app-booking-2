@@ -1,5 +1,7 @@
 // hooks/contrats/useContratTemplateEditor.js
 import { useState, useEffect, useRef } from 'react';
+// Import pour le module saut de page Quill
+import '@/components/contrats/QuillPageBreakModule';
 
 /**
  * Hook personnalisé pour gérer l'état et la logique de l'éditeur de modèles de contrat
@@ -193,58 +195,40 @@ const useContratTemplateEditor = (template, onSave, isModalContext, onClose, nav
 
     // Chercher l'éditeur Quill dans le conteneur ou ses enfants
     let quillEditor = null;
-    
-    // Vérifier si l'élément est directement un éditeur Quill
     if (container.classList.contains('ql-editor')) {
       quillEditor = container;
     } else {
-      // Chercher l'éditeur Quill dans les enfants
       quillEditor = container.querySelector('.ql-editor');
     }
 
     if (quillEditor) {
       // Insertion directe dans ReactQuill
       const variableText = `{${variable}}`;
-      
       // Obtenir la position actuelle du curseur ou ajouter à la fin
       const selection = window.getSelection();
       let range;
-      
       if (selection.rangeCount > 0 && quillEditor.contains(selection.focusNode)) {
-        // Il y a une sélection dans l'éditeur
         range = selection.getRangeAt(0);
       } else {
-        // Pas de sélection, créer une range à la fin du contenu
         range = document.createRange();
         range.selectNodeContents(quillEditor);
-        range.collapse(false); // false = fin du contenu
+        range.collapse(false); // fin du contenu
       }
-      
-      // Insérer la variable
       range.deleteContents();
       const textNode = document.createTextNode(variableText);
       range.insertNode(textNode);
-      
-      // Placer le curseur après la variable insérée
       range.setStartAfter(textNode);
       range.collapse(true);
-      
-      // Mettre à jour la sélection
       selection.removeAllRanges();
       selection.addRange(range);
-      
-      // Focus sur l'éditeur
       quillEditor.focus();
-      
-      // Déclencher les événements pour que ReactQuill détecte le changement
       const inputEvent = new Event('input', { bubbles: true, cancelable: true });
       quillEditor.dispatchEvent(inputEvent);
-      
       console.log(`Variable {${variable}} insérée dans ${targetId}`);
       return;
     }
 
-    // Fallback : Si ce n'est pas ReactQuill, essayer la méthode directe via les setters
+    // Fallback : Si ce n'est pas ReactQuill, utiliser les setters d'état (ajout à la fin)
     const variableText = `{${variable}}`;
     switch (targetId) {
       case 'bodyContent':
@@ -266,7 +250,6 @@ const useContratTemplateEditor = (template, onSave, isModalContext, onClose, nav
         console.warn(`TargetId ${targetId} non reconnu pour l'insertion de variable`);
         break;
     }
-    
     console.log(`Variable {${variable}} insérée via setter dans ${targetId}`);
   };
 
@@ -393,7 +376,7 @@ const useContratTemplateEditor = (template, onSave, isModalContext, onClose, nav
     return estimatedPages;
   };
 
-  // Configuration des modules pour les éditeurs ReactQuill
+  // Configuration des modules pour les éditeurs ReactQuill (avec bouton saut de page)
   const editorModules = {
     toolbar: [
       [{ 'header': [1, 2, 3, false] }],
@@ -403,8 +386,17 @@ const useContratTemplateEditor = (template, onSave, isModalContext, onClose, nav
       [{ 'size': ['small', false, 'large', 'huge'] }],
       [{ 'color': [] }, { 'background': [] }],
       [{ 'align': [] }],
+      ['pagebreak'], // Bouton saut de page
       ['link', 'clean']
-    ]
+    ],
+    handlers: {
+      'pagebreak': function() {
+        const range = this.quill.getSelection(true);
+        const position = range ? range.index : this.quill.getLength();
+        this.quill.insertEmbed(position, 'pagebreak', true);
+        this.quill.setSelection(position + 1);
+      }
+    }
   };
 
   // Retourner tous les états et fonctions nécessaires pour le composant

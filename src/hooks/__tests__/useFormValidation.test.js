@@ -1,13 +1,13 @@
-// src/hooks/__tests__/useFormValidationMigrated.test.js
+// src/hooks/__tests__/useFormValidation.test.js
 import { renderHook, act } from '@testing-library/react';
-import useFormValidationMigrated from '../forms/useFormValidationMigrated';
+import useFormValidation from '../forms/useFormValidation';
 
 // Désactiver les logs pendant les tests pour éviter de polluer la console
 jest.mock('../../utils/logUtils', () => ({
   debugLog: jest.fn()
 }));
 
-describe('useFormValidationMigrated', () => {
+describe('useFormValidation', () => {
   // Configuration de base pour les tests
   const initialValues = {
     name: '',
@@ -46,7 +46,7 @@ describe('useFormValidationMigrated', () => {
   };
 
   test('devrait initialiser correctement les valeurs et l\'état du formulaire', () => {
-    const { result } = renderHook(() => useFormValidationMigrated({
+    const { result } = renderHook(() => useFormValidation({
       initialValues,
       validationSchema
     }));
@@ -61,7 +61,7 @@ describe('useFormValidationMigrated', () => {
   });
 
   test('devrait mettre à jour les valeurs lors des changements', () => {
-    const { result } = renderHook(() => useFormValidationMigrated({
+    const { result } = renderHook(() => useFormValidation({
       initialValues,
       validationSchema
     }));
@@ -92,7 +92,7 @@ describe('useFormValidationMigrated', () => {
   });
 
   test('devrait valider correctement les valeurs du formulaire', () => {
-    const { result } = renderHook(() => useFormValidationMigrated({
+    const { result } = renderHook(() => useFormValidation({
       initialValues,
       validationSchema
     }));
@@ -128,7 +128,7 @@ describe('useFormValidationMigrated', () => {
   });
 
   test('devrait valider les champs individuellement', () => {
-    const { result } = renderHook(() => useFormValidationMigrated({
+    const { result } = renderHook(() => useFormValidation({
       initialValues,
       validationSchema,
       validateOnChange: true
@@ -170,7 +170,7 @@ describe('useFormValidationMigrated', () => {
   test('devrait gérer correctement la soumission du formulaire', () => {
     const mockSubmit = jest.fn();
     
-    const { result } = renderHook(() => useFormValidationMigrated({
+    const { result } = renderHook(() => useFormValidation({
       initialValues,
       validationSchema,
       validateOnSubmit: true,
@@ -213,7 +213,7 @@ describe('useFormValidationMigrated', () => {
   });
 
   test('devrait réinitialiser correctement le formulaire', () => {
-    const { result } = renderHook(() => useFormValidationMigrated({
+    const { result } = renderHook(() => useFormValidation({
       initialValues,
       validationSchema
     }));
@@ -245,7 +245,7 @@ describe('useFormValidationMigrated', () => {
   });
 
   test('devrait gérer correctement les changements de focus (blur)', () => {
-    const { result } = renderHook(() => useFormValidationMigrated({
+    const { result } = renderHook(() => useFormValidation({
       initialValues,
       validationSchema,
       validateOnBlur: true
@@ -282,7 +282,7 @@ describe('useFormValidationMigrated', () => {
   });
 
   test('devrait permettre d\'ajouter et de gérer des erreurs manuellement', () => {
-    const { result } = renderHook(() => useFormValidationMigrated({
+    const { result } = renderHook(() => useFormValidation({
       initialValues,
       validationSchema
     }));

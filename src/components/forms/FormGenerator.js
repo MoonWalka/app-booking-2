@@ -1,8 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import {  collection, addDoc, serverTimestamp, doc, updateDoc, getDoc  } from '@/firebaseInit';
-import { db } from '../../firebaseInit';
+import { db } from '@/services/firebase-service';
+import {
+  collection,
+  addDoc,
+  updateDoc,
+  doc,
+  getDoc,
+  serverTimestamp,
+  query,
+  where,
+  getDocs
+} from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid';
 import Card from '@/components/ui/Card';
+import Button from '@ui/Button';
 
 const FormGenerator = ({ concertId, programmateurId, onFormGenerated }) => {
   const [loading, setLoading] = useState(false);
@@ -168,13 +179,13 @@ const FormGenerator = ({ concertId, programmateurId, onFormGenerated }) => {
           <p>
             Générez un lien de formulaire à envoyer au programmateur pour qu'il puisse remplir ses informations.
           </p>
-          <button
-            className="btn btn-primary"
+          <Button
+            variant="primary"
             onClick={generateForm}
             disabled={loading}
           >
             {loading ? 'Génération en cours...' : 'Générer un formulaire'}
-          </button>
+          </Button>
         </div>
       ) : (
         <div>
@@ -193,13 +204,12 @@ const FormGenerator = ({ concertId, programmateurId, onFormGenerated }) => {
               value={formLink}
               readOnly
             />
-            <button
-              className="btn btn-outline-secondary"
-              type="button"
+            <Button
+              variant="outline-secondary"
               onClick={copyToClipboard}
             >
               {copied ? 'Copié !' : 'Copier'}
-            </button>
+            </Button>
           </div>
           <div className="alert alert-info mb-3">
             <i className="bi bi-info-circle me-2"></i>
@@ -210,13 +220,13 @@ const FormGenerator = ({ concertId, programmateurId, onFormGenerated }) => {
             <p className="text-muted">
               Ce lien est valable jusqu'au {formatExpiryDate(expiryDate)}.
             </p>
-            <button
-              className="btn btn-outline-primary"
+            <Button
+              variant="outline-primary"
               onClick={generateForm}
               disabled={loading}
             >
               {loading ? 'Génération en cours...' : 'Générer un nouveau lien'}
-            </button>
+            </Button>
           </div>
           
           {existingLink && existingLink.completed && (

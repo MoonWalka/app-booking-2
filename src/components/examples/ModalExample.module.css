@@ -80,7 +80,7 @@
   padding: 0.5rem 1rem;
   background-color: transparent;
   color: var(--tc-text-secondary);
-  border: 1px solid var(--tc-color-d4d4d4, #d4d4d4);
+  border: 1px solid var(--tc-color-d4d4d4);
   border-radius: 4px;
   cursor: pointer;
   font-weight: 500;
@@ -88,7 +88,7 @@
 }
 
 .modalButtonSecondary:hover {
-  background-color: var(--tc-color-f5f5f5, #f5f5f5);
+  background-color: var(--tc-color-f5f5f5);
 }
 
 .form {
@@ -111,7 +111,7 @@
 
 .input {
   padding: 0.75rem;
-  border: 1px solid var(--tc-color-d4d4d4, #d4d4d4);
+  border: 1px solid var(--tc-color-d4d4d4);
   border-radius: 4px;
   font-size: 1rem;
   transition: border-color 0.2s;
@@ -120,5 +120,5 @@
 .input:focus {
   outline: none;
   border-color: var(--tc-primary-color);
-  box-shadow: 0 0 0 2px var(--tc-color-rgba(74, 144, 226, 0.2), rgba(74, 144, 226, 0.2));
+  box-shadow: 0 0 0 2px var(--tc-color-rgba(74), rgba(74, 144, 226, 0.2));
 }

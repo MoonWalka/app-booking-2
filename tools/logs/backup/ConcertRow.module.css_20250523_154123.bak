@@ -1,0 +1,81 @@
+/*
+ * Styles pour ConcertRow
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
+.concertRow {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.concertRow:hover {
+  background-color: var(--tc-color-rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.04));
+}
+
+.pastDate {
+  opacity: 0.7;
+}
+
+.dateColumn {
+  min-width: 100px;
+  white-space: nowrap;
+}
+
+.dateContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.date {
+  font-weight: 500;
+}
+
+.pastDateIndicator {
+  font-size: 0.75rem;
+  opacity: 0.7;
+  color: var(--tc-color-6c757d, #6c757d);
+}
+
+.titleColumn {
+  min-width: 180px;
+}
+
+.title {
+  font-weight: 500;
+  display: block;
+}
+
+.artistName {
+  font-size: 0.85rem;
+  color: var(--tc-color-6c757d, #6c757d);
+  display: block;
+}
+
+.locationColumn {
+  min-width: 180px;
+}
+
+.locationName {
+  font-weight: 500;
+  display: block;
+}
+
+.locationCity {
+  font-size: 0.85rem;
+  color: var(--tc-color-6c757d, #6c757d);
+  display: block;
+}
+
+.organizerColumn {
+  min-width: 150px;
+}
+
+.statusColumn {
+  min-width: 140px;
+}
+
+.actionsColumn {
+  width: 120px;
+  text-align: right;
+}

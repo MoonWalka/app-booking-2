@@ -108,9 +108,9 @@
 
 /* Carte de formulaire */
 .formCard {
-  background-color: var(--tc-color-fff, #fff);
+  background-color: var(--tc-color-fff);
   border-radius: 8px;
-  box-shadow: 0 2px 4px var(--tc-color-rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
+  box-shadow: 0 2px 4px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.1));
   margin-bottom: var(--tc-spacing-lg);
   overflow: hidden;
 }
@@ -128,7 +128,7 @@
   align-items: center;
   background-color: var(--tc-bg-color);
   padding: var(--tc-spacing-md);
-  border-bottom: 1px solid var(--tc-color-eee, #eee);
+  border-bottom: 1px solid var(--tc-color-eee);
 }
 
 .cardHeader {
@@ -189,7 +189,7 @@
 }
 
 .required {
-  color: var(--tc-color-dc3545, #dc3545);
+  color: var(--tc-color-dc3545);
   margin-left: var(--tc-spacing-xs);
 }
 
@@ -214,7 +214,7 @@
 .formControl:focus {
   border-color: var(--tc-primary-color);
   outline: 0;
-  box-shadow: 0 0 0 0.2rem var(--tc-color-rgba(0, 123, 255, 0.25), rgba(0, 123, 255, 0.25));
+  box-shadow: 0 0 0 0.2rem var(--tc-color-rgba(0), rgba(0, 123, 255, 0.25));
 }
 
 .formSelect {
@@ -301,7 +301,7 @@
 .selectedLieu,
 .selectedProgrammateur,
 .selectedArtiste {
-  border: 1px solid var(--tc-color-ddd, #ddd);
+  border: 1px solid var(--tc-color-ddd);
   border-radius: 6px;
   padding: var(--tc-spacing-lg);
   margin-bottom: var(--tc-spacing-sm);
@@ -335,7 +335,7 @@
   display: flex;
   align-items: center;
   margin-top: var(--tc-spacing-xs);
-  color: var(--tc-color-666, #666);
+  color: var(--tc-color-666);
 }
 
 .lieuAddress i,
@@ -347,7 +347,7 @@
   font-size: var(--tc-font-size-sm);
   display: block;
   margin-bottom: var(--tc-spacing-xs);
-  color: var(--tc-color-666, #666);
+  color: var(--tc-color-666);
 }
 
 .programmateurContacts {
@@ -363,14 +363,14 @@
 
 .programmateurContactItem i {
   margin-right: var(--tc-spacing-xs);
-  color: var(--tc-color-666, #666);
+  color: var(--tc-color-666);
 }
 
 .artisteGenre {
   font-size: var(--tc-font-size-sm);
   display: block;
   margin-bottom: var(--tc-spacing-xs);
-  color: var(--tc-color-666, #666);
+  color: var(--tc-color-666);
 }
 
 .artisteDescription {
@@ -452,7 +452,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--tc-color-rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
+  background-color: var(--tc-color-rgba(0), rgba(0, 0, 0, 0.5));
   display: flex;
   justify-content: center;
   align-items: center;
@@ -460,17 +460,17 @@
 }
 
 .tcModalConfirm {
-  background-color: var(--tc-color-fff, #fff);
+  background-color: var(--tc-color-fff);
   border-radius: 0.5rem;
   width: 450px;
   max-width: 90vw;
-  box-shadow: 0 4px 20px var(--tc-color-rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15));
+  box-shadow: 0 4px 20px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.15));
   overflow: hidden;
 }
 
 .tcModalHeader {
   padding: var(--tc-spacing-md);
-  border-bottom: 1px solid var(--tc-color-eee, #eee);
+  border-bottom: 1px solid var(--tc-color-eee);
 }
 
 .tcModalHeader h5 {
@@ -484,7 +484,7 @@
 
 .tcModalFooter {
   padding: var(--tc-spacing-md);
-  border-top: 1px solid var(--tc-color-eee, #eee);
+  border-top: 1px solid var(--tc-color-eee);
   display: flex;
   justify-content: flex-end;
   gap: var(--tc-spacing-sm);

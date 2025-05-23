@@ -5,12 +5,12 @@
  */
 
 .bodySection {
-  background-color: var(--tc-color-ffffff, #ffffff);
+  background-color: var(--tc-color-ffffff);
   border-radius: 6px;
-  border: 1px solid var(--tc-color-e9ecef, #e9ecef);
+  border: 1px solid var(--tc-color-e9ecef);
   padding: 1.25rem;
   margin-bottom: 1.5rem;
-  box-shadow: 0 1px 3px var(--tc-color-rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05));
+  box-shadow: 0 1px 3px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.05));
 }
 
 .bodySectionHeader {
@@ -24,7 +24,7 @@
   margin: 0;
   font-size: 1rem;
   font-weight: 500;
-  color: var(--tc-color-344767, #344767);
+  color: var(--tc-color-344767);
 }
 
 .sectionActions {
@@ -34,15 +34,15 @@
 }
 
 .instructionsText {
-  color: var(--tc-color-6c757d, #6c757d);
+  color: var(--tc-color-6c757d);
   font-size: 0.85rem;
 }
 
 .instructionsText code {
-  background-color: var(--tc-color-f8f9fa, #f8f9fa);
+  background-color: var(--tc-color-f8f9fa);
   padding: 2px 4px;
   border-radius: 3px;
-  border: 1px solid var(--tc-color-e9ecef, #e9ecef);
+  border: 1px solid var(--tc-color-e9ecef);
   font-size: 0.8rem;
 }
 
@@ -77,12 +77,12 @@
 }
 
 .bodyHelpText {
-  background-color: var(--tc-color-f8f9fa, #f8f9fa);
+  background-color: var(--tc-color-f8f9fa);
   border-radius: 4px;
   padding: 12px 16px;
   margin-top: 16px;
   font-size: 0.875rem;
-  color: var(--tc-color-6c757d, #6c757d);
+  color: var(--tc-color-6c757d);
 }
 
 .helpList {
@@ -99,9 +99,9 @@
 }
 
 .helpList code {
-  background-color: var(--tc-color-eaeef2, #eaeef2);
+  background-color: var(--tc-color-eaeef2);
   padding: 2px 4px;
   border-radius: 3px;
-  border: 1px solid var(--tc-color-dee2e6, #dee2e6);
+  border: 1px solid var(--tc-color-dee2e6);
   font-size: 0.85rem;
 }

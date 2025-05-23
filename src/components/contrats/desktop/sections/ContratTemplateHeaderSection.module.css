@@ -11,7 +11,7 @@
 }
 
 .sectionInfo {
-  color: var(--tc-color-6c757d, #6c757d);
+  color: var(--tc-color-6c757d);
   font-size: 0.875rem;
   margin-bottom: 8px;
 }
@@ -35,10 +35,10 @@
 .logoPreview {
   max-width: 150px;
   max-height: 70px;
-  border: 1px solid var(--tc-color-e9ecef, #e9ecef);
+  border: 1px solid var(--tc-color-e9ecef);
   border-radius: 4px;
   padding: 8px;
-  background-color: var(--tc-color-f8f9fa, #f8f9fa);
+  background-color: var(--tc-color-f8f9fa);
 }
 
 .logoUpload {
@@ -49,15 +49,15 @@
 .logoUploadLabel {
   display: inline-block;
   padding: 8px 16px;
-  background-color: var(--tc-color-f8f9fa, #f8f9fa);
-  border: 1px solid var(--tc-color-dee2e6, #dee2e6);
+  background-color: var(--tc-color-f8f9fa);
+  border: 1px solid var(--tc-color-dee2e6);
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .logoUploadLabel:hover {
-  background-color: var(--tc-color-e9ecef, #e9ecef);
+  background-color: var(--tc-color-e9ecef);
 }
 
 .logoUploadInput {
@@ -95,14 +95,14 @@
   width: 100%;
   padding: 8px 12px;
   font-size: 0.9rem;
-  border: 1px solid var(--tc-color-ced4da, #ced4da);
+  border: 1px solid var(--tc-color-ced4da);
   border-radius: 4px;
   min-height: 120px;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
 .headerContentInput:focus {
-  border-color: var(--tc-color-86b7fe, #86b7fe);
+  border-color: var(--tc-color-86b7fe);
   outline: 0;
-  box-shadow: 0 0 0 0.25rem var(--tc-color-rgba(13, 110, 253, 0.25), rgba(13, 110, 253, 0.25));
+  box-shadow: 0 0 0 0.25rem var(--tc-color-rgba(13), rgba(13, 110, 253, 0.25));
 }

@@ -1,0 +1,49 @@
+/*
+ * Styles pour ValidationModal
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
+ */
+
+.validationModal :global(.modal-content) {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.modalTitle {
+  font-size: 1.var(--tc-spacing-3);
+  font-weight: var(--tc-font-weight-semibold);
+}
+
+.messageContainer {
+  display: flex;
+  align-items: flex-start;
+  padding: var(--tc-spacing-2) 0;
+}
+
+.messageContainer i {
+  font-size: var(--tc-font-size-xl);
+  color: var(--tc-color-text-secondary);
+  margin-right: var(--tc-spacing-2);
+  margin-top: 0.var(--tc-spacing-3);
+}
+
+.confirmMessage {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--tc-spacing-3);
+  border-top: 1px solid var(--tc-color-e9ecef, #e9ecef);
+}
+
+.cancelButton, .confirmButton {
+  flex: 1;
+  max-width: 45%;
+  font-size: var(--tc-font-size-sm);
+  padding: var(--tc-spacing-2);
+}

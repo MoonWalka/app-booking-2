@@ -5,18 +5,18 @@
  */
 
 .formCard {
-  background-color: var(--tc-color-ffffff, #ffffff);
+  background-color: var(--tc-color-ffffff);
   border-radius: 8px;
-  box-shadow: 0 2px 4px var(--tc-color-rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05));
+  box-shadow: 0 2px 4px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.05));
   margin-bottom: 20px;
-  border: 1px solid var(--tc-color-e9ecef, #e9ecef);
+  border: 1px solid var(--tc-color-e9ecef);
   overflow: hidden;
 }
 
 .cardHeader {
-  background-color: var(--tc-color-f8f9fa, #f8f9fa);
+  background-color: var(--tc-color-f8f9fa);
   padding: 15px 20px;
-  border-bottom: 1px solid var(--tc-color-e9ecef, #e9ecef);
+  border-bottom: 1px solid var(--tc-color-e9ecef);
   display: flex;
   align-items: center;
   gap: 10px;
@@ -29,7 +29,7 @@
 }
 
 .cardHeader i {
-  color: var(--tc-color-6c757d, #6c757d);
+  color: var(--tc-color-6c757d);
   font-size: 1.2rem;
 }
 
@@ -67,7 +67,7 @@
 }
 
 .structureItem:hover {
-  background-color: var(--tc-color-f8f9fa, #f8f9fa);
+  background-color: var(--tc-color-f8f9fa);
 }
 
 .structureName {
@@ -77,14 +77,14 @@
 
 .structureDetails {
   font-size: 13px;
-  color: var(--tc-color-6c757d, #6c757d);
+  color: var(--tc-color-6c757d);
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
 }
 
 .structureType {
-  background-color: var(--tc-color-e9ecef, #e9ecef);
+  background-color: var(--tc-color-e9ecef);
   padding: 2px 8px;
   border-radius: 12px;
   font-size: 12px;
@@ -107,8 +107,8 @@
 }
 
 .structureCard {
-  background-color: var(--tc-color-f8f9fa, #f8f9fa);
-  border: 1px solid var(--tc-color-e9ecef, #e9ecef);
+  background-color: var(--tc-color-f8f9fa);
+  border: 1px solid var(--tc-color-e9ecef);
   border-radius: 6px;
   padding: 12px;
   display: flex;
@@ -123,7 +123,7 @@
 }
 
 .contactLink {
-  color: var(--tc-color-0d6efd, #0d6efd);
+  color: var(--tc-color-0d6efd);
   text-decoration: none;
   display: flex;
   align-items: center;

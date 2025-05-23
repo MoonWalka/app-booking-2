@@ -1,0 +1,17 @@
+.tcModalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: calc(var(--tc-spacing-md, 16px) * 2) calc(var(--tc-spacing-lg, 32px)); /* double le padding vertical */
+}
+
+.tcModalFooter {
+  position: sticky;
+  bottom: 0;
+  background-color: var(--tc-white-color);
+  z-index: var(--tc-z-index-sticky);
+  margin: 0 -1px -1px -1px;
+  border-top: var(--tc-border-width) solid var(--tc-border-color-light);
+  box-shadow: var(--tc-box-shadow-bottom);
+  padding: calc(var(--tc-spacing-md, 16px) * 2) calc(var(--tc-spacing-lg, 32px)); /* double le padding vertical */
+} 

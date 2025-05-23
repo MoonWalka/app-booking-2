@@ -135,9 +135,9 @@
    SÉLECTEUR DE COULEUR
    ============================= */
 .colorPicker {
-  width: var(--tc-color-picker-width, 50px);
-  height: var(--tc-color-picker-height, 40px);
-  padding: var(--tc-color-picker-padding, 2px);
+  width: var(--tc-color-picker-width);
+  height: var(--tc-color-picker-height);
+  padding: var(--tc-color-picker-padding);
   border: 1px solid var(--tc-border-color);
   border-radius: var(--tc-border-radius);
   cursor: pointer;
@@ -168,7 +168,7 @@
 
 .exportButton {
   flex: 1;
-  min-width: var(--tc-export-button-min-width, 200px);
+  min-width: var(--tc-export-button-min-width);
   padding: var(--tc-spacing-md);
   border-radius: var(--tc-border-radius);
   border: 1px solid var(--tc-border-color);
@@ -185,7 +185,7 @@
 .exportButton:hover {
   border-color: var(--tc-primary-color);
   background-color: rgba(var(--tc-primary-color-rgb), 0.05);
-  transform: translateY(var(--tc-hover-translateY, -2px));
+  transform: translateY(var(--tc-hover-translateY));
 }
 
 .exportIcon {

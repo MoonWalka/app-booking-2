@@ -15,8 +15,8 @@
 }
 
 .colorPreview {
-  width: var(--tc-color-preview-width, 40px);
-  height: var(--tc-color-preview-height, 40px);
+  width: var(--tc-color-preview-width);
+  height: var(--tc-color-preview-height);
   border-radius: var(--tc-border-radius);
   border: 1px solid var(--tc-border-color);
   box-shadow: var(--tc-shadow-sm);
@@ -28,7 +28,7 @@
 }
 
 .colorInput {
-  width: var(--tc-color-input-width, 120px);
+  width: var(--tc-color-input-width);
   padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
   border: 1px solid var(--tc-input-border);
   border-radius: var(--tc-border-radius);

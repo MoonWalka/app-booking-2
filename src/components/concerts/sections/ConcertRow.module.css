@@ -10,7 +10,7 @@
 }
 
 .concertRow:hover {
-  background-color: var(--tc-color-rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.04));
+  background-color: var(--tc-color-rgba(0), rgba(0, 0, 0, 0.04));
 }
 
 .pastDate {
@@ -34,7 +34,7 @@
 .pastDateIndicator {
   font-size: 0.75rem;
   opacity: 0.7;
-  color: var(--tc-color-6c757d, #6c757d);
+  color: var(--tc-color-6c757d);
 }
 
 .titleColumn {
@@ -48,7 +48,7 @@
 
 .artistName {
   font-size: 0.85rem;
-  color: var(--tc-color-6c757d, #6c757d);
+  color: var(--tc-color-6c757d);
   display: block;
 }
 
@@ -63,7 +63,7 @@
 
 .locationCity {
   font-size: 0.85rem;
-  color: var(--tc-color-6c757d, #6c757d);
+  color: var(--tc-color-6c757d);
   display: block;
 }
 

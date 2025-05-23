@@ -8,7 +8,7 @@
 .validationAlert {
   margin-bottom: var(--tc-spacing-4);
   border-radius: var(--tc-radius-md);
-  box-shadow: 0 2px 5px var(--tc-color-rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.08));
+  box-shadow: 0 2px 5px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.08));
   border-left: 4px solid var(--tc-bs-success);
 }
 

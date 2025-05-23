@@ -14,7 +14,7 @@
  * ------------------
  */
 .tableContainer {
-  background-color: var(--tc-bg-color, #f8f9fa);
+  background-color: var(--tc-bg-color);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow-sm);
   overflow-x: auto;
@@ -39,8 +39,8 @@
  * -----------------
  */
 .concertsTable thead th {
-  background-color: var(--tc-bg-color-light, #f4f6fa);
-  color: var(--tc-text-color-primary, #222);
+  background-color: var(--tc-bg-color-light);
+  color: var(--tc-text-color-primary);
   font-weight: var(--tc-font-weight-semibold);
   border-bottom: 2px solid var(--tc-border-color);
   padding: var(--tc-spacing-sm) var(--tc-spacing-md);
@@ -69,8 +69,8 @@
   border-bottom: 1px solid var(--tc-border-color);
   vertical-align: middle;
   font-size: var(--tc-font-size-base);
-  background: var(--tc-bg-color, #fff);
-  color: var(--tc-text-color-base, #222);
+  background: var(--tc-bg-color);
+  color: var(--tc-text-color-base);
 }
 
 .concertsTable tbody tr:hover {

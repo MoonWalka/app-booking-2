@@ -1,0 +1,135 @@
+/*
+ * Styles pour ConcertStructureSection
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
+.formCard {
+  background-color: var(--tc-color-ffffff, #ffffff);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px var(--tc-color-rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05));
+  margin-bottom: 20px;
+  border: 1px solid var(--tc-color-e9ecef, #e9ecef);
+  overflow: hidden;
+}
+
+.cardHeader {
+  background-color: var(--tc-color-f8f9fa, #f8f9fa);
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--tc-color-e9ecef, #e9ecef);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cardHeader h3 {
+  margin: 0;
+  font-size: 18px;
+  flex-grow: 1;
+}
+
+.cardHeader i {
+  color: var(--tc-color-6c757d, #6c757d);
+  font-size: 1.2rem;
+}
+
+.cardHeaderAction {
+  padding: 4px 10px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.cardBody {
+  padding: 20px;
+}
+
+.formGroup {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.formLabel {
+  font-weight: 500;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.structureSearchContainer {
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.structureItem {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.structureItem:hover {
+  background-color: var(--tc-color-f8f9fa, #f8f9fa);
+}
+
+.structureName {
+  font-weight: 500;
+  margin-bottom: 3px;
+}
+
+.structureDetails {
+  font-size: 13px;
+  color: var(--tc-color-6c757d, #6c757d);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.structureType {
+  background-color: var(--tc-color-e9ecef, #e9ecef);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.structureLocation {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.structureSiret {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.selectedStructure {
+  margin-top: 10px;
+}
+
+.structureCard {
+  background-color: var(--tc-color-f8f9fa, #f8f9fa);
+  border: 1px solid var(--tc-color-e9ecef, #e9ecef);
+  border-radius: 6px;
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.structureInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.contactLink {
+  color: var(--tc-color-0d6efd, #0d6efd);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.contactLink:hover {
+  text-decoration: underline;
+}

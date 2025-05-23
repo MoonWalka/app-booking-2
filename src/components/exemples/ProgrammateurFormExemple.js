@@ -11,6 +11,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useProgrammateurForm } from '@/hooks/programmateurs';
 import EntitySearchField from '@/components/ui/EntitySearchField';
 import Card from '@/components/ui/Card';
+import Button from '@ui/Button';
 import '@styles/index.css';
 
 /**
@@ -67,21 +68,20 @@ const ProgrammateurFormExemple = () => {
   // Définition des actions d'en-tête pour le formulaire principal
   const headerActions = (
     <div>
-      <button
-        type="button"
-        className="btn btn-outline-secondary mr-2"
+      <Button
+        variant="outline-secondary"
+        className="mr-2"
         onClick={handleCancel}
       >
         Annuler
-      </button>
-      <button
-        type="button"
-        className="btn btn-primary"
+      </Button>
+      <Button
+        variant="primary"
         onClick={handleSubmit}
         disabled={isSubmitting}
       >
         {isSubmitting ? 'Enregistrement...' : 'Enregistrer'}
-      </button>
+      </Button>
     </div>
   );
   
@@ -204,13 +204,14 @@ const ProgrammateurFormExemple = () => {
                         {selectedStructure.adresse}, {selectedStructure.codePostal} {selectedStructure.ville}
                       </p>
                     )}
-                    <button
-                      type="button"
-                      className="btn btn-sm btn-outline-danger mt-2"
+                    <Button
+                      size="sm"
+                      variant="outline-danger"
+                      className="mt-2"
                       onClick={() => handleSelectStructure(null)}
                     >
                       Dissocier cette structure
-                    </button>
+                    </Button>
                   </div>
                 ) : (
                   <div className="new-structure-form">
@@ -355,20 +356,20 @@ const ProgrammateurFormExemple = () => {
           
           {/* Boutons de soumission du formulaire */}
           <div className="form-actions mt-4">
-            <button
-              type="button"
-              className="btn btn-outline-secondary mr-2"
+            <Button
+              variant="outline-secondary"
+              className="mr-2"
               onClick={handleCancel}
             >
               Annuler
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
-              className="btn btn-primary"
+              variant="primary"
               disabled={isSubmitting}
             >
               {isSubmitting ? 'Enregistrement...' : 'Enregistrer'}
-            </button>
+            </Button>
           </div>
         </form>
       </Card>

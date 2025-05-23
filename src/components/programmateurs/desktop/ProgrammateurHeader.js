@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import Button from '@ui/Button';
 import styles from './ProgrammateurHeader.module.css';
 
 const ProgrammateurHeader = ({ 
@@ -31,9 +32,10 @@ const ProgrammateurHeader = ({
         {isEditing ? (
           <>
             {/* Buttons in edit mode */}
-            <button 
+            <Button 
               onClick={handleSubmit} 
-              className="btn btn-primary d-flex align-items-center"
+              variant="primary"
+              className="d-flex align-items-center"
               disabled={isSubmitting}
             >
               {isSubmitting ? (
@@ -47,39 +49,46 @@ const ProgrammateurHeader = ({
                   <span>Enregistrer</span>
                 </>
               )}
-            </button>
+            </Button>
             
-            <button 
+            <Button 
               onClick={() => setIsEditing(false)} 
-              className="btn btn-outline-secondary d-flex align-items-center"
+              variant="outline-secondary"
+              className="d-flex align-items-center"
             >
               <i className="bi bi-x-circle me-2"></i>
               <span>Annuler</span>
-            </button>
+            </Button>
             
-            <button 
+            <Button 
               onClick={handleDelete} 
-              className="btn btn-outline-danger d-flex align-items-center"
+              variant="outline-danger"
+              className="d-flex align-items-center"
             >
               <i className="bi bi-trash me-2"></i>
               <span>Supprimer</span>
-            </button>
+            </Button>
           </>
         ) : (
           <>
             {/* Buttons in view mode */}
-            <Link to="/programmateurs" className="btn btn-outline-secondary d-flex align-items-center">
+            <Button 
+              onClick={() => navigate('/programmateurs')}
+              variant="outline-secondary"
+              className="d-flex align-items-center"
+            >
               <i className="bi bi-arrow-left me-2"></i>
               <span>Retour</span>
-            </Link>
+            </Button>
             
-            <button 
+            <Button 
               onClick={() => setIsEditing(true)} 
-              className="btn btn-outline-primary d-flex align-items-center"
+              variant="outline-primary"
+              className="d-flex align-items-center"
             >
               <i className="bi bi-pencil me-2"></i>
               <span>Modifier</span>
-            </button>
+            </Button>
           </>
         )}
       </div>

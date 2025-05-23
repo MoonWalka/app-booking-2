@@ -5,6 +5,7 @@ import {  collection, doc, getDoc, setDoc, serverTimestamp  } from '@/firebaseIn
 import { db } from '../../../firebaseInit';
 import { useLocationIQ } from '@/hooks/common';
 import StepNavigation from '../../common/steps/StepNavigation.js';
+import Button from '@ui/Button';
 import styles from './ProgrammateurForm.module.css';
 
 // Étape 1: Informations de contact
@@ -83,13 +84,12 @@ const ContactInfoStep = ({ data, onNext, onBack }) => {
       </div>
       
       <div className={styles.stepFormActions}>
-        <button
-          type="button"
-          className="btn btn-primary"
+        <Button
+          variant="primary"
           onClick={handleNext}
         >
           Suivant
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -159,13 +159,12 @@ const StructureStep = ({ data, onNext, onBack }) => {
       </div>
       
       <div className={styles.stepFormActions}>
-        <button
-          type="button"
-          className="btn btn-primary"
+        <Button
+          variant="primary"
           onClick={handleNext}
         >
           Suivant
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -301,13 +300,12 @@ const AddressStep = ({ data, onNext, onBack }) => {
       </div>
       
       <div className={styles.stepFormActions}>
-        <button
-          type="button"
-          className="btn btn-primary"
+        <Button
+          variant="primary"
           onClick={handleNext}
         >
           Terminer
-        </button>
+        </Button>
       </div>
     </div>
   );

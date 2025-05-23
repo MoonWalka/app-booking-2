@@ -57,9 +57,6 @@ import Button from '@ui/Button';
 ## Fichiers Prioritaires (Plus d'usages)
 
 🎯 FICHIERS PRIORITAIRES (plus d'usages):
-src//components/programmateurs/desktop/ProgrammateurHeader.js:5
-src//components/exemples/ProgrammateurFormExemple.js:5
-src//components/programmateurs/mobile/ProgrammateurForm.js:3
 src//components/lieux/desktop/sections/LieuxTableRow.js:3
 src//components/lieux/desktop/sections/LieuxResultsTable.js:3
 src//components/lieux/desktop/sections/LieuConcertsSection.js:3
@@ -67,6 +64,9 @@ src//components/forms/FormGenerator.js:3
 src//components/contrats/desktop/sections/ContratGenerationActions.js:3
 src//components/contrats/desktop/ContratTemplateEditor.js:3
 src//components/concerts/sections/ConcertFormHeader.js:3
+src//components/concerts/sections/ConcertFormActions.js:3
+src//components/programmateurs/desktop/ProgrammateurStructuresSection.js:2
+src//components/programmateurs/desktop/ProgrammateurLieuxSection.js:2
 ## Checklist Migration par Fichier
 
 ### GenericList.js
@@ -189,20 +189,6 @@ src//components/concerts/sections/ConcertFormHeader.js:3
 - [ ] Usages Bootstrap remplacés
 - [ ] Test de rendu OK
 
-### ProgrammateurFormExemple.js
-**Chemin:** `src//components/exemples/ProgrammateurFormExemple.js`
-
-**Usages Bootstrap détectés:**
--         className="btn btn-outline-secondary mr-2"
--         className="btn btn-primary"
--                       className="btn btn-sm btn-outline-danger mt-2"
--               className="btn btn-outline-secondary mr-2"
--               className="btn btn-primary"
-
-- [ ] Import Button ajouté
-- [ ] Usages Bootstrap remplacés
-- [ ] Test de rendu OK
-
 ### ArtisteFormExemple.js
 **Chemin:** `src//components/exemples/ArtisteFormExemple.js`
 
@@ -313,20 +299,6 @@ src//components/concerts/sections/ConcertFormHeader.js:3
 - [ ] Usages Bootstrap remplacés
 - [ ] Test de rendu OK
 
-### ProgrammateurHeader.js
-**Chemin:** `src//components/programmateurs/desktop/ProgrammateurHeader.js`
-
-**Usages Bootstrap détectés:**
--               className="btn btn-primary d-flex align-items-center"
--               className="btn btn-outline-secondary d-flex align-items-center"
--               className="btn btn-outline-danger d-flex align-items-center"
--             <Link to="/programmateurs" className="btn btn-outline-secondary d-flex align-items-center">
--               className="btn btn-outline-primary d-flex align-items-center"
-
-- [ ] Import Button ajouté
-- [ ] Usages Bootstrap remplacés
-- [ ] Test de rendu OK
-
 ### DeleteProgrammateurModal.js
 **Chemin:** `src//components/programmateurs/desktop/DeleteProgrammateurModal.js`
 
@@ -355,18 +327,6 @@ src//components/concerts/sections/ConcertFormHeader.js:3
 **Usages Bootstrap détectés:**
 -                 className="btn btn-outline-secondary"
 -               className="btn btn-sm btn-outline-secondary"
-
-- [ ] Import Button ajouté
-- [ ] Usages Bootstrap remplacés
-- [ ] Test de rendu OK
-
-### ProgrammateurForm.js
-**Chemin:** `src//components/programmateurs/mobile/ProgrammateurForm.js`
-
-**Usages Bootstrap détectés:**
--           className="btn btn-primary"
--           className="btn btn-primary"
--           className="btn btn-primary"
 
 - [ ] Import Button ajouté
 - [ ] Usages Bootstrap remplacés

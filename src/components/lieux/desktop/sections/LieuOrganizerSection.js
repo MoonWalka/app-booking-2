@@ -1,7 +1,8 @@
 import React, { useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import styles from './LieuOrganizerSection.module.css';
+import Button from '@ui/Button';
 import Card from '@/components/ui/Card';
+import styles from './LieuOrganizerSection.module.css';
 
 /**
  * Organizer section component for venue details
@@ -56,13 +57,13 @@ const LieuOrganizerSection = ({
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
-                  <button
+                  <Button
                     type="button"
-                    className="btn btn-outline-secondary"
+                    variant="outline-secondary"
                     onClick={handleCreateProgrammateur}
                   >
                     Créer un programmateur
-                  </button>
+                  </Button>
                 </div>
                 
                 {isSearching && (
@@ -122,14 +123,15 @@ const LieuOrganizerSection = ({
                       )}
                     </div>
                   </div>
-                  <button 
+                  <Button 
                     type="button" 
-                    className="btn btn-sm btn-outline-danger" 
+                    variant="outline-danger"
+                    size="sm"
                     onClick={handleRemoveProgrammateur}
                     aria-label="Supprimer ce programmateur"
                   >
                     <i className="bi bi-x-lg"></i>
-                  </button>
+                  </Button>
                 </div>
               </div>
             )}

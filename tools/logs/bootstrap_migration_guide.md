@@ -59,14 +59,14 @@ import Button from '@ui/Button';
 🎯 FICHIERS PRIORITAIRES (plus d'usages):
 src//components/lieux/desktop/sections/LieuxTableRow.js:3
 src//components/lieux/desktop/sections/LieuxResultsTable.js:3
-src//components/lieux/desktop/sections/LieuConcertsSection.js:3
-src//components/forms/FormGenerator.js:3
-src//components/contrats/desktop/sections/ContratGenerationActions.js:3
-src//components/contrats/desktop/ContratTemplateEditor.js:3
 src//components/concerts/sections/ConcertFormHeader.js:3
 src//components/concerts/sections/ConcertFormActions.js:3
 src//components/programmateurs/desktop/ProgrammateurStructuresSection.js:2
 src//components/programmateurs/desktop/ProgrammateurLieuxSection.js:2
+src//components/programmateurs/desktop/ProgrammateurConcertsSection.js:2
+src//components/programmateurs/desktop/ProgrammateurAddressSection.js:2
+src//components/programmateurs/desktop/DeleteProgrammateurModal.js:2
+src//components/lieux/desktop/sections/LieuOrganizerSection.js:2
 ## Checklist Migration par Fichier
 
 ### GenericList.js
@@ -145,40 +145,6 @@ src//components/programmateurs/desktop/ProgrammateurLieuxSection.js:2
 - [ ] Usages Bootstrap remplacés
 - [ ] Test de rendu OK
 
-### FormGenerator.js
-**Chemin:** `src//components/forms/FormGenerator.js`
-
-**Usages Bootstrap détectés:**
--             className="btn btn-primary"
--               className="btn btn-outline-secondary"
--               className="btn btn-outline-primary"
-
-- [ ] Import Button ajouté
-- [ ] Usages Bootstrap remplacés
-- [ ] Test de rendu OK
-
-### FormValidationInterface.js
-**Chemin:** `src//components/forms/validation/FormValidationInterface.js`
-
-**Usages Bootstrap détectés:**
--           className="btn btn-primary mt-3" 
--           className="btn btn-primary mt-3" 
-
-- [ ] Import Button ajouté
-- [ ] Usages Bootstrap remplacés
-- [ ] Test de rendu OK
-
-### FormValidationInterfaceNew.js
-**Chemin:** `src//components/forms/validation/FormValidationInterfaceNew.js`
-
-**Usages Bootstrap détectés:**
--           className="btn btn-primary mt-3" 
--           className="btn btn-primary mt-3" 
-
-- [ ] Import Button ajouté
-- [ ] Usages Bootstrap remplacés
-- [ ] Test de rendu OK
-
 ### StructuresList.js
 **Chemin:** `src//components/structures/desktop/StructuresList.js`
 
@@ -194,29 +160,6 @@ src//components/programmateurs/desktop/ProgrammateurLieuxSection.js:2
 
 **Usages Bootstrap détectés:**
 -                       className="btn btn-sm btn-outline-danger"
-
-- [ ] Import Button ajouté
-- [ ] Usages Bootstrap remplacés
-- [ ] Test de rendu OK
-
-### LieuStructuresSection.js
-**Chemin:** `src//components/lieux/desktop/sections/LieuStructuresSection.js`
-
-**Usages Bootstrap détectés:**
--               className="btn btn-sm btn-outline-primary"
--                     className="btn btn-sm btn-outline-danger ms-2"
-
-- [ ] Import Button ajouté
-- [ ] Usages Bootstrap remplacés
-- [ ] Test de rendu OK
-
-### LieuConcertsSection.js
-**Chemin:** `src//components/lieux/desktop/sections/LieuConcertsSection.js`
-
-**Usages Bootstrap détectés:**
--               className="btn btn-sm btn-outline-secondary"
--               className="btn btn-sm btn-outline-primary"
--                 className="btn btn-link" 
 
 - [ ] Import Button ajouté
 - [ ] Usages Bootstrap remplacés
@@ -362,18 +305,6 @@ src//components/programmateurs/desktop/ProgrammateurLieuxSection.js:2
 - [ ] Usages Bootstrap remplacés
 - [ ] Test de rendu OK
 
-### ContratTemplateEditor.js
-**Chemin:** `src//components/contrats/desktop/ContratTemplateEditor.js`
-
-**Usages Bootstrap détectés:**
--               className="btn btn-outline-secondary" 
--               className="btn btn-outline-primary" 
--               className="btn btn-primary" 
-
-- [ ] Import Button ajouté
-- [ ] Usages Bootstrap remplacés
-- [ ] Test de rendu OK
-
 ### ContratTemplateHeaderSection.js
 **Chemin:** `src//components/contrats/desktop/sections/ContratTemplateHeaderSection.js`
 
@@ -419,8 +350,6 @@ src//components/programmateurs/desktop/ProgrammateurLieuxSection.js:2
 
 **Usages Bootstrap détectés:**
 -             className="btn btn-primary"
--                   <button className="btn btn-danger" disabled>
--           <button className="btn btn-warning" disabled>
 
 - [ ] Import Button ajouté
 - [ ] Usages Bootstrap remplacés

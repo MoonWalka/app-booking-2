@@ -1,4 +1,5 @@
 import React from 'react';
+import Button from '@ui/Button';
 import styles from './SearchDropdown.module.css';
 
 /**
@@ -46,15 +47,16 @@ const SearchDropdown = ({
           onChange={(e) => setSearchTerm(e.target.value)}
           onFocus={onFocus}
         />
-        <button
+        <Button
           type="button"
-          className={`btn btn-outline-secondary ${styles.createButton}`}
+          variant="outline-secondary"
+          className={styles.createButton}
           onClick={onCreate}
           aria-label={`Créer un nouveau ${entityType}`}
         >
           <i className="bi bi-plus-lg"></i>
           {createButtonText || `Créer ${entityType}`}
-        </button>
+        </Button>
       </div>
       
       {/* Dropdown des résultats */}
@@ -102,14 +104,15 @@ const SearchDropdown = ({
               <div className={styles.noResultsMessage}>
                 {emptyResultsText || `Aucun ${entityType} trouvé`}
               </div>
-              <button
+              <Button
                 type="button"
-                className="btn btn-sm btn-primary"
+                variant="primary"
+                size="sm"
                 onClick={onCreate}
               >
                 <i className="bi bi-plus-circle me-1"></i>
                 {createButtonText || `Créer un nouveau ${entityType}`}
-              </button>
+              </Button>
             </div>
           )}
           

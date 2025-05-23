@@ -1,9 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Card from '@/components/ui/Card';
-import { Spinner } from 'react-bootstrap';
 import { db } from '@/firebaseInit';
-import { doc, collection, query, limit, getDocs, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
+import { 
+  doc, 
+  updateDoc, 
+  arrayUnion, 
+  arrayRemove, 
+  query, 
+  collection, 
+  getDocs, 
+  limit 
+} from 'firebase/firestore';
+import { Spinner } from 'react-bootstrap';
+import Button from '@ui/Button';
+import Card from '@/components/ui/Card';
 import styles from './LieuStructuresSection.module.css';
 
 /**
@@ -182,14 +192,15 @@ export const LieuStructuresSection = ({ lieu, isEditing = false }) => {
       headerActions={
         isEditing ? (
           <div className={styles.headerActions}>
-            <button
-              className="btn btn-sm btn-outline-primary"
+            <Button
+              size="sm"
+              variant="outline-primary"
               onClick={handleCreateStructure}
               title="Associer une structure à ce lieu"
             >
               <i className="bi bi-plus-lg"></i>
               <span className="d-none d-sm-inline ms-1">Associer une structure</span>
-            </button>
+            </Button>
           </div>
         ) : null
       }
@@ -203,13 +214,15 @@ export const LieuStructuresSection = ({ lieu, isEditing = false }) => {
               <div key={structure.id} className={styles.structureItem}>
                 <Link to={`/structures/${structure.id}`}>{structure.nom}</Link>
                 {isEditing && (
-                  <button
-                    className="btn btn-sm btn-outline-danger ms-2"
+                  <Button
+                    size="sm"
+                    variant="outline-danger"
+                    className="ms-2"
                     onClick={() => handleRemoveStructure(structure.id)}
                     title="Retirer cette structure du lieu"
                   >
                     <i className="bi bi-x-lg"></i>
-                  </button>
+                  </Button>
                 )}
               </div>
             ))

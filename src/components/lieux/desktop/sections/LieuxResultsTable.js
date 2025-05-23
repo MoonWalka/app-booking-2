@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import Button from '@ui/Button';
 import Table from '@/components/ui/Table';
 import styles from './LieuxResultsTable.module.css';
 
@@ -66,9 +67,14 @@ const LieuxResultsTable = ({ lieux, onDeleteLieu }) => {
       <a className={`btn btn-outline-primary ${styles.actionButton}`} href={`/lieux/edit/${lieu.id}`} title="Éditer">
         <i className="bi bi-pencil"></i>
       </a>
-      <button className={`btn btn-danger ${styles.actionButton}`} onClick={() => onDeleteLieu(lieu.id)} title="Supprimer">
+      <Button 
+        variant="danger" 
+        className={styles.actionButton} 
+        onClick={() => onDeleteLieu(lieu.id)} 
+        title="Supprimer"
+      >
         <i className="bi bi-trash"></i>
-      </button>
+      </Button>
     </div>
   );
 

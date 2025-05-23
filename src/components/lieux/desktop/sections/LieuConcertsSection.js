@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { db } from '@/firebaseInit';
 import { collection, query, where, limit, getDocs } from 'firebase/firestore';
+import Button from '@ui/Button';
 import styles from './LieuConcertsSection.module.css';
 import Card from '@/components/ui/Card';
 
@@ -118,22 +119,24 @@ const LieuConcertsSection = ({ lieu, isEditing }) => {
       headerActions={
         isEditing ? (
           <div className={styles.headerActions}>
-            <button 
+            <Button 
               onClick={() => navigate('/concerts', { state: { filterLieuId: lieu.id } })}
-              className="btn btn-sm btn-outline-secondary"
+              size="sm"
+              variant="outline-secondary"
               title="Voir tous les concerts"
             >
               <i className="bi bi-list"></i>
               <span className="d-none d-sm-inline ms-1">Tout voir</span>
-            </button>
-            <button 
+            </Button>
+            <Button 
               onClick={handleCreateConcert}
-              className="btn btn-sm btn-outline-primary"
+              size="sm"
+              variant="outline-primary"
               title="Ajouter un concert à ce lieu"
             >
               <i className="bi bi-plus-lg"></i>
               <span className="d-none d-sm-inline ms-1">Ajouter</span>
-            </button>
+            </Button>
           </div>
         ) : null
       }
@@ -158,12 +161,12 @@ const LieuConcertsSection = ({ lieu, isEditing }) => {
           ))}
           {concerts.length >= 5 && isEditing && (
             <div className="text-center mt-2">
-              <button 
-                className="btn btn-link" 
+              <Button 
+                variant="link"
                 onClick={() => navigate('/concerts', { state: { filterLieuId: lieu.id } })}
               >
                 Voir tous les concerts ({lieu.concertsCount || '?'})
-              </button>
+              </Button>
             </div>
           )}
         </div>

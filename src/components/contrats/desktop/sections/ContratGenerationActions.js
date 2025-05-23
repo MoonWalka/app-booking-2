@@ -45,7 +45,7 @@ const ContratGenerationActions = ({
               />
             }
             fileName={`Contrat_${concert.titre || 'Concert'}.pdf`}
-            className="btn btn-primary"
+            className={styles.pdfDownloadButton}
           >
             {({ blob, url, loading, error }) => {
               if (error) {

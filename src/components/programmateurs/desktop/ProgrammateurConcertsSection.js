@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { formatDate } from '@/utils/dateUtils';
+import Button from '@ui/Button';
 import styles from './ProgrammateurConcertsSection.module.css';
 import Card from '../../../components/ui/Card';
 
@@ -65,10 +66,10 @@ const ProgrammateurConcertsSection = ({
                 </div>
               </div>
               <div className={styles.concertActions}>
-                <Link to={`/concerts/${concert.id}`} className="btn btn-sm btn-outline-primary">
+                <Button as={Link} to={`/concerts/${concert.id}`} variant="outline-primary" size="sm">
                   <i className="bi bi-eye me-1"></i>
                   Voir
-                </Link>
+                </Button>
               </div>
             </div>
           ))}
@@ -77,13 +78,15 @@ const ProgrammateurConcertsSection = ({
 
       {!isEditing && (
         <div className={styles.addSection}>
-          <Link 
+          <Button 
+            as={Link}
             to="/concerts/nouveau" 
-            className="btn btn-sm btn-outline-success"
+            variant="outline-success"
+            size="sm"
           >
             <i className="bi bi-plus-lg me-1"></i>
             Ajouter un concert
-          </Link>
+          </Button>
         </div>
       )}
     </>

@@ -15,6 +15,30 @@
   flex-wrap: wrap;
 }
 
+/* Style pour le bouton de téléchargement PDF */
+.pdfDownloadButton {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  background-color: var(--tc-color-primary);
+  color: white;
+  text-decoration: none;
+  border-radius: var(--tc-border-radius);
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.pdfDownloadButton:hover {
+  background-color: var(--tc-color-primary-dark);
+  color: white;
+  text-decoration: none;
+}
+
+.pdfDownloadButton:focus {
+  outline: 2px solid var(--tc-color-primary);
+  outline-offset: 2px;
+}
+
 /* Styles responsive standardisés */
 @media (max-width: 768px) {
   .buttonsContainer {

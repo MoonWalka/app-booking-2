@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { Form, InputGroup, Table, Button, Tabs, Tab, Spinner } from 'react-bootstrap';
+import { Form, InputGroup, Table, Button as BootstrapButton, Tabs, Tab, Spinner } from 'react-bootstrap';
+import Button from '@ui/Button';
 import styles from './GenericList.module.css';
 
 const GenericList = ({
@@ -68,10 +69,10 @@ const GenericList = ({
       <div className={styles.header}>
         <h2 className={styles.title}>{title}</h2>
         {addButtonText && addButtonLink && (
-          <Link to={addButtonLink} className="btn btn-primary">
+          <Button as={Link} to={addButtonLink} variant="primary">
             <i className="bi bi-plus-circle me-2"></i>
             {addButtonText}
-          </Link>
+          </Button>
         )}
       </div>
 
@@ -87,12 +88,12 @@ const GenericList = ({
               onChange={handleSearchChange}
             />
             {searchTerm && (
-              <Button 
+              <BootstrapButton 
                 variant="outline-secondary" 
                 onClick={() => setSearchTerm('')}
               >
                 <i className="bi bi-x-lg"></i>
-              </Button>
+              </BootstrapButton>
             )}
           </InputGroup>
         )}
@@ -142,7 +143,7 @@ const GenericList = ({
 
           {hasMore && (
             <div className={styles.loadMoreContainer}>
-              <Button 
+              <BootstrapButton 
                 variant="outline-primary" 
                 onClick={handleLoadMoreFn}
                 disabled={loading}
@@ -165,7 +166,7 @@ const GenericList = ({
                     Charger plus
                   </>
                 )}
-              </Button>
+              </BootstrapButton>
             </div>
           )}
         </>

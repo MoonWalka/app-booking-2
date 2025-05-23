@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import Button from '@ui/Button';
 import styles from './LieuxListEmptyState.module.css';
 
 /**
@@ -16,12 +17,13 @@ const LieuxListEmptyState = ({ hasSearchQuery, hasFilters }) => {
           "Aucun lieu ne correspond à votre recherche ou aux filtres sélectionnés." : 
           <>
             Aucun lieu n'a été ajouté.{' '}
-            <button 
-              className="btn btn-link p-0 d-inline"
+            <Button 
+              variant="link"
+              className="p-0 d-inline"
               onClick={() => navigate('/lieux/nouveau')}
             >
               Cliquez ici
-            </button>
+            </Button>
             {' '}pour ajouter votre premier lieu.
           </>
         }

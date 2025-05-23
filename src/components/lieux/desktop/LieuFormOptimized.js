@@ -4,6 +4,7 @@ import Card from '@/components/ui/Card';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import ErrorMessage from '@/components/ui/ErrorMessage';
 import SectionTitle from '@/components/ui/SectionTitle';
+import Button from '@ui/Button';
 
 /**
  * Formulaire de lieu optimisé utilisant le hook basé sur useGenericEntityForm
@@ -174,20 +175,20 @@ const LieuFormOptimized = ({ lieuId }) => {
       </Card>
 
       <div className="form-actions">
-        <button 
+        <Button 
           type="submit" 
-          className="btn-primary" 
+          variant="primary" 
           disabled={submitting}
         >
           {submitting ? 'Enregistrement...' : 'Enregistrer'}
-        </button>
-        <button 
+        </Button>
+        <Button 
           type="button" 
-          className="btn-secondary"
+          variant="secondary"
           onClick={() => window.history.back()}
         >
           Annuler
-        </button>
+        </Button>
       </div>
     </form>
   );

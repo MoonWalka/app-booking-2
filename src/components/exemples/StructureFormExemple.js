@@ -1,5 +1,5 @@
 /**
- * Composant exemple démontrant l'utilisation de useStructureFormOptimized
+ * Composant exemple démontrant l'utilisation de useStructureForm
  * 
  * Ce composant sert d'exemple pour illustrer comment utiliser le hook optimisé
  * pour les formulaires de structures, conformément au plan de dépréciation
@@ -8,7 +8,7 @@
 
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { useStructureFormOptimized } from '@/hooks/structures';
+import { useStructureForm } from '@/hooks/structures';
 
 // Styles communs pour le formulaire (réutilisés des autres exemples)
 const formStyles = {
@@ -126,7 +126,7 @@ const formStyles = {
 };
 
 /**
- * Composant exemple démontrant l'utilisation de useStructureFormOptimized
+ * Composant exemple démontrant l'utilisation de useStructureForm
  */
 const StructureFormExemple = () => {
   const { id } = useParams();
@@ -157,7 +157,7 @@ const StructureFormExemple = () => {
     
     // Gestion des erreurs et de l'annulation
     handleCancel
-  } = useStructureFormOptimized(id);
+  } = useStructureForm(id);
   
   // Gestion du formulaire
   const handleSubmit = async (e) => {

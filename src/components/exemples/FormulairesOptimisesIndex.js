@@ -71,7 +71,7 @@ const FormulairesOptimisesIndex = () => {
     {
       id: 'structure',
       title: 'Formulaire de Structure Optimisé',
-      description: 'Exemple d\'un formulaire de structure utilisant useStructureFormOptimized avec validation SIRET et gestion des adresses.',
+      description: 'Exemple d\'un formulaire de structure utilisant useStructureForm avec validation SIRET et gestion des adresses.',
       link: '/exemples/formulaires/structure',
       tags: ['structure', 'formulaire', 'optimisé', 'validation', 'siret'],
       icon: 'building',

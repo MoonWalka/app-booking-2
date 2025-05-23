@@ -1,4 +1,4 @@
-// src/hooks/contrats/useContratDetailsMigrated.js
+// src/hooks/contrats/useContratDetails.js
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { doc, getDoc } from '@/firebaseInit';

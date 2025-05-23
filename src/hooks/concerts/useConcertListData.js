@@ -1,4 +1,4 @@
-// src/hooks/concerts/useConcertListData.optimized.js
+// src/hooks/concerts/useConcertListData.js
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { 
   collection, 

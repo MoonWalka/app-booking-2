@@ -1,4 +1,4 @@
-// src/hooks/concerts/useConcertDetailsOptimized.js
+// src/hooks/concerts/useConcertDetails.js
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { doc, getDoc, db } from '@/firebaseInit';
@@ -23,7 +23,7 @@ import { formatDate, formatMontant, isDatePassed, copyToClipboard, getCacheKey }
  * @returns {object} - API du hook
  */
 const useConcertDetails = (id, locationParam) => {
-  console.log(`[useConcertDetailsOptimized] init: id=${id}, location=${locationParam?.pathname || 'n/a'}`);
+  console.log(`[useConcertDetails] init: id=${id}, location=${locationParam?.pathname || 'n/a'}`);
   
   const navigate = useNavigate();
   const locationData = useLocation();
@@ -173,7 +173,7 @@ const useConcertDetails = (id, locationParam) => {
   }, [id, concertForms]);
   
   const handleDeleteSuccess = useCallback(() => {
-    console.log('[LOG][useConcertDetailsOptimized] handleDeleteSuccess (redirection)');
+    console.log('[LOG][useConcertDetails] handleDeleteSuccess (redirection)');
     // Notifier les autres composants
     try {
       const event = new CustomEvent('concertDeleted', { detail: { id } });
@@ -187,7 +187,7 @@ const useConcertDetails = (id, locationParam) => {
   // Mettre à jour les callbacks dans genericDetails
   useEffect(() => {
     if (genericDetails) {
-      console.log('[LOG][useConcertDetailsOptimized] genericDetails initialisé, handleDelete:', typeof genericDetails.handleDelete);
+      console.log('[LOG][useConcertDetails] genericDetails initialisé, handleDelete:', typeof genericDetails.handleDelete);
       genericDetails.options = {
         ...genericDetails.options, 
         onSaveSuccess: handleSaveSuccess,
@@ -203,7 +203,7 @@ const useConcertDetails = (id, locationParam) => {
     if (!entity || !genericDetails) return;
     
     try {
-      console.log("[useConcertDetailsOptimized] Démarrage des mises à jour bidirectionnelles");
+      console.log("[useConcertDetails] Démarrage des mises à jour bidirectionnelles");
       
       // Créer un tableau de promesses pour exécuter les mises à jour en parallèle
       const updatePromises = [];
@@ -259,9 +259,9 @@ const useConcertDetails = (id, locationParam) => {
       
       // Attendre que toutes les mises à jour soient terminées
       await Promise.all(updatePromises);
-      console.log("[useConcertDetailsOptimized] Mises à jour bidirectionnelles terminées avec succès");
+      console.log("[useConcertDetails] Mises à jour bidirectionnelles terminées avec succès");
     } catch (error) {
-      console.error("[useConcertDetailsOptimized] Erreur lors des mises à jour bidirectionnelles:", error);
+      console.error("[useConcertDetails] Erreur lors des mises à jour bidirectionnelles:", error);
       throw error; // Propager l'erreur pour la gestion en amont
     }
   }, [id, genericDetails, initialProgrammateurId, initialArtisteId, initialStructureId, initialLieuId, concertAssociations]);
@@ -376,24 +376,24 @@ const useConcertDetails = (id, locationParam) => {
     
     // Vérifier que l'entité est chargée et que tous les hooks dépendants sont prêts
     if (genericDetails && genericDetails.entity && !genericDetails.loading && concertAssociations) {
-      console.log("[useConcertDetailsOptimized] useEffect pour relations bidirectionnelles déclenché");
+      console.log("[useConcertDetails] useEffect pour relations bidirectionnelles déclenché");
       
       // Créer une fonction asynchrone à l'intérieur de l'effet
       const updateBidirectionalRelations = async () => {
         try {
-          console.log("[useConcertDetailsOptimized] Démarrage de la mise à jour des relations bidirectionnelles");
+          console.log("[useConcertDetails] Démarrage de la mise à jour des relations bidirectionnelles");
           // Attendre que toutes les entités soient chargées
           const entitiesLoaded = await fetchRelatedEntities();
-          console.log("[useConcertDetailsOptimized] Entités chargées pour les relations bidirectionnelles:", entitiesLoaded);
+          console.log("[useConcertDetails] Entités chargées pour les relations bidirectionnelles:", entitiesLoaded);
           
           // Effectuer les mises à jour bidirectionnelles
           await handleBidirectionalUpdates();
-          console.log("[useConcertDetailsOptimized] Mise à jour des relations bidirectionnelles terminée avec succès");
+          console.log("[useConcertDetails] Mise à jour des relations bidirectionnelles terminée avec succès");
           
           // Marquer comme déjà exécuté pour éviter les doubles appels
           bidirectionalUpdatesRef.current = true;
         } catch (error) {
-          console.error("[useConcertDetailsOptimized] Erreur lors de la mise à jour des relations bidirectionnelles:", error);
+          console.error("[useConcertDetails] Erreur lors de la mise à jour des relations bidirectionnelles:", error);
         }
       };
       
@@ -475,7 +475,7 @@ const useConcertDetails = (id, locationParam) => {
   const handleCancel = useCallback(() => {
     if (!genericDetails) return;
     
-    console.log("[useConcertDetailsOptimized] Annulation de l'édition");
+    console.log("[useConcertDetails] Annulation de l'édition");
     
     // Utiliser la méthode handleCancel du hook générique si elle existe
     if (typeof genericDetails.handleCancel === 'function') {
@@ -504,7 +504,7 @@ const useConcertDetails = (id, locationParam) => {
   // Log de debug pour vérifier que l'entité est correctement chargée
   useEffect(() => {
     if (genericDetails && genericDetails.entity) {
-      console.log("[useConcertDetailsOptimized] Entité chargée:", {
+      console.log("[useConcertDetails] Entité chargée:", {
         id: genericDetails.entity.id,
         titre: genericDetails.entity.titre,
         date: genericDetails.entity.date,
@@ -512,7 +512,7 @@ const useConcertDetails = (id, locationParam) => {
         isEditing: genericDetails.isEditing
       });
     } else if (!genericDetails?.loading) {
-      console.warn("[useConcertDetailsOptimized] Entité non disponible après chargement");
+      console.warn("[useConcertDetails] Entité non disponible après chargement");
     }
   }, [genericDetails]);
 
@@ -520,19 +520,19 @@ const useConcertDetails = (id, locationParam) => {
   const toggleEditMode = useCallback(() => {
     if (!genericDetails) return;
     
-    console.log(`[useConcertDetailsOptimized] Basculement du mode édition - isEditing: ${genericDetails.isEditing}`);
+    console.log(`[useConcertDetails] Basculement du mode édition - isEditing: ${genericDetails.isEditing}`);
     // Utiliser directement la fonction toggleEditMode du hook générique
     genericDetails.toggleEditMode();
   }, [genericDetails]);
   
   // Ajout log pour la suppression
   const handleDeleteClick = useCallback(() => {
-    console.log('[LOG][useConcertDetailsOptimized] handleDeleteClick appelé');
+    console.log('[LOG][useConcertDetails] handleDeleteClick appelé');
     if (genericDetails.handleDelete) {
-      console.log('[LOG][useConcertDetailsOptimized] genericDetails.handleDelete existe, appel');
+      console.log('[LOG][useConcertDetails] genericDetails.handleDelete existe, appel');
       genericDetails.handleDelete();
     } else {
-      console.warn('[LOG][useConcertDetailsOptimized] genericDetails.handleDelete est undefined');
+      console.warn('[LOG][useConcertDetails] genericDetails.handleDelete est undefined');
     }
   }, [genericDetails]);
   

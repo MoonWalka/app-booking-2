@@ -1,4 +1,4 @@
-// src/hooks/structures/useStructureDetailsOptimized.js
+// src/hooks/structures/useStructureDetails.js
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGenericEntityDetails } from '@/hooks/common';
@@ -68,7 +68,7 @@ const useStructureDetails = (id) => {
       showSuccessToast(`La structure a été enregistrée avec succès`);
     },
     onSaveError: (error) => {
-      console.error(`[useStructureDetailsOptimized] Erreur de sauvegarde:`, error);
+      console.error(`[useStructureDetails] Erreur de sauvegarde:`, error);
       showErrorToast(`Erreur lors de l'enregistrement de la structure: ${error.message}`);
     },
     onDeleteSuccess: () => {
@@ -76,7 +76,7 @@ const useStructureDetails = (id) => {
       navigate('/structures');
     },
     onDeleteError: (error) => {
-      console.error(`[useStructureDetailsOptimized] Erreur de suppression:`, error);
+      console.error(`[useStructureDetails] Erreur de suppression:`, error);
       showErrorToast(`Erreur lors de la suppression de la structure: ${error.message}`);
     },
     

@@ -16,9 +16,7 @@ export { default as useConcertDetails } from './useConcertDetails';
 
 export { default as useConcertStatus } from './useConcertStatus';
 
-export { default as useConcertStatusMigrated } from './useConcertStatusMigrated';
 
-export { default as useConcertStatusV2 } from './useConcertStatusMigrated';
 
 // Exports des autres hooks spécifiques aux concerts
 export { default as useConcertListData } from './useConcertListData';

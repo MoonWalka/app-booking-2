@@ -1,10 +1,18 @@
+// src/hooks/concerts/useConcertStatus.js
 import { useMemo } from 'react';
+import { debugLog } from '@/utils/logUtils';
 
 /**
- * Hook to manage concert status information and display utilities
+ * Hook optimisé pour gérer les informations de statut des concerts et les utilitaires d'affichage
+ * Version migrée qui respecte l'architecture V2
+ * 
+ * @returns {Object} API pour la gestion des statuts de concert
  */
-export const useConcertStatus = () => {
-  // Status details mapping with icons, labels, variants and tooltips
+const useConcertStatus = () => {
+  debugLog('Hook useConcertStatus instancié', 'debug', 'useConcertStatus');
+
+  // Mapping des détails de statut avec icônes, libellés, variants et tooltips
+  // Mémorisé pour éviter les recréations inutiles
   const statusDetailsMap = useMemo(() => ({
     contact: {
       icon: '📞',
@@ -50,7 +58,7 @@ export const useConcertStatus = () => {
     }
   }), []);
   
-  // Function to get status details
+  // Fonction pour obtenir les détails d'un statut
   const getStatusDetails = (statut) => {
     return statusDetailsMap[statut] || {
       icon: '❓',
@@ -61,7 +69,7 @@ export const useConcertStatus = () => {
     };
   };
 
-  // Function to get contract button variant
+  // Fonction pour obtenir la variante de bouton de contrat
   const getContractButtonVariant = (status) => {
     if (!status) return 'outline-primary';
     
@@ -77,7 +85,7 @@ export const useConcertStatus = () => {
     }
   };
   
-  // Function to get contract tooltip text
+  // Fonction pour obtenir le texte du tooltip du contrat
   const getContractTooltip = (status) => {
     if (!status) return 'Aucun contrat généré';
     
@@ -93,7 +101,16 @@ export const useConcertStatus = () => {
     }
   };
 
-  // Function to get status message and action recommendation
+  /**
+   * Fonction intelligente pour obtenir un message de statut et une recommandation d'action
+   * basée sur l'état complet du concert
+   * 
+   * @param {Object} concert - L'objet concert
+   * @param {boolean} hasForm - Indique si un formulaire est associé
+   * @param {boolean} hasUnvalidatedForm - Indique si un formulaire non validé est associé
+   * @param {boolean} isDatePassed - Indique si la date du concert est passée
+   * @returns {Object} - Message, action recommandée et variante
+   */
   const getStatusMessage = (concert, hasForm, hasUnvalidatedForm, isDatePassed) => {
     if (!concert) return { message: '', action: '', variant: 'light' };
     
@@ -126,13 +143,33 @@ export const useConcertStatus = () => {
         return { message: concert.statut || 'Non défini', action: 'unknown', variant: 'light' };
     }
   };
+
+  /**
+   * Fonction pour déterminer si un changement de statut est autorisé
+   * @param {string} currentStatus - Le statut actuel
+   * @param {string} targetStatus - Le statut cible
+   * @returns {boolean} - True si le changement est autorisé
+   */
+  const isStatusChangeAllowed = (currentStatus, targetStatus) => {
+    // Cas particulier: annulation possible depuis n'importe quel statut
+    if (targetStatus === 'annule') return true;
+    
+    // Cas particulier: retour à un état précédent toujours possible
+    const currentStep = getStatusDetails(currentStatus).step;
+    const targetStep = getStatusDetails(targetStatus).step;
+    
+    // Autoriser les changements progressifs (même step ou step+1)
+    return targetStep <= currentStep + 1;
+  };
   
+  // API retournée
   return {
     statusDetailsMap,
     getStatusDetails,
     getContractButtonVariant,
     getContractTooltip,
-    getStatusMessage
+    getStatusMessage,
+    isStatusChangeAllowed
   };
 };
 

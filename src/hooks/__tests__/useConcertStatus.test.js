@@ -1,6 +1,6 @@
-// src/hooks/__tests__/useConcertStatusMigrated.test.js
+// src/hooks/__tests__/useConcertStatus.test.js
 import { renderHook, act } from '@testing-library/react';
-import useConcertStatusMigrated from '../concerts/useConcertStatusMigrated';
+import useConcertStatus from '../concerts/useConcertStatus';
 
 // Mock des modules et services externes
 jest.mock('../../../src/utils/logUtils', () => ({
@@ -26,7 +26,7 @@ jest.mock('react-toastify', () => ({
   }
 }));
 
-describe('useConcertStatusMigrated', () => {
+describe('useConcertStatus', () => {
   // Données de test
   const testConcert = {
     id: 'concert-123',
@@ -45,7 +45,7 @@ describe('useConcertStatusMigrated', () => {
   });
 
   test('devrait initialiser correctement l\'état et les fonctions', () => {
-    const { result } = renderHook(() => useConcertStatusMigrated());
+    const { result } = renderHook(() => useConcertStatus());
 
     // Vérifier la structure de retour
     expect(result.current).toHaveProperty('isUpdating');
@@ -62,7 +62,7 @@ describe('useConcertStatusMigrated', () => {
   });
 
   test('devrait fournir les options de statut correctes', () => {
-    const { result } = renderHook(() => useConcertStatusMigrated());
+    const { result } = renderHook(() => useConcertStatus());
     
     // Vérifier que toutes les options de statut sont présentes
     const requiredStatuses = ['draft', 'confirmed', 'cancelled', 'completed'];
@@ -78,7 +78,7 @@ describe('useConcertStatusMigrated', () => {
   });
 
   test('devrait fournir des fonctions utilitaires pour le statut', () => {
-    const { result } = renderHook(() => useConcertStatusMigrated());
+    const { result } = renderHook(() => useConcertStatus());
     
     // Tester getStatusLabel
     expect(result.current.getStatusLabel('draft')).toBe('Brouillon');
@@ -93,7 +93,7 @@ describe('useConcertStatusMigrated', () => {
   });
 
   test('devrait vérifier correctement si un changement de statut est autorisé', () => {
-    const { result } = renderHook(() => useConcertStatusMigrated());
+    const { result } = renderHook(() => useConcertStatus());
     
     // Les règles basiques de transition de statut
     expect(result.current.isStatusChangeAllowed('draft', 'confirmed')).toBe(true);
@@ -112,7 +112,7 @@ describe('useConcertStatusMigrated', () => {
     const { updateDoc } = require('firebase/firestore');
     const { toast } = require('react-toastify');
     
-    const { result } = renderHook(() => useConcertStatusMigrated());
+    const { result } = renderHook(() => useConcertStatus());
     
     // Exécuter le changement de statut
     await act(async () => {
@@ -136,7 +136,7 @@ describe('useConcertStatusMigrated', () => {
     
     updateDoc.mockImplementationOnce(() => Promise.reject(new Error('Test error')));
     
-    const { result } = renderHook(() => useConcertStatusMigrated());
+    const { result } = renderHook(() => useConcertStatus());
     
     // Exécuter le changement de statut qui va échouer
     await act(async () => {
@@ -156,7 +156,7 @@ describe('useConcertStatusMigrated', () => {
   test('ne devrait pas permettre le changement vers le même statut', async () => {
     const { updateDoc } = require('firebase/firestore');
     
-    const { result } = renderHook(() => useConcertStatusMigrated());
+    const { result } = renderHook(() => useConcertStatus());
     
     // Tenter de changer vers le même statut
     await act(async () => {

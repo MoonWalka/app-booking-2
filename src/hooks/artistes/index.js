@@ -15,13 +15,11 @@ export { default as useArtisteDetails } from './useArtisteDetails';
  */
 
 // Export de la version migrée du hook de liste d'artistes
-export { default as useArtistesListMigrated } from './useArtistesListMigrated';
 
 /**
  * @recommended La version migrée du hook useArtistesList basée sur useGenericEntityList.
  * À utiliser dans les nouveaux développements.
  */
-export { default as useArtistesListV2 } from './useArtistesListMigrated';
 
 /**
  * @recommended APPROCHE RECOMMANDÉE - Versions optimisées des hooks pour les artistes
@@ -31,7 +29,6 @@ export { default as useArtistesListV2 } from './useArtistesListMigrated';
  */
 export { default as useArtisteForm } from './useArtisteForm';
 export { default as useDeleteArtisteOptimized } from './useDeleteArtisteOptimized';
-export { default as useArtistesListOptimized } from './useArtistesListOptimized';
 
 // Export des hooks utilitaires supplémentaires
 export { default as useHandleDeleteArtist } from './useHandleDeleteArtist';

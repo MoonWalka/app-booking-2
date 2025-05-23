@@ -1,13 +1,13 @@
 /**
- * Test unitaire pour le hook useArtistesListOptimized
+ * Test unitaire pour le hook useArtistesList
  */
 
 import { renderHook, act } from '@testing-library/react';
 import { useGenericEntityList } from '@/hooks/common';
 
 // Mock complet du hook
-jest.mock('../../hooks/artistes/useArtistesListOptimized', () => ({
-  useArtistesListOptimized: jest.fn()
+jest.mock('../../hooks/artistes/useArtistesList', () => ({
+  useArtistesList: jest.fn()
 }), { virtual: true });
 
 // Mock des modules importés par le hook
@@ -17,9 +17,9 @@ jest.mock('../../hooks/common', () => ({
 }));
 
 // Importer le mock après l'avoir défini
-import { useArtistesListOptimized } from '../../hooks/artistes/useArtistesListOptimized';
+import { useArtistesList } from '../../hooks/artistes/useArtistesList';
 
-describe('useArtistesListOptimized', () => {
+describe('useArtistesList', () => {
   // Mock des données pour les artistes
   const mockArtistes = [
     { 
@@ -74,15 +74,15 @@ describe('useArtistesListOptimized', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     useGenericEntityList.mockReturnValue(mockEntityList);
-    useArtistesListOptimized.mockImplementation(() => mockArtistesListHook);
+    useArtistesList.mockImplementation(() => mockArtistesListHook);
   });
   
   test('devrait initialiser correctement le hook avec les paramètres par défaut', () => {
     // Rendu du hook
-    const { result } = renderHook(() => useArtistesListOptimized());
+    const { result } = renderHook(() => useArtistesList());
     
     // Vérifier que le hook a été appelé
-    expect(useArtistesListOptimized).toHaveBeenCalled();
+    expect(useArtistesList).toHaveBeenCalled();
     
     // Vérifier que les propriétés principales sont exposées
     expect(result.current).toHaveProperty('artistes');
@@ -107,15 +107,15 @@ describe('useArtistesListOptimized', () => {
     };
     
     // Rendu du hook avec des paramètres personnalisés
-    renderHook(() => useArtistesListOptimized(customOptions));
+    renderHook(() => useArtistesList(customOptions));
     
     // Vérifier que le hook a été appelé avec les bons paramètres
-    expect(useArtistesListOptimized).toHaveBeenCalledWith(customOptions);
+    expect(useArtistesList).toHaveBeenCalledWith(customOptions);
   });
   
   test('refreshWithStats devrait rafraîchir les données et recalculer les statistiques', () => {
     // Rendu du hook
-    const { result } = renderHook(() => useArtistesListOptimized());
+    const { result } = renderHook(() => useArtistesList());
     
     // Appeler refreshWithStats
     act(() => {
@@ -128,7 +128,7 @@ describe('useArtistesListOptimized', () => {
   
   test('filterByGenre devrait appliquer le filtre correctement', () => {
     // Rendu du hook
-    const { result } = renderHook(() => useArtistesListOptimized());
+    const { result } = renderHook(() => useArtistesList());
     
     // Appliquer un filtre de genre
     act(() => {
@@ -141,7 +141,7 @@ describe('useArtistesListOptimized', () => {
   
   test('filterByHasConcerts devrait appliquer le filtre correctement', () => {
     // Rendu du hook
-    const { result } = renderHook(() => useArtistesListOptimized());
+    const { result } = renderHook(() => useArtistesList());
     
     // Appliquer un filtre pour les artistes avec concerts
     act(() => {
@@ -154,7 +154,7 @@ describe('useArtistesListOptimized', () => {
   
   test('devrait exposer toutes les propriétés et méthodes du hook générique', () => {
     // Rendu du hook
-    const { result } = renderHook(() => useArtistesListOptimized());
+    const { result } = renderHook(() => useArtistesList());
     
     // Vérifier que toutes les propriétés du hook générique sont exposées
     Object.keys(mockEntityList).forEach(key => {

@@ -145,4 +145,3 @@ export {
  * Ces versions sont conformes au plan de dépréciation qui prévoit la suppression 
  * des hooks spécifiques d'ici novembre 2025.
  */
-export { default as useDeleteStructureOptimized } from './useDeleteStructureOptimized';

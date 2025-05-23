@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import styles from './StructureDetails.module.css';
 
 // MIGRATION: Utilisation des hooks optimisés au lieu des versions V2/déprécié
-import { useStructureDetails, useDeleteStructureOptimized } from '@/hooks/structures';
+import { useStructureDetails, useDeleteStructure } from '@/hooks/structures';
 
 // Import section components
 import StructureHeader from './sections/StructureHeader';
@@ -37,7 +37,7 @@ const StructureDetails = () => {
     showDeleteModal,
     setShowDeleteModal,
     handleDelete
-  } = useDeleteStructureOptimized(() => {
+  } = useDeleteStructure(() => {
     // Callback après suppression réussie
     navigate('/structures');
   });

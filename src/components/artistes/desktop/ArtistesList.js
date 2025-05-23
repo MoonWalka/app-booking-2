@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import styles from './ArtistesList.module.css';
 
 // MIGRATION: Utilisation des hooks optimisés au lieu des versions V2
-import { useArtistesList, useDeleteArtisteOptimized } from '@/hooks/artistes';
+import { useArtistesList, useDeleteArtiste } from '@/hooks/artistes';
 
 // Import des composants UI
 import ArtistesListHeader from '../sections/ArtistesListHeader';
@@ -59,7 +59,7 @@ const ArtistesList = () => {
   });
 
   // MIGRATION: Utilisation du hook optimisé pour la suppression
-  const { handleDelete } = useDeleteArtisteOptimized((deletedId) => {
+  const { handleDelete } = useDeleteArtiste((deletedId) => {
     // Callback exécuté après une suppression réussie
     // Mise à jour de la liste locale d'artistes
     setArtistes(prevArtistes => prevArtistes.filter(a => a.id !== deletedId));

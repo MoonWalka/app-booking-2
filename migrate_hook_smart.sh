@@ -73,7 +73,7 @@ for version_file in "${VERSIONS_TO_MIGRATE[@]}"; do
     echo "  🔄 Migration: $version_name → $TARGET_VERSION"
     
     # Traiter seulement les fichiers EXTERNES au domaine hooks/$DOMAIN
-    find src/ -name "*.js" -o -name "*.jsx" | grep -v "src/hooks/$DOMAIN/" | while read -r file; do
+    find src/ -name "*.js" -o -name "*.jsx" | grep -v "hooks/$DOMAIN" | while read -r file; do
         if [ -f "$file" ]; then
             # Vérifier si le fichier contient des références avant de le modifier
             if grep -q "$version_name" "$file" 2>/dev/null; then

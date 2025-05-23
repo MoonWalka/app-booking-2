@@ -1,13 +1,13 @@
 /**
- * Test unitaire pour le hook useLieuSearchOptimized
+ * Test unitaire pour le hook useLieuSearch
  */
 
 import { renderHook, act } from '@testing-library/react';
 import { useGenericEntitySearch } from '@/hooks/common';
 
 // Mock complet du hook
-jest.mock('../../hooks/lieux/useLieuSearchOptimized', () => ({
-  useLieuSearchOptimized: jest.fn()
+jest.mock('../../hooks/lieux/useLieuSearch', () => ({
+  useLieuSearch: jest.fn()
 }), { virtual: true });
 
 // Mock des modules importés par le hook
@@ -22,9 +22,9 @@ jest.mock('react-router-dom', () => ({
 }));
 
 // Importer le mock après l'avoir défini
-import { useLieuSearchOptimized } from '../../hooks/lieux/useLieuSearchOptimized';
+import { useLieuSearch } from '../../hooks/lieux/useLieuSearch';
 
-describe('useLieuSearchOptimized', () => {
+describe('useLieuSearch', () => {
   // Données de test pour les lieux
   const mockLieux = [
     { 
@@ -107,7 +107,7 @@ describe('useLieuSearchOptimized', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     useGenericEntitySearch.mockReturnValue(mockSearchHook);
-    useLieuSearchOptimized.mockImplementation((options) => {
+    useLieuSearch.mockImplementation((options) => {
       if (options?.onSelect) {
         mockLieuSearchHook.setLieu = jest.fn((lieu) => {
           mockSearchHook.setSelectedEntity(lieu);
@@ -121,10 +121,10 @@ describe('useLieuSearchOptimized', () => {
   
   test('devrait initialiser correctement le hook avec les paramètres par défaut', () => {
     // Rendu du hook
-    const { result } = renderHook(() => useLieuSearchOptimized());
+    const { result } = renderHook(() => useLieuSearch());
     
     // Vérifier que le hook a été appelé
-    expect(useLieuSearchOptimized).toHaveBeenCalled();
+    expect(useLieuSearch).toHaveBeenCalled();
     
     // Vérifier que les propriétés principales sont exposées
     expect(result.current).toHaveProperty('searchTerm');
@@ -152,15 +152,15 @@ describe('useLieuSearchOptimized', () => {
     };
     
     // Rendu du hook avec des paramètres personnalisés
-    renderHook(() => useLieuSearchOptimized(customOptions));
+    renderHook(() => useLieuSearch(customOptions));
     
     // Vérifier que le hook a été appelé avec les bons paramètres
-    expect(useLieuSearchOptimized).toHaveBeenCalledWith(customOptions);
+    expect(useLieuSearch).toHaveBeenCalledWith(customOptions);
   });
   
   test('setLieu devrait sélectionner un lieu et appeler onSelect si fourni', () => {
     // Rendu du hook avec onSelect
-    const { result } = renderHook(() => useLieuSearchOptimized({ onSelect: mockOnSelect }));
+    const { result } = renderHook(() => useLieuSearch({ onSelect: mockOnSelect }));
     
     // Lieu à sélectionner
     const lieu = mockTransformedLieux[0];
@@ -179,7 +179,7 @@ describe('useLieuSearchOptimized', () => {
   
   test('clearLieu devrait effacer le lieu sélectionné', () => {
     // Rendu du hook
-    const { result } = renderHook(() => useLieuSearchOptimized());
+    const { result } = renderHook(() => useLieuSearch());
     
     // Effacer la sélection
     act(() => {
@@ -192,7 +192,7 @@ describe('useLieuSearchOptimized', () => {
   
   test('handleCreateLieu devrait naviguer vers la page de création de lieu', () => {
     // Rendu du hook
-    const { result } = renderHook(() => useLieuSearchOptimized());
+    const { result } = renderHook(() => useLieuSearch());
     
     // Créer un lieu
     act(() => {
@@ -205,7 +205,7 @@ describe('useLieuSearchOptimized', () => {
   
   test('navigateToLieuDetails devrait naviguer vers la page de détails du lieu', () => {
     // Rendu du hook
-    const { result } = renderHook(() => useLieuSearchOptimized());
+    const { result } = renderHook(() => useLieuSearch());
     
     // Naviguer vers les détails d'un lieu
     const lieuId = 'lieu-1';
@@ -219,7 +219,7 @@ describe('useLieuSearchOptimized', () => {
   
   test('devrait exposer les bonnes propriétés et méthodes du hook générique', () => {
     // Rendu du hook
-    const { result } = renderHook(() => useLieuSearchOptimized());
+    const { result } = renderHook(() => useLieuSearch());
     
     // Vérifier que les propriétés du hook générique sont exposées
     expect(result.current.searchTerm).toBe(mockSearchHook.searchTerm);

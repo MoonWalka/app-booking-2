@@ -4,7 +4,6 @@
 
 
 
-export { default as useLieuSearchOptimized } from './useLieuSearchOptimized';
 
 export { default as useLieuxFiltersOptimized } from './useLieuxFiltersOptimized';
 
@@ -32,9 +31,7 @@ export { default as useLieuDeleteV2 } from './useLieuDeleteMigrated';
 
 export { default as useLieuSearch } from './useLieuSearch';
 
-export { default as useLieuSearchMigrated } from './useLieuSearchMigrated';
 
-export { default as useLieuSearchV2 } from './useLieuSearchMigrated';
 
 export { default as useLieuxFilters } from './useLieuxFilters';
 

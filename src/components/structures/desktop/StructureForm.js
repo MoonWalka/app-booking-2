@@ -2,7 +2,7 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { Form, Alert } from 'react-bootstrap';
 // MIGRATION: Utilisation du hook optimisé au lieu de l'ancien hook
-import { useStructureFormOptimized, useStructureValidation } from '@/hooks/structures';
+import { useStructureForm, useStructureValidation } from '@/hooks/structures';
 import useDeleteStructureOptimized from '@/hooks/structures/useDeleteStructureOptimized';
 import styles from './StructureForm.module.css';
 
@@ -33,7 +33,7 @@ const StructureForm = () => {
     handleChange,
     handleSubmit,
     handleCancel
-  } = useStructureFormOptimized(id);
+  } = useStructureForm(id);
 
   // Use validation hook
   const { errors } = useStructureValidation(formData);

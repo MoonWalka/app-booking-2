@@ -8,13 +8,11 @@ export { default as useArtistesList } from './useArtistesList';
 export { default as useArtisteDetails } from './useArtisteDetails';
 
 // Export de la version migrée avec son nom original
-export { default as useArtisteDetailsMigrated } from './useArtisteDetailsMigrated';
 
 /**
  * @recommended La version migrée du hook useArtisteDetails basée sur les hooks génériques.
  * À utiliser dans les nouveaux développements.
  */
-export { default as useArtisteDetailsV2 } from './useArtisteDetailsMigrated';
 
 // Export de la version migrée du hook de liste d'artistes
 export { default as useArtistesListMigrated } from './useArtistesListMigrated';
@@ -32,7 +30,6 @@ export { default as useArtistesListV2 } from './useArtistesListMigrated';
  * des hooks spécifiques d'ici novembre 2025.
  */
 export { default as useArtisteForm } from './useArtisteForm';
-export { default as useArtisteDetailsOptimized } from './useArtisteDetailsOptimized';
 export { default as useDeleteArtisteOptimized } from './useDeleteArtisteOptimized';
 export { default as useArtistesListOptimized } from './useArtistesListOptimized';
 

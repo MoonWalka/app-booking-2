@@ -7,7 +7,7 @@
  * - ENTITY_TYPE: Type de l'entité en minuscule (ex: concert, structure, etc.)
  * - HOOK_PATH: Chemin d'importation du hook (ex: @/hooks/concerts)
  * 
- * Exemple: Pour useConcertFormOptimized:
+ * Exemple: Pour useConcertForm:
  * - ENTITY_NAME: Concert
  * - ENTITY_TYPE: concert
  * - HOOK_PATH: @/hooks/concerts

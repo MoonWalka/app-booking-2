@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import styles from './ConcertForm.module.css';
 
 // Hooks personnalisés
-import useConcertFormOptimized from '@/hooks/concerts/useConcertFormOptimized';
+import useConcertForm from '@/hooks/concerts/useConcertForm';
 import useConcertDeleteOptimized from '@/hooks/concerts/useConcertDeleteOptimized';
 import { useEntitySearch } from '@/hooks/common';
 
@@ -32,8 +32,8 @@ const ConcertFormDesktop = () => {
   console.log("[ConcertForm] isNewConcert (basé sur useParams id === 'nouveau'):", isNewConcert, "ID actuel:", id);
 
   // Hook optimisé pour gérer état, chargement, soumission
-  const formHook = useConcertFormOptimized(id);
-  console.log("[ConcertForm] Hook useConcertFormOptimized initialisé. ID passé au hook:", id);
+  const formHook = useConcertForm(id);
+  console.log("[ConcertForm] Hook useConcertForm initialisé. ID passé au hook:", id);
   
   // Hook optimisé pour gérer la suppression
   const {

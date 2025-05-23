@@ -1,6 +1,7 @@
 // src/components/common/layout/MobileLayout.js
 import React, { useState } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
+import Button from '@ui/Button';
 import { useAuth } from '../../../context/AuthContext.js';
 import { APP_NAME } from '../../../config.js';
 // Import redondant supprimé - les styles sont déjà chargés dans App.js
@@ -114,10 +115,14 @@ function MobileLayout() {
           {currentUser && (
             <div className="user-info">
               <div className="user-email">{currentUser.email}</div>
-              <button onClick={handleLogout} className="btn btn-sm btn-outline-light">
+              <Button 
+                onClick={handleLogout} 
+                variant="outline-light"
+                size="sm"
+              >
                 <i className="bi bi-box-arrow-right me-2"></i>
                 Déconnexion
-              </button>
+              </Button>
             </div>
           )}
         </div>

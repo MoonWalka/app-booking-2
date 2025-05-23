@@ -57,16 +57,16 @@ import Button from '@ui/Button';
 ## Fichiers Prioritaires (Plus d'usages)
 
 🎯 FICHIERS PRIORITAIRES (plus d'usages):
-src//components/lieux/desktop/sections/LieuxTableRow.js:3
-src//components/lieux/desktop/sections/LieuxResultsTable.js:3
 src//components/concerts/sections/ConcertFormHeader.js:3
-src//components/concerts/sections/ConcertFormActions.js:3
 src//components/programmateurs/desktop/ProgrammateurStructuresSection.js:2
 src//components/programmateurs/desktop/ProgrammateurLieuxSection.js:2
 src//components/programmateurs/desktop/ProgrammateurConcertsSection.js:2
 src//components/programmateurs/desktop/ProgrammateurAddressSection.js:2
-src//components/programmateurs/desktop/DeleteProgrammateurModal.js:2
-src//components/lieux/desktop/sections/LieuOrganizerSection.js:2
+src//components/lieux/desktop/sections/LieuxTableRow.js:2
+src//components/lieux/desktop/sections/LieuxResultsTable.js:2
+src//components/structures/desktop/StructuresList.js:1
+src//components/molecules/GenericList.js:1
+src//components/lieux/desktop/sections/LieuxListHeader.js:1
 ## Checklist Migration par Fichier
 
 ### GenericList.js
@@ -79,50 +79,6 @@ src//components/lieux/desktop/sections/LieuOrganizerSection.js:2
 - [ ] Usages Bootstrap remplacés
 - [ ] Test de rendu OK
 
-### ConcertFormActions.js
-**Chemin:** `src//components/concerts/sections/ConcertFormActions.js`
-
-**Usages Bootstrap détectés:**
--           className={`btn btn-outline-secondary ${styles.actionButton}`}
--             className={`btn btn-outline-danger ${styles.actionButton}`}
--             className="btn btn-primary"
-
-- [ ] Import Button ajouté
-- [ ] Usages Bootstrap remplacés
-- [ ] Test de rendu OK
-
-### SearchDropdown.js
-**Chemin:** `src//components/concerts/sections/SearchDropdown.js`
-
-**Usages Bootstrap détectés:**
--           className={`btn btn-outline-secondary ${styles.createButton}`}
--                 className="btn btn-sm btn-primary"
-
-- [ ] Import Button ajouté
-- [ ] Usages Bootstrap remplacés
-- [ ] Test de rendu OK
-
-### DeleteConfirmModal.js
-**Chemin:** `src//components/concerts/sections/DeleteConfirmModal.js`
-
-**Usages Bootstrap détectés:**
--             className="btn btn-outline-secondary"
--             className="btn btn-danger"
-
-- [ ] Import Button ajouté
-- [ ] Usages Bootstrap remplacés
-- [ ] Test de rendu OK
-
-### SelectedEntityCard.js
-**Chemin:** `src//components/concerts/sections/SelectedEntityCard.js`
-
-**Usages Bootstrap détectés:**
--             className={`btn btn-sm btn-outline-secondary ${styles.editButton}`}
-
-- [ ] Import Button ajouté
-- [ ] Usages Bootstrap remplacés
-- [ ] Test de rendu OK
-
 ### ConcertFormHeader.js
 **Chemin:** `src//components/concerts/sections/ConcertFormHeader.js`
 
@@ -130,16 +86,6 @@ src//components/lieux/desktop/sections/LieuOrganizerSection.js:2
 -           className={`btn btn-outline-secondary ${styles.actionBtn}`}
 -             className={`btn btn-outline-danger ${styles.actionBtn}`}
 -           className={`btn btn-primary ${styles.actionBtn}`}
-
-- [ ] Import Button ajouté
-- [ ] Usages Bootstrap remplacés
-- [ ] Test de rendu OK
-
-### DeleteConcertModal.js
-**Chemin:** `src//components/concerts/desktop/DeleteConcertModal.js`
-
-**Usages Bootstrap détectés:**
--             className="btn btn-danger"
 
 - [ ] Import Button ajouté
 - [ ] Usages Bootstrap remplacés
@@ -160,17 +106,6 @@ src//components/lieux/desktop/sections/LieuOrganizerSection.js:2
 
 **Usages Bootstrap détectés:**
 -                       className="btn btn-sm btn-outline-danger"
-
-- [ ] Import Button ajouté
-- [ ] Usages Bootstrap remplacés
-- [ ] Test de rendu OK
-
-### LieuOrganizerSection.js
-**Chemin:** `src//components/lieux/desktop/sections/LieuOrganizerSection.js`
-
-**Usages Bootstrap détectés:**
--                     className="btn btn-outline-secondary"
--                     className="btn btn-sm btn-outline-danger" 
 
 - [ ] Import Button ajouté
 - [ ] Usages Bootstrap remplacés
@@ -202,7 +137,6 @@ src//components/lieux/desktop/sections/LieuOrganizerSection.js:2
 **Usages Bootstrap détectés:**
 -       <a className={`btn btn-secondary ${styles.actionButton}`} href={`/lieux/${lieu.id}`} title="Voir">
 -       <a className={`btn btn-outline-primary ${styles.actionButton}`} href={`/lieux/edit/${lieu.id}`} title="Éditer">
--       <button className={`btn btn-danger ${styles.actionButton}`} onClick={() => onDeleteLieu(lieu.id)} title="Supprimer">
 
 - [ ] Import Button ajouté
 - [ ] Usages Bootstrap remplacés
@@ -214,7 +148,6 @@ src//components/lieux/desktop/sections/LieuOrganizerSection.js:2
 **Usages Bootstrap détectés:**
 -               className={`btn btn-secondary ${styles.actionButton}`}
 -               className={`btn btn-outline-primary ${styles.actionButton}`}
--               className={`btn btn-danger ${styles.actionButton}`}
 
 - [ ] Import Button ajouté
 - [ ] Usages Bootstrap remplacés
@@ -237,17 +170,6 @@ src//components/lieux/desktop/sections/LieuOrganizerSection.js:2
 **Usages Bootstrap détectés:**
 -                     <Link to={`/lieux/${lieu.id}`} className="btn btn-sm btn-outline-primary">
 -                 className="btn btn-sm btn-outline-success"
-
-- [ ] Import Button ajouté
-- [ ] Usages Bootstrap remplacés
-- [ ] Test de rendu OK
-
-### DeleteProgrammateurModal.js
-**Chemin:** `src//components/programmateurs/desktop/DeleteProgrammateurModal.js`
-
-**Usages Bootstrap détectés:**
--                 className="btn btn-secondary" 
--                 className="btn btn-danger" 
 
 - [ ] Import Button ajouté
 - [ ] Usages Bootstrap remplacés

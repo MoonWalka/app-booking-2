@@ -1,6 +1,7 @@
 // src/components/common/layout/DesktopLayout.js
 import React, { useState, useEffect } from 'react';
 import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
+import Button from '@ui/Button';
 import { useAuth } from '@/context/AuthContext.js';
 import { APP_NAME } from '@/config.js';
 import layoutStyles from '@/components/layout/Layout.module.css';
@@ -99,10 +100,14 @@ function DesktopLayout({ children }) {
           {currentUser && (
             <div className={sidebarStyles.userInfo}>
               <div className={sidebarStyles.userEmail}>{currentUser.email}</div>
-              <button onClick={handleLogout} className="btn btn-sm btn-outline-light">
+              <Button 
+                onClick={handleLogout} 
+                variant="outline-light"
+                size="sm"
+              >
                 <i className="bi bi-box-arrow-right me-2"></i>
                 Déconnexion
-              </button>
+              </Button>
             </div>
           )}
         </div>

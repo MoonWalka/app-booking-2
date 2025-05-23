@@ -1,0 +1,174 @@
+/*
+ * Styles pour Card
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
+/* 
+ * Styles pour le composant Card standardisé
+ */
+
+/* Style de base pour toutes les cartes */
+.card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-sizing: border-box;
+  background-color: white;
+  color: var(--tc-text-primary);
+}
+
+/* Variantes */
+.card-default {
+  box-shadow: 0 2px 5px var(--tc-color-rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
+  border: 1px solid var(--tc-border-color);
+}
+
+.card-outlined {
+  border: 1px solid var(--tc-border-color);
+}
+
+.card-elevated {
+  box-shadow: 0 4px 12px var(--tc-color-rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15));
+}
+
+/* Niveaux d'élévation */
+.elevation-low {
+  box-shadow: 0 2px 4px var(--tc-color-rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.08));
+}
+
+.elevation-medium {
+  box-shadow: 0 4px 8px var(--tc-color-rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.12));
+}
+
+.elevation-high {
+  box-shadow: 0 8px 16px var(--tc-color-rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.18));
+}
+
+/* Tailles */
+.fullWidth {
+  width: 100%;
+}
+
+.fullHeight {
+  height: 100%;
+}
+
+/* En-tête de la carte */
+.cardHeader {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  box-sizing: border-box;
+  min-height: 48px;
+}
+
+.headerWithBorder {
+  border-bottom: 1px solid var(--tc-border-color);
+}
+
+.headerContent {
+  flex: 1;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.subtitle {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--tc-text-secondary);
+}
+
+.avatar {
+  margin-right: 0.75rem;
+  display: flex;
+  align-items: center;
+}
+
+.action {
+  margin-left: 0.75rem;
+}
+
+/* Corps de la carte */
+.cardBody {
+  flex: 1;
+  box-sizing: border-box;
+}
+
+.padding-none {
+  padding: 0;
+}
+
+.padding-small {
+  padding: 0.75rem;
+}
+
+.padding-default {
+  padding: 1rem;
+}
+
+.padding-large {
+  padding: 1.5rem;
+}
+
+/* Pied de page de la carte */
+.cardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  box-sizing: border-box;
+  min-height: 48px;
+}
+
+.footerWithBorder {
+  border-top: 1px solid var(--tc-border-color);
+}
+
+.footerContent {
+  flex: 1;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Média de la carte */
+.cardMedia {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--tc-background-secondary);
+}
+
+.mediaItem {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Adaptations responsives */
+@media screen and (max-width: 768px) {
+  .cardHeader, .cardFooter {
+    padding: 0.75rem;
+  }
+  
+  .title {
+    font-size: 1rem;
+  }
+  
+  .padding-default {
+    padding: 0.75rem;
+  }
+  
+  .padding-large {
+    padding: 1.25rem;
+  }
+}

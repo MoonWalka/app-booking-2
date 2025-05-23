@@ -5,16 +5,16 @@
   width: 100vw;
   height: 100vh;
   background: rgba(0, 0, 0, 0.55);
-  z-index: var(--tc-z-index-modal, 1050);
+  z-index: var(--tc-z-index-modal);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .modalContent {
-  background: var(--tc-bg-white, #fff);
-  border-radius: var(--tc-border-radius-lg, 1rem);
-  box-shadow: var(--tc-shadow-lg, 0 10px 15px rgba(0,0,0,0.1));
+  background: var(--tc-bg-white);
+  border-radius: var(--tc-border-radius-lg);
+  box-shadow: var(--tc-shadow-lg));
   max-width: 600px;
   width: 100%;
   max-height: 90vh;
@@ -25,82 +25,82 @@
 }
 
 .modalHeader {
-  padding: var(--tc-spacing-4, 1rem) var(--tc-spacing-5, 1.5rem);
-  border-bottom: 1px solid var(--tc-border-ultralight, #e0e0e0);
+  padding: var(--tc-spacing-4) var(--tc-spacing-5);
+  border-bottom: 1px solid var(--tc-border-ultralight);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: var(--tc-bg-light, #faf9f9);
+  background: var(--tc-bg-light);
 }
 
 .modalTitle {
-  font-size: var(--tc-font-size-lg, 1.25rem);
-  font-weight: var(--tc-font-weight-bold, 700);
-  color: var(--tc-color-title, #222);
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-bold);
+  color: var(--tc-color-title);
   margin: 0;
 }
 
 .closeButton {
   background: transparent;
   border: none;
-  color: var(--tc-text-muted, #888);
-  font-size: var(--tc-spacing-4, 1rem);
+  color: var(--tc-text-muted);
+  font-size: var(--tc-spacing-4);
   line-height: 1;
   padding: 0;
-  border-radius: var(--tc-border-radius-sm, 0.25rem);
+  border-radius: var(--tc-border-radius-sm);
   cursor: pointer;
-  transition: color var(--tc-transition-fast, 0.15s);
+  transition: color var(--tc-transition-fast);
 }
 .closeButton:hover {
-  color: var(--tc-danger-color, #c22);
-  background: var(--tc-bg-light, #f8f9fa);
+  color: var(--tc-danger-color);
+  background: var(--tc-bg-light);
 }
 
 .modalBody {
-  background: var(--tc-bg-white, #fff);
-  padding: var(--tc-spacing-5, 1.5rem);
-  color: var(--tc-text-color, #2d2d2d);
-  font-size: var(--tc-font-size-md, 1rem);
+  background: var(--tc-bg-white);
+  padding: var(--tc-spacing-5);
+  color: var(--tc-text-color);
+  font-size: var(--tc-font-size-md);
 }
 
 .warningIcon {
-  color: var(--tc-warning-color, #ffc107);
+  color: var(--tc-warning-color);
   font-size: 2.7rem;
   display: flex;
   justify-content: center;
-  margin-bottom: var(--tc-spacing-3, 0.5rem);
+  margin-bottom: var(--tc-spacing-3);
 }
 
 .warningText {
-  color: var(--tc-danger-color, #b20000);
-  font-weight: var(--tc-font-weight-semibold, 600);
-  margin-top: var(--tc-spacing-3, 0.5rem);
+  color: var(--tc-danger-color);
+  font-weight: var(--tc-font-weight-semibold);
+  margin-top: var(--tc-spacing-3);
   margin-bottom: 0;
-  font-size: var(--tc-font-size-md, 1rem);
+  font-size: var(--tc-font-size-md);
 }
 
 .modalFooter {
   display: flex;
   justify-content: flex-end;
-  gap: var(--tc-spacing-2-5, 0.7rem);
-  padding: var(--tc-spacing-4, 1rem) var(--tc-spacing-5, 1.5rem);
-  border-top: 1px solid var(--tc-border-ultralight, #e0e0e0);
-  background: var(--tc-bg-light, #faf9f9);
+  gap: var(--tc-spacing-2-5);
+  padding: var(--tc-spacing-4) var(--tc-spacing-5);
+  border-top: 1px solid var(--tc-border-ultralight);
+  background: var(--tc-bg-light);
 }
 
 @media (max-width: 768px) {
   .modalContent {
     max-width: 95vw;
-    border-radius: var(--tc-border-radius-md, 0.5rem);
+    border-radius: var(--tc-border-radius-md);
   }
   .modalBody {
-    padding: var(--tc-spacing-4, 1rem);
+    padding: var(--tc-spacing-4);
     max-height: 50vh;
   }
   .modalFooter {
     flex-direction: column;
-    gap: var(--tc-spacing-2, 0.5rem);
-    padding: var(--tc-spacing-3, 0.75rem) var(--tc-spacing-4, 1rem);
+    gap: var(--tc-spacing-2);
+    padding: var(--tc-spacing-3) var(--tc-spacing-4);
   }
   .modalFooter button {
     width: 100%;
@@ -112,12 +112,12 @@
     max-width: 98vw;
   }
   .modalHeader {
-    padding: var(--tc-spacing-2-5, 0.7rem) var(--tc-spacing-3, 0.8rem);
+    padding: var(--tc-spacing-2-5) var(--tc-spacing-3);
   }
   .modalBody {
-    padding: var(--tc-spacing-3, 0.8rem);
+    padding: var(--tc-spacing-3);
   }
   .modalFooter {
-    padding: var(--tc-spacing-2-5, 0.7rem) var(--tc-spacing-3, 0.8rem);
+    padding: var(--tc-spacing-2-5) var(--tc-spacing-3);
   }
 }

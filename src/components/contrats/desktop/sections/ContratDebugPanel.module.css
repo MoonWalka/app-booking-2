@@ -11,9 +11,9 @@
 
 .debugCard {
   margin-top: 1rem;
-  border: 1px solid var(--tc-color-ddd, #ddd);
+  border: 1px solid var(--tc-color-ddd);
   border-radius: 4px;
-  background-color: var(--tc-color-f8f9fa, #f8f9fa);
+  background-color: var(--tc-color-f8f9fa);
 }
 
 .debugHeader {
@@ -21,12 +21,12 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem;
-  border-bottom: 1px solid var(--tc-color-ddd, #ddd);
-  background-color: var(--tc-color-eee, #eee);
+  border-bottom: 1px solid var(--tc-color-ddd);
+  background-color: var(--tc-color-eee);
 }
 
 .debugPre {
-  background-color: var(--tc-color-f0f0f0, #f0f0f0);
+  background-color: var(--tc-color-f0f0f0);
   padding: 0.5rem;
   border-radius: 3px;
   max-height: 200px;

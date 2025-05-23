@@ -120,7 +120,7 @@
    MODE ÉDITION
    ============================= */
 .cardEditing {
-  border: var(--tc-border-width, 1px) dashed var(--tc-border-color);
+  border: var(--tc-border-width) dashed var(--tc-border-color);
   box-shadow: var(--tc-shadow-sm);
 }
 

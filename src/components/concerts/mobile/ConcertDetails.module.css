@@ -21,8 +21,8 @@
   display: flex;
   align-items: center;
   padding: var(--tc-spacing-2) var(--tc-spacing-3);
-  background-color: var(--tc-color-fff, #fff);
-  box-shadow: 0 2px 4px var(--tc-color-rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05));
+  background-color: var(--tc-color-fff);
+  box-shadow: 0 2px 4px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.05));
   position: sticky;
   top: 0;
   z-index: 10;
@@ -65,8 +65,8 @@
   display: flex;
   overflow-x: auto;
   padding: var(--tc-spacing-2);
-  background-color: var(--tc-color-fff, #fff);
-  box-shadow: 0 1px 2px var(--tc-color-rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05));
+  background-color: var(--tc-color-fff);
+  box-shadow: 0 1px 2px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.05));
   position: sticky;
   top: 56px;
   z-index: 9;
@@ -85,16 +85,16 @@
 }
 
 .infoCard {
-  background-color: var(--tc-color-fff, #fff);
+  background-color: var(--tc-color-fff);
   border-radius: var(--tc-radius-md);
   padding: var(--tc-spacing-3);
-  box-shadow: 0 1px 3px var(--tc-color-rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
+  box-shadow: 0 1px 3px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.1));
 }
 
 .infoItem {
   margin-bottom: var(--tc-spacing-2);
   padding-bottom: var(--tc-spacing-2);
-  border-bottom: 1px solid var(--tc-color-f0f0f0, #f0f0f0);
+  border-bottom: 1px solid var(--tc-color-f0f0f0);
 }
 
 .infoItem:last-child {
@@ -133,10 +133,10 @@
 }
 
 .lieuCard {
-  background-color: var(--tc-color-fff, #fff);
+  background-color: var(--tc-color-fff);
   border-radius: var(--tc-radius-md);
   padding: var(--tc-spacing-3);
-  box-shadow: 0 1px 3px var(--tc-color-rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
+  box-shadow: 0 1px 3px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.1));
 }
 
 .lieuName {
@@ -180,10 +180,10 @@
 }
 
 .programmateurCard {
-  background-color: var(--tc-color-fff, #fff);
+  background-color: var(--tc-color-fff);
   border-radius: var(--tc-radius-md);
   padding: var(--tc-spacing-3);
-  box-shadow: 0 1px 3px var(--tc-color-rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
+  box-shadow: 0 1px 3px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.1));
 }
 
 .programmateurName {
@@ -208,7 +208,7 @@
 
 .formSection {
   margin-top: var(--tc-spacing-4);
-  border-top: 1px solid var(--tc-color-f0f0f0, #f0f0f0);
+  border-top: 1px solid var(--tc-color-f0f0f0);
   padding-top: var(--tc-spacing-3);
 }
 
@@ -246,10 +246,10 @@
 }
 
 .artisteCard {
-  background-color: var(--tc-color-fff, #fff);
+  background-color: var(--tc-color-fff);
   border-radius: var(--tc-radius-md);
   padding: var(--tc-spacing-3);
-  box-shadow: 0 1px 3px var(--tc-color-rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
+  box-shadow: 0 1px 3px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.1));
 }
 
 .artisteName {
@@ -306,10 +306,10 @@
   align-items: center;
   justify-content: center;
   padding: var(--tc-spacing-8);
-  background-color: var(--tc-color-fff, #fff);
+  background-color: var(--tc-color-fff);
   border-radius: var(--tc-radius-md);
   text-align: center;
-  box-shadow: 0 1px 3px var(--tc-color-rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
+  box-shadow: 0 1px 3px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.1));
 }
 
 .emptyState i {
@@ -378,7 +378,7 @@
 /* Contenu des onglets */
 .tabContent {
   padding: var(--tc-spacing-3);
-  background-color: var(--tc-color-fff, #fff);
+  background-color: var(--tc-color-fff);
 }
 
 /* Conteneur pour le générateur de formulaire */

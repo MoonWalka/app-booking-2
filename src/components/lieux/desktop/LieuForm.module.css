@@ -281,7 +281,7 @@
   font-size: var(--tc-font-size-sm);
   color: var(--tc-text-color);
   border-top: 1px solid var(--tc-gray-200);
-  font-family: var(--tc-font-family-mono, monospace);
+  font-family: var(--tc-font-family-mono);
 }
 
 /* =============================

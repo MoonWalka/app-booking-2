@@ -63,7 +63,7 @@
   font-size: 16px;
   display: inline-block;
   vertical-align: middle;
-  background: var(--tc-primary-color, #222);
+  background: var(--tc-primary-color);
   color: #fff;
   border-radius: 6px;
   padding: 2px 6px;

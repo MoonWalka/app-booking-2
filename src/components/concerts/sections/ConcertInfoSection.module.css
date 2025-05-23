@@ -47,7 +47,7 @@
 
 .formControl:focus {
   border-color: var(--tc-text-color); /* var(--tc-focus-border) */
-  box-shadow: 0 0 0 0.25rem var(--tc-color-rgba(13, 110, 253, 0.25), rgba(13, 110, 253, 0.25)); /* var(--tc-focus-shadow) */
+  box-shadow: 0 0 0 0.25rem var(--tc-color-rgba(13), rgba(13, 110, 253, 0.25)); /* var(--tc-focus-shadow) */
   outline: 0;
 }
 

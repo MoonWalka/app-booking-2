@@ -43,7 +43,7 @@
   background-color: var(--tc-white);
   color: var(--tc-secondary-color);
   font-weight: var(--tc-font-weight-bold);
-  box-shadow: 0 1px 4px 0 var(--tc-shadow-color-sm, rgba(0,0,0,0.04));
+  box-shadow: 0 1px 4px 0 var(--tc-shadow-color-sm));
   border: 1px solid var(--tc-border-color);
   z-index: 1;
 }

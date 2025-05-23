@@ -318,7 +318,7 @@
   margin-bottom: var(--tc-spacing-4);
   border: 1px solid var(--tc-color-border-medium);
   border-radius: var(--tc-radius-sm);
-  box-shadow: 0 1px 3px var(--tc-color-rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
+  box-shadow: 0 1px 3px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.1));
 }
 
 .sectionBody {

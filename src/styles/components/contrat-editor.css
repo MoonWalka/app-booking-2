@@ -109,7 +109,7 @@
   margin-bottom: var(--tc-spacing-4);
   width: 100%;
   min-height: 500px;
-  box-shadow: 0 2px 5px var(--tc-color-rgba(0,0,0,0.1), rgba(0,0,0,0.1));
+  box-shadow: 0 2px 5px var(--tc-color-rgba(0), rgba(0,0,0,0.1));
 }
 
 .preview-header {
@@ -134,7 +134,7 @@
   min-height: 297mm;
   margin: 0 auto;
   padding: 20mm;
-  box-shadow: 0 0 10px var(--tc-color-rgba(0,0,0,0.1), rgba(0,0,0,0.1));
+  box-shadow: 0 0 10px var(--tc-color-rgba(0), rgba(0,0,0,0.1));
   background-color: var(--tc-bg-default);
 }
 
@@ -171,7 +171,7 @@
   width: 100%;
   height: auto;
   border: 1px solid var(--tc-color-border-medium);
-  box-shadow: 0 2px 5px var(--tc-color-rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
+  box-shadow: 0 2px 5px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.1));
   overflow: visible;
   background-color: var(--tc-bg-default);
 }

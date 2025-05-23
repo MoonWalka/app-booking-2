@@ -1,0 +1,235 @@
+/*
+ * Styles pour ParametresApparence.module.css
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 20 mai 2025
+ */
+
+/* =============================
+   SÉLECTEUR DE COULEUR
+   ============================= */
+.colorPreviewContainer {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-spacing-md);
+}
+
+.colorPreview {
+  width: var(--tc-color-preview-width, 40px);
+  height: var(--tc-color-preview-height, 40px);
+  border-radius: var(--tc-border-radius);
+  border: 1px solid var(--tc-border-color);
+  box-shadow: var(--tc-shadow-sm);
+  transition: var(--tc-transition);
+}
+
+.colorPreview:hover {
+  border-color: var(--tc-primary-color);
+}
+
+.colorInput {
+  width: var(--tc-color-input-width, 120px);
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  border: 1px solid var(--tc-input-border);
+  border-radius: var(--tc-border-radius);
+  font-size: var(--tc-font-size-sm);
+  font-family: monospace;
+  color: var(--tc-input-color);
+  background-color: var(--tc-input-bg);
+}
+
+.colorInput:focus {
+  border-color: var(--tc-input-focus-border);
+  outline: none;
+  box-shadow: var(--tc-input-focus-shadow);
+}
+
+.colorPickerPopup {
+  position: absolute;
+  z-index: var(--tc-z-index-dropdown);
+  margin-top: var(--tc-spacing-xs);
+  background-color: var(--tc-bg-color);
+  border: 1px solid var(--tc-border-color);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-shadow);
+  padding: var(--tc-spacing-sm);
+}
+
+/* =============================
+   CONTRÔLE DE TAILLE DE POLICE
+   ============================= */
+.fontSizeContainer {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-spacing-md);
+}
+
+.fontSizeSlider {
+  flex: 1;
+  height: 6px;
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: var(--tc-gray-300);
+  border-radius: var(--tc-border-radius-pill);
+  outline: none;
+}
+
+.fontSizeSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: var(--tc-primary-color);
+  cursor: pointer;
+  transition: var(--tc-transition);
+}
+
+.fontSizeSlider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: var(--tc-primary-color);
+  cursor: pointer;
+  transition: var(--tc-transition);
+}
+
+.fontSizeSlider:focus::-webkit-slider-thumb {
+  background-color: var(--tc-primary-dark);
+  box-shadow: 0 0 0 3px var(--tc-focus-ring-color);
+}
+
+.fontSizeValue {
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-text-color);
+  width: 50px;
+  text-align: center;
+  padding: var(--tc-spacing-xs) 0;
+  border: 1px solid var(--tc-border-color);
+  border-radius: var(--tc-border-radius);
+  background-color: var(--tc-input-bg);
+}
+
+/* =============================
+   BOUTONS D'ACTION
+   ============================= */
+.actionButtons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--tc-spacing-lg);
+  padding-top: var(--tc-spacing-md);
+  border-top: 1px solid var(--tc-border-color);
+}
+
+.resetButtonsGroup {
+  display: flex;
+  gap: var(--tc-spacing-sm);
+}
+
+.resetButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tc-spacing-xs);
+  padding: var(--tc-btn-padding-y) var(--tc-btn-padding-x);
+  border-radius: var(--tc-border-radius);
+  border: 1px solid var(--tc-border-color);
+  background-color: var(--tc-bg-color);
+  color: var(--tc-text-color);
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-medium);
+  cursor: pointer;
+  transition: var(--tc-transition);
+}
+
+.resetButton:hover {
+  background-color: var(--tc-hover-bg);
+  border-color: var(--tc-border-medium);
+}
+
+.saveButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tc-spacing-xs);
+  padding: var(--tc-btn-padding-y) var(--tc-btn-padding-x);
+  border-radius: var(--tc-border-radius);
+  background-color: var(--tc-btn-primary-bg);
+  color: var(--tc-btn-primary-text);
+  border: none;
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-medium);
+  cursor: pointer;
+  transition: var(--tc-transition);
+}
+
+.saveButton:hover {
+  background-color: var(--tc-btn-primary-hover-bg);
+}
+
+/* =============================
+   PRÉVISUALISATION
+   ============================= */
+.previewContainer {
+  margin-top: var(--tc-spacing-md);
+  padding: var(--tc-spacing-md);
+  border: 1px solid var(--tc-border-color);
+  border-radius: var(--tc-border-radius);
+  background-color: var(--tc-gray-50);
+}
+
+.previewTitle {
+  font-size: var(--tc-font-size-md);
+  font-weight: var(--tc-font-weight-semibold);
+  margin-bottom: var(--tc-spacing-sm);
+  color: var(--tc-text-color);
+}
+
+.previewContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-spacing-sm);
+}
+
+/* =============================
+   RESPONSIVE DESIGN
+   ============================= */
+@media (max-width: 992px) { /* Valeurs fixes pour compatibilité */
+  .actionButtons {
+    margin-top: var(--tc-spacing-md);
+  }
+}
+
+@media (max-width: 576px) {
+  .actionButtons {
+    flex-direction: column-reverse;
+    gap: var(--tc-spacing-md);
+  }
+  
+  .resetButtonsGroup {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .saveButton {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .colorInput {
+    width: 100%;
+  }
+  
+  .fontSizeContainer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .fontSizeSlider {
+    margin-right: 0;
+    margin-bottom: var(--tc-spacing-sm);
+  }
+  
+  .fontSizeValue {
+    width: 100%;
+  }
+}

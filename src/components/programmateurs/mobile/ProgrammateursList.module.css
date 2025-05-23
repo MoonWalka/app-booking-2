@@ -81,13 +81,13 @@
   background-color: var(--tc-bg-color);
   border: 1px solid var(--tc-border-color));
   border-radius: var(--tc-border-radius));
-  box-shadow: 0 2px 4px var(--tc-color-rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05));
+  box-shadow: 0 2px 4px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.05));
   transition: all 0.3s ease;
   cursor: pointer;
 }
 
 .programmateurCard:hover {
-  box-shadow: 0 4px 6px var(--tc-color-rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
+  box-shadow: 0 4px 6px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.1));
   transform: translateY(-2px);
 }
 

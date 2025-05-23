@@ -7,14 +7,14 @@
 .templatePreview {
   margin-bottom: 1.5rem;
   padding: 0.75rem;
-  border: 1px solid var(--tc-color-e0e0e0, #e0e0e0);
+  border: 1px solid var(--tc-color-e0e0e0);
   border-radius: 4px;
-  background-color: var(--tc-color-fafafa, #fafafa);
+  background-color: var(--tc-color-fafafa);
 }
 
 .previewHeader {
   margin-bottom: 1.25rem;
-  border-bottom: 1px solid var(--tc-color-f0f0f0, #f0f0f0);
+  border-bottom: 1px solid var(--tc-color-f0f0f0);
   padding-bottom: 0.75rem;
 }
 
@@ -22,7 +22,7 @@
   font-size: 1.25rem;
   font-weight: 600;
   margin-bottom: 0.25rem;
-  color: var(--tc-color-344767, #344767);
+  color: var(--tc-color-344767);
 }
 
 .previewContent {
@@ -30,7 +30,7 @@
 }
 
 .multiPagePreviewWrapper {
-  background-color: var(--tc-color-f5f5f5, #f5f5f5);
+  background-color: var(--tc-color-f5f5f5);
   border-radius: 4px;
   padding: 0.5rem;
 }

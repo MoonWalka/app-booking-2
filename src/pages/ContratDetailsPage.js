@@ -6,7 +6,7 @@ import ContratPDFWrapper from '@/components/contrats/ContratPDFWrapper';
 import styles from './ContratDetailsPage.module.css';
 
 // Import custom hooks
-import { useContratDetailsV2 } from '@/hooks/contrats';
+import { useContratDetails } from '@/hooks/contrats';
 import useContratActions from '@/hooks/contrats/useContratActions';
 import { usePdfPreview } from '@/hooks/contrats';
 
@@ -34,7 +34,7 @@ const ContratDetailsPage = () => {
     loading, 
     error,
     setContrat
-  } = useContratDetailsV2(id);
+  } = useContratDetails(id);
   
   // Hook for handling contract actions (mark as sent, signed, delete)
   const {

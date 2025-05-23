@@ -1,0 +1,244 @@
+📋 Rapport généré le Fri May 23 13:08:16 CEST 2025
+=========================================
+=================
+
+🔍 ANALYSE: useLieuDelete dans lieux
+----------------------------------------
+Versions trouvées:
+  ✓ Original: src/hooks/lieux/useLieuDelete.js
+  🔄 Migrated: src/hooks/lieux/useLieuDeleteMigrated.js
+  ⚡ Optimized: src/hooks/lieux/useLieuDeleteOptimized.js
+  📊 useLieuDelete:        2 imports,       20 usages
+    ✅ UTILISÉ ACTIVEMENT
+  📊 useLieuDeleteMigrated:        0 imports,        5 usages
+  📊 useLieuDeleteOptimized:        2 imports,       10 usages
+    ✅ UTILISÉ ACTIVEMENT
+
+🔍 ANALYSE: useLieuDetails dans lieux
+----------------------------------------
+Versions trouvées:
+  ✓ Original: src/hooks/lieux/useLieuDetails.js
+  🔄 Migrated: src/hooks/lieux/useLieuDetailsMigrated.js
+  ⚡ Optimized: src/hooks/lieux/useLieuDetailsOptimized.js
+  📊 useLieuDetails:        7 imports,       43 usages
+    ✅ UTILISÉ ACTIVEMENT
+  📊 useLieuDetailsMigrated:        2 imports,       20 usages
+    ✅ UTILISÉ ACTIVEMENT
+  📊 useLieuDetailsOptimized:        4 imports,       16 usages
+    ✅ UTILISÉ ACTIVEMENT
+
+🔍 ANALYSE: useLieuForm dans lieux
+----------------------------------------
+Versions trouvées:
+  ✓ Original: src/hooks/lieux/useLieuForm.js
+  🔄 Migrated: src/hooks/lieux/useLieuFormMigrated.js
+  ⚡ Optimized: src/hooks/lieux/useLieuFormOptimized.js
+  ✅ Complete: src/hooks/lieux/useLieuFormComplete.js
+  📊 useLieuForm:        5 imports,       34 usages
+    ✅ UTILISÉ ACTIVEMENT
+  📊 useLieuFormMigrated:        0 imports,        4 usages
+  📊 useLieuFormOptimized:        5 imports,       18 usages
+    ✅ UTILISÉ ACTIVEMENT
+  📊 useLieuFormComplete:        0 imports,        3 usages
+
+🔍 ANALYSE: useLieuSearch dans lieux
+----------------------------------------
+Versions trouvées:
+  ✓ Original: src/hooks/lieux/useLieuSearch.js
+  🔄 Migrated: src/hooks/lieux/useLieuSearchMigrated.js
+  ⚡ Optimized: src/hooks/lieux/useLieuSearchOptimized.js
+  📊 useLieuSearch:        4 imports,       46 usages
+    ✅ UTILISÉ ACTIVEMENT
+  📊 useLieuSearchMigrated:        0 imports,        6 usages
+  📊 useLieuSearchOptimized:        3 imports,       26 usages
+    ✅ UTILISÉ ACTIVEMENT
+
+🔍 ANALYSE: useLieuxFilters dans lieux
+----------------------------------------
+Versions trouvées:
+  ✓ Original: src/hooks/lieux/useLieuxFilters.js
+  🔄 Migrated: src/hooks/lieux/useLieuxFiltersMigrated.js
+  ⚡ Optimized: src/hooks/lieux/useLieuxFiltersOptimized.js
+  📊 useLieuxFilters:        4 imports,       48 usages
+    ✅ UTILISÉ ACTIVEMENT
+  📊 useLieuxFiltersMigrated:        1 imports,       13 usages
+    ✅ UTILISÉ ACTIVEMENT
+  📊 useLieuxFiltersOptimized:        3 imports,       26 usages
+    ✅ UTILISÉ ACTIVEMENT
+=================
+
+🔍 ANALYSE: useArtisteDetails dans artistes
+----------------------------------------
+Versions trouvées:
+  ✓ Original: src/hooks/artistes/useArtisteDetails.js
+  🔄 Migrated: src/hooks/artistes/useArtisteDetailsMigrated.js
+  ⚡ Optimized: src/hooks/artistes/useArtisteDetailsOptimized.js
+  📊 useArtisteDetails:        2 imports,       18 usages
+    ✅ UTILISÉ ACTIVEMENT
+  📊 useArtisteDetailsMigrated:        1 imports,        5 usages
+    ✅ UTILISÉ ACTIVEMENT
+  📊 useArtisteDetailsOptimized:        0 imports,        5 usages
+
+🔍 ANALYSE: useArtisteSearch dans artistes
+----------------------------------------
+Versions trouvées:
+  ✓ Original: src/hooks/artistes/useArtisteSearch.js
+  ⚡ Optimized: src/hooks/artistes/useArtisteSearchOptimized.js
+  📊 useArtisteSearch:        1 imports,       13 usages
+    ✅ UTILISÉ ACTIVEMENT
+  📊 useArtisteSearchOptimized:        0 imports,        3 usages
+
+🔍 ANALYSE: useArtistesList dans artistes
+----------------------------------------
+Versions trouvées:
+  ✓ Original: src/hooks/artistes/useArtistesList.js
+  🔄 Migrated: src/hooks/artistes/useArtistesListMigrated.js
+  ⚡ Optimized: src/hooks/artistes/useArtistesListOptimized.js
+  📊 useArtistesList:        3 imports,       33 usages
+    ✅ UTILISÉ ACTIVEMENT
+  📊 useArtistesListMigrated:        0 imports,        4 usages
+  📊 useArtistesListOptimized:        3 imports,       21 usages
+    ✅ UTILISÉ ACTIVEMENT
+=================
+
+🔍 ANALYSE: useConcertDetails dans concerts
+----------------------------------------
+Versions trouvées:
+  ✓ Original: src/hooks/concerts/useConcertDetails.js
+  🔄 Migrated: src/hooks/concerts/useConcertDetailsMigrated.js
+  ⚡ Optimized: src/hooks/concerts/useConcertDetailsOptimized.js
+  📊 useConcertDetails:        5 imports,       75 usages
+    ✅ UTILISÉ ACTIVEMENT
+  📊 useConcertDetailsMigrated:        2 imports,       35 usages
+    ✅ UTILISÉ ACTIVEMENT
+  📊 useConcertDetailsOptimized:        2 imports,       27 usages
+    ✅ UTILISÉ ACTIVEMENT
+
+🔍 ANALYSE: useConcertForm dans concerts
+----------------------------------------
+Versions trouvées:
+  ✓ Original: src/hooks/concerts/useConcertForm.js
+  🔄 Migrated: src/hooks/concerts/useConcertFormMigrated.js
+  ⚡ Optimized: src/hooks/concerts/useConcertFormOptimized.js
+  📊 useConcertForm:        7 imports,       69 usages
+    ✅ UTILISÉ ACTIVEMENT
+  📊 useConcertFormMigrated:        0 imports,        3 usages
+  📊 useConcertFormOptimized:        4 imports,       48 usages
+    ✅ UTILISÉ ACTIVEMENT
+
+🔍 ANALYSE: useConcertListData dans concerts
+----------------------------------------
+Versions trouvées:
+  ✓ Original: src/hooks/concerts/useConcertListData.js
+  📊 useConcertListData:        0 imports,       12 usages
+
+🔍 ANALYSE: useConcertStatus dans concerts
+----------------------------------------
+Versions trouvées:
+  ✓ Original: src/hooks/concerts/useConcertStatus.js
+  🔄 Migrated: src/hooks/concerts/useConcertStatusMigrated.js
+  📊 useConcertStatus:        5 imports,       28 usages
+    ✅ UTILISÉ ACTIVEMENT
+  📊 useConcertStatusMigrated:        1 imports,       14 usages
+    ✅ UTILISÉ ACTIVEMENT
+=================
+
+🔍 ANALYSE: useDeleteProgrammateur dans programmateurs
+----------------------------------------
+Versions trouvées:
+  ✓ Original: src/hooks/programmateurs/useDeleteProgrammateur.js
+  ⚡ Optimized: src/hooks/programmateurs/useDeleteProgrammateurOptimized.js
+  📊 useDeleteProgrammateur:        2 imports,       11 usages
+    ✅ UTILISÉ ACTIVEMENT
+  📊 useDeleteProgrammateurOptimized:        2 imports,        8 usages
+    ✅ UTILISÉ ACTIVEMENT
+
+🔍 ANALYSE: useProgrammateurDetails dans programmateurs
+----------------------------------------
+Versions trouvées:
+  ✓ Original: src/hooks/programmateurs/useProgrammateurDetails.js
+  🔄 Migrated: src/hooks/programmateurs/useProgrammateurDetailsMigrated.js
+  ⚡ Optimized: src/hooks/programmateurs/useProgrammateurDetailsOptimized.js
+  📊 useProgrammateurDetails:        6 imports,       59 usages
+    ✅ UTILISÉ ACTIVEMENT
+  📊 useProgrammateurDetailsMigrated:        0 imports,       18 usages
+  📊 useProgrammateurDetailsOptimized:        2 imports,       21 usages
+    ✅ UTILISÉ ACTIVEMENT
+
+🔍 ANALYSE: useProgrammateurForm dans programmateurs
+----------------------------------------
+Versions trouvées:
+  ✓ Original: src/hooks/programmateurs/useProgrammateurForm.js
+  ⚡ Optimized: src/hooks/programmateurs/useProgrammateurFormOptimized.js
+  📊 useProgrammateurForm:        2 imports,       17 usages
+    ✅ UTILISÉ ACTIVEMENT
+  📊 useProgrammateurFormOptimized:        2 imports,       14 usages
+    ✅ UTILISÉ ACTIVEMENT
+
+🔍 ANALYSE: useProgrammateurSearch dans programmateurs
+----------------------------------------
+Versions trouvées:
+  ✓ Original: src/hooks/programmateurs/useProgrammateurSearch.js
+  🔄 Migrated: src/hooks/programmateurs/useProgrammateurSearchMigrated.js
+  ⚡ Optimized: src/hooks/programmateurs/useProgrammateurSearchOptimized.js
+  📊 useProgrammateurSearch:        5 imports,       49 usages
+    ✅ UTILISÉ ACTIVEMENT
+  📊 useProgrammateurSearchMigrated:        1 imports,        7 usages
+    ✅ UTILISÉ ACTIVEMENT
+  📊 useProgrammateurSearchOptimized:        2 imports,       26 usages
+    ✅ UTILISÉ ACTIVEMENT
+=================
+
+🔍 ANALYSE: useDeleteStructure dans structures
+----------------------------------------
+Versions trouvées:
+  ✓ Original: src/hooks/structures/useDeleteStructure.js
+  ⚡ Optimized: src/hooks/structures/useDeleteStructureOptimized.js
+  📊 useDeleteStructure:        3 imports,       11 usages
+    ✅ UTILISÉ ACTIVEMENT
+  📊 useDeleteStructureOptimized:        2 imports,        7 usages
+    ✅ UTILISÉ ACTIVEMENT
+
+🔍 ANALYSE: useStructureDetails dans structures
+----------------------------------------
+Versions trouvées:
+  ✓ Original: src/hooks/structures/useStructureDetails.js
+  🔄 Migrated: src/hooks/structures/useStructureDetailsMigrated.js
+  ⚡ Optimized: src/hooks/structures/useStructureDetailsOptimized.js
+  📊 useStructureDetails:        4 imports,       21 usages
+    ✅ UTILISÉ ACTIVEMENT
+  📊 useStructureDetailsMigrated:        1 imports,        5 usages
+    ✅ UTILISÉ ACTIVEMENT
+  📊 useStructureDetailsOptimized:        1 imports,        6 usages
+    ✅ UTILISÉ ACTIVEMENT
+
+🔍 ANALYSE: useStructureForm dans structures
+----------------------------------------
+Versions trouvées:
+  ✓ Original: src/hooks/structures/useStructureForm.js
+  🔄 Migrated: src/hooks/structures/useStructureFormMigrated.js
+  ⚡ Optimized: src/hooks/structures/useStructureFormOptimized.js
+  📊 useStructureForm:        4 imports,       24 usages
+    ✅ UTILISÉ ACTIVEMENT
+  📊 useStructureFormMigrated:        1 imports,        8 usages
+    ✅ UTILISÉ ACTIVEMENT
+  📊 useStructureFormOptimized:        2 imports,       11 usages
+    ✅ UTILISÉ ACTIVEMENT
+=================
+
+🔍 ANALYSE: useContratDetails dans contrats
+----------------------------------------
+Versions trouvées:
+  ✓ Original: src/hooks/contrats/useContratDetails.js
+  🔄 Migrated: src/hooks/contrats/useContratDetailsMigrated.js
+  📊 useContratDetails:        3 imports,       13 usages
+    ✅ UTILISÉ ACTIVEMENT
+  📊 useContratDetailsMigrated:        1 imports,        5 usages
+    ✅ UTILISÉ ACTIVEMENT
+📊 RECOMMANDATIONS BASÉES SUR L'USAGE
+=====================================
+STRATÉGIE DE CONSOLIDATION:
+1. SUPPRIMER les versions avec 0 imports ET 0 usages
+2. GARDER la version la plus utilisée (généralement Optimized)
+3. MIGRER les imports des versions moins utilisées vers la version principale
+4. TESTER après chaque suppression

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import Button from '@ui/Button';
+import Card from '@/components/ui/Card';
+import useAdresseValidation from '@/hooks/common/useAddressSearch';
 import styles from './ProgrammateurAddressSection.module.css';
-import { useAdresseValidation } from '@/hooks/programmateurs';
-import Card from '../../../components/ui/Card';
+import { useAdresseValidation as useAdresseValidationProgrammateur } from '@/hooks/programmateurs';
 
 const ProgrammateurAddressSection = ({
   programmateur,
@@ -26,7 +28,7 @@ const ProgrammateurAddressSection = ({
     validateAdresse,
     selectSuggestion,
     formatFullAddress
-  } = useAdresseValidation(adresseData);
+  } = useAdresseValidationProgrammateur(adresseData);
 
   // Check address validity
   const handleValidateAddress = async () => {
@@ -96,8 +98,8 @@ const ProgrammateurAddressSection = ({
                 onChange={handleChange}
                 placeholder="Numéro et nom de rue"
               />
-              <button
-                className="btn btn-outline-secondary"
+              <Button
+                variant="outline-secondary"
                 type="button"
                 onClick={handleValidateAddress}
                 disabled={!formData.structure.adresse || isValidating}
@@ -113,7 +115,7 @@ const ProgrammateurAddressSection = ({
                     Valider
                   </>
                 )}
-              </button>
+              </Button>
             </div>
           </div>
           
@@ -192,15 +194,17 @@ const ProgrammateurAddressSection = ({
           <p className="mb-3 fs-5">{getFullAddress()}</p>
           
           {programmateur?.structureAdresse && (
-            <a 
+            <Button 
+              as="a"
               href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(getFullAddress())}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn btn-sm btn-outline-secondary"
+              variant="outline-secondary"
+              size="sm"
             >
               <i className="bi bi-map me-2"></i>
               Voir sur la carte
-            </a>
+            </Button>
           )}
         </div>
       )}

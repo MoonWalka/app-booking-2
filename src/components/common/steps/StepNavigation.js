@@ -1,5 +1,6 @@
 // src/components/common/steps/StepNavigation.js
 import React, { useState } from 'react';
+import Button from '@ui/Button';
 import styles from './StepNavigation.module.css';
 
 const StepNavigation = ({ 
@@ -76,13 +77,13 @@ const StepNavigation = ({
       
       {/* Boutons de navigation */}
       <div className={styles.stepButtons}>
-        <button 
+        <Button 
           type="button" 
-          className="btn btn-outline-secondary" 
+          variant="outline-secondary"
           onClick={goToPreviousStep}
         >
           {currentStep === 0 ? 'Annuler' : 'Précédent'}
-        </button>
+        </Button>
         
         {/* Le bouton "Suivant" est généralement géré dans le composant d'étape lui-même */}
       </div>

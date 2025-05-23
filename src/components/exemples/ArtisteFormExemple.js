@@ -11,6 +11,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useArtisteForm } from '@/hooks/artistes';
 import Card from '@/components/ui/Card';
 import '@styles/index.css';
+import Button from '@ui/Button';
 
 /**
  * Composant pour le formulaire d'artiste optimisé
@@ -222,13 +223,14 @@ const ArtisteFormExemple = () => {
                 {membres.map((membre, index) => (
                   <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
                     {membre}
-                    <button
+                    <Button
                       type="button"
-                      className="btn btn-sm btn-outline-danger"
+                      variant="outline-danger"
+                      size="sm"
                       onClick={() => supprimerMembre(index)}
                     >
                       <i className="bi bi-trash"></i>
-                    </button>
+                    </Button>
                   </li>
                 ))}
               </ul>

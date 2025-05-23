@@ -1,6 +1,6 @@
 # Rapport Automatique - Migration Bootstrap
 
-**Généré le :** 2025-05-23 16:14:25  
+**Généré le :** 2025-05-23 16:21:26  
 **Par :** `tools/css/generate_migration_report.sh`
 
 ---
@@ -8,35 +8,28 @@
 ## 📊 **STATISTIQUES EN TEMPS RÉEL**
 
 ### Progression Globale
-- **Usages Bootstrap restants** : 31
-- **Fichiers avec Bootstrap** : 20
-- **Usages composant Button** : 329
-- **Progression estimée** : 58% (43/74)
+- **Usages Bootstrap restants** : 22
+- **Fichiers avec Bootstrap** : 13
+- **Usages composant Button** : 346
+- **Progression estimée** : 70% (52/74)
 
 ### Analyse de l'État
-⚡ **PROGRÈS CORRECT** Plus de 40% de migration accomplie.
+🚀 **BON PROGRÈS !** Plus de 60% de migration accomplie.
 
 ---
 
 ## 📋 **FICHIERS AVEC USAGES BOOTSTRAP RESTANTS**
 
 ### Fichiers à traiter :
-- `src//components/common/layout/DesktopLayout.js` (1 usages)
-- `src//components/common/layout/MobileLayout.js` (1 usages)
-- `src//components/common/steps/StepNavigation.js` (1 usages)
 - `src//components/concerts/desktop/ConcertHeader.js` (6 usages)
-- `src//components/concerts/desktop/DeleteConcertModal.js` (1 usages)
-- `src//components/concerts/sections/DeleteConfirmModal.js` (2 usages)
 - `src//components/contrats/desktop/sections/CollapsibleSection.js` (1 usages)
 - `src//components/contrats/desktop/sections/ContratDebugPanel.js` (1 usages)
 - `src//components/contrats/desktop/sections/ContratGenerationActions.js` (1 usages)
 - `src//components/contrats/desktop/sections/ContratTemplateHeaderSection.js` (1 usages)
 - `src//components/contrats/desktop/sections/UserGuide.js` (1 usages)
-- `src//components/exemples/ArtisteFormExemple.js` (1 usages)
 - `src//components/lieux/desktop/LieuFormOptimized.js` (2 usages)
 - `src//components/lieux/desktop/sections/LieuxListEmptyState.js` (1 usages)
 - `src//components/molecules/GenericList.js` (1 usages)
-- `src//components/programmateurs/desktop/ProgrammateurAddressSection.js` (2 usages)
 - `src//components/programmateurs/desktop/ProgrammateurConcertsSection.js` (2 usages)
 - `src//components/programmateurs/desktop/ProgrammateurLieuxSection.js` (2 usages)
 - `src//components/programmateurs/desktop/ProgrammateurStructuresSection.js` (2 usages)
@@ -44,17 +37,13 @@
 
 ### Détail des usages :
 `src//components/molecules/GenericList.js:71:          <Link to={addButtonLink} className="btn btn-primary">`
-`src//components/concerts/sections/DeleteConfirmModal.js:39:            className="btn btn-outline-secondary"`
-`src//components/concerts/sections/DeleteConfirmModal.js:47:            className="btn btn-danger"`
 `src//components/concerts/desktop/ConcertHeader.js:43:                  <span className="btn-text">Enregistrement...</span>`
 `src//components/concerts/desktop/ConcertHeader.js:48:                  <span className="btn-text">Enregistrer</span>`
 `src//components/concerts/desktop/ConcertHeader.js:59:              <span className="btn-text">Annuler</span>`
 `src//components/concerts/desktop/ConcertHeader.js:68:              <span className="btn-text">Supprimer</span>`
 `src//components/concerts/desktop/ConcertHeader.js:80:              <span className="btn-text">Retour</span>`
 `src//components/concerts/desktop/ConcertHeader.js:89:              <span className="btn-text">Modifier</span>`
-`src//components/concerts/desktop/DeleteConcertModal.js:39:            className="btn btn-danger"`
 `src//components/structures/desktop/StructuresList.js:226:              <Link to="/structures/new" className="btn btn-primary">`
-`src//components/exemples/ArtisteFormExemple.js:227:                      className="btn btn-sm btn-outline-danger"`
 `src//components/lieux/desktop/sections/LieuxListEmptyState.js:20:              className="btn btn-link p-0 d-inline"`
 `src//components/lieux/desktop/LieuFormOptimized.js:179:          className="btn-primary"`
 `src//components/lieux/desktop/LieuFormOptimized.js:186:          className="btn-secondary"`
@@ -63,16 +52,20 @@
 `src//components/programmateurs/desktop/ProgrammateurLieuxSection.js:171:                    <Link to={`/lieux/${lieu.id}`} className="btn btn-sm btn-outline-primary">`
 `src//components/programmateurs/desktop/ProgrammateurLieuxSection.js:185:                className="btn btn-sm btn-outline-success"`
 `src//components/programmateurs/desktop/ProgrammateurConcertsSection.js:68:                <Link to={`/concerts/${concert.id}`} className="btn btn-sm btn-outline-primary">`
+`src//components/programmateurs/desktop/ProgrammateurConcertsSection.js:82:            className="btn btn-sm btn-outline-success"`
+`src//components/contrats/desktop/sections/ContratTemplateHeaderSection.js:66:                className="btn btn-sm btn-outline-danger"`
+`src//components/contrats/desktop/sections/CollapsibleSection.js:13:          className="btn btn-sm btn-outline-secondary"`
+`src//components/contrats/desktop/sections/ContratDebugPanel.js:39:              className="btn btn-sm btn-outline-secondary"`
 
 ---
 
 ## 🎯 **RECOMMANDATIONS D'ACTIONS**
 
-### Phase de Progression 🚀
-1. **Exécuter l'analyse** `./tools/css/migrate_bootstrap_buttons.sh`
-2. **Migrer 5-10 fichiers par session**
-3. **Prioriser les fichiers** avec le plus d'usages
-4. **Maintenir la documentation** à jour
+### Phase d'Accélération ⚡
+1. **Utiliser le script** `./tools/css/migrate_bootstrap_buttons.sh`
+2. **Traiter les fichiers par priorité** (plus d'usages d'abord)
+3. **Tester régulièrement** avec `npm run build`
+4. **Documenter les cas particuliers**
 
 ---
 

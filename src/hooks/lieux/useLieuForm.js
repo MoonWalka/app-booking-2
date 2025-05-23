@@ -1,26 +1,111 @@
+import { useGenericEntityForm } from '@/hooks/common';
+import useProgrammateurSearch from '@/hooks/lieux/useProgrammateurSearch';
+
 /**
- * @deprecated Ce hook est déprécié et sera supprimé dans une future version (novembre 2025).
- * Veuillez utiliser le hook optimisé basé sur les hooks génériques à la place:
- * import { useLieuFormOptimized } from '@/hooks/lieux';
+ * Hook optimisé pour les formulaires de lieux utilisant directement le hook générique
+ * Cette approche est recommandée pour tous les nouveaux développements
  * 
- * Hook pour gérer les formulaires de lieux
  * @param {string} lieuId - ID du lieu ou 'nouveau' pour un nouveau lieu
  * @returns {Object} - États et fonctions pour gérer le formulaire de lieu
  */
-import useLieuFormOptimized from './useLieuFormOptimized';
-import { useEffect } from 'react';
-
-const useLieuForm = (lieuId) => {
-  // Afficher un avertissement de dépréciation
-  useEffect(() => {
-    console.warn(
-      'Avertissement: useLieuForm est déprécié et sera supprimé en novembre 2025. ' +
-      'Veuillez utiliser useLieuFormOptimized depuis @/hooks/lieux à la place.'
-    );
-  }, []);
+export const useLieuForm = (lieuId) => {
+  // Configuration spécifique pour les lieux
+  const validateLieuForm = (data) => {
+    const errors = {};
+    
+    // Validation spécifique aux lieux
+    if (!data.nom) errors.nom = 'Le nom du lieu est requis';
+    if (!data.adresse) errors.adresse = 'L\'adresse est requise';
+    if (data.capacite !== undefined && (isNaN(data.capacite) || data.capacite < 0)) {
+      errors.capacite = 'La capacité doit être un nombre positif';
+    }
+    
+    return {
+      isValid: Object.keys(errors).length === 0,
+      errors,
+      message: Object.keys(errors).length > 0 ? 'Veuillez corriger les erreurs du formulaire.' : null
+    };
+  };
   
-  // Utiliser directement la version optimisée basée sur useGenericEntityForm
-  return useLieuFormOptimized(lieuId);
+  const transformLieuData = (data) => {
+    // Transformation spécifique aux lieux avant sauvegarde
+    return {
+      ...data,
+      // Conversion en nombre si nécessaire
+      capacite: data.capacite !== undefined ? Number(data.capacite) : null,
+      // Création de champs normalisés pour la recherche
+      nomNormalise: data.nom ? data.nom.toLowerCase().trim() : '',
+      villeNormalisee: data.ville ? data.ville.toLowerCase().trim() : '',
+      // Toujours inclure un champ updatedBy pour l'audit
+      updatedBy: 'system' // Idéalement, utilisez le contexte d'authentification ici
+    };
+  };
+  
+  // Utilisation directe du hook générique avec configuration spécifique
+  const formHook = useGenericEntityForm({
+    entityType: 'lieux', // Pour la navigation après sauvegarde
+    entityId: lieuId,
+    collectionName: 'lieux',
+    initialData: {
+      // Valeurs par défaut pour un nouveau lieu
+      nom: '',
+      adresse: '',
+      codePostal: '',
+      ville: '',
+      pays: 'France',
+      capacite: null,
+      equipements: [],
+      description: '',
+      programmateurId: null,
+      actif: true
+    },
+    validateForm: validateLieuForm,
+    transformData: transformLieuData,
+    onSuccess: (savedId, savedData) => {
+      // Actions spécifiques après sauvegarde
+      console.log(`Lieu ${savedId} sauvegardé avec succès`);
+      // Vous pourriez déclencher d'autres actions ici
+    },
+    relatedEntities: [
+      {
+        name: 'programmateur',
+        collection: 'programmateurs',
+        idField: 'programmateurId'
+      }
+    ]
+  });
+  
+  // Extension du hook avec des fonctionnalités spécifiques aux lieux
+  const addEquipement = (equipement) => {
+    if (!formHook.formData.equipements.includes(equipement)) {
+      formHook.setFormData(prev => ({
+        ...prev,
+        equipements: [...prev.equipements, equipement]
+      }));
+    }
+  };
+
+  const removeEquipement = (equipement) => {
+    formHook.setFormData(prev => ({
+      ...prev,
+      equipements: prev.equipements.filter(e => e !== equipement)
+    }));
+  };
+
+  // Toujours appeler le hook à ce niveau pour respecter les règles de React
+  const programmateurSearch = useProgrammateurSearch(formHook.formData, formHook.setFormData);
+
+  // Retourner le hook générique enrichi de fonctionnalités spécifiques
+  return {
+    ...formHook, // Toutes les fonctionnalités du hook générique
+    // Propriétés et méthodes spécifiques aux lieux
+    addEquipement,
+    removeEquipement,
+    // Raccourcis pour une meilleure DX
+    lieu: formHook.formData,
+    programmateur: formHook.relatedData?.programmateur,
+    programmateurSearch // toujours présent
+  };
 };
 
 export default useLieuForm;

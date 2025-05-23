@@ -2,7 +2,6 @@
 // ========== HOOKS OPTIMISÉS (RECOMMANDÉS) ==========
 // Ces hooks suivent l'approche recommandée et utilisent directement les hooks génériques
 
-export { default as useLieuFormOptimized } from './useLieuFormOptimized';
 
 
 export { default as useLieuSearchOptimized } from './useLieuSearchOptimized';
@@ -16,11 +15,8 @@ export { default as useLieuDeleteOptimized } from './useLieuDeleteOptimized';
 
 export { default as useLieuForm } from './useLieuForm';
 
-export { default as useLieuFormV2 } from './useLieuFormMigrated';
 
-export { default as useLieuFormMigrated } from './useLieuFormMigrated';
 
-export { default as useLieuFormComplete } from './useLieuFormComplete';
 
 // ========== AUTRES HOOKS ==========
 

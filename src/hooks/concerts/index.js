@@ -30,4 +30,4 @@ export { default as useEntitySearch } from './useEntitySearch';
 export { default as useFormSubmission } from './useFormSubmission';
 
 // Exports pour la gestion de la suppression de concerts
-export { default as useConcertDeleteOptimized } from './useConcertDeleteOptimized';
+export { default as useConcertDelete } from './useConcertDelete';

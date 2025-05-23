@@ -6,7 +6,7 @@
 
 
 
-export { default as useLieuDeleteOptimized } from './useLieuDeleteOptimized';
+export { default as useLieuDelete } from './useLieuDelete';
 
 // ========== HOOKS DE COMPATIBILITÉ (DÉPRÉCIÉS) ==========
 // Ces hooks sont maintenus pour la compatibilité mais seront supprimés en novembre 2025
@@ -22,11 +22,8 @@ export { default as useLieuDetails } from './useLieuDetails';
 
 
 
-export { default as useLieuDelete } from './useLieuDelete';
 
-export { default as useLieuDeleteMigrated } from './useLieuDeleteMigrated';
 
-export { default as useLieuDeleteV2 } from './useLieuDeleteMigrated';
 
 export { default as useLieuSearch } from './useLieuSearch';
 

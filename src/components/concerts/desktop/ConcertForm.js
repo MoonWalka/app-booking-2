@@ -4,7 +4,7 @@ import styles from './ConcertForm.module.css';
 
 // Hooks personnalisés
 import useConcertForm from '@/hooks/concerts/useConcertForm';
-import useConcertDeleteOptimized from '@/hooks/concerts/useConcertDeleteOptimized';
+import useConcertDelete from '@/hooks/concerts/useConcertDelete';
 import { useEntitySearch } from '@/hooks/common';
 
 // Sections du formulaire
@@ -39,7 +39,7 @@ const ConcertFormDesktop = () => {
   const {
     isDeleting,
     handleDeleteConcert
-  } = useConcertDeleteOptimized(() => navigate('/concerts'));
+  } = useConcertDelete(() => navigate('/concerts'));
   
   const {
     loading,

@@ -1,4 +1,5 @@
 import React from 'react';
+import Button from '@ui/Button';
 import styles from './ConcertFormHeader.module.css';
 
 /**
@@ -32,7 +33,7 @@ const ConcertFormHeader = ({ id, formData, navigate, isSubmitting, onDelete, onC
       </div>
       
       <div className={styles.actionButtons}>
-        <button
+        <Button
           type="button"
           className={`btn btn-outline-secondary ${styles.actionBtn}`}
           onClick={handleCancel}
@@ -40,10 +41,10 @@ const ConcertFormHeader = ({ id, formData, navigate, isSubmitting, onDelete, onC
         >
           <i className="bi bi-arrow-left me-2"></i>
           Retour
-        </button>
+        </Button>
         
         {!isNewConcert && (
-          <button
+          <Button
             type="button"
             className={`btn btn-outline-danger ${styles.actionBtn}`}
             onClick={onDelete}
@@ -51,10 +52,10 @@ const ConcertFormHeader = ({ id, formData, navigate, isSubmitting, onDelete, onC
           >
             <i className="bi bi-trash me-2"></i>
             Supprimer
-          </button>
+          </Button>
         )}
         
-        <button
+        <Button
           type="submit"
           form="concertForm"
           className={`btn btn-primary ${styles.actionBtn}`}
@@ -71,7 +72,7 @@ const ConcertFormHeader = ({ id, formData, navigate, isSubmitting, onDelete, onC
               Enregistrer
             </>
           )}
-        </button>
+        </Button>
       </div>
     </div>
   );

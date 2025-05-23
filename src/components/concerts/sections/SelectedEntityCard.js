@@ -1,4 +1,5 @@
 import React from 'react';
+import Button from '@ui/Button';
 import styles from './SelectedEntityCard.module.css';
 
 /**
@@ -104,14 +105,16 @@ const SelectedEntityCard = ({
         
         {/* Bouton pour éditer cette entité */}
         <div className={styles.entityActions}>
-          <button 
+          <Button 
             type="button" 
-            className={`btn btn-sm btn-outline-secondary ${styles.editButton}`}
+            variant="outline-secondary"
+            size="sm"
+            className={styles.editButton}
             onClick={() => window.open(`/${entityType}s/${entity.id}`, '_blank')}
           >
             <i className="bi bi-pencil me-1"></i>
             Éditer {entityType === 'lieu' ? 'ce' : (entityType === 'programmateur' ? 'ce' : 'cet')} {entityType}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

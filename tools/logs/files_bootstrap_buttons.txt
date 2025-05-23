@@ -5,13 +5,8 @@ src//components/concerts/sections/DeleteConfirmModal.js
 src//components/concerts/sections/SelectedEntityCard.js
 src//components/concerts/sections/ConcertFormHeader.js
 src//components/concerts/desktop/DeleteConcertModal.js
-src//components/forms/FormGenerator.js
-src//components/forms/validation/FormValidationInterface.js
-src//components/forms/validation/FormValidationInterfaceNew.js
 src//components/structures/desktop/StructuresList.js
 src//components/exemples/ArtisteFormExemple.js
-src//components/lieux/desktop/sections/LieuStructuresSection.js
-src//components/lieux/desktop/sections/LieuConcertsSection.js
 src//components/lieux/desktop/sections/LieuOrganizerSection.js
 src//components/lieux/desktop/sections/LieuxListHeader.js
 src//components/lieux/desktop/sections/LieuxListEmptyState.js
@@ -25,7 +20,6 @@ src//components/programmateurs/desktop/ProgrammateurAddressSection.js
 src//components/common/layout/DesktopLayout.js
 src//components/common/layout/MobileLayout.js
 src//components/common/steps/StepNavigation.js
-src//components/contrats/desktop/ContratTemplateEditor.js
 src//components/contrats/desktop/sections/ContratTemplateHeaderSection.js
 src//components/contrats/desktop/sections/CollapsibleSection.js
 src//components/contrats/desktop/sections/ContratDebugPanel.js

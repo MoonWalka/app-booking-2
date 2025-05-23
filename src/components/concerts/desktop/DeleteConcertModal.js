@@ -34,9 +34,9 @@ const DeleteConcertModal = ({ show, concertNom, onClose, onConfirm, isDeleting }
           >
             Annuler
           </Button>
-          <button 
+          <Button 
             type="button"
-            className="btn btn-danger"
+            variant="danger"
             onClick={() => {
               alert('Bouton cliqué!');
               console.log('[TEST] Bouton standard cliqué');
@@ -50,7 +50,7 @@ const DeleteConcertModal = ({ show, concertNom, onClose, onConfirm, isDeleting }
                 Suppression...
               </>
             ) : 'Supprimer définitivement'}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

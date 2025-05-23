@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Button from '@ui/Button';
 import styles from './DeleteProgrammateurModal.module.css';
 
 const DeleteProgrammateurModal = ({ programmateur, handleDelete }) => {
@@ -57,17 +58,17 @@ const DeleteProgrammateurModal = ({ programmateur, handleDelete }) => {
               )}
             </div>
             <div className={styles.modalFooter}>
-              <button 
+              <Button 
                 type="button" 
-                className="btn btn-secondary" 
+                variant="secondary"
                 onClick={closeModal}
                 disabled={isDeleting}
               >
                 Annuler
-              </button>
-              <button 
+              </Button>
+              <Button 
                 type="button" 
-                className="btn btn-danger" 
+                variant="danger"
                 onClick={confirmDelete}
                 disabled={isDeleting}
               >
@@ -82,7 +83,7 @@ const DeleteProgrammateurModal = ({ programmateur, handleDelete }) => {
                     Supprimer définitivement
                   </>
                 )}
-              </button>
+              </Button>
             </div>
           </div>
         </div>

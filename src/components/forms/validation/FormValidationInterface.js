@@ -7,6 +7,7 @@ import { useFieldActions } from '@/hooks/forms';
 import { useValidationBatchActions } from '@/hooks/forms';
 
 // Import components
+import Button from '@ui/Button';
 import FormHeader from './FormHeader';
 import ValidationSummary from './ValidationSummary';
 import ValidationSection from './ValidationSection';
@@ -84,12 +85,13 @@ const FormValidationInterface = () => {
           <i className="bi bi-exclamation-triangle-fill me-2"></i>
           {error}
         </div>
-        <button 
-          className="btn btn-primary mt-3" 
+        <Button 
+          variant="primary"
+          className="mt-3"
           onClick={() => navigate(`/concerts/${id}`)}
         >
           Retour à la fiche concert
-        </button>
+        </Button>
       </div>
     );
   }
@@ -102,12 +104,13 @@ const FormValidationInterface = () => {
           <i className="bi bi-question-circle-fill me-2"></i>
           Formulaire non trouvé.
         </div>
-        <button 
-          className="btn btn-primary mt-3" 
+        <Button 
+          variant="primary"
+          className="mt-3"
           onClick={() => navigate(`/concerts/${id}`)}
         >
           Retour à la fiche concert
-        </button>
+        </Button>
       </div>
     );
   }

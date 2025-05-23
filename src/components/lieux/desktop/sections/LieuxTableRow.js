@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import Button from '@ui/Button';
 import styles from './LieuxTableRow.module.css';
 
 /**
@@ -123,12 +124,13 @@ const LieuxTableRow = ({ lieu, onRowClick, onDelete }) => {
             placement="top"
             overlay={<Tooltip>Supprimer le lieu</Tooltip>}
           >
-            <button 
+            <Button 
               onClick={(e) => { onDelete(lieu.id, e); handleActionClick(e); }} 
-              className={`btn btn-danger ${styles.actionButton}`}
+              variant="danger"
+              className={styles.actionButton}
             >
               <i className="bi bi-trash"></i>
-            </button>
+            </Button>
           </OverlayTrigger>
         </div>
       </td>

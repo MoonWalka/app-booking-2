@@ -1,4 +1,5 @@
 import React from 'react';
+import Button from '@ui/Button';
 import styles from './ConcertFormActions.module.css';
 
 /**
@@ -32,34 +33,36 @@ const ConcertFormActions = ({ id, isSubmitting, onDelete, onSubmit, onCancel, na
   return (
     <div className={position === 'top' ? styles.topActionsContainer : styles.bottomActionsContainer}>
       <div className={styles.leftButtons}>
-        <button
+        <Button
           type="button"
-          className={`btn btn-outline-secondary ${styles.actionButton}`}
+          variant="outline-secondary"
+          className={styles.actionButton}
           onClick={handleCancel}
           disabled={isSubmitting}
         >
           <i className="bi bi-arrow-left me-2"></i>
           Retour
-        </button>
+        </Button>
         
         {showDeleteButton && (
-          <button
+          <Button
             type="button"
-            className={`btn btn-outline-danger ${styles.actionButton}`}
+            variant="outline-danger"
+            className={styles.actionButton}
             onClick={onDelete}
             disabled={isSubmitting}
           >
             <i className="bi bi-trash me-1"></i>
             Supprimer
-          </button>
+          </Button>
         )}
       </div>
       
       {showSaveButton && (
         <div className={styles.rightButtons}>
-          <button
+          <Button
             type="submit"
-            className="btn btn-primary"
+            variant="primary"
             disabled={isSubmitting}
             onClick={onSubmit}
           >
@@ -74,7 +77,7 @@ const ConcertFormActions = ({ id, isSubmitting, onDelete, onSubmit, onCancel, na
                 Enregistrer
               </>
             )}
-          </button>
+          </Button>
         </div>
       )}
     </div>

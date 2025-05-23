@@ -1,4 +1,5 @@
 import React from 'react';
+import Button from '@ui/Button';
 import styles from './DeleteConfirmModal.module.css';
 
 /**
@@ -34,17 +35,17 @@ const DeleteConfirmModal = ({ isSubmitting, onCancel, onConfirm }) => {
         </div>
         
         <div className={styles.modalFooter}>
-          <button
+          <Button
             type="button"
-            className="btn btn-outline-secondary"
+            variant="outline-secondary"
             onClick={onCancel}
             disabled={isSubmitting}
           >
             Annuler
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
-            className="btn btn-danger"
+            variant="danger"
             onClick={() => {
               console.log('[LOG][DeleteConfirmModal] Bouton SUPPRIMER cliqué');
               onConfirm();
@@ -60,7 +61,7 @@ const DeleteConfirmModal = ({ isSubmitting, onCancel, onConfirm }) => {
             ) : (
               'Supprimer'
             )}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

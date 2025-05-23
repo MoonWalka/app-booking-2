@@ -1,13 +1,13 @@
 /**
- * Test unitaire pour le hook useLieuxFiltersOptimized
+ * Test unitaire pour le hook useLieuxFilters
  */
 
 import { renderHook, act } from '@testing-library/react';
 import { useGenericEntityList } from '@/hooks/common';
 
 // Mock complet du hook
-jest.mock('../../hooks/lieux/useLieuxFiltersOptimized', () => ({
-  useLieuxFiltersOptimized: jest.fn()
+jest.mock('../../hooks/lieux/useLieuxFilters', () => ({
+  useLieuxFilters: jest.fn()
 }), { virtual: true });
 
 // Mock des modules importés par le hook
@@ -17,9 +17,9 @@ jest.mock('../../hooks/common', () => ({
 }));
 
 // Importer le mock après l'avoir défini
-import { useLieuxFiltersOptimized } from '../../hooks/lieux/useLieuxFiltersOptimized';
+import { useLieuxFilters } from '../../hooks/lieux/useLieuxFilters';
 
-describe('useLieuxFiltersOptimized', () => {
+describe('useLieuxFilters', () => {
   // Données de test pour les lieux
   const mockLieux = [
     { 
@@ -98,15 +98,15 @@ describe('useLieuxFiltersOptimized', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     useGenericEntityList.mockReturnValue(mockEntityList);
-    useLieuxFiltersOptimized.mockImplementation(() => mockLieuxFiltersHook);
+    useLieuxFilters.mockImplementation(() => mockLieuxFiltersHook);
   });
   
   test('devrait initialiser correctement le hook avec les paramètres par défaut', () => {
     // Rendu du hook
-    const { result } = renderHook(() => useLieuxFiltersOptimized());
+    const { result } = renderHook(() => useLieuxFilters());
     
     // Vérifier que le hook a été appelé
-    expect(useLieuxFiltersOptimized).toHaveBeenCalled();
+    expect(useLieuxFilters).toHaveBeenCalled();
     
     // Vérifier que les propriétés principales sont exposées
     expect(result.current).toHaveProperty('lieux');
@@ -140,15 +140,15 @@ describe('useLieuxFiltersOptimized', () => {
     };
     
     // Rendu du hook avec des paramètres personnalisés
-    renderHook(() => useLieuxFiltersOptimized(customOptions));
+    renderHook(() => useLieuxFilters(customOptions));
     
     // Vérifier que le hook a été appelé avec les bons paramètres
-    expect(useLieuxFiltersOptimized).toHaveBeenCalledWith(customOptions);
+    expect(useLieuxFilters).toHaveBeenCalledWith(customOptions);
   });
   
   test('setFilterType devrait appliquer le filtre par type', () => {
     // Rendu du hook
-    const { result } = renderHook(() => useLieuxFiltersOptimized());
+    const { result } = renderHook(() => useLieuxFilters());
     
     // Appliquer un filtre par type
     const filterValue = 'Théâtre';
@@ -162,7 +162,7 @@ describe('useLieuxFiltersOptimized', () => {
   
   test('setFilterRegion devrait appliquer le filtre par région', () => {
     // Rendu du hook
-    const { result } = renderHook(() => useLieuxFiltersOptimized());
+    const { result } = renderHook(() => useLieuxFilters());
     
     // Appliquer un filtre par région
     const filterValue = 'Île-de-France';
@@ -176,7 +176,7 @@ describe('useLieuxFiltersOptimized', () => {
   
   test('setFilterVille devrait appliquer le filtre par ville', () => {
     // Rendu du hook
-    const { result } = renderHook(() => useLieuxFiltersOptimized());
+    const { result } = renderHook(() => useLieuxFilters());
     
     // Appliquer un filtre par ville
     const filterValue = 'Paris';
@@ -190,7 +190,7 @@ describe('useLieuxFiltersOptimized', () => {
   
   test('resetFilters devrait réinitialiser tous les filtres', () => {
     // Rendu du hook
-    const { result } = renderHook(() => useLieuxFiltersOptimized());
+    const { result } = renderHook(() => useLieuxFilters());
     
     // Réinitialiser les filtres
     act(() => {
@@ -203,7 +203,7 @@ describe('useLieuxFiltersOptimized', () => {
   
   test('setSortOption devrait mettre à jour le tri', () => {
     // Rendu du hook
-    const { result } = renderHook(() => useLieuxFiltersOptimized());
+    const { result } = renderHook(() => useLieuxFilters());
     
     // Changer l'option de tri
     const sortOption = 'capacite_desc';
@@ -217,7 +217,7 @@ describe('useLieuxFiltersOptimized', () => {
   
   test('devrait exposer les propriétés et les listes de valeurs disponibles', () => {
     // Rendu du hook
-    const { result } = renderHook(() => useLieuxFiltersOptimized());
+    const { result } = renderHook(() => useLieuxFilters());
     
     // Vérifier les listes de valeurs disponibles
     expect(result.current.types).toEqual(uniqueTypes);
@@ -227,7 +227,7 @@ describe('useLieuxFiltersOptimized', () => {
   
   test('devrait exposer les propriétés dérivées du hook générique', () => {
     // Rendu du hook
-    const { result } = renderHook(() => useLieuxFiltersOptimized());
+    const { result } = renderHook(() => useLieuxFilters());
     
     // Vérifier les propriétés dérivées
     expect(result.current.isFiltered).toBe(mockEntityList.isFiltered);

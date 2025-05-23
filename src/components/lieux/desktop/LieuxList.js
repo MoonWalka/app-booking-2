@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Alert } from 'react-bootstrap';
 import Spinner from '@/components/common/Spinner';
 // Migration vers les hooks optimisés maintenant disponibles
-import { useLieuxQuery, useLieuxFiltersOptimized, useLieuDeleteOptimized } from '@/hooks/lieux';
+import { useLieuxQuery, useLieuxFilters, useLieuDeleteOptimized } from '@/hooks/lieux';
 import styles from './LieuxList.module.css';
 
 // Import section components
@@ -27,7 +27,7 @@ const LieuxList = () => {
     sortOption, 
     setSortOption, 
     filteredLieux 
-  } = useLieuxFiltersOptimized(lieux);
+  } = useLieuxFilters(lieux);
 
   // Handle deletion of lieux
   const { handleDeleteLieu } = useLieuDeleteOptimized((deletedId) => {

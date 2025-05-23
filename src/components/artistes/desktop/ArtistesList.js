@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import styles from './ArtistesList.module.css';
 
 // MIGRATION: Utilisation des hooks optimisés au lieu des versions V2
-import { useArtistesListOptimized, useDeleteArtisteOptimized } from '@/hooks/artistes';
+import { useArtistesList, useDeleteArtisteOptimized } from '@/hooks/artistes';
 
 // Import des composants UI
 import ArtistesListHeader from '../sections/ArtistesListHeader';
@@ -17,7 +17,7 @@ import ArtistesLoadMore from '../sections/ArtistesLoadMore';
 
 /**
  * Composant qui affiche une liste d'artistes avec recherche, filtres et pagination
- * Refactorisé pour utiliser useArtistesListOptimized basé sur hooks génériques optimisés
+ * Refactorisé pour utiliser useArtistesList basé sur hooks génériques optimisés
  */
 const ArtistesList = () => {
   const navigate = useNavigate();
@@ -51,7 +51,7 @@ const ArtistesList = () => {
 
     // Actions
     setArtistes
-  } = useArtistesListOptimized({
+  } = useArtistesList({
     pageSize: 20,
     initialSortField: 'nom',
     initialSortDirection: 'asc',

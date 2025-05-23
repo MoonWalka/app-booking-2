@@ -133,14 +133,12 @@ export {
 };
 
 // Export des versions migrées avec leurs noms originaux
-export { default as useStructureDetailsMigrated } from './useStructureDetailsMigrated';
 export { default as useStructureFormMigrated } from './useStructureFormMigrated';
 
 /**
  * @recommended Les versions migrées des hooks basées sur les hooks génériques.
  * À utiliser dans les nouveaux développements.
  */
-export { default as useStructureDetailsV2 } from './useStructureDetailsMigrated';
 export { default as useStructureFormV2 } from './useStructureFormMigrated';
 
 /**
@@ -150,5 +148,4 @@ export { default as useStructureFormV2 } from './useStructureFormMigrated';
  * des hooks spécifiques d'ici novembre 2025.
  */
 export { default as useStructureFormOptimized } from './useStructureFormOptimized';
-export { default as useStructureDetailsOptimized } from './useStructureDetailsOptimized';
 export { default as useDeleteStructureOptimized } from './useDeleteStructureOptimized';

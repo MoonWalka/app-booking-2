@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import styles from './StructureDetails.module.css';
 
 // MIGRATION: Utilisation des hooks optimisés au lieu des versions V2/déprécié
-import { useStructureDetailsOptimized, useDeleteStructureOptimized } from '@/hooks/structures';
+import { useStructureDetails, useDeleteStructureOptimized } from '@/hooks/structures';
 
 // Import section components
 import StructureHeader from './sections/StructureHeader';
@@ -30,7 +30,7 @@ const StructureDetails = () => {
     programmateurs,
     loadingProgrammateurs,
     formatValue
-  } = useStructureDetailsOptimized(id);
+  } = useStructureDetails(id);
   
   const {
     deleting,

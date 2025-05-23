@@ -1,0 +1,349 @@
+📋 Rapport généré le Fri May 23 13:14:14 CEST 2025
+==================================================
+🔍 Analyse: useArtisteDetailsMigrated
+  📄 Fichier: src/hooks/artistes/useArtisteDetailsMigrated.js
+  📤 Exports dans index.js:        2
+  📥 Imports directs:        1
+  💻 Utilisation dans le code:        2
+  🧪 Utilisation dans les tests:        0
+  📊 TOTAL D'UTILISATION: 5
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+🔍 Analyse: useArtisteDetailsOptimized
+  📄 Fichier: src/hooks/artistes/useArtisteDetailsOptimized.js
+  📤 Exports dans index.js:        1
+  📥 Imports directs:        0
+  💻 Utilisation dans le code:        3
+  🧪 Utilisation dans les tests:        0
+  📊 TOTAL D'UTILISATION: 4
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+🔍 Analyse: useArtisteFormOptimized
+  📄 Fichier: src/hooks/artistes/useArtisteFormOptimized.js
+  📤 Exports dans index.js:        1
+  📥 Imports directs:        2
+  💻 Utilisation dans le code:       18
+  🧪 Utilisation dans les tests:       10
+  📊 TOTAL D'UTILISATION: 31
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+🔍 Analyse: useArtisteSearchOptimized
+  📄 Fichier: src/hooks/artistes/useArtisteSearchOptimized.js
+  📤 Exports dans index.js:        1
+  📥 Imports directs:        0
+  💻 Utilisation dans le code:        1
+  🧪 Utilisation dans les tests:        0
+  📊 TOTAL D'UTILISATION: 2
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+🔍 Analyse: useArtistesListMigrated
+  📄 Fichier: src/hooks/artistes/useArtistesListMigrated.js
+  📤 Exports dans index.js:        2
+  📥 Imports directs:        0
+  💻 Utilisation dans le code:        1
+  🧪 Utilisation dans les tests:        0
+  📊 TOTAL D'UTILISATION: 3
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+🔍 Analyse: useArtistesListOptimized
+  📄 Fichier: src/hooks/artistes/useArtistesListOptimized.js
+  📤 Exports dans index.js:        1
+  📥 Imports directs:        3
+  💻 Utilisation dans le code:       18
+  🧪 Utilisation dans les tests:       14
+  📊 TOTAL D'UTILISATION: 36
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+🔍 Analyse: useDeleteArtisteOptimized
+  📄 Fichier: src/hooks/artistes/useDeleteArtisteOptimized.js
+  📤 Exports dans index.js:        1
+  📥 Imports directs:        2
+  💻 Utilisation dans le code:        5
+  🧪 Utilisation dans les tests:        0
+  📊 TOTAL D'UTILISATION: 8
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+🔍 Analyse: useConcertDeleteOptimized
+  📄 Fichier: src/hooks/concerts/useConcertDeleteOptimized.js
+  📤 Exports dans index.js:        1
+  📥 Imports directs:        1
+  💻 Utilisation dans le code:        7
+  🧪 Utilisation dans les tests:        0
+  📊 TOTAL D'UTILISATION: 9
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+🔍 Analyse: useConcertDetailsMigrated
+  📄 Fichier: src/hooks/concerts/useConcertDetailsMigrated.js
+  📤 Exports dans index.js:        2
+  📥 Imports directs:        2
+  💻 Utilisation dans le code:       32
+  🧪 Utilisation dans les tests:       14
+  📊 TOTAL D'UTILISATION: 50
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+🔍 Analyse: useConcertDetailsOptimized
+  📄 Fichier: src/hooks/concerts/useConcertDetailsOptimized.js
+  📤 Exports dans index.js:        1
+  📥 Imports directs:        2
+  💻 Utilisation dans le code:       23
+  🧪 Utilisation dans les tests:        0
+  📊 TOTAL D'UTILISATION: 26
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+🔍 Analyse: useConcertFormMigrated
+  📄 Fichier: src/hooks/concerts/useConcertFormMigrated.js
+  📤 Exports dans index.js:        0
+  📥 Imports directs:        0
+  💻 Utilisation dans le code:        2
+  🧪 Utilisation dans les tests:        0
+  📊 TOTAL D'UTILISATION: 2
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+🔍 Analyse: useConcertFormOptimized
+  📄 Fichier: src/hooks/concerts/useConcertFormOptimized.js
+  📤 Exports dans index.js:        1
+  📥 Imports directs:        4
+  💻 Utilisation dans le code:       43
+  🧪 Utilisation dans les tests:       11
+  📊 TOTAL D'UTILISATION: 59
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+🔍 Analyse: useConcertStatusMigrated
+  📄 Fichier: src/hooks/concerts/useConcertStatusMigrated.js
+  📤 Exports dans index.js:        2
+  📥 Imports directs:        1
+  💻 Utilisation dans le code:       11
+  🧪 Utilisation dans les tests:       10
+  📊 TOTAL D'UTILISATION: 24
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+🔍 Analyse: useContratDetailsMigrated
+  📄 Fichier: src/hooks/contrats/useContratDetailsMigrated.js
+  📤 Exports dans index.js:        2
+  📥 Imports directs:        1
+  💻 Utilisation dans le code:        2
+  🧪 Utilisation dans les tests:        0
+  📊 TOTAL D'UTILISATION: 5
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+🔍 Analyse: useContratFormOptimized
+  📄 Fichier: src/hooks/contrats/useContratFormOptimized.js
+  📤 Exports dans index.js:        1
+  📥 Imports directs:        1
+  💻 Utilisation dans le code:        3
+  🧪 Utilisation dans les tests:        0
+  📊 TOTAL D'UTILISATION: 5
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+🔍 Analyse: useFormValidationMigrated
+  📄 Fichier: src/hooks/forms/useFormValidationMigrated.js
+  📤 Exports dans index.js:        2
+  📥 Imports directs:        2
+  💻 Utilisation dans le code:       16
+  🧪 Utilisation dans les tests:       11
+  📊 TOTAL D'UTILISATION: 31
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+🔍 Analyse: useLieuDeleteMigrated
+  📄 Fichier: src/hooks/lieux/useLieuDeleteMigrated.js
+  📤 Exports dans index.js:        2
+  📥 Imports directs:        0
+  💻 Utilisation dans le code:        2
+  🧪 Utilisation dans les tests:        0
+  📊 TOTAL D'UTILISATION: 4
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+🔍 Analyse: useLieuDeleteOptimized
+  📄 Fichier: src/hooks/lieux/useLieuDeleteOptimized.js
+  📤 Exports dans index.js:        1
+  📥 Imports directs:        2
+  💻 Utilisation dans le code:        5
+  🧪 Utilisation dans les tests:        0
+  📊 TOTAL D'UTILISATION: 8
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+🔍 Analyse: useLieuDetailsMigrated
+  📄 Fichier: src/hooks/lieux/useLieuDetailsMigrated.js
+  📤 Exports dans index.js:        2
+  📥 Imports directs:        2
+  💻 Utilisation dans le code:       17
+  🧪 Utilisation dans les tests:        9
+  📊 TOTAL D'UTILISATION: 30
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+🔍 Analyse: useLieuDetailsOptimized
+  📄 Fichier: src/hooks/lieux/useLieuDetailsOptimized.js
+  📤 Exports dans index.js:        1
+  📥 Imports directs:        4
+  💻 Utilisation dans le code:       11
+  🧪 Utilisation dans les tests:        0
+  📊 TOTAL D'UTILISATION: 16
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+🔍 Analyse: useLieuFormComplete
+  📄 Fichier: src/hooks/lieux/useLieuFormComplete.js
+  📤 Exports dans index.js:        1
+  📥 Imports directs:        0
+  💻 Utilisation dans le code:        0
+  🧪 Utilisation dans les tests:        0
+  📊 TOTAL D'UTILISATION: 1
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+🔍 Analyse: useLieuFormMigrated
+  📄 Fichier: src/hooks/lieux/useLieuFormMigrated.js
+  📤 Exports dans index.js:        2
+  📥 Imports directs:        0
+  💻 Utilisation dans le code:        1
+  🧪 Utilisation dans les tests:        0
+  📊 TOTAL D'UTILISATION: 3
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+🔍 Analyse: useLieuFormOptimized
+  📄 Fichier: src/hooks/lieux/useLieuFormOptimized.js
+  📤 Exports dans index.js:        1
+  📥 Imports directs:        5
+  💻 Utilisation dans le code:       12
+  🧪 Utilisation dans les tests:        9
+  📊 TOTAL D'UTILISATION: 27
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+🔍 Analyse: useLieuSearchMigrated
+  📄 Fichier: src/hooks/lieux/useLieuSearchMigrated.js
+  📤 Exports dans index.js:        2
+  📥 Imports directs:        0
+  💻 Utilisation dans le code:        3
+  🧪 Utilisation dans les tests:        0
+  📊 TOTAL D'UTILISATION: 5
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+🔍 Analyse: useLieuSearchOptimized
+  📄 Fichier: src/hooks/lieux/useLieuSearchOptimized.js
+  📤 Exports dans index.js:        1
+  📥 Imports directs:        3
+  💻 Utilisation dans le code:       20
+  🧪 Utilisation dans les tests:       15
+  📊 TOTAL D'UTILISATION: 39
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+🔍 Analyse: useLieuxFiltersMigrated
+  📄 Fichier: src/hooks/lieux/useLieuxFiltersMigrated.js
+  📤 Exports dans index.js:        2
+  📥 Imports directs:        1
+  💻 Utilisation dans le code:       10
+  🧪 Utilisation dans les tests:       10
+  📊 TOTAL D'UTILISATION: 23
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+🔍 Analyse: useLieuxFiltersOptimized
+  📄 Fichier: src/hooks/lieux/useLieuxFiltersOptimized.js
+  📤 Exports dans index.js:        1
+  📥 Imports directs:        3
+  💻 Utilisation dans le code:       21
+  🧪 Utilisation dans les tests:       17
+  📊 TOTAL D'UTILISATION: 42
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+🔍 Analyse: useDeleteProgrammateurOptimized
+  📄 Fichier: src/hooks/programmateurs/useDeleteProgrammateurOptimized.js
+  📤 Exports dans index.js:        1
+  📥 Imports directs:        2
+  💻 Utilisation dans le code:        6
+  🧪 Utilisation dans les tests:        0
+  📊 TOTAL D'UTILISATION: 9
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+🔍 Analyse: useProgrammateurDetailsMigrated
+  📄 Fichier: src/hooks/programmateurs/useProgrammateurDetailsMigrated.js
+  📤 Exports dans index.js:        1
+  📥 Imports directs:        0
+  💻 Utilisation dans le code:       16
+  🧪 Utilisation dans les tests:        2
+  📊 TOTAL D'UTILISATION: 19
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+🔍 Analyse: useProgrammateurDetailsOptimized
+  📄 Fichier: src/hooks/programmateurs/useProgrammateurDetailsOptimized.js
+  📤 Exports dans index.js:        1
+  📥 Imports directs:        2
+  💻 Utilisation dans le code:       19
+  🧪 Utilisation dans les tests:        0
+  📊 TOTAL D'UTILISATION: 22
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+🔍 Analyse: useProgrammateurFormOptimized
+  📄 Fichier: src/hooks/programmateurs/useProgrammateurFormOptimized.js
+  📤 Exports dans index.js:        1
+  📥 Imports directs:        2
+  💻 Utilisation dans le code:       11
+  🧪 Utilisation dans les tests:        0
+  📊 TOTAL D'UTILISATION: 14
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+🔍 Analyse: useProgrammateurSearchMigrated
+  📄 Fichier: src/hooks/programmateurs/useProgrammateurSearchMigrated.js
+  📤 Exports dans index.js:        2
+  📥 Imports directs:        1
+  💻 Utilisation dans le code:        4
+  🧪 Utilisation dans les tests:        0
+  📊 TOTAL D'UTILISATION: 7
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+🔍 Analyse: useProgrammateurSearchOptimized
+  📄 Fichier: src/hooks/programmateurs/useProgrammateurSearchOptimized.js
+  📤 Exports dans index.js:        1
+  📥 Imports directs:        2
+  💻 Utilisation dans le code:       23
+  🧪 Utilisation dans les tests:       17
+  📊 TOTAL D'UTILISATION: 43
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+🔍 Analyse: useDeleteStructureOptimized
+  📄 Fichier: src/hooks/structures/useDeleteStructureOptimized.js
+  📤 Exports dans index.js:        1
+  📥 Imports directs:        2
+  💻 Utilisation dans le code:        5
+  🧪 Utilisation dans les tests:        0
+  📊 TOTAL D'UTILISATION: 8
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+🔍 Analyse: useStructureDetailsMigrated
+  📄 Fichier: src/hooks/structures/useStructureDetailsMigrated.js
+  📤 Exports dans index.js:        2
+  📥 Imports directs:        1
+  💻 Utilisation dans le code:        2
+  🧪 Utilisation dans les tests:        0
+  📊 TOTAL D'UTILISATION: 5
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+🔍 Analyse: useStructureDetailsOptimized
+  📄 Fichier: src/hooks/structures/useStructureDetailsOptimized.js
+  📤 Exports dans index.js:        1
+  📥 Imports directs:        1
+  💻 Utilisation dans le code:        4
+  🧪 Utilisation dans les tests:        0
+  📊 TOTAL D'UTILISATION: 6
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+🔍 Analyse: useStructureFormMigrated
+  📄 Fichier: src/hooks/structures/useStructureFormMigrated.js
+  📤 Exports dans index.js:        2
+  📥 Imports directs:        1
+  💻 Utilisation dans le code:        5
+  🧪 Utilisation dans les tests:        0
+  📊 TOTAL D'UTILISATION: 8
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+🔍 Analyse: useStructureFormOptimized
+  📄 Fichier: src/hooks/structures/useStructureFormOptimized.js
+  📤 Exports dans index.js:        1
+  📥 Imports directs:        2
+  💻 Utilisation dans le code:        8
+  🧪 Utilisation dans les tests:        0
+  📊 TOTAL D'UTILISATION: 11
+  ✅ UTILISÉ QUELQUE PART - À CONSERVER
+====================================
+🗑️ HOOKS VRAIMENT INUTILISÉS (suppression sûre):
+  ✅ Aucun hook vraiment inutilisé trouvé !
+
+✅ HOOKS UTILISÉS (à conserver):
+  ✅ src/hooks/artistes/useArtisteDetailsMigrated.js
+  ✅ src/hooks/artistes/useArtisteDetailsOptimized.js
+  ✅ src/hooks/artistes/useArtisteFormOptimized.js
+  ✅ src/hooks/artistes/useArtisteSearchOptimized.js
+  ✅ src/hooks/artistes/useArtistesListMigrated.js
+  ✅ src/hooks/artistes/useArtistesListOptimized.js
+  ✅ src/hooks/artistes/useDeleteArtisteOptimized.js
+  ✅ src/hooks/concerts/useConcertDeleteOptimized.js
+  ✅ src/hooks/concerts/useConcertDetailsMigrated.js
+  ✅ src/hooks/concerts/useConcertDetailsOptimized.js
+  ✅ src/hooks/concerts/useConcertFormMigrated.js
+  ✅ src/hooks/concerts/useConcertFormOptimized.js
+  ✅ src/hooks/concerts/useConcertStatusMigrated.js
+  ✅ src/hooks/contrats/useContratDetailsMigrated.js
+  ✅ src/hooks/contrats/useContratFormOptimized.js
+  ✅ src/hooks/forms/useFormValidationMigrated.js
+  ✅ src/hooks/lieux/useLieuDeleteMigrated.js
+  ✅ src/hooks/lieux/useLieuDeleteOptimized.js
+  ✅ src/hooks/lieux/useLieuDetailsMigrated.js
+  ✅ src/hooks/lieux/useLieuDetailsOptimized.js
+  ✅ src/hooks/lieux/useLieuFormComplete.js
+  ✅ src/hooks/lieux/useLieuFormMigrated.js
+  ✅ src/hooks/lieux/useLieuFormOptimized.js
+  ✅ src/hooks/lieux/useLieuSearchMigrated.js
+  ✅ src/hooks/lieux/useLieuSearchOptimized.js
+  ✅ src/hooks/lieux/useLieuxFiltersMigrated.js
+  ✅ src/hooks/lieux/useLieuxFiltersOptimized.js
+  ✅ src/hooks/programmateurs/useDeleteProgrammateurOptimized.js
+  ✅ src/hooks/programmateurs/useProgrammateurDetailsMigrated.js
+  ✅ src/hooks/programmateurs/useProgrammateurDetailsOptimized.js
+  ✅ src/hooks/programmateurs/useProgrammateurFormOptimized.js
+  ✅ src/hooks/programmateurs/useProgrammateurSearchMigrated.js
+  ✅ src/hooks/programmateurs/useProgrammateurSearchOptimized.js
+  ✅ src/hooks/structures/useDeleteStructureOptimized.js
+  ✅ src/hooks/structures/useStructureDetailsMigrated.js
+  ✅ src/hooks/structures/useStructureDetailsOptimized.js
+  ✅ src/hooks/structures/useStructureFormMigrated.js
+  ✅ src/hooks/structures/useStructureFormOptimized.js

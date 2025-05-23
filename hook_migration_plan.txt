@@ -1,0 +1,343 @@
+📋 Plan de migration généré le Fri May 23 13:16:05 CEST 2025
+==========================================
+
+🔍 ANALYSE: useLieuDelete dans lieux
+----------------------------------------
+  📊 useLieuDelete: 16 références totales
+    - Exports:        4, Imports:        2, Usage:       10
+  📊 useLieuDeleteMigrated: 4 références totales
+    - Exports:        2, Imports:        0, Usage:        2
+  📊 useLieuDeleteOptimized: 8 références totales
+    - Exports:        1, Imports:        2, Usage:        5
+
+🎯 RECOMMANDATION:
+  ✅ Version cible: useLieuDelete (16 références)
+  📁 Fichier cible: src/hooks/lieux/useLieuDelete.js
+
+🔄 VERSIONS À MIGRER:
+  ➡️  useLieuDeleteMigrated (4 références) → useLieuDelete
+  ➡️  useLieuDeleteOptimized (8 références) → useLieuDelete
+
+
+🔍 ANALYSE: useLieuDetails dans lieux
+----------------------------------------
+  📊 useLieuDetails: 44 références totales
+    - Exports:        4, Imports:        7, Usage:       33
+  📊 useLieuDetailsMigrated: 21 références totales
+    - Exports:        2, Imports:        2, Usage:       17
+  📊 useLieuDetailsOptimized: 16 références totales
+    - Exports:        1, Imports:        4, Usage:       11
+
+🎯 RECOMMANDATION:
+  ✅ Version cible: useLieuDetails (44 références)
+  📁 Fichier cible: src/hooks/lieux/useLieuDetails.js
+
+🔄 VERSIONS À MIGRER:
+  ➡️  useLieuDetailsMigrated (21 références) → useLieuDetails
+  ➡️  useLieuDetailsOptimized (16 références) → useLieuDetails
+
+
+🔍 ANALYSE: useLieuForm dans lieux
+----------------------------------------
+  📊 useLieuForm: 28 références totales
+    - Exports:        6, Imports:        5, Usage:       17
+  📊 useLieuFormMigrated: 3 références totales
+    - Exports:        2, Imports:        0, Usage:        1
+  📊 useLieuFormOptimized: 18 références totales
+    - Exports:        1, Imports:        5, Usage:       12
+  📊 useLieuFormComplete: 1 références totales
+    - Exports:        1, Imports:        0, Usage:        0
+
+🎯 RECOMMANDATION:
+  ✅ Version cible: useLieuForm (28 références)
+  📁 Fichier cible: src/hooks/lieux/useLieuForm.js
+
+🔄 VERSIONS À MIGRER:
+  ➡️  useLieuFormMigrated (3 références) → useLieuForm
+  ➡️  useLieuFormOptimized (18 références) → useLieuForm
+  ➡️  useLieuFormComplete (1 références) → useLieuForm
+
+
+🔍 ANALYSE: useLieuSearch dans lieux
+----------------------------------------
+  📊 useLieuSearch: 40 références totales
+    - Exports:        5, Imports:        4, Usage:       31
+  📊 useLieuSearchMigrated: 5 références totales
+    - Exports:        2, Imports:        0, Usage:        3
+  📊 useLieuSearchOptimized: 24 références totales
+    - Exports:        1, Imports:        3, Usage:       20
+
+🎯 RECOMMANDATION:
+  ✅ Version cible: useLieuSearch (40 références)
+  📁 Fichier cible: src/hooks/lieux/useLieuSearch.js
+
+🔄 VERSIONS À MIGRER:
+  ➡️  useLieuSearchMigrated (5 références) → useLieuSearch
+  ➡️  useLieuSearchOptimized (24 références) → useLieuSearch
+
+
+🔍 ANALYSE: useLieuxFilters dans lieux
+----------------------------------------
+  📊 useLieuxFilters: 46 références totales
+    - Exports:        4, Imports:        4, Usage:       38
+  📊 useLieuxFiltersMigrated: 13 références totales
+    - Exports:        2, Imports:        1, Usage:       10
+  📊 useLieuxFiltersOptimized: 25 références totales
+    - Exports:        1, Imports:        3, Usage:       21
+
+🎯 RECOMMANDATION:
+  ✅ Version cible: useLieuxFilters (46 références)
+  📁 Fichier cible: src/hooks/lieux/useLieuxFilters.js
+
+🔄 VERSIONS À MIGRER:
+  ➡️  useLieuxFiltersMigrated (13 références) → useLieuxFilters
+  ➡️  useLieuxFiltersOptimized (25 références) → useLieuxFilters
+
+
+🔍 ANALYSE: useArtisteDetails dans artistes
+----------------------------------------
+  📊 useArtisteDetails: 16 références totales
+    - Exports:        4, Imports:        2, Usage:       10
+  📊 useArtisteDetailsMigrated: 5 références totales
+    - Exports:        2, Imports:        1, Usage:        2
+  📊 useArtisteDetailsOptimized: 4 références totales
+    - Exports:        1, Imports:        0, Usage:        3
+
+🎯 RECOMMANDATION:
+  ✅ Version cible: useArtisteDetails (16 références)
+  📁 Fichier cible: src/hooks/artistes/useArtisteDetails.js
+
+🔄 VERSIONS À MIGRER:
+  ➡️  useArtisteDetailsMigrated (5 références) → useArtisteDetails
+  ➡️  useArtisteDetailsOptimized (4 références) → useArtisteDetails
+
+
+🔍 ANALYSE: useArtisteSearch dans artistes
+----------------------------------------
+  📊 useArtisteSearch: 11 références totales
+    - Exports:        2, Imports:        1, Usage:        8
+  📊 useArtisteSearchOptimized: 2 références totales
+    - Exports:        1, Imports:        0, Usage:        1
+
+🎯 RECOMMANDATION:
+  ✅ Version cible: useArtisteSearch (11 références)
+  📁 Fichier cible: src/hooks/artistes/useArtisteSearch.js
+
+🔄 VERSIONS À MIGRER:
+  ➡️  useArtisteSearchOptimized (2 références) → useArtisteSearch
+
+
+🔍 ANALYSE: useArtistesList dans artistes
+----------------------------------------
+  📊 useArtistesList: 30 références totales
+    - Exports:        4, Imports:        3, Usage:       23
+  📊 useArtistesListMigrated: 3 références totales
+    - Exports:        2, Imports:        0, Usage:        1
+  📊 useArtistesListOptimized: 22 références totales
+    - Exports:        1, Imports:        3, Usage:       18
+
+🎯 RECOMMANDATION:
+  ✅ Version cible: useArtistesList (30 références)
+  📁 Fichier cible: src/hooks/artistes/useArtistesList.js
+
+🔄 VERSIONS À MIGRER:
+  ➡️  useArtistesListMigrated (3 références) → useArtistesList
+  ➡️  useArtistesListOptimized (22 références) → useArtistesList
+
+
+🔍 ANALYSE: useConcertDetails dans concerts
+----------------------------------------
+  📊 useConcertDetails: 75 références totales
+    - Exports:        4, Imports:        5, Usage:       66
+  📊 useConcertDetailsMigrated: 36 références totales
+    - Exports:        2, Imports:        2, Usage:       32
+  📊 useConcertDetailsOptimized: 26 références totales
+    - Exports:        1, Imports:        2, Usage:       23
+
+🎯 RECOMMANDATION:
+  ✅ Version cible: useConcertDetails (75 références)
+  📁 Fichier cible: src/hooks/concerts/useConcertDetails.js
+
+🔄 VERSIONS À MIGRER:
+  ➡️  useConcertDetailsMigrated (36 références) → useConcertDetails
+  ➡️  useConcertDetailsOptimized (26 références) → useConcertDetails
+
+
+🔍 ANALYSE: useConcertForm dans concerts
+----------------------------------------
+  📊 useConcertForm: 68 références totales
+    - Exports:        3, Imports:        7, Usage:       58
+  📊 useConcertFormMigrated: 2 références totales
+    - Exports:        0, Imports:        0, Usage:        2
+  📊 useConcertFormOptimized: 48 références totales
+    - Exports:        1, Imports:        4, Usage:       43
+
+🎯 RECOMMANDATION:
+  ✅ Version cible: useConcertForm (68 références)
+  📁 Fichier cible: src/hooks/concerts/useConcertForm.js
+
+🔄 VERSIONS À MIGRER:
+  ➡️  useConcertFormMigrated (2 références) → useConcertForm
+  ➡️  useConcertFormOptimized (48 références) → useConcertForm
+
+
+🔍 ANALYSE: useConcertListData dans concerts
+----------------------------------------
+  📊 useConcertListData: 8 références totales
+    - Exports:        1, Imports:        0, Usage:        7
+
+🔍 ANALYSE: useConcertStatus dans concerts
+----------------------------------------
+  📊 useConcertStatus: 30 références totales
+    - Exports:        3, Imports:        5, Usage:       22
+  📊 useConcertStatusMigrated: 14 références totales
+    - Exports:        2, Imports:        1, Usage:       11
+
+🎯 RECOMMANDATION:
+  ✅ Version cible: useConcertStatus (30 références)
+  📁 Fichier cible: src/hooks/concerts/useConcertStatus.js
+
+🔄 VERSIONS À MIGRER:
+  ➡️  useConcertStatusMigrated (14 références) → useConcertStatus
+
+
+🔍 ANALYSE: useDeleteProgrammateur dans programmateurs
+----------------------------------------
+  📊 useDeleteProgrammateur: 11 références totales
+    - Exports:        2, Imports:        2, Usage:        7
+  📊 useDeleteProgrammateurOptimized: 9 références totales
+    - Exports:        1, Imports:        2, Usage:        6
+
+🎯 RECOMMANDATION:
+  ✅ Version cible: useDeleteProgrammateur (11 références)
+  📁 Fichier cible: src/hooks/programmateurs/useDeleteProgrammateur.js
+
+🔄 VERSIONS À MIGRER:
+  ➡️  useDeleteProgrammateurOptimized (9 références) → useDeleteProgrammateur
+
+
+🔍 ANALYSE: useProgrammateurDetails dans programmateurs
+----------------------------------------
+  📊 useProgrammateurDetails: 61 références totales
+    - Exports:        3, Imports:        6, Usage:       52
+  📊 useProgrammateurDetailsMigrated: 17 références totales
+    - Exports:        1, Imports:        0, Usage:       16
+  📊 useProgrammateurDetailsOptimized: 22 références totales
+    - Exports:        1, Imports:        2, Usage:       19
+
+🎯 RECOMMANDATION:
+  ✅ Version cible: useProgrammateurDetails (61 références)
+  📁 Fichier cible: src/hooks/programmateurs/useProgrammateurDetails.js
+
+🔄 VERSIONS À MIGRER:
+  ➡️  useProgrammateurDetailsMigrated (17 références) → useProgrammateurDetails
+  ➡️  useProgrammateurDetailsOptimized (22 références) → useProgrammateurDetails
+
+
+🔍 ANALYSE: useProgrammateurForm dans programmateurs
+----------------------------------------
+  📊 useProgrammateurForm: 16 références totales
+    - Exports:        2, Imports:        2, Usage:       12
+  📊 useProgrammateurFormOptimized: 14 références totales
+    - Exports:        1, Imports:        2, Usage:       11
+
+🎯 RECOMMANDATION:
+  ✅ Version cible: useProgrammateurForm (16 références)
+  📁 Fichier cible: src/hooks/programmateurs/useProgrammateurForm.js
+
+🔄 VERSIONS À MIGRER:
+  ➡️  useProgrammateurFormOptimized (14 références) → useProgrammateurForm
+
+
+🔍 ANALYSE: useProgrammateurSearch dans programmateurs
+----------------------------------------
+  📊 useProgrammateurSearch: 46 références totales
+    - Exports:        5, Imports:        5, Usage:       36
+  📊 useProgrammateurSearchMigrated: 7 références totales
+    - Exports:        2, Imports:        1, Usage:        4
+  📊 useProgrammateurSearchOptimized: 26 références totales
+    - Exports:        1, Imports:        2, Usage:       23
+
+🎯 RECOMMANDATION:
+  ✅ Version cible: useProgrammateurSearch (46 références)
+  📁 Fichier cible: src/hooks/programmateurs/useProgrammateurSearch.js
+
+🔄 VERSIONS À MIGRER:
+  ➡️  useProgrammateurSearchMigrated (7 références) → useProgrammateurSearch
+  ➡️  useProgrammateurSearchOptimized (26 références) → useProgrammateurSearch
+
+
+🔍 ANALYSE: useDeleteStructure dans structures
+----------------------------------------
+  📊 useDeleteStructure: 9 références totales
+    - Exports:        1, Imports:        2, Usage:        6
+  📊 useDeleteStructureOptimized: 8 références totales
+    - Exports:        1, Imports:        2, Usage:        5
+
+🎯 RECOMMANDATION:
+  ✅ Version cible: useDeleteStructure (9 références)
+  📁 Fichier cible: src/hooks/structures/useDeleteStructure.js
+
+🔄 VERSIONS À MIGRER:
+  ➡️  useDeleteStructureOptimized (8 références) → useDeleteStructure
+
+
+🔍 ANALYSE: useStructureDetails dans structures
+----------------------------------------
+  📊 useStructureDetails: 18 références totales
+    - Exports:        3, Imports:        3, Usage:       12
+  📊 useStructureDetailsMigrated: 5 références totales
+    - Exports:        2, Imports:        1, Usage:        2
+  📊 useStructureDetailsOptimized: 6 références totales
+    - Exports:        1, Imports:        1, Usage:        4
+
+🎯 RECOMMANDATION:
+  ✅ Version cible: useStructureDetails (18 références)
+  📁 Fichier cible: src/hooks/structures/useStructureDetails.js
+
+🔄 VERSIONS À MIGRER:
+  ➡️  useStructureDetailsMigrated (5 références) → useStructureDetails
+  ➡️  useStructureDetailsOptimized (6 références) → useStructureDetails
+
+
+🔍 ANALYSE: useStructureForm dans structures
+----------------------------------------
+  📊 useStructureForm: 22 références totales
+    - Exports:        3, Imports:        3, Usage:       16
+  📊 useStructureFormMigrated: 8 références totales
+    - Exports:        2, Imports:        1, Usage:        5
+  📊 useStructureFormOptimized: 11 références totales
+    - Exports:        1, Imports:        2, Usage:        8
+
+🎯 RECOMMANDATION:
+  ✅ Version cible: useStructureForm (22 références)
+  📁 Fichier cible: src/hooks/structures/useStructureForm.js
+
+🔄 VERSIONS À MIGRER:
+  ➡️  useStructureFormMigrated (8 références) → useStructureForm
+  ➡️  useStructureFormOptimized (11 références) → useStructureForm
+
+
+🔍 ANALYSE: useContratDetails dans contrats
+----------------------------------------
+  📊 useContratDetails: 13 références totales
+    - Exports:        3, Imports:        3, Usage:        7
+  📊 useContratDetailsMigrated: 5 références totales
+    - Exports:        2, Imports:        1, Usage:        2
+
+🎯 RECOMMANDATION:
+  ✅ Version cible: useContratDetails (13 références)
+  📁 Fichier cible: src/hooks/contrats/useContratDetails.js
+
+🔄 VERSIONS À MIGRER:
+  ➡️  useContratDetailsMigrated (5 références) → useContratDetails
+
+
+📊 PLAN DE MIGRATION PRIORITAIRE
+=================================
+
+🚀 ÉTAPES RECOMMANDÉES:
+1. Commencer par les hooks les plus utilisés
+2. Migrer progressivement les imports
+3. Tester après chaque migration
+4. Supprimer les versions obsolètes une fois migrées

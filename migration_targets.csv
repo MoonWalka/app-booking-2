@@ -1,0 +1,20 @@
+hook_base,target_version,target_file
+📋 useLieuDelete,useLieuDelete,src/hooks/lieux/useLieuDelete.js
+📋 useLieuDetails,useLieuDetails,src/hooks/lieux/useLieuDetails.js
+📋 useLieuForm,useLieuForm,src/hooks/lieux/useLieuForm.js
+📋 useLieuSearch,useLieuSearch,src/hooks/lieux/useLieuSearch.js
+📋 useLieuxFilters,useLieuxFilters,src/hooks/lieux/useLieuxFilters.js
+📋 useArtisteDetails,useArtisteDetails,src/hooks/artistes/useArtisteDetails.js
+📋 useArtisteSearch,useArtisteSearch,src/hooks/artistes/useArtisteSearch.js
+📋 useArtistesList,useArtistesList,src/hooks/artistes/useArtistesList.js
+📋 useConcertDetails,useConcertDetails,src/hooks/concerts/useConcertDetails.js
+📋 useConcertForm,useConcertForm,src/hooks/concerts/useConcertForm.js
+📋 useConcertStatus,useConcertStatus,src/hooks/concerts/useConcertStatus.js
+📋 useDeleteProgrammateur,useDeleteProgrammateur,src/hooks/programmateurs/useDeleteProgrammateur.js
+📋 useProgrammateurDetails,useProgrammateurDetails,src/hooks/programmateurs/useProgrammateurDetails.js
+📋 useProgrammateurForm,useProgrammateurForm,src/hooks/programmateurs/useProgrammateurForm.js
+📋 useProgrammateurSearch,useProgrammateurSearch,src/hooks/programmateurs/useProgrammateurSearch.js
+📋 useDeleteStructure,useDeleteStructure,src/hooks/structures/useDeleteStructure.js
+📋 useStructureDetails,useStructureDetails,src/hooks/structures/useStructureDetails.js
+📋 useStructureForm,useStructureForm,src/hooks/structures/useStructureForm.js
+📋 useContratDetails,useContratDetails,src/hooks/contrats/useContratDetails.js

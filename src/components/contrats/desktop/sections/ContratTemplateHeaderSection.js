@@ -4,6 +4,7 @@ import VariablesPanel from './VariablesPanel';
 import styles from './ContratTemplateHeaderSection.module.css';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { CompactToolbarModule } from '@/components/contrats/QuillPageBreakModule';
 
 /**
  * Composant pour la configuration de l'en-tête du contrat
@@ -134,7 +135,7 @@ const ContratTemplateHeaderSection = ({
             className={styles.headerContentInput}
             value={headerContent}
             onChange={setHeaderContent}
-            modules={{ toolbar: [['bold', 'italic', 'underline'], [{ list: 'ordered' }, { list: 'bullet' }], ['clean']] }}
+            modules={CompactToolbarModule}
             placeholder="Contenu de l'en-tête..."
             theme="snow"
             style={{ minHeight: 100, height: '100%' }}

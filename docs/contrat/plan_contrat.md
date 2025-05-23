@@ -18,20 +18,20 @@
     - [x] Signature
     - [x] En-tête
     - [x] Pied de page
-- [ ] Tester le collage de contenu riche depuis Google Docs dans chaque section.
-- [ ] S'assurer que l'insertion de variables dynamiques fonctionne dans chaque éditeur.
-- [ ] Nettoyer le code et supprimer les imports inutiles liés aux `<textarea>`.
+- [x] Tester le collage de contenu riche depuis Google Docs dans chaque section.
+- [x] S'assurer que l'insertion de variables dynamiques fonctionne dans chaque éditeur.
+- [x] Nettoyer le code et supprimer les imports inutiles liés aux `<textarea>`.
 
 ## 2. Ajouter un bouton "Saut de page" dans l'éditeur
 - Intégrer un bouton dédié dans la barre d'outils de l'éditeur pour insérer automatiquement un saut de page (`<hr class="page-break">` ou `[SAUT_DE_PAGE]`).
 - (Optionnel) Afficher visuellement les sauts de page dans l'éditeur (ligne, icône ou repère).
 
 **Checklist :**
-- [ ] Ajouter un bouton "Saut de page" dans la barre d'outils de l'éditeur WYSIWYG.
-- [ ] Configurer ce bouton pour insérer `<hr class="page-break">` ou `[SAUT_DE_PAGE]` à la position du curseur.
-- [ ] (Optionnel) Ajouter un style visuel dans l'éditeur pour représenter le saut de page (ligne, icône…).
-- [ ] Tester l'insertion et la suppression de sauts de page dans chaque section.
-- [ ] Vérifier que le PDF respecte bien les sauts de page insérés.
+- [x] Ajouter un bouton "Saut de page" dans la barre d'outils de l'éditeur WYSIWYG.
+- [x] Configurer ce bouton pour insérer `<hr class="page-break">` ou `[SAUT_DE_PAGE]` à la position du curseur.
+- [x] (Optionnel) Ajouter un style visuel dans l'éditeur pour représenter le saut de page (ligne, icône…).
+- [x] Tester l'insertion et la suppression de sauts de page dans chaque section.
+- [x] Vérifier que le PDF respecte bien les sauts de page insérés.
 
 ## 3. Enrichir le CSS d'impression
 - Compléter le fichier `contrat-print.css` pour couvrir tous les cas de contenu collé depuis Google Docs :  
@@ -39,27 +39,27 @@
 - Tester le rendu avec des modèles variés et ajuster le CSS pour chaque cas problématique.
 
 **Checklist :**
-- [ ] Lister les cas de contenu Google Docs qui posent problème (espacements, couleurs, images, tableaux…).
-- [ ] Adapter/compléter le fichier `contrat-print.css` pour chaque cas identifié.
-- [ ] Ajouter des styles pour :
-    - [ ] Listes imbriquées
-    - [ ] Tableaux complexes
-    - [ ] Images (alignement, taille…)
-    - [ ] Polices et couleurs personnalisées
-- [ ] Tester le rendu PDF avec plusieurs modèles collés depuis Google Docs.
-- [ ] Documenter les limites ou cas non gérés.
+- [x] Lister les cas de contenu Google Docs qui posent problème (espacements, couleurs, images, tableaux…).
+- [x] Adapter/compléter le fichier `contrat-print.css` pour chaque cas identifié.
+- [x] Ajouter des styles pour :
+    - [x] Listes imbriquées
+    - [x] Tableaux complexes
+    - [x] Images (alignement, taille…)
+    - [x] Polices et couleurs personnalisées
+- [x] Tester le rendu PDF avec plusieurs modèles collés depuis Google Docs.
+- [x] Documenter les limites ou cas non gérés.
 
 ## 4. Créer une suite de tests de rendu PDF
 - Mettre en place des tests manuels ou automatiques pour valider le rendu PDF avec différents modèles collés depuis Google Docs.
 - Documenter les cas limites et les bugs de rendu rencontrés.
 
 **Checklist :**
-- [ ] Préparer une collection de modèles de contrats variés (simples, complexes, avec images, tableaux…).
-- [ ] Coller chaque modèle dans l'éditeur et générer le PDF.
-- [ ] Comparer visuellement le PDF au modèle Google Docs d'origine.
-- [ ] Noter les bugs ou écarts de rendu.
-- [ ] (Optionnel) Mettre en place des tests automatisés de rendu PDF (ex : snapshot visuel).
-- [ ] Créer un rapport de bugs ou d'améliorations CSS à traiter.
+- [x] Préparer une collection de modèles de contrats variés (simples, complexes, avec images, tableaux…).
+- [x] Coller chaque modèle dans l'éditeur et générer le PDF.
+- [x] Comparer visuellement le PDF au modèle Google Docs d'origine.
+- [x] Noter les bugs ou écarts de rendu.
+- [x] (Optionnel) Mettre en place des tests automatisés de rendu PDF (ex : snapshot visuel).
+- [x] Créer un rapport de bugs ou d'améliorations CSS à traiter.
 
 ## 5. Améliorer la gestion des variables dynamiques
 - Ajouter la gestion des variables manquantes (alerte, valeur par défaut).

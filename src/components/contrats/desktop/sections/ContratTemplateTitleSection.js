@@ -4,6 +4,7 @@ import VariablesPanel from './VariablesPanel';
 import styles from './ContratTemplateTitleSection.module.css';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { CompactToolbarModule } from '@/components/contrats/QuillPageBreakModule';
 
 /**
  * Composant pour la configuration du titre du contrat
@@ -61,7 +62,7 @@ const ContratTemplateTitleSection = ({
             className={styles.titleInput}
             value={titleTemplate}
             onChange={setTitleTemplate}
-            modules={{ toolbar: [['bold', 'italic', 'underline'], ['clean']] }}
+            modules={CompactToolbarModule}
             placeholder="Ex: Contrat de prestation - {concert_titre}"
             theme="snow"
           />

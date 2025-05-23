@@ -1,4 +1,4 @@
-import { db, doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs } from '@/firebaseInit';
+import { db, doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs, serverTimestamp } from '@/firebaseInit';
 
 /**
  * Service pour gérer la synchronisation entre les informations descriptives de structure
@@ -101,7 +101,7 @@ const structureService = {
           */
           
           if (needsUpdate) {
-            updates.updatedAt = new Date().toISOString();
+            updates.updatedAt = serverTimestamp();
             await updateDoc(structureRef, updates);
             console.log(`Structure ${structureId} mise à jour via structureService`);
           }
@@ -111,7 +111,7 @@ const structureService = {
           if (programmId) {
             await updateDoc(doc(db, 'programmateurs', programmId), {
               structureId: structureId,
-              updatedAt: new Date().toISOString()
+              updatedAt: serverTimestamp()
             });
           }
           */
@@ -185,7 +185,7 @@ const structureService = {
           */
           
           if (needsUpdate) {
-            updates.updatedAt = new Date().toISOString();
+            updates.updatedAt = serverTimestamp();
             await updateDoc(doc(db, 'structures', newStructureId), updates);
             console.log(`Structure existante ${newStructureId} mise à jour via structureService`);
           }
@@ -195,7 +195,7 @@ const structureService = {
           if (programmId) {
             await updateDoc(doc(db, 'programmateurs', programmId), {
               structureId: newStructureId,
-              updatedAt: new Date().toISOString()
+              updatedAt: serverTimestamp()
             });
             console.log(`Programmateur ${programmId} associé à la structure ${newStructureId}`);
           }
@@ -215,8 +215,8 @@ const structureService = {
         pays: structureCountry || 'France',
         siret: structureSiret || '',
         tva: structureTva || '',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
       };
       
       /* DÉSACTIVATION TEMPORAIRE DE LA GESTION BIDIRECTIONNELLE
@@ -236,7 +236,7 @@ const structureService = {
       if (programmId) {
         await updateDoc(doc(db, 'programmateurs', programmId), {
           structureId: newStructureRef.id,
-          updatedAt: new Date().toISOString()
+          updatedAt: serverTimestamp()
         });
         console.log(`Programmateur ${programmId} associé à la nouvelle structure ${newStructureRef.id}`);
       }
@@ -288,7 +288,7 @@ const structureService = {
             structurePays: structureData.pays,
             structureSiret: structureData.siret,
             structureTva: structureData.tva,
-            updatedAt: new Date().toISOString()
+            updatedAt: serverTimestamp()
           });
           
           console.log(`Programmateur ${progId} mis à jour avec les données de structure ${structureId}`);

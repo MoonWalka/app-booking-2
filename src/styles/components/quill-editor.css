@@ -57,6 +57,32 @@
   transition: all var(--tc-transition-duration);
 }
 
+/* Bouton saut de page personnalisé */
+.tc-quill-editor-wrapper .ql-toolbar button.ql-pagebreak::before {
+  content: "📄";
+  font-size: 14px;
+}
+
+.tc-quill-editor-wrapper .ql-toolbar button.ql-pagebreak {
+  position: relative;
+}
+
+.tc-quill-editor-wrapper .ql-toolbar button.ql-pagebreak:hover::after {
+  content: "Saut de page";
+  position: absolute;
+  bottom: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--tc-gray-900);
+  color: var(--tc-white);
+  padding: 2px 6px;
+  border-radius: var(--tc-border-radius-sm);
+  font-size: 11px;
+  white-space: nowrap;
+  z-index: 1000;
+  pointer-events: none;
+}
+
 .tc-quill-editor-wrapper .ql-toolbar button:hover {
   background-color: var(--tc-gray-100);
 }
@@ -252,6 +278,48 @@
 .tc-quill-editor-wrapper.fullscreen .ql-container {
   flex-grow: 1;
   overflow-y: auto;
+}
+
+/* ========================================
+   SAUTS DE PAGE DANS L'ÉDITEUR
+   ======================================== */
+
+/* Style pour les sauts de page dans l'éditeur */
+.tc-quill-editor-wrapper .ql-editor .page-break {
+  margin: var(--tc-spacing-md) 0;
+  padding: var(--tc-spacing-xs);
+  border: 2px dashed var(--tc-primary-color);
+  border-radius: var(--tc-border-radius-sm);
+  background-color: rgba(var(--tc-primary-color-rgb), 0.05);
+  text-align: center;
+  position: relative;
+  min-height: 20px;
+  display: block;
+  cursor: pointer;
+}
+
+.tc-quill-editor-wrapper .ql-editor .page-break:hover {
+  background-color: rgba(var(--tc-primary-color-rgb), 0.1);
+  border-color: var(--tc-primary-color);
+}
+
+.tc-quill-editor-wrapper .ql-editor .page-break span {
+  background-color: var(--tc-white);
+  padding: 0 var(--tc-spacing-xs);
+  color: var(--tc-primary-color);
+  font-weight: 500;
+}
+
+/* Affichage alternatif avec juste le texte [SAUT_DE_PAGE] */
+.tc-quill-editor-wrapper .ql-editor div[data-page-break="true"]:empty::before {
+  content: "[SAUT_DE_PAGE]";
+  color: var(--tc-primary-color);
+  font-style: italic;
+  font-weight: bold;
+  background-color: rgba(var(--tc-primary-color-rgb), 0.1);
+  padding: var(--tc-spacing-xs);
+  border-radius: var(--tc-border-radius-sm);
+  display: inline-block;
 }
 
 /* ========================================

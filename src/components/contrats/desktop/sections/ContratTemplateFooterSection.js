@@ -4,6 +4,7 @@ import VariablesPanel from './VariablesPanel';
 import styles from './ContratTemplateFooterSection.module.css';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { CompactToolbarModule } from '@/components/contrats/QuillPageBreakModule';
 
 /**
  * Composant pour la configuration du pied de page du contrat
@@ -95,7 +96,7 @@ const ContratTemplateFooterSection = ({
             className={styles.footerContentInput}
             value={footerContent}
             onChange={setFooterContent}
-            modules={{ toolbar: [['bold', 'italic', 'underline'], [{ list: 'ordered' }, { list: 'bullet' }], ['clean']] }}
+            modules={CompactToolbarModule}
             placeholder="Contenu du pied de page..."
             theme="snow"
             style={{ minHeight: 100, height: '100%' }}

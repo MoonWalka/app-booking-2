@@ -1,3 +1,7 @@
+// Ce hook n'est plus utilisé pour la gestion des textarea dans l'app contrats. À supprimer ou archiver si besoin.
+
+// (Aucune logique textarea à conserver)
+
 import { useState, useRef, useEffect } from 'react';
 
 /**

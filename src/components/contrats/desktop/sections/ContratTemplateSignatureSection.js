@@ -4,6 +4,7 @@ import VariablesPanel from './VariablesPanel';
 import styles from './ContratTemplateSignatureSection.module.css';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { CompactToolbarModule } from '@/components/contrats/QuillPageBreakModule';
 
 /**
  * Composant pour la configuration de la section de signature du contrat
@@ -64,7 +65,7 @@ const ContratTemplateSignatureSection = ({
             className={styles.signatureContentInput}
             value={signatureTemplate}
             onChange={setSignatureTemplate}
-            modules={{ toolbar: [['bold', 'italic', 'underline'], [{ list: 'ordered' }, { list: 'bullet' }], ['clean']] }}
+            modules={CompactToolbarModule}
             placeholder="Format de la section de signature..."
             theme="snow"
             style={{ minHeight: 150, height: '100%' }}

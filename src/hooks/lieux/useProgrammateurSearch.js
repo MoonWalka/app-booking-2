@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { collection, query, where, orderBy, limit, getDocs, doc, setDoc, getDoc, db } from '@/firebaseInit';
+import { collection, query, where, orderBy, limit, getDocs, doc, setDoc, getDoc, db, serverTimestamp } from '@/firebaseInit';
 
 /**
  * Hook to handle programmateur search and selection
@@ -123,8 +123,8 @@ export const useProgrammateurSearch = (lieu, setLieu) => {
         structure: '',
         email: '',
         telephone: '',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
       };
       
       await setDoc(newProgRef, progData);

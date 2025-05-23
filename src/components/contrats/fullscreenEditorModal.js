@@ -3,6 +3,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 // Modifié l'ordre d'importation pour que les styles de Quill aient priorité
 import styles from './FullscreenEditorModal.module.css';
+import { ToolbarModule } from './QuillPageBreakModule';
 
 const FullscreenEditorModal = ({ 
   isOpen, 
@@ -65,13 +66,7 @@ const FullscreenEditorModal = ({
   
   if (!isOpen) return null;
   
-  const modules = {
-    toolbar: [
-      ['bold', 'italic', 'underline'],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      ['clean']
-    ],
-  };
+  const modules = ToolbarModule;
 
   return (
     <div className={styles.modalOverlay} onClick={handleBackdropClick} role="button" tabIndex={0}>

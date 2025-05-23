@@ -1,4 +1,4 @@
-import { doc, getDoc, updateDoc, arrayUnion, db } from '@/firebaseInit';
+import { doc, getDoc, updateDoc, arrayUnion, serverTimestamp, db } from '@/firebaseInit';
 
 /**
  * Hook pour gérer les associations entre un concert et d'autres entités
@@ -21,7 +21,7 @@ const useConcertAssociations = () => {
         
         await updateDoc(progRef, {
           concertsAssocies: arrayUnion(concertReference),
-          updatedAt: new Date().toISOString()
+          updatedAt: serverTimestamp()
         });
       }
       
@@ -38,7 +38,7 @@ const useConcertAssociations = () => {
           
           await updateDoc(oldProgRef, {
             concertsAssocies: updatedConcerts,
-            updatedAt: new Date().toISOString()
+            updatedAt: serverTimestamp()
           });
         }
       }
@@ -64,7 +64,7 @@ const useConcertAssociations = () => {
         
         await updateDoc(artisteRef, {
           concerts: arrayUnion(concertReference),
-          updatedAt: new Date().toISOString()
+          updatedAt: serverTimestamp()
         });
       }
       
@@ -81,7 +81,7 @@ const useConcertAssociations = () => {
           
           await updateDoc(oldArtisteRef, {
             concerts: updatedConcerts,
-            updatedAt: new Date().toISOString()
+            updatedAt: serverTimestamp()
           });
         }
       }
@@ -109,7 +109,7 @@ const useConcertAssociations = () => {
           
           await updateDoc(structureRef, {
             concertsAssocies: arrayUnion(concertReference),
-            updatedAt: new Date().toISOString()
+            updatedAt: serverTimestamp()
           });
         }
       }
@@ -127,7 +127,7 @@ const useConcertAssociations = () => {
           
           await updateDoc(oldStructureRef, {
             concertsAssocies: updatedConcerts,
-            updatedAt: new Date().toISOString()
+            updatedAt: serverTimestamp()
           });
         }
       }
@@ -153,7 +153,7 @@ const useConcertAssociations = () => {
         
         await updateDoc(lieuRef, {
           concertsAssocies: arrayUnion(concertReference),
-          updatedAt: new Date().toISOString()
+          updatedAt: serverTimestamp()
         });
       }
       
@@ -170,7 +170,7 @@ const useConcertAssociations = () => {
           
           await updateDoc(oldLieuRef, {
             concertsAssocies: updatedConcerts,
-            updatedAt: new Date().toISOString()
+            updatedAt: serverTimestamp()
           });
         }
       }

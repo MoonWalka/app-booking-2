@@ -90,8 +90,9 @@ rm -f "src/hooks/contrats/useContratDetails.js.bak"
 echo "📤 6. Mise à jour des exports..."
 INDEX_FILE="src/hooks/contrats/index.js"
 if [ -f "$INDEX_FILE" ]; then
-    # Supprimer l'export de useContratDetailsMigrated
+    # Supprimer tous les exports qui pointent vers useContratDetailsMigrated
     sed -i.bak "/export { default as useContratDetailsMigrated } from/d" "$INDEX_FILE"
+    sed -i.bak "/export { default as useContratDetailsV2 } from.*useContratDetailsMigrated/d" "$INDEX_FILE"
     rm -f "$INDEX_FILE.bak"
 fi
 

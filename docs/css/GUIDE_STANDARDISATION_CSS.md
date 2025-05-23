@@ -27,8 +27,9 @@ src/
 ├── styles/
 │   ├── base/
 │   │   ├── colors.css       # Variables de couleurs
+│   │   ├── index.css        # Point d'entrée base
+│   │   ├── reset.css        # Reset CSS global
 │   │   ├── typography.css   # Typographie et texte
-│   │   ├── spacing.css      # Espacement et layout
 │   │   └── variables.css    # Variables globales
 │   ├── components/
 │   │   ├── buttons.css      # Styles des boutons
@@ -39,8 +40,8 @@ src/
 │   │   ├── artistes.css     # Styles spécifiques aux pages
 │   │   ├── concerts.css
 │   │   └── ...
-│   ├── critical/
-│   │   └── critical.css     # Styles critiques pour inlining
+│   ├── mixins/
+│   │   └── breakpoints.css  # Mixins pour media queries
 │   └── index.css            # Point d'entrée principal
 ├── components/
 │   ├── ui/                  # Composants UI réutilisables
@@ -447,15 +448,20 @@ function ResponsiveComponent() {
 
 ## 7. Performance
 
-### 7.1 Styles critiques
+### 7.1 Optimisation du chargement CSS
 
-Les styles critiques sont définis dans `src/styles/critical/critical.css` et inlinés dans le HTML :
+Pour optimiser les performances, séparer les styles critiques des styles non-critiques :
 
 ```html
 <head>
+  <!-- Styles critiques inlinés pour un rendu immédiat -->
   <style id="critical-css">
-    /* Styles critiques inlinés */
+    /* Variables CSS essentielles et styles de layout */
+    :root { --tc-primary-color: #3498db; /* ... */ }
+    body { font-family: sans-serif; margin: 0; }
   </style>
+  
+  <!-- Autres styles chargés de manière asynchrone -->
   <link rel="preload" href="/static/css/main.css" as="style">
   <link rel="stylesheet" href="/static/css/main.css">
 </head>

@@ -1,5 +1,5 @@
 /**
- * Composant exemple démontrant l'utilisation de useContratFormOptimized
+ * Composant exemple démontrant l'utilisation de useContratForm
  * 
  * Ce composant sert d'exemple pour illustrer comment utiliser le hook optimisé
  * pour les formulaires de contrats, conformément au plan de dépréciation
@@ -8,7 +8,7 @@
 
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useContratFormOptimized } from '@/hooks/contrats';
+import { useContratForm } from '@/hooks/contrats';
 import { format } from 'date-fns';
 
 // Styles communs pour le formulaire (réutilisés des autres exemples)
@@ -167,7 +167,7 @@ const formStyles = {
 };
 
 /**
- * Composant exemple démontrant l'utilisation de useContratFormOptimized
+ * Composant exemple démontrant l'utilisation de useContratForm
  */
 const ContratFormExemple = () => {
   const { id } = useParams();
@@ -221,7 +221,7 @@ const ContratFormExemple = () => {
     hasRequiredFields,
     canGeneratePdf,
     statutContrat
-  } = useContratFormOptimized(id);
+  } = useContratForm(id);
   
   // Fonctions de gestion des onglets
   const handleTabChange = (tab) => {

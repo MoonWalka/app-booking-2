@@ -1,9 +1,9 @@
 /**
- * Test unitaire pour le hook useArtisteFormOptimized
+ * Test unitaire pour le hook useArtisteForm
  */
 
 import { renderHook, act } from '@testing-library/react';
-import { useArtisteFormOptimized } from '@/hooks/artistes';
+import { useArtisteForm } from '@/hooks/artistes';
 import { useGenericEntityForm } from '@/hooks/common';
 import { validateArtisteForm } from '@/utils/validation';
 import { generateArtisteId } from '@/utils/idGenerators';
@@ -47,7 +47,7 @@ jest.mock('react-router-dom', () => ({
   useNavigate: jest.fn().mockReturnValue(jest.fn())
 }));
 
-describe('useArtisteFormOptimized', () => {
+describe('useArtisteForm', () => {
   // Configuration de base pour les tests
   const mockArtisteId = 'test-artiste-123';
   const mockArtisteData = {
@@ -103,7 +103,7 @@ describe('useArtisteFormOptimized', () => {
 
   test('devrait initialiser correctement le hook avec un ID existant', () => {
     // Rendu du hook avec un ID
-    const { result } = renderHook(() => useArtisteFormOptimized(mockArtisteId));
+    const { result } = renderHook(() => useArtisteForm(mockArtisteId));
     
     // Vérifier que useGenericEntityForm a été appelé avec les bons paramètres
     expect(useGenericEntityForm).toHaveBeenCalledWith(expect.objectContaining({
@@ -138,7 +138,7 @@ describe('useArtisteFormOptimized', () => {
     });
     
     // Rendu du hook sans ID (nouvel artiste)
-    const { result } = renderHook(() => useArtisteFormOptimized('nouveau'));
+    const { result } = renderHook(() => useArtisteForm('nouveau'));
     
     // Vérifier que le hook générique a été appelé correctement
     expect(useGenericEntityForm).toHaveBeenCalledWith(expect.objectContaining({
@@ -153,7 +153,7 @@ describe('useArtisteFormOptimized', () => {
   
   test('handleAgentChange devrait mettre à jour les données du formulaire', () => {
     // Rendu du hook
-    const { result } = renderHook(() => useArtisteFormOptimized(mockArtisteId));
+    const { result } = renderHook(() => useArtisteForm(mockArtisteId));
     
     const newAgent = { id: 'new-agent-456', nom: 'Nouvel Agent', email: 'nouvel.agent@example.com' };
     
@@ -181,7 +181,7 @@ describe('useArtisteFormOptimized', () => {
   
   test('handleAddContact devrait ajouter un contact à la liste', () => {
     // Rendu du hook
-    const { result } = renderHook(() => useArtisteFormOptimized(mockArtisteId));
+    const { result } = renderHook(() => useArtisteForm(mockArtisteId));
     
     const newContact = { nom: 'Nouveau Contact', email: 'nouveau@example.com' };
     
@@ -207,7 +207,7 @@ describe('useArtisteFormOptimized', () => {
   
   test('handleRemoveContact devrait supprimer un contact de la liste', () => {
     // Rendu du hook
-    const { result } = renderHook(() => useArtisteFormOptimized(mockArtisteId));
+    const { result } = renderHook(() => useArtisteForm(mockArtisteId));
     
     // Index du contact à supprimer
     const indexToRemove = 0;
@@ -234,7 +234,7 @@ describe('useArtisteFormOptimized', () => {
   
   test('handlePhotoUpload devrait ajouter une photo à la liste', () => {
     // Rendu du hook
-    const { result } = renderHook(() => useArtisteFormOptimized(mockArtisteId));
+    const { result } = renderHook(() => useArtisteForm(mockArtisteId));
     
     // Simuler un téléchargement de photo réussi
     const mockPhotoURL = 'https://example.com/photos/new-photo.jpg';
@@ -252,7 +252,7 @@ describe('useArtisteFormOptimized', () => {
   
   test('handleRemovePhoto devrait supprimer une photo de la liste', () => {
     // Rendu du hook
-    const { result } = renderHook(() => useArtisteFormOptimized(mockArtisteId));
+    const { result } = renderHook(() => useArtisteForm(mockArtisteId));
     
     // URL de la photo à supprimer
     const photoToRemove = mockArtisteData.photos[0];

@@ -27,4 +27,4 @@ export {
   replaceVariablesWithMockData 
 } from './contractVariables';
 
-export { default as useContratFormOptimized } from './useContratFormOptimized';
+export { default as useContratForm } from './useContratForm';

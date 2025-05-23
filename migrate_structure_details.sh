@@ -85,20 +85,16 @@ sed -i.bak "s/export default useStructureDetailsOptimized/export default useStru
 rm -f "src/hooks/structures/useStructureDetails.js.bak"
 echo "  ✅ Fonction renommée"
 
-# Étape 6: Nettoyer les exports dans index.js
+# Étape 6: Nettoyer les exports dans index.js (GARDER useStructureDetails)
 echo "📤 6. Nettoyage des exports..."
 INDEX_FILE="src/hooks/structures/index.js"
 if [ -f "$INDEX_FILE" ]; then
-    # Supprimer tous les anciens exports et commentaires
+    # Supprimer uniquement les anciennes versions
     sed -i.bak "/export { default as useStructureDetailsMigrated } from/d" "$INDEX_FILE"
     sed -i.bak "/export { default as useStructureDetailsV2 } from/d" "$INDEX_FILE"
     sed -i.bak "/export { default as useStructureDetailsOptimized } from/d" "$INDEX_FILE"
     
-    # Supprimer les imports inutilisés
-    sed -i.bak "/import useStructureDetails from/d" "$INDEX_FILE"
-    
-    # Supprimer les références dans les exports groupés
-    sed -i.bak "s/  useStructureDetails,//g" "$INDEX_FILE"
+    # Note: On garde l'import useStructureDetails et son export car il pointe maintenant vers le bon fichier
     
     rm -f "$INDEX_FILE.bak"
     echo "  ✅ Exports nettoyés"
@@ -128,7 +124,7 @@ git commit -m "🔄 Migration finale useStructureDetails - Consolidation réussi
 - useStructureDetailsOptimized (moderne, production) → useStructureDetails (nom final)
 - Suppression wrapper déprécié + version intermédiaire
 - Mise à jour du composant: useStructureDetailsOptimized → useStructureDetails
-- Nettoyage des exports multiples et commentaires
+- Nettoyage des exports multiples et commentaires (gardé useStructureDetails)
 - Version finale: useStructureDetails avec useGenericEntityDetails (176 lignes)
 - Tests de compilation validés"
 

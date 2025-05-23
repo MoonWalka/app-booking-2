@@ -14,7 +14,7 @@ import ProgrammateurLieuxSection from './ProgrammateurLieuxSection';
 import Card from '../../../components/ui/Card';
 
 // MIGRATION: Utilisation du hook optimisé
-import { useProgrammateurFormOptimized } from '@/hooks/programmateurs';
+import { useProgrammateurForm } from '@/hooks/programmateurs';
 import { useCompanySearch } from '@/hooks/common';
 import { useAddressSearch } from '@/hooks/common';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
@@ -43,7 +43,7 @@ const ProgrammateurForm = () => {
     formatValue,
     handleStructureChange,
     handleCancel: hookHandleCancel
-  } = useProgrammateurFormOptimized(id);
+  } = useProgrammateurForm(id);
   
   // État local pour contrôler l'affichage des sections
   const [sections, setSections] = useState({

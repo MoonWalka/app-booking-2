@@ -1,21 +1,21 @@
 /**
- * Composant exemple démontrant l'utilisation de useProgrammateurFormOptimized
+ * Composant exemple démontrant l'utilisation de useProgrammateurForm
  * 
- * Ce composant montre comment utiliser le hook optimisé useProgrammateurFormOptimized
+ * Ce composant montre comment utiliser le hook optimisé useProgrammateurForm
  * qui représente l'approche recommandée utilisant directement les hooks génériques
  * conformément au plan de dépréciation officiel.
  */
 
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useProgrammateurFormOptimized } from '@/hooks/programmateurs';
+import { useProgrammateurForm } from '@/hooks/programmateurs';
 import EntitySearchField from '@/components/ui/EntitySearchField';
 import Card from '@/components/ui/Card';
 import '@styles/index.css';
 
 /**
  * Composant pour le formulaire de programmateur optimisé
- * Utilise directement useProgrammateurFormOptimized
+ * Utilise directement useProgrammateurForm
  */
 const ProgrammateurFormExemple = () => {
   const { id } = useParams();
@@ -46,7 +46,7 @@ const ProgrammateurFormExemple = () => {
     programmateur,
     contact,
     selectedStructure
-  } = useProgrammateurFormOptimized(id);
+  } = useProgrammateurForm(id);
   
   // Gérer la soumission du formulaire
   const handleSubmit = (e) => {
@@ -375,11 +375,11 @@ const ProgrammateurFormExemple = () => {
       
       {/* Aide et documentation */}
       <Card
-        title="Utilisation du hook useProgrammateurFormOptimized"
+        title="Utilisation du hook useProgrammateurForm"
         className="mt-4"
       >
         <p>
-          Ce composant démontre l'utilisation du hook <code>useProgrammateurFormOptimized</code> qui est basé directement
+          Ce composant démontre l'utilisation du hook <code>useProgrammateurForm</code> qui est basé directement
           sur <code>useGenericEntityForm</code>, conformément au plan de dépréciation officiel.
         </p>
         <p>

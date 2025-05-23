@@ -15,7 +15,6 @@ export { default as useProgrammateurSearchV2 } from './useProgrammateurSearchMig
 // Exports des hooks de formulaire
 export { default as useProgrammateurForm } from './useProgrammateurForm';
 
-export { default as useProgrammateurFormOptimized } from './useProgrammateurFormOptimized';
 export { default as useProgrammateurSearchOptimized } from './useProgrammateurSearchOptimized';
 export { default as useDeleteProgrammateurOptimized } from './useDeleteProgrammateurOptimized';
 

@@ -83,11 +83,12 @@ const ConcertLocationSectionMobile = ({
                     <div className={styles.noResults}>
                       Aucun lieu trouvé
                       <Button
-                        variant="link"
-                        className={styles.createLink}
-                        onClick={handleCreateLieu}
+                        type="button"
+                        variant="outline-secondary"
+                        className="tc-btn-outline-secondary"
+                        onClick={() => handleCreateLieu()}
                       >
-                        Créer un nouveau lieu
+                        Créer un lieu
                       </Button>
                     </div>
                   )}

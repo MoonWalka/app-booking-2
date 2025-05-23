@@ -96,9 +96,9 @@ const ConcertOrganizerSectionMobile = ({
                       <Button
                         variant="link"
                         className={styles.createLink}
-                        onClick={handleCreateProgrammateur}
+                        onClick={() => handleCreateProgrammateur()}
                       >
-                        Créer un nouvel organisateur
+                        Créer un nouveau programmateur
                       </Button>
                     </div>
                   )}

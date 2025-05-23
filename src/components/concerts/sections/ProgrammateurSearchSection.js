@@ -49,7 +49,7 @@ const ProgrammateurSearchSection = ({
               isSearching={isSearchingProgs}
               placeholder="Rechercher un programmateur par nom..."
               onSelect={handleSelectProgrammateur}
-              onCreate={() => handleCreateProgrammateur(progSearchTerm, handleSelectProgrammateur)}
+              onCreate={handleCreateProgrammateur}
               createButtonText="Nouveau programmateur"
               emptyResultsText="Aucun programmateur trouvé"
               entityType="programmateur"

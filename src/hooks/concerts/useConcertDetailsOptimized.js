@@ -520,16 +520,10 @@ const useConcertDetailsOptimized = (id, locationParam) => {
   const toggleEditMode = useCallback(() => {
     if (!genericDetails) return;
     
-    // Si nous sommes déjà en mode édition, utiliser le toggleEditMode du hook générique
-    if (genericDetails.isEditing) {
-      genericDetails.toggleEditMode();
-      return;
-    }
-    
-    // Si nous sommes en mode consultation, naviguer vers la page d'édition
-    console.log(`[useConcertDetailsOptimized] Redirection vers page d'édition pour concert ${id}`);
-    navigate(`/concerts/${id}/edit`);
-  }, [genericDetails, id, navigate]);
+    console.log(`[useConcertDetailsOptimized] Basculement du mode édition - isEditing: ${genericDetails.isEditing}`);
+    // Utiliser directement la fonction toggleEditMode du hook générique
+    genericDetails.toggleEditMode();
+  }, [genericDetails]);
   
   // Ajout log pour la suppression
   const handleDeleteClick = useCallback(() => {
@@ -555,11 +549,11 @@ const useConcertDetailsOptimized = (id, locationParam) => {
     error: genericDetails?.error || null,
     
     // Données du formulaire
-    formState: genericDetails?.formData || {},
+    formData: genericDetails?.formData || {},
     isEditMode: genericDetails?.isEditing || false,
     
     // Données des formulaires spécifiques aux concerts
-    formData: concertForms?.formData || null,
+    concertFormData: concertForms?.formData || null,
     formDataStatus: concertForms?.formDataStatus || null,
     showFormGenerator: concertForms?.showFormGenerator || false,
     setShowFormGenerator: concertForms?.setShowFormGenerator || (() => {}),
@@ -568,6 +562,7 @@ const useConcertDetailsOptimized = (id, locationParam) => {
     
     // Fonctions de gestion génériques
     handleChange: genericDetails?.handleChange || (() => {}),
+    handleSave: genericDetails?.handleSubmit || (() => {}),
     toggleEditMode,
     handleDelete: genericDetails?.handleDelete || (() => {}),
     handleSubmit: handleSubmitWithRelations,

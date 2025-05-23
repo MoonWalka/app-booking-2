@@ -49,11 +49,10 @@ const ArtisteSearchSection = ({
               isSearching={isSearchingArtistes}
               placeholder="Rechercher un artiste par nom..."
               onSelect={handleSelectArtiste}
-              onCreate={() => handleCreateArtiste(artisteSearchTerm, handleSelectArtiste)}
+              onCreate={handleCreateArtiste}
               createButtonText="Nouvel artiste"
               emptyResultsText="Aucun artiste trouvé"
               entityType="artiste"
-              onFocus={() => artisteSearchTerm.length >= 2 && !showArtisteResults && setArtisteSearchTerm(artisteSearchTerm)}
             />
             <small className={styles.formHelpText}>
               Tapez au moins 2 caractères pour rechercher un artiste par nom.

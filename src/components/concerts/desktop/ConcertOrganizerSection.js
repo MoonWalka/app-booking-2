@@ -70,7 +70,7 @@ const ConcertOrganizerSection = ({
                     type="button"
                     variant="outline-secondary"
                     className="tc-btn-outline-secondary"
-                    onClick={handleCreateProgrammateur}
+                    onClick={() => handleCreateProgrammateur()}
                   >
                     Créer un programmateur
                   </Button>

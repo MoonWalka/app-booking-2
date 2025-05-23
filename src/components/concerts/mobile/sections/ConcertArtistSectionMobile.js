@@ -87,7 +87,7 @@ const ConcertArtistSectionMobile = ({
                       <Button
                         variant="link"
                         className={styles.createLink}
-                        onClick={handleCreateArtiste}
+                        onClick={() => handleCreateArtiste()}
                       >
                         Créer un nouvel artiste
                       </Button>

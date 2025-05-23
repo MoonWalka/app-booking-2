@@ -1,0 +1,153 @@
+src/hooks
+├── __tests__
+│   ├── setupTests.js
+│   ├── templates
+│   │   └── optimizedFormHookTest.template.js
+│   ├── useArtisteFormOptimized.test.js
+│   ├── useArtistesListOptimized.test.js
+│   ├── useConcertDetailsMigrated.test.js
+│   ├── useConcertFormOptimized.test.js
+│   ├── useConcertStatusMigrated.test.js
+│   ├── useFirebaseMigrated.test.js
+│   ├── useFormValidationMigrated.test.js
+│   ├── useGenericEntityDetails.test.js
+│   ├── useGenericEntityList.test.js
+│   ├── useLieuDetailsMigrated.test.js
+│   ├── useLieuFormOptimized.test.js
+│   ├── useLieuSearchOptimized.test.js
+│   ├── useLieuxFiltersMigrated.test.js
+│   ├── useLieuxFiltersOptimized.test.js
+│   ├── useProgrammateurDetails.test.js
+│   └── useProgrammateurSearchOptimized.test.js
+├── artistes
+│   ├── index.js
+│   ├── useArtisteDetails.js
+│   ├── useArtisteDetailsMigrated.js
+│   ├── useArtisteFormOptimized.js
+│   ├── useArtisteSearch.js
+│   ├── useArtistesList.js
+│   ├── useArtistesListMigrated.js
+│   ├── useArtistesListOptimized.js
+│   ├── useHandleDeleteArtist.js
+│   └── useSearchAndFilter.js
+├── common
+│   ├── index.js
+│   ├── useAddressSearch.js
+│   ├── useCache.js
+│   ├── useCompanySearch.js
+│   ├── useDebounce.js
+│   ├── useEntitySearch.js
+│   ├── useFirestoreSubscription.js
+│   ├── useFirestoreSubscription.js.bak
+│   ├── useFormSubmission.js
+│   ├── useGenericEntityDelete.js
+│   ├── useGenericEntityDetails.js
+│   ├── useGenericEntityForm.js
+│   ├── useGenericEntityList.js
+│   ├── useGenericEntitySearch.js
+│   ├── useLocationIQ.js
+│   ├── useResponsive.js
+│   ├── useSearchAndFilter.js
+│   └── useTheme.js
+├── concerts
+│   ├── index.js
+│   ├── useConcertActions.js
+│   ├── useConcertAssociations.js
+│   ├── useConcertDetails.js
+│   ├── useConcertDetailsMigrated.js
+│   ├── useConcertFilters.js
+│   ├── useConcertForm.js
+│   ├── useConcertFormData.js
+│   ├── useConcertFormMigrated.js
+│   ├── useConcertFormOptimized.js
+│   ├── useConcertFormsManagement.js
+│   ├── useConcertListData.js
+│   ├── useConcertStatus.js
+│   ├── useConcertStatusMigrated.js
+│   ├── useConcertSubmission.js
+│   ├── useConcerts.js
+│   ├── useEntitySearch.js
+│   └── useFormSubmission.js
+├── contrats
+│   ├── contractVariables.js
+│   ├── index.js
+│   ├── useContractTemplates.js
+│   ├── useContratActions.js
+│   ├── useContratDetails.js
+│   ├── useContratDetailsMigrated.js
+│   ├── useContratFormOptimized.js
+│   ├── useContratGenerator.js
+│   ├── useContratTemplateEditor.js
+│   ├── useContratTemplatePreview.js
+│   └── usePdfPreview.js
+├── firestore
+│   └── useFirebaseSave.js
+├── forms
+│   ├── index.js
+│   ├── useAdminFormValidation.js
+│   ├── useFieldActions.js
+│   ├── useFormSubmission.js
+│   ├── useFormTokenValidation.js
+│   ├── useFormValidation.js
+│   ├── useFormValidationData.js
+│   ├── useFormValidationMigrated.js
+│   ├── useLieuFormState.js
+│   └── useValidationBatchActions.js
+├── index.js
+├── lieux
+│   ├── index.js
+│   ├── useAddressSearch.js
+│   ├── useLieuDelete.js
+│   ├── useLieuDeleteMigrated.js
+│   ├── useLieuDetails.js
+│   ├── useLieuDetailsMigrated.js
+│   ├── useLieuForm.js
+│   ├── useLieuFormComplete.js
+│   ├── useLieuFormMigrated.js
+│   ├── useLieuFormOptimized.js
+│   ├── useLieuSearch.js
+│   ├── useLieuSearchMigrated.js
+│   ├── useLieuSearchOptimized.js
+│   ├── useLieuxFilters.js
+│   ├── useLieuxFiltersMigrated.js
+│   ├── useLieuxFiltersOptimized.js
+│   ├── useLieuxQuery.js
+│   └── useProgrammateurSearch.js
+├── lists
+│   └── useConcertsList.js
+├── parametres
+│   ├── index.js
+│   └── useEntrepriseForm.js
+├── programmateurs
+│   ├── index.js
+│   ├── useAddressSearch.js
+│   ├── useAdresseValidation.js
+│   ├── useCompanySearch.js
+│   ├── useConcertSearch.js
+│   ├── useFormSubmission.js
+│   ├── useLieuSearch.js
+│   ├── useProgrammateurDetails.js
+│   ├── useProgrammateurForm.js
+│   ├── useProgrammateurFormOptimized.js
+│   ├── useProgrammateurSearch.js
+│   ├── useProgrammateurSearchMigrated.js
+│   └── useProgrammateurSearchOptimized.js
+├── search
+│   ├── index.js
+│   ├── useArtisteSearch.js
+│   ├── useConcertSearch.js
+│   ├── useLieuSearch.js
+│   ├── useProgrammateurSearch.js
+│   ├── useSearchAndFilter.js
+│   └── useStructureSearch.js
+└── structures
+    ├── index.js
+    ├── useDeleteStructure.js
+    ├── useStructureDetails.js
+    ├── useStructureDetailsMigrated.js
+    ├── useStructureForm.js
+    ├── useStructureFormMigrated.js
+    ├── useStructureFormOptimized.js
+    └── useStructureValidation.js
+
+15 directories, 136 files

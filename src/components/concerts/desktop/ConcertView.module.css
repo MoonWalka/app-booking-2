@@ -4,3 +4,14 @@
  * Dernière mise à jour: 16 May 2025
  */
 
+.concertViewContainer {
+  overflow-x: auto;
+  margin-bottom: var(--tc-spacing-md);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-shadow);
+  background-color: var(--tc-bg-color-light);
+  border: 1px solid var(--tc-border-color);
+  padding: var(--tc-spacing-md);
+  width: 100%;
+}
+

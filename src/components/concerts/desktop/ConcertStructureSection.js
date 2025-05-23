@@ -61,7 +61,7 @@ const ConcertStructureSection = ({
                     type="button"
                     variant="outline-secondary"
                     className="tc-btn-outline-secondary"
-                    onClick={handleCreateStructure}
+                    onClick={() => handleCreateStructure()}
                   >
                     Créer une structure
                   </Button>

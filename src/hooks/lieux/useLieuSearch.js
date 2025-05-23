@@ -1,6 +1,6 @@
 // src/hooks/lieux/useLieuSearch.js
 import { useNavigate } from 'react-router-dom';
-import { useEntitySearch } from '@/hooks/common/useEntitySearch';
+import { useEntitySearch } from '@/hooks/common';
 import { useEffect } from 'react';
 import { useLieuSearchOptimized } from './useLieuSearchOptimized';
 import { debugLog } from '@/utils/logUtils';

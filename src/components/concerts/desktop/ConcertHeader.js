@@ -19,20 +19,11 @@ const ConcertHeader = ({
   navigateToList
 }) => {
   return (
-    <>
-      <div className={styles.formHeaderContainer}>
+    <div className={styles.detailsHeaderContainer}>
+      <div className={styles.titleContainer}>
         <h2 className={styles.modernTitle}>
           {concert.titre || `Concert du ${formatDate(concert.date)}`}
         </h2>
-        <div className={styles.breadcrumbContainer}>
-          <Button variant="light" size="sm" className="tc-btn-light btn-sm" onClick={navigateToList}>
-            Concerts
-          </Button>
-          <i className="bi bi-chevron-right"></i>
-          <span className={`${styles.breadcrumbItem} ${styles.active}`}>
-            {concert.titre || formatDate(concert.date)}
-          </span>
-        </div>
       </div>
 
       <div className={styles.actionButtons}>
@@ -100,7 +91,7 @@ const ConcertHeader = ({
           </>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

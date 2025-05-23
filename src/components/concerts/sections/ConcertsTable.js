@@ -37,10 +37,18 @@ const ConcertsTable = memo(({
   const sortedConcerts = [...concerts].sort((a, b) => {
     let valA = a[sortField];
     let valB = b[sortField];
+    
     if (sortField === 'date') {
       valA = new Date(a.date);
       valB = new Date(b.date);
+    } else if (sortField === 'lieuNom') {
+      valA = a.lieu?.nom || a.lieuNom || '';
+      valB = b.lieu?.nom || b.lieuNom || '';
+    } else if (sortField === 'programmateurNom') {
+      valA = a.programmateur?.nom || a.programmateurNom || '';
+      valB = b.programmateur?.nom || b.programmateurNom || '';
     }
+    
     if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
     if (valA > valB) return sortDirection === 'asc' ? 1 : -1;
     return 0;
@@ -75,11 +83,11 @@ const ConcertsTable = memo(({
       sortable: true,
       render: (row) => (
         <div>
-          <span className={styles.locationName}>{row.lieuNom || 'Lieu non spécifié'}</span>
-          {row.lieuVille && (
+          <span className={styles.locationName}>{row.lieu?.nom || row.lieuNom || 'Lieu non spécifié'}</span>
+          {(row.lieu?.ville || row.lieuVille) && (
             <span className={styles.locationCity}>
-              {row.lieuVille}
-              {row.lieuCodePostal && row.lieuCodePostal.length >= 2 && ` (${row.lieuCodePostal.substring(0, 2)})`}
+              {row.lieu?.ville || row.lieuVille}
+              {(row.lieu?.codePostal || row.lieuCodePostal) && (row.lieu?.codePostal || row.lieuCodePostal).length >= 2 && ` (${(row.lieu?.codePostal || row.lieuCodePostal).substring(0, 2)})`}
             </span>
           )}
         </div>
@@ -89,7 +97,7 @@ const ConcertsTable = memo(({
       label: 'Programmateur',
       key: 'programmateurNom',
       sortable: true,
-      render: (row) => row.programmateurNom || 'Non spécifié'
+      render: (row) => row.programmateur?.nom || row.programmateurNom || 'Non spécifié'
     },
     {
       label: 'Statut',

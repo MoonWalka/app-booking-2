@@ -61,7 +61,7 @@ const ConcertArtistSection = ({
                     type="button"
                     variant="outline-secondary"
                     className="tc-btn-outline-secondary"
-                    onClick={handleCreateArtiste}
+                    onClick={() => handleCreateArtiste()}
                   >
                     Créer un artiste
                   </Button>

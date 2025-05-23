@@ -9,7 +9,7 @@ import { showSuccessToast, showErrorToast } from '@/utils/toasts';
  * @param {Function} onDeleteSuccess - Callback appelé après une suppression réussie
  * @returns {Object} État et fonctions pour la gestion de la suppression
  */
-const useConcertDeleteOptimized = (onDeleteSuccess) => {
+const useConcertDelete = (onDeleteSuccess) => {
   // Utiliser le hook générique avec la configuration spécifique aux concerts
   const {
     isDeleting,
@@ -50,12 +50,12 @@ const useConcertDeleteOptimized = (onDeleteSuccess) => {
     
     // Callbacks
     onSuccess: (id) => {
-      console.log('[useConcertDeleteOptimized] Suppression réussie, ID:', id);
+      console.log('[useConcertDelete] Suppression réussie, ID:', id);
       showSuccessToast('Le concert a été supprimé avec succès');
       if (onDeleteSuccess) onDeleteSuccess(id);
     },
     onError: (error) => {
-      console.error('[useConcertDeleteOptimized] Erreur de suppression:', error);
+      console.error('[useConcertDelete] Erreur de suppression:', error);
       showErrorToast(`Erreur lors de la suppression: ${error.message}`);
     },
     
@@ -67,12 +67,12 @@ const useConcertDeleteOptimized = (onDeleteSuccess) => {
 
   // Fonction adaptée pour les concerts avec logs et vérifications
   const handleDeleteConcert = useCallback((id, event) => {
-    console.log('[useConcertDeleteOptimized] handleDeleteConcert appelé avec ID:', id);
+    console.log('[useConcertDelete] handleDeleteConcert appelé avec ID:', id);
     if (event) event.stopPropagation();
     
     // Vérifications de sécurité
     if (!id) {
-      console.error('[useConcertDeleteOptimized] ID du concert manquant');
+      console.error('[useConcertDelete] ID du concert manquant');
       showErrorToast('ID du concert manquant, impossible de supprimer');
       return Promise.reject(new Error('ID manquant'));
     }
@@ -92,7 +92,7 @@ const useConcertDeleteOptimized = (onDeleteSuccess) => {
         details: result.relatedEntitiesDetails 
       };
     } catch (error) {
-      console.error('[useConcertDeleteOptimized] Erreur de vérification:', error);
+      console.error('[useConcertDelete] Erreur de vérification:', error);
       return { canDelete: false, reason: error.message };
     }
   }, [checkRelatedEntities]);
@@ -113,4 +113,4 @@ const useConcertDeleteOptimized = (onDeleteSuccess) => {
   };
 };
 
-export default useConcertDeleteOptimized; 
+export default useConcertDelete; 

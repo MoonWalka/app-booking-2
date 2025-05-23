@@ -6,7 +6,7 @@ import styles from './LieuForm.module.css';
 
 // MIGRATION: Utilisation du hook optimisé au lieu du hook complet
 import { useLieuForm } from '@/hooks/lieux';
-import useLieuDeleteOptimized from '@/hooks/lieux/useLieuDeleteOptimized';
+import useLieuDelete from '@/hooks/lieux/useLieuDelete';
 
 // Import sections
 import LieuFormHeader from './sections/LieuFormHeader';
@@ -36,7 +36,7 @@ const LieuForm = () => {
   const {
     isDeleting,
     handleDeleteLieu
-  } = useLieuDeleteOptimized(() => navigate('/lieux'));
+  } = useLieuDelete(() => navigate('/lieux'));
 
   if (loading && id !== 'nouveau') {
     return <Spinner message="Chargement du lieu..." contentOnly={true} />;

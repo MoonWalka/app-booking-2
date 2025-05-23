@@ -47,17 +47,26 @@ if [ "$external_imports" -gt 0 ] || [ "$external_usages" -gt 0 ]; then
     
     find src/ -name "*.js" -o -name "*.jsx" | grep -v "hooks/contrats" | while read -r file; do
         if [ -f "$file" ]; then
-            if grep -q "useContratDetails" "$file" 2>/dev/null; then
+            if grep -q "useContratDetails\|useContratDetailsV2" "$file" 2>/dev/null; then
                 echo "    📝 Mise à jour: $file"
                 
-                # Remplacer les imports
-                sed -i.bak "s/import { *useContratDetails *} from ['\"][^'\"]*['\"]/import { useContratDetailsMigrated } from '@\/hooks\/contrats'/g" "$file"
-                sed -i.bak "s/import useContratDetails from ['\"][^'\"]*['\"]/import useContratDetailsMigrated from '@\/hooks\/contrats'/g" "$file"
+                # Remplacer les imports useContratDetails
+                sed -i.bak "s/import { *useContratDetails *} from ['\"][^'\"]*['\"]/import { useContratDetails } from '@\/hooks\/contrats'/g" "$file"
+                sed -i.bak "s/import useContratDetails from ['\"][^'\"]*['\"]/import useContratDetails from '@\/hooks\/contrats'/g" "$file"
+                
+                # Remplacer les imports useContratDetailsV2
+                sed -i.bak "s/import { *useContratDetailsV2 *} from ['\"][^'\"]*['\"]/import { useContratDetails } from '@\/hooks\/contrats'/g" "$file"
+                sed -i.bak "s/import useContratDetailsV2 from ['\"][^'\"]*['\"]/import useContratDetails from '@\/hooks\/contrats'/g" "$file"
                 
                 # Remplacer les usages dans le code
-                sed -i.bak "s/const { *useContratDetails *} *= *use/const { useContratDetailsMigrated } = use/g" "$file"
-                sed -i.bak "s/const useContratDetails *= *use/const useContratDetailsMigrated = use/g" "$file"
-                sed -i.bak "s/= *useContratDetails(/= useContratDetailsMigrated(/g" "$file"
+                sed -i.bak "s/const { *useContratDetails *} *= *use/const { useContratDetails } = use/g" "$file"
+                sed -i.bak "s/const useContratDetails *= *use/const useContratDetails = use/g" "$file"
+                sed -i.bak "s/= *useContratDetails(/= useContratDetails(/g" "$file"
+                
+                # Remplacer les usages de useContratDetailsV2
+                sed -i.bak "s/const { *useContratDetailsV2 *} *= *use/const { useContratDetails } = use/g" "$file"
+                sed -i.bak "s/const useContratDetailsV2 *= *use/const useContratDetails = use/g" "$file"
+                sed -i.bak "s/= *useContratDetailsV2(/= useContratDetails(/g" "$file"
                 
                 # Nettoyer les fichiers .bak
                 rm -f "$file.bak"

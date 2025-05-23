@@ -34,7 +34,6 @@ export { default as useArtistesListV2 } from './useArtistesListMigrated';
 export { default as useArtisteFormOptimized } from './useArtisteFormOptimized';
 export { default as useArtisteDetailsOptimized } from './useArtisteDetailsOptimized';
 export { default as useDeleteArtisteOptimized } from './useDeleteArtisteOptimized';
-export { default as useArtisteSearchOptimized } from './useArtisteSearchOptimized';
 export { default as useArtistesListOptimized } from './useArtistesListOptimized';
 
 // Export des hooks utilitaires supplémentaires

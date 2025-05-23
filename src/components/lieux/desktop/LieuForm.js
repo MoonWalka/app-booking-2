@@ -5,7 +5,7 @@ import Spinner from '@/components/common/Spinner';
 import styles from './LieuForm.module.css';
 
 // MIGRATION: Utilisation du hook optimisé au lieu du hook complet
-import { useLieuFormOptimized } from '@/hooks/lieux';
+import { useLieuForm } from '@/hooks/lieux';
 import useLieuDeleteOptimized from '@/hooks/lieux/useLieuDeleteOptimized';
 
 // Import sections
@@ -30,7 +30,7 @@ const LieuForm = () => {
     addressSearch,
     programmateurSearch,
     submitting
-  } = useLieuFormOptimized(id);
+  } = useLieuForm(id);
 
   // Ajout du hook de suppression optimisé
   const {

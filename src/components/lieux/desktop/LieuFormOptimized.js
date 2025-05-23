@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLieuFormOptimized } from '@/hooks/lieux';
+import { useLieuForm } from '@/hooks/lieux';
 import Card from '@/components/ui/Card';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import ErrorMessage from '@/components/ui/ErrorMessage';
@@ -23,7 +23,7 @@ const LieuFormOptimized = ({ lieuId }) => {
     removeEquipement,
     programmateur,
     handleSelectRelatedEntity
-  } = useLieuFormOptimized(lieuId);
+  } = useLieuForm(lieuId);
 
   // Affichage du chargement
   if (loading) {

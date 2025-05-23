@@ -1,5 +1,5 @@
 /**
- * Composant exemple démontrant l'utilisation de useConcertFormOptimized
+ * Composant exemple démontrant l'utilisation de useConcertForm
  * 
  * Ce composant sert d'exemple pour illustrer comment utiliser le hook optimisé
  * pour les formulaires de concerts, conformément au plan de dépréciation
@@ -8,7 +8,7 @@
 
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useConcertFormOptimized } from '@/hooks/concerts';
+import { useConcertForm } from '@/hooks/concerts';
 import { format } from 'date-fns';
 import '@styles/index.css';; // Importer les styles typographiques standards
 
@@ -120,7 +120,7 @@ const formStyles = {
 };
 
 /**
- * Composant exemple démontrant l'utilisation de useConcertFormOptimized
+ * Composant exemple démontrant l'utilisation de useConcertForm
  */
 const ConcertFormExemple = () => {
   const { id } = useParams();
@@ -170,7 +170,7 @@ const ConcertFormExemple = () => {
     addPartenaire,
     removePartenaire,
     updatePartenaire
-  } = useConcertFormOptimized(id);
+  } = useConcertForm(id);
   
   // Fonction pour gérer les soumissions
   const handleSubmit = async (e) => {

@@ -2,7 +2,6 @@
 // ========== HOOKS OPTIMISÉS (RECOMMANDÉS) ==========
 // Ces hooks suivent l'approche recommandée et utilisent directement les hooks génériques
 
-export { default as useConcertFormOptimized } from './useConcertFormOptimized';
 
 
 // ========== HOOKS DE COMPATIBILITÉ (DÉPRÉCIÉS) ==========

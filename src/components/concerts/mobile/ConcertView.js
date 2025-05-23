@@ -8,7 +8,7 @@ import styles from './ConcertView.module.css';
 // Import des hooks personnalisés
 import {
   useConcertDetails,
-  useConcertFormOptimized,
+  useConcertForm,
   useConcertStatus
 } from '@/hooks/concerts';
 
@@ -62,7 +62,7 @@ const ConcertView = () => {
     generatedFormLink,
     setGeneratedFormLink,
     handleFormGenerated
-  } = useConcertFormOptimized(id, programmateur?.id);
+  } = useConcertForm(id, programmateur?.id);
   
   // Utiliser directement le hook de statut pour éviter la duplication de code
   const { getStatusInfo: getStatusFromHook } = useConcertStatus();

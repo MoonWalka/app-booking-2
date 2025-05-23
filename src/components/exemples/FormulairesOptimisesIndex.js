@@ -44,7 +44,7 @@ const FormulairesOptimisesIndex = () => {
     {
       id: 'concert',
       title: 'Formulaire de Concert Optimisé',
-      description: 'Exemple d\'un formulaire de concert utilisant useConcertFormOptimized basé directement sur useGenericEntityForm avec gestion de dates, lieux et artistes.',
+      description: 'Exemple d\'un formulaire de concert utilisant useConcertForm basé directement sur useGenericEntityForm avec gestion de dates, lieux et artistes.',
       link: '/exemples/formulaires/concert',
       tags: ['concert', 'formulaire', 'optimisé', 'dates', 'validation'],
       icon: 'calendar-event',

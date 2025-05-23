@@ -1,7 +1,7 @@
 // src/components/contrats/desktop/sections/ContratGenerationActions.js
 import React from 'react';
-import { Button } from 'react-bootstrap';
 import { PDFDownloadLink } from '@react-pdf/renderer';
+import Button from '@ui/Button';
 import styles from './ContratGenerationActions.module.css';
 import ContratPDFWrapper from '@/components/pdf/ContratPDFWrapper.js';
 
@@ -51,10 +51,10 @@ const ContratGenerationActions = ({
               if (error) {
                 console.error("Erreur lors de la génération du PDF:", error);
                 return (
-                  <button className="btn btn-danger" disabled>
+                  <Button variant="danger" disabled>
                     <i className="bi bi-exclamation-triangle me-2"></i>
                     Erreur de génération
-                  </button>
+                  </Button>
                 );
               }
               
@@ -89,10 +89,10 @@ const ContratGenerationActions = ({
             }}
           </PDFDownloadLink>
         ) : (
-          <button className="btn btn-warning" disabled>
+          <Button variant="warning" disabled>
             <i className="bi bi-exclamation-triangle me-2"></i>
             Données insuffisantes pour générer le contrat
-          </button>
+          </Button>
         )}
         
         {contratId && (

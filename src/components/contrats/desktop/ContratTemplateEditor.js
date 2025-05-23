@@ -3,6 +3,7 @@ import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'react-quill/dist/quill.snow.css';
 import styles from './ContratTemplateEditor.module.css';
+import Button from '@ui/Button';
 
 // Import des hooks personnalisés
 import { 
@@ -191,25 +192,25 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
       {isModalContext && (
         <div className={styles.tcModalFooter}>
           <div className={styles.modalFooter}>
-            <button 
-              className="btn btn-outline-secondary" 
+            <Button 
+              variant="outline-secondary"
               onClick={onClose}
             >
               <i className="bi bi-x-circle me-2"></i>Annuler
-            </button>
-            <button 
-              className="btn btn-outline-primary" 
+            </Button>
+            <Button 
+              variant="outline-primary"
               onClick={() => editor.setPreviewMode(!editor.previewMode)}
             >
               <i className={`bi bi-${editor.previewMode ? 'pencil' : 'eye'} me-2`}></i>
               {editor.previewMode ? 'Éditer' : 'Aperçu'}
-            </button>
-            <button 
-              className="btn btn-primary" 
+            </Button>
+            <Button 
+              variant="primary"
               onClick={editor.handleSave}
             >
               <i className="bi bi-check-circle me-2"></i>Enregistrer
-            </button>
+            </Button>
           </div>
         </div>
       )}

@@ -1,0 +1,146 @@
+📋 Rapport généré le Fri May 23 13:01:42 CEST 2025
+=====================================================
+
+FICHIERS .backup/.bak:
+./backup_deleted_files/20250507_190859/ActionButton.js.bak
+./config_backup_20250516_124213/.env.backup
+./config_backup_20250516_124213/.env.development.backup
+./package-lock.json.backup
+./package.json.bak
+./refactorisation_backup_20250516_141550/src/components/common/ui/Card.js.bak
+./refactorisation_backup_20250516_141550/src/components/programmateurs/mobile/ProgrammateursList.module.css.bak
+./refactorisation_backup_20250516_141550/src/firebaseInit.js.backup
+./refactorisation_backup_20250516_141550/src/hooks/common/useFirestoreSubscription.js.bak
+./refactorisation_backup_20250516_170903/src/components/common/ui/Card.js.bak
+./refactorisation_backup_20250516_170903/src/components/programmateurs/mobile/ProgrammateursList.module.css.bak
+./refactorisation_backup_20250516_170903/src/firebaseInit.js.backup
+./refactorisation_backup_20250516_170903/src/hooks/common/useFirestoreSubscription.js.bak
+./src/components/artistes/mobile/ArtistesList.module.css.bak
+./src/components/common/ui/Card.js.bak
+./src/components/concerts/sections/ConcertInfoSection.module.css.bak
+./src/components/concerts/sections/ConcertInfoSectionEdit.module.css.bak
+./src/components/contrats/desktop/hooks/useContratTemplatePreview.js.bak
+./src/components/contrats/desktop/sections/ContratTemplateHeader.module.css.bak
+./src/components/contrats/desktop/sections/ContratTemplateTitleSection.module.css.bak
+./src/components/forms/public/FormPageHeader.module.css.bak
+./src/components/forms/public/PublicFormLayout.module.css.bak
+./src/components/pdf/ContratPDFWrapper.js.bak
+./src/components/programmateurs/mobile/ProgrammateursList.module.css.bak
+./src/firebaseInit.js.backup
+./src/hooks/common/useFirestoreSubscription.js.bak
+./src/hooks/concerts/useConcertListData.js.bak
+./src/hooks/contrats/useContratTemplatePreview.js.bak
+./src/styles/base/colors.css.bak
+./src/styles/base/index.css.bak
+./src/styles/base/reset.css.bak
+./src/styles/base/variables.css.bak
+./src/styles/components/alerts.css.bak
+./src/styles/components/badges.css.bak
+./src/styles/components/buttons.css.bak
+./src/styles/components/cards.css.bak
+./src/styles/components/concerts-mobile.css.bak
+./src/styles/components/concerts.css.bak
+./src/styles/components/contrat-editor.css.bak
+./src/styles/components/contrat-print.css.bak
+./src/styles/components/details.css.bak
+./src/styles/components/dropdowns.css.bak
+./src/styles/components/errors.css.bak
+./src/styles/components/forms.css.bak
+./src/styles/components/layout.css.bak
+./src/styles/components/lists.css.bak
+./src/styles/components/modals.css.bak
+./src/styles/components/navigation.css.bak
+./src/styles/components/quill-editor.css.bak
+./src/styles/components/spinner.css.bak
+./src/styles/components/tables.css.bak
+./src/styles/index.css.bak
+./src/styles/mixins/breakpoints.css.bak
+./src/styles/pages/artistes.css.bak
+./src/styles/pages/concerts.css.bak
+./src/styles/pages/contrats.css.bak
+./src/styles/pages/formPublic.css.bak
+./src/styles/pages/forms.css.bak
+./src/styles/pages/lieux.css.bak
+./src/styles/pages/programmateurs.css.bak
+./src/styles/pages/structures.css.bak
+./src/styles/theme.css.bak
+Taille totale: 8.0K
+
+DOSSIERS DE BACKUP:
+./backup_deleted_files
+./config_backup_20250516_124213
+./refactorisation_backup_20250516_141550
+./refactorisation_backup_20250516_170903
+./test_css/css_backup_20250519_233524
+./test_css_fixed/css_backup_20250519_233619
+  ./backup_deleted_files: 8.0K
+  ./config_backup_20250516_124213: 8.0K
+  ./refactorisation_backup_20250516_141550: 4.3M
+  ./refactorisation_backup_20250516_170903: 4.3M
+  ./test_css/css_backup_20250519_233524: 8.0K
+  ./test_css_fixed/css_backup_20250519_233619: 8.0K
+
+VERSIONS MULTIPLES (hooks):
+Fichiers 'Migrated':
+src/hooks/__tests__/useConcertDetailsMigrated.test.js
+src/hooks/__tests__/useConcertStatusMigrated.test.js
+src/hooks/__tests__/useFirebaseMigrated.test.js
+src/hooks/__tests__/useFormValidationMigrated.test.js
+src/hooks/__tests__/useLieuDetailsMigrated.test.js
+src/hooks/__tests__/useLieuxFiltersMigrated.test.js
+src/hooks/artistes/useArtisteDetailsMigrated.js
+src/hooks/artistes/useArtistesListMigrated.js
+src/hooks/concerts/useConcertDetailsMigrated.js
+src/hooks/concerts/useConcertFormMigrated.js
+src/hooks/concerts/useConcertStatusMigrated.js
+src/hooks/contrats/useContratDetailsMigrated.js
+src/hooks/forms/useFormValidationMigrated.js
+src/hooks/lieux/useLieuDeleteMigrated.js
+src/hooks/lieux/useLieuDetailsMigrated.js
+src/hooks/lieux/useLieuFormMigrated.js
+src/hooks/lieux/useLieuSearchMigrated.js
+src/hooks/lieux/useLieuxFiltersMigrated.js
+src/hooks/programmateurs/useProgrammateurDetailsMigrated.js
+src/hooks/programmateurs/useProgrammateurSearchMigrated.js
+src/hooks/structures/useStructureDetailsMigrated.js
+src/hooks/structures/useStructureFormMigrated.js
+Fichiers 'Optimized':
+src/hooks/__tests__/useArtisteFormOptimized.test.js
+src/hooks/__tests__/useArtistesListOptimized.test.js
+src/hooks/__tests__/useConcertFormOptimized.test.js
+src/hooks/__tests__/useLieuFormOptimized.test.js
+src/hooks/__tests__/useLieuSearchOptimized.test.js
+src/hooks/__tests__/useLieuxFiltersOptimized.test.js
+src/hooks/__tests__/useProgrammateurSearchOptimized.test.js
+src/hooks/artistes/useArtisteDetailsOptimized.js
+src/hooks/artistes/useArtisteFormOptimized.js
+src/hooks/artistes/useArtisteSearchOptimized.js
+src/hooks/artistes/useArtistesListOptimized.js
+src/hooks/artistes/useDeleteArtisteOptimized.js
+src/hooks/concerts/useConcertDeleteOptimized.js
+src/hooks/concerts/useConcertDetailsOptimized.js
+src/hooks/concerts/useConcertFormOptimized.js
+src/hooks/contrats/useContratFormOptimized.js
+src/hooks/lieux/useLieuDeleteOptimized.js
+src/hooks/lieux/useLieuDetailsOptimized.js
+src/hooks/lieux/useLieuFormOptimized.js
+src/hooks/lieux/useLieuSearchOptimized.js
+src/hooks/lieux/useLieuxFiltersOptimized.js
+src/hooks/programmateurs/useDeleteProgrammateurOptimized.js
+src/hooks/programmateurs/useProgrammateurDetailsOptimized.js
+src/hooks/programmateurs/useProgrammateurFormOptimized.js
+src/hooks/programmateurs/useProgrammateurSearchOptimized.js
+src/hooks/structures/useDeleteStructureOptimized.js
+src/hooks/structures/useStructureDetailsOptimized.js
+src/hooks/structures/useStructureFormOptimized.js
+Fichiers 'Complete':
+src/hooks/lieux/useLieuFormComplete.js
+Vérification des usages des fichiers de backup...
+
+RECOMMANDATIONS:
+✅ SÛRS À SUPPRIMER:
+  - Tous les fichiers .backup et .bak (ils sont dans Git)
+⚠️  À EXAMINER:
+  - Dossiers de backup (vérifier le contenu d'abord)
+🔍 À ANALYSER:
+  - Versions multiples (vérifier les imports avant suppression)

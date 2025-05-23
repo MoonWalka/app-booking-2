@@ -50,11 +50,11 @@ const validateArtisteForm = (data) => {
  * @param {string} artisteId - ID de l'artiste ou 'nouveau' pour un nouvel artiste
  * @returns {Object} - États et fonctions pour gérer le formulaire
  */
-export const useArtisteFormOptimized = (artisteId) => {
+export const useArtisteForm = (artisteId) => {
   const navigate = useNavigate();
   const isNewArtiste = !artisteId || artisteId === 'nouveau';
   
-  debugLog(`Initialisation du formulaire d'artiste optimisé: ${isNewArtiste ? 'nouvel artiste' : `artiste ${artisteId}`}`, 'info', 'useArtisteFormOptimized');
+  debugLog(`Initialisation du formulaire d'artiste optimisé: ${isNewArtiste ? 'nouvel artiste' : `artiste ${artisteId}`}`, 'info', 'useArtisteForm');
   
   // Gestion des membres du groupe comme état local
   const [membres, setMembres] = useState([]);
@@ -72,7 +72,7 @@ export const useArtisteFormOptimized = (artisteId) => {
       updatedAt: new Date()
     };
     
-    debugLog('Données transformées avant sauvegarde', 'debug', 'useArtisteFormOptimized', transformedData);
+    debugLog('Données transformées avant sauvegarde', 'debug', 'useArtisteForm', transformedData);
     return transformedData;
   };
   
@@ -192,4 +192,4 @@ export const useArtisteFormOptimized = (artisteId) => {
   };
 };
 
-export default useArtisteFormOptimized;
+export default useArtisteForm;

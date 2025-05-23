@@ -53,7 +53,7 @@ const FormulairesOptimisesIndex = () => {
     {
       id: 'artiste',
       title: 'Formulaire d\'Artiste Optimisé',
-      description: 'Exemple d\'un formulaire d\'artiste utilisant useArtisteFormOptimized avec gestion des membres et des étapes multiples.',
+      description: 'Exemple d\'un formulaire d\'artiste utilisant useArtisteForm avec gestion des membres et des étapes multiples.',
       link: '/exemples/formulaires/artiste',
       tags: ['artiste', 'formulaire', 'optimisé', 'étapes', 'membres'],
       icon: 'music-note-beamed',

@@ -1,20 +1,20 @@
 /**
- * Composant exemple démontrant l'utilisation de useArtisteFormOptimized
+ * Composant exemple démontrant l'utilisation de useArtisteForm
  * 
- * Ce composant montre comment utiliser le hook optimisé useArtisteFormOptimized
+ * Ce composant montre comment utiliser le hook optimisé useArtisteForm
  * qui représente l'approche recommandée utilisant directement les hooks génériques
  * conformément au plan de dépréciation officiel.
  */
 
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useArtisteFormOptimized } from '@/hooks/artistes';
+import { useArtisteForm } from '@/hooks/artistes';
 import Card from '@/components/ui/Card';
 import '@styles/index.css';
 
 /**
  * Composant pour le formulaire d'artiste optimisé
- * Utilise directement useArtisteFormOptimized
+ * Utilise directement useArtisteForm
  */
 const ArtisteFormExemple = () => {
   const { id } = useParams();
@@ -50,7 +50,7 @@ const ArtisteFormExemple = () => {
     // Raccourcis DX
     artiste,
     contacts
-  } = useArtisteFormOptimized(id);
+  } = useArtisteForm(id);
   
   // État local pour gérer l'ajout de nouveaux membres
   const [nouveauMembre, setNouveauMembre] = useState('');
@@ -329,12 +329,12 @@ const ArtisteFormExemple = () => {
       
       {/* Aide et documentation */}
       <Card
-        title="Utilisation du hook useArtisteFormOptimized"
+        title="Utilisation du hook useArtisteForm"
         className="mt-4"
         icon={<i className="bi bi-info-circle"></i>}
       >
         <p>
-          Ce composant démontre l'utilisation du hook <code>useArtisteFormOptimized</code> qui est basé directement
+          Ce composant démontre l'utilisation du hook <code>useArtisteForm</code> qui est basé directement
           sur <code>useGenericEntityForm</code>, conformément au plan de dépréciation officiel.
         </p>
         <p>

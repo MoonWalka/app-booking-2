@@ -31,7 +31,7 @@ export { default as useArtistesListV2 } from './useArtistesListMigrated';
  * Ces versions sont conformes au plan de dépréciation qui prévoit la suppression 
  * des hooks spécifiques d'ici novembre 2025.
  */
-export { default as useArtisteFormOptimized } from './useArtisteFormOptimized';
+export { default as useArtisteForm } from './useArtisteForm';
 export { default as useArtisteDetailsOptimized } from './useArtisteDetailsOptimized';
 export { default as useDeleteArtisteOptimized } from './useDeleteArtisteOptimized';
 export { default as useArtistesListOptimized } from './useArtistesListOptimized';

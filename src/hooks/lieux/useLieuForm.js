@@ -1,5 +1,5 @@
 import { useGenericEntityForm } from '@/hooks/common';
-import useProgrammateurSearch from '@/hooks/lieux/useProgrammateurSearch';
+import useProgrammateurSearch from '@/hooks/programmateurs/useProgrammateurSearch';
 
 /**
  * Hook optimisé pour les formulaires de lieux utilisant directement le hook générique

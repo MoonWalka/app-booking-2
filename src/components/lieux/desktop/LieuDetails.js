@@ -9,7 +9,7 @@ import Button from '@/components/ui/Button';
 // Import custom hooks depuis les emplacements standardisés
 // MIGRATION: Utilisation du hook optimisé au lieu du hook migré
 import { useLieuDetails } from '@/hooks/lieux';
-import { useProgrammateurSearchV2 } from '@/hooks/programmateurs';
+import { useProgrammateurSearch } from '@/hooks/programmateurs';
 import { useAddressSearch } from '@/hooks/common';
 
 // Import section components
@@ -68,7 +68,7 @@ const LieuDetails = () => {
     selectedProgrammateur,
     handleSelectProgrammateur,
     handleRemoveProgrammateur
-  } = useProgrammateurSearchV2(lieuId);
+  } = useProgrammateurSearch(lieuId);
 
   const {
     addressSuggestions,

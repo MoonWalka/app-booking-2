@@ -1,13 +1,13 @@
 /**
- * Test unitaire pour le hook useProgrammateurSearchOptimized
+ * Test unitaire pour le hook useProgrammateurSearch
  */
 
 import { renderHook, act } from '@testing-library/react';
 import { useGenericEntitySearch } from '@/hooks/common';
 
 // Mock complet du hook
-jest.mock('../../hooks/programmateurs/useProgrammateurSearchOptimized', () => ({
-  useProgrammateurSearchOptimized: jest.fn()
+jest.mock('../../hooks/programmateurs/useProgrammateurSearch', () => ({
+  useProgrammateurSearch: jest.fn()
 }), { virtual: true });
 
 // Mock des modules importés par le hook
@@ -22,9 +22,9 @@ jest.mock('react-router-dom', () => ({
 }));
 
 // Importer le mock après l'avoir défini
-import { useProgrammateurSearchOptimized } from '../../hooks/programmateurs/useProgrammateurSearchOptimized';
+import { useProgrammateurSearch } from '../../hooks/programmateurs/useProgrammateurSearch';
 
-describe('useProgrammateurSearchOptimized', () => {
+describe('useProgrammateurSearch', () => {
   // Données de test pour les programmateurs
   const mockProgrammateurs = [
     { 
@@ -107,7 +107,7 @@ describe('useProgrammateurSearchOptimized', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     useGenericEntitySearch.mockReturnValue(mockSearchHook);
-    useProgrammateurSearchOptimized.mockImplementation((options) => {
+    useProgrammateurSearch.mockImplementation((options) => {
       if (options?.onSelect) {
         mockProgrammateurSearchHook.setProgrammateur = jest.fn((programmateur) => {
           mockSearchHook.setSelectedEntity(programmateur);
@@ -121,10 +121,10 @@ describe('useProgrammateurSearchOptimized', () => {
   
   test('devrait initialiser correctement le hook avec les paramètres par défaut', () => {
     // Rendu du hook
-    const { result } = renderHook(() => useProgrammateurSearchOptimized());
+    const { result } = renderHook(() => useProgrammateurSearch());
     
     // Vérifier que le hook a été appelé
-    expect(useProgrammateurSearchOptimized).toHaveBeenCalled();
+    expect(useProgrammateurSearch).toHaveBeenCalled();
     
     // Vérifier que les propriétés principales sont exposées
     expect(result.current).toHaveProperty('searchTerm');
@@ -152,15 +152,15 @@ describe('useProgrammateurSearchOptimized', () => {
     };
     
     // Rendu du hook avec des paramètres personnalisés
-    renderHook(() => useProgrammateurSearchOptimized(customOptions));
+    renderHook(() => useProgrammateurSearch(customOptions));
     
     // Vérifier que le hook a été appelé avec les bons paramètres
-    expect(useProgrammateurSearchOptimized).toHaveBeenCalledWith(customOptions);
+    expect(useProgrammateurSearch).toHaveBeenCalledWith(customOptions);
   });
   
   test('setProgrammateur devrait sélectionner un programmateur et appeler onSelect si fourni', () => {
     // Rendu du hook avec onSelect
-    const { result } = renderHook(() => useProgrammateurSearchOptimized({ onSelect: mockOnSelect }));
+    const { result } = renderHook(() => useProgrammateurSearch({ onSelect: mockOnSelect }));
     
     // Programmateur à sélectionner
     const programmateur = mockTransformedProgrammateurs[0];
@@ -179,7 +179,7 @@ describe('useProgrammateurSearchOptimized', () => {
   
   test('clearProgrammateur devrait effacer le programmateur sélectionné', () => {
     // Rendu du hook
-    const { result } = renderHook(() => useProgrammateurSearchOptimized());
+    const { result } = renderHook(() => useProgrammateurSearch());
     
     // Effacer la sélection
     act(() => {
@@ -192,7 +192,7 @@ describe('useProgrammateurSearchOptimized', () => {
   
   test('handleCreateProgrammateur devrait naviguer vers la page de création de programmateur', () => {
     // Rendu du hook
-    const { result } = renderHook(() => useProgrammateurSearchOptimized());
+    const { result } = renderHook(() => useProgrammateurSearch());
     
     // Créer un programmateur
     act(() => {
@@ -205,7 +205,7 @@ describe('useProgrammateurSearchOptimized', () => {
   
   test('navigateToProgrammateurDetails devrait naviguer vers la page de détails du programmateur', () => {
     // Rendu du hook
-    const { result } = renderHook(() => useProgrammateurSearchOptimized());
+    const { result } = renderHook(() => useProgrammateurSearch());
     
     // Naviguer vers les détails d'un programmateur
     const programmateurId = 'prog-1';
@@ -219,7 +219,7 @@ describe('useProgrammateurSearchOptimized', () => {
   
   test('devrait exposer les bonnes propriétés et méthodes du hook générique', () => {
     // Rendu du hook
-    const { result } = renderHook(() => useProgrammateurSearchOptimized());
+    const { result } = renderHook(() => useProgrammateurSearch());
     
     // Vérifier que les propriétés du hook générique sont exposées
     expect(result.current.searchTerm).toBe(mockSearchHook.searchTerm);
@@ -234,10 +234,10 @@ describe('useProgrammateurSearchOptimized', () => {
   
   test('devrait gérer correctement le paramètre lieuId (pour la compatibilité avec l\'ancienne API)', () => {
     // Rendu du hook avec lieuId
-    renderHook(() => useProgrammateurSearchOptimized({ lieuId: 'lieu-123' }));
+    renderHook(() => useProgrammateurSearch({ lieuId: 'lieu-123' }));
     
     // Vérifier que le hook a été appelé avec le bon paramètre
-    expect(useProgrammateurSearchOptimized).toHaveBeenCalledWith(expect.objectContaining({
+    expect(useProgrammateurSearch).toHaveBeenCalledWith(expect.objectContaining({
       lieuId: 'lieu-123'
     }));
   });

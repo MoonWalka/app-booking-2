@@ -8,14 +8,11 @@ export { default as useProgrammateurSearch } from './useProgrammateurSearch';
 
 
 // Exporter le hook de recherche migré
-export { default as useProgrammateurSearchMigrated } from './useProgrammateurSearchMigrated';
 
-export { default as useProgrammateurSearchV2 } from './useProgrammateurSearchMigrated';
 
 // Exports des hooks de formulaire
 export { default as useProgrammateurForm } from './useProgrammateurForm';
 
-export { default as useProgrammateurSearchOptimized } from './useProgrammateurSearchOptimized';
 export { default as useDeleteProgrammateurOptimized } from './useDeleteProgrammateurOptimized';
 
 // Add alias for migrated details hook

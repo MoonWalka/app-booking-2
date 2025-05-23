@@ -8,7 +8,7 @@ import Button from '@/components/ui/Button';
 
 // Import custom hooks depuis les emplacements standardisés
 // MIGRATION: Utilisation du hook optimisé au lieu du hook migré
-import { useLieuDetailsOptimized } from '@/hooks/lieux';
+import { useLieuDetails } from '@/hooks/lieux';
 import { useProgrammateurSearchV2 } from '@/hooks/programmateurs';
 import { useAddressSearch } from '@/hooks/common';
 
@@ -53,7 +53,7 @@ const LieuDetails = () => {
     handleProgrammateurChange,
     addEquipement,
     removeEquipement
-  } = useLieuDetailsOptimized(lieuId);
+  } = useLieuDetails(lieuId);
 
   // Les noms peuvent différer légèrement entre les hooks, récupération des données liées
   const hasAssociatedConcerts = false; // Cette information devrait être récupérée du hook ou d'une autre source

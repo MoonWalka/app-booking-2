@@ -5,7 +5,7 @@ import Spinner from '@/components/common/Spinner';
 import Button from '@/components/ui/Button';
 import { toast } from 'react-toastify';
 // MIGRATION: Utilisation du hook optimisé au lieu du hook V2
-import { useLieuDetailsOptimized } from '@/hooks/lieux';
+import { useLieuDetails } from '@/hooks/lieux';
 
 // Import styles
 import styles from './LieuView.module.css';
@@ -27,7 +27,7 @@ const LieuView = () => {
     handleDeleteClick,
     relatedData,
     loadingRelated
-  } = useLieuDetailsOptimized(lieuId);
+  } = useLieuDetails(lieuId);
 
   // Récupérer le programmateur depuis les entités liées
   const programmateur = relatedData?.programmateur;

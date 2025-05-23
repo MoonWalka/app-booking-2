@@ -3,7 +3,7 @@ import React, { useMemo, useEffect } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { useResponsive } from '@/hooks/common';
 // MIGRATION: Utilisation du hook optimisé au lieu du hook V2
-import { useLieuDetailsOptimized } from '@/hooks/lieux';
+import { useLieuDetails } from '@/hooks/lieux';
 import LieuForm from '@/components/lieux/LieuForm';
 
 /**
@@ -16,7 +16,7 @@ function LieuDetails() {
   const responsive = useResponsive();
   
   // MIGRATION: Utilisation du hook optimisé pour gérer l'état global
-  const lieuHook = useLieuDetailsOptimized(id);
+  const lieuHook = useLieuDetails(id);
   const { isEditing } = lieuHook;
   
   // Mémoriser le composant de vue pour éviter les recréations à chaque rendu

@@ -10,7 +10,7 @@ import Button from '@components/ui/Button';
 import ErrorMessage from '@components/ui/ErrorMessage';
 
 // MIGRATION: Utilisation du hook optimisé au lieu du hook V2
-import { useLieuDetailsOptimized } from '@hooks/lieux';
+import { useLieuDetails } from '@hooks/lieux';
 
 // Import section components
 import { LieuHeader } from './sections/LieuHeader';
@@ -48,7 +48,7 @@ const LieuView = () => {
     handleDeleteClick,
     handleCloseDeleteModal,
     handleConfirmDelete
-  } = useLieuDetailsOptimized(lieuId);
+  } = useLieuDetails(lieuId);
 
   // Récupérer le programmateur depuis les entités liées
   const programmateur = relatedData?.programmateur;

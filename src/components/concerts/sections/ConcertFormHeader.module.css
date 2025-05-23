@@ -8,15 +8,45 @@
   width: 100%;
 }
 
-.formHeader {
-  margin-bottom: var(--tc-spacing-4);
+.detailsHeaderContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--tc-spacing-md);
+  gap: var(--tc-spacing-md);
+  width: 100%;
+}
+
+.titleContainer {
+  flex: 1;
+  min-width: 0; /* Permet la compression si nécessaire */
 }
 
 .pageTitle {
   font-size: var(--tc-font-size-xl);
   font-weight: var(--tc-font-weight-bold);
   color: var(--tc-color-title);
-  margin-bottom: var(--tc-spacing-1-5);
+  margin: 0;
+}
+
+.actionButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tc-spacing-sm);
+  align-items: flex-start;
+  flex-shrink: 0; /* Empêche la compression des boutons */
+}
+
+.actionBtn {
+  min-width: 130px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: var(--tc-transition);
+  font-weight: var(--tc-font-weight-medium);
+  gap: var(--tc-spacing-xs); /* Espacement entre l'icône et le texte */
+  border-radius: var(--tc-border-radius);
 }
 
 .breadcrumbContainer {
@@ -49,8 +79,20 @@
 
 /* Styles responsive standardisés */
 @media (max-width: 768px) {
-  .formHeader {
-    margin-bottom: var(--tc-spacing-3);
+  .detailsHeaderContainer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .actionButtons {
+    order: -1; /* Place les boutons en haut sur mobile */
+    width: 100%;
+    justify-content: stretch;
+  }
+  
+  .actionBtn {
+    flex: 1;
+    min-width: 0;
   }
 }
 
@@ -59,11 +101,13 @@
     font-size: var(--tc-font-size-lg);
   }
   
-  .breadcrumbContainer {
-    font-size: var(--tc-font-size-xs);
+  .actionButtons {
+    gap: var(--tc-spacing-xs);
+    flex-direction: column;
   }
   
-  .breadcrumbSeparator {
-    margin: 0 var(--tc-spacing-1);
+  .actionBtn {
+    min-height: 44px; /* Augmente légèrement la hauteur pour une meilleure zone de toucher */
+    width: 100%;
   }
 }

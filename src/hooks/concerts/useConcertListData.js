@@ -52,10 +52,10 @@ export const useConcertListData = () => {
 
   const minTimeBetweenFetches = 10000; // 10 secondes minimum entre deux fetch
 
-  const fetchConcertsAndForms = useCallback(async (loadMore = false) => {
-    // Éviter les rechargements trop fréquents sauf pour le chargement de plus d'éléments
+  const fetchConcertsAndForms = useCallback(async (loadMore = false, force = false) => {
+    // Éviter les rechargements trop fréquents sauf pour le chargement de plus d'éléments ou si force=true
     const now = Date.now();
-    if (!loadMore && now - lastFetchRef.current < minTimeBetweenFetches) {
+    if (!loadMore && !force && now - lastFetchRef.current < minTimeBetweenFetches) {
       logger.log('Ignorer le rechargement - trop récent');
       return;
     }
@@ -332,6 +332,25 @@ export const useConcertListData = () => {
     }
   }, [fetchConcertsAndForms]);
 
+  // Effet pour écouter les événements de mise à jour de concert
+  useEffect(() => {
+    const handleConcertUpdate = (event) => {
+      logger.log('🔄 Événement de mise à jour de concert détecté, rafraîchissement forcé');
+      fetchConcertsAndForms(false, true); // Force le rafraîchissement
+    };
+
+    // Écouter les événements personnalisés de mise à jour de concert
+    window.addEventListener('concertDataRefreshed', handleConcertUpdate);
+    window.addEventListener('concertUpdated', handleConcertUpdate);
+    window.addEventListener('concertStatusChanged', handleConcertUpdate);
+
+    return () => {
+      window.removeEventListener('concertDataRefreshed', handleConcertUpdate);
+      window.removeEventListener('concertUpdated', handleConcertUpdate);
+      window.removeEventListener('concertStatusChanged', handleConcertUpdate);
+    };
+  }, [fetchConcertsAndForms]);
+
   // Fonction pour vérifier si un concert a un formulaire associé
   const hasForm = useCallback((concertId) => {
     return concertsWithForms.includes(concertId) || 
@@ -370,6 +389,7 @@ export const useConcertListData = () => {
       }
     },
     refreshData: () => fetchConcertsAndForms(false),
+    forceRefresh: () => fetchConcertsAndForms(false, true),
     hasForm,
     hasUnvalidatedForm,
     hasContract,

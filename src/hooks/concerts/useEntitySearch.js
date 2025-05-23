@@ -7,7 +7,7 @@
  */
 
 // Import de la version centralisée
-import useEntitySearch from '@/hooks/common/useEntitySearch';
+import { useEntitySearch } from '@/hooks/common/useEntitySearch';
 
 // Export pour maintenir la compatibilité avec le code existant
 export default useEntitySearch;

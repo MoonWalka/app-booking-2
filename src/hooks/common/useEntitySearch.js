@@ -25,6 +25,9 @@ import {
  * @param {Function} options.customSearchFunction - Fonction personnalisée pour la recherche (optionnel)
  */
 export const useEntitySearch = (options) => {
+  console.log('=== useEntitySearch CALLED ===');
+  console.log('options:', options);
+  
   const {
     entityType, 
     searchField = 'nom',
@@ -36,12 +39,16 @@ export const useEntitySearch = (options) => {
     customSearchFunction = null
   } = options;
 
+  console.log('Parsed options:', { entityType, searchField, onSelect: !!onSelect });
+
   // États de base pour la recherche
   const [searchTerm, setSearchTerm] = useState('');
   const [results, setResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [selectedEntity, setSelectedEntity] = useState(null);
+  
+  console.log('Hook states initialized - setSearchTerm type:', typeof setSearchTerm);
   
   // Références pour la gestion du debounce et du dropdown
   const searchTimeoutRef = useRef(null);
@@ -199,17 +206,26 @@ export const useEntitySearch = (options) => {
 
   // Fonction pour créer une nouvelle entité
   const handleCreate = async (additionalData = {}) => {
+    console.log(`[DEBUG][useEntitySearch] handleCreate appelé pour ${entityType}`, {
+      allowCreate,
+      searchTerm,
+      additionalData
+    });
+    
     if (!allowCreate) {
       console.warn(`Création non autorisée pour le type d'entité: ${entityType}`);
       return null;
     }
     
     if (!searchTerm.trim()) {
+      console.error(`[DEBUG][useEntitySearch] Nom vide pour ${entityType}`);
       alert(`Veuillez saisir un nom avant de créer un nouveau ${entityType.slice(0, -1)}.`);
       return null;
     }
     
     try {
+      console.log(`[DEBUG][useEntitySearch] Début création ${entityType}...`);
+      
       // Données de base pour chaque type d'entité
       let entityData = {
         nom: searchTerm.trim(),
@@ -218,6 +234,8 @@ export const useEntitySearch = (options) => {
         updatedAt: serverTimestamp(),
         ...additionalData
       };
+      
+      console.log(`[DEBUG][useEntitySearch] Données de base créées:`, entityData);
       
       // Données spécifiques selon le type d'entité
       switch (entityType) {
@@ -230,6 +248,7 @@ export const useEntitySearch = (options) => {
             capacite: '',
             ...additionalData
           };
+          console.log(`[DEBUG][useEntitySearch] Données spécifiques lieu ajoutées:`, entityData);
           break;
         case 'programmateurs':
           entityData = {
@@ -286,9 +305,14 @@ export const useEntitySearch = (options) => {
           break;
       }
       
+      console.log(`[DEBUG][useEntitySearch] Données finales avant création:`, entityData);
+      
       // Créer le document dans Firestore
       const newEntityRef = doc(collection(db, entityType));
+      console.log(`[DEBUG][useEntitySearch] Référence créée:`, newEntityRef.id);
+      
       await setDoc(newEntityRef, entityData);
+      console.log(`[DEBUG][useEntitySearch] Document créé avec succès dans Firestore`);
       
       // Créer l'objet complet avec l'ID
       const newEntityWithId = { 
@@ -296,23 +320,29 @@ export const useEntitySearch = (options) => {
         ...entityData
       };
       
+      console.log(`[DEBUG][useEntitySearch] Entité créée:`, newEntityWithId);
+      
       // Définir comme entité sélectionnée
       setSelectedEntity(newEntityWithId);
       setShowResults(false);
       
+      console.log(`[DEBUG][useEntitySearch] onSelect appelé avec:`, newEntityWithId);
       if (onSelect) {
         onSelect(newEntityWithId);
       }
       
+      console.log(`[DEBUG][useEntitySearch] Création terminée avec succès`);
       return newEntityWithId;
     } catch (error) {
-      console.error(`Erreur lors de la création du ${entityType.slice(0, -1)}:`, error);
+      console.error(`[DEBUG][useEntitySearch] ERREUR lors de la création du ${entityType.slice(0, -1)}:`, error);
+      console.error(`[DEBUG][useEntitySearch] Stack trace:`, error.stack);
       alert(`Une erreur est survenue lors de la création du ${entityType.slice(0, -1)}.`);
       return null;
     }
   };
 
-  return {
+  console.log('=== useEntitySearch RETURNING ===');
+  const returnValue = {
     searchTerm,
     setSearchTerm,
     results,
@@ -327,6 +357,9 @@ export const useEntitySearch = (options) => {
     performSearch,
     dropdownRef
   };
-};
+  console.log('Return value:', returnValue);
+  console.log('setSearchTerm in return:', typeof setSearchTerm, setSearchTerm);
+  console.log('===================================');
 
-export default useEntitySearch;
+  return returnValue;
+};

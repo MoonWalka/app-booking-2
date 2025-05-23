@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { updateDoc, doc, arrayUnion, serverTimestamp } from '@/firebaseInit';
 import { db } from '@/firebaseInit';
-import { useEntitySearch } from '@/hooks/common/useEntitySearch';
+import { useEntitySearch } from '@/hooks/common';
 
 /**
  * Hook personnalisé pour la recherche et l'association de concerts à un programmateur

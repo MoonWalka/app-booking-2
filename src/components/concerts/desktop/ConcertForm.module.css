@@ -12,17 +12,14 @@
  * maintenant les mêmes propriétés que concertFormContainer
  */
 .deskConcertFormContainer, .concertFormContainer {
-  max-width: 1000px; /* Uniformisé à 1000px */
-  margin: 0 auto;
-  padding: var(--tc-spacing-lg);
+  padding: var(--tc-spacing-md);
   background-color: var(--tc-bg-color);
+  width: 100%;
 }
 
 .deskConcertFormContainer {
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--tc-spacing-lg);
+  padding: var(--tc-spacing-md);
 }
 
 /* En-tête du formulaire */

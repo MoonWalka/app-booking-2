@@ -32,11 +32,6 @@ const ConcertView = ({ id: propId, detailsHook }) => {
   // État pour la confirmation de suppression
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   
-  // Ajout de l'état local pour gérer le mode édition
-  const [isEditMode, setIsEditMode] = useState(false);
-  // Ajout d'un état local pour les données éditées
-  const [editData, setEditData] = useState(null);
-  
   // Utiliser uniquement le hook optimisé passé en prop
   const {
     concert,
@@ -67,28 +62,26 @@ const ConcertView = ({ id: propId, detailsHook }) => {
 
   // Fonction pour passer en mode édition
   const handleEdit = () => {
-    setEditData({ ...concert });
-    setIsEditMode(true);
+    console.log("[🔍 ConcertView] Clic sur Modifier. Basculement en mode édition");
+    toggleEditMode();
   };
 
   // Fonction pour annuler l'édition
   const handleCancel = () => {
-    setIsEditMode(false);
-    setEditData(null);
+    toggleEditMode();
   };
 
   // Fonction pour gérer les changements dans les inputs
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setEditData((prev) => ({ ...prev, [name]: value }));
+    if (detailsHook && detailsHook.handleChange) {
+      detailsHook.handleChange(e);
+    }
   };
 
   // Fonction pour enregistrer les modifications (à adapter selon l'API/hook)
   const handleSave = async () => {
     if (detailsHook && detailsHook.handleSave) {
-      await detailsHook.handleSave(editData);
-      setIsEditMode(false);
-      setEditData(null);
+      await detailsHook.handleSave();
     }
   };
 
@@ -127,26 +120,28 @@ const ConcertView = ({ id: propId, detailsHook }) => {
     <div className={styles.concertViewContainer || 'concert-view-container'}>
       {/* En-tête avec titre et boutons d'action */}
       <ConcertHeader 
-        concert={isEditMode ? editData : concert}
+        concert={concert}
         onEdit={handleEdit}
         onDelete={handleOpenDeleteModal}
-        isEditMode={isEditMode}
+        isEditMode={detailsEditMode}
         formatDate={formatDate}
         navigateToList={() => {
           navigate('/concerts');
         }}
-        onSave={isEditMode ? handleSave : undefined}
-        onCancel={isEditMode ? handleCancel : undefined}
+        onSave={handleSave}
+        onCancel={handleCancel}
+        isSubmitting={isSubmitting}
+        canSave={true}
       />
 
       {/* Mode vue */}
       <>
         {/* Informations générales */}
         <ConcertGeneralInfo 
-          concert={isEditMode ? editData : concert}
-          isEditMode={isEditMode}
-          formData={isEditMode ? editData : undefined}
-          onChange={isEditMode ? handleChange : undefined}
+          concert={concert}
+          isEditMode={detailsEditMode}
+          formData={formData}
+          onChange={handleChange}
           formatDate={formatDate}
           formatMontant={formatMontant}
           isDatePassed={isDatePassed}
@@ -159,9 +154,9 @@ const ConcertView = ({ id: propId, detailsHook }) => {
         <ConcertLocationSection 
           concertId={id}
           lieu={lieu}
-          isEditMode={isEditMode}
-          formData={isEditMode ? editData : undefined}
-          onChange={isEditMode ? handleChange : undefined}
+          isEditMode={detailsEditMode}
+          formData={formData}
+          onChange={handleChange}
           navigateToLieuDetails={(lieuId) => navigate(`/lieux/${lieuId}`)}
         />
 
@@ -169,9 +164,9 @@ const ConcertView = ({ id: propId, detailsHook }) => {
         <ConcertOrganizerSection 
           concertId={id}
           programmateur={programmateur}
-          isEditMode={isEditMode}
-          formData={isEditMode ? editData : undefined}
-          onChange={isEditMode ? handleChange : undefined}
+          isEditMode={detailsEditMode}
+          formData={formData}
+          onChange={handleChange}
           navigateToProgrammateurDetails={(progId) => navigate(`/programmateurs/${progId}`)}
           showFormGenerator={showFormGenerator}
           setShowFormGenerator={setShowFormGenerator}
@@ -180,16 +175,16 @@ const ConcertView = ({ id: propId, detailsHook }) => {
           handleFormGenerated={handleFormGenerated}
           copyToClipboard={copyToClipboard}
           formatDate={formatDate}
-          concert={isEditMode ? editData : concert}
+          concert={concert}
         />
 
         {/* Structure */}
         <ConcertStructureSection 
           concertId={id}
           structure={structure}
-          isEditMode={isEditMode}
-          formData={isEditMode ? editData : undefined}
-          onChange={isEditMode ? handleChange : undefined}
+          isEditMode={detailsEditMode}
+          formData={formData}
+          onChange={handleChange}
           navigateToStructureDetails={(structureId) => navigate(`/structures/${structureId}`)}
         />
 
@@ -198,9 +193,9 @@ const ConcertView = ({ id: propId, detailsHook }) => {
           <ConcertArtistSection 
             concertId={id}
             artiste={artiste}
-            isEditMode={isEditMode}
-            formData={isEditMode ? editData : undefined}
-            onChange={isEditMode ? handleChange : undefined}
+            isEditMode={detailsEditMode}
+            formData={formData}
+            onChange={handleChange}
             navigateToArtisteDetails={(artisteId) => navigate(`/artistes/${artisteId}`)}
           />
         )}
@@ -218,7 +213,7 @@ const ConcertView = ({ id: propId, detailsHook }) => {
       )}
 
       {/* Modale de confirmation de suppression */}
-      {isEditMode && (
+      {showDeleteConfirm && (
         <DeleteConcertModal
           show={showDeleteConfirm}
           concertNom={concert.titre || formatDate(concert.date)}

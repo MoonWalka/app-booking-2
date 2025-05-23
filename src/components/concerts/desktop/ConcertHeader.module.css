@@ -6,20 +6,26 @@
 
 /* Styles pour le composant ConcertHeader */
 
-.formHeaderContainer {
+.detailsHeaderContainer {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: var(--tc-spacing-md);
-  flex-wrap: wrap;
-  width: 100%; /* Assure que l'en-tête prend toute la largeur disponible */
+  gap: var(--tc-spacing-md);
+  width: 100%;
+}
+
+.titleContainer {
+  flex: 1;
+  min-width: 0; /* Permet la compression si nécessaire */
 }
 
 .modernTitle {
   font-size: var(--tc-font-size-xl);
   font-weight: var(--tc-font-weight-bold);
   color: var(--tc-text-color-primary);
-  margin: 0; /* Supprime la marge par défaut pour un alignement optimal */
+  margin: 0;
+  margin-top: var(--tc-spacing-xs); /* Petit espacement depuis le breadcrumb */
 }
 
 .breadcrumbContainer {
@@ -27,6 +33,7 @@
   align-items: center;
   gap: var(--tc-spacing-xs);
   font-size: var(--tc-font-size-sm);
+  margin-bottom: var(--tc-spacing-xs);
 }
 
 .breadcrumbItem {
@@ -51,10 +58,8 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--tc-spacing-sm);
-  margin-bottom: var(--tc-spacing-md);
-  justify-content: flex-start;
-  align-items: center;
-  width: 100%; /* Assure que les boutons prennent toute la largeur disponible */
+  align-items: flex-start;
+  flex-shrink: 0; /* Empêche la compression des boutons */
 }
 
 .actionBtn {
@@ -71,18 +76,20 @@
 
 /* Media queries */
 @media (max-width: var(--tc-breakpoint-md)) {
-  .formHeaderContainer {
+  .detailsHeaderContainer {
     flex-direction: column;
     align-items: flex-start;
   }
   
   .actionButtons {
-    flex-direction: column;
+    order: -1; /* Place les boutons en haut sur mobile */
     width: 100%;
+    justify-content: stretch;
   }
   
   .actionBtn {
-    width: 100%;
+    flex: 1;
+    min-width: 0;
   }
 }
 
@@ -90,9 +97,11 @@
 @media (max-width: var(--tc-breakpoint-xs)) {
   .actionButtons {
     gap: var(--tc-spacing-xs);
+    flex-direction: column;
   }
   
   .actionBtn {
     min-height: 44px; /* Augmente légèrement la hauteur pour une meilleure zone de toucher */
+    width: 100%;
   }
 }

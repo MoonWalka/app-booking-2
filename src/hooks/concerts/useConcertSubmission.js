@@ -80,6 +80,32 @@ const useConcertSubmission = (concertId, formData, selectedEntities) => {
     // Hooks de cycle de vie
     beforeDelete: async (id) => {
       console.log(`Préparation à la suppression du concert ${id}...`);
+    },
+    
+    // Émettre un événement après la sauvegarde pour déclencher le rafraîchissement de la liste
+    afterSubmit: async (id, data) => {
+      try {
+        const event = new CustomEvent('concertUpdated', { 
+          detail: { id, data, timestamp: Date.now() } 
+        });
+        window.dispatchEvent(event);
+        console.log(`Événement concertUpdated émis pour le concert ${id}`);
+      } catch (e) {
+        console.warn('Impossible d\'émettre l\'événement de mise à jour', e);
+      }
+    },
+    
+    // Émettre un événement après la suppression
+    afterDelete: async (id) => {
+      try {
+        const event = new CustomEvent('concertUpdated', { 
+          detail: { id, deleted: true, timestamp: Date.now() } 
+        });
+        window.dispatchEvent(event);
+        console.log(`Événement concertUpdated (suppression) émis pour le concert ${id}`);
+      } catch (e) {
+        console.warn('Impossible d\'émettre l\'événement de suppression', e);
+      }
     }
   });
   

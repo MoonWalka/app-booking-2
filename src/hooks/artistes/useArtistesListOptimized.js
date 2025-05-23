@@ -30,6 +30,10 @@ export const useArtistesListOptimized = ({
     sansConcerts: 0
   });
 
+  // États de recherche pour la compatibilité
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filters, setFilters] = useState({});
+
   // Utilisation du hook générique pour les listes
   const entityList = useGenericEntityList({
     collectionName: 'artistes',
@@ -111,15 +115,48 @@ export const useArtistesListOptimized = ({
     });
   }, [entityList]);
 
+  // Fonctions de compatibilité pour ArtistesList
+  const setFilter = useCallback((key, value) => {
+    setFilters(prev => ({ ...prev, [key]: value }));
+  }, []);
+
+  const resetFilters = useCallback(() => {
+    setFilters({});
+    setSearchTerm('');
+  }, []);
+
+  // Alias pour la compatibilité
+  const setSortBy = entityList.setSortField || (() => {});
+  const setSortDirection = entityList.setSortDirection || (() => {});
+  const sortBy = entityList.sortField || sortField;
+  const hasMore = entityList.hasMore || false;
+  const loadMoreArtistes = entityList.loadMore || (() => {});
+  const setArtistes = entityList.setEntities || (() => {});
+
   return {
     ...entityList,
     // Renommer entities en artistes pour maintenir la compatibilité
     artistes: entityList.entities,
     stats,
     refreshWithStats,
+    
     // Ajouter des filtres spécifiques aux artistes
     filterByGenre,
     filterByHasConcerts,
+    
+    // Propriétés de compatibilité avec ArtistesList
+    searchTerm,
+    setSearchTerm,
+    filters,
+    setFilter,
+    resetFilters,
+    sortBy,
+    setSortBy,
+    sortDirection,
+    setSortDirection,
+    hasMore,
+    loadMoreArtistes,
+    setArtistes
   };
 };
 

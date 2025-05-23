@@ -22,13 +22,13 @@ import { debugLog } from '@/utils/logUtils';
  * @param {string} programmateurId - ID du programmateur ou 'nouveau' pour un nouveau programmateur
  * @returns {Object} - États et fonctions pour gérer le formulaire
  */
-export const useProgrammateurFormOptimized = (programmateurId) => {
+export const useProgrammateurForm = (programmateurId) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const actualProgrammateurId = programmateurId || id;
   const isNewProgrammateur = !actualProgrammateurId || actualProgrammateurId === 'nouveau';
   
-  debugLog(`Initialisation du formulaire de programmateur optimisé: ${isNewProgrammateur ? 'nouveau programmateur' : `programmateur ${actualProgrammateurId}`}`, 'info', 'useProgrammateurFormOptimized');
+  debugLog(`Initialisation du formulaire de programmateur optimisé: ${isNewProgrammateur ? 'nouveau programmateur' : `programmateur ${actualProgrammateurId}`}`, 'info', 'useProgrammateurForm');
   
   // Fonction de validation spécifique aux programmateurs
   const validateProgrammateurForm = (data) => {
@@ -83,7 +83,7 @@ export const useProgrammateurFormOptimized = (programmateurId) => {
       updatedAt: new Date()
     };
     
-    debugLog('Données transformées avant sauvegarde', 'debug', 'useProgrammateurFormOptimized', transformedData);
+    debugLog('Données transformées avant sauvegarde', 'debug', 'useProgrammateurForm', transformedData);
     return transformedData;
   };
   
@@ -189,7 +189,7 @@ export const useProgrammateurFormOptimized = (programmateurId) => {
   
   // Fonction pour gérer l'annulation du formulaire
   const handleCancel = useCallback(() => {
-    debugLog('Annulation du formulaire programmateur', 'info', 'useProgrammateurFormOptimized');
+    debugLog('Annulation du formulaire programmateur', 'info', 'useProgrammateurForm');
     
     // Si c'est un nouveau programmateur, rediriger vers la liste
     if (isNewProgrammateur) {
@@ -240,4 +240,4 @@ export const useProgrammateurFormOptimized = (programmateurId) => {
   };
 };
 
-export default useProgrammateurFormOptimized;
+export default useProgrammateurForm;

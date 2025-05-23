@@ -1,4 +1,4 @@
-// src/hooks/lieux/useLieuDetailsOptimized.js
+// src/hooks/lieux/useLieuDetails.js
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
@@ -69,7 +69,7 @@ const useLieuDetails = (id) => {
       showSuccessToast(`Le lieu ${data.nom || ''} a été mis à jour avec succès`);
     },
     onSaveError: (error) => {
-      console.error(`[useLieuDetailsOptimized] Erreur de sauvegarde:`, error);
+      console.error(`[useLieuDetails] Erreur de sauvegarde:`, error);
       showErrorToast(`Erreur lors de la sauvegarde du lieu: ${error.message}`);
     },
     onDeleteSuccess: () => {
@@ -77,7 +77,7 @@ const useLieuDetails = (id) => {
       navigate('/lieux');
     },
     onDeleteError: (error) => {
-      console.error(`[useLieuDetailsOptimized] Erreur de suppression:`, error);
+      console.error(`[useLieuDetails] Erreur de suppression:`, error);
       showErrorToast(`Erreur lors de la suppression du lieu: ${error.message}`);
     },
     
@@ -95,7 +95,7 @@ const useLieuDetails = (id) => {
   
   // Gestion du programmateur
   const handleProgrammateurChange = useCallback((newProgrammateur) => {
-    console.log('[LOG][useLieuDetailsOptimized] handleProgrammateurChange appelé', newProgrammateur);
+    console.log('[LOG][useLieuDetails] handleProgrammateurChange appelé', newProgrammateur);
     if (newProgrammateur) {
       detailsHook.setFormData(prev => {
         const updated = {
@@ -107,7 +107,7 @@ const useLieuDetails = (id) => {
             prenom: newProgrammateur.prenom
           }
         };
-        console.log('[LOG][useLieuDetailsOptimized] setFormData (programmateur)', updated);
+        console.log('[LOG][useLieuDetails] setFormData (programmateur)', updated);
         return updated;
       });
     } else {
@@ -117,7 +117,7 @@ const useLieuDetails = (id) => {
           programmateurId: null,
           programmateur: null
         };
-        console.log('[LOG][useLieuDetailsOptimized] setFormData (programmateur null)', updated);
+        console.log('[LOG][useLieuDetails] setFormData (programmateur null)', updated);
         return updated;
       });
     }
@@ -150,7 +150,7 @@ const useLieuDetails = (id) => {
   
   // Ajout log pour la suppression
   const handleDeleteClick = useCallback(() => {
-    console.log('[LOG][useLieuDetailsOptimized] handleDeleteClick appelé');
+    console.log('[LOG][useLieuDetails] handleDeleteClick appelé');
     if (detailsHook.handleDelete) {
       detailsHook.handleDelete();
     }

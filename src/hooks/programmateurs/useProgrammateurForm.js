@@ -1,51 +1,35 @@
+/**
+ * Hook optimisé pour le formulaire de programmateur basé sur useGenericEntityForm
+ * 
+ * ⚠️ NOTE IMPORTANTE - APPROCHE RECOMMANDÉE ⚠️
+ * Ce hook représente l'approche RECOMMANDÉE pour les nouveaux développements.
+ * Il utilise DIRECTEMENT les hooks génériques plutôt que de passer par des wrappers
+ * ou des hooks "Migrated/V2", conformément au plan de dépréciation officiel
+ * (PLAN_DEPRECIATION_HOOKS.md) qui prévoit la suppression de tous les hooks 
+ * spécifiques d'ici novembre 2025.
+ */
+
 import { useState, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
-import { useGenericEntityForm } from '@/hooks/common/useGenericEntityForm';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useGenericEntityForm } from '@/hooks/common';
+import { showSuccessToast, showErrorToast } from '@/utils/toasts';
+import { debugLog } from '@/utils/logUtils';
 
 /**
- * Hook pour la gestion des formulaires de programmateurs
- * Implémentation basée sur useGenericEntityForm
+ * Hook optimisé pour gérer les formulaires de programmateurs
+ * Utilise directement useGenericEntityForm comme recommandé
  * 
  * @param {string} programmateurId - ID du programmateur ou 'nouveau' pour un nouveau programmateur
- * @returns {Object} États et fonctions pour gérer le formulaire de programmateur
+ * @returns {Object} - États et fonctions pour gérer le formulaire
  */
-const useProgrammateurForm = (programmateurId) => {
+export const useProgrammateurFormOptimized = (programmateurId) => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const actualProgrammateurId = programmateurId || id;
+  const isNewProgrammateur = !actualProgrammateurId || actualProgrammateurId === 'nouveau';
   
-  // Configuration des entités liées à un programmateur
-  const relatedEntities = [
-    { 
-      name: 'structure',
-      collection: 'structures',
-      idField: 'structureId',
-      nameField: 'structureNom'
-    }
-  ];
-
-  // Données initiales du formulaire
-  const initialData = {
-    contact: {
-      nom: '',
-      prenom: '',
-      fonction: '',
-      email: '',
-      telephone: ''
-    },
-    structure: {
-      raisonSociale: '',
-      type: '',
-      adresse: '',
-      codePostal: '',
-      ville: '',
-      pays: 'France',
-      siret: '',
-      tva: ''
-    },
-    structureId: '',
-    concertsAssocies: []
-  };
-
+  debugLog(`Initialisation du formulaire de programmateur optimisé: ${isNewProgrammateur ? 'nouveau programmateur' : `programmateur ${actualProgrammateurId}`}`, 'info', 'useProgrammateurFormOptimized');
+  
   // Fonction de validation spécifique aux programmateurs
   const validateProgrammateurForm = (data) => {
     const errors = {};
@@ -67,11 +51,12 @@ const useProgrammateurForm = (programmateurId) => {
     
     return {
       isValid: Object.keys(errors).length === 0,
-      errors
+      errors,
+      message: Object.keys(errors).length > 0 ? 'Veuillez corriger les erreurs du formulaire.' : null
     };
   };
 
-  // Transformation des données avant sauvegarde
+  // Fonction de transformation des données avant sauvegarde
   const transformProgrammateurData = (data) => {
     // S'assurer que les objets imbriqués existent toujours
     const transformedData = {
@@ -93,42 +78,100 @@ const useProgrammateurForm = (programmateurId) => {
         siret: '',
         tva: ''
       },
-      concertsAssocies: data.concertsAssocies || []
+      concertsAssocies: data.concertsAssocies || [],
+      // Ajout de la date de mise à jour
+      updatedAt: new Date()
     };
     
+    debugLog('Données transformées avant sauvegarde', 'debug', 'useProgrammateurFormOptimized', transformedData);
     return transformedData;
   };
-
-  // Callback après sauvegarde réussie
-  const onProgrammateurSaveSuccess = (savedId, savedData) => {
-    console.log(`Programmateur ${savedId} enregistré avec succès`, savedData);
+  
+  // Callbacks pour les opérations réussies ou en erreur
+  const onSuccessCallback = useCallback((savedId, savedData) => {
+    const message = isNewProgrammateur
+      ? `Le programmateur ${savedData.contact?.nom || ''} a été créé avec succès`
+      : `Le programmateur ${savedData.contact?.nom || ''} a été mis à jour avec succès`;
+    
+    showSuccessToast(message);
+    navigate(`/programmateurs/${savedId}`);
     
     // Si une structure a été créée en même temps, on pourrait gérer ici la sauvegarde de la structure
     // et la mise à jour de la relation entre la structure et le programmateur
-    // Code pour gérer la création/liaison de structure si nécessaire...
-  };
+  }, [isNewProgrammateur, navigate]);
 
-  // Utiliser le hook générique avec la configuration spécifique aux programmateurs
-  const genericFormHook = useGenericEntityForm({
+  const onErrorCallback = useCallback((error) => {
+    const message = isNewProgrammateur
+      ? `Erreur lors de la création du programmateur: ${error.message}`
+      : `Erreur lors de la sauvegarde du programmateur: ${error.message}`;
+    
+    showErrorToast(message);
+  }, [isNewProgrammateur]);
+  
+  // Utilisation directe du hook générique avec configuration spécifique aux programmateurs
+  const formHook = useGenericEntityForm({
     entityType: 'programmateurs',
-    entityId: actualProgrammateurId,
-    initialData,
+    entityId: isNewProgrammateur ? null : actualProgrammateurId,
     collectionName: 'programmateurs',
+    initialData: {
+      // Valeurs par défaut pour un nouveau programmateur
+      contact: {
+        nom: '',
+        prenom: '',
+        fonction: '',
+        email: '',
+        telephone: ''
+      },
+      structure: {
+        raisonSociale: '',
+        type: '',
+        adresse: '',
+        codePostal: '',
+        ville: '',
+        pays: 'France',
+        siret: '',
+        tva: ''
+      },
+      structureId: '',
+      concertsAssocies: []
+    },
     validateForm: validateProgrammateurForm,
     transformData: transformProgrammateurData,
-    onSuccess: onProgrammateurSaveSuccess,
-    relatedEntities
+    onSuccess: onSuccessCallback,
+    onError: onErrorCallback,
+    relatedEntities: [
+      { 
+        name: 'structure',
+        collection: 'structures',
+        idField: 'structureId',
+        nameField: 'structureNom'
+      }
+    ]
   });
-
-  // Pour faciliter l'accès à la structure liée
-  const selectedStructure = genericFormHook.relatedData.structure || null;
-
-  // Fonction spécifique pour sélectionner/désélectionner la structure
+  
+  // Extension du hook avec des fonctionnalités spécifiques aux programmateurs
+  
+  // Fonction pour sélectionner/désélectionner la structure
   const handleSelectStructure = useCallback((structure) => {
-    genericFormHook.handleSelectRelatedEntity('structure', structure);
-  }, [genericFormHook.handleSelectRelatedEntity]);
-
-  // Fonction pour gérer le toggle des sections
+    if (structure) {
+      formHook.updateFormData(prev => ({
+        ...prev,
+        structureId: structure.id,
+        structureNom: structure.raisonSociale || structure.nom
+      }));
+      
+      // Charger les détails de la structure dans les données liées
+      formHook.loadRelatedEntity('structure', structure.id);
+    } else {
+      formHook.updateFormData(prev => ({
+        ...prev,
+        structureId: '',
+        structureNom: ''
+      }));
+    }
+  }, [formHook]);
+  
+  // Fonction pour gérer le toggle des sections (interface utilisateur)
   const [sectionsVisibility, setSectionsVisibility] = useState({
     contactVisible: true,
     legalVisible: true,
@@ -143,20 +186,58 @@ const useProgrammateurForm = (programmateurId) => {
       [sectionName]: !prev[sectionName]
     }));
   }, []);
-
+  
+  // Fonction pour gérer l'annulation du formulaire
+  const handleCancel = useCallback(() => {
+    debugLog('Annulation du formulaire programmateur', 'info', 'useProgrammateurFormOptimized');
+    
+    // Si c'est un nouveau programmateur, rediriger vers la liste
+    if (isNewProgrammateur) {
+      navigate('/programmateurs');
+    } else {
+      // Si c'est un programmateur existant, rediriger vers sa vue détails
+      navigate(`/programmateurs/${actualProgrammateurId}`);
+    }
+  }, [navigate, isNewProgrammateur, actualProgrammateurId]);
+  
+  // Fonctions pour mettre à jour des objets imbriqués
+  const updateContact = useCallback((field, value) => {
+    formHook.updateFormData(prev => ({
+      ...prev,
+      contact: {
+        ...prev.contact,
+        [field]: value
+      }
+    }));
+  }, [formHook]);
+  
+  const updateStructure = useCallback((field, value) => {
+    formHook.updateFormData(prev => ({
+      ...prev,
+      structure: {
+        ...prev.structure,
+        [field]: value
+      }
+    }));
+  }, [formHook]);
+  
+  // Retourner le hook générique enrichi de fonctionnalités spécifiques
   return {
-    ...genericFormHook,
-    // Ajouter les propriétés spécifiques aux programmateurs pour maintenir la compatibilité
-    programmateur: genericFormHook.formData,
-    setProgrammateur: genericFormHook.setFormData,
-    formData: genericFormHook.formData, // Alias pour la compatibilité
-    selectedStructure,
+    ...formHook, // Toutes les fonctionnalités du hook générique
+    // Propriétés et méthodes spécifiques aux programmateurs
+    isNewProgrammateur,
     handleSelectStructure,
     sectionsVisibility,
     toggleSection,
-    // Pour compatibilité avec l'ancien code qui utilise validateForm comme fonction
-    validateForm: () => validateProgrammateurForm(genericFormHook.formData).isValid
+    updateContact,
+    updateStructure,
+    handleCancel, // Ajout de la fonction handleCancel
+    // Raccourcis pour une meilleure DX
+    programmateur: formHook.formData,
+    contact: formHook.formData?.contact || {},
+    structure: formHook.relatedData?.structure,
+    selectedStructure: formHook.relatedData?.structure
   };
 };
 
-export default useProgrammateurForm;
+export default useProgrammateurFormOptimized;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { db, getDoc, doc } from '@/firebaseInit';
+import Button from '@ui/Button';
 import styles from './ProgrammateurStructuresSection.module.css';
 import Card from '../../../components/ui/Card';
 
@@ -94,22 +95,24 @@ const ProgrammateurStructuresSection = ({ programmateur, structure: structurePro
           </div>
           <div className={styles.structureActions}>
             {hasRealStructure ? (
-              <Link to={`/structures/${structureData.id}`} className="btn btn-sm btn-outline-primary">
+              <Button as={Link} to={`/structures/${structureData.id}`} variant="outline-primary" size="sm">
                 <i className="bi bi-eye me-1"></i>
                 Voir
-              </Link>
+              </Button>
             ) : (
-              <Link 
+              <Button 
+                as={Link}
                 to="/structures/nouvelle" 
                 state={{ 
                   returnTo: `/programmateurs/${programmateur?.id}`,
                   programmateurId: programmateur?.id
                 }}
-                className="btn btn-sm btn-outline-primary"
+                variant="outline-primary"
+                size="sm"
               >
                 <i className="bi bi-plus-lg me-1"></i>
                 Créer une structure
-              </Link>
+              </Button>
             )}
           </div>
         </div>

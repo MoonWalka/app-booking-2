@@ -12,7 +12,8 @@ import {
   doc 
 } from 'firebase/firestore';
 import { db } from '@/firebaseInit';
-import { Modal, Button, Form, InputGroup } from 'react-bootstrap';
+import { Modal, Button as BootstrapButton, Form, InputGroup } from 'react-bootstrap';
+import Button from '@ui/Button';
 import styles from './StructuresList.module.css';
 
 const StructuresList = () => {
@@ -169,12 +170,12 @@ const StructuresList = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
             {searchTerm && (
-              <Button 
+              <BootstrapButton 
                 variant="outline-secondary" 
                 onClick={() => setSearchTerm('')}
               >
                 <i className="bi bi-x"></i>
-              </Button>
+              </BootstrapButton>
             )}
           </InputGroup>
 
@@ -223,10 +224,10 @@ const StructuresList = () => {
                 Réinitialiser les filtres
               </Button>
             ) : (
-              <Link to="/structures/new" className="btn btn-primary">
+              <Button as={Link} to="/structures/new" variant="primary">
                 <i className="bi bi-plus-circle me-2"></i>
                 Créer ma première structure
-              </Link>
+              </Button>
             )}
           </div>
         ) : (
@@ -370,10 +371,10 @@ const StructuresList = () => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+          <BootstrapButton variant="secondary" onClick={() => setShowDeleteModal(false)}>
             Annuler
-          </Button>
-          <Button 
+          </BootstrapButton>
+          <BootstrapButton 
             variant="danger" 
             onClick={handleDelete}
             disabled={deleting}
@@ -389,7 +390,7 @@ const StructuresList = () => {
                 Supprimer
               </>
             )}
-          </Button>
+          </BootstrapButton>
         </Modal.Footer>
       </Modal>
     </div>

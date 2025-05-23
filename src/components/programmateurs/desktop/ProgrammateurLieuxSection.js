@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { db, getDoc, doc, query, collection, where, getDocs } from '@/firebaseInit';
+import Button from '@ui/Button';
 import styles from './ProgrammateurLieuxSection.module.css';
 import Card from '../../../components/ui/Card';
 
@@ -168,10 +169,10 @@ const ProgrammateurLieuxSection = ({ programmateur, lieux: lieuxProp = [], isEdi
                     </div>
                   </div>
                   <div className={styles.lieuActions}>
-                    <Link to={`/lieux/${lieu.id}`} className="btn btn-sm btn-outline-primary">
+                    <Button as={Link} to={`/lieux/${lieu.id}`} variant="outline-primary" size="sm">
                       <i className="bi bi-eye me-1"></i>
                       Voir
-                    </Link>
+                    </Button>
                   </div>
                 </div>
               ))}
@@ -180,13 +181,15 @@ const ProgrammateurLieuxSection = ({ programmateur, lieux: lieuxProp = [], isEdi
 
           {!isEditing && (
             <div className={styles.addSection}>
-              <Link 
+              <Button 
+                as={Link}
                 to={`/lieux/nouveau?programmateur=${programmateur?.id}`} 
-                className="btn btn-sm btn-outline-success"
+                variant="outline-success"
+                size="sm"
               >
                 <i className="bi bi-plus-lg me-1"></i>
                 Ajouter un lieu
-              </Link>
+              </Button>
             </div>
           )}
         </>

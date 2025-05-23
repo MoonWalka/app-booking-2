@@ -1,6 +1,7 @@
 // src/components/contrats/desktop/sections/ContratDebugPanel.js
 import React from 'react';
-import { Button } from 'react-bootstrap';
+import { Button as BootstrapButton } from 'react-bootstrap';
+import Button from '@ui/Button';
 import styles from './ContratDebugPanel.module.css';
 import Card from '@/components/ui/Card';
 
@@ -18,14 +19,14 @@ const ContratDebugPanel = ({
     <>
       {/* Bouton de débogage */}
       <div className={styles.debugToggle}>
-        <Button 
+        <BootstrapButton 
           variant="outline-secondary" 
           size="sm"
           onClick={toggleDebugInfo}
         >
           <i className={`bi bi-${showDebugInfo ? 'eye-slash' : 'bug'} me-2`}></i>
           {showDebugInfo ? "Masquer les infos de débogage" : "Afficher les infos de débogage"}
-        </Button>
+        </BootstrapButton>
       </div>
       
       {/* Section de débogage */}
@@ -35,12 +36,13 @@ const ContratDebugPanel = ({
           className={styles.debugCard}
           variant="info"
           headerActions={
-            <button 
-              className="btn btn-sm btn-outline-secondary"
+            <Button 
+              variant="outline-secondary"
+              size="sm"
               onClick={toggleDebugInfo}
             >
               <i className="bi bi-x"></i>
-            </button>
+            </Button>
           }
         >
           <h6>Modèle sélectionné</h6>

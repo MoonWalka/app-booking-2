@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import CollapsibleSection from './CollapsibleSection';
 import VariablesPanel from './VariablesPanel';
+import Button from '@ui/Button';
 import styles from './ContratTemplateHeaderSection.module.css';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -61,14 +62,15 @@ const ContratTemplateHeaderSection = ({
                 alt="Logo aperçu"
                 className={styles.logoPreview}
               />
-              <button
+              <Button
                 type="button"
-                className="btn btn-sm btn-outline-danger"
+                variant="outline-danger"
+                size="sm"
                 onClick={handleRemoveLogo}
               >
                 <i className="bi bi-trash me-1"></i>
                 Supprimer
-              </button>
+              </Button>
             </div>
           ) : (
             <div className={styles.logoUpload}>

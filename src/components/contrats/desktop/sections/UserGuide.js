@@ -1,4 +1,5 @@
 import React from 'react';
+import Button from '@ui/Button';
 import styles from './UserGuide.module.css';
 
 /**
@@ -8,12 +9,13 @@ const UserGuide = ({ onClose }) => (
   <div className={styles.userGuide}>
     <div className={styles.guideHeader}>
       <h3 className={styles.guideTitle}>Mode d'emploi de l'éditeur de modèles de contrat</h3>
-      <button 
-        className="btn btn-sm btn-outline-secondary" 
+      <Button 
+        variant="outline-secondary"
+        size="sm"
         onClick={onClose}
       >
         <i className="bi bi-x-lg"></i>
-      </button>
+      </Button>
     </div>
     
     <div className={styles.guideContent}>

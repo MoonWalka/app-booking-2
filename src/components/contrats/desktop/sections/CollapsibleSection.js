@@ -1,4 +1,5 @@
 import React from 'react';
+import Button from '@ui/Button';
 import styles from './CollapsibleSection.module.css';
 
 /**
@@ -9,13 +10,14 @@ const CollapsibleSection = ({ title, isCollapsed, toggleCollapse, children }) =>
     <div className={styles.card}>
       <div className={styles.cardHeader}>
         <h3 className={styles.cardTitle}>{title}</h3>
-        <button 
-          className="btn btn-sm btn-outline-secondary"
+        <Button 
+          variant="outline-secondary"
+          size="sm"
           type="button"
           onClick={toggleCollapse}
         >
           <i className={`bi bi-chevron-${isCollapsed ? 'up' : 'down'}`}></i>
-        </button>
+        </Button>
       </div>
       {!isCollapsed && (
         <div className={styles.cardBody}>

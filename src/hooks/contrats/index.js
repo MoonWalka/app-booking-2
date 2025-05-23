@@ -4,13 +4,7 @@
 export { default as useContratDetails } from './useContratDetails';
 
 // Export de la version migrée avec son nom original
-export { default as useContratDetailsMigrated } from './useContratDetailsMigrated';
 
-/**
- * @recommended La version migrée du hook useContratDetails basée sur les hooks génériques.
- * À utiliser dans les nouveaux développements.
- */
-export { default as useContratDetailsV2 } from './useContratDetailsMigrated';
 
 // Exports des hooks liés aux modèles de contrats
 export { default as useContratTemplateEditor } from './useContratTemplateEditor';

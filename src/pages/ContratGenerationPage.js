@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Form, Card, Alert } from 'react-bootstrap';
 import { db } from '@/firebaseInit';
-import { doc, getDoc, collection, getDocs, addDoc, updateDoc, serverTimestamp, orderBy, query, where } from '@/firebaseInit';
-import ContratGenerator from '@/components/contrats/ContratGenerator.js';
-import { PDFDownloadLink } from '@react-pdf/renderer';
+import { doc, getDoc, collection, getDocs, addDoc, serverTimestamp } from '@/firebaseInit';
 import '@styles/index.css';
 import { formatDateFr } from '../utils/dateUtils';
 

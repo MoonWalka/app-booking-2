@@ -1,8 +1,7 @@
 // src/hooks/common/useGenericEntityDetails.js
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { 
-  doc, getDoc, setDoc, deleteDoc, updateDoc, 
-  collection, query, where, getDocs,
+  doc, getDoc, deleteDoc, updateDoc, 
   serverTimestamp 
 } from '@/firebaseInit';
 import { db } from '@/firebaseInit';

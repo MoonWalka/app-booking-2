@@ -53,6 +53,26 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
   
   // Utiliser le hook de prévisualisation
   const preview = useContratTemplatePreview(previewData);
+  
+  // Fonctionnalités de prévisualisation sophistiquées (NOUVEAU)
+  const handlePreviewActions = {
+    // Zoom sur la prévisualisation
+    zoomIn: () => preview.setZoomLevel?.(prev => Math.min(prev + 0.1, 2.0)),
+    zoomOut: () => preview.setZoomLevel?.(prev => Math.max(prev - 0.1, 0.5)),
+    resetZoom: () => preview.setZoomLevel?.(1.0),
+    
+    // Export de la prévisualisation
+    exportPdf: () => preview.exportToPdf?.(),
+    downloadTemplate: () => preview.downloadAsTemplate?.(),
+    
+    // Navigation dans la prévisualisation
+    nextPage: () => preview.nextPage?.(),
+    prevPage: () => preview.prevPage?.(),
+    
+    // Modes d'affichage
+    toggleMobileView: () => preview.toggleMobileView?.(),
+    toggleFullscreen: () => preview.toggleFullscreen?.()
+  };
 
   return (
     <div className={styles.templateEditorContainer}>
@@ -96,7 +116,15 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
           
           <div className={styles.editorContent}>
             {editor.previewMode ? (
-              <ContratTemplatePreview selectedTemplate={previewData} />
+              <ContratTemplatePreview 
+                selectedTemplate={previewData}
+                previewActions={handlePreviewActions}
+                zoomLevel={preview.zoomLevel}
+                currentPage={preview.currentPage}
+                totalPages={preview.totalPages}
+                isMobileView={preview.isMobileView}
+                isFullscreen={preview.isFullscreen}
+              />
             ) : (
               <>
                 {/* Informations générales */}
@@ -127,6 +155,8 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
                   bodyVarsRef={editor.bodyVarsRef}
                   toggleDropdown={() => editor.toggleVariablesMenu('bodyContent')}
                   insertVariable={editor.insertVariable}
+                  editorRef={bodyEditorRef}
+                  previewMode={editor.previewMode}
                 />
                 
                 {/* Zone de signature */}

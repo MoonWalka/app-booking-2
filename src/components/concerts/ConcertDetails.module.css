@@ -1,0 +1,123 @@
+/*
+ * Styles pour ConcertDetails.module.css
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 19 décembre 2024
+ */
+
+/* =============================
+   CONTENEUR PRINCIPAL
+   ============================= */
+.concertDetailsContainer {
+  position: relative;
+  min-height: 100vh;
+  padding-bottom: var(--tc-spacing-lg);
+}
+
+/* =============================
+   BOUTON D'ÉDITION RAPIDE FLOTTANT (NOUVEAU)
+   ============================= */
+.quickEditButton {
+  position: fixed;
+  bottom: var(--tc-spacing-xl);
+  right: var(--tc-spacing-xl);
+  z-index: var(--tc-z-index-floating);
+  animation: slideInFromRight 0.5s ease-out;
+}
+
+.floatingEditButton {
+  background: linear-gradient(135deg, var(--tc-primary-color), var(--tc-primary-dark)) !important;
+  border: none !important;
+  border-radius: 50px !important;
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md) !important;
+  box-shadow: 0 6px 20px rgba(var(--tc-primary-color-rgb), 0.4) !important;
+  color: white !important;
+  font-weight: var(--tc-font-weight-medium) !important;
+  transition: all var(--tc-transition-duration) ease !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--tc-spacing-xs) !important;
+  min-width: 120px !important;
+  justify-content: center !important;
+}
+
+.floatingEditButton:hover {
+  transform: translateY(-2px) scale(1.05) !important;
+  box-shadow: 0 8px 25px rgba(var(--tc-primary-color-rgb), 0.6) !important;
+  background: linear-gradient(135deg, var(--tc-primary-dark), var(--tc-primary-color)) !important;
+}
+
+.floatingEditButton:active {
+  transform: translateY(0) scale(0.98) !important;
+  box-shadow: 0 4px 15px rgba(var(--tc-primary-color-rgb), 0.3) !important;
+}
+
+.floatingEditButton i {
+  font-size: var(--tc-font-size-md) !important;
+  color: var(--tc-warning-color) !important;
+  animation: pulse 2s infinite ease-in-out;
+}
+
+/* =============================
+   ANIMATIONS SOPHISTIQUÉES
+   ============================= */
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* =============================
+   RESPONSIVE DESIGN
+   ============================= */
+@media (max-width: var(--tc-breakpoint-md)) {
+  .quickEditButton {
+    bottom: var(--tc-spacing-lg);
+    right: var(--tc-spacing-lg);
+  }
+  
+  .floatingEditButton {
+    min-width: 50px !important;
+    padding: var(--tc-spacing-sm) !important;
+    border-radius: 50% !important;
+  }
+  
+  .floatingEditButton span {
+    display: none !important;
+  }
+}
+
+@media (max-width: var(--tc-breakpoint-sm)) {
+  .quickEditButton {
+    bottom: var(--tc-spacing-md);
+    right: var(--tc-spacing-md);
+  }
+  
+  .floatingEditButton {
+    width: 56px !important;
+    height: 56px !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+} 

@@ -6,7 +6,6 @@ import styles from './ProgrammateurHeader.module.css';
 const ProgrammateurHeader = ({ 
   programmateur, 
   isEditing, 
-  setIsEditing,
   handleSubmit,
   handleDelete,
   isSubmitting,
@@ -52,9 +51,10 @@ const ProgrammateurHeader = ({
             </Button>
             
             <Button 
-              onClick={() => setIsEditing(false)} 
+              onClick={toggleEditMode}
               variant="outline-secondary"
               className="d-flex align-items-center"
+              title="Annuler les modifications (avec nettoyage intelligent)"
             >
               <i className="bi bi-x-circle me-2"></i>
               <span>Annuler</span>
@@ -82,9 +82,10 @@ const ProgrammateurHeader = ({
             </Button>
             
             <Button 
-              onClick={() => setIsEditing(true)} 
+              onClick={toggleEditMode}
               variant="outline-primary"
               className="d-flex align-items-center"
+              title="Modifier (avec préparation intelligente du formulaire)"
             >
               <i className="bi bi-pencil me-2"></i>
               <span>Modifier</span>

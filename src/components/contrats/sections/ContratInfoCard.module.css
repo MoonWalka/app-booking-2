@@ -4,4 +4,57 @@
  * Dernière mise à jour: 16 May 2025
  */
 
-/* No specific styles needed yet, using Bootstrap card styling */
+.infoCard {
+  background-color: var(--tc-color-white);
+  border: 1px solid var(--tc-color-border);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-box-shadow);
+  padding: var(--tc-spacing-lg);
+}
+
+.cardHeader {
+  margin-bottom: var(--tc-spacing-md);
+  padding-bottom: var(--tc-spacing-sm);
+  border-bottom: 1px solid var(--tc-color-border);
+}
+
+.cardHeader h4 {
+  color: var(--tc-color-secondary-dark);
+  font-weight: var(--tc-font-weight-semibold);
+  margin: 0;
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--tc-spacing-lg);
+}
+
+.infoSection {
+  padding: var(--tc-spacing-sm);
+}
+
+.infoSection h5 {
+  color: var(--tc-color-secondary);
+  font-size: var(--tc-font-size-md);
+  font-weight: var(--tc-font-weight-medium);
+  margin-bottom: var(--tc-spacing-sm);
+}
+
+.infoItem {
+  margin-bottom: var(--tc-spacing-xs);
+  line-height: 1.6;
+}
+
+.infoItem strong {
+  color: var(--tc-color-text-primary);
+  font-weight: var(--tc-font-weight-medium);
+}
+
+/* Support responsive */
+@media (max-width: 768px) {
+  .infoGrid {
+    grid-template-columns: 1fr;
+    gap: var(--tc-spacing-md);
+  }
+}

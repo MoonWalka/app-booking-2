@@ -10,9 +10,9 @@ import styles from './ArtistesListHeader.module.css';
  */
 const ArtistesListHeader = ({ onAddClick }) => {
   return (
-    <div className="row mb-4 align-items-center">
+    <div className={`row mb-4 align-items-center ${styles.header}`}>
       <div className="col">
-        <h1 className="mb-0">
+        <h1 className={`mb-0 ${styles.title}`}>
           <i className="bi bi-music-note-list me-2"></i>
           Gestion des artistes
         </h1>

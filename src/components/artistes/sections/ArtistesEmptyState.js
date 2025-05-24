@@ -9,13 +9,13 @@ import styles from './ArtistesEmptyState.module.css';
 const ArtistesEmptyState = ({ searchTerm, onAddClick }) => {
   return (
     <Card className="text-center py-5">
-      <Card.Body>
-        <i className="bi bi-music-note-list display-1 text-muted mb-3"></i>
-        <h3>Aucun artiste trouvé</h3>
+      <Card.Body className={styles.emptyContainer}>
+        <i className={`bi bi-music-note-list display-1 text-muted mb-3 ${styles.emptyIcon}`}></i>
+        <h3 className={styles.emptyTitle}>Aucun artiste trouvé</h3>
         {searchTerm ? (
-          <p>Aucun résultat pour la recherche "{searchTerm}"</p>
+          <p className={styles.emptyText}>Aucun résultat pour la recherche "{searchTerm}"</p>
         ) : (
-          <p>Vous n'avez pas encore ajouté d'artistes</p>
+          <p className={styles.emptyText}>Vous n'avez pas encore ajouté d'artistes</p>
         )}
         <Button
           variant="primary"

@@ -4,17 +4,68 @@
  * Dernière mise à jour: 20 mai 2025
  */
 
-.inputIcon {
-  color: var(--tc-text-muted);
+.contactFieldsContainer {
+  padding: var(--tc-spacing-md);
 }
 
-.formLabel {
+.fieldsRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-spacing-lg);
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: var(--tc-spacing-md);
+}
+
+.fieldLabel {
   font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-color-text-primary);
+  margin-bottom: var(--tc-spacing-sm);
+  font-size: var(--tc-font-size-sm);
+}
+
+.fieldInput {
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  border: 1px solid var(--tc-color-border);
+  border-radius: var(--tc-border-radius);
+  font-size: var(--tc-font-size-md);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.fieldInput:focus {
+  outline: none;
+  border-color: var(--tc-color-primary);
+  box-shadow: 0 0 0 3px var(--tc-color-primary-light);
+}
+
+.fieldInput:invalid {
+  border-color: var(--tc-color-danger);
+}
+
+.fullWidthField {
+  grid-column: 1 / -1;
+}
+
+.inputIcon {
+  color: var(--tc-color-text-muted);
+  margin-right: var(--tc-spacing-sm);
 }
 
 .invalidFeedback {
   width: 100%;
   margin-top: var(--tc-spacing-xs);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-danger-color);
+  color: var(--tc-color-danger);
+}
+
+/* Support responsive */
+@media (max-width: 768px) {
+  .fieldsRow {
+    grid-template-columns: 1fr;
+    gap: var(--tc-spacing-md);
+  }
 }

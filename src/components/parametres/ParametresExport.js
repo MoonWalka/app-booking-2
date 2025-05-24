@@ -39,13 +39,13 @@ const ParametresExport = () => {
     }
   };
 
-  const exportData = async (collection) => {
+  const exportData = async (collectionName) => {
     setExportProgress(0);
-    setExportStatus(`Export des ${collection} en cours...`);
+    setExportStatus(`Export des ${collectionName} en cours...`);
     setError('');
     
     try {
-      const q = query(collection(db, collection));
+      const q = query(collection(db, collectionName));
       const querySnapshot = await getDocs(q);
       const data = [];
       let progress = 0;
@@ -64,7 +64,7 @@ const ParametresExport = () => {
       switch (format) {
         case 'json':
           exportData = JSON.stringify(data, null, 2);
-          fileName = `${collection}_${new Date().toISOString()}.json`;
+          fileName = `${collectionName}_${new Date().toISOString()}.json`;
           mimeType = 'application/json';
           break;
         case 'csv':
@@ -72,7 +72,7 @@ const ParametresExport = () => {
           const headers = Object.keys(data[0] || {}).join(',');
           const rows = data.map(item => Object.values(item).join(','));
           exportData = [headers, ...rows].join('\n');
-          fileName = `${collection}_${new Date().toISOString()}.csv`;
+          fileName = `${collectionName}_${new Date().toISOString()}.csv`;
           mimeType = 'text/csv';
           break;
         default:
@@ -91,7 +91,7 @@ const ParametresExport = () => {
       document.body.removeChild(a);
 
       setExportStatus('Export terminé');
-      setSuccess(`Export des ${collection} terminé avec succès`);
+      setSuccess(`Export des ${collectionName} terminé avec succès`);
       setTimeout(() => {
         setExportProgress(0);
         setExportStatus('');

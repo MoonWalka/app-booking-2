@@ -10,12 +10,12 @@
 
 ### Métriques d'Impact
 - **Avant :** 113 warnings no-unused-vars
-- **Après :** 94 warnings no-unused-vars  
-- **Réduction :** **-19 warnings (-17%)**
-- **Warnings Firebase éliminés :** 14/15 (93%)
+- **Après :** 93 warnings no-unused-vars  
+- **Réduction :** **-20 warnings (-18%)**
+- **Warnings Firebase éliminés :** 15/15 (100%)
 
 ### 🎯 Objectif Atteint
-✅ **Phase Firebase largement réussie** - 93% des warnings Firebase éliminés
+✅ **Phase Firebase 100% RÉUSSIE** - Tous les warnings Firebase éliminés !
 
 ---
 
@@ -74,20 +74,45 @@
 ```
 **Impact :** -2 warnings
 
+### 7. `src/components/parametres/ParametresExport.js`
+**Problème résolu :** Conflit de nommage (shadowing)
+```diff
+- const exportData = async (collection) => {
++ const exportData = async (collectionName) => {
+    setExportProgress(0);
+-   setExportStatus(`Export des ${collection} en cours...`);
++   setExportStatus(`Export des ${collectionName} en cours...`);
+    setError('');
+    
+    try {
+-     const q = query(collection(db, collection));
++     const q = query(collection(db, collectionName));
+```
+**Impact :** -1 warning (shadowing résolu)
+
 ---
 
-## 🎯 Warning Firebase Restant
+## ✅ Résolution Finale Firebase
 
 ### `src/components/parametres/ParametresExport.js`
-**Status :** ⚠️ **Faux positif détecté**
-- Le warning indique `'collection' is defined but never used`
-- **Analyse :** `collection` est utilisé ligne 42 dans `exportData()`
-- **Action :** Aucune - Import nécessaire
+**Status :** ✅ **RÉSOLU - Shadowing détecté et corrigé**
+- **Problème :** Le paramètre `collection` masquait l'import Firebase `collection`  
+- **Solution :** Renommage du paramètre en `collectionName`
+- **Résultat :** Warning éliminé, code plus clair
 
 ```javascript
-// Ligne 42 - Usage légitime
-const q = query(collection(db, collection));
+// AVANT - Conflit de nommage
+const exportData = async (collection) => {
+  const q = query(collection(db, collection)); // ❌ collection ambigu
+}
+
+// APRÈS - Nommage explicite  
+const exportData = async (collectionName) => {
+  const q = query(collection(db, collectionName)); // ✅ collection Firebase claire
+}
 ```
+
+🎉 **Tous les warnings Firebase éliminés !**
 
 ---
 
@@ -147,7 +172,7 @@ npm run build 2>&1 | grep -B1 -E "Firebase_function.*is defined but never used" 
 ## 🎉 Bilan de la Session Firebase
 
 ### ✅ Réussites
-- **93% des warnings Firebase éliminés** (14/15)
+- **100% des warnings Firebase éliminés** (15/15)
 - **Méthodologie systématique** validée
 - **Aucune régression** de compilation
 - **Documentation complète** des changements
@@ -155,7 +180,7 @@ npm run build 2>&1 | grep -B1 -E "Firebase_function.*is defined but never used" 
 ### 📊 Progression Globale du Projet
 - **État initial :** ~124 warnings (estimation session CSS)
 - **Après CSS Modules :** 113 warnings  
-- **Après Firebase :** **94 warnings**
+- **Après Firebase :** **93 warnings**
 - **Progression totale :** **-24% depuis le début**
 
 ### 🎯 Objectif Suivant

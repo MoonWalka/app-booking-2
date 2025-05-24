@@ -40,23 +40,7 @@ const StructureInfoSection = ({
     
     setSearching(true);
     try {
-      const structuresRef = collection(db, 'structures');
-      const q = query(
-        structuresRef,
-        where('nom', '>=', searchTerm),
-        where('nom', '<=', searchTerm + '\uf8ff'),
-        limit(5)
-      );
-      
-      const querySnapshot = await getDocs(q);
-      const results = [];
-      querySnapshot.forEach((doc) => {
-        results.push({
-          id: doc.id,
-          ...doc.data()
-        });
-      });
-      
+      const results = await structureService.searchStructures(searchTerm, 5);
       setSearchResults(results);
       setShowResults(true);
     } catch (error) {
@@ -82,11 +66,10 @@ const StructureInfoSection = ({
     const loadStructure = async () => {
       if (formik && formik.values && formik.values.structureId) {
         try {
-          const structureDoc = await getDoc(doc(db, 'structures', formik.values.structureId));
-          if (structureDoc.exists()) {
-            const structureData = structureDoc.data();
+          const structureData = await structureService.getStructureById(formik.values.structureId);
+          if (structureData) {
             setSelectedStructure({
-              id: structureDoc.id,
+              id: formik.values.structureId,
               ...structureData
             });
             

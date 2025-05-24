@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Form, Alert, Container, Row, Col, Button } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import styles from './ProgrammateurForm.module.css';
@@ -262,6 +262,8 @@ const ProgrammateurForm = () => {
                     addressFieldActive={addressSearch.addressFieldActive}
                     setAddressFieldActive={addressSearch.setAddressFieldActive}
                     handleSelectAddress={addressSearch.handleSelectAddress}
+                    structure={structure}
+                    formatValue={formatValue}
                   />
                 </>
               )}
@@ -289,11 +291,23 @@ const ProgrammateurForm = () => {
               }
             >
               {sections.lieuxVisible && (
-                <ProgrammateurLieuxSection
-                  programmateur={programmateur}
-                  isEditing={true}
-                  showCardWrapper={false}
-                />
+                <>
+                  {/* Section d'informations sur les lieux - NOUVEAU: Finalisation intelligente */}
+                  <LieuInfoSection
+                    formData={formData}
+                    handleChange={handleChange}
+                    errors={{}}
+                    lieuxOptions={[]}
+                    setShowLieuModal={() => {}}
+                  />
+                  
+                  {/* Section des lieux associés existants */}
+                  <ProgrammateurLieuxSection
+                    programmateur={programmateur}
+                    isEditing={true}
+                    showCardWrapper={false}
+                  />
+                </>
               )}
             </Card>
 

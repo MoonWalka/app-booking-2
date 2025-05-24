@@ -184,6 +184,15 @@ const LieuDetails = () => {
           isSearchingAddress={isSearchingAddress}
           handleSelectAddress={handleSelectAddress}
           setAddressFieldActive={setAddressFieldActive}
+          isAddressFieldActive={isAddressFieldActive}
+        />
+
+        {/* Contact section - NOUVEAU: Finalisation intelligente */}
+        <LieuContactSection
+          lieu={lieu}
+          contact={formData?.contact || lieu?.contact}
+          isEditing={isEditing}
+          handleChange={handleChange}
         />
 
         {/* Programmateur section */}

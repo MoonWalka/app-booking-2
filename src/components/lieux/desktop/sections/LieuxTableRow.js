@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Button from '@ui/Button';
 import styles from './LieuxTableRow.module.css';
@@ -8,6 +8,8 @@ import styles from './LieuxTableRow.module.css';
  * Component for a single row in the lieux table
  */
 const LieuxTableRow = ({ lieu, onRowClick, onDelete }) => {
+  const navigate = useNavigate();
+  
   // Helper functions for getting badge colors and labels
   const getJaugeColor = (jauge) => {
     if (!jauge) return 'secondary';
@@ -100,25 +102,25 @@ const LieuxTableRow = ({ lieu, onRowClick, onDelete }) => {
             placement="top"
             overlay={<Tooltip>Voir le lieu</Tooltip>}
           >
-            <Link 
-              to={`/lieux/${lieu.id}`} 
-              className={`btn btn-secondary ${styles.actionButton}`}
-              onClick={handleActionClick}
+            <Button 
+              onClick={(e) => { navigate(`/lieux/${lieu.id}`); handleActionClick(e); }} 
+              variant="secondary"
+              className={styles.actionButton}
             >
               <i className="bi bi-eye"></i>
-            </Link>
+            </Button>
           </OverlayTrigger>
           <OverlayTrigger
             placement="top"
             overlay={<Tooltip>Modifier le lieu</Tooltip>}
           >
-            <Link 
-              to={`/lieux/edit/${lieu.id}`} 
-              className={`btn btn-outline-primary ${styles.actionButton}`}
-              onClick={handleActionClick}
+            <Button 
+              onClick={(e) => { navigate(`/lieux/edit/${lieu.id}`); handleActionClick(e); }} 
+              variant="outline-primary"
+              className={styles.actionButton}
             >
               <i className="bi bi-pencil"></i>
-            </Link>
+            </Button>
           </OverlayTrigger>
           <OverlayTrigger
             placement="top"

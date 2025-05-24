@@ -106,3 +106,8 @@
   outline: 0;
   box-shadow: 0 0 0 0.25rem var(--tc-color-rgba(13), rgba(13, 110, 253, 0.25));
 }
+
+.reactQuillEditor {
+  min-height: 100px;
+  height: 100%;
+}

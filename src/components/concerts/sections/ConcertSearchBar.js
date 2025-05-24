@@ -42,7 +42,6 @@ const ConcertSearchBar = ({ searchTerm, setSearchTerm, statusFilter, setStatusFi
           placeholder="Rechercher un concert par titre, lieu, programmateur..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          style={{ maxWidth: 600 }}
         />
         {searchTerm && (
           <button

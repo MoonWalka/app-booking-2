@@ -121,6 +121,12 @@
   border: 1px solid var(--tc-color-ddd);
 }
 
+.mapIframe {
+  border: 1px solid var(--tc-border-color);
+  border-radius: var(--tc-border-radius);
+  width: 100%;
+}
+
 /* Media queries */
 @media (max-width: 768px) {
   .cardBody {

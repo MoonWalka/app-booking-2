@@ -44,32 +44,13 @@ const ContratTemplateEditorModal = ({
       >
         {/* Bannière de succès custom */}
         {showSuccess && (
-          <div style={{
-            background: '#d1e7dd',
-            color: '#0f5132',
-            border: '1px solid #badbcc',
-            borderRadius: '6px',
-            padding: '16px',
-            marginBottom: '16px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '16px',
-          }}>
+          <div className={styles.successBanner}>
             <span>
               <strong>✅ Modèle enregistré avec succès !</strong><br />
               Vous pouvez maintenant fermer la fenêtre en cliquant sur la croix en haut à droite.
             </span>
             <button
-              style={{
-                background: 'transparent',
-                border: 'none',
-                color: '#0f5132',
-                fontWeight: 'bold',
-                fontSize: '1.1rem',
-                cursor: 'pointer',
-                marginLeft: '16px',
-              }}
+              className={styles.closeBannerButton}
               onClick={() => setShowSuccess(false)}
               aria-label="Fermer l'alerte"
             >

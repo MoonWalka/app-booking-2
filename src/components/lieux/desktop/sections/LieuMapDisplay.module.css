@@ -67,6 +67,12 @@
   box-shadow: var(--tc-shadow-sm);
 }
 
+.leafletMapContainer {
+  height: 300px;
+  width: 100%;
+  border-radius: var(--tc-border-radius-sm);
+}
+
 .mapControls {
   display: flex;
   justify-content: space-between;

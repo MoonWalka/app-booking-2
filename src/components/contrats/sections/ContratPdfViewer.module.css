@@ -29,6 +29,12 @@
   flex-direction: column;
 }
 
+.pdfIframe {
+  border: 1px solid var(--tc-border-color);
+  border-radius: var(--tc-border-radius);
+  width: 100%;
+}
+
 /* Styles responsive standardisés */
 @media (max-width: 992px) {
   .htmlPreview {

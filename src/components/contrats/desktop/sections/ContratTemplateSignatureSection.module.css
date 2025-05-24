@@ -44,6 +44,11 @@
   box-shadow: var(--tc-focus-shadow);
 }
 
+.reactQuillEditor {
+  min-height: 150px;
+  height: 100%;
+}
+
 .signatureTips {
   margin-top: var(--tc-spacing-4);
   background-color: var(--tc-bg-info-subtle);

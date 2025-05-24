@@ -169,7 +169,7 @@ const LieuAddressSection = ({ lieu, isEditing = false, handleChange, addressSear
             center={mapPosition} 
             zoom={13} 
             scrollWheelZoom={false}
-            style={{ height: '300px', width: '100%', borderRadius: '8px' }}
+            className={styles.leafletMapComponent}
           >
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

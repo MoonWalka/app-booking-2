@@ -199,7 +199,7 @@ const ConcertLocationSection = ({
                   src={`https://maps.google.com/maps?q=${encodeURIComponent(`${lieu.adresse}, ${lieu.codePostal} ${lieu.ville}`)}&z=6&output=embed`}
                   width="100%" 
                   height="250" 
-                  style={{border: '1px solid #ddd', borderRadius: '4px'}}
+                  className={styles.mapIframe}
                   allowFullScreen="" 
                   loading="lazy" 
                   referrerPolicy="no-referrer-when-downgrade"

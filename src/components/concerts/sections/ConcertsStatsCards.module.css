@@ -6,6 +6,7 @@
   margin-bottom: var(--tc-spacing-lg);
   width: 100%;
 }
+
 .statCard {
   background: var(--tc-bg-color);
   border-radius: var(--tc-border-radius);
@@ -18,18 +19,52 @@
   border: 1.5px solid var(--tc-border-color);
   min-width: 0;
 }
+
+/* Bordures colorées dynamiques avec variables --tc- */
+.statCard[data-color="primary"] {
+  border-color: var(--tc-primary-color);
+}
+
+.statCard[data-color="success"] {
+  border-color: var(--tc-success-color);
+}
+
+.statCard[data-color="muted"] {
+  border-color: var(--tc-gray-500);
+}
+
+.statIcon {
+  font-size: var(--tc-font-size-2xl); /* 2rem équivalent à 2.2rem */
+  line-height: 1;
+}
+
+/* Icônes colorées dynamiques avec variables --tc- */
+.statIcon[data-color="primary"] {
+  color: var(--tc-primary-color);
+}
+
+.statIcon[data-color="success"] {
+  color: var(--tc-success-color);
+}
+
+.statIcon[data-color="muted"] {
+  color: var(--tc-gray-500);
+}
+
 .statText {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
 }
+
 .statValue {
   font-size: 2.2rem;
   font-weight: var(--tc-font-weight-bold);
   color: var(--tc-primary-color);
   line-height: 1.1;
 }
+
 .statLabel {
   font-size: 1rem;
   color: var(--tc-text-muted);

@@ -93,13 +93,12 @@ const ContratTemplateFooterSection = ({
             ref={quillRef}
             key={previewMode ? 'preview' : 'edit'}
             id="footerContent"
-            className={styles.footerContentInput}
+            className={`${styles.footerContentInput} ${styles.reactQuillEditor}`}
             value={footerContent}
             onChange={setFooterContent}
             modules={CompactToolbarModule}
             placeholder="Contenu du pied de page..."
             theme="snow"
-            style={{ minHeight: 100, height: '100%' }}
           />
           
           <div className={styles.exampleFooter}>

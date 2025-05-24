@@ -66,13 +66,12 @@ const ContratTemplateBodySection = ({
           ref={quillRef}
           key={previewMode ? 'preview' : 'edit'}
           id="bodyContent"
-          className={styles.bodyContentEditor}
+          className={`${styles.bodyContentEditor} ${styles.reactQuillEditor}`}
           value={bodyContent}
           onChange={setBodyContent}
           modules={CompactToolbarModule}
           placeholder="Entrez ici le contenu principal de votre contrat..."
           theme="snow"
-          style={{ minHeight: 300, height: '100%' }}
         />
       </div>
       

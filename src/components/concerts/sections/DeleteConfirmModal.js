@@ -51,7 +51,6 @@ const DeleteConfirmModal = ({ isSubmitting, onCancel, onConfirm }) => {
               onConfirm();
             }}
             disabled={isSubmitting}
-            style={{cursor: 'pointer'}}
           >
             {isSubmitting ? (
               <>

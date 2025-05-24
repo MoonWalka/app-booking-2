@@ -62,13 +62,12 @@ const ContratTemplateSignatureSection = ({
             ref={quillRef}
             key={previewMode ? 'preview' : 'edit'}
             id="signatureTemplate"
-            className={styles.signatureContentInput}
+            className={`${styles.signatureContentInput} ${styles.reactQuillEditor}`}
             value={signatureTemplate}
             onChange={setSignatureTemplate}
             modules={CompactToolbarModule}
             placeholder="Format de la section de signature..."
             theme="snow"
-            style={{ minHeight: 150, height: '100%' }}
           />
         </div>
         

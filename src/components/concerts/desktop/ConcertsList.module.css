@@ -22,6 +22,29 @@
   padding: var(--tc-spacing-md);
 }
 
+/* Bouton de diagnostic de performance (développement seulement) */
+.debugButtonContainer {
+  position: fixed;
+  bottom: var(--tc-spacing-lg);
+  left: var(--tc-spacing-lg);
+  z-index: 9999;
+}
+
+.debugButton {
+  background: var(--tc-primary-color);
+  color: var(--tc-white);
+  border: none;
+  padding: var(--tc-spacing-xs) var(--tc-spacing-md);
+  border-radius: var(--tc-border-radius);
+  cursor: pointer;
+  font-size: var(--tc-font-size-xs);
+  transition: var(--tc-transition);
+}
+
+.debugButton:hover {
+  background: var(--tc-primary-color-dark);
+}
+
 /* Responsive */
 @media (max-width: var(--tc-breakpoint-md)) {
   .concertsContainer {

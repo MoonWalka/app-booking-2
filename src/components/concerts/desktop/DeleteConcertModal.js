@@ -42,7 +42,6 @@ const DeleteConcertModal = ({ show, concertNom, onClose, onConfirm, isDeleting }
               console.log('[TEST] Bouton standard cliqué');
               onConfirm();
             }}
-            style={{cursor: 'pointer'}}
           >
             {isDeleting ? (
               <>

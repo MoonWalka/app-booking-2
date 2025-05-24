@@ -171,6 +171,10 @@
   margin-bottom: var(--tc-spacing-md);
 }
 
+.errorAlert {
+  margin-bottom: var(--tc-spacing-lg);
+}
+
 .formGroup {
   margin-bottom: var(--tc-spacing-md);
 }

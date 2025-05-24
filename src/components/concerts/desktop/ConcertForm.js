@@ -154,7 +154,7 @@ const ConcertFormDesktop = () => {
     <div className={styles.deskConcertFormContainer}>
       {/* Affichage d'une erreur de validation */}
       {formHook.error && (
-        <div className="alert alert-danger" style={{ marginBottom: 20 }}>
+        <div className={`alert alert-danger ${styles.errorAlert}`}>
           <i className="bi bi-exclamation-triangle-fill me-2"></i>
           {formHook.error}
         </div>

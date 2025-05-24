@@ -272,6 +272,12 @@
   height: 400px;
 }
 
+.leafletMapComponent {
+  height: 300px;
+  width: 100%;
+  border-radius: var(--tc-border-radius-lg);
+}
+
 .coordinatesDisplay {
   display: flex;
   justify-content: space-between;

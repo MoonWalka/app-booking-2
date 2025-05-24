@@ -167,6 +167,8 @@ const ConcertsList = () => {
             hasUnvalidatedForm={hasUnvalidatedForm}
             hasContract={hasContract}
             getContractStatus={getContractStatus}
+            getContractButtonVariant={getContractButtonVariant}
+            getContractTooltip={getContractTooltip}
             isDatePassed={isDatePassed}
             handleViewConcert={handleViewConcert}
             handleSendForm={handleSendForm}

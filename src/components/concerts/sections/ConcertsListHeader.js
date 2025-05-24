@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './ConcertsListHeader.module.css';
-import Button from '@/components/ui/Button';
 
 const ConcertsListHeader = () => {
   const navigate = useNavigate();

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Nav } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ParametresEntreprise from '../components/parametres/ParametresEntreprise';
 // Imports avec chemins modifiés de la branche refacto-structure-scriptshell - pour implémentation future

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, InputGroup, Button } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import styles from '../ProgrammateursList.module.css';
 
 const ProgrammateursListSearchFilter = ({ searchTerm, setSearchTerm, filteredCount, totalCount, filterStructure, setFilterStructure, sortOption, setSortOption, structures }) => {

@@ -7,10 +7,11 @@ const StepNavigation = ({
   steps, 
   onComplete, 
   onCancel,
-  initialStep = 0
+  initialStep = 0,
+  initialData = {}
 }) => {
   const [currentStep, setCurrentStep] = useState(initialStep);
-  const [stepData, setStepData] = useState({});
+  const [stepData, setStepData] = useState(initialData);
   
   const goToNextStep = (data = {}) => {
     // Fusionner les nouvelles données avec les données existantes

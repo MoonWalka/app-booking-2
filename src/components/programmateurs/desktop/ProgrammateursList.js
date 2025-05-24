@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { OverlayTrigger, Tooltip, Button, Form, InputGroup } from 'react-bootstrap';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { useProgrammateurSearch, useDeleteProgrammateur } from '@/hooks/programmateurs';
 import Spinner from '@/components/common/Spinner';
 import styles from './ProgrammateursList.module.css';
@@ -55,6 +55,33 @@ const ProgrammateursList = ({ onNavigateToDetails }) => {
   // Filtres avancés
   const [filterStructure, setFilterStructure] = useState('');
   const [sortOption, setSortOption] = useState('nom-asc');
+
+  // Filtres avancés sophistiqués (hook)
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+
+  // Gestion des filtres avancés avec le hook sophistiqué
+  const handleAdvancedFilterChange = (filterType, value) => {
+    const newFilters = {
+      ...searchFilters,
+      [filterType]: value
+    };
+    setSearchFilters(newFilters);
+    handleSearch(searchTerm, newFilters);
+  };
+
+  // Reset des filtres avancés
+  const handleResetAdvancedFilters = () => {
+    setSearchFilters({});
+    setFilterStructure('');
+    handleSearch(searchTerm, {});
+  };
+
+  // Vérifier si des filtres avancés sont actifs
+  const hasActiveAdvancedFilters = () => {
+    return Object.keys(searchFilters).some(key => 
+      searchFilters[key] && searchFilters[key] !== '' && searchFilters[key] !== 'all'
+    ) || filterStructure;
+  };
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -177,18 +204,134 @@ const ProgrammateursList = ({ onNavigateToDetails }) => {
       {/* Stats cards (placeholder) */}
       {stats && <ProgrammateursStatsCards stats={stats} />}
 
-      {/* Search and filter controls */}
-      <ProgrammateursListSearchFilter 
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        filteredCount={filteredProgrammateurs.length}
-        totalCount={programmateurs.length}
-        filterStructure={filterStructure}
-        setFilterStructure={setFilterStructure}
-        sortOption={sortOption}
-        setSortOption={setSortOption}
-        structures={structures}
-      />
+      {/* Search and filter controls avec filtres avancés sophistiqués */}
+      <div className={styles.searchAndFiltersContainer}>
+        <ProgrammateursListSearchFilter 
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          filteredCount={filteredProgrammateurs.length}
+          totalCount={programmateurs.length}
+          filterStructure={filterStructure}
+          setFilterStructure={setFilterStructure}
+          sortOption={sortOption}
+          setSortOption={setSortOption}
+          structures={structures}
+        />
+        
+        {/* Boutons pour filtres avancés */}
+        <div className={styles.advancedFiltersToggle}>
+          <button
+            type="button"
+            className={`${styles.toggleButton} ${showAdvancedFilters ? styles.active : ''}`}
+            onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
+          >
+            <i className="bi bi-funnel me-2"></i>
+            Filtres avancés
+            {hasActiveAdvancedFilters() && (
+              <span className={styles.activeFiltersBadge}>
+                {Object.keys(searchFilters).filter(key => searchFilters[key] && searchFilters[key] !== '').length + (filterStructure ? 1 : 0)}
+              </span>
+            )}
+            <i className={`bi ${showAdvancedFilters ? 'bi-chevron-up' : 'bi-chevron-down'} ms-2`}></i>
+          </button>
+          
+          {hasActiveAdvancedFilters() && (
+            <button
+              type="button"
+              className={styles.resetFiltersButton}
+              onClick={handleResetAdvancedFilters}
+              title="Réinitialiser tous les filtres"
+            >
+              <i className="bi bi-x-circle me-1"></i>
+              Réinitialiser
+            </button>
+          )}
+        </div>
+        
+        {/* Panel des filtres avancés */}
+        {showAdvancedFilters && (
+          <div className={styles.advancedFiltersPanel}>
+            <div className={styles.filtersGrid}>
+              {/* Filtre par statut d'activité */}
+              <div className={styles.filterGroup}>
+                <label className={styles.filterLabel}>Statut d'activité</label>
+                <select
+                  className={styles.filterSelect}
+                  value={searchFilters.actif || 'all'}
+                  onChange={(e) => handleAdvancedFilterChange('actif', e.target.value)}
+                >
+                  <option value="all">Tous</option>
+                  <option value="true">Actifs</option>
+                  <option value="false">Inactifs</option>
+                </select>
+              </div>
+              
+              {/* Filtre par présence d'email */}
+              <div className={styles.filterGroup}>
+                <label className={styles.filterLabel}>Contact email</label>
+                <select
+                  className={styles.filterSelect}
+                  value={searchFilters.hasEmail || 'all'}
+                  onChange={(e) => handleAdvancedFilterChange('hasEmail', e.target.value)}
+                >
+                  <option value="all">Tous</option>
+                  <option value="true">Avec email</option>
+                  <option value="false">Sans email</option>
+                </select>
+              </div>
+              
+              {/* Filtre par présence de téléphone */}
+              <div className={styles.filterGroup}>
+                <label className={styles.filterLabel}>Contact téléphone</label>
+                <select
+                  className={styles.filterSelect}
+                  value={searchFilters.hasTelephone || 'all'}
+                  onChange={(e) => handleAdvancedFilterChange('hasTelephone', e.target.value)}
+                >
+                  <option value="all">Tous</option>
+                  <option value="true">Avec téléphone</option>
+                  <option value="false">Sans téléphone</option>
+                </select>
+              </div>
+              
+              {/* Filtre par fonction */}
+              <div className={styles.filterGroup}>
+                <label className={styles.filterLabel}>Fonction</label>
+                <input
+                  type="text"
+                  className={styles.filterInput}
+                  placeholder="Ex: Directeur, Manager..."
+                  value={searchFilters.fonction || ''}
+                  onChange={(e) => handleAdvancedFilterChange('fonction', e.target.value)}
+                />
+              </div>
+              
+              {/* Filtre par ville */}
+              <div className={styles.filterGroup}>
+                <label className={styles.filterLabel}>Ville</label>
+                <input
+                  type="text"
+                  className={styles.filterInput}
+                  placeholder="Ex: Paris, Lyon..."
+                  value={searchFilters.ville || ''}
+                  onChange={(e) => handleAdvancedFilterChange('ville', e.target.value)}
+                />
+              </div>
+              
+              {/* Filtre par date de création */}
+              <div className={styles.filterGroup}>
+                <label className={styles.filterLabel}>Créé après</label>
+                <input
+                  type="date"
+                  className={styles.filterInput}
+                  value={searchFilters.dateCreationApres || ''}
+                  onChange={(e) => handleAdvancedFilterChange('dateCreationApres', e.target.value)}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* Table or empty state */}
       {filteredProgrammateurs.length > 0 ? (

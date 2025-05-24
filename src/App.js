@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, Suspense } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import '@styles/index.css';
 import { 
   BrowserRouter as Router, 
@@ -25,7 +25,6 @@ import ContratGenerationPage from '@/pages/ContratGenerationPage';
 import ContratDetailsPage from '@/pages/ContratDetailsPage';
 import StructuresPage from '@/pages/StructuresPage';
 import RouterStabilizer from '@/utils/RouterStabilizer';
-import DesktopLayout from '@/components/common/layout/DesktopLayout';
 import ProgrammateursList from '@/components/programmateurs/ProgrammateursList';
 import ConcertFormWrapper from '@/components/concerts/ConcertForm';
 import ConcertsList from '@/components/concerts/ConcertsList';

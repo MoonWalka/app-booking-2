@@ -1,6 +1,6 @@
 // src/components/concerts/desktop/ConcertView.js
 import React, { useState } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Alert } from 'react-bootstrap';
 import FormGenerator from '@/components/forms/FormGenerator';
 import styles from './ConcertView.module.css';
@@ -24,7 +24,6 @@ import DeleteConcertModal from './DeleteConcertModal';
 const ConcertView = ({ id: propId, detailsHook }) => {
   const { id: urlId } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
   
   // Utiliser l'ID passé en prop s'il existe, sinon utiliser l'ID de l'URL
   const id = propId || urlId;

@@ -1,5 +1,4 @@
 import React, { createContext, useState, useContext, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import firebase, { IS_LOCAL_MODE, CURRENT_MODE } from '@/firebaseInit';
 
 // Créer le contexte
@@ -21,7 +20,6 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const lastAuthState = useRef(null); // Pour suivre le dernier état d'authentification
   const authCheckCount = useRef(0); // Pour limiter les vérifications d'authentification fréquentes
-  const navigate = useNavigate();
 
   useEffect(() => {
     // Pour éviter les vérifications d'authentification trop fréquentes

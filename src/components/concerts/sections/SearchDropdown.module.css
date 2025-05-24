@@ -159,3 +159,35 @@
     flex-direction: column;
   }
 }
+
+/* Header du dropdown avec bouton de fermeture */
+.dropdownHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  background-color: var(--tc-gray-50);
+  border-bottom: 1px solid var(--tc-border-color);
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-text-muted);
+}
+
+.dropdownTitle {
+  flex-grow: 1;
+}
+
+.closeDropdownButton {
+  padding: var(--tc-spacing-xs) !important;
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-gray-600);
+  border: none !important;
+  background: none !important;
+  text-decoration: none !important;
+}
+
+.closeDropdownButton:hover {
+  color: var(--tc-danger-color) !important;
+  background-color: var(--tc-gray-100) !important;
+  border-radius: var(--tc-border-radius-sm);
+}

@@ -10,6 +10,7 @@ import styles from './SearchDropdown.module.css';
  * @param {Function} props.setSearchTerm - Fonction pour mettre à jour le terme de recherche
  * @param {Array} props.results - Les résultats de la recherche
  * @param {boolean} props.showResults - Indique si les résultats doivent être affichés
+ * @param {Function} props.setShowResults - Fonction pour contrôler l'affichage des résultats
  * @param {boolean} props.isSearching - Indique si une recherche est en cours
  * @param {string} props.placeholder - Le texte d'indication dans l'input
  * @param {Function} props.onSelect - Fonction appelée lors de la sélection d'un résultat
@@ -24,6 +25,7 @@ const SearchDropdown = ({
   setSearchTerm,
   results,
   showResults,
+  setShowResults,
   isSearching,
   placeholder,
   onSelect,
@@ -62,6 +64,25 @@ const SearchDropdown = ({
       {/* Dropdown des résultats */}
       {showResults && (
         <div className={styles.resultsDropdown}>
+          {/* Bouton de fermeture du dropdown */}
+          <div className={styles.dropdownHeader}>
+            <span className={styles.dropdownTitle}>
+              Résultats de recherche ({results.length})
+            </span>
+            {setShowResults && (
+              <Button
+                type="button"
+                variant="link"
+                size="sm"
+                className={styles.closeDropdownButton}
+                onClick={() => setShowResults(false)}
+                aria-label="Fermer les résultats"
+              >
+                <i className="bi bi-x-lg"></i>
+              </Button>
+            )}
+          </div>
+          
           {/* État de chargement */}
           {isSearching && (
             <div className={styles.loadingContainer}>

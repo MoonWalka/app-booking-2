@@ -83,3 +83,95 @@
     gap: var(--tc-spacing-1);
   }
 }
+
+/* =============================
+   VARIANTS DYNAMIQUES DE BOUTONS DE CONTRAT (NOUVEAU)
+   ============================= */
+.variant-primary {
+  background-color: var(--tc-primary-color) !important;
+  border-color: var(--tc-primary-color) !important;
+  color: white !important;
+}
+
+.variant-primary:hover {
+  background-color: var(--tc-primary-dark) !important;
+  border-color: var(--tc-primary-dark) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(var(--tc-primary-color-rgb), 0.3);
+}
+
+.variant-success {
+  background-color: var(--tc-success-color) !important;
+  border-color: var(--tc-success-color) !important;
+  color: white !important;
+}
+
+.variant-success:hover {
+  background-color: var(--tc-success-dark) !important;
+  border-color: var(--tc-success-dark) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(var(--tc-success-color-rgb), 0.3);
+}
+
+.variant-warning {
+  background-color: var(--tc-warning-color) !important;
+  border-color: var(--tc-warning-color) !important;
+  color: white !important;
+}
+
+.variant-warning:hover {
+  background-color: var(--tc-warning-dark) !important;
+  border-color: var(--tc-warning-dark) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(var(--tc-warning-color-rgb), 0.3);
+}
+
+.variant-danger {
+  background-color: var(--tc-danger-color) !important;
+  border-color: var(--tc-danger-color) !important;
+  color: white !important;
+}
+
+.variant-danger:hover {
+  background-color: var(--tc-danger-dark) !important;
+  border-color: var(--tc-danger-dark) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(var(--tc-danger-color-rgb), 0.3);
+}
+
+.variant-info {
+  background-color: var(--tc-info-color) !important;
+  border-color: var(--tc-info-color) !important;
+  color: white !important;
+}
+
+.variant-info:hover {
+  background-color: var(--tc-info-dark) !important;
+  border-color: var(--tc-info-dark) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(var(--tc-info-color-rgb), 0.3);
+}
+
+/* =============================
+   AMÉLIORATION ICÔNES DYNAMIQUES
+   ============================= */
+.contractButton i {
+  transition: all var(--tc-transition-duration);
+}
+
+.contractButton:hover i {
+  transform: scale(1.1);
+}
+
+/* Couleurs spécifiques pour les icônes de statut */
+.contractButton .text-success {
+  color: var(--tc-success-color) !important;
+}
+
+.contractButton .text-warning {
+  color: var(--tc-warning-color) !important;
+}
+
+.contractButton .text-danger {
+  color: var(--tc-danger-color) !important;
+}

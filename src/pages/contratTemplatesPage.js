@@ -1,6 +1,5 @@
 // src/pages/contratTemplatesPage.js - MODIFIÉ
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { db, collection, getDocs, doc, deleteDoc, query, orderBy, addDoc, updateDoc, serverTimestamp } from '@/firebaseInit';
 import '@styles/index.css';
 import { Button, Badge, Alert } from 'react-bootstrap';
@@ -18,7 +17,6 @@ const ContratTemplatesPage = () => {
   const [loading, setLoading] = useState(true);
   const [sortField, setSortField] = useState('updatedAt');
   const [sortDirection, setSortDirection] = useState('desc');
-  const navigate = useNavigate();
   
   // États pour la modale
   const [showEditorModal, setShowEditorModal] = useState(false);

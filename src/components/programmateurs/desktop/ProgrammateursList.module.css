@@ -378,3 +378,174 @@
   background: var(--tc-bg-color);
   border-color: var(--tc-primary-color);
 }
+
+/* =============================
+   FILTRES AVANCÉS SOPHISTIQUÉS (NOUVEAU)
+   ============================= */
+.searchAndFiltersContainer {
+  background-color: var(--tc-bg-color-light);
+  border-radius: var(--tc-border-radius);
+  padding: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-spacing-lg);
+  border: 1px solid var(--tc-border-color);
+}
+
+.advancedFiltersToggle {
+  display: flex;
+  gap: var(--tc-spacing-sm);
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: var(--tc-spacing-md);
+  padding-top: var(--tc-spacing-md);
+  border-top: 1px solid var(--tc-border-light);
+}
+
+.toggleButton {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-spacing-xs);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  background-color: white;
+  border: 1px solid var(--tc-border-color);
+  border-radius: var(--tc-border-radius);
+  color: var(--tc-text-color);
+  cursor: pointer;
+  transition: all var(--tc-transition-duration);
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-medium);
+}
+
+.toggleButton:hover {
+  background-color: var(--tc-gray-50);
+  border-color: var(--tc-primary-color);
+  color: var(--tc-primary-color);
+}
+
+.toggleButton.active {
+  background-color: var(--tc-primary-color);
+  border-color: var(--tc-primary-color);
+  color: white;
+}
+
+.activeFiltersBadge {
+  background-color: var(--tc-danger-color);
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--tc-font-size-xs);
+  font-weight: var(--tc-font-weight-bold);
+}
+
+.resetFiltersButton {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-spacing-xs);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  background-color: var(--tc-danger-color);
+  border: 1px solid var(--tc-danger-color);
+  border-radius: var(--tc-border-radius);
+  color: white;
+  cursor: pointer;
+  transition: all var(--tc-transition-duration);
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-medium);
+}
+
+.resetFiltersButton:hover {
+  background-color: var(--tc-danger-dark);
+  border-color: var(--tc-danger-dark);
+  transform: translateY(-1px);
+}
+
+.advancedFiltersPanel {
+  margin-top: var(--tc-spacing-md);
+  padding: var(--tc-spacing-lg);
+  background-color: var(--tc-gray-50);
+  border-radius: var(--tc-border-radius);
+  border: 1px solid var(--tc-border-light);
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    max-height: 300px;
+  }
+}
+
+.filtersGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--tc-spacing-md);
+  align-items: start;
+}
+
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-spacing-xs);
+}
+
+.filterLabel {
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-text-color);
+  margin-bottom: var(--tc-spacing-xs);
+}
+
+.filterSelect,
+.filterInput {
+  padding: var(--tc-spacing-sm);
+  border: 1px solid var(--tc-border-color);
+  border-radius: var(--tc-border-radius);
+  font-size: var(--tc-font-size-sm);
+  background-color: white;
+  transition: border-color var(--tc-transition-duration);
+}
+
+.filterSelect:focus,
+.filterInput:focus {
+  outline: none;
+  border-color: var(--tc-primary-color);
+  box-shadow: 0 0 0 2px rgba(var(--tc-primary-color-rgb), 0.2);
+}
+
+.filterInput::placeholder {
+  color: var(--tc-text-muted);
+  font-style: italic;
+}
+
+/* =============================
+   RESPONSIVE POUR FILTRES AVANCÉS
+   ============================= */
+@media (max-width: 768px) {
+  .searchAndFiltersContainer {
+    padding: var(--tc-spacing-md);
+  }
+  
+  .advancedFiltersToggle {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--tc-spacing-sm);
+  }
+  
+  .filtersGrid {
+    grid-template-columns: 1fr;
+    gap: var(--tc-spacing-sm);
+  }
+  
+  .toggleButton,
+  .resetFiltersButton {
+    justify-content: center;
+  }
+}

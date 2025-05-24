@@ -18,7 +18,9 @@ const ConcertsTable = memo(({
   handleSendForm,
   handleViewForm,
   handleGenerateContract,
-  handleViewContract
+  handleViewContract,
+  getContractButtonVariant,
+  getContractTooltip
 }) => {
   // Gestion du tri local (par défaut sur la date, décroissant)
   const [sortField, setSortField] = useState('date');
@@ -130,6 +132,8 @@ const ConcertsTable = memo(({
       hasUnvalidatedForm={hasUnvalidatedForm ? hasUnvalidatedForm(row.id) : false}
       hasContract={hasContract ? hasContract(row.id) : false}
       contractStatus={getContractStatus ? getContractStatus(row.id) : null}
+      getContractButtonVariant={getContractButtonVariant}
+      getContractTooltip={getContractTooltip}
       handleViewConcert={handleViewConcert}
       handleSendForm={handleSendForm}
       handleViewForm={handleViewForm}

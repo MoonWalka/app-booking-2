@@ -12,6 +12,7 @@ import CardSection from '@/components/ui/CardSection';
  * @param {Function} props.setArtisteSearchTerm - Fonction pour mettre à jour le terme de recherche
  * @param {Array} props.artisteResults - Résultats de la recherche d'artistes
  * @param {boolean} props.showArtisteResults - Indique si les résultats doivent être affichés
+ * @param {Function} props.setShowArtisteResults - Fonction pour contrôler l'affichage des résultats
  * @param {boolean} props.isSearchingArtistes - Indique si une recherche est en cours
  * @param {Object} props.artisteDropdownRef - Référence pour gérer le clic en dehors du dropdown
  * @param {Object} props.selectedArtiste - Artiste sélectionné
@@ -24,6 +25,7 @@ const ArtisteSearchSection = ({
   setArtisteSearchTerm,
   artisteResults,
   showArtisteResults,
+  setShowArtisteResults,
   isSearchingArtistes,
   artisteDropdownRef,
   selectedArtiste,
@@ -46,6 +48,7 @@ const ArtisteSearchSection = ({
               setSearchTerm={setArtisteSearchTerm}
               results={artisteResults}
               showResults={showArtisteResults}
+              setShowResults={setShowArtisteResults}
               isSearching={isSearchingArtistes}
               placeholder="Rechercher un artiste par nom..."
               onSelect={handleSelectArtiste}

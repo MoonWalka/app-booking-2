@@ -194,6 +194,7 @@ const ConcertFormDesktop = () => {
           setLieuSearchTerm={setLieuSearchTerm}
           lieuResults={lieuResults}
           showLieuResults={showLieuResults}
+          setShowLieuResults={setShowLieuResults}
           isSearchingLieux={isSearchingLieux}
           lieuDropdownRef={lieuDropdownRef}
           selectedLieu={formData.lieuId ? lieu : null}
@@ -208,6 +209,7 @@ const ConcertFormDesktop = () => {
           setProgSearchTerm={setProgSearchTerm}
           progResults={progResults}
           showProgResults={showProgResults}
+          setShowProgResults={setShowProgResults}
           isSearchingProgs={isSearchingProgs}
           progDropdownRef={progDropdownRef}
           selectedProgrammateur={formData.programmateurId ? programmateur : null}
@@ -221,6 +223,7 @@ const ConcertFormDesktop = () => {
           setArtisteSearchTerm={setArtisteSearchTerm}
           artisteResults={artisteResults}
           showArtisteResults={showArtisteResults}
+          setShowArtisteResults={setShowArtisteResults}
           isSearchingArtistes={isSearchingArtistes}
           artisteDropdownRef={artisteDropdownRef}
           selectedArtiste={formData.artisteId ? artiste : null}

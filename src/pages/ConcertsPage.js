@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import ConcertsList from '@/components/concerts/ConcertsList.js';
 import ConcertForm from '@/components/concerts/ConcertForm/';
 import ConcertDetails from '@/components/concerts/ConcertDetails';
@@ -8,7 +8,6 @@ import FormValidationInterface from '@/components/forms/desktop/FormValidationIn
 
 
 function ConcertsPage() {
-  const navigate = useNavigate();
   const location = useLocation();
   
   // Log pour suivre chaque rendu de ConcertsPage et l'URL active

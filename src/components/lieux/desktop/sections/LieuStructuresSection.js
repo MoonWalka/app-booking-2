@@ -209,26 +209,195 @@ export const LieuStructuresSection = ({ lieu, isEditing = false }) => {
         <Spinner animation="border" size="sm" />
       ) : (
         <div className={styles.structuresListContainer}>
-          {structures.length > 0 ? (
-            structures.map(structure => (
-              <div key={structure.id} className={styles.structureItem}>
-                <Link to={`/structures/${structure.id}`}>{structure.nom}</Link>
-                {isEditing && (
-                  <Button
-                    size="sm"
-                    variant="outline-danger"
-                    className="ms-2"
-                    onClick={() => handleRemoveStructure(structure.id)}
-                    title="Retirer cette structure du lieu"
-                  >
-                    <i className="bi bi-x-lg"></i>
-                  </Button>
+          {/* Interface de recherche pour ajouter des structures (en mode édition) */}
+          {isEditing && (
+            <div className={styles.searchSection} ref={dropdownRef}>
+              <div className={styles.searchInputGroup}>
+                <label className={styles.searchLabel}>Rechercher et associer une structure</label>
+                <div className={styles.inputWithDropdown}>
+                  <input
+                    type="text"
+                    className={styles.searchInput}
+                    placeholder="Tapez le nom d'une structure..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                  {searchTerm && (
+                    <button
+                      type="button"
+                      className={styles.clearSearchButton}
+                      onClick={() => {
+                        setSearchTerm('');
+                        setSearchResults([]);
+                      }}
+                      aria-label="Effacer la recherche"
+                    >
+                      <i className="bi bi-x-lg"></i>
+                    </button>
+                  )}
+                </div>
+                
+                {/* Dropdown des résultats de recherche */}
+                {searchTerm.length >= 2 && (
+                  <div className={styles.searchDropdown}>
+                    {/* Header avec compteur */}
+                    <div className={styles.dropdownHeader}>
+                      <span className={styles.dropdownTitle}>
+                        {isSearching ? 'Recherche en cours...' : `${searchResults.length} structure(s) trouvée(s)`}
+                      </span>
+                      <button
+                        type="button"
+                        className={styles.closeDropdownButton}
+                        onClick={() => {
+                          setSearchResults([]);
+                          setSearchTerm('');
+                        }}
+                        aria-label="Fermer les résultats"
+                      >
+                        <i className="bi bi-x-lg"></i>
+                      </button>
+                    </div>
+                    
+                    {/* État de chargement */}
+                    {isSearching && (
+                      <div className={styles.loadingContainer}>
+                        <div className="spinner-border spinner-border-sm" role="status">
+                          <span className="visually-hidden">Recherche en cours...</span>
+                        </div>
+                        <span className={styles.loadingText}>Recherche de structures...</span>
+                      </div>
+                    )}
+                    
+                    {/* Résultats avec sélection temporaire */}
+                    {!isSearching && searchResults.length > 0 && (
+                      <div className={styles.resultsList}>
+                        {searchResults.map(structure => (
+                          <div 
+                            key={structure.id} 
+                            className={`${styles.resultItem} ${selectedStructure?.id === structure.id ? styles.resultItemSelected : ''}`}
+                            onClick={() => {
+                              // Sélection temporaire pour prévisualisation
+                              setSelectedStructure(selectedStructure?.id === structure.id ? null : structure);
+                            }}
+                          >
+                            <div className={styles.structureName}>
+                              {structure.nom}
+                              {selectedStructure?.id === structure.id && (
+                                <i className="bi bi-check-circle-fill ms-2 text-success"></i>
+                              )}
+                            </div>
+                            {structure.type && (
+                              <div className={styles.structureDetail}>Type: {structure.type}</div>
+                            )}
+                            {structure.adresse && (
+                              <div className={styles.structureDetail}>
+                                <i className="bi bi-geo-alt me-1"></i>
+                                {structure.adresse}
+                              </div>
+                            )}
+                            {structure.programmateur && (
+                              <div className={styles.structureDetail}>
+                                <i className="bi bi-person me-1"></i>
+                                Programmateur: {structure.programmateur}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    
+                    {/* Bouton d'association pour la structure sélectionnée */}
+                    {selectedStructure && (
+                      <div className={styles.selectionActions}>
+                        <div className={styles.selectedInfo}>
+                          <i className="bi bi-info-circle me-2"></i>
+                          Structure sélectionnée : <strong>{selectedStructure.nom}</strong>
+                        </div>
+                        <div className={styles.actionButtons}>
+                          <Button
+                            type="button"
+                            variant="outline-secondary"
+                            size="sm"
+                            onClick={() => setSelectedStructure(null)}
+                          >
+                            <i className="bi bi-x me-1"></i>
+                            Annuler
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="primary"
+                            size="sm"
+                            onClick={() => {
+                              handleSelectStructure(selectedStructure);
+                              setSelectedStructure(null);
+                            }}
+                          >
+                            <i className="bi bi-plus-circle me-1"></i>
+                            Associer cette structure
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Pas de résultats */}
+                    {!isSearching && searchResults.length === 0 && searchTerm.length >= 2 && (
+                      <div className={styles.noResultsContainer}>
+                        <div className={styles.noResultsMessage}>
+                          Aucune structure trouvée pour "{searchTerm}"
+                        </div>
+                        <Button
+                          type="button"
+                          variant="primary"
+                          size="sm"
+                          onClick={handleCreateStructure}
+                        >
+                          <i className="bi bi-plus-circle me-1"></i>
+                          Créer une nouvelle structure
+                        </Button>
+                      </div>
+                    )}
+                    
+                    {/* Aide pour la recherche */}
+                    {searchTerm.length < 2 && (
+                      <div className={styles.searchTip}>
+                        <i className="bi bi-info-circle me-1"></i>
+                        Tapez au moins 2 caractères pour rechercher
+                      </div>
+                    )}
+                  </div>
                 )}
               </div>
-            ))
-          ) : (
-            <div className={styles.textEmpty}>Aucune structure associée.</div>
+            </div>
           )}
+          
+          {/* Liste des structures associées */}
+          <div className={styles.associatedStructures}>
+            <h4 className={styles.associatedTitle}>
+              Structures associées ({structures.length})
+            </h4>
+            {structures.length > 0 ? (
+              structures.map(structure => (
+                <div key={structure.id} className={styles.structureItem}>
+                  <Link to={`/structures/${structure.id}`} className={styles.structureLink}>
+                    {structure.nom}
+                  </Link>
+                  {isEditing && (
+                    <Button
+                      size="sm"
+                      variant="outline-danger"
+                      className="ms-2"
+                      onClick={() => handleRemoveStructure(structure.id)}
+                      title="Retirer cette structure du lieu"
+                    >
+                      <i className="bi bi-x-lg"></i>
+                    </Button>
+                  )}
+                </div>
+              ))
+            ) : (
+              <div className={styles.textEmpty}>Aucune structure associée.</div>
+            )}
+          </div>
         </div>
       )}
     </Card>

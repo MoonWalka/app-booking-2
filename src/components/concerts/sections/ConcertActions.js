@@ -8,12 +8,19 @@ const ConcertActions = ({
   hasUnvalidatedForm,
   hasContract,
   contractStatus,
+  getContractButtonVariant,
+  getContractTooltip,
   handleViewConcert,
   handleSendForm,
   handleViewForm,
   handleGenerateContract,
   handleViewContract
 }) => {
+  
+  // Calculer le variant et tooltip pour les boutons de contrat
+  const contractButtonVariant = getContractButtonVariant ? getContractButtonVariant(concert, hasContract, contractStatus) : 'primary';
+  const contractButtonTooltip = getContractTooltip ? getContractTooltip(concert, hasContract, contractStatus) : 'Action contrat';
+  
   return (
     <div className={styles.actionsContainer} onClick={(e) => e.stopPropagation()}>
       {/* View Concert Button */}
@@ -68,15 +75,15 @@ const ConcertActions = ({
         </button>
       )}
       
-      {/* Contract Actions */}
+      {/* Contract Actions avec styling dynamique sophistiqué */}
       {!hasContract && (
         <button 
-          className={`${styles.actionButton} ${styles.contractButton}`}
+          className={`${styles.actionButton} ${styles.contractButton} ${styles[`variant-${contractButtonVariant}`]}`}
           onClick={(e) => {
             e.stopPropagation();
             handleGenerateContract(concert.id);
           }}
-          title="Générer contrat"
+          title={contractButtonTooltip}
         >
           <i className="bi bi-file-earmark-plus"></i>
         </button>
@@ -84,14 +91,20 @@ const ConcertActions = ({
       
       {hasContract && (
         <button 
-          className={`${styles.actionButton} ${styles.contractButton}`}
+          className={`${styles.actionButton} ${styles.contractButton} ${styles[`variant-${contractButtonVariant}`]}`}
           onClick={(e) => {
             e.stopPropagation();
             handleViewContract(concert.id);
           }}
-          title={contractStatus === 'signed' ? 'Contrat signé' : 'Voir contrat'}
+          title={contractButtonTooltip}
         >
-          <i className="bi bi-file-earmark-text"></i>
+          {contractStatus === 'signed' ? (
+            <i className="bi bi-file-earmark-check text-success"></i>
+          ) : contractStatus === 'pending' ? (
+            <i className="bi bi-file-earmark-arrow-up text-warning"></i>
+          ) : (
+            <i className="bi bi-file-earmark-text"></i>
+          )}
         </button>
       )}
       

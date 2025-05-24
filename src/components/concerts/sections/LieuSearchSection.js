@@ -12,6 +12,7 @@ import CardSection from '@/components/ui/CardSection';
  * @param {Function} props.setLieuSearchTerm - Fonction pour mettre à jour le terme de recherche
  * @param {Array} props.lieuResults - Résultats de la recherche de lieux
  * @param {boolean} props.showLieuResults - Indique si les résultats doivent être affichés
+ * @param {Function} props.setShowLieuResults - Fonction pour contrôler l'affichage des résultats
  * @param {boolean} props.isSearchingLieux - Indique si une recherche est en cours
  * @param {Object} props.lieuDropdownRef - Référence pour gérer le clic en dehors du dropdown
  * @param {Object} props.selectedLieu - Lieu sélectionné
@@ -24,6 +25,7 @@ const LieuSearchSection = ({
   setLieuSearchTerm,
   lieuResults,
   showLieuResults,
+  setShowLieuResults,
   isSearchingLieux,
   lieuDropdownRef,
   selectedLieu,
@@ -47,6 +49,7 @@ const LieuSearchSection = ({
               setSearchTerm={setLieuSearchTerm}
               results={lieuResults}
               showResults={showLieuResults}
+              setShowResults={setShowLieuResults}
               isSearching={isSearchingLieux}
               placeholder="Rechercher un lieu par nom..."
               onSelect={handleSelectLieu}

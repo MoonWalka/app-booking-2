@@ -1,5 +1,5 @@
 // src/hooks/common/useResponsive.js
-import React, { /*lazy,*/ Suspense, useState, useEffect, useCallback, useRef } from 'react';
+import React, { /*lazy,*/ useState, useEffect, useCallback, useRef } from 'react';
 import { debugLog } from '@/utils/logUtils';
 import { getComponentByPath } from '@/components/componentMapping';
 

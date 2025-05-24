@@ -1,5 +1,5 @@
 // src/pages/ContratsPage.js
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { collection, getDocs, query, orderBy, where } from '@/firebaseInit';
 import { db } from '@/firebaseInit';

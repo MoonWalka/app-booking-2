@@ -12,6 +12,7 @@ import CardSection from '@/components/ui/CardSection';
  * @param {Function} props.setProgSearchTerm - Fonction pour mettre à jour le terme de recherche
  * @param {Array} props.progResults - Résultats de la recherche de programmateurs
  * @param {boolean} props.showProgResults - Indique si les résultats doivent être affichés
+ * @param {Function} props.setShowProgResults - Fonction pour contrôler l'affichage des résultats
  * @param {boolean} props.isSearchingProgs - Indique si une recherche est en cours
  * @param {Object} props.progDropdownRef - Référence pour gérer le clic en dehors du dropdown
  * @param {Object} props.selectedProgrammateur - Programmateur sélectionné
@@ -24,6 +25,7 @@ const ProgrammateurSearchSection = ({
   setProgSearchTerm,
   progResults,
   showProgResults,
+  setShowProgResults,
   isSearchingProgs,
   progDropdownRef,
   selectedProgrammateur,
@@ -46,6 +48,7 @@ const ProgrammateurSearchSection = ({
               setSearchTerm={setProgSearchTerm}
               results={progResults}
               showResults={showProgResults}
+              setShowResults={setShowProgResults}
               isSearching={isSearchingProgs}
               placeholder="Rechercher un programmateur par nom..."
               onSelect={handleSelectProgrammateur}

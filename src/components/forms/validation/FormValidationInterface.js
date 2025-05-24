@@ -33,9 +33,7 @@ const FormValidationInterface = () => {
     lieu,
     contactFields,
     structureFields,
-    lieuFields,
-    formatDate,
-    formatCurrency
+    lieuFields
   } = useFormValidationData(id);
   
   // Hook for field validation actions

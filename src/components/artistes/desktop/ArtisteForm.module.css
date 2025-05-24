@@ -30,6 +30,93 @@
   margin-bottom: var(--tc-spacing-xl);
 }
 
+/* Navigation par étapes */
+.stepNavigation {
+  margin-bottom: var(--tc-spacing-xl);
+}
+
+.stepIndicators {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: var(--tc-spacing-lg);
+}
+
+.stepIndicators::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background-color: var(--tc-border-color);
+  z-index: 1;
+}
+
+.stepIndicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+  background-color: var(--tc-color-white);
+  padding: 0 var(--tc-spacing-sm);
+}
+
+.stepNumber {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--tc-color-gray-200);
+  color: var(--tc-text-color-secondary);
+  font-weight: var(--tc-font-weight-semibold);
+  font-size: var(--tc-font-size-sm);
+  margin-bottom: var(--tc-spacing-xs);
+  transition: all 0.3s ease;
+}
+
+.stepTitle {
+  font-size: var(--tc-font-size-xs);
+  color: var(--tc-text-color-secondary);
+  text-align: center;
+  max-width: 100px;
+  line-height: 1.2;
+}
+
+/* État actif */
+.stepIndicator.active .stepNumber {
+  background-color: var(--tc-primary-color);
+  color: var(--tc-color-white);
+}
+
+.stepIndicator.active .stepTitle {
+  color: var(--tc-primary-color);
+  font-weight: var(--tc-font-weight-semibold);
+}
+
+/* État complété */
+.stepIndicator.completed .stepNumber {
+  background-color: var(--tc-success-color);
+  color: var(--tc-color-white);
+}
+
+.stepIndicator.completed .stepTitle {
+  color: var(--tc-success-color);
+}
+
+/* Actions du formulaire */
+.formActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--tc-spacing-xl);
+  padding-top: var(--tc-spacing-md);
+  border-top: var(--tc-border-width) solid var(--tc-border-color);
+}
+
 .stepForm {
   margin-bottom: var(--tc-spacing-md);
 }
@@ -106,6 +193,36 @@
   .stepFormActions button {
     width: 100%;
   }
+  
+  /* Navigation par étapes responsive */
+  .stepIndicators {
+    justify-content: center;
+    gap: var(--tc-spacing-md);
+  }
+  
+  .stepIndicators::before {
+    display: none;
+  }
+  
+  .stepTitle {
+    font-size: var(--tc-font-size-xxs);
+    max-width: 80px;
+  }
+  
+  .stepNumber {
+    width: 32px;
+    height: 32px;
+    font-size: var(--tc-font-size-xs);
+  }
+  
+  .formActions {
+    flex-direction: column;
+    gap: var(--tc-spacing-sm);
+  }
+  
+  .formActions button {
+    width: 100%;
+  }
 }
 
 @media (max-width: 576px) {
@@ -119,5 +236,23 @@
   
   .addMembreContainer {
     flex-direction: column;
+  }
+  
+  /* Navigation simplifiée sur très petits écrans */
+  .stepIndicators {
+    flex-direction: column;
+    align-items: center;
+    gap: var(--tc-spacing-xs);
+  }
+  
+  .stepIndicator {
+    flex-direction: row;
+    gap: var(--tc-spacing-sm);
+    padding: var(--tc-spacing-xs);
+  }
+  
+  .stepTitle {
+    max-width: none;
+    text-align: left;
   }
 }

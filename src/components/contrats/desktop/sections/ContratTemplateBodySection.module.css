@@ -76,6 +76,11 @@
   overflow-y: auto;
 }
 
+.reactQuillEditor {
+  min-height: 300px;
+  height: 100%;
+}
+
 .bodyHelpText {
   background-color: var(--tc-color-f8f9fa);
   border-radius: 4px;

@@ -27,7 +27,7 @@ const LieuMapDisplay = ({ lieu, setLieu }) => {
         <MapContainer 
           center={position} 
           zoom={16} 
-          style={{ height: '300px', width: '100%', borderRadius: '4px' }}
+          className={styles.leafletMapContainer}
           attributionControl={false}
         >
           <TileLayer

@@ -59,6 +59,10 @@
   box-shadow: 0 0 0 0.25rem var(--tc-color-rgba(13), rgba(13, 110, 253, 0.25));
 }
 
+.reactQuillEditor {
+  height: 100%;
+}
+
 .exampleFooter {
   margin-top: 12px;
   background-color: var(--tc-color-f8f9fa);

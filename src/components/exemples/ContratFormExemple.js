@@ -10,161 +10,7 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useContratForm } from '@/hooks/contrats';
 import { format } from 'date-fns';
-
-// Styles communs pour le formulaire (réutilisés des autres exemples)
-const formStyles = {
-  container: {
-    maxWidth: '800px',
-    margin: '0 auto',
-    padding: '20px',
-    backgroundColor: '#f9f9f9',
-    borderRadius: '8px',
-    boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-  },
-  section: {
-    marginBottom: '20px',
-    padding: '15px',
-    backgroundColor: '#fff',
-    borderRadius: '6px',
-    boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
-  },
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '20px'
-  },
-  title: {
-    fontSize: '1.5rem',
-    fontWeight: 'bold',
-    color: '#2c3e50'
-  },
-  field: {
-    marginBottom: '15px'
-  },
-  label: {
-    display: 'block',
-    marginBottom: '5px',
-    fontWeight: 'bold',
-    fontSize: '0.9rem'
-  },
-  input: {
-    width: '100%',
-    padding: '8px 12px',
-    border: '1px solid #ddd',
-    borderRadius: '4px',
-    fontSize: '1rem'
-  },
-  textarea: {
-    width: '100%',
-    padding: '8px 12px',
-    border: '1px solid #ddd',
-    borderRadius: '4px',
-    fontSize: '1rem',
-    minHeight: '80px'
-  },
-  select: {
-    width: '100%',
-    padding: '8px 12px',
-    border: '1px solid #ddd',
-    borderRadius: '4px',
-    fontSize: '1rem',
-    backgroundColor: '#fff'
-  },
-  buttonGroup: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginTop: '20px'
-  },
-  button: {
-    padding: '10px 20px',
-    borderRadius: '4px',
-    border: 'none',
-    cursor: 'pointer',
-    fontSize: '0.9rem',
-    fontWeight: 'bold'
-  },
-  primaryButton: {
-    backgroundColor: '#3498db',
-    color: 'white'
-  },
-  secondaryButton: {
-    backgroundColor: '#e9e9e9',
-    color: '#333'
-  },
-  warningButton: {
-    backgroundColor: '#f39c12',
-    color: 'white'
-  },
-  dangerButton: {
-    backgroundColor: '#e74c3c',
-    color: 'white'
-  },
-  sectionTitle: {
-    fontSize: '1.1rem',
-    fontWeight: 'bold',
-    marginBottom: '15px',
-    color: '#34495e',
-    borderBottom: '1px solid #eee',
-    paddingBottom: '8px'
-  },
-  error: {
-    color: '#e74c3c',
-    fontSize: '0.85rem',
-    marginTop: '5px'
-  },
-  badge: {
-    padding: '4px 8px',
-    borderRadius: '4px',
-    fontSize: '0.8rem',
-    fontWeight: 'bold'
-  },
-  successBadge: {
-    backgroundColor: '#2ecc71',
-    color: 'white'
-  },
-  infoBadge: {
-    backgroundColor: '#3498db',
-    color: 'white'
-  },
-  warningBadge: {
-    backgroundColor: '#f39c12',
-    color: 'white'
-  },
-  twoColumns: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: '15px'
-  },
-  threeColumns: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr 1fr',
-    gap: '15px'
-  },
-  tabBar: {
-    display: 'flex',
-    marginBottom: '20px',
-    borderBottom: '1px solid #ddd'
-  },
-  tab: {
-    padding: '10px 20px',
-    cursor: 'pointer'
-  },
-  activeTab: {
-    borderBottom: '2px solid #3498db',
-    fontWeight: 'bold'
-  },
-  statusBox: {
-    padding: '10px',
-    borderRadius: '4px',
-    marginBottom: '15px'
-  },
-  actionsContainer: {
-    display: 'flex',
-    gap: '10px',
-    justifyContent: 'flex-end'
-  }
-};
+import styles from './ContratFormExemple.module.css';
 
 /**
  * Composant exemple démontrant l'utilisation de useContratForm
@@ -238,30 +84,26 @@ const ContratFormExemple = () => {
   const renderStatut = () => {
     const statut = contrat.statut || 'brouillon';
     
-    let bgColor = '#e9e9e9';
-    let textColor = '#333';
+    // Déterminer la classe CSS selon le statut
+    let statusClass = styles.statusBrouillon; // par défaut
     
     switch(statut) {
       case 'signe':
-        bgColor = '#2ecc71';
-        textColor = '#fff';
+        statusClass = styles.statusSigne;
         break;
       case 'en_attente_signature':
-        bgColor = '#f39c12';
-        textColor = '#fff';
+        statusClass = styles.statusEnAttenteSignature;
         break;
       case 'annule':
-        bgColor = '#e74c3c';
-        textColor = '#fff';
+        statusClass = styles.statusAnnule;
         break;
       case 'brouillon':
       default:
-        bgColor = '#3498db';
-        textColor = '#fff';
+        statusClass = styles.statusBrouillon;
     }
     
     return (
-      <div style={{ ...formStyles.statusBox, backgroundColor: bgColor, color: textColor }}>
+      <div className={`${styles.statusBox} ${statusClass}`}>
         <strong>Statut: </strong>
         {statut === 'brouillon' && 'Brouillon'}
         {statut === 'en_attente_signature' && 'En attente de signature'}
@@ -278,8 +120,8 @@ const ContratFormExemple = () => {
   
   if (isLoading) {
     return (
-      <div style={formStyles.container}>
-        <div style={{ textAlign: 'center', padding: '40px 0' }}>
+      <div className={styles.container}>
+        <div className={styles.textCenterLoading}>
           <h3>Chargement du contrat...</h3>
           <p>Veuillez patienter pendant le chargement des données.</p>
         </div>
@@ -288,16 +130,13 @@ const ContratFormExemple = () => {
   }
   
   return (
-    <div style={formStyles.container}>
+    <div className={styles.container}>
       {/* En-tête du formulaire */}
-      <div style={formStyles.header}>
-        <h1 style={formStyles.title}>
+      <div className={styles.header}>
+        <h1 className={styles.title}>
           {isNewContrat ? 'Nouveau Contrat' : `Contrat: ${contrat.reference || 'Sans référence'}`}
         </h1>
-        <span style={{
-          ...formStyles.badge,
-          ...isNewContrat ? formStyles.infoBadge : formStyles.successBadge
-        }}>
+        <span className={`${styles.badge} ${isNewContrat ? styles.infoBadge : styles.successBadge}`}>
           {isNewContrat ? 'Création' : 'Édition'}
         </span>
       </div>
@@ -306,40 +145,28 @@ const ContratFormExemple = () => {
       {!isNewContrat && renderStatut()}
       
       {/* Navigation par onglets */}
-      <div style={formStyles.tabBar}>
+      <div className={styles.tabBar}>
         <div 
           onClick={() => handleTabChange('details')}
-          style={{
-            ...formStyles.tab,
-            ...(activeTab === 'details' ? formStyles.activeTab : {})
-          }}
+          className={`${styles.tab} ${activeTab === 'details' ? styles.activeTab : ''}`}
         >
           Détails généraux
         </div>
         <div 
           onClick={() => handleTabChange('parties')}
-          style={{
-            ...formStyles.tab,
-            ...(activeTab === 'parties' ? formStyles.activeTab : {})
-          }}
+          className={`${styles.tab} ${activeTab === 'parties' ? styles.activeTab : ''}`}
         >
           Parties contractantes
         </div>
         <div 
           onClick={() => handleTabChange('clauses')}
-          style={{
-            ...formStyles.tab,
-            ...(activeTab === 'clauses' ? formStyles.activeTab : {})
-          }}
+          className={`${styles.tab} ${activeTab === 'clauses' ? styles.activeTab : ''}`}
         >
           Clauses spéciales
         </div>
         <div 
           onClick={() => handleTabChange('conditions')}
-          style={{
-            ...formStyles.tab,
-            ...(activeTab === 'conditions' ? formStyles.activeTab : {})
-          }}
+          className={`${styles.tab} ${activeTab === 'conditions' ? styles.activeTab : ''}`}
         >
           Conditions financières
         </div>
@@ -348,27 +175,27 @@ const ContratFormExemple = () => {
       <form onSubmit={handleSubmit}>
         {/* Onglet Détails généraux */}
         {activeTab === 'details' && (
-          <div style={formStyles.section}>
-            <h3 style={formStyles.sectionTitle}>Détails généraux du contrat</h3>
+          <div className={styles.section}>
+            <h3 className={styles.sectionTitle}>Détails généraux du contrat</h3>
             
-            <div style={formStyles.field}>
-              <label htmlFor="reference" style={formStyles.label}>Référence du contrat *</label>
+            <div className={styles.field}>
+              <label htmlFor="reference" className={styles.label}>Référence du contrat *</label>
               <input
                 id="reference"
                 type="text"
-                style={formStyles.input}
+                className={styles.input}
                 value={contrat.reference || ''}
                 onChange={(e) => updateFormData(prev => ({ ...prev, reference: e.target.value }))}
                 placeholder="Référence unique du contrat"
               />
-              {formErrors.reference && <p style={formStyles.error}>{formErrors.reference}</p>}
+              {formErrors.reference && <p className={styles.error}>{formErrors.reference}</p>}
             </div>
             
-            <div style={formStyles.field}>
-              <label htmlFor="type" style={formStyles.label}>Type de contrat *</label>
+            <div className={styles.field}>
+              <label htmlFor="type" className={styles.label}>Type de contrat *</label>
               <select
                 id="type"
-                style={formStyles.select}
+                className={styles.select}
                 value={contrat.type || ''}
                 onChange={(e) => updateFormData(prev => ({ ...prev, type: e.target.value }))}
               >
@@ -379,27 +206,27 @@ const ContratFormExemple = () => {
                 <option value="prestation">Contrat de prestation</option>
                 <option value="autre">Autre type de contrat</option>
               </select>
-              {formErrors.type && <p style={formStyles.error}>{formErrors.type}</p>}
+              {formErrors.type && <p className={styles.error}>{formErrors.type}</p>}
             </div>
             
-            <div style={formStyles.twoColumns}>
-              <div style={formStyles.field}>
-                <label htmlFor="dateSignature" style={formStyles.label}>Date de signature</label>
+            <div className={styles.twoColumns}>
+              <div className={styles.field}>
+                <label htmlFor="dateSignature" className={styles.label}>Date de signature</label>
                 <input
                   id="dateSignature"
                   type="date"
-                  style={formStyles.input}
+                  className={styles.input}
                   value={dateSignatureFormatted || ''}
                   onChange={(e) => setDateSignature(e.target.value)}
                 />
               </div>
               
-              <div style={formStyles.field}>
-                <label htmlFor="lieuxSignature" style={formStyles.label}>Lieu de signature</label>
+              <div className={styles.field}>
+                <label htmlFor="lieuxSignature" className={styles.label}>Lieu de signature</label>
                 <input
                   id="lieuxSignature"
                   type="text"
-                  style={formStyles.input}
+                  className={styles.input}
                   value={contrat.lieuSignature || ''}
                   onChange={(e) => updateFormData(prev => ({ ...prev, lieuSignature: e.target.value }))}
                   placeholder="Ville où le contrat est signé"
@@ -407,23 +234,23 @@ const ContratFormExemple = () => {
               </div>
             </div>
             
-            <div style={formStyles.field}>
-              <label htmlFor="objetContrat" style={formStyles.label}>Objet du contrat *</label>
+            <div className={styles.field}>
+              <label htmlFor="objetContrat" className={styles.label}>Objet du contrat *</label>
               <textarea
                 id="objetContrat"
-                style={formStyles.textarea}
+                className={styles.textarea}
                 value={contrat.objetContrat || ''}
                 onChange={(e) => updateFormData(prev => ({ ...prev, objetContrat: e.target.value }))}
                 placeholder="Description détaillée de l'objet du contrat"
               />
-              {formErrors.objetContrat && <p style={formStyles.error}>{formErrors.objetContrat}</p>}
+              {formErrors.objetContrat && <p className={styles.error}>{formErrors.objetContrat}</p>}
             </div>
             
-            <div style={formStyles.field}>
-              <label htmlFor="noteInterne" style={formStyles.label}>Notes internes</label>
+            <div className={styles.field}>
+              <label htmlFor="noteInterne" className={styles.label}>Notes internes</label>
               <textarea
                 id="noteInterne"
-                style={formStyles.textarea}
+                className={styles.textarea}
                 value={contrat.noteInterne || ''}
                 onChange={(e) => updateFormData(prev => ({ ...prev, noteInterne: e.target.value }))}
                 placeholder="Notes visibles uniquement par l'équipe"
@@ -432,12 +259,7 @@ const ContratFormExemple = () => {
             
             {/* Information sur le concert lié */}
             {concert && (
-              <div style={{
-                padding: '10px',
-                backgroundColor: '#f0f7fb',
-                borderRadius: '4px',
-                marginBottom: '15px'
-              }}>
+              <div className={styles.infoBox}>
                 <p><strong>Lié au concert:</strong> {concert.titre}</p>
                 {concert.date && (
                   <p><strong>Date du concert:</strong> {format(new Date(concert.date), 'dd/MM/yyyy HH:mm')}</p>
@@ -449,12 +271,7 @@ const ContratFormExemple = () => {
             )}
             
             {(!concert && !isNewContrat) && (
-              <div style={{
-                padding: '10px',
-                backgroundColor: '#ffe9e0',
-                borderRadius: '4px',
-                marginBottom: '15px'
-              }}>
+              <div className={styles.warningBox}>
                 <p><strong>Attention:</strong> Ce contrat n'est lié à aucun concert.</p>
               </div>
             )}
@@ -463,17 +280,12 @@ const ContratFormExemple = () => {
         
         {/* Onglet Parties contractantes */}
         {activeTab === 'parties' && (
-          <div style={formStyles.section}>
-            <h3 style={formStyles.sectionTitle}>Parties contractantes</h3>
+          <div className={styles.section}>
+            <h3 className={styles.sectionTitle}>Parties contractantes</h3>
             
             {/* Section Structure */}
-            <div style={{
-              padding: '15px',
-              backgroundColor: '#f8f9fa',
-              borderRadius: '6px',
-              marginBottom: '20px'
-            }}>
-              <h4 style={{ marginTop: 0, marginBottom: '15px' }}>Structure organisatrice</h4>
+            <div className={styles.infoBox}>
+              <h4 className={styles.subTitle}>Structure organisatrice</h4>
               
               {structure ? (
                 <div>
@@ -487,12 +299,7 @@ const ContratFormExemple = () => {
                   
                   <button
                     type="button"
-                    style={{
-                      ...formStyles.button,
-                      ...formStyles.secondaryButton,
-                      padding: '5px 10px',
-                      marginTop: '10px'
-                    }}
+                    className={`${styles.button} ${styles.secondaryButton} ${styles.smallButton}`}
                     onClick={() => updateStructure(null)}
                   >
                     Changer de structure
@@ -503,12 +310,7 @@ const ContratFormExemple = () => {
                   <p>Aucune structure sélectionnée</p>
                   <button
                     type="button"
-                    style={{
-                      ...formStyles.button,
-                      ...formStyles.primaryButton,
-                      padding: '5px 10px',
-                      marginTop: '10px'
-                    }}
+                    className={`${styles.button} ${styles.primaryButton} ${styles.smallButton}`}
                     onClick={() => {
                       // Ici, vous pourriez ouvrir une boîte de dialogue ou naviguer vers un sélecteur de structures
                       alert("Cette fonctionnalité ouvrirait un sélecteur de structures dans l'application réelle");
@@ -518,17 +320,12 @@ const ContratFormExemple = () => {
                   </button>
                 </div>
               )}
-              {formErrors.structureId && <p style={formStyles.error}>{formErrors.structureId}</p>}
+              {formErrors.structureId && <p className={styles.error}>{formErrors.structureId}</p>}
             </div>
             
             {/* Section Artiste */}
-            <div style={{
-              padding: '15px',
-              backgroundColor: '#f8f9fa',
-              borderRadius: '6px',
-              marginBottom: '20px'
-            }}>
-              <h4 style={{ marginTop: 0, marginBottom: '15px' }}>Artiste</h4>
+            <div className={styles.infoBox}>
+              <h4 className={styles.subTitle}>Artiste</h4>
               
               {artiste ? (
                 <div>
@@ -538,12 +335,7 @@ const ContratFormExemple = () => {
                   
                   <button
                     type="button"
-                    style={{
-                      ...formStyles.button,
-                      ...formStyles.secondaryButton,
-                      padding: '5px 10px',
-                      marginTop: '10px'
-                    }}
+                    className={`${styles.button} ${styles.secondaryButton} ${styles.smallButton}`}
                     onClick={() => updateArtiste(null)}
                   >
                     Changer d'artiste
@@ -554,12 +346,7 @@ const ContratFormExemple = () => {
                   <p>Aucun artiste sélectionné</p>
                   <button
                     type="button"
-                    style={{
-                      ...formStyles.button,
-                      ...formStyles.primaryButton,
-                      padding: '5px 10px',
-                      marginTop: '10px'
-                    }}
+                    className={`${styles.button} ${styles.primaryButton} ${styles.smallButton}`}
                     onClick={() => {
                       // Ici, vous pourriez ouvrir une boîte de dialogue ou naviguer vers un sélecteur d'artistes
                       alert("Cette fonctionnalité ouvrirait un sélecteur d'artistes dans l'application réelle");
@@ -569,60 +356,55 @@ const ContratFormExemple = () => {
                   </button>
                 </div>
               )}
-              {formErrors.artisteId && <p style={formStyles.error}>{formErrors.artisteId}</p>}
+              {formErrors.artisteId && <p className={styles.error}>{formErrors.artisteId}</p>}
             </div>
             
             {/* Section Signataires */}
-            <div style={{
-              padding: '15px',
-              backgroundColor: '#f8f9fa',
-              borderRadius: '6px',
-              marginBottom: '20px'
-            }}>
-              <h4 style={{ marginTop: 0, marginBottom: '15px' }}>Signataires</h4>
+            <div className={styles.infoBox}>
+              <h4 className={styles.subTitle}>Signataires</h4>
               
-              <div style={formStyles.field}>
-                <label htmlFor="signataire1Nom" style={formStyles.label}>Nom du signataire (structure)</label>
+              <div className={styles.field}>
+                <label htmlFor="signataire1Nom" className={styles.label}>Nom du signataire (structure)</label>
                 <input
                   id="signataire1Nom"
                   type="text"
-                  style={formStyles.input}
+                  className={styles.input}
                   value={contrat.signataire1Nom || ''}
                   onChange={(e) => updateFormData(prev => ({ ...prev, signataire1Nom: e.target.value }))}
                   placeholder="Nom et prénom du signataire pour la structure"
                 />
               </div>
               
-              <div style={formStyles.field}>
-                <label htmlFor="signataire1Fonction" style={formStyles.label}>Fonction du signataire (structure)</label>
+              <div className={styles.field}>
+                <label htmlFor="signataire1Fonction" className={styles.label}>Fonction du signataire (structure)</label>
                 <input
                   id="signataire1Fonction"
                   type="text"
-                  style={formStyles.input}
+                  className={styles.input}
                   value={contrat.signataire1Fonction || ''}
                   onChange={(e) => updateFormData(prev => ({ ...prev, signataire1Fonction: e.target.value }))}
                   placeholder="Ex: Directeur, Président, etc."
                 />
               </div>
               
-              <div style={formStyles.field}>
-                <label htmlFor="signataire2Nom" style={formStyles.label}>Nom du signataire (artiste)</label>
+              <div className={styles.field}>
+                <label htmlFor="signataire2Nom" className={styles.label}>Nom du signataire (artiste)</label>
                 <input
                   id="signataire2Nom"
                   type="text"
-                  style={formStyles.input}
+                  className={styles.input}
                   value={contrat.signataire2Nom || ''}
                   onChange={(e) => updateFormData(prev => ({ ...prev, signataire2Nom: e.target.value }))}
                   placeholder="Nom et prénom du signataire pour l'artiste"
                 />
               </div>
               
-              <div style={formStyles.field}>
-                <label htmlFor="signataire2Fonction" style={formStyles.label}>Fonction du signataire (artiste)</label>
+              <div className={styles.field}>
+                <label htmlFor="signataire2Fonction" className={styles.label}>Fonction du signataire (artiste)</label>
                 <input
                   id="signataire2Fonction"
                   type="text"
-                  style={formStyles.input}
+                  className={styles.input}
                   value={contrat.signataire2Fonction || ''}
                   onChange={(e) => updateFormData(prev => ({ ...prev, signataire2Fonction: e.target.value }))}
                   placeholder="Ex: Artiste, Manager, Agent, etc."
@@ -634,13 +416,13 @@ const ContratFormExemple = () => {
         
         {/* Onglet Clauses spéciales */}
         {activeTab === 'clauses' && (
-          <div style={formStyles.section}>
-            <h3 style={formStyles.sectionTitle}>Clauses spéciales</h3>
+          <div className={styles.section}>
+            <h3 className={styles.sectionTitle}>Clauses spéciales</h3>
             
-            <div style={{ marginBottom: '15px' }}>
+            <div className={styles.field}>
               <button
                 type="button"
-                style={{ ...formStyles.button, ...formStyles.primaryButton }}
+                className={`${styles.button} ${styles.primaryButton}`}
                 onClick={handleAddClause}
               >
                 Ajouter une clause
@@ -653,31 +435,25 @@ const ContratFormExemple = () => {
               clausesSpeciales.map((clause, index) => (
                 <div
                   key={index}
-                  style={{
-                    padding: '15px',
-                    backgroundColor: clause.important ? '#fff3e0' : '#f8f9fa',
-                    borderRadius: '6px',
-                    marginBottom: '15px',
-                    border: clause.important ? '1px solid #ffcc80' : '1px solid #e9e9e9'
-                  }}
+                  className={`${styles.field} ${styles.clauseBox}`}
                 >
-                  <div style={formStyles.field}>
-                    <label htmlFor={`clause-${index}-titre`} style={formStyles.label}>Titre de la clause *</label>
+                  <div className={styles.field}>
+                    <label htmlFor={`clause-${index}-titre`} className={styles.label}>Titre de la clause *</label>
                     <input
                       id={`clause-${index}-titre`}
                       type="text"
-                      style={formStyles.input}
+                      className={styles.input}
                       value={clause.titre || ''}
                       onChange={(e) => updateClauseSpeciale(index, 'titre', e.target.value)}
                       placeholder="Ex: Restauration, Hébergement, etc."
                     />
                   </div>
                   
-                  <div style={formStyles.field}>
-                    <label htmlFor={`clause-${index}-contenu`} style={formStyles.label}>Contenu *</label>
+                  <div className={styles.field}>
+                    <label htmlFor={`clause-${index}-contenu`} className={styles.label}>Contenu *</label>
                     <textarea
                       id={`clause-${index}-contenu`}
-                      style={formStyles.textarea}
+                      className={styles.textarea}
                       value={clause.contenu || ''}
                       onChange={(e) => updateClauseSpeciale(index, 'contenu', e.target.value)}
                       placeholder="Texte détaillé de la clause spéciale"
@@ -685,22 +461,21 @@ const ContratFormExemple = () => {
                     />
                   </div>
                   
-                  <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                  <div className={styles.field}>
                     <input
                       id={`clause-${index}-important`}
                       type="checkbox"
                       checked={clause.important || false}
                       onChange={(e) => updateClauseSpeciale(index, 'important', e.target.checked)}
-                      style={{ marginRight: '5px' }}
                     />
-                    <label htmlFor={`clause-${index}-important`} style={{ fontSize: '0.9rem' }}>
+                    <label htmlFor={`clause-${index}-important`} className={styles.label}>
                       Clause importante (mise en évidence dans le contrat)
                     </label>
                   </div>
                   
                   <button
                     type="button"
-                    style={{ ...formStyles.button, ...formStyles.dangerButton }}
+                    className={`${styles.button} ${styles.dangerButton}`}
                     onClick={() => removeClauseSpeciale(index)}
                   >
                     Supprimer cette clause
@@ -713,59 +488,56 @@ const ContratFormExemple = () => {
         
         {/* Onglet Conditions financières */}
         {activeTab === 'conditions' && (
-          <div style={formStyles.section}>
-            <h3 style={formStyles.sectionTitle}>Conditions financières</h3>
+          <div className={styles.section}>
+            <h3 className={styles.sectionTitle}>Conditions financières</h3>
             
-            <div style={formStyles.twoColumns}>
-              <div style={formStyles.field}>
-                <label htmlFor="montantHT" style={formStyles.label}>Montant HT *</label>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div className={styles.twoColumns}>
+              <div className={styles.field}>
+                <label htmlFor="montantHT" className={styles.label}>Montant HT *</label>
+                <div className={styles.inputContainer}>
                   <input
                     id="montantHT"
                     type="number"
                     min="0"
                     step="0.01"
-                    style={formStyles.input}
+                    className={styles.input}
                     value={contrat.montantHT || ''}
                     onChange={(e) => updateFormData(prev => ({ ...prev, montantHT: Number(e.target.value) }))}
                     placeholder="Montant hors taxes"
                   />
-                  <span style={{ marginLeft: '8px' }}>€</span>
+                  <span className={styles.currency}>€</span>
                 </div>
-                {formErrors.montantHT && <p style={formStyles.error}>{formErrors.montantHT}</p>}
+                {formErrors.montantHT && <p className={styles.error}>{formErrors.montantHT}</p>}
               </div>
               
-              <div style={formStyles.field}>
-                <label htmlFor="tauxTVA" style={formStyles.label}>Taux de TVA (%)</label>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
+              <div className={styles.field}>
+                <label htmlFor="tauxTVA" className={styles.label}>Taux de TVA (%)</label>
+                <div className={styles.inputContainer}>
                   <input
                     id="tauxTVA"
                     type="number"
                     min="0"
                     max="100"
                     step="0.1"
-                    style={formStyles.input}
+                    className={styles.input}
                     value={contrat.tauxTVA || ''}
                     onChange={(e) => updateFormData(prev => ({ ...prev, tauxTVA: Number(e.target.value) }))}
                     placeholder="Ex: 5.5, 20, etc."
                   />
-                  <span style={{ marginLeft: '8px' }}>%</span>
+                  <span className={styles.percentage}>%</span>
                 </div>
               </div>
             </div>
             
-            <div style={formStyles.field}>
-              <label htmlFor="montantTTC" style={formStyles.label}>Montant TTC estimé</label>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div className={styles.field}>
+              <label htmlFor="montantTTC" className={styles.label}>Montant TTC estimé</label>
+              <div className={styles.inputContainer}>
                 <input
                   id="montantTTC"
                   type="number"
                   min="0"
                   step="0.01"
-                  style={{
-                    ...formStyles.input,
-                    backgroundColor: '#f8f9fa'
-                  }}
+                  className={`${styles.input} ${styles.disabledInput}`}
                   value={(() => {
                     const ht = Number(contrat.montantHT || 0);
                     const tva = Number(contrat.tauxTVA || 0);
@@ -773,15 +545,15 @@ const ContratFormExemple = () => {
                   })()}
                   disabled
                 />
-                <span style={{ marginLeft: '8px' }}>€</span>
+                <span className={styles.currency}>€</span>
               </div>
             </div>
             
-            <div style={formStyles.field}>
-              <label htmlFor="modePaiement" style={formStyles.label}>Mode de paiement</label>
+            <div className={styles.field}>
+              <label htmlFor="modePaiement" className={styles.label}>Mode de paiement</label>
               <select
                 id="modePaiement"
-                style={formStyles.select}
+                className={styles.select}
                 value={contrat.modePaiement || ''}
                 onChange={(e) => updateFormData(prev => ({ ...prev, modePaiement: e.target.value }))}
               >
@@ -793,35 +565,35 @@ const ContratFormExemple = () => {
               </select>
             </div>
             
-            <div style={formStyles.field}>
-              <label htmlFor="echeancier" style={formStyles.label}>Échéancier de paiement</label>
+            <div className={styles.field}>
+              <label htmlFor="echeancier" className={styles.label}>Échéancier de paiement</label>
               <textarea
                 id="echeancier"
-                style={formStyles.textarea}
+                className={styles.textarea}
                 value={contrat.echeancier || ''}
                 onChange={(e) => updateFormData(prev => ({ ...prev, echeancier: e.target.value }))}
                 placeholder="Ex: 30% à la signature, 70% le jour du spectacle"
               />
             </div>
             
-            <div style={formStyles.field}>
-              <label htmlFor="delaiPaiement" style={formStyles.label}>Délai de paiement (jours)</label>
+            <div className={styles.field}>
+              <label htmlFor="delaiPaiement" className={styles.label}>Délai de paiement (jours)</label>
               <input
                 id="delaiPaiement"
                 type="number"
                 min="0"
-                style={formStyles.input}
+                className={styles.input}
                 value={contrat.delaiPaiement || ''}
                 onChange={(e) => updateFormData(prev => ({ ...prev, delaiPaiement: Number(e.target.value) }))}
                 placeholder="Nombre de jours après prestation/événement"
               />
             </div>
             
-            <div style={formStyles.field}>
-              <label htmlFor="notesFinancieres" style={formStyles.label}>Notes financières</label>
+            <div className={styles.field}>
+              <label htmlFor="notesFinancieres" className={styles.label}>Notes financières</label>
               <textarea
                 id="notesFinancieres"
-                style={formStyles.textarea}
+                className={styles.textarea}
                 value={contrat.notesFinancieres || ''}
                 onChange={(e) => updateFormData(prev => ({ ...prev, notesFinancieres: e.target.value }))}
                 placeholder="Autres informations financières pertinentes"
@@ -831,47 +603,45 @@ const ContratFormExemple = () => {
         )}
         
         {/* Boutons d'actions */}
-        <div>
-          <div style={formStyles.buttonGroup}>
-            <button
-              type="button"
-              style={{ ...formStyles.button, ...formStyles.secondaryButton }}
-              onClick={resetForm}
-            >
-              Réinitialiser
-            </button>
-            
-            <div style={formStyles.actionsContainer}>
-              {!isNewContrat && canGeneratePdf && (
-                <button
-                  type="button"
-                  style={{ ...formStyles.button, ...formStyles.warningButton }}
-                  onClick={generatePDF}
-                  disabled={isGeneratingPDF}
-                >
-                  {isGeneratingPDF ? 'Génération en cours...' : 'Générer PDF'}
-                </button>
-              )}
-              
-              {!isNewContrat && canGeneratePdf && contrat.statut !== 'signe' && (
-                <button
-                  type="button"
-                  style={{ ...formStyles.button, ...formStyles.primaryButton }}
-                  onClick={sendForSignature}
-                  disabled={isSendingForSignature}
-                >
-                  {isSendingForSignature ? 'Envoi en cours...' : 'Envoyer pour signature'}
-                </button>
-              )}
-              
+        <div className={styles.buttonGroup}>
+          <button
+            type="button"
+            className={`${styles.button} ${styles.secondaryButton}`}
+            onClick={resetForm}
+          >
+            Réinitialiser
+          </button>
+          
+          <div className={styles.actionsContainer}>
+            {!isNewContrat && canGeneratePdf && (
               <button
-                type="submit"
-                style={{ ...formStyles.button, ...formStyles.primaryButton }}
-                disabled={isSaving}
+                type="button"
+                className={`${styles.button} ${styles.warningButton}`}
+                onClick={generatePDF}
+                disabled={isGeneratingPDF}
               >
-                {isSaving ? 'Enregistrement...' : isNewContrat ? 'Créer le contrat' : 'Enregistrer les modifications'}
+                {isGeneratingPDF ? 'Génération en cours...' : 'Générer PDF'}
               </button>
-            </div>
+            )}
+            
+            {!isNewContrat && canGeneratePdf && contrat.statut !== 'signe' && (
+              <button
+                type="button"
+                className={`${styles.button} ${styles.primaryButton}`}
+                onClick={sendForSignature}
+                disabled={isSendingForSignature}
+              >
+                {isSendingForSignature ? 'Envoi en cours...' : 'Envoyer pour signature'}
+              </button>
+            )}
+            
+            <button
+              type="submit"
+              className={`${styles.button} ${styles.primaryButton}`}
+              disabled={isSaving}
+            >
+              {isSaving ? 'Enregistrement...' : isNewContrat ? 'Créer le contrat' : 'Enregistrer les modifications'}
+            </button>
           </div>
         </div>
       </form>

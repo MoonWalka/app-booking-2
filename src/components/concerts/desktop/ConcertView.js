@@ -102,7 +102,7 @@ const ConcertView = ({ id: propId, detailsHook }) => {
 
   if (loading) {
     return (
-      <div className="loading-container d-flex justify-content-center align-items-center" style={{ minHeight: '300px' }}>
+      <div className={styles.loadingContainer}>
         <div className="text-center">
           <div className="spinner-border text-primary" role="status">
             <span className="visually-hidden">Chargement du concert...</span>

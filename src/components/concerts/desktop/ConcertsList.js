@@ -124,18 +124,10 @@ const ConcertsList = () => {
       
       {/* Bouton de diagnostic (visible uniquement en développement) */}
       {process.env.NODE_ENV === 'development' && (
-        <div style={{ position: 'fixed', bottom: '20px', left: '20px', zIndex: 9999 }}>
+        <div className={styles.debugButtonContainer}>
           <button 
             onClick={activateDiagnostic}
-            style={{
-              background: '#6200ee', 
-              color: 'white', 
-              border: 'none', 
-              padding: '8px 16px',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '12px'
-            }}
+            className={styles.debugButton}
           >
             Activer Diagnostic
           </button>

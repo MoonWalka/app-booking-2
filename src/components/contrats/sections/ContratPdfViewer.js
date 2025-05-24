@@ -80,7 +80,7 @@ const ContratPdfViewer = ({
                     width="100%" 
                     height={550} 
                     title="Aperçu PDF"
-                    style={{ border: '1px solid #ddd' }}
+                    className={styles.pdfIframe}
                   />
                 </div>
               ) : (

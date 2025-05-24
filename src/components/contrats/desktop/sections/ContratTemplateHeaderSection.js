@@ -134,13 +134,12 @@ const ContratTemplateHeaderSection = ({
             ref={quillRef}
             key={previewMode ? 'preview' : 'edit'}
             id="headerContent"
-            className={styles.headerContentInput}
+            className={`${styles.headerContentInput} ${styles.reactQuillEditor}`}
             value={headerContent}
             onChange={setHeaderContent}
             modules={CompactToolbarModule}
             placeholder="Contenu de l'en-tête..."
             theme="snow"
-            style={{ minHeight: 100, height: '100%' }}
           />
         </div>
       </div>

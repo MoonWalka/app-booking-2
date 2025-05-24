@@ -69,7 +69,7 @@ const ConcertView = () => {
 
   if (loading) {
     return (
-      <div className="loading-container d-flex justify-content-center align-items-center" style={{ minHeight: '200px' }}>
+      <div className={styles.loadingContainer}>
         <div className="text-center">
           <div className="spinner-border text-primary" role="status">
             <span className="visually-hidden">Chargement...</span>
@@ -88,7 +88,7 @@ const ConcertView = () => {
   const statusInfo = getStatusInfo ? getStatusInfo() : getStatusFromHook(concert.statut, concert, formData);
 
   return (
-    <div className={styles.concertViewContainer || 'concert-view-container-mobile'}>
+    <div className={styles.concertViewContainer}>
       {/* En-tête avec titre et boutons d'action */}
       <ConcertHeaderMobile 
         concert={concert}
@@ -100,7 +100,7 @@ const ConcertView = () => {
       />
 
       {/* Mode vue - version mobile */}
-      <div className={styles.mobileContent || 'mobile-content'}>
+      <div className={styles.mobileContent}>
         {/* Informations générales */}
         <ConcertGeneralInfoMobile 
           concert={concert}

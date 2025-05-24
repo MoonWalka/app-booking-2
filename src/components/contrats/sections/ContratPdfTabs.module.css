@@ -4,4 +4,109 @@
  * Dernière mise à jour: 16 May 2025
  */
 
-/* Using Bootstrap Nav styling by default */
+.tabsContainer {
+  margin-bottom: var(--tc-spacing-lg);
+  border-bottom: 1px solid var(--tc-color-border);
+}
+
+.tabsList {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: var(--tc-spacing-xs);
+}
+
+.tabItem {
+  flex: none;
+}
+
+.tabLink {
+  display: flex;
+  align-items: center;
+  padding: var(--tc-spacing-md) var(--tc-spacing-lg);
+  color: var(--tc-color-secondary);
+  text-decoration: none;
+  border: 1px solid transparent;
+  border-bottom: none;
+  border-radius: var(--tc-border-radius) var(--tc-border-radius) 0 0;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  background-color: transparent;
+  font-weight: var(--tc-font-weight-medium);
+}
+
+.tabLink:hover {
+  color: var(--tc-color-primary);
+  background-color: var(--tc-color-surface);
+}
+
+.tabLink.active {
+  color: var(--tc-color-primary);
+  background-color: var(--tc-color-white);
+  border-color: var(--tc-color-border);
+  border-bottom: 1px solid var(--tc-color-white);
+  margin-bottom: -1px;
+}
+
+.tabLink:disabled {
+  color: var(--tc-color-text-muted);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.tabIcon {
+  margin-right: var(--tc-spacing-sm);
+  font-size: var(--tc-font-size-sm);
+}
+
+.tabBadge {
+  margin-left: var(--tc-spacing-sm);
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  border-radius: var(--tc-border-radius-sm);
+  font-size: var(--tc-font-size-xs);
+  font-weight: var(--tc-font-weight-medium);
+}
+
+.tabBadgeSuccess {
+  background-color: var(--tc-color-success);
+  color: var(--tc-color-white);
+}
+
+.tabBadgeInfo {
+  background-color: var(--tc-color-info);
+  color: var(--tc-color-white);
+}
+
+.spinner {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: var(--tc-spacing-sm);
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Support responsive */
+@media (max-width: 768px) {
+  .tabsList {
+    flex-direction: column;
+  }
+  
+  .tabLink {
+    border-radius: var(--tc-border-radius);
+    border: 1px solid var(--tc-color-border);
+    margin-bottom: var(--tc-spacing-xs);
+  }
+  
+  .tabLink.active {
+    border: 1px solid var(--tc-color-primary);
+    background-color: var(--tc-color-primary-light);
+  }
+}

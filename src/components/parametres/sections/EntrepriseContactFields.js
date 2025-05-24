@@ -1,5 +1,4 @@
 import React from 'react';
-import { Row, Col, Form } from 'react-bootstrap';
 import styles from './EntrepriseContactFields.module.css';
 
 /**
@@ -11,42 +10,42 @@ import styles from './EntrepriseContactFields.module.css';
  */
 const EntrepriseContactFields = ({ formData, handleChange }) => {
   return (
-    <>
-      <Row>
-        <Col md={6}>
-          <Form.Group className="mb-3">
-            <Form.Label>Phone</Form.Label>
-            <Form.Control
-              type="text"
-              name="telephone"
-              value={formData.telephone || ''}
-              onChange={handleChange}
-            />
-          </Form.Group>
-        </Col>
-        <Col md={6}>
-          <Form.Group className="mb-3">
-            <Form.Label>Email</Form.Label>
-            <Form.Control
-              type="email"
-              name="email"
-              value={formData.email || ''}
-              onChange={handleChange}
-            />
-          </Form.Group>
-        </Col>
-      </Row>
+    <div className={styles.contactFieldsContainer}>
+      <div className={styles.fieldsRow}>
+        <div className={styles.fieldGroup}>
+          <label className={styles.fieldLabel}>Phone</label>
+          <input
+            type="text"
+            name="telephone"
+            value={formData.telephone || ''}
+            onChange={handleChange}
+            className={styles.fieldInput}
+          />
+        </div>
+        
+        <div className={styles.fieldGroup}>
+          <label className={styles.fieldLabel}>Email</label>
+          <input
+            type="email"
+            name="email"
+            value={formData.email || ''}
+            onChange={handleChange}
+            className={styles.fieldInput}
+          />
+        </div>
+      </div>
       
-      <Form.Group className="mb-3">
-        <Form.Label>Website</Form.Label>
-        <Form.Control
+      <div className={`${styles.fieldGroup} ${styles.fullWidthField}`}>
+        <label className={styles.fieldLabel}>Website</label>
+        <input
           type="text"
           name="siteWeb"
           value={formData.siteWeb || ''}
           onChange={handleChange}
+          className={styles.fieldInput}
         />
-      </Form.Group>
-    </>
+      </div>
+    </div>
   );
 };
 

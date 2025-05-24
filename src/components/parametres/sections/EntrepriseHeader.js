@@ -9,11 +9,11 @@ import styles from './EntrepriseHeader.module.css';
 const EntrepriseHeader = ({ success }) => {
   return (
     <>
-      <h3 className="mb-3">Company Information</h3>
-      <p className="text-muted">This information will appear in the headers and footers of generated contracts.</p>
+      <h3 className={styles.headerTitle}>Company Information</h3>
+      <p className={styles.headerDescription}>This information will appear in the headers and footers of generated contracts.</p>
       
       {success && (
-        <div className="alert alert-success" role="alert">
+        <div className={`alert alert-success ${styles.successAlert}`} role="alert">
           {success}
         </div>
       )}

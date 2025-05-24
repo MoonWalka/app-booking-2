@@ -15,23 +15,35 @@ const ContratInfoCard = ({ contrat, concert, template, lieu }) => {
 
   return (
     <Card 
-      className="mb-4"
+      className={`mb-4 ${styles.infoCard}`}
       title="Informations du contrat"
     >
-      <div className="row">
-        <div className="col-md-6">
-          <p><strong>Modèle utilisé :</strong> {template?.name || 'Non spécifié'}</p>
-          <p><strong>Date de génération :</strong> {contrat?.dateGeneration ? formatDate(contrat.dateGeneration) : 'Non spécifiée'}</p>
+      <div className={styles.infoGrid}>
+        <div className={styles.infoSection}>
+          <div className={styles.infoItem}>
+            <strong>Modèle utilisé :</strong> {template?.name || 'Non spécifié'}
+          </div>
+          <div className={styles.infoItem}>
+            <strong>Date de génération :</strong> {contrat?.dateGeneration ? formatDate(contrat.dateGeneration) : 'Non spécifiée'}
+          </div>
           {contrat?.dateEnvoi && (
-            <p><strong>Date d'envoi :</strong> {formatDate(contrat.dateEnvoi)}</p>
+            <div className={styles.infoItem}>
+              <strong>Date d'envoi :</strong> {formatDate(contrat.dateEnvoi)}
+            </div>
           )}
         </div>
         
-        <div className="col-md-6">
+        <div className={styles.infoSection}>
           <h5>Informations du concert</h5>
-          <p><strong>Date :</strong> {concert?.date ? formatDate(concert.date) : 'Non spécifiée'}</p>
-          <p><strong>Lieu :</strong> {concert?.lieuNom || lieu?.nom || 'Non spécifié'}</p>
-          <p><strong>Programmateur :</strong> {concert?.programmateurNom || 'Non spécifié'}</p>
+          <div className={styles.infoItem}>
+            <strong>Date :</strong> {concert?.date ? formatDate(concert.date) : 'Non spécifiée'}
+          </div>
+          <div className={styles.infoItem}>
+            <strong>Lieu :</strong> {concert?.lieuNom || lieu?.nom || 'Non spécifié'}
+          </div>
+          <div className={styles.infoItem}>
+            <strong>Programmateur :</strong> {concert?.programmateurNom || 'Non spécifié'}
+          </div>
         </div>
       </div>
     </Card>

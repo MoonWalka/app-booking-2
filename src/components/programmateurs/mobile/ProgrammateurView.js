@@ -4,8 +4,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Badge, Spinner } from 'react-bootstrap';
 import Card from '@/components/ui/Card';
 import { useProgrammateurDetails } from '@/hooks/programmateurs';
-import UnderConstruction from '@/components/common/UnderConstruction';
-import styles from './ProgrammateurDetails.module.css';
 
 /**
  * Composant d'affichage des détails d'un programmateur - Version Mobile

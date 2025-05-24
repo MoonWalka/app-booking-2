@@ -385,24 +385,18 @@ const ContratHTMLPreview = ({ data, title = 'Contrat' }) => {
   }, [data, title]);
   
   if (!htmlContent) {
-    return <div className="loading-preview">Chargement de l'aperçu...</div>;
+    return <div className={styles.loading}>Chargement de l'aperçu...</div>;
   }
   
   return (
-    <div className="html-preview-container" style={{ width: '100%', overflow: 'auto' }}>
-      <iframe
-        srcDoc={htmlContent}
-        title="Aperçu du contrat"
-        className="html-preview-frame"
-        style={{ 
-          width: '100%', 
-          height: '1000px',
-          border: '1px solid #ddd',
-          borderRadius: '4px',
-          backgroundColor: '#f0f0f0',
-          maxWidth: '100%'
-        }}
-      />
+    <div className={styles.container}>
+      <div className={styles.previewContainer}>
+        <iframe
+          srcDoc={htmlContent}
+          title="Aperçu du contrat"
+          className={styles.previewFrame}
+        />
+      </div>
     </div>
   );
 };

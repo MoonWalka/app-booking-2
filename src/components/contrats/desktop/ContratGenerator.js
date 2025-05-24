@@ -48,68 +48,78 @@ const ContratGenerator = ({ concert, programmateur, artiste, lieu }) => {
 
   if (templates.length === 0) {
     return (
-      <Card className="mb-4">
+      <Card className={`mb-4 ${styles.generatorSection}`}>
         <ContratNoTemplates />
       </Card>
     );
   }
 
   return (
-    <Card 
-      className="mb-4"
-      title="Génération de contrat"
-    >
-      {/* Affichage des alertes d'erreur/succès */}
-      <ContratAlerts 
-        showErrorAlert={showErrorAlert}
-        errorMessage={errorMessage}
-        showSuccessAlert={showSuccessAlert}
-        resetAlerts={resetAlerts}
-      />
-      
-      {/* Sélecteur de modèle de contrat */}
-      <ContratTemplateSelector 
-        templates={templates}
-        selectedTemplateId={selectedTemplateId}
-        handleTemplateChange={handleTemplateChange}
-        disabled={generatingPdf}
-      />
-      
-      {/* Aperçu du modèle sélectionné */}
-      {selectedTemplate && (
-        <>
-          <ContratTemplatePreview selectedTemplate={selectedTemplate} />
-          
-          {/* Actions pour générer le contrat */}
-          <ContratGenerationActions 
-            validateDataBeforeGeneration={validateDataBeforeGeneration}
-            selectedTemplate={selectedTemplate}
-            contratId={contratId}
-            concert={concert}
-            programmateur={programmateur}
-            artiste={artiste}
-            lieu={lieu}
-            entrepriseInfo={entrepriseInfo}
-            pdfUrl={pdfUrl}
-            setPdfUrl={setPdfUrl}
-            saveGeneratedContract={saveGeneratedContract}
-            showSuccess={showSuccess}
+    <div className={styles.contratGeneratorContainer}>
+      <Card 
+        className={`mb-4 ${styles.generatorSection}`}
+        title="Génération de contrat"
+      >
+        {/* Affichage des alertes d'erreur/succès */}
+        <div className={styles.sectionSpacer}>
+          <ContratAlerts 
+            showErrorAlert={showErrorAlert}
+            errorMessage={errorMessage}
+            showSuccessAlert={showSuccessAlert}
+            resetAlerts={resetAlerts}
           />
-        </>
-      )}
-      
-      {/* Panel de débogage */}
-      <ContratDebugPanel 
-        showDebugInfo={showDebugInfo}
-        toggleDebugInfo={toggleDebugInfo}
-        selectedTemplate={selectedTemplate}
-        concert={concert}
-        programmateur={programmateur}
-        artiste={artiste}
-        lieu={lieu}
-        entrepriseInfo={entrepriseInfo}
-      />
-    </Card>
+        </div>
+        
+        {/* Sélecteur de modèle de contrat */}
+        <div className={styles.sectionSpacer}>
+          <ContratTemplateSelector 
+            templates={templates}
+            selectedTemplateId={selectedTemplateId}
+            handleTemplateChange={handleTemplateChange}
+            disabled={generatingPdf}
+          />
+        </div>
+        
+        {/* Aperçu du modèle sélectionné */}
+        {selectedTemplate && (
+          <>
+            <div className={styles.sectionSpacer}>
+              <ContratTemplatePreview selectedTemplate={selectedTemplate} />
+            </div>
+            
+            {/* Actions pour générer le contrat */}
+            <div className={styles.actionsContainer}>
+              <ContratGenerationActions 
+                validateDataBeforeGeneration={validateDataBeforeGeneration}
+                selectedTemplate={selectedTemplate}
+                contratId={contratId}
+                concert={concert}
+                programmateur={programmateur}
+                artiste={artiste}
+                lieu={lieu}
+                entrepriseInfo={entrepriseInfo}
+                pdfUrl={pdfUrl}
+                setPdfUrl={setPdfUrl}
+                saveGeneratedContract={saveGeneratedContract}
+                showSuccess={showSuccess}
+              />
+            </div>
+          </>
+        )}
+        
+        {/* Panel de débogage */}
+        <ContratDebugPanel 
+          showDebugInfo={showDebugInfo}
+          toggleDebugInfo={toggleDebugInfo}
+          selectedTemplate={selectedTemplate}
+          concert={concert}
+          programmateur={programmateur}
+          artiste={artiste}
+          lieu={lieu}
+          entrepriseInfo={entrepriseInfo}
+        />
+      </Card>
+    </div>
   );
 };
 

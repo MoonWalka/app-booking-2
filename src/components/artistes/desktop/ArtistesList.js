@@ -100,7 +100,7 @@ const ArtistesList = () => {
   // État de chargement
   if (loading && artistes.length === 0) {
     return (
-      <Container className="py-5 text-center">
+      <Container className={styles.spinnerContainer}>
         <Spinner animation="border" role="status" variant="primary" className="me-2" />
         <span>Chargement des artistes...</span>
       </Container>
@@ -123,7 +123,7 @@ const ArtistesList = () => {
   const noResults = searchTerm && filteredArtistes.length === 0;
 
   return (
-    <Container className="py-4">
+    <Container className={styles.artistesContainer}>
       {/* En-tête avec titre et bouton d'ajout */}
       <ArtistesListHeader onAddClick={handleAddClick} />
       

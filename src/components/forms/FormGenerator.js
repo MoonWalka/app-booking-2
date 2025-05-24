@@ -6,10 +6,7 @@ import {
   updateDoc,
   doc,
   getDoc,
-  serverTimestamp,
-  query,
-  where,
-  getDocs
+  serverTimestamp
 } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid';
 import Card from '@/components/ui/Card';

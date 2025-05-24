@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { 
   collection, 
   query, 
-  where, 
   orderBy, 
   startAfter, 
   limit, 

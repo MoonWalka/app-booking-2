@@ -57,7 +57,23 @@ const ConcertView = ({ id: propId, detailsHook }) => {
     isEditMode: detailsEditMode
   } = detailsHook;
 
-  // Optionnel : on peut utiliser detailsHook.getStatusInfo, sinon fallback
+  // Hook de statut avancé pour fonctionnalités sophistiquées (NOUVEAU)
+  const concertStatus = useConcertStatus();
+  
+  // Système de statut intelligent combinant les deux hooks (NOUVEAU)
+  const getAdvancedStatusInfo = () => {
+    const basicStatus = getStatusInfo();
+    const advancedStatus = concertStatus.getStatusDetails?.(concert?.statut);
+    
+    return {
+      ...basicStatus,
+      ...advancedStatus,
+      // Combinaison intelligente des informations
+      statusBadge: advancedStatus?.badge || basicStatus?.badge,
+      actionButtons: advancedStatus?.actions || [],
+      urgencyLevel: advancedStatus?.urgency || 'normal'
+    };
+  };
 
   // Fonction pour passer en mode édition
   const handleEdit = () => {
@@ -102,7 +118,7 @@ const ConcertView = ({ id: propId, detailsHook }) => {
   }
 
   // Utiliser soit getStatusInfo du hook useConcertDetails ou du hook useConcertStatus
-  const statusInfo = getStatusInfo();
+  const statusInfo = getAdvancedStatusInfo();
 
   // Ajout log ouverture modale suppression
   const handleOpenDeleteModal = () => {
@@ -218,8 +234,9 @@ const ConcertView = ({ id: propId, detailsHook }) => {
           concertNom={concert.titre || formatDate(concert.date)}
           onClose={handleCloseDeleteModal}
           onConfirm={() => {
-            console.log('[LOG][ConcertView] onConfirm suppression appelé');
-            detailsHook.handleDeleteClick();
+            console.log('[LOG][ConcertView] onConfirm suppression appelé - utilisation directe de handleDelete');
+            handleDelete(); // Utilisation directe du handleDelete du hook
+            setShowDeleteConfirm(false); // Fermer la modale après suppression
           }}
           isDeleting={isSubmitting}
         />

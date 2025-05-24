@@ -92,6 +92,24 @@ const ArtistesList = () => {
     setSortBy(value);
   };
 
+  // Gestion du changement de direction de tri (NOUVEAU)
+  const handleSortDirectionToggle = () => {
+    const newDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+    setSortDirection(newDirection);
+  };
+
+  // Réinitialisation de tous les filtres (NOUVEAU)
+  const handleResetFilters = () => {
+    resetFilters();
+    setSearchTerm('');
+    setShowDropdown(false);
+  };
+
+  // Vérifier si des filtres sont actifs (NOUVEAU)
+  const hasActiveFilters = () => {
+    return searchTerm || (filters && Object.values(filters).some(f => f && f !== 'all'));
+  };
+
   // Création d'un nouvel artiste depuis la barre de recherche
   const handleCreateArtiste = () => {
     navigate('/artistes/nouveau', { state: { initialNom: searchTerm } });
@@ -140,6 +158,9 @@ const ArtistesList = () => {
         sortBy={sortBy}
         onSortChange={handleSortChange}
         sortDirection={sortDirection}
+        onSortDirectionToggle={handleSortDirectionToggle}
+        onResetFilters={handleResetFilters}
+        hasActiveFilters={hasActiveFilters()}
         showDropdown={showDropdown}
         searchResults={filteredArtistes}
         noResults={noResults}

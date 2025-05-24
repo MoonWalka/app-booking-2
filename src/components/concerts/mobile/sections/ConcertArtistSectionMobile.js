@@ -75,7 +75,9 @@ const ConcertArtistSectionMobile = ({
                           <div className={styles.resultName}>{result.nom}</div>
                           {result.genre && (
                             <div className={styles.resultGenre}>
-                              {result.genre}
+                              <Badge bg="secondary" className={styles.genreBadge}>
+                                {result.genre}
+                              </Badge>
                             </div>
                           )}
                         </ListGroup.Item>
@@ -105,7 +107,9 @@ const ConcertArtistSectionMobile = ({
                       {selectedArtiste.genre && (
                         <div className={styles.artisteGenre}>
                           <i className="bi bi-music-note-beamed me-1"></i>
-                          {selectedArtiste.genre}
+                          <Badge bg="primary" className={styles.genreBadge}>
+                            {selectedArtiste.genre}
+                          </Badge>
                         </div>
                       )}
                       {selectedArtiste.description && (
@@ -151,7 +155,9 @@ const ConcertArtistSectionMobile = ({
               {artiste.genre && (
                 <div className={styles.artisteDetail}>
                   <i className="bi bi-music-note-beamed me-2"></i>
-                  <span>{artiste.genre}</span>
+                  <Badge bg="info" className={styles.genreBadge}>
+                    {artiste.genre}
+                  </Badge>
                 </div>
               )}
 

@@ -12,12 +12,31 @@ function ContratTemplateEditor(props) {
   const { isModal, ...otherProps } = props;
   const { isMobile } = useResponsive();
   
+  // Adapter l'interface selon le type d'appareil (NOUVEAU)
+  const getResponsiveConfig = () => {
+    if (isMobile) {
+      return {
+        isModalContext: true, // Forcer le mode modal sur mobile pour une meilleure UX
+        compactMode: true,
+        showFullscreen: true
+      };
+    }
+    return {
+      isModalContext: isModal === true,
+      compactMode: false,
+      showFullscreen: false
+    };
+  };
+
+  const responsiveConfig = getResponsiveConfig();
+  
   // Pour l'instant, utiliser la version desktop dans tous les cas
-  // avec une propriété pour indiquer si on est en mode modal
+  // avec des propriétés adaptées au type d'appareil
   return (
     <DesktopContratTemplateEditor 
       {...otherProps} 
-      isModalContext={isModal === true}
+      {...responsiveConfig}
+      isMobileDevice={isMobile}
     />
   );
 }

@@ -233,29 +233,6 @@ const useFormValidationData = (concertId) => {
     }
   }, [concertId]);
 
-  // Fonctions utilitaires
-  const formatDate = (dateString) => {
-    if (!dateString) return 'Non spécifiée';
-    
-    // Si c'est un timestamp Firestore
-    if (dateString && dateString.seconds) {
-      return new Date(dateString.seconds * 1000).toLocaleDateString('fr-FR', { 
-        day: '2-digit', 
-        month: '2-digit', 
-        year: 'numeric' 
-      });
-    }
-    
-    // Sinon, traiter comme une chaîne de date standard
-    const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
-    return new Date(dateString).toLocaleDateString('fr-FR', options);
-  };
-
-  const formatCurrency = (value) => {
-    if (!value) return '0,00 €';
-    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(value);
-  };
-
   return {
     formData,
     formId,
@@ -270,9 +247,7 @@ const useFormValidationData = (concertId) => {
     lieu,
     contactFields,
     structureFields,
-    lieuFields,
-    formatDate,
-    formatCurrency
+    lieuFields
   };
 };
 

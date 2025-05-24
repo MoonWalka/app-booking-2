@@ -253,6 +253,10 @@ const ArtisteFormDesktop = () => {
   const [loading, setLoading] = useState(!!id && id !== 'nouveau');
   const [initialData, setInitialData] = useState({});
   
+  // État pour la navigation entre étapes
+  const [currentStep, setCurrentStep] = useState(0);
+  const [formData, setFormData] = useState({});
+  
   // Ajout du hook de suppression optimisé
   const {
     isDeleting,
@@ -265,7 +269,9 @@ const ArtisteFormDesktop = () => {
         try {
           const artisteDoc = await getDoc(doc(db, 'artistes', id));
           if (artisteDoc.exists()) {
-            setInitialData(artisteDoc.data());
+            const data = artisteDoc.data();
+            setInitialData(data);
+            setFormData(data); // Initialiser le formulaire avec les données existantes
           }
         } catch (error) {
           console.error('Erreur lors de la récupération de l\'artiste:', error);
@@ -284,6 +290,7 @@ const ArtisteFormDesktop = () => {
     try {
       // Fusionner les données de toutes les étapes
       const artisteData = {
+        ...formData,
         ...data,
         updatedAt: Timestamp.now()
       };
@@ -309,6 +316,25 @@ const ArtisteFormDesktop = () => {
     navigate('/artistes');
   };
   
+  // Navigation entre étapes
+  const handleNext = (stepData) => {
+    const updatedFormData = { ...formData, ...stepData };
+    setFormData(updatedFormData);
+    
+    if (currentStep < steps.length - 1) {
+      setCurrentStep(currentStep + 1);
+    } else {
+      // Dernière étape, sauvegarder
+      handleComplete(updatedFormData);
+    }
+  };
+  
+  const handleBack = () => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+  
   if (loading) {
     return <div className={styles.loadingIndicator}>Chargement...</div>;
   }
@@ -328,6 +354,9 @@ const ArtisteFormDesktop = () => {
       component: MembersStep 
     }
   ];
+  
+  // Obtenir le composant de l'étape actuelle
+  const CurrentStepComponent = steps[currentStep].component;
   
   return (
     <div className={styles.artisteFormDesktop}>
@@ -355,17 +384,59 @@ const ArtisteFormDesktop = () => {
         )}
       </div>
       
-      {/* Remplaçons le composant StepNavigation */}
+      {/* Navigation par étapes */}
+      <div className={styles.stepNavigation}>
+        <div className={styles.stepIndicators}>
+          {steps.map((step, index) => (
+            <div 
+              key={index}
+              className={`${styles.stepIndicator} ${index === currentStep ? styles.active : ''} ${index < currentStep ? styles.completed : ''}`}
+            >
+              <div className={styles.stepNumber}>
+                {index < currentStep ? (
+                  <i className="bi bi-check"></i>
+                ) : (
+                  index + 1
+                )}
+              </div>
+              <div className={styles.stepTitle}>{step.title}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      {/* Contenu de l'étape actuelle */}
       <div className={styles.stepFormContainer}>
-        <h2>Formulaire d'artiste</h2>
-        <p>Ce formulaire est en cours de développement. Utilisez la version desktop pour le moment.</p>
-        <Button
-          className="tc-btn tc-btn-primary"
-          variant="primary"
-          onClick={() => navigate('/artistes')}
-        >
-          Retour à la liste
-        </Button>
+        <CurrentStepComponent
+          data={formData}
+          onNext={handleNext}
+          onBack={currentStep > 0 ? handleBack : null}
+        />
+        
+        {/* Actions globales */}
+        <div className={styles.formActions}>
+          {currentStep > 0 && (
+            <Button
+              type="button"
+              variant="outline-secondary"
+              className="tc-btn tc-btn-outline-secondary me-2"
+              onClick={handleBack}
+            >
+              <i className="bi bi-arrow-left me-2"></i>
+              Précédent
+            </Button>
+          )}
+          
+          <Button
+            type="button"
+            variant="outline-danger"
+            className="tc-btn tc-btn-outline-danger"
+            onClick={handleCancel}
+          >
+            <i className="bi bi-x-lg me-2"></i>
+            Annuler
+          </Button>
+        </div>
       </div>
     </div>
   );

@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { db, getDoc, doc, query, collection, where, getDocs } from '@/firebaseInit';
-import Button from '@ui/Button';
+import { db, query, where, collection, getDocs, doc, getDoc } from '@/firebaseInit';
+import Button from '@/components/ui/Button';
+import Card from '@/components/ui/Card';
 import styles from './ProgrammateurLieuxSection.module.css';
-import Card from '../../../components/ui/Card';
 
 /**
  * Composant pour afficher les lieux associés à un programmateur
@@ -27,11 +27,27 @@ const ProgrammateurLieuxSection = ({ programmateur, lieux: lieuxProp = [], isEdi
     });
   }, [programmateur, lieuxProp]);
   
-  // FIX: Stratégie robuste pour déterminer la source des lieux
-  const hasValidLieuxInProp = Array.isArray(lieuxProp) && lieuxProp.length > 0;
-  const hasValidLocalLieux = Array.isArray(localLieux) && localLieux.length > 0;
-  const lieux = hasValidLieuxInProp ? lieuxProp : localLieux;
-  const hasLieux = lieux?.length > 0;
+  // NOUVEAU: Mémoriser les validations pour optimiser les performances - Finalisation intelligente
+  const hasValidLieuxInProp = useMemo(() => 
+    Array.isArray(lieuxProp) && lieuxProp.length > 0, 
+    [lieuxProp]
+  );
+  
+  const hasValidLocalLieux = useMemo(() => 
+    Array.isArray(localLieux) && localLieux.length > 0, 
+    [localLieux]
+  );
+  
+  // NOUVEAU: Mémoriser la source de lieux active pour éviter recalculs
+  const lieux = useMemo(() => 
+    hasValidLieuxInProp ? lieuxProp : localLieux, 
+    [hasValidLieuxInProp, lieuxProp, localLieux]
+  );
+  
+  const hasLieux = useMemo(() => 
+    lieux?.length > 0, 
+    [lieux]
+  );
 
   // LOGS DE DIAGNOSTIC: Vérifier quelle source de lieux est utilisée
   useEffect(() => {
@@ -40,7 +56,10 @@ const ProgrammateurLieuxSection = ({ programmateur, lieux: lieuxProp = [], isEdi
       lieuxFinal: lieux?.length || 0,
       hasLieux,
       hasValidLieuxInProp,
-      hasValidLocalLieux
+      hasValidLocalLieux,
+      // NOUVEAU: Métadonnées de diagnostic avancées
+      timestamp: new Date().toISOString(),
+      cacheStatus: hasValidLieuxInProp ? 'using-prop' : 'using-local'
     });
   }, [lieuxProp, localLieux, lieux, hasLieux, hasValidLieuxInProp, hasValidLocalLieux]);
 
@@ -129,7 +148,7 @@ const ProgrammateurLieuxSection = ({ programmateur, lieux: lieuxProp = [], isEdi
     };
 
     loadLieux();
-  }, [programmateur, lieuxProp]);
+  }, [programmateur, lieuxProp, hasValidLieuxInProp]);
 
   // Contenu principal de la section
   const sectionContent = (

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import styles from './VariablesPanel.module.css';
 
 /**
@@ -23,8 +23,8 @@ const VariablesPanel = ({
   // Références pour la gestion de clic à l'extérieur (logique du hook)
   const panelRef = useRef(null);
 
-  // Variables pré-définies intégrées du hook useVariablesDropdown
-  const predefinedVariables = {
+  // Variables pré-définies intégrées du hook useVariablesDropdown - NOUVEAU: Mémorisées pour optimisation
+  const predefinedVariables = useMemo(() => ({
     body: [
       { label: "Nom du programmateur", value: "programmateur_nom" },
       { label: "Structure du programmateur", value: "programmateur_structure" },
@@ -62,7 +62,7 @@ const VariablesPanel = ({
       { label: "Année actuelle", value: "date_annee" },
       { label: "Date complète", value: "date_complete" }
     ]
-  };
+  }), []); // Mémorisé sans dépendances car les variables sont statiques
 
   // Catégories de variables
   const categories = [
@@ -92,16 +92,31 @@ const VariablesPanel = ({
     };
   }, [isVisible, buttonRef]);
 
-  // Fusionner les variables personnalisées avec les pré-définies
-  const getAllVariables = () => {
+  // NOUVEAU: Mémoriser getAllVariables pour éviter des recalculs inutiles - Finalisation intelligente
+  const getAllVariables = useCallback(() => {
     const customVars = variables || [];
     const predefined = selectedCategory === 'all' 
       ? [...predefinedVariables.body, ...predefinedVariables.headerFooter, ...predefinedVariables.signature]
         .filter((item, index, arr) => arr.findIndex(i => i.value === item.value) === index) // dédoublonner
       : predefinedVariables[selectedCategory] || [];
     
-    return [...customVars, ...predefined];
-  };
+    // NOUVEAU: Ajouter cache de métadonnées pour optimisation avancée
+    const allVars = [...customVars, ...predefined];
+    
+    // NOUVEAU: Ajouter statistiques de variables pour interface améliorée
+    const stats = {
+      total: allVars.length,
+      custom: customVars.length,
+      predefined: predefined.length,
+      category: selectedCategory,
+      lastUpdate: Date.now()
+    };
+    
+    // Attacher les métadonnées pour un usage ultérieur
+    allVars._metadata = stats;
+    
+    return allVars;
+  }, [variables, selectedCategory, predefinedVariables]);
 
   // Filtrer les variables selon le terme de recherche et la catégorie
   useEffect(() => {
@@ -117,9 +132,19 @@ const VariablesPanel = ({
           variable.label?.toLowerCase().includes(searchLower)
         );
       });
+      
+      // NOUVEAU: Copier les métadonnées vers les résultats filtrés
+      if (allVars._metadata) {
+        filtered._metadata = {
+          ...allVars._metadata,
+          filtered: filtered.length,
+          searchTerm: searchTerm
+        };
+      }
+      
       setFilteredVariables(filtered);
     }
-  }, [searchTerm, variables, selectedCategory]);
+  }, [searchTerm, variables, selectedCategory, getAllVariables]); // NOUVEAU: Dépendance corrigée
 
   const handleTogglePanel = () => {
     setIsVisible(!isVisible);

@@ -57,8 +57,38 @@ class CacheService {
     const cacheKey = `${collection}/${id}`;
     const collectionCache = this.entityCache[collection];
     
+    // Initialiser le logging des accès si pas encore fait
+    if (!this.accessLog) {
+      this.accessLog = {}; // Log des accès par clé
+      this.debugMode = process.env.NODE_ENV === 'development';
+    }
+    
+    // Enregistrer l'accès pour le debugging
+    if (!this.accessLog[cacheKey]) {
+      this.accessLog[cacheKey] = {
+        collection,
+        id,
+        firstAccess: Date.now(),
+        lastAccess: Date.now(),
+        accessCount: 0,
+        hitCount: 0,
+        missCount: 0
+      };
+    }
+    
+    // Mettre à jour les statistiques d'accès
+    this.accessLog[cacheKey].lastAccess = Date.now();
+    this.accessLog[cacheKey].accessCount++;
+    
     if (!collectionCache || !collectionCache[id]) {
       this.stats.misses++;
+      this.accessLog[cacheKey].missCount++;
+      
+      // Debugging avancé en mode développement
+      if (this.debugMode) {
+        console.log(`[CACHE MISS] ${cacheKey} - Accès #${this.accessLog[cacheKey].accessCount}`);
+      }
+      
       return null;
     }
     
@@ -69,11 +99,27 @@ class CacheService {
     if (Date.now() - cachedItem.timestamp > cacheDuration) {
       // Cache expiré
       this.stats.misses++;
+      this.accessLog[cacheKey].missCount++;
+      
+      // Logging de l'expiration avec détails
+      if (this.debugMode) {
+        const expired = Date.now() - cachedItem.timestamp;
+        console.log(`[CACHE EXPIRED] ${cacheKey} - Expiré depuis ${expired}ms (limite: ${cacheDuration}ms)`);
+      }
+      
       return null;
     }
     
     // Cache hit
     this.stats.hits++;
+    this.accessLog[cacheKey].hitCount++;
+    
+    // Logging du succès avec métriques
+    if (this.debugMode) {
+      const hitRate = ((this.accessLog[cacheKey].hitCount / this.accessLog[cacheKey].accessCount) * 100).toFixed(1);
+      console.log(`[CACHE HIT] ${cacheKey} - Taux de succès: ${hitRate}% (${this.accessLog[cacheKey].hitCount}/${this.accessLog[cacheKey].accessCount})`);
+    }
+    
     return cachedItem.data;
   }
   
@@ -440,6 +486,176 @@ class CacheService {
       ...this.stats,
       hitRate: `${hitRate}%`,
       timeSinceCleanup: Math.round((Date.now() - this.stats.lastCleanup) / 1000)
+    };
+  }
+
+  // NOUVEAU: Méthodes de debugging avancé - Finalisation intelligente
+
+  /**
+   * Retourne les statistiques détaillées d'accès par clé
+   * @param {string} collection - Filtrer par collection (optionnel)
+   * @returns {Object} - Statistiques détaillées
+   */
+  getAccessStats(collection = null) {
+    if (!this.accessLog) return { total: 0, keys: [] };
+    
+    const keys = Object.keys(this.accessLog);
+    const filteredKeys = collection 
+      ? keys.filter(key => this.accessLog[key].collection === collection)
+      : keys;
+    
+    const stats = filteredKeys.map(cacheKey => ({
+      cacheKey,
+      ...this.accessLog[cacheKey],
+      hitRate: ((this.accessLog[cacheKey].hitCount / this.accessLog[cacheKey].accessCount) * 100).toFixed(1),
+      avgAccessTime: this.accessLog[cacheKey].accessCount > 0 
+        ? Math.round((this.accessLog[cacheKey].lastAccess - this.accessLog[cacheKey].firstAccess) / this.accessLog[cacheKey].accessCount)
+        : 0
+    }));
+    
+    // Trier par taux de hit décroissant
+    stats.sort((a, b) => parseFloat(b.hitRate) - parseFloat(a.hitRate));
+    
+    return {
+      total: filteredKeys.length,
+      totalAccesses: stats.reduce((sum, stat) => sum + stat.accessCount, 0),
+      avgHitRate: stats.length > 0 
+        ? (stats.reduce((sum, stat) => sum + parseFloat(stat.hitRate), 0) / stats.length).toFixed(1)
+        : '0',
+      keys: stats
+    };
+  }
+
+  /**
+   * Identifie les clés avec de mauvaises performances
+   * @param {number} minAccesses - Nombre minimum d'accès pour être considéré
+   * @param {number} maxHitRate - Taux de hit maximum pour être considéré comme problématique
+   * @returns {Array} - Liste des clés problématiques
+   */
+  getProblematicKeys(minAccesses = 5, maxHitRate = 30) {
+    if (!this.accessLog) return [];
+    
+    return Object.keys(this.accessLog)
+      .filter(cacheKey => {
+        const log = this.accessLog[cacheKey];
+        const hitRate = (log.hitCount / log.accessCount) * 100;
+        return log.accessCount >= minAccesses && hitRate <= maxHitRate;
+      })
+      .map(cacheKey => ({
+        cacheKey,
+        ...this.accessLog[cacheKey],
+        hitRate: ((this.accessLog[cacheKey].hitCount / this.accessLog[cacheKey].accessCount) * 100).toFixed(1),
+        recommendation: this.accessLog[cacheKey].hitCount === 0 
+          ? 'Considérer la pré-charge ou l\'invalidation de cette clé'
+          : 'Vérifier la durée de cache ou la logique d\'invalidation'
+      }))
+      .sort((a, b) => a.accessCount - b.accessCount);
+  }
+
+  /**
+   * Retourne un rapport de performance détaillé
+   * @returns {Object} - Rapport complet
+   */
+  getPerformanceReport() {
+    const globalStats = this.getStats();
+    const accessStats = this.getAccessStats();
+    const problematicKeys = this.getProblematicKeys();
+    
+    // Top 10 des clés les plus utilisées
+    const topKeys = accessStats.keys.slice(0, 10);
+    
+    // Collections les plus utilisées
+    const collectionStats = {};
+    Object.values(this.accessLog || {}).forEach(log => {
+      if (!collectionStats[log.collection]) {
+        collectionStats[log.collection] = { accessCount: 0, hitCount: 0, keys: 0 };
+      }
+      collectionStats[log.collection].accessCount += log.accessCount;
+      collectionStats[log.collection].hitCount += log.hitCount;
+      collectionStats[log.collection].keys++;
+    });
+    
+    const collectionPerformance = Object.keys(collectionStats).map(collection => ({
+      collection,
+      ...collectionStats[collection],
+      hitRate: ((collectionStats[collection].hitCount / collectionStats[collection].accessCount) * 100).toFixed(1)
+    })).sort((a, b) => b.accessCount - a.accessCount);
+    
+    return {
+      timestamp: new Date().toISOString(),
+      globalStats,
+      accessStats: {
+        totalKeys: accessStats.total,
+        totalAccesses: accessStats.totalAccesses,
+        avgHitRate: accessStats.avgHitRate + '%'
+      },
+      topKeys,
+      collectionPerformance,
+      problematicKeys,
+      recommendations: this.generateRecommendations(problematicKeys, collectionPerformance)
+    };
+  }
+
+  /**
+   * Génère des recommandations d'optimisation
+   * @param {Array} problematicKeys - Clés problématiques
+   * @param {Array} collectionPerformance - Performance par collection
+   * @returns {Array} - Liste de recommandations
+   */
+  generateRecommendations(problematicKeys, collectionPerformance) {
+    const recommendations = [];
+    
+    if (problematicKeys.length > 0) {
+      recommendations.push({
+        type: 'performance',
+        priority: 'high',
+        message: `${problematicKeys.length} clés ont un faible taux de hit. Considérer l'ajustement des durées de cache.`,
+        keys: problematicKeys.slice(0, 5).map(k => k.cacheKey)
+      });
+    }
+    
+    const lowPerformanceCollections = collectionPerformance.filter(c => parseFloat(c.hitRate) < 50);
+    if (lowPerformanceCollections.length > 0) {
+      recommendations.push({
+        type: 'configuration',
+        priority: 'medium',
+        message: `Collections avec faible performance : ${lowPerformanceCollections.map(c => c.collection).join(', ')}`,
+        suggestion: 'Vérifier CACHE_DURATIONS ou implémenter une stratégie de pré-charge'
+      });
+    }
+    
+    const totalSize = this.stats.size;
+    if (totalSize > this.MAX_CACHE_ITEMS * 0.8) {
+      recommendations.push({
+        type: 'memory',
+        priority: 'medium',
+        message: `Cache proche de la limite (${totalSize}/${this.MAX_CACHE_ITEMS}). Considérer l'augmentation de MAX_CACHE_ITEMS.`
+      });
+    }
+    
+    return recommendations;
+  }
+
+  /**
+   * Active ou désactive le mode debug
+   * @param {boolean} enabled - Activer le debug
+   */
+  setDebugMode(enabled) {
+    this.debugMode = enabled;
+    console.log(`[CacheService] Mode debug ${enabled ? 'activé' : 'désactivé'}`);
+  }
+
+  /**
+   * Exporte les logs d'accès pour analyse externe
+   * @returns {Object} - Logs formatés pour export
+   */
+  exportAccessLogs() {
+    return {
+      exportTimestamp: new Date().toISOString(),
+      cacheService: 'TourCraft Cache Service',
+      version: '1.0',
+      accessLogs: this.accessLog || {},
+      globalStats: this.getStats()
     };
   }
 }

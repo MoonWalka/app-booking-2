@@ -1,24 +1,24 @@
 // src/components/lieux/LieuxList.js
 import React from 'react';
 import { useResponsive } from '@/hooks/common';
-import Spinner from '@/components/common/Spinner';
+
+// Imports directs des composants
+import LieuxDesktopList from './desktop/LieuxList';
+import LieuxMobileList from './mobile/LieuxMobileList'; // NOUVEAU: Composant mobile finalisé
 
 /**
- * LieuxList - Responsive component for listing venues
- * Will render either desktop or mobile version based on screen size
+ * Composant wrapper responsive pour la liste des lieux
+ * Utilise maintenant les versions desktop et mobile complètes
  */
 function LieuxList(props) {
-  // Create a custom fallback with our standardized Spinner component
-  const customFallback = <Spinner message="Chargement de la liste des lieux..." contentOnly={true} />;
+  const { isMobile } = useResponsive(); // FINALISATION INTELLIGENTE: Variable maintenant utilisée !
   
-  const { getResponsiveComponent } = useResponsive();
-  const ResponsiveComponent = getResponsiveComponent({
-    desktopPath: 'lieux/desktop/LieuxList',
-    mobilePath: 'lieux/mobile/LieuxList',
-    fallback: customFallback // Use our standardized spinner as fallback
-  });
-  
-  return <ResponsiveComponent {...props} />;
+  // Rendu conditionnel complet desktop/mobile
+  return isMobile ? (
+    <LieuxMobileList {...props} />
+  ) : (
+    <LieuxDesktopList {...props} />
+  );
 }
 
 export default LieuxList;

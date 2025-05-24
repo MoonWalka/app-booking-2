@@ -1,5 +1,5 @@
 // src/components/programmateurs/mobile/ProgrammateurForm.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {  collection, doc, getDoc, setDoc, serverTimestamp  } from '@/firebaseInit';
 import { db } from '../../../firebaseInit';
@@ -183,7 +183,7 @@ const AddressStep = ({ data, onNext, onBack }) => {
   const { searchAddress } = useLocationIQ();
   
   // Fonction pour rechercher des adresses
-  const handleAddressSearch = async () => {
+  const handleAddressSearch = useCallback(async () => {
     if (searchTerm.length < 3) return;
     
     setSearching(true);
@@ -195,7 +195,7 @@ const AddressStep = ({ data, onNext, onBack }) => {
     } finally {
       setSearching(false);
     }
-  };
+  }, [searchTerm, searchAddress]);
   
   // Effet pour déclencher la recherche
   useEffect(() => {
@@ -206,7 +206,7 @@ const AddressStep = ({ data, onNext, onBack }) => {
     }, 500);
     
     return () => clearTimeout(timer);
-  }, [searchTerm]);
+  }, [searchTerm, handleAddressSearch]);
   
   // Sélectionner une adresse dans les résultats
   const handleSelectAddress = (result) => {

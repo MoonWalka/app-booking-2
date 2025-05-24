@@ -1,16 +1,24 @@
 // src/components/artistes/ArtisteForm.js
 import React from 'react';
 import { useResponsive } from '@/hooks/common';
-;
 
+// Imports directs des composants
+import ArtistesDesktopForm from './desktop/ArtisteForm';
+import ArtistesMobileForm from './mobile/ArtisteForm';
+
+/**
+ * Composant wrapper responsive pour le formulaire d'artiste
+ * Affiche la version desktop ou mobile selon la taille d'écran
+ */
 function ArtisteForm(props) {
-  const { getResponsiveComponent } = useResponsive();
-  const ResponsiveComponent = getResponsiveComponent({
-    desktopPath: 'artistes/desktop/ArtisteForm',
-    mobilePath: 'artistes/mobile/ArtisteForm'
-  });
+  const { isMobile } = useResponsive();
   
-  return <ResponsiveComponent {...props} />;
+  // Rendu conditionnel simple
+  return isMobile ? (
+    <ArtistesMobileForm {...props} />
+  ) : (
+    <ArtistesDesktopForm {...props} />
+  );
 }
 
 export default ArtisteForm;

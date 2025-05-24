@@ -477,4 +477,5 @@ class FirestoreService {
 }
 
 // Exporter une instance unique du service
-export default new FirestoreService();
+const firestoreService = new FirestoreService();
+export default firestoreService;

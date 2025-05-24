@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { 
   collection, 
   query, 
@@ -54,45 +54,8 @@ export const useEntitySearch = (options) => {
   const searchTimeoutRef = useRef(null);
   const dropdownRef = useRef(null);
 
-  // Effet pour la recherche avec debounce
-  useEffect(() => {
-    if (searchTimeoutRef.current) {
-      clearTimeout(searchTimeoutRef.current);
-    }
-    
-    if (searchTerm.length >= 2) {
-      setIsSearching(true);
-      searchTimeoutRef.current = setTimeout(() => {
-        performSearch();
-      }, 300);
-    } else {
-      setResults([]);
-      setIsSearching(false);
-    }
-    
-    return () => {
-      if (searchTimeoutRef.current) {
-        clearTimeout(searchTimeoutRef.current);
-      }
-    };
-  }, [searchTerm, entityType]);
-
-  // Gestionnaire pour les clics en dehors du dropdown
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setShowResults(false);
-      }
-    };
-    
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  // Fonction de recherche dans Firestore
-  const performSearch = async () => {
+  // NOUVEAU: Fonction de recherche stabilisée avec useCallback - Finalisation intelligente
+  const performSearch = useCallback(async () => {
     try {
       // Si une fonction de recherche personnalisée est fournie, l'utiliser
       if (customSearchFunction) {
@@ -181,7 +144,44 @@ export const useEntitySearch = (options) => {
     } finally {
       setIsSearching(false);
     }
-  };
+  }, [searchTerm, entityType, customSearchFunction, searchField, maxResults, additionalSearchFields, filterResults]);
+
+  // Effet pour déclencher la recherche avec debounce - NOUVEAU: Dépendance performSearch ajoutée
+  useEffect(() => {
+    if (!searchTerm.trim()) {
+      setResults([]);
+      setShowResults(false);
+      setIsSearching(false);
+      return;
+    }
+    
+    setIsSearching(true);
+    
+    // Debounce de 300ms
+    searchTimeoutRef.current = setTimeout(() => {
+      performSearch();
+    }, 300);
+    
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, [searchTerm, entityType, performSearch]); // NOUVEAU: performSearch ajouté aux dépendances
+
+  // Gestionnaire pour les clics en dehors du dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowResults(false);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   // Fonction pour sélectionner une entité
   const handleSelect = (entity) => {

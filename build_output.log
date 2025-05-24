@@ -1,0 +1,119 @@
+
+> app-booking@0.1.0 build
+> craco build
+
+Creating an optimized production build...
+Compiled with warnings.
+
+[eslint] 
+src/components/concerts/desktop/ConcertLocationSection.js
+  Line 197:17:  <iframe> elements must have a unique title property  jsx-a11y/iframe-has-title
+
+src/components/lieux/LieuForm.js
+  Line 14:11:  'isMobile' is assigned a value but never used  no-unused-vars
+
+src/components/lieux/LieuxList.js
+  Line 14:11:  'isMobile' is assigned a value but never used  no-unused-vars
+
+src/components/programmateurs/mobile/ProgrammateurForm.js
+  Line 209:6:  React Hook useEffect has a missing dependency: 'handleAddressSearch'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/components/programmateurs/sections/StructureInfoSection.js
+  Line 61:6:  React Hook useEffect has a missing dependency: 'searchStructure'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 85:6:  React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array           react-hooks/exhaustive-deps
+
+src/hooks/common/useFirestoreSubscription.js
+  Line 184:21:  The ref value 'instanceRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'instanceRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+  Line 187:6:   React Hook useEffect has a missing dependency: 'refresh'. Either include it or remove the dependency array                                                                                                                                                             react-hooks/exhaustive-deps
+  Line 187:55:  React Hook useEffect has a complex expression in the dependency array. Extract it to a separate variable so it can be statically checked                                                                                                                               react-hooks/exhaustive-deps
+
+src/hooks/common/useGenericEntityDelete.js
+  Line 48:9:  The 'checkRelatedEntities' function makes the dependencies of useCallback Hook (at line 256) change on every render. To fix this, wrap the definition of 'checkRelatedEntities' in its own useCallback() Hook  react-hooks/exhaustive-deps
+
+src/hooks/common/useGenericEntityDetails.js
+  Line 144:6:   React Hook useEffect has a missing dependency: 'collectionName'. Either include it or remove the dependency array                                                                                                                                                      react-hooks/exhaustive-deps
+  Line 172:6:   React Hook useCallback has a missing dependency: 'loadAllRelatedEntities'. Either include it or remove the dependency array                                                                                                                                            react-hooks/exhaustive-deps
+  Line 308:6:   React Hook useCallback has missing dependencies: 'loadAllRelatedEntities' and 'realtime'. Either include them or remove the dependency array                                                                                                                           react-hooks/exhaustive-deps
+  Line 391:6:   React Hook useCallback has a missing dependency: 'loadRelatedEntity'. Either include it or remove the dependency array                                                                                                                                                 react-hooks/exhaustive-deps
+  Line 814:46:  The ref value 'instanceRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'instanceRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+src/hooks/common/useGenericEntityForm.js
+  Line 343:6:  React Hook useCallback has an unnecessary dependency: 'navigate'. Either exclude it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/hooks/concerts/useConcertForm.js
+  Line 48:9:  The 'transformConcertData' function makes the dependencies of useMemo Hook (at line 132) change on every render. Move it inside the useMemo callback. Alternatively, wrap the definition of 'transformConcertData' in its own useCallback() Hook  react-hooks/exhaustive-deps
+  Line 87:6:  React Hook useCallback has an unnecessary dependency: 'navigate'. Either exclude it or remove the dependency array                                                                                                                                react-hooks/exhaustive-deps
+
+src/hooks/forms/useFormValidation.js
+  Line 247:6:  React Hook useCallback has a missing dependency: 'resetForm'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/hooks/forms/useFormValidationData.js
+  Line 234:6:  React Hook useEffect has a missing dependency: 'fetchData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/hooks/parametres/useEntrepriseForm.js
+  Line 116:6:  React Hook useEffect has a missing dependency: 'genericFormHook'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/ArtistesPage.js
+  Line 8:1:  Block is redundant  no-lone-blocks
+
+src/pages/ContratsPage.js
+  Line 10:8:  'ContratTemplatesPage' is defined but never used      no-unused-vars
+  Line 11:8:  'ContratTemplatesEditPage' is defined but never used  no-unused-vars
+
+src/pages/DashboardPage.js
+  Line 6:1:  Block is redundant  no-lone-blocks
+
+src/pages/contratTemplatesEditPage.js
+  Line 4:8:  'ContratTemplateEditor' is defined but never used  no-unused-vars
+
+src/schemas/ProgrammateurSchemas.js
+  Line 83:1:  Assign object to a variable before exporting as module default  import/no-anonymous-default-export
+
+src/services/InstanceTracker.js
+  Line 432:1:  Assign object to a variable before exporting as module default  import/no-anonymous-default-export
+
+src/services/firebase-service.js
+  Line 9:3:    'getFirestore' is defined but never used                        no-unused-vars
+  Line 264:1:  Assign object to a variable before exporting as module default  import/no-anonymous-default-export
+
+src/services/firestoreService.js
+  Line 480:1:  Assign instance to a variable before exporting as module default  import/no-anonymous-default-export
+
+src/services/structureService.js
+  Line 29:11:  'programmId' is assigned a value but never used  no-unused-vars
+
+src/services/syncService.js
+  Line 5:8:    'firebase' is defined but never used                                                  no-unused-vars
+  Line 7:10:   'localDB' is defined but never used                                                   no-unused-vars
+  Line 95:31:  Function declared in a loop contains unsafe references to variable(s) 'successCount'  no-loop-func
+  Line 239:1:  Assign object to a variable before exporting as module default                        import/no-anonymous-default-export
+
+src/utils/logUtils.js
+  Line 62:1:  Assign object to a variable before exporting as module default  import/no-anonymous-default-export
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+File sizes after gzip:
+
+  967.03 kB  build/static/js/main.cea21605.js
+  112.46 kB  build/static/css/main.9080e863.css
+  1.74 kB    build/static/js/453.4bf0bb80.chunk.js
+
+The bundle size is significantly larger than recommended.
+Consider reducing it with code splitting: https://goo.gl/9VhYWB
+You can also analyze the project dependencies: https://goo.gl/LeUzfb
+
+The project was built assuming it is hosted at /.
+You can control this with the homepage field in your package.json.
+
+The build folder is ready to be deployed.
+You may serve it with a static server:
+
+  npm install -g serve
+  serve -s build
+
+Find out more about deployment here:
+
+  https://cra.link/deployment
+

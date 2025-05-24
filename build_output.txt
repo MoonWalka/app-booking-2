@@ -1,0 +1,10 @@
+
+> app-booking@0.1.0 build
+> craco build
+
+Creating an optimized production build...
+Failed to compile.
+
+Module not found: Error: Can't resolve '/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/common/Card' in '/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/components/programmateurs/desktop'
+
+

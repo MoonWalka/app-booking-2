@@ -6,7 +6,7 @@
 
 import { initializeApp } from 'firebase/app';
 import { 
-  getFirestore, initializeFirestore, 
+  initializeFirestore, 
   collection as firestoreCollection, 
   doc as firestoreDoc, 
   getDoc as firestoreGetDoc, 
@@ -261,7 +261,7 @@ export { storageRef as ref, uploadBytes, getDownloadURL };
 export const MODE_LOCAL = IS_LOCAL_MODE;
 
 // Export d'un objet avec toutes les fonctionnalités
-export default {
+const firebaseService = {
   db,
   auth,
   storage,
@@ -294,3 +294,5 @@ export default {
   onAuthStateChanged,
   MODE_LOCAL: IS_LOCAL_MODE
 };
+
+export default firebaseService;

@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { db } from '@/firebaseInit';
 import { doc, getDoc, setDoc, updateDoc, collection, Timestamp } from '@/firebaseInit';
 import { debugLog } from '@/utils/logUtils';
@@ -39,7 +38,6 @@ export const useGenericEntityForm = ({
   console.log("[useGenericEntityForm] Valeur initiale de entityId:", entityId, "type:", typeof entityId);
   
   debugLog('Hook exécuté !', 'trace', 'useGenericEntityForm');
-  const navigate = useNavigate();
   const [formData, setFormData] = useState(initialData);
   const [loading, setLoading] = useState(!!entityId && entityId !== 'nouveau');
   const [submitting, setSubmitting] = useState(false);
@@ -340,7 +338,7 @@ export const useGenericEntityForm = ({
       setSubmitting(false);
       console.log("[useGenericEntityForm] handleSubmit END: submitting reset to false");
     }
-  }, [formData, entityId, isNew, collectionName, validateForm, transformData, onSuccess, onError, navigate, initialEntityData, entityType, generateId]);
+  }, [formData, entityId, isNew, collectionName, validateForm, transformData, onSuccess, onError, initialEntityData, entityType, generateId]);
 
   // Réinitialiser le formulaire
   const resetForm = useCallback(() => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Form, Row, Col, Button, Dropdown } from 'react-bootstrap';
 import structureService from '@/services/structureService';
 import styles from './StructureInfoSection.module.css';
@@ -34,7 +34,7 @@ const StructureInfoSection = ({
   };
 
   // Rechercher une structure existante
-  const searchStructure = async () => {
+  const searchStructure = useCallback(async () => {
     if (!searchTerm.trim() || searchTerm.length < 2) return;
     
     setSearching(true);
@@ -47,7 +47,7 @@ const StructureInfoSection = ({
     } finally {
       setSearching(false);
     }
-  };
+  }, [searchTerm]);
 
   // Gérer le timing de recherche avec debounce
   useEffect(() => {
@@ -58,7 +58,7 @@ const StructureInfoSection = ({
     }, 300);
     
     return () => clearTimeout(timer);
-  }, [searchTerm]);
+  }, [searchTerm, searchStructure]);
 
   // Charger les données d'une structure si un ID est déjà présent
   useEffect(() => {
@@ -82,7 +82,7 @@ const StructureInfoSection = ({
     };
     
     loadStructure();
-  }, [formik?.values?.structureId]);
+  }, [formik?.values?.structureId, formik]);
 
   // Sélectionner une structure dans la liste de recherche
   const handleSelectStructure = (structure) => {

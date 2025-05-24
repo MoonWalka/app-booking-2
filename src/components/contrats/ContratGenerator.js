@@ -11,9 +11,14 @@ import DesktopContratGenerator from './desktop/ContratGenerator';
 function ContratGenerator(props) {
   const { isMobile } = useResponsive();
   
-  // Pour l'instant, utiliser la version desktop dans tous les cas
-  // Si une version spécifique pour mobile est nécessaire à l'avenir,
-  // elle pourra être importée et utilisée ici
+  // Architecture responsive prête pour l'avenir
+  if (isMobile) {
+    // Pour l'instant, utiliser la version desktop même sur mobile
+    // TODO: Implémenter MobileContratGenerator si nécessaire
+    return <DesktopContratGenerator {...props} />;
+  }
+  
+  // Version desktop
   return <DesktopContratGenerator {...props} />;
 }
 

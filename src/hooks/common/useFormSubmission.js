@@ -73,6 +73,24 @@ const useFormSubmission = (options) => {
         });
         console.log(`Association créée avec ${targetCollection}/${newValue}`);
       }
+      
+      // NOUVEAU: Utiliser sourceField pour mettre à jour le document source avec tracking bidirectionnel
+      if (sourceField && (oldValue !== newValue)) {
+        const sourceRef = doc(db, collection, documentId);
+        const updateData = {
+          [sourceField]: newValue || null,
+          [`${sourceField}History`]: arrayUnion({
+            oldValue: oldValue || null,
+            newValue: newValue || null,
+            timestamp: serverTimestamp(),
+            action: newValue ? (oldValue ? 'updated' : 'created') : 'removed'
+          }),
+          updatedAt: serverTimestamp()
+        };
+        
+        await updateDoc(sourceRef, updateData);
+        console.log(`Source field ${sourceField} mis à jour avec tracking d'historique`);
+      }
     } catch (error) {
       console.error(`Erreur lors de la mise à jour de l'association avec ${targetCollection}:`, error);
       throw error;
@@ -119,7 +137,21 @@ const useFormSubmission = (options) => {
       // Mettre à jour les associations si configurées
       if (Object.keys(associations).length > 0) {
         for (const [key, config] of Object.entries(associations)) {
+          // NOUVEAU: Utiliser key pour logging avancé des associations - Finalisation intelligente
+          console.log(`[ASSOCIATION] Traitement de l'association "${key}" pour document ${documentId}`, {
+            associationKey: key,
+            targetCollection: config.targetCollection,
+            targetField: config.targetField,
+            sourceField: config.sourceField,
+            oldValue: config.oldValue,
+            newValue: config.newValue,
+            timestamp: new Date().toISOString()
+          });
+          
           await updateAssociation(documentId, processedData, config);
+          
+          // NOUVEAU: Log de confirmation avec la clé d'association
+          console.log(`[ASSOCIATION] Association "${key}" traitée avec succès`);
         }
       }
       
@@ -171,12 +203,23 @@ const useFormSubmission = (options) => {
       // Supprimer les associations si configurées
       if (Object.keys(associations).length > 0) {
         for (const [key, config] of Object.entries(associations)) {
+          // NOUVEAU: Logging avancé des suppressions d'associations - Finalisation intelligente
+          console.log(`[ASSOCIATION DELETE] Suppression de l'association "${key}" pour document ${id}`, {
+            associationKey: key,
+            targetCollection: config.targetCollection,
+            targetField: config.targetField,
+            targetValue: config.newValue,
+            timestamp: new Date().toISOString()
+          });
+          
           if (config.newValue) {
             const targetRef = doc(db, config.targetCollection, config.newValue);
             await updateDoc(targetRef, {
               [config.targetField]: arrayRemove(id)
             });
-            console.log(`Association supprimée avec ${config.targetCollection}/${config.newValue}`);
+            console.log(`[ASSOCIATION DELETE] Association "${key}" supprimée avec succès de ${config.targetCollection}/${config.newValue}`);
+          } else {
+            console.log(`[ASSOCIATION DELETE] Association "${key}" ignorée (pas de valeur cible)`);
           }
         }
       }

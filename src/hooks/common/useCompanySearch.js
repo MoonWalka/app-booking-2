@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 
 /**
  * Hook personnalisé consolidé pour la recherche d'entreprises via l'API Entreprise
@@ -29,55 +29,10 @@ const useCompanySearch = (options = {}) => {
   // Référence pour le menu déroulant des résultats
   const searchResultsRef = useRef(null);
 
-  // Effet pour gérer la recherche avec debounce
-  useEffect(() => {
-    if (searchTimeoutRef.current) {
-      clearTimeout(searchTimeoutRef.current);
-    }
-    
-    if (searchTerm.length >= 3 && (searchType === 'name' || searchType === 'siret')) {
-      setIsSearchingCompany(true);
-      
-      searchTimeoutRef.current = setTimeout(() => {
-        searchCompany();
-      }, 500);
-    } else {
-      setSearchResults([]);
-      setIsSearchingCompany(false);
-    }
-    
-    return () => {
-      if (searchTimeoutRef.current) {
-        clearTimeout(searchTimeoutRef.current);
-      }
-    };
-  }, [searchTerm, searchType]);
-
-  // Effet pour gérer les clics en dehors du menu déroulant
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (searchResultsRef.current && !searchResultsRef.current.contains(event.target)) {
-        setSearchResults([]);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  // Notification de l'entreprise sélectionnée
-  useEffect(() => {
-    if (onCompanySelect && selectedCompany) {
-      onCompanySelect(selectedCompany);
-    }
-  }, [selectedCompany, onCompanySelect]);
-
   /**
-   * Fonction de recherche d'entreprise
+   * Fonction de recherche d'entreprise - NOUVEAU: Mémorisée pour optimisation
    */
-  const searchCompany = async () => {
+  const searchCompany = useCallback(async () => {
     try {
       // Construire la clé de cache
       const cacheKey = `${searchType}_${searchTerm}`;
@@ -139,7 +94,52 @@ const useCompanySearch = (options = {}) => {
     } finally {
       setIsSearchingCompany(false);
     }
-  };
+  }, [searchType, searchTerm]); // NOUVEAU: Dépendances stabilisées
+
+  // Effet pour gérer la recherche avec debounce
+  useEffect(() => {
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+    
+    if (searchTerm.length >= 3 && (searchType === 'name' || searchType === 'siret')) {
+      setIsSearchingCompany(true);
+      
+      searchTimeoutRef.current = setTimeout(() => {
+        searchCompany();
+      }, 500);
+    } else {
+      setSearchResults([]);
+      setIsSearchingCompany(false);
+    }
+    
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, [searchTerm, searchType, searchCompany]); // NOUVEAU: Dépendance corrigée
+
+  // Effet pour gérer les clics en dehors du menu déroulant
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchResultsRef.current && !searchResultsRef.current.contains(event.target)) {
+        setSearchResults([]);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  // Notification de l'entreprise sélectionnée
+  useEffect(() => {
+    if (onCompanySelect && selectedCompany) {
+      onCompanySelect(selectedCompany);
+    }
+  }, [selectedCompany, onCompanySelect]);
 
   /**
    * Sélectionner une entreprise parmi les résultats

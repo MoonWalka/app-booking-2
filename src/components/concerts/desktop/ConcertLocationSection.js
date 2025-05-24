@@ -195,6 +195,7 @@ const ConcertLocationSection = ({
             <div className="mt-3">
               <div className={`mb-3 ${styles.mapContainer}`}>
                 <iframe 
+                  title={`Carte de localisation de ${lieu.nom} - ${lieu.adresse}, ${lieu.codePostal} ${lieu.ville}`}
                   src={`https://maps.google.com/maps?q=${encodeURIComponent(`${lieu.adresse}, ${lieu.codePostal} ${lieu.ville}`)}&z=6&output=embed`}
                   width="100%" 
                   height="250" 

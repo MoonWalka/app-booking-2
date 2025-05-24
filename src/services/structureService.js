@@ -26,7 +26,6 @@ const structureService = {
     const structureSiret = programmateur.structure?.siret || programmateur.structureSiret || '';
     const structureTva = programmateur.structure?.tva || programmateur.structureTva || '';
     const structureId = programmateur.structureId || '';
-    const programmId = programmateur.id || '';
     
     // Si pas d'informations de structure, rien à faire
     if (!structureName) {
@@ -89,32 +88,11 @@ const structureService = {
             needsUpdate = true;
           }
           
-          /* DÉSACTIVATION TEMPORAIRE DE LA GESTION BIDIRECTIONNELLE
-          // Si programmateur ID fourni, s'assurer qu'il est dans la liste des programmateurs associés
-          if (programmId) {
-            const programmateursAssocies = structureData.programmateursAssocies || [];
-            if (!programmateursAssocies.includes(programmId)) {
-              updates.programmateursAssocies = [...programmateursAssocies, programmId];
-              needsUpdate = true;
-            }
-          }
-          */
-          
           if (needsUpdate) {
             updates.updatedAt = serverTimestamp();
             await updateDoc(structureRef, updates);
             console.log(`Structure ${structureId} mise à jour via structureService`);
           }
-          
-          /* DÉSACTIVATION TEMPORAIRE DE LA GESTION BIDIRECTIONNELLE
-          // Si un ID de programmateur est fourni, mettre à jour sa référence vers cette structure
-          if (programmId) {
-            await updateDoc(doc(db, 'programmateurs', programmId), {
-              structureId: structureId,
-              updatedAt: serverTimestamp()
-            });
-          }
-          */
           
           return structureId;
         } else {
@@ -173,33 +151,11 @@ const structureService = {
             needsUpdate = true;
           }
           
-          /* DÉSACTIVATION TEMPORAIRE DE LA GESTION BIDIRECTIONNELLE
-          // Si programmateur ID fourni, s'assurer qu'il est dans la liste des programmateurs associés
-          if (programmId) {
-            const programmateursAssocies = structureData.programmateursAssocies || [];
-            if (!programmateursAssocies.includes(programmId)) {
-              updates.programmateursAssocies = [...programmateursAssocies, programmId];
-              needsUpdate = true;
-            }
-          }
-          */
-          
           if (needsUpdate) {
             updates.updatedAt = serverTimestamp();
             await updateDoc(doc(db, 'structures', newStructureId), updates);
             console.log(`Structure existante ${newStructureId} mise à jour via structureService`);
           }
-          
-          /* DÉSACTIVATION TEMPORAIRE DE LA GESTION BIDIRECTIONNELLE
-          // Si un ID de programmateur est fourni, mettre à jour sa référence vers cette structure
-          if (programmId) {
-            await updateDoc(doc(db, 'programmateurs', programmId), {
-              structureId: newStructureId,
-              updatedAt: serverTimestamp()
-            });
-            console.log(`Programmateur ${programmId} associé à la structure ${newStructureId}`);
-          }
-          */
           
           return newStructureId;
         }
@@ -219,28 +175,10 @@ const structureService = {
         updatedAt: serverTimestamp(),
       };
       
-      /* DÉSACTIVATION TEMPORAIRE DE LA GESTION BIDIRECTIONNELLE
-      // Ajouter le programmateur à la liste des programmateurs associés si ID fourni
-      if (programmId) {
-        structureData.programmateursAssocies = [programmId];
-      }
-      */
-      
       // Créer la nouvelle entité
       const newStructureRef = doc(collection(db, 'structures'));
       await setDoc(newStructureRef, structureData);
       console.log(`Nouvelle structure créée: ${newStructureRef.id} via structureService`);
-      
-      /* DÉSACTIVATION TEMPORAIRE DE LA GESTION BIDIRECTIONNELLE
-      // Si un ID de programmateur est fourni, mettre à jour sa référence vers cette structure
-      if (programmId) {
-        await updateDoc(doc(db, 'programmateurs', programmId), {
-          structureId: newStructureRef.id,
-          updatedAt: serverTimestamp()
-        });
-        console.log(`Programmateur ${programmId} associé à la nouvelle structure ${newStructureRef.id}`);
-      }
-      */
       
       return newStructureRef.id;
     } catch (error) {

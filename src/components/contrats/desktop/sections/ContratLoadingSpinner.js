@@ -1,6 +1,5 @@
 // src/components/contrats/desktop/sections/ContratLoadingSpinner.js
 import React from 'react';
-import { Spinner } from 'react-bootstrap';
 import styles from './ContratLoadingSpinner.module.css';
 
 const ContratLoadingSpinner = () => {

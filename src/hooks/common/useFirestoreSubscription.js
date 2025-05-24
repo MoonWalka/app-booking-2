@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { doc, onSnapshot, db } from '@/firebaseInit';
 
 /**
@@ -65,7 +65,7 @@ const useFirestoreSubscription = (
   };
 
   // Fonction pour rafraîchir l'abonnement
-  const refresh = () => {
+  const refresh = useCallback(() => {
     if (!instanceRef.current.isMounted) return;
     
     // Mettre à jour les props stockées
@@ -169,22 +169,25 @@ const useFirestoreSubscription = (
         onError(err);
       }
     }
-  };
+  }, [collectionName, id, onData, onError, transform, selectedFields]);
   
   // Effet pour gérer le cycle de vie et les changements de props
   useEffect(() => {
+    // Capturer la référence actuelle pour le cleanup
+    const currentInstance = instanceRef.current;
+    
     refresh();
     
     // Nettoyage lors du démontage
     return () => {
-      instanceRef.current.isMounted = false;
+      currentInstance.isMounted = false;
       
-      if (instanceRef.current.unsubscribe) {
-        instanceRef.current.unsubscribe();
-        instanceRef.current.unsubscribe = null;
+      if (currentInstance.unsubscribe) {
+        currentInstance.unsubscribe();
+        currentInstance.unsubscribe = null;
       }
     };
-  }, [collectionName, id, onData, onError, transform, JSON.stringify(selectedFields)]);
+  }, [refresh]);
   
   return { loading, error, lastUpdateTime, refresh };
 };

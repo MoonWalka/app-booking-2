@@ -286,8 +286,13 @@ const PerformanceMonitor = () => {
                       <td style={{ padding: '5px' }}>{req.type}</td>
                       <td style={{ padding: '5px' }}>{req.collection}</td>
                       <td style={{ padding: '5px' }}>{req.id}</td>
-                      <td className="tc-text-right" style={{ padding: '5px' }} className={req.duration > 1000 ? 'tc-font-bold' : 'tc-font-normal'}>
-                        {req.duration}
+                      <td 
+                        className={`tc-text-right ${req.duration > 1000 ? 'tc-font-bold tc-text-danger' : 'tc-font-normal'}`}
+                        style={{ padding: '5px' }}
+                        title={`Durée: ${req.duration}ms ${req.duration > 1000 ? '(TRÈS LENT)' : req.duration > 500 ? '(Lent)' : ''}`}
+                      >
+                        {req.duration}ms
+                        {req.duration > 1000 && <span style={{ marginLeft: '5px', color: 'red' }}>🔥</span>}
                       </td>
                     </tr>
                   ))}

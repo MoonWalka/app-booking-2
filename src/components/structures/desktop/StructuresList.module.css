@@ -83,6 +83,12 @@
   border-bottom: var(--tc-border-width) solid var(--tc-border-color);
 }
 
+/* NOUVEAU: Style pour le compteur des résultats filtrés */
+.filteredCount {
+  color: var(--tc-text-color-muted);
+  font-style: italic;
+}
+
 .dataTable {
   width: 100%;
   border-collapse: collapse;

@@ -5,14 +5,6 @@ import ArtisteForm from '@/components/artistes/ArtisteForm';
 import ArtisteDetail from '@/components/artistes/ArtisteDetail';
 
 // Imports modifiés de la branche refacto-structure-scriptshell - pour implémentation future
-{/* 
-import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import ArtistesList from '@components/artistes/ArtistesList';
-import ArtisteDetails from '@components/artistes/ArtisteDetails';
-import ArtisteForm from '@components/artistes/ArtisteForm';
-import '@styles/index.css';
-*/}
 // Note: Les imports utilisent des alias différents comme '@components' au lieu de '@/components'
 // et un nom de composant différent 'ArtisteDetails' au lieu de 'ArtisteDetail'
 // Vous devrez vérifier que ces alias sont correctement configurés dans votre projet

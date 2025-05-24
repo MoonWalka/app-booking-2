@@ -114,6 +114,129 @@ const useConcertSearch = (programmateur) => {
     setShowConcertResults(false);
   };
 
+  // NOUVEAU: Fonction pour dissocier un concert du programmateur - Finalisation intelligente
+  const handleRemoveConcert = async (concertId, concertTitre = null) => {
+    try {
+      if (!programmateur || !concertId) return false;
+      
+      // Vérifier si le concert est effectivement associé
+      const associatedConcert = (programmateur.concertsAssocies || []).find(c => c.id === concertId);
+      
+      if (!associatedConcert) {
+        console.warn(`Concert ${concertId} n'est pas associé au programmateur ${programmateur.id}`);
+        return false;
+      }
+      
+      // Demander confirmation
+      const concertName = concertTitre || associatedConcert.titre || `Concert du ${associatedConcert.date}`;
+      const confirmMessage = `Êtes-vous sûr de vouloir dissocier le concert "${concertName}" du programmateur ${programmateur.nom} ?\n\nCette action retirera la liaison entre les deux entités.`;
+      
+      if (!window.confirm(confirmMessage)) {
+        return false;
+      }
+      
+      // Filtrer les concerts associés pour retirer celui sélectionné
+      const updatedConcerts = (programmateur.concertsAssocies || []).filter(c => c.id !== concertId);
+      
+      // Mettre à jour le programmateur dans Firestore
+      await updateDoc(doc(db, 'programmateurs', programmateur.id), {
+        concertsAssocies: updatedConcerts,
+        updatedAt: serverTimestamp()
+      });
+      
+      // Retirer la référence du programmateur dans le concert
+      await updateDoc(doc(db, 'concerts', concertId), {
+        programmateurId: null,
+        programmateurNom: null,
+        updatedAt: serverTimestamp()
+      });
+      
+      // Utiliser la fonction handleRemove du hook useEntitySearch
+      if (handleRemove && typeof handleRemove === 'function') {
+        handleRemove();
+      }
+      
+      // Afficher une confirmation
+      alert(`Le concert "${concertName}" a été dissocié du programmateur.`);
+      
+      console.log(`[useConcertSearch] Concert ${concertId} dissocié avec succès du programmateur ${programmateur.id}`);
+      return true;
+      
+    } catch (error) {
+      console.error('Erreur lors de la dissociation du concert:', error);
+      alert(`Une erreur est survenue lors de la dissociation du concert : ${error.message}`);
+      return false;
+    }
+  };
+
+  // NOUVEAU: Fonction pour dissocier tous les concerts d'un programmateur
+  const handleRemoveAllConcerts = async () => {
+    try {
+      if (!programmateur || !programmateur.concertsAssocies || programmateur.concertsAssocies.length === 0) {
+        alert('Aucun concert à dissocier.');
+        return false;
+      }
+      
+      const concertCount = programmateur.concertsAssocies.length;
+      const confirmMessage = `Êtes-vous sûr de vouloir dissocier TOUS les ${concertCount} concerts du programmateur ${programmateur.nom} ?\n\nCette action retirera toutes les liaisons entre le programmateur et ses concerts.`;
+      
+      if (!window.confirm(confirmMessage)) {
+        return false;
+      }
+      
+      // Dissocier tous les concerts en parallèle
+      const dissociationPromises = programmateur.concertsAssocies.map(async (concert) => {
+        try {
+          await updateDoc(doc(db, 'concerts', concert.id), {
+            programmateurId: null,
+            programmateurNom: null,
+            updatedAt: serverTimestamp()
+          });
+          return concert.id;
+        } catch (error) {
+          console.error(`Erreur lors de la dissociation du concert ${concert.id}:`, error);
+          return null;
+        }
+      });
+      
+      const results = await Promise.all(dissociationPromises);
+      const successCount = results.filter(result => result !== null).length;
+      
+      // Mettre à jour le programmateur pour retirer tous les concerts
+      await updateDoc(doc(db, 'programmateurs', programmateur.id), {
+        concertsAssocies: [],
+        updatedAt: serverTimestamp()
+      });
+      
+      alert(`${successCount}/${concertCount} concerts ont été dissociés avec succès.`);
+      
+      console.log(`[useConcertSearch] ${successCount} concerts dissociés du programmateur ${programmateur.id}`);
+      return true;
+      
+    } catch (error) {
+      console.error('Erreur lors de la dissociation de tous les concerts:', error);
+      alert(`Une erreur est survenue lors de la dissociation : ${error.message}`);
+      return false;
+    }
+  };
+
+  // NOUVEAU: Fonction pour obtenir les statistiques des associations
+  const getAssociationStats = () => {
+    if (!programmateur) return null;
+    
+    const concerts = programmateur.concertsAssocies || [];
+    const now = new Date();
+    
+    return {
+      total: concerts.length,
+      upcoming: concerts.filter(c => c.date && new Date(c.date) > now).length,
+      past: concerts.filter(c => c.date && new Date(c.date) <= now).length,
+      withoutDate: concerts.filter(c => !c.date).length,
+      withLocation: concerts.filter(c => c.lieu).length,
+      withoutLocation: concerts.filter(c => !c.lieu).length
+    };
+  };
+
   return {
     showConcertSearch,
     concertSearchTerm,
@@ -125,7 +248,10 @@ const useConcertSearch = (programmateur) => {
     setShowConcertResults,
     toggleConcertSearch,
     handleSelectConcert,
-    handleCreateConcert
+    handleCreateConcert,
+    handleRemoveConcert,
+    handleRemoveAllConcerts,
+    getAssociationStats
   };
 };
 

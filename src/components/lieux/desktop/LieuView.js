@@ -57,6 +57,40 @@ const LieuView = () => {
   // Information sur les concerts associés (à implémenter dans le hook si nécessaire)
   const hasAssociatedConcerts = lieu?.concerts?.length > 0 || false;
 
+  // Handlers améliorés avec notifications - NOUVEAU: Finalisation intelligente
+  const handleEditWithNotification = () => {
+    toast.info('Passage en mode édition', {
+      position: 'top-right',
+      autoClose: 2000,
+      hideProgressBar: true,
+    });
+    handleEdit();
+  };
+
+  const handleDeleteWithNotification = async () => {
+    try {
+      const result = await handleConfirmDelete();
+      if (result !== false) {
+        toast.success('Lieu supprimé avec succès !', {
+          position: 'top-right',
+          autoClose: 3000,
+        });
+        // Redirection après suppression réussie
+        setTimeout(() => navigate('/lieux'), 1500);
+      }
+      return result;
+    } catch (error) {
+      toast.error('Erreur lors de la suppression du lieu', {
+        position: 'top-right',
+        autoClose: 5000,
+      });
+      throw error;
+    }
+  };
+
+  // Mode édition rapide basé sur isEditing du hook
+  const effectiveEditMode = isEditing;
+
   // If loading, show a spinner
   if (loading) {
     return (
@@ -112,32 +146,32 @@ const LieuView = () => {
       {/* Header with title and action buttons */}
       <LieuHeader 
         lieu={lieu}
-        isEditing={false}
-        onEdit={handleEdit}
+        isEditing={effectiveEditMode}
+        onEdit={handleEditWithNotification}
         onDelete={handleDeleteClick}
       />
 
       {/* Nouvelle structure : sections empilées verticalement */}
       <div className={styles.sectionsStack}>
-        <LieuGeneralInfo lieu={lieu} isEditing={false} />
-        <LieuAddressSection lieu={lieu} isEditing={false} />
+        <LieuGeneralInfo lieu={lieu} isEditing={effectiveEditMode} />
+        <LieuAddressSection lieu={lieu} isEditing={effectiveEditMode} />
         <LieuInfoSection lieu={lieu} />
-        <LieuContactSection lieu={lieu} isEditing={false} />
+        <LieuContactSection lieu={lieu} isEditing={effectiveEditMode} />
         <LieuOrganizerSection
-          isEditing={false}
+          isEditing={effectiveEditMode}
           programmateur={programmateur}
           loadingProgrammateur={loadingProgrammateur}
           lieu={lieu}
         />
-        <LieuConcertsSection lieu={lieu} isEditing={false} />
-        <LieuStructuresSection lieu={lieu} isEditing={false} />
+        <LieuConcertsSection lieu={lieu} isEditing={effectiveEditMode} />
+        <LieuStructuresSection lieu={lieu} isEditing={effectiveEditMode} />
       </div>
 
       {/* Delete confirmation modal */}
       <DeleteLieuModal
         show={showDeleteModal}
         onClose={handleCloseDeleteModal}
-        onConfirm={handleConfirmDelete}
+        onConfirm={handleDeleteWithNotification}
         lieu={lieu}
         isDeleting={isDeleting}
         hasAssociatedConcerts={hasAssociatedConcerts}

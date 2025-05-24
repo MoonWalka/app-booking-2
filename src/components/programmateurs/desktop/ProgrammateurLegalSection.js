@@ -82,31 +82,32 @@ const ProgrammateurLegalSection = ({
                 <Col md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="structureRaisonSociale">Raison sociale</Form.Label>
-                    <Form.Control
+                    <Field
                       id="structureRaisonSociale"
                       name="structureCache.raisonSociale"
                       type="text"
-                      value={values.structureCache.raisonSociale}
+                      className={`form-control ${touched.structureCache?.raisonSociale && errors.structureCache?.raisonSociale ? 'is-invalid' : ''}`}
+                      placeholder="Nom de l'organisation"
                       onChange={(e) => handleFormikChange(e, formikHandleChange)}
                       onBlur={handleBlur}
-                      placeholder="Nom de l'organisation"
-                      isInvalid={touched.structureCache?.raisonSociale && errors.structureCache?.raisonSociale}
                     />
-                    <Form.Control.Feedback type="invalid">
-                      {errors.structureCache?.raisonSociale}
-                    </Form.Control.Feedback>
+                    <ErrorMessage 
+                      name="structureCache.raisonSociale" 
+                      component="div" 
+                      className="invalid-feedback" 
+                    />
                   </Form.Group>
                 </Col>
                 <Col md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="structureType">Type de structure</Form.Label>
-                    <Form.Select
+                    <Field
+                      as="select"
                       id="structureType"
                       name="structureCache.type"
-                      value={values.structureCache.type}
+                      className={`form-select ${touched.structureCache?.type && errors.structureCache?.type ? 'is-invalid' : ''}`}
                       onChange={(e) => handleFormikChange(e, formikHandleChange)}
                       onBlur={handleBlur}
-                      isInvalid={touched.structureCache?.type && errors.structureCache?.type}
                     >
                       <option value="">Sélectionner un type</option>
                       <option value="association">Association</option>
@@ -115,10 +116,12 @@ const ProgrammateurLegalSection = ({
                       <option value="sas">SAS</option>
                       <option value="collectivite">Collectivité territoriale</option>
                       <option value="autre">Autre</option>
-                    </Form.Select>
-                    <Form.Control.Feedback type="invalid">
-                      {errors.structureCache?.type}
-                    </Form.Control.Feedback>
+                    </Field>
+                    <ErrorMessage 
+                      name="structureCache.type" 
+                      component="div" 
+                      className="invalid-feedback" 
+                    />
                   </Form.Group>
                 </Col>
               </Row>

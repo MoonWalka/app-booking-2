@@ -208,16 +208,40 @@ const SyncManager = () => {
             <Form>
               <Form.Group className="mb-3">
                 <Form.Label>Sélectionnez les collections à synchroniser :</Form.Label>
-                {Object.entries(collections).map(([name, isSelected]) => (
-                  <Form.Check 
-                    key={name}
-                    type="checkbox"
-                    id={`collection-${name}`}
-                    label={name.charAt(0).toUpperCase() + name.slice(1)}
-                    checked={isSelected}
-                    onChange={e => setCollections({...collections, [name]: e.target.checked})}
-                  />
-                ))}
+                <ListGroup className="mt-2">
+                  {Object.entries(collections).map(([name, isSelected]) => (
+                    <ListGroup.Item 
+                      key={name}
+                      className={`d-flex justify-content-between align-items-center ${isSelected ? 'list-group-item-primary' : ''}`}
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => setCollections({...collections, [name]: !isSelected})}
+                    >
+                      <div className="d-flex align-items-center">
+                        <Form.Check 
+                          type="checkbox"
+                          id={`collection-${name}`}
+                          checked={isSelected}
+                          onChange={e => setCollections({...collections, [name]: e.target.checked})}
+                          className="me-3"
+                          style={{ pointerEvents: 'none' }}
+                        />
+                        <div>
+                          <strong>{name.charAt(0).toUpperCase() + name.slice(1)}</strong>
+                          <div className="text-muted small">
+                            {name === 'concerts' && 'Événements et spectacles'}
+                            {name === 'lieux' && 'Salles et venues'}
+                            {name === 'programmateurs' && 'Contacts et organisateurs'}
+                            {name === 'artistes' && 'Musiciens et groupes'}
+                            {name === 'structures' && 'Entreprises et associations'}
+                          </div>
+                        </div>
+                      </div>
+                      <Badge bg={isSelected ? 'success' : 'secondary'}>
+                        {isSelected ? 'Sélectionné' : 'Non sélectionné'}
+                      </Badge>
+                    </ListGroup.Item>
+                  ))}
+                </ListGroup>
               </Form.Group>
             </Form>
 

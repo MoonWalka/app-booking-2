@@ -141,6 +141,8 @@ const FormValidationInterface = () => {
         title="Informations du concert"
         headerClass={styles.concertSectionHeader}
         concert={concert}
+        formatDate={formatDate}
+        formatCurrency={formatCurrency}
       />
       
       {/* Lieu information - Mobile version */}
@@ -155,6 +157,8 @@ const FormValidationInterface = () => {
         onValidateField={handleValidateField}
         onCopyValue={copyFormValueToFinal}
         isValidated={isAlreadyValidated || validated}
+        formatDate={formatDate}
+        formatCurrency={formatCurrency}
       />
       
       {/* Contact information - Mobile version */}
@@ -169,6 +173,8 @@ const FormValidationInterface = () => {
         onValidateField={handleValidateField}
         onCopyValue={copyFormValueToFinal}
         isValidated={isAlreadyValidated || validated}
+        formatDate={formatDate}
+        formatCurrency={formatCurrency}
       />
       
       {/* Structure information - Mobile version */}
@@ -184,6 +190,8 @@ const FormValidationInterface = () => {
         onCopyValue={copyFormValueToFinal}
         isValidated={isAlreadyValidated || validated}
         structureFieldsMapping={true}
+        formatDate={formatDate}
+        formatCurrency={formatCurrency}
       />
       
       {/* Validation button - Mobile version */}

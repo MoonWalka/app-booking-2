@@ -75,7 +75,7 @@ const EntrepriseFormFields = ({ formData, handleChange, addressSearch }) => {
         </Form.Text>
         
         {/* Address suggestions */}
-        {addressSuggestions && addressSuggestions.length > 0 && (
+        {addressFieldActive && addressSuggestions && addressSuggestions.length > 0 && (
           <div ref={suggestionsRef} className={styles.suggestionsList}>
             {addressSuggestions.map((suggestion, index) => (
               <div
@@ -100,12 +100,20 @@ const EntrepriseFormFields = ({ formData, handleChange, addressSearch }) => {
         )}
         
         {/* Address search indicator */}
-        {isSearchingAddress && (
+        {addressFieldActive && isSearchingAddress && (
           <div className={styles.searchingIndicator}>
             <div className="spinner-border spinner-border-sm text-primary" role="status">
               <span className="visually-hidden">Searching...</span>
             </div>
             <span>Searching addresses...</span>
+          </div>
+        )}
+        
+        {/* No results message when field is active but no suggestions */}
+        {addressFieldActive && !isSearchingAddress && formData.adresse && formData.adresse.length > 2 && (!addressSuggestions || addressSuggestions.length === 0) && (
+          <div className={styles.noResultsMessage}>
+            <i className="bi bi-info-circle"></i>
+            <span>No address suggestions found. Try a different search term.</span>
           </div>
         )}
       </Form.Group>

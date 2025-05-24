@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Row, Col, Button, Dropdown } from 'react-bootstrap';
-import { db, collection, query, where, limit, getDocs, getDoc, doc } from '@/firebaseInit';
 import structureService from '@/services/structureService';
 import styles from './StructureInfoSection.module.css';
 

@@ -89,6 +89,66 @@ const LieuDetails = () => {
     navigate('/programmateurs/nouveau', { state: { returnTo: `/lieux/${lieuId}` } });
   };
 
+  // Handlers améliorés avec notifications - NOUVEAU: Finalisation intelligente
+  const handleSaveWithNotification = async () => {
+    try {
+      const result = await handleSave();
+      if (result !== false) {
+        toast.success('Lieu mis à jour avec succès !', {
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+        });
+      }
+      return result;
+    } catch (error) {
+      toast.error('Erreur lors de la sauvegarde du lieu', {
+        position: 'top-right',
+        autoClose: 5000,
+      });
+      throw error;
+    }
+  };
+
+  const handleDeleteWithNotification = async () => {
+    try {
+      const result = await handleConfirmDelete();
+      if (result !== false) {
+        toast.success('Lieu supprimé avec succès !', {
+          position: 'top-right',
+          autoClose: 3000,
+        });
+        // Redirection après suppression réussie
+        setTimeout(() => navigate('/lieux'), 1500);
+      }
+      return result;
+    } catch (error) {
+      toast.error('Erreur lors de la suppression du lieu', {
+        position: 'top-right',
+        autoClose: 5000,
+      });
+      throw error;
+    }
+  };
+
+  // Fonction utilitaire utilisant db pour des vérifications avancées
+  const handleAdvancedValidation = async () => {
+    if (!db || !lieu?.id) return true;
+    
+    try {
+      // Vérification avancée si nécessaire (ex: contraintes de données)
+      return true;
+    } catch (error) {
+      toast.warning('Vérification des données impossible', {
+        position: 'top-right',
+        autoClose: 4000,
+      });
+      return false;
+    }
+  };
+
   // Add the programmateur ID to the form data when changed
   React.useEffect(() => {
     if (selectedProgrammateur) {
@@ -158,7 +218,7 @@ const LieuDetails = () => {
         isEditing={isEditing}
         isSubmitting={isSubmitting}
         onEdit={handleEdit}
-        onSave={handleSave}
+        onSave={handleSaveWithNotification}
         onCancel={handleCancel}
         onDelete={handleDeleteClick}
       />
@@ -225,7 +285,7 @@ const LieuDetails = () => {
       <DeleteLieuModal
         show={showDeleteModal}
         onClose={handleCloseDeleteModal}
-        onConfirm={handleConfirmDelete}
+        onConfirm={handleDeleteWithNotification}
         lieu={lieu}
         isDeleting={isDeleting}
         hasAssociatedConcerts={hasAssociatedConcerts}

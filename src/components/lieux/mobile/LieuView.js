@@ -33,6 +33,39 @@ const LieuView = () => {
   const programmateur = relatedData?.programmateur;
   const loadingProgrammateur = loadingRelated?.programmateur;
 
+  // Handlers mobiles avec notifications - NOUVEAU: Finalisation intelligente
+  const handleEditWithNotification = () => {
+    toast.info('📱 Passage en mode édition', {
+      position: 'bottom-center', // Position adaptée mobile
+      autoClose: 2000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      style: {
+        fontSize: '14px',
+        borderRadius: '8px',
+      }
+    });
+    handleEdit();
+  };
+
+  const handleDeleteWithNotification = () => {
+    toast.warning('⚠️ Confirmation requise pour supprimer', {
+      position: 'bottom-center',
+      autoClose: 3000,
+      hideProgressBar: false,
+      style: {
+        fontSize: '14px',
+        borderRadius: '8px',
+      }
+    });
+    handleDeleteClick();
+  };
+
+  const handleBackWithNotification = () => {
+    toast.dismiss(); // Fermer toutes les notifications avant navigation
+    navigate('/lieux');
+  };
+
   // If loading, show a spinner
   if (loading) {
     return (
@@ -52,7 +85,7 @@ const LieuView = () => {
         </div>
         <Button 
           variant="primary" 
-          onClick={() => navigate('/lieux')}
+          onClick={handleBackWithNotification}
           icon={<i className="bi bi-arrow-left"></i>}
         >
           Retour à la liste des lieux
@@ -71,7 +104,7 @@ const LieuView = () => {
         </div>
         <Button 
           variant="primary" 
-          onClick={() => navigate('/lieux')}
+          onClick={handleBackWithNotification}
           icon={<i className="bi bi-arrow-left"></i>}
         >
           Retour à la liste des lieux
@@ -92,7 +125,7 @@ const LieuView = () => {
         <div className="d-flex align-items-center">
           <Button 
             variant="text" 
-            onClick={() => navigate('/lieux')}
+            onClick={handleBackWithNotification}
             className="p-0 me-2"
             icon={<i className="bi bi-arrow-left fs-4"></i>}
           />
@@ -103,12 +136,12 @@ const LieuView = () => {
           <Button 
             variant="outline-primary" 
             className="me-2"
-            onClick={handleEdit}
+            onClick={handleEditWithNotification}
             icon={<i className="bi bi-pencil"></i>}
           />
           <Button 
             variant="outline-danger" 
-            onClick={handleDeleteClick}
+            onClick={handleDeleteWithNotification}
             icon={<i className="bi bi-trash"></i>}
           />
         </div>

@@ -1,0 +1,362 @@
+
+> app-booking@0.1.0 build
+> craco build
+
+Creating an optimized production build...
+Compiled with warnings.
+
+[eslint] 
+src/App.js
+  Line 1:46:   'Suspense' is defined but never used                no-unused-vars
+  Line 28:8:   'DesktopLayout' is defined but never used           no-unused-vars
+  Line 183:9:  'routeFallback' is assigned a value but never used  no-unused-vars
+
+src/components/artistes/desktop/ArtisteForm.js
+  Line 254:10:  'initialData' is assigned a value but never used     no-unused-vars
+  Line 283:9:   'handleComplete' is assigned a value but never used  no-unused-vars
+  Line 308:9:   'handleCancel' is assigned a value but never used    no-unused-vars
+  Line 317:9:   'steps' is assigned a value but never used           no-unused-vars
+
+src/components/artistes/desktop/ArtistesList.js
+  Line 5:8:   'styles' is defined but never used                     no-unused-vars
+  Line 44:5:  'resetFilters' is assigned a value but never used      no-unused-vars
+  Line 50:5:  'setSortDirection' is assigned a value but never used  no-unused-vars
+
+src/components/artistes/sections/ArtistesEmptyState.js
+  Line 4:8:  'styles' is defined but never used  no-unused-vars
+
+src/components/artistes/sections/ArtistesListHeader.js
+  Line 4:8:  'styles' is defined but never used  no-unused-vars
+
+src/components/common/Layout.js
+  Line 4:10:   'useResponsive' is defined but never used          no-unused-vars
+  Line 8:8:    'layoutStyles' is defined but never used           no-unused-vars
+  Line 16:10:  'isNavigating' is assigned a value but never used  no-unused-vars
+  Line 17:10:  'prevOutlet' is assigned a value but never used    no-unused-vars
+  Line 84:19:  Unreachable code                                   no-unreachable
+
+src/components/concerts/ConcertDetails.js
+  Line 26:56:  'toggleEditMode' is assigned a value but never used                                                          no-unused-vars
+  Line 47:6:   React Hook useMemo has a missing dependency: 'responsive'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/components/concerts/desktop/ConcertForm.js
+  Line 81:21:   'setShowLieuResults' is assigned a value but never used     no-unused-vars
+  Line 103:21:  'setShowProgResults' is assigned a value but never used     no-unused-vars
+  Line 120:21:  'setShowArtisteResults' is assigned a value but never used  no-unused-vars
+
+src/components/concerts/desktop/ConcertLocationSection.js
+  Line 197:17:  <iframe> elements must have a unique title property  jsx-a11y/iframe-has-title
+
+src/components/concerts/desktop/ConcertView.js
+  Line 9:10:  'useConcertStatus' is defined but never used       no-unused-vars
+  Line 27:9:  'location' is assigned a value but never used      no-unused-vars
+  Line 51:5:  'handleDelete' is assigned a value but never used  no-unused-vars
+
+src/components/concerts/desktop/ConcertsList.js
+  Line 80:5:  'getContractButtonVariant' is assigned a value but never used  no-unused-vars
+  Line 81:5:  'getContractTooltip' is assigned a value but never used        no-unused-vars
+
+src/components/concerts/mobile/sections/ConcertArtistSectionMobile.js
+  Line 2:50:  'Badge' is defined but never used  no-unused-vars
+
+src/components/concerts/sections/ConcertsListHeader.js
+  Line 4:8:  'Button' is defined but never used  no-unused-vars
+
+src/components/contrats/ContratGenerator.js
+  Line 12:11:  'isMobile' is assigned a value but never used  no-unused-vars
+
+src/components/contrats/ContratTemplateEditor.js
+  Line 13:11:  'isMobile' is assigned a value but never used  no-unused-vars
+
+src/components/contrats/desktop/ContratGenerator.js
+  Line 4:8:  'styles' is defined but never used  no-unused-vars
+
+src/components/contrats/desktop/ContratTemplateEditor.js
+  Line 33:9:  'bodyEditorRef' is assigned a value but never used  no-unused-vars
+  Line 55:9:  'preview' is assigned a value but never used        no-unused-vars
+
+src/components/contrats/desktop/sections/ContratLoadingSpinner.js
+  Line 3:10:  'Spinner' is defined but never used  no-unused-vars
+
+src/components/contrats/sections/ContratInfoCard.js
+  Line 4:8:  'styles' is defined but never used  no-unused-vars
+
+src/components/contrats/sections/ContratPdfTabs.js
+  Line 4:8:  'styles' is defined but never used  no-unused-vars
+
+src/components/debug/PerformanceMonitor.js
+  Line 289:80:  No duplicate props allowed  react/jsx-no-duplicate-props
+
+src/components/forms/FormGenerator.js
+  Line 10:3:  'query' is defined but never used    no-unused-vars
+  Line 11:3:  'where' is defined but never used    no-unused-vars
+  Line 12:3:  'getDocs' is defined but never used  no-unused-vars
+
+src/components/forms/mobile/FormValidationInterface.js
+  Line 46:5:  'formatDate' is assigned a value but never used      no-unused-vars
+  Line 47:5:  'formatCurrency' is assigned a value but never used  no-unused-vars
+
+src/components/forms/validation/FormValidationInterface.js
+  Line 37:5:  'formatDate' is assigned a value but never used      no-unused-vars
+  Line 38:5:  'formatCurrency' is assigned a value but never used  no-unused-vars
+
+src/components/lieux/desktop/LieuDetails.js
+  Line 3:10:  'toast' is defined but never used                          no-unused-vars
+  Line 5:10:  'db' is defined but never used                             no-unused-vars
+  Line 20:8:  'LieuContactSection' is defined but never used             no-unused-vars
+  Line 76:5:  'isAddressFieldActive' is assigned a value but never used  no-unused-vars
+
+src/components/lieux/desktop/LieuView.js
+  Line 4:10:  'toast' is defined but never used               no-unused-vars
+  Line 42:5:  'isEditing' is assigned a value but never used  no-unused-vars
+
+src/components/lieux/desktop/sections/LieuStructuresSection.js
+  Line 27:10:  'searchResults' is assigned a value but never used          no-unused-vars
+  Line 28:10:  'isSearching' is assigned a value but never used            no-unused-vars
+  Line 29:10:  'selectedStructure' is assigned a value but never used      no-unused-vars
+  Line 29:29:  'setSelectedStructure' is assigned a value but never used   no-unused-vars
+  Line 140:9:  'handleSelectStructure' is assigned a value but never used  no-unused-vars
+
+src/components/lieux/mobile/LieuView.js
+  Line 6:10:  'toast' is defined but never used  no-unused-vars
+
+src/components/parametres/ParametresExport.js
+  Line 2:37:  'Row' is defined but never used         no-unused-vars
+  Line 2:42:  'Col' is defined but never used         no-unused-vars
+  Line 5:14:  'collection' is defined but never used  no-unused-vars
+
+src/components/parametres/sections/EntrepriseContactFields.js
+  Line 3:8:  'styles' is defined but never used  no-unused-vars
+
+src/components/parametres/sections/EntrepriseFormFields.js
+  Line 17:5:  'addressFieldActive' is assigned a value but never used  no-unused-vars
+
+src/components/parametres/sections/EntrepriseHeader.js
+  Line 2:8:  'styles' is defined but never used  no-unused-vars
+
+src/components/parametres/sync/SyncManager.js
+  Line 2:57:  'ListGroup' is defined but never used  no-unused-vars
+
+src/components/pdf/ContratPDFWrapper.js
+  Line 10:8:  'styles' is defined but never used  no-unused-vars
+
+src/components/programmateurs/desktop/ProgrammateurForm.js
+  Line 1:27:  'useEffect' is defined but never used             no-unused-vars
+  Line 9:8:   'LieuInfoSection' is defined but never used       no-unused-vars
+  Line 35:5:  'structure' is assigned a value but never used    no-unused-vars
+  Line 43:5:  'formatValue' is assigned a value but never used  no-unused-vars
+
+src/components/programmateurs/desktop/ProgrammateurLegalSection.js
+  Line 3:18:  'Field' is defined but never used         no-unused-vars
+  Line 3:25:  'ErrorMessage' is defined but never used  no-unused-vars
+
+src/components/programmateurs/desktop/ProgrammateurLieuxSection.js
+  Line 132:6:  React Hook useEffect has a missing dependency: 'hasValidLieuxInProp'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/components/programmateurs/desktop/ProgrammateursList.js
+  Line 3:35:  'Button' is defined but never used                     no-unused-vars
+  Line 3:43:  'Form' is defined but never used                       no-unused-vars
+  Line 3:49:  'InputGroup' is defined but never used                 no-unused-vars
+  Line 22:5:  'searchFilters' is assigned a value but never used     no-unused-vars
+  Line 23:5:  'setSearchFilters' is assigned a value but never used  no-unused-vars
+  Line 24:5:  'handleSearch' is assigned a value but never used      no-unused-vars
+
+src/components/programmateurs/desktop/sections/ProgrammateursListSearchFilter.js
+  Line 2:16:  'InputGroup' is defined but never used  no-unused-vars
+  Line 2:28:  'Button' is defined but never used      no-unused-vars
+
+src/components/programmateurs/mobile/ProgrammateurForm.js
+  Line 209:6:  React Hook useEffect has a missing dependency: 'handleAddressSearch'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/components/programmateurs/mobile/ProgrammateurView.js
+  Line 7:8:  'UnderConstruction' is defined but never used  no-unused-vars
+  Line 8:8:  'styles' is defined but never used             no-unused-vars
+
+src/components/programmateurs/sections/StructureInfoSection.js
+  Line 4:8:    'structureService' is defined but never used                                                                        no-unused-vars
+  Line 78:6:   React Hook useEffect has a missing dependency: 'searchStructure'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 103:6:  React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array           react-hooks/exhaustive-deps
+
+src/components/structures/desktop/StructureForm.js
+  Line 39:11:  'errors' is assigned a value but never used  no-unused-vars
+
+src/components/structures/desktop/StructuresList.js
+  Line 6:3:   'where' is defined but never used                      no-unused-vars
+  Line 84:9:  'filterStructures' is assigned a value but never used  no-unused-vars
+
+src/components/structures/desktop/sections/StructureBillingSection.js
+  Line 22:13:  'updateFormData' is assigned a value but never used  no-unused-vars
+
+src/context/AuthContext.js
+  Line 24:9:  'navigate' is assigned a value but never used  no-unused-vars
+
+src/context/ModalContext.js
+  Line 56:6:  React Hook useCallback has a missing dependency: 'closeModal'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/hooks/artistes/useArtisteSearch.js
+  Line 18:9:  The 'artisteFilters' object makes the dependencies of useMemo Hook (at line 87) change on every render. To fix this, wrap the initialization of 'artisteFilters' in its own useMemo() Hook  react-hooks/exhaustive-deps
+
+src/hooks/common/useAddressSearch.js
+  Line 90:6:  React Hook useEffect has a missing dependency: 'handleSearch'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/hooks/common/useCompanySearch.js
+  Line 54:6:  React Hook useEffect has a missing dependency: 'searchCompany'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/hooks/common/useEntitySearch.js
+  Line 78:6:  React Hook useEffect has a missing dependency: 'performSearch'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/hooks/common/useFirestoreSubscription.js
+  Line 184:21:  The ref value 'instanceRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'instanceRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+  Line 187:6:   React Hook useEffect has a missing dependency: 'refresh'. Either include it or remove the dependency array                                                                                                                                                             react-hooks/exhaustive-deps
+  Line 187:55:  React Hook useEffect has a complex expression in the dependency array. Extract it to a separate variable so it can be statically checked                                                                                                                               react-hooks/exhaustive-deps
+
+src/hooks/common/useFormSubmission.js
+  Line 52:7:    'sourceField' is assigned a value but never used  no-unused-vars
+  Line 121:21:  'key' is assigned a value but never used          no-unused-vars
+  Line 173:21:  'key' is assigned a value but never used          no-unused-vars
+
+src/hooks/common/useGenericEntityDelete.js
+  Line 48:9:  The 'checkRelatedEntities' function makes the dependencies of useCallback Hook (at line 256) change on every render. To fix this, wrap the definition of 'checkRelatedEntities' in its own useCallback() Hook  react-hooks/exhaustive-deps
+
+src/hooks/common/useGenericEntityDetails.js
+  Line 4:16:    'setDoc' is defined but never used                                                                                                                                                                                                                                     no-unused-vars
+  Line 5:3:     'collection' is defined but never used                                                                                                                                                                                                                                 no-unused-vars
+  Line 5:15:    'query' is defined but never used                                                                                                                                                                                                                                      no-unused-vars
+  Line 5:22:    'where' is defined but never used                                                                                                                                                                                                                                      no-unused-vars
+  Line 5:29:    'getDocs' is defined but never used                                                                                                                                                                                                                                    no-unused-vars
+  Line 145:6:   React Hook useEffect has a missing dependency: 'collectionName'. Either include it or remove the dependency array                                                                                                                                                      react-hooks/exhaustive-deps
+  Line 173:6:   React Hook useCallback has a missing dependency: 'loadAllRelatedEntities'. Either include it or remove the dependency array                                                                                                                                            react-hooks/exhaustive-deps
+  Line 309:6:   React Hook useCallback has missing dependencies: 'loadAllRelatedEntities' and 'realtime'. Either include them or remove the dependency array                                                                                                                           react-hooks/exhaustive-deps
+  Line 392:6:   React Hook useCallback has a missing dependency: 'loadRelatedEntity'. Either include it or remove the dependency array                                                                                                                                                 react-hooks/exhaustive-deps
+  Line 815:46:  The ref value 'instanceRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'instanceRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+src/hooks/common/useGenericEntityForm.js
+  Line 343:6:  React Hook useCallback has an unnecessary dependency: 'navigate'. Either exclude it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/hooks/common/useGenericEntitySearch.js
+  Line 1:44:  'useMemo' is defined but never used  no-unused-vars
+  Line 3:52:  'orderBy' is defined but never used  no-unused-vars
+
+src/hooks/common/useResponsive.js
+  Line 2:27:    'Suspense' is defined but never used                  no-unused-vars
+  Line 53:9:    'retryCounter' is assigned a value but never used     no-unused-vars
+  Line 179:13:  'defaultFallback' is assigned a value but never used  no-unused-vars
+
+src/hooks/concerts/useConcertDetails.js
+  Line 33:10:   'cacheKey' is assigned a value but never used        no-unused-vars
+  Line 44:9:    'concertStatus' is assigned a value but never used   no-unused-vars
+  Line 441:40:  'formDataStatus' is assigned a value but never used  no-unused-vars
+
+src/hooks/concerts/useConcertForm.js
+  Line 48:9:  The 'transformConcertData' function makes the dependencies of useMemo Hook (at line 132) change on every render. Move it inside the useMemo callback. Alternatively, wrap the definition of 'transformConcertData' in its own useCallback() Hook  react-hooks/exhaustive-deps
+  Line 87:6:  React Hook useCallback has an unnecessary dependency: 'navigate'. Either exclude it or remove the dependency array                                                                                                                                react-hooks/exhaustive-deps
+
+src/hooks/concerts/useConcertFormsManagement.js
+  Line 1:20:  'useEffect' is defined but never used  no-unused-vars
+
+src/hooks/concerts/useConcertListData.js
+  Line 47:9:   'cacheRef' is assigned a value but never used                                                                     no-unused-vars
+  Line 333:6:  React Hook useEffect has a missing dependency: 'hookStartTime'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/hooks/forms/useFieldActions.js
+  Line 1:10:  'useState' is defined but never used  no-unused-vars
+
+src/hooks/forms/useFormValidation.js
+  Line 247:6:  React Hook useCallback has a missing dependency: 'resetForm'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/hooks/forms/useFormValidationData.js
+  Line 234:6:  React Hook useEffect has a missing dependency: 'fetchData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/hooks/parametres/useEntrepriseForm.js
+  Line 116:6:  React Hook useEffect has a missing dependency: 'genericFormHook'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/hooks/programmateurs/useConcertSearch.js
+  Line 36:5:  'handleRemove' is assigned a value but never used  no-unused-vars
+
+src/pages/ArtistesPage.js
+  Line 8:1:  Block is redundant  no-lone-blocks
+
+src/pages/ConcertsPage.js
+  Line 11:9:  'navigate' is assigned a value but never used  no-unused-vars
+
+src/pages/ContratGenerationPage.js
+  Line 5:52:  'updateDoc' is defined but never used         no-unused-vars
+  Line 5:80:  'orderBy' is defined but never used           no-unused-vars
+  Line 5:89:  'query' is defined but never used             no-unused-vars
+  Line 5:96:  'where' is defined but never used             no-unused-vars
+  Line 6:8:   'ContratGenerator' is defined but never used  no-unused-vars
+  Line 7:10:  'PDFDownloadLink' is defined but never used   no-unused-vars
+
+src/pages/ContratsPage.js
+  Line 2:38:  'Suspense' is defined but never used                  no-unused-vars
+  Line 10:8:  'ContratTemplatesPage' is defined but never used      no-unused-vars
+  Line 11:8:  'ContratTemplatesEditPage' is defined but never used  no-unused-vars
+
+src/pages/DashboardPage.js
+  Line 6:1:  Block is redundant  no-lone-blocks
+
+src/pages/ParametresPage.js
+  Line 2:31:  'Nav' is defined but never used  no-unused-vars
+
+src/pages/contratTemplatesEditPage.js
+  Line 4:8:  'ContratTemplateEditor' is defined but never used  no-unused-vars
+
+src/pages/contratTemplatesPage.js
+  Line 4:58:  'where' is defined but never used              no-unused-vars
+  Line 21:9:  'navigate' is assigned a value but never used  no-unused-vars
+
+src/schemas/ProgrammateurSchemas.js
+  Line 83:1:  Assign object to a variable before exporting as module default  import/no-anonymous-default-export
+
+src/services/InstanceTracker.js
+  Line 93:15:  'instanceId' is assigned a value but never used                 no-unused-vars
+  Line 154:1:  Assign object to a variable before exporting as module default  import/no-anonymous-default-export
+
+src/services/cacheService.js
+  Line 57:11:  'cacheKey' is assigned a value but never used  no-unused-vars
+
+src/services/firebase-service.js
+  Line 9:3:    'getFirestore' is defined but never used                        no-unused-vars
+  Line 264:1:  Assign object to a variable before exporting as module default  import/no-anonymous-default-export
+
+src/services/firestoreService.js
+  Line 480:1:  Assign instance to a variable before exporting as module default  import/no-anonymous-default-export
+
+src/services/structureService.js
+  Line 29:11:  'programmId' is assigned a value but never used  no-unused-vars
+
+src/services/syncService.js
+  Line 5:8:    'firebase' is defined but never used                                                  no-unused-vars
+  Line 7:10:   'localDB' is defined but never used                                                   no-unused-vars
+  Line 95:31:  Function declared in a loop contains unsafe references to variable(s) 'successCount'  no-loop-func
+  Line 239:1:  Assign object to a variable before exporting as module default                        import/no-anonymous-default-export
+
+src/utils/logUtils.js
+  Line 62:1:  Assign object to a variable before exporting as module default  import/no-anonymous-default-export
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+File sizes after gzip:
+
+  961.44 kB  build/static/js/main.ebabe500.js
+  112.98 kB  build/static/css/main.b63f977f.css
+  1.74 kB    build/static/js/453.4bf0bb80.chunk.js
+
+The bundle size is significantly larger than recommended.
+Consider reducing it with code splitting: https://goo.gl/9VhYWB
+You can also analyze the project dependencies: https://goo.gl/LeUzfb
+
+The project was built assuming it is hosted at /.
+You can control this with the homepage field in your package.json.
+
+The build folder is ready to be deployed.
+You may serve it with a static server:
+
+  npm install -g serve
+  serve -s build
+
+Find out more about deployment here:
+
+  https://cra.link/deployment
+

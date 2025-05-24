@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import Button from '@ui/Button';
 import styles from './LieuxListHeader.module.css';
 
 /**
@@ -11,13 +12,14 @@ const LieuxListHeader = () => {
   return (
     <div className={styles.headerContainer}>
       <h2 className={styles.headerTitle}>Liste des lieux</h2>
-      <button 
-        className={`btn btn-primary d-flex align-items-center gap-2 ${styles.addButton}`}
+      <Button 
+        variant="primary"
+        className={`d-flex align-items-center gap-2 ${styles.addButton}`}
         onClick={() => navigate('/lieux/nouveau')}
       >
         <i className="bi bi-plus-lg"></i>
         Ajouter un lieu
-      </button>
+      </Button>
     </div>
   );
 };

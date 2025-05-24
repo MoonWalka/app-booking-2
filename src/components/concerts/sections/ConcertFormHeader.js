@@ -35,7 +35,8 @@ const ConcertFormHeader = ({ id, formData, navigate, isSubmitting, onDelete, onC
       <div className={styles.actionButtons}>
         <Button
           type="button"
-          className={`btn btn-outline-secondary ${styles.actionBtn}`}
+          variant="outline-secondary"
+          className={styles.actionBtn}
           onClick={handleCancel}
           disabled={isSubmitting}
         >
@@ -46,7 +47,8 @@ const ConcertFormHeader = ({ id, formData, navigate, isSubmitting, onDelete, onC
         {!isNewConcert && (
           <Button
             type="button"
-            className={`btn btn-outline-danger ${styles.actionBtn}`}
+            variant="outline-danger"
+            className={styles.actionBtn}
             onClick={onDelete}
             disabled={isSubmitting}
           >
@@ -58,7 +60,8 @@ const ConcertFormHeader = ({ id, formData, navigate, isSubmitting, onDelete, onC
         <Button
           type="submit"
           form="concertForm"
-          className={`btn btn-primary ${styles.actionBtn}`}
+          variant="primary"
+          className={styles.actionBtn}
           disabled={isSubmitting}
         >
           {isSubmitting ? (

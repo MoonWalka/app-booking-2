@@ -61,12 +61,22 @@ const LieuxResultsTable = ({ lieux, onDeleteLieu }) => {
   // Actions par ligne
   const renderActions = (lieu) => (
     <div className={`text-end ${styles.actionButtons}`} onClick={e => e.stopPropagation()}>
-      <a className={`btn btn-secondary ${styles.actionButton}`} href={`/lieux/${lieu.id}`} title="Voir">
+      <Button 
+        variant="secondary" 
+        className={styles.actionButton} 
+        onClick={() => navigate(`/lieux/${lieu.id}`)} 
+        title="Voir"
+      >
         <i className="bi bi-eye"></i>
-      </a>
-      <a className={`btn btn-outline-primary ${styles.actionButton}`} href={`/lieux/edit/${lieu.id}`} title="Éditer">
+      </Button>
+      <Button 
+        variant="outline-primary" 
+        className={styles.actionButton} 
+        onClick={() => navigate(`/lieux/edit/${lieu.id}`)} 
+        title="Éditer"
+      >
         <i className="bi bi-pencil"></i>
-      </a>
+      </Button>
       <Button 
         variant="danger" 
         className={styles.actionButton} 

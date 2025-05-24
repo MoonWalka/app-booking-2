@@ -1,0 +1,113 @@
+  Line 1:46:   'Suspense' is defined but never used                no-unused-vars
+  Line 28:8:   'DesktopLayout' is defined but never used           no-unused-vars
+  Line 183:9:  'routeFallback' is assigned a value but never used  no-unused-vars
+  Line 254:10:  'initialData' is assigned a value but never used     no-unused-vars
+  Line 283:9:   'handleComplete' is assigned a value but never used  no-unused-vars
+  Line 308:9:   'handleCancel' is assigned a value but never used    no-unused-vars
+  Line 317:9:   'steps' is assigned a value but never used           no-unused-vars
+  Line 44:5:  'resetFilters' is assigned a value but never used      no-unused-vars
+  Line 50:5:  'setSortDirection' is assigned a value but never used  no-unused-vars
+  Line 4:10:   'useResponsive' is defined but never used          no-unused-vars
+  Line 8:8:    'layoutStyles' is defined but never used           no-unused-vars
+  Line 16:10:  'isNavigating' is assigned a value but never used  no-unused-vars
+  Line 17:10:  'prevOutlet' is assigned a value but never used    no-unused-vars
+  Line 26:56:  'toggleEditMode' is assigned a value but never used                                                          no-unused-vars
+  Line 81:21:   'setShowLieuResults' is assigned a value but never used     no-unused-vars
+  Line 103:21:  'setShowProgResults' is assigned a value but never used     no-unused-vars
+  Line 120:21:  'setShowArtisteResults' is assigned a value but never used  no-unused-vars
+  Line 9:10:  'useConcertStatus' is defined but never used       no-unused-vars
+  Line 27:9:  'location' is assigned a value but never used      no-unused-vars
+  Line 51:5:  'handleDelete' is assigned a value but never used  no-unused-vars
+  Line 80:5:  'getContractButtonVariant' is assigned a value but never used  no-unused-vars
+  Line 81:5:  'getContractTooltip' is assigned a value but never used        no-unused-vars
+  Line 2:50:  'Badge' is defined but never used  no-unused-vars
+  Line 4:8:  'Button' is defined but never used  no-unused-vars
+  Line 12:11:  'isMobile' is assigned a value but never used  no-unused-vars
+  Line 13:11:  'isMobile' is assigned a value but never used  no-unused-vars
+  Line 33:9:  'bodyEditorRef' is assigned a value but never used  no-unused-vars
+  Line 55:9:  'preview' is assigned a value but never used        no-unused-vars
+  Line 3:10:  'Spinner' is defined but never used  no-unused-vars
+  Line 10:3:  'query' is defined but never used    no-unused-vars
+  Line 11:3:  'where' is defined but never used    no-unused-vars
+  Line 12:3:  'getDocs' is defined but never used  no-unused-vars
+  Line 46:5:  'formatDate' is assigned a value but never used      no-unused-vars
+  Line 47:5:  'formatCurrency' is assigned a value but never used  no-unused-vars
+  Line 37:5:  'formatDate' is assigned a value but never used      no-unused-vars
+  Line 38:5:  'formatCurrency' is assigned a value but never used  no-unused-vars
+  Line 3:10:  'toast' is defined but never used                          no-unused-vars
+  Line 5:10:  'db' is defined but never used                             no-unused-vars
+  Line 20:8:  'LieuContactSection' is defined but never used             no-unused-vars
+  Line 76:5:  'isAddressFieldActive' is assigned a value but never used  no-unused-vars
+  Line 4:10:  'toast' is defined but never used               no-unused-vars
+  Line 42:5:  'isEditing' is assigned a value but never used  no-unused-vars
+  Line 27:10:  'searchResults' is assigned a value but never used          no-unused-vars
+  Line 28:10:  'isSearching' is assigned a value but never used            no-unused-vars
+  Line 29:10:  'selectedStructure' is assigned a value but never used      no-unused-vars
+  Line 29:29:  'setSelectedStructure' is assigned a value but never used   no-unused-vars
+  Line 140:9:  'handleSelectStructure' is assigned a value but never used  no-unused-vars
+  Line 6:10:  'toast' is defined but never used  no-unused-vars
+  Line 2:37:  'Row' is defined but never used         no-unused-vars
+  Line 2:42:  'Col' is defined but never used         no-unused-vars
+  Line 5:14:  'collection' is defined but never used  no-unused-vars
+  Line 17:5:  'addressFieldActive' is assigned a value but never used  no-unused-vars
+  Line 2:57:  'ListGroup' is defined but never used  no-unused-vars
+  Line 1:27:  'useEffect' is defined but never used             no-unused-vars
+  Line 9:8:   'LieuInfoSection' is defined but never used       no-unused-vars
+  Line 35:5:  'structure' is assigned a value but never used    no-unused-vars
+  Line 43:5:  'formatValue' is assigned a value but never used  no-unused-vars
+  Line 3:18:  'Field' is defined but never used         no-unused-vars
+  Line 3:25:  'ErrorMessage' is defined but never used  no-unused-vars
+  Line 3:35:  'Button' is defined but never used                     no-unused-vars
+  Line 3:43:  'Form' is defined but never used                       no-unused-vars
+  Line 3:49:  'InputGroup' is defined but never used                 no-unused-vars
+  Line 22:5:  'searchFilters' is assigned a value but never used     no-unused-vars
+  Line 23:5:  'setSearchFilters' is assigned a value but never used  no-unused-vars
+  Line 24:5:  'handleSearch' is assigned a value but never used      no-unused-vars
+  Line 2:16:  'InputGroup' is defined but never used  no-unused-vars
+  Line 2:28:  'Button' is defined but never used      no-unused-vars
+  Line 4:8:    'structureService' is defined but never used                                                                        no-unused-vars
+  Line 39:11:  'errors' is assigned a value but never used  no-unused-vars
+  Line 6:3:   'where' is defined but never used                      no-unused-vars
+  Line 84:9:  'filterStructures' is assigned a value but never used  no-unused-vars
+  Line 22:13:  'updateFormData' is assigned a value but never used  no-unused-vars
+  Line 24:9:  'navigate' is assigned a value but never used  no-unused-vars
+  Line 52:7:    'sourceField' is assigned a value but never used  no-unused-vars
+  Line 121:21:  'key' is assigned a value but never used          no-unused-vars
+  Line 173:21:  'key' is assigned a value but never used          no-unused-vars
+  Line 4:16:    'setDoc' is defined but never used                                                                                                                                                                                                                                     no-unused-vars
+  Line 5:3:     'collection' is defined but never used                                                                                                                                                                                                                                 no-unused-vars
+  Line 5:15:    'query' is defined but never used                                                                                                                                                                                                                                      no-unused-vars
+  Line 5:22:    'where' is defined but never used                                                                                                                                                                                                                                      no-unused-vars
+  Line 5:29:    'getDocs' is defined but never used                                                                                                                                                                                                                                    no-unused-vars
+  Line 1:44:  'useMemo' is defined but never used  no-unused-vars
+  Line 3:52:  'orderBy' is defined but never used  no-unused-vars
+  Line 2:27:    'Suspense' is defined but never used                  no-unused-vars
+  Line 53:9:    'retryCounter' is assigned a value but never used     no-unused-vars
+  Line 179:13:  'defaultFallback' is assigned a value but never used  no-unused-vars
+  Line 33:10:   'cacheKey' is assigned a value but never used        no-unused-vars
+  Line 44:9:    'concertStatus' is assigned a value but never used   no-unused-vars
+  Line 441:40:  'formDataStatus' is assigned a value but never used  no-unused-vars
+  Line 1:20:  'useEffect' is defined but never used  no-unused-vars
+  Line 47:9:   'cacheRef' is assigned a value but never used                                                                     no-unused-vars
+  Line 1:10:  'useState' is defined but never used  no-unused-vars
+  Line 36:5:  'handleRemove' is assigned a value but never used  no-unused-vars
+  Line 11:9:  'navigate' is assigned a value but never used  no-unused-vars
+  Line 5:52:  'updateDoc' is defined but never used         no-unused-vars
+  Line 5:80:  'orderBy' is defined but never used           no-unused-vars
+  Line 5:89:  'query' is defined but never used             no-unused-vars
+  Line 5:96:  'where' is defined but never used             no-unused-vars
+  Line 6:8:   'ContratGenerator' is defined but never used  no-unused-vars
+  Line 7:10:  'PDFDownloadLink' is defined but never used   no-unused-vars
+  Line 2:38:  'Suspense' is defined but never used                  no-unused-vars
+  Line 10:8:  'ContratTemplatesPage' is defined but never used      no-unused-vars
+  Line 11:8:  'ContratTemplatesEditPage' is defined but never used  no-unused-vars
+  Line 2:31:  'Nav' is defined but never used  no-unused-vars
+  Line 4:8:  'ContratTemplateEditor' is defined but never used  no-unused-vars
+  Line 4:58:  'where' is defined but never used              no-unused-vars
+  Line 21:9:  'navigate' is assigned a value but never used  no-unused-vars
+  Line 93:15:  'instanceId' is assigned a value but never used                 no-unused-vars
+  Line 57:11:  'cacheKey' is assigned a value but never used  no-unused-vars
+  Line 9:3:    'getFirestore' is defined but never used                        no-unused-vars
+  Line 29:11:  'programmId' is assigned a value but never used  no-unused-vars
+  Line 5:8:    'firebase' is defined but never used                                                  no-unused-vars
+  Line 7:10:   'localDB' is defined but never used                                                   no-unused-vars

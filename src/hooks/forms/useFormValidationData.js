@@ -1,5 +1,33 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { db, doc, getDoc, collection, query, where, getDocs, updateDoc } from '@/firebaseInit';
+
+// Liste des champs à comparer et valider pour le programmateur
+const contactFields = [
+  { id: 'nom', label: 'Nom' },
+  { id: 'prenom', label: 'Prénom' },
+  { id: 'fonction', label: 'Fonction' },
+  { id: 'email', label: 'Email' },
+  { id: 'telephone', label: 'Téléphone' }
+];
+
+const structureFields = [
+  { id: 'raisonSociale', label: 'Raison sociale' },
+  { id: 'type', label: 'Type de structure' },
+  { id: 'adresse', label: 'Adresse' },
+  { id: 'codePostal', label: 'Code postal' },
+  { id: 'ville', label: 'Ville' },
+  { id: 'pays', label: 'Pays' },
+  { id: 'siret', label: 'SIRET' }
+];
+
+// Liste des champs à comparer et valider pour le lieu
+const lieuFields = [
+  { id: 'nom', label: 'Nom du lieu' },
+  { id: 'adresse', label: 'Adresse' },
+  { id: 'codePostal', label: 'Code postal' },
+  { id: 'ville', label: 'Ville' },
+  { id: 'capacite', label: 'Capacité' }
+];
 
 const useFormValidationData = (concertId) => {
   const [formData, setFormData] = useState(null);
@@ -12,35 +40,7 @@ const useFormValidationData = (concertId) => {
   const [programmateur, setProgrammateur] = useState(null);
   const [lieu, setLieu] = useState(null);
   
-  // Liste des champs à comparer et valider pour le programmateur
-  const contactFields = [
-    { id: 'nom', label: 'Nom' },
-    { id: 'prenom', label: 'Prénom' },
-    { id: 'fonction', label: 'Fonction' },
-    { id: 'email', label: 'Email' },
-    { id: 'telephone', label: 'Téléphone' }
-  ];
-  
-  const structureFields = [
-    { id: 'raisonSociale', label: 'Raison sociale' },
-    { id: 'type', label: 'Type de structure' },
-    { id: 'adresse', label: 'Adresse' },
-    { id: 'codePostal', label: 'Code postal' },
-    { id: 'ville', label: 'Ville' },
-    { id: 'pays', label: 'Pays' },
-    { id: 'siret', label: 'SIRET' }
-  ];
-
-  // Liste des champs à comparer et valider pour le lieu
-  const lieuFields = [
-    { id: 'nom', label: 'Nom du lieu' },
-    { id: 'adresse', label: 'Adresse' },
-    { id: 'codePostal', label: 'Code postal' },
-    { id: 'ville', label: 'Ville' },
-    { id: 'capacite', label: 'Capacité' }
-  ];
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       console.log("Recherche de formulaire pour le concert:", concertId);
       
@@ -225,13 +225,13 @@ const useFormValidationData = (concertId) => {
       setError(`Impossible de charger les données du formulaire: ${err.message}`);
       setLoading(false);
     }
-  };
+  }, [concertId, lieu]);
 
   useEffect(() => {
     if (concertId) {
       fetchData();
     }
-  }, [concertId]);
+  }, [concertId, fetchData]);
 
   return {
     formData,

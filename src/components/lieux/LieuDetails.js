@@ -1,50 +1,26 @@
 // src/components/lieux/LieuDetails.js
-import React, { useMemo, useEffect } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import React from 'react';
+import { useParams } from 'react-router-dom';
 import { useResponsive } from '@/hooks/common';
-// MIGRATION: Utilisation du hook optimisé au lieu du hook V2
-import { useLieuDetails } from '@/hooks/lieux';
-import LieuForm from '@/components/lieux/LieuForm';
+
+// Imports directs des composants
+import LieuxDesktopView from './desktop/LieuView';
+import LieuxMobileView from './mobile/LieuView';
 
 /**
  * Composant conteneur pour les détails d'un lieu
- * Version optimisée avec mémorisation du composant responsif
+ * Utilise le hook useResponsive pour afficher soit la version desktop, soit la version mobile
  */
-function LieuDetails() {
+const LieuDetails = () => {
   const { id } = useParams();
-  const location = useLocation();
-  const responsive = useResponsive();
+  const { isMobile } = useResponsive();
   
-  // MIGRATION: Utilisation du hook optimisé pour gérer l'état global
-  const lieuHook = useLieuDetails(id);
-  const { isEditing } = lieuHook;
-  
-  // Mémoriser le composant de vue pour éviter les recréations à chaque rendu
-  const LieuView = useMemo(() => {
-    console.log(`[INFO] Création du composant de vue lieu, mode: ${responsive.isMobile ? 'Mobile' : 'Desktop'}`);
-    return responsive.getResponsiveComponent({
-      desktopPath: 'lieux/desktop/LieuView',
-      mobilePath: 'lieux/mobile/LieuView'
-    });
-  }, [responsive.isMobile, responsive.getResponsiveComponent]);
-  
-  // Logging optimisé pour le montage/démontage
-  useEffect(() => {
-    console.log(`[INFO] LieuDetails monté pour ID: ${id}, mode: ${responsive.isMobile ? 'Mobile' : 'Desktop'}`);
-    
-    return () => {
-      console.log(`[INFO] LieuDetails démonté pour ID: ${id}`);
-    };
-  }, [id, responsive.isMobile]);
-  
-  // En mode édition, afficher le formulaire
-  if (isEditing) {
-    return <LieuForm id={id} />;
-  }
-  
-  // En mode visualisation, utiliser le composant mémorisé
-  return <LieuView id={id} lieuHook={lieuHook} />;
-}
+  // Rendu conditionnel simple
+  return isMobile ? (
+    <LieuxMobileView id={id} />
+  ) : (
+    <LieuxDesktopView id={id} />
+  );
+};
 
-// Utilisation de React.memo pour éviter les re-rendus inutiles
-export default React.memo(LieuDetails);
+export default LieuDetails;

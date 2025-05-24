@@ -29,6 +29,11 @@ export const ModalProvider = ({ children }) => {
     return `modal-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
   }, []);
   
+  // Fonction pour fermer une modale spécifique
+  const closeModal = useCallback((id) => {
+    setModals(prevModals => prevModals.filter(modal => modal.id !== id));
+  }, []);
+  
   // Fonction pour ouvrir une nouvelle modale
   const openModal = useCallback(({ 
     component, 
@@ -53,12 +58,7 @@ export const ModalProvider = ({ children }) => {
     ]);
     
     return id;
-  }, [generateId]);
-  
-  // Fonction pour fermer une modale spécifique
-  const closeModal = useCallback((id) => {
-    setModals(prevModals => prevModals.filter(modal => modal.id !== id));
-  }, []);
+  }, [generateId, closeModal]);
   
   // Fonction pour fermer toutes les modales
   const closeAllModals = useCallback(() => {

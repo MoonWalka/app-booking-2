@@ -92,6 +92,16 @@ const LieuDetails = () => {
   // Handlers améliorés avec notifications - NOUVEAU: Finalisation intelligente
   const handleSaveWithNotification = async () => {
     try {
+      // NOUVEAU: Validation avancée avant sauvegarde
+      const isDataValid = await handleAdvancedValidation();
+      if (!isDataValid) {
+        toast.warning('La validation des données a échoué. Veuillez vérifier vos informations.', {
+          position: 'top-right',
+          autoClose: 4000,
+        });
+        return false;
+      }
+
       const result = await handleSave();
       if (result !== false) {
         toast.success('Lieu mis à jour avec succès !', {
@@ -138,14 +148,73 @@ const LieuDetails = () => {
     if (!db || !lieu?.id) return true;
     
     try {
-      // Vérification avancée si nécessaire (ex: contraintes de données)
+      // NOUVEAU: Vérifications avancées de validation métier
+      
+      // 1. Vérifier l'unicité du nom de lieu dans la même ville
+      if (formData?.nom && formData?.ville) {
+        const existingLieux = await db.collection('lieux')
+          .where('nom', '==', formData.nom)
+          .where('ville', '==', formData.ville)
+          .where('id', '!=', lieu.id)
+          .get();
+          
+        if (!existingLieux.empty) {
+          toast.warning('Un lieu avec ce nom existe déjà dans cette ville', {
+            position: 'top-right',
+            autoClose: 4000,
+          });
+          return false;
+        }
+      }
+      
+      // 2. Vérifier la cohérence de la capacité
+      if (formData?.capacite && parseInt(formData.capacite) <= 0) {
+        toast.warning('La capacité doit être un nombre positif', {
+          position: 'top-right',
+          autoClose: 4000,
+        });
+        return false;
+      }
+      
+      // 3. Vérifier la validité de l'email de contact
+      if (formData?.contact?.email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.contact.email)) {
+          toast.warning('L\'adresse email de contact n\'est pas valide', {
+            position: 'top-right',
+            autoClose: 4000,
+          });
+          return false;
+        }
+      }
+      
+      // 4. Vérifier que les champs obligatoires sont remplis
+      const requiredFields = ['nom', 'type'];
+      for (const field of requiredFields) {
+        if (!formData?.[field]?.trim()) {
+          toast.warning(`Le champ "${field}" est obligatoire`, {
+            position: 'top-right',
+            autoClose: 4000,
+          });
+          return false;
+        }
+      }
+      
+      // 5. Validation réussie
+      toast.success('✓ Validation des données réussie', {
+        position: 'top-right',
+        autoClose: 2000,
+        hideProgressBar: true,
+      });
+      
       return true;
     } catch (error) {
-      toast.warning('Vérification des données impossible', {
+      console.error('Erreur lors de la validation:', error);
+      toast.warning('Vérification des données impossible - Sauvegarde tout de même autorisée', {
         position: 'top-right',
         autoClose: 4000,
       });
-      return false;
+      return true; // Permettre la sauvegarde en cas d'erreur de validation
     }
   };
 

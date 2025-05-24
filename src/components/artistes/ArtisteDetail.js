@@ -1,7 +1,11 @@
 // src/components/artistes/ArtisteDetail.js
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { useResponsive } from '@/hooks/common'; // Utilisation du hook recommandé
+import { useResponsive } from '@/hooks/common';
+
+// Imports directs des composants
+import ArtistesDesktopView from './desktop/ArtisteView';
+import ArtistesMobileView from './mobile/ArtisteView';
 
 /**
  * Composant conteneur pour les détails d'un artiste
@@ -9,15 +13,14 @@ import { useResponsive } from '@/hooks/common'; // Utilisation du hook recommand
  */
 const ArtisteDetail = () => {
   const { id } = useParams();
-  const responsive = useResponsive();
+  const { isMobile } = useResponsive();
   
-  // Obtenir le composant approprié selon la taille de l'écran
-  const ArtisteView = responsive.getResponsiveComponent({
-    desktopPath: 'artistes/desktop/ArtisteView',
-    mobilePath: 'artistes/mobile/ArtisteView'
-  });
-  
-  return <ArtisteView id={id} />;
+  // Rendu conditionnel simple
+  return isMobile ? (
+    <ArtistesMobileView id={id} />
+  ) : (
+    <ArtistesDesktopView id={id} />
+  );
 };
 
 export default ArtisteDetail;

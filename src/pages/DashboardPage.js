@@ -3,12 +3,6 @@ import Card from '@/components/ui/Card';
 import styles from './Dashboard.module.css';
 
 // Imports modifiés de la branche refacto-structure-scriptshell - pour implémentation future
-{/* 
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Card, Row, Col } from 'react-bootstrap';
-import '@styles/index.css';
-*/}
 // Note: Les imports utilisent React Bootstrap pour les composants UI et ajoutent useState, useEffect, useNavigate
 // Vous devrez vérifier que ces dépendances sont installées et configurées correctement
 

@@ -111,6 +111,29 @@
   cursor: pointer;
 }
 
+/* NOUVEAU: Style pour l'alerte de succès de copie d'adresse */
+.successAlert {
+  margin-bottom: var(--tc-spacing-md);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  border-radius: var(--tc-border-radius);
+  background-color: var(--tc-success-color-10);
+  border: 1px solid var(--tc-success-color-20);
+  color: var(--tc-success-color-dark);
+  font-size: var(--tc-font-size-sm);
+  animation: slideInFromTop 0.3s ease-out;
+}
+
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Responsive styles */
 @media (max-width: 768px) {
   .formRow {

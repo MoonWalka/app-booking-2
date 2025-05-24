@@ -1,20 +1,24 @@
-// src/components/forms/LieuForm.js
+// src/components/lieux/LieuForm.js
 import React from 'react';
 import { useResponsive } from '@/hooks/common';
-import Spinner from '@/components/common/Spinner';
 
+// Imports directs des composants
+import LieuxDesktopForm from './desktop/LieuForm';
+import LieuMobileForm from './mobile/LieuMobileForm'; // NOUVEAU: Composant mobile finalisé
+
+/**
+ * Composant wrapper responsive pour le formulaire de lieu
+ * Utilise maintenant les versions desktop et mobile complètes
+ */
 function LieuForm(props) {
-  // Créer un fallback personnalisé avec notre composant Spinner standardisé
-  const customFallback = <Spinner message="Chargement du formulaire..." contentOnly={true} />;
+  const { isMobile } = useResponsive(); // FINALISATION INTELLIGENTE: Variable maintenant utilisée !
   
-  const { getResponsiveComponent } = useResponsive();
-  const ResponsiveComponent = getResponsiveComponent({
-    desktopPath: 'lieux/desktop/LieuForm',
-    mobilePath: 'lieux/mobile/LieuForm',
-    fallback: customFallback // Utiliser notre spinner standardisé comme fallback
-  });
-  
-  return <ResponsiveComponent {...props} />;
+  // Rendu conditionnel complet desktop/mobile
+  return isMobile ? (
+    <LieuMobileForm {...props} />
+  ) : (
+    <LieuxDesktopForm {...props} />
+  );
 }
 
 export default LieuForm;

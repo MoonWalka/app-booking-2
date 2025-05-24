@@ -204,6 +204,20 @@ const useFormValidation = (options) => {
   }, [validateField, validateOnBlur, values]);
 
   /**
+   * Réinitialise le formulaire
+   * 
+   * @param {Object} [newValues] - Nouvelles valeurs initiales (optionnel)
+   */
+  const resetForm = useCallback((newValues = null) => {
+    setValues(newValues || initialValues);
+    setErrors({});
+    setTouched({});
+    setIsSubmitting(false);
+    setIsDirty(false);
+    debugLog('Formulaire réinitialisé', 'info', 'useFormValidation');
+  }, [initialValues]);
+
+  /**
    * Gère la soumission du formulaire
    * 
    * @param {Event} e - Événement submit
@@ -244,21 +258,7 @@ const useFormValidation = (options) => {
     } else {
       setIsSubmitting(false);
     }
-  }, [validateForm, validateOnSubmit, validationSchema, values, onSubmit]);
-
-  /**
-   * Réinitialise le formulaire
-   * 
-   * @param {Object} [newValues] - Nouvelles valeurs initiales (optionnel)
-   */
-  const resetForm = useCallback((newValues = null) => {
-    setValues(newValues || initialValues);
-    setErrors({});
-    setTouched({});
-    setIsSubmitting(false);
-    setIsDirty(false);
-    debugLog('Formulaire réinitialisé', 'info', 'useFormValidation');
-  }, [initialValues]);
+  }, [validateForm, validateOnSubmit, validationSchema, values, onSubmit, resetForm]);
 
   /**
    * Met à jour plusieurs valeurs à la fois

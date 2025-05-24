@@ -6,9 +6,7 @@ import { db } from '@/firebaseInit';
 import { Table, Badge, Button, Container, Row, Col, Card } from 'react-bootstrap';
 import ContratGenerationPage from '@pages/ContratGenerationPage.js';
 import ContratDetailsPage from '@pages/ContratDetailsPage.js';
-// Imports directs au lieu de lazy
-import ContratTemplatesPage from '@pages/contratTemplatesPage.js';
-import ContratTemplatesEditPage from '@pages/contratTemplatesEditPage.js';
+// Imports directs au lieu de lazy - SUPPRIMÉS: imports non utilisés
 import '@styles/index.css';
 
 // Charger les composants de manière dynamique pour éviter les dépendances circulaires

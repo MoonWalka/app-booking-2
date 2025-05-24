@@ -44,13 +44,198 @@ export const useConcertListData = () => {
 
   const lastFetchRef = useRef(0);
   const isInitialRenderRef = useRef(true);
+  // NOUVEAU: Cache local hybride finalisé - Système de cache intelligent multi-niveaux
   const cacheRef = useRef({
     concerts: {},
     lieux: {},
-    programmateurs: {}
+    programmateurs: {},
+    // NOUVEAU: Métadonnées de cache
+    timestamps: {},
+    hitCounts: {},
+    performance: {}
   });
 
   const minTimeBetweenFetches = 10000; // 10 secondes minimum entre deux fetch
+
+  // NOUVEAU: Fonction de gestion du cache hybride - Finalisation intelligente
+  const getCachedEntity = useCallback((collectionName, id) => {
+    // Vérifier d'abord le cache local (plus rapide)
+    const localCacheKey = `${collectionName}_${id}`;
+    const localCached = cacheRef.current[collectionName]?.[id];
+    
+    if (localCached && localCached.timestamp && Date.now() - localCached.timestamp < 300000) { // 5 min
+      // Augmenter le compteur de hits
+      cacheRef.current.hitCounts[localCacheKey] = (cacheRef.current.hitCounts[localCacheKey] || 0) + 1;
+      logger.log(`[CACHE LOCAL] Hit pour ${localCacheKey} (${cacheRef.current.hitCounts[localCacheKey]} hits)`);
+      return localCached.data;
+    }
+    
+    // Sinon, essayer le cache service
+    const serviceCacheKey = `entity_${collectionName}_${id}`;
+    return cacheService.get(serviceCacheKey);
+  }, []);
+
+  // NOUVEAU: Fonction pour mettre à jour le cache hybride
+  const setCachedEntity = useCallback((collectionName, id, data) => {
+    // Mettre à jour le cache local
+    if (!cacheRef.current[collectionName]) {
+      cacheRef.current[collectionName] = {};
+    }
+    
+    cacheRef.current[collectionName][id] = {
+      data,
+      timestamp: Date.now()
+    };
+    
+    // Mettre à jour aussi le cache service
+    const serviceCacheKey = `entity_${collectionName}_${id}`;
+    const cacheTTL = cacheService.CACHE_DURATIONS?.[collectionName] || cacheService.CACHE_DURATIONS?.default;
+    cacheService.set(serviceCacheKey, data, cacheTTL);
+    
+    // Log de performance
+    const cacheKey = `${collectionName}_${id}`;
+    cacheRef.current.timestamps[cacheKey] = Date.now();
+    logger.log(`[CACHE HYBRIDE] Stockage ${cacheKey}`);
+  }, []);
+
+  // NOUVEAU: Fonction pour obtenir les statistiques de cache
+  const getCacheStats = useCallback(() => {
+    const totalEntries = Object.keys(cacheRef.current.timestamps).length;
+    const hitCounts = Object.values(cacheRef.current.hitCounts).reduce((sum, count) => sum + count, 0);
+    
+    return {
+      totalEntries,
+      totalHits: hitCounts,
+      collections: {
+        concerts: Object.keys(cacheRef.current.concerts || {}).length,
+        lieux: Object.keys(cacheRef.current.lieux || {}).length,
+        programmateurs: Object.keys(cacheRef.current.programmateurs || {}).length
+      },
+      performance: cacheRef.current.performance
+    };
+  }, []);
+
+  // NOUVEAU: Fonction pour vider le cache avec sélectivité
+  const clearCache = useCallback((collectionName = null) => {
+    if (collectionName) {
+      // Vider seulement une collection
+      cacheRef.current[collectionName] = {};
+      logger.log(`[CACHE] Vidage du cache ${collectionName}`);
+    } else {
+      // Vider tout le cache
+      cacheRef.current = {
+        concerts: {},
+        lieux: {},
+        programmateurs: {},
+        timestamps: {},
+        hitCounts: {},
+        performance: {}
+      };
+      logger.log(`[CACHE] Vidage complet du cache`);
+    }
+  }, []);
+
+  // NOUVEAU: Fonction utilitaire pour récupérer des entités par lot en utilisant le cache hybride
+  const fetchEntitiesBatch = useCallback(async (collectionName, ids) => {
+    if (!ids || ids.length === 0) return [];
+    
+    // NOUVEAU: Filtrer les IDs en utilisant le cache hybride
+    const cachedEntities = [];
+    const idsToFetch = [];
+    
+    for (const id of ids) {
+      const cachedItem = getCachedEntity(collectionName, id);
+      
+      if (cachedItem) {
+        cachedEntities.push(cachedItem);
+      } else {
+        idsToFetch.push(id);
+      }
+    }
+    
+    // Si tous les éléments sont en cache, retourner directement
+    if (idsToFetch.length === 0) {
+      logger.log(`[CACHE HYBRIDE] Tous les ${collectionName} trouvés en cache (${cachedEntities.length} items)`);
+      return cachedEntities;
+    }
+    
+    // Mesure de performance
+    const startTime = performance.now();
+    logger.startLoading(`batch ${collectionName} (${idsToFetch.length} items)`);
+    
+    try {
+      // Firestore limite les requêtes 'in' à 10 éléments max
+      const batchSize = 10;
+      const batchResults = [];
+      
+      // Traiter les IDs par lots de 10
+      for (let i = 0; i < idsToFetch.length; i += batchSize) {
+        const batchIds = idsToFetch.slice(i, i + batchSize);
+        
+        // Utiliser "__name__" comme identifiant de document pour where...in
+        const batchQuery = query(
+          collection(db, collectionName),
+          where('__name__', 'in', batchIds)
+        );
+        
+        const querySnapshot = await getDocs(batchQuery);
+        
+        // Traiter les résultats du lot
+        const results = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        
+        // NOUVEAU: Mettre en cache avec le système hybride
+        results.forEach(item => {
+          if (item && item.id) {
+            setCachedEntity(collectionName, item.id, item);
+          }
+        });
+        
+        batchResults.push(...results);
+      }
+      
+      // Log de performance avec statistiques de cache
+      const endTime = performance.now();
+      const fetchTime = endTime - startTime;
+      logger.performance(`Requête batch ${collectionName}`, fetchTime, { 
+        count: idsToFetch.length,
+        cached: cachedEntities.length,
+        fetched: batchResults.length
+      });
+      
+      // NOUVEAU: Stocker les métriques de performance dans le cache
+      cacheRef.current.performance[`${collectionName}_batch_${Date.now()}`] = {
+        fetchTime,
+        itemsCount: idsToFetch.length,
+        cacheHitRate: cachedEntities.length / (cachedEntities.length + idsToFetch.length)
+      };
+      
+      return [...cachedEntities, ...batchResults];
+    } catch (error) {
+      logger.error(`Erreur lors du chargement batch des ${collectionName}:`, error);
+      
+      // En cas d'erreur avec la méthode batch, on revient à la méthode document par document
+      const results = [];
+      for (const id of idsToFetch) {
+        try {
+          const docSnap = await getDoc(doc(db, collectionName, id));
+          if (docSnap.exists()) {
+            const data = { id: docSnap.id, ...docSnap.data() };
+            results.push(data);
+            
+            // NOUVEAU: Mettre en cache avec le système hybride
+            setCachedEntity(collectionName, id, data);
+          }
+        } catch (e) {
+          // Silencieux pour éviter de remplir la console d'erreurs
+        }
+      }
+      
+      return [...cachedEntities, ...results];
+    }
+  }, [getCachedEntity, setCachedEntity]);
 
   const fetchConcertsAndForms = useCallback(async (loadMore = false, force = false) => {
     // Éviter les rechargements trop fréquents sauf pour le chargement de plus d'éléments ou si force=true
@@ -215,102 +400,7 @@ export const useConcertListData = () => {
       setLoading(false);
       setLoadingMore(false);
     }
-  }, []);
-  
-  // Fonction utilitaire pour récupérer des entités par lot en utilisant le service de cache
-  const fetchEntitiesBatch = async (collectionName, ids) => {
-    if (!ids || ids.length === 0) return [];
-    
-    // Filtrer les IDs déjà en cache
-    const cachedEntities = [];
-    const idsToFetch = [];
-    
-    for (const id of ids) {
-      // Essayer d'utiliser le cacheService au lieu du cache local
-      const cacheKey = `entity_${collectionName}_${id}`;
-      const cachedItem = cacheService.get(cacheKey);
-      
-      if (cachedItem) {
-        cachedEntities.push(cachedItem);
-      } else {
-        idsToFetch.push(id);
-      }
-    }
-    
-    // Si tous les éléments sont en cache, retourner directement
-    if (idsToFetch.length === 0) {
-      return cachedEntities;
-    }
-    
-    // Mesure de performance
-    const startTime = performance.now();
-    logger.startLoading(`batch ${collectionName} (${idsToFetch.length} items)`);
-    
-    try {
-      // Firestore limite les requêtes 'in' à 10 éléments max
-      const batchSize = 10;
-      const batchResults = [];
-      
-      // Traiter les IDs par lots de 10
-      for (let i = 0; i < idsToFetch.length; i += batchSize) {
-        const batchIds = idsToFetch.slice(i, i + batchSize);
-        
-        // Utiliser "__name__" comme identifiant de document pour where...in
-        const batchQuery = query(
-          collection(db, collectionName),
-          where('__name__', 'in', batchIds)
-        );
-        
-        const querySnapshot = await getDocs(batchQuery);
-        
-        // Traiter les résultats du lot
-        const results = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
-        
-        // Mettre en cache avec le cacheService
-        results.forEach(item => {
-          if (item && item.id) {
-            const cacheKey = `entity_${collectionName}_${item.id}`;
-            const cacheTTL = cacheService.CACHE_DURATIONS?.[collectionName] || cacheService.CACHE_DURATIONS?.default;
-            cacheService.set(cacheKey, item, cacheTTL);
-          }
-        });
-        
-        batchResults.push(...results);
-      }
-      
-      // Log de performance
-      const endTime = performance.now();
-      logger.performance(`Requête batch ${collectionName}`, endTime - startTime, { count: idsToFetch.length });
-      
-      return [...cachedEntities, ...batchResults];
-    } catch (error) {
-      logger.error(`Erreur lors du chargement batch des ${collectionName}:`, error);
-      
-      // En cas d'erreur avec la méthode batch, on revient à la méthode document par document
-      const results = [];
-      for (const id of idsToFetch) {
-        try {
-          const docSnap = await getDoc(doc(db, collectionName, id));
-          if (docSnap.exists()) {
-            const data = { id: docSnap.id, ...docSnap.data() };
-            results.push(data);
-            
-            // Mettre en cache
-            const cacheKey = `entity_${collectionName}_${id}`;
-            const cacheTTL = cacheService.CACHE_DURATIONS?.[collectionName] || cacheService.CACHE_DURATIONS?.default;
-            cacheService.set(cacheKey, data, cacheTTL);
-          }
-        } catch (e) {
-          // Silencieux pour éviter de remplir la console d'erreurs
-        }
-      }
-      
-      return [...cachedEntities, ...results];
-    }
-  };
+  }, [fetchEntitiesBatch]);
 
   // Effet initial pour charger les données
   useEffect(() => {
@@ -330,7 +420,7 @@ export const useConcertListData = () => {
           logger.error('Erreur dans le chargement initial', err);
         });
     }
-  }, [fetchConcertsAndForms]);
+  }, [fetchConcertsAndForms, hookStartTime]);
 
   // Effet pour écouter les événements de mise à jour de concert
   useEffect(() => {
@@ -393,7 +483,12 @@ export const useConcertListData = () => {
     hasForm,
     hasUnvalidatedForm,
     hasContract,
-    getContractStatus
+    getContractStatus,
+    // NOUVEAU: Fonctions du cache hybride
+    getCacheStats,
+    clearCache,
+    getCachedEntity,
+    setCachedEntity
   };
 };
 

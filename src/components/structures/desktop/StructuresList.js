@@ -79,7 +79,7 @@ const StructuresList = () => {
     fetchStructures();
   }, [fetchStructures]);
 
-  // Fonction pour filtrer les structures
+  // Fonction pour filtrer les structures - NOUVEAU: Finalisation intelligente avec filtrage temps réel
   const filterStructures = () => {
     let result = [...structures];
 
@@ -100,6 +100,40 @@ const StructuresList = () => {
     }
 
     return result;
+  };
+
+  // NOUVEAU: Fonction pour trier et filtrer les structures
+  const getSortedAndFilteredStructures = () => {
+    const filtered = filterStructures();
+    
+    // Application du tri
+    return [...filtered].sort((a, b) => {
+      let aValue, bValue;
+      
+      switch (sortBy) {
+        case 'nom':
+          aValue = (a.nom || a.raisonSociale || '').toLowerCase();
+          bValue = (b.nom || b.raisonSociale || '').toLowerCase();
+          break;
+        case 'type':
+          aValue = a.type || '';
+          bValue = b.type || '';
+          break;
+        case 'updatedAt':
+          aValue = a.updatedAt?.toDate?.() || new Date(a.updatedAt || 0);
+          bValue = b.updatedAt?.toDate?.() || new Date(b.updatedAt || 0);
+          break;
+        default:
+          aValue = '';
+          bValue = '';
+      }
+      
+      if (sortDirection === 'asc') {
+        return aValue > bValue ? 1 : -1;
+      } else {
+        return aValue < bValue ? 1 : -1;
+      }
+    });
   };
 
   // Fonction pour charger plus de structures
@@ -193,7 +227,13 @@ const StructuresList = () => {
         </div>
 
         <div className={styles.resultsCount}>
-          {structures.length} structure(s) trouvée(s)
+          {/* NOUVEAU: Affichage du nombre filtré vs total */}
+          {getSortedAndFilteredStructures().length} structure(s) trouvée(s)
+          {(searchTerm || typeFilter) && getSortedAndFilteredStructures().length !== structures.length && (
+            <span className={styles.filteredCount}>
+              {' '}sur {structures.length} au total
+            </span>
+          )}
         </div>
 
         {loading ? (
@@ -207,7 +247,7 @@ const StructuresList = () => {
             <i className="bi bi-exclamation-triangle me-2"></i>
             {error}
           </div>
-        ) : structures.length === 0 ? (
+        ) : getSortedAndFilteredStructures().length === 0 ? (
           <div className={styles.emptyState}>
             <i className={`bi bi-building ${styles.emptyStateIcon}`}></i>
             <p className={styles.emptyStateText}>
@@ -252,7 +292,8 @@ const StructuresList = () => {
                 </tr>
               </thead>
               <tbody>
-                {structures.map((structure) => (
+                {/* NOUVEAU: Utilisation des structures filtrées et triées */}
+                {getSortedAndFilteredStructures().map((structure) => (
                   <tr 
                     key={structure.id} 
                     className={styles.tableRow}

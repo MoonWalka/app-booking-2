@@ -2,9 +2,9 @@
  * Service de synchronisation entre la base locale et Firebase
  * Permet d'importer/exporter des données entre les deux environnements
  */
-import firebase, { db as firebaseDB, IS_LOCAL_MODE } from '../firebaseInit';
+import { db as firebaseDB, IS_LOCAL_MODE } from '../firebaseInit';
 import { collection, getDocs, doc, setDoc } from '../firebaseInit';
-import { localDB, _getRawLocalData, _importRawData } from '../mockStorage';
+import { _getRawLocalData, _importRawData } from '../mockStorage';
 
 /**
  * Exporte les données locales vers Firebase
@@ -92,10 +92,10 @@ export async function importFirebaseDataToLocal(collections = ['concerts', 'lieu
         }
         
         // Pour chaque document
-        snapshot.docs.forEach(doc => {
+        for (const doc of snapshot.docs) {
           localData[collName][doc.id] = doc.data();
           successCount++;
-        });
+        }
         
         console.log(`Collection ${collName} importée: ${snapshot.docs.length} documents`);
       } catch (error) {
@@ -236,7 +236,7 @@ export function enableAutoSync(intervalMinutes = 30) {
   };
 }
 
-export default {
+const syncService = {
   exportLocalDataToFirebase,
   importFirebaseDataToLocal,
   exportSpecificDocuments,
@@ -244,3 +244,5 @@ export default {
   restoreLocalData,
   enableAutoSync
 };
+
+export default syncService;

@@ -45,7 +45,7 @@ const useGenericEntityDelete = (options) => {
    * @param {string} entityId - ID de l'entité à supprimer
    * @returns {Promise<boolean>} True si la suppression est autorisée
    */
-  const checkRelatedEntities = async (entityId) => {
+  const checkRelatedEntities = useCallback(async (entityId) => {
     if (!relatedEntities || relatedEntities.length === 0) {
       return true;
     }
@@ -186,7 +186,7 @@ const useGenericEntityDelete = (options) => {
       toast.error(`Erreur lors de la vérification des dépendances: ${error.message}`);
       return false;
     }
-  };
+  }, [relatedEntities, entityType, collectionName, onError]);
 
   /**
    * Gérer la suppression d'une entité

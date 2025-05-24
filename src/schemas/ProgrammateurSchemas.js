@@ -80,8 +80,11 @@ export const ProgrammateurLegalSectionSchema = Yup.object().shape({
   structureCache: StructureCacheSchema
 });
 
-export default {
+// Export par défaut avec nom de variable
+const programmateurSchemas = {
   ProgrammateurSchema,
   StructureCacheSchema,
   ProgrammateurLegalSectionSchema
 };
+
+export default programmateurSchemas;

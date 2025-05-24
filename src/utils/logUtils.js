@@ -59,8 +59,10 @@ export const perfLog = (message, hookName = '') => {
   console.log(`[PERF] ${prefix}${message}`);
 };
 
-export default {
+const logUtils = {
   debugLog,
   perfLog,
   isDebugEnabled
 };
+
+export default logUtils;

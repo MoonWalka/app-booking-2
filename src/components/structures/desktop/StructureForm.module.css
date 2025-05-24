@@ -57,6 +57,33 @@
   font-size: var(--tc-font-size-md);
 }
 
+/* NOUVEAU: Styles pour l'alerte de validation temps réel */
+.validationAlert {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-spacing-sm);
+  padding: var(--tc-spacing-md) var(--tc-spacing-md);
+  border-radius: var(--tc-border-radius);
+  background-color: var(--tc-warning-color-10);
+  color: var(--tc-warning-color-dark);
+  border: var(--tc-border-width) solid var(--tc-warning-color-20);
+  margin-bottom: var(--tc-spacing-lg);
+}
+
+.validationAlert ul {
+  margin: 0;
+  padding-left: var(--tc-spacing-md);
+}
+
+.validationAlert li {
+  margin-bottom: var(--tc-spacing-xs);
+}
+
+.validationAlert i {
+  font-size: var(--tc-font-size-md);
+  color: var(--tc-warning-color);
+}
+
 .formCard {
   background-color: var(--tc-color-white);
   border-radius: var(--tc-border-radius-md);

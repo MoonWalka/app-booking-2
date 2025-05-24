@@ -1,0 +1,290 @@
+/*
+ * Styles pour LieuMobileForm.module.css
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 20 mai 2025
+ */
+
+/* =============================
+   CONTENEUR PRINCIPAL MOBILE
+   ============================= */
+.mobileContainer {
+  padding: var(--tc-spacing-sm);
+  background-color: var(--tc-bg-color-dark);
+  min-height: 100vh;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* =============================
+   EN-TÊTE MOBILE
+   ============================= */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--tc-spacing-md);
+  padding-bottom: var(--tc-spacing-sm);
+  border-bottom: 1px solid var(--tc-border-color);
+  position: sticky;
+  top: 0;
+  background-color: var(--tc-bg-color-dark);
+  z-index: 10;
+}
+
+.headerTitle {
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-color);
+  margin: 0;
+  line-height: 1.2;
+}
+
+/* =============================
+   FORMULAIRE MOBILE
+   ============================= */
+.mobileForm {
+  padding-bottom: var(--tc-spacing-xl);
+}
+
+.formSection {
+  margin-bottom: var(--tc-spacing-lg);
+  padding: var(--tc-spacing-md);
+  border-radius: var(--tc-border-radius);
+  background-color: var(--tc-bg-color-light);
+  box-shadow: var(--tc-shadow-sm);
+  border: 1px solid var(--tc-border-color);
+}
+
+.formSection h2 {
+  font-size: var(--tc-font-size-md);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-color);
+  margin-top: 0;
+  margin-bottom: var(--tc-spacing-md);
+  padding-bottom: var(--tc-spacing-xs);
+  border-bottom: 1px solid var(--tc-border-color);
+  display: flex;
+  align-items: center;
+}
+
+.formSection h2 i {
+  color: var(--tc-primary-color);
+  font-size: var(--tc-font-size-lg);
+}
+
+/* =============================
+   CHAMPS DE FORMULAIRE
+   ============================= */
+.mobileForm .form-label {
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-text-color);
+  margin-bottom: var(--tc-spacing-xs);
+  font-size: var(--tc-font-size-sm);
+}
+
+.mobileForm .form-control,
+.mobileForm .form-select {
+  border-radius: var(--tc-border-radius);
+  border: 1px solid var(--tc-border-color);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  font-size: var(--tc-font-size-base);
+  transition: var(--tc-transition);
+  background-color: var(--tc-bg-color-light);
+  color: var(--tc-text-color);
+}
+
+.mobileForm .form-control:focus,
+.mobileForm .form-select:focus {
+  border-color: var(--tc-primary-color);
+  box-shadow: var(--tc-input-focus-shadow);
+  outline: none;
+}
+
+.mobileForm .form-control-lg {
+  padding: var(--tc-spacing-md) var(--tc-spacing-lg);
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-medium);
+}
+
+.mobileForm textarea.form-control {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* =============================
+   SECTIONS D'ACTION
+   ============================= */
+.actionsSection {
+  position: sticky;
+  bottom: 0;
+  background-color: var(--tc-bg-color-dark);
+  padding: var(--tc-spacing-md);
+  margin: 0 calc(-1 * var(--tc-spacing-sm));
+  border-top: 1px solid var(--tc-border-color);
+  box-shadow: var(--tc-shadow-lg);
+}
+
+.actionsSection .btn {
+  padding: var(--tc-spacing-md) var(--tc-spacing-lg);
+  font-size: var(--tc-font-size-base);
+  font-weight: var(--tc-font-weight-medium);
+  border-radius: var(--tc-border-radius);
+  transition: var(--tc-transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--tc-spacing-sm);
+}
+
+.actionsSection .btn-primary {
+  background-color: var(--tc-color-primary);
+  border-color: var(--tc-color-primary);
+  color: var(--tc-bg-color-light);
+}
+
+.actionsSection .btn-primary:hover {
+  background-color: var(--tc-primary-dark);
+  border-color: var(--tc-primary-dark);
+}
+
+.actionsSection .btn-danger {
+  background-color: var(--tc-color-danger);
+  border-color: var(--tc-color-danger);
+  color: var(--tc-bg-color-light);
+}
+
+.actionsSection .btn-danger:hover {
+  background-color: var(--tc-danger-dark);
+  border-color: var(--tc-danger-dark);
+}
+
+.actionsSection .btn-outline-secondary {
+  background-color: transparent;
+  border-color: var(--tc-border-color);
+  color: var(--tc-text-color-secondary);
+}
+
+.actionsSection .btn-outline-secondary:hover {
+  background-color: var(--tc-bg-color-light);
+  border-color: var(--tc-border-color);
+  color: var(--tc-text-color);
+}
+
+/* =============================
+   CHAMPS REQUIS
+   ============================= */
+.mobileForm .form-label .text-danger {
+  color: var(--tc-color-danger) !important;
+  font-weight: var(--tc-font-weight-bold);
+}
+
+/* =============================
+   ALERTES ET MESSAGES D'ERREUR
+   ============================= */
+.mobileForm .alert {
+  border-radius: var(--tc-border-radius);
+  padding: var(--tc-spacing-md);
+  margin-bottom: var(--tc-spacing-md);
+  display: flex;
+  align-items: center;
+  gap: var(--tc-spacing-sm);
+  font-size: var(--tc-font-size-sm);
+}
+
+.mobileForm .alert-danger {
+  background-color: rgba(var(--tc-color-danger-rgb), 0.1);
+  border: 1px solid rgba(var(--tc-color-danger-rgb), 0.3);
+  color: var(--tc-color-danger);
+}
+
+.mobileForm .alert i {
+  font-size: var(--tc-font-size-lg);
+  flex-shrink: 0;
+}
+
+/* =============================
+   RESPONSIVE DESIGN
+   ============================= */
+@media (max-width: var(--tc-breakpoint-sm)) {
+  .mobileContainer {
+    padding: var(--tc-spacing-xs);
+  }
+  
+  .formSection {
+    padding: var(--tc-spacing-sm);
+    margin-bottom: var(--tc-spacing-md);
+  }
+  
+  .formSection h2 {
+    font-size: var(--tc-font-size-sm);
+  }
+  
+  .mobileForm .form-control-lg {
+    padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+    font-size: var(--tc-font-size-base);
+  }
+  
+  .actionsSection {
+    padding: var(--tc-spacing-sm);
+  }
+  
+  .actionsSection .btn {
+    padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+    font-size: var(--tc-font-size-sm);
+  }
+}
+
+/* =============================
+   OPTIMISATIONS TACTILES
+   ============================= */
+@media (hover: none) and (pointer: coarse) {
+  .mobileForm .form-control,
+  .mobileForm .form-select {
+    min-height: 44px; /* Taille minimale recommandée pour le tactile */
+  }
+  
+  .actionsSection .btn {
+    min-height: 48px; /* Boutons plus grands pour le tactile */
+  }
+}
+
+/* =============================
+   ANIMATION D'APPARITION
+   ============================= */
+.formSection {
+  animation: slideInUp 0.3s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =============================
+   ÉTATS DE FOCUS AMÉLIORÉS
+   ============================= */
+.mobileForm .form-control:focus,
+.mobileForm .form-select:focus {
+  transform: translateY(-1px);
+  box-shadow: 
+    var(--tc-input-focus-shadow),
+    0 4px 8px rgba(var(--tc-primary-color-rgb), 0.15);
+}
+
+/* =============================
+   STYLES POUR LES PLACEHOLDERS
+   ============================= */
+.mobileForm .form-control::placeholder {
+  color: var(--tc-text-color-secondary);
+  opacity: 0.7;
+}
+
+.mobileForm .form-control:focus::placeholder {
+  opacity: 0.5;
+} 

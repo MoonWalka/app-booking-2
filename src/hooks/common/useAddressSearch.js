@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import useLocationIQ from './useLocationIQ';
 
 /**
@@ -65,6 +65,37 @@ const useAddressSearch = (options = {}) => {
     };
   }, [dropdownRef]);
 
+  // Effet pour notifier du changement d'adresse sélectionnée
+  useEffect(() => {
+    if (onAddressChange && selectedAddress) {
+      onAddressChange(selectedAddress);
+    }
+  }, [selectedAddress, onAddressChange]);
+
+  /**
+   * Recherche des adresses via l'API LocationIQ - NOUVEAU: Mémorisée pour optimisation
+   */
+  const handleSearch = useCallback(async () => {
+    // Détermine le terme de recherche selon le mode d'utilisation
+    const query = formData ? formData.adresse : searchTerm;
+    
+    if (!query || query.trim().length < 3) {
+      setIsSearching(false);
+      return;
+    }
+
+    try {
+      const results = await searchAddress(query);
+      setAddressResults(results);
+      setShowResults(true);
+    } catch (error) {
+      console.error("Erreur lors de la recherche d'adresses:", error);
+      setAddressResults([]);
+    } finally {
+      setIsSearching(false);
+    }
+  }, [formData, searchTerm, searchAddress]); // NOUVEAU: Dépendances stabilisées
+
   // Effet pour déclencher la recherche lorsque le terme de recherche change
   useEffect(() => {
     if (searchTimeoutRef.current) {
@@ -87,38 +118,7 @@ const useAddressSearch = (options = {}) => {
         clearTimeout(searchTimeoutRef.current);
       }
     };
-  }, [searchTerm, formData?.adresse, addressFieldActive]);
-
-  // Effet pour notifier du changement d'adresse sélectionnée
-  useEffect(() => {
-    if (onAddressChange && selectedAddress) {
-      onAddressChange(selectedAddress);
-    }
-  }, [selectedAddress, onAddressChange]);
-
-  /**
-   * Recherche des adresses via l'API LocationIQ
-   */
-  const handleSearch = async () => {
-    // Détermine le terme de recherche selon le mode d'utilisation
-    const query = formData ? formData.adresse : searchTerm;
-    
-    if (!query || query.trim().length < 3) {
-      setIsSearching(false);
-      return;
-    }
-
-    try {
-      const results = await searchAddress(query);
-      setAddressResults(results);
-      setShowResults(true);
-    } catch (error) {
-      console.error("Erreur lors de la recherche d'adresses:", error);
-      setAddressResults([]);
-    } finally {
-      setIsSearching(false);
-    }
-  };
+  }, [searchTerm, formData?.adresse, addressFieldActive, handleSearch]); // NOUVEAU: Dépendance corrigée
 
   /**
    * Sélectionne une adresse dans les résultats

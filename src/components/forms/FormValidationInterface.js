@@ -1,17 +1,24 @@
-// src/components/forms/FormValidationInterface.js (nouveau wrapper)
+// src/components/forms/FormValidationInterface.js
 import React from 'react';
 import { useResponsive } from '@/hooks/common';
-;
 
+// Imports directs des composants
+import FormsDesktopValidationInterface from './desktop/FormValidationInterface';
+import FormsMobileValidationInterface from './mobile/FormValidationInterface';
+
+/**
+ * Composant wrapper responsive pour l'interface de validation des formulaires
+ * Affiche la version desktop ou mobile selon la taille d'écran
+ */
 function FormValidationInterface(props) {
-  const { getResponsiveComponent } = useResponsive();
-  const ResponsiveComponent = getResponsiveComponent({
-    desktopPath: 'forms/desktop/FormValidationInterface',
-    mobilePath: 'forms/mobile/FormValidationInterface'
-  });
+  const { isMobile } = useResponsive();
   
-  // Passer tous les props au composant responsive
-  return <ResponsiveComponent {...props} />;
+  // Rendu conditionnel simple
+  return isMobile ? (
+    <FormsMobileValidationInterface {...props} />
+  ) : (
+    <FormsDesktopValidationInterface {...props} />
+  );
 }
 
 export default FormValidationInterface;

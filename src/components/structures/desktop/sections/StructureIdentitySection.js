@@ -9,9 +9,10 @@ import Card from '@/components/ui/Card';
  * @param {Object} props - Component props
  * @param {Object} props.formData - Form data
  * @param {Function} props.handleChange - Change handler
+ * @param {Object} props.errors - Validation errors object
  * @returns {JSX.Element} - Rendered component
  */
-const StructureIdentitySection = ({ formData, handleChange }) => {
+const StructureIdentitySection = ({ formData, handleChange, errors = {} }) => {
   return (
     <Card
       title="Informations de base"
@@ -31,9 +32,10 @@ const StructureIdentitySection = ({ formData, handleChange }) => {
               onChange={handleChange}
               required
               placeholder="Nom commercial ou d'usage"
+              isInvalid={!!errors.nom}
             />
             <Form.Control.Feedback type="invalid">
-              Le nom est requis
+              {errors.nom || 'Le nom est requis'}
             </Form.Control.Feedback>
           </Form.Group>
         </Col>
@@ -62,6 +64,7 @@ const StructureIdentitySection = ({ formData, handleChange }) => {
               value={formData.type}
               onChange={handleChange}
               required
+              isInvalid={!!errors.type}
             >
               <option value="">Sélectionner un type</option>
               <option value="association">Association</option>
@@ -71,7 +74,7 @@ const StructureIdentitySection = ({ formData, handleChange }) => {
               <option value="autre">Autre</option>
             </Form.Select>
             <Form.Control.Feedback type="invalid">
-              Le type de structure est requis
+              {errors.type || 'Le type de structure est requis'}
             </Form.Control.Feedback>
           </Form.Group>
         </Col>
@@ -86,9 +89,10 @@ const StructureIdentitySection = ({ formData, handleChange }) => {
               onChange={handleChange}
               placeholder="Numéro SIRET (14 chiffres)"
               pattern="[0-9]{14}"
+              isInvalid={!!errors.siret}
             />
             <Form.Control.Feedback type="invalid">
-              Le SIRET doit contenir 14 chiffres
+              {errors.siret || 'Le SIRET doit contenir 14 chiffres'}
             </Form.Control.Feedback>
           </Form.Group>
         </Col>

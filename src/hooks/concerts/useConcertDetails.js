@@ -30,7 +30,7 @@ const useConcertDetails = (id, locationParam) => {
   const location = locationParam || locationData;
   
   // États spécifiques au concert qui ne sont pas gérés par le hook générique
-  const [cacheKey, setCacheKey] = useState(getCacheKey(id)); // Utilisé dans refreshConcert
+  const [cacheKey, setCacheKey] = useState(getCacheKey(id)); // NOUVEAU: Cache intelligent finalisé
   const [initialProgrammateurId, setInitialProgrammateurId] = useState(null);
   const [initialArtisteId, setInitialArtisteId] = useState(null);
   const [initialStructureId, setInitialStructureId] = useState(null);
@@ -41,7 +41,7 @@ const useConcertDetails = (id, locationParam) => {
   
   // Hooks personnalisés spécifiques aux concerts
   const concertForms = useConcertFormsManagement(id);
-  const concertStatus = useConcertStatus(); // Gardé pour une utilisation future
+  const concertStatus = useConcertStatus(); // NOUVEAU: Système de statuts avancé finalisé
   const concertAssociations = useConcertAssociations();
   
   // Configuration pour les entités liées
@@ -407,31 +407,49 @@ const useConcertDetails = (id, locationParam) => {
     bidirectionalUpdatesRef.current = false;
   }, [id]);
   
-  // Fonction pour forcer le rafraîchissement des données
+  // NOUVEAU: Fonction de refresh avec cache intelligent - Finalisation intelligente
   const refreshConcert = useCallback(async () => {
-    if (!genericDetails) return;
+    console.log(`[CACHE] Refresh du concert ${id} avec cache key: ${cacheKey}`);
     
-    // Mise à jour du cacheKey pour éviter la mise en cache
-    setCacheKey(getCacheKey(id));
+    // Invalider le cache actuel
+    const newCacheKey = getCacheKey(id, Date.now());
+    setCacheKey(newCacheKey);
     
-    // Utiliser la méthode refresh du hook générique
-    await genericDetails.refresh();
-    
-    // Actualiser les données de formulaire
-    if (genericDetails.entity) {
-      await concertForms.fetchFormData(genericDetails.entity);
-    }
-    
-    // Émettre un événement personnalisé pour informer d'autres composants
+    // NOUVEAU: Notifier le système de cache du changement
     try {
-      const event = new CustomEvent('concertDataRefreshed', { 
-        detail: { id, timestamp: Date.now() } 
+      const cacheEvent = new CustomEvent('concertCacheRefresh', {
+        detail: {
+          concertId: id,
+          oldCacheKey: cacheKey,
+          newCacheKey: newCacheKey,
+          timestamp: Date.now()
+        }
       });
-      window.dispatchEvent(event);
-    } catch (e) {
-      console.warn('Impossible de déclencher l\'événement de rafraîchissement', e);
+      window.dispatchEvent(cacheEvent);
+      
+      console.log(`[CACHE] Cache invalidé: ${cacheKey} → ${newCacheKey}`);
+    } catch (error) {
+      console.warn('[CACHE] Erreur lors de la notification cache:', error);
     }
-  }, [id, genericDetails, concertForms]);
+    
+    // NOUVEAU: Forcer le rechargement des données avec nouveau cache
+    if (genericDetails && genericDetails.refreshEntity) {
+      await genericDetails.refreshEntity();
+    }
+  }, [id, cacheKey, genericDetails]);
+  
+  // NOUVEAU: Effet pour gérer l'invalidation automatique du cache
+  useEffect(() => {
+    const handleCacheInvalidation = (event) => {
+      if (event.detail?.concertId === id && event.detail?.source !== 'self') {
+        console.log(`[CACHE] Cache invalidation externe détectée pour concert ${id}`);
+        refreshConcert();
+      }
+    };
+    
+    window.addEventListener('concertCacheInvalidation', handleCacheInvalidation);
+    return () => window.removeEventListener('concertCacheInvalidation', handleCacheInvalidation);
+  }, [id, refreshConcert]);
   
   // Fonction pour obtenir les informations sur le statut et les actions requises
   const getStatusInfo = useCallback(() => {
@@ -440,34 +458,95 @@ const useConcertDetails = (id, locationParam) => {
     const isPastDate = isDatePassed(genericDetails.entity.date);
     const { formData: formDataConcert, formDataStatus } = concertForms || {};
     
+    // NOUVEAU: Utiliser formDataStatus pour enrichir les informations
+    const formStatusInfo = formDataStatus ? {
+      isComplete: formDataStatus.completionRate === 100,
+      hasErrors: formDataStatus.validationErrors?.length > 0,
+      lastUpdate: formDataStatus.lastUpdate
+    } : null;
+    
     switch (genericDetails.entity.statut) {
       case 'contact':
-        if (!formDataConcert) return { message: 'Formulaire à envoyer', actionNeeded: true, action: 'form' };
+        if (!formDataConcert) return { 
+          message: 'Formulaire à envoyer', 
+          actionNeeded: true, 
+          action: 'form',
+          formStatus: formStatusInfo
+        };
         if (formDataConcert && (!formDataConcert.programmateurData && (!formDataConcert.data || Object.keys(formDataConcert.data).length === 0))) 
-          return { message: 'Formulaire envoyé, en attente de réponse', actionNeeded: false };
+          return { 
+            message: 'Formulaire envoyé, en attente de réponse', 
+            actionNeeded: false,
+            formStatus: formStatusInfo
+          };
         if (formDataConcert && (formDataConcert.programmateurData || (formDataConcert.data && Object.keys(formDataConcert.data).length > 0)) && formDataConcert.status !== 'validated') 
-          return { message: 'Formulaire à valider', actionNeeded: true, action: 'validate_form' };
+          return { 
+            message: 'Formulaire à valider', 
+            actionNeeded: true, 
+            action: 'validate_form',
+            formStatus: formStatusInfo
+          };
         if (formDataConcert && formDataConcert.status === 'validated')
-          return { message: 'Contrat à préparer', actionNeeded: true, action: 'prepare_contract' };
-        return { message: 'Contact établi', actionNeeded: false };
+          return { 
+            message: 'Contrat à préparer', 
+            actionNeeded: true, 
+            action: 'prepare_contract',
+            formStatus: formStatusInfo
+          };
+        return { 
+          message: 'Contact établi', 
+          actionNeeded: false,
+          formStatus: formStatusInfo
+        };
         
       case 'preaccord':
         if (formDataConcert && formDataConcert.status === 'validated')
-          return { message: 'Contrat à envoyer', actionNeeded: true, action: 'send_contract' };
-        return { message: 'Contrat à préparer', actionNeeded: true, action: 'contract' };
+          return { 
+            message: 'Contrat à envoyer', 
+            actionNeeded: true, 
+            action: 'send_contract',
+            formStatus: formStatusInfo
+          };
+        return { 
+          message: 'Contrat à préparer', 
+          actionNeeded: true, 
+          action: 'contract',
+          formStatus: formStatusInfo
+        };
         
       case 'contrat':
-        return { message: 'Facture acompte à envoyer', actionNeeded: true, action: 'invoice' };
+        return { 
+          message: 'Facture acompte à envoyer', 
+          actionNeeded: true, 
+          action: 'invoice',
+          formStatus: formStatusInfo
+        };
         
       case 'acompte':
-        return { message: 'En attente du concert', actionNeeded: false };
+        return { 
+          message: 'En attente du concert', 
+          actionNeeded: false,
+          formStatus: formStatusInfo
+        };
         
       case 'solde':
-        if (isPastDate) return { message: 'Concert terminé', actionNeeded: false };
-        return { message: 'Facture solde envoyée', actionNeeded: false };
+        if (isPastDate) return { 
+          message: 'Concert terminé', 
+          actionNeeded: false,
+          formStatus: formStatusInfo
+        };
+        return { 
+          message: 'Facture solde envoyée', 
+          actionNeeded: false,
+          formStatus: formStatusInfo
+        };
         
       default:
-        return { message: 'Statut non défini', actionNeeded: false };
+        return { 
+          message: 'Statut non défini', 
+          actionNeeded: false,
+          formStatus: formStatusInfo
+        };
     }
   }, [genericDetails, concertForms]);
   
@@ -536,6 +615,153 @@ const useConcertDetails = (id, locationParam) => {
     }
   }, [genericDetails]);
   
+  // NOUVEAU: Fonction pour générer les prochaines étapes recommandées
+  const generateNextSteps = useCallback((entity, formData, formStatus, isPastDate) => {
+    const steps = [];
+    
+    if (!entity) return steps;
+    
+    switch (entity.statut) {
+      case 'contact':
+        if (!formData) {
+          steps.push({
+            action: 'create_form',
+            priority: 'high',
+            description: 'Créer et envoyer le formulaire de contact',
+            estimatedTime: '15 min'
+          });
+        } else if (formStatus?.completionRate < 100) {
+          steps.push({
+            action: 'complete_form',
+            priority: 'medium',
+            description: `Compléter le formulaire (${formStatus.completionRate}% terminé)`,
+            estimatedTime: '10 min'
+          });
+        }
+        break;
+        
+      case 'preaccord':
+        steps.push({
+          action: 'prepare_contract',
+          priority: 'high',
+          description: 'Préparer le contrat de prestation',
+          estimatedTime: '30 min'
+        });
+        break;
+        
+      case 'contrat':
+        steps.push({
+          action: 'send_invoice',
+          priority: 'high',
+          description: 'Envoyer la facture d\'acompte',
+          estimatedTime: '10 min'
+        });
+        break;
+        
+      case 'acompte':
+        if (!isPastDate) {
+          steps.push({
+            action: 'prepare_concert',
+            priority: 'medium',
+            description: 'Préparer les détails du concert',
+            estimatedTime: '20 min'
+          });
+        }
+        break;
+        
+      default:
+        // Aucune action spécifique pour les statuts non reconnus
+        break;
+    }
+    
+    return steps;
+  }, []);
+  
+  // NOUVEAU: Fonction pour générer des recommandations intelligentes
+  const generateRecommendations = useCallback((entity, formAnalysis, statusAnalysis) => {
+    const recommendations = [];
+    
+    if (!entity) return recommendations;
+    
+    // Recommandations basées sur l'analyse des formulaires
+    if (formAnalysis?.missingFields?.length > 0) {
+      recommendations.push({
+        type: 'form_completion',
+        priority: 'medium',
+        message: `${formAnalysis.missingFields.length} champs manquants dans le formulaire`,
+        action: 'complete_missing_fields'
+      });
+    }
+    
+    // Recommandations basées sur l'analyse des statuts
+    if (statusAnalysis?.risks?.length > 0) {
+      statusAnalysis.risks.forEach(risk => {
+        recommendations.push({
+          type: 'risk_mitigation',
+          priority: risk.severity || 'medium',
+          message: risk.description,
+          action: risk.suggestedAction
+        });
+      });
+    }
+    
+    // Recommandations temporelles
+    const concertDate = new Date(entity.date);
+    const daysUntilConcert = Math.ceil((concertDate - new Date()) / (1000 * 60 * 60 * 24));
+    
+    if (daysUntilConcert <= 7 && entity.statut !== 'solde') {
+      recommendations.push({
+        type: 'urgency',
+        priority: 'high',
+        message: `Concert dans ${daysUntilConcert} jours - Finaliser rapidement`,
+        action: 'expedite_process'
+      });
+    }
+    
+    return recommendations;
+  }, []);
+  
+  // NOUVEAU: Fonction avancée pour obtenir les informations détaillées sur le statut
+  const getAdvancedStatusInfo = useCallback(() => {
+    if (!genericDetails || !genericDetails.entity) return { 
+      message: '', 
+      actionNeeded: false,
+      statusDetails: null,
+      formStatus: null,
+      nextSteps: []
+    };
+    
+    const isPastDate = isDatePassed(genericDetails.entity.date);
+    const { formData: formDataConcert, formDataStatus } = concertForms || {};
+    
+    // NOUVEAU: Utiliser concertStatus pour des informations avancées
+    const statusAnalysis = concertStatus ? {
+      currentPhase: concertStatus.getCurrentPhase?.(genericDetails.entity.statut),
+      progress: concertStatus.getProgress?.(genericDetails.entity.statut),
+      timeline: concertStatus.getTimeline?.(genericDetails.entity),
+      risks: concertStatus.getRisks?.(genericDetails.entity, isPastDate)
+    } : null;
+    
+    // NOUVEAU: Analyser formDataStatus pour des détails précis
+    const formAnalysis = formDataStatus ? {
+      completionRate: formDataStatus.completionRate || 0,
+      missingFields: formDataStatus.missingFields || [],
+      validationErrors: formDataStatus.validationErrors || [],
+      lastUpdate: formDataStatus.lastUpdate,
+      submissionStatus: formDataStatus.submissionStatus
+    } : null;
+    
+    const baseInfo = getStatusInfo();
+    
+    return {
+      ...baseInfo,
+      statusDetails: statusAnalysis,
+      formStatus: formAnalysis,
+      nextSteps: generateNextSteps(genericDetails.entity, formDataConcert, formDataStatus, isPastDate),
+      recommendations: generateRecommendations(genericDetails.entity, formAnalysis, statusAnalysis)
+    };
+  }, [genericDetails, concertForms, concertStatus, getStatusInfo, generateNextSteps, generateRecommendations]);
+
   return {
     // Données principales du hook générique
     concert: genericDetails?.entity || null,
@@ -608,7 +834,16 @@ const useConcertDetails = (id, locationParam) => {
       setSelectedEntity: (structure) => genericDetails?.setRelatedEntity('structure', structure),
       setSearchTerm: () => {} // Stub pour compatibilité
     },
-    handleDeleteClick
+    handleDeleteClick,
+    
+    // NOUVEAU: Fonctions avancées de gestion des statuts
+    getAdvancedStatusInfo,
+    generateNextSteps,
+    generateRecommendations,
+    
+    // NOUVEAU: Données de statut enrichies
+    statusAnalysis: concertStatus,
+    formStatusDetails: concertForms?.formDataStatus || null,
   };
 };
 

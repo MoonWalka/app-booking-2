@@ -45,7 +45,7 @@ export const useConcertForm = (concertId) => {
   // Note: on utilise directement validateConcertForm de utils/validation.js
   
   // Fonction de transformation des données avant sauvegarde
-  const transformConcertData = (data) => {
+  const transformConcertData = useCallback((data) => {
     // Transformations spécifiques aux concerts avant sauvegarde
     console.log("[useConcertForm] transformConcertData appelé avec:", data);
     
@@ -64,10 +64,10 @@ export const useConcertForm = (concertId) => {
     debugLog('Données transformées avant sauvegarde', 'debug', 'useConcertForm', transformedData);
     console.log("[useConcertForm] transformConcertData retourne:", transformedData);
     return transformedData;
-  };
+  }, []);
   
   // Callbacks pour les opérations réussies ou en erreur
-  // Empêcher l’exécution sur le succès initial (chargement des données)
+  // Empêcher l'exécution sur le succès initial (chargement des données)
   const hasSubmittedRef = useRef(false);
   const onSuccessCallback = useCallback((savedId, savedData) => {
     if (!hasSubmittedRef.current) {
@@ -84,7 +84,7 @@ export const useConcertForm = (concertId) => {
     
     // Ne navigue plus automatiquement après sauvegarde pour rester dans /:id/edit
     // (Supprimez ou ajustez la redirection si nécessaire)
-  }, [isNewConcert, navigate]);
+  }, [isNewConcert]);
 
   const onErrorCallback = useCallback((error) => {
     console.log(`[TRACE-UNIQUE][useConcertForm][onError] at ${new Date().toISOString()} - error:`, error);

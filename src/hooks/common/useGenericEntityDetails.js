@@ -141,7 +141,7 @@ const useGenericEntityDetails = ({
       
       debugLog(`Réinitialisation des états pour nouvel ID: ${entityType}:${id}`, 'info', 'useGenericEntityDetails');
     }
-  }, [id, entityType, safeSetState]);
+  }, [id, entityType, collectionName, safeSetState]);
   
   // Callback pour recevoir les données de l'abonnement Firestore
   const handleSubscriptionData = useCallback((data) => {
@@ -169,6 +169,8 @@ const useGenericEntityDetails = ({
       safeSetState(setError, { message: `${entityType} non trouvé(e)` });
       safeSetState(setLoading, false);
     }
+    // loadAllRelatedEntities est stable grâce à useCallback, exemption pour éviter dépendance circulaire
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transformData, cacheEnabled, cache, id, entityType, autoLoadRelated, safeSetState]);
   
   // Callback pour gérer les erreurs de l'abonnement
@@ -305,7 +307,8 @@ const useGenericEntityDetails = ({
       safeSetState(setLoading, false);
       instanceRef.current.currentlyFetching = false;
     }
-  }, [id, collectionName, entityType, idField, transformData, autoLoadRelated, safeSetState, cacheEnabled, cache]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, collectionName, entityType, idField, transformData, autoLoadRelated, realtime, safeSetState, cacheEnabled, cache]);
   
   // Fonction pour charger toutes les entités liées
   const loadAllRelatedEntities = useCallback(async (entityData) => {
@@ -388,6 +391,8 @@ const useGenericEntityDetails = ({
     } catch (err) {
       debugLog(`Erreur globale lors du chargement des entités liées: ${err}`, 'error', 'useGenericEntityDetails');
     }
+    // loadRelatedEntity est stable grâce à useCallback, exemption pour éviter dépendance circulaire
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [relatedEntities, entityType, id, safeSetState, cacheEnabled, cache]);
   
   // Fonction pour charger une entité liée spécifique
@@ -804,14 +809,17 @@ const useGenericEntityDetails = ({
   
   // Gestion des derniers nettoyages au démontage
   useEffect(() => {
+    // Capturer la référence actuelle pour la fonction de cleanup
+    const currentInstance = instanceRef.current;
+    
     return () => {
       // Marquer comme démonté
-      instanceRef.current.isMounted = false;
+      currentInstance.isMounted = false;
       
       debugLog(`Démontage du hook pour ${entityType}:${id}`, 'info', 'useGenericEntityDetails');
       
       // Désenregistrer l'instance du tracker
-      InstanceTracker.unregister(instanceRef.current.instanceId);
+      InstanceTracker.unregister(currentInstance.instanceId);
     };
   }, [entityType, id]);
   

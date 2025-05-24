@@ -1,21 +1,24 @@
-// src/components/forms/ProgrammateurForm.js
+// src/components/programmateurs/ProgrammateurForm.js
 import React from 'react';
 import { useResponsive } from '@/hooks/common';
-import { useParams } from 'react-router-dom'; // Utilisation du hook recommandé
 
-console.log('[TRACE-UNIQUE][ProgrammateurForm] Composant exécuté !');
+// Imports directs des composants
+import ProgrammateursDesktopForm from './desktop/ProgrammateurForm';
+import ProgrammateursMobileForm from './mobile/ProgrammateurForm';
 
+/**
+ * Composant wrapper responsive pour le formulaire de programmateur
+ * Affiche la version desktop ou mobile selon la taille d'écran
+ */
 function ProgrammateurForm(props) {
-  const params = useParams();
-  console.log('[TRACE-UNIQUE][ProgrammateurForm] wrapper mount, useParams:', params);
-  const responsive = useResponsive();
+  const { isMobile } = useResponsive();
   
-  const ResponsiveComponent = responsive.getResponsiveComponent({
-    desktopPath: 'programmateurs/desktop/ProgrammateurForm',
-    mobilePath: 'programmateurs/mobile/ProgrammateurForm'
-  });
-  
-  return <ResponsiveComponent {...props} />;
+  // Rendu conditionnel simple
+  return isMobile ? (
+    <ProgrammateursMobileForm {...props} />
+  ) : (
+    <ProgrammateursDesktopForm {...props} />
+  );
 }
 
 export default ProgrammateurForm;

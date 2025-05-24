@@ -113,7 +113,7 @@ export const useEntrepriseForm = () => {
     if (parametres.entreprise) {
       genericFormHook.setFormData(parametres.entreprise);
     }
-  }, [parametres.entreprise]);
+  }, [parametres.entreprise, genericFormHook]);
 
   /**
    * Handle selection of a company from search results

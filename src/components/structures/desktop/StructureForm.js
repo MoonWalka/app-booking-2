@@ -35,8 +35,8 @@ const StructureForm = () => {
     handleCancel
   } = useStructureForm(id);
 
-  // Use validation hook
-  const { errors } = useStructureValidation(formData);
+  // Use validation hook - NOUVEAU: Finalisation intelligente avec validation temps réel
+  const { errors, validateForm } = useStructureValidation(formData);
 
   // Ajout du hook de suppression optimisé
   const {
@@ -74,28 +74,47 @@ const StructureForm = () => {
 
       {/* Main form */}
       <Form noValidate validated={validated} onSubmit={handleSubmit}>
+        {/* NOUVEAU: Affichage du résumé des erreurs de validation */}
+        {Object.keys(errors).length > 0 && (
+          <Alert variant="warning" className={styles.validationAlert}>
+            <div className="d-flex align-items-center mb-2">
+              <i className="bi bi-exclamation-triangle me-2"></i>
+              <strong>Veuillez corriger les erreurs suivantes :</strong>
+            </div>
+            <ul className="mb-0">
+              {Object.entries(errors).map(([field, message]) => (
+                <li key={field}>{message}</li>
+              ))}
+            </ul>
+          </Alert>
+        )}
+
         {/* Identity information */}
         <StructureIdentitySection 
           formData={formData}
-          handleChange={handleChange} 
+          handleChange={handleChange}
+          errors={errors} // NOUVEAU: Transmission des erreurs pour validation temps réel
         />
         
         {/* Address and contact information */}
         <StructureAddressSection 
           formData={formData}
-          handleChange={handleChange} 
+          handleChange={handleChange}
+          errors={errors} // NOUVEAU: Transmission des erreurs
         />
         
         {/* Billing information */}
         <StructureBillingSection
           formData={formData}
           handleChange={handleChange}
+          errors={errors} // NOUVEAU: Transmission des erreurs
         />
         
         {/* Primary contact person */}
         <StructureContactSection 
           contact={formData.contact}
-          handleChange={handleChange} 
+          handleChange={handleChange}
+          errors={errors} // NOUVEAU: Transmission des erreurs
         />
         
         {/* Notes */}
@@ -111,6 +130,8 @@ const StructureForm = () => {
           handleCancel={handleCancel}
           onDelete={id !== 'nouveau' ? () => handleDelete(id) : undefined}
           isDeleting={isDeleting}
+          validateForm={validateForm} // NOUVEAU: Fonction de validation pour le bouton Sauvegarder
+          hasErrors={Object.keys(errors).length > 0} // NOUVEAU: Indicateur d'erreurs
         />
       </Form>
     </div>

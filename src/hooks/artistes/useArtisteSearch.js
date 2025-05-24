@@ -14,14 +14,23 @@ import { useMemo } from 'react';
 const useArtisteSearch = (artistes = [], options = {}) => {
   const navigate = useNavigate();
   
-  // Définir les filtres spécifiques aux artistes
-  const artisteFilters = {
+  // NOUVEAU: Définir les filtres spécifiques aux artistes avec useMemo pour optimisation
+  const artisteFilters = useMemo(() => ({
     tous: () => true,
     avecConcerts: (artiste) => artiste.concertsAssocies?.length > 0,
     sansConcerts: (artiste) => !artiste.concertsAssocies || artiste.concertsAssocies.length === 0,
     actifs: (artiste) => artiste.statut === 'actif',
-    inactifs: (artiste) => artiste.statut === 'inactif'
-  };
+    inactifs: (artiste) => artiste.statut === 'inactif',
+    // NOUVEAU: Filtres avancés pour une recherche plus riche
+    parGenre: (artiste, genre) => artiste.style?.toLowerCase().includes(genre?.toLowerCase()),
+    recents: (artiste) => {
+      if (!artiste.dateCreation) return false;
+      const dateCreation = artiste.dateCreation.toDate ? artiste.dateCreation.toDate() : new Date(artiste.dateCreation);
+      const unMoisEnMs = 30 * 24 * 60 * 60 * 1000;
+      return (Date.now() - dateCreation.getTime()) < unMoisEnMs;
+    },
+    populaires: (artiste) => (artiste.concertsAssocies?.length || 0) > 5
+  }), []); // Mémoïsé sans dépendances car les fonctions sont stables
   
   // Déterminer le mode de recherche en fonction de la présence d'artistes en paramètre
   const searchMode = artistes && artistes.length > 0 ? 'client' : 'server';

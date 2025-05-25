@@ -1,11 +1,18 @@
 // src/hooks/forms/useFormValidation.js
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { debugLog } from '@/utils/logUtils';
+import useGenericValidation from '@/hooks/generics/validation/useGenericValidation';
 
 /**
  * Hook migré pour la validation de formulaire
- * Fournit une API complète pour gérer la validation des champs de formulaire
- * et suivre les erreurs et l'état de validation
+ * 
+ * @deprecated Utilisez useGenericValidation directement pour les nouveaux développements
+ * @migrationDate 2025-01-XX
+ * @replaces Wrapper autour de useGenericValidation pour maintenir la compatibilité
+ * 
+ * Ce hook est maintenant un wrapper autour de useGenericValidation.
+ * Il maintient l'API existante pour la compatibilité avec le code existant,
+ * mais utilise la logique générique en arrière-plan.
  * 
  * @param {Object} options - Options de configuration
  * @param {Object} options.initialValues - Valeurs initiales du formulaire
@@ -21,118 +28,88 @@ const useFormValidation = (options) => {
     initialValues = {},
     validationSchema = {},
     validateOnChange = true,
-    validateOnBlur = true,
     validateOnSubmit = true,
     onSubmit = null
   } = options || {};
 
-  // États du formulaire
+  // États du formulaire (maintenus pour compatibilité)
   const [values, setValues] = useState(initialValues);
-  const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isValid, setIsValid] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
 
-  /**
-   * Valide un champ spécifique
-   * 
-   * @param {string} fieldName - Nom du champ à valider
-   * @param {any} fieldValue - Valeur du champ
-   * @returns {string|null} Message d'erreur ou null si valide
-   */
-  const validateField = useCallback((fieldName, fieldValue) => {
-    // Si aucune règle de validation pour ce champ, considérer comme valide
-    if (!validationSchema[fieldName]) return null;
+  // Conversion du schéma de validation vers le format useGenericValidation
+  const convertedValidationRules = useMemo(() => {
+    const converted = {};
     
-    const fieldRules = validationSchema[fieldName];
-    
-    // Vérifier la règle required
-    if (fieldRules.required && 
-        (fieldValue === undefined || 
-         fieldValue === null || 
-         fieldValue === '' || 
-         (Array.isArray(fieldValue) && fieldValue.length === 0))) {
-      return fieldRules.requiredMessage || 'Ce champ est requis';
-    }
-    
-    // Vérifier la règle min (longueur minimale pour les chaînes, valeur minimale pour les nombres)
-    if (fieldRules.min !== undefined && fieldValue !== undefined && fieldValue !== null) {
-      if (typeof fieldValue === 'string' && fieldValue.length < fieldRules.min) {
-        return fieldRules.minMessage || `Minimum ${fieldRules.min} caractères requis`;
-      } 
-      if (typeof fieldValue === 'number' && fieldValue < fieldRules.min) {
-        return fieldRules.minMessage || `La valeur doit être au moins ${fieldRules.min}`;
-      }
-    }
-    
-    // Vérifier la règle max (longueur maximale pour les chaînes, valeur maximale pour les nombres)
-    if (fieldRules.max !== undefined && fieldValue !== undefined && fieldValue !== null) {
-      if (typeof fieldValue === 'string' && fieldValue.length > fieldRules.max) {
-        return fieldRules.maxMessage || `Maximum ${fieldRules.max} caractères autorisés`;
-      } 
-      if (typeof fieldValue === 'number' && fieldValue > fieldRules.max) {
-        return fieldRules.maxMessage || `La valeur doit être au plus ${fieldRules.max}`;
-      }
-    }
-    
-    // Vérifier la règle email
-    if (fieldRules.email && typeof fieldValue === 'string' && fieldValue) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(fieldValue)) {
-        return fieldRules.emailMessage || 'Format d\'email invalide';
-      }
-    }
-    
-    // Vérifier la règle pattern (regex)
-    if (fieldRules.pattern && typeof fieldValue === 'string' && fieldValue) {
-      const regex = new RegExp(fieldRules.pattern);
-      if (!regex.test(fieldValue)) {
-        return fieldRules.patternMessage || 'Format invalide';
-      }
-    }
-    
-    // Vérifier la règle custom (fonction personnalisée)
-    if (typeof fieldRules.validate === 'function') {
-      const customError = fieldRules.validate(fieldValue, values);
-      if (customError) {
-        return customError;
-      }
-    }
-    
-    // Le champ est valide
-    return null;
-  }, [validationSchema, values]);
-
-  /**
-   * Valide tout le formulaire
-   * 
-   * @returns {Object} Erreurs par champ
-   */
-  const validateForm = useCallback(() => {
-    const newErrors = {};
-    let hasErrors = false;
-    
-    // Valider chaque champ du formulaire
     Object.keys(validationSchema).forEach(fieldName => {
-      const error = validateField(fieldName, values[fieldName]);
-      if (error) {
-        newErrors[fieldName] = error;
-        hasErrors = true;
-      }
+      const fieldRules = validationSchema[fieldName];
+      
+      // Conversion des règles vers le format générique
+      converted[fieldName] = {
+        required: fieldRules.required,
+        requiredMessage: fieldRules.requiredMessage,
+        
+        // Conversion des règles min/max
+        minLength: fieldRules.min,
+        minLengthMessage: fieldRules.minMessage,
+        maxLength: fieldRules.max,
+        maxLengthMessage: fieldRules.maxMessage,
+        
+        // Conversion des règles de type
+        type: fieldRules.email ? 'email' : undefined,
+        typeMessage: fieldRules.emailMessage,
+        
+        // Conversion des patterns
+        pattern: fieldRules.pattern,
+        patternMessage: fieldRules.patternMessage,
+        
+        // Validation personnalisée
+        validate: fieldRules.validate
+      };
+      
+      // Nettoyer les propriétés undefined
+      Object.keys(converted[fieldName]).forEach(key => {
+        if (converted[fieldName][key] === undefined) {
+          delete converted[fieldName][key];
+        }
+      });
     });
     
-    setErrors(newErrors);
-    setIsValid(!hasErrors);
-    
-    return newErrors;
-  }, [validateField, validationSchema, values]);
+    return converted;
+  }, [validationSchema]);
+
+  // Utilisation du hook générique
+  const {
+    validationErrors: errors,
+    isValid,
+    validateField: genericValidateField,
+    validateForm: genericValidateForm,
+    clearErrors,
+    setFieldError
+  } = useGenericValidation(values, convertedValidationRules, {
+    validateOnChange,
+    enableValidation: true,
+    debounceDelay: 300
+  });
+
+  /**
+   * Valide un champ spécifique (wrapper pour compatibilité)
+   */
+  const validateField = useCallback((fieldName, fieldValue) => {
+    return genericValidateField(fieldName, fieldValue, values);
+  }, [genericValidateField, values]);
+
+  /**
+   * Valide tout le formulaire (wrapper pour compatibilité)
+   */
+  const validateForm = useCallback(async () => {
+    const result = await genericValidateForm();
+    return result.errors;
+  }, [genericValidateForm]);
 
   /**
    * Gère les changements de valeur des champs
-   * 
-   * @param {Event|string} eventOrFieldName - Événement ou nom du champ
-   * @param {any} [value] - Valeur du champ (si le nom du champ est passé directement)
    */
   const handleChange = useCallback((eventOrFieldName, value) => {
     let fieldName, fieldValue;
@@ -141,11 +118,8 @@ const useFormValidation = (options) => {
     if (eventOrFieldName && eventOrFieldName.target) {
       const target = eventOrFieldName.target;
       fieldName = target.name;
-      
-      // Adapter la valeur selon le type d'élément
       fieldValue = target.type === 'checkbox' ? target.checked : target.value;
     } else {
-      // Si le premier argument est directement le nom du champ
       fieldName = eventOrFieldName;
       fieldValue = value;
     }
@@ -166,22 +140,10 @@ const useFormValidation = (options) => {
         [fieldName]: true
       }));
     }
-    
-    // Valider le champ si nécessaire
-    if (validateOnChange) {
-      const fieldError = validateField(fieldName, fieldValue);
-      
-      setErrors(prevErrors => ({
-        ...prevErrors,
-        [fieldName]: fieldError
-      }));
-    }
-  }, [touched, validateField, validateOnChange]);
+  }, [touched]);
 
   /**
    * Gère la perte de focus des champs
-   * 
-   * @param {Event} e - Événement blur
    */
   const handleBlur = useCallback((e) => {
     const { name } = e.target;
@@ -192,37 +154,25 @@ const useFormValidation = (options) => {
       [name]: true
     }));
     
-    // Valider le champ si nécessaire
-    if (validateOnBlur) {
-      const fieldError = validateField(name, values[name]);
-      
-      setErrors(prevErrors => ({
-        ...prevErrors,
-        [name]: fieldError
-      }));
-    }
-  }, [validateField, validateOnBlur, values]);
+    // La validation est gérée automatiquement par useGenericValidation
+  }, []);
 
   /**
    * Réinitialise le formulaire
-   * 
-   * @param {Object} [newValues] - Nouvelles valeurs initiales (optionnel)
    */
   const resetForm = useCallback((newValues = null) => {
     setValues(newValues || initialValues);
-    setErrors({});
     setTouched({});
     setIsSubmitting(false);
     setIsDirty(false);
+    clearErrors();
     debugLog('Formulaire réinitialisé', 'info', 'useFormValidation');
-  }, [initialValues]);
+  }, [initialValues, clearErrors]);
 
   /**
    * Gère la soumission du formulaire
-   * 
-   * @param {Event} e - Événement submit
    */
-  const handleSubmit = useCallback((e) => {
+  const handleSubmit = useCallback(async (e) => {
     if (e && e.preventDefault) {
       e.preventDefault();
     }
@@ -240,7 +190,8 @@ const useFormValidation = (options) => {
     // Valider le formulaire si nécessaire
     let formErrors = {};
     if (validateOnSubmit) {
-      formErrors = validateForm();
+      const result = await genericValidateForm();
+      formErrors = result.errors;
     }
     
     // Appeler onSubmit si aucune erreur et callback fourni
@@ -248,7 +199,7 @@ const useFormValidation = (options) => {
       debugLog('Formulaire valide, soumission en cours', 'info', 'useFormValidation');
       
       try {
-        onSubmit(values, {
+        await onSubmit(values, {
           setSubmitting: setIsSubmitting,
           resetForm: resetForm
         });
@@ -258,12 +209,10 @@ const useFormValidation = (options) => {
     } else {
       setIsSubmitting(false);
     }
-  }, [validateForm, validateOnSubmit, validationSchema, values, onSubmit, resetForm]);
+  }, [validateOnSubmit, validationSchema, values, onSubmit, resetForm, genericValidateForm]);
 
   /**
    * Met à jour plusieurs valeurs à la fois
-   * 
-   * @param {Object} newValues - Nouvelles valeurs à appliquer
    */
   const setFieldValues = useCallback((newValues) => {
     setValues(prev => ({
@@ -275,9 +224,6 @@ const useFormValidation = (options) => {
 
   /**
    * Définit une valeur pour un champ spécifique
-   * 
-   * @param {string} fieldName - Nom du champ
-   * @param {any} value - Valeur à définir
    */
   const setFieldValue = useCallback((fieldName, value) => {
     setValues(prev => ({
@@ -285,42 +231,10 @@ const useFormValidation = (options) => {
       [fieldName]: value
     }));
     setIsDirty(true);
-    
-    // Valider le champ si nécessaire
-    if (validateOnChange) {
-      const fieldError = validateField(fieldName, value);
-      
-      setErrors(prevErrors => ({
-        ...prevErrors,
-        [fieldName]: fieldError
-      }));
-    }
-  }, [validateField, validateOnChange]);
-
-  /**
-   * Définit une erreur pour un champ spécifique
-   * 
-   * @param {string} fieldName - Nom du champ
-   * @param {string} errorMessage - Message d'erreur
-   */
-  const setFieldError = useCallback((fieldName, errorMessage) => {
-    setErrors(prev => ({
-      ...prev,
-      [fieldName]: errorMessage
-    }));
-    
-    // Mettre à jour l'état de validité global
-    setIsValid(Object.values({
-      ...errors,
-      [fieldName]: errorMessage
-    }).every(error => !error));
-  }, [errors]);
+  }, []);
 
   /**
    * Récupère l'état complet d'un champ (valeur, erreur, touché)
-   * 
-   * @param {string} fieldName - Nom du champ
-   * @returns {Object} État complet du champ
    */
   const getFieldMeta = useCallback((fieldName) => {
     return {
@@ -331,14 +245,8 @@ const useFormValidation = (options) => {
     };
   }, [values, errors, touched]);
 
-  // Effet pour mettre à jour l'état de validité global lorsque les erreurs changent
-  useEffect(() => {
-    const formIsValid = Object.values(errors).every(error => !error);
-    setIsValid(formIsValid);
-  }, [errors]);
-
   return {
-    // État
+    // État (API compatible)
     values,
     errors,
     touched,
@@ -346,12 +254,12 @@ const useFormValidation = (options) => {
     isValid,
     isDirty,
     
-    // Gestionnaires
+    // Gestionnaires (API compatible)
     handleChange,
     handleBlur,
     handleSubmit,
     
-    // Actions
+    // Actions (API compatible)
     validateField,
     validateForm,
     resetForm,
@@ -360,9 +268,13 @@ const useFormValidation = (options) => {
     setFieldError,
     getFieldMeta,
     
-    // Helpers
+    // Helpers (API compatible)
     setValues,
-    setErrors,
+    setErrors: (newErrors) => {
+      Object.keys(newErrors).forEach(fieldName => {
+        setFieldError(fieldName, newErrors[fieldName]);
+      });
+    },
     setTouched
   };
 };

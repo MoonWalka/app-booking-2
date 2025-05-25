@@ -1,18 +1,25 @@
 /**
  * @fileoverview Hook d'administration pour la validation des soumissions de formulaires
- * Permet aux administrateurs de récupérer et valider les soumissions de formulaires
- * avec les données associées du concert et du lieu.
+ * 
+ * @deprecated Utilisez useGenericEntityDetails directement pour les nouveaux développements
+ * @migrationDate 2025-01-XX
+ * @replaces Wrapper autour de useGenericEntityDetails pour maintenir la compatibilité
+ * 
+ * Ce hook est maintenant un wrapper autour de useGenericEntityDetails.
+ * Il maintient l'API existante pour la compatibilité avec le code existant,
+ * mais utilise la logique générique en arrière-plan.
  * 
  * @author TourCraft Team
  * @since 2024
  */
 
-import { useState, useEffect } from 'react';
-import { getDoc, doc } from '@/services/firebase-service';
-import { db } from '@/services/firebase-service';
+import { useMemo } from 'react';
+import useGenericEntityDetails from '@/hooks/common/useGenericEntityDetails';
 
 /**
  * Hook d'administration pour la récupération et validation des soumissions de formulaires
+ * 
+ * @deprecated Utilisez useGenericEntityDetails directement pour les nouveaux développements
  * 
  * Ce hook permet aux administrateurs de récupérer une soumission de formulaire spécifique
  * avec toutes les données contextuelles nécessaires (concert, lieu) pour la validation.
@@ -53,82 +60,69 @@ import { db } from '@/services/firebase-service';
  * );
  * ```
  * 
- * @dependencies
- * - Firebase Firestore (collections: formSubmissions, concerts, lieux)
- * - React hooks (useState, useEffect)
- * 
  * @complexity LOW
  * @businessCritical true
- * @migrationCandidate useGenericEntityDetails - Candidat pour généralisation
- * 
- * @workflow
- * 1. Validation de la présence du submissionId
- * 2. Récupération de la soumission depuis formSubmissions
- * 3. Récupération du concert associé via concertId
- * 4. Récupération optionnelle du lieu via lieuId
- * 5. Gestion des erreurs et mise à jour des états
- * 
- * @errorHandling
- * - ID manquant : "ID de soumission manquant"
- * - Soumission inexistante : "La soumission demandée n'existe pas."
- * - Erreur générique : "Impossible de charger les données de la soumission."
+ * @migrated useGenericEntityDetails - Migré vers la version générique
  * 
  * @adminOnly true
  * @usedBy AdminFormValidation, ValidationDashboard
  */
 export const useAdminFormValidation = (submissionId) => {
-  const [loading, setLoading] = useState(true);
-  const [formData, setFormData] = useState(null);
-  const [concert, setConcert] = useState(null);
-  const [lieu, setLieu] = useState(null);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    if (!submissionId) {
-      setError("ID de soumission manquant");
-      setLoading(false);
-      return;
+  // Configuration des entités liées pour useGenericEntityDetails
+  const relatedEntitiesConfig = useMemo(() => [
+    {
+      name: 'concert',
+      collection: 'concerts',
+      idField: 'concertId',
+      type: 'single',
+      loadImmediately: true
+    },
+    {
+      name: 'lieu',
+      collection: 'lieux',
+      idField: 'lieuId',
+      type: 'single',
+      loadImmediately: true,
+      // Le lieu est lié au concert, pas directement à la soumission
+      parentEntity: 'concert'
     }
+  ], []);
 
-    const fetchFormSubmission = async () => {
-      try {
-        setLoading(true);
-        
-        // Récupérer les données de la soumission
-        const submissionDoc = await getDoc(doc(db, 'formSubmissions', submissionId));
-        if (submissionDoc.exists()) {
-          const submissionData = submissionDoc.data();
-          setFormData(submissionData);
-          
-          // Récupérer le concert associé
-          if (submissionData.concertId) {
-            const concertDoc = await getDoc(doc(db, 'concerts', submissionData.concertId));
-            if (concertDoc.exists()) {
-              const concertData = concertDoc.data();
-              setConcert(concertData);
-              
-              // Récupérer le lieu si nécessaire
-              if (concertData.lieuId) {
-                const lieuDoc = await getDoc(doc(db, 'lieux', concertData.lieuId));
-                if (lieuDoc.exists()) {
-                  setLieu(lieuDoc.data());
-                }
-              }
-            }
-          }
-        } else {
-          setError("La soumission demandée n'existe pas.");
-        }
-      } catch (error) {
-        console.error("Erreur lors de la récupération de la soumission:", error);
-        setError("Impossible de charger les données de la soumission.");
-      } finally {
-        setLoading(false);
+  // Utilisation du hook générique
+  const {
+    entity: formData,
+    loading,
+    error: genericError,
+    relatedData
+  } = useGenericEntityDetails({
+    entityType: 'formSubmission',
+    collectionName: 'formSubmissions',
+    id: submissionId,
+    relatedEntities: relatedEntitiesConfig,
+    transformData: (data) => {
+      // Transformation pour maintenir la compatibilité
+      return data;
+    },
+    onError: (error) => {
+      // Gestion d'erreur personnalisée pour maintenir les messages existants
+      if (error.includes('not found') || error.includes('non trouvé')) {
+        return "La soumission demandée n'existe pas.";
       }
-    };
-    
-    fetchFormSubmission();
-  }, [submissionId]);
+      return "Impossible de charger les données de la soumission.";
+    }
+  });
+
+  // Extraction des entités liées pour maintenir l'API existante
+  const concert = relatedData?.concert || null;
+  const lieu = relatedData?.lieu || null;
+
+  // Gestion d'erreur personnalisée pour maintenir la compatibilité
+  const error = useMemo(() => {
+    if (!submissionId) {
+      return "ID de soumission manquant";
+    }
+    return genericError;
+  }, [submissionId, genericError]);
 
   return {
     loading,

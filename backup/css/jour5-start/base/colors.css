@@ -45,26 +45,51 @@
     --tc-color-gray-500: #6b7280;              /* Moyen foncé - maquette */
     --tc-color-gray-600: #4b5563;              /* Foncé - maquette */
 
-    /* ===== COULEURS DE FOND ESSENTIELLES ===== */
+    /* ===== COULEURS DE FOND RÉELLES ===== */
     --tc-bg-default: #ffffff;              /* Fond principal */
     --tc-bg-light: #f5f7f9;                /* Fond clair - maquette */
     --tc-bg-body: #f9fafb;                 /* Fond du body - maquette */
+    --tc-bg-card: #ffffff;                 /* Fond des cartes */
+    --tc-bg-modal: #ffffff;                /* Fond des modales */
     --tc-bg-sidebar: var(--tc-color-primary); /* Fond sidebar */
+    --tc-bg-header: #ffffff;               /* Fond header */
     --tc-bg-hover: #f8f9fa;                /* Fond au survol */
+    --tc-bg-active: #e9ecef;               /* Fond actif */
+    --tc-bg-focus: rgba(33, 53, 71, 0.1);  /* Fond focus - basé sur primary */
+    --tc-bg-success: rgba(76, 175, 80, 0.1);   /* Fond succès */
+    --tc-bg-warning: rgba(255, 193, 7, 0.1);   /* Fond avertissement */
+    --tc-bg-error: rgba(244, 67, 54, 0.1);     /* Fond erreur */
+    --tc-bg-info: rgba(33, 150, 243, 0.1);     /* Fond information */
     --tc-bg-overlay: rgba(0, 0, 0, 0.5);    /* Overlay sombre */
+    --tc-bg-backdrop: rgba(0, 0, 0, 0.3);   /* Backdrop modal */
 
-    /* ===== COULEURS DE TEXTE ESSENTIELLES ===== */
+    /* ===== COULEURS DE TEXTE RÉELLES ===== */
     --tc-text-default: #333333;            /* Texte principal - maquette */
     --tc-text-secondary: #555555;          /* Texte secondaire - maquette */
     --tc-text-muted: #888888;              /* Texte atténué - maquette */
     --tc-text-light: #ffffff;              /* Texte clair */
+    --tc-text-dark: #000000;               /* Texte foncé */
     --tc-text-primary: var(--tc-color-primary);     /* Texte primaire */
+    --tc-text-secondary-color: var(--tc-color-secondary); /* Texte secondaire coloré */
+    --tc-text-success: var(--tc-color-success);     /* Texte succès */
+    --tc-text-warning: var(--tc-color-warning);     /* Texte avertissement */
+    --tc-text-error: var(--tc-color-error);         /* Texte erreur */
+    --tc-text-info: var(--tc-color-info);           /* Texte information */
     --tc-text-link: var(--tc-color-primary);        /* Liens */
+    --tc-text-link-hover: var(--tc-color-primary-dark); /* Liens survol */
+    --tc-text-placeholder: #adb5bd;                 /* Placeholder */
 
-    /* ===== COULEURS DE BORDURES ESSENTIELLES ===== */
+    /* ===== COULEURS DE BORDURES RÉELLES ===== */
     --tc-border-default: #e0e0e0;          /* Bordure principale - maquette */
     --tc-border-light: #dee2e6;            /* Bordure claire - maquette */
+    --tc-border-dark: #adb5bd;             /* Bordure foncée */
     --tc-border-primary: var(--tc-color-primary);   /* Bordure primaire */
+    --tc-border-success: var(--tc-color-success);   /* Bordure succès */
+    --tc-border-warning: var(--tc-color-warning);   /* Bordure avertissement */
+    --tc-border-error: var(--tc-color-error);       /* Bordure erreur */
+    --tc-border-info: var(--tc-color-info);         /* Bordure information */
+    --tc-border-focus: var(--tc-color-primary);     /* Bordure focus */
+    --tc-border-hover: var(--tc-color-primary-light); /* Bordure survol */
 
     /* ===== COULEURS MÉTIER TOURCRAFT ===== */
     --tc-color-artiste: #6610f2;           /* Violet artistes */
@@ -74,18 +99,34 @@
     --tc-color-programmateur: #6f42c1;     /* Violet programmateurs */
     --tc-color-programmateur-light: #f0e6fa; /* Variante claire */
 
-    /* ===== VARIABLES RGB ESSENTIELLES ===== */
+    /* ===== VARIABLES RGB POUR TRANSPARENCE ===== */
     --tc-color-primary-rgb: 33, 53, 71;
+    --tc-color-secondary-rgb: 30, 136, 229;
+    --tc-color-success-rgb: 76, 175, 80;
+    --tc-color-warning-rgb: 255, 193, 7;
+    --tc-color-error-rgb: 244, 67, 54;
+    --tc-color-info-rgb: 33, 150, 243;
 }
 
-/* ===== ALIAS DE COMPATIBILITÉ ESSENTIELS ===== */
+/* ===== ALIAS DE COMPATIBILITÉ ===== */
+/* Maintien de la compatibilité avec les anciennes variables */
 :root {
-    /* Alias critiques pour rétrocompatibilité */
+    /* Anciens noms → Nouveaux noms */
     --tc-primary-color: var(--tc-color-primary);
     --tc-secondary-color: var(--tc-color-secondary);
+    --tc-success-color: var(--tc-color-success);
+    --tc-warning-color: var(--tc-color-warning);
+    --tc-danger-color: var(--tc-color-error);
+    --tc-info-color: var(--tc-color-info);
     --tc-bg-color: var(--tc-bg-default);
     --tc-text-color: var(--tc-text-default);
     --tc-border-color: var(--tc-border-default);
+    
+    /* Variables de boutons */
+    --tc-btn-primary-bg: var(--tc-color-primary);
+    --tc-btn-primary-text: var(--tc-text-light);
+    --tc-btn-secondary-bg: var(--tc-color-secondary);
+    --tc-btn-secondary-text: var(--tc-text-light);
 }
 
 /* ===== VARIABLES POUR DARK MODE ===== */

@@ -1,4 +1,4 @@
-import { useGenericEntityForm } from '@/hooks/common';
+import useGenericEntityForm from '@/hooks/generics/forms/useGenericEntityForm';
 import useProgrammateurSearch from '@/hooks/programmateurs/useProgrammateurSearch';
 
 /**

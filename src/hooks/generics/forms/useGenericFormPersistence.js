@@ -7,7 +7,7 @@
  * @phase Phase 2 - Généralisation - Semaine 3
  */
 
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 
 /**
  * Hook générique pour la persistance de formulaires
@@ -118,7 +118,7 @@ const useGenericFormPersistence = (persistenceConfig = {}, options = {}) => {
   const saveCounterRef = useRef(0);
   
   // Utilitaires de stockage
-  const storageUtils = {
+  const storageUtils = useMemo(() => ({
     // Compression des données
     compress: (data) => {
       if (!enableCompression) return data;
@@ -158,7 +158,7 @@ const useGenericFormPersistence = (persistenceConfig = {}, options = {}) => {
         return data;
       }
     }
-  };
+  }), [enableCompression, enableEncryption]);
   
   // Obtenir l'interface de stockage
   const getStorage = useCallback(() => {
@@ -420,7 +420,7 @@ const useGenericFormPersistence = (persistenceConfig = {}, options = {}) => {
         getVersions();
       }
     }
-  }, [key]); // Seulement au montage
+  }, [key, restoreData, enableVersioning, getVersions]);
   
   // Sauvegarde avant fermeture de page
   useEffect(() => {

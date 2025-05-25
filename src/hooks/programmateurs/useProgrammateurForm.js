@@ -11,7 +11,7 @@
 
 import { useState, useCallback, useMemo } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import { useGenericEntityForm } from '@/hooks/common';
+import useGenericEntityForm from '@/hooks/generics/forms/useGenericEntityForm';
 import { showSuccessToast, showErrorToast } from '@/utils/toasts';
 import { debugLog } from '@/utils/logUtils';
 

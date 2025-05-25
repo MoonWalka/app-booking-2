@@ -3,7 +3,7 @@ import { collection, query, where, doc, getDoc, getDocs, updateDoc, db } from '@
 
 /**
  * Hook pour gérer les formulaires professionnels envoyés aux programmateurs
- * Différent de useConcertSubmission qui gère le formulaire principal du concert
+ * Gère spécifiquement les formulaires associés aux concerts existants
  *
  * Ce hook s'occupe spécifiquement de :
  * - La récupération des formulaires associés à un concert existant

@@ -1,8 +1,8 @@
 // src/hooks/programmateurs/useConcertSearch.js
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { updateDoc, doc, arrayUnion, serverTimestamp } from '@/firebaseInit';
-import { db } from '@/firebaseInit';
+import { updateDoc, doc, arrayUnion, serverTimestamp } from '@/services/firebase-service';
+import { db } from '@/services/firebase-service';
 import { useEntitySearch } from '@/hooks/common';
 
 /**

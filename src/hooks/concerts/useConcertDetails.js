@@ -1,7 +1,7 @@
 // src/hooks/concerts/useConcertDetails.js
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { doc, getDoc, db } from '@/firebaseInit';
+import { doc, getDoc, db } from '@/services/firebase-service';
 
 // Import du hook générique
 import { useGenericEntityDetails } from '@/hooks/common';

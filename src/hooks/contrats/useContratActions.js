@@ -1,8 +1,8 @@
 // src/hooks/contrats/useContratActions.js
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { doc, updateDoc, deleteDoc, Timestamp } from '@/firebaseInit';
-import { db } from '@/firebaseInit';
+import { doc, updateDoc, deleteDoc, Timestamp } from '@/services/firebase-service';
+import { db } from '@/services/firebase-service';
 
 /**
  * Hook to manage contract actions (mark as sent, signed, deletion)

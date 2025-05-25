@@ -8,7 +8,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { collection, query, orderBy, getDocs, db } from '@/firebaseInit';
+import { collection, query, orderBy, getDocs, db } from '@/services/firebase-service';
 
 /**
  * Hook de requête pour la récupération et gestion des données de lieux

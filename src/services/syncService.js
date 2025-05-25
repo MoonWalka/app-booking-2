@@ -2,8 +2,8 @@
  * Service de synchronisation entre la base locale et Firebase
  * Permet d'importer/exporter des données entre les deux environnements
  */
-import { db as firebaseDB, IS_LOCAL_MODE } from '../firebaseInit';
-import { collection, getDocs, doc, setDoc } from '../firebaseInit';
+import { db as firebaseDB, IS_LOCAL_MODE } from '../services/firebase-service';
+import { collection, getDocs, doc, setDoc } from '../services/firebase-service';
 // 🚀 PHASE 3C : Remplacement mockStorage par Firebase Testing SDK
 import firebaseEmulatorService from './firebase-emulator-service';
 

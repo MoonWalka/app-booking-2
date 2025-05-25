@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'; // NOUVEAU: useEffect et useCallback utilisés pour synchronisation automatique et stabilisation
-import { collection, query, where, doc, getDoc, getDocs, updateDoc, db } from '@/firebaseInit';
+import { collection, query, where, doc, getDoc, getDocs, updateDoc, db } from '@/services/firebase-service';
 
 /**
  * Hook pour gérer les formulaires professionnels envoyés aux programmateurs

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { collection, query, where, getDocs, getDoc, doc } from '@/firebaseInit';
-import { db } from '@/firebaseInit';
+import { collection, query, where, getDocs, getDoc, doc } from '@/services/firebase-service';
+import { db } from '@/services/firebase-service';
 
 /**
  * Hook to validate a form token and fetch related concert data

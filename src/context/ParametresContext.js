@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { doc, getDoc, setDoc } from '@/firebaseInit';
-import { db } from '@/firebaseInit';
+import { doc, getDoc, setDoc } from '@/services/firebase-service';
+import { db } from '@/services/firebase-service';
 
 const ParametresContext = createContext();
 

@@ -8,7 +8,7 @@
  */
 
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { db } from '@/firebaseInit';
+import { db } from '@/services/firebase-service';
 import { 
   collection, 
   query, 
@@ -17,7 +17,7 @@ import {
   limit, 
   getDocs,
   startAfter
-} from '@/firebaseInit';
+} from '@/services/firebase-service';
 
 /**
  * Hook générique pour la recherche

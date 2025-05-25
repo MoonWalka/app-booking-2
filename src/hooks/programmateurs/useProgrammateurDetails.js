@@ -1,6 +1,6 @@
 import { useGenericEntityDetails } from '@/hooks/common';
 import { useState, useEffect } from 'react';
-import { collection, query, where, getDocs, doc, getDoc, db } from '@/firebaseInit';
+import { collection, query, where, getDocs, doc, getDoc, db } from '@/services/firebase-service';
 
 /**
  * Hook pour gérer les détails d'un programmateur en utilisant le hook générique

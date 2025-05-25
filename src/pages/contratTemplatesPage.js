@@ -1,6 +1,6 @@
 // src/pages/contratTemplatesPage.js - MODIFIÉ
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { db, collection, getDocs, doc, deleteDoc, query, orderBy, addDoc, updateDoc, serverTimestamp } from '@/firebaseInit';
+import { db, collection, getDocs, doc, deleteDoc, query, orderBy, addDoc, updateDoc, serverTimestamp } from '@/services/firebase-service';
 import '@styles/index.css';
 import { Button, Badge, Alert } from 'react-bootstrap';
 import Table from '@/components/ui/Table';

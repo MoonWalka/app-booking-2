@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Form, Card, Alert } from 'react-bootstrap';
-import { db } from '@/firebaseInit';
-import { doc, getDoc, collection, getDocs, addDoc, serverTimestamp } from '@/firebaseInit';
+import { db } from '@/services/firebase-service';
+import { doc, getDoc, collection, getDocs, addDoc, serverTimestamp } from '@/services/firebase-service';
 import '@styles/index.css';
 import { formatDateFr } from '../utils/dateUtils';
 

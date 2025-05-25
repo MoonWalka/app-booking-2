@@ -1,7 +1,7 @@
 // src/components/artistes/desktop/ArtisteView.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { db } from '@/firebaseInit';
+import { db } from '@/services/firebase-service';
 import { doc, getDoc } from 'firebase/firestore';
 import '@styles/index.css';
 import styles from './ArtisteDetail.module.css'; // Réutilisation des styles existants

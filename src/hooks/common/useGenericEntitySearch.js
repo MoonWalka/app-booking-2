@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { db } from '@/firebaseInit';
-import { collection, query, where, getDocs, limit } from '@/firebaseInit';
+import { db } from '@/services/firebase-service';
+import { collection, query, where, getDocs, limit } from '@/services/firebase-service';
 import useDebounce from './useDebounce';
 
 /**

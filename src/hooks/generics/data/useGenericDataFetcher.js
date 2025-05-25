@@ -8,7 +8,7 @@
  */
 
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { db } from '@/firebaseInit';
+import { db } from '@/services/firebase-service';
 import { 
   collection, 
   doc,
@@ -19,7 +19,7 @@ import {
   getDocs,
   getDoc,
   onSnapshot
-} from '@/firebaseInit';
+} from '@/services/firebase-service';
 
 /**
  * Hook générique pour la récupération de données

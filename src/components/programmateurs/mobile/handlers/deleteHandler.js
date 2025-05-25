@@ -1,4 +1,4 @@
-import { db, doc, deleteDoc } from '@/firebaseInit';
+import { db, doc, deleteDoc } from '@/services/firebase-service';
 
 export const handleDelete = async (id) => {
   if (window.confirm('Êtes-vous sûr de vouloir supprimer ce programmateur ?')) {

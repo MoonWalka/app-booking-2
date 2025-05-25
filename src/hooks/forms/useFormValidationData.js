@@ -8,7 +8,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { db, doc, getDoc, collection, query, where, getDocs, updateDoc } from '@/firebaseInit';
+import { db, doc, getDoc, collection, query, where, getDocs, updateDoc } from '@/services/firebase-service';
 
 /**
  * Configuration des champs de contact du programmateur

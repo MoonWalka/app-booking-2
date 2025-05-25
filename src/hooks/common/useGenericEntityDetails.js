@@ -3,8 +3,8 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { 
   doc, getDoc, deleteDoc, updateDoc, 
   serverTimestamp 
-} from '@/firebaseInit';
-import { db } from '@/firebaseInit';
+} from '@/services/firebase-service';
+import { db } from '@/services/firebase-service';
 import { debugLog } from '@/utils/logUtils';
 import useCache from './useCache';
 import useFirestoreSubscription from './useFirestoreSubscription';

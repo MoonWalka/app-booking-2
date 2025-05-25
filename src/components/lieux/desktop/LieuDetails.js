@@ -2,7 +2,7 @@ import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { db } from '@/firebaseInit';
+import { db } from '@/services/firebase-service';
 import Spinner from '@/components/common/Spinner';
 import Button from '@/components/ui/Button';
 

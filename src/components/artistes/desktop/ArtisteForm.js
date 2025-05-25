@@ -10,7 +10,7 @@ import {
   collection, 
   Timestamp 
 } from 'firebase/firestore';
-import { db } from '@/firebaseInit';
+import { db } from '@/services/firebase-service';
 import '@styles/index.css';
 import Button from '@/components/ui/Button';
 import useDeleteArtiste from '@/hooks/artistes/useDeleteArtiste';

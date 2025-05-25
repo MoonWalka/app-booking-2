@@ -10,7 +10,7 @@
 .structuresCard {
   margin-bottom: var(--tc-space-6);
   background-color: var(--tc-bg-color-light);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-shadow-sm);
   border: 1px solid var(--tc-border-default);
   overflow: hidden;
@@ -54,9 +54,9 @@
   max-height: 300px;
   overflow-y: auto;
   border: 1px solid var(--tc-gray-300);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   background-color: var(--tc-bg-default);
-  box-shadow: var(--tc-shadow);
+  box-shadow: var(--tc-shadow-base);
   z-index: var(--tc-z-index-dropdown);
   margin-top: var(--tc-space-1);
 }
@@ -113,9 +113,9 @@
 
 .typeBadge {
   background-color: rgba(var(--tc-info-color-rgb), 0.1);
-  color: var(--tc-info-color);
+  color: var(--tc-color-info);
   padding: var(--tc-space-1) var(--tc-space-2);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   font-size: var(--tc-font-size-xs);
   text-transform: capitalize;
   font-weight: var(--tc-font-weight-medium);
@@ -148,7 +148,7 @@
   padding: var(--tc-space-1) var(--tc-space-2);
   margin-bottom: var(--tc-space-1);
   background-color: rgba(var(--tc-primary-color-rgb), 0.1);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   border: 1px solid rgba(var(--tc-primary-color-rgb), 0.3);
 }
 
@@ -187,7 +187,7 @@
 }
 
 .required {
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
   margin-left: var(--tc-space-1);
 }
 
@@ -228,7 +228,7 @@
   margin-bottom: var(--tc-space-6);
   padding: var(--tc-space-4);
   background-color: var(--tc-gray-50);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   border: 1px solid var(--tc-border-default);
 }
 
@@ -254,7 +254,7 @@
   width: 100%;
   padding: var(--tc-space-2);
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   font-size: var(--tc-font-size-sm);
   transition: border-color var(--tc-transition-duration);
 }
@@ -273,12 +273,12 @@
   color: var(--tc-gray-500);
   cursor: pointer;
   padding: var(--tc-space-1);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   transition: all var(--tc-transition-duration);
 }
 
 .clearSearchButton:hover {
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
   background-color: var(--tc-gray-100);
 }
 
@@ -291,7 +291,7 @@
   overflow-y: auto;
   background-color: var(--tc-white);
   border: 1px solid var(--tc-border-default);
-  border-radius: 0 0 var(--tc-border-radius) var(--tc-border-radius);
+  border-radius: 0 0 var(--tc-radius-base) var(--tc-radius-base);
   box-shadow: var(--tc-shadow-md);
   z-index: var(--tc-z-index-dropdown);
   margin-top: 1px;
@@ -319,12 +319,12 @@
   color: var(--tc-gray-600);
   cursor: pointer;
   padding: var(--tc-space-1);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   transition: all var(--tc-transition-duration);
 }
 
 .closeDropdownButton:hover {
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
   background-color: var(--tc-gray-100);
 }
 
@@ -426,7 +426,7 @@
   margin-bottom: var(--tc-space-1);
   background-color: rgba(var(--tc-primary-color-rgb), 0.05);
   border: 1px solid rgba(var(--tc-primary-color-rgb), 0.2);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   transition: all var(--tc-transition-duration);
 }
 
@@ -453,7 +453,7 @@
   font-style: italic;
   padding: var(--tc-space-6);
   background-color: var(--tc-gray-50);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   border: 1px dashed var(--tc-border-default);
 }
 
@@ -477,7 +477,7 @@
   display: flex;
   align-items: center;
   margin-bottom: var(--tc-space-2);
-  color: var(--tc-success-color);
+  color: var(--tc-color-success);
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
 }
@@ -533,7 +533,7 @@
 }
 
 .structureName i.bi-check-circle-fill {
-  color: var(--tc-success-color);
+  color: var(--tc-color-success);
   font-size: var(--tc-font-size-md);
   animation: checkAppear 0.3s ease-in-out;
 }

@@ -349,5 +349,5 @@
 }
 
 .errorContainer {
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
 }

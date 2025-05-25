@@ -36,12 +36,12 @@
 .sectionNavLink:hover,
 .sectionNavLink:focus {
   background-color: rgba(var(--tc-secondary-color-rgb), 0.05);
-  color: var(--tc-secondary-color);
+  color: var(--tc-color-secondary);
 }
 
 .sectionNavLink.active {
   background-color: var(--tc-white);
-  color: var(--tc-secondary-color);
+  color: var(--tc-color-secondary);
   font-weight: var(--tc-font-weight-bold);
   box-shadow: 0 1px 4px 0 var(--tc-shadow-color-sm));
   border: 1px solid var(--tc-border-default);
@@ -52,7 +52,7 @@
 .sectionNavLink.active:hover,
 .sectionNavLink.active:focus {
   background-color: var(--tc-white);
-  color: var(--tc-secondary-color);
+  color: var(--tc-color-secondary);
 }
 
 .statusCount {

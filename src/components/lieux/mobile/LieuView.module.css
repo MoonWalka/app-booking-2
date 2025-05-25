@@ -46,7 +46,7 @@
 .section {
   margin-bottom: var(--tc-space-6);
   padding: var(--tc-space-4);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   background-color: var(--tc-bg-color-light);
   box-shadow: var(--tc-shadow-sm);
   border: 1px solid var(--tc-border-default);
@@ -93,7 +93,7 @@
 }
 
 .errorMessage {
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-medium);
   margin-bottom: var(--tc-space-4);
@@ -148,11 +148,11 @@
   justify-content: center;
   gap: var(--tc-space-1);
   padding: var(--tc-space-2) var(--tc-space-4);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
   cursor: pointer;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .primaryButton {
@@ -177,13 +177,13 @@
 }
 
 .dangerButton {
-  background-color: var(--tc-danger-color);
+  background-color: var(--tc-color-error);
   color: var(--tc-bg-color-light);
   border: none;
 }
 
 .dangerButton:hover {
-  background-color: var(--tc-danger-dark);
+  background-color: var(--tc-color-error-dark);
 }
 
 /* =============================
@@ -191,14 +191,14 @@
    ============================= */
 .concertItem {
   padding: var(--tc-space-2);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   margin-bottom: var(--tc-space-2);
   display: flex;
   justify-content: space-between;
   align-items: center;
   background-color: var(--tc-bg-color-dark);
   cursor: pointer;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
   border: 1px solid var(--tc-gray-200);
 }
 
@@ -255,7 +255,7 @@
     gap: var(--tc-space-1);
     padding: var(--tc-space-2);
     border: 1px solid var(--tc-gray-200);
-    border-radius: var(--tc-border-radius);
+    border-radius: var(--tc-radius-base);
     background-color: var(--tc-gray-50);
   }
   

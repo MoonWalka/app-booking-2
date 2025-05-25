@@ -9,7 +9,7 @@
   width: 100%;
   margin-top: var(--tc-space-1);
   border: 1px solid var(--tc-border-light);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   max-height: 200px;
   overflow-y: auto;
   box-shadow: var(--tc-shadow-sm);

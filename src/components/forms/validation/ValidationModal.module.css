@@ -27,7 +27,7 @@
 
 .modalContent {
   background-color: var(--tc-bg-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-shadow-modal));
   width: 100%;
   max-width: 500px;
@@ -96,7 +96,7 @@
   padding: var(--tc-space-2) var(--tc-space-4);
   background-color: var(--tc-bg-light);
   border: none;
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   color: var(--tc-text-default);
   cursor: pointer;
   font-weight: var(--tc-font-weight-medium);
@@ -110,8 +110,8 @@
   padding: var(--tc-space-2) var(--tc-space-4);
   background-color: var(--tc-color-primary);
   border: none;
-  border-radius: var(--tc-border-radius-sm);
-  color: var(--tc-light-color);
+  border-radius: var(--tc-radius-sm);
+  color: var(--tc-text-light);
   cursor: pointer;
   font-weight: var(--tc-font-weight-medium);
   display: flex;

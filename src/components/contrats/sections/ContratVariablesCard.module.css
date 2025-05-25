@@ -12,7 +12,7 @@
   max-height: 400px;
   overflow-y: auto;
   border: 1px solid var(--tc-border-light);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   padding: var(--tc-spacing-1-5);
 }
 

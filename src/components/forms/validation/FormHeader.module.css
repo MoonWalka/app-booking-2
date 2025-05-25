@@ -42,11 +42,11 @@
   padding: var(--tc-space-1) var(--tc-space-4);
   background-color: transparent;
   border: var(--tc-border-width) solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   color: var(--tc-text-color-secondary);
   font-weight: var(--tc-font-weight-medium);
   cursor: pointer;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .backButton:hover {

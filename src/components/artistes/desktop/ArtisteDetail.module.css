@@ -23,8 +23,8 @@
   display: flex;
   margin-bottom: var(--tc-spacing-xl);
   background-color: var(--tc-white);
-  border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-shadow);
+  border-radius: var(--tc-radius-base);
+  box-shadow: var(--tc-shadow-base);
   overflow: hidden;
 }
 
@@ -52,7 +52,7 @@
 }
 
 .desktopPlaceholderPhoto i {
-  font-size: var(--tc-font-size-xxl);
+  font-size: var(--tc-font-size-2xl);
 }
 
 .desktopArtisteInfo {
@@ -97,8 +97,8 @@
 
 .desktopTabContent {
   background-color: var(--tc-bg-default);
-  border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-shadow);
+  border-radius: var(--tc-radius-base);
+  box-shadow: var(--tc-shadow-base);
   padding: var(--tc-space-4);
 }
 
@@ -126,7 +126,7 @@
 .infoContent .membresList li {
   padding: var(--tc-space-1) var(--tc-space-2);
   background-color: var(--tc-hover-bg);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
 }
 
 .contactsGridDesktop {
@@ -140,11 +140,11 @@
   align-items: center;
   gap: var(--tc-space-1);
   padding: var(--tc-space-2);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   border: var(--tc-border-width) solid var(--tc-border-default);
   text-decoration: none;
   color: var(--tc-text-default);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .contactItem:hover {
@@ -184,10 +184,10 @@
   display: flex;
   align-items: center;
   padding: var(--tc-space-4);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   background-color: var(--tc-hover-bg);
   cursor: pointer;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .concertItem:hover,
@@ -232,7 +232,7 @@
 
 .statCard {
   padding: var(--tc-space-4);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   background-color: var(--tc-hover-bg);
   border: var(--tc-border-width) solid var(--tc-border-default);
   display: flex;
@@ -273,7 +273,7 @@
 }
 
 .emptyStateDesktop i {
-  font-size: var(--tc-font-size-xxl);
+  font-size: var(--tc-font-size-2xl);
   margin-bottom: var(--tc-space-4);
   color: var(--tc-gray-400);
 }
@@ -358,5 +358,5 @@
 }
 
 .errorContainerDesktop {
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
 }

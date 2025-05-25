@@ -9,7 +9,7 @@
 
 .statCard {
   background: var(--tc-bg-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-shadow-sm);
   padding: var(--tc-space-6) var(--tc-spacing-xl);
   display: flex;
@@ -26,7 +26,7 @@
 }
 
 .statCard[data-color="success"] {
-  border-color: var(--tc-success-color);
+  border-color: var(--tc-color-success);
 }
 
 .statCard[data-color="muted"] {
@@ -44,7 +44,7 @@
 }
 
 .statIcon[data-color="success"] {
-  color: var(--tc-success-color);
+  color: var(--tc-color-success);
 }
 
 .statIcon[data-color="muted"] {

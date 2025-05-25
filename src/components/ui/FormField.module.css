@@ -23,11 +23,11 @@
   font-weight: var(--tc-font-weight-medium);
   color: var(--tc-text-default);
   margin-bottom: var(--tc-space-1);
-  line-height: var(--tc-line-height-base);
+  line-height: var(--tc-line-height-normal);
 }
 
 .requiredIndicator {
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
   margin-left: var(--tc-space-1);
   font-weight: var(--tc-font-weight-bold);
 }
@@ -46,20 +46,20 @@
   width: 100%;
   padding: var(--tc-space-2) var(--tc-space-4);
   font-size: var(--tc-font-size-base);
-  font-family: var(--tc-font-family-base);
-  line-height: var(--tc-line-height-base);
+  font-family: var(--tc-font-sans);
+  line-height: var(--tc-line-height-normal);
   color: var(--tc-text-default);
   background-color: var(--tc-bg-color-light);
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
-  transition: var(--tc-transition);
+  border-radius: var(--tc-radius-base);
+  transition: var(--tc-transition-base);
   box-sizing: border-box;
 }
 
 .formField:focus {
   outline: none;
   border-color: var(--tc-color-primary);
-  box-shadow: var(--tc-input-focus-shadow);
+  box-shadow: var(--tc-shadow-base);
   background-color: var(--tc-bg-color-light);
 }
 
@@ -120,12 +120,12 @@
    ÉTATS
    ============================= */
 .formField--error {
-  border-color: var(--tc-danger-color);
+  border-color: var(--tc-color-error);
   background-color: var(--tc-danger-bg);
 }
 
 .formField--error:focus {
-  border-color: var(--tc-danger-color);
+  border-color: var(--tc-color-error);
   box-shadow: 0 0 0 3px rgba(var(--tc-danger-color-rgb), 0.1);
 }
 
@@ -147,7 +147,7 @@
 textarea.formField {
   min-height: 80px;
   resize: vertical;
-  line-height: var(--tc-line-height-base);
+  line-height: var(--tc-line-height-normal);
 }
 
 /* =============================
@@ -171,8 +171,8 @@ select.formField {
   gap: var(--tc-space-1);
   margin-top: var(--tc-space-1);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-danger-color);
-  line-height: var(--tc-line-height-base);
+  color: var(--tc-color-error);
+  line-height: var(--tc-line-height-normal);
 }
 
 .errorMessage i {
@@ -187,7 +187,7 @@ select.formField {
   margin-top: var(--tc-space-1);
   font-size: var(--tc-font-size-sm);
   color: var(--tc-text-color-muted);
-  line-height: var(--tc-line-height-base);
+  line-height: var(--tc-line-height-normal);
 }
 
 /* =============================
@@ -221,18 +221,18 @@ select.formField {
    VALIDATION HTML5
    ============================= */
 .formField:invalid {
-  border-color: var(--tc-danger-color);
+  border-color: var(--tc-color-error);
 }
 
 .formField:valid {
-  border-color: var(--tc-success-color);
+  border-color: var(--tc-color-success);
 }
 
 /* Désactiver les styles de validation par défaut du navigateur */
 .formField:invalid:not(:focus):not(:placeholder-shown) {
-  border-color: var(--tc-danger-color);
+  border-color: var(--tc-color-error);
 }
 
 .formField:valid:not(:focus):not(:placeholder-shown) {
-  border-color: var(--tc-success-color);
+  border-color: var(--tc-color-success);
 } 

@@ -17,7 +17,7 @@
   justify-content: center;
   width: 36px;
   height: 36px;
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   transition: all 0.2s ease;
   background: none;
   border: none;
@@ -25,7 +25,7 @@
 }
 
 .viewButton {
-  color: var(--tc-info-color);
+  color: var(--tc-color-info);
 }
 
 .viewButton:hover {
@@ -33,7 +33,7 @@
 }
 
 .editButton {
-  color: var(--tc-success-color);
+  color: var(--tc-color-success);
 }
 
 .editButton:hover {
@@ -41,7 +41,7 @@
 }
 
 .deleteButton {
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
 }
 
 .deleteButton:hover {
@@ -49,7 +49,7 @@
 }
 
 .formButton {
-  color: var(--tc-warning-color);
+  color: var(--tc-color-warning);
 }
 
 .formButton:hover {
@@ -57,7 +57,7 @@
 }
 
 .contractButton {
-  color: var(--tc-secondary-color);
+  color: var(--tc-color-secondary);
 }
 
 .contractButton:hover {
@@ -101,53 +101,53 @@
 }
 
 .variant-success {
-  background-color: var(--tc-success-color) !important;
-  border-color: var(--tc-success-color) !important;
+  background-color: var(--tc-color-success) !important;
+  border-color: var(--tc-color-success) !important;
   color: white !important;
 }
 
 .variant-success:hover {
-  background-color: var(--tc-success-dark) !important;
-  border-color: var(--tc-success-dark) !important;
+  background-color: var(--tc-color-success-dark) !important;
+  border-color: var(--tc-color-success-dark) !important;
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(var(--tc-success-color-rgb), 0.3);
 }
 
 .variant-warning {
-  background-color: var(--tc-warning-color) !important;
-  border-color: var(--tc-warning-color) !important;
+  background-color: var(--tc-color-warning) !important;
+  border-color: var(--tc-color-warning) !important;
   color: white !important;
 }
 
 .variant-warning:hover {
-  background-color: var(--tc-warning-dark) !important;
-  border-color: var(--tc-warning-dark) !important;
+  background-color: var(--tc-color-warning-dark) !important;
+  border-color: var(--tc-color-warning-dark) !important;
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(var(--tc-warning-color-rgb), 0.3);
 }
 
 .variant-danger {
-  background-color: var(--tc-danger-color) !important;
-  border-color: var(--tc-danger-color) !important;
+  background-color: var(--tc-color-error) !important;
+  border-color: var(--tc-color-error) !important;
   color: white !important;
 }
 
 .variant-danger:hover {
-  background-color: var(--tc-danger-dark) !important;
-  border-color: var(--tc-danger-dark) !important;
+  background-color: var(--tc-color-error-dark) !important;
+  border-color: var(--tc-color-error-dark) !important;
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(var(--tc-danger-color-rgb), 0.3);
 }
 
 .variant-info {
-  background-color: var(--tc-info-color) !important;
-  border-color: var(--tc-info-color) !important;
+  background-color: var(--tc-color-info) !important;
+  border-color: var(--tc-color-info) !important;
   color: white !important;
 }
 
 .variant-info:hover {
-  background-color: var(--tc-info-dark) !important;
-  border-color: var(--tc-info-dark) !important;
+  background-color: var(--tc-color-info-dark) !important;
+  border-color: var(--tc-color-info-dark) !important;
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(var(--tc-info-color-rgb), 0.3);
 }
@@ -165,13 +165,13 @@
 
 /* Couleurs spécifiques pour les icônes de statut */
 .contractButton .text-success {
-  color: var(--tc-success-color) !important;
+  color: var(--tc-color-success) !important;
 }
 
 .contractButton .text-warning {
-  color: var(--tc-warning-color) !important;
+  color: var(--tc-color-warning) !important;
 }
 
 .contractButton .text-danger {
-  color: var(--tc-danger-color) !important;
+  color: var(--tc-color-error) !important;
 }

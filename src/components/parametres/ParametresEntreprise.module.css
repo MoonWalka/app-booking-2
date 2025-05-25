@@ -12,7 +12,7 @@
   z-index: var(--tc-z-index-dropdown);
   background-color: var(--tc-bg-default);
   border: 1px solid var(--tc-border-default);
-  border-radius: 0 0 var(--tc-border-radius-sm) var(--tc-border-radius-sm);
+  border-radius: 0 0 var(--tc-radius-sm) var(--tc-radius-sm);
   box-shadow: var(--tc-shadow-sm);
   margin-top: -1px;
 }
@@ -63,7 +63,7 @@
   width: 100%;
   padding: var(--tc-space-2);
   background-color: var(--tc-bg-default);
-  border-radius: 0 0 var(--tc-border-radius-sm) var(--tc-border-radius-sm);
+  border-radius: 0 0 var(--tc-radius-sm) var(--tc-radius-sm);
   border: 1px solid var(--tc-border-default);
   border-top: none;
   box-shadow: var(--tc-shadow-sm);
@@ -95,8 +95,8 @@
 }
 
 .formCard {
-  border-radius: var(--tc-border-radius-lg);
-  box-shadow: var(--tc-shadow);
+  border-radius: var(--tc-radius-lg);
+  box-shadow: var(--tc-shadow-base);
   margin-bottom: var(--tc-space-6);
 }
 
@@ -117,7 +117,7 @@
   }
   
   .formCard {
-    border-radius: var(--tc-border-radius);
+    border-radius: var(--tc-radius-base);
     margin-bottom: var(--tc-space-4);
   }
   

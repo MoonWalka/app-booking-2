@@ -29,7 +29,7 @@
 
 .errorContainer i {
   font-size: 3rem;
-  color: var(--tc-danger-color));
+  color: var(--tc-color-error));
 }
 
 .emptyState {
@@ -197,7 +197,7 @@
   position: relative;
   padding: var(--tc-spacing-2);
   background-color: var(--tc-bg-light));
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   min-height: 2.5rem;
   display: flex;
   align-items: center;

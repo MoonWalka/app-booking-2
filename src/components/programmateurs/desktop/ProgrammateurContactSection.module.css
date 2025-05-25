@@ -13,11 +13,11 @@
 
 .cardWrapper {
   background-color: var(--tc-bg-default);
-  border-radius: var(--tc-border-radius-lg);
+  border-radius: var(--tc-radius-lg);
   box-shadow: var(--tc-box-shadow);
   margin-bottom: var(--tc-space-6);
   overflow: hidden;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .cardWrapper:hover {
@@ -61,7 +61,7 @@
   padding: var(--tc-space-1) var(--tc-space-2);
   background-color: var(--tc-bg-light-alpha);
   border: var(--tc-border-width) solid var(--tc-border-light-alpha);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   font-size: var(--tc-font-size-base);
   line-height: 1.5;
   margin-bottom: 0;

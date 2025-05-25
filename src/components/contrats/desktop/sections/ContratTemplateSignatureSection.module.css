@@ -32,7 +32,7 @@
   padding: var(--tc-spacing-2) var(--tc-spacing-3);
   font-size: var(--tc-font-size-sm);
   border: 1px solid var(--tc-border-input);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   transition: border-color var(--tc-transition-speed) ease-in-out, box-shadow var(--tc-transition-speed) ease-in-out;
   font-family: var(--tc-font-family-monospace);
   min-height: 150px;
@@ -67,7 +67,7 @@
 .signatureExample {
   background-color: var(--tc-bg-white-translucent);
   padding: var(--tc-spacing-3);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   border: 1px solid var(--tc-border-info-subtle);
   white-space: pre-wrap;
   font-size: var(--tc-font-size-xs);

@@ -30,8 +30,8 @@
   top: 0;
   overflow-y: auto; /* Permet le défilement si le contenu est trop long */
   z-index: var(--tc-z-index-sidebar); /* Valeur élevée pour superposer la plupart des éléments */
-  box-shadow: var(--tc-shadow);
-  transition: var(--tc-transition);
+  box-shadow: var(--tc-shadow-base);
+  transition: var(--tc-transition-base);
   /* Structure en flexbox verticale */
   display: flex;
   flex-direction: column;
@@ -88,7 +88,7 @@
   display: flex;
   align-items: center;
   padding: var(--tc-space-2) var(--tc-space-6);
-  color: var(--tc-light-color);
+  color: var(--tc-text-light);
   text-decoration: none;
   /* Transition courte pour une réaction rapide au hover */
   transition: var(--tc-transition-short);
@@ -102,7 +102,7 @@
  */
 .navLinks a:hover {
   background-color: var(--tc-sidebar-hover-bg-color);
-  color: var(--tc-light-color);
+  color: var(--tc-text-light);
 }
 
 /* 

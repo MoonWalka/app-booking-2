@@ -9,7 +9,7 @@
    ============================= */
 .formCard {
   background-color: var(--tc-bg-color-light);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-shadow-sm);
   overflow: hidden;
   margin-bottom: var(--tc-space-4);
@@ -86,13 +86,13 @@
   width: 100%;
   padding: var(--tc-space-2);
   font-size: var(--tc-font-size-base);
-  line-height: var(--tc-line-height-base);
+  line-height: var(--tc-line-height-normal);
   color: var(--tc-text-default);
   background-color: var(--tc-bg-default);
   background-clip: padding-box;
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
-  transition: var(--tc-transition);
+  border-radius: var(--tc-radius-base);
+  transition: var(--tc-transition-base);
 }
 
 .formControl:focus {
@@ -100,7 +100,7 @@
   background-color: var(--tc-bg-default);
   border-color: var(--tc-color-primary);
   outline: 0;
-  box-shadow: var(--tc-input-focus-shadow);
+  box-shadow: var(--tc-shadow-base);
 }
 
 /* =============================
@@ -135,7 +135,7 @@
 }
 
 .required {
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
   margin-left: var(--tc-space-1);
 }
 

@@ -13,7 +13,7 @@
   align-items: center;
   padding: var(--tc-space-4);
   background-color: rgba(var(--tc-danger-color-rgb), 0.1);
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
 }
 
 .modalTitle {
@@ -27,7 +27,7 @@
 }
 
 .warningIcon {
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
   font-size: var(--tc-font-size-lg);
   display: flex;
   align-items: center;
@@ -45,14 +45,14 @@
   margin-bottom: var(--tc-space-4);
   color: var(--tc-text-default);
   font-size: var(--tc-font-size-base);
-  line-height: var(--tc-line-height-base);
+  line-height: var(--tc-line-height-normal);
 }
 
 .concertsWarning {
   background-color: rgba(var(--tc-warning-color-rgb), 0.1);
-  border-left: 4px solid var(--tc-warning-color);
+  border-left: 4px solid var(--tc-color-warning);
   padding: var(--tc-space-2) var(--tc-space-4);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   margin: var(--tc-space-4) 0;
   color: var(--tc-gray-800);
 }
@@ -78,10 +78,10 @@
   align-items: center;
   gap: var(--tc-space-1);
   padding: var(--tc-space-2) var(--tc-space-4);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   font-weight: var(--tc-font-weight-medium);
   font-size: var(--tc-font-size-sm);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
   cursor: pointer;
 }
 
@@ -91,22 +91,22 @@
 }
 
 .deleteBtn {
-  background-color: var(--tc-danger-color);
-  color: var(--tc-light-color);
+  background-color: var(--tc-color-error);
+  color: var(--tc-text-light);
   border: none;
   display: flex;
   align-items: center;
   gap: var(--tc-space-1);
   padding: var(--tc-space-2) var(--tc-space-4);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   font-weight: var(--tc-font-weight-medium);
   font-size: var(--tc-font-size-sm);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
   cursor: pointer;
 }
 
 .deleteBtn:hover {
-  background-color: var(--tc-danger-dark);
+  background-color: var(--tc-color-error-dark);
 }
 
 /* =============================

@@ -23,8 +23,8 @@
 /* VUE DÉTAILLÉE D'UN ARTISTE */
 .tc-artiste-detail-container {
   background-color: var(--tc-bg-default);
-  border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-shadow);
+  border-radius: var(--tc-radius-base);
+  box-shadow: var(--tc-shadow-base);
   margin-bottom: var(--tc-space-4);
   overflow: hidden;
 }
@@ -45,7 +45,7 @@
 .tc-artiste-header-image {
   width: 150px;
   height: 150px;
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   overflow: hidden;
   flex-shrink: 0;
 }
@@ -135,7 +135,7 @@
   align-items: center;
   gap: var(--tc-space-1);
   border-bottom: 3px solid transparent;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
   color: var(--tc-text-muted);
   font-weight: var(--tc-font-weight-medium);
 }
@@ -206,7 +206,7 @@
 .tc-artiste-contact-link {
   color: var(--tc-artiste-color);
   text-decoration: none;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .tc-artiste-contact-link:hover {
@@ -229,7 +229,7 @@
   padding: var(--tc-spacing-xl);
   text-align: center;
   background-color: var(--tc-gray-50);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   margin: var(--tc-space-4) 0;
 }
 
@@ -281,19 +281,19 @@
 
 .tc-artiste-stat-card {
   background-color: var(--tc-bg-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   padding: var(--tc-space-4);
   display: flex;
   align-items: center;
   gap: var(--tc-space-2);
   box-shadow: var(--tc-shadow-sm);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
   border: 1px solid var(--tc-border-default);
 }
 
 .tc-artiste-stat-card:hover {
   transform: translateY(-2px);
-  box-shadow: var(--tc-shadow);
+  box-shadow: var(--tc-shadow-base);
 }
 
 .tc-artiste-stat-icon {
@@ -328,8 +328,8 @@
 /* FORMULAIRE D'ARTISTE */
 .tc-artiste-form-container {
   background-color: var(--tc-bg-default);
-  border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-shadow);
+  border-radius: var(--tc-radius-base);
+  box-shadow: var(--tc-shadow-base);
   margin-bottom: var(--tc-space-4);
   overflow: hidden;
 }
@@ -359,7 +359,7 @@
 .tc-artiste-breadcrumb-item {
   color: var(--tc-artiste-color);
   cursor: pointer;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .tc-artiste-breadcrumb-item:hover {
@@ -388,7 +388,7 @@
 .tc-artiste-form-section {
   margin-bottom: var(--tc-space-6);
   background-color: var(--tc-gray-50);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   padding: var(--tc-space-4);
 }
 
@@ -431,7 +431,7 @@
   max-width: 100%;
   height: auto;
   max-height: 300px;
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   border: 1px solid var(--tc-border-default);
 }
 
@@ -447,8 +447,8 @@
 /* LISTE DES ARTISTES */
 .tc-artistes-list-container {
   background-color: var(--tc-bg-default);
-  border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-shadow);
+  border-radius: var(--tc-radius-base);
+  box-shadow: var(--tc-shadow-base);
   margin-bottom: var(--tc-space-4);
   overflow: hidden;
 }
@@ -478,17 +478,17 @@
 .tc-artiste-list-card {
   display: flex;
   background-color: var(--tc-bg-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-shadow-sm);
   margin-bottom: var(--tc-space-2);
   overflow: hidden;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
   border: 1px solid var(--tc-border-default);
 }
 
 .tc-artiste-list-card:hover {
   transform: translateY(-3px);
-  box-shadow: var(--tc-shadow);
+  box-shadow: var(--tc-shadow-base);
 }
 
 .tc-artiste-list-image {
@@ -549,17 +549,17 @@
   display: flex;
   flex-direction: column;
   background-color: var(--tc-bg-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   overflow: hidden;
   box-shadow: var(--tc-shadow-sm);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
   border: 1px solid var(--tc-border-default);
   height: 100%;
 }
 
 .tc-artiste-card:hover {
   transform: translateY(-3px);
-  box-shadow: var(--tc-shadow);
+  box-shadow: var(--tc-shadow-base);
 }
 
 .tc-artiste-card-image {
@@ -623,7 +623,7 @@
   max-width: 130px;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .tc-artiste-tag:hover {
@@ -646,7 +646,7 @@
   color: var(--tc-artiste-color);
   text-decoration: none;
   font-weight: var(--tc-font-weight-medium);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .tc-artiste-link:hover {

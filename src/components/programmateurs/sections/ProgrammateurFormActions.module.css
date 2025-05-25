@@ -16,7 +16,7 @@
   padding: var(--tc-space-4);
   background-color: var(--tc-white-light);
   border-top: 1px solid var(--tc-border-default);
-  border-radius: 0 0 var(--tc-border-radius) var(--tc-border-radius);
+  border-radius: 0 0 var(--tc-radius-base) var(--tc-radius-base);
   margin-top: var(--tc-space-6);
 }
 
@@ -35,7 +35,7 @@
   color: var(--tc-text-muted);
   background-color: var(--tc-white);
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   transition: all 0.2s ease-in-out;
   cursor: pointer;
   font-size: var(--tc-font-size-base);
@@ -50,7 +50,7 @@
   color: var(--tc-white);
   background-color: var(--tc-color-primary);
   border: 1px solid var(--tc-color-primary);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   transition: all 0.2s ease-in-out;
   cursor: pointer;
   font-size: var(--tc-font-size-base);
@@ -69,10 +69,10 @@
 
 .deleteButton {
   padding: var(--tc-space-1) var(--tc-space-4);
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
   background-color: transparent;
-  border: 1px solid var(--tc-danger-color);
-  border-radius: var(--tc-border-radius);
+  border: 1px solid var(--tc-color-error);
+  border-radius: var(--tc-radius-base);
   transition: all 0.2s ease-in-out;
   cursor: pointer;
   font-size: var(--tc-font-size-base);
@@ -80,7 +80,7 @@
 
 .deleteButton:hover {
   color: var(--tc-white);
-  background-color: var(--tc-danger-color);
+  background-color: var(--tc-color-error);
 }
 
 /* Style pour l'indicateur de chargement */

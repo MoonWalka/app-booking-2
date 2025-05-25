@@ -32,13 +32,13 @@
 }
 
 .generatorHeader p {
-  color: var(--tc-secondary-color);
+  color: var(--tc-color-secondary);
   font-size: var(--tc-font-size-sm);
 }
 
 .generatorSection {
   background-color: var(--tc-white);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-box-shadow);
   padding: var(--tc-space-6);
   margin-bottom: var(--tc-space-6);

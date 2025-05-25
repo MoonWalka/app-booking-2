@@ -12,7 +12,7 @@
 
 .detailsHeader {
   background-color: var(--tc-white);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   padding: var(--tc-space-4);
   margin-bottom: var(--tc-space-4);
   box-shadow: var(--tc-shadow-sm);
@@ -61,7 +61,7 @@
 .headerBadge {
   display: inline-block;
   padding: var(--tc-space-1) var(--tc-space-2);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-medium);
 }
@@ -110,7 +110,7 @@
   color: var(--tc-color-primary);
   border: 1px solid var(--tc-color-primary);
   background-color: transparent;
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   padding: var(--tc-space-1) var(--tc-space-4);
   transition: all 0.2s ease;
 }
@@ -121,16 +121,16 @@
 }
 
 .dangerOutlineButton {
-  color: var(--tc-danger-color);
-  border: 1px solid var(--tc-danger-color);
+  color: var(--tc-color-error);
+  border: 1px solid var(--tc-color-error);
   background-color: transparent;
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   padding: var(--tc-space-1) var(--tc-space-4);
   transition: all 0.2s ease;
 }
 
 .dangerOutlineButton:hover {
-  background-color: var(--tc-danger-color);
+  background-color: var(--tc-color-error);
   color: var(--tc-white);
 }
 

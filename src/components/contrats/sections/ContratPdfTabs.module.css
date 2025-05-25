@@ -25,11 +25,11 @@
   display: flex;
   align-items: center;
   padding: var(--tc-space-4) var(--tc-space-6);
-  color: var(--tc-secondary-color);
+  color: var(--tc-color-secondary);
   text-decoration: none;
   border: 1px solid transparent;
   border-bottom: none;
-  border-radius: var(--tc-border-radius) var(--tc-border-radius) 0 0;
+  border-radius: var(--tc-radius-base) var(--tc-radius-base) 0 0;
   transition: all 0.2s ease;
   cursor: pointer;
   background-color: transparent;
@@ -63,18 +63,18 @@
 .tabBadge {
   margin-left: var(--tc-space-2);
   padding: var(--tc-space-1) var(--tc-space-2);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-medium);
 }
 
 .tabBadgeSuccess {
-  background-color: var(--tc-success-color);
+  background-color: var(--tc-color-success);
   color: var(--tc-white);
 }
 
 .tabBadgeInfo {
-  background-color: var(--tc-info-color);
+  background-color: var(--tc-color-info);
   color: var(--tc-white);
 }
 
@@ -100,7 +100,7 @@
   }
   
   .tabLink {
-    border-radius: var(--tc-border-radius);
+    border-radius: var(--tc-radius-base);
     border: 1px solid var(--tc-border-default);
     margin-bottom: var(--tc-space-1);
   }

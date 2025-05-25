@@ -30,13 +30,13 @@
   gap: var(--tc-space-1);
   font-weight: var(--tc-font-weight-medium);
   background-color: var(--tc-color-primary);
-  color: var(--tc-light-color);
+  color: var(--tc-text-light);
   border: none;
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   padding: var(--tc-space-2) var(--tc-space-4);
   font-size: var(--tc-font-size-base);
   cursor: pointer;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 .addButton:hover {
   background-color: var(--tc-primary-dark);

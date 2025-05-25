@@ -48,10 +48,10 @@
 .copyButton {
   background: none;
   border: var(--tc-border-width) solid var(--tc-color-primary);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   padding: var(--tc-space-1) var(--tc-space-1);
   cursor: pointer;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .copyButton:hover:not(:disabled) {
@@ -74,8 +74,8 @@
   padding: var(--tc-space-1) var(--tc-space-2);
   font-family: var(--tc-font-family-monospace);
   border: var(--tc-border-width) solid var(--tc-gray-400);
-  border-radius: var(--tc-border-radius-sm);
-  transition: var(--tc-transition);
+  border-radius: var(--tc-radius-sm);
+  transition: var(--tc-transition-base);
 }
 
 .finalValueInput:focus {

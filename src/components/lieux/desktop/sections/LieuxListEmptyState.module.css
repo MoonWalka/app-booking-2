@@ -11,7 +11,7 @@
   display: flex;
   align-items: center;
   padding: var(--tc-space-4);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   background-color: var(--tc-bg-color-light);
   color: var(--tc-text-color-secondary);
   border: 1px solid var(--tc-border-default);
@@ -41,7 +41,7 @@
 .alertMessage {
   font-size: var(--tc-font-size-sm);
   color: var(--tc-gray-600);
-  line-height: var(--tc-line-height-base);
+  line-height: var(--tc-line-height-normal);
 }
 
 .actionButton {
@@ -52,11 +52,11 @@
   background-color: var(--tc-color-primary);
   color: var(--tc-bg-color-light);
   border: none;
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
   cursor: pointer;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
   margin-top: var(--tc-space-2);
   gap: var(--tc-space-1);
 }

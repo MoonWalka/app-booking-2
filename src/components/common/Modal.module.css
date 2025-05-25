@@ -21,7 +21,7 @@
 
 .modal {
   background-color: var(--tc-bg-white);
-  border-radius: var(--tc-border-radius-lg);
+  border-radius: var(--tc-radius-lg);
   box-shadow: var(--tc-shadow-lg);
   width: 100%;
   max-width: 600px;
@@ -252,15 +252,15 @@
 }
 
 .modalSuccess {
-  border-top: 4px solid var(--tc-success-color);
+  border-top: 4px solid var(--tc-color-success);
 }
 
 .modalWarning {
-  border-top: 4px solid var(--tc-warning-color);
+  border-top: 4px solid var(--tc-color-warning);
 }
 
 .modalInfo {
-  border-top: 4px solid var(--tc-info-color);
+  border-top: 4px solid var(--tc-color-info);
 }
 
 /* Support pour l'accessibilité et le focus */

@@ -19,11 +19,11 @@
   align-items: center;
   gap: var(--tc-space-1);
   user-select: none;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .tc-dropdown-toggle-icon {
-  transition: transform var(--tc-transition);
+  transition: transform var(--tc-transition-base);
   font-size: 0.85em;
 }
 
@@ -39,15 +39,15 @@
   z-index: var(--tc-z-index-dropdown);
   min-width: 180px;
   background-color: var(--tc-bg-default);
-  border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-shadow);
+  border-radius: var(--tc-radius-base);
+  box-shadow: var(--tc-shadow-base);
   border: 1px solid var(--tc-border-default);
   margin-top: var(--tc-space-1);
   overflow: hidden;
   opacity: 0;
   visibility: hidden;
   transform: translateY(-5px);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
   max-height: 80vh;
   overflow-y: auto;
 }
@@ -124,7 +124,7 @@
   padding: var(--tc-space-1) var(--tc-space-2);
   padding-right: 30px;
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   font-size: var(--tc-font-size-sm);
   background-color: var(--tc-bg-default);
 }
@@ -159,9 +159,9 @@
   padding: var(--tc-space-1) var(--tc-space-2);
   padding-right: 35px;
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   font-size: var(--tc-font-size-sm);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .tc-search-input:focus {
@@ -187,8 +187,8 @@
   background-color: var(--tc-bg-default);
   border: 1px solid var(--tc-border-default);
   border-top: none;
-  border-radius: 0 0 var(--tc-border-radius) var(--tc-border-radius);
-  box-shadow: var(--tc-shadow);
+  border-radius: 0 0 var(--tc-radius-base) var(--tc-radius-base);
+  box-shadow: var(--tc-shadow-base);
   max-height: 300px;
   overflow-y: auto;
   z-index: var(--tc-z-index-dropdown);
@@ -230,13 +230,13 @@
   padding: var(--tc-space-1) var(--tc-space-2);
   background-color: var(--tc-gray-50);
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   font-size: var(--tc-font-size-sm);
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: var(--tc-space-1);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .tc-filter-toggle:hover {
@@ -255,8 +255,8 @@
   margin-top: var(--tc-space-1);
   min-width: 250px;
   background-color: var(--tc-bg-default);
-  border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-shadow);
+  border-radius: var(--tc-radius-base);
+  box-shadow: var(--tc-shadow-base);
   border: 1px solid var(--tc-border-default);
   padding: var(--tc-space-2);
   z-index: var(--tc-z-index-dropdown);
@@ -342,7 +342,7 @@
   padding: 2px 8px;
   font-size: var(--tc-font-size-xs);
   margin-left: var(--tc-space-1);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .tc-filter-badge:hover {

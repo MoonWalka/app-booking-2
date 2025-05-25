@@ -14,7 +14,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   margin: 0 var(--tc-spacing-0-5);
 }
 

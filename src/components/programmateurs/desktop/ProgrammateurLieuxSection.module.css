@@ -11,7 +11,7 @@
 
 .cardWrapper {
   background-color: var(--tc-bg-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-box-shadow-sm);
   margin-bottom: var(--tc-space-6);
   overflow: hidden;
@@ -42,7 +42,7 @@
   right: 0;
   background-color: var(--tc-dropdown-bg);
   border: var(--tc-border-width) solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   box-shadow: var(--tc-box-shadow-md);
   z-index: var(--tc-z-index-dropdown);
   max-height: 300px;
@@ -65,7 +65,7 @@
 
 .listGroup {
   border: var(--tc-border-width) solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   overflow: hidden;
 }
 
@@ -83,7 +83,7 @@
   align-items: center;
   padding: var(--tc-space-4);
   background-color: var(--tc-bg-light);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   border: var(--tc-border-width) dashed var(--tc-border-light);
   color: var(--tc-text-secondary);
 }

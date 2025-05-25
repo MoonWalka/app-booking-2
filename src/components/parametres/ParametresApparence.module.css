@@ -17,10 +17,10 @@
 .colorPreview {
   width: var(--tc-preview-width);
   height: var(--tc-preview-height);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   border: 1px solid var(--tc-border-default);
   box-shadow: var(--tc-shadow-sm);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
   background-color: var(--preview-color, var(--tc-color-primary));
 }
 
@@ -31,8 +31,8 @@
 .colorInput {
   width: var(--tc-input-width);
   padding: var(--tc-space-1) var(--tc-space-2);
-  border: 1px solid var(--tc-input-border);
-  border-radius: var(--tc-border-radius);
+  border: 1px solid var(--tc-border-default);
+  border-radius: var(--tc-radius-base);
   font-size: var(--tc-font-size-sm);
   font-family: monospace;
   color: var(--tc-input-color);
@@ -40,9 +40,9 @@
 }
 
 .colorInput:focus {
-  border-color: var(--tc-input-focus-border);
+  border-color: var(--tc-color-primary);
   outline: none;
-  box-shadow: var(--tc-input-focus-shadow);
+  box-shadow: var(--tc-shadow-base);
 }
 
 .colorPickerPopup {
@@ -51,8 +51,8 @@
   margin-top: var(--tc-space-1);
   background-color: var(--tc-bg-default);
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-shadow);
+  border-radius: var(--tc-radius-base);
+  box-shadow: var(--tc-shadow-base);
   padding: var(--tc-space-2);
 }
 
@@ -84,7 +84,7 @@
   border-radius: 50%;
   background-color: var(--tc-color-primary);
   cursor: pointer;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .fontSizeSlider::-moz-range-thumb {
@@ -93,7 +93,7 @@
   border-radius: 50%;
   background-color: var(--tc-color-primary);
   cursor: pointer;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .fontSizeSlider:focus::-webkit-slider-thumb {
@@ -108,7 +108,7 @@
   text-align: center;
   padding: var(--tc-space-1) 0;
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   background-color: var(--tc-bg-default);
 }
 
@@ -133,14 +133,14 @@
   align-items: center;
   gap: var(--tc-space-1);
   padding: var(--tc-btn-padding-y) var(--tc-btn-padding-x);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   border: 1px solid var(--tc-border-default);
   background-color: var(--tc-bg-default);
   color: var(--tc-text-default);
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
   cursor: pointer;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .resetButton:hover {
@@ -153,14 +153,14 @@
   align-items: center;
   gap: var(--tc-space-1);
   padding: var(--tc-btn-padding-y) var(--tc-btn-padding-x);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   background-color: var(--tc-color-primary);
   color: var(--tc-text-light);
   border: none;
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
   cursor: pointer;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .saveButton:hover {
@@ -174,7 +174,7 @@
   margin-top: var(--tc-space-4);
   padding: var(--tc-space-4);
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   background-color: var(--tc-gray-50);
 }
 

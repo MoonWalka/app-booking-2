@@ -21,19 +21,19 @@
   flex: 1;
   min-width: 150px;
   background-color: var(--tc-bg-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-shadow-sm);
   padding: var(--tc-space-4);
   display: flex;
   align-items: center;
   gap: var(--tc-space-4);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
   border: 1px solid var(--tc-border-default);
 }
 
 .statCard:hover {
   transform: translateY(-3px);
-  box-shadow: var(--tc-shadow);
+  box-shadow: var(--tc-shadow-base);
 }
 
 /* =============================
@@ -42,7 +42,7 @@
 .statIcon {
   width: 48px;
   height: 48px;
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -56,22 +56,22 @@
 
 .avecConcerts .statIcon {
   background-color: rgba(var(--tc-success-color-rgb), 0.1);
-  color: var(--tc-success-color);
+  color: var(--tc-color-success);
 }
 
 .sansConcerts .statIcon {
   background-color: rgba(var(--tc-secondary-color-rgb), 0.1);
-  color: var(--tc-secondary-color);
+  color: var(--tc-color-secondary);
 }
 
 .festivals .statIcon {
   background-color: rgba(var(--tc-danger-color-rgb), 0.1);
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
 }
 
 .salles .statIcon {
   background-color: rgba(var(--tc-warning-color-rgb), 0.1);
-  color: var(--tc-warning-color);
+  color: var(--tc-color-warning);
 }
 
 /* =============================

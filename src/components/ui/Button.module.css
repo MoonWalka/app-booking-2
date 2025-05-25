@@ -27,9 +27,9 @@
   border: none;
   padding: var(--tc-space-2) var(--tc-space-4);
   font-size: var(--tc-font-size-base);
-  line-height: var(--tc-line-height-base);
-  border-radius: var(--tc-border-radius);
-  transition: var(--tc-transition);
+  line-height: var(--tc-line-height-normal);
+  border-radius: var(--tc-radius-base);
+  transition: var(--tc-transition-base);
   cursor: pointer;
 }
 
@@ -39,7 +39,7 @@
 .btnPrimary {
   background-color: var(--tc-color-primary);
   border-color: var(--tc-color-primary);
-  color: var(--tc-light-color);
+  color: var(--tc-text-light);
 }
 
 .btnPrimary:hover {
@@ -49,38 +49,38 @@
 }
 
 .btnSecondary {
-  background-color: var(--tc-secondary-color);
-  border-color: var(--tc-secondary-color);
-  color: var(--tc-light-color);
+  background-color: var(--tc-color-secondary);
+  border-color: var(--tc-color-secondary);
+  color: var(--tc-text-light);
 }
 
 .btnSecondary:hover {
-  background-color: var(--tc-secondary-dark);
-  border-color: var(--tc-secondary-dark);
+  background-color: var(--tc-color-secondary-dark);
+  border-color: var(--tc-color-secondary-dark);
   text-decoration: none;
 }
 
 .btnSuccess {
-  background-color: var(--tc-success-color);
-  border-color: var(--tc-success-color);
-  color: var(--tc-light-color);
+  background-color: var(--tc-color-success);
+  border-color: var(--tc-color-success);
+  color: var(--tc-text-light);
 }
 
 .btnSuccess:hover {
-  background-color: var(--tc-success-dark);
-  border-color: var(--tc-success-dark);
+  background-color: var(--tc-color-success-dark);
+  border-color: var(--tc-color-success-dark);
   text-decoration: none;
 }
 
 .btnDanger {
-  background-color: var(--tc-danger-color);
-  border-color: var(--tc-danger-color);
-  color: var(--tc-light-color);
+  background-color: var(--tc-color-error);
+  border-color: var(--tc-color-error);
+  color: var(--tc-text-light);
 }
 
 .btnDanger:hover {
-  background-color: var(--tc-danger-dark);
-  border-color: var(--tc-danger-dark);
+  background-color: var(--tc-color-error-dark);
+  border-color: var(--tc-color-error-dark);
   text-decoration: none;
 }
 
@@ -95,55 +95,55 @@
 
 .btnOutlinePrimary:hover {
   background-color: var(--tc-color-primary);
-  color: var(--tc-light-color);
+  color: var(--tc-text-light);
   text-decoration: none;
 }
 
 .btnOutlineSecondary {
   background-color: transparent;
-  border-color: var(--tc-secondary-color);
-  color: var(--tc-secondary-color);
+  border-color: var(--tc-color-secondary);
+  color: var(--tc-color-secondary);
 }
 
 .btnOutlineSecondary:hover {
-  background-color: var(--tc-secondary-color);
-  color: var(--tc-light-color);
+  background-color: var(--tc-color-secondary);
+  color: var(--tc-text-light);
   text-decoration: none;
 }
 
 .btnOutlineSuccess {
   background-color: transparent;
-  border-color: var(--tc-success-color);
-  color: var(--tc-success-color);
+  border-color: var(--tc-color-success);
+  color: var(--tc-color-success);
 }
 
 .btnOutlineSuccess:hover {
-  background-color: var(--tc-success-color);
-  color: var(--tc-light-color);
+  background-color: var(--tc-color-success);
+  color: var(--tc-text-light);
   text-decoration: none;
 }
 
 .btnOutlineWarning {
   background-color: transparent;
-  border-color: var(--tc-warning-color);
-  color: var(--tc-warning-color);
+  border-color: var(--tc-color-warning);
+  color: var(--tc-color-warning);
 }
 
 .btnOutlineWarning:hover {
-  background-color: var(--tc-warning-color);
-  color: var(--tc-dark-color);
+  background-color: var(--tc-color-warning);
+  color: var(--tc-text-default);
   text-decoration: none;
 }
 
 .btnOutlineInfo {
   background-color: transparent;
-  border-color: var(--tc-info-color);
-  color: var(--tc-info-color);
+  border-color: var(--tc-color-info);
+  color: var(--tc-color-info);
 }
 
 .btnOutlineInfo:hover {
-  background-color: var(--tc-info-color);
-  color: var(--tc-light-color);
+  background-color: var(--tc-color-info);
+  color: var(--tc-text-light);
   text-decoration: none;
 }
 
@@ -153,13 +153,13 @@
 .btnSm {
   padding: var(--tc-space-1) var(--tc-space-2);
   font-size: var(--tc-font-size-sm);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
 }
 
 .btnLg {
   padding: var(--tc-space-2) var(--tc-space-4);
   font-size: var(--tc-font-size-lg);
-  border-radius: var(--tc-border-radius-lg);
+  border-radius: var(--tc-radius-lg);
 }
 
 /* =============================

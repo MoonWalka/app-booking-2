@@ -54,7 +54,7 @@
   background-color: var(--tc-bg-default);
   background-clip: padding-box;
   border: 1px solid var(--tc-input-border-color);
-  border-radius: var(--tc-border-radius));
+  border-radius: var(--tc-radius-base));
   transition: all 0.2s ease;
 }
 
@@ -89,7 +89,7 @@
   overflow-y: auto;
   background-color: var(--tc-bg-default);
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius));
+  border-radius: var(--tc-radius-base));
   box-shadow: 0 var(--tc-spacing-2) var(--tc-spacing-3) rgba(0, 0, 0, 0.15);
   z-index: 1000;
 }

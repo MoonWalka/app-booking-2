@@ -43,7 +43,7 @@
 .spinner {
   border: 4px solid rgba(var(--tc-gray-300-rgb), 0.3);
   border-radius: 50%;
-  border-top: 4px solid var(--tc-secondary-color);
+  border-top: 4px solid var(--tc-color-secondary);
   width: 40px;
   height: 40px;
   animation: spin 1s linear infinite;
@@ -57,23 +57,23 @@
 }
 
 .spinnerSecondary {
-  border-top-color: var(--tc-secondary-color);
+  border-top-color: var(--tc-color-secondary);
 }
 
 .spinnerSuccess {
-  border-top-color: var(--tc-success-color);
+  border-top-color: var(--tc-color-success);
 }
 
 .spinnerWarning {
-  border-top-color: var(--tc-warning-color);
+  border-top-color: var(--tc-color-warning);
 }
 
 .spinnerDanger {
-  border-top-color: var(--tc-danger-color);
+  border-top-color: var(--tc-color-error);
 }
 
 .spinnerInfo {
-  border-top-color: var(--tc-info-color);
+  border-top-color: var(--tc-color-info);
 }
 
 /* =============================

@@ -17,7 +17,7 @@
   padding: var(--tc-space-4);
   background-color: var(--tc-white-secondary);
   border-bottom: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius) var(--tc-border-radius) 0 0;
+  border-radius: var(--tc-radius-base) var(--tc-radius-base) 0 0;
   margin-bottom: var(--tc-space-4);
 }
 
@@ -92,7 +92,7 @@
   color: var(--tc-color-primary);
   background-color: transparent;
   border: 1px solid var(--tc-color-primary);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   cursor: pointer;
   transition: all 0.2s ease;
   font-size: var(--tc-font-size-sm);

@@ -68,10 +68,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
   font-weight: var(--tc-font-weight-medium);
   gap: var(--tc-space-1); /* Espacement entre l'icône et le texte */
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
 }
 
 /* Media queries */

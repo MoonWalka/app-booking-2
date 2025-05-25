@@ -17,11 +17,11 @@
 }
 
 .environment-local {
-  background-color: var(--tc-warning-color);
+  background-color: var(--tc-color-warning);
   color: var(--tc-black);
 }
 
 .environment-development {
-  background-color: var(--tc-info-color);
+  background-color: var(--tc-color-info);
   color: var(--tc-white);
 }

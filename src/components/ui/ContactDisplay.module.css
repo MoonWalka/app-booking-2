@@ -10,10 +10,10 @@
 .contactDefault {
   padding: var(--tc-space-4);
   background-color: var(--tc-gray-100);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   margin-bottom: var(--tc-space-4);
   border: 1px solid var(--tc-gray-300);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .contactCompact {
@@ -23,10 +23,10 @@
   align-items: center;
   padding: var(--tc-space-2);
   background-color: var(--tc-gray-100);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   margin-bottom: var(--tc-space-2);
   border: 1px solid var(--tc-gray-300);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .contactInline {

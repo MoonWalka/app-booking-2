@@ -41,7 +41,7 @@
   background-color: var(--tc-color-primary);
   color: var(--tc-white);
   border: none;
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   font-weight: var(--tc-font-weight-medium);
   text-decoration: none;
   transition: background-color var(--tc-transition-duration);
@@ -144,12 +144,12 @@
   text-align: center;
   white-space: nowrap;
   vertical-align: baseline;
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   color: var(--tc-white);
 }
 
 .badgeSuccess {
-  background-color: var(--tc-success-color);
+  background-color: var(--tc-color-success);
 }
 
 .badgePrimary {
@@ -157,16 +157,16 @@
 }
 
 .badgeInfo {
-  background-color: var(--tc-info-color);
+  background-color: var(--tc-color-info);
 }
 
 .badgeWarning {
-  background-color: var(--tc-warning-color);
+  background-color: var(--tc-color-warning);
   color: var(--tc-text-color-dark);
 }
 
 .badgeSecondary {
-  background-color: var(--tc-secondary-color);
+  background-color: var(--tc-color-secondary);
 }
 
 .actionButtons {
@@ -185,10 +185,10 @@
   justify-content: center;
   width: 32px;
   height: 32px;
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   border: none;
   font-size: var(--tc-font-size-sm);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .actionButtonPrimary {
@@ -203,11 +203,11 @@
 
 .actionButtonDanger {
   background-color: var(--tc-danger-color-10);
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
 }
 
 .actionButtonDanger:hover {
-  background-color: var(--tc-danger-color);
+  background-color: var(--tc-color-error);
   color: var(--tc-white);
 }
 
@@ -223,10 +223,10 @@
   padding: var(--tc-space-2) var(--tc-space-6);
   border: var(--tc-border-width) solid var(--tc-border-default);
   background-color: transparent;
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   color: var(--tc-text-color-secondary);
   font-weight: var(--tc-font-weight-medium);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .loadMoreButton:hover {
@@ -249,7 +249,7 @@
 }
 
 .emptyStateIcon {
-  font-size: var(--tc-font-size-xxl);
+  font-size: var(--tc-font-size-2xl);
   color: var(--tc-text-color-muted);
   margin-bottom: var(--tc-space-4);
 }

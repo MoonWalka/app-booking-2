@@ -91,7 +91,7 @@
 /* APERÇU DU TEMPLATE */
 .tc-template-preview {
   background-color: var(--tc-hover-bg);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   padding: var(--tc-space-2);
   margin-top: var(--tc-space-4);
 }
@@ -103,7 +103,7 @@
 .tc-template-section-item {
   padding: var(--tc-space-1) var(--tc-space-2);
   margin-bottom: var(--tc-space-1);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   background-color: var(--tc-bg-default);
   display: flex;
   align-items: center;
@@ -130,12 +130,12 @@
 /* PDF VIEWER */
 .tc-pdf-viewer-container {
   margin-top: var(--tc-space-4);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   overflow: hidden;
 }
 
 .tc-pdf-viewer {
   height: 600px;
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
 }

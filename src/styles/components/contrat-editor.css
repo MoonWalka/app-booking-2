@@ -19,7 +19,7 @@
   flex-direction: column;
   position: relative;
   background-color: var(--tc-bg-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   overflow: hidden;
 }
 
@@ -35,14 +35,14 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--tc-info-color);
-  color: var(--tc-info-color);
+  border: 1px solid var(--tc-color-info);
+  color: var(--tc-color-info);
   background-color: transparent;
   transition: all 0.2s ease-in-out;
 }
 
 .tc-modal-actions .tc-btn.tc-btn-outline-info:hover {
-  background-color: var(--tc-info-color);
+  background-color: var(--tc-color-info);
   color: var(--tc-bg-default);
 }
 
@@ -63,7 +63,7 @@
 }
 
 .tc-modal-close:hover {
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
 }
 
 /* Styles pour le corps de la modale */
@@ -79,7 +79,7 @@
   width: 100%;
   font-family: Arial, sans-serif;
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   padding: var(--tc-spacing-2);
   line-height: 1.5;
 }
@@ -97,7 +97,7 @@
 .template-info-card {
   background-color: var(--tc-bg-default);
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   padding: var(--tc-font-size-xl);
 }
 
@@ -185,7 +185,7 @@
 .variables-guide {
   background-color: var(--tc-light-bg);
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   padding: var(--tc-spacing-2);
   margin-bottom: var(--tc-spacing-3);
 }
@@ -196,7 +196,7 @@
   margin: var(--tc-spacing-1);
   background-color: var(--tc-gray-800);
   border: 1px solid var(--tc-border-color-medium);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   font-size: var(--tc-font-size-sm);
   cursor: pointer;
 }
@@ -217,13 +217,13 @@
 }
 
 .ql-toolbar {
-  border-top-left-radius: var(--tc-border-radius);
-  border-top-right-radius: var(--tc-border-radius);
+  border-top-left-radius: var(--tc-radius-base);
+  border-top-right-radius: var(--tc-radius-base);
 }
 
 .ql-container {
-  border-bottom-left-radius: var(--tc-border-radius);
-  border-bottom-right-radius: var(--tc-border-radius);
+  border-bottom-left-radius: var(--tc-radius-base);
+  border-bottom-right-radius: var(--tc-radius-base);
 }
 
 /* Fix pour les boutons Variables et Aide */

@@ -12,7 +12,7 @@
 }
 
 .searchTypeButtons button {
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
   display: flex;
   align-items: center;
 }

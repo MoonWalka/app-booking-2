@@ -12,11 +12,11 @@
    ============================= */
 .errorPanel {
   padding: var(--tc-space-4);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   border: 1px solid;
   margin-bottom: var(--tc-space-4);
   box-shadow: var(--tc-shadow-sm);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 /* =============================
@@ -30,7 +30,7 @@
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-semibold);
   margin: 0;
-  line-height: var(--tc-line-height-base);
+  line-height: var(--tc-line-height-normal);
 }
 
 .alertContent {
@@ -40,7 +40,7 @@
 .alertMessage {
   margin: 0;
   font-size: var(--tc-font-size-base);
-  line-height: var(--tc-line-height-base);
+  line-height: var(--tc-line-height-normal);
 }
 
 /* =============================
@@ -48,42 +48,42 @@
    ============================= */
 .alertError {
   background-color: var(--tc-danger-bg);
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
   border-color: var(--tc-danger-border);
 }
 
 .alertError .alertTitle {
-  color: var(--tc-danger-dark);
+  color: var(--tc-color-error-dark);
 }
 
 .alertWarning {
   background-color: var(--tc-warning-bg);
-  color: var(--tc-warning-color);
+  color: var(--tc-color-warning);
   border-color: var(--tc-warning-border);
 }
 
 .alertWarning .alertTitle {
-  color: var(--tc-warning-dark);
+  color: var(--tc-color-warning-dark);
 }
 
 .alertInfo {
   background-color: var(--tc-info-bg);
-  color: var(--tc-info-color);
+  color: var(--tc-color-info);
   border-color: var(--tc-info-border);
 }
 
 .alertInfo .alertTitle {
-  color: var(--tc-info-dark);
+  color: var(--tc-color-info-dark);
 }
 
 .alertSuccess {
   background-color: var(--tc-success-bg);
-  color: var(--tc-success-color);
+  color: var(--tc-color-success);
   border-color: var(--tc-success-border);
 }
 
 .alertSuccess .alertTitle {
-  color: var(--tc-success-dark);
+  color: var(--tc-color-success-dark);
 }
 
 /* =============================

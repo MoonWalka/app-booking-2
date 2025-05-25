@@ -48,8 +48,8 @@
   text-align: center;
   white-space: nowrap;
   vertical-align: baseline;
-  border-radius: var(--tc-border-radius);
-  color: var(--tc-light-color);
+  border-radius: var(--tc-radius-base);
+  color: var(--tc-text-light);
   text-transform: capitalize;
   line-height: 1;
 }
@@ -72,8 +72,8 @@
   text-align: center;
   white-space: nowrap;
   vertical-align: baseline;
-  border-radius: var(--tc-border-radius);
-  color: var(--tc-light-color);
+  border-radius: var(--tc-radius-base);
+  color: var(--tc-text-light);
   line-height: 1;
 }
 
@@ -111,11 +111,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   background-color: transparent;
   border: 1px solid var(--tc-gray-300);
   color: var(--tc-gray-700);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .actionButton:hover {

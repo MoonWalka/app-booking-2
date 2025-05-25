@@ -15,14 +15,14 @@
 .section {
   margin-bottom: var(--tc-space-6);
   border: var(--tc-border-width) solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   overflow: hidden;
 }
 
 .header {
   padding: var(--tc-space-2) var(--tc-space-4);
   background-color: var(--tc-color-primary);
-  color: var(--tc-light-color);
+  color: var(--tc-text-light);
 }
 
 .header.bg-primary {
@@ -30,11 +30,11 @@
 }
 
 .header.bg-info {
-  background-color: var(--tc-info-color);
+  background-color: var(--tc-color-info);
 }
 
 .header.bg-secondary {
-  background-color: var(--tc-secondary-color);
+  background-color: var(--tc-color-secondary);
 }
 
 .title {
@@ -51,9 +51,9 @@
 .infoAlert {
   margin-bottom: var(--tc-space-6);
   padding: var(--tc-space-2) var(--tc-space-4);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   background-color: var(--tc-info-color-05);
-  border: var(--tc-border-width) solid var(--tc-info-color);
+  border: var(--tc-border-width) solid var(--tc-color-info);
 }
 
 .infoAlertContent {
@@ -64,7 +64,7 @@
 .infoIcon {
   font-size: var(--tc-font-size-lg);
   margin-right: var(--tc-space-2);
-  color: var(--tc-info-color);
+  color: var(--tc-color-info);
 }
 
 .infoText {
@@ -121,7 +121,7 @@
 .infoGroup {
   padding: var(--tc-space-2);
   background-color: var(--tc-bg-default);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   box-shadow: var(--tc-shadow-card));
 }
 

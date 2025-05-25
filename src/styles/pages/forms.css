@@ -10,7 +10,7 @@
 .tc-form-progress {
   display: flex;
   margin-bottom: var(--tc-space-6);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   overflow: hidden;
 }
 
@@ -55,7 +55,7 @@
 }
 
 .tc-form-header {
-  background-color: var(--tc-secondary-color);
+  background-color: var(--tc-color-secondary);
   color: var(--tc-white);
   padding: var(--tc-space-2) var(--tc-space-6);
   text-align: center;
@@ -74,7 +74,7 @@
 }
 
 .tc-form-footer {
-  background-color: var(--tc-secondary-color);
+  background-color: var(--tc-color-secondary);
   color: var(--tc-white);
   padding: var(--tc-space-2);
   text-align: center;
@@ -85,7 +85,7 @@
   margin-top: var(--tc-space-6);
   padding: var(--tc-space-1) var(--tc-space-2);
   background-color: var(--tc-gray-50);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   text-align: center;
   font-size: var(--tc-font-size-xs);
   color: var(--tc-text-muted);
@@ -98,8 +98,8 @@
 }
 
 .tc-error-icon {
-  font-size: var(--tc-font-size-xxl);
-  color: var(--tc-danger-color);
+  font-size: var(--tc-font-size-2xl);
+  color: var(--tc-color-error);
   margin-bottom: var(--tc-space-4);
 }
 
@@ -113,8 +113,8 @@
   margin-top: var(--tc-space-2);
   padding: var(--tc-space-1) var(--tc-space-2);
   background-color: rgba(var(--tc-warning-color-rgb), 0.1);
-  border-radius: var(--tc-border-radius);
-  color: var(--tc-warning-color);
+  border-radius: var(--tc-radius-base);
+  color: var(--tc-color-warning);
 }
 
 .tc-form-submitted-info, 
@@ -122,8 +122,8 @@
   margin-top: var(--tc-space-4);
   padding: var(--tc-space-2);
   background-color: rgba(var(--tc-success-color-rgb), 0.1);
-  border-radius: var(--tc-border-radius);
-  color: var(--tc-success-color);
+  border-radius: var(--tc-radius-base);
+  color: var(--tc-color-success);
 }
 
 /* LIENS DE FORMULAIRE */
@@ -131,7 +131,7 @@
   margin-top: var(--tc-space-4);
   background-color: var(--tc-gray-50);
   padding: var(--tc-space-2);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
 }
 
 .tc-form-link {
@@ -152,8 +152,8 @@
 }
 
 .tc-success-icon {
-  font-size: var(--tc-font-size-xxl);
-  color: var(--tc-success-color);
+  font-size: var(--tc-font-size-2xl);
+  color: var(--tc-color-success);
   margin-bottom: var(--tc-space-4);
 }
 
@@ -165,9 +165,9 @@
 
 .tc-validation-card {
   background-color: var(--tc-bg-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   padding: var(--tc-space-4);
-  box-shadow: var(--tc-shadow);
+  box-shadow: var(--tc-shadow-base);
   margin-top: var(--tc-space-4);
 }
 
@@ -189,6 +189,6 @@
 .tc-concert-info {
   background-color: var(--tc-gray-50);
   padding: var(--tc-space-2);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   margin-top: var(--tc-space-2);
 }

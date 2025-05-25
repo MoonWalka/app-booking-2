@@ -17,7 +17,7 @@
   align-items: center;
   background-color: var(--tc-white);
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   padding: var(--tc-space-1) var(--tc-space-2);
   width: 100%;
   max-width: 600px;
@@ -44,7 +44,7 @@
   gap: var(--tc-space-1);
   background-color: var(--tc-white);
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   color: var(--tc-text-color-secondary);
   font-weight: var(--tc-font-weight-medium);
   padding: var(--tc-space-1) var(--tc-space-2);
@@ -68,7 +68,7 @@
   min-width: 220px;
   background: var(--tc-white);
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-shadow-md);
   z-index: 10;
   padding: 0.25rem 0;
@@ -118,7 +118,7 @@
   gap: var(--tc-space-1);
   background-color: var(--tc-white);
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   color: var(--tc-text-color-secondary);
   font-weight: var(--tc-font-weight-medium);
   padding: var(--tc-space-1) var(--tc-space-2);

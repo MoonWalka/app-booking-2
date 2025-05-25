@@ -6,7 +6,7 @@
 
 .searchResultsDropdown {
   border: 1px solid var(--tc-border-light);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   background-color: var(--tc-bg-card);
   z-index: var(--tc-z-index-dropdown);
   box-shadow: var(--tc-shadow-md);

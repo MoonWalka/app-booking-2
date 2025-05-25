@@ -53,7 +53,7 @@
 }
 
 .required {
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
   margin-left: 3px;
 }
 
@@ -123,7 +123,7 @@
 
 .mapIframe {
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   width: 100%;
 }
 

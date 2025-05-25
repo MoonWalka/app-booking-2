@@ -20,8 +20,8 @@
 .tc-programmateur-container {
   padding: var(--tc-space-4);
   background-color: var(--tc-bg-default);
-  border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-shadow);
+  border-radius: var(--tc-radius-base);
+  box-shadow: var(--tc-shadow-base);
   margin-bottom: var(--tc-space-4);
 }
 
@@ -55,8 +55,8 @@
   margin-top: var(--tc-space-4);
   padding: var(--tc-space-2);
   background-color: rgba(var(--tc-warning-color-rgb), 0.1);
-  border-radius: var(--tc-border-radius);
-  border-left: 4px solid var(--tc-warning-color);
+  border-radius: var(--tc-radius-base);
+  border-left: 4px solid var(--tc-color-warning);
 }
 
 /* =============================
@@ -89,7 +89,7 @@
 
 .tc-form-card {
   background-color: var(--tc-bg-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-shadow-sm);
   margin-bottom: var(--tc-space-4);
   overflow: hidden;
@@ -174,8 +174,8 @@
 
 .tc-programmateur-list-card {
   background-color: var(--tc-bg-default);
-  border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-shadow);
+  border-radius: var(--tc-radius-base);
+  box-shadow: var(--tc-shadow-base);
   margin-bottom: var(--tc-space-2);
   overflow: hidden;
   transition: transform var(--tc-transition-duration);
@@ -208,7 +208,7 @@
 .tc-tag {
   padding: var(--tc-space-1) var(--tc-space-2);
   background-color: var(--tc-gray-100);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   font-size: var(--tc-font-size-xs);
   color: var(--tc-primary-dark);
 }
@@ -249,7 +249,7 @@
   justify-content: space-between;
   background-color: var(--tc-gray-100);
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   padding: var(--tc-space-2) var(--tc-space-4);
   transition: all var(--tc-transition-duration);
 }
@@ -313,5 +313,5 @@
   line-height: 1;
   color: var(--tc-gray-700);
   background-color: var(--tc-gray-100);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
 }

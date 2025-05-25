@@ -27,10 +27,10 @@
 .searchResultsDropdown {
   background-color: var(--tc-white);
   border: var(--tc-border-width) solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   z-index: var(--tc-z-index-dropdown);
   overflow: hidden;
-  box-shadow: var(--tc-shadow);
+  box-shadow: var(--tc-shadow-base);
 }
 
 .searchResultItem {
@@ -97,7 +97,7 @@
   border-radius: var(--tc-border-radius-md);
   overflow: hidden;
   border: none;
-  box-shadow: var(--tc-shadow);
+  box-shadow: var(--tc-shadow-base);
 }
 
 .artistesTable th {

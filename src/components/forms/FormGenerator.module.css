@@ -58,9 +58,9 @@
   padding: var(--tc-space-4);
   margin-bottom: var(--tc-space-6);
   background-color: var(--tc-success-bg);
-  color: var(--tc-success-color);
+  color: var(--tc-color-success);
   border: 1px solid var(--tc-success-border);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
 }
 
 .alertInfo {
@@ -70,9 +70,9 @@
   padding: var(--tc-space-4);
   margin-bottom: var(--tc-space-4);
   background-color: var(--tc-info-bg);
-  color: var(--tc-info-color);
+  color: var(--tc-color-info);
   border: 1px solid var(--tc-info-border);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
 }
 
 .alertWarning {
@@ -82,9 +82,9 @@
   padding: var(--tc-space-4);
   margin-top: var(--tc-space-4);
   background-color: var(--tc-warning-bg);
-  color: var(--tc-warning-color);
+  color: var(--tc-color-warning);
   border: 1px solid var(--tc-warning-border);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
 }
 
 /* =============================
@@ -93,7 +93,7 @@
 .inputGroup {
   display: flex;
   margin-bottom: var(--tc-space-4);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   overflow: hidden;
   box-shadow: var(--tc-shadow-sm);
 }
@@ -135,17 +135,17 @@
 @media (max-width: var(--tc-breakpoint-sm)) {
   .inputGroup {
     flex-direction: column;
-    border-radius: var(--tc-border-radius);
+    border-radius: var(--tc-radius-base);
   }
   
   .linkInput {
-    border-radius: var(--tc-border-radius) var(--tc-border-radius) 0 0;
+    border-radius: var(--tc-radius-base) var(--tc-radius-base) 0 0;
     border-right: 1px solid var(--tc-border-default);
     border-bottom: none;
   }
   
   .copyButton {
-    border-radius: 0 0 var(--tc-border-radius) var(--tc-border-radius);
+    border-radius: 0 0 var(--tc-radius-base) var(--tc-radius-base);
     border-left: 1px solid var(--tc-border-default);
     border-top: none;
   }
@@ -169,5 +169,5 @@
 .alertWarning:hover {
   transform: translateY(-1px);
   box-shadow: var(--tc-shadow-md);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 } 

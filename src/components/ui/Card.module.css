@@ -13,7 +13,7 @@
    ============================= */
 .card {
   background-color: var(--tc-bg-default);
-  border-radius: var(--tc-border-radius-lg);
+  border-radius: var(--tc-radius-lg);
   box-shadow: var(--tc-shadow-sm);
   border: 1px solid var(--tc-border-default);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -97,23 +97,23 @@
 }
 
 .cardSecondary {
-  border-left: 4px solid var(--tc-secondary-color);
+  border-left: 4px solid var(--tc-color-secondary);
 }
 
 .cardSuccess {
-  border-left: 4px solid var(--tc-success-color);
+  border-left: 4px solid var(--tc-color-success);
 }
 
 .cardWarning {
-  border-left: 4px solid var(--tc-warning-color);
+  border-left: 4px solid var(--tc-color-warning);
 }
 
 .cardDanger {
-  border-left: 4px solid var(--tc-danger-color);
+  border-left: 4px solid var(--tc-color-error);
 }
 
 .cardInfo {
-  border-left: 4px solid var(--tc-info-color);
+  border-left: 4px solid var(--tc-color-info);
 }
 
 /* =============================

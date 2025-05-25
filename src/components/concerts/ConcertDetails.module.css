@@ -53,7 +53,7 @@
 
 .floatingEditButton i {
   font-size: var(--tc-font-size-md) !important;
-  color: var(--tc-warning-color) !important;
+  color: var(--tc-color-warning) !important;
   animation: pulse 2s infinite ease-in-out;
 }
 

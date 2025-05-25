@@ -80,7 +80,7 @@
   padding: var(--tc-spacing-3);
   background-color: var(--tc-bg-default);
   border: 1px solid var(--tc-border-default));
-  border-radius: var(--tc-border-radius));
+  border-radius: var(--tc-radius-base));
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
   cursor: pointer;

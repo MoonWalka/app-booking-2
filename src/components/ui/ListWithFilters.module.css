@@ -9,8 +9,8 @@
    ============================= */
 .container {
   background-color: var(--tc-bg-default);
-  border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-shadow);
+  border-radius: var(--tc-radius-base);
+  box-shadow: var(--tc-shadow-base);
   padding: var(--tc-space-6);
   margin-bottom: var(--tc-spacing-xl);
   border: 1px solid var(--tc-border-default);
@@ -42,13 +42,13 @@
   background-color: transparent;
   border: 1px solid var(--tc-gray-300);
   color: var(--tc-gray-600);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   padding: var(--tc-space-2);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .refreshButton:hover {
@@ -63,7 +63,7 @@
   margin-bottom: var(--tc-space-6);
   padding: var(--tc-space-4);
   background-color: var(--tc-gray-100);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   border: 1px solid var(--tc-gray-200);
 }
 
@@ -91,18 +91,18 @@
   width: 100%;
   padding: var(--tc-space-2);
   border: 1px solid var(--tc-gray-400);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   font-size: var(--tc-font-size-sm);
   color: var(--tc-text-default);
   background-color: var(--tc-bg-default);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .filterInput:focus,
 .filterSelect:focus {
   border-color: var(--tc-color-primary);
   outline: none;
-  box-shadow: var(--tc-input-focus-shadow);
+  box-shadow: var(--tc-shadow-base);
 }
 
 .filterActions {
@@ -113,14 +113,14 @@
 
 .applyButton {
   background-color: var(--tc-color-primary);
-  color: var(--tc-light-color);
+  color: var(--tc-text-light);
   border: none;
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   padding: var(--tc-space-2) var(--tc-space-4);
   cursor: pointer;
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .applyButton:hover {
@@ -131,17 +131,17 @@
   background-color: transparent;
   border: 1px solid var(--tc-gray-400);
   color: var(--tc-gray-600);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   padding: var(--tc-space-2) var(--tc-space-4);
   cursor: pointer;
   font-size: var(--tc-font-size-sm);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .resetButton:hover {
   background-color: rgba(var(--tc-danger-color-rgb), 0.1);
-  color: var(--tc-danger-color);
-  border-color: var(--tc-danger-color);
+  color: var(--tc-color-error);
+  border-color: var(--tc-color-error);
 }
 
 /* =============================
@@ -241,12 +241,12 @@
   background-color: transparent;
   border: 1px solid var(--tc-gray-400);
   color: var(--tc-gray-700);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   padding: var(--tc-space-2) var(--tc-space-4);
   cursor: pointer;
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .loadMoreButton:hover {

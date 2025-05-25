@@ -13,10 +13,10 @@
    ============================= */
 .infoPanel {
   background-color: rgba(var(--tc-info-color-rgb), 0.1);
-  border-left: 4px solid var(--tc-info-color);
+  border-left: 4px solid var(--tc-color-info);
   padding: var(--tc-space-4);
   margin: var(--tc-space-6) 0;
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   display: flex;
   flex-direction: column;
   gap: var(--tc-space-2);
@@ -27,17 +27,17 @@
    ============================= */
 .success {
   background-color: rgba(var(--tc-success-color-rgb), 0.1);
-  border-left-color: var(--tc-success-color);
+  border-left-color: var(--tc-color-success);
 }
 
 .warning {
   background-color: rgba(var(--tc-warning-color-rgb), 0.1);
-  border-left-color: var(--tc-warning-color);
+  border-left-color: var(--tc-color-warning);
 }
 
 .error {
   background-color: rgba(var(--tc-danger-color-rgb), 0.1);
-  border-left-color: var(--tc-danger-color);
+  border-left-color: var(--tc-color-error);
 }
 
 /* =============================
@@ -56,7 +56,7 @@
   color: var(--tc-gray-700);
   margin-bottom: 0;
   font-size: var(--tc-font-size-base);
-  line-height: var(--tc-line-height-base);
+  line-height: var(--tc-line-height-normal);
 }
 
 /* Styles pour les paragraphes dans le contenu */

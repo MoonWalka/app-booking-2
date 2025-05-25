@@ -21,7 +21,7 @@
   background-color: var(--tc-gray-100);
   color: var(--tc-text-default);
   box-shadow: none; /* Modifié: suppression de l'ombre portée */
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
   gap: var(--tc-space-1);
 }
 
@@ -58,22 +58,22 @@
 
 .success {
   background-color: rgba(var(--tc-success-color-rgb), 0.1);
-  color: var(--tc-success-color);
+  color: var(--tc-color-success);
 }
 
 .info {
   background-color: rgba(var(--tc-info-color-rgb), 0.1);
-  color: var(--tc-info-color);
+  color: var(--tc-color-info);
 }
 
 .warning {
   background-color: rgba(var(--tc-warning-color-rgb), 0.1);
-  color: var(--tc-warning-color);
+  color: var(--tc-color-warning);
 }
 
 .danger {
   background-color: rgba(var(--tc-danger-color-rgb), 0.1);
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
 }
 
 /* =============================

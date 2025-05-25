@@ -6,7 +6,7 @@
 
 .sync-manager {
   box-shadow: var(--tc-shadow-lg);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   max-width: 900px;
   margin: 0 auto;
 }
@@ -28,7 +28,7 @@
 
 .sync-manager .tab-content {
   background-color: var(--tc-white);
-  border-radius: 0 0 var(--tc-border-radius-sm) var(--tc-border-radius-sm);
+  border-radius: 0 0 var(--tc-radius-sm) var(--tc-radius-sm);
 }
 
 .sync-manager .progress {
@@ -39,16 +39,16 @@
 .sync-manager .badge {
   font-weight: var(--tc-font-weight-medium);
   padding: var(--tc-space-1) var(--tc-space-2);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
 }
 
 /* Colorisation contextuelle */
 .environment-local .badge {
-  background-color: var(--tc-info-color);
+  background-color: var(--tc-color-info);
 }
 
 .environment-development .badge {
-  background-color: var(--tc-warning-color);
+  background-color: var(--tc-color-warning);
 }
 
 /* Animation de synchronisation */

@@ -18,7 +18,7 @@
 
 .tc-modal {
   background-color: var(--tc-bg-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-shadow-modal);
   max-width: 600px;
   max-height: 90vh;
@@ -60,11 +60,11 @@
   line-height: 1;
   padding: 0;
   cursor: pointer;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .tc-modal-close:hover {
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
 }
 
 /* Tailles de modales */
@@ -125,7 +125,7 @@
   height: auto;
   min-height: 200px;
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   background: var(--tc-bg-default);
 }
 

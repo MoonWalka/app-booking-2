@@ -23,7 +23,7 @@
   background-color: var(--tc-color-primary);
   color: white;
   text-decoration: none;
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   font-weight: 500;
   transition: background-color 0.2s ease;
 }

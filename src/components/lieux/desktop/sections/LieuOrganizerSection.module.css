@@ -9,7 +9,7 @@
    ============================= */
 .formCard {
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   background-color: var(--tc-bg-color-light);
   box-shadow: var(--tc-shadow-sm);
   overflow: hidden;
@@ -83,9 +83,9 @@
   max-height: 300px;
   overflow-y: auto;
   border: 1px solid var(--tc-gray-300);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   background-color: var(--tc-bg-default);
-  box-shadow: var(--tc-shadow);
+  box-shadow: var(--tc-shadow-base);
   z-index: var(--tc-z-index-dropdown);
 }
 
@@ -137,7 +137,7 @@
   align-items: flex-start;
   padding: var(--tc-space-4);
   border: 1px solid var(--tc-gray-300);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   background-color: var(--tc-gray-100);
 }
 

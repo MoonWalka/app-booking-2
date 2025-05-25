@@ -242,3 +242,7 @@ export { storageRef as ref, uploadBytes, getDownloadURL };
 
 // Indicateur de mode
 export const MODE_LOCAL = IS_LOCAL_MODE;
+
+// 🔧 COMPATIBILITÉ : Exports supplémentaires pour maintenir la compatibilité
+export const CURRENT_MODE = IS_LOCAL_MODE ? 'local' : 'production';
+export { IS_LOCAL_MODE };

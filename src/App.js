@@ -59,7 +59,6 @@ class ErrorBoundary extends React.Component {
     // Si c'est une erreur de chargement de chunk, on peut essayer de recharger
     if (error.name === 'ChunkLoadError' && this.retryCount < 2) {
       this.retryCount++;
-      console.log(`Tentative de rechargement (${this.retryCount}/2)...`);
       // Attendre un peu avant de recharger pour éviter les boucles
       setTimeout(() => {
         window.location.reload();

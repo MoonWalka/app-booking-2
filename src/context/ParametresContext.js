@@ -2,19 +2,17 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { doc, getDoc, setDoc } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
 
-const ParametresContext = createContext();
+export const ParametresContext = createContext(null);
 
 export const useParametres = () => {
   const context = useContext(ParametresContext);
   if (!context) {
-    throw new Error('useParametres doit être utilisé dans un ParametresProvider');
+    throw new Error('useParametres doit être utilisé à l\'intérieur d\'un ParametresProvider');
   }
   return context;
 };
 
 export const ParametresProvider = ({ children }) => {
-  console.log('[TRACE-UNIQUE][ParametresProvider] Provider exécuté !');
-  
   const [parametres, setParametres] = useState({
     entreprise: {},
     generaux: {

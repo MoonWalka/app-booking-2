@@ -1,11 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Form, Row, Col, Button, Dropdown } from 'react-bootstrap';
-import structureService from '@/services/structureService';
+import React from 'react';
+import { Form, Row, Col } from 'react-bootstrap';
 import styles from './StructureInfoSection.module.css';
 
 /**
  * StructureInfoSection - Section contenant les informations sur la structure du programmateur
- * Permet également de rechercher et sélectionner une structure existante
  */
 const StructureInfoSection = ({ 
   formik = {}, // Valeur par défaut pour éviter les erreurs
@@ -13,12 +11,6 @@ const StructureInfoSection = ({
   errors = {}, 
   isReadOnly = false 
 }) => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [searching, setSearching] = useState(false);
-  const [showResults, setShowResults] = useState(false);
-  const [searchResults, setSearchResults] = useState([]);
-  const [selectedStructure, setSelectedStructure] = useState(null);
-
   // S'assurer que formik.values existe, sinon initialiser avec une structure vide
   const formikValues = formik.values || { 
     structure: { 
@@ -33,169 +25,14 @@ const StructureInfoSection = ({
     structureId: ''
   };
 
-  // Rechercher une structure existante
-  const searchStructure = useCallback(async () => {
-    if (!searchTerm.trim() || searchTerm.length < 2) return;
-    
-    setSearching(true);
-    try {
-      const results = await structureService.searchStructures(searchTerm, 5);
-      setSearchResults(results);
-      setShowResults(true);
-    } catch (error) {
-      console.error('Erreur lors de la recherche de structures:', error);
-    } finally {
-      setSearching(false);
-    }
-  }, [searchTerm]);
-
-  // Gérer le timing de recherche avec debounce
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (searchTerm.trim().length >= 2) {
-        searchStructure();
-      }
-    }, 300);
-    
-    return () => clearTimeout(timer);
-  }, [searchTerm, searchStructure]);
-
-  // Charger les données d'une structure si un ID est déjà présent
-  useEffect(() => {
-    const loadStructure = async () => {
-      if (formik && formik.values && formik.values.structureId) {
-        try {
-          const structureData = await structureService.getStructureById(formik.values.structureId);
-          if (structureData) {
-            setSelectedStructure({
-              id: formik.values.structureId,
-              ...structureData
-            });
-            
-            // Mettre à jour le champ de recherche
-            setSearchTerm(structureData.nom || structureData.raisonSociale || '');
-          }
-        } catch (error) {
-          console.error('Erreur lors du chargement de la structure:', error);
-        }
-      }
-    };
-    
-    loadStructure();
-  }, [formik?.values?.structureId, formik]);
-
-  // Sélectionner une structure dans la liste de recherche
-  const handleSelectStructure = (structure) => {
-    setSelectedStructure(structure);
-    setShowResults(false);
-    setSearchTerm(structure.nom || structure.raisonSociale || '');
-    
-    // Mettre à jour les données du formulaire
-    if (formik && formik.setFieldValue) {
-      // Mettre à jour les champs informatifs
-      formik.setFieldValue('structure.raisonSociale', structure.nom || structure.raisonSociale || '');
-      formik.setFieldValue('structure.type', structure.type || '');
-      formik.setFieldValue('structure.adresse', structure.adresse || '');
-      formik.setFieldValue('structure.codePostal', structure.codePostal || '');
-      formik.setFieldValue('structure.ville', structure.ville || '');
-      formik.setFieldValue('structure.siret', structure.siret || '');
-      formik.setFieldValue('structure.tva', structure.tva || '');
-      
-      // Stocker l'ID de la structure pour l'association
-      formik.setFieldValue('structureId', structure.id);
-    }
-  };
-
-  // Effacer la structure sélectionnée
-  const handleClearStructure = () => {
-    setSelectedStructure(null);
-    setSearchTerm('');
-    if (formik && formik.setFieldValue) {
-      formik.setFieldValue('structureId', '');
-    }
-  };
-
   // Accéder aux valeurs de structure de manière sécurisée
   const structureValues = formikValues.structure || {};
   const touchedStructure = touched?.structure || {};
   const errorsStructure = errors?.structure || {};
 
-  // Déterminer si le formulaire est en mode édition ou lecture seule
-  const isFormReadOnly = isReadOnly || (selectedStructure !== null);
-
   return (
     <div className={styles.structureInfoSection}>
       <h4 className={styles.sectionTitle}>Informations sur la structure</h4>
-      
-      {!isReadOnly && (
-        <div className={styles.structureSearch}>
-          <Form.Group className="mb-3">
-            <Form.Label>Rechercher une structure existante</Form.Label>
-            <div className={styles.searchContainer}>
-              <Form.Control
-                type="text"
-                placeholder="Nom de la structure"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                onFocus={() => searchTerm.length >= 2 && setShowResults(true)}
-                disabled={isReadOnly}
-                className={styles.searchInput}
-              />
-              {selectedStructure && (
-                <Button 
-                  variant="outline-secondary"
-                  size="sm"
-                  className={styles.clearButton}
-                  onClick={handleClearStructure}
-                >
-                  <i className="bi bi-x-lg"></i>
-                </Button>
-              )}
-            </div>
-            
-            {showResults && (
-              <Dropdown.Menu show={true} className={styles.resultsDropdown}>
-                {searching ? (
-                  <div className={styles.loadingResults}>
-                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                    Recherche en cours...
-                  </div>
-                ) : searchResults.length > 0 ? (
-                  searchResults.map(structure => (
-                    <Dropdown.Item 
-                      key={structure.id}
-                      onClick={() => handleSelectStructure(structure)}
-                      className={styles.resultItem}
-                    >
-                      <div className={styles.structureName}>{structure.nom || structure.raisonSociale}</div>
-                      {structure.ville && (
-                        <div className={styles.structureLocation}>
-                          <i className="bi bi-geo-alt me-1"></i>
-                          {structure.ville}
-                        </div>
-                      )}
-                    </Dropdown.Item>
-                  ))
-                ) : (
-                  <div className={styles.noResults}>
-                    Aucune structure trouvée
-                  </div>
-                )}
-              </Dropdown.Menu>
-            )}
-            
-            {selectedStructure && (
-              <div className={styles.selectedStructureInfo}>
-                <i className="bi bi-link-45deg me-1"></i>
-                Structure associée: 
-                <strong className="ms-1">
-                  {selectedStructure.nom || selectedStructure.raisonSociale}
-                </strong>
-              </div>
-            )}
-          </Form.Group>
-        </div>
-      )}
       
       <Row>
         <Col md={6}>
@@ -209,7 +46,7 @@ const StructureInfoSection = ({
               onChange={formik.handleChange || (() => {})}
               onBlur={formik.handleBlur || (() => {})}
               isInvalid={touchedStructure.raisonSociale && errorsStructure.raisonSociale}
-              disabled={isFormReadOnly}
+              disabled={isReadOnly}
               placeholder="Nom de la structure"
               className={styles.formInput}
             />
@@ -228,7 +65,7 @@ const StructureInfoSection = ({
               value={structureValues.type || ''}
               onChange={formik.handleChange || (() => {})}
               onBlur={formik.handleBlur || (() => {})}
-              disabled={isFormReadOnly}
+              disabled={isReadOnly}
               className={styles.formInput}
             >
               <option value="">Sélectionner un type</option>
@@ -254,7 +91,7 @@ const StructureInfoSection = ({
               value={structureValues.adresse || ''}
               onChange={formik.handleChange || (() => {})}
               onBlur={formik.handleBlur || (() => {})}
-              disabled={isFormReadOnly}
+              disabled={isReadOnly}
               placeholder="Adresse de la structure"
               className={styles.formInput}
             />
@@ -273,7 +110,7 @@ const StructureInfoSection = ({
               value={structureValues.codePostal || ''}
               onChange={formik.handleChange || (() => {})}
               onBlur={formik.handleBlur || (() => {})}
-              disabled={isFormReadOnly}
+              disabled={isReadOnly}
               placeholder="Code postal"
               className={styles.formInput}
             />
@@ -290,7 +127,7 @@ const StructureInfoSection = ({
               value={structureValues.ville || ''}
               onChange={formik.handleChange || (() => {})}
               onBlur={formik.handleBlur || (() => {})}
-              disabled={isFormReadOnly}
+              disabled={isReadOnly}
               placeholder="Ville"
               className={styles.formInput}
             />
@@ -309,7 +146,7 @@ const StructureInfoSection = ({
               value={structureValues.siret || ''}
               onChange={formik.handleChange || (() => {})}
               onBlur={formik.handleBlur || (() => {})}
-              disabled={isFormReadOnly}
+              disabled={isReadOnly}
               placeholder="Numéro SIRET"
               className={styles.formInput}
             />
@@ -326,7 +163,7 @@ const StructureInfoSection = ({
               value={structureValues.tva || ''}
               onChange={formik.handleChange || (() => {})}
               onBlur={formik.handleBlur || (() => {})}
-              disabled={isFormReadOnly}
+              disabled={isReadOnly}
               placeholder="Numéro de TVA"
               className={styles.formInput}
             />

@@ -52,12 +52,12 @@ Ce dossier contient toute la documentation technique du projet TourCraft. Ce fic
 
 ## 🛠️ Workflows
 
-- [�� **Workflows Généraux**](/docs/workflows/WORKFLOWS.md)
-- [📄 **Concert Workflow**](/docs/workflows/CONCERT_WORKFLOW.md)
-- [📄 **Contrat Workflow**](/docs/workflows/CONTRAT_WORKFLOW.md)
-- [📄 **Association Workflow**](/docs/workflows/ASSOCIATION_WORKFLOW.md)
-- [📋 **PR Checklist**](/docs/workflows/PR_CHECKLIST.md)
-- [📊 **Logs et Erreurs Runtime**](/docs/workflows/RUNTIME_LOGS_AND_ERRORS.md)
+- [📋 **Workflows Généraux**](/docs/workflows/WORKFLOWS.md) - Documentation générale des workflows
+- [📄 **Concert Workflow**](/docs/workflows/CONCERT_WORKFLOW.md) - Workflow spécifique aux concerts
+- [📄 **Contrat Workflow**](/docs/workflows/CONTRAT_WORKFLOW.md) - Workflow spécifique aux contrats
+- [📄 **Association Workflow**](/docs/workflows/ASSOCIATION_WORKFLOW.md) - Workflow spécifique aux associations
+- [📋 **PR Checklist**](/docs/workflows/PR_CHECKLIST.md) - Checklist pour les Pull Requests
+- [📊 **Logs et Erreurs Runtime**](/docs/workflows/RUNTIME_LOGS_AND_ERRORS.md) - Documentation des logs et erreurs runtime
 
 ## 🔥 Migration Firebase
 
@@ -83,6 +83,17 @@ Ce dossier contient toute la documentation technique du projet TourCraft. Ce fic
 - [📋 **Standardisation Modèles**](/docs/standards/STANDARDISATION_MODELES.md) - Standardisation des modèles de données
 - [📋 **Guide Imports UI**](/docs/standards/GUIDE_IMPORTS_UI.md) - Guide des imports d'interface utilisateur
 - [📋 **Composants Standardisés**](/docs/standards/components-standardises.md) - Standards pour les composants
+
+## 🔧 Services & Utilitaires
+
+### Services
+- [📋 **Documentation Services**](/docs/services/SERVICES.md) - Documentation complète de tous les services
+
+### Utilitaires
+- [📋 **Documentation Utilitaires**](/docs/utils/UTILS.md) - Documentation complète de toutes les fonctions utilitaires
+
+### Contextes React
+- [📋 **Documentation Contexts**](/docs/contexts/CONTEXTS.md) - Documentation complète de tous les contextes React
 
 ## 📁 Documents Archivés
 
@@ -111,6 +122,8 @@ Les documents suivants ont été archivés car ils concernent des initiatives te
 
 4. **Pour contribuer aux hooks**: Voir le [Guide des Hooks](/docs/hooks/HOOKS.md) et les hooks génériques dans le dossier `src/hooks/common/`
 
+5. **Pour les services et utilitaires**: Consultez la [Documentation Services](/docs/services/SERVICES.md) et [Documentation Utilitaires](/docs/utils/UTILS.md)
+
 ### Pour les Tech Leads & Managers
 
 - [État Consolidé des Migrations et Refactorisations](/docs/migration/ETAT_MIGRATION_CONSOLIDATION.md): Vision globale de tous les chantiers
@@ -130,6 +143,7 @@ Les documents suivants ont été archivés car ils concernent des initiatives te
 - **[performance/](/docs/performance/)** - Documentation des optimisations et performances
 - **[services/](/docs/services/)** - Documentation des services
 - **[standards/](/docs/standards/)** - Standards, conventions et guides de style
+- **[utils/](/docs/utils/)** - Documentation des utilitaires
 - **[workflows/](/docs/workflows/)** - Documentation des workflows et processus
 - **[manuel/](/docs/manuel/)** - Documentation manuelle et guides utilisateur
 
@@ -152,12 +166,12 @@ Les documents suivants ont été archivés car ils concernent des initiatives te
    - Ne pas modifier plusieurs documents connexes sans coordination
 
 ## ✨ Changements Récents
-- Refactorisation complète de la documentation (mai 2025)
-- Réorganisation des fichiers par thématique
-- Création d'index structurés pour chaque dossier
-- Élimination des redondances et doublons
-- Unification du formulaire de concert via `ConcertForm` responsive wrapper
-- Migration vers `useConcertFormOptimized` pour la gestion création/édition
+- **Refactorisation complète de la documentation (mai 2025)** : Phases 1-3 terminées avec excellence
+- **Réorganisation des fichiers par thématique** : Structure logique établie
+- **Création d'index structurés** : 11 index README.md créés pour navigation optimale
+- **Élimination des redondances et doublons** : Documentation nettoyée et cohérente
+- **Unification du formulaire de concert** via `ConcertForm` responsive wrapper
+- **Migration vers `useConcertFormOptimized`** pour la gestion création/édition
 
 ---
 

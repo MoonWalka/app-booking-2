@@ -5,6 +5,7 @@ import '@styles/index.css';
 import { Button, Badge, Alert } from 'react-bootstrap';
 import Table from '@/components/ui/Table';
 import Card from '@components/ui/Card';
+import FlexContainer from '@/components/ui/FlexContainer';
 import ContratTemplateEditorModal from '@/components/contrats/ContratTemplateEditorModal';
 
 
@@ -224,10 +225,10 @@ const ContratTemplatesPage = () => {
       label: 'Nom du modèle',
       sortable: true,
       render: (row) => (
-        <div className="d-flex align-items-center">
+        <FlexContainer align="center">
           <i className="bi bi-file-earmark-text me-2 text-primary"></i>
           <span className="fw-medium">{row.name}</span>
-        </div>
+        </FlexContainer>
       )
     },
     {
@@ -236,8 +237,10 @@ const ContratTemplatesPage = () => {
       sortable: true,
       render: (row) => (
         row.isDefault ? (
-          <Badge bg="success" className="d-flex align-items-center" style={{ width: 'fit-content' }}>
-            <i className="bi bi-star-fill me-1"></i> Par défaut
+          <Badge bg="success" style={{ width: 'fit-content' }}>
+            <FlexContainer align="center" inline>
+              <i className="bi bi-star-fill me-1"></i> Par défaut
+            </FlexContainer>
           </Badge>
         ) : (
           <Badge bg="secondary" style={{ width: 'fit-content' }}>Standard</Badge>
@@ -249,10 +252,10 @@ const ContratTemplatesPage = () => {
       label: 'Dernière mise à jour',
       sortable: true,
       render: (row) => (
-        <div className="d-flex align-items-center">
+        <FlexContainer align="center">
           <i className="bi bi-calendar3 me-2 text-muted"></i>
           {new Date(row.updatedAt.seconds * 1000).toLocaleDateString()}
-        </div>
+        </FlexContainer>
       )
     },
     {
@@ -260,17 +263,17 @@ const ContratTemplatesPage = () => {
       label: 'Sections',
       sortable: false,
       render: (row) => (
-        <div className="d-flex align-items-center">
+        <FlexContainer align="center">
           <i className="bi bi-list-ul me-2 text-muted"></i>
           {row.sections ? row.sections.length : 0}
-        </div>
+        </FlexContainer>
       )
     }
   ], []);
   
   // 🔧 SOLUTION CRITIQUE: Mémoriser renderActions (cause principale des re-renders)
   const renderActions = useCallback((row) => (
-    <div className="d-flex align-items-center justify-content-start gap-2 action-buttons-row">
+    <FlexContainer align="center" justify="flex-start" gap="sm" className="action-buttons-row">
       <Button 
         className="tc-btn tc-btn-outline-primary tc-btn-sm"
         style={{ minWidth: '85px' }}
@@ -299,7 +302,7 @@ const ContratTemplatesPage = () => {
         <i className="bi bi-trash me-1"></i>
         {row.isDefault ? '' : 'Supprimer'}
       </Button>
-    </div>
+    </FlexContainer>
   ), [handleEditTemplate, handleSetDefault, handleDelete]);
 
   return (

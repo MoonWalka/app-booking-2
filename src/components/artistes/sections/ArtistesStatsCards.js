@@ -1,5 +1,6 @@
 // src/components/artistes/sections/ArtistesStatsCards.js
 import React from 'react';
+import FlexContainer from '@/components/ui/FlexContainer';
 import styles from './ArtistesStatsCards.module.css';
 import Card from '@/components/ui/Card';
 
@@ -17,7 +18,7 @@ const ArtistesStatsCards = ({ stats }) => {
         variant={color}
         isHoverable={false}
       >
-        <div className="d-flex align-items-center">
+        <FlexContainer align="center">
           <div className={`${styles.statsIcon} text-${color} me-3`}>
             <i className={`bi bi-${icon} fs-2`}></i>
           </div>
@@ -25,7 +26,7 @@ const ArtistesStatsCards = ({ stats }) => {
             <h3 className={`stats-value fw-bold mb-1 text-${color}`}>{value}</h3>
             <div className="stats-label text-muted">{label}</div>
           </div>
-        </div>
+        </FlexContainer>
       </Card>
     );
   };

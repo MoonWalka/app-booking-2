@@ -4,6 +4,7 @@ import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import ContratTemplateEditor from '@/components/contrats/ContratTemplateEditor';
 import Alert from '@/components/ui/Alert';
+import FlexContainer from '@/components/ui/FlexContainer';
 import '@styles/index.css';
 
 const ContratTemplatesEditPage = () => {
@@ -81,11 +82,11 @@ const ContratTemplatesEditPage = () => {
 
   if (loading) {
     return (
-      <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '200px' }}>
+      <FlexContainer justify="center" align="center" style={{ minHeight: '200px' }}>
         <div className="spinner-border" role="status">
           <span className="visually-hidden">Chargement...</span>
         </div>
-      </div>
+      </FlexContainer>
     );
   }
 

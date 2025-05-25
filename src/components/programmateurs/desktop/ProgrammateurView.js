@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
+import FlexContainer from '@/components/ui/FlexContainer';
 import ProgrammateurContactSection from './ProgrammateurContactSection';
 import ProgrammateurLegalSection from './ProgrammateurLegalSection';
 import ProgrammateurConcertsSection from './ProgrammateurConcertsSection';
@@ -76,7 +77,7 @@ const ProgrammateurView = ({
       {/* En-tête avec titre et actions */}
       <Card className="mb-4 bg-light">
         <Card.Body>
-          <div className="d-flex justify-content-between align-items-center">
+          <FlexContainer justify="space-between" align="center">
             <div>
               <h2 className="mb-0">
                 {programmateur.nom || 'Sans nom'} 
@@ -100,7 +101,7 @@ const ProgrammateurView = ({
                 Supprimer
               </Button>
             </div>
-          </div>
+          </FlexContainer>
         </Card.Body>
       </Card>
       
@@ -109,22 +110,24 @@ const ProgrammateurView = ({
         <Col>
           {/* Section Contact - structure de carte unique */}
           <Card className="mb-4">
-            <Card.Header className="d-flex justify-content-between align-items-center bg-primary text-white">
-              <h5 className="mb-0">
-                <i className="bi bi-person-vcard me-2"></i>
-                Informations de contact
-              </h5>
-              <Button 
-                variant="link" 
-                className="p-0 text-white" 
-                onClick={() => toggleSection('contactVisible')}
-              >
-                {sections.contactVisible ? (
-                  <i className="bi bi-chevron-up"></i>
-                ) : (
-                  <i className="bi bi-chevron-down"></i>
-                )}
-              </Button>
+            <Card.Header className="bg-primary text-white">
+              <FlexContainer justify="space-between" align="center">
+                <h5 className="mb-0">
+                  <i className="bi bi-person-vcard me-2"></i>
+                  Informations de contact
+                </h5>
+                <Button 
+                  variant="link" 
+                  className="p-0 text-white" 
+                  onClick={() => toggleSection('contactVisible')}
+                >
+                  {sections.contactVisible ? (
+                    <i className="bi bi-chevron-up"></i>
+                  ) : (
+                    <i className="bi bi-chevron-down"></i>
+                  )}
+                </Button>
+              </FlexContainer>
             </Card.Header>
             
             {sections.contactVisible && (
@@ -141,22 +144,24 @@ const ProgrammateurView = ({
 
           {/* Section Informations Légales - structure de carte unique */}
           <Card className="mb-4">
-            <Card.Header className="d-flex justify-content-between align-items-center bg-primary text-white">
-              <h5 className="mb-0">
-                <i className="bi bi-file-earmark-text me-2"></i>
-                Informations légales
-              </h5>
-              <Button 
-                variant="link" 
-                className="p-0 text-white" 
-                onClick={() => toggleSection('legalVisible')}
-              >
-                {sections.legalVisible ? (
-                  <i className="bi bi-chevron-up"></i>
-                ) : (
-                  <i className="bi bi-chevron-down"></i>
-                )}
-              </Button>
+            <Card.Header className="bg-primary text-white">
+              <FlexContainer justify="space-between" align="center">
+                <h5 className="mb-0">
+                  <i className="bi bi-file-earmark-text me-2"></i>
+                  Informations légales
+                </h5>
+                <Button 
+                  variant="link" 
+                  className="p-0 text-white" 
+                  onClick={() => toggleSection('legalVisible')}
+                >
+                  {sections.legalVisible ? (
+                    <i className="bi bi-chevron-up"></i>
+                  ) : (
+                    <i className="bi bi-chevron-down"></i>
+                  )}
+                </Button>
+              </FlexContainer>
             </Card.Header>
             
             {sections.legalVisible && (
@@ -173,22 +178,24 @@ const ProgrammateurView = ({
           
           {/* Section Structure - structure de carte unique */}
           <Card className="mb-4">
-            <Card.Header className="d-flex justify-content-between align-items-center bg-primary text-white">
-              <h5 className="mb-0">
-                <i className="bi bi-building me-2"></i>
-                Structure
-              </h5>
-              <Button 
-                variant="link" 
-                className="p-0 text-white" 
-                onClick={() => toggleSection('structureVisible')}
-              >
-                {sections.structureVisible ? (
-                  <i className="bi bi-chevron-up"></i>
-                ) : (
-                  <i className="bi bi-chevron-down"></i>
-                )}
-              </Button>
+            <Card.Header className="bg-primary text-white">
+              <FlexContainer justify="space-between" align="center">
+                <h5 className="mb-0">
+                  <i className="bi bi-building me-2"></i>
+                  Structure
+                </h5>
+                <Button 
+                  variant="link" 
+                  className="p-0 text-white" 
+                  onClick={() => toggleSection('structureVisible')}
+                >
+                  {sections.structureVisible ? (
+                    <i className="bi bi-chevron-up"></i>
+                  ) : (
+                    <i className="bi bi-chevron-down"></i>
+                  )}
+                </Button>
+              </FlexContainer>
             </Card.Header>
             
             {sections.structureVisible && (
@@ -204,22 +211,24 @@ const ProgrammateurView = ({
           
           {/* Section Lieux - structure de carte unique */}
           <Card className="mb-4">
-            <Card.Header className="d-flex justify-content-between align-items-center bg-primary text-white">
-              <h5 className="mb-0">
-                <i className="bi bi-geo-alt me-2"></i>
-                Lieux associés
-              </h5>
-              <Button 
-                variant="link" 
-                className="p-0 text-white" 
-                onClick={() => toggleSection('lieuxVisible')}
-              >
-                {sections.lieuxVisible ? (
-                  <i className="bi bi-chevron-up"></i>
-                ) : (
-                  <i className="bi bi-chevron-down"></i>
-                )}
-              </Button>
+            <Card.Header className="bg-primary text-white">
+              <FlexContainer justify="space-between" align="center">
+                <h5 className="mb-0">
+                  <i className="bi bi-geo-alt me-2"></i>
+                  Lieux associés
+                </h5>
+                <Button 
+                  variant="link" 
+                  className="p-0 text-white" 
+                  onClick={() => toggleSection('lieuxVisible')}
+                >
+                  {sections.lieuxVisible ? (
+                    <i className="bi bi-chevron-up"></i>
+                  ) : (
+                    <i className="bi bi-chevron-down"></i>
+                  )}
+                </Button>
+              </FlexContainer>
             </Card.Header>
             
             {sections.lieuxVisible && (
@@ -236,22 +245,24 @@ const ProgrammateurView = ({
 
           {/* Section Concerts - structure de carte unique */}
           <Card className="mb-4">
-            <Card.Header className="d-flex justify-content-between align-items-center bg-primary text-white">
-              <h5 className="mb-0">
-                <i className="bi bi-calendar-event me-2"></i>
-                Concerts associés
-              </h5>
-              <Button 
-                variant="link" 
-                className="p-0 text-white" 
-                onClick={() => toggleSection('concertsVisible')}
-              >
-                {sections.concertsVisible ? (
-                  <i className="bi bi-chevron-up"></i>
-                ) : (
-                  <i className="bi bi-chevron-down"></i>
-                )}
-              </Button>
+            <Card.Header className="bg-primary text-white">
+              <FlexContainer justify="space-between" align="center">
+                <h5 className="mb-0">
+                  <i className="bi bi-calendar-event me-2"></i>
+                  Concerts associés
+                </h5>
+                <Button 
+                  variant="link" 
+                  className="p-0 text-white" 
+                  onClick={() => toggleSection('concertsVisible')}
+                >
+                  {sections.concertsVisible ? (
+                    <i className="bi bi-chevron-up"></i>
+                  ) : (
+                    <i className="bi bi-chevron-down"></i>
+                  )}
+                </Button>
+              </FlexContainer>
             </Card.Header>
             
             {sections.concertsVisible && (

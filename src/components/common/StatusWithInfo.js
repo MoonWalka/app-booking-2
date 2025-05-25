@@ -1,5 +1,6 @@
 import React from 'react';
 import { OverlayTrigger, Tooltip, Badge } from 'react-bootstrap';
+import FlexContainer from '@/components/ui/FlexContainer';
 import styles from './StatusWithInfo.module.css';
 
 /**
@@ -9,13 +10,15 @@ const StatusWithInfo = ({ icon, label, variant, tooltip, additionalInfo }) => {
   const content = (
     <Badge 
       bg={variant} 
-      className={`d-flex align-items-center gap-2 ${styles.statusBadge}`}
+      className={styles.statusBadge}
     >
-      {icon && <span className={styles.statusIcon}>{icon}</span>}
-      <span>{label}</span>
-      {additionalInfo && (
-        <span className={styles.additionalInfo}>{additionalInfo}</span>
-      )}
+      <FlexContainer align="center" gap="sm" inline>
+        {icon && <span className={styles.statusIcon}>{icon}</span>}
+        <span>{label}</span>
+        {additionalInfo && (
+          <span className={styles.additionalInfo}>{additionalInfo}</span>
+        )}
+      </FlexContainer>
     </Badge>
   );
 

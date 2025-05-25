@@ -1,0 +1,213 @@
+/*
+ * Styles pour FlexContainer.module.css
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 25 mai 2025
+ */
+
+@import '@styles/base/variables.css';
+
+/* =============================
+   CONTENEURS FLEX DE BASE
+   ============================= */
+.flex {
+  display: flex;
+}
+
+.inlineFlex {
+  display: inline-flex;
+}
+
+/* =============================
+   DIRECTIONS FLEX
+   ============================= */
+.direction-row {
+  flex-direction: row;
+}
+
+.direction-column {
+  flex-direction: column;
+}
+
+.direction-row-reverse {
+  flex-direction: row-reverse;
+}
+
+.direction-column-reverse {
+  flex-direction: column-reverse;
+}
+
+/* =============================
+   JUSTIFICATION (AXLE PRINCIPAL)
+   ============================= */
+.justify-flex-start {
+  justify-content: flex-start;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-flex-end {
+  justify-content: flex-end;
+}
+
+.justify-space-between {
+  justify-content: space-between;
+}
+
+.justify-space-around {
+  justify-content: space-around;
+}
+
+.justify-space-evenly {
+  justify-content: space-evenly;
+}
+
+/* =============================
+   ALIGNEMENT (AXLE SECONDAIRE)
+   ============================= */
+.align-stretch {
+  align-items: stretch;
+}
+
+.align-flex-start {
+  align-items: flex-start;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.align-flex-end {
+  align-items: flex-end;
+}
+
+.align-baseline {
+  align-items: baseline;
+}
+
+/* =============================
+   COMPORTEMENT DE RETOUR À LA LIGNE
+   ============================= */
+.wrap-nowrap {
+  flex-wrap: nowrap;
+}
+
+.wrap-wrap {
+  flex-wrap: wrap;
+}
+
+.wrap-wrap-reverse {
+  flex-wrap: wrap-reverse;
+}
+
+/* =============================
+   ESPACEMENT ENTRE ÉLÉMENTS (GAP)
+   ============================= */
+.gap-xs {
+  gap: var(--tc-spacing-xs);
+}
+
+.gap-sm {
+  gap: var(--tc-spacing-sm);
+}
+
+.gap-md {
+  gap: var(--tc-spacing-md);
+}
+
+.gap-lg {
+  gap: var(--tc-spacing-lg);
+}
+
+.gap-xl {
+  gap: var(--tc-spacing-xl);
+}
+
+/* =============================
+   RESPONSIVE DESIGN
+   ============================= */
+@media (max-width: var(--tc-breakpoint-md)) {
+  /* Sur mobile, forcer certains conteneurs en colonne */
+  .flex.responsive-column,
+  .inlineFlex.responsive-column {
+    flex-direction: column;
+  }
+  
+  /* Réduire les gaps sur mobile */
+  .gap-lg {
+    gap: var(--tc-spacing-md);
+  }
+  
+  .gap-xl {
+    gap: var(--tc-spacing-lg);
+  }
+}
+
+@media (max-width: var(--tc-breakpoint-sm)) {
+  /* Gaps encore plus petits sur très petits écrans */
+  .gap-md {
+    gap: var(--tc-spacing-sm);
+  }
+  
+  .gap-lg {
+    gap: var(--tc-spacing-sm);
+  }
+  
+  .gap-xl {
+    gap: var(--tc-spacing-md);
+  }
+}
+
+/* =============================
+   CLASSES UTILITAIRES COMMUNES
+   ============================= */
+/* Combinaisons fréquentes pour optimiser l'usage */
+.flex.center-all {
+  justify-content: center;
+  align-items: center;
+}
+
+.flex.space-between-center {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flex.column-center {
+  flex-direction: column;
+  align-items: center;
+}
+
+/* =============================
+   ÉTATS INTERACTIFS
+   ============================= */
+.flex:focus-visible,
+.inlineFlex:focus-visible {
+  outline: 2px solid var(--tc-primary-color);
+  outline-offset: 2px;
+}
+
+/* =============================
+   ACCESSIBILITÉ
+   ============================= */
+/* Améliorer la lisibilité pour les lecteurs d'écran */
+.flex[role="group"],
+.inlineFlex[role="group"] {
+  /* Styles spécifiques pour les groupes accessibles */
+}
+
+/* =============================
+   PERFORMANCE
+   ============================= */
+/* Optimisations pour les animations */
+.flex,
+.inlineFlex {
+  /* Préparer pour les transformations GPU si nécessaire */
+  will-change: auto;
+}
+
+/* Conteneurs avec beaucoup d'éléments */
+.flex.many-items,
+.inlineFlex.many-items {
+  contain: layout style;
+} 

@@ -1,62 +1,49 @@
 // src/hooks/lieux/useLieuxFilters.js
 import { useState, useMemo, useCallback } from 'react';
-import { useGenericEntityList } from '@/hooks/generics';
 
 /**
  * Hook optimisé pour la gestion des filtres et de la recherche de lieux
  * 
- * Version améliorée avec une API plus directe et une meilleure performance
+ * Version simplifiée qui fonctionne avec les lieux passés en paramètre
+ * Corrigé pour éliminer l'erreur filters.find
  * 
- * @param {Array} lieux - Liste de lieux préchargés (optionnel)
+ * @param {Array} lieux - Liste de lieux préchargés
  * @returns {Object} API de filtrage et recherche de lieux
  */
 const useLieuxFilters = (lieux = []) => {
-  // Options de tri disponibles
+  // États locaux pour les filtres
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterType, setFilterType] = useState('tous');
   const [sortOption, setSortOption] = useState('nomAsc');
 
-  // Configuration du hook générique
-  const filterConfig = {
-    type: { type: 'equals' },
-    region: { type: 'equals' },
-    ville: { type: 'equals' },
-    actif: { type: 'equals' }
-  };
-  
-  // Utiliser useGenericEntityList avec la bonne configuration
-  const {
-    entities: filteredLieux,
-    loading,
-    error,
-    search: searchTerm,
-    setSearch: setSearchTerm,
-    filters = [], // Added default empty array in case filters is undefined
-    applyFilter,
-    removeFilter,
-    resetFilters: clearAllFilters,
-    refresh
-  } = useGenericEntityList({
-    // Configuration de base
-    collectionName: 'lieux',
-    initialItems: lieux,
-    paginationMode: lieux.length > 0 ? 'client' : 'server',
+  // Filtrage et recherche des lieux
+  const filteredLieux = useMemo(() => {
+    if (!Array.isArray(lieux)) return [];
     
-    // Configuration de recherche et filtrage
-    filterConfig,
-    searchFields: ['nom', 'ville', 'adresse', 'codePostal'],
+    let filtered = [...lieux];
     
-    // Configuration du tri initiale
-    initialSortField: 'nom',
-    initialSortDirection: 'asc',
+    // Filtrage par terme de recherche
+    if (searchTerm && searchTerm.trim()) {
+      const term = searchTerm.toLowerCase().trim();
+      filtered = filtered.filter(lieu => {
+        return (
+          (lieu.nom && lieu.nom.toLowerCase().includes(term)) ||
+          (lieu.ville && lieu.ville.toLowerCase().includes(term)) ||
+          (lieu.adresse && lieu.adresse.toLowerCase().includes(term)) ||
+          (lieu.codePostal && lieu.codePostal.includes(term))
+        );
+      });
+    }
     
-    // Options avancées
-    transformItem: (lieu) => ({
-      ...lieu,
-      displayLabel: lieu.nom ? `${lieu.nom} - ${lieu.ville || 'Ville non spécifiée'}` : 'Lieu sans nom',
-    }),
-    cacheResults: false, // Désactiver le cache pour les performances
-  });
+    // Filtrage par type
+    if (filterType && filterType !== 'tous') {
+      filtered = filtered.filter(lieu => lieu.type === filterType);
+    }
+    
+    return filtered;
+  }, [lieux, searchTerm, filterType]);
 
-  // Gestion du tri des lieux
+  // Tri des lieux filtrés
   const sortedLieux = useMemo(() => {
     if (!filteredLieux || filteredLieux.length === 0) return [];
     
@@ -84,22 +71,7 @@ const useLieuxFilters = (lieux = []) => {
     }
   }, [filteredLieux, sortOption]);
 
-  // Extraction du filtre par type actuel
-  const filterType = useMemo(() => {
-    const typeFilter = filters.find(f => f.field === 'type');
-    return typeFilter ? typeFilter.value : 'tous';
-  }, [filters]);
-  
-  // Méthode pour définir le filtre par type
-  const setFilterType = useCallback((type) => {
-    if (type === 'tous') {
-      removeFilter('type');
-    } else {
-      applyFilter({ field: 'type', operator: '==', value: type });
-    }
-  }, [applyFilter, removeFilter]);
-
-  // Extraction des options de filtre disponibles
+  // Extraction des types disponibles
   const types = useMemo(() => {
     if (!lieux || !Array.isArray(lieux)) return ['tous'];
     
@@ -111,19 +83,19 @@ const useLieuxFilters = (lieux = []) => {
 
   // Fonction de réinitialisation complète
   const resetFilters = useCallback(() => {
-    clearAllFilters();
     setSearchTerm('');
+    setFilterType('tous');
     setSortOption('nomAsc');
-  }, [clearAllFilters, setSearchTerm]);
+  }, []);
 
   return {
     // Données
     filteredLieux: sortedLieux,
-    loading,
-    error,
+    loading: false, // Pas de chargement car on travaille avec des données locales
+    error: null,
     
     // Recherche
-    searchTerm: searchTerm || '',
+    searchTerm,
     setSearchTerm,
     
     // Filtres
@@ -137,7 +109,7 @@ const useLieuxFilters = (lieux = []) => {
     
     // Actions
     resetFilters,
-    refresh
+    refresh: () => {} // Pas besoin de refresh car on travaille avec des données locales
   };
 };
 

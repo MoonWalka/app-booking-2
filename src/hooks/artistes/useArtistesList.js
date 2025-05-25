@@ -35,24 +35,26 @@ export const useArtistesList = ({
   const [filters, setFilters] = useState({});
 
   // Utilisation du hook générique pour les listes
-  const entityList = useGenericEntityList({
-    collectionName: 'artistes',
+  const entityList = useGenericEntityList('artistes', {
     pageSize,
-    sortByField: sortField,
-    sortDirection,
-    initialFilters,
-    // Champs de recherche pour les artistes
-    searchFields: {
-      nom: { prefix: true },
-      genre: { exact: true },
-      tags: { array: true }
-    },
-    // Transformation des données pour ajouter des champs calculés si nécessaire
-    transformData: (data) => ({
+    defaultSort: { field: sortField, direction: sortDirection },
+    defaultFilters: {},
+    enableSelection: false,
+    enableFilters: false,
+    enableSearch: false,
+    searchFields: ['nom', 'genre', 'tags'],
+    transformItem: (data) => ({
       ...data,
       // Exemple de champ calculé
       hasConcerts: !!(data.concertsAssocies && data.concertsAssocies.length > 0)
     })
+  }, {
+    paginationType: 'pages',
+    enableVirtualization: false,
+    enableCache: true,
+    enableRealTime: false,
+    enableBulkActions: false,
+    autoRefresh: false
   });
 
   // Fonction pour calculer les statistiques
@@ -135,8 +137,8 @@ export const useArtistesList = ({
 
   return {
     ...entityList,
-    // Renommer entities en artistes pour maintenir la compatibilité
-    artistes: entityList.entities,
+    // Renommer items en artistes pour maintenir la compatibilité (CORRECTION: utiliser items au lieu de entities)
+    artistes: entityList.items || [],
     stats,
     refreshWithStats,
     

@@ -7,9 +7,7 @@ Ce dossier contient la documentation de l'architecture du projet TourCraft, incl
 ## 📋 Documents Disponibles
 
 ### Architecture Principale
-- [🔍 **ARCHITECTURE_LEGACY.md**](./ARCHITECTURE_LEGACY.md) - Architecture globale du projet et principes techniques
 - [📐 **GUIDE_ARCHITECTURE.md**](./GUIDE_ARCHITECTURE.md) - Guide détaillé de l'architecture du projet
-- [📐 **ARCHITECTURE_SUPPLEMENTAIRE.md**](./ARCHITECTURE_SUPPLEMENTAIRE.md) - Documentation supplémentaire d'architecture
 
 ### Plans et Refactorisation
 - [📐 **REFACTORING_STRUCTURE.md**](./REFACTORING_STRUCTURE.md) - Plan de refactorisation de la structure du projet

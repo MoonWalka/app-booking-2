@@ -136,7 +136,7 @@
    ============================= */
 .colorPicker {
   width: var(--tc-input-width);
-  height: var(--tc-input-height);
+  height: var(--tc-space-10);
   padding: var(--tc-space-2);
   border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-radius-base);

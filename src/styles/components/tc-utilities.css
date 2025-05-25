@@ -106,9 +106,9 @@
 
 /* Gap (pour flexbox/grid) */
 .tc-gap-1 { gap: var(--tc-space-1); }          /* remplace gap-1 */
-.tc-gap-2 { gap: var(--tc-gap-2); }            /* remplace gap-2 */
+.tc-gap-2 { gap: var(--tc-space-2); }            /* remplace gap-2 */
 .tc-gap-3 { gap: var(--tc-space-3); }          /* remplace gap-3 */
-.tc-gap-4 { gap: var(--tc-gap-4); }            /* remplace gap-4 */
+.tc-gap-4 { gap: var(--tc-space-4); }            /* remplace gap-4 */
 .tc-gap-6 { gap: var(--tc-space-6); }          /* remplace gap-6 */
 
 /* Space between (pour flexbox) */
@@ -190,7 +190,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: var(--tc-btn-padding-y) var(--tc-btn-padding-x);
+    padding: var(--tc-space-2) var(--tc-space-4);
     font-size: var(--tc-font-size-base);
     font-weight: var(--tc-font-weight-medium);
     border-radius: var(--tc-radius-base);

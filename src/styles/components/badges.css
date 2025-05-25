@@ -58,7 +58,7 @@
 
 /* BADGES DE STATUT - VARIANTES SPÉCIFIQUES CONCERT */
 .tc-status-contrat {
-  background-color: rgba(var(--tc-primary-dark-rgb), 0.9);
+  background-color: rgba(var(--tc-color-primary-dark-rgb), 0.9);
   color: var(--tc-color-white);
 }
 

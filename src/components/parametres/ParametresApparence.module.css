@@ -132,7 +132,7 @@
   display: inline-flex;
   align-items: center;
   gap: var(--tc-space-1);
-  padding: var(--tc-btn-padding-y) var(--tc-btn-padding-x);
+  padding: var(--tc-space-2) var(--tc-space-4);
   border-radius: var(--tc-radius-base);
   border: 1px solid var(--tc-border-default);
   background-color: var(--tc-bg-default);
@@ -152,7 +152,7 @@
   display: inline-flex;
   align-items: center;
   gap: var(--tc-space-1);
-  padding: var(--tc-btn-padding-y) var(--tc-btn-padding-x);
+  padding: var(--tc-space-2) var(--tc-space-4);
   border-radius: var(--tc-radius-base);
   background-color: var(--tc-color-primary);
   color: var(--tc-text-light);

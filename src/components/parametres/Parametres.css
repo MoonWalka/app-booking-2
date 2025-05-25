@@ -135,9 +135,9 @@
    SÉLECTEUR DE COULEUR
    ============================= */
 .colorPicker {
-  width: var(--tc-color-picker-width);
-  height: var(--tc-color-picker-height);
-  padding: var(--tc-color-picker-padding);
+  width: var(--tc-input-width);
+  height: var(--tc-input-height);
+  padding: var(--tc-spacing-sm);
   border: 1px solid var(--tc-border-color);
   border-radius: var(--tc-border-radius);
   cursor: pointer;

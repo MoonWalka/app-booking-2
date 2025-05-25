@@ -94,12 +94,12 @@
 
 .status-confirme {
   background-color: rgba(25, 135, 84, 0.1);
-  color: var(--tc-color-198754);
+  color: var(--tc-success-color);
 }
 
 .status-option {
   background-color: rgba(255, 193, 7, 0.1);
-  color: var(--tc-color-ffc107);
+  color: var(--tc-warning-color);
 }
 
 .status-annule {
@@ -109,7 +109,7 @@
 
 .status-attente {
   background-color: rgba(13, 110, 253, 0.1);
-  color: var(--tc-color-0d6efd);
+  color: var(--tc-primary-color);
 }
 
 .concertActions {

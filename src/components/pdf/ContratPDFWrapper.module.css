@@ -31,12 +31,12 @@
 }
 
 .errorMessage {
-  color: var(--tc-color-error);
+  color: var(--tc-danger-color);
   background-color: var(--tc-error-bg-color);
   padding: var(--tc-spacing-3);
   border-radius: var(--tc-radius-md);
   margin: var(--tc-spacing-3) 0;
-  border-left: 4px solid var(--tc-color-error);
+  border-left: 4px solid var(--tc-danger-color);
 }
 
 /* Styles responsive standardisés */

@@ -1,0 +1,1499 @@
+{
+  "hooks_inventory": {
+    "concerts/useConcertAssociations": {
+      "path": "concerts/useConcertAssociations.js",
+      "domain": "concerts",
+      "name": "useConcertAssociations",
+      "file_size": 6934,
+      "line_count": 190,
+      "imports": [],
+      "exports": [
+        "useConcertAssociations"
+      ],
+      "uses_generic": false,
+      "complexity_score": 48,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "concerts/useEntitySearch": {
+      "path": "concerts/useEntitySearch.js",
+      "domain": "concerts",
+      "name": "useEntitySearch",
+      "file_size": 495,
+      "line_count": 13,
+      "imports": [
+        "common",
+        "common/useEntitySearch"
+      ],
+      "exports": [
+        "useEntitySearch"
+      ],
+      "uses_generic": false,
+      "complexity_score": 1,
+      "is_wrapper": false,
+      "deprecated": true
+    },
+    "concerts/useConcertListData": {
+      "path": "concerts/useConcertListData.js",
+      "domain": "concerts",
+      "name": "useConcertListData",
+      "file_size": 18526,
+      "line_count": 496,
+      "imports": [],
+      "exports": [
+        "useConcertListData",
+        "useConcertListData"
+      ],
+      "uses_generic": false,
+      "complexity_score": 144,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "concerts/useConcertDetails": {
+      "path": "concerts/useConcertDetails.js",
+      "domain": "concerts",
+      "name": "useConcertDetails",
+      "file_size": 31135,
+      "line_count": 850,
+      "imports": [
+        "common",
+        "concerts/useConcertStatus",
+        "concerts/useConcertFormsManagement",
+        "concerts/useConcertAssociations"
+      ],
+      "exports": [
+        "useConcertDetails"
+      ],
+      "uses_generic": true,
+      "complexity_score": 246,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "concerts/useConcertStatus": {
+      "path": "concerts/useConcertStatus.js",
+      "domain": "concerts",
+      "name": "useConcertStatus",
+      "file_size": 5547,
+      "line_count": 176,
+      "imports": [],
+      "exports": [
+        "useConcertStatus"
+      ],
+      "uses_generic": false,
+      "complexity_score": 28,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "concerts/useConcertFilters": {
+      "path": "concerts/useConcertFilters.js",
+      "domain": "concerts",
+      "name": "useConcertFilters",
+      "file_size": 2058,
+      "line_count": 64,
+      "imports": [],
+      "exports": [
+        "useConcertFilters",
+        "useConcertFilters"
+      ],
+      "uses_generic": false,
+      "complexity_score": 24,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "concerts/useConcertSubmission": {
+      "path": "concerts/useConcertSubmission.js",
+      "domain": "concerts",
+      "name": "useConcertSubmission",
+      "file_size": 4045,
+      "line_count": 125,
+      "imports": [
+        "forms/useFormSubmission"
+      ],
+      "exports": [
+        "useConcertSubmission"
+      ],
+      "uses_generic": false,
+      "complexity_score": 23,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "concerts/useConcertFormData": {
+      "path": "concerts/useConcertFormData.js",
+      "domain": "concerts",
+      "name": "useConcertFormData",
+      "file_size": 3189,
+      "line_count": 106,
+      "imports": [],
+      "exports": [
+        "useConcertFormData"
+      ],
+      "uses_generic": false,
+      "complexity_score": 36,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "concerts/useFormSubmission": {
+      "path": "concerts/useFormSubmission.js",
+      "domain": "concerts",
+      "name": "useFormSubmission",
+      "file_size": 499,
+      "line_count": 13,
+      "imports": [
+        "common",
+        "common/useFormSubmission"
+      ],
+      "exports": [
+        "useFormSubmission"
+      ],
+      "uses_generic": false,
+      "complexity_score": 1,
+      "is_wrapper": false,
+      "deprecated": true
+    },
+    "concerts/useConcertForm": {
+      "path": "concerts/useConcertForm.js",
+      "domain": "concerts",
+      "name": "useConcertForm",
+      "file_size": 11510,
+      "line_count": 295,
+      "imports": [
+        "common"
+      ],
+      "exports": [
+        "useConcertForm",
+        "useConcertForm"
+      ],
+      "uses_generic": true,
+      "complexity_score": 70,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "concerts/useConcertActions": {
+      "path": "concerts/useConcertActions.js",
+      "domain": "concerts",
+      "name": "useConcertActions",
+      "file_size": 1049,
+      "line_count": 43,
+      "imports": [],
+      "exports": [
+        "useConcertActions",
+        "useConcertActions"
+      ],
+      "uses_generic": false,
+      "complexity_score": 4,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "concerts/useConcertDelete": {
+      "path": "concerts/useConcertDelete.js",
+      "domain": "concerts",
+      "name": "useConcertDelete",
+      "file_size": 3783,
+      "line_count": 116,
+      "imports": [
+        "common"
+      ],
+      "exports": [
+        "useConcertDelete"
+      ],
+      "uses_generic": true,
+      "complexity_score": 25,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "concerts/useConcerts": {
+      "path": "concerts/useConcerts.js",
+      "domain": "concerts",
+      "name": "useConcerts",
+      "file_size": 150,
+      "line_count": 7,
+      "imports": [],
+      "exports": [
+        "useConcerts",
+        "useConcerts"
+      ],
+      "uses_generic": false,
+      "complexity_score": 0,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "concerts/useConcertFormsManagement": {
+      "path": "concerts/useConcertFormsManagement.js",
+      "domain": "concerts",
+      "name": "useConcertFormsManagement",
+      "file_size": 9842,
+      "line_count": 287,
+      "imports": [],
+      "exports": [
+        "useConcertFormsManagement"
+      ],
+      "uses_generic": false,
+      "complexity_score": 116,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "forms/useFieldActions": {
+      "path": "forms/useFieldActions.js",
+      "domain": "forms",
+      "name": "useFieldActions",
+      "file_size": 5828,
+      "line_count": 183,
+      "imports": [],
+      "exports": [
+        "useFieldActions"
+      ],
+      "uses_generic": false,
+      "complexity_score": 24,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "forms/useFormValidation": {
+      "path": "forms/useFormValidation.js",
+      "domain": "forms",
+      "name": "useFormValidation",
+      "file_size": 10944,
+      "line_count": 370,
+      "imports": [],
+      "exports": [
+        "useFormValidation"
+      ],
+      "uses_generic": false,
+      "complexity_score": 106,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "forms/useFormValidationData": {
+      "path": "forms/useFormValidationData.js",
+      "domain": "forms",
+      "name": "useFormValidationData",
+      "file_size": 9152,
+      "line_count": 254,
+      "imports": [],
+      "exports": [
+        "useFormValidationData"
+      ],
+      "uses_generic": false,
+      "complexity_score": 79,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "forms/useAdminFormValidation": {
+      "path": "forms/useAdminFormValidation.js",
+      "domain": "forms",
+      "name": "useAdminFormValidation",
+      "file_size": 2132,
+      "line_count": 71,
+      "imports": [],
+      "exports": [
+        "useAdminFormValidation",
+        "useAdminFormValidation"
+      ],
+      "uses_generic": false,
+      "complexity_score": 35,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "forms/useFormTokenValidation": {
+      "path": "forms/useFormTokenValidation.js",
+      "domain": "forms",
+      "name": "useFormTokenValidation",
+      "file_size": 4217,
+      "line_count": 128,
+      "imports": [],
+      "exports": [
+        "useFormTokenValidation",
+        "useFormTokenValidation"
+      ],
+      "uses_generic": false,
+      "complexity_score": 47,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "forms/useFormSubmission": {
+      "path": "forms/useFormSubmission.js",
+      "domain": "forms",
+      "name": "useFormSubmission",
+      "file_size": 499,
+      "line_count": 13,
+      "imports": [
+        "common",
+        "common/useFormSubmission"
+      ],
+      "exports": [
+        "useFormSubmission"
+      ],
+      "uses_generic": false,
+      "complexity_score": 1,
+      "is_wrapper": false,
+      "deprecated": true
+    },
+    "forms/useLieuFormState": {
+      "path": "forms/useLieuFormState.js",
+      "domain": "forms",
+      "name": "useLieuFormState",
+      "file_size": 4683,
+      "line_count": 158,
+      "imports": [
+        "common"
+      ],
+      "exports": [
+        "useLieuFormState",
+        "useLieuFormState"
+      ],
+      "uses_generic": false,
+      "complexity_score": 46,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "forms/useValidationBatchActions": {
+      "path": "forms/useValidationBatchActions.js",
+      "domain": "forms",
+      "name": "useValidationBatchActions",
+      "file_size": 13385,
+      "line_count": 331,
+      "imports": [],
+      "exports": [
+        "useValidationBatchActions"
+      ],
+      "uses_generic": false,
+      "complexity_score": 73,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "structures/useStructureDetails": {
+      "path": "structures/useStructureDetails.js",
+      "domain": "structures",
+      "name": "useStructureDetails",
+      "file_size": 5916,
+      "line_count": 177,
+      "imports": [
+        "common"
+      ],
+      "exports": [
+        "useStructureDetails"
+      ],
+      "uses_generic": true,
+      "complexity_score": 34,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "structures/useStructureForm": {
+      "path": "structures/useStructureForm.js",
+      "domain": "structures",
+      "name": "useStructureForm",
+      "file_size": 7255,
+      "line_count": 211,
+      "imports": [
+        "common"
+      ],
+      "exports": [
+        "useStructureForm",
+        "useStructureForm"
+      ],
+      "uses_generic": true,
+      "complexity_score": 46,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "structures/useStructureValidation": {
+      "path": "structures/useStructureValidation.js",
+      "domain": "structures",
+      "name": "useStructureValidation",
+      "file_size": 1931,
+      "line_count": 75,
+      "imports": [],
+      "exports": [
+        "useStructureValidation",
+        "useStructureValidation"
+      ],
+      "uses_generic": false,
+      "complexity_score": 24,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "structures/useDeleteStructure": {
+      "path": "structures/useDeleteStructure.js",
+      "domain": "structures",
+      "name": "useDeleteStructure",
+      "file_size": 4370,
+      "line_count": 127,
+      "imports": [
+        "common"
+      ],
+      "exports": [
+        "useDeleteStructure"
+      ],
+      "uses_generic": true,
+      "complexity_score": 26,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "lists/useConcertsList": {
+      "path": "lists/useConcertsList.js",
+      "domain": "lists",
+      "name": "useConcertsList",
+      "file_size": 5494,
+      "line_count": 209,
+      "imports": [],
+      "exports": [
+        "useConcertsList"
+      ],
+      "uses_generic": false,
+      "complexity_score": 54,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "firestore/useFirebaseSave": {
+      "path": "firestore/useFirebaseSave.js",
+      "domain": "firestore",
+      "name": "useFirebaseSave",
+      "file_size": 125,
+      "line_count": 5,
+      "imports": [],
+      "exports": [
+        "useFirebaseSave"
+      ],
+      "uses_generic": false,
+      "complexity_score": 0,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "lieux/useLieuxFilters": {
+      "path": "lieux/useLieuxFilters.js",
+      "domain": "lieux",
+      "name": "useLieuxFilters",
+      "file_size": 4303,
+      "line_count": 144,
+      "imports": [
+        "common"
+      ],
+      "exports": [
+        "useLieuxFilters"
+      ],
+      "uses_generic": true,
+      "complexity_score": 35,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "lieux/useAddressSearch": {
+      "path": "lieux/useAddressSearch.js",
+      "domain": "lieux",
+      "name": "useAddressSearch",
+      "file_size": 495,
+      "line_count": 13,
+      "imports": [
+        "common",
+        "common/useAddressSearch"
+      ],
+      "exports": [
+        "useAddressSearch"
+      ],
+      "uses_generic": false,
+      "complexity_score": 1,
+      "is_wrapper": false,
+      "deprecated": true
+    },
+    "lieux/useLieuDetails": {
+      "path": "lieux/useLieuDetails.js",
+      "domain": "lieux",
+      "name": "useLieuDetails",
+      "file_size": 6023,
+      "line_count": 191,
+      "imports": [
+        "common"
+      ],
+      "exports": [
+        "useLieuDetails"
+      ],
+      "uses_generic": true,
+      "complexity_score": 37,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "lieux/useLieuSearch": {
+      "path": "lieux/useLieuSearch.js",
+      "domain": "lieux",
+      "name": "useLieuSearch",
+      "file_size": 3530,
+      "line_count": 107,
+      "imports": [
+        "common"
+      ],
+      "exports": [
+        "useLieuSearch",
+        "useLieuSearch"
+      ],
+      "uses_generic": true,
+      "complexity_score": 26,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "lieux/useLieuForm": {
+      "path": "lieux/useLieuForm.js",
+      "domain": "lieux",
+      "name": "useLieuForm",
+      "file_size": 3800,
+      "line_count": 111,
+      "imports": [
+        "common",
+        "programmateurs/useProgrammateurSearch"
+      ],
+      "exports": [
+        "useLieuForm",
+        "useLieuForm"
+      ],
+      "uses_generic": true,
+      "complexity_score": 15,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "lieux/useLieuDelete": {
+      "path": "lieux/useLieuDelete.js",
+      "domain": "lieux",
+      "name": "useLieuDelete",
+      "file_size": 3904,
+      "line_count": 121,
+      "imports": [
+        "common"
+      ],
+      "exports": [
+        "useLieuDelete"
+      ],
+      "uses_generic": true,
+      "complexity_score": 26,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "lieux/useLieuxQuery": {
+      "path": "lieux/useLieuxQuery.js",
+      "domain": "lieux",
+      "name": "useLieuxQuery",
+      "file_size": 2189,
+      "line_count": 87,
+      "imports": [],
+      "exports": [
+        "useLieuxQuery"
+      ],
+      "uses_generic": false,
+      "complexity_score": 33,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "programmateurs/useDeleteProgrammateur": {
+      "path": "programmateurs/useDeleteProgrammateur.js",
+      "domain": "programmateurs",
+      "name": "useDeleteProgrammateur",
+      "file_size": 3290,
+      "line_count": 86,
+      "imports": [
+        "common"
+      ],
+      "exports": [
+        "useDeleteProgrammateur"
+      ],
+      "uses_generic": true,
+      "complexity_score": 13,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "programmateurs/useAdresseValidation": {
+      "path": "programmateurs/useAdresseValidation.js",
+      "domain": "programmateurs",
+      "name": "useAdresseValidation",
+      "file_size": 2927,
+      "line_count": 94,
+      "imports": [
+        "common/useLocationIQ"
+      ],
+      "exports": [
+        "useAdresseValidation"
+      ],
+      "uses_generic": false,
+      "complexity_score": 33,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "programmateurs/useAddressSearch": {
+      "path": "programmateurs/useAddressSearch.js",
+      "domain": "programmateurs",
+      "name": "useAddressSearch",
+      "file_size": 495,
+      "line_count": 13,
+      "imports": [
+        "common",
+        "common/useAddressSearch"
+      ],
+      "exports": [
+        "useAddressSearch"
+      ],
+      "uses_generic": false,
+      "complexity_score": 1,
+      "is_wrapper": false,
+      "deprecated": true
+    },
+    "programmateurs/useConcertSearch": {
+      "path": "programmateurs/useConcertSearch.js",
+      "domain": "programmateurs",
+      "name": "useConcertSearch",
+      "file_size": 9664,
+      "line_count": 258,
+      "imports": [
+        "common"
+      ],
+      "exports": [
+        "useConcertSearch"
+      ],
+      "uses_generic": false,
+      "complexity_score": 62,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "programmateurs/useProgrammateurForm": {
+      "path": "programmateurs/useProgrammateurForm.js",
+      "domain": "programmateurs",
+      "name": "useProgrammateurForm",
+      "file_size": 9331,
+      "line_count": 263,
+      "imports": [
+        "common"
+      ],
+      "exports": [
+        "useProgrammateurForm",
+        "useProgrammateurForm"
+      ],
+      "uses_generic": true,
+      "complexity_score": 64,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "programmateurs/useLieuSearch": {
+      "path": "programmateurs/useLieuSearch.js",
+      "domain": "programmateurs",
+      "name": "useLieuSearch",
+      "file_size": 569,
+      "line_count": 10,
+      "imports": [],
+      "exports": [
+        "useLieuSearch"
+      ],
+      "uses_generic": false,
+      "complexity_score": 1,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "programmateurs/useProgrammateurSearch": {
+      "path": "programmateurs/useProgrammateurSearch.js",
+      "domain": "programmateurs",
+      "name": "useProgrammateurSearch",
+      "file_size": 9864,
+      "line_count": 248,
+      "imports": [
+        "common"
+      ],
+      "exports": [
+        "useProgrammateurSearch",
+        "useProgrammateurSearch"
+      ],
+      "uses_generic": true,
+      "complexity_score": 76,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "programmateurs/useProgrammateurDetails": {
+      "path": "programmateurs/useProgrammateurDetails.js",
+      "domain": "programmateurs",
+      "name": "useProgrammateurDetails",
+      "file_size": 8241,
+      "line_count": 190,
+      "imports": [
+        "common"
+      ],
+      "exports": [
+        "useProgrammateurDetails",
+        "function"
+      ],
+      "uses_generic": true,
+      "complexity_score": 59,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "programmateurs/useFormSubmission": {
+      "path": "programmateurs/useFormSubmission.js",
+      "domain": "programmateurs",
+      "name": "useFormSubmission",
+      "file_size": 499,
+      "line_count": 13,
+      "imports": [
+        "common",
+        "common/useFormSubmission"
+      ],
+      "exports": [
+        "useFormSubmission"
+      ],
+      "uses_generic": false,
+      "complexity_score": 1,
+      "is_wrapper": false,
+      "deprecated": true
+    },
+    "programmateurs/useCompanySearch": {
+      "path": "programmateurs/useCompanySearch.js",
+      "domain": "programmateurs",
+      "name": "useCompanySearch",
+      "file_size": 495,
+      "line_count": 13,
+      "imports": [
+        "common",
+        "common/useCompanySearch"
+      ],
+      "exports": [
+        "useCompanySearch"
+      ],
+      "uses_generic": false,
+      "complexity_score": 1,
+      "is_wrapper": false,
+      "deprecated": true
+    },
+    "search/useConcertSearch": {
+      "path": "search/useConcertSearch.js",
+      "domain": "search",
+      "name": "useConcertSearch",
+      "file_size": 2899,
+      "line_count": 88,
+      "imports": [],
+      "exports": [
+        "useConcertSearch"
+      ],
+      "uses_generic": true,
+      "complexity_score": 22,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "search/useLieuSearch": {
+      "path": "search/useLieuSearch.js",
+      "domain": "search",
+      "name": "useLieuSearch",
+      "file_size": 996,
+      "line_count": 28,
+      "imports": [
+        "lieux/useLieuSearch"
+      ],
+      "exports": [
+        "useLieuSearch"
+      ],
+      "uses_generic": true,
+      "complexity_score": 12,
+      "is_wrapper": true,
+      "deprecated": true
+    },
+    "search/useStructureSearch": {
+      "path": "search/useStructureSearch.js",
+      "domain": "search",
+      "name": "useStructureSearch",
+      "file_size": 2397,
+      "line_count": 66,
+      "imports": [],
+      "exports": [
+        "useStructureSearch"
+      ],
+      "uses_generic": true,
+      "complexity_score": 17,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "search/useSearchAndFilter": {
+      "path": "search/useSearchAndFilter.js",
+      "domain": "search",
+      "name": "useSearchAndFilter",
+      "file_size": 503,
+      "line_count": 13,
+      "imports": [
+        "common",
+        "common/useSearchAndFilter"
+      ],
+      "exports": [
+        "useSearchAndFilter"
+      ],
+      "uses_generic": false,
+      "complexity_score": 1,
+      "is_wrapper": false,
+      "deprecated": true
+    },
+    "search/useArtisteSearch": {
+      "path": "search/useArtisteSearch.js",
+      "domain": "search",
+      "name": "useArtisteSearch",
+      "file_size": 2187,
+      "line_count": 65,
+      "imports": [],
+      "exports": [
+        "useArtisteSearch"
+      ],
+      "uses_generic": true,
+      "complexity_score": 17,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "common/useEntitySearch": {
+      "path": "common/useEntitySearch.js",
+      "domain": "common",
+      "name": "useEntitySearch",
+      "file_size": 11895,
+      "line_count": 365,
+      "imports": [],
+      "exports": [
+        "useEntitySearch"
+      ],
+      "uses_generic": false,
+      "complexity_score": 85,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "common/useDebounce": {
+      "path": "common/useDebounce.js",
+      "domain": "common",
+      "name": "useDebounce",
+      "file_size": 959,
+      "line_count": 30,
+      "imports": [],
+      "exports": [
+        "useDebounce"
+      ],
+      "uses_generic": false,
+      "complexity_score": 16,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "common/useAddressSearch": {
+      "path": "common/useAddressSearch.js",
+      "domain": "common",
+      "name": "useAddressSearch",
+      "file_size": 7737,
+      "line_count": 261,
+      "imports": [],
+      "exports": [
+        "useAddressSearch"
+      ],
+      "uses_generic": false,
+      "complexity_score": 80,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "common/useTheme": {
+      "path": "common/useTheme.js",
+      "domain": "common",
+      "name": "useTheme",
+      "file_size": 2276,
+      "line_count": 71,
+      "imports": [],
+      "exports": [
+        "useTheme"
+      ],
+      "uses_generic": false,
+      "complexity_score": 16,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "common/useResponsive": {
+      "path": "common/useResponsive.js",
+      "domain": "common",
+      "name": "useResponsive",
+      "file_size": 3439,
+      "line_count": 110,
+      "imports": [],
+      "exports": [
+        "useResponsive"
+      ],
+      "uses_generic": false,
+      "complexity_score": 34,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "common/useGenericEntityDetails": {
+      "path": "common/useGenericEntityDetails.js",
+      "domain": "common",
+      "name": "useGenericEntityDetails",
+      "file_size": 35964,
+      "line_count": 1038,
+      "imports": [],
+      "exports": [
+        "useGenericEntityDetails"
+      ],
+      "uses_generic": true,
+      "complexity_score": 330,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "common/useGenericEntityDelete": {
+      "path": "common/useGenericEntityDelete.js",
+      "domain": "common",
+      "name": "useGenericEntityDelete",
+      "file_size": 10653,
+      "line_count": 277,
+      "imports": [],
+      "exports": [
+        "useGenericEntityDelete"
+      ],
+      "uses_generic": true,
+      "complexity_score": 69,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "common/useCache": {
+      "path": "common/useCache.js",
+      "domain": "common",
+      "name": "useCache",
+      "file_size": 4345,
+      "line_count": 143,
+      "imports": [],
+      "exports": [
+        "useCache"
+      ],
+      "uses_generic": false,
+      "complexity_score": 52,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "common/useGenericEntityForm": {
+      "path": "common/useGenericEntityForm.js",
+      "domain": "common",
+      "name": "useGenericEntityForm",
+      "file_size": 15318,
+      "line_count": 381,
+      "imports": [],
+      "exports": [
+        "useGenericEntityForm",
+        "useGenericEntityForm"
+      ],
+      "uses_generic": true,
+      "complexity_score": 118,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "common/useSearchAndFilter": {
+      "path": "common/useSearchAndFilter.js",
+      "domain": "common",
+      "name": "useSearchAndFilter",
+      "file_size": 6431,
+      "line_count": 178,
+      "imports": [],
+      "exports": [
+        "useSearchAndFilter",
+        "useSearchAndFilter"
+      ],
+      "uses_generic": false,
+      "complexity_score": 45,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "common/useLocationIQ": {
+      "path": "common/useLocationIQ.js",
+      "domain": "common",
+      "name": "useLocationIQ",
+      "file_size": 2393,
+      "line_count": 97,
+      "imports": [],
+      "exports": [
+        "useLocationIQ",
+        "useLocationIQ"
+      ],
+      "uses_generic": false,
+      "complexity_score": 25,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "common/useFormSubmission": {
+      "path": "common/useFormSubmission.js",
+      "domain": "common",
+      "name": "useFormSubmission",
+      "file_size": 9506,
+      "line_count": 271,
+      "imports": [],
+      "exports": [
+        "useFormSubmission"
+      ],
+      "uses_generic": false,
+      "complexity_score": 65,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "common/useGenericEntityList": {
+      "path": "common/useGenericEntityList.js",
+      "domain": "common",
+      "name": "useGenericEntityList",
+      "file_size": 10682,
+      "line_count": 320,
+      "imports": [],
+      "exports": [
+        "useGenericEntityList"
+      ],
+      "uses_generic": true,
+      "complexity_score": 95,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "common/useFirestoreSubscription": {
+      "path": "common/useFirestoreSubscription.js",
+      "domain": "common",
+      "name": "useFirestoreSubscription",
+      "file_size": 6359,
+      "line_count": 195,
+      "imports": [],
+      "exports": [
+        "useFirestoreSubscription"
+      ],
+      "uses_generic": false,
+      "complexity_score": 60,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "common/useCompanySearch": {
+      "path": "common/useCompanySearch.js",
+      "domain": "common",
+      "name": "useCompanySearch",
+      "file_size": 6646,
+      "line_count": 204,
+      "imports": [],
+      "exports": [
+        "useCompanySearch"
+      ],
+      "uses_generic": false,
+      "complexity_score": 62,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "common/useGenericEntitySearch": {
+      "path": "common/useGenericEntitySearch.js",
+      "domain": "common",
+      "name": "useGenericEntitySearch",
+      "file_size": 9278,
+      "line_count": 295,
+      "imports": [],
+      "exports": [
+        "useGenericEntitySearch"
+      ],
+      "uses_generic": true,
+      "complexity_score": 93,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "contrats/useContratDetails": {
+      "path": "contrats/useContratDetails.js",
+      "domain": "contrats",
+      "name": "useContratDetails",
+      "file_size": 6563,
+      "line_count": 190,
+      "imports": [
+        "common"
+      ],
+      "exports": [
+        "useContratDetails"
+      ],
+      "uses_generic": true,
+      "complexity_score": 57,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "contrats/useContratTemplateEditor": {
+      "path": "contrats/useContratTemplateEditor.js",
+      "domain": "contrats",
+      "name": "useContratTemplateEditor",
+      "file_size": 16797,
+      "line_count": 478,
+      "imports": [],
+      "exports": [
+        "useContratTemplateEditor"
+      ],
+      "uses_generic": false,
+      "complexity_score": 120,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "contrats/useContratGenerator": {
+      "path": "contrats/useContratGenerator.js",
+      "domain": "contrats",
+      "name": "useContratGenerator",
+      "file_size": 11808,
+      "line_count": 325,
+      "imports": [],
+      "exports": [
+        "useContratGenerator",
+        "useContratGenerator"
+      ],
+      "uses_generic": false,
+      "complexity_score": 91,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "contrats/useContratForm": {
+      "path": "contrats/useContratForm.js",
+      "domain": "contrats",
+      "name": "useContratForm",
+      "file_size": 335,
+      "line_count": 13,
+      "imports": [
+        "common/useGenericEntityForm"
+      ],
+      "exports": [
+        "useContratForm",
+        "function"
+      ],
+      "uses_generic": true,
+      "complexity_score": 1,
+      "is_wrapper": true,
+      "deprecated": false
+    },
+    "contrats/contractVariables": {
+      "path": "contrats/contractVariables.js",
+      "domain": "contrats",
+      "name": "contractVariables",
+      "file_size": 2865,
+      "line_count": 73,
+      "imports": [],
+      "exports": [
+        "bodyVariables",
+        "headerFooterVariables",
+        "signatureVariables",
+        "templateTypes",
+        "replaceVariablesWithMockData"
+      ],
+      "uses_generic": false,
+      "complexity_score": 8,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "contrats/usePdfPreview": {
+      "path": "contrats/usePdfPreview.js",
+      "domain": "contrats",
+      "name": "usePdfPreview",
+      "file_size": 2538,
+      "line_count": 77,
+      "imports": [],
+      "exports": [
+        "usePdfPreview",
+        "usePdfPreview"
+      ],
+      "uses_generic": false,
+      "complexity_score": 28,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "contrats/useContratActions": {
+      "path": "contrats/useContratActions.js",
+      "domain": "contrats",
+      "name": "useContratActions",
+      "file_size": 3016,
+      "line_count": 102,
+      "imports": [],
+      "exports": [
+        "useContratActions",
+        "useContratActions"
+      ],
+      "uses_generic": false,
+      "complexity_score": 29,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "contrats/useContratTemplatePreview": {
+      "path": "contrats/useContratTemplatePreview.js",
+      "domain": "contrats",
+      "name": "useContratTemplatePreview",
+      "file_size": 11762,
+      "line_count": 351,
+      "imports": [],
+      "exports": [
+        "useContratTemplatePreview"
+      ],
+      "uses_generic": false,
+      "complexity_score": 49,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "artistes/useHandleDeleteArtist": {
+      "path": "artistes/useHandleDeleteArtist.js",
+      "domain": "artistes",
+      "name": "useHandleDeleteArtist",
+      "file_size": 1833,
+      "line_count": 51,
+      "imports": [],
+      "exports": [
+        "useHandleDeleteArtist",
+        "useHandleDeleteArtist"
+      ],
+      "uses_generic": false,
+      "complexity_score": 11,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "artistes/useSearchAndFilter": {
+      "path": "artistes/useSearchAndFilter.js",
+      "domain": "artistes",
+      "name": "useSearchAndFilter",
+      "file_size": 2067,
+      "line_count": 62,
+      "imports": [],
+      "exports": [
+        "useSearchAndFilter"
+      ],
+      "uses_generic": false,
+      "complexity_score": 6,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "artistes/useArtisteDetails": {
+      "path": "artistes/useArtisteDetails.js",
+      "domain": "artistes",
+      "name": "useArtisteDetails",
+      "file_size": 9031,
+      "line_count": 293,
+      "imports": [
+        "common"
+      ],
+      "exports": [
+        "useArtisteDetails"
+      ],
+      "uses_generic": true,
+      "complexity_score": 72,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "artistes/useArtisteForm": {
+      "path": "artistes/useArtisteForm.js",
+      "domain": "artistes",
+      "name": "useArtisteForm",
+      "file_size": 6289,
+      "line_count": 195,
+      "imports": [
+        "common"
+      ],
+      "exports": [
+        "useArtisteForm",
+        "useArtisteForm"
+      ],
+      "uses_generic": true,
+      "complexity_score": 50,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "artistes/useArtisteSearch": {
+      "path": "artistes/useArtisteSearch.js",
+      "domain": "artistes",
+      "name": "useArtisteSearch",
+      "file_size": 5577,
+      "line_count": 130,
+      "imports": [
+        "common"
+      ],
+      "exports": [
+        "useArtisteSearch"
+      ],
+      "uses_generic": true,
+      "complexity_score": 23,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "artistes/useDeleteArtiste": {
+      "path": "artistes/useDeleteArtiste.js",
+      "domain": "artistes",
+      "name": "useDeleteArtiste",
+      "file_size": 4278,
+      "line_count": 127,
+      "imports": [
+        "common"
+      ],
+      "exports": [
+        "useDeleteArtiste"
+      ],
+      "uses_generic": true,
+      "complexity_score": 26,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "artistes/useArtistesList": {
+      "path": "artistes/useArtistesList.js",
+      "domain": "artistes",
+      "name": "useArtistesList",
+      "file_size": 4661,
+      "line_count": 163,
+      "imports": [
+        "common"
+      ],
+      "exports": [
+        "useArtistesList",
+        "useArtistesList"
+      ],
+      "uses_generic": true,
+      "complexity_score": 50,
+      "is_wrapper": false,
+      "deprecated": false
+    },
+    "parametres/useEntrepriseForm": {
+      "path": "parametres/useEntrepriseForm.js",
+      "domain": "parametres",
+      "name": "useEntrepriseForm",
+      "file_size": 4734,
+      "line_count": 146,
+      "imports": [
+        "common/useGenericEntityForm"
+      ],
+      "exports": [
+        "useEntrepriseForm",
+        "useEntrepriseForm"
+      ],
+      "uses_generic": true,
+      "complexity_score": 41,
+      "is_wrapper": false,
+      "deprecated": false
+    }
+  },
+  "dependencies": {
+    "concerts/useEntitySearch": [
+      "common/useEntitySearch",
+      "common"
+    ],
+    "concerts/useConcertDetails": [
+      "concerts/useConcertFormsManagement",
+      "concerts/useConcertAssociations",
+      "concerts/useConcertStatus",
+      "common"
+    ],
+    "concerts/useConcertSubmission": [
+      "forms/useFormSubmission"
+    ],
+    "concerts/useFormSubmission": [
+      "common/useFormSubmission",
+      "common"
+    ],
+    "concerts/useConcertForm": [
+      "common"
+    ],
+    "concerts/useConcertDelete": [
+      "common"
+    ],
+    "forms/useFormSubmission": [
+      "common/useFormSubmission",
+      "common"
+    ],
+    "forms/useLieuFormState": [
+      "common"
+    ],
+    "structures/useStructureDetails": [
+      "common"
+    ],
+    "structures/useStructureForm": [
+      "common"
+    ],
+    "structures/useDeleteStructure": [
+      "common"
+    ],
+    "lieux/useLieuxFilters": [
+      "common"
+    ],
+    "lieux/useAddressSearch": [
+      "common/useAddressSearch",
+      "common"
+    ],
+    "lieux/useLieuDetails": [
+      "common"
+    ],
+    "lieux/useLieuSearch": [
+      "common"
+    ],
+    "lieux/useLieuForm": [
+      "programmateurs/useProgrammateurSearch",
+      "common"
+    ],
+    "lieux/useLieuDelete": [
+      "common"
+    ],
+    "programmateurs/useDeleteProgrammateur": [
+      "common"
+    ],
+    "programmateurs/useAdresseValidation": [
+      "common/useLocationIQ"
+    ],
+    "programmateurs/useAddressSearch": [
+      "common/useAddressSearch",
+      "common"
+    ],
+    "programmateurs/useConcertSearch": [
+      "common"
+    ],
+    "programmateurs/useProgrammateurForm": [
+      "common"
+    ],
+    "programmateurs/useProgrammateurSearch": [
+      "common"
+    ],
+    "programmateurs/useProgrammateurDetails": [
+      "common"
+    ],
+    "programmateurs/useFormSubmission": [
+      "common/useFormSubmission",
+      "common"
+    ],
+    "programmateurs/useCompanySearch": [
+      "common/useCompanySearch",
+      "common"
+    ],
+    "search/useLieuSearch": [
+      "lieux/useLieuSearch"
+    ],
+    "search/useSearchAndFilter": [
+      "common/useSearchAndFilter",
+      "common"
+    ],
+    "contrats/useContratDetails": [
+      "common"
+    ],
+    "contrats/useContratForm": [
+      "common/useGenericEntityForm"
+    ],
+    "artistes/useArtisteDetails": [
+      "common"
+    ],
+    "artistes/useArtisteForm": [
+      "common"
+    ],
+    "artistes/useArtisteSearch": [
+      "common"
+    ],
+    "artistes/useDeleteArtiste": [
+      "common"
+    ],
+    "artistes/useArtistesList": [
+      "common"
+    ],
+    "parametres/useEntrepriseForm": [
+      "common/useGenericEntityForm"
+    ]
+  },
+  "usage_stats": {
+    "common": 25,
+    "concerts": 4,
+    "concerts/useConcertForm": 1,
+    "concerts/useConcertDelete": 1,
+    "forms": 6,
+    "structures": 3,
+    "structures/useDeleteStructure": 1,
+    "contrats": 2,
+    "programmateurs": 8,
+    "artistes": 2,
+    "lieux": 8,
+    "lieux/useLieuDelete": 2,
+    "programmateurs/useDeleteProgrammateur": 1,
+    "common/useAddressSearch": 1,
+    "artistes/useDeleteArtiste": 1,
+    "parametres": 1
+  },
+  "generic_adoption": {
+    "useGenericEntityForm": [
+      "src/components/exemples/ProgrammateurFormExemple.js",
+      "src/components/exemples/ArtisteFormExemple.js",
+      "src/components/exemples/FormulairesOptimisesIndex.js",
+      "src/components/lieux/desktop/LieuFormOptimized.js"
+    ],
+    "useGenericEntityList": [
+      "src/components/artistes/desktop/ArtistesList.js"
+    ]
+  }
+}

@@ -9,14 +9,14 @@
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   margin-bottom: 20px;
-  border: 1px solid var(--tc-color-e9ecef);
+  border: 1px solid var(--tc-gray-200);
   overflow: hidden;
 }
 
 .cardHeader {
-  background-color: var(--tc-color-f8f9fa);
+  background-color: var(--tc-gray-50);
   padding: 15px 20px;
-  border-bottom: 1px solid var(--tc-color-e9ecef);
+  border-bottom: 1px solid var(--tc-gray-200);
   display: flex;
   align-items: center;
   gap: 10px;
@@ -67,7 +67,7 @@
 }
 
 .structureItem:hover {
-  background-color: var(--tc-color-f8f9fa);
+  background-color: var(--tc-gray-50);
 }
 
 .structureName {
@@ -84,7 +84,7 @@
 }
 
 .structureType {
-  background-color: var(--tc-color-e9ecef);
+  background-color: var(--tc-gray-200);
   padding: 2px 8px;
   border-radius: 12px;
   font-size: 12px;
@@ -107,8 +107,8 @@
 }
 
 .structureCard {
-  background-color: var(--tc-color-f8f9fa);
-  border: 1px solid var(--tc-color-e9ecef);
+  background-color: var(--tc-gray-50);
+  border: 1px solid var(--tc-gray-200);
   border-radius: 6px;
   padding: 12px;
   display: flex;
@@ -123,7 +123,7 @@
 }
 
 .contactLink {
-  color: var(--tc-color-0d6efd);
+  color: var(--tc-primary-color);
   text-decoration: none;
   display: flex;
   align-items: center;

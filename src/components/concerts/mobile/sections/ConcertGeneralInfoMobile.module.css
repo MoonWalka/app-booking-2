@@ -56,8 +56,8 @@
   display: flex;
   align-items: center;
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-color-error);
-  background-color: var(--tc-color-error-light));
+  color: var(--tc-danger-color);
+  background-color: var(--tc-danger-light);
   padding: var(--tc-spacing-2);
   border-radius: var(--tc-radius-sm);
 }
@@ -86,7 +86,7 @@
 }
 
 .passedDate {
-  color: var(--tc-color-error);
+  color: var(--tc-danger-color);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -95,7 +95,7 @@
 .passedBadge {
   font-size: var(--tc-font-size-xs);
   padding: var(--tc-spacing-1) var(--tc-spacing-1);
-  background-color: var(--tc-color-error);
+  background-color: var(--tc-danger-color);
   color: white;
   border-radius: var(--tc-radius-sm);
 }

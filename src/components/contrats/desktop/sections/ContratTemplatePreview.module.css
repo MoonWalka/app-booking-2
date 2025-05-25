@@ -7,14 +7,14 @@
 .templatePreview {
   margin-bottom: 1.5rem;
   padding: 0.75rem;
-  border: 1px solid var(--tc-color-e0e0e0);
+  border: 1px solid var(--tc-gray-200);
   border-radius: 4px;
-  background-color: var(--tc-color-fafafa);
+  background-color: var(--tc-gray-50);
 }
 
 .previewHeader {
   margin-bottom: 1.25rem;
-  border-bottom: 1px solid var(--tc-color-f0f0f0);
+  border-bottom: 1px solid var(--tc-gray-100);
   padding-bottom: 0.75rem;
 }
 
@@ -22,7 +22,7 @@
   font-size: 1.25rem;
   font-weight: 600;
   margin-bottom: 0.25rem;
-  color: var(--tc-color-344767);
+  color: var(--tc-gray-700);
 }
 
 .previewContent {

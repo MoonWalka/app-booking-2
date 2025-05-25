@@ -65,7 +65,7 @@ const ConcertLocationSection = ({
                     <span className="input-group-text"><i className="bi bi-search"></i></span>
                     <input
                       type="text"
-                      className={styles.formField}
+                      className="form-control"
                       placeholder="Rechercher un lieu par nom..."
                       value={lieuSearchTerm}
                       onChange={(e) => setLieuSearchTerm(e.target.value)}
@@ -161,7 +161,7 @@ const ConcertLocationSection = ({
               </Alert>
             )}
             
-            <small className={styles.helpText}>
+            <small className="form-text text-muted">
               Tapez au moins 2 caractères pour rechercher un lieu par nom.
             </small>
           </div>

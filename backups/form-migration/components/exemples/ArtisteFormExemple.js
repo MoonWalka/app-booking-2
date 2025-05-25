@@ -90,7 +90,7 @@ const ArtisteFormExemple = () => {
           <div className="form-section">
             <h3>Informations de base</h3>
             
-            <div className={styles.formGroup}>
+            <div className="form-group">
               <label htmlFor="nom">Nom de l'artiste *</label>
               <input
                 type="text"
@@ -103,22 +103,22 @@ const ArtisteFormExemple = () => {
               {formErrors?.nom && <div className="invalid-feedback">{formErrors.nom}</div>}
             </div>
             
-            <div className={styles.formGroup}>
+            <div className="form-group">
               <label htmlFor="genre">Genre musical</label>
               <input
                 type="text"
                 id="genre"
-                className={styles.formField}
+                className="form-control"
                 value={artiste.genre || ''}
                 onChange={(e) => updateFormData(prev => ({ ...prev, genre: e.target.value }))}
               />
             </div>
             
-            <div className={styles.formGroup}>
+            <div className="form-group">
               <label htmlFor="description">Description</label>
               <textarea
                 id="description"
-                className={styles.formField}
+                className="form-control"
                 rows="4"
                 value={artiste.description || ''}
                 onChange={(e) => updateFormData(prev => ({ ...prev, description: e.target.value }))}
@@ -132,7 +132,7 @@ const ArtisteFormExemple = () => {
           <div className="form-section">
             <h3>Coordonnées</h3>
             
-            <div className={styles.formGroup}>
+            <div className="form-group">
               <label htmlFor="email">Email</label>
               <input
                 type="email"
@@ -144,18 +144,18 @@ const ArtisteFormExemple = () => {
               {formErrors?.['contacts.email'] && <div className="invalid-feedback">{formErrors['contacts.email']}</div>}
             </div>
             
-            <div className={styles.formGroup}>
+            <div className="form-group">
               <label htmlFor="telephone">Téléphone</label>
               <input
                 type="tel"
                 id="telephone"
-                className={styles.formField}
+                className="form-control"
                 value={contacts.telephone || ''}
                 onChange={(e) => updateContact('telephone', e.target.value)}
               />
             </div>
             
-            <div className={styles.formGroup}>
+            <div className="form-group">
               <label htmlFor="siteWeb">Site web</label>
               <input
                 type="url"
@@ -174,7 +174,7 @@ const ArtisteFormExemple = () => {
                 <input
                   type="text"
                   id="instagram"
-                  className={styles.formField}
+                  className="form-control"
                   value={contacts.instagram || ''}
                   onChange={(e) => updateContact('instagram', e.target.value)}
                 />
@@ -185,7 +185,7 @@ const ArtisteFormExemple = () => {
                 <input
                   type="text"
                   id="facebook"
-                  className={styles.formField}
+                  className="form-control"
                   value={contacts.facebook || ''}
                   onChange={(e) => updateContact('facebook', e.target.value)}
                 />
@@ -199,11 +199,11 @@ const ArtisteFormExemple = () => {
           <div className="form-section">
             <h3>Membres du groupe</h3>
             
-            <div className={styles.formGroup}>
+            <div className="form-group">
               <div className="input-group">
                 <input
                   type="text"
-                  className={styles.formField}
+                  className="form-control"
                   placeholder="Nom du membre"
                   value={nouveauMembre}
                   onChange={(e) => setNouveauMembre(e.target.value)}

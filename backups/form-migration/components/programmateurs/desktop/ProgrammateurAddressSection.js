@@ -91,7 +91,7 @@ const ProgrammateurAddressSection = ({
             <div className="input-group">
               <input
                 type="text"
-                className={styles.formField}
+                className="form-control"
                 id="structure.adresse"
                 name="structure.adresse"
                 value={formData.structure.adresse}
@@ -125,7 +125,7 @@ const ProgrammateurAddressSection = ({
                 <label htmlFor="structure.codePostal" className={styles.cardLabel}>Code postal</label>
                 <input
                   type="text"
-                  className={styles.formField}
+                  className="form-control"
                   id="structure.codePostal"
                   name="structure.codePostal"
                   value={formData.structure.codePostal}
@@ -139,7 +139,7 @@ const ProgrammateurAddressSection = ({
                 <label htmlFor="structure.ville" className={styles.cardLabel}>Ville</label>
                 <input
                   type="text"
-                  className={styles.formField}
+                  className="form-control"
                   id="structure.ville"
                   name="structure.ville"
                   value={formData.structure.ville}
@@ -154,7 +154,7 @@ const ProgrammateurAddressSection = ({
             <label htmlFor="structure.pays" className={styles.cardLabel}>Pays</label>
             <input
               type="text"
-              className={styles.formField}
+              className="form-control"
               id="structure.pays"
               name="structure.pays"
               value={formData.structure.pays}

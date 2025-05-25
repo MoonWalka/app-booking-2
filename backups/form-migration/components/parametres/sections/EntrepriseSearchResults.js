@@ -51,7 +51,7 @@ const EntrepriseSearchResults = ({
           </span>
         )}
       </div>
-      <small className={styles.helpText}>
+      <small className="form-text text-muted">
         {searchType === 'name' 
           ? "Enter at least 3 characters to start searching" 
           : "Enter a SIREN (9 digits) or SIRET (14 digits) number"

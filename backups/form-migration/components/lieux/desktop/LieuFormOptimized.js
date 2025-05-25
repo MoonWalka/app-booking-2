@@ -58,7 +58,7 @@ const LieuFormOptimized = ({ lieuId }) => {
           {lieuId === 'nouveau' ? 'Nouveau lieu' : 'Modifier le lieu'}
         </SectionTitle>
         
-        <div className={styles.formGroup}>
+        <div className="form-group">
           <label htmlFor="nom">Nom du lieu*</label>
           <input
             type="text"
@@ -71,7 +71,7 @@ const LieuFormOptimized = ({ lieuId }) => {
           {formErrors.nom && <div className="error-message">{formErrors.nom}</div>}
         </div>
 
-        <div className={styles.formGroup}>
+        <div className="form-group">
           <label htmlFor="adresse">Adresse*</label>
           <input
             type="text"
@@ -85,7 +85,7 @@ const LieuFormOptimized = ({ lieuId }) => {
         </div>
 
         <div className="form-row">
-          <div className={styles.formGroup}>
+          <div className="form-group">
             <label htmlFor="codePostal">Code postal</label>
             <input
               type="text"
@@ -96,7 +96,7 @@ const LieuFormOptimized = ({ lieuId }) => {
             />
           </div>
 
-          <div className={styles.formGroup}>
+          <div className="form-group">
             <label htmlFor="ville">Ville</label>
             <input
               type="text"
@@ -108,7 +108,7 @@ const LieuFormOptimized = ({ lieuId }) => {
           </div>
         </div>
 
-        <div className={styles.formGroup}>
+        <div className="form-group">
           <label htmlFor="pays">Pays</label>
           <input
             type="text"
@@ -119,7 +119,7 @@ const LieuFormOptimized = ({ lieuId }) => {
           />
         </div>
 
-        <div className={styles.formGroup}>
+        <div className="form-group">
           <label htmlFor="capacite">Capacité</label>
           <input
             type="number"
@@ -132,7 +132,7 @@ const LieuFormOptimized = ({ lieuId }) => {
           {formErrors.capacite && <div className="error-message">{formErrors.capacite}</div>}
         </div>
 
-        <div className={styles.formGroup}>
+        <div className="form-group">
           <label>Équipements disponibles</label>
           <div className="checkbox-group">
             {equipements.map(equip => (
@@ -149,7 +149,7 @@ const LieuFormOptimized = ({ lieuId }) => {
           </div>
         </div>
 
-        <div className={styles.formGroup}>
+        <div className="form-group">
           <label htmlFor="description">Description</label>
           <textarea
             id="description"
@@ -160,7 +160,7 @@ const LieuFormOptimized = ({ lieuId }) => {
           />
         </div>
 
-        <div className={styles.formGroup}>
+        <div className="form-group">
           <label htmlFor="actif">Statut</label>
           <select
             id="actif"

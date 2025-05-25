@@ -125,19 +125,19 @@ const ProgrammateurFormExemple = () => {
                     <input
                       type="text"
                       id="contactPrenom"
-                      className={styles.formField}
+                      className="form-control"
                       value={contact.prenom || ''}
                       onChange={(e) => updateContact('prenom', e.target.value)}
                     />
                   </div>
                 </div>
                 
-                <div className={styles.formGroup}>
+                <div className="form-group">
                   <label htmlFor="contactFonction">Fonction</label>
                   <input
                     type="text"
                     id="contactFonction"
-                    className={styles.formField}
+                    className="form-control"
                     value={contact.fonction || ''}
                     onChange={(e) => updateContact('fonction', e.target.value)}
                     placeholder="Ex: Directeur de programmation"
@@ -165,7 +165,7 @@ const ProgrammateurFormExemple = () => {
                     <input
                       type="tel"
                       id="contactTelephone"
-                      className={styles.formField}
+                      className="form-control"
                       value={contact.telephone || ''}
                       onChange={(e) => updateContact('telephone', e.target.value)}
                     />
@@ -186,7 +186,7 @@ const ProgrammateurFormExemple = () => {
             
             {sectionsVisibility.structureVisible && (
               <div className="section-content">
-                <div className={styles.formGroup}>
+                <div className="form-group">
                   <label htmlFor="structureSearch">Rechercher une structure existante</label>
                   <EntitySearchField
                     entityType="structure"
@@ -236,7 +236,7 @@ const ProgrammateurFormExemple = () => {
                         <label htmlFor="structureType">Type de structure</label>
                         <select
                           id="structureType"
-                          className={styles.formField}
+                          className="form-control"
                           value={programmateur.structure?.type || ''}
                           onChange={(e) => updateStructure('type', e.target.value)}
                         >
@@ -250,12 +250,12 @@ const ProgrammateurFormExemple = () => {
                         </select>
                       </div>
                     </div>
-                    <div className={styles.formGroup}>
+                    <div className="form-group">
                       <label htmlFor="structureAdresse">Adresse</label>
                       <input
                         type="text"
                         id="structureAdresse"
-                        className={styles.formField}
+                        className="form-control"
                         value={programmateur.structure?.adresse || ''}
                         onChange={(e) => updateStructure('adresse', e.target.value)}
                       />
@@ -266,7 +266,7 @@ const ProgrammateurFormExemple = () => {
                         <input
                           type="text"
                           id="structureCodePostal"
-                          className={styles.formField}
+                          className="form-control"
                           value={programmateur.structure?.codePostal || ''}
                           onChange={(e) => updateStructure('codePostal', e.target.value)}
                         />
@@ -276,7 +276,7 @@ const ProgrammateurFormExemple = () => {
                         <input
                           type="text"
                           id="structureVille"
-                          className={styles.formField}
+                          className="form-control"
                           value={programmateur.structure?.ville || ''}
                           onChange={(e) => updateStructure('ville', e.target.value)}
                         />
@@ -288,7 +288,7 @@ const ProgrammateurFormExemple = () => {
                         <input
                           type="text"
                           id="structureSiret"
-                          className={styles.formField}
+                          className="form-control"
                           value={programmateur.structure?.siret || ''}
                           onChange={(e) => updateStructure('siret', e.target.value)}
                         />
@@ -298,7 +298,7 @@ const ProgrammateurFormExemple = () => {
                         <input
                           type="text"
                           id="structureTva"
-                          className={styles.formField}
+                          className="form-control"
                           value={programmateur.structure?.tva || ''}
                           onChange={(e) => updateStructure('tva', e.target.value)}
                         />

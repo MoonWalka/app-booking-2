@@ -63,7 +63,7 @@ const ConcertOrganizerSection = ({
                   <span className="input-group-text"><i className="bi bi-search"></i></span>
                   <input
                     type="text"
-                    className={styles.formField}
+                    className="form-control"
                     placeholder="Rechercher un programmateur par nom..."
                     value={progSearchTerm}
                     onChange={(e) => setProgSearchTerm(e.target.value)}
@@ -149,7 +149,7 @@ const ConcertOrganizerSection = ({
               </div>
             )}
             
-            <small className={styles.helpText}>
+            <small className="form-text text-muted">
               Tapez au moins 2 caractères pour rechercher un programmateur par nom.
             </small>
           </div>

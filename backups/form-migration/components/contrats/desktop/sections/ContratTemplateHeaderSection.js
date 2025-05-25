@@ -97,7 +97,7 @@ const ContratTemplateHeaderSection = ({
               id="headerHeight"
               min="10"
               max="50"
-              className={styles.formField}
+              className="form-control"
               value={headerHeight}
               onChange={(e) => setHeaderHeight(parseInt(e.target.value) || 0)}
             />
@@ -109,7 +109,7 @@ const ContratTemplateHeaderSection = ({
               id="headerBottomMargin"
               min="0"
               max="30"
-              className={styles.formField}
+              className="form-control"
               value={headerBottomMargin}
               onChange={(e) => setHeaderBottomMargin(parseInt(e.target.value) || 0)}
             />

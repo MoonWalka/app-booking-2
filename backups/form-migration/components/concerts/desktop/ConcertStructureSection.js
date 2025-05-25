@@ -53,7 +53,7 @@ const ConcertStructureSection = ({
                   <span className="input-group-text"><i className="bi bi-search"></i></span>
                   <input
                     type="text"
-                    className={styles.formField}
+                    className="form-control"
                     placeholder="Rechercher une structure par nom ou raison sociale..."
                     value={structureSearchTerm}
                     onChange={(e) => setStructureSearchTerm(e.target.value)}
@@ -144,7 +144,7 @@ const ConcertStructureSection = ({
               </div>
             )}
             
-            <small className={styles.helpText}>
+            <small className="form-text text-muted">
               Tapez au moins 2 caractères pour rechercher une structure par nom ou raison sociale.
             </small>
           </div>

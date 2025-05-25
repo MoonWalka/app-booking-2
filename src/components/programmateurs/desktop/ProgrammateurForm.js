@@ -34,11 +34,6 @@ const ProgrammateurForm = () => {
   const isNewFromUrl = location.pathname.endsWith('/nouveau');
 
   // LOGS TEMPORAIREMENT DÉSACTIVÉS POUR ÉVITER LA BOUCLE
-  // console.log('[DEBUG][ProgrammateurForm] Composant ProgrammateurForm chargé');
-  // console.log('[DEBUG][ProgrammateurForm] ID reçu des params:', id);
-  // console.log('[DEBUG][ProgrammateurForm] Type de ID:', typeof id);
-  // console.log('[DEBUG][ProgrammateurForm] location.pathname:', location.pathname);
-  // console.log('[DEBUG][ProgrammateurForm] isNewFromUrl:', isNewFromUrl);
   // console.log('[DEBUG][ProgrammateurForm] Mode détecté:', isNewFromUrl ? 'nouveau' : 'édition');
 
   // MIGRATION: Utilisation du hook optimisé
@@ -57,10 +52,6 @@ const ProgrammateurForm = () => {
     handleCancel: hookHandleCancel
   } = useProgrammateurForm(id);
   
-  // console.log('[DEBUG][ProgrammateurForm] Hook useProgrammateurForm initialisé');
-  // console.log('[DEBUG][ProgrammateurForm] Loading:', loading);
-  // console.log('[DEBUG][ProgrammateurForm] Error:', error);
-  // console.log('[DEBUG][ProgrammateurForm] FormData:', formData);
   
   // État local pour contrôler l'affichage des sections
   const [sections, setSections] = useState({

@@ -113,7 +113,6 @@ const safeReload = () => {
   };
   
   setNetworkState(newState);
-  console.log(`🔄 Rechargement contrôlé (${newState.reloadAttempts}/${MAX_RELOAD_ATTEMPTS})`);
   
   // Persister avant rechargement
   utilityCache.persist();

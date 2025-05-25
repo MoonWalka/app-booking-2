@@ -196,7 +196,6 @@ const useGenericEntityDelete = (options) => {
    * @returns {Promise<boolean>} True si la suppression a réussi
    */
   const handleDelete = useCallback(async (entityId, e) => {
-    console.log('[LOG][useGenericEntityDelete] handleDelete appelé', entityId);
     // Empêcher la propagation de l'événement si fourni
     if (e && e.stopPropagation) {
       e.stopPropagation();
@@ -235,7 +234,6 @@ const useGenericEntityDelete = (options) => {
         onSuccess(entityId);
       }
       
-      console.log('[LOG][useGenericEntityDelete] Suppression réussie', entityId);
       return true;
     } catch (error) {
       debugLog(`Erreur lors de la suppression du ${entityType}: ${error.message}`, 'error', 'useGenericEntityDelete');

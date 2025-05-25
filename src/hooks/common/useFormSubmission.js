@@ -61,7 +61,6 @@ const useFormSubmission = (options) => {
         await updateDoc(oldTargetRef, {
           [targetField]: arrayRemove(documentId)
         });
-        console.log(`Association supprimée avec ${targetCollection}/${oldValue}`);
       }
       
       // Si une nouvelle valeur est spécifiée, créer la nouvelle association
@@ -151,7 +150,6 @@ const useFormSubmission = (options) => {
           await updateAssociation(documentId, processedData, config);
           
           // NOUVEAU: Log de confirmation avec la clé d'association
-          console.log(`[ASSOCIATION] Association "${key}" traitée avec succès`);
         }
       }
       
@@ -217,9 +215,7 @@ const useFormSubmission = (options) => {
             await updateDoc(targetRef, {
               [config.targetField]: arrayRemove(id)
             });
-            console.log(`[ASSOCIATION DELETE] Association "${key}" supprimée avec succès de ${config.targetCollection}/${config.newValue}`);
           } else {
-            console.log(`[ASSOCIATION DELETE] Association "${key}" ignorée (pas de valeur cible)`);
           }
         }
       }

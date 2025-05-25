@@ -86,7 +86,6 @@ class CacheService {
       
       // Debugging avancé en mode développement
       if (this.debugMode) {
-        console.log(`[CACHE MISS] ${cacheKey} - Accès #${this.accessLog[cacheKey].accessCount}`);
       }
       
       return null;
@@ -104,7 +103,6 @@ class CacheService {
       // Logging de l'expiration avec détails
       if (this.debugMode) {
         const expired = Date.now() - cachedItem.timestamp;
-        console.log(`[CACHE EXPIRED] ${cacheKey} - Expiré depuis ${expired}ms (limite: ${cacheDuration}ms)`);
       }
       
       return null;
@@ -117,7 +115,6 @@ class CacheService {
     // Logging du succès avec métriques
     if (this.debugMode) {
       const hitRate = ((this.accessLog[cacheKey].hitCount / this.accessLog[cacheKey].accessCount) * 100).toFixed(1);
-      console.log(`[CACHE HIT] ${cacheKey} - Taux de succès: ${hitRate}% (${this.accessLog[cacheKey].hitCount}/${this.accessLog[cacheKey].accessCount})`);
     }
     
     return cachedItem.data;
@@ -642,7 +639,6 @@ class CacheService {
    */
   setDebugMode(enabled) {
     this.debugMode = enabled;
-    console.log(`[CacheService] Mode debug ${enabled ? 'activé' : 'désactivé'}`);
   }
 
   /**

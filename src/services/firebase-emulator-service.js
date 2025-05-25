@@ -321,7 +321,6 @@ const _getRawLocalData = async () => {
       });
     }
     
-    console.log('📊 Données émulateur récupérées:', Object.keys(rawData).map(k => `${k}: ${Object.keys(rawData[k]).length} docs`));
     return rawData;
   } catch (error) {
     console.error('❌ Erreur lors de la récupération des données émulateur:', error);
@@ -351,7 +350,6 @@ const _importRawData = async (data) => {
       }
     }
     
-    console.log(`📥 Import émulateur terminé: ${importCount} documents importés`);
     return true;
   } catch (error) {
     console.error('❌ Erreur lors de l\'import dans l\'émulateur:', error);

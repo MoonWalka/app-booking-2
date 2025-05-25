@@ -240,7 +240,6 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
   const rebuildCursorCache = useCallback(async (targetPage) => {
     if (paginationType !== 'cursor' || !refetch) return;
     
-    console.log(`🔄 Reconstruction cache curseurs jusqu'à la page ${targetPage}`);
     
     let currentCursor = null;
     setCursorCache(new Map()); // Reset du cache
@@ -561,7 +560,6 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
           const newHeight = entry.contentRect.height;
           if (newHeight !== containerHeight) {
             setContainerHeight(newHeight);
-            console.log(`📏 Hauteur conteneur mise à jour: ${newHeight}px`);
           }
         }
       });
@@ -586,7 +584,6 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
       updateVirtualizedItems();
     });
     
-    console.log(`📏 Conteneur redimensionné manuellement: ${newHeight}px`);
   }, [enableVirtualization, updateVirtualizedItems]);
   
   // Fonction d'auto-ajustement de la hauteur du conteneur
@@ -600,7 +597,6 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
       
       if (newHeight !== containerHeight) {
         setContainerHeight(newHeight);
-        console.log(`📏 Auto-ajustement conteneur: ${newHeight}px`);
       }
     }
   }, [enableVirtualization, containerHeight]);
@@ -641,7 +637,6 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
       }
     }, refreshInterval);
     
-    console.log(`✅ Auto-refresh démarré (${refreshInterval}ms)`);
   }, [autoRefresh, autoRefreshStatus, isPageVisible, loading, refetch, refreshInterval]);
   
   // Arrêt de l'auto-refresh

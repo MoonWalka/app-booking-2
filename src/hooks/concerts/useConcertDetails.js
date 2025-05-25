@@ -23,7 +23,6 @@ import { formatDate, formatMontant, isDatePassed, copyToClipboard, getCacheKey }
  * @returns {object} - API du hook
  */
 const useConcertDetails = (id, locationParam) => {
-  console.log(`[useConcertDetails] init: id=${id}, location=${locationParam?.pathname || 'n/a'}`);
   
   const navigate = useNavigate();
   const locationData = useLocation();
@@ -173,7 +172,6 @@ const useConcertDetails = (id, locationParam) => {
   }, [id, concertForms]);
   
   const handleDeleteSuccess = useCallback(() => {
-    console.log('[LOG][useConcertDetails] handleDeleteSuccess (redirection)');
     // Notifier les autres composants
     try {
       const event = new CustomEvent('concertDeleted', { detail: { id } });
@@ -203,7 +201,6 @@ const useConcertDetails = (id, locationParam) => {
     if (!entity || !genericDetails) return;
     
     try {
-      console.log("[useConcertDetails] Démarrage des mises à jour bidirectionnelles");
       
       // Créer un tableau de promesses pour exécuter les mises à jour en parallèle
       const updatePromises = [];
@@ -259,7 +256,6 @@ const useConcertDetails = (id, locationParam) => {
       
       // Attendre que toutes les mises à jour soient terminées
       await Promise.all(updatePromises);
-      console.log("[useConcertDetails] Mises à jour bidirectionnelles terminées avec succès");
     } catch (error) {
       console.error("[useConcertDetails] Erreur lors des mises à jour bidirectionnelles:", error);
       throw error; // Propager l'erreur pour la gestion en amont
@@ -381,14 +377,11 @@ const useConcertDetails = (id, locationParam) => {
       // Créer une fonction asynchrone à l'intérieur de l'effet
       const updateBidirectionalRelations = async () => {
         try {
-          console.log("[useConcertDetails] Démarrage de la mise à jour des relations bidirectionnelles");
           // Attendre que toutes les entités soient chargées
           const entitiesLoaded = await fetchRelatedEntities();
-          console.log("[useConcertDetails] Entités chargées pour les relations bidirectionnelles:", entitiesLoaded);
           
           // Effectuer les mises à jour bidirectionnelles
           await handleBidirectionalUpdates();
-          console.log("[useConcertDetails] Mise à jour des relations bidirectionnelles terminée avec succès");
           
           // Marquer comme déjà exécuté pour éviter les doubles appels
           bidirectionalUpdatesRef.current = true;
@@ -409,7 +402,6 @@ const useConcertDetails = (id, locationParam) => {
   
   // NOUVEAU: Fonction de refresh avec cache intelligent - Finalisation intelligente
   const refreshConcert = useCallback(async () => {
-    console.log(`[CACHE] Refresh du concert ${id} avec cache key: ${cacheKey}`);
     
     // Invalider le cache actuel
     const newCacheKey = getCacheKey(id, Date.now());
@@ -427,7 +419,6 @@ const useConcertDetails = (id, locationParam) => {
       });
       window.dispatchEvent(cacheEvent);
       
-      console.log(`[CACHE] Cache invalidé: ${cacheKey} → ${newCacheKey}`);
     } catch (error) {
       console.warn('[CACHE] Erreur lors de la notification cache:', error);
     }
@@ -442,7 +433,6 @@ const useConcertDetails = (id, locationParam) => {
   useEffect(() => {
     const handleCacheInvalidation = (event) => {
       if (event.detail?.concertId === id && event.detail?.source !== 'self') {
-        console.log(`[CACHE] Cache invalidation externe détectée pour concert ${id}`);
         refreshConcert();
       }
     };
@@ -554,7 +544,6 @@ const useConcertDetails = (id, locationParam) => {
   const handleCancel = useCallback(() => {
     if (!genericDetails) return;
     
-    console.log("[useConcertDetails] Annulation de l'édition");
     
     // Utiliser la méthode handleCancel du hook générique si elle existe
     if (typeof genericDetails.handleCancel === 'function') {
@@ -599,16 +588,13 @@ const useConcertDetails = (id, locationParam) => {
   const toggleEditMode = useCallback(() => {
     if (!genericDetails) return;
     
-    console.log(`[useConcertDetails] Basculement du mode édition - isEditing: ${genericDetails.isEditing}`);
     // Utiliser directement la fonction toggleEditMode du hook générique
     genericDetails.toggleEditMode();
   }, [genericDetails]);
   
   // Ajout log pour la suppression
   const handleDeleteClick = useCallback(() => {
-    console.log('[LOG][useConcertDetails] handleDeleteClick appelé');
     if (genericDetails.handleDelete) {
-      console.log('[LOG][useConcertDetails] genericDetails.handleDelete existe, appel');
       genericDetails.handleDelete();
     } else {
       console.warn('[LOG][useConcertDetails] genericDetails.handleDelete est undefined');

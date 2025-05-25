@@ -178,7 +178,6 @@ class PersistenceService {
       }
     }
 
-    console.log(`🧹 Cache nettoyé: ${cleaned} entrées supprimées`);
     return cleaned;
   }
 

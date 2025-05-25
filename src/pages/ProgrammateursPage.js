@@ -8,7 +8,6 @@ import { Outlet } from 'react-router-dom';
  * - Mémoisation des routes pour réduire les re-rendus
  */
 export default function ProgrammateursPage() {
-  // console.log('[DEBUG][ProgrammateursPage] Page ProgrammateursPage chargée - rendu Outlet');
   
   return <Outlet />;
 }

@@ -66,7 +66,6 @@ const ProgrammateurLieuxSection = ({ programmateur, lieux: lieuxProp = [], isEdi
   useEffect(() => {
     // FIX: Ne pas charger les lieux si lieuxProp est un tableau valide et non vide
     if (hasValidLieuxInProp) {
-      console.log(`[DIAGNOSTIC] ProgrammateurLieuxSection - Utilisation des lieux de la prop, pas de chargement local`);
       setLoading(false);
       return;
     }
@@ -82,7 +81,6 @@ const ProgrammateurLieuxSection = ({ programmateur, lieux: lieuxProp = [], isEdi
           // Vérifier d'abord si le programmateur a des lieuxIds ou lieuxAssocies
           if (programmateur.lieuxIds?.length > 0 || programmateur.lieuxAssocies?.length > 0) {
             const lieuxIds = programmateur.lieuxIds || programmateur.lieuxAssocies || [];
-            console.log(`[DIAGNOSTIC] ProgrammateurLieuxSection - Trouvé ${lieuxIds.length} références de lieux directement dans le programmateur`);
             
             // Récupérer les détails complets pour chaque ID de lieu
             const lieuxPromises = lieuxIds.map(lieuId => {
@@ -111,7 +109,6 @@ const ProgrammateurLieuxSection = ({ programmateur, lieux: lieuxProp = [], isEdi
             setLocalLieux(newLieux);
           } else {
             // Essayer plusieurs méthodes de requête si aucun lieuxIds n'est trouvé
-            console.log(`[DIAGNOSTIC] ProgrammateurLieuxSection - Aucun lieuxIds trouvé, recherche par référence inverse`);
             
             // Méthode 1: Chercher les lieux qui ont ce programmateur dans un tableau 'programmateurs'
             let lieuxQuery = query(
@@ -123,7 +120,6 @@ const ProgrammateurLieuxSection = ({ programmateur, lieux: lieuxProp = [], isEdi
             
             // Méthode 2: Si aucun résultat, chercher par programmateurId
             if (newLieux.length === 0) {
-              console.log(`[DIAGNOSTIC] ProgrammateurLieuxSection - Aucun résultat avec 'programmateurs', essai avec 'programmateurId'`);
               lieuxQuery = query(
                 collection(db, 'lieux'),
                 where('programmateurId', '==', programmateur.id)

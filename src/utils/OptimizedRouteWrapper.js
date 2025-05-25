@@ -35,7 +35,6 @@ const OptimizedRouteWrapper = ({
   });
   
   // Log d'entrée dans le wrapper
-  console.log('[DEBUG][OptimizedRouteWrapper] Montage du wrapper. Pathname:', location.pathname, 'delay:', delay, 'showSpinner:', showSpinner, 'spinnerMessage:', spinnerMessage);
   
   // Fonction de nettoyage des timers (utilisée dans useEffect et cleanup)
   const clearAllTimers = useCallback(() => {
@@ -63,7 +62,6 @@ const OptimizedRouteWrapper = ({
   useEffect(() => {
     const currentPath = location.pathname;
     const previousPath = lastPathRef.current;
-    console.log('[DEBUG][OptimizedRouteWrapper] useEffect déclenché. currentPath:', currentPath, 'previousPath:', previousPath);
     
     // Ne réinitialiser que si le chemin a réellement changé de manière significative
     const shouldResetComponent = 
@@ -74,7 +72,6 @@ const OptimizedRouteWrapper = ({
     lastPathRef.current = currentPath;
     
     if (shouldResetComponent) {
-      console.log(`[DEBUG][OptimizedRouteWrapper] shouldResetComponent = true. Resetting states.`);
       
       // Réinitialiser les états
       setIsStable(false);
@@ -84,7 +81,6 @@ const OptimizedRouteWrapper = ({
       clearAllTimers();
       
       // Nouvelle séquence de stabilisation
-      console.log(`[INFO] Route majeure détectée: ${previousPath} → ${currentPath}`);
       
       // Premier délai pour la stabilisation
       timersRef.current.stabilize = setTimeout(() => {
@@ -104,7 +100,6 @@ const OptimizedRouteWrapper = ({
   
   // Si la route n'est pas encore stable, afficher un indicateur de chargement
   if (!isStable) {
-    console.log('[DEBUG][OptimizedRouteWrapper] Affichage du spinner (isStable=false)');
     return showSpinner ? (
       <div className="route-transition">
         <LoadingSpinner message={spinnerMessage} contentOnly={true} />
@@ -113,7 +108,6 @@ const OptimizedRouteWrapper = ({
   }
   
   // Une fois stable, rendre les enfants avec une classe pour les transitions CSS
-  console.log('[DEBUG][OptimizedRouteWrapper] Rendu des enfants (isStable=true, isReady=' + isReady + ')');
   return (
     <div className={`optimized-route-container ${isReady ? 'route-ready' : 'route-stabilizing'}`}>
       {children}

@@ -20,7 +20,6 @@ const ProgrammateurView = () => {
     formatValue
   } = useProgrammateurDetails(id);
 
-  console.log('[DEBUG][ProgrammateurView-mobile] State:', { programmateur, loading, error });
 
   // Version temporaire plus détaillée qui peut remplacer le composant UnderConstruction
   // Vous pouvez développer ce composant progressivement

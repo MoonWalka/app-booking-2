@@ -87,7 +87,6 @@ const Button = ({
           type={type}
           className={buttonClasses}
           onClick={(e) => {
-            console.log('[DEBUG][Button] onClick déclenché', e);
             if (onClick) onClick(e);
           }}
           disabled={disabled}
@@ -104,7 +103,6 @@ const Button = ({
       type={type}
       className={buttonClasses}
       onClick={(e) => {
-        console.log('[DEBUG][Button] onClick déclenché', e);
         if (onClick) onClick(e);
       }}
       disabled={disabled}

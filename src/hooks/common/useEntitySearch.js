@@ -224,7 +224,6 @@ export const useEntitySearch = (options) => {
     }
     
     try {
-      console.log(`[DEBUG][useEntitySearch] Début création ${entityType}...`);
       
       // Données de base pour chaque type d'entité
       let entityData = {
@@ -235,7 +234,6 @@ export const useEntitySearch = (options) => {
         ...additionalData
       };
       
-      console.log(`[DEBUG][useEntitySearch] Données de base créées:`, entityData);
       
       // Données spécifiques selon le type d'entité
       switch (entityType) {
@@ -248,7 +246,6 @@ export const useEntitySearch = (options) => {
             capacite: '',
             ...additionalData
           };
-          console.log(`[DEBUG][useEntitySearch] Données spécifiques lieu ajoutées:`, entityData);
           break;
         case 'programmateurs':
           entityData = {
@@ -305,14 +302,11 @@ export const useEntitySearch = (options) => {
           break;
       }
       
-      console.log(`[DEBUG][useEntitySearch] Données finales avant création:`, entityData);
       
       // Créer le document dans Firestore
       const newEntityRef = doc(collection(db, entityType));
-      console.log(`[DEBUG][useEntitySearch] Référence créée:`, newEntityRef.id);
       
       await setDoc(newEntityRef, entityData);
-      console.log(`[DEBUG][useEntitySearch] Document créé avec succès dans Firestore`);
       
       // Créer l'objet complet avec l'ID
       const newEntityWithId = { 
@@ -320,18 +314,15 @@ export const useEntitySearch = (options) => {
         ...entityData
       };
       
-      console.log(`[DEBUG][useEntitySearch] Entité créée:`, newEntityWithId);
       
       // Définir comme entité sélectionnée
       setSelectedEntity(newEntityWithId);
       setShowResults(false);
       
-      console.log(`[DEBUG][useEntitySearch] onSelect appelé avec:`, newEntityWithId);
       if (onSelect) {
         onSelect(newEntityWithId);
       }
       
-      console.log(`[DEBUG][useEntitySearch] Création terminée avec succès`);
       return newEntityWithId;
     } catch (error) {
       console.error(`[DEBUG][useEntitySearch] ERREUR lors de la création du ${entityType.slice(0, -1)}:`, error);

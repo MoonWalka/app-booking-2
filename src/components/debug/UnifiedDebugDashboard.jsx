@@ -196,7 +196,6 @@ const UnifiedDebugDashboard = () => {
     if (FirestoreService.clearCache) {
       FirestoreService.clearCache();
     }
-    console.log(`🧹 Nettoyage: ${cleaned} entrées supprimées`);
     updateAllStats();
   }, [updateAllStats]);
 

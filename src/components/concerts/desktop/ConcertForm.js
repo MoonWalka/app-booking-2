@@ -63,7 +63,6 @@ const ConcertFormDesktop = () => {
 
   // Gestion programmateur via optimized hook
   const handleProgrammateurChange = (prog) => {
-    console.log("[ConcertForm] handleProgrammateurChange appelé avec:", prog?.id);
     if (prog) {
       updateFormData(prev => ({ ...prev, programmateurId: prog.id, programmateurNom: prog.nom }));
       loadRelatedEntity('programmateur', prog.id);

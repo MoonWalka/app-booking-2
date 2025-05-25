@@ -6,10 +6,7 @@ const ProgrammateursListHeader = () => {
   const navigate = useNavigate();
   
   const handleNewProgrammateurClick = () => {
-    // console.log('[DEBUG][ProgrammateursListHeader] Clic sur "Nouveau programmateur" détecté');
-    // console.log('[DEBUG][ProgrammateursListHeader] Navigation vers: /programmateurs/nouveau');
     navigate('/programmateurs/nouveau');
-    // console.log('[DEBUG][ProgrammateursListHeader] Commande navigate() exécutée');
   };
   
   return (

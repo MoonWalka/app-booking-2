@@ -103,7 +103,6 @@ const useGenericFieldActions = (config = {}, options = {}) => {
     };
     
     if (enableLogging) {
-      console.log(`[${entityType}FieldActions] Action enregistrée:`, action);
     }
     
     setActionHistory(prev => {
@@ -206,7 +205,6 @@ const useGenericFieldActions = (config = {}, options = {}) => {
   // Fonction de validation d'un champ
   const validateField = useCallback((fieldPath, value, immediate = false) => {
     if (enableLogging) {
-      console.log(`[${entityType}FieldActions] Validation de:`, fieldPath, value);
     }
     
     // Annuler la validation précédente si elle existe
@@ -312,7 +310,6 @@ const useGenericFieldActions = (config = {}, options = {}) => {
   // Fonction pour copier une valeur de champ
   const copyFieldValue = useCallback((fieldPath, sourceValue) => {
     if (enableLogging) {
-      console.log(`[${entityType}FieldActions] Copie de valeur:`, fieldPath, sourceValue);
     }
     
     setFieldState(prev => ({
@@ -380,7 +377,6 @@ const useGenericFieldActions = (config = {}, options = {}) => {
     }));
     
     if (enableLogging) {
-      console.log(`[${entityType}FieldActions] Historique effacé`);
     }
   }, [entityType, enableLogging]);
   

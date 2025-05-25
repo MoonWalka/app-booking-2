@@ -28,7 +28,6 @@ const ProgrammateurView = ({
   handleDelete,
   formatValue
 }) => {
-  console.log('[TRACE-UNIQUE][ProgrammateurView][desktop] Ce composant est exécuté !');
   const navigate = useNavigate();
   
   console.log('[TRACE-UNIQUE][ProgrammateurView] loading:', loading);
@@ -54,7 +53,6 @@ const ProgrammateurView = ({
   };
   
   if (loading) {
-    console.log('[TRACE-UNIQUE][ProgrammateurView] Affichage du spinner de chargement');
     return <LoadingSpinner message="Chargement du programmateur..." />;
   }
   
@@ -73,7 +71,6 @@ const ProgrammateurView = ({
     navigate(`/programmateurs/${programmateur.id}/edit`);
   };
   
-  console.log('[TRACE-UNIQUE][ProgrammateurView] Affichage du détail du programmateur');
   return (
     <Container className={styles.programmateurDetails}>
       {/* En-tête avec titre et actions */}

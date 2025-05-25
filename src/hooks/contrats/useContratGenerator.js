@@ -267,7 +267,6 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
           setSelectedTemplate(defaultTemplate);
         } else if (templatesList.length > 0) {
           // Sinon, sélectionner le premier modèle
-          console.log("Pas de modèle par défaut, sélection du premier:", templatesList[0].id);
           setSelectedTemplateId(templatesList[0].id);
           setSelectedTemplate(templatesList[0]);
         }

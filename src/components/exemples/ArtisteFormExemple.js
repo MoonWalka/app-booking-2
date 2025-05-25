@@ -9,6 +9,7 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useArtisteForm } from '@/hooks/artistes';
+import FlexContainer from '@/components/ui/FlexContainer';
 import Card from '@/components/ui/Card';
 import Alert from '@/components/ui/Alert';
 import '@styles/index.css';
@@ -222,16 +223,18 @@ const ArtisteFormExemple = () => {
             {membres.length > 0 ? (
               <ul className="list-group mt-3">
                 {membres.map((membre, index) => (
-                  <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
-                    {membre}
-                    <Button
-                      type="button"
-                      variant="outline-danger"
-                      size="sm"
-                      onClick={() => supprimerMembre(index)}
-                    >
-                      <i className="bi bi-trash"></i>
-                    </Button>
+                  <li key={index} className="list-group-item">
+                    <FlexContainer justify="space-between" align="center">
+                      {membre}
+                      <Button
+                        type="button"
+                        variant="outline-danger"
+                        size="sm"
+                        onClick={() => supprimerMembre(index)}
+                      >
+                        <i className="bi bi-trash"></i>
+                      </Button>
+                    </FlexContainer>
                   </li>
                 ))}
               </ul>

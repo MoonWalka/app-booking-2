@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import FlexContainer from '@/components/ui/FlexContainer';
 import styles from './ConcertOrganizerSection.module.css';
 import Button from '@/components/ui/Button';
 import Alert from '@/components/ui/Alert';
@@ -214,7 +215,7 @@ const ConcertOrganizerSection = ({
                 ) : (
                   <div className="mb-3">
                     <Alert variant="info">
-                      <div className="d-flex justify-content-between align-items-center">
+                      <FlexContainer justify="space-between" align="center">
                         <div>
                           Formulaire créé le {formatDate(formData.createdAt)}
                         </div>
@@ -229,7 +230,7 @@ const ConcertOrganizerSection = ({
                              'Complété'}
                           </span>
                         )}
-                      </div>
+                      </FlexContainer>
                     </Alert>
 
                     <div className={styles.formSharingOptions}>

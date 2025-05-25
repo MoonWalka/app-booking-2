@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import FlexContainer from '@/components/ui/FlexContainer';
 
 // Importer les styles de test
 import '@styles/index.css';;
@@ -149,11 +150,11 @@ const StyleTestPage = () => {
           
           <div className="mb-3">
             <h4>Spinner</h4>
-            <div className="d-flex align-items-center">
+            <FlexContainer align="center">
               <Spinner size="sm" className="mr-2" />
               <Spinner className="mr-2" />
               <Spinner size="lg" />
-            </div>
+            </FlexContainer>
           </div>
         </Col>
       </Row>

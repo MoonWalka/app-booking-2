@@ -1,6 +1,7 @@
 // src/components/artistes/desktop/ArtisteForm.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import FlexContainer from '@/components/ui/FlexContainer';
 import styles from './ArtisteForm.module.css';
 import { 
   doc, 
@@ -215,17 +216,19 @@ const MembersStep = ({ data, onNext, onBack }) => {
           ) : (
             <ul className="list-group">
               {membres.map((membre, index) => (
-                <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
-                  {membre}
-                  <Button 
-                    type="button" 
-                    variant="outline-danger"
-                    size="sm"
-                    className="tc-btn tc-btn-sm tc-btn-outline-danger"
-                    onClick={() => supprimerMembre(index)}
-                  >
-                    <i className="bi bi-trash"></i>
-                  </Button>
+                <li key={index} className="list-group-item">
+                  <FlexContainer justify="space-between" align="center">
+                    {membre}
+                    <Button 
+                      type="button" 
+                      variant="outline-danger"
+                      size="sm"
+                      className="tc-btn tc-btn-sm tc-btn-outline-danger"
+                      onClick={() => supprimerMembre(index)}
+                    >
+                      <i className="bi bi-trash"></i>
+                    </Button>
+                  </FlexContainer>
                 </li>
               ))}
             </ul>

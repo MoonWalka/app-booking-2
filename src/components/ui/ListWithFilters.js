@@ -296,7 +296,7 @@ const ListWithFilters = ({
                 <th 
                   key={column.id} 
                   className={`${styles.tableHeader} ${column.sortable ? styles.sortable : ''}`}
-                  style={{ width: column.width || 'auto' }}
+                  style={{ '--column-width': column.width || 'auto' }}
                   onClick={() => column.sortable && handleSort(column.field)}
                 >
                   <div className={styles.headerContent}>

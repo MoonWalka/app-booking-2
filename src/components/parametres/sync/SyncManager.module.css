@@ -1,0 +1,131 @@
+/*
+ * Styles pour SyncManager
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 23 mai 2025
+ */
+
+.clickableItem {
+  cursor: pointer;
+  transition: var(--tc-transition);
+}
+
+.clickableItem:hover {
+  background-color: var(--tc-hover-bg-light);
+}
+
+.disabledPointer {
+  pointer-events: none;
+}
+
+.syncManager {
+  background-color: var(--tc-color-white);
+  border: var(--tc-border-width) solid var(--tc-border-color);
+  border-radius: var(--tc-border-radius-lg);
+  box-shadow: var(--tc-box-shadow);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--tc-spacing-md) var(--tc-spacing-lg);
+  background-color: var(--tc-color-gray-100);
+  border-bottom: var(--tc-border-width) solid var(--tc-border-color);
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-spacing-sm);
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-color-primary);
+  margin: 0;
+}
+
+.badge {
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  border-radius: var(--tc-border-radius);
+  font-size: var(--tc-font-size-xs);
+  font-weight: var(--tc-font-weight-medium);
+}
+
+.badgeInfo {
+  background-color: var(--tc-info-color);
+  color: var(--tc-color-white);
+}
+
+.badgeWarning {
+  background-color: var(--tc-warning-color);
+  color: var(--tc-text-color-dark);
+}
+
+.body {
+  padding: var(--tc-spacing-lg);
+}
+
+.footer {
+  padding: var(--tc-spacing-md) var(--tc-spacing-lg);
+  background-color: var(--tc-color-gray-50);
+  border-top: var(--tc-border-width) solid var(--tc-border-color);
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-text-color-muted);
+}
+
+/* Collections */
+.collectionItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--tc-spacing-md);
+  border: var(--tc-border-width) solid var(--tc-border-color);
+  border-radius: var(--tc-border-radius);
+  margin-bottom: var(--tc-spacing-sm);
+  transition: var(--tc-transition);
+}
+
+.collectionSelected {
+  background-color: var(--tc-primary-color-05);
+  border-color: var(--tc-primary-color);
+}
+
+.collectionContent {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-spacing-md);
+}
+
+.collectionDetails {
+  display: flex;
+  flex-direction: column;
+}
+
+.collectionName {
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-color-primary);
+  margin-bottom: var(--tc-spacing-xs);
+}
+
+.collectionDescription {
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-text-color-muted);
+}
+
+/* Responsive */
+@media (max-width: var(--tc-breakpoint-sm)) {
+  .header {
+    flex-direction: column;
+    gap: var(--tc-spacing-sm);
+    align-items: flex-start;
+  }
+  
+  .body {
+    padding: var(--tc-spacing-md);
+  }
+  
+  .collectionItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--tc-spacing-sm);
+  }
+} 

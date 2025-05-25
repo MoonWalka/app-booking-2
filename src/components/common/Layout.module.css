@@ -1,0 +1,71 @@
+/*
+ * Styles pour Layout (common)
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 23 mai 2025
+ */
+
+.errorContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--tc-bg-color);
+  color: var(--tc-text-color);
+}
+
+.errorContent {
+  text-align: center;
+  padding: var(--tc-spacing-xl);
+  background-color: var(--tc-color-white);
+  border-radius: var(--tc-border-radius-lg);
+  box-shadow: var(--tc-box-shadow);
+  max-width: 500px;
+  margin: var(--tc-spacing-lg);
+}
+
+.errorTitle {
+  font-size: var(--tc-font-size-xl);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-color-primary);
+  margin-bottom: var(--tc-spacing-md);
+}
+
+.errorMessage {
+  font-size: var(--tc-font-size-md);
+  color: var(--tc-text-color-secondary);
+  margin-bottom: var(--tc-spacing-lg);
+  line-height: 1.5;
+}
+
+.retryButton {
+  background-color: var(--tc-primary-color);
+  color: var(--tc-color-white);
+  border: none;
+  border-radius: var(--tc-border-radius);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-lg);
+  font-size: var(--tc-font-size-md);
+  font-weight: var(--tc-font-weight-medium);
+  cursor: pointer;
+  transition: var(--tc-transition);
+}
+
+.retryButton:hover {
+  background-color: var(--tc-primary-color-dark);
+  transform: translateY(-1px);
+}
+
+/* Responsive */
+@media (max-width: var(--tc-breakpoint-sm)) {
+  .errorContent {
+    margin: var(--tc-spacing-md);
+    padding: var(--tc-spacing-lg);
+  }
+  
+  .errorTitle {
+    font-size: var(--tc-font-size-lg);
+  }
+  
+  .errorMessage {
+    font-size: var(--tc-font-size-sm);
+  }
+} 

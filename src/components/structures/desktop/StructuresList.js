@@ -288,7 +288,7 @@ const StructuresList = () => {
                     Dernière modification
                     {renderSortIcon('updatedAt')}
                   </th>
-                  <th style={{ width: '100px' }}>Actions</th>
+                  <th className={styles.actionsColumn}>Actions</th>
                 </tr>
               </thead>
               <tbody>

@@ -25,7 +25,7 @@ const StepProgress = ({ currentStep, totalSteps, stepLabels = [] }) => {
       <div className={styles.stepProgressBar}>
         <div 
           className={styles.stepProgressFill} 
-          style={{ width: `${(currentStep / (totalSteps - 1)) * 100}%` }}
+          style={{ '--progress-width': `${(currentStep / (totalSteps - 1)) * 100}%` }}
         ></div>
       </div>
     </div>

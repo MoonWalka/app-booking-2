@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import useResponsive from '../../hooks/common/useResponsive';
+import styles from './Layout.module.css';
 
 // Import des deux layouts selon l'architecture responsive prévue
 import DesktopLayout from './layout/DesktopLayout';
@@ -37,12 +38,12 @@ function Layout() {
   // Afficher un fallback en cas d'erreur persistante
   if (layoutError && retryCount >= 2) {
     return (
-      <div className="error-container d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
-        <div className="text-center">
-          <h2>Problème de chargement</h2>
-          <p>Nous rencontrons des difficultés à charger l'interface de l'application.</p>
+      <div className={styles.errorContainer}>
+        <div className={styles.errorContent}>
+          <h2 className={styles.errorTitle}>Problème de chargement</h2>
+          <p className={styles.errorMessage}>Nous rencontrons des difficultés à charger l'interface de l'application.</p>
           <button 
-            className="tc-btn tc-btn-primary mt-3"
+            className={styles.retryButton}
             onClick={() => window.location.reload()}
           >
             Réessayer

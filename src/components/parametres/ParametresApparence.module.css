@@ -21,6 +21,7 @@
   border: 1px solid var(--tc-border-color);
   box-shadow: var(--tc-shadow-sm);
   transition: var(--tc-transition);
+  background-color: var(--preview-color, var(--tc-primary-color));
 }
 
 .colorPreview:hover {

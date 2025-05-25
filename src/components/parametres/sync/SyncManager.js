@@ -4,7 +4,7 @@ import { FaSync, FaCloudUploadAlt, FaCloudDownloadAlt, FaSave, FaUpload, FaClock
 import { toast } from 'react-toastify';
 import * as syncService from '../../../services/syncService';
 import { IS_LOCAL_MODE, CURRENT_MODE } from '../../../firebaseInit';
-import './SyncManager.css';
+import styles from './SyncManager.module.css';
 
 /**
  * Composant de gestion de la synchronisation des données entre local et Firebase
@@ -212,8 +212,7 @@ const SyncManager = () => {
                   {Object.entries(collections).map(([name, isSelected]) => (
                     <ListGroup.Item 
                       key={name}
-                      className={`d-flex justify-content-between align-items-center ${isSelected ? 'list-group-item-primary' : ''}`}
-                      style={{ cursor: 'pointer' }}
+                      className={`d-flex justify-content-between align-items-center ${isSelected ? 'list-group-item-primary' : ''} ${styles.clickableItem}`}
                       onClick={() => setCollections({...collections, [name]: !isSelected})}
                     >
                       <div className="d-flex align-items-center">
@@ -222,8 +221,7 @@ const SyncManager = () => {
                           id={`collection-${name}`}
                           checked={isSelected}
                           onChange={e => setCollections({...collections, [name]: e.target.checked})}
-                          className="me-3"
-                          style={{ pointerEvents: 'none' }}
+                          className={`me-3 ${styles.disabledPointer}`}
                         />
                         <div>
                           <strong>{name.charAt(0).toUpperCase() + name.slice(1)}</strong>

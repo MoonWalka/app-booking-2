@@ -59,6 +59,7 @@
   background-color: var(--tc-color-success);
   border-radius: 3px;
   transition: width var(--tc-transition-speed) ease;
+  width: var(--progress-width, 0%);
 }
 
 .stepLabel {

@@ -14,9 +14,12 @@ export { default as useGenericFormAction } from './actions/useGenericFormAction'
 export { default as useGenericSearch } from './search/useGenericSearch';
 export { default as useGenericFilteredSearch } from './search/useGenericFilteredSearch';
 
-// Hooks de listes génériques (Semaine 2) - ⏳ PLANIFIÉ
-// export { default as useGenericEntityList } from './lists/useGenericEntityList';
-// export { default as useGenericDataFetcher } from './data/useGenericDataFetcher';
+// Hooks de données génériques - SEMAINE 2 ✅
+export { default as useGenericDataFetcher } from './data/useGenericDataFetcher';
+export { default as useGenericCachedData } from './data/useGenericCachedData';
+
+// Hooks de listes génériques - SEMAINE 2 ✅
+export { default as useGenericEntityList } from './lists/useGenericEntityList';
 
 // Hooks de formulaires génériques (Semaine 3) - ⏳ PLANIFIÉ
 // export { default as useGenericEntityForm } from './forms/useGenericEntityForm';
@@ -31,16 +34,17 @@ export { default as useGenericFilteredSearch } from './search/useGenericFiltered
  * - useGenericSearch: Hook de recherche avec cache et suggestions
  * - useGenericFilteredSearch: Hook de recherche avancée avec filtres
  * 
- * SEMAINE 2 - LISTS + DATA (0/4 hooks) ⏳ PLANIFIÉE
- * - useGenericEntityList: Hook de listes avec pagination
- * - useGenericDataFetcher: Hook de récupération de données
- * - + 2 autres hooks de données
+ * SEMAINE 2 - LISTS + DATA (3/4 hooks) 🔄 EN COURS
+ * - useGenericDataFetcher: Hook de récupération de données optimisé ✅
+ * - useGenericCachedData: Hook de cache multi-niveaux avancé ✅
+ * - useGenericEntityList: Hook de listes avec pagination et sélection ✅
+ * - Migration useConcertsList: Hook critique métier ⏳ RESTANT
  * 
  * SEMAINE 3 - FORM + VALIDATION (0/4 hooks) ⏳ PLANIFIÉE
  * - useGenericEntityForm: Hook de formulaires d'entités
  * - useGenericValidation: Hook de validation générique
  * - + 2 autres hooks de formulaires
  * 
- * @progress 4/12 hooks créés (33% - Semaine 1 terminée)
- * @nextMilestone Semaine 2 - Hooks de listes et données
+ * @progress 7/12 hooks créés (58% - Semaine 2 en cours)
+ * @nextMilestone Migration useConcertsList (hook critique)
  */

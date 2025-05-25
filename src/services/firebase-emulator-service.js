@@ -338,14 +338,20 @@ const _importRawData = async (data) => {
   }
 
   try {
-    let importCount = 0;
+    // let importCount = 0; // Compteur de débogage - logs supprimés
+    
+    // Valider la structure des données
+    if (!data || typeof data !== 'object') {
+      console.error('❌ Données invalides pour l\'import');
+      return false;
+    }
     
     for (const [collName, documents] of Object.entries(data)) {
       if (typeof documents === 'object' && documents !== null) {
         for (const [docId, docData] of Object.entries(documents)) {
           const docRef = doc(collName, docId);
           await setDoc(docRef, docData, { merge: true });
-          importCount++;
+          // importCount++; // Compteur de débogage - logs supprimés
         }
       }
     }

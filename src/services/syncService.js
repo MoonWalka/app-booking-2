@@ -25,7 +25,7 @@ export async function exportLocalDataToFirebase(collections = ['concerts', 'lieu
   
   try {
     const localData = await firebaseEmulatorService._getRawLocalData();
-    let successCount = 0;
+    // let successCount = 0; // Compteur de débogage - logs supprimés
     let errorCount = 0;
     
     for (const collName of collections) {
@@ -37,7 +37,7 @@ export async function exportLocalDataToFirebase(collections = ['concerts', 'lieu
         try {
           const docRef = doc(firebaseDB, collName, docId);
           await setDoc(docRef, data);
-          successCount++;
+          // successCount++;
         } catch (error) {
           console.error(`Erreur lors de la synchronisation de ${collName}/${docId}:`, error);
           errorCount++;
@@ -71,7 +71,7 @@ export async function importFirebaseDataToLocal(collections = ['concerts', 'lieu
   try {
     // Obtenir les données locales actuelles
     const localData = await firebaseEmulatorService._getRawLocalData();
-    let successCount = 0;
+    // let successCount = 0; // Compteur de débogage - logs supprimés
     let errorCount = 0;
     
     // Pour chaque collection
@@ -94,7 +94,7 @@ export async function importFirebaseDataToLocal(collections = ['concerts', 'lieu
         // Pour chaque document
         for (const doc of snapshot.docs) {
           localData[collName][doc.id] = doc.data();
-          successCount++;
+          // successCount++;
         }
         
         console.log(`Collection ${collName} importée: ${snapshot.docs.length} documents`);
@@ -128,18 +128,16 @@ export async function exportSpecificDocuments(collectionName, documentIds) {
   try {
     const localData = await firebaseEmulatorService._getRawLocalData();
     const localCollection = localData[collectionName] || {};
-    let successCount = 0;
     
     for (const docId of documentIds) {
       const data = localCollection[docId];
       if (data) {
         const docRef = doc(firebaseDB, collectionName, docId);
         await setDoc(docRef, data);
-        successCount++;
       }
     }
     
-    return successCount > 0;
+    return true;
   } catch (error) {
     console.error('Erreur lors de l\'exportation spécifique:', error);
     return false;

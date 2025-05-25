@@ -29,6 +29,9 @@ const UnifiedDebugDashboard = () => {
   
   // États pour Utility Cache
   const [utilityStats, setUtilityStats] = useState({});
+  
+  // État pour le nettoyage
+  // const [cleanupStatus, setCleanupStatus] = useState(''); // État de débogage - interface simplifiée
 
   // 🔄 Mise à jour des statistiques Firebase
   const updateFirebaseStats = useCallback(() => {
@@ -192,7 +195,8 @@ const UnifiedDebugDashboard = () => {
 
   // 🧹 Nettoyage
   const cleanup = useCallback(() => {
-    const cleaned = persistenceService.cleanup();
+    // const cleaned = await cleanupService.performCleanup(); // Résultat de débogage - logs supprimés
+    persistenceService.cleanup();
     if (FirestoreService.clearCache) {
       FirestoreService.clearCache();
     }

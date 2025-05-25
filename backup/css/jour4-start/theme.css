@@ -1,0 +1,238 @@
+/*
+ * Styles pour theme.css
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 20 mai 2025
+ */
+
+/* Import des variables avec l'alias standardisé */
+@import '@styles/base/variables.css';
+
+/* =============================
+   STYLES DE BASE
+   ============================= */
+body {
+  background-color: var(--tc-bg-color);
+  color: var(--tc-text-color);
+  font-family: var(--tc-font-family-base);
+  font-size: var(--tc-font-size-base);
+  line-height: var(--tc-line-height-base);
+  transition: var(--tc-transition);
+}
+
+/* =============================
+   COMPOSANTS DE BASE
+   ============================= */
+.tc-card {
+  background-color: var(--tc-card-bg);
+  border: 1px solid var(--tc-border-color);
+  box-shadow: var(--tc-shadow-sm);
+  border-radius: var(--tc-border-radius);
+  padding: var(--tc-spacing-md);
+}
+
+.tc-form-control {
+  background-color: var(--tc-input-bg);
+  border: 1px solid var(--tc-input-border);
+  color: var(--tc-input-color);
+  border-radius: var(--tc-border-radius);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  font-size: var(--tc-font-size-base);
+  transition: var(--tc-transition);
+}
+
+.tc-form-control:focus {
+  border-color: var(--tc-input-focus-border);
+  box-shadow: var(--tc-input-focus-shadow);
+  outline: none;
+}
+
+/* =============================
+   BOUTONS
+   ============================= */
+.tc-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  font-size: var(--tc-font-size-base);
+  font-weight: var(--tc-font-weight-medium);
+  border-radius: var(--tc-border-radius);
+  cursor: pointer;
+  transition: var(--tc-transition);
+  border: 1px solid transparent;
+}
+
+/* Bouton primaire */
+.tc-btn-primary {
+  background-color: var(--tc-btn-primary-bg);
+  border-color: var(--tc-btn-primary-border);
+  color: var(--tc-btn-primary-text);
+}
+
+.tc-btn-primary:hover, 
+.tc-btn-primary:focus, 
+.tc-btn-primary:active,
+.tc-btn-primary.tc-active {
+  background-color: var(--tc-btn-primary-hover-bg);
+  border-color: var(--tc-btn-primary-hover-bg);
+}
+
+/* Bouton secondaire */
+.tc-btn-secondary {
+  background-color: var(--tc-btn-secondary-bg);
+  color: var(--tc-btn-secondary-text);
+  border-color: var(--tc-btn-secondary-border);
+}
+
+.tc-btn-secondary:hover,
+.tc-btn-secondary:focus,
+.tc-btn-secondary:active,
+.tc-btn-secondary.tc-active {
+  background-color: var(--tc-secondary-dark);
+  border-color: var(--tc-secondary-dark);
+}
+
+/* Bouton succès */
+.tc-btn-success {
+  background-color: var(--tc-success-color);
+  color: var(--tc-light-color);
+  border-color: var(--tc-success-color);
+}
+
+.tc-btn-success:hover,
+.tc-btn-success:focus,
+.tc-btn-success:active,
+.tc-btn-success.tc-active {
+  background-color: var(--tc-success-dark);
+  border-color: var(--tc-success-dark);
+}
+
+/* Bouton danger */
+.tc-btn-danger {
+  background-color: var(--tc-danger-color);
+  color: var(--tc-light-color);
+  border-color: var(--tc-danger-color);
+}
+
+.tc-btn-danger:hover,
+.tc-btn-danger:focus,
+.tc-btn-danger:active,
+.tc-btn-danger.tc-active {
+  background-color: var(--tc-danger-dark);
+  border-color: var(--tc-danger-dark);
+}
+
+/* Bouton info */
+.tc-btn-info {
+  background-color: var(--tc-info-color);
+  color: var(--tc-light-color);
+  border-color: var(--tc-info-color);
+}
+
+.tc-btn-info:hover,
+.tc-btn-info:focus,
+.tc-btn-info:active,
+.tc-btn-info.tc-active {
+  background-color: var(--tc-info-dark);
+  border-color: var(--tc-info-dark);
+}
+
+/* =============================
+   UTILITAIRES
+   ============================= */
+/* Désactivation des animations */
+[data-animations="false"] * {
+  transition: none !important;
+}
+
+/* Suggestions d'adresse */
+.tc-address-suggestions {
+  position: absolute;
+  z-index: var(--tc-z-index-dropdown);
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: var(--tc-spacing-xs);
+  background-color: var(--tc-bg-color);
+  border: 1px solid var(--tc-border-color);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-shadow);
+}
+
+.tc-suggestion-item {
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  cursor: pointer;
+}
+
+.tc-suggestion-item:hover {
+  background-color: var(--tc-hover-bg);
+}
+
+/* =============================
+   BADGES ET ÉTIQUETTES
+   ============================= */
+.tc-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  font-size: var(--tc-font-size-xs);
+  font-weight: var(--tc-font-weight-semibold);
+  border-radius: var(--tc-border-radius-pill);
+  line-height: 1;
+}
+
+.tc-badge-primary {
+  background-color: var(--tc-primary-color);
+  color: var(--tc-light-color);
+}
+
+.tc-badge-secondary {
+  background-color: var(--tc-secondary-color);
+  color: var(--tc-light-color);
+}
+
+.tc-badge-success {
+  background-color: var(--tc-success-color);
+  color: var(--tc-light-color);
+}
+
+.tc-badge-danger {
+  background-color: var(--tc-danger-color);
+  color: var(--tc-light-color);
+}
+
+.tc-badge-warning {
+  background-color: var(--tc-warning-color);
+  color: var(--tc-dark-color);
+}
+
+.tc-badge-info {
+  background-color: var(--tc-info-color);
+  color: var(--tc-light-color);
+}
+
+/* =============================
+   TEXTES COLORÉS
+   ============================= */
+.tc-text-primary { color: var(--tc-primary-color); }
+.tc-text-secondary { color: var(--tc-secondary-color); }
+.tc-text-success { color: var(--tc-success-color); }
+.tc-text-danger { color: var(--tc-danger-color); }
+.tc-text-warning { color: var(--tc-warning-color); }
+.tc-text-info { color: var(--tc-info-color); }
+.tc-text-muted { color: var(--tc-text-muted); }
+
+/* =============================
+   LIENS
+   ============================= */
+a, .tc-link {
+  color: var(--tc-primary-color);
+  text-decoration: none;
+  transition: color var(--tc-transition-duration);
+}
+
+a:hover, .tc-link:hover {
+  color: var(--tc-primary-dark);
+  text-decoration: underline;
+}

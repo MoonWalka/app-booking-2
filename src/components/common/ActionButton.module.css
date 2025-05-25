@@ -32,6 +32,6 @@
   .actionButton {
     width: 36px;
     height: 36px;
-    margin: 0 var(--tc-spacing-1);
+    margin: 0 var(--tc-space-1);
   }
 }

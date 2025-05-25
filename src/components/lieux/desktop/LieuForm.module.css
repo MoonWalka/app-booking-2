@@ -39,7 +39,7 @@
   display: flex;
   align-items: center;
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
   gap: var(--tc-space-1);
 }
 
@@ -58,7 +58,7 @@
 }
 
 .breadcrumbSeparator {
-  color: var(--tc-text-color-muted);
+  color: var(--tc-text-muted);
   font-size: var(--tc-font-size-xs);
 }
 
@@ -89,7 +89,7 @@
 
 .formSubtitle {
   margin-top: var(--tc-space-1);
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
   font-size: var(--tc-font-size-sm);
 }
 
@@ -328,7 +328,7 @@
   display: flex;
   justify-content: flex-end;
   gap: var(--tc-space-4);
-  margin-top: var(--tc-spacing-xl);
+  margin-top: var(--tc-space-8);
   padding-top: var(--tc-space-6);
   border-top: 1px solid var(--tc-gray-300);
 }

@@ -26,7 +26,7 @@
   margin: 0;
   font-size: var(--tc-font-size-xl);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-color-primary);
+  color: var(--tc-text-primary);
 }
 
 .title i {
@@ -79,13 +79,13 @@
 .resultsCount {
   padding: var(--tc-space-2) var(--tc-space-6);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
   border-bottom: var(--tc-border-width) solid var(--tc-border-default);
 }
 
 /* NOUVEAU: Style pour le compteur des résultats filtrés */
 .filteredCount {
-  color: var(--tc-text-color-muted);
+  color: var(--tc-text-muted);
   font-style: italic;
 }
 
@@ -103,7 +103,7 @@
 .dataTable th {
   background-color: var(--tc-gray-100);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
   text-align: left;
 }
 
@@ -212,7 +212,7 @@
 }
 
 .muted {
-  color: var(--tc-text-color-muted);
+  color: var(--tc-text-muted);
   font-style: italic;
 }
 
@@ -224,14 +224,14 @@
   border: var(--tc-border-width) solid var(--tc-border-default);
   background-color: transparent;
   border-radius: var(--tc-radius-base);
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
   font-weight: var(--tc-font-weight-medium);
   transition: var(--tc-transition-base);
 }
 
 .loadMoreButton:hover {
   background-color: var(--tc-gray-100);
-  color: var(--tc-text-color-primary);
+  color: var(--tc-text-primary);
 }
 
 .loadMoreButton:disabled {
@@ -244,19 +244,19 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--tc-spacing-xl) var(--tc-space-6);
+  padding: var(--tc-space-8) var(--tc-space-6);
   text-align: center;
 }
 
 .emptyStateIcon {
   font-size: var(--tc-font-size-2xl);
-  color: var(--tc-text-color-muted);
+  color: var(--tc-text-muted);
   margin-bottom: var(--tc-space-4);
 }
 
 .emptyStateText {
   font-size: var(--tc-font-size-lg);
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
   margin-bottom: var(--tc-space-6);
 }
 

@@ -143,7 +143,7 @@
   color: var(--tc-white);
 }
 
-.tc-card-bg-subtle-primary { background-color: rgba(var(--tc-primary-color-rgb), 0.05); }
+.tc-card-bg-subtle-primary { background-color: rgba(var(--tc-color-primary-rgb), 0.05); }
 .tc-card-bg-subtle-success { background-color: rgba(var(--tc-success-color-rgb), 0.05); }
 .tc-card-bg-subtle-warning { background-color: rgba(var(--tc-warning-color-rgb), 0.05); }
 .tc-card-bg-subtle-danger { background-color: rgba(var(--tc-danger-color-rgb), 0.05); }
@@ -178,7 +178,7 @@
 }
 
 .tc-card-table tr:hover {
-  background-color: rgba(var(--tc-primary-color-rgb), 0.02);
+  background-color: rgba(var(--tc-color-primary-rgb), 0.02);
 }
 
 .tc-card-with-media .tc-card-media {
@@ -330,9 +330,9 @@
 
 /* ANIMATIONS */
 @keyframes tc-card-pulse {
-  0% { box-shadow: 0 0 0 0 rgba(var(--tc-primary-color-rgb), 0.4); }
-  70% { box-shadow: 0 0 0 10px rgba(var(--tc-primary-color-rgb), 0); }
-  100% { box-shadow: 0 0 0 0 rgba(var(--tc-primary-color-rgb), 0); }
+  0% { box-shadow: 0 0 0 0 rgba(var(--tc-color-primary-rgb), 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(var(--tc-color-primary-rgb), 0); }
+  100% { box-shadow: 0 0 0 0 rgba(var(--tc-color-primary-rgb), 0); }
 }
 
 .tc-card-highlight {

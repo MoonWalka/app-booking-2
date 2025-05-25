@@ -54,7 +54,7 @@
   height: 6px;
   background-color: var(--tc-bg-light);
   border-radius: 3px;
-  margin: 0 var(--tc-spacing-3);
+  margin: 0 var(--tc-space-3);
   position: relative;
   top: -1.25rem;
   z-index: 0;
@@ -72,7 +72,7 @@
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-semibold);
   text-align: center;
-  margin-bottom: var(--tc-spacing-4);
+  margin-bottom: var(--tc-space-4);
   color: var(--tc-text-default);
 }
 
@@ -83,27 +83,27 @@
 .stepButtons {
   display: flex;
   justify-content: space-between;
-  margin-top: var(--tc-spacing-3);
+  margin-top: var(--tc-space-3);
 }
 
 /* Styles responsive standardisés */
 @media (max-width: 768px) {
   .stepProgress {
-    margin-bottom: var(--tc-spacing-4);
+    margin-bottom: var(--tc-space-4);
   }
   
   .stepTitle {
-    margin-bottom: var(--tc-spacing-3);
+    margin-bottom: var(--tc-space-3);
   }
   
   .stepContent {
-    margin-bottom: var(--tc-spacing-4);
+    margin-bottom: var(--tc-space-4);
   }
 }
 
 @media (max-width: 576px) {
   .stepNavigationContainer {
-    padding: 0 var(--tc-spacing-3);
+    padding: 0 var(--tc-space-3);
   }
   
   .stepProgressDots {

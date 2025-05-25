@@ -15,7 +15,7 @@
 
 .errorContent {
   text-align: center;
-  padding: var(--tc-spacing-xl);
+  padding: var(--tc-space-8);
   background-color: var(--tc-white);
   border-radius: var(--tc-radius-lg);
   box-shadow: var(--tc-box-shadow);
@@ -26,13 +26,13 @@
 .errorTitle {
   font-size: var(--tc-font-size-xl);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-color-primary);
+  color: var(--tc-text-primary);
   margin-bottom: var(--tc-space-4);
 }
 
 .errorMessage {
   font-size: var(--tc-font-size-md);
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
   margin-bottom: var(--tc-space-6);
   line-height: 1.5;
 }

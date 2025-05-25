@@ -17,7 +17,7 @@
 }
 
 .sectionNavLink {
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
   background-color: var(--tc-gray-50);
   padding: var(--tc-space-1) var(--tc-space-6);
   border-radius: var(--tc-border-radius-md);
@@ -35,7 +35,7 @@
 
 .sectionNavLink:hover,
 .sectionNavLink:focus {
-  background-color: rgba(var(--tc-secondary-color-rgb), 0.05);
+  background-color: rgba(var(--tc-color-secondary-rgb), 0.05);
   color: var(--tc-color-secondary);
 }
 

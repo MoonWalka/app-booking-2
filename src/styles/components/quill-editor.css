@@ -156,7 +156,7 @@
 /* Focus styles */
 .tc-quill-editor-wrapper .ql-container.ql-focused {
   border-color: var(--tc-color-primary);
-  box-shadow: 0 0 0 2px rgba(var(--tc-primary-color-rgb), 0.1);
+  box-shadow: 0 0 0 2px rgba(var(--tc-color-primary-rgb), 0.1);
 }
 
 /* ========================================
@@ -297,7 +297,7 @@
   padding: var(--tc-space-1);
   border: 2px dashed var(--tc-color-primary);
   border-radius: var(--tc-radius-sm);
-  background-color: rgba(var(--tc-primary-color-rgb), 0.05);
+  background-color: rgba(var(--tc-color-primary-rgb), 0.05);
   text-align: center;
   position: relative;
   min-height: 20px;
@@ -306,7 +306,7 @@
 }
 
 .tc-quill-editor-wrapper .ql-editor .page-break:hover {
-  background-color: rgba(var(--tc-primary-color-rgb), 0.1);
+  background-color: rgba(var(--tc-color-primary-rgb), 0.1);
   border-color: var(--tc-color-primary);
 }
 
@@ -323,7 +323,7 @@
   color: var(--tc-color-primary);
   font-style: italic;
   font-weight: bold;
-  background-color: rgba(var(--tc-primary-color-rgb), 0.1);
+  background-color: rgba(var(--tc-color-primary-rgb), 0.1);
   padding: var(--tc-space-1);
   border-radius: var(--tc-radius-sm);
   display: inline-block;

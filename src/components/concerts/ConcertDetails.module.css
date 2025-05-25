@@ -18,8 +18,8 @@
    ============================= */
 .quickEditButton {
   position: fixed;
-  bottom: var(--tc-spacing-xl);
-  right: var(--tc-spacing-xl);
+  bottom: var(--tc-space-8);
+  right: var(--tc-space-8);
   z-index: var(--tc-z-index-floating);
   animation: slideInFromRight 0.5s ease-out;
 }
@@ -29,7 +29,7 @@
   border: none !important;
   border-radius: 50px !important;
   padding: var(--tc-space-2) var(--tc-space-4) !important;
-  box-shadow: 0 6px 20px rgba(var(--tc-primary-color-rgb), 0.4) !important;
+  box-shadow: 0 6px 20px rgba(var(--tc-color-primary-rgb), 0.4) !important;
   color: white !important;
   font-weight: var(--tc-font-weight-medium) !important;
   transition: all var(--tc-transition-duration) ease !important;
@@ -42,13 +42,13 @@
 
 .floatingEditButton:hover {
   transform: translateY(-2px) scale(1.05) !important;
-  box-shadow: 0 8px 25px rgba(var(--tc-primary-color-rgb), 0.6) !important;
+  box-shadow: 0 8px 25px rgba(var(--tc-color-primary-rgb), 0.6) !important;
   background: linear-gradient(135deg, var(--tc-primary-dark), var(--tc-color-primary)) !important;
 }
 
 .floatingEditButton:active {
   transform: translateY(0) scale(0.98) !important;
-  box-shadow: 0 4px 15px rgba(var(--tc-primary-color-rgb), 0.3) !important;
+  box-shadow: 0 4px 15px rgba(var(--tc-color-primary-rgb), 0.3) !important;
 }
 
 .floatingEditButton i {

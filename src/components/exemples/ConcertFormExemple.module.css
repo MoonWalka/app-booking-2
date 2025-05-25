@@ -22,7 +22,7 @@
    ============================= */
 .section {
   margin-bottom: var(--tc-spacing-5);
-  padding: var(--tc-spacing-4);
+  padding: var(--tc-space-4);
   background-color: var(--tc-bg-white);
   border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-shadow-sm);
@@ -47,15 +47,15 @@
 .sectionTitle {
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-bold);
-  margin-bottom: var(--tc-spacing-4);
+  margin-bottom: var(--tc-space-4);
   color: var(--tc-gray-700);
   border-bottom: 1px solid var(--tc-gray-200);
-  padding-bottom: var(--tc-spacing-2);
+  padding-bottom: var(--tc-space-2);
 }
 
 .subTitle {
   margin-top: 0;
-  margin-bottom: var(--tc-spacing-4);
+  margin-bottom: var(--tc-space-4);
   font-size: var(--tc-font-size-md);
   color: var(--tc-gray-600);
 }
@@ -64,19 +64,19 @@
    CHAMPS DE FORMULAIRE
    ============================= */
 .field {
-  margin-bottom: var(--tc-spacing-4);
+  margin-bottom: var(--tc-space-4);
 }
 
 .label {
   display: block;
-  margin-bottom: var(--tc-spacing-1);
+  margin-bottom: var(--tc-space-1);
   font-weight: var(--tc-font-weight-bold);
   font-size: var(--tc-font-size-sm);
 }
 
 .input {
   width: 100%;
-  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  padding: var(--tc-space-2) var(--tc-space-3);
   border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-radius-sm);
   font-size: var(--tc-font-size-base);
@@ -91,7 +91,7 @@
 
 .textarea {
   width: 100%;
-  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  padding: var(--tc-space-2) var(--tc-space-3);
   border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-radius-sm);
   font-size: var(--tc-font-size-base);
@@ -108,7 +108,7 @@
 
 .select {
   width: 100%;
-  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  padding: var(--tc-space-2) var(--tc-space-3);
   border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-radius-sm);
   font-size: var(--tc-font-size-base);
@@ -129,7 +129,7 @@
   display: flex;
   justify-content: space-between;
   margin-top: var(--tc-spacing-5);
-  gap: var(--tc-spacing-3);
+  gap: var(--tc-space-3);
 }
 
 .button {
@@ -179,7 +179,7 @@
 }
 
 .smallButton {
-  padding: var(--tc-spacing-1) var(--tc-spacing-2-5) !important;
+  padding: var(--tc-space-1) var(--tc-spacing-2-5) !important;
   margin-top: var(--tc-spacing-2-5) !important;
 }
 
@@ -187,7 +187,7 @@
    BADGES
    ============================= */
 .badge {
-  padding: var(--tc-spacing-1) var(--tc-spacing-2);
+  padding: var(--tc-space-1) var(--tc-space-2);
   border-radius: var(--tc-radius-sm);
   font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-bold);
@@ -214,13 +214,13 @@
 .twoColumns {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--tc-spacing-4);
+  gap: var(--tc-space-4);
 }
 
 .threeColumns {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: var(--tc-spacing-4);
+  gap: var(--tc-space-4);
 }
 
 /* =============================
@@ -254,11 +254,11 @@
 .statusBox {
   padding: var(--tc-spacing-2-5);
   border-radius: var(--tc-radius-sm);
-  margin-bottom: var(--tc-spacing-4);
+  margin-bottom: var(--tc-space-4);
 }
 
 .infoBox {
-  padding: var(--tc-spacing-4);
+  padding: var(--tc-space-4);
   background-color: var(--tc-bg-color-light);
   border-radius: var(--tc-radius-base);
   margin-bottom: var(--tc-spacing-5);
@@ -268,7 +268,7 @@
   padding: var(--tc-spacing-2-5);
   background-color: var(--tc-warning-light);
   border-radius: var(--tc-radius-sm);
-  margin-bottom: var(--tc-spacing-4);
+  margin-bottom: var(--tc-space-4);
 }
 
 /* =============================
@@ -322,7 +322,7 @@
 }
 
 .currency {
-  margin-left: var(--tc-spacing-2);
+  margin-left: var(--tc-space-2);
   color: var(--tc-gray-600);
   font-weight: var(--tc-font-weight-medium);
 }
@@ -336,7 +336,7 @@
    ============================= */
 .stylesBadgeContainer {
   display: flex;
-  gap: var(--tc-spacing-1);
+  gap: var(--tc-space-1);
   flex-wrap: wrap;
   margin-bottom: var(--tc-spacing-2-5);
 }
@@ -344,12 +344,12 @@
 .styleBadge {
   background-color: var(--tc-color-primary);
   color: var(--tc-white);
-  padding: var(--tc-spacing-1) var(--tc-spacing-2-5);
+  padding: var(--tc-space-1) var(--tc-spacing-2-5);
   border-radius: 15px;
   font-size: var(--tc-font-size-sm);
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-1);
+  gap: var(--tc-space-1);
 }
 
 .styleBadgeRemove {
@@ -359,7 +359,7 @@
   cursor: pointer;
   font-weight: var(--tc-font-weight-bold);
   font-size: var(--tc-font-size-base);
-  padding: 0 0 0 var(--tc-spacing-1);
+  padding: 0 0 0 var(--tc-space-1);
 }
 
 /* =============================
@@ -396,7 +396,7 @@
 .error {
   color: var(--tc-color-error);
   font-size: var(--tc-font-size-xs);
-  margin-top: var(--tc-spacing-1);
+  margin-top: var(--tc-space-1);
 }
 
 /* =============================
@@ -404,7 +404,7 @@
    ============================= */
 @media (max-width: var(--tc-breakpoint-md)) {
   .container {
-    padding: var(--tc-spacing-3);
+    padding: var(--tc-space-3);
   }
   
   .twoColumns,
@@ -419,7 +419,7 @@
   .header {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--tc-spacing-2);
+    gap: var(--tc-space-2);
   }
 }
 

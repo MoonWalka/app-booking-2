@@ -40,7 +40,7 @@
 }
 
 .tc-navigation-link:hover {
-  background-color: var(--tc-hover-bg);
+  background-color: var(--tc-bg-hover);
   color: var(--tc-text-default);
 }
 
@@ -89,13 +89,13 @@
 
 .tc-sub-navigation-link:hover {
   color: var(--tc-color-primary);
-  background-color: rgba(var(--tc-primary-color-rgb), 0.05);
+  background-color: rgba(var(--tc-color-primary-rgb), 0.05);
 }
 
 .tc-sub-navigation-link.tc-active {
   color: var(--tc-color-primary);
   font-weight: var(--tc-font-weight-medium);
-  background-color: rgba(var(--tc-primary-color-rgb), 0.1);
+  background-color: rgba(var(--tc-color-primary-rgb), 0.1);
 }
 
 /* NAVIGATION PAR ONGLETS */
@@ -169,7 +169,7 @@
 
 .tc-tab-button:hover {
   color: var(--tc-text-default);
-  background-color: var(--tc-hover-bg);
+  background-color: var(--tc-bg-hover);
 }
 
 .tc-tab-button.tc-active {
@@ -363,7 +363,7 @@
 }
 
 .tc-pagination-link:hover {
-  background-color: var(--tc-hover-bg);
+  background-color: var(--tc-bg-hover);
   border-color: var(--tc-border-default);
   color: var(--tc-text-default);
 }
@@ -436,7 +436,7 @@
 }
 
 .tc-vertical-menu-link.tc-active {
-  background-color: rgba(var(--tc-primary-color-rgb), 0.05);
+  background-color: rgba(var(--tc-color-primary-rgb), 0.05);
   color: var(--tc-color-primary);
   font-weight: var(--tc-font-weight-medium);
   border-left: 3px solid var(--tc-color-primary);

@@ -99,7 +99,7 @@
 .formControl:focus {
   border-color: var(--tc-primary-color-light);
   outline: 0;
-  box-shadow: 0 0 0 0.25rem rgba(var(--tc-primary-color-rgb), 0.25);
+  box-shadow: 0 0 0 0.25rem rgba(var(--tc-color-primary-rgb), 0.25);
 }
 
 .formTextarea {

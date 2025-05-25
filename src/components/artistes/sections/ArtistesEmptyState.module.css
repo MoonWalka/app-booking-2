@@ -5,14 +5,14 @@
  */
 
 .emptyContainer {
-  padding: var(--tc-spacing-6) var(--tc-spacing-3);
+  padding: var(--tc-space-6) var(--tc-space-3);
   text-align: center;
 }
 
 .emptyIcon {
   font-size: var(--tc-font-size-3xl);
   color: var(--tc-text-muted);
-  margin-bottom: var(--tc-spacing-3);
+  margin-bottom: var(--tc-space-3);
 }
 
 .emptyTitle {
@@ -24,24 +24,24 @@
 
 .emptyText {
   color: var(--tc-text-muted);
-  margin-bottom: var(--tc-spacing-4);
+  margin-bottom: var(--tc-space-4);
 }
 
 /* Styles responsive standardisés */
 @media (max-width: 768px) {
   .emptyContainer {
-    padding: var(--tc-spacing-5) var(--tc-spacing-2);
+    padding: var(--tc-spacing-5) var(--tc-space-2);
   }
   
   .emptyIcon {
     font-size: var(--tc-font-size-2xl);
-    margin-bottom: var(--tc-spacing-2);
+    margin-bottom: var(--tc-space-2);
   }
 }
 
 @media (max-width: 576px) {
   .emptyContainer {
-    padding: var(--tc-spacing-4) var(--tc-spacing-2);
+    padding: var(--tc-space-4) var(--tc-space-2);
   }
   
   .emptyTitle {

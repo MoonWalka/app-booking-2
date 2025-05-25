@@ -9,7 +9,7 @@
   padding: var(--tc-space-4);
   border-radius: var(--tc-radius-base);
   background-color: var(--tc-bg-color-light);
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
   border: 1px solid var(--tc-border-default);
   margin-top: var(--tc-space-4);
   gap: var(--tc-space-2);

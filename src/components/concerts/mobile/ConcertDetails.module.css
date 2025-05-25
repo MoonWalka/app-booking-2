@@ -20,7 +20,7 @@
 .mobileHeaderBar {
   display: flex;
   align-items: center;
-  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  padding: var(--tc-space-2) var(--tc-space-3);
   background-color: var(--tc-white);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   position: sticky;
@@ -30,10 +30,10 @@
 
 .backButton {
   margin-right: 12px;
-  padding: 0.375rem var(--tc-spacing-2);
+  padding: 0.375rem var(--tc-space-2);
   line-height: 1;
-  margin-top: var(--tc-spacing-3);
-  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  margin-top: var(--tc-space-3);
+  padding: var(--tc-space-2) var(--tc-space-3);
   border: none;
   background-color: var(--tc-color-primary);
   color: var(--tc-bg-default);
@@ -47,7 +47,7 @@
 }
 
 .mobileTitleContainer h1 {
-  font-size: 1.var(--tc-spacing-3);
+  font-size: 1.var(--tc-space-3);
   margin: 0;
   var(--tc-bg-default)-space: nowrap;
   overflow: hidden;
@@ -57,14 +57,14 @@
 
 .mobileActions {
   display: flex;
-  gap: var(--tc-spacing-2);
+  gap: var(--tc-space-2);
 }
 
 /* Onglets pour navigation mobile */
 .mobileTabs {
   display: flex;
   overflow-x: auto;
-  padding: var(--tc-spacing-2);
+  padding: var(--tc-space-2);
   background-color: var(--tc-white);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   position: sticky;
@@ -74,26 +74,26 @@
 
 /* Contenu de l'onglet sélectionné */
 .mobileTabContent {
-  padding: var(--tc-spacing-3);
+  padding: var(--tc-space-3);
 }
 
 /* Styles pour les onglets */
 
 /* Onglet Infos */
 .infoTabContent {
-  margin-bottom: var(--tc-spacing-3);
+  margin-bottom: var(--tc-space-3);
 }
 
 .infoCard {
   background-color: var(--tc-white);
   border-radius: var(--tc-radius-md);
-  padding: var(--tc-spacing-3);
+  padding: var(--tc-space-3);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .infoItem {
-  margin-bottom: var(--tc-spacing-2);
-  padding-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-space-2);
+  padding-bottom: var(--tc-space-2);
   border-bottom: 1px solid var(--tc-gray-100);
 }
 
@@ -107,42 +107,42 @@
   display: block;
   font-weight: var(--tc-font-weight-semibold);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-text-color-secondary);
-  margin-bottom: var(--tc-spacing-1);
+  color: var(--tc-text-secondary);
+  margin-bottom: var(--tc-space-1);
 }
 
 .infoValue {
-  font-size: var(--tc-spacing-3);
+  font-size: var(--tc-space-3);
 }
 
 .notes {
-  padding-top: var(--tc-spacing-2);
+  padding-top: var(--tc-space-2);
 }
 
 .notesContent {
   background-color: var(--tc-bg-light);
-  padding: var(--tc-spacing-2);
+  padding: var(--tc-space-2);
   border-radius: 6px;
-  margin-top: var(--tc-spacing-2);
+  margin-top: var(--tc-space-2);
   var(--tc-bg-default)-space: pre-wrap;
 }
 
 /* Onglet Lieu */
 .lieuTabContent {
-  margin-bottom: var(--tc-spacing-3);
+  margin-bottom: var(--tc-space-3);
 }
 
 .lieuCard {
   background-color: var(--tc-white);
   border-radius: var(--tc-radius-md);
-  padding: var(--tc-spacing-3);
+  padding: var(--tc-space-3);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .lieuName {
-  font-size: 1.var(--tc-spacing-8);
+  font-size: 1.var(--tc-space-8);
   font-weight: var(--tc-font-weight-semibold);
-  margin-bottom: var(--tc-spacing-3);
+  margin-bottom: var(--tc-space-3);
 }
 
 .lieuAddress,
@@ -150,151 +150,151 @@
 .lieuContact {
   display: flex;
   align-items: flex-start;
-  margin-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-space-2);
 }
 
 .lieuAddress i,
 .lieuCapacity i,
 .lieuContact i {
-  margin-right: var(--tc-spacing-2);
-  margin-top: var(--tc-spacing-1);
+  margin-right: var(--tc-space-2);
+  margin-top: var(--tc-space-1);
   min-width: 16px;
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
 }
 
 .lieuMap {
-  margin: var(--tc-spacing-3) 0;
+  margin: var(--tc-space-3) 0;
   border-radius: var(--tc-radius-md);
   overflow: hidden;
 }
 
 .lieuActions {
-  margin-top: var(--tc-spacing-3);
+  margin-top: var(--tc-space-3);
   display: flex;
   justify-content: center;
 }
 
 /* Onglet Programmateur */
 .programmateurTabContent {
-  margin-bottom: var(--tc-spacing-3);
+  margin-bottom: var(--tc-space-3);
 }
 
 .programmateurCard {
   background-color: var(--tc-white);
   border-radius: var(--tc-radius-md);
-  padding: var(--tc-spacing-3);
+  padding: var(--tc-space-3);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .programmateurName {
-  font-size: 1.var(--tc-spacing-8);
+  font-size: 1.var(--tc-space-8);
   font-weight: var(--tc-font-weight-semibold);
-  margin-bottom: var(--tc-spacing-3);
+  margin-bottom: var(--tc-space-3);
 }
 
 .programmateurStructure,
 .programmateurContact {
   display: flex;
   align-items: center;
-  margin-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-space-2);
 }
 
 .programmateurStructure i,
 .programmateurContact i {
-  margin-right: var(--tc-spacing-2);
+  margin-right: var(--tc-space-2);
   min-width: 16px;
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
 }
 
 .formSection {
-  margin-top: var(--tc-spacing-4);
+  margin-top: var(--tc-space-4);
   border-top: 1px solid var(--tc-gray-100);
-  padding-top: var(--tc-spacing-3);
+  padding-top: var(--tc-space-3);
 }
 
 .formSection h4 {
-  font-size: var(--tc-spacing-3);
+  font-size: var(--tc-space-3);
   font-weight: var(--tc-font-weight-semibold);
-  margin-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-space-2);
 }
 
 .formInfo {
-  margin-bottom: var(--tc-spacing-3);
+  margin-bottom: var(--tc-space-3);
 }
 
 .formStatus {
-  margin-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-space-2);
 }
 
 .formAction {
-  margin-bottom: var(--tc-spacing-3);
+  margin-bottom: var(--tc-space-3);
 }
 
 .formSharingOptions {
-  margin-top: var(--tc-spacing-3);
+  margin-top: var(--tc-space-3);
 }
 
 .programmateurActions {
-  margin-top: var(--tc-spacing-3);
+  margin-top: var(--tc-space-3);
   display: flex;
   justify-content: center;
 }
 
 /* Onglet Artiste */
 .artisteTabContent {
-  margin-bottom: var(--tc-spacing-3);
+  margin-bottom: var(--tc-space-3);
 }
 
 .artisteCard {
   background-color: var(--tc-white);
   border-radius: var(--tc-radius-md);
-  padding: var(--tc-spacing-3);
+  padding: var(--tc-space-3);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .artisteName {
-  font-size: 1.var(--tc-spacing-8);
+  font-size: 1.var(--tc-space-8);
   font-weight: var(--tc-font-weight-semibold);
-  margin-bottom: var(--tc-spacing-3);
+  margin-bottom: var(--tc-space-3);
 }
 
 .artisteGenre {
   display: flex;
   align-items: center;
-  margin-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-space-2);
 }
 
 .artisteGenre i {
-  margin-right: var(--tc-spacing-2);
+  margin-right: var(--tc-space-2);
   min-width: 16px;
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
 }
 
 .artisteDescription {
-  margin: var(--tc-spacing-3) 0;
-  padding: var(--tc-spacing-2);
+  margin: var(--tc-space-3) 0;
+  padding: var(--tc-space-2);
   background-color: var(--tc-bg-light);
   border-radius: 6px;
 }
 
 .artisteContacts {
-  margin-top: var(--tc-spacing-3);
+  margin-top: var(--tc-space-3);
 }
 
 .artisteContact {
   display: flex;
   align-items: center;
-  margin-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-space-2);
 }
 
 .artisteContact i {
-  margin-right: var(--tc-spacing-2);
+  margin-right: var(--tc-space-2);
   min-width: 16px;
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
 }
 
 .artisteActions {
-  margin-top: var(--tc-spacing-3);
+  margin-top: var(--tc-space-3);
   display: flex;
   justify-content: center;
 }
@@ -305,7 +305,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--tc-spacing-8);
+  padding: var(--tc-space-8);
   background-color: var(--tc-white);
   border-radius: var(--tc-radius-md);
   text-align: center;
@@ -315,11 +315,11 @@
 .emptyState i {
   font-size: 2.5rem;
   color: var(--tc-border-color-light);
-  margin-bottom: var(--tc-spacing-3);
+  margin-bottom: var(--tc-space-3);
 }
 
 .emptyState p {
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
   margin-bottom: 0;
 }
 
@@ -329,16 +329,16 @@
   justify-content: center;
   align-items: center;
   height: calc(100vh - 56px);
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
   flex-direction: column;
   height: 50vh;
-  padding: var(--tc-spacing-3);
+  padding: var(--tc-space-3);
   text-align: center;
 }
 
 .loadingText {
-  margin-top: var(--tc-spacing-3);
-  color: var(--tc-text-color-secondary);
+  margin-top: var(--tc-space-3);
+  color: var(--tc-text-secondary);
   font-size: var(--tc-font-size-sm);
 }
 
@@ -350,7 +350,7 @@
   height: calc(100vh - 56px);
   color: var(--tc-color-error);
   flex-direction: column;
-  padding: var(--tc-spacing-8) var(--tc-spacing-3);
+  padding: var(--tc-space-8) var(--tc-space-3);
   text-align: center;
 }
 
@@ -371,46 +371,46 @@
 
 .navTab {
   font-size: var(--tc-font-size-sm);
-  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  padding: var(--tc-space-2) var(--tc-space-3);
   text-align: center;
 }
 
 /* Contenu des onglets */
 .tabContent {
-  padding: var(--tc-spacing-3);
+  padding: var(--tc-space-3);
   background-color: var(--tc-white);
 }
 
 /* Conteneur pour le générateur de formulaire */
 .formGeneratorContainer {
-  margin-top: var(--tc-spacing-3);
-  padding: var(--tc-spacing-3);
+  margin-top: var(--tc-space-3);
+  padding: var(--tc-space-3);
   background-color: var(--tc-bg-light);
-  border-radius: var(--tc-spacing-2);
+  border-radius: var(--tc-space-2);
   border: 1px solid var(--tc-border-color-light);
 }
 
 /* Utilitaires */
 .mt-3 {
-  margin-top: var(--tc-spacing-3);
+  margin-top: var(--tc-space-3);
 }
 
 .mb-3 {
-  margin-bottom: var(--tc-spacing-3);
+  margin-bottom: var(--tc-space-3);
 }
 
 .p-3 {
-  padding: var(--tc-spacing-3);
+  padding: var(--tc-space-3);
 }
 
 /* Styles spécifiques pour les petits écrans */
 @media (max-width: 576px) {
   .tabContent {
-    padding: var(--tc-spacing-2) var(--tc-spacing-2);
+    padding: var(--tc-space-2) var(--tc-space-2);
   }
   
   .navTab {
-    padding: var(--tc-spacing-2) var(--tc-spacing-2);
+    padding: var(--tc-space-2) var(--tc-space-2);
     font-size: var(--tc-font-size-sm);
   }
 }

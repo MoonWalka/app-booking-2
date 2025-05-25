@@ -17,14 +17,14 @@
   background-color: var(--tc-bg-subtle);
   border-bottom-width: 1px;
   font-weight: var(--tc-font-weight-semibold);
-  padding: var(--tc-spacing-2) var(--tc-spacing-3-5);
+  padding: var(--tc-space-2) var(--tc-spacing-3-5);
   color: var(--tc-text-default);
 }
 
 /* Styles responsive standardisés */
 @media (max-width: 768px) {
   .artistesTable th {
-    padding: var(--tc-spacing-1-5) var(--tc-spacing-3);
+    padding: var(--tc-spacing-1-5) var(--tc-space-3);
   }
 }
 
@@ -38,7 +38,7 @@
   }
   
   .artistesTable th {
-    padding: var(--tc-spacing-1) var(--tc-spacing-2);
+    padding: var(--tc-space-1) var(--tc-space-2);
     font-size: var(--tc-font-size-sm);
   }
 }

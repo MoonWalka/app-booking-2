@@ -23,7 +23,7 @@
 .modernTitle {
   font-size: var(--tc-font-size-xl);
   font-weight: var(--tc-font-weight-bold);
-  color: var(--tc-text-color-primary);
+  color: var(--tc-text-primary);
   margin: 0;
   margin-top: var(--tc-space-1); /* Petit espacement depuis le breadcrumb */
 }

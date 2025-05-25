@@ -27,7 +27,7 @@
 
 .modernTable th {
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-color-primary);
+  color: var(--tc-text-primary);
   border-bottom: 2px solid var(--tc-border-default);
   padding: var(--tc-space-2) var(--tc-space-4);
   text-align: left;

@@ -141,7 +141,7 @@
 }
 
 .tc-artiste-tab-item:hover {
-  background-color: var(--tc-hover-bg);
+  background-color: var(--tc-bg-hover);
   color: var(--tc-text-default);
 }
 
@@ -226,7 +226,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--tc-spacing-xl);
+  padding: var(--tc-space-8);
   text-align: center;
   background-color: var(--tc-gray-50);
   border-radius: var(--tc-radius-base);

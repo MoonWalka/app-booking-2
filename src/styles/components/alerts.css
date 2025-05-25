@@ -57,13 +57,13 @@
 /* Variantes d'alertes */
 .tc-alert-primary {
   color: var(--tc-color-primary);
-  background-color: rgba(var(--tc-primary-color-rgb), 0.1);
+  background-color: rgba(var(--tc-color-primary-rgb), 0.1);
   border-color: var(--tc-color-primary);
 }
 
 .tc-alert-secondary {
   color: var(--tc-color-secondary);
-  background-color: rgba(var(--tc-secondary-color-rgb), 0.1);
+  background-color: rgba(var(--tc-color-secondary-rgb), 0.1);
   border-color: var(--tc-color-secondary);
 }
 

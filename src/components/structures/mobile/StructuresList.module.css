@@ -36,7 +36,7 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: var(--tc-spacing-xl) var(--tc-space-4);
+  padding: var(--tc-space-8) var(--tc-space-4);
   color: var(--tc-text-muted);
 }
 

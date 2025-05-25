@@ -61,14 +61,14 @@
 }
 
 .contractButton:hover {
-  background-color: rgba(var(--tc-secondary-color-rgb), 0.1);
+  background-color: rgba(var(--tc-color-secondary-rgb), 0.1);
 }
 
 /* Styles responsive standardisés */
 @media (max-width: 576px) {
   .actionsContainer {
     flex-wrap: wrap;
-    gap: var(--tc-spacing-1);
+    gap: var(--tc-space-1);
   }
 }
 
@@ -80,7 +80,7 @@
 @media (max-width: 576px) {
   .actionsContainer {
     flex-wrap: wrap;
-    gap: var(--tc-spacing-1);
+    gap: var(--tc-space-1);
   }
 }
 
@@ -97,7 +97,7 @@
   background-color: var(--tc-primary-dark) !important;
   border-color: var(--tc-primary-dark) !important;
   transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(var(--tc-primary-color-rgb), 0.3);
+  box-shadow: 0 4px 8px rgba(var(--tc-color-primary-rgb), 0.3);
 }
 
 .variant-success {

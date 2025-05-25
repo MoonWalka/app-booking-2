@@ -52,7 +52,7 @@ button {
 .tc-btn:focus,
 .tc-btn:focus-visible {
   outline: 0;
-  box-shadow: 0 0 0 3px rgba(var(--tc-primary-color-rgb), 0.25);
+  box-shadow: 0 0 0 3px rgba(var(--tc-color-primary-rgb), 0.25);
 }
 
 /* Alignement des icônes */
@@ -229,7 +229,7 @@ button {
 
 .tc-btn-text:hover,
 .tc-btn-text:active {
-  background-color: rgba(var(--tc-primary-color-rgb), 0.05);
+  background-color: rgba(var(--tc-color-primary-rgb), 0.05);
   color: var(--tc-primary-dark);
 }
 
@@ -239,7 +239,7 @@ button {
 
 .tc-btn-text-secondary:hover,
 .tc-btn-text-secondary:active {
-  background-color: rgba(var(--tc-secondary-color-rgb), 0.05);
+  background-color: rgba(var(--tc-color-secondary-rgb), 0.05);
   color: var(--tc-color-secondary-dark);
 }
 
@@ -429,7 +429,7 @@ button {
 }
 
 .tc-btn:focus-visible {
-  box-shadow: 0 0 0 3px rgba(var(--tc-primary-color-rgb), 0.4);
+  box-shadow: 0 0 0 3px rgba(var(--tc-color-primary-rgb), 0.4);
   outline: none;
 }
 

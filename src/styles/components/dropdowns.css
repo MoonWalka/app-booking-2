@@ -77,11 +77,11 @@
 }
 
 .tc-dropdown-item:hover {
-  background-color: var(--tc-hover-bg);
+  background-color: var(--tc-bg-hover);
 }
 
 .tc-dropdown-item.tc-active {
-  background-color: var(--tc-hover-bg);
+  background-color: var(--tc-bg-hover);
   font-weight: var(--tc-font-weight-medium);
 }
 
@@ -166,7 +166,7 @@
 
 .tc-search-input:focus {
   border-color: var(--tc-color-primary);
-  box-shadow: 0 0 0 3px rgba(var(--tc-primary-color-rgb), 0.1);
+  box-shadow: 0 0 0 3px rgba(var(--tc-color-primary-rgb), 0.1);
   outline: none;
 }
 
@@ -205,7 +205,7 @@
 }
 
 .tc-search-result-item:hover {
-  background-color: var(--tc-hover-bg);
+  background-color: var(--tc-bg-hover);
 }
 
 .tc-search-result-item:last-child {
@@ -240,7 +240,7 @@
 }
 
 .tc-filter-toggle:hover {
-  background-color: var(--tc-hover-bg);
+  background-color: var(--tc-bg-hover);
 }
 
 .tc-filter-icon {
@@ -336,7 +336,7 @@
 .tc-filter-badge {
   display: inline-flex;
   align-items: center;
-  background-color: rgba(var(--tc-primary-color-rgb), 0.1);
+  background-color: rgba(var(--tc-color-primary-rgb), 0.1);
   color: var(--tc-color-primary);
   border-radius: var(--tc-border-radius-pill);
   padding: 2px 8px;
@@ -346,7 +346,7 @@
 }
 
 .tc-filter-badge:hover {
-  background-color: rgba(var(--tc-primary-color-rgb), 0.2);
+  background-color: rgba(var(--tc-color-primary-rgb), 0.2);
 }
 
 .tc-filter-badge-remove {

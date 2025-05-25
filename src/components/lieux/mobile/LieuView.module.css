@@ -76,7 +76,7 @@
 }
 
 .spinnerText {
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
   font-size: var(--tc-font-size-md);
   margin-top: var(--tc-space-2);
 }
@@ -122,7 +122,7 @@
 
 .dataLabel {
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
   font-size: var(--tc-font-size-sm);
   width: 200px;
   flex-shrink: 0;
@@ -167,7 +167,7 @@
 
 .secondaryButton {
   background-color: var(--tc-bg-color-light);
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
   border: 1px solid var(--tc-border-default);
 }
 

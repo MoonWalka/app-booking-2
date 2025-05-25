@@ -29,7 +29,7 @@
   margin: 0;
   font-size: var(--tc-font-size-xl);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-color-primary);
+  color: var(--tc-text-primary);
 }
 
 .titleIcon {
@@ -85,14 +85,14 @@
   display: inline-flex;
   align-items: center;
   gap: var(--tc-space-2);
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
   text-decoration: none;
   margin-bottom: var(--tc-space-4);
   transition: color var(--tc-transition-duration);
 }
 
 .backLink:hover {
-  color: var(--tc-text-color-primary);
+  color: var(--tc-text-primary);
   text-decoration: none;
 }
 
@@ -128,7 +128,7 @@
   padding: var(--tc-space-4) var(--tc-space-6);
   border-bottom: var(--tc-border-width) solid var(--tc-border-default);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-color-primary);
+  color: var(--tc-text-primary);
   background-color: var(--tc-card-header-bg);
 }
 
@@ -136,7 +136,7 @@
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-semibold);
   margin: 0;
-  color: var(--tc-text-color-primary);
+  color: var(--tc-text-primary);
 }
 
 .cardHeader i {
@@ -209,12 +209,12 @@
 
 .infoLabel {
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
 }
 
 .infoValue {
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-text-color-primary);
+  color: var(--tc-text-primary);
 }
 
 .addressCard {
@@ -234,7 +234,7 @@
 
 .addressLine {
   margin-bottom: var(--tc-space-1);
-  color: var(--tc-text-color-primary);
+  color: var(--tc-text-primary);
 }
 
 .contactCard {
@@ -255,7 +255,7 @@
 .contactName {
   font-weight: var(--tc-font-weight-semibold);
   margin-bottom: var(--tc-space-1);
-  color: var(--tc-text-color-primary);
+  color: var(--tc-text-primary);
 }
 
 .contactInfo {
@@ -263,7 +263,7 @@
   align-items: center;
   gap: var(--tc-space-2);
   margin-bottom: var(--tc-space-1);
-  color: var(--tc-text-color-primary);
+  color: var(--tc-text-primary);
 }
 
 .contactInfoIcon {
@@ -299,13 +299,13 @@
 
 .programmateurName {
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-text-color-primary);
+  color: var(--tc-text-primary);
   margin-bottom: var(--tc-space-1);
 }
 
 .programmateurRole {
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
 }
 
 .empty {
@@ -313,30 +313,30 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--tc-spacing-xl) 0;
+  padding: var(--tc-space-8) 0;
   text-align: center;
 }
 
 .emptyIcon {
   font-size: var(--tc-font-size-xl);
-  color: var(--tc-text-color-muted);
+  color: var(--tc-text-muted);
   margin-bottom: var(--tc-space-2);
 }
 
 .emptyText {
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
   margin-bottom: var(--tc-space-4);
 }
 
 .muted {
-  color: var(--tc-text-color-muted);
+  color: var(--tc-text-muted);
   font-style: italic;
 }
 
 .loading {
   display: flex;
   justify-content: center;
-  padding: var(--tc-spacing-xl) 0;
+  padding: var(--tc-space-8) 0;
 }
 
 .spinner {
@@ -370,7 +370,7 @@
 .notesContent {
   white-space: pre-wrap;
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-text-color-primary);
+  color: var(--tc-text-primary);
 }
 
 .notesContent p {

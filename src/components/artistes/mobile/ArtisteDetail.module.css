@@ -76,31 +76,31 @@
 }
 
 .artisteInfo {
-  padding: var(--tc-spacing-3);
+  padding: var(--tc-space-3);
 }
 
 .artisteName {
   font-size: var(--tc-font-size-xl);
   font-weight: var(--tc-font-weight-semibold);
-  margin-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-space-2);
 }
 
 .artisteGenre {
   color: var(--tc-text-secondary);
   font-size: var(--tc-font-size-sm);
-  margin-bottom: var(--tc-spacing-3);
+  margin-bottom: var(--tc-space-3);
 }
 
 .artisteStats {
   display: flex;
-  gap: var(--tc-spacing-3);
-  margin-top: var(--tc-spacing-2);
+  gap: var(--tc-space-3);
+  margin-top: var(--tc-space-2);
 }
 
 .statItem {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-1);
+  gap: var(--tc-space-1);
   color: var(--tc-text-secondary);
   font-size: var(--tc-font-size-sm);
 }
@@ -112,7 +112,7 @@
 .mobileTabs {
   display: flex;
   overflow-x: auto;
-  margin-bottom: var(--tc-spacing-3);
+  margin-bottom: var(--tc-space-3);
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none; /* Firefox */
 }
@@ -124,7 +124,7 @@
 .tabButton {
   flex: 1;
   min-width: 80px;
-  padding: var(--tc-spacing-2) var(--tc-spacing-4);
+  padding: var(--tc-space-2) var(--tc-space-4);
   text-align: center;
   border: none;
   background-color: transparent;
@@ -136,7 +136,7 @@
 .tabButton i {
   display: block;
   font-size: var(--tc-font-size-lg);
-  margin-bottom: var(--tc-spacing-1);
+  margin-bottom: var(--tc-space-1);
 }
 
 .tabButton.active {
@@ -148,21 +148,21 @@
   background-color: var(--tc-bg-default);
   border-radius: var(--tc-radius-lg);
   box-shadow: var(--tc-shadow-md);
-  padding: var(--tc-spacing-3);
+  padding: var(--tc-space-3);
   min-height: 200px;
 }
 
 /* Styles pour l'onglet Infos */
 .infoContent .infoSection {
-  margin-bottom: var(--tc-spacing-4);
+  margin-bottom: var(--tc-space-4);
 }
 
 .infoContent .infoSection h3 {
   font-size: var(--tc-font-size-md);
-  margin-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-space-2);
   color: var(--tc-text-default);
   border-bottom: var(--tc-border-width) solid var(--tc-border-default);
-  padding-bottom: var(--tc-spacing-2);
+  padding-bottom: var(--tc-space-2);
 }
 
 .infoContent .membresList {
@@ -170,11 +170,11 @@
   padding-left: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-2);
+  gap: var(--tc-space-2);
 }
 
 .infoContent .membresList li {
-  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  padding: var(--tc-space-2) var(--tc-space-3);
   background-color: var(--tc-bg-light);
   border-radius: var(--tc-radius-sm);
 }
@@ -182,14 +182,14 @@
 .contactsGrid {
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-2);
+  gap: var(--tc-space-2);
 }
 
 .contactItem {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-2);
-  padding: var(--tc-spacing-2);
+  gap: var(--tc-space-2);
+  padding: var(--tc-space-2);
   border-radius: var(--tc-radius-md);
   border: var(--tc-border-width) solid var(--tc-border-default);
   text-decoration: none;
@@ -206,7 +206,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--tc-spacing-3);
+  margin-bottom: var(--tc-space-3);
 }
 
 .concertsHeader h3 {
@@ -217,30 +217,30 @@
 .concertsList {
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-2);
+  gap: var(--tc-space-2);
 }
 
 .concertItem {
   background-color: var(--tc-bg-light);
   border-radius: var(--tc-radius-md);
-  padding: var(--tc-spacing-3);
+  padding: var(--tc-space-3);
 }
 
 .concertDate {
   color: var(--tc-text-secondary);
   font-size: var(--tc-font-size-xs);
-  margin-bottom: var(--tc-spacing-1);
+  margin-bottom: var(--tc-space-1);
 }
 
 .concertLieu {
   font-weight: var(--tc-font-weight-medium);
-  margin-bottom: var(--tc-spacing-1);
+  margin-bottom: var(--tc-space-1);
 }
 
 .concertProgrammateur {
   color: var(--tc-text-secondary);
   font-size: var(--tc-font-size-sm);
-  margin-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-space-2);
 }
 
 .concertMontant {
@@ -252,19 +252,19 @@
 .contratsList {
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-2);
+  gap: var(--tc-space-2);
 }
 
 .contratItem {
   background-color: var(--tc-bg-light);
   border-radius: var(--tc-radius-md);
-  padding: var(--tc-spacing-3);
+  padding: var(--tc-space-3);
 }
 
 .contratDate {
   color: var(--tc-text-secondary);
   font-size: var(--tc-font-size-xs);
-  margin-bottom: var(--tc-spacing-1);
+  margin-bottom: var(--tc-space-1);
 }
 
 .contratConcert {
@@ -272,7 +272,7 @@
 }
 
 .contratActions {
-  margin-top: var(--tc-spacing-2);
+  margin-top: var(--tc-space-2);
   text-align: right;
 }
 
@@ -280,16 +280,16 @@
 .statsCards {
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-3);
+  gap: var(--tc-space-3);
 }
 
 .statCard {
   background-color: var(--tc-bg-light);
   border-radius: var(--tc-radius-md);
-  padding: var(--tc-spacing-4);
+  padding: var(--tc-space-4);
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-3);
+  gap: var(--tc-space-3);
 }
 
 .statIcon {
@@ -311,7 +311,7 @@
 .statContent h4 {
   font-size: var(--tc-font-size-sm);
   color: var(--tc-text-secondary);
-  margin: 0 0 var(--tc-spacing-1) 0;
+  margin: 0 0 var(--tc-space-1) 0;
 }
 
 .statValue {
@@ -322,19 +322,19 @@
 
 /* État vide */
 .emptyState {
-  padding: var(--tc-spacing-8) var(--tc-spacing-3);
+  padding: var(--tc-space-8) var(--tc-space-3);
   text-align: center;
   color: var(--tc-text-secondary);
 }
 
 .emptyState i {
   font-size: var(--tc-font-size-2xl);
-  margin-bottom: var(--tc-spacing-3);
+  margin-bottom: var(--tc-space-3);
   color: var(--tc-gray-400);
 }
 
 .emptyState p {
-  margin-bottom: var(--tc-spacing-3);
+  margin-bottom: var(--tc-space-3);
 }
 
 /* États de chargement et d'erreur */
@@ -344,7 +344,7 @@
   justify-content: center;
   align-items: center;
   min-height: 300px;
-  padding: var(--tc-spacing-3);
+  padding: var(--tc-space-3);
   text-align: center;
 }
 

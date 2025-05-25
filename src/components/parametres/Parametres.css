@@ -27,7 +27,7 @@
 }
 
 .navLink:hover {
-  background-color: var(--tc-hover-bg);
+  background-color: var(--tc-bg-hover);
   color: var(--tc-gray-900);
 }
 
@@ -76,7 +76,7 @@
 }
 
 .cardBody {
-  padding: var(--tc-spacing-xl);
+  padding: var(--tc-space-8);
 }
 
 /* =============================
@@ -184,7 +184,7 @@
 
 .exportButton:hover {
   border-color: var(--tc-color-primary);
-  background-color: rgba(var(--tc-primary-color-rgb), 0.05);
+  background-color: rgba(var(--tc-color-primary-rgb), 0.05);
   transform: translateY(var(--tc-hover-translateY));
 }
 

@@ -5,10 +5,10 @@
  */
 
 .actionsContainer {
-  margin-bottom: var(--tc-spacing-4);
+  margin-bottom: var(--tc-space-4);
   display: flex;
   flex-wrap: wrap;
-  gap: var(--tc-spacing-2);
+  gap: var(--tc-space-2);
 }
 
 /* Styles responsive standardisés */
@@ -22,6 +22,6 @@
 
 @media (max-width: 576px) {
   .actionsContainer {
-    margin-bottom: var(--tc-spacing-3);
+    margin-bottom: var(--tc-space-3);
   }
 }

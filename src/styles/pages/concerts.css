@@ -275,7 +275,7 @@
 }
 
 .tc-status-message-primary {
-  background-color: rgba(var(--tc-primary-color-rgb), 0.15);
+  background-color: rgba(var(--tc-color-primary-rgb), 0.15);
   color: #0056b3;
 }
 

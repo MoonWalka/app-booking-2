@@ -7,7 +7,7 @@
 /* ValidationActionBar Styles - Standardisés */
 .container {
   /* Base container styles */
-  margin: var(--tc-spacing-xl) 0;
+  margin: var(--tc-space-8) 0;
 }
 
 .content {

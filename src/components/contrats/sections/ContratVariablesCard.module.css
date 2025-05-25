@@ -29,7 +29,7 @@
 .variableName {
   font-weight: var(--tc-font-weight-medium);
   width: 30%;
-  padding-right: var(--tc-spacing-3);
+  padding-right: var(--tc-space-3);
 }
 
 .variableValue {
@@ -46,12 +46,12 @@
 
 @media (max-width: 576px) {
   .contractVariablesCard {
-    margin-bottom: var(--tc-spacing-3);
+    margin-bottom: var(--tc-space-3);
   }
   
   .variableItem {
     flex-direction: column;
-    padding: var(--tc-spacing-1);
+    padding: var(--tc-space-1);
   }
   
   .variableName, 

@@ -46,7 +46,7 @@
 
 .errorContainer {
   max-width: 800px;
-  margin: var(--tc-spacing-xl) auto;
+  margin: var(--tc-space-8) auto;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -73,7 +73,7 @@
 }
 
 .errorMessage {
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
   margin-bottom: var(--tc-space-4);
 }
 

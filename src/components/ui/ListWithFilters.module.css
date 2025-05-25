@@ -12,7 +12,7 @@
   border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-shadow-base);
   padding: var(--tc-space-6);
-  margin-bottom: var(--tc-spacing-xl);
+  margin-bottom: var(--tc-space-8);
   border: 1px solid var(--tc-border-default);
 }
 
@@ -209,7 +209,7 @@
    ÉTATS SPÉCIAUX
    ============================= */
 .noData {
-  padding: var(--tc-spacing-xl);
+  padding: var(--tc-space-8);
   text-align: center;
   color: var(--tc-gray-600);
   font-size: var(--tc-font-size-md);

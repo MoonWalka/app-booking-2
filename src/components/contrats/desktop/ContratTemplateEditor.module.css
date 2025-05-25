@@ -48,7 +48,7 @@
   border: none;
   font-size: var(--tc-font-size-lg);
   cursor: pointer;
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
 }
 .tcModalClose:hover {
   color: var(--tc-color-error);
@@ -173,7 +173,7 @@
   border-radius: var(--tc-radius-sm);
   background-color: var(--tc-gray-100);
   border-color: var(--tc-border-default);
-  color: var(--tc-text-color-primary);
+  color: var(--tc-text-primary);
   font-weight: var(--tc-font-weight-medium);
   font-size: var(--tc-font-size-sm);
 }
@@ -199,7 +199,7 @@
   padding-bottom: var(--tc-space-1);
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-color-primary);
+  color: var(--tc-text-primary);
   margin-bottom: var(--tc-space-4);
 }
 
@@ -270,7 +270,7 @@
 
 .breadcrumbItem.active {
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-color-primary);
+  color: var(--tc-text-primary);
 }
 
 .editorTitle {
@@ -321,7 +321,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
   margin-right: var(--tc-space-4);
 }
 

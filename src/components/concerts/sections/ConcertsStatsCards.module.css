@@ -11,7 +11,7 @@
   background: var(--tc-bg-default);
   border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-shadow-sm);
-  padding: var(--tc-space-6) var(--tc-spacing-xl);
+  padding: var(--tc-space-6) var(--tc-space-8);
   display: flex;
   flex-direction: row;
   align-items: center;

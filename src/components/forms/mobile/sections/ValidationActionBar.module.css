@@ -11,7 +11,7 @@
   left: 0;
   right: 0;
   background: var(--tc-bg-default);
-  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  padding: var(--tc-space-2) var(--tc-space-3);
   box-shadow: var(--tc-shadow-lg));
   z-index: 1000;
   display: flex;
@@ -20,6 +20,6 @@
 
 .validateButton {
   width: 100%;
-  padding: var(--tc-spacing-2);
+  padding: var(--tc-space-2);
   font-weight: var(--tc-font-weight-medium);
 }

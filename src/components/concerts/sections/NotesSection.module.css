@@ -20,7 +20,7 @@
   align-items: center;
   justify-content: center;
   font-size: var(--tc-font-size-md);
-  margin-right: var(--tc-spacing-3);
+  margin-right: var(--tc-space-3);
 }
 
 .cardTitle {
@@ -42,7 +42,7 @@
     width: var(--tc-icon-size-sm);
     height: var(--tc-icon-size-sm);
     font-size: var(--tc-font-size-sm);
-    margin-right: var(--tc-spacing-2);
+    margin-right: var(--tc-space-2);
   }
   
   .cardTitle {

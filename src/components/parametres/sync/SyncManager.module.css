@@ -39,7 +39,7 @@
   gap: var(--tc-space-2);
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-color-primary);
+  color: var(--tc-text-primary);
   margin: 0;
 }
 
@@ -69,7 +69,7 @@
   background-color: var(--tc-gray-50);
   border-top: var(--tc-border-width) solid var(--tc-border-default);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-text-color-muted);
+  color: var(--tc-text-muted);
 }
 
 /* Collections */
@@ -102,13 +102,13 @@
 
 .collectionName {
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-color-primary);
+  color: var(--tc-text-primary);
   margin-bottom: var(--tc-space-1);
 }
 
 .collectionDescription {
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-text-color-muted);
+  color: var(--tc-text-muted);
 }
 
 /* Responsive */

@@ -6,7 +6,7 @@
  */
 
 .artisteContainer {
-  margin-bottom: var(--tc-spacing-3);
+  margin-bottom: var(--tc-space-3);
 }
 
 .artisteCard {
@@ -17,8 +17,8 @@
 .sectionTitle {
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-semibold);
-  margin-bottom: var(--tc-spacing-3);
-  padding-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-space-3);
+  padding-bottom: var(--tc-space-2);
   border-bottom: 1px solid var(--tc-border-default);
 }
 
@@ -26,14 +26,14 @@
 .searchContainer {
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-3);
+  gap: var(--tc-space-3);
 }
 
 .formLabel {
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-text-color-secondary);
-  margin-bottom: var(--tc-spacing-1);
+  color: var(--tc-text-secondary);
+  margin-bottom: var(--tc-space-1);
 }
 
 .searchInputGroup {
@@ -48,14 +48,14 @@
 
 .clearButton {
   position: absolute;
-  right: var(--tc-spacing-1);
+  right: var(--tc-space-1);
   border: none;
   background: transparent;
-  padding: var(--tc-spacing-1) var(--tc-spacing-2);
+  padding: var(--tc-space-1) var(--tc-space-2);
 }
 
 .searchResults {
-  margin-top: var(--tc-spacing-2);
+  margin-top: var(--tc-space-2);
   border: 1px solid var(--tc-border-color-medium);
   border-radius: var(--tc-radius-sm);
   max-height: 200px;
@@ -63,12 +63,12 @@
 }
 
 .loadingResults {
-  padding: var(--tc-spacing-2);
+  padding: var(--tc-space-2);
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-2);
+  gap: var(--tc-space-2);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
 }
 
 .resultsList {
@@ -76,7 +76,7 @@
 }
 
 .resultItem {
-  padding: var(--tc-spacing-2) var(--tc-spacing-2);
+  padding: var(--tc-space-2) var(--tc-space-2);
   cursor: pointer;
 }
 
@@ -87,27 +87,27 @@
 
 .resultGenre {
   font-size: var(--tc-font-size-xs);
-  color: var(--tc-text-color-secondary);
-  margin-top: var(--tc-spacing-1);
+  color: var(--tc-text-secondary);
+  margin-top: var(--tc-space-1);
 }
 
 .noResults {
-  padding: var(--tc-spacing-2);
+  padding: var(--tc-space-2);
   text-align: center;
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
 }
 
 .createLink {
   display: block;
-  margin-top: var(--tc-spacing-2);
+  margin-top: var(--tc-space-2);
   text-decoration: underline;
   padding: 0;
   font-size: var(--tc-font-size-sm);
 }
 
 .selectedArtiste {
-  margin-top: var(--tc-spacing-3);
+  margin-top: var(--tc-space-3);
 }
 
 .selectedArtisteCard {
@@ -118,21 +118,21 @@
 .artisteName {
   font-weight: var(--tc-font-weight-semibold);
   font-size: var(--tc-font-size-md);
-  margin-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-space-2);
 }
 
 .artisteGenre {
   font-size: var(--tc-font-size-sm);
-  margin-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-space-2);
   display: flex;
   align-items: center;
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
 }
 
 .artisteDescription {
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-text-color-secondary);
-  margin-top: var(--tc-spacing-2);
+  color: var(--tc-text-secondary);
+  margin-top: var(--tc-space-2);
   font-style: italic;
 }
 
@@ -140,14 +140,14 @@
 .artisteContent {
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-2);
+  gap: var(--tc-space-2);
 }
 
 .artisteHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-space-2);
 }
 
 .artisteHeader h4 {
@@ -157,7 +157,7 @@
 }
 
 .artisteDetailsButton {
-  padding: var(--tc-spacing-1) var(--tc-spacing-2);
+  padding: var(--tc-space-1) var(--tc-space-2);
   font-size: var(--tc-font-size-xs);
 }
 
@@ -165,54 +165,54 @@
   display: flex;
   align-items: center;
   font-size: var(--tc-font-size-sm);
-  margin-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-space-2);
 }
 
 .artisteDetail i {
   width: 20px;
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
 }
 
 .artisteBio {
-  margin-top: var(--tc-spacing-2);
+  margin-top: var(--tc-space-2);
 }
 
 .bioTitle {
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-semibold);
-  margin-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-space-2);
 }
 
 .bioText {
   background-color: var(--tc-bg-light);
-  padding: var(--tc-spacing-2);
+  padding: var(--tc-space-2);
   border-radius: var(--tc-radius-sm);
   font-size: var(--tc-font-size-sm);
   white-space: pre-wrap;
 }
 
 .artisteContact {
-  margin-top: var(--tc-spacing-2);
-  padding-top: var(--tc-spacing-2);
+  margin-top: var(--tc-space-2);
+  padding-top: var(--tc-space-2);
   border-top: 1px solid var(--tc-border-default);
 }
 
 .contactTitle {
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-semibold);
-  margin-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-space-2);
 }
 
 .contactDetail {
   display: flex;
   align-items: center;
   font-size: var(--tc-font-size-sm);
-  margin-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-space-2);
 }
 
 .contactDetail i {
   width: 20px;
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
 }
 
 /* État vide */
@@ -221,13 +221,13 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--tc-spacing-8) var(--tc-spacing-3);
+  padding: var(--tc-space-8) var(--tc-space-3);
   text-align: center;
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
 }
 
 .emptyState i {
   font-size: 2rem;
-  margin-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-space-2);
   opacity: 0.5;
 }

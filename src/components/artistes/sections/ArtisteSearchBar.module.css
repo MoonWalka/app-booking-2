@@ -17,7 +17,7 @@
 .searchResultItem {
   display: flex;
   align-items: center;
-  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  padding: var(--tc-space-2) var(--tc-space-3);
   text-decoration: none;
   color: inherit;
   border-bottom: 1px solid var(--tc-border-ultralight);
@@ -32,7 +32,7 @@
   height: 40px;
   border-radius: 50%;
   overflow: hidden;
-  margin-right: var(--tc-spacing-3);
+  margin-right: var(--tc-space-3);
   flex-shrink: 0;
 }
 
@@ -48,7 +48,7 @@
 }
 
 .searchCreateItem {
-  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  padding: var(--tc-space-2) var(--tc-space-3);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -68,7 +68,7 @@
   
   .searchResultItem,
   .searchCreateItem {
-    padding: var(--tc-spacing-1-5) var(--tc-spacing-2);
+    padding: var(--tc-spacing-1-5) var(--tc-space-2);
   }
 }
 
@@ -76,7 +76,7 @@
   .searchResultAvatar {
     width: 32px;
     height: 32px;
-    margin-right: var(--tc-spacing-2);
+    margin-right: var(--tc-space-2);
   }
   
   .placeholderAvatar {

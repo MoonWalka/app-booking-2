@@ -6,7 +6,7 @@
  */
 
 .organizerContainer {
-  margin-bottom: var(--tc-spacing-3);
+  margin-bottom: var(--tc-space-3);
 }
 
 .organizerCard {
@@ -17,8 +17,8 @@
 .sectionTitle {
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-semibold);
-  margin-bottom: var(--tc-spacing-3);
-  padding-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-space-3);
+  padding-bottom: var(--tc-space-2);
   border-bottom: 1px solid var(--tc-border-default);
 }
 
@@ -26,14 +26,14 @@
 .searchContainer {
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-3);
+  gap: var(--tc-space-3);
 }
 
 .formLabel {
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-text-color-secondary);
-  margin-bottom: var(--tc-spacing-1);
+  color: var(--tc-text-secondary);
+  margin-bottom: var(--tc-space-1);
 }
 
 .searchInputGroup {
@@ -48,14 +48,14 @@
 
 .clearButton {
   position: absolute;
-  right: var(--tc-spacing-1);
+  right: var(--tc-space-1);
   border: none;
   background: transparent;
-  padding: var(--tc-spacing-1) var(--tc-spacing-2);
+  padding: var(--tc-space-1) var(--tc-space-2);
 }
 
 .searchResults {
-  margin-top: var(--tc-spacing-2);
+  margin-top: var(--tc-space-2);
   border: 1px solid var(--tc-border-color-medium);
   border-radius: var(--tc-radius-sm);
   max-height: 200px;
@@ -63,12 +63,12 @@
 }
 
 .loadingResults {
-  padding: var(--tc-spacing-2);
+  padding: var(--tc-space-2);
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-2);
+  gap: var(--tc-space-2);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
 }
 
 .resultsList {
@@ -76,7 +76,7 @@
 }
 
 .resultItem {
-  padding: var(--tc-spacing-2) var(--tc-spacing-2);
+  padding: var(--tc-space-2) var(--tc-space-2);
   cursor: pointer;
 }
 
@@ -87,27 +87,27 @@
 
 .resultStructure {
   font-size: var(--tc-font-size-xs);
-  color: var(--tc-text-color-secondary);
-  margin-top: var(--tc-spacing-1);
+  color: var(--tc-text-secondary);
+  margin-top: var(--tc-space-1);
 }
 
 .noResults {
-  padding: var(--tc-spacing-2);
+  padding: var(--tc-space-2);
   text-align: center;
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
 }
 
 .createLink {
   display: block;
-  margin-top: var(--tc-spacing-2);
+  margin-top: var(--tc-space-2);
   text-decoration: underline;
   padding: 0;
   font-size: var(--tc-font-size-sm);
 }
 
 .selectedProg {
-  margin-top: var(--tc-spacing-3);
+  margin-top: var(--tc-space-3);
 }
 
 .selectedProgCard {
@@ -118,33 +118,33 @@
 .progName {
   font-weight: var(--tc-font-weight-semibold);
   font-size: var(--tc-font-size-md);
-  margin-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-space-2);
 }
 
 .progStructure, .progContact {
   font-size: var(--tc-font-size-sm);
-  margin-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-space-2);
   display: flex;
   align-items: center;
 }
 
 .progStructure i, .progContact i {
   width: 20px;
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
 }
 
 /* Mode affichage */
 .organizerContent {
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-2);
+  gap: var(--tc-space-2);
 }
 
 .organizerHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-space-2);
 }
 
 .organizerName {
@@ -154,7 +154,7 @@
 }
 
 .organizerDetailsButton {
-  padding: var(--tc-spacing-1) var(--tc-spacing-2);
+  padding: var(--tc-space-1) var(--tc-space-2);
   font-size: var(--tc-font-size-xs);
 }
 
@@ -162,39 +162,39 @@
   display: flex;
   align-items: center;
   font-size: var(--tc-font-size-sm);
-  margin-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-space-2);
 }
 
 .organizerDetail i {
   width: 20px;
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
 }
 
 .formSection {
-  margin-top: var(--tc-spacing-3);
-  padding-top: var(--tc-spacing-3);
+  margin-top: var(--tc-space-3);
+  padding-top: var(--tc-space-3);
   border-top: 1px solid var(--tc-border-default);
 }
 
 .formSectionTitle {
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-semibold);
-  margin-bottom: var(--tc-spacing-3);
+  margin-bottom: var(--tc-space-3);
 }
 
 .formInfo {
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-2);
+  gap: var(--tc-space-2);
 }
 
 .formStatusBadge {
-  margin-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-space-2);
 }
 
 .badge {
   font-size: var(--tc-font-size-xs);
-  padding: var(--tc-spacing-1) var(--tc-spacing-2);
+  padding: var(--tc-space-1) var(--tc-space-2);
 }
 
 .formDetail {
@@ -205,7 +205,7 @@
 
 .formDetail i {
   width: 20px;
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
 }
 
 .formValidated {
@@ -213,33 +213,33 @@
   align-items: center;
   background-color: var(--tc-success-color-light);
   color: var(--tc-success-color-dark);
-  padding: var(--tc-spacing-2);
+  padding: var(--tc-space-2);
   border-radius: var(--tc-radius-sm);
   font-size: var(--tc-font-size-sm);
-  margin-top: var(--tc-spacing-2);
+  margin-top: var(--tc-space-2);
 }
 
 .validateButton {
   width: 100%;
-  margin-top: var(--tc-spacing-2);
+  margin-top: var(--tc-space-2);
 }
 
 .formActions {
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-2);
+  gap: var(--tc-space-2);
 }
 
 .generatedFormContainer {
   background-color: var(--tc-bg-light);
   border-radius: var(--tc-radius-sm);
-  padding: var(--tc-spacing-2);
-  margin-top: var(--tc-spacing-2);
+  padding: var(--tc-space-2);
+  margin-top: var(--tc-space-2);
 }
 
 .formLinkInfo {
   font-size: var(--tc-font-size-sm);
-  margin-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-space-2);
   color: var(--tc-color-primary);
 }
 
@@ -262,13 +262,13 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--tc-spacing-8) var(--tc-spacing-3);
+  padding: var(--tc-space-8) var(--tc-space-3);
   text-align: center;
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
 }
 
 .emptyState i {
   font-size: 2rem;
-  margin-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-space-2);
   opacity: 0.5;
 }

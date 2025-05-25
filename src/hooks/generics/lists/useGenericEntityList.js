@@ -76,7 +76,7 @@ import useGenericFilteredSearch from '../search/useGenericFilteredSearch';
  * @complexity HIGH
  * @businessCritical true
  * @generic true
- * @replaces useConcertsList, useProgrammateursList, useEntityList
+ * @replaces useConcertsList (SUPPRIMÉ), useProgrammateursList, useEntityList
  */
 const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
   const {
@@ -113,9 +113,19 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
   const [totalCount, setTotalCount] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   
+  // États pour la virtualisation
+  const [virtualizedItems, setVirtualizedItems] = useState([]);
+  const [visibleRange, setVisibleRange] = useState({ start: 0, end: 0 });
+  const [scrollTop, setScrollTop] = useState(0);
+  const [containerHeight, setContainerHeight] = useState(400);
+  const [itemHeight, setItemHeight] = useState(50);
+  
   // Références
   const refreshIntervalRef = useRef(null);
   const lastCursorRef = useRef(null);
+  const virtualScrollRef = useRef(null);
+  const itemHeightsRef = useRef(new Map());
+  const observerRef = useRef(null);
   
   // Configuration de récupération des données
   const fetchConfig = {
@@ -150,7 +160,7 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
   
   // Hook de récupération de données
   const {
-    data: items,
+    data: fetchedItems,
     loading,
     error,
     refetch,
@@ -202,6 +212,108 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
     startIndex: (currentPage - 1) * pageSize,
     endIndex: Math.min(currentPage * pageSize, totalCount)
   };
+  
+  // Cache des curseurs pour navigation bidirectionnelle
+  const [cursorCache, setCursorCache] = useState(new Map());
+  const [currentCursor, setCurrentCursor] = useState(null);
+  const [cursorLoading, setCursorLoading] = useState(false);
+  const [cursorError, setCursorError] = useState(null);
+  
+  // Sauvegarde d'un curseur pour une page donnée
+  const saveCursor = useCallback((page, cursor) => {
+    if (paginationType !== 'cursor') return;
+    
+    setCursorCache(prev => {
+      const newCache = new Map(prev);
+      newCache.set(page, cursor);
+      return newCache;
+    });
+  }, [paginationType]);
+  
+  // Récupération d'un curseur pour une page donnée
+  const getCursor = useCallback((page) => {
+    if (paginationType !== 'cursor') return null;
+    return cursorCache.get(page) || null;
+  }, [paginationType, cursorCache]);
+  
+  // Reconstruction du cache de curseurs (pour navigation vers une page éloignée)
+  const rebuildCursorCache = useCallback(async (targetPage) => {
+    if (paginationType !== 'cursor' || !refetch) return;
+    
+    console.log(`🔄 Reconstruction cache curseurs jusqu'à la page ${targetPage}`);
+    
+    let currentCursor = null;
+    setCursorCache(new Map()); // Reset du cache
+    
+    // Parcourir page par page jusqu'à la cible
+    for (let page = 1; page < targetPage; page++) {
+      try {
+        const result = await refetch({
+          startAfter: currentCursor,
+          limit: pageSize
+        });
+        
+        if (result && result.length > 0) {
+          const lastDoc = result[result.length - 1];
+          saveCursor(page, lastDoc);
+          currentCursor = lastDoc;
+        } else {
+          break; // Plus de données
+        }
+      } catch (error) {
+        console.error(`❌ Erreur reconstruction page ${page}:`, error);
+        break;
+      }
+    }
+  }, [paginationType, refetch, pageSize, saveCursor]);
+  
+  // Navigation vers une page avec curseur
+  const goToPageWithCursor = useCallback(async (targetPage) => {
+    if (paginationType !== 'cursor' || !refetch) return;
+    
+    setCursorLoading(true);
+    setCursorError(null);
+    
+    try {
+      let cursor = null;
+      
+      if (targetPage > 1) {
+        // Récupérer le curseur de la page précédente
+        cursor = getCursor(targetPage - 1);
+        
+        if (!cursor) {
+          console.warn(`⚠️ Curseur manquant pour la page ${targetPage - 1}`);
+          // Fallback: reconstruire depuis le début
+          await rebuildCursorCache(targetPage);
+          cursor = getCursor(targetPage - 1);
+        }
+      }
+      
+      // Mettre à jour la référence du curseur
+      lastCursorRef.current = cursor;
+      setCurrentCursor(cursor);
+      
+      // Déclencher la requête avec le curseur
+      const result = await refetch({
+        startAfter: cursor,
+        limit: pageSize
+      });
+      
+      // Sauvegarder le nouveau curseur si on a des résultats
+      if (result && result.length > 0) {
+        const lastDoc = result[result.length - 1];
+        saveCursor(targetPage, lastDoc);
+      }
+      
+      setCurrentPage(targetPage);
+      
+    } catch (error) {
+      console.error('❌ Erreur navigation curseur:', error);
+      setCursorError(`Erreur de navigation: ${error.message}`);
+    } finally {
+      setCursorLoading(false);
+    }
+  }, [paginationType, refetch, pageSize, getCursor, saveCursor, rebuildCursorCache]);
   
   // Navigation de pagination
   const goToPage = useCallback((page) => {
@@ -360,65 +472,286 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
     }, [enableBulkActions, selectedItems])
   };
   
-  // Rafraîchissement automatique
+  // ===== FONCTIONS DE VIRTUALISATION =====
+  
+  // Calcul de la plage visible pour la virtualisation
+  const calculateVisibleRange = useCallback(() => {
+    if (!enableVirtualization || finalItems.length === 0) {
+      return { start: 0, end: finalItems.length };
+    }
+    
+    const startIndex = Math.floor(scrollTop / itemHeight);
+    const endIndex = Math.min(
+      startIndex + Math.ceil(containerHeight / itemHeight) + 1,
+      finalItems.length
+    );
+    
+    return { start: Math.max(0, startIndex), end: endIndex };
+  }, [enableVirtualization, finalItems.length, scrollTop, itemHeight, containerHeight]);
+  
+  // Mise à jour des éléments virtualisés
+  const updateVirtualizedItems = useCallback(() => {
+    if (!enableVirtualization) {
+      setVirtualizedItems(finalItems);
+      return;
+    }
+    
+    const range = calculateVisibleRange();
+    setVisibleRange(range);
+    
+    const visibleItems = finalItems.slice(range.start, range.end).map((item, index) => ({
+      ...item,
+      virtualIndex: range.start + index,
+      virtualTop: (range.start + index) * itemHeight
+    }));
+    
+    setVirtualizedItems(visibleItems);
+  }, [enableVirtualization, finalItems, calculateVisibleRange, itemHeight]);
+  
+  // Gestion du scroll pour la virtualisation
+  const handleVirtualScroll = useCallback((event) => {
+    if (!enableVirtualization) return;
+    
+    const newScrollTop = event.target.scrollTop;
+    setScrollTop(newScrollTop);
+    
+    // Mise à jour de la plage visible avec throttling
+    requestAnimationFrame(() => {
+      updateVirtualizedItems();
+    });
+  }, [enableVirtualization, updateVirtualizedItems]);
+  
+  // Calcul de la hauteur totale virtualisée
+  const getTotalVirtualHeight = useCallback(() => {
+    if (!enableVirtualization) return 'auto';
+    return finalItems.length * itemHeight;
+  }, [enableVirtualization, finalItems.length, itemHeight]);
+  
+  // Mise à jour de la hauteur d'un élément (pour les hauteurs variables)
+  const updateItemHeight = useCallback((index, height) => {
+    if (!enableVirtualization) return;
+    
+    itemHeightsRef.current.set(index, height);
+    
+    // Recalculer la hauteur moyenne si on a assez d'échantillons
+    const heights = Array.from(itemHeightsRef.current.values());
+    if (heights.length > 10) {
+      const avgHeight = heights.reduce((sum, h) => sum + h, 0) / heights.length;
+      setItemHeight(Math.round(avgHeight));
+    }
+  }, [enableVirtualization]);
+  
+  // Observer pour mesurer automatiquement les hauteurs d'éléments
+  const setupItemHeightObserver = useCallback(() => {
+    if (!enableVirtualization || !virtualScrollRef.current) return;
+    
+    if (observerRef.current) {
+      observerRef.current.disconnect();
+    }
+    
+    observerRef.current = new ResizeObserver((entries) => {
+      entries.forEach((entry) => {
+        const index = parseInt(entry.target.dataset.virtualIndex);
+        if (!isNaN(index)) {
+          updateItemHeight(index, entry.contentRect.height);
+        }
+        
+        // Mise à jour de la hauteur du conteneur si c'est le conteneur principal
+        if (entry.target === virtualScrollRef.current) {
+          const newHeight = entry.contentRect.height;
+          if (newHeight !== containerHeight) {
+            setContainerHeight(newHeight);
+            console.log(`📏 Hauteur conteneur mise à jour: ${newHeight}px`);
+          }
+        }
+      });
+    });
+    
+    // Observer tous les éléments visibles
+    const items = virtualScrollRef.current.querySelectorAll('[data-virtual-index]');
+    items.forEach(item => observerRef.current.observe(item));
+    
+    // Observer aussi le conteneur principal pour détecter les changements de taille
+    observerRef.current.observe(virtualScrollRef.current);
+  }, [enableVirtualization, updateItemHeight, containerHeight]);
+  
+  // Fonction de redimensionnement manuel du conteneur
+  const resizeContainer = useCallback((newHeight) => {
+    if (!enableVirtualization) return;
+    
+    setContainerHeight(newHeight);
+    
+    // Recalculer la plage visible avec la nouvelle hauteur
+    requestAnimationFrame(() => {
+      updateVirtualizedItems();
+    });
+    
+    console.log(`📏 Conteneur redimensionné manuellement: ${newHeight}px`);
+  }, [enableVirtualization, updateVirtualizedItems]);
+  
+  // Fonction d'auto-ajustement de la hauteur du conteneur
+  const autoResizeContainer = useCallback(() => {
+    if (!enableVirtualization || !virtualScrollRef.current) return;
+    
+    const parentElement = virtualScrollRef.current.parentElement;
+    if (parentElement) {
+      const availableHeight = parentElement.clientHeight;
+      const newHeight = Math.max(200, availableHeight - 20); // Minimum 200px, avec marge
+      
+      if (newHeight !== containerHeight) {
+        setContainerHeight(newHeight);
+        console.log(`📏 Auto-ajustement conteneur: ${newHeight}px`);
+      }
+    }
+  }, [enableVirtualization, containerHeight]);
+  
+  // ===== FIN FONCTIONS DE VIRTUALISATION =====
+  
+  // ===== AUTO-REFRESH =====
+  
+  const [autoRefreshStatus, setAutoRefreshStatus] = useState('idle'); // 'idle' | 'running' | 'paused'
+  const [isPageVisible, setIsPageVisible] = useState(true);
+  
+  // Gestion de la visibilité de la page pour l'auto-refresh
+  const handleVisibilityChange = useCallback(() => {
+    const isVisible = !document.hidden;
+    setIsPageVisible(isVisible);
+    
+    if (autoRefresh) {
+      if (isVisible && autoRefreshStatus === 'paused') {
+        setAutoRefreshStatus('running');
+        console.log('🔄 Auto-refresh repris (page visible)');
+      } else if (!isVisible && autoRefreshStatus === 'running') {
+        setAutoRefreshStatus('paused');
+        console.log('⏸️ Auto-refresh mis en pause (page cachée)');
+      }
+    }
+  }, [autoRefresh, autoRefreshStatus]);
+  
+  // Démarrage de l'auto-refresh
   const startAutoRefresh = useCallback(() => {
-    if (!autoRefresh) return;
+    if (!autoRefresh || autoRefreshStatus === 'running') return;
+    
+    setAutoRefreshStatus('running');
     
     refreshIntervalRef.current = setInterval(() => {
-      console.log('🔄 Rafraîchissement automatique de la liste');
-      refetch();
+      if (isPageVisible && !loading) {
+        console.log('🔄 Auto-refresh des données');
+        refetch();
+      }
     }, refreshInterval);
-  }, [autoRefresh, refreshInterval, refetch]);
+    
+    console.log(`✅ Auto-refresh démarré (${refreshInterval}ms)`);
+  }, [autoRefresh, autoRefreshStatus, isPageVisible, loading, refetch, refreshInterval]);
   
+  // Arrêt de l'auto-refresh
   const stopAutoRefresh = useCallback(() => {
     if (refreshIntervalRef.current) {
       clearInterval(refreshIntervalRef.current);
       refreshIntervalRef.current = null;
     }
+    setAutoRefreshStatus('idle');
+    console.log('⏹️ Auto-refresh arrêté');
   }, []);
   
-  // Recherche dans la liste
+  // ===== RECHERCHE DANS LA LISTE =====
+  
+  const [searchInListTerm, setSearchInListTerm] = useState('');
+  const [searchInListResults, setSearchInListResults] = useState([]);
+  
+  // Recherche locale dans les éléments chargés
   const searchInList = useCallback((searchTerm) => {
-    if (!enableSearch || !searchAndFilterHook.setSearchTerm) return;
+    setSearchInListTerm(searchTerm);
     
-    searchAndFilterHook.setSearchTerm(searchTerm);
-  }, [enableSearch, searchAndFilterHook]);
-  
-  // Filtrage de la liste
-  const setFilter = useCallback((filterKey, value) => {
-    if (!enableFilters || !searchAndFilterHook.setFilter) return;
-    
-    searchAndFilterHook.setFilter(filterKey, value);
-  }, [enableFilters, searchAndFilterHook]);
-  
-  // Réinitialisation de la liste
-  const resetList = useCallback(() => {
-    setCurrentPage(1);
-    setAllItems([]);
-    setSelectedItems([]);
-    setSorting(defaultSort);
-    
-    if (enableFilters && searchAndFilterHook.clearFilters) {
-      searchAndFilterHook.clearFilters();
+    if (!searchTerm.trim()) {
+      setSearchInListResults([]);
+      return finalItems;
     }
     
-    if (enableSearch && searchAndFilterHook.clearSearch) {
-      searchAndFilterHook.clearSearch();
-    }
+    const term = searchTerm.toLowerCase();
+    const results = finalItems.filter(item => {
+      // Recherche dans les champs configurés
+      if (searchFields.length > 0) {
+        return searchFields.some(field => {
+          const value = item[field];
+          return value && typeof value === 'string' && 
+                 value.toLowerCase().includes(term);
+        });
+      }
+      
+      // Recherche générale dans toutes les propriétés string
+      return Object.values(item).some(value => 
+        typeof value === 'string' && value.toLowerCase().includes(term)
+      );
+    });
     
-    refetch();
-  }, [defaultSort, enableFilters, enableSearch, searchAndFilterHook, refetch]);
+    setSearchInListResults(results);
+    return results;
+  }, [finalItems, searchFields]);
+  
+  // Effacement de la recherche dans la liste
+  const clearSearchInList = useCallback(() => {
+    setSearchInListTerm('');
+    setSearchInListResults([]);
+  }, []);
+  
+  // ===== EFFETS =====
   
   // Effet de rafraîchissement automatique
   useEffect(() => {
     if (autoRefresh) {
       startAutoRefresh();
+      
+      // Écouter les changements de visibilité
+      document.addEventListener('visibilitychange', handleVisibilityChange);
     }
     
     return () => {
       stopAutoRefresh();
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [autoRefresh, startAutoRefresh, stopAutoRefresh]);
+  }, [autoRefresh, startAutoRefresh, stopAutoRefresh, handleVisibilityChange]);
+  
+  // Effets pour la virtualisation
+  useEffect(() => {
+    if (enableVirtualization) {
+      updateVirtualizedItems();
+    }
+  }, [enableVirtualization, updateVirtualizedItems]);
+  
+  useEffect(() => {
+    if (enableVirtualization) {
+      setupItemHeightObserver();
+    }
+    
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+    };
+  }, [enableVirtualization, setupItemHeightObserver, virtualizedItems]);
+  
+  // Effet pour traiter les données récupérées
+  useEffect(() => {
+    if (fetchedItems) {
+      const processedItems = fetchedItems.map(item => 
+        transformItem ? transformItem(item) : item
+      );
+      
+      if (paginationType === 'infinite') {
+        setAllItems(prev => [...prev, ...processedItems]);
+      } else {
+        setAllItems(processedItems);
+      }
+      
+      setTotalCount(processedItems.length);
+      setHasMore(processedItems.length === pageSize);
+      
+      if (onItemsChange) {
+        onItemsChange(processedItems);
+      }
+    }
+  }, [fetchedItems, transformItem, paginationType, pageSize, onItemsChange]);
   
   // Effet de nettoyage de la sélection lors du changement d'éléments
   useEffect(() => {
@@ -439,6 +772,24 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
     items: finalItems,
     loading,
     error,
+    
+    // Virtualisation
+    virtualizedItems: enableVirtualization ? virtualizedItems : finalItems,
+    visibleRange,
+    virtualScrollRef,
+    handleVirtualScroll,
+    getTotalVirtualHeight,
+    updateItemHeight,
+    resizeContainer,
+    autoResizeContainer,
+    isVirtualized: enableVirtualization,
+    virtualStats: {
+      totalItems: finalItems.length,
+      visibleItems: virtualizedItems.length,
+      itemHeight,
+      containerHeight,
+      scrollTop
+    },
     
     // Pagination
     pagination,
@@ -467,18 +818,35 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
     
     // Recherche et filtres
     searchInList,
-    setFilter,
-    searchTerm: searchAndFilterHook?.searchTerm,
-    activeFilters: searchAndFilterHook?.activeFilters,
+    setFilter: searchAndFilterHook?.setFilter || (() => {}),
+    searchTerm: searchAndFilterHook?.searchTerm || '',
+    activeFilters: searchAndFilterHook?.activeFilters || {},
+    
+    // Auto-refresh
+    autoRefreshStatus,
+    startAutoRefresh,
+    stopAutoRefresh,
     
     // Utilitaires
     refetch,
-    resetList,
+    resetList: () => {
+      setCurrentPage(1);
+      setAllItems([]);
+      setSelectedItems([]);
+      setSorting(defaultSort);
+      clearSearchInList();
+      
+      if (enableFilters && searchAndFilterHook?.clearFilters) {
+        searchAndFilterHook.clearFilters();
+      }
+      
+      if (enableSearch && searchAndFilterHook?.clearSearch) {
+        searchAndFilterHook.clearSearch();
+      }
+      
+      refetch();
+    },
     lastFetch,
-    
-    // Auto-refresh
-    startAutoRefresh,
-    stopAutoRefresh,
     
     // Statistiques
     stats: {
@@ -486,7 +854,32 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
       selectedCount: selectedItems.length,
       currentPageItems: finalItems.length,
       selectionRate: totalCount > 0 ? (selectedItems.length / totalCount) * 100 : 0
-    }
+    },
+    
+    // Pagination par curseur
+    cursorPagination: {
+      goToPage: goToPageWithCursor,
+      currentCursor,
+      loading: cursorLoading,
+      error: cursorError,
+      hasCursor: (page) => cursorCache.has(page),
+      getCursorInfo: () => ({
+        currentPage,
+        currentCursor,
+        cacheSize: cursorCache.size,
+        cachedPages: Array.from(cursorCache.keys()).sort((a, b) => a - b)
+      }),
+      clearCache: () => {
+        setCursorCache(new Map());
+        setCurrentCursor(null);
+        lastCursorRef.current = null;
+      }
+    },
+    
+    // Recherche dans la liste
+    searchInListTerm,
+    searchInListResults,
+    clearSearchInList
   };
 };
 

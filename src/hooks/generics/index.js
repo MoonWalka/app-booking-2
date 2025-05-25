@@ -42,7 +42,7 @@ export { default as useGenericValidation } from './validation/useGenericValidati
  * - useGenericDataFetcher: Hook de récupération de données optimisé ✅
  * - useGenericCachedData: Hook de cache multi-niveaux avancé ✅
  * - useGenericEntityList: Hook de listes avec pagination et sélection ✅
- * - Migration useConcertsList: Hook critique métier ✅ TERMINÉE
+ * - Migration useConcertsList: Hook critique métier ✅ TERMINÉE et SUPPRIMÉ
  * 
  * SEMAINE 3 - FORMS + VALIDATION (4/4 hooks) ✅ TERMINÉE
  * - useGenericEntityForm: Hook de formulaires d'entités avancés ✅

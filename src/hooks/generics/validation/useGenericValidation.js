@@ -75,7 +75,6 @@ import { useState, useCallback, useEffect, useMemo } from 'react';
 const useGenericValidation = (data = {}, validationRules = {}, options = {}) => {
   const {
     validateOnChange = true,
-    validateOnBlur = true,
     enableValidation = true,
     debounceDelay = 300,
     enableAsyncValidation = true
@@ -144,6 +143,10 @@ const useGenericValidation = (data = {}, validationRules = {}, options = {}) => 
           if (!siretRegex.test(value.replace(/\s/g, ''))) {
             return rule.typeMessage || 'SIRET doit contenir 14 chiffres';
           }
+          break;
+          
+        default:
+          // Type non reconnu, pas d'erreur
           break;
       }
       return null;
@@ -258,7 +261,7 @@ const useGenericValidation = (data = {}, validationRules = {}, options = {}) => 
     }
     
     // Validation synchrone avec validateurs intégrés
-    for (const [validatorName, validator] of Object.entries(builtInValidators)) {
+    for (const validator of Object.values(builtInValidators)) {
       const error = validator(value, rule);
       if (error) {
         setValidationErrors(prev => ({

@@ -1,7 +1,7 @@
 import React from 'react';
 // src/hooks/__tests__/useGenericEntityList.test.js
 import { renderHook, act } from '@testing-library/react';
-import { useGenericEntityList } from '@/hooks/common';
+import { useGenericEntityList } from '@/hooks/generics';
 
 // Mock des dépendances Firebase
 jest.mock('@/firebaseInit', () => {

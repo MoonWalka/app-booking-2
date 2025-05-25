@@ -1,4 +1,4 @@
-import useGenericEntityForm from '@/hooks/common/useGenericEntityForm';
+import useGenericEntityForm from '@/hooks/generics/forms/useGenericEntityForm';
 
 /**
  * Hook optimisé pour la gestion des formulaires de contrats

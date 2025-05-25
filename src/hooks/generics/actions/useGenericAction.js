@@ -11,13 +11,17 @@ import { useState, useCallback } from 'react';
 import { db } from '@/services/firebase-service';
 import { 
   collection, 
-  doc, 
-  addDoc, 
-  updateDoc, 
-  deleteDoc, 
-  getDocs, 
+  doc,
   query, 
-  where 
+  where, 
+  orderBy, 
+  limit, 
+  getDocs,
+  getDoc,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  startAfter
 } from '@/services/firebase-service';
 
 /**
@@ -305,13 +309,160 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
     }
   }, [entityType, create, update, remove, onError, enableLogging, autoResetError]);
   
+  // Fonction de requête avancée (utilise query, where, orderBy, limit, getDocs)
+  const queryEntities = useCallback(async (queryConfig = {}) => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const {
+        filters = {},
+        orderByField = null,
+        orderDirection = 'asc',
+        limitCount = null,
+        startAfterDoc = null
+      } = queryConfig;
+      
+      if (enableLogging) {
+        console.log(`🔍 Requête ${entityType}:`, queryConfig);
+      }
+      
+      // Construction de la requête
+      let q = collection(db, entityType);
+      const constraints = [];
+      
+      // Ajout des filtres
+      Object.entries(filters).forEach(([field, value]) => {
+        if (value !== undefined && value !== null && value !== '') {
+          if (Array.isArray(value)) {
+            constraints.push(where(field, 'in', value));
+          } else if (typeof value === 'object' && value.operator) {
+            constraints.push(where(field, value.operator, value.value));
+          } else {
+            constraints.push(where(field, '==', value));
+          }
+        }
+      });
+      
+      // Ajout du tri
+      if (orderByField) {
+        constraints.push(orderBy(orderByField, orderDirection));
+      }
+      
+      // Ajout de la pagination
+      if (startAfterDoc) {
+        constraints.push(startAfter(startAfterDoc));
+      }
+      
+      // Ajout de la limite
+      if (limitCount) {
+        constraints.push(limit(limitCount));
+      }
+      
+      // Exécution de la requête
+      if (constraints.length > 0) {
+        q = query(q, ...constraints);
+      }
+      
+      const querySnapshot = await getDocs(q);
+      const results = [];
+      
+      querySnapshot.forEach((doc) => {
+        results.push({ id: doc.id, ...doc.data() });
+      });
+      
+      if (enableLogging) {
+        console.log(`✅ Requête ${entityType} terminée:`, results.length, 'résultats');
+      }
+      
+      return {
+        data: results,
+        lastDoc: querySnapshot.docs[querySnapshot.docs.length - 1] || null,
+        hasMore: results.length === limitCount
+      };
+      
+    } catch (err) {
+      const errorMessage = `Erreur lors de la requête ${entityType}: ${err.message}`;
+      setError(errorMessage);
+      
+      if (onError) {
+        onError(err);
+      }
+      
+      if (enableLogging) {
+        console.error('❌', errorMessage, err);
+      }
+      
+      throw err;
+    } finally {
+      setLoading(false);
+      
+      if (autoResetError) {
+        setTimeout(() => setError(null), 5000);
+      }
+    }
+  }, [entityType, onError, enableLogging, autoResetError]);
+  
+  // Fonction de récupération d'une entité par ID
+  const getById = useCallback(async (id) => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      if (enableLogging) {
+        console.log(`📖 Récupération ${entityType} ${id}`);
+      }
+      
+      if (!id) {
+        throw new Error('ID manquant pour la récupération');
+      }
+      
+      const docRef = doc(db, entityType, id);
+      const docSnap = await getDoc(docRef);
+      
+      if (!docSnap.exists) {
+        throw new Error(`${entityType} avec l'ID ${id} non trouvé`);
+      }
+      
+      const result = { id, ...docSnap.data() };
+      
+      if (enableLogging) {
+        console.log(`✅ ${entityType} récupéré:`, result);
+      }
+      
+      return result;
+      
+    } catch (err) {
+      const errorMessage = `Erreur lors de la récupération de ${entityType}: ${err.message}`;
+      setError(errorMessage);
+      
+      if (onError) {
+        onError(err);
+      }
+      
+      if (enableLogging) {
+        console.error('❌', errorMessage, err);
+      }
+      
+      throw err;
+    } finally {
+      setLoading(false);
+      
+      if (autoResetError) {
+        setTimeout(() => setError(null), 5000);
+      }
+    }
+  }, [entityType, onError, enableLogging, autoResetError]);
+
   return {
     loading,
     error,
     create,
     update,
     remove,
-    batchOperation
+    batchOperation,
+    queryEntities,
+    getById
   };
 };
 

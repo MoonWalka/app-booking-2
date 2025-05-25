@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParametres } from '@/context/ParametresContext';
-import { useGenericEntityForm } from '@/hooks/common/useGenericEntityForm';
+import useGenericEntityForm from '@/hooks/generics/forms/useGenericEntityForm';
 
 /**
  * Custom hook pour gérer le formulaire d'entreprise

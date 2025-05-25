@@ -5,7 +5,7 @@
  * en utilisant directement les hooks génériques.
  */
 import { useState, useEffect, useCallback } from 'react';
-import { useGenericEntityList } from '@/hooks/common';
+import { useGenericEntityList } from '@/hooks/generics';
 import { collection, getDocs, query } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
 

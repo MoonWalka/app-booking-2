@@ -15,7 +15,7 @@
  * 4. Exportez le hook dans le fichier index.js de votre module
  */
 
-import { useGenericEntityList } from '@/hooks/common';
+import { useGenericEntityList } from '@/hooks/generics';
 import { useState, useCallback, useMemo } from 'react';
 
 /**

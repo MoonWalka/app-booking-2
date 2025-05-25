@@ -71,26 +71,27 @@ import useGenericDataFetcher from './useGenericDataFetcher';
  */
 const useGenericCachedData = (entityType, cacheConfig = {}, options = {}) => {
   const {
-    cacheKey,
-    strategy = 'ttl', // 'ttl' | 'lru' | 'tags' | 'manual'
-    ttl = 5 * 60 * 1000, // 5 minutes par défaut
-    maxSize = 50,
-    levels = ['memory'], // 'memory' | 'session' | 'local'
+    cacheKey = 'default',
+    strategy = 'lru',
+    levels = ['memory'],
+    maxSize = 100,
+    ttl = 5 * 60 * 1000,
     tags = [],
     fetchConfig = {},
+    onCacheInvalidate,
     onCacheHit,
-    onCacheMiss,
-    onCacheInvalidate
+    onCacheMiss
   } = cacheConfig;
   
   const {
-    enablePersistence = true,
-    enableCompression = false,
-    enableWarming = false,
-    warmingQueries = [],
+    enableCache = true,
+    enableRealTime = false,
+    enableOptimisticUpdates = true,
     enableStats = true,
-    enableAutoCleanup = true,
-    cleanupInterval = 60 * 1000 // 1 minute
+    enableCompression = false,
+    onCacheHit: onCacheHitOption,
+    onCacheMiss: onCacheMissOption,
+    onError
   } = options;
   
   // États de base
@@ -103,12 +104,14 @@ const useGenericCachedData = (entityType, cacheConfig = {}, options = {}) => {
     hitRate: 0
   });
   const [isFromCache, setIsFromCache] = useState(false);
+  const [realTimeSubscription, setRealTimeSubscription] = useState(null);
+  const [optimisticUpdates, setOptimisticUpdates] = useState(new Map());
   
   // Références pour les différents niveaux de cache
   const memoryCacheRef = useRef(new Map());
   const lruOrderRef = useRef([]);
   const tagsMapRef = useRef(new Map());
-  const cleanupIntervalRef = useRef(null);
+  const errorRetryRef = useRef(new Map());
   
   // Hook de récupération de données de base
   const {
@@ -123,14 +126,34 @@ const useGenericCachedData = (entityType, cacheConfig = {}, options = {}) => {
     onData: (newData) => {
       if (newData) {
         setCacheData(cacheKey, newData);
+        
+        // Appliquer les mises à jour optimistes si activées
+        if (enableOptimisticUpdates && optimisticUpdates.has(cacheKey)) {
+          const optimisticData = optimisticUpdates.get(cacheKey);
+          const mergedData = { ...newData, ...optimisticData };
+          setCacheData(cacheKey, mergedData);
+        }
       }
       if (fetchConfig.onData) {
         fetchConfig.onData(newData);
       }
+    },
+    onError: (err) => {
+      // Gestion d'erreur avec retry si activé
+      if (onError) {
+        onError(err);
+      }
+      
+      // Retry automatique pour certaines erreurs
+      const retryCount = errorRetryRef.current.get(cacheKey) || 0;
+      if (retryCount < 3 && err.code !== 'permission-denied') {
+        errorRetryRef.current.set(cacheKey, retryCount + 1);
+        setTimeout(() => refetch(), Math.pow(2, retryCount) * 1000);
+      }
     }
   }, {
     enableCache: false, // Désactiver le cache du DataFetcher, on gère le nôtre
-    autoFetch: false // On contrôle le fetch manuellement
+    autoFetch: !enableCache // Fetch automatique seulement si cache désactivé
   });
   
   // Génération de clé de cache
@@ -414,8 +437,14 @@ const useGenericCachedData = (entityType, cacheConfig = {}, options = {}) => {
       }
     }
     
+    // Callback d'invalidation
     if (onCacheInvalidate) {
-      onCacheInvalidate(keyOrTags);
+      onCacheInvalidate(keyOrTags, {
+        strategy,
+        invalidatedKeys: keyOrTags ? (Array.isArray(keyOrTags) ? keyOrTags : [keyOrTags]) : ['all'],
+        timestamp: new Date(),
+        cacheSize: memoryCacheRef.current.size
+      });
     }
     
     // Mise à jour des statistiques
@@ -425,57 +454,7 @@ const useGenericCachedData = (entityType, cacheConfig = {}, options = {}) => {
         size: memoryCacheRef.current.size
       }));
     }
-  }, [strategy, generateCacheKey, onCacheInvalidate, enableStats]);
-  
-  // Préchauffage du cache
-  const warmCache = useCallback(async () => {
-    if (!enableWarming || warmingQueries.length === 0) return;
-    
-    console.log(`🔥 Préchauffage du cache ${entityType}...`);
-    
-    for (const query of warmingQueries) {
-      try {
-        // Utiliser le DataFetcher pour récupérer les données
-        // Les données seront automatiquement mises en cache via onData
-        await refetch();
-      } catch (err) {
-        console.warn(`⚠️ Erreur préchauffage cache:`, err);
-      }
-    }
-  }, [enableWarming, warmingQueries, entityType, refetch]);
-  
-  // Nettoyage automatique du cache
-  const cleanupCache = useCallback(() => {
-    if (!enableAutoCleanup) return;
-    
-    const now = Date.now();
-    let cleanedCount = 0;
-    
-    // Nettoyage du cache mémoire
-    memoryCacheRef.current.forEach((value, key) => {
-      if (strategy === 'ttl' && now - value.timestamp > ttl) {
-        memoryCacheRef.current.delete(key);
-        cleanedCount++;
-      }
-    });
-    
-    if (cleanedCount > 0) {
-      console.log(`🧹 Cache nettoyé: ${cleanedCount} entrées supprimées`);
-      
-      // Mise à jour des statistiques
-      if (enableStats) {
-        setCacheStats(prev => ({
-          ...prev,
-          size: memoryCacheRef.current.size
-        }));
-      }
-    }
-  }, [enableAutoCleanup, strategy, ttl, enableStats]);
-  
-  // Fonction de nettoyage complet
-  const clearCache = useCallback(() => {
-    invalidate();
-  }, [invalidate]);
+  }, [strategy, generateCacheKey, enableStats, onCacheInvalidate]);
   
   // Mise à jour des statistiques de cache
   const updateCacheStats = useCallback((isHit) => {
@@ -494,12 +473,30 @@ const useGenericCachedData = (entityType, cacheConfig = {}, options = {}) => {
       return newStats;
     });
     
+    // Callbacks de cache avec métadonnées
     if (isHit && onCacheHit) {
-      onCacheHit();
+      onCacheHit({
+        cacheKey,
+        strategy,
+        level: 'memory', // TODO: détecter le niveau réel
+        timestamp: new Date()
+      });
     } else if (!isHit && onCacheMiss) {
-      onCacheMiss();
+      onCacheMiss({
+        cacheKey,
+        strategy,
+        timestamp: new Date(),
+        willFetch: true
+      });
     }
-  }, [enableStats, onCacheHit, onCacheMiss]);
+    
+    // Fallback vers les callbacks des options si définis
+    if (isHit && onCacheHitOption) {
+      onCacheHitOption();
+    } else if (!isHit && onCacheMissOption) {
+      onCacheMissOption();
+    }
+  }, [enableStats, onCacheHit, onCacheMiss, onCacheHitOption, onCacheMissOption, cacheKey, strategy]);
   
   // Effet de récupération des données avec cache
   useEffect(() => {
@@ -515,26 +512,157 @@ const useGenericCachedData = (entityType, cacheConfig = {}, options = {}) => {
     }
   }, [cacheKey, getCacheData, updateCacheStats, refetch]);
   
-  // Effet de nettoyage automatique
-  useEffect(() => {
-    if (enableAutoCleanup) {
-      cleanupIntervalRef.current = setInterval(cleanupCache, cleanupInterval);
+  // Préchauffage du cache
+  const warmCache = useCallback(async (warmingQueries = []) => {
+    if (!warmingQueries.length) return;
+    
+    console.log(`🔥 Préchauffage du cache ${entityType}:`, warmingQueries.length, 'requêtes');
+    
+    try {
+      for (const queryConfig of warmingQueries) {
+        const warmKey = `warm_${JSON.stringify(queryConfig)}`;
+        
+        // Vérifier si déjà en cache
+        const cached = getCacheData(warmKey);
+        if (cached) continue;
+        
+        // Simuler une requête de préchauffage
+        // En production, cela ferait une vraie requête avec queryConfig
+        const warmData = await refetch(queryConfig);
+        if (warmData) {
+          setCacheData(warmKey, warmData);
+        }
+      }
+      
+      console.log(`✅ Préchauffage terminé pour ${entityType}`);
+    } catch (error) {
+      console.error(`❌ Erreur préchauffage ${entityType}:`, error);
+    }
+  }, [entityType, getCacheData, setCacheData, refetch]);
+  
+  // Nettoyage complet du cache
+  const clearCache = useCallback(() => {
+    console.log(`🧹 Nettoyage complet du cache ${entityType}`);
+    
+    // Vider tous les niveaux de cache
+    memoryCacheRef.current.clear();
+    lruOrderRef.current = [];
+    tagsMapRef.current.clear();
+    
+    if (typeof window !== 'undefined') {
+      const prefix = generateCacheKey('');
+      
+      // Nettoyer sessionStorage
+      Object.keys(sessionStorage).forEach(key => {
+        if (key.startsWith(prefix)) {
+          sessionStorage.removeItem(key);
+        }
+      });
+      
+      // Nettoyer localStorage
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith(prefix)) {
+          localStorage.removeItem(key);
+        }
+      });
     }
     
+    // Réinitialiser les statistiques
+    setCacheStats({
+      hits: 0,
+      misses: 0,
+      size: 0,
+      lastHit: null,
+      lastMiss: null,
+      hitRate: 0
+    });
+    
+    setIsFromCache(false);
+    
+    console.log(`✅ Cache ${entityType} nettoyé`);
+  }, [entityType, generateCacheKey]);
+
+  // Gestion du temps réel
+  useEffect(() => {
+    if (!enableRealTime || !enableCache) return;
+    
+    console.log(`🔄 Activation temps réel pour ${entityType}`);
+    
+    // Simuler un abonnement temps réel (en production, utiliser onSnapshot)
+    const subscription = setInterval(() => {
+      // Vérifier si les données ont changé
+      const currentData = getCacheData(cacheKey);
+      if (currentData) {
+        // Déclencher un refetch périodique pour simuler le temps réel
+        refetch();
+      }
+    }, 30000); // Toutes les 30 secondes
+    
+    setRealTimeSubscription(subscription);
+    
     return () => {
-      if (cleanupIntervalRef.current) {
-        clearInterval(cleanupIntervalRef.current);
+      if (subscription) {
+        clearInterval(subscription);
+        setRealTimeSubscription(null);
+        console.log(`🔄 Désactivation temps réel pour ${entityType}`);
       }
     };
-  }, [enableAutoCleanup, cleanupCache, cleanupInterval]);
+  }, [enableRealTime, enableCache, entityType, cacheKey, getCacheData, refetch]);
   
-  // Effet de préchauffage initial
-  useEffect(() => {
-    if (enableWarming) {
-      warmCache();
+  // Fonction de mise à jour optimiste
+  const applyOptimisticUpdate = useCallback((key, updates) => {
+    if (!enableOptimisticUpdates) return;
+    
+    console.log(`⚡ Mise à jour optimiste ${entityType}:`, updates);
+    
+    // Stocker la mise à jour optimiste
+    setOptimisticUpdates(prev => new Map(prev.set(key, updates)));
+    
+    // Appliquer immédiatement au cache
+    const currentData = getCacheData(key);
+    if (currentData) {
+      const optimisticData = Array.isArray(currentData) 
+        ? currentData.map(item => item.id === updates.id ? { ...item, ...updates } : item)
+        : { ...currentData, ...updates };
+      
+      setCacheData(key, optimisticData);
     }
-  }, [enableWarming, warmCache]);
+    
+    // Nettoyer après un délai
+    setTimeout(() => {
+      setOptimisticUpdates(prev => {
+        const newMap = new Map(prev);
+        newMap.delete(key);
+        return newMap;
+      });
+    }, 5000);
+  }, [enableOptimisticUpdates, entityType, getCacheData, setCacheData]);
   
+  // Fonction de gestion d'erreur avancée
+  const handleError = useCallback((error, context = {}) => {
+    console.error(`❌ Erreur cache ${entityType}:`, error, context);
+    
+    if (onError) {
+      onError(error, {
+        entityType,
+        cacheKey,
+        context,
+        cacheStats,
+        timestamp: new Date()
+      });
+    }
+    
+    // Retry logic basée sur le type d'erreur
+    if (error.code === 'network-error' && context.retryable !== false) {
+      const retryCount = errorRetryRef.current.get(cacheKey) || 0;
+      if (retryCount < 3) {
+        console.log(`🔄 Retry ${retryCount + 1}/3 pour ${entityType}`);
+        errorRetryRef.current.set(cacheKey, retryCount + 1);
+        setTimeout(() => refetch(), Math.pow(2, retryCount) * 1000);
+      }
+    }
+  }, [entityType, cacheKey, cacheStats, onError, refetch]);
+
   return {
     // Données
     data,
@@ -545,11 +673,15 @@ const useGenericCachedData = (entityType, cacheConfig = {}, options = {}) => {
     isFromCache,
     cacheStats,
     lastFetch,
+    realTimeSubscription,
+    optimisticUpdates: Array.from(optimisticUpdates.entries()),
     
     // Actions
     invalidate,
     warmCache,
     clearCache,
+    applyOptimisticUpdate,
+    handleError,
     
     // Utilitaires
     getCacheData,

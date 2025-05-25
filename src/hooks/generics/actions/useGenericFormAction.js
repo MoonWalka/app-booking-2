@@ -170,6 +170,29 @@ const useGenericFormAction = (entityType, formConfig = {}, options = {}) => {
     return isValid;
   }, [formData, validationRules, validateField, enableValidation]);
   
+  // Auto-save
+  const handleAutoSave = useCallback(async (dataToSave) => {
+    if (submitMode === 'update' && formData.id) {
+      try {
+        await update(formData.id, dataToSave);
+        console.log('💾 Auto-save réussi');
+      } catch (error) {
+        console.warn('⚠️ Échec auto-save:', error);
+      }
+    }
+  }, [submitMode, formData.id, update]);
+  
+  // Réinitialisation du formulaire
+  const handleReset = useCallback(() => {
+    setFormData(initialDataRef.current);
+    setValidationErrors({});
+    setIsDirty(false);
+    
+    if (onReset) {
+      onReset();
+    }
+  }, [onReset]);
+  
   // Changement de champ
   const handleFieldChange = useCallback((fieldName, value) => {
     setFormData(prev => {
@@ -205,19 +228,7 @@ const useGenericFormAction = (entityType, formConfig = {}, options = {}) => {
       
       return newData;
     });
-  }, [validateField, enableValidation, validateOnChange, enableAutoSave, autoSaveDelay, onFieldChange]);
-  
-  // Auto-save
-  const handleAutoSave = useCallback(async (dataToSave) => {
-    if (submitMode === 'update' && formData.id) {
-      try {
-        await update(formData.id, dataToSave);
-        console.log('💾 Auto-save réussi');
-      } catch (error) {
-        console.warn('⚠️ Échec auto-save:', error);
-      }
-    }
-  }, [submitMode, formData.id, update]);
+  }, [validateField, enableValidation, validateOnChange, enableAutoSave, autoSaveDelay, onFieldChange, handleAutoSave]);
   
   // Soumission du formulaire
   const handleSubmit = useCallback(async (e) => {
@@ -267,18 +278,7 @@ const useGenericFormAction = (entityType, formConfig = {}, options = {}) => {
     } finally {
       setIsSubmitting(false);
     }
-  }, [formData, validateForm, onSubmit, submitMode, create, update, resetOnSuccess]);
-  
-  // Réinitialisation du formulaire
-  const handleReset = useCallback(() => {
-    setFormData(initialDataRef.current);
-    setValidationErrors({});
-    setIsDirty(false);
-    
-    if (onReset) {
-      onReset();
-    }
-  }, [onReset]);
+  }, [formData, validateForm, onSubmit, submitMode, create, update, resetOnSuccess, handleReset]);
   
   // Mise à jour des données initiales
   const updateInitialData = useCallback((newInitialData) => {

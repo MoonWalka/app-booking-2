@@ -408,7 +408,7 @@ const useGenericSearch = (entityType, searchConfig = {}, options = {}) => {
       setResults([]);
       setSuggestions([]);
     }
-  }, [searchTerm, minSearchLength]); // Attention: ne pas inclure 'search' pour éviter les boucles
+  }, [searchTerm, minSearchLength, search]);
   
   // Nettoyage
   useEffect(() => {

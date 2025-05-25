@@ -209,70 +209,6 @@ const useGenericEntityForm = (formConfig = {}, options = {}) => {
     return data;
   }, [transformData]);
   
-  // Gestion des changements de champs
-  const handleFieldChange = useCallback((fieldName, value, options = {}) => {
-    const { markTouched = true, triggerValidation = validateOnChange } = options;
-    
-    // Mise à jour des données
-    setFormData(prev => {
-      const newData = {
-        ...prev,
-        [fieldName]: value
-      };
-      
-      // Validation du champ si activée
-      if (triggerValidation && enableValidation) {
-        setTimeout(() => {
-          validateField(fieldName, value, newData);
-        }, 0);
-      }
-      
-      return newData;
-    });
-    
-    // Marquer comme touché
-    if (markTouched && enableTouchedTracking) {
-      setTouchedFields(prev => ({
-        ...prev,
-        [fieldName]: true
-      }));
-    }
-    
-    // Marquer comme modifié
-    if (enableDirtyTracking) {
-      setIsDirty(true);
-    }
-    
-    // Déclencher l'auto-save
-    if (enableAutoSave) {
-      triggerAutoSave();
-    }
-  }, [validateOnChange, enableValidation, validateField, enableTouchedTracking, enableDirtyTracking, enableAutoSave]);
-  
-  // Gestion des changements par événement
-  const handleInputChange = useCallback((event) => {
-    const { name, value, type, checked } = event.target;
-    const fieldValue = type === 'checkbox' ? checked : value;
-    
-    handleFieldChange(name, fieldValue);
-  }, [handleFieldChange]);
-  
-  // Gestion du blur
-  const handleFieldBlur = useCallback((fieldName) => {
-    // Marquer comme touché
-    if (enableTouchedTracking) {
-      setTouchedFields(prev => ({
-        ...prev,
-        [fieldName]: true
-      }));
-    }
-    
-    // Validation si activée
-    if (validateOnBlur && enableValidation) {
-      validateField(fieldName, formData[fieldName], formData);
-    }
-  }, [enableTouchedTracking, validateOnBlur, enableValidation, validateField, formData]);
-  
   // Auto-save avec debounce
   const triggerAutoSave = useCallback(() => {
     if (!enableAutoSave) return;
@@ -302,6 +238,62 @@ const useGenericEntityForm = (formConfig = {}, options = {}) => {
       }
     }, autoSaveDelay);
   }, [enableAutoSave, autoSaveDelay, processFormData, formData, entityId, update]);
+  
+  // Gestion des changements de champs
+  const handleFieldChange = useCallback((fieldName, value) => {
+    setFormData(prev => {
+      const newData = { ...prev, [fieldName]: value };
+      
+      // Marquer comme modifié
+      if (enableDirtyTracking) {
+        setIsDirty(true);
+      }
+      
+      // Validation en temps réel
+      if (validateOnChange && enableValidation) {
+        validateField(fieldName, value, newData);
+      }
+      
+      // Marquer comme touché
+      if (enableTouchedTracking) {
+        setTouchedFields(prev => ({
+          ...prev,
+          [fieldName]: true
+        }));
+      }
+      
+      return newData;
+    });
+    
+    // Déclencher l'auto-save
+    if (enableAutoSave) {
+      triggerAutoSave();
+    }
+  }, [validateOnChange, enableValidation, validateField, enableTouchedTracking, enableDirtyTracking, enableAutoSave, triggerAutoSave]);
+  
+  // Gestion des changements par événement
+  const handleInputChange = useCallback((event) => {
+    const { name, value, type, checked } = event.target;
+    const fieldValue = type === 'checkbox' ? checked : value;
+    
+    handleFieldChange(name, fieldValue);
+  }, [handleFieldChange]);
+  
+  // Gestion du blur
+  const handleFieldBlur = useCallback((fieldName) => {
+    // Marquer comme touché
+    if (enableTouchedTracking) {
+      setTouchedFields(prev => ({
+        ...prev,
+        [fieldName]: true
+      }));
+    }
+    
+    // Validation si activée
+    if (validateOnBlur && enableValidation) {
+      validateField(fieldName, formData[fieldName], formData);
+    }
+  }, [enableTouchedTracking, validateOnBlur, enableValidation, validateField, formData]);
   
   // Soumission du formulaire
   const handleSubmit = useCallback(async (event) => {

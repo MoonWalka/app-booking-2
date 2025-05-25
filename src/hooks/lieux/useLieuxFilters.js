@@ -1,6 +1,6 @@
 // src/hooks/lieux/useLieuxFilters.js
 import { useState, useMemo, useCallback } from 'react';
-import { useGenericEntityList } from '@/hooks/common';
+import { useGenericEntityList } from '@/hooks/generics';
 
 /**
  * Hook optimisé pour la gestion des filtres et de la recherche de lieux

@@ -24,7 +24,7 @@
 
 .cardHeader i {
   margin-right: var(--tc-spacing-sm);
-  color: var(--tc-color-primary);
+  color: var(--tc-primary-color);
 }
 
 .cardHeader h3 {
@@ -49,7 +49,7 @@
 }
 
 .required {
-  color: var(--tc-color-danger);
+  color: var(--tc-danger-color);
   margin-left: var(--tc-spacing-xs);
 }
 
@@ -62,7 +62,7 @@
   display: flex;
   align-items: center;
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-color-warning);
+  color: var(--tc-warning-color);
 }
 
 .actionNeeded i {

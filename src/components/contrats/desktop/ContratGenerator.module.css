@@ -27,17 +27,17 @@
 .generatorHeader h1 {
   font-size: var(--tc-font-size-2xl);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-color-secondary-dark);
+  color: var(--tc-secondary-color-dark);
   margin-bottom: var(--tc-spacing-1);
 }
 
 .generatorHeader p {
-  color: var(--tc-color-secondary);
+  color: var(--tc-secondary-color);
   font-size: var(--tc-font-size-sm);
 }
 
 .generatorSection {
-  background-color: var(--tc-color-white);
+  background-color: var(--tc-white);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-box-shadow);
   padding: var(--tc-spacing-lg);

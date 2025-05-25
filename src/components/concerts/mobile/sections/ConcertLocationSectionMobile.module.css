@@ -19,7 +19,7 @@
   font-weight: var(--tc-font-weight-semibold);
   margin-bottom: var(--tc-spacing-3);
   padding-bottom: var(--tc-spacing-2);
-  border-bottom: 1px solid var(--tc-color-border);
+  border-bottom: 1px solid var(--tc-border-color);
 }
 
 /* Mode édition */
@@ -32,7 +32,7 @@
 .formLabel {
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-color-text-secondary);
+  color: var(--tc-text-color-secondary);
   margin-bottom: var(--tc-spacing-1);
 }
 
@@ -56,7 +56,7 @@
 
 .searchResults {
   margin-top: var(--tc-spacing-2);
-  border: 1px solid var(--tc-color-border-medium);
+  border: 1px solid var(--tc-border-color-medium);
   border-radius: var(--tc-radius-sm);
   max-height: 200px;
   overflow-y: auto;
@@ -68,7 +68,7 @@
   align-items: center;
   gap: var(--tc-spacing-2);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-color-text-secondary);
+  color: var(--tc-text-color-secondary);
 }
 
 .resultsList {
@@ -87,7 +87,7 @@
 
 .resultAddress {
   font-size: var(--tc-font-size-xs);
-  color: var(--tc-color-text-secondary);
+  color: var(--tc-text-color-secondary);
   margin-top: var(--tc-spacing-1);
 }
 
@@ -95,7 +95,7 @@
   padding: var(--tc-spacing-2);
   text-align: center;
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-color-text-secondary);
+  color: var(--tc-text-color-secondary);
 }
 
 .createLink {
@@ -112,7 +112,7 @@
 
 .selectedLieuCard {
   background-color: var(--tc-bg-light);
-  border: 1px solid var(--tc-color-border-light);
+  border: 1px solid var(--tc-border-color-light);
 }
 
 .lieuName {
@@ -128,7 +128,7 @@
 
 .lieuCapacity {
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-color-text-secondary);
+  color: var(--tc-text-color-secondary);
   display: flex;
   align-items: center;
 }
@@ -170,13 +170,13 @@
 .lieuDetail i {
   margin-top: var(--tc-spacing-1);
   width: 20px;
-  color: var(--tc-color-text-secondary);
+  color: var(--tc-text-color-secondary);
 }
 
 .lieuContact {
   margin-top: var(--tc-spacing-2);
   padding-top: var(--tc-spacing-2);
-  border-top: 1px solid var(--tc-color-border);
+  border-top: 1px solid var(--tc-border-color);
 }
 
 .contactTitle {
@@ -194,7 +194,7 @@
 
 .contactDetail i {
   width: 20px;
-  color: var(--tc-color-text-secondary);
+  color: var(--tc-text-color-secondary);
 }
 
 /* État vide */
@@ -205,7 +205,7 @@
   justify-content: center;
   padding: var(--tc-spacing-8) var(--tc-spacing-3);
   text-align: center;
-  color: var(--tc-color-text-secondary);
+  color: var(--tc-text-color-secondary);
 }
 
 .emptyState i {

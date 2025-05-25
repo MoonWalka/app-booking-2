@@ -14,7 +14,7 @@
 .cardWrapper {
   margin-bottom: var(--tc-spacing-lg);
   border-radius: var(--tc-border-radius-lg);
-  box-shadow: var(--tc-box-shadow));
+  box-shadow: var(--tc-shadow);
   background-color: var(--tc-card-bg);
   overflow: hidden;
 }

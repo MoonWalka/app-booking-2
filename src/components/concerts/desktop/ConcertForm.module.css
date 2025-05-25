@@ -108,15 +108,15 @@
 
 /* Carte de formulaire */
 .formCard {
-  background-color: var(--tc-color-fff);
+  background-color: var(--tc-white);
   border-radius: 8px;
-  box-shadow: 0 2px 4px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.1));
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: var(--tc-spacing-lg);
   overflow: hidden;
 }
 
 .formCard {
-  background-color: var(--tc-color-white);
+  background-color: var(--tc-white);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-box-shadow);
   margin-bottom: var(--tc-spacing-lg);
@@ -128,11 +128,11 @@
   align-items: center;
   background-color: var(--tc-bg-color);
   padding: var(--tc-spacing-md);
-  border-bottom: 1px solid var(--tc-color-eee);
+  border-bottom: 1px solid var(--tc-gray-200);
 }
 
 .cardHeader {
-  background-color: var(--tc-color-gray-100);
+  background-color: var(--tc-gray-100);
   padding: var(--tc-spacing-md) var(--tc-spacing-md);
   border-bottom: var(--tc-border-width) solid var(--tc-border-color);
   display: flex;
@@ -193,7 +193,7 @@
 }
 
 .required {
-  color: var(--tc-color-dc3545);
+  color: var(--tc-danger-color);
   margin-left: var(--tc-spacing-xs);
 }
 
@@ -204,7 +204,7 @@
   font-size: 1rem;
   line-height: 1.5;
   color: var(--tc-text-color);
-  background-color: var(--tc-color-white);
+  background-color: var(--tc-white);
   border: 1px solid var(--tc-input-border-color);
   border-radius: var(--tc-border-radius-sm);
   transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
@@ -218,7 +218,7 @@
 .formControl:focus {
   border-color: var(--tc-primary-color);
   outline: 0;
-  box-shadow: 0 0 0 0.2rem var(--tc-color-rgba(0), rgba(0, 123, 255, 0.25));
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 
 .formSelect {
@@ -228,7 +228,7 @@
   font-size: 1rem;
   line-height: 1.5;
   color: var(--tc-text-color);
-  background-color: var(--tc-color-white);
+  background-color: var(--tc-white);
   border: 1px solid var(--tc-input-border-color);
   border-radius: var(--tc-border-radius-sm);
   transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
@@ -267,7 +267,7 @@
   color: var(--tc-text-color);
   text-align: center;
   white-space: nowrap;
-  background-color: var(--tc-color-gray-100);
+  background-color: var(--tc-gray-100);
   border: 1px solid var(--tc-input-border-color);
   border-radius: 0 var(--tc-border-radius-sm) var(--tc-border-radius-sm) 0;
 }
@@ -403,7 +403,7 @@
   display: flex;
   flex-direction: column;
   font-size: var(--tc-font-size-xs);
-  color: var(--tc-color-6c757d);
+  color: var(--tc-gray-600);
   margin-top: var(--tc-spacing-xs);
 }
 
@@ -413,7 +413,7 @@
   max-height: 200px;
   overflow-y: auto;
   z-index: 1000;
-  background-color: var(--tc-color-white);
+  background-color: var(--tc-white);
   border: var(--tc-border-width) solid var(--tc-input-border-color);
   border-radius: 0 0 var(--tc-border-radius-sm) var(--tc-border-radius-sm);
   box-shadow: var(--tc-dropdown-shadow);
@@ -425,11 +425,11 @@
   display: flex;
   align-items: center;
   cursor: pointer;
-  border-bottom: var(--tc-border-width) solid var(--tc-color-gray-200);
+  border-bottom: var(--tc-border-width) solid var(--tc-gray-200);
 }
 
 .suggestionItem:hover {
-  background-color: var(--tc-color-gray-100);
+  background-color: var(--tc-gray-100);
 }
 
 /* Actions de formulaire en bas */
@@ -456,7 +456,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--tc-color-rgba(0), rgba(0, 0, 0, 0.5));
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -464,17 +464,17 @@
 }
 
 .tcModalConfirm {
-  background-color: var(--tc-color-fff);
+  background-color: var(--tc-white);
   border-radius: 0.5rem;
   width: 450px;
   max-width: 90vw;
-  box-shadow: 0 4px 20px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.15));
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   overflow: hidden;
 }
 
 .tcModalHeader {
   padding: var(--tc-spacing-md);
-  border-bottom: 1px solid var(--tc-color-eee);
+  border-bottom: 1px solid var(--tc-gray-200);
 }
 
 .tcModalHeader h5 {
@@ -488,7 +488,7 @@
 
 .tcModalFooter {
   padding: var(--tc-spacing-md);
-  border-top: 1px solid var(--tc-color-eee);
+  border-top: 1px solid var(--tc-gray-200);
   display: flex;
   justify-content: flex-end;
   gap: var(--tc-spacing-sm);

@@ -14,11 +14,11 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--tc-spacing-sm) var(--tc-spacing-md);
-  background-color: var(--tc-color-dark);
+  background-color: var(--tc-dark-color);
 }
 
 .navbarDark {
-  color: var(--tc-color-light);
+  color: var(--tc-light-color);
 }
 
 .navbarExpand {
@@ -55,9 +55,9 @@
   font-size: var(--tc-font-size-lg);
   line-height: 1;
   background-color: transparent;
-  border: var(--tc-border-width) solid var(--tc-color-rgba(255), rgba(255,255,255,.1));
+  border: var(--tc-border-width) solid rgba(255,255,255,.1);
   border-radius: var(--tc-border-radius);
-  color: var(--tc-color-rgba(255), rgba(255,255,255,.5));
+  color: rgba(255,255,255,.5);
 }
 
 .navbarTogglerIcon {
@@ -92,13 +92,13 @@
 .navLink {
   display: block;
   padding: var(--tc-spacing-sm) var(--tc-spacing-md);
-  color: var(--tc-color-rgba(255), rgba(255,255,255,.55));
+  color: rgba(255,255,255,.55);
   text-decoration: none;
   transition: var(--tc-transition);
 }
 
 .navLink:hover, .navLink:focus {
-  color: var(--tc-color-rgba(255), rgba(255,255,255,.75));
+  color: rgba(255,255,255,.75);
 }
 
 .meAuto {
@@ -112,7 +112,7 @@
 .navbarText {
   padding-top: var(--tc-spacing-sm);
   padding-bottom: var(--tc-spacing-sm);
-  color: var(--tc-color-rgba(255), rgba(255,255,255,.55));
+  color: rgba(255,255,255,.55);
 }
 
 .me3 {

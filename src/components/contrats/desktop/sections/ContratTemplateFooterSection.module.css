@@ -11,7 +11,7 @@
 }
 
 .sectionInfo {
-  color: var(--tc-color-6c757d);
+  color: var(--tc-gray-600);
   font-size: 0.875rem;
   margin-bottom: 8px;
 }
@@ -56,7 +56,7 @@
 .footerContentInput:focus {
   border-color: var(--tc-color-86b7fe);
   outline: 0;
-  box-shadow: 0 0 0 0.25rem var(--tc-color-rgba(13), rgba(13, 110, 253, 0.25));
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
 }
 
 .reactQuillEditor {
@@ -72,13 +72,13 @@
 
 .exampleLabel {
   display: block;
-  color: var(--tc-color-6c757d);
+  color: var(--tc-gray-600);
   font-size: 0.75rem;
   margin-bottom: 4px;
 }
 
 .exampleContent {
-  color: var(--tc-color-6c757d);
+  color: var(--tc-gray-600);
   font-size: 0.85rem;
   font-style: italic;
 }

@@ -34,7 +34,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--tc-color-text-muted);
+  color: var(--tc-text-muted);
   border-radius: 50%;
   font-size: var(--tc-font-size-lg);
 }

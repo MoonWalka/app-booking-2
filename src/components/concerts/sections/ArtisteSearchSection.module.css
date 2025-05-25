@@ -18,14 +18,14 @@
   display: block;
   margin-bottom: var(--tc-spacing-1-5);
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-color-title);
+  color: var(--tc-text-color);
 }
 
 .formHelpText {
   display: block;
   margin-top: var(--tc-spacing-1-5);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-color-text-muted);
+  color: var(--tc-text-muted);
 }
 
 /* Styles responsive standardisés */

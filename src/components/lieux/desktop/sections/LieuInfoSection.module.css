@@ -39,7 +39,7 @@
 
 .cardIcon {
   font-size: var(--tc-font-size-lg);
-  color: var(--tc-color-primary);
+  color: var(--tc-primary-color);
   display: flex;
   align-items: center;
   justify-content: center;

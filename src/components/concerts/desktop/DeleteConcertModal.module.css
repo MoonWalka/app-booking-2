@@ -20,7 +20,7 @@
 }
 
 .modalConfirm {
-  background-color: var(--tc-color-fff);
+  background-color: var(--tc-white);
   border-radius: 0.5rem;
   width: 450px;
   max-width: 90vw;
@@ -30,7 +30,7 @@
 
 .modalHeader {
   padding: 1rem;
-  border-bottom: 1px solid var(--tc-color-eee);
+  border-bottom: 1px solid var(--tc-gray-200);
 }
 
 .modalHeader h5 {
@@ -44,7 +44,7 @@
 
 .modalFooter {
   padding: 1rem;
-  border-top: 1px solid var(--tc-color-eee);
+  border-top: 1px solid var(--tc-gray-200);
   display: flex;
   justify-content: flex-end;
   gap: 0.5rem;

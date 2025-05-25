@@ -17,7 +17,7 @@
 }
 
 .backButton {
-  color: var(--tc-color-text-primary);
+  color: var(--tc-text-color);
   padding: var(--tc-spacing-1) var(--tc-spacing-2);
   margin-right: var(--tc-spacing-2);
   display: flex;
@@ -46,6 +46,6 @@
 
 .concertDate {
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-color-text-secondary);
+  color: var(--tc-text-color-secondary);
   margin-top: var(--tc-spacing-1);
 }

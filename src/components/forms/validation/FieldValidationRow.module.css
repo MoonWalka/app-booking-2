@@ -33,7 +33,7 @@
 }
 
 .emptyValue {
-  color: var(--tc-color-gray-500);
+  color: var(--tc-gray-500);
   font-style: italic;
   font-weight: normal;
 }
@@ -61,7 +61,7 @@
 .copyButton:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-  border-color: var(--tc-color-gray-400);
+  border-color: var(--tc-gray-400);
 }
 
 .finalValueCell {
@@ -73,7 +73,7 @@
   width: 100%;
   padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
   font-family: var(--tc-font-family-monospace);
-  border: var(--tc-border-width) solid var(--tc-color-gray-400);
+  border: var(--tc-border-width) solid var(--tc-gray-400);
   border-radius: var(--tc-border-radius-sm);
   transition: var(--tc-transition);
 }
@@ -85,7 +85,7 @@
 }
 
 .finalValueInput:disabled {
-  background-color: var(--tc-color-gray-200);
+  background-color: var(--tc-gray-200);
   opacity: 1;
 }
 

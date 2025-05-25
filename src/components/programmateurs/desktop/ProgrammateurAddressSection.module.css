@@ -10,7 +10,7 @@
 }
 
 .cardWrapper {
-  background-color: var(--tc-color-white);
+  background-color: var(--tc-white);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-box-shadow);
   margin-bottom: var(--tc-spacing-lg);
@@ -24,7 +24,7 @@
 }
 
 .cardHeader {
-  background-color: var(--tc-color-gray-100);
+  background-color: var(--tc-gray-100);
   padding: var(--tc-spacing-md);
   display: flex;
   align-items: center;
@@ -69,7 +69,7 @@
 }
 
 .suggestionItem:hover {
-  background-color: var(--tc-color-primary-light);
+  background-color: var(--tc-primary-color-light);
 }
 
 .addressDisplay {

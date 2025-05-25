@@ -33,7 +33,7 @@
 .modernTitle {
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-bold);
-  color: var(--tc-color-primary);
+  color: var(--tc-primary-color);
   margin-bottom: var(--tc-spacing-sm);
 }
 
@@ -104,7 +104,7 @@
 
 .cardHeader i {
   margin-right: var(--tc-spacing-sm);
-  color: var(--tc-color-primary);
+  color: var(--tc-primary-color);
 }
 
 .cardHeader h3 {
@@ -134,7 +134,7 @@
 }
 
 .required {
-  color: var(--tc-color-danger);
+  color: var(--tc-danger-color);
   margin-left: var(--tc-spacing-xs);
 }
 
@@ -148,7 +148,7 @@
   display: flex;
   align-items: center;
   font-size: var(--tc-font-size-xs);
-  color: var(--tc-color-warning);
+  color: var(--tc-warning-color);
 }
 
 .actionNeeded i {
@@ -162,7 +162,7 @@
 
 /* Items de détails */
 .contactLink {
-  color: var(--tc-color-primary);
+  color: var(--tc-primary-color);
   text-decoration: none;
   display: inline-flex;
   align-items: center;

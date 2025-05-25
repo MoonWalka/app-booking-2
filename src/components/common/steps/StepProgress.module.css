@@ -26,22 +26,22 @@
   justify-content: center;
   font-weight: var(--tc-font-weight-semibold);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-color-text-muted);
+  color: var(--tc-text-muted);
   z-index: 2;
   transition: all var(--tc-transition-speed) ease;
   position: relative;
 }
 
 .stepDot.active {
-  background-color: var(--tc-color-primary);
-  color: var(--tc-color-white);
-  border-color: var(--tc-color-primary);
+  background-color: var(--tc-primary-color);
+  color: var(--tc-white);
+  border-color: var(--tc-primary-color);
 }
 
 .stepDot.completed {
-  background-color: var(--tc-color-success);
-  color: var(--tc-color-white);
-  border-color: var(--tc-color-success);
+  background-color: var(--tc-success-color);
+  color: var(--tc-white);
+  border-color: var(--tc-success-color);
 }
 
 .stepProgressBar {
@@ -56,7 +56,7 @@
 
 .stepProgressFill {
   height: 100%;
-  background-color: var(--tc-color-success);
+  background-color: var(--tc-success-color);
   border-radius: 3px;
   transition: width var(--tc-transition-speed) ease;
   width: var(--progress-width, 0%);
@@ -71,7 +71,7 @@
   white-space: nowrap;
   font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-color-text-muted);
+  color: var(--tc-text-muted);
 }
 
 /* Styles responsive standardisés */

@@ -22,7 +22,7 @@
 .header {
   padding: var(--tc-spacing-sm) var(--tc-spacing-md);
   background-color: var(--tc-primary-color);
-  color: var(--tc-color-light);
+  color: var(--tc-light-color);
 }
 
 .header.bg-primary {

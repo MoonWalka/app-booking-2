@@ -38,7 +38,7 @@
 }
 
 .searchInput:focus {
-  border-color: var(--tc-color-primary);
+  border-color: var(--tc-primary-color);
   outline: none;
   box-shadow: var(--tc-input-focus-shadow);
 }

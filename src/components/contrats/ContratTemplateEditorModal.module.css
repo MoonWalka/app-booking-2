@@ -61,9 +61,9 @@
 }
 
 .successBanner {
-  background: var(--tc-color-success-bg);
-  color: var(--tc-color-success-text);
-  border: 1px solid var(--tc-color-success-border);
+  background: var(--tc-success-color-bg);
+  color: var(--tc-success-color-text);
+  border: 1px solid var(--tc-success-color-border);
   border-radius: var(--tc-border-radius);
   padding: var(--tc-spacing-4);
   margin-bottom: var(--tc-spacing-4);
@@ -76,7 +76,7 @@
 .closeBannerButton {
   background: transparent;
   border: none;
-  color: var(--tc-color-success-text);
+  color: var(--tc-success-color-text);
   font-weight: var(--tc-font-weight-bold);
   font-size: 1.1rem;
   cursor: pointer;

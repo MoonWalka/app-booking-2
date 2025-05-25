@@ -5,8 +5,8 @@
  */
 
 .infoCard {
-  background-color: var(--tc-color-white);
-  border: 1px solid var(--tc-color-border);
+  background-color: var(--tc-white);
+  border: 1px solid var(--tc-border-color);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-box-shadow);
   padding: var(--tc-spacing-lg);
@@ -15,11 +15,11 @@
 .cardHeader {
   margin-bottom: var(--tc-spacing-md);
   padding-bottom: var(--tc-spacing-sm);
-  border-bottom: 1px solid var(--tc-color-border);
+  border-bottom: 1px solid var(--tc-border-color);
 }
 
 .cardHeader h4 {
-  color: var(--tc-color-secondary-dark);
+  color: var(--tc-secondary-color-dark);
   font-weight: var(--tc-font-weight-semibold);
   margin: 0;
 }
@@ -35,7 +35,7 @@
 }
 
 .infoSection h5 {
-  color: var(--tc-color-secondary);
+  color: var(--tc-secondary-color);
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-medium);
   margin-bottom: var(--tc-spacing-sm);
@@ -47,7 +47,7 @@
 }
 
 .infoItem strong {
-  color: var(--tc-color-text-primary);
+  color: var(--tc-text-color);
   font-weight: var(--tc-font-weight-medium);
 }
 

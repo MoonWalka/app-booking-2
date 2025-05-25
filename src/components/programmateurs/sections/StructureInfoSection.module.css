@@ -13,7 +13,7 @@
 .container {
   margin-bottom: var(--tc-spacing-lg);
   padding: var(--tc-spacing-md);
-  background-color: var(--tc-color-background-secondary);
+  background-color: var(--tc-white-secondary);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-box-shadow-sm);
 }
@@ -30,8 +30,8 @@
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-bold);
   margin-bottom: var(--tc-spacing-md);
-  color: var(--tc-color-text-primary);
-  border-bottom: 1px solid var(--tc-color-border-light);
+  color: var(--tc-text-color);
+  border-bottom: 1px solid var(--tc-border-color-light);
   padding-bottom: var(--tc-spacing-sm);
 }
 
@@ -55,7 +55,7 @@
   display: block;
   font-weight: var(--tc-font-weight-medium);
   margin-bottom: var(--tc-spacing-xs);
-  color: var(--tc-color-text-secondary);
+  color: var(--tc-text-color-secondary);
 }
 
 .formControl {
@@ -64,10 +64,10 @@
   padding: var(--tc-spacing-sm);
   font-size: var(--tc-font-size-base);
   line-height: 1.5;
-  color: var(--tc-color-text-primary);
-  background-color: var(--tc-color-background);
+  color: var(--tc-text-color);
+  background-color: var(--tc-white);
   background-clip: padding-box;
-  border: 1px solid var(--tc-color-border);
+  border: 1px solid var(--tc-border-color);
   border-radius: var(--tc-border-radius);
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
@@ -122,8 +122,8 @@
   left: 0;
   right: 0;
   z-index: 10;
-  background-color: var(--tc-color-background);
-  border: 1px solid var(--tc-color-border);
+  background-color: var(--tc-white);
+  border: 1px solid var(--tc-border-color);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-box-shadow-md);
   max-height: 300px;
@@ -132,7 +132,7 @@
 
 .resultItem {
   padding: var(--tc-spacing-sm);
-  border-bottom: 1px solid var(--tc-color-border-light);
+  border-bottom: 1px solid var(--tc-border-color-light);
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
@@ -142,7 +142,7 @@
 }
 
 .resultItem:hover {
-  background-color: var(--tc-color-background-hover);
+  background-color: var(--tc-white-hover);
 }
 
 .structureName {
@@ -189,17 +189,17 @@
 .createNewButton {
   margin-top: var(--tc-spacing-sm);
   padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
-  color: var(--tc-color-primary);
+  color: var(--tc-primary-color);
   background-color: transparent;
-  border: 1px solid var(--tc-color-primary);
+  border: 1px solid var(--tc-primary-color);
   border-radius: var(--tc-border-radius);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .createNewButton:hover {
-  color: var(--tc-color-background);
-  background-color: var(--tc-color-primary);
+  color: var(--tc-white);
+  background-color: var(--tc-primary-color);
 }
 
 .selectedStructureInfo {
@@ -214,8 +214,8 @@
 
 .selectedStructure {
   padding: var(--tc-spacing-sm);
-  background-color: var(--tc-color-background-light);
-  border: 1px solid var(--tc-color-border);
+  background-color: var(--tc-white-light);
+  border: 1px solid var(--tc-border-color);
   border-radius: var(--tc-border-radius);
   margin-bottom: var(--tc-spacing-md);
   display: flex;
@@ -224,7 +224,7 @@
 }
 
 .removeButton {
-  color: var(--tc-color-danger);
+  color: var(--tc-danger-color);
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -232,14 +232,14 @@
 }
 
 .removeButton:hover {
-  color: var(--tc-color-danger-dark);
+  color: var(--tc-danger-color-dark);
 }
 
 .notification {
   margin-top: var(--tc-spacing-sm);
   padding: var(--tc-spacing-sm);
-  background-color: var(--tc-color-success-light);
-  color: var(--tc-color-success-dark);
+  background-color: var(--tc-success-color-light);
+  color: var(--tc-success-color-dark);
   border-radius: var(--tc-border-radius);
   animation: fadeOut 3s forwards;
 }

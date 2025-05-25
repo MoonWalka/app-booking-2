@@ -30,7 +30,7 @@
   display: block;
   margin-bottom: 0.5rem; /* var(--tc-spacing-1-5) */
   font-weight: 500; /* var(--tc-font-weight-medium) */
-  color: var(--tc-text-color); /* var(--tc-color-title) */
+  color: var(--tc-text-color); /* var(--tc-text-color) */
 }
 
 .formControl {
@@ -47,7 +47,7 @@
 
 .formControl:focus {
   border-color: var(--tc-text-color); /* var(--tc-focus-border) */
-  box-shadow: 0 0 0 0.25rem var(--tc-color-rgba(13), rgba(13, 110, 253, 0.25)); /* var(--tc-focus-shadow) */
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25); /* var(--tc-focus-shadow) */
   outline: 0;
 }
 
@@ -72,11 +72,11 @@
   display: block;
   margin-top: 0.25rem; /* var(--tc-spacing-0-5) */
   font-size: 0.875rem; /* var(--tc-font-size-sm) */
-  color: var(--tc-text-color); /* var(--tc-color-text-muted) */
+  color: var(--tc-text-color); /* var(--tc-text-muted) */
 }
 
 .requiredField {
-  color: var(--tc-text-color); /* var(--tc-color-danger) */
+  color: var(--tc-text-color); /* var(--tc-danger-color) */
   margin-left: 0.25rem; /* var(--tc-spacing-0-5) */
 }
 

@@ -133,7 +133,7 @@
 /* Styles pour les champs à valider */
 .fieldContainer {
   padding: var(--tc-spacing-2) 0;
-  border-bottom: 1px solid var(--tc-color-border);
+  border-bottom: 1px solid var(--tc-border-color);
 }
 
 .fieldContainer:last-child {
@@ -150,7 +150,7 @@
 
 .fieldLabel {
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-color-text-primary);
+  color: var(--tc-text-color);
   font-size: 0.95rem;
 }
 
@@ -173,11 +173,11 @@
 }
 
 .existingValue {
-  border-left: 3px solid var(--tc-color-text-secondary);
+  border-left: 3px solid var(--tc-text-color-secondary);
 }
 
 .formValue {
-  border-left: 3px solid var(--tc-color-primary);
+  border-left: 3px solid var(--tc-primary-color);
 }
 
 .valueLabel {
@@ -186,7 +186,7 @@
   left: 8px;
   background-color: var(--tc-bg-default);
   font-size: 0.7rem;
-  color: var(--tc-color-text-secondary);
+  color: var(--tc-text-color-secondary);
   padding: 0 var(--tc-spacing-1);
 }
 

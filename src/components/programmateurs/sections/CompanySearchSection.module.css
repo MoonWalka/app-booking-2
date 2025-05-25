@@ -13,7 +13,7 @@
 .container {
   margin-bottom: var(--tc-spacing-lg);
   padding: var(--tc-spacing-md);
-  background-color: var(--tc-color-background-secondary);
+  background-color: var(--tc-white-secondary);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-box-shadow-sm);
 }
@@ -22,8 +22,8 @@
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-bold);
   margin-bottom: var(--tc-spacing-md);
-  color: var(--tc-color-text-primary);
-  border-bottom: 1px solid var(--tc-color-border-light);
+  color: var(--tc-text-color);
+  border-bottom: 1px solid var(--tc-border-color-light);
   padding-bottom: var(--tc-spacing-sm);
 }
 
@@ -37,17 +37,17 @@
   padding: var(--tc-spacing-sm);
   font-size: var(--tc-font-size-base);
   line-height: 1.5;
-  color: var(--tc-color-text-primary);
-  background-color: var(--tc-color-background);
-  border: 1px solid var(--tc-color-border);
+  color: var(--tc-text-color);
+  background-color: var(--tc-white);
+  border: 1px solid var(--tc-border-color);
   border-radius: var(--tc-border-radius);
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
 .searchInput:focus {
-  color: var(--tc-color-text-primary);
-  background-color: var(--tc-color-background);
-  border-color: var(--tc-color-primary-light);
+  color: var(--tc-text-color);
+  background-color: var(--tc-white);
+  border-color: var(--tc-primary-color-light);
   outline: 0;
   box-shadow: 0 0 0 0.25rem var(--tc-primary-color-shadow);
 }
@@ -58,8 +58,8 @@
   left: 0;
   right: 0;
   z-index: 10;
-  background-color: var(--tc-color-background);
-  border: 1px solid var(--tc-color-border);
+  background-color: var(--tc-white);
+  border: 1px solid var(--tc-border-color);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-box-shadow-md);
   max-height: 300px;
@@ -68,7 +68,7 @@
 
 .resultItem {
   padding: var(--tc-spacing-sm);
-  border-bottom: 1px solid var(--tc-color-border-light);
+  border-bottom: 1px solid var(--tc-border-color-light);
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
@@ -78,24 +78,24 @@
 }
 
 .resultItem:hover {
-  background-color: var(--tc-color-background-hover);
+  background-color: var(--tc-white-hover);
 }
 
 .companyName {
   font-weight: var(--tc-font-weight-medium);
   margin-bottom: var(--tc-spacing-xs);
-  color: var(--tc-color-text-primary);
+  color: var(--tc-text-color);
 }
 
 .companyDetails {
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-color-text-muted);
+  color: var(--tc-text-muted);
 }
 
 .noResults {
   padding: var(--tc-spacing-md);
   text-align: center;
-  color: var(--tc-color-text-muted);
+  color: var(--tc-text-muted);
   font-style: italic;
 }
 
@@ -108,15 +108,15 @@
 .errorMessage {
   padding: var(--tc-spacing-sm);
   margin-bottom: var(--tc-spacing-md);
-  color: var(--tc-color-danger);
-  background-color: var(--tc-color-danger-light);
+  color: var(--tc-danger-color);
+  background-color: var(--tc-danger-color-light);
   border-radius: var(--tc-border-radius);
 }
 
 .helperText {
   margin-top: var(--tc-spacing-xs);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-color-text-muted);
+  color: var(--tc-text-muted);
 }
 
 /* Responsive styles */

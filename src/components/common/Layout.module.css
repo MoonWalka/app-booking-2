@@ -16,7 +16,7 @@
 .errorContent {
   text-align: center;
   padding: var(--tc-spacing-xl);
-  background-color: var(--tc-color-white);
+  background-color: var(--tc-white);
   border-radius: var(--tc-border-radius-lg);
   box-shadow: var(--tc-box-shadow);
   max-width: 500px;
@@ -39,7 +39,7 @@
 
 .retryButton {
   background-color: var(--tc-primary-color);
-  color: var(--tc-color-white);
+  color: var(--tc-white);
   border: none;
   border-radius: var(--tc-border-radius);
   padding: var(--tc-spacing-sm) var(--tc-spacing-lg);

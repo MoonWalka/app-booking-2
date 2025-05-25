@@ -18,7 +18,7 @@
 .title {
   font-size: var(--tc-font-size-xl);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-color-title);
+  color: var(--tc-text-color);
   margin: 0;
 }
 

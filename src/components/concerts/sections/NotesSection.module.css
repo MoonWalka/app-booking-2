@@ -27,7 +27,7 @@
   margin: 0;
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-color-title);
+  color: var(--tc-text-color);
 }
 
 /* Styles responsive standardisés */
@@ -58,7 +58,7 @@
 .notesContent {
   white-space: pre-wrap;
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-color-text-primary);
+  color: var(--tc-text-color);
   line-height: 1.5;
 }
 
@@ -72,6 +72,6 @@
 
 .emptyNotes {
   font-style: italic;
-  color: var(--tc-color-text-muted);
+  color: var(--tc-text-muted);
   font-size: var(--tc-font-size-sm);
 }

@@ -19,7 +19,7 @@
 
 .cardWrapper:hover {
   transform: translateY(-3px);
-  box-shadow: 0 5px 15px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.08));
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
 }
 
 .cardHeader {
@@ -86,7 +86,7 @@
 .legalSection {
   background-color: var(--tc-card-bg);
   border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-box-shadow));
+  box-shadow: var(--tc-shadow);
   padding: var(--tc-spacing-lg);
   margin-bottom: var(--tc-spacing-lg);
 }

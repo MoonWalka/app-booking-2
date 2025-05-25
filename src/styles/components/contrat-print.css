@@ -498,7 +498,7 @@ body.contrat-print-mode {
   
   .contrat-print-mode .contrat-container {
     padding: 30px;
-    box-shadow: 0 0 10px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.1));
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     background-color: var(--tc-bg-default);
   }
   
@@ -519,7 +519,7 @@ body.contrat-print-mode {
     background: var(--tc-bg-default);
     padding: 0 10px;
     font-size: 10px;
-    color: var(--tc-color-text-secondary);
+    color: var(--tc-text-color-secondary);
     display: block !important;
   }
   

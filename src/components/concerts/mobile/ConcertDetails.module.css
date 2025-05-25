@@ -21,8 +21,8 @@
   display: flex;
   align-items: center;
   padding: var(--tc-spacing-2) var(--tc-spacing-3);
-  background-color: var(--tc-color-fff);
-  box-shadow: 0 2px 4px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.05));
+  background-color: var(--tc-white);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   position: sticky;
   top: 0;
   z-index: 10;
@@ -35,7 +35,7 @@
   margin-top: var(--tc-spacing-3);
   padding: var(--tc-spacing-2) var(--tc-spacing-3);
   border: none;
-  background-color: var(--tc-color-primary);
+  background-color: var(--tc-primary-color);
   color: var(--tc-bg-default);
   border-radius: var(--tc-radius-sm);
   font-weight: var(--tc-font-weight-medium);
@@ -65,8 +65,8 @@
   display: flex;
   overflow-x: auto;
   padding: var(--tc-spacing-2);
-  background-color: var(--tc-color-fff);
-  box-shadow: 0 1px 2px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.05));
+  background-color: var(--tc-white);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   position: sticky;
   top: 56px;
   z-index: 9;
@@ -85,10 +85,10 @@
 }
 
 .infoCard {
-  background-color: var(--tc-color-fff);
+  background-color: var(--tc-white);
   border-radius: var(--tc-radius-md);
   padding: var(--tc-spacing-3);
-  box-shadow: 0 1px 3px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.1));
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .infoItem {
@@ -107,7 +107,7 @@
   display: block;
   font-weight: var(--tc-font-weight-semibold);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-color-text-secondary);
+  color: var(--tc-text-color-secondary);
   margin-bottom: var(--tc-spacing-1);
 }
 
@@ -133,10 +133,10 @@
 }
 
 .lieuCard {
-  background-color: var(--tc-color-fff);
+  background-color: var(--tc-white);
   border-radius: var(--tc-radius-md);
   padding: var(--tc-spacing-3);
-  box-shadow: 0 1px 3px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.1));
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .lieuName {
@@ -159,7 +159,7 @@
   margin-right: var(--tc-spacing-2);
   margin-top: var(--tc-spacing-1);
   min-width: 16px;
-  color: var(--tc-color-text-secondary);
+  color: var(--tc-text-color-secondary);
 }
 
 .lieuMap {
@@ -180,10 +180,10 @@
 }
 
 .programmateurCard {
-  background-color: var(--tc-color-fff);
+  background-color: var(--tc-white);
   border-radius: var(--tc-radius-md);
   padding: var(--tc-spacing-3);
-  box-shadow: 0 1px 3px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.1));
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .programmateurName {
@@ -203,7 +203,7 @@
 .programmateurContact i {
   margin-right: var(--tc-spacing-2);
   min-width: 16px;
-  color: var(--tc-color-text-secondary);
+  color: var(--tc-text-color-secondary);
 }
 
 .formSection {
@@ -246,10 +246,10 @@
 }
 
 .artisteCard {
-  background-color: var(--tc-color-fff);
+  background-color: var(--tc-white);
   border-radius: var(--tc-radius-md);
   padding: var(--tc-spacing-3);
-  box-shadow: 0 1px 3px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.1));
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .artisteName {
@@ -267,7 +267,7 @@
 .artisteGenre i {
   margin-right: var(--tc-spacing-2);
   min-width: 16px;
-  color: var(--tc-color-text-secondary);
+  color: var(--tc-text-color-secondary);
 }
 
 .artisteDescription {
@@ -290,7 +290,7 @@
 .artisteContact i {
   margin-right: var(--tc-spacing-2);
   min-width: 16px;
-  color: var(--tc-color-text-secondary);
+  color: var(--tc-text-color-secondary);
 }
 
 .artisteActions {
@@ -306,20 +306,20 @@
   align-items: center;
   justify-content: center;
   padding: var(--tc-spacing-8);
-  background-color: var(--tc-color-fff);
+  background-color: var(--tc-white);
   border-radius: var(--tc-radius-md);
   text-align: center;
-  box-shadow: 0 1px 3px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.1));
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .emptyState i {
   font-size: 2.5rem;
-  color: var(--tc-color-border-light);
+  color: var(--tc-border-color-light);
   margin-bottom: var(--tc-spacing-3);
 }
 
 .emptyState p {
-  color: var(--tc-color-text-secondary);
+  color: var(--tc-text-color-secondary);
   margin-bottom: 0;
 }
 
@@ -329,7 +329,7 @@
   justify-content: center;
   align-items: center;
   height: calc(100vh - 56px);
-  color: var(--tc-color-text-secondary);
+  color: var(--tc-text-color-secondary);
   flex-direction: column;
   height: 50vh;
   padding: var(--tc-spacing-3);
@@ -338,7 +338,7 @@
 
 .loadingText {
   margin-top: var(--tc-spacing-3);
-  color: var(--tc-color-text-secondary);
+  color: var(--tc-text-color-secondary);
   font-size: var(--tc-font-size-sm);
 }
 
@@ -378,7 +378,7 @@
 /* Contenu des onglets */
 .tabContent {
   padding: var(--tc-spacing-3);
-  background-color: var(--tc-color-fff);
+  background-color: var(--tc-white);
 }
 
 /* Conteneur pour le générateur de formulaire */
@@ -387,7 +387,7 @@
   padding: var(--tc-spacing-3);
   background-color: var(--tc-bg-light);
   border-radius: var(--tc-spacing-2);
-  border: 1px solid var(--tc-color-border-light);
+  border: 1px solid var(--tc-border-color-light);
 }
 
 /* Utilitaires */

@@ -15,8 +15,8 @@
   justify-content: space-between;
   align-items: center;
   padding: var(--tc-spacing-md);
-  background-color: var(--tc-color-background-secondary);
-  border-bottom: 1px solid var(--tc-color-border);
+  background-color: var(--tc-white-secondary);
+  border-bottom: 1px solid var(--tc-border-color);
   border-radius: var(--tc-border-radius) var(--tc-border-radius) 0 0;
   margin-bottom: var(--tc-spacing-md);
 }
@@ -28,20 +28,20 @@
 
 .icon {
   font-size: var(--tc-font-size-xl);
-  color: var(--tc-color-primary);
+  color: var(--tc-primary-color);
   margin-right: var(--tc-spacing-sm);
 }
 
 .title {
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-bold);
-  color: var(--tc-color-text-primary);
+  color: var(--tc-text-color);
   margin: 0;
 }
 
 .subtitle {
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-color-text-muted);
+  color: var(--tc-text-muted);
   margin: var(--tc-spacing-xs) 0 0 0;
 }
 
@@ -62,22 +62,22 @@
 .breadcrumbItem:not(:last-child)::after {
   content: "/";
   margin: 0 var(--tc-spacing-xs);
-  color: var(--tc-color-text-muted);
+  color: var(--tc-text-muted);
 }
 
 .breadcrumbLink {
-  color: var(--tc-color-primary);
+  color: var(--tc-primary-color);
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 .breadcrumbLink:hover {
-  color: var(--tc-color-primary-dark);
+  color: var(--tc-primary-color-dark);
   text-decoration: underline;
 }
 
 .breadcrumbCurrent {
-  color: var(--tc-color-text-muted);
+  color: var(--tc-text-muted);
 }
 
 .headerActions {
@@ -89,9 +89,9 @@
   display: inline-flex;
   align-items: center;
   padding: var(--tc-spacing-xs) var(--tc-spacing-md);
-  color: var(--tc-color-primary);
+  color: var(--tc-primary-color);
   background-color: transparent;
-  border: 1px solid var(--tc-color-primary);
+  border: 1px solid var(--tc-primary-color);
   border-radius: var(--tc-border-radius);
   cursor: pointer;
   transition: all 0.2s ease;
@@ -99,8 +99,8 @@
 }
 
 .actionButton:hover {
-  color: var(--tc-color-background);
-  background-color: var(--tc-color-primary);
+  color: var(--tc-white);
+  background-color: var(--tc-primary-color);
 }
 
 .actionButtonIcon {

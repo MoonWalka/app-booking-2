@@ -13,7 +13,7 @@
 .container {
   margin-bottom: var(--tc-spacing-lg);
   padding: var(--tc-spacing-md);
-  background-color: var(--tc-color-background-secondary);
+  background-color: var(--tc-white-secondary);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-box-shadow-sm);
 }
@@ -22,8 +22,8 @@
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-bold);
   margin-bottom: var(--tc-spacing-md);
-  color: var(--tc-color-text-primary);
-  border-bottom: 1px solid var(--tc-color-border-light);
+  color: var(--tc-text-color);
+  border-bottom: 1px solid var(--tc-border-color-light);
   padding-bottom: var(--tc-spacing-sm);
 }
 
@@ -35,7 +35,7 @@
   display: block;
   font-weight: var(--tc-font-weight-medium);
   margin-bottom: var(--tc-spacing-xs);
-  color: var(--tc-color-text-secondary);
+  color: var(--tc-text-color-secondary);
 }
 
 .formControl {
@@ -44,18 +44,18 @@
   padding: var(--tc-spacing-sm);
   font-size: var(--tc-font-size-base);
   line-height: 1.5;
-  color: var(--tc-color-text-primary);
-  background-color: var(--tc-color-background);
+  color: var(--tc-text-color);
+  background-color: var(--tc-white);
   background-clip: padding-box;
-  border: 1px solid var(--tc-color-border);
+  border: 1px solid var(--tc-border-color);
   border-radius: var(--tc-border-radius);
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
 .formControl:focus {
-  color: var(--tc-color-text-primary);
-  background-color: var(--tc-color-background);
-  border-color: var(--tc-color-primary-light);
+  color: var(--tc-text-color);
+  background-color: var(--tc-white);
+  border-color: var(--tc-primary-color-light);
   outline: 0;
   box-shadow: var(--tc-primary-color-shadow);
 }
@@ -74,7 +74,7 @@
 }
 
 .required {
-  color: var(--tc-color-danger);
+  color: var(--tc-danger-color);
   margin-left: var(--tc-spacing-xs);
 }
 
@@ -82,7 +82,7 @@
   display: block;
   margin-top: var(--tc-spacing-xs);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-color-text-muted);
+  color: var(--tc-text-muted);
 }
 
 /* Responsive styles */

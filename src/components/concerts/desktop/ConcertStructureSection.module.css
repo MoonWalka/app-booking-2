@@ -5,9 +5,9 @@
  */
 
 .formCard {
-  background-color: var(--tc-color-ffffff);
+  background-color: var(--tc-whitefff);
   border-radius: 8px;
-  box-shadow: 0 2px 4px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.05));
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   margin-bottom: 20px;
   border: 1px solid var(--tc-color-e9ecef);
   overflow: hidden;
@@ -29,7 +29,7 @@
 }
 
 .cardHeader i {
-  color: var(--tc-color-6c757d);
+  color: var(--tc-gray-600);
   font-size: 1.2rem;
 }
 
@@ -77,7 +77,7 @@
 
 .structureDetails {
   font-size: 13px;
-  color: var(--tc-color-6c757d);
+  color: var(--tc-gray-600);
   display: flex;
   flex-wrap: wrap;
   gap: 10px;

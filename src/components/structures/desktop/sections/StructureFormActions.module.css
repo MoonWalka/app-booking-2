@@ -22,20 +22,20 @@
   display: flex;
   align-items: center;
   gap: var(--tc-spacing-xs);
-  border: 1px solid var(--tc-color-border);
+  border: 1px solid var(--tc-border-color);
   padding: var(--tc-spacing-sm) var(--tc-spacing-md);
   border-radius: var(--tc-border-radius-sm);
   background-color: transparent;
-  color: var(--tc-color-text-muted);
+  color: var(--tc-text-muted);
   font-size: var(--tc-font-size-sm);
   transition: all 0.2s;
   cursor: pointer;
 }
 
 .cancelButton:hover:not(:disabled) {
-  background-color: var(--tc-color-background-secondary);
-  color: var(--tc-color-text-secondary);
-  border-color: var(--tc-color-border-dark);
+  background-color: var(--tc-white-secondary);
+  color: var(--tc-text-color-secondary);
+  border-color: var(--tc-border-color-dark);
 }
 
 .cancelButton i {
@@ -48,8 +48,8 @@
   gap: var(--tc-spacing-xs);
   padding: var(--tc-spacing-sm) var(--tc-spacing-md);
   border-radius: var(--tc-border-radius-sm);
-  background-color: var(--tc-color-primary);
-  color: var(--tc-color-background);
+  background-color: var(--tc-primary-color);
+  color: var(--tc-white);
   border: none;
   font-size: var(--tc-font-size-sm);
   transition: all 0.2s;
@@ -57,7 +57,7 @@
 }
 
 .submitButton:hover:not(:disabled) {
-  background-color: var(--tc-color-primary-dark);
+  background-color: var(--tc-primary-color-dark);
 }
 
 .submitButton:disabled {

@@ -11,7 +11,7 @@
 }
 
 .sectionInfo {
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
   font-size: 0.875rem;
   margin-bottom: 8px;
 }
@@ -47,7 +47,7 @@
   width: 100%;
   padding: 8px 12px;
   font-size: 0.9rem;
-  border: 1px solid var(--tc-gray-300);
+  border: 1px solid var(--tc-color-gray-300);
   border-radius: 4px;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   min-height: 100px;
@@ -65,20 +65,20 @@
 
 .exampleFooter {
   margin-top: 12px;
-  background-color: var(--tc-gray-50);
+  background-color: var(--tc-color-gray-50);
   border-radius: 4px;
   padding: 8px 12px;
 }
 
 .exampleLabel {
   display: block;
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
   font-size: 0.75rem;
   margin-bottom: 4px;
 }
 
 .exampleContent {
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
   font-size: 0.85rem;
   font-style: italic;
 }

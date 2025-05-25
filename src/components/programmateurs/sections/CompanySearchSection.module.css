@@ -38,7 +38,7 @@
   font-size: var(--tc-font-size-base);
   line-height: 1.5;
   color: var(--tc-text-default);
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-radius-base);
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
@@ -46,7 +46,7 @@
 
 .searchInput:focus {
   color: var(--tc-text-default);
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   border-color: var(--tc-primary-color-light);
   outline: 0;
   box-shadow: 0 0 0 0.25rem var(--tc-primary-color-shadow);
@@ -58,7 +58,7 @@
   left: 0;
   right: 0;
   z-index: 10;
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-box-shadow-md);

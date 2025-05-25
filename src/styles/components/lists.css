@@ -26,7 +26,7 @@
 /* BOUTON D'AJOUT */
 .tc-btn-add {
   background: var(--tc-color-primary);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
   border: none;
   border-radius: var(--tc-radius-base);
   font-weight: var(--tc-font-weight-medium);
@@ -46,7 +46,7 @@
 .tc-btn-add:hover,
 .tc-btn-add:focus {
   background: var(--tc-color-primary-dark);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
   text-decoration: none;
 }
 
@@ -68,12 +68,12 @@
   border-radius: 0 var(--tc-radius-base) var(--tc-radius-base) 0;
   border: 1px solid var(--tc-border-default);
   border-left: none;
-  background: var(--tc-gray-100);
+  background: var(--tc-color-gray-100);
   color: var(--tc-text-default);
 }
 
 .tc-search-bar .tc-btn:active {
-  background: var(--tc-gray-200);
+  background: var(--tc-color-gray-200);
 }
 
 /* TABLE STYLES */
@@ -130,7 +130,7 @@
 
 /* BADGES & FIELD VALUES */
 .tc-structure-badge {
-  background: var(--tc-gray-200);
+  background: var(--tc-color-gray-200);
   color: var(--tc-text-default);
   font-size: var(--tc-font-size-sm);
   padding: calc(var(--tc-space-1) / 2) var(--tc-space-2);
@@ -154,7 +154,7 @@
 /* ACTIONS BUTTONS */
 .tc-table-actions .tc-btn {
   color: var(--tc-text-default);
-  background: var(--tc-gray-100);
+  background: var(--tc-color-gray-100);
   border-radius: var(--tc-radius-sm);
   margin-right: var(--tc-space-1);
   border: none;
@@ -172,7 +172,7 @@
 .tc-table-actions .tc-btn:hover,
 .tc-table-actions .tc-btn:focus, 
 .tc-table-actions .tc-btn:active {
-  background: var(--tc-gray-200);
+  background: var(--tc-color-gray-200);
   color: var(--tc-color-primary);
 }
 

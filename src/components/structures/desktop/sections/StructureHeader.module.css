@@ -11,7 +11,7 @@
  */
 
 .detailsHeader {
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   border-radius: var(--tc-radius-base);
   padding: var(--tc-space-4);
   margin-bottom: var(--tc-space-4);
@@ -117,7 +117,7 @@
 
 .primaryOutlineButton:hover {
   background-color: var(--tc-color-primary);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
 }
 
 .dangerOutlineButton {
@@ -131,7 +131,7 @@
 
 .dangerOutlineButton:hover {
   background-color: var(--tc-color-error);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
 }
 
 /* Responsive styles */

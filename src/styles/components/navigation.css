@@ -46,7 +46,7 @@
 
 .tc-navigation-link.tc-active {
   background-color: var(--tc-color-primary);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
 }
 
 .tc-navigation-icon {
@@ -55,7 +55,7 @@
 
 /* NAVIGATION SECONDAIRE */
 .tc-sub-navigation {
-  background-color: var(--tc-gray-50);
+  background-color: var(--tc-color-gray-50);
   border-radius: var(--tc-radius-base);
   padding: var(--tc-space-1) var(--tc-space-4);
   margin-bottom: var(--tc-space-4);
@@ -153,7 +153,7 @@
   border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-radius-base);
   padding: var(--tc-space-1);
-  background-color: var(--tc-gray-50);
+  background-color: var(--tc-color-gray-50);
 }
 
 .tc-tab-button {
@@ -197,7 +197,7 @@
   justify-content: center;
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
-  border: 2px solid var(--tc-gray-300);
+  border: 2px solid var(--tc-color-gray-300);
   transition: var(--tc-transition-base);
   position: relative;
   z-index: 2;
@@ -206,20 +206,20 @@
 
 .tc-step-dot.tc-active {
   background-color: var(--tc-color-primary);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
   border-color: var(--tc-color-primary);
 }
 
 .tc-step-dot.tc-completed {
   background-color: var(--tc-color-success);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
   border-color: var(--tc-color-success);
 }
 
 .tc-step-line {
   flex: 1;
   height: 2px;
-  background-color: var(--tc-gray-300);
+  background-color: var(--tc-color-gray-300);
   margin: 0 -5px;
   position: relative;
   z-index: 1;
@@ -251,8 +251,8 @@
   bottom: 45px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: var(--tc-gray-900);
-  color: var(--tc-white);
+  background-color: var(--tc-color-gray-900);
+  color: var(--tc-color-white);
   padding: var(--tc-space-1) var(--tc-space-2);
   border-radius: var(--tc-radius-base);
   font-size: var(--tc-font-size-xs);
@@ -273,7 +273,7 @@
   margin-left: -5px;
   border-width: 5px;
   border-style: solid;
-  border-color: var(--tc-gray-900) transparent transparent transparent;
+  border-color: var(--tc-color-gray-900) transparent transparent transparent;
 }
 
 .tc-step-dot:hover .tc-step-description {
@@ -285,7 +285,7 @@
 .tc-step-progress {
   width: 100%;
   height: 6px;
-  background-color: var(--tc-gray-200);
+  background-color: var(--tc-color-gray-200);
   border-radius: 3px;
   margin: var(--tc-space-4) 0;
   overflow: hidden;
@@ -325,7 +325,7 @@
 
 .tc-breadcrumb-separator {
   margin: 0 var(--tc-space-1);
-  color: var(--tc-gray-400);
+  color: var(--tc-color-gray-400);
 }
 
 .tc-breadcrumb-current {
@@ -370,7 +370,7 @@
 
 .tc-pagination-link.tc-active {
   background-color: var(--tc-color-primary);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
   border-color: var(--tc-color-primary);
 }
 
@@ -401,7 +401,7 @@
 .tc-vertical-menu-title {
   padding: var(--tc-space-2) var(--tc-space-4);
   font-weight: var(--tc-font-weight-semibold);
-  background-color: var(--tc-gray-50);
+  background-color: var(--tc-color-gray-50);
   border-bottom: 1px solid var(--tc-border-default);
   color: var(--tc-text-default);
 }
@@ -431,7 +431,7 @@
 }
 
 .tc-vertical-menu-link:hover {
-  background-color: var(--tc-gray-50);
+  background-color: var(--tc-color-gray-50);
   color: var(--tc-text-default);
 }
 
@@ -445,7 +445,7 @@
 
 .tc-vertical-menu-icon {
   font-size: 1.2em;
-  color: var(--tc-gray-500);
+  color: var(--tc-color-gray-500);
 }
 
 .tc-vertical-menu-link:hover .tc-vertical-menu-icon,
@@ -546,7 +546,7 @@
 
 .tc-tabs.tc-tabs-vertical .tc-tab.tc-active {
   color: var(--tc-color-primary);
-  background: var(--tc-gray-50);
+  background: var(--tc-color-gray-50);
   font-weight: var(--tc-font-weight-semibold);
   border-right: none;
 }
@@ -556,6 +556,6 @@
 }
 
 .tc-tabs.tc-tabs-vertical .tc-tab:hover {
-  background: var(--tc-gray-100);
+  background: var(--tc-color-gray-100);
   color: var(--tc-color-primary);
 }

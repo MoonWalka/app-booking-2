@@ -107,7 +107,7 @@
 }
 
 .formField--filled {
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
   border: 1px solid transparent;
 }
 
@@ -130,7 +130,7 @@
 }
 
 .formField--disabled {
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
   color: var(--tc-text-muted);
   cursor: not-allowed;
   opacity: 0.6;

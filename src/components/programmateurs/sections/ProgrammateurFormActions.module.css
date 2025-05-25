@@ -33,7 +33,7 @@
 .cancelButton {
   padding: var(--tc-space-1) var(--tc-space-4);
   color: var(--tc-text-muted);
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-radius-base);
   transition: all 0.2s ease-in-out;
@@ -47,7 +47,7 @@
 
 .saveButton {
   padding: var(--tc-space-1) var(--tc-space-4);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
   background-color: var(--tc-color-primary);
   border: 1px solid var(--tc-color-primary);
   border-radius: var(--tc-radius-base);
@@ -79,7 +79,7 @@
 }
 
 .deleteButton:hover {
-  color: var(--tc-white);
+  color: var(--tc-color-white);
   background-color: var(--tc-color-error);
 }
 

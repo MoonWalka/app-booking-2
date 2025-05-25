@@ -24,8 +24,8 @@
   justify-content: space-between;
   align-items: center;
   padding: var(--tc-space-4) var(--tc-space-4);
-  background-color: var(--tc-gray-100);
-  border-bottom: 1px solid var(--tc-gray-300);
+  background-color: var(--tc-color-gray-100);
+  border-bottom: 1px solid var(--tc-color-gray-300);
 }
 
 .headerTitle {
@@ -61,7 +61,7 @@
 
 .infoLabel {
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
   margin-bottom: var(--tc-space-1);
   font-weight: var(--tc-font-weight-medium);
 }
@@ -76,7 +76,7 @@
 
 /* Style pour les lignes en alternance en mode visualisation */
 .infoGroup:nth-child(odd) {
-  background-color: var(--tc-gray-50);
+  background-color: var(--tc-color-gray-50);
   padding: var(--tc-space-2);
   border-radius: var(--tc-radius-sm);
 }

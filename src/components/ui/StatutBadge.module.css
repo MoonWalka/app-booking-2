@@ -18,7 +18,7 @@
   white-space: nowrap;
   text-align: center;
   vertical-align: middle;
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
   color: var(--tc-text-default);
   box-shadow: none; /* Modifié: suppression de l'ombre portée */
   transition: var(--tc-transition-base);
@@ -53,7 +53,7 @@
 
 .secondary {
   background-color: rgba(158, 158, 158, 0.1); /* Modifié: couleur plus transparente */
-  color: var(--tc-gray-600); /* Modifié: couleur plus foncée pour la lisibilité */
+  color: var(--tc-color-gray-600); /* Modifié: couleur plus foncée pour la lisibilité */
 }
 
 .success {

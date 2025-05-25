@@ -11,12 +11,12 @@
   --tc-card-padding: 1rem;
   --tc-card-margin: 0 0 1rem 0;
   --tc-card-bg-color: var(--tc-whitefff);
-  --tc-card-border-color: var(--tc-gray-200);
+  --tc-card-border-color: var(--tc-color-gray-200);
   --tc-card-shadow-low: 0 2px 4px rgba(0, 0, 0, 0.05);
   --tc-card-shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.1);
   --tc-card-shadow-high: 0 8px 16px rgba(0, 0, 0, 0.15);
   --tc-card-header-bg-color: transparent;
-  --tc-card-footer-bg-color: var(--tc-gray-50);
+  --tc-card-footer-bg-color: var(--tc-color-gray-50);
   --tc-card-title-color: var(--tc-gray-800333);
   --tc-card-subtitle-color: var(--tc-gray-600666);
 }

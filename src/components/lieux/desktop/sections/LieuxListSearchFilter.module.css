@@ -51,7 +51,7 @@
   border: none;
   background: none;
   cursor: pointer;
-  color: var(--tc-gray-500);
+  color: var(--tc-color-gray-500);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -60,12 +60,12 @@
 }
 
 .clearSearch:hover {
-  color: var(--tc-gray-700);
+  color: var(--tc-color-gray-700);
 }
 
 .resultsCount {
   font-size: var(--tc-font-size-xs);
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
   margin-top: var(--tc-space-1);
   padding-left: var(--tc-space-2);
 }
@@ -80,10 +80,10 @@
   white-space: nowrap;
   gap: var(--tc-space-1);
   padding: var(--tc-space-2) var(--tc-space-4);
-  border: 1px solid var(--tc-gray-300);
+  border: 1px solid var(--tc-color-gray-300);
   border-radius: var(--tc-radius-base);
   background-color: var(--tc-bg-default);
-  color: var(--tc-gray-700);
+  color: var(--tc-color-gray-700);
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
   cursor: pointer;
@@ -92,8 +92,8 @@
 
 .modernFilterBtn:hover, 
 .modernSortBtn:hover {
-  background-color: var(--tc-gray-100);
-  border-color: var(--tc-gray-400);
+  background-color: var(--tc-color-gray-100);
+  border-color: var(--tc-color-gray-400);
 }
 
 .modernFilterBtn i, 

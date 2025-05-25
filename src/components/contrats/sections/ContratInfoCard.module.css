@@ -5,7 +5,7 @@
  */
 
 .infoCard {
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-box-shadow);

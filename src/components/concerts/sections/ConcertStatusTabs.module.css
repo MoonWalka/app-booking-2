@@ -18,7 +18,7 @@
 
 .sectionNavLink {
   color: var(--tc-text-secondary);
-  background-color: var(--tc-gray-50);
+  background-color: var(--tc-color-gray-50);
   padding: var(--tc-space-1) var(--tc-space-6);
   border-radius: var(--tc-border-radius-md);
   font-weight: var(--tc-font-weight-regular);
@@ -40,7 +40,7 @@
 }
 
 .sectionNavLink.active {
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   color: var(--tc-color-secondary);
   font-weight: var(--tc-font-weight-bold);
   box-shadow: 0 1px 4px 0 var(--tc-shadow-color-sm));
@@ -51,7 +51,7 @@
 /* Désactive l'effet hover sur l'actif */
 .sectionNavLink.active:hover,
 .sectionNavLink.active:focus {
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   color: var(--tc-color-secondary);
 }
 
@@ -59,8 +59,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--tc-gray-200);
-  color: var(--tc-gray-600);
+  background-color: var(--tc-color-gray-200);
+  color: var(--tc-color-gray-600);
   border-radius: var(--tc-border-radius-pill); /* Utiliser la variable pour border-radius */
   padding: calc(var(--tc-space-1) / 2) var(--tc-space-1); /* Équivalent à 2px 8px */
   font-size: var(--tc-font-size-xs);

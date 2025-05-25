@@ -30,7 +30,7 @@
 }
 
 .statCard[data-color="muted"] {
-  border-color: var(--tc-gray-500);
+  border-color: var(--tc-color-gray-500);
 }
 
 .statIcon {
@@ -48,7 +48,7 @@
 }
 
 .statIcon[data-color="muted"] {
-  color: var(--tc-gray-500);
+  color: var(--tc-color-gray-500);
 }
 
 .statText {

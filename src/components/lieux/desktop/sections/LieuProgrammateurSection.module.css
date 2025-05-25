@@ -70,14 +70,14 @@
   border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-shadow-base);
   background-color: var(--tc-bg-default);
-  border: 1px solid var(--tc-gray-300);
+  border: 1px solid var(--tc-color-gray-300);
   z-index: var(--tc-z-index-dropdown);
 }
 
 .programmateurItem {
   padding: var(--tc-space-2);
   cursor: pointer;
-  border-bottom: 1px solid var(--tc-gray-200);
+  border-bottom: 1px solid var(--tc-color-gray-200);
   transition: background-color var(--tc-transition-duration);
 }
 
@@ -86,7 +86,7 @@
 }
 
 .programmateurItem:hover {
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
 }
 
 .programmateurName {
@@ -97,7 +97,7 @@
 
 .programmateurDetails {
   font-size: var(--tc-font-size-xs);
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
   display: flex;
   flex-direction: column;
   gap: var(--tc-space-1);
@@ -119,9 +119,9 @@
   justify-content: space-between;
   align-items: center;
   padding: var(--tc-space-4);
-  border: 1px solid var(--tc-gray-300);
+  border: 1px solid var(--tc-color-gray-300);
   border-radius: var(--tc-radius-base);
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
 }
 
 .programmateurInfo {
@@ -142,7 +142,7 @@
   display: flex;
   align-items: center;
   gap: var(--tc-space-1);
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
 }
 
 .programmateurContactItem i {

@@ -346,14 +346,14 @@
   justify-content: center;
   padding: 0;
   background-color: var(--tc-bg-default);
-  border: 1px solid var(--tc-gray-300);
-  color: var(--tc-gray-700);
+  border: 1px solid var(--tc-color-gray-300);
+  color: var(--tc-color-gray-700);
   cursor: pointer;
   transition: var(--tc-transition-base);
 }
 
 .lieuActionBtn:hover {
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
 }
 
 .lieuActionEdit:hover {

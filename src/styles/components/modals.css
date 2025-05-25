@@ -159,7 +159,7 @@
 
 .tc-modal-full .card-header {
   padding: var(--tc-space-2) var(--tc-font-size-xl);
-  background-color: var(--tc-card-header-bg);
+  background-color: var(--tc-bg-surface);
 }
 
 .tc-modal-full .card-body {

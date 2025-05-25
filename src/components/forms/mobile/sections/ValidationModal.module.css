@@ -38,7 +38,7 @@
   display: flex;
   justify-content: space-between;
   padding: var(--tc-space-3);
-  border-top: 1px solid var(--tc-gray-200);
+  border-top: 1px solid var(--tc-color-gray-200);
 }
 
 .cancelButton, .confirmButton {

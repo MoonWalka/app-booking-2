@@ -59,7 +59,7 @@
 .concertCard {
   display: flex;
   align-items: stretch;
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   border-radius: var(--tc-radius-md);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   overflow: hidden;
@@ -79,7 +79,7 @@
   justify-content: center;
   align-items: center;
   background-color: var(--tc-color-primary);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
   padding: var(--tc-space-2);
   min-width: 60px;
   text-align: center;
@@ -185,7 +185,7 @@
 .concertActions {
   display: flex;
   flex-direction: column;
-  border-left: 1px solid var(--tc-gray-100);
+  border-left: 1px solid var(--tc-color-gray-100);
 }
 
 .actionBtn {
@@ -208,7 +208,7 @@
 
 .actionBtn.edit {
   color: var(--tc-color-success);
-  border-top: 1px solid var(--tc-gray-100);
+  border-top: 1px solid var(--tc-color-gray-100);
 }
 
 .concertActionButton {

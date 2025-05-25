@@ -74,7 +74,7 @@
 }
 
 .concertsTable tbody tr:hover {
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
 }
 
 .concertsTable tbody tr:last-child td {
@@ -88,7 +88,7 @@
 .noResults {
   text-align: center;
   padding: var(--tc-space-8);
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
   font-size: var(--tc-font-size-md);
   border-top: 1px solid var(--tc-border-default);
 }
@@ -100,7 +100,7 @@
 .noResults {
   padding: var(--tc-space-8);
   text-align: center;
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
   font-size: var(--tc-font-size-md);
   border-top: 1px solid var(--tc-border-default);
 }
@@ -113,7 +113,7 @@
 
 .actions button, .actions a {
   border: none;
-  background: var(--tc-gray-200);
+  background: var(--tc-color-gray-200);
   color: var(--tc-text-default);
   font-size: 1.1rem;
   padding: 0.25rem 0.5rem;
@@ -128,15 +128,15 @@
 }
 .actions button:hover, .actions a:hover {
   background: var(--tc-color-primary);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
 }
 .actions .viewButton {
-  background: var(--tc-gray-300);
+  background: var(--tc-color-gray-300);
   color: var(--tc-color-primary);
 }
 .actions .viewButton:hover {
   background: var(--tc-color-primary);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
 }
 .actions .editButton {
   background: var(--tc-warning-color-light);
@@ -144,7 +144,7 @@
 }
 .actions .editButton:hover {
   background: var(--tc-color-warning);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
 }
 .actions .contractButton, .actions .formButton {
   background: var(--tc-info-color-light);
@@ -152,7 +152,7 @@
 }
 .actions .contractButton:hover, .actions .formButton:hover {
   background: var(--tc-color-info);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
 }
 .actions .deleteButton {
   background: var(--tc-danger-color-light);
@@ -160,7 +160,7 @@
 }
 .actions .deleteButton:hover {
   background: var(--tc-color-error);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
 }
 
 /* 

@@ -24,7 +24,7 @@
 }
 
 .modalContent {
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-box-shadow-lg);
   width: 100%;
@@ -110,7 +110,7 @@
 .cancelButton {
   padding: var(--tc-space-1) var(--tc-space-4);
   color: var(--tc-text-muted);
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-radius-base);
   cursor: pointer;
@@ -124,7 +124,7 @@
 
 .confirmButton {
   padding: var(--tc-space-1) var(--tc-space-4);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
   background-color: var(--tc-color-error);
   border: 1px solid var(--tc-color-error);
   border-radius: var(--tc-radius-base);

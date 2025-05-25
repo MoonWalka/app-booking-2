@@ -123,7 +123,7 @@
   display: flex;
   justify-content: center;
   width: 100%;
-  background-color: var(--tc-gray-800);
+  background-color: var(--tc-color-gray-800);
   min-height: calc(100vh - 200px);
 }
 
@@ -144,12 +144,12 @@
   height: 700px;
   border: 1px solid var(--tc-border-color-medium);
   border-radius: var(--tc-radius-sm);
-  background-color: var(--tc-gray-800);
+  background-color: var(--tc-color-gray-800);
 }
 
 /* Ajout du style pour la visualisation des pages A4 séparées */
 .template-preview .preview-content {
-  background-color: var(--tc-gray-800);
+  background-color: var(--tc-color-gray-800);
   padding: 20px;
   overflow-y: auto;
   max-height: 80vh;
@@ -194,7 +194,7 @@
   display: inline-block;
   padding: var(--tc-space-1) var(--tc-space-2);
   margin: var(--tc-space-1);
-  background-color: var(--tc-gray-800);
+  background-color: var(--tc-color-gray-800);
   border: 1px solid var(--tc-border-color-medium);
   border-radius: var(--tc-radius-sm);
   font-size: var(--tc-font-size-sm);
@@ -202,7 +202,7 @@
 }
 
 .variable-badge:hover {
-  background-color: var(--tc-light-hover);
+  background-color: var(--tc-bg-hover);
 }
 
 .variables-badge-container {

@@ -92,7 +92,7 @@
 .formText {
   margin-top: var(--tc-space-1);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
 }
 
 .formError {

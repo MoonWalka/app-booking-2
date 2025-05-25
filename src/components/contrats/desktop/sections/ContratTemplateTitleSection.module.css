@@ -45,7 +45,7 @@
 }
 
 .examplePreview {
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
   border-radius: 4px;
   padding: 8px 12px;
   margin-top: 8px;
@@ -53,13 +53,13 @@
 
 .exampleLabel {
   display: block;
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
   font-size: 0.75rem;
   margin-bottom: 4px;
 }
 
 .exampleContent {
   font-weight: bold;
-  color: var(--tc-gray-900);
+  color: var(--tc-color-gray-900);
   font-size: 1rem;
 }

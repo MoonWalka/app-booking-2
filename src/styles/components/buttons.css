@@ -69,7 +69,7 @@ button {
 .tc-btn-primary {
   background-color: var(--tc-color-primary);
   border-color: var(--tc-color-primary);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
 }
 
 .tc-btn-primary:hover,
@@ -81,7 +81,7 @@ button {
 .tc-btn-secondary {
   background-color: var(--tc-color-secondary);
   border-color: var(--tc-color-secondary);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
 }
 
 .tc-btn-secondary:hover,
@@ -93,7 +93,7 @@ button {
 .tc-btn-success {
   background-color: var(--tc-color-success);
   border-color: var(--tc-color-success);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
 }
 
 .tc-btn-success:hover,
@@ -105,7 +105,7 @@ button {
 .tc-btn-danger {
   background-color: var(--tc-color-error);
   border-color: var(--tc-color-error);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
 }
 
 .tc-btn-danger:hover,
@@ -117,7 +117,7 @@ button {
 .tc-btn-warning {
   background-color: var(--tc-color-warning);
   border-color: var(--tc-color-warning);
-  color: var(--tc-gray-900);
+  color: var(--tc-color-gray-900);
 }
 
 .tc-btn-warning:hover,
@@ -129,7 +129,7 @@ button {
 .tc-btn-info {
   background-color: var(--tc-color-info);
   border-color: var(--tc-color-info);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
 }
 
 .tc-btn-info:hover,
@@ -139,27 +139,27 @@ button {
 }
 
 .tc-btn-light {
-  background-color: var(--tc-gray-100);
-  border-color: var(--tc-gray-200);
-  color: var(--tc-gray-900);
+  background-color: var(--tc-color-gray-100);
+  border-color: var(--tc-color-gray-200);
+  color: var(--tc-color-gray-900);
 }
 
 .tc-btn-light:hover,
 .tc-btn-light:active {
-  background-color: var(--tc-gray-200);
-  border-color: var(--tc-gray-300);
+  background-color: var(--tc-color-gray-200);
+  border-color: var(--tc-color-gray-300);
 }
 
 .tc-btn-dark {
-  background-color: var(--tc-gray-800);
-  border-color: var(--tc-gray-800);
-  color: var(--tc-white);
+  background-color: var(--tc-color-gray-800);
+  border-color: var(--tc-color-gray-800);
+  color: var(--tc-color-white);
 }
 
 .tc-btn-dark:hover,
 .tc-btn-dark:active {
-  background-color: var(--tc-gray-900);
-  border-color: var(--tc-gray-900);
+  background-color: var(--tc-color-gray-900);
+  border-color: var(--tc-color-gray-900);
 }
 
 /* VARIANTES OUTLINE */
@@ -175,7 +175,7 @@ button {
 
 .tc-btn-outline-primary:hover,
 .tc-btn-outline-primary:active {
-  color: var(--tc-white);
+  color: var(--tc-color-white);
   background-color: var(--tc-color-primary);
   border-color: var(--tc-color-primary);
 }
@@ -188,7 +188,7 @@ button {
 
 .tc-btn-outline-secondary:hover,
 .tc-btn-outline-secondary:active {
-  color: var(--tc-white);
+  color: var(--tc-color-white);
   background-color: var(--tc-color-secondary);
   border-color: var(--tc-color-secondary);
 }
@@ -201,7 +201,7 @@ button {
 
 .tc-btn-outline-success:hover,
 .tc-btn-outline-success:active {
-  color: var(--tc-white);
+  color: var(--tc-color-white);
   background-color: var(--tc-color-success);
   border-color: var(--tc-color-success);
 }
@@ -214,7 +214,7 @@ button {
 
 .tc-btn-outline-danger:hover,
 .tc-btn-outline-danger:active {
-  color: var(--tc-white);
+  color: var(--tc-color-white);
   background-color: var(--tc-color-error);
   border-color: var(--tc-color-error);
 }

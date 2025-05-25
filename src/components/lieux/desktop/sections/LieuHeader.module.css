@@ -44,7 +44,7 @@
 }
 
 .breadcrumbItem.active {
-  color: var(--tc-gray-700);
+  color: var(--tc-color-gray-700);
   font-weight: var(--tc-font-weight-medium);
   cursor: default;
 }
@@ -56,7 +56,7 @@
 .breadcrumbContainer i {
   margin: 0 var(--tc-space-1);
   font-size: var(--tc-font-size-xs);
-  color: var(--tc-gray-500);
+  color: var(--tc-color-gray-500);
 }
 
 /* =============================
@@ -100,8 +100,8 @@
   padding: var(--tc-space-1) var(--tc-space-2);
   border-radius: var(--tc-radius-base);
   font-weight: var(--tc-font-weight-medium);
-  background-color: var(--tc-gray-100);
-  color: var(--tc-gray-700);
+  background-color: var(--tc-color-gray-100);
+  color: var(--tc-color-gray-700);
 }
 
 /* =============================

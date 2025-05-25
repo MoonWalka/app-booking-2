@@ -12,7 +12,7 @@
 }
 
 .formCard {
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-shadow-base);
   margin-bottom: var(--tc-space-6);
@@ -20,7 +20,7 @@
 }
 
 .cardHeader {
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
   padding: var(--tc-space-4) var(--tc-space-4);
   border-bottom: var(--tc-border-width) solid var(--tc-border-default);
   display: flex;
@@ -77,7 +77,7 @@
 .searchOptionsContainer {
   margin-bottom: var(--tc-space-6);
   padding: var(--tc-space-4);
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
   border-radius: var(--tc-radius-base);
 }
 
@@ -107,12 +107,12 @@
 .searchResultItem {
   cursor: pointer;
   padding: var(--tc-space-2);
-  border-bottom: var(--tc-border-width) solid var(--tc-gray-200);
+  border-bottom: var(--tc-border-width) solid var(--tc-color-gray-200);
   transition: background-color 0.2s ease;
 }
 
 .searchResultItem:hover {
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
 }
 
 .suggestionContainer {
@@ -121,7 +121,7 @@
   max-height: 200px;
   overflow-y: auto;
   z-index: 1000;
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   border: var(--tc-border-width) solid var(--tc-input-border-color);
   border-radius: 0 0 var(--tc-radius-sm) var(--tc-radius-sm);
   box-shadow: var(--tc-dropdown-shadow));
@@ -133,11 +133,11 @@
   display: flex;
   align-items: center;
   cursor: pointer;
-  border-bottom: var(--tc-border-width) solid var(--tc-gray-200);
+  border-bottom: var(--tc-border-width) solid var(--tc-color-gray-200);
 }
 
 .suggestionItem:hover {
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
 }
 
 .formActions {

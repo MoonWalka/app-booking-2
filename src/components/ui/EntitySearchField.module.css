@@ -62,14 +62,14 @@
 .icon {
   position: absolute;
   left: var(--tc-space-2);
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
   font-size: var(--tc-font-size-md);
 }
 
 .loadingIndicator {
   position: absolute;
   right: var(--tc-space-2);
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
 }
 
 /* =============================
@@ -117,7 +117,7 @@
   align-items: flex-start;
   padding: var(--tc-space-2);
   cursor: pointer;
-  border-bottom: 1px solid var(--tc-gray-200);
+  border-bottom: 1px solid var(--tc-color-gray-200);
   transition: background-color var(--tc-transition-duration);
 }
 
@@ -126,7 +126,7 @@
 }
 
 .suggestionItem:hover {
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
 }
 
 .suggestionIcon {
@@ -146,7 +146,7 @@
 
 .suggestionDetails {
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
   margin-top: var(--tc-space-1);
   display: flex;
   flex-direction: column;
@@ -168,8 +168,8 @@
 .noResults {
   padding: var(--tc-space-2);
   text-align: center;
-  background-color: var(--tc-gray-100);
-  color: var(--tc-gray-600);
+  background-color: var(--tc-color-gray-100);
+  color: var(--tc-color-gray-600);
   border-radius: var(--tc-radius-base);
   margin-top: var(--tc-space-1);
 }
@@ -178,8 +178,8 @@
    ENTITÉ SÉLECTIONNÉE
    ============================= */
 .selectedEntity {
-  background-color: var(--tc-gray-100);
-  border: 1px solid var(--tc-gray-300);
+  background-color: var(--tc-color-gray-100);
+  border: 1px solid var(--tc-color-gray-300);
   border-radius: var(--tc-radius-base);
   padding: var(--tc-space-2);
   margin-top: var(--tc-space-2);
@@ -208,7 +208,7 @@
 
 .entityStructure {
   font-style: italic;
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
   margin-bottom: var(--tc-space-1);
 }
 
@@ -220,7 +220,7 @@
 
 .entityContact {
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
   display: flex;
   align-items: center;
   gap: var(--tc-space-1);

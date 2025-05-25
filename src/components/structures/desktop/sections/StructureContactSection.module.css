@@ -11,7 +11,7 @@
  */
 
 .formCard {
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-box-shadow-sm);
   margin-bottom: var(--tc-space-6);
@@ -19,7 +19,7 @@
 }
 
 .detailsCard {
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   border-radius: var(--tc-radius-base);
   margin-bottom: var(--tc-space-4);
   box-shadow: var(--tc-box-shadow-sm);
@@ -95,7 +95,7 @@
   font-size: var(--tc-font-size-sm);
   line-height: 1.5;
   color: var(--tc-text-default);
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 

@@ -101,38 +101,38 @@
 
 .tc-status-message-primary {
   background-color: rgba(var(--tc-color-primary-rgb), 0.15);
-  color: var(--tc-gray-800);
+  color: var(--tc-color-gray-800);
 }
 
 .tc-status-message-success {
   background-color: rgba(var(--tc-success-color-rgb), 0.15);
-  color: var(--tc-gray-800);
+  color: var(--tc-color-gray-800);
 }
 
 .tc-status-message-info {
   background-color: rgba(var(--tc-info-color-rgb), 0.15);
-  color: var(--tc-gray-800);
+  color: var(--tc-color-gray-800);
 }
 
 .tc-status-message-warning {
   background-color: rgba(var(--tc-warning-color-rgb), 0.15);
-  color: var(--tc-gray-800);
+  color: var(--tc-color-gray-800);
 }
 
 .tc-status-message-danger {
   background-color: rgba(var(--tc-danger-color-rgb), 0.15);
-  color: var(--tc-gray-800);
+  color: var(--tc-color-gray-800);
 }
 
 .tc-status-message-secondary {
-  background-color: rgba(var(--tc-gray-600-rgb), 0.15);
-  color: var(--tc-gray-800);
+  background-color: rgba(var(--tc-color-gray-600-rgb), 0.15);
+  color: var(--tc-color-gray-800);
 }
 
 .tc-status-message-light {
   background-color: rgba(var(--tc-gray-100-rgb), 0.8);
-  color: var(--tc-gray-800);
-  border: 1px solid rgba(var(--tc-gray-600-rgb), 0.2);
+  color: var(--tc-color-gray-800);
+  border: 1px solid rgba(var(--tc-color-gray-600-rgb), 0.2);
 }
 
 .tc-status-advanced-container {
@@ -284,7 +284,7 @@
   }
   
   .tc-status-filter-tabs::-webkit-scrollbar-thumb {
-    background-color: rgba(var(--tc-gray-600-rgb), 0.2);
+    background-color: rgba(var(--tc-color-gray-600-rgb), 0.2);
     border-radius: var(--tc-radius-sm);
   }
 }

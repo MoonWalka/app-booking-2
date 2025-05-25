@@ -23,7 +23,7 @@
   align-items: center;
   cursor: pointer;
   transition: var(--tc-transition-fast);
-  border-bottom: 1px solid var(--tc-gray-200);
+  border-bottom: 1px solid var(--tc-color-gray-200);
 }
 
 .suggestionItem:hover {

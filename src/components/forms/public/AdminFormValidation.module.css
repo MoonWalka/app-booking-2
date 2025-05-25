@@ -16,7 +16,7 @@
 .formDataPreview {
   margin: 1.5rem 0;
   padding: 1rem;
-  background-color: var(--tc-gray-50);
+  background-color: var(--tc-color-gray-50);
   border-radius: 0.25rem;
-  border: 1px solid var(--tc-gray-200);
+  border: 1px solid var(--tc-color-gray-200);
 }

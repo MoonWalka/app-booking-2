@@ -80,12 +80,12 @@
 
 .tc-spinner-light {
   border-color: rgba(255, 255, 255, 0.2);
-  border-top-color: var(--tc-white);
+  border-top-color: var(--tc-color-white);
 }
 
 .tc-spinner-dark {
-  border-color: rgba(var(--tc-gray-800-rgb), 0.2);
-  border-top-color: var(--tc-gray-800);
+  border-color: rgba(var(--tc-color-gray-800-rgb), 0.2);
+  border-top-color: var(--tc-color-gray-800);
 }
 
 /* CONTENEURS DE SPINNER */

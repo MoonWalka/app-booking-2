@@ -1,10 +1,10 @@
-/* 
- * ConcertsList.module.css - Version modifiée
- * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 21 mai 2025
+/*
+ * ConcertsList.module.css - Version standardisée TourCraft
+ * Conforme au Guide CSS TourCraft v2.0
+ * Dernière mise à jour: 25 mai 2025
  */
 
-.concertsContainer {
+ .concertsContainer {
   padding: 0;
   background: none;
   box-shadow: none;
@@ -14,40 +14,59 @@
 /* Conteneur du tableau - Assurer qu'il prend toute la largeur */
 .tableContainer {
   overflow-x: auto;
-  margin-bottom: var(--tc-spacing-md);
-  border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-shadow);
-  background-color: var(--tc-bg-color-light);
+  margin-bottom: var(--tc-spacing-6);
+  border-radius: var(--tc-border-radius-lg);
+  box-shadow: var(--tc-shadow-md);
+  background-color: var(--tc-bg-light);
   border: 1px solid var(--tc-border-color);
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-spacing-6);
 }
 
 /* Bouton de diagnostic de performance (développement seulement) */
 .debugButtonContainer {
   position: fixed;
-  bottom: var(--tc-spacing-lg);
-  left: var(--tc-spacing-lg);
-  z-index: 9999;
+  bottom: var(--tc-spacing-xl);
+  left: var(--tc-spacing-xl);
+  z-index: var(--tc-z-index-tooltip);
 }
 
 .debugButton {
-  background: var(--tc-primary-color);
-  color: var(--tc-white);
+  background: var(--tc-color-primary);
+  color: var(--tc-bg-default);
   border: none;
   padding: var(--tc-spacing-xs) var(--tc-spacing-md);
   border-radius: var(--tc-border-radius);
   cursor: pointer;
   font-size: var(--tc-font-size-xs);
-  transition: var(--tc-transition);
+  font-weight: var(--tc-font-weight-medium);
+  transition: background-color var(--tc-transition-normal);
 }
 
 .debugButton:hover {
-  background: var(--tc-primary-color-dark);
+  background: var(--tc-color-primary-dark);
+  opacity: 0.9;
 }
 
-/* Responsive */
-@media (max-width: var(--tc-breakpoint-md)) {
+/* Responsive - Approche mobile-first conforme au guide */
+@media (min-width: 768px) {
+  .tableContainer {
+    padding: var(--tc-spacing-8);
+  }
+}
+
+@media (max-width: 767px) {
   .concertsContainer {
-    padding: var(--tc-spacing-md);
+    padding: var(--tc-spacing-4);
+  }
+  
+  .tableContainer {
+    margin: var(--tc-spacing-2);
+    padding: var(--tc-spacing-4);
+    border-radius: var(--tc-border-radius);
+  }
+  
+  .debugButtonContainer {
+    bottom: var(--tc-spacing-4);
+    left: var(--tc-spacing-4);
   }
 }

@@ -26,17 +26,19 @@
 
 /* ===== STYLES GÉNÉRAUX ===== */
 body.contrat-print-mode {
-  /* Normalisation des polices */
+  /* Réinitialisation complète pour l'impression */
+  margin: 0;
+  padding: 20mm;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 11pt;
   line-height: 1.5;
-  color: var(--tc-color-000000)000);
+  color: #000000;
   
   /* Dimensionnement pour A4 */
   width: 210mm;
   min-height: 297mm;
   margin: 0 auto;
-  background-color: var(--tc-bg-default);
+  background-color: var(--tc-white);
   
   /* Supprimer couleurs de fond & images inutiles à l'impression */
   background-image: none;
@@ -104,7 +106,7 @@ body.contrat-print-mode {
   page-break-inside: avoid;
   margin-top: 1.5em;
   margin-bottom: 0.75em;
-  color: var(--tc-color-000000)000);
+  color: #000000;
   font-weight: bold !important;
 }
 

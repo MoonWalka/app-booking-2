@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Alert, Container, Row, Col, Button } from 'react-bootstrap';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import styles from './ProgrammateurForm.module.css';
 
 // Import des sous-composants
@@ -27,7 +27,19 @@ import useDeleteProgrammateur from '@/hooks/programmateurs/useDeleteProgrammateu
  */
 const ProgrammateurForm = () => {
   const { id } = useParams();
+  const location = useLocation();
   const navigate = useNavigate();
+
+  // Détecter le mode "nouveau" via l'URL
+  const isNewFromUrl = location.pathname.endsWith('/nouveau');
+
+  // LOGS TEMPORAIREMENT DÉSACTIVÉS POUR ÉVITER LA BOUCLE
+  // console.log('[DEBUG][ProgrammateurForm] Composant ProgrammateurForm chargé');
+  // console.log('[DEBUG][ProgrammateurForm] ID reçu des params:', id);
+  // console.log('[DEBUG][ProgrammateurForm] Type de ID:', typeof id);
+  // console.log('[DEBUG][ProgrammateurForm] location.pathname:', location.pathname);
+  // console.log('[DEBUG][ProgrammateurForm] isNewFromUrl:', isNewFromUrl);
+  // console.log('[DEBUG][ProgrammateurForm] Mode détecté:', isNewFromUrl ? 'nouveau' : 'édition');
 
   // MIGRATION: Utilisation du hook optimisé
   const{ 
@@ -44,6 +56,11 @@ const ProgrammateurForm = () => {
     handleStructureChange,
     handleCancel: hookHandleCancel
   } = useProgrammateurForm(id);
+  
+  // console.log('[DEBUG][ProgrammateurForm] Hook useProgrammateurForm initialisé');
+  // console.log('[DEBUG][ProgrammateurForm] Loading:', loading);
+  // console.log('[DEBUG][ProgrammateurForm] Error:', error);
+  // console.log('[DEBUG][ProgrammateurForm] FormData:', formData);
   
   // État local pour contrôler l'affichage des sections
   const [sections, setSections] = useState({
@@ -109,7 +126,7 @@ const ProgrammateurForm = () => {
           <div className="d-flex justify-content-between align-items-center">
             <div>
               <h2 className="mb-0">
-                {id === 'nouveau' ? 'Nouveau programmateur' : `Éditer: ${programmateur?.nom || 'Programmateur'}`}
+                {isNewFromUrl ? 'Nouveau programmateur' : `Éditer: ${programmateur?.nom || 'Programmateur'}`}
                 {programmateur?.fonction && <span className="text-muted fs-5"> ({programmateur.fonction})</span>}
               </h2>
             </div>
@@ -354,7 +371,7 @@ const ProgrammateurForm = () => {
               </Button>
               
               <div>
-                {id !== 'nouveau' && (
+                {!isNewFromUrl && (
                   <Button 
                     variant="outline-danger"
                     onClick={() => handleDelete(id)}

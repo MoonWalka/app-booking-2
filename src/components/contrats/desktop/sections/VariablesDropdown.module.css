@@ -10,49 +10,49 @@
 }
 
 .variablesButton {
-  background-color: var(--tc-color-f0f7ff);
-  color: var(--tc-color-2563eb);
-  border: 1px solid var(--tc-color-bfdbfe);
-  border-radius: 4px;
-  padding: 6px 12px;
-  font-size: 0.85rem;
+  background-color: var(--tc-primary-light);
+  color: var(--tc-primary-color);
+  border: 1px solid var(--tc-border-color);
+  border-radius: var(--tc-border-radius-sm);
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  font-size: var(--tc-font-size-sm);
   display: flex;
   align-items: center;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: var(--tc-transition);
 }
 
 .variablesButton:hover {
-  background-color: var(--tc-color-dbeafe);
-  border-color: var(--tc-color-93c5fd);
+  background-color: var(--tc-primary-color);
+  color: var(--tc-white);
 }
 
 .dropdown {
   position: absolute;
   top: 100%;
   left: 0;
-  z-index: 1000;
+  z-index: var(--tc-z-index-dropdown);
   min-width: 280px;
   max-width: 340px;
   max-height: 400px;
-  background-color: white;
-  border-radius: 6px;
-  box-shadow: 0 4px 16px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.1));
+  background-color: var(--tc-white);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-shadow-lg);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  margin-top: 4px;
-  border: 1px solid var(--tc-color-e5e7eb);
+  margin-top: var(--tc-spacing-xs);
+  border: 1px solid var(--tc-border-color);
 }
 
 .dropdownHeader {
-  padding: 12px 16px;
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
   margin: 0;
-  font-weight: 600;
-  border-bottom: 1px solid var(--tc-color-f3f4f6);
-  color: var(--tc-color-4b5563);
-  background-color: var(--tc-color-f9fafb);
-  font-size: 0.9rem;
+  font-weight: var(--tc-font-weight-semibold);
+  border-bottom: 1px solid var(--tc-border-color);
+  color: var(--tc-text-color);
+  background-color: var(--tc-gray-100);
+  font-size: var(--tc-font-size-sm);
 }
 
 .variablesList {
@@ -67,56 +67,56 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 16px;
+  padding: var(--tc-spacing-xs) var(--tc-spacing-md);
   border: none;
   background: none;
   width: 100%;
   text-align: left;
   cursor: pointer;
-  transition: background-color 0.15s;
-  border-bottom: 1px solid var(--tc-color-f3f4f6);
+  transition: var(--tc-transition);
+  border-bottom: 1px solid var(--tc-border-color);
 }
 
 .variableItem:hover {
-  background-color: var(--tc-color-f3f4f6);
+  background-color: var(--tc-hover-bg);
 }
 
 .variableLabel {
-  color: var(--tc-color-4b5563);
-  font-size: 0.85rem;
-  margin-right: 10px;
+  color: var(--tc-text-color);
+  font-size: var(--tc-font-size-sm);
+  margin-right: var(--tc-spacing-sm);
 }
 
 .variableCode {
-  color: var(--tc-color-6366f1);
-  background-color: var(--tc-color-f3f4f6);
-  padding: 2px 4px;
-  border-radius: 4px;
+  color: var(--tc-primary-color);
+  background-color: var(--tc-gray-100);
+  padding: var(--tc-spacing-xs);
+  border-radius: var(--tc-border-radius-sm);
   font-family: monospace;
-  font-size: 0.8rem;
+  font-size: var(--tc-font-size-xs);
   white-space: nowrap;
 }
 
 .dropdownFooter {
-  padding: 8px;
+  padding: var(--tc-spacing-xs);
   text-align: center;
-  background-color: var(--tc-color-f9fafb);
-  border-top: 1px solid var(--tc-color-f3f4f6);
+  background-color: var(--tc-gray-100);
+  border-top: 1px solid var(--tc-border-color);
 }
 
 .closeButton {
-  padding: 5px 12px;
-  background-color: var(--tc-color-f3f4f6);
-  border: 1px solid var(--tc-color-e5e7eb);
-  border-radius: 4px;
-  color: var(--tc-color-4b5563);
-  font-size: 0.85rem;
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  background-color: var(--tc-gray-200);
+  border: 1px solid var(--tc-border-color);
+  border-radius: var(--tc-border-radius-sm);
+  color: var(--tc-text-color);
+  font-size: var(--tc-font-size-sm);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: var(--tc-transition);
 }
 
 .closeButton:hover {
-  background-color: var(--tc-color-e5e7eb);
+  background-color: var(--tc-gray-300);
 }
 
 @media (max-width: 768px) {

@@ -1,7 +1,7 @@
 /*
  * Styles pour StructureBillingSection
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Dernière mise à jour: 25 mai 2025
  */
 
 /* 
@@ -10,41 +10,109 @@
  * Dernière mise à jour: 04/05/2025
  */
 
-.formCard {
-  background-color: var(--tc-color-background);
-  border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-box-shadow-sm);
+.billingSection {
   margin-bottom: var(--tc-spacing-lg);
+}
+
+.billingCard {
+  background-color: var(--tc-white);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-shadow-sm);
+  border: 1px solid var(--tc-border-color);
   overflow: hidden;
 }
 
-.cardHeader {
+.billingHeader {
+  padding: var(--tc-spacing-md);
+  border-bottom: 1px solid var(--tc-border-color);
+  background-color: var(--tc-gray-50);
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  padding: var(--tc-spacing-md) var(--tc-spacing-md);
-  border-bottom: 1px solid var(--tc-color-border-light);
-  background-color: var(--tc-color-background-secondary);
 }
 
-.cardHeader i {
-  font-size: var(--tc-font-size-lg);
-  color: var(--tc-color-primary);
-  margin-right: var(--tc-spacing-sm);
-}
-
-.cardHeader h3 {
-  font-size: var(--tc-font-size-md);
-  font-weight: var(--tc-font-weight-bold);
+.billingTitle {
   margin: 0;
-  color: var(--tc-color-text-primary);
+  color: var(--tc-primary-color);
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
 }
 
-.cardBody {
+.billingContent {
   padding: var(--tc-spacing-md);
 }
 
 .formGroup {
   margin-bottom: var(--tc-spacing-md);
+}
+
+.formLabel {
+  display: block;
+  margin-bottom: var(--tc-spacing-xs);
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-text-color);
+  font-size: var(--tc-font-size-sm);
+}
+
+.formInput {
+  width: 100%;
+  padding: var(--tc-spacing-sm);
+  border: 1px solid var(--tc-border-color);
+  border-radius: var(--tc-border-radius-sm);
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-text-color);
+  background-color: var(--tc-white);
+  transition: var(--tc-transition);
+}
+
+.formInput:focus {
+  outline: none;
+  border-color: var(--tc-primary-light);
+  box-shadow: 0 0 0 2px rgba(var(--tc-primary-color-rgb), 0.2);
+}
+
+.formTextarea {
+  width: 100%;
+  min-height: 100px;
+  padding: var(--tc-spacing-sm);
+  border: 1px solid var(--tc-border-color);
+  border-radius: var(--tc-border-radius-sm);
+  font-size: var(--tc-font-size-sm);
+  font-family: inherit;
+  resize: vertical;
+  transition: var(--tc-transition);
+}
+
+.formTextarea:focus {
+  outline: none;
+  border-color: var(--tc-primary-light);
+  box-shadow: 0 0 0 2px rgba(var(--tc-primary-color-rgb), 0.2);
+}
+
+.formSelect {
+  width: 100%;
+  padding: var(--tc-spacing-sm);
+  border: 1px solid var(--tc-border-color);
+  border-radius: var(--tc-border-radius-sm);
+  font-size: var(--tc-font-size-sm);
+  background-color: var(--tc-white);
+  transition: var(--tc-transition);
+}
+
+.formSelect:focus {
+  outline: none;
+  border-color: var(--tc-primary-light);
+  box-shadow: 0 0 0 2px rgba(var(--tc-primary-color-rgb), 0.2);
+}
+
+.required {
+  color: var(--tc-danger-color);
+}
+
+.helpText {
+  font-size: var(--tc-font-size-xs);
+  color: var(--tc-text-color);
+  margin-top: var(--tc-spacing-xs);
 }
 
 .formRow {
@@ -60,41 +128,6 @@
   padding-left: var(--tc-spacing-sm);
 }
 
-.formLabel {
-  font-weight: var(--tc-font-weight-medium);
-  margin-bottom: var(--tc-spacing-xs);
-  font-size: var(--tc-font-size-sm);
-  display: block;
-}
-
-.formControl, .formSelect {
-  display: block;
-  width: 100%;
-  border: 1px solid var(--tc-color-border);
-  border-radius: var(--tc-border-radius-sm);
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
-  font-size: var(--tc-font-size-sm);
-  line-height: 1.5;
-  color: var(--tc-color-text-primary);
-  background-color: var(--tc-color-background);
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
-
-.formControl:focus, .formSelect:focus {
-  border-color: var(--tc-color-primary-light);
-  outline: 0;
-  box-shadow: 0 0 0 0.25rem rgba(var(--tc-color-primary-rgb), 0.25);
-}
-
-.formSelect {
-  padding-right: 2rem;
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
-  background-repeat: no-repeat;
-  background-position: right 0.75rem center;
-  background-size: 16px 12px;
-  appearance: none;
-}
-
 .sameAddressCheck {
   margin-bottom: var(--tc-spacing-md);
   display: flex;
@@ -107,7 +140,7 @@
 
 .checkboxLabel {
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-color-text-primary);
+  color: var(--tc-text-color);
   cursor: pointer;
 }
 
@@ -144,7 +177,7 @@
     margin-bottom: var(--tc-spacing-sm);
   }
   
-  .cardBody {
+  .billingContent {
     padding: var(--tc-spacing-sm);
   }
 }

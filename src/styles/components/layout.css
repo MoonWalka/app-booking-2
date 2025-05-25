@@ -546,3 +546,10 @@
   margin: 0 auto;
   padding: 0 var(--tc-spacing-md);
 }
+
+/* CLASSES UTILITAIRES POUR REMPLACER LES STYLES INLINE */
+.tc-min-h-300 { min-height: 300px; }
+.tc-whitespace-pre-wrap { white-space: pre-wrap; }
+.tc-mt-lg { margin-top: var(--tc-spacing-lg); }
+.tc-w-fit { width: fit-content; }
+.tc-min-w-85 { min-width: 85px; }

@@ -1,6 +1,5 @@
 import React from 'react';
-import { useParams, Outlet } from 'react-router-dom';
-import ListView from '@/components/programmateurs/ProgrammateursList';
+import { Outlet } from 'react-router-dom';
 
 /**
  * Page principale des programmateurs qui gère les différentes routes
@@ -9,6 +8,7 @@ import ListView from '@/components/programmateurs/ProgrammateursList';
  * - Mémoisation des routes pour réduire les re-rendus
  */
 export default function ProgrammateursPage() {
-  const { id } = useParams();
-  return id ? <Outlet /> : <ListView />;
+  // console.log('[DEBUG][ProgrammateursPage] Page ProgrammateursPage chargée - rendu Outlet');
+  
+  return <Outlet />;
 }

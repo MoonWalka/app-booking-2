@@ -26,6 +26,9 @@ import DeleteLieuModal from './sections/DeleteLieuModal';
 // Import styles
 import styles from './LieuDetails.module.css';
 
+// 🚀 NOUVEAU : Import du hook de persistance générique
+import useGenericFormPersistence from '@/hooks/generics/forms/useGenericFormPersistence';
+
 /**
  * LieuDetails component - displays and manages a venue's details
  */
@@ -78,12 +81,18 @@ const LieuDetails = () => {
     handleSelectAddress
   } = useAddressSearch(formData, handleChange);
 
+  // 🚀 NOUVEAU : Utilisation du hook de persistance générique
+  const { saveFormData, loadFormData } = useGenericFormPersistence({
+    key: `lieu_form_${lieuId}`,
+    storageType: 'localStorage',
+    enableAutoSave: false
+  });
+
   // Handle programmateur creation link
   const handleCreateProgrammateur = () => {
-    // Stocker temporairement le formulaire actuel en localStorage
+    // 🎯 SIMPLIFICATION : Utiliser le hook de persistance générique
     if (isEditing) {
-      localStorage.setItem('lieuFormData', JSON.stringify(formData));
-      localStorage.setItem('lieuEditingId', lieuId);
+      saveFormData(formData);
     }
     
     navigate('/programmateurs/nouveau', { state: { returnTo: `/lieux/${lieuId}` } });

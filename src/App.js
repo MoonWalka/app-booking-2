@@ -104,49 +104,20 @@ class ErrorBoundary extends React.Component {
   }
 }
 
-// Composant de protection des routes amélioré avec mémoire d'état
+// Composant de protection des routes simplifié
 function PrivateRoute({ children }) {
   const { currentUser, loading } = useAuth();
-  const lastAuthState = useRef(sessionStorage.getItem('wasAuthenticated') === 'true');
   const [redirecting, setRedirecting] = useState(false);
-  const redirectAttempts = useRef(parseInt(sessionStorage.getItem('redirectAttempts') || '0', 10));
   
-  // Utiliser un effet pour suivre l'état d'authentification
+  // 🎯 SIMPLIFICATION : Logique de redirection simplifiée
   useEffect(() => {
-    if (currentUser) {
-      // Si l'utilisateur est authentifié, mémoriser cet état
-      sessionStorage.setItem('wasAuthenticated', 'true');
-      // Réinitialiser le compteur de tentatives de redirection
-      redirectAttempts.current = 0;
-      sessionStorage.setItem('redirectAttempts', '0');
-    }
-  }, [currentUser]);
-  
-  // Empêcher les redirections en boucle
-  useEffect(() => {
-    if (!currentUser && !loading && !redirecting) {
-      // Si trop de tentatives consécutives (5+), arrêter de rediriger
-      if (redirectAttempts.current >= 5) {
-        console.warn("Trop de tentatives de redirection consécutives. Arrêt du cycle de redirection.");
-        return;
-      }
-      
-      // Incrémenter et enregistrer le nombre de tentatives
-      redirectAttempts.current += 1;
-      sessionStorage.setItem('redirectAttempts', redirectAttempts.current.toString());
-      
-      // Pour éviter une boucle de redirection, vérifier si l'utilisateur était authentifié auparavant
-      if (lastAuthState.current) {
-        console.log("L'utilisateur était authentifié précédemment. Tentative de restauration de session...");
-        // Attendre un peu avant de rediriger, pour permettre à la session de se restaurer
-        const timer = setTimeout(() => {
-          setRedirecting(true);
-        }, 2000);
-        
-        return () => clearTimeout(timer);
-      } else {
+    if (!loading && !currentUser && !redirecting) {
+      // Délai court pour éviter les redirections trop rapides
+      const timer = setTimeout(() => {
         setRedirecting(true);
-      }
+      }, 100);
+      
+      return () => clearTimeout(timer);
     }
   }, [currentUser, loading, redirecting]);
   

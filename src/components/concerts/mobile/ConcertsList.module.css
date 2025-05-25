@@ -185,7 +185,7 @@
 .concertActions {
   display: flex;
   flex-direction: column;
-  border-left: 1px solid var(--tc-color-f0f0f0);
+  border-left: 1px solid var(--tc-gray-100);
 }
 
 .actionBtn {
@@ -207,8 +207,8 @@
 }
 
 .actionBtn.edit {
-  color: var(--tc-color-28a745);
-  border-top: 1px solid var(--tc-color-f0f0f0);
+  color: var(--tc-success-color);
+  border-top: 1px solid var(--tc-gray-100);
 }
 
 .concertActionButton {
@@ -237,8 +237,8 @@
 }
 
 .errorContainer {
-  background-color: var(--tc-color-f8d7da);
-  color: var(--tc-color-721c24);
+  background-color: var(--tc-danger-light);
+  color: var(--tc-danger-dark);
   padding: var(--tc-spacing-3);
   border-radius: var(--tc-radius-md);
   margin: var(--tc-spacing-4) 0;

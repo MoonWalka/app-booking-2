@@ -48,6 +48,7 @@ VARIABLE_MAPPINGS = {
     '--tc-color-text-secondary': '--tc-text-color-secondary',
     '--tc-color-text-muted': '--tc-text-muted',
     '--tc-color-text-dark': '--tc-text-color',
+    '--tc-color-text': '--tc-text-color',
     '--tc-color-title': '--tc-text-color',
     
     # Variables de bordures
@@ -59,6 +60,10 @@ VARIABLE_MAPPINGS = {
     '--tc-color-background': '--tc-white',
     '--tc-color-background-secondary': '--tc-gray-50',
     '--tc-color-surface': '--tc-white',
+    
+    # Variables d'erreur
+    '--tc-color-error': '--tc-danger-color',
+    '--tc-color-error-light': '--tc-danger-light',
     
     # Variables spécifiques avec valeurs hexadécimales
     '--tc-color-2c3e50': '--tc-gray-800',
@@ -85,6 +90,59 @@ VARIABLE_MAPPINGS = {
     '--tc-color-dc3545': '--tc-danger-color',
     '--tc-color-dee2e6': '--tc-gray-200',
     '--tc-color-06c': '--tc-primary-color',
+    '--tc-color-555': '--tc-gray-600',
+    '--tc-color-666': '--tc-gray-600',
+    '--tc-color-ddd': '--tc-gray-300',
+    '--tc-color-f0f0f0': '--tc-gray-100',
+    '--tc-color-f8f9fa': '--tc-gray-50',
+    '--tc-color-e9ecef': '--tc-gray-200',
+    '--tc-color-344767': '--tc-gray-700',
+    '--tc-color-495057': '--tc-gray-600',
+    '--tc-color-198754': '--tc-success-color',
+    '--tc-color-ffc107': '--tc-warning-color',
+    '--tc-color-0d6efd': '--tc-primary-color',
+    '--tc-color-e0e0e0': '--tc-gray-200',
+    '--tc-color-fafafa': '--tc-gray-50',
+    '--tc-color-ced4da': '--tc-gray-300',
+    '--tc-color-86b7fe': '--tc-primary-light',
+    '--tc-color-28a745': '--tc-success-color',
+    '--tc-color-f8d7da': '--tc-danger-light',
+    '--tc-color-721c24': '--tc-danger-dark',
+    
+    # Variables de couleurs spécifiques (picker, preview, etc.)
+    '--tc-color-picker-width': '--tc-input-width',
+    '--tc-color-picker-height': '--tc-input-height',
+    '--tc-color-picker-padding': '--tc-spacing-sm',
+    '--tc-color-preview-width': '--tc-preview-width',
+    '--tc-color-preview-height': '--tc-preview-height',
+    '--tc-color-input-width': '--tc-input-width',
+    
+    # Variables de couleurs complexes (gradients, etc.)
+    '--tc-color-f0f7ff': '--tc-primary-lightest',
+    '--tc-color-e0f2fe': '--tc-info-lightest',
+    '--tc-color-2563eb': '--tc-primary-color',
+    '--tc-color-bfdbfe': '--tc-primary-light',
+    '--tc-color-dbeafe': '--tc-primary-lighter',
+    '--tc-color-bae6fd': '--tc-info-light',
+    '--tc-color-93c5fd': '--tc-primary-light',
+    '--tc-color-1d4ed8': '--tc-primary-dark',
+    '--tc-color-e5e7eb': '--tc-gray-200',
+    '--tc-color-f8fafc': '--tc-gray-50',
+    '--tc-color-f1f5f9': '--tc-gray-100',
+    '--tc-color-e2e8f0': '--tc-gray-200',
+    '--tc-color-94a3b8': '--tc-gray-400',
+    '--tc-color-cbd5e1': '--tc-gray-300',
+    '--tc-color-64748b': '--tc-gray-500',
+    '--tc-color-f0f9ff': '--tc-info-lightest',
+    '--tc-color-e0f7fa': '--tc-info-lightest',
+    '--tc-color-374151': '--tc-gray-700',
+    '--tc-color-6366f1': '--tc-primary-color',
+    '--tc-color-10b981': '--tc-success-color',
+    '--tc-color-059669': '--tc-success-dark',
+    '--tc-color-ff9800': '--tc-warning-color',
+    '--tc-color-2196f3': '--tc-info-color',
+    '--tc-color-666666': '--tc-gray-600',
+    '--tc-color-f9f9f9': '--tc-gray-50',
 }
 
 # Patterns pour les variables malformées
@@ -93,6 +151,7 @@ MALFORMED_PATTERNS = [
     (r'var\(--tc-color-000000\)000\)', 'var(--tc-black)'),
     (r'var\(--tc-color-rgba\(0\), rgba\(([^)]+)\)\)', r'rgba(\1)'),
     (r'var\(--tc-color-rgba\([^)]+\), ([^)]+)\)', r'\1'),
+    (r'var\(--tc-color-error-light\)\)', 'var(--tc-danger-light)'),
     
     # Variables avec doubles parenthèses
     (r'var\(--tc-box-shadow-lg\)\)', 'var(--tc-shadow-lg)'),

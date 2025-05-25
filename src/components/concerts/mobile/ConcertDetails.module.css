@@ -94,7 +94,7 @@
 .infoItem {
   margin-bottom: var(--tc-spacing-2);
   padding-bottom: var(--tc-spacing-2);
-  border-bottom: 1px solid var(--tc-color-f0f0f0);
+  border-bottom: 1px solid var(--tc-gray-100);
 }
 
 .infoItem:last-child {
@@ -208,7 +208,7 @@
 
 .formSection {
   margin-top: var(--tc-spacing-4);
-  border-top: 1px solid var(--tc-color-f0f0f0);
+  border-top: 1px solid var(--tc-gray-100);
   padding-top: var(--tc-spacing-3);
 }
 
@@ -348,7 +348,7 @@
   justify-content: center;
   align-items: center;
   height: calc(100vh - 56px);
-  color: var(--tc-color-error);
+  color: var(--tc-danger-color);
   flex-direction: column;
   padding: var(--tc-spacing-8) var(--tc-spacing-3);
   text-align: center;

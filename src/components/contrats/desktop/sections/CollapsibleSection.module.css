@@ -7,7 +7,7 @@
 .card {
   background-color: var(--tc-whitefff);
   border-radius: 6px;
-  border: 1px solid var(--tc-color-e9ecef);
+  border: 1px solid var(--tc-gray-200);
   margin-bottom: 1rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
@@ -17,8 +17,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem 1.25rem;
-  border-bottom: 1px solid var(--tc-color-e9ecef);
-  background-color: var(--tc-color-f8f9fa);
+  border-bottom: 1px solid var(--tc-gray-200);
+  background-color: var(--tc-gray-50);
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
 }
@@ -27,7 +27,7 @@
   margin: 0;
   font-size: 1rem;
   font-weight: 500;
-  color: var(--tc-color-344767);
+  color: var(--tc-gray-700);
 }
 
 .cardBody {

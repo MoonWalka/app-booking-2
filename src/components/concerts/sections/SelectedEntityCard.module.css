@@ -8,7 +8,7 @@
 
 .entityCard {
   background-color: var(--tc-whitefff);
-  border: 1px solid var(--tc-color-e9ecef);
+  border: 1px solid var(--tc-gray-200);
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   margin-top: 1rem;
@@ -24,7 +24,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem 1rem;
-  border-bottom: 1px solid var(--tc-color-f0f0f0);
+  border-bottom: 1px solid var(--tc-gray-100);
 }
 
 .entityTitle {
@@ -37,7 +37,7 @@
   width: 32px;
   height: 32px;
   background-color: rgba(13, 110, 253, 0.1);
-  color: var(--tc-color-0d6efd);
+  color: var(--tc-primary-color);
   border-radius: 6px;
   display: flex;
   align-items: center;
@@ -49,7 +49,7 @@
   margin: 0;
   font-size: 1rem;
   font-weight: 600;
-  color: var(--tc-color-344767);
+  color: var(--tc-gray-700);
 }
 
 .removeButton {
@@ -68,7 +68,7 @@
 }
 
 .removeButton:hover {
-  background-color: var(--tc-color-f8d7da);
+  background-color: var(--tc-danger-light);
   color: var(--tc-danger-color);
 }
 
@@ -80,7 +80,7 @@
   display: flex;
   align-items: flex-start;
   margin-bottom: 0.5rem;
-  color: var(--tc-color-495057);
+  color: var(--tc-gray-600);
   font-size: 0.875rem;
 }
 

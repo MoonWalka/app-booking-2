@@ -72,7 +72,7 @@
 }
 
 .active {
-  color: var(--tc-color-text);
+  color: var(--tc-text-color);
   font-weight: var(--tc-font-weight-semibold);
   cursor: default;
 }

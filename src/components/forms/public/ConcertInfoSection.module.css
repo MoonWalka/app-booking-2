@@ -5,7 +5,7 @@
  */
 
 .concertInfo {
-  border: 1px solid var(--tc-color-e9ecef);
+  border: 1px solid var(--tc-gray-200);
   border-radius: 0.25rem;
 }
 

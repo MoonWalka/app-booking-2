@@ -86,7 +86,7 @@
 
 .itemName {
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-color-text);
+  color: var(--tc-text-color);
   margin-bottom: var(--tc-spacing-0-5);
 }
 

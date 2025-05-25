@@ -6,7 +6,7 @@
 
 .formContainer {
   margin-bottom: 1.5rem;
-  border: 1px solid var(--tc-color-e9ecef);
+  border: 1px solid var(--tc-gray-200);
 }
 
 .formContainer h3 {

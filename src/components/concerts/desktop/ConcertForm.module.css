@@ -305,7 +305,7 @@
 .selectedLieu,
 .selectedProgrammateur,
 .selectedArtiste {
-  border: 1px solid var(--tc-color-ddd);
+  border: 1px solid var(--tc-gray-300);
   border-radius: 6px;
   padding: var(--tc-spacing-lg);
   margin-bottom: var(--tc-spacing-sm);
@@ -339,7 +339,7 @@
   display: flex;
   align-items: center;
   margin-top: var(--tc-spacing-xs);
-  color: var(--tc-color-666);
+  color: var(--tc-gray-600);
 }
 
 .lieuAddress i,
@@ -351,7 +351,7 @@
   font-size: var(--tc-font-size-sm);
   display: block;
   margin-bottom: var(--tc-spacing-xs);
-  color: var(--tc-color-666);
+  color: var(--tc-gray-600);
 }
 
 .programmateurContacts {
@@ -367,14 +367,14 @@
 
 .programmateurContactItem i {
   margin-right: var(--tc-spacing-xs);
-  color: var(--tc-color-666);
+  color: var(--tc-gray-600);
 }
 
 .artisteGenre {
   font-size: var(--tc-font-size-sm);
   display: block;
   margin-bottom: var(--tc-spacing-xs);
-  color: var(--tc-color-666);
+  color: var(--tc-gray-600);
 }
 
 .artisteDescription {
@@ -388,7 +388,7 @@
 .artisteItem {
   padding: var(--tc-spacing-md);
   cursor: pointer;
-  border-bottom: 1px solid var(--tc-color-f0f0f0);
+  border-bottom: 1px solid var(--tc-gray-100);
 }
 
 .lieuItem:hover,

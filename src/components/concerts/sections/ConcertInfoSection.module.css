@@ -94,7 +94,7 @@
   font-size: 1rem; /* var(--tc-font-size-base) */
   font-weight: 400; /* var(--tc-font-weight-regular) */
   line-height: 1.5; /* var(--tc-line-height-base) */
-  color: var(--tc-text-color); /* var(--tc-color-text) */
+  color: var(--tc-text-color); /* var(--tc-text-color) */
   text-align: center;
   white-space: nowrap;
   background-color: var(--tc-input-background-color); /* var(--tc-bg-subtle) */

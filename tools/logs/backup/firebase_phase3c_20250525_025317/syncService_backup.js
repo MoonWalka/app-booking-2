@@ -4,8 +4,7 @@
  */
 import { db as firebaseDB, IS_LOCAL_MODE } from '../firebaseInit';
 import { collection, getDocs, doc, setDoc } from '../firebaseInit';
-// 🚀 PHASE 3C : Remplacement mockStorage par Firebase Testing SDK
-import firebaseEmulatorService from './firebase-emulator-service';
+import { _getRawLocalData, _importRawData } from '../mockStorage';
 
 /**
  * Exporte les données locales vers Firebase
@@ -24,7 +23,7 @@ export async function exportLocalDataToFirebase(collections = ['concerts', 'lieu
   }
   
   try {
-    const localData = await firebaseEmulatorService._getRawLocalData();
+    const localData = _getRawLocalData();
     let successCount = 0;
     let errorCount = 0;
     
@@ -71,7 +70,7 @@ export async function importFirebaseDataToLocal(collections = ['concerts', 'lieu
   
   try {
     // Obtenir les données locales actuelles
-    const localData = await firebaseEmulatorService._getRawLocalData();
+    const localData = _getRawLocalData();
     let successCount = 0;
     let errorCount = 0;
     
@@ -106,7 +105,7 @@ export async function importFirebaseDataToLocal(collections = ['concerts', 'lieu
     }
     
     // Sauvegarder les données importées
-    await firebaseEmulatorService._importRawData(localData);
+    _importRawData(localData);
     
     console.log(`Importation terminée. ${successCount} documents importés, ${errorCount} erreurs.`);
     return errorCount === 0;
@@ -128,7 +127,7 @@ export async function exportSpecificDocuments(collectionName, documentIds) {
   }
   
   try {
-    const localData = await firebaseEmulatorService._getRawLocalData();
+    const localData = _getRawLocalData();
     const localCollection = localData[collectionName] || {};
     let successCount = 0;
     
@@ -153,24 +152,20 @@ export async function exportSpecificDocuments(collectionName, documentIds) {
  */
 export function backupLocalData() {
   try {
-    // 🚀 PHASE 3C : Fonction async pour compatibilité émulateur
-    firebaseEmulatorService._getRawLocalData().then(localData => {
-      const jsonData = JSON.stringify(localData, null, 2);
-      const blob = new Blob([jsonData], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      
-      const now = new Date();
-      const timestamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}`;
-      
-      a.href = url;
-      a.download = `tourcraft_local_backup_${timestamp}.json`;
-      a.click();
-      
-      URL.revokeObjectURL(url);
-    }).catch(error => {
-      console.error('Erreur lors de la sauvegarde des données locales:', error);
-    });
+    const localData = _getRawLocalData();
+    const jsonData = JSON.stringify(localData, null, 2);
+    const blob = new Blob([jsonData], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    
+    const now = new Date();
+    const timestamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}`;
+    
+    a.href = url;
+    a.download = `tourcraft_local_backup_${timestamp}.json`;
+    a.click();
+    
+    URL.revokeObjectURL(url);
     return true;
   } catch (error) {
     console.error('Erreur lors de la sauvegarde des données locales:', error);
@@ -192,10 +187,10 @@ export async function restoreLocalData(file) {
     
     const reader = new FileReader();
     
-    reader.onload = async (e) => {
+    reader.onload = (e) => {
       try {
         const data = JSON.parse(e.target.result);
-        await firebaseEmulatorService._importRawData(data);
+        _importRawData(data);
         resolve(true);
       } catch (error) {
         console.error('Erreur lors de la restauration des données:', error);

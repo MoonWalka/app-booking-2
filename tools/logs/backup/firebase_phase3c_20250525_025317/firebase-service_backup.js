@@ -50,14 +50,38 @@ if (IS_LOCAL_MODE) {
     // Initialisation de l'émulateur
     if (emulatorService && emulatorService.initializeEmulator) {
       emulatorService.initializeEmulator().catch(err => {
-        console.warn('⚠️ Émulateur Firebase non disponible, mode dégradé:', err.message);
-        emulatorService = null;
+        console.warn('⚠️ Émulateur Firebase non disponible, fallback vers mocks simples:', err.message);
       });
     }
   } catch (err) {
     console.error('❌ Erreur lors de l\'importation du service émulateur:', err);
-    console.log('🔄 Mode dégradé activé (pas de service local)');
-    emulatorService = null;
+    console.log('🔄 Fallback vers mockStorage...');
+    
+    // Fallback vers l'ancien système si nécessaire
+    try {
+      const mockStorage = require('../mockStorage');
+      emulatorService = {
+        collection: mockStorage.collection,
+        doc: mockStorage.doc,
+        getDoc: mockStorage.getDoc,
+        getDocs: mockStorage.getDocs,
+        setDoc: mockStorage.setDoc,
+        addDoc: mockStorage.addDoc,
+        updateDoc: mockStorage.updateDoc,
+        deleteDoc: mockStorage.deleteDoc,
+        where: mockStorage.where,
+        orderBy: mockStorage.orderBy,
+        limit: mockStorage.limit,
+        serverTimestamp: mockStorage.serverTimestamp,
+        arrayUnion: mockStorage.arrayUnion,
+        arrayRemove: mockStorage.arrayRemove,
+        Timestamp: mockStorage.Timestamp
+      };
+      console.log('📦 MockStorage fallback activé');
+    } catch (fallbackErr) {
+      console.error('❌ Erreur fallback mockStorage:', fallbackErr);
+      emulatorService = null;
+    }
   }
 }
 

@@ -82,7 +82,7 @@ const LieuDetails = () => {
   } = useAddressSearch(formData, handleChange);
 
   // 🚀 NOUVEAU : Utilisation du hook de persistance générique
-  const { saveFormData, loadFormData } = useGenericFormPersistence({
+  const { saveFormData } = useGenericFormPersistence({
     key: `lieu_form_${lieuId}`,
     storageType: 'localStorage',
     enableAutoSave: false

@@ -71,10 +71,10 @@ comm -23 audit/variables_used.txt audit/variables_defined.txt > audit/variables_
 ```
 
 **Livrables Jour 1 :**
-- [ ] Inventaire complet des 431 variables
-- [ ] Liste des 270 variables manquantes
-- [ ] Cartographie des fichiers sources
-- [ ] Analyse des doublons
+- ✅ Inventaire complet des 431 variables
+- ✅ Liste des 270 variables manquantes
+- ✅ Cartographie des fichiers sources
+- ✅ Analyse des doublons
 
 #### **Jour 2 : Catégorisation et priorisation**
 ```bash

@@ -34,6 +34,12 @@ const pdfStyles = StyleSheet.create({
     marginBottom: 10,
     textAlign: 'center',
   },
+  logoImage: {
+    maxWidth: '30%',
+    maxHeight: '40mm',
+    marginBottom: 10,
+    alignSelf: 'center'
+  },
 });
 
 /**
@@ -228,7 +234,7 @@ const getContratHTML = (data, title = 'Contrat', forPreview = false) => {
     if (safeData.template.logoUrl) {
       htmlContent += `
         <div class="logo-container">
-          <img src="${safeData.template.logoUrl}" alt="Logo" />
+          <img src="${safeData.template.logoUrl}" alt="Logo" style={pdfStyles.logoImage} />
         </div>
       `;
     }
@@ -440,12 +446,7 @@ const ContratPDFWrapper = ({
           </Text>
           
           {effectiveTemplate.logoUrl && (
-            <Image src={effectiveTemplate.logoUrl} style={{
-              maxWidth: '30%',
-              maxHeight: '40mm',
-              marginBottom: 10,
-              alignSelf: 'center'
-            }} />
+            <Image src={effectiveTemplate.logoUrl} style={pdfStyles.logoImage} />
           )}
           
           <Text>

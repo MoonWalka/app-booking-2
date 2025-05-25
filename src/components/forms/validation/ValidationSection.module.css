@@ -92,6 +92,26 @@
   padding: var(--tc-spacing-sm);
 }
 
+.columnField {
+  width: 15%;
+}
+
+.columnExisting {
+  width: 25%;
+}
+
+.columnForm {
+  width: 25%;
+}
+
+.columnAction {
+  width: 10%;
+}
+
+.columnFinal {
+  width: 25%;
+}
+
 .concertInfoGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));

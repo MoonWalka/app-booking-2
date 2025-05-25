@@ -140,7 +140,7 @@ const ParametresApparence = () => {
                   <div 
                     id="colorPreview" 
                     className={styles.colorPreview} 
-                    style={{ backgroundColor: localState.couleurPrincipale }}
+                    style={{ '--preview-color': localState.couleurPrincipale }}
                   />
                   <Form.Control
                     type="color"

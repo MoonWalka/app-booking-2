@@ -59,7 +59,7 @@ const StepNavigation = ({
         <div className={styles.stepProgressBar}>
           <div 
             className={styles.stepProgressFill}
-            style={{ width: `${(currentStep / (steps.length - 1)) * 100}%` }}
+            style={{ '--progress-width': `${(currentStep / (steps.length - 1)) * 100}%` }}
           ></div>
         </div>
       </div>

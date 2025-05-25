@@ -165,6 +165,7 @@
   color: var(--tc-gray-700);
   font-weight: var(--tc-font-weight-semibold);
   font-size: var(--tc-font-size-sm);
+  width: var(--column-width, auto);
 }
 
 .sortable {

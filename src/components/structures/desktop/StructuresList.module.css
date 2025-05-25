@@ -175,6 +175,10 @@
   justify-content: flex-end;
 }
 
+.actionsColumn {
+  width: 100px;
+}
+
 .actionButton {
   display: inline-flex;
   align-items: center;

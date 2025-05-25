@@ -76,11 +76,11 @@ const ValidationSection = ({
           <table className={styles.table}>
             <thead className={styles.tableHeader}>
               <tr>
-                <th style={{width: '15%'}}>Champ</th>
-                <th style={{width: '25%'}}>Valeur existante</th>
-                <th style={{width: '25%'}}>Valeur du formulaire</th>
-                <th style={{width: '10%'}}></th>
-                <th style={{width: '25%'}}>Valeur finale</th>
+                <th className={styles.columnField}>Champ</th>
+                <th className={styles.columnExisting}>Valeur existante</th>
+                <th className={styles.columnForm}>Valeur du formulaire</th>
+                <th className={styles.columnAction}></th>
+                <th className={styles.columnFinal}>Valeur finale</th>
               </tr>
             </thead>
             <tbody>

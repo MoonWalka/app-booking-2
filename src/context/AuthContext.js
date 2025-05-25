@@ -1,5 +1,6 @@
-import React, { createContext, useState, useContext, useEffect, useRef } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 import { auth, onAuthStateChanged, signInWithEmailAndPassword, signOut, IS_LOCAL_MODE, CURRENT_MODE } from '@/services/firebase-service';
+import useGenericCachedData from '@/hooks/generics/data/useGenericCachedData';
 
 // Créer le contexte
 export const AuthContext = createContext(null);
@@ -13,117 +14,107 @@ export const useAuth = () => {
   return context;
 };
 
-// Provider du contexte d'authentification
+// Provider du contexte d'authentification simplifié
 export const AuthProvider = ({ children }) => {
   console.log('[TRACE-UNIQUE][AuthProvider] Provider exécuté ! Mode:', CURRENT_MODE, 'Local:', IS_LOCAL_MODE);
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const lastAuthState = useRef(null); // Pour suivre le dernier état d'authentification
-  const authCheckCount = useRef(0); // Pour limiter les vérifications d'authentification fréquentes
+
+  // 🚀 NOUVEAU : Utilisation du cache générique pour l'état d'authentification
+  const { 
+    setCacheData, 
+    getCacheData, 
+    invalidate: clearAuthCache 
+  } = useGenericCachedData('auth', {
+    cacheKey: 'currentUser',
+    strategy: 'ttl',
+    ttl: 5 * 60 * 1000, // 5 minutes
+    levels: ['memory', 'session'], // Cache en mémoire et session
+    onCacheHit: () => console.log('✅ État d\'authentification récupéré du cache'),
+    onCacheMiss: () => console.log('❌ Cache d\'authentification manqué')
+  }, {
+    enableStats: true,
+    enableAutoCleanup: true
+  });
 
   useEffect(() => {
-    // Pour éviter les vérifications d'authentification trop fréquentes
-    const now = Date.now();
-    const lastCheck = parseInt(sessionStorage.getItem('lastAuthCheck') || '0', 10);
-    
-    // Si une vérification a été effectuée dans les 5 dernières secondes, utiliser le dernier état connu
-    if (now - lastCheck < 5000 && sessionStorage.getItem('cachedAuthState')) {
-      try {
-        const cachedUser = JSON.parse(sessionStorage.getItem('cachedAuthState'));
-        setCurrentUser(cachedUser);
-        setLoading(false);
-        console.log('Utilisation de l\'état d\'authentification mis en cache');
-        return;
-      } catch (e) {
-        console.error('Erreur lors de la lecture de l\'état d\'authentification mis en cache:', e);
-        // Continuer avec la vérification normale si le cache échoue
-      }
-    }
-    
-    // Mode développement avec bypass d'authentification
-    if (IS_LOCAL_MODE || process.env.REACT_APP_BYPASS_AUTH === 'true') {
-      console.log('Mode développement local ou bypass d\'authentification activé');
-      const devUser = { uid: 'dev-user', email: 'dev@example.com' };
-      setCurrentUser(devUser);
+    // 🎯 SIMPLIFICATION : Vérifier d'abord le cache
+    const cachedUser = getCacheData('currentUser');
+    if (cachedUser && cachedUser !== 'null') {
+      setCurrentUser(cachedUser);
       setLoading(false);
-      // Mettre en cache l'état d'authentification
-      sessionStorage.setItem('cachedAuthState', JSON.stringify(devUser));
-      sessionStorage.setItem('lastAuthCheck', now.toString());
-      return;
-    }
-
-    // Limiter le nombre de souscriptions aux changements d'authentification
-    if (authCheckCount.current > 5) {
-      console.warn('Trop de vérifications d\'authentification successives. Utilisation du dernier état connu.');
-      setLoading(false);
-      return;
-    }
-
-    authCheckCount.current += 1;
-    
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      // Vérifier si l'état d'authentification a changé
-      const currentAuthState = user ? user.uid : null;
-      const hasChanged = currentAuthState !== lastAuthState.current;
+      console.log('✅ Utilisation de l\'état d\'authentification mis en cache');
       
-      if (hasChanged) {
-        console.log('État d\'authentification modifié');
-        lastAuthState.current = currentAuthState;
-        setCurrentUser(user);
+      // Vérifier en arrière-plan si l'état a changé
+      setTimeout(() => {
+        checkAuthState();
+      }, 100);
+      return;
+    }
+
+    // Vérification immédiate si pas de cache
+    checkAuthState();
+
+    function checkAuthState() {
+      // Mode développement avec bypass d'authentification
+      if (IS_LOCAL_MODE || process.env.REACT_APP_BYPASS_AUTH === 'true') {
+        console.log('🔧 Mode développement local ou bypass d\'authentification activé');
+        const devUser = { uid: 'dev-user', email: 'dev@example.com' };
+        setCurrentUser(devUser);
+        setCacheData('currentUser', devUser);
+        setLoading(false);
+        return;
+      }
+
+      // 🎯 SIMPLIFICATION : Une seule souscription, sans compteurs ni timeouts
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        console.log('🔄 État d\'authentification modifié');
         
-        // Mettre en cache l'état d'authentification
         if (user) {
-          // Ne pas mettre l'objet user complet en cache, juste les informations essentielles
+          // Créer un objet utilisateur simplifié pour le cache
           const userCache = {
             uid: user.uid,
             email: user.email,
             displayName: user.displayName
           };
-          sessionStorage.setItem('cachedAuthState', JSON.stringify(userCache));
+          setCurrentUser(userCache);
+          setCacheData('currentUser', userCache);
         } else {
-          sessionStorage.setItem('cachedAuthState', 'null');
+          setCurrentUser(null);
+          setCacheData('currentUser', null);
         }
-      }
-      
-      setLoading(false);
-      sessionStorage.setItem('lastAuthCheck', now.toString());
-      
-      // Réinitialiser le compteur après une vérification réussie
-      setTimeout(() => {
-        authCheckCount.current = 0;
-      }, 5000);
-    });
+        
+        setLoading(false);
+      });
 
-    return () => {
-      unsubscribe();
-    };
-  }, []);
+      return unsubscribe;
+    }
+  }, [getCacheData, setCacheData]);
 
-  // Fonction de connexion stabilisée
+  // 🎯 SIMPLIFICATION : Fonctions de connexion/déconnexion simplifiées
   const login = async (email, password) => {
     try {
       setLoading(true);
-      await signInWithEmailAndPassword(auth, email, password);
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      // Le cache sera mis à jour automatiquement par onAuthStateChanged
       return true;
     } catch (error) {
-      console.error("Erreur de connexion:", error);
+      console.error("❌ Erreur de connexion:", error);
       return false;
     } finally {
       setLoading(false);
     }
   };
 
-  // Fonction de déconnexion stabilisée
   const logout = async () => {
     try {
       setLoading(true);
       await signOut(auth);
       // Nettoyer le cache d'authentification
-      sessionStorage.removeItem('cachedAuthState');
-      sessionStorage.removeItem('lastAuthCheck');
+      clearAuthCache();
       return true;
     } catch (error) {
-      console.error("Erreur de déconnexion:", error);
+      console.error("❌ Erreur de déconnexion:", error);
       return false;
     } finally {
       setLoading(false);
@@ -134,7 +125,9 @@ export const AuthProvider = ({ children }) => {
     currentUser,
     loading,
     login,
-    logout
+    logout,
+    // 🚀 NOUVEAU : Exposer la fonction de nettoyage du cache
+    clearAuthCache
   };
 
   return (
@@ -142,4 +135,4 @@ export const AuthProvider = ({ children }) => {
       {!loading && children}
     </AuthContext.Provider>
   );
-}
+};

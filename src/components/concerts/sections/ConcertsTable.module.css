@@ -40,7 +40,7 @@
  */
 .concertsTable thead th {
   background-color: var(--tc-bg-color-light);
-  color: var(--tc-text-color-primary);
+  color: var(--tc-text-primary);
   font-weight: var(--tc-font-weight-semibold);
   border-bottom: 2px solid var(--tc-border-default);
   padding: var(--tc-space-2) var(--tc-space-4);
@@ -87,7 +87,7 @@
  */
 .noResults {
   text-align: center;
-  padding: var(--tc-spacing-xl);
+  padding: var(--tc-space-8);
   color: var(--tc-gray-600);
   font-size: var(--tc-font-size-md);
   border-top: 1px solid var(--tc-border-default);
@@ -98,7 +98,7 @@
  * ------------------
  */
 .noResults {
-  padding: var(--tc-spacing-xl);
+  padding: var(--tc-space-8);
   text-align: center;
   color: var(--tc-gray-600);
   font-size: var(--tc-font-size-md);
@@ -208,7 +208,7 @@
   left: 0.75rem;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
   font-size: 1.1rem;
   pointer-events: none;
 }
@@ -221,7 +221,7 @@
   background: none;
   padding: 0;
   cursor: pointer;
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
   display: flex;
   align-items: center;
   justify-content: center;

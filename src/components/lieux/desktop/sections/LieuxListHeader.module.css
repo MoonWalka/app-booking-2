@@ -29,7 +29,7 @@
 
 .headerDescription {
   margin-top: var(--tc-space-1);
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
   font-size: var(--tc-font-size-sm);
   line-height: var(--tc-line-height-normal);
 }

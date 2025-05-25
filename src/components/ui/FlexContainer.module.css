@@ -121,7 +121,7 @@
 }
 
 .gap-xl {
-  gap: var(--tc-spacing-xl);
+  gap: var(--tc-space-8);
 }
 
 /* =============================

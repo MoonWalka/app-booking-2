@@ -12,7 +12,7 @@
    ============================= */
 .loadingContainer {
   text-align: center;
-  padding: var(--tc-spacing-xl);
+  padding: var(--tc-space-8);
 }
 
 .spinner {
@@ -44,7 +44,7 @@
 
 .loadingText {
   margin-top: var(--tc-space-4);
-  color: var(--tc-text-color-muted);
+  color: var(--tc-text-muted);
   font-size: var(--tc-font-size-base);
 }
 
@@ -124,7 +124,7 @@
 }
 
 .expiryText {
-  color: var(--tc-text-color-muted);
+  color: var(--tc-text-muted);
   font-size: var(--tc-font-size-sm);
   margin: 0;
 }

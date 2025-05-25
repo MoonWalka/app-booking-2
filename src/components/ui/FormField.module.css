@@ -64,7 +64,7 @@
 }
 
 .formField::placeholder {
-  color: var(--tc-text-color-muted);
+  color: var(--tc-text-muted);
   opacity: 1;
 }
 
@@ -131,13 +131,13 @@
 
 .formField--disabled {
   background-color: var(--tc-gray-100);
-  color: var(--tc-text-color-muted);
+  color: var(--tc-text-muted);
   cursor: not-allowed;
   opacity: 0.6;
 }
 
 .formField--disabled::placeholder {
-  color: var(--tc-text-color-muted);
+  color: var(--tc-text-muted);
 }
 
 /* =============================
@@ -186,7 +186,7 @@ select.formField {
 .helpText {
   margin-top: var(--tc-space-1);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-text-color-muted);
+  color: var(--tc-text-muted);
   line-height: var(--tc-line-height-normal);
 }
 

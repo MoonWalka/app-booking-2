@@ -43,7 +43,7 @@
 .cardLabel {
   font-weight: var(--tc-font-weight-bold);
   margin-bottom: var(--tc-space-2);
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
   display: block;
 }
 

@@ -37,7 +37,7 @@
 
 /* Élément du fil d'Ariane */
 .breadcrumbItem {
-  color: var(--tc-text-color-primary);
+  color: var(--tc-text-primary);
   cursor: pointer;
 }
 
@@ -46,7 +46,7 @@
 }
 
 .breadcrumbItem.active {
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
   cursor: default;
 }
 
@@ -206,7 +206,7 @@
   display: flex;
   align-items: center;
   margin-top: var(--tc-space-1);
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
 }
 
 .lieuAddress i,
@@ -218,7 +218,7 @@
   font-size: var(--tc-font-size-sm);
   display: block;
   margin-bottom: var(--tc-space-1);
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
 }
 
 .programmateurContacts {
@@ -234,14 +234,14 @@
 
 .programmateurContactItem i {
   margin-right: var(--tc-space-1);
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
 }
 
 .artisteGenre {
   font-size: var(--tc-font-size-sm);
   display: block;
   margin-bottom: var(--tc-space-1);
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
 }
 
 .artisteDescription {

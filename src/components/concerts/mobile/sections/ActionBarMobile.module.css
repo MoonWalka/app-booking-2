@@ -11,7 +11,7 @@
   left: 0;
   right: 0;
   background-color: var(--tc-bg-default);
-  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  padding: var(--tc-space-2) var(--tc-space-3);
   box-shadow: var(--tc-shadow-lg));
   z-index: 1000;
 }
@@ -19,7 +19,7 @@
 .actionButtonGroup {
   display: flex;
   justify-content: space-between;
-  gap: var(--tc-spacing-3);
+  gap: var(--tc-space-3);
 }
 
 .cancelButton, .deleteButton {
@@ -33,7 +33,7 @@
 /* Responsive adjustments */
 @media (max-width: 360px) {
   .actionButtonGroup {
-    gap: var(--tc-spacing-2);
+    gap: var(--tc-space-2);
   }
   
   .cancelButton,
@@ -41,6 +41,6 @@
   .saveButton,
   .editButton {
     font-size: var(--tc-font-size-sm);
-    padding: var(--tc-spacing-2) var(--tc-spacing-1);
+    padding: var(--tc-space-2) var(--tc-space-1);
   }
 }

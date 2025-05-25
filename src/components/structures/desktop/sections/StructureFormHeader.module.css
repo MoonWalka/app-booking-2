@@ -40,7 +40,7 @@
 
 .backButton:hover {
   background-color: var(--tc-white-secondary);
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
 }
 
 .backButton i {

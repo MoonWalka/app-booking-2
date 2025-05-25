@@ -129,8 +129,8 @@
    SECTIONS D'ACTION
    ============================= */
 .actionsSection {
-  margin-top: var(--tc-spacing-xl);
-  padding-bottom: var(--tc-spacing-xl);
+  margin-top: var(--tc-space-8);
+  padding-bottom: var(--tc-space-8);
 }
 
 .actionsSection .btn {
@@ -170,7 +170,7 @@
 .actionsSection .btn-outline-secondary {
   background-color: transparent;
   border-color: var(--tc-border-default);
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
 }
 
 .actionsSection .btn-outline-secondary:hover {
@@ -283,14 +283,14 @@
   transform: translateY(-1px);
   box-shadow: 
     var(--tc-shadow-base),
-    0 4px 8px rgba(var(--tc-primary-color-rgb), 0.15);
+    0 4px 8px rgba(var(--tc-color-primary-rgb), 0.15);
 }
 
 /* =============================
    STYLES POUR LES PLACEHOLDERS
    ============================= */
 .mobileForm .form-control::placeholder {
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
   opacity: 0.7;
 }
 

@@ -13,7 +13,7 @@
   align-items: center;
   justify-content: center;
   height: 50vh;
-  padding: var(--tc-spacing-8);
+  padding: var(--tc-space-8);
   text-align: center;
 }
 
@@ -22,9 +22,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--tc-spacing-8);
+  padding: var(--tc-space-8);
   text-align: center;
-  gap: var(--tc-spacing-3);
+  gap: var(--tc-space-3);
 }
 
 .errorContainer i {
@@ -37,24 +37,24 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 3rem var(--tc-spacing-3);
+  padding: 3rem var(--tc-space-3);
   text-align: center;
 }
 
 .emptyState i {
   font-size: 3rem;
   color: var(--tc-text-muted));
-  margin-bottom: var(--tc-spacing-3);
+  margin-bottom: var(--tc-space-3);
   opacity: 0.5;
 }
 
 .actionButtons {
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-2);
+  gap: var(--tc-space-2);
   width: 100%;
   max-width: 300px;
-  margin-top: var(--tc-spacing-4);
+  margin-top: var(--tc-space-4);
 }
 
 .formValidationMobile {
@@ -64,7 +64,7 @@
 .mobileHeaderBar {
   display: flex;
   align-items: center;
-  padding: var(--tc-spacing-3);
+  padding: var(--tc-space-3);
   background-color: var(--tc-color-primary));
   color: var(--tc-bg-default);
   position: sticky;
@@ -77,9 +77,9 @@
   border: none;
   color: var(--tc-bg-default);
   font-size: var(--tc-font-size-xl);
-  padding: var(--tc-spacing-1) var(--tc-spacing-2);
-  margin-right: var(--tc-spacing-2);
-  margin-top: var(--tc-spacing-3);
+  padding: var(--tc-space-1) var(--tc-space-2);
+  margin-right: var(--tc-space-2);
+  margin-top: var(--tc-space-3);
   width: 100%;
   max-width: 250px;
 }
@@ -95,7 +95,7 @@
 }
 
 .formStatusContainer {
-  padding: var(--tc-spacing-3);
+  padding: var(--tc-space-3);
   background-color: var(--tc-bg-light));
   border-bottom: 1px solid var(--tc-border-default));
 }
@@ -103,8 +103,8 @@
 .formStatus {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-2);
-  margin-bottom: var(--tc-spacing-2);
+  gap: var(--tc-space-2);
+  margin-bottom: var(--tc-space-2);
 }
 
 .statusLabel {
@@ -117,7 +117,7 @@
 
 .infoItem {
   display: flex;
-  gap: var(--tc-spacing-2);
+  gap: var(--tc-space-2);
 }
 
 .infoLabel {
@@ -144,8 +144,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: var(--tc-spacing-2) var(--tc-spacing-3);
-  gap: var(--tc-spacing-1);
+  padding: var(--tc-space-2) var(--tc-space-3);
+  gap: var(--tc-space-1);
   background: none;
   border: none;
   color: var(--tc-text-muted));
@@ -166,17 +166,17 @@
 }
 
 .formContent {
-  padding: var(--tc-spacing-3);
+  padding: var(--tc-space-3);
 }
 
 .formSection {
-  margin-bottom: var(--tc-spacing-8);
+  margin-bottom: var(--tc-space-8);
 }
 
 .formSection h3 {
-  font-size: 1.var(--tc-spacing-3);
+  font-size: 1.var(--tc-space-3);
   margin-bottom: var(--tc-font-size-xl);
-  padding-bottom: var(--tc-spacing-2);
+  padding-bottom: var(--tc-space-2);
   border-bottom: 1px solid var(--tc-border-default));
 }
 
@@ -190,12 +190,12 @@
 .fieldLabel {
   font-size: 0.875rem;
   font-weight: var(--tc-font-weight-medium);
-  margin-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-space-2);
 }
 
 .fieldValue {
   position: relative;
-  padding: var(--tc-spacing-2);
+  padding: var(--tc-space-2);
   background-color: var(--tc-bg-light));
   border-radius: var(--tc-radius-base);
   min-height: 2.5rem;
@@ -214,7 +214,7 @@
 
 .validationCheckbox {
   position: relative;
-  margin-left: var(--tc-spacing-2);
+  margin-left: var(--tc-space-2);
 }
 
 .validationCheckbox input {
@@ -226,7 +226,7 @@
 }
 
 .validationCheckbox label {
-  font-size: var(--tc-spacing-4);
+  font-size: var(--tc-space-4);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -242,7 +242,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  padding: var(--tc-spacing-3);
+  padding: var(--tc-space-3);
   background-color: var(--tc-bg-default);
   box-shadow: var(--tc-shadow-lg));
   z-index: 100;
@@ -251,19 +251,19 @@
 }
 
 .formValidation {
-  padding: var(--tc-spacing-2);
+  padding: var(--tc-space-2);
   margin-bottom: 60px; /* Space for fixed validation bar at bottom */
 }
 
 /* Header styles */
 .headerContainer {
-  margin-bottom: var(--tc-spacing-3);
+  margin-bottom: var(--tc-space-3);
 }
 
 .pageTitle {
   font-size: var(--tc-font-size-xl);
   font-weight: var(--tc-font-weight-semibold);
-  margin-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-space-2);
 }
 
 /* Loading and error states */
@@ -274,14 +274,14 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--tc-spacing-8) var(--tc-spacing-3);
+  padding: var(--tc-space-8) var(--tc-space-3);
   text-align: center;
 }
 
 .loadingText {
-  margin-top: var(--tc-spacing-3);
+  margin-top: var(--tc-space-3);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
 }
 
 /* Section headers */
@@ -289,8 +289,8 @@
   background-color: var(--tc-bs-primary);
   color: var(--tc-bg-default);
   border-radius: var(--tc-radius-sm) 4px 0 0;
-  padding: var(--tc-spacing-2) var(--tc-spacing-2);
-  font-size: var(--tc-spacing-3);
+  padding: var(--tc-space-2) var(--tc-space-2);
+  font-size: var(--tc-space-3);
   font-weight: var(--tc-font-weight-medium);
 }
 
@@ -298,8 +298,8 @@
   background-color: var(--tc-bs-info);
   color: var(--tc-bg-default);
   border-radius: var(--tc-radius-sm) 4px 0 0;
-  padding: var(--tc-spacing-2) var(--tc-spacing-2);
-  font-size: var(--tc-spacing-3);
+  padding: var(--tc-space-2) var(--tc-space-2);
+  font-size: var(--tc-space-3);
   font-weight: var(--tc-font-weight-medium);
 }
 
@@ -308,30 +308,30 @@
   background-color: var(--tc-bs-secondary);
   color: var(--tc-bg-default);
   border-radius: var(--tc-radius-sm) 4px 0 0;
-  padding: var(--tc-spacing-2) var(--tc-spacing-2);
-  font-size: var(--tc-spacing-3);
+  padding: var(--tc-space-2) var(--tc-space-2);
+  font-size: var(--tc-space-3);
   font-weight: var(--tc-font-weight-medium);
 }
 
 /* Section containers */
 .sectionContainer {
-  margin-bottom: var(--tc-spacing-4);
+  margin-bottom: var(--tc-space-4);
   border: 1px solid var(--tc-border-color-medium);
   border-radius: var(--tc-radius-sm);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .sectionBody {
-  padding: var(--tc-spacing-2);
+  padding: var(--tc-space-2);
 }
 
 /* Field row */
 .fieldRow {
   display: flex;
   flex-direction: column;
-  margin-bottom: var(--tc-spacing-3);
+  margin-bottom: var(--tc-space-3);
   border-bottom: 1px solid var(--tc-border-default);
-  padding-bottom: var(--tc-spacing-3);
+  padding-bottom: var(--tc-space-3);
 }
 
 .fieldRow:last-child {
@@ -343,8 +343,8 @@
 .fieldLabel {
   font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-text-color-secondary);
-  margin-bottom: var(--tc-spacing-1);
+  color: var(--tc-text-secondary);
+  margin-bottom: var(--tc-space-1);
 }
 
 .fieldValue {
@@ -354,12 +354,12 @@
 .fieldCompare {
   display: flex;
   flex-direction: column;
-  margin-top: var(--tc-spacing-2);
+  margin-top: var(--tc-space-2);
 }
 
 .formValue {
   background-color: var(--tc-bg-light);
-  padding: var(--tc-spacing-2);
+  padding: var(--tc-space-2);
   border-radius: var(--tc-radius-sm);
   font-size: var(--tc-font-size-sm);
 }
@@ -367,8 +367,8 @@
 /* Action buttons in fields */
 .actionButtons {
   display: flex;
-  margin-top: var(--tc-spacing-2);
-  gap: var(--tc-spacing-2);
+  margin-top: var(--tc-space-2);
+  gap: var(--tc-space-2);
 }
 
 .actionButtons button {
@@ -384,7 +384,7 @@
   left: 0;
   right: 0;
   background: var(--tc-bg-default);
-  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  padding: var(--tc-space-2) var(--tc-space-3);
   box-shadow: var(--tc-shadow-lg));
   z-index: 1000;
   display: flex;

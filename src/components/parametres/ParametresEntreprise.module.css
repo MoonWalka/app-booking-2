@@ -27,7 +27,7 @@
 }
 
 .suggestionItem:hover {
-  background-color: var(--tc-hover-bg);
+  background-color: var(--tc-bg-hover);
 }
 
 .suggestionItem:last-child {

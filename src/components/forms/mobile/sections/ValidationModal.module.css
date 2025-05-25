@@ -11,21 +11,21 @@
 }
 
 .modalTitle {
-  font-size: 1.var(--tc-spacing-3);
+  font-size: 1.var(--tc-space-3);
   font-weight: var(--tc-font-weight-semibold);
 }
 
 .messageContainer {
   display: flex;
   align-items: flex-start;
-  padding: var(--tc-spacing-2) 0;
+  padding: var(--tc-space-2) 0;
 }
 
 .messageContainer i {
   font-size: var(--tc-font-size-xl);
-  color: var(--tc-text-color-secondary);
-  margin-right: var(--tc-spacing-2);
-  margin-top: 0.var(--tc-spacing-3);
+  color: var(--tc-text-secondary);
+  margin-right: var(--tc-space-2);
+  margin-top: 0.var(--tc-space-3);
 }
 
 .confirmMessage {
@@ -37,7 +37,7 @@
 .modalFooter {
   display: flex;
   justify-content: space-between;
-  padding: var(--tc-spacing-3);
+  padding: var(--tc-space-3);
   border-top: 1px solid var(--tc-gray-200);
 }
 
@@ -45,5 +45,5 @@
   flex: 1;
   max-width: 45%;
   font-size: var(--tc-font-size-sm);
-  padding: var(--tc-spacing-2);
+  padding: var(--tc-space-2);
 }

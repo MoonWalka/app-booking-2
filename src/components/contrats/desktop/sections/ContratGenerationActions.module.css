@@ -5,13 +5,13 @@
  */
 
 .actionsContainer {
-  margin-top: var(--tc-spacing-4);
+  margin-top: var(--tc-space-4);
 }
 
 .buttonsContainer {
   display: flex;
-  gap: var(--tc-spacing-3);
-  margin-top: var(--tc-spacing-3);
+  gap: var(--tc-space-3);
+  margin-top: var(--tc-space-3);
   flex-wrap: wrap;
 }
 
@@ -19,7 +19,7 @@
 .pdfDownloadButton {
   display: inline-flex;
   align-items: center;
-  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  padding: var(--tc-space-2) var(--tc-space-3);
   background-color: var(--tc-color-primary);
   color: white;
   text-decoration: none;
@@ -42,13 +42,13 @@
 /* Styles responsive standardisés */
 @media (max-width: 768px) {
   .buttonsContainer {
-    gap: var(--tc-spacing-2);
+    gap: var(--tc-space-2);
   }
 }
 
 @media (max-width: 576px) {
   .actionsContainer {
-    margin-top: var(--tc-spacing-3);
+    margin-top: var(--tc-space-3);
   }
   
   .buttonsContainer {

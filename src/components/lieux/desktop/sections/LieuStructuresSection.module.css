@@ -24,7 +24,7 @@
   align-items: center;
   gap: var(--tc-space-2);
   padding: var(--tc-space-4) 0;
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
   justify-content: center;
   font-size: var(--tc-font-size-sm);
 }
@@ -147,9 +147,9 @@
   align-items: center;
   padding: var(--tc-space-1) var(--tc-space-2);
   margin-bottom: var(--tc-space-1);
-  background-color: rgba(var(--tc-primary-color-rgb), 0.1);
+  background-color: rgba(var(--tc-color-primary-rgb), 0.1);
   border-radius: var(--tc-radius-base);
-  border: 1px solid rgba(var(--tc-primary-color-rgb), 0.3);
+  border: 1px solid rgba(var(--tc-color-primary-rgb), 0.3);
 }
 
 /* =============================
@@ -157,7 +157,7 @@
    ============================= */
 .emptyState {
   text-align: center;
-  padding: var(--tc-spacing-xl) 0;
+  padding: var(--tc-space-8) 0;
   color: var(--tc-gray-500);
   display: flex;
   flex-direction: column;
@@ -262,7 +262,7 @@
 .searchInput:focus {
   outline: none;
   border-color: var(--tc-color-primary);
-  box-shadow: 0 0 0 2px rgba(var(--tc-primary-color-rgb), 0.2);
+  box-shadow: 0 0 0 2px rgba(var(--tc-color-primary-rgb), 0.2);
 }
 
 .clearSearchButton {
@@ -424,15 +424,15 @@
   align-items: center;
   padding: var(--tc-space-2);
   margin-bottom: var(--tc-space-1);
-  background-color: rgba(var(--tc-primary-color-rgb), 0.05);
-  border: 1px solid rgba(var(--tc-primary-color-rgb), 0.2);
+  background-color: rgba(var(--tc-color-primary-rgb), 0.05);
+  border: 1px solid rgba(var(--tc-color-primary-rgb), 0.2);
   border-radius: var(--tc-radius-base);
   transition: all var(--tc-transition-duration);
 }
 
 .structureItem:hover {
-  background-color: rgba(var(--tc-primary-color-rgb), 0.1);
-  border-color: rgba(var(--tc-primary-color-rgb), 0.3);
+  background-color: rgba(var(--tc-color-primary-rgb), 0.1);
+  border-color: rgba(var(--tc-color-primary-rgb), 0.3);
 }
 
 .structureLink {
@@ -461,7 +461,7 @@
    SÉLECTION TEMPORAIRE DE STRUCTURE (NOUVEAU)
    ============================= */
 .resultItemSelected {
-  background-color: rgba(var(--tc-primary-color-rgb), 0.1) !important;
+  background-color: rgba(var(--tc-color-primary-rgb), 0.1) !important;
   border: 2px solid var(--tc-color-primary) !important;
   transform: translateX(4px);
 }

@@ -464,7 +464,7 @@ body.contrat-print-mode {
 .contrat-print-mode .article {
   page-break-inside: avoid;
   break-inside: avoid;
-  margin-bottom: var(--tc-spacing-4);
+  margin-bottom: var(--tc-space-4);
   font-size: 12pt;
   line-height: 1.5;
   max-width: 100%;
@@ -519,7 +519,7 @@ body.contrat-print-mode {
     background: var(--tc-bg-default);
     padding: 0 10px;
     font-size: 10px;
-    color: var(--tc-text-color-secondary);
+    color: var(--tc-text-secondary);
     display: block !important;
   }
   

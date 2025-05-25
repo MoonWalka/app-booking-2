@@ -144,8 +144,8 @@
 }
 
 .resetButton:hover {
-  background-color: var(--tc-hover-bg);
-  border-color: var(--tc-border-medium);
+  background-color: var(--tc-bg-hover);
+  border-color: var(--tc-border-default);
 }
 
 .saveButton {

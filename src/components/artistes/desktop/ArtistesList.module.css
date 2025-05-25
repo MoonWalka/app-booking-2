@@ -38,7 +38,7 @@
   align-items: center;
   padding: var(--tc-space-2) var(--tc-space-4);
   text-decoration: none;
-  color: var(--tc-text-color-primary);
+  color: var(--tc-text-primary);
   transition: background-color var(--tc-transition-duration-fast) ease-in-out;
   border-bottom: var(--tc-border-width) solid var(--tc-border-color-light);
 }
@@ -90,7 +90,7 @@
   align-items: center;
   justify-content: center;
   font-size: var(--tc-font-size-lg);
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
 }
 
 .artistesListContainer {
@@ -105,7 +105,7 @@
   background-color: var(--tc-gray-100);
   padding: var(--tc-space-4) var(--tc-space-6);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-color-primary);
+  color: var(--tc-text-primary);
 }
 
 .artistesTable td {
@@ -158,7 +158,7 @@
 }
 
 .paginationContainer {
-  margin-top: var(--tc-spacing-xl);
+  margin-top: var(--tc-space-8);
   display: flex;
   justify-content: center;
 }

@@ -9,20 +9,20 @@
   border-radius: var(--tc-border-radius-md);
   border: 1px solid var(--tc-border-light);
   padding: var(--tc-spacing-3-5);
-  margin-bottom: var(--tc-spacing-4);
+  margin-bottom: var(--tc-space-4);
   box-shadow: var(--tc-shadow-xs);
 }
 
 /* Styles responsive standardisés */
 @media (max-width: 768px) {
   .templateInfoCard {
-    padding: var(--tc-spacing-3);
+    padding: var(--tc-space-3);
   }
 }
 
 @media (max-width: 576px) {
   .templateInfoCard {
-    padding: var(--tc-spacing-2);
-    margin-bottom: var(--tc-spacing-3);
+    padding: var(--tc-space-2);
+    margin-bottom: var(--tc-space-3);
   }
 }

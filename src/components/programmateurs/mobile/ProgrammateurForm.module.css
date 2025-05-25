@@ -7,13 +7,13 @@
 
 
 .programmateursFormMobile {
-  padding: var(--tc-spacing-3);
+  padding: var(--tc-space-3);
   background-color: var(--tc-bg-default);
 }
 
 .mobileFormHeader {
-  margin-bottom: var(--tc-spacing-4);
-  padding-bottom: var(--tc-spacing-3);
+  margin-bottom: var(--tc-space-4);
+  padding-bottom: var(--tc-space-3);
   border-bottom: 1px solid var(--tc-border-default));
 }
 
@@ -32,12 +32,12 @@
 
 .stepFormGroup {
   position: relative;
-  margin-bottom: var(--tc-spacing-3);
+  margin-bottom: var(--tc-space-3);
 }
 
 .stepFormGroup label {
   display: block;
-  margin-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-space-2);
   font-weight: var(--tc-font-weight-medium);
   color: var(--tc-label-color);
 }
@@ -47,8 +47,8 @@
 .stepFormGroup textarea {
   display: block;
   width: 100%;
-  padding: var(--tc-spacing-2) var(--tc-spacing-3);
-  font-size: var(--tc-spacing-3);
+  padding: var(--tc-space-2) var(--tc-space-3);
+  font-size: var(--tc-space-3);
   line-height: 1.5;
   color: var(--tc-text-default);
   background-color: var(--tc-bg-default);
@@ -63,19 +63,19 @@
 .stepFormGroup textarea:focus {
   border-color: var(--tc-color-primary);
   outline: 0;
-  box-shadow: 0 0 0 0.var(--tc-spacing-8) rgba(58, 134, 255, 0.25);
+  box-shadow: 0 0 0 0.var(--tc-space-8) rgba(58, 134, 255, 0.25);
 }
 
 .stepFormActions {
   display: flex;
   justify-content: space-between;
-  margin-top: var(--tc-spacing-4);
-  padding-top: var(--tc-spacing-3);
+  margin-top: var(--tc-space-4);
+  padding-top: var(--tc-space-3);
   border-top: 1px solid var(--tc-border-color-light));
 }
 
 .searchingIndicator {
-  margin-top: var(--tc-spacing-2);
+  margin-top: var(--tc-space-2);
   font-size: 0.875rem;
   color: var(--tc-text-muted));
 }
@@ -90,18 +90,18 @@
   background-color: var(--tc-bg-default);
   border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-radius-base));
-  box-shadow: 0 var(--tc-spacing-2) var(--tc-spacing-3) rgba(0, 0, 0, 0.15);
+  box-shadow: 0 var(--tc-space-2) var(--tc-space-3) rgba(0, 0, 0, 0.15);
   z-index: 1000;
 }
 
 .addressResultItem {
-  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  padding: var(--tc-space-2) var(--tc-space-3);
   cursor: pointer;
   border-bottom: 1px solid var(--tc-border-color-light));
 }
 
 .addressResultItem:hover {
-  background-color: var(--tc-hover-bg));
+  background-color: var(--tc-bg-hover));
 }
 
 .loadingIndicator {

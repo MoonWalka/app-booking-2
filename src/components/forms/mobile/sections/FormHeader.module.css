@@ -6,8 +6,8 @@
  */
 
 .headerContainer {
-  margin-bottom: var(--tc-spacing-3);
-  padding: var(--tc-spacing-2) 0;
+  margin-bottom: var(--tc-space-3);
+  padding: var(--tc-space-2) 0;
   border-bottom: 1px solid var(--tc-border-color-light);
 }
 
@@ -15,7 +15,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--tc-spacing-2);
+  gap: var(--tc-space-2);
 }
 
 .title {
@@ -27,15 +27,15 @@
 
 .backButton {
   font-size: var(--tc-font-size-xs);
-  padding: var(--tc-spacing-1) var(--tc-spacing-2);
+  padding: var(--tc-space-1) var(--tc-space-2);
 }
 
 @media (max-width: 576px) {
   .headerContainer {
-    padding: var(--tc-spacing-2) 0;
+    padding: var(--tc-space-2) 0;
   }
   
   .title {
-    font-size: 1.var(--tc-spacing-3);
+    font-size: 1.var(--tc-space-3);
   }
 }

@@ -92,7 +92,7 @@
   font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-normal);
   padding: 2px var(--tc-space-1);
-  background-color: rgba(var(--tc-primary-color-rgb), 0.1);
+  background-color: rgba(var(--tc-color-primary-rgb), 0.1);
   border-radius: var(--tc-radius-sm);
 }
 
@@ -374,13 +374,13 @@
 
 .categoryBtn:hover {
   color: var(--tc-color-primary);
-  background-color: rgba(var(--tc-primary-color-rgb), 0.1);
+  background-color: rgba(var(--tc-color-primary-rgb), 0.1);
 }
 
 .categoryBtn.active {
   color: var(--tc-color-primary);
-  background-color: rgba(var(--tc-primary-color-rgb), 0.15);
-  border-color: rgba(var(--tc-primary-color-rgb), 0.3);
+  background-color: rgba(var(--tc-color-primary-rgb), 0.15);
+  border-color: rgba(var(--tc-color-primary-rgb), 0.3);
 }
 
 .categoryBtn i {

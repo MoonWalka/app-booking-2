@@ -8,12 +8,12 @@
 
 
 .structureFormMobile {
-  padding-bottom: var(--tc-spacing-3);
+  padding-bottom: var(--tc-space-3);
 }
 
 .formHeader {
-  margin-bottom: var(--tc-spacing-3);
-  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  margin-bottom: var(--tc-space-3);
+  padding: var(--tc-space-2) var(--tc-space-3);
   background-color: var(--tc-bg-default);
   position: sticky;
   top: 0;
@@ -30,8 +30,8 @@
 }
 
 .backButton {
-  font-size: var(--tc-spacing-4);
-  color: var(--tc-text-color-secondary);
+  font-size: var(--tc-space-4);
+  color: var(--tc-text-secondary);
   padding: 0;
   background: none;
   border: none;
@@ -39,35 +39,35 @@
 
 .formSection {
   background-color: var(--tc-bg-default);
-  margin: 0 var(--tc-spacing-3) var(--tc-spacing-3);
-  border-radius: var(--tc-spacing-2);
-  padding: var(--tc-spacing-3);
+  margin: 0 var(--tc-space-3) var(--tc-space-3);
+  border-radius: var(--tc-space-2);
+  padding: var(--tc-space-3);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .formSectionTitle {
   font-size: var(--tc-font-size-xl);
   font-weight: var(--tc-font-weight-semibold);
-  margin-bottom: var(--tc-spacing-3);
-  padding-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-space-3);
+  padding-bottom: var(--tc-space-2);
   border-bottom: 1px solid var(--tc-border-default);
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-2);
+  gap: var(--tc-space-2);
 }
 
 .formLabel {
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
   color: var(--tc-text-secondary);
-  margin-bottom: var(--tc-spacing-1);
+  margin-bottom: var(--tc-space-1);
 }
 
 .formControl {
   border-radius: 0.375rem;
   border: 1px solid var(--tc-border-default);
-  padding: var(--tc-spacing-2) var(--tc-spacing-2);
-  font-size: var(--tc-spacing-3);
+  padding: var(--tc-space-2) var(--tc-space-2);
+  font-size: var(--tc-space-3);
 }
 
 .formActions {
@@ -76,8 +76,8 @@
   left: 0;
   right: 0;
   display: flex;
-  gap: var(--tc-spacing-3);
-  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  gap: var(--tc-space-3);
+  padding: var(--tc-space-2) var(--tc-space-3);
   background-color: var(--tc-bg-default);
   box-shadow: var(--tc-shadow-lg);
   z-index: 100;
@@ -88,13 +88,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--tc-spacing-2);
+  gap: var(--tc-space-2);
 }
 
 .spinner {
   display: inline-block;
-  width: var(--tc-spacing-3);
-  height: var(--tc-spacing-3);
+  width: var(--tc-space-3);
+  height: var(--tc-space-3);
   border-radius: 50%;
   border: 2px solid currentColor;
   border-right-color: transparent;

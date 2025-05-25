@@ -34,7 +34,7 @@
 
 .cancelButton:hover:not(:disabled) {
   background-color: var(--tc-white-secondary);
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
   border-color: var(--tc-border-color-dark);
 }
 

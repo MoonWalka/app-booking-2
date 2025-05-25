@@ -65,12 +65,12 @@
   color: var(--tc-success-color-text);
   border: 1px solid var(--tc-success-color-border);
   border-radius: var(--tc-radius-base);
-  padding: var(--tc-spacing-4);
-  margin-bottom: var(--tc-spacing-4);
+  padding: var(--tc-space-4);
+  margin-bottom: var(--tc-space-4);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--tc-spacing-4);
+  gap: var(--tc-space-4);
 }
 
 .closeBannerButton {
@@ -80,7 +80,7 @@
   font-weight: var(--tc-font-weight-bold);
   font-size: 1.1rem;
   cursor: pointer;
-  margin-left: var(--tc-spacing-4);
+  margin-left: var(--tc-space-4);
   transition: opacity var(--tc-transition-speed);
 }
 

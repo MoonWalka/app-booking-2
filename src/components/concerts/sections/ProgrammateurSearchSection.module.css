@@ -38,7 +38,7 @@
     width: var(--tc-icon-size-sm);
     height: var(--tc-icon-size-sm);
     font-size: var(--tc-font-size-sm);
-    margin-right: var(--tc-spacing-2);
+    margin-right: var(--tc-space-2);
   }
   
   .cardTitle {
@@ -46,6 +46,6 @@
   }
   
   .formLabel {
-    margin-bottom: var(--tc-spacing-1);
+    margin-bottom: var(--tc-space-1);
   }
 }

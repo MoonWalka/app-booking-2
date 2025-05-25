@@ -77,7 +77,7 @@
   background: none;
   padding: 0 var(--tc-space-2);
   cursor: pointer;
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -90,7 +90,7 @@
 
 .resultsCount {
   font-size: var(--tc-font-size-xs);
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
   margin-top: var(--tc-space-1);
   padding-left: var(--tc-space-2);
 }
@@ -120,7 +120,7 @@
 
 .modernFilterBtn.active,
 .modernSortBtn.active {
-  background-color: rgba(var(--tc-primary-color-rgb), 0.1);
+  background-color: rgba(var(--tc-color-primary-rgb), 0.1);
   border-color: var(--tc-color-primary);
   color: var(--tc-color-primary);
 }
@@ -167,7 +167,7 @@
 }
 
 .clickableRow:hover {
-  background-color: rgba(var(--tc-primary-color-rgb), 0.1);
+  background-color: rgba(var(--tc-color-primary-rgb), 0.1);
 }
 
 .tableRowAnimate {

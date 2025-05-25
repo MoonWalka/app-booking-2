@@ -104,7 +104,7 @@
 
 .modernFilterBtn.active, 
 .modernSortBtn.active {
-  background-color: rgba(var(--tc-primary-color-rgb), 0.1);
+  background-color: rgba(var(--tc-color-primary-rgb), 0.1);
   border-color: var(--tc-color-primary);
   color: var(--tc-color-primary);
 }

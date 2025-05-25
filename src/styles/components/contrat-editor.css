@@ -31,7 +31,7 @@
 }
 
 .tc-modal-actions .tc-btn.tc-btn-outline-info {
-  padding: 0.375rem var(--tc-spacing-2);
+  padding: 0.375rem var(--tc-space-2);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -50,7 +50,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--tc-spacing-3) var(--tc-spacing-4);
+  padding: var(--tc-space-3) var(--tc-space-4);
 }
 
 .tc-modal-close {
@@ -58,7 +58,7 @@
   border: none;
   font-size: var(--tc-font-size-xl);
   cursor: pointer;
-  padding: var(--tc-spacing-1);
+  padding: var(--tc-space-1);
   color: var(--tc-text-muted);
 }
 
@@ -68,7 +68,7 @@
 
 /* Styles pour le corps de la modale */
 .tc-modal-scrollable-content {
-  padding: var(--tc-spacing-4);
+  padding: var(--tc-space-4);
   overflow-y: auto;
 }
 
@@ -80,7 +80,7 @@
   font-family: Arial, sans-serif;
   border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-radius-base);
-  padding: var(--tc-spacing-2);
+  padding: var(--tc-space-2);
   line-height: 1.5;
 }
 
@@ -106,20 +106,20 @@
   background-color: var(--tc-bg-default);
   border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-radius-sm);
-  margin-bottom: var(--tc-spacing-4);
+  margin-bottom: var(--tc-space-4);
   width: 100%;
   min-height: 500px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .preview-header {
-  padding: var(--tc-spacing-3);
+  padding: var(--tc-space-3);
   border-bottom: 1px solid var(--tc-border-default);
   background-color: var(--tc-light-bg);
 }
 
 .preview-content {
-  padding: var(--tc-spacing-8);
+  padding: var(--tc-space-8);
   display: flex;
   justify-content: center;
   width: 100%;
@@ -186,14 +186,14 @@
   background-color: var(--tc-light-bg);
   border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-radius-base);
-  padding: var(--tc-spacing-2);
-  margin-bottom: var(--tc-spacing-3);
+  padding: var(--tc-space-2);
+  margin-bottom: var(--tc-space-3);
 }
 
 .variable-badge {
   display: inline-block;
-  padding: var(--tc-spacing-1) var(--tc-spacing-2);
-  margin: var(--tc-spacing-1);
+  padding: var(--tc-space-1) var(--tc-space-2);
+  margin: var(--tc-space-1);
   background-color: var(--tc-gray-800);
   border: 1px solid var(--tc-border-color-medium);
   border-radius: var(--tc-radius-sm);
@@ -208,12 +208,12 @@
 .variables-badge-container {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--tc-spacing-2);
+  gap: var(--tc-space-2);
 }
 
 /* Styles pour l'éditeur ReactQuill */
 .quill {
-  margin-bottom: var(--tc-spacing-4);
+  margin-bottom: var(--tc-space-4);
 }
 
 .ql-toolbar {

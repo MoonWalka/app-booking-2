@@ -122,7 +122,7 @@
 .concertDetails {
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-2);
+  gap: var(--tc-space-2);
 }
 
 .concertField {
@@ -132,7 +132,7 @@
 
 /* Styles pour les champs à valider */
 .fieldContainer {
-  padding: var(--tc-spacing-2) 0;
+  padding: var(--tc-space-2) 0;
   border-bottom: 1px solid var(--tc-border-default);
 }
 
@@ -145,7 +145,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-space-2);
 }
 
 .fieldLabel {
@@ -155,25 +155,25 @@
 }
 
 .fieldBadge {
-  font-size: var(--tc-spacing-2);
+  font-size: var(--tc-space-2);
 }
 
 .valuesContainer {
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-3);
-  margin-bottom: var(--tc-spacing-2);
+  gap: var(--tc-space-3);
+  margin-bottom: var(--tc-space-2);
 }
 
 .existingValue, .formValue {
   background-color: var(--tc-bg-light);
   border-radius: 6px;
-  padding: var(--tc-spacing-2);
+  padding: var(--tc-space-2);
   position: relative;
 }
 
 .existingValue {
-  border-left: 3px solid var(--tc-text-color-secondary);
+  border-left: 3px solid var(--tc-text-secondary);
 }
 
 .formValue {
@@ -186,12 +186,12 @@
   left: 8px;
   background-color: var(--tc-bg-default);
   font-size: 0.7rem;
-  color: var(--tc-text-color-secondary);
-  padding: 0 var(--tc-spacing-1);
+  color: var(--tc-text-secondary);
+  padding: 0 var(--tc-space-1);
 }
 
 .valueContent {
-  padding-top: var(--tc-spacing-1);
+  padding-top: var(--tc-space-1);
   font-size: var(--tc-font-size-sm);
   word-break: break-word;
 }

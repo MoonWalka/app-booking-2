@@ -6,7 +6,7 @@
  */
 
 .generalInfoContainer {
-  margin-bottom: var(--tc-spacing-3);
+  margin-bottom: var(--tc-space-3);
 }
 
 .infoCard {
@@ -16,7 +16,7 @@
 
 /* Styles pour le mode édition */
 .formGroup {
-  margin-bottom: var(--tc-spacing-3);
+  margin-bottom: var(--tc-space-3);
 }
 
 .formGroup:last-child {
@@ -26,8 +26,8 @@
 .formLabel {
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-text-color-secondary);
-  margin-bottom: var(--tc-spacing-1);
+  color: var(--tc-text-secondary);
+  margin-bottom: var(--tc-space-1);
 }
 
 .textareaField {
@@ -39,9 +39,9 @@
 .statusContainer {
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-2);
-  margin-bottom: var(--tc-spacing-3);
-  padding-bottom: var(--tc-spacing-2);
+  gap: var(--tc-space-2);
+  margin-bottom: var(--tc-space-3);
+  padding-bottom: var(--tc-space-2);
   border-bottom: 1px solid var(--tc-border-default);
 }
 
@@ -49,7 +49,7 @@
   display: inline-block;
   font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-medium);
-  padding: var(--tc-spacing-1) var(--tc-spacing-2);
+  padding: var(--tc-space-1) var(--tc-space-2);
 }
 
 .actionNeeded {
@@ -58,13 +58,13 @@
   font-size: var(--tc-font-size-sm);
   color: var(--tc-color-error);
   background-color: var(--tc-danger-light);
-  padding: var(--tc-spacing-2);
+  padding: var(--tc-space-2);
   border-radius: var(--tc-radius-sm);
 }
 
 .infoGroup {
-  margin-bottom: var(--tc-spacing-2);
-  padding-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-space-2);
+  padding-bottom: var(--tc-space-2);
   border-bottom: 1px solid var(--tc-border-default);
   display: flex;
   flex-direction: column;
@@ -77,8 +77,8 @@
 .infoLabel {
   font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-text-color-secondary);
-  margin-bottom: var(--tc-spacing-1);
+  color: var(--tc-text-secondary);
+  margin-bottom: var(--tc-space-1);
 }
 
 .infoValue {
@@ -94,27 +94,27 @@
 
 .passedBadge {
   font-size: var(--tc-font-size-xs);
-  padding: var(--tc-spacing-1) var(--tc-spacing-1);
+  padding: var(--tc-space-1) var(--tc-space-1);
   background-color: var(--tc-color-error);
   color: white;
   border-radius: var(--tc-radius-sm);
 }
 
 .notesGroup {
-  margin-top: var(--tc-spacing-2);
+  margin-top: var(--tc-space-2);
 }
 
 .notesContent {
   background-color: var(--tc-bg-light);
-  padding: var(--tc-spacing-2);
+  padding: var(--tc-space-2);
   border-radius: var(--tc-radius-sm);
   font-size: var(--tc-font-size-sm);
   white-space: pre-wrap;
 }
 
 .formStatusIndicator {
-  margin-top: var(--tc-spacing-3);
-  padding: var(--tc-spacing-2);
+  margin-top: var(--tc-space-3);
+  padding: var(--tc-space-2);
   background-color: var(--tc-bg-light);
   border-radius: var(--tc-radius-sm);
   font-size: var(--tc-font-size-sm);

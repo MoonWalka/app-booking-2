@@ -240,7 +240,7 @@
 }
 
 .tc-programmateur-item:hover {
-  background-color: rgba(var(--tc-primary-color-rgb), 0.1);
+  background-color: rgba(var(--tc-color-primary-rgb), 0.1);
 }
 
 .tc-programmateur-card {

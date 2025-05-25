@@ -6,7 +6,7 @@
  */
 
 .validationAlert {
-  margin-bottom: var(--tc-spacing-4);
+  margin-bottom: var(--tc-space-4);
   border-radius: var(--tc-radius-md);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
   border-left: 4px solid var(--tc-bs-success);
@@ -18,14 +18,14 @@
 }
 
 .alertContent i {
-  font-size: var(--tc-spacing-4);
+  font-size: var(--tc-space-4);
   color: var(--tc-bs-success);
 }
 
 .alertTitle {
-  font-size: var(--tc-spacing-3);
+  font-size: var(--tc-space-3);
   font-weight: var(--tc-font-weight-semibold);
-  margin-bottom: var(--tc-spacing-1);
+  margin-bottom: var(--tc-space-1);
 }
 
 .alertText {

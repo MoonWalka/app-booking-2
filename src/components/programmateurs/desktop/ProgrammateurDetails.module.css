@@ -142,7 +142,7 @@
   display: flex;
   justify-content: flex-end;
   gap: var(--tc-space-2);
-  margin-top: var(--tc-spacing-xl);
+  margin-top: var(--tc-space-8);
   padding-top: var(--tc-space-6);
   border-top: var(--tc-border-width) solid var(--tc-border-light);
 }
@@ -155,7 +155,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--tc-spacing-xl);
+  margin-bottom: var(--tc-space-8);
   padding-bottom: var(--tc-space-4);
   border-bottom: var(--tc-border-width) solid var(--tc-border-light);
 }

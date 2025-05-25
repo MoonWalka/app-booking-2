@@ -74,7 +74,7 @@
 }
 
 .tc-table-hover tbody tr:hover {
-  background-color: var(--tc-hover-bg);
+  background-color: var(--tc-bg-hover);
 }
 
 /* TABLEAU RESPONSIVE */
@@ -119,11 +119,11 @@
 }
 
 .tc-table .tc-table-primary {
-  background-color: rgba(var(--tc-primary-color-rgb), 0.1);
+  background-color: rgba(var(--tc-color-primary-rgb), 0.1);
 }
 
 .tc-table .tc-table-secondary {
-  background-color: rgba(var(--tc-secondary-color-rgb), 0.1);
+  background-color: rgba(var(--tc-color-secondary-rgb), 0.1);
 }
 
 .tc-table .tc-table-success {
@@ -156,21 +156,21 @@
 }
 
 .tc-table tr.tc-highlighted {
-  background-color: rgba(var(--tc-primary-color-rgb), 0.08);
+  background-color: rgba(var(--tc-color-primary-rgb), 0.08);
 }
 
 .tc-table tr.tc-selected {
-  background-color: rgba(var(--tc-primary-color-rgb), 0.15);
+  background-color: rgba(var(--tc-color-primary-rgb), 0.15);
 }
 
 .tc-table-striped tbody tr.tc-highlighted:nth-of-type(odd),
 .tc-table-hover tbody tr.tc-highlighted:hover {
-  background-color: rgba(var(--tc-primary-color-rgb), 0.08);
+  background-color: rgba(var(--tc-color-primary-rgb), 0.08);
 }
 
 .tc-table-striped tbody tr.tc-selected:nth-of-type(odd),
 .tc-table-hover tbody tr.tc-selected:hover {
-  background-color: rgba(var(--tc-primary-color-rgb), 0.15);
+  background-color: rgba(var(--tc-color-primary-rgb), 0.15);
 }
 
 /* CELLULES D'ACTIONS */
@@ -201,7 +201,7 @@
 }
 
 .tc-table .tc-table-action-button:hover {
-  background-color: var(--tc-hover-bg);
+  background-color: var(--tc-bg-hover);
   color: var(--tc-text-default);
 }
 
@@ -309,7 +309,7 @@
 }
 
 .tc-pagination-link:hover {
-  background-color: var(--tc-hover-bg);
+  background-color: var(--tc-bg-hover);
   border-color: var(--tc-border-default);
   color: var(--tc-text-default);
 }
@@ -378,7 +378,7 @@
 }
 
 .tc-table-filter-button:hover {
-  background-color: var(--tc-hover-bg);
+  background-color: var(--tc-bg-hover);
   color: var(--tc-color-primary);
 }
 
@@ -403,7 +403,7 @@
 
 .tc-table-search-input:focus {
   border-color: var(--tc-color-primary);
-  box-shadow: 0 0 0 3px rgba(var(--tc-primary-color-rgb), 0.1);
+  box-shadow: 0 0 0 3px rgba(var(--tc-color-primary-rgb), 0.1);
   outline: none;
 }
 

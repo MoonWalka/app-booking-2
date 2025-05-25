@@ -96,7 +96,7 @@
 
 .emptyState {
   text-align: center;
-  padding: var(--tc-spacing-xl) 0;
+  padding: var(--tc-space-8) 0;
   color: var(--tc-text-muted);
   display: flex;
   flex-direction: column;

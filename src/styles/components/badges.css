@@ -46,7 +46,7 @@
 }
 
 .tc-status-draft {
-  background-color: rgba(var(--tc-secondary-color-rgb), 0.9);
+  background-color: rgba(var(--tc-color-secondary-rgb), 0.9);
   color: var(--tc-white);
 }
 
@@ -78,7 +78,7 @@
 }
 
 .tc-status-contact {
-  background-color: rgba(var(--tc-secondary-color-rgb), 0.9);
+  background-color: rgba(var(--tc-color-secondary-rgb), 0.9);
   color: var(--tc-white);
 }
 
@@ -138,8 +138,8 @@
 .tc-badge-outline-info { color: var(--tc-color-info); border-color: var(--tc-color-info); }
 
 /* Variantes avec fond pastel */
-.tc-badge-soft-primary { background-color: rgba(var(--tc-primary-color-rgb), 0.1); color: var(--tc-color-primary); }
-.tc-badge-soft-secondary { background-color: rgba(var(--tc-secondary-color-rgb), 0.1); color: var(--tc-color-secondary); }
+.tc-badge-soft-primary { background-color: rgba(var(--tc-color-primary-rgb), 0.1); color: var(--tc-color-primary); }
+.tc-badge-soft-secondary { background-color: rgba(var(--tc-color-secondary-rgb), 0.1); color: var(--tc-color-secondary); }
 .tc-badge-soft-success { background-color: rgba(var(--tc-success-color-rgb), 0.1); color: var(--tc-color-success); }
 .tc-badge-soft-danger { background-color: rgba(var(--tc-danger-color-rgb), 0.1); color: var(--tc-color-error); }
 .tc-badge-soft-warning { background-color: rgba(var(--tc-warning-color-rgb), 0.1); color: var(--tc-color-warning); }
@@ -158,8 +158,8 @@
 
 .tc-badge-interactive.tc-badge-primary:hover { background-color: var(--tc-primary-dark); }
 .tc-badge-interactive.tc-badge-secondary:hover { background-color: var(--tc-color-secondary-dark); }
-.tc-badge-interactive.tc-badge-outline-primary:hover { background-color: rgba(var(--tc-primary-color-rgb), 0.1); }
-.tc-badge-interactive.tc-badge-outline-secondary:hover { background-color: rgba(var(--tc-secondary-color-rgb), 0.1); }
+.tc-badge-interactive.tc-badge-outline-primary:hover { background-color: rgba(var(--tc-color-primary-rgb), 0.1); }
+.tc-badge-interactive.tc-badge-outline-secondary:hover { background-color: rgba(var(--tc-color-secondary-rgb), 0.1); }
 
 /* VARIANTES DE TAILLE */
 .tc-badge-sm {

@@ -23,13 +23,13 @@
 .cardLabel {
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
   margin-bottom: var(--tc-space-1);
 }
 
 .fieldValue {
   font-size: var(--tc-font-size-base);
-  color: var(--tc-text-color-primary);
+  color: var(--tc-text-primary);
   margin-bottom: 0;
   word-break: break-word;
 }

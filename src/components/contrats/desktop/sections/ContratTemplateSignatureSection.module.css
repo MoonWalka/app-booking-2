@@ -7,29 +7,29 @@
 .signatureSectionContent {
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-4);
+  gap: var(--tc-space-4);
 }
 
 .sectionInfo {
   color: var(--tc-text-muted);
   font-size: var(--tc-font-size-sm);
-  margin-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-space-2);
 }
 
 .editorContainer {
-  margin-top: var(--tc-spacing-2);
+  margin-top: var(--tc-space-2);
 }
 
 .editorHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-space-2);
 }
 
 .signatureContentInput {
   width: 100%;
-  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  padding: var(--tc-space-2) var(--tc-space-3);
   font-size: var(--tc-font-size-sm);
   border: 1px solid var(--tc-border-input);
   border-radius: var(--tc-radius-sm);
@@ -50,10 +50,10 @@
 }
 
 .signatureTips {
-  margin-top: var(--tc-spacing-4);
+  margin-top: var(--tc-space-4);
   background-color: var(--tc-bg-info-subtle);
   border-radius: var(--tc-border-radius-md);
-  padding: var(--tc-spacing-4);
+  padding: var(--tc-space-4);
   border-left: 4px solid var(--tc-info-color-highlight);
 }
 
@@ -66,31 +66,31 @@
 
 .signatureExample {
   background-color: var(--tc-bg-white-translucent);
-  padding: var(--tc-spacing-3);
+  padding: var(--tc-space-3);
   border-radius: var(--tc-radius-sm);
   border: 1px solid var(--tc-border-info-subtle);
   white-space: pre-wrap;
   font-size: var(--tc-font-size-xs);
   color: var(--tc-text-default);
   font-family: var(--tc-font-family-monospace);
-  margin-bottom: var(--tc-spacing-3);
+  margin-bottom: var(--tc-space-3);
 }
 
 .tipText {
   color: var(--tc-info-color-text-muted);
   font-size: var(--tc-font-size-xs);
-  margin-top: var(--tc-spacing-2);
+  margin-top: var(--tc-space-2);
   margin-bottom: 0;
 }
 
 /* Styles responsive standardisés */
 @media (max-width: 768px) {
   .signatureSectionContent {
-    gap: var(--tc-spacing-3);
+    gap: var(--tc-space-3);
   }
   
   .signatureTips {
-    padding: var(--tc-spacing-3);
+    padding: var(--tc-space-3);
   }
 }
 
@@ -98,7 +98,7 @@
   .editorHeader {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--tc-spacing-1);
+    gap: var(--tc-space-1);
   }
   
   .signatureContentInput {
@@ -106,10 +106,10 @@
   }
   
   .signatureTips {
-    padding: var(--tc-spacing-2);
+    padding: var(--tc-space-2);
   }
   
   .signatureExample {
-    padding: var(--tc-spacing-2);
+    padding: var(--tc-space-2);
   }
 }

@@ -13,13 +13,13 @@
 }
 
 .desktopFormHeader {
-  margin-bottom: var(--tc-spacing-xl);
+  margin-bottom: var(--tc-space-8);
 }
 
 .desktopFormHeader h1 {
   font-size: var(--tc-font-size-xl);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-color-primary);
+  color: var(--tc-text-primary);
 }
 
 .stepFormContainer {
@@ -27,12 +27,12 @@
   border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-box-shadow);
   padding: var(--tc-space-6);
-  margin-bottom: var(--tc-spacing-xl);
+  margin-bottom: var(--tc-space-8);
 }
 
 /* Navigation par étapes */
 .stepNavigation {
-  margin-bottom: var(--tc-spacing-xl);
+  margin-bottom: var(--tc-space-8);
 }
 
 .stepIndicators {
@@ -71,7 +71,7 @@
   align-items: center;
   justify-content: center;
   background-color: var(--tc-gray-200);
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
   font-weight: var(--tc-font-weight-semibold);
   font-size: var(--tc-font-size-sm);
   margin-bottom: var(--tc-space-1);
@@ -80,7 +80,7 @@
 
 .stepTitle {
   font-size: var(--tc-font-size-xs);
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
   text-align: center;
   max-width: 100px;
   line-height: 1.2;
@@ -112,7 +112,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: var(--tc-spacing-xl);
+  margin-top: var(--tc-space-8);
   padding-top: var(--tc-space-4);
   border-top: var(--tc-border-width) solid var(--tc-border-default);
 }
@@ -129,7 +129,7 @@
   display: block;
   margin-bottom: var(--tc-space-1);
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-text-color-primary);
+  color: var(--tc-text-primary);
 }
 
 .stepFormGroup input,
@@ -149,7 +149,7 @@
 .stepFormActions {
   display: flex;
   justify-content: space-between;
-  margin-top: var(--tc-spacing-xl);
+  margin-top: var(--tc-space-8);
 }
 
 .addMembreContainer {
@@ -172,7 +172,7 @@
   align-items: center;
   min-height: 200px;
   font-size: var(--tc-font-size-md);
-  color: var(--tc-text-color-secondary);
+  color: var(--tc-text-secondary);
 }
 
 /* Support responsive */

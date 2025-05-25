@@ -40,7 +40,7 @@
 .input {
   width: 100%;
   padding: var(--tc-space-2) var(--tc-space-2);
-  padding-left: var(--tc-spacing-xl);
+  padding-left: var(--tc-space-8);
   font-size: var(--tc-font-size-base);
   line-height: var(--tc-line-height-normal);
   color: var(--tc-text-default);

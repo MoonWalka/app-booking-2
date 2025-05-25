@@ -21,7 +21,7 @@
 /* Styles responsive standardisés */
 @media (max-width: 768px) {
   .header {
-    margin-bottom: var(--tc-spacing-4);
+    margin-bottom: var(--tc-space-4);
   }
 }
 
@@ -29,8 +29,8 @@
   .header {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--tc-spacing-2);
-    margin-bottom: var(--tc-spacing-3);
+    gap: var(--tc-space-2);
+    margin-bottom: var(--tc-space-3);
   }
   
   .title {

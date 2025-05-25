@@ -88,13 +88,13 @@
   
   .stepLabel {
     font-size: var(--tc-font-size-xxs);
-    margin-top: var(--tc-spacing-1);
+    margin-top: var(--tc-space-1);
   }
 }
 
 @media (max-width: 576px) {
   .stepProgress {
-    margin-bottom: var(--tc-spacing-4);
+    margin-bottom: var(--tc-space-4);
   }
   
   .stepDot {

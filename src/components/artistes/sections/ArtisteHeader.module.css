@@ -7,7 +7,7 @@
 .headerContainer {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-4);
+  gap: var(--tc-space-4);
   margin-bottom: var(--tc-spacing-5);
 }
 
@@ -42,7 +42,7 @@
 }
 
 .artisteName {
-  margin: 0 0 var(--tc-spacing-1);
+  margin: 0 0 var(--tc-space-1);
   font-size: var(--tc-font-size-xl);
   font-weight: var(--tc-font-weight-bold);
   color: var(--tc-text-default);
@@ -50,7 +50,7 @@
 
 .artisteDetails {
   display: flex;
-  gap: var(--tc-spacing-3);
+  gap: var(--tc-space-3);
   flex-wrap: wrap;
   color: var(--tc-text-muted);
 }
@@ -58,21 +58,21 @@
 .detailItem {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-1);
+  gap: var(--tc-space-1);
   font-size: var(--tc-font-size-sm);
 }
 
 .headerActions {
   display: flex;
-  gap: var(--tc-spacing-2);
-  margin-top: var(--tc-spacing-3);
+  gap: var(--tc-space-2);
+  margin-top: var(--tc-space-3);
 }
 
 /* Styles responsive standardisés */
 @media (max-width: 768px) {
   .headerContainer {
-    gap: var(--tc-spacing-3);
-    margin-bottom: var(--tc-spacing-4);
+    gap: var(--tc-space-3);
+    margin-bottom: var(--tc-space-4);
   }
   
   .avatarContainer {
@@ -89,17 +89,17 @@
   .headerContainer {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--tc-spacing-2);
-    margin-bottom: var(--tc-spacing-3);
+    gap: var(--tc-space-2);
+    margin-bottom: var(--tc-space-3);
   }
   
   .avatarContainer {
-    margin-bottom: var(--tc-spacing-1);
+    margin-bottom: var(--tc-space-1);
   }
   
   .artisteDetails {
     flex-direction: column;
-    gap: var(--tc-spacing-1);
+    gap: var(--tc-space-1);
   }
   
   .headerActions {

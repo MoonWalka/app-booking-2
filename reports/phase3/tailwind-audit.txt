@@ -1,0 +1,28 @@
+# AUDIT CLASSES TAILWIND - Mon May 26 00:06:32 CEST 2025
+# Généré automatiquement pour la Phase 3
+
+[0;34mPattern: text-xs|text-sm|text-base|text-lg|text-xl|text-2xl|text-3xl|text-4xl|text-5xl|text-6xl[0m
+  *.js:        9 fichiers
+text-base
+text-lg
+text-sm
+text-xl
+text-xs
+
+[0;34mPattern: font-thin|font-light|font-normal|font-medium|font-semibold|font-bold|font-extrabold|font-black[0m
+  *.js:        5 fichiers
+font-bold
+font-medium
+font-normal
+font-semibold
+
+[0;34mPattern: p-[0-9]|px-[0-9]|py-[0-9]|pt-[0-9]|pb-[0-9]|pl-[0-9]|pr-[0-9][0m
+  *.html:        1 fichiers
+p-1
+p-2
+p-3
+p-4
+p-6
+p-8
+py-8
+  *.js:       88 fichiers

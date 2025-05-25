@@ -1,6 +1,7 @@
 // src/components/contrats/sections/ContratVariablesCard.js
 import React, { useState } from 'react';
 import { Card, Button } from 'react-bootstrap';
+import FlexContainer from '@/components/ui/FlexContainer';
 import styles from './ContratVariablesCard.module.css';
 
 /**
@@ -18,24 +19,26 @@ const ContratVariablesCard = ({ contrat }) => {
   return (
     <Card className={styles.contractVariablesCard}>
       <Card.Header 
-        className="d-flex align-items-center cursor-pointer"
+        className="cursor-pointer"
         onClick={() => setShowVariables(!showVariables)}
       >
-        <i className="bi bi-braces me-2 text-primary"></i>
-        <h5 className="mb-0">Variables du contrat</h5>
-        <div className="ms-auto d-flex align-items-center">
-          {showVariables && (
-            <Button 
-              variant="outline-secondary" 
-              size="sm" 
-              className="me-2"
-              onClick={handleCopyVariables}
-            >
-              <i className="bi bi-clipboard me-1"></i> Copier
-            </Button>
-          )}
-          <i className={`bi bi-chevron-${showVariables ? 'up' : 'down'} transition-icon`}></i>
-        </div>
+        <FlexContainer align="center">
+          <i className="bi bi-braces me-2 text-primary"></i>
+          <h5 className="mb-0">Variables du contrat</h5>
+          <FlexContainer align="center" className="ms-auto">
+            {showVariables && (
+              <Button 
+                variant="outline-secondary" 
+                size="sm" 
+                className="me-2"
+                onClick={handleCopyVariables}
+              >
+                <i className="bi bi-clipboard me-1"></i> Copier
+              </Button>
+            )}
+            <i className={`bi bi-chevron-${showVariables ? 'up' : 'down'} transition-icon`}></i>
+          </FlexContainer>
+        </FlexContainer>
       </Card.Header>
       
       <div className={`collapse ${showVariables ? 'show' : ''}`}>

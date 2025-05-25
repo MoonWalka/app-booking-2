@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Alert, Container, Row, Col, Button } from 'react-bootstrap';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import FlexContainer from '@/components/ui/FlexContainer';
 import styles from './ProgrammateurForm.module.css';
 
 // Import des sous-composants
@@ -114,7 +115,7 @@ const ProgrammateurForm = () => {
           className="mb-4"
           variant="light"
         >
-          <div className="d-flex justify-content-between align-items-center">
+          <FlexContainer justify="space-between" align="center">
             <div>
               <h2 className="mb-0">
                 {isNewFromUrl ? 'Nouveau programmateur' : `Éditer: ${programmateur?.nom || 'Programmateur'}`}
@@ -150,7 +151,7 @@ const ProgrammateurForm = () => {
                 Annuler
               </Button>
             </div>
-          </div>
+          </FlexContainer>
         </Card>
         
         {/* Message d'erreur global si nécessaire */}
@@ -350,7 +351,7 @@ const ProgrammateurForm = () => {
             </Card>
             
             {/* Boutons du formulaire */}
-            <div className="d-flex justify-content-between mt-4 mb-5">
+            <FlexContainer justify="space-between" className="mt-4 mb-5">
               <Button 
                 variant="outline-secondary"
                 onClick={handleCancel}
@@ -402,7 +403,7 @@ const ProgrammateurForm = () => {
                   )}
                 </Button>
               </div>
-            </div>
+            </FlexContainer>
           </Col>
         </Row>
       </Container>

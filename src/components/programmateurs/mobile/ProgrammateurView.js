@@ -2,6 +2,7 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Badge, Spinner } from 'react-bootstrap';
+import FlexContainer from '@/components/ui/FlexContainer';
 import Card from '@/components/ui/Card';
 import { useProgrammateurDetails } from '@/hooks/programmateurs';
 
@@ -26,10 +27,10 @@ const ProgrammateurView = () => {
 
   if (loading) {
     return (
-      <div className="d-flex justify-content-center align-items-center p-5">
+      <FlexContainer justify="center" align="center" className="p-5">
         <Spinner animation="border" variant="primary" />
         <span className="ms-2">Chargement...</span>
-      </div>
+      </FlexContainer>
     );
   }
 
@@ -82,7 +83,7 @@ const ProgrammateurView = () => {
   return (
     <div className="programmateur-mobile-container p-3">
       {/* Header avec actions */}
-      <div className="d-flex justify-content-between align-items-center mb-3">
+      <FlexContainer justify="space-between" align="center" className="mb-3">
         <Button 
           variant="link" 
           className="p-0 text-decoration-none"
@@ -111,7 +112,7 @@ const ProgrammateurView = () => {
             Supprimer
           </Button>
         </div>
-      </div>
+      </FlexContainer>
       
       {/* Titre */}
       <h1 className="h4 mb-3">{programmateur.nom}</h1>
@@ -129,21 +130,21 @@ const ProgrammateurView = () => {
       >
         <div className="mb-2">
           {programmateur.email && (
-            <div className="d-flex align-items-center mb-2">
+            <FlexContainer align="center" className="mb-2">
               <i className="bi bi-envelope me-2 text-muted"></i>
               <a href={`mailto:${programmateur.email}`}>
                 {programmateur.email}
               </a>
-            </div>
+            </FlexContainer>
           )}
           
           {programmateur.telephone && (
-            <div className="d-flex align-items-center mb-2">
+            <FlexContainer align="center" className="mb-2">
               <i className="bi bi-telephone me-2 text-muted"></i>
               <a href={`tel:${programmateur.telephone}`}>
                 {programmateur.telephone}
               </a>
-            </div>
+            </FlexContainer>
           )}
         </div>
       </Card>
@@ -177,17 +178,19 @@ const ProgrammateurView = () => {
             {programmateur.concertsAssocies.slice(0, 3).map(concert => (
               <div 
                 key={concert.id} 
-                className="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                className="list-group-item list-group-item-action"
                 onClick={() => navigate(`/concerts/${concert.id}`)}
               >
-                <div>
-                  <div className="fw-semibold">{concert.titre || "Concert sans titre"}</div>
-                  <small className="text-muted">
-                    {new Date(concert.date).toLocaleDateString('fr-FR')}
-                    {concert.lieu && ` - ${concert.lieu}`}
-                  </small>
-                </div>
-                <i className="bi bi-chevron-right text-muted"></i>
+                <FlexContainer justify="space-between" align="center">
+                  <div>
+                    <div className="fw-semibold">{concert.titre || "Concert sans titre"}</div>
+                    <small className="text-muted">
+                      {new Date(concert.date).toLocaleDateString('fr-FR')}
+                      {concert.lieu && ` - ${concert.lieu}`}
+                    </small>
+                  </div>
+                  <i className="bi bi-chevron-right text-muted"></i>
+                </FlexContainer>
               </div>
             ))}
             

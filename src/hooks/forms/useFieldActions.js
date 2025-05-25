@@ -1,182 +1,111 @@
-import { useState } from 'react';
+/**
+ * @fileoverview Hook pour les actions de champs de formulaires
+ * 
+ * @deprecated Utilisez useGenericFieldActions directement pour les nouveaux développements
+ * @migrationDate 2025-01-XX
+ * @replaces Wrapper autour de useGenericFieldActions pour maintenir la compatibilité
+ * 
+ * Ce hook est maintenant un wrapper autour de useGenericFieldActions.
+ * Il maintient l'API existante pour la compatibilité avec le code existant,
+ * mais utilise la logique générique en arrière-plan.
+ * 
+ * @author TourCraft Team
+ * @since 2024
+ * @phase Phase 2 - Migration vers hooks génériques
+ */
 
-const useFieldActions = (validatedFields, setValidatedFields) => {
-  // NOUVEAU: État local pour les actions de champs - Finalisation intelligente
-  const [fieldActions, setFieldActions] = useState({
-    history: [], // Historique des actions
-    pendingActions: {}, // Actions en attente
-    validationStatus: {}, // Statut de validation par champ
-    lastModified: {}, // Dernière modification par champ
-    performance: {} // Métriques de performance
-  });
+import { useMemo } from 'react';
+import useGenericFieldActions from '@/hooks/generics/actions/useGenericFieldActions';
 
-  // NOUVEAU: Fonction pour enregistrer une action
-  const recordAction = (actionType, fieldPath, data = {}) => {
-    const action = {
-      type: actionType,
-      fieldPath,
-      timestamp: Date.now(),
-      data,
-      id: `${actionType}_${fieldPath}_${Date.now()}`
-    };
-
-    setFieldActions(prev => ({
-      ...prev,
-      history: [...prev.history.slice(-49), action], // Garder 50 dernières actions
-      lastModified: {
-        ...prev.lastModified,
-        [fieldPath]: action.timestamp
-      }
-    }));
-
-    return action;
-  };
-
-  // NOUVEAU: Fonction pour marquer un champ comme en cours de validation
-  const markFieldPending = (fieldPath) => {
-    setFieldActions(prev => ({
-      ...prev,
-      pendingActions: {
-        ...prev.pendingActions,
-        [fieldPath]: { status: 'validating', startTime: Date.now() }
-      },
-      validationStatus: {
-        ...prev.validationStatus,
-        [fieldPath]: 'pending'
-      }
-    }));
-  };
-
-  // NOUVEAU: Fonction pour finaliser la validation d'un champ
-  const finalizeFieldValidation = (fieldPath, isValid, errorMessage = null) => {
-    const startTime = fieldActions.pendingActions[fieldPath]?.startTime;
-    const duration = startTime ? Date.now() - startTime : 0;
-
-    setFieldActions(prev => ({
-      ...prev,
-      pendingActions: {
-        ...prev.pendingActions,
-        [fieldPath]: undefined
-      },
-      validationStatus: {
-        ...prev.validationStatus,
-        [fieldPath]: isValid ? 'valid' : 'invalid'
-      },
-      performance: {
-        ...prev.performance,
-        [fieldPath]: {
-          lastValidationDuration: duration,
-          totalValidations: (prev.performance[fieldPath]?.totalValidations || 0) + 1,
-          successRate: isValid 
-            ? ((prev.performance[fieldPath]?.successRate || 0) * (prev.performance[fieldPath]?.totalValidations || 0) + 1) / ((prev.performance[fieldPath]?.totalValidations || 0) + 1)
-            : ((prev.performance[fieldPath]?.successRate || 0) * (prev.performance[fieldPath]?.totalValidations || 0)) / ((prev.performance[fieldPath]?.totalValidations || 0) + 1)
-        }
-      }
-    }));
-
-    // Enregistrer l'action
-    recordAction('validation_complete', fieldPath, { 
-      isValid, 
-      errorMessage, 
-      duration 
-    });
-  };
-
-  // Gérer la validation d'un champ spécifique - AMÉLIORÉ avec tracking
-  const handleValidateField = (category, fieldName, value) => {
-    // Créer un objet qui représente le chemin complet du champ
-    // Par exemple: contact.nom, structure.raisonSociale, lieu.adresse, etc.
-    const fieldPath = `${category}.${fieldName}`;
-    
-    // NOUVEAU: Marquer comme en cours de validation
-    markFieldPending(fieldPath);
-    
-    // Enregistrer l'action de validation
-    recordAction('field_validate', fieldPath, { value, category, fieldName });
-    
-    // Mettre à jour l'état local des champs validés
-    setValidatedFields(prev => ({
-      ...prev,
-      [fieldPath]: value
-    }));
-
-    // NOUVEAU: Simuler validation et finaliser
-    setTimeout(() => {
-      const isValid = value && value.toString().trim().length > 0;
-      finalizeFieldValidation(fieldPath, isValid, isValid ? null : 'Valeur requise');
-    }, 100);
-  };
-
-  // Copier la valeur du formulaire vers la valeur finale - AMÉLIORÉ avec tracking
-  const copyFormValueToFinal = (fieldPath, formValue) => {
-    // Enregistrer l'action de copie
-    recordAction('value_copy', fieldPath, { formValue });
-    
-    setValidatedFields(prev => ({
-      ...prev,
-      [fieldPath]: formValue
-    }));
-
-    // NOUVEAU: Marquer comme valide après copie
-    setFieldActions(prev => ({
-      ...prev,
-      validationStatus: {
-        ...prev.validationStatus,
-        [fieldPath]: 'copied'
-      }
-    }));
-  };
-
-  // NOUVEAU: Fonction pour obtenir l'historique des actions
-  const getActionHistory = (fieldPath = null) => {
-    if (fieldPath) {
-      return fieldActions.history.filter(action => action.fieldPath === fieldPath);
-    }
-    return fieldActions.history;
-  };
-
-  // NOUVEAU: Fonction pour obtenir les statistiques de performance
-  const getPerformanceStats = () => {
-    const stats = {
-      totalFields: Object.keys(fieldActions.performance).length,
-      avgValidationTime: 0,
-      totalValidations: 0,
-      overallSuccessRate: 0
-    };
-
-    const performances = Object.values(fieldActions.performance);
-    if (performances.length > 0) {
-      stats.avgValidationTime = performances.reduce((sum, p) => sum + (p.lastValidationDuration || 0), 0) / performances.length;
-      stats.totalValidations = performances.reduce((sum, p) => sum + (p.totalValidations || 0), 0);
-      stats.overallSuccessRate = performances.reduce((sum, p) => sum + (p.successRate || 0), 0) / performances.length;
-    }
-
-    return stats;
-  };
-
-  // NOUVEAU: Fonction pour réinitialiser l'historique
-  const clearHistory = () => {
-    setFieldActions(prev => ({
-      ...prev,
-      history: [],
-      pendingActions: {},
-      validationStatus: {},
-      lastModified: {},
-      performance: {}
-    }));
-  };
-
+/**
+ * Hook migré pour les actions de champs de formulaires
+ * 
+ * @deprecated Utilisez useGenericFieldActions directement pour les nouveaux développements
+ * 
+ * Ce hook maintient l'API existante pour la compatibilité avec le code existant,
+ * mais utilise useGenericFieldActions en arrière-plan pour bénéficier des améliorations.
+ * 
+ * @param {Object} config - Configuration du hook (optionnel)
+ * @param {Object} options - Options additionnelles (optionnel)
+ * @returns {Object} Interface du hook d'actions de champs
+ * 
+ * @example
+ * ```javascript
+ * // Utilisation existante (maintenue pour compatibilité)
+ * const { validateField, copyFieldValue } = useFieldActions();
+ * 
+ * // RECOMMANDÉ pour nouveaux développements :
+ * import useGenericFieldActions from '@/hooks/generics/actions/useGenericFieldActions';
+ * const { validateField, copyFieldValue } = useGenericFieldActions({
+ *   entityType: 'form',
+ *   validationRules: { ... }
+ * });
+ * ```
+ */
+const useFieldActions = (config = {}, options = {}) => {
+  // Configuration par défaut pour maintenir la compatibilité
+  const fieldActionsConfig = useMemo(() => ({
+    entityType: config.entityType || 'form',
+    validationRules: config.validationRules || {
+      // Règles de validation par défaut pour la compatibilité
+      'nom': { required: true, minLength: 2 },
+      'email': { required: true, type: 'email' },
+      'telephone': { type: 'phone' },
+      'description': { maxLength: 500 }
+    },
+    onFieldChange: config.onFieldChange || null,
+    onValidationComplete: config.onValidationComplete || null
+  }), [config]);
+  
+  // Options par défaut pour maintenir la compatibilité
+  const fieldActionsOptions = useMemo(() => ({
+    enableHistory: options.enableHistory !== undefined ? options.enableHistory : true,
+    enablePerformance: options.enablePerformance !== undefined ? options.enablePerformance : false,
+    enableLogging: options.enableLogging || false,
+    maxHistorySize: options.maxHistorySize || 20,
+    validationDelay: options.validationDelay || 300
+  }), [options]);
+  
+  // Utiliser le hook générique avec la configuration des champs
+  const genericHook = useGenericFieldActions(fieldActionsConfig, fieldActionsOptions);
+  
+  // Retourner l'interface compatible avec l'ancienne API
   return {
-    handleValidateField,
-    copyFormValueToFinal,
-    // NOUVEAU: Fonctions étendues avec état local
-    fieldActions,
-    getActionHistory,
-    getPerformanceStats,
-    clearHistory,
-    markFieldPending,
-    finalizeFieldValidation,
-    recordAction
+    // API existante maintenue
+    validateField: genericHook.validateField,
+    copyFieldValue: genericHook.copyFieldValue,
+    fieldState: genericHook.fieldState,
+    
+    // Nouvelles fonctionnalités disponibles via le hook générique
+    getFieldState: genericHook.getFieldState,
+    getFieldHistory: genericHook.getFieldHistory,
+    getPerformanceStats: genericHook.getPerformanceStats,
+    clearHistory: genericHook.clearHistory,
+    
+    // Utilitaires
+    markFieldPending: genericHook.markFieldPending,
+    finalizeFieldValidation: genericHook.finalizeFieldValidation,
+    recordAction: genericHook.recordAction,
+    
+    // Statistiques
+    getTotalFields: genericHook.getTotalFields,
+    getPendingValidations: genericHook.getPendingValidations,
+    getValidFields: genericHook.getValidFields,
+    getInvalidFields: genericHook.getInvalidFields,
+    
+    // Fonctions spécifiques aux champs (wrappers pour compatibilité)
+    validateFormField: genericHook.validateField,
+    copyFormFieldValue: genericHook.copyFieldValue,
+    getFormFieldState: genericHook.getFieldState,
+    
+    // Informations de migration
+    _migrationInfo: {
+      isWrapper: true,
+      originalHook: 'useFieldActions',
+      genericHook: 'useGenericFieldActions',
+      migrationDate: '2025-01-XX',
+      phase: 'Phase 2'
+    }
   };
 };
 

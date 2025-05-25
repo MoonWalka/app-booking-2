@@ -1,3 +1,185 @@
+/**
+ * @fileoverview Hook de génération de contrats PDF avec templates dynamiques
+ * Gère la création, modification et sauvegarde de contrats PDF personnalisés
+ * avec système de templates, variables dynamiques et gestion d'état avancée.
+ * 
+ * @author TourCraft Team
+ * @since 2024
+ */
+
+/**
+ * Hook de génération de contrats PDF avec système de templates avancé
+ * 
+ * Ce hook fournit une interface complète pour générer des contrats PDF personnalisés
+ * en utilisant des templates dynamiques, des variables contextuelles et une gestion
+ * d'état sophistiquée pour les workflows de contrats professionnels.
+ * 
+ * @description
+ * Fonctionnalités principales :
+ * - Gestion des templates de contrats avec sélection dynamique
+ * - Génération de variables contextuelles automatiques
+ * - Validation des données avant génération PDF
+ * - Sauvegarde et versioning des contrats générés
+ * - Gestion des contrats existants avec mise à jour
+ * - Interface de débogage et gestion d'erreurs avancée
+ * - Intégration avec les paramètres d'entreprise
+ * - Système d'alertes et notifications
+ * 
+ * @param {Object} concert - Données complètes du concert
+ * @param {string} concert.id - ID unique du concert
+ * @param {string} concert.titre - Titre du concert
+ * @param {Object} concert.date - Date du concert (Firestore timestamp)
+ * @param {string} concert.heure - Heure du concert
+ * @param {number} concert.montant - Montant du concert
+ * 
+ * @param {Object} programmateur - Données du programmateur
+ * @param {string} programmateur.nom - Nom du programmateur
+ * @param {string} programmateur.prenom - Prénom du programmateur
+ * @param {string} programmateur.adresse - Adresse du programmateur
+ * @param {string} programmateur.email - Email du programmateur
+ * @param {string} programmateur.telephone - Téléphone du programmateur
+ * @param {string} programmateur.structure - Structure du programmateur
+ * 
+ * @param {Object} artiste - Données de l'artiste
+ * @param {string} artiste.nom - Nom de l'artiste
+ * @param {string} artiste.genre - Genre musical
+ * @param {string} artiste.contact - Contact de l'artiste
+ * 
+ * @param {Object} lieu - Données du lieu de concert
+ * @param {string} lieu.nom - Nom du lieu
+ * @param {string} lieu.adresse - Adresse du lieu
+ * @param {string} lieu.capacite - Capacité du lieu
+ * @param {string} lieu.ville - Ville du lieu
+ * @param {string} lieu.codePostal - Code postal du lieu
+ * 
+ * @returns {Object} Interface complète de génération de contrats
+ * @returns {Array} returns.templates - Liste des templates de contrats disponibles
+ * @returns {string} returns.selectedTemplateId - ID du template sélectionné
+ * @returns {Object|null} returns.selectedTemplate - Template sélectionné complet
+ * @returns {boolean} returns.loading - État de chargement des données
+ * @returns {boolean} returns.generatingPdf - État de génération PDF en cours
+ * @returns {string|null} returns.pdfUrl - URL du PDF généré
+ * @returns {Object|null} returns.entrepriseInfo - Informations de l'entreprise
+ * @returns {string|null} returns.contratId - ID du contrat sauvegardé
+ * @returns {string} returns.errorMessage - Message d'erreur détaillé
+ * @returns {boolean} returns.showErrorAlert - État d'affichage de l'alerte d'erreur
+ * @returns {boolean} returns.showSuccessAlert - État d'affichage de l'alerte de succès
+ * @returns {boolean} returns.showDebugInfo - État d'affichage des infos de débogage
+ * @returns {Function} returns.validateDataBeforeGeneration - Validation avant génération
+ * @returns {Function} returns.handleTemplateChange - Gestionnaire de changement de template
+ * @returns {Function} returns.prepareContractVariables - Préparation des variables de contrat
+ * @returns {Function} returns.saveGeneratedContract - Sauvegarde du contrat généré
+ * @returns {Function} returns.toggleDebugInfo - Basculement des infos de débogage
+ * @returns {Function} returns.resetAlerts - Réinitialisation des alertes
+ * @returns {Function} returns.showSuccess - Affichage d'alerte de succès
+ * @returns {Function} returns.setPdfUrl - Définition de l'URL PDF
+ * 
+ * @example
+ * ```javascript
+ * const {
+ *   templates,
+ *   selectedTemplateId,
+ *   selectedTemplate,
+ *   loading,
+ *   generatingPdf,
+ *   pdfUrl,
+ *   validateDataBeforeGeneration,
+ *   handleTemplateChange,
+ *   saveGeneratedContract,
+ *   showSuccess,
+ *   errorMessage
+ * } = useContratGenerator(concert, programmateur, artiste, lieu);
+ * 
+ * // Sélection de template
+ * <select value={selectedTemplateId} onChange={handleTemplateChange}>
+ *   {templates.map(template => (
+ *     <option key={template.id} value={template.id}>
+ *       {template.name}
+ *     </option>
+ *   ))}
+ * </select>
+ * 
+ * // Génération de contrat
+ * const handleGenerate = async () => {
+ *   if (!validateDataBeforeGeneration()) {
+ *     alert('Données incomplètes pour la génération');
+ *     return;
+ *   }
+ *   
+ *   try {
+ *     const pdfBlob = await generatePDF(selectedTemplate, variables);
+ *     const url = await uploadPDF(pdfBlob);
+ *     const contratId = await saveGeneratedContract(url);
+ *     showSuccess(`Contrat ${contratId} généré avec succès !`);
+ *   } catch (error) {
+ *     console.error('Erreur génération:', error);
+ *   }
+ * };
+ * ```
+ * 
+ * @dependencies
+ * - Firebase Firestore (collections: contratTemplates, contrats, parametres)
+ * - React hooks (useState, useEffect)
+ * - PDF generation service
+ * - File upload service
+ * 
+ * @complexity VERY_HIGH
+ * @businessCritical true
+ * @migrationCandidate useGenericDocumentGenerator - Candidat pour généralisation
+ * 
+ * @workflow
+ * 1. Chargement des templates de contrats disponibles
+ * 2. Récupération des informations d'entreprise
+ * 3. Vérification d'existence de contrat pour le concert
+ * 4. Sélection automatique du template par défaut
+ * 5. Préparation des variables contextuelles
+ * 6. Validation des données avant génération
+ * 7. Génération du PDF avec template sélectionné
+ * 8. Sauvegarde du contrat avec snapshot du template
+ * 9. Gestion des versions et mises à jour
+ * 10. Notifications et gestion d'erreurs
+ * 
+ * @templateSystem
+ * - Templates avec header, body, footer personnalisables
+ * - Variables dynamiques avec fallbacks
+ * - Versioning automatique des templates
+ * - Support logos et signatures
+ * - Marges et hauteurs configurables
+ * 
+ * @variableMapping
+ * - Programmateur: nom, prénom, adresse, email, téléphone, structure
+ * - Lieu: nom, adresse, capacité, ville, codePostal
+ * - Artiste: nom, genre, contact
+ * - Concert: titre, date formatée, heure, montant formaté
+ * 
+ * @contractLifecycle
+ * - generated: Contrat généré
+ * - sent: Contrat envoyé
+ * - signed: Contrat signé
+ * - archived: Contrat archivé
+ * 
+ * @errorHandling
+ * - Validation des données essentielles
+ * - Gestion des templates manquants
+ * - Erreurs de génération PDF détaillées
+ * - Erreurs de sauvegarde Firestore
+ * - Logging complet pour débogage
+ * 
+ * @performance
+ * - Chargement asynchrone des templates
+ * - Cache des informations d'entreprise
+ * - Génération PDF optimisée
+ * - Sauvegarde avec snapshots pour historique
+ * 
+ * @security
+ * - Validation des données d'entrée
+ * - Sanitization des variables de template
+ * - Contrôle d'accès aux templates
+ * - Audit trail des générations
+ * 
+ * @usedBy ContratGenerator, ContratEditor, ContratPreview, AdminContrats
+ */
+
 // src/hooks/contrats/useContratGenerator.js
 import { useState, useEffect } from 'react';
 import { db } from '@/firebaseInit';

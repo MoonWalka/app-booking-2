@@ -1,24 +1,49 @@
-# Guide CSS TourCraft - Version 2.0
+# Guide CSS TourCraft - Version 2.0 (Consolidé)
 
 ## Introduction
 
 Ce guide CSS définit les standards, conventions et bonnes pratiques pour le développement front-end de l'application TourCraft. Il intègre les améliorations issues de notre récent audit CSS et établit un cadre cohérent pour garantir la qualité, la maintenabilité et la cohérence visuelle de notre interface utilisateur.
 
+**✨ Version consolidée** : Ce document intègre tous les standards CSS TourCraft en un guide de référence unique.
+
 ## Table des matières
 
-1. [Architecture CSS](#1-architecture-css)
-2. [Système de variables](#2-système-de-variables)
-3. [Conventions de nommage](#3-conventions-de-nommage)
-4. [Imports et alias](#4-imports-et-alias)
-5. [Composants UI standardisés](#5-composants-ui-standardisés)
-6. [Responsive design](#6-responsive-design)
-7. [Performance](#7-performance)
-8. [Outils et scripts](#8-outils-et-scripts)
-9. [Checklist de qualité](#9-checklist-de-qualité)
+1. [Principes fondamentaux](#1-principes-fondamentaux)
+2. [Architecture CSS](#2-architecture-css)
+3. [Système de variables](#3-système-de-variables)
+4. [Conventions de nommage](#4-conventions-de-nommage)
+5. [Modules CSS](#5-modules-css)
+6. [Imports et alias](#6-imports-et-alias)
+7. [Composants UI standardisés](#7-composants-ui-standardisés)
+8. [Responsive design](#8-responsive-design)
+9. [Performance](#9-performance)
+10. [Outils et scripts](#10-outils-et-scripts)
+11. [Checklist de qualité](#11-checklist-de-qualité)
 
-## 1. Architecture CSS
+## 1. Principes fondamentaux
 
-### 1.1 Structure des fichiers
+### 1.1 Principes de base
+
+1. **Utiliser des modules CSS** pour encapsuler les styles des composants
+2. **Favoriser les variables CSS** pour toutes les valeurs réutilisables
+3. **Suivre une convention de nommage cohérente**
+4. **Concevoir de façon responsive dès le départ**
+5. **Documenter les choix de style complexes**
+6. **Éviter les styles inline** en production
+7. **Privilégier la réutilisabilité** et la maintenabilité
+
+### 1.2 Formatage du code CSS
+
+- Utiliser **Prettier** avec la configuration du projet
+- Indentation de 2 espaces
+- Pas d'espaces de fin de ligne
+- Utiliser des points-virgules à la fin des déclarations
+- Une déclaration par ligne
+- Espaces autour des deux-points dans les déclarations
+
+## 2. Architecture CSS
+
+### 2.1 Structure des fichiers
 
 L'architecture CSS de TourCraft suit une structure modulaire et hiérarchique :
 
@@ -56,7 +81,7 @@ src/
 │           └── Component.module.css
 ```
 
-### 1.2 Approches de styling
+### 2.2 Approches de styling
 
 TourCraft utilise deux approches complémentaires :
 
@@ -70,7 +95,7 @@ TourCraft utilise deux approches complémentaires :
    - Classes utilitaires réutilisables
    - Importés via `src/styles/index.css`
 
-### 1.3 Priorité des styles
+### 2.3 Priorité des styles
 
 L'ordre de priorité des styles est le suivant (du plus prioritaire au moins prioritaire) :
 
@@ -79,9 +104,9 @@ L'ordre de priorité des styles est le suivant (du plus prioritaire au moins pri
 3. Styles globaux
 4. Styles par défaut du navigateur
 
-## 2. Système de variables
+## 3. Système de variables
 
-### 2.1 Préfixe standardisé
+### 3.1 Préfixe standardisé
 
 Toutes les variables CSS doivent utiliser le préfixe `--tc-` (TourCraft) :
 
@@ -89,38 +114,47 @@ Toutes les variables CSS doivent utiliser le préfixe `--tc-` (TourCraft) :
 /* ✅ Correct */
 :root {
   --tc-primary-color: #3498db;
+  --tc-spacing-4: 16px;
 }
 
 /* ❌ Incorrect */
 :root {
-  --primary-color: #3498db;
+  --primary-color: #3498db;        /* Manque le préfixe tc */
+  --bs-primary: #3498db;           /* Préfixe non-standard */
+  --tc-bs-spacing-4: 16px;         /* Double préfixe */
 }
 ```
 
-### 2.2 Catégories de variables
+### 3.2 Catégories de variables
 
-Les variables sont organisées par catégories :
-
-#### Couleurs
+#### Couleurs principales
 
 ```css
 /* Couleurs primaires */
---tc-color-primary: #3498db;
---tc-color-secondary: #2c3e50;
---tc-color-success: #2ecc71;
---tc-color-warning: #f39c12;
---tc-color-danger: #e74c3c;
---tc-color-info: #3498db;
+--tc-color-primary: #1a73e8;
+--tc-color-primary-light: rgba(26, 115, 232, 0.1);
+--tc-color-primary-dark: #0d47a1;
+
+/* Couleurs secondaires */
+--tc-color-secondary: #5f6368;
+--tc-color-secondary-light: #e8eaed;
+--tc-color-secondary-dark: #3c4043;
+
+/* Couleurs fonctionnelles */
+--tc-color-success: #34a853;
+--tc-color-warning: #fbbc04;
+--tc-color-error: #ea4335;
+--tc-color-info: #4285f4;
+
+/* Couleurs de fond */
+--tc-bg-default: #ffffff;
+--tc-bg-light: #f8f9fa;
+--tc-bg-dark: #202124;
 
 /* Couleurs de texte */
 --tc-text-color-primary: #212529;
 --tc-text-color-secondary: #6c757d;
 --tc-text-color-muted: #95a5a6;
-
-/* Couleurs de fond */
---tc-bg-color: #f5f7fa;
---tc-bg-color-light: #ffffff;
---tc-bg-color-dark: #e9ecef;
 ```
 
 #### Typographie
@@ -130,9 +164,9 @@ Les variables sont organisées par catégories :
 --tc-font-size-xs: 0.75rem;
 --tc-font-size-sm: 0.875rem;
 --tc-font-size-md: 1rem;
---tc-font-size-lg: 1.25rem;
---tc-font-size-xl: 1.5rem;
---tc-font-size-2xl: 2rem;
+--tc-font-size-lg: 1.125rem;
+--tc-font-size-xl: 1.25rem;
+--tc-font-size-2xl: 1.5rem;
 
 /* Poids de police */
 --tc-font-weight-light: 300;
@@ -140,6 +174,10 @@ Les variables sont organisées par catégories :
 --tc-font-weight-medium: 500;
 --tc-font-weight-semibold: 600;
 --tc-font-weight-bold: 700;
+
+/* Familles de polices */
+--tc-font-family-primary: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, sans-serif;
+--tc-font-family-secondary: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, sans-serif;
 
 /* Hauteurs de ligne */
 --tc-line-height-tight: 1.25;
@@ -151,6 +189,21 @@ Les variables sont organisées par catégories :
 
 ```css
 /* Espacements */
+--tc-spacing-0: 0;
+--tc-spacing-1: 4px;
+--tc-spacing-2: 8px;
+--tc-spacing-3: 12px;
+--tc-spacing-4: 16px;
+--tc-spacing-5: 20px;
+--tc-spacing-6: 24px;
+--tc-spacing-8: 32px;
+--tc-spacing-10: 40px;
+--tc-spacing-12: 48px;
+--tc-spacing-16: 64px;
+--tc-spacing-20: 80px;
+--tc-spacing-24: 96px;
+
+/* Espacements alternatifs */
 --tc-spacing-xs: 0.25rem;
 --tc-spacing-sm: 0.5rem;
 --tc-spacing-md: 1rem;
@@ -166,18 +219,42 @@ Les variables sont organisées par catégories :
 --tc-border-width: 1px;
 --tc-border-width-thick: 2px;
 --tc-border-color: #dee2e6;
+--tc-border-light: #e0e0e0;
+--tc-border-medium: #bdbdbd;
+--tc-border-dark: #757575;
+
+/* Rayons des bordures */
 --tc-border-radius-sm: 0.25rem;
 --tc-border-radius: 0.375rem;
+--tc-border-radius-md: 4px;
 --tc-border-radius-lg: 0.5rem;
+--tc-border-radius-xl: 12px;
 --tc-border-radius-pill: 50rem;
 
 /* Ombres */
 --tc-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
 --tc-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
 --tc-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+--tc-shadow-xl: 0 8px 16px rgba(0, 0, 0, 0.1);
 ```
 
-### 2.3 Utilisation des variables
+#### Transitions et animations
+
+```css
+/* Transitions */
+--tc-transition-fast: 0.15s ease;
+--tc-transition-normal: 0.3s ease;
+--tc-transition-slow: 0.5s ease;
+--tc-transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
+
+/* Z-index */
+--tc-z-index-dropdown: 1000;
+--tc-z-index-navbar: 1020;
+--tc-z-index-modal: 1050;
+--tc-z-index-tooltip: 1070;
+```
+
+### 3.3 Utilisation des variables
 
 Toujours utiliser les variables CSS sans fallbacks codés en dur :
 
@@ -204,387 +281,317 @@ Toujours utiliser les variables CSS sans fallbacks codés en dur :
 }
 ```
 
-## 3. Conventions de nommage
+## 4. Conventions de nommage
 
-### 3.1 Classes CSS Modules
+### 4.1 Nommage des classes CSS
 
-Pour les CSS Modules, utiliser la convention camelCase :
+Le projet utilise une convention de nommage BEM modifiée:
 
-```css
-/* ✅ Correct */
-.buttonPrimary {
-  /* styles */
-}
+- **Bloc** : Le composant principal (ex: `concert-card`)
+- **Élément** : Une partie du composant (ex: `concert-card__title`)
+- **Modificateur** : Une variation (ex: `concert-card--featured`)
 
-.cardHeader {
-  /* styles */
-}
+### 4.2 Fichiers et modules
 
-/* ❌ Incorrect */
-.button-primary {
-  /* styles */
-}
+- **Composants React** : PascalCase (ex: `UserProfile.js`)
+- **Modules CSS** : Nom du composant suffixé par ".module.css" (ex: `UserProfile.module.css`)
+- **Styles globaux** : kebab-case (ex: `global-styles.css`)
 
-.card_header {
-  /* styles */
-}
+## 5. Modules CSS
+
+### 5.1 Structure des fichiers
+
+Chaque composant React doit avoir son propre module CSS avec le même nom:
+
+```
+Button.js
+Button.module.css
 ```
 
-### 3.2 Classes globales
+### 5.2 Organisation interne des fichiers CSS
 
-Pour les classes globales, utiliser le préfixe `tc-` suivi de kebab-case :
+Organiser le contenu des fichiers CSS selon cet ordre:
 
-```css
-/* ✅ Correct */
-.tc-btn {
-  /* styles */
-}
+1. Variables locales spécifiques au composant
+2. Styles de base du composant
+3. Variantes du composant
+4. États (hover, active, disabled)
+5. Media queries pour le responsive
 
-.tc-card-header {
-  /* styles */
-}
-
-/* ❌ Incorrect - Sans préfixe */
-.btn {
-  /* styles */
-}
-
-/* ❌ Incorrect - Mauvais format */
-.tcBtn {
-  /* styles */
-}
-```
-
-### 3.3 États et variantes
-
-Pour les états et variantes, utiliser des suffixes descriptifs :
+### 5.3 Exemple de structure avec commentaires
 
 ```css
-/* États */
-.buttonPrimary.isActive {}
-.buttonPrimary.isDisabled {}
+/*
+ * Styles pour Button
+ * Standardisé selon le Guide CSS TourCraft
+ * Dernière mise à jour: 25 mai 2025
+ */
+
+/* Variables locales */
+.button {
+  --button-height: 36px;
+  --button-horizontal-padding: var(--tc-spacing-4);
+}
+
+/* Styles de base */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--button-height);
+  padding: 0 var(--button-horizontal-padding);
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-medium);
+  border-radius: var(--tc-border-radius-md);
+  transition: background-color var(--tc-transition-fast) var(--tc-transition-timing);
+}
 
 /* Variantes */
-.tc-btn-primary {}
-.tc-btn-secondary {}
-.tc-btn-outline {}
-```
-
-## 4. Imports et alias
-
-### 4.1 Configuration des alias
-
-TourCraft utilise des alias pour simplifier les imports. La configuration se trouve dans `jsconfig.json` :
-
-```json
-{
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"],
-      "@styles/*": ["src/styles/*"],
-      "@components/*": ["src/components/*"],
-      "@ui/*": ["src/components/ui/*"]
-    }
-  }
-}
-```
-
-### 4.2 Imports standardisés
-
-Utiliser les alias pour tous les imports CSS :
-
-```jsx
-// ✅ Correct - Import de CSS Module
-import styles from './Component.module.css';
-
-// ✅ Correct - Import de styles globaux (uniquement au niveau App)
-import '@styles/index.css';
-
-// ✅ Correct - Import de composant UI
-import Button from '@ui/Button';
-
-// ❌ Incorrect - Chemin relatif complexe
-import styles from '../../../styles/components/buttons.css';
-
-// ❌ Incorrect - Import redondant de styles globaux
-import '@styles/index.css'; // Ne pas importer dans les composants individuels
-```
-
-### 4.3 Règles d'import
-
-1. **Styles globaux** : Importer uniquement dans `App.js` ou au niveau racine
-2. **CSS Modules** : Importer dans chaque composant concerné
-3. **Éviter les imports multiples** : Ne pas importer plusieurs fichiers CSS dans un même composant
-
-## 5. Composants UI standardisés
-
-### 5.1 Bibliothèque de composants
-
-TourCraft dispose d'une bibliothèque de composants UI standardisés dans `src/components/ui/` :
-
-- `Button` : Boutons d'action
-- `Card` : Conteneurs de contenu
-- `Badge` : Étiquettes et badges
-- `Form` : Éléments de formulaire
-- etc.
-
-### 5.2 Utilisation des composants UI
-
-Toujours privilégier les composants UI standardisés :
-
-```jsx
-// ✅ Correct
-import Button from '@ui/Button';
-
-function Component() {
-  return (
-    <Button variant="primary" onClick={handleClick}>
-      Valider
-    </Button>
-  );
+.button--primary {
+  background-color: var(--tc-color-primary);
+  color: var(--tc-bg-default);
 }
 
-// ❌ Incorrect - Utilisation directe de classes Bootstrap
-function Component() {
-  return (
-    <button className="btn btn-primary" onClick={handleClick}>
-      Valider
-    </button>
-  );
-}
-```
-
-### 5.3 Extension des composants
-
-Pour étendre un composant UI avec des styles spécifiques :
-
-```jsx
-import Button from '@ui/Button';
-import styles from './CustomPage.module.css';
-
-function CustomPage() {
-  return (
-    <Button 
-      variant="primary" 
-      className={styles.customButton}
-      onClick={handleClick}
-    >
-      Action spécifique
-    </Button>
-  );
-}
-```
-
-## 6. Responsive design
-
-### 6.1 Approche mobile-first
-
-TourCraft suit une approche mobile-first :
-
-```css
-/* Styles de base (mobile) */
-.container {
-  padding: var(--tc-spacing-sm);
+.button--secondary {
+  background-color: var(--tc-color-secondary);
+  color: var(--tc-bg-default);
 }
 
-/* Styles pour tablettes et au-delà */
+/* États */
+.button:hover {
+  opacity: 0.9;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Media queries */
 @media (min-width: 768px) {
-  .container {
-    padding: var(--tc-spacing-md);
-  }
-}
-
-/* Styles pour desktop */
-@media (min-width: 1024px) {
-  .container {
-    padding: var(--tc-spacing-lg);
+  .button {
+    --button-height: 40px;
+    --button-horizontal-padding: var(--tc-spacing-6);
   }
 }
 ```
 
-### 6.2 Points de rupture standardisés
+## 6. Imports et alias
 
-Utiliser les points de rupture standardisés :
+### 6.1 Imports CSS
+
+```javascript
+// ✅ Correct - Import de module CSS
+import styles from './Button.module.css';
+
+// ✅ Correct - Import de styles globaux
+import './global-styles.css';
+
+// ❌ Incorrect - Import sans extension
+import styles from './Button.module';
+```
+
+### 6.2 Utilisation des classes
+
+```javascript
+// ✅ Correct - Utilisation des classes CSS Modules
+<button className={styles.button}>
+  Cliquer ici
+</button>
+
+// ✅ Correct - Combinaison de classes
+<button className={`${styles.button} ${styles['button--primary']}`}>
+  Bouton primaire
+</button>
+
+// ✅ Correct - Avec clsx pour la lisibilité
+import clsx from 'clsx';
+
+<button className={clsx(styles.button, {
+  [styles['button--primary']]: isPrimary,
+  [styles['button--disabled']]: isDisabled
+})}>
+  Bouton conditionnel
+</button>
+```
+
+## 7. Composants UI standardisés
+
+### 7.1 Composants de base
+
+Les composants suivants doivent utiliser les standards CSS TourCraft :
+
+- **Button** : Boutons avec variantes (primary, secondary, danger)
+- **Card** : Cartes avec ombres et bordures standardisées
+- **Form** : Champs de formulaire avec validation visuelle
+- **Modal** : Modales avec overlay et animations
+- **Tooltip** : Info-bulles avec positionnement intelligent
+
+### 7.2 Exemple de composant standardisé
 
 ```css
-/* Variables de points de rupture */
-:root {
-  --tc-breakpoint-sm: 576px;
-  --tc-breakpoint-md: 768px;
-  --tc-breakpoint-lg: 992px;
-  --tc-breakpoint-xl: 1200px;
-  --tc-breakpoint-2xl: 1400px;
+/* Card.module.css */
+.card {
+  background-color: var(--tc-bg-default);
+  border-radius: var(--tc-border-radius-lg);
+  box-shadow: var(--tc-shadow-md);
+  padding: var(--tc-spacing-6);
+  transition: box-shadow var(--tc-transition-normal);
+}
+
+.card:hover {
+  box-shadow: var(--tc-shadow-lg);
+}
+
+.card__header {
+  margin-bottom: var(--tc-spacing-4);
+  padding-bottom: var(--tc-spacing-3);
+  border-bottom: 1px solid var(--tc-border-color);
+}
+
+.card__title {
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-color-primary);
+  margin: 0;
+}
+
+.card__content {
+  color: var(--tc-text-color-secondary);
+  line-height: var(--tc-line-height-normal);
 }
 ```
 
-### 6.3 Composants responsives vs. versions distinctes
+## 8. Responsive design
 
-Privilégier les composants responsives avec media queries plutôt que des versions distinctes :
+### 8.1 Points de rupture (media queries)
 
-```jsx
-// ✅ Recommandé - Composant responsive unique
-import styles from './Component.module.css';
+```css
+/* Points de rupture - Approche mobile-first */
+@media (min-width: 576px) { /* Petits appareils et plus */ }
+@media (min-width: 768px) { /* Tablettes et plus */ }
+@media (min-width: 992px) { /* Ordinateurs de bureau et plus */ }
+@media (min-width: 1200px) { /* Grands écrans */ }
+```
 
-function Component() {
-  return <div className={styles.container}>...</div>;
+> ⚠️ **Important** : Nous suivons une approche mobile-first, donc utilisez `min-width` et non `max-width` pour les media queries. Les styles de base s'appliquent à tous les appareils, puis nous ajoutons des styles spécifiques pour les écrans plus grands.
+
+### 8.2 Variables responsives
+
+```css
+/* Variables responsives avec Custom Properties */
+.component {
+  --component-padding: var(--tc-spacing-4);
+  --component-font-size: var(--tc-font-size-sm);
 }
 
-// styles.module.css utilise des media queries
-```
-
-Si nécessaire, utiliser le hook `useResponsive` pour les cas complexes :
-
-```jsx
-// Pour les cas complexes uniquement
-import { useResponsive } from '@hooks/useResponsive';
-
-function ResponsiveComponent() {
-  const { isMobile } = useResponsive();
-  
-  return isMobile ? <MobileView /> : <DesktopView />;
-}
-```
-
-## 7. Performance
-
-### 7.1 Optimisation du chargement CSS
-
-Pour optimiser les performances, séparer les styles critiques des styles non-critiques :
-
-```html
-<head>
-  <!-- Styles critiques inlinés pour un rendu immédiat -->
-  <style id="critical-css">
-    /* Variables CSS essentielles et styles de layout */
-    :root { --tc-primary-color: #3498db; /* ... */ }
-    body { font-family: sans-serif; margin: 0; }
-  </style>
-  
-  <!-- Autres styles chargés de manière asynchrone -->
-  <link rel="preload" href="/static/css/main.css" as="style">
-  <link rel="stylesheet" href="/static/css/main.css">
-</head>
-```
-
-### 7.2 Optimisation des imports
-
-Éviter les imports CSS redondants qui augmentent la taille du bundle :
-
-```jsx
-// ✅ Correct - Import unique au niveau App
-// App.js
-import '@styles/index.css';
-
-// ❌ Incorrect - Imports redondants dans chaque composant
-// Component.js
-import '@styles/index.css'; // Redondant
-```
-
-### 7.3 Minimisation des styles inline
-
-Éviter les styles inline qui contournent l'optimisation CSS :
-
-```jsx
-// ✅ Correct - Utilisation de CSS Modules
-import styles from './Component.module.css';
-
-function Component() {
-  return <div className={styles.container}>...</div>;
+@media (min-width: 768px) {
+  .component {
+    --component-padding: var(--tc-spacing-6);
+    --component-font-size: var(--tc-font-size-md);
+  }
 }
 
-// ❌ Incorrect - Styles inline
-function Component() {
-  return (
-    <div style={{ 
-      padding: '1rem', 
-      backgroundColor: '#f5f7fa' 
-    }}>
-      ...
-    </div>
-  );
+@media (min-width: 992px) {
+  .component {
+    --component-padding: var(--tc-spacing-8);
+    --component-font-size: var(--tc-font-size-lg);
+  }
 }
 ```
 
-## 8. Outils et scripts
+## 9. Performance
 
-### 8.1 Scripts d'audit
+### 9.1 Optimisations CSS
 
-TourCraft dispose de scripts d'audit pour vérifier la conformité CSS :
+- **Éviter les sélecteurs complexes** : Privilégier les classes simples
+- **Minimiser les reflows** : Éviter les changements de layout fréquents
+- **Utiliser transform et opacity** : Pour les animations performantes
+- **Lazy loading des styles** : Charger les styles uniquement quand nécessaire
+
+### 9.2 Bonnes pratiques
+
+```css
+/* ✅ Performant - Transform pour les animations */
+.element {
+  transform: translateX(0);
+  transition: transform var(--tc-transition-normal);
+}
+
+.element--moved {
+  transform: translateX(100px);
+}
+
+/* ❌ Non performant - Left pour les animations */
+.element {
+  left: 0;
+  transition: left var(--tc-transition-normal);
+}
+
+.element--moved {
+  left: 100px;
+}
+```
+
+## 10. Outils et scripts
+
+### 10.1 Scripts de migration
+
+Le projet dispose de scripts automatisés pour la migration CSS :
+
+- `refactor_css.py` : Migration automatique vers les variables CSS
+- `prefix_css_vars.py` : Ajout automatique des préfixes --tc-
+- `css_audit.py` : Audit des styles non conformes
+
+### 10.2 Validation
 
 ```bash
-# Vérifier l'utilisation des variables CSS
-npm run audit:css
+# Audit CSS
+npm run css:audit
 
-# Vérifier l'utilisation directe des classes Bootstrap
-npm run audit:bootstrap
+# Validation des variables
+npm run css:validate
+
+# Formatage automatique
+npm run css:format
 ```
 
-### 8.2 Scripts de correction
+## 11. Checklist de qualité
 
-Des scripts de correction sont disponibles pour standardiser le CSS :
+### 11.1 Avant de commiter
 
-```bash
-# Supprimer les fallbacks codés en dur
-./fix_css_var_fallbacks.sh
+- [ ] Toutes les valeurs codées en dur sont remplacées par des variables CSS
+- [ ] Les variables utilisent le préfixe `--tc-`
+- [ ] Les styles sont organisés selon la structure recommandée
+- [ ] Les media queries suivent l'approche mobile-first
+- [ ] Les commentaires expliquent les choix complexes
+- [ ] Le code est formaté avec Prettier
+- [ ] Aucun style inline en production
 
-# Corriger les fallbacks en cascade
-./fix_css_cascade_fallbacks.sh
+### 11.2 Revue de code
 
-# Corriger les problèmes de parenthèses manquantes
-./fix_css_missing_parenthesis.sh
-
-# Corriger les espaces inconsistants
-./fix_css_inconsistent_spaces.sh
-```
-
-### 8.3 Linter CSS
-
-Un linter CSS personnalisé est configuré pour détecter les problèmes :
-
-```bash
-# Lancer le linter CSS
-npm run lint:css
-```
-
-## 9. Checklist de qualité
-
-Avant de soumettre du code CSS, vérifier les points suivants :
-
-### 9.1 Variables et valeurs
-
-- [ ] Toutes les couleurs utilisent des variables `--tc-color-*`
-- [ ] Tous les espacements utilisent des variables `--tc-spacing-*`
-- [ ] Toutes les tailles de police utilisent des variables `--tc-font-size-*`
-- [ ] Aucun fallback codé en dur n'est présent
-
-### 9.2 Structure et organisation
-
-- [ ] Les styles spécifiques aux composants sont dans des fichiers `.module.css`
-- [ ] Les imports CSS utilisent les alias configurés
-- [ ] Pas d'imports redondants de styles globaux
-- [ ] Les classes suivent les conventions de nommage
-
-### 9.3 Composants et responsive
-
-- [ ] Les composants UI standardisés sont utilisés quand disponibles
-- [ ] L'approche mobile-first est respectée
-- [ ] Les media queries utilisent les points de rupture standardisés
-- [ ] Les styles sont cohérents entre desktop et mobile
-
-### 9.4 Performance
-
-- [ ] Les styles critiques sont identifiés
-- [ ] Pas de styles inline inutiles
-- [ ] Les sélecteurs CSS sont optimisés (pas trop spécifiques)
-- [ ] Les animations sont optimisées pour les performances
-
-## Conclusion
-
-Ce guide CSS établit un cadre cohérent pour le développement front-end de TourCraft. En suivant ces standards et bonnes pratiques, nous garantissons une interface utilisateur cohérente, maintenable et performante.
-
-Pour toute question ou suggestion d'amélioration, contacter l'équipe front-end.
+- [ ] Les noms de classes suivent la convention BEM
+- [ ] Les composants utilisent des CSS Modules
+- [ ] Les styles sont réutilisables et maintenables
+- [ ] Les performances sont optimisées
+- [ ] La documentation est à jour
 
 ---
 
-*Dernière mise à jour : 20 mai 2025*
+## Conclusion
+
+Ce guide CSS consolidé établit les standards d'excellence pour TourCraft. En suivant ces conventions, nous garantissons :
+
+- **Cohérence visuelle** dans toute l'application
+- **Maintenabilité** du code CSS
+- **Performance optimale** des styles
+- **Facilité de développement** pour l'équipe
+- **Évolutivité** de l'architecture CSS
+
+Pour toute question ou suggestion d'amélioration, consultez l'équipe de développement front-end.
+
+---
+
+*Guide CSS TourCraft - Version 2.0 Consolidée*  
+*Dernière mise à jour : 25 mai 2025*  
+*Document de référence unique pour tous les standards CSS*

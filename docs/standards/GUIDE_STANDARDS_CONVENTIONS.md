@@ -101,108 +101,46 @@ Le projet utilise une architecture CSS basée sur:
 - **Classes utilitaires** pour les styles communs
 - **Media queries** pour le responsive design
 
-### Variables CSS
+> 📋 **Référence complète** : Pour tous les détails sur les standards CSS, consultez le [**Guide CSS TourCraft Consolidé**](/docs/css/GUIDE_STANDARDISATION_CSS.md) qui contient :
+> - Système complet de variables CSS avec préfixe `--tc-`
+> - Conventions de nommage BEM
+> - Structure des modules CSS
+> - Points de rupture responsive
+> - Composants UI standardisés
+> - Optimisations de performance
+> - Checklist de qualité
 
-Toutes les valeurs répétées doivent être définies comme variables CSS dans `:root`:
+### Variables CSS essentielles
+
+Toutes les valeurs répétées doivent utiliser les variables CSS avec le préfixe `--tc-` :
 
 ```css
-:root {
-  /* Couleurs primaires */
-  --color-primary: #0056b3;
-  --color-primary-light: #4d90fe;
-  --color-primary-dark: #003d82;
-
-  /* Couleurs secondaires */
-  --color-secondary: #6c757d;
-  --color-secondary-light: #a1a8ae;
-  --color-secondary-dark: #343a40;
-
-  /* Couleurs fonctionnelles */
-  --color-success: #28a745;
-  --color-danger: #dc3545;
-  --color-warning: #ffc107;
-  --color-info: #17a2b8;
-
-  /* Couleurs de fond */
-  --bg-light: #f8f9fa;
-  --bg-dark: #212529;
-
-  /* Espacement */
-  --spacing-xxs: 0.25rem;
-  --spacing-xs: 0.5rem;
-  --spacing-sm: 1rem;
-  --spacing-md: 1.5rem;
-  --spacing-lg: 2rem;
-  --spacing-xl: 3rem;
-  --spacing-xxl: 4rem;
-
-  /* Typographie */
-  --font-family-base: 'Roboto', sans-serif;
-  --font-family-heading: 'Roboto Condensed', sans-serif;
-  --font-size-base: 16px;
-  --font-size-sm: 0.875rem;
-  --font-size-md: 1rem;
-  --font-size-lg: 1.25rem;
-  --font-size-xl: 1.5rem;
-  --font-size-xxl: 2rem;
-
-  /* Border radius */
-  --border-radius-sm: 0.25rem;
-  --border-radius-md: 0.5rem;
-  --border-radius-lg: 1rem;
-
-  /* Shadows */
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
-
-  /* Z-index */
-  --z-index-dropdown: 1000;
-  --z-index-navbar: 1020;
-  --z-index-modal: 1050;
-  --z-index-tooltip: 1070;
-
-  /* Transitions */
-  --transition-fast: 0.15s ease;
-  --transition-normal: 0.3s ease;
-  --transition-slow: 0.5s ease;
-}
+/* Exemples de variables principales */
+--tc-color-primary: #1a73e8;
+--tc-spacing-4: 16px;
+--tc-font-size-md: 1rem;
+--tc-border-radius-md: 4px;
 ```
 
-### Nommage des classes CSS
+### Modules CSS
 
-Le projet utilise une convention de nommage BEM modifiée:
+Chaque composant React doit avoir son propre module CSS :
 
-- **Bloc** : Le composant principal (ex: `concert-card`)
-- **Élément** : Une partie du composant (ex: `concert-card__title`)
-- **Modificateur** : Une variation (ex: `concert-card--featured`)
+```
+Button.js
+Button.module.css
+```
 
 ### Media Queries Standards
 
+Approche mobile-first avec points de rupture standardisés :
+
 ```css
 /* Mobile first */
-/* Extra petit (téléphones, moins de 576px) */
-/* Pas de media query car c'est la taille par défaut */
-
-/* Petit (tablettes portrait, 576px et plus) */
-@media (min-width: 576px) {
-  /* Styles */
-}
-
-/* Moyen (tablettes paysage, 768px et plus) */
-@media (min-width: 768px) {
-  /* Styles */
-}
-
-/* Grand (desktops, 992px et plus) */
-@media (min-width: 992px) {
-  /* Styles */
-}
-
-/* Extra grand (grands desktops, 1200px et plus) */
-@media (min-width: 1200px) {
-  /* Styles */
-}
+@media (min-width: 576px) { /* Petits appareils et plus */ }
+@media (min-width: 768px) { /* Tablettes et plus */ }
+@media (min-width: 992px) { /* Ordinateurs de bureau et plus */ }
+@media (min-width: 1200px) { /* Grands écrans */ }
 ```
 
 ## Standards des composants React

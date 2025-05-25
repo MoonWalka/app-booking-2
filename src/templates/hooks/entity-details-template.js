@@ -16,7 +16,7 @@
  */
 
 import { useGenericEntityDetails } from '@/hooks/common';
-import { query, collection, where, db } from '@/firebaseInit';
+import { query, collection, where, db } from '@/services/firebase-service';
 
 /**
  * Hook optimisé pour gérer les détails d'une entité

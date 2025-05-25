@@ -1,4 +1,4 @@
-import { db } from '@/firebaseInit';
+import { db } from '@/services/firebase-service';
 
 export const handleLoadMore = async (collectionName, lastDoc, orderByField = 'nom', pageSize = 10) => {
   try {

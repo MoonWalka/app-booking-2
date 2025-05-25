@@ -14,7 +14,7 @@ import {
   onSnapshot, 
   serverTimestamp 
 } from 'firebase/firestore';
-import { db } from '@/firebaseInit';
+import { db } from '@/services/firebase-service';
 import cacheService from './cacheService';
 
 /**

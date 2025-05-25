@@ -8,7 +8,7 @@
  */
 
 import { useState, useCallback } from 'react';
-import { db } from '@/firebaseInit';
+import { db } from '@/services/firebase-service';
 import { 
   collection, 
   doc, 
@@ -18,7 +18,7 @@ import {
   getDocs, 
   query, 
   where 
-} from '@/firebaseInit';
+} from '@/services/firebase-service';
 
 /**
  * Hook générique pour les actions CRUD

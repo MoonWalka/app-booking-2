@@ -1,6 +1,6 @@
 // src/hooks/artistes/useHandleDeleteArtist.js
-import { doc, deleteDoc } from '@/firebaseInit';
-import { db } from '@/firebaseInit';
+import { doc, deleteDoc } from '@/services/firebase-service';
+import { db } from '@/services/firebase-service';
 
 /**
  * Custom hook to handle artist deletion

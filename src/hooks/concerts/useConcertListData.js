@@ -11,7 +11,7 @@ import {
   startAfter,
   where, 
   db 
-} from '@/firebaseInit';
+} from '@/services/firebase-service';
 import logger from '@/services/loggerService';
 import cacheService from '@/services/cacheService';
 

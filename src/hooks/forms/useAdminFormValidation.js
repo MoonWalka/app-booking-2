@@ -8,8 +8,8 @@
  */
 
 import { useState, useEffect } from 'react';
-import { getDoc, doc } from '@/firebaseInit';
-import { db } from '@/firebaseInit';
+import { getDoc, doc } from '@/services/firebase-service';
+import { db } from '@/services/firebase-service';
 
 /**
  * Hook d'administration pour la récupération et validation des soumissions de formulaires

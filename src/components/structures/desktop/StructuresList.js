@@ -10,7 +10,7 @@ import {
   deleteDoc,
   doc 
 } from 'firebase/firestore';
-import { db } from '@/firebaseInit';
+import { db } from '@/services/firebase-service';
 import { Modal, Button as BootstrapButton, Form, InputGroup } from 'react-bootstrap';
 import Button from '@ui/Button';
 import styles from './StructuresList.module.css';

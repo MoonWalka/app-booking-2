@@ -1,4 +1,4 @@
-import { db, collection, query, orderBy, startAfter, limit, getDocs } from '@/firebaseInit';
+import { db, collection, query, orderBy, startAfter, limit, getDocs } from '@/services/firebase-service';
 
 export const handleLoadMore = async (lastDoc, pageSize = 10) => {
   try {

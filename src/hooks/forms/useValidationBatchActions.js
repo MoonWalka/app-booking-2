@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { db } from '@/firebaseInit';
-import { doc, getDoc, updateDoc, collection, addDoc, Timestamp } from '@/firebaseInit';
+import { db } from '@/services/firebase-service';
+import { doc, getDoc, updateDoc, collection, addDoc, Timestamp } from '@/services/firebase-service';
 
 const useValidationBatchActions = ({ formId, concertId, validatedFields, setValidated }) => {
   const [validationInProgress, setValidationInProgress] = useState(false);

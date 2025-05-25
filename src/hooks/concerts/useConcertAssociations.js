@@ -1,4 +1,4 @@
-import { doc, getDoc, updateDoc, arrayUnion, serverTimestamp, db } from '@/firebaseInit';
+import { doc, getDoc, updateDoc, arrayUnion, serverTimestamp, db } from '@/services/firebase-service';
 
 /**
  * Hook pour gérer les associations entre un concert et d'autres entités

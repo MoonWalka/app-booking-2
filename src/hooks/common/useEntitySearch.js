@@ -10,7 +10,7 @@ import {
   orderBy,
   serverTimestamp,
   db
-} from '@/firebaseInit';
+} from '@/services/firebase-service';
 
 /**
  * Hook générique pour la recherche d'entités (lieux, programmateurs, artistes, concerts, etc.)

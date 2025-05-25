@@ -8,7 +8,7 @@
 import { useCallback, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGenericEntitySearch } from '@/hooks/common';
-import { collection, getDocs, db } from '@/firebaseInit';
+import { collection, getDocs, db } from '@/services/firebase-service';
 import { debugLog } from '@/utils/logUtils';
 
 /**

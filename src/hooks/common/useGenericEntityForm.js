@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { db } from '@/firebaseInit';
-import { doc, getDoc, setDoc, updateDoc, collection, Timestamp } from '@/firebaseInit';
+import { db } from '@/services/firebase-service';
+import { doc, getDoc, setDoc, updateDoc, collection, Timestamp } from '@/services/firebase-service';
 import { debugLog } from '@/utils/logUtils';
 
 /**

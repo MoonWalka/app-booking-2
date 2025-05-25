@@ -9,7 +9,7 @@ import ProgrammateursListHeader from './sections/ProgrammateursListHeader';
 import ProgrammateursStatsCards from './sections/ProgrammateursStatsCards';
 import ProgrammateursListSearchFilter from './sections/ProgrammateursListSearchFilter';
 import ProgrammateursListEmptyState from './sections/ProgrammateursListEmptyState';
-import { collection, getDocs } from '@/firebaseInit';
+import { collection, getDocs } from '@/services/firebase-service';
 
 const ProgrammateursList = ({ onNavigateToDetails }) => {
   const navigate = useNavigate();

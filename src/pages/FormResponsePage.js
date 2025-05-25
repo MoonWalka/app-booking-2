@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { updateDoc, doc, db } from '@/firebaseInit';
+import { updateDoc, doc, db } from '@/services/firebase-service';
 import ProgrammateurForm from '@/components/programmateurs/ProgrammateurForm.js';
 
 // Import modular components

@@ -9,8 +9,8 @@ import useDeleteStructure from './useDeleteStructure';
 
 // Import des hooks génériques nécessaires
 import { useState } from 'react';
-import { collection, query, where, getDocs, limit } from '@/firebaseInit';
-import { db } from '@/firebaseInit';
+import { collection, query, where, getDocs, limit } from '@/services/firebase-service';
+import { db } from '@/services/firebase-service';
 
 /**
  * Hook de recherche de structures

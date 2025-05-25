@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { collection, query, where, getDocs, orderBy, limit, startAfter, getCountFromServer, db } from '@/firebaseInit';
+import { collection, query, where, getDocs, orderBy, limit, startAfter, getCountFromServer, db } from '@/services/firebase-service';
 
 /**
  * Hook pour gérer une liste générique d'entités depuis Firestore

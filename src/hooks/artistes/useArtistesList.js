@@ -6,8 +6,8 @@
  */
 import { useState, useEffect, useCallback } from 'react';
 import { useGenericEntityList } from '@/hooks/common';
-import { collection, getDocs, query } from '@/firebaseInit';
-import { db } from '@/firebaseInit';
+import { collection, getDocs, query } from '@/services/firebase-service';
+import { db } from '@/services/firebase-service';
 
 /**
  * Hook optimisé pour gérer une liste d'artistes avec pagination et filtres

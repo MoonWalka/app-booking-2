@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { doc, onSnapshot, db } from '@/firebaseInit';
+import { doc, onSnapshot, db } from '@/services/firebase-service';
 
 /**
  * Hook pour s'abonner aux changements d'un document Firestore.

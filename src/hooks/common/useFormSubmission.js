@@ -1,7 +1,7 @@
 // src/hooks/common/useFormSubmission.js
 import { useState } from 'react';
-import { doc, setDoc, updateDoc, deleteDoc, serverTimestamp, arrayUnion, arrayRemove } from '@/firebaseInit';
-import { db } from '@/firebaseInit';
+import { doc, setDoc, updateDoc, deleteDoc, serverTimestamp, arrayUnion, arrayRemove } from '@/services/firebase-service';
+import { db } from '@/services/firebase-service';
 
 /**
  * Hook générique pour gérer la soumission de formulaire vers Firestore

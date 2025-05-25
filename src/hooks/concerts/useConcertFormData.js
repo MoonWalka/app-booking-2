@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { collection, query, where, doc, getDoc, getDocs, updateDoc, db } from '@/firebaseInit';
+import { collection, query, where, doc, getDoc, getDocs, updateDoc, db } from '@/services/firebase-service';
 
 /**
  * Hook pour gérer les données du formulaire associé à un concert

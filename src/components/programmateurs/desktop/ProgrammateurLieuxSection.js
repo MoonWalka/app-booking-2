@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { db, query, where, collection, getDocs, doc, getDoc } from '@/firebaseInit';
+import { db, query, where, collection, getDocs, doc, getDoc } from '@/services/firebase-service';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import styles from './ProgrammateurLieuxSection.module.css';

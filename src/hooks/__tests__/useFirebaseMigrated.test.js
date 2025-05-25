@@ -24,6 +24,6 @@ jest.mock('../../firebaseInit', () => ({
 }));
 
 // Import des dépendances mockées
-import { db } from '../../firebaseInit';
+import { db } from '../../services/firebase-service';
 
 // ...existing code...

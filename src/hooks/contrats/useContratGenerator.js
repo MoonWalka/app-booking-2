@@ -182,7 +182,7 @@
 
 // src/hooks/contrats/useContratGenerator.js
 import { useState, useEffect } from 'react';
-import { db } from '@/firebaseInit';
+import { db } from '@/services/firebase-service';
 import { 
   collection, 
   doc, 
@@ -194,7 +194,7 @@ import {
   addDoc,
   updateDoc,
   serverTimestamp
-} from '@/firebaseInit';
+} from '@/services/firebase-service';
 
 export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
   const [templates, setTemplates] = useState([]);

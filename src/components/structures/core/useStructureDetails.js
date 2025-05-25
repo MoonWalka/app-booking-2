@@ -7,7 +7,7 @@ import {
   updateDoc, 
   deleteDoc 
 } from 'firebase/firestore';
-import { db } from '@/firebaseInit';
+import { db } from '@/services/firebase-service';
 
 /**
  * Hook contenant la logique partagée pour l'affichage et la gestion des détails d'une structure

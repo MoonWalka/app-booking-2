@@ -178,18 +178,6 @@ function App() {
     v7_relativeSplatPath: true // Améliore la résolution des chemins
   };
 
-  // Le fallback unifié pour les chargements de routes
-  const routeFallback = (
-    <div className="loading-container d-flex justify-content-center align-items-center" style={{ minHeight: '300px' }}>
-      <div className="text-center">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Chargement de la page...</span>
-        </div>
-        <p className="mt-2">Chargement de la page...</p>
-      </div>
-    </div>
-  );
-
   return (
     <ErrorBoundary>
       <Router>
@@ -198,7 +186,16 @@ function App() {
             <ModalProvider> {/* Ajout du ModalProvider */}
               {/* Intégration du stabilisateur de routeur */}
               <RouterStabilizer />
-              <Suspense fallback={routeFallback}>
+              <Suspense fallback={
+                <div className="loading-container d-flex justify-content-center align-items-center" style={{ minHeight: '300px' }}>
+                  <div className="text-center">
+                    <div className="spinner-border text-primary" role="status">
+                      <span className="visually-hidden">Chargement de la page...</span>
+                    </div>
+                    <p className="mt-2">Chargement de la page...</p>
+                  </div>
+                </div>
+              }>
                 <Routes>
                   <Route path="/test-buttons" element={<TestButtons />} />
                   {/* Routes publiques pour les formulaires */}
@@ -211,7 +208,16 @@ function App() {
                     {/* Routes pour les concerts */}
                     <Route path="/concerts/*" element={
                       <PrivateRoute>
-                        <Suspense fallback={routeFallback}>
+                        <Suspense fallback={
+                          <div className="loading-container d-flex justify-content-center align-items-center" style={{ minHeight: '300px' }}>
+                            <div className="text-center">
+                              <div className="spinner-border text-primary" role="status">
+                                <span className="visually-hidden">Chargement de la page...</span>
+                              </div>
+                              <p className="mt-2">Chargement de la page...</p>
+                            </div>
+                          </div>
+                        }>
                           <ConcertsPage />
                         </Suspense>
                       </PrivateRoute>
@@ -224,7 +230,16 @@ function App() {
                     {/* Routes pour les programmateurs */}
                     <Route path="/programmateurs/*" element={
                       <PrivateRoute>
-                        <Suspense fallback={routeFallback}>
+                        <Suspense fallback={
+                          <div className="loading-container d-flex justify-content-center align-items-center" style={{ minHeight: '300px' }}>
+                            <div className="text-center">
+                              <div className="spinner-border text-primary" role="status">
+                                <span className="visually-hidden">Chargement de la page...</span>
+                              </div>
+                              <p className="mt-2">Chargement de la page...</p>
+                            </div>
+                          </div>
+                        }>
                           <ProgrammateursPage />
                         </Suspense>
                       </PrivateRoute>
@@ -237,7 +252,16 @@ function App() {
                     {/* Routes pour les lieux */}
                     <Route path="/lieux/*" element={
                       <PrivateRoute>
-                        <Suspense fallback={routeFallback}>
+                        <Suspense fallback={
+                          <div className="loading-container d-flex justify-content-center align-items-center" style={{ minHeight: '300px' }}>
+                            <div className="text-center">
+                              <div className="spinner-border text-primary" role="status">
+                                <span className="visually-hidden">Chargement de la page...</span>
+                              </div>
+                              <p className="mt-2">Chargement de la page...</p>
+                            </div>
+                          </div>
+                        }>
                           <LieuxPage />
                         </Suspense>
                       </PrivateRoute>
@@ -246,7 +270,16 @@ function App() {
                     {/* Routes pour les structures */}
                     <Route path="/structures/*" element={
                       <PrivateRoute>
-                        <Suspense fallback={routeFallback}>
+                        <Suspense fallback={
+                          <div className="loading-container d-flex justify-content-center align-items-center" style={{ minHeight: '300px' }}>
+                            <div className="text-center">
+                              <div className="spinner-border text-primary" role="status">
+                                <span className="visually-hidden">Chargement de la page...</span>
+                              </div>
+                              <p className="mt-2">Chargement de la page...</p>
+                            </div>
+                          </div>
+                        }>
                           <StructuresPage />
                         </Suspense>
                       </PrivateRoute>
@@ -255,7 +288,16 @@ function App() {
                     {/* Routes pour les contrats */}
                     <Route path="/contrats/*" element={
                       <PrivateRoute>
-                        <Suspense fallback={routeFallback}>
+                        <Suspense fallback={
+                          <div className="loading-container d-flex justify-content-center align-items-center" style={{ minHeight: '300px' }}>
+                            <div className="text-center">
+                              <div className="spinner-border text-primary" role="status">
+                                <span className="visually-hidden">Chargement de la page...</span>
+                              </div>
+                              <p className="mt-2">Chargement de la page...</p>
+                            </div>
+                          </div>
+                        }>
                           <Routes>
                             <Route index element={<ContratsPage />} />
                             <Route path="generate/:concertId" element={<ContratGenerationPage />} />
@@ -268,7 +310,16 @@ function App() {
                     {/* Routes pour les artistes */}
                     <Route path="/artistes/*" element={
                       <PrivateRoute>
-                        <Suspense fallback={routeFallback}>
+                        <Suspense fallback={
+                          <div className="loading-container d-flex justify-content-center align-items-center" style={{ minHeight: '300px' }}>
+                            <div className="text-center">
+                              <div className="spinner-border text-primary" role="status">
+                                <span className="visually-hidden">Chargement de la page...</span>
+                              </div>
+                              <p className="mt-2">Chargement de la page...</p>
+                            </div>
+                          </div>
+                        }>
                           <ArtistesPage />
                         </Suspense>
                       </PrivateRoute>
@@ -277,7 +328,16 @@ function App() {
                     {/* Routes pour les paramètres */}
                     <Route path="/parametres/*" element={
                       <PrivateRoute>
-                        <Suspense fallback={routeFallback}>
+                        <Suspense fallback={
+                          <div className="loading-container d-flex justify-content-center align-items-center" style={{ minHeight: '300px' }}>
+                            <div className="text-center">
+                              <div className="spinner-border text-primary" role="status">
+                                <span className="visually-hidden">Chargement de la page...</span>
+                              </div>
+                              <p className="mt-2">Chargement de la page...</p>
+                            </div>
+                          </div>
+                        }>
                           <ParametresPage />
                         </Suspense>
                       </PrivateRoute>

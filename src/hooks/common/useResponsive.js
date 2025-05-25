@@ -1,109 +1,109 @@
-// src/hooks/common/useResponsive.js
-import { useState, useEffect, useCallback } from 'react';
-import { debugLog } from '@/utils/logUtils';
+/**
+ * @fileoverview Hook pour la gestion responsive
+ * 
+ * @deprecated Utilisez useGenericResponsive directement pour les nouveaux développements
+ * @migrationDate 2025-01-XX
+ * @replaces Wrapper autour de useGenericResponsive pour maintenir la compatibilité
+ * 
+ * Ce hook est maintenant un wrapper autour de useGenericResponsive.
+ * Il maintient l'API existante pour la compatibilité avec le code existant,
+ * mais utilise la logique générique en arrière-plan.
+ * 
+ * @author TourCraft Team
+ * @since 2024
+ * @phase Phase 3 - Migration vers hooks génériques utilitaires
+ */
 
-// Fonction debounce pour limiter les appels lors du redimensionnement
-const debounce = (func, wait) => {
-  let timeout;
-  return function executedFunction(...args) {
-    const later = () => {
-      clearTimeout(timeout);
-      func(...args);
-    };
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-  };
-};
+import { useMemo } from 'react';
+import useGenericResponsive from '@/hooks/generics/utils/useGenericResponsive';
 
 /**
- * Hook useResponsive simplifié - détection de taille d'écran uniquement
+ * Hook migré pour la gestion responsive
  * 
- * @param {Object} options - Options du hook
- * @param {number} options.breakpoint - Seuil en pixels pour considérer un affichage mobile (défaut: 768px)
- * @param {boolean} options.forceDesktop - Force l'affichage desktop même sur mobile (défaut: false)
- * @param {number} options.transitionDelay - Délai en ms pour la transition entre modes (défaut: 150ms)
- * @returns {Object} - État et fonctions liées à la responsivité
+ * @deprecated Utilisez useGenericResponsive directement pour les nouveaux développements
+ * 
+ * Ce hook maintient l'API existante pour la compatibilité avec le code existant,
+ * mais utilise useGenericResponsive en arrière-plan pour bénéficier des améliorations.
+ * 
+ * @param {Object} options - Options de configuration (optionnel)
+ * @returns {Object} Interface du hook responsive
+ * 
+ * @example
+ * ```javascript
+ * // Utilisation existante (maintenue pour compatibilité)
+ * const { isMobile, isDesktop, dimensions } = useResponsive();
+ * 
+ * // RECOMMANDÉ pour nouveaux développements :
+ * import useGenericResponsive from '@/hooks/generics/utils/useGenericResponsive';
+ * const { isMobile, isDesktop, dimensions } = useGenericResponsive();
+ * ```
  */
 const useResponsive = (options = {}) => {
-  debugLog('Hook useResponsive exécuté', 'trace', 'useResponsive');
+  // Configuration pour maintenir la compatibilité avec l'ancienne API
+  const responsiveConfig = useMemo(() => ({
+    breakpoints: {
+      mobile: options.breakpoint || 768,
+      tablet: 1024,
+      desktop: 1200,
+      wide: 1440
+    },
+    enableOrientation: false, // Désactivé par défaut pour compatibilité
+    enableDeviceDetection: false,
+    forceBreakpoint: options.forceDesktop ? 'desktop' : null
+  }), [options.breakpoint, options.forceDesktop]);
   
-  const {
-    breakpoint = 768,
-    forceDesktop = false,
-    transitionDelay = 150
-  } = options;
-
-  // État pour stocker si on est sur mobile
-  const [isMobile, setIsMobile] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    if (forceDesktop) return false;
-    return window.innerWidth < breakpoint;
-  });
+  // Options pour maintenir la compatibilité
+  const responsiveOptions = useMemo(() => ({
+    debounceDelay: options.transitionDelay || 150,
+    enablePerformanceMode: true,
+    enableLogging: false,
+    cacheResults: true
+  }), [options.transitionDelay]);
   
-  // État pour stocker les dimensions de l'écran
-  const [dimensions, setDimensions] = useState({
-    width: typeof window !== 'undefined' ? window.innerWidth : 0,
-    height: typeof window !== 'undefined' ? window.innerHeight : 0
-  });
-
-  // Fonction pour vérifier si une largeur d'écran est considérée comme mobile
-  const checkIsMobile = useCallback((width) => {
-    if (forceDesktop) return false;
-    return width < breakpoint;
-  }, [breakpoint, forceDesktop]);
-
-  // Mettre à jour les dimensions de la fenêtre
-  const updateDimensions = useCallback(() => {
-    if (typeof window !== 'undefined') {
-      const width = window.innerWidth;
-      const height = window.innerHeight;
-      
-      setDimensions({ width, height });
-      setIsMobile(forceDesktop ? false : width < breakpoint);
-    }
-  }, [breakpoint, forceDesktop]);
-
-  // Effet pour mettre à jour les dimensions lors du redimensionnement
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    // Fonction pour vérifier la taille de l'écran
-    const checkMobile = () => {
-      const width = window.innerWidth;
-      const height = window.innerHeight;
-      
-      setDimensions({ width, height });
-      setIsMobile(forceDesktop ? false : width < breakpoint);
+  // Utiliser le hook générique avec la configuration de compatibilité
+  const genericHook = useGenericResponsive(responsiveConfig, responsiveOptions);
+  
+  // Fonction pour vérifier si une largeur est mobile (compatibilité)
+  const checkIsMobile = useMemo(() => {
+    return (width) => {
+      if (options.forceDesktop) return false;
+      return width < (options.breakpoint || 768);
     };
-
-    // Wrapper la fonction avec debounce
-    const debouncedCheckMobile = debounce(checkMobile, transitionDelay);
-
-    // Vérifier immédiatement au montage
-    checkMobile();
-
-    // Ajouter l'écouteur d'événement
-    window.addEventListener('resize', debouncedCheckMobile);
-
-    // Nettoyer l'écouteur d'événement
-    return () => {
-      window.removeEventListener('resize', debouncedCheckMobile);
-    };
-  }, [breakpoint, forceDesktop, transitionDelay]);
-
+  }, [options.forceDesktop, options.breakpoint]);
+  
+  // Fonction pour mettre à jour les dimensions (compatibilité)
+  const updateDimensions = genericHook.forceUpdate;
+  
+  // Retourner l'interface compatible avec l'ancienne API
   return {
-    // Propriétés principales
-    isMobile,
-    isDesktop: !isMobile,
+    // API existante maintenue
+    isMobile: genericHook.isMobile,
+    isDesktop: genericHook.isDesktop,
+    dimensions: genericHook.dimensions,
+    screenWidth: genericHook.screenWidth,
+    screenHeight: genericHook.screenHeight,
     
-    // Dimensions
-    dimensions,
-    screenWidth: dimensions.width,
-    screenHeight: dimensions.height,
-    
-    // Fonctions utilitaires
+    // Fonctions de compatibilité
     checkIsMobile,
-    updateDimensions
+    updateDimensions,
+    
+    // Nouvelles fonctionnalités disponibles via le hook générique
+    isTablet: genericHook.isTablet,
+    isWide: genericHook.isWide,
+    currentBreakpoint: genericHook.currentBreakpoint,
+    aspectRatio: genericHook.aspectRatio,
+    matchBreakpoint: genericHook.matchBreakpoint,
+    isBreakpointUp: genericHook.isBreakpointUp,
+    isBreakpointDown: genericHook.isBreakpointDown,
+    
+    // Informations de migration
+    _migrationInfo: {
+      isWrapper: true,
+      originalHook: 'useResponsive',
+      genericHook: 'useGenericResponsive',
+      migrationDate: '2025-01-XX',
+      phase: 'Phase 3'
+    }
   };
 };
 

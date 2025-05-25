@@ -1,15 +1,15 @@
 /**
  * @fileoverview Index des hooks génériques
  * 
- * ✅ PHASE 2 COMPLÉTÉE - Nouveaux hooks génériques ajoutés ✅
+ * ✅ PHASE 3 COMPLÉTÉE - Hooks utilitaires génériques ajoutés ✅
  * 
- * Hooks génériques créés lors de la Phase 2 :
- * - useGenericEntityStatus : Gestion des statuts d'entités
- * - useGenericFieldActions : Actions de champs de formulaires
+ * Hooks génériques créés lors de la Phase 3 :
+ * - useGenericResponsive : Gestion responsive avancée
+ * - useGenericSearch : Recherche unifiée (adresses, entreprises, entités)
  * 
  * @author TourCraft Team
  * @since 2024
- * @phase Phase 2 - Généralisation intelligente
+ * @phase Phase 3 - Optimisation et adoption généralisée
  */
 
 // Hooks de listes et données
@@ -25,10 +25,16 @@ export { default as useGenericValidation } from './validation/useGenericValidati
 
 // Hooks d'actions
 export { default as useGenericFormAction } from './actions/useGenericFormAction';
-export { default as useGenericFieldActions } from './actions/useGenericFieldActions'; // ✅ NOUVEAU Phase 2
+export { default as useGenericFieldActions } from './actions/useGenericFieldActions'; // ✅ Phase 2
 
 // Hooks de statut
-export { default as useGenericEntityStatus } from './status/useGenericEntityStatus'; // ✅ NOUVEAU Phase 2
+export { default as useGenericEntityStatus } from './status/useGenericEntityStatus'; // ✅ Phase 2
+
+// Hooks de recherche
+export { default as useGenericSearch } from './search/useGenericSearch'; // ✅ NOUVEAU Phase 3
+
+// Hooks utilitaires
+export { default as useGenericResponsive } from './utils/useGenericResponsive'; // ✅ NOUVEAU Phase 3
 
 /**
  * Configuration par défaut pour les hooks génériques
@@ -64,6 +70,29 @@ export const GENERIC_HOOKS_CONFIG = {
     validateOnBlur: true,
     validateOnSubmit: true,
     enableLogging: false
+  },
+  
+  // Configuration responsive par défaut (Phase 3)
+  DEFAULT_RESPONSIVE_CONFIG: {
+    breakpoints: {
+      mobile: 768,
+      tablet: 1024,
+      desktop: 1200,
+      wide: 1440
+    },
+    enableOrientation: true,
+    enableDeviceDetection: false,
+    debounceDelay: 150
+  },
+  
+  // Configuration de recherche par défaut (Phase 3)
+  DEFAULT_SEARCH_CONFIG: {
+    debounceDelay: 500,
+    minSearchLength: 2,
+    maxResults: 10,
+    enableCache: true,
+    enableClickOutside: true,
+    enableKeyboardNavigation: true
   }
 };
 
@@ -90,6 +119,30 @@ export const GENERIC_HOOKS_UTILS = {
     validationRules,
     onFieldChange: options.onFieldChange || null,
     onValidationComplete: options.onValidationComplete || null
+  }),
+  
+  /**
+   * Créer une configuration responsive
+   */
+  createResponsiveConfig: (breakpoints, options = {}) => ({
+    breakpoints: { ...GENERIC_HOOKS_CONFIG.DEFAULT_RESPONSIVE_CONFIG.breakpoints, ...breakpoints },
+    enableOrientation: options.enableOrientation !== undefined ? options.enableOrientation : true,
+    enableDeviceDetection: options.enableDeviceDetection || false,
+    onBreakpointChange: options.onBreakpointChange || null,
+    onOrientationChange: options.onOrientationChange || null
+  }),
+  
+  /**
+   * Créer une configuration de recherche
+   */
+  createSearchConfig: (searchType, searchFunction, options = {}) => ({
+    searchType,
+    searchFunction,
+    searchFields: options.searchFields || ['name'],
+    formatResult: options.formatResult || ((item) => item),
+    validateResult: options.validateResult || ((item) => true),
+    onResultSelect: options.onResultSelect || null,
+    onSearchComplete: options.onSearchComplete || null
   }),
   
   /**

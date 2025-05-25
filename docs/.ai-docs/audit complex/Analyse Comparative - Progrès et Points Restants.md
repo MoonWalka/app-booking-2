@@ -13,9 +13,10 @@
 ### Points Restants ✅
 - **Pattern Factory éliminé** : Détection de mode directe sans fichier séparé
 - **Logs de débogage** : Maintenus volontairement pour stabilité (justifié)
+- **Exports Firebase corrigés** : CURRENT_MODE et IS_LOCAL_MODE ajoutés pour compatibilité
 
 ### Évaluation Globale
-**Progression : ~100%** - **TERMINÉE** ✅ Simplification complète de l'architecture Firebase
+**Progression : ~100%** - **TERMINÉE** ✅ Simplification complète de l'architecture Firebase avec correction des exports
 
 ## 2. Rationalisation des Hooks
 

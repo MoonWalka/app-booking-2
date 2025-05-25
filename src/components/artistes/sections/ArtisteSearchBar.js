@@ -2,6 +2,7 @@
 import React from 'react';
 import { Button, Form, InputGroup } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import FlexContainer from '@/components/ui/FlexContainer';
 import styles from './ArtisteSearchBar.module.css';
 import Card from '@/components/ui/Card';
 
@@ -99,9 +100,9 @@ const ArtisteSearchBar = ({
               </Form.Select>
             </div>
             <div className="col-md-8">
-              <div className="d-flex align-items-center h-100">
+              <FlexContainer align="center" className="h-100">
                 <span className="me-2 d-none d-md-block">Trier par:</span>
-                <div className="d-flex gap-2 flex-wrap">
+                <FlexContainer gap="sm" wrap="wrap">
                   <Button 
                     variant={sortBy === 'nom' ? 'primary' : 'outline-secondary'}
                     size="sm"
@@ -129,8 +130,8 @@ const ArtisteSearchBar = ({
                       <i className={`bi bi-sort-${sortDirection === 'asc' ? 'down' : 'up'} ms-1`}></i>
                     )}
                   </Button>
-                </div>
-              </div>
+                </FlexContainer>
+              </FlexContainer>
             </div>
           </div>
         </div>

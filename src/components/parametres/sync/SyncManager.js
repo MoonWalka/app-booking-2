@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Button, Alert, Form, ProgressBar, Badge, ListGroup, Tab, Tabs } from 'react-bootstrap';
 import { FaSync, FaCloudUploadAlt, FaCloudDownloadAlt, FaSave, FaUpload, FaClock } from 'react-icons/fa';
+import FlexContainer from '@/components/ui/FlexContainer';
 import { toast } from 'react-toastify';
 import * as syncService from '../../../services/syncService';
 import { IS_LOCAL_MODE, CURRENT_MODE } from '../../../services/firebase-service';
@@ -187,13 +188,15 @@ const SyncManager = () => {
 
   return (
     <Card className="sync-manager">
-      <Card.Header className="d-flex justify-content-between align-items-center">
-        <div>
-          <FaSync className="me-2" /> Gestion de la Synchronisation
-        </div>
-        <Badge bg={IS_LOCAL_MODE ? "info" : "warning"}>
-          {IS_LOCAL_MODE ? "MODE LOCAL" : "MODE DÉVELOPPEMENT"}
-        </Badge>
+      <Card.Header>
+        <FlexContainer justify="space-between" align="center">
+          <div>
+            <FaSync className="me-2" /> Gestion de la Synchronisation
+          </div>
+          <Badge bg={IS_LOCAL_MODE ? "info" : "warning"}>
+            {IS_LOCAL_MODE ? "MODE LOCAL" : "MODE DÉVELOPPEMENT"}
+          </Badge>
+        </FlexContainer>
       </Card.Header>
       <Card.Body>
         <Alert variant="info">
@@ -212,38 +215,40 @@ const SyncManager = () => {
                   {Object.entries(collections).map(([name, isSelected]) => (
                     <ListGroup.Item 
                       key={name}
-                      className={`d-flex justify-content-between align-items-center ${isSelected ? 'list-group-item-primary' : ''} ${styles.clickableItem}`}
+                      className={`${isSelected ? 'list-group-item-primary' : ''} ${styles.clickableItem}`}
                       onClick={() => setCollections({...collections, [name]: !isSelected})}
                     >
-                      <div className="d-flex align-items-center">
-                        <Form.Check 
-                          type="checkbox"
-                          id={`collection-${name}`}
-                          checked={isSelected}
-                          onChange={e => setCollections({...collections, [name]: e.target.checked})}
-                          className={`me-3 ${styles.disabledPointer}`}
-                        />
-                        <div>
-                          <strong>{name.charAt(0).toUpperCase() + name.slice(1)}</strong>
-                          <div className="text-muted small">
-                            {name === 'concerts' && 'Événements et spectacles'}
-                            {name === 'lieux' && 'Salles et venues'}
-                            {name === 'programmateurs' && 'Contacts et organisateurs'}
-                            {name === 'artistes' && 'Musiciens et groupes'}
-                            {name === 'structures' && 'Entreprises et associations'}
+                      <FlexContainer justify="space-between" align="center">
+                        <FlexContainer align="center">
+                          <Form.Check 
+                            type="checkbox"
+                            id={`collection-${name}`}
+                            checked={isSelected}
+                            onChange={e => setCollections({...collections, [name]: e.target.checked})}
+                            className={`me-3 ${styles.disabledPointer}`}
+                          />
+                          <div>
+                            <strong>{name.charAt(0).toUpperCase() + name.slice(1)}</strong>
+                            <div className="text-muted small">
+                              {name === 'concerts' && 'Événements et spectacles'}
+                              {name === 'lieux' && 'Salles et venues'}
+                              {name === 'programmateurs' && 'Contacts et organisateurs'}
+                              {name === 'artistes' && 'Musiciens et groupes'}
+                              {name === 'structures' && 'Entreprises et associations'}
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                      <Badge bg={isSelected ? 'success' : 'secondary'}>
-                        {isSelected ? 'Sélectionné' : 'Non sélectionné'}
-                      </Badge>
+                        </FlexContainer>
+                        <Badge bg={isSelected ? 'success' : 'secondary'}>
+                          {isSelected ? 'Sélectionné' : 'Non sélectionné'}
+                        </Badge>
+                      </FlexContainer>
                     </ListGroup.Item>
                   ))}
                 </ListGroup>
               </Form.Group>
             </Form>
 
-            <div className="d-flex mb-3 gap-2">
+            <FlexContainer gap="sm" className="mb-3">
               <Button 
                 variant="primary" 
                 onClick={handleExport} 
@@ -260,7 +265,7 @@ const SyncManager = () => {
               >
                 <FaCloudDownloadAlt className="me-2" /> Importer depuis Firebase
               </Button>
-            </div>
+            </FlexContainer>
 
             {exportProgress > 0 && (
               <div className="mb-3">

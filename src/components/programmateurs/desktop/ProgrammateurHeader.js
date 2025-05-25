@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from '@ui/Button';
+import FlexContainer from '@/components/ui/FlexContainer';
 import styles from './ProgrammateurHeader.module.css';
 
 const ProgrammateurHeader = ({ 
@@ -34,39 +35,42 @@ const ProgrammateurHeader = ({
             <Button 
               onClick={handleSubmit} 
               variant="primary"
-              className="d-flex align-items-center"
               disabled={isSubmitting}
             >
-              {isSubmitting ? (
-                <>
-                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                  <span>Enregistrement...</span>
-                </>
-              ) : (
-                <>
-                  <i className="bi bi-check-circle me-2"></i>
-                  <span>Enregistrer</span>
-                </>
-              )}
+              <FlexContainer align="center" inline>
+                {isSubmitting ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    <span>Enregistrement...</span>
+                  </>
+                ) : (
+                  <>
+                    <i className="bi bi-check-circle me-2"></i>
+                    <span>Enregistrer</span>
+                  </>
+                )}
+              </FlexContainer>
             </Button>
             
             <Button 
               onClick={toggleEditMode}
               variant="outline-secondary"
-              className="d-flex align-items-center"
               title="Annuler les modifications (avec nettoyage intelligent)"
             >
-              <i className="bi bi-x-circle me-2"></i>
-              <span>Annuler</span>
+              <FlexContainer align="center" inline>
+                <i className="bi bi-x-circle me-2"></i>
+                <span>Annuler</span>
+              </FlexContainer>
             </Button>
             
             <Button 
               onClick={handleDelete} 
               variant="outline-danger"
-              className="d-flex align-items-center"
             >
-              <i className="bi bi-trash me-2"></i>
-              <span>Supprimer</span>
+              <FlexContainer align="center" inline>
+                <i className="bi bi-trash me-2"></i>
+                <span>Supprimer</span>
+              </FlexContainer>
             </Button>
           </>
         ) : (
@@ -75,20 +79,22 @@ const ProgrammateurHeader = ({
             <Button 
               onClick={() => navigate('/programmateurs')}
               variant="outline-secondary"
-              className="d-flex align-items-center"
             >
-              <i className="bi bi-arrow-left me-2"></i>
-              <span>Retour</span>
+              <FlexContainer align="center" inline>
+                <i className="bi bi-arrow-left me-2"></i>
+                <span>Retour</span>
+              </FlexContainer>
             </Button>
             
             <Button 
               onClick={toggleEditMode}
               variant="outline-primary"
-              className="d-flex align-items-center"
               title="Modifier (avec préparation intelligente du formulaire)"
             >
-              <i className="bi bi-pencil me-2"></i>
-              <span>Modifier</span>
+              <FlexContainer align="center" inline>
+                <i className="bi bi-pencil me-2"></i>
+                <span>Modifier</span>
+              </FlexContainer>
             </Button>
           </>
         )}

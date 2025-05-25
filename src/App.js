@@ -9,6 +9,7 @@ import {
 import { AuthProvider, useAuth } from '@/context/AuthContext';
 import { ParametresProvider } from '@/context/ParametresContext';
 import { ModalProvider } from '@/context/ModalContext'; // Import du nouveau ModalProvider
+import FlexContainer from '@/components/ui/FlexContainer';
 import Layout from '@/components/common/Layout';
 import DashboardPage from '@/pages/DashboardPage';
 import ConcertsPage from '@/pages/ConcertsPage';
@@ -122,14 +123,14 @@ function PrivateRoute({ children }) {
   
   if (loading) {
     return (
-      <div className="loading-container d-flex justify-content-center align-items-center tc-min-h-300">
+      <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
         <div className="text-center">
           <div className="spinner-border text-primary" role="status">
             <span className="visually-hidden">Vérification de l'authentification...</span>
           </div>
           <p className="mt-2">Vérification de l'authentification...</p>
         </div>
-      </div>
+      </FlexContainer>
     );
   }
   
@@ -157,14 +158,14 @@ function App() {
               {/* Intégration du stabilisateur de routeur */}
               <RouterStabilizer />
               <Suspense fallback={
-                <div className="loading-container d-flex justify-content-center align-items-center tc-min-h-300">
+                <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
                   <div className="text-center">
                     <div className="spinner-border text-primary" role="status">
                       <span className="visually-hidden">Chargement de la page...</span>
                     </div>
                     <p className="mt-2">Chargement de la page...</p>
                   </div>
-                </div>
+                </FlexContainer>
               }>
                 <Routes>
                   <Route path="/test-buttons" element={<TestButtons />} />
@@ -179,14 +180,14 @@ function App() {
                     <Route path="/concerts/*" element={
                       <PrivateRoute>
                         <Suspense fallback={
-                          <div className="loading-container d-flex justify-content-center align-items-center tc-min-h-300">
+                          <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
                             <div className="text-center">
                               <div className="spinner-border text-primary" role="status">
                                 <span className="visually-hidden">Chargement de la page...</span>
                               </div>
                               <p className="mt-2">Chargement de la page...</p>
                             </div>
-                          </div>
+                          </FlexContainer>
                         }>
                           <ConcertsPage />
                         </Suspense>
@@ -201,14 +202,14 @@ function App() {
                     <Route path="/programmateurs/*" element={
                       <PrivateRoute>
                         <Suspense fallback={
-                          <div className="loading-container d-flex justify-content-center align-items-center tc-min-h-300">
+                          <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
                             <div className="text-center">
                               <div className="spinner-border text-primary" role="status">
                                 <span className="visually-hidden">Chargement de la page...</span>
                               </div>
                               <p className="mt-2">Chargement de la page...</p>
                             </div>
-                          </div>
+                          </FlexContainer>
                         }>
                           <ProgrammateursPage />
                         </Suspense>
@@ -224,14 +225,14 @@ function App() {
                     <Route path="/lieux/*" element={
                       <PrivateRoute>
                         <Suspense fallback={
-                          <div className="loading-container d-flex justify-content-center align-items-center tc-min-h-300">
+                          <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
                             <div className="text-center">
                               <div className="spinner-border text-primary" role="status">
                                 <span className="visually-hidden">Chargement de la page...</span>
                               </div>
                               <p className="mt-2">Chargement de la page...</p>
                             </div>
-                          </div>
+                          </FlexContainer>
                         }>
                           <LieuxPage />
                         </Suspense>
@@ -242,14 +243,14 @@ function App() {
                     <Route path="/structures/*" element={
                       <PrivateRoute>
                         <Suspense fallback={
-                          <div className="loading-container d-flex justify-content-center align-items-center tc-min-h-300">
+                          <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
                             <div className="text-center">
                               <div className="spinner-border text-primary" role="status">
                                 <span className="visually-hidden">Chargement de la page...</span>
                               </div>
                               <p className="mt-2">Chargement de la page...</p>
                             </div>
-                          </div>
+                          </FlexContainer>
                         }>
                           <StructuresPage />
                         </Suspense>
@@ -260,14 +261,14 @@ function App() {
                     <Route path="/contrats/*" element={
                       <PrivateRoute>
                         <Suspense fallback={
-                          <div className="loading-container d-flex justify-content-center align-items-center tc-min-h-300">
+                          <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
                             <div className="text-center">
                               <div className="spinner-border text-primary" role="status">
                                 <span className="visually-hidden">Chargement de la page...</span>
                               </div>
                               <p className="mt-2">Chargement de la page...</p>
                             </div>
-                          </div>
+                          </FlexContainer>
                         }>
                           <Routes>
                             <Route index element={<ContratsPage />} />
@@ -282,14 +283,14 @@ function App() {
                     <Route path="/artistes/*" element={
                       <PrivateRoute>
                         <Suspense fallback={
-                          <div className="loading-container d-flex justify-content-center align-items-center tc-min-h-300">
+                          <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
                             <div className="text-center">
                               <div className="spinner-border text-primary" role="status">
                                 <span className="visually-hidden">Chargement de la page...</span>
                               </div>
                               <p className="mt-2">Chargement de la page...</p>
                             </div>
-                          </div>
+                          </FlexContainer>
                         }>
                           <ArtistesPage />
                         </Suspense>
@@ -300,14 +301,14 @@ function App() {
                     <Route path="/parametres/*" element={
                       <PrivateRoute>
                         <Suspense fallback={
-                          <div className="loading-container d-flex justify-content-center align-items-center tc-min-h-300">
+                          <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
                             <div className="text-center">
                               <div className="spinner-border text-primary" role="status">
                                 <span className="visually-hidden">Chargement de la page...</span>
                               </div>
                               <p className="mt-2">Chargement de la page...</p>
                             </div>
-                          </div>
+                          </FlexContainer>
                         }>
                           <ParametresPage />
                         </Suspense>

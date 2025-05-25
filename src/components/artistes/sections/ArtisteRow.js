@@ -2,6 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Badge, Button } from 'react-bootstrap';
+import FlexContainer from '@/components/ui/FlexContainer';
 import styles from './ArtisteRow.module.css';
 
 /**
@@ -17,7 +18,8 @@ const ArtisteRow = ({ artiste, onDelete }) => {
   return (
     <tr className={artiste.estGroupeFavori ? styles.favoriteArtisteRow : ''}>
       <td className={styles.artisteNameCell}>
-        <Link to={`/artistes/${artiste.id}`} className="d-flex align-items-center text-decoration-none">
+        <Link to={`/artistes/${artiste.id}`} className="text-decoration-none">
+          <FlexContainer align="center">
           <div className={styles.artisteAvatar + " me-3"}>
             {artiste.photoPrincipale ? (
               <img src={artiste.photoPrincipale} alt={artiste.nom} className="img-fluid" />
@@ -28,65 +30,70 @@ const ArtisteRow = ({ artiste, onDelete }) => {
             )}
           </div>
           <div className="text-truncate">
-            <div className="fw-bold d-flex align-items-center text-truncate">
+            <FlexContainer align="center" className="fw-bold text-truncate">
               <span className="text-truncate">{artiste.nom}</span>
               {artiste.estGroupeFavori && (
                 <i className="bi bi-star-fill text-warning ms-2 flex-shrink-0"></i>
               )}
-            </div>
+            </FlexContainer>
             {artiste.genre && <div className="small text-muted text-truncate">{artiste.genre}</div>}
           </div>
+          </FlexContainer>
         </Link>
       </td>
       <td>
         {artiste.ville ? (
-          <div className="d-flex align-items-center">
+          <FlexContainer align="center">
             <i className="bi bi-geo-alt text-muted me-2 flex-shrink-0"></i>
             <span className="text-truncate">{artiste.ville}</span>
-          </div>
+          </FlexContainer>
         ) : (
           <span className="text-muted" aria-label="Pas de lieu spécifié">-</span>
         )}
       </td>
       <td>
         {artiste.cachetMoyen ? (
-          <div className="d-flex align-items-center">
+          <FlexContainer align="center">
             <i className="bi bi-cash text-muted me-2 flex-shrink-0"></i>
             <span className="text-nowrap">{new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(artiste.cachetMoyen)}</span>
-          </div>
+          </FlexContainer>
         ) : (
           <span className="text-muted" aria-label="Pas de cachet spécifié">-</span>
         )}
       </td>
       <td>
         {getNbConcerts(artiste) > 0 ? (
-          <Badge bg="primary" className="px-2 py-1 d-inline-flex align-items-center">
-            <i className="bi bi-music-note-beamed me-1"></i>
-            {getNbConcerts(artiste)}
+          <Badge bg="primary" className="px-2 py-1">
+            <FlexContainer align="center" inline>
+              <i className="bi bi-music-note-beamed me-1"></i>
+              {getNbConcerts(artiste)}
+            </FlexContainer>
           </Badge>
         ) : (
           <Badge bg="secondary" className="px-2 py-1" aria-label="Aucun concert">0</Badge>
         )}
       </td>
       <td>
-        <div className="d-flex align-items-center gap-2">
+        <FlexContainer align="center" gap="sm">
           <Button 
             as={Link} 
             to={`/artistes/${artiste.id}`} 
             variant="outline-primary" 
-            size="sm" 
-            className="d-flex align-items-center"
+            size="sm"
           >
-            <i className="bi bi-eye me-1"></i>Voir
+            <FlexContainer align="center" inline>
+              <i className="bi bi-eye me-1"></i>Voir
+            </FlexContainer>
           </Button>
           <Button 
             as={Link} 
             to={`/artistes/${artiste.id}/modifier`} 
             variant="outline-secondary" 
-            size="sm" 
-            className="d-flex align-items-center"
+            size="sm"
           >
-            <i className="bi bi-pencil me-1"></i>Modifier
+            <FlexContainer align="center" inline>
+              <i className="bi bi-pencil me-1"></i>Modifier
+            </FlexContainer>
           </Button>
           <Button 
             variant="outline-danger"
@@ -96,7 +103,7 @@ const ArtisteRow = ({ artiste, onDelete }) => {
           >
             <i className="bi bi-trash"></i>
           </Button>
-        </div>
+        </FlexContainer>
       </td>
     </tr>
   );

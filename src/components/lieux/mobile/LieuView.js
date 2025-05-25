@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Spinner from '@/components/common/Spinner';
 import Button from '@/components/ui/Button';
 import Alert from '@/components/ui/Alert';
+import FlexContainer from '@/components/ui/FlexContainer';
 import { toast } from 'react-toastify';
 // MIGRATION: Utilisation du hook optimisé au lieu du hook V2
 import { useLieuDetails } from '@/hooks/lieux';
@@ -70,9 +71,9 @@ const LieuView = () => {
   // If loading, show a spinner
   if (loading) {
     return (
-      <div className={styles?.spinnerContainer || "d-flex justify-content-center align-items-center p-5"}>
+      <FlexContainer justify="center" align="center" className={styles?.spinnerContainer || "p-5"}>
         <Spinner variant="primary" message="Chargement du lieu..." />
-      </div>
+      </FlexContainer>
     );
   }
 
@@ -120,8 +121,8 @@ const LieuView = () => {
   return (
     <div className={styles?.lieuContainer || "mobile-lieu-container p-3"}>
       {/* Header avec boutons d'action */}
-      <div className={styles?.header || "mobile-header d-flex justify-content-between align-items-center mb-4"}>
-        <div className="d-flex align-items-center">
+      <FlexContainer justify="space-between" align="center" className={styles?.header || "mobile-header mb-4"}>
+        <FlexContainer align="center">
           <Button 
             variant="text" 
             onClick={handleBackWithNotification}
@@ -129,9 +130,9 @@ const LieuView = () => {
             icon={<i className="bi bi-arrow-left fs-4"></i>}
           />
           <h1 className="mb-0 h4">{lieu.nom}</h1>
-        </div>
+        </FlexContainer>
         
-        <div className="d-flex">
+        <FlexContainer>
           <Button 
             variant="outline-primary" 
             className="me-2"
@@ -143,8 +144,8 @@ const LieuView = () => {
             onClick={handleDeleteWithNotification}
             icon={<i className="bi bi-trash"></i>}
           />
-        </div>
-      </div>
+        </FlexContainer>
+      </FlexContainer>
 
       {/* Informations de base */}
       <div className={styles?.section || "mobile-section mb-4 p-3 border rounded"}>
@@ -237,7 +238,7 @@ const LieuView = () => {
 
       {/* Concerts associés - affichage simplifié */}
       <div className={styles?.section || "mobile-section mb-4 p-3 border rounded"}>
-        <div className="d-flex justify-content-between align-items-center mb-3">
+        <FlexContainer justify="space-between" align="center" className="mb-3">
           <h2 className="h6 mb-0">Concerts</h2>
           <Button 
             variant="outline-primary" 
@@ -247,23 +248,25 @@ const LieuView = () => {
           >
             Ajouter
           </Button>
-        </div>
+        </FlexContainer>
         
         {lieu.concerts && lieu.concerts.length > 0 ? (
           <div className="list-group">
             {lieu.concerts.map(concert => (
               <div 
                 key={concert.id} 
-                className="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                className="list-group-item list-group-item-action"
                 onClick={() => navigate(`/concerts/${concert.id}`)}
               >
-                <div>
-                  <div>{concert.titre || "Concert sans titre"}</div>
-                  <small className="text-muted">
-                    {new Date(concert.date).toLocaleDateString('fr-FR')}
-                  </small>
-                </div>
-                <i className="bi bi-chevron-right text-muted"></i>
+                <FlexContainer justify="space-between" align="center">
+                  <div>
+                    <div>{concert.titre || "Concert sans titre"}</div>
+                    <small className="text-muted">
+                      {new Date(concert.date).toLocaleDateString('fr-FR')}
+                    </small>
+                  </div>
+                  <i className="bi bi-chevron-right text-muted"></i>
+                </FlexContainer>
               </div>
             ))}
           </div>

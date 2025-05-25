@@ -4,6 +4,7 @@ import { Routes, Route, useNavigate } from 'react-router-dom';
 import { collection, getDocs, query, orderBy, where } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
 import { Table, Badge, Button, Container, Row, Col, Card } from 'react-bootstrap';
+import FlexContainer from '@/components/ui/FlexContainer';
 import ContratGenerationPage from '@pages/ContratGenerationPage.js';
 import ContratDetailsPage from '@pages/ContratDetailsPage.js';
 // Imports directs au lieu de lazy - SUPPRIMÉS: imports non utilisés
@@ -103,7 +104,7 @@ const ContratsPage = () => {
     <Container fluid className="p-4">
       <Row className="mb-4">
         <Col>
-          <div className="d-flex justify-content-between align-items-center">
+          <FlexContainer justify="space-between" align="center">
             <h2 className="mb-0"><i className="bi bi-file-earmark-text me-2"></i>Contrats</h2>
             <Button 
               variant="primary" 
@@ -112,7 +113,7 @@ const ContratsPage = () => {
               <i className="bi bi-gear me-2"></i>
               Gérer les modèles
             </Button>
-          </div>
+          </FlexContainer>
         </Col>
       </Row>
 
@@ -166,18 +167,18 @@ const ContratsPage = () => {
                     <td className="align-middle fw-medium">{contrat.concert?.titre || 'N/A'}</td>
                     <td className="align-middle">
                       {contrat.concert?.lieuNom ? (
-                        <div className="d-flex align-items-center">
+                        <FlexContainer align="center">
                           <i className="bi bi-geo-alt text-muted me-2"></i>
                           {contrat.concert.lieuNom}
-                        </div>
+                        </FlexContainer>
                       ) : 'N/A'}
                     </td>
                     <td className="align-middle">
                       {contrat.concert?.programmateurNom ? (
-                        <div className="d-flex align-items-center">
+                        <FlexContainer align="center">
                           <i className="bi bi-person text-muted me-2"></i>
                           {contrat.concert.programmateurNom}
-                        </div>
+                        </FlexContainer>
                       ) : 'N/A'}
                     </td>
                     <td className="align-middle">{getStatusBadge(contrat.status)}</td>

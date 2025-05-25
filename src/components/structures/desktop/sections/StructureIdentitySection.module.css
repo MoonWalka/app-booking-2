@@ -11,7 +11,7 @@
  */
 
 .formCard {
-  background-color: var(--tc-color-background);
+  background-color: var(--tc-white);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-box-shadow-sm);
   margin-bottom: var(--tc-spacing-lg);
@@ -22,13 +22,13 @@
   display: flex;
   align-items: center;
   padding: var(--tc-spacing-md) var(--tc-spacing-md);
-  border-bottom: 1px solid var(--tc-color-border-light);
-  background-color: var(--tc-color-background-secondary);
+  border-bottom: 1px solid var(--tc-border-color-light);
+  background-color: var(--tc-white-secondary);
 }
 
 .cardHeader i {
   font-size: var(--tc-font-size-lg);
-  color: var(--tc-color-primary);
+  color: var(--tc-primary-color);
   margin-right: var(--tc-spacing-sm);
 }
 
@@ -69,20 +69,20 @@
 .formControl, .formSelect {
   display: block;
   width: 100%;
-  border: 1px solid var(--tc-color-border);
+  border: 1px solid var(--tc-border-color);
   border-radius: var(--tc-border-radius-sm);
   padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
   font-size: var(--tc-font-size-sm);
   line-height: 1.5;
-  color: var(--tc-color-text-primary);
-  background-color: var(--tc-color-background);
+  color: var(--tc-text-color);
+  background-color: var(--tc-white);
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
 .formControl:focus, .formSelect:focus {
-  border-color: var(--tc-color-primary-light);
+  border-color: var(--tc-primary-color-light);
   outline: 0;
-  box-shadow: 0 0 0 0.25rem rgba(var(--tc-color-primary-rgb), 0.25);
+  box-shadow: 0 0 0 0.25rem rgba(var(--tc-primary-color-rgb), 0.25);
 }
 
 .formSelect {
@@ -99,11 +99,11 @@
   width: 100%;
   margin-top: var(--tc-spacing-xs);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-color-danger);
+  color: var(--tc-danger-color);
 }
 
 .required {
-  color: var(--tc-color-danger);
+  color: var(--tc-danger-color);
   margin-left: var(--tc-spacing-xs);
 }
 

@@ -137,8 +137,8 @@
 }
 
 .actionsSection .btn-primary {
-  background-color: var(--tc-color-primary);
-  border-color: var(--tc-color-primary);
+  background-color: var(--tc-primary-color);
+  border-color: var(--tc-primary-color);
   color: var(--tc-bg-color-light);
 }
 
@@ -148,8 +148,8 @@
 }
 
 .actionsSection .btn-danger {
-  background-color: var(--tc-color-danger);
-  border-color: var(--tc-color-danger);
+  background-color: var(--tc-danger-color);
+  border-color: var(--tc-danger-color);
   color: var(--tc-bg-color-light);
 }
 
@@ -174,7 +174,7 @@
    CHAMPS REQUIS
    ============================= */
 .mobileForm .form-label .text-danger {
-  color: var(--tc-color-danger) !important;
+  color: var(--tc-danger-color) !important;
   font-weight: var(--tc-font-weight-bold);
 }
 
@@ -192,9 +192,9 @@
 }
 
 .mobileForm .alert-danger {
-  background-color: rgba(var(--tc-color-danger-rgb), 0.1);
-  border: 1px solid rgba(var(--tc-color-danger-rgb), 0.3);
-  color: var(--tc-color-danger);
+  background-color: rgba(var(--tc-danger-color-rgb), 0.1);
+  border: 1px solid rgba(var(--tc-danger-color-rgb), 0.3);
+  color: var(--tc-danger-color);
 }
 
 .mobileForm .alert i {

@@ -23,14 +23,14 @@
 
 .fieldLabel {
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-color-text-primary);
+  color: var(--tc-text-color);
   margin-bottom: var(--tc-spacing-sm);
   font-size: var(--tc-font-size-sm);
 }
 
 .fieldInput {
   padding: var(--tc-spacing-sm) var(--tc-spacing-md);
-  border: 1px solid var(--tc-color-border);
+  border: 1px solid var(--tc-border-color);
   border-radius: var(--tc-border-radius);
   font-size: var(--tc-font-size-md);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -38,12 +38,12 @@
 
 .fieldInput:focus {
   outline: none;
-  border-color: var(--tc-color-primary);
-  box-shadow: 0 0 0 3px var(--tc-color-primary-light);
+  border-color: var(--tc-primary-color);
+  box-shadow: 0 0 0 3px var(--tc-primary-color-light);
 }
 
 .fieldInput:invalid {
-  border-color: var(--tc-color-danger);
+  border-color: var(--tc-danger-color);
 }
 
 .fullWidthField {
@@ -51,7 +51,7 @@
 }
 
 .inputIcon {
-  color: var(--tc-color-text-muted);
+  color: var(--tc-text-muted);
   margin-right: var(--tc-spacing-sm);
 }
 
@@ -59,7 +59,7 @@
   width: 100%;
   margin-top: var(--tc-spacing-xs);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-color-danger);
+  color: var(--tc-danger-color);
 }
 
 /* Support responsive */

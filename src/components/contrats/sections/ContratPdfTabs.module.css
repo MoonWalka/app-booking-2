@@ -6,7 +6,7 @@
 
 .tabsContainer {
   margin-bottom: var(--tc-spacing-lg);
-  border-bottom: 1px solid var(--tc-color-border);
+  border-bottom: 1px solid var(--tc-border-color);
 }
 
 .tabsList {
@@ -25,7 +25,7 @@
   display: flex;
   align-items: center;
   padding: var(--tc-spacing-md) var(--tc-spacing-lg);
-  color: var(--tc-color-secondary);
+  color: var(--tc-secondary-color);
   text-decoration: none;
   border: 1px solid transparent;
   border-bottom: none;
@@ -37,20 +37,20 @@
 }
 
 .tabLink:hover {
-  color: var(--tc-color-primary);
-  background-color: var(--tc-color-surface);
+  color: var(--tc-primary-color);
+  background-color: var(--tc-white);
 }
 
 .tabLink.active {
-  color: var(--tc-color-primary);
-  background-color: var(--tc-color-white);
-  border-color: var(--tc-color-border);
-  border-bottom: 1px solid var(--tc-color-white);
+  color: var(--tc-primary-color);
+  background-color: var(--tc-white);
+  border-color: var(--tc-border-color);
+  border-bottom: 1px solid var(--tc-white);
   margin-bottom: -1px;
 }
 
 .tabLink:disabled {
-  color: var(--tc-color-text-muted);
+  color: var(--tc-text-muted);
   cursor: not-allowed;
   opacity: 0.6;
 }
@@ -69,13 +69,13 @@
 }
 
 .tabBadgeSuccess {
-  background-color: var(--tc-color-success);
-  color: var(--tc-color-white);
+  background-color: var(--tc-success-color);
+  color: var(--tc-white);
 }
 
 .tabBadgeInfo {
-  background-color: var(--tc-color-info);
-  color: var(--tc-color-white);
+  background-color: var(--tc-info-color);
+  color: var(--tc-white);
 }
 
 .spinner {
@@ -101,12 +101,12 @@
   
   .tabLink {
     border-radius: var(--tc-border-radius);
-    border: 1px solid var(--tc-color-border);
+    border: 1px solid var(--tc-border-color);
     margin-bottom: var(--tc-spacing-xs);
   }
   
   .tabLink.active {
-    border: 1px solid var(--tc-color-primary);
-    background-color: var(--tc-color-primary-light);
+    border: 1px solid var(--tc-primary-color);
+    background-color: var(--tc-primary-color-light);
   }
 }

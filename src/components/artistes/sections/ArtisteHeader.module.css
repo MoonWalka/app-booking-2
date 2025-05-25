@@ -33,7 +33,7 @@
   align-items: center;
   justify-content: center;
   background-color: var(--tc-bg-subtle);
-  color: var(--tc-color-text-muted);
+  color: var(--tc-text-muted);
   font-size: var(--tc-font-size-xl);
 }
 
@@ -45,14 +45,14 @@
   margin: 0 0 var(--tc-spacing-1);
   font-size: var(--tc-font-size-xl);
   font-weight: var(--tc-font-weight-bold);
-  color: var(--tc-color-title);
+  color: var(--tc-text-color);
 }
 
 .artisteDetails {
   display: flex;
   gap: var(--tc-spacing-3);
   flex-wrap: wrap;
-  color: var(--tc-color-text-muted);
+  color: var(--tc-text-muted);
 }
 
 .detailItem {

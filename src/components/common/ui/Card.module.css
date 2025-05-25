@@ -21,7 +21,7 @@
 
 /* Variantes */
 .card-default {
-  box-shadow: 0 2px 5px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.1));
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   border: 1px solid var(--tc-border-color);
 }
 
@@ -30,20 +30,20 @@
 }
 
 .card-elevated {
-  box-shadow: 0 4px 12px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.15));
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* Niveaux d'élévation */
 .elevation-low {
-  box-shadow: 0 2px 4px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.08));
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
 }
 
 .elevation-medium {
-  box-shadow: 0 4px 8px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.12));
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
 }
 
 .elevation-high {
-  box-shadow: 0 8px 16px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.18));
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.18);
 }
 
 /* Tailles */

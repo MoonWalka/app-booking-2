@@ -25,7 +25,7 @@
 .pageTitle {
   font-size: var(--tc-font-size-xl);
   font-weight: var(--tc-font-weight-bold);
-  color: var(--tc-color-title);
+  color: var(--tc-text-color);
   margin: 0;
 }
 
@@ -53,7 +53,7 @@
   display: flex;
   align-items: center;
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-color-text-muted);
+  color: var(--tc-text-muted);
 }
 
 .breadcrumbItem {
@@ -62,7 +62,7 @@
 }
 
 .breadcrumbItem:hover:not(.active) {
-  color: var(--tc-color-primary);
+  color: var(--tc-primary-color);
   text-decoration: underline;
 }
 

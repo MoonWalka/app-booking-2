@@ -30,7 +30,7 @@
 }
 
 .multiPagePreviewWrapper {
-  background-color: var(--tc-color-f5f5f5);
+  background-color: var(--tc-gray-100);
   border-radius: 4px;
   padding: 0.5rem;
 }

@@ -281,7 +281,7 @@
 .loadingText {
   margin-top: var(--tc-spacing-3);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-color-text-secondary);
+  color: var(--tc-text-color-secondary);
 }
 
 /* Section headers */
@@ -316,9 +316,9 @@
 /* Section containers */
 .sectionContainer {
   margin-bottom: var(--tc-spacing-4);
-  border: 1px solid var(--tc-color-border-medium);
+  border: 1px solid var(--tc-border-color-medium);
   border-radius: var(--tc-radius-sm);
-  box-shadow: 0 1px 3px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.1));
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .sectionBody {
@@ -330,7 +330,7 @@
   display: flex;
   flex-direction: column;
   margin-bottom: var(--tc-spacing-3);
-  border-bottom: 1px solid var(--tc-color-border);
+  border-bottom: 1px solid var(--tc-border-color);
   padding-bottom: var(--tc-spacing-3);
 }
 
@@ -343,7 +343,7 @@
 .fieldLabel {
   font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-color-text-secondary);
+  color: var(--tc-text-color-secondary);
   margin-bottom: var(--tc-spacing-1);
 }
 

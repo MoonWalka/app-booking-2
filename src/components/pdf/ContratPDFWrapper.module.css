@@ -27,7 +27,7 @@
   text-align: center;
   padding: var(--tc-spacing-5);
   font-style: italic;
-  color: var(--tc-color-secondary);
+  color: var(--tc-secondary-color);
 }
 
 .errorMessage {

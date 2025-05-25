@@ -31,7 +31,7 @@
 
 .backButton {
   font-size: var(--tc-spacing-4);
-  color: var(--tc-color-text-secondary);
+  color: var(--tc-text-color-secondary);
   padding: 0;
   background: none;
   border: none;
@@ -42,7 +42,7 @@
   margin: 0 var(--tc-spacing-3) var(--tc-spacing-3);
   border-radius: var(--tc-spacing-2);
   padding: var(--tc-spacing-3);
-  box-shadow: 0 2px 4px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.05));
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .formSectionTitle {

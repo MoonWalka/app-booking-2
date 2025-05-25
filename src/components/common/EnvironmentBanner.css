@@ -18,10 +18,10 @@
 
 .environment-local {
   background-color: var(--tc-color-ff9800);
-  color: var(--tc-color-000);
+  color: var(--tc-black);
 }
 
 .environment-development {
   background-color: var(--tc-color-2196f3);
-  color: var(--tc-color-fff);
+  color: var(--tc-white);
 }

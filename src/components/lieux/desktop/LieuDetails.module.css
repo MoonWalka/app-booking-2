@@ -61,7 +61,7 @@
 
 .errorIcon {
   font-size: var(--tc-font-size-xxl);
-  color: var(--tc-color-danger);
+  color: var(--tc-danger-color);
   margin-bottom: var(--tc-spacing-sm);
 }
 
@@ -82,7 +82,7 @@
   align-items: center;
   gap: var(--tc-spacing-xs);
   padding: var(--tc-spacing-sm) var(--tc-spacing-md);
-  background-color: var(--tc-color-primary);
+  background-color: var(--tc-primary-color);
   color: var(--tc-bg-color-light);
   border: none;
   border-radius: var(--tc-border-radius);

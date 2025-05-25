@@ -13,7 +13,7 @@
 .container {
   margin-bottom: var(--tc-spacing-lg);
   padding: var(--tc-spacing-md);
-  background-color: var(--tc-color-background-secondary);
+  background-color: var(--tc-white-secondary);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-box-shadow-sm);
 }
@@ -22,8 +22,8 @@
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-bold);
   margin-bottom: var(--tc-spacing-md);
-  color: var(--tc-color-text-primary);
-  border-bottom: 1px solid var(--tc-color-border-light);
+  color: var(--tc-text-color);
+  border-bottom: 1px solid var(--tc-border-color-light);
   padding-bottom: var(--tc-spacing-sm);
 }
 
@@ -36,13 +36,13 @@
   width: 100%;
   padding: var(--tc-spacing-sm);
   font-size: var(--tc-font-size-base);
-  border: 1px solid var(--tc-color-border);
+  border: 1px solid var(--tc-border-color);
   border-radius: var(--tc-border-radius);
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
 .searchInput:focus {
-  border-color: var(--tc-color-primary-light);
+  border-color: var(--tc-primary-color-light);
   outline: none;
   box-shadow: var(--tc-primary-color-shadow);
 }
@@ -53,8 +53,8 @@
   left: 0;
   right: 0;
   z-index: 10;
-  background-color: var(--tc-color-background);
-  border: 1px solid var(--tc-color-border);
+  background-color: var(--tc-white);
+  border: 1px solid var(--tc-border-color);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-box-shadow-md);
   max-height: 300px;
@@ -63,7 +63,7 @@
 
 .resultItem {
   padding: var(--tc-spacing-sm);
-  border-bottom: 1px solid var(--tc-color-border-light);
+  border-bottom: 1px solid var(--tc-border-color-light);
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
@@ -73,24 +73,24 @@
 }
 
 .resultItem:hover {
-  background-color: var(--tc-color-background-hover);
+  background-color: var(--tc-white-hover);
 }
 
 .resultItemName {
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-color-text-primary);
+  color: var(--tc-text-color);
 }
 
 .resultItemLocation {
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-color-text-muted);
+  color: var(--tc-text-muted);
   margin-top: var(--tc-spacing-xs);
 }
 
 .noResults {
   padding: var(--tc-spacing-md);
   text-align: center;
-  color: var(--tc-color-text-muted);
+  color: var(--tc-text-muted);
   font-style: italic;
 }
 
@@ -103,10 +103,10 @@
   justify-content: space-between;
   align-items: center;
   padding: var(--tc-spacing-sm);
-  border: 1px solid var(--tc-color-border-light);
+  border: 1px solid var(--tc-border-color-light);
   margin-bottom: var(--tc-spacing-sm);
   border-radius: var(--tc-border-radius);
-  background-color: var(--tc-color-background-light);
+  background-color: var(--tc-white-light);
 }
 
 .lieuDetails {
@@ -115,17 +115,17 @@
 
 .lieuName {
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-color-text-primary);
+  color: var(--tc-text-color);
 }
 
 .lieuAddress {
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-color-text-muted);
+  color: var(--tc-text-muted);
   margin-top: var(--tc-spacing-xs);
 }
 
 .removeButton {
-  color: var(--tc-color-danger);
+  color: var(--tc-danger-color);
   background: transparent;
   border: none;
   cursor: pointer;
@@ -146,7 +146,7 @@
 
 .loadingText {
   margin-left: var(--tc-spacing-sm);
-  color: var(--tc-color-text-muted);
+  color: var(--tc-text-muted);
 }
 
 .addButton {
@@ -154,17 +154,17 @@
   align-items: center;
   margin-top: var(--tc-spacing-md);
   padding: var(--tc-spacing-xs) var(--tc-spacing-md);
-  color: var(--tc-color-primary);
+  color: var(--tc-primary-color);
   background-color: transparent;
-  border: 1px solid var(--tc-color-primary);
+  border: 1px solid var(--tc-primary-color);
   border-radius: var(--tc-border-radius);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .addButton:hover {
-  color: var(--tc-color-background);
-  background-color: var(--tc-color-primary);
+  color: var(--tc-white);
+  background-color: var(--tc-primary-color);
 }
 
 .addButtonIcon {

@@ -8,7 +8,7 @@
 .headerContainer {
   margin-bottom: var(--tc-spacing-3);
   padding: var(--tc-spacing-2) 0;
-  border-bottom: 1px solid var(--tc-color-border-light);
+  border-bottom: 1px solid var(--tc-border-color-light);
 }
 
 .titleContainer {

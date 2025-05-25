@@ -111,7 +111,7 @@
   background-color: var(--tc-primary-color);
   border: none;
   border-radius: var(--tc-border-radius-sm);
-  color: var(--tc-color-light);
+  color: var(--tc-light-color);
   cursor: pointer;
   font-weight: var(--tc-font-weight-medium);
   display: flex;

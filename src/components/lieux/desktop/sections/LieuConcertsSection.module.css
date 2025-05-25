@@ -43,7 +43,7 @@
 }
 
 .cardIcon {
-  color: var(--tc-color-primary);
+  color: var(--tc-primary-color);
   font-size: var(--tc-font-size-xl);
   display: flex;
   align-items: center;

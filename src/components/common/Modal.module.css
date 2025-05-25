@@ -60,7 +60,7 @@
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-bold);
   margin: 0;
-  color: var(--tc-color-title);
+  color: var(--tc-text-color);
 }
 
 .modalBody {
@@ -141,7 +141,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--tc-color-rgba(0), rgba(0, 0, 0, 0.5));
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -152,7 +152,7 @@
 .modal {
   background-color: var(--tc-bg-color);
   border-radius: 8px;
-  box-shadow: 0 4px 20px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.15));
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   width: 100%;
   max-height: 90vh;
   overflow: hidden;
@@ -222,7 +222,7 @@
 
 .closeButton:hover {
   color: var(--tc-icon-hover-color);
-  background-color: var(--tc-color-rgba(0), rgba(0, 0, 0, 0.05));
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 /* Animations */

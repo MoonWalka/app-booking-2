@@ -43,7 +43,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--tc-color-text-muted);
+  color: var(--tc-text-muted);
   font-size: var(--tc-font-size-lg);
 }
 
@@ -52,7 +52,7 @@
   cursor: pointer;
   display: flex;
   align-items: center;
-  color: var(--tc-color-primary);
+  color: var(--tc-primary-color);
   background-color: var(--tc-bg-primary-subtle);
 }
 

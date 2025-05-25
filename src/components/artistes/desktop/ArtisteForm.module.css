@@ -23,7 +23,7 @@
 }
 
 .stepFormContainer {
-  background-color: var(--tc-color-white);
+  background-color: var(--tc-white);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-box-shadow);
   padding: var(--tc-spacing-lg);
@@ -59,7 +59,7 @@
   align-items: center;
   position: relative;
   z-index: 2;
-  background-color: var(--tc-color-white);
+  background-color: var(--tc-white);
   padding: 0 var(--tc-spacing-sm);
 }
 
@@ -70,7 +70,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--tc-color-gray-200);
+  background-color: var(--tc-gray-200);
   color: var(--tc-text-color-secondary);
   font-weight: var(--tc-font-weight-semibold);
   font-size: var(--tc-font-size-sm);
@@ -89,7 +89,7 @@
 /* État actif */
 .stepIndicator.active .stepNumber {
   background-color: var(--tc-primary-color);
-  color: var(--tc-color-white);
+  color: var(--tc-white);
 }
 
 .stepIndicator.active .stepTitle {
@@ -100,7 +100,7 @@
 /* État complété */
 .stepIndicator.completed .stepNumber {
   background-color: var(--tc-success-color);
-  color: var(--tc-color-white);
+  color: var(--tc-white);
 }
 
 .stepIndicator.completed .stepTitle {

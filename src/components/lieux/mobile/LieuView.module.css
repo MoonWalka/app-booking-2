@@ -93,7 +93,7 @@
 }
 
 .errorMessage {
-  color: var(--tc-color-danger);
+  color: var(--tc-danger-color);
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-medium);
   margin-bottom: var(--tc-spacing-md);
@@ -156,7 +156,7 @@
 }
 
 .primaryButton {
-  background-color: var(--tc-color-primary);
+  background-color: var(--tc-primary-color);
   color: var(--tc-bg-color-light);
   border: none;
 }
@@ -177,7 +177,7 @@
 }
 
 .dangerButton {
-  background-color: var(--tc-color-danger);
+  background-color: var(--tc-danger-color);
   color: var(--tc-bg-color-light);
   border: none;
 }

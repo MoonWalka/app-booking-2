@@ -18,7 +18,7 @@
   border-bottom-width: 1px;
   font-weight: var(--tc-font-weight-semibold);
   padding: var(--tc-spacing-2) var(--tc-spacing-3-5);
-  color: var(--tc-color-text-dark);
+  color: var(--tc-text-color);
 }
 
 /* Styles responsive standardisés */

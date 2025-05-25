@@ -26,7 +26,7 @@
 .formLabel {
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-color-text-secondary);
+  color: var(--tc-text-color-secondary);
   margin-bottom: var(--tc-spacing-1);
 }
 
@@ -42,7 +42,7 @@
   gap: var(--tc-spacing-2);
   margin-bottom: var(--tc-spacing-3);
   padding-bottom: var(--tc-spacing-2);
-  border-bottom: 1px solid var(--tc-color-border);
+  border-bottom: 1px solid var(--tc-border-color);
 }
 
 .statusBadge {
@@ -65,7 +65,7 @@
 .infoGroup {
   margin-bottom: var(--tc-spacing-2);
   padding-bottom: var(--tc-spacing-2);
-  border-bottom: 1px solid var(--tc-color-border);
+  border-bottom: 1px solid var(--tc-border-color);
   display: flex;
   flex-direction: column;
 }
@@ -77,7 +77,7 @@
 .infoLabel {
   font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-color-text-secondary);
+  color: var(--tc-text-color-secondary);
   margin-bottom: var(--tc-spacing-1);
 }
 

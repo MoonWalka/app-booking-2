@@ -39,7 +39,7 @@
   gap: var(--tc-spacing-sm);
   padding: var(--tc-spacing-sm) var(--tc-spacing-md);
   background-color: var(--tc-primary-color);
-  color: var(--tc-color-white);
+  color: var(--tc-white);
   border: none;
   border-radius: var(--tc-border-radius);
   font-weight: var(--tc-font-weight-medium);
@@ -49,12 +49,12 @@
 
 .addButton:hover {
   background-color: var(--tc-primary-color-dark);
-  color: var(--tc-color-white);
+  color: var(--tc-white);
   text-decoration: none;
 }
 
 .content {
-  background-color: var(--tc-color-white);
+  background-color: var(--tc-white);
   border-radius: var(--tc-border-radius-md);
   box-shadow: var(--tc-box-shadow);
   overflow: hidden;
@@ -64,7 +64,7 @@
   display: flex;
   gap: var(--tc-spacing-md);
   padding: var(--tc-spacing-md) var(--tc-spacing-lg);
-  background-color: var(--tc-color-gray-100);
+  background-color: var(--tc-gray-100);
   border-bottom: var(--tc-border-width) solid var(--tc-border-color);
 }
 
@@ -101,7 +101,7 @@
 }
 
 .dataTable th {
-  background-color: var(--tc-color-gray-100);
+  background-color: var(--tc-gray-100);
   font-weight: var(--tc-font-weight-semibold);
   color: var(--tc-text-color-secondary);
   text-align: left;
@@ -145,7 +145,7 @@
   white-space: nowrap;
   vertical-align: baseline;
   border-radius: var(--tc-border-radius);
-  color: var(--tc-color-white);
+  color: var(--tc-white);
 }
 
 .badgeSuccess {
@@ -198,7 +198,7 @@
 
 .actionButtonPrimary:hover {
   background-color: var(--tc-primary-color);
-  color: var(--tc-color-white);
+  color: var(--tc-white);
 }
 
 .actionButtonDanger {
@@ -208,7 +208,7 @@
 
 .actionButtonDanger:hover {
   background-color: var(--tc-danger-color);
-  color: var(--tc-color-white);
+  color: var(--tc-white);
 }
 
 .muted {
@@ -230,7 +230,7 @@
 }
 
 .loadMoreButton:hover {
-  background-color: var(--tc-color-gray-100);
+  background-color: var(--tc-gray-100);
   color: var(--tc-text-color-primary);
 }
 

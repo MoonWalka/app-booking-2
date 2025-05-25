@@ -5,11 +5,11 @@
  */
 
 .card {
-  background-color: var(--tc-color-ffffff);
+  background-color: var(--tc-whitefff);
   border-radius: 6px;
   border: 1px solid var(--tc-color-e9ecef);
   margin-bottom: 1rem;
-  box-shadow: 0 1px 3px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.05));
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .cardHeader {

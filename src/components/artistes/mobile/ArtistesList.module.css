@@ -84,13 +84,13 @@
   background-color: var(--tc-bg-color);
   border-radius: var(--tc-border-radius);
   overflow: hidden;
-  box-shadow: 0 2px 4px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.05));
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
   cursor: pointer;
 }
 
 .artisteCardMobile:hover {
-  box-shadow: 0 4px 8px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.1));
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transform: translateY(-2px);
 }
 
@@ -268,12 +268,12 @@
 .statValue {
   font-size: var(--tc-font-size-xl);
   font-weight: var(--tc-font-weight-bold);
-  color: var(--tc-color-primary);
+  color: var(--tc-primary-color);
 }
 
 .statLabel {
   font-size: var(--tc-spacing-2);
-  color: var(--tc-color-text-secondary);
+  color: var(--tc-text-color-secondary);
 }
 
 .searchFilterContainer {
@@ -290,10 +290,10 @@
   right: 0;
   top: 100%;
   background-color: var(--tc-bg-default);
-  border: 1px solid var(--tc-color-border-light);
+  border: 1px solid var(--tc-border-color-light);
   border-radius: 0.375rem;
   z-index: 1000;
-  box-shadow: 0 var(--tc-spacing-2) var(--tc-spacing-3) var(--tc-color-rgba(0), rgba(0, 0, 0, 0.15));
+  box-shadow: 0 var(--tc-spacing-2) var(--tc-spacing-3) rgba(0, 0, 0, 0.15);
   max-height: 300px;
   overflow-y: auto;
 }
@@ -323,8 +323,8 @@
 .searchCreateItem {
   padding: var(--tc-spacing-2) var(--tc-spacing-3);
   cursor: pointer;
-  color: var(--tc-color-primary);
-  background-color: var(--tc-color-rgba(13), rgba(13, 110, 253, 0.05));
+  color: var(--tc-primary-color);
+  background-color: rgba(13, 110, 253, 0.05);
 }
 
 .sortButtons {
@@ -341,7 +341,7 @@
 
 .artisteCard {
   border: none;
-  box-shadow: 0 2px 4px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.05));
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .artisteHeader {
@@ -378,7 +378,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--tc-color-text-secondary);
+  color: var(--tc-text-color-secondary);
 }
 
 .artisteName {
@@ -391,7 +391,7 @@
 
 .artisteGenre {
   font-size: 0.875rem;
-  color: var(--tc-color-text-secondary);
+  color: var(--tc-text-color-secondary);
 }
 
 .concertsBadge {
@@ -450,5 +450,5 @@
 
 .emptyCard {
   border: none;
-  box-shadow: 0 2px 4px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.05));
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }

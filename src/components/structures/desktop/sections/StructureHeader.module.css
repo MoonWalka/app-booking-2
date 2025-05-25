@@ -11,11 +11,11 @@
  */
 
 .detailsHeader {
-  background-color: var(--tc-color-background);
+  background-color: var(--tc-white);
   border-radius: var(--tc-border-radius);
   padding: var(--tc-spacing-md);
   margin-bottom: var(--tc-spacing-md);
-  box-shadow: var(--tc-box-shadow-sm));
+  box-shadow: var(--tc-shadow-sm);
 }
 
 .breadcrumb {
@@ -23,7 +23,7 @@
   align-items: center;
   margin-bottom: var(--tc-spacing-sm);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-color-text-muted);
+  color: var(--tc-text-muted);
 }
 
 .breadcrumbLink {
@@ -32,7 +32,7 @@
 }
 
 .breadcrumbLink:hover {
-  color: var(--tc-color-primary);
+  color: var(--tc-primary-color);
 }
 
 .breadcrumbSeparator {
@@ -41,7 +41,7 @@
 
 .breadcrumbCurrent {
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-color-text-primary);
+  color: var(--tc-text-color);
 }
 
 .headerTitle {
@@ -55,7 +55,7 @@
   font-weight: var(--tc-font-weight-bold);
   margin: 0;
   margin-right: var(--tc-spacing-sm);
-  color: var(--tc-color-text-primary);
+  color: var(--tc-text-color);
 }
 
 .headerBadge {
@@ -81,34 +81,34 @@
 
 /* Badge styles */
 .badgePrimary {
-  background-color: var(--tc-color-primary-light);
-  color: var(--tc-color-primary-dark);
+  background-color: var(--tc-primary-color-light);
+  color: var(--tc-primary-color-dark);
 }
 
 .badgeSuccess {
-  background-color: var(--tc-color-success-light);
-  color: var(--tc-color-success-dark);
+  background-color: var(--tc-success-color-light);
+  color: var(--tc-success-color-dark);
 }
 
 .badgeInfo {
-  background-color: var(--tc-color-info-light);
-  color: var(--tc-color-info-dark);
+  background-color: var(--tc-info-color-light);
+  color: var(--tc-info-color-dark);
 }
 
 .badgeWarning {
-  background-color: var(--tc-color-warning-light);
-  color: var(--tc-color-warning-dark);
+  background-color: var(--tc-warning-color-light);
+  color: var(--tc-warning-color-dark);
 }
 
 .badgeSecondary {
-  background-color: var(--tc-color-secondary-light);
-  color: var(--tc-color-secondary-dark);
+  background-color: var(--tc-secondary-color-light);
+  color: var(--tc-secondary-color-dark);
 }
 
 /* Button styles */
 .primaryOutlineButton {
-  color: var(--tc-color-primary);
-  border: 1px solid var(--tc-color-primary);
+  color: var(--tc-primary-color);
+  border: 1px solid var(--tc-primary-color);
   background-color: transparent;
   border-radius: var(--tc-border-radius);
   padding: var(--tc-spacing-xs) var(--tc-spacing-md);
@@ -116,13 +116,13 @@
 }
 
 .primaryOutlineButton:hover {
-  background-color: var(--tc-color-primary);
-  color: var(--tc-color-background);
+  background-color: var(--tc-primary-color);
+  color: var(--tc-white);
 }
 
 .dangerOutlineButton {
-  color: var(--tc-color-danger);
-  border: 1px solid var(--tc-color-danger);
+  color: var(--tc-danger-color);
+  border: 1px solid var(--tc-danger-color);
   background-color: transparent;
   border-radius: var(--tc-border-radius);
   padding: var(--tc-spacing-xs) var(--tc-spacing-md);
@@ -130,8 +130,8 @@
 }
 
 .dangerOutlineButton:hover {
-  background-color: var(--tc-color-danger);
-  color: var(--tc-color-background);
+  background-color: var(--tc-danger-color);
+  color: var(--tc-white);
 }
 
 /* Responsive styles */

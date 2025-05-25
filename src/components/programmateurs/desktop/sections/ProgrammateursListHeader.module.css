@@ -29,7 +29,7 @@
   align-items: center;
   gap: var(--tc-spacing-xs);
   font-weight: var(--tc-font-weight-medium);
-  background-color: var(--tc-color-primary);
+  background-color: var(--tc-primary-color);
   color: var(--tc-light-color);
   border: none;
   border-radius: var(--tc-border-radius);

@@ -157,7 +157,7 @@
   display: flex;
   justify-content: flex-end;
   padding: var(--tc-spacing-md) var(--tc-spacing-lg);
-  background-color: var(--tc-color-gray-100);
+  background-color: var(--tc-gray-100);
   border-top: var(--tc-border-width) solid var(--tc-border-color);
 }
 
@@ -171,7 +171,7 @@
   white-space: nowrap;
   vertical-align: baseline;
   border-radius: var(--tc-border-radius);
-  color: var(--tc-color-white);
+  color: var(--tc-white);
 }
 
 .badgeSuccess {

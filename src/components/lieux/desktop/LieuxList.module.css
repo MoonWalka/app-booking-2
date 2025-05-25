@@ -63,7 +63,7 @@
 
 .searchInput:focus {
   background-color: var(--tc-bg-color-light);
-  border-color: var(--tc-color-primary);
+  border-color: var(--tc-primary-color);
   box-shadow: var(--tc-input-focus-shadow);
   outline: none;
 }

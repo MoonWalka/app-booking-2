@@ -152,9 +152,9 @@
   max-width: 210mm;
   min-height: 297mm;
   margin: 0 auto;
-  background: var(--tc-color-white);
+  background: var(--tc-white);
   padding: 20mm;
-  box-shadow: var(--tc-box-shadow));
+  box-shadow: var(--tc-shadow);
 }
 
 /* Style pour le dropdown des variables */

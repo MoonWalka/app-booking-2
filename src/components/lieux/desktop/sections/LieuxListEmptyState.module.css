@@ -49,7 +49,7 @@
   align-items: center;
   justify-content: center;
   padding: var(--tc-spacing-sm) var(--tc-spacing-md);
-  background-color: var(--tc-color-primary);
+  background-color: var(--tc-primary-color);
   color: var(--tc-bg-color-light);
   border: none;
   border-radius: var(--tc-border-radius);

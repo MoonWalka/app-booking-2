@@ -29,7 +29,7 @@
 }
 
 .cardIcon {
-  color: var(--tc-color-primary);
+  color: var(--tc-primary-color);
   font-size: var(--tc-font-size-lg);
   display: flex;
   align-items: center;

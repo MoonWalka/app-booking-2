@@ -11,7 +11,7 @@
  */
 
 .formCard {
-  background-color: var(--tc-color-background);
+  background-color: var(--tc-white);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-box-shadow-sm);
   margin-bottom: var(--tc-spacing-lg);
@@ -19,7 +19,7 @@
 }
 
 .detailsCard {
-  background-color: var(--tc-color-background);
+  background-color: var(--tc-white);
   border-radius: var(--tc-border-radius);
   margin-bottom: var(--tc-spacing-md);
   box-shadow: var(--tc-box-shadow-sm);
@@ -30,13 +30,13 @@
   display: flex;
   align-items: center;
   padding: var(--tc-spacing-sm) var(--tc-spacing-md);
-  background-color: var(--tc-color-background-secondary);
-  border-bottom: 1px solid var(--tc-color-border);
+  background-color: var(--tc-white-secondary);
+  border-bottom: 1px solid var(--tc-border-color);
 }
 
 .cardHeader i {
   font-size: var(--tc-font-size-lg);
-  color: var(--tc-color-primary);
+  color: var(--tc-primary-color);
   margin-right: var(--tc-spacing-sm);
 }
 
@@ -44,7 +44,7 @@
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-bold);
   margin: 0;
-  color: var(--tc-color-text-primary);
+  color: var(--tc-text-color);
 }
 
 .cardBody {
@@ -78,20 +78,20 @@
 .formControl, .formSelect {
   display: block;
   width: 100%;
-  border: 1px solid var(--tc-color-border);
+  border: 1px solid var(--tc-border-color);
   border-radius: var(--tc-border-radius-sm);
   padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
   font-size: var(--tc-font-size-sm);
   line-height: 1.5;
-  color: var(--tc-color-text-primary);
-  background-color: var(--tc-color-background);
+  color: var(--tc-text-color);
+  background-color: var(--tc-white);
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
 .formControl:focus, .formSelect:focus {
-  border-color: var(--tc-color-primary-light);
+  border-color: var(--tc-primary-color-light);
   outline: 0;
-  box-shadow: 0 0 0 0.25rem rgba(var(--tc-color-primary-rgb), 0.25);
+  box-shadow: 0 0 0 0.25rem rgba(var(--tc-primary-color-rgb), 0.25);
 }
 
 .infoGroup {
@@ -100,26 +100,26 @@
 
 .infoLabel {
   font-size: var(--tc-font-size-xs);
-  color: var(--tc-color-text-muted);
+  color: var(--tc-text-muted);
   margin-bottom: var(--tc-spacing-xs);
   font-weight: var(--tc-font-weight-medium);
 }
 
 .infoValue {
   font-size: var(--tc-font-size-base);
-  color: var(--tc-color-text-primary);
+  color: var(--tc-text-color);
 }
 
 .contactLink {
   display: inline-flex;
   align-items: center;
-  color: var(--tc-color-primary);
+  color: var(--tc-primary-color);
   text-decoration: none;
   transition: color 0.2s;
 }
 
 .contactLink:hover {
-  color: var(--tc-color-primary-dark);
+  color: var(--tc-primary-color-dark);
   text-decoration: underline;
 }
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { Alert } from 'react-bootstrap';
 import Spinner from '@/components/common/Spinner';
 import PerformanceMonitor from '@/components/common/PerformanceMonitor';
-import DebugPerformanceMonitor from '@/components/debug/PerformanceMonitorEnhanced';
+import UnifiedDebugDashboard from '@/components/debug/UnifiedDebugDashboard';
 
 // Import custom hooks
 import { 
@@ -120,7 +120,7 @@ const ConcertsList = () => {
     <div className={styles.tableContainer}>
       {/* Moniteurs de performance en mode développement */}
       <PerformanceMonitor enabled={process.env.NODE_ENV === 'development'} />
-      <DebugPerformanceMonitor enabled={process.env.NODE_ENV === 'development'} />
+      <UnifiedDebugDashboard enabled={process.env.NODE_ENV === 'development'} />
       
       {/* Bouton de diagnostic (visible uniquement en développement) */}
       {process.env.NODE_ENV === 'development' && (

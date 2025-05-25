@@ -29,8 +29,8 @@ import ProgrammateursList from '@/components/programmateurs/ProgrammateursList';
 import ConcertFormWrapper from '@/components/concerts/ConcertForm';
 import ConcertsList from '@/components/concerts/ConcertsList';
 import ConcertDetails from '@/components/concerts/ConcertDetails';
-// Import du moniteur de performances (uniquement en développement)
-import PerformanceMonitor from '@/components/debug/PerformanceMonitor';
+// Import du dashboard de debug unifié (uniquement en développement)
+import UnifiedDebugDashboard from '@/components/debug/UnifiedDebugDashboard';
 
 // Import de l'outil de diagnostic en mode développement uniquement
 if (process.env.NODE_ENV === 'development') {
@@ -323,7 +323,7 @@ function App() {
                   </Route>
                 </Routes>
               </Suspense>
-              {process.env.NODE_ENV === 'development' && <PerformanceMonitor />}
+              {process.env.NODE_ENV === 'development' && <UnifiedDebugDashboard />}
             </ModalProvider>
           </ParametresProvider>
         </AuthProvider>

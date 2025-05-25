@@ -1,18 +1,6 @@
 # Documentation TourCraft
 
-*Note: Ce README a été mis à jour le 16 May 2025. Certains liens peuvent nécessiter une mise à jour suite à la réorganisation de la documentation.*
-
-
-*Note: Ce README a été mis à jour le 16 May 2025. Certains liens peuvent nécessiter une mise à jour suite à la réorganisation de la documentation.*
-
-
-*Note: Ce README a été mis à jour le 16 May 2025. Certains liens peuvent nécessiter une mise à jour suite à la réorganisation de la documentation.*
-
-
-*Note: Ce README a été mis à jour le 16 May 2025. Certains liens peuvent nécessiter une mise à jour suite à la réorganisation de la documentation.*
-
-
-*Document mis à jour le: 12 mai 2025*
+*Document mis à jour le : 25 mai 2025*
 
 Ce dossier contient toute la documentation technique du projet TourCraft. Ce fichier README sert d'index central pour naviguer efficacement dans la documentation disponible.
 
@@ -135,7 +123,7 @@ Les documents suivants ont été archivés car ils concernent des initiatives te
 1. **Mise à jour hebdomadaire**: Le document [État Consolidé des Migrations et Refactorisations](/docs/migration/ETAT_MIGRATION_CONSOLIDATION.md) est mis à jour tous les vendredis
 
 2. **Création/Modification de documentation**:
-   - Suivre les standards de formatation Markdown
+   - Suivre les standards de formatage Markdown
    - Ajouter systématiquement la date de création et de dernière mise à jour
    - Mettre à jour cet index si un nouveau document est créé
 
@@ -145,7 +133,7 @@ Les documents suivants ont été archivés car ils concernent des initiatives te
    - La mention "[ARCHIVÉ]" est ajoutée au début du titre du document
 
 4. **Résolution des incohérences**:
-   - Signaler toute incohérence à l'équipe documentation (documentation@tourcraft.com)
+   - Signaler toute incohérence dans les issues GitHub du projet
    - Ne pas modifier plusieurs documents connexes sans coordination
 
 ## ✨ Changements Récents
@@ -154,6 +142,5 @@ Les documents suivants ont été archivés car ils concernent des initiatives te
 
 ---
 
-*Index maintenu par l'équipe Documentation*
-*Dernière mise à jour : 10 mai 2025*
-*Pour toute question: documentation@tourcraft.com*
+*Index maintenu par l'équipe de développement*  
+*Dernière mise à jour : 25 mai 2025*

@@ -109,6 +109,11 @@ Les documents suivants ont été archivés car ils concernent des initiatives te
 - [📋 **Inventaire Composants Mobiles**](/docs/archive/INVENTAIRE_REFACTORISATION_COMPOSANTS_MOBILES.md) - [ARCHIVÉ] Inventaire des composants mobiles à refactoriser
 - [📊 **Audit CSS**](/docs/archive/css_audit_report.md) - [ARCHIVÉ] Rapport d'audit CSS
 - [📊 **Audit CSS Global**](/docs/archive/global_css_audit_report.md) - [ARCHIVÉ] Rapport d'audit global des styles CSS
+- [📋 **Liste Prioritaire Migration Hooks**](/docs/archive/LISTE_PRIORITAIRE_HOOKS_MIGRATION.md) - [ARCHIVÉ] Liste prioritaire des hooks à migrer (migration terminée)
+- [📝 **Désactivation Lazy Loading**](/docs/archive/LAZY_LOADING_DESACTIVE.md) - [ARCHIVÉ] Documentation de la désactivation du lazy loading
+- [📋 **Plan Nettoyage Manuel**](/docs/archive/nettoyage.md) - [ARCHIVÉ] Plan d'action de nettoyage du code (largement accompli)
+- [📊 **Journal Debug Général**](/docs/archive/log.md) - [ARCHIVÉ] Journal de debug et logs historiques
+- [📋 **Plan Résolution Bugs GPT**](/docs/archive/planGPT.md) - [ARCHIVÉ] Plan de résolution de bugs temporaire
 
 ## 📌 Comment Utiliser Cette Documentation
 

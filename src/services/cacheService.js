@@ -102,7 +102,7 @@ class CacheService {
       
       // Logging de l'expiration avec détails
       if (this.debugMode) {
-        const expired = Date.now() - cachedItem.timestamp;
+        // const expired = Date.now() - cachedItem.timestamp; // Métrique de débogage - logs supprimés
       }
       
       return null;
@@ -114,7 +114,7 @@ class CacheService {
     
     // Logging du succès avec métriques
     if (this.debugMode) {
-      const hitRate = ((this.accessLog[cacheKey].hitCount / this.accessLog[cacheKey].accessCount) * 100).toFixed(1);
+      // const hitRate = ((this.accessLog[cacheKey].hitCount / this.accessLog[cacheKey].accessCount) * 100).toFixed(1); // Métrique de débogage - logs supprimés
     }
     
     return cachedItem.data;

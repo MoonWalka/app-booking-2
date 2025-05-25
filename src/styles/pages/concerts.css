@@ -216,7 +216,7 @@
 .tc-concerts-table th {
   font-weight: var(--tc-font-weight-semibold);
   color: var(--tc-text-muted);
-  background-color: var(--tc-table-header-bg);
+  background-color: var(--tc-bg-surface);
 }
 
 /* COMPOSANTS DE STATUT */
@@ -231,23 +231,23 @@
 }
 
 .tc-concert-status-confirmed {
-  background-color: var(--tc-concert-status-confirmed-bg);
-  color: var(--tc-concert-status-confirmed-color);
+  background-color: var(--tc-color-success);
+  color: var(--tc-color-white);
 }
 
 .tc-concert-status-pending {
-  background-color: var(--tc-concert-status-pending-bg);
-  color: var(--tc-concert-status-pending-color);
+  background-color: var(--tc-color-warning);
+  color: var(--tc-color-white);
 }
 
 .tc-concert-status-cancelled {
-  background-color: var(--tc-concert-status-cancelled-bg);
-  color: var(--tc-concert-status-cancelled-color);
+  background-color: var(--tc-color-error);
+  color: var(--tc-color-white);
 }
 
 .tc-concert-status-draft {
-  background-color: var(--tc-concert-status-draft-bg);
-  color: var(--tc-concert-status-draft-color);
+  background-color: var(--tc-color-gray-500);
+  color: var(--tc-color-white);
 }
 
 /* Messages de statut standardisés */

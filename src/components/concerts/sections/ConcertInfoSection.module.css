@@ -10,7 +10,7 @@
 }
 
 .formGroup {
-  margin-bottom: 1.25rem; /* var(--tc-spacing-3-5) */
+  margin-bottom: 1.25rem; /* var(--tc-color-primary) */
 }
 
 .formRow {
@@ -28,7 +28,7 @@
 
 .formLabel {
   display: block;
-  margin-bottom: 0.5rem; /* var(--tc-spacing-1-5) */
+  margin-bottom: 0.5rem; /* var(--tc-color-primary) */
   font-weight: 500; /* var(--tc-font-weight-medium) */
   color: var(--tc-text-default); /* var(--tc-text-default) */
 }
@@ -36,13 +36,13 @@
 .formControl {
   display: block;
   width: 100%;
-  padding: 0.5rem 0.75rem; /* var(--tc-spacing-1-5) var(--tc-space-2) */
+  padding: 0.5rem 0.75rem; /* var(--tc-color-primary) var(--tc-space-2) */
   font-size: 1rem; /* var(--tc-font-size-base) */
   line-height: 1.5; /* var(--tc-line-height-normal) */
   border: 1px solid var(--tc-text-default); /* var(--tc-border-input) */
   border-radius: 0.25rem; /* var(--tc-radius-sm) */
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-  background-color: var(--tc-input-background-color);
+  background-color: var(--tc-bg-input);
 }
 
 .formControl:focus {
@@ -54,7 +54,7 @@
 .formSelect {
   display: block;
   width: 100%;
-  padding: 0.5rem 1.5rem 0.5rem 0.75rem; /* var(--tc-spacing-1-5) var(--tc-spacing-5) var(--tc-spacing-1-5) var(--tc-space-2) */
+  padding: 0.5rem 1.5rem 0.5rem 0.75rem; /* var(--tc-color-primary) var(--tc-spacing-5) var(--tc-color-primary) var(--tc-space-2) */
   font-size: 1rem; /* var(--tc-font-size-base) */
   font-weight: 400; /* var(--tc-font-weight-regular) */
   line-height: 1.5; /* var(--tc-line-height-normal) */
@@ -63,21 +63,21 @@
   border: 1px solid var(--tc-text-default); /* var(--tc-border-input) */
   border-radius: 0.25rem; /* var(--tc-radius-sm) */
   appearance: none;
-  background-color: var(--tc-input-background-color);
+  background-color: var(--tc-bg-input);
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
   background-repeat: no-repeat;
 }
 
 .formHelpText {
   display: block;
-  margin-top: 0.25rem; /* var(--tc-spacing-0-5) */
+  margin-top: 0.25rem; /* var(--tc-color-primary) */
   font-size: 0.875rem; /* var(--tc-font-size-sm) */
   color: var(--tc-text-default); /* var(--tc-text-muted) */
 }
 
 .requiredField {
   color: var(--tc-text-default); /* var(--tc-color-error) */
-  margin-left: 0.25rem; /* var(--tc-spacing-0-5) */
+  margin-left: 0.25rem; /* var(--tc-color-primary) */
 }
 
 .inputGroup {
@@ -90,14 +90,14 @@
 .inputGroupAddon {
   display: flex;
   align-items: center;
-  padding: 0.5rem 0.75rem; /* var(--tc-spacing-1-5) var(--tc-space-2) */
+  padding: 0.5rem 0.75rem; /* var(--tc-color-primary) var(--tc-space-2) */
   font-size: 1rem; /* var(--tc-font-size-base) */
   font-weight: 400; /* var(--tc-font-weight-regular) */
   line-height: 1.5; /* var(--tc-line-height-normal) */
   color: var(--tc-text-default); /* var(--tc-text-default) */
   text-align: center;
   white-space: nowrap;
-  background-color: var(--tc-input-background-color); /* var(--tc-bg-subtle) */
+  background-color: var(--tc-bg-input); /* var(--tc-bg-subtle) */
   border: 1px solid var(--tc-text-default); /* var(--tc-border-input) */
   border-left: 0;
   border-radius: 0 0.25rem 0.25rem 0; /* 0 var(--tc-radius-sm) var(--tc-radius-sm) 0 */
@@ -126,8 +126,8 @@
 
 @media (max-width: 576px) {
   .cardIcon {
-    width: 24px; /* var(--tc-icon-size-sm) */
-    height: 24px; /* var(--tc-icon-size-sm) */
+    width: 24px; /* var(--tc-color-primary) */
+    height: 24px; /* var(--tc-color-primary) */
     font-size: 0.875rem; /* var(--tc-font-size-sm) */
   }
   

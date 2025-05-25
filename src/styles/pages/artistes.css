@@ -94,7 +94,7 @@
 
 .tc-artiste-genre i,
 .tc-artiste-contact i {
-  color: var(--tc-artiste-color);
+  color: var(--tc-color-primary);
   font-size: var(--tc-font-size-md);
   width: 20px;
   text-align: center;
@@ -146,8 +146,8 @@
 }
 
 .tc-artiste-tab-item.tc-active {
-  border-bottom-color: var(--tc-artiste-color);
-  color: var(--tc-artiste-color);
+  border-bottom-color: var(--tc-color-primary);
+  color: var(--tc-color-primary);
   background-color: var(--tc-bg-default);
 }
 
@@ -204,7 +204,7 @@
 }
 
 .tc-artiste-contact-link {
-  color: var(--tc-artiste-color);
+  color: var(--tc-color-primary);
   text-decoration: none;
   transition: var(--tc-transition-base);
 }
@@ -298,7 +298,7 @@
 
 .tc-artiste-stat-icon {
   font-size: var(--tc-font-size-xl);
-  color: var(--tc-artiste-color);
+  color: var(--tc-color-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -357,7 +357,7 @@
 }
 
 .tc-artiste-breadcrumb-item {
-  color: var(--tc-artiste-color);
+  color: var(--tc-color-primary);
   cursor: pointer;
   transition: var(--tc-transition-base);
 }
@@ -533,7 +533,7 @@
 }
 
 .tc-artiste-list-meta i {
-  color: var(--tc-artiste-color);
+  color: var(--tc-color-primary);
   font-size: var(--tc-font-size-sm);
 }
 
@@ -615,7 +615,7 @@
   align-items: center;
   justify-content: center;
   background-color: var(--tc-artiste-color-light);
-  color: var(--tc-artiste-color);
+  color: var(--tc-color-primary);
   border-radius: var(--tc-border-radius-pill);
   padding: var(--tc-space-1) var(--tc-space-2);
   margin: 2px;
@@ -636,14 +636,14 @@
   padding: 2px 8px;
   background-color: var(--tc-artiste-color-light);
   border-radius: var(--tc-border-radius-pill);
-  color: var(--tc-artiste-color);
+  color: var(--tc-color-primary);
   font-size: var(--tc-font-size-xs);
   margin-right: var(--tc-space-1);
 }
 
 /* Liens */
 .tc-artiste-link {
-  color: var(--tc-artiste-color);
+  color: var(--tc-color-primary);
   text-decoration: none;
   font-weight: var(--tc-font-weight-medium);
   transition: var(--tc-transition-base);

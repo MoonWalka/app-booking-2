@@ -92,7 +92,7 @@
 }
 
 .tc-table thead {
-  background: var(--tc-table-header-bg);
+  background: var(--tc-bg-surface);
   border-top: 1px solid var(--tc-border-default);
 }
 
@@ -109,7 +109,7 @@
   letter-spacing: 0.08em;
   border-bottom: 2px solid var(--tc-border-default);
   padding: var(--tc-space-2) var(--tc-space-4);
-  background: var(--tc-table-header-bg);
+  background: var(--tc-bg-surface);
 }
 
 .tc-table tbody tr {

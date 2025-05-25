@@ -35,7 +35,7 @@
 .createButton {
   display: inline-flex;
   align-items: center;
-  gap: var(--tc-spacing-1-5);
+  gap: var(--tc-color-primary);
   white-space: nowrap;
   border-radius: 0 var(--tc-radius-sm) var(--tc-radius-sm) 0;
 }
@@ -59,7 +59,7 @@
   padding: var(--tc-space-2);
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-1-5);
+  gap: var(--tc-color-primary);
   justify-content: center;
 }
 
@@ -87,13 +87,13 @@
 .itemName {
   font-weight: var(--tc-font-weight-medium);
   color: var(--tc-text-default);
-  margin-bottom: var(--tc-spacing-0-5);
+  margin-bottom: var(--tc-color-primary);
 }
 
 .itemDetail {
   font-size: var(--tc-font-size-sm);
   color: var(--tc-text-muted);
-  margin-top: var(--tc-spacing-0-25);
+  margin-top: var(--tc-color-primary);
 }
 
 .noResultsContainer {
@@ -108,7 +108,7 @@
 .noResultsMessage {
   color: var(--tc-text-muted);
   font-style: italic;
-  margin-bottom: var(--tc-spacing-1-5);
+  margin-bottom: var(--tc-color-primary);
 }
 
 .tipContainer {
@@ -119,13 +119,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--tc-spacing-1-5);
+  gap: var(--tc-color-primary);
 }
 
 /* Styles responsive standardisés */
 @media (max-width: 768px) {
   .resultItem {
-    padding: var(--tc-spacing-1-5) var(--tc-space-2);
+    padding: var(--tc-color-primary) var(--tc-space-2);
   }
   
   .resultsDropdown {

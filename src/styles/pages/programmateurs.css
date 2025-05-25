@@ -110,7 +110,7 @@
 }
 
 .tc-card-header i.bi-person-badge {
-  color: var(--tc-programmateur-color);
+  color: var(--tc-color-primary);
   margin-right: var(--tc-space-2);
   font-size: var(--tc-font-size-lg);
 }
@@ -217,7 +217,7 @@
    COMPOSANTS DE SÉLECTION
    ============================= */
 .tc-detail-card {
-  border-left: 3px solid var(--tc-programmateur-color);
+  border-left: 3px solid var(--tc-color-primary);
 }
 
 .tc-programmateur-search {

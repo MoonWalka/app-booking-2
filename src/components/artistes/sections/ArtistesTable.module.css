@@ -17,14 +17,14 @@
   background-color: var(--tc-bg-subtle);
   border-bottom-width: 1px;
   font-weight: var(--tc-font-weight-semibold);
-  padding: var(--tc-space-2) var(--tc-spacing-3-5);
+  padding: var(--tc-space-2) var(--tc-color-primary);
   color: var(--tc-text-default);
 }
 
 /* Styles responsive standardisés */
 @media (max-width: 768px) {
   .artistesTable th {
-    padding: var(--tc-spacing-1-5) var(--tc-space-3);
+    padding: var(--tc-color-primary) var(--tc-space-3);
   }
 }
 

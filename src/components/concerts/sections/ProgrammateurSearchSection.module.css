@@ -14,14 +14,14 @@
 
 .formLabel {
   display: block;
-  margin-bottom: var(--tc-spacing-1-5);
+  margin-bottom: var(--tc-color-primary);
   font-weight: var(--tc-font-weight-medium);
   color: var(--tc-text-default);
 }
 
 .formHelpText {
   display: block;
-  margin-top: var(--tc-spacing-1-5);
+  margin-top: var(--tc-color-primary);
   font-size: var(--tc-font-size-sm);
   color: var(--tc-text-muted);
 }
@@ -35,8 +35,8 @@
 
 @media (max-width: 576px) {
   .cardIcon {
-    width: var(--tc-icon-size-sm);
-    height: var(--tc-icon-size-sm);
+    width: var(--tc-color-primary);
+    height: var(--tc-color-primary);
     font-size: var(--tc-font-size-sm);
     margin-right: var(--tc-space-2);
   }

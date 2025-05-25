@@ -67,7 +67,7 @@
 }
 
 .breadcrumbSeparator {
-  margin: 0 var(--tc-spacing-1-5);
+  margin: 0 var(--tc-color-primary);
   font-size: var(--tc-font-size-xs);
 }
 

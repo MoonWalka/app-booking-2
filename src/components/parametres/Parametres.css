@@ -168,7 +168,7 @@
 
 .exportButton {
   flex: 1;
-  min-width: var(--tc-export-button-min-width);
+  min-width: var(--tc-color-primary);
   padding: var(--tc-space-4);
   border-radius: var(--tc-radius-base);
   border: 1px solid var(--tc-border-default);

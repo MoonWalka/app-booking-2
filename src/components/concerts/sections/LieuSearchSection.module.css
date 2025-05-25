@@ -16,21 +16,21 @@
 
 .formLabel {
   display: block;
-  margin-bottom: var(--tc-spacing-1-5);
+  margin-bottom: var(--tc-color-primary);
   font-weight: var(--tc-font-weight-medium);
   color: var(--tc-text-default);
 }
 
 .formHelpText {
   display: block;
-  margin-top: var(--tc-spacing-1-5);
+  margin-top: var(--tc-color-primary);
   font-size: var(--tc-font-size-sm);
   color: var(--tc-text-muted);
 }
 
 .requiredField {
   color: var(--tc-color-error);
-  margin-left: var(--tc-spacing-0-5);
+  margin-left: var(--tc-color-primary);
 }
 
 /* Styles responsive standardisés */

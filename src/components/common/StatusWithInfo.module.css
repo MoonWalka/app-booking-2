@@ -5,7 +5,7 @@
  */
 
 .statusBadge {
-  padding: var(--tc-spacing-1-5) var(--tc-space-2);
+  padding: var(--tc-color-primary) var(--tc-space-2);
   font-weight: var(--tc-font-weight-medium);
   letter-spacing: 0.2px;
 }
@@ -23,7 +23,7 @@
 /* Styles responsive standardisés */
 @media (max-width: 576px) {
   .statusBadge {
-    padding: var(--tc-space-1) var(--tc-spacing-1-5);
+    padding: var(--tc-space-1) var(--tc-color-primary);
   }
   
   .statusIcon {

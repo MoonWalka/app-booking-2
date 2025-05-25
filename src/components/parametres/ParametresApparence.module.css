@@ -98,7 +98,7 @@
 
 .fontSizeSlider:focus::-webkit-slider-thumb {
   background-color: var(--tc-color-primary-dark);
-  box-shadow: 0 0 0 3px var(--tc-focus-ring-color);
+  box-shadow: 0 0 0 3px var(--tc-color-primary);
 }
 
 .fontSizeValue {

@@ -59,7 +59,7 @@
 
 .tipsTitle {
   font-size: var(--tc-font-size-base);
-  margin-bottom: var(--tc-spacing-2-5);
+  margin-bottom: var(--tc-color-primary);
   color: var(--tc-info-color-text);
   font-weight: var(--tc-font-weight-medium);
 }

@@ -259,3 +259,40 @@ export { storageRef as ref, uploadBytes, getDownloadURL };
 
 // Indicateur de mode
 export const MODE_LOCAL = IS_LOCAL_MODE;
+
+// Export d'un objet avec toutes les fonctionnalités
+const firebaseService = {
+  db,
+  auth,
+  storage,
+  remoteConfig,
+  collection: IS_LOCAL_MODE ? safeMockCollection : firestoreCollection,
+  doc: IS_LOCAL_MODE ? safeMockDoc : firestoreDoc,
+  getDoc: IS_LOCAL_MODE ? safeMockGetDoc : enhancedGetDoc,
+  getDocs: IS_LOCAL_MODE ? safeMockGetDocs : enhancedGetDocs,
+  setDoc: IS_LOCAL_MODE ? safeMockSetDoc : firestoreSetDoc,
+  addDoc: IS_LOCAL_MODE ? safeMockAddDoc : firestoreAddDoc,
+  updateDoc: IS_LOCAL_MODE ? safeMockUpdateDoc : firestoreUpdateDoc,
+  deleteDoc: IS_LOCAL_MODE ? safeMockDeleteDoc : firestoreDeleteDoc,
+  query: IS_LOCAL_MODE ? safeMockQuery : firestoreQuery,
+  where: IS_LOCAL_MODE ? safeMockWhere : firestoreWhere,
+  orderBy: IS_LOCAL_MODE ? safeMockOrderBy : firestoreOrderBy,
+  limit: IS_LOCAL_MODE ? safeMockLimit : firestoreLimit,
+  startAfter: IS_LOCAL_MODE ? safeMockStartAfter : firestoreStartAfter,
+  serverTimestamp: IS_LOCAL_MODE ? safeMockServerTimestamp : firestoreServerTimestamp,
+  arrayUnion: IS_LOCAL_MODE ? safeMockArrayUnion : firestoreArrayUnion,
+  arrayRemove: IS_LOCAL_MODE ? safeMockArrayRemove : firestoreArrayRemove,
+  Timestamp: IS_LOCAL_MODE ? safeMockTimestamp : FirebaseTimestamp,
+  onSnapshot: IS_LOCAL_MODE ? mockOnSnapshot : firestoreOnSnapshot,
+  getCountFromServer: IS_LOCAL_MODE ? mockGetCountFromServer : firestoreGetCountFromServer,
+  ref: storageRef,
+  uploadBytes,
+  getDownloadURL,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  MODE_LOCAL: IS_LOCAL_MODE
+};
+
+export default firebaseService;

@@ -3,6 +3,7 @@ import { Form, Row, Col } from 'react-bootstrap';
 import { Formik, Field, ErrorMessage } from 'formik';
 import { ProgrammateurLegalSectionSchema } from '../../../schemas/ProgrammateurSchemas';
 import Alert from '../../../components/ui/Alert';
+import FormField from '../../../components/ui/FormField';
 import styles from './ProgrammateurLegalSection.module.css';
 import Card from '../../../components/ui/Card';
 
@@ -101,22 +102,24 @@ const ProgrammateurLegalSection = ({
                 <Col md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="structureType">Type de structure</Form.Label>
-                    <Field
-                      as="select"
+                    <FormField
+                      type="select"
                       id="structureType"
                       name="structureCache.type"
-                      className={`form-select ${touched.structureCache?.type && errors.structureCache?.type ? 'is-invalid' : ''}`}
+                      value={values.structureCache?.type || ''}
                       onChange={(e) => handleFormikChange(e, formikHandleChange)}
                       onBlur={handleBlur}
-                    >
-                      <option value="">Sélectionner un type</option>
-                      <option value="association">Association</option>
-                      <option value="sarl">SARL</option>
-                      <option value="eurl">EURL</option>
-                      <option value="sas">SAS</option>
-                      <option value="collectivite">Collectivité territoriale</option>
-                      <option value="autre">Autre</option>
-                    </Field>
+                      error={touched.structureCache?.type && errors.structureCache?.type ? errors.structureCache.type : null}
+                      options={[
+                        { value: '', label: 'Sélectionner un type' },
+                        { value: 'association', label: 'Association' },
+                        { value: 'sarl', label: 'SARL' },
+                        { value: 'eurl', label: 'EURL' },
+                        { value: 'sas', label: 'SAS' },
+                        { value: 'collectivite', label: 'Collectivité territoriale' },
+                        { value: 'autre', label: 'Autre' }
+                      ]}
+                    />
                     <ErrorMessage 
                       name="structureCache.type" 
                       component="div" 

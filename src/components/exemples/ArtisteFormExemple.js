@@ -12,6 +12,7 @@ import { useArtisteForm } from '@/hooks/artistes';
 import FlexContainer from '@/components/ui/FlexContainer';
 import Card from '@/components/ui/Card';
 import Alert from '@/components/ui/Alert';
+import FormField from '@/components/ui/FormField';
 import '@styles/index.css';
 import Button from '@ui/Button';
 
@@ -90,40 +91,32 @@ const ArtisteFormExemple = () => {
           <div className="form-section">
             <h3>Informations de base</h3>
             
-            <div className={styles.formGroup}>
-              <label htmlFor="nom">Nom de l'artiste *</label>
-              <input
-                type="text"
-                id="nom"
-                className={formErrors?.nom ? 'form-control is-invalid' : 'form-control'}
-                value={artiste.nom || ''}
-                onChange={(e) => updateFormData(prev => ({ ...prev, nom: e.target.value }))}
-                required
-              />
-              {formErrors?.nom && <div className="invalid-feedback">{formErrors.nom}</div>}
-            </div>
+            <FormField
+              label="Nom de l'artiste *"
+              type="text"
+              id="nom"
+              value={artiste.nom || ''}
+              onChange={(e) => updateFormData(prev => ({ ...prev, nom: e.target.value }))}
+              error={formErrors?.nom}
+              required
+            />
             
-            <div className={styles.formGroup}>
-              <label htmlFor="genre">Genre musical</label>
-              <input
-                type="text"
-                id="genre"
-                className={styles.formField}
-                value={artiste.genre || ''}
-                onChange={(e) => updateFormData(prev => ({ ...prev, genre: e.target.value }))}
-              />
-            </div>
+            <FormField
+              label="Genre musical"
+              type="text"
+              id="genre"
+              value={artiste.genre || ''}
+              onChange={(e) => updateFormData(prev => ({ ...prev, genre: e.target.value }))}
+            />
             
-            <div className={styles.formGroup}>
-              <label htmlFor="description">Description</label>
-              <textarea
-                id="description"
-                className={styles.formField}
-                rows="4"
-                value={artiste.description || ''}
-                onChange={(e) => updateFormData(prev => ({ ...prev, description: e.target.value }))}
-              />
-            </div>
+            <FormField
+              label="Description"
+              type="textarea"
+              id="description"
+              rows="4"
+              value={artiste.description || ''}
+              onChange={(e) => updateFormData(prev => ({ ...prev, description: e.target.value }))}
+            />
           </div>
         );
       
@@ -132,65 +125,54 @@ const ArtisteFormExemple = () => {
           <div className="form-section">
             <h3>Coordonnées</h3>
             
-            <div className={styles.formGroup}>
-              <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                id="email"
-                className={formErrors?.['contacts.email'] ? 'form-control is-invalid' : 'form-control'}
-                value={contacts.email || ''}
-                onChange={(e) => updateContact('email', e.target.value)}
-              />
-              {formErrors?.['contacts.email'] && <div className="invalid-feedback">{formErrors['contacts.email']}</div>}
-            </div>
+            <FormField
+              label="Email"
+              type="email"
+              id="email"
+              value={contacts.email || ''}
+              onChange={(e) => updateContact('email', e.target.value)}
+              error={formErrors?.['contacts.email']}
+            />
             
-            <div className={styles.formGroup}>
-              <label htmlFor="telephone">Téléphone</label>
-              <input
-                type="tel"
-                id="telephone"
-                className={styles.formField}
-                value={contacts.telephone || ''}
-                onChange={(e) => updateContact('telephone', e.target.value)}
-              />
-            </div>
+            <FormField
+              label="Téléphone"
+              type="tel"
+              id="telephone"
+              value={contacts.telephone || ''}
+              onChange={(e) => updateContact('telephone', e.target.value)}
+            />
             
-            <div className={styles.formGroup}>
-              <label htmlFor="siteWeb">Site web</label>
-              <input
-                type="url"
-                id="siteWeb"
-                className={formErrors?.['contacts.siteWeb'] ? 'form-control is-invalid' : 'form-control'}
-                value={contacts.siteWeb || ''}
-                onChange={(e) => updateContact('siteWeb', e.target.value)}
-                placeholder="https://"
-              />
-              {formErrors?.['contacts.siteWeb'] && <div className="invalid-feedback">{formErrors['contacts.siteWeb']}</div>}
-            </div>
+            <FormField
+              label="Site web"
+              type="url"
+              id="siteWeb"
+              value={contacts.siteWeb || ''}
+              onChange={(e) => updateContact('siteWeb', e.target.value)}
+              placeholder="https://"
+              error={formErrors?.['contacts.siteWeb']}
+            />
             
-            <div className="form-row">
-              <div className="form-group col-md-6">
-                <label htmlFor="instagram">Instagram</label>
-                <input
+            <FlexContainer gap="1rem" wrap>
+              <div style={{ flex: '1', minWidth: '250px' }}>
+                <FormField
+                  label="Instagram"
                   type="text"
                   id="instagram"
-                  className={styles.formField}
                   value={contacts.instagram || ''}
                   onChange={(e) => updateContact('instagram', e.target.value)}
                 />
               </div>
               
-              <div className="form-group col-md-6">
-                <label htmlFor="facebook">Facebook</label>
-                <input
+              <div style={{ flex: '1', minWidth: '250px' }}>
+                <FormField
+                  label="Facebook"
                   type="text"
                   id="facebook"
-                  className={styles.formField}
                   value={contacts.facebook || ''}
                   onChange={(e) => updateContact('facebook', e.target.value)}
                 />
               </div>
-            </div>
+            </FlexContainer>
           </div>
         );
       
@@ -199,26 +181,23 @@ const ArtisteFormExemple = () => {
           <div className="form-section">
             <h3>Membres du groupe</h3>
             
-            <div className={styles.formGroup}>
-              <div className="input-group">
-                <input
+            <FlexContainer gap="0.5rem">
+              <div style={{ flex: '1' }}>
+                <FormField
                   type="text"
-                  className={styles.formField}
                   placeholder="Nom du membre"
                   value={nouveauMembre}
                   onChange={(e) => setNouveauMembre(e.target.value)}
                 />
-                <div className="input-group-append">
-                  <button
-                    type="button"
-                    className="tc-btn tc-btn-outline-primary"
-                    onClick={handleAjouterMembre}
-                  >
-                    <i className="bi bi-plus-lg"></i> Ajouter
-                  </button>
-                </div>
               </div>
-            </div>
+              <Button
+                type="button"
+                variant="outline-primary"
+                onClick={handleAjouterMembre}
+              >
+                <i className="bi bi-plus-lg"></i> Ajouter
+              </Button>
+            </FlexContainer>
             
             {membres.length > 0 ? (
               <ul className="list-group mt-3">

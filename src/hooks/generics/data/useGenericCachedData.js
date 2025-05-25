@@ -536,7 +536,7 @@ const useGenericCachedData = (entityType, cacheConfig = {}, options = {}) => {
     } catch (error) {
       console.error(`❌ Erreur préchauffage ${entityType}:`, error);
     }
-  }, [entityType, getCacheData, setCacheData, refetch]);
+  }, [getCacheData, setCacheData, refetch, entityType]);
   
   // Nettoyage complet du cache
   const clearCache = useCallback(() => {
@@ -576,7 +576,7 @@ const useGenericCachedData = (entityType, cacheConfig = {}, options = {}) => {
     
     setIsFromCache(false);
     
-  }, [entityType, generateCacheKey]);
+  }, [generateCacheKey]);
 
   // Gestion du temps réel
   useEffect(() => {
@@ -601,7 +601,7 @@ const useGenericCachedData = (entityType, cacheConfig = {}, options = {}) => {
         setRealTimeSubscription(null);
       }
     };
-  }, [enableRealTime, enableCache, entityType, cacheKey, getCacheData, refetch]);
+  }, [enableRealTime, enableCache, cacheKey, getCacheData, refetch]);
   
   // Fonction de mise à jour optimiste
   const applyOptimisticUpdate = useCallback((key, updates) => {
@@ -629,7 +629,7 @@ const useGenericCachedData = (entityType, cacheConfig = {}, options = {}) => {
         return newMap;
       });
     }, 5000);
-  }, [enableOptimisticUpdates, entityType, getCacheData, setCacheData]);
+  }, [enableOptimisticUpdates, getCacheData, setCacheData]);
   
   // Fonction de gestion d'erreur avancée
   const handleError = useCallback((error, context = {}) => {

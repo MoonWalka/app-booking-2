@@ -1,11 +1,13 @@
 // src/components/contrats/sections/ContratPdfViewer.js
 import React from 'react';
 import Card from '@/components/ui/Card';
+import Alert from '@/components/ui/Alert';
 import { PDFViewer } from '@react-pdf/renderer';
 import styles from './ContratPdfViewer.module.css';
 
 /**
  * Component for displaying different types of PDF previews
+ * Migré vers le composant Alert standardisé TourCraft
  */
 const ContratPdfViewer = ({
   previewType,
@@ -41,10 +43,9 @@ const ContratPdfViewer = ({
           
           {previewType === 'react-pdf' && (
             <div className={styles.reactPdfPreview}>
-              <div className="alert alert-warning mb-3">
-                <i className="bi bi-exclamation-triangle-fill me-2"></i>
+              <Alert variant="warning">
                 Cet aperçu est simplifié. La mise en page peut différer du résultat final.
-              </div>
+              </Alert>
               <PDFViewer width="100%" height={550}>
                 <ContratPDFWrapper 
                   template={pdfData.template}
@@ -71,10 +72,9 @@ const ContratPdfViewer = ({
                 </div>
               ) : pdfPreviewUrl ? (
                 <div className={styles.pdfContainer}>
-                  <div className="alert alert-success mb-3">
-                    <i className="bi bi-check-circle-fill me-2"></i>
+                  <Alert variant="success">
                     Cet aperçu est identique au PDF qui sera téléchargé.
-                  </div>
+                  </Alert>
                   <iframe 
                     src={pdfPreviewUrl} 
                     width="100%" 

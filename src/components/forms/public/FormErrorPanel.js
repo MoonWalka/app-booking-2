@@ -3,24 +3,25 @@ import styles from './FormErrorPanel.module.css';
 
 /**
  * Component to display error states in forms
+ * Migré vers les standards CSS TourCraft - Suppression des classes Bootstrap alert
  */
-const FormErrorPanel = ({ type, message, actionButton }) => {
-  // Map of types to alert classes and titles
+const FormErrorPanel = ({ type = 'error', message, actionButton }) => {
+  // Map of types to CSS classes and titles (utilise CSS Modules au lieu de Bootstrap)
   const typeConfig = {
     error: { 
-      className: 'alert-danger',
+      className: styles.alertError,
       title: 'Erreur'
     },
     warning: {
-      className: 'alert-warning',
+      className: styles.alertWarning,
       title: 'Attention'
     },
     info: {
-      className: 'alert-info',
+      className: styles.alertInfo,
       title: 'Information'
     },
     success: {
-      className: 'alert-success',
+      className: styles.alertSuccess,
       title: 'Succès'
     },
   };
@@ -29,14 +30,18 @@ const FormErrorPanel = ({ type, message, actionButton }) => {
   const config = typeConfig[type] || typeConfig.error;
   
   return (
-    <div className={`alert ${config.className} ${styles.errorPanel}`}>
-      <h3>{config.title}</h3>
-      <p>{message}</p>
-      {actionButton && (
-        <div className={styles.actionContainer}>
-          {actionButton}
-        </div>
-      )}
+    <div className={`${styles.errorPanel} ${config.className}`}>
+      <div className={styles.alertHeader}>
+        <h3 className={styles.alertTitle}>{config.title}</h3>
+      </div>
+      <div className={styles.alertContent}>
+        <p className={styles.alertMessage}>{message}</p>
+        {actionButton && (
+          <div className={styles.actionContainer}>
+            {actionButton}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

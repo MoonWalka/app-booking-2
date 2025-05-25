@@ -4,11 +4,14 @@
  * Ce composant présente tous les exemples disponibles des formulaires utilisant
  * les hooks optimisés directement basés sur useGenericEntityForm, conformément
  * au plan de dépréciation officiel (mai 2025).
+ * 
+ * Migré vers le composant Alert standardisé TourCraft
  */
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Card from '@/components/ui/Card';
+import Alert from '@/components/ui/Alert';
 import '@styles/index.css';
 
 // Cards pour les différents exemples de formulaires
@@ -107,11 +110,11 @@ const FormulairesOptimisesIndex = () => {
           Ces exemples montrent comment utiliser les hooks de formulaires optimisés qui sont directement
           basés sur <code>useGenericEntityForm</code>, conformément au plan de dépréciation officiel.
         </p>
-        <div className="alert alert-info">
-          <i className="bi bi-info-circle"></i> <strong>Note importante (mai 2025):</strong> Les hooks spécifiques originaux et leurs versions
+        <Alert variant="info" title="Note importante (mai 2025)">
+          Les hooks spécifiques originaux et leurs versions
           migrées V2 seront dépréciés d'ici novembre 2025. Il est fortement recommandé d'utiliser directement les
           versions optimisées présentées ici pour les nouveaux développements.
-        </div>
+        </Alert>
       </div>
 
       {/* Barre de recherche et filtres */}
@@ -166,9 +169,9 @@ const FormulairesOptimisesIndex = () => {
           ))
         ) : (
           <div className="col-12">
-            <div className="alert alert-warning">
+            <Alert variant="warning">
               Aucun exemple ne correspond à votre recherche.
-            </div>
+            </Alert>
           </div>
         )}
       </div>

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { useProgrammateurSearch, useDeleteProgrammateur } from '@/hooks/programmateurs';
 import Spinner from '@/components/common/Spinner';
+import Alert from '@/components/ui/Alert';
 import styles from './ProgrammateursList.module.css';
 import Table from '@/components/ui/Table';
 import ProgrammateursListHeader from './sections/ProgrammateursListHeader';
@@ -189,10 +190,9 @@ const ProgrammateursList = ({ onNavigateToDetails }) => {
 
   if (error) {
     return (
-      <div className="alert alert-danger" role="alert">
-        <i className="bi bi-exclamation-triangle-fill me-2"></i>
+      <Alert variant="danger">
         Erreur: {error instanceof Error ? error.message : String(error)}
-      </div>
+      </Alert>
     );
   }
 

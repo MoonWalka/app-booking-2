@@ -2,6 +2,7 @@ import React from 'react';
 import { Form, Row, Col } from 'react-bootstrap';
 import { Formik, Field, ErrorMessage } from 'formik';
 import { ProgrammateurLegalSectionSchema } from '../../../schemas/ProgrammateurSchemas';
+import Alert from '../../../components/ui/Alert';
 import styles from './ProgrammateurLegalSection.module.css';
 import Card from '../../../components/ui/Card';
 
@@ -62,10 +63,9 @@ const ProgrammateurLegalSection = ({
   const sectionContent = (
     <>
       {structureCreated && (
-        <div className="alert alert-success mb-3" role="alert">
-          <i className="bi bi-check-circle me-2"></i>
+        <Alert variant="success" className="mb-3">
           Structure créée et associée avec succès ! Ces informations sont maintenant disponibles dans l'espace Structures.
-        </div>
+        </Alert>
       )}
       
       {isEditing ? (

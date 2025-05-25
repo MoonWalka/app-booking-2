@@ -11,6 +11,8 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import Card from '@/components/ui/Card';
 import Button from '@ui/Button';
+import FormField from '@/components/ui/FormField';
+import styles from './FormGenerator.module.css';
 
 const FormGenerator = ({ concertId, programmateurId, onFormGenerated }) => {
   const [loading, setLoading] = useState(false);
@@ -156,11 +158,11 @@ const FormGenerator = ({ concertId, programmateurId, onFormGenerated }) => {
         title="Formulaire pour le programmateur"
         className="mb-4"
       >
-        <div className="text-center">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Chargement...</span>
+        <div className={styles.loadingContainer}>
+          <div className={styles.spinner} role="status">
+            <span className={styles.visuallyHidden}>Chargement...</span>
           </div>
-          <p className="mt-3">Vérification des liens existants...</p>
+          <p className={styles.loadingText}>Vérification des liens existants...</p>
         </div>
       </Card>
     );
@@ -186,35 +188,38 @@ const FormGenerator = ({ concertId, programmateurId, onFormGenerated }) => {
         </div>
       ) : (
         <div>
-          <div className="alert alert-success mb-4">
-            <i className="bi bi-check-circle-fill me-2"></i>
+          <div className={styles.alertSuccess}>
+            <i className="bi bi-check-circle-fill"></i>
             <strong>Un lien de formulaire est actif</strong> - Valable jusqu'au {formatExpiryDate(expiryDate)}
           </div>
           
           <p>
             Voici le lien du formulaire à envoyer au programmateur :
           </p>
-          <div className="input-group mb-3">
-            <input
+          
+          <div className={styles.inputGroup}>
+            <FormField
               type="text"
-              className="form-control"
               value={formLink}
               readOnly
+              className={styles.linkInput}
             />
             <Button
               variant="outline-secondary"
               onClick={copyToClipboard}
+              className={styles.copyButton}
             >
               {copied ? 'Copié !' : 'Copier'}
             </Button>
           </div>
-          <div className="alert alert-info mb-3">
-            <i className="bi bi-info-circle me-2"></i>
+          
+          <div className={styles.alertInfo}>
+            <i className="bi bi-info-circle"></i>
             <span>Ce lien permet au programmateur de remplir ses informations pour ce concert sans avoir accès au reste de l'application.</span>
           </div>
           
-          <div className="d-flex justify-content-between">
-            <p className="text-muted">
+          <div className={styles.footerActions}>
+            <p className={styles.expiryText}>
               Ce lien est valable jusqu'au {formatExpiryDate(expiryDate)}.
             </p>
             <Button
@@ -227,8 +232,8 @@ const FormGenerator = ({ concertId, programmateurId, onFormGenerated }) => {
           </div>
           
           {existingLink && existingLink.completed && (
-            <div className="alert alert-warning mt-3">
-              <i className="bi bi-exclamation-triangle-fill me-2"></i>
+            <div className={styles.alertWarning}>
+              <i className="bi bi-exclamation-triangle-fill"></i>
               <strong>Attention :</strong> Le formulaire a déjà été complété par le programmateur. Générer un nouveau lien si vous souhaitez qu'il puisse soumettre de nouvelles informations.
             </div>
           )}

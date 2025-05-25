@@ -1,4 +1,5 @@
 import React from 'react';
+import Alert from '@/components/ui/Alert';
 import styles from './EntrepriseHeader.module.css';
 
 /**
@@ -13,9 +14,9 @@ const EntrepriseHeader = ({ success }) => {
       <p className={styles.headerDescription}>This information will appear in the headers and footers of generated contracts.</p>
       
       {success && (
-        <div className={`alert alert-success ${styles.successAlert}`} role="alert">
+        <Alert variant="success" className={styles.successAlert}>
           {success}
-        </div>
+        </Alert>
       )}
     </>
   );

@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import styles from './ConcertArtistSection.module.css';
 import Button from '@/components/ui/Button';
+import Alert from '@/components/ui/Alert';
 import CardSection from '@/components/ui/CardSection';
 
 /**
@@ -246,10 +247,9 @@ const ConcertArtistSection = ({
             )}
           </>
         ) : (
-          <div className="alert alert-warning">
-            <i className="bi bi-exclamation-triangle me-2"></i>
+          <Alert variant="warning">
             Aucun artiste n'est associé à ce concert.
-          </div>
+          </Alert>
         )}
       </div>
     </CardSection>

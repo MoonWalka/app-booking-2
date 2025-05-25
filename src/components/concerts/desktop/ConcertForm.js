@@ -1,5 +1,6 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import Alert from '@/components/ui/Alert';
 import styles from './ConcertForm.module.css';
 
 // Hooks personnalisés
@@ -153,10 +154,9 @@ const ConcertFormDesktop = () => {
     <div className={styles.deskConcertFormContainer}>
       {/* Affichage d'une erreur de validation */}
       {formHook.error && (
-        <div className={`alert alert-danger ${styles.errorAlert}`}>
-          <i className="bi bi-exclamation-triangle-fill me-2"></i>
+        <Alert variant="danger" className={styles.errorAlert}>
           {formHook.error}
-        </div>
+        </Alert>
       )}
       
       {/* En-tête du formulaire */}

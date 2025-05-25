@@ -13,6 +13,7 @@ import {
 import { db } from '@/services/firebase-service';
 import { Modal, Button as BootstrapButton, Form, InputGroup } from 'react-bootstrap';
 import Button from '@ui/Button';
+import Alert from '@ui/Alert';
 import styles from './StructuresList.module.css';
 
 const StructuresList = () => {
@@ -243,10 +244,9 @@ const StructuresList = () => {
             </div>
           </div>
         ) : error ? (
-          <div className="alert alert-danger">
-            <i className="bi bi-exclamation-triangle me-2"></i>
+          <Alert variant="danger">
             {error}
-          </div>
+          </Alert>
         ) : getSortedAndFilteredStructures().length === 0 ? (
           <div className={styles.emptyState}>
             <i className={`bi bi-building ${styles.emptyStateIcon}`}></i>
@@ -403,11 +403,10 @@ const StructuresList = () => {
         <Modal.Body>
           <p>Êtes-vous sûr de vouloir supprimer cette structure ?</p>
           {structureToDelete?.programmateursAssocies?.length > 0 && (
-            <div className="alert alert-warning">
-              <i className="bi bi-exclamation-triangle me-2"></i>
+            <Alert variant="warning">
               Cette structure est associée à {structureToDelete.programmateursAssocies.length} programmateur(s).
               La suppression retirera ces associations.
-            </div>
+            </Alert>
           )}
         </Modal.Body>
         <Modal.Footer>

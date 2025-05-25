@@ -11,6 +11,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useProgrammateurForm } from '@/hooks/programmateurs';
 import EntitySearchField from '@/components/ui/EntitySearchField';
 import Card from '@/components/ui/Card';
+import Alert from '@/components/ui/Alert';
 import Button from '@ui/Button';
 import '@styles/index.css';
 
@@ -196,7 +197,7 @@ const ProgrammateurFormExemple = () => {
                 </div>
                 
                 {selectedStructure ? (
-                  <div className="selected-structure-info alert alert-info">
+                  <Alert variant="info" className="selected-structure-info">
                     <h5>{selectedStructure.raisonSociale || selectedStructure.nom}</h5>
                     {selectedStructure.siret && <p>SIRET: {selectedStructure.siret}</p>}
                     {selectedStructure.adresse && (
@@ -212,7 +213,7 @@ const ProgrammateurFormExemple = () => {
                     >
                       Dissocier cette structure
                     </Button>
-                  </div>
+                  </Alert>
                 ) : (
                   <div className="new-structure-form">
                     <hr/>
@@ -348,7 +349,7 @@ const ProgrammateurFormExemple = () => {
                     </table>
                   </div>
                 ) : (
-                  <div className="alert alert-light">Aucun concert associé à ce programmateur</div>
+                  <Alert variant="light">Aucun concert associé à ce programmateur</Alert>
                 )}
               </div>
             )}

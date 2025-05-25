@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import Alert from '@/components/ui/Alert';
 // Import des styles
 import styles from './ConcertDetails.module.css';
 
@@ -121,9 +122,9 @@ const ConcertDetails = () => {
           </div>
           <p className="mt-2">{loading ? 'Chargement du concert...' : 'Préparation des données...'}</p>
           {!loading && !concert && (
-            <div className="alert alert-warning mt-3" role="alert">
+            <Alert variant="warning" className="mt-3">
               Données non disponibles. <Button variant="outline-primary" size="sm" className="ms-2" onClick={() => navigate('/concerts')}>Retour à la liste</Button>
-            </div>
+            </Alert>
           )}
         </div>
       </div>

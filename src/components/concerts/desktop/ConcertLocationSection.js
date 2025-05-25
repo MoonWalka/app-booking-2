@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import styles from './ConcertLocationSection.module.css';
 import Button from '@/components/ui/Button';
+import Alert from '@/components/ui/Alert';
 import CardSection from '@/components/ui/CardSection';
 
 /**
@@ -154,11 +155,10 @@ const ConcertLocationSection = ({
                 </div>
               )
             ) : (
-              <div className="alert alert-info">
-                <i className="bi bi-info-circle me-2"></i>
+              <Alert variant="info">
                 Mode édition des lieux non disponible dans cette vue. 
                 Veuillez utiliser le formulaire de création/modification dédié.
-              </div>
+              </Alert>
             )}
             
             <small className="form-text text-muted">
@@ -217,10 +217,9 @@ const ConcertLocationSection = ({
             </div>
           </>
         ) : (
-          <div className="alert alert-warning">
-            <i className="bi bi-exclamation-triangle me-2"></i>
+          <Alert variant="warning">
             Aucun lieu n'est associé à ce concert.
-          </div>
+          </Alert>
         )}
       </div>
     </CardSection>

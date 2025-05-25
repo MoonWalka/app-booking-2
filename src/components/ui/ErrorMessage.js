@@ -1,16 +1,25 @@
 import React from 'react';
+import Alert from './Alert';
 
 /**
  * ErrorMessage - Display error messages to the user
+ * Migré vers le composant Alert standardisé TourCraft
  */
-const ErrorMessage = ({ message = 'Une erreur est survenue.', variant = 'danger' }) => {
+const ErrorMessage = ({ 
+  message = 'Une erreur est survenue.', 
+  variant = 'danger',
+  children,
+  className = '',
+  ...props 
+}) => {
   return (
-    <div className={`alert alert-${variant} m-3`} role="alert">
-      <div className="d-flex align-items-center">
-        <i className="bi bi-exclamation-triangle-fill me-2"></i>
-        <div>{message}</div>
-      </div>
-    </div>
+    <Alert 
+      variant={variant} 
+      className={className}
+      {...props}
+    >
+      {children || message}
+    </Alert>
   );
 };
 

@@ -380,11 +380,14 @@ const useConcertDetails = (id, locationParam) => {
           // Attendre que toutes les entités soient chargées
           const entitiesLoaded = await fetchRelatedEntities();
           
-          // Effectuer les mises à jour bidirectionnelles
-          await handleBidirectionalUpdates();
-          
-          // Marquer comme déjà exécuté pour éviter les doubles appels
-          bidirectionalUpdatesRef.current = true;
+          // Vérifier que les entités sont bien chargées avant de procéder
+          if (entitiesLoaded && Object.keys(entitiesLoaded).length > 0) {
+            // Effectuer les mises à jour bidirectionnelles
+            await handleBidirectionalUpdates();
+            
+            // Marquer comme déjà exécuté pour éviter les doubles appels
+            bidirectionalUpdatesRef.current = true;
+          }
         } catch (error) {
           console.error("[useConcertDetails] Erreur lors de la mise à jour des relations bidirectionnelles:", error);
         }

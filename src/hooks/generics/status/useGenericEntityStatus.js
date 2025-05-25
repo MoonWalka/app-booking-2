@@ -107,7 +107,7 @@ const useGenericEntityStatus = (statusConfig = {}, options = {}) => {
       step: 0,
       category: 'unknown'
     };
-  }, [statusDetailsMap, entityType, enableLogging]);
+  }, [statusDetailsMap, enableLogging]);
   
   // Fonction pour vérifier si un changement de statut est autorisé
   const isStatusChangeAllowed = useCallback((currentStatus, targetStatus) => {
@@ -140,7 +140,7 @@ const useGenericEntityStatus = (statusConfig = {}, options = {}) => {
     
     // 4. Transitions progressives (step suivant ou même step)
     return targetDetails.step <= currentDetails.step + 1;
-  }, [statusDetailsMap, getStatusDetails, customTransitionRules, allowBackwardTransitions, entityType, enableLogging]);
+  }, [statusDetailsMap, getStatusDetails, customTransitionRules, allowBackwardTransitions, enableLogging]);
   
   // Fonction pour obtenir les statuts suivants possibles
   const getNextStatuses = useCallback((currentStatus) => {
@@ -198,7 +198,7 @@ const useGenericEntityStatus = (statusConfig = {}, options = {}) => {
       tooltip: statusDetails.tooltip,
       progress: getStatusProgress(status)
     };
-  }, [statusDetailsMap, getStatusDetails, getStatusProgress, customMessageGenerator, entityType, enableLogging]);
+  }, [statusDetailsMap, getStatusDetails, getStatusProgress, customMessageGenerator, enableLogging]);
   
   // Fonction pour obtenir les statuts par catégorie
   const getStatusesByCategory = useCallback((category = null) => {

@@ -10,6 +10,7 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useArtisteForm } from '@/hooks/artistes';
 import Card from '@/components/ui/Card';
+import Alert from '@/components/ui/Alert';
 import '@styles/index.css';
 import Button from '@ui/Button';
 
@@ -235,7 +236,7 @@ const ArtisteFormExemple = () => {
                 ))}
               </ul>
             ) : (
-              <div className="alert alert-light">Aucun membre ajouté</div>
+              <Alert variant="light">Aucun membre ajouté</Alert>
             )}
           </div>
         );

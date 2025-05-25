@@ -14,6 +14,54 @@
 }
 
 /* =============================
+   LAYOUT FLEXBOX (Remplacement Bootstrap d-flex)
+   ============================= */
+.spinnerContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem;
+}
+
+.filterSortContainer {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.statsContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+  color: var(--tc-text-muted);
+  font-size: 0.875rem;
+}
+
+.lieuCardActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.filteredIndicator {
+  margin-left: 0.5rem;
+  color: var(--tc-primary-color);
+}
+
+.errorAlert {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem;
+  padding: 1rem;
+  background-color: var(--tc-danger-bg);
+  color: var(--tc-danger-color);
+  border: 1px solid var(--tc-danger-border);
+  border-radius: var(--tc-border-radius);
+}
+
+/* =============================
    EN-TÊTE
    ============================= */
 .headerContainer {
@@ -289,15 +337,6 @@
 /* =============================
    ACTIONS
    ============================= */
-.lieuCardActions {
-  display: flex;
-  justify-content: flex-end;
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
-  background-color: var(--tc-gray-50);
-  gap: var(--tc-spacing-sm);
-  border-top: 1px solid var(--tc-gray-200);
-}
-
 .lieuActionBtn {
   width: 36px;
   height: 36px;

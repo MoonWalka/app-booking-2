@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Container, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import Alert from '@/components/ui/Alert';
 import styles from './ArtistesList.module.css';
 
 // MIGRATION: Utilisation des hooks optimisés au lieu des versions V2
@@ -129,9 +130,9 @@ const ArtistesList = () => {
   if (error) {
     return (
       <Container className="py-5 text-center">
-        <div className="alert alert-danger" role="alert">
+        <Alert variant="danger">
           Une erreur est survenue lors du chargement des artistes : {error.message || error}
-        </div>
+        </Alert>
       </Container>
     );
   }

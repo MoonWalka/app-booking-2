@@ -1,4 +1,5 @@
 import React from 'react';
+import Alert from '@/components/ui/Alert';
 import styles from './EntrepriseSearchResults.module.css';
 import { Form } from 'react-bootstrap';
 
@@ -94,10 +95,9 @@ const EntrepriseSearchResults = ({
       
       {/* No results message */}
       {searchTerm.length >= 3 && searchResults.length === 0 && !isSearching && (
-        <div className={`alert alert-info ${styles.noResultsAlert}`}>
-          <i className="bi bi-info-circle-fill me-2"></i>
+        <Alert variant="info" className={styles.noResultsAlert}>
           No company found. Check your search or try different terms.
-        </div>
+        </Alert>
       )}
     </div>
   );

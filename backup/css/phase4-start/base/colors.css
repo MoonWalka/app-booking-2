@@ -88,72 +88,15 @@
     --tc-border-color: var(--tc-border-default);
 }
 
-/* ===== DARK MODE COMPLET - PHASE 4 ===== */
-/* Thème sombre avec couleurs adaptées pour un contraste optimal */
+/* ===== VARIABLES POUR DARK MODE ===== */
+/* Préparation pour le thème sombre (Phase 4) */
 [data-theme="dark"] {
-    /* ===== COULEURS PRINCIPALES ADAPTÉES ===== */
-    --tc-color-primary: #4a6b7c;           /* Primary plus clair pour dark mode */
-    --tc-color-primary-light: #5a7b8c;     /* Variante claire adaptée */
-    --tc-color-primary-dark: #3a5b6c;      /* Variante foncée adaptée */
-    --tc-color-secondary: #42a5f5;         /* Secondary plus clair */
-    --tc-color-secondary-light: #64b5f6;   /* Variante claire */
-    --tc-color-secondary-dark: #2196f3;    /* Variante foncée */
-    --tc-color-accent: #80cbc4;            /* Accent plus clair */
-
-    /* ===== COULEURS DE STATUT ADAPTÉES ===== */
-    --tc-color-success: #66bb6a;           /* Vert plus clair */
-    --tc-color-success-light: #81c784;     /* Variante claire */
-    --tc-color-success-dark: #4caf50;      /* Variante foncée */
-    --tc-color-warning: #ffca28;           /* Jaune plus clair */
-    --tc-color-warning-light: #ffd54f;     /* Variante claire */
-    --tc-color-warning-dark: #ffc107;      /* Variante foncée */
-    --tc-color-error: #ef5350;             /* Rouge plus clair */
-    --tc-color-error-light: #f48fb1;       /* Variante claire */
-    --tc-color-error-dark: #f44336;        /* Variante foncée */
-    --tc-color-info: #42a5f5;              /* Bleu plus clair */
-    --tc-color-info-light: #64b5f6;        /* Variante claire */
-    --tc-color-info-dark: #2196f3;         /* Variante foncée */
-
-    /* ===== COULEURS FONCTIONNELLES ADAPTÉES ===== */
-    --tc-color-blue-500: #60a5fa;          /* Bleu plus clair */
-    --tc-color-green-500: #34d399;         /* Vert plus clair */
-    --tc-color-yellow-500: #fbbf24;        /* Jaune plus clair */
-    --tc-color-red-500: #f87171;           /* Rouge plus clair */
-
-    /* ===== COULEURS NEUTRES INVERSÉES ===== */
-    --tc-color-gray-100: rgba(255, 255, 255, 0.05);  /* Très clair inversé */
-    --tc-color-gray-200: #374151;          /* Clair inversé */
-    --tc-color-gray-300: #4b5563;          /* Moyen clair inversé */
-    --tc-color-gray-400: #6b7280;          /* Moyen inversé */
-    --tc-color-gray-500: #9ca3af;          /* Moyen foncé inversé */
-    --tc-color-gray-600: #d1d5db;          /* Foncé inversé */
-
-    /* ===== COULEURS DE FOND DARK MODE ===== */
-    --tc-bg-default: #1e1e1e;              /* Fond principal sombre */
-    --tc-bg-light: #2d2d2d;                /* Fond clair sombre */
-    --tc-bg-body: #121212;                 /* Fond du body sombre */
-    --tc-bg-sidebar: #1a1a1a;              /* Fond sidebar sombre */
-    --tc-bg-hover: #3a3a3a;                /* Fond au survol sombre */
-    --tc-bg-overlay: rgba(0, 0, 0, 0.8);   /* Overlay plus sombre */
-
-    /* ===== COULEURS DE TEXTE DARK MODE ===== */
-    --tc-text-default: #ffffff;            /* Texte principal clair */
-    --tc-text-secondary: #e0e0e0;          /* Texte secondaire clair */
-    --tc-text-muted: #b0b0b0;              /* Texte atténué clair */
-    --tc-text-light: #ffffff;              /* Texte clair */
-    --tc-text-primary: var(--tc-color-primary);     /* Texte primaire adapté */
-    --tc-text-link: var(--tc-color-secondary);      /* Liens adaptés */
-
-    /* ===== COULEURS DE BORDURES DARK MODE ===== */
-    --tc-border-default: #404040;          /* Bordure principale sombre */
-    --tc-border-light: #555555;            /* Bordure claire sombre */
-    --tc-border-primary: var(--tc-color-primary);   /* Bordure primaire adaptée */
-
-    /* ===== COULEURS MÉTIER ADAPTÉES ===== */
-    --tc-color-artiste: #8b5cf6;           /* Violet artistes plus clair */
-    --tc-color-artiste-light: #3b1f47;     /* Variante sombre */
-    --tc-color-concert: #818cf8;           /* Bleu concerts plus clair */
-    --tc-color-concert-light: #1e1b3a;     /* Variante sombre */
-    --tc-color-programmateur: #a855f7;     /* Violet programmateurs plus clair */
-    --tc-color-programmateur-light: #2d1b3d; /* Variante sombre */
+    --tc-bg-default: #1a1a1a;
+    --tc-bg-light: #2d2d2d;
+    --tc-bg-body: #121212;
+    --tc-text-default: #ffffff;
+    --tc-text-secondary: #cccccc;
+    --tc-text-muted: #999999;
+    --tc-border-default: #404040;
+    --tc-border-light: #555555;
 } 

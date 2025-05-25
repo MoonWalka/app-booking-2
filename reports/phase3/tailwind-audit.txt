@@ -26,3 +26,32 @@ p-6
 p-8
 py-8
   *.js:       88 fichiers
+p-0
+p-1
+p-2
+p-3
+p-4
+p-5
+p-6
+p-7
+p-8
+p-9
+pb-4
+pl-2
+pt-1
+pt-2
+pt-3
+px-0
+px-1
+px-2
+px-3
+px-4
+px-5
+py-1
+py-2
+py-3
+py-4
+py-5
+  *.jsx:        1 fichiers
+p-4
+  *.ts:       18 fichiers

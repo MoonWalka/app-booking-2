@@ -7,18 +7,21 @@ Ce dossier contient toute la documentation technique du projet TourCraft. Ce fic
 ## 🔄 État des Migrations et Refactorisations
 
 - [📊 **État Consolidé des Migrations et Refactorisations**](/docs/migration/ETAT_MIGRATION_CONSOLIDATION.md) - Vision globale et centralisée de l'avancement de tous les chantiers de refactorisation en cours
-- [📋 **Audit Global de la Documentation**](/docs/analyses/AUDIT_GLOBAL_DOCUMENTATION.md) - Analyse des incohérences et plan de consolidation de la documentation
+- [📋 **Audit Complet de la Documentation 2025**](/docs/AUDIT_DOCUMENTATION_COMPLET_2025.md) - Audit exhaustif et plan de refactorisation de la documentation
 
 ## 🏗️ Architecture & Structure
 
 - [🔍 **Architecture**](/docs/architecture/ARCHITECTURE_LEGACY.md) - Architecture globale du projet et principes techniques
 - [📐 **Guide d'Architecture**](/docs/architecture/GUIDE_ARCHITECTURE.md) - Guide détaillé de l'architecture du projet
 - [📐 **Refactoring Structure**](/docs/architecture/REFACTORING_STRUCTURE.md) - Plan de refactorisation de la structure du projet
+- [📋 **Plan Environnements Dev/Prod**](/docs/architecture/plan-environnements-dev-prod.md) - Plan des environnements de développement et production
 
 ## 🎨 CSS & Design
 
 - [📝 **Guide de Style CSS**](/docs/standards/CSS_STYLE_GUIDE.md) - Standards et conventions CSS
 - [📑 **Résumé de la Refactorisation CSS**](/docs/css/RESUME_REFACTORISATION_CSS.md) - Résumé des travaux de refactorisation CSS effectués
+- [📋 **Architecture CSS**](/docs/css/ARCHITECTURE_CSS.md) - Architecture et organisation CSS
+- [📋 **Guide de Standardisation CSS**](/docs/css/GUIDE_STANDARDISATION_CSS.md) - Guide de standardisation CSS
 
 ## 🧩 Composants
 
@@ -49,7 +52,7 @@ Ce dossier contient toute la documentation technique du projet TourCraft. Ce fic
 
 ## 🛠️ Workflows
 
-- [📋 **Workflows Généraux**](/docs/workflows/WORKFLOWS.md)
+- [�� **Workflows Généraux**](/docs/workflows/WORKFLOWS.md)
 - [📄 **Concert Workflow**](/docs/workflows/CONCERT_WORKFLOW.md)
 - [📄 **Contrat Workflow**](/docs/workflows/CONTRAT_WORKFLOW.md)
 - [📄 **Association Workflow**](/docs/workflows/ASSOCIATION_WORKFLOW.md)
@@ -67,7 +70,19 @@ Ce dossier contient toute la documentation technique du projet TourCraft. Ce fic
 
 - [📊 **Analyse des Dépendances**](/docs/analyses/ANALYSE_DEPENDANCES.md) - Analyse des dépendances du projet
 - [📊 **Analyses & Audits**](/docs/analyses/ANALYSES_AUDITS.md) - Synthèse des analyses et audits effectués
-- [📊 **Audit des Composants Similaires**](/docs/analyses/AUDIT_COMPOSANTS_SIMILAIRES.md) - Analyse des composants avec des fonctionnalités similaires
+- [📋 **Audit Global de la Documentation**](/docs/analyses/AUDIT_GLOBAL_DOCUMENTATION.md) - Analyse des incohérences et plan de consolidation de la documentation
+
+## 📈 Performance & Optimisations
+
+- [📊 **Optimisations Générales**](/docs/performance/OPTIMISATIONS.md) - Optimisations générales du projet
+- [📊 **Optimisations Relations Entités**](/docs/performance/OPTIMISATIONS_RELATIONS_ENTITES.md) - Optimisations spécifiques aux relations entre entités
+
+## 📐 Standards & Conventions
+
+- [📋 **Guide Standards & Conventions**](/docs/standards/GUIDE_STANDARDS_CONVENTIONS.md) - Guide général des standards et conventions
+- [📋 **Standardisation Modèles**](/docs/standards/STANDARDISATION_MODELES.md) - Standardisation des modèles de données
+- [📋 **Guide Imports UI**](/docs/standards/GUIDE_IMPORTS_UI.md) - Guide des imports d'interface utilisateur
+- [📋 **Composants Standardisés**](/docs/standards/components-standardises.md) - Standards pour les composants
 
 ## 📁 Documents Archivés
 
@@ -99,7 +114,7 @@ Les documents suivants ont été archivés car ils concernent des initiatives te
 ### Pour les Tech Leads & Managers
 
 - [État Consolidé des Migrations et Refactorisations](/docs/migration/ETAT_MIGRATION_CONSOLIDATION.md): Vision globale de tous les chantiers
-- [Audit Global de la Documentation](/docs/analyses/AUDIT_GLOBAL_DOCUMENTATION.md): Analyse des incohérences et plan d'amélioration
+- [Audit Complet de la Documentation 2025](/docs/AUDIT_DOCUMENTATION_COMPLET_2025.md): Analyse des incohérences et plan d'amélioration
 - Documents de planification: Pour comprendre la stratégie de refactorisation et les prochaines étapes
 
 ## 📁 Structure des Dossiers de Documentation
@@ -112,11 +127,11 @@ Les documents suivants ont été archivés car ils concernent des initiatives te
 - **[css/](/docs/css/)** - Documentation CSS et résultats de la refactorisation CSS (terminée)
 - **[hooks/](/docs/hooks/)** - Documentation des hooks React (migration vers hooks génériques terminée)
 - **[migration/](/docs/migration/)** - Plans et état des migrations (Firebase, etc.)
+- **[performance/](/docs/performance/)** - Documentation des optimisations et performances
 - **[services/](/docs/services/)** - Documentation des services
 - **[standards/](/docs/standards/)** - Standards, conventions et guides de style
-- **[tests/](/docs/tests/)** - Documentation sur les tests
-- **[utils/](/docs/utils/)** - Documentation des utilitaires
 - **[workflows/](/docs/workflows/)** - Documentation des workflows et processus
+- **[manuel/](/docs/manuel/)** - Documentation manuelle et guides utilisateur
 
 ## 🔄 Processus de Mise à Jour de la Documentation
 
@@ -137,8 +152,12 @@ Les documents suivants ont été archivés car ils concernent des initiatives te
    - Ne pas modifier plusieurs documents connexes sans coordination
 
 ## ✨ Changements Récents
-- Unification du formulaire de concert via `ConcertForm` responsive wrapper.
-- Migration vers `useConcertFormOptimized` pour la gestion création/édition.
+- Refactorisation complète de la documentation (mai 2025)
+- Réorganisation des fichiers par thématique
+- Création d'index structurés pour chaque dossier
+- Élimination des redondances et doublons
+- Unification du formulaire de concert via `ConcertForm` responsive wrapper
+- Migration vers `useConcertFormOptimized` pour la gestion création/édition
 
 ---
 

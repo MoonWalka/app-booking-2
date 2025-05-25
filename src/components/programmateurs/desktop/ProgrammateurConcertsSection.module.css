@@ -76,7 +76,7 @@
   flex-wrap: wrap;
   gap: 0.75rem;
   font-size: 0.875rem;
-  color: var(--tc-bs-gray-600);
+  color: var(--tc-color-primary);
 }
 
 .concertDate, .concertLocation {
@@ -125,7 +125,7 @@
   background-color: rgba(13, 110, 253, 0.05);
   border: 1px solid rgba(13, 110, 253, 0.1);
   border-radius: 0.375rem;
-  color: var(--tc-bs-gray-700);
+  color: var(--tc-color-primary);
 }
 
 /* Section pour ajouter */
@@ -150,5 +150,5 @@
   display: flex;
   align-items: center;
   padding: 1rem;
-  color: var(--tc-bs-gray-600);
+  color: var(--tc-color-primary);
 }

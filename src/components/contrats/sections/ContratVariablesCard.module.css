@@ -13,12 +13,12 @@
   overflow-y: auto;
   border: 1px solid var(--tc-border-light);
   border-radius: var(--tc-radius-sm);
-  padding: var(--tc-spacing-1-5);
+  padding: var(--tc-color-primary);
 }
 
 .variableItem {
   display: flex;
-  padding: var(--tc-spacing-1-5);
+  padding: var(--tc-color-primary);
   border-bottom: 1px solid var(--tc-bg-subtle);
 }
 
@@ -61,7 +61,7 @@
   }
   
   .variableName {
-    margin-bottom: var(--tc-spacing-0-5);
+    margin-bottom: var(--tc-color-primary);
     color: var(--tc-text-muted);
     font-size: var(--tc-font-size-sm);
   }

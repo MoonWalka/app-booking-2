@@ -125,7 +125,7 @@
 }
 
 .button {
-  padding: var(--tc-spacing-2-5) var(--tc-spacing-5);
+  padding: var(--tc-color-primary) var(--tc-spacing-5);
   border-radius: var(--tc-radius-sm);
   border: none;
   cursor: pointer;
@@ -220,7 +220,7 @@
 }
 
 .tab {
-  padding: var(--tc-spacing-2-5) var(--tc-spacing-5);
+  padding: var(--tc-color-primary) var(--tc-spacing-5);
   cursor: pointer;
   transition: var(--tc-transition-base);
 }
@@ -239,7 +239,7 @@
    BOÎTES DE STATUT
    ============================= */
 .statusBox {
-  padding: var(--tc-spacing-2-5);
+  padding: var(--tc-color-primary);
   border-radius: var(--tc-radius-sm);
   margin-bottom: var(--tc-space-4);
 }
@@ -249,7 +249,7 @@
    ============================= */
 .actionsContainer {
   display: flex;
-  gap: var(--tc-spacing-2-5);
+  gap: var(--tc-color-primary);
   justify-content: flex-end;
 }
 
@@ -264,7 +264,7 @@
 }
 
 .infoSection {
-  padding: var(--tc-spacing-2-5);
+  padding: var(--tc-color-primary);
   border-radius: var(--tc-radius-sm);
   margin-bottom: var(--tc-space-4);
 }
@@ -285,7 +285,7 @@
 }
 
 .warningBox {
-  padding: var(--tc-spacing-2-5);
+  padding: var(--tc-color-primary);
   background-color: var(--tc-warning-light);
   border-radius: var(--tc-radius-sm);
   margin-bottom: var(--tc-space-4);
@@ -297,8 +297,8 @@
 }
 
 .smallButton {
-  padding: var(--tc-space-1) var(--tc-spacing-2-5) !important;
-  margin-top: var(--tc-spacing-2-5) !important;
+  padding: var(--tc-space-1) var(--tc-color-primary) !important;
+  margin-top: var(--tc-color-primary) !important;
 }
 
 .clauseBox {

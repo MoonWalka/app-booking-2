@@ -130,7 +130,7 @@ button {
 
 /* Style de focus accessible */
 :focus-visible {
-  outline: 2px solid var(--tc-focus-ring-color);
+  outline: 2px solid var(--tc-color-primary);
   outline-offset: 2px;
 }
 

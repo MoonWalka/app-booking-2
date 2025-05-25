@@ -11,7 +11,7 @@
 .stepProgressDots {
   display: flex;
   justify-content: space-between;
-  margin-bottom: var(--tc-spacing-1-5);
+  margin-bottom: var(--tc-color-primary);
   position: relative;
 }
 
@@ -48,7 +48,7 @@
   height: 6px;
   background-color: var(--tc-bg-light);
   border-radius: 3px;
-  margin: 0 var(--tc-spacing-3-5);
+  margin: 0 var(--tc-color-primary);
   position: relative;
   top: -1.3rem;
   z-index: 1;
@@ -67,7 +67,7 @@
   top: 100%;
   left: 50%;
   transform: translateX(-50%);
-  margin-top: var(--tc-spacing-1-5);
+  margin-top: var(--tc-color-primary);
   white-space: nowrap;
   font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-medium);
@@ -105,6 +105,6 @@
   .stepProgressBar {
     height: 4px;
     top: -0.9rem;
-    margin: 0 var(--tc-spacing-2-5);
+    margin: 0 var(--tc-color-primary);
   }
 }

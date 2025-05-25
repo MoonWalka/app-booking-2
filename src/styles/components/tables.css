@@ -30,7 +30,7 @@
 .tc-table thead th {
   vertical-align: bottom;
   border-bottom: 2px solid var(--tc-border-default);
-  background-color: var(--tc-table-header-bg);
+  background-color: var(--tc-bg-surface);
   color: var(--tc-text-default);
   font-weight: var(--tc-font-weight-semibold);
   text-transform: uppercase;
@@ -99,7 +99,7 @@
   position: sticky;
   top: 0;
   z-index: 10;
-  background-color: var(--tc-table-header-bg);
+  background-color: var(--tc-bg-surface);
 }
 
 /* LÉGENDE DE TABLEAU */
@@ -115,7 +115,7 @@
 
 /* CLASSES CONTEXTUELLES */
 .tc-table .tc-table-active {
-  background-color: rgba(var(--tc-gray-200-rgb), 0.7);
+  background-color: rgba(var(--tc-color-gray-200-rgb), 0.7);
 }
 
 .tc-table .tc-table-primary {

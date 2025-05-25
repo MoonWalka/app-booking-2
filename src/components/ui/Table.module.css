@@ -27,7 +27,7 @@
 }
 
 .table tbody tr:hover {
-  background-color: var(--tc-table-hover-bg);
+  background-color: var(--tc-bg-hover);
 }
 
 .sortableHeader {

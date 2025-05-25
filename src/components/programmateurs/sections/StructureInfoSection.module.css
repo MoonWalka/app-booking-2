@@ -37,7 +37,7 @@
 
 .formInput {
   background-color: var(--tc-bs-white);
-  border: 1px solid var(--tc-bs-gray-300);
+  border: 1px solid var(--tc-color-primary);
   transition: all 0.2s ease;
   padding: 0.5rem;
 }
@@ -96,7 +96,7 @@
   position: absolute;
   right: 0.5rem;
   padding: 0.25rem 0.5rem;
-  color: var(--tc-bs-gray-600);
+  color: var(--tc-color-primary);
   background: none;
   border: none;
 }
@@ -152,7 +152,7 @@
 
 .structureLocation {
   font-size: 0.8rem;
-  color: var(--tc-bs-gray-600);
+  color: var(--tc-color-primary);
   margin-top: 0.25rem;
   display: flex;
   align-items: center;
@@ -161,13 +161,13 @@
 .loadingResults {
   padding: 1rem;
   text-align: center;
-  color: var(--tc-bs-gray-600);
+  color: var(--tc-color-primary);
 }
 
 .noResults {
   padding: 1rem;
   text-align: center;
-  color: var(--tc-bs-gray-600);
+  color: var(--tc-color-primary);
 }
 
 .createNew {

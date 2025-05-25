@@ -56,7 +56,7 @@
   padding: var(--tc-space-4);
   display: flex;
   gap: var(--tc-space-4);
-  box-shadow: 0 -2px 4px rgba(var(--tc-black-rgb), 0.075);
+  box-shadow: 0 -2px 4px rgba(var(--tc-color-black-rgb), 0.075);
   z-index: var(--tc-z-index-modal);
 }
 

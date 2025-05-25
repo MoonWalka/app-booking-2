@@ -100,22 +100,22 @@
 }
 
 .tc-type-badge.tc-bg-bar {
-  background-color: var(--tc-bar-color);
+  background-color: var(--tc-color-accent);
   color: var(--tc-color-white);
 }
 
 .tc-type-badge.tc-bg-festival {
-  background-color: var(--tc-festival-color);
+  background-color: var(--tc-color-secondary);
   color: var(--tc-color-white);
 }
 
 .tc-type-badge.tc-bg-salle {
-  background-color: var(--tc-salle-color);
+  background-color: var(--tc-color-primary);
   color: var(--tc-color-white);
 }
 
 .tc-type-badge.tc-bg-plateau {
-  background-color: var(--tc-plateau-color);
+  background-color: var(--tc-color-warning);
   color: var(--tc-color-white);
 }
 

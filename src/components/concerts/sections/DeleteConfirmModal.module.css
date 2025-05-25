@@ -82,7 +82,7 @@
 .modalFooter {
   display: flex;
   justify-content: flex-end;
-  gap: var(--tc-spacing-2-5);
+  gap: var(--tc-color-primary);
   padding: var(--tc-space-4) var(--tc-spacing-5);
   border-top: 1px solid var(--tc-border-ultralight);
   background: var(--tc-bg-light);
@@ -112,12 +112,12 @@
     max-width: 98vw;
   }
   .modalHeader {
-    padding: var(--tc-spacing-2-5) var(--tc-space-3);
+    padding: var(--tc-color-primary) var(--tc-space-3);
   }
   .modalBody {
     padding: var(--tc-space-3);
   }
   .modalFooter {
-    padding: var(--tc-spacing-2-5) var(--tc-space-3);
+    padding: var(--tc-color-primary) var(--tc-space-3);
   }
 }

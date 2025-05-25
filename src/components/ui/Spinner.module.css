@@ -41,7 +41,7 @@
    SPINNER DE BASE
    ============================= */
 .spinner {
-  border: 4px solid rgba(var(--tc-gray-300-rgb), 0.3);
+  border: 4px solid rgba(var(--tc-color-primary), 0.3);
   border-radius: 50%;
   border-top: 4px solid var(--tc-color-secondary);
   width: 40px;

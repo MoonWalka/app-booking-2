@@ -1,7 +1,19 @@
+/**
+ * @fileoverview Hook de validation des données de formulaire pour les concerts
+ * Gère la récupération et la validation des soumissions de formulaires associées aux concerts,
+ * incluant les données du programmateur, du lieu et de la structure.
+ * 
+ * @author TourCraft Team
+ * @since 2024
+ */
+
 import { useState, useEffect, useCallback } from 'react';
 import { db, doc, getDoc, collection, query, where, getDocs, updateDoc } from '@/firebaseInit';
 
-// Liste des champs à comparer et valider pour le programmateur
+/**
+ * Configuration des champs de contact du programmateur
+ * @type {Array<{id: string, label: string}>}
+ */
 const contactFields = [
   { id: 'nom', label: 'Nom' },
   { id: 'prenom', label: 'Prénom' },
@@ -10,6 +22,10 @@ const contactFields = [
   { id: 'telephone', label: 'Téléphone' }
 ];
 
+/**
+ * Configuration des champs de structure du programmateur
+ * @type {Array<{id: string, label: string}>}
+ */
 const structureFields = [
   { id: 'raisonSociale', label: 'Raison sociale' },
   { id: 'type', label: 'Type de structure' },
@@ -20,7 +36,10 @@ const structureFields = [
   { id: 'siret', label: 'SIRET' }
 ];
 
-// Liste des champs à comparer et valider pour le lieu
+/**
+ * Configuration des champs du lieu de concert
+ * @type {Array<{id: string, label: string}>}
+ */
 const lieuFields = [
   { id: 'nom', label: 'Nom du lieu' },
   { id: 'adresse', label: 'Adresse' },
@@ -29,6 +48,86 @@ const lieuFields = [
   { id: 'capacite', label: 'Capacité' }
 ];
 
+/**
+ * Hook de validation des données de formulaire pour un concert
+ * 
+ * Ce hook gère la logique complexe de récupération et validation des données
+ * de formulaire soumises par les programmateurs pour un concert donné.
+ * 
+ * @description
+ * Fonctionnalités principales :
+ * - Récupération des données du concert et du lieu associé
+ * - Recherche de la soumission de formulaire (formSubmissions)
+ * - Gestion des liens de formulaire non soumis (formLinks)
+ * - Récupération des données du programmateur existant
+ * - Initialisation des valeurs de validation
+ * - Gestion des états de validation
+ * 
+ * @param {string} concertId - ID unique du concert pour lequel récupérer les données de formulaire
+ * 
+ * @returns {Object} État et données du formulaire de validation
+ * @returns {Object|null} returns.formData - Données de la soumission de formulaire
+ * @returns {string|null} returns.formId - ID de la soumission de formulaire
+ * @returns {Object|null} returns.concert - Données complètes du concert
+ * @returns {boolean} returns.loading - État de chargement des données
+ * @returns {string|null} returns.error - Message d'erreur éventuel
+ * @returns {boolean} returns.validated - État de validation du formulaire
+ * @returns {Function} returns.setValidated - Fonction pour modifier l'état de validation
+ * @returns {Object} returns.validatedFields - Champs validés avec leurs valeurs
+ * @returns {Function} returns.setValidatedFields - Fonction pour modifier les champs validés
+ * @returns {Object|null} returns.programmateur - Données du programmateur existant
+ * @returns {Object|null} returns.lieu - Données du lieu de concert
+ * @returns {Array} returns.contactFields - Configuration des champs de contact
+ * @returns {Array} returns.structureFields - Configuration des champs de structure
+ * @returns {Array} returns.lieuFields - Configuration des champs de lieu
+ * 
+ * @example
+ * ```javascript
+ * const {
+ *   formData,
+ *   loading,
+ *   error,
+ *   validated,
+ *   validatedFields,
+ *   setValidatedFields,
+ *   programmateur,
+ *   lieu
+ * } = useFormValidationData('concert-123');
+ * 
+ * if (loading) return <div>Chargement...</div>;
+ * if (error) return <div>Erreur: {error}</div>;
+ * 
+ * // Utiliser les données pour la validation
+ * ```
+ * 
+ * @dependencies
+ * - Firebase Firestore (collections: concerts, formSubmissions, formLinks, lieux, programmateurs)
+ * - React hooks (useState, useEffect, useCallback)
+ * 
+ * @complexity HIGH
+ * @businessCritical true
+ * @migrationCandidate useGenericEntityForm - Candidat pour généralisation
+ * 
+ * @workflow
+ * 1. Récupération des données du concert par concertId
+ * 2. Récupération optionnelle des données du lieu associé
+ * 3. Recherche de la soumission de formulaire :
+ *    - Via formSubmissionId du concert (si existant)
+ *    - Via requête sur formSubmissions par concertId
+ *    - Vérification des formLinks si aucune soumission
+ * 4. Sélection de la soumission la plus récente
+ * 5. Mise à jour du concert avec formSubmissionId
+ * 6. Récupération des données du programmateur existant
+ * 7. Initialisation des valeurs de validation
+ * 8. Gestion des états de validation existants
+ * 
+ * @errorHandling
+ * - Concert inexistant : "Ce concert n'existe pas."
+ * - Aucun formulaire : "Aucun formulaire n'a été soumis pour ce concert."
+ * - Lien sans soumission : "Un lien de formulaire a été généré mais le programmateur n'a pas encore soumis de réponse."
+ * - Soumission introuvable : "La soumission de formulaire n'a pas été trouvée."
+ * - Erreurs génériques : "Impossible de charger les données du formulaire: {error}"
+ */
 const useFormValidationData = (concertId) => {
   const [formData, setFormData] = useState(null);
   const [formId, setFormId] = useState(null);

@@ -1,6 +1,140 @@
+/**
+ * @fileoverview Hook de gestion de la liste des concerts avec pagination et filtres
+ * Fournit une interface complète pour afficher, rechercher et filtrer les concerts
+ * avec gestion des statuts, formulaires associés et pagination optimisée.
+ * 
+ * @author TourCraft Team
+ * @since 2024
+ */
+
 import { useState, useEffect, useCallback } from 'react';
 import { formatDate } from '@/utils/dateUtils';
 import { concertService } from '@/services/firestoreService.js';
+
+/**
+ * Hook de gestion complète de la liste des concerts avec fonctionnalités avancées
+ * 
+ * Ce hook fournit une interface riche pour gérer l'affichage des concerts avec
+ * pagination, recherche, filtres par statut, et gestion des formulaires associés.
+ * Optimisé pour les grandes listes avec chargement progressif.
+ * 
+ * @description
+ * Fonctionnalités principales :
+ * - Récupération paginée des concerts (20 par page)
+ * - Gestion des statuts de concert avec détails visuels
+ * - Recherche multi-critères (titre, lieu, programmateur, date)
+ * - Filtres par statut avec compteurs
+ * - Détection des formulaires associés
+ * - Chargement progressif avec pagination infinie
+ * - Gestion des erreurs et états de chargement
+ * - Interface de rechargement et réinitialisation
+ * 
+ * @returns {Object} Interface complète de gestion des concerts
+ * @returns {Array} returns.concerts - Liste des concerts chargés
+ * @returns {boolean} returns.loading - État de chargement en cours
+ * @returns {string|null} returns.error - Message d'erreur éventuel
+ * @returns {boolean} returns.hasMore - Indique s'il y a plus de concerts à charger
+ * @returns {Function} returns.fetchConcerts - Fonction de chargement des concerts
+ * @returns {Array} returns.searchFields - Configuration des champs de recherche
+ * @returns {Array} returns.filterOptions - Options de filtrage par statut
+ * @returns {Function} returns.getStatusDetails - Fonction d'obtention des détails de statut
+ * @returns {Function} returns.hasForm - Fonction de vérification de formulaire associé
+ * 
+ * @example
+ * ```javascript
+ * const {
+ *   concerts,
+ *   loading,
+ *   error,
+ *   hasMore,
+ *   fetchConcerts,
+ *   searchFields,
+ *   filterOptions,
+ *   getStatusDetails,
+ *   hasForm
+ * } = useConcertsList();
+ * 
+ * // Affichage de la liste
+ * if (loading && concerts.length === 0) return <div>Chargement...</div>;
+ * if (error) return <div>Erreur: {error}</div>;
+ * 
+ * return (
+ *   <div>
+ *     {concerts.map(concert => {
+ *       const statusDetails = getStatusDetails(concert.statut);
+ *       const hasFormulaire = hasForm(concert.id);
+ *       
+ *       return (
+ *         <div key={concert.id}>
+ *           <h3>{concert.titre}</h3>
+ *           <span className={`badge badge-${statusDetails.variant}`}>
+ *             {statusDetails.icon} {statusDetails.label}
+ *           </span>
+ *           {hasFormulaire && <span>📋 Formulaire</span>}
+ *         </div>
+ *       );
+ *     })}
+ *     
+ *     {hasMore && (
+ *       <button onClick={() => fetchConcerts(false)}>
+ *         Charger plus
+ *       </button>
+ *     )}
+ *   </div>
+ * );
+ * ```
+ * 
+ * @dependencies
+ * - concertService (Firestore service)
+ * - formatDate utility
+ * - React hooks (useState, useEffect, useCallback)
+ * 
+ * @complexity HIGH
+ * @businessCritical true
+ * @migrationCandidate useGenericEntityList - Candidat prioritaire pour généralisation
+ * 
+ * @workflow
+ * 1. Initialisation des états et configuration de pagination
+ * 2. Chargement initial des concerts avec tri par date
+ * 3. Récupération des formulaires associés
+ * 4. Configuration des champs de recherche et filtres
+ * 5. Gestion de la pagination avec lastVisible
+ * 6. Mise à jour progressive de la liste
+ * 7. Gestion des erreurs et états de chargement
+ * 
+ * @statusManagement
+ * - contact: Contact établi (📞, step 1)
+ * - preaccord: Pré-accord (✅, step 2)
+ * - contrat: Contrat signé (📄, step 3)
+ * - acompte: Acompte facturé (💸, step 4)
+ * - solde: Solde facturé (🔁, step 5)
+ * - annule: Annulé (❌, step 0)
+ * 
+ * @searchFields
+ * - titre: Titre du concert
+ * - lieuNom: Nom du lieu
+ * - programmateurNom: Nom du programmateur
+ * - date: Date formatée du concert
+ * 
+ * @pagination
+ * - pageSize: 20 concerts par page
+ * - Chargement progressif avec lastVisible
+ * - Détection automatique de fin de liste
+ * - Option de réinitialisation complète
+ * 
+ * @performance
+ * - Pagination optimisée avec Firestore cursors
+ * - Chargement asynchrone des formulaires
+ * - Mise en cache des résultats de recherche
+ * - Callbacks mémorisés pour éviter les re-renders
+ * 
+ * @errorHandling
+ * - Erreur de chargement : "Impossible de charger les concerts. Veuillez réessayer plus tard."
+ * - Logging automatique des erreurs dans la console
+ * - Gestion gracieuse des échecs de pagination
+ * 
+ * @usedBy ConcertsList, ConcertsDashboard, ConcertsSearch, AdminPanel
+ */
 
 export function useConcertsList() {
   const [concerts, setConcerts] = useState([]);

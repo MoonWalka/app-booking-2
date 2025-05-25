@@ -367,6 +367,22 @@ const useGenericSearch = (config = {}, options = {}) => {
     };
   }, [enableClickOutside]);
   
+  // Fonctions utilitaires (définies avant leur utilisation)
+  const selectItem = useCallback((item) => {
+    setSelectedItem(item);
+    setSearchTerm('');
+    setShowResults(false);
+    selectedIndexRef.current = -1;
+    
+    if (onResultSelect) {
+      onResultSelect(item);
+    }
+    
+    if (enableLogging) {
+      console.log('[useGenericSearch] Élément sélectionné:', item);
+    }
+  }, [onResultSelect, enableLogging]);
+  
   // Navigation au clavier
   useEffect(() => {
     if (!enableKeyboardNavigation) return;
@@ -411,22 +427,7 @@ const useGenericSearch = (config = {}, options = {}) => {
     };
   }, [enableKeyboardNavigation, showResults, results, selectItem]);
   
-  // Fonctions utilitaires
-  const selectItem = useCallback((item) => {
-    setSelectedItem(item);
-    setSearchTerm('');
-    setShowResults(false);
-    selectedIndexRef.current = -1;
-    
-    if (onResultSelect) {
-      onResultSelect(item);
-    }
-    
-    if (enableLogging) {
-      console.log('[useGenericSearch] Élément sélectionné:', item);
-    }
-  }, [onResultSelect, enableLogging]);
-  
+  // Autres fonctions utilitaires
   const clearResults = useCallback(() => {
     setResults([]);
     setShowResults(false);

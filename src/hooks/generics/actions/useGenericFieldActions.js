@@ -273,6 +273,13 @@ const useGenericFieldActions = (config = {}, options = {}) => {
                 errorMessage = rules.typeMessage || 'Numéro de téléphone invalide';
               }
               break;
+            default:
+              // Type de validation non reconnu - ignorer silencieusement
+              // ou utiliser une validation personnalisée si définie
+              if (enableLogging) {
+                console.warn(`[${entityType}FieldActions] Type de validation non reconnu: ${rules.type}`);
+              }
+              break;
           }
         }
         

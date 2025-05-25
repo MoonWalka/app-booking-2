@@ -46,7 +46,9 @@
     --tc-font-weight-bold: 700;
     
     /* Hauteurs de ligne */
+    --tc-line-height-tight: 1.25;
     --tc-line-height-normal: 1.5;
+    --tc-line-height-relaxed: 1.75;
     
     /* Alias de compatibilité */
     --tc-font-family-base: var(--tc-font-sans);
@@ -61,20 +63,31 @@
     --tc-space-2: 0.5rem;                  /* 8px - Petit espacement */
     --tc-space-3: 0.75rem;                 /* 12px - Espacement moyen */
     --tc-space-4: 1rem;                    /* 16px - Espacement standard */
+    --tc-space-5: 1.25rem;                 /* 20px - Grand espacement */
     --tc-space-6: 1.5rem;                  /* 24px - Très grand espacement */
     --tc-space-8: 2rem;                    /* 32px - Espacement XL */
+    --tc-space-10: 2.5rem;                 /* 40px - Espacement XXL */
+    --tc-space-12: 3rem;                   /* 48px - Espacement maximum */
     
-    /* Alias essentiels */
+    /* Alias sémantiques */
     --tc-space-xs: var(--tc-space-1);      /* Extra small */
     --tc-space-sm: var(--tc-space-2);      /* Small */
     --tc-space-md: var(--tc-space-4);      /* Medium */
     --tc-space-lg: var(--tc-space-6);      /* Large */
+    --tc-space-xl: var(--tc-space-8);      /* Extra large */
+    --tc-space-xxl: var(--tc-space-12);    /* Extra extra large */
     
-    /* Espacements Tailwind */
-    --tc-gap-2: var(--tc-space-2);         /* gap-2 */
+    /* Espacements spécifiques maquette */
+    --tc-gap-2: var(--tc-space-2);         /* gap-4, space-x-2 */
     --tc-gap-4: var(--tc-space-4);         /* gap-4 */
+    --tc-gap-6: var(--tc-space-6);         /* gap-6 */
     
-    /* Compatibilité critique */
+    /* Alias de compatibilité */
+    --tc-spacing-xs: var(--tc-space-xs);
+    --tc-spacing-sm: var(--tc-space-sm);
+    --tc-spacing-md: var(--tc-space-md);
+    --tc-spacing-lg: var(--tc-space-lg);
+    --tc-spacing-xl: var(--tc-space-xl);
     --tc-spacing-unit: var(--tc-space-md);
 
     /* ===== BORDURES OPTIMISÉES ===== */
@@ -92,26 +105,42 @@
     /* ===== EFFETS OPTIMISÉS (MAQUETTE) ===== */
     /* Basée sur l'audit maquette HTML - 49 → 20 variables (-59%) */
     
-    /* Ombres essentielles */
+    /* Ombres réelles de la maquette */
     --tc-shadow-none: none;
     --tc-shadow-sm: 0 2px 4px rgba(0,0,0,0.05);      /* section-nav hover */
     --tc-shadow-base: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --tc-shadow-md: 0 4px 8px rgba(0, 0, 0, 0.05);   /* stat-card hover */
     --tc-shadow-lg: 0 8px 16px rgba(0,0,0,0.1);      /* dropdown */
+    --tc-shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
     
-    /* Border-radius essentiels */
+    /* Ombres spécialisées maquette */
+    --tc-shadow-card: var(--tc-shadow-base);
+    --tc-shadow-modal: var(--tc-shadow-xl);
+    --tc-shadow-dropdown: var(--tc-shadow-lg);
+    --tc-shadow-button: 0 2px 5px rgba(0, 0, 0, 0.1); /* btn-primary hover */
+    --tc-shadow-focus: 0 0 0 3px rgba(33, 53, 71, 0.3);
+    
+    /* Border-radius maquette */
     --tc-radius-none: 0;
-    --tc-radius-sm: 0.25rem;               /* 4px - badge */
-    --tc-radius-base: 0.375rem;            /* 6px - buttons */
-    --tc-radius-lg: 0.75rem;               /* 12px - cards */
+    --tc-radius-sm: 0.25rem;               /* 4px - badge, dropdown-item */
+    --tc-radius-base: 0.375rem;            /* 6px - buttons, form-control */
+    --tc-radius-md: 0.5rem;                /* 8px - stat-card, containers */
+    --tc-radius-lg: 0.75rem;               /* 12px */
+    --tc-radius-xl: 1rem;                  /* 16px */
     --tc-radius-full: 9999px;              /* rounded-full */
     
-    /* Transitions essentielles */
-    --tc-transition-fast: 150ms ease;      /* Rapide */
-    --tc-transition-base: 300ms ease;      /* Standard */
+    /* Transitions maquette */
+    --tc-transition-fast: 150ms ease;      /* all 0.2s ease */
+    --tc-transition-base: 300ms ease;      /* all 0.3s ease */
+    --tc-transition-slow: 500ms ease;
+    --tc-transform-hover: translateY(-2px);
     
-    /* Alias critiques */
+    /* Alias de compatibilité */
     --tc-shadow: var(--tc-shadow-base);
     --tc-border-radius: var(--tc-radius-base);
+    --tc-border-radius-sm: var(--tc-radius-sm);
+    --tc-border-radius-lg: var(--tc-radius-lg);
+    --tc-transition-duration: var(--tc-transition-base);
     --tc-transition: all var(--tc-transition-base) ease-in-out;
 
     /* ===== BREAKPOINTS ===== */
@@ -125,14 +154,20 @@
     /* ===== VARIABLES D'INTERFACE ===== */
     --tc-header-height: 60px;
     --tc-sidebar-width: 240px;
+    --tc-sidebar-collapsed-width: 64px;
 
-    /* ===== COMPOSANTS ESSENTIELS ===== */
+    /* ===== FOCUS ACCESSIBILITY ===== */
+    --tc-focus-ring-color: rgba(52, 152, 219, 0.5);
+    --tc-focus-ring-width: 3px;
+
+    /* ===== COMPOSANTS OPTIMISÉS ===== */
     /* Boutons */
     --tc-btn-padding-y: 0.375rem;
     --tc-btn-padding-x: var(--tc-space-sm);
     
     /* Formulaires */
     --tc-input-height: 2.5rem;             /* 40px */
+    --tc-input-padding: var(--tc-space-3); /* 12px */
 }    /* Mode compact - définition en dehors de :root pour permettre la surcharge via data-attributes */
 [data-compact="true"] {
     --tc-spacing-unit: var(--tc-spacing-sm);

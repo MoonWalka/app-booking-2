@@ -195,7 +195,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: var(--tc-modal-overlay-bg);
+    background-color: var(--tc-bg-overlay);
     z-index: var(--tc-z-index-backdrop); /* Juste en-dessous de la sidebar */
     display: none;
   }

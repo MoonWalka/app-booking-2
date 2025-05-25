@@ -40,7 +40,7 @@
 }
 
 .tc-type-autre {
-  background-color: rgba(var(--tc-gray-100-rgb), 0.6);
+  background-color: rgba(var(--tc-color-gray-100-rgb), 0.6);
   color: var(--tc-color-gray-600);
 }
 

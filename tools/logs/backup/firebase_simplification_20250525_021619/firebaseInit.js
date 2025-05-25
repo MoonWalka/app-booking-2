@@ -5,7 +5,7 @@
  */
 
 // Import depuis le service Firebase qui utilise le pattern Factory
-import {
+import firebaseService, {
   db, auth, storage, remoteConfig,
   collection, doc, getDoc, getDocs,
   setDoc, addDoc, updateDoc, deleteDoc,
@@ -35,3 +35,6 @@ export {
 export const IS_LOCAL_MODE = MODE_LOCAL;
 export const BYPASS_AUTH = process.env.REACT_APP_BYPASS_AUTH === 'true';
 export const CURRENT_MODE = MODE_LOCAL ? 'local' : 'production';
+
+// Export par défaut du service Firebase complet
+export default firebaseService;

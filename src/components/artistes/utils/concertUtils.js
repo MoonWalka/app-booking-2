@@ -1,12 +1,12 @@
-import firebase from '@/firebaseInit';
+import { db, collection, query, where, getDocs } from '@/firebaseInit';
 
 export const getNbConcerts = async (artisteId) => {
   try {
-    const q = firebase.query(
-      firebase.collection(firebase.db, 'concerts'),
-      firebase.where('artisteId', '==', artisteId)
+    const q = query(
+      collection(db, 'concerts'),
+      where('artisteId', '==', artisteId)
     );
-    const querySnapshot = await firebase.getDocs(q);
+    const querySnapshot = await getDocs(q);
     return querySnapshot.size;
   } catch (error) {
     console.error('Erreur lors du comptage des concerts:', error);

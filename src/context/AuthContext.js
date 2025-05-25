@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect, useRef } from 'react';
-import firebase, { IS_LOCAL_MODE, CURRENT_MODE } from '@/firebaseInit';
+import { auth, onAuthStateChanged, signInWithEmailAndPassword, signOut, IS_LOCAL_MODE, CURRENT_MODE } from '@/firebaseInit';
 
 // Créer le contexte
 export const AuthContext = createContext(null);
@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }) => {
 
     authCheckCount.current += 1;
     
-    const unsubscribe = firebase.onAuthStateChanged(firebase.auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       // Vérifier si l'état d'authentification a changé
       const currentAuthState = user ? user.uid : null;
       const hasChanged = currentAuthState !== lastAuthState.current;
@@ -103,7 +103,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       setLoading(true);
-      await firebase.signInWithEmailAndPassword(firebase.auth, email, password);
+      await signInWithEmailAndPassword(auth, email, password);
       return true;
     } catch (error) {
       console.error("Erreur de connexion:", error);
@@ -117,7 +117,7 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       setLoading(true);
-      await firebase.signOut(firebase.auth);
+      await signOut(auth);
       // Nettoyer le cache d'authentification
       sessionStorage.removeItem('cachedAuthState');
       sessionStorage.removeItem('lastAuthCheck');

@@ -1,15 +1,15 @@
-import firebase from '../../../firebaseInit';
+import { db, collection, query, startAfter, limit, getDocs } from '../../../firebaseInit';
 
 export const handleLoadMore = async (collectionName, lastDoc, pageSize = 10) => {
   try {
-    const collectionRef = firebase.collection(firebase.db, collectionName);
-    const q = firebase.query(
+    const collectionRef = collection(db, collectionName);
+    const q = query(
       collectionRef,
-      firebase.startAfter(lastDoc),
-      firebase.limit(pageSize)
+      startAfter(lastDoc),
+      limit(pageSize)
     );
 
-    const snapshot = await firebase.getDocs(q);
+    const snapshot = await getDocs(q);
     const newItems = snapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()

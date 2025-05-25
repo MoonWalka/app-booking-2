@@ -20,17 +20,10 @@ jest.mock('../../firebaseInit', () => ({
       })),
       get: jest.fn()
     }))
-  },
-  firebase: {
-    firestore: {
-      FieldValue: {
-        serverTimestamp: jest.fn(() => 'server-timestamp')
-      }
-    }
   }
 }));
 
 // Import des dépendances mockées
-import { db, firebase } from '../../firebaseInit';
+import { db } from '../../firebaseInit';
 
 // ...existing code...

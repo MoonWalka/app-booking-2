@@ -1,10 +1,9 @@
 /**
  * Point d'entrée pour Firebase
- * Utilise le pattern Factory pour éviter les dépendances circulaires
- * IMPORTANT: Ce fichier ne doit PAS importer directement depuis mockStorage.js
+ * Interface simplifiée pour éviter les dépendances circulaires
  */
 
-// Import depuis le service Firebase qui utilise le pattern Factory
+// Import depuis le service Firebase simplifié
 import {
   db, auth, storage, remoteConfig,
   collection, doc, getDoc, getDocs,

@@ -10,8 +10,8 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: var(--tc-spacing-md);
-  gap: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
+  gap: var(--tc-space-4);
   width: 100%;
 }
 
@@ -25,19 +25,19 @@
   font-weight: var(--tc-font-weight-bold);
   color: var(--tc-text-color-primary);
   margin: 0;
-  margin-top: var(--tc-spacing-xs); /* Petit espacement depuis le breadcrumb */
+  margin-top: var(--tc-space-1); /* Petit espacement depuis le breadcrumb */
 }
 
 .breadcrumbContainer {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-xs);
+  gap: var(--tc-space-1);
   font-size: var(--tc-font-size-sm);
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
 }
 
 .breadcrumbItem {
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   cursor: pointer;
 }
 
@@ -57,7 +57,7 @@
 .actionButtons {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--tc-spacing-sm);
+  gap: var(--tc-space-2);
   align-items: flex-start;
   flex-shrink: 0; /* Empêche la compression des boutons */
 }
@@ -70,7 +70,7 @@
   align-items: center;
   transition: var(--tc-transition);
   font-weight: var(--tc-font-weight-medium);
-  gap: var(--tc-spacing-xs); /* Espacement entre l'icône et le texte */
+  gap: var(--tc-space-1); /* Espacement entre l'icône et le texte */
   border-radius: var(--tc-border-radius);
 }
 
@@ -96,7 +96,7 @@
 /* Media query pour très petits écrans */
 @media (max-width: var(--tc-breakpoint-xs)) {
   .actionButtons {
-    gap: var(--tc-spacing-xs);
+    gap: var(--tc-space-1);
     flex-direction: column;
   }
   

@@ -5,8 +5,8 @@
  */
 
 .tabsContainer {
-  margin-bottom: var(--tc-spacing-lg);
-  border-bottom: 1px solid var(--tc-border-color);
+  margin-bottom: var(--tc-space-6);
+  border-bottom: 1px solid var(--tc-border-default);
 }
 
 .tabsList {
@@ -14,7 +14,7 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  gap: var(--tc-spacing-xs);
+  gap: var(--tc-space-1);
 }
 
 .tabItem {
@@ -24,7 +24,7 @@
 .tabLink {
   display: flex;
   align-items: center;
-  padding: var(--tc-spacing-md) var(--tc-spacing-lg);
+  padding: var(--tc-space-4) var(--tc-space-6);
   color: var(--tc-secondary-color);
   text-decoration: none;
   border: 1px solid transparent;
@@ -37,14 +37,14 @@
 }
 
 .tabLink:hover {
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   background-color: var(--tc-white);
 }
 
 .tabLink.active {
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   background-color: var(--tc-white);
-  border-color: var(--tc-border-color);
+  border-color: var(--tc-border-default);
   border-bottom: 1px solid var(--tc-white);
   margin-bottom: -1px;
 }
@@ -56,13 +56,13 @@
 }
 
 .tabIcon {
-  margin-right: var(--tc-spacing-sm);
+  margin-right: var(--tc-space-2);
   font-size: var(--tc-font-size-sm);
 }
 
 .tabBadge {
-  margin-left: var(--tc-spacing-sm);
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  margin-left: var(--tc-space-2);
+  padding: var(--tc-space-1) var(--tc-space-2);
   border-radius: var(--tc-border-radius-sm);
   font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-medium);
@@ -85,7 +85,7 @@
   border-top: 2px solid currentColor;
   border-radius: 50%;
   animation: spin 1s linear infinite;
-  margin-right: var(--tc-spacing-sm);
+  margin-right: var(--tc-space-2);
 }
 
 @keyframes spin {
@@ -101,12 +101,12 @@
   
   .tabLink {
     border-radius: var(--tc-border-radius);
-    border: 1px solid var(--tc-border-color);
-    margin-bottom: var(--tc-spacing-xs);
+    border: 1px solid var(--tc-border-default);
+    margin-bottom: var(--tc-space-1);
   }
   
   .tabLink.active {
-    border: 1px solid var(--tc-primary-color);
+    border: 1px solid var(--tc-color-primary);
     background-color: var(--tc-primary-color-light);
   }
 }

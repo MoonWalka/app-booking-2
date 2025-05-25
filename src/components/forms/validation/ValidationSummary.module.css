@@ -6,7 +6,7 @@
 
 /* ValidationSummary Styles - Standardisés */
 .container {
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
   border: var(--tc-border-width) solid var(--tc-success-color);
   border-radius: var(--tc-border-radius);
   background-color: var(--tc-success-color-10);
@@ -14,12 +14,12 @@
 }
 
 .content {
-  padding: var(--tc-spacing-lg);
+  padding: var(--tc-space-6);
   text-align: center;
 }
 
 .iconWrapper {
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .iconWrapper i {
@@ -30,7 +30,7 @@
 .title {
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-semibold);
-  margin-bottom: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-space-2);
   color: var(--tc-success-color-dark);
 }
 
@@ -78,7 +78,7 @@
 /* Support responsive */
 @media (max-width: 768px) {
   .content {
-    padding: var(--tc-spacing-md);
+    padding: var(--tc-space-4);
   }
   
   .iconWrapper i {
@@ -92,10 +92,10 @@
 
 @media (max-width: 576px) {
   .container {
-    margin-bottom: var(--tc-spacing-md);
+    margin-bottom: var(--tc-space-4);
   }
   
   .content {
-    padding: var(--tc-spacing-sm);
+    padding: var(--tc-space-2);
   }
 }

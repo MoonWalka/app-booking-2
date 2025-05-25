@@ -6,18 +6,18 @@
  */
 
 .structuresListMobile {
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
 }
 
 .structuresHeaderMobile {
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
 }
 
 .structuresTitleMobile {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .structuresTitleMobile h1 {
@@ -27,7 +27,7 @@
 }
 
 .structuresFiltersMobile {
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .emptyState {
@@ -36,26 +36,26 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: var(--tc-spacing-xl) var(--tc-spacing-md);
+  padding: var(--tc-spacing-xl) var(--tc-space-4);
   color: var(--tc-text-muted);
 }
 
 .emptyState i {
   font-size: var(--tc-font-size-xxxl);
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
   color: var(--tc-text-light);
 }
 
 .emptyState p {
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
   color: var(--tc-text-secondary);
 }
 
 .structuresCard {
   background-color: var(--tc-bg-default);
   border-radius: var(--tc-border-radius-lg);
-  padding: var(--tc-spacing-md);
-  margin-bottom: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
+  margin-bottom: var(--tc-space-4);
   box-shadow: var(--tc-shadow-sm);
   display: flex;
   justify-content: space-between;
@@ -64,43 +64,43 @@
 
 .structureInfo {
   flex: 1;
-  padding-right: var(--tc-spacing-sm);
+  padding-right: var(--tc-space-2);
 }
 
 .structureName {
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-semibold);
-  margin-bottom: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-space-2);
   color: var(--tc-text-primary);
 }
 
 .structureType {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-sm);
+  gap: var(--tc-space-2);
   font-size: var(--tc-font-size-sm);
   color: var(--tc-text-secondary);
-  margin-bottom: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-space-2);
 }
 
 .structureContact {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-sm);
+  gap: var(--tc-space-2);
   font-size: var(--tc-font-size-sm);
   color: var(--tc-text-secondary);
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
 }
 
 .structureContact i {
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   font-size: var(--tc-font-size-sm);
 }
 
 .structureActions {
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-sm);
+  gap: var(--tc-space-2);
 }
 
 .structureActionBtn {
@@ -114,7 +114,7 @@
 
 .badgeMobile {
   display: inline-block;
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  padding: var(--tc-space-1) var(--tc-space-2);
   font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-medium);
   border-radius: var(--tc-border-radius-pill);
@@ -124,11 +124,11 @@
 
 .badgeProgrammateurs {
   background-color: var(--tc-primary-light);
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
 }
 
 .mobileLoadMore {
   display: flex;
   justify-content: center;
-  margin: var(--tc-spacing-lg) 0;
+  margin: var(--tc-space-6) 0;
 }

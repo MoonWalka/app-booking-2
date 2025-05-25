@@ -11,10 +11,10 @@
 
 .variablesButton {
   background-color: var(--tc-primary-light);
-  color: var(--tc-primary-color);
-  border: 1px solid var(--tc-border-color);
+  color: var(--tc-color-primary);
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-border-radius-sm);
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  padding: var(--tc-space-1) var(--tc-space-2);
   font-size: var(--tc-font-size-sm);
   display: flex;
   align-items: center;
@@ -23,7 +23,7 @@
 }
 
 .variablesButton:hover {
-  background-color: var(--tc-primary-color);
+  background-color: var(--tc-color-primary);
   color: var(--tc-white);
 }
 
@@ -41,16 +41,16 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  margin-top: var(--tc-spacing-xs);
-  border: 1px solid var(--tc-border-color);
+  margin-top: var(--tc-space-1);
+  border: 1px solid var(--tc-border-default);
 }
 
 .dropdownHeader {
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  padding: var(--tc-space-2) var(--tc-space-4);
   margin: 0;
   font-weight: var(--tc-font-weight-semibold);
-  border-bottom: 1px solid var(--tc-border-color);
-  color: var(--tc-text-color);
+  border-bottom: 1px solid var(--tc-border-default);
+  color: var(--tc-text-default);
   background-color: var(--tc-gray-100);
   font-size: var(--tc-font-size-sm);
 }
@@ -67,14 +67,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--tc-spacing-xs) var(--tc-spacing-md);
+  padding: var(--tc-space-1) var(--tc-space-4);
   border: none;
   background: none;
   width: 100%;
   text-align: left;
   cursor: pointer;
   transition: var(--tc-transition);
-  border-bottom: 1px solid var(--tc-border-color);
+  border-bottom: 1px solid var(--tc-border-default);
 }
 
 .variableItem:hover {
@@ -82,15 +82,15 @@
 }
 
 .variableLabel {
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   font-size: var(--tc-font-size-sm);
-  margin-right: var(--tc-spacing-sm);
+  margin-right: var(--tc-space-2);
 }
 
 .variableCode {
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   background-color: var(--tc-gray-100);
-  padding: var(--tc-spacing-xs);
+  padding: var(--tc-space-1);
   border-radius: var(--tc-border-radius-sm);
   font-family: monospace;
   font-size: var(--tc-font-size-xs);
@@ -98,18 +98,18 @@
 }
 
 .dropdownFooter {
-  padding: var(--tc-spacing-xs);
+  padding: var(--tc-space-1);
   text-align: center;
   background-color: var(--tc-gray-100);
-  border-top: 1px solid var(--tc-border-color);
+  border-top: 1px solid var(--tc-border-default);
 }
 
 .closeButton {
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  padding: var(--tc-space-1) var(--tc-space-2);
   background-color: var(--tc-gray-200);
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-border-radius-sm);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   font-size: var(--tc-font-size-sm);
   cursor: pointer;
   transition: var(--tc-transition);

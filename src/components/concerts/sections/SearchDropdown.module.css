@@ -86,7 +86,7 @@
 
 .itemName {
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   margin-bottom: var(--tc-spacing-0-5);
 }
 
@@ -165,9 +165,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  padding: var(--tc-space-2) var(--tc-space-4);
   background-color: var(--tc-gray-50);
-  border-bottom: 1px solid var(--tc-border-color);
+  border-bottom: 1px solid var(--tc-border-default);
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
   color: var(--tc-text-muted);
@@ -178,7 +178,7 @@
 }
 
 .closeDropdownButton {
-  padding: var(--tc-spacing-xs) !important;
+  padding: var(--tc-space-1) !important;
   font-size: var(--tc-font-size-sm);
   color: var(--tc-gray-600);
   border: none !important;

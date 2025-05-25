@@ -13,7 +13,7 @@
   align-items: center;
   gap: var(--tc-spacing-2);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
 }
 
 /* Styles responsive standardisés */

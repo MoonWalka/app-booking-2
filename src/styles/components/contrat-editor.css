@@ -78,7 +78,7 @@
 .footer-textarea {
   width: 100%;
   font-family: Arial, sans-serif;
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-border-radius);
   padding: var(--tc-spacing-2);
   line-height: 1.5;
@@ -96,7 +96,7 @@
 /* Styles pour les sections du modèle */
 .template-info-card {
   background-color: var(--tc-bg-default);
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-border-radius);
   padding: var(--tc-font-size-xl);
 }
@@ -104,7 +104,7 @@
 /* Styles pour l'aperçu de contrat */
 .preview-container {
   background-color: var(--tc-bg-default);
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-radius-sm);
   margin-bottom: var(--tc-spacing-4);
   width: 100%;
@@ -114,7 +114,7 @@
 
 .preview-header {
   padding: var(--tc-spacing-3);
-  border-bottom: 1px solid var(--tc-border-color);
+  border-bottom: 1px solid var(--tc-border-default);
   background-color: var(--tc-light-bg);
 }
 
@@ -184,7 +184,7 @@
 /* Styles pour les listes de variables */
 .variables-guide {
   background-color: var(--tc-light-bg);
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-border-radius);
   padding: var(--tc-spacing-2);
   margin-bottom: var(--tc-spacing-3);

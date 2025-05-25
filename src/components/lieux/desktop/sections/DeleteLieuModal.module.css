@@ -8,10 +8,10 @@
    EN-TÊTE DE MODAL
    ============================= */
 .modalHeader {
-  border-bottom: 1px solid var(--tc-border-color);
+  border-bottom: 1px solid var(--tc-border-default);
   display: flex;
   align-items: center;
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
   background-color: rgba(var(--tc-danger-color-rgb), 0.1);
   color: var(--tc-danger-color);
 }
@@ -22,7 +22,7 @@
   font-weight: var(--tc-font-weight-semibold);
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-sm);
+  gap: var(--tc-space-2);
   line-height: 1.3;
 }
 
@@ -38,12 +38,12 @@
    CORPS DE MODAL
    ============================= */
 .modalBody {
-  padding: var(--tc-spacing-lg);
+  padding: var(--tc-space-6);
 }
 
 .modalBody p {
-  margin-bottom: var(--tc-spacing-md);
-  color: var(--tc-text-color);
+  margin-bottom: var(--tc-space-4);
+  color: var(--tc-text-default);
   font-size: var(--tc-font-size-base);
   line-height: var(--tc-line-height-base);
 }
@@ -51,9 +51,9 @@
 .concertsWarning {
   background-color: rgba(var(--tc-warning-color-rgb), 0.1);
   border-left: 4px solid var(--tc-warning-color);
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  padding: var(--tc-space-2) var(--tc-space-4);
   border-radius: var(--tc-border-radius);
-  margin: var(--tc-spacing-md) 0;
+  margin: var(--tc-space-4) 0;
   color: var(--tc-gray-800);
 }
 
@@ -61,23 +61,23 @@
    PIED DE MODAL
    ============================= */
 .modalFooter {
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
   display: flex;
   flex-wrap: wrap;
-  gap: var(--tc-spacing-sm);
-  border-top: 1px solid var(--tc-border-color);
+  gap: var(--tc-space-2);
+  border-top: 1px solid var(--tc-border-default);
   justify-content: flex-end;
   background-color: var(--tc-gray-50);
 }
 
 .cancelBtn {
-  background-color: var(--tc-bg-color);
+  background-color: var(--tc-bg-default);
   color: var(--tc-gray-700);
   border: 1px solid var(--tc-gray-300);
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-xs);
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  gap: var(--tc-space-1);
+  padding: var(--tc-space-2) var(--tc-space-4);
   border-radius: var(--tc-border-radius);
   font-weight: var(--tc-font-weight-medium);
   font-size: var(--tc-font-size-sm);
@@ -96,8 +96,8 @@
   border: none;
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-xs);
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  gap: var(--tc-space-1);
+  padding: var(--tc-space-2) var(--tc-space-4);
   border-radius: var(--tc-border-radius);
   font-weight: var(--tc-font-weight-medium);
   font-size: var(--tc-font-size-sm);
@@ -114,11 +114,11 @@
    ============================= */
 @media (max-width: var(--tc-breakpoint-sm)) {
   .modalHeader, .modalFooter {
-    padding: var(--tc-spacing-sm);
+    padding: var(--tc-space-2);
   }
   
   .modalBody {
-    padding: var(--tc-spacing-md);
+    padding: var(--tc-space-4);
   }
   
   .modalTitle {
@@ -126,7 +126,7 @@
   }
   
   .concertsWarning {
-    padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+    padding: var(--tc-space-1) var(--tc-space-2);
   }
   
   .modalFooter {

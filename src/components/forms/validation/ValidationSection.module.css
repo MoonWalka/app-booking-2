@@ -13,20 +13,20 @@
 }
 
 .section {
-  margin-bottom: var(--tc-spacing-lg);
-  border: var(--tc-border-width) solid var(--tc-border-color);
+  margin-bottom: var(--tc-space-6);
+  border: var(--tc-border-width) solid var(--tc-border-default);
   border-radius: var(--tc-border-radius);
   overflow: hidden;
 }
 
 .header {
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
-  background-color: var(--tc-primary-color);
+  padding: var(--tc-space-2) var(--tc-space-4);
+  background-color: var(--tc-color-primary);
   color: var(--tc-light-color);
 }
 
 .header.bg-primary {
-  background-color: var(--tc-primary-color);
+  background-color: var(--tc-color-primary);
 }
 
 .header.bg-info {
@@ -44,13 +44,13 @@
 }
 
 .body {
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
   background-color: var(--tc-bg-light);
 }
 
 .infoAlert {
-  margin-bottom: var(--tc-spacing-lg);
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-6);
+  padding: var(--tc-space-2) var(--tc-space-4);
   border-radius: var(--tc-border-radius);
   background-color: var(--tc-info-color-05);
   border: var(--tc-border-width) solid var(--tc-info-color);
@@ -63,13 +63,13 @@
 
 .infoIcon {
   font-size: var(--tc-font-size-lg);
-  margin-right: var(--tc-spacing-sm);
+  margin-right: var(--tc-space-2);
   color: var(--tc-info-color);
 }
 
 .infoText {
   margin: 0;
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
 }
 
 .tableContainer {
@@ -88,8 +88,8 @@
 
 .table th,
 .table td {
-  border: var(--tc-border-width) solid var(--tc-border-color);
-  padding: var(--tc-spacing-sm);
+  border: var(--tc-border-width) solid var(--tc-border-default);
+  padding: var(--tc-space-2);
 }
 
 .columnField {
@@ -115,20 +115,20 @@
 .concertInfoGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  grid-gap: var(--tc-spacing-lg);
+  grid-gap: var(--tc-space-6);
 }
 
 .infoGroup {
-  padding: var(--tc-spacing-sm);
-  background-color: var(--tc-card-bg);
+  padding: var(--tc-space-2);
+  background-color: var(--tc-bg-default);
   border-radius: var(--tc-border-radius-sm);
   box-shadow: var(--tc-shadow-card));
 }
 
 .infoLabel {
   font-weight: var(--tc-font-weight-semibold);
-  margin-bottom: var(--tc-spacing-sm);
-  color: var(--tc-text-color);
+  margin-bottom: var(--tc-space-2);
+  color: var(--tc-text-default);
 }
 
 .infoValue {
@@ -139,11 +139,11 @@
 @media (max-width: var(--tc-breakpoint-sm)) {
   .concertInfoGrid {
     grid-template-columns: 1fr;
-    grid-gap: var(--tc-spacing-md);
+    grid-gap: var(--tc-space-4);
   }
   
   .body {
-    padding: var(--tc-spacing-sm);
+    padding: var(--tc-space-2);
   }
 }
 
@@ -154,6 +154,6 @@
   
   .infoIcon {
     margin-right: 0;
-    margin-bottom: var(--tc-spacing-xs);
+    margin-bottom: var(--tc-space-1);
   }
 }

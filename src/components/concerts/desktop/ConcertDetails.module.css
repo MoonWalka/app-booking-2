@@ -10,7 +10,7 @@
 .concertDetailsContainer {
   max-width: 900px;
   margin: 0 auto;
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
 }
 
 .loadingContainer {
@@ -25,7 +25,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
   flex-wrap: wrap;
 }
 
@@ -33,15 +33,15 @@
 .modernTitle {
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-bold);
-  color: var(--tc-primary-color);
-  margin-bottom: var(--tc-spacing-sm);
+  color: var(--tc-color-primary);
+  margin-bottom: var(--tc-space-2);
 }
 
 /* Container du fil d'Ariane */
 .breadcrumbContainer {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-sm);
+  gap: var(--tc-space-2);
   font-size: var(--tc-font-size-sm);
 }
 
@@ -68,8 +68,8 @@
 .actionButtons {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--tc-spacing-sm);
-  margin-bottom: var(--tc-spacing-lg);
+  gap: var(--tc-space-2);
+  margin-bottom: var(--tc-space-6);
   justify-content: flex-start;
   align-items: center;
   width: 100%;
@@ -90,7 +90,7 @@
   background-color: var(--tc-bg-color-light);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow-md);
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
   overflow: hidden;
 }
 
@@ -98,13 +98,13 @@
   display: flex;
   align-items: center;
   background-color: var(--tc-bg-color-dark);
-  padding: var(--tc-spacing-md);
-  border-bottom: var(--tc-border-width) solid var(--tc-border-color);
+  padding: var(--tc-space-4);
+  border-bottom: var(--tc-border-width) solid var(--tc-border-default);
 }
 
 .cardHeader i {
-  margin-right: var(--tc-spacing-sm);
-  color: var(--tc-primary-color);
+  margin-right: var(--tc-space-2);
+  color: var(--tc-color-primary);
 }
 
 .cardHeader h3 {
@@ -119,23 +119,23 @@
 }
 
 .cardBody {
-  padding: var(--tc-spacing-lg);
+  padding: var(--tc-space-6);
 }
 
 /* Champs de formulaire */
 .formGroup {
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .formLabel {
   display: block;
-  margin-bottom: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-space-2);
   font-weight: var(--tc-font-weight-medium);
 }
 
 .required {
   color: var(--tc-danger-color);
-  margin-left: var(--tc-spacing-xs);
+  margin-left: var(--tc-space-1);
 }
 
 /* Statut display */
@@ -152,7 +152,7 @@
 }
 
 .actionNeeded i {
-  margin-right: var(--tc-spacing-xs);
+  margin-right: var(--tc-space-1);
 }
 
 /* Notes content */
@@ -162,7 +162,7 @@
 
 /* Items de détails */
 .contactLink {
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
@@ -182,10 +182,10 @@
 .selectedLieu,
 .selectedProgrammateur,
 .selectedArtiste {
-  border: var(--tc-border-width) solid var(--tc-border-color);
+  border: var(--tc-border-width) solid var(--tc-border-default);
   border-radius: var(--tc-border-radius);
-  padding: var(--tc-spacing-md);
-  margin-bottom: var(--tc-spacing-sm);
+  padding: var(--tc-space-4);
+  margin-bottom: var(--tc-space-2);
 }
 
 .lieuCard,
@@ -207,7 +207,7 @@
 .artisteName {
   font-weight: var(--tc-font-weight-semibold);
   display: block;
-  margin-bottom: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-space-2);
 }
 
 .lieuAddress,
@@ -215,48 +215,48 @@
   font-size: var(--tc-font-size-sm);
   display: flex;
   align-items: center;
-  margin-top: var(--tc-spacing-xs);
+  margin-top: var(--tc-space-1);
   color: var(--tc-text-color-secondary);
 }
 
 .lieuAddress i,
 .lieuCapacity i {
-  margin-right: var(--tc-spacing-xs);
+  margin-right: var(--tc-space-1);
 }
 
 .programmateurStructure {
   font-size: var(--tc-font-size-sm);
   display: block;
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
   color: var(--tc-text-color-secondary);
 }
 
 .programmateurContacts {
-  margin-top: var(--tc-spacing-sm);
+  margin-top: var(--tc-space-2);
 }
 
 .programmateurContactItem {
   display: flex;
   align-items: center;
   font-size: var(--tc-font-size-sm);
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
 }
 
 .programmateurContactItem i {
-  margin-right: var(--tc-spacing-xs);
+  margin-right: var(--tc-space-1);
   color: var(--tc-text-color-secondary);
 }
 
 .artisteGenre {
   font-size: var(--tc-font-size-sm);
   display: block;
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
   color: var(--tc-text-color-secondary);
 }
 
 .artisteDescription {
   font-size: var(--tc-font-size-sm);
-  margin-top: var(--tc-spacing-sm);
+  margin-top: var(--tc-space-2);
 }
 
 /* Map container */
@@ -264,14 +264,14 @@
   width: 100%;
   border-radius: var(--tc-border-radius);
   overflow: hidden;
-  border: var(--tc-border-width) solid var(--tc-border-color);
+  border: var(--tc-border-width) solid var(--tc-border-default);
 }
 
 /* Form sharing options */
 .formSharingOptions {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--tc-spacing-sm);
+  gap: var(--tc-space-2);
 }
 
 /* Modal */
@@ -298,7 +298,7 @@
 }
 
 .tcModalHeader {
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
   border-bottom: var(--tc-border-width) solid var(--tc-border-color-light);
 }
 
@@ -308,21 +308,21 @@
 }
 
 .tcModalBody {
-  padding: var(--tc-spacing-lg);
+  padding: var(--tc-space-6);
 }
 
 .tcModalFooter {
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
   border-top: var(--tc-border-width) solid var(--tc-border-color-light);
   display: flex;
   justify-content: flex-end;
-  gap: var(--tc-spacing-sm);
+  gap: var(--tc-space-2);
 }
 
 /* Media queries */
 @media (max-width: var(--tc-breakpoint-lg)) {
   .concertDetailsContainer {
-    padding: var(--tc-spacing-sm);
+    padding: var(--tc-space-2);
   }
 }
 
@@ -333,7 +333,7 @@
   }
   
   .cardBody {
-    padding: var(--tc-spacing-md);
+    padding: var(--tc-space-4);
   }
   
   .actionButtons {
@@ -356,6 +356,6 @@
   }
   
   .tcModalBody {
-    padding: var(--tc-spacing-md);
+    padding: var(--tc-space-4);
   }
 }

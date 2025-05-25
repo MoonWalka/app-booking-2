@@ -21,7 +21,7 @@
   top: 0;
   left: 0;
   z-index: var(--tc-z-index-modal);
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
 }
 
 .spinnerInline {
@@ -29,12 +29,12 @@
   justify-content: center;
   align-items: center;
   position: relative;
-  margin: var(--tc-spacing-xs);
+  margin: var(--tc-space-1);
 }
 
 .spinnerWithText {
   flex-direction: column;
-  gap: var(--tc-spacing-md);
+  gap: var(--tc-space-4);
 }
 
 /* =============================
@@ -53,7 +53,7 @@
    VARIANTES DE COULEUR
    ============================= */
 .spinnerPrimary {
-  border-top-color: var(--tc-primary-color);
+  border-top-color: var(--tc-color-primary);
 }
 
 .spinnerSecondary {
@@ -101,7 +101,7 @@
    TEXTE DE CHARGEMENT
    ============================= */
 .loadingText {
-  margin-top: var(--tc-spacing-md);
+  margin-top: var(--tc-space-4);
   color: var(--tc-gray-700);
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-medium);
@@ -131,6 +131,6 @@
   }
   
   .spinnerWithText {
-    gap: var(--tc-spacing-sm);
+    gap: var(--tc-space-2);
   }
 }

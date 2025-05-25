@@ -14,22 +14,22 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
 }
 
 .formHeader h2 {
   font-size: var(--tc-font-size-xl);
   font-weight: var(--tc-font-weight-bold);
   margin: 0;
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
 }
 
 .backButton {
   display: flex;
   align-items: center;
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
-  gap: var(--tc-spacing-xs);
-  border: 1px solid var(--tc-border-color);
+  padding: var(--tc-space-1) var(--tc-space-2);
+  gap: var(--tc-space-1);
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-border-radius-sm);
   background-color: transparent;
   color: var(--tc-text-muted);
@@ -44,7 +44,7 @@
 }
 
 .backButton i {
-  margin-right: var(--tc-spacing-xs);
+  margin-right: var(--tc-space-1);
 }
 
 /* Responsive styles */
@@ -52,7 +52,7 @@
   .formHeader {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--tc-spacing-sm);
+    gap: var(--tc-space-2);
   }
   
   .formHeader h2 {

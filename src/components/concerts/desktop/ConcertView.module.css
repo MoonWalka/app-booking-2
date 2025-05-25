@@ -6,12 +6,12 @@
 
 .concertViewContainer {
   overflow-x: auto;
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow);
   background-color: var(--tc-bg-color-light);
-  border: 1px solid var(--tc-border-color);
-  padding: var(--tc-spacing-md);
+  border: 1px solid var(--tc-border-default);
+  padding: var(--tc-space-4);
   width: 100%;
 }
 

@@ -36,8 +36,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--tc-spacing-md);
-  border-bottom: 1px solid var(--tc-border-color);
+  padding: var(--tc-space-4);
+  border-bottom: 1px solid var(--tc-border-default);
 }
 
 .modalTitle {
@@ -65,29 +65,29 @@
 }
 
 .modalBody {
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
 }
 
 .warningMessage {
-  color: var(--tc-text-color);
-  margin-bottom: var(--tc-spacing-md);
+  color: var(--tc-text-default);
+  margin-bottom: var(--tc-space-4);
 }
 
 .warningIcon {
   color: var(--tc-warning-color);
-  margin-right: var(--tc-spacing-sm);
+  margin-right: var(--tc-space-2);
 }
 
 .entityDetails {
-  padding: var(--tc-spacing-sm);
+  padding: var(--tc-space-2);
   background-color: var(--tc-white-secondary);
   border-radius: var(--tc-border-radius);
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .detailItem {
   display: flex;
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
 }
 
 .detailItem:last-child {
@@ -96,22 +96,22 @@
 
 .detailLabel {
   font-weight: var(--tc-font-weight-medium);
-  margin-right: var(--tc-spacing-sm);
+  margin-right: var(--tc-space-2);
 }
 
 .modalFooter {
   display: flex;
   justify-content: flex-end;
-  gap: var(--tc-spacing-sm);
-  padding: var(--tc-spacing-md);
-  border-top: 1px solid var(--tc-border-color);
+  gap: var(--tc-space-2);
+  padding: var(--tc-space-4);
+  border-top: 1px solid var(--tc-border-default);
 }
 
 .cancelButton {
-  padding: var(--tc-spacing-xs) var(--tc-spacing-md);
+  padding: var(--tc-space-1) var(--tc-space-4);
   color: var(--tc-text-muted);
   background-color: var(--tc-white);
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-border-radius);
   cursor: pointer;
   font-size: var(--tc-font-size-base);
@@ -123,7 +123,7 @@
 }
 
 .confirmButton {
-  padding: var(--tc-spacing-xs) var(--tc-spacing-md);
+  padding: var(--tc-space-1) var(--tc-space-4);
   color: var(--tc-white);
   background-color: var(--tc-danger-color);
   border: 1px solid var(--tc-danger-color);
@@ -153,12 +153,12 @@
 /* Responsive styles */
 @media (max-width: var(--tc-breakpoint-sm)) {
   .modalContent {
-    margin: 0 var(--tc-spacing-md);
+    margin: 0 var(--tc-space-4);
   }
   
   .modalFooter {
     flex-direction: column;
-    gap: var(--tc-spacing-sm);
+    gap: var(--tc-space-2);
   }
   
   .cancelButton,

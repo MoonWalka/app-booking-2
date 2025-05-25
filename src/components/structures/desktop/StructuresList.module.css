@@ -14,15 +14,15 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--tc-spacing-lg);
-  padding-bottom: var(--tc-spacing-md);
-  border-bottom: var(--tc-border-width) solid var(--tc-border-color);
+  margin-bottom: var(--tc-space-6);
+  padding-bottom: var(--tc-space-4);
+  border-bottom: var(--tc-border-width) solid var(--tc-border-default);
 }
 
 .title {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-sm);
+  gap: var(--tc-space-2);
   margin: 0;
   font-size: var(--tc-font-size-xl);
   font-weight: var(--tc-font-weight-semibold);
@@ -30,15 +30,15 @@
 }
 
 .title i {
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
 }
 
 .addButton {
   display: inline-flex;
   align-items: center;
-  gap: var(--tc-spacing-sm);
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
-  background-color: var(--tc-primary-color);
+  gap: var(--tc-space-2);
+  padding: var(--tc-space-2) var(--tc-space-4);
+  background-color: var(--tc-color-primary);
   color: var(--tc-white);
   border: none;
   border-radius: var(--tc-border-radius);
@@ -62,10 +62,10 @@
 
 .searchBar {
   display: flex;
-  gap: var(--tc-spacing-md);
-  padding: var(--tc-spacing-md) var(--tc-spacing-lg);
+  gap: var(--tc-space-4);
+  padding: var(--tc-space-4) var(--tc-space-6);
   background-color: var(--tc-gray-100);
-  border-bottom: var(--tc-border-width) solid var(--tc-border-color);
+  border-bottom: var(--tc-border-width) solid var(--tc-border-default);
 }
 
 .searchInput {
@@ -77,10 +77,10 @@
 }
 
 .resultsCount {
-  padding: var(--tc-spacing-sm) var(--tc-spacing-lg);
+  padding: var(--tc-space-2) var(--tc-space-6);
   font-size: var(--tc-font-size-sm);
   color: var(--tc-text-color-secondary);
-  border-bottom: var(--tc-border-width) solid var(--tc-border-color);
+  border-bottom: var(--tc-border-width) solid var(--tc-border-default);
 }
 
 /* NOUVEAU: Style pour le compteur des résultats filtrés */
@@ -96,8 +96,8 @@
 
 .dataTable th,
 .dataTable td {
-  padding: var(--tc-spacing-sm) var(--tc-spacing-lg);
-  border-bottom: var(--tc-border-width) solid var(--tc-border-color);
+  padding: var(--tc-space-2) var(--tc-space-6);
+  border-bottom: var(--tc-border-width) solid var(--tc-border-default);
 }
 
 .dataTable th {
@@ -128,11 +128,11 @@
 .iconText {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-sm);
+  gap: var(--tc-space-2);
 }
 
 .rowIcon {
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
 }
 
 .badge {
@@ -153,7 +153,7 @@
 }
 
 .badgePrimary {
-  background-color: var(--tc-primary-color);
+  background-color: var(--tc-color-primary);
 }
 
 .badgeInfo {
@@ -171,7 +171,7 @@
 
 .actionButtons {
   display: flex;
-  gap: var(--tc-spacing-sm);
+  gap: var(--tc-space-2);
   justify-content: flex-end;
 }
 
@@ -193,11 +193,11 @@
 
 .actionButtonPrimary {
   background-color: var(--tc-primary-color-10);
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
 }
 
 .actionButtonPrimary:hover {
-  background-color: var(--tc-primary-color);
+  background-color: var(--tc-color-primary);
   color: var(--tc-white);
 }
 
@@ -219,9 +219,9 @@
 .loadMoreButton {
   display: inline-flex;
   align-items: center;
-  gap: var(--tc-spacing-sm);
-  padding: var(--tc-spacing-sm) var(--tc-spacing-lg);
-  border: var(--tc-border-width) solid var(--tc-border-color);
+  gap: var(--tc-space-2);
+  padding: var(--tc-space-2) var(--tc-space-6);
+  border: var(--tc-border-width) solid var(--tc-border-default);
   background-color: transparent;
   border-radius: var(--tc-border-radius);
   color: var(--tc-text-color-secondary);
@@ -244,20 +244,20 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--tc-spacing-xl) var(--tc-spacing-lg);
+  padding: var(--tc-spacing-xl) var(--tc-space-6);
   text-align: center;
 }
 
 .emptyStateIcon {
   font-size: var(--tc-font-size-xxl);
   color: var(--tc-text-color-muted);
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .emptyStateText {
   font-size: var(--tc-font-size-lg);
   color: var(--tc-text-color-secondary);
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
 }
 
 .spinner {
@@ -265,7 +265,7 @@
   width: 2rem;
   height: 2rem;
   border: 0.25em solid var(--tc-border-color-light);
-  border-right-color: var(--tc-primary-color);
+  border-right-color: var(--tc-color-primary);
   border-radius: 50%;
   animation: spinner-border 0.75s linear infinite;
 }
@@ -278,7 +278,7 @@
 @media (max-width: var(--tc-breakpoint-md)) {
   .dataTable th,
   .dataTable td {
-    padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+    padding: var(--tc-space-2) var(--tc-space-4);
   }
 }
 
@@ -286,13 +286,13 @@
   .header {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--tc-spacing-md);
+    gap: var(--tc-space-4);
   }
   
   .searchBar {
     flex-direction: column;
-    gap: var(--tc-spacing-sm);
-    padding: var(--tc-spacing-md);
+    gap: var(--tc-space-2);
+    padding: var(--tc-space-4);
   }
   
   .typeFilter {
@@ -321,11 +321,11 @@
   }
   
   .resultsCount {
-    padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+    padding: var(--tc-space-2) var(--tc-space-4);
   }
   
   .emptyState {
-    padding: var(--tc-spacing-lg) var(--tc-spacing-md);
+    padding: var(--tc-space-6) var(--tc-space-4);
   }
   
   .emptyStateIcon {

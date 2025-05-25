@@ -5,14 +5,14 @@
  */
 
 .container {
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .cardWrapper {
-  background-color: var(--tc-card-bg);
+  background-color: var(--tc-bg-default);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-box-shadow);
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
   overflow: hidden;
   transition: var(--tc-transition);
 }
@@ -24,24 +24,24 @@
 
 .cardHeader {
   background-color: var(--tc-bg-light);
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
   display: flex;
   align-items: center;
-  border-bottom: var(--tc-border-width) solid var(--tc-border-color);
+  border-bottom: var(--tc-border-width) solid var(--tc-border-default);
   gap: 0.75rem;
 }
 
 .cardBody {
-  padding: var(--tc-spacing-lg);
+  padding: var(--tc-space-6);
 }
 
 .formGroup {
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .cardLabel {
   font-weight: var(--tc-font-weight-semibold);
-  margin-bottom: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-space-2);
   color: var(--tc-text-secondary);
   display: block;
   font-size: var(--tc-font-size-sm);
@@ -50,7 +50,7 @@
 }
 
 .formSection {
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
 }
 
 .cardValueCode {
@@ -84,19 +84,19 @@
 
 /* Style spécifique à la section légale */
 .legalSection {
-  background-color: var(--tc-card-bg);
+  background-color: var(--tc-bg-default);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow);
-  padding: var(--tc-spacing-lg);
-  margin-bottom: var(--tc-spacing-lg);
+  padding: var(--tc-space-6);
+  margin-bottom: var(--tc-space-6);
 }
 
 .sectionHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--tc-spacing-md);
-  padding-bottom: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-space-4);
+  padding-bottom: var(--tc-space-2);
   border-bottom: var(--tc-border-width) solid var(--tc-border-light);
 }
 
@@ -113,23 +113,23 @@
 }
 
 .sectionContent {
-  margin-top: var(--tc-spacing-sm);
+  margin-top: var(--tc-space-2);
 }
 
 .infoGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: var(--tc-spacing-md);
+  gap: var(--tc-space-4);
 }
 
 .infoGroup {
-  margin-bottom: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-space-2);
 }
 
 .infoLabel {
   font-size: var(--tc-font-size-sm);
   color: var(--tc-text-secondary);
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
 }
 
 .infoValue {
@@ -148,18 +148,18 @@
   .sectionHeader {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--tc-spacing-sm);
+    gap: var(--tc-space-2);
   }
 }
 
 /* Pour les très petits écrans */
 @media (max-width: 576px) {
   .cardBody {
-    padding: var(--tc-spacing-md);
+    padding: var(--tc-space-4);
   }
   
   .legalSection {
-    padding: var(--tc-spacing-md);
+    padding: var(--tc-space-4);
   }
   
   .cardWrapper:hover {

@@ -13,15 +13,15 @@
 .detailsHeader {
   background-color: var(--tc-white);
   border-radius: var(--tc-border-radius);
-  padding: var(--tc-spacing-md);
-  margin-bottom: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
+  margin-bottom: var(--tc-space-4);
   box-shadow: var(--tc-shadow-sm);
 }
 
 .breadcrumb {
   display: flex;
   align-items: center;
-  margin-bottom: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-space-2);
   font-size: var(--tc-font-size-sm);
   color: var(--tc-text-muted);
 }
@@ -32,35 +32,35 @@
 }
 
 .breadcrumbLink:hover {
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
 }
 
 .breadcrumbSeparator {
-  margin: 0 var(--tc-spacing-xs);
+  margin: 0 var(--tc-space-1);
 }
 
 .breadcrumbCurrent {
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
 }
 
 .headerTitle {
   display: flex;
   align-items: center;
-  margin-bottom: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-space-2);
 }
 
 .headerTitle h2 {
   font-size: var(--tc-font-size-xl);
   font-weight: var(--tc-font-weight-bold);
   margin: 0;
-  margin-right: var(--tc-spacing-sm);
-  color: var(--tc-text-color);
+  margin-right: var(--tc-space-2);
+  color: var(--tc-text-default);
 }
 
 .headerBadge {
   display: inline-block;
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  padding: var(--tc-space-1) var(--tc-space-2);
   border-radius: var(--tc-border-radius-sm);
   font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-medium);
@@ -68,14 +68,14 @@
 
 .headerActions {
   display: flex;
-  gap: var(--tc-spacing-sm);
-  margin-top: var(--tc-spacing-sm);
+  gap: var(--tc-space-2);
+  margin-top: var(--tc-space-2);
 }
 
 .actionButton {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-xs);
+  gap: var(--tc-space-1);
   font-weight: var(--tc-font-weight-medium);
 }
 
@@ -107,16 +107,16 @@
 
 /* Button styles */
 .primaryOutlineButton {
-  color: var(--tc-primary-color);
-  border: 1px solid var(--tc-primary-color);
+  color: var(--tc-color-primary);
+  border: 1px solid var(--tc-color-primary);
   background-color: transparent;
   border-radius: var(--tc-border-radius);
-  padding: var(--tc-spacing-xs) var(--tc-spacing-md);
+  padding: var(--tc-space-1) var(--tc-space-4);
   transition: all 0.2s ease;
 }
 
 .primaryOutlineButton:hover {
-  background-color: var(--tc-primary-color);
+  background-color: var(--tc-color-primary);
   color: var(--tc-white);
 }
 
@@ -125,7 +125,7 @@
   border: 1px solid var(--tc-danger-color);
   background-color: transparent;
   border-radius: var(--tc-border-radius);
-  padding: var(--tc-spacing-xs) var(--tc-spacing-md);
+  padding: var(--tc-space-1) var(--tc-space-4);
   transition: all 0.2s ease;
 }
 
@@ -143,7 +143,7 @@
   
   .headerTitle h2 {
     margin-right: 0;
-    margin-bottom: var(--tc-spacing-xs);
+    margin-bottom: var(--tc-space-1);
   }
   
   .headerActions {

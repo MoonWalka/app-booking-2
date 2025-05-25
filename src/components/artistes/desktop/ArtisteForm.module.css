@@ -9,7 +9,7 @@
 .artisteFormDesktop {
   max-width: 800px;
   margin: 0 auto;
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
 }
 
 .desktopFormHeader {
@@ -26,7 +26,7 @@
   background-color: var(--tc-white);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-box-shadow);
-  padding: var(--tc-spacing-lg);
+  padding: var(--tc-space-6);
   margin-bottom: var(--tc-spacing-xl);
 }
 
@@ -39,7 +39,7 @@
   display: flex;
   justify-content: space-between;
   position: relative;
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
 }
 
 .stepIndicators::before {
@@ -49,7 +49,7 @@
   left: 10%;
   right: 10%;
   height: 2px;
-  background-color: var(--tc-border-color);
+  background-color: var(--tc-border-default);
   z-index: 1;
 }
 
@@ -60,7 +60,7 @@
   position: relative;
   z-index: 2;
   background-color: var(--tc-white);
-  padding: 0 var(--tc-spacing-sm);
+  padding: 0 var(--tc-space-2);
 }
 
 .stepNumber {
@@ -74,7 +74,7 @@
   color: var(--tc-text-color-secondary);
   font-weight: var(--tc-font-weight-semibold);
   font-size: var(--tc-font-size-sm);
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
   transition: all 0.3s ease;
 }
 
@@ -88,12 +88,12 @@
 
 /* État actif */
 .stepIndicator.active .stepNumber {
-  background-color: var(--tc-primary-color);
+  background-color: var(--tc-color-primary);
   color: var(--tc-white);
 }
 
 .stepIndicator.active .stepTitle {
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   font-weight: var(--tc-font-weight-semibold);
 }
 
@@ -113,21 +113,21 @@
   justify-content: space-between;
   align-items: center;
   margin-top: var(--tc-spacing-xl);
-  padding-top: var(--tc-spacing-md);
-  border-top: var(--tc-border-width) solid var(--tc-border-color);
+  padding-top: var(--tc-space-4);
+  border-top: var(--tc-border-width) solid var(--tc-border-default);
 }
 
 .stepForm {
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .stepFormGroup {
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .stepFormGroup label {
   display: block;
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
   font-weight: var(--tc-font-weight-medium);
   color: var(--tc-text-color-primary);
 }
@@ -135,8 +135,8 @@
 .stepFormGroup input,
 .stepFormGroup textarea {
   width: 100%;
-  padding: var(--tc-spacing-sm);
-  border: var(--tc-border-width) solid var(--tc-border-color);
+  padding: var(--tc-space-2);
+  border: var(--tc-border-width) solid var(--tc-border-default);
   border-radius: var(--tc-border-radius-sm);
   font-size: var(--tc-font-size-sm);
 }
@@ -154,8 +154,8 @@
 
 .addMembreContainer {
   display: flex;
-  gap: var(--tc-spacing-sm);
-  margin-bottom: var(--tc-spacing-md);
+  gap: var(--tc-space-2);
+  margin-bottom: var(--tc-space-4);
 }
 
 .addMembreContainer input {
@@ -163,7 +163,7 @@
 }
 
 .membresList {
-  margin-top: var(--tc-spacing-md);
+  margin-top: var(--tc-space-4);
 }
 
 .loadingIndicator {
@@ -178,16 +178,16 @@
 /* Support responsive */
 @media (max-width: 768px) {
   .artisteFormDesktop {
-    padding: var(--tc-spacing-sm);
+    padding: var(--tc-space-2);
   }
   
   .stepFormContainer {
-    padding: var(--tc-spacing-md);
+    padding: var(--tc-space-4);
   }
   
   .stepFormActions {
     flex-direction: column;
-    gap: var(--tc-spacing-sm);
+    gap: var(--tc-space-2);
   }
   
   .stepFormActions button {
@@ -197,7 +197,7 @@
   /* Navigation par étapes responsive */
   .stepIndicators {
     justify-content: center;
-    gap: var(--tc-spacing-md);
+    gap: var(--tc-space-4);
   }
   
   .stepIndicators::before {
@@ -217,7 +217,7 @@
   
   .formActions {
     flex-direction: column;
-    gap: var(--tc-spacing-sm);
+    gap: var(--tc-space-2);
   }
   
   .formActions button {
@@ -227,11 +227,11 @@
 
 @media (max-width: 576px) {
   .artisteFormDesktop {
-    padding: var(--tc-spacing-xs);
+    padding: var(--tc-space-1);
   }
   
   .stepFormContainer {
-    padding: var(--tc-spacing-sm);
+    padding: var(--tc-space-2);
   }
   
   .addMembreContainer {
@@ -242,13 +242,13 @@
   .stepIndicators {
     flex-direction: column;
     align-items: center;
-    gap: var(--tc-spacing-xs);
+    gap: var(--tc-space-1);
   }
   
   .stepIndicator {
     flex-direction: row;
-    gap: var(--tc-spacing-sm);
-    padding: var(--tc-spacing-xs);
+    gap: var(--tc-space-2);
+    padding: var(--tc-space-1);
   }
   
   .stepTitle {

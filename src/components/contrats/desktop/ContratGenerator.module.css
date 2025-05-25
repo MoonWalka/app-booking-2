@@ -40,35 +40,35 @@
   background-color: var(--tc-white);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-box-shadow);
-  padding: var(--tc-spacing-lg);
-  margin-bottom: var(--tc-spacing-lg);
+  padding: var(--tc-space-6);
+  margin-bottom: var(--tc-space-6);
 }
 
 .generatorSection h2 {
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-semibold);
   margin-top: 0;
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
   color: var(--tc-text-color-primary);
 }
 
 .formGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: var(--tc-spacing-md);
+  gap: var(--tc-space-4);
 }
 
 .actionsContainer {
   display: flex;
   justify-content: flex-end;
-  margin-top: var(--tc-spacing-lg);
-  gap: var(--tc-spacing-md);
+  margin-top: var(--tc-space-6);
+  gap: var(--tc-space-4);
 }
 
 /* Support responsive */
 @media (max-width: 992px) {
   .generatorSection {
-    padding: var(--tc-spacing-md);
+    padding: var(--tc-space-4);
   }
 }
 
@@ -89,11 +89,11 @@
 
 @media (max-width: 576px) {
   .contratGeneratorContainer {
-    padding: var(--tc-spacing-sm);
+    padding: var(--tc-space-2);
   }
   
   .generatorSection {
-    padding: var(--tc-spacing-sm);
+    padding: var(--tc-space-2);
   }
   
   .generatorHeader h1 {

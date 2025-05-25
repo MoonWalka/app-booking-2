@@ -13,17 +13,17 @@
 .formActions {
   display: flex;
   justify-content: flex-end;
-  gap: var(--tc-spacing-md);
-  margin-top: var(--tc-spacing-lg);
-  margin-bottom: var(--tc-spacing-md);
+  gap: var(--tc-space-4);
+  margin-top: var(--tc-space-6);
+  margin-bottom: var(--tc-space-4);
 }
 
 .cancelButton {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-xs);
-  border: 1px solid var(--tc-border-color);
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  gap: var(--tc-space-1);
+  border: 1px solid var(--tc-border-default);
+  padding: var(--tc-space-2) var(--tc-space-4);
   border-radius: var(--tc-border-radius-sm);
   background-color: transparent;
   color: var(--tc-text-muted);
@@ -45,10 +45,10 @@
 .submitButton {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-xs);
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  gap: var(--tc-space-1);
+  padding: var(--tc-space-2) var(--tc-space-4);
   border-radius: var(--tc-border-radius-sm);
-  background-color: var(--tc-primary-color);
+  background-color: var(--tc-color-primary);
   color: var(--tc-white);
   border: none;
   font-size: var(--tc-font-size-sm);
@@ -73,7 +73,7 @@
   display: inline-block;
   width: 1rem;
   height: 1rem;
-  margin-right: var(--tc-spacing-xs);
+  margin-right: var(--tc-space-1);
   border: 0.15em solid currentColor;
   border-right-color: transparent;
   border-radius: 50%;
@@ -90,7 +90,7 @@
 @media (max-width: 768px) {
   .formActions {
     flex-direction: column-reverse;
-    gap: var(--tc-spacing-sm);
+    gap: var(--tc-space-2);
   }
   
   .cancelButton,

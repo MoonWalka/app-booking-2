@@ -15,7 +15,7 @@
   font-size: var(--tc-font-size-xl);
   font-weight: var(--tc-font-weight-semibold);
   margin: 0;
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
 }
 
 /* Styles responsive standardisés */

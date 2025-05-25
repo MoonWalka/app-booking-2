@@ -8,7 +8,7 @@
    CONTENEUR PRINCIPAL
    ============================= */
 .lieuContainer {
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
   max-width: 100%;
   overflow-x: hidden;
   margin: 0 auto;
@@ -21,22 +21,22 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--tc-spacing-md);
-  padding-bottom: var(--tc-spacing-sm);
-  border-bottom: 1px solid var(--tc-border-color);
+  margin-bottom: var(--tc-space-4);
+  padding-bottom: var(--tc-space-2);
+  border-bottom: 1px solid var(--tc-border-default);
 }
 
 .headerTitle {
   font-size: var(--tc-font-size-xl);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   margin: 0;
   line-height: 1.2;
 }
 
 .headerActions {
   display: flex;
-  gap: var(--tc-spacing-sm);
+  gap: var(--tc-space-2);
   align-items: center;
 }
 
@@ -44,22 +44,22 @@
    SECTIONS
    ============================= */
 .section {
-  margin-bottom: var(--tc-spacing-lg);
-  padding: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-6);
+  padding: var(--tc-space-4);
   border-radius: var(--tc-border-radius);
   background-color: var(--tc-bg-color-light);
   box-shadow: var(--tc-shadow-sm);
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
 }
 
 .sectionTitle {
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   margin-top: 0;
-  margin-bottom: var(--tc-spacing-md);
-  padding-bottom: var(--tc-spacing-xs);
-  border-bottom: 1px solid var(--tc-border-color);
+  margin-bottom: var(--tc-space-4);
+  padding-bottom: var(--tc-space-1);
+  border-bottom: 1px solid var(--tc-border-default);
   line-height: 1.3;
 }
 
@@ -72,22 +72,22 @@
   align-items: center;
   height: 50vh;
   flex-direction: column;
-  gap: var(--tc-spacing-md);
+  gap: var(--tc-space-4);
 }
 
 .spinnerText {
   color: var(--tc-text-color-secondary);
   font-size: var(--tc-font-size-md);
-  margin-top: var(--tc-spacing-sm);
+  margin-top: var(--tc-space-2);
 }
 
 .errorContainer {
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
   max-width: 800px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-md);
+  gap: var(--tc-space-4);
   align-items: center;
   text-align: center;
 }
@@ -96,7 +96,7 @@
   color: var(--tc-danger-color);
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-medium);
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 /* =============================
@@ -109,8 +109,8 @@
 }
 
 .dataItem {
-  padding: var(--tc-spacing-sm) 0;
-  border-bottom: 1px solid var(--tc-border-color);
+  padding: var(--tc-space-2) 0;
+  border-bottom: 1px solid var(--tc-border-default);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -130,7 +130,7 @@
 
 .dataValue {
   flex: 1;
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   font-size: var(--tc-font-size-base);
 }
 
@@ -139,15 +139,15 @@
    ============================= */
 .actionButtons {
   display: flex;
-  gap: var(--tc-spacing-sm);
+  gap: var(--tc-space-2);
 }
 
 .actionButton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--tc-spacing-xs);
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  gap: var(--tc-space-1);
+  padding: var(--tc-space-2) var(--tc-space-4);
   border-radius: var(--tc-border-radius);
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
@@ -156,7 +156,7 @@
 }
 
 .primaryButton {
-  background-color: var(--tc-primary-color);
+  background-color: var(--tc-color-primary);
   color: var(--tc-bg-color-light);
   border: none;
 }
@@ -168,12 +168,12 @@
 .secondaryButton {
   background-color: var(--tc-bg-color-light);
   color: var(--tc-text-color-secondary);
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
 }
 
 .secondaryButton:hover {
   background-color: var(--tc-bg-color-dark);
-  border-color: var(--tc-border-color);
+  border-color: var(--tc-border-default);
 }
 
 .dangerButton {
@@ -190,9 +190,9 @@
    CONCERTS ASSOCIÉS
    ============================= */
 .concertItem {
-  padding: var(--tc-spacing-sm);
+  padding: var(--tc-space-2);
   border-radius: var(--tc-border-radius);
-  margin-bottom: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-space-2);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -212,12 +212,12 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-xs);
+  gap: var(--tc-space-1);
 }
 
 .concertTitle {
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   font-size: var(--tc-font-size-base);
 }
 
@@ -226,17 +226,17 @@
   color: var(--tc-gray-600);
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-xs);
+  gap: var(--tc-space-1);
 }
 
 .concertDateIcon {
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   font-size: var(--tc-font-size-sm);
 }
 
 .concertActions {
   display: flex;
-  gap: var(--tc-spacing-xs);
+  gap: var(--tc-space-1);
 }
 
 /* =============================
@@ -246,14 +246,14 @@
   .dataList {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: var(--tc-spacing-md);
+    gap: var(--tc-space-4);
   }
   
   .dataItem {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--tc-spacing-xs);
-    padding: var(--tc-spacing-sm);
+    gap: var(--tc-space-1);
+    padding: var(--tc-space-2);
     border: 1px solid var(--tc-gray-200);
     border-radius: var(--tc-border-radius);
     background-color: var(--tc-gray-50);
@@ -261,7 +261,7 @@
   
   .dataLabel {
     width: 100%;
-    margin-bottom: var(--tc-spacing-xs);
+    margin-bottom: var(--tc-space-1);
   }
 }
 
@@ -269,11 +269,11 @@
   .header {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--tc-spacing-sm);
+    gap: var(--tc-space-2);
   }
   
   .headerActions {
-    margin-top: var(--tc-spacing-sm);
+    margin-top: var(--tc-space-2);
     width: 100%;
   }
   
@@ -282,13 +282,13 @@
   }
   
   .section {
-    padding: var(--tc-spacing-sm);
+    padding: var(--tc-space-2);
   }
 }
 
 @media (max-width: var(--tc-breakpoint-sm)) {
   .lieuContainer {
-    padding: var(--tc-spacing-sm);
+    padding: var(--tc-space-2);
   }
   
   .actionButtons {
@@ -304,12 +304,12 @@
   .concertItem {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--tc-spacing-sm);
+    gap: var(--tc-space-2);
   }
   
   .concertActions {
     width: 100%;
     justify-content: flex-end;
-    margin-top: var(--tc-spacing-xs);
+    margin-top: var(--tc-space-1);
   }
 }

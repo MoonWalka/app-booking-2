@@ -35,7 +35,7 @@
   margin-top: var(--tc-spacing-3);
   padding: var(--tc-spacing-2) var(--tc-spacing-3);
   border: none;
-  background-color: var(--tc-primary-color);
+  background-color: var(--tc-color-primary);
   color: var(--tc-bg-default);
   border-radius: var(--tc-radius-sm);
   font-weight: var(--tc-font-weight-medium);

@@ -7,18 +7,18 @@
 .suggestionsList {
   position: absolute;
   width: 100%;
-  margin-top: var(--tc-spacing-xs);
+  margin-top: var(--tc-space-1);
   border: 1px solid var(--tc-border-light);
   border-radius: var(--tc-border-radius-sm);
   max-height: 200px;
   overflow-y: auto;
   box-shadow: var(--tc-shadow-sm);
   z-index: var(--tc-z-index-dropdown);
-  background-color: var(--tc-bg-color);
+  background-color: var(--tc-bg-default);
 }
 
 .suggestionItem {
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  padding: var(--tc-space-1) var(--tc-space-2);
   cursor: pointer;
   display: flex;
   align-items: flex-start;
@@ -30,7 +30,7 @@
 }
 
 .suggestionIcon {
-  margin-right: var(--tc-spacing-xs);
+  margin-right: var(--tc-space-1);
   font-size: var(--tc-font-size-base);
   color: var(--tc-text-muted);
 }
@@ -51,11 +51,11 @@
 
 .searchingIndicator {
   position: absolute;
-  top: calc(100% + var(--tc-spacing-md));
+  top: calc(100% + var(--tc-space-4));
   left: 0;
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-xs);
+  gap: var(--tc-space-1);
   font-size: var(--tc-font-size-sm);
   color: var(--tc-text-muted);
 }
@@ -63,11 +63,11 @@
 /* Styles responsive standardisés */
 @media (max-width: 768px) {
   .suggestionItem {
-    padding: var(--tc-spacing-xs) var(--tc-spacing-xs);
+    padding: var(--tc-space-1) var(--tc-space-1);
   }
   
   .suggestionIcon {
-    margin-right: var(--tc-spacing-xs);
+    margin-right: var(--tc-space-1);
   }
 }
 

@@ -30,7 +30,7 @@
   display: block;
   margin-bottom: 0.5rem; /* var(--tc-spacing-1-5) */
   font-weight: 500; /* var(--tc-font-weight-medium) */
-  color: var(--tc-text-color); /* var(--tc-text-color) */
+  color: var(--tc-text-default); /* var(--tc-text-default) */
 }
 
 .formControl {
@@ -39,14 +39,14 @@
   padding: 0.5rem 0.75rem; /* var(--tc-spacing-1-5) var(--tc-spacing-2) */
   font-size: 1rem; /* var(--tc-font-size-base) */
   line-height: 1.5; /* var(--tc-line-height-base) */
-  border: 1px solid var(--tc-text-color); /* var(--tc-border-input) */
+  border: 1px solid var(--tc-text-default); /* var(--tc-border-input) */
   border-radius: 0.25rem; /* var(--tc-border-radius-sm) */
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   background-color: var(--tc-input-background-color);
 }
 
 .formControl:focus {
-  border-color: var(--tc-text-color); /* var(--tc-focus-border) */
+  border-color: var(--tc-text-default); /* var(--tc-focus-border) */
   box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25); /* var(--tc-focus-shadow) */
   outline: 0;
 }
@@ -60,7 +60,7 @@
   line-height: 1.5; /* var(--tc-line-height-base) */
   background-position: right 0.75rem center;
   background-size: 16px 12px;
-  border: 1px solid var(--tc-text-color); /* var(--tc-border-input) */
+  border: 1px solid var(--tc-text-default); /* var(--tc-border-input) */
   border-radius: 0.25rem; /* var(--tc-border-radius-sm) */
   appearance: none;
   background-color: var(--tc-input-background-color);
@@ -72,11 +72,11 @@
   display: block;
   margin-top: 0.25rem; /* var(--tc-spacing-0-5) */
   font-size: 0.875rem; /* var(--tc-font-size-sm) */
-  color: var(--tc-text-color); /* var(--tc-text-muted) */
+  color: var(--tc-text-default); /* var(--tc-text-muted) */
 }
 
 .requiredField {
-  color: var(--tc-text-color); /* var(--tc-danger-color) */
+  color: var(--tc-text-default); /* var(--tc-danger-color) */
   margin-left: 0.25rem; /* var(--tc-spacing-0-5) */
 }
 
@@ -94,11 +94,11 @@
   font-size: 1rem; /* var(--tc-font-size-base) */
   font-weight: 400; /* var(--tc-font-weight-regular) */
   line-height: 1.5; /* var(--tc-line-height-base) */
-  color: var(--tc-text-color); /* var(--tc-text-color) */
+  color: var(--tc-text-default); /* var(--tc-text-default) */
   text-align: center;
   white-space: nowrap;
   background-color: var(--tc-input-background-color); /* var(--tc-bg-subtle) */
-  border: 1px solid var(--tc-text-color); /* var(--tc-border-input) */
+  border: 1px solid var(--tc-text-default); /* var(--tc-border-input) */
   border-left: 0;
   border-radius: 0 0.25rem 0.25rem 0; /* 0 var(--tc-border-radius-sm) var(--tc-border-radius-sm) 0 */
 }

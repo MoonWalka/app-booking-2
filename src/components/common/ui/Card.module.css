@@ -22,11 +22,11 @@
 /* Variantes */
 .card-default {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
 }
 
 .card-outlined {
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
 }
 
 .card-elevated {
@@ -65,7 +65,7 @@
 }
 
 .headerWithBorder {
-  border-bottom: 1px solid var(--tc-border-color);
+  border-bottom: 1px solid var(--tc-border-default);
 }
 
 .headerContent {
@@ -127,7 +127,7 @@
 }
 
 .footerWithBorder {
-  border-top: 1px solid var(--tc-border-color);
+  border-top: 1px solid var(--tc-border-default);
 }
 
 .footerContent {

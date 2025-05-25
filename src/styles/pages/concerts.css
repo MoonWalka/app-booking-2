@@ -31,8 +31,8 @@
 .tc-concert-form-container .tc-action-buttons {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--tc-spacing-sm);
-  margin-bottom: var(--tc-spacing-md);
+  gap: var(--tc-space-2);
+  margin-bottom: var(--tc-space-4);
   justify-content: flex-start;
   align-items: center;
   width: 100%;
@@ -41,41 +41,41 @@
 .tc-concert-form-container .tc-form-actions {
   display: flex;
   justify-content: flex-end;
-  gap: var(--tc-spacing-sm);
-  margin-top: var(--tc-spacing-lg);
-  margin-bottom: var(--tc-spacing-md);
+  gap: var(--tc-space-2);
+  margin-top: var(--tc-space-6);
+  margin-bottom: var(--tc-space-4);
   flex-wrap: wrap;
 }
 
 /* DÉTAILS DU CONCERT */
 .tc-concert-detail-container {
-  padding: var(--tc-spacing-md);
-  background-color: var(--tc-bg-color);
+  padding: var(--tc-space-4);
+  background-color: var(--tc-bg-default);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow);
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .tc-concert-details-container {
   max-width: 900px;
   margin: 0 auto;
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
 }
 
 .tc-concert-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: var(--tc-spacing-md);
-  padding-bottom: var(--tc-spacing-sm);
-  border-bottom: 1px solid var(--tc-border-color);
+  margin-bottom: var(--tc-space-4);
+  padding-bottom: var(--tc-space-2);
+  border-bottom: 1px solid var(--tc-border-default);
 }
 
 .tc-concert-title {
   font-size: var(--tc-font-size-xl);
   font-weight: var(--tc-font-weight-bold);
-  margin-bottom: var(--tc-spacing-xs);
-  color: var(--tc-text-color);
+  margin-bottom: var(--tc-space-1);
+  color: var(--tc-text-default);
 }
 
 .tc-concert-date-display {
@@ -85,34 +85,34 @@
 
 /* LISTE DES CONCERTS */
 .tc-concerts-list-container {
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
 }
 
 .tc-concerts-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .tc-concerts-title {
   font-size: var(--tc-font-size-xl);
   font-weight: var(--tc-font-weight-bold);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
 }
 
 .tc-concerts-actions {
   display: flex;
-  gap: var(--tc-spacing-sm);
+  gap: var(--tc-space-2);
 }
 
 /* FILTRES */
 .tc-filter-bar {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--tc-spacing-sm);
-  margin-bottom: var(--tc-spacing-md);
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  gap: var(--tc-space-2);
+  margin-bottom: var(--tc-space-4);
+  padding: var(--tc-space-2) var(--tc-space-4);
   background-color: var(--tc-gray-50);
   border-radius: var(--tc-border-radius);
 }
@@ -120,33 +120,33 @@
 .tc-filter-group {
   display: flex;
   align-items: center;
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
   min-width: 200px;
 }
 
 .tc-filter-label {
-  margin-right: var(--tc-spacing-xs);
+  margin-right: var(--tc-space-1);
   font-weight: var(--tc-font-weight-medium);
   color: var(--tc-gray-700);
   white-space: nowrap;
 }
 
 .tc-filter-select {
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
-  border: 1px solid var(--tc-border-color);
+  padding: var(--tc-space-1) var(--tc-space-2);
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-border-radius-sm);
   min-width: 120px;
 }
 
 /* CARTES DE CONCERT */
 .tc-concert-list-card {
-  background-color: var(--tc-bg-color);
+  background-color: var(--tc-bg-default);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow);
-  margin-bottom: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-space-2);
   overflow: hidden;
   transition: var(--tc-transition);
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
 }
 
 .tc-concert-list-card:hover {
@@ -169,7 +169,7 @@
 }
 
 .tc-concert-modal {
-  background-color: var(--tc-bg-color);
+  background-color: var(--tc-bg-default);
   border-radius: var(--tc-border-radius);
   width: 450px;
   max-width: 90vw;
@@ -187,8 +187,8 @@
 .tc-concert-title-mobile {
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-semibold);
-  margin: 0 0 var(--tc-spacing-xs) 0;
-  color: var(--tc-text-color);
+  margin: 0 0 var(--tc-space-1) 0;
+  color: var(--tc-text-default);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -200,7 +200,7 @@
   border-collapse: separate;
   border-spacing: 0;
   width: 100%;
-  background-color: var(--tc-bg-color);
+  background-color: var(--tc-bg-default);
   border-radius: var(--tc-border-radius);
   overflow: hidden;
   box-shadow: var(--tc-shadow);
@@ -208,9 +208,9 @@
 
 .tc-concerts-table th,
 .tc-concerts-table td {
-  padding: var(--tc-spacing-sm);
+  padding: var(--tc-space-2);
   vertical-align: middle;
-  border-bottom: 1px solid var(--tc-border-color);
+  border-bottom: 1px solid var(--tc-border-default);
 }
 
 .tc-concerts-table th {
@@ -223,11 +223,11 @@
 .tc-concert-status {
   display: inline-flex;
   align-items: center;
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  padding: var(--tc-space-1) var(--tc-space-2);
   border-radius: var(--tc-border-radius-pill);
   font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-medium);
-  gap: var(--tc-spacing-xs);
+  gap: var(--tc-space-1);
 }
 
 .tc-concert-status-confirmed {
@@ -252,7 +252,7 @@
 
 /* Messages de statut standardisés */
 .tc-status-message {
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  padding: var(--tc-space-1) var(--tc-space-2);
   border-radius: var(--tc-border-radius-pill);
   font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-medium);
@@ -261,7 +261,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--tc-spacing-xs);
+  gap: var(--tc-space-1);
 }
 
 .tc-status-message-warning {
@@ -296,18 +296,18 @@
 
 .tc-status-message-light {
   background-color: rgba(var(--tc-gray-600-rgb), 0.1);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
 }
 
 /* Rappels d'action */
 .tc-action-reminder {
-  margin-top: var(--tc-spacing-xs);
+  margin-top: var(--tc-space-1);
   font-size: var(--tc-font-size-xs);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--tc-spacing-xs);
-  padding: 3px var(--tc-spacing-xs);
+  gap: var(--tc-space-1);
+  padding: 3px var(--tc-space-1);
   background-color: rgba(var(--tc-warning-color-rgb), 0.1);
   border-radius: var(--tc-border-radius-pill);
   color: #964b00;
@@ -347,12 +347,12 @@
   }
   
   .tc-info-section {
-    margin: 0 0 var(--tc-spacing-md);
+    margin: 0 0 var(--tc-space-4);
     width: 100%;
   }
   
   .tc-filter-bar {
-    padding: var(--tc-spacing-xs);
+    padding: var(--tc-space-1);
     flex-direction: column;
   }
   
@@ -363,7 +363,7 @@
   
   .tc-filter-label {
     width: 100%;
-    margin-bottom: var(--tc-spacing-xs);
+    margin-bottom: var(--tc-space-1);
   }
   
   .tc-filter-select {
@@ -390,7 +390,7 @@
 .tc-badge-wrapper {
   display: inline-flex;
   align-items: center;
-  gap: var(--tc-spacing-xs);
+  gap: var(--tc-space-1);
 }
 
 .tc-badge-with-icon {

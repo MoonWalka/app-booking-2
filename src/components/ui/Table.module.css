@@ -7,13 +7,13 @@
 
 .table th,
 .table td {
-  padding: var(--tc-spacing-sm);
+  padding: var(--tc-space-2);
   border-bottom: 1px solid var(--tc-table-border-color);
   text-align: left;
 }
 
 .table th {
-  background-color: var(--tc-primary-color) !important;
+  background-color: var(--tc-color-primary) !important;
   font-weight: var(--tc-font-weight-semibold);
   color: var(--tc-white);
   border-top: none !important;

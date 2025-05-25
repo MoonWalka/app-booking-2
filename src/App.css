@@ -12,7 +12,7 @@ body {
 }
 
 a {
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   text-decoration: none;
 }
 

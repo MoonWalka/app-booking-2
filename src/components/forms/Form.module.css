@@ -11,7 +11,7 @@
 .concertFormContainer {
   max-width: 800px;
   margin: 0 auto;
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
 }
 
 /* Styles pour les erreurs de validation */
@@ -28,17 +28,17 @@
 .errorMessage {
   color: var(--tc-danger-color);
   font-size: var(--tc-font-size-sm);
-  margin-top: var(--tc-spacing-xs);
+  margin-top: var(--tc-space-1);
 }
 
 /* Styles pour les formulaires standards */
 .formGroup {
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .formLabel {
   display: block;
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
   font-weight: var(--tc-font-weight-medium);
   color: var(--tc-text-color-primary);
 }
@@ -46,19 +46,19 @@
 .formControl {
   display: block;
   width: 100%;
-  padding: var(--tc-spacing-sm);
+  padding: var(--tc-space-2);
   font-size: var(--tc-font-size-base);
   line-height: 1.5;
   color: var(--tc-text-color-primary);
   background-color: var(--tc-white);
   background-clip: padding-box;
-  border: var(--tc-border-width) solid var(--tc-border-color);
+  border: var(--tc-border-width) solid var(--tc-border-default);
   border-radius: var(--tc-border-radius-sm);
   transition: var(--tc-transition);
 }
 
 .formControl:focus {
-  border-color: var(--tc-primary-color);
+  border-color: var(--tc-color-primary);
   box-shadow: var(--tc-focus-shadow));
   outline: 0;
 }
@@ -66,8 +66,8 @@
 .formActions {
   display: flex;
   justify-content: flex-end;
-  margin-top: var(--tc-spacing-lg);
-  gap: var(--tc-spacing-sm);
+  margin-top: var(--tc-space-6);
+  gap: var(--tc-space-2);
 }
 
 /* Support responsive avec points de rupture standardisés */
@@ -80,7 +80,7 @@
 @media (max-width: var(--tc-breakpoint-sm)) {
   .formActions {
     flex-direction: column-reverse;
-    gap: var(--tc-spacing-xs);
+    gap: var(--tc-space-1);
   }
   
   .formActions button {
@@ -90,10 +90,10 @@
 
 @media (max-width: var(--tc-breakpoint-xs)) {
   .concertFormContainer {
-    padding: var(--tc-spacing-sm);
+    padding: var(--tc-space-2);
   }
   
   .formGroup {
-    margin-bottom: var(--tc-spacing-sm);
+    margin-bottom: var(--tc-space-2);
   }
 }

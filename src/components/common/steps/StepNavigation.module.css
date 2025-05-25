@@ -38,9 +38,9 @@
 }
 
 .stepDot.active {
-  background-color: var(--tc-primary-color);
+  background-color: var(--tc-color-primary);
   color: var(--tc-white);
-  border-color: var(--tc-primary-color);
+  border-color: var(--tc-color-primary);
 }
 
 .stepDot.completed {
@@ -73,7 +73,7 @@
   font-weight: var(--tc-font-weight-semibold);
   text-align: center;
   margin-bottom: var(--tc-spacing-4);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
 }
 
 .stepContent {

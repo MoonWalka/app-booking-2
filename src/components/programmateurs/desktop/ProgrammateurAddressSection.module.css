@@ -6,14 +6,14 @@
 
 .container {
   /* Base styles for ProgrammateurAddressSection */
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .cardWrapper {
   background-color: var(--tc-white);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-box-shadow);
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
   overflow: hidden;
   transition: var(--tc-transition);
 }
@@ -25,24 +25,24 @@
 
 .cardHeader {
   background-color: var(--tc-gray-100);
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
   display: flex;
   align-items: center;
-  border-bottom: var(--tc-border-width) solid var(--tc-border-color);
-  gap: var(--tc-spacing-sm);
+  border-bottom: var(--tc-border-width) solid var(--tc-border-default);
+  gap: var(--tc-space-2);
 }
 
 .cardBody {
-  padding: var(--tc-spacing-lg);
+  padding: var(--tc-space-6);
 }
 
 .formGroup {
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .cardLabel {
   font-weight: var(--tc-font-weight-bold);
-  margin-bottom: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-space-2);
   color: var(--tc-text-color-secondary);
   display: block;
 }
@@ -50,18 +50,18 @@
 .suggestionsContainer {
   border: var(--tc-border-width) solid var(--tc-border-color-light);
   border-radius: var(--tc-border-radius-sm);
-  margin-top: var(--tc-spacing-md);
-  margin-bottom: var(--tc-spacing-md);
+  margin-top: var(--tc-space-4);
+  margin-bottom: var(--tc-space-4);
   max-height: 250px;
   overflow-y: auto;
 }
 
 .suggestionsList {
-  padding: var(--tc-spacing-sm) 0;
+  padding: var(--tc-space-2) 0;
 }
 
 .suggestionItem {
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  padding: var(--tc-space-2) var(--tc-space-4);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -80,7 +80,7 @@
 /* Responsive design - medium devices */
 @media (max-width: 768px) {
   .cardBody {
-    padding: var(--tc-spacing-md);
+    padding: var(--tc-space-4);
   }
   
   .cardWrapper:hover {
@@ -91,11 +91,11 @@
 /* Additional responsive support for small screens */
 @media (max-width: 576px) {
   .cardHeader {
-    padding: var(--tc-spacing-sm);
+    padding: var(--tc-space-2);
   }
   
   .suggestionItem {
-    padding: var(--tc-spacing-sm);
+    padding: var(--tc-space-2);
   }
   
   .cardWrapper:hover {

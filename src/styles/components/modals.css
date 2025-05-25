@@ -17,7 +17,7 @@
 }
 
 .tc-modal {
-  background-color: var(--tc-card-bg);
+  background-color: var(--tc-bg-default);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow-modal);
   max-width: 600px;
@@ -33,7 +33,7 @@
   height: 100vh;
   max-width: none;
   margin: 0;
-  background: var(--tc-card-bg);
+  background: var(--tc-bg-default);
   border-radius: 0;
   box-shadow: none;
   flex-direction: column;
@@ -42,14 +42,14 @@
 
 .tc-modal-header {
   padding: var(--tc-spacing-3) var(--tc-spacing-4);
-  border-bottom: 1px solid var(--tc-border-color);
+  border-bottom: 1px solid var(--tc-border-default);
   justify-content: space-between;
 }
 
 .tc-modal-title {
   font-size: var(--tc-font-size-xl);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
 }
 
 .tc-modal-close {
@@ -81,7 +81,7 @@
 }
 
 .tc-modal-footer {
-  border-top: 1px solid var(--tc-border-color);
+  border-top: 1px solid var(--tc-border-default);
   justify-content: flex-end;
   gap: var(--tc-spacing-2);
 }
@@ -89,7 +89,7 @@
 .tc-modal-full {
   max-width: 95%;
   height: 90vh;
-  background-color: var(--tc-card-bg);
+  background-color: var(--tc-bg-default);
 }
 
 .tc-modal-full .tc-modal-fixed-header {
@@ -124,15 +124,15 @@
 .tc-modal-full .quill {
   height: auto;
   min-height: 200px;
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-border-radius-sm);
-  background: var(--tc-card-bg);
+  background: var(--tc-bg-default);
 }
 
 .tc-modal-full .ql-toolbar.ql-snow {
   z-index: 10;
   border-top: none;
-  border-bottom: 1px solid var(--tc-border-color);
+  border-bottom: 1px solid var(--tc-border-default);
   padding: var(--tc-spacing-2);
   flex-wrap: wrap;
   justify-content: flex-start;
@@ -141,7 +141,7 @@
 .tc-modal-full .ql-container.ql-snow {
   border-top: 0;
   min-height: 150px;
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
 }
 
 .tc-modal-full .ql-toolbar button {
@@ -154,7 +154,7 @@
 
 .tc-modal-full .card {
   margin-bottom: var(--tc-spacing-4);
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
 }
 
 .tc-modal-full .card-header {

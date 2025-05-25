@@ -5,23 +5,23 @@
  */
 
 .searchBox {
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .suggestionsList {
-  margin-top: var(--tc-spacing-xs);
-  border: 1px solid var(--tc-border-color);
+  margin-top: var(--tc-space-1);
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-border-radius-sm);
   max-height: 300px;
   overflow-y: auto;
   box-shadow: var(--tc-shadow);
   z-index: var(--tc-z-index-dropdown);
-  background-color: var(--tc-bg-color);
+  background-color: var(--tc-bg-default);
 }
 
 .suggestionItem {
-  padding: var(--tc-spacing-xs);
-  border-bottom: 1px solid var(--tc-border-color);
+  padding: var(--tc-space-1);
+  border-bottom: 1px solid var(--tc-border-default);
   cursor: pointer;
   display: flex;
   align-items: flex-start;
@@ -37,7 +37,7 @@
 }
 
 .suggestionIcon {
-  margin-right: var(--tc-spacing-xs);
+  margin-right: var(--tc-space-1);
   font-size: var(--tc-font-size-lg);
   color: var(--tc-text-muted);
 }
@@ -48,13 +48,13 @@
 
 .suggestionTitle {
   font-weight: var(--tc-font-weight-medium);
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
 }
 
 .suggestionSubtitle {
   font-size: var(--tc-font-size-sm);
   color: var(--tc-gray-800);
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
 }
 
 .suggestionDetails {
@@ -63,8 +63,8 @@
 }
 
 .noResultsAlert {
-  margin-top: var(--tc-spacing-xs);
-  padding: var(--tc-spacing-xs);
+  margin-top: var(--tc-space-1);
+  padding: var(--tc-space-1);
   font-size: var(--tc-font-size-sm);
 }
 
@@ -77,11 +77,11 @@
 
 @media (max-width: 576px) {
   .searchBox {
-    margin-bottom: var(--tc-spacing-sm);
+    margin-bottom: var(--tc-space-2);
   }
   
   .suggestionItem {
-    padding: var(--tc-spacing-xs);
+    padding: var(--tc-space-1);
   }
   
   .suggestionIcon {

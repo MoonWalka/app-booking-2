@@ -69,14 +69,14 @@
 .input {
   width: 100%;
   padding: var(--tc-spacing-2) var(--tc-spacing-3);
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-border-radius-sm);
   font-size: var(--tc-font-size-base);
   transition: var(--tc-transition);
 }
 
 .input:focus {
-  border-color: var(--tc-primary-color);
+  border-color: var(--tc-color-primary);
   outline: 0;
   box-shadow: var(--tc-input-focus-shadow);
 }
@@ -84,7 +84,7 @@
 .textarea {
   width: 100%;
   padding: var(--tc-spacing-2) var(--tc-spacing-3);
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-border-radius-sm);
   font-size: var(--tc-font-size-base);
   min-height: 80px;
@@ -93,7 +93,7 @@
 }
 
 .textarea:focus {
-  border-color: var(--tc-primary-color);
+  border-color: var(--tc-color-primary);
   outline: 0;
   box-shadow: var(--tc-input-focus-shadow);
 }
@@ -101,7 +101,7 @@
 .select {
   width: 100%;
   padding: var(--tc-spacing-2) var(--tc-spacing-3);
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-border-radius-sm);
   font-size: var(--tc-font-size-base);
   background-color: var(--tc-bg-white);
@@ -109,7 +109,7 @@
 }
 
 .select:focus {
-  border-color: var(--tc-primary-color);
+  border-color: var(--tc-color-primary);
   outline: 0;
   box-shadow: var(--tc-input-focus-shadow);
 }
@@ -135,7 +135,7 @@
 }
 
 .primaryButton {
-  background-color: var(--tc-primary-color);
+  background-color: var(--tc-color-primary);
   color: var(--tc-white);
 }
 
@@ -186,7 +186,7 @@
 }
 
 .infoBadge {
-  background-color: var(--tc-primary-color);
+  background-color: var(--tc-color-primary);
   color: var(--tc-white);
 }
 
@@ -216,7 +216,7 @@
 .tabBar {
   display: flex;
   margin-bottom: var(--tc-spacing-5);
-  border-bottom: 1px solid var(--tc-border-color);
+  border-bottom: 1px solid var(--tc-border-default);
 }
 
 .tab {
@@ -230,9 +230,9 @@
 }
 
 .activeTab {
-  border-bottom: 2px solid var(--tc-primary-color);
+  border-bottom: 2px solid var(--tc-color-primary);
   font-weight: var(--tc-font-weight-bold);
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
 }
 
 /* =============================
@@ -306,7 +306,7 @@
   background-color: var(--tc-bg-color-light);
   border-radius: var(--tc-border-radius);
   margin-bottom: var(--tc-spacing-4);
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
 }
 
 .inputContainer {
@@ -344,7 +344,7 @@
 }
 
 .statusBrouillon {
-  background-color: var(--tc-primary-color) !important;
+  background-color: var(--tc-color-primary) !important;
   color: var(--tc-white) !important;
 }
 

@@ -7,11 +7,11 @@
 .sectionNav {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-sm); /* Espacement horizontal régulier */
+  gap: var(--tc-space-2); /* Espacement horizontal régulier */
   background-color: transparent;
   border-radius: 0;
   padding: 0;
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
   overflow-x: auto;
   width: 100%;
 }
@@ -19,7 +19,7 @@
 .sectionNavLink {
   color: var(--tc-text-color-secondary);
   background-color: var(--tc-gray-50);
-  padding: var(--tc-spacing-xs) var(--tc-spacing-lg);
+  padding: var(--tc-space-1) var(--tc-space-6);
   border-radius: var(--tc-border-radius-md);
   font-weight: var(--tc-font-weight-regular);
   font-size: var(--tc-font-size-base);
@@ -44,7 +44,7 @@
   color: var(--tc-secondary-color);
   font-weight: var(--tc-font-weight-bold);
   box-shadow: 0 1px 4px 0 var(--tc-shadow-color-sm));
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
   z-index: 1;
 }
 
@@ -62,7 +62,7 @@
   background-color: var(--tc-gray-200);
   color: var(--tc-gray-600);
   border-radius: var(--tc-border-radius-pill); /* Utiliser la variable pour border-radius */
-  padding: calc(var(--tc-spacing-xs) / 2) var(--tc-spacing-xs); /* Équivalent à 2px 8px */
+  padding: calc(var(--tc-space-1) / 2) var(--tc-space-1); /* Équivalent à 2px 8px */
   font-size: var(--tc-font-size-xs);
-  margin-left: var(--tc-spacing-xs);
+  margin-left: var(--tc-space-1);
 }

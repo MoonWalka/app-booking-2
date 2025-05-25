@@ -19,7 +19,7 @@
   font-weight: var(--tc-font-weight-semibold);
   margin-bottom: var(--tc-spacing-3);
   padding-bottom: var(--tc-spacing-2);
-  border-bottom: 1px solid var(--tc-border-color);
+  border-bottom: 1px solid var(--tc-border-default);
 }
 
 /* Mode édition */
@@ -194,7 +194,7 @@
 .artisteContact {
   margin-top: var(--tc-spacing-2);
   padding-top: var(--tc-spacing-2);
-  border-top: 1px solid var(--tc-border-color);
+  border-top: 1px solid var(--tc-border-default);
 }
 
 .contactTitle {

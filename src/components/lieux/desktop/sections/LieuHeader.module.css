@@ -11,9 +11,9 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
   flex-wrap: wrap;
-  gap: var(--tc-spacing-md);
+  gap: var(--tc-space-4);
 }
 
 .titleContainer {
@@ -27,14 +27,14 @@
 .breadcrumbContainer {
   display: flex;
   align-items: center;
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
   font-size: var(--tc-font-size-sm);
   color: var(--tc-secondary-color);
 }
 
 .breadcrumbItem {
   cursor: pointer;
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   transition: color var(--tc-transition-duration);
 }
 
@@ -54,7 +54,7 @@
 }
 
 .breadcrumbContainer i {
-  margin: 0 var(--tc-spacing-xs);
+  margin: 0 var(--tc-space-1);
   font-size: var(--tc-font-size-xs);
   color: var(--tc-gray-500);
 }
@@ -66,10 +66,10 @@
   margin: 0;
   font-size: var(--tc-font-size-xxl);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-sm);
+  gap: var(--tc-space-2);
   flex-wrap: wrap;
   line-height: 1.2;
 }
@@ -79,7 +79,7 @@
    ============================= */
 .actionButtons {
   display: flex;
-  gap: var(--tc-spacing-xs);
+  gap: var(--tc-space-1);
   align-items: center;
   justify-content: flex-end;
   flex-wrap: wrap;
@@ -88,7 +88,7 @@
 .actionBtn {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-xs);
+  gap: var(--tc-space-1);
 }
 
 /* =============================
@@ -97,7 +97,7 @@
 .typeBadge {
   font-size: var(--tc-font-size-xs);
   text-transform: uppercase;
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  padding: var(--tc-space-1) var(--tc-space-2);
   border-radius: var(--tc-border-radius);
   font-weight: var(--tc-font-weight-medium);
   background-color: var(--tc-gray-100);
@@ -110,13 +110,13 @@
 @media (max-width: var(--tc-breakpoint-md)) {
   .detailsHeaderContainer {
     flex-direction: column;
-    gap: var(--tc-spacing-sm);
+    gap: var(--tc-space-2);
   }
   
   .actionButtons {
     width: 100%;
     justify-content: flex-start;
-    margin-top: var(--tc-spacing-sm);
+    margin-top: var(--tc-space-2);
   }
   
   .modernTitle {
@@ -135,6 +135,6 @@
   
   .typeBadge {
     font-size: calc(var(--tc-font-size-xs) * 0.9);
-    padding: calc(var(--tc-spacing-xs) * 0.8) var(--tc-spacing-xs);
+    padding: calc(var(--tc-space-1) * 0.8) var(--tc-space-1);
   }
 }

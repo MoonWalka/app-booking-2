@@ -7,24 +7,24 @@
 /* Styles standardisés pour StructureLegalSection */
 
 .sectionContent {
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
 }
 
 .infoGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: var(--tc-spacing-lg);
+  gap: var(--tc-space-6);
 }
 
 .infoGroup {
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .cardLabel {
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-semibold);
   color: var(--tc-text-color-secondary);
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
 }
 
 .fieldValue {
@@ -38,13 +38,13 @@
 @media (max-width: var(--tc-breakpoint-sm)) {
   .infoGrid {
     grid-template-columns: 1fr 1fr;
-    gap: var(--tc-spacing-md);
+    gap: var(--tc-space-4);
   }
 }
 
 @media (max-width: var(--tc-breakpoint-xs)) {
   .infoGrid {
     grid-template-columns: 1fr;
-    gap: var(--tc-spacing-sm);
+    gap: var(--tc-space-2);
   }
 }

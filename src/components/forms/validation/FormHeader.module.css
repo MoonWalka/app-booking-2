@@ -10,14 +10,14 @@
 /* FormHeader Styles - Standardisés */
 .container {
   /* Base container styles */
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
 }
 
 .headerWrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .titleWrapper {
@@ -32,16 +32,16 @@
 
 .actionsWrapper {
   display: flex;
-  gap: var(--tc-spacing-xs);
+  gap: var(--tc-space-1);
 }
 
 .backButton {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-xs);
-  padding: var(--tc-spacing-xs) var(--tc-spacing-md);
+  gap: var(--tc-space-1);
+  padding: var(--tc-space-1) var(--tc-space-4);
   background-color: transparent;
-  border: var(--tc-border-width) solid var(--tc-border-color);
+  border: var(--tc-border-width) solid var(--tc-border-default);
   border-radius: var(--tc-border-radius-sm);
   color: var(--tc-text-color-secondary);
   font-weight: var(--tc-font-weight-medium);
@@ -57,7 +57,7 @@
 .divider {
   border: 0;
   border-top: var(--tc-border-width) solid var(--tc-border-color-light);
-  margin: var(--tc-spacing-md) 0;
+  margin: var(--tc-space-4) 0;
 }
 
 /* Support responsive avec variables standardisées */
@@ -65,7 +65,7 @@
   .headerWrapper {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--tc-spacing-sm);
+    gap: var(--tc-space-2);
   }
   
   .actionsWrapper {
@@ -80,12 +80,12 @@
 
 @media (max-width: var(--tc-breakpoint-xs)) {
   .container {
-    margin-bottom: var(--tc-spacing-md);
+    margin-bottom: var(--tc-space-4);
   }
   
   .actionsWrapper {
     flex-wrap: wrap;
-    gap: var(--tc-spacing-xs);
+    gap: var(--tc-space-1);
   }
   
   .backButton {

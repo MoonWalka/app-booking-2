@@ -6,32 +6,32 @@
 
 .container {
   /* Base styles for ProgrammateurLieuxSection */
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .cardWrapper {
-  background-color: var(--tc-card-bg);
+  background-color: var(--tc-bg-default);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-box-shadow-sm);
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
   overflow: hidden;
 }
 
 .cardHeader {
   background-color: var(--tc-bg-light);
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
   display: flex;
   align-items: center;
   border-bottom: var(--tc-border-width) solid var(--tc-border-light);
-  gap: var(--tc-spacing-sm);
+  gap: var(--tc-space-2);
 }
 
 .cardBody {
-  padding: var(--tc-spacing-lg);
+  padding: var(--tc-space-6);
 }
 
 .searchSection {
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
   position: relative;
 }
 
@@ -41,7 +41,7 @@
   left: 0;
   right: 0;
   background-color: var(--tc-dropdown-bg);
-  border: var(--tc-border-width) solid var(--tc-border-color);
+  border: var(--tc-border-width) solid var(--tc-border-default);
   border-radius: var(--tc-border-radius-sm);
   box-shadow: var(--tc-box-shadow-md);
   z-index: var(--tc-z-index-dropdown);
@@ -50,7 +50,7 @@
 }
 
 .dropdownItem {
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  padding: var(--tc-space-2) var(--tc-space-4);
   border-bottom: var(--tc-border-width) solid var(--tc-border-light);
   cursor: pointer;
 }
@@ -64,14 +64,14 @@
 }
 
 .listGroup {
-  border: var(--tc-border-width) solid var(--tc-border-color);
+  border: var(--tc-border-width) solid var(--tc-border-default);
   border-radius: var(--tc-border-radius);
   overflow: hidden;
 }
 
 .listGroupItem {
-  padding: var(--tc-spacing-md);
-  border-bottom: var(--tc-border-width) solid var(--tc-border-color);
+  padding: var(--tc-space-4);
+  border-bottom: var(--tc-border-width) solid var(--tc-border-default);
 }
 
 .listGroupItem:last-child {
@@ -81,7 +81,7 @@
 .alertWrapper {
   display: flex;
   align-items: center;
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
   background-color: var(--tc-bg-light);
   border-radius: var(--tc-border-radius);
   border: var(--tc-border-width) dashed var(--tc-border-light);
@@ -90,12 +90,12 @@
 
 .alertIcon {
   font-size: var(--tc-font-size-lg);
-  margin-right: var(--tc-spacing-md);
+  margin-right: var(--tc-space-4);
   color: var(--tc-text-secondary);
 }
 
 @media (max-width: 768px) {
   .cardBody {
-    padding: var(--tc-spacing-md);
+    padding: var(--tc-space-4);
   }
 }

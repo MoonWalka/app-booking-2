@@ -45,7 +45,7 @@
   margin: 0 0 var(--tc-spacing-1);
   font-size: var(--tc-font-size-xl);
   font-weight: var(--tc-font-weight-bold);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
 }
 
 .artisteDetails {

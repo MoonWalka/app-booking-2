@@ -8,7 +8,7 @@
    CONTENEUR PRINCIPAL MOBILE
    ============================= */
 .mobileContainer {
-  padding: var(--tc-spacing-sm);
+  padding: var(--tc-space-2);
   background-color: var(--tc-bg-color-dark);
   min-height: 100vh;
 }
@@ -46,7 +46,7 @@
 
 .filteredIndicator {
   margin-left: 0.5rem;
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
 }
 
 .errorAlert {
@@ -68,15 +68,15 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--tc-spacing-sm);
-  padding-bottom: var(--tc-spacing-sm);
-  border-bottom: 1px solid var(--tc-border-color);
+  margin-bottom: var(--tc-space-2);
+  padding-bottom: var(--tc-space-2);
+  border-bottom: 1px solid var(--tc-border-default);
 }
 
 .modernTitle {
   font-size: var(--tc-font-size-lg);
   margin: 0;
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   font-weight: var(--tc-font-weight-semibold);
   line-height: 1.2;
 }
@@ -90,7 +90,7 @@
   justify-content: center;
   padding: 0;
   box-shadow: var(--tc-shadow);
-  background-color: var(--tc-primary-color);
+  background-color: var(--tc-color-primary);
   color: var(--tc-bg-color-light);
   border: none;
   cursor: pointer;
@@ -106,25 +106,25 @@
    RECHERCHE ET FILTRES
    ============================= */
 .searchFilterContainer {
-  margin-bottom: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-space-2);
 }
 
 .searchBar {
   max-width: 410px;
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
   position: relative;
 }
 
 .searchInput {
   height: 45px;
   border-radius: 0 var(--tc-border-radius) var(--tc-border-radius) 0;
-  padding-left: var(--tc-spacing-md);
+  padding-left: var(--tc-space-4);
   background-color: var(--tc-bg-color-light);
   box-shadow: var(--tc-shadow-sm);
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
   border-left: none;
   width: 100%;
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   font-size: var(--tc-font-size-base);
   transition: var(--tc-transition);
 }
@@ -132,16 +132,16 @@
 .searchInput:focus {
   outline: none;
   box-shadow: var(--tc-input-focus-shadow);
-  border-color: var(--tc-primary-color);
+  border-color: var(--tc-color-primary);
 }
 
 .inputGroupText {
   background-color: var(--tc-bg-color-light);
   border-radius: var(--tc-border-radius) 0 0 var(--tc-border-radius);
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
   border-right: none;
   box-shadow: var(--tc-shadow-sm);
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  padding: var(--tc-space-2) var(--tc-space-4);
   color: var(--tc-text-color-secondary);
   display: flex;
   align-items: center;
@@ -155,7 +155,7 @@
   height: 100%;
   border: none;
   background: none;
-  padding: 0 var(--tc-spacing-sm);
+  padding: 0 var(--tc-space-2);
   cursor: pointer;
   color: var(--tc-text-color-secondary);
   display: flex;
@@ -165,14 +165,14 @@
 }
 
 .clearSearch:hover {
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
 }
 
 .resultsCount {
-  margin-top: var(--tc-spacing-sm);
+  margin-top: var(--tc-space-2);
   font-size: var(--tc-font-size-sm);
   color: var(--tc-text-color-secondary);
-  padding-left: var(--tc-spacing-sm);
+  padding-left: var(--tc-space-2);
 }
 
 /* =============================
@@ -183,39 +183,39 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--tc-spacing-xl) var(--tc-spacing-md);
+  padding: var(--tc-spacing-xl) var(--tc-space-4);
   text-align: center;
   background-color: var(--tc-bg-color-light);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow-sm);
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
   margin: var(--tc-spacing-xl) 0;
 }
 
 .emptyStateIcon {
   font-size: var(--tc-font-size-xxl);
-  color: var(--tc-border-color);
-  margin-bottom: var(--tc-spacing-md);
+  color: var(--tc-border-default);
+  margin-bottom: var(--tc-space-4);
 }
 
 .emptyStateText {
   color: var(--tc-text-color-secondary);
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
   font-size: var(--tc-font-size-base);
 }
 
 .emptyStateButton {
-  background-color: var(--tc-primary-color);
+  background-color: var(--tc-color-primary);
   color: var(--tc-bg-color-light);
   border: none;
-  padding: var(--tc-spacing-sm) var(--tc-spacing-lg);
+  padding: var(--tc-space-2) var(--tc-space-6);
   border-radius: var(--tc-border-radius);
   font-weight: var(--tc-font-weight-medium);
   cursor: pointer;
   transition: var(--tc-transition);
   display: inline-flex;
   align-items: center;
-  gap: var(--tc-spacing-sm);
+  gap: var(--tc-space-2);
 }
 
 .emptyStateButton:hover {
@@ -228,7 +228,7 @@
 .lieuCardsContainer {
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-md);
+  gap: var(--tc-space-4);
 }
 
 .lieuCard {
@@ -238,7 +238,7 @@
   overflow: hidden;
   cursor: pointer;
   transition: var(--tc-transition);
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
 }
 
 .lieuCard:hover {
@@ -247,28 +247,28 @@
 }
 
 .lieuCardHeader {
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
   background-color: var(--tc-bg-color-dark);
-  border-bottom: 1px solid var(--tc-border-color);
+  border-bottom: 1px solid var(--tc-border-default);
 }
 
 .lieuCardTitle {
   margin: 0;
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   display: flex;
   align-items: center;
   line-height: 1.3;
 }
 
 .lieuCardBody {
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
 }
 
 .lieuInfoItem {
   display: flex;
-  margin-bottom: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-space-2);
   align-items: flex-start;
 }
 
@@ -282,13 +282,13 @@
 
 .lieuInfoText {
   flex: 1;
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   font-size: var(--tc-font-size-base);
   line-height: var(--tc-line-height-base);
 }
 
 .lieuContactLink {
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   text-decoration: none;
   transition: color var(--tc-transition-duration);
 }
@@ -305,11 +305,11 @@
   display: inline-flex;
   align-items: center;
   color: var(--tc-light-color);
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  padding: var(--tc-space-1) var(--tc-space-2);
   border-radius: var(--tc-border-radius);
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
-  gap: var(--tc-spacing-xs);
+  gap: var(--tc-space-1);
   line-height: 1;
 }
 
@@ -322,12 +322,12 @@
   display: inline-flex;
   align-items: center;
   background-color: rgba(var(--tc-primary-color-rgb), 0.1);
-  color: var(--tc-primary-color);
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  color: var(--tc-color-primary);
+  padding: var(--tc-space-1) var(--tc-space-2);
   border-radius: var(--tc-border-radius-pill);
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
-  gap: var(--tc-spacing-xs);
+  gap: var(--tc-space-1);
 }
 
 .concertCountIcon {
@@ -345,7 +345,7 @@
   align-items: center;
   justify-content: center;
   padding: 0;
-  background-color: var(--tc-bg-color);
+  background-color: var(--tc-bg-default);
   border: 1px solid var(--tc-gray-300);
   color: var(--tc-gray-700);
   cursor: pointer;
@@ -357,8 +357,8 @@
 }
 
 .lieuActionEdit:hover {
-  color: var(--tc-primary-color);
-  border-color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
+  border-color: var(--tc-color-primary);
 }
 
 .lieuActionDelete:hover {
@@ -371,11 +371,11 @@
    ============================= */
 @media (max-width: var(--tc-breakpoint-sm)) {
   .lieuCardHeader {
-    padding: var(--tc-spacing-sm);
+    padding: var(--tc-space-2);
   }
   
   .lieuCardBody {
-    padding: var(--tc-spacing-sm);
+    padding: var(--tc-space-2);
   }
   
   .lieuCardTitle {
@@ -383,7 +383,7 @@
   }
   
   .lieuCardActions {
-    padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+    padding: var(--tc-space-1) var(--tc-space-2);
   }
   
   .lieuActionBtn {

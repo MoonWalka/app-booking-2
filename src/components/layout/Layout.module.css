@@ -17,7 +17,7 @@
 .content {
   flex: 1;
   margin-left: var(--tc-sidebar-width); /* Correspond à la largeur de la sidebar */
-  padding: var(--tc-spacing-lg);
+  padding: var(--tc-space-6);
   min-height: 100vh;
   background-color: var(--tc-background-color);
   transition: opacity var(--tc-transition-duration) ease-in-out;
@@ -43,8 +43,8 @@
 
 /* Styles pour le header */
 .header {
-  background-color: var(--tc-card-bg);
-  padding: var(--tc-spacing-md) var(--tc-spacing-lg);
+  background-color: var(--tc-bg-default);
+  padding: var(--tc-space-4) var(--tc-space-6);
   box-shadow: var(--tc-shadow-card);
 }
 
@@ -52,6 +52,6 @@
 @media (max-width: var(--tc-breakpoint-md)) {
   .content {
     margin-left: 0;
-    padding: var(--tc-spacing-md);
+    padding: var(--tc-space-4);
   }
 }

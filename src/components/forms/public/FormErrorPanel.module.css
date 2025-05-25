@@ -11,10 +11,10 @@
    PANEL D'ERREUR BASE
    ============================= */
 .errorPanel {
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
   border-radius: var(--tc-border-radius);
   border: 1px solid;
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
   box-shadow: var(--tc-shadow-sm);
   transition: var(--tc-transition);
 }
@@ -23,7 +23,7 @@
    HEADER ET CONTENU
    ============================= */
 .alertHeader {
-  margin-bottom: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-space-2);
 }
 
 .alertTitle {
@@ -90,11 +90,11 @@
    CONTENEUR D'ACTIONS
    ============================= */
 .actionContainer {
-  margin-top: var(--tc-spacing-md);
-  padding-top: var(--tc-spacing-sm);
+  margin-top: var(--tc-space-4);
+  padding-top: var(--tc-space-2);
   border-top: 1px solid rgba(0, 0, 0, 0.1);
   display: flex;
-  gap: var(--tc-spacing-sm);
+  gap: var(--tc-space-2);
   justify-content: flex-end;
 }
 
@@ -111,8 +111,8 @@
    ============================= */
 @media (max-width: var(--tc-breakpoint-sm)) {
   .errorPanel {
-    padding: var(--tc-spacing-sm);
-    margin-bottom: var(--tc-spacing-sm);
+    padding: var(--tc-space-2);
+    margin-bottom: var(--tc-space-2);
   }
   
   .alertTitle {
@@ -125,7 +125,7 @@
   
   .actionContainer {
     flex-direction: column;
-    gap: var(--tc-spacing-xs);
+    gap: var(--tc-space-1);
   }
 }
 
@@ -138,6 +138,6 @@
 
 /* Focus visible pour l'accessibilité */
 .errorPanel:focus-visible {
-  outline: 2px solid var(--tc-primary-color);
+  outline: 2px solid var(--tc-color-primary);
   outline-offset: 2px;
 }

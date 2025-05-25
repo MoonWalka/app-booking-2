@@ -18,7 +18,7 @@
   border-radius: var(--tc-border-radius-lg);
   box-shadow: var(--tc-shadow-md);
   background-color: var(--tc-bg-light);
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
   padding: var(--tc-spacing-6);
 }
 
@@ -34,7 +34,7 @@
   background: var(--tc-color-primary);
   color: var(--tc-bg-default);
   border: none;
-  padding: var(--tc-spacing-xs) var(--tc-spacing-md);
+  padding: var(--tc-space-1) var(--tc-space-4);
   border-radius: var(--tc-border-radius);
   cursor: pointer;
   font-size: var(--tc-font-size-xs);

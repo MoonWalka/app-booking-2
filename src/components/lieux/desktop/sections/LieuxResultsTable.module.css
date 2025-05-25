@@ -9,11 +9,11 @@
    ============================= */
 .tableContainer {
   overflow-x: auto;
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow-sm);
-  background-color: var(--tc-bg-color);
-  border: 1px solid var(--tc-border-color);
+  background-color: var(--tc-bg-default);
+  border: 1px solid var(--tc-border-default);
 }
 
 /* =============================
@@ -28,8 +28,8 @@
 .modernTable th {
   font-weight: var(--tc-font-weight-semibold);
   color: var(--tc-text-color-primary);
-  border-bottom: 2px solid var(--tc-border-color);
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  border-bottom: 2px solid var(--tc-border-default);
+  padding: var(--tc-space-2) var(--tc-space-4);
   text-align: left;
   white-space: nowrap;
   position: sticky;
@@ -45,11 +45,11 @@
 }
 
 .modernTable td {
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
-  border-bottom: 1px solid var(--tc-border-color);
+  padding: var(--tc-space-2) var(--tc-space-4);
+  border-bottom: 1px solid var(--tc-border-default);
   vertical-align: middle;
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
 }
 
 .modernTable tbody tr {
@@ -99,7 +99,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  padding: var(--tc-space-2) var(--tc-space-4);
   background-color: var(--tc-gray-100);
   border-top: 1px solid var(--tc-gray-200);
 }
@@ -111,7 +111,7 @@
 
 .paginationControls {
   display: flex;
-  gap: var(--tc-spacing-xs);
+  gap: var(--tc-space-1);
 }
 
 .paginationButton {
@@ -122,7 +122,7 @@
   height: 32px;
   border: 1px solid var(--tc-gray-300);
   border-radius: var(--tc-border-radius);
-  background-color: var(--tc-bg-color);
+  background-color: var(--tc-bg-default);
   color: var(--tc-gray-700);
   font-size: var(--tc-font-size-sm);
   cursor: pointer;
@@ -135,9 +135,9 @@
 }
 
 .paginationButton.active {
-  background-color: var(--tc-primary-color);
+  background-color: var(--tc-color-primary);
   color: var(--tc-light-color);
-  border-color: var(--tc-primary-color);
+  border-color: var(--tc-color-primary);
 }
 
 .paginationButton:disabled {
@@ -160,21 +160,21 @@
   }
 
   .modernTable td, .modernTable th {
-    padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+    padding: var(--tc-space-1) var(--tc-space-2);
   }
 }
 
 @media (max-width: var(--tc-breakpoint-sm)) {
   .tableContainer {
-    margin-left: calc(var(--tc-spacing-sm) * -1);
-    margin-right: calc(var(--tc-spacing-sm) * -1);
-    width: calc(100% + (var(--tc-spacing-sm) * 2));
+    margin-left: calc(var(--tc-space-2) * -1);
+    margin-right: calc(var(--tc-space-2) * -1);
+    width: calc(100% + (var(--tc-space-2) * 2));
     border-radius: 0;
   }
   
   .tableFooter {
     flex-direction: column;
-    gap: var(--tc-spacing-sm);
+    gap: var(--tc-space-2);
   }
   
   .paginationControls {

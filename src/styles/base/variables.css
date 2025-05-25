@@ -135,12 +135,12 @@
     --tc-input-height: 2.5rem;             /* 40px */
 }    /* Mode compact - définition en dehors de :root pour permettre la surcharge via data-attributes */
 [data-compact="true"] {
-    --tc-spacing-unit: var(--tc-spacing-sm);
+    --tc-spacing-unit: var(--tc-space-2);
     --tc-font-size-base: 0.875rem; /* 14px */
 }    /* Variables de responsive design */
 @media (max-width: 768px) {
     :root {
-        --tc-spacing-unit: var(--tc-spacing-sm);
+        --tc-spacing-unit: var(--tc-space-2);
         --tc-sidebar-width: 100%; /* Sidebar prend toute la largeur en mobile */
     }
 }

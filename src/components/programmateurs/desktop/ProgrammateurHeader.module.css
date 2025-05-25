@@ -6,16 +6,16 @@
 
 .container {
   /* Base styles for ProgrammateurHeader */
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .detailsHeaderContainer {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
   flex-wrap: wrap;
-  gap: var(--tc-spacing-md);
+  gap: var(--tc-space-4);
 }
 
 .titleContainer {
@@ -25,7 +25,7 @@
 .breadcrumb {
   display: flex;
   align-items: center;
-  margin-bottom: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-space-2);
   font-size: var(--tc-font-size-sm);
 }
 
@@ -35,7 +35,7 @@
 }
 
 .breadcrumbDivider {
-  margin: 0 var(--tc-spacing-sm);
+  margin: 0 var(--tc-space-2);
   font-size: var(--tc-font-size-xs);
   color: var(--tc-text-tertiary);
 }
@@ -45,12 +45,12 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: var(--tc-spacing-sm);
+  gap: var(--tc-space-2);
 }
 
 .headerActions {
   display: flex;
-  gap: var(--tc-spacing-sm);
+  gap: var(--tc-space-2);
   align-items: center;
 }
 
@@ -62,7 +62,7 @@
   .headerActions {
     width: 100%;
     justify-content: flex-start;
-    margin-top: var(--tc-spacing-sm);
+    margin-top: var(--tc-space-2);
   }
 
   .breadcrumb {
@@ -77,6 +77,6 @@
   }
 
   .container {
-    margin-bottom: var(--tc-spacing-sm);
+    margin-bottom: var(--tc-space-2);
   }
 }

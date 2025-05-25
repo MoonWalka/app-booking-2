@@ -11,8 +11,8 @@
 .tc-structure-type-badge {
   display: inline-flex;
   align-items: center;
-  gap: var(--tc-spacing-xs);
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  gap: var(--tc-space-1);
+  padding: var(--tc-space-1) var(--tc-space-2);
   border-radius: var(--tc-border-radius-sm);
   font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-medium);
@@ -26,7 +26,7 @@
 
 .tc-type-festival {
   background-color: rgba(var(--tc-primary-color-rgb), 0.1);
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
 }
 
 .tc-type-association {
@@ -52,10 +52,10 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: var(--tc-bg-color);
-  padding: var(--tc-spacing-md);
+  background-color: var(--tc-bg-default);
+  padding: var(--tc-space-4);
   display: flex;
-  gap: var(--tc-spacing-md);
+  gap: var(--tc-space-4);
   box-shadow: 0 -2px 4px rgba(var(--tc-black-rgb), 0.075);
   z-index: var(--tc-z-index-modal);
 }
@@ -76,7 +76,7 @@
    LIENS DE CONTACT
    ============================= */
 .tc-structure-contact-link {
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   text-decoration: none;
   transition: color var(--tc-transition-duration);
 }
@@ -91,10 +91,10 @@
    ============================= */
 .tc-structures-card {
   position: relative;
-  background-color: var(--tc-bg-color);
+  background-color: var(--tc-bg-default);
   border-radius: var(--tc-border-radius);
-  padding: var(--tc-spacing-md);
-  margin-bottom: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
+  margin-bottom: var(--tc-space-4);
   box-shadow: var(--tc-shadow);
   cursor: pointer;
   transition: var(--tc-transition);
@@ -111,18 +111,18 @@
 /* Badge pour le nombre de programmateurs */
 .tc-badge-mobile {
   position: absolute;
-  top: calc(-1 * var(--tc-spacing-sm));
-  right: calc(-1 * var(--tc-spacing-sm));
-  min-width: var(--tc-spacing-md);
-  height: var(--tc-spacing-md);
-  border-radius: var(--tc-spacing-sm);
+  top: calc(-1 * var(--tc-space-2));
+  right: calc(-1 * var(--tc-space-2));
+  min-width: var(--tc-space-4);
+  height: var(--tc-space-4);
+  border-radius: var(--tc-space-2);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-bold);
   color: var(--tc-light-color);
-  padding: 0 var(--tc-spacing-sm);
+  padding: 0 var(--tc-space-2);
 }
 
 .tc-badge-programmateurs {

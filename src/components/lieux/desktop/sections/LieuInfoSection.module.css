@@ -12,8 +12,8 @@
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow-sm);
   overflow: hidden;
-  margin-bottom: var(--tc-spacing-lg);
-  border: 1px solid var(--tc-border-color);
+  margin-bottom: var(--tc-space-6);
+  border: 1px solid var(--tc-border-default);
   transition: var(--tc-transition);
 }
 
@@ -23,23 +23,23 @@
 .cardHeader {
   display: flex;
   align-items: center;
-  padding: var(--tc-spacing-md) var(--tc-spacing-lg);
+  padding: var(--tc-space-4) var(--tc-space-6);
   background-color: var(--tc-bg-color-dark);
-  border-bottom: 1px solid var(--tc-border-color);
-  gap: var(--tc-spacing-sm);
+  border-bottom: 1px solid var(--tc-border-default);
+  gap: var(--tc-space-2);
 }
 
 .cardTitle {
   margin: 0;
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   line-height: 1.3;
 }
 
 .cardIcon {
   font-size: var(--tc-font-size-lg);
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -49,7 +49,7 @@
    CORPS DE CARTE
    ============================= */
 .cardBody {
-  padding: var(--tc-spacing-lg);
+  padding: var(--tc-space-6);
 }
 
 /* =============================
@@ -57,46 +57,46 @@
    ============================= */
 .required {
   color: var(--tc-danger-color);
-  margin-left: var(--tc-spacing-xs);
+  margin-left: var(--tc-space-1);
 }
 
 .formGroup {
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .formLabel {
   display: block;
-  margin-bottom: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-space-2);
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   font-size: var(--tc-font-size-sm);
 }
 
 .formControl {
   width: 100%;
-  padding: var(--tc-spacing-sm);
-  border: 1px solid var(--tc-border-color);
+  padding: var(--tc-space-2);
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-border-radius);
   font-size: var(--tc-font-size-base);
-  color: var(--tc-text-color);
-  background-color: var(--tc-bg-color);
+  color: var(--tc-text-default);
+  background-color: var(--tc-bg-default);
   transition: var(--tc-transition);
 }
 
 .formControl:focus {
-  border-color: var(--tc-primary-color);
+  border-color: var(--tc-color-primary);
   outline: none;
   box-shadow: var(--tc-input-focus-shadow);
 }
 
 .formText {
-  margin-top: var(--tc-spacing-xs);
+  margin-top: var(--tc-space-1);
   font-size: var(--tc-font-size-sm);
   color: var(--tc-gray-600);
 }
 
 .formError {
-  margin-top: var(--tc-spacing-xs);
+  margin-top: var(--tc-space-1);
   font-size: var(--tc-font-size-sm);
   color: var(--tc-danger-color);
 }
@@ -106,11 +106,11 @@
    ============================= */
 @media (max-width: var(--tc-breakpoint-md)) {
   .cardHeader {
-    padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+    padding: var(--tc-space-2) var(--tc-space-4);
   }
   
   .cardBody {
-    padding: var(--tc-spacing-md);
+    padding: var(--tc-space-4);
   }
   
   .cardTitle {
@@ -120,10 +120,10 @@
 
 @media (max-width: var(--tc-breakpoint-sm)) {
   .formCard {
-    margin-bottom: var(--tc-spacing-md);
+    margin-bottom: var(--tc-space-4);
   }
   
   .cardBody {
-    padding: var(--tc-spacing-sm);
+    padding: var(--tc-space-2);
   }
 }

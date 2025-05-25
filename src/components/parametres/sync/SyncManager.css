@@ -23,7 +23,7 @@
 
 .sync-manager .nav-tabs .nav-link.active {
   font-weight: var(--tc-font-weight-semibold);
-  border-bottom: 2px solid var(--tc-primary-color);
+  border-bottom: 2px solid var(--tc-color-primary);
 }
 
 .sync-manager .tab-content {
@@ -38,7 +38,7 @@
 /* Styles pour les icônes d'environnement */
 .sync-manager .badge {
   font-weight: var(--tc-font-weight-medium);
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  padding: var(--tc-space-1) var(--tc-space-2);
   border-radius: var(--tc-border-radius-sm);
 }
 

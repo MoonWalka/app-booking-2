@@ -10,7 +10,7 @@
   background-color: var(--tc-bg-color-light);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow-sm);
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
   overflow: hidden;
 }
 
@@ -18,13 +18,13 @@
   display: flex;
   align-items: center;
   background-color: var(--tc-bg-color-dark);
-  padding: var(--tc-spacing-md);
-  border-bottom: 1px solid var(--tc-border-color);
+  padding: var(--tc-space-4);
+  border-bottom: 1px solid var(--tc-border-default);
 }
 
 .cardHeader i {
-  margin-right: var(--tc-spacing-sm);
-  color: var(--tc-primary-color);
+  margin-right: var(--tc-space-2);
+  color: var(--tc-color-primary);
 }
 
 .cardHeader h3 {
@@ -35,22 +35,22 @@
 }
 
 .cardBody {
-  padding: var(--tc-spacing-lg);
+  padding: var(--tc-space-6);
 }
 
 .formGroup {
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .formLabel {
   display: block;
-  margin-bottom: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-space-2);
   font-weight: var(--tc-font-weight-medium);
 }
 
 .required {
   color: var(--tc-danger-color);
-  margin-left: var(--tc-spacing-xs);
+  margin-left: var(--tc-space-1);
 }
 
 .statusDisplay {
@@ -66,7 +66,7 @@
 }
 
 .actionNeeded i {
-  margin-right: var(--tc-spacing-xs);
+  margin-right: var(--tc-space-1);
 }
 
 .notesContent {
@@ -76,6 +76,6 @@
 /* Media queries */
 @media (max-width: var(--tc-breakpoint-md)) {
   .cardBody {
-    padding: var(--tc-spacing-md);
+    padding: var(--tc-space-4);
   }
 }

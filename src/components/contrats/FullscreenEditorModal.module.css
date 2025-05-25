@@ -34,11 +34,11 @@
 
 .modalHeader {
   padding: 15px 20px;
-  border-bottom: 1px solid var(--tc-border-color);
+  border-bottom: 1px solid var(--tc-border-default);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: var(--tc-primary-color);
+  background-color: var(--tc-color-primary);
   color: white;
 }
 
@@ -97,7 +97,7 @@
 
 .modalFooter {
   padding: 15px 20px;
-  border-top: 1px solid var(--tc-border-color);
+  border-top: 1px solid var(--tc-border-default);
   display: flex;
   justify-content: flex-end;
   gap: 10px;

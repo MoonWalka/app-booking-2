@@ -26,7 +26,7 @@
 
 .searchResultsDropdown {
   background-color: var(--tc-white);
-  border: var(--tc-border-width) solid var(--tc-border-color);
+  border: var(--tc-border-width) solid var(--tc-border-default);
   border-radius: var(--tc-border-radius);
   z-index: var(--tc-z-index-dropdown);
   overflow: hidden;
@@ -36,7 +36,7 @@
 .searchResultItem {
   display: flex;
   align-items: center;
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  padding: var(--tc-space-2) var(--tc-space-4);
   text-decoration: none;
   color: var(--tc-text-color-primary);
   transition: background-color var(--tc-transition-duration-fast) ease-in-out;
@@ -55,7 +55,7 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  margin-right: var(--tc-spacing-md);
+  margin-right: var(--tc-space-4);
   overflow: hidden;
   background-color: var(--tc-gray-100);
   display: flex;
@@ -71,10 +71,10 @@
 }
 
 .searchCreateItem {
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  padding: var(--tc-space-2) var(--tc-space-4);
   cursor: pointer;
   transition: background-color var(--tc-transition-duration-fast) ease-in-out;
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
 }
 
 .searchCreateItem:hover {
@@ -103,13 +103,13 @@
 .artistesTable th {
   border-top: none;
   background-color: var(--tc-gray-100);
-  padding: var(--tc-spacing-md) var(--tc-spacing-lg);
+  padding: var(--tc-space-4) var(--tc-space-6);
   font-weight: var(--tc-font-weight-semibold);
   color: var(--tc-text-color-primary);
 }
 
 .artistesTable td {
-  padding: var(--tc-spacing-md) var(--tc-spacing-lg);
+  padding: var(--tc-space-4) var(--tc-space-6);
   vertical-align: middle;
 }
 
@@ -146,7 +146,7 @@
 .artistesContainer {
   max-width: 1400px;
   margin: 0 auto;
-  padding: var(--tc-spacing-lg) var(--tc-spacing-md);
+  padding: var(--tc-space-6) var(--tc-space-4);
 }
 
 .spinnerContainer {
@@ -167,13 +167,13 @@
 @media (max-width: 992px) {
   .artistesTable th,
   .artistesTable td {
-    padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+    padding: var(--tc-space-2) var(--tc-space-4);
   }
 }
 
 @media (max-width: 768px) {
   .artistesContainer {
-    padding: var(--tc-spacing-sm);
+    padding: var(--tc-space-2);
   }
   
   .artistesTable {
@@ -185,13 +185,13 @@
   }
   
   .paginationContainer {
-    margin-top: var(--tc-spacing-lg);
+    margin-top: var(--tc-space-6);
   }
 }
 
 @media (max-width: 576px) {
   .artistesTable th,
   .artistesTable td {
-    padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+    padding: var(--tc-space-1) var(--tc-space-2);
   }
 }

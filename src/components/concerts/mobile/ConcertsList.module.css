@@ -78,7 +78,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: var(--tc-primary-color);
+  background-color: var(--tc-color-primary);
   color: var(--tc-white);
   padding: var(--tc-spacing-2);
   min-width: 60px;
@@ -203,7 +203,7 @@
 }
 
 .actionBtn.view {
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
 }
 
 .actionBtn.edit {

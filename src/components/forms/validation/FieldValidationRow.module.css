@@ -20,14 +20,14 @@
 
 .fieldName {
   font-weight: var(--tc-font-weight-semibold);
-  padding: var(--tc-spacing-sm);
+  padding: var(--tc-space-2);
   max-width: 150px;
 }
 
 .existingValue, .formValue {
   font-family: var(--tc-font-family-monospace);
   white-space: pre-wrap;
-  padding: var(--tc-spacing-sm);
+  padding: var(--tc-space-2);
   max-width: 250px;
   overflow-wrap: break-word;
 }
@@ -42,14 +42,14 @@
   width: 60px;
   text-align: center;
   vertical-align: middle;
-  padding: var(--tc-spacing-sm);
+  padding: var(--tc-space-2);
 }
 
 .copyButton {
   background: none;
-  border: var(--tc-border-width) solid var(--tc-primary-color);
+  border: var(--tc-border-width) solid var(--tc-color-primary);
   border-radius: var(--tc-border-radius-sm);
-  padding: var(--tc-spacing-xs) var(--tc-spacing-xs);
+  padding: var(--tc-space-1) var(--tc-space-1);
   cursor: pointer;
   transition: var(--tc-transition);
 }
@@ -65,13 +65,13 @@
 }
 
 .finalValueCell {
-  padding: var(--tc-spacing-sm);
+  padding: var(--tc-space-2);
   width: 25%;
 }
 
 .finalValueInput {
   width: 100%;
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  padding: var(--tc-space-1) var(--tc-space-2);
   font-family: var(--tc-font-family-monospace);
   border: var(--tc-border-width) solid var(--tc-gray-400);
   border-radius: var(--tc-border-radius-sm);
@@ -79,7 +79,7 @@
 }
 
 .finalValueInput:focus {
-  border-color: var(--tc-primary-color);
+  border-color: var(--tc-color-primary);
   box-shadow: var(--tc-focus-shadow));
   outline: 0;
 }
@@ -120,7 +120,7 @@
   .row {
     display: flex;
     flex-direction: column;
-    padding: var(--tc-spacing-xs) 0;
+    padding: var(--tc-space-1) 0;
   }
   
   .fieldName,
@@ -129,7 +129,7 @@
   .finalValueCell {
     max-width: none;
     width: 100%;
-    padding: var(--tc-spacing-xs);
+    padding: var(--tc-space-1);
   }
   
   .actionCell {

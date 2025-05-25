@@ -9,6 +9,7 @@
 
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import useGenericValidation from '../validation/useGenericValidation';
+import { utilityCache } from '../../../utils/networkStabilizer';
 
 /**
  * Hook générique pour les formulaires multi-étapes (wizard)
@@ -163,9 +164,9 @@ const useGenericFormWizard = (wizardConfig = {}, options = {}) => {
   useEffect(() => {
     if (enablePersistence && persistenceKey) {
       try {
-        const saved = localStorage.getItem(`wizard_${persistenceKey}`);
+        const saved = utilityCache?.get(`wizard_${persistenceKey}`);
         if (saved) {
-          const { step, data, completed } = JSON.parse(saved);
+          const { step, data, completed } = saved;
           setCurrentStep(step || 0);
           setFormData(prev => ({ ...prev, ...data }));
           setCompletedSteps(new Set(completed || []));
@@ -185,7 +186,7 @@ const useGenericFormWizard = (wizardConfig = {}, options = {}) => {
           data: formData,
           completed: Array.from(completedSteps)
         };
-        localStorage.setItem(`wizard_${persistenceKey}`, JSON.stringify(progressData));
+        utilityCache?.set(`wizard_${persistenceKey}`, progressData, 24 * 60 * 60 * 1000);
       } catch (error) {
         console.warn('⚠️ Erreur sauvegarde progression wizard:', error);
       }
@@ -377,7 +378,7 @@ const useGenericFormWizard = (wizardConfig = {}, options = {}) => {
       
       // Nettoyer la progression sauvegardée
       if (enablePersistence && persistenceKey) {
-        localStorage.removeItem(`wizard_${persistenceKey}`);
+        utilityCache?.remove(`wizard_${persistenceKey}`);
       }
       
       console.log('✅ Wizard terminé avec succès');
@@ -402,7 +403,7 @@ const useGenericFormWizard = (wizardConfig = {}, options = {}) => {
     
     // Nettoyer la progression sauvegardée
     if (enablePersistence && persistenceKey) {
-      localStorage.removeItem(`wizard_${persistenceKey}`);
+      utilityCache?.remove(`wizard_${persistenceKey}`);
     }
     
     console.log('🔄 Wizard réinitialisé');

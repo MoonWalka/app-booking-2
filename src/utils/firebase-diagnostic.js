@@ -3,6 +3,9 @@
  * qui peuvent causer des erreurs CORS
  */
 
+// 🚀 NOUVEAU : Import du cache utilitaire unifié
+import { utilityCache } from './networkStabilizer.js';
+
 /**
  * Vérifie que les variables d'environnement Firebase essentielles sont définies
  */
@@ -143,19 +146,12 @@ export async function testFirebaseConnection() {
       });
     }, 10000); // 10 secondes de timeout
     
-    // Charger l'état de connexion si disponible
-    const connectionStatus = localStorage.getItem('firebaseConnectionStatus');
+    // 🎯 SIMPLIFICATION : Utilisation du cache utilitaire unifié
+    const connectionStatus = utilityCache.get('firebaseConnectionStatus');
     if (connectionStatus) {
-      try {
-        const status = JSON.parse(connectionStatus);
-        // Si le test a été fait récemment (moins de 5 minutes)
-        if (status.timestamp && (Date.now() - status.timestamp < 5 * 60 * 1000)) {
-          clearTimeout(timeout);
-          return resolve(status);
-        }
-      } catch (e) {
-        // Ignorer les erreurs de parsing
-      }
+      // Le cache a déjà un TTL intégré, pas besoin de vérifier manuellement
+      clearTimeout(timeout);
+      return resolve(connectionStatus);
     }
     
     // Ici, on pourrait implémenter un test plus avancé
@@ -168,8 +164,8 @@ export async function testFirebaseConnection() {
       error: configValid ? null : 'Configuration Firebase invalide'
     };
     
-    // Sauvegarder le résultat pour éviter de refaire le test trop souvent
-    localStorage.setItem('firebaseConnectionStatus', JSON.stringify(result));
+    // 🚀 NOUVEAU : Sauvegarder avec TTL de 5 minutes
+    utilityCache.set('firebaseConnectionStatus', result, 5 * 60 * 1000);
     
     clearTimeout(timeout);
     resolve(result);

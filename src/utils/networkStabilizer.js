@@ -3,28 +3,99 @@
  * Utilitaire pour stabiliser la connexion réseau et empêcher les rechargements intempestifs
  */
 
+// 🚀 NOUVEAU : Service de cache pour les utilitaires
+class UtilityCache {
+  constructor() {
+    this.cache = new Map();
+  }
+  
+  get(key) {
+    const item = this.cache.get(key);
+    if (!item) return null;
+    
+    // Vérifier TTL
+    if (Date.now() - item.timestamp > item.ttl) {
+      this.cache.delete(key);
+      return null;
+    }
+    
+    return item.data;
+  }
+  
+  set(key, data, ttl = 30 * 60 * 1000) { // 30 minutes par défaut
+    this.cache.set(key, {
+      data,
+      timestamp: Date.now(),
+      ttl
+    });
+  }
+  
+  remove(key) {
+    this.cache.delete(key);
+  }
+  
+  // Persistance en sessionStorage pour survie aux rechargements
+  persist() {
+    const data = {};
+    this.cache.forEach((value, key) => {
+      data[key] = value;
+    });
+    try {
+      sessionStorage.setItem('utilityCache', JSON.stringify(data));
+    } catch (e) {
+      console.warn('⚠️ Erreur persistance cache utilitaire:', e);
+    }
+  }
+  
+  restore() {
+    try {
+      const stored = sessionStorage.getItem('utilityCache');
+      if (stored) {
+        const data = JSON.parse(stored);
+        Object.entries(data).forEach(([key, value]) => {
+          this.cache.set(key, value);
+        });
+      }
+    } catch (e) {
+      console.warn('⚠️ Erreur restauration cache utilitaire:', e);
+    }
+  }
+}
+
+// Instance globale du cache utilitaire
+const utilityCache = new UtilityCache();
+
 // Nombre maximum de tentatives de rechargement autorisées
 const MAX_RELOAD_ATTEMPTS = 2;
 // Intervalle minimum entre deux rechargements (en millisecondes)
 const MIN_RELOAD_INTERVAL = 30000; // 30 secondes
 
-// Variables pour suivre les rechargements
-let reloadAttempts = 0;
-let lastReloadTime = 0;
+// 🎯 SIMPLIFICATION : Utilisation du cache unifié
+const getNetworkState = () => {
+  return utilityCache.get('networkState') || {
+    reloadAttempts: 0,
+    lastReloadTime: 0
+  };
+};
+
+const setNetworkState = (state) => {
+  utilityCache.set('networkState', state, 60 * 60 * 1000); // 1 heure
+};
 
 // Vérifie si un rechargement est autorisé
 const canReload = () => {
+  const { reloadAttempts, lastReloadTime } = getNetworkState();
   const now = Date.now();
   
   // Si trop de tentatives ont été effectuées
   if (reloadAttempts >= MAX_RELOAD_ATTEMPTS) {
-    console.log('Trop de tentatives de rechargement. Opération bloquée.');
+    console.log('🚫 Trop de tentatives de rechargement. Opération bloquée.');
     return false;
   }
   
   // Si un rechargement a été effectué récemment
   if (now - lastReloadTime < MIN_RELOAD_INTERVAL) {
-    console.log('Dernier rechargement trop récent. Opération bloquée.');
+    console.log('⏰ Dernier rechargement trop récent. Opération bloquée.');
     return false;
   }
   
@@ -35,9 +106,17 @@ const canReload = () => {
 const safeReload = () => {
   if (!canReload()) return false;
   
-  reloadAttempts++;
-  lastReloadTime = Date.now();
-  console.log(`Rechargement contrôlé (${reloadAttempts}/${MAX_RELOAD_ATTEMPTS})`);
+  const state = getNetworkState();
+  const newState = {
+    reloadAttempts: state.reloadAttempts + 1,
+    lastReloadTime: Date.now()
+  };
+  
+  setNetworkState(newState);
+  console.log(`🔄 Rechargement contrôlé (${newState.reloadAttempts}/${MAX_RELOAD_ATTEMPTS})`);
+  
+  // Persister avant rechargement
+  utilityCache.persist();
   
   // Effectuer le rechargement
   window.location.reload();
@@ -48,10 +127,10 @@ const safeReload = () => {
 const handleNetworkError = (error) => {
   // Ignore chunk loading errors (lazy-loaded bundles)
   if (error && error.name === 'ChunkLoadError') {
-    console.warn('ChunkLoadError intercepté, pas de rechargement');
+    console.warn('⚠️ ChunkLoadError intercepté, pas de rechargement');
     return false;
   }
-  console.error('Erreur réseau détectée:', error);
+  console.error('❌ Erreur réseau détectée:', error);
   
   // Analyse l'erreur pour déterminer si elle est liée au réseau
   const isNetworkError = error && (
@@ -89,44 +168,32 @@ const setupGlobalErrorHandler = () => {
   
   // Intercepte les événements de perte de connexion
   window.addEventListener('offline', () => {
-    console.log('La connexion réseau a été perdue.');
+    console.log('📡 La connexion réseau a été perdue.');
     // Pas de rechargement automatique quand on perd la connexion
   });
   
   // Intercepte les événements de récupération de connexion
   window.addEventListener('online', () => {
-    console.log('La connexion réseau a été rétablie.');
+    console.log('🌐 La connexion réseau a été rétablie.');
     // Attendre un peu avant de recharger pour laisser les connexions se stabiliser
     setTimeout(() => safeReload(), 5000);
   });
 };
 
-// Fonction d'initialisation
+// 🎯 SIMPLIFICATION : Fonction d'initialisation unifiée
 const initNetworkStabilizer = () => {
-  // Récupère les données stockées s'il y en a
-  const storedData = sessionStorage.getItem('networkStabilizer');
-  if (storedData) {
-    try {
-      const data = JSON.parse(storedData);
-      reloadAttempts = data.reloadAttempts || 0;
-      lastReloadTime = data.lastReloadTime || 0;
-    } catch (e) {
-      console.error('Erreur lors de la lecture des données de session:', e);
-    }
-  }
+  // Restaurer le cache depuis sessionStorage
+  utilityCache.restore();
   
   // Enregistre les handlers d'erreurs
   setupGlobalErrorHandler();
   
-  // Sauvegarde les données avant que la page ne soit fermée
+  // 🚀 NOUVEAU : Persistance automatique avant fermeture
   window.addEventListener('beforeunload', () => {
-    sessionStorage.setItem('networkStabilizer', JSON.stringify({
-      reloadAttempts,
-      lastReloadTime
-    }));
+    utilityCache.persist();
   });
   
-  console.log('Stabilisateur de réseau initialisé');
+  console.log('🛡️ Stabilisateur de réseau initialisé avec cache unifié');
 };
 
-export { initNetworkStabilizer, handleNetworkError, safeReload };
+export { initNetworkStabilizer, handleNetworkError, safeReload, utilityCache };

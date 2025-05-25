@@ -180,6 +180,11 @@ const useConcertStatus = (options = {}) => {
           contextualMessage = `Concert reporté${entity.nouvelleDateProposee ? ` au ${new Date(entity.nouvelleDateProposee).toLocaleDateString()}` : ''}`;
           recommendedAction = 'reschedule_concert';
           break;
+        default:
+          // Statut non reconnu - utiliser les valeurs par défaut
+          contextualMessage = statusDetails.label;
+          recommendedAction = `action_${status}`;
+          break;
       }
       
       return {

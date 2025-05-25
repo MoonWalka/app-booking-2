@@ -95,7 +95,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       setLoading(true);
-      const result = await signInWithEmailAndPassword(auth, email, password);
+      await signInWithEmailAndPassword(auth, email, password);
       // Le cache sera mis à jour automatiquement par onAuthStateChanged
       return true;
     } catch (error) {

@@ -36,7 +36,7 @@ migrate_variable_safe() {
     echo "   Description: $description"
     
     # Compter les occurrences avant (tous fichiers CSS)
-    local count_before=$(grep -r "var($old_var)" src/ components/ --include="*.css" --include="*.module.css" 2>/dev/null | wc -l | tr -d ' ')
+    local count_before=$(grep -r "var($old_var)" src/ --include="*.css" --include="*.module.css" 2>/dev/null | wc -l | tr -d ' ')
     
     if [ "$count_before" -eq 0 ]; then
         echo "   ⚠️  Variable non trouvée, ignorée"
@@ -46,11 +46,11 @@ migrate_variable_safe() {
     echo "   📊 $count_before occurrences trouvées"
     
     # Utiliser perl pour le remplacement dans tous les fichiers CSS
-    find src/ components/ -name "*.css" -o -name "*.module.css" -type f -exec perl -pi -e "s/var\\($old_var\\)/var($new_var)/g" {} \;
+    find src/ -name "*.css" -o -name "*.module.css" -type f -exec perl -pi -e "s/var\\($old_var\\)/var($new_var)/g" {} \;
     
     # Vérifier le résultat
-    local count_after=$(grep -r "var($old_var)" src/ components/ --include="*.css" --include="*.module.css" 2>/dev/null | wc -l | tr -d ' ')
-    local count_new=$(grep -r "var($new_var)" src/ components/ --include="*.css" --include="*.module.css" 2>/dev/null | wc -l | tr -d ' ')
+    local count_after=$(grep -r "var($old_var)" src/ --include="*.css" --include="*.module.css" 2>/dev/null | wc -l | tr -d ' ')
+    local count_new=$(grep -r "var($new_var)" src/ --include="*.css" --include="*.module.css" 2>/dev/null | wc -l | tr -d ' ')
     
     echo "   ✅ Migration terminée: $count_after restantes, $count_new nouvelles"
     echo
@@ -118,7 +118,7 @@ echo
 echo "🔍 Recherche automatique COMPLÈTE des variables restantes..."
 
 # Créer un fichier temporaire avec TOUTES les variables restantes
-grep -r "var(--tc-" src/ components/ --include="*.css" --include="*.module.css" | grep -v -E "(space-|color-|font-|radius-|shadow-|transition-|text-|bg-|border-|breakpoint-|z-index-|line-height-|sidebar-|header-|opacity-|container-)" | sed 's/.*var(\(--tc-[^)]*\)).*/\1/' | sort | uniq > /tmp/all_remaining_vars.txt
+grep -r "var(--tc-" src/ --include="*.css" --include="*.module.css" | grep -v -E "(space-|color-|font-|radius-|shadow-|transition-|text-|bg-|border-|breakpoint-|z-index-|line-height-|sidebar-|header-|opacity-|container-)" | sed 's/.*var(\(--tc-[^)]*\)).*/\1/' | sort | uniq > /tmp/all_remaining_vars.txt
 
 echo "📋 TOUTES les variables restantes détectées:"
 cat /tmp/all_remaining_vars.txt | head -20
@@ -159,8 +159,8 @@ echo -e "${PURPLE}📊 RAPPORT FINAL ULTRA-COMPLET${NC}"
 echo "==============================="
 
 # Compter les variables restantes dans TOUS les fichiers
-total_vars=$(grep -r "var(--tc-" src/ components/ --include="*.css" --include="*.module.css" 2>/dev/null | wc -l | tr -d ' ')
-old_pattern_vars=$(grep -r "var(--tc-" src/ components/ --include="*.css" --include="*.module.css" 2>/dev/null | grep -v -E "(space-|color-|font-|radius-|shadow-|transition-|text-|bg-|border-|breakpoint-|z-index-|line-height-|sidebar-|header-|opacity-|container-)" | wc -l | tr -d ' ')
+total_vars=$(grep -r "var(--tc-" src/ --include="*.css" --include="*.module.css" 2>/dev/null | wc -l | tr -d ' ')
+old_pattern_vars=$(grep -r "var(--tc-" src/ --include="*.css" --include="*.module.css" 2>/dev/null | grep -v -E "(space-|color-|font-|radius-|shadow-|transition-|text-|bg-|border-|breakpoint-|z-index-|line-height-|sidebar-|header-|opacity-|container-)" | wc -l | tr -d ' ')
 
 echo "Variables CSS totales restantes: $total_vars"
 echo "Variables de l'ancien pattern restantes: $old_pattern_vars"

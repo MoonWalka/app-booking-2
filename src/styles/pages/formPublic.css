@@ -113,7 +113,7 @@
 }
 
 .tc-form-public .tc-btn-submit-public:hover {
-  background-color: var(--tc-primary-dark);
+  background-color: var(--tc-color-primary-dark);
 }
 
 .tc-form-public .tc-btn-submit-public:disabled {

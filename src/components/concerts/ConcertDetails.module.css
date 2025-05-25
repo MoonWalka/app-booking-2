@@ -25,7 +25,7 @@
 }
 
 .floatingEditButton {
-  background: linear-gradient(135deg, var(--tc-color-primary), var(--tc-primary-dark)) !important;
+  background: linear-gradient(135deg, var(--tc-color-primary), var(--tc-color-primary-dark)) !important;
   border: none !important;
   border-radius: 50px !important;
   padding: var(--tc-space-2) var(--tc-space-4) !important;
@@ -43,7 +43,7 @@
 .floatingEditButton:hover {
   transform: translateY(-2px) scale(1.05) !important;
   box-shadow: 0 8px 25px rgba(var(--tc-color-primary-rgb), 0.6) !important;
-  background: linear-gradient(135deg, var(--tc-primary-dark), var(--tc-color-primary)) !important;
+  background: linear-gradient(135deg, var(--tc-color-primary-dark), var(--tc-color-primary)) !important;
 }
 
 .floatingEditButton:active {

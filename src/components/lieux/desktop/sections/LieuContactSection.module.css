@@ -130,7 +130,7 @@
 }
 
 .contactLink:hover {
-  color: var(--tc-primary-dark);
+  color: var(--tc-color-primary-dark);
   text-decoration: underline;
 }
 

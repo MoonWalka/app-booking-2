@@ -115,7 +115,7 @@
 .preview-header {
   padding: var(--tc-space-3);
   border-bottom: 1px solid var(--tc-border-default);
-  background-color: var(--tc-light-bg);
+  background-color: var(--tc-bg-light);
 }
 
 .preview-content {
@@ -183,7 +183,7 @@
 
 /* Styles pour les listes de variables */
 .variables-guide {
-  background-color: var(--tc-light-bg);
+  background-color: var(--tc-bg-light);
   border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-radius-base);
   padding: var(--tc-space-2);

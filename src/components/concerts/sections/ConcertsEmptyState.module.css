@@ -33,7 +33,7 @@
 }
 
 .actionButton:hover {
-  background-color: var(--tc-primary-dark);
+  background-color: var(--tc-color-primary-dark);
 }
 
 @media (max-width: var(--tc-breakpoint-sm)) {

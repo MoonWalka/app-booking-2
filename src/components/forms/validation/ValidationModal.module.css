@@ -120,7 +120,7 @@
 }
 
 .confirmButton:hover:not(:disabled) {
-  background-color: var(--tc-primary-dark);
+  background-color: var(--tc-color-primary-dark);
 }
 
 .confirmButton:disabled, .cancelButton:disabled {

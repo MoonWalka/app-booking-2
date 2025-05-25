@@ -40,7 +40,7 @@
   top: 100%;
   left: 0;
   right: 0;
-  background-color: var(--tc-dropdown-bg);
+  background-color: var(--tc-bg-surface);
   border: var(--tc-border-width) solid var(--tc-border-default);
   border-radius: var(--tc-radius-sm);
   box-shadow: var(--tc-box-shadow-md);

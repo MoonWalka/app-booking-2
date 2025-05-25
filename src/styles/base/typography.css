@@ -278,7 +278,7 @@ strong, .tc-strong, b {
 }
 
 .tc-link:hover, .tc-text-link:hover {
-  color: var(--tc-primary-dark);
+  color: var(--tc-color-primary-dark);
   text-decoration: underline;
 }
 
@@ -461,7 +461,7 @@ strong, .tc-strong, b {
 }
 
 .tc-nav-item.active {
-  background-color: var(--tc-primary-dark);
+  background-color: var(--tc-color-primary-dark);
   font-weight: var(--tc-font-weight-semibold);
 }
 

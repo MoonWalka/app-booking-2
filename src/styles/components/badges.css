@@ -156,7 +156,7 @@
   box-shadow: var(--tc-shadow-sm);
 }
 
-.tc-badge-interactive.tc-badge-primary:hover { background-color: var(--tc-primary-dark); }
+.tc-badge-interactive.tc-badge-primary:hover { background-color: var(--tc-color-primary-dark); }
 .tc-badge-interactive.tc-badge-secondary:hover { background-color: var(--tc-color-secondary-dark); }
 .tc-badge-interactive.tc-badge-outline-primary:hover { background-color: rgba(var(--tc-color-primary-rgb), 0.1); }
 .tc-badge-interactive.tc-badge-outline-secondary:hover { background-color: rgba(var(--tc-color-secondary-rgb), 0.1); }

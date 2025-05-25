@@ -94,8 +94,8 @@
 }
 
 .variant-primary:hover {
-  background-color: var(--tc-primary-dark) !important;
-  border-color: var(--tc-primary-dark) !important;
+  background-color: var(--tc-color-primary-dark) !important;
+  border-color: var(--tc-color-primary-dark) !important;
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(var(--tc-color-primary-rgb), 0.3);
 }

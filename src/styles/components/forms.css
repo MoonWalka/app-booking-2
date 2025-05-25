@@ -316,7 +316,7 @@ textarea.tc-form-control-lg {
 }
 
 .tc-form-search-button:hover {
-  background-color: var(--tc-primary-dark);
+  background-color: var(--tc-color-primary-dark);
 }
 
 /* GROUPES DE FORMULAIRE AVEC ADD-ONS */

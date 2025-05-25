@@ -36,9 +36,9 @@
 }
 
 .toggleButton.active {
-  background: linear-gradient(135deg, var(--tc-color-primary) 0%, var(--tc-primary-dark) 100%);
+  background: linear-gradient(135deg, var(--tc-color-primary) 0%, var(--tc-color-primary-dark) 100%);
   color: white;
-  border-color: var(--tc-primary-dark);
+  border-color: var(--tc-color-primary-dark);
   box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
 }
 
@@ -289,7 +289,7 @@
 }
 
 .showAllBtn:hover {
-  background-color: var(--tc-primary-dark);
+  background-color: var(--tc-color-primary-dark);
 }
 
 .closeButton {

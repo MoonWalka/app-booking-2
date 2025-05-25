@@ -39,7 +39,7 @@
   transition: var(--tc-transition-base);
 }
 .addButton:hover {
-  background-color: var(--tc-primary-dark);
+  background-color: var(--tc-color-primary-dark);
 }
 .addButton i {
   font-size: var(--tc-font-size-base);

@@ -21,7 +21,7 @@ const LieuGeneralInfo = ({ lieu, formData, isEditing, handleChange }) => {
         {isEditing ? (
           <input
             type="text"
-            className={styles.formField}
+            className="form-control"
             id="nom"
             name="nom"
             value={formData.nom}
@@ -38,7 +38,7 @@ const LieuGeneralInfo = ({ lieu, formData, isEditing, handleChange }) => {
         <label htmlFor="type" className={styles.formLabel}>Type de lieu</label>
         {isEditing ? (
           <select
-            className={styles.formSelect}
+            className="form-select"
             id="type"
             name="type"
             value={formData.type || ''}
@@ -67,14 +67,14 @@ const LieuGeneralInfo = ({ lieu, formData, isEditing, handleChange }) => {
           <>
             <input
               type="number"
-              className={styles.formField}
+              className="form-control"
               id="capacite"
               name="capacite"
               value={formData.capacite}
               onChange={handleChange}
               placeholder="Nombre maximum de personnes que le lieu peut accueillir"
             />
-            <small className={styles.helpText}>
+            <small className="form-text text-muted">
               Nombre maximum de personnes que le lieu peut accueillir
             </small>
           </>

@@ -56,7 +56,7 @@ const ContratTemplateFooterSection = ({
               id="footerHeight"
               min="10"
               max="50"
-              className={styles.formField}
+              className="form-control"
               value={footerHeight}
               onChange={(e) => setFooterHeight(parseInt(e.target.value) || 0)}
             />
@@ -68,7 +68,7 @@ const ContratTemplateFooterSection = ({
               id="footerTopMargin"
               min="0"
               max="30"
-              className={styles.formField}
+              className="form-control"
               value={footerTopMargin}
               onChange={(e) => setFooterTopMargin(parseInt(e.target.value) || 0)}
             />

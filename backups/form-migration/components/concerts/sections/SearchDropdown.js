@@ -43,7 +43,7 @@ const SearchDropdown = ({
         </span>
         <input
           type="text"
-          className={`${styles.formField} ${styles.searchInput}`}
+          className={`form-control ${styles.searchInput}`}
           placeholder={placeholder}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}

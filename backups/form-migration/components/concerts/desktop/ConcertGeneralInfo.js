@@ -32,7 +32,7 @@ const ConcertGeneralInfo = ({
               <label htmlFor="titre" className={styles.formLabel}>Titre du concert</label>
               <input
                 type="text"
-                className={styles.formField}
+                className="form-control"
                 id="titre"
                 name="titre"
                 value={formData.titre || ''}
@@ -47,7 +47,7 @@ const ConcertGeneralInfo = ({
                   <label htmlFor="date" className={styles.formLabel}>Date du concert <span className={styles.required}>*</span></label>
                   <input
                     type="date"
-                    className={styles.formField}
+                    className="form-control"
                     id="date"
                     name="date"
                     value={formData.date}
@@ -61,7 +61,7 @@ const ConcertGeneralInfo = ({
                   <label htmlFor="montant" className={styles.formLabel}>Montant (€) <span className={styles.required}>*</span></label>
                   <input
                     type="number"
-                    className={styles.formField}
+                    className="form-control"
                     id="montant"
                     name="montant"
                     value={formData.montant}
@@ -75,7 +75,7 @@ const ConcertGeneralInfo = ({
             <div className={styles.formGroup}>
               <label htmlFor="statut" className={styles.formLabel}>Statut</label>
               <select
-                className={styles.formSelect}
+                className="form-select"
                 id="statut"
                 name="statut"
                 value={formData.statut}
@@ -96,7 +96,7 @@ const ConcertGeneralInfo = ({
             <div className={styles.formGroup}>
               <label htmlFor="notes" className={styles.formLabel}>Notes</label>
               <textarea
-                className={styles.formField}
+                className="form-control"
                 id="notes"
                 name="notes"
                 rows="3"

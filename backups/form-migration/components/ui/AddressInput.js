@@ -128,7 +128,7 @@ const AddressInput = ({
         )}
       </div>
       
-      <small className={styles.helpText}>
+      <small className="form-text text-muted">
         Commencez à taper pour voir des suggestions d'adresses
       </small>
       

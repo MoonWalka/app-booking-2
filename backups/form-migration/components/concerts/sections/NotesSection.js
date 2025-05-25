@@ -28,7 +28,7 @@ const NotesSection = ({ notes, onChange, isEditMode }) => {
           <textarea
             id="notes"
             name="notes"
-            className={`${styles.formField} ${styles.notesTextarea}`}
+            className={`form-control ${styles.notesTextarea}`}
             value={notes || ''}
             onChange={e => onChange && onChange(e.target.value)}
             placeholder="Ajoutez ici toutes les informations complémentaires concernant ce concert..."

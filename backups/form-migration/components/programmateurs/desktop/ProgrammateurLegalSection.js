@@ -86,7 +86,7 @@ const ProgrammateurLegalSection = ({
                       id="structureRaisonSociale"
                       name="structureCache.raisonSociale"
                       type="text"
-                      className={`${styles.formField} ${touched.structureCache?.raisonSociale && errors.structureCache?.raisonSociale ? 'is-invalid' : ''}`}
+                      className={`form-control ${touched.structureCache?.raisonSociale && errors.structureCache?.raisonSociale ? 'is-invalid' : ''}`}
                       placeholder="Nom de l'organisation"
                       onChange={(e) => handleFormikChange(e, formikHandleChange)}
                       onBlur={handleBlur}

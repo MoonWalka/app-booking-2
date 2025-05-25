@@ -31,7 +31,7 @@ const ProgrammateurContactSection = ({
                 <label htmlFor="contact.nom" className={styles.cardLabel}>Nom <span className="text-danger">*</span></label>
                 <input
                   type="text"
-                  className={styles.formField}
+                  className="form-control"
                   id="contact.nom"
                   name="contact.nom"
                   value={formData.contact.nom}
@@ -46,7 +46,7 @@ const ProgrammateurContactSection = ({
                 <label htmlFor="contact.prenom" className={styles.cardLabel}>Prénom</label>
                 <input
                   type="text"
-                  className={styles.formField}
+                  className="form-control"
                   id="contact.prenom"
                   name="contact.prenom"
                   value={formData.contact.prenom}
@@ -61,7 +61,7 @@ const ProgrammateurContactSection = ({
             <label htmlFor="contact.fonction" className={styles.cardLabel}>Fonction</label>
             <input
               type="text"
-              className={styles.formField}
+              className="form-control"
               id="contact.fonction"
               name="contact.fonction"
               value={formData.contact.fonction}
@@ -78,7 +78,7 @@ const ProgrammateurContactSection = ({
                   <span className="input-group-text"><i className="bi bi-envelope"></i></span>
                   <input
                     type="email"
-                    className={styles.formField}
+                    className="form-control"
                     id="contact.email"
                     name="contact.email"
                     value={formData.contact.email}
@@ -95,7 +95,7 @@ const ProgrammateurContactSection = ({
                   <span className="input-group-text"><i className="bi bi-telephone"></i></span>
                   <input
                     type="tel"
-                    className={styles.formField}
+                    className="form-control"
                     id="contact.telephone"
                     name="contact.telephone"
                     value={formData.contact.telephone}

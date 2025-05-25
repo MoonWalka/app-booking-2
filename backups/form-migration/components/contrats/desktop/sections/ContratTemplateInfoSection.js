@@ -22,7 +22,7 @@ const ContratTemplateInfoSection = ({
             <input
               type="text"
               id="templateName"
-              className={styles.formField}
+              className="form-control"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Ex: Contrat standard de prestation musicale"
@@ -34,7 +34,7 @@ const ContratTemplateInfoSection = ({
             <label htmlFor="templateType">Type de modèle</label>
             <select
               id="templateType"
-              className={styles.formSelect}
+              className="form-select"
               value={templateType}
               onChange={(e) => setTemplateType(e.target.value)}
             >
@@ -50,11 +50,11 @@ const ContratTemplateInfoSection = ({
         <input
           type="checkbox"
           id="isDefault"
-          className={styles.formCheckInput}
+          className="form-check-input"
           checked={isDefault}
           onChange={(e) => setIsDefault(e.target.checked)}
         />
-        <label className={styles.formCheckLabel} htmlFor="isDefault">
+        <label className="form-check-label" htmlFor="isDefault">
           Utiliser comme modèle par défaut
         </label>
       </div>

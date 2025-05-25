@@ -54,7 +54,7 @@ const ConcertArtistSection = ({
                   <span className="input-group-text"><i className="bi bi-search"></i></span>
                   <input
                     type="text"
-                    className={styles.formField}
+                    className="form-control"
                     placeholder="Rechercher un artiste par nom..."
                     value={artisteSearchTerm}
                     onChange={(e) => setArtisteSearchTerm(e.target.value)}
@@ -130,7 +130,7 @@ const ConcertArtistSection = ({
               </div>
             )}
             
-            <small className={styles.helpText}>
+            <small className="form-text text-muted">
               Tapez au moins 2 caractères pour rechercher un artiste par nom.
             </small>
           </div>

@@ -1,242 +1,112 @@
-import { db, doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs, serverTimestamp } from '@/services/firebase-service';
+import { db } from '@/services/firebase-service';
+import { 
+  doc, 
+  getDoc, 
+  setDoc, 
+  updateDoc, 
+  collection, 
+  query, 
+  where, 
+  getDocs,
+  Timestamp 
+} from 'firebase/firestore';
 
 /**
- * Service pour gérer la synchronisation entre les informations descriptives de structure
- * et les entités Structure à part entière
- * Note temporaire: La gestion bidirectionnelle a été désactivée pour diagnostic
+ * Service pour la gestion des structures
+ * Gère la synchronisation bidirectionnelle entre structures et programmateurs
  */
-const structureService = {
-  /**
-   * Assure qu'un programmateur avec des informations de structure est correctement lié à une entité Structure
-   * - Si un structureId existe déjà, vérifie que l'entité existe et la met à jour si nécessaire
-   * - Si aucun structureId n'existe mais qu'il y a des informations de structure, crée une nouvelle entité
-   * NOTE: La gestion bidirectionnelle a été temporairement désactivée
-   * 
-   * @param {Object} programmateur - L'objet programmateur complet ou formData
-   * @returns {Promise<string|null>} - L'ID de l'entité Structure associée ou null
-   */
-  ensureStructureEntity: async (programmateur) => {
-    // Conversion des champs en fonction du format d'entrée (programmateur ou formData)
-    const structureName = programmateur.structure?.raisonSociale || programmateur.structure || programmateur.structureNom || '';
-    const structureType = programmateur.structure?.type || programmateur.structureType || '';
-    const structureAddress = programmateur.structure?.adresse || programmateur.structureAdresse || '';
-    const structurePostalCode = programmateur.structure?.codePostal || programmateur.structureCodePostal || '';
-    const structureCity = programmateur.structure?.ville || programmateur.structureVille || '';
-    const structureCountry = programmateur.structure?.pays || programmateur.structurePays || 'France';
-    const structureSiret = programmateur.structure?.siret || programmateur.structureSiret || '';
-    const structureTva = programmateur.structure?.tva || programmateur.structureTva || '';
-    const structureId = programmateur.structureId || '';
-    
-    // Si pas d'informations de structure, rien à faire
-    if (!structureName) {
-      return null;
-    }
-    
-    try {
-      console.log("[DIAGNOSTIC] Début de ensureStructureEntity avec désactivation bidirectionnelle");
-      
-      // Cas 1: Le programmateur a déjà un structureId
-      if (structureId) {
-        // Vérifier que l'entité existe
-        const structureRef = doc(db, 'structures', structureId);
-        const structureDoc = await getDoc(structureRef);
-        
-        if (structureDoc.exists()) {
-          // Mettre à jour l'entité si nécessaire
-          const structureData = structureDoc.data();
-          const updates = {};
-          let needsUpdate = false;
-          
-          // Vérifier chaque champ pour des mises à jour nécessaires
-          if (structureName !== (structureData.nom || structureData.raisonSociale)) {
-            updates.nom = structureName;
-            needsUpdate = true;
-          }
-          
-          if (structureType && structureType !== structureData.type) {
-            updates.type = structureType;
-            needsUpdate = true;
-          }
-          
-          if (structureAddress && structureAddress !== structureData.adresse) {
-            updates.adresse = structureAddress;
-            needsUpdate = true;
-          }
-          
-          if (structurePostalCode && structurePostalCode !== structureData.codePostal) {
-            updates.codePostal = structurePostalCode;
-            needsUpdate = true;
-          }
-          
-          if (structureCity && structureCity !== structureData.ville) {
-            updates.ville = structureCity;
-            needsUpdate = true;
-          }
-          
-          if (structureCountry && structureCountry !== structureData.pays) {
-            updates.pays = structureCountry;
-            needsUpdate = true;
-          }
-          
-          if (structureSiret && structureSiret !== structureData.siret) {
-            updates.siret = structureSiret;
-            needsUpdate = true;
-          }
-          
-          if (structureTva && structureTva !== structureData.tva) {
-            updates.tva = structureTva;
-            needsUpdate = true;
-          }
-          
-          if (needsUpdate) {
-            updates.updatedAt = serverTimestamp();
-            await updateDoc(structureRef, updates);
-            console.log(`Structure ${structureId} mise à jour via structureService`);
-          }
-          
-          return structureId;
-        } else {
-          // La référence existe mais l'entité a disparu, il faut en créer une nouvelle
-          console.warn(`Structure ${structureId} référencée mais inexistante, création d'une nouvelle`);
-        }
-      }
-      
-      // Cas 2: Rechercher une structure existante avec le même nom
-      if (structureName) {
-        const structuresQuery = query(
-          collection(db, 'structures'), 
-          where('nom', '==', structureName)
-        );
-        
-        const existingStructures = await getDocs(structuresQuery);
-        if (!existingStructures.empty) {
-          // Utiliser la première structure trouvée
-          const existingStructure = existingStructures.docs[0];
-          const newStructureId = existingStructure.id;
-          
-          console.log(`Structure existante trouvée avec le nom "${structureName}": ${newStructureId}`);
-          
-          // Mettre à jour les données de la structure si nécessaire
-          const structureData = existingStructure.data();
-          const updates = {};
-          let needsUpdate = false;
-          
-          if (structureType && structureType !== structureData.type) {
-            updates.type = structureType;
-            needsUpdate = true;
-          }
-          
-          if (structureAddress && structureAddress !== structureData.adresse) {
-            updates.adresse = structureAddress;
-            needsUpdate = true;
-          }
-          
-          if (structurePostalCode && structurePostalCode !== structureData.codePostal) {
-            updates.codePostal = structurePostalCode;
-            needsUpdate = true;
-          }
-          
-          if (structureCity && structureCity !== structureData.ville) {
-            updates.ville = structureCity;
-            needsUpdate = true;
-          }
-          
-          if (structureSiret && structureSiret !== structureData.siret) {
-            updates.siret = structureSiret;
-            needsUpdate = true;
-          }
-          
-          if (structureTva && structureTva !== structureData.tva) {
-            updates.tva = structureTva;
-            needsUpdate = true;
-          }
-          
-          if (needsUpdate) {
-            updates.updatedAt = serverTimestamp();
-            await updateDoc(doc(db, 'structures', newStructureId), updates);
-            console.log(`Structure existante ${newStructureId} mise à jour via structureService`);
-          }
-          
-          return newStructureId;
-        }
-      }
-      
-      // Cas 3: Créer une nouvelle entité Structure
-      const structureData = {
-        nom: structureName,
-        type: structureType || 'Non spécifié',
-        adresse: structureAddress || '',
-        codePostal: structurePostalCode || '',
-        ville: structureCity || '',
-        pays: structureCountry || 'France',
-        siret: structureSiret || '',
-        tva: structureTva || '',
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-      };
-      
-      // Créer la nouvelle entité
-      const newStructureRef = doc(collection(db, 'structures'));
-      await setDoc(newStructureRef, structureData);
-      console.log(`Nouvelle structure créée: ${newStructureRef.id} via structureService`);
-      
-      return newStructureRef.id;
-    } catch (error) {
-      console.error('Erreur lors de la synchronisation de la structure via structureService:', error);
-      return null;
-    }
-  },
-  
-  /**
-   * Synchronise les changements apportés à une entité Structure vers les informations descriptives
-   * dans les programmateurs associés
-   * NOTE: Temporairement désactivée pour diagnostic
-   * 
-   * @param {string} structureId - L'ID de la structure
-   * @returns {Promise<void>}
-   */
-  syncStructureToAssociatedProgrammateurs: async (structureId) => {
-    console.log("[DIAGNOSTIC] syncStructureToAssociatedProgrammateurs désactivée temporairement");
-    /* DÉSACTIVATION TEMPORAIRE DE LA FONCTION COMPLÈTE
-    try {
-      // Récupérer la structure
-      const structureDoc = await getDoc(doc(db, 'structures', structureId));
-      if (!structureDoc.exists()) {
-        console.warn(`Structure ${structureId} introuvable`);
-        return;
-      }
-      
-      const structureData = structureDoc.data();
-      
-      // Récupérer tous les programmateurs associés
-      const programmateurIds = structureData.programmateursAssocies || [];
-      
-      for (const progId of programmateurIds) {
-        const progRef = doc(db, 'programmateurs', progId);
-        const progDoc = await getDoc(progRef);
-        
-        if (progDoc.exists()) {
-          // Mettre à jour les informations descriptives
-          await updateDoc(progRef, {
-            structure: structureData.nom || structureData.raisonSociale,
-            structureType: structureData.type,
-            structureAdresse: structureData.adresse,
-            structureCodePostal: structureData.codePostal,
-            structureVille: structureData.ville,
-            structurePays: structureData.pays,
-            structureSiret: structureData.siret,
-            structureTva: structureData.tva,
-            updatedAt: serverTimestamp()
-          });
-          
-          console.log(`Programmateur ${progId} mis à jour avec les données de structure ${structureId}`);
-        }
-      }
-    } catch (error) {
-      console.error(`Erreur lors de la synchronisation des programmateurs avec la structure ${structureId}:`, error);
-    }
-    */
-  }
-};
 
-export default structureService;
+/**
+ * Assure qu'une structure existe et est synchronisée
+ * @param {string} structureId - ID de la structure
+ * @param {Object} structureData - Données de la structure (optionnel)
+ * @returns {Promise<string>} - ID de la structure
+ */
+export async function ensureStructureEntity(structureId, structureData = {}) {
+  if (!structureId) {
+    throw new Error('ID de structure requis');
+  }
+
+  try {
+    // Vérifier si la structure existe
+    const structureRef = doc(db, 'structures', structureId);
+    const structureDoc = await getDoc(structureRef);
+
+    if (structureDoc.exists()) {
+      // Structure existe, la mettre à jour si des données sont fournies
+      if (Object.keys(structureData).length > 0) {
+        const updateData = {
+          ...structureData,
+          updatedAt: Timestamp.now()
+        };
+        
+        await updateDoc(structureRef, updateData);
+      }
+      
+      return structureId;
+    } else {
+      // Structure n'existe pas, la créer
+      const newStructureData = {
+        nom: structureData.nom || `Structure ${structureId}`,
+        type: structureData.type || 'association',
+        adresse: structureData.adresse || {},
+        contacts: structureData.contacts || {},
+        programmateursAssocies: structureData.programmateursAssocies || [],
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+        ...structureData
+      };
+
+      await setDoc(structureRef, newStructureData);
+      
+      return structureId;
+    }
+  } catch (error) {
+    console.error('Erreur lors de la synchronisation de la structure via structureService:', error);
+    throw error;
+  }
+}
+
+/**
+ * Synchronise les données d'une structure avec ses programmateurs associés
+ * @param {string} structureId - ID de la structure
+ */
+export async function syncStructureToAssociatedProgrammateurs(structureId) {
+  // Fonction désactivée temporairement pour éviter les boucles infinies
+  return;
+  
+  if (!structureId) {
+    console.warn(`Structure ${structureId} introuvable`);
+    return;
+  }
+
+  try {
+    // Récupérer la structure
+    const structureDoc = await getDoc(doc(db, 'structures', structureId));
+    if (!structureDoc.exists()) {
+      return;
+    }
+
+    const structureData = structureDoc.data();
+    const programmateursAssocies = structureData.programmateursAssocies || [];
+
+    // Mettre à jour chaque programmateur associé
+    for (const progId of programmateursAssocies) {
+      try {
+        const progRef = doc(db, 'programmateurs', progId);
+        await updateDoc(progRef, {
+          structure: {
+            id: structureId,
+            nom: structureData.nom,
+            type: structureData.type
+          },
+          updatedAt: Timestamp.now()
+        });
+      } catch (error) {
+        console.error(`Erreur lors de la synchronisation des programmateurs avec la structure ${structureId}:`, error);
+      }
+    }
+  } catch (error) {
+    console.error(`Erreur lors de la synchronisation des programmateurs avec la structure ${structureId}:`, error);
+  }
+}

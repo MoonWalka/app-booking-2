@@ -6,25 +6,22 @@ import './App.css'; // Styles spécifiques à l'app
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-// import { initNetworkStabilizer } from './utils/networkStabilizer';
 
-// Désactivation provisoire du stabilisateur réseau
-// initNetworkStabilizer();
+// Import du service de diagnostic de performance
+import './diagnostic';
 
-// Vérification des variables d'environnement
-console.log("--- Vérification des variables d'environnement ---");
-console.log("NODE_ENV:", process.env.NODE_ENV);
-console.log("REACT_APP_FIREBASE_API_KEY existe:", !!process.env.REACT_APP_FIREBASE_API_KEY);
-console.log("REACT_APP_ variables:", Object.keys(process.env)
-  .filter(key => key.startsWith('REACT_APP_'))
-  .join(", "));
-console.log("--- Fin de la vérification ---");
+// Import des polyfills pour la compatibilité
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <App />
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

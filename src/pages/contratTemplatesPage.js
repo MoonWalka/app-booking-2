@@ -54,7 +54,6 @@ const ContratTemplatesPage = () => {
         await deleteDoc(doc(db, 'contratTemplates', id));
         setTemplates(prev => prev.filter(template => template.id !== id));
         
-        console.log('Modèle supprimé avec succès');
         if (window.DISABLE_AUTO_SAVE !== true) {
           setSuccess('Modèle supprimé avec succès');
         }
@@ -63,7 +62,7 @@ const ContratTemplatesPage = () => {
         alert('Une erreur est survenue lors de la suppression du modèle.');
       }
     }
-  }, []); // 🔧 CORRECTION: Pas de dépendance templates, utilise prev =>
+  }, []);
 
   const handleSetDefault = useCallback(async (id) => {
     try {
@@ -93,7 +92,6 @@ const ContratTemplatesPage = () => {
         return prev; // Garder l'état actuel
       });
       
-      console.log('Modèle défini comme défaut avec succès');
       if (window.DISABLE_AUTO_SAVE !== true) {
         setSuccess('Modèle défini comme défaut avec succès');
       }
@@ -105,14 +103,12 @@ const ContratTemplatesPage = () => {
 
   // 🔧 SOLUTION: Mémoriser les fonctions pour éviter les re-créations
   const handleEditTemplate = useCallback((template) => {
-    console.log("🟢 Template passé à la modale :", template);
     setCurrentTemplate(template);
     setIsNewTemplate(false);
     setShowEditorModal(true);
   }, []);
   
   const handleCreateTemplate = useCallback(() => {
-    console.log("handleCreateTemplate appelé");
     // Créer un objet template vide pour un nouveau modèle
     // Ceci garantit que la modale s'ouvre toujours avec un nouvel objet vide
     // et non avec le dernier template édité
@@ -148,7 +144,6 @@ const ContratTemplatesPage = () => {
   }, []);
   
   const handleCloseEditor = useCallback(() => {
-    console.log("handleCloseEditor appelé");
     setShowEditorModal(false);
     // Attendre que la transition de fermeture soit terminée avant de réinitialiser
     setTimeout(() => {
@@ -159,11 +154,9 @@ const ContratTemplatesPage = () => {
   const handleSaveTemplate = useCallback(async (templateData) => {
     // CORRECTION: Vérifier le flag de désactivation de la sauvegarde automatique
     if (window.DISABLE_AUTO_SAVE === true) {
-      console.log("🚫 handleSaveTemplate bloqué par le flag DISABLE_AUTO_SAVE");
       return;
     }
     
-    console.warn('⚡️ [Firestore] Début de la sauvegarde Firestore (modal)', templateData);
     try {
       if (isNewTemplate) {
         // Création d'un nouveau modèle
@@ -172,7 +165,6 @@ const ContratTemplatesPage = () => {
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp()
         });
-        console.warn('✅ [Firestore] Nouveau modèle créé avec addDoc, id:', docRef.id);
         const newTemplate = {
           id: docRef.id,
           ...templateData,
@@ -182,8 +174,6 @@ const ContratTemplatesPage = () => {
         // CORRECTION: Éviter les changements d'état qui provoquent des re-rendus
         if (window.DISABLE_AUTO_SAVE !== true) {
           setTemplates(prev => [newTemplate, ...prev]);
-        } else {
-          console.log("🚫 Changement de templates bloqué par DISABLE_AUTO_SAVE");
         }
       } else {
         // Mise à jour d'un modèle existant
@@ -191,7 +181,6 @@ const ContratTemplatesPage = () => {
           ...templateData,
           updatedAt: serverTimestamp()
         });
-        console.warn('✅ [Firestore] Modèle mis à jour avec updateDoc, id:', currentTemplate.id);
         // Mettre à jour l'état local
         // CORRECTION: Éviter les changements d'état qui provoquent des re-rendus
         if (window.DISABLE_AUTO_SAVE !== true) {
@@ -209,8 +198,6 @@ const ContratTemplatesPage = () => {
                 } 
               : template
           ));
-        } else {
-          console.log("🚫 Changement de templates bloqué par DISABLE_AUTO_SAVE");
         }
       }
       // Ne plus fermer la modale automatiquement ici
@@ -288,7 +275,6 @@ const ContratTemplatesPage = () => {
         className="tc-btn tc-btn-outline-primary tc-btn-sm"
         style={{ minWidth: '85px' }}
         onClick={() => {
-          console.log("Bouton Modifier cliqué pour template:", row.id);
           handleEditTemplate(row);
         }}
       >

@@ -1,7 +1,6 @@
 /**
  * Services Firebase centralisés
- * Ce fichier sert d'interface unique pour accéder aux services Firebase
- * en utilisant le Factory Pattern pour basculer entre le mode local et production
+ * Interface unique pour accéder aux services Firebase avec basculement automatique local/production
  */
 
 import { initializeApp } from 'firebase/app';
@@ -34,11 +33,12 @@ import {
 } from 'firebase/auth';
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { getRemoteConfig } from 'firebase/remote-config';
-import { isLocalMode } from './firebase-factory';
 
-// 🎯 PHASE 3B : Migration vers Firebase Testing SDK
+// 🎯 SIMPLIFICATION : Détection directe du mode sans Factory
+const IS_LOCAL_MODE = (process.env.REACT_APP_MODE || 'production') === 'local';
+
+// 🎯 Migration vers Firebase Testing SDK
 let emulatorService = null;
-const IS_LOCAL_MODE = isLocalMode();
 
 if (IS_LOCAL_MODE) {
   try {

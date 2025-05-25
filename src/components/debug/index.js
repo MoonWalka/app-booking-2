@@ -1,8 +1,8 @@
 // src/components/debug/index.js
-import PerformanceMonitorEnhanced from './PerformanceMonitorEnhanced';
+import UnifiedDebugDashboard from './UnifiedDebugDashboard';
 
-// Exporter la version améliorée comme valeur par défaut
-export default PerformanceMonitorEnhanced;
+// Exporter le dashboard unifié comme valeur par défaut
+export default UnifiedDebugDashboard;
 
-// Exporter aussi l'ancienne version pour compatibilité
-export { default as PerformanceMonitor } from './PerformanceMonitor';
+// Export nommé pour compatibilité
+export { default as UnifiedDebugDashboard } from './UnifiedDebugDashboard';

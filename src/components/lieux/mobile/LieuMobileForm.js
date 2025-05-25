@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Spinner from '@/components/common/Spinner';
 import Button from '@/components/ui/Button';
 import FormField from '@/components/ui/FormField';
+import FlexContainer from '@/components/ui/FlexContainer';
 import { toast } from 'react-toastify';
 
 // MIGRATION: Utilisation du hook optimisé au lieu du hook complet
@@ -98,8 +99,8 @@ const LieuMobileForm = () => {
   return (
     <div className={styles?.mobileContainer || "mobile-container p-3"}>
       {/* Header mobile avec navigation */}
-      <div className={styles?.header || "mobile-header d-flex justify-content-between align-items-center mb-4"}>
-        <div className="d-flex align-items-center">
+      <FlexContainer justify="space-between" align="center" className={styles?.header || "mobile-header mb-4"}>
+        <FlexContainer align="center">
           <Button 
             variant="text" 
             onClick={handleBackWithNotification}
@@ -109,8 +110,8 @@ const LieuMobileForm = () => {
           <h1 className="mb-0 h4">
             {id === 'nouveau' ? 'Nouveau lieu' : `Modifier ${lieu.nom || 'le lieu'}`}
           </h1>
-        </div>
-      </div>
+        </FlexContainer>
+      </FlexContainer>
 
       <form onSubmit={handleSubmitWithNotification} className={styles?.mobileForm || "mobile-form"}>
         {/* Section Informations principales */}
@@ -306,22 +307,24 @@ const LieuMobileForm = () => {
                   {programmateurSearch.results.map(prog => (
                     <div 
                       key={prog.id}
-                      className="d-flex justify-content-between align-items-center p-2 border-bottom"
+                      className="p-2 border-bottom"
                     >
-                      <div className="flex-1">
-                        <div className="fw-semibold">{prog.nom} {prog.prenom}</div>
-                        <div className="small text-muted">{prog.email}</div>
-                        {prog.structureNom && (
-                          <div className="small text-muted">{prog.structureNom}</div>
-                        )}
-                      </div>
-                      <Button
-                        variant="outline-primary"
-                        size="sm"
-                        onClick={() => programmateurSearch.associateProgrammateur(prog.id)}
-                      >
-                        <i className="bi bi-plus"></i>
-                      </Button>
+                      <FlexContainer justify="space-between" align="center">
+                        <div className="flex-1">
+                          <div className="fw-semibold">{prog.nom} {prog.prenom}</div>
+                          <div className="small text-muted">{prog.email}</div>
+                          {prog.structureNom && (
+                            <div className="small text-muted">{prog.structureNom}</div>
+                          )}
+                        </div>
+                        <Button
+                          variant="outline-primary"
+                          size="sm"
+                          onClick={() => programmateurSearch.associateProgrammateur(prog.id)}
+                        >
+                          <i className="bi bi-plus"></i>
+                        </Button>
+                      </FlexContainer>
                     </div>
                   ))}
                 </div>
@@ -340,19 +343,21 @@ const LieuMobileForm = () => {
               {lieu.programmateursAssocies.map(prog => (
                 <div 
                   key={prog.id}
-                  className="d-flex justify-content-between align-items-center p-2 bg-light rounded mb-2"
+                  className="p-2 bg-light rounded mb-2"
                 >
-                  <div className="flex-1">
-                    <div className="fw-semibold">{prog.nom} {prog.prenom}</div>
-                    <div className="small text-muted">{prog.email}</div>
-                  </div>
-                  <Button
-                    variant="outline-danger"
-                    size="sm"
-                    onClick={() => programmateurSearch.dissociateProgrammateur(prog.id)}
-                  >
-                    <i className="bi bi-x"></i>
-                  </Button>
+                  <FlexContainer justify="space-between" align="center">
+                    <div className="flex-1">
+                      <div className="fw-semibold">{prog.nom} {prog.prenom}</div>
+                      <div className="small text-muted">{prog.email}</div>
+                    </div>
+                    <Button
+                      variant="outline-danger"
+                      size="sm"
+                      onClick={() => programmateurSearch.dissociateProgrammateur(prog.id)}
+                    >
+                      <i className="bi bi-x"></i>
+                    </Button>
+                  </FlexContainer>
                 </div>
               ))}
             </div>

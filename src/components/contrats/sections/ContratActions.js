@@ -2,6 +2,7 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
 import { FaEnvelope, FaFileSignature } from 'react-icons/fa';
+import FlexContainer from '@/components/ui/FlexContainer';
 import styles from './ContratActions.module.css';
 
 /**
@@ -21,7 +22,7 @@ const ContratActions = ({
 }) => {
   return (
     <div className={styles.actionsContainer}>
-      <div className="d-flex gap-2">
+      <FlexContainer gap="sm">
         <Button 
           variant="primary" 
           onClick={onPdfViewerToggle}
@@ -75,7 +76,7 @@ const ContratActions = ({
         >
           <i className="bi bi-arrow-left me-1"></i> Retour aux contrats
         </Button>
-      </div>
+      </FlexContainer>
     </div>
   );
 };

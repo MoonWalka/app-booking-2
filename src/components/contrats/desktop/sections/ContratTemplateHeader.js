@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import FlexContainer from '@/components/ui/FlexContainer';
 import styles from './ContratTemplateHeader.module.css';
 
 /**
@@ -42,35 +43,43 @@ const ContratTemplateHeader = ({
         
         <div className={styles.editorActions}>
           <button 
-            className="tc-btn tc-btn-outline-info d-flex align-items-center gap-2"
+            className="tc-btn tc-btn-outline-info"
             onClick={onToggleGuide}
           >
-            <i className="bi bi-question-circle me-1"></i>
-            {showGuide ? 'Masquer l\'aide' : 'Aide'}
+            <FlexContainer align="center" gap="sm" inline>
+              <i className="bi bi-question-circle me-1"></i>
+              {showGuide ? 'Masquer l\'aide' : 'Aide'}
+            </FlexContainer>
           </button>
           
           <button 
-            className="tc-btn tc-btn-outline-secondary d-flex align-items-center gap-2"
+            className="tc-btn tc-btn-outline-secondary"
             onClick={onCancel}
           >
-            <i className="bi bi-x-circle me-1"></i>
-            Annuler
+            <FlexContainer align="center" gap="sm" inline>
+              <i className="bi bi-x-circle me-1"></i>
+              Annuler
+            </FlexContainer>
           </button>
           
           <button 
-            className="tc-btn tc-btn-outline-primary d-flex align-items-center gap-2"
+            className="tc-btn tc-btn-outline-primary"
             onClick={onTogglePreview}
           >
-            <i className={`bi bi-${previewMode ? 'pencil' : 'eye'} me-1`}></i>
-            {previewMode ? 'Éditer' : 'Aperçu'}
+            <FlexContainer align="center" gap="sm" inline>
+              <i className={`bi bi-${previewMode ? 'pencil' : 'eye'} me-1`}></i>
+              {previewMode ? 'Éditer' : 'Aperçu'}
+            </FlexContainer>
           </button>
           
           <button 
-            className="tc-btn tc-btn-primary d-flex align-items-center gap-2"
+            className="tc-btn tc-btn-primary"
             onClick={onSave}
           >
-            <i className="bi bi-check-circle me-1"></i>
-            Enregistrer
+            <FlexContainer align="center" gap="sm" inline>
+              <i className="bi bi-check-circle me-1"></i>
+              Enregistrer
+            </FlexContainer>
           </button>
         </div>
       </div>

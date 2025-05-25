@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { Dropdown } from 'react-bootstrap';
+import FlexContainer from '@/components/ui/FlexContainer';
 import styles from './LieuxListSearchFilter.module.css';
 
 /**
@@ -51,7 +52,7 @@ const LieuxListSearchFilter = ({
         )}
       </div>
       
-      <div className="d-flex gap-2">
+      <FlexContainer gap="sm">
         <Dropdown>
           <Dropdown.Toggle variant="outline-secondary" id="filter-dropdown" className={styles.modernFilterBtn}>
             <i className="bi bi-funnel me-2"></i>
@@ -132,7 +133,7 @@ const LieuxListSearchFilter = ({
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
-      </div>
+      </FlexContainer>
     </div>
   );
 };

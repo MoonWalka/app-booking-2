@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import FlexContainer from '@/components/ui/FlexContainer';
 import styles from './ConcertArtistSection.module.css';
 import Button from '@/components/ui/Button';
 import Alert from '@/components/ui/Alert';
@@ -211,7 +212,7 @@ const ConcertArtistSection = ({
               artiste.contacts?.facebook) && (
               <div className="mt-3">
                 <div className="fw-bold mb-2">Réseaux sociaux:</div>
-                <div className="d-flex gap-2">
+                <FlexContainer gap="sm">
                   {artiste.contacts.siteWeb && (
                     <a href={artiste.contacts.siteWeb} 
                       target="_blank" 
@@ -242,7 +243,7 @@ const ConcertArtistSection = ({
                       <span className="ms-1">Facebook</span>
                     </a>
                   )}
-                </div>
+                </FlexContainer>
               </div>
             )}
           </>

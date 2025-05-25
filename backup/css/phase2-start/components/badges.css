@@ -1,0 +1,239 @@
+/*
+ * Styles pour badges.css
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 20 mai 2025
+ */
+
+@import '@styles/base/variables.css';
+
+/* BADGES DE STATUT - BASE */
+.tc-status-badge {
+  display: inline-block;
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  border-radius: var(--tc-border-radius);
+  font-size: var(--tc-font-size-xs);
+  font-weight: var(--tc-font-weight-semibold);
+  text-align: center;
+  min-width: 80px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: var(--tc-transition);
+  box-shadow: var(--tc-shadow-sm);
+}
+
+/* BADGES DE STATUT - VARIANTES SÉMANTIQUES */
+.tc-status-option,
+.tc-status-waiting {
+  background-color: rgba(var(--tc-warning-color-rgb), 0.9);
+  color: var(--tc-gray-900);
+}
+
+.tc-status-confirmed,
+.tc-status-success {
+  background-color: rgba(var(--tc-success-color-rgb), 0.9);
+  color: var(--tc-gray-900);
+}
+
+.tc-status-cancelled {
+  background-color: rgba(var(--tc-gray-600-rgb), 0.9);
+  color: var(--tc-white);
+}
+
+.tc-status-pending {
+  background-color: rgba(var(--tc-info-color-rgb), 0.9);
+  color: var(--tc-gray-900);
+}
+
+.tc-status-draft {
+  background-color: rgba(var(--tc-secondary-color-rgb), 0.9);
+  color: var(--tc-white);
+}
+
+.tc-status-declined,
+.tc-status-error {
+  background-color: rgba(var(--tc-danger-color-rgb), 0.9);
+  color: var(--tc-white);
+}
+
+/* BADGES DE STATUT - VARIANTES SPÉCIFIQUES CONCERT */
+.tc-status-contrat {
+  background-color: rgba(var(--tc-primary-dark-rgb), 0.9);
+  color: var(--tc-white);
+}
+
+.tc-status-preaccord {
+  background-color: rgba(var(--tc-warning-color-rgb), 0.9);
+  color: var(--tc-gray-900);
+}
+
+.tc-status-acompte {
+  background-color: rgba(var(--tc-info-color-rgb), 0.9);
+  color: var(--tc-gray-900);
+}
+
+.tc-status-solde {
+  background-color: rgba(var(--tc-success-color-rgb), 0.9);
+  color: var(--tc-gray-900);
+}
+
+.tc-status-contact {
+  background-color: rgba(var(--tc-secondary-color-rgb), 0.9);
+  color: var(--tc-white);
+}
+
+/* BADGES DE NOTIFICATION */
+.tc-notification-badge {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--tc-danger-color);
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(40%, -40%);
+  box-shadow: 0 0 0 2px var(--tc-bg-color);
+  animation: tc-badge-pulse 1.5s infinite;
+}
+
+.tc-notification-badge-sm { width: 8px; height: 8px; }
+.tc-notification-badge-lg { width: 12px; height: 12px; }
+
+.tc-notification-badge-success { background-color: var(--tc-success-color); }
+.tc-notification-badge-warning { background-color: var(--tc-warning-color); }
+.tc-notification-badge-info { background-color: var(--tc-info-color); }
+
+/* BADGES STANDARD */
+.tc-badge {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--tc-border-radius);
+  font-size: var(--tc-font-size-xs);
+  font-weight: var(--tc-font-weight-semibold);
+  line-height: 1.2;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  transition: var(--tc-transition);
+}
+
+/* Variantes principales */
+.tc-badge-primary { background-color: var(--tc-primary-color); color: var(--tc-white); }
+.tc-badge-secondary { background-color: var(--tc-secondary-color); color: var(--tc-white); }
+.tc-badge-success { background-color: var(--tc-success-color); color: var(--tc-gray-900); }
+.tc-badge-danger { background-color: var(--tc-danger-color); color: var(--tc-white); }
+.tc-badge-warning { background-color: var(--tc-warning-color); color: var(--tc-gray-900); }
+.tc-badge-info { background-color: var(--tc-info-color); color: var(--tc-gray-900); }
+.tc-badge-light { background-color: var(--tc-gray-200); color: var(--tc-gray-900); }
+.tc-badge-dark { background-color: var(--tc-gray-800); color: var(--tc-white); }
+
+/* Variantes avec contour */
+.tc-badge-outline { background-color: transparent; border: 1px solid currentColor; }
+.tc-badge-outline-primary { color: var(--tc-primary-color); border-color: var(--tc-primary-color); }
+.tc-badge-outline-secondary { color: var(--tc-secondary-color); border-color: var(--tc-secondary-color); }
+.tc-badge-outline-success { color: var(--tc-success-color); border-color: var(--tc-success-color); }
+.tc-badge-outline-danger { color: var(--tc-danger-color); border-color: var(--tc-danger-color); }
+.tc-badge-outline-warning { color: var(--tc-warning-color); border-color: var(--tc-warning-color); }
+.tc-badge-outline-info { color: var(--tc-info-color); border-color: var(--tc-info-color); }
+
+/* Variantes avec fond pastel */
+.tc-badge-soft-primary { background-color: rgba(var(--tc-primary-color-rgb), 0.1); color: var(--tc-primary-color); }
+.tc-badge-soft-secondary { background-color: rgba(var(--tc-secondary-color-rgb), 0.1); color: var(--tc-secondary-color); }
+.tc-badge-soft-success { background-color: rgba(var(--tc-success-color-rgb), 0.1); color: var(--tc-success-color); }
+.tc-badge-soft-danger { background-color: rgba(var(--tc-danger-color-rgb), 0.1); color: var(--tc-danger-color); }
+.tc-badge-soft-warning { background-color: rgba(var(--tc-warning-color-rgb), 0.1); color: var(--tc-warning-color); }
+.tc-badge-soft-info { background-color: rgba(var(--tc-info-color-rgb), 0.1); color: var(--tc-info-color); }
+
+/* BADGES INTERACTIFS */
+.tc-badge-interactive {
+  cursor: pointer;
+  transition: var(--tc-transition);
+}
+
+.tc-badge-interactive:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--tc-shadow-sm);
+}
+
+.tc-badge-interactive.tc-badge-primary:hover { background-color: var(--tc-primary-dark); }
+.tc-badge-interactive.tc-badge-secondary:hover { background-color: var(--tc-secondary-dark); }
+.tc-badge-interactive.tc-badge-outline-primary:hover { background-color: rgba(var(--tc-primary-color-rgb), 0.1); }
+.tc-badge-interactive.tc-badge-outline-secondary:hover { background-color: rgba(var(--tc-secondary-color-rgb), 0.1); }
+
+/* VARIANTES DE TAILLE */
+.tc-badge-sm {
+  padding: 0.15rem 0.4rem;
+  font-size: calc(var(--tc-font-size-xs) * 0.85);
+  min-width: 60px;
+}
+
+.tc-badge-lg {
+  padding: 0.25rem 0.6rem;
+  font-size: var(--tc-font-size-sm);
+  min-width: 100px;
+}
+
+/* BADGES COMPTEUR */
+.tc-counter-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: var(--tc-danger-color);
+  color: var(--tc-white);
+  width: 20px;
+  height: 20px;
+  font-size: 10px;
+  font-weight: var(--tc-font-weight-semibold);
+  box-shadow: var(--tc-shadow-sm);
+}
+
+.tc-counter-badge-sm { width: 16px; height: 16px; font-size: 9px; }
+.tc-counter-badge-lg { width: 24px; height: 24px; font-size: 12px; }
+
+.tc-counter-badge-primary { background-color: var(--tc-primary-color); }
+.tc-counter-badge-secondary { background-color: var(--tc-secondary-color); }
+.tc-counter-badge-success { background-color: var(--tc-success-color); }
+.tc-counter-badge-warning { background-color: var(--tc-warning-color); }
+.tc-counter-badge-info { background-color: var(--tc-info-color); }
+
+/* BADGES AVEC ICÔNE */
+.tc-badge-with-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tc-badge-with-icon i, 
+.tc-badge-with-icon svg {
+  font-size: 0.85em;
+}
+
+/* ANIMATIONS */
+@keyframes tc-badge-pulse {
+  0% { opacity: 0.7; transform: scale(1) translate(40%, -40%); }
+  50% { opacity: 1; transform: scale(1.1) translate(40%, -40%); }
+  100% { opacity: 0.7; transform: scale(1) translate(40%, -40%); }
+}
+
+/* RESPONSIVE */
+@media (max-width: var(--tc-breakpoint-sm)) {
+  .tc-status-badge {
+    padding: calc(var(--tc-spacing-xs) * 0.8) var(--tc-spacing-xs);
+    font-size: calc(var(--tc-font-size-xs) * 0.9);
+    min-width: 70px;
+  }
+  
+  .tc-badge-lg {
+    padding: 0.2rem 0.5rem;
+    font-size: calc(var(--tc-font-size-sm) * 0.9);
+    min-width: 90px;
+  }
+  
+  .tc-counter-badge {
+    width: 18px;
+    height: 18px;
+    font-size: 9px;
+  }
+}

@@ -1,0 +1,195 @@
+/*
+ * Styles pour breakpoints.css
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Date de création: Mai 2025
+ * Dernière mise à jour: 20 mai 2025
+ */
+
+/*
+ * CLASSES UTILITAIRES POUR MEDIA QUERIES
+ * =====================================
+ * Système de classes utilitaires responsive pour l'approche mobile-first
+ * Utilisation: <div className="tc-card xs:flex-col md:flex-row">
+ */
+
+/* =============================
+   CLASSES POUR MAX-WIDTH (DESKTOP-FIRST)
+   ============================= */
+
+/* Point de rupture XS (<576px - Smartphones) */
+@media (max-width: var(--tc-breakpoint-sm)) {
+  .xs\:hidden {
+    display: none !important;
+  }
+  
+  .xs\:block {
+    display: block !important;
+  }
+  
+  .xs\:flex {
+    display: flex !important;
+  }
+  
+  .xs\:w-full {
+    width: 100% !important;
+  }
+  
+  .xs\:text-center {
+    text-align: center !important;
+  }
+  
+  .xs\:flex-col {
+    flex-direction: column !important;
+  }
+}
+
+/* Point de rupture SM (<768px - Tablettes) */
+@media (max-width: var(--tc-breakpoint-md)) {
+  .sm\:hidden {
+    display: none !important;
+  }
+  
+  .sm\:block {
+    display: block !important;
+  }
+  
+  .sm\:flex {
+    display: flex !important;
+  }
+  
+  .sm\:w-full {
+    width: 100% !important;
+  }
+  
+  .sm\:text-center {
+    text-align: center !important;
+  }
+  
+  .sm\:flex-col {
+    flex-direction: column !important;
+  }
+}
+
+/* Point de rupture MD (<992px - Petits écrans) */
+@media (max-width: var(--tc-breakpoint-lg)) {
+  .md\:hidden {
+    display: none !important;
+  }
+  
+  .md\:block {
+    display: block !important;
+  }
+  
+  .md\:flex {
+    display: flex !important;
+  }
+  
+  .md\:w-full {
+    width: 100% !important;
+  }
+  
+  .md\:text-center {
+    text-align: center !important;
+  }
+  
+  .md\:flex-col {
+    flex-direction: column !important;
+  }
+}
+
+/* Point de rupture LG (<1200px - Grands écrans) */
+@media (max-width: var(--tc-breakpoint-xl)) {
+  .lg\:hidden {
+    display: none !important;
+  }
+  
+  .lg\:block {
+    display: block !important;
+  }
+  
+  .lg\:flex {
+    display: flex !important;
+  }
+  
+  .lg\:w-full {
+    width: 100% !important;
+  }
+  
+  .lg\:text-center {
+    text-align: center !important;
+  }
+  
+  .lg\:flex-col {
+    flex-direction: column !important;
+  }
+}
+
+/* =============================
+   CLASSES POUR MIN-WIDTH (MOBILE-FIRST)
+   ============================= */
+
+/* À partir des tablettes (≥768px) */
+@media (min-width: var(--tc-breakpoint-md)) {
+  .min-sm\:hidden {
+    display: none !important;
+  }
+  
+  .min-sm\:block {
+    display: block !important;
+  }
+  
+  .min-sm\:flex {
+    display: flex !important;
+  }
+  
+  .min-sm\:inline-flex {
+    display: inline-flex !important;
+  }
+}
+
+/* À partir des petits écrans (≥992px) */
+@media (min-width: var(--tc-breakpoint-lg)) {
+  .min-md\:hidden {
+    display: none !important;
+  }
+  
+  .min-md\:block {
+    display: block !important;
+  }
+  
+  .min-md\:flex {
+    display: flex !important;
+  }
+  
+  .min-md\:inline-flex {
+    display: inline-flex !important;
+  }
+}
+
+/*
+ * GUIDE D'UTILISATION
+ * ==================
+ * 
+ * 1. Importer ce fichier dans un composant:
+ *    @import '@styles/breakpoints.css';
+ * 
+ * 2. Utiliser les classes utilitaires dans votre JSX:
+ *    <div className="tc-card xs:flex-col md:flex-row">
+ * 
+ * 3. Pour les CSS Modules avec sélecteurs complexes:
+ *    @media (max-width: var(--tc-breakpoint-md)) {
+ *      .myComponent {
+ *        // Styles spécifiques pour tablettes et mobiles
+ *      }
+ *    }
+ *
+ * 4. L'approche mobile-first est recommandée:
+ *    .myComponent {
+ *      // Styles de base pour mobile
+ *    }
+ *    @media (min-width: var(--tc-breakpoint-md)) {
+ *      .myComponent {
+ *        // Adaptations pour écrans plus grands
+ *      }
+ *    }
+ */

@@ -34,29 +34,25 @@ import {
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { getRemoteConfig } from 'firebase/remote-config';
 
-// 🎯 SIMPLIFICATION : Détection directe du mode sans Factory
+// Détection directe du mode sans Factory
 const IS_LOCAL_MODE = (process.env.REACT_APP_MODE || 'production') === 'local';
 
-// 🎯 Migration vers Firebase Testing SDK
+// Migration vers Firebase Testing SDK
 let emulatorService = null;
 
 if (IS_LOCAL_MODE) {
   try {
-    // 🚀 NOUVEAU : Import du service émulateur Firebase Testing SDK
+    // Import du service émulateur Firebase Testing SDK
     const firebaseEmulator = require('./firebase-emulator-service');
     emulatorService = firebaseEmulator.default;
-    console.log('🔥 Firebase Testing SDK service importé avec succès');
     
     // Initialisation de l'émulateur
     if (emulatorService && emulatorService.initializeEmulator) {
       emulatorService.initializeEmulator().catch(err => {
-        console.warn('⚠️ Émulateur Firebase non disponible, mode dégradé:', err.message);
         emulatorService = null;
       });
     }
   } catch (err) {
-    console.error('❌ Erreur lors de l\'importation du service émulateur:', err);
-    console.log('🔄 Mode dégradé activé (pas de service local)');
     emulatorService = null;
   }
 }
@@ -83,8 +79,6 @@ const handleFirestoreError = (error) => {
 
 // Initialisation conditionnelle selon le mode
 if (IS_LOCAL_MODE) {
-  console.log('Mode local activé - Service Firebase utilise les mocks');
-  
   // Utiliser mockStorage pour db
   db = emulatorService;
   
@@ -127,7 +121,6 @@ if (IS_LOCAL_MODE) {
 
 // Mock pour getCountFromServer si en mode local
 const mockGetCountFromServer = async (query) => {
-  console.log('Mock getCountFromServer appelé');
   // Extraction du nom de la collection depuis la requête
   const collectionName = query._path?.segments?.[0] || '';
   
@@ -149,7 +142,6 @@ const mockGetCountFromServer = async (query) => {
 
 // Mock de onSnapshot pour le mode local
 const mockOnSnapshot = (docRef, callback) => {
-  console.log('Mock onSnapshot appelé pour', docRef);
   const path = typeof docRef.path === 'string' ? docRef.path : '';
   const pathParts = path.split('/');
   const collectionName = pathParts.length > 0 ? pathParts[0] : '';
@@ -179,7 +171,7 @@ const mockOnSnapshot = (docRef, callback) => {
     }
   }, 100);
   
-  return () => console.log('Mock onSnapshot unsubscribe');
+  return () => {};
 };
 
 // Surcharge des fonctions Firestore avec gestion d'erreurs
@@ -199,8 +191,7 @@ const enhancedGetDocs = async (...args) => {
   }
 };
 
-// 🎯 SIMPLIFICATION : Fonctions mock directes avec optional chaining
-// Plus besoin de createSafeMockFunction et 18 proxies !
+// Fonctions mock directes avec optional chaining
 const getDirectMockFunction = (functionName) => {
   return (...args) => emulatorService?.[functionName]?.(...args) || null;
 };
@@ -213,7 +204,7 @@ export {
   remoteConfig
 };
 
-// 🎯 SIMPLIFICATION : Exports directs sans proxies intermédiaires
+// Exports directs sans proxies intermédiaires
 export const collection = IS_LOCAL_MODE ? getDirectMockFunction('collection') : firestoreCollection;
 export const doc = IS_LOCAL_MODE ? getDirectMockFunction('doc') : firestoreDoc;
 export const getDoc = IS_LOCAL_MODE ? getDirectMockFunction('getDoc') : enhancedGetDoc;
@@ -243,6 +234,6 @@ export { storageRef as ref, uploadBytes, getDownloadURL };
 // Indicateur de mode
 export const MODE_LOCAL = IS_LOCAL_MODE;
 
-// 🔧 COMPATIBILITÉ : Exports supplémentaires pour maintenir la compatibilité
+// Exports supplémentaires pour maintenir la compatibilité
 export const CURRENT_MODE = IS_LOCAL_MODE ? 'local' : 'production';
 export { IS_LOCAL_MODE };

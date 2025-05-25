@@ -108,7 +108,7 @@
 
 /* Carte de formulaire */
 .formCard {
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: var(--tc-space-6);
@@ -116,7 +116,7 @@
 }
 
 .formCard {
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-box-shadow);
   margin-bottom: var(--tc-space-6);
@@ -128,11 +128,11 @@
   align-items: center;
   background-color: var(--tc-bg-default);
   padding: var(--tc-space-4);
-  border-bottom: 1px solid var(--tc-gray-200);
+  border-bottom: 1px solid var(--tc-color-gray-200);
 }
 
 .cardHeader {
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
   padding: var(--tc-space-4) var(--tc-space-4);
   border-bottom: var(--tc-border-width) solid var(--tc-border-default);
   display: flex;
@@ -204,7 +204,7 @@
   font-size: 1rem;
   line-height: 1.5;
   color: var(--tc-text-default);
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   border: 1px solid var(--tc-input-border-color);
   border-radius: var(--tc-radius-sm);
   transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
@@ -228,7 +228,7 @@
   font-size: 1rem;
   line-height: 1.5;
   color: var(--tc-text-default);
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   border: 1px solid var(--tc-input-border-color);
   border-radius: var(--tc-radius-sm);
   transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
@@ -267,7 +267,7 @@
   color: var(--tc-text-default);
   text-align: center;
   white-space: nowrap;
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
   border: 1px solid var(--tc-input-border-color);
   border-radius: 0 var(--tc-radius-sm) var(--tc-radius-sm) 0;
 }
@@ -305,7 +305,7 @@
 .selectedLieu,
 .selectedProgrammateur,
 .selectedArtiste {
-  border: 1px solid var(--tc-gray-300);
+  border: 1px solid var(--tc-color-gray-300);
   border-radius: 6px;
   padding: var(--tc-space-6);
   margin-bottom: var(--tc-space-2);
@@ -339,7 +339,7 @@
   display: flex;
   align-items: center;
   margin-top: var(--tc-space-1);
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
 }
 
 .lieuAddress i,
@@ -351,7 +351,7 @@
   font-size: var(--tc-font-size-sm);
   display: block;
   margin-bottom: var(--tc-space-1);
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
 }
 
 .programmateurContacts {
@@ -367,14 +367,14 @@
 
 .programmateurContactItem i {
   margin-right: var(--tc-space-1);
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
 }
 
 .artisteGenre {
   font-size: var(--tc-font-size-sm);
   display: block;
   margin-bottom: var(--tc-space-1);
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
 }
 
 .artisteDescription {
@@ -388,7 +388,7 @@
 .artisteItem {
   padding: var(--tc-space-4);
   cursor: pointer;
-  border-bottom: 1px solid var(--tc-gray-100);
+  border-bottom: 1px solid var(--tc-color-gray-100);
 }
 
 .lieuItem:hover,
@@ -403,7 +403,7 @@
   display: flex;
   flex-direction: column;
   font-size: var(--tc-font-size-xs);
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
   margin-top: var(--tc-space-1);
 }
 
@@ -413,7 +413,7 @@
   max-height: 200px;
   overflow-y: auto;
   z-index: 1000;
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   border: var(--tc-border-width) solid var(--tc-input-border-color);
   border-radius: 0 0 var(--tc-radius-sm) var(--tc-radius-sm);
   box-shadow: var(--tc-dropdown-shadow);
@@ -425,11 +425,11 @@
   display: flex;
   align-items: center;
   cursor: pointer;
-  border-bottom: var(--tc-border-width) solid var(--tc-gray-200);
+  border-bottom: var(--tc-border-width) solid var(--tc-color-gray-200);
 }
 
 .suggestionItem:hover {
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
 }
 
 /* Actions de formulaire en bas */
@@ -464,7 +464,7 @@
 }
 
 .tcModalConfirm {
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   border-radius: 0.5rem;
   width: 450px;
   max-width: 90vw;
@@ -474,7 +474,7 @@
 
 .tcModalHeader {
   padding: var(--tc-space-4);
-  border-bottom: 1px solid var(--tc-gray-200);
+  border-bottom: 1px solid var(--tc-color-gray-200);
 }
 
 .tcModalHeader h5 {
@@ -488,7 +488,7 @@
 
 .tcModalFooter {
   padding: var(--tc-space-4);
-  border-top: 1px solid var(--tc-gray-200);
+  border-top: 1px solid var(--tc-color-gray-200);
   display: flex;
   justify-content: flex-end;
   gap: var(--tc-space-2);

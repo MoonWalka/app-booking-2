@@ -102,7 +102,7 @@
 }
 
 .tc-card-header {
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
   padding: var(--tc-space-2) var(--tc-space-4);
   display: flex;
   align-items: center;
@@ -188,7 +188,7 @@
 
 .tc-programmateur-card-header {
   padding: var(--tc-space-2);
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -207,7 +207,7 @@
 
 .tc-tag {
   padding: var(--tc-space-1) var(--tc-space-2);
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
   border-radius: var(--tc-radius-sm);
   font-size: var(--tc-font-size-xs);
   color: var(--tc-color-primary-dark);
@@ -236,7 +236,7 @@
   padding: var(--tc-space-2) var(--tc-space-4);
   cursor: pointer;
   transition: background-color var(--tc-transition-duration);
-  border-bottom: 1px solid var(--tc-gray-200);
+  border-bottom: 1px solid var(--tc-color-gray-200);
 }
 
 .tc-programmateur-item:hover {
@@ -247,7 +247,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
   border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-radius-base);
   padding: var(--tc-space-2) var(--tc-space-4);
@@ -284,7 +284,7 @@
    ============================= */
 .tc-structure-card .tc-data-label {
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
   margin-bottom: var(--tc-space-1);
   display: block;
 }
@@ -311,7 +311,7 @@
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
   line-height: 1;
-  color: var(--tc-gray-700);
-  background-color: var(--tc-gray-100);
+  color: var(--tc-color-gray-700);
+  background-color: var(--tc-color-gray-100);
   border-radius: var(--tc-radius-sm);
 }

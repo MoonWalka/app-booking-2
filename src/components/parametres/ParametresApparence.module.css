@@ -71,7 +71,7 @@
   height: 6px;
   -webkit-appearance: none;
   appearance: none;
-  background-color: var(--tc-gray-300);
+  background-color: var(--tc-color-gray-300);
   border-radius: var(--tc-border-radius-pill);
   outline: none;
 }
@@ -175,7 +175,7 @@
   padding: var(--tc-space-4);
   border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-radius-base);
-  background-color: var(--tc-gray-50);
+  background-color: var(--tc-color-gray-50);
 }
 
 .previewTitle {

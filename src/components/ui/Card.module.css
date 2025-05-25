@@ -35,7 +35,7 @@
 .cardHeader {
   padding: var(--tc-space-4);
   border-bottom: 1px solid var(--tc-border-default);
-  background-color: var(--tc-gray-50);
+  background-color: var(--tc-color-gray-50);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -83,7 +83,7 @@
 .cardFooter {
   padding: var(--tc-space-4);
   border-top: 1px solid var(--tc-border-default);
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   display: flex;
   justify-content: flex-end;
   gap: var(--tc-space-2);

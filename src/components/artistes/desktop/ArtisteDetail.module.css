@@ -22,7 +22,7 @@
 .desktopArtisteProfile {
   display: flex;
   margin-bottom: var(--tc-space-8);
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-shadow-base);
   overflow: hidden;
@@ -32,7 +32,7 @@
   width: 240px;
   height: 240px;
   overflow: hidden;
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
 }
 
 .desktopArtisteImage img {
@@ -47,8 +47,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--tc-gray-200);
-  color: var(--tc-gray-500);
+  background-color: var(--tc-color-gray-200);
+  color: var(--tc-color-gray-500);
 }
 
 .desktopPlaceholderPhoto i {
@@ -275,7 +275,7 @@
 .emptyStateDesktop i {
   font-size: var(--tc-font-size-2xl);
   margin-bottom: var(--tc-space-4);
-  color: var(--tc-gray-400);
+  color: var(--tc-color-gray-400);
 }
 
 .emptyStateDesktop p {

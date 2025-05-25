@@ -45,7 +45,7 @@
   font-size: var(--tc-font-size-base);
   line-height: 1.5;
   color: var(--tc-text-default);
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   background-clip: padding-box;
   border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-radius-base);
@@ -54,7 +54,7 @@
 
 .formControl:focus {
   color: var(--tc-text-default);
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   border-color: var(--tc-primary-color-light);
   outline: 0;
   box-shadow: var(--tc-primary-color-shadow);

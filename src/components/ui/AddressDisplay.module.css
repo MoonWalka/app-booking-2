@@ -9,7 +9,7 @@
    ============================= */
 .addressDefault {
   padding: var(--tc-space-4);
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
   border-radius: var(--tc-radius-base);
   margin-bottom: var(--tc-space-4);
   border: 1px solid var(--tc-border-default);
@@ -20,7 +20,7 @@
   display: flex;
   align-items: center;
   padding: var(--tc-space-2);
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
   border-radius: var(--tc-radius-sm);
   margin-bottom: var(--tc-space-1);
   border: 1px solid var(--tc-border-default);
@@ -59,12 +59,12 @@
 }
 
 .addressLocation {
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
   margin-bottom: var(--tc-space-1);
 }
 
 .addressCountry {
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
   font-style: italic;
   font-size: var(--tc-font-size-sm);
 }
@@ -96,7 +96,7 @@
    ÉTAT VIDE
    ============================= */
 .empty {
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
   font-style: italic;
   display: flex;
   align-items: center;

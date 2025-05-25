@@ -27,7 +27,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 15px 20px;
-  border-bottom: 1px solid var(--tc-gray-200);
+  border-bottom: 1px solid var(--tc-color-gray-200);
 }
 
 .editor-modal-container .tc-modal-close {
@@ -37,7 +37,7 @@
   font-size: 20px;
   line-height: 1;
   cursor: pointer;
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
   transition: color 0.15s ease-in-out;
 }
 
@@ -56,7 +56,7 @@
 }
 
 .editor-modal-container .btn-outline-info:hover {
-  color: var(--tc-white);
+  color: var(--tc-color-white);
   background-color: var(--tc-color-info);
   border-color: var(--tc-color-info);
 }
@@ -66,8 +66,8 @@
   display: flex;
   flex-wrap: wrap;
   background-color: white;
-  border: 1px solid var(--tc-gray-300);
-  border-bottom: 1px solid var(--tc-gray-300);
+  border: 1px solid var(--tc-color-gray-300);
+  border-bottom: 1px solid var(--tc-color-gray-300);
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
   padding: 8px;
@@ -107,7 +107,7 @@
 
 /* Style pour le container de l'éditeur */
 .editor-modal-container .ql-container.ql-snow {
-  border: 1px solid var(--tc-gray-300);
+  border: 1px solid var(--tc-color-gray-300);
   border-top: 0;
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
@@ -168,8 +168,8 @@
   z-index: 2000;
   position: absolute;
   transform: translateY(10px);
-  background-color: var(--tc-white);
-  border: 1px solid var(--tc-gray-300);
+  background-color: var(--tc-color-white);
+  border: 1px solid var(--tc-color-gray-300);
   box-shadow: 0px 0px 5px rgba(0,0,0,.2);
   border-radius: 3px;
   padding: 5px 12px;
@@ -182,8 +182,8 @@
   position: absolute;
   min-width: 100%;
   padding: 4px 8px;
-  background-color: var(--tc-white);
-  border: 1px solid var(--tc-gray-300);
+  background-color: var(--tc-color-white);
+  border: 1px solid var(--tc-color-gray-300);
   box-shadow: 0 2px 8px rgba(0,0,0,.15);
   border-radius: 3px;
   z-index: 2000;

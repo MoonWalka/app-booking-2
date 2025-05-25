@@ -34,13 +34,13 @@
 
 .stepDot.active {
   background-color: var(--tc-color-primary);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
   border-color: var(--tc-color-primary);
 }
 
 .stepDot.completed {
   background-color: var(--tc-color-success);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
   border-color: var(--tc-color-success);
 }
 

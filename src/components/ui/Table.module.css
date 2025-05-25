@@ -15,7 +15,7 @@
 .table th {
   background-color: var(--tc-color-primary) !important;
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
   border-top: none !important;
 }
 

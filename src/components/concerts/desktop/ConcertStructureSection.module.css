@@ -9,14 +9,14 @@
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   margin-bottom: 20px;
-  border: 1px solid var(--tc-gray-200);
+  border: 1px solid var(--tc-color-gray-200);
   overflow: hidden;
 }
 
 .cardHeader {
-  background-color: var(--tc-gray-50);
+  background-color: var(--tc-color-gray-50);
   padding: 15px 20px;
-  border-bottom: 1px solid var(--tc-gray-200);
+  border-bottom: 1px solid var(--tc-color-gray-200);
   display: flex;
   align-items: center;
   gap: 10px;
@@ -29,7 +29,7 @@
 }
 
 .cardHeader i {
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
   font-size: 1.2rem;
 }
 
@@ -67,7 +67,7 @@
 }
 
 .structureItem:hover {
-  background-color: var(--tc-gray-50);
+  background-color: var(--tc-color-gray-50);
 }
 
 .structureName {
@@ -77,14 +77,14 @@
 
 .structureDetails {
   font-size: 13px;
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
 }
 
 .structureType {
-  background-color: var(--tc-gray-200);
+  background-color: var(--tc-color-gray-200);
   padding: 2px 8px;
   border-radius: 12px;
   font-size: 12px;
@@ -107,8 +107,8 @@
 }
 
 .structureCard {
-  background-color: var(--tc-gray-50);
-  border: 1px solid var(--tc-gray-200);
+  background-color: var(--tc-color-gray-50);
+  border: 1px solid var(--tc-color-gray-200);
   border-radius: 6px;
   padding: 12px;
   display: flex;

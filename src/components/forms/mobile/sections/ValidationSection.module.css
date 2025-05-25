@@ -5,7 +5,7 @@
  */
 
 .validationSection {
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   border-radius: var(--tc-radius-base);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
   margin-bottom: var(--tc-space-4);
@@ -14,7 +14,7 @@
 
 .sectionHeader {
   padding: var(--tc-space-4);
-  background-color: var(--tc-gray-50);
+  background-color: var(--tc-color-gray-50);
   border-bottom: 1px solid var(--tc-border-default);
   display: flex;
   justify-content: space-between;
@@ -80,7 +80,7 @@
   padding: var(--tc-space-1) var(--tc-space-2);
   border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-radius-sm);
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   color: var(--tc-text-default);
   font-size: var(--tc-font-size-xs);
   cursor: pointer;
@@ -88,7 +88,7 @@
 }
 
 .actionButton:hover {
-  background-color: var(--tc-gray-50);
+  background-color: var(--tc-color-gray-50);
 }
 
 .validationPending {
@@ -104,7 +104,7 @@
 }
 
 .statusPending {
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
   color: var(--tc-text-muted);
 }
 

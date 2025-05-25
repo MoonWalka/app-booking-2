@@ -39,7 +39,7 @@
   gap: var(--tc-space-2);
   padding: var(--tc-space-2) var(--tc-space-4);
   background-color: var(--tc-color-primary);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
   border: none;
   border-radius: var(--tc-radius-base);
   font-weight: var(--tc-font-weight-medium);
@@ -49,12 +49,12 @@
 
 .addButton:hover {
   background-color: var(--tc-primary-color-dark);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
   text-decoration: none;
 }
 
 .content {
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   border-radius: var(--tc-border-radius-md);
   box-shadow: var(--tc-box-shadow);
   overflow: hidden;
@@ -64,7 +64,7 @@
   display: flex;
   gap: var(--tc-space-4);
   padding: var(--tc-space-4) var(--tc-space-6);
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
   border-bottom: var(--tc-border-width) solid var(--tc-border-default);
 }
 
@@ -101,7 +101,7 @@
 }
 
 .dataTable th {
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
   font-weight: var(--tc-font-weight-semibold);
   color: var(--tc-text-secondary);
   text-align: left;
@@ -145,7 +145,7 @@
   white-space: nowrap;
   vertical-align: baseline;
   border-radius: var(--tc-radius-base);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
 }
 
 .badgeSuccess {
@@ -198,7 +198,7 @@
 
 .actionButtonPrimary:hover {
   background-color: var(--tc-color-primary);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
 }
 
 .actionButtonDanger {
@@ -208,7 +208,7 @@
 
 .actionButtonDanger:hover {
   background-color: var(--tc-color-error);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
 }
 
 .muted {
@@ -230,7 +230,7 @@
 }
 
 .loadMoreButton:hover {
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
   color: var(--tc-text-primary);
 }
 

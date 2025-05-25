@@ -25,7 +25,7 @@
 }
 
 .searchResultsDropdown {
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   border: var(--tc-border-width) solid var(--tc-border-default);
   border-radius: var(--tc-radius-base);
   z-index: var(--tc-z-index-dropdown);
@@ -44,7 +44,7 @@
 }
 
 .searchResultItem:hover {
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
 }
 
 .searchResultItem:last-child {
@@ -57,7 +57,7 @@
   border-radius: 50%;
   margin-right: var(--tc-space-4);
   overflow: hidden;
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -85,7 +85,7 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: var(--tc-gray-200);
+  background-color: var(--tc-color-gray-200);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -102,7 +102,7 @@
 
 .artistesTable th {
   border-top: none;
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
   padding: var(--tc-space-4) var(--tc-space-6);
   font-weight: var(--tc-font-weight-semibold);
   color: var(--tc-text-primary);
@@ -122,7 +122,7 @@
   height: 48px;
   border-radius: 50%;
   overflow: hidden;
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
   display: flex;
   align-items: center;
   justify-content: center;

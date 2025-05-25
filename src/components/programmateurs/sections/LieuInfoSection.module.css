@@ -53,7 +53,7 @@
   left: 0;
   right: 0;
   z-index: 10;
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-box-shadow-md);
@@ -163,7 +163,7 @@
 }
 
 .addButton:hover {
-  color: var(--tc-white);
+  color: var(--tc-color-white);
   background-color: var(--tc-color-primary);
 }
 

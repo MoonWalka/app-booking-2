@@ -23,8 +23,8 @@
   display: flex;
   align-items: center;
   padding: var(--tc-space-4);
-  background-color: var(--tc-gray-100);
-  border-bottom: 1px solid var(--tc-gray-300);
+  background-color: var(--tc-color-gray-100);
+  border-bottom: 1px solid var(--tc-color-gray-300);
   gap: var(--tc-space-2);
 }
 
@@ -114,12 +114,12 @@
   display: flex;
   padding: var(--tc-space-2);
   cursor: pointer;
-  border-bottom: 1px solid var(--tc-gray-200);
+  border-bottom: 1px solid var(--tc-color-gray-200);
   transition: background-color var(--tc-transition-duration);
 }
 
 .addressSuggestionItem:hover {
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
 }
 
 .addressSuggestionItem:last-child {
@@ -146,7 +146,7 @@
 
 .suggestionDetails {
   font-size: var(--tc-font-size-xs);
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
   margin-top: var(--tc-space-1);
 }
 
@@ -155,7 +155,7 @@
   align-items: center;
   gap: var(--tc-space-2);
   margin-top: var(--tc-space-1);
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
   font-size: var(--tc-font-size-sm);
 }
 

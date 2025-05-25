@@ -52,7 +52,7 @@
   padding: 0.75rem;
   border: 1px solid var(--tc-bs-border-color);
   border-radius: 0.375rem;
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
 }
 
 .concertInfo {

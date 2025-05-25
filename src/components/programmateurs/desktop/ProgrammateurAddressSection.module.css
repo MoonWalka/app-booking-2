@@ -10,7 +10,7 @@
 }
 
 .cardWrapper {
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-box-shadow);
   margin-bottom: var(--tc-space-6);
@@ -24,7 +24,7 @@
 }
 
 .cardHeader {
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
   padding: var(--tc-space-4);
   display: flex;
   align-items: center;

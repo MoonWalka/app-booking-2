@@ -18,14 +18,14 @@
   flex: 1;
   padding: var(--tc-space-1) var(--tc-space-2);
   text-align: center;
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
   color: var(--tc-text-default);
   position: relative;
 }
 
 .tc-progress-step.tc-active {
   background-color: var(--tc-color-primary);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
 }
 
 .tc-progress-step:not(:last-child)::after {
@@ -38,7 +38,7 @@
   height: 0;
   border-top: 10px solid transparent;
   border-bottom: 10px solid transparent;
-  border-left: 10px solid var(--tc-gray-100);
+  border-left: 10px solid var(--tc-color-gray-100);
   z-index: 1;
 }
 
@@ -51,12 +51,12 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--tc-gray-50);
+  background-color: var(--tc-color-gray-50);
 }
 
 .tc-form-header {
   background-color: var(--tc-color-secondary);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
   padding: var(--tc-space-2) var(--tc-space-6);
   text-align: center;
 }
@@ -75,7 +75,7 @@
 
 .tc-form-footer {
   background-color: var(--tc-color-secondary);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
   padding: var(--tc-space-2);
   text-align: center;
   font-size: var(--tc-font-size-xs);
@@ -84,7 +84,7 @@
 .tc-form-security-notice {
   margin-top: var(--tc-space-6);
   padding: var(--tc-space-1) var(--tc-space-2);
-  background-color: var(--tc-gray-50);
+  background-color: var(--tc-color-gray-50);
   border-radius: var(--tc-radius-base);
   text-align: center;
   font-size: var(--tc-font-size-xs);
@@ -129,7 +129,7 @@
 /* LIENS DE FORMULAIRE */
 .tc-form-link-container {
   margin-top: var(--tc-space-4);
-  background-color: var(--tc-gray-50);
+  background-color: var(--tc-color-gray-50);
   padding: var(--tc-space-2);
   border-radius: var(--tc-radius-base);
 }
@@ -187,7 +187,7 @@
 }
 
 .tc-concert-info {
-  background-color: var(--tc-gray-50);
+  background-color: var(--tc-color-gray-50);
   padding: var(--tc-space-2);
   border-radius: var(--tc-radius-base);
   margin-top: var(--tc-space-2);

@@ -49,7 +49,7 @@
   padding: var(--tc-space-2) var(--tc-space-4);
   border-radius: var(--tc-radius-sm);
   background-color: var(--tc-color-primary);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
   border: none;
   font-size: var(--tc-font-size-sm);
   transition: all 0.2s;

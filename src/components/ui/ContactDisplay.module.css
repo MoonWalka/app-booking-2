@@ -9,10 +9,10 @@
    ============================= */
 .contactDefault {
   padding: var(--tc-space-4);
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
   border-radius: var(--tc-radius-base);
   margin-bottom: var(--tc-space-4);
-  border: 1px solid var(--tc-gray-300);
+  border: 1px solid var(--tc-color-gray-300);
   transition: var(--tc-transition-base);
 }
 
@@ -22,10 +22,10 @@
   gap: var(--tc-space-4);
   align-items: center;
   padding: var(--tc-space-2);
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
   border-radius: var(--tc-radius-sm);
   margin-bottom: var(--tc-space-2);
-  border: 1px solid var(--tc-gray-300);
+  border: 1px solid var(--tc-color-gray-300);
   transition: var(--tc-transition-base);
 }
 
@@ -52,7 +52,7 @@
   font-weight: var(--tc-font-weight-normal);
   font-style: italic;
   margin-left: var(--tc-space-2);
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
   font-size: var(--tc-font-size-sm);
 }
 
@@ -77,7 +77,7 @@
 }
 
 .contactEmpty {
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
   display: flex;
   align-items: center;
   margin-top: var(--tc-space-2);

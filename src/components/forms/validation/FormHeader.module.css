@@ -50,8 +50,8 @@
 }
 
 .backButton:hover {
-  background-color: var(--tc-gray-100);
-  border-color: var(--tc-gray-500);
+  background-color: var(--tc-color-gray-100);
+  border-color: var(--tc-color-gray-500);
 }
 
 .divider {

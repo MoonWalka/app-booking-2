@@ -12,7 +12,7 @@
   margin: 0 auto;
   padding: var(--tc-space-8) var(--tc-space-4);
   font-family: var(--tc-font-sans);
-  background-color: var(--tc-gray-50);
+  background-color: var(--tc-color-gray-50);
   min-height: 100vh;
 }
 
@@ -41,7 +41,7 @@
   display: flex;
   align-items: center;
   padding: var(--tc-space-2) var(--tc-space-4);
-  background-color: var(--tc-gray-50);
+  background-color: var(--tc-color-gray-50);
   border-bottom: 1px solid var(--tc-border-default);
   border-radius: var(--tc-radius-base) var(--tc-radius-base) 0 0;
 }
@@ -84,13 +84,13 @@
 }
 
 .tc-form-public .tc-optional {
-  color: var(--tc-gray-500);
+  color: var(--tc-color-gray-500);
   font-size: var(--tc-font-size-sm);
   font-style: italic;
 }
 
 .tc-form-public .tc-input-group-text {
-  background-color: var(--tc-gray-50);
+  background-color: var(--tc-color-gray-50);
   border-color: var(--tc-border-default);
   color: var(--tc-text-muted);
 }
@@ -103,7 +103,7 @@
 
 .tc-form-public .tc-btn-submit-public {
   background-color: var(--tc-color-primary);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
   border: none;
   border-radius: var(--tc-radius-sm);
   padding: var(--tc-space-2) var(--tc-space-6);
@@ -117,7 +117,7 @@
 }
 
 .tc-form-public .tc-btn-submit-public:disabled {
-  background-color: var(--tc-gray-300);
+  background-color: var(--tc-color-gray-300);
   cursor: not-allowed;
 }
 
@@ -125,7 +125,7 @@
   margin-top: var(--tc-space-8);
   text-align: center;
   padding: var(--tc-space-2);
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
   font-size: var(--tc-font-size-sm);
 }
 

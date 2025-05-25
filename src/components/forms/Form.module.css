@@ -50,7 +50,7 @@
   font-size: var(--tc-font-size-base);
   line-height: 1.5;
   color: var(--tc-text-primary);
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   background-clip: padding-box;
   border: var(--tc-border-width) solid var(--tc-border-default);
   border-radius: var(--tc-radius-sm);

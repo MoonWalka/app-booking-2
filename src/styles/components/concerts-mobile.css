@@ -297,36 +297,36 @@
 /* // Correction UI: Styles spécifiques pour différents statuts avec amélioration de contraste */
 .concert-status-badge.bg-info {
   background-color: rgba(23, 162, 184, 0.2) !important;
-  color: var(--tc-gray-800) !important;
+  color: var(--tc-color-gray-800) !important;
 }
 
 .concert-status-badge.bg-primary {
   background-color: rgba(0, 123, 255, 0.2) !important;
-  color: var(--tc-gray-800) !important;
+  color: var(--tc-color-gray-800) !important;
 }
 
 .concert-status-badge.bg-success {
   background-color: rgba(40, 167, 69, 0.2) !important;
-  color: var(--tc-gray-800) !important;
+  color: var(--tc-color-gray-800) !important;
 }
 
 .concert-status-badge.bg-warning {
   background-color: rgba(255, 193, 7, 0.2) !important;
-  color: var(--tc-gray-800) !important;
+  color: var(--tc-color-gray-800) !important;
 }
 
 .concert-status-badge.bg-secondary {
   background-color: rgba(108, 117, 125, 0.2) !important;
-  color: var(--tc-gray-800) !important;
+  color: var(--tc-color-gray-800) !important;
 }
 
 .concert-status-badge.bg-danger {
   background-color: rgba(220, 53, 69, 0.2) !important;
-  color: var(--tc-gray-800) !important;
+  color: var(--tc-color-gray-800) !important;
 }
 
 .concert-status-badge.bg-light {
   background-color: rgba(248, 249, 250, 0.8) !important;
-  color: var(--tc-gray-800) !important;
+  color: var(--tc-color-gray-800) !important;
   border: 1px solid rgba(0, 0, 0, 0.1);
 }

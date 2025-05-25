@@ -38,14 +38,14 @@
 
 .tabLink:hover {
   color: var(--tc-color-primary);
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
 }
 
 .tabLink.active {
   color: var(--tc-color-primary);
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   border-color: var(--tc-border-default);
-  border-bottom: 1px solid var(--tc-white);
+  border-bottom: 1px solid var(--tc-color-white);
   margin-bottom: -1px;
 }
 
@@ -70,12 +70,12 @@
 
 .tabBadgeSuccess {
   background-color: var(--tc-color-success);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
 }
 
 .tabBadgeInfo {
   background-color: var(--tc-color-info);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
 }
 
 .spinner {

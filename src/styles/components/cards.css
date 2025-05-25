@@ -58,7 +58,7 @@
 
 .tc-card-footer {
   padding: var(--tc-space-2) var(--tc-space-4);
-  background-color: var(--tc-gray-50);
+  background-color: var(--tc-color-gray-50);
   border-top: 1px solid var(--tc-border-default);
 }
 
@@ -125,12 +125,12 @@
 .tc-card-accent-info { border-left-color: var(--tc-color-info); }
 
 .tc-card-bg-light {
-  background-color: var(--tc-gray-50);
+  background-color: var(--tc-color-gray-50);
 }
 
 .tc-card-bg-primary {
   background-color: var(--tc-color-primary);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
 }
 
 .tc-card-bg-primary .tc-card-header,
@@ -140,7 +140,7 @@
 }
 
 .tc-card-bg-primary .tc-card-header-title {
-  color: var(--tc-white);
+  color: var(--tc-color-white);
 }
 
 .tc-card-bg-subtle-primary { background-color: rgba(var(--tc-color-primary-rgb), 0.05); }
@@ -157,9 +157,9 @@
 }
 
 .tc-card-table th {
-  background-color: var(--tc-gray-50);
+  background-color: var(--tc-color-gray-50);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-gray-700);
+  color: var(--tc-color-gray-700);
   font-size: var(--tc-font-size-sm);
   text-align: left;
   text-transform: uppercase;
@@ -242,7 +242,7 @@
 .tc-card-action-button {
   background: transparent;
   border: none;
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
   cursor: pointer;
   padding: var(--tc-space-1);
   border-radius: var(--tc-radius-sm);
@@ -253,8 +253,8 @@
 }
 
 .tc-card-action-button:hover {
-  background-color: var(--tc-gray-100);
-  color: var(--tc-gray-900);
+  background-color: var(--tc-color-gray-100);
+  color: var(--tc-color-gray-900);
 }
 
 .tc-card-action-button i,

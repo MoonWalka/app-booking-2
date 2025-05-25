@@ -53,7 +53,7 @@
 }
 
 .content {
-  color: var(--tc-gray-700);
+  color: var(--tc-color-gray-700);
   margin-bottom: 0;
   font-size: var(--tc-font-size-base);
   line-height: var(--tc-line-height-normal);

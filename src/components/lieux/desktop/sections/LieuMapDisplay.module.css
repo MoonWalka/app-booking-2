@@ -61,7 +61,7 @@
 .interactiveMapContainer {
   border-radius: var(--tc-radius-base);
   overflow: hidden;
-  border: 1px solid var(--tc-gray-300);
+  border: 1px solid var(--tc-color-gray-300);
   margin-bottom: var(--tc-space-2);
   height: 400px;
   box-shadow: var(--tc-shadow-sm);
@@ -92,19 +92,19 @@
   align-items: center;
   justify-content: center;
   background-color: var(--tc-bg-default);
-  border: 1px solid var(--tc-gray-300);
+  border: 1px solid var(--tc-color-gray-300);
   border-radius: var(--tc-radius-base);
   padding: var(--tc-space-1);
   cursor: pointer;
-  color: var(--tc-gray-700);
+  color: var(--tc-color-gray-700);
   transition: var(--tc-transition-base);
   width: 32px;
   height: 32px;
 }
 
 .mapButton:hover {
-  background-color: var(--tc-gray-100);
-  border-color: var(--tc-gray-400);
+  background-color: var(--tc-color-gray-100);
+  border-color: var(--tc-color-gray-400);
   color: var(--tc-color-primary);
 }
 

@@ -18,7 +18,7 @@
 }
 
 .syncManager {
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   border: var(--tc-border-width) solid var(--tc-border-default);
   border-radius: var(--tc-radius-lg);
   box-shadow: var(--tc-box-shadow);
@@ -29,7 +29,7 @@
   justify-content: space-between;
   align-items: center;
   padding: var(--tc-space-4) var(--tc-space-6);
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
   border-bottom: var(--tc-border-width) solid var(--tc-border-default);
 }
 
@@ -52,7 +52,7 @@
 
 .badgeInfo {
   background-color: var(--tc-color-info);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
 }
 
 .badgeWarning {
@@ -66,7 +66,7 @@
 
 .footer {
   padding: var(--tc-space-4) var(--tc-space-6);
-  background-color: var(--tc-gray-50);
+  background-color: var(--tc-color-gray-50);
   border-top: var(--tc-border-width) solid var(--tc-border-default);
   font-size: var(--tc-font-size-sm);
   color: var(--tc-text-muted);

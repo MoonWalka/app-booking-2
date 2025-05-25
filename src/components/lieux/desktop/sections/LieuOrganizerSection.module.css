@@ -67,7 +67,7 @@
   font-weight: var(--tc-font-weight-medium);
   margin-bottom: var(--tc-space-2);
   display: block;
-  color: var(--tc-gray-700);
+  color: var(--tc-color-gray-700);
   font-size: var(--tc-font-size-sm);
 }
 
@@ -82,7 +82,7 @@
   margin-top: var(--tc-space-1);
   max-height: 300px;
   overflow-y: auto;
-  border: 1px solid var(--tc-gray-300);
+  border: 1px solid var(--tc-color-gray-300);
   border-radius: var(--tc-radius-base);
   background-color: var(--tc-bg-default);
   box-shadow: var(--tc-shadow-base);
@@ -93,7 +93,7 @@
   cursor: pointer;
   padding: var(--tc-space-2) var(--tc-space-4);
   transition: background-color var(--tc-transition-duration);
-  border-bottom: 1px solid var(--tc-gray-200);
+  border-bottom: 1px solid var(--tc-color-gray-200);
 }
 
 .programmateurItem:last-child {
@@ -101,7 +101,7 @@
 }
 
 .programmateurItem:hover {
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
 }
 
 .programmateurName {
@@ -112,7 +112,7 @@
 
 .programmateurDetails {
   font-size: var(--tc-font-size-xs);
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
   display: flex;
   gap: var(--tc-space-2);
   align-items: center;
@@ -121,7 +121,7 @@
 .programmateurStructure:before {
   content: "|";
   margin-right: var(--tc-space-2);
-  color: var(--tc-gray-400);
+  color: var(--tc-color-gray-400);
 }
 
 /* =============================
@@ -136,9 +136,9 @@
   justify-content: space-between;
   align-items: flex-start;
   padding: var(--tc-space-4);
-  border: 1px solid var(--tc-gray-300);
+  border: 1px solid var(--tc-color-gray-300);
   border-radius: var(--tc-radius-base);
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
 }
 
 .programmateurInfo {
@@ -156,7 +156,7 @@
 
 .programmateurContactItem {
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-gray-700);
+  color: var(--tc-color-gray-700);
   display: flex;
   align-items: center;
   gap: var(--tc-space-1);
@@ -183,7 +183,7 @@
 .infoLabel {
   width: 120px;
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
   display: flex;
   align-items: center;
   gap: var(--tc-space-1);
@@ -228,7 +228,7 @@
 }
 
 .textEmpty {
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
   font-style: italic;
   font-size: var(--tc-font-size-sm);
 }

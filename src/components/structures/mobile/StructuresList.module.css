@@ -118,8 +118,8 @@
   font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-medium);
   border-radius: var(--tc-border-radius-pill);
-  background-color: var(--tc-gray-200);
-  color: var(--tc-gray-700);
+  background-color: var(--tc-color-gray-200);
+  color: var(--tc-color-gray-700);
 }
 
 .badgeProgrammateurs {

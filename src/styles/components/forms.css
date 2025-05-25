@@ -94,13 +94,13 @@
 }
 
 .tc-form-control::placeholder {
-  color: var(--tc-gray-500);
+  color: var(--tc-color-gray-500);
   opacity: 1;
 }
 
 .tc-form-control:disabled,
 .tc-form-control[readonly] {
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
   opacity: 0.7;
   cursor: not-allowed;
 }
@@ -308,7 +308,7 @@ textarea.tc-form-control-lg {
   bottom: 2px;
   border: none;
   background-color: var(--tc-color-primary);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
   border-radius: 0 var(--tc-radius-base) var(--tc-radius-base) 0;
   padding: 0 var(--tc-space-2);
   cursor: pointer;
@@ -335,10 +335,10 @@ textarea.tc-form-control-lg {
   font-size: var(--tc-font-size-sm);
   font-weight: 400;
   line-height: 1.5;
-  color: var(--tc-gray-700);
+  color: var(--tc-color-gray-700);
   text-align: center;
   white-space: nowrap;
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
   border: 1px solid var(--tc-border-default);
 }
 
@@ -383,7 +383,7 @@ textarea.tc-form-control-lg {
   padding: var(--tc-space-1) var(--tc-space-2);
   border: 1px dashed var(--tc-border-default);
   border-radius: var(--tc-radius-base);
-  background-color: var(--tc-gray-50);
+  background-color: var(--tc-color-gray-50);
   text-align: center;
   width: 100%;
   transition: var(--tc-transition-base);
@@ -398,12 +398,12 @@ textarea.tc-form-control-lg {
   display: block;
   font-size: 1.5rem;
   margin-bottom: var(--tc-space-1);
-  color: var(--tc-gray-500);
+  color: var(--tc-color-gray-500);
 }
 
 .tc-form-file-text {
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-gray-700);
+  color: var(--tc-color-gray-700);
 }
 
 .tc-form-file-help {

@@ -102,7 +102,7 @@
    ============================= */
 .loadingText {
   margin-top: var(--tc-space-4);
-  color: var(--tc-gray-700);
+  color: var(--tc-color-gray-700);
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-medium);
   text-align: center;

@@ -38,7 +38,7 @@ body.contrat-print-mode {
   width: 210mm;
   min-height: 297mm;
   margin: 0 auto;
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   
   /* Supprimer couleurs de fond & images inutiles à l'impression */
   background-image: none;
@@ -455,7 +455,7 @@ body.contrat-print-mode {
 }
 
 .contrat-print-mode .signature-line {
-  border-bottom: 1px solid var(--tc-gray-800);
+  border-bottom: 1px solid var(--tc-color-gray-800);
   height: 15mm;
   margin-top: 15mm;
 }
@@ -504,7 +504,7 @@ body.contrat-print-mode {
   
   /* Visualisation des sauts de page en mode prévisualisation */
   .contrat-print-mode .page-break {
-    border-top: 2px dashed var(--tc-gray-800);
+    border-top: 2px dashed var(--tc-color-gray-800);
     margin: 20px 0;
     position: relative;
     height: 20px;

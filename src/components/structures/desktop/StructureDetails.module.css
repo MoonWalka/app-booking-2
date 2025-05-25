@@ -129,7 +129,7 @@
   border-bottom: var(--tc-border-width) solid var(--tc-border-default);
   font-weight: var(--tc-font-weight-semibold);
   color: var(--tc-text-primary);
-  background-color: var(--tc-card-header-bg);
+  background-color: var(--tc-bg-surface);
 }
 
 .cardHeader h3 {
@@ -157,7 +157,7 @@
   display: flex;
   justify-content: flex-end;
   padding: var(--tc-space-4) var(--tc-space-6);
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
   border-top: var(--tc-border-width) solid var(--tc-border-default);
 }
 
@@ -171,7 +171,7 @@
   white-space: nowrap;
   vertical-align: baseline;
   border-radius: var(--tc-radius-base);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
 }
 
 .badgeSuccess {

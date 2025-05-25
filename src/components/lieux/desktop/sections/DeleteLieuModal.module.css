@@ -54,7 +54,7 @@
   padding: var(--tc-space-2) var(--tc-space-4);
   border-radius: var(--tc-radius-base);
   margin: var(--tc-space-4) 0;
-  color: var(--tc-gray-800);
+  color: var(--tc-color-gray-800);
 }
 
 /* =============================
@@ -67,13 +67,13 @@
   gap: var(--tc-space-2);
   border-top: 1px solid var(--tc-border-default);
   justify-content: flex-end;
-  background-color: var(--tc-gray-50);
+  background-color: var(--tc-color-gray-50);
 }
 
 .cancelBtn {
   background-color: var(--tc-bg-default);
-  color: var(--tc-gray-700);
-  border: 1px solid var(--tc-gray-300);
+  color: var(--tc-color-gray-700);
+  border: 1px solid var(--tc-color-gray-300);
   display: flex;
   align-items: center;
   gap: var(--tc-space-1);
@@ -86,8 +86,8 @@
 }
 
 .cancelBtn:hover {
-  background-color: var(--tc-gray-100);
-  border-color: var(--tc-gray-400);
+  background-color: var(--tc-color-gray-100);
+  border-color: var(--tc-color-gray-400);
 }
 
 .deleteBtn {

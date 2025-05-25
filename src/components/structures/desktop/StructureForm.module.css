@@ -10,7 +10,7 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: var(--tc-space-6);
-  background-color: var(--tc-gray-50);
+  background-color: var(--tc-color-gray-50);
 }
 
 .formHeader {
@@ -83,7 +83,7 @@
 }
 
 .formCard {
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-shadow-sm);
   margin-bottom: var(--tc-space-6);
@@ -95,7 +95,7 @@
   align-items: center;
   padding: var(--tc-space-4);
   border-bottom: 1px solid var(--tc-border-default);
-  background-color: var(--tc-gray-100);
+  background-color: var(--tc-color-gray-100);
 }
 
 .cardHeader i {
@@ -146,7 +146,7 @@
   font-size: var(--tc-font-size-sm);
   line-height: 1.5;
   color: var(--tc-text-default);
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
@@ -206,7 +206,7 @@
 .btnPrimary {
   background-color: var(--tc-color-primary);
   border-color: var(--tc-color-primary);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
 }
 
 .btnPrimary:hover {
@@ -215,20 +215,20 @@
 }
 
 .btnSecondary {
-  background-color: var(--tc-gray-200);
-  border-color: var(--tc-gray-200);
-  color: var(--tc-gray-800);
+  background-color: var(--tc-color-gray-200);
+  border-color: var(--tc-color-gray-200);
+  color: var(--tc-color-gray-800);
 }
 
 .btnSecondary:hover {
-  background-color: var(--tc-gray-300);
-  border-color: var(--tc-gray-300);
+  background-color: var(--tc-color-gray-300);
+  border-color: var(--tc-color-gray-300);
 }
 
 .btnDanger {
   background-color: var(--tc-color-error);
   border-color: var(--tc-color-error);
-  color: var(--tc-white);
+  color: var(--tc-color-white);
 }
 
 .btnDanger:hover {

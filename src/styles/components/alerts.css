@@ -145,7 +145,7 @@
   align-items: center;
   padding: var(--tc-space-2) var(--tc-space-2);
   color: var(--tc-text-default);
-  background-color: var(--tc-card-header-bg);
+  background-color: var(--tc-bg-surface);
   border-bottom: 1px solid var(--tc-border-default);
 }
 

@@ -35,13 +35,13 @@
 }
 
 .tc-type-mairie {
-  background-color: rgba(var(--tc-gray-600-rgb), 0.1);
-  color: var(--tc-gray-600);
+  background-color: rgba(var(--tc-color-gray-600-rgb), 0.1);
+  color: var(--tc-color-gray-600);
 }
 
 .tc-type-autre {
   background-color: rgba(var(--tc-gray-100-rgb), 0.6);
-  color: var(--tc-gray-600);
+  color: var(--tc-color-gray-600);
 }
 
 /* =============================

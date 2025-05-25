@@ -53,7 +53,7 @@
 
 .suggestionSubtitle {
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-gray-800);
+  color: var(--tc-color-gray-800);
   margin-bottom: var(--tc-space-1);
 }
 

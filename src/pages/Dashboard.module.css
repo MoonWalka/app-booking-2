@@ -14,7 +14,7 @@
 }
 
 .statCard {
-  background-color: var(--tc-white);
+  background-color: var(--tc-color-white);
   padding: var(--tc-space-4);
   border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-shadow-sm);

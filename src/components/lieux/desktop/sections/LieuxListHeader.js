@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '@ui/Button';
+import FlexContainer from '@/components/ui/FlexContainer';
 import styles from './LieuxListHeader.module.css';
 
 /**
@@ -14,11 +15,13 @@ const LieuxListHeader = () => {
       <h2 className={styles.headerTitle}>Liste des lieux</h2>
       <Button 
         variant="primary"
-        className={`d-flex align-items-center gap-2 ${styles.addButton}`}
+        className={styles.addButton}
         onClick={() => navigate('/lieux/nouveau')}
       >
-        <i className="bi bi-plus-lg"></i>
-        Ajouter un lieu
+        <FlexContainer align="center" gap="sm" inline>
+          <i className="bi bi-plus-lg"></i>
+          Ajouter un lieu
+        </FlexContainer>
       </Button>
     </div>
   );

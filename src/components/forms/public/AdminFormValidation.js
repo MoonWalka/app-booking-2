@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import FlexContainer from '@/components/ui/FlexContainer';
 import FormLoadingState from './FormLoadingState';
 import FormErrorPanel from './FormErrorPanel';
 import styles from './AdminFormValidation.module.css';
@@ -37,14 +38,14 @@ const AdminFormValidation = ({
   }
 
   const footerContent = (
-    <div className="d-flex justify-content-end">
+    <FlexContainer justify="flex-end">
       <button className="tc-btn-secondary me-2" onClick={() => navigate('/concerts')}>
         Retour
       </button>
       <button className="tc-btn-primary" onClick={onValidate}>
         Valider les informations
       </button>
-    </div>
+    </FlexContainer>
   );
 
   return (

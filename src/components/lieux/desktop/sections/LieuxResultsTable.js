@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '@ui/Button';
 import Table from '@/components/ui/Table';
+import FlexContainer from '@/components/ui/FlexContainer';
 import styles from './LieuxResultsTable.module.css';
 
 /**
@@ -17,10 +18,10 @@ const LieuxResultsTable = ({ lieux, onDeleteLieu }) => {
       key: 'nom',
       sortable: true,
       render: (lieu) => (
-        <div className="d-flex align-items-center fw-medium">
+        <FlexContainer align="center" className="fw-medium">
           <i className="bi bi-geo-alt me-2 text-primary"></i>
           {lieu.nom}
-        </div>
+        </FlexContainer>
       )
     },
     {

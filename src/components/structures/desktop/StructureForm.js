@@ -1,6 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { Form, Alert } from 'react-bootstrap';
+import FlexContainer from '@/components/ui/FlexContainer';
 // MIGRATION: Utilisation du hook optimisé au lieu de l'ancien hook
 import { useStructureForm, useStructureValidation } from '@/hooks/structures';
 import useDeleteStructure from '@/hooks/structures/useDeleteStructure';
@@ -77,10 +78,10 @@ const StructureForm = () => {
         {/* NOUVEAU: Affichage du résumé des erreurs de validation */}
         {Object.keys(errors).length > 0 && (
           <Alert variant="warning" className={styles.validationAlert}>
-            <div className="d-flex align-items-center mb-2">
+            <FlexContainer align="center" className="mb-2">
               <i className="bi bi-exclamation-triangle me-2"></i>
               <strong>Veuillez corriger les erreurs suivantes :</strong>
-            </div>
+            </FlexContainer>
             <ul className="mb-0">
               {Object.entries(errors).map(([field, message]) => (
                 <li key={field}>{message}</li>

@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Button from '@ui/Button';
+import FlexContainer from '@/components/ui/FlexContainer';
 import styles from './LieuxTableRow.module.css';
 
 /**
@@ -53,10 +54,10 @@ const LieuxTableRow = ({ lieu, onRowClick, onDelete }) => {
       onClick={() => onRowClick(lieu.id)}
     >
       <td className="fw-medium">
-        <div className="d-flex align-items-center">
+        <FlexContainer align="center">
           <i className="bi bi-geo-alt me-2 text-primary"></i>
           {lieu.nom || <span className="text-muted">Sans nom</span>}
-        </div>
+        </FlexContainer>
       </td>
       <td>
         {lieu.type ? (

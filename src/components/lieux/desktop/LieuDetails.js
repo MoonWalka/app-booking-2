@@ -230,7 +230,6 @@ const LieuDetails = () => {
   // Add the programmateur ID to the form data when changed
   React.useEffect(() => {
     if (selectedProgrammateur) {
-      console.log('[LOG][LieuDetails] Appel handleProgrammateurChange(selectedProgrammateur)', selectedProgrammateur);
       handleProgrammateurChange(selectedProgrammateur);
     }
     // Ne rien faire si pas de programmateur sélectionné : on laisse le champ vide

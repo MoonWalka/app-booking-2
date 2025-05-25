@@ -233,7 +233,6 @@ const useGenericSearch = (config = {}, options = {}) => {
       setShowResults(true);
       
       if (enableLogging) {
-        console.log(`[useGenericSearch] Résultat depuis le cache:`, cachedResult);
       }
       
       return;
@@ -293,7 +292,6 @@ const useGenericSearch = (config = {}, options = {}) => {
       setShowResults(true);
       
       if (enableLogging) {
-        console.log(`[useGenericSearch] Résultats trouvés:`, formattedResults);
       }
       
       // Callback de recherche terminée
@@ -379,7 +377,6 @@ const useGenericSearch = (config = {}, options = {}) => {
     }
     
     if (enableLogging) {
-      console.log('[useGenericSearch] Élément sélectionné:', item);
     }
   }, [onResultSelect, enableLogging]);
   

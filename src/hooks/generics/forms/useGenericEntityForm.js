@@ -341,7 +341,6 @@ const useGenericEntityForm = (formConfig = {}, options = {}) => {
         result = await create(processedData);
       }
       
-      console.log(`✅ ${entityId ? 'Mise à jour' : 'Création'} réussie:`, result);
       return result;
       
     } catch (error) {

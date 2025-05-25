@@ -516,7 +516,6 @@ const useGenericCachedData = (entityType, cacheConfig = {}, options = {}) => {
   const warmCache = useCallback(async (warmingQueries = []) => {
     if (!warmingQueries.length) return;
     
-    console.log(`🔥 Préchauffage du cache ${entityType}:`, warmingQueries.length, 'requêtes');
     
     try {
       for (const queryConfig of warmingQueries) {
@@ -534,7 +533,6 @@ const useGenericCachedData = (entityType, cacheConfig = {}, options = {}) => {
         }
       }
       
-      console.log(`✅ Préchauffage terminé pour ${entityType}`);
     } catch (error) {
       console.error(`❌ Erreur préchauffage ${entityType}:`, error);
     }
@@ -542,7 +540,6 @@ const useGenericCachedData = (entityType, cacheConfig = {}, options = {}) => {
   
   // Nettoyage complet du cache
   const clearCache = useCallback(() => {
-    console.log(`🧹 Nettoyage complet du cache ${entityType}`);
     
     // Vider tous les niveaux de cache
     memoryCacheRef.current.clear();
@@ -579,14 +576,12 @@ const useGenericCachedData = (entityType, cacheConfig = {}, options = {}) => {
     
     setIsFromCache(false);
     
-    console.log(`✅ Cache ${entityType} nettoyé`);
   }, [entityType, generateCacheKey]);
 
   // Gestion du temps réel
   useEffect(() => {
     if (!enableRealTime || !enableCache) return;
     
-    console.log(`🔄 Activation temps réel pour ${entityType}`);
     
     // Simuler un abonnement temps réel (en production, utiliser onSnapshot)
     const subscription = setInterval(() => {
@@ -604,7 +599,6 @@ const useGenericCachedData = (entityType, cacheConfig = {}, options = {}) => {
       if (subscription) {
         clearInterval(subscription);
         setRealTimeSubscription(null);
-        console.log(`🔄 Désactivation temps réel pour ${entityType}`);
       }
     };
   }, [enableRealTime, enableCache, entityType, cacheKey, getCacheData, refetch]);
@@ -613,7 +607,6 @@ const useGenericCachedData = (entityType, cacheConfig = {}, options = {}) => {
   const applyOptimisticUpdate = useCallback((key, updates) => {
     if (!enableOptimisticUpdates) return;
     
-    console.log(`⚡ Mise à jour optimiste ${entityType}:`, updates);
     
     // Stocker la mise à jour optimiste
     setOptimisticUpdates(prev => new Map(prev.set(key, updates)));
@@ -656,7 +649,6 @@ const useGenericCachedData = (entityType, cacheConfig = {}, options = {}) => {
     if (error.code === 'network-error' && context.retryable !== false) {
       const retryCount = errorRetryRef.current.get(cacheKey) || 0;
       if (retryCount < 3) {
-        console.log(`🔄 Retry ${retryCount + 1}/3 pour ${entityType}`);
         errorRetryRef.current.set(cacheKey, retryCount + 1);
         setTimeout(() => refetch(), Math.pow(2, retryCount) * 1000);
       }

@@ -33,11 +33,8 @@ export const useConcertForm = (concertId) => {
   // Pour un nouveau concert, générer l'ID une seule fois pour éviter les boucles de render
   const generatedIdRef = useRef(isNewConcert ? generateConcertId() : null);
 
-  console.log(`[TRACE-UNIQUE][useConcertForm] init at ${new Date().toISOString()} - concertId=${concertId}, isNewConcert=${isNewConcert}`);
 
-  console.log(`[useConcertForm] init: concertId=${concertId}, isNewConcert=${isNewConcert}, concertId type=${typeof concertId}`);
   // Nettoyer les logs pour éviter la confusion (supprimer références à useConcertFormMigrated)
-  console.log("[useConcertForm] isNewConcert:", isNewConcert);
   
   debugLog(`Initialisation du formulaire de concert optimisé: ${isNewConcert ? 'nouveau concert' : `concert ${concertId}`}`, 'info', 'useConcertForm');
   
@@ -47,7 +44,6 @@ export const useConcertForm = (concertId) => {
   // Fonction de transformation des données avant sauvegarde
   const transformConcertData = useCallback((data) => {
     // Transformations spécifiques aux concerts avant sauvegarde
-    console.log("[useConcertForm] transformConcertData appelé avec:", data);
     
     const transformedData = {
       ...data,
@@ -62,7 +58,6 @@ export const useConcertForm = (concertId) => {
     };
     
     debugLog('Données transformées avant sauvegarde', 'debug', 'useConcertForm', transformedData);
-    console.log("[useConcertForm] transformConcertData retourne:", transformedData);
     return transformedData;
   }, []);
   
@@ -74,7 +69,6 @@ export const useConcertForm = (concertId) => {
       hasSubmittedRef.current = true;
       return;
     }
-    console.log(`[TRACE-UNIQUE][useConcertForm][onSuccess] at ${new Date().toISOString()} - savedId=${savedId}, isNewConcert=${isNewConcert}`);
     
     const message = isNewConcert
       ? `Le concert ${savedData.titre || ''} a été créé avec succès`
@@ -87,7 +81,6 @@ export const useConcertForm = (concertId) => {
   }, [isNewConcert]);
 
   const onErrorCallback = useCallback((error) => {
-    console.log(`[TRACE-UNIQUE][useConcertForm][onError] at ${new Date().toISOString()} - error:`, error);
     
     const message = isNewConcert
       ? `Erreur lors de la création du concert: ${error.message}`
@@ -143,14 +136,12 @@ export const useConcertForm = (concertId) => {
   
   // Log any changes to the form data
   useEffect(() => {
-    console.log("[useConcertForm] formData changed:", formHook.formData);
   }, [formHook.formData]);
   
   // Extension du hook avec des fonctionnalités spécifiques aux concerts
   
   // Gérer le changement d'artiste (avec mise à jour des données liées)
   const handleArtisteChange = useCallback((artiste) => {
-    console.log("[useConcertForm] handleArtisteChange appelé avec:", artiste?.id);
     
     if (artiste) {
       formHook.updateFormData(prev => ({
@@ -172,7 +163,6 @@ export const useConcertForm = (concertId) => {
 
   // Gérer le changement de lieu (avec mise à jour des données liées)
   const handleLieuChange = useCallback((lieu) => {
-    console.log("[useConcertForm] handleLieuChange appelé avec:", lieu?.id);
     
     if (lieu) {
       formHook.updateFormData(prev => ({
@@ -238,7 +228,6 @@ export const useConcertForm = (concertId) => {
 
   // Wrapper pour handleChange qui ajoute des logs détaillés et force la mise à jour de formData si nécessaire
   const handleChangeWithLogs = useCallback((e) => {
-    console.log("[useConcertForm] handleChange appelé avec:", e.target.name, e.target.value);
     
     // Extraire le nom et la valeur du champ
     const { name, value, type, checked } = e.target;
@@ -248,7 +237,6 @@ export const useConcertForm = (concertId) => {
       // Essayer d'utiliser la fonction handleChange originale
       if (formHook.handleChange) {
         formHook.handleChange(e);
-        console.log("[useConcertForm] Après handleChange, formData:", formHook.formData);
       } else {
         // Fallback : mettre à jour directement les données avec updateFormData
         console.warn("[useConcertForm] handleChange non défini, utilisation de updateFormData à la place");

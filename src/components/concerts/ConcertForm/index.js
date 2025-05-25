@@ -20,9 +20,7 @@ const ConcertFormWrapper = (props) => {
   
   // Log pour détecter si le wrapper est monté/démonté excessivement
   useEffect(() => {
-    console.log(`[🔍 ConcertFormWrapper] MONTÉ pour id=${id}`);
     return () => {
-      console.log(`[🔍 ConcertFormWrapper] DÉMONTÉ pour id=${id}`);
     };
   }, [id]);
   

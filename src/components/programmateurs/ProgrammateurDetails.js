@@ -9,7 +9,6 @@ import { useProgrammateurDetails } from '@/hooks/programmateurs';
 
 // Log après imports (pour respecter import/first)
 console.log('[DEBUG][ProgrammateurDetails] APRES imports');
-console.log('[TEST-TRACE-UNIQUE][ProgrammateurDetails] Ce fichier est bien exécuté !');
 
 /**
  * Composant conteneur pour les détails d'un programmateur
@@ -41,7 +40,6 @@ export default function ProgrammateurDetails() {
   console.log('[TRACE-UNIQUE][ProgrammateurDetails] Entrée dans la fonction composant');
 
   // Log d'état pour diagnostic visuel
-  console.log('[DEBUG][ProgrammateurDetails] State:', { loading, error, programmateur });
 
   if (loading) return <Spinner />;
   if (error) return <ErrorDisplay error={error} />;

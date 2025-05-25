@@ -301,7 +301,6 @@ const useGenericDataFetcher = (entityType, fetchConfig = {}, options = {}) => {
           setRetryCount(prev => prev + 1);
           
           retryTimeoutRef.current = setTimeout(() => {
-            console.log(`🔄 Retry ${retryCount + 1}/${maxRetries} pour ${entityType}`);
             fetchData(false); // Ne pas utiliser le cache lors du retry
           }, retryDelay * Math.pow(2, retryCount)); // Backoff exponentiel
         }
@@ -356,7 +355,6 @@ const useGenericDataFetcher = (entityType, fetchConfig = {}, options = {}) => {
           setLastFetch(new Date());
           setError(null);
           
-          console.log(`🔄 Données ${entityType} mises à jour en temps réel`);
         },
         (err) => {
           const errorMessage = `Erreur temps réel ${entityType}: ${err.message}`;

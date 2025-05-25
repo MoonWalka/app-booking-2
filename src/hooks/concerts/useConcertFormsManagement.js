@@ -137,7 +137,6 @@ const useConcertFormsManagement = (concertId) => {
   // NOUVEAU: Effet pour la synchronisation automatique initiale
   useEffect(() => {
     if (concertId) {
-      console.log(`[SYNC] Initialisation de la synchronisation pour concert ${concertId}`);
       setIsLoading(true);
       
       // Charger les données initiales
@@ -163,7 +162,6 @@ const useConcertFormsManagement = (concertId) => {
   // NOUVEAU: Effet pour la surveillance des changements de formulaire
   useEffect(() => {
     if (formData) {
-      console.log(`[SYNC] Analyse des données du formulaire ${formData.id}`);
       
       // Calculer le taux de completion et analyser les données
       const analysisResult = analyzeFormData(formData);
@@ -205,7 +203,6 @@ const useConcertFormsManagement = (concertId) => {
       if (concertDoc.exists()) {
         await fetchFormData(concertDoc.data());
         setLastSyncTime(new Date().toISOString());
-        console.log(`[SYNC] Synchronisation manuelle terminée pour concert ${concertId}`);
       }
     } catch (error) {
       console.error('[SYNC] Erreur lors de la synchronisation manuelle:', error);

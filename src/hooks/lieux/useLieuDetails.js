@@ -95,7 +95,6 @@ const useLieuDetails = (id) => {
   
   // Gestion du programmateur
   const handleProgrammateurChange = useCallback((newProgrammateur) => {
-    console.log('[LOG][useLieuDetails] handleProgrammateurChange appelé', newProgrammateur);
     if (newProgrammateur) {
       detailsHook.setFormData(prev => {
         const updated = {
@@ -107,7 +106,6 @@ const useLieuDetails = (id) => {
             prenom: newProgrammateur.prenom
           }
         };
-        console.log('[LOG][useLieuDetails] setFormData (programmateur)', updated);
         return updated;
       });
     } else {
@@ -117,7 +115,6 @@ const useLieuDetails = (id) => {
           programmateurId: null,
           programmateur: null
         };
-        console.log('[LOG][useLieuDetails] setFormData (programmateur null)', updated);
         return updated;
       });
     }
@@ -150,7 +147,6 @@ const useLieuDetails = (id) => {
   
   // Ajout log pour la suppression
   const handleDeleteClick = useCallback(() => {
-    console.log('[LOG][useLieuDetails] handleDeleteClick appelé');
     if (detailsHook.handleDelete) {
       detailsHook.handleDelete();
     }

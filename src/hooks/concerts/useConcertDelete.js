@@ -50,7 +50,6 @@ const useConcertDelete = (onDeleteSuccess) => {
     
     // Callbacks
     onSuccess: (id) => {
-      console.log('[useConcertDelete] Suppression réussie, ID:', id);
       showSuccessToast('Le concert a été supprimé avec succès');
       if (onDeleteSuccess) onDeleteSuccess(id);
     },
@@ -67,7 +66,6 @@ const useConcertDelete = (onDeleteSuccess) => {
 
   // Fonction adaptée pour les concerts avec logs et vérifications
   const handleDeleteConcert = useCallback((id, event) => {
-    console.log('[useConcertDelete] handleDeleteConcert appelé avec ID:', id);
     if (event) event.stopPropagation();
     
     // Vérifications de sécurité

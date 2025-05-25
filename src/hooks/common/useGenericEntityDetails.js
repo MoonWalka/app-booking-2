@@ -59,7 +59,6 @@ const useGenericEntityDetails = ({
   cacheTTL                   // TTL personnalisé pour ce hook (en ms)
 }) => {
   // debugLog('Hook exécuté !', 'trace', 'useGenericEntityDetails');
-  // console.log('useGenericEntityDetails args:', { entityType, collectionName, id });
   
   // Enregistrer l'instance avec le tracker à la place de la variable globale
   const instanceRef = useRef({
@@ -115,7 +114,6 @@ const useGenericEntityDetails = ({
   // Réinitialisation complète lors d'un changement d'ID
   useEffect(() => {
     // Ajout log pour traquer les changements d'ID
-    console.log('[LOG useEffect:id/entityType] Nouvelle valeur id:', id, 'entityType:', entityType);
     // Si l'ID change, on doit réinitialiser tous les états
     if (instanceRef.current.lastId !== id) {
       // Annuler les requêtes en cours
@@ -274,7 +272,6 @@ const useGenericEntityDetails = ({
         const transformedData = transformData ? transformData(entityData) : entityData;
         
         // Log avant safeSetState pour confirmer l'exécution
-        console.log('[DEBUG] Avant safeSetState dans fetchEntity:', transformedData);
 
         // Mettre en cache si le cache est activé
         if (cacheEnabled) {
@@ -710,7 +707,6 @@ const useGenericEntityDetails = ({
       }
       
       // Fermer le modal
-      console.log('[LOG][useGenericEntityDetails] setShowDeleteModal(false) après suppression');
       setShowDeleteModal(false);
       
       // Appeler le callback si fourni
@@ -726,7 +722,6 @@ const useGenericEntityDetails = ({
       debugLog(`Erreur lors de la suppression de ${entityType}: ${err}`, 'error', 'useGenericEntityDetails');
       
       // Fermer le modal
-      console.log('[LOG][useGenericEntityDetails] setShowDeleteModal(false) après erreur');
       setShowDeleteModal(false);
       
       // Appeler le callback d'erreur si fourni
@@ -742,15 +737,12 @@ const useGenericEntityDetails = ({
   
   // Fonction pour annuler la suppression (fermer le modal)
   const handleCancelDelete = useCallback(() => {
-    console.log('[LOG][useGenericEntityDetails] handleCancelDelete appelé, setShowDeleteModal(false)');
     setShowDeleteModal(false);
   }, []);
   
   // Fonction pour déclencher le processus de suppression
   const handleDelete = useCallback(() => {
-    console.log('[LOG][useGenericEntityDetails] handleDelete appelé, useDeleteModal:', useDeleteModal);
     if (useDeleteModal) {
-      console.log('[LOG][useGenericEntityDetails] setShowDeleteModal(true)');
       setShowDeleteModal(true);
     } else {
       handleConfirmDelete();

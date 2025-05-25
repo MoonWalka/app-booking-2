@@ -22,7 +22,6 @@ const ConcertDetails = () => {
   const navigate = useNavigate();
   const location = useLocation();
   
-  console.log("[🔍 ConcertDetails] RENDER #1 - id=" + id + ", pathname=" + location.pathname, { time: new Date().toLocaleTimeString() });
   
   // État pour la confirmation de suppression
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);

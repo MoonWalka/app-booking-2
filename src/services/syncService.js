@@ -45,7 +45,6 @@ export async function exportLocalDataToFirebase(collections = ['concerts', 'lieu
       }
     }
     
-    console.log(`Synchronisation terminée. ${successCount} documents exportés, ${errorCount} erreurs.`);
     return errorCount === 0;
   } catch (error) {
     console.error('Erreur lors de la synchronisation:', error);
@@ -108,7 +107,6 @@ export async function importFirebaseDataToLocal(collections = ['concerts', 'lieu
     // Sauvegarder les données importées
     await firebaseEmulatorService._importRawData(localData);
     
-    console.log(`Importation terminée. ${successCount} documents importés, ${errorCount} erreurs.`);
     return errorCount === 0;
   } catch (error) {
     console.error('Erreur lors de l\'importation:', error);

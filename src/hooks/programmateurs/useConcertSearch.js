@@ -159,7 +159,6 @@ const useConcertSearch = (programmateur) => {
       // Afficher une confirmation
       alert(`Le concert "${concertName}" a été dissocié du programmateur.`);
       
-      console.log(`[useConcertSearch] Concert ${concertId} dissocié avec succès du programmateur ${programmateur.id}`);
       return true;
       
     } catch (error) {
@@ -210,7 +209,6 @@ const useConcertSearch = (programmateur) => {
       
       alert(`${successCount}/${concertCount} concerts ont été dissociés avec succès.`);
       
-      console.log(`[useConcertSearch] ${successCount} concerts dissociés du programmateur ${programmateur.id}`);
       return true;
       
     } catch (error) {

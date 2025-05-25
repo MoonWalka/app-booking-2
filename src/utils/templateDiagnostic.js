@@ -12,7 +12,6 @@ export const analyzeTemplates = async () => {
   try {
     const templatesSnapshot = await getDocs(collection(db, 'contratTemplates'));
     
-    console.log(`🔍 Analyse de ${templatesSnapshot.size} templates...`);
     console.log('-------------------------------------------------');
     
     templatesSnapshot.docs.forEach(templateDoc => {
@@ -66,7 +65,6 @@ export const analyzeTemplates = async () => {
       }
     });
     
-    console.log("\n✅ Analyse terminée!");
   } catch (error) {
     console.error("❌ Erreur lors de l'analyse des templates:", error);
   }
@@ -85,7 +83,6 @@ export const cleanupAllTemplates = async () => {
   
   try {
     const templatesSnapshot = await getDocs(collection(db, 'contratTemplates'));
-    console.log(`🧹 Nettoyage de ${templatesSnapshot.size} templates...`);
     
     const batch = writeBatch(db);
     let count = 0;
@@ -163,7 +160,6 @@ export const cleanupAllTemplates = async () => {
     
     if (count > 0) {
       await batch.commit();
-      console.log(`✅ ${count} templates nettoyés avec succès!`);
     } else {
       console.log("ℹ️ Aucun template ne nécessitait de nettoyage.");
     }

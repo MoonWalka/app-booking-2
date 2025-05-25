@@ -33,13 +33,7 @@ export const useProgrammateurForm = (programmateurId) => {
   const isNewProgrammateur = isNewFromUrl || !actualProgrammateurId || actualProgrammateurId === 'nouveau';
   
   // LOGS TEMPORAIREMENT DÉSACTIVÉS POUR ÉVITER LA BOUCLE
-  // console.log('[DEBUG][useProgrammateurForm] Hook initialisé');
-  // console.log('[DEBUG][useProgrammateurForm] programmateurId param:', programmateurId);
-  // console.log('[DEBUG][useProgrammateurForm] id from useParams:', id);
-  // console.log('[DEBUG][useProgrammateurForm] location.pathname:', location.pathname);
-  // console.log('[DEBUG][useProgrammateurForm] isNewFromUrl:', isNewFromUrl);
   // console.log('[DEBUG][useProgrammateurForm] actualProgrammateurId:', actualProgrammateurId);
-  // console.log('[DEBUG][useProgrammateurForm] isNewProgrammateur:', isNewProgrammateur);
   
   // debugLog(`Initialisation du formulaire de programmateur optimisé: ${isNewProgrammateur ? 'nouveau programmateur' : `programmateur ${actualProgrammateurId}`}`, 'info', 'useProgrammateurForm');
   

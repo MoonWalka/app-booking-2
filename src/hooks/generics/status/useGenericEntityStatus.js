@@ -97,7 +97,6 @@ const useGenericEntityStatus = (statusConfig = {}, options = {}) => {
   // Fonction pour obtenir les détails d'un statut
   const getStatusDetails = useCallback((status) => {
     if (enableLogging) {
-      console.log(`[${entityType}Status] Récupération détails pour:`, status);
     }
     
     return statusDetailsMap[status] || {
@@ -113,7 +112,6 @@ const useGenericEntityStatus = (statusConfig = {}, options = {}) => {
   // Fonction pour vérifier si un changement de statut est autorisé
   const isStatusChangeAllowed = useCallback((currentStatus, targetStatus) => {
     if (enableLogging) {
-      console.log(`[${entityType}Status] Vérification transition:`, currentStatus, '→', targetStatus);
     }
     
     // Règles personnalisées si fournies
@@ -174,7 +172,6 @@ const useGenericEntityStatus = (statusConfig = {}, options = {}) => {
   // Fonction pour obtenir un message contextuel
   const getStatusMessage = useCallback((entity, context = {}) => {
     if (enableLogging) {
-      console.log(`[${entityType}Status] Génération message pour:`, entity?.status || entity?.statut);
     }
     
     // Générateur de message personnalisé si fourni

@@ -36,12 +36,10 @@ export default function useProgrammateurDetails(id) {
       
       try {
         setLoadingLieux(true);
-        console.log(`[DIAGNOSTIC] useProgrammateurDetails - Chargement des lieux pour programmateur ${id}`);
         
         // Vérifier d'abord si le programmateur a des lieuxIds ou lieuxAssocies dans ses données
         if (details.entity.lieuxIds?.length > 0 || details.entity.lieuxAssocies?.length > 0) {
           const lieuxRefs = details.entity.lieuxIds || details.entity.lieuxAssocies || [];
-          console.log(`[DIAGNOSTIC] useProgrammateurDetails - ${lieuxRefs.length} références de lieux trouvées dans le programmateur`);
           
           const lieuxPromises = lieuxRefs.map(lieuRef => {
             const lieuId = typeof lieuRef === 'object' ? lieuRef.id : lieuRef;
@@ -55,12 +53,10 @@ export default function useProgrammateurDetails(id) {
           
           const lieuxResults = await Promise.all(lieuxPromises);
           const validLieux = lieuxResults.filter(lieu => lieu !== null);
-          console.log(`[DIAGNOSTIC] useProgrammateurDetails - ${validLieux.length} lieux chargés depuis les références`);
           
           setLieux(validLieux);
         } else {
           // Si pas de référence directe, chercher par référence inverse
-          console.log(`[DIAGNOSTIC] useProgrammateurDetails - Pas de références directes, recherche par référence inverse`);
           
           // Méthode 1: Chercher les lieux avec ce programmateur dans 'programmateurs'
           let lieuxQuery = query(
@@ -72,7 +68,6 @@ export default function useProgrammateurDetails(id) {
           
           // Méthode 2: Si rien trouvé, chercher par programmateurId
           if (lieuxLoaded.length === 0) {
-            console.log(`[DIAGNOSTIC] useProgrammateurDetails - Pas de résultat avec 'programmateurs', essai avec 'programmateurId'`);
             lieuxQuery = query(
               collection(db, 'lieux'),
               where('programmateurId', '==', id)
@@ -106,12 +101,10 @@ export default function useProgrammateurDetails(id) {
       
       try {
         setLoadingConcerts(true);
-        console.log(`[DIAGNOSTIC] useProgrammateurDetails - Chargement des concerts pour programmateur ${id}`);
         
         // Méthode 1: Vérifier si le programmateur a des concertsIds ou concertsAssocies dans ses données
         if (details.entity.concertsIds?.length > 0 || details.entity.concertsAssocies?.length > 0) {
           const concertRefs = details.entity.concertsIds || details.entity.concertsAssocies || [];
-          console.log(`[DIAGNOSTIC] useProgrammateurDetails - ${concertRefs.length} références de concerts trouvées dans le programmateur`);
           
           const concertPromises = concertRefs.map(concertRef => {
             // Si c'est déjà un objet avec ID et des infos basiques, on peut l'utiliser directement
@@ -131,12 +124,10 @@ export default function useProgrammateurDetails(id) {
           
           const concertResults = await Promise.all(concertPromises);
           const validConcerts = concertResults.filter(concert => concert !== null);
-          console.log(`[DIAGNOSTIC] useProgrammateurDetails - ${validConcerts.length} concerts chargés depuis les références`);
           
           setConcerts(validConcerts);
         } else {
           // Méthode 2: Chercher par référence inverse dans la collection concerts
-          console.log(`[DIAGNOSTIC] useProgrammateurDetails - Pas de références directes, recherche par référence inverse`);
           
           // Chercher les concerts avec ce programmateur comme programmateurId
           let concertsQuery = query(
@@ -148,7 +139,6 @@ export default function useProgrammateurDetails(id) {
           
           // Si aucun résultat, essayer avec le champ programmateurs (array-contains)
           if (concertsLoaded.length === 0) {
-            console.log(`[DIAGNOSTIC] useProgrammateurDetails - Pas de résultat avec 'programmateurId', essai avec 'programmateurs'`);
             concertsQuery = query(
               collection(db, 'concerts'),
               where('programmateurs', 'array-contains', id)

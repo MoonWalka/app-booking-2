@@ -93,7 +93,6 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
     
     try {
       if (enableLogging) {
-        console.log(`🆕 Création ${entityType}:`, data);
       }
       
       // Validation optionnelle
@@ -116,7 +115,6 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
       }
       
       if (enableLogging) {
-        console.log(`✅ ${entityType} créé:`, result);
       }
       
       return result;
@@ -150,7 +148,6 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
     
     try {
       if (enableLogging) {
-        console.log(`🔄 Mise à jour ${entityType} ${id}:`, data);
       }
       
       if (!id) {
@@ -170,7 +167,6 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
       }
       
       if (enableLogging) {
-        console.log(`✅ ${entityType} mis à jour:`, result);
       }
       
       return result;
@@ -204,7 +200,6 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
     
     try {
       if (enableLogging) {
-        console.log(`🗑️ Suppression ${entityType} ${id}`);
       }
       
       if (!id) {
@@ -218,7 +213,6 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
       }
       
       if (enableLogging) {
-        console.log(`✅ ${entityType} supprimé: ${id}`);
       }
       
       return id;
@@ -252,7 +246,6 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
     
     try {
       if (enableLogging) {
-        console.log(`📦 Opération en lot ${entityType}:`, operations.length, 'opérations');
       }
       
       const results = [];
@@ -282,7 +275,6 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
       }
       
       if (enableLogging) {
-        console.log(`✅ Opération en lot terminée:`, results.length, 'opérations');
       }
       
       return results;
@@ -324,7 +316,6 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
       } = queryConfig;
       
       if (enableLogging) {
-        console.log(`🔍 Requête ${entityType}:`, queryConfig);
       }
       
       // Construction de la requête
@@ -372,7 +363,6 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
       });
       
       if (enableLogging) {
-        console.log(`✅ Requête ${entityType} terminée:`, results.length, 'résultats');
       }
       
       return {
@@ -410,7 +400,6 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
     
     try {
       if (enableLogging) {
-        console.log(`📖 Récupération ${entityType} ${id}`);
       }
       
       if (!id) {
@@ -427,7 +416,6 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
       const result = { id, ...docSnap.data() };
       
       if (enableLogging) {
-        console.log(`✅ ${entityType} récupéré:`, result);
       }
       
       return result;

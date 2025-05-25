@@ -39,10 +39,8 @@ export const debugLog = (message, level = 'debug', hookName = '', data = null) =
       console.error(`[ERROR] ${formattedMessage}`, data || '');
       break;
     case 'trace':
-      console.log(`[TRACE] ${formattedMessage}`, data || '');
       break;
     default:
-      console.log(`[DEBUG] ${formattedMessage}`, data || '');
   }
 };
 

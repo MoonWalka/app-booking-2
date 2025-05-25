@@ -205,7 +205,6 @@ const useGenericResponsive = (config = {}, options = {}) => {
     }
     
     if (enableLogging) {
-      console.log('[useGenericResponsive] État mis à jour:', newState);
     }
   }, [
     breakpoints, 

@@ -8,7 +8,7 @@
 
 /* Styles globaux */
 body {
-  background-color: var(--tc-background-color);
+  background-color: var(--tc-bg-default);
 }
 
 a {
@@ -17,7 +17,7 @@ a {
 }
 
 a:hover {
-  color: var(--tc-primary-dark);
+  color: var(--tc-color-primary-dark);
   text-decoration: none; /* Modification: désactive le soulignement pour tous les liens au survol */
 }
 

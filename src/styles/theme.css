@@ -33,7 +33,7 @@ body {
 .tc-form-control {
   background-color: var(--tc-bg-default);
   border: 1px solid var(--tc-border-default);
-  color: var(--tc-input-color);
+  color: var(--tc-text-default);
   border-radius: var(--tc-radius-base);
   padding: var(--tc-space-2) var(--tc-space-4);
   font-size: var(--tc-font-size-base);
@@ -73,8 +73,8 @@ body {
 .tc-btn-primary:focus, 
 .tc-btn-primary:active,
 .tc-btn-primary.tc-active {
-  background-color: var(--tc-btn-primary-hover-bg);
-  border-color: var(--tc-btn-primary-hover-bg);
+  background-color: var(--tc-color-primary-hover);
+  border-color: var(--tc-color-primary-hover);
 }
 
 /* Bouton secondaire */
@@ -233,6 +233,6 @@ a, .tc-link {
 }
 
 a:hover, .tc-link:hover {
-  color: var(--tc-primary-dark);
+  color: var(--tc-color-primary-dark);
   text-decoration: underline;
 }

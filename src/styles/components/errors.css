@@ -117,7 +117,7 @@
 }
 
 .tc-retry-button:hover {
-  background-color: var(--tc-primary-dark);
+  background-color: var(--tc-color-primary-dark);
 }
 
 .tc-home-button {

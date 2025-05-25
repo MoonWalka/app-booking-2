@@ -43,8 +43,8 @@
 }
 
 .btnPrimary:hover {
-  background-color: var(--tc-primary-dark);
-  border-color: var(--tc-primary-dark);
+  background-color: var(--tc-color-primary-dark);
+  border-color: var(--tc-color-primary-dark);
   text-decoration: none;
 }
 
@@ -227,7 +227,7 @@
 }
 
 .btnLink:hover {
-  color: var(--tc-primary-dark);
+  color: var(--tc-color-primary-dark);
   text-decoration: underline;
 }
 

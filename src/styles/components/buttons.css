@@ -74,8 +74,8 @@ button {
 
 .tc-btn-primary:hover,
 .tc-btn-primary:active {
-  background-color: var(--tc-primary-dark);
-  border-color: var(--tc-primary-dark);
+  background-color: var(--tc-color-primary-dark);
+  border-color: var(--tc-color-primary-dark);
 }
 
 .tc-btn-secondary {
@@ -230,7 +230,7 @@ button {
 .tc-btn-text:hover,
 .tc-btn-text:active {
   background-color: rgba(var(--tc-color-primary-rgb), 0.05);
-  color: var(--tc-primary-dark);
+  color: var(--tc-color-primary-dark);
 }
 
 .tc-btn-text-secondary {

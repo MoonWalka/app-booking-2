@@ -45,7 +45,7 @@
 
 .tc-btn-add:hover,
 .tc-btn-add:focus {
-  background: var(--tc-primary-dark);
+  background: var(--tc-color-primary-dark);
   color: var(--tc-white);
   text-decoration: none;
 }

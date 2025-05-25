@@ -73,7 +73,7 @@
 
 .contactLink:hover {
   text-decoration: underline;
-  color: var(--tc-primary-dark);
+  color: var(--tc-color-primary-dark);
 }
 
 .contactEmpty {

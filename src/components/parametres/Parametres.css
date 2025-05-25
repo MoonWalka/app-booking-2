@@ -37,7 +37,7 @@
 }
 
 .navLinkActive:hover {
-  background-color: var(--tc-primary-dark);
+  background-color: var(--tc-color-primary-dark);
   color: var(--tc-text-light);
 }
 
@@ -100,7 +100,7 @@
   border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-radius-base);
   font-size: var(--tc-font-size-base);
-  color: var(--tc-input-color);
+  color: var(--tc-text-default);
   background-color: var(--tc-bg-default);
   transition: var(--tc-transition-base);
 }

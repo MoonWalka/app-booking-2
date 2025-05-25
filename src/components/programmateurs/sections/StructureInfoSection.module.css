@@ -23,7 +23,7 @@
   border-radius: var(--tc-radius-base);
   padding: 1.5rem;
   margin-bottom: 1.5rem;
-  box-shadow: var(--tc-card-shadow);
+  box-shadow: var(--tc-shadow-base);
 }
 
 .sectionTitle {

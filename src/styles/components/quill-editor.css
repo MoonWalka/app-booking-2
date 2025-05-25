@@ -199,7 +199,7 @@
 }
 
 .tc-quill-editor-wrapper .ql-editor a:hover {
-  color: var(--tc-primary-dark);
+  color: var(--tc-color-primary-dark);
 }
 
 .tc-quill-editor-wrapper .ql-editor blockquote {
@@ -419,7 +419,7 @@
 }
 
 .tc-quill-preview a:hover {
-  color: var(--tc-primary-dark);
+  color: var(--tc-color-primary-dark);
 }
 
 .tc-quill-preview blockquote {

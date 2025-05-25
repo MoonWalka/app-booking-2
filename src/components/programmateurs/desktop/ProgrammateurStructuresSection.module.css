@@ -17,7 +17,7 @@
   margin: 0;
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-primary-dark);
+  color: var(--tc-color-primary-dark);
   border-bottom: var(--tc-border-width) solid var(--tc-border-light);
   display: flex;
   align-items: center;

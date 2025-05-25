@@ -203,7 +203,7 @@
   gap: 0.75rem;
   padding: 1rem 1.5rem;
   border-top: 1px solid var(--tc-border-default);
-  background-color: var(--tc-footer-bg);
+  background-color: var(--tc-bg-surface);
 }
 
 .closeButton {

@@ -152,8 +152,8 @@
 }
 
 .actionsSection .btn-primary:hover {
-  background-color: var(--tc-primary-dark);
-  border-color: var(--tc-primary-dark);
+  background-color: var(--tc-color-primary-dark);
+  border-color: var(--tc-color-primary-dark);
 }
 
 .actionsSection .btn-danger {

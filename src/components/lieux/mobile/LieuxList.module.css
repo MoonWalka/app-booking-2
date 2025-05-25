@@ -98,7 +98,7 @@
 }
 
 .modernAddBtn:hover {
-  background-color: var(--tc-primary-dark);
+  background-color: var(--tc-color-primary-dark);
   transform: translateY(-2px);
 }
 
@@ -219,7 +219,7 @@
 }
 
 .emptyStateButton:hover {
-  background-color: var(--tc-primary-dark);
+  background-color: var(--tc-color-primary-dark);
 }
 
 /* =============================
@@ -295,7 +295,7 @@
 
 .lieuContactLink:hover {
   text-decoration: underline;
-  color: var(--tc-primary-dark);
+  color: var(--tc-color-primary-dark);
 }
 
 /* =============================

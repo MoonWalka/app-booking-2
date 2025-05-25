@@ -19,7 +19,7 @@
   margin-left: var(--tc-sidebar-width); /* Correspond à la largeur de la sidebar */
   padding: var(--tc-space-6);
   min-height: 100vh;
-  background-color: var(--tc-background-color);
+  background-color: var(--tc-bg-default);
   transition: opacity var(--tc-transition-duration) ease-in-out;
   position: relative;
 }
@@ -36,7 +36,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--tc-background-color);
+  background-color: var(--tc-bg-default);
   z-index: 1;
   pointer-events: none; /* Permet toujours les clics à travers */
 }

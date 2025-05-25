@@ -152,7 +152,7 @@ function PrivateRoute({ children }) {
   
   if (loading) {
     return (
-      <div className="loading-container d-flex justify-content-center align-items-center" style={{ minHeight: '300px' }}>
+      <div className="loading-container d-flex justify-content-center align-items-center tc-min-h-300">
         <div className="text-center">
           <div className="spinner-border text-primary" role="status">
             <span className="visually-hidden">Vérification de l'authentification...</span>
@@ -187,7 +187,7 @@ function App() {
               {/* Intégration du stabilisateur de routeur */}
               <RouterStabilizer />
               <Suspense fallback={
-                <div className="loading-container d-flex justify-content-center align-items-center" style={{ minHeight: '300px' }}>
+                <div className="loading-container d-flex justify-content-center align-items-center tc-min-h-300">
                   <div className="text-center">
                     <div className="spinner-border text-primary" role="status">
                       <span className="visually-hidden">Chargement de la page...</span>
@@ -209,7 +209,7 @@ function App() {
                     <Route path="/concerts/*" element={
                       <PrivateRoute>
                         <Suspense fallback={
-                          <div className="loading-container d-flex justify-content-center align-items-center" style={{ minHeight: '300px' }}>
+                          <div className="loading-container d-flex justify-content-center align-items-center tc-min-h-300">
                             <div className="text-center">
                               <div className="spinner-border text-primary" role="status">
                                 <span className="visually-hidden">Chargement de la page...</span>
@@ -231,7 +231,7 @@ function App() {
                     <Route path="/programmateurs/*" element={
                       <PrivateRoute>
                         <Suspense fallback={
-                          <div className="loading-container d-flex justify-content-center align-items-center" style={{ minHeight: '300px' }}>
+                          <div className="loading-container d-flex justify-content-center align-items-center tc-min-h-300">
                             <div className="text-center">
                               <div className="spinner-border text-primary" role="status">
                                 <span className="visually-hidden">Chargement de la page...</span>
@@ -245,15 +245,16 @@ function App() {
                       </PrivateRoute>
                     }>
                       <Route index element={<ProgrammateursList />} />
-                      <Route path=":id" element={<ProgrammateurDetails />} />
+                      <Route path="nouveau" element={<ProgrammateurForm />} />
                       <Route path=":id/edit" element={<ProgrammateurForm />} />
+                      <Route path=":id" element={<ProgrammateurDetails />} />
                     </Route>
                     
                     {/* Routes pour les lieux */}
                     <Route path="/lieux/*" element={
                       <PrivateRoute>
                         <Suspense fallback={
-                          <div className="loading-container d-flex justify-content-center align-items-center" style={{ minHeight: '300px' }}>
+                          <div className="loading-container d-flex justify-content-center align-items-center tc-min-h-300">
                             <div className="text-center">
                               <div className="spinner-border text-primary" role="status">
                                 <span className="visually-hidden">Chargement de la page...</span>
@@ -271,7 +272,7 @@ function App() {
                     <Route path="/structures/*" element={
                       <PrivateRoute>
                         <Suspense fallback={
-                          <div className="loading-container d-flex justify-content-center align-items-center" style={{ minHeight: '300px' }}>
+                          <div className="loading-container d-flex justify-content-center align-items-center tc-min-h-300">
                             <div className="text-center">
                               <div className="spinner-border text-primary" role="status">
                                 <span className="visually-hidden">Chargement de la page...</span>
@@ -289,7 +290,7 @@ function App() {
                     <Route path="/contrats/*" element={
                       <PrivateRoute>
                         <Suspense fallback={
-                          <div className="loading-container d-flex justify-content-center align-items-center" style={{ minHeight: '300px' }}>
+                          <div className="loading-container d-flex justify-content-center align-items-center tc-min-h-300">
                             <div className="text-center">
                               <div className="spinner-border text-primary" role="status">
                                 <span className="visually-hidden">Chargement de la page...</span>
@@ -311,7 +312,7 @@ function App() {
                     <Route path="/artistes/*" element={
                       <PrivateRoute>
                         <Suspense fallback={
-                          <div className="loading-container d-flex justify-content-center align-items-center" style={{ minHeight: '300px' }}>
+                          <div className="loading-container d-flex justify-content-center align-items-center tc-min-h-300">
                             <div className="text-center">
                               <div className="spinner-border text-primary" role="status">
                                 <span className="visually-hidden">Chargement de la page...</span>
@@ -329,7 +330,7 @@ function App() {
                     <Route path="/parametres/*" element={
                       <PrivateRoute>
                         <Suspense fallback={
-                          <div className="loading-container d-flex justify-content-center align-items-center" style={{ minHeight: '300px' }}>
+                          <div className="loading-container d-flex justify-content-center align-items-center tc-min-h-300">
                             <div className="text-center">
                               <div className="spinner-border text-primary" role="status">
                                 <span className="visually-hidden">Chargement de la page...</span>

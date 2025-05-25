@@ -1,28 +1,121 @@
 /*
  * Styles pour ValidationSection
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Date de création: Inconnue
- * Dernière mise à jour: 5 mai 2025
+ * Dernière mise à jour: 25 mai 2025
  */
 
-.sectionCard {
-  margin-bottom: var(--tc-spacing-4);
-  border-radius: var(--tc-radius-md);
-  box-shadow: 0 2px 5px var(--tc-color-rgba(0), rgba(0, 0, 0, 0.08));
+.validationSection {
+  background-color: var(--tc-white);
+  border-radius: var(--tc-border-radius);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+  margin-bottom: var(--tc-spacing-md);
   overflow: hidden;
 }
 
-.defaultHeader {
-  background-color: var(--tc-bg-light);
-  font-weight: var(--tc-font-weight-semibold);
-  font-size: var(--tc-spacing-3);
+.sectionHeader {
+  padding: var(--tc-spacing-md);
+  background-color: var(--tc-gray-50);
+  border-bottom: 1px solid var(--tc-border-color);
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.validatedBadge {
-  font-size: var(--tc-spacing-2);
+.sectionTitle {
+  margin: 0;
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-color);
+}
+
+.sectionContent {
+  padding: var(--tc-spacing-md);
+}
+
+.validationItem {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--tc-spacing-sm);
+  padding: var(--tc-spacing-sm) 0;
+  border-bottom: 1px solid var(--tc-border-color);
+}
+
+.validationItem:last-child {
+  border-bottom: none;
+}
+
+.validationIcon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: var(--tc-font-size-sm);
+}
+
+.validationContent {
+  flex: 1;
+}
+
+.validationLabel {
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-text-color);
+  margin-bottom: var(--tc-spacing-xs);
+}
+
+.validationValue {
+  color: var(--tc-text-muted);
+  font-size: var(--tc-font-size-sm);
+}
+
+.validationActions {
+  display: flex;
+  gap: var(--tc-spacing-xs);
+  margin-top: var(--tc-spacing-sm);
+}
+
+.actionButton {
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  border: 1px solid var(--tc-border-color);
+  border-radius: var(--tc-border-radius-sm);
+  background-color: var(--tc-white);
+  color: var(--tc-text-color);
+  font-size: var(--tc-font-size-xs);
+  cursor: pointer;
+  transition: var(--tc-transition);
+}
+
+.actionButton:hover {
+  background-color: var(--tc-gray-50);
+}
+
+.validationPending {
+  border-left: 3px solid var(--tc-text-muted);
+}
+
+.validationApproved {
+  border-left: 3px solid var(--tc-primary-color);
+}
+
+.validationRejected {
+  border-left: 3px solid var(--tc-danger-color);
+}
+
+.statusPending {
+  background-color: var(--tc-gray-100);
+  color: var(--tc-text-muted);
+}
+
+.statusApproved {
+  background-color: var(--tc-success-light);
+  color: var(--tc-success-color);
+}
+
+.statusRejected {
+  background-color: var(--tc-danger-light);
+  color: var(--tc-danger-color);
 }
 
 /* Styles pour les détails du concert */
@@ -101,18 +194,6 @@
   padding-top: var(--tc-spacing-1);
   font-size: var(--tc-font-size-sm);
   word-break: break-word;
-}
-
-/* Styles pour les boutons d'action */
-.actionButtons {
-  display: flex;
-  margin-top: var(--tc-spacing-2);
-}
-
-.actionButton {
-  flex: 1;
-  font-size: var(--tc-font-size-sm);
-  padding: var(--tc-spacing-2);
 }
 
 /* Responsive adaptations */

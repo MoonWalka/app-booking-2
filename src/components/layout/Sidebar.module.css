@@ -88,7 +88,7 @@
   display: flex;
   align-items: center;
   padding: var(--tc-spacing-sm) var(--tc-spacing-lg);
-  color: var(--tc-color-light);
+  color: var(--tc-light-color);
   text-decoration: none;
   /* Transition courte pour une réaction rapide au hover */
   transition: var(--tc-transition-short);
@@ -102,7 +102,7 @@
  */
 .navLinks a:hover {
   background-color: var(--tc-sidebar-hover-bg-color);
-  color: var(--tc-color-light);
+  color: var(--tc-light-color);
 }
 
 /* 

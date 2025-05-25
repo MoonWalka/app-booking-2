@@ -128,7 +128,7 @@
 }
 .actions button:hover, .actions a:hover {
   background: var(--tc-primary-color);
-  color: #fff;
+  color: var(--tc-white);
 }
 .actions .viewButton {
   background: var(--tc-gray-300);
@@ -136,7 +136,7 @@
 }
 .actions .viewButton:hover {
   background: var(--tc-primary-color);
-  color: #fff;
+  color: var(--tc-white);
 }
 .actions .editButton {
   background: var(--tc-warning-color-light);
@@ -144,7 +144,7 @@
 }
 .actions .editButton:hover {
   background: var(--tc-warning-color);
-  color: #fff;
+  color: var(--tc-white);
 }
 .actions .contractButton, .actions .formButton {
   background: var(--tc-info-color-light);
@@ -152,7 +152,7 @@
 }
 .actions .contractButton:hover, .actions .formButton:hover {
   background: var(--tc-info-color);
-  color: #fff;
+  color: var(--tc-white);
 }
 .actions .deleteButton {
   background: var(--tc-danger-color-light);
@@ -160,7 +160,7 @@
 }
 .actions .deleteButton:hover {
   background: var(--tc-danger-color);
-  color: #fff;
+  color: var(--tc-white);
 }
 
 /* 

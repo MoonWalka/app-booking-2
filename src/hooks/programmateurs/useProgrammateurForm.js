@@ -9,8 +9,8 @@
  * spécifiques d'ici novembre 2025.
  */
 
-import { useState, useCallback } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useState, useCallback, useMemo } from 'react';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useGenericEntityForm } from '@/hooks/common';
 import { showSuccessToast, showErrorToast } from '@/utils/toasts';
 import { debugLog } from '@/utils/logUtils';
@@ -25,13 +25,26 @@ import { debugLog } from '@/utils/logUtils';
 export const useProgrammateurForm = (programmateurId) => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const actualProgrammateurId = programmateurId || id;
-  const isNewProgrammateur = !actualProgrammateurId || actualProgrammateurId === 'nouveau';
+  const location = useLocation();
   
-  debugLog(`Initialisation du formulaire de programmateur optimisé: ${isNewProgrammateur ? 'nouveau programmateur' : `programmateur ${actualProgrammateurId}`}`, 'info', 'useProgrammateurForm');
+  // Détecter le mode "nouveau" via l'URL plutôt que via les paramètres
+  const isNewFromUrl = location.pathname.endsWith('/nouveau');
+  const actualProgrammateurId = programmateurId || id;
+  const isNewProgrammateur = isNewFromUrl || !actualProgrammateurId || actualProgrammateurId === 'nouveau';
+  
+  // LOGS TEMPORAIREMENT DÉSACTIVÉS POUR ÉVITER LA BOUCLE
+  // console.log('[DEBUG][useProgrammateurForm] Hook initialisé');
+  // console.log('[DEBUG][useProgrammateurForm] programmateurId param:', programmateurId);
+  // console.log('[DEBUG][useProgrammateurForm] id from useParams:', id);
+  // console.log('[DEBUG][useProgrammateurForm] location.pathname:', location.pathname);
+  // console.log('[DEBUG][useProgrammateurForm] isNewFromUrl:', isNewFromUrl);
+  // console.log('[DEBUG][useProgrammateurForm] actualProgrammateurId:', actualProgrammateurId);
+  // console.log('[DEBUG][useProgrammateurForm] isNewProgrammateur:', isNewProgrammateur);
+  
+  // debugLog(`Initialisation du formulaire de programmateur optimisé: ${isNewProgrammateur ? 'nouveau programmateur' : `programmateur ${actualProgrammateurId}`}`, 'info', 'useProgrammateurForm');
   
   // Fonction de validation spécifique aux programmateurs
-  const validateProgrammateurForm = (data) => {
+  const validateProgrammateurForm = useCallback((data) => {
     const errors = {};
     
     if (!data.contact?.nom) {
@@ -54,10 +67,10 @@ export const useProgrammateurForm = (programmateurId) => {
       errors,
       message: Object.keys(errors).length > 0 ? 'Veuillez corriger les erreurs du formulaire.' : null
     };
-  };
+  }, []);
 
   // Fonction de transformation des données avant sauvegarde
-  const transformProgrammateurData = (data) => {
+  const transformProgrammateurData = useCallback((data) => {
     // S'assurer que les objets imbriqués existent toujours
     const transformedData = {
       ...data,
@@ -83,9 +96,9 @@ export const useProgrammateurForm = (programmateurId) => {
       updatedAt: new Date()
     };
     
-    debugLog('Données transformées avant sauvegarde', 'debug', 'useProgrammateurForm', transformedData);
+    // debugLog('Données transformées avant sauvegarde', 'debug', 'useProgrammateurForm', transformedData);
     return transformedData;
-  };
+  }, []);
   
   // Callbacks pour les opérations réussies ou en erreur
   const onSuccessCallback = useCallback((savedId, savedData) => {
@@ -94,7 +107,14 @@ export const useProgrammateurForm = (programmateurId) => {
       : `Le programmateur ${savedData.contact?.nom || ''} a été mis à jour avec succès`;
     
     showSuccessToast(message);
-    navigate(`/programmateurs/${savedId}`);
+    
+    // Éviter la boucle infinie : ne pas naviguer si savedId est "nouveau"
+    if (savedId && savedId !== 'nouveau') {
+      navigate(`/programmateurs/${savedId}`);
+    } else if (isNewProgrammateur) {
+      // Pour un nouveau programmateur, rediriger vers la liste
+      navigate('/programmateurs');
+    }
     
     // Si une structure a été créée en même temps, on pourrait gérer ici la sauvegarde de la structure
     // et la mise à jour de la relation entre la structure et le programmateur
@@ -113,7 +133,7 @@ export const useProgrammateurForm = (programmateurId) => {
     entityType: 'programmateurs',
     entityId: isNewProgrammateur ? null : actualProgrammateurId,
     collectionName: 'programmateurs',
-    initialData: {
+    initialData: useMemo(() => ({
       // Valeurs par défaut pour un nouveau programmateur
       contact: {
         nom: '',
@@ -134,19 +154,19 @@ export const useProgrammateurForm = (programmateurId) => {
       },
       structureId: '',
       concertsAssocies: []
-    },
+    }), []),
     validateForm: validateProgrammateurForm,
     transformData: transformProgrammateurData,
     onSuccess: onSuccessCallback,
     onError: onErrorCallback,
-    relatedEntities: [
+    relatedEntities: useMemo(() => [
       { 
         name: 'structure',
         collection: 'structures',
         idField: 'structureId',
         nameField: 'structureNom'
       }
-    ]
+    ], [])
   });
   
   // Extension du hook avec des fonctionnalités spécifiques aux programmateurs

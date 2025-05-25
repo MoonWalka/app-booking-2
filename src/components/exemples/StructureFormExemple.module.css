@@ -1,8 +1,7 @@
 /*
  * Styles pour StructureFormExemple
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: [Date actuelle]
- * Adapté pour les formulaires de structures
+ * Dernière mise à jour: 25 mai 2025
  */
 
 /* =============================
@@ -11,65 +10,65 @@
 .container {
   max-width: 800px;
   margin: 0 auto;
-  padding: var(--tc-spacing-5);
-  background-color: var(--tc-bg-color-light);
-  border-radius: var(--tc-border-radius-lg);
-  box-shadow: var(--tc-shadow-md);
+  padding: var(--tc-spacing-lg);
+  background-color: var(--tc-white);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-shadow);
 }
 
 /* =============================
    SECTIONS
    ============================= */
 .section {
-  margin-bottom: var(--tc-spacing-5);
-  padding: var(--tc-spacing-4);
-  background-color: var(--tc-bg-white);
+  margin-bottom: var(--tc-spacing-lg);
+  padding: var(--tc-spacing-md);
+  border: 1px solid var(--tc-border-color);
   border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-shadow-sm);
+  background-color: var(--tc-gray-50);
 }
 
 /* =============================
    EN-TÊTES ET TITRES
    ============================= */
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--tc-spacing-5);
+  text-align: center;
+  margin-bottom: var(--tc-spacing-lg);
+  padding-bottom: var(--tc-spacing-md);
+  border-bottom: 1px solid var(--tc-border-color);
 }
 
 .title {
   font-size: var(--tc-font-size-xl);
   font-weight: var(--tc-font-weight-bold);
-  color: var(--tc-color-2c3e50);
+  color: var(--tc-gray-800);
 }
 
 .sectionTitle {
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-bold);
-  margin-bottom: var(--tc-spacing-4);
-  color: var(--tc-color-34495e);
-  border-bottom: 1px solid var(--tc-color-eee);
-  padding-bottom: var(--tc-spacing-2);
+  margin-bottom: var(--tc-spacing-md);
+  color: var(--tc-gray-700);
+  border-bottom: 1px solid var(--tc-gray-300);
+  padding-bottom: var(--tc-spacing-sm);
 }
 
 /* =============================
    CHAMPS DE FORMULAIRE
    ============================= */
 .field {
-  margin-bottom: var(--tc-spacing-4);
+  margin-bottom: var(--tc-spacing-md);
 }
 
 .label {
   display: block;
-  margin-bottom: var(--tc-spacing-1);
+  margin-bottom: var(--tc-spacing-xs);
   font-weight: var(--tc-font-weight-bold);
   font-size: var(--tc-font-size-sm);
 }
 
 .input {
   width: 100%;
-  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
   border: 1px solid var(--tc-border-color);
   border-radius: var(--tc-border-radius-sm);
   font-size: var(--tc-font-size-base);
@@ -77,14 +76,14 @@
 }
 
 .input:focus {
-  border-color: var(--tc-color-primary);
+  border-color: var(--tc-primary-color);
   outline: 0;
   box-shadow: var(--tc-input-focus-shadow);
 }
 
 .textarea {
   width: 100%;
-  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
   border: 1px solid var(--tc-border-color);
   border-radius: var(--tc-border-radius-sm);
   font-size: var(--tc-font-size-base);
@@ -94,23 +93,23 @@
 }
 
 .textarea:focus {
-  border-color: var(--tc-color-primary);
+  border-color: var(--tc-primary-color);
   outline: 0;
   box-shadow: var(--tc-input-focus-shadow);
 }
 
 .select {
   width: 100%;
-  padding: var(--tc-spacing-2) var(--tc-spacing-3);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
   border: 1px solid var(--tc-border-color);
   border-radius: var(--tc-border-radius-sm);
   font-size: var(--tc-font-size-base);
-  background-color: var(--tc-bg-white);
+  background-color: var(--tc-white);
   transition: var(--tc-transition);
 }
 
 .select:focus {
-  border-color: var(--tc-color-primary);
+  border-color: var(--tc-primary-color);
   outline: 0;
   box-shadow: var(--tc-input-focus-shadow);
 }
@@ -121,12 +120,12 @@
 .buttonGroup {
   display: flex;
   justify-content: space-between;
-  margin-top: var(--tc-spacing-5);
-  gap: var(--tc-spacing-3);
+  margin-top: var(--tc-spacing-lg);
+  gap: var(--tc-spacing-md);
 }
 
 .button {
-  padding: var(--tc-spacing-2-5) var(--tc-spacing-5);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-lg);
   border-radius: var(--tc-border-radius-sm);
   border: none;
   cursor: pointer;
@@ -136,64 +135,64 @@
 }
 
 .primaryButton {
-  background-color: var(--tc-color-3498db);
-  color: var(--tc-color-white);
+  background-color: var(--tc-primary-color);
+  color: var(--tc-white);
 }
 
 .primaryButton:hover {
-  background-color: var(--tc-color-2980b9);
+  background-color: var(--tc-primary-dark);
 }
 
 .secondaryButton {
-  background-color: var(--tc-color-e9e9e9);
-  color: var(--tc-color-333);
+  background-color: var(--tc-gray-200);
+  color: var(--tc-gray-800);
 }
 
 .secondaryButton:hover {
-  background-color: var(--tc-color-d4d4d4);
+  background-color: var(--tc-gray-300);
 }
 
 .warningButton {
-  background-color: var(--tc-color-f39c12);
-  color: var(--tc-color-white);
+  background-color: var(--tc-warning-color);
+  color: var(--tc-white);
 }
 
 .warningButton:hover {
-  background-color: var(--tc-color-e67e22);
+  background-color: var(--tc-warning-dark);
 }
 
 .dangerButton {
-  background-color: var(--tc-color-e74c3c);
-  color: var(--tc-color-white);
+  background-color: var(--tc-danger-color);
+  color: var(--tc-white);
 }
 
 .dangerButton:hover {
-  background-color: var(--tc-color-c0392b);
+  background-color: var(--tc-danger-dark);
 }
 
 /* =============================
    BADGES
    ============================= */
 .badge {
-  padding: var(--tc-spacing-1) var(--tc-spacing-2);
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
   border-radius: var(--tc-border-radius-sm);
   font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-bold);
 }
 
 .successBadge {
-  background-color: var(--tc-color-2ecc71);
-  color: var(--tc-color-white);
+  background-color: var(--tc-success-color);
+  color: var(--tc-white);
 }
 
 .infoBadge {
-  background-color: var(--tc-color-3498db);
-  color: var(--tc-color-white);
+  background-color: var(--tc-info-color);
+  color: var(--tc-white);
 }
 
 .warningBadge {
-  background-color: var(--tc-color-f39c12);
-  color: var(--tc-color-white);
+  background-color: var(--tc-warning-color);
+  color: var(--tc-white);
 }
 
 /* =============================
@@ -202,13 +201,13 @@
 .twoColumns {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--tc-spacing-4);
+  gap: var(--tc-spacing-md);
 }
 
 .threeColumns {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: var(--tc-spacing-4);
+  gap: var(--tc-spacing-md);
 }
 
 /* =============================
@@ -216,33 +215,33 @@
    ============================= */
 .tabBar {
   display: flex;
-  margin-bottom: var(--tc-spacing-5);
+  margin-bottom: var(--tc-spacing-lg);
   border-bottom: 1px solid var(--tc-border-color);
 }
 
 .tab {
-  padding: var(--tc-spacing-2-5) var(--tc-spacing-5);
+  padding: var(--tc-spacing-sm) var(--tc-spacing-lg);
   cursor: pointer;
   transition: var(--tc-transition);
 }
 
 .tab:hover {
-  background-color: var(--tc-bg-color-light);
+  background-color: var(--tc-gray-100);
 }
 
 .activeTab {
-  border-bottom: 2px solid var(--tc-color-3498db);
+  border-bottom: 2px solid var(--tc-primary-color);
   font-weight: var(--tc-font-weight-bold);
-  color: var(--tc-color-3498db);
+  color: var(--tc-primary-color);
 }
 
 /* =============================
-   BOÎTES DE STATUT
+   SECTIONS D'INFORMATION
    ============================= */
 .statusBox {
-  padding: var(--tc-spacing-2-5);
-  border-radius: var(--tc-border-radius-sm);
-  margin-bottom: var(--tc-spacing-4);
+  padding: var(--tc-spacing-md);
+  border-radius: var(--tc-border-radius);
+  margin-bottom: var(--tc-spacing-md);
 }
 
 /* =============================
@@ -250,120 +249,114 @@
    ============================= */
 .actionsContainer {
   display: flex;
-  gap: var(--tc-spacing-2-5);
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--tc-spacing-md);
 }
 
 .textCenter {
   text-align: center;
-  padding: var(--tc-spacing-10) 0;
 }
 
 .textCenterLoading {
   text-align: center;
-  padding: var(--tc-spacing-10) 0;
+  color: var(--tc-gray-600);
 }
 
 .formattedAddress {
-  padding: var(--tc-spacing-2-5);
-  background-color: var(--tc-color-f0f7fb);
+  background-color: var(--tc-gray-100);
+  padding: var(--tc-spacing-sm);
   border-radius: var(--tc-border-radius-sm);
-  margin-top: var(--tc-spacing-2-5);
-  margin-bottom: var(--tc-spacing-2-5);
+  margin-top: var(--tc-spacing-sm);
 }
 
 .infoSection {
-  padding: var(--tc-spacing-2-5);
-  border-radius: var(--tc-border-radius-sm);
-  margin-bottom: var(--tc-spacing-4);
+  background-color: var(--tc-info-light);
 }
 
 .concertInfoSection {
-  background-color: var(--tc-color-f0f7fb);
+  background-color: var(--tc-info-light);
 }
 
 .warningInfoSection {
-  background-color: var(--tc-color-ffe9e0);
+  background-color: var(--tc-warning-light);
 }
 
 .infoBox {
-  padding: var(--tc-spacing-4);
-  background-color: var(--tc-bg-color-light);
+  padding: var(--tc-spacing-md);
   border-radius: var(--tc-border-radius);
-  margin-bottom: var(--tc-spacing-5);
+  margin-bottom: var(--tc-spacing-md);
+  background-color: var(--tc-warning-light);
 }
 
 .warningBox {
-  padding: var(--tc-spacing-2-5);
-  background-color: var(--tc-color-ffe9e0);
-  border-radius: var(--tc-border-radius-sm);
-  margin-bottom: var(--tc-spacing-4);
+  padding: var(--tc-spacing-md);
+  border-radius: var(--tc-border-radius);
+  margin-bottom: var(--tc-spacing-md);
+  background-color: var(--tc-warning-light);
 }
 
 .subTitle {
-  margin-top: 0;
-  margin-bottom: var(--tc-spacing-4);
+  font-size: var(--tc-font-size-md);
+  font-weight: var(--tc-font-weight-semibold);
+  margin-bottom: var(--tc-spacing-sm);
 }
 
 .smallButton {
-  padding: var(--tc-spacing-1) var(--tc-spacing-2-5) !important;
-  margin-top: var(--tc-spacing-2-5) !important;
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  font-size: var(--tc-font-size-xs);
 }
 
 .clauseBox {
-  padding: var(--tc-spacing-4);
-  background-color: var(--tc-bg-color-light);
+  background-color: var(--tc-gray-100);
+  padding: var(--tc-spacing-md);
   border-radius: var(--tc-border-radius);
-  margin-bottom: var(--tc-spacing-4);
-  border: 1px solid var(--tc-border-color);
+  margin-bottom: var(--tc-spacing-md);
 }
 
 .inputContainer {
-  display: flex;
-  align-items: center;
+  position: relative;
 }
 
 .currency,
 .percentage {
-  margin-left: var(--tc-spacing-2);
-  color: var(--tc-color-6c757d);
-  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-gray-600);
 }
 
 .disabledInput {
-  background-color: var(--tc-bg-color-light) !important;
+  background-color: var(--tc-gray-100);
+  color: var(--tc-gray-600);
+  cursor: not-allowed;
 }
 
 /* =============================
    STATUTS DE CONTRAT
    ============================= */
 .statusSigne {
-  background-color: var(--tc-color-2ecc71) !important;
-  color: var(--tc-color-white) !important;
+  background-color: var(--tc-success-color) !important;
+  color: var(--tc-white) !important;
 }
 
 .statusEnAttenteSignature {
-  background-color: var(--tc-color-f39c12) !important;
-  color: var(--tc-color-white) !important;
+  background-color: var(--tc-warning-color) !important;
+  color: var(--tc-white) !important;
 }
 
 .statusAnnule {
-  background-color: var(--tc-color-e74c3c) !important;
-  color: var(--tc-color-white) !important;
+  background-color: var(--tc-danger-color) !important;
+  color: var(--tc-white) !important;
 }
 
 .statusBrouillon {
-  background-color: var(--tc-color-3498db) !important;
-  color: var(--tc-color-white) !important;
+  background-color: var(--tc-info-color) !important;
+  color: var(--tc-white) !important;
 }
 
 /* =============================
    MESSAGES D'ERREUR
    ============================= */
 .error {
-  color: var(--tc-color-e74c3c);
-  font-size: var(--tc-font-size-xs);
-  margin-top: var(--tc-spacing-1);
+  color: var(--tc-danger-color);
 }
 
 /* =============================
@@ -371,7 +364,7 @@
    ============================= */
 @media (max-width: var(--tc-breakpoint-md)) {
   .container {
-    padding: var(--tc-spacing-3);
+    padding: var(--tc-spacing-md);
   }
   
   .twoColumns,
@@ -381,21 +374,21 @@
   
   .buttonGroup {
     flex-direction: column;
+    gap: var(--tc-spacing-sm);
   }
   
   .header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--tc-spacing-2);
+    padding-bottom: var(--tc-spacing-sm);
   }
 }
 
 @media (max-width: var(--tc-breakpoint-sm)) {
   .tabBar {
-    flex-direction: column;
+    flex-wrap: wrap;
   }
   
   .tab {
+    flex: 1;
     text-align: center;
   }
 } 

@@ -171,7 +171,7 @@
   gap: var(--tc-spacing-xs);
   padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
   border-radius: var(--tc-border-radius-sm);
-  background-color: var(--tc-color-gray-100);
+  background-color: var(--tc-gray-100);
   border-color: var(--tc-border-color);
   color: var(--tc-text-color-primary);
   font-weight: var(--tc-font-weight-medium);
@@ -184,10 +184,10 @@
   left: 0;
   z-index: var(--tc-z-index-dropdown);
   width: 320px;
-  background-color: var(--tc-color-white);
+  background-color: var(--tc-white);
   border: var(--tc-border-width) solid var(--tc-border-color);
   border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-box-shadow-lg));
+  box-shadow: var(--tc-shadow-lg);
   padding: var(--tc-spacing-sm);
   margin-top: var(--tc-spacing-xs);
   max-height: 400px;
@@ -224,12 +224,12 @@
 
 /* Guide d'utilisation */
 .userGuide {
-  background-color: var(--tc-color-gray-100);
+  background-color: var(--tc-gray-100);
   border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-box-shadow));
+  box-shadow: var(--tc-shadow);
   margin-bottom: var(--tc-spacing-md);
   padding: var(--tc-spacing-md);
-  border: var(--tc-border-width) solid var(--tc-color-gray-200);
+  border: var(--tc-border-width) solid var(--tc-gray-200);
 }
 
 .guideHeader {
@@ -286,10 +286,10 @@
 
 /* Carte pour les infos du modèle */
 .templateInfoCard {
-  background-color: var(--tc-color-white);
+  background-color: var(--tc-white);
   border-radius: var(--tc-border-radius);
   padding: var(--tc-spacing-md);
-  box-shadow: var(--tc-box-shadow-sm));
+  box-shadow: var(--tc-shadow-sm);
   border: var(--tc-border-width) solid var(--tc-border-color-light);
 }
 

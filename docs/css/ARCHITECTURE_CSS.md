@@ -1,6 +1,33 @@
 # Architecture CSS de TourCraft
 
-*Date de création : 17 mai 2025*
+*Date de création : 17 mai 2025*  
+*Dernière mise à jour : 25 mai 2025 - Navigation enrichie (Phase 3)*
+
+---
+
+## 🔗 **NAVIGATION & DOCUMENTS COMPLÉMENTAIRES**
+
+Ce document fait partie de l'**écosystème documentaire CSS TourCraft**. Pour une compréhension complète :
+
+### 📋 **Documents CSS Connexes**
+- **📄 [Guide Standardisation CSS](/docs/css/GUIDE_STANDARDISATION_CSS.md)** ✅ **RÉFÉRENCE PRINCIPALE**
+  - *Standards CSS complets, variables --tc-, CSS Modules*
+  - **Relation** : Ce document fournit l'architecture, le guide fournit l'implémentation
+  
+- **📄 [Résumé Refactorisation CSS](/docs/css/RESUME_REFACTORISATION_CSS.md)** 📈 **HISTORIQUE**
+  - *Historique des accomplissements et métriques de progression*
+  - **Relation** : Ce document explique l'architecture actuelle, le résumé explique comment on y est arrivé
+
+### 🎯 **Navigation Recommandée**
+1. **Commencer ici** pour comprendre les **principes architecturaux**
+2. Consulter le **Guide Standardisation CSS** pour l'**implémentation pratique**
+3. Référencer le **Résumé Refactorisation** pour le **contexte historique**
+
+### 📋 **Autres Références**
+- **📄 [Guide Standards Conventions](/docs/standards/GUIDE_STANDARDS_CONVENTIONS.md)** - Standards généraux (référence le guide CSS)
+- **📄 [Index Analyses & Audits](/docs/analyses/ANALYSES_AUDITS.md)** - Navigation centrale de la documentation
+
+---
 
 ## Architecture et standardisation CSS
 
@@ -147,3 +174,9 @@ Nous utilisons des points de rupture standardisés dans tout le projet, définis
 ---
 
 Ce document est complémentaire au [Guide de Standardisation CSS](/docs/css/GUIDE_STANDARDISATION_CSS.md) qui contient des informations supplémentaires sur l'utilisation des variables CSS, les bonnes pratiques et les composants standardisés.
+
+### 🔗 **Liens Utiles**
+- **Implémentation pratique** : [Guide Standardisation CSS](/docs/css/GUIDE_STANDARDISATION_CSS.md)
+- **Historique du projet** : [Résumé Refactorisation CSS](/docs/css/RESUME_REFACTORISATION_CSS.md)
+- **Standards généraux** : [Guide Standards Conventions](/docs/standards/GUIDE_STANDARDS_CONVENTIONS.md)
+- **Navigation centrale** : [Index Analyses & Audits](/docs/analyses/ANALYSES_AUDITS.md)

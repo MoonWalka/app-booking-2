@@ -1,7 +1,33 @@
 # Résumé de la Refactorisation CSS - TourCraft
 
 *Document créé le: 1 mai 2025*  
-*Dernière mise à jour: 5 mai 2025*
+*Dernière mise à jour: 25 mai 2025 - Navigation enrichie (Phase 3)*
+
+---
+
+## 🔗 **NAVIGATION & DOCUMENTS COMPLÉMENTAIRES**
+
+Ce document fait partie de l'**écosystème documentaire CSS TourCraft**. Il présente l'**historique et les accomplissements** de la refactorisation CSS.
+
+### 📋 **Documents CSS Connexes**
+- **📄 [Guide Standardisation CSS](/docs/css/GUIDE_STANDARDISATION_CSS.md)** ✅ **RÉFÉRENCE PRINCIPALE**
+  - *Standards CSS complets, variables --tc-, CSS Modules*
+  - **Relation** : Ce document montre les accomplissements, le guide montre l'état actuel
+  
+- **📄 [Architecture CSS](/docs/css/ARCHITECTURE_CSS.md)** 🏗️ **ARCHITECTURE**
+  - *Principes architecturaux et structure CSS*
+  - **Relation** : Ce document montre la progression, l'architecture montre les principes
+
+### 🎯 **Navigation Recommandée**
+1. **Consulter ce document** pour comprendre **l'historique et les réalisations**
+2. Référencer **Architecture CSS** pour les **principes fondamentaux**
+3. Utiliser **Guide Standardisation CSS** pour l'**implémentation quotidienne**
+
+### 📋 **Autres Références**
+- **📄 [Guide Standards Conventions](/docs/standards/GUIDE_STANDARDS_CONVENTIONS.md)** - Standards généraux (référence le guide CSS)
+- **📄 [Index Analyses & Audits](/docs/analyses/ANALYSES_AUDITS.md)** - Navigation centrale de la documentation
+
+---
 
 ## Introduction
 

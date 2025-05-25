@@ -15,22 +15,22 @@
   background-color: var(--tc-white);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow);
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
   overflow: hidden;
 }
 
 .cardHeader {
   background-color: var(--tc-gray-100);
-  padding: var(--tc-spacing-md) var(--tc-spacing-md);
-  border-bottom: var(--tc-border-width) solid var(--tc-border-color);
+  padding: var(--tc-space-4) var(--tc-space-4);
+  border-bottom: var(--tc-border-width) solid var(--tc-border-default);
   display: flex;
   align-items: center;
 }
 
 .cardIcon {
-  margin-right: var(--tc-spacing-sm);
+  margin-right: var(--tc-space-2);
   font-size: 1.2rem;
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -44,39 +44,39 @@
   margin: 0;
   font-size: 1.25rem;
   font-weight: var(--tc-font-weight-bold);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
 }
 
 .cardBody {
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
 }
 
 .formGroup {
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .formLabel {
   display: block;
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
 }
 
 .requiredField {
   color: var(--tc-danger-color);
-  margin-left: var(--tc-spacing-xs);
+  margin-left: var(--tc-space-1);
 }
 
 .optionalText {
   color: var(--tc-secondary-color);
   font-size: 0.85rem;
   font-weight: normal;
-  margin-left: var(--tc-spacing-xs);
+  margin-left: var(--tc-space-1);
 }
 
 .searchOptionsContainer {
-  margin-bottom: var(--tc-spacing-lg);
-  padding: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-6);
+  padding: var(--tc-space-4);
   background-color: var(--tc-gray-100);
   border-radius: var(--tc-border-radius);
 }
@@ -84,13 +84,13 @@
 .searchOptionsTitle {
   font-size: 1rem;
   font-weight: var(--tc-font-weight-bold);
-  margin-bottom: var(--tc-spacing-sm);
-  color: var(--tc-text-color);
+  margin-bottom: var(--tc-space-2);
+  color: var(--tc-text-default);
 }
 
 .searchButtonsGroup {
   display: flex;
-  gap: var(--tc-spacing-xs);
+  gap: var(--tc-space-1);
   flex-wrap: wrap;
 }
 
@@ -106,7 +106,7 @@
 
 .searchResultItem {
   cursor: pointer;
-  padding: var(--tc-spacing-sm);
+  padding: var(--tc-space-2);
   border-bottom: var(--tc-border-width) solid var(--tc-gray-200);
   transition: background-color 0.2s ease;
 }
@@ -129,7 +129,7 @@
 }
 
 .suggestionItem {
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  padding: var(--tc-space-2) var(--tc-space-4);
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -143,27 +143,27 @@
 .formActions {
   display: flex;
   justify-content: space-between;
-  margin-top: var(--tc-spacing-lg);
+  margin-top: var(--tc-space-6);
 }
 
 /* Support responsive */
 @media (max-width: 768px) {
   .formCard {
     border-radius: var(--tc-border-radius-sm);
-    margin-bottom: var(--tc-spacing-md);
+    margin-bottom: var(--tc-space-4);
   }
   
   .cardHeader {
-    padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+    padding: var(--tc-space-2) var(--tc-space-4);
   }
   
   .cardBody {
-    padding: var(--tc-spacing-sm);
+    padding: var(--tc-space-2);
   }
   
   .formActions {
     flex-direction: column;
-    gap: var(--tc-spacing-sm);
+    gap: var(--tc-space-2);
   }
   
   .formActions button {
@@ -191,6 +191,6 @@
   }
   
   .searchOptionsContainer {
-    padding: var(--tc-spacing-sm);
+    padding: var(--tc-space-2);
   }
 }

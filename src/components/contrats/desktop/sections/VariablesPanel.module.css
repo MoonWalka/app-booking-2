@@ -13,7 +13,7 @@
 /* Bouton d'activation du panel */
 .toggleButton {
   background: linear-gradient(135deg, var(--tc-primary-lightest) 0%, var(--tc-info-lightest) 100%);
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   border: 1px solid var(--tc-primary-light);
   border-radius: 6px;
   padding: 8px 14px;
@@ -36,7 +36,7 @@
 }
 
 .toggleButton.active {
-  background: linear-gradient(135deg, var(--tc-primary-color) 0%, var(--tc-primary-dark) 100%);
+  background: linear-gradient(135deg, var(--tc-color-primary) 0%, var(--tc-primary-dark) 100%);
   color: white;
   border-color: var(--tc-primary-dark);
   box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
@@ -83,15 +83,15 @@
 .headerTitle {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-xs);
-  margin-bottom: var(--tc-spacing-sm);
+  gap: var(--tc-space-1);
+  margin-bottom: var(--tc-space-2);
 }
 
 .varCount {
   color: var(--tc-text-muted);
   font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-normal);
-  padding: 2px var(--tc-spacing-xs);
+  padding: 2px var(--tc-space-1);
   background-color: rgba(var(--tc-primary-color-rgb), 0.1);
   border-radius: var(--tc-border-radius-sm);
 }
@@ -126,7 +126,7 @@
 
 .searchInput:focus {
   outline: none;
-  border-color: var(--tc-primary-color);
+  border-color: var(--tc-color-primary);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
@@ -194,7 +194,7 @@
 }
 
 .variableCode {
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   background: var(--tc-gray-100);
   padding: 2px 6px;
   border-radius: 4px;
@@ -242,8 +242,8 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  gap: var(--tc-spacing-sm);
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  gap: var(--tc-space-2);
+  padding: var(--tc-space-2) var(--tc-space-4);
   background-color: var(--tc-gray-50);
   border-top: 1px solid var(--tc-border-light);
 }
@@ -251,7 +251,7 @@
 .footerLeft {
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-xs);
+  gap: var(--tc-space-1);
   flex-grow: 1;
 }
 
@@ -262,7 +262,7 @@
 }
 
 .categoryInfo {
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   font-style: italic;
 }
 
@@ -277,9 +277,9 @@
    AMÉLIORATION DES BOUTONS
    ============================= */
 .showAllBtn {
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
-  margin-top: var(--tc-spacing-sm);
-  background-color: var(--tc-primary-color);
+  padding: var(--tc-space-1) var(--tc-space-2);
+  margin-top: var(--tc-space-2);
+  background-color: var(--tc-color-primary);
   color: white;
   border: none;
   border-radius: var(--tc-border-radius-sm);
@@ -295,8 +295,8 @@
 .closeButton {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-xs);
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  gap: var(--tc-space-1);
+  padding: var(--tc-space-1) var(--tc-space-2);
   background-color: var(--tc-gray-600);
   color: white;
   border: none;
@@ -322,7 +322,7 @@
   .panelFooter {
     flex-direction: column;
     align-items: stretch;
-    gap: var(--tc-spacing-xs);
+    gap: var(--tc-space-1);
   }
   
   .footerLeft {
@@ -348,9 +348,9 @@
    ============================= */
 .categorySelector {
   display: flex;
-  gap: var(--tc-spacing-xs);
-  margin-bottom: var(--tc-spacing-sm);
-  padding: var(--tc-spacing-xs);
+  gap: var(--tc-space-1);
+  margin-bottom: var(--tc-space-2);
+  padding: var(--tc-space-1);
   background-color: var(--tc-gray-50);
   border-radius: var(--tc-border-radius);
   border: 1px solid var(--tc-border-light);
@@ -359,8 +359,8 @@
 .categoryBtn {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-xs);
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  gap: var(--tc-space-1);
+  padding: var(--tc-space-1) var(--tc-space-2);
   border: 1px solid transparent;
   border-radius: var(--tc-border-radius-sm);
   background: none;
@@ -373,12 +373,12 @@
 }
 
 .categoryBtn:hover {
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   background-color: rgba(var(--tc-primary-color-rgb), 0.1);
 }
 
 .categoryBtn.active {
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   background-color: rgba(var(--tc-primary-color-rgb), 0.15);
   border-color: rgba(var(--tc-primary-color-rgb), 0.3);
 }

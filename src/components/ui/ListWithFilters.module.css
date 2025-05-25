@@ -8,12 +8,12 @@
    CONTENEUR PRINCIPAL
    ============================= */
 .container {
-  background-color: var(--tc-bg-color);
+  background-color: var(--tc-bg-default);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow);
-  padding: var(--tc-spacing-lg);
+  padding: var(--tc-space-6);
   margin-bottom: var(--tc-spacing-xl);
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
 }
 
 /* =============================
@@ -23,19 +23,19 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
 }
 
 .title {
   margin: 0;
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
 }
 
 .actionsWrapper {
   display: flex;
-  gap: var(--tc-spacing-sm);
+  gap: var(--tc-space-2);
 }
 
 .refreshButton {
@@ -43,7 +43,7 @@
   border: 1px solid var(--tc-gray-300);
   color: var(--tc-gray-600);
   border-radius: var(--tc-border-radius);
-  padding: var(--tc-spacing-sm);
+  padding: var(--tc-space-2);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -53,15 +53,15 @@
 
 .refreshButton:hover {
   background-color: var(--tc-gray-100);
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
 }
 
 /* =============================
    FILTRES
    ============================= */
 .filtersContainer {
-  margin-bottom: var(--tc-spacing-lg);
-  padding: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-6);
+  padding: var(--tc-space-4);
   background-color: var(--tc-gray-100);
   border-radius: var(--tc-border-radius);
   border: 1px solid var(--tc-gray-200);
@@ -70,8 +70,8 @@
 .filters {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--tc-spacing-md);
-  margin-bottom: var(--tc-spacing-md);
+  gap: var(--tc-space-4);
+  margin-bottom: var(--tc-space-4);
 }
 
 .filterItem {
@@ -80,7 +80,7 @@
 
 .filterLabel {
   display: block;
-  margin-bottom: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-space-2);
   color: var(--tc-gray-700);
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
@@ -89,18 +89,18 @@
 .filterInput, 
 .filterSelect {
   width: 100%;
-  padding: var(--tc-spacing-sm);
+  padding: var(--tc-space-2);
   border: 1px solid var(--tc-gray-400);
   border-radius: var(--tc-border-radius);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-text-color);
-  background-color: var(--tc-bg-color);
+  color: var(--tc-text-default);
+  background-color: var(--tc-bg-default);
   transition: var(--tc-transition);
 }
 
 .filterInput:focus,
 .filterSelect:focus {
-  border-color: var(--tc-primary-color);
+  border-color: var(--tc-color-primary);
   outline: none;
   box-shadow: var(--tc-input-focus-shadow);
 }
@@ -108,15 +108,15 @@
 .filterActions {
   display: flex;
   justify-content: flex-end;
-  gap: var(--tc-spacing-sm);
+  gap: var(--tc-space-2);
 }
 
 .applyButton {
-  background-color: var(--tc-primary-color);
+  background-color: var(--tc-color-primary);
   color: var(--tc-light-color);
   border: none;
   border-radius: var(--tc-border-radius);
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  padding: var(--tc-space-2) var(--tc-space-4);
   cursor: pointer;
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
@@ -132,7 +132,7 @@
   border: 1px solid var(--tc-gray-400);
   color: var(--tc-gray-600);
   border-radius: var(--tc-border-radius);
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  padding: var(--tc-space-2) var(--tc-space-4);
   cursor: pointer;
   font-size: var(--tc-font-size-sm);
   transition: var(--tc-transition);
@@ -149,7 +149,7 @@
    ============================= */
 .tableWrapper {
   overflow-x: auto;
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .table {
@@ -159,7 +159,7 @@
 
 .tableHeader {
   text-align: left;
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  padding: var(--tc-space-2) var(--tc-space-4);
   background-color: var(--tc-gray-100);
   border-bottom: 2px solid var(--tc-gray-300);
   color: var(--tc-gray-700);
@@ -184,9 +184,9 @@
 }
 
 .sortIcon {
-  margin-left: var(--tc-spacing-sm);
+  margin-left: var(--tc-space-2);
   font-size: var(--tc-font-size-xs);
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
 }
 
 .tableRow {
@@ -200,8 +200,8 @@
 }
 
 .tableCell {
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
-  color: var(--tc-text-color);
+  padding: var(--tc-space-2) var(--tc-space-4);
+  color: var(--tc-text-default);
   font-size: var(--tc-font-size-sm);
 }
 
@@ -221,8 +221,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: var(--tc-spacing-lg);
-  gap: var(--tc-spacing-sm);
+  padding: var(--tc-space-6);
+  gap: var(--tc-space-2);
   color: var(--tc-gray-600);
   font-size: var(--tc-font-size-sm);
 }
@@ -234,7 +234,7 @@
 .loadMoreContainer {
   display: flex;
   justify-content: center;
-  padding: var(--tc-spacing-md) 0 0;
+  padding: var(--tc-space-4) 0 0;
 }
 
 .loadMoreButton {
@@ -242,7 +242,7 @@
   border: 1px solid var(--tc-gray-400);
   color: var(--tc-gray-700);
   border-radius: var(--tc-border-radius);
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  padding: var(--tc-space-2) var(--tc-space-4);
   cursor: pointer;
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
@@ -251,13 +251,13 @@
 
 .loadMoreButton:hover {
   background-color: var(--tc-gray-100);
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
 }
 
 .loadingMoreContainer {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-sm);
+  gap: var(--tc-space-2);
   color: var(--tc-gray-600);
   font-size: var(--tc-font-size-sm);
 }
@@ -267,23 +267,23 @@
    ============================= */
 @media (max-width: var(--tc-breakpoint-md)) {
   .container {
-    padding: var(--tc-spacing-md);
+    padding: var(--tc-space-4);
   }
 
   .header {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--tc-spacing-sm);
+    gap: var(--tc-space-2);
   }
 
   .actionsWrapper {
     width: 100%;
     justify-content: flex-end;
-    margin-top: var(--tc-spacing-xs);
+    margin-top: var(--tc-space-1);
   }
 
   .filters {
-    gap: var(--tc-spacing-sm);
+    gap: var(--tc-space-2);
   }
 
   .filterItem {
@@ -297,7 +297,7 @@
 
   .applyButton, .resetButton {
     width: 100%;
-    padding: var(--tc-spacing-sm);
+    padding: var(--tc-space-2);
   }
 }
 
@@ -307,10 +307,10 @@
   }
 
   .tableHeader, .tableCell {
-    padding: var(--tc-spacing-xs);
+    padding: var(--tc-space-1);
   }
   
   .filtersContainer {
-    padding: var(--tc-spacing-sm);
+    padding: var(--tc-space-2);
   }
 }

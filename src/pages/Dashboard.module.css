@@ -9,13 +9,13 @@
 .dashboardStats {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--tc-spacing-md);
-  margin: var(--tc-spacing-md) 0;
+  gap: var(--tc-space-4);
+  margin: var(--tc-space-4) 0;
 }
 
 .statCard {
   background-color: var(--tc-white);
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow-sm);
   flex: 1 1 200px; /* flex-grow, flex-shrink, flex-basis */
@@ -25,6 +25,6 @@
 .statValue {
   font-size: var(--tc-font-size-xxl);
   font-weight: var(--tc-font-weight-bold);
-  color: var(--tc-primary-color);
-  margin: var(--tc-spacing-sm) 0;
+  color: var(--tc-color-primary);
+  margin: var(--tc-space-2) 0;
 }

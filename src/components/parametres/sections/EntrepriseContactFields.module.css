@@ -5,32 +5,32 @@
  */
 
 .contactFieldsContainer {
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
 }
 
 .fieldsRow {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: var(--tc-spacing-lg);
-  margin-bottom: var(--tc-spacing-lg);
+  gap: var(--tc-space-6);
+  margin-bottom: var(--tc-space-6);
 }
 
 .fieldGroup {
   display: flex;
   flex-direction: column;
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .fieldLabel {
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-text-color);
-  margin-bottom: var(--tc-spacing-sm);
+  color: var(--tc-text-default);
+  margin-bottom: var(--tc-space-2);
   font-size: var(--tc-font-size-sm);
 }
 
 .fieldInput {
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
-  border: 1px solid var(--tc-border-color);
+  padding: var(--tc-space-2) var(--tc-space-4);
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-border-radius);
   font-size: var(--tc-font-size-md);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -38,7 +38,7 @@
 
 .fieldInput:focus {
   outline: none;
-  border-color: var(--tc-primary-color);
+  border-color: var(--tc-color-primary);
   box-shadow: 0 0 0 3px var(--tc-primary-color-light);
 }
 
@@ -52,12 +52,12 @@
 
 .inputIcon {
   color: var(--tc-text-muted);
-  margin-right: var(--tc-spacing-sm);
+  margin-right: var(--tc-space-2);
 }
 
 .invalidFeedback {
   width: 100%;
-  margin-top: var(--tc-spacing-xs);
+  margin-top: var(--tc-space-1);
   font-size: var(--tc-font-size-sm);
   color: var(--tc-danger-color);
 }
@@ -66,6 +66,6 @@
 @media (max-width: 768px) {
   .fieldsRow {
     grid-template-columns: 1fr;
-    gap: var(--tc-spacing-md);
+    gap: var(--tc-space-4);
   }
 }

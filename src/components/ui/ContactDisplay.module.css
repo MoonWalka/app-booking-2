@@ -8,10 +8,10 @@
    VARIANTES D'AFFICHAGE DE CONTACT
    ============================= */
 .contactDefault {
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
   background-color: var(--tc-gray-100);
   border-radius: var(--tc-border-radius);
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
   border: 1px solid var(--tc-gray-300);
   transition: var(--tc-transition);
 }
@@ -19,12 +19,12 @@
 .contactCompact {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--tc-spacing-md);
+  gap: var(--tc-space-4);
   align-items: center;
-  padding: var(--tc-spacing-sm);
+  padding: var(--tc-space-2);
   background-color: var(--tc-gray-100);
   border-radius: var(--tc-border-radius-sm);
-  margin-bottom: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-space-2);
   border: 1px solid var(--tc-gray-300);
   transition: var(--tc-transition);
 }
@@ -32,7 +32,7 @@
 .contactInline {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--tc-spacing-md);
+  gap: var(--tc-space-4);
   align-items: center;
 }
 
@@ -41,17 +41,17 @@
    ============================= */
 .contactName {
   font-weight: var(--tc-font-weight-medium);
-  margin-bottom: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-space-2);
   display: flex;
   align-items: center;
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   font-size: var(--tc-font-size-md);
 }
 
 .contactFunction {
   font-weight: var(--tc-font-weight-normal);
   font-style: italic;
-  margin-left: var(--tc-spacing-sm);
+  margin-left: var(--tc-space-2);
   color: var(--tc-gray-600);
   font-size: var(--tc-font-size-sm);
 }
@@ -59,14 +59,14 @@
 .contactItem {
   display: flex;
   align-items: center;
-  margin-top: var(--tc-spacing-sm);
+  margin-top: var(--tc-space-2);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-text-color);
-  gap: var(--tc-spacing-xs);
+  color: var(--tc-text-default);
+  gap: var(--tc-space-1);
 }
 
 .contactLink {
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   text-decoration: none;
   transition: color var(--tc-transition-duration);
 }
@@ -80,7 +80,7 @@
   color: var(--tc-gray-600);
   display: flex;
   align-items: center;
-  margin-top: var(--tc-spacing-sm);
+  margin-top: var(--tc-space-2);
   font-style: italic;
   font-size: var(--tc-font-size-sm);
 }
@@ -109,11 +109,11 @@
    ============================= */
 @media (max-width: var(--tc-breakpoint-sm)) {
   .contactDefault {
-    padding: var(--tc-spacing-sm);
+    padding: var(--tc-space-2);
   }
   
   .contactCompact {
-    gap: var(--tc-spacing-sm);
+    gap: var(--tc-space-2);
     flex-direction: column;
     align-items: flex-start;
   }
@@ -121,6 +121,6 @@
   .contactInline {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--tc-spacing-xs);
+    gap: var(--tc-space-1);
   }
 }

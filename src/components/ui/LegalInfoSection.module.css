@@ -8,12 +8,12 @@
    CONTENEUR PRINCIPAL
    ============================= */
 .legalInfoSection {
-  background-color: var(--tc-bg-color);
+  background-color: var(--tc-bg-default);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow-sm);
   overflow: hidden;
-  margin-bottom: var(--tc-spacing-md);
-  border: 1px solid var(--tc-border-color);
+  margin-bottom: var(--tc-space-4);
+  border: 1px solid var(--tc-border-default);
 }
 
 /* =============================
@@ -23,7 +23,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--tc-spacing-md) var(--tc-spacing-md);
+  padding: var(--tc-space-4) var(--tc-space-4);
   background-color: var(--tc-gray-100);
   border-bottom: 1px solid var(--tc-gray-300);
 }
@@ -32,44 +32,44 @@
   display: flex;
   align-items: center;
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   font-size: var(--tc-font-size-md);
 }
 
 .headerIcon {
   font-size: var(--tc-font-size-lg);
-  margin-right: var(--tc-spacing-sm);
-  color: var(--tc-primary-color);
+  margin-right: var(--tc-space-2);
+  color: var(--tc-color-primary);
 }
 
 /* =============================
    CONTENU DE SECTION
    ============================= */
 .sectionContent {
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
 }
 
 .infoGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: var(--tc-spacing-md);
+  gap: var(--tc-space-4);
 }
 
 .infoGroup {
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .infoLabel {
   font-size: var(--tc-font-size-sm);
   color: var(--tc-gray-600);
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
   font-weight: var(--tc-font-weight-medium);
 }
 
 .infoValue {
   font-size: var(--tc-font-size-base);
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   word-break: break-word;
   line-height: var(--tc-line-height-base);
 }
@@ -77,7 +77,7 @@
 /* Style pour les lignes en alternance en mode visualisation */
 .infoGroup:nth-child(odd) {
   background-color: var(--tc-gray-50);
-  padding: var(--tc-spacing-sm);
+  padding: var(--tc-space-2);
   border-radius: var(--tc-border-radius-sm);
 }
 
@@ -93,21 +93,21 @@
 @media (max-width: var(--tc-breakpoint-md)) {
   .infoGrid {
     grid-template-columns: 1fr;
-    gap: var(--tc-spacing-md);
+    gap: var(--tc-space-4);
   }
   
   .sectionHeader {
-    padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+    padding: var(--tc-space-2) var(--tc-space-4);
   }
   
   .sectionContent {
-    padding: var(--tc-spacing-md);
+    padding: var(--tc-space-4);
   }
 }
 
 @media (max-width: var(--tc-breakpoint-sm)) {
   .infoGroup {
-    margin-bottom: var(--tc-spacing-sm);
+    margin-bottom: var(--tc-space-2);
   }
   
   .headerIcon {
@@ -115,6 +115,6 @@
   }
   
   .sectionContent {
-    padding: var(--tc-spacing-sm);
+    padding: var(--tc-space-2);
   }
 }

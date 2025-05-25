@@ -18,7 +18,7 @@
   display: block;
   margin-bottom: var(--tc-spacing-1-5);
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
 }
 
 .formHelpText {

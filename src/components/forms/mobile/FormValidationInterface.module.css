@@ -65,7 +65,7 @@
   display: flex;
   align-items: center;
   padding: var(--tc-spacing-3);
-  background-color: var(--tc-primary-color));
+  background-color: var(--tc-color-primary));
   color: var(--tc-bg-default);
   position: sticky;
   top: 0;
@@ -97,7 +97,7 @@
 .formStatusContainer {
   padding: var(--tc-spacing-3);
   background-color: var(--tc-bg-light));
-  border-bottom: 1px solid var(--tc-border-color));
+  border-bottom: 1px solid var(--tc-border-default));
 }
 
 .formStatus {
@@ -130,7 +130,7 @@
 
 .formTabs {
   display: flex;
-  border-bottom: 1px solid var(--tc-border-color));
+  border-bottom: 1px solid var(--tc-border-default));
   background-color: var(--tc-bg-default);
   overflow-x: auto;
   scrollbar-width: none;
@@ -156,8 +156,8 @@
 }
 
 .tabButton.active {
-  color: var(--tc-primary-color));
-  border-bottom-color: var(--tc-primary-color));
+  color: var(--tc-color-primary));
+  border-bottom-color: var(--tc-color-primary));
   font-weight: var(--tc-font-weight-medium);
 }
 
@@ -177,7 +177,7 @@
   font-size: 1.var(--tc-spacing-3);
   margin-bottom: var(--tc-font-size-xl);
   padding-bottom: var(--tc-spacing-2);
-  border-bottom: 1px solid var(--tc-border-color));
+  border-bottom: 1px solid var(--tc-border-default));
 }
 
 .formField {
@@ -330,7 +330,7 @@
   display: flex;
   flex-direction: column;
   margin-bottom: var(--tc-spacing-3);
-  border-bottom: 1px solid var(--tc-border-color);
+  border-bottom: 1px solid var(--tc-border-default);
   padding-bottom: var(--tc-spacing-3);
 }
 

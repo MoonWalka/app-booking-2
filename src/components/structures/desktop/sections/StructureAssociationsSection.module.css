@@ -13,7 +13,7 @@
 .detailsCard {
   background-color: var(--tc-white);
   border-radius: var(--tc-border-radius);
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
   box-shadow: var(--tc-shadow-sm);
   overflow: hidden;
 }
@@ -21,40 +21,40 @@
 .cardHeader {
   display: flex;
   align-items: center;
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  padding: var(--tc-space-2) var(--tc-space-4);
   background-color: var(--tc-white-secondary);
-  border-bottom: 1px solid var(--tc-border-color);
+  border-bottom: 1px solid var(--tc-border-default);
 }
 
 .cardHeader h3 {
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-bold);
   margin: 0;
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
 }
 
 .cardHeader i {
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   font-size: var(--tc-font-size-lg);
-  margin-right: var(--tc-spacing-sm);
+  margin-right: var(--tc-space-2);
 }
 
 .cardBody {
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
 }
 
 .programmateursList {
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-md);
+  gap: var(--tc-space-4);
 }
 
 .programmateurCard {
   display: flex;
   align-items: center;
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
   border-radius: var(--tc-border-radius-sm);
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
   transition: all 0.2s ease;
 }
 
@@ -70,13 +70,13 @@
 .programmateurName {
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-medium);
-  margin: 0 0 var(--tc-spacing-sm) 0;
+  margin: 0 0 var(--tc-space-2) 0;
   display: flex;
   align-items: center;
 }
 
 .programmateurName a {
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   text-decoration: none;
   transition: color 0.2s;
 }
@@ -89,7 +89,7 @@
 .programmateurDetails {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--tc-spacing-md);
+  gap: var(--tc-space-4);
 }
 
 .detailItem {
@@ -100,7 +100,7 @@
 }
 
 .detailItem i {
-  margin-right: var(--tc-spacing-xs);
+  margin-right: var(--tc-space-1);
 }
 
 .detailItem a {
@@ -110,14 +110,14 @@
 }
 
 .detailItem a:hover {
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   text-decoration: underline;
 }
 
 .alertInfo {
   display: flex;
   align-items: center;
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
   border-radius: var(--tc-border-radius-sm);
   background-color: var(--tc-info-color-light);
   color: var(--tc-info-color-dark);
@@ -126,7 +126,7 @@
 
 .alertInfo i {
   font-size: var(--tc-font-size-md);
-  margin-right: var(--tc-spacing-sm);
+  margin-right: var(--tc-space-2);
 }
 
 .spinner {
@@ -135,7 +135,7 @@
   border-width: 0.25rem;
   border-style: solid;
   border-color: var(--tc-primary-color-light);
-  border-right-color: var(--tc-primary-color);
+  border-right-color: var(--tc-color-primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin: 0 auto;
@@ -156,10 +156,10 @@
 @media (max-width: 768px) {
   .programmateurDetails {
     flex-direction: column;
-    gap: var(--tc-spacing-xs);
+    gap: var(--tc-space-1);
   }
   
   .cardBody {
-    padding: var(--tc-spacing-sm);
+    padding: var(--tc-space-2);
   }
 }

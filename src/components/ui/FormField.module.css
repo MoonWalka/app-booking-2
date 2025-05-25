@@ -11,7 +11,7 @@
    CONTENEUR PRINCIPAL
    ============================= */
 .formFieldContainer {
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 /* =============================
@@ -21,14 +21,14 @@
   display: block;
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-text-color);
-  margin-bottom: var(--tc-spacing-xs);
+  color: var(--tc-text-default);
+  margin-bottom: var(--tc-space-1);
   line-height: var(--tc-line-height-base);
 }
 
 .requiredIndicator {
   color: var(--tc-danger-color);
-  margin-left: var(--tc-spacing-xs);
+  margin-left: var(--tc-space-1);
   font-weight: var(--tc-font-weight-bold);
 }
 
@@ -44,13 +44,13 @@
    ============================= */
 .formField {
   width: 100%;
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  padding: var(--tc-space-2) var(--tc-space-4);
   font-size: var(--tc-font-size-base);
   font-family: var(--tc-font-family-base);
   line-height: var(--tc-line-height-base);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   background-color: var(--tc-bg-color-light);
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-border-radius);
   transition: var(--tc-transition);
   box-sizing: border-box;
@@ -58,7 +58,7 @@
 
 .formField:focus {
   outline: none;
-  border-color: var(--tc-primary-color);
+  border-color: var(--tc-color-primary);
   box-shadow: var(--tc-input-focus-shadow);
   background-color: var(--tc-bg-color-light);
 }
@@ -72,19 +72,19 @@
    VARIANTES DE TAILLE
    ============================= */
 .formField--sm {
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  padding: var(--tc-space-1) var(--tc-space-2);
   font-size: var(--tc-font-size-sm);
   height: 32px;
 }
 
 .formField--md {
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  padding: var(--tc-space-2) var(--tc-space-4);
   font-size: var(--tc-font-size-base);
   height: 40px;
 }
 
 .formField--lg {
-  padding: var(--tc-spacing-md) var(--tc-spacing-lg);
+  padding: var(--tc-space-4) var(--tc-space-6);
   font-size: var(--tc-font-size-lg);
   height: 48px;
 }
@@ -98,11 +98,11 @@
 
 .formField--outline {
   background-color: transparent;
-  border: 2px solid var(--tc-border-color);
+  border: 2px solid var(--tc-border-default);
 }
 
 .formField--outline:focus {
-  border-color: var(--tc-primary-color);
+  border-color: var(--tc-color-primary);
   background-color: var(--tc-bg-color-light);
 }
 
@@ -113,7 +113,7 @@
 
 .formField--filled:focus {
   background-color: var(--tc-bg-color-light);
-  border-color: var(--tc-primary-color);
+  border-color: var(--tc-color-primary);
 }
 
 /* =============================
@@ -155,10 +155,10 @@ textarea.formField {
    ============================= */
 select.formField {
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
-  background-position: right var(--tc-spacing-sm) center;
+  background-position: right var(--tc-space-2) center;
   background-repeat: no-repeat;
   background-size: 16px 12px;
-  padding-right: calc(var(--tc-spacing-lg) + 16px);
+  padding-right: calc(var(--tc-space-6) + 16px);
   appearance: none;
 }
 
@@ -168,8 +168,8 @@ select.formField {
 .errorMessage {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-xs);
-  margin-top: var(--tc-spacing-xs);
+  gap: var(--tc-space-1);
+  margin-top: var(--tc-space-1);
   font-size: var(--tc-font-size-sm);
   color: var(--tc-danger-color);
   line-height: var(--tc-line-height-base);
@@ -184,7 +184,7 @@ select.formField {
    TEXTE D'AIDE
    ============================= */
 .helpText {
-  margin-top: var(--tc-spacing-xs);
+  margin-top: var(--tc-space-1);
   font-size: var(--tc-font-size-sm);
   color: var(--tc-text-color-muted);
   line-height: var(--tc-line-height-base);
@@ -195,7 +195,7 @@ select.formField {
    ============================= */
 @media (max-width: var(--tc-breakpoint-sm)) {
   .formField--lg {
-    padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+    padding: var(--tc-space-2) var(--tc-space-4);
     font-size: var(--tc-font-size-base);
     height: 44px;
   }
@@ -213,7 +213,7 @@ select.formField {
    FOCUS VISIBLE (ACCESSIBILITÉ)
    ============================= */
 .formField:focus-visible {
-  outline: 2px solid var(--tc-primary-color);
+  outline: 2px solid var(--tc-color-primary);
   outline-offset: 2px;
 }
 

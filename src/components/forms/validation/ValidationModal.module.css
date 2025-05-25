@@ -26,7 +26,7 @@
 }
 
 .modalContent {
-  background-color: var(--tc-card-bg);
+  background-color: var(--tc-bg-default);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow-modal));
   width: 100%;
@@ -49,15 +49,15 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--tc-spacing-md);
-  border-bottom: var(--tc-border-width) solid var(--tc-border-color);
+  padding: var(--tc-space-4);
+  border-bottom: var(--tc-border-width) solid var(--tc-border-default);
 }
 
 .modalTitle {
   margin: 0;
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
 }
 
 .closeButton {
@@ -72,43 +72,43 @@
 }
 
 .closeButton:hover:not(:disabled) {
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
 }
 
 .modalBody {
-  padding: var(--tc-spacing-lg);
+  padding: var(--tc-space-6);
 }
 
 .message {
   margin: 0;
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
 }
 
 .modalFooter {
   display: flex;
   justify-content: flex-end;
-  padding: var(--tc-spacing-md);
-  border-top: var(--tc-border-width) solid var(--tc-border-color);
-  gap: var(--tc-spacing-sm);
+  padding: var(--tc-space-4);
+  border-top: var(--tc-border-width) solid var(--tc-border-default);
+  gap: var(--tc-space-2);
 }
 
 .cancelButton {
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  padding: var(--tc-space-2) var(--tc-space-4);
   background-color: var(--tc-bg-light);
   border: none;
   border-radius: var(--tc-border-radius-sm);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   cursor: pointer;
   font-weight: var(--tc-font-weight-medium);
 }
 
 .cancelButton:hover:not(:disabled) {
-  background-color: var(--tc-border-color);
+  background-color: var(--tc-border-default);
 }
 
 .confirmButton {
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
-  background-color: var(--tc-primary-color);
+  padding: var(--tc-space-2) var(--tc-space-4);
+  background-color: var(--tc-color-primary);
   border: none;
   border-radius: var(--tc-border-radius-sm);
   color: var(--tc-light-color);
@@ -116,7 +116,7 @@
   font-weight: var(--tc-font-weight-medium);
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-sm);
+  gap: var(--tc-space-2);
 }
 
 .confirmButton:hover:not(:disabled) {
@@ -130,8 +130,8 @@
 
 .spinner {
   display: inline-block;
-  width: var(--tc-spacing-md);
-  height: var(--tc-spacing-md);
+  width: var(--tc-space-4);
+  height: var(--tc-space-4);
   border: 0.2em solid currentColor;
   border-right-color: transparent;
   border-radius: 50%;
@@ -148,11 +148,11 @@
 @media (max-width: var(--tc-breakpoint-xs)) {
   .modalContent {
     max-width: 90%;
-    margin: var(--tc-spacing-sm);
+    margin: var(--tc-space-2);
   }
   
   .modalBody {
-    padding: var(--tc-spacing-md);
+    padding: var(--tc-space-4);
   }
   
   .modalFooter {
@@ -161,6 +161,6 @@
   
   .cancelButton, .confirmButton {
     width: 100%;
-    margin-top: var(--tc-spacing-xs);
+    margin-top: var(--tc-space-1);
   }
 }

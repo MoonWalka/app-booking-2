@@ -15,7 +15,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  padding: var(--tc-space-1) var(--tc-space-2);
   font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-semibold);
   line-height: 1;
@@ -37,7 +37,7 @@
    VARIANTES DE COULEUR
    ============================= */
 .primary {
-  background-color: var(--tc-primary-color);
+  background-color: var(--tc-color-primary);
   color: var(--tc-light-color);
 }
 
@@ -71,8 +71,8 @@
    ============================= */
 .outlinePrimary {
   background-color: transparent;
-  border: 1px solid var(--tc-primary-color);
-  color: var(--tc-primary-color);
+  border: 1px solid var(--tc-color-primary);
+  color: var(--tc-color-primary);
 }
 
 .outlineSecondary {

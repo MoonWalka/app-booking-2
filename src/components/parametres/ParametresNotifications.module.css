@@ -5,16 +5,16 @@
  */
 
 .notificationSection {
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
 }
 
 .notificationGroup {
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .notificationTypeTitle {
-  margin-top: var(--tc-spacing-lg);
-  margin-bottom: var(--tc-spacing-md);
+  margin-top: var(--tc-space-6);
+  margin-bottom: var(--tc-space-4);
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-medium);
 }
@@ -22,32 +22,32 @@
 .formActions {
   display: flex;
   justify-content: flex-end;
-  margin-top: var(--tc-spacing-lg);
+  margin-top: var(--tc-space-6);
 }
 
 .successMessage {
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
 }
 
 /* Styles responsive standardisés */
 @media (max-width: 768px) {
   .notificationTypeTitle {
-    margin-top: var(--tc-spacing-md);
-    margin-bottom: var(--tc-spacing-sm);
+    margin-top: var(--tc-space-4);
+    margin-bottom: var(--tc-space-2);
   }
   
   .formActions {
-    margin-top: var(--tc-spacing-md);
+    margin-top: var(--tc-space-4);
   }
 }
 
 @media (max-width: 576px) {
   .notificationSection {
-    margin-bottom: var(--tc-spacing-md);
+    margin-bottom: var(--tc-space-4);
   }
   
   .notificationGroup {
-    margin-bottom: var(--tc-spacing-sm);
+    margin-bottom: var(--tc-space-2);
   }
   
   .formActions {
@@ -55,6 +55,6 @@
   }
   
   .successMessage {
-    margin-bottom: var(--tc-spacing-md);
+    margin-bottom: var(--tc-space-4);
   }
 }

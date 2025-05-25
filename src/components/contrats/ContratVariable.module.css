@@ -19,20 +19,20 @@
   align-items: center;
   padding: 8px 12px;
   border-radius: 4px;
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
   background-color: var(--tc-bg-light);
   transition: all 0.2s ease;
 }
 
 .variableItem button:hover {
   background-color: var(--tc-primary-bg-subtle);
-  border-color: var(--tc-primary-color);
+  border-color: var(--tc-color-primary);
 }
 
 .variableName {
   font-weight: 600;
   font-family: monospace;
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   display: block;
 }
 
@@ -48,7 +48,7 @@
   padding: 12px;
   border-radius: 4px;
   background-color: var(--tc-bg-light);
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
   margin-bottom: 8px;
   cursor: pointer;
   transition: background-color 0.2s ease;

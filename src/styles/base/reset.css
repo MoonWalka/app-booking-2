@@ -43,8 +43,8 @@ body {
   font-size: var(--tc-font-size-base);
   font-weight: var(--tc-font-weight-normal);
   line-height: var(--tc-line-height-base);
-  color: var(--tc-text-color);
-  background-color: var(--tc-bg-color);
+  color: var(--tc-text-default);
+  background-color: var(--tc-bg-default);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -87,7 +87,7 @@ ul, ol {
  */
 a {
   text-decoration: none;
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   transition: color var(--tc-transition-duration);
   background-color: transparent; /* Assure la transparence sur les liens avec image */
 }
@@ -178,7 +178,7 @@ input[type="search"]::-webkit-search-cancel-button {
  */
 ::selection {
   background-color: rgba(var(--tc-primary-color-rgb), 0.2);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
 }
 
 /*

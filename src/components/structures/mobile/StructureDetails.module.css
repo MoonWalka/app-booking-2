@@ -60,7 +60,7 @@
   font-size: var(--tc-font-size-xl); /* ou autre valeur explicite */
   margin-bottom: var(--tc-spacing-3);
   padding-bottom: var(--tc-spacing-2);
-  border-bottom: 1px solid var(--tc-border-color);
+  border-bottom: 1px solid var(--tc-border-default);
   display: flex;
   align-items: center;
   gap: var(--tc-spacing-2);

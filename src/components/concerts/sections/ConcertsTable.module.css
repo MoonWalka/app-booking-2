@@ -14,12 +14,12 @@
  * ------------------
  */
 .tableContainer {
-  background-color: var(--tc-bg-color);
+  background-color: var(--tc-bg-default);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow-sm);
   overflow-x: auto;
-  margin-top: var(--tc-spacing-md);
-  border: 1px solid var(--tc-border-color);
+  margin-top: var(--tc-space-4);
+  border: 1px solid var(--tc-border-default);
 }
 
 /* 
@@ -42,8 +42,8 @@
   background-color: var(--tc-bg-color-light);
   color: var(--tc-text-color-primary);
   font-weight: var(--tc-font-weight-semibold);
-  border-bottom: 2px solid var(--tc-border-color);
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  border-bottom: 2px solid var(--tc-border-default);
+  padding: var(--tc-space-2) var(--tc-space-4);
   text-align: left;
   font-size: var(--tc-font-size-sm);
   position: sticky;
@@ -65,11 +65,11 @@
  * ----------------
  */
 .concertsTable td {
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
-  border-bottom: 1px solid var(--tc-border-color);
+  padding: var(--tc-space-2) var(--tc-space-4);
+  border-bottom: 1px solid var(--tc-border-default);
   vertical-align: middle;
   font-size: var(--tc-font-size-base);
-  background: var(--tc-bg-color);
+  background: var(--tc-bg-default);
   color: var(--tc-text-color-base);
 }
 
@@ -90,7 +90,7 @@
   padding: var(--tc-spacing-xl);
   color: var(--tc-gray-600);
   font-size: var(--tc-font-size-md);
-  border-top: 1px solid var(--tc-border-color);
+  border-top: 1px solid var(--tc-border-default);
 }
 
 /* 
@@ -102,19 +102,19 @@
   text-align: center;
   color: var(--tc-gray-600);
   font-size: var(--tc-font-size-md);
-  border-top: 1px solid var(--tc-border-color);
+  border-top: 1px solid var(--tc-border-default);
 }
 
 .actions {
   display: flex;
-  gap: var(--tc-spacing-xs);
+  gap: var(--tc-space-1);
   justify-content: flex-end;
 }
 
 .actions button, .actions a {
   border: none;
   background: var(--tc-gray-200);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   font-size: 1.1rem;
   padding: 0.25rem 0.5rem;
   border-radius: 50%;
@@ -124,18 +124,18 @@
   align-items: center;
   justify-content: center;
   transition: background 0.15s, color 0.15s;
-  margin-left: var(--tc-spacing-xs);
+  margin-left: var(--tc-space-1);
 }
 .actions button:hover, .actions a:hover {
-  background: var(--tc-primary-color);
+  background: var(--tc-color-primary);
   color: var(--tc-white);
 }
 .actions .viewButton {
   background: var(--tc-gray-300);
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
 }
 .actions .viewButton:hover {
-  background: var(--tc-primary-color);
+  background: var(--tc-color-primary);
   color: var(--tc-white);
 }
 .actions .editButton {
@@ -170,7 +170,7 @@
 @media (max-width: 768px) {
   .concertsTable thead th,
   .concertsTable tbody td {
-    padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+    padding: var(--tc-space-1) var(--tc-space-2);
   }
   .concertsTable {
     min-width: 700px;
@@ -188,18 +188,18 @@
   align-items: center;
   background: var(--tc-bg-color-light);
   border-radius: var(--tc-border-radius);
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
   padding-left: 2.5rem;
 }
 .searchInput {
   width: 100%;
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  padding: var(--tc-space-2) var(--tc-space-4);
   padding-left: 0.5rem;
   background-color: transparent;
   border: none;
   outline: none;
   font-size: var(--tc-font-size-base);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   border-radius: var(--tc-border-radius);
   box-shadow: none;
 }
@@ -229,25 +229,25 @@
   transition: color var(--tc-transition-duration);
 }
 .clearSearch:hover {
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
 }
 
 .filtersCol, .searchFilterRow button, .searchFilterRow select {
   height: 40px;
   border-radius: var(--tc-border-radius);
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
   background: var(--tc-bg-color-light);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   font-size: var(--tc-font-size-base);
-  padding: 0 var(--tc-spacing-md);
-  margin-left: var(--tc-spacing-xs);
+  padding: 0 var(--tc-space-4);
+  margin-left: var(--tc-space-1);
   transition: background var(--tc-transition-duration), border-color var(--tc-transition-duration);
   display: flex;
   align-items: center;
 }
 .searchFilterRow button:hover, .searchFilterRow select:focus {
-  background: var(--tc-bg-color);
-  border-color: var(--tc-primary-color);
+  background: var(--tc-bg-default);
+  border-color: var(--tc-color-primary);
 }
 @media (max-width: 768px) {
   .searchBox {
@@ -256,6 +256,6 @@
   .filtersCol, .searchFilterRow button, .searchFilterRow select {
     width: 100%;
     margin-left: 0;
-    margin-top: var(--tc-spacing-xs);
+    margin-top: var(--tc-space-1);
   }
 }

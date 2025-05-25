@@ -13,28 +13,28 @@
 .actionsContainer {
   display: flex;
   justify-content: space-between;
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
   background-color: var(--tc-white-light);
-  border-top: 1px solid var(--tc-border-color);
+  border-top: 1px solid var(--tc-border-default);
   border-radius: 0 0 var(--tc-border-radius) var(--tc-border-radius);
-  margin-top: var(--tc-spacing-lg);
+  margin-top: var(--tc-space-6);
 }
 
 .leftActions {
   display: flex;
-  gap: var(--tc-spacing-sm);
+  gap: var(--tc-space-2);
 }
 
 .rightActions {
   display: flex;
-  gap: var(--tc-spacing-sm);
+  gap: var(--tc-space-2);
 }
 
 .cancelButton {
-  padding: var(--tc-spacing-xs) var(--tc-spacing-md);
+  padding: var(--tc-space-1) var(--tc-space-4);
   color: var(--tc-text-muted);
   background-color: var(--tc-white);
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-border-radius);
   transition: all 0.2s ease-in-out;
   cursor: pointer;
@@ -46,10 +46,10 @@
 }
 
 .saveButton {
-  padding: var(--tc-spacing-xs) var(--tc-spacing-md);
+  padding: var(--tc-space-1) var(--tc-space-4);
   color: var(--tc-white);
-  background-color: var(--tc-primary-color);
-  border: 1px solid var(--tc-primary-color);
+  background-color: var(--tc-color-primary);
+  border: 1px solid var(--tc-color-primary);
   border-radius: var(--tc-border-radius);
   transition: all 0.2s ease-in-out;
   cursor: pointer;
@@ -68,7 +68,7 @@
 }
 
 .deleteButton {
-  padding: var(--tc-spacing-xs) var(--tc-spacing-md);
+  padding: var(--tc-space-1) var(--tc-space-4);
   color: var(--tc-danger-color);
   background-color: transparent;
   border: 1px solid var(--tc-danger-color);
@@ -85,7 +85,7 @@
 
 /* Style pour l'indicateur de chargement */
 .spinner {
-  margin-right: var(--tc-spacing-xs);
+  margin-right: var(--tc-space-1);
   animation: spin 1s linear infinite;
   display: inline-block;
   width: 1rem;
@@ -101,7 +101,7 @@
 @media (max-width: var(--tc-breakpoint-sm)) {
   .actionsContainer {
     flex-direction: column-reverse;
-    gap: var(--tc-spacing-md);
+    gap: var(--tc-space-4);
   }
   
   .leftActions,

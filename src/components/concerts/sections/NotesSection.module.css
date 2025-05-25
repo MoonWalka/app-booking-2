@@ -27,7 +27,7 @@
   margin: 0;
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
 }
 
 /* Styles responsive standardisés */
@@ -58,12 +58,12 @@
 .notesContent {
   white-space: pre-wrap;
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   line-height: 1.5;
 }
 
 .notesContent p {
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
 }
 
 .notesContent p:last-child {

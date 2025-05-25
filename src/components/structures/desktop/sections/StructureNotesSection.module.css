@@ -14,14 +14,14 @@
   background-color: var(--tc-white);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-box-shadow-sm);
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
   overflow: hidden;
 }
 
 .detailsCard {
   background-color: var(--tc-white);
   border-radius: var(--tc-border-radius);
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
   box-shadow: var(--tc-box-shadow-sm);
   overflow: hidden;
 }
@@ -29,37 +29,37 @@
 .cardHeader {
   display: flex;
   align-items: center;
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  padding: var(--tc-space-2) var(--tc-space-4);
   background-color: var(--tc-white-secondary);
-  border-bottom: 1px solid var(--tc-border-color);
+  border-bottom: 1px solid var(--tc-border-default);
 }
 
 .cardHeader i {
   font-size: var(--tc-font-size-lg);
-  color: var(--tc-primary-color);
-  margin-right: var(--tc-spacing-sm);
+  color: var(--tc-color-primary);
+  margin-right: var(--tc-space-2);
 }
 
 .cardHeader h3 {
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-bold);
   margin: 0;
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
 }
 
 .cardBody {
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
 }
 
 .notesContent {
   white-space: pre-wrap;
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   line-height: 1.5;
 }
 
 .notesContent p {
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
 }
 
 .notesContent p:last-child {
@@ -73,12 +73,12 @@
 }
 
 .formGroup {
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .formLabel {
   font-weight: var(--tc-font-weight-medium);
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
   font-size: var(--tc-font-size-sm);
   display: block;
 }
@@ -86,12 +86,12 @@
 .formControl {
   display: block;
   width: 100%;
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-border-radius-sm);
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  padding: var(--tc-space-1) var(--tc-space-2);
   font-size: var(--tc-font-size-sm);
   line-height: 1.5;
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   background-color: var(--tc-white);
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
@@ -110,7 +110,7 @@
 /* Responsive styles */
 @media (max-width: 768px) {
   .cardBody {
-    padding: var(--tc-spacing-sm);
+    padding: var(--tc-space-2);
   }
   
   .formTextarea {

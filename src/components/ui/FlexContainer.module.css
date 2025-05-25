@@ -105,19 +105,19 @@
    ESPACEMENT ENTRE ÉLÉMENTS (GAP)
    ============================= */
 .gap-xs {
-  gap: var(--tc-spacing-xs);
+  gap: var(--tc-space-1);
 }
 
 .gap-sm {
-  gap: var(--tc-spacing-sm);
+  gap: var(--tc-space-2);
 }
 
 .gap-md {
-  gap: var(--tc-spacing-md);
+  gap: var(--tc-space-4);
 }
 
 .gap-lg {
-  gap: var(--tc-spacing-lg);
+  gap: var(--tc-space-6);
 }
 
 .gap-xl {
@@ -136,26 +136,26 @@
   
   /* Réduire les gaps sur mobile */
   .gap-lg {
-    gap: var(--tc-spacing-md);
+    gap: var(--tc-space-4);
   }
   
   .gap-xl {
-    gap: var(--tc-spacing-lg);
+    gap: var(--tc-space-6);
   }
 }
 
 @media (max-width: var(--tc-breakpoint-sm)) {
   /* Gaps encore plus petits sur très petits écrans */
   .gap-md {
-    gap: var(--tc-spacing-sm);
+    gap: var(--tc-space-2);
   }
   
   .gap-lg {
-    gap: var(--tc-spacing-sm);
+    gap: var(--tc-space-2);
   }
   
   .gap-xl {
-    gap: var(--tc-spacing-md);
+    gap: var(--tc-space-4);
   }
 }
 
@@ -183,7 +183,7 @@
    ============================= */
 .flex:focus-visible,
 .inlineFlex:focus-visible {
-  outline: 2px solid var(--tc-primary-color);
+  outline: 2px solid var(--tc-color-primary);
   outline-offset: 2px;
 }
 

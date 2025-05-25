@@ -12,14 +12,14 @@
  * maintenant les mêmes propriétés que concertFormContainer
  */
 .deskConcertFormContainer, .concertFormContainer {
-  padding: var(--tc-spacing-md);
-  background-color: var(--tc-bg-color);
+  padding: var(--tc-space-4);
+  background-color: var(--tc-bg-default);
   width: 100%;
 }
 
 .deskConcertFormContainer {
   width: 100%;
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
 }
 
 /* En-tête du formulaire */
@@ -27,7 +27,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
   flex-wrap: wrap;
 }
 
@@ -35,21 +35,21 @@
 .modernTitle {
   font-size: var(--tc-font-size-xl);
   font-weight: var(--tc-font-weight-bold);
-  color: var(--tc-primary-color);
-  margin-bottom: var(--tc-spacing-sm);
+  color: var(--tc-color-primary);
+  margin-bottom: var(--tc-space-2);
 }
 
 /* Container du fil d'Ariane */
 .breadcrumbContainer {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-sm);
+  gap: var(--tc-space-2);
   font-size: var(--tc-font-size-sm);
 }
 
 /* Élément du fil d'Ariane */
 .breadcrumbItem {
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   cursor: pointer;
 }
 
@@ -70,8 +70,8 @@
 .actionButtons {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--tc-spacing-sm);
-  margin-bottom: var(--tc-spacing-lg);
+  gap: var(--tc-space-2);
+  margin-bottom: var(--tc-space-6);
   justify-content: flex-start;
   align-items: center;
   width: 100%;
@@ -91,19 +91,19 @@
 
 /* Formulaire moderne - utilisation des styles unifiés */
 .deskModernForm, .modernForm {
-  margin-top: var(--tc-spacing-md);
+  margin-top: var(--tc-space-4);
   background-color: transparent;
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-md);
+  gap: var(--tc-space-4);
 }
 
 .deskModernForm {
-  margin-top: var(--tc-spacing-md);
+  margin-top: var(--tc-space-4);
   background-color: transparent;
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-md);
+  gap: var(--tc-space-4);
 }
 
 /* Carte de formulaire */
@@ -111,7 +111,7 @@
   background-color: var(--tc-white);
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
   overflow: hidden;
 }
 
@@ -119,29 +119,29 @@
   background-color: var(--tc-white);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-box-shadow);
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
   overflow: hidden;
 }
 
 .cardHeader {
   display: flex;
   align-items: center;
-  background-color: var(--tc-bg-color);
-  padding: var(--tc-spacing-md);
+  background-color: var(--tc-bg-default);
+  padding: var(--tc-space-4);
   border-bottom: 1px solid var(--tc-gray-200);
 }
 
 .cardHeader {
   background-color: var(--tc-gray-100);
-  padding: var(--tc-spacing-md) var(--tc-spacing-md);
-  border-bottom: var(--tc-border-width) solid var(--tc-border-color);
+  padding: var(--tc-space-4) var(--tc-space-4);
+  border-bottom: var(--tc-border-width) solid var(--tc-border-default);
   display: flex;
   align-items: center;
 }
 
 .cardHeader i {
-  margin-right: var(--tc-spacing-sm);
-  color: var(--tc-primary-color);
+  margin-right: var(--tc-space-2);
+  color: var(--tc-color-primary);
 }
 
 .cardHeader h3 {
@@ -155,55 +155,55 @@
   margin: 0;
   font-size: 1.25rem;
   font-weight: var(--tc-font-weight-bold);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
 }
 
 .cardBody {
-  padding: var(--tc-spacing-lg);
+  padding: var(--tc-space-6);
 }
 
 .cardBody {
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
 }
 
 /* Champs de formulaire */
 .formGroup {
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .errorAlert {
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
 }
 
 .formGroup {
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .formLabel {
   display: block;
-  margin-bottom: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-space-2);
   font-weight: var(--tc-font-weight-semibold);
 }
 
 .formLabel {
   display: block;
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
 }
 
 .required {
   color: var(--tc-danger-color);
-  margin-left: var(--tc-spacing-xs);
+  margin-left: var(--tc-space-1);
 }
 
 .formControl {
   display: block;
   width: 100%;
-  padding: var(--tc-spacing-sm);
+  padding: var(--tc-space-2);
   font-size: 1rem;
   line-height: 1.5;
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   background-color: var(--tc-white);
   border: 1px solid var(--tc-input-border-color);
   border-radius: var(--tc-border-radius-sm);
@@ -216,7 +216,7 @@
 }
 
 .formControl:focus {
-  border-color: var(--tc-primary-color);
+  border-color: var(--tc-color-primary);
   outline: 0;
   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
@@ -224,10 +224,10 @@
 .formSelect {
   display: block;
   width: 100%;
-  padding: var(--tc-spacing-sm);
+  padding: var(--tc-space-2);
   font-size: 1rem;
   line-height: 1.5;
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   background-color: var(--tc-white);
   border: 1px solid var(--tc-input-border-color);
   border-radius: var(--tc-border-radius-sm);
@@ -259,12 +259,12 @@
 .inputGroupAddon {
   display: flex;
   align-items: center;
-  padding: var(--tc-spacing-sm);
+  padding: var(--tc-space-2);
   margin-bottom: 0;
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   text-align: center;
   white-space: nowrap;
   background-color: var(--tc-gray-100);
@@ -279,7 +279,7 @@
 
 .requiredField {
   color: var(--tc-danger-color);
-  margin-left: var(--tc-spacing-xs);
+  margin-left: var(--tc-space-1);
 }
 
 .formHelpText {
@@ -299,7 +299,7 @@
 .programmateurSearchContainer,
 .artisteSearchContainer {
   position: relative;
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .selectedLieu,
@@ -307,8 +307,8 @@
 .selectedArtiste {
   border: 1px solid var(--tc-gray-300);
   border-radius: 6px;
-  padding: var(--tc-spacing-lg);
-  margin-bottom: var(--tc-spacing-sm);
+  padding: var(--tc-space-6);
+  margin-bottom: var(--tc-space-2);
 }
 
 .lieuCard,
@@ -330,7 +330,7 @@
 .artisteName {
   font-weight: var(--tc-font-weight-semibold);
   display: block;
-  margin-bottom: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-space-2);
 }
 
 .lieuAddress,
@@ -338,55 +338,55 @@
   font-size: var(--tc-font-size-sm);
   display: flex;
   align-items: center;
-  margin-top: var(--tc-spacing-xs);
+  margin-top: var(--tc-space-1);
   color: var(--tc-gray-600);
 }
 
 .lieuAddress i,
 .lieuCapacity i {
-  margin-right: var(--tc-spacing-xs);
+  margin-right: var(--tc-space-1);
 }
 
 .programmateurStructure {
   font-size: var(--tc-font-size-sm);
   display: block;
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
   color: var(--tc-gray-600);
 }
 
 .programmateurContacts {
-  margin-top: var(--tc-spacing-sm);
+  margin-top: var(--tc-space-2);
 }
 
 .programmateurContactItem {
   display: flex;
   align-items: center;
   font-size: var(--tc-font-size-sm);
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
 }
 
 .programmateurContactItem i {
-  margin-right: var(--tc-spacing-xs);
+  margin-right: var(--tc-space-1);
   color: var(--tc-gray-600);
 }
 
 .artisteGenre {
   font-size: var(--tc-font-size-sm);
   display: block;
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
   color: var(--tc-gray-600);
 }
 
 .artisteDescription {
   font-size: var(--tc-font-size-sm);
-  margin-top: var(--tc-spacing-sm);
+  margin-top: var(--tc-space-2);
 }
 
 /* Items de dropdown */
 .lieuItem,
 .programmateurItem,
 .artisteItem {
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
   cursor: pointer;
   border-bottom: 1px solid var(--tc-gray-100);
 }
@@ -394,7 +394,7 @@
 .lieuItem:hover,
 .programmateurItem:hover,
 .artisteItem:hover {
-  background-color: var(--tc-bg-color);
+  background-color: var(--tc-bg-default);
 }
 
 .lieuDetails,
@@ -404,7 +404,7 @@
   flex-direction: column;
   font-size: var(--tc-font-size-xs);
   color: var(--tc-gray-600);
-  margin-top: var(--tc-spacing-xs);
+  margin-top: var(--tc-space-1);
 }
 
 .suggestionContainer {
@@ -421,7 +421,7 @@
 }
 
 .suggestionItem {
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  padding: var(--tc-space-2) var(--tc-space-4);
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -436,7 +436,7 @@
 .formActions {
   display: flex;
   justify-content: flex-end;
-  gap: var(--tc-spacing-md);
+  gap: var(--tc-space-4);
   margin-top: var(--tc-spacing-xl);
   margin-bottom: var(--tc-spacing-xl);
   flex-wrap: wrap;
@@ -445,7 +445,7 @@
 .formActions {
   display: flex;
   justify-content: space-between;
-  margin-top: var(--tc-spacing-lg);
+  margin-top: var(--tc-space-6);
   margin-bottom: var(--tc-spacing-xl);
 }
 
@@ -473,7 +473,7 @@
 }
 
 .tcModalHeader {
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
   border-bottom: 1px solid var(--tc-gray-200);
 }
 
@@ -483,15 +483,15 @@
 }
 
 .tcModalBody {
-  padding: var(--tc-spacing-lg);
+  padding: var(--tc-space-6);
 }
 
 .tcModalFooter {
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
   border-top: 1px solid var(--tc-gray-200);
   display: flex;
   justify-content: flex-end;
-  gap: var(--tc-spacing-sm);
+  gap: var(--tc-space-2);
 }
 
 /* Classes de chargement uniformisées */
@@ -512,7 +512,7 @@
   }
   
   .cardBody {
-    padding: var(--tc-spacing-md);
+    padding: var(--tc-space-4);
   }
   
   .actionButtons {
@@ -536,15 +536,15 @@
 @media (max-width: 768px) {
   .formCard {
     border-radius: var(--tc-border-radius-sm);
-    margin-bottom: var(--tc-spacing-md);
+    margin-bottom: var(--tc-space-4);
   }
   
   .cardHeader {
-    padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+    padding: var(--tc-space-2) var(--tc-space-4);
   }
   
   .cardBody {
-    padding: var(--tc-spacing-sm);
+    padding: var(--tc-space-2);
   }
   
   .formRow {
@@ -557,7 +557,7 @@
   
   .formActions {
     flex-direction: column;
-    gap: var(--tc-spacing-sm);
+    gap: var(--tc-space-2);
   }
   
   .formActions button {

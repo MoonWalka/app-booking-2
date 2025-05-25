@@ -5,69 +5,69 @@
  */
 
 .sectionTitle {
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-medium);
   color: var(--tc-gray-900);
 }
 
 .exportSection {
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
 }
 
 .exportButtons {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--tc-spacing-sm);
-  margin-bottom: var(--tc-spacing-md);
+  gap: var(--tc-space-2);
+  margin-bottom: var(--tc-space-4);
 }
 
 .exportProgress {
-  margin-top: var(--tc-spacing-md);
+  margin-top: var(--tc-space-4);
 }
 
 .exportStatus {
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
   color: var(--tc-text-muted);
 }
 
 .backupSection {
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
 }
 
 .formActions {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: var(--tc-spacing-lg);
+  margin-top: var(--tc-space-6);
 }
 
 /* Styles responsive standardisés */
 @media (max-width: 768px) {
   .exportSection,
   .backupSection {
-    margin-bottom: var(--tc-spacing-md);
+    margin-bottom: var(--tc-space-4);
   }
   
   .formActions {
-    margin-top: var(--tc-spacing-md);
+    margin-top: var(--tc-space-4);
   }
   
   .exportButtons {
-    margin-bottom: var(--tc-spacing-sm);
+    margin-bottom: var(--tc-space-2);
   }
 }
 
 @media (max-width: 576px) {
   .formActions {
     flex-direction: column;
-    gap: var(--tc-spacing-sm);
+    gap: var(--tc-space-2);
     align-items: stretch;
   }
   
   .exportButtons {
     flex-direction: column;
-    gap: var(--tc-spacing-xs);
+    gap: var(--tc-space-1);
     width: 100%;
   }
   

@@ -5,14 +5,14 @@
  */
 
 .formSection {
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .formActions {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: var(--tc-spacing-lg);
+  margin-top: var(--tc-space-6);
 }
 
 .passwordField {
@@ -20,46 +20,46 @@
 }
 
 .passwordHint {
-  margin-top: var(--tc-spacing-xs);
+  margin-top: var(--tc-space-1);
   font-size: var(--tc-font-size-sm);
   color: var(--tc-text-secondary);
 }
 
 .successAlert {
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .errorAlert {
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .formTitle {
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 /* Styles responsive standardisés */
 @media (max-width: 768px) {
   .formSection {
-    margin-bottom: var(--tc-spacing-sm);
+    margin-bottom: var(--tc-space-2);
   }
   
   .formActions {
-    margin-top: var(--tc-spacing-md);
+    margin-top: var(--tc-space-4);
   }
   
   .formTitle {
-    margin-bottom: var(--tc-spacing-md);
+    margin-bottom: var(--tc-space-4);
   }
   
   .successAlert,
   .errorAlert {
-    margin-bottom: var(--tc-spacing-md);
+    margin-bottom: var(--tc-space-4);
   }
 }
 
 @media (max-width: 576px) {
   .formActions {
     flex-direction: column;
-    gap: var(--tc-spacing-sm);
+    gap: var(--tc-space-2);
   }
 }

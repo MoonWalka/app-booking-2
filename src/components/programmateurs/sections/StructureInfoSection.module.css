@@ -11,8 +11,8 @@
  */
 
 .container {
-  margin-bottom: var(--tc-spacing-lg);
-  padding: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-6);
+  padding: var(--tc-space-4);
   background-color: var(--tc-white-secondary);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-box-shadow-sm);
@@ -29,10 +29,10 @@
 .sectionTitle {
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-bold);
-  margin-bottom: var(--tc-spacing-md);
-  color: var(--tc-text-color);
+  margin-bottom: var(--tc-space-4);
+  color: var(--tc-text-default);
   border-bottom: 1px solid var(--tc-border-color-light);
-  padding-bottom: var(--tc-spacing-sm);
+  padding-bottom: var(--tc-space-2);
 }
 
 .formInput {
@@ -44,30 +44,30 @@
 
 .formInput:focus {
   box-shadow: 0 0 0 0.15rem var(--tc-primary-color-shadow);
-  border-color: var(--tc-primary-color);
+  border-color: var(--tc-color-primary);
 }
 
 .formGroup {
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .formLabel {
   display: block;
   font-weight: var(--tc-font-weight-medium);
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
   color: var(--tc-text-color-secondary);
 }
 
 .formControl {
   display: block;
   width: 100%;
-  padding: var(--tc-spacing-sm);
+  padding: var(--tc-space-2);
   font-size: var(--tc-font-size-base);
   line-height: 1.5;
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   background-color: var(--tc-white);
   background-clip: padding-box;
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-border-radius);
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
@@ -85,7 +85,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .searchInput {
@@ -123,7 +123,7 @@
   right: 0;
   z-index: 10;
   background-color: var(--tc-white);
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-box-shadow-md);
   max-height: 300px;
@@ -131,7 +131,7 @@
 }
 
 .resultItem {
-  padding: var(--tc-spacing-sm);
+  padding: var(--tc-space-2);
   border-bottom: 1px solid var(--tc-border-color-light);
   cursor: pointer;
   transition: background-color 0.2s ease;
@@ -147,7 +147,7 @@
 
 .structureName {
   font-weight: var(--tc-font-weight-medium);
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
 }
 
 .structureLocation {
@@ -187,11 +187,11 @@
 }
 
 .createNewButton {
-  margin-top: var(--tc-spacing-sm);
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
-  color: var(--tc-primary-color);
+  margin-top: var(--tc-space-2);
+  padding: var(--tc-space-1) var(--tc-space-2);
+  color: var(--tc-color-primary);
   background-color: transparent;
-  border: 1px solid var(--tc-primary-color);
+  border: 1px solid var(--tc-color-primary);
   border-radius: var(--tc-border-radius);
   cursor: pointer;
   transition: all 0.2s ease;
@@ -199,7 +199,7 @@
 
 .createNewButton:hover {
   color: var(--tc-white);
-  background-color: var(--tc-primary-color);
+  background-color: var(--tc-color-primary);
 }
 
 .selectedStructureInfo {
@@ -213,11 +213,11 @@
 }
 
 .selectedStructure {
-  padding: var(--tc-spacing-sm);
+  padding: var(--tc-space-2);
   background-color: var(--tc-white-light);
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-border-radius);
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -236,8 +236,8 @@
 }
 
 .notification {
-  margin-top: var(--tc-spacing-sm);
-  padding: var(--tc-spacing-sm);
+  margin-top: var(--tc-space-2);
+  padding: var(--tc-space-2);
   background-color: var(--tc-success-color-light);
   color: var(--tc-success-color-dark);
   border-radius: var(--tc-border-radius);
@@ -262,6 +262,6 @@
   }
   
   .removeButton {
-    margin-top: var(--tc-spacing-sm);
+    margin-top: var(--tc-space-2);
   }
 }

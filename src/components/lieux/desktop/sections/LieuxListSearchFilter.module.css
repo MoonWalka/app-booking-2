@@ -11,9 +11,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
   flex-wrap: wrap;
-  gap: var(--tc-spacing-md);
+  gap: var(--tc-space-4);
 }
 
 /* =============================
@@ -27,25 +27,25 @@
 
 .searchInput {
   width: 100%;
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
-  padding-right: calc(var(--tc-spacing-lg) + var(--tc-spacing-sm));
-  border: 1px solid var(--tc-border-color);
+  padding: var(--tc-space-2) var(--tc-space-4);
+  padding-right: calc(var(--tc-space-6) + var(--tc-space-2));
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-border-radius);
   font-size: var(--tc-font-size-base);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   background-color: var(--tc-bg-color-light);
   transition: var(--tc-transition);
 }
 
 .searchInput:focus {
-  border-color: var(--tc-primary-color);
+  border-color: var(--tc-color-primary);
   outline: none;
   box-shadow: var(--tc-input-focus-shadow);
 }
 
 .clearSearch {
   position: absolute;
-  right: var(--tc-spacing-sm);
+  right: var(--tc-space-2);
   top: 50%;
   transform: translateY(-50%);
   border: none;
@@ -55,7 +55,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--tc-spacing-xs);
+  padding: var(--tc-space-1);
   transition: color var(--tc-transition-duration);
 }
 
@@ -66,8 +66,8 @@
 .resultsCount {
   font-size: var(--tc-font-size-xs);
   color: var(--tc-gray-600);
-  margin-top: var(--tc-spacing-xs);
-  padding-left: var(--tc-spacing-sm);
+  margin-top: var(--tc-space-1);
+  padding-left: var(--tc-space-2);
 }
 
 /* =============================
@@ -78,11 +78,11 @@
   display: flex;
   align-items: center;
   white-space: nowrap;
-  gap: var(--tc-spacing-xs);
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  gap: var(--tc-space-1);
+  padding: var(--tc-space-2) var(--tc-space-4);
   border: 1px solid var(--tc-gray-300);
   border-radius: var(--tc-border-radius);
-  background-color: var(--tc-bg-color);
+  background-color: var(--tc-bg-default);
   color: var(--tc-gray-700);
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
@@ -99,14 +99,14 @@
 .modernFilterBtn i, 
 .modernSortBtn i {
   font-size: var(--tc-font-size-md);
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
 }
 
 .modernFilterBtn.active, 
 .modernSortBtn.active {
   background-color: rgba(var(--tc-primary-color-rgb), 0.1);
-  border-color: var(--tc-primary-color);
-  color: var(--tc-primary-color);
+  border-color: var(--tc-color-primary);
+  color: var(--tc-color-primary);
 }
 
 /* =============================
@@ -114,7 +114,7 @@
    ============================= */
 @media (max-width: var(--tc-breakpoint-md)) {
   .searchFilterContainer {
-    gap: var(--tc-spacing-sm);
+    gap: var(--tc-space-2);
   }
   
   .searchBar {

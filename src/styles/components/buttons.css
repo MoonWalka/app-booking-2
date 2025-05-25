@@ -11,7 +11,7 @@ button {
   cursor: pointer;
   border: none;
   border-radius: var(--tc-border-radius);
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  padding: var(--tc-space-2) var(--tc-space-4);
   font-size: var(--tc-font-size-base);
   font-family: var(--tc-font-family-base);
   transition: var(--tc-transition);
@@ -23,13 +23,13 @@ button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--tc-spacing-xs);
+  gap: var(--tc-space-1);
   font-weight: var(--tc-font-weight-medium);
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
   user-select: none;
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  padding: var(--tc-space-2) var(--tc-space-4);
   font-size: var(--tc-font-size-base);
   line-height: 1.5;
   border-radius: var(--tc-border-radius);
@@ -67,8 +67,8 @@ button {
 
 /* VARIANTES DE COULEUR */
 .tc-btn-primary {
-  background-color: var(--tc-primary-color);
-  border-color: var(--tc-primary-color);
+  background-color: var(--tc-color-primary);
+  border-color: var(--tc-color-primary);
   color: var(--tc-white);
 }
 
@@ -168,16 +168,16 @@ button {
 }
 
 .tc-btn-outline-primary {
-  color: var(--tc-primary-color);
-  border-color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
+  border-color: var(--tc-color-primary);
   background-color: transparent;
 }
 
 .tc-btn-outline-primary:hover,
 .tc-btn-outline-primary:active {
   color: var(--tc-white);
-  background-color: var(--tc-primary-color);
-  border-color: var(--tc-primary-color);
+  background-color: var(--tc-color-primary);
+  border-color: var(--tc-color-primary);
 }
 
 .tc-btn-outline-secondary {
@@ -223,8 +223,8 @@ button {
 .tc-btn-text {
   background-color: transparent;
   border-color: transparent;
-  color: var(--tc-primary-color);
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  color: var(--tc-color-primary);
+  padding: var(--tc-space-1) var(--tc-space-2);
 }
 
 .tc-btn-text:hover,
@@ -276,7 +276,7 @@ button {
 }
 
 .tc-btn-icon {
-  padding: var(--tc-spacing-xs);
+  padding: var(--tc-space-1);
   width: 36px;
   height: 36px;
   display: inline-flex;
@@ -334,8 +334,8 @@ button {
 
 .tc-action-buttons {
   display: flex;
-  gap: var(--tc-spacing-sm);
-  margin-top: var(--tc-spacing-md);
+  gap: var(--tc-space-2);
+  margin-top: var(--tc-space-4);
 }
 
 .tc-card-footer .tc-action-buttons,
@@ -355,13 +355,13 @@ button {
 
 /* TAILLES DE BOUTONS */
 .tc-btn-sm {
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  padding: var(--tc-space-1) var(--tc-space-2);
   font-size: var(--tc-font-size-xs);
   line-height: 1.4;
 }
 
 .tc-btn-lg {
-  padding: var(--tc-spacing-sm) var(--tc-spacing-lg);
+  padding: var(--tc-space-2) var(--tc-space-6);
   font-size: var(--tc-font-size-md);
   line-height: 1.5;
 }

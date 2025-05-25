@@ -25,7 +25,7 @@
   vertical-align: middle;
   user-select: none;
   border: none;
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  padding: var(--tc-space-2) var(--tc-space-4);
   font-size: var(--tc-font-size-base);
   line-height: var(--tc-line-height-base);
   border-radius: var(--tc-border-radius);
@@ -37,8 +37,8 @@
    VARIANTES PRINCIPALES
    ============================= */
 .btnPrimary {
-  background-color: var(--tc-primary-color);
-  border-color: var(--tc-primary-color);
+  background-color: var(--tc-color-primary);
+  border-color: var(--tc-color-primary);
   color: var(--tc-light-color);
 }
 
@@ -89,12 +89,12 @@
    ============================= */
 .btnOutlinePrimary {
   background-color: transparent;
-  border-color: var(--tc-primary-color);
-  color: var(--tc-primary-color);
+  border-color: var(--tc-color-primary);
+  color: var(--tc-color-primary);
 }
 
 .btnOutlinePrimary:hover {
-  background-color: var(--tc-primary-color);
+  background-color: var(--tc-color-primary);
   color: var(--tc-light-color);
   text-decoration: none;
 }
@@ -151,13 +151,13 @@
    VARIANTES DE TAILLE
    ============================= */
 .btnSm {
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  padding: var(--tc-space-1) var(--tc-space-2);
   font-size: var(--tc-font-size-sm);
   border-radius: var(--tc-border-radius-sm);
 }
 
 .btnLg {
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  padding: var(--tc-space-2) var(--tc-space-4);
   font-size: var(--tc-font-size-lg);
   border-radius: var(--tc-border-radius-lg);
 }
@@ -169,7 +169,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--tc-spacing-xs);
+  gap: var(--tc-space-1);
 }
 
 .iconWrapper {
@@ -193,16 +193,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--tc-spacing-sm);
+  padding: var(--tc-space-2);
   aspect-ratio: 1 / 1;
 }
 
 .btnSm.iconOnly {
-  padding: var(--tc-spacing-xs);
+  padding: var(--tc-space-1);
 }
 
 .btnLg.iconOnly {
-  padding: var(--tc-spacing-sm);
+  padding: var(--tc-space-2);
 }
 
 /* =============================
@@ -219,7 +219,7 @@
    ============================= */
 .btnLink {
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   text-decoration: none;
   background-color: transparent;
   border: none;
@@ -253,10 +253,10 @@
    ============================= */
 @media (max-width: var(--tc-breakpoint-sm)) {
   .btn {
-    padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+    padding: var(--tc-space-2) var(--tc-space-4);
   }
   
   .btnLg {
-    padding: var(--tc-spacing-md) var(--tc-spacing-lg);
+    padding: var(--tc-space-4) var(--tc-space-6);
   }
 }

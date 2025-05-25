@@ -14,22 +14,22 @@
   background-color: var(--tc-white);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-box-shadow-sm);
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
   overflow: hidden;
 }
 
 .cardHeader {
   display: flex;
   align-items: center;
-  padding: var(--tc-spacing-md) var(--tc-spacing-md);
+  padding: var(--tc-space-4) var(--tc-space-4);
   border-bottom: 1px solid var(--tc-border-color-light);
   background-color: var(--tc-white-secondary);
 }
 
 .cardHeader i {
   font-size: var(--tc-font-size-lg);
-  color: var(--tc-primary-color);
-  margin-right: var(--tc-spacing-sm);
+  color: var(--tc-color-primary);
+  margin-right: var(--tc-space-2);
 }
 
 .cardHeader h3 {
@@ -39,29 +39,29 @@
 }
 
 .cardBody {
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
 }
 
 .formGroup {
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .formRow {
   display: flex;
   flex-wrap: wrap;
-  margin-right: calc(var(--tc-spacing-sm) * -1);
-  margin-left: calc(var(--tc-spacing-sm) * -1);
+  margin-right: calc(var(--tc-space-2) * -1);
+  margin-left: calc(var(--tc-space-2) * -1);
 }
 
 .formCol {
   flex: 1 0 0%;
-  padding-right: var(--tc-spacing-sm);
-  padding-left: var(--tc-spacing-sm);
+  padding-right: var(--tc-space-2);
+  padding-left: var(--tc-space-2);
 }
 
 .formLabel {
   font-weight: var(--tc-font-weight-medium);
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
   font-size: var(--tc-font-size-sm);
   display: block;
 }
@@ -69,12 +69,12 @@
 .formControl, .formSelect {
   display: block;
   width: 100%;
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-border-radius-sm);
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  padding: var(--tc-space-1) var(--tc-space-2);
   font-size: var(--tc-font-size-sm);
   line-height: 1.5;
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   background-color: var(--tc-white);
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
@@ -97,14 +97,14 @@
 .invalidFeedback {
   display: block;
   width: 100%;
-  margin-top: var(--tc-spacing-xs);
+  margin-top: var(--tc-space-1);
   font-size: var(--tc-font-size-sm);
   color: var(--tc-danger-color);
 }
 
 .required {
   color: var(--tc-danger-color);
-  margin-left: var(--tc-spacing-xs);
+  margin-left: var(--tc-space-1);
 }
 
 /* Responsive styles */
@@ -114,10 +114,10 @@
   }
   
   .formCol {
-    margin-bottom: var(--tc-spacing-sm);
+    margin-bottom: var(--tc-space-2);
   }
   
   .cardBody {
-    padding: var(--tc-spacing-sm);
+    padding: var(--tc-space-2);
   }
 }

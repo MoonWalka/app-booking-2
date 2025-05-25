@@ -10,7 +10,7 @@
 .container {
   max-width: 800px;
   margin: 0 auto;
-  padding: var(--tc-spacing-lg);
+  padding: var(--tc-space-6);
   background-color: var(--tc-white);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow);
@@ -20,9 +20,9 @@
    SECTIONS
    ============================= */
 .section {
-  margin-bottom: var(--tc-spacing-lg);
-  padding: var(--tc-spacing-md);
-  border: 1px solid var(--tc-border-color);
+  margin-bottom: var(--tc-space-6);
+  padding: var(--tc-space-4);
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-border-radius);
   background-color: var(--tc-gray-50);
 }
@@ -32,9 +32,9 @@
    ============================= */
 .header {
   text-align: center;
-  margin-bottom: var(--tc-spacing-lg);
-  padding-bottom: var(--tc-spacing-md);
-  border-bottom: 1px solid var(--tc-border-color);
+  margin-bottom: var(--tc-space-6);
+  padding-bottom: var(--tc-space-4);
+  border-bottom: 1px solid var(--tc-border-default);
 }
 
 .title {
@@ -46,45 +46,45 @@
 .sectionTitle {
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-bold);
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
   color: var(--tc-gray-700);
   border-bottom: 1px solid var(--tc-gray-300);
-  padding-bottom: var(--tc-spacing-sm);
+  padding-bottom: var(--tc-space-2);
 }
 
 /* =============================
    CHAMPS DE FORMULAIRE
    ============================= */
 .field {
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .label {
   display: block;
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
   font-weight: var(--tc-font-weight-bold);
   font-size: var(--tc-font-size-sm);
 }
 
 .input {
   width: 100%;
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
-  border: 1px solid var(--tc-border-color);
+  padding: var(--tc-space-2) var(--tc-space-4);
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-border-radius-sm);
   font-size: var(--tc-font-size-base);
   transition: var(--tc-transition);
 }
 
 .input:focus {
-  border-color: var(--tc-primary-color);
+  border-color: var(--tc-color-primary);
   outline: 0;
   box-shadow: var(--tc-input-focus-shadow);
 }
 
 .textarea {
   width: 100%;
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
-  border: 1px solid var(--tc-border-color);
+  padding: var(--tc-space-2) var(--tc-space-4);
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-border-radius-sm);
   font-size: var(--tc-font-size-base);
   min-height: 80px;
@@ -93,15 +93,15 @@
 }
 
 .textarea:focus {
-  border-color: var(--tc-primary-color);
+  border-color: var(--tc-color-primary);
   outline: 0;
   box-shadow: var(--tc-input-focus-shadow);
 }
 
 .select {
   width: 100%;
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
-  border: 1px solid var(--tc-border-color);
+  padding: var(--tc-space-2) var(--tc-space-4);
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-border-radius-sm);
   font-size: var(--tc-font-size-base);
   background-color: var(--tc-white);
@@ -109,7 +109,7 @@
 }
 
 .select:focus {
-  border-color: var(--tc-primary-color);
+  border-color: var(--tc-color-primary);
   outline: 0;
   box-shadow: var(--tc-input-focus-shadow);
 }
@@ -120,12 +120,12 @@
 .buttonGroup {
   display: flex;
   justify-content: space-between;
-  margin-top: var(--tc-spacing-lg);
-  gap: var(--tc-spacing-md);
+  margin-top: var(--tc-space-6);
+  gap: var(--tc-space-4);
 }
 
 .button {
-  padding: var(--tc-spacing-sm) var(--tc-spacing-lg);
+  padding: var(--tc-space-2) var(--tc-space-6);
   border-radius: var(--tc-border-radius-sm);
   border: none;
   cursor: pointer;
@@ -135,7 +135,7 @@
 }
 
 .primaryButton {
-  background-color: var(--tc-primary-color);
+  background-color: var(--tc-color-primary);
   color: var(--tc-white);
 }
 
@@ -174,7 +174,7 @@
    BADGES
    ============================= */
 .badge {
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  padding: var(--tc-space-1) var(--tc-space-2);
   border-radius: var(--tc-border-radius-sm);
   font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-bold);
@@ -201,13 +201,13 @@
 .twoColumns {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--tc-spacing-md);
+  gap: var(--tc-space-4);
 }
 
 .threeColumns {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: var(--tc-spacing-md);
+  gap: var(--tc-space-4);
 }
 
 /* =============================
@@ -215,12 +215,12 @@
    ============================= */
 .tabBar {
   display: flex;
-  margin-bottom: var(--tc-spacing-lg);
-  border-bottom: 1px solid var(--tc-border-color);
+  margin-bottom: var(--tc-space-6);
+  border-bottom: 1px solid var(--tc-border-default);
 }
 
 .tab {
-  padding: var(--tc-spacing-sm) var(--tc-spacing-lg);
+  padding: var(--tc-space-2) var(--tc-space-6);
   cursor: pointer;
   transition: var(--tc-transition);
 }
@@ -230,18 +230,18 @@
 }
 
 .activeTab {
-  border-bottom: 2px solid var(--tc-primary-color);
+  border-bottom: 2px solid var(--tc-color-primary);
   font-weight: var(--tc-font-weight-bold);
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
 }
 
 /* =============================
    SECTIONS D'INFORMATION
    ============================= */
 .statusBox {
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
   border-radius: var(--tc-border-radius);
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 /* =============================
@@ -251,7 +251,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: var(--tc-spacing-md);
+  margin-top: var(--tc-space-4);
 }
 
 .textCenter {
@@ -265,9 +265,9 @@
 
 .formattedAddress {
   background-color: var(--tc-gray-100);
-  padding: var(--tc-spacing-sm);
+  padding: var(--tc-space-2);
   border-radius: var(--tc-border-radius-sm);
-  margin-top: var(--tc-spacing-sm);
+  margin-top: var(--tc-space-2);
 }
 
 .infoSection {
@@ -283,35 +283,35 @@
 }
 
 .infoBox {
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
   border-radius: var(--tc-border-radius);
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
   background-color: var(--tc-warning-light);
 }
 
 .warningBox {
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
   border-radius: var(--tc-border-radius);
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
   background-color: var(--tc-warning-light);
 }
 
 .subTitle {
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-semibold);
-  margin-bottom: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-space-2);
 }
 
 .smallButton {
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  padding: var(--tc-space-1) var(--tc-space-2);
   font-size: var(--tc-font-size-xs);
 }
 
 .clauseBox {
   background-color: var(--tc-gray-100);
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
   border-radius: var(--tc-border-radius);
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .inputContainer {
@@ -364,7 +364,7 @@
    ============================= */
 @media (max-width: var(--tc-breakpoint-md)) {
   .container {
-    padding: var(--tc-spacing-md);
+    padding: var(--tc-space-4);
   }
   
   .twoColumns,
@@ -374,11 +374,11 @@
   
   .buttonGroup {
     flex-direction: column;
-    gap: var(--tc-spacing-sm);
+    gap: var(--tc-space-2);
   }
   
   .header {
-    padding-bottom: var(--tc-spacing-sm);
+    padding-bottom: var(--tc-space-2);
   }
 }
 

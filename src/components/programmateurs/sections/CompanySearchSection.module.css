@@ -11,8 +11,8 @@
  */
 
 .container {
-  margin-bottom: var(--tc-spacing-lg);
-  padding: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-6);
+  padding: var(--tc-space-4);
   background-color: var(--tc-white-secondary);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-box-shadow-sm);
@@ -21,31 +21,31 @@
 .sectionTitle {
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-bold);
-  margin-bottom: var(--tc-spacing-md);
-  color: var(--tc-text-color);
+  margin-bottom: var(--tc-space-4);
+  color: var(--tc-text-default);
   border-bottom: 1px solid var(--tc-border-color-light);
-  padding-bottom: var(--tc-spacing-sm);
+  padding-bottom: var(--tc-space-2);
 }
 
 .searchContainer {
   position: relative;
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .searchInput {
   width: 100%;
-  padding: var(--tc-spacing-sm);
+  padding: var(--tc-space-2);
   font-size: var(--tc-font-size-base);
   line-height: 1.5;
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   background-color: var(--tc-white);
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-border-radius);
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
 .searchInput:focus {
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   background-color: var(--tc-white);
   border-color: var(--tc-primary-color-light);
   outline: 0;
@@ -59,7 +59,7 @@
   right: 0;
   z-index: 10;
   background-color: var(--tc-white);
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-box-shadow-md);
   max-height: 300px;
@@ -67,7 +67,7 @@
 }
 
 .resultItem {
-  padding: var(--tc-spacing-sm);
+  padding: var(--tc-space-2);
   border-bottom: 1px solid var(--tc-border-color-light);
   cursor: pointer;
   transition: background-color 0.2s ease;
@@ -83,8 +83,8 @@
 
 .companyName {
   font-weight: var(--tc-font-weight-medium);
-  margin-bottom: var(--tc-spacing-xs);
-  color: var(--tc-text-color);
+  margin-bottom: var(--tc-space-1);
+  color: var(--tc-text-default);
 }
 
 .companyDetails {
@@ -93,7 +93,7 @@
 }
 
 .noResults {
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
   text-align: center;
   color: var(--tc-text-muted);
   font-style: italic;
@@ -102,19 +102,19 @@
 .loadingSpinner {
   display: flex;
   justify-content: center;
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
 }
 
 .errorMessage {
-  padding: var(--tc-spacing-sm);
-  margin-bottom: var(--tc-spacing-md);
+  padding: var(--tc-space-2);
+  margin-bottom: var(--tc-space-4);
   color: var(--tc-danger-color);
   background-color: var(--tc-danger-color-light);
   border-radius: var(--tc-border-radius);
 }
 
 .helperText {
-  margin-top: var(--tc-spacing-xs);
+  margin-top: var(--tc-space-1);
   font-size: var(--tc-font-size-sm);
   color: var(--tc-text-muted);
 }

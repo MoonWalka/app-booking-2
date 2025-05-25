@@ -10,9 +10,9 @@
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  gap: var(--tc-spacing-md);
+  gap: var(--tc-space-4);
   width: 100%;
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
 }
 
 .headerTitle {
@@ -25,13 +25,13 @@
 .addButton {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-xs);
+  gap: var(--tc-space-1);
   font-weight: var(--tc-font-weight-medium);
-  background-color: var(--tc-primary-color);
+  background-color: var(--tc-color-primary);
   color: var(--tc-light-color);
   border: none;
   border-radius: var(--tc-border-radius);
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  padding: var(--tc-space-2) var(--tc-space-4);
   font-size: var(--tc-font-size-base);
   cursor: pointer;
   transition: var(--tc-transition);
@@ -55,6 +55,6 @@
   .addButton {
     width: 100%;
     justify-content: center;
-    margin-bottom: var(--tc-spacing-xs);
+    margin-bottom: var(--tc-space-1);
   }
 }

@@ -11,8 +11,8 @@
  */
 
 .container {
-  margin-bottom: var(--tc-spacing-lg);
-  padding: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-6);
+  padding: var(--tc-space-4);
   background-color: var(--tc-white-secondary);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-box-shadow-sm);
@@ -21,39 +21,39 @@
 .sectionTitle {
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-bold);
-  margin-bottom: var(--tc-spacing-md);
-  color: var(--tc-text-color);
+  margin-bottom: var(--tc-space-4);
+  color: var(--tc-text-default);
   border-bottom: 1px solid var(--tc-border-color-light);
-  padding-bottom: var(--tc-spacing-sm);
+  padding-bottom: var(--tc-space-2);
 }
 
 .formGroup {
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .formLabel {
   display: block;
   font-weight: var(--tc-font-weight-medium);
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
   color: var(--tc-text-color-secondary);
 }
 
 .formControl {
   display: block;
   width: 100%;
-  padding: var(--tc-spacing-sm);
+  padding: var(--tc-space-2);
   font-size: var(--tc-font-size-base);
   line-height: 1.5;
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   background-color: var(--tc-white);
   background-clip: padding-box;
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-border-radius);
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
 .formControl:focus {
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   background-color: var(--tc-white);
   border-color: var(--tc-primary-color-light);
   outline: 0;
@@ -63,24 +63,24 @@
 .formRow {
   display: flex;
   flex-wrap: wrap;
-  margin-right: calc(var(--tc-spacing-sm) * -1);
-  margin-left: calc(var(--tc-spacing-sm) * -1);
+  margin-right: calc(var(--tc-space-2) * -1);
+  margin-left: calc(var(--tc-space-2) * -1);
 }
 
 .formCol {
   flex: 1 0 0%;
-  padding-right: var(--tc-spacing-sm);
-  padding-left: var(--tc-spacing-sm);
+  padding-right: var(--tc-space-2);
+  padding-left: var(--tc-space-2);
 }
 
 .required {
   color: var(--tc-danger-color);
-  margin-left: var(--tc-spacing-xs);
+  margin-left: var(--tc-space-1);
 }
 
 .helperText {
   display: block;
-  margin-top: var(--tc-spacing-xs);
+  margin-top: var(--tc-space-1);
   font-size: var(--tc-font-size-sm);
   color: var(--tc-text-muted);
 }
@@ -92,7 +92,7 @@
   }
   
   .formCol {
-    margin-bottom: var(--tc-spacing-sm);
+    margin-bottom: var(--tc-space-2);
   }
 }
 

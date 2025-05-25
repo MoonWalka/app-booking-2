@@ -8,7 +8,7 @@
    CONTENEUR PRINCIPAL
    ============================= */
 .lieuDetailsContainer {
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
   width: 100%;
 }
 
@@ -18,20 +18,20 @@
 .twoColumnsLayout {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--tc-spacing-lg);
-  margin-top: var(--tc-spacing-md);
+  gap: var(--tc-space-6);
+  margin-top: var(--tc-space-4);
 }
 
 .leftColumn {
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-md);
+  gap: var(--tc-space-4);
 }
 
 .rightColumn {
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-md);
+  gap: var(--tc-space-4);
 }
 
 /* =============================
@@ -50,39 +50,39 @@
   text-align: center;
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-md);
+  gap: var(--tc-space-4);
   align-items: center;
-  padding: var(--tc-spacing-lg);
+  padding: var(--tc-space-6);
   background-color: var(--tc-bg-color-light);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow-sm);
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
 }
 
 .errorIcon {
   font-size: var(--tc-font-size-xxl);
   color: var(--tc-danger-color);
-  margin-bottom: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-space-2);
 }
 
 .errorTitle {
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-color);
-  margin-bottom: var(--tc-spacing-sm);
+  color: var(--tc-text-default);
+  margin-bottom: var(--tc-space-2);
 }
 
 .errorMessage {
   color: var(--tc-text-color-secondary);
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .errorButton {
   display: inline-flex;
   align-items: center;
-  gap: var(--tc-spacing-xs);
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
-  background-color: var(--tc-primary-color);
+  gap: var(--tc-space-1);
+  padding: var(--tc-space-2) var(--tc-space-4);
+  background-color: var(--tc-color-primary);
   color: var(--tc-bg-color-light);
   border: none;
   border-radius: var(--tc-border-radius);
@@ -106,12 +106,12 @@
 
 @media (max-width: var(--tc-breakpoint-md)) {
   .lieuDetailsContainer {
-    padding: var(--tc-spacing-sm);
+    padding: var(--tc-space-2);
   }
   
   .twoColumnsLayout {
-    gap: var(--tc-spacing-md);
-    margin-top: var(--tc-spacing-sm);
+    gap: var(--tc-space-4);
+    margin-top: var(--tc-space-2);
   }
   
   .spinnerContainer {
@@ -121,17 +121,17 @@
 
 @media (max-width: var(--tc-breakpoint-sm)) {
   .lieuDetailsContainer {
-    padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+    padding: var(--tc-space-1) var(--tc-space-2);
   }
   
   .errorContainer {
-    margin: var(--tc-spacing-lg) auto;
-    gap: var(--tc-spacing-sm);
-    padding: var(--tc-spacing-md);
+    margin: var(--tc-space-6) auto;
+    gap: var(--tc-space-2);
+    padding: var(--tc-space-4);
   }
   
   .leftColumn, .rightColumn {
-    gap: var(--tc-spacing-sm);
+    gap: var(--tc-space-2);
   }
   
   .spinnerContainer {
@@ -145,6 +145,6 @@
 .sectionsStack {
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-lg); /* Espacement standard entre les sections */
-  margin-top: var(--tc-spacing-md);
+  gap: var(--tc-space-6); /* Espacement standard entre les sections */
+  margin-top: var(--tc-space-4);
 }

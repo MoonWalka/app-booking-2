@@ -7,7 +7,7 @@
 .editorHeader {
   margin-bottom: 20px;
   padding-bottom: 12px;
-  border-bottom: 1px solid var(--tc-text-color);
+  border-bottom: 1px solid var(--tc-text-default);
 }
 
 .breadcrumbContainer {
@@ -16,12 +16,12 @@
   gap: 8px;
   margin-bottom: 8px;
   font-size: 0.9rem;
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
 }
 
 .breadcrumbItem {
   cursor: pointer;
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
 }
 
 .breadcrumbItem:hover {
@@ -29,7 +29,7 @@
 }
 
 .breadcrumbItemActive {
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   font-weight: 500;
 }
 
@@ -37,7 +37,7 @@
   margin-bottom: 16px;
   font-size: 1.5rem;
   font-weight: 600;
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
 }
 
 .editorActions {
@@ -52,7 +52,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  border-bottom: 1px solid var(--tc-text-color);
+  border-bottom: 1px solid var(--tc-text-default);
 }
 
 .modalTitle {
@@ -72,12 +72,12 @@
   border: none;
   font-size: 1.25rem;
   line-height: 1;
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   cursor: pointer;
   padding: 0.25rem 0.5rem;
   transition: color 0.15s ease-in-out;
 }
 
 .modalClose:hover {
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
 }

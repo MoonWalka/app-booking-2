@@ -8,19 +8,19 @@
 
 .programmateursFormMobile {
   padding: var(--tc-spacing-3);
-  background-color: var(--tc-bg-color);
+  background-color: var(--tc-bg-default);
 }
 
 .mobileFormHeader {
   margin-bottom: var(--tc-spacing-4);
   padding-bottom: var(--tc-spacing-3);
-  border-bottom: 1px solid var(--tc-border-color));
+  border-bottom: 1px solid var(--tc-border-default));
 }
 
 .mobileFormHeader h1 {
   font-size: 1.75rem;
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-color));
+  color: var(--tc-text-default));
   margin: 0;
 }
 
@@ -50,8 +50,8 @@
   padding: var(--tc-spacing-2) var(--tc-spacing-3);
   font-size: var(--tc-spacing-3);
   line-height: 1.5;
-  color: var(--tc-text-color);
-  background-color: var(--tc-input-bg);
+  color: var(--tc-text-default);
+  background-color: var(--tc-bg-default);
   background-clip: padding-box;
   border: 1px solid var(--tc-input-border-color);
   border-radius: var(--tc-border-radius));
@@ -61,7 +61,7 @@
 .stepFormGroup input:focus, 
 .stepFormGroup select:focus, 
 .stepFormGroup textarea:focus {
-  border-color: var(--tc-primary-color);
+  border-color: var(--tc-color-primary);
   outline: 0;
   box-shadow: 0 0 0 0.var(--tc-spacing-8) rgba(58, 134, 255, 0.25);
 }
@@ -87,8 +87,8 @@
   width: 100%;
   max-height: 200px;
   overflow-y: auto;
-  background-color: var(--tc-bg-color);
-  border: 1px solid var(--tc-border-color);
+  background-color: var(--tc-bg-default);
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-border-radius));
   box-shadow: 0 var(--tc-spacing-2) var(--tc-spacing-3) rgba(0, 0, 0, 0.15);
   z-index: 1000;

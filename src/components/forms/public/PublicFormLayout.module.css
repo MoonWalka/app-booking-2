@@ -8,16 +8,16 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--tc-text-color);
+  background-color: var(--tc-text-default);
   max-width: 1200px;
   margin: 0 auto;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }
 
 .formHeader {
-  background-color: var(--tc-text-color);
+  background-color: var(--tc-text-default);
   padding: 1rem 2rem;
-  border-bottom: 1px solid var(--tc-text-color);
+  border-bottom: 1px solid var(--tc-text-default);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
@@ -27,20 +27,20 @@
 
 .formLogo h2 {
   margin: 0;
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
 }
 
 .formContent {
   flex-grow: 1;
   padding: 2rem;
-  background-color: var(--tc-text-color);
+  background-color: var(--tc-text-default);
 }
 
 .formFooter {
   padding: 1rem 2rem;
-  background-color: var(--tc-text-color);
-  border-top: 1px solid var(--tc-text-color);
+  background-color: var(--tc-text-default);
+  border-top: 1px solid var(--tc-text-default);
   text-align: center;
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   font-size: 0.9rem;
 }

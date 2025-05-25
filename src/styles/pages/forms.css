@@ -9,22 +9,22 @@
 /* FORMULAIRE MULTI-ÉTAPES */
 .tc-form-progress {
   display: flex;
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
   border-radius: var(--tc-border-radius);
   overflow: hidden;
 }
 
 .tc-progress-step {
   flex: 1;
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  padding: var(--tc-space-1) var(--tc-space-2);
   text-align: center;
   background-color: var(--tc-gray-100);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   position: relative;
 }
 
 .tc-progress-step.tc-active {
-  background-color: var(--tc-primary-color);
+  background-color: var(--tc-color-primary);
   color: var(--tc-white);
 }
 
@@ -43,7 +43,7 @@
 }
 
 .tc-progress-step.tc-active:not(:last-child)::after {
-  border-left-color: var(--tc-primary-color);
+  border-left-color: var(--tc-color-primary);
 }
 
 /* INTERFACE ISOLÉE DU FORMULAIRE */
@@ -57,7 +57,7 @@
 .tc-form-header {
   background-color: var(--tc-secondary-color);
   color: var(--tc-white);
-  padding: var(--tc-spacing-sm) var(--tc-spacing-lg);
+  padding: var(--tc-space-2) var(--tc-space-6);
   text-align: center;
 }
 
@@ -67,7 +67,7 @@
 
 .tc-form-content {
   flex: 1;
-  padding: var(--tc-spacing-lg);
+  padding: var(--tc-space-6);
   max-width: 800px;
   margin: 0 auto;
   width: 100%;
@@ -76,14 +76,14 @@
 .tc-form-footer {
   background-color: var(--tc-secondary-color);
   color: var(--tc-white);
-  padding: var(--tc-spacing-sm);
+  padding: var(--tc-space-2);
   text-align: center;
   font-size: var(--tc-font-size-xs);
 }
 
 .tc-form-security-notice {
-  margin-top: var(--tc-spacing-lg);
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  margin-top: var(--tc-space-6);
+  padding: var(--tc-space-1) var(--tc-space-2);
   background-color: var(--tc-gray-50);
   border-radius: var(--tc-border-radius);
   text-align: center;
@@ -94,24 +94,24 @@
 /* MESSAGES D'ERREUR */
 .tc-form-error {
   text-align: center;
-  padding: var(--tc-spacing-xl) var(--tc-spacing-md);
+  padding: var(--tc-spacing-xl) var(--tc-space-4);
 }
 
 .tc-error-icon {
   font-size: var(--tc-font-size-xxl);
   color: var(--tc-danger-color);
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .tc-error-help {
-  margin-top: var(--tc-spacing-md);
+  margin-top: var(--tc-space-4);
   font-style: italic;
 }
 
 /* AVERTISSEMENTS ET INFORMATIONS */
 .tc-form-expired-warning {
-  margin-top: var(--tc-spacing-sm);
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  margin-top: var(--tc-space-2);
+  padding: var(--tc-space-1) var(--tc-space-2);
   background-color: rgba(var(--tc-warning-color-rgb), 0.1);
   border-radius: var(--tc-border-radius);
   color: var(--tc-warning-color);
@@ -119,8 +119,8 @@
 
 .tc-form-submitted-info, 
 .tc-form-validated-info {
-  margin-top: var(--tc-spacing-md);
-  padding: var(--tc-spacing-sm);
+  margin-top: var(--tc-space-4);
+  padding: var(--tc-space-2);
   background-color: rgba(var(--tc-success-color-rgb), 0.1);
   border-radius: var(--tc-border-radius);
   color: var(--tc-success-color);
@@ -128,33 +128,33 @@
 
 /* LIENS DE FORMULAIRE */
 .tc-form-link-container {
-  margin-top: var(--tc-spacing-md);
+  margin-top: var(--tc-space-4);
   background-color: var(--tc-gray-50);
-  padding: var(--tc-spacing-sm);
+  padding: var(--tc-space-2);
   border-radius: var(--tc-border-radius);
 }
 
 .tc-form-link {
   display: flex;
-  gap: var(--tc-spacing-xs);
-  margin-top: var(--tc-spacing-xs);
+  gap: var(--tc-space-1);
+  margin-top: var(--tc-space-1);
 }
 
 .tc-form-link input {
   flex: 1;
-  background-color: var(--tc-bg-color);
+  background-color: var(--tc-bg-default);
 }
 
 /* SUCCÈS DU FORMULAIRE */
 .tc-form-success {
   text-align: center;
-  padding: var(--tc-spacing-xl) var(--tc-spacing-md);
+  padding: var(--tc-spacing-xl) var(--tc-space-4);
 }
 
 .tc-success-icon {
   font-size: var(--tc-font-size-xxl);
   color: var(--tc-success-color);
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 /* VALIDATION */
@@ -164,16 +164,16 @@
 }
 
 .tc-validation-card {
-  background-color: var(--tc-bg-color);
+  background-color: var(--tc-bg-default);
   border-radius: var(--tc-border-radius);
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
   box-shadow: var(--tc-shadow);
-  margin-top: var(--tc-spacing-md);
+  margin-top: var(--tc-space-4);
 }
 
 .tc-validation-success {
   text-align: center;
-  padding: var(--tc-spacing-xl) var(--tc-spacing-md);
+  padding: var(--tc-spacing-xl) var(--tc-space-4);
 }
 
 /* FORMULAIRE DE PROGRAMMATEUR */
@@ -183,12 +183,12 @@
 }
 
 .tc-form-intro {
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
 }
 
 .tc-concert-info {
   background-color: var(--tc-gray-50);
-  padding: var(--tc-spacing-sm);
+  padding: var(--tc-space-2);
   border-radius: var(--tc-border-radius);
-  margin-top: var(--tc-spacing-sm);
+  margin-top: var(--tc-space-2);
 }

@@ -7,8 +7,8 @@
 .searchTypeButtons {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--tc-spacing-sm);
-  margin-top: var(--tc-spacing-md);
+  gap: var(--tc-space-2);
+  margin-top: var(--tc-space-4);
 }
 
 .searchTypeButtons button {
@@ -21,8 +21,8 @@
 @media (max-width: 768px) {
   .searchTypeButtons {
     flex-direction: column;
-    gap: var(--tc-spacing-xs);
-    margin-top: var(--tc-spacing-sm);
+    gap: var(--tc-space-1);
+    margin-top: var(--tc-space-2);
   }
   
   .searchTypeButtons button {
@@ -33,7 +33,7 @@
 
 @media (max-width: 576px) {
   .searchTypeButtons {
-    margin-top: var(--tc-spacing-xs);
-    gap: var(--tc-spacing-xs);
+    margin-top: var(--tc-space-1);
+    gap: var(--tc-space-1);
   }
 }

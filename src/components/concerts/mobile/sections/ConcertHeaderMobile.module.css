@@ -17,7 +17,7 @@
 }
 
 .backButton {
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   padding: var(--tc-spacing-1) var(--tc-spacing-2);
   margin-right: var(--tc-spacing-2);
   display: flex;

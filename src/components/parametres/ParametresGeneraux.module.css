@@ -7,7 +7,7 @@
 .submitButton {
   display: flex;
   justify-content: flex-end;
-  margin-top: var(--tc-spacing-lg);
+  margin-top: var(--tc-space-6);
 }
 
 .languageSelect {
@@ -15,17 +15,17 @@
 }
 
 .successAlert {
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .formSection {
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 /* Styles responsive standardisés */
 @media (max-width: 768px) {
   .submitButton {
-    margin-top: var(--tc-spacing-md);
+    margin-top: var(--tc-space-4);
   }
 }
 
@@ -39,6 +39,6 @@
   }
   
   .formSection {
-    margin-bottom: var(--tc-spacing-sm);
+    margin-bottom: var(--tc-space-2);
   }
 }

@@ -10,8 +10,8 @@
 /* Styles pour les alertes et notifications */
 .tc-alert {
   position: relative;
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
-  margin-bottom: var(--tc-spacing-md);
+  padding: var(--tc-space-2) var(--tc-space-4);
+  margin-bottom: var(--tc-space-4);
   border: 1px solid transparent;
   border-radius: var(--tc-border-radius);
   display: flex;
@@ -19,7 +19,7 @@
 }
 
 .tc-alert-icon {
-  margin-right: var(--tc-spacing-sm);
+  margin-right: var(--tc-space-2);
   font-size: var(--tc-font-size-lg);
   display: flex;
   align-items: center;
@@ -31,7 +31,7 @@
 
 .tc-alert-title {
   font-weight: var(--tc-font-weight-semibold);
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
 }
 
 .tc-alert-message {
@@ -44,7 +44,7 @@
   color: inherit;
   opacity: 0.7;
   padding: 0;
-  margin-left: var(--tc-spacing-sm);
+  margin-left: var(--tc-space-2);
   font-size: var(--tc-font-size-lg);
   cursor: pointer;
   transition: var(--tc-transition);
@@ -56,9 +56,9 @@
 
 /* Variantes d'alertes */
 .tc-alert-primary {
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   background-color: rgba(var(--tc-primary-color-rgb), 0.1);
-  border-color: var(--tc-primary-color);
+  border-color: var(--tc-color-primary);
 }
 
 .tc-alert-secondary {
@@ -100,7 +100,7 @@
 .tc-toast-container {
   position: fixed;
   z-index: var(--tc-z-index-toast);
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
 }
 
 .tc-toast-container.top-right {
@@ -127,10 +127,10 @@
   position: relative;
   min-width: 250px;
   max-width: 350px;
-  background-color: var(--tc-bg-color);
+  background-color: var(--tc-bg-default);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow-lg);
-  margin-bottom: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-space-2);
   overflow: hidden;
   animation: tcToastFadeIn 0.3s ease;
 }
@@ -143,14 +143,14 @@
 .tc-toast-header {
   display: flex;
   align-items: center;
-  padding: var(--tc-spacing-sm) var(--tc-spacing-sm);
-  color: var(--tc-text-color);
+  padding: var(--tc-space-2) var(--tc-space-2);
+  color: var(--tc-text-default);
   background-color: var(--tc-card-header-bg);
-  border-bottom: 1px solid var(--tc-border-color);
+  border-bottom: 1px solid var(--tc-border-default);
 }
 
 .tc-toast-body {
-  padding: var(--tc-spacing-sm);
+  padding: var(--tc-space-2);
 }
 
 .tc-toast-progress {
@@ -158,7 +158,7 @@
   bottom: 0;
   left: 0;
   height: 4px;
-  background-color: var(--tc-primary-color);
+  background-color: var(--tc-color-primary);
   animation: tcToastProgress linear forwards;
 }
 
@@ -169,7 +169,7 @@
 
 /* Toast par type */
 .tc-toast-primary .tc-toast-progress {
-  background-color: var(--tc-primary-color);
+  background-color: var(--tc-color-primary);
 }
 
 .tc-toast-success .tc-toast-progress {

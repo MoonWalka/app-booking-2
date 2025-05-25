@@ -42,7 +42,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  padding: var(--tc-space-1) var(--tc-space-2);
   font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-semibold);
   text-align: center;
@@ -58,15 +58,15 @@
   display: inline-flex;
   align-items: center;
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-text-color);
-  gap: var(--tc-spacing-xs);
+  color: var(--tc-text-default);
+  gap: var(--tc-space-1);
 }
 
 .jaugeBadge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  padding: var(--tc-space-1) var(--tc-space-2);
   font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-semibold);
   text-align: center;
@@ -80,7 +80,7 @@
 .jaugeType {
   opacity: 0.8;
   font-weight: var(--tc-font-weight-normal);
-  margin-left: var(--tc-spacing-xs);
+  margin-left: var(--tc-space-1);
 }
 
 /* =============================
@@ -90,8 +90,8 @@
   display: inline-flex;
   align-items: center;
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-primary-color);
-  gap: var(--tc-spacing-xs);
+  color: var(--tc-color-primary);
+  gap: var(--tc-space-1);
   font-weight: var(--tc-font-weight-medium);
 }
 
@@ -100,7 +100,7 @@
    ============================= */
 .actionButtons {
   display: flex;
-  gap: var(--tc-spacing-sm);
+  gap: var(--tc-space-2);
   justify-content: flex-end;
 }
 
@@ -120,7 +120,7 @@
 
 .actionButton:hover {
   background-color: var(--tc-gray-100);
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   border-color: var(--tc-gray-400);
 }
 
@@ -143,6 +143,6 @@
   .typeBadge,
   .jaugeBadge {
     font-size: calc(var(--tc-font-size-xs) * 0.9);
-    padding: calc(var(--tc-spacing-xs) * 0.8) var(--tc-spacing-xs);
+    padding: calc(var(--tc-space-1) * 0.8) var(--tc-space-1);
   }
 }

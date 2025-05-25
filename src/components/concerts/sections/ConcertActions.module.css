@@ -7,7 +7,7 @@
 .actionsContainer {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-xs);
+  gap: var(--tc-space-1);
   justify-content: flex-end;
 }
 
@@ -88,8 +88,8 @@
    VARIANTS DYNAMIQUES DE BOUTONS DE CONTRAT (NOUVEAU)
    ============================= */
 .variant-primary {
-  background-color: var(--tc-primary-color) !important;
-  border-color: var(--tc-primary-color) !important;
+  background-color: var(--tc-color-primary) !important;
+  border-color: var(--tc-color-primary) !important;
   color: white !important;
 }
 

@@ -10,7 +10,7 @@
 .concertDetailsContainer {
   position: relative;
   min-height: 100vh;
-  padding-bottom: var(--tc-spacing-lg);
+  padding-bottom: var(--tc-space-6);
 }
 
 /* =============================
@@ -25,17 +25,17 @@
 }
 
 .floatingEditButton {
-  background: linear-gradient(135deg, var(--tc-primary-color), var(--tc-primary-dark)) !important;
+  background: linear-gradient(135deg, var(--tc-color-primary), var(--tc-primary-dark)) !important;
   border: none !important;
   border-radius: 50px !important;
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md) !important;
+  padding: var(--tc-space-2) var(--tc-space-4) !important;
   box-shadow: 0 6px 20px rgba(var(--tc-primary-color-rgb), 0.4) !important;
   color: white !important;
   font-weight: var(--tc-font-weight-medium) !important;
   transition: all var(--tc-transition-duration) ease !important;
   display: flex !important;
   align-items: center !important;
-  gap: var(--tc-spacing-xs) !important;
+  gap: var(--tc-space-1) !important;
   min-width: 120px !important;
   justify-content: center !important;
 }
@@ -43,7 +43,7 @@
 .floatingEditButton:hover {
   transform: translateY(-2px) scale(1.05) !important;
   box-shadow: 0 8px 25px rgba(var(--tc-primary-color-rgb), 0.6) !important;
-  background: linear-gradient(135deg, var(--tc-primary-dark), var(--tc-primary-color)) !important;
+  background: linear-gradient(135deg, var(--tc-primary-dark), var(--tc-color-primary)) !important;
 }
 
 .floatingEditButton:active {
@@ -91,13 +91,13 @@
    ============================= */
 @media (max-width: var(--tc-breakpoint-md)) {
   .quickEditButton {
-    bottom: var(--tc-spacing-lg);
-    right: var(--tc-spacing-lg);
+    bottom: var(--tc-space-6);
+    right: var(--tc-space-6);
   }
   
   .floatingEditButton {
     min-width: 50px !important;
-    padding: var(--tc-spacing-sm) !important;
+    padding: var(--tc-space-2) !important;
     border-radius: 50% !important;
   }
   
@@ -108,8 +108,8 @@
 
 @media (max-width: var(--tc-breakpoint-sm)) {
   .quickEditButton {
-    bottom: var(--tc-spacing-md);
-    right: var(--tc-spacing-md);
+    bottom: var(--tc-space-4);
+    right: var(--tc-space-4);
   }
   
   .floatingEditButton {

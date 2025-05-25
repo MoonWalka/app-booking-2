@@ -10,13 +10,13 @@
 .modernAlert {
   display: flex;
   align-items: center;
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
   border-radius: var(--tc-border-radius);
   background-color: var(--tc-bg-color-light);
   color: var(--tc-text-color-secondary);
-  border: 1px solid var(--tc-border-color);
-  margin-top: var(--tc-spacing-md);
-  gap: var(--tc-spacing-sm);
+  border: 1px solid var(--tc-border-default);
+  margin-top: var(--tc-space-4);
+  gap: var(--tc-space-2);
 }
 
 .alertIcon {
@@ -34,8 +34,8 @@
 .alertTitle {
   font-weight: var(--tc-font-weight-semibold);
   font-size: var(--tc-font-size-md);
-  margin-bottom: var(--tc-spacing-xs);
-  color: var(--tc-text-color);
+  margin-bottom: var(--tc-space-1);
+  color: var(--tc-text-default);
 }
 
 .alertMessage {
@@ -48,8 +48,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
-  background-color: var(--tc-primary-color);
+  padding: var(--tc-space-2) var(--tc-space-4);
+  background-color: var(--tc-color-primary);
   color: var(--tc-bg-color-light);
   border: none;
   border-radius: var(--tc-border-radius);
@@ -57,8 +57,8 @@
   font-weight: var(--tc-font-weight-medium);
   cursor: pointer;
   transition: var(--tc-transition);
-  margin-top: var(--tc-spacing-sm);
-  gap: var(--tc-spacing-xs);
+  margin-top: var(--tc-space-2);
+  gap: var(--tc-space-1);
 }
 
 .actionButton:hover {
@@ -73,11 +73,11 @@
     flex-direction: column;
     align-items: flex-start;
     text-align: center;
-    padding: var(--tc-spacing-sm);
+    padding: var(--tc-space-2);
   }
   
   .alertIcon {
-    margin-bottom: var(--tc-spacing-sm);
+    margin-bottom: var(--tc-space-2);
     align-self: center;
   }
   

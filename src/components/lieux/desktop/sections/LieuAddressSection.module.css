@@ -8,12 +8,12 @@
    CARTE D'ADRESSE
    ============================= */
 .formCard {
-  background-color: var(--tc-bg-color);
+  background-color: var(--tc-bg-default);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow-sm);
   overflow: hidden;
-  margin-bottom: var(--tc-spacing-md);
-  border: 1px solid var(--tc-border-color);
+  margin-bottom: var(--tc-space-4);
+  border: 1px solid var(--tc-border-default);
 }
 
 /* =============================
@@ -22,23 +22,23 @@
 .cardHeader {
   display: flex;
   align-items: center;
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
   background-color: var(--tc-gray-100);
   border-bottom: 1px solid var(--tc-gray-300);
-  gap: var(--tc-spacing-sm);
+  gap: var(--tc-space-2);
 }
 
 .cardTitle {
   margin: 0;
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   line-height: 1.3;
 }
 
 .cardIcon {
   font-size: var(--tc-font-size-md);
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -48,50 +48,50 @@
    CORPS DE CARTE
    ============================= */
 .cardBody {
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
 }
 
 /* =============================
    FORMULAIRE
    ============================= */
 .formGroup {
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
   position: relative;
 }
 
 .formLabel {
   display: block;
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   font-size: var(--tc-font-size-sm);
 }
 
 .formControl {
   display: block;
   width: 100%;
-  padding: var(--tc-spacing-sm);
+  padding: var(--tc-space-2);
   font-size: var(--tc-font-size-base);
   line-height: var(--tc-line-height-base);
-  color: var(--tc-text-color);
-  background-color: var(--tc-bg-color);
+  color: var(--tc-text-default);
+  background-color: var(--tc-bg-default);
   background-clip: padding-box;
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-border-radius);
   transition: var(--tc-transition);
 }
 
 .formControl:focus {
-  color: var(--tc-text-color);
-  background-color: var(--tc-bg-color);
-  border-color: var(--tc-primary-color);
+  color: var(--tc-text-default);
+  background-color: var(--tc-bg-default);
+  border-color: var(--tc-color-primary);
   outline: 0;
   box-shadow: var(--tc-input-focus-shadow);
 }
 
 .required {
   color: var(--tc-danger-color);
-  margin-left: var(--tc-spacing-xs);
+  margin-left: var(--tc-space-1);
 }
 
 /* =============================
@@ -102,17 +102,17 @@
   width: 100%;
   max-height: 300px;
   overflow-y: auto;
-  background-color: var(--tc-bg-color);
-  border: 1px solid var(--tc-border-color);
+  background-color: var(--tc-bg-default);
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow);
   z-index: var(--tc-z-index-dropdown);
-  margin-top: var(--tc-spacing-xs);
+  margin-top: var(--tc-space-1);
 }
 
 .addressSuggestionItem {
   display: flex;
-  padding: var(--tc-spacing-sm);
+  padding: var(--tc-space-2);
   cursor: pointer;
   border-bottom: 1px solid var(--tc-gray-200);
   transition: background-color var(--tc-transition-duration);
@@ -130,8 +130,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: var(--tc-spacing-sm);
-  color: var(--tc-primary-color);
+  margin-right: var(--tc-space-2);
+  color: var(--tc-color-primary);
   font-size: var(--tc-font-size-md);
 }
 
@@ -141,20 +141,20 @@
 
 .suggestionName {
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
 }
 
 .suggestionDetails {
   font-size: var(--tc-font-size-xs);
   color: var(--tc-gray-600);
-  margin-top: var(--tc-spacing-xs);
+  margin-top: var(--tc-space-1);
 }
 
 .addressSearching {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-sm);
-  margin-top: var(--tc-spacing-xs);
+  gap: var(--tc-space-2);
+  margin-top: var(--tc-space-1);
   color: var(--tc-gray-600);
   font-size: var(--tc-font-size-sm);
 }
@@ -164,7 +164,7 @@
    ============================= */
 @media (max-width: var(--tc-breakpoint-md)) {
   .cardBody {
-    padding: var(--tc-spacing-sm);
+    padding: var(--tc-space-2);
   }
   
   .addressSuggestions {
@@ -178,14 +178,14 @@
 
 @media (max-width: var(--tc-breakpoint-sm)) {
   .cardHeader {
-    padding: var(--tc-spacing-sm);
+    padding: var(--tc-space-2);
   }
   
   .formControl {
-    padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+    padding: var(--tc-space-1) var(--tc-space-2);
   }
   
   .addressSuggestionItem {
-    padding: var(--tc-spacing-xs);
+    padding: var(--tc-space-1);
   }
 }

@@ -24,7 +24,7 @@
 
 .button {
   padding: 0.75rem 1.25rem;
-  background-color: var(--tc-primary-color);
+  background-color: var(--tc-color-primary);
   color: white;
   border: none;
   border-radius: 4px;
@@ -63,7 +63,7 @@
 
 .modalButton {
   padding: 0.5rem 1rem;
-  background-color: var(--tc-primary-color);
+  background-color: var(--tc-color-primary);
   color: white;
   border: none;
   border-radius: 4px;
@@ -119,6 +119,6 @@
 
 .input:focus {
   outline: none;
-  border-color: var(--tc-primary-color);
+  border-color: var(--tc-color-primary);
   box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
 }

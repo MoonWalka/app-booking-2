@@ -30,7 +30,7 @@
 }
 
 .pdfIframe {
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-border-radius);
   width: 100%;
 }

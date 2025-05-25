@@ -11,8 +11,8 @@
    STYLES DE BASE
    ============================= */
 body {
-  background-color: var(--tc-bg-color);
-  color: var(--tc-text-color);
+  background-color: var(--tc-bg-default);
+  color: var(--tc-text-default);
   font-family: var(--tc-font-family-base);
   font-size: var(--tc-font-size-base);
   line-height: var(--tc-line-height-base);
@@ -23,19 +23,19 @@ body {
    COMPOSANTS DE BASE
    ============================= */
 .tc-card {
-  background-color: var(--tc-card-bg);
-  border: 1px solid var(--tc-border-color);
+  background-color: var(--tc-bg-default);
+  border: 1px solid var(--tc-border-default);
   box-shadow: var(--tc-shadow-sm);
   border-radius: var(--tc-border-radius);
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
 }
 
 .tc-form-control {
-  background-color: var(--tc-input-bg);
+  background-color: var(--tc-bg-default);
   border: 1px solid var(--tc-input-border);
   color: var(--tc-input-color);
   border-radius: var(--tc-border-radius);
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  padding: var(--tc-space-2) var(--tc-space-4);
   font-size: var(--tc-font-size-base);
   transition: var(--tc-transition);
 }
@@ -53,7 +53,7 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  padding: var(--tc-space-2) var(--tc-space-4);
   font-size: var(--tc-font-size-base);
   font-weight: var(--tc-font-weight-medium);
   border-radius: var(--tc-border-radius);
@@ -64,9 +64,9 @@ body {
 
 /* Bouton primaire */
 .tc-btn-primary {
-  background-color: var(--tc-btn-primary-bg);
+  background-color: var(--tc-color-primary);
   border-color: var(--tc-btn-primary-border);
-  color: var(--tc-btn-primary-text);
+  color: var(--tc-text-light);
 }
 
 .tc-btn-primary:hover, 
@@ -152,15 +152,15 @@ body {
   width: 100%;
   max-height: 200px;
   overflow-y: auto;
-  margin-top: var(--tc-spacing-xs);
-  background-color: var(--tc-bg-color);
-  border: 1px solid var(--tc-border-color);
+  margin-top: var(--tc-space-1);
+  background-color: var(--tc-bg-default);
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow);
 }
 
 .tc-suggestion-item {
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  padding: var(--tc-space-2) var(--tc-space-4);
   cursor: pointer;
 }
 
@@ -175,7 +175,7 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  padding: var(--tc-space-1) var(--tc-space-2);
   font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-semibold);
   border-radius: var(--tc-border-radius-pill);
@@ -183,7 +183,7 @@ body {
 }
 
 .tc-badge-primary {
-  background-color: var(--tc-primary-color);
+  background-color: var(--tc-color-primary);
   color: var(--tc-light-color);
 }
 
@@ -215,7 +215,7 @@ body {
 /* =============================
    TEXTES COLORÉS
    ============================= */
-.tc-text-primary { color: var(--tc-primary-color); }
+.tc-text-primary { color: var(--tc-color-primary); }
 .tc-text-secondary { color: var(--tc-secondary-color); }
 .tc-text-success { color: var(--tc-success-color); }
 .tc-text-danger { color: var(--tc-danger-color); }
@@ -227,7 +227,7 @@ body {
    LIENS
    ============================= */
 a, .tc-link {
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   text-decoration: none;
   transition: color var(--tc-transition-duration);
 }

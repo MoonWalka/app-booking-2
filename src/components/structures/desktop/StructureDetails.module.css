@@ -8,7 +8,7 @@
 
 .detailsContainer {
   width: 100%;
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -17,15 +17,15 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--tc-spacing-lg);
-  padding-bottom: var(--tc-spacing-md);
-  border-bottom: var(--tc-border-width) solid var(--tc-border-color);
+  margin-bottom: var(--tc-space-6);
+  padding-bottom: var(--tc-space-4);
+  border-bottom: var(--tc-border-width) solid var(--tc-border-default);
 }
 
 .title {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-sm);
+  gap: var(--tc-space-2);
   margin: 0;
   font-size: var(--tc-font-size-xl);
   font-weight: var(--tc-font-weight-semibold);
@@ -33,20 +33,20 @@
 }
 
 .titleIcon {
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
 }
 
 .actions {
   display: flex;
-  gap: var(--tc-spacing-sm);
+  gap: var(--tc-space-2);
 }
 
 .editButton {
   display: inline-flex;
   align-items: center;
-  gap: var(--tc-spacing-sm);
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
-  background-color: var(--tc-primary-color);
+  gap: var(--tc-space-2);
+  padding: var(--tc-space-2) var(--tc-space-4);
+  background-color: var(--tc-color-primary);
   color: var(--tc-white-color);
   border: none;
   border-radius: var(--tc-border-radius);
@@ -64,8 +64,8 @@
 .deleteButton {
   display: inline-flex;
   align-items: center;
-  gap: var(--tc-spacing-sm);
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  gap: var(--tc-space-2);
+  padding: var(--tc-space-2) var(--tc-space-4);
   background-color: var(--tc-danger-color-10);
   color: var(--tc-danger-color);
   border: var(--tc-border-width) solid var(--tc-danger-color);
@@ -84,10 +84,10 @@
 .backLink {
   display: inline-flex;
   align-items: center;
-  gap: var(--tc-spacing-sm);
+  gap: var(--tc-space-2);
   color: var(--tc-text-color-secondary);
   text-decoration: none;
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
   transition: color var(--tc-transition-duration);
 }
 
@@ -99,19 +99,19 @@
 .content {
   display: grid;
   grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-  gap: var(--tc-spacing-lg);
+  gap: var(--tc-space-6);
 }
 
 .mainSection {
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-lg);
+  gap: var(--tc-space-6);
 }
 
 .sideSection {
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-lg);
+  gap: var(--tc-space-6);
 }
 
 .card {
@@ -124,9 +124,9 @@
 .cardHeader {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-sm);
-  padding: var(--tc-spacing-md) var(--tc-spacing-lg);
-  border-bottom: var(--tc-border-width) solid var(--tc-border-color);
+  gap: var(--tc-space-2);
+  padding: var(--tc-space-4) var(--tc-space-6);
+  border-bottom: var(--tc-border-width) solid var(--tc-border-default);
   font-weight: var(--tc-font-weight-semibold);
   color: var(--tc-text-color-primary);
   background-color: var(--tc-card-header-bg);
@@ -140,25 +140,25 @@
 }
 
 .cardHeader i {
-  margin-right: var(--tc-spacing-sm);
-  color: var(--tc-primary-color);
+  margin-right: var(--tc-space-2);
+  color: var(--tc-color-primary);
   font-size: var(--tc-font-size-md);
 }
 
 .cardHeaderIcon {
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
 }
 
 .cardBody {
-  padding: var(--tc-spacing-lg);
+  padding: var(--tc-space-6);
 }
 
 .cardFooter {
   display: flex;
   justify-content: flex-end;
-  padding: var(--tc-spacing-md) var(--tc-spacing-lg);
+  padding: var(--tc-space-4) var(--tc-space-6);
   background-color: var(--tc-gray-100);
-  border-top: var(--tc-border-width) solid var(--tc-border-color);
+  border-top: var(--tc-border-width) solid var(--tc-border-default);
 }
 
 .badge {
@@ -179,7 +179,7 @@
 }
 
 .badgePrimary {
-  background-color: var(--tc-primary-color);
+  background-color: var(--tc-color-primary);
 }
 
 .badgeInfo {
@@ -198,13 +198,13 @@
 .infoGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--tc-spacing-lg);
+  gap: var(--tc-space-6);
 }
 
 .infoItem {
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-xs);
+  gap: var(--tc-space-1);
 }
 
 .infoLabel {
@@ -219,13 +219,13 @@
 
 .addressCard {
   display: flex;
-  gap: var(--tc-spacing-md);
+  gap: var(--tc-space-4);
 }
 
 .addressIcon {
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   font-size: var(--tc-font-size-lg);
-  margin-top: var(--tc-spacing-xs);
+  margin-top: var(--tc-space-1);
 }
 
 .addressDetails {
@@ -233,19 +233,19 @@
 }
 
 .addressLine {
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
   color: var(--tc-text-color-primary);
 }
 
 .contactCard {
   display: flex;
-  gap: var(--tc-spacing-md);
+  gap: var(--tc-space-4);
 }
 
 .contactIcon {
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   font-size: var(--tc-font-size-lg);
-  margin-top: var(--tc-spacing-xs);
+  margin-top: var(--tc-space-1);
 }
 
 .contactDetails {
@@ -254,20 +254,20 @@
 
 .contactName {
   font-weight: var(--tc-font-weight-semibold);
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
   color: var(--tc-text-color-primary);
 }
 
 .contactInfo {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-sm);
-  margin-bottom: var(--tc-spacing-xs);
+  gap: var(--tc-space-2);
+  margin-bottom: var(--tc-space-1);
   color: var(--tc-text-color-primary);
 }
 
 .contactInfoIcon {
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
 }
 
 .programmateursList {
@@ -279,9 +279,9 @@
 .programmateurItem {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-sm);
-  padding: var(--tc-spacing-sm) 0;
-  border-bottom: var(--tc-border-width) solid var(--tc-border-color);
+  gap: var(--tc-space-2);
+  padding: var(--tc-space-2) 0;
+  border-bottom: var(--tc-border-width) solid var(--tc-border-default);
 }
 
 .programmateurItem:last-child {
@@ -289,7 +289,7 @@
 }
 
 .programmateurIcon {
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   font-size: var(--tc-font-size-lg);
 }
 
@@ -300,7 +300,7 @@
 .programmateurName {
   font-weight: var(--tc-font-weight-medium);
   color: var(--tc-text-color-primary);
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
 }
 
 .programmateurRole {
@@ -320,12 +320,12 @@
 .emptyIcon {
   font-size: var(--tc-font-size-xl);
   color: var(--tc-text-color-muted);
-  margin-bottom: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-space-2);
 }
 
 .emptyText {
   color: var(--tc-text-color-secondary);
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .muted {
@@ -348,7 +348,7 @@
   border-right-color: transparent;
   border-radius: 50%;
   animation: spinner-border .75s linear infinite;
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
 }
 
 @keyframes spinner-border {
@@ -356,13 +356,13 @@
 }
 
 .detailsContent {
-  margin-top: var(--tc-spacing-md);
+  margin-top: var(--tc-space-4);
 }
 
 .detailsCard {
   background-color: var(--tc-surface-background);
   border-radius: var(--tc-border-radius);
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
   box-shadow: var(--tc-box-shadow);
   overflow: hidden;
 }
@@ -374,25 +374,25 @@
 }
 
 .notesContent p {
-  margin-bottom: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-space-2);
 }
 
 .alertInfo {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-sm);
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  gap: var(--tc-space-2);
+  padding: var(--tc-space-2) var(--tc-space-4);
   border-radius: var(--tc-border-radius);
   background-color: var(--tc-warning-color-light);
   color: var(--tc-warning-color);
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 /* Support responsive */
 @media (max-width: var(--tc-breakpoint-md)) {
   .infoGrid {
     grid-template-columns: 1fr;
-    gap: var(--tc-spacing-md);
+    gap: var(--tc-space-4);
   }
   
   .content {
@@ -404,7 +404,7 @@
   .header {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--tc-spacing-md);
+    gap: var(--tc-space-4);
   }
   
   .actions {
@@ -413,17 +413,17 @@
   }
   
   .cardHeader {
-    padding: var(--tc-spacing-md);
+    padding: var(--tc-space-4);
   }
   
   .cardBody {
-    padding: var(--tc-spacing-md);
+    padding: var(--tc-space-4);
   }
 }
 
 @media (max-width: var(--tc-breakpoint-xs)) {
   .detailsContainer {
-    padding: var(--tc-spacing-sm);
+    padding: var(--tc-space-2);
   }
   
   .title {
@@ -437,6 +437,6 @@
   
   .addressCard, .contactCard {
     flex-direction: column;
-    gap: var(--tc-spacing-sm);
+    gap: var(--tc-space-2);
   }
 }

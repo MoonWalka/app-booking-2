@@ -39,7 +39,7 @@
 .mobile-search-container .input-group-text {
   background-color: var(--tc-bg-default);
   border: none;
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
 }
 
 .mobile-search-container .form-control {
@@ -113,7 +113,7 @@
   align-items: center;
   justify-content: center;
   min-width: 70px;
-  background-color: var(--tc-primary-color);
+  background-color: var(--tc-color-primary);
   color: var(--tc-bg-default);
   padding: var(--tc-spacing-2) var(--tc-spacing-2);
   text-align: center;
@@ -199,7 +199,7 @@
 
 .artist-tag {
   background-color: rgba(0, 123, 255, 0.1);
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   padding: 0.15rem var(--tc-spacing-2);
   border-radius: var(--tc-radius-sm);
   font-size: var(--tc-font-size-xs);
@@ -258,7 +258,7 @@
 }
 
 .action-btn.view {
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
 }
 
 .action-btn.edit {

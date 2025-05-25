@@ -8,14 +8,14 @@
   background-color: var(--tc-white);
   border-radius: var(--tc-border-radius);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
   overflow: hidden;
 }
 
 .sectionHeader {
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
   background-color: var(--tc-gray-50);
-  border-bottom: 1px solid var(--tc-border-color);
+  border-bottom: 1px solid var(--tc-border-default);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -25,19 +25,19 @@
   margin: 0;
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
 }
 
 .sectionContent {
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
 }
 
 .validationItem {
   display: flex;
   align-items: flex-start;
-  gap: var(--tc-spacing-sm);
-  padding: var(--tc-spacing-sm) 0;
-  border-bottom: 1px solid var(--tc-border-color);
+  gap: var(--tc-space-2);
+  padding: var(--tc-space-2) 0;
+  border-bottom: 1px solid var(--tc-border-default);
 }
 
 .validationItem:last-child {
@@ -61,8 +61,8 @@
 
 .validationLabel {
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-text-color);
-  margin-bottom: var(--tc-spacing-xs);
+  color: var(--tc-text-default);
+  margin-bottom: var(--tc-space-1);
 }
 
 .validationValue {
@@ -72,16 +72,16 @@
 
 .validationActions {
   display: flex;
-  gap: var(--tc-spacing-xs);
-  margin-top: var(--tc-spacing-sm);
+  gap: var(--tc-space-1);
+  margin-top: var(--tc-space-2);
 }
 
 .actionButton {
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
-  border: 1px solid var(--tc-border-color);
+  padding: var(--tc-space-1) var(--tc-space-2);
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-border-radius-sm);
   background-color: var(--tc-white);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   font-size: var(--tc-font-size-xs);
   cursor: pointer;
   transition: var(--tc-transition);
@@ -96,7 +96,7 @@
 }
 
 .validationApproved {
-  border-left: 3px solid var(--tc-primary-color);
+  border-left: 3px solid var(--tc-color-primary);
 }
 
 .validationRejected {
@@ -133,7 +133,7 @@
 /* Styles pour les champs à valider */
 .fieldContainer {
   padding: var(--tc-spacing-2) 0;
-  border-bottom: 1px solid var(--tc-border-color);
+  border-bottom: 1px solid var(--tc-border-default);
 }
 
 .fieldContainer:last-child {
@@ -150,7 +150,7 @@
 
 .fieldLabel {
   font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   font-size: 0.95rem;
 }
 
@@ -177,7 +177,7 @@
 }
 
 .formValue {
-  border-left: 3px solid var(--tc-primary-color);
+  border-left: 3px solid var(--tc-color-primary);
 }
 
 .valueLabel {

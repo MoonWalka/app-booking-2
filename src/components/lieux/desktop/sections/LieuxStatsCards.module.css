@@ -10,8 +10,8 @@
 .statsContainer {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--tc-spacing-md);
-  margin-bottom: var(--tc-spacing-lg);
+  gap: var(--tc-space-4);
+  margin-bottom: var(--tc-space-6);
 }
 
 /* =============================
@@ -20,15 +20,15 @@
 .statCard {
   flex: 1;
   min-width: 150px;
-  background-color: var(--tc-bg-color);
+  background-color: var(--tc-bg-default);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow-sm);
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-md);
+  gap: var(--tc-space-4);
   transition: var(--tc-transition);
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
 }
 
 .statCard:hover {
@@ -51,7 +51,7 @@
 
 .total .statIcon {
   background-color: rgba(var(--tc-primary-color-rgb), 0.1);
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
 }
 
 .avecConcerts .statIcon {
@@ -86,13 +86,13 @@
   font-size: var(--tc-font-size-xl);
   font-weight: var(--tc-font-weight-semibold);
   line-height: 1.2;
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
 }
 
 .statLabel {
   font-size: var(--tc-font-size-sm);
   color: var(--tc-gray-600);
-  margin-top: var(--tc-spacing-xs);
+  margin-top: var(--tc-space-1);
 }
 
 /* =============================
@@ -100,12 +100,12 @@
    ============================= */
 @media (max-width: var(--tc-breakpoint-lg)) {
   .statsContainer {
-    gap: var(--tc-spacing-sm);
+    gap: var(--tc-space-2);
   }
 
   .statCard {
-    padding: var(--tc-spacing-sm);
-    gap: var(--tc-spacing-sm);
+    padding: var(--tc-space-2);
+    gap: var(--tc-space-2);
   }
   
   .statIcon {
@@ -121,7 +121,7 @@
   }
 
   .statCard {
-    flex-basis: calc(50% - var(--tc-spacing-sm));
+    flex-basis: calc(50% - var(--tc-space-2));
     min-width: 140px;
   }
   

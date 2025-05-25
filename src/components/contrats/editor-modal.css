@@ -94,7 +94,7 @@
 
 .editor-modal-container .ql-toolbar.ql-snow button.ql-active,
 .editor-modal-container .ql-toolbar.ql-snow button:hover {
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   background-color: rgba(0,0,0,0.04);
   border-radius: 3px;
 }

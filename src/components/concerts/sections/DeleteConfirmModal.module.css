@@ -36,7 +36,7 @@
 .modalTitle {
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-bold);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   margin: 0;
 }
 
@@ -59,7 +59,7 @@
 .modalBody {
   background: var(--tc-bg-white);
   padding: var(--tc-spacing-5);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   font-size: var(--tc-font-size-md);
 }
 

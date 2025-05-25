@@ -52,7 +52,7 @@
   cursor: pointer;
   display: flex;
   align-items: center;
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   background-color: var(--tc-bg-primary-subtle);
 }
 

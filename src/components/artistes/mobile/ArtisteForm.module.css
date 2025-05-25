@@ -15,13 +15,13 @@
 
 .artisteFormMobile {
   padding: var(--tc-spacing-3);
-  background-color: var(--tc-bg-color);
+  background-color: var(--tc-bg-default);
 }
 
 .mobileFormHeader {
   margin-bottom: var(--tc-spacing-4);
   padding-bottom: var(--tc-spacing-3);
-  border-bottom: var(--tc-border-width) solid var(--tc-border-color);
+  border-bottom: var(--tc-border-width) solid var(--tc-border-default);
 }
 
 .mobileForm {
@@ -31,7 +31,7 @@
 }
 
 .formSection {
-  background-color: var(--tc-bg-color);
+  background-color: var(--tc-bg-default);
   border-radius: var(--tc-border-radius);
   padding: var(--tc-spacing-4);
   margin-bottom: var(--tc-spacing-4);
@@ -41,7 +41,7 @@
 .sectionTitle {
   font-size: var(--tc-font-size-xl);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   margin-bottom: var(--tc-spacing-4);
   padding-bottom: var(--tc-spacing-2);
   border-bottom: var(--tc-border-width) solid var(--tc-border-color-light);
@@ -60,7 +60,7 @@
   padding: var(--tc-spacing-2);
   background-color: var(--tc-bg-light);
   border-radius: var(--tc-border-radius);
-  border: var(--tc-border-width) solid var(--tc-border-color);
+  border: var(--tc-border-width) solid var(--tc-border-default);
 }
 
 .formActions {

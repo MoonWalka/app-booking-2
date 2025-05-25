@@ -71,7 +71,7 @@
   border: 1px solid var(--tc-border-info-subtle);
   white-space: pre-wrap;
   font-size: var(--tc-font-size-xs);
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   font-family: var(--tc-font-family-monospace);
   margin-bottom: var(--tc-spacing-3);
 }

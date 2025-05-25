@@ -37,7 +37,7 @@
   width: 32px;
   height: 32px;
   background-color: rgba(13, 110, 253, 0.1);
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   border-radius: 6px;
   display: flex;
   align-items: center;

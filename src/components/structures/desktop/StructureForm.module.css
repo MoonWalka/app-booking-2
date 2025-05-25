@@ -9,7 +9,7 @@
 .structureFormContainer {
   max-width: 1200px;
   margin: 0 auto;
-  padding: var(--tc-spacing-lg);
+  padding: var(--tc-space-6);
   background-color: var(--tc-gray-50);
 }
 
@@ -17,9 +17,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--tc-spacing-lg);
-  padding-bottom: var(--tc-spacing-md);
-  border-bottom: var(--tc-border-width) solid var(--tc-border-color);
+  margin-bottom: var(--tc-space-6);
+  padding-bottom: var(--tc-space-4);
+  border-bottom: var(--tc-border-width) solid var(--tc-border-default);
 }
 
 .formHeader h2 {
@@ -32,8 +32,8 @@
 .backButton {
   display: inline-flex;
   align-items: center;
-  gap: var(--tc-spacing-sm);
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  gap: var(--tc-space-2);
+  padding: var(--tc-space-2) var(--tc-space-4);
   border-radius: var(--tc-border-radius);
   font-weight: var(--tc-font-weight-medium);
   transition: var(--tc-transition);
@@ -42,13 +42,13 @@
 .alertError {
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-sm);
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  gap: var(--tc-space-2);
+  padding: var(--tc-space-2) var(--tc-space-4);
   border-radius: var(--tc-border-radius);
   background-color: var(--tc-danger-color-10);
   color: var(--tc-danger-color-dark);
   border: var(--tc-border-width) solid var(--tc-danger-color-20);
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
 }
 
 .alertError i {
@@ -59,22 +59,22 @@
 .validationAlert {
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-sm);
-  padding: var(--tc-spacing-md) var(--tc-spacing-md);
+  gap: var(--tc-space-2);
+  padding: var(--tc-space-4) var(--tc-space-4);
   border-radius: var(--tc-border-radius);
   background-color: var(--tc-warning-color-10);
   color: var(--tc-warning-color-dark);
   border: var(--tc-border-width) solid var(--tc-warning-color-20);
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
 }
 
 .validationAlert ul {
   margin: 0;
-  padding-left: var(--tc-spacing-md);
+  padding-left: var(--tc-space-4);
 }
 
 .validationAlert li {
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
 }
 
 .validationAlert i {
@@ -86,39 +86,39 @@
   background-color: var(--tc-white);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow-sm);
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
   overflow: hidden;
 }
 
 .cardHeader {
   display: flex;
   align-items: center;
-  padding: var(--tc-spacing-md);
-  border-bottom: 1px solid var(--tc-border-color);
+  padding: var(--tc-space-4);
+  border-bottom: 1px solid var(--tc-border-default);
   background-color: var(--tc-gray-100);
 }
 
 .cardHeader i {
   font-size: var(--tc-font-size-lg);
-  color: var(--tc-primary-color);
-  margin-right: var(--tc-spacing-sm);
+  color: var(--tc-color-primary);
+  margin-right: var(--tc-space-2);
 }
 
 .cardHeader h3 {
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-bold);
   margin: 0;
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
 }
 
 .cardBody {
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
 }
 
 .formRow {
   display: flex;
-  gap: var(--tc-spacing-md);
-  margin-bottom: var(--tc-spacing-md);
+  gap: var(--tc-space-4);
+  margin-bottom: var(--tc-space-4);
 }
 
 .formCol {
@@ -126,26 +126,26 @@
 }
 
 .formGroup {
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .formLabel {
   font-weight: var(--tc-font-weight-medium);
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
   font-size: var(--tc-font-size-sm);
   display: block;
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
 }
 
 .formControl, .formSelect {
   display: block;
   width: 100%;
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-border-radius-sm);
-  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  padding: var(--tc-space-1) var(--tc-space-2);
   font-size: var(--tc-font-size-sm);
   line-height: 1.5;
-  color: var(--tc-text-color);
+  color: var(--tc-text-default);
   background-color: var(--tc-white);
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
@@ -177,20 +177,20 @@
 .helpText {
   font-size: var(--tc-font-size-xs);
   color: var(--tc-text-muted);
-  margin-top: var(--tc-spacing-xs);
+  margin-top: var(--tc-space-1);
 }
 
 .buttonGroup {
   display: flex;
   justify-content: flex-end;
-  gap: var(--tc-spacing-sm);
-  margin-top: var(--tc-spacing-lg);
-  padding-top: var(--tc-spacing-md);
-  border-top: 1px solid var(--tc-border-color);
+  gap: var(--tc-space-2);
+  margin-top: var(--tc-space-6);
+  padding-top: var(--tc-space-4);
+  border-top: 1px solid var(--tc-border-default);
 }
 
 .btn {
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  padding: var(--tc-space-2) var(--tc-space-4);
   border-radius: var(--tc-border-radius-sm);
   border: 1px solid transparent;
   font-size: var(--tc-font-size-sm);
@@ -200,12 +200,12 @@
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  gap: var(--tc-spacing-xs);
+  gap: var(--tc-space-1);
 }
 
 .btnPrimary {
-  background-color: var(--tc-primary-color);
-  border-color: var(--tc-primary-color);
+  background-color: var(--tc-color-primary);
+  border-color: var(--tc-color-primary);
   color: var(--tc-white);
 }
 
@@ -239,7 +239,7 @@
 /* Support responsive */
 @media (max-width: var(--tc-breakpoint-md)) {
   .structureFormContainer {
-    padding: var(--tc-spacing-md);
+    padding: var(--tc-space-4);
   }
   
   .formRow {
@@ -260,15 +260,15 @@
   .formHeader {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--tc-spacing-md);
+    gap: var(--tc-space-4);
   }
   
   .cardHeader {
-    padding: var(--tc-spacing-md);
+    padding: var(--tc-space-4);
   }
   
   .cardBody {
-    padding: var(--tc-spacing-md);
+    padding: var(--tc-space-4);
   }
   
   .buttonGroup {
@@ -282,7 +282,7 @@
 
 @media (max-width: var(--tc-breakpoint-xs)) {
   .structureFormContainer {
-    padding: var(--tc-spacing-sm);
+    padding: var(--tc-space-2);
   }
   
   .formHeader h2 {

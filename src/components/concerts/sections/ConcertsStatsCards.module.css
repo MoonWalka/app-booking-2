@@ -2,27 +2,27 @@
 .statsCards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: var(--tc-spacing-md);
-  margin-bottom: var(--tc-spacing-lg);
+  gap: var(--tc-space-4);
+  margin-bottom: var(--tc-space-6);
   width: 100%;
 }
 
 .statCard {
-  background: var(--tc-bg-color);
+  background: var(--tc-bg-default);
   border-radius: var(--tc-border-radius);
   box-shadow: var(--tc-shadow-sm);
-  padding: var(--tc-spacing-lg) var(--tc-spacing-xl);
+  padding: var(--tc-space-6) var(--tc-spacing-xl);
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: var(--tc-spacing-md);
-  border: 1.5px solid var(--tc-border-color);
+  gap: var(--tc-space-4);
+  border: 1.5px solid var(--tc-border-default);
   min-width: 0;
 }
 
 /* Bordures colorées dynamiques avec variables --tc- */
 .statCard[data-color="primary"] {
-  border-color: var(--tc-primary-color);
+  border-color: var(--tc-color-primary);
 }
 
 .statCard[data-color="success"] {
@@ -40,7 +40,7 @@
 
 /* Icônes colorées dynamiques avec variables --tc- */
 .statIcon[data-color="primary"] {
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
 }
 
 .statIcon[data-color="success"] {
@@ -61,7 +61,7 @@
 .statValue {
   font-size: 2.2rem;
   font-weight: var(--tc-font-weight-bold);
-  color: var(--tc-primary-color);
+  color: var(--tc-color-primary);
   line-height: 1.1;
 }
 

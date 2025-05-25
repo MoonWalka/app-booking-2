@@ -10,15 +10,15 @@
   max-height: 200px;
   overflow: auto;
   z-index: var(--tc-z-index-dropdown);
-  background-color: var(--tc-bg-color);
-  border: 1px solid var(--tc-border-color);
+  background-color: var(--tc-bg-default);
+  border: 1px solid var(--tc-border-default);
   border-radius: 0 0 var(--tc-border-radius-sm) var(--tc-border-radius-sm);
   box-shadow: var(--tc-shadow-sm);
   margin-top: -1px;
 }
 
 .suggestionItem {
-  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  padding: var(--tc-space-2) var(--tc-space-4);
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -35,8 +35,8 @@
 }
 
 .suggestionIcon {
-  margin-right: var(--tc-spacing-sm);
-  color: var(--tc-primary-color);
+  margin-right: var(--tc-space-2);
+  color: var(--tc-color-primary);
 }
 
 .suggestionContent {
@@ -61,47 +61,47 @@
   position: absolute;
   top: 100%;
   width: 100%;
-  padding: var(--tc-spacing-sm);
-  background-color: var(--tc-bg-color);
+  padding: var(--tc-space-2);
+  background-color: var(--tc-bg-default);
   border-radius: 0 0 var(--tc-border-radius-sm) var(--tc-border-radius-sm);
-  border: 1px solid var(--tc-border-color);
+  border: 1px solid var(--tc-border-default);
   border-top: none;
   box-shadow: var(--tc-shadow-sm);
   z-index: var(--tc-z-index-dropdown);
   display: flex;
   align-items: center;
-  gap: var(--tc-spacing-sm);
+  gap: var(--tc-space-2);
 }
 
 .searchTypeButtons {
   display: flex;
-  gap: var(--tc-spacing-sm);
-  margin-bottom: var(--tc-spacing-md);
+  gap: var(--tc-space-2);
+  margin-bottom: var(--tc-space-4);
 }
 
 .searchBox {
   position: relative;
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-space-4);
 }
 
 .noResultsAlert {
-  margin-top: var(--tc-spacing-xs);
+  margin-top: var(--tc-space-1);
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: var(--tc-spacing-md);
+  padding: var(--tc-space-4);
 }
 
 .formCard {
   border-radius: var(--tc-border-radius-lg);
   box-shadow: var(--tc-shadow);
-  margin-bottom: var(--tc-spacing-lg);
+  margin-bottom: var(--tc-space-6);
 }
 
 .form {
-  margin-top: var(--tc-spacing-md);
+  margin-top: var(--tc-space-4);
 }
 
 /* Styles responsive standardisés */
@@ -113,12 +113,12 @@
 
 @media (max-width: 768px) {
   .container {
-    padding: var(--tc-spacing-sm);
+    padding: var(--tc-space-2);
   }
   
   .formCard {
     border-radius: var(--tc-border-radius);
-    margin-bottom: var(--tc-spacing-md);
+    margin-bottom: var(--tc-space-4);
   }
   
   .searchTypeButtons {
@@ -128,15 +128,15 @@
 
 @media (max-width: 576px) {
   .container {
-    padding: var(--tc-spacing-xs);
+    padding: var(--tc-space-1);
   }
   
   .suggestionItem {
-    padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+    padding: var(--tc-space-1) var(--tc-space-2);
   }
   
   .searchTypeButtons {
-    gap: var(--tc-spacing-xs);
-    margin-bottom: var(--tc-spacing-sm);
+    gap: var(--tc-space-1);
+    margin-bottom: var(--tc-space-2);
   }
 }

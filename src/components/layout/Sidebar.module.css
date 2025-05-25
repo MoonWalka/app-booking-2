@@ -43,7 +43,7 @@
  * Contient généralement le logo et peut-être un bouton de toggle
  */
 .sidebarHeader {
-  padding: var(--tc-spacing-lg);
+  padding: var(--tc-space-6);
   border-bottom: var(--tc-border-width) solid var(--tc-sidebar-border-color);
   text-align: center;
 }
@@ -55,7 +55,7 @@
  * Pas de padding horizontal pour permettre aux liens de s'étendre sur toute la largeur
  */
 .sidebarContent {
-  padding: var(--tc-spacing-sm) 0;
+  padding: var(--tc-space-2) 0;
 }
 
 /* 
@@ -75,7 +75,7 @@
  * Espacement vertical entre les éléments de navigation
  */
 .navLinks li {
-  margin-bottom: var(--tc-spacing-xs);
+  margin-bottom: var(--tc-space-1);
 }
 
 /* 
@@ -87,7 +87,7 @@
 .navLinks a {
   display: flex;
   align-items: center;
-  padding: var(--tc-spacing-sm) var(--tc-spacing-lg);
+  padding: var(--tc-space-2) var(--tc-space-6);
   color: var(--tc-light-color);
   text-decoration: none;
   /* Transition courte pour une réaction rapide au hover */
@@ -114,7 +114,7 @@
 .navLinks a.active {
   background-color: var(--tc-sidebar-active-bg-color);
   /* La bordure gauche crée un indicateur visuel fort pour la page active */
-  border-left: 4px solid var(--tc-primary-color);
+  border-left: 4px solid var(--tc-color-primary);
 }
 
 /* 
@@ -123,7 +123,7 @@
  * Espacement et dimensionnement des icônes dans la navigation
  */
 .navLinks a i {
-  margin-right: var(--tc-spacing-sm);
+  margin-right: var(--tc-space-2);
   font-size: var(--tc-font-size-md);
 }
 
@@ -135,7 +135,7 @@
  */
 .sidebarFooter {
   margin-top: auto; /* Astuce flexbox pour pousser cet élément tout en bas */
-  padding: var(--tc-spacing-lg);
+  padding: var(--tc-space-6);
   border-top: var(--tc-border-width) solid var(--tc-sidebar-border-color);
 }
 
@@ -156,7 +156,7 @@
  * word-break permet de gérer les emails longs qui pourraient déborder
  */
 .userEmail {
-  margin-bottom: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-space-2);
   word-break: break-word; /* Permet aux emails longs de se couper correctement */
   text-align: center;
 }

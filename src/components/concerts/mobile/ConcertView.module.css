@@ -6,7 +6,7 @@
  */
 
 .concertViewContainer {
-  padding: var(--tc-spacing-sm);
+  padding: var(--tc-space-2);
   background-color: var(--tc-bg-color-light);
   min-height: 100vh;
 }
@@ -21,6 +21,6 @@
 .mobileContent {
   display: flex;
   flex-direction: column;
-  gap: var(--tc-spacing-sm);
+  gap: var(--tc-space-2);
 }
 

@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import styles from './ConcertOrganizerSection.module.css';
 import Button from '@/components/ui/Button';
+import Alert from '@/components/ui/Alert';
 import CardSection from '@/components/ui/CardSection';
 
 /**
@@ -212,10 +213,9 @@ const ConcertOrganizerSection = ({
                   </div>
                 ) : (
                   <div className="mb-3">
-                    <div className="alert alert-info">
+                    <Alert variant="info">
                       <div className="d-flex justify-content-between align-items-center">
                         <div>
-                          <i className="bi bi-info-circle me-2"></i>
                           Formulaire créé le {formatDate(formData.createdAt)}
                         </div>
                         {formData.status && (
@@ -230,7 +230,7 @@ const ConcertOrganizerSection = ({
                           </span>
                         )}
                       </div>
-                    </div>
+                    </Alert>
 
                     <div className={styles.formSharingOptions}>
                       <Button
@@ -270,10 +270,9 @@ const ConcertOrganizerSection = ({
             )}
           </>
         ) : (
-          <div className="alert alert-warning">
-            <i className="bi bi-exclamation-triangle me-2"></i>
+          <Alert variant="warning">
             Aucun programmateur n'est associé à ce concert.
-          </div>
+          </Alert>
         )}
       </div>
     </CardSection>

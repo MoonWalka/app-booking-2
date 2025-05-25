@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Spinner from '@/components/common/Spinner';
 import Button from '@/components/ui/Button';
+import FormField from '@/components/ui/FormField';
 import { toast } from 'react-toastify';
 
 // MIGRATION: Utilisation du hook optimisé au lieu du hook complet
@@ -15,6 +16,7 @@ import styles from './LieuForm.module.css';
  * LieuMobileForm Component - Mobile version
  * Formulaire optimisé pour mobile avec interface tactile et navigation intuitive
  * Architecture responsive avec validation en temps réel
+ * MIGRATION: Utilise FormField standardisé TourCraft
  */
 const LieuMobileForm = () => {
   const navigate = useNavigate();
@@ -86,7 +88,7 @@ const LieuMobileForm = () => {
   if (loading && id !== 'nouveau') {
     return (
       <div className={styles?.mobileContainer || "mobile-container p-3"}>
-        <div className="d-flex justify-content-center align-items-center p-5">
+        <div className={styles.spinnerContainer}>
           <Spinner variant="primary" message="Chargement du lieu..." />
         </div>
       </div>
@@ -118,27 +120,25 @@ const LieuMobileForm = () => {
             Informations principales
           </h2>
           
-          <div className="mb-3">
-            <label htmlFor="nom" className="form-label fw-semibold">
-              Nom du lieu <span className="text-danger">*</span>
-            </label>
-            <input
-              type="text"
-              id="nom"
-              className="form-control form-control-lg"
-              placeholder="Ex: Le Zénith de Paris"
-              value={lieu.nom || ''}
-              onChange={(e) => handleChange('nom', e.target.value)}
-              required
-            />
-          </div>
+          <FormField
+            type="text"
+            id="nom"
+            name="nom"
+            label="Nom du lieu"
+            placeholder="Ex: Le Zénith de Paris"
+            value={lieu.nom || ''}
+            onChange={(e) => handleChange('nom', e.target.value)}
+            required
+            size="lg"
+          />
 
           <div className="row">
             <div className="col-6">
-              <label htmlFor="type" className="form-label fw-semibold">Type</label>
-              <select
+              <FormField
+                type="select"
                 id="type"
-                className="form-select"
+                name="type"
+                label="Type"
                 value={lieu.type || ''}
                 onChange={(e) => handleChange('type', e.target.value)}
               >
@@ -151,14 +151,14 @@ const LieuMobileForm = () => {
                 <option value="festival">Site de festival</option>
                 <option value="plein-air">Plein air</option>
                 <option value="autre">Autre</option>
-              </select>
+              </FormField>
             </div>
             <div className="col-6">
-              <label htmlFor="capacite" className="form-label fw-semibold">Capacité</label>
-              <input
+              <FormField
                 type="number"
                 id="capacite"
-                className="form-control"
+                name="capacite"
+                label="Capacité"
                 placeholder="Ex: 2000"
                 value={lieu.capacite || ''}
                 onChange={(e) => handleChange('capacite', e.target.value)}
@@ -166,17 +166,16 @@ const LieuMobileForm = () => {
             </div>
           </div>
 
-          <div className="mt-3">
-            <label htmlFor="description" className="form-label fw-semibold">Description</label>
-            <textarea
-              id="description"
-              className="form-control"
-              rows="3"
-              placeholder="Description du lieu, équipements, particularités..."
-              value={lieu.description || ''}
-              onChange={(e) => handleChange('description', e.target.value)}
-            />
-          </div>
+          <FormField
+            type="textarea"
+            id="description"
+            name="description"
+            label="Description"
+            placeholder="Description du lieu, équipements, particularités..."
+            value={lieu.description || ''}
+            onChange={(e) => handleChange('description', e.target.value)}
+            rows={3}
+          />
         </div>
 
         {/* Section Adresse */}
@@ -186,30 +185,24 @@ const LieuMobileForm = () => {
             Adresse
           </h2>
           
-          <div className="mb-3">
-            <label htmlFor="adresse" className="form-label fw-semibold">
-              Adresse <span className="text-danger">*</span>
-            </label>
-            <input
-              type="text"
-              id="adresse"
-              className="form-control"
-              placeholder="Ex: 211 Avenue Jean Jaurès"
-              value={lieu.adresse || ''}
-              onChange={(e) => handleChange('adresse', e.target.value)}
-              required
-            />
-          </div>
+          <FormField
+            type="text"
+            id="adresse"
+            name="adresse"
+            label="Adresse"
+            placeholder="Ex: 211 Avenue Jean Jaurès"
+            value={lieu.adresse || ''}
+            onChange={(e) => handleChange('adresse', e.target.value)}
+            required
+          />
 
           <div className="row">
             <div className="col-4">
-              <label htmlFor="codePostal" className="form-label fw-semibold">
-                Code postal <span className="text-danger">*</span>
-              </label>
-              <input
+              <FormField
                 type="text"
                 id="codePostal"
-                className="form-control"
+                name="codePostal"
+                label="Code postal"
                 placeholder="75019"
                 value={lieu.codePostal || ''}
                 onChange={(e) => handleChange('codePostal', e.target.value)}
@@ -217,13 +210,11 @@ const LieuMobileForm = () => {
               />
             </div>
             <div className="col-8">
-              <label htmlFor="ville" className="form-label fw-semibold">
-                Ville <span className="text-danger">*</span>
-              </label>
-              <input
+              <FormField
                 type="text"
                 id="ville"
-                className="form-control"
+                name="ville"
+                label="Ville"
                 placeholder="Paris"
                 value={lieu.ville || ''}
                 onChange={(e) => handleChange('ville', e.target.value)}
@@ -232,17 +223,15 @@ const LieuMobileForm = () => {
             </div>
           </div>
 
-          <div className="mt-3">
-            <label htmlFor="pays" className="form-label fw-semibold">Pays</label>
-            <input
-              type="text"
-              id="pays"
-              className="form-control"
-              placeholder="France"
-              value={lieu.pays || 'France'}
-              onChange={(e) => handleChange('pays', e.target.value)}
-            />
-          </div>
+          <FormField
+            type="text"
+            id="pays"
+            name="pays"
+            label="Pays"
+            placeholder="France"
+            value={lieu.pays || 'France'}
+            onChange={(e) => handleChange('pays', e.target.value)}
+          />
         </div>
 
         {/* Section Contact */}
@@ -252,41 +241,35 @@ const LieuMobileForm = () => {
             Contact
           </h2>
           
-          <div className="mb-3">
-            <label htmlFor="contactNom" className="form-label fw-semibold">Nom du contact</label>
-            <input
-              type="text"
-              id="contactNom"
-              className="form-control"
-              placeholder="Ex: Jean Dupont"
-              value={lieu.contactNom || ''}
-              onChange={(e) => handleChange('contactNom', e.target.value)}
-            />
-          </div>
+          <FormField
+            type="text"
+            id="contactNom"
+            name="contactNom"
+            label="Nom du contact"
+            placeholder="Ex: Jean Dupont"
+            value={lieu.contactNom || ''}
+            onChange={(e) => handleChange('contactNom', e.target.value)}
+          />
 
-          <div className="mb-3">
-            <label htmlFor="contactEmail" className="form-label fw-semibold">Email</label>
-            <input
-              type="email"
-              id="contactEmail"
-              className="form-control"
-              placeholder="contact@venue.com"
-              value={lieu.contactEmail || ''}
-              onChange={(e) => handleChange('contactEmail', e.target.value)}
-            />
-          </div>
+          <FormField
+            type="email"
+            id="contactEmail"
+            name="contactEmail"
+            label="Email"
+            placeholder="contact@venue.com"
+            value={lieu.contactEmail || ''}
+            onChange={(e) => handleChange('contactEmail', e.target.value)}
+          />
 
-          <div className="mb-3">
-            <label htmlFor="contactTelephone" className="form-label fw-semibold">Téléphone</label>
-            <input
-              type="tel"
-              id="contactTelephone"
-              className="form-control"
-              placeholder="01 42 39 30 30"
-              value={lieu.contactTelephone || ''}
-              onChange={(e) => handleChange('contactTelephone', e.target.value)}
-            />
-          </div>
+          <FormField
+            type="tel"
+            id="contactTelephone"
+            name="contactTelephone"
+            label="Téléphone"
+            placeholder="01 42 39 30 30"
+            value={lieu.contactTelephone || ''}
+            onChange={(e) => handleChange('contactTelephone', e.target.value)}
+          />
         </div>
 
         {/* NOUVEAU: Section Programmateurs associés */}
@@ -297,24 +280,15 @@ const LieuMobileForm = () => {
           </h2>
           
           {/* Interface de recherche de programmateurs */}
-          <div className="mb-3">
-            <label htmlFor="programmateurSearch" className="form-label fw-semibold">
-              Rechercher et associer des programmateurs
-            </label>
-            <div className="input-group">
-              <span className="input-group-text">
-                <i className="bi bi-search"></i>
-              </span>
-              <input
-                type="text"
-                id="programmateurSearch"
-                className="form-control"
-                placeholder="Rechercher un programmateur..."
-                value={programmateurSearch.searchTerm || ''}
-                onChange={(e) => programmateurSearch.setSearchTerm(e.target.value)}
-              />
-            </div>
-          </div>
+          <FormField
+            type="text"
+            id="programmateurSearch"
+            name="programmateurSearch"
+            label="Rechercher et associer des programmateurs"
+            placeholder="Rechercher un programmateur..."
+            value={programmateurSearch.searchTerm || ''}
+            onChange={(e) => programmateurSearch.setSearchTerm(e.target.value)}
+          />
 
           {/* Résultats de recherche */}
           {programmateurSearch.searchTerm && (
@@ -457,7 +431,7 @@ const LieuMobileForm = () => {
 
         {/* Affichage des erreurs */}
         {error && (
-          <div className="alert alert-danger d-flex align-items-center gap-2 mt-3">
+          <div className={styles.errorAlert}>
             <i className="bi bi-exclamation-triangle-fill"></i>
             <div>{error}</div>
           </div>

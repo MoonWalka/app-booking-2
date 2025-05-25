@@ -1,8 +1,10 @@
 import React from 'react';
+import Alert from '@/components/ui/Alert';
 import styles from './FormSubmitBlock.module.css';
 
 /**
  * Component to display form submission actions and completion status
+ * Migré vers le composant Alert standardisé TourCraft
  */
 const FormSubmitBlock = ({ 
   isSubmitting, 
@@ -12,7 +14,7 @@ const FormSubmitBlock = ({
 }) => {
   if (isCompleted) {
     return (
-      <div className={`alert alert-success ${styles.completedBlock}`}>
+      <Alert variant="success" className={styles.completedBlock}>
         <h3>Formulaire complété</h3>
         <p>Nous avons bien reçu vos informations. Merci pour votre participation.</p>
         {onEditRequest && (
@@ -24,7 +26,7 @@ const FormSubmitBlock = ({
             Modifier vos informations
           </button>
         )}
-      </div>
+      </Alert>
     );
   }
   

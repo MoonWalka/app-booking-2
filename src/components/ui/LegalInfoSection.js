@@ -3,10 +3,12 @@ import { Form, Row, Col } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import styles from './LegalInfoSection.module.css';
 import Card from '@/components/ui/Card';
+import Alert from '@/components/ui/Alert';
 
 /**
  * Composant générique pour afficher/éditer des informations légales
  * Ce composant remplace ProgrammateurLegalSection et EntrepriseLegalSection
+ * Migré vers le composant Alert standardisé TourCraft
  * 
  * @param {Object} props - Propriétés du composant
  * @param {Object} props.data - Données à afficher/éditer
@@ -85,10 +87,9 @@ const LegalInfoSection = ({
 
   // Contenu de la notification à afficher si nécessaire
   const notificationContent = notificationVisible && (
-    <div className="alert alert-success mb-3" role="alert">
-      <i className="bi bi-check-circle me-2"></i>
+    <Alert variant="success">
       {notificationText}
-    </div>
+    </Alert>
   );
   
   return (
@@ -357,10 +358,9 @@ const LegalInfoSection = ({
             {!getNestedValue(data, fieldMapping.companyName) && 
              !getNestedValue(data, fieldMapping.siret) && 
              !getNestedValue(data, fieldMapping.address) && (
-              <div className="alert alert-info">
-                <i className="bi bi-info-circle me-2"></i>
+              <Alert variant="info">
                 Aucune information légale disponible
-              </div>
+              </Alert>
             )}
           </div>
         )}

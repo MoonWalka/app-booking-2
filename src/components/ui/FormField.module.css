@@ -1,0 +1,238 @@
+/*
+ * Styles pour FormField
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 25 mai 2025
+ */
+
+/* Import des variables CSS TourCraft */
+@import '@styles/base/variables.css';
+
+/* =============================
+   CONTENEUR PRINCIPAL
+   ============================= */
+.formFieldContainer {
+  margin-bottom: var(--tc-spacing-md);
+}
+
+/* =============================
+   LABEL
+   ============================= */
+.formLabel {
+  display: block;
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-text-color);
+  margin-bottom: var(--tc-spacing-xs);
+  line-height: var(--tc-line-height-base);
+}
+
+.requiredIndicator {
+  color: var(--tc-danger-color);
+  margin-left: var(--tc-spacing-xs);
+  font-weight: var(--tc-font-weight-bold);
+}
+
+/* =============================
+   WRAPPER INPUT
+   ============================= */
+.inputWrapper {
+  position: relative;
+}
+
+/* =============================
+   CHAMP DE FORMULAIRE BASE
+   ============================= */
+.formField {
+  width: 100%;
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  font-size: var(--tc-font-size-base);
+  font-family: var(--tc-font-family-base);
+  line-height: var(--tc-line-height-base);
+  color: var(--tc-text-color);
+  background-color: var(--tc-bg-color-light);
+  border: 1px solid var(--tc-border-color);
+  border-radius: var(--tc-border-radius);
+  transition: var(--tc-transition);
+  box-sizing: border-box;
+}
+
+.formField:focus {
+  outline: none;
+  border-color: var(--tc-primary-color);
+  box-shadow: var(--tc-input-focus-shadow);
+  background-color: var(--tc-bg-color-light);
+}
+
+.formField::placeholder {
+  color: var(--tc-text-color-muted);
+  opacity: 1;
+}
+
+/* =============================
+   VARIANTES DE TAILLE
+   ============================= */
+.formField--sm {
+  padding: var(--tc-spacing-xs) var(--tc-spacing-sm);
+  font-size: var(--tc-font-size-sm);
+  height: 32px;
+}
+
+.formField--md {
+  padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+  font-size: var(--tc-font-size-base);
+  height: 40px;
+}
+
+.formField--lg {
+  padding: var(--tc-spacing-md) var(--tc-spacing-lg);
+  font-size: var(--tc-font-size-lg);
+  height: 48px;
+}
+
+/* =============================
+   VARIANTES DE STYLE
+   ============================= */
+.formField--default {
+  /* Styles par défaut déjà définis */
+}
+
+.formField--outline {
+  background-color: transparent;
+  border: 2px solid var(--tc-border-color);
+}
+
+.formField--outline:focus {
+  border-color: var(--tc-primary-color);
+  background-color: var(--tc-bg-color-light);
+}
+
+.formField--filled {
+  background-color: var(--tc-gray-100);
+  border: 1px solid transparent;
+}
+
+.formField--filled:focus {
+  background-color: var(--tc-bg-color-light);
+  border-color: var(--tc-primary-color);
+}
+
+/* =============================
+   ÉTATS
+   ============================= */
+.formField--error {
+  border-color: var(--tc-danger-color);
+  background-color: var(--tc-danger-bg);
+}
+
+.formField--error:focus {
+  border-color: var(--tc-danger-color);
+  box-shadow: 0 0 0 3px rgba(var(--tc-danger-color-rgb), 0.1);
+}
+
+.formField--disabled {
+  background-color: var(--tc-gray-100);
+  color: var(--tc-text-color-muted);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.formField--disabled::placeholder {
+  color: var(--tc-text-color-muted);
+}
+
+/* =============================
+   TEXTAREA SPÉCIFIQUE
+   ============================= */
+.formField[type="textarea"],
+textarea.formField {
+  min-height: 80px;
+  resize: vertical;
+  line-height: var(--tc-line-height-base);
+}
+
+/* =============================
+   SELECT SPÉCIFIQUE
+   ============================= */
+select.formField {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right var(--tc-spacing-sm) center;
+  background-repeat: no-repeat;
+  background-size: 16px 12px;
+  padding-right: calc(var(--tc-spacing-lg) + 16px);
+  appearance: none;
+}
+
+/* =============================
+   MESSAGES D'ERREUR
+   ============================= */
+.errorMessage {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-spacing-xs);
+  margin-top: var(--tc-spacing-xs);
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-danger-color);
+  line-height: var(--tc-line-height-base);
+}
+
+.errorMessage i {
+  font-size: var(--tc-font-size-sm);
+  flex-shrink: 0;
+}
+
+/* =============================
+   TEXTE D'AIDE
+   ============================= */
+.helpText {
+  margin-top: var(--tc-spacing-xs);
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-text-color-muted);
+  line-height: var(--tc-line-height-base);
+}
+
+/* =============================
+   RESPONSIVE DESIGN
+   ============================= */
+@media (max-width: var(--tc-breakpoint-sm)) {
+  .formField--lg {
+    padding: var(--tc-spacing-sm) var(--tc-spacing-md);
+    font-size: var(--tc-font-size-base);
+    height: 44px;
+  }
+  
+  .formField--md {
+    height: 40px;
+  }
+  
+  .formField--sm {
+    height: 36px;
+  }
+}
+
+/* =============================
+   FOCUS VISIBLE (ACCESSIBILITÉ)
+   ============================= */
+.formField:focus-visible {
+  outline: 2px solid var(--tc-primary-color);
+  outline-offset: 2px;
+}
+
+/* =============================
+   VALIDATION HTML5
+   ============================= */
+.formField:invalid {
+  border-color: var(--tc-danger-color);
+}
+
+.formField:valid {
+  border-color: var(--tc-success-color);
+}
+
+/* Désactiver les styles de validation par défaut du navigateur */
+.formField:invalid:not(:focus):not(:placeholder-shown) {
+  border-color: var(--tc-danger-color);
+}
+
+.formField:valid:not(:focus):not(:placeholder-shown) {
+  border-color: var(--tc-success-color);
+} 

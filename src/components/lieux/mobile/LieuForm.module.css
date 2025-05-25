@@ -8,11 +8,31 @@
    CONTENEUR PRINCIPAL MOBILE
    ============================= */
 .mobileContainer {
-  padding: var(--tc-spacing-sm);
+  padding: var(--tc-spacing-md);
   background-color: var(--tc-bg-color-dark);
   min-height: 100vh;
-  max-width: 100%;
-  overflow-x: hidden;
+}
+
+/* =============================
+   LAYOUT FLEXBOX (Remplacement Bootstrap d-flex)
+   ============================= */
+.spinnerContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem;
+}
+
+.errorAlert {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-spacing-sm);
+  margin-top: var(--tc-spacing-md);
+  padding: var(--tc-spacing-md);
+  background-color: var(--tc-danger-bg);
+  color: var(--tc-danger-color);
+  border: 1px solid var(--tc-danger-border);
+  border-radius: var(--tc-border-radius);
 }
 
 /* =============================
@@ -22,13 +42,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--tc-spacing-md);
+  margin-bottom: var(--tc-spacing-lg);
   padding-bottom: var(--tc-spacing-sm);
   border-bottom: 1px solid var(--tc-border-color);
-  position: sticky;
-  top: 0;
-  background-color: var(--tc-bg-color-dark);
-  z-index: 10;
 }
 
 .headerTitle {
@@ -43,28 +59,26 @@
    FORMULAIRE MOBILE
    ============================= */
 .mobileForm {
-  padding-bottom: var(--tc-spacing-xl);
+  max-width: 100%;
 }
 
 .formSection {
   margin-bottom: var(--tc-spacing-lg);
   padding: var(--tc-spacing-md);
-  border-radius: var(--tc-border-radius);
   background-color: var(--tc-bg-color-light);
-  box-shadow: var(--tc-shadow-sm);
   border: 1px solid var(--tc-border-color);
+  border-radius: var(--tc-border-radius);
+  box-shadow: var(--tc-shadow-sm);
 }
 
 .formSection h2 {
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-semibold);
   color: var(--tc-text-color);
-  margin-top: 0;
   margin-bottom: var(--tc-spacing-md);
-  padding-bottom: var(--tc-spacing-xs);
-  border-bottom: 1px solid var(--tc-border-color);
   display: flex;
   align-items: center;
+  gap: var(--tc-spacing-sm);
 }
 
 .formSection h2 i {
@@ -115,13 +129,8 @@
    SECTIONS D'ACTION
    ============================= */
 .actionsSection {
-  position: sticky;
-  bottom: 0;
-  background-color: var(--tc-bg-color-dark);
-  padding: var(--tc-spacing-md);
-  margin: 0 calc(-1 * var(--tc-spacing-sm));
-  border-top: 1px solid var(--tc-border-color);
-  box-shadow: var(--tc-shadow-lg);
+  margin-top: var(--tc-spacing-xl);
+  padding-bottom: var(--tc-spacing-xl);
 }
 
 .actionsSection .btn {
@@ -203,11 +212,24 @@
 }
 
 /* =============================
+   RÉSULTATS DE RECHERCHE
+   ============================= */
+.searchResults {
+  background-color: var(--tc-bg-color-light);
+  border: 1px solid var(--tc-border-color);
+  border-radius: var(--tc-border-radius);
+  padding: var(--tc-spacing-sm);
+  margin-bottom: var(--tc-spacing-md);
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+/* =============================
    RESPONSIVE DESIGN
    ============================= */
 @media (max-width: var(--tc-breakpoint-sm)) {
   .mobileContainer {
-    padding: var(--tc-spacing-xs);
+    padding: var(--tc-spacing-sm);
   }
   
   .formSection {
@@ -216,21 +238,8 @@
   }
   
   .formSection h2 {
-    font-size: var(--tc-font-size-sm);
-  }
-  
-  .mobileForm .form-control-lg {
-    padding: var(--tc-spacing-sm) var(--tc-spacing-md);
     font-size: var(--tc-font-size-base);
-  }
-  
-  .actionsSection {
-    padding: var(--tc-spacing-sm);
-  }
-  
-  .actionsSection .btn {
-    padding: var(--tc-spacing-sm) var(--tc-spacing-md);
-    font-size: var(--tc-font-size-sm);
+    margin-bottom: var(--tc-spacing-sm);
   }
 }
 

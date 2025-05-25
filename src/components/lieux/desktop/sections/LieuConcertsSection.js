@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { db } from '@/services/firebase-service';
 import { collection, query, where, limit, getDocs } from 'firebase/firestore';
 import Button from '@ui/Button';
+import Alert from '@ui/Alert';
 import styles from './LieuConcertsSection.module.css';
 import Card from '@/components/ui/Card';
 
@@ -149,10 +150,9 @@ const LieuConcertsSection = ({ lieu, isEditing }) => {
         </div>
       ) : error ? (
         <div className={`${styles.concertItem} ${styles.error}`}>
-          <div className="alert alert-warning m-0 p-3">
-            <i className="bi bi-exclamation-triangle me-2"></i>
+          <Alert variant="warning" className="m-0 p-3">
             {error}
-          </div>
+          </Alert>
         </div>
       ) : concerts.length > 0 ? (
         <div className={styles.concertsListContainer}>

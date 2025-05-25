@@ -1,0 +1,258 @@
+/*
+ * Styles pour Alert
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 25 mai 2025
+ */
+
+/* Import des variables CSS TourCraft */
+@import '@styles/base/variables.css';
+
+/* =============================
+   ALERTE BASE
+   ============================= */
+.alert {
+  padding: var(--tc-spacing-md);
+  border-radius: var(--tc-border-radius);
+  border: 1px solid;
+  margin-bottom: var(--tc-spacing-md);
+  box-shadow: var(--tc-shadow-sm);
+  transition: var(--tc-transition);
+  position: relative;
+}
+
+/* =============================
+   CONTENU DE L'ALERTE
+   ============================= */
+.alertContent {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--tc-spacing-sm);
+}
+
+.alertIcon {
+  flex-shrink: 0;
+  font-size: var(--tc-font-size-lg);
+  line-height: 1;
+  margin-top: 2px; /* Alignement avec le texte */
+}
+
+.alertBody {
+  flex: 1;
+  min-width: 0; /* Permet la troncature du texte */
+}
+
+.alertTitle {
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
+  margin-bottom: var(--tc-spacing-xs);
+  line-height: var(--tc-line-height-base);
+}
+
+.alertMessage {
+  font-size: var(--tc-font-size-base);
+  line-height: var(--tc-line-height-base);
+  margin: 0;
+}
+
+/* =============================
+   VARIANTES DE TYPE (Remplacement Bootstrap alert-*)
+   ============================= */
+.alert--success {
+  background-color: var(--tc-success-bg);
+  color: var(--tc-success-color);
+  border-color: var(--tc-success-border);
+}
+
+.alert--success .alertIcon {
+  color: var(--tc-success-dark);
+}
+
+.alert--success .alertTitle {
+  color: var(--tc-success-dark);
+}
+
+.alert--danger {
+  background-color: var(--tc-danger-bg);
+  color: var(--tc-danger-color);
+  border-color: var(--tc-danger-border);
+}
+
+.alert--danger .alertIcon {
+  color: var(--tc-danger-dark);
+}
+
+.alert--danger .alertTitle {
+  color: var(--tc-danger-dark);
+}
+
+.alert--warning {
+  background-color: var(--tc-warning-bg);
+  color: var(--tc-warning-color);
+  border-color: var(--tc-warning-border);
+}
+
+.alert--warning .alertIcon {
+  color: var(--tc-warning-dark);
+}
+
+.alert--warning .alertTitle {
+  color: var(--tc-warning-dark);
+}
+
+.alert--info {
+  background-color: var(--tc-info-bg);
+  color: var(--tc-info-color);
+  border-color: var(--tc-info-border);
+}
+
+.alert--info .alertIcon {
+  color: var(--tc-info-dark);
+}
+
+.alert--info .alertTitle {
+  color: var(--tc-info-dark);
+}
+
+.alert--light {
+  background-color: var(--tc-gray-50);
+  color: var(--tc-gray-700);
+  border-color: var(--tc-gray-200);
+}
+
+.alert--light .alertIcon {
+  color: var(--tc-gray-600);
+}
+
+.alert--light .alertTitle {
+  color: var(--tc-gray-800);
+}
+
+/* =============================
+   ALERTE DISMISSIBLE
+   ============================= */
+.alert--dismissible {
+  padding-right: calc(var(--tc-spacing-md) + 32px); /* Espace pour le bouton */
+}
+
+.alertDismiss {
+  position: absolute;
+  top: var(--tc-spacing-sm);
+  right: var(--tc-spacing-sm);
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--tc-border-radius-sm);
+  transition: var(--tc-transition);
+  color: currentColor;
+  opacity: 0.7;
+}
+
+.alertDismiss:hover {
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.alertDismiss:focus {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* =============================
+   ÉTATS INTERACTIFS
+   ============================= */
+.alert:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--tc-shadow-md);
+}
+
+/* =============================
+   RESPONSIVE DESIGN
+   ============================= */
+@media (max-width: var(--tc-breakpoint-sm)) {
+  .alert {
+    padding: var(--tc-spacing-sm);
+    margin-bottom: var(--tc-spacing-sm);
+  }
+  
+  .alertContent {
+    gap: var(--tc-spacing-xs);
+  }
+  
+  .alertIcon {
+    font-size: var(--tc-font-size-md);
+  }
+  
+  .alertTitle {
+    font-size: var(--tc-font-size-md);
+  }
+  
+  .alertMessage {
+    font-size: var(--tc-font-size-sm);
+  }
+  
+  .alert--dismissible {
+    padding-right: calc(var(--tc-spacing-sm) + 28px);
+  }
+  
+  .alertDismiss {
+    width: 20px;
+    height: 20px;
+    top: var(--tc-spacing-xs);
+    right: var(--tc-spacing-xs);
+  }
+}
+
+/* =============================
+   ACCESSIBILITÉ
+   ============================= */
+.alert[role="alert"] {
+  /* Styles pour les alertes ARIA live */
+}
+
+.alert[role="alertdialog"] {
+  /* Styles pour les dialogues d'alerte */
+}
+
+/* Focus visible pour l'accessibilité */
+.alert:focus-visible {
+  outline: 2px solid var(--tc-primary-color);
+  outline-offset: 2px;
+}
+
+/* =============================
+   ANIMATIONS
+   ============================= */
+.alert {
+  animation: slideInDown 0.3s ease-out;
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animation de sortie pour les alertes dismissibles */
+.alert--dismissing {
+  animation: slideOutUp 0.2s ease-in forwards;
+}
+
+@keyframes slideOutUp {
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+    height: 0;
+    margin: 0;
+    padding: 0;
+  }
+} 

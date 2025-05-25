@@ -2,6 +2,7 @@
 import React from 'react';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import Button from '@ui/Button';
+import Alert from '@ui/Alert';
 import styles from './ContratGenerationActions.module.css';
 import ContratPDFWrapper from '@/components/pdf/ContratPDFWrapper.js';
 
@@ -24,10 +25,9 @@ const ContratGenerationActions = ({
   return (
     <div className={styles.actionsContainer}>
       {contratId && (
-        <div className="alert alert-info">
-          <i className="bi bi-info-circle me-2"></i>
+        <Alert variant="info">
           Un contrat a déjà été généré pour ce concert. Vous pouvez le régénérer avec un nouveau modèle.
-        </div>
+        </Alert>
       )}
       
       <div className={styles.buttonsContainer}>

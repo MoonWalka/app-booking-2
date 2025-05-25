@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { db } from '@/services/firebase-service';
 import Spinner from '@/components/common/Spinner';
 import Button from '@/components/ui/Button';
+import Alert from '@/components/ui/Alert';
 
 // Import custom hooks depuis les emplacements standardisés
 // MIGRATION: Utilisation du hook optimisé au lieu du hook migré
@@ -248,10 +249,9 @@ const LieuDetails = () => {
   if (error) {
     return (
       <div className={styles.errorContainer}>
-        <div className="alert alert-danger">
-          <i className="bi bi-exclamation-triangle-fill me-2"></i>
+        <Alert variant="danger">
           {error}
-        </div>
+        </Alert>
         <Button 
           variant="primary" 
           onClick={() => navigate('/lieux')}
@@ -267,10 +267,9 @@ const LieuDetails = () => {
   if (!lieu && !loading) {
     return (
       <div className={styles.errorContainer}>
-        <div className="alert alert-warning">
-          <i className="bi bi-exclamation-triangle-fill me-2"></i>
+        <Alert variant="warning">
           Ce lieu n'existe pas ou n'a pas pu être chargé.
-        </div>
+        </Alert>
         <Button 
           variant="primary" 
           onClick={() => navigate('/lieux')}

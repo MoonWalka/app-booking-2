@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '@ui/Button';
+import Alert from '@ui/Alert';
 import Card from '@/components/ui/Card';
 import styles from './LieuOrganizerSection.module.css';
 
@@ -201,10 +202,9 @@ const LieuOrganizerSection = ({
                   )}
                 </div>
               ) : (
-                <div className="alert alert-warning">
-                  <i className="bi bi-exclamation-triangle me-2"></i>
+                <Alert variant="warning">
                   Le programmateur associé (ID: {lieu.programmateurId}) n'a pas pu être chargé ou n'existe plus.
-                </div>
+                </Alert>
               )
             ) : (
               <div className={styles.textEmpty}>Aucun programmateur associé à ce lieu.</div>

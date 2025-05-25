@@ -1,14 +1,143 @@
 /*
  * Styles pour FormErrorPanel
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Dernière mise à jour: 25 mai 2025
  */
 
-.errorPanel h3 {
-  font-size: 1.25rem;
-  margin-bottom: 0.75rem;
+/* Import des variables CSS TourCraft */
+@import '@styles/base/variables.css';
+
+/* =============================
+   PANEL D'ERREUR BASE
+   ============================= */
+.errorPanel {
+  padding: var(--tc-spacing-md);
+  border-radius: var(--tc-border-radius);
+  border: 1px solid;
+  margin-bottom: var(--tc-spacing-md);
+  box-shadow: var(--tc-shadow-sm);
+  transition: var(--tc-transition);
 }
 
+/* =============================
+   HEADER ET CONTENU
+   ============================= */
+.alertHeader {
+  margin-bottom: var(--tc-spacing-sm);
+}
+
+.alertTitle {
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
+  margin: 0;
+  line-height: var(--tc-line-height-base);
+}
+
+.alertContent {
+  /* Contenu principal */
+}
+
+.alertMessage {
+  margin: 0;
+  font-size: var(--tc-font-size-base);
+  line-height: var(--tc-line-height-base);
+}
+
+/* =============================
+   VARIANTES DE TYPE (Remplacement Bootstrap alert-*)
+   ============================= */
+.alertError {
+  background-color: var(--tc-danger-bg);
+  color: var(--tc-danger-color);
+  border-color: var(--tc-danger-border);
+}
+
+.alertError .alertTitle {
+  color: var(--tc-danger-dark);
+}
+
+.alertWarning {
+  background-color: var(--tc-warning-bg);
+  color: var(--tc-warning-color);
+  border-color: var(--tc-warning-border);
+}
+
+.alertWarning .alertTitle {
+  color: var(--tc-warning-dark);
+}
+
+.alertInfo {
+  background-color: var(--tc-info-bg);
+  color: var(--tc-info-color);
+  border-color: var(--tc-info-border);
+}
+
+.alertInfo .alertTitle {
+  color: var(--tc-info-dark);
+}
+
+.alertSuccess {
+  background-color: var(--tc-success-bg);
+  color: var(--tc-success-color);
+  border-color: var(--tc-success-border);
+}
+
+.alertSuccess .alertTitle {
+  color: var(--tc-success-dark);
+}
+
+/* =============================
+   CONTENEUR D'ACTIONS
+   ============================= */
 .actionContainer {
-  margin-top: 1rem;
+  margin-top: var(--tc-spacing-md);
+  padding-top: var(--tc-spacing-sm);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  gap: var(--tc-spacing-sm);
+  justify-content: flex-end;
+}
+
+/* =============================
+   ÉTATS INTERACTIFS
+   ============================= */
+.errorPanel:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--tc-shadow-md);
+}
+
+/* =============================
+   RESPONSIVE DESIGN
+   ============================= */
+@media (max-width: var(--tc-breakpoint-sm)) {
+  .errorPanel {
+    padding: var(--tc-spacing-sm);
+    margin-bottom: var(--tc-spacing-sm);
+  }
+  
+  .alertTitle {
+    font-size: var(--tc-font-size-md);
+  }
+  
+  .alertMessage {
+    font-size: var(--tc-font-size-sm);
+  }
+  
+  .actionContainer {
+    flex-direction: column;
+    gap: var(--tc-spacing-xs);
+  }
+}
+
+/* =============================
+   ACCESSIBILITÉ
+   ============================= */
+.errorPanel[role="alert"] {
+  /* Styles pour les alertes ARIA */
+}
+
+/* Focus visible pour l'accessibilité */
+.errorPanel:focus-visible {
+  outline: 2px solid var(--tc-primary-color);
+  outline-offset: 2px;
 }

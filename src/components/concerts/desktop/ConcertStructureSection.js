@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import styles from './ConcertStructureSection.module.css';
 import Button from '@/components/ui/Button';
+import Alert from '@/components/ui/Alert';
 import CardSection from '@/components/ui/CardSection';
 
 /**
@@ -210,10 +211,9 @@ const ConcertStructureSection = ({
             </div>
           </>
         ) : (
-          <div className="alert alert-info">
-            <i className="bi bi-info-circle me-2"></i>
+          <Alert variant="info">
             Aucune structure n'est associée directement à ce concert.
-          </div>
+          </Alert>
         )}
       </div>
     </CardSection>

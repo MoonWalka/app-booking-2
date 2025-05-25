@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import 'leaflet/dist/leaflet.css';
 import Spinner from '@/components/common/Spinner';
+import Alert from '@/components/ui/Alert';
 import styles from './LieuForm.module.css';
 
 // MIGRATION: Utilisation du hook optimisé au lieu du hook complet
@@ -82,10 +83,9 @@ const LieuForm = () => {
           />
 
           {error && (
-            <div className="alert alert-danger d-flex align-items-center gap-2 shadow-sm rounded-3 mb-4">
-              <i className="bi bi-exclamation-triangle-fill fs-5 text-danger me-2"></i>
+            <Alert variant="danger" className="d-flex align-items-center gap-2 shadow-sm rounded-3 mb-4">
               <div>{error}</div>
-            </div>
+            </Alert>
           )}
         </div>
       </form>

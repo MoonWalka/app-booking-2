@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
+import Alert from '@/components/ui/Alert';
+import FormField from '@/components/ui/FormField';
 
 // Imports modifiés de la branche refacto-structure-scriptshell - pour implémentation future
 {/* 
@@ -97,7 +99,7 @@ const LoginPage = () => {
   );
   */
   
-  // Version avec le composant Card standardisé
+  // Version avec les composants standardisés TourCraft
   return (
     <div className="container">
       <div className="row justify-content-center mt-5">
@@ -106,30 +108,35 @@ const LoginPage = () => {
             title="Connexion"
             variant="primary"
           >
-            {error && <div className="alert alert-danger">{error}</div>}
+            {error && (
+              <Alert variant="danger">
+                {error}
+              </Alert>
+            )}
+            
             <form onSubmit={handleSubmit}>
-              <div className="mb-3">
-                <label htmlFor="email" className="form-label">Email</label>
-                <input
-                  type="email"
-                  className="form-control"
-                  id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="password" className="form-label">Mot de passe</label>
-                <input
-                  type="password"
-                  className="form-control"
-                  id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </div>
+              <FormField
+                type="email"
+                id="email"
+                name="email"
+                label="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                placeholder="votre@email.com"
+              />
+              
+              <FormField
+                type="password"
+                id="password"
+                name="password"
+                label="Mot de passe"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                placeholder="Votre mot de passe"
+              />
+              
               <div className="d-grid">
                 <Button
                   type="submit"
@@ -142,6 +149,7 @@ const LoginPage = () => {
                 </Button>
               </div>
             </form>
+            
             <div className="mt-3 text-center">
               <small className="text-muted">
                 Pour les tests, utilisez: test@example.com / password

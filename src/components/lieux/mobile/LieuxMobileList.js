@@ -95,7 +95,7 @@ const LieuxMobileList = () => {
   if (loading) {
     return (
       <div className={styles.mobileContainer}>
-        <div className={styles.spinnerContainer || "d-flex justify-content-center align-items-center p-5"}>
+        <div className={styles.spinnerContainer}>
           <Spinner variant="primary" message="Chargement des lieux..." />
         </div>
       </div>
@@ -106,7 +106,7 @@ const LieuxMobileList = () => {
   if (error) {
     return (
       <div className={styles.mobileContainer}>
-        <div className="alert alert-danger d-flex align-items-center gap-2 m-3">
+        <div className={styles.errorAlert}>
           <i className="bi bi-exclamation-triangle-fill"></i>
           {error}
         </div>
@@ -157,7 +157,7 @@ const LieuxMobileList = () => {
         </div>
 
         {/* NOUVEAU: Interface mobile de filtrage et tri */}
-        <div className={styles.filterSortContainer || "d-flex gap-2 mt-3"}>
+        <div className={styles.filterSortContainer}>
           {/* Filtre par type */}
           <div className={styles.filterGroup || "flex-1"}>
             <select
@@ -195,9 +195,10 @@ const LieuxMobileList = () => {
 
           {/* Reset filtres */}
           {(filterType || sortOption !== 'nom-asc') && (
-            <button
-              type="button"
-              className={styles.resetFilters || "btn btn-outline-secondary btn-sm"}
+            <Button
+              variant="outline-secondary"
+              size="sm"
+              className={styles.resetFilters}
               onClick={() => {
                 setFilterType('');
                 setSortOption('nom-asc');
@@ -205,13 +206,13 @@ const LieuxMobileList = () => {
               aria-label="Réinitialiser filtres"
             >
               <i className="bi bi-arrow-clockwise"></i>
-            </button>
+            </Button>
           )}
         </div>
 
         {/* NOUVEAU: Affichage des statistiques */}
         {stats && (
-          <div className={styles.statsContainer || "d-flex justify-content-between mt-2 text-muted small"}>
+          <div className={styles.statsContainer}>
             <span>Total: {stats.total || lieux.length}</span>
             {stats.byType && Object.keys(stats.byType).length > 0 && (
               <span>Types: {Object.keys(stats.byType).length}</span>
@@ -227,7 +228,7 @@ const LieuxMobileList = () => {
           {filteredLieux.length} lieu{filteredLieux.length !== 1 ? 'x' : ''} 
           {lieux.length !== filteredLieux.length && ` sur ${lieux.length}`}
           {(filterType || sortOption !== 'nom-asc') && (
-            <span className={styles.filteredIndicator || "ms-2 text-primary"}>
+            <span className={styles.filteredIndicator}>
               <i className="bi bi-funnel-fill"></i>
             </span>
           )}
@@ -316,7 +317,7 @@ const LieuxMobileList = () => {
                 )}
 
                 {/* Actions */}
-                <div className={styles.lieuCardActions || "d-flex justify-content-end gap-2 mt-3"}>
+                <div className={styles.lieuCardActions}>
                   <Button
                     variant="outline-primary"
                     size="sm"

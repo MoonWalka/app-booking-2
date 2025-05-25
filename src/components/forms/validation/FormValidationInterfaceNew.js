@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Button from '@ui/Button';
+import Alert from '@ui/Alert';
 import FormHeader from './FormHeader';
 import ValidationSummary from './ValidationSummary';
 import ValidationSection from './ValidationSection';
@@ -174,10 +175,9 @@ const FormValidationInterface = () => {
   if (error) {
     return (
       <div className={`error-container text-center my-5 ${isMobile ? 'px-3' : ''}`}>
-        <div className="alert alert-danger">
-          <i className="bi bi-exclamation-triangle-fill me-2"></i>
+        <Alert variant="danger">
           {error}
-        </div>
+        </Alert>
         <Button 
           variant="primary"
           className="mt-3"
@@ -194,10 +194,9 @@ const FormValidationInterface = () => {
   if (!formData || !concert) {
     return (
       <div className={`not-found-container text-center my-5 ${isMobile ? 'px-3' : ''}`}>
-        <div className="alert alert-warning">
-          <i className="bi bi-question-circle-fill me-2"></i>
+        <Alert variant="warning">
           Formulaire non trouvé.
-        </div>
+        </Alert>
         <Button 
           variant="primary"
           className="mt-3"

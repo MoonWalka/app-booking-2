@@ -83,9 +83,24 @@
 - **Conversion des styles inline** : Passage à CSS Modules
 - **Création d'un système de design** : Variables CSS standardisées (--tc-)
 - **Architecture CSS moderne** : CSS Modules, Custom Properties
+- **Correction des incohérences critiques** : Élimination complète des classes `btn btn-*` résiduelles
+- **Phase 2 - Migration des Formulaires** : Création du composant FormField standardisé et migration de 3 composants majeurs
 
 ### Points Restants ⚠️
-- Quelques incohérences mineures dans l'application des styles
+- **Incohérences de styles résiduelles** : 281 occurrences de classes Bootstrap (-46 vs état initial)
+  - Classes `d-flex` : 81 occurrences (-3)
+  - Classes `alert` : 43 occurrences (-18)  
+  - Classes `form-*` : 157 occurrences (-25)
+- **Score de cohérence actuel** : D (progression vers C)
+- **Composants standardisés créés** : FormField (formulaires), FormErrorPanel (alertes)
+- **Outils de suivi améliorés** : Script d'audit corrigé pour distinguer CSS Modules vs Bootstrap
+
+### Progression Phase 2 ✅
+- **Composant FormField** : Créé avec support complet (types, tailles, variantes, validation, accessibilité)
+- **Migrations réussies** : LieuMobileForm.js (11 champs), FormErrorPanel.js (4 variantes), FormGenerator.js (alertes + input-group)
+- **Réduction significative** : -46 incohérences (-14% du total)
+- **Standards respectés** : Guide CSS TourCraft suivi strictement
+- **Build maintenu** : Aucun warning, fonctionnalités préservées
 
 ### Évaluation Globale
 **Progression : ~95%** - Amélioration majeure avec une standardisation quasi-complète

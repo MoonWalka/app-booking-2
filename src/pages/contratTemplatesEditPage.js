@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import ContratTemplateEditor from '@/components/contrats/ContratTemplateEditor';
+import Alert from '@/components/ui/Alert';
 import '@styles/index.css';
 
 const ContratTemplatesEditPage = () => {
@@ -90,9 +91,9 @@ const ContratTemplatesEditPage = () => {
 
   if (error) {
     return (
-      <div className="alert alert-danger" role="alert">
+      <Alert variant="danger">
         {error}
-      </div>
+      </Alert>
     );
   }
 

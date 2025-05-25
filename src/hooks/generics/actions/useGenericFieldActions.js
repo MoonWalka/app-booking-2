@@ -305,7 +305,7 @@ const useGenericFieldActions = (config = {}, options = {}) => {
     } else {
       validationTimeouts.current[fieldPath] = setTimeout(performValidation, validationDelay);
     }
-  }, [entityType, validationRules, onFieldChange, markFieldPending, finalizeFieldValidation, fieldState.values, enableLogging, validationDelay]);
+  }, [validationRules, onFieldChange, markFieldPending, finalizeFieldValidation, fieldState.values, enableLogging, validationDelay, entityType]);
   
   // Fonction pour copier une valeur de champ
   const copyFieldValue = useCallback((fieldPath, sourceValue) => {
@@ -329,7 +329,7 @@ const useGenericFieldActions = (config = {}, options = {}) => {
     }));
     
     recordAction('value_copy', fieldPath, { sourceValue });
-  }, [entityType, recordAction, enableLogging]);
+  }, [recordAction, enableLogging]);
   
   // Fonction pour obtenir l'historique d'un champ
   const getFieldHistory = useCallback((fieldPath = null) => {
@@ -378,7 +378,7 @@ const useGenericFieldActions = (config = {}, options = {}) => {
     
     if (enableLogging) {
     }
-  }, [entityType, enableLogging]);
+  }, [enableLogging]);
   
   // Fonction pour obtenir l'état d'un champ
   const getFieldState = useCallback((fieldPath) => {

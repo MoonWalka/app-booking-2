@@ -3,6 +3,7 @@ import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Spinner from '@/components/common/Spinner';
 import Button from '@/components/ui/Button';
+import Alert from '@/components/ui/Alert';
 import { toast } from 'react-toastify';
 // MIGRATION: Utilisation du hook optimisé au lieu du hook V2
 import { useLieuDetails } from '@/hooks/lieux';
@@ -79,10 +80,9 @@ const LieuView = () => {
   if (error) {
     return (
       <div className={styles?.errorContainer || "p-3"}>
-        <div className="alert alert-danger">
-          <i className="bi bi-exclamation-triangle-fill me-2"></i>
+        <Alert variant="danger">
           {error}
-        </div>
+        </Alert>
         <Button 
           variant="primary" 
           onClick={handleBackWithNotification}
@@ -98,10 +98,9 @@ const LieuView = () => {
   if (!lieu && !loading) {
     return (
       <div className={styles?.errorContainer || "p-3"}>
-        <div className="alert alert-warning">
-          <i className="bi bi-exclamation-triangle-fill me-2"></i>
+        <Alert variant="warning">
           Ce lieu n'existe pas ou n'a pas pu être chargé.
-        </div>
+        </Alert>
         <Button 
           variant="primary" 
           onClick={handleBackWithNotification}

@@ -13,6 +13,8 @@ import EntitySearchField from '@/components/ui/EntitySearchField';
 import Card from '@/components/ui/Card';
 import Alert from '@/components/ui/Alert';
 import Button from '@ui/Button';
+import FormField from '@/components/ui/FormField';
+import FlexContainer from '@/components/ui/FlexContainer';
 import '@styles/index.css';
 
 /**
@@ -104,73 +106,62 @@ const ProgrammateurFormExemple = () => {
             
             {sectionsVisibility.contactVisible && (
               <div className="section-content">
-                <div className="form-row">
-                  <div className="form-group col-md-6">
-                    <label htmlFor="contactNom">Nom *</label>
-                    <input
+                <FlexContainer gap="1rem" wrap>
+                  <div style={{ flex: '1', minWidth: '250px' }}>
+                    <FormField
+                      label="Nom *"
                       type="text"
                       id="contactNom"
-                      className={formErrors?.['contact.nom'] ? 'form-control is-invalid' : 'form-control'}
                       value={contact.nom || ''}
                       onChange={(e) => updateContact('nom', e.target.value)}
+                      error={formErrors?.['contact.nom']}
                       required
                     />
-                    {formErrors?.['contact.nom'] && (
-                      <div className="invalid-feedback">{formErrors['contact.nom']}</div>
-                    )}
                   </div>
                   
-                  <div className="form-group col-md-6">
-                    <label htmlFor="contactPrenom">Prénom</label>
-                    <input
+                  <div style={{ flex: '1', minWidth: '250px' }}>
+                    <FormField
+                      label="Prénom"
                       type="text"
                       id="contactPrenom"
-                      className={styles.formField}
                       value={contact.prenom || ''}
                       onChange={(e) => updateContact('prenom', e.target.value)}
                     />
                   </div>
-                </div>
+                </FlexContainer>
                 
-                <div className={styles.formGroup}>
-                  <label htmlFor="contactFonction">Fonction</label>
-                  <input
-                    type="text"
-                    id="contactFonction"
-                    className={styles.formField}
-                    value={contact.fonction || ''}
-                    onChange={(e) => updateContact('fonction', e.target.value)}
-                    placeholder="Ex: Directeur de programmation"
-                  />
-                </div>
+                <FormField
+                  label="Fonction"
+                  type="text"
+                  id="contactFonction"
+                  value={contact.fonction || ''}
+                  onChange={(e) => updateContact('fonction', e.target.value)}
+                  placeholder="Ex: Directeur de programmation"
+                />
                 
-                <div className="form-row">
-                  <div className="form-group col-md-6">
-                    <label htmlFor="contactEmail">Email *</label>
-                    <input
+                <FlexContainer gap="1rem" wrap>
+                  <div style={{ flex: '1', minWidth: '250px' }}>
+                    <FormField
+                      label="Email *"
                       type="email"
                       id="contactEmail"
-                      className={formErrors?.['contact.email'] ? 'form-control is-invalid' : 'form-control'}
                       value={contact.email || ''}
                       onChange={(e) => updateContact('email', e.target.value)}
+                      error={formErrors?.['contact.email']}
                       required
                     />
-                    {formErrors?.['contact.email'] && (
-                      <div className="invalid-feedback">{formErrors['contact.email']}</div>
-                    )}
                   </div>
                   
-                  <div className="form-group col-md-6">
-                    <label htmlFor="contactTelephone">Téléphone</label>
-                    <input
+                  <div style={{ flex: '1', minWidth: '250px' }}>
+                    <FormField
+                      label="Téléphone"
                       type="tel"
                       id="contactTelephone"
-                      className={styles.formField}
                       value={contact.telephone || ''}
                       onChange={(e) => updateContact('telephone', e.target.value)}
                     />
                   </div>
-                </div>
+                </FlexContainer>
               </div>
             )}
           </div>
@@ -186,15 +177,14 @@ const ProgrammateurFormExemple = () => {
             
             {sectionsVisibility.structureVisible && (
               <div className="section-content">
-                <div className={styles.formGroup}>
-                  <label htmlFor="structureSearch">Rechercher une structure existante</label>
-                  <EntitySearchField
-                    entityType="structure"
-                    placeholder="Rechercher une structure par nom, ville ou SIRET"
-                    onSelect={handleSelectStructure}
-                    selectedEntity={selectedStructure}
-                  />
-                </div>
+                <FormField
+                  label="Rechercher une structure existante"
+                  as={EntitySearchField}
+                  entityType="structure"
+                  placeholder="Rechercher une structure par nom, ville ou SIRET"
+                  onSelect={handleSelectStructure}
+                  selectedEntity={selectedStructure}
+                />
                 
                 {selectedStructure ? (
                   <Alert variant="info" className="selected-structure-info">
@@ -218,92 +208,83 @@ const ProgrammateurFormExemple = () => {
                   <div className="new-structure-form">
                     <hr/>
                     <h5>Ou créer une nouvelle structure</h5>
-                    <div className="form-row">
-                      <div className="form-group col-md-6">
-                        <label htmlFor="structureRaisonSociale">Raison sociale</label>
-                        <input
+                    <FlexContainer gap="1rem" wrap>
+                      <div style={{ flex: '1', minWidth: '250px' }}>
+                        <FormField
+                          label="Raison sociale"
                           type="text"
                           id="structureRaisonSociale"
-                          className={formErrors?.['structure.raisonSociale'] ? 'form-control is-invalid' : 'form-control'}
                           value={programmateur.structure?.raisonSociale || ''}
                           onChange={(e) => updateStructure('raisonSociale', e.target.value)}
+                          error={formErrors?.['structure.raisonSociale']}
                         />
-                        {formErrors?.['structure.raisonSociale'] && (
-                          <div className="invalid-feedback">{formErrors['structure.raisonSociale']}</div>
-                        )}
                       </div>
-                      <div className="form-group col-md-6">
-                        <label htmlFor="structureType">Type de structure</label>
-                        <select
+                      <div style={{ flex: '1', minWidth: '250px' }}>
+                        <FormField
+                          label="Type de structure"
+                          type="select"
                           id="structureType"
-                          className={styles.formField}
                           value={programmateur.structure?.type || ''}
                           onChange={(e) => updateStructure('type', e.target.value)}
-                        >
-                          <option value="">Sélectionner...</option>
-                          <option value="association">Association</option>
-                          <option value="sarl">SARL</option>
-                          <option value="sas">SAS</option>
-                          <option value="eurl">EURL</option>
-                          <option value="collectivite">Collectivité</option>
-                          <option value="autre">Autre</option>
-                        </select>
+                          options={[
+                            { value: '', label: 'Sélectionner...' },
+                            { value: 'association', label: 'Association' },
+                            { value: 'sarl', label: 'SARL' },
+                            { value: 'sas', label: 'SAS' },
+                            { value: 'eurl', label: 'EURL' },
+                            { value: 'collectivite', label: 'Collectivité' },
+                            { value: 'autre', label: 'Autre' }
+                          ]}
+                        />
                       </div>
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label htmlFor="structureAdresse">Adresse</label>
-                      <input
-                        type="text"
-                        id="structureAdresse"
-                        className={styles.formField}
-                        value={programmateur.structure?.adresse || ''}
-                        onChange={(e) => updateStructure('adresse', e.target.value)}
-                      />
-                    </div>
-                    <div className="form-row">
-                      <div className="form-group col-md-4">
-                        <label htmlFor="structureCodePostal">Code postal</label>
-                        <input
+                    </FlexContainer>
+                    <FormField
+                      label="Adresse"
+                      type="text"
+                      id="structureAdresse"
+                      value={programmateur.structure?.adresse || ''}
+                      onChange={(e) => updateStructure('adresse', e.target.value)}
+                    />
+                    <FlexContainer gap="1rem" wrap>
+                      <div style={{ flex: '1', minWidth: '150px', maxWidth: '200px' }}>
+                        <FormField
+                          label="Code postal"
                           type="text"
                           id="structureCodePostal"
-                          className={styles.formField}
                           value={programmateur.structure?.codePostal || ''}
                           onChange={(e) => updateStructure('codePostal', e.target.value)}
                         />
                       </div>
-                      <div className="form-group col-md-8">
-                        <label htmlFor="structureVille">Ville</label>
-                        <input
+                      <div style={{ flex: '2', minWidth: '250px' }}>
+                        <FormField
+                          label="Ville"
                           type="text"
                           id="structureVille"
-                          className={styles.formField}
                           value={programmateur.structure?.ville || ''}
                           onChange={(e) => updateStructure('ville', e.target.value)}
                         />
                       </div>
-                    </div>
-                    <div className="form-row">
-                      <div className="form-group col-md-6">
-                        <label htmlFor="structureSiret">SIRET</label>
-                        <input
+                    </FlexContainer>
+                    <FlexContainer gap="1rem" wrap>
+                      <div style={{ flex: '1', minWidth: '250px' }}>
+                        <FormField
+                          label="SIRET"
                           type="text"
                           id="structureSiret"
-                          className={styles.formField}
                           value={programmateur.structure?.siret || ''}
                           onChange={(e) => updateStructure('siret', e.target.value)}
                         />
                       </div>
-                      <div className="form-group col-md-6">
-                        <label htmlFor="structureTva">N° TVA</label>
-                        <input
+                      <div style={{ flex: '1', minWidth: '250px' }}>
+                        <FormField
+                          label="N° TVA"
                           type="text"
                           id="structureTva"
-                          className={styles.formField}
                           value={programmateur.structure?.tva || ''}
                           onChange={(e) => updateStructure('tva', e.target.value)}
                         />
                       </div>
-                    </div>
+                    </FlexContainer>
                   </div>
                 )}
               </div>

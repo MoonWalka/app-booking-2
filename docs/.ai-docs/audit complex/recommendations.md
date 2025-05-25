@@ -127,7 +127,7 @@ Pour implémenter ces recommandations de manière efficace et progressive :
    - Consolider les hooks génériques
 
 3. **Phase 3 : Refactorisation structurelle** (4-8 semaines)
-   - Unifier les implémentations desktop/mobile
+   - Unifier les implémentations desktop/mobile //annulé car beaucoup de bug à reflechir
    - Simplifier la structure des composants
    - Rationaliser la gestion d'état
 

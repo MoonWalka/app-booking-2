@@ -34,17 +34,18 @@ export { default as useGenericEntityList } from './lists/useGenericEntityList';
  * - useGenericSearch: Hook de recherche avec cache et suggestions
  * - useGenericFilteredSearch: Hook de recherche avancée avec filtres
  * 
- * SEMAINE 2 - LISTS + DATA (3/4 hooks) 🔄 EN COURS
+ * SEMAINE 2 - LISTS + DATA (4/4 hooks) ✅ TERMINÉE
  * - useGenericDataFetcher: Hook de récupération de données optimisé ✅
  * - useGenericCachedData: Hook de cache multi-niveaux avancé ✅
  * - useGenericEntityList: Hook de listes avec pagination et sélection ✅
- * - Migration useConcertsList: Hook critique métier ⏳ RESTANT
+ * - Migration useConcertsList: Hook critique métier ✅ TERMINÉE
  * 
  * SEMAINE 3 - FORM + VALIDATION (0/4 hooks) ⏳ PLANIFIÉE
  * - useGenericEntityForm: Hook de formulaires d'entités
  * - useGenericValidation: Hook de validation générique
  * - + 2 autres hooks de formulaires
  * 
- * @progress 7/12 hooks créés (58% - Semaine 2 en cours)
- * @nextMilestone Migration useConcertsList (hook critique)
+ * @progress 8/12 hooks créés (67% - Semaine 2 TERMINÉE ✅)
+ * @milestone SEMAINE 2 FINALISÉE AVEC SUCCÈS
+ * @nextPhase Semaine 3 - Hooks de formulaires et validation
  */

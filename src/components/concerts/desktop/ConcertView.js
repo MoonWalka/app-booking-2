@@ -6,7 +6,8 @@ import FormGenerator from '@/components/forms/FormGenerator';
 import styles from './ConcertView.module.css';
 
 // Import des hooks personnalisés
-import { useConcertStatus } from '@/hooks/concerts'; // conserver uniquement pour status si nécessaire
+import { useConcertDetails } from '@/hooks/concerts';
+import { useConcertStatus } from '@/hooks/concerts';
 
 // Import des composants
 import ConcertHeader from './ConcertHeader';
@@ -19,9 +20,9 @@ import DeleteConcertModal from './DeleteConcertModal';
 
 /**
  * Composant de vue des détails d'un concert - Version Desktop
- * N'est responsable que de l'affichage et utilise les hooks pour toute la logique
+ * Gère ses propres données via les hooks
  */
-const ConcertView = ({ id: propId, detailsHook }) => {
+const ConcertView = ({ id: propId }) => {
   const { id: urlId } = useParams();
   const navigate = useNavigate();
   
@@ -31,7 +32,8 @@ const ConcertView = ({ id: propId, detailsHook }) => {
   // État pour la confirmation de suppression
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   
-  // Utiliser uniquement le hook optimisé passé en prop
+  // Utiliser le hook pour récupérer les données du concert
+  const detailsHook = useConcertDetails(id);
   const {
     concert,
     lieu,
@@ -55,13 +57,15 @@ const ConcertView = ({ id: propId, detailsHook }) => {
     getStatusInfo,
     handleFormGenerated,
     isEditMode: detailsEditMode
-  } = detailsHook;
+  } = detailsHook || {};
 
-  // Hook de statut avancé pour fonctionnalités sophistiquées (NOUVEAU)
+  // Hook de statut avancé pour fonctionnalités sophistiquées
   const concertStatus = useConcertStatus();
   
-  // Système de statut intelligent combinant les deux hooks (NOUVEAU)
+  // Système de statut intelligent combinant les deux hooks
   const getAdvancedStatusInfo = () => {
+    if (!getStatusInfo) return {};
+    
     const basicStatus = getStatusInfo();
     const advancedStatus = concertStatus.getStatusDetails?.(concert?.statut);
     
@@ -78,12 +82,12 @@ const ConcertView = ({ id: propId, detailsHook }) => {
   // Fonction pour passer en mode édition
   const handleEdit = () => {
     console.log("[🔍 ConcertView] Clic sur Modifier. Basculement en mode édition");
-    toggleEditMode();
+    if (toggleEditMode) toggleEditMode();
   };
 
   // Fonction pour annuler l'édition
   const handleCancel = () => {
-    toggleEditMode();
+    if (toggleEditMode) toggleEditMode();
   };
 
   // Fonction pour gérer les changements dans les inputs
@@ -93,7 +97,7 @@ const ConcertView = ({ id: propId, detailsHook }) => {
     }
   };
 
-  // Fonction pour enregistrer les modifications (à adapter selon l'API/hook)
+  // Fonction pour enregistrer les modifications
   const handleSave = async () => {
     if (detailsHook && detailsHook.handleSave) {
       await detailsHook.handleSave();
@@ -125,6 +129,7 @@ const ConcertView = ({ id: propId, detailsHook }) => {
     console.log('[LOG][ConcertView] Ouverture de la modale suppression');
     setShowDeleteConfirm(true);
   };
+  
   // Ajout log fermeture modale suppression
   const handleCloseDeleteModal = () => {
     console.log('[LOG][ConcertView] Fermeture de la modale suppression');
@@ -217,30 +222,25 @@ const ConcertView = ({ id: propId, detailsHook }) => {
       </>
 
       {/* Composant pour l'envoi de formulaire */}
-      {showFormGenerator && !generatedFormLink && (
-        <div className="p-3 border rounded mb-3">
-          <FormGenerator
-            concertId={id}
-            programmateurId={concert.programmateurId}
-            onFormGenerated={handleFormGenerated}
-          />
-        </div>
+      {showFormGenerator && (
+        <FormGenerator
+          concert={concert}
+          programmateur={programmateur}
+          onFormGenerated={handleFormGenerated}
+          onClose={() => setShowFormGenerator(false)}
+        />
       )}
 
       {/* Modale de confirmation de suppression */}
-      {showDeleteConfirm && (
-        <DeleteConcertModal
-          show={showDeleteConfirm}
-          concertNom={concert.titre || formatDate(concert.date)}
-          onClose={handleCloseDeleteModal}
-          onConfirm={() => {
-            console.log('[LOG][ConcertView] onConfirm suppression appelé - utilisation directe de handleDelete');
-            handleDelete(); // Utilisation directe du handleDelete du hook
-            setShowDeleteConfirm(false); // Fermer la modale après suppression
-          }}
-          isDeleting={isSubmitting}
-        />
-      )}
+      <DeleteConcertModal
+        show={showDeleteConfirm}
+        onHide={handleCloseDeleteModal}
+        onConfirm={() => {
+          handleDelete();
+          setShowDeleteConfirm(false);
+        }}
+        concertTitle={concert?.titre}
+      />
     </div>
   );
 };

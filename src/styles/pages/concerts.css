@@ -51,8 +51,8 @@
 .tc-concert-detail-container {
   padding: var(--tc-space-4);
   background-color: var(--tc-bg-default);
-  border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-shadow);
+  border-radius: var(--tc-radius-base);
+  box-shadow: var(--tc-shadow-base);
   margin-bottom: var(--tc-space-4);
 }
 
@@ -114,7 +114,7 @@
   margin-bottom: var(--tc-space-4);
   padding: var(--tc-space-2) var(--tc-space-4);
   background-color: var(--tc-gray-50);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
 }
 
 .tc-filter-group {
@@ -134,18 +134,18 @@
 .tc-filter-select {
   padding: var(--tc-space-1) var(--tc-space-2);
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   min-width: 120px;
 }
 
 /* CARTES DE CONCERT */
 .tc-concert-list-card {
   background-color: var(--tc-bg-default);
-  border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-shadow);
+  border-radius: var(--tc-radius-base);
+  box-shadow: var(--tc-shadow-base);
   margin-bottom: var(--tc-space-2);
   overflow: hidden;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
   border: 1px solid var(--tc-border-default);
 }
 
@@ -170,7 +170,7 @@
 
 .tc-concert-modal {
   background-color: var(--tc-bg-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   width: 450px;
   max-width: 90vw;
   box-shadow: var(--tc-shadow-lg);
@@ -201,9 +201,9 @@
   border-spacing: 0;
   width: 100%;
   background-color: var(--tc-bg-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   overflow: hidden;
-  box-shadow: var(--tc-shadow);
+  box-shadow: var(--tc-shadow-base);
 }
 
 .tc-concerts-table th,

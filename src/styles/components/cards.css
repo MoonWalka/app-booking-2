@@ -10,11 +10,11 @@
 .tc-card {
   background-color: var(--tc-bg-default);
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-shadow);
+  border-radius: var(--tc-radius-base);
+  box-shadow: var(--tc-shadow-base);
   margin-bottom: var(--tc-space-4);
   overflow: hidden;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
   position: relative;
   display: flex;
   flex-direction: column;
@@ -75,7 +75,7 @@
 
 .tc-card-borderless {
   border: none;
-  border-radius: var(--tc-border-radius-lg);
+  border-radius: var(--tc-radius-lg);
   box-shadow: var(--tc-shadow-lg);
 }
 
@@ -109,7 +109,7 @@
 
 .tc-card-selected {
   border-color: var(--tc-color-primary);
-  box-shadow: 0 0 0 1px var(--tc-color-primary), var(--tc-shadow);
+  box-shadow: 0 0 0 1px var(--tc-color-primary), var(--tc-shadow-base);
 }
 
 /* CARTES AVEC COULEURS */
@@ -118,11 +118,11 @@
 }
 
 .tc-card-accent-primary { border-left-color: var(--tc-color-primary); }
-.tc-card-accent-secondary { border-left-color: var(--tc-secondary-color); }
-.tc-card-accent-success { border-left-color: var(--tc-success-color); }
-.tc-card-accent-warning { border-left-color: var(--tc-warning-color); }
-.tc-card-accent-danger { border-left-color: var(--tc-danger-color); }
-.tc-card-accent-info { border-left-color: var(--tc-info-color); }
+.tc-card-accent-secondary { border-left-color: var(--tc-color-secondary); }
+.tc-card-accent-success { border-left-color: var(--tc-color-success); }
+.tc-card-accent-warning { border-left-color: var(--tc-color-warning); }
+.tc-card-accent-danger { border-left-color: var(--tc-color-error); }
+.tc-card-accent-info { border-left-color: var(--tc-color-info); }
 
 .tc-card-bg-light {
   background-color: var(--tc-gray-50);
@@ -230,8 +230,8 @@
   font-size: var(--tc-font-size-xs);
 }
 
-.tc-stat-change-positive { color: var(--tc-success-color); }
-.tc-stat-change-negative { color: var(--tc-danger-color); }
+.tc-stat-change-positive { color: var(--tc-color-success); }
+.tc-stat-change-negative { color: var(--tc-color-error); }
 
 /* CARTES AVEC ACTIONS */
 .tc-card-actions {
@@ -245,8 +245,8 @@
   color: var(--tc-gray-600);
   cursor: pointer;
   padding: var(--tc-space-1);
-  border-radius: var(--tc-border-radius-sm);
-  transition: var(--tc-transition);
+  border-radius: var(--tc-radius-sm);
+  transition: var(--tc-transition-base);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -262,8 +262,8 @@
   font-size: 16px;
 }
 
-.tc-card-action-edit:hover { color: var(--tc-secondary-color); }
-.tc-card-action-delete:hover { color: var(--tc-danger-color); }
+.tc-card-action-edit:hover { color: var(--tc-color-secondary); }
+.tc-card-action-delete:hover { color: var(--tc-color-error); }
 .tc-card-action-view:hover { color: var(--tc-color-primary); }
 
 /* MISE EN PAGE ET GRILLES */

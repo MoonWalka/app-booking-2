@@ -262,7 +262,7 @@
 }
 
 .action-btn.edit {
-  color: var(--tc-secondary-color);
+  color: var(--tc-color-secondary);
 }
 
 /* // Correction UI: Styles pour les états vides et erreurs */
@@ -286,7 +286,7 @@
 }
 
 .error-container i {
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
 }
 
 .empty-container p, .error-container p {

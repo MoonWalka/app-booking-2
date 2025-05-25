@@ -14,7 +14,7 @@
   margin-bottom: var(--tc-space-6);
   padding: var(--tc-space-4);
   background-color: var(--tc-white-secondary);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-box-shadow-sm);
 }
 
@@ -40,7 +40,7 @@
   color: var(--tc-text-default);
   background-color: var(--tc-white);
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
@@ -60,7 +60,7 @@
   z-index: 10;
   background-color: var(--tc-white);
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-box-shadow-md);
   max-height: 300px;
   overflow-y: auto;
@@ -108,9 +108,9 @@
 .errorMessage {
   padding: var(--tc-space-2);
   margin-bottom: var(--tc-space-4);
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
   background-color: var(--tc-danger-color-light);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
 }
 
 .helperText {

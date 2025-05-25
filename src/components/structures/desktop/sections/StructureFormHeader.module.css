@@ -30,7 +30,7 @@
   padding: var(--tc-space-1) var(--tc-space-2);
   gap: var(--tc-space-1);
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   background-color: transparent;
   color: var(--tc-text-muted);
   font-size: var(--tc-font-size-sm);

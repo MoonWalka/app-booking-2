@@ -12,8 +12,8 @@ body::before {
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: var(--tc-warning-color);
-  color: var(--tc-dark-color);
+  background-color: var(--tc-color-warning);
+  color: var(--tc-text-default);
   text-align: center;
   padding: 5px;
   font-size: 14px;

@@ -42,12 +42,12 @@
 }
 
 .editor-modal-container .tc-modal-close:hover {
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
 }
 
 .editor-modal-container .btn-outline-info {
-  color: var(--tc-info-color);
-  border-color: var(--tc-info-color);
+  color: var(--tc-color-info);
+  border-color: var(--tc-color-info);
   background-color: transparent;
   padding: 0.25rem 0.5rem;
   font-size: 0.875rem;
@@ -57,8 +57,8 @@
 
 .editor-modal-container .btn-outline-info:hover {
   color: var(--tc-white);
-  background-color: var(--tc-info-color);
-  border-color: var(--tc-info-color);
+  background-color: var(--tc-color-info);
+  border-color: var(--tc-color-info);
 }
 
 /* Force l'affichage des barres d'outils de ReactQuill */

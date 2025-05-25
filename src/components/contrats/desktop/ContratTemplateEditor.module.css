@@ -51,7 +51,7 @@
   color: var(--tc-text-color-secondary);
 }
 .tcModalClose:hover {
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
 }
 
 .tcModalBody {
@@ -78,7 +78,7 @@
   padding: var(--tc-space-2);
   font-family: var(--tc-font-family);
   border: var(--tc-border-width) solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   line-height: 1.5;
 }
 
@@ -88,7 +88,7 @@
   padding: var(--tc-space-2);
   font-family: var(--tc-font-family);
   border: var(--tc-border-width) solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   line-height: 1.5;
 }
 
@@ -106,7 +106,7 @@
 .variablesGuide {
   background-color: var(--tc-gray-100);
   border: var(--tc-border-width) solid var(--tc-gray-200);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   padding: var(--tc-space-2);
   margin-bottom: var(--tc-space-2);
 }
@@ -126,7 +126,7 @@
 .previewContainer {
   border: var(--tc-border-width) solid var(--tc-border-default);
   background-color: var(--tc-white-color);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   margin-bottom: var(--tc-space-4);
   width: 100%;
   min-height: 500px;
@@ -154,7 +154,7 @@
   margin: 0 auto;
   background: var(--tc-white);
   padding: 20mm;
-  box-shadow: var(--tc-shadow);
+  box-shadow: var(--tc-shadow-base);
 }
 
 /* Style pour le dropdown des variables */
@@ -170,7 +170,7 @@
   align-items: center;
   gap: var(--tc-space-1);
   padding: var(--tc-space-1) var(--tc-space-2);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   background-color: var(--tc-gray-100);
   border-color: var(--tc-border-default);
   color: var(--tc-text-color-primary);
@@ -186,7 +186,7 @@
   width: 320px;
   background-color: var(--tc-white);
   border: var(--tc-border-width) solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-shadow-lg);
   padding: var(--tc-space-2);
   margin-top: var(--tc-space-1);
@@ -210,10 +210,10 @@
   margin: 2px;
   background-color: var(--tc-primary-color-05);
   border: var(--tc-border-width) solid var(--tc-primary-color-20);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   font-size: var(--tc-font-size-xs);
   color: var(--tc-primary-color-dark);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
   font-family: var(--tc-font-family-mono);
 }
 
@@ -225,8 +225,8 @@
 /* Guide d'utilisation */
 .userGuide {
   background-color: var(--tc-gray-100);
-  border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-shadow);
+  border-radius: var(--tc-radius-base);
+  box-shadow: var(--tc-shadow-base);
   margin-bottom: var(--tc-space-4);
   padding: var(--tc-space-4);
   border: var(--tc-border-width) solid var(--tc-gray-200);
@@ -287,7 +287,7 @@
 /* Carte pour les infos du modèle */
 .templateInfoCard {
   background-color: var(--tc-white);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   padding: var(--tc-space-4);
   box-shadow: var(--tc-shadow-sm);
   border: var(--tc-border-width) solid var(--tc-border-color-light);
@@ -303,7 +303,7 @@
   max-width: 100px;
   max-height: 60px;
   border: var(--tc-border-width) solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
 }
 
 .removeLogoBtn {
@@ -317,7 +317,7 @@
   width: 100px;
   height: 60px;
   border: var(--tc-border-width) solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -379,7 +379,7 @@
     top: auto;
     bottom: 0;
     margin: 0;
-    border-radius: var(--tc-border-radius) var(--tc-border-radius) 0 0;
+    border-radius: var(--tc-radius-base) var(--tc-radius-base) 0 0;
     max-height: 50vh;
     z-index: var(--tc-z-index-modal);
   }

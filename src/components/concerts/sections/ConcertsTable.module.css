@@ -15,7 +15,7 @@
  */
 .tableContainer {
   background-color: var(--tc-bg-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-shadow-sm);
   overflow-x: auto;
   margin-top: var(--tc-space-4);
@@ -54,10 +54,10 @@
 }
 
 .concertsTable th:first-child {
-  border-top-left-radius: var(--tc-border-radius);
+  border-top-left-radius: var(--tc-radius-base);
 }
 .concertsTable th:last-child {
-  border-top-right-radius: var(--tc-border-radius);
+  border-top-right-radius: var(--tc-radius-base);
 }
 
 /* 
@@ -140,26 +140,26 @@
 }
 .actions .editButton {
   background: var(--tc-warning-color-light);
-  color: var(--tc-warning-color);
+  color: var(--tc-color-warning);
 }
 .actions .editButton:hover {
-  background: var(--tc-warning-color);
+  background: var(--tc-color-warning);
   color: var(--tc-white);
 }
 .actions .contractButton, .actions .formButton {
   background: var(--tc-info-color-light);
-  color: var(--tc-info-color);
+  color: var(--tc-color-info);
 }
 .actions .contractButton:hover, .actions .formButton:hover {
-  background: var(--tc-info-color);
+  background: var(--tc-color-info);
   color: var(--tc-white);
 }
 .actions .deleteButton {
   background: var(--tc-danger-color-light);
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
 }
 .actions .deleteButton:hover {
-  background: var(--tc-danger-color);
+  background: var(--tc-color-error);
   color: var(--tc-white);
 }
 
@@ -187,7 +187,7 @@
   display: flex;
   align-items: center;
   background: var(--tc-bg-color-light);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   border: 1px solid var(--tc-border-default);
   padding-left: 2.5rem;
 }
@@ -200,7 +200,7 @@
   outline: none;
   font-size: var(--tc-font-size-base);
   color: var(--tc-text-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   box-shadow: none;
 }
 .searchBox .searchIcon {
@@ -234,7 +234,7 @@
 
 .filtersCol, .searchFilterRow button, .searchFilterRow select {
   height: 40px;
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   border: 1px solid var(--tc-border-default);
   background: var(--tc-bg-color-light);
   color: var(--tc-text-default);

@@ -53,7 +53,7 @@
 
 .structuresCard {
   background-color: var(--tc-bg-default);
-  border-radius: var(--tc-border-radius-lg);
+  border-radius: var(--tc-radius-lg);
   padding: var(--tc-space-4);
   margin-bottom: var(--tc-space-4);
   box-shadow: var(--tc-shadow-sm);

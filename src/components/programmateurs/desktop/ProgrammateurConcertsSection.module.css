@@ -94,17 +94,17 @@
 
 .status-confirme {
   background-color: rgba(25, 135, 84, 0.1);
-  color: var(--tc-success-color);
+  color: var(--tc-color-success);
 }
 
 .status-option {
   background-color: rgba(255, 193, 7, 0.1);
-  color: var(--tc-warning-color);
+  color: var(--tc-color-warning);
 }
 
 .status-annule {
   background-color: rgba(220, 53, 69, 0.1);
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
 }
 
 .status-attente {

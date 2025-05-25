@@ -85,7 +85,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
   font-weight: var(--tc-font-weight-semibold);
 }
 
@@ -117,7 +117,7 @@
 
 .formCard {
   background-color: var(--tc-white);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-box-shadow);
   margin-bottom: var(--tc-space-6);
   overflow: hidden;
@@ -193,7 +193,7 @@
 }
 
 .required {
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
   margin-left: var(--tc-space-1);
 }
 
@@ -206,7 +206,7 @@
   color: var(--tc-text-default);
   background-color: var(--tc-white);
   border: 1px solid var(--tc-input-border-color);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
 
@@ -230,7 +230,7 @@
   color: var(--tc-text-default);
   background-color: var(--tc-white);
   border: 1px solid var(--tc-input-border-color);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
 
@@ -269,7 +269,7 @@
   white-space: nowrap;
   background-color: var(--tc-gray-100);
   border: 1px solid var(--tc-input-border-color);
-  border-radius: 0 var(--tc-border-radius-sm) var(--tc-border-radius-sm) 0;
+  border-radius: 0 var(--tc-radius-sm) var(--tc-radius-sm) 0;
 }
 
 .inputGroup .formControl {
@@ -278,7 +278,7 @@
 }
 
 .requiredField {
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
   margin-left: var(--tc-space-1);
 }
 
@@ -415,7 +415,7 @@
   z-index: 1000;
   background-color: var(--tc-white);
   border: var(--tc-border-width) solid var(--tc-input-border-color);
-  border-radius: 0 0 var(--tc-border-radius-sm) var(--tc-border-radius-sm);
+  border-radius: 0 0 var(--tc-radius-sm) var(--tc-radius-sm);
   box-shadow: var(--tc-dropdown-shadow);
   margin-top: -1px;
 }
@@ -535,7 +535,7 @@
 
 @media (max-width: 768px) {
   .formCard {
-    border-radius: var(--tc-border-radius-sm);
+    border-radius: var(--tc-radius-sm);
     margin-bottom: var(--tc-space-4);
   }
   

@@ -21,7 +21,7 @@
 }
 
 .required {
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
   margin-left: var(--tc-space-1);
 }
 
@@ -32,10 +32,10 @@
   position: relative;
   width: 100%;
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   background-color: var(--tc-bg-default);
   cursor: pointer;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .selector:hover {
@@ -44,11 +44,11 @@
 
 .selector.open {
   border-color: var(--tc-color-primary);
-  box-shadow: var(--tc-input-focus-shadow);
+  box-shadow: var(--tc-shadow-base);
 }
 
 .selector.error {
-  border-color: var(--tc-danger-color);
+  border-color: var(--tc-color-error);
 }
 
 .selector.disabled {
@@ -99,7 +99,7 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .clearButton:hover {
@@ -118,8 +118,8 @@
   margin-top: var(--tc-space-1);
   background-color: var(--tc-bg-default);
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-shadow);
+  border-radius: var(--tc-radius-base);
+  box-shadow: var(--tc-shadow-base);
   z-index: var(--tc-z-index-dropdown);
   max-height: 300px;
   display: flex;
@@ -198,7 +198,7 @@
 }
 
 .errorText {
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
 }
 
 /* =============================
@@ -213,7 +213,7 @@
     right: 0;
     width: 100%;
     margin-top: 0;
-    border-radius: var(--tc-border-radius) var(--tc-border-radius) 0 0;
+    border-radius: var(--tc-radius-base) var(--tc-radius-base) 0 0;
     max-height: 70vh;
     box-shadow: var(--tc-shadow-lg);
     z-index: var(--tc-z-index-modal);

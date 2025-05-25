@@ -28,7 +28,7 @@
   top: 0;
   left: 0;
   z-index: 1000;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 /* En-tête de la barre latérale */
@@ -85,7 +85,7 @@
   padding: var(--tc-space-2) var(--tc-space-4);
   display: flex;
   align-items: center;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
   text-decoration: none;
   border-left: 3px solid transparent;
 }
@@ -202,8 +202,8 @@
   gap: var(--tc-space-2);
   cursor: pointer;
   padding: var(--tc-space-1) var(--tc-space-2);
-  border-radius: var(--tc-border-radius);
-  transition: var(--tc-transition);
+  border-radius: var(--tc-radius-base);
+  transition: var(--tc-transition-base);
 }
 
 .tc-user-menu:hover {
@@ -283,11 +283,11 @@
   padding: var(--tc-space-1);
   width: 40px;
   height: 40px;
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .tc-menu-toggle:hover {
@@ -336,7 +336,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   z-index: 10;
 }
 
@@ -357,7 +357,7 @@
   align-items: center;
   color: var(--tc-white);
   text-decoration: none;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
   border-left: 3px solid transparent;
 }
 

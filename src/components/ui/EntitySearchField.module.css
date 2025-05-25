@@ -42,13 +42,13 @@
   padding: var(--tc-space-2) var(--tc-space-2);
   padding-left: var(--tc-spacing-xl);
   font-size: var(--tc-font-size-base);
-  line-height: var(--tc-line-height-base);
+  line-height: var(--tc-line-height-normal);
   color: var(--tc-text-default);
   background-color: var(--tc-bg-default);
   background-clip: padding-box;
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
-  transition: var(--tc-transition);
+  border-radius: var(--tc-radius-base);
+  transition: var(--tc-transition-base);
 }
 
 .input:focus {
@@ -56,7 +56,7 @@
   background-color: var(--tc-bg-default);
   border-color: var(--tc-color-primary);
   outline: 0;
-  box-shadow: var(--tc-input-focus-shadow);
+  box-shadow: var(--tc-shadow-base);
 }
 
 .icon {
@@ -84,14 +84,14 @@
   color: var(--tc-color-primary);
   background-color: transparent;
   border: 1px dashed var(--tc-color-primary);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   cursor: pointer;
   text-align: center;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .createButton:hover {
-  color: var(--tc-light-color);
+  color: var(--tc-text-light);
   background-color: var(--tc-color-primary);
   border-color: var(--tc-color-primary);
 }
@@ -107,9 +107,9 @@
   margin-top: var(--tc-space-1);
   background-color: var(--tc-bg-default);
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   z-index: var(--tc-z-index-dropdown);
-  box-shadow: var(--tc-shadow);
+  box-shadow: var(--tc-shadow-base);
 }
 
 .suggestionItem {
@@ -170,7 +170,7 @@
   text-align: center;
   background-color: var(--tc-gray-100);
   color: var(--tc-gray-600);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   margin-top: var(--tc-space-1);
 }
 
@@ -180,7 +180,7 @@
 .selectedEntity {
   background-color: var(--tc-gray-100);
   border: 1px solid var(--tc-gray-300);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   padding: var(--tc-space-2);
   margin-top: var(--tc-space-2);
 }
@@ -229,7 +229,7 @@
 .removeButton {
   background: transparent;
   border: none;
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
   cursor: pointer;
   padding: var(--tc-space-1);
   margin-left: var(--tc-space-2);
@@ -240,7 +240,7 @@
 }
 
 .removeButton:hover {
-  color: var(--tc-danger-dark);
+  color: var(--tc-color-error-dark);
 }
 
 /* =============================

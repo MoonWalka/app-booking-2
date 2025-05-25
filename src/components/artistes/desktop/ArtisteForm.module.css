@@ -24,7 +24,7 @@
 
 .stepFormContainer {
   background-color: var(--tc-white);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-box-shadow);
   padding: var(--tc-space-6);
   margin-bottom: var(--tc-spacing-xl);
@@ -99,12 +99,12 @@
 
 /* État complété */
 .stepIndicator.completed .stepNumber {
-  background-color: var(--tc-success-color);
+  background-color: var(--tc-color-success);
   color: var(--tc-white);
 }
 
 .stepIndicator.completed .stepTitle {
-  color: var(--tc-success-color);
+  color: var(--tc-color-success);
 }
 
 /* Actions du formulaire */
@@ -137,7 +137,7 @@
   width: 100%;
   padding: var(--tc-space-2);
   border: var(--tc-border-width) solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   font-size: var(--tc-font-size-sm);
 }
 

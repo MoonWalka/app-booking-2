@@ -14,7 +14,7 @@
   margin-bottom: var(--tc-space-6);
   padding: var(--tc-space-4);
   background-color: var(--tc-white-secondary);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-box-shadow-sm);
 }
 
@@ -48,7 +48,7 @@
   background-color: var(--tc-white);
   background-clip: padding-box;
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
@@ -74,7 +74,7 @@
 }
 
 .required {
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
   margin-left: var(--tc-space-1);
 }
 

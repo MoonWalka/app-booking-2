@@ -7,8 +7,8 @@
 .concertViewContainer {
   overflow-x: auto;
   margin-bottom: var(--tc-space-4);
-  border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-shadow);
+  border-radius: var(--tc-radius-base);
+  box-shadow: var(--tc-shadow-base);
   background-color: var(--tc-bg-color-light);
   border: 1px solid var(--tc-border-default);
   padding: var(--tc-space-4);

@@ -31,7 +31,7 @@
 .fieldInput {
   padding: var(--tc-space-2) var(--tc-space-4);
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   font-size: var(--tc-font-size-md);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -43,7 +43,7 @@
 }
 
 .fieldInput:invalid {
-  border-color: var(--tc-danger-color);
+  border-color: var(--tc-color-error);
 }
 
 .fullWidthField {
@@ -59,7 +59,7 @@
   width: 100%;
   margin-top: var(--tc-space-1);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
 }
 
 /* Support responsive */

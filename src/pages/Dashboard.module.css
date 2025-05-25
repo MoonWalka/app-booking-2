@@ -16,14 +16,14 @@
 .statCard {
   background-color: var(--tc-white);
   padding: var(--tc-space-4);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-shadow-sm);
   flex: 1 1 200px; /* flex-grow, flex-shrink, flex-basis */
   text-align: center;
 }
 
 .statValue {
-  font-size: var(--tc-font-size-xxl);
+  font-size: var(--tc-font-size-2xl);
   font-weight: var(--tc-font-weight-bold);
   color: var(--tc-color-primary);
   margin: var(--tc-space-2) 0;

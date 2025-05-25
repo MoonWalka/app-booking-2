@@ -207,7 +207,7 @@
 }
 
 .actionBtn.edit {
-  color: var(--tc-success-color);
+  color: var(--tc-color-success);
   border-top: 1px solid var(--tc-gray-100);
 }
 
@@ -238,7 +238,7 @@
 
 .errorContainer {
   background-color: var(--tc-danger-light);
-  color: var(--tc-danger-dark);
+  color: var(--tc-color-error-dark);
   padding: var(--tc-spacing-3);
   border-radius: var(--tc-radius-md);
   margin: var(--tc-spacing-4) 0;

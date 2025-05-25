@@ -16,11 +16,11 @@
 
 .navLink {
   padding: var(--tc-space-2) var(--tc-space-4);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   color: var(--tc-gray-700);
   text-decoration: none;
   font-weight: var(--tc-font-weight-medium);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
   display: flex;
   align-items: center;
   gap: var(--tc-space-2);
@@ -33,12 +33,12 @@
 
 .navLinkActive {
   background-color: var(--tc-color-primary);
-  color: var(--tc-light-color);
+  color: var(--tc-text-light);
 }
 
 .navLinkActive:hover {
   background-color: var(--tc-primary-dark);
-  color: var(--tc-light-color);
+  color: var(--tc-text-light);
 }
 
 .navIcon {
@@ -53,8 +53,8 @@
    ============================= */
 .card {
   background-color: var(--tc-bg-default);
-  border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-shadow);
+  border-radius: var(--tc-radius-base);
+  box-shadow: var(--tc-shadow-base);
   border: 1px solid var(--tc-border-default);
   margin-bottom: var(--tc-space-6);
 }
@@ -97,18 +97,18 @@
 .formControl {
   width: 100%;
   padding: var(--tc-space-2) var(--tc-space-4);
-  border: 1px solid var(--tc-input-border);
-  border-radius: var(--tc-border-radius);
+  border: 1px solid var(--tc-border-default);
+  border-radius: var(--tc-radius-base);
   font-size: var(--tc-font-size-base);
   color: var(--tc-input-color);
   background-color: var(--tc-bg-default);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .formControl:focus {
-  border-color: var(--tc-input-focus-border);
+  border-color: var(--tc-color-primary);
   outline: none;
-  box-shadow: var(--tc-input-focus-shadow);
+  box-shadow: var(--tc-shadow-base);
 }
 
 .formText {
@@ -139,7 +139,7 @@
   height: var(--tc-input-height);
   padding: var(--tc-space-2);
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   cursor: pointer;
 }
 
@@ -170,12 +170,12 @@
   flex: 1;
   min-width: var(--tc-export-button-min-width);
   padding: var(--tc-space-4);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   border: 1px solid var(--tc-border-default);
   background-color: var(--tc-bg-default);
   text-align: center;
   cursor: pointer;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
   display: flex;
   flex-direction: column;
   align-items: center;

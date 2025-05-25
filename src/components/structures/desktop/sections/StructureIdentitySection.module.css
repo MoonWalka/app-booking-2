@@ -12,7 +12,7 @@
 
 .formCard {
   background-color: var(--tc-white);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-box-shadow-sm);
   margin-bottom: var(--tc-space-6);
   overflow: hidden;
@@ -70,7 +70,7 @@
   display: block;
   width: 100%;
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   padding: var(--tc-space-1) var(--tc-space-2);
   font-size: var(--tc-font-size-sm);
   line-height: 1.5;
@@ -99,11 +99,11 @@
   width: 100%;
   margin-top: var(--tc-space-1);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
 }
 
 .required {
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
   margin-left: var(--tc-space-1);
 }
 

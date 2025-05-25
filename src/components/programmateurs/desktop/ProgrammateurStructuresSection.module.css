@@ -6,7 +6,7 @@
 
 .sectionContainer {
   background-color: var(--tc-bg-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-box-shadow);
   margin-bottom: var(--tc-space-6);
   overflow: hidden;
@@ -78,7 +78,7 @@
   background-color: var(--tc-bg-info-light);
   color: var(--tc-info);
   padding: var(--tc-space-1) var(--tc-space-2);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   font-size: var(--tc-font-size-xs);
   text-transform: capitalize;
 }

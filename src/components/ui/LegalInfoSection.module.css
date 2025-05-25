@@ -9,7 +9,7 @@
    ============================= */
 .legalInfoSection {
   background-color: var(--tc-bg-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-shadow-sm);
   overflow: hidden;
   margin-bottom: var(--tc-space-4);
@@ -71,14 +71,14 @@
   font-weight: var(--tc-font-weight-medium);
   color: var(--tc-text-default);
   word-break: break-word;
-  line-height: var(--tc-line-height-base);
+  line-height: var(--tc-line-height-normal);
 }
 
 /* Style pour les lignes en alternance en mode visualisation */
 .infoGroup:nth-child(odd) {
   background-color: var(--tc-gray-50);
   padding: var(--tc-space-2);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
 }
 
 /* =============================

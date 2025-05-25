@@ -27,16 +27,16 @@
   text-align: center;
   padding: var(--tc-spacing-5);
   font-style: italic;
-  color: var(--tc-secondary-color);
+  color: var(--tc-color-secondary);
 }
 
 .errorMessage {
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
   background-color: var(--tc-error-bg-color);
   padding: var(--tc-spacing-3);
   border-radius: var(--tc-radius-md);
   margin: var(--tc-spacing-3) 0;
-  border-left: 4px solid var(--tc-danger-color);
+  border-left: 4px solid var(--tc-color-error);
 }
 
 /* Styles responsive standardisés */

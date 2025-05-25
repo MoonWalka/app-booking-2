@@ -14,7 +14,7 @@
   margin-bottom: var(--tc-space-6);
   padding: var(--tc-space-4);
   background-color: var(--tc-white-secondary);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-box-shadow-sm);
 }
 
@@ -37,7 +37,7 @@
   padding: var(--tc-space-2);
   font-size: var(--tc-font-size-base);
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
@@ -55,7 +55,7 @@
   z-index: 10;
   background-color: var(--tc-white);
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-box-shadow-md);
   max-height: 300px;
   overflow-y: auto;
@@ -105,7 +105,7 @@
   padding: var(--tc-space-2);
   border: 1px solid var(--tc-border-color-light);
   margin-bottom: var(--tc-space-2);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   background-color: var(--tc-white-light);
 }
 
@@ -125,12 +125,12 @@
 }
 
 .removeButton {
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
   background: transparent;
   border: none;
   cursor: pointer;
   padding: var(--tc-space-1) var(--tc-space-2);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   transition: background-color 0.2s ease;
 }
 
@@ -157,7 +157,7 @@
   color: var(--tc-color-primary);
   background-color: transparent;
   border: 1px solid var(--tc-color-primary);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   cursor: pointer;
   transition: all 0.2s ease;
 }

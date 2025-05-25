@@ -13,13 +13,13 @@
   background-color: var(--tc-primary-light);
   color: var(--tc-color-primary);
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   padding: var(--tc-space-1) var(--tc-space-2);
   font-size: var(--tc-font-size-sm);
   display: flex;
   align-items: center;
   cursor: pointer;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .variablesButton:hover {
@@ -36,7 +36,7 @@
   max-width: 340px;
   max-height: 400px;
   background-color: var(--tc-white);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-shadow-lg);
   overflow: hidden;
   display: flex;
@@ -73,7 +73,7 @@
   width: 100%;
   text-align: left;
   cursor: pointer;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
   border-bottom: 1px solid var(--tc-border-default);
 }
 
@@ -91,7 +91,7 @@
   color: var(--tc-color-primary);
   background-color: var(--tc-gray-100);
   padding: var(--tc-space-1);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   font-family: monospace;
   font-size: var(--tc-font-size-xs);
   white-space: nowrap;
@@ -108,11 +108,11 @@
   padding: var(--tc-space-1) var(--tc-space-2);
   background-color: var(--tc-gray-200);
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   color: var(--tc-text-default);
   font-size: var(--tc-font-size-sm);
   cursor: pointer;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .closeButton:hover {

@@ -24,7 +24,7 @@
   gap: var(--tc-space-1);
   border: 1px solid var(--tc-border-default);
   padding: var(--tc-space-2) var(--tc-space-4);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   background-color: transparent;
   color: var(--tc-text-muted);
   font-size: var(--tc-font-size-sm);
@@ -47,7 +47,7 @@
   align-items: center;
   gap: var(--tc-space-1);
   padding: var(--tc-space-2) var(--tc-space-4);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   background-color: var(--tc-color-primary);
   color: var(--tc-white);
   border: none;

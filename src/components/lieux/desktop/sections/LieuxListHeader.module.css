@@ -31,7 +31,7 @@
   margin-top: var(--tc-space-1);
   color: var(--tc-text-color-secondary);
   font-size: var(--tc-font-size-sm);
-  line-height: var(--tc-line-height-base);
+  line-height: var(--tc-line-height-normal);
 }
 
 /* =============================
@@ -49,13 +49,13 @@
   gap: var(--tc-space-1);
   font-weight: var(--tc-font-weight-medium);
   background-color: var(--tc-color-primary);
-  color: var(--tc-light-color);
+  color: var(--tc-text-light);
   border: none;
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   padding: var(--tc-space-2) var(--tc-space-4);
   font-size: var(--tc-font-size-base);
   cursor: pointer;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .addButton:hover {
@@ -72,7 +72,7 @@
 .viewToggle {
   display: flex;
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   overflow: hidden;
 }
 
@@ -82,7 +82,7 @@
   padding: var(--tc-space-1) var(--tc-space-2);
   cursor: pointer;
   color: var(--tc-gray-600);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -91,7 +91,7 @@
 
 .viewToggleButton.active {
   background-color: var(--tc-color-primary);
-  color: var(--tc-light-color);
+  color: var(--tc-text-light);
 }
 
 .viewToggleButton:hover:not(.active) {

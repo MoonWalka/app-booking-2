@@ -59,8 +59,8 @@
 
 .filterPill {
   padding: var(--tc-spacing-2) var(--tc-spacing-3);
-  background-color: var(--tc-border-radius);
-  border: 1px solid var(--tc-border-radius);
+  background-color: var(--tc-radius-base);
+  border: 1px solid var(--tc-radius-base);
   border-radius: var(--tc-spacing-8);
   white-space: nowrap;
   font-size: 0.875rem;
@@ -69,9 +69,9 @@
 }
 
 .filterPill.active {
-  background-color: var(--tc-border-radius);
+  background-color: var(--tc-radius-base);
   color: var(--tc-bg-default);
-  border-color: var(--tc-border-radius);
+  border-color: var(--tc-radius-base);
 }
 
 .mobileArtistesGrid {
@@ -82,7 +82,7 @@
 
 .artisteCardMobile {
   background-color: var(--tc-bg-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
@@ -97,7 +97,7 @@
 .artisteCardHeader {
   position: relative;
   height: 120px;
-  background-color: var(--tc-border-radius);
+  background-color: var(--tc-radius-base);
   overflow: hidden;
 }
 
@@ -113,8 +113,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--tc-border-radius);
-  color: var(--tc-border-radius);
+  background-color: var(--tc-radius-base);
+  color: var(--tc-radius-base);
 }
 
 .placeholderPhotoMobile i {
@@ -138,7 +138,7 @@
 }
 
 .badgeConcerts {
-  background-color: var(--tc-border-radius);
+  background-color: var(--tc-radius-base);
   color: var(--tc-bg-default);
 }
 
@@ -150,11 +150,11 @@
   margin: 0 0 var(--tc-spacing-2) 0;
   font-size: 1.var(--tc-spacing-3);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-border-radius);
+  color: var(--tc-radius-base);
 }
 
 .genre {
-  color: var(--tc-border-radius);
+  color: var(--tc-radius-base);
   font-size: 0.875rem;
   margin-bottom: var(--tc-spacing-2);
 }
@@ -179,17 +179,17 @@
 }
 
 .actionBtn.view {
-  background-color: var(--tc-info-color);
+  background-color: var(--tc-color-info);
   color: var(--tc-bg-default);
 }
 
 .actionBtn.edit {
-  background-color: var(--tc-warning-color);
+  background-color: var(--tc-color-warning);
   color: var(--tc-bg-default);
 }
 
 .actionBtn.delete {
-  background-color: var(--tc-border-radius);
+  background-color: var(--tc-radius-base);
   color: var(--tc-bg-default);
 }
 
@@ -204,7 +204,7 @@
 
 .emptyStateMobile i {
   font-size: 3rem;
-  color: var(--tc-border-radius);
+  color: var(--tc-radius-base);
   margin-bottom: var(--tc-spacing-3);
   opacity: 0.5;
 }

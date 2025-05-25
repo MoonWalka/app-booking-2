@@ -133,7 +133,7 @@
 .tc-shadow-lg { box-shadow: var(--tc-shadow-lg); }             /* remplace shadow-lg */
 
 /* Transitions */
-.tc-transition { transition: var(--tc-transition); }           /* remplace transition */
+.tc-transition { transition: var(--tc-transition-base); }           /* remplace transition */
 .tc-transition-fast { transition: var(--tc-transition-fast); } /* remplace transition-fast */
 
 /* ===== LAYOUT UTILITIES ===== */
@@ -195,7 +195,7 @@
     font-weight: var(--tc-font-weight-medium);
     border-radius: var(--tc-radius-base);
     border: 1px solid transparent;
-    transition: var(--tc-transition);
+    transition: var(--tc-transition-base);
     cursor: pointer;
     text-decoration: none;
 }
@@ -228,7 +228,7 @@
 .tc-card {
     background-color: var(--tc-bg-default);
     border-radius: var(--tc-radius-lg);
-    box-shadow: var(--tc-shadow);
+    box-shadow: var(--tc-shadow-base);
     padding: var(--tc-space-6);
     border: 1px solid var(--tc-border-light);
 }

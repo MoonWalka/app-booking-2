@@ -12,7 +12,7 @@
 
 .detailsCard {
   background-color: var(--tc-white);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   margin-bottom: var(--tc-space-4);
   box-shadow: var(--tc-shadow-sm);
   overflow: hidden;

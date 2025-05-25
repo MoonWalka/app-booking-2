@@ -16,17 +16,17 @@
 
 /* Styles pour les erreurs de validation */
 .inputError {
-  border-color: var(--tc-danger-color);
+  border-color: var(--tc-color-error);
   background-color: var(--tc-danger-color-05);
 }
 
 .selectError {
-  border-color: var(--tc-danger-color);
+  border-color: var(--tc-color-error);
   background-color: var(--tc-danger-color-05);
 }
 
 .errorMessage {
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
   font-size: var(--tc-font-size-sm);
   margin-top: var(--tc-space-1);
 }
@@ -53,8 +53,8 @@
   background-color: var(--tc-white);
   background-clip: padding-box;
   border: var(--tc-border-width) solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius-sm);
-  transition: var(--tc-transition);
+  border-radius: var(--tc-radius-sm);
+  transition: var(--tc-transition-base);
 }
 
 .formControl:focus {

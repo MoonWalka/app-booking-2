@@ -21,7 +21,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   overflow: hidden;
   background-color: var(--tc-white);
   margin-bottom: var(--tc-space-4);
@@ -35,8 +35,8 @@
   display: flex !important;
   flex-wrap: wrap;
   background-color: var(--tc-gray-50);
-  border-top-left-radius: var(--tc-border-radius);
-  border-top-right-radius: var(--tc-border-radius);
+  border-top-left-radius: var(--tc-radius-base);
+  border-top-right-radius: var(--tc-radius-base);
   border: 1px solid var(--tc-border-light);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   position: sticky;
@@ -53,7 +53,7 @@
   align-items: center;
   justify-content: center;
   padding: 0;
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   transition: all var(--tc-transition-duration);
 }
 
@@ -83,7 +83,7 @@
   background: var(--tc-gray-900);
   color: var(--tc-white);
   padding: 2px 6px;
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   font-size: 11px;
   white-space: nowrap;
   z-index: 1000;
@@ -105,7 +105,7 @@
 
 .tc-quill-editor-wrapper .ql-toolbar .ql-picker-label {
   padding: 0 var(--tc-space-1);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   display: flex;
   align-items: center;
   height: 100%;
@@ -116,9 +116,9 @@
 }
 
 .tc-quill-editor-wrapper .ql-toolbar .ql-picker-options {
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   border: 1px solid var(--tc-border-light);
-  box-shadow: var(--tc-shadow);
+  box-shadow: var(--tc-shadow-base);
   background-color: var(--tc-white);
   padding: var(--tc-space-1) 0;
 }
@@ -138,12 +138,12 @@
    ======================================== */
 
 .tc-quill-editor-wrapper .ql-container {
-  font-family: var(--tc-font-family-base);
+  font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-base);
   border: 1px solid var(--tc-border-light);
   border-top: none;
-  border-bottom-left-radius: var(--tc-border-radius);
-  border-bottom-right-radius: var(--tc-border-radius);
+  border-bottom-left-radius: var(--tc-radius-base);
+  border-bottom-right-radius: var(--tc-radius-base);
 }
 
 .tc-quill-editor-wrapper .ql-editor {
@@ -164,7 +164,7 @@
    ======================================== */
 
 .tc-quill-editor-wrapper .ql-editor h1 {
-  font-size: var(--tc-font-size-xxl);
+  font-size: var(--tc-font-size-2xl);
   font-weight: var(--tc-font-weight-bold);
   margin-bottom: var(--tc-space-4);
   color: var(--tc-gray-900);
@@ -214,14 +214,14 @@
 .tc-quill-editor-wrapper .ql-editor code {
   background-color: var(--tc-gray-100);
   padding: 0.2em 0.4em;
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   font-family: monospace;
   color: var(--tc-gray-800);
 }
 
 .tc-quill-editor-wrapper .ql-editor pre {
   background-color: var(--tc-gray-100);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   padding: var(--tc-space-2);
   margin-bottom: var(--tc-space-2);
   overflow-x: auto;
@@ -296,7 +296,7 @@
   margin: var(--tc-space-4) 0;
   padding: var(--tc-space-1);
   border: 2px dashed var(--tc-color-primary);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   background-color: rgba(var(--tc-primary-color-rgb), 0.05);
   text-align: center;
   position: relative;
@@ -325,7 +325,7 @@
   font-weight: bold;
   background-color: rgba(var(--tc-primary-color-rgb), 0.1);
   padding: var(--tc-space-1);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   display: inline-block;
 }
 
@@ -353,12 +353,12 @@
 
 .tc-quill-editor-wrapper.tc-readonly .ql-container {
   border-top: 1px solid var(--tc-border-light);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
 }
 
 /* Éditeur avec erreur */
 .tc-quill-editor-wrapper.tc-invalid .ql-container {
-  border-color: var(--tc-danger-color);
+  border-color: var(--tc-color-error);
 }
 
 .tc-quill-editor-wrapper.tc-invalid .ql-editor {
@@ -373,7 +373,7 @@
   width: 100%;
   padding: var(--tc-space-4);
   border: 1px solid var(--tc-border-light);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   background-color: var(--tc-white);
   min-height: 200px;
   overflow-y: auto;
@@ -384,7 +384,7 @@
 }
 
 .tc-quill-preview h1 {
-  font-size: var(--tc-font-size-xxl);
+  font-size: var(--tc-font-size-2xl);
   font-weight: var(--tc-font-weight-bold);
   margin-bottom: var(--tc-space-4);
   color: var(--tc-gray-900);
@@ -434,14 +434,14 @@
 .tc-quill-preview code {
   background-color: var(--tc-gray-100);
   padding: 0.2em 0.4em;
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   font-family: monospace;
   color: var(--tc-gray-800);
 }
 
 .tc-quill-preview pre {
   background-color: var(--tc-gray-100);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   padding: var(--tc-space-2);
   margin-bottom: var(--tc-space-2);
   overflow-x: auto;
@@ -460,7 +460,7 @@
 .tc-quill-preview img {
   max-width: 100%;
   height: auto;
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   margin-bottom: var(--tc-space-2);
 }
 

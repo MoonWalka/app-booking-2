@@ -11,7 +11,7 @@
 
 .htmlPreview {
   border: 1px solid var(--tc-border-light);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   padding: var(--tc-spacing-5);
   background-color: var(--tc-bg-white);
 }
@@ -31,7 +31,7 @@
 
 .pdfIframe {
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   width: 100%;
 }
 

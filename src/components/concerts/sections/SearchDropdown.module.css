@@ -21,7 +21,7 @@
   background-color: var(--tc-bg-subtle);
   border: 1px solid var(--tc-border-input);
   border-right: none;
-  border-radius: var(--tc-border-radius-sm) 0 0 var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm) 0 0 var(--tc-radius-sm);
   color: var(--tc-text-muted);
 }
 
@@ -37,7 +37,7 @@
   align-items: center;
   gap: var(--tc-spacing-1-5);
   white-space: nowrap;
-  border-radius: 0 var(--tc-border-radius-sm) var(--tc-border-radius-sm) 0;
+  border-radius: 0 var(--tc-radius-sm) var(--tc-radius-sm) 0;
 }
 
 .resultsDropdown {
@@ -49,7 +49,7 @@
   overflow-y: auto;
   background-color: var(--tc-white); /* Correction : fond blanc opaque pour la dropdown */
   border: 1px solid var(--tc-border-input);
-  border-radius: 0 0 var(--tc-border-radius-sm) var(--tc-border-radius-sm);
+  border-radius: 0 0 var(--tc-radius-sm) var(--tc-radius-sm);
   box-shadow: var(--tc-shadow-md);
   z-index: var(--tc-z-index-dropdown);
   margin-top: -1px;
@@ -141,7 +141,7 @@
   .inputGroupText {
     border-right: 1px solid var(--tc-border-input);
     border-bottom: none;
-    border-radius: var(--tc-border-radius-sm) var(--tc-border-radius-sm) 0 0;
+    border-radius: var(--tc-radius-sm) var(--tc-radius-sm) 0 0;
   }
   
   .searchInput {
@@ -152,7 +152,7 @@
   }
   
   .createButton {
-    border-radius: 0 0 var(--tc-border-radius-sm) var(--tc-border-radius-sm);
+    border-radius: 0 0 var(--tc-radius-sm) var(--tc-radius-sm);
   }
   
   .tipContainer, .loadingContainer {
@@ -187,7 +187,7 @@
 }
 
 .closeDropdownButton:hover {
-  color: var(--tc-danger-color) !important;
+  color: var(--tc-color-error) !important;
   background-color: var(--tc-gray-100) !important;
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
 }

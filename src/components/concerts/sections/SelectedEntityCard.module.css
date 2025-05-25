@@ -69,7 +69,7 @@
 
 .removeButton:hover {
   background-color: var(--tc-danger-light);
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
 }
 
 .entityDetails {

@@ -19,7 +19,7 @@
   display: flex;
   justify-content: center;
   font-size: 3rem;
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
   margin-bottom: var(--tc-spacing-3);
 }
 

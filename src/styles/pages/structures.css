@@ -13,7 +13,7 @@
   align-items: center;
   gap: var(--tc-space-1);
   padding: var(--tc-space-1) var(--tc-space-2);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-medium);
 }
@@ -21,7 +21,7 @@
 /* Variantes par type de structure */
 .tc-type-salle {
   background-color: rgba(var(--tc-info-color-rgb), 0.1);
-  color: var(--tc-info-color);
+  color: var(--tc-color-info);
 }
 
 .tc-type-festival {
@@ -31,7 +31,7 @@
 
 .tc-type-association {
   background-color: rgba(var(--tc-success-color-rgb), 0.1);
-  color: var(--tc-success-color);
+  color: var(--tc-color-success);
 }
 
 .tc-type-mairie {
@@ -92,12 +92,12 @@
 .tc-structures-card {
   position: relative;
   background-color: var(--tc-bg-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   padding: var(--tc-space-4);
   margin-bottom: var(--tc-space-4);
-  box-shadow: var(--tc-shadow);
+  box-shadow: var(--tc-shadow-base);
   cursor: pointer;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .tc-structures-card:active {
@@ -121,10 +121,10 @@
   justify-content: center;
   font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-bold);
-  color: var(--tc-light-color);
+  color: var(--tc-text-light);
   padding: 0 var(--tc-space-2);
 }
 
 .tc-badge-programmateurs {
-  background-color: var(--tc-success-color);
+  background-color: var(--tc-color-success);
 }

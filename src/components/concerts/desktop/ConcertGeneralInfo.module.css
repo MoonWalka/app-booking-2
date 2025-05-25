@@ -8,7 +8,7 @@
 
 .formCard {
   background-color: var(--tc-bg-color-light);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-shadow-sm);
   margin-bottom: var(--tc-space-6);
   overflow: hidden;
@@ -49,7 +49,7 @@
 }
 
 .required {
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
   margin-left: var(--tc-space-1);
 }
 
@@ -62,7 +62,7 @@
   display: flex;
   align-items: center;
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-warning-color);
+  color: var(--tc-color-warning);
 }
 
 .actionNeeded i {

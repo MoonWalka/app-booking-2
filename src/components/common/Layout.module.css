@@ -17,7 +17,7 @@
   text-align: center;
   padding: var(--tc-spacing-xl);
   background-color: var(--tc-white);
-  border-radius: var(--tc-border-radius-lg);
+  border-radius: var(--tc-radius-lg);
   box-shadow: var(--tc-box-shadow);
   max-width: 500px;
   margin: var(--tc-space-6);
@@ -41,12 +41,12 @@
   background-color: var(--tc-color-primary);
   color: var(--tc-white);
   border: none;
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   padding: var(--tc-space-2) var(--tc-space-6);
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-medium);
   cursor: pointer;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .retryButton:hover {

@@ -23,7 +23,7 @@
 
 .modalContent {
   background-color: var(--tc-bg-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   max-width: 500px;
   width: 100%;
   box-shadow: var(--tc-box-shadow-lg);
@@ -64,20 +64,20 @@
 
 .alertDanger {
   background-color: var(--tc-danger-light);
-  color: var(--tc-danger-dark);
+  color: var(--tc-color-error-dark);
   padding: var(--tc-space-2) var(--tc-space-4);
   margin-bottom: var(--tc-space-4);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   display: flex;
   align-items: center;
 }
 
 .alertWarning {
   background-color: var(--tc-warning-light);
-  color: var(--tc-warning-dark);
+  color: var(--tc-color-warning-dark);
   padding: var(--tc-space-2) var(--tc-space-4);
   margin-top: var(--tc-space-4);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   display: flex;
   align-items: flex-start;
 }

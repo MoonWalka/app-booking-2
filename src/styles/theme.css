@@ -13,10 +13,10 @@
 body {
   background-color: var(--tc-bg-default);
   color: var(--tc-text-default);
-  font-family: var(--tc-font-family-base);
+  font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-base);
-  line-height: var(--tc-line-height-base);
-  transition: var(--tc-transition);
+  line-height: var(--tc-line-height-normal);
+  transition: var(--tc-transition-base);
 }
 
 /* =============================
@@ -26,23 +26,23 @@ body {
   background-color: var(--tc-bg-default);
   border: 1px solid var(--tc-border-default);
   box-shadow: var(--tc-shadow-sm);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   padding: var(--tc-space-4);
 }
 
 .tc-form-control {
   background-color: var(--tc-bg-default);
-  border: 1px solid var(--tc-input-border);
+  border: 1px solid var(--tc-border-default);
   color: var(--tc-input-color);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   padding: var(--tc-space-2) var(--tc-space-4);
   font-size: var(--tc-font-size-base);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .tc-form-control:focus {
-  border-color: var(--tc-input-focus-border);
-  box-shadow: var(--tc-input-focus-shadow);
+  border-color: var(--tc-color-primary);
+  box-shadow: var(--tc-shadow-base);
   outline: none;
 }
 
@@ -56,16 +56,16 @@ body {
   padding: var(--tc-space-2) var(--tc-space-4);
   font-size: var(--tc-font-size-base);
   font-weight: var(--tc-font-weight-medium);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   cursor: pointer;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
   border: 1px solid transparent;
 }
 
 /* Bouton primaire */
 .tc-btn-primary {
   background-color: var(--tc-color-primary);
-  border-color: var(--tc-btn-primary-border);
+  border-color: var(--tc-color-primary);
   color: var(--tc-text-light);
 }
 
@@ -79,62 +79,62 @@ body {
 
 /* Bouton secondaire */
 .tc-btn-secondary {
-  background-color: var(--tc-btn-secondary-bg);
-  color: var(--tc-btn-secondary-text);
-  border-color: var(--tc-btn-secondary-border);
+  background-color: var(--tc-color-secondary);
+  color: var(--tc-text-light);
+  border-color: var(--tc-color-secondary);
 }
 
 .tc-btn-secondary:hover,
 .tc-btn-secondary:focus,
 .tc-btn-secondary:active,
 .tc-btn-secondary.tc-active {
-  background-color: var(--tc-secondary-dark);
-  border-color: var(--tc-secondary-dark);
+  background-color: var(--tc-color-secondary-dark);
+  border-color: var(--tc-color-secondary-dark);
 }
 
 /* Bouton succès */
 .tc-btn-success {
-  background-color: var(--tc-success-color);
-  color: var(--tc-light-color);
-  border-color: var(--tc-success-color);
+  background-color: var(--tc-color-success);
+  color: var(--tc-text-light);
+  border-color: var(--tc-color-success);
 }
 
 .tc-btn-success:hover,
 .tc-btn-success:focus,
 .tc-btn-success:active,
 .tc-btn-success.tc-active {
-  background-color: var(--tc-success-dark);
-  border-color: var(--tc-success-dark);
+  background-color: var(--tc-color-success-dark);
+  border-color: var(--tc-color-success-dark);
 }
 
 /* Bouton danger */
 .tc-btn-danger {
-  background-color: var(--tc-danger-color);
-  color: var(--tc-light-color);
-  border-color: var(--tc-danger-color);
+  background-color: var(--tc-color-error);
+  color: var(--tc-text-light);
+  border-color: var(--tc-color-error);
 }
 
 .tc-btn-danger:hover,
 .tc-btn-danger:focus,
 .tc-btn-danger:active,
 .tc-btn-danger.tc-active {
-  background-color: var(--tc-danger-dark);
-  border-color: var(--tc-danger-dark);
+  background-color: var(--tc-color-error-dark);
+  border-color: var(--tc-color-error-dark);
 }
 
 /* Bouton info */
 .tc-btn-info {
-  background-color: var(--tc-info-color);
-  color: var(--tc-light-color);
-  border-color: var(--tc-info-color);
+  background-color: var(--tc-color-info);
+  color: var(--tc-text-light);
+  border-color: var(--tc-color-info);
 }
 
 .tc-btn-info:hover,
 .tc-btn-info:focus,
 .tc-btn-info:active,
 .tc-btn-info.tc-active {
-  background-color: var(--tc-info-dark);
-  border-color: var(--tc-info-dark);
+  background-color: var(--tc-color-info-dark);
+  border-color: var(--tc-color-info-dark);
 }
 
 /* =============================
@@ -155,8 +155,8 @@ body {
   margin-top: var(--tc-space-1);
   background-color: var(--tc-bg-default);
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-shadow);
+  border-radius: var(--tc-radius-base);
+  box-shadow: var(--tc-shadow-base);
 }
 
 .tc-suggestion-item {
@@ -184,43 +184,43 @@ body {
 
 .tc-badge-primary {
   background-color: var(--tc-color-primary);
-  color: var(--tc-light-color);
+  color: var(--tc-text-light);
 }
 
 .tc-badge-secondary {
-  background-color: var(--tc-secondary-color);
-  color: var(--tc-light-color);
+  background-color: var(--tc-color-secondary);
+  color: var(--tc-text-light);
 }
 
 .tc-badge-success {
-  background-color: var(--tc-success-color);
-  color: var(--tc-light-color);
+  background-color: var(--tc-color-success);
+  color: var(--tc-text-light);
 }
 
 .tc-badge-danger {
-  background-color: var(--tc-danger-color);
-  color: var(--tc-light-color);
+  background-color: var(--tc-color-error);
+  color: var(--tc-text-light);
 }
 
 .tc-badge-warning {
-  background-color: var(--tc-warning-color);
-  color: var(--tc-dark-color);
+  background-color: var(--tc-color-warning);
+  color: var(--tc-text-default);
 }
 
 .tc-badge-info {
-  background-color: var(--tc-info-color);
-  color: var(--tc-light-color);
+  background-color: var(--tc-color-info);
+  color: var(--tc-text-light);
 }
 
 /* =============================
    TEXTES COLORÉS
    ============================= */
 .tc-text-primary { color: var(--tc-color-primary); }
-.tc-text-secondary { color: var(--tc-secondary-color); }
-.tc-text-success { color: var(--tc-success-color); }
-.tc-text-danger { color: var(--tc-danger-color); }
-.tc-text-warning { color: var(--tc-warning-color); }
-.tc-text-info { color: var(--tc-info-color); }
+.tc-text-secondary { color: var(--tc-color-secondary); }
+.tc-text-success { color: var(--tc-color-success); }
+.tc-text-danger { color: var(--tc-color-error); }
+.tc-text-warning { color: var(--tc-color-warning); }
+.tc-text-info { color: var(--tc-color-info); }
 .tc-text-muted { color: var(--tc-text-muted); }
 
 /* =============================

@@ -66,7 +66,7 @@
 }
 
 .tc-form-required {
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
   margin-left: 2px;
 }
 
@@ -75,15 +75,15 @@
   display: block;
   width: 100%;
   padding: var(--tc-space-1) var(--tc-space-2);
-  font-family: var(--tc-font-family-base);
+  font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-base);
   line-height: 1.5;
   color: var(--tc-text-default);
   background-color: var(--tc-bg-default);
   background-clip: padding-box;
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
-  transition: var(--tc-transition);
+  border-radius: var(--tc-radius-base);
+  transition: var(--tc-transition-base);
   height: 40px;
 }
 
@@ -158,11 +158,11 @@ select.tc-form-control optgroup {
   background-size: contain;
   border: 1px solid var(--tc-border-default);
   appearance: none;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .tc-form-check-input[type="checkbox"] {
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
 }
 
 .tc-form-check-input[type="radio"] {
@@ -226,7 +226,7 @@ select.tc-form-control optgroup {
 
 /* VALIDATION ET ÉTATS */
 .tc-form-control.tc-is-invalid {
-  border-color: var(--tc-danger-color);
+  border-color: var(--tc-color-error);
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23dc3545' d='M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right var(--tc-space-2) center;
@@ -243,11 +243,11 @@ select.tc-form-control.tc-is-invalid {
   width: 100%;
   margin-top: var(--tc-space-1);
   font-size: var(--tc-font-size-xs);
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
 }
 
 .tc-form-control.tc-is-valid {
-  border-color: var(--tc-success-color);
+  border-color: var(--tc-color-success);
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%2328a745' d='M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right var(--tc-space-2) center;
@@ -260,7 +260,7 @@ select.tc-form-control.tc-is-invalid {
   width: 100%;
   margin-top: var(--tc-space-1);
   font-size: var(--tc-font-size-xs);
-  color: var(--tc-success-color);
+  color: var(--tc-color-success);
 }
 
 /* TAILLES DE CHAMPS */
@@ -268,14 +268,14 @@ select.tc-form-control.tc-is-invalid {
   height: 32px;
   padding: 0.25rem 0.5rem;
   font-size: var(--tc-font-size-xs);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
 }
 
 .tc-form-control-lg {
   height: 48px;
   padding: 0.5rem 1rem;
   font-size: var(--tc-font-size-md);
-  border-radius: var(--tc-border-radius-lg);
+  border-radius: var(--tc-radius-lg);
 }
 
 textarea.tc-form-control-sm {
@@ -309,10 +309,10 @@ textarea.tc-form-control-lg {
   border: none;
   background-color: var(--tc-color-primary);
   color: var(--tc-white);
-  border-radius: 0 var(--tc-border-radius) var(--tc-border-radius) 0;
+  border-radius: 0 var(--tc-radius-base) var(--tc-radius-base) 0;
   padding: 0 var(--tc-space-2);
   cursor: pointer;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .tc-form-search-button:hover {
@@ -382,11 +382,11 @@ textarea.tc-form-control-lg {
   cursor: pointer;
   padding: var(--tc-space-1) var(--tc-space-2);
   border: 1px dashed var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   background-color: var(--tc-gray-50);
   text-align: center;
   width: 100%;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .tc-form-file-label:hover {
@@ -447,7 +447,7 @@ textarea.tc-form-control-lg {
   }
   
   .tc-input-group > * {
-    border-radius: var(--tc-border-radius) !important;
+    border-radius: var(--tc-radius-base) !important;
     margin-bottom: var(--tc-space-1);
   }
   

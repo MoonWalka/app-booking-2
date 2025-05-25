@@ -7,8 +7,8 @@
 /* ValidationSummary Styles - Standardisés */
 .container {
   margin-bottom: var(--tc-space-6);
-  border: var(--tc-border-width) solid var(--tc-success-color);
-  border-radius: var(--tc-border-radius);
+  border: var(--tc-border-width) solid var(--tc-color-success);
+  border-radius: var(--tc-radius-base);
   background-color: var(--tc-success-color-10);
   overflow: hidden;
 }
@@ -23,8 +23,8 @@
 }
 
 .iconWrapper i {
-  font-size: var(--tc-font-size-xxl);
-  color: var(--tc-success-color);
+  font-size: var(--tc-font-size-2xl);
+  color: var(--tc-color-success);
 }
 
 .title {
@@ -41,12 +41,12 @@
 
 /* Variante pour les erreurs */
 .containerError {
-  border-color: var(--tc-danger-color);
+  border-color: var(--tc-color-error);
   background-color: var(--tc-danger-color-10);
 }
 
 .containerError .iconWrapper i {
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
 }
 
 .containerError .title {
@@ -59,12 +59,12 @@
 
 /* Variante pour les avertissements */
 .containerWarning {
-  border-color: var(--tc-warning-color);
+  border-color: var(--tc-color-warning);
   background-color: var(--tc-warning-color-10);
 }
 
 .containerWarning .iconWrapper i {
-  color: var(--tc-warning-color);
+  color: var(--tc-color-warning);
 }
 
 .containerWarning .title {

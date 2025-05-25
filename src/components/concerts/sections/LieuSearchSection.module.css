@@ -29,7 +29,7 @@
 }
 
 .requiredField {
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
   margin-left: var(--tc-spacing-0-5);
 }
 

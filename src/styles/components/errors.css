@@ -19,8 +19,8 @@
   background-color: var(--tc-bg-default);
   max-width: 800px;
   margin: 0 auto;
-  border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-shadow);
+  border-radius: var(--tc-radius-base);
+  box-shadow: var(--tc-shadow-base);
 }
 
 .tc-error-fullpage {
@@ -31,11 +31,11 @@
 .tc-error-icon {
   font-size: 4rem;
   margin-bottom: var(--tc-space-4);
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
 }
 
-.tc-error-icon-warning { color: var(--tc-warning-color); }
-.tc-error-icon-info { color: var(--tc-info-color); }
+.tc-error-icon-warning { color: var(--tc-color-warning); }
+.tc-error-icon-info { color: var(--tc-color-info); }
 .tc-error-icon-offline { color: var(--tc-text-muted); }
 
 /* ÉLÉMENTS DE TEXTE D'ERREUR */
@@ -63,7 +63,7 @@
   font-family: monospace;
   background-color: var(--tc-gray-100);
   padding: var(--tc-space-1) var(--tc-space-2);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   margin: var(--tc-space-2) 0;
   color: var(--tc-text-default);
   font-size: var(--tc-font-size-sm);
@@ -75,12 +75,12 @@
 
 /* MESSAGES D'ERREUR DE FORMULAIRE */
 .tc-form-error {
-  border-color: var(--tc-danger-color) !important;
-  box-shadow: 0 0 0 1px var(--tc-danger-color);
+  border-color: var(--tc-color-error) !important;
+  box-shadow: 0 0 0 1px var(--tc-color-error);
 }
 
 .tc-error-message {
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
   font-size: var(--tc-font-size-xs);
   margin-top: var(--tc-space-1);
   display: flex;
@@ -106,11 +106,11 @@
   background-color: var(--tc-color-primary);
   color: var(--tc-white);
   border: none;
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   cursor: pointer;
   font-size: var(--tc-font-size-base);
   font-weight: var(--tc-font-weight-medium);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
   display: inline-flex;
   align-items: center;
   gap: var(--tc-space-1);
@@ -125,11 +125,11 @@
   background-color: var(--tc-bg-default);
   color: var(--tc-color-primary);
   border: 1px solid var(--tc-color-primary);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   cursor: pointer;
   font-size: var(--tc-font-size-base);
   font-weight: var(--tc-font-weight-medium);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
   display: inline-flex;
   align-items: center;
   gap: var(--tc-space-1);
@@ -141,14 +141,14 @@
 
 /* TYPES D'ERREURS SPÉCIFIQUES */
 .tc-error-404 .tc-error-icon { color: var(--tc-color-primary); }
-.tc-error-500 .tc-error-icon { color: var(--tc-danger-color); }
-.tc-error-network .tc-error-icon { color: var(--tc-warning-color); }
-.tc-error-auth .tc-error-icon { color: var(--tc-secondary-color); }
+.tc-error-500 .tc-error-icon { color: var(--tc-color-error); }
+.tc-error-network .tc-error-icon { color: var(--tc-color-warning); }
+.tc-error-auth .tc-error-icon { color: var(--tc-color-secondary); }
 
 /* ALERTES CONTEXTUELLES */
 .tc-alert {
   padding: var(--tc-space-2) var(--tc-space-4);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   margin-bottom: var(--tc-space-4);
   display: flex;
   align-items: flex-start;
@@ -194,37 +194,37 @@
 /* Variantes d'alertes */
 .tc-alert-error {
   background-color: rgba(var(--tc-danger-color-rgb), 0.1);
-  color: var(--tc-danger-dark);
-  border-left: 4px solid var(--tc-danger-color);
+  color: var(--tc-color-error-dark);
+  border-left: 4px solid var(--tc-color-error);
 }
 
 .tc-alert-warning {
   background-color: rgba(var(--tc-warning-color-rgb), 0.1);
-  color: var(--tc-warning-dark);
-  border-left: 4px solid var(--tc-warning-color);
+  color: var(--tc-color-warning-dark);
+  border-left: 4px solid var(--tc-color-warning);
 }
 
 .tc-alert-info {
   background-color: rgba(var(--tc-info-color-rgb), 0.1);
-  color: var(--tc-info-dark);
-  border-left: 4px solid var(--tc-info-color);
+  color: var(--tc-color-info-dark);
+  border-left: 4px solid var(--tc-color-info);
 }
 
 .tc-alert-success {
   background-color: rgba(var(--tc-success-color-rgb), 0.1);
-  color: var(--tc-success-dark);
-  border-left: 4px solid var(--tc-success-color);
+  color: var(--tc-color-success-dark);
+  border-left: 4px solid var(--tc-color-success);
 }
 
 /* CHAMPS DE FORMULAIRE AVEC ERREUR */
 .tc-form-group.has-error .tc-form-label {
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
 }
 
 .tc-form-group.has-error .tc-form-input,
 .tc-form-group.has-error .tc-form-select,
 .tc-form-group.has-error .tc-form-textarea {
-  border-color: var(--tc-danger-color);
+  border-color: var(--tc-color-error);
   background-color: rgba(var(--tc-danger-color-rgb), 0.05);
 }
 

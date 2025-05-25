@@ -11,10 +11,10 @@
 .suggestionsList {
   margin-top: var(--tc-space-1);
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   max-height: 300px;
   overflow-y: auto;
-  box-shadow: var(--tc-shadow);
+  box-shadow: var(--tc-shadow-base);
   z-index: var(--tc-z-index-dropdown);
   background-color: var(--tc-bg-default);
 }

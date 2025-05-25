@@ -29,7 +29,7 @@
   align-items: center;
   margin-bottom: var(--tc-space-1);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-secondary-color);
+  color: var(--tc-color-secondary);
 }
 
 .breadcrumbItem {
@@ -64,7 +64,7 @@
    ============================= */
 .modernTitle {
   margin: 0;
-  font-size: var(--tc-font-size-xxl);
+  font-size: var(--tc-font-size-2xl);
   font-weight: var(--tc-font-weight-semibold);
   color: var(--tc-text-default);
   display: flex;
@@ -98,7 +98,7 @@
   font-size: var(--tc-font-size-xs);
   text-transform: uppercase;
   padding: var(--tc-space-1) var(--tc-space-2);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   font-weight: var(--tc-font-weight-medium);
   background-color: var(--tc-gray-100);
   color: var(--tc-gray-700);

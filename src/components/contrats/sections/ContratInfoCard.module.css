@@ -7,7 +7,7 @@
 .infoCard {
   background-color: var(--tc-white);
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-box-shadow);
   padding: var(--tc-space-6);
 }
@@ -35,7 +35,7 @@
 }
 
 .infoSection h5 {
-  color: var(--tc-secondary-color);
+  color: var(--tc-color-secondary);
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-medium);
   margin-bottom: var(--tc-space-2);

@@ -11,7 +11,7 @@
   max-width: 800px;
   margin: 0 auto;
   padding: var(--tc-spacing-xl) var(--tc-space-4);
-  font-family: var(--tc-font-family-base);
+  font-family: var(--tc-font-sans);
   background-color: var(--tc-gray-50);
   min-height: 100vh;
 }
@@ -31,10 +31,10 @@
 /* SECTIONS DE FORMULAIRE */
 .tc-form-public .tc-form-section {
   background-color: var(--tc-bg-default);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   padding: var(--tc-space-6);
   margin-bottom: var(--tc-space-6);
-  box-shadow: var(--tc-shadow);
+  box-shadow: var(--tc-shadow-base);
 }
 
 .tc-form-public .tc-card-header {
@@ -43,7 +43,7 @@
   padding: var(--tc-space-2) var(--tc-space-4);
   background-color: var(--tc-gray-50);
   border-bottom: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius) var(--tc-border-radius) 0 0;
+  border-radius: var(--tc-radius-base) var(--tc-radius-base) 0 0;
 }
 
 .tc-form-public .tc-card-header i {
@@ -71,10 +71,10 @@
 
 .tc-form-public .tc-form-control {
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   padding: var(--tc-space-1) var(--tc-space-2);
   font-size: var(--tc-font-size-base);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .tc-form-public .tc-form-control:focus {
@@ -105,11 +105,11 @@
   background-color: var(--tc-color-primary);
   color: var(--tc-white);
   border: none;
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   padding: var(--tc-space-2) var(--tc-space-6);
   font-size: var(--tc-font-size-base);
   cursor: pointer;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .tc-form-public .tc-btn-submit-public:hover {
@@ -131,7 +131,7 @@
 
 /* ALERTES */
 .tc-form-public .tc-alert {
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   padding: var(--tc-space-2);
 }
 
@@ -148,7 +148,7 @@
 /* COMPARAISON DE VALEURS */
 .tc-form-value.tc-updated {
   background-color: var(--tc-bg-default);
-  border-left: 3px solid var(--tc-warning-color);
+  border-left: 3px solid var(--tc-color-warning);
   padding-left: var(--tc-space-1);
 }
 

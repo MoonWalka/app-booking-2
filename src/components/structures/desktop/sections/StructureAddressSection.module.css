@@ -12,7 +12,7 @@
 
 .formCard {
   background-color: var(--tc-white);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-box-shadow-sm);
   margin-bottom: var(--tc-space-6);
   overflow: hidden;
@@ -20,7 +20,7 @@
 
 .detailsCard {
   background-color: var(--tc-white);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   margin-bottom: var(--tc-space-4);
   box-shadow: var(--tc-box-shadow-sm);
   overflow: hidden;
@@ -79,7 +79,7 @@
   display: block;
   width: 100%;
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   padding: var(--tc-space-1) var(--tc-space-2);
   font-size: var(--tc-font-size-sm);
   line-height: 1.5;

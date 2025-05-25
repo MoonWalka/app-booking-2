@@ -14,11 +14,11 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--tc-space-2) var(--tc-space-4);
-  background-color: var(--tc-dark-color);
+  background-color: var(--tc-text-default);
 }
 
 .navbarDark {
-  color: var(--tc-light-color);
+  color: var(--tc-text-light);
 }
 
 .navbarExpand {
@@ -56,7 +56,7 @@
   line-height: 1;
   background-color: transparent;
   border: var(--tc-border-width) solid rgba(255,255,255,.1);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   color: rgba(255,255,255,.5);
 }
 
@@ -94,7 +94,7 @@
   padding: var(--tc-space-2) var(--tc-space-4);
   color: rgba(255,255,255,.55);
   text-decoration: none;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .navLink:hover, .navLink:focus {
@@ -124,10 +124,10 @@
   border-color: var(--tc-light);
   padding: var(--tc-space-1) var(--tc-space-2);
   font-size: var(--tc-font-size-sm);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   display: inline-block;
   font-weight: var(--tc-font-weight-normal);
-  line-height: var(--tc-line-height-base);
+  line-height: var(--tc-line-height-normal);
   text-align: center;
   text-decoration: none;
   vertical-align: middle;
@@ -135,7 +135,7 @@
   user-select: none;
   background-color: transparent;
   border: var(--tc-border-width) solid;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .btnOutlineLight:hover {

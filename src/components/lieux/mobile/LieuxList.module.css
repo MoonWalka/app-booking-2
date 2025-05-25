@@ -56,9 +56,9 @@
   margin: 1rem;
   padding: 1rem;
   background-color: var(--tc-danger-bg);
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
   border: 1px solid var(--tc-danger-border);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
 }
 
 /* =============================
@@ -89,12 +89,12 @@
   align-items: center;
   justify-content: center;
   padding: 0;
-  box-shadow: var(--tc-shadow);
+  box-shadow: var(--tc-shadow-base);
   background-color: var(--tc-color-primary);
   color: var(--tc-bg-color-light);
   border: none;
   cursor: pointer;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .modernAddBtn:hover {
@@ -117,7 +117,7 @@
 
 .searchInput {
   height: 45px;
-  border-radius: 0 var(--tc-border-radius) var(--tc-border-radius) 0;
+  border-radius: 0 var(--tc-radius-base) var(--tc-radius-base) 0;
   padding-left: var(--tc-space-4);
   background-color: var(--tc-bg-color-light);
   box-shadow: var(--tc-shadow-sm);
@@ -126,18 +126,18 @@
   width: 100%;
   color: var(--tc-text-default);
   font-size: var(--tc-font-size-base);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .searchInput:focus {
   outline: none;
-  box-shadow: var(--tc-input-focus-shadow);
+  box-shadow: var(--tc-shadow-base);
   border-color: var(--tc-color-primary);
 }
 
 .inputGroupText {
   background-color: var(--tc-bg-color-light);
-  border-radius: var(--tc-border-radius) 0 0 var(--tc-border-radius);
+  border-radius: var(--tc-radius-base) 0 0 var(--tc-radius-base);
   border: 1px solid var(--tc-border-default);
   border-right: none;
   box-shadow: var(--tc-shadow-sm);
@@ -186,14 +186,14 @@
   padding: var(--tc-spacing-xl) var(--tc-space-4);
   text-align: center;
   background-color: var(--tc-bg-color-light);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-shadow-sm);
   border: 1px solid var(--tc-border-default);
   margin: var(--tc-spacing-xl) 0;
 }
 
 .emptyStateIcon {
-  font-size: var(--tc-font-size-xxl);
+  font-size: var(--tc-font-size-2xl);
   color: var(--tc-border-default);
   margin-bottom: var(--tc-space-4);
 }
@@ -209,10 +209,10 @@
   color: var(--tc-bg-color-light);
   border: none;
   padding: var(--tc-space-2) var(--tc-space-6);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   font-weight: var(--tc-font-weight-medium);
   cursor: pointer;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
   display: inline-flex;
   align-items: center;
   gap: var(--tc-space-2);
@@ -233,11 +233,11 @@
 
 .lieuCard {
   background-color: var(--tc-bg-color-light);
-  border-radius: var(--tc-border-radius);
-  box-shadow: var(--tc-shadow);
+  border-radius: var(--tc-radius-base);
+  box-shadow: var(--tc-shadow-base);
   overflow: hidden;
   cursor: pointer;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
   border: 1px solid var(--tc-border-default);
 }
 
@@ -284,7 +284,7 @@
   flex: 1;
   color: var(--tc-text-default);
   font-size: var(--tc-font-size-base);
-  line-height: var(--tc-line-height-base);
+  line-height: var(--tc-line-height-normal);
 }
 
 .lieuContactLink {
@@ -304,9 +304,9 @@
 .jaugeBadge {
   display: inline-flex;
   align-items: center;
-  color: var(--tc-light-color);
+  color: var(--tc-text-light);
   padding: var(--tc-space-1) var(--tc-space-2);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
   gap: var(--tc-space-1);
@@ -340,7 +340,7 @@
 .lieuActionBtn {
   width: 36px;
   height: 36px;
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -349,7 +349,7 @@
   border: 1px solid var(--tc-gray-300);
   color: var(--tc-gray-700);
   cursor: pointer;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .lieuActionBtn:hover {
@@ -362,8 +362,8 @@
 }
 
 .lieuActionDelete:hover {
-  color: var(--tc-danger-color);
-  border-color: var(--tc-danger-color);
+  color: var(--tc-color-error);
+  border-color: var(--tc-color-error);
 }
 
 /* =============================

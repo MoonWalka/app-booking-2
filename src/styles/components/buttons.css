@@ -10,11 +10,11 @@
 button {
   cursor: pointer;
   border: none;
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   padding: var(--tc-space-2) var(--tc-space-4);
   font-size: var(--tc-font-size-base);
-  font-family: var(--tc-font-family-base);
-  transition: var(--tc-transition);
+  font-family: var(--tc-font-sans);
+  transition: var(--tc-transition-base);
   appearance: none;
 }
 
@@ -32,8 +32,8 @@ button {
   padding: var(--tc-space-2) var(--tc-space-4);
   font-size: var(--tc-font-size-base);
   line-height: 1.5;
-  border-radius: var(--tc-border-radius);
-  transition: var(--tc-transition);
+  border-radius: var(--tc-radius-base);
+  transition: var(--tc-transition-base);
   border: 1px solid transparent;
   cursor: pointer;
   position: relative;
@@ -79,63 +79,63 @@ button {
 }
 
 .tc-btn-secondary {
-  background-color: var(--tc-secondary-color);
-  border-color: var(--tc-secondary-color);
+  background-color: var(--tc-color-secondary);
+  border-color: var(--tc-color-secondary);
   color: var(--tc-white);
 }
 
 .tc-btn-secondary:hover,
 .tc-btn-secondary:active {
-  background-color: var(--tc-secondary-dark);
-  border-color: var(--tc-secondary-dark);
+  background-color: var(--tc-color-secondary-dark);
+  border-color: var(--tc-color-secondary-dark);
 }
 
 .tc-btn-success {
-  background-color: var(--tc-success-color);
-  border-color: var(--tc-success-color);
+  background-color: var(--tc-color-success);
+  border-color: var(--tc-color-success);
   color: var(--tc-white);
 }
 
 .tc-btn-success:hover,
 .tc-btn-success:active {
-  background-color: var(--tc-success-dark);
-  border-color: var(--tc-success-dark);
+  background-color: var(--tc-color-success-dark);
+  border-color: var(--tc-color-success-dark);
 }
 
 .tc-btn-danger {
-  background-color: var(--tc-danger-color);
-  border-color: var(--tc-danger-color);
+  background-color: var(--tc-color-error);
+  border-color: var(--tc-color-error);
   color: var(--tc-white);
 }
 
 .tc-btn-danger:hover,
 .tc-btn-danger:active {
-  background-color: var(--tc-danger-dark);
-  border-color: var(--tc-danger-dark);
+  background-color: var(--tc-color-error-dark);
+  border-color: var(--tc-color-error-dark);
 }
 
 .tc-btn-warning {
-  background-color: var(--tc-warning-color);
-  border-color: var(--tc-warning-color);
+  background-color: var(--tc-color-warning);
+  border-color: var(--tc-color-warning);
   color: var(--tc-gray-900);
 }
 
 .tc-btn-warning:hover,
 .tc-btn-warning:active {
-  background-color: var(--tc-warning-dark);
-  border-color: var(--tc-warning-dark);
+  background-color: var(--tc-color-warning-dark);
+  border-color: var(--tc-color-warning-dark);
 }
 
 .tc-btn-info {
-  background-color: var(--tc-info-color);
-  border-color: var(--tc-info-color);
+  background-color: var(--tc-color-info);
+  border-color: var(--tc-color-info);
   color: var(--tc-white);
 }
 
 .tc-btn-info:hover,
 .tc-btn-info:active {
-  background-color: var(--tc-info-dark);
-  border-color: var(--tc-info-dark);
+  background-color: var(--tc-color-info-dark);
+  border-color: var(--tc-color-info-dark);
 }
 
 .tc-btn-light {
@@ -181,42 +181,42 @@ button {
 }
 
 .tc-btn-outline-secondary {
-  color: var(--tc-secondary-color);
-  border-color: var(--tc-secondary-color);
+  color: var(--tc-color-secondary);
+  border-color: var(--tc-color-secondary);
   background-color: transparent;
 }
 
 .tc-btn-outline-secondary:hover,
 .tc-btn-outline-secondary:active {
   color: var(--tc-white);
-  background-color: var(--tc-secondary-color);
-  border-color: var(--tc-secondary-color);
+  background-color: var(--tc-color-secondary);
+  border-color: var(--tc-color-secondary);
 }
 
 .tc-btn-outline-success {
-  color: var(--tc-success-color);
-  border-color: var(--tc-success-color);
+  color: var(--tc-color-success);
+  border-color: var(--tc-color-success);
   background-color: transparent;
 }
 
 .tc-btn-outline-success:hover,
 .tc-btn-outline-success:active {
   color: var(--tc-white);
-  background-color: var(--tc-success-color);
-  border-color: var(--tc-success-color);
+  background-color: var(--tc-color-success);
+  border-color: var(--tc-color-success);
 }
 
 .tc-btn-outline-danger {
-  color: var(--tc-danger-color);
-  border-color: var(--tc-danger-color);
+  color: var(--tc-color-error);
+  border-color: var(--tc-color-error);
   background-color: transparent;
 }
 
 .tc-btn-outline-danger:hover,
 .tc-btn-outline-danger:active {
   color: var(--tc-white);
-  background-color: var(--tc-danger-color);
-  border-color: var(--tc-danger-color);
+  background-color: var(--tc-color-error);
+  border-color: var(--tc-color-error);
 }
 
 /* BOUTONS TEXTE SEULEMENT */
@@ -234,23 +234,23 @@ button {
 }
 
 .tc-btn-text-secondary {
-  color: var(--tc-secondary-color);
+  color: var(--tc-color-secondary);
 }
 
 .tc-btn-text-secondary:hover,
 .tc-btn-text-secondary:active {
   background-color: rgba(var(--tc-secondary-color-rgb), 0.05);
-  color: var(--tc-secondary-dark);
+  color: var(--tc-color-secondary-dark);
 }
 
 .tc-btn-text-danger {
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
 }
 
 .tc-btn-text-danger:hover,
 .tc-btn-text-danger:active {
   background-color: rgba(var(--tc-danger-color-rgb), 0.05);
-  color: var(--tc-danger-dark);
+  color: var(--tc-color-error-dark);
 }
 
 /* BOUTONS SPÉCIAUX */

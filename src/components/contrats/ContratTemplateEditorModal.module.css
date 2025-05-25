@@ -64,7 +64,7 @@
   background: var(--tc-success-color-bg);
   color: var(--tc-success-color-text);
   border: 1px solid var(--tc-success-color-border);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   padding: var(--tc-spacing-4);
   margin-bottom: var(--tc-spacing-4);
   display: flex;

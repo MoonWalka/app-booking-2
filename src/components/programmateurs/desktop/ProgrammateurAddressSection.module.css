@@ -11,11 +11,11 @@
 
 .cardWrapper {
   background-color: var(--tc-white);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-box-shadow);
   margin-bottom: var(--tc-space-6);
   overflow: hidden;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .cardWrapper:hover {
@@ -49,7 +49,7 @@
 
 .suggestionsContainer {
   border: var(--tc-border-width) solid var(--tc-border-color-light);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   margin-top: var(--tc-space-4);
   margin-bottom: var(--tc-space-4);
   max-height: 250px;

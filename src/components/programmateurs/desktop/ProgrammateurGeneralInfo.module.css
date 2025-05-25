@@ -10,7 +10,7 @@
 
 .infoCard {
   background-color: var(--tc-bg-light);
-  border-radius: var(--tc-border-radius-lg);
+  border-radius: var(--tc-radius-lg);
   padding: var(--tc-spacing-md-plus);
   box-shadow: var(--tc-box-shadow-sm);
 }

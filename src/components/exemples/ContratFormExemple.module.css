@@ -12,7 +12,7 @@
   margin: 0 auto;
   padding: var(--tc-spacing-5);
   background-color: var(--tc-bg-color-light);
-  border-radius: var(--tc-border-radius-lg);
+  border-radius: var(--tc-radius-lg);
   box-shadow: var(--tc-shadow-md);
 }
 
@@ -23,7 +23,7 @@
   margin-bottom: var(--tc-spacing-5);
   padding: var(--tc-spacing-4);
   background-color: var(--tc-bg-white);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-shadow-sm);
 }
 
@@ -70,48 +70,48 @@
   width: 100%;
   padding: var(--tc-spacing-2) var(--tc-spacing-3);
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   font-size: var(--tc-font-size-base);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .input:focus {
   border-color: var(--tc-color-primary);
   outline: 0;
-  box-shadow: var(--tc-input-focus-shadow);
+  box-shadow: var(--tc-shadow-base);
 }
 
 .textarea {
   width: 100%;
   padding: var(--tc-spacing-2) var(--tc-spacing-3);
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   font-size: var(--tc-font-size-base);
   min-height: 80px;
   resize: vertical;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .textarea:focus {
   border-color: var(--tc-color-primary);
   outline: 0;
-  box-shadow: var(--tc-input-focus-shadow);
+  box-shadow: var(--tc-shadow-base);
 }
 
 .select {
   width: 100%;
   padding: var(--tc-spacing-2) var(--tc-spacing-3);
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   font-size: var(--tc-font-size-base);
   background-color: var(--tc-bg-white);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .select:focus {
   border-color: var(--tc-color-primary);
   outline: 0;
-  box-shadow: var(--tc-input-focus-shadow);
+  box-shadow: var(--tc-shadow-base);
 }
 
 /* =============================
@@ -126,12 +126,12 @@
 
 .button {
   padding: var(--tc-spacing-2-5) var(--tc-spacing-5);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   border: none;
   cursor: pointer;
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-bold);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .primaryButton {
@@ -153,21 +153,21 @@
 }
 
 .warningButton {
-  background-color: var(--tc-warning-color);
+  background-color: var(--tc-color-warning);
   color: var(--tc-white);
 }
 
 .warningButton:hover {
-  background-color: var(--tc-warning-dark);
+  background-color: var(--tc-color-warning-dark);
 }
 
 .dangerButton {
-  background-color: var(--tc-danger-color);
+  background-color: var(--tc-color-error);
   color: var(--tc-white);
 }
 
 .dangerButton:hover {
-  background-color: var(--tc-danger-dark);
+  background-color: var(--tc-color-error-dark);
 }
 
 /* =============================
@@ -175,13 +175,13 @@
    ============================= */
 .badge {
   padding: var(--tc-spacing-1) var(--tc-spacing-2);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-bold);
 }
 
 .successBadge {
-  background-color: var(--tc-success-color);
+  background-color: var(--tc-color-success);
   color: var(--tc-white);
 }
 
@@ -191,7 +191,7 @@
 }
 
 .warningBadge {
-  background-color: var(--tc-warning-color);
+  background-color: var(--tc-color-warning);
   color: var(--tc-white);
 }
 
@@ -222,7 +222,7 @@
 .tab {
   padding: var(--tc-spacing-2-5) var(--tc-spacing-5);
   cursor: pointer;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .tab:hover {
@@ -240,7 +240,7 @@
    ============================= */
 .statusBox {
   padding: var(--tc-spacing-2-5);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   margin-bottom: var(--tc-spacing-4);
 }
 
@@ -265,7 +265,7 @@
 
 .infoSection {
   padding: var(--tc-spacing-2-5);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   margin-bottom: var(--tc-spacing-4);
 }
 
@@ -280,14 +280,14 @@
 .infoBox {
   padding: var(--tc-spacing-4);
   background-color: var(--tc-bg-color-light);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   margin-bottom: var(--tc-spacing-5);
 }
 
 .warningBox {
   padding: var(--tc-spacing-2-5);
   background-color: var(--tc-warning-light);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   margin-bottom: var(--tc-spacing-4);
 }
 
@@ -304,7 +304,7 @@
 .clauseBox {
   padding: var(--tc-spacing-4);
   background-color: var(--tc-bg-color-light);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   margin-bottom: var(--tc-spacing-4);
   border: 1px solid var(--tc-border-default);
 }
@@ -329,17 +329,17 @@
    STATUTS DE CONTRAT
    ============================= */
 .statusSigne {
-  background-color: var(--tc-success-color) !important;
+  background-color: var(--tc-color-success) !important;
   color: var(--tc-white) !important;
 }
 
 .statusEnAttenteSignature {
-  background-color: var(--tc-warning-color) !important;
+  background-color: var(--tc-color-warning) !important;
   color: var(--tc-white) !important;
 }
 
 .statusAnnule {
-  background-color: var(--tc-danger-color) !important;
+  background-color: var(--tc-color-error) !important;
   color: var(--tc-white) !important;
 }
 
@@ -352,7 +352,7 @@
    MESSAGES D'ERREUR
    ============================= */
 .error {
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
   font-size: var(--tc-font-size-xs);
   margin-top: var(--tc-spacing-1);
 }

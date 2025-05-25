@@ -16,7 +16,7 @@
 
 .billingCard {
   background-color: var(--tc-white);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-shadow-sm);
   border: 1px solid var(--tc-border-default);
   overflow: hidden;
@@ -58,11 +58,11 @@
   width: 100%;
   padding: var(--tc-space-2);
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   font-size: var(--tc-font-size-sm);
   color: var(--tc-text-default);
   background-color: var(--tc-white);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .formInput:focus {
@@ -76,11 +76,11 @@
   min-height: 100px;
   padding: var(--tc-space-2);
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   font-size: var(--tc-font-size-sm);
   font-family: inherit;
   resize: vertical;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .formTextarea:focus {
@@ -93,10 +93,10 @@
   width: 100%;
   padding: var(--tc-space-2);
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   font-size: var(--tc-font-size-sm);
   background-color: var(--tc-white);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .formSelect:focus {
@@ -106,7 +106,7 @@
 }
 
 .required {
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
 }
 
 .helpText {
@@ -148,7 +148,7 @@
 .successAlert {
   margin-bottom: var(--tc-space-4);
   padding: var(--tc-space-2) var(--tc-space-4);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   background-color: var(--tc-success-color-10);
   border: 1px solid var(--tc-success-color-20);
   color: var(--tc-success-color-dark);

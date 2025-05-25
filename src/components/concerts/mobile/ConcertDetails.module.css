@@ -348,7 +348,7 @@
   justify-content: center;
   align-items: center;
   height: calc(100vh - 56px);
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
   flex-direction: column;
   padding: var(--tc-spacing-8) var(--tc-spacing-3);
   text-align: center;

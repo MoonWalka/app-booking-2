@@ -12,7 +12,7 @@
 
 .detailsCard {
   background-color: var(--tc-white);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   margin-bottom: var(--tc-space-4);
   box-shadow: var(--tc-shadow-sm);
   overflow: hidden;
@@ -53,7 +53,7 @@
   display: flex;
   align-items: center;
   padding: var(--tc-space-4);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   border: 1px solid var(--tc-border-default);
   transition: all 0.2s ease;
 }
@@ -118,7 +118,7 @@
   display: flex;
   align-items: center;
   padding: var(--tc-space-4);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   background-color: var(--tc-info-color-light);
   color: var(--tc-info-color-dark);
   font-size: var(--tc-font-size-sm);

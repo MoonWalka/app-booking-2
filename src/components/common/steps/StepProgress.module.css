@@ -39,9 +39,9 @@
 }
 
 .stepDot.completed {
-  background-color: var(--tc-success-color);
+  background-color: var(--tc-color-success);
   color: var(--tc-white);
-  border-color: var(--tc-success-color);
+  border-color: var(--tc-color-success);
 }
 
 .stepProgressBar {
@@ -56,7 +56,7 @@
 
 .stepProgressFill {
   height: 100%;
-  background-color: var(--tc-success-color);
+  background-color: var(--tc-color-success);
   border-radius: 3px;
   transition: width var(--tc-transition-speed) ease;
   width: var(--progress-width, 0%);

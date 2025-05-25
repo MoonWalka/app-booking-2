@@ -34,9 +34,9 @@
   align-items: center;
   gap: var(--tc-space-2);
   padding: var(--tc-space-2) var(--tc-space-4);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   font-weight: var(--tc-font-weight-medium);
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
 }
 
 .alertError {
@@ -44,7 +44,7 @@
   align-items: center;
   gap: var(--tc-space-2);
   padding: var(--tc-space-2) var(--tc-space-4);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   background-color: var(--tc-danger-color-10);
   color: var(--tc-danger-color-dark);
   border: var(--tc-border-width) solid var(--tc-danger-color-20);
@@ -61,7 +61,7 @@
   flex-direction: column;
   gap: var(--tc-space-2);
   padding: var(--tc-space-4) var(--tc-space-4);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   background-color: var(--tc-warning-color-10);
   color: var(--tc-warning-color-dark);
   border: var(--tc-border-width) solid var(--tc-warning-color-20);
@@ -79,12 +79,12 @@
 
 .validationAlert i {
   font-size: var(--tc-font-size-md);
-  color: var(--tc-warning-color);
+  color: var(--tc-color-warning);
 }
 
 .formCard {
   background-color: var(--tc-white);
-  border-radius: var(--tc-border-radius);
+  border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-shadow-sm);
   margin-bottom: var(--tc-space-6);
   overflow: hidden;
@@ -141,7 +141,7 @@
   display: block;
   width: 100%;
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   padding: var(--tc-space-1) var(--tc-space-2);
   font-size: var(--tc-font-size-sm);
   line-height: 1.5;
@@ -171,7 +171,7 @@
 }
 
 .required {
-  color: var(--tc-danger-color);
+  color: var(--tc-color-error);
 }
 
 .helpText {
@@ -191,12 +191,12 @@
 
 .btn {
   padding: var(--tc-space-2) var(--tc-space-4);
-  border-radius: var(--tc-border-radius-sm);
+  border-radius: var(--tc-radius-sm);
   border: 1px solid transparent;
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
   cursor: pointer;
-  transition: var(--tc-transition);
+  transition: var(--tc-transition-base);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
@@ -226,14 +226,14 @@
 }
 
 .btnDanger {
-  background-color: var(--tc-danger-color);
-  border-color: var(--tc-danger-color);
+  background-color: var(--tc-color-error);
+  border-color: var(--tc-color-error);
   color: var(--tc-white);
 }
 
 .btnDanger:hover {
-  background-color: var(--tc-danger-dark);
-  border-color: var(--tc-danger-dark);
+  background-color: var(--tc-color-error-dark);
+  border-color: var(--tc-color-error-dark);
 }
 
 /* Support responsive */

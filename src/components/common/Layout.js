@@ -1,15 +1,12 @@
 // src/components/common/Layout.js
 import React, { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
-import useResponsive from '../../hooks/common/useResponsive';
 import styles from './Layout.module.css';
 
-// Import des deux layouts selon l'architecture responsive prévue
+// Import du layout selon l'architecture responsive prévue
 import DesktopLayout from './layout/DesktopLayout';
-import MobileLayout from './layout/MobileLayout';
 
 function Layout() {
-  const { isMobile } = useResponsive();
   const [layoutError, setLayoutError] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
   
@@ -29,47 +26,37 @@ function Layout() {
     }
   }, [layoutError, retryCount]);
   
-  // Fonction pour capturer les erreurs
-  const handleLayoutError = (error) => {
-    console.error("Erreur lors du chargement du layout:", error);
-    setLayoutError(true);
-  };
-  
-  // Afficher un fallback en cas d'erreur persistante
-  if (layoutError && retryCount >= 2) {
-    return (
-      <div className={styles.errorContainer}>
-        <div className={styles.errorContent}>
-          <h2 className={styles.errorTitle}>Problème de chargement</h2>
-          <p className={styles.errorMessage}>Nous rencontrons des difficultés à charger l'interface de l'application.</p>
-          <button 
-            className={styles.retryButton}
-            onClick={() => window.location.reload()}
-          >
-            Réessayer
-          </button>
+  // Gestion des états d'erreur
+  if (layoutError) {
+    // Si trop de tentatives, afficher l'erreur persistante
+    if (retryCount >= 2) {
+      return (
+        <div className={styles.errorContainer}>
+          <div className={styles.errorContent}>
+            <h2 className={styles.errorTitle}>Problème de chargement</h2>
+            <p className={styles.errorMessage}>Nous rencontrons des difficultés à charger l'interface de l'application.</p>
+            <button 
+              className={styles.retryButton}
+              onClick={() => window.location.reload()}
+            >
+              Réessayer
+            </button>
+          </div>
         </div>
-      </div>
-    );
+      );
+    }
+    // Sinon, afficher un fallback temporaire pendant la tentative de rechargement
+    return null;
   }
-  
-  // Utiliser un try-catch pour gérer les erreurs de rendu
-  try {
-    // Architecture responsive selon recommandation #1 : 
-    // "Unifier les implémentations desktop/mobile avec approche responsive"
-    return isMobile ? (
-      <MobileLayout>
-        <Outlet />
-      </MobileLayout>
-    ) : (
-      <DesktopLayout>
-        <Outlet />
-      </DesktopLayout>
-    );
-  } catch (error) {
-    handleLayoutError(error);
-    return null; // Le fallback s'affichera après le setState
-  }
+
+  // Architecture responsive selon recommandation #1 : 
+  // "Unifier les implémentations desktop/mobile avec approche responsive"
+  // Pour l'instant, utilisons toujours le DesktopLayout en attendant l'implémentation responsive
+  return (
+    <DesktopLayout>
+      <Outlet />
+    </DesktopLayout>
+  );
 }
 
 export default Layout;

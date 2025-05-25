@@ -1,5 +1,6 @@
 // src/components/programmateurs/ProgrammateursList.js
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useResponsive } from '@/hooks/common';
 
 // Imports directs des composants
@@ -12,12 +13,18 @@ import ProgrammateursMobileList from './mobile/ProgrammateursList';
  */
 function ProgrammateursList(props) {
   const { isMobile } = useResponsive();
+  const navigate = useNavigate();
   
-  // Rendu conditionnel simple
+  // Fonction de navigation vers les détails d'un programmateur
+  const handleNavigateToDetails = (programmateurId) => {
+    navigate(`/programmateurs/${programmateurId}`);
+  };
+  
+  // Rendu conditionnel simple avec la prop de navigation
   return isMobile ? (
-    <ProgrammateursMobileList {...props} />
+    <ProgrammateursMobileList {...props} onNavigateToDetails={handleNavigateToDetails} />
   ) : (
-    <ProgrammateursDesktopList {...props} />
+    <ProgrammateursDesktopList {...props} onNavigateToDetails={handleNavigateToDetails} />
   );
 }
 

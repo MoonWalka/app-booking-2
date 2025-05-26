@@ -9,15 +9,107 @@ import styles from './ContactInfoSection.module.css';
 const ContactInfoSection = ({ 
   formData, 
   handleChange, 
-  errors 
+  errors,
+  showCardWrapper = true 
 }) => {
+  if (!showCardWrapper) {
+    return (
+      <div>
+        <Row>
+          <Col md={6}>
+            <Form.Group className={styles.formGroup}>
+              <Form.Label className={styles.formLabel}>
+                Nom <span className={styles.requiredField}>*</span>
+              </Form.Label>
+              <Form.Control
+                type="text"
+                name="nom"
+                value={formData.nom}
+                onChange={handleChange}
+                isInvalid={!!errors.nom}
+                required
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.nom}
+              </Form.Control.Feedback>
+            </Form.Group>
+          </Col>
+          <Col md={6}>
+            <Form.Group className={styles.formGroup}>
+              <Form.Label className={styles.formLabel}>
+                Prénom <span className={styles.requiredField}>*</span>
+              </Form.Label>
+              <Form.Control
+                type="text"
+                name="prenom"
+                value={formData.prenom}
+                onChange={handleChange}
+                isInvalid={!!errors.prenom}
+                required
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.prenom}
+              </Form.Control.Feedback>
+            </Form.Group>
+          </Col>
+        </Row>
+        
+        <Form.Group className={styles.formGroup}>
+          <Form.Label className={styles.formLabel}>
+            Fonction <span className={styles.optionalText}>(facultatif)</span>
+          </Form.Label>
+          <Form.Control
+            type="text"
+            name="fonction"
+            value={formData.fonction}
+            onChange={handleChange}
+            placeholder="Ex: Directeur artistique, Responsable programmation..."
+          />
+        </Form.Group>
+        
+        <Row>
+          <Col md={6}>
+            <Form.Group className={styles.formGroup}>
+              <Form.Label className={styles.formLabel}>Email</Form.Label>
+              <Form.Control
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                isInvalid={!!errors.email}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.email}
+              </Form.Control.Feedback>
+              <Form.Text className="text-muted">
+                Facultatif, mais recommandé pour les communications futures.
+              </Form.Text>
+            </Form.Group>
+          </Col>
+          <Col md={6}>
+            <Form.Group className={styles.formGroup}>
+              <Form.Label className={styles.formLabel}>Téléphone</Form.Label>
+              <Form.Control
+                type="tel"
+                name="telephone"
+                value={formData.telephone}
+                onChange={handleChange}
+              />
+            </Form.Group>
+          </Col>
+                  </Row>
+      </div>
+    );
+  }
+
+  // Version avec carte (pour usage standalone)
   return (
     <div className={styles.formCard}>
       <div className={styles.cardHeader}>
         <div className={styles.cardIcon}>
           <i className="bi bi-person-lines-fill"></i>
         </div>
-        <h3>Informations de contact</h3>
+        <h3 className={styles.cardTitle}>Informations de contact</h3>
       </div>
       <div className={styles.cardBody}>
         <Row>

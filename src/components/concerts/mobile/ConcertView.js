@@ -45,14 +45,13 @@ const ConcertView = () => {
     loading,
     isSubmitting,
     formData,
-    toggleEditMode,
+    handleEdit,
     handleDeleteClick,
     copyToClipboard,
     formatDate,
     formatMontant,
     isDatePassed,
-    getStatusInfo,
-    isEditMode
+    getStatusInfo
   } = useConcertDetails(id, location);
 
   const{
@@ -92,7 +91,7 @@ const ConcertView = () => {
       {/* En-tête avec titre et boutons d'action */}
       <ConcertHeaderMobile 
         concert={concert}
-        onEdit={toggleEditMode}
+        onEdit={handleEdit}
         onDelete={() => setShowDeleteConfirm(true)}
         isEditMode={false}
         formatDate={formatDate}
@@ -169,21 +168,19 @@ const ConcertView = () => {
       )}
 
       {/* Modale de confirmation de suppression */}
-      {isEditMode && (
-        <DeleteConcertModalMobile
-          show={showDeleteConfirm}
-          concertNom={concert.titre || formatDate(concert.date)}
-          onClose={() => {
-            console.log('[LOG][ConcertViewMobile] Fermeture de la modal suppression');
-            setShowDeleteConfirm(false);
-          }}
-          onConfirm={() => {
-            console.log('[LOG][ConcertViewMobile] Confirmation suppression');
-            handleDeleteClick();
-          }}
-          isDeleting={isSubmitting}
-        />
-      )}
+      <DeleteConcertModalMobile
+        show={showDeleteConfirm}
+        concertNom={concert.titre || formatDate(concert.date)}
+        onClose={() => {
+          console.log('[LOG][ConcertViewMobile] Fermeture de la modal suppression');
+          setShowDeleteConfirm(false);
+        }}
+        onConfirm={() => {
+          console.log('[LOG][ConcertViewMobile] Confirmation suppression');
+          handleDeleteClick();
+        }}
+        isDeleting={isSubmitting}
+      />
     </div>
   );
 };

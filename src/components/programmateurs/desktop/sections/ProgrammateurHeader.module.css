@@ -1,0 +1,80 @@
+/*
+ * Styles pour ProgrammateurHeader
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ */
+
+.headerContainer {
+  background-color: var(--tc-color-white);
+  border-radius: var(--tc-radius-base);
+  box-shadow: var(--tc-shadow-base);
+  margin-bottom: var(--tc-space-6);
+  padding: var(--tc-space-4);
+}
+
+.headerContent {
+  width: 100%;
+}
+
+.titleSection {
+  flex: 1;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--tc-font-size-2xl);
+  font-weight: var(--tc-font-weight-bold);
+  color: var(--tc-text-default);
+  line-height: 1.2;
+}
+
+.subtitle {
+  margin: var(--tc-space-1) 0 0 0;
+  font-size: var(--tc-font-size-lg);
+  color: var(--tc-text-muted);
+  font-weight: var(--tc-font-weight-medium);
+}
+
+.actionsSection {
+  flex-shrink: 0;
+}
+
+/* Responsive */
+@media (max-width: var(--tc-breakpoint-md)) {
+  .headerContent {
+    flex-direction: column;
+    gap: var(--tc-space-4);
+    align-items: stretch;
+  }
+  
+  .titleSection {
+    text-align: center;
+  }
+  
+  .actionsSection {
+    width: 100%;
+  }
+  
+  .actionsSection > div {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: var(--tc-breakpoint-sm)) {
+  .headerContainer {
+    padding: var(--tc-space-3);
+    margin-bottom: var(--tc-space-4);
+  }
+  
+  .title {
+    font-size: var(--tc-font-size-xl);
+  }
+  
+  .subtitle {
+    font-size: var(--tc-font-size-base);
+  }
+  
+  .actionsSection > div {
+    gap: var(--tc-space-2);
+  }
+} 

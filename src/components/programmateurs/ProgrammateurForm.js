@@ -3,8 +3,8 @@ import React from 'react';
 import { useResponsive } from '@/hooks/common';
 
 // Imports directs des composants
-import ProgrammateursDesktopForm from './desktop/ProgrammateurForm';
-import ProgrammateursMobileForm from './mobile/ProgrammateurForm';
+import ProgrammateurDesktopForm from './desktop/ProgrammateurForm';
+import ProgrammateurFormMobile from './mobile/ProgrammateurForm';
 
 /**
  * Composant wrapper responsive pour le formulaire de programmateur
@@ -15,9 +15,9 @@ function ProgrammateurForm(props) {
   
   // Rendu conditionnel simple
   return isMobile ? (
-    <ProgrammateursMobileForm {...props} />
+    <ProgrammateurFormMobile {...props} />
   ) : (
-    <ProgrammateursDesktopForm {...props} />
+    <ProgrammateurDesktopForm {...props} />
   );
 }
 

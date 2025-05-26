@@ -145,7 +145,7 @@ describe('useGenericEntityDetails', () => {
     
     // Passer en mode édition
     act(() => {
-      result.current.toggleEditMode();
+      // toggleEditMode supprimé - utiliser handleEdit pour la navigation
     });
     
     // Vérifier que le mode a été changé

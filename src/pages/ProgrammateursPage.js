@@ -11,7 +11,7 @@ const ProgrammateursPage = () => {
       <Routes>
         <Route path="/" element={<ProgrammateursList />} />
         <Route path="/nouveau" element={<ProgrammateurForm />} />
-        <Route path="/edit/:id" element={<ProgrammateurForm />} />
+        <Route path="/:id/edit" element={<ProgrammateurForm />} />
         <Route path="/:id" element={<ProgrammateurDetails />} />
       </Routes>
     </div>

@@ -34,7 +34,7 @@ const TypeBadge = ({ type }) => {
 
 /**
  * Header component for venue details
- * Adapté pour le nouveau système d'édition basé sur la navigation
+ * Style imité de la version qui te plaisait (ccdebb12)
  */
 const LieuHeader = ({ 
   lieu, 
@@ -72,18 +72,11 @@ const LieuHeader = ({
           <i className="bi bi-chevron-right"></i>
           <span className={`${styles.breadcrumbItem} ${styles.active}`}>
             {lieu?.nom || 'Lieu'}
-            {isEditMode && ' (Édition)'}
           </span>
         </div>
         <h2 className={styles.modernTitle}>
           {lieu?.nom || 'Lieu'}
           {lieu?.type && <TypeBadge type={lieu.type} />}
-          {isEditMode && (
-            <Badge bg="warning" className="ms-2">
-              <i className="bi bi-pencil me-1"></i>
-              Édition
-            </Badge>
-          )}
         </h2>
       </div>
       
@@ -108,16 +101,6 @@ const LieuHeader = ({
             </Button>
             
             <Button 
-              onClick={onCancel} 
-              variant="secondary"
-              className={styles.actionBtn}
-              disabled={isSubmitting}
-              icon={<i className="bi bi-x-circle"></i>}
-            >
-              Annuler
-            </Button>
-            
-            <Button 
               onClick={onDelete} 
               variant="danger"
               className={styles.actionBtn}
@@ -125,6 +108,16 @@ const LieuHeader = ({
               icon={<i className="bi bi-trash"></i>}
             >
               Supprimer
+            </Button>
+            
+            <Button 
+              onClick={onCancel} 
+              variant="secondary"
+              className={styles.actionBtn}
+              disabled={isSubmitting}
+              icon={<i className="bi bi-x-circle"></i>}
+            >
+              Annuler
             </Button>
           </>
         ) : (
@@ -145,15 +138,6 @@ const LieuHeader = ({
               icon={<i className="bi bi-pencil"></i>}
             >
               Modifier
-            </Button>
-            
-            <Button 
-              onClick={onDelete} 
-              variant="outline-danger"
-              className={styles.actionBtn}
-              icon={<i className="bi bi-trash"></i>}
-            >
-              Supprimer
             </Button>
           </>
         )}

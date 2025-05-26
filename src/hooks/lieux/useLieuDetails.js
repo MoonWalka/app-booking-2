@@ -290,16 +290,8 @@ const useLieuDetails = (id, locationParam) => {
     formatDate,
     validateForm: validateLieuFormData,
     
-    // Compatibilité avec l'ancien système (à supprimer progressivement)
-    isEditing: isEditMode,
-    toggleEditMode: () => {
-      console.warn('[useLieuDetails] toggleEditMode est déprécié, utilisez handleEdit/handleCancel');
-      if (isEditMode) {
-        handleCancel();
-      } else {
-        handleEdit();
-      }
-    }
+    // Compatibilité avec l'ancien système - SUPPRIMÉ
+    // Le système des lieux utilise maintenant la navigation vers des formulaires séparés
   };
 };
 

@@ -1,41 +1,42 @@
-import React, { useState } from 'react';
-import { Form, Alert, Container, Row, Col, Button } from 'react-bootstrap';
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import FlexContainer from '@/components/ui/FlexContainer';
-import styles from './ProgrammateurForm.module.css';
+import React from 'react';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-// Import des sous-composants
-import ContactInfoSection from '../sections/ContactInfoSection';
-import StructureInfoSection from '../sections/StructureInfoSection';
-import LieuInfoSection from '../sections/LieuInfoSection';
-import CompanySearchSection from '../sections/CompanySearchSection';
-import ProgrammateurLegalSection from './ProgrammateurLegalSection';
-import ProgrammateurConcertsSection from './ProgrammateurConcertsSection';
-import ProgrammateurLieuxSection from './ProgrammateurLieuxSection';
-import Card from '../../../components/ui/Card';
+// Import des composants UI standardisés
+import LoadingSpinner from '@components/ui/LoadingSpinner';
+import Button from '@components/ui/Button';
+import ErrorMessage from '@components/ui/ErrorMessage';
 
 // MIGRATION: Utilisation du hook optimisé
 import { useProgrammateurForm } from '@/hooks/programmateurs';
 import { useCompanySearch } from '@/hooks/common';
 import { useAddressSearch } from '@/hooks/common';
-import LoadingSpinner from '@/components/ui/LoadingSpinner';
-import ErrorMessage from '@/components/ui/ErrorMessage';
 import useDeleteProgrammateur from '@/hooks/programmateurs/useDeleteProgrammateur';
 
+// Import section components
+import { ProgrammateurHeader } from './sections/ProgrammateurHeader';
+import ProgrammateurContactSection from './sections/ProgrammateurContactSection';
+import ProgrammateurLegalSectionWrapper from './sections/ProgrammateurLegalSectionWrapper';
+import ProgrammateurStructureSection from './sections/ProgrammateurStructureSection';
+import ProgrammateurLieuxSectionWrapper from './sections/ProgrammateurLieuxSectionWrapper';
+import ProgrammateurConcertsSectionWrapper from './sections/ProgrammateurConcertsSectionWrapper';
+import DeleteProgrammateurModal from './sections/DeleteProgrammateurModal';
+
+// Import des styles CSS Module
+import styles from './ProgrammateurForm.module.css';
+
 /**
- * Formulaire d'édition d'un programmateur - Version Desktop harmonisée avec ProgrammateurView
- * MIGRATION: Utilise maintenant le hook optimisé pour une meilleure performance et gestion des erreurs
+ * ProgrammateurForm component - displays a programmer's details in edit mode
+ * Utilise la même structure que LieuView mais en mode édition
  */
 const ProgrammateurForm = () => {
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
-
+  
   // Détecter le mode "nouveau" via l'URL
   const isNewFromUrl = location.pathname.endsWith('/nouveau');
-
-  // LOGS TEMPORAIREMENT DÉSACTIVÉS POUR ÉVITER LA BOUCLE
-  // console.log('[DEBUG][ProgrammateurForm] Mode détecté:', isNewFromUrl ? 'nouveau' : 'édition');
 
   // MIGRATION: Utilisation du hook optimisé
   const{ 
@@ -52,28 +53,9 @@ const ProgrammateurForm = () => {
     handleStructureChange,
     handleCancel: hookHandleCancel
   } = useProgrammateurForm(id);
-  
-  
-  // État local pour contrôler l'affichage des sections
-  const [sections, setSections] = useState({
-    contactVisible: true,
-    legalVisible: true,
-    structureVisible: true,
-    lieuxVisible: true,
-    concertsVisible: true
-  });
-  
-  // Gestion du toggle des sections
-  const toggleSection = (sectionName) => {
-    setSections(prev => ({
-      ...prev,
-      [sectionName]: !prev[sectionName]
-    }));
-  };
 
   // Hooks pour la recherche d'entreprise et d'adresses
   const companySearch = useCompanySearch((company) => {
-    // MIGRATION: Utiliser handleStructureChange du hook optimisé
     handleStructureChange(company);
   });
 
@@ -84,330 +66,162 @@ const ProgrammateurForm = () => {
     () => {}
   );
   
-  // Ajout du hook de suppression optimisé
+  // Hook de suppression optimisé
   const {
     isDeleting,
-    handleDelete
+    showDeleteModal,
+    handleDeleteClick,
+    handleCloseDeleteModal,
+    handleConfirmDelete
   } = useDeleteProgrammateur(() => navigate('/programmateurs'));
-  
-  // Fonction pour gérer l'annulation du formulaire
-  const handleCancel = () => {
+
+  // Information sur les concerts associés
+  const hasAssociatedConcerts = programmateur?.concertsAssocies?.length > 0 || false;
+
+  // Handlers avec notifications
+  const handleSaveWithNotification = async (e) => {
+    try {
+      await handleSubmit(e);
+      toast.success('Programmateur enregistré avec succès !', {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: true,
+      });
+    } catch (error) {
+      toast.error('Erreur lors de l\'enregistrement', {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: true,
+      });
+    }
+  };
+
+  const handleCancelWithNotification = () => {
+    toast.info('Édition annulée', {
+      position: 'top-right',
+      autoClose: 2000,
+      hideProgressBar: true,
+    });
     hookHandleCancel();
   };
-  
+
+  // If loading, show a spinner
   if (loading) {
-    return <LoadingSpinner />;
+    return (
+      <div className={styles.spinnerContainer}>
+        <LoadingSpinner variant="primary" message="Chargement du programmateur..." />
+      </div>
+    );
   }
-  
+
+  // If error, show an error message
   if (error) {
-    return <ErrorMessage message={error} />;
+    return (
+      <div className={styles.errorContainer}>
+        <ErrorMessage variant="danger" icon="exclamation-triangle-fill">
+          {error.message || error}
+        </ErrorMessage>
+        <Button 
+          variant="primary" 
+          onClick={() => navigate('/programmateurs')}
+          iconStart="arrow-left"
+        >
+          Retour à la liste des programmateurs
+        </Button>
+      </div>
+    );
   }
-  
-  if (!programmateur && id !== 'nouveau') {
-    return <ErrorMessage message="Programmateur introuvable" />;
+
+  // If no programmateur and not creating new one
+  if (!programmateur && !isNewFromUrl && !loading) {
+    return (
+      <div className={styles.errorContainer}>
+        <ErrorMessage variant="warning" icon="exclamation-triangle-fill">
+          Ce programmateur n'existe pas ou n'a pas pu être chargé.
+        </ErrorMessage>
+        <Button 
+          variant="primary" 
+          onClick={() => navigate('/programmateurs')}
+          iconStart="arrow-left"
+        >
+          Retour à la liste des programmateurs
+        </Button>
+      </div>
+    );
   }
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <Container className={styles.programmateurForm}>
-        {/* En-tête avec titre et actions */}
-        <Card 
-          className="mb-4"
-          variant="light"
-        >
-          <FlexContainer justify="space-between" align="center">
-            <div>
-              <h2 className="mb-0">
-                {isNewFromUrl ? 'Nouveau programmateur' : `Éditer: ${programmateur?.nom || 'Programmateur'}`}
-                {programmateur?.fonction && <span className="text-muted fs-5"> ({programmateur.fonction})</span>}
-              </h2>
-            </div>
-            <div>
-              <Button 
-                variant="primary" 
-                type="submit"
-                disabled={isSubmitting}
-                className="me-2"
-              >
-                {isSubmitting ? (
-                  <>
-                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                    Enregistrement...
-                  </>
-                ) : (
-                  <>
-                    <i className="bi bi-check-lg me-2"></i>
-                    Enregistrer
-                  </>
-                )}
-              </Button>
-              <Button 
-                variant="outline-secondary" 
-                onClick={handleCancel}
-                disabled={isSubmitting}
-                type="button"
-              >
-                <i className="bi bi-x-lg me-2"></i>
-                Annuler
-              </Button>
-            </div>
-          </FlexContainer>
-        </Card>
-        
-        {/* Message d'erreur global si nécessaire */}
-        {error && (
-          <Alert variant="danger" className="mb-4">
-            <i className="bi bi-exclamation-triangle-fill me-2"></i>
-            {error}
-          </Alert>
-        )}
-        
-        {/* Disposition en une seule colonne */}
-        <Row>
-          <Col>
-            {/* Carte Contact */}
-            <Card 
-              className="mb-4"
-              title="Informations de contact"
-              icon={<i className="bi bi-person-vcard"></i>}
-              variant="primary"
-              headerActions={
-                <Button 
-                  variant="link" 
-                  className="p-0 text-white" 
-                  onClick={() => toggleSection('contactVisible')}
-                  type="button"
-                >
-                  {sections.contactVisible ? (
-                    <i className="bi bi-chevron-up"></i>
-                  ) : (
-                    <i className="bi bi-chevron-down"></i>
-                  )}
-                </Button>
-              }
-            >
-              {sections.contactVisible && (
-                <ContactInfoSection 
-                  formData={formData}
-                  handleChange={handleChange}
-                  errors={{}}
-                />
-              )}
-            </Card>
+    <form onSubmit={handleSaveWithNotification}>
+      <div className={styles.formContainer}>
+        {/* Header with title and action buttons */}
+        <ProgrammateurHeader 
+          programmateur={programmateur}
+          isEditMode={true}
+          isNewFromUrl={isNewFromUrl}
+          onSave={handleSaveWithNotification}
+          onCancel={handleCancelWithNotification}
+          onDelete={handleDeleteClick}
+          isSubmitting={isSubmitting}
+          canSave={true}
+          navigateToList={() => navigate('/programmateurs')}
+        />
 
-            {/* Carte Informations Légales */}
-            <Card 
-              className="mb-4"
-              title="Informations légales"
-              icon={<i className="bi bi-file-earmark-text"></i>}
-              variant="primary"
-              headerActions={
-                <Button 
-                  variant="link" 
-                  className="p-0 text-white" 
-                  onClick={() => toggleSection('legalVisible')}
-                  type="button"
-                >
-                  {sections.legalVisible ? (
-                    <i className="bi bi-chevron-up"></i>
-                  ) : (
-                    <i className="bi bi-chevron-down"></i>
-                  )}
-                </Button>
-              }
-            >
-              {sections.legalVisible && (
-                <ProgrammateurLegalSection
-                  programmateur={programmateur}
-                  isEditing={true}
-                  formData={formData}
-                  handleChange={handleChange}
-                  showCardWrapper={false}
-                />
-              )}
-            </Card>
-            
-            {/* Carte Structure */}
-            <Card 
-              className="mb-4"
-              title="Structure"
-              icon={<i className="bi bi-building"></i>}
-              variant="primary"
-              headerActions={
-                <Button 
-                  variant="link" 
-                  className="p-0 text-white" 
-                  onClick={() => toggleSection('structureVisible')}
-                  type="button"
-                >
-                  {sections.structureVisible ? (
-                    <i className="bi bi-chevron-up"></i>
-                  ) : (
-                    <i className="bi bi-chevron-down"></i>
-                  )}
-                </Button>
-              }
-            >
-              {sections.structureVisible && (
-                <>
-                  {/* Options de recherche d'entreprise */}
-                  <CompanySearchSection 
-                    searchType={companySearch.searchType}
-                    setSearchType={companySearch.setSearchType}
-                    searchTerm={companySearch.searchTerm}
-                    setSearchTerm={companySearch.setSearchTerm}
-                    searchResults={companySearch.searchResults}
-                    isSearchingCompany={companySearch.isSearchingCompany}
-                    handleSelectCompany={companySearch.handleSelectCompany}
-                  />
-                  
-                  {/* Formulaire de structure juridique */}
-                  <StructureInfoSection 
-                    formData={formData}
-                    handleChange={handleChange}
-                    errors={{}}
-                    addressSuggestions={addressSearch.addressSuggestions} 
-                    isSearchingAddress={addressSearch.isSearchingAddress}
-                    addressFieldActive={addressSearch.addressFieldActive}
-                    setAddressFieldActive={addressSearch.setAddressFieldActive}
-                    handleSelectAddress={addressSearch.handleSelectAddress}
-                    structure={structure}
-                    formatValue={formatValue}
-                  />
-                </>
-              )}
-            </Card>
-            
-            {/* Carte Lieux */}
-            <Card 
-              className="mb-4"
-              title="Lieux associés"
-              icon={<i className="bi bi-geo-alt"></i>}
-              variant="primary"
-              headerActions={
-                <Button 
-                  variant="link" 
-                  className="p-0 text-white" 
-                  onClick={() => toggleSection('lieuxVisible')}
-                  type="button"
-                >
-                  {sections.lieuxVisible ? (
-                    <i className="bi bi-chevron-up"></i>
-                  ) : (
-                    <i className="bi bi-chevron-down"></i>
-                  )}
-                </Button>
-              }
-            >
-              {sections.lieuxVisible && (
-                <>
-                  {/* Section d'informations sur les lieux - NOUVEAU: Finalisation intelligente */}
-                  <LieuInfoSection
-                    formData={formData}
-                    handleChange={handleChange}
-                    errors={{}}
-                    lieuxOptions={[]}
-                    setShowLieuModal={() => {}}
-                  />
-                  
-                  {/* Section des lieux associés existants */}
-                  <ProgrammateurLieuxSection
-                    programmateur={programmateur}
-                    isEditing={true}
-                    showCardWrapper={false}
-                  />
-                </>
-              )}
-            </Card>
+        {/* Sections empilées verticalement en mode édition */}
+        <div className={styles.sectionsStack}>
+          <ProgrammateurContactSection 
+            programmateur={programmateur}
+            isEditMode={true}
+            formData={formData}
+            onChange={handleChange}
+            errors={{}}
+          />
+          
+          <ProgrammateurLegalSectionWrapper
+            programmateur={programmateur}
+            isEditMode={true}
+            formData={formData}
+            onChange={handleChange}
+            errors={{}}
+          />
+          
+          <ProgrammateurStructureSection
+            programmateur={programmateur}
+            structure={structure}
+            isEditMode={true}
+            formData={formData}
+            onChange={handleChange}
+            onStructureChange={handleStructureChange}
+            companySearch={companySearch}
+            addressSearch={addressSearch}
+            formatValue={formatValue}
+            errors={{}}
+          />
+          
+          <ProgrammateurLieuxSectionWrapper
+            programmateur={programmateur}
+            isEditMode={true}
+            formData={formData}
+            onChange={handleChange}
+          />
+          
+          <ProgrammateurConcertsSectionWrapper
+            programmateur={programmateur}
+            isEditMode={true}
+            concertsAssocies={programmateur?.concertsAssocies || []}
+          />
+        </div>
 
-            {/* Carte Concerts */}
-            <Card 
-              className="mb-4"
-              title="Concerts associés"
-              icon={<i className="bi bi-calendar-event"></i>}
-              variant="primary"
-              headerActions={
-                <Button 
-                  variant="link" 
-                  className="p-0 text-white" 
-                  onClick={() => toggleSection('concertsVisible')}
-                  type="button"
-                >
-                  {sections.concertsVisible ? (
-                    <i className="bi bi-chevron-up"></i>
-                  ) : (
-                    <i className="bi bi-chevron-down"></i>
-                  )}
-                </Button>
-              }
-            >
-              {sections.concertsVisible && (
-                <ProgrammateurConcertsSection
-                  concertsAssocies={programmateur?.concertsAssocies || []}
-                  isEditing={true}
-                  showCardWrapper={false}
-                />
-              )}
-            </Card>
-            
-            {/* Boutons du formulaire */}
-            <FlexContainer justify="space-between" className="mt-4 mb-5">
-              <Button 
-                variant="outline-secondary"
-                onClick={handleCancel}
-                disabled={isSubmitting}
-                type="button"
-              >
-                <i className="bi bi-arrow-left me-2"></i>
-                Retour
-              </Button>
-              
-              <div>
-                {!isNewFromUrl && (
-                  <Button 
-                    variant="outline-danger"
-                    onClick={() => handleDelete(id)}
-                    disabled={isSubmitting || isDeleting}
-                    className="me-2"
-                    type="button"
-                  >
-                    {isDeleting ? (
-                      <>
-                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                        Suppression...
-                      </>
-                    ) : (
-                      <>
-                        <i className="bi bi-trash me-2"></i>
-                        Supprimer
-                      </>
-                    )}
-                  </Button>
-                )}
-                
-                <Button 
-                  variant="primary" 
-                  type="submit"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                      Enregistrement...
-                    </>
-                  ) : (
-                    <>
-                      <i className="bi bi-check-lg me-2"></i>
-                      Enregistrer
-                    </>
-                  )}
-                </Button>
-              </div>
-            </FlexContainer>
-          </Col>
-        </Row>
-      </Container>
-    </Form>
+        {/* Delete confirmation modal */}
+        <DeleteProgrammateurModal
+          show={showDeleteModal}
+          onClose={handleCloseDeleteModal}
+          onConfirm={handleConfirmDelete}
+          programmateur={programmateur}
+          isDeleting={isDeleting}
+          hasAssociatedConcerts={hasAssociatedConcerts}
+        />
+      </div>
+    </form>
   );
 };
 

@@ -6,21 +6,29 @@
  */
 
 
-.programmateursFormMobile {
+.formContainer {
   padding: var(--tc-space-3);
   background-color: var(--tc-bg-default);
+  width: 100%;
+}
+
+.formCard {
+  background-color: var(--tc-bg-default);
+  border-radius: var(--tc-radius-base);
+  margin-bottom: var(--tc-space-4);
+  overflow: hidden;
 }
 
 .mobileFormHeader {
   margin-bottom: var(--tc-space-4);
   padding-bottom: var(--tc-space-3);
-  border-bottom: 1px solid var(--tc-border-default));
+  border-bottom: 1px solid var(--tc-border-default);
 }
 
 .mobileFormHeader h1 {
   font-size: 1.75rem;
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-default));
+  color: var(--tc-text-default);
   margin: 0;
 }
 
@@ -54,7 +62,7 @@
   background-color: var(--tc-bg-default);
   background-clip: padding-box;
   border: 1px solid var(--tc-input-border-color);
-  border-radius: var(--tc-radius-base));
+  border-radius: var(--tc-radius-base);
   transition: all 0.2s ease;
 }
 
@@ -63,7 +71,7 @@
 .stepFormGroup textarea:focus {
   border-color: var(--tc-color-primary);
   outline: 0;
-  box-shadow: 0 0 0 0.var(--tc-space-8) rgba(58, 134, 255, 0.25);
+  box-shadow: 0 0 0 var(--tc-space-1) rgba(58, 134, 255, 0.25);
 }
 
 .stepFormActions {
@@ -71,13 +79,13 @@
   justify-content: space-between;
   margin-top: var(--tc-space-4);
   padding-top: var(--tc-space-3);
-  border-top: 1px solid var(--tc-border-color-light));
+  border-top: 1px solid var(--tc-border-color-light);
 }
 
 .searchingIndicator {
   margin-top: var(--tc-space-2);
   font-size: 0.875rem;
-  color: var(--tc-text-muted));
+  color: var(--tc-text-muted);
 }
 
 .addressResults {
@@ -89,7 +97,7 @@
   overflow-y: auto;
   background-color: var(--tc-bg-default);
   border: 1px solid var(--tc-border-default);
-  border-radius: var(--tc-radius-base));
+  border-radius: var(--tc-radius-base);
   box-shadow: 0 var(--tc-space-2) var(--tc-space-3) rgba(0, 0, 0, 0.15);
   z-index: 1000;
 }
@@ -97,11 +105,11 @@
 .addressResultItem {
   padding: var(--tc-space-2) var(--tc-space-3);
   cursor: pointer;
-  border-bottom: 1px solid var(--tc-border-color-light));
+  border-bottom: 1px solid var(--tc-border-color-light);
 }
 
 .addressResultItem:hover {
-  background-color: var(--tc-bg-hover));
+  background-color: var(--tc-bg-hover);
 }
 
 .loadingIndicator {
@@ -109,5 +117,5 @@
   justify-content: center;
   align-items: center;
   height: 100px;
-  color: var(--tc-text-muted));
+  color: var(--tc-text-muted);
 }

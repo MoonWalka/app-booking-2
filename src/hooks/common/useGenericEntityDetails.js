@@ -619,30 +619,8 @@ const useGenericEntityDetails = ({
     }
   }, [relatedEntities, safeSetState, cacheEnabled, cache]);
   
-  // Fonction pour basculer entre les modes d'édition
-  const toggleEditMode = useCallback(() => {
-    if (isEditing) {
-      // Quitter le mode édition
-      setFormData(entity || {});
-      setFormErrors({});
-      setDirtyFields([]);
-      setIsDirty(false);
-      setIsEditing(false);
-      
-      // Appeler le callback si fourni
-      if (onModeChange) {
-        onModeChange('view');
-      }
-    } else {
-      // Passer en mode édition
-      setIsEditing(true);
-      
-      // Appeler le callback si fourni
-      if (onModeChange) {
-        onModeChange('edit');
-      }
-    }
-  }, [isEditing, entity, onModeChange]);
+  // SUPPRIMÉ: toggleEditMode - remplacé par la navigation vers des formulaires séparés
+  // Les entités utilisent maintenant le pattern vue/formulaire séparé avec navigation
   
   // Gestionnaire de changements pour les champs du formulaire
   const handleChange = useCallback((e) => {
@@ -1112,8 +1090,7 @@ const useGenericEntityDetails = ({
     showDeleteModal,
     
     // Actions de base
-    toggleEditMode,
-    handleEdit: toggleEditMode,
+    handleEdit: navigateToEdit,
     handleChange,
     handleSubmit,
     handleDelete,

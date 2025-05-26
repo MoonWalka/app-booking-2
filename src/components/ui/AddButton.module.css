@@ -1,0 +1,147 @@
+/*
+ * Styles pour AddButton - Composant bouton d'ajout standardisé
+ * TourCraft Design System
+ * Dernière mise à jour: 21 mai 2025
+ */
+
+/* =============================
+   STYLE DE BASE
+   ============================= */
+.addButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tc-space-1);
+  font-weight: var(--tc-font-weight-medium);
+  border: none;
+  border-radius: var(--tc-radius-base);
+  cursor: pointer;
+  transition: var(--tc-transition-base);
+  text-decoration: none;
+  font-family: inherit;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.addButton:focus {
+  outline: 2px solid var(--tc-color-primary);
+  outline-offset: 2px;
+}
+
+/* =============================
+   VARIANTES DE COULEUR
+   ============================= */
+.addButton--primary {
+  background-color: var(--tc-color-primary);
+  color: var(--tc-text-light);
+}
+
+.addButton--primary:hover {
+  background-color: var(--tc-color-primary-hover);
+  color: var(--tc-text-light);
+}
+
+.addButton--secondary {
+  background-color: var(--tc-color-secondary);
+  color: var(--tc-text-light);
+}
+
+.addButton--secondary:hover {
+  background-color: var(--tc-color-secondary-dark);
+  color: var(--tc-text-light);
+}
+
+.addButton--success {
+  background-color: var(--tc-color-success);
+  color: var(--tc-text-light);
+}
+
+.addButton--success:hover {
+  background-color: var(--tc-color-success-dark);
+  color: var(--tc-text-light);
+}
+
+.addButton--outline {
+  background-color: transparent;
+  color: var(--tc-color-primary);
+  border: 1px solid var(--tc-color-primary);
+}
+
+.addButton--outline:hover {
+  background-color: var(--tc-color-primary);
+  color: var(--tc-text-light);
+}
+
+/* =============================
+   TAILLES
+   ============================= */
+.addButton--sm {
+  padding: var(--tc-space-1) var(--tc-space-3);
+  font-size: var(--tc-font-size-sm);
+  gap: var(--tc-space-1);
+}
+
+.addButton--base {
+  padding: var(--tc-space-2) var(--tc-space-4);
+  font-size: var(--tc-font-size-base);
+  gap: var(--tc-space-1);
+}
+
+.addButton--lg {
+  padding: var(--tc-space-3) var(--tc-space-6);
+  font-size: var(--tc-font-size-lg);
+  gap: var(--tc-space-2);
+}
+
+/* =============================
+   ÉTAT DÉSACTIVÉ
+   ============================= */
+.addButton--disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* =============================
+   ICÔNES
+   ============================= */
+.addButton i {
+  font-size: inherit;
+  line-height: 1;
+}
+
+/* =============================
+   RESPONSIVE
+   ============================= */
+@media (max-width: 576px) {
+  .addButton {
+    width: 100%;
+    justify-content: center;
+    padding: var(--tc-space-3) var(--tc-space-4);
+  }
+  
+  .addButton--sm {
+    padding: var(--tc-space-2) var(--tc-space-3);
+  }
+  
+  .addButton--lg {
+    padding: var(--tc-space-4) var(--tc-space-6);
+  }
+}
+
+/* =============================
+   ANIMATIONS
+   ============================= */
+@media (prefers-reduced-motion: no-preference) {
+  .addButton {
+    transform: translateY(0);
+  }
+  
+  .addButton:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--tc-shadow-base);
+  }
+  
+  .addButton:active {
+    transform: translateY(0);
+  }
+} 

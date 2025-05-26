@@ -1,0 +1,85 @@
+{
+  "components": [
+    {
+      "name": "AddButton",
+      "path": "src/components/ui/AddButton.js",
+      "features": {
+        "hasLink": true,
+        "hasOnClick": true,
+        "hasVariants": true,
+        "hasIcon": true,
+        "hasTooltip": false,
+        "hasSize": true,
+        "isDeprecated": false
+      },
+      "purpose": "Bouton d'ajout spécialisé",
+      "linesOfCode": 75,
+      "complexity": {
+        "lines": 75,
+        "props": 9,
+        "conditionals": 1,
+        "functions": 3,
+        "score": 14
+      }
+    },
+    {
+      "name": "Button",
+      "path": "src/components/ui/Button.js",
+      "features": {
+        "hasLink": false,
+        "hasOnClick": true,
+        "hasVariants": true,
+        "hasIcon": true,
+        "hasTooltip": true,
+        "hasSize": true,
+        "isDeprecated": false
+      },
+      "purpose": "Bouton générique",
+      "linesOfCode": 130,
+      "complexity": {
+        "lines": 130,
+        "props": 11,
+        "conditionals": 4,
+        "functions": 5,
+        "score": 24
+      }
+    },
+    {
+      "name": "ActionButton",
+      "path": "src/components/common/ActionButton.js",
+      "features": {
+        "hasLink": true,
+        "hasOnClick": true,
+        "hasVariants": true,
+        "hasIcon": false,
+        "hasTooltip": false,
+        "hasSize": true,
+        "isDeprecated": false
+      },
+      "purpose": "Bouton d'action avec tooltip",
+      "linesOfCode": 64,
+      "complexity": {
+        "lines": 64,
+        "props": 7,
+        "conditionals": 2,
+        "functions": 2,
+        "score": 13
+      }
+    }
+  ],
+  "doublons": [],
+  "recommendations": [
+    {
+      "type": "architecture",
+      "priority": "medium",
+      "title": "Optimiser l'architecture des boutons",
+      "description": "3 composants de bouton détectés",
+      "suggestion": "Utiliser une hiérarchie: Button (base) → ActionButton (spécialisé) → AddButton (très spécialisé)"
+    }
+  ],
+  "summary": {
+    "totalComponents": 3,
+    "doublonsDetected": 0,
+    "consolidationPossible": false
+  }
+}

@@ -1,6 +1,5 @@
 // src/components/artistes/sections/ArtistesListHeader.js
 import React from 'react';
-import { Button } from 'react-bootstrap';
 import styles from './ArtistesListHeader.module.css';
 
 /**
@@ -18,13 +17,13 @@ const ArtistesListHeader = ({ onAddClick }) => {
         </h1>
       </div>
       <div className="col-auto">
-        <Button 
-          variant="primary"
+        <button 
+          className={styles.addButton}
           onClick={onAddClick}
         >
-          <i className="bi bi-plus-circle me-2"></i>
-          Nouvel artiste
-        </Button>
+          <i className="bi bi-plus-lg"></i>
+          Ajouter un artiste
+        </button>
       </div>
     </div>
   );

@@ -10,6 +10,7 @@
     --tc-color-primary: #213547;           /* Couleur principale maquette */
     --tc-color-primary-light: #2d4a63;     /* Variante claire */
     --tc-color-primary-dark: #1a2b3a;      /* Variante foncée */
+    --tc-color-primary-hover: #1a2b3a;     /* Couleur hover (même que dark) */
     --tc-color-secondary: #1e88e5;         /* Bleu secondaire maquette */
     --tc-color-secondary-light: #64b5f6;   /* Variante claire */
     --tc-color-secondary-dark: #1565c0;    /* Variante foncée */
@@ -38,12 +39,16 @@
     /* ===== COULEURS NEUTRES RÉELLES ===== */
     --tc-color-white: #ffffff;
     --tc-color-black: #000000;
+    --tc-color-gray-50: #f9fafb;               /* Très très clair */
     --tc-color-gray-100: rgba(0, 0, 0, 0.01);  /* Très clair - maquette */
     --tc-color-gray-200: #e5e7eb;              /* Clair - maquette */
     --tc-color-gray-300: #d1d5db;              /* Moyen clair - maquette */
     --tc-color-gray-400: #9ca3af;              /* Moyen - maquette */
     --tc-color-gray-500: #6b7280;              /* Moyen foncé - maquette */
     --tc-color-gray-600: #4b5563;              /* Foncé - maquette */
+    --tc-color-gray-700: #374151;              /* Très foncé */
+    --tc-color-gray-800: #1f2937;              /* Ultra foncé */
+    --tc-color-gray-900: #111827;              /* Noir grisé */
 
     /* ===== COULEURS DE FOND ESSENTIELLES ===== */
     --tc-bg-default: #ffffff;              /* Fond principal */
@@ -52,6 +57,25 @@
     --tc-bg-sidebar: var(--tc-color-primary); /* Fond sidebar */
     --tc-bg-hover: #f8f9fa;                /* Fond au survol */
     --tc-bg-overlay: rgba(0, 0, 0, 0.5);    /* Overlay sombre */
+    --tc-bg-white: #ffffff;                 /* Fond blanc explicite */
+    --tc-bg-card: #ffffff;                  /* Fond des cartes */
+    --tc-bg-surface: #ffffff;               /* Fond des surfaces */
+    --tc-bg-subtle: #f8f9fa;               /* Fond subtil */
+    --tc-bg-input: #ffffff;                 /* Fond des inputs */
+    --tc-bg-secondary: var(--tc-color-secondary-light); /* Fond secondaire */
+
+    /* ===== COULEURS DE FOND PAR STATUT ===== */
+    --tc-bg-success: #e8f5e8;              /* Fond vert succès */
+    --tc-bg-warning: #fff3cd;              /* Fond jaune warning */
+    --tc-bg-error: #fdeaea;                /* Fond rouge erreur */
+    --tc-bg-info: #e3f2fd;                 /* Fond bleu info */
+    --tc-bg-info-light: #f0f8ff;           /* Fond bleu info clair */
+    --tc-bg-info-subtle: #f8fbff;          /* Fond bleu info subtil */
+    --tc-bg-warning-light: #fffbf0;        /* Fond warning clair */
+    --tc-bg-warning-subtle: #fffef7;       /* Fond warning subtil */
+    --tc-bg-orange-subtle: #fff7ed;        /* Fond orange subtil */
+    --tc-bg-primary-subtle: #f0f4f8;       /* Fond primary subtil */
+    --tc-bg-primary-highlight: #e8f0f5;    /* Fond primary highlight */
 
     /* ===== COULEURS DE TEXTE ESSENTIELLES ===== */
     --tc-text-default: #333333;            /* Texte principal - maquette */
@@ -60,11 +84,25 @@
     --tc-text-light: #ffffff;              /* Texte clair */
     --tc-text-primary: var(--tc-color-primary);     /* Texte primaire */
     --tc-text-link: var(--tc-color-primary);        /* Liens */
+    --tc-text-tertiary: #999999;           /* Texte tertiaire */
+    --tc-text-placeholder: #aaaaaa;        /* Placeholder */
+    --tc-text-dark: #222222;               /* Texte foncé */
+    --tc-text-warning-dark: var(--tc-color-warning-dark); /* Texte warning foncé */
 
     /* ===== COULEURS DE BORDURES ESSENTIELLES ===== */
     --tc-border-default: #e0e0e0;          /* Bordure principale - maquette */
     --tc-border-light: #dee2e6;            /* Bordure claire - maquette */
     --tc-border-primary: var(--tc-color-primary);   /* Bordure primaire */
+    --tc-border-ultralight: #f0f0f0;       /* Bordure ultra claire */
+    --tc-border-input: #d1d5db;            /* Bordure input */
+    --tc-border-light-alpha: rgba(0, 0, 0, 0.1); /* Bordure claire transparente */
+
+    /* ===== BORDURES PAR STATUT ===== */
+    --tc-success-border: var(--tc-color-success-light); /* Bordure succès */
+    --tc-warning-border: var(--tc-color-warning-light); /* Bordure warning */
+    --tc-danger-border: var(--tc-color-error-light);    /* Bordure danger */
+    --tc-info-border: var(--tc-color-info-light);       /* Bordure info */
+    --tc-border-info-subtle: #e3f2fd;      /* Bordure info subtile */
 
     /* ===== COULEURS MÉTIER TOURCRAFT ===== */
     --tc-color-artiste: #6610f2;           /* Violet artistes */
@@ -73,9 +111,27 @@
     --tc-color-concert-light: #eef0fd;     /* Variante claire */
     --tc-color-programmateur: #6f42c1;     /* Violet programmateurs */
     --tc-color-programmateur-light: #f0e6fa; /* Variante claire */
+    --tc-color-orange: #ff6b35;            /* Orange */
 
     /* ===== VARIABLES RGB ESSENTIELLES ===== */
     --tc-color-primary-rgb: 33, 53, 71;
+    --tc-color-secondary-rgb: 30, 136, 229;
+    --tc-color-black-rgb: 0, 0, 0;
+    --tc-color-gray-100-rgb: 249, 250, 251;
+    --tc-color-gray-200-rgb: 229, 231, 235;
+    --tc-color-gray-600-rgb: 75, 85, 99;
+    --tc-color-gray-800-rgb: 31, 41, 55;
+    --tc-bg-color-rgb: 255, 255, 255;
+    --tc-color-primary-dark-rgb: 26, 43, 58;
+
+    /* ===== COULEURS SPÉCIALISÉES ===== */
+    --tc-artiste-color-light: var(--tc-color-artiste-light);
+    --tc-artiste-color-rgb: 102, 16, 242;
+    --tc-bg-color-light: #f8f9fa;
+    --tc-bg-color-dark: #343a40;
+    --tc-bg-light-alpha: rgba(248, 249, 250, 0.8);
+    --tc-bg-white-translucent: rgba(255, 255, 255, 0.9);
+    --tc-error-bg-color: var(--tc-bg-error);
 
     /* ===== ALIAS POUR COMPATIBILITÉ ===== */
     --tc-primary: var(--tc-color-primary);
@@ -85,6 +141,11 @@
     --tc-bg-color: var(--tc-bg-default);
     --tc-text-color: var(--tc-text-default);
     --tc-border-color: var(--tc-border-default);
+    --tc-light: #f8f9fa;
+    --tc-dark: #343a40;
+    --tc-info: var(--tc-color-info);
+    --tc-white-color: #ffffff;
+    --tc-whitefff: #ffffff;
     
     /* ===== VARIABLES COMMUNES SYSTÈME ===== */
     /* Z-index système */
@@ -93,6 +154,9 @@
     --tc-z-index-dropdown: 1010;
     --tc-z-index-modal: 1020;
     --tc-z-index-tooltip: 1030;
+    --tc-z-index-floating: 1015;
+    --tc-z-index-sticky: 1005;
+    --tc-z-index-toast: 1025;
     
     /* Bordures communes */
     --tc-border-width: 1px;
@@ -103,10 +167,106 @@
     --tc-active-overlay-light: rgba(255, 255, 255, 0.15);
     --tc-hover-overlay-dark: rgba(0, 0, 0, 0.1);
     --tc-active-overlay-dark: rgba(0, 0, 0, 0.15);
+    --tc-hover-bg-light: #f0f0f0;
+    --tc-white-hover: #f8f9fa;
+    --tc-white-light: #fafbfc;
     
     /* Transitions communes */
     --tc-transition-short: 150ms ease;
     --tc-transition-duration: 300ms;
+    --tc-transition-speed: 300ms;
+    --tc-transition-duration-fast: 150ms;
+
+    /* ===== COULEURS ÉTENDUES PAR STATUT ===== */
+    /* Success */
+    --tc-success-color-light: var(--tc-color-success-light);
+    --tc-success-color-dark: var(--tc-color-success-dark);
+    --tc-success-color-lightest: #f0f9f0;
+    --tc-success-color-bg: var(--tc-bg-success);
+    --tc-success-color-border: var(--tc-success-border);
+    --tc-success-color-text: var(--tc-color-success-dark);
+    --tc-success-color-rgb: 76, 175, 80;
+    --tc-success-color-10: rgba(76, 175, 80, 0.1);
+    --tc-success-color-20: rgba(76, 175, 80, 0.2);
+
+    /* Warning */
+    --tc-warning-color-light: var(--tc-color-warning-light);
+    --tc-warning-color-dark: var(--tc-color-warning-dark);
+    --tc-warning-color-darker: #e65100;
+    --tc-warning-light: var(--tc-bg-warning-light);
+    --tc-warning-color-rgb: 255, 193, 7;
+    --tc-warning-color-10: rgba(255, 193, 7, 0.1);
+    --tc-warning-color-20: rgba(255, 193, 7, 0.2);
+
+    /* Danger/Error */
+    --tc-danger-color-light: var(--tc-color-error-light);
+    --tc-danger-color-dark: var(--tc-color-error-dark);
+    --tc-danger-color-darker: #b71c1c;
+    --tc-danger-color-lighter: #ffebee;
+    --tc-danger-bg: var(--tc-bg-error);
+    --tc-danger-bg-subtle: #fef2f2;
+    --tc-danger-light: var(--tc-danger-color-lighter);
+    --tc-danger-text: var(--tc-color-error-dark);
+    --tc-danger-color-rgb: 244, 67, 54;
+    --tc-danger-color-05: rgba(244, 67, 54, 0.05);
+    --tc-danger-color-10: rgba(244, 67, 54, 0.1);
+    --tc-danger-color-20: rgba(244, 67, 54, 0.2);
+
+    /* Info */
+    --tc-info-color-light: var(--tc-color-info-light);
+    --tc-info-color-dark: var(--tc-color-info-dark);
+    --tc-info-color-lightest: #e3f2fd;
+    --tc-info-color-highlight: #bbdefb;
+    --tc-info-color-text: var(--tc-color-info-dark);
+    --tc-info-color-text-muted: #546e7a;
+    --tc-info-light: var(--tc-bg-info-light);
+    --tc-info-lightest: var(--tc-info-color-lightest);
+    --tc-info-color-rgb: 33, 150, 243;
+    --tc-info-color-05: rgba(33, 150, 243, 0.05);
+
+    /* Primary */
+    --tc-primary-color-light: var(--tc-color-primary-light);
+    --tc-primary-color-dark: var(--tc-color-primary-dark);
+    --tc-primary-color-lighter: #3d5a73;
+    --tc-primary-light: #e8f0f5;
+    --tc-primary-lighter: #f0f4f8;
+    --tc-primary-lightest: #f8fafb;
+    --tc-primary-bg-subtle: var(--tc-bg-primary-subtle);
+    --tc-primary-color-shadow: rgba(33, 53, 71, 0.2);
+    --tc-primary-color-05: rgba(33, 53, 71, 0.05);
+    --tc-primary-color-10: rgba(33, 53, 71, 0.1);
+    --tc-primary-color-20: rgba(33, 53, 71, 0.2);
+    --tc-primary-color-30: rgba(33, 53, 71, 0.3);
+
+    /* Secondary */
+    --tc-secondary-color-light: var(--tc-color-secondary-light);
+    --tc-secondary-color-dark: var(--tc-color-secondary-dark);
+
+    /* ===== VARIABLES BOOTSTRAP COMPATIBILITÉ ===== */
+    --tc-bs-primary: var(--tc-color-primary);
+    --tc-bs-danger: var(--tc-color-error);
+    --tc-bs-white: var(--tc-color-white);
+    --tc-bs-border-color: var(--tc-border-default);
+
+    /* ===== VARIABLES SPÉCIALISÉES ===== */
+    --tc-alert-color: var(--tc-color-info);
+    --tc-backdrop-bg: rgba(0, 0, 0, 0.5);
+    --tc-header-bg: var(--tc-color-primary);
+    --tc-surface-background: var(--tc-bg-default);
+    --tc-table-border-color: var(--tc-border-light);
+    --tc-text-color-base: var(--tc-text-default);
+    --tc-text-color-dark: var(--tc-text-dark);
+    --tc-text-color-primary-dark: var(--tc-color-primary-dark);
+    --tc-label-color: var(--tc-text-default);
+    --tc-input-border-color: var(--tc-border-input);
+    --tc-focus-border: var(--tc-color-primary);
+    --tc-focus-shadow: 0 0 0 2px rgba(33, 53, 71, 0.2);
+    --tc-border-color-light: var(--tc-border-light);
+    --tc-border-color-medium: var(--tc-border-default);
+    --tc-border-color-dark: #999999;
+
+    /* ===== COULEURS SPÉCIALES ===== */
+    --tc-color-eaeef2: #eaeef2;
 }
 
 /* ===== DARK MODE COMPLET - PHASE 4 ===== */
@@ -116,6 +276,7 @@
     --tc-color-primary: #4a6b7c;           /* Primary plus clair pour dark mode */
     --tc-color-primary-light: #5a7b8c;     /* Variante claire adaptée */
     --tc-color-primary-dark: #3a5b6c;      /* Variante foncée adaptée */
+    --tc-color-primary-hover: #3a5b6c;     /* Couleur hover (même que dark) */
     --tc-color-secondary: #42a5f5;         /* Secondary plus clair */
     --tc-color-secondary-light: #64b5f6;   /* Variante claire */
     --tc-color-secondary-dark: #2196f3;    /* Variante foncée */
@@ -142,12 +303,16 @@
     --tc-color-red-500: #f87171;           /* Rouge plus clair */
 
     /* ===== COULEURS NEUTRES INVERSÉES ===== */
+    --tc-color-gray-50: #1f2937;           /* Inversé */
     --tc-color-gray-100: rgba(255, 255, 255, 0.05);  /* Très clair inversé */
     --tc-color-gray-200: #374151;          /* Clair inversé */
     --tc-color-gray-300: #4b5563;          /* Moyen clair inversé */
     --tc-color-gray-400: #6b7280;          /* Moyen inversé */
     --tc-color-gray-500: #9ca3af;          /* Moyen foncé inversé */
     --tc-color-gray-600: #d1d5db;          /* Foncé inversé */
+    --tc-color-gray-700: #e5e7eb;          /* Très foncé inversé */
+    --tc-color-gray-800: #f3f4f6;          /* Ultra foncé inversé */
+    --tc-color-gray-900: #f9fafb;          /* Noir grisé inversé */
 
     /* ===== COULEURS DE FOND DARK MODE ===== */
     --tc-bg-default: #1e1e1e;              /* Fond principal sombre */
@@ -156,6 +321,11 @@
     --tc-bg-sidebar: #1a1a1a;              /* Fond sidebar sombre */
     --tc-bg-hover: #3a3a3a;                /* Fond au survol sombre */
     --tc-bg-overlay: rgba(0, 0, 0, 0.8);   /* Overlay plus sombre */
+    --tc-bg-white: #2d2d2d;                /* Fond blanc adapté */
+    --tc-bg-card: #2d2d2d;                 /* Fond des cartes sombre */
+    --tc-bg-surface: #2d2d2d;              /* Fond des surfaces sombre */
+    --tc-bg-subtle: #3a3a3a;               /* Fond subtil sombre */
+    --tc-bg-input: #3a3a3a;                /* Fond des inputs sombre */
 
     /* ===== COULEURS DE TEXTE DARK MODE ===== */
     --tc-text-default: #ffffff;            /* Texte principal clair */
@@ -164,11 +334,16 @@
     --tc-text-light: #ffffff;              /* Texte clair */
     --tc-text-primary: var(--tc-color-primary);     /* Texte primaire adapté */
     --tc-text-link: var(--tc-color-secondary);      /* Liens adaptés */
+    --tc-text-tertiary: #a0a0a0;           /* Texte tertiaire adapté */
+    --tc-text-placeholder: #808080;        /* Placeholder adapté */
+    --tc-text-dark: #ffffff;               /* Texte foncé inversé */
 
     /* ===== COULEURS DE BORDURES DARK MODE ===== */
     --tc-border-default: #404040;          /* Bordure principale sombre */
     --tc-border-light: #555555;            /* Bordure claire sombre */
     --tc-border-primary: var(--tc-color-primary);   /* Bordure primaire adaptée */
+    --tc-border-ultralight: #505050;       /* Bordure ultra claire sombre */
+    --tc-border-input: #555555;            /* Bordure input sombre */
 
     /* ===== COULEURS MÉTIER ADAPTÉES ===== */
     --tc-color-artiste: #8b5cf6;           /* Violet artistes plus clair */

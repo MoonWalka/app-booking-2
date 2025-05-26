@@ -85,7 +85,7 @@
 }
 
 .listGroupItem:hover {
-  box-shadow: var(--tc-box-shadow-hover));
+  box-shadow: var(--tc-box-shadow-hover);
 }
 
 .dropdownMenu {
@@ -93,7 +93,7 @@
   background-color: var(--tc-bg-default);
   border: var(--tc-border-width) solid var(--tc-border-light);
   border-radius: var(--tc-radius-base);
-  box-shadow: var(--tc-dropdown-shadow));
+  box-shadow: var(--tc-dropdown-shadow);
   max-height: 300px;
   overflow-y: auto;
   margin-top: var(--tc-space-1);

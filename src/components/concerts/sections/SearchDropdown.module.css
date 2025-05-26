@@ -35,7 +35,7 @@
 .createButton {
   display: inline-flex;
   align-items: center;
-  gap: var(--tc-color-primary);
+  gap: var(--tc-space-3);
   white-space: nowrap;
   border-radius: 0 var(--tc-radius-sm) var(--tc-radius-sm) 0;
 }
@@ -59,7 +59,7 @@
   padding: var(--tc-space-2);
   display: flex;
   align-items: center;
-  gap: var(--tc-color-primary);
+  gap: var(--tc-space-3);
   justify-content: center;
 }
 
@@ -119,13 +119,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--tc-color-primary);
+  gap: var(--tc-space-3);
 }
 
 /* Styles responsive standardisés */
 @media (max-width: 768px) {
   .resultItem {
-    padding: var(--tc-color-primary) var(--tc-space-2);
+    padding: var(--tc-space-3) var(--tc-space-2);
   }
   
   .resultsDropdown {

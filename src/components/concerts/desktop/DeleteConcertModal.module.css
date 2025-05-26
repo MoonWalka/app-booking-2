@@ -24,7 +24,7 @@
   border-radius: 0.5rem;
   width: 450px;
   max-width: 90vw;
-  box-shadow: 0 4px 20px var(--tc-shadow-lg));
+  box-shadow: 0 4px 20px var(--tc-shadow-lg);
   overflow: hidden;
 }
 

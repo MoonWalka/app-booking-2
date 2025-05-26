@@ -6,9 +6,9 @@
 
 .templateInfoCard {
   background-color: var(--tc-bg-card);
-  border-radius: var(--tc-border-radius-md);
+  border-radius: var(--tc-radius-md);
   border: 1px solid var(--tc-border-light);
-  padding: var(--tc-color-primary);
+  padding: var(--tc-space-3);
   margin-bottom: var(--tc-space-4);
   box-shadow: var(--tc-shadow-xs);
 }

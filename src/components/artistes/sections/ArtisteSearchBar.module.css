@@ -68,7 +68,7 @@
   
   .searchResultItem,
   .searchCreateItem {
-    padding: var(--tc-color-primary) var(--tc-space-2);
+    padding: var(--tc-space-3) var(--tc-space-2);
   }
 }
 

@@ -133,7 +133,7 @@
 }
 
 .button {
-  padding: var(--tc-color-primary) var(--tc-spacing-5);
+  padding: var(--tc-space-3) var(--tc-spacing-5);
   border-radius: var(--tc-radius-sm);
   border: none;
   cursor: pointer;
@@ -233,7 +233,7 @@
 }
 
 .tab {
-  padding: var(--tc-color-primary) var(--tc-spacing-5);
+  padding: var(--tc-space-3) var(--tc-spacing-5);
   cursor: pointer;
   transition: var(--tc-transition-base);
 }
@@ -252,7 +252,7 @@
    BOÎTES DE STATUT ET INFO
    ============================= */
 .statusBox {
-  padding: var(--tc-color-primary);
+  padding: var(--tc-space-3);
   border-radius: var(--tc-radius-sm);
   margin-bottom: var(--tc-space-4);
 }
@@ -265,7 +265,7 @@
 }
 
 .warningBox {
-  padding: var(--tc-color-primary);
+  padding: var(--tc-space-3);
   background-color: var(--tc-warning-light);
   border-radius: var(--tc-radius-sm);
   margin-bottom: var(--tc-space-4);
@@ -299,7 +299,7 @@
    ============================= */
 .actionsContainer {
   display: flex;
-  gap: var(--tc-color-primary);
+  gap: var(--tc-space-3);
   justify-content: flex-end;
 }
 
@@ -383,7 +383,7 @@
 }
 
 .partenaireBox {
-  padding: var(--tc-color-primary);
+  padding: var(--tc-space-3);
   background-color: var(--tc-bg-color-light);
   border-radius: var(--tc-radius-sm);
   margin-bottom: var(--tc-color-primary);

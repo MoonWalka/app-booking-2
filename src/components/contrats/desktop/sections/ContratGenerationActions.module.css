@@ -53,6 +53,6 @@
   
   .buttonsContainer {
     flex-direction: column;
-    gap: var(--tc-color-primary);
+    gap: var(--tc-space-3);
   }
 }

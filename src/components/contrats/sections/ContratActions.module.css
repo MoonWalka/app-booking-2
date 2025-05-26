@@ -16,7 +16,7 @@
   .actionsContainer > div {
     flex-direction: column;
     width: 100%;
-    gap: var(--tc-color-primary);
+    gap: var(--tc-space-3);
   }
 }
 

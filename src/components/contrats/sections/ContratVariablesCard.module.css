@@ -13,12 +13,12 @@
   overflow-y: auto;
   border: 1px solid var(--tc-border-light);
   border-radius: var(--tc-radius-sm);
-  padding: var(--tc-color-primary);
+  padding: var(--tc-space-3);
 }
 
 .variableItem {
   display: flex;
-  padding: var(--tc-color-primary);
+  padding: var(--tc-space-3);
   border-bottom: 1px solid var(--tc-bg-subtle);
 }
 

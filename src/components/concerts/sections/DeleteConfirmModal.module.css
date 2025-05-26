@@ -14,7 +14,7 @@
 .modalContent {
   background: var(--tc-bg-white);
   border-radius: var(--tc-radius-lg);
-  box-shadow: var(--tc-shadow-lg));
+  box-shadow: var(--tc-shadow-lg);
   max-width: 600px;
   width: 100%;
   max-height: 90vh;
@@ -82,7 +82,7 @@
 .modalFooter {
   display: flex;
   justify-content: flex-end;
-  gap: var(--tc-color-primary);
+  gap: var(--tc-space-3);
   padding: var(--tc-space-4) var(--tc-space-5);
   border-top: 1px solid var(--tc-border-ultralight);
   background: var(--tc-bg-light);
@@ -91,7 +91,7 @@
 @media (max-width: 768px) {
   .modalContent {
     max-width: 95vw;
-    border-radius: var(--tc-border-radius-md);
+    border-radius: var(--tc-radius-md);
   }
   .modalBody {
     padding: var(--tc-space-4);
@@ -112,12 +112,12 @@
     max-width: 98vw;
   }
   .modalHeader {
-    padding: var(--tc-color-primary) var(--tc-space-3);
+    padding: var(--tc-space-3) var(--tc-space-3);
   }
   .modalBody {
     padding: var(--tc-space-3);
   }
   .modalFooter {
-    padding: var(--tc-color-primary) var(--tc-space-3);
+    padding: var(--tc-space-3) var(--tc-space-3);
   }
 }

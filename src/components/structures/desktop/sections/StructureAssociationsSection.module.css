@@ -59,7 +59,7 @@
 }
 
 .programmateurCard:hover {
-  box-shadow: var(--tc-box-shadow-md));
+  box-shadow: var(--tc-box-shadow-md);
   border-color: var(--tc-primary-color-light);
 }
 

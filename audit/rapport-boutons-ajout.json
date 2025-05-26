@@ -1,0 +1,65 @@
+{
+  "files": [
+    {
+      "file": "ConcertsListHeader.js",
+      "path": "src/components/concerts/sections/ConcertsListHeader.js",
+      "type": "JS",
+      "issues": [],
+      "standardized": true
+    },
+    {
+      "file": "ArtistesListHeader.js",
+      "path": "src/components/artistes/sections/ArtistesListHeader.js",
+      "type": "JS",
+      "issues": [],
+      "standardized": true
+    },
+    {
+      "file": "LieuxListHeader.js",
+      "path": "src/components/lieux/desktop/sections/LieuxListHeader.js",
+      "type": "JS",
+      "issues": [],
+      "standardized": true
+    },
+    {
+      "file": "ProgrammateursListHeader.js",
+      "path": "src/components/programmateurs/desktop/sections/ProgrammateursListHeader.js",
+      "type": "JS",
+      "issues": [],
+      "standardized": true
+    },
+    {
+      "file": "ConcertsListHeader.module.css",
+      "path": "src/components/concerts/sections/ConcertsListHeader.module.css",
+      "type": "CSS",
+      "issues": [],
+      "standardized": true
+    },
+    {
+      "file": "ArtistesListHeader.module.css",
+      "path": "src/components/artistes/sections/ArtistesListHeader.module.css",
+      "type": "CSS",
+      "issues": [],
+      "standardized": true
+    },
+    {
+      "file": "LieuxListHeader.module.css",
+      "path": "src/components/lieux/desktop/sections/LieuxListHeader.module.css",
+      "type": "CSS",
+      "issues": [],
+      "standardized": true
+    },
+    {
+      "file": "ProgrammateursListHeader.module.css",
+      "path": "src/components/programmateurs/desktop/sections/ProgrammateursListHeader.module.css",
+      "type": "CSS",
+      "issues": [],
+      "standardized": true
+    }
+  ],
+  "summary": {
+    "total": 8,
+    "standardized": 8,
+    "issues": []
+  }
+}

@@ -36,6 +36,17 @@ import UnifiedDebugDashboard from '@/components/debug/UnifiedDebugDashboard';
 // Import de l'outil de diagnostic en mode développement uniquement
 if (process.env.NODE_ENV === 'development') {
   import('./diagnostic').catch(err => console.error('Erreur lors du chargement du diagnostic:', err));
+  import('./utils/debugMode').catch(err => console.error('Erreur lors du chargement du mode debug:', err));
+}
+
+// Import et exécution du script de peuplement pour le mode local
+if (process.env.REACT_APP_MODE === 'local') {
+  import('./utils/seedEmulator').then(({ seedEmulator }) => {
+    // Attendre un peu que l'émulateur soit initialisé
+    setTimeout(() => {
+      seedEmulator().catch(err => console.error('Erreur lors du peuplement de l\'émulateur:', err));
+    }, 2000);
+  }).catch(err => console.error('Erreur lors du chargement du script de peuplement:', err));
 }
 
 // Composant ErrorBoundary pour capturer les erreurs de chargement

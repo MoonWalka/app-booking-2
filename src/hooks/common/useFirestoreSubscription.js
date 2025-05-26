@@ -2,7 +2,34 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { doc, onSnapshot, db } from '@/services/firebase-service';
 
 /**
- * Hook pour s'abonner aux changements d'un document Firestore.
+ * Hook pour s'abonner aux changeme  // Effet principal pour configurer l'abonnement - STABILISATION DES DÉPENDANCES
+  const stableRefreshRef = useRef();
+  
+  // Stocker une référence stable de refresh
+  useEffect(() => {
+    stableRefreshRef.current = refresh;
+  }, [refresh]);
+
+  useEffect(() => {
+    // Capturer la référence actuelle pour le cleanup
+    const currentInstance = instanceRef.current;
+    
+    // Utiliser la référence stable pour éviter la boucle infinie
+    const stableRefresh = stableRefreshRef.current;
+    if (stableRefresh) {
+      stableRefresh();
+    }
+    
+    // Nettoyage lors du démontage
+    return () => {
+      currentInstance.isMounted = false;
+      
+      if (currentInstance.unsubscribe) {
+        currentInstance.unsubscribe();
+        currentInstance.unsubscribe = null;
+      }
+    };
+  }, [collectionName, id]); // Dépendances stables uniquement Firestore.
  * Version optimisée avec moins de logs et sélection de champs.
  * 
  * @param {string} collectionName - Nom de la collection

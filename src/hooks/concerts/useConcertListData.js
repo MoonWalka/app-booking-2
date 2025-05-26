@@ -402,25 +402,36 @@ export const useConcertListData = () => {
     }
   }, [fetchEntitiesBatch]);
 
-  // Effet initial pour charger les données
+  // Effet initial pour charger les données - STABILISATION DES DÉPENDANCES
+  const stableFetchRef = useRef();
+  
+  // Stocker une référence stable de fetchConcertsAndForms
+  useEffect(() => {
+    stableFetchRef.current = fetchConcertsAndForms;
+  }, [fetchConcertsAndForms]);
+
   useEffect(() => {
     if (isInitialRenderRef.current) {
       console.time('⏱️ Premier chargement des concerts');
       logger.log('🔄 Effet initial - déclenchement du premier chargement');
       isInitialRenderRef.current = false;
       
-      // Utiliser Promise pour pouvoir mesurer le temps total
-      fetchConcertsAndForms()
-        .then(() => {
-          console.timeEnd('⏱️ Premier chargement des concerts');
-          logger.performance('Temps total initialisation hook', performance.now() - hookStartTime);
-        })
-        .catch(err => {
-          console.timeEnd('⏱️ Premier chargement des concerts');
-          logger.error('Erreur dans le chargement initial', err);
-        });
+      // Utiliser la référence stable pour éviter la boucle infinie
+      const stableFetch = stableFetchRef.current;
+      if (stableFetch) {
+        // Utiliser Promise pour pouvoir mesurer le temps total
+        stableFetch()
+          .then(() => {
+            console.timeEnd('⏱️ Premier chargement des concerts');
+            logger.performance('Temps total initialisation hook', performance.now() - hookStartTime);
+          })
+          .catch(err => {
+            console.timeEnd('⏱️ Premier chargement des concerts');
+            logger.error('Erreur dans le chargement initial', err);
+          });
+      }
     }
-  }, [fetchConcertsAndForms, hookStartTime]);
+  }, [hookStartTime]); // Dépendances réduites et stables
 
   // Effet pour écouter les événements de mise à jour de concert
   useEffect(() => {

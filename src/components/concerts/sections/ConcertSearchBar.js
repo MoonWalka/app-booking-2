@@ -3,11 +3,11 @@ import styles from './ConcertSearchBar.module.css';
 
 const statusTabs = [
   { id: 'all', label: 'Tous les concerts' },
-  { id: 'contact-etabli', label: 'Contact établi' },
-  { id: 'pre-accord', label: 'Pré-accord' },
-  { id: 'contrat-signe', label: 'Contrat signé' },
-  { id: 'acompte-facture', label: 'Acompte facturé' },
-  { id: 'solde-facture', label: 'Soldé facturé' },
+  { id: 'contact', label: 'Contact établi' },
+  { id: 'preaccord', label: 'Pré-accord' },
+  { id: 'contrat', label: 'Contrat signé' },
+  { id: 'acompte', label: 'Acompte facturé' },
+  { id: 'solde', label: 'Soldé facturé' },
   { id: 'annule', label: 'Annulé' },
 ];
 

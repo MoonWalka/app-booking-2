@@ -1,11 +1,21 @@
 import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import LieuxList from '@/components/lieux/LieuxList';
+import LieuDetails from '@/components/lieux/LieuDetails';
+import LieuForm from '@/components/lieux/LieuForm';
+import '@styles/index.css';
 
-// STUB TEMPORAIRE POUR DÉSACTIVER LE MODULE LIEUX
 const LieuxPage = () => {
   return (
-    <div style={{ padding: 40, textAlign: 'center', color: '#888', fontSize: 24 }}>
-      Module Lieux désactivé temporairement pour diagnostic.<br />
-      (Aucune logique Lieux n'est exécutée)
+    <div className="lieux-page p-3 p-lg-4">
+      <div className="container-fluid px-0">
+        <Routes>
+          <Route path="/" element={<LieuxList />} />
+          <Route path="/nouveau" element={<LieuForm />} />
+          <Route path="/edit/:id" element={<LieuForm />} />
+          <Route path="/:id" element={<LieuDetails />} />
+        </Routes>
+      </div>
     </div>
   );
 };

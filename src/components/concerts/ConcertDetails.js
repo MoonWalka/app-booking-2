@@ -14,6 +14,9 @@ import ConcertsMobileView from './mobile/ConcertView';
 const ConcertDetails = () => {
   const { id } = useParams();
   const { isMobile } = useResponsive();
+
+  // LOG DEBUG : montage du composant ConcertDetails
+  console.log('[DEBUG][ConcertDetails] Montage avec id:', id, '| isMobile:', isMobile);
   
   // Rendu conditionnel simple
   return isMobile ? (

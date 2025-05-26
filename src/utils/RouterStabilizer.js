@@ -1,5 +1,5 @@
 // src/utils/RouterStabilizer.js
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useLocation, useNavigationType } from 'react-router-dom';
 import useGenericCachedData from '@/hooks/generics/data/useGenericCachedData';
 
@@ -12,20 +12,21 @@ export function RouterStabilizer() {
   const navigationType = useNavigationType();
   
   // 🚀 NOUVEAU : Utilisation du cache générique pour l'historique de navigation
-  const { 
-    getCacheData, 
-    setCacheData 
-  } = useGenericCachedData('router', {
+  const cacheHook = useGenericCachedData('router', {
     cacheKey: 'navigation',
     strategy: 'ttl',
     ttl: 5 * 60 * 1000, // 5 minutes
     levels: ['memory', 'session']
   });
+
+  // 🔧 FIX: Utiliser useRef pour stabiliser l'accès aux fonctions du cache
+  const cacheRef = useRef(cacheHook);
+  cacheRef.current = cacheHook;
   
   // 🎯 SIMPLIFICATION : Détection de boucles simplifiée
   useEffect(() => {
     const now = Date.now();
-    const navigationHistory = getCacheData('history') || [];
+    const navigationHistory = cacheRef.current.getCacheData('history') || [];
     
     // Ajouter la navigation actuelle
     const newNavigation = {
@@ -38,7 +39,7 @@ export function RouterStabilizer() {
     
     // Ne conserver que les 10 dernières navigations
     const recentHistory = navigationHistory.slice(-10);
-    setCacheData('history', recentHistory);
+    cacheRef.current.setCacheData('history', recentHistory);
     
     // Détecter les boucles (même chemin > 3 fois en 2 secondes)
     const recentSamePath = recentHistory.filter(
@@ -47,10 +48,10 @@ export function RouterStabilizer() {
     
     if (recentSamePath.length > 3) {
       console.warn('🔄 Boucle de navigation détectée:', location.pathname);
-      setCacheData('loopDetected', true);
-      setCacheData('history', []); // Reset l'historique
+      cacheRef.current.setCacheData('loopDetected', true);
+      cacheRef.current.setCacheData('history', []); // Reset l'historique
     }
-  }, [location, navigationType, getCacheData, setCacheData]);
+  }, [location, navigationType]); // 🔧 FIX: Supprimer les dépendances instables
   
   return null;
 }
@@ -59,19 +60,23 @@ export function RouterStabilizer() {
  * Hook custom pour accéder à la configuration de stabilité du routeur
  */
 export function useRouterStability() {
-  const { getCacheData, setCacheData } = useGenericCachedData('router', {
+  const cacheHook = useGenericCachedData('router', {
     cacheKey: 'navigation',
     strategy: 'ttl',
     ttl: 5 * 60 * 1000,
     levels: ['memory', 'session']
   });
+
+  // 🔧 FIX: Utiliser useRef pour stabiliser l'accès
+  const cacheRef = useRef(cacheHook);
+  cacheRef.current = cacheHook;
   
   const clearDetectedLoop = () => {
-    setCacheData('loopDetected', false);
+    cacheRef.current.setCacheData('loopDetected', false);
   };
   
   const isLoopDetected = () => {
-    return getCacheData('loopDetected') === true;
+    return cacheRef.current.getCacheData('loopDetected') === true;
   };
   
   return {

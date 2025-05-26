@@ -5,9 +5,9 @@
  * Cette implémentation suit l'approche RECOMMANDÉE pour les nouveaux développements
  * en utilisant directement les hooks génériques.
  */
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback, useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useGenericEntitySearch } from '@/hooks/common';
+// import { useGenericEntitySearch } from '@/hooks/common'; // Retiré car non utilisé dans cette version simplifiée
 import { collection, getDocs, db } from '@/services/firebase-service';
 import { debugLog } from '@/utils/logUtils';
 
@@ -44,204 +44,169 @@ export const useProgrammateurSearch = ({
 } = {}) => {
   const navigate = useNavigate();
   const [selectedProgrammateur, setSelectedProgrammateur] = useState(null);
-  const [hasLoadedInitialData, setHasLoadedInitialData] = useState(false);
   const [error, setError] = useState(null);
-  const [localResults, setLocalResults] = useState([]);
+  const [allProgrammateurs, setAllProgrammateurs] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   
   // États supplémentaires pour la gestion du tri et du filtrage
   const [sortField, setSortField] = useState('nom');
   const [sortDirection, setSortDirection] = useState('asc');
-  const [searchFilters, setSearchFilters] = useState([]);
+  const [searchFilters, setSearchFilters] = useState({});
+  const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
   
-  // Utilisation du hook générique avec configuration pour les programmateurs
-  const searchHook = useGenericEntitySearch({
-    collectionName: 'programmateurs',
-    // Champs sur lesquels effectuer la recherche
-    searchFields: ['nom', 'prenom', 'email', 'structure', 'telephone'],
-    initialSearchTerm,
-    limit: maxResults,
-    // Permettre la recherche locale pour de meilleures performances
-    useLocalSearch: true,
-    preloadData: true,
-    // Modifier la condition pour accepter aussi les recherches vides (pour le chargement initial)
-    searchCondition: () => true,
-    // Transformation des résultats pour l'affichage
-    transformResult: (programmateur) => ({
-      ...programmateur,
-      // Format d'affichage standardisé pour les programmateurs
-      displayName: programmateur.nom ? 
-        `${programmateur.prenom || ''} ${programmateur.nom}${programmateur.structure ? ` (${programmateur.structure})` : ''}` : 
-        'Programmateur sans nom',
-      // Nom complet pour faciliter l'utilisation
-      fullName: `${programmateur.prenom || ''} ${programmateur.nom || ''}`
-    })
-  });
-  
-  // Chargement initial des données si nécessaire
+  // 🔧 FIX: Chargement initial simple et direct
   useEffect(() => {
-    const loadAllProgrammateurs = async () => {
-      if (!hasLoadedInitialData && searchHook.results.length === 0 && !searchHook.isSearching) {
-        debugLog('[useProgrammateurSearch] Chargement initial des programmateurs', 'info');
+    const loadProgrammateurs = async () => {
+      if (allProgrammateurs.length > 0) return; // Éviter les rechargements
+      
+      setIsLoading(true);
+      try {
+        debugLog('[useProgrammateurSearch] Chargement des programmateurs', 'info');
         
-        try {
-          const snapshot = await getDocs(collection(db, 'programmateurs'));
-          const programmateurs = snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-          }));
-          
-          // Transformer les résultats comme dans le hook générique
-          const transformedProgrammateurs = programmateurs.map(programmateur => ({
-            ...programmateur,
-            displayName: programmateur.nom ? 
-              `${programmateur.prenom || ''} ${programmateur.nom}${programmateur.structure ? ` (${programmateur.structure})` : ''}` : 
-              'Programmateur sans nom',
-            fullName: `${programmateur.prenom || ''} ${programmateur.nom || ''}`
-          }));
-          
-          // Au lieu de définir les résultats via searchHook.setResults qui n'existe pas,
-          // nous les stockons dans notre propre état localResults
-          setLocalResults(transformedProgrammateurs);
-          setHasLoadedInitialData(true);
-          
-          debugLog(`[useProgrammateurSearch] ${transformedProgrammateurs.length} programmateurs chargés`, 'info');
-        } catch (error) {
-          debugLog(`[useProgrammateurSearch] Erreur lors du chargement initial: ${error.message}`, 'error');
-          setError(error);
-        }
+        const snapshot = await getDocs(collection(db, 'programmateurs'));
+        const programmateurs = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+          // Format d'affichage standardisé
+          displayName: doc.data().nom ? 
+            `${doc.data().prenom || ''} ${doc.data().nom}${doc.data().structure ? ` (${doc.data().structure})` : ''}` : 
+            'Programmateur sans nom',
+          fullName: `${doc.data().prenom || ''} ${doc.data().nom || ''}`
+        }));
+        
+        setAllProgrammateurs(programmateurs);
+        debugLog(`[useProgrammateurSearch] ${programmateurs.length} programmateurs chargés`, 'info');
+      } catch (error) {
+        debugLog(`[useProgrammateurSearch] Erreur lors du chargement: ${error.message}`, 'error');
+        setError(error);
+      } finally {
+        setIsLoading(false);
       }
     };
     
-    loadAllProgrammateurs();
-  }, [hasLoadedInitialData, searchHook.results, searchHook.isSearching]);
+    loadProgrammateurs();
+  }, [allProgrammateurs.length]); // 🔧 FIX: Ajouter la dépendance manquante
   
-  // Déterminer la source des résultats - utiliser nos résultats locaux ou ceux du hook générique
-  const effectiveResults = searchHook.results.length > 0 ? searchHook.results : localResults;
-  
-  // Fonction pour trier les résultats en fonction de sortField et sortDirection
-  const [sortedAndFilteredResults, setSortedAndFilteredResults] = useState([]);
-  
-  useEffect(() => {
-    if (effectiveResults.length > 0) {
-      const sortedResults = [...effectiveResults].sort((a, b) => {
-        // Utilisation de la fonction utilitaire getNestedValue définie plus haut
-        let valA = getNestedValue(a, sortField);
-        let valB = getNestedValue(b, sortField);
-        
-        // Convertir en chaînes pour la comparaison
-        valA = String(valA).toLowerCase();
-        valB = String(valB).toLowerCase();
-        
-        // Trier selon la direction
-        if (sortDirection === 'asc') {
-          return valA.localeCompare(valB);
-        } else {
-          return valB.localeCompare(valA);
-        }
-      });
-      
-      // Log de debug
-      debugLog(`[useProgrammateurSearch] Résultats triés par ${sortField} ${sortDirection}`, 'debug', 'search');
-      
-      // Appliquer les filtres si nécessaire
-      let filteredResults = sortedResults;
-      if (searchFilters && searchFilters.length > 0) {
-        filteredResults = filteredResults.filter(item => {
-          return searchFilters.every(filter => {
-            const { field, operator, value } = filter;
-            const itemValue = getNestedValue(item, field);
-            
-            switch (operator) {
-              case '==': return itemValue === value;
-              case '!=': return itemValue !== value;
-              case '>': return itemValue > value;
-              case '>=': return itemValue >= value;
-              case '<': return itemValue < value;
-              case '<=': return itemValue <= value;
-              case 'contains': return String(itemValue).includes(value);
-              case 'startsWith': return String(itemValue).startsWith(value);
-              case 'endsWith': return String(itemValue).endsWith(value);
-              default: return true;
-            }
-          });
-        });
-        
-        debugLog(`[useProgrammateurSearch] Résultats filtrés: ${filteredResults.length}`, 'debug', 'search');
-      }
-      
-      // Stocker les résultats triés et filtrés dans notre propre état
-      setSortedAndFilteredResults(filteredResults);
-    } else {
-      setSortedAndFilteredResults([]);
+  // 🔧 FIX: Filtrage et tri mémorisés pour éviter les recalculs
+  const filteredAndSortedProgrammateurs = useMemo(() => {
+    let filtered = allProgrammateurs;
+    
+    // Filtrage par terme de recherche
+    if (searchTerm && searchTerm.trim()) {
+      const term = searchTerm.toLowerCase();
+      filtered = filtered.filter(p => 
+        (p.nom && p.nom.toLowerCase().includes(term)) ||
+        (p.prenom && p.prenom.toLowerCase().includes(term)) ||
+        (p.email && p.email.toLowerCase().includes(term)) ||
+        (p.structure && p.structure.nom && p.structure.nom.toLowerCase().includes(term))
+      );
     }
-  }, [effectiveResults, sortField, sortDirection, searchFilters]);
+    
+    // Application des filtres avancés
+    Object.entries(searchFilters).forEach(([key, value]) => {
+      if (!value || value === 'all') return;
+      
+      switch (key) {
+        case 'actif':
+          filtered = filtered.filter(p => String(p.actif) === value);
+          break;
+        case 'hasEmail':
+          filtered = filtered.filter(p => value === 'true' ? !!p.email : !p.email);
+          break;
+        case 'hasTelephone':
+          filtered = filtered.filter(p => value === 'true' ? !!p.telephone : !p.telephone);
+          break;
+        case 'fonction':
+          filtered = filtered.filter(p => p.fonction && p.fonction.toLowerCase().includes(value.toLowerCase()));
+          break;
+        case 'ville':
+          filtered = filtered.filter(p => p.ville && p.ville.toLowerCase().includes(value.toLowerCase()));
+          break;
+        default:
+          break;
+      }
+    });
+    
+    // Tri
+    filtered.sort((a, b) => {
+      const valA = getNestedValue(a, sortField) || '';
+      const valB = getNestedValue(b, sortField) || '';
+      
+      const comparison = String(valA).toLowerCase().localeCompare(String(valB).toLowerCase());
+      return sortDirection === 'asc' ? comparison : -comparison;
+    });
+    
+    return filtered.slice(0, maxResults);
+  }, [allProgrammateurs, searchTerm, searchFilters, sortField, sortDirection, maxResults]);
   
-  // Gestion de la sélection d'un programmateur avec callback
+  // 🔧 FIX: Fonctions de gestion simplifiées
   const handleProgrammateurSelect = useCallback((programmateur) => {
     setSelectedProgrammateur(programmateur);
-    searchHook.setSelectedEntity(programmateur);
-    
-    // Appeler le callback de sélection si fourni
     if (onSelect && typeof onSelect === 'function') {
       onSelect(programmateur);
     }
-  }, [onSelect, searchHook]);
+  }, [onSelect]);
   
-  // Navigation vers la page de création de programmateur
   const handleCreateProgrammateur = useCallback(() => {
     navigate('/programmateurs/nouveau');
   }, [navigate]);
   
-  // Navigation vers la page de détail d'un programmateur
   const navigateToProgrammateurDetails = useCallback((programmateurId) => {
     if (programmateurId) {
       navigate(`/programmateurs/${programmateurId}`);
     }
   }, [navigate]);
   
-  // Effacer la sélection
   const clearSelection = useCallback(() => {
     setSelectedProgrammateur(null);
-    searchHook.clearSelection();
-  }, [searchHook]);
+  }, []);
 
-  // Fonction pour gérer la recherche manuelle
-  const handleSearch = useCallback(() => {
-    searchHook.refreshSearch();
-  }, [searchHook]);
+  const handleSearch = useCallback((term = searchTerm, filters = searchFilters) => {
+    setSearchTerm(term);
+    setSearchFilters(filters);
+  }, [searchTerm, searchFilters]);
+  
+  const resetSearch = useCallback(() => {
+    setSearchTerm('');
+    setSearchFilters({});
+  }, []);
   
   return {
-    // Propriétés et méthodes du hook générique
-    ...searchHook,
+    // Données principales
+    programmateurs: filteredAndSortedProgrammateurs,
+    programmateur: selectedProgrammateur,
+    loading: isLoading,
+    error,
     
-    // Propriétés spécifiques aux programmateurs pour une meilleure DX
-    programmateur: searchHook.selectedEntity || selectedProgrammateur,
-    setProgrammateur: handleProgrammateurSelect,
-    clearProgrammateur: clearSelection,
-    programmateurs: sortedAndFilteredResults, // Utiliser les résultats triés et filtrés
-    loading: searchHook.isSearching, // Ajout de l'état loading
-    error: error || searchHook.error, // Utiliser notre erreur ou celle du hook générique
+    // États de recherche et filtrage
+    searchTerm,
+    setSearchTerm,
+    searchFilters,
+    setSearchFilters,
     
-    // Propriétés et méthodes de tri et filtrage
+    // États de tri
     sortField,
     setSortField,
     sortDirection, 
     setSortDirection,
-    searchFilters,
-    setSearchFilters,
-    handleSearch,
     
-    // Actions spécifiques aux programmateurs
+    // Fonctions
+    handleSearch,
+    resetSearch,
+    setProgrammateur: handleProgrammateurSelect,
+    clearProgrammateur: clearSelection,
     handleCreateProgrammateur,
     navigateToProgrammateurDetails,
     
-    // Aliases pour compatibilité avec le code existant
-    searchProgrammateurs: searchHook.refreshSearch,
-    resetSearch: searchHook.clearSearch,
-    
-    // États supplémentaires
-    isSearching: searchHook.isSearching,
-    searchError: error || searchHook.error
+    // Aliases pour compatibilité
+    results: filteredAndSortedProgrammateurs,
+    isSearching: isLoading,
+    searchError: error,
+    selectedEntity: selectedProgrammateur,
+    setSelectedEntity: handleProgrammateurSelect,
+    clearSelection,
+    refreshSearch: () => handleSearch(),
+    clearSearch: resetSearch
   };
 };
 

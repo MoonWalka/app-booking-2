@@ -25,7 +25,7 @@ import FormResponsePage from '@/pages/FormResponsePage';
 import ContratGenerationPage from '@/pages/ContratGenerationPage';
 import ContratDetailsPage from '@/pages/ContratDetailsPage';
 import StructuresPage from '@/pages/StructuresPage';
-import RouterStabilizer from '@/utils/RouterStabilizer';
+import RouterStabilizer from '@/utils/RouterStabilizer'; // Réactivé après correction
 import ProgrammateursList from '@/components/programmateurs/ProgrammateursList';
 import ConcertFormWrapper from '@/components/concerts/ConcertForm';
 import ConcertsList from '@/components/concerts/ConcertsList';
@@ -155,7 +155,7 @@ function App() {
         <AuthProvider>
           <ParametresProvider>
             <ModalProvider> {/* Ajout du ModalProvider */}
-              {/* Intégration du stabilisateur de routeur */}
+              {/* 🔧 FIX: RouterStabilizer réactivé après correction */}
               <RouterStabilizer />
               <Suspense fallback={
                 <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">

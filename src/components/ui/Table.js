@@ -11,6 +11,19 @@ import styles from './Table.module.css';
  * @param {Function} onRowClick - Callback au clic sur une ligne (optionnel)
  */
 const Table = ({ columns, data, renderActions, sortField, sortDirection, onSort, onRowClick }) => {
+  
+  // 🔧 FIX: Gérer le clic sur une ligne en évitant les conflits
+  const handleRowClick = (rowId, event) => {
+    // Vérifier si le clic provient d'un bouton d'action ou d'un lien
+    if (event.target.closest('button') || event.target.closest('a')) {
+      return; // Ne pas déclencher la navigation si c'est un bouton ou un lien
+    }
+    
+    if (onRowClick) {
+      onRowClick(rowId);
+    }
+  };
+
   return (
     <table className={styles.table}>
       <thead>
@@ -47,11 +60,19 @@ const Table = ({ columns, data, renderActions, sortField, sortDirection, onSort,
       <tbody>
         {data.length > 0 ? (
           data.map((row, idx) => (
-            <tr key={row.id || idx} className={styles.clickableRow} onClick={onRowClick ? () => onRowClick(row.id) : undefined}>
+            <tr 
+              key={row.id || idx} 
+              className={onRowClick ? styles.clickableRow : ''} 
+              onClick={onRowClick ? (e) => handleRowClick(row.id, e) : undefined}
+            >
               {columns.map(col => (
                 <td key={col.key}>{col.render ? col.render(row) : row[col.key]}</td>
               ))}
-              {renderActions && <td>{renderActions(row)}</td>}
+              {renderActions && (
+                <td onClick={(e) => e.stopPropagation()}>
+                  {renderActions(row)}
+                </td>
+              )}
             </tr>
           ))
         ) : (

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { useProgrammateurSearch, useDeleteProgrammateur } from '@/hooks/programmateurs';
 import Spinner from '@/components/common/Spinner';
@@ -117,9 +117,9 @@ const ProgrammateursList = ({ onNavigateToDetails }) => {
       sortable: true,
       render: (row) => (
         <>
-          <Link to={`/programmateurs/${row.id}`} className={styles.programmateurLink} onClick={e => e.stopPropagation()}>
+          <span className={styles.programmateurName}>
             {row.nom}{row.prenom && ` ${row.prenom}`}
-          </Link>
+          </span>
           {row.fonction && <div className={styles.fonction}>{row.fonction}</div>}
         </>
       )
@@ -146,19 +146,38 @@ const ProgrammateursList = ({ onNavigateToDetails }) => {
 
   // Actions par ligne
   const renderActions = (row) => (
-    <div className={styles.actionButtons} onClick={e => e.stopPropagation()}>
+    <div className={styles.actionButtons}>
       <OverlayTrigger placement="top" overlay={<Tooltip>Voir les détails</Tooltip>}>
-        <button className={`${styles.actionButton} ${styles.viewButton}`} onClick={() => onNavigateToDetails(row.id)}>
+        <button 
+          className={`${styles.actionButton} ${styles.viewButton}`} 
+          onClick={(e) => {
+            e.stopPropagation();
+            onNavigateToDetails(row.id);
+          }}
+        >
           <i className="bi bi-eye"></i>
         </button>
       </OverlayTrigger>
       <OverlayTrigger placement="top" overlay={<Tooltip>Modifier</Tooltip>}>
-        <button className={`${styles.actionButton} ${styles.editButton}`} onClick={() => navigate(`/programmateurs/${row.id}/edit`)}>
+        <button 
+          className={`${styles.actionButton} ${styles.editButton}`} 
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate(`/programmateurs/${row.id}/edit`);
+          }}
+        >
           <i className="bi bi-pencil"></i>
         </button>
       </OverlayTrigger>
       <OverlayTrigger placement="top" overlay={<Tooltip>Supprimer</Tooltip>}>
-        <button className={`${styles.actionButton} ${styles.deleteButton}`} onClick={() => handleDeleteProgrammateur(row.id)} disabled={isDeleting}>
+        <button 
+          className={`${styles.actionButton} ${styles.deleteButton}`} 
+          onClick={(e) => {
+            e.stopPropagation();
+            handleDeleteProgrammateur(row.id);
+          }} 
+          disabled={isDeleting}
+        >
           <i className="bi bi-trash"></i>
         </button>
       </OverlayTrigger>

@@ -5,9 +5,13 @@
  * - Cache de persistance
  * - Tests et diagnostics
  * - Monitoring temps réel
+ * - Diagnostic de navigation
+ * - Tests de navigation
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useLocation, useNavigationType, useNavigate } from 'react-router-dom';
+import { useAuth } from '@/context/AuthContext';
 import FirestoreService from '@/services/firestoreService';
 import persistenceService, { CACHE_STRATEGIES } from '@/services/persistenceService';
 import { utilityCache } from '@/utils/networkStabilizer';
@@ -30,9 +34,26 @@ const UnifiedDebugDashboard = () => {
   // États pour Utility Cache
   const [utilityStats, setUtilityStats] = useState({});
   
-  // État pour le nettoyage
-  // const [cleanupStatus, setCleanupStatus] = useState(''); // État de débogage - interface simplifiée
-
+  // États pour Navigation Diagnostic
+  const location = useLocation();
+  const navigationType = useNavigationType();
+  const navigate = useNavigate();
+  const { currentUser, loading } = useAuth();
+  
+  const [navLogs, setNavLogs] = useState([]);
+  const [navRenderCount, setNavRenderCount] = useState(0);
+  const [navAuthRenderCount, setNavAuthRenderCount] = useState(0);
+  const [navLocationChanges, setNavLocationChanges] = useState(0);
+  const [navErrors, setNavErrors] = useState([]);
+  const [navTestResults, setNavTestResults] = useState([]);
+  const [isRunningNavTests, setIsRunningNavTests] = useState(false);
+  
+  const navRenderCountRef = useRef(0);
+  const navAuthRenderCountRef = useRef(0);
+  const lastLocationRef = useRef(null);
+  const lastAuthStateRef = useRef(null);
+  const startTimeRef = useRef(Date.now());
+  
   // 🔄 Mise à jour des statistiques Firebase
   const updateFirebaseStats = useCallback(() => {
     if (FirestoreService.getCacheStats) {
@@ -63,6 +84,189 @@ const UnifiedDebugDashboard = () => {
     updatePersistenceStats();
     updateUtilityStats();
   }, [updateFirebaseStats, updatePersistenceStats, updateUtilityStats]);
+
+  // 🧭 Fonctions de diagnostic de navigation
+  // Fonction helper pour créer des logs de navigation de manière stable
+  const createNavLogEntry = useCallback((message, type = 'info') => {
+    const timestamp = new Date().toLocaleTimeString();
+    return {
+      id: Date.now() + Math.random(),
+      timestamp,
+      message,
+      type,
+      location: location.pathname
+    };
+  }, [location.pathname]);
+
+  const addNavLog = useCallback((message, type = 'info') => {
+    const logEntry = createNavLogEntry(message, type);
+    
+    setNavLogs(prev => [...prev.slice(-49), logEntry]); // Garder seulement les 50 derniers logs
+    
+    if (type === 'error') {
+      setNavErrors(prev => [...prev.slice(-9), logEntry]); // Garder les 10 dernières erreurs
+    }
+  }, [createNavLogEntry]);
+
+  const clearNavLogs = useCallback(() => {
+    setNavLogs([]);
+    setNavErrors([]);
+    setNavRenderCount(0);
+    setNavAuthRenderCount(0);
+    setNavLocationChanges(0);
+    navRenderCountRef.current = 0;
+    navAuthRenderCountRef.current = 0;
+    startTimeRef.current = Date.now();
+  }, []);
+
+  const getNavDiagnostic = useCallback(() => {
+    const issues = [];
+    
+    if (navRenderCount > 30) {
+      issues.push(`🚨 Trop de rendus (${navRenderCount}) - Possible boucle infinie`);
+    }
+    
+    if (navAuthRenderCount > 15) {
+      issues.push(`🚨 Auth instable (${navAuthRenderCount} changements) - Problème dans AuthContext`);
+    }
+    
+    if (navErrors.length > 5) {
+      issues.push(`🚨 Trop d'erreurs (${navErrors.length}) - Vérifier la console`);
+    }
+    
+    const recentRenders = navLogs.filter(log => 
+      log.type === 'render' && 
+      Date.now() - new Date(`1970-01-01T${log.timestamp}`).getTime() < 5000
+    ).length;
+    
+    if (recentRenders > 10) {
+      issues.push(`🚨 Rendus trop fréquents (${recentRenders} en 5s)`);
+    }
+    
+    return issues;
+  }, [navRenderCount, navAuthRenderCount, navErrors.length, navLogs]);
+
+  // 🧪 Tests de navigation
+  const addNavTestResult = useCallback((test, status, details = '') => {
+    const result = {
+      id: Date.now(),
+      test,
+      status, // 'success', 'error', 'warning', 'running'
+      details,
+      timestamp: new Date().toLocaleTimeString()
+    };
+    setNavTestResults(prev => [...prev, result]);
+    return result;
+  }, []);
+
+  const runQuickNavTest = useCallback(() => {
+    setNavTestResults([]);
+    
+    // Test rapide de détection d'éléments
+    const programmateursElements = document.querySelectorAll('[href*="/programmateurs"]');
+    addNavTestResult('Détection liens programmateurs', programmateursElements.length > 0 ? 'success' : 'warning', 
+      `${programmateursElements.length} liens trouvés`);
+    
+    const clickableElements = document.querySelectorAll('.clickableRow, [data-testid*="item"]');
+    addNavTestResult('Détection éléments cliquables', clickableElements.length > 0 ? 'success' : 'warning', 
+      `${clickableElements.length} éléments trouvés`);
+    
+    const tableElements = document.querySelectorAll('table, .table');
+    addNavTestResult('Détection tables', tableElements.length > 0 ? 'success' : 'warning', 
+      `${tableElements.length} tables trouvées`);
+    
+    // Test de la console pour les erreurs
+    const hasConsoleErrors = window.console._errors && window.console._errors.length > 0;
+    addNavTestResult('Vérification erreurs console', hasConsoleErrors ? 'error' : 'success', 
+      hasConsoleErrors ? 'Erreurs détectées' : 'Pas d\'erreurs');
+  }, [addNavTestResult]);
+
+  const runFullNavTest = useCallback(async () => {
+    setIsRunningNavTests(true);
+    setNavTestResults([]);
+    
+    try {
+      // Test 1: Navigation vers les programmateurs
+      addNavTestResult('Navigation vers /programmateurs', 'running');
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      try {
+        navigate('/programmateurs');
+        await new Promise(resolve => setTimeout(resolve, 500));
+        addNavTestResult('Navigation vers /programmateurs', 'success', 'Navigation réussie');
+      } catch (error) {
+        addNavTestResult('Navigation vers /programmateurs', 'error', error.message);
+      }
+      
+      // Test 2: Attendre le chargement
+      addNavTestResult('Attente du chargement de la liste', 'running');
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Vérifier si des éléments sont présents
+      const listElements = document.querySelectorAll('[data-testid="programmateur-item"], .programmateur-item, .clickableRow');
+      if (listElements.length > 0) {
+        addNavTestResult('Chargement de la liste', 'success', `${listElements.length} éléments trouvés`);
+        
+        // Test 3: Clic sur le premier élément
+        addNavTestResult('Test de clic sur un élément', 'running');
+        try {
+          const firstElement = listElements[0];
+          const clickEvent = new MouseEvent('click', {
+            bubbles: true,
+            cancelable: true,
+            view: window
+          });
+          
+          firstElement.dispatchEvent(clickEvent);
+          await new Promise(resolve => setTimeout(resolve, 500));
+          
+          // Vérifier si la navigation a eu lieu
+          if (location.pathname.includes('/programmateurs/') && location.pathname !== '/programmateurs') {
+            addNavTestResult('Test de clic sur un élément', 'success', `Navigation vers ${location.pathname}`);
+          } else {
+            addNavTestResult('Test de clic sur un élément', 'warning', 'Pas de navigation détectée');
+          }
+        } catch (error) {
+          addNavTestResult('Test de clic sur un élément', 'error', error.message);
+        }
+      } else {
+        addNavTestResult('Chargement de la liste', 'error', 'Aucun élément de liste trouvé');
+      }
+      
+      // Test 4: Navigation vers d'autres modules
+      const modules = [
+        { path: '/concerts', name: 'Concerts' },
+        { path: '/artistes', name: 'Artistes' },
+        { path: '/lieux', name: 'Lieux' }
+      ];
+      
+      for (const module of modules) {
+        addNavTestResult(`Navigation vers ${module.name}`, 'running');
+        try {
+          navigate(module.path);
+          await new Promise(resolve => setTimeout(resolve, 300));
+          addNavTestResult(`Navigation vers ${module.name}`, 'success', `Route: ${location.pathname}`);
+        } catch (error) {
+          addNavTestResult(`Navigation vers ${module.name}`, 'error', error.message);
+        }
+      }
+      
+      // Test 5: Retour au dashboard
+      addNavTestResult('Retour au dashboard', 'running');
+      try {
+        navigate('/');
+        await new Promise(resolve => setTimeout(resolve, 300));
+        addNavTestResult('Retour au dashboard', 'success', 'Navigation réussie');
+      } catch (error) {
+        addNavTestResult('Retour au dashboard', 'error', error.message);
+      }
+      
+    } catch (error) {
+      addNavTestResult('Test général', 'error', `Erreur globale: ${error.message}`);
+    } finally {
+      setIsRunningNavTests(false);
+    }
+  }, [navigate, location.pathname, addNavTestResult]);
 
   // 📊 Monitoring des requêtes Firebase
   useEffect(() => {
@@ -132,6 +336,86 @@ const UnifiedDebugDashboard = () => {
     const interval = setInterval(updateAllStats, refreshInterval);
     return () => clearInterval(interval);
   }, [isVisible, refreshInterval, updateAllStats]);
+
+  // 🧭 Monitoring de navigation - Compteur de rendus
+  useEffect(() => {
+    if (!isVisible) return;
+    
+    navRenderCountRef.current += 1;
+    setNavRenderCount(navRenderCountRef.current);
+    
+    const now = Date.now();
+    const elapsed = now - startTimeRef.current;
+    
+    addNavLog(`🔄 Rendu #${navRenderCountRef.current} (${elapsed}ms depuis le début)`, 'render');
+    
+    // Détecter les boucles de rendu
+    if (navRenderCountRef.current > 50) {
+      addNavLog(`🚨 ALERTE: Plus de 50 rendus détectés! Possible boucle infinie`, 'error');
+    }
+  }, [isVisible, addNavLog]);
+
+  // 🧭 Surveillance des changements d'authentification
+  useEffect(() => {
+    if (!isVisible) return;
+    
+    navAuthRenderCountRef.current += 1;
+    setNavAuthRenderCount(navAuthRenderCountRef.current);
+    
+    const authState = { currentUser: !!currentUser, loading };
+    const authStateStr = JSON.stringify(authState);
+    
+    if (lastAuthStateRef.current !== authStateStr) {
+      addNavLog(`🔐 Auth changé: ${authStateStr}`, 'auth');
+      lastAuthStateRef.current = authStateStr;
+      
+      // Détecter les boucles d'auth
+      if (navAuthRenderCountRef.current > 20) {
+        addNavLog(`🚨 ALERTE: Plus de 20 changements d'auth! Possible boucle`, 'error');
+      }
+    }
+  }, [currentUser, loading, isVisible, addNavLog]);
+
+  // 🧭 Surveillance des changements de location
+  useEffect(() => {
+    if (!isVisible) return;
+    
+    const locationStr = `${location.pathname}${location.search}${location.hash}`;
+    
+    if (lastLocationRef.current !== locationStr) {
+      setNavLocationChanges(prev => prev + 1);
+      addNavLog(`🧭 Navigation: ${locationStr} (${navigationType})`, 'navigation');
+      lastLocationRef.current = locationStr;
+    }
+  }, [location, navigationType, isVisible, addNavLog]);
+
+  // 🧭 Surveillance des erreurs console
+  useEffect(() => {
+    if (!isVisible) return;
+    
+    const originalError = console.error;
+    const originalWarn = console.warn;
+    
+    console.error = (...args) => {
+      addNavLog(`❌ Erreur: ${args.join(' ')}`, 'error');
+      originalError.apply(console, args);
+    };
+    
+    console.warn = (...args) => {
+      const message = args.join(' ');
+      if (message.includes('Maximum update depth') || message.includes('boucle')) {
+        addNavLog(`⚠️ Warning critique: ${message}`, 'error');
+      } else {
+        addNavLog(`⚠️ Warning: ${message}`, 'warning');
+      }
+      originalWarn.apply(console, args);
+    };
+    
+    return () => {
+      console.error = originalError;
+      console.warn = originalWarn;
+    };
+  }, [isVisible, addNavLog]);
 
   // 🧪 Tests de performance
   const runPerformanceTest = useCallback(async () => {
@@ -209,8 +493,11 @@ const UnifiedDebugDashboard = () => {
     setTestResults([]);
     setLastRequests([]);
     setSlowRequests([]);
+    // Reset navigation data
+    clearNavLogs();
+    setNavTestResults([]);
     updateAllStats();
-  }, [updateAllStats]);
+  }, [updateAllStats, clearNavLogs]);
 
   // 🎨 Styles
   const styles = {
@@ -365,6 +652,38 @@ const UnifiedDebugDashboard = () => {
     }
   };
 
+  // Fonction utilitaire pour les couleurs de statut
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'success': return '#00ff00';
+      case 'error': return '#ff0000';
+      case 'warning': return '#ffaa00';
+      case 'running': return '#00aaff';
+      default: return '#ffffff';
+    }
+  };
+
+  const getStatusIcon = (status) => {
+    switch (status) {
+      case 'success': return '✅';
+      case 'error': return '❌';
+      case 'warning': return '⚠️';
+      case 'running': return '⏳';
+      default: return '📝';
+    }
+  };
+
+  const getLogColor = (type) => {
+    switch (type) {
+      case 'error': return '#ff4444';
+      case 'warning': return '#ffaa00';
+      case 'auth': return '#4444ff';
+      case 'navigation': return '#44ff44';
+      case 'render': return '#888888';
+      default: return '#000000';
+    }
+  };
+
   if (process.env.NODE_ENV === 'production') {
     return null;
   }
@@ -411,7 +730,9 @@ const UnifiedDebugDashboard = () => {
           { id: 'cache', label: '📊 Cache', icon: '📊' },
           { id: 'firebase', label: '🔥 Firebase', icon: '🔥' },
           { id: 'tests', label: '🧪 Tests', icon: '🧪' },
-          { id: 'requests', label: '📡 Requêtes', icon: '📡' }
+          { id: 'requests', label: '📡 Requêtes', icon: '📡' },
+          { id: 'navigation', label: '🧭 Navigation', icon: '🧭' },
+          { id: 'navtests', label: '🧪 Nav Tests', icon: '🧪' }
         ].map(tab => (
           <div
             key={tab.id}
@@ -583,6 +904,168 @@ const UnifiedDebugDashboard = () => {
                     ))}
                   </tbody>
                 </table>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Onglet Navigation */}
+        {activeTab === 'navigation' && (
+          <div>
+            <div style={styles.card}>
+              <h4 style={styles.cardTitle}>🧭 Navigation Diagnostic</h4>
+              <div style={styles.stat}>
+                <span style={styles.label}>Navigations:</span>
+                <span style={styles.value}>{navRenderCount}</span>
+              </div>
+              <div style={styles.stat}>
+                <span style={styles.label}>Erreurs:</span>
+                <span style={styles.value}>{navErrors.length}</span>
+              </div>
+              <div style={styles.stat}>
+                <span style={styles.label}>Changements de location:</span>
+                <span style={styles.value}>{navLocationChanges}</span>
+              </div>
+            </div>
+
+            <div style={styles.card}>
+              <h4 style={styles.cardTitle}>🧭 Logs de Navigation</h4>
+              <table style={styles.table}>
+                <thead>
+                  <tr>
+                    <th style={styles.th}>Type</th>
+                    <th style={styles.th}>Message</th>
+                    <th style={styles.th}>Location</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {navLogs.map((log, index) => (
+                    <tr key={index} style={{backgroundColor: getLogColor(log.type)}}>
+                      <td style={styles.td}>{getStatusIcon(log.type)}</td>
+                      <td style={styles.td}>{log.message}</td>
+                      <td style={styles.td}>{log.location}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div style={styles.card}>
+              <h4 style={styles.cardTitle}>🧭 Erreurs de Navigation</h4>
+              <table style={styles.table}>
+                <thead>
+                  <tr>
+                    <th style={styles.th}>Erreur</th>
+                    <th style={styles.th}>Message</th>
+                    <th style={styles.th}>Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {navErrors.map((error, index) => (
+                    <tr key={index} style={{backgroundColor: getStatusColor('error')}}>
+                      <td style={styles.td}>{getStatusIcon('error')}</td>
+                      <td style={styles.td}>{error.message}</td>
+                      <td style={styles.td}>{error.timestamp}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* Onglet Nav Tests */}
+        {activeTab === 'navtests' && (
+          <div>
+            <div style={{ marginBottom: '16px' }}>
+              <button 
+                onClick={runQuickNavTest} 
+                disabled={isRunningNavTests}
+                style={styles.button}
+              >
+                🚀 Test Rapide
+              </button>
+              <button 
+                onClick={runFullNavTest} 
+                disabled={isRunningNavTests}
+                style={{...styles.button, marginLeft: '8px'}}
+              >
+                {isRunningNavTests ? '⏳ En cours...' : '🧪 Test Complet'}
+              </button>
+              <button 
+                onClick={() => setNavTestResults([])} 
+                style={{...styles.button, marginLeft: '8px', backgroundColor: '#6c757d'}}
+              >
+                🧹 Clear
+              </button>
+            </div>
+
+            <div style={styles.card}>
+              <h4 style={styles.cardTitle}>📍 État Actuel</h4>
+              <div style={styles.stat}>
+                <span style={styles.label}>Route actuelle:</span>
+                <span style={styles.value}>{location.pathname}</span>
+              </div>
+              <div style={styles.stat}>
+                <span style={styles.label}>User connecté:</span>
+                <span style={styles.value}>{currentUser ? '✅' : '❌'}</span>
+              </div>
+              <div style={styles.stat}>
+                <span style={styles.label}>Loading:</span>
+                <span style={styles.value}>{loading ? '⏳' : '✅'}</span>
+              </div>
+            </div>
+
+            {/* Diagnostic automatique */}
+            {getNavDiagnostic().length > 0 && (
+              <div style={{...styles.card, backgroundColor: '#fff3f3', marginTop: '16px'}}>
+                <h4 style={styles.cardTitle}>🚨 PROBLÈMES DÉTECTÉS</h4>
+                {getNavDiagnostic().map((issue, index) => (
+                  <div key={index} style={{ color: '#dc3545', marginBottom: '8px' }}>
+                    {issue}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Résultats des tests */}
+            {navTestResults.length > 0 && (
+              <div style={{...styles.card, marginTop: '16px'}}>
+                <h4 style={styles.cardTitle}>📋 Résultats des Tests</h4>
+                <table style={styles.table}>
+                  <thead>
+                    <tr>
+                      <th style={styles.th}>Test</th>
+                      <th style={styles.th}>Statut</th>
+                      <th style={styles.th}>Détails</th>
+                      <th style={styles.th}>Heure</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {navTestResults.map((result, index) => (
+                      <tr key={index} style={{
+                        backgroundColor: result.status === 'error' ? '#fff3f3' : 
+                                       result.status === 'warning' ? '#fff8e1' :
+                                       result.status === 'success' ? '#f3fff3' : 'transparent'
+                      }}>
+                        <td style={styles.td}>{result.test}</td>
+                        <td style={styles.td}>
+                          <span style={{ color: getStatusColor(result.status) }}>
+                            {getStatusIcon(result.status)} {result.status}
+                          </span>
+                        </td>
+                        <td style={styles.td}>{result.details}</td>
+                        <td style={styles.td}>{result.timestamp}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {navTestResults.length === 0 && (
+              <div style={{...styles.card, marginTop: '16px', textAlign: 'center', color: '#666'}}>
+                <p>Aucun test exécuté. Cliquez sur "Test Rapide" pour un diagnostic rapide ou "Test Complet" pour une analyse complète de la navigation.</p>
               </div>
             )}
           </div>

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { db } from '@/services/firebase-service';
 import { collection, query, where, getDocs, limit } from '@/services/firebase-service';
 import useDebounce from './useDebounce';
@@ -41,10 +41,13 @@ const useGenericEntitySearch = ({
   const [showDropdown, setShowDropdown] = useState(false);
   const [allData, setAllData] = useState([]);
   
-  // Stocker les configurations dans des refs pour éviter une recréation à chaque rendu
-  const configRef = useRef({
+  // 🔧 FIX: Stabiliser les searchFields pour éviter les re-créations
+  const stableSearchFields = useMemo(() => searchFields, [searchFields]);
+  
+  // 🔧 FIX: Mémoriser la configuration avec TOUTES les dépendances nécessaires
+  const config = useMemo(() => ({
     collectionName,
-    searchFields,
+    searchFields: stableSearchFields,
     useLocalSearch,
     preloadData,
     customFilter,
@@ -52,84 +55,71 @@ const useGenericEntitySearch = ({
     searchCondition,
     sortResults,
     resultLimit
-  });
-  
-  // Mettre à jour les refs si les configurations changent
-  useEffect(() => {
-    configRef.current = {
-      collectionName,
-      searchFields,
-      useLocalSearch,
-      preloadData,
-      customFilter,
-      transformResult,
-      searchCondition,
-      sortResults,
-      resultLimit
-    };
-  }, [
-    collectionName, searchFields, useLocalSearch, preloadData,
-    customFilter, transformResult, searchCondition, sortResults, resultLimit
+  }), [
+    collectionName, 
+    stableSearchFields,
+    useLocalSearch, 
+    preloadData,
+    resultLimit,
+    customFilter,
+    transformResult,
+    searchCondition,
+    sortResults
   ]);
   
   // Terme de recherche avec debounce
   const debouncedSearchTerm = useDebounce(searchTerm, debounceTime);
 
-  // Préchargement de toutes les données si nécessaire
+  // 🔧 FIX: Préchargement avec dépendance sur allData.length
   useEffect(() => {
-    if (useLocalSearch && preloadData) {
-      const fetchAllData = async () => {
-        try {
-          setIsSearching(true);
-          const q = query(collection(db, collectionName));
-          const querySnapshot = await getDocs(q);
-          const fetchedData = querySnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-          }));
-          setAllData(fetchedData);
-        } catch (err) {
-          console.error("Erreur lors du préchargement des données:", err);
-          setError(err);
-        } finally {
-          setIsSearching(false);
-        }
-      };
-
-      fetchAllData();
+    if (!config.useLocalSearch || !config.preloadData || allData.length > 0) {
+      return;
     }
-  }, [collectionName, useLocalSearch, preloadData]);
 
-  // Fonction pour récupérer toute la collection (pour recherche locale)
-  const fetchCollection = async () => {
-    const q = query(collection(db, configRef.current.collectionName));
+    const fetchAllData = async () => {
+      try {
+        setIsSearching(true);
+        const q = query(collection(db, config.collectionName));
+        const querySnapshot = await getDocs(q);
+        const fetchedData = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setAllData(fetchedData);
+      } catch (err) {
+        console.error("Erreur lors du préchargement des données:", err);
+        setError(err);
+      } finally {
+        setIsSearching(false);
+      }
+    };
+
+    fetchAllData();
+  }, [config.collectionName, config.useLocalSearch, config.preloadData, allData.length]);
+
+  // 🔧 FIX: Fonction pour récupérer toute la collection - mémorisée
+  const fetchCollection = useCallback(async () => {
+    const q = query(collection(db, config.collectionName));
     const querySnapshot = await getDocs(q);
     return querySnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
     }));
-  };
+  }, [config.collectionName]);
   
-  // Fonction pour rechercher dans Firestore
-  const searchFirestore = async (term) => {
-    const { collectionName, searchFields, resultLimit } = configRef.current;
-    
-    const queries = searchFields.map(field => {
-      // Création d'une requête pour chaque champ de recherche
+  // 🔧 FIX: Fonction pour rechercher dans Firestore - mémorisée
+  const searchFirestore = useCallback(async (term) => {
+    const queries = config.searchFields.map(field => {
       return query(
-        collection(db, collectionName),
-        // Recherche de termes qui commencent par le terme de recherche (permet l'autocomplétion)
-        // Note: où le champ >= term et < term + '\uf8ff'
+        collection(db, config.collectionName),
         where(field, ">=", term.toLowerCase()),
         where(field, "<=", term.toLowerCase() + '\uf8ff'),
-        limit(resultLimit)
+        limit(config.resultLimit)
       );
     });
     
-    // Exécution des requêtes en parallèle
     const queryResults = await Promise.all(queries.map(q => getDocs(q)));
     
-    // Fusion des résultats et suppression des doublons
     const uniqueResults = new Map();
     queryResults.forEach(querySnapshot => {
       querySnapshot.docs.forEach(doc => {
@@ -143,10 +133,10 @@ const useGenericEntitySearch = ({
     });
     
     return Array.from(uniqueResults.values());
-  };
+  }, [config.collectionName, config.searchFields, config.resultLimit]);
   
   // Fonction utilitaire pour accéder aux propriétés imbriquées
-  const getNestedValue = (obj, path) => {
+  const getNestedValue = useCallback((obj, path) => {
     if (!obj || !path) return undefined;
     const pathArray = path.split('.');
     let value = obj;
@@ -155,12 +145,11 @@ const useGenericEntitySearch = ({
       if (value === undefined) break;
     }
     return value;
-  };
+  }, []);
 
-  // Fonction de recherche stabilisée qui utilise configRef
+  // 🔧 FIX: Fonction de recherche stabilisée avec condition correcte
   const performSearch = useCallback(async (term) => {
-    const config = configRef.current;
-    
+    // 🔧 FIX: Utiliser la fonction searchCondition du config
     if (!term || !config.searchCondition(term)) {
       setResults([]);
       return;
@@ -192,7 +181,9 @@ const useGenericEntitySearch = ({
       }
       
       // Application de la transformation si fournie
-      searchResults = searchResults.map(config.transformResult);
+      if (config.transformResult) {
+        searchResults = searchResults.map(config.transformResult);
+      }
       
       // Tri des résultats si une fonction de tri est fournie
       if (config.sortResults) {
@@ -210,9 +201,15 @@ const useGenericEntitySearch = ({
     } finally {
       setIsSearching(false);
     }
-  }, [allData]); // Uniquement dépendant de allData, les autres dépendances sont dans configRef
+  }, [
+    config,
+    allData, 
+    fetchCollection, 
+    searchFirestore, 
+    getNestedValue
+  ]);
   
-  // Effectuer la recherche lorsque le terme de recherche avec debounce change
+  // 🔧 FIX: Effectuer la recherche seulement quand le terme debounced change
   useEffect(() => {
     performSearch(debouncedSearchTerm);
   }, [debouncedSearchTerm, performSearch]);
@@ -227,11 +224,11 @@ const useGenericEntitySearch = ({
   // Gérer le focus sur l'input
   const handleInputFocus = useCallback(() => {
     setShowDropdown(true);
-    // Si le terme de recherche est déjà valide, relancer la recherche
-    if (configRef.current.searchCondition(searchTerm)) {
+    // 🔧 FIX: Utiliser la condition du config
+    if (searchTerm && config.searchCondition(searchTerm)) {
       performSearch(searchTerm);
     }
-  }, [searchTerm, performSearch]);
+  }, [searchTerm, performSearch, config]);
 
   // Gérer le clic sur un résultat
   const handleResultClick = useCallback((entity) => {

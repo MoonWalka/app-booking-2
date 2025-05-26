@@ -1,6 +1,5 @@
 import React, { createContext, useState, useContext, useEffect, useCallback, useRef } from 'react';
 import { auth, onAuthStateChanged, signInWithEmailAndPassword, signOut, IS_LOCAL_MODE } from '@/services/firebase-service';
-import useGenericCachedData from '@/hooks/generics/data/useGenericCachedData';
 
 // Créer le contexte
 export const AuthContext = createContext(null);
@@ -22,28 +21,14 @@ export const AuthProvider = ({ children }) => {
   
   // 🔧 FIX: Utiliser useRef pour éviter les re-créations
   const unsubscribeRef = useRef(null);
+  const userCacheRef = useRef(null);
 
-  // 🔧 FIX: Utilisation du cache générique avec configuration stable
-  const cacheHook = useGenericCachedData('auth', {
-    cacheKey: 'currentUser',
-    strategy: 'ttl',
-    ttl: 5 * 60 * 1000, // 5 minutes
-    levels: ['memory', 'session'] // Cache en mémoire et session
-  }, {
-    enableStats: true,
-    enableAutoCleanup: true
-  });
-
-  // 🔧 FIX: Utiliser des refs pour stabiliser l'accès aux fonctions du cache
-  const cacheRef = useRef(cacheHook);
-  cacheRef.current = cacheHook;
-
-  // 🔧 FIX: Fonction d'initialisation mémorisée SANS dépendances instables
+  // 🔧 FIX: Fonction d'initialisation ultra-simplifiée
   const initializeAuth = useCallback(() => {
     if (initialized) return;
     
-    // Vérifier d'abord le cache
-    const cachedUser = cacheRef.current.getCacheData('currentUser');
+    // Vérifier d'abord le cache simple
+    const cachedUser = userCacheRef.current;
     if (cachedUser && cachedUser !== 'null') {
       setCurrentUser(cachedUser);
       setLoading(false);
@@ -66,7 +51,7 @@ export const AuthProvider = ({ children }) => {
       if (IS_LOCAL_MODE || process.env.REACT_APP_BYPASS_AUTH === 'true') {
         const devUser = { uid: 'dev-user', email: 'dev@example.com' };
         setCurrentUser(devUser);
-        cacheRef.current.setCacheData('currentUser', devUser);
+        userCacheRef.current = devUser;
         setLoading(false);
         setInitialized(true);
         return;
@@ -86,10 +71,10 @@ export const AuthProvider = ({ children }) => {
             displayName: user.displayName
           };
           setCurrentUser(userCache);
-          cacheRef.current.setCacheData('currentUser', userCache);
+          userCacheRef.current = userCache;
         } else {
           setCurrentUser(null);
-          cacheRef.current.setCacheData('currentUser', null);
+          userCacheRef.current = null;
         }
         
         setLoading(false);
@@ -131,7 +116,7 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
       await signOut(auth);
       // Nettoyer le cache d'authentification
-      cacheRef.current.clearCache();
+      userCacheRef.current = null;
       return true;
     } catch (error) {
       console.error('Erreur de déconnexion:', error);
@@ -143,7 +128,7 @@ export const AuthProvider = ({ children }) => {
 
   // 🔧 FIX: Fonction clearAuthCache pour compatibilité
   const clearAuthCache = useCallback(() => {
-    cacheRef.current.clearCache();
+    userCacheRef.current = null;
   }, []);
 
   const value = {

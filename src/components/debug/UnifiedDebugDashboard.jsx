@@ -21,6 +21,7 @@ const UnifiedDebugDashboard = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [activeTab, setActiveTab] = useState('cache');
   const [refreshInterval, setRefreshInterval] = useState(1000);
+  const [isExpanded, setIsExpanded] = useState(false);
   
   // États pour Firebase Performance
   const [firebaseStats, setFirebaseStats] = useState({});
@@ -47,6 +48,12 @@ const UnifiedDebugDashboard = () => {
   const [navErrors, setNavErrors] = useState([]);
   const [navTestResults, setNavTestResults] = useState([]);
   const [isRunningNavTests, setIsRunningNavTests] = useState(false);
+  
+  // États pour Deep Analysis
+  const [hookAnalysis, setHookAnalysis] = useState([]);
+  const [componentTree, setComponentTree] = useState([]);
+  const [performanceMetrics, setPerformanceMetrics] = useState({});
+  const [errorPatterns, setErrorPatterns] = useState([]);
   
   const navRenderCountRef = useRef(0);
   const navAuthRenderCountRef = useRef(0);
@@ -520,16 +527,22 @@ const UnifiedDebugDashboard = () => {
     },
     dashboard: {
       position: 'fixed',
-      top: '20px',
-      right: '20px',
-      width: '500px',
-      maxHeight: '80vh',
+      top: '10px',
+      right: '10px',
+      width: isExpanded ? 'min(95vw, 1200px)' : 'min(90vw, 800px)', // Responsive width
+      maxWidth: isExpanded ? '1200px' : '800px',
+      minWidth: '600px',
+      height: isExpanded ? 'min(95vh, 900px)' : 'min(90vh, 800px)', // Responsive height
+      maxHeight: isExpanded ? '95vh' : '90vh',
       backgroundColor: 'white',
       borderRadius: '12px',
       boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
       zIndex: 9998,
       overflow: 'hidden',
-      border: '1px solid #e0e0e0'
+      border: '1px solid #e0e0e0',
+      display: 'flex',
+      flexDirection: 'column',
+      transition: 'all 0.3s ease'
     },
     header: {
       padding: '16px 20px',
@@ -578,17 +591,23 @@ const UnifiedDebugDashboard = () => {
     tabs: {
       display: 'flex',
       backgroundColor: '#f8f9fa',
-      borderBottom: '1px solid #e0e0e0'
+      borderBottom: '1px solid #e0e0e0',
+      flexWrap: 'wrap', // Allow wrapping on small screens
+      minHeight: 'auto'
     },
     tab: {
-      flex: 1,
-      padding: '12px 16px',
+      flex: '1 1 auto',
+      minWidth: '80px', // Minimum width for each tab
+      padding: '8px 12px', // Reduced padding for better fit
       textAlign: 'center',
       cursor: 'pointer',
       borderBottom: '3px solid transparent',
-      fontSize: '14px',
+      fontSize: '12px', // Smaller font for better fit
       fontWeight: 'bold',
-      transition: 'all 0.2s'
+      transition: 'all 0.2s',
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis'
     },
     activeTab: {
       borderBottom: '3px solid #007bff',
@@ -596,9 +615,10 @@ const UnifiedDebugDashboard = () => {
       color: '#007bff'
     },
     content: {
-      padding: '20px',
-      maxHeight: '60vh',
-      overflow: 'auto'
+      padding: '16px',
+      flex: 1, // Take remaining space
+      overflow: 'auto',
+      minHeight: 0 // Important for flex scrolling
     },
     grid: {
       display: 'grid',
@@ -684,6 +704,164 @@ const UnifiedDebugDashboard = () => {
     }
   };
 
+  // 🔬 Fonctions d'analyse approfondie
+  const analyzeHooks = useCallback(() => {
+    const analysis = [];
+    
+    // Analyser les hooks React dans la page actuelle
+    const reactFiberNode = document.querySelector('#root')?._reactInternalFiber || 
+                          document.querySelector('#root')?._reactInternals;
+    
+    if (reactFiberNode) {
+      analysis.push({
+        type: 'React Fiber',
+        status: 'detected',
+        details: 'React Fiber tree accessible'
+      });
+    }
+    
+    // Analyser les erreurs de hooks
+    const hookErrors = navLogs.filter(log => 
+      log.message.includes('hook') || 
+      log.message.includes('useEffect') || 
+      log.message.includes('useCallback') ||
+      log.message.includes('dependency')
+    );
+    
+    analysis.push({
+      type: 'Hook Errors',
+      status: hookErrors.length > 0 ? 'warning' : 'success',
+      details: `${hookErrors.length} erreurs de hooks détectées`,
+      data: hookErrors
+    });
+    
+    // Analyser les re-rendus excessifs
+    const excessiveRenders = navLogs.filter(log => 
+      log.type === 'render' && 
+      Date.now() - new Date(`1970-01-01T${log.timestamp}`).getTime() < 10000
+    );
+    
+    analysis.push({
+      type: 'Excessive Renders',
+      status: excessiveRenders.length > 20 ? 'error' : excessiveRenders.length > 10 ? 'warning' : 'success',
+      details: `${excessiveRenders.length} rendus en 10 secondes`,
+      data: excessiveRenders
+    });
+    
+    setHookAnalysis(analysis);
+  }, [navLogs]);
+
+  const analyzeComponentTree = useCallback(() => {
+    const tree = [];
+    
+    // Analyser l'arbre des composants via React DevTools si disponible
+    if (window.__REACT_DEVTOOLS_GLOBAL_HOOK__) {
+      tree.push({
+        component: 'React DevTools',
+        status: 'available',
+        details: 'React DevTools détecté'
+      });
+    }
+    
+    // Analyser les composants avec des erreurs
+    const errorComponents = [...new Set(navLogs
+      .filter(log => log.type === 'error')
+      .map(log => {
+        const match = log.message.match(/(\w+)@http/);
+        return match ? match[1] : 'Unknown';
+      })
+    )];
+    
+    errorComponents.forEach(component => {
+      tree.push({
+        component,
+        status: 'error',
+        details: 'Composant avec erreurs détectées'
+      });
+    });
+    
+    setComponentTree(tree);
+  }, [navLogs]);
+
+  const analyzePerformance = useCallback(() => {
+    const metrics = {};
+    
+    // Analyser les métriques de performance
+    if (performance.getEntriesByType) {
+      const navigationEntries = performance.getEntriesByType('navigation');
+      if (navigationEntries.length > 0) {
+        const nav = navigationEntries[0];
+        metrics.domContentLoaded = Math.round(nav.domContentLoadedEventEnd - nav.domContentLoadedEventStart);
+        metrics.loadComplete = Math.round(nav.loadEventEnd - nav.loadEventStart);
+        metrics.totalLoadTime = Math.round(nav.loadEventEnd - nav.fetchStart);
+      }
+      
+      const resourceEntries = performance.getEntriesByType('resource');
+      metrics.resourceCount = resourceEntries.length;
+      metrics.slowResources = resourceEntries.filter(r => r.duration > 1000).length;
+    }
+    
+    // Analyser les métriques de mémoire si disponibles
+    if (performance.memory) {
+      metrics.memoryUsed = Math.round(performance.memory.usedJSHeapSize / 1024 / 1024);
+      metrics.memoryTotal = Math.round(performance.memory.totalJSHeapSize / 1024 / 1024);
+      metrics.memoryLimit = Math.round(performance.memory.jsHeapSizeLimit / 1024 / 1024);
+    }
+    
+    setPerformanceMetrics(metrics);
+  }, []);
+
+  const analyzeErrorPatterns = useCallback(() => {
+    const patterns = [];
+    
+    // Grouper les erreurs par type
+    const errorGroups = {};
+    navErrors.forEach(error => {
+      const errorType = error.message.split(':')[0] || 'Unknown';
+      if (!errorGroups[errorType]) {
+        errorGroups[errorType] = [];
+      }
+      errorGroups[errorType].push(error);
+    });
+    
+    Object.entries(errorGroups).forEach(([type, errors]) => {
+      patterns.push({
+        pattern: type,
+        count: errors.length,
+        frequency: errors.length / Math.max(navErrors.length, 1),
+        lastOccurrence: errors[errors.length - 1]?.timestamp,
+        status: errors.length > 5 ? 'critical' : errors.length > 2 ? 'warning' : 'info'
+      });
+    });
+    
+    // Analyser les patterns temporels
+    const timePatterns = navLogs.reduce((acc, log) => {
+      const minute = new Date(`1970-01-01T${log.timestamp}`).getMinutes();
+      acc[minute] = (acc[minute] || 0) + 1;
+      return acc;
+    }, {});
+    
+    const maxActivity = Math.max(...Object.values(timePatterns));
+    if (maxActivity > 50) {
+      patterns.push({
+        pattern: 'High Activity Burst',
+        count: maxActivity,
+        frequency: 1,
+        status: 'warning',
+        details: 'Pic d\'activité détecté'
+      });
+    }
+    
+    setErrorPatterns(patterns);
+  }, [navErrors, navLogs]);
+
+  const runDeepAnalysis = useCallback(() => {
+    analyzeHooks();
+    analyzeComponentTree();
+    analyzePerformance();
+    analyzeErrorPatterns();
+  }, [analyzeHooks, analyzeComponentTree, analyzePerformance, analyzeErrorPatterns]);
+
   if (process.env.NODE_ENV === 'production') {
     return null;
   }
@@ -718,6 +896,13 @@ const UnifiedDebugDashboard = () => {
             <option value={2000}>2s</option>
             <option value={5000}>5s</option>
           </select>
+          <button 
+            onClick={() => setIsExpanded(!isExpanded)} 
+            style={{...styles.button, backgroundColor: isExpanded ? '#28a745' : '#6c757d'}}
+            title={isExpanded ? 'Réduire' : 'Agrandir'}
+          >
+            {isExpanded ? '📉' : '📈'}
+          </button>
           <button onClick={cleanup} style={styles.button}>🧹</button>
           <button onClick={resetAll} style={styles.button}>🔄</button>
           <button onClick={() => setIsVisible(false)} style={styles.closeButton}>✕</button>
@@ -727,12 +912,13 @@ const UnifiedDebugDashboard = () => {
       {/* Tabs */}
       <div style={styles.tabs}>
         {[
-          { id: 'cache', label: '📊 Cache', icon: '📊' },
-          { id: 'firebase', label: '🔥 Firebase', icon: '🔥' },
-          { id: 'tests', label: '🧪 Tests', icon: '🧪' },
-          { id: 'requests', label: '📡 Requêtes', icon: '📡' },
-          { id: 'navigation', label: '🧭 Navigation', icon: '🧭' },
-          { id: 'navtests', label: '🧪 Nav Tests', icon: '🧪' }
+          { id: 'cache', label: '📊 Cache', shortLabel: '📊' },
+          { id: 'firebase', label: '🔥 Firebase', shortLabel: '🔥' },
+          { id: 'tests', label: '🧪 Tests', shortLabel: '🧪' },
+          { id: 'requests', label: '📡 Requêtes', shortLabel: '📡' },
+          { id: 'navigation', label: '🧭 Navigation', shortLabel: '🧭' },
+          { id: 'navtests', label: '🧪 Nav Tests', shortLabel: '🧪²' },
+          { id: 'deepanalysis', label: '🔬 Deep Analysis', shortLabel: '🔬' }
         ].map(tab => (
           <div
             key={tab.id}
@@ -741,8 +927,9 @@ const UnifiedDebugDashboard = () => {
               ...(activeTab === tab.id ? styles.activeTab : {})
             }}
             onClick={() => setActiveTab(tab.id)}
+            title={tab.label} // Tooltip avec le nom complet
           >
-            {tab.label}
+            {isExpanded ? tab.label : tab.shortLabel}
           </div>
         ))}
       </div>
@@ -1066,6 +1253,159 @@ const UnifiedDebugDashboard = () => {
             {navTestResults.length === 0 && (
               <div style={{...styles.card, marginTop: '16px', textAlign: 'center', color: '#666'}}>
                 <p>Aucun test exécuté. Cliquez sur "Test Rapide" pour un diagnostic rapide ou "Test Complet" pour une analyse complète de la navigation.</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Onglet Deep Analysis */}
+        {activeTab === 'deepanalysis' && (
+          <div>
+            <div style={{ marginBottom: '16px' }}>
+              <button 
+                onClick={runDeepAnalysis} 
+                style={styles.button}
+              >
+                🔬 Lancer l'analyse approfondie
+              </button>
+              <button 
+                onClick={() => {
+                  setHookAnalysis([]);
+                  setComponentTree([]);
+                  setPerformanceMetrics({});
+                  setErrorPatterns([]);
+                }} 
+                style={{...styles.button, marginLeft: '8px', backgroundColor: '#6c757d'}}
+              >
+                🧹 Clear
+              </button>
+            </div>
+
+            {/* Analyse des Hooks */}
+            {hookAnalysis.length > 0 && (
+              <div style={{...styles.card, marginBottom: '16px'}}>
+                <h4 style={styles.cardTitle}>🪝 Analyse des Hooks</h4>
+                <table style={styles.table}>
+                  <thead>
+                    <tr>
+                      <th style={styles.th}>Type</th>
+                      <th style={styles.th}>Statut</th>
+                      <th style={styles.th}>Détails</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {hookAnalysis.map((analysis, index) => (
+                      <tr key={index} style={{
+                        backgroundColor: analysis.status === 'error' ? '#fff3f3' : 
+                                       analysis.status === 'warning' ? '#fff8e1' :
+                                       analysis.status === 'success' ? '#f3fff3' : 'transparent'
+                      }}>
+                        <td style={styles.td}>{analysis.type}</td>
+                        <td style={styles.td}>
+                          <span style={{ color: getStatusColor(analysis.status) }}>
+                            {getStatusIcon(analysis.status)} {analysis.status}
+                          </span>
+                        </td>
+                        <td style={styles.td}>{analysis.details}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {/* Arbre des Composants */}
+            {componentTree.length > 0 && (
+              <div style={{...styles.card, marginBottom: '16px'}}>
+                <h4 style={styles.cardTitle}>🌳 Arbre des Composants</h4>
+                <table style={styles.table}>
+                  <thead>
+                    <tr>
+                      <th style={styles.th}>Composant</th>
+                      <th style={styles.th}>Statut</th>
+                      <th style={styles.th}>Détails</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {componentTree.map((comp, index) => (
+                      <tr key={index} style={{
+                        backgroundColor: comp.status === 'error' ? '#fff3f3' : 
+                                       comp.status === 'warning' ? '#fff8e1' :
+                                       comp.status === 'available' ? '#f3fff3' : 'transparent'
+                      }}>
+                        <td style={styles.td}>{comp.component}</td>
+                        <td style={styles.td}>
+                          <span style={{ color: getStatusColor(comp.status) }}>
+                            {getStatusIcon(comp.status)} {comp.status}
+                          </span>
+                        </td>
+                        <td style={styles.td}>{comp.details}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {/* Métriques de Performance */}
+            {Object.keys(performanceMetrics).length > 0 && (
+              <div style={{...styles.card, marginBottom: '16px'}}>
+                <h4 style={styles.cardTitle}>⚡ Métriques de Performance</h4>
+                <div style={styles.grid}>
+                  {Object.entries(performanceMetrics).map(([key, value]) => (
+                    <div key={key} style={styles.stat}>
+                      <span style={styles.label}>{key}:</span>
+                      <span style={styles.value}>
+                        {typeof value === 'number' ? 
+                          (key.includes('memory') ? `${value} MB` : 
+                           key.includes('Time') ? `${value} ms` : value) : 
+                          value}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Patterns d'Erreurs */}
+            {errorPatterns.length > 0 && (
+              <div style={{...styles.card, marginBottom: '16px'}}>
+                <h4 style={styles.cardTitle}>🔍 Patterns d'Erreurs</h4>
+                <table style={styles.table}>
+                  <thead>
+                    <tr>
+                      <th style={styles.th}>Pattern</th>
+                      <th style={styles.th}>Occurrences</th>
+                      <th style={styles.th}>Fréquence</th>
+                      <th style={styles.th}>Statut</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {errorPatterns.map((pattern, index) => (
+                      <tr key={index} style={{
+                        backgroundColor: pattern.status === 'critical' ? '#fff3f3' : 
+                                       pattern.status === 'warning' ? '#fff8e1' :
+                                       'transparent'
+                      }}>
+                        <td style={styles.td}>{pattern.pattern}</td>
+                        <td style={styles.td}>{pattern.count}</td>
+                        <td style={styles.td}>{Math.round(pattern.frequency * 100)}%</td>
+                        <td style={styles.td}>
+                          <span style={{ color: getStatusColor(pattern.status) }}>
+                            {getStatusIcon(pattern.status)} {pattern.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {hookAnalysis.length === 0 && componentTree.length === 0 && 
+             Object.keys(performanceMetrics).length === 0 && errorPatterns.length === 0 && (
+              <div style={{...styles.card, textAlign: 'center', color: '#666'}}>
+                <p>Aucune analyse effectuée. Cliquez sur "🔬 Lancer l'analyse approfondie" pour commencer.</p>
               </div>
             )}
           </div>

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { db } from '@/services/firebase-service';
 import { collection, query, where, getDocs, limit } from '@/services/firebase-service';
 import useDebounce from './useDebounce';
@@ -44,28 +44,32 @@ const useGenericEntitySearch = ({
   // 🔧 FIX: Stabiliser les searchFields pour éviter les re-créations
   const stableSearchFields = useMemo(() => searchFields, [searchFields]);
   
+  // Références pour stabiliser les fonctions
+  const transformResultRef = useRef(transformResult);
+  const customFilterRef = useRef(customFilter);
+  const sortResultsRef = useRef(sortResults);
+  const searchConditionRef = useRef(searchCondition);
+  
+  // Mettre à jour les références
+  transformResultRef.current = transformResult;
+  customFilterRef.current = customFilter;
+  sortResultsRef.current = sortResults;
+  searchConditionRef.current = searchCondition;
+  
   // 🔧 FIX: Mémoriser la configuration avec TOUTES les dépendances nécessaires
   const config = useMemo(() => ({
     collectionName,
     searchFields: stableSearchFields,
     useLocalSearch,
     preloadData,
-    customFilter,
-    transformResult,
-    searchCondition,
-    sortResults,
     resultLimit
   }), [
     collectionName, 
     stableSearchFields,
     useLocalSearch, 
     preloadData,
-    resultLimit,
-    customFilter,
-    transformResult,
-    searchCondition,
-    sortResults
-  ]);
+    resultLimit
+  ]); // CORRECTION: Retirer les fonctions instables du config
   
   // Terme de recherche avec debounce
   const debouncedSearchTerm = useDebounce(searchTerm, debounceTime);
@@ -149,8 +153,8 @@ const useGenericEntitySearch = ({
 
   // 🔧 FIX: Fonction de recherche stabilisée avec condition correcte
   const performSearch = useCallback(async (term) => {
-    // 🔧 FIX: Utiliser la fonction searchCondition du config
-    if (!term || !config.searchCondition(term)) {
+    // 🔧 FIX: Utiliser la fonction searchCondition du ref
+    if (!term || !searchConditionRef.current(term)) {
       setResults([]);
       return;
     }
@@ -176,18 +180,18 @@ const useGenericEntitySearch = ({
       }
       
       // Application du filtre personnalisé si fourni
-      if (config.customFilter) {
-        searchResults = searchResults.filter(config.customFilter);
+      if (customFilterRef.current) {
+        searchResults = searchResults.filter(customFilterRef.current);
       }
       
       // Application de la transformation si fournie
-      if (config.transformResult) {
-        searchResults = searchResults.map(config.transformResult);
+      if (transformResultRef.current) {
+        searchResults = searchResults.map(transformResultRef.current);
       }
       
       // Tri des résultats si une fonction de tri est fournie
-      if (config.sortResults) {
-        searchResults.sort(config.sortResults);
+      if (sortResultsRef.current) {
+        searchResults.sort(sortResultsRef.current);
       }
       
       // Limitation du nombre de résultats
@@ -207,7 +211,7 @@ const useGenericEntitySearch = ({
     fetchCollection, 
     searchFirestore, 
     getNestedValue
-  ]);
+  ]); // Les refs sont stables, pas besoin de les ajouter
   
   // 🔧 FIX: Effectuer la recherche seulement quand le terme debounced change
   useEffect(() => {
@@ -224,11 +228,11 @@ const useGenericEntitySearch = ({
   // Gérer le focus sur l'input
   const handleInputFocus = useCallback(() => {
     setShowDropdown(true);
-    // 🔧 FIX: Utiliser la condition du config
-    if (searchTerm && config.searchCondition(searchTerm)) {
+    // 🔧 FIX: Utiliser la condition du ref
+    if (searchTerm && searchConditionRef.current(searchTerm)) {
       performSearch(searchTerm);
     }
-  }, [searchTerm, performSearch, config]);
+  }, [searchTerm, performSearch]); // CORRECTION: Retirer config car on utilise les refs
 
   // Gérer le clic sur un résultat
   const handleResultClick = useCallback((entity) => {

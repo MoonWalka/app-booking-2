@@ -7,7 +7,7 @@
  * @phase Phase 2 - Généralisation
  */
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import useGenericSearch from './useGenericSearch';
 
 /**
@@ -96,6 +96,14 @@ const useGenericFilteredSearch = (entityType, filterConfig = {}, options = {}) =
   const [filterHistory, setFilterHistory] = useState([]);
   const [filterStats, setFilterStats] = useState({});
   
+  // Références pour stabiliser les fonctions
+  const onFilterChangeRef = useRef(onFilterChange);
+  const onPresetApplyRef = useRef(onPresetApply);
+  
+  // Mettre à jour les références
+  onFilterChangeRef.current = onFilterChange;
+  onPresetApplyRef.current = onPresetApply;
+  
   // Hook de recherche de base
   const {
     results,
@@ -183,13 +191,13 @@ const useGenericFilteredSearch = (entityType, filterConfig = {}, options = {}) =
       }
       
       // Callback personnalisé
-      if (onFilterChange) {
-        onFilterChange(filterKey, value, newFilters);
+      if (onFilterChangeRef.current) {
+        onFilterChangeRef.current(filterKey, value, newFilters);
       }
       
       return newFilters;
     });
-  }, [enableFilterHistory, onFilterChange]);
+  }, [enableFilterHistory]); // CORRECTION: Retirer onFilterChange car on utilise onFilterChangeRef
   
   // Supprimer un filtre
   const removeFilter = useCallback((filterKey) => {
@@ -208,10 +216,10 @@ const useGenericFilteredSearch = (entityType, filterConfig = {}, options = {}) =
       }, ...prev.slice(0, 49)]);
     }
     
-    if (onFilterChange) {
-      onFilterChange(null, null, {});
+    if (onFilterChangeRef.current) {
+      onFilterChangeRef.current(null, null, {});
     }
-  }, [enableFilterHistory, onFilterChange]);
+  }, [enableFilterHistory]); // CORRECTION: Retirer onFilterChange car on utilise onFilterChangeRef
   
   // Appliquer plusieurs filtres en une fois
   const applyFilters = useCallback((filters) => {
@@ -225,10 +233,10 @@ const useGenericFilteredSearch = (entityType, filterConfig = {}, options = {}) =
       }, ...prev.slice(0, 49)]);
     }
     
-    if (onFilterChange) {
-      onFilterChange(null, null, filters);
+    if (onFilterChangeRef.current) {
+      onFilterChangeRef.current(null, null, filters);
     }
-  }, [enableFilterHistory, onFilterChange]);
+  }, [enableFilterHistory]); // CORRECTION: Retirer onFilterChange car on utilise onFilterChangeRef
   
   // Sauvegarder un préréglage
   const savePreset = useCallback((name, filters = activeFilters) => {
@@ -252,10 +260,10 @@ const useGenericFilteredSearch = (entityType, filterConfig = {}, options = {}) =
     
     applyFilters(preset.filters);
     
-    if (onPresetApply) {
-      onPresetApply(preset);
+    if (onPresetApplyRef.current) {
+      onPresetApplyRef.current(preset);
     }
-  }, [enablePresets, applyFilters, onPresetApply]);
+  }, [enablePresets, applyFilters]); // CORRECTION: Retirer onPresetApply car on utilise onPresetApplyRef
   
   // Supprimer un préréglage
   const deletePreset = useCallback((presetId) => {

@@ -113,6 +113,16 @@ const useGenericDataFetcher = (entityType, fetchConfig = {}, options = {}) => {
   const retryTimeoutRef = useRef(null);
   const abortControllerRef = useRef(null);
   
+  // Références pour stabiliser les fonctions
+  const onDataRef = useRef(onData);
+  const onErrorRef = useRef(onError);
+  const transformDataRef = useRef(transformData);
+  
+  // Mettre à jour les références
+  onDataRef.current = onData;
+  onErrorRef.current = onError;
+  transformDataRef.current = transformData;
+  
   // Génération de la clé de cache
   const generateCacheKey = useCallback(() => {
     if (cacheKey) return cacheKey;
@@ -222,17 +232,17 @@ const useGenericDataFetcher = (entityType, fetchConfig = {}, options = {}) => {
     let processedData = rawData;
     
     // Transformation personnalisée
-    if (transformData && typeof transformData === 'function') {
-      processedData = transformData(processedData);
+    if (transformDataRef.current && typeof transformDataRef.current === 'function') {
+      processedData = transformDataRef.current(processedData);
     }
     
     // Callback de données
-    if (onData) {
-      onData(processedData);
+    if (onDataRef.current) {
+      onDataRef.current(processedData);
     }
     
     return processedData;
-  }, [transformData, onData]);
+  }, []); // CORRECTION: Pas de dépendances car on utilise les refs
   
   // Fonction de récupération principale
   const fetchData = useCallback(async (useCache = true) => {
@@ -290,8 +300,8 @@ const useGenericDataFetcher = (entityType, fetchConfig = {}, options = {}) => {
         const errorMessage = `Erreur lors de la récupération ${entityType}: ${err.message}`;
         setError(errorMessage);
         
-        if (onError) {
-          onError(err);
+        if (onErrorRef.current) {
+          onErrorRef.current(err);
         }
         
         console.error('❌', errorMessage, err);
@@ -318,12 +328,11 @@ const useGenericDataFetcher = (entityType, fetchConfig = {}, options = {}) => {
     entityType,
     processData,
     setCachedData,
-    onError,
     enableRetry,
     retryCount,
     maxRetries,
     retryDelay
-  ]);
+  ]); // CORRECTION: Retirer onError car on utilise onErrorRef
   
   // Configuration de l'écoute en temps réel
   const setupRealTimeListener = useCallback(() => {
@@ -360,8 +369,8 @@ const useGenericDataFetcher = (entityType, fetchConfig = {}, options = {}) => {
           const errorMessage = `Erreur temps réel ${entityType}: ${err.message}`;
           setError(errorMessage);
           
-          if (onError) {
-            onError(err);
+          if (onErrorRef.current) {
+            onErrorRef.current(err);
           }
           
           console.error('❌', errorMessage, err);
@@ -373,22 +382,30 @@ const useGenericDataFetcher = (entityType, fetchConfig = {}, options = {}) => {
     } catch (err) {
       console.error('❌ Erreur configuration temps réel:', err);
     }
-  }, [enableRealTime, buildQuery, mode, entityType, processData, setCachedData, onError]);
+  }, [enableRealTime, buildQuery, mode, entityType, processData, setCachedData]); // CORRECTION: Retirer onError car on utilise onErrorRef
+  
+  // Références stables pour les fonctions
+  const fetchDataRef = useRef();
+  const setupRealTimeListenerRef = useRef();
+  
+  // Assigner les fonctions aux références
+  fetchDataRef.current = fetchData;
+  setupRealTimeListenerRef.current = setupRealTimeListener;
   
   // Fonction de re-récupération
   const refetch = useCallback(() => {
     invalidateCache();
-    return fetchData(false);
-  }, [invalidateCache, fetchData]);
+    return fetchDataRef.current(false);
+  }, [invalidateCache]);
   
   // Effet de récupération automatique
   useEffect(() => {
-    if (autoFetch) {
-      fetchData();
+    if (autoFetch && fetchDataRef.current) {
+      fetchDataRef.current();
     }
     
-    if (enableRealTime) {
-      setupRealTimeListener();
+    if (enableRealTime && setupRealTimeListenerRef.current) {
+      setupRealTimeListenerRef.current();
     }
     
     return () => {
@@ -403,7 +420,7 @@ const useGenericDataFetcher = (entityType, fetchConfig = {}, options = {}) => {
         abortControllerRef.current.abort();
       }
     };
-  }, [autoFetch, enableRealTime, fetchData, setupRealTimeListener]);
+  }, [autoFetch, enableRealTime]); // CORRECTION: Utiliser les refs pour éviter les boucles
   
   // Effet de vérification de fraîcheur des données
   useEffect(() => {

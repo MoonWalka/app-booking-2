@@ -127,6 +127,18 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
   const itemHeightsRef = useRef(new Map());
   const observerRef = useRef(null);
   
+  // Références pour stabiliser les fonctions
+  const onItemSelectRef = useRef(onItemSelect);
+  const onItemsChangeRef = useRef(onItemsChange);
+  const onPageChangeRef = useRef(onPageChange);
+  const transformItemRef = useRef(transformItem);
+  
+  // Mettre à jour les références
+  onItemSelectRef.current = onItemSelect;
+  onItemsChangeRef.current = onItemsChange;
+  onPageChangeRef.current = onPageChange;
+  transformItemRef.current = transformItem;
+  
   // Configuration de récupération des données
   const fetchConfig = {
     mode: 'collection',
@@ -139,7 +151,7 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
     onData: (newData) => {
       if (newData) {
         const processedItems = newData.map(item => 
-          transformItem ? transformItem(item) : item
+          transformItemRef.current ? transformItemRef.current(item) : item
         );
         
         if (paginationType === 'infinite') {
@@ -151,8 +163,8 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
         setTotalCount(newData.length);
         setHasMore(newData.length === pageSize);
         
-        if (onItemsChange) {
-          onItemsChange(processedItems);
+        if (onItemsChangeRef.current) {
+          onItemsChangeRef.current(processedItems);
         }
       }
     }
@@ -180,13 +192,13 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
       searchFields,
       onResults: (results) => {
         const processedItems = results.map(item => 
-          transformItem ? transformItem(item) : item
+          transformItemRef.current ? transformItemRef.current(item) : item
         );
         setAllItems(processedItems);
         setTotalCount(results.length);
         
-        if (onItemsChange) {
-          onItemsChange(processedItems);
+        if (onItemsChangeRef.current) {
+          onItemsChangeRef.current(processedItems);
         }
       }
     } : {},

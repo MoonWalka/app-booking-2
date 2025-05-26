@@ -121,6 +121,20 @@ const useGenericSearch = (config = {}, options = {}) => {
   const inputRef = useRef(null);
   const selectedIndexRef = useRef(-1);
   
+  // Références pour stabiliser les fonctions
+  const searchFunctionRef = useRef(searchFunction);
+  const formatResultRef = useRef(formatResult);
+  const validateResultRef = useRef(validateResult);
+  const onSearchCompleteRef = useRef(onSearchComplete);
+  const onResultSelectRef = useRef(onResultSelect);
+  
+  // Mettre à jour les références
+  searchFunctionRef.current = searchFunction;
+  formatResultRef.current = formatResult;
+  validateResultRef.current = validateResult;
+  onSearchCompleteRef.current = onSearchComplete;
+  onResultSelectRef.current = onResultSelect;
+  
   // Cache intelligent avec TTL
   const getCachedResult = useCallback((key) => {
     if (!enableCache) return null;
@@ -244,9 +258,9 @@ const useGenericSearch = (config = {}, options = {}) => {
       
       let searchResult;
       
-      if (searchFunction && typeof searchFunction === 'function') {
+      if (searchFunctionRef.current && typeof searchFunctionRef.current === 'function') {
         // Fonction de recherche personnalisée
-        searchResult = await searchFunction(term, searchType, page);
+        searchResult = await searchFunctionRef.current(term, searchType, page);
       } else if (enableFirestore) {
         // Recherche Firestore
         const firestoreResults = await searchFirestore(term, searchType);
@@ -267,8 +281,8 @@ const useGenericSearch = (config = {}, options = {}) => {
       
       // Formater et valider les résultats
       const formattedResults = normalizedResults
-        .map(formatResult)
-        .filter(validateResult)
+        .map(formatResultRef.current)
+        .filter(validateResultRef.current)
         .slice(0, maxResults);
       
       // Mettre en cache
@@ -295,8 +309,8 @@ const useGenericSearch = (config = {}, options = {}) => {
       }
       
       // Callback de recherche terminée
-      if (onSearchComplete) {
-        onSearchComplete(formattedResults, term, searchType);
+      if (onSearchCompleteRef.current) {
+        onSearchCompleteRef.current(formattedResults, term, searchType);
       }
       
     } catch (err) {
@@ -312,18 +326,14 @@ const useGenericSearch = (config = {}, options = {}) => {
     minSearchLength,
     getCachedResult,
     setCachedResult,
-    searchFunction,
     enableFirestore,
     searchFirestore,
     apiEndpoint,
     searchAPI,
-    formatResult,
-    validateResult,
     maxResults,
     enablePagination,
-    enableLogging,
-    onSearchComplete
-  ]);
+    enableLogging
+  ]); // CORRECTION: Retirer searchFunction, formatResult, validateResult, onSearchComplete (fonctions instables)
   
   // Effet pour la recherche avec debounce
   useEffect(() => {
@@ -372,13 +382,13 @@ const useGenericSearch = (config = {}, options = {}) => {
     setShowResults(false);
     selectedIndexRef.current = -1;
     
-    if (onResultSelect) {
-      onResultSelect(item);
+    if (onResultSelectRef.current) {
+      onResultSelectRef.current(item);
     }
     
     if (enableLogging) {
     }
-  }, [onResultSelect, enableLogging]);
+  }, [enableLogging]); // CORRECTION: Retirer onResultSelect car on utilise onResultSelectRef
   
   // Navigation au clavier
   useEffect(() => {

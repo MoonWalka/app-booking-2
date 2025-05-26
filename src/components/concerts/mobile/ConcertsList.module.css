@@ -237,7 +237,7 @@
 }
 
 .errorContainer {
-  background-color: var(--tc-danger-light);
+  background-color: var(--tc-color-error-light);
   color: var(--tc-color-error-dark);
   padding: var(--tc-space-3);
   border-radius: var(--tc-radius-md);

@@ -286,7 +286,7 @@
 
 /* Section headers */
 .concertSectionHeader {
-  background-color: var(--tc-bs-primary);
+  background-color: var(--tc-color-primary);
   color: var(--tc-bg-default);
   border-radius: var(--tc-radius-sm) 4px 0 0;
   padding: var(--tc-space-2) var(--tc-space-2);
@@ -295,7 +295,7 @@
 }
 
 .lieuSectionHeader {
-  background-color: var(--tc-bs-info);
+  background-color: var(--tc-color-info);
   color: var(--tc-bg-default);
   border-radius: var(--tc-radius-sm) 4px 0 0;
   padding: var(--tc-space-2) var(--tc-space-2);
@@ -305,7 +305,7 @@
 
 .contactSectionHeader,
 .structureSectionHeader {
-  background-color: var(--tc-bs-secondary);
+  background-color: var(--tc-color-secondary);
   color: var(--tc-bg-default);
   border-radius: var(--tc-radius-sm) 4px 0 0;
   padding: var(--tc-space-2) var(--tc-space-2);

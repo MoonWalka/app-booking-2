@@ -41,7 +41,7 @@
 .signatureContentInput:focus {
   border-color: var(--tc-focus-border);
   outline: 0;
-  box-shadow: var(--tc-focus-shadow);
+  box-shadow: var(--tc-shadow-focus);
 }
 
 .reactQuillEditor {

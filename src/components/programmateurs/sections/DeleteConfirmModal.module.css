@@ -80,7 +80,7 @@
 
 .entityDetails {
   padding: var(--tc-space-2);
-  background-color: var(--tc-white-secondary);
+  background-color: var(--tc-bg-secondary);
   border-radius: var(--tc-radius-base);
   margin-bottom: var(--tc-space-4);
 }

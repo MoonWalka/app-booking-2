@@ -30,7 +30,7 @@
   display: flex;
   align-items: center;
   padding: var(--tc-space-2) var(--tc-space-4);
-  background-color: var(--tc-white-secondary);
+  background-color: var(--tc-bg-secondary);
   border-bottom: 1px solid var(--tc-border-default);
 }
 

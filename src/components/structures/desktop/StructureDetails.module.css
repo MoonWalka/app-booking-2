@@ -47,7 +47,7 @@
   gap: var(--tc-space-2);
   padding: var(--tc-space-2) var(--tc-space-4);
   background-color: var(--tc-color-primary);
-  color: var(--tc-white-color);
+  color: var(--tc-color-white);
   border: none;
   border-radius: var(--tc-radius-base);
   font-weight: var(--tc-font-weight-medium);
@@ -57,7 +57,7 @@
 
 .editButton:hover {
   background-color: var(--tc-primary-color-dark);
-  color: var(--tc-white-color);
+  color: var(--tc-color-white);
   text-decoration: none;
 }
 
@@ -77,7 +77,7 @@
 
 .deleteButton:hover {
   background-color: var(--tc-color-error);
-  color: var(--tc-white-color);
+  color: var(--tc-color-white);
   text-decoration: none;
 }
 
@@ -115,7 +115,7 @@
 }
 
 .card {
-  background-color: var(--tc-white-color);
+  background-color: var(--tc-color-white);
   border-radius: var(--tc-border-radius-md);
   box-shadow: var(--tc-box-shadow);
   overflow: hidden;

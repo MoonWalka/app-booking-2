@@ -109,12 +109,12 @@
 }
 
 .statusApproved {
-  background-color: var(--tc-success-light);
+  background-color: var(--tc-color-success-light);
   color: var(--tc-color-success);
 }
 
 .statusRejected {
-  background-color: var(--tc-danger-light);
+  background-color: var(--tc-color-error-light);
   color: var(--tc-color-error);
 }
 

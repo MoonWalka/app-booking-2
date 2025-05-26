@@ -76,16 +76,37 @@
 
     /* ===== VARIABLES RGB ESSENTIELLES ===== */
     --tc-color-primary-rgb: 33, 53, 71;
-}
 
-/* ===== ALIAS DE COMPATIBILITÉ ESSENTIELS ===== */
-:root {
-    /* Alias critiques pour rétrocompatibilité */
+    /* ===== ALIAS POUR COMPATIBILITÉ ===== */
+    --tc-primary: var(--tc-color-primary);
+    --tc-secondary: var(--tc-color-secondary);
     --tc-primary-color: var(--tc-color-primary);
     --tc-secondary-color: var(--tc-color-secondary);
     --tc-bg-color: var(--tc-bg-default);
     --tc-text-color: var(--tc-text-default);
     --tc-border-color: var(--tc-border-default);
+    
+    /* ===== VARIABLES COMMUNES SYSTÈME ===== */
+    /* Z-index système */
+    --tc-z-index-backdrop: 999;
+    --tc-z-index-sidebar: 1000;
+    --tc-z-index-dropdown: 1010;
+    --tc-z-index-modal: 1020;
+    --tc-z-index-tooltip: 1030;
+    
+    /* Bordures communes */
+    --tc-border-width: 1px;
+    --tc-border-sidebar: 1px solid rgba(255, 255, 255, 0.1);
+    
+    /* Effets hover/active communes */
+    --tc-hover-overlay-light: rgba(255, 255, 255, 0.1);
+    --tc-active-overlay-light: rgba(255, 255, 255, 0.15);
+    --tc-hover-overlay-dark: rgba(0, 0, 0, 0.1);
+    --tc-active-overlay-dark: rgba(0, 0, 0, 0.15);
+    
+    /* Transitions communes */
+    --tc-transition-short: 150ms ease;
+    --tc-transition-duration: 300ms;
 }
 
 /* ===== DARK MODE COMPLET - PHASE 4 ===== */

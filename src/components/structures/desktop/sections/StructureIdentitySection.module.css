@@ -23,7 +23,7 @@
   align-items: center;
   padding: var(--tc-space-4) var(--tc-space-4);
   border-bottom: 1px solid var(--tc-border-color-light);
-  background-color: var(--tc-white-secondary);
+  background-color: var(--tc-bg-secondary);
 }
 
 .cardHeader i {

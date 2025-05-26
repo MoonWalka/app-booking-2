@@ -121,7 +121,7 @@
    ============================= */
 .formField--error {
   border-color: var(--tc-color-error);
-  background-color: var(--tc-danger-bg);
+  background-color: var(--tc-bg-error);
 }
 
 .formField--error:focus {

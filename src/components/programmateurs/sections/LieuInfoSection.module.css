@@ -13,7 +13,7 @@
 .container {
   margin-bottom: var(--tc-space-6);
   padding: var(--tc-space-4);
-  background-color: var(--tc-white-secondary);
+  background-color: var(--tc-bg-secondary);
   border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-box-shadow-sm);
 }

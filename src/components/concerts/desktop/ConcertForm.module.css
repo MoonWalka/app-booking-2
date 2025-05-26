@@ -118,7 +118,7 @@
 .formCard {
   background-color: var(--tc-color-white);
   border-radius: var(--tc-radius-base);
-  box-shadow: var(--tc-box-shadow);
+  box-shadow: var(--tc-shadow-base);
   margin-bottom: var(--tc-space-6);
   overflow: hidden;
 }
@@ -416,7 +416,7 @@
   background-color: var(--tc-color-white);
   border: var(--tc-border-width) solid var(--tc-input-border-color);
   border-radius: 0 0 var(--tc-radius-sm) var(--tc-radius-sm);
-  box-shadow: var(--tc-dropdown-shadow);
+  box-shadow: var(--tc-shadow-lg);
   margin-top: -1px;
 }
 

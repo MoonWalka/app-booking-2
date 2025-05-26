@@ -25,7 +25,7 @@
 }
 
 .modalHeader {
-  padding: var(--tc-space-4) var(--tc-spacing-5);
+  padding: var(--tc-space-4) var(--tc-space-5);
   border-bottom: 1px solid var(--tc-border-ultralight);
   display: flex;
   justify-content: space-between;
@@ -58,7 +58,7 @@
 
 .modalBody {
   background: var(--tc-bg-white);
-  padding: var(--tc-spacing-5);
+  padding: var(--tc-space-5);
   color: var(--tc-text-default);
   font-size: var(--tc-font-size-md);
 }
@@ -83,7 +83,7 @@
   display: flex;
   justify-content: flex-end;
   gap: var(--tc-color-primary);
-  padding: var(--tc-space-4) var(--tc-spacing-5);
+  padding: var(--tc-space-4) var(--tc-space-5);
   border-top: 1px solid var(--tc-border-ultralight);
   background: var(--tc-bg-light);
 }

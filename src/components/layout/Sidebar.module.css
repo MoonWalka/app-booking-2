@@ -22,14 +22,14 @@
 .sidebar {
   width: var(--tc-sidebar-width);
   min-width: var(--tc-sidebar-width); /* Empêche la sidebar de rétrécir dans les flex layouts */
-  background-color: var(--tc-sidebar-bg-color);
-  color: var(--tc-sidebar-text-color);
+  background-color: var(--tc-color-primary);        /* Utilise la variable commune */
+  color: var(--tc-text-light);                      /* Utilise la variable commune */
   height: 100vh;
   position: fixed;
   left: 0;
   top: 0;
   overflow-y: auto; /* Permet le défilement si le contenu est trop long */
-  z-index: var(--tc-z-index-sidebar); /* Valeur élevée pour superposer la plupart des éléments */
+  z-index: var(--tc-z-index-sidebar);
   box-shadow: var(--tc-shadow-base);
   transition: var(--tc-transition-base);
   /* Structure en flexbox verticale */
@@ -44,7 +44,7 @@
  */
 .sidebarHeader {
   padding: var(--tc-space-6);
-  border-bottom: var(--tc-border-width) solid var(--tc-sidebar-border-color);
+  border-bottom: var(--tc-border-sidebar);
   text-align: center;
 }
 
@@ -101,7 +101,7 @@
  * Conserve la couleur du texte pour maintenir le contraste
  */
 .navLinks a:hover {
-  background-color: var(--tc-sidebar-hover-bg-color);
+  background-color: var(--tc-hover-overlay-light);
   color: var(--tc-text-light);
 }
 
@@ -112,7 +112,7 @@
  * Utilise une bordure gauche colorée comme indicateur visuel principal
  */
 .navLinks a.active {
-  background-color: var(--tc-sidebar-active-bg-color);
+  background-color: var(--tc-active-overlay-light);
   /* La bordure gauche crée un indicateur visuel fort pour la page active */
   border-left: 4px solid var(--tc-color-primary);
 }
@@ -124,7 +124,7 @@
  */
 .navLinks a i {
   margin-right: var(--tc-space-2);
-  font-size: var(--tc-font-size-md);
+  font-size: var(--tc-font-size-lg);                /* Utilise la variable commune */
 }
 
 /* 
@@ -136,7 +136,7 @@
 .sidebarFooter {
   margin-top: auto; /* Astuce flexbox pour pousser cet élément tout en bas */
   padding: var(--tc-space-6);
-  border-top: var(--tc-border-width) solid var(--tc-sidebar-border-color);
+  border-top: var(--tc-border-sidebar);
 }
 
 /* 
@@ -196,7 +196,7 @@
     right: 0;
     bottom: 0;
     background-color: var(--tc-bg-overlay);
-    z-index: var(--tc-z-index-backdrop); /* Juste en-dessous de la sidebar */
+    z-index: var(--tc-z-index-backdrop);
     display: none;
   }
   

@@ -12,11 +12,11 @@ import useLieuDelete from '@/hooks/lieux/useLieuDelete';
 
 // Import sections
 import LieuFormHeader from './sections/LieuFormHeader';
-import LieuInfoSection from './sections/LieuInfoSection';
+import LieuGeneralInfo from './sections/LieuGeneralInfo';
 import LieuAddressSection from './sections/LieuAddressSection';
-import LieuProgrammateurSection from './sections/LieuProgrammateurSection';
+import LieuOrganizerSection from './sections/LieuOrganizerSection';
 import LieuContactSection from './sections/LieuContactSection';
-import LieuFormActions from './sections/LieuFormActions';
+import LieuInfoSection from './sections/LieuInfoSection';
 
 const LieuForm = () => {
   const navigate = useNavigate();
@@ -46,41 +46,59 @@ const LieuForm = () => {
 
   return (
     <div className={styles.lieuFormContainer}>
-      <LieuFormHeader id={id} lieuNom={lieu.nom} navigate={navigate} />
+      {/* Header avec le style qui te plaisait */}
+      <LieuFormHeader 
+        id={id} 
+        lieuNom={lieu.nom} 
+        lieu={lieu}
+        navigate={navigate}
+        isSubmitting={submitting || loading || isDeleting}
+        onSave={handleSubmit}
+        onDelete={id !== 'nouveau' ? () => handleDeleteLieu(id) : undefined}
+        canSave={true}
+      />
 
       <form onSubmit={handleSubmit} className={styles.modernForm}>
         <div className={styles.sectionsStack}>
-          {/* Main venue information */}
-          <LieuInfoSection 
-            lieu={lieu} 
-            handleChange={handleChange} 
+          {/* General information section - Même ordre que LieuDetails */}
+          <LieuGeneralInfo
+            lieu={lieu}
+            formData={lieu}
+            isEditMode={true}
+            onChange={handleChange}
           />
 
-          {/* Address and map */}
+          {/* Address section */}
           <LieuAddressSection 
             lieu={lieu}
+            isEditing={true}
             handleChange={handleChange}
             addressSearch={addressSearch}
           />
 
-          {/* Programmateur */}
-          <LieuProgrammateurSection 
-            programmateurSearch={programmateurSearch}
+          {/* Organizer section - Même nom que dans LieuDetails */}
+          <LieuOrganizerSection
+            isEditMode={true}
+            programmateur={programmateurSearch?.selectedEntity}
+            lieu={lieu}
+            formData={lieu}
+            onChange={handleChange}
+            onProgrammateurChange={programmateurSearch?.setSelectedEntity}
           />
 
-          {/* Contact information */}
+          {/* Contact section - Déplacé vers le bas comme dans LieuDetails */}
           <LieuContactSection 
+            lieu={lieu}
             contact={lieu.contact} 
+            isEditing={true}
             handleChange={handleChange} 
           />
 
-          {/* Form actions */}
-          <LieuFormActions 
-            loading={submitting || loading || isDeleting}
-            id={id}
-            navigate={navigate}
-            onDelete={id !== 'nouveau' ? () => handleDeleteLieu(id) : undefined}
-            isDeleting={isDeleting}
+          {/* Additional information section - En bas comme dans LieuDetails */}
+          <LieuInfoSection 
+            lieu={lieu}
+            isEditing={true}
+            handleChange={handleChange}
           />
 
           {error && (

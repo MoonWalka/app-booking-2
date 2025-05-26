@@ -13,10 +13,13 @@ import Card from '../../../components/ui/Card';
  * @param {boolean} props.showCardWrapper - Indique si la structure de carte doit être affichée
  */
 const ProgrammateurConcertsSection = ({ 
+  programmateur,
   concertsAssocies = [], 
-  isEditing = false,
+  isEditMode = false, // Renommé pour cohérence
   showCardWrapper = true 
 }) => {
+  // Alias pour compatibilité
+  const isEditing = isEditMode;
   const hasConcerts = concertsAssocies?.length > 0;
   
   // Trier les concerts par date (les plus récents en premier)

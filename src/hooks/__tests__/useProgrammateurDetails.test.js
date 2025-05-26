@@ -65,7 +65,7 @@ jest.mock('../../../src/hooks/common', () => {
         isSubmitting: false,
         
         // Actions simulées
-        toggleEditMode: jest.fn(),
+        handleEdit: jest.fn(),
         handleChange: jest.fn(),
         handleSubmit: jest.fn(),
         handleDelete: jest.fn(),
@@ -225,7 +225,7 @@ describe('useProgrammateurDetailsMigrated', () => {
     const { result } = renderHook(() => useProgrammateurDetails('prog-1'));
     
     // Vérifier que les fonctions génériques sont présentes
-    expect(result.current.toggleEditMode).toBeDefined();
+    expect(result.current.handleEdit).toBeDefined();
     expect(result.current.handleSubmit).toBeDefined();
     expect(result.current.handleDelete).toBeDefined();
     expect(result.current.entity).toBeDefined();

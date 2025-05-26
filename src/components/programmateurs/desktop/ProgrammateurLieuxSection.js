@@ -13,7 +13,16 @@ import styles from './ProgrammateurLieuxSection.module.css';
  * @param {boolean} props.isEditing - Mode édition
  * @param {boolean} props.showCardWrapper - Indique si la structure de carte doit être affichée
  */
-const ProgrammateurLieuxSection = ({ programmateur, lieux: lieuxProp = [], isEditing = false, showCardWrapper = true }) => {
+const ProgrammateurLieuxSection = ({ 
+  programmateur, 
+  lieux: lieuxProp = [], 
+  isEditMode = false, // Renommé pour cohérence
+  formData = {},
+  onChange = () => {},
+  showCardWrapper = true 
+}) => {
+  // Alias pour compatibilité
+  const isEditing = isEditMode;
   const [loading, setLoading] = useState(true);
   const [localLieux, setLocalLieux] = useState([]);
   

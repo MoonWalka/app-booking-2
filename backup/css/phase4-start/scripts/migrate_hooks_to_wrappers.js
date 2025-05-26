@@ -63,7 +63,7 @@ const ${hookName} = (id) => {
     isSubmitting: migratedHook.isSubmitting,
     
     // Fonctions de la version originale
-    toggleEditMode: migratedHook.toggleEditMode,
+          handleEdit: migratedHook.handleEdit,
     setFormData: migratedHook.updateFormData,
     handleChange: (e) => {
       const { name, value } = e.target;

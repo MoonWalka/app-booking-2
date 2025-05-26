@@ -4,55 +4,83 @@
  * Dernière mise à jour: 16 May 2025
  */
 
-/* ProgrammateurForm.module.css - Standardisé */
+/* ProgrammateurForm.module.css - Standardisé selon LieuView */
 .formContainer {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
+  padding: var(--tc-space-4);
+}
+
+.spinnerContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+.errorContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--tc-space-4);
+  padding: var(--tc-space-6);
+  text-align: center;
+}
+
+.sectionsStack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-space-4);
 }
 
 .formCard {
   background-color: var(--tc-color-white);
   border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-shadow-base);
-  margin-bottom: var(--tc-space-6);
+  margin-bottom: var(--tc-space-4);
   overflow: hidden;
 }
 
 .cardHeader {
   background-color: var(--tc-color-gray-100);
-  padding: var(--tc-space-4) var(--tc-space-4);
-  border-bottom: var(--tc-border-width) solid var(--tc-border-default);
+  padding: var(--tc-space-3);
+  border-bottom: 1px solid var(--tc-color-gray-300);
   display: flex;
   align-items: center;
+  gap: var(--tc-space-2);
 }
 
 .cardIcon {
-  margin-right: var(--tc-space-2);
-  font-size: 1.2rem;
   color: var(--tc-color-primary);
+  font-size: var(--tc-font-size-xl);
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
-  background-color: var(--tc-primary-color-10));
-  border-radius: var(--tc-radius-sm);
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
+  flex-grow: 1;
+  color: var(--tc-text-default);
+  line-height: 1.3;
 }
 
 .cardHeader h3 {
   margin: 0;
-  font-size: 1.25rem;
-  font-weight: var(--tc-font-weight-bold);
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
   color: var(--tc-text-default);
 }
 
 .cardBody {
-  padding: var(--tc-space-4);
+  padding: var(--tc-space-3);
 }
 
 .formGroup {
-  margin-bottom: var(--tc-space-4);
+  margin-bottom: var(--tc-space-3);
 }
 
 .formLabel {

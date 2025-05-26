@@ -23,12 +23,15 @@ const ProgrammateurLegalSection = ({
   programmateur = {}, 
   formData = {}, 
   handleChange: parentHandleChange = () => {}, 
-  isEditing = false,
+  isEditMode = false, // Renommé pour cohérence avec les autres sections
   formatValue = (val) => val,
   structureCreated = false,
   onSubmit = () => {},
-  showCardWrapper = true // Nouvelle prop avec valeur par défaut à true
+  showCardWrapper = true, // Nouvelle prop avec valeur par défaut à true
+  errors = {} // Ajout des erreurs
 }) => {
+  // Alias pour compatibilité
+  const isEditing = isEditMode;
   // Préparation des valeurs initiales pour Formik
   const initialValues = {
     structureCache: {

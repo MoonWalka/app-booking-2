@@ -1,5 +1,5 @@
 // src/components/concerts/desktop/ConcertView.js
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Alert } from 'react-bootstrap';
 import FormGenerator from '@/components/forms/FormGenerator';
@@ -8,6 +8,9 @@ import styles from './ConcertView.module.css';
 // Import des hooks personnalisés
 import { useConcertDetails } from '@/hooks/concerts';
 import { useConcertStatus } from '@/hooks/concerts';
+import { useLieuSearch } from '@/hooks/lieux/useLieuSearch';
+import { useProgrammateurSearch } from '@/hooks/programmateurs/useProgrammateurSearch';
+import useArtisteSearch from '@/hooks/artistes/useArtisteSearch';
 
 // Import des composants
 import ConcertHeader from './ConcertHeader';
@@ -64,6 +67,95 @@ const ConcertView = ({ id: propId }) => {
   // Hook de statut avancé pour fonctionnalités sophistiquées
   const concertStatus = useConcertStatus();
   
+  // Extraire les setters stables pour éviter les re-renders
+  const setLieu = detailsHook?.setLieu;
+  const setProgrammateur = detailsHook?.setProgrammateur;
+  const setArtiste = detailsHook?.setArtiste;
+  
+  // Callbacks stables pour les hooks de recherche
+  const handleLieuSelect = useCallback((lieu) => {
+    if (setLieu) {
+      setLieu(lieu);
+    }
+  }, [setLieu]);
+  
+  const handleProgrammateurSelect = useCallback((programmateur) => {
+    if (setProgrammateur) {
+      setProgrammateur(programmateur);
+    }
+  }, [setProgrammateur]);
+  
+  const handleArtisteSelect = useCallback((artiste) => {
+    if (setArtiste) {
+      setArtiste(artiste);
+    }
+  }, [setArtiste]);
+  
+  // Hooks de recherche pour les sections (toujours appelés pour respecter les règles des hooks)
+  const lieuSearchHook = useLieuSearch({
+    onSelect: handleLieuSelect,
+    maxResults: 10
+  });
+  
+  const programmateurSearchHook = useProgrammateurSearch({
+    onSelect: handleProgrammateurSelect,
+    maxResults: 10
+  });
+  
+  const artisteSearchHook = useArtisteSearch('', {
+    onSelect: handleArtisteSelect,
+    maxResults: 10
+  });
+  
+  // Objets optimisés selon le mode édition avec dépendances stables
+  const lieuSearch = useMemo(() => {
+    if (detailsEditMode) {
+      return lieuSearchHook;
+    }
+    return {
+      searchTerm: '',
+      setSearchTerm: () => {},
+      showResults: false,
+      results: [],
+      isSearching: false,
+      handleLieuSelect: () => {},
+      setSelectedEntity: () => {},
+      handleCreateLieu: () => navigate('/lieux/nouveau')
+    };
+  }, [detailsEditMode, lieuSearchHook, navigate]);
+  
+  const programmateurSearch = useMemo(() => {
+    if (detailsEditMode) {
+      return programmateurSearchHook;
+    }
+    return {
+      searchTerm: '',
+      setSearchTerm: () => {},
+      showResults: false,
+      results: [],
+      isSearching: false,
+      setProgrammateur: () => {},
+      setSelectedEntity: () => {},
+      handleCreateProgrammateur: () => navigate('/programmateurs/nouveau')
+    };
+  }, [detailsEditMode, programmateurSearchHook, navigate]);
+  
+  const artisteSearch = useMemo(() => {
+    if (detailsEditMode) {
+      return artisteSearchHook;
+    }
+    return {
+      searchTerm: '',
+      setSearchTerm: () => {},
+      showResults: false,
+      results: [],
+      isSearching: false,
+      setArtiste: () => {},
+      setSelectedEntity: () => {},
+      handleCreateArtiste: () => navigate('/artistes/nouveau')
+    };
+  }, [detailsEditMode, artisteSearchHook, navigate]);
+
   // Système de statut intelligent combinant les deux hooks
   const getAdvancedStatusInfo = () => {
     if (!getStatusInfo) return {};
@@ -105,6 +197,11 @@ const ConcertView = ({ id: propId }) => {
       await detailsHook.handleSave();
     }
   };
+
+  // Gestion d'erreur basique - si le hook principal échoue
+  if (!detailsHook) {
+    return <Alert variant="danger">Erreur lors du chargement des données du concert</Alert>;
+  }
 
   if (loading) {
     return (
@@ -180,6 +277,15 @@ const ConcertView = ({ id: propId }) => {
           formData={formData}
           onChange={handleChange}
           navigateToLieuDetails={(lieuId) => navigate(`/lieux/${lieuId}`)}
+          selectedLieu={lieu}
+          lieuSearchTerm={lieuSearch.searchTerm}
+          setLieuSearchTerm={lieuSearch.setSearchTerm}
+          showLieuResults={lieuSearch.showResults}
+          lieuResults={lieuSearch.results}
+          isSearchingLieux={lieuSearch.isSearching}
+          handleSelectLieu={lieuSearch.handleLieuSelect || lieuSearch.setSelectedEntity}
+          handleRemoveLieu={() => setLieu && setLieu(null)}
+          handleCreateLieu={lieuSearch.handleCreateLieu || (() => navigate('/lieux/nouveau'))}
         />
 
         {/* Programmateur */}
@@ -198,6 +304,15 @@ const ConcertView = ({ id: propId }) => {
           copyToClipboard={copyToClipboard}
           formatDate={formatDate}
           concert={concert}
+          selectedProgrammateur={programmateur}
+          progSearchTerm={programmateurSearch.searchTerm}
+          setProgSearchTerm={programmateurSearch.setSearchTerm}
+          showProgResults={programmateurSearch.showResults}
+          progResults={programmateurSearch.results}
+          isSearchingProgs={programmateurSearch.isSearching}
+          handleSelectProgrammateur={programmateurSearch.setProgrammateur || programmateurSearch.setSelectedEntity}
+          handleRemoveProgrammateur={() => setProgrammateur && setProgrammateur(null)}
+          handleCreateProgrammateur={programmateurSearch.handleCreateProgrammateur || (() => navigate('/programmateurs/nouveau'))}
         />
 
         {/* Structure */}
@@ -219,6 +334,15 @@ const ConcertView = ({ id: propId }) => {
             formData={formData}
             onChange={handleChange}
             navigateToArtisteDetails={(artisteId) => navigate(`/artistes/${artisteId}`)}
+            selectedArtiste={artiste}
+            artisteSearchTerm={artisteSearch.searchTerm}
+            setArtisteSearchTerm={artisteSearch.setSearchTerm}
+            showArtisteResults={artisteSearch.showResults}
+            artisteResults={artisteSearch.results}
+            isSearchingArtistes={artisteSearch.isSearching}
+            handleSelectArtiste={artisteSearch.setArtiste || artisteSearch.setSelectedEntity}
+            handleRemoveArtiste={() => setArtiste && setArtiste(null)}
+            handleCreateArtiste={artisteSearch.handleCreateArtiste || (() => navigate('/artistes/nouveau'))}
           />
         )}
       </>

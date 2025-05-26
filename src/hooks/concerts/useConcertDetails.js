@@ -28,6 +28,9 @@ const useConcertDetails = (id, locationParam) => {
   const locationData = useLocation();
   const location = locationParam || locationData;
   
+  // Détecter le mode édition basé sur l'URL
+  const isEditMode = location.pathname.includes('/edit');
+  
   // États spécifiques au concert qui ne sont pas gérés par le hook générique
   const [cacheKey, setCacheKey] = useState(getCacheKey(id)); // NOUVEAU: Cache intelligent finalisé
   const [initialProgrammateurId, setInitialProgrammateurId] = useState(null);
@@ -128,7 +131,7 @@ const useConcertDetails = (id, locationParam) => {
     entityType: 'concert',
     collectionName: 'concerts',
     id,
-    initialMode: 'view',  // assurer mode consultation par défaut
+    initialMode: isEditMode ? 'edit' : 'view',  // Mode basé sur l'URL
     relatedEntities,
     autoLoadRelated: true, // Activer le chargement automatique des entités liées
     transformData: transformConcertData,
@@ -781,7 +784,7 @@ const useConcertDetails = (id, locationParam) => {
     
     // Données du formulaire
     formData: genericDetails?.formData || {},
-    isEditMode: genericDetails?.isEditing || false,
+    isEditMode: isEditMode,
     
     // Données des formulaires spécifiques aux concerts
     concertFormData: concertForms?.formData || null,

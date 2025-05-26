@@ -28,71 +28,47 @@ import styles from './LieuDetails.module.css';
 
 /**
  * LieuView component - displays a venue's details in read-only mode
- * Séparé du mode édition pour une meilleure séparation des préoccupations
+ * Edition is handled by LieuForm (like concerts system)
  */
-const LieuView = () => {
-  const { id: lieuId } = useParams();
+const LieuView = ({ id: propId }) => {
+  const { id: urlId } = useParams();
   const navigate = useNavigate();
+  
+  // Utiliser l'ID passé en prop s'il existe, sinon utiliser l'ID de l'URL
+  const id = propId || urlId;
 
-  // MIGRATION: Utilisation du hook optimisé
+  // Hook pour les détails en mode lecture seule
   const {
     lieu,
+    programmateur,
     loading,
+    isLoading,
+    isSubmitting,
     error,
-    isEditing,
     isDeleting,
     showDeleteModal,
-    relatedData,
     loadingRelated,
-    handleEdit,
+    handleEdit, // Navigation vers LieuForm
     handleDeleteClick,
     handleCloseDeleteModal,
     handleConfirmDelete
-  } = useLieuDetails(lieuId);
-
-  // Récupérer le programmateur depuis les entités liées
-  const programmateur = relatedData?.programmateur;
-  const loadingProgrammateur = loadingRelated?.programmateur;
+  } = useLieuDetails(id);
 
   // Information sur les concerts associés (à implémenter dans le hook si nécessaire)
   const hasAssociatedConcerts = lieu?.concerts?.length > 0 || false;
 
-  // Handlers améliorés avec notifications - NOUVEAU: Finalisation intelligente
+  // Handlers avec notifications
   const handleEditWithNotification = () => {
-    toast.info('Passage en mode édition', {
+    toast.info('Redirection vers le formulaire d\'édition', {
       position: 'top-right',
       autoClose: 2000,
       hideProgressBar: true,
     });
-    handleEdit();
+    handleEdit(); // Navigation vers /lieux/:id/edit
   };
-
-  const handleDeleteWithNotification = async () => {
-    try {
-      const result = await handleConfirmDelete();
-      if (result !== false) {
-        toast.success('Lieu supprimé avec succès !', {
-          position: 'top-right',
-          autoClose: 3000,
-        });
-        // Redirection après suppression réussie
-        setTimeout(() => navigate('/lieux'), 1500);
-      }
-      return result;
-    } catch (error) {
-      toast.error('Erreur lors de la suppression du lieu', {
-        position: 'top-right',
-        autoClose: 5000,
-      });
-      throw error;
-    }
-  };
-
-  // Mode édition rapide basé sur isEditing du hook
-  const effectiveEditMode = isEditing;
 
   // If loading, show a spinner
-  if (loading) {
+  if (loading || isLoading) {
     return (
       <div className={styles.spinnerContainer}>
         <LoadingSpinner variant="primary" message="Chargement du lieu..." />
@@ -105,7 +81,7 @@ const LieuView = () => {
     return (
       <div className={styles.errorContainer}>
         <ErrorMessage variant="danger" icon="exclamation-triangle-fill">
-          {error}
+          {error.message || error}
         </ErrorMessage>
         <Button 
           variant="primary" 
@@ -119,7 +95,7 @@ const LieuView = () => {
   }
 
   // If no lieu or lieu not found after loading is complete, show a message
-  if (!lieu && !loading) {
+  if (!lieu && !loading && !isLoading) {
     return (
       <div className={styles.errorContainer}>
         <ErrorMessage variant="warning" icon="exclamation-triangle-fill">
@@ -146,32 +122,67 @@ const LieuView = () => {
       {/* Header with title and action buttons */}
       <LieuHeader 
         lieu={lieu}
-        isEditing={effectiveEditMode}
+        isEditMode={false}
         onEdit={handleEditWithNotification}
+        onSave={() => {}}
+        onCancel={() => {}}
         onDelete={handleDeleteClick}
+        isSubmitting={isSubmitting}
+        canSave={false}
+        navigateToList={() => navigate('/lieux')}
       />
 
-      {/* Nouvelle structure : sections empilées verticalement */}
+      {/* Sections empilées verticalement avec support du mode édition */}
       <div className={styles.sectionsStack}>
-        <LieuGeneralInfo lieu={lieu} isEditing={effectiveEditMode} />
-        <LieuAddressSection lieu={lieu} isEditing={effectiveEditMode} />
-        <LieuInfoSection lieu={lieu} />
-        <LieuContactSection lieu={lieu} isEditing={effectiveEditMode} />
-        <LieuOrganizerSection
-          isEditing={effectiveEditMode}
-          programmateur={programmateur}
-          loadingProgrammateur={loadingProgrammateur}
-          lieu={lieu}
+        <LieuGeneralInfo 
+          lieu={lieu} 
+          isEditMode={false}
+          formData={{}}
+          onChange={() => {}}
         />
-        <LieuConcertsSection lieu={lieu} isEditing={effectiveEditMode} />
-        <LieuStructuresSection lieu={lieu} isEditing={effectiveEditMode} />
+        <LieuAddressSection 
+          lieu={lieu} 
+          isEditMode={false}
+          formData={{}}
+          onChange={() => {}}
+          updateCoordinates={() => {}}
+        />
+        <LieuInfoSection 
+          lieu={lieu}
+          isEditMode={false}
+          formData={{}}
+          onChange={() => {}}
+        />
+        <LieuContactSection 
+          lieu={lieu} 
+          isEditMode={false}
+          formData={{}}
+          onChange={() => {}}
+        />
+        <LieuOrganizerSection
+          isEditMode={false}
+          programmateur={programmateur}
+          loadingProgrammateur={loadingRelated?.programmateur}
+          lieu={lieu}
+          formData={{}}
+          onChange={() => {}}
+          onProgrammateurChange={() => {}}
+        />
+        <LieuConcertsSection 
+          lieu={lieu} 
+          isEditMode={false}
+        />
+        <LieuStructuresSection 
+          lieu={lieu} 
+          isEditMode={false}
+        />
       </div>
 
       {/* Delete confirmation modal */}
       <DeleteLieuModal
         show={showDeleteModal}
         onClose={handleCloseDeleteModal}
-        onConfirm={handleDeleteWithNotification}
+        onConfirm={handleConfirmDelete}
         lieu={lieu}
         isDeleting={isDeleting}
         hasAssociatedConcerts={hasAssociatedConcerts}

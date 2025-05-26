@@ -1,5 +1,5 @@
 // src/components/artistes/desktop/ArtistesList.js
-import React, { useState } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { Container, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Alert from '@/components/ui/Alert';
@@ -23,98 +23,137 @@ import ArtistesLoadMore from '../sections/ArtistesLoadMore';
 const ArtistesList = () => {
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
-  const searchInputRef = React.useRef(null);
+  const searchInputRef = useRef(null);
+  const isUpdatingRef = useRef(false);
 
   // MIGRATION: Utilisation du hook optimisé
   const {
-    // Données principales
     artistes,
     loading,
     stats,
     error,
-    
-    // Pagination
     hasMore,
     loadMoreArtistes,
-    
-    // Recherche et filtrage
     searchTerm,
     setSearchTerm,
     filters,
     setFilter,
     resetFilters,
-    
-    // Tri
     sortBy,
     sortDirection,
     setSortBy,
     setSortDirection,
-
-    // Actions
     setArtistes
   } = useArtistesList({
     pageSize: 20,
     initialSortField: 'nom',
     initialSortDirection: 'asc',
-    cacheEnabled: false // Désactiver le cache pour éviter les problèmes de données obsolètes
+    cacheEnabled: false
   });
 
   // MIGRATION: Utilisation du hook optimisé pour la suppression
-  const { handleDelete } = useDeleteArtiste((deletedId) => {
-    // Callback exécuté après une suppression réussie
-    // Mise à jour de la liste locale d'artistes
-    setArtistes(prevArtistes => prevArtistes.filter(a => a.id !== deletedId));
-  });
+  const { handleDelete } = useDeleteArtiste(useCallback((deletedId) => {
+    if (isUpdatingRef.current) return;
+    isUpdatingRef.current = true;
+    
+    try {
+      setArtistes(prevArtistes => prevArtistes.filter(a => a.id !== deletedId));
+    } finally {
+      isUpdatingRef.current = false;
+    }
+  }, [setArtistes]));
 
   // Navigation vers le formulaire de création d'artiste
-  const handleAddClick = () => {
+  const handleAddClick = useCallback(() => {
     navigate('/artistes/nouveau');
-  };
+  }, [navigate]);
 
   // Gestion de la recherche
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-    setShowDropdown(!!e.target.value);
-  };
+  const handleSearchChange = useCallback((e) => {
+    if (isUpdatingRef.current) return;
+    isUpdatingRef.current = true;
+    
+    try {
+      setSearchTerm(e.target.value);
+      setShowDropdown(!!e.target.value);
+    } finally {
+      isUpdatingRef.current = false;
+    }
+  }, [setSearchTerm]);
 
   // Effacement de la recherche
-  const handleClearSearch = () => {
-    setSearchTerm('');
-    setShowDropdown(false);
-  };
+  const handleClearSearch = useCallback(() => {
+    if (isUpdatingRef.current) return;
+    isUpdatingRef.current = true;
+    
+    try {
+      setSearchTerm('');
+      setShowDropdown(false);
+    } finally {
+      isUpdatingRef.current = false;
+    }
+  }, [setSearchTerm]);
 
   // Gestion du changement de filtre
-  const handleFilterChange = (e) => {
-    setFilter('status', e.target.value);
-  };
+  const handleFilterChange = useCallback((e) => {
+    if (isUpdatingRef.current) return;
+    isUpdatingRef.current = true;
+    
+    try {
+      setFilter('status', e.target.value);
+    } finally {
+      isUpdatingRef.current = false;
+    }
+  }, [setFilter]);
 
   // Gestion du changement de tri
-  const handleSortChange = (value) => {
-    setSortBy(value);
-  };
+  const handleSortChange = useCallback((value) => {
+    if (isUpdatingRef.current) return;
+    isUpdatingRef.current = true;
+    
+    try {
+      setSortBy(value);
+    } finally {
+      isUpdatingRef.current = false;
+    }
+  }, [setSortBy]);
 
-  // Gestion du changement de direction de tri (NOUVEAU)
-  const handleSortDirectionToggle = () => {
-    const newDirection = sortDirection === 'asc' ? 'desc' : 'asc';
-    setSortDirection(newDirection);
-  };
+  // Gestion du changement de direction de tri
+  const handleSortDirectionToggle = useCallback(() => {
+    if (isUpdatingRef.current) return;
+    isUpdatingRef.current = true;
+    
+    try {
+      const newDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+      setSortDirection(newDirection);
+    } finally {
+      isUpdatingRef.current = false;
+    }
+  }, [sortDirection, setSortDirection]);
 
-  // Réinitialisation de tous les filtres (NOUVEAU)
-  const handleResetFilters = () => {
-    resetFilters();
-    setSearchTerm('');
-    setShowDropdown(false);
-  };
+  // Réinitialisation de tous les filtres
+  const handleResetFilters = useCallback(() => {
+    if (isUpdatingRef.current) return;
+    isUpdatingRef.current = true;
+    
+    try {
+      resetFilters();
+      setSearchTerm('');
+      setShowDropdown(false);
+    } finally {
+      isUpdatingRef.current = false;
+    }
+  }, [resetFilters, setSearchTerm]);
 
-  // Vérifier si des filtres sont actifs (NOUVEAU)
-  const hasActiveFilters = () => {
+  // Vérifier si des filtres sont actifs
+  const hasActiveFilters = useCallback(() => {
     return searchTerm || (filters && Object.values(filters).some(f => f && f !== 'all'));
-  };
+  }, [searchTerm, filters]);
 
   // Création d'un nouvel artiste depuis la barre de recherche
-  const handleCreateArtiste = () => {
+  const handleCreateArtiste = useCallback(() => {
     navigate('/artistes/nouveau', { state: { initialNom: searchTerm } });
-  };
+  }, [navigate, searchTerm]);
 
   // État de chargement
   if (loading && artistes.length === 0) {

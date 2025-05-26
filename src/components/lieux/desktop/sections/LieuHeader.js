@@ -34,17 +34,28 @@ const TypeBadge = ({ type }) => {
 
 /**
  * Header component for venue details
+ * Adapté pour le nouveau système d'édition basé sur la navigation
  */
 const LieuHeader = ({ 
   lieu, 
-  isEditing, 
+  isEditMode, 
   isSubmitting, 
   onEdit, 
   onSave, 
   onCancel, 
-  onDelete 
+  onDelete,
+  canSave = true,
+  navigateToList
 }) => {
   const navigate = useNavigate();
+
+  const handleNavigateToList = () => {
+    if (navigateToList) {
+      navigateToList();
+    } else {
+      navigate('/lieux');
+    }
+  };
 
   return (
     <div className={styles.detailsHeaderContainer}>
@@ -52,29 +63,38 @@ const LieuHeader = ({
         <div className={styles.breadcrumbContainer}>
           <span 
             className={styles.breadcrumbItem} 
-            onClick={() => navigate('/lieux')} 
+            onClick={handleNavigateToList} 
             role="button" 
             tabIndex={0}
           >
             Lieux
           </span>
           <i className="bi bi-chevron-right"></i>
-          <span className={`${styles.breadcrumbItem} ${styles.active}`}>{lieu.nom}</span>
+          <span className={`${styles.breadcrumbItem} ${styles.active}`}>
+            {lieu?.nom || 'Lieu'}
+            {isEditMode && ' (Édition)'}
+          </span>
         </div>
         <h2 className={styles.modernTitle}>
-          {lieu.nom}
-          {lieu.type && <TypeBadge type={lieu.type} />}
+          {lieu?.nom || 'Lieu'}
+          {lieu?.type && <TypeBadge type={lieu.type} />}
+          {isEditMode && (
+            <Badge bg="warning" className="ms-2">
+              <i className="bi bi-pencil me-1"></i>
+              Édition
+            </Badge>
+          )}
         </h2>
       </div>
       
       <div className={styles.actionButtons}>
-        {isEditing ? (
+        {isEditMode ? (
           <>
             <Button 
               onClick={onSave} 
               variant="success"
               className={styles.actionBtn}
-              disabled={isSubmitting}
+              disabled={isSubmitting || !canSave}
               icon={<i className="bi bi-check-circle"></i>}
             >
               {isSubmitting ? (
@@ -88,6 +108,16 @@ const LieuHeader = ({
             </Button>
             
             <Button 
+              onClick={onCancel} 
+              variant="secondary"
+              className={styles.actionBtn}
+              disabled={isSubmitting}
+              icon={<i className="bi bi-x-circle"></i>}
+            >
+              Annuler
+            </Button>
+            
+            <Button 
               onClick={onDelete} 
               variant="danger"
               className={styles.actionBtn}
@@ -96,21 +126,11 @@ const LieuHeader = ({
             >
               Supprimer
             </Button>
-            
-            <Button 
-              onClick={onCancel} 
-              variant="danger"
-              className={styles.actionBtn}
-              disabled={isSubmitting}
-              icon={<i className="bi bi-x-circle"></i>}
-            >
-              Annuler
-            </Button>
           </>
         ) : (
           <>
             <Button 
-              onClick={() => navigate('/lieux')} 
+              onClick={handleNavigateToList} 
               variant="secondary"
               className={styles.actionBtn}
               icon={<i className="bi bi-arrow-left"></i>}
@@ -125,6 +145,15 @@ const LieuHeader = ({
               icon={<i className="bi bi-pencil"></i>}
             >
               Modifier
+            </Button>
+            
+            <Button 
+              onClick={onDelete} 
+              variant="outline-danger"
+              className={styles.actionBtn}
+              icon={<i className="bi bi-trash"></i>}
+            >
+              Supprimer
             </Button>
           </>
         )}

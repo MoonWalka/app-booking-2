@@ -118,10 +118,11 @@ const useGenericFilteredSearch = (entityType, filterConfig = {}, options = {}) =
     hasMore,
     loadMore
   } = useGenericSearch(
-    entityType,
     {
+      searchType: 'entity',
+      enableFirestore: filterConfig.enableFirestore || false,
+      collectionName: filterConfig.collectionName || entityType,
       searchFields,
-      defaultFilters: activeFilters,
       onResults: (results, searchContext) => {
         if (enableFilterStats) {
           updateFilterStats(results, searchContext);

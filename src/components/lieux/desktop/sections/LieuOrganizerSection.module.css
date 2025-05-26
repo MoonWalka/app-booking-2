@@ -71,6 +71,35 @@
   font-size: var(--tc-font-size-sm);
 }
 
+/* Champ de formulaire */
+.formField {
+  width: 100%;
+  padding: var(--tc-space-2) var(--tc-space-3);
+  border: 1px solid var(--tc-color-gray-300);
+  border-radius: var(--tc-radius-base);
+  font-size: var(--tc-font-size-base);
+  transition: border-color var(--tc-transition-duration), box-shadow var(--tc-transition-duration);
+  background-color: var(--tc-bg-default);
+}
+
+.formField:focus {
+  outline: none;
+  border-color: var(--tc-color-primary);
+  box-shadow: 0 0 0 3px var(--tc-color-primary-light);
+}
+
+.formField::placeholder {
+  color: var(--tc-color-gray-500);
+}
+
+/* Texte d'aide */
+.helpText {
+  font-size: var(--tc-font-size-xs);
+  color: var(--tc-color-gray-600);
+  margin-top: var(--tc-space-1);
+  display: block;
+}
+
 /* =============================
    RECHERCHE DE PROGRAMMATEUR
    ============================= */
@@ -122,6 +151,22 @@
   content: "|";
   margin-right: var(--tc-space-2);
   color: var(--tc-color-gray-400);
+}
+
+/* Option de création dans le dropdown */
+.createOption {
+  cursor: pointer;
+  padding: var(--tc-space-2) var(--tc-space-4);
+  transition: background-color var(--tc-transition-duration);
+  color: var(--tc-color-primary);
+  font-weight: var(--tc-font-weight-medium);
+  display: flex;
+  align-items: center;
+}
+
+.createOption:hover {
+  background-color: var(--tc-color-primary-light);
+  color: var(--tc-color-primary-dark);
 }
 
 /* =============================

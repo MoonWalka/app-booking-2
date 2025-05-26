@@ -13,7 +13,6 @@ import useConcertAssociations from '@/hooks/concerts/useConcertAssociations';
 
 // Import des utilitaires
 import { formatDate, formatMontant, isDatePassed, copyToClipboard, getCacheKey } from '@/utils/formatters';
-import { debugLog } from '@/utils/logUtils';
 
 /**
  * Hook optimisé pour les détails de concert
@@ -124,7 +123,7 @@ const useConcertDetails = (id, locationParam) => {
   }, []);
   
   // Utilisation de useGenericEntityDetails avec les améliorations
-  debugLog(`🎵 CONCERT_DETAILS: Appel de useGenericEntityDetails avec id: ${id}`, 'info', 'useConcertDetails');
+  // debugLog(`🎵 CONCERT_DETAILS: Appel de useGenericEntityDetails avec id: ${id}`, 'info', 'useConcertDetails');
   const genericDetails = useGenericEntityDetails({
     entityType: 'concert',
     collectionName: 'concerts',
@@ -140,15 +139,15 @@ const useConcertDetails = (id, locationParam) => {
     onDeleteSuccess: null, // Sera défini ci-dessous
     navigate,
     returnPath: '/concerts',
-    // Pas d'editPath pour éviter de forcer le mode édition
+    editPath: `/concerts/${id}/edit`, // Ajout du chemin d'édition
     // Options avancées
     useDeleteModal: true,
     disableCache: false,
     realtime: false // Explicitement désactiver le mode temps réel
   });
   
-  debugLog(`📊 CONCERT_DETAILS: genericDetails retourné - entity: ${genericDetails?.entity ? 'PRÉSENT' : 'NULL'}, loading: ${genericDetails?.loading}, error: ${genericDetails?.error ? 'PRÉSENT' : 'NULL'}`, 'info', 'useConcertDetails');
-  debugLog(`📊 CONCERT_DETAILS: Détail entity: ${JSON.stringify(genericDetails?.entity)}`, 'debug', 'useConcertDetails');
+  // debugLog(`📊 CONCERT_DETAILS: genericDetails retourné - entity: ${genericDetails?.entity ? 'PRÉSENT' : 'NULL'}, loading: ${genericDetails?.loading}, error: ${genericDetails?.error ? 'PRÉSENT' : 'NULL'}`, 'info', 'useConcertDetails');
+  // debugLog(`📊 CONCERT_DETAILS: Détail entity: ${JSON.stringify(genericDetails?.entity)}`, 'debug', 'useConcertDetails');
   
   // Callbacks pour les événements de sauvegarde et suppression
   // Défini après l'initialisation de genericDetails pour pouvoir l'utiliser dans la dépendance
@@ -191,7 +190,7 @@ const useConcertDetails = (id, locationParam) => {
   // Mettre à jour les callbacks dans genericDetails - UTILISATION DE SETTER POUR ÉVITER MUTATION
   const updateGenericDetailsOptions = useCallback(() => {
     if (genericDetails && genericDetails.updateOptions) {
-      console.log('[LOG][useConcertDetails] genericDetails initialisé, handleDelete:', typeof genericDetails.handleDelete);
+      // console.log('[LOG][useConcertDetails] genericDetails initialisé, handleDelete:', typeof genericDetails.handleDelete);
       genericDetails.updateOptions({
         onSaveSuccess: handleSaveSuccess,
         onDeleteSuccess: handleDeleteSuccess
@@ -405,7 +404,7 @@ const useConcertDetails = (id, locationParam) => {
     const stableConcertAssocs = stableConcertAssociationsRef.current;
     
     if (stableGenericDetails && stableGenericDetails.entity && !stableGenericDetails.loading && stableConcertAssocs) {
-      console.log("[useConcertDetails] useEffect pour relations bidirectionnelles déclenché");
+      // console.log("[useConcertDetails] useEffect pour relations bidirectionnelles déclenché");
       
       // Créer une fonction asynchrone à l'intérieur de l'effet
       const updateBidirectionalRelations = async () => {
@@ -579,18 +578,10 @@ const useConcertDetails = (id, locationParam) => {
   // Fonction pour gérer l'annulation de l'édition
   const handleCancel = useCallback(() => {
     if (!genericDetails) return;
-    
-    
     // Utiliser la méthode handleCancel du hook générique si elle existe
     if (typeof genericDetails.handleCancel === 'function') {
       genericDetails.handleCancel();
-    } else {
-      // Fallback: désactiver simplement le mode édition
-      if (genericDetails.isEditing) {
-        genericDetails.toggleEditMode();
-      }
     }
-    
     // Réinitialiser les états spécifiques au hook si nécessaire
   }, [genericDetails]);
 
@@ -608,32 +599,24 @@ const useConcertDetails = (id, locationParam) => {
   // Log de debug pour vérifier que l'entité est correctement chargée
   useEffect(() => {
     if (genericDetails && genericDetails.entity) {
-      console.log("[useConcertDetails] Entité chargée:", {
-        id: genericDetails.entity.id,
-        titre: genericDetails.entity.titre,
-        date: genericDetails.entity.date,
-        isLoading: genericDetails.loading,
-        isEditing: genericDetails.isEditing
-      });
+      // console.log("[useConcertDetails] Entité chargée:", {
+      //   id: genericDetails.entity.id,
+      //   titre: genericDetails.entity.titre,
+      //   date: genericDetails.entity.date,
+      //   isLoading: genericDetails.loading,
+      //   isEditing: genericDetails.isEditing
+      // });
     } else if (!genericDetails?.loading) {
-      console.warn("[useConcertDetails] Entité non disponible après chargement");
+      // console.warn("[useConcertDetails] Entité non disponible après chargement");
     }
   }, [genericDetails]);
 
-  // Fonction pour basculer entre les modes d'édition
-  const toggleEditMode = useCallback(() => {
-    if (!genericDetails) return;
-    
-    // Utiliser directement la fonction toggleEditMode du hook générique
-    genericDetails.toggleEditMode();
-  }, [genericDetails]);
-  
   // Ajout log pour la suppression
   const handleDeleteClick = useCallback(() => {
     if (genericDetails.handleDelete) {
       genericDetails.handleDelete();
     } else {
-      console.warn('[LOG][useConcertDetails] genericDetails.handleDelete est undefined');
+      // console.warn('[LOG][useConcertDetails] genericDetails.handleDelete est undefined');
     }
   }, [genericDetails]);
   
@@ -811,7 +794,6 @@ const useConcertDetails = (id, locationParam) => {
     // Fonctions de gestion génériques
     handleChange: genericDetails?.handleChange || (() => {}),
     handleSave: genericDetails?.handleSubmit || (() => {}),
-    toggleEditMode,
     handleDelete: genericDetails?.handleDelete || (() => {}),
     handleSubmit: handleSubmitWithRelations,
     validateForm: validateConcertForm,

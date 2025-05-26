@@ -190,6 +190,8 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
       availableFilters: filters,
       defaultFilters,
       searchFields,
+      enableFirestore: true,
+      collectionName: entityType,
       onResults: (results) => {
         const processedItems = results.map(item => 
           transformItemRef.current ? transformItemRef.current(item) : item
@@ -208,8 +210,11 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
     }
   );
   
-  // Utiliser les résultats de recherche/filtres si disponibles
-  const finalItems = (enableFilters || enableSearch) && searchAndFilterHook.results 
+  // Utiliser les résultats de recherche/filtres si disponibles, mais seulement s'il y a une recherche active ou des filtres
+  const hasActiveSearch = searchAndFilterHook?.searchTerm && searchAndFilterHook.searchTerm.length > 0;
+  const hasActiveFilters = searchAndFilterHook?.activeFilters && Object.keys(searchAndFilterHook.activeFilters).length > 0;
+  
+  const finalItems = (enableFilters || enableSearch) && (hasActiveSearch || hasActiveFilters) && searchAndFilterHook.results 
     ? searchAndFilterHook.results 
     : allItems;
   
@@ -704,75 +709,96 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
   
   // ===== EFFETS =====
   
-  // Effet de rafraîchissement automatique
-  useEffect(() => {
-    if (autoRefresh) {
-      startAutoRefresh();
-      
-      // Écouter les changements de visibilité
-      document.addEventListener('visibilitychange', handleVisibilityChange);
-    }
-    
-    return () => {
-      stopAutoRefresh();
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, [autoRefresh, startAutoRefresh, stopAutoRefresh, handleVisibilityChange]);
-  
-  // Effets pour la virtualisation
-  useEffect(() => {
-    if (enableVirtualization) {
-      updateVirtualizedItems();
-    }
-  }, [enableVirtualization, updateVirtualizedItems]);
-  
-  useEffect(() => {
-    if (enableVirtualization) {
-      setupItemHeightObserver();
-    }
-    
-    return () => {
-      if (observerRef.current) {
-        observerRef.current.disconnect();
-      }
-    };
-  }, [enableVirtualization, setupItemHeightObserver, virtualizedItems]);
-  
   // Effet pour traiter les données récupérées
   useEffect(() => {
-    if (fetchedItems) {
-      const processedItems = fetchedItems.map(item => 
-        transformItem ? transformItem(item) : item
-      );
-      
+    if (!fetchedItems) return;
+    
+    const processedItems = fetchedItems.map(item => 
+      transformItemRef.current ? transformItemRef.current(item) : item
+    );
+    
+    setAllItems(prev => {
       if (paginationType === 'infinite') {
-        setAllItems(prev => [...prev, ...processedItems]);
-      } else {
-        setAllItems(processedItems);
+        return [...prev, ...processedItems];
       }
-      
-      setTotalCount(processedItems.length);
-      setHasMore(processedItems.length === pageSize);
-      
-      if (onItemsChange) {
-        onItemsChange(processedItems);
-      }
+      return processedItems;
+    });
+    
+    setTotalCount(processedItems.length);
+    setHasMore(processedItems.length === pageSize);
+    
+    if (onItemsChangeRef.current) {
+      onItemsChangeRef.current(processedItems);
     }
-  }, [fetchedItems, transformItem, paginationType, pageSize, onItemsChange]);
+  }, [fetchedItems, paginationType, pageSize]);
   
-  // Effet de nettoyage de la sélection lors du changement d'éléments
+  // Effet pour le nettoyage de la sélection
   useEffect(() => {
-    if (enableSelection && selectedItems.length > 0) {
-      // Nettoyer les éléments sélectionnés qui ne sont plus dans la liste
-      const validSelection = selectedItems.filter(selected =>
-        finalItems.some(item => item.id === selected.id)
-      );
-      
-      if (validSelection.length !== selectedItems.length) {
-        setSelectedItems(validSelection);
-      }
+    if (!enableSelection || selectedItems.length === 0) return;
+    
+    const validSelection = selectedItems.filter(selected =>
+      finalItems.some(item => item.id === selected.id)
+    );
+    
+    if (validSelection.length !== selectedItems.length) {
+      setSelectedItems(validSelection);
     }
-  }, [enableSelection, selectedItems, finalItems]);
+  }, [enableSelection, finalItems, selectedItems]);
+  
+  // Effet pour la virtualisation
+  useEffect(() => {
+    if (!enableVirtualization) return;
+    
+    // Utiliser setupItemHeightObserver pour initialiser l'observateur
+    setupItemHeightObserver();
+    
+    const updateItems = () => {
+      const range = calculateVisibleRange();
+      setVisibleRange(range);
+      
+      const visibleItems = finalItems.slice(range.start, range.end).map((item, index) => ({
+        ...item,
+        virtualIndex: range.start + index,
+        virtualTop: (range.start + index) * itemHeight
+      }));
+      
+      setVirtualizedItems(visibleItems);
+    };
+    
+    updateItems();
+  }, [enableVirtualization, finalItems, calculateVisibleRange, itemHeight, setupItemHeightObserver]);
+  
+  // Effet pour l'auto-refresh
+  useEffect(() => {
+    if (!autoRefresh) return;
+    
+    // Utiliser handleVisibilityChange pour gérer la visibilité
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    const startRefresh = () => {
+      if (refreshIntervalRef.current) return;
+      
+      refreshIntervalRef.current = setInterval(() => {
+        if (isPageVisible && !loading) {
+          refetch();
+        }
+      }, refreshInterval);
+    };
+    
+    const stopRefresh = () => {
+      if (refreshIntervalRef.current) {
+        clearInterval(refreshIntervalRef.current);
+        refreshIntervalRef.current = null;
+      }
+    };
+    
+    startRefresh();
+    
+    return () => {
+      stopRefresh();
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [autoRefresh, isPageVisible, loading, refetch, refreshInterval, handleVisibilityChange]);
   
   return {
     // Données

@@ -163,6 +163,14 @@ const useGenericSearch = (config = {}, options = {}) => {
   
   // Fonction de recherche Firestore
   const searchFirestore = useCallback(async (term, searchType) => {
+    console.log('🔍 [useGenericSearch] searchFirestore appelé:', { 
+      term, 
+      searchType, 
+      enableFirestore, 
+      collectionName, 
+      searchFields 
+    });
+    
     if (!enableFirestore || !collectionName) {
       throw new Error('Firestore search not configured');
     }
@@ -170,6 +178,21 @@ const useGenericSearch = (config = {}, options = {}) => {
     // Import dynamique pour éviter les dépendances circulaires
     const { collection, query, where, getDocs, orderBy, limit } = await import('@/services/firebase-service');
     const { db } = await import('@/services/firebase-service');
+    
+    // Si pas de terme de recherche, charger toutes les données
+    if (!term || term.length === 0) {
+      console.log('🔍 [useGenericSearch] Chargement de toutes les données de', collectionName);
+      const q = query(collection(db, collectionName), limit(maxResults));
+      const querySnapshot = await getDocs(q);
+      const allDocs = [];
+      
+      querySnapshot.forEach(doc => {
+        allDocs.push({ id: doc.id, ...doc.data() });
+      });
+      
+      console.log('🔍 [useGenericSearch] Données chargées:', allDocs.length, 'éléments');
+      return allDocs;
+    }
     
     const searchQueries = searchFields.map(field => {
       const q = query(
@@ -194,6 +217,7 @@ const useGenericSearch = (config = {}, options = {}) => {
       });
     });
     
+    console.log('🔍 [useGenericSearch] Résultats de recherche:', allDocs.length, 'éléments');
     return allDocs.slice(0, maxResults);
   }, [enableFirestore, collectionName, searchFields, maxResults]);
   

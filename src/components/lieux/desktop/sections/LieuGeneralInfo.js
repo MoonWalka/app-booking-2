@@ -5,44 +5,49 @@ import { TypeBadge } from './LieuHeader';
 
 /**
  * General information section for a venue
+ * Adapté pour le nouveau système d'édition basé sur la navigation
  */
-const LieuGeneralInfo = ({ lieu, formData, isEditing, handleChange }) => {
+const LieuGeneralInfo = ({ lieu, formData = {}, isEditMode, onChange }) => {
+  // Sécuriser l'accès aux données
+  const safeFormData = formData || {};
+  const safeLieu = lieu || {};
+
   return (
     <Card
       title="Informations principales"
       icon={<i className="bi bi-building"></i>}
-      isEditing={isEditing}
-      isHoverable={!isEditing}
+      isEditing={isEditMode}
+      isHoverable={!isEditMode}
     >
       <div className={styles.formGroup}>
         <label htmlFor="nom" className={styles.formLabel}>
-          Nom du lieu {isEditing && <span className={styles.required}>*</span>}
+          Nom du lieu {isEditMode && <span className={styles.required}>*</span>}
         </label>
-        {isEditing ? (
+        {isEditMode ? (
           <input
             type="text"
             className={styles.formField}
             id="nom"
             name="nom"
-            value={formData.nom}
-            onChange={handleChange}
+            value={safeFormData.nom || ''}
+            onChange={onChange}
             required
             placeholder="Ex: Le Café des Artistes"
           />
         ) : (
-          <div className={styles.formControlStatic}>{lieu.nom}</div>
+          <div className={styles.formControlStatic}>{safeLieu.nom || 'Non spécifié'}</div>
         )}
       </div>
       
       <div className={styles.formGroup}>
         <label htmlFor="type" className={styles.formLabel}>Type de lieu</label>
-        {isEditing ? (
+        {isEditMode ? (
           <select
             className={styles.formSelect}
             id="type"
             name="type"
-            value={formData.type || ''}
-            onChange={handleChange}
+            value={safeFormData.type || ''}
+            onChange={onChange}
           >
             <option value="">Sélectionnez un type</option>
             <option value="bar">Bar</option>
@@ -53,8 +58,8 @@ const LieuGeneralInfo = ({ lieu, formData, isEditing, handleChange }) => {
           </select>
         ) : (
           <div className={styles.formControlStatic}>
-            {lieu.type ? 
-              <TypeBadge type={lieu.type} /> : 
+            {safeLieu.type ? 
+              <TypeBadge type={safeLieu.type} /> : 
               <span className={styles.textEmpty}>Non spécifié</span>
             }
           </div>
@@ -63,15 +68,15 @@ const LieuGeneralInfo = ({ lieu, formData, isEditing, handleChange }) => {
       
       <div className={styles.formGroup}>
         <label htmlFor="capacite" className={styles.formLabel}>Capacité</label>
-        {isEditing ? (
+        {isEditMode ? (
           <>
             <input
               type="number"
               className={styles.formField}
               id="capacite"
               name="capacite"
-              value={formData.capacite}
-              onChange={handleChange}
+              value={safeFormData.capacite || ''}
+              onChange={onChange}
               placeholder="Nombre maximum de personnes que le lieu peut accueillir"
             />
             <small className={styles.helpText}>
@@ -80,8 +85,8 @@ const LieuGeneralInfo = ({ lieu, formData, isEditing, handleChange }) => {
           </>
         ) : (
           <div className={styles.formControlStatic}>
-            {lieu.capacite ? 
-              `${lieu.capacite} personnes` : 
+            {safeLieu.capacite ? 
+              `${safeLieu.capacite} personnes` : 
               <span className={styles.textEmpty}>Non spécifiée</span>
             }
           </div>

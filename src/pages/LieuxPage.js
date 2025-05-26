@@ -12,8 +12,8 @@ const LieuxPage = () => {
         <Routes>
           <Route path="/" element={<LieuxList />} />
           <Route path="/nouveau" element={<LieuForm />} />
-          <Route path="/edit/:id" element={<LieuForm />} />
           <Route path="/:id" element={<LieuDetails />} />
+          <Route path="/:id/edit" element={<LieuForm />} />
         </Routes>
       </div>
     </div>

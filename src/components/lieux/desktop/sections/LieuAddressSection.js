@@ -2,7 +2,17 @@ import React from 'react';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import styles from '../LieuForm.module.css';
+
+// Fix universel des icônes Leaflet (évite les 404 distmarker-*.png)
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+});
 
 const LieuAddressSection = ({ lieu, isEditing = false, handleChange, addressSearch = {} }) => {
   // Add default empty object to prevent destructuring errors

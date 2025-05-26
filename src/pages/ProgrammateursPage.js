@@ -1,13 +1,11 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
 
-/**
- * Page principale des programmateurs qui gère les différentes routes
- * Version optimisée avec:
- * - Utilisation du OptimizedRouteWrapper pour une meilleure stabilité
- * - Mémoisation des routes pour réduire les re-rendus
- */
+// STUB TEMPORAIRE POUR DÉSACTIVER LE MODULE PROGRAMMATEUR
 export default function ProgrammateursPage() {
-  
-  return <Outlet />;
+  return (
+    <div style={{ padding: 40, textAlign: 'center', color: '#888', fontSize: 24 }}>
+      Module Programmateur désactivé temporairement pour diagnostic.<br />
+      (Aucune logique Programmateur n'est exécutée)
+    </div>
+  );
 }

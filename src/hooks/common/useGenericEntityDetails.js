@@ -53,6 +53,8 @@ const useGenericEntityDetails = ({
   skipPermissionCheck = false, // Ignorer la vérification des permissions
   realtime = false,          // Utiliser des écouteurs temps réel
   useDeleteModal = true,     // Utiliser un modal pour confirmer la suppression
+  autoRefresh = false,        // Activer le polling
+  refreshInterval = 30000,    // Intervalle en ms (par défaut 30 s)
   
   // Options de cache
   cacheEnabled = true,       // Activer le cache pour ce hook
@@ -110,10 +112,19 @@ const useGenericEntityDetails = ({
         setEntity(cachedData);
         setFormData(cachedData);
         setLoading(false);
+        // Le chargement des entités liées sera déclenché dans un effet séparé
         debugLog(`✅ IMMEDIATE_CACHE_CHECK: États mis à jour depuis le cache`, 'info', 'useGenericEntityDetails');
       }
     }
-  }, [id, entity, cacheEnabled, cache, entityType]);
+  }, [id, entity, cacheEnabled, cache, entityType, autoLoadRelated]);
+  
+  // Effet dédié pour charger les entités liées une fois que l'entité est disponible
+  useEffect(() => {
+    if (autoLoadRelated && entity && Object.keys(relatedData).length === 0) {
+      loadAllRelatedEntities(entity);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoLoadRelated, entity, relatedData]);
   
   // Fonction sécurisée pour mettre à jour les états uniquement si le composant est monté
   const safeSetState = useCallback((setter, value) => {
@@ -372,6 +383,7 @@ const useGenericEntityDetails = ({
     
     // Si l'identifiant de l'entité liée n'existe pas dans l'entité principale, retourner null
     if (!entityData[relatedIdField]) {
+      debugLog(`❌ LOAD_RELATED: Pas d'ID pour l'entité liée ${name}`, 'warn', 'useGenericEntityDetails');
       return type === 'one-to-many' ? [] : null;
     }
     
@@ -380,6 +392,7 @@ const useGenericEntityDetails = ({
       
       // Vérifier s'il y a une requête personnalisée pour cette entité
       if (customQueries && customQueries[name]) {
+        debugLog(`🔍 LOAD_RELATED: Utilisation de la requête personnalisée pour ${name}`, 'debug', 'useGenericEntityDetails');
         const customQuery = customQueries[name];
         const queryResult = await customQuery(entityData);
         result = queryResult;
@@ -403,50 +416,65 @@ const useGenericEntityDetails = ({
               break;
             }
           }
-        } else {
-          allCached = false;
         }
         
-        // Si tous les éléments sont en cache, les utiliser
         if (allCached && cachedResults.length > 0) {
-          result = cachedResults;
-        } else {
-          // Sinon, charger depuis Firestore
-          const relatedDocs = await Promise.all(
-            relatedIds.map(relId => getDoc(doc(db, relatedCollection, relId)))
-          );
-          result = relatedDocs
-            .filter(doc => doc.exists())
-            .map(doc => ({ id: doc.id, ...doc.data() }));
+          debugLog(`✅ LOAD_RELATED: Toutes les entités liées ${name} trouvées en cache`, 'info', 'useGenericEntityDetails');
+          return cachedResults;
         }
+        
+        // Si pas toutes en cache, charger depuis Firestore
+        const results = await Promise.all(
+          relatedIds.map(async (relId) => {
+            const docRef = doc(db, relatedCollection, relId);
+            const docSnap = await getDoc(docRef);
+            
+            if (docSnap.exists()) {
+              const data = { [relatedIdField]: docSnap.id, ...docSnap.data() };
+              if (cacheEnabled) {
+                cache.set(`related:${name}:${relId}`, data);
+              }
+              return data;
+            }
+            return null;
+          })
+        );
+        
+        result = results.filter(Boolean);
       } else {
         // Charger une seule entité liée
-        const relatedId = entityData[relatedIdField];
+        const relId = entityData[relatedIdField];
         
         // Vérifier le cache d'abord
         if (cacheEnabled) {
-          const cachedItem = cache.get(`related:${name}:${relatedId}`);
+          const cachedItem = cache.get(`related:${name}:${relId}`);
           if (cachedItem) {
-            result = cachedItem;
-            return result;
+            debugLog(`✅ LOAD_RELATED: Entité liée ${name} trouvée en cache`, 'info', 'useGenericEntityDetails');
+            return cachedItem;
           }
         }
         
         // Si pas en cache, charger depuis Firestore
-        const relatedDoc = await getDoc(doc(db, relatedCollection, relatedId));
-        if (relatedDoc.exists()) {
-          result = { id: relatedDoc.id, ...relatedDoc.data() };
+        const docRef = doc(db, relatedCollection, relId);
+        const docSnap = await getDoc(docRef);
+        
+        if (docSnap.exists()) {
+          result = { [relatedIdField]: docSnap.id, ...docSnap.data() };
+          if (cacheEnabled) {
+            cache.set(`related:${name}:${relId}`, result);
+          }
         } else {
+          debugLog(`❌ LOAD_RELATED: Entité liée ${name} non trouvée`, 'warn', 'useGenericEntityDetails');
           result = null;
         }
       }
       
       return result;
-    } catch (err) {
-      debugLog(`Erreur lors du chargement de l'entité liée ${name}: ${err}`, 'error', 'useGenericEntityDetails');
-      throw err;
+    } catch (error) {
+      debugLog(`❌ LOAD_RELATED: Erreur lors du chargement de l'entité liée ${name}: ${error}`, 'error', 'useGenericEntityDetails');
+      return type === 'one-to-many' ? [] : null;
     }
-  }, [customQueries, cacheEnabled, cache]);
+  }, [cacheEnabled, cache, customQueries]);
   
   // Fonction pour charger toutes les entités liées
   const loadAllRelatedEntities = useCallback(async (entityData) => {
@@ -823,19 +851,22 @@ const useGenericEntityDetails = ({
     }
   }, [fetchEntity, id, cacheEnabled, cache, realtime, subscription]);
   
-  // Fonction pour réessayer en cas d'erreur
+  // ====== Effet d'auto-refresh (polling) ======
+  useEffect(() => {
+    if (!autoRefresh || realtime || !id) return;
+    const intervalId = setInterval(() => {
+      refresh();
+    }, refreshInterval);
+    return () => clearInterval(intervalId);
+  }, [autoRefresh, realtime, id, refresh, refreshInterval]);
+  
+  // Fonction pour réessayer manuellement en cas d'erreur
   const retryFetch = useCallback(() => {
     debugLog(`Nouvelle tentative de chargement pour ${entityType}:${id}`, 'info', 'useGenericEntityDetails');
-    
-    // Effacer le cache pour cette entité
-    if (cacheEnabled) {
-      cache.remove(id);
-    }
-    
-    // Réinitialiser les erreurs et recharger
+    if (cacheEnabled) cache.remove(id);
     safeSetState(setError, null);
     refresh();
-  }, [entityType, id, safeSetState, cacheEnabled, cache, refresh]);
+  }, [entityType, id, cacheEnabled, cache, safeSetState, refresh]);
   
   // Chargement initial de l'entité - Compatible StrictMode
   useEffect(() => {
@@ -870,7 +901,8 @@ const useGenericEntityDetails = ({
     } else {
       debugLog(`⏭️ INITIAL_LOAD_EFFECT: Mode realtime activé, pas d'appel fetchEntity`, 'debug', 'useGenericEntityDetails');
     }
-  }, [id, entityType, realtime, fetchEntity, cacheEnabled, cache]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, entityType, realtime]); // Suppression de fetchEntity, cacheEnabled, cache pour éviter la boucle infinie
   
   // Gestion des derniers nettoyages au démontage
   useEffect(() => {

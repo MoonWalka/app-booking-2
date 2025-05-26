@@ -2,52 +2,28 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { doc, onSnapshot, db } from '@/services/firebase-service';
 
 /**
- * Hook pour s'abonner aux changeme  // Effet principal pour configurer l'abonnement - STABILISATION DES DÉPENDANCES
-  const stableRefreshRef = useRef();
-  
-  // Stocker une référence stable de refresh
-  useEffect(() => {
-    stableRefreshRef.current = refresh;
-  }, [refresh]);
-
-  useEffect(() => {
-    // Capturer la référence actuelle pour le cleanup
-    const currentInstance = instanceRef.current;
-    
-    // Utiliser la référence stable pour éviter la boucle infinie
-    const stableRefresh = stableRefreshRef.current;
-    if (stableRefresh) {
-      stableRefresh();
-    }
-    
-    // Nettoyage lors du démontage
-    return () => {
-      currentInstance.isMounted = false;
-      
-      if (currentInstance.unsubscribe) {
-        currentInstance.unsubscribe();
-        currentInstance.unsubscribe = null;
-      }
-    };
-  }, [collectionName, id]); // Dépendances stables uniquement Firestore.
+ * Hook pour s'abonner aux changements Firestore.
  * Version optimisée avec moins de logs et sélection de champs.
  * 
- * @param {string} collectionName - Nom de la collection
- * @param {string} id - ID du document
- * @param {Function} onData - Callback appelé quand les données changent
- * @param {Function} onError - Callback appelé en cas d'erreur
- * @param {Function} transform - Transformation à appliquer aux données
- * @param {Array<string>} selectedFields - Champs à retourner (optionnel, tous par défaut)
+ * @param {Object} config - Configuration de l'abonnement
+ * @param {string} config.collectionName - Nom de la collection
+ * @param {string} config.id - ID du document
+ * @param {Function} config.onData - Callback appelé quand les données changent
+ * @param {Function} config.onError - Callback appelé en cas d'erreur
+ * @param {Function} config.transform - Transformation à appliquer aux données
+ * @param {Array<string>} config.selectedFields - Champs à retourner (optionnel, tous par défaut)
+ * @param {boolean} config.enabled - Activer/désactiver l'abonnement (défaut: true)
  * @returns {Object} loading, error, lastUpdateTime, refresh
  */
-const useFirestoreSubscription = (
+const useFirestoreSubscription = ({
   collectionName, 
   id, 
   onData, 
   onError, 
   transform,
-  selectedFields
-) => {
+  selectedFields,
+  enabled = true
+}) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [lastUpdateTime, setLastUpdateTime] = useState(null);
@@ -109,6 +85,17 @@ const useFirestoreSubscription = (
       instanceRef.current.cacheKey = `${collectionName}/${id}`;
       setLoading(true);
       setError(null);
+    }
+    
+    // Si l'abonnement est désactivé, nettoyer et sortir
+    if (!enabled) {
+      if (instanceRef.current.unsubscribe) {
+        instanceRef.current.unsubscribe();
+        instanceRef.current.unsubscribe = null;
+      }
+      setLoading(false);
+      setError(null);
+      return;
     }
     
     // Si ID ou collection manquant, ne pas s'abonner
@@ -196,14 +183,25 @@ const useFirestoreSubscription = (
         onError(err);
       }
     }
-  }, [collectionName, id, onData, onError, transform, selectedFields]);
+  }, [collectionName, id, onData, onError, transform, selectedFields, enabled]);
   
   // Effet pour gérer le cycle de vie et les changements de props
   useEffect(() => {
     // Capturer la référence actuelle pour le cleanup
     const currentInstance = instanceRef.current;
     
-    refresh();
+    // Ne démarrer l'abonnement que si enabled est true
+    if (enabled) {
+      refresh();
+    } else {
+      // Si désactivé, nettoyer immédiatement
+      if (currentInstance.unsubscribe) {
+        currentInstance.unsubscribe();
+        currentInstance.unsubscribe = null;
+      }
+      setLoading(false);
+      setError(null);
+    }
     
     // Nettoyage lors du démontage
     return () => {
@@ -214,7 +212,7 @@ const useFirestoreSubscription = (
         currentInstance.unsubscribe = null;
       }
     };
-  }, [refresh]);
+  }, [refresh, enabled]);
   
   return { loading, error, lastUpdateTime, refresh };
 };

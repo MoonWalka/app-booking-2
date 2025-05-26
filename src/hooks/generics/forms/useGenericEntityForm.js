@@ -416,6 +416,8 @@ const useGenericEntityForm = (formConfig = {}, options = {}) => {
     handleSubmit,
     handleReset,
     handleFieldChange,
+    // Alias de compatibilité
+    handleChange: handleFieldChange,
     handleInputChange,
     handleFieldBlur,
     updateInitialData,

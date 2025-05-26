@@ -128,7 +128,7 @@ export const useArtisteForm = (artisteId) => {
     if (formHook.formData?.membres && formHook.formData.membres.length > 0) {
       setMembres(formHook.formData.membres);
     }
-  }, [formHook.formData]);
+  }, [formHook.formData, setMembres]);
   
   // Gestion des membres du groupe
   const ajouterMembre = useCallback((nom) => {

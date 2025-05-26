@@ -51,7 +51,6 @@ const ConcertView = ({ id: propId }) => {
     setShowFormGenerator,
     generatedFormLink,
     setGeneratedFormLink,
-    toggleEditMode,
     handleDelete,
     copyToClipboard,
     formatDate,
@@ -84,13 +83,13 @@ const ConcertView = ({ id: propId }) => {
 
   // Fonction pour passer en mode édition
   const handleEdit = () => {
-    console.log("[🔍 ConcertView] Clic sur Modifier. Basculement en mode édition");
-    if (toggleEditMode) toggleEditMode();
+    console.log("[🔍 ConcertView] Clic sur Modifier. Navigation vers la page d'édition");
+    navigate(`/concerts/${id}/edit`);
   };
 
   // Fonction pour annuler l'édition
   const handleCancel = () => {
-    if (toggleEditMode) toggleEditMode();
+    navigate(`/concerts/${id}`);
   };
 
   // Fonction pour gérer les changements dans les inputs

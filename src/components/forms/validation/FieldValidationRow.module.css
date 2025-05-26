@@ -80,7 +80,7 @@
 
 .finalValueInput:focus {
   border-color: var(--tc-color-primary);
-  box-shadow: var(--tc-focus-shadow));
+  box-shadow: var(--tc-shadow-focus);
   outline: 0;
 }
 

@@ -58,7 +58,7 @@
    VARIANTES DE TYPE (Remplacement Bootstrap alert-*)
    ============================= */
 .alert--success {
-  background-color: var(--tc-success-bg);
+  background-color: var(--tc-bg-success);
   color: var(--tc-color-success);
   border-color: var(--tc-success-border);
 }
@@ -72,7 +72,7 @@
 }
 
 .alert--danger {
-  background-color: var(--tc-danger-bg);
+  background-color: var(--tc-bg-error);
   color: var(--tc-color-error);
   border-color: var(--tc-danger-border);
 }
@@ -86,7 +86,7 @@
 }
 
 .alert--warning {
-  background-color: var(--tc-warning-bg);
+  background-color: var(--tc-bg-warning);
   color: var(--tc-color-warning);
   border-color: var(--tc-warning-border);
 }
@@ -100,7 +100,7 @@
 }
 
 .alert--info {
-  background-color: var(--tc-info-bg);
+  background-color: var(--tc-bg-info);
   color: var(--tc-color-info);
   border-color: var(--tc-info-border);
 }

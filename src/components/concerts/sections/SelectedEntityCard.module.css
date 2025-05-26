@@ -7,7 +7,7 @@
 /* Styles pour SelectedEntityCard */
 
 .entityCard {
-  background-color: var(--tc-whitefff);
+  background-color: var(--tc-color-white);
   border: 1px solid var(--tc-color-gray-200);
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
@@ -68,7 +68,7 @@
 }
 
 .removeButton:hover {
-  background-color: var(--tc-danger-light);
+  background-color: var(--tc-color-error-light);
   color: var(--tc-color-error);
 }
 

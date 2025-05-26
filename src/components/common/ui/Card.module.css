@@ -144,7 +144,7 @@
   position: relative;
   width: 100%;
   overflow: hidden;
-  background-color: var(--tc-background-secondary);
+  background-color: var(--tc-bg-secondary);
 }
 
 .mediaItem {

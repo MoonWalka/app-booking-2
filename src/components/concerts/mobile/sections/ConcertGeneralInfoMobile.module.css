@@ -57,7 +57,7 @@
   align-items: center;
   font-size: var(--tc-font-size-sm);
   color: var(--tc-color-error);
-  background-color: var(--tc-danger-light);
+  background-color: var(--tc-color-error-light);
   padding: var(--tc-space-2);
   border-radius: var(--tc-radius-sm);
 }

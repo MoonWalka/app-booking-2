@@ -457,7 +457,7 @@ strong, .tc-strong, b {
 }
 
 .tc-nav-item:hover {
-  background-color: var(--tc-primary-light);
+  background-color: var(--tc-color-primary-light);
 }
 
 .tc-nav-item.active {

@@ -48,7 +48,7 @@
     /* Hauteurs de ligne */
     --tc-line-height-normal: 1.5;
     
-    /* Alias de compatibilité */
+    /* Alias de compatibilité typographie */
     --tc-font-family-base: var(--tc-font-sans);
     --tc-line-height-base: var(--tc-line-height-normal);
 
@@ -61,6 +61,7 @@
     --tc-space-2: 0.5rem;                  /* 8px - Petit espacement */
     --tc-space-3: 0.75rem;                 /* 12px - Espacement moyen */
     --tc-space-4: 1rem;                    /* 16px - Espacement standard */
+    --tc-space-5: 1.25rem;                 /* 20px - Espacement intermédiaire */
     --tc-space-6: 1.5rem;                  /* 24px - Très grand espacement */
     --tc-space-8: 2rem;                    /* 32px - Espacement XL */
     
@@ -76,18 +77,6 @@
     
     /* Compatibilité critique */
     --tc-spacing-unit: var(--tc-space-md);
-
-    /* ===== BORDURES OPTIMISÉES ===== */
-    /* Variables de bordures maintenant dans colors.css */
-
-    /* ===== Z-INDEX ===== */
-    --tc-z-index-dropdown: 1000;
-    --tc-z-index-modal: 1050;
-    --tc-z-index-tooltip: 1070;
-    --tc-z-index-toast: 1080;
-
-    /* ===== TRANSITIONS OPTIMISÉES ===== */
-    /* Variables de transitions maintenant dans la section EFFETS */
 
     /* ===== EFFETS OPTIMISÉS (MAQUETTE) ===== */
     /* Basée sur l'audit maquette HTML - 49 → 20 variables (-59%) */
@@ -133,11 +122,14 @@
     
     /* Formulaires */
     --tc-input-height: 2.5rem;             /* 40px */
-}    /* Mode compact - définition en dehors de :root pour permettre la surcharge via data-attributes */
+}
+
+/* ===== MODES ET RESPONSIVE ===== */
 [data-compact="true"] {
     --tc-spacing-unit: var(--tc-space-2);
     --tc-font-size-base: 0.875rem; /* 14px */
-}    /* Variables de responsive design */
+}
+
 @media (max-width: 768px) {
     :root {
         --tc-spacing-unit: var(--tc-space-2);
@@ -146,3 +138,4 @@
 }
 
 /* Variables de dark mode - définies dans colors.css */
+

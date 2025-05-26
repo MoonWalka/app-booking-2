@@ -271,7 +271,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--tc-overlay-color);
+  background-color: var(--tc-bg-overlay);
   display: flex;
   justify-content: center;
   align-items: center;

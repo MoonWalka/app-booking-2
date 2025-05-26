@@ -10,15 +10,15 @@
   --tc-card-border-radius: 8px;
   --tc-card-padding: 1rem;
   --tc-card-margin: 0 0 1rem 0;
-  --tc-card-bg-color: var(--tc-whitefff);
+  --tc-card-bg-color: var(--tc-color-white);
   --tc-card-border-color: var(--tc-color-gray-200);
   --tc-card-shadow-low: 0 2px 4px rgba(0, 0, 0, 0.05);
   --tc-card-shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.1);
   --tc-card-shadow-high: 0 8px 16px rgba(0, 0, 0, 0.15);
   --tc-card-header-bg-color: transparent;
   --tc-card-footer-bg-color: var(--tc-color-gray-50);
-  --tc-card-title-color: var(--tc-gray-800333);
-  --tc-card-subtitle-color: var(--tc-gray-600666);
+  --tc-card-title-color: var(--tc-color-gray-800);
+  --tc-card-subtitle-color: var(--tc-color-gray-600);
 }
 
 /* Styles de base de la Card */
@@ -27,7 +27,7 @@
   flex-direction: column;
   border-radius: var(--tc-card-border-radius);
   background-color: var(--tc-card-bg-color);
-  margin: var(--tc-card-margin);
+  margin: var(--tc-space-4);
   overflow: hidden;
   width: 100%;
 }
@@ -63,7 +63,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--tc-card-padding);
+  padding: var(--tc-space-4);
   background-color: var(--tc-card-header-bg-color);
   border-bottom: 1px solid var(--tc-card-border-color);
 }
@@ -107,13 +107,13 @@
 
 /* Corps de la Card */
 .tc-card__body {
-  padding: var(--tc-card-padding);
+  padding: var(--tc-space-4);
   flex: 1;
 }
 
 /* Pied de la Card */
 .tc-card__footer {
-  padding: var(--tc-card-padding);
+  padding: var(--tc-space-4);
   background-color: var(--tc-card-footer-bg-color);
   border-top: 1px solid var(--tc-card-border-color);
 }

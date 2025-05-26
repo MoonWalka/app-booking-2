@@ -209,11 +209,17 @@ const useGenericEntityForm = (formConfig = {}, options = {}) => {
     return data;
   }, [transformData]);
   
-  // Auto-save avec debounce
+  // Utiliser useRef pour accéder à la valeur actuelle de formData sans créer de dépendance
+  const formDataRef = useRef(formData);
+  useEffect(() => {
+    formDataRef.current = formData;
+  }, [formData]);
+
+  // Auto-save avec debounce - Version stabilisée
   const triggerAutoSave = useCallback(() => {
     if (!enableAutoSave) return;
     
-    // Annuler le timeout précédent
+    // Annuler la sauvegarde précédente
     if (autoSaveTimeoutRef.current) {
       clearTimeout(autoSaveTimeoutRef.current);
     }
@@ -223,7 +229,8 @@ const useGenericEntityForm = (formConfig = {}, options = {}) => {
     // Programmer la sauvegarde
     autoSaveTimeoutRef.current = setTimeout(async () => {
       try {
-        const processedData = processFormData(formData);
+        const currentFormData = formDataRef.current; // Utiliser la ref
+        const processedData = processFormData(currentFormData);
         
         if (entityId) {
           await update(entityId, processedData);
@@ -237,7 +244,7 @@ const useGenericEntityForm = (formConfig = {}, options = {}) => {
         setAutoSaveStatus('error');
       }
     }, autoSaveDelay);
-  }, [enableAutoSave, autoSaveDelay, processFormData, formData, entityId, update]);
+  }, [enableAutoSave, autoSaveDelay, processFormData, entityId, update]);
   
   // Gestion des changements de champs
   const handleFieldChange = useCallback((fieldName, value) => {

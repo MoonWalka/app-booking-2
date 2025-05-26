@@ -19,9 +19,10 @@ import 'regenerator-runtime/runtime';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
+  // StrictMode désactivé - cause des problèmes de double montage avec nos hooks
+  // <React.StrictMode>
     <App />
-  </React.StrictMode>
+  // </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

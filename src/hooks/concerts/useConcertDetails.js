@@ -13,6 +13,7 @@ import useConcertAssociations from '@/hooks/concerts/useConcertAssociations';
 
 // Import des utilitaires
 import { formatDate, formatMontant, isDatePassed, copyToClipboard, getCacheKey } from '@/utils/formatters';
+import { debugLog } from '@/utils/logUtils';
 
 /**
  * Hook optimisé pour les détails de concert
@@ -123,6 +124,7 @@ const useConcertDetails = (id, locationParam) => {
   }, []);
   
   // Utilisation de useGenericEntityDetails avec les améliorations
+  debugLog(`🎵 CONCERT_DETAILS: Appel de useGenericEntityDetails avec id: ${id}`, 'info', 'useConcertDetails');
   const genericDetails = useGenericEntityDetails({
     entityType: 'concert',
     collectionName: 'concerts',
@@ -141,8 +143,12 @@ const useConcertDetails = (id, locationParam) => {
     // Pas d'editPath pour éviter de forcer le mode édition
     // Options avancées
     useDeleteModal: true,
-    disableCache: false
+    disableCache: false,
+    realtime: false // Explicitement désactiver le mode temps réel
   });
+  
+  debugLog(`📊 CONCERT_DETAILS: genericDetails retourné - entity: ${genericDetails?.entity ? 'PRÉSENT' : 'NULL'}, loading: ${genericDetails?.loading}, error: ${genericDetails?.error ? 'PRÉSENT' : 'NULL'}`, 'info', 'useConcertDetails');
+  debugLog(`📊 CONCERT_DETAILS: Détail entity: ${JSON.stringify(genericDetails?.entity)}`, 'debug', 'useConcertDetails');
   
   // Callbacks pour les événements de sauvegarde et suppression
   // Défini après l'initialisation de genericDetails pour pouvoir l'utiliser dans la dépendance
@@ -182,17 +188,20 @@ const useConcertDetails = (id, locationParam) => {
     navigate('/concerts');
   }, [id, navigate]);
   
-  // Mettre à jour les callbacks dans genericDetails
-  useEffect(() => {
-    if (genericDetails) {
+  // Mettre à jour les callbacks dans genericDetails - UTILISATION DE SETTER POUR ÉVITER MUTATION
+  const updateGenericDetailsOptions = useCallback(() => {
+    if (genericDetails && genericDetails.updateOptions) {
       console.log('[LOG][useConcertDetails] genericDetails initialisé, handleDelete:', typeof genericDetails.handleDelete);
-      genericDetails.options = {
-        ...genericDetails.options, 
+      genericDetails.updateOptions({
         onSaveSuccess: handleSaveSuccess,
         onDeleteSuccess: handleDeleteSuccess
-      };
+      });
     }
   }, [genericDetails, handleSaveSuccess, handleDeleteSuccess]);
+
+  useEffect(() => {
+    updateGenericDetailsOptions();
+  }, [updateGenericDetailsOptions]);
   
   // Fonction pour gérer les mises à jour des relations bidirectionnelles
   const handleBidirectionalUpdates = useCallback(async () => {
@@ -366,12 +375,36 @@ const useConcertDetails = (id, locationParam) => {
   }, [genericDetails, handleBidirectionalUpdates]);
   
   // Effet pour mettre à jour les relations bidirectionnelles au chargement initial
+  // SÉPARATION DES DÉPENDANCES POUR ÉVITER LA BOUCLE INFINIE
+  const stableGenericDetailsRef = useRef();
+  const stableConcertAssociationsRef = useRef();
+  
+  // Stocker les références stables
+  useEffect(() => {
+    if (genericDetails && genericDetails.entity && !genericDetails.loading) {
+      stableGenericDetailsRef.current = {
+        entity: genericDetails.entity,
+        loading: genericDetails.loading
+      };
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [genericDetails?.entity?.id, genericDetails?.loading]); // Dépendances spécifiques et stables
+
+  useEffect(() => {
+    if (concertAssociations) {
+      stableConcertAssociationsRef.current = concertAssociations;
+    }
+  }, [concertAssociations]);
+
   useEffect(() => {
     // Guard contre l'exécution en double en StrictMode
     if (bidirectionalUpdatesRef.current) return;
     
     // Vérifier que l'entité est chargée et que tous les hooks dépendants sont prêts
-    if (genericDetails && genericDetails.entity && !genericDetails.loading && concertAssociations) {
+    const stableGenericDetails = stableGenericDetailsRef.current;
+    const stableConcertAssocs = stableConcertAssociationsRef.current;
+    
+    if (stableGenericDetails && stableGenericDetails.entity && !stableGenericDetails.loading && stableConcertAssocs) {
       console.log("[useConcertDetails] useEffect pour relations bidirectionnelles déclenché");
       
       // Créer une fonction asynchrone à l'intérieur de l'effet
@@ -396,7 +429,7 @@ const useConcertDetails = (id, locationParam) => {
       // Exécuter la fonction asynchrone
       updateBidirectionalRelations();
     }
-  }, [genericDetails, handleBidirectionalUpdates, concertAssociations, fetchRelatedEntities]);
+  }, [id, fetchRelatedEntities, handleBidirectionalUpdates]); // Dépendances réduites et stables
   
   // Réinitialiser le guard si l'ID change
   useEffect(() => {

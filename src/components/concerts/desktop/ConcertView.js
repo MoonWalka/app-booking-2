@@ -28,6 +28,9 @@ const ConcertView = ({ id: propId }) => {
   
   // Utiliser l'ID passé en prop s'il existe, sinon utiliser l'ID de l'URL
   const id = propId || urlId;
+
+  // LOG DEBUG : montage du composant ConcertView
+  console.log('[DEBUG][ConcertView] Montage avec id:', id);
   
   // État pour la confirmation de suppression
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);

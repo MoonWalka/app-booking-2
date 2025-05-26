@@ -79,6 +79,7 @@ const handleFirestoreError = (error) => {
 
 // Initialisation conditionnelle selon le mode
 if (IS_LOCAL_MODE) {
+  console.log('[LOG Firebase Service] Mode local détecté, emulatorService:', emulatorService);
   // Utiliser mockStorage pour db
   db = emulatorService;
   
@@ -193,7 +194,12 @@ const enhancedGetDocs = async (...args) => {
 
 // Fonctions mock directes avec optional chaining
 const getDirectMockFunction = (functionName) => {
-  return (...args) => emulatorService?.[functionName]?.(...args) || null;
+  return (...args) => {
+    console.log(`[LOG Firebase Service] Appel de ${functionName} avec args:`, args);
+    const result = emulatorService?.[functionName]?.(...args) || null;
+    console.log(`[LOG Firebase Service] Résultat de ${functionName}:`, result);
+    return result;
+  };
 };
 
 // Export des fonctions appropriées selon le mode

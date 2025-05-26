@@ -1,12 +1,25 @@
 import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import StructuresList from '../components/structures/desktop/StructuresList';
+import StructureForm from '../components/structures/desktop/StructureForm';
+import StructureDetails from '../components/structures/desktop/StructureDetails';
+import useResponsive from '../hooks/common/useResponsive';
+import MobileStructuresList from '../components/structures/mobile/StructuresList';
+import MobileStructureDetails from '../components/structures/mobile/StructureDetails';
+import MobileStructureForm from '../components/structures/mobile/StructureForm';
 
-// STUB TEMPORAIRE POUR DÉSACTIVER LE MODULE STRUCTURES
 const StructuresPage = () => {
+  const { isMobile } = useResponsive();
+
+  // Utiliser les composants adaptés selon le type d'appareil
   return (
-    <div style={{ padding: 40, textAlign: 'center', color: '#888', fontSize: 24 }}>
-      Module Structures désactivé temporairement pour diagnostic.<br />
-      (Aucune logique Structures n'est exécutée)
-    </div>
+    <Routes>
+      <Route path="/" element={isMobile ? <MobileStructuresList /> : <StructuresList />} />
+      <Route path="/nouveau" element={isMobile ? <MobileStructureForm /> : <StructureForm />} />
+      <Route path="/:id" element={isMobile ? <MobileStructureDetails /> : <StructureDetails />} />
+      <Route path="/:id/edit" element={isMobile ? <MobileStructureForm /> : <StructureForm />} />
+      <Route path="*" element={<Navigate to="/structures" replace />} />
+    </Routes>
   );
 };
 

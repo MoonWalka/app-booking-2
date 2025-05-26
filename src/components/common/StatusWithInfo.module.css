@@ -5,7 +5,7 @@
  */
 
 .statusBadge {
-  padding: var(--tc-color-primary) var(--tc-space-2);
+  padding: var(--tc-space-3) var(--tc-space-2);
   font-weight: var(--tc-font-weight-medium);
   letter-spacing: 0.2px;
 }

@@ -13,7 +13,7 @@
 .cardIcon {
   width: var(--tc-color-primary);
   height: var(--tc-color-primary);
-  border-radius: var(--tc-border-radius-md);
+  border-radius: var(--tc-radius-md);
   background-color: var(--tc-bg-orange-subtle);
   color: var(--tc-color-orange);
   display: flex;

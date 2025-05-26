@@ -290,7 +290,7 @@
 
 .tcModalConfirm {
   background-color: var(--tc-bg-color-light);
-  border-radius: var(--tc-border-radius-md);
+  border-radius: var(--tc-radius-md);
   width: 450px;
   max-width: 90vw;
   box-shadow: var(--tc-shadow-lg);

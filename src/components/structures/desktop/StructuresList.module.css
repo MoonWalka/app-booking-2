@@ -55,7 +55,7 @@
 
 .content {
   background-color: var(--tc-color-white);
-  border-radius: var(--tc-border-radius-md);
+  border-radius: var(--tc-radius-md);
   box-shadow: var(--tc-box-shadow);
   overflow: hidden;
 }

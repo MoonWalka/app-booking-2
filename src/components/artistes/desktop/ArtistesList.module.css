@@ -94,7 +94,7 @@
 }
 
 .artistesListContainer {
-  border-radius: var(--tc-border-radius-md);
+  border-radius: var(--tc-radius-md);
   overflow: hidden;
   border: none;
   box-shadow: var(--tc-shadow-base);

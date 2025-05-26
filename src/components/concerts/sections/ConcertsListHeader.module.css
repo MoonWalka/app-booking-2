@@ -38,7 +38,7 @@
 }
 
 .addButton:hover {
-  background-color: var(--tc-color-primary-dark);
+  background-color: var(--tc-color-primary-hover);
 }
 
 .addButton i {

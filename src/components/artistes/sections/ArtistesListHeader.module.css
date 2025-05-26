@@ -1,7 +1,7 @@
 /*
  * Styles pour ArtistesListHeader
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 5 mai 2025
+ * Dernière mise à jour: 21 mai 2025
  */
 
 .header {
@@ -16,6 +16,34 @@
   font-weight: var(--tc-font-weight-semibold);
   margin: 0;
   color: var(--tc-text-default);
+}
+
+/* =============================
+   BOUTON AJOUTER STANDARDISÉ
+   ============================= */
+.addButton {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-1);
+  font-weight: var(--tc-font-weight-medium);
+  background-color: var(--tc-color-primary);
+  color: var(--tc-text-light);
+  border: none;
+  border-radius: var(--tc-radius-base);
+  padding: var(--tc-space-2) var(--tc-space-4);
+  font-size: var(--tc-font-size-base);
+  cursor: pointer;
+  transition: var(--tc-transition-base);
+  text-decoration: none;
+}
+
+.addButton:hover {
+  background-color: var(--tc-color-primary-hover);
+  color: var(--tc-text-light);
+}
+
+.addButton i {
+  font-size: var(--tc-font-size-base);
 }
 
 /* Styles responsive standardisés */
@@ -35,5 +63,11 @@
   
   .title {
     font-size: var(--tc-font-size-lg);
+  }
+  
+  .addButton {
+    width: 100%;
+    justify-content: center;
+    margin-top: var(--tc-space-2);
   }
 }

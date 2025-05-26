@@ -20,7 +20,7 @@
   color: var(--tc-text-secondary);
   background-color: var(--tc-color-gray-50);
   padding: var(--tc-space-1) var(--tc-space-6);
-  border-radius: var(--tc-border-radius-md);
+  border-radius: var(--tc-radius-md);
   font-weight: var(--tc-font-weight-regular);
   font-size: var(--tc-font-size-base);
   transition: none;
@@ -43,7 +43,7 @@
   background-color: var(--tc-color-white);
   color: var(--tc-color-secondary);
   font-weight: var(--tc-font-weight-bold);
-  box-shadow: 0 1px 4px 0 var(--tc-shadow-color-sm));
+  box-shadow: 0 1px 4px 0 var(--tc-shadow-color-sm;
   border: 1px solid var(--tc-border-default);
   z-index: 1;
 }

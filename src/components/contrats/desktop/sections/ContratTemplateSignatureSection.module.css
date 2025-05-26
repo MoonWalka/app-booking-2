@@ -52,7 +52,7 @@
 .signatureTips {
   margin-top: var(--tc-space-4);
   background-color: var(--tc-bg-info-subtle);
-  border-radius: var(--tc-border-radius-md);
+  border-radius: var(--tc-radius-md);
   padding: var(--tc-space-4);
   border-left: 4px solid var(--tc-info-color-highlight);
 }

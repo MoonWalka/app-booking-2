@@ -124,7 +124,7 @@
   background-color: var(--tc-color-white);
   border: var(--tc-border-width) solid var(--tc-input-border-color);
   border-radius: 0 0 var(--tc-radius-sm) var(--tc-radius-sm);
-  box-shadow: var(--tc-dropdown-shadow));
+  box-shadow: var(--tc-dropdown-shadow);
   margin-top: -1px;
 }
 

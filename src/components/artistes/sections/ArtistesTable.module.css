@@ -24,7 +24,7 @@
 /* Styles responsive standardisés */
 @media (max-width: 768px) {
   .artistesTable th {
-    padding: var(--tc-color-primary) var(--tc-space-3);
+    padding: var(--tc-space-3) var(--tc-space-3);
   }
 }
 

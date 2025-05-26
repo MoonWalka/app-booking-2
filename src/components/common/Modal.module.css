@@ -73,7 +73,7 @@
   border-top: 1px solid var(--tc-border-ultralight);
   display: flex;
   justify-content: flex-end;
-  gap: var(--tc-color-primary);
+  gap: var(--tc-space-3);
 }
 
 /* Styles responsive standardisés */
@@ -91,7 +91,7 @@
   .modal {
     width: 95%;
     max-height: 80vh;
-    border-radius: var(--tc-border-radius-md);
+    border-radius: var(--tc-radius-md);
   }
   
   .modalHeader {
@@ -115,7 +115,7 @@
   }
   
   .modalHeader {
-    padding: var(--tc-color-primary) var(--tc-space-3);
+    padding: var(--tc-space-3) var(--tc-space-3);
   }
   
   .modalBody {
@@ -123,7 +123,7 @@
   }
   
   .modalFooter {
-    padding: var(--tc-color-primary) var(--tc-space-3);
+    padding: var(--tc-space-3) var(--tc-space-3);
     flex-direction: column;
     gap: var(--tc-space-2);
   }

@@ -28,7 +28,7 @@
 .modalContent {
   background-color: var(--tc-bg-default);
   border-radius: var(--tc-radius-base);
-  box-shadow: var(--tc-shadow-modal));
+  box-shadow: var(--tc-shadow-modal);
   width: 100%;
   max-width: 500px;
   animation: modalFadeIn 0.3s;

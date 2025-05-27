@@ -53,7 +53,7 @@ const useGenericEntityForm = (formConfig = {}, options = {}) => {
   const navigate = useNavigate();
   
   // ✅ CORRECTION 1: Stabilisation des données initiales avec useMemo
-  const stableInitialData = useMemo(() => ({ ...initialData }), [JSON.stringify(initialData)]);
+  const stableInitialData = useMemo(() => ({ ...initialData }), [initialData]);
   
   // ✅ CORRECTION 2: État initial simplifié
   const [formData, setFormData] = useState(() => entityId ? {} : stableInitialData);

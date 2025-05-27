@@ -5,6 +5,12 @@
  * @author TourCraft Team
  * @since 2024
  * @phase Phase 3 - Optimisation et adoption généralisée
+ * 
+ * CORRECTIONS APPLIQUÉES POUR ÉVITER LES BOUCLES DE RE-RENDERS :
+ * - Stabilisation de l'état avec useMemo pour éviter les objets instables
+ * - Mémoïsation des callbacks avec useCallback
+ * - Évitement des mises à jour inutiles avec comparaison d'état
+ * - Utilisation de useRef pour les valeurs stables
  */
 
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
@@ -60,27 +66,51 @@ import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
  * @replaces useResponsive
  */
 const useGenericResponsive = (config = {}, options = {}) => {
-  const {
-    breakpoints = {
+  // ✅ CORRECTION 1: Stabiliser la configuration avec useMemo
+  const stableConfig = useMemo(() => ({
+    breakpoints: config.breakpoints || {
       mobile: 768,
       tablet: 1024,
       desktop: 1200,
       wide: 1440
     },
-    enableOrientation = true,
-    enableDeviceDetection = false,
-    onBreakpointChange = null,
-    onOrientationChange = null,
-    forceBreakpoint = null // Pour les tests ou cas spéciaux
-  } = config;
-  
-  const {
-    debounceDelay = 150,
-    throttleDelay = 50,
-    enablePerformanceMode = true,
-    enableLogging = false,
-    cacheResults = true
-  } = options;
+    enableOrientation: config.enableOrientation !== false,
+    enableDeviceDetection: config.enableDeviceDetection || false,
+    forceBreakpoint: config.forceBreakpoint || null
+  }), [
+    config.breakpoints,
+    config.enableOrientation,
+    config.enableDeviceDetection,
+    config.forceBreakpoint
+  ]);
+
+  const stableOptions = useMemo(() => ({
+    debounceDelay: options.debounceDelay || 150,
+    throttleDelay: options.throttleDelay || 50,
+    enablePerformanceMode: options.enablePerformanceMode !== false,
+    enableLogging: options.enableLogging || false,
+    cacheResults: options.cacheResults !== false
+  }), [
+    options.debounceDelay,
+    options.throttleDelay,
+    options.enablePerformanceMode,
+    options.enableLogging,
+    options.cacheResults
+  ]);
+
+  // ✅ CORRECTION 2: Références stables pour les callbacks
+  const callbacksRef = useRef({
+    onBreakpointChange: config.onBreakpointChange,
+    onOrientationChange: config.onOrientationChange
+  });
+
+  // Mettre à jour les callbacks uniquement quand nécessaire
+  useEffect(() => {
+    callbacksRef.current = {
+      onBreakpointChange: config.onBreakpointChange,
+      onOrientationChange: config.onOrientationChange
+    };
+  }, [config.onBreakpointChange, config.onOrientationChange]);
   
   // Références pour les timeouts et cache
   const debounceTimeout = useRef(null);
@@ -88,11 +118,11 @@ const useGenericResponsive = (config = {}, options = {}) => {
   const lastUpdate = useRef(0);
   const cache = useRef({});
   
-  // Fonction pour calculer le breakpoint (définie avant utilisation)
+  // ✅ CORRECTION 3: Fonction pour calculer le breakpoint stable
   const calculateBreakpoint = useCallback((width, breakpointConfig) => {
     const cacheKey = `${width}_${JSON.stringify(breakpointConfig)}`;
     
-    if (cacheResults && cache.current[cacheKey]) {
+    if (stableOptions.cacheResults && cache.current[cacheKey]) {
       return cache.current[cacheKey];
     }
     
@@ -108,14 +138,14 @@ const useGenericResponsive = (config = {}, options = {}) => {
       result = 'mobile';
     }
     
-    if (cacheResults) {
+    if (stableOptions.cacheResults) {
       cache.current[cacheKey] = result;
     }
     
     return result;
-  }, [cacheResults]);
+  }, [stableOptions.cacheResults]);
   
-  // Fonction pour détecter le type d'appareil
+  // ✅ CORRECTION 4: Fonction pour détecter le type d'appareil stable
   const detectDeviceType = useCallback(() => {
     if (typeof window === 'undefined') return 'desktop';
     
@@ -130,7 +160,7 @@ const useGenericResponsive = (config = {}, options = {}) => {
     }
   }, []);
   
-  // État principal
+  // ✅ CORRECTION 5: État principal stable
   const [state, setState] = useState(() => {
     if (typeof window === 'undefined') {
       return {
@@ -148,13 +178,13 @@ const useGenericResponsive = (config = {}, options = {}) => {
     return {
       width,
       height,
-      currentBreakpoint: forceBreakpoint || calculateBreakpoint(width, breakpoints),
-      orientation: enableOrientation ? (height > width ? 'portrait' : 'landscape') : 'landscape',
-      deviceType: enableDeviceDetection ? detectDeviceType() : 'desktop'
+      currentBreakpoint: stableConfig.forceBreakpoint || calculateBreakpoint(width, stableConfig.breakpoints),
+      orientation: stableConfig.enableOrientation ? (height > width ? 'portrait' : 'landscape') : 'landscape',
+      deviceType: stableConfig.enableDeviceDetection ? detectDeviceType() : 'desktop'
     };
   });
   
-  // Fonction de mise à jour avec throttle/debounce
+  // ✅ CORRECTION 6: Fonction de mise à jour avec throttle/debounce stable
   const updateDimensions = useCallback(() => {
     if (typeof window === 'undefined') return;
     
@@ -163,66 +193,68 @@ const useGenericResponsive = (config = {}, options = {}) => {
     const height = window.innerHeight;
     
     // Throttle pour les performances
-    if (enablePerformanceMode && now - lastUpdate.current < throttleDelay) {
+    if (stableOptions.enablePerformanceMode && now - lastUpdate.current < stableOptions.throttleDelay) {
       if (throttleTimeout.current) {
         clearTimeout(throttleTimeout.current);
       }
       
       throttleTimeout.current = setTimeout(() => {
         updateDimensions();
-      }, throttleDelay);
+      }, stableOptions.throttleDelay);
       
       return;
     }
     
     lastUpdate.current = now;
     
-    const newBreakpoint = forceBreakpoint || calculateBreakpoint(width, breakpoints);
-    const newOrientation = enableOrientation ? (height > width ? 'portrait' : 'landscape') : 'landscape';
-    const newDeviceType = enableDeviceDetection ? detectDeviceType() : 'desktop';
+    const newBreakpoint = stableConfig.forceBreakpoint || calculateBreakpoint(width, stableConfig.breakpoints);
+    const newOrientation = stableConfig.enableOrientation ? (height > width ? 'portrait' : 'landscape') : 'landscape';
+    const newDeviceType = stableConfig.enableDeviceDetection ? detectDeviceType() : 'desktop';
     
-    const newState = {
-      width,
-      height,
-      currentBreakpoint: newBreakpoint,
-      orientation: newOrientation,
-      deviceType: newDeviceType
-    };
-    
-    // Vérifier les changements pour les callbacks
-    const breakpointChanged = newBreakpoint !== state.currentBreakpoint;
-    const orientationChanged = newOrientation !== state.orientation;
-    
-    setState(newState);
-    
-    // Callbacks
-    if (breakpointChanged && onBreakpointChange) {
-      onBreakpointChange(newBreakpoint, state.currentBreakpoint);
-    }
-    
-    if (orientationChanged && onOrientationChange) {
-      onOrientationChange(newOrientation, state.orientation);
-    }
-    
-    if (enableLogging) {
-    }
+    // ✅ CORRECTION 7: Éviter les mises à jour inutiles
+    setState(prevState => {
+      // Vérifier si quelque chose a vraiment changé
+      if (
+        prevState.width === width &&
+        prevState.height === height &&
+        prevState.currentBreakpoint === newBreakpoint &&
+        prevState.orientation === newOrientation &&
+        prevState.deviceType === newDeviceType
+      ) {
+        return prevState; // Pas de changement, retourner l'état précédent
+      }
+
+      const newState = {
+        width,
+        height,
+        currentBreakpoint: newBreakpoint,
+        orientation: newOrientation,
+        deviceType: newDeviceType
+      };
+
+      // Callbacks pour les changements
+      if (prevState.currentBreakpoint !== newBreakpoint && callbacksRef.current.onBreakpointChange) {
+        callbacksRef.current.onBreakpointChange(newBreakpoint, prevState.currentBreakpoint);
+      }
+      
+      if (prevState.orientation !== newOrientation && callbacksRef.current.onOrientationChange) {
+        callbacksRef.current.onOrientationChange(newOrientation, prevState.orientation);
+      }
+
+      return newState;
+    });
   }, [
-    breakpoints, 
-    enableOrientation, 
-    enableDeviceDetection, 
-    enablePerformanceMode,
-    throttleDelay,
-    forceBreakpoint,
+    stableConfig.breakpoints,
+    stableConfig.enableOrientation,
+    stableConfig.enableDeviceDetection,
+    stableConfig.forceBreakpoint,
+    stableOptions.enablePerformanceMode,
+    stableOptions.throttleDelay,
     calculateBreakpoint,
-    detectDeviceType,
-    onBreakpointChange,
-    onOrientationChange,
-    state.currentBreakpoint,
-    state.orientation,
-    enableLogging
+    detectDeviceType
   ]);
   
-  // Fonction debounced pour les événements resize
+  // ✅ CORRECTION 8: Fonction debounced stable
   const debouncedUpdate = useCallback(() => {
     if (debounceTimeout.current) {
       clearTimeout(debounceTimeout.current);
@@ -230,8 +262,8 @@ const useGenericResponsive = (config = {}, options = {}) => {
     
     debounceTimeout.current = setTimeout(() => {
       updateDimensions();
-    }, debounceDelay);
-  }, [updateDimensions, debounceDelay]);
+    }, stableOptions.debounceDelay);
+  }, [updateDimensions, stableOptions.debounceDelay]);
   
   // Effet pour l'écoute des événements
   useEffect(() => {
@@ -243,7 +275,7 @@ const useGenericResponsive = (config = {}, options = {}) => {
     // Écouter les événements
     window.addEventListener('resize', debouncedUpdate);
     
-    if (enableOrientation) {
+    if (stableConfig.enableOrientation) {
       window.addEventListener('orientationchange', debouncedUpdate);
     }
     
@@ -251,7 +283,7 @@ const useGenericResponsive = (config = {}, options = {}) => {
     return () => {
       window.removeEventListener('resize', debouncedUpdate);
       
-      if (enableOrientation) {
+      if (stableConfig.enableOrientation) {
         window.removeEventListener('orientationchange', debouncedUpdate);
       }
       
@@ -263,9 +295,9 @@ const useGenericResponsive = (config = {}, options = {}) => {
         clearTimeout(throttleTimeout.current);
       }
     };
-  }, [debouncedUpdate, enableOrientation, updateDimensions]);
+  }, [debouncedUpdate, stableConfig.enableOrientation, updateDimensions]);
   
-  // Propriétés calculées mémorisées
+  // ✅ CORRECTION 9: Propriétés calculées mémorisées et stables
   const computedProperties = useMemo(() => {
     const { currentBreakpoint, width, height, orientation, deviceType } = state;
     
@@ -285,7 +317,7 @@ const useGenericResponsive = (config = {}, options = {}) => {
       isTabletDevice: deviceType === 'tablet',
       isDesktopDevice: deviceType === 'desktop',
       
-      // Dimensions
+      // ✅ CORRECTION 10: Dimensions stables
       dimensions: { width, height },
       screenWidth: width,
       screenHeight: height,
@@ -298,7 +330,7 @@ const useGenericResponsive = (config = {}, options = {}) => {
     };
   }, [state]);
   
-  // Fonctions utilitaires
+  // ✅ CORRECTION 11: Fonctions utilitaires stables
   const matchBreakpoint = useCallback((breakpointName) => {
     return state.currentBreakpoint === breakpointName;
   }, [state.currentBreakpoint]);
@@ -320,8 +352,8 @@ const useGenericResponsive = (config = {}, options = {}) => {
   }, [state.currentBreakpoint]);
   
   const getBreakpointValue = useCallback((breakpointName) => {
-    return breakpoints[breakpointName] || 0;
-  }, [breakpoints]);
+    return stableConfig.breakpoints[breakpointName] || 0;
+  }, [stableConfig.breakpoints]);
   
   // Fonction pour forcer une mise à jour
   const forceUpdate = useCallback(() => {
@@ -346,15 +378,15 @@ const useGenericResponsive = (config = {}, options = {}) => {
     clearCache,
     
     // Configuration
-    breakpoints,
+    breakpoints: stableConfig.breakpoints,
     
     // Métadonnées
     _config: {
-      breakpoints,
-      enableOrientation,
-      enableDeviceDetection,
-      debounceDelay,
-      throttleDelay
+      breakpoints: stableConfig.breakpoints,
+      enableOrientation: stableConfig.enableOrientation,
+      enableDeviceDetection: stableConfig.enableDeviceDetection,
+      debounceDelay: stableOptions.debounceDelay,
+      throttleDelay: stableOptions.throttleDelay
     }
   };
 };

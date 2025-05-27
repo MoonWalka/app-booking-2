@@ -1,12 +1,11 @@
-// Dans index.js
 // Import des styles dans l'ordre correct: bootstrap → styles globaux
 import 'bootstrap/dist/css/bootstrap.min.css';  // Bootstrap en premier
 import '@styles/index.css'; // Ensuite nos styles (qui incluent déjà reset, variables, etc.)
 import './App.css'; // Styles spécifiques à l'app
+import './index.css';
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
@@ -16,6 +15,21 @@ import './diagnostic';
 // Import des polyfills pour la compatibilité
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
+
+// Configuration de why-did-you-render pour le diagnostic des re-renders
+if (process.env.NODE_ENV === 'development') {
+  const whyDidYouRender = require('@welldone-software/why-did-you-render');
+  const ReactForWDYR = require('react');
+  
+  whyDidYouRender(ReactForWDYR, {
+    trackAllComponents: true,
+    trackHooks: true,
+    logOnDifferentValues: true,
+    collapseGroups: true,
+    include: [/.*Artiste.*/, /.*Concert.*/, /.*Generic.*/],
+    exclude: [/^Connect/, /^Router/]
+  });
+}
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

@@ -97,6 +97,10 @@ export const useEntrepriseForm = () => {
     transformData: transformEntrepriseData,
     customSubmit: customSubmitHandler, // Remplace l'accès Firebase standard par notre fonction personnalisée
     relatedEntities: [] // Pas d'entités liées pour les paramètres d'entreprise
+  }, {
+    enableValidation: false, // Désactiver la validation automatique pour éviter les boucles infinies
+    validateOnChange: false,
+    validateOnBlur: false
   });
 
   // Surcharger handleSubmit pour éviter la navigation automatique
@@ -113,7 +117,8 @@ export const useEntrepriseForm = () => {
     if (parametres.entreprise) {
       genericFormHook.setFormData(parametres.entreprise);
     }
-  }, [parametres.entreprise, genericFormHook]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [parametres.entreprise]);
 
   /**
    * Handle selection of a company from search results

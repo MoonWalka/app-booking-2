@@ -1,5 +1,5 @@
 // src/components/concerts/desktop/ConcertView.js
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, memo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Alert } from 'react-bootstrap';
 import FormGenerator from '@/components/forms/FormGenerator';
@@ -25,21 +25,27 @@ import DeleteConcertModal from './DeleteConcertModal';
  * Composant de vue des détails d'un concert - Version Desktop
  * Gère ses propres données via les hooks
  */
-const ConcertView = ({ id: propId }) => {
+const ConcertView = memo(({ id: propId }) => {
   const { id: urlId } = useParams();
   const navigate = useNavigate();
   
   // Utiliser l'ID passé en prop s'il existe, sinon utiliser l'ID de l'URL
   const id = propId || urlId;
 
-  // LOG DEBUG : montage du composant ConcertView
-  console.log('[DEBUG][ConcertView] Montage avec id:', id);
-  
   // État pour la confirmation de suppression
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   
   // Utiliser le hook pour récupérer les données du concert
   const detailsHook = useConcertDetails(id);
+  
+  // ✅ DEBUG: Tracer les changements de detailsHook
+  // console.log('[DEBUG][ConcertView] detailsHook changed:', {
+  //   loading: detailsHook?.loading,
+  //   concert: !!detailsHook?.concert,
+  //   error: !!detailsHook?.error,
+  //   timestamp: Date.now()
+  // });
+  
   const {
     concert,
     lieu,
@@ -235,6 +241,9 @@ const ConcertView = ({ id: propId }) => {
     setShowDeleteConfirm(false);
   };
 
+  // ✅ DEBUG: Activer why-did-you-render
+  ConcertView.whyDidYouRender = true;
+
   return (
     <div className={styles.concertViewContainer || 'concert-view-container'}>
       {/* En-tête avec titre et boutons d'action */}
@@ -369,6 +378,9 @@ const ConcertView = ({ id: propId }) => {
       />
     </div>
   );
-};
+});
+
+// Ajouter un nom d'affichage pour le debugging
+ConcertView.displayName = 'ConcertView';
 
 export default ConcertView;

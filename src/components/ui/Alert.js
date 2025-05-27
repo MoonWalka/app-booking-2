@@ -77,7 +77,7 @@ const Alert = ({
 
 Alert.propTypes = {
   variant: PropTypes.oneOf(['success', 'danger', 'warning', 'info', 'light']),
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
   className: PropTypes.string,
   dismissible: PropTypes.bool,
   onDismiss: PropTypes.func,

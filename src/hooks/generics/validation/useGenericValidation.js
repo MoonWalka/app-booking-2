@@ -428,7 +428,8 @@ const useGenericValidation = (data = {}, validationRules = {}, options = {}) => 
     return () => {
       Object.values(timeouts).forEach(timeout => clearTimeout(timeout));
     };
-  }, [data, validateOnChange, enableValidation, debounceDelay, validateField, validationRules]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, validateOnChange, enableValidation, debounceDelay, validationRules]);
   
   // État de validation global
   const isValid = useMemo(() => {

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { doc, getDoc, setDoc } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
 
@@ -94,7 +94,7 @@ export const ParametresProvider = ({ children }) => {
     chargerParametres();
   }, []);
 
-  const sauvegarderParametres = async (section, nouvellesValeurs) => {
+  const sauvegarderParametres = useCallback(async (section, nouvellesValeurs) => {
     try {
       const parametresMisAJour = {
         ...parametres,
@@ -112,7 +112,7 @@ export const ParametresProvider = ({ children }) => {
       setError(err.message);
       return false;
     }
-  };
+  }, [parametres]);
 
   const value = {
     parametres,

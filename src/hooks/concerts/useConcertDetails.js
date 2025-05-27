@@ -1,5 +1,5 @@
 // src/hooks/concerts/useConcertDetails.js
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { doc, getDoc, db } from '@/services/firebase-service';
 
@@ -31,6 +31,14 @@ const useConcertDetails = (id, locationParam) => {
   // Détecter le mode édition basé sur l'URL
   const isEditMode = location.pathname.includes('/edit');
   
+  // ✅ DEBUG: Tracer les appels du hook
+  // console.log('[DEBUG][useConcertDetails] Hook called with:', {
+  //   id,
+  //   isEditMode,
+  //   pathname: location.pathname,
+  //   timestamp: Date.now()
+  // });
+  
   // États spécifiques au concert qui ne sont pas gérés par le hook générique
   const [cacheKey, setCacheKey] = useState(getCacheKey(id)); // NOUVEAU: Cache intelligent finalisé
   const [initialProgrammateurId, setInitialProgrammateurId] = useState(null);
@@ -46,8 +54,8 @@ const useConcertDetails = (id, locationParam) => {
   const concertStatus = useConcertStatus(); // NOUVEAU: Système de statuts avancé finalisé
   const concertAssociations = useConcertAssociations();
   
-  // Configuration pour les entités liées
-  const relatedEntities = [
+  // Configuration pour les entités liées - Stabilisée avec useMemo
+  const relatedEntities = useMemo(() => [
     {
       name: 'lieu',
       collection: 'lieux',
@@ -80,10 +88,17 @@ const useConcertDetails = (id, locationParam) => {
       type: 'one-to-one',
       essential: false // La structure peut être chargée à la demande
     }
-  ];
+  ], []); // Pas de dépendances car la configuration est statique
   
-  // Fonction pour transformer les données du concert
-  const transformConcertData = useCallback((data) => {
+  // ✅ CORRECTION MAJEURE: Stabiliser toutes les fonctions avec useRef
+  const transformConcertDataRef = useRef();
+  const validateConcertFormRef = useRef();
+  const formatConcertValueRef = useRef();
+  const handleSaveSuccessRef = useRef();
+  const handleDeleteSuccessRef = useRef();
+  
+  // Mettre à jour les références sans déclencher de re-renders
+  transformConcertDataRef.current = useCallback((data) => {
     // Stocker les IDs initiaux pour la gestion des relations bidirectionnelles
     if (data.programmateurId) {
       setInitialProgrammateurId(data.programmateurId);
@@ -104,8 +119,7 @@ const useConcertDetails = (id, locationParam) => {
     return data;
   }, []);
   
-  // Fonction pour valider le formulaire de concert
-  const validateConcertForm = useCallback((formData) => {
+  validateConcertFormRef.current = useCallback((formData) => {
     const errors = {};
     
     if (!formData.date) errors.date = 'La date est obligatoire';
@@ -118,43 +132,14 @@ const useConcertDetails = (id, locationParam) => {
     };
   }, []);
   
-  // Fonction pour formater les valeurs d'affichage
-  const formatConcertValue = useCallback((field, value) => {
+  formatConcertValueRef.current = useCallback((field, value) => {
     if (field === 'date') return formatDate(value);
     if (field === 'montant') return formatMontant(value);
     return value;
   }, []);
   
-  // Utilisation de useGenericEntityDetails avec les améliorations
-  // debugLog(`🎵 CONCERT_DETAILS: Appel de useGenericEntityDetails avec id: ${id}`, 'info', 'useConcertDetails');
-  const genericDetails = useGenericEntityDetails({
-    entityType: 'concert',
-    collectionName: 'concerts',
-    id,
-    initialMode: isEditMode ? 'edit' : 'view',  // Mode basé sur l'URL
-    relatedEntities,
-    autoLoadRelated: true, // Activer le chargement automatique des entités liées
-    transformData: transformConcertData,
-    validateFormFn: validateConcertForm,
-    formatValue: formatConcertValue,
-    checkDeletePermission: async () => true,
-    onSaveSuccess: null, // Sera défini ci-dessous
-    onDeleteSuccess: null, // Sera défini ci-dessous
-    navigate,
-    returnPath: '/concerts',
-    editPath: `/concerts/${id}/edit`, // Ajout du chemin d'édition
-    // Options avancées
-    useDeleteModal: true,
-    disableCache: false,
-    realtime: false // Explicitement désactiver le mode temps réel
-  });
-  
-  // debugLog(`📊 CONCERT_DETAILS: genericDetails retourné - entity: ${genericDetails?.entity ? 'PRÉSENT' : 'NULL'}, loading: ${genericDetails?.loading}, error: ${genericDetails?.error ? 'PRÉSENT' : 'NULL'}`, 'info', 'useConcertDetails');
-  // debugLog(`📊 CONCERT_DETAILS: Détail entity: ${JSON.stringify(genericDetails?.entity)}`, 'debug', 'useConcertDetails');
-  
-  // Callbacks pour les événements de sauvegarde et suppression
-  // Défini après l'initialisation de genericDetails pour pouvoir l'utiliser dans la dépendance
-  const handleSaveSuccess = useCallback((data) => {
+  // ✅ CORRECTION: Stabiliser les callbacks de succès
+  handleSaveSuccessRef.current = useCallback((data) => {
     // Mettre à jour les IDs initiaux pour la prochaine édition
     setInitialProgrammateurId(data.programmateurId || null);
     setInitialArtisteId(data.artisteId || null);
@@ -179,7 +164,7 @@ const useConcertDetails = (id, locationParam) => {
     concertForms.fetchFormData(data);
   }, [id, concertForms]);
   
-  const handleDeleteSuccess = useCallback(() => {
+  handleDeleteSuccessRef.current = useCallback(() => {
     // Notifier les autres composants
     try {
       const event = new CustomEvent('concertDeleted', { detail: { id } });
@@ -190,20 +175,40 @@ const useConcertDetails = (id, locationParam) => {
     navigate('/concerts');
   }, [id, navigate]);
   
-  // Mettre à jour les callbacks dans genericDetails - UTILISATION DE SETTER POUR ÉVITER MUTATION
-  const updateGenericDetailsOptions = useCallback(() => {
-    if (genericDetails && genericDetails.updateOptions) {
-      // console.log('[LOG][useConcertDetails] genericDetails initialisé, handleDelete:', typeof genericDetails.handleDelete);
-      genericDetails.updateOptions({
-        onSaveSuccess: handleSaveSuccess,
-        onDeleteSuccess: handleDeleteSuccess
-      });
-    }
-  }, [genericDetails, handleSaveSuccess, handleDeleteSuccess]);
+  // ✅ CORRECTION: Configuration ultra-stable avec références
+  const genericDetailsConfig = useMemo(() => ({
+    entityType: 'concert',
+    collectionName: 'concerts',
+    id,
+    initialMode: isEditMode ? 'edit' : 'view',
+    relatedEntities,
+    autoLoadRelated: true,
+    transformData: (data) => transformConcertDataRef.current(data),
+    validateFormFn: (formData) => validateConcertFormRef.current(formData),
+    formatValue: (field, value) => formatConcertValueRef.current(field, value),
+    checkDeletePermission: async () => true,
+    onSaveSuccess: (data) => handleSaveSuccessRef.current(data),
+    onDeleteSuccess: () => handleDeleteSuccessRef.current(),
+    navigate,
+    returnPath: '/concerts',
+    editPath: `/concerts/${id}/edit`,
+    useDeleteModal: true,
+    disableCache: false,
+    realtime: false
+  }), [id, isEditMode, relatedEntities, navigate]); // Dépendances réduites et stables
 
-  useEffect(() => {
-    updateGenericDetailsOptions();
-  }, [updateGenericDetailsOptions]);
+  const genericDetails = useGenericEntityDetails(genericDetailsConfig);
+  
+  // ✅ DEBUG: Tracer les changements de genericDetails
+  // console.log('[DEBUG][useConcertDetails] genericDetails changed:', {
+  //   hasEntity: !!genericDetails?.entity,
+  //   loading: genericDetails?.loading,
+  //   error: !!genericDetails?.error,
+  //   timestamp: Date.now()
+  // });
+  
+  // debugLog(`📊 CONCERT_DETAILS: genericDetails retourné - entity: ${genericDetails?.entity ? 'PRÉSENT' : 'NULL'}, loading: ${genericDetails?.loading}, error: ${genericDetails?.error ? 'PRÉSENT' : 'NULL'}`, 'info', 'useConcertDetails');
+  // debugLog(`📊 CONCERT_DETAILS: Détail entity: ${JSON.stringify(genericDetails?.entity)}`, 'debug', 'useConcertDetails');
   
   // Fonction pour gérer les mises à jour des relations bidirectionnelles
   const handleBidirectionalUpdates = useCallback(async () => {
@@ -799,7 +804,7 @@ const useConcertDetails = (id, locationParam) => {
     handleSave: genericDetails?.handleSubmit || (() => {}),
     handleDelete: genericDetails?.handleDelete || (() => {}),
     handleSubmit: handleSubmitWithRelations,
-    validateForm: validateConcertForm,
+    validateForm: (formData) => validateConcertFormRef.current(formData),
     handleCancel,
     
     // Fonctions spécifiques aux concerts

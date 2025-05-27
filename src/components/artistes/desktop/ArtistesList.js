@@ -1,5 +1,5 @@
 // src/components/artistes/desktop/ArtistesList.js
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useMemo } from 'react';
 import { Container, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Alert from '@/components/ui/Alert';
@@ -21,6 +21,9 @@ import ArtistesLoadMore from '../sections/ArtistesLoadMore';
  * Refactorisé pour utiliser useArtistesList basé sur hooks génériques optimisés
  */
 const ArtistesList = () => {
+  // 🧪 DIAGNOSTIC: Compteur de renders
+  console.count("🎨 [ARTISTES] ArtistesList render");
+  
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
   const searchInputRef = useRef(null);
@@ -51,8 +54,8 @@ const ArtistesList = () => {
     cacheEnabled: false
   });
 
-  // MIGRATION: Utilisation du hook optimisé pour la suppression
-  const { handleDelete } = useDeleteArtiste(useCallback((deletedId) => {
+  // ✅ CORRECTION: Stabiliser le callback de suppression
+  const deleteCallback = useCallback((deletedId) => {
     if (isUpdatingRef.current) return;
     isUpdatingRef.current = true;
     
@@ -61,7 +64,9 @@ const ArtistesList = () => {
     } finally {
       isUpdatingRef.current = false;
     }
-  }, [setArtistes]));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // ✅ Pas de dépendances, utilise des refs
+    const { handleDelete } = useDeleteArtiste(deleteCallback);
 
   // Navigation vers le formulaire de création d'artiste
   const handleAddClick = useCallback(() => {
@@ -145,8 +150,8 @@ const ArtistesList = () => {
     }
   }, [resetFilters, setSearchTerm]);
 
-  // Vérifier si des filtres sont actifs
-  const hasActiveFilters = useCallback(() => {
+  // ✅ CORRECTION: Mémoiser hasActiveFilters au lieu d'useCallback
+  const hasActiveFilters = useMemo(() => {
     return searchTerm || (filters && Object.values(filters).some(f => f && f !== 'all'));
   }, [searchTerm, filters]);
 
@@ -200,7 +205,7 @@ const ArtistesList = () => {
         sortDirection={sortDirection}
         onSortDirectionToggle={handleSortDirectionToggle}
         onResetFilters={handleResetFilters}
-        hasActiveFilters={hasActiveFilters()}
+        hasActiveFilters={hasActiveFilters}
         showDropdown={showDropdown}
         searchResults={filteredArtistes}
         noResults={noResults}

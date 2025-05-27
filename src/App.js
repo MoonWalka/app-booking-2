@@ -32,6 +32,7 @@ import ConcertsList from '@/components/concerts/ConcertsList';
 import ConcertDetails from '@/components/concerts/ConcertDetails';
 // Import du dashboard de debug unifié (uniquement en développement)
 import UnifiedDebugDashboard from '@/components/debug/UnifiedDebugDashboard';
+import TestParametresVersions from '@/pages/TestParametresVersions';
 
 // Import de l'outil de diagnostic en mode développement uniquement
 if (process.env.NODE_ENV === 'development') {
@@ -180,6 +181,7 @@ function App() {
               }>
                 <Routes>
                   <Route path="/test-buttons" element={<TestButtons />} />
+                  <Route path="/test-parametres-versions" element={<TestParametresVersions />} />
                   {/* Routes publiques pour les formulaires */}
                   <Route path="/formulaire/:concertId/:token" element={<FormResponsePage />} />
                   

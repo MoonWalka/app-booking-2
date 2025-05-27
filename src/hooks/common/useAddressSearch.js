@@ -72,10 +72,13 @@ const useAddressSearch = (options = {}) => {
     }
   }, [selectedAddress, onAddressChange]);
 
+  // ✅ CORRECTION BOUCLE INFINIE: Référence stable pour handleSearch
+  const handleSearchRef = useRef();
+  
   /**
-   * Recherche des adresses via l'API LocationIQ - NOUVEAU: Mémorisée pour optimisation
+   * Recherche des adresses via l'API LocationIQ - CORRIGÉ: Sans dépendances circulaires
    */
-  const handleSearch = useCallback(async () => {
+  handleSearchRef.current = async () => {
     // Détermine le terme de recherche selon le mode d'utilisation
     const query = formData ? formData.adresse : searchTerm;
     
@@ -94,9 +97,9 @@ const useAddressSearch = (options = {}) => {
     } finally {
       setIsSearching(false);
     }
-  }, [formData, searchTerm, searchAddress]); // NOUVEAU: Dépendances stabilisées
+  };
 
-  // Effet pour déclencher la recherche lorsque le terme de recherche change
+  // ✅ CORRECTION BOUCLE INFINIE: useEffect sans dépendance circulaire
   useEffect(() => {
     if (searchTimeoutRef.current) {
       clearTimeout(searchTimeoutRef.current);
@@ -106,7 +109,7 @@ const useAddressSearch = (options = {}) => {
         (formData?.adresse && formData.adresse.trim().length > 2 && addressFieldActive)) {
       setIsSearching(true);
       searchTimeoutRef.current = setTimeout(() => {
-        handleSearch();
+        handleSearchRef.current();
       }, 500);
     } else {
       setAddressResults([]);
@@ -118,7 +121,7 @@ const useAddressSearch = (options = {}) => {
         clearTimeout(searchTimeoutRef.current);
       }
     };
-  }, [searchTerm, formData?.adresse, addressFieldActive, handleSearch]); // NOUVEAU: Dépendance corrigée
+  }, [searchTerm, formData?.adresse, addressFieldActive]); // ✅ CORRIGÉ: handleSearch retiré des dépendances
 
   /**
    * Sélectionne une adresse dans les résultats
@@ -224,6 +227,13 @@ const useAddressSearch = (options = {}) => {
     
     return parts.join(', ');
   };
+
+  // ✅ CORRECTION: Fonction handleSearch stable (définie avant les returns)
+  const handleSearch = useCallback(() => {
+    if (handleSearchRef.current) {
+      handleSearchRef.current();
+    }
+  }, []);
 
   // Retourne différentes interfaces selon le mode d'utilisation (formulaire ou standard)
   if (formData && updateFormData) {

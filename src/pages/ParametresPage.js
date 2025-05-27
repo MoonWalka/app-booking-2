@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useNavigate, useLocation } from 'react-router-dom';
-import ParametresEntreprise from '../components/parametres/ParametresEntrepriseSimple';
+import ParametresEntreprise from '../components/parametres/ParametresEntrepriseRobuste';
 import ParametresGeneraux from '../components/parametres/ParametresGenerauxSimple';
 import ParametresCompte from '../components/parametres/ParametresCompteSimple';
 import {

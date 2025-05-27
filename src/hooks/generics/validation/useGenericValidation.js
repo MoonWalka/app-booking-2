@@ -7,7 +7,7 @@
  * @phase Phase 2 - Généralisation - Semaine 3
  */
 
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 
 /**
  * Hook générique pour la validation de données
@@ -410,7 +410,11 @@ const useGenericValidation = (data = {}, validationRules = {}, options = {}) => 
     }
   }, [validationRules]);
   
-  // Validation en temps réel des champs modifiés
+  // ✅ CORRECTION BOUCLE INFINIE: Référence stable pour validateField
+  const validateFieldRef = useRef(validateField);
+  validateFieldRef.current = validateField;
+  
+  // Validation en temps réel des champs modifiés - CORRIGÉ
   useEffect(() => {
     if (!validateOnChange || !enableValidation) return;
     
@@ -420,7 +424,7 @@ const useGenericValidation = (data = {}, validationRules = {}, options = {}) => 
       if (validationRules[fieldName]) {
         // Debounce pour éviter trop de validations
         timeouts[fieldName] = setTimeout(() => {
-          validateField(fieldName, data[fieldName], data);
+          validateFieldRef.current(fieldName, data[fieldName], data);
         }, debounceDelay);
       }
     });
@@ -428,8 +432,7 @@ const useGenericValidation = (data = {}, validationRules = {}, options = {}) => 
     return () => {
       Object.values(timeouts).forEach(timeout => clearTimeout(timeout));
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, validateOnChange, enableValidation, debounceDelay, validationRules]);
+  }, [data, validateOnChange, enableValidation, debounceDelay, validationRules]); // ✅ validateField retiré des dépendances
   
   // État de validation global
   const isValid = useMemo(() => {

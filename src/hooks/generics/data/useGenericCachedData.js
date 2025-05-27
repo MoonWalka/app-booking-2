@@ -325,40 +325,55 @@ const useGenericCachedData = (entityType, cacheConfig = {}, options = {}) => {
     }
   }, [levels, generateCacheKey, compressData, tags]);
   
-  // Fonction unifiée de récupération du cache
+  // ✅ CORRECTION: Références stables pour éviter les dépendances circulaires
+  const levelsRef = useRef(levels);
+  const getFromMemoryCacheRef = useRef(getFromMemoryCache);
+  const getFromSessionCacheRef = useRef(getFromSessionCache);
+  const getFromLocalCacheRef = useRef(getFromLocalCache);
+  const setToMemoryCacheRef = useRef(setToMemoryCache);
+  const setToSessionCacheRef = useRef(setToSessionCache);
+  
+  levelsRef.current = levels;
+  getFromMemoryCacheRef.current = getFromMemoryCache;
+  getFromSessionCacheRef.current = getFromSessionCache;
+  getFromLocalCacheRef.current = getFromLocalCache;
+  setToMemoryCacheRef.current = setToMemoryCache;
+  setToSessionCacheRef.current = setToSessionCache;
+  
+  // Fonction unifiée de récupération du cache - CORRIGÉ
   const getCacheData = useCallback((key) => {
     // Ordre de priorité : memory > session > local
     let cachedData = null;
     
-    if (levels.includes('memory')) {
-      cachedData = getFromMemoryCache(key);
+    if (levelsRef.current.includes('memory')) {
+      cachedData = getFromMemoryCacheRef.current(key);
       if (cachedData) {
         setIsFromCache(true);
         return cachedData;
       }
     }
     
-    if (levels.includes('session')) {
-      cachedData = getFromSessionCache(key);
+    if (levelsRef.current.includes('session')) {
+      cachedData = getFromSessionCacheRef.current(key);
       if (cachedData) {
         // Remonter vers le cache mémoire
-        if (levels.includes('memory')) {
-          setToMemoryCache(key, cachedData);
+        if (levelsRef.current.includes('memory')) {
+          setToMemoryCacheRef.current(key, cachedData);
         }
         setIsFromCache(true);
         return cachedData;
       }
     }
     
-    if (levels.includes('local')) {
-      cachedData = getFromLocalCache(key);
+    if (levelsRef.current.includes('local')) {
+      cachedData = getFromLocalCacheRef.current(key);
       if (cachedData) {
         // Remonter vers les caches supérieurs
-        if (levels.includes('memory')) {
-          setToMemoryCache(key, cachedData);
+        if (levelsRef.current.includes('memory')) {
+          setToMemoryCacheRef.current(key, cachedData);
         }
-        if (levels.includes('session')) {
-          setToSessionCache(key, cachedData);
+        if (levelsRef.current.includes('session')) {
+          setToSessionCacheRef.current(key, cachedData);
         }
         setIsFromCache(true);
         return cachedData;
@@ -367,18 +382,22 @@ const useGenericCachedData = (entityType, cacheConfig = {}, options = {}) => {
     
     setIsFromCache(false);
     return null;
-  }, [levels, getFromMemoryCache, getFromSessionCache, getFromLocalCache, setToMemoryCache, setToSessionCache]);
+  }, []); // ✅ Aucune dépendance car on utilise les références
   
-  // Fonction unifiée de mise en cache
+  // ✅ CORRECTION: Références stables pour setCacheData
+  const setToLocalCacheRef = useRef(setToLocalCache);
+  setToLocalCacheRef.current = setToLocalCache;
+  
+  // Fonction unifiée de mise en cache - CORRIGÉ
   const setCacheData = useCallback((key, data) => {
-    if (levels.includes('memory')) {
-      setToMemoryCache(key, data);
+    if (levelsRef.current.includes('memory')) {
+      setToMemoryCacheRef.current(key, data);
     }
-    if (levels.includes('session')) {
-      setToSessionCache(key, data);
+    if (levelsRef.current.includes('session')) {
+      setToSessionCacheRef.current(key, data);
     }
-    if (levels.includes('local')) {
-      setToLocalCache(key, data);
+    if (levelsRef.current.includes('local')) {
+      setToLocalCacheRef.current(key, data);
     }
     
     // Mise à jour des statistiques
@@ -389,9 +408,16 @@ const useGenericCachedData = (entityType, cacheConfig = {}, options = {}) => {
         lastHit: new Date()
       }));
     }
-  }, [levels, setToMemoryCache, setToSessionCache, setToLocalCache, enableStats]);
+  }, [enableStats]); // ✅ Dépendances stables uniquement
   
-  // Invalidation du cache
+  // ✅ CORRECTION: Références stables pour invalidate
+  const generateCacheKeyRef = useRef(generateCacheKey);
+  const onCacheInvalidateRef = useRef(onCacheInvalidate);
+  
+  generateCacheKeyRef.current = generateCacheKey;
+  onCacheInvalidateRef.current = onCacheInvalidate;
+  
+  // Invalidation du cache - CORRIGÉ
   const invalidate = useCallback((keyOrTags = null) => {
     if (strategy === 'tags' && keyOrTags && Array.isArray(keyOrTags)) {
       // Invalidation par tags
@@ -410,7 +436,7 @@ const useGenericCachedData = (entityType, cacheConfig = {}, options = {}) => {
       });
     } else if (keyOrTags) {
       // Invalidation par clé spécifique
-      const fullKey = generateCacheKey(keyOrTags);
+      const fullKey = generateCacheKeyRef.current(keyOrTags);
       memoryCacheRef.current.delete(fullKey);
       if (typeof window !== 'undefined') {
         sessionStorage.removeItem(fullKey);
@@ -423,7 +449,7 @@ const useGenericCachedData = (entityType, cacheConfig = {}, options = {}) => {
       tagsMapRef.current.clear();
       if (typeof window !== 'undefined') {
         // Nettoyer seulement les clés de cette entité
-        const prefix = generateCacheKey('');
+        const prefix = generateCacheKeyRef.current('');
         Object.keys(sessionStorage).forEach(key => {
           if (key.startsWith(prefix)) {
             sessionStorage.removeItem(key);
@@ -438,8 +464,8 @@ const useGenericCachedData = (entityType, cacheConfig = {}, options = {}) => {
     }
     
     // Callback d'invalidation
-    if (onCacheInvalidate) {
-      onCacheInvalidate(keyOrTags, {
+    if (onCacheInvalidateRef.current) {
+      onCacheInvalidateRef.current(keyOrTags, {
         strategy,
         invalidatedKeys: keyOrTags ? (Array.isArray(keyOrTags) ? keyOrTags : [keyOrTags]) : ['all'],
         timestamp: new Date(),
@@ -454,9 +480,20 @@ const useGenericCachedData = (entityType, cacheConfig = {}, options = {}) => {
         size: memoryCacheRef.current.size
       }));
     }
-  }, [strategy, generateCacheKey, enableStats, onCacheInvalidate]);
+  }, [strategy, enableStats]); // ✅ Dépendances stables uniquement
   
-  // Mise à jour des statistiques de cache
+  // ✅ CORRECTION: Références stables pour updateCacheStats
+  const onCacheHitRef = useRef(onCacheHit);
+  const onCacheMissRef = useRef(onCacheMiss);
+  const onCacheHitOptionRef = useRef(onCacheHitOption);
+  const onCacheMissOptionRef = useRef(onCacheMissOption);
+  
+  onCacheHitRef.current = onCacheHit;
+  onCacheMissRef.current = onCacheMiss;
+  onCacheHitOptionRef.current = onCacheHitOption;
+  onCacheMissOptionRef.current = onCacheMissOption;
+  
+  // Mise à jour des statistiques de cache - CORRIGÉ
   const updateCacheStats = useCallback((isHit) => {
     if (!enableStats) return;
     
@@ -474,15 +511,15 @@ const useGenericCachedData = (entityType, cacheConfig = {}, options = {}) => {
     });
     
     // Callbacks de cache avec métadonnées
-    if (isHit && onCacheHit) {
-      onCacheHit({
+    if (isHit && onCacheHitRef.current) {
+      onCacheHitRef.current({
         cacheKey,
         strategy,
         level: 'memory', // TODO: détecter le niveau réel
         timestamp: new Date()
       });
-    } else if (!isHit && onCacheMiss) {
-      onCacheMiss({
+    } else if (!isHit && onCacheMissRef.current) {
+      onCacheMissRef.current({
         cacheKey,
         strategy,
         timestamp: new Date(),
@@ -491,63 +528,74 @@ const useGenericCachedData = (entityType, cacheConfig = {}, options = {}) => {
     }
     
     // Fallback vers les callbacks des options si définis
-    if (isHit && onCacheHitOption) {
-      onCacheHitOption();
-    } else if (!isHit && onCacheMissOption) {
-      onCacheMissOption();
+    if (isHit && onCacheHitOptionRef.current) {
+      onCacheHitOptionRef.current();
+    } else if (!isHit && onCacheMissOptionRef.current) {
+      onCacheMissOptionRef.current();
     }
-  }, [enableStats, onCacheHit, onCacheMiss, onCacheHitOption, onCacheMissOption, cacheKey, strategy]);
+  }, [enableStats, cacheKey, strategy]); // ✅ Dépendances stables uniquement
   
-  // Effet de récupération des données avec cache
+  // ✅ CORRECTION: Références stables pour l'effet de cache
+  const updateCacheStatsRef = useRef(updateCacheStats);
+  updateCacheStatsRef.current = updateCacheStats;
+  
+  // Effet de récupération des données avec cache - CORRIGÉ
   useEffect(() => {
     if (!cacheKey) return;
     
-    const cachedData = getCacheData(cacheKey);
+    const cachedData = getCacheDataRef.current(cacheKey);
     if (cachedData) {
-      updateCacheStats(true);
+      updateCacheStatsRef.current(true);
       // Les données sont déjà définies via le DataFetcher
     } else {
-      updateCacheStats(false);
-      refetch(); // Déclencher la récupération
+      updateCacheStatsRef.current(false);
+      refetchRef.current(); // Déclencher la récupération
     }
-  }, [cacheKey, getCacheData, updateCacheStats, refetch]);
+  }, [cacheKey]); // ✅ Dépendances stables uniquement
   
-  // Préchauffage du cache
+  // ✅ CORRECTION: Références stables pour warmCache
+  const getCacheDataRef = useRef(getCacheData);
+  const setCacheDataRef = useRef(setCacheData);
+  const refetchRef = useRef(refetch);
+  
+  getCacheDataRef.current = getCacheData;
+  setCacheDataRef.current = setCacheData;
+  refetchRef.current = refetch;
+  
+  // Préchauffage du cache - CORRIGÉ
   const warmCache = useCallback(async (warmingQueries = []) => {
     if (!warmingQueries.length) return;
-    
     
     try {
       for (const queryConfig of warmingQueries) {
         const warmKey = `warm_${JSON.stringify(queryConfig)}`;
         
         // Vérifier si déjà en cache
-        const cached = getCacheData(warmKey);
+        const cached = getCacheDataRef.current(warmKey);
         if (cached) continue;
         
         // Simuler une requête de préchauffage
         // En production, cela ferait une vraie requête avec queryConfig
-        const warmData = await refetch(queryConfig);
+        const warmData = await refetchRef.current(queryConfig);
         if (warmData) {
-          setCacheData(warmKey, warmData);
+          setCacheDataRef.current(warmKey, warmData);
         }
       }
       
     } catch (error) {
       console.error(`❌ Erreur préchauffage ${entityType}:`, error);
     }
-  }, [getCacheData, setCacheData, refetch, entityType]);
+  }, [entityType]); // ✅ Dépendances stables uniquement
   
-  // Nettoyage complet du cache
+  // Nettoyage complet du cache - CORRIGÉ
   const clearCache = useCallback(() => {
-    
     // Vider tous les niveaux de cache
     memoryCacheRef.current.clear();
     lruOrderRef.current = [];
     tagsMapRef.current.clear();
     
     if (typeof window !== 'undefined') {
-      const prefix = generateCacheKey('');
+      const prefix = generateCacheKeyRef.current('');
       
       // Nettoyer sessionStorage
       Object.keys(sessionStorage).forEach(key => {
@@ -575,21 +623,19 @@ const useGenericCachedData = (entityType, cacheConfig = {}, options = {}) => {
     });
     
     setIsFromCache(false);
-    
-  }, [generateCacheKey]);
+  }, []); // ✅ Aucune dépendance car on utilise la référence
 
-  // Gestion du temps réel
+  // Gestion du temps réel - CORRIGÉ
   useEffect(() => {
     if (!enableRealTime || !enableCache) return;
-    
     
     // Simuler un abonnement temps réel (en production, utiliser onSnapshot)
     const subscription = setInterval(() => {
       // Vérifier si les données ont changé
-      const currentData = getCacheData(cacheKey);
+      const currentData = getCacheDataRef.current(cacheKey);
       if (currentData) {
         // Déclencher un refetch périodique pour simuler le temps réel
-        refetch();
+        refetchRef.current();
       }
     }, 30000); // Toutes les 30 secondes
     
@@ -601,24 +647,23 @@ const useGenericCachedData = (entityType, cacheConfig = {}, options = {}) => {
         setRealTimeSubscription(null);
       }
     };
-  }, [enableRealTime, enableCache, cacheKey, getCacheData, refetch]);
+  }, [enableRealTime, enableCache, cacheKey]); // ✅ Dépendances stables uniquement
   
-  // Fonction de mise à jour optimiste
+  // Fonction de mise à jour optimiste - CORRIGÉ
   const applyOptimisticUpdate = useCallback((key, updates) => {
     if (!enableOptimisticUpdates) return;
-    
     
     // Stocker la mise à jour optimiste
     setOptimisticUpdates(prev => new Map(prev.set(key, updates)));
     
     // Appliquer immédiatement au cache
-    const currentData = getCacheData(key);
+    const currentData = getCacheDataRef.current(key);
     if (currentData) {
       const optimisticData = Array.isArray(currentData) 
         ? currentData.map(item => item.id === updates.id ? { ...item, ...updates } : item)
         : { ...currentData, ...updates };
       
-      setCacheData(key, optimisticData);
+      setCacheDataRef.current(key, optimisticData);
     }
     
     // Nettoyer après un délai
@@ -629,14 +674,18 @@ const useGenericCachedData = (entityType, cacheConfig = {}, options = {}) => {
         return newMap;
       });
     }, 5000);
-  }, [enableOptimisticUpdates, getCacheData, setCacheData]);
+  }, [enableOptimisticUpdates]); // ✅ Dépendances stables uniquement
   
-  // Fonction de gestion d'erreur avancée
+  // ✅ CORRECTION: Références stables pour handleError
+  const onErrorRef = useRef(onError);
+  onErrorRef.current = onError;
+  
+  // Fonction de gestion d'erreur avancée - CORRIGÉ
   const handleError = useCallback((error, context = {}) => {
     console.error(`❌ Erreur cache ${entityType}:`, error, context);
     
-    if (onError) {
-      onError(error, {
+    if (onErrorRef.current) {
+      onErrorRef.current(error, {
         entityType,
         cacheKey,
         context,
@@ -650,10 +699,10 @@ const useGenericCachedData = (entityType, cacheConfig = {}, options = {}) => {
       const retryCount = errorRetryRef.current.get(cacheKey) || 0;
       if (retryCount < 3) {
         errorRetryRef.current.set(cacheKey, retryCount + 1);
-        setTimeout(() => refetch(), Math.pow(2, retryCount) * 1000);
+        setTimeout(() => refetchRef.current(), Math.pow(2, retryCount) * 1000);
       }
     }
-  }, [entityType, cacheKey, cacheStats, onError, refetch]);
+  }, [entityType, cacheKey, cacheStats]); // ✅ Dépendances stables uniquement
 
   return {
     // Données

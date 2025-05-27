@@ -241,8 +241,7 @@ const ConcertView = memo(({ id: propId }) => {
     setShowDeleteConfirm(false);
   };
 
-  // ✅ DEBUG: Activer why-did-you-render
-  ConcertView.whyDidYouRender = true;
+
 
   return (
     <div className={styles.concertViewContainer || 'concert-view-container'}>

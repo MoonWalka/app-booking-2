@@ -23,7 +23,7 @@ const StructureLegalSection = ({
     <div className={styles.sectionContent}>
       {isEditing ? (
         // Mode édition
-        <Form>
+        <>
           <Row>
             <Col md={6}>
               <Form.Group className="mb-3">
@@ -91,7 +91,7 @@ const StructureLegalSection = ({
               </Form.Group>
             </Col>
           </Row>
-        </Form>
+        </>
       ) : (
         // Mode visualisation
         <div className={styles.infoGrid}>

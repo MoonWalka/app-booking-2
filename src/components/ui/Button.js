@@ -117,7 +117,7 @@ Button.propTypes = {
   variant: PropTypes.string,
   size: PropTypes.string,
   className: PropTypes.string,
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
   onClick: PropTypes.func,
   type: PropTypes.string,
   disabled: PropTypes.bool,

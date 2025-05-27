@@ -210,8 +210,9 @@ const useConcertDetails = (id, locationParam) => {
   // debugLog(`📊 CONCERT_DETAILS: genericDetails retourné - entity: ${genericDetails?.entity ? 'PRÉSENT' : 'NULL'}, loading: ${genericDetails?.loading}, error: ${genericDetails?.error ? 'PRÉSENT' : 'NULL'}`, 'info', 'useConcertDetails');
   // debugLog(`📊 CONCERT_DETAILS: Détail entity: ${JSON.stringify(genericDetails?.entity)}`, 'debug', 'useConcertDetails');
   
-  // Fonction pour gérer les mises à jour des relations bidirectionnelles
-  const handleBidirectionalUpdates = useCallback(async () => {
+  // Fonction pour gérer les mises à jour des relations bidirectionnelles - STABILISÉE
+  const handleBidirectionalUpdatesRef = useRef();
+  handleBidirectionalUpdatesRef.current = useCallback(async () => {
     const { entity, relatedData } = genericDetails || {};
     
     if (!entity || !genericDetails) return;
@@ -278,8 +279,13 @@ const useConcertDetails = (id, locationParam) => {
     }
   }, [id, genericDetails, initialProgrammateurId, initialArtisteId, initialStructureId, initialLieuId, concertAssociations]);
   
-  // Fonction pour récupérer les entités nécessaires aux relations bidirectionnelles
-  const fetchRelatedEntities = useCallback(async () => {
+  const handleBidirectionalUpdates = useCallback(async () => {
+    return handleBidirectionalUpdatesRef.current();
+  }, []);
+  
+  // Fonction pour récupérer les entités nécessaires aux relations bidirectionnelles - STABILISÉE
+  const fetchRelatedEntitiesRef = useRef();
+  fetchRelatedEntitiesRef.current = useCallback(async () => {
     const { entity, relatedData } = genericDetails || {};
     if (!entity || !genericDetails) return null;
   
@@ -368,6 +374,8 @@ const useConcertDetails = (id, locationParam) => {
     return results;
   }, [genericDetails, initialProgrammateurId, initialArtisteId, initialStructureId, initialLieuId]);
   
+
+  
   // Extension de handleSubmit pour gérer les relations bidirectionnelles
   const handleSubmitWithRelations = useCallback(async (e) => {
     if (!genericDetails) return;
@@ -418,12 +426,12 @@ const useConcertDetails = (id, locationParam) => {
       const updateBidirectionalRelations = async () => {
         try {
           // Attendre que toutes les entités soient chargées
-          const entitiesLoaded = await fetchRelatedEntities();
+          const entitiesLoaded = await fetchRelatedEntitiesRef.current();
           
           // Vérifier que les entités sont bien chargées avant de procéder
           if (entitiesLoaded && Object.keys(entitiesLoaded).length > 0) {
             // Effectuer les mises à jour bidirectionnelles
-            await handleBidirectionalUpdates();
+            await handleBidirectionalUpdatesRef.current();
             
             // Marquer comme déjà exécuté pour éviter les doubles appels
             bidirectionalUpdatesRef.current = true;
@@ -436,7 +444,7 @@ const useConcertDetails = (id, locationParam) => {
       // Exécuter la fonction asynchrone
       updateBidirectionalRelations();
     }
-  }, [id, fetchRelatedEntities, handleBidirectionalUpdates]); // Dépendances réduites et stables
+  }, [id]); // Dépendances ultra-réduites et stables
   
   // Réinitialiser le guard si l'ID change
   useEffect(() => {

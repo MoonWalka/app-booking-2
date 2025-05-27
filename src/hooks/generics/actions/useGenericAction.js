@@ -1,13 +1,13 @@
 /**
- * @fileoverview Hook générique pour les actions CRUD
- * Hook générique créé lors de la Phase 2 de généralisation
+ * @fileoverview Hook générique pour les actions CRUD - VERSION ROBUSTE
+ * Version refactorisée pour éliminer les boucles infinies
  * 
  * @author TourCraft Team
  * @since 2024
- * @phase Phase 2 - Généralisation
+ * @phase Phase 2 - Généralisation - Refactor Robuste
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { db } from '@/services/firebase-service';
 import { 
   collection, 
@@ -74,57 +74,62 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
   const [error, setError] = useState(null);
   
   const { 
-    onCreate, 
-    onUpdate, 
-    onDelete, 
+    onSuccess, 
     onError,
     validateBeforeAction = true 
   } = actionConfig;
   
   const { 
-    enableLogging = true,
+    enableLogging = false, // ✅ CORRECTION: Désactiver les logs par défaut
     autoResetError = true 
   } = options;
   
-  // Fonction de création
-  const create = useCallback(async (data) => {
+  // ✅ CORRECTION: Références stables pour les callbacks
+  const onSuccessRef = useRef(onSuccess);
+  const onErrorRef = useRef(onError);
+  
+  onSuccessRef.current = onSuccess;
+  onErrorRef.current = onError;
+  
+  // ✅ CORRECTION: Fonction de création stabilisée
+  const create = useCallback(async (data, customId = null) => {
     setLoading(true);
     setError(null);
     
     try {
-      if (enableLogging) {
-      }
-      
-      // Validation optionnelle
       if (validateBeforeAction && !data) {
         throw new Error('Données manquantes pour la création');
       }
       
-      // Ajouter les métadonnées
       const entityData = {
         ...data,
         createdAt: new Date(),
         updatedAt: new Date()
       };
       
-      const docRef = await addDoc(collection(db, entityType), entityData);
-      const result = { id: docRef.id, ...entityData };
-      
-      if (onCreate) {
-        onCreate(result);
+      let result;
+      if (customId) {
+        // Création avec ID personnalisé
+        await updateDoc(doc(db, entityType, customId), entityData);
+        result = { id: customId, ...entityData };
+      } else {
+        // Création avec ID auto-généré
+        const docRef = await addDoc(collection(db, entityType), entityData);
+        result = { id: docRef.id, ...entityData };
       }
       
-      if (enableLogging) {
+      if (onSuccessRef.current) {
+        onSuccessRef.current(result, 'create');
       }
       
       return result;
       
     } catch (err) {
-      const errorMessage = `Erreur lors de la création de ${entityType}: ${err.message}`;
+      const errorMessage = `Erreur création ${entityType}: ${err.message}`;
       setError(errorMessage);
       
-      if (onError) {
-        onError(err);
+      if (onErrorRef.current) {
+        onErrorRef.current(err, 'create');
       }
       
       if (enableLogging) {
@@ -139,17 +144,14 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
         setTimeout(() => setError(null), 5000);
       }
     }
-  }, [entityType, onCreate, onError, validateBeforeAction, enableLogging, autoResetError]);
+  }, [entityType, validateBeforeAction, enableLogging, autoResetError]);
   
-  // Fonction de mise à jour
+  // ✅ CORRECTION: Fonction de mise à jour stabilisée
   const update = useCallback(async (id, data) => {
     setLoading(true);
     setError(null);
     
     try {
-      if (enableLogging) {
-      }
-      
       if (!id) {
         throw new Error('ID manquant pour la mise à jour');
       }
@@ -162,21 +164,18 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
       await updateDoc(doc(db, entityType, id), updateData);
       const result = { id, ...updateData };
       
-      if (onUpdate) {
-        onUpdate(result);
-      }
-      
-      if (enableLogging) {
+      if (onSuccessRef.current) {
+        onSuccessRef.current(result, 'update');
       }
       
       return result;
       
     } catch (err) {
-      const errorMessage = `Erreur lors de la mise à jour de ${entityType}: ${err.message}`;
+      const errorMessage = `Erreur mise à jour ${entityType}: ${err.message}`;
       setError(errorMessage);
       
-      if (onError) {
-        onError(err);
+      if (onErrorRef.current) {
+        onErrorRef.current(err, 'update');
       }
       
       if (enableLogging) {
@@ -191,38 +190,32 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
         setTimeout(() => setError(null), 5000);
       }
     }
-  }, [entityType, onUpdate, onError, enableLogging, autoResetError]);
+  }, [entityType, enableLogging, autoResetError]);
   
-  // Fonction de suppression
+  // ✅ CORRECTION: Fonction de suppression stabilisée
   const remove = useCallback(async (id) => {
     setLoading(true);
     setError(null);
     
     try {
-      if (enableLogging) {
-      }
-      
       if (!id) {
         throw new Error('ID manquant pour la suppression');
       }
       
       await deleteDoc(doc(db, entityType, id));
       
-      if (onDelete) {
-        onDelete(id);
-      }
-      
-      if (enableLogging) {
+      if (onSuccessRef.current) {
+        onSuccessRef.current(id, 'delete');
       }
       
       return id;
       
     } catch (err) {
-      const errorMessage = `Erreur lors de la suppression de ${entityType}: ${err.message}`;
+      const errorMessage = `Erreur suppression ${entityType}: ${err.message}`;
       setError(errorMessage);
       
-      if (onError) {
-        onError(err);
+      if (onErrorRef.current) {
+        onErrorRef.current(err, 'delete');
       }
       
       if (enableLogging) {
@@ -237,17 +230,23 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
         setTimeout(() => setError(null), 5000);
       }
     }
-  }, [entityType, onDelete, onError, enableLogging, autoResetError]);
+  }, [entityType, enableLogging, autoResetError]);
   
-  // Fonction d'opération en lot
+  // ✅ CORRECTION: Références stables pour les fonctions CRUD
+  const createRef = useRef(create);
+  const updateRef = useRef(update);
+  const removeRef = useRef(remove);
+  
+  createRef.current = create;
+  updateRef.current = update;
+  removeRef.current = remove;
+  
+  // ✅ CORRECTION: Fonction d'opération en lot sans dépendances circulaires
   const batchOperation = useCallback(async (operations) => {
     setLoading(true);
     setError(null);
     
     try {
-      if (enableLogging) {
-      }
-      
       const results = [];
       
       for (const operation of operations) {
@@ -255,17 +254,17 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
         
         switch (type) {
           case 'create':
-            const created = await create(data);
+            const created = await createRef.current(data);
             results.push({ type: 'create', result: created });
             break;
             
           case 'update':
-            const updated = await update(id, data);
+            const updated = await updateRef.current(id, data);
             results.push({ type: 'update', result: updated });
             break;
             
           case 'delete':
-            const deleted = await remove(id);
+            const deleted = await removeRef.current(id);
             results.push({ type: 'delete', result: deleted });
             break;
             
@@ -274,17 +273,14 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
         }
       }
       
-      if (enableLogging) {
-      }
-      
       return results;
       
     } catch (err) {
-      const errorMessage = `Erreur lors de l'opération en lot ${entityType}: ${err.message}`;
+      const errorMessage = `Erreur opération en lot ${entityType}: ${err.message}`;
       setError(errorMessage);
       
-      if (onError) {
-        onError(err);
+      if (onErrorRef.current) {
+        onErrorRef.current(err, 'batch');
       }
       
       if (enableLogging) {
@@ -299,7 +295,7 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
         setTimeout(() => setError(null), 5000);
       }
     }
-  }, [entityType, create, update, remove, onError, enableLogging, autoResetError]);
+  }, [entityType, enableLogging, autoResetError]); // Pas de dépendances circulaires
   
   // Fonction de requête avancée (utilise query, where, orderBy, limit, getDocs)
   const queryEntities = useCallback(async (queryConfig = {}) => {
@@ -409,8 +405,8 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
       const docRef = doc(db, entityType, id);
       const docSnap = await getDoc(docRef);
       
-      if (!docSnap.exists) {
-        throw new Error(`${entityType} avec l'ID ${id} non trouvé`);
+      if (!docSnap.exists()) {
+        return null; // ✅ CORRECTION: Retourner null au lieu de throw pour éviter les erreurs
       }
       
       const result = { id, ...docSnap.data() };
@@ -421,18 +417,18 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
       return result;
       
     } catch (err) {
-      const errorMessage = `Erreur lors de la récupération de ${entityType}: ${err.message}`;
+      const errorMessage = `Erreur récupération ${entityType}: ${err.message}`;
       setError(errorMessage);
       
-      if (onError) {
-        onError(err);
+      if (onErrorRef.current) {
+        onErrorRef.current(err, 'getById');
       }
       
       if (enableLogging) {
         console.error('❌', errorMessage, err);
       }
       
-      throw err;
+      return null; // ✅ CORRECTION: Retourner null en cas d'erreur
     } finally {
       setLoading(false);
       
@@ -440,7 +436,7 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
         setTimeout(() => setError(null), 5000);
       }
     }
-  }, [entityType, onError, enableLogging, autoResetError]);
+  }, [entityType, enableLogging, autoResetError]);
 
   return {
     loading,

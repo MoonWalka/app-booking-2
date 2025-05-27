@@ -1,15 +1,13 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useNavigate, useLocation } from 'react-router-dom';
-import ParametresEntreprise from '../components/parametres/ParametresEntrepriseRobuste';
-import ParametresGeneraux from '../components/parametres/ParametresGenerauxSimple';
-import ParametresCompte from '../components/parametres/ParametresCompteSimple';
-import {
-  ParametresNotificationsSimple as ParametresNotifications,
-  ParametresApparenceSimple as ParametresApparence,
-  ParametresExportSimple as ParametresExport,
-  SyncManagerSimple as SyncManager
-} from '../components/parametres/ParametresSimples';
+import ParametresEntreprise from '../components/parametres/ParametresEntreprise';
+import ParametresGeneraux from '../components/parametres/ParametresGeneraux';
+import ParametresCompte from '../components/parametres/ParametresCompte';
+import ParametresNotifications from '../components/parametres/ParametresNotifications';
+import ParametresApparence from '../components/parametres/ParametresApparence';
+import ParametresExport from '../components/parametres/ParametresExport';
+import SyncManager from '../components/parametres/sync/SyncManager';
 import TabNavigation from '../components/common/TabNavigation';
 import '@styles/index.css';
 

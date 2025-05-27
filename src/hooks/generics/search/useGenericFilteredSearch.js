@@ -135,15 +135,22 @@ const useGenericFilteredSearch = (entityType, filterConfig = {}, options = {}) =
     }
   );
   
-  // Mise à jour des statistiques de filtres
+  // ✅ CORRECTION: Références stables pour éviter les dépendances circulaires
+  const availableFiltersRef = useRef(availableFilters);
+  const activeFiltersRef = useRef(activeFilters);
+  
+  availableFiltersRef.current = availableFilters;
+  activeFiltersRef.current = activeFilters;
+  
+  // Mise à jour des statistiques de filtres - CORRIGÉ
   const updateFilterStats = useCallback((results, searchContext) => {
     if (!enableFilterStats) return;
     
     const stats = {};
     
     // Compter les résultats par filtre
-    Object.keys(availableFilters).forEach(filterKey => {
-      const filterConfig = availableFilters[filterKey];
+    Object.keys(availableFiltersRef.current).forEach(filterKey => {
+      const filterConfig = availableFiltersRef.current[filterKey];
       
       if (filterConfig.type === 'select' && filterConfig.options) {
         stats[filterKey] = {};
@@ -158,13 +165,13 @@ const useGenericFilteredSearch = (entityType, filterConfig = {}, options = {}) =
     // Statistiques générales
     stats._meta = {
       totalResults: results.length,
-      activeFiltersCount: Object.keys(activeFilters).length,
+      activeFiltersCount: Object.keys(activeFiltersRef.current).length,
       searchTerm: searchContext?.term || '',
       lastUpdated: new Date().toISOString()
     };
     
     setFilterStats(stats);
-  }, [enableFilterStats, availableFilters, activeFilters]);
+  }, [enableFilterStats]); // ✅ Dépendances stables uniquement
   
   // Définir un filtre
   const setFilter = useCallback((filterKey, value) => {
@@ -273,9 +280,13 @@ const useGenericFilteredSearch = (entityType, filterConfig = {}, options = {}) =
     setFilterPresets(prev => prev.filter(preset => preset.id !== presetId));
   }, [enablePresets]);
   
-  // Obtenir les valeurs possibles pour un filtre
+  // ✅ CORRECTION: Références stables pour results
+  const resultsRef = useRef(results);
+  resultsRef.current = results;
+  
+  // Obtenir les valeurs possibles pour un filtre - CORRIGÉ
   const getFilterOptions = useCallback((filterKey) => {
-    const filterConfig = availableFilters[filterKey];
+    const filterConfig = availableFiltersRef.current[filterKey];
     if (!filterConfig) return [];
     
     if (filterConfig.options) {
@@ -283,9 +294,9 @@ const useGenericFilteredSearch = (entityType, filterConfig = {}, options = {}) =
     }
     
     // Pour les filtres dynamiques, extraire les valeurs des résultats
-    if (enableDynamicFilters && results.length > 0) {
+    if (enableDynamicFilters && resultsRef.current.length > 0) {
       const values = [...new Set(
-        results
+        resultsRef.current
           .map(item => item[filterKey])
           .filter(value => value !== null && value !== undefined)
       )];
@@ -294,11 +305,11 @@ const useGenericFilteredSearch = (entityType, filterConfig = {}, options = {}) =
     }
     
     return [];
-  }, [availableFilters, enableDynamicFilters, results]);
+  }, [enableDynamicFilters]); // ✅ Dépendances stables uniquement
   
-  // Valider un filtre
+  // Valider un filtre - CORRIGÉ
   const validateFilter = useCallback((filterKey, value) => {
-    const filterConfig = availableFilters[filterKey];
+    const filterConfig = availableFiltersRef.current[filterKey];
     if (!filterConfig) return false;
     
     switch (filterConfig.type) {
@@ -320,21 +331,21 @@ const useGenericFilteredSearch = (entityType, filterConfig = {}, options = {}) =
       default:
         return true;
     }
-  }, [availableFilters]);
+  }, []); // ✅ Aucune dépendance car on utilise la référence
   
-  // Obtenir le nombre de résultats pour un filtre spécifique
+  // Obtenir le nombre de résultats pour un filtre spécifique - CORRIGÉ
   const getFilterResultCount = useCallback((filterKey, value) => {
-    if (!enableFilterStats || !results.length) return 0;
+    if (!enableFilterStats || !resultsRef.current.length) return 0;
     
-    return results.filter(item => item[filterKey] === value).length;
-  }, [enableFilterStats, results]);
+    return resultsRef.current.filter(item => item[filterKey] === value).length;
+  }, [enableFilterStats]); // ✅ Dépendances stables uniquement
   
-  // Construire une requête de filtre complexe
+  // Construire une requête de filtre complexe - CORRIGÉ
   const buildComplexFilter = useCallback((filters) => {
     const complexFilter = {};
     
     Object.entries(filters).forEach(([key, value]) => {
-      const filterConfig = availableFilters[key];
+      const filterConfig = availableFiltersRef.current[key];
       if (!filterConfig) return;
       
       switch (filterConfig.type) {
@@ -362,7 +373,7 @@ const useGenericFilteredSearch = (entityType, filterConfig = {}, options = {}) =
     });
     
     return complexFilter;
-  }, [availableFilters]);
+  }, []); // ✅ Aucune dépendance car on utilise la référence
   
   // Effet pour appliquer automatiquement les filtres
   useEffect(() => {

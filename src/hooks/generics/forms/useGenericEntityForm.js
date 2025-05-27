@@ -1,117 +1,43 @@
 /**
- * @fileoverview Hook générique pour les formulaires d'entités
- * Hook générique créé lors de la Phase 2 de généralisation - Semaine 3
+ * @fileoverview Hook générique pour les formulaires d'entités - VERSION ROBUSTE
+ * Version refactorisée pour éliminer les boucles infinies et optimiser les performances
  * 
  * @author TourCraft Team
  * @since 2024
- * @phase Phase 2 - Généralisation - Semaine 3
+ * @phase Phase 2 - Généralisation - Semaine 3 - Refactor Robuste
  */
 
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useGenericAction from '../actions/useGenericAction';
 import useGenericValidation from '../validation/useGenericValidation';
 
-console.log('[UGEF] Hook useGenericEntityForm importé'); // Log d'import
-
 /**
- * Hook générique pour les formulaires d'entités
+ * Hook générique pour les formulaires d'entités - VERSION ROBUSTE
  * 
- * @description
- * Fonctionnalités supportées :
- * - form_management: Gestion complète des formulaires d'entités
- * - validation: Validation intégrée avec règles personnalisables
- * - auto_save: Sauvegarde automatique avec debounce
- * - state_management: Gestion d'état avancée (dirty, touched, submitting)
+ * ✅ CORRECTIONS APPLIQUÉES :
+ * - Stabilisation de toutes les dépendances avec useRef
+ * - Simplification de la logique d'état initial
+ * - Élimination des objets instables dans les dépendances
+ * - Mémoïsation des callbacks critiques
+ * - Réduction des logs pour éviter les effets de bord
  * 
  * @param {Object} formConfig - Configuration du formulaire
- * @param {string} formConfig.entityType - Type d'entité
- * @param {string|null} formConfig.entityId - ID de l'entité (null pour création)
- * @param {Object} formConfig.initialData - Données initiales
- * @param {Object} formConfig.validationRules - Règles de validation
- * @param {Function} formConfig.onSubmit - Callback de soumission
- * @param {Function} formConfig.onSuccess - Callback de succès
- * @param {Function} formConfig.onError - Callback d'erreur
- * 
  * @param {Object} options - Options additionnelles
- * @param {boolean} options.enableAutoSave - Activer la sauvegarde automatique
- * @param {number} options.autoSaveDelay - Délai de sauvegarde automatique (ms)
- * @param {boolean} options.enableValidation - Activer la validation
- * @param {boolean} options.validateOnChange - Valider à chaque changement
- * @param {boolean} options.resetOnSuccess - Réinitialiser après succès
- * @param {string} options.redirectOnSuccess - URL de redirection après succès
- * 
  * @returns {Object} Interface du hook générique
- * @returns {Object} returns.formData - Données du formulaire
- * @returns {Function} returns.setFormData - Fonction de mise à jour des données
- * @returns {Function} returns.handleSubmit - Fonction de soumission
- * @returns {Function} returns.handleReset - Fonction de réinitialisation
- * @returns {Function} returns.handleFieldChange - Fonction de changement de champ
- * @returns {boolean} returns.loading - État de chargement
- * @returns {string|null} returns.error - Message d'erreur
- * @returns {boolean} returns.isDirty - Formulaire modifié
- * @returns {boolean} returns.isValid - Formulaire valide
- * @returns {Object} returns.validationErrors - Erreurs de validation
- * @returns {boolean} returns.isSubmitting - Soumission en cours
- * @returns {Object} returns.touchedFields - Champs touchés
- * 
- * @example
- * ```javascript
- * // Formulaire de création
- * const {
- *   formData,
- *   handleSubmit,
- *   handleFieldChange,
- *   loading,
- *   isValid,
- *   validationErrors
- * } = useGenericEntityForm({
- *   entityType: 'concerts',
- *   entityId: null,
- *   initialData: { titre: '', date: '', lieu: '' },
- *   validationRules: {
- *     titre: { required: true, minLength: 3 },
- *     date: { required: true, type: 'date' }
- *   }
- * });
- * 
- * // Formulaire d'édition avec auto-save
- * const {
- *   formData,
- *   handleFieldChange,
- *   isDirty,
- *   autoSaveStatus
- * } = useGenericEntityForm({
- *   entityType: 'programmateurs',
- *   entityId: 'prog123',
- *   initialData: existingData,
- *   validationRules: programmateurRules
- * }, {
- *   enableAutoSave: true,
- *   autoSaveDelay: 3000
- * });
- * ```
- * 
- * @complexity HIGH
- * @businessCritical true
- * @generic true
- * @replaces useStructureForm, useEntrepriseForm, useFormValidation
  */
 const useGenericEntityForm = (formConfig = {}, options = {}) => {
   const {
     entityType,
     entityId = null,
-    initialData: configInitialData = {}, // Renommer pour clarté
+    initialData = {},
     validationRules = {},
     onSubmit,
     onSuccess,
     onError,
     transformData = null,
-    // Ajout pour le cas de création avec ID prédéfini (utilisé par useConcertForm)
     generateId: configGenerateId,
   } = formConfig;
-  
-  console.log('[UGEF] Appel de useGenericEntityForm avec:', { entityType, entityId, configInitialData: {...configInitialData}, options: {...options} });
 
   const {
     enableAutoSave = false,
@@ -126,32 +52,37 @@ const useGenericEntityForm = (formConfig = {}, options = {}) => {
   
   const navigate = useNavigate();
   
-  // Si entityId est null (création), utiliser configInitialData, sinon, charger.
-  // Pour la création, si un ID est généré en amont (par ex. useConcertForm), il ne sera pas utilisé pour le fetch initial.
-  const [formData, setFormData] = useState(() => {
-    console.log('[UGEF] useState pour formData. entityId:', entityId, 'configInitialData:', {...configInitialData});
-    return entityId ? {} : configInitialData; // Commencer vide si édition, sinon initialData
-  });
-  const [originalData, setOriginalData] = useState(() => {
-    console.log('[UGEF] useState pour originalData. entityId:', entityId, 'configInitialData:', {...configInitialData});
-    return entityId ? {} : configInitialData;
-  });
+  // ✅ CORRECTION 1: Stabilisation des données initiales avec useMemo
+  const stableInitialData = useMemo(() => ({ ...initialData }), [JSON.stringify(initialData)]);
   
+  // ✅ CORRECTION 2: État initial simplifié
+  const [formData, setFormData] = useState(() => entityId ? {} : stableInitialData);
+  const [originalData, setOriginalData] = useState(() => entityId ? {} : stableInitialData);
   const [isDirty, setIsDirty] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [touchedFields, setTouchedFields] = useState({});
   const [autoSaveStatus, setAutoSaveStatus] = useState('idle');
   
+  // ✅ CORRECTION 3: Références stables pour éviter les dépendances circulaires
   const autoSaveTimeoutRef = useRef(null);
-  const initialLoadDoneRef = useRef(false); // Pour s'assurer que le chargement initial ne se fait qu'une fois
-  const isMountedRef = useRef(true); // Pour gérer les mises à jour d'état sur un composant démonté
+  const initialLoadDoneRef = useRef(false);
+  const isMountedRef = useRef(true);
+  const onSubmitRef = useRef(onSubmit);
+  const onSuccessRef = useRef(onSuccess);
+  const onErrorRef = useRef(onError);
+  const transformDataRef = useRef(transformData);
+  
+  // ✅ CORRECTION 4: Mise à jour des références sans déclencher de re-renders
+  onSubmitRef.current = onSubmit;
+  onSuccessRef.current = onSuccess;
+  onErrorRef.current = onError;
+  transformDataRef.current = transformData;
 
+  // ✅ CORRECTION 5: Nettoyage simplifié
   useEffect(() => {
     isMountedRef.current = true;
     return () => {
       isMountedRef.current = false;
-      // Copier la référence dans une variable locale pour éviter le warning ESLint
-      // eslint-disable-next-line react-hooks/exhaustive-deps
       const timeoutId = autoSaveTimeoutRef.current;
       if (timeoutId) {
         clearTimeout(timeoutId);
@@ -159,6 +90,7 @@ const useGenericEntityForm = (formConfig = {}, options = {}) => {
     };
   }, []);
 
+  // ✅ CORRECTION 6: Validation avec dépendances stables
   const {
     validationErrors,
     isValid,
@@ -172,121 +104,152 @@ const useGenericEntityForm = (formConfig = {}, options = {}) => {
     enableValidation
   });
   
+  // ✅ CORRECTION 7: Références stables pour les callbacks de validation
+  const validateFieldRef = useRef(validateField);
+  const validateFormRef = useRef(validateForm);
+  const clearErrorsRef = useRef(clearErrors);
+  
+  validateFieldRef.current = validateField;
+  validateFormRef.current = validateForm;
+  clearErrorsRef.current = clearErrors;
+
+  // ✅ CORRECTION 8: Action hook avec callbacks stabilisés
   const { create, update, getById, loading: actionLoading, error: actionError } = useGenericAction(entityType, {
     onSuccess: (data, action) => {
-      console.log('[UGEF] Action Success:', { action, data });
       if (!isMountedRef.current) return;
       if (action === 'create' || action === 'update') {
         setAutoSaveStatus('saved');
         setIsDirty(false);
-        setOriginalData(formData); // formData devrait être à jour ici
-        if (onSuccess) onSuccess(data, action);
-        if (resetOnSuccess) handleReset();
+        setOriginalData(formData);
+        if (onSuccessRef.current) onSuccessRef.current(data, action);
+        if (resetOnSuccess) handleResetRef.current();
         if (redirectOnSuccess) navigate(redirectOnSuccess.replace(':id', data.id));
       }
     },
     onError: (error, action) => {
-      console.log('[UGEF] Action Error:', { action, error });
       if (!isMountedRef.current) return;
       if (action === 'create' || action === 'update') setAutoSaveStatus('error');
-      if (onError) onError(error, action);
+      if (onErrorRef.current) onErrorRef.current(error, action);
     }
   });
   
+  // ✅ CORRECTION 9: Références stables pour les actions
+  const createRef = useRef(create);
+  const updateRef = useRef(update);
+  const getByIdRef = useRef(getById);
+  
+  createRef.current = create;
+  updateRef.current = update;
+  getByIdRef.current = getById;
+
+  // ✅ CORRECTION 10: Chargement initial avec dépendances stables
   useEffect(() => {
-    console.log('[UGEF] useEffect [entityId, getById] - entityId:', entityId, 'initialLoadDoneRef.current:', initialLoadDoneRef.current);
-    if (entityId && !initialLoadDoneRef.current) {
+    if (entityId && !initialLoadDoneRef.current && getByIdRef.current) {
       initialLoadDoneRef.current = true;
-      console.log('[UGEF] Chargement initial des données pour entityId:', entityId);
-      getById(entityId).then(data => {
+      getByIdRef.current(entityId).then(data => {
         if (!isMountedRef.current) return;
         if (data) {
-          console.log('[UGEF] Données chargées pour entityId:', entityId, 'data:', {...data});
           setFormData(data);
           setOriginalData(data);
           setIsDirty(false);
         } else {
-          console.warn('[UGEF] Aucune donnée trouvée pour entityId:', entityId, 'utilisation de configInitialData');
-          setFormData(configInitialData);
-          setOriginalData(configInitialData); 
+          setFormData(stableInitialData);
+          setOriginalData(stableInitialData); 
         }
       }).catch(err => {
-        console.error('[UGEF] Erreur lors du chargement initial pour entityId:', entityId, err);
+        console.error('[UGEF] Erreur chargement:', err);
         if (isMountedRef.current) {
-            setFormData(configInitialData); // Fallback to initialData on error
-            setOriginalData(configInitialData);
+          setFormData(stableInitialData);
+          setOriginalData(stableInitialData);
         }
       });
     } else if (!entityId && !initialLoadDoneRef.current) {
-      // Cas de création, s'assurer que initialData est bien appliqué si pas déjà fait par useState
-      console.log('[UGEF] Mode création (pas d\'entityId), application de configInitialData si nécessaire.', {...configInitialData});
-      setFormData(configInitialData);
-      setOriginalData(configInitialData);
-      initialLoadDoneRef.current = true; // Marquer comme fait pour éviter re-application
+      setFormData(stableInitialData);
+      setOriginalData(stableInitialData);
+      initialLoadDoneRef.current = true;
     }
-  }, [entityId, getById, configInitialData]); // configInitialData est ajouté pour s'assurer que si elle change, l'état est mis à jour pour la création
+  }, [entityId, stableInitialData]); // Dépendances stables uniquement
   
+  // ✅ CORRECTION 11: Fonction de traitement des données stabilisée
   const processFormData = useCallback((dataToProcess) => {
     let processed = { ...dataToProcess };
-    if (transformData && typeof transformData === 'function') {
-      console.log('[UGEF] transformData appelé avant traitement:', {...processed});
-      processed = transformData(processed);
-      console.log('[UGEF] transformData appelé après traitement:', {...processed});
+    if (transformDataRef.current && typeof transformDataRef.current === 'function') {
+      processed = transformDataRef.current(processed);
     }
     return processed;
-  }, [transformData]);
+  }, []); // Pas de dépendances car on utilise la ref
   
-  const formDataRef = useRef(formData);
-  useEffect(() => { formDataRef.current = formData; }, [formData]);
-
+  // ✅ CORRECTION 12: Auto-save simplifié
   const triggerAutoSave = useCallback(() => {
-    // ... (logique auto-save avec logs si nécessaire)
-  }, [/* ... */]); // Dépendances à vérifier pour l'auto-save
+    if (!enableAutoSave || !isMountedRef.current) return;
+    
+    const timeoutId = autoSaveTimeoutRef.current;
+    if (timeoutId) clearTimeout(timeoutId);
+    
+    autoSaveTimeoutRef.current = setTimeout(async () => {
+      if (!isMountedRef.current) return;
+      setAutoSaveStatus('saving');
+      try {
+        const processedData = processFormData(formData);
+        if (entityId && updateRef.current) {
+          await updateRef.current(entityId, processedData);
+        }
+      } catch (error) {
+        console.error('[UGEF] Auto-save error:', error);
+        setAutoSaveStatus('error');
+      }
+    }, 3000);
+  }, [enableAutoSave, entityId, formData, processFormData]);
   
+  // ✅ CORRECTION 13: Changement de champ stabilisé
   const handleFieldChange = useCallback((fieldName, value) => {
-    // console.log('[UGEF] handleFieldChange:', { fieldName, value });
     if (!isMountedRef.current) return;
     setFormData(prev => {
       const newData = { ...prev, [fieldName]: value };
       if (enableDirtyTracking) setIsDirty(true);
-      if (validateOnChange && enableValidation) validateField(fieldName, value, newData);
-      if (enableTouchedTracking) setTouchedFields(prevTouched => ({ ...prevTouched, [fieldName]: true }));
+      if (validateOnChange && enableValidation && validateFieldRef.current) {
+        validateFieldRef.current(fieldName, value, newData);
+      }
+      if (enableTouchedTracking) {
+        setTouchedFields(prevTouched => ({ ...prevTouched, [fieldName]: true }));
+      }
       return newData;
     });
     if (enableAutoSave) triggerAutoSave();
-  }, [validateOnChange, enableValidation, validateField, enableTouchedTracking, enableDirtyTracking, enableAutoSave, triggerAutoSave]);
+  }, [validateOnChange, enableValidation, enableTouchedTracking, enableDirtyTracking, enableAutoSave, triggerAutoSave]);
   
+  // ✅ CORRECTION 14: Changement d'input stabilisé
   const handleInputChange = useCallback((event) => {
     const { name, value, type, checked } = event.target;
     handleFieldChange(name, type === 'checkbox' ? checked : value);
   }, [handleFieldChange]);
   
+  // ✅ CORRECTION 15: Blur handler stabilisé
   const handleFieldBlur = useCallback((fieldName) => {
-    // ... (logique blur avec logs si nécessaire)
-  }, [/* ... */]); // Dépendances à vérifier
+    if (validateOnBlur && enableValidation && validateFieldRef.current) {
+      validateFieldRef.current(fieldName, formData[fieldName], formData);
+    }
+  }, [validateOnBlur, enableValidation, formData]);
   
+  // ✅ CORRECTION 16: Soumission stabilisée
   const handleSubmit = useCallback(async (event) => {
     if (event) event.preventDefault();
-    console.log('[UGEF] handleSubmit - Début. formData:', {...formDataRef.current});
     if (!isMountedRef.current) return false;
     setIsSubmitting(true);
     
     try {
-      if (enableValidation) {
-        const validationResult = await validateForm(); // Assurez-vous que validateForm est bien asynchrone si des validateurs le sont
+      if (enableValidation && validateFormRef.current) {
+        const validationResult = await validateFormRef.current();
         if (!validationResult.isValid) {
-          console.warn('[UGEF] Formulaire invalide:', validationResult.errors);
           if (isMountedRef.current) setIsSubmitting(false);
           return false;
         }
       }
       
-      const processedData = processFormData(formDataRef.current);
-      console.log('[UGEF] handleSubmit - Données traitées:', {...processedData});
+      const processedData = processFormData(formData);
       
-      if (onSubmit) {
-        console.log('[UGEF] Appel du onSubmit personnalisé');
-        const result = await onSubmit(processedData, { /* ...details... */ });
+      if (onSubmitRef.current) {
+        const result = await onSubmitRef.current(processedData);
         if (result === false) {
           if (isMountedRef.current) setIsSubmitting(false);
           return false;
@@ -294,15 +257,12 @@ const useGenericEntityForm = (formConfig = {}, options = {}) => {
       }
       
       let result;
-      if (entityId) {
-        console.log('[UGEF] Appel de update pour entityId:', entityId, 'avec données:', {...processedData});
-        result = await update(entityId, processedData);
-      } else {
+      if (entityId && updateRef.current) {
+        result = await updateRef.current(entityId, processedData);
+      } else if (createRef.current) {
         const idToCreate = configGenerateId ? configGenerateId() : undefined;
-        console.log('[UGEF] Appel de create avec données:', {...processedData}, 'et ID généré (si applicable):', idToCreate);
-        result = await create(processedData, idToCreate);
+        result = await createRef.current(processedData, idToCreate);
       }
-      console.log('[UGEF] handleSubmit - Résultat action CRUD:', result);
       return result;
     } catch (error) {
       console.error('[UGEF] Erreur soumission:', error);
@@ -310,31 +270,34 @@ const useGenericEntityForm = (formConfig = {}, options = {}) => {
     } finally {
       if (isMountedRef.current) setIsSubmitting(false);
     }
-  }, [enableValidation, validateForm, processFormData, onSubmit, entityId, update, create, configGenerateId]); // formDataRef.current n'est pas une dépendance
+  }, [enableValidation, processFormData, formData, entityId, configGenerateId]);
   
+  // ✅ CORRECTION 17: Reset stabilisé avec référence
   const handleReset = useCallback(() => {
-    console.log('[UGEF] handleReset - originalData:', {...originalData});
     if (!isMountedRef.current) return;
     setFormData(originalData);
     setIsDirty(false);
     setTouchedFields({});
     setAutoSaveStatus('idle');
-    clearErrors();
-    // Copier la référence dans une variable locale pour éviter le warning ESLint
+    if (clearErrorsRef.current) clearErrorsRef.current();
     const timeoutId = autoSaveTimeoutRef.current;
     if (timeoutId) clearTimeout(timeoutId);
-  }, [originalData, clearErrors]);
+  }, [originalData]);
   
-  // Mise à jour des données initiales
+  // ✅ CORRECTION 18: Référence stable pour handleReset
+  const handleResetRef = useRef(handleReset);
+  handleResetRef.current = handleReset;
+  
+  // ✅ CORRECTION 19: Mise à jour des données initiales stabilisée
   const updateInitialData = useCallback((newData) => {
     setFormData(newData);
     setOriginalData(newData);
     setIsDirty(false);
     setTouchedFields({});
-    clearErrors();
-  }, [clearErrors]);
+    if (clearErrorsRef.current) clearErrorsRef.current();
+  }, []);
   
-  // Vérification si un champ est touché et a une erreur
+  // ✅ CORRECTION 20: État de champ stabilisé
   const getFieldState = useCallback((fieldName) => {
     return {
       value: formData[fieldName],
@@ -345,12 +308,11 @@ const useGenericEntityForm = (formConfig = {}, options = {}) => {
     };
   }, [formData, validationErrors, touchedFields, originalData]);
   
-  // État de chargement global
+  // ✅ CORRECTION 21: État de chargement simplifié
   const loading = actionLoading || (entityId && !initialLoadDoneRef.current);
-  
-  console.log('[UGEF] Hook retourne:', { entityId, loading, initialLoading: (entityId && !initialLoadDoneRef.current), actionLoading, formData: {...formData}, error: actionError });
 
-  return {
+  // ✅ CORRECTION 22: Interface de retour stabilisée avec useMemo
+  return useMemo(() => ({
     formData,
     setFormData,
     originalData,
@@ -384,7 +346,32 @@ const useGenericEntityForm = (formConfig = {}, options = {}) => {
     },
     entityType,
     entityId,
-  };
+  }), [
+    formData,
+    originalData,
+    handleSubmit,
+    handleReset,
+    handleInputChange,
+    handleFieldChange,
+    handleFieldBlur,
+    updateInitialData,
+    loading,
+    actionError,
+    isDirty,
+    isValid,
+    isSubmitting,
+    touchedFields,
+    validationErrors,
+    validateField,
+    validateForm,
+    setFieldError,
+    clearErrors,
+    autoSaveStatus,
+    triggerAutoSave,
+    entityId,
+    getFieldState,
+    entityType
+  ]);
 };
 
 export default useGenericEntityForm; 

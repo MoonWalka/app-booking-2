@@ -106,7 +106,7 @@ const Card = ({
 };
 
 Card.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
   title: PropTypes.string,
   icon: PropTypes.node,
   className: PropTypes.string,

@@ -5,9 +5,15 @@
  * @author TourCraft Team
  * @since 2024
  * @phase Phase 2 - Généralisation - Semaine 2
+ * 
+ * CORRECTIONS APPLIQUÉES POUR ÉVITER LES BOUCLES DE RE-RENDERS :
+ * - Stabilisation des objets de configuration avec useMemo
+ * - Mémoïsation des callbacks avec useCallback et dépendances stables
+ * - Utilisation de useRef pour les fonctions transformItem
+ * - Évitement des mises à jour directes des références
  */
 
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import useGenericDataFetcher from '../data/useGenericDataFetcher';
 import useGenericFilteredSearch from '../search/useGenericFilteredSearch';
 
@@ -79,37 +85,72 @@ import useGenericFilteredSearch from '../search/useGenericFilteredSearch';
  * @replaces useConcertsList (SUPPRIMÉ), useProgrammateursList, useEntityList
  */
 const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
-  const {
-    pageSize = 20,
-    defaultSort = null,
-    defaultFilters = {},
-    enableSelection = false,
-    enableFilters = false,
-    enableSearch = false,
-    searchFields = [],
-    filters = {},
-    onItemSelect,
-    onItemsChange,
-    onPageChange,
-    transformItem = null
-  } = listConfig;
-  
-  const {
-    paginationType = 'pages', // 'pages' | 'infinite' | 'cursor'
-    enableVirtualization = false,
-    enableCache = true,
-    enableRealTime = false,
-    enableBulkActions = false,
-    maxSelectionSize = null,
-    autoRefresh = false,
-    refreshInterval = 30000 // 30 secondes
-  } = options;
+  // ✅ CORRECTION 1: Stabiliser la configuration avec useMemo
+  const stableListConfig = useMemo(() => ({
+    pageSize: listConfig.pageSize || 20,
+    defaultSort: listConfig.defaultSort || null,
+    defaultFilters: listConfig.defaultFilters || {},
+    enableSelection: listConfig.enableSelection || false,
+    enableFilters: listConfig.enableFilters || false,
+    enableSearch: listConfig.enableSearch || false,
+    searchFields: listConfig.searchFields || [],
+    filters: listConfig.filters || {},
+    // ✅ CORRECTION 2: Ne pas inclure les fonctions dans la configuration stable
+    // onItemSelect, onItemsChange, onPageChange, transformItem seront gérées séparément
+  }), [
+    listConfig.pageSize,
+    listConfig.defaultSort,
+    listConfig.defaultFilters,
+    listConfig.enableSelection,
+    listConfig.enableFilters,
+    listConfig.enableSearch,
+    listConfig.searchFields,
+    listConfig.filters
+  ]);
+
+  const stableOptions = useMemo(() => ({
+    paginationType: options.paginationType || 'pages',
+    enableVirtualization: options.enableVirtualization || false,
+    enableCache: options.enableCache !== false, // true par défaut
+    enableRealTime: options.enableRealTime || false,
+    enableBulkActions: options.enableBulkActions || false,
+    maxSelectionSize: options.maxSelectionSize || null,
+    autoRefresh: options.autoRefresh || false,
+    refreshInterval: options.refreshInterval || 30000
+  }), [
+    options.paginationType,
+    options.enableVirtualization,
+    options.enableCache,
+    options.enableRealTime,
+    options.enableBulkActions,
+    options.maxSelectionSize,
+    options.autoRefresh,
+    options.refreshInterval
+  ]);
+
+  // ✅ CORRECTION 3: Utiliser des références stables pour les callbacks
+  const callbacksRef = useRef({
+    onItemSelect: listConfig.onItemSelect,
+    onItemsChange: listConfig.onItemsChange,
+    onPageChange: listConfig.onPageChange,
+    transformItem: listConfig.transformItem
+  });
+
+  // ✅ CORRECTION 4: Mettre à jour les callbacks uniquement quand nécessaire
+  useEffect(() => {
+    callbacksRef.current = {
+      onItemSelect: listConfig.onItemSelect,
+      onItemsChange: listConfig.onItemsChange,
+      onPageChange: listConfig.onPageChange,
+      transformItem: listConfig.transformItem
+    };
+  }, [listConfig.onItemSelect, listConfig.onItemsChange, listConfig.onPageChange, listConfig.transformItem]);
   
   // États de base
   const [currentPage, setCurrentPage] = useState(1);
   const [allItems, setAllItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
-  const [sorting, setSorting] = useState(defaultSort);
+  const [sorting, setSorting] = useState(stableListConfig.defaultSort);
   const [totalCount, setTotalCount] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   
@@ -127,48 +168,48 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
   const itemHeightsRef = useRef(new Map());
   const observerRef = useRef(null);
   
-  // Références pour stabiliser les fonctions
-  const onItemSelectRef = useRef(onItemSelect);
-  const onItemsChangeRef = useRef(onItemsChange);
-  const onPageChangeRef = useRef(onPageChange);
-  const transformItemRef = useRef(transformItem);
-  
-  // Mettre à jour les références
-  onItemSelectRef.current = onItemSelect;
-  onItemsChangeRef.current = onItemsChange;
-  onPageChangeRef.current = onPageChange;
-  transformItemRef.current = transformItem;
-  
-  // Configuration de récupération des données
-  const fetchConfig = {
+  // ✅ CORRECTION 5: Fonction de transformation stable
+  const transformItemStable = useCallback((item) => {
+    const transformFn = callbacksRef.current.transformItem;
+    return transformFn ? transformFn(item) : item;
+  }, []); // Pas de dépendances car utilise une ref
+
+  // ✅ CORRECTION 6: Configuration de récupération des données stable
+  const fetchConfig = useMemo(() => ({
     mode: 'collection',
-    filters: defaultFilters,
+    filters: stableListConfig.defaultFilters,
     orderBy: sorting ? {
       field: sorting.field,
       direction: sorting.direction
     } : null,
-    limit: pageSize,
+    limit: stableListConfig.pageSize,
+    // ✅ CORRECTION 7: Callback onData stable
     onData: (newData) => {
       if (newData) {
-        const processedItems = newData.map(item => 
-          transformItemRef.current ? transformItemRef.current(item) : item
-        );
+        const processedItems = newData.map(transformItemStable);
         
-        if (paginationType === 'infinite') {
+        if (stableOptions.paginationType === 'infinite') {
           setAllItems(prev => [...prev, ...processedItems]);
         } else {
           setAllItems(processedItems);
         }
         
         setTotalCount(newData.length);
-        setHasMore(newData.length === pageSize);
+        setHasMore(newData.length === stableListConfig.pageSize);
         
-        if (onItemsChangeRef.current) {
-          onItemsChangeRef.current(processedItems);
+        const onItemsChange = callbacksRef.current.onItemsChange;
+        if (onItemsChange) {
+          onItemsChange(processedItems);
         }
       }
     }
-  };
+  }), [
+    stableListConfig.defaultFilters,
+    stableListConfig.pageSize,
+    stableOptions.paginationType,
+    sorting,
+    transformItemStable
+  ]);
   
   // Hook de récupération de données
   const {
@@ -178,57 +219,86 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
     refetch,
     lastFetch
   } = useGenericDataFetcher(entityType, fetchConfig, {
-    enableCache,
-    enableRealTime,
+    enableCache: stableOptions.enableCache,
+    enableRealTime: stableOptions.enableRealTime,
     autoFetch: true
   });
   
-  // Hook de recherche et filtres (si activé)
-  const searchAndFilterHook = useGenericFilteredSearch(
-    entityType,
-    enableFilters || enableSearch ? {
-      availableFilters: filters,
-      defaultFilters,
-      searchFields,
+  // ✅ CORRECTION 8: Configuration de recherche et filtres stable
+  const searchConfig = useMemo(() => {
+    if (!stableListConfig.enableFilters && !stableListConfig.enableSearch) {
+      return {};
+    }
+    
+    return {
+      availableFilters: stableListConfig.filters,
+      defaultFilters: stableListConfig.defaultFilters,
+      searchFields: stableListConfig.searchFields,
       enableFirestore: true,
       collectionName: entityType,
       onResults: (results) => {
-        const processedItems = results.map(item => 
-          transformItemRef.current ? transformItemRef.current(item) : item
-        );
+        const processedItems = results.map(transformItemStable);
         setAllItems(processedItems);
         setTotalCount(results.length);
         
-        if (onItemsChangeRef.current) {
-          onItemsChangeRef.current(processedItems);
+        const onItemsChange = callbacksRef.current.onItemsChange;
+        if (onItemsChange) {
+          onItemsChange(processedItems);
         }
       }
-    } : {},
-    {
-      autoApplyFilters: true,
-      enableDebounce: true
-    }
+    };
+  }, [
+    stableListConfig.enableFilters,
+    stableListConfig.enableSearch,
+    stableListConfig.filters,
+    stableListConfig.defaultFilters,
+    stableListConfig.searchFields,
+    entityType,
+    transformItemStable
+  ]);
+
+  const searchOptions = useMemo(() => ({
+    autoApplyFilters: true,
+    enableDebounce: true
+  }), []);
+
+  // Hook de recherche et filtres (si activé)
+  const searchAndFilterHook = useGenericFilteredSearch(
+    entityType,
+    searchConfig,
+    searchOptions
   );
   
-  // Utiliser les résultats de recherche/filtres si disponibles, mais seulement s'il y a une recherche active ou des filtres
-  const hasActiveSearch = searchAndFilterHook?.searchTerm && searchAndFilterHook.searchTerm.length > 0;
-  const hasActiveFilters = searchAndFilterHook?.activeFilters && Object.keys(searchAndFilterHook.activeFilters).length > 0;
+  // ✅ CORRECTION 9: Calcul des éléments finaux stable
+  const finalItems = useMemo(() => {
+    const hasActiveSearch = searchAndFilterHook?.searchTerm && searchAndFilterHook.searchTerm.length > 0;
+    const hasActiveFilters = searchAndFilterHook?.activeFilters && Object.keys(searchAndFilterHook.activeFilters).length > 0;
+    
+    return (stableListConfig.enableFilters || stableListConfig.enableSearch) && 
+           (hasActiveSearch || hasActiveFilters) && 
+           searchAndFilterHook.results 
+      ? searchAndFilterHook.results 
+      : allItems;
+  }, [
+    stableListConfig.enableFilters,
+    stableListConfig.enableSearch,
+    searchAndFilterHook?.searchTerm,
+    searchAndFilterHook?.activeFilters,
+    searchAndFilterHook?.results,
+    allItems
+  ]);
   
-  const finalItems = (enableFilters || enableSearch) && (hasActiveSearch || hasActiveFilters) && searchAndFilterHook.results 
-    ? searchAndFilterHook.results 
-    : allItems;
-  
-  // Calcul de la pagination
-  const pagination = {
+  // ✅ CORRECTION 10: Calcul de la pagination stable
+  const pagination = useMemo(() => ({
     currentPage,
-    pageSize,
+    pageSize: stableListConfig.pageSize,
     totalItems: totalCount,
-    totalPages: Math.ceil(totalCount / pageSize),
-    hasNext: currentPage < Math.ceil(totalCount / pageSize),
+    totalPages: Math.ceil(totalCount / stableListConfig.pageSize),
+    hasNext: currentPage < Math.ceil(totalCount / stableListConfig.pageSize),
     hasPrevious: currentPage > 1,
-    startIndex: (currentPage - 1) * pageSize,
-    endIndex: Math.min(currentPage * pageSize, totalCount)
-  };
+    startIndex: (currentPage - 1) * stableListConfig.pageSize,
+    endIndex: Math.min(currentPage * stableListConfig.pageSize, totalCount)
+  }), [currentPage, stableListConfig.pageSize, totalCount]);
   
   // Cache des curseurs pour navigation bidirectionnelle
   const [cursorCache, setCursorCache] = useState(new Map());
@@ -238,24 +308,24 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
   
   // Sauvegarde d'un curseur pour une page donnée
   const saveCursor = useCallback((page, cursor) => {
-    if (paginationType !== 'cursor') return;
+    if (stableOptions.paginationType !== 'cursor') return;
     
     setCursorCache(prev => {
       const newCache = new Map(prev);
       newCache.set(page, cursor);
       return newCache;
     });
-  }, [paginationType]);
+  }, [stableOptions.paginationType]);
   
   // Récupération d'un curseur pour une page donnée
   const getCursor = useCallback((page) => {
-    if (paginationType !== 'cursor') return null;
+    if (stableOptions.paginationType !== 'cursor') return null;
     return cursorCache.get(page) || null;
-  }, [paginationType, cursorCache]);
+  }, [stableOptions.paginationType, cursorCache]);
   
   // Reconstruction du cache de curseurs (pour navigation vers une page éloignée)
   const rebuildCursorCache = useCallback(async (targetPage) => {
-    if (paginationType !== 'cursor' || !refetch) return;
+    if (stableOptions.paginationType !== 'cursor' || !refetch) return;
     
     
     let currentCursor = null;
@@ -266,7 +336,7 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
       try {
         const result = await refetch({
           startAfter: currentCursor,
-          limit: pageSize
+          limit: stableListConfig.pageSize
         });
         
         if (result && result.length > 0) {
@@ -281,11 +351,11 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
         break;
       }
     }
-  }, [paginationType, refetch, pageSize, saveCursor]);
+  }, [stableOptions.paginationType, refetch, stableListConfig.pageSize, saveCursor]);
   
   // Navigation vers une page avec curseur
   const goToPageWithCursor = useCallback(async (targetPage) => {
-    if (paginationType !== 'cursor' || !refetch) return;
+    if (stableOptions.paginationType !== 'cursor' || !refetch) return;
     
     setCursorLoading(true);
     setCursorError(null);
@@ -312,7 +382,7 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
       // Déclencher la requête avec le curseur
       const result = await refetch({
         startAfter: cursor,
-        limit: pageSize
+        limit: stableListConfig.pageSize
       });
       
       // Sauvegarder le nouveau curseur si on a des résultats
@@ -329,7 +399,7 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
     } finally {
       setCursorLoading(false);
     }
-  }, [paginationType, refetch, pageSize, getCursor, saveCursor, rebuildCursorCache]);
+  }, [stableOptions.paginationType, refetch, stableListConfig.pageSize, getCursor, saveCursor, rebuildCursorCache]);
   
   // Navigation de pagination
   const goToPage = useCallback((page) => {
@@ -337,13 +407,13 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
     
     setCurrentPage(page);
     
-    if (onPageChange) {
-      onPageChange(page);
+    if (callbacksRef.current.onPageChange) {
+      callbacksRef.current.onPageChange(page);
     }
     
     // Refetch avec la nouvelle page
     refetch();
-  }, [pagination.totalPages, onPageChange, refetch]);
+  }, [pagination.totalPages, refetch]);
   
   const goToNextPage = useCallback(() => {
     if (pagination.hasNext) {
@@ -361,12 +431,12 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
   const loadMore = useCallback(() => {
     if (loading || !hasMore) return;
     
-    if (paginationType === 'infinite') {
+    if (stableOptions.paginationType === 'infinite') {
       // Pour l'infinite scroll, on ajoute à la liste existante
       setCurrentPage(prev => prev + 1);
       refetch();
     }
-  }, [loading, hasMore, paginationType, refetch]);
+  }, [loading, hasMore, stableOptions.paginationType, refetch]);
   
   // Gestion du tri
   const handleSortChange = useCallback((field, direction = 'asc') => {
@@ -376,13 +446,13 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
     // Reset à la première page lors du changement de tri
     setCurrentPage(1);
     
-    if (paginationType === 'infinite') {
+    if (stableOptions.paginationType === 'infinite') {
       setAllItems([]); // Vider la liste pour infinite scroll
     }
     
     // Refetch avec le nouveau tri
     refetch();
-  }, [paginationType, refetch]);
+  }, [stableOptions.paginationType, refetch]);
   
   const toggleSort = useCallback((field) => {
     const newDirection = sorting?.field === field && sorting?.direction === 'asc' 
@@ -397,7 +467,7 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
   }, [selectedItems]);
   
   const toggleSelection = useCallback((item) => {
-    if (!enableSelection) return;
+    if (!stableListConfig.enableSelection) return;
     
     setSelectedItems(prev => {
       const isCurrentlySelected = prev.some(selected => selected.id === item.id);
@@ -407,36 +477,36 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
         newSelection = prev.filter(selected => selected.id !== item.id);
       } else {
         // Vérifier la limite de sélection
-        if (maxSelectionSize && prev.length >= maxSelectionSize) {
-          console.warn(`⚠️ Limite de sélection atteinte: ${maxSelectionSize}`);
+        if (stableOptions.maxSelectionSize && prev.length >= stableOptions.maxSelectionSize) {
+          console.warn(`⚠️ Limite de sélection atteinte: ${stableOptions.maxSelectionSize}`);
           return prev;
         }
         newSelection = [...prev, item];
       }
       
-      if (onItemSelect) {
-        onItemSelect(item, !isCurrentlySelected, newSelection);
+      if (callbacksRef.current.onItemSelect) {
+        callbacksRef.current.onItemSelect(item, !isCurrentlySelected, newSelection);
       }
       
       return newSelection;
     });
-  }, [enableSelection, maxSelectionSize, onItemSelect]);
+  }, [stableListConfig.enableSelection, stableOptions.maxSelectionSize]);
   
   const selectAll = useCallback(() => {
-    if (!enableSelection) return;
+    if (!stableListConfig.enableSelection) return;
     
     const itemsToSelect = finalItems.filter(item => !isSelected(item));
     
     // Vérifier la limite de sélection
-    if (maxSelectionSize && selectedItems.length + itemsToSelect.length > maxSelectionSize) {
-      const remainingSlots = maxSelectionSize - selectedItems.length;
+    if (stableOptions.maxSelectionSize && selectedItems.length + itemsToSelect.length > stableOptions.maxSelectionSize) {
+      const remainingSlots = stableOptions.maxSelectionSize - selectedItems.length;
       const limitedSelection = [...selectedItems, ...itemsToSelect.slice(0, remainingSlots)];
       setSelectedItems(limitedSelection);
-      console.warn(`⚠️ Sélection limitée à ${maxSelectionSize} éléments`);
+      console.warn(`⚠️ Sélection limitée à ${stableOptions.maxSelectionSize} éléments`);
     } else {
       setSelectedItems(prev => [...prev, ...itemsToSelect]);
     }
-  }, [enableSelection, finalItems, isSelected, selectedItems, maxSelectionSize]);
+  }, [stableListConfig.enableSelection, finalItems, isSelected, selectedItems, stableOptions.maxSelectionSize]);
   
   const selectNone = useCallback(() => {
     setSelectedItems([]);
@@ -448,51 +518,51 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
   
   // Sélection par plage
   const selectRange = useCallback((startIndex, endIndex) => {
-    if (!enableSelection) return;
+    if (!stableListConfig.enableSelection) return;
     
     const rangeItems = finalItems.slice(startIndex, endIndex + 1);
     const newSelection = [...selectedItems];
     
     rangeItems.forEach(item => {
       if (!newSelection.some(selected => selected.id === item.id)) {
-        if (!maxSelectionSize || newSelection.length < maxSelectionSize) {
+        if (!stableOptions.maxSelectionSize || newSelection.length < stableOptions.maxSelectionSize) {
           newSelection.push(item);
         }
       }
     });
     
     setSelectedItems(newSelection);
-  }, [enableSelection, finalItems, selectedItems, maxSelectionSize]);
+  }, [stableListConfig.enableSelection, finalItems, selectedItems, stableOptions.maxSelectionSize]);
   
   // Actions en lot
   const bulkActions = {
     delete: useCallback(async (items = selectedItems) => {
-      if (!enableBulkActions) return;
+      if (!stableOptions.enableBulkActions) return;
       
       // TODO: Implémenter la suppression en lot
       console.log('🗑️ Suppression en lot:', items.length, 'éléments');
-    }, [enableBulkActions, selectedItems]),
+    }, [stableOptions.enableBulkActions, selectedItems]),
     
     update: useCallback(async (updates, items = selectedItems) => {
-      if (!enableBulkActions) return;
+      if (!stableOptions.enableBulkActions) return;
       
       // TODO: Implémenter la mise à jour en lot
       console.log('🔄 Mise à jour en lot:', items.length, 'éléments');
-    }, [enableBulkActions, selectedItems]),
+    }, [stableOptions.enableBulkActions, selectedItems]),
     
     export: useCallback((format = 'json', items = selectedItems) => {
-      if (!enableBulkActions) return;
+      if (!stableOptions.enableBulkActions) return;
       
       // TODO: Implémenter l'export
       console.log('📤 Export en lot:', items.length, 'éléments', 'format:', format);
-    }, [enableBulkActions, selectedItems])
+    }, [stableOptions.enableBulkActions, selectedItems])
   };
   
   // ===== FONCTIONS DE VIRTUALISATION =====
   
   // Calcul de la plage visible pour la virtualisation
   const calculateVisibleRange = useCallback(() => {
-    if (!enableVirtualization || finalItems.length === 0) {
+    if (!stableOptions.enableVirtualization || finalItems.length === 0) {
       return { start: 0, end: finalItems.length };
     }
     
@@ -503,11 +573,11 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
     );
     
     return { start: Math.max(0, startIndex), end: endIndex };
-  }, [enableVirtualization, finalItems.length, scrollTop, itemHeight, containerHeight]);
+  }, [stableOptions.enableVirtualization, finalItems.length, scrollTop, itemHeight, containerHeight]);
   
   // Mise à jour des éléments virtualisés
   const updateVirtualizedItems = useCallback(() => {
-    if (!enableVirtualization) {
+    if (!stableOptions.enableVirtualization) {
       setVirtualizedItems(finalItems);
       return;
     }
@@ -522,11 +592,11 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
     }));
     
     setVirtualizedItems(visibleItems);
-  }, [enableVirtualization, finalItems, calculateVisibleRange, itemHeight]);
+  }, [stableOptions.enableVirtualization, finalItems, calculateVisibleRange, itemHeight]);
   
   // Gestion du scroll pour la virtualisation
   const handleVirtualScroll = useCallback((event) => {
-    if (!enableVirtualization) return;
+    if (!stableOptions.enableVirtualization) return;
     
     const newScrollTop = event.target.scrollTop;
     setScrollTop(newScrollTop);
@@ -535,17 +605,17 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
     requestAnimationFrame(() => {
       updateVirtualizedItems();
     });
-  }, [enableVirtualization, updateVirtualizedItems]);
+  }, [stableOptions.enableVirtualization, updateVirtualizedItems]);
   
   // Calcul de la hauteur totale virtualisée
   const getTotalVirtualHeight = useCallback(() => {
-    if (!enableVirtualization) return 'auto';
+    if (!stableOptions.enableVirtualization) return 'auto';
     return finalItems.length * itemHeight;
-  }, [enableVirtualization, finalItems.length, itemHeight]);
+  }, [stableOptions.enableVirtualization, finalItems.length, itemHeight]);
   
   // Mise à jour de la hauteur d'un élément (pour les hauteurs variables)
   const updateItemHeight = useCallback((index, height) => {
-    if (!enableVirtualization) return;
+    if (!stableOptions.enableVirtualization) return;
     
     itemHeightsRef.current.set(index, height);
     
@@ -555,11 +625,11 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
       const avgHeight = heights.reduce((sum, h) => sum + h, 0) / heights.length;
       setItemHeight(Math.round(avgHeight));
     }
-  }, [enableVirtualization]);
+  }, [stableOptions.enableVirtualization]);
   
   // Observer pour mesurer automatiquement les hauteurs d'éléments
   const setupItemHeightObserver = useCallback(() => {
-    if (!enableVirtualization || !virtualScrollRef.current) return;
+    if (!stableOptions.enableVirtualization || !virtualScrollRef.current) return;
     
     if (observerRef.current) {
       observerRef.current.disconnect();
@@ -588,11 +658,11 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
     
     // Observer aussi le conteneur principal pour détecter les changements de taille
     observerRef.current.observe(virtualScrollRef.current);
-  }, [enableVirtualization, updateItemHeight, containerHeight]);
+  }, [stableOptions.enableVirtualization, updateItemHeight, containerHeight]);
   
   // Fonction de redimensionnement manuel du conteneur
   const resizeContainer = useCallback((newHeight) => {
-    if (!enableVirtualization) return;
+    if (!stableOptions.enableVirtualization) return;
     
     setContainerHeight(newHeight);
     
@@ -601,11 +671,11 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
       updateVirtualizedItems();
     });
     
-  }, [enableVirtualization, updateVirtualizedItems]);
+  }, [stableOptions.enableVirtualization, updateVirtualizedItems]);
   
   // Fonction d'auto-ajustement de la hauteur du conteneur
   const autoResizeContainer = useCallback(() => {
-    if (!enableVirtualization || !virtualScrollRef.current) return;
+    if (!stableOptions.enableVirtualization || !virtualScrollRef.current) return;
     
     const parentElement = virtualScrollRef.current.parentElement;
     if (parentElement) {
@@ -616,7 +686,7 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
         setContainerHeight(newHeight);
       }
     }
-  }, [enableVirtualization, containerHeight]);
+  }, [stableOptions.enableVirtualization, containerHeight]);
   
   // ===== FIN FONCTIONS DE VIRTUALISATION =====
   
@@ -630,7 +700,7 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
     const isVisible = !document.hidden;
     setIsPageVisible(isVisible);
     
-    if (autoRefresh) {
+    if (stableOptions.autoRefresh) {
       if (isVisible && autoRefreshStatus === 'paused') {
         setAutoRefreshStatus('running');
         console.log('🔄 Auto-refresh repris (page visible)');
@@ -639,11 +709,11 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
         console.log('⏸️ Auto-refresh mis en pause (page cachée)');
       }
     }
-  }, [autoRefresh, autoRefreshStatus]);
+  }, [stableOptions.autoRefresh, autoRefreshStatus]);
   
   // Démarrage de l'auto-refresh
   const startAutoRefresh = useCallback(() => {
-    if (!autoRefresh || autoRefreshStatus === 'running') return;
+    if (!stableOptions.autoRefresh || autoRefreshStatus === 'running') return;
     
     setAutoRefreshStatus('running');
     
@@ -652,9 +722,9 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
         console.log('🔄 Auto-refresh des données');
         refetch();
       }
-    }, refreshInterval);
+    }, stableOptions.refreshInterval);
     
-  }, [autoRefresh, autoRefreshStatus, isPageVisible, loading, refetch, refreshInterval]);
+  }, [stableOptions.autoRefresh, autoRefreshStatus, isPageVisible, loading, refetch, stableOptions.refreshInterval]);
   
   // Arrêt de l'auto-refresh
   const stopAutoRefresh = useCallback(() => {
@@ -683,8 +753,8 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
     const term = searchTerm.toLowerCase();
     const results = finalItems.filter(item => {
       // Recherche dans les champs configurés
-      if (searchFields.length > 0) {
-        return searchFields.some(field => {
+      if (stableListConfig.searchFields.length > 0) {
+        return stableListConfig.searchFields.some(field => {
           const value = item[field];
           return value && typeof value === 'string' && 
                  value.toLowerCase().includes(term);
@@ -699,7 +769,7 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
     
     setSearchInListResults(results);
     return results;
-  }, [finalItems, searchFields]);
+  }, [finalItems, stableListConfig.searchFields]);
   
   // Effacement de la recherche dans la liste
   const clearSearchInList = useCallback(() => {
@@ -713,28 +783,27 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
   useEffect(() => {
     if (!fetchedItems) return;
     
-    const processedItems = fetchedItems.map(item => 
-      transformItemRef.current ? transformItemRef.current(item) : item
-    );
+    const processedItems = fetchedItems.map(transformItemStable);
     
     setAllItems(prev => {
-      if (paginationType === 'infinite') {
+      if (stableOptions.paginationType === 'infinite') {
         return [...prev, ...processedItems];
       }
       return processedItems;
     });
     
     setTotalCount(processedItems.length);
-    setHasMore(processedItems.length === pageSize);
+    setHasMore(processedItems.length === stableListConfig.pageSize);
     
-    if (onItemsChangeRef.current) {
-      onItemsChangeRef.current(processedItems);
+    const onItemsChange = callbacksRef.current.onItemsChange;
+    if (onItemsChange) {
+      onItemsChange(processedItems);
     }
-  }, [fetchedItems, paginationType, pageSize]);
+  }, [fetchedItems, stableOptions.paginationType, stableListConfig.pageSize, transformItemStable]);
   
   // Effet pour le nettoyage de la sélection
   useEffect(() => {
-    if (!enableSelection || selectedItems.length === 0) return;
+    if (!stableListConfig.enableSelection || selectedItems.length === 0) return;
     
     const validSelection = selectedItems.filter(selected =>
       finalItems.some(item => item.id === selected.id)
@@ -743,11 +812,11 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
     if (validSelection.length !== selectedItems.length) {
       setSelectedItems(validSelection);
     }
-  }, [enableSelection, finalItems, selectedItems]);
+  }, [stableListConfig.enableSelection, finalItems, selectedItems]);
   
   // Effet pour la virtualisation
   useEffect(() => {
-    if (!enableVirtualization) return;
+    if (!stableOptions.enableVirtualization) return;
     
     // Utiliser setupItemHeightObserver pour initialiser l'observateur
     setupItemHeightObserver();
@@ -766,11 +835,11 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
     };
     
     updateItems();
-  }, [enableVirtualization, finalItems, calculateVisibleRange, itemHeight, setupItemHeightObserver]);
+  }, [stableOptions.enableVirtualization, finalItems, calculateVisibleRange, itemHeight, setupItemHeightObserver]);
   
   // Effet pour l'auto-refresh
   useEffect(() => {
-    if (!autoRefresh) return;
+    if (!stableOptions.autoRefresh) return;
     
     // Utiliser handleVisibilityChange pour gérer la visibilité
     document.addEventListener('visibilitychange', handleVisibilityChange);
@@ -782,7 +851,7 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
         if (isPageVisible && !loading) {
           refetch();
         }
-      }, refreshInterval);
+      }, stableOptions.refreshInterval);
     };
     
     const stopRefresh = () => {
@@ -798,7 +867,7 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
       stopRefresh();
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [autoRefresh, isPageVisible, loading, refetch, refreshInterval, handleVisibilityChange]);
+  }, [stableOptions.autoRefresh, isPageVisible, loading, refetch, stableOptions.refreshInterval, handleVisibilityChange]);
   
   return {
     // Données
@@ -807,7 +876,7 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
     error,
     
     // Virtualisation
-    virtualizedItems: enableVirtualization ? virtualizedItems : finalItems,
+    virtualizedItems: stableOptions.enableVirtualization ? virtualizedItems : finalItems,
     visibleRange,
     virtualScrollRef,
     handleVirtualScroll,
@@ -815,7 +884,7 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
     updateItemHeight,
     resizeContainer,
     autoResizeContainer,
-    isVirtualized: enableVirtualization,
+    isVirtualized: stableOptions.enableVirtualization,
     virtualStats: {
       totalItems: finalItems.length,
       visibleItems: virtualizedItems.length,
@@ -866,14 +935,14 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
       setCurrentPage(1);
       setAllItems([]);
       setSelectedItems([]);
-      setSorting(defaultSort);
+      setSorting(stableListConfig.defaultSort);
       clearSearchInList();
       
-      if (enableFilters && searchAndFilterHook?.clearFilters) {
+      if (stableListConfig.enableFilters && searchAndFilterHook?.clearFilters) {
         searchAndFilterHook.clearFilters();
       }
       
-      if (enableSearch && searchAndFilterHook?.clearSearch) {
+      if (stableListConfig.enableSearch && searchAndFilterHook?.clearSearch) {
         searchAndFilterHook.clearSearch();
       }
       

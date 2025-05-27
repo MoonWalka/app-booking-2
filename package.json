@@ -58,7 +58,18 @@
     "audit:bootstrap": "node scripts/audit-bootstrap.js",
     "audit:bootstrap:fix": "node scripts/audit-bootstrap.js --fix",
     "audit:all": "npm run audit:css && npm run audit:bootstrap && npm run audit:card",
-    "audit:report": "node scripts/generate-audit-report.js"
+    "audit:report": "node scripts/generate-audit-report.js",
+    "test:renders": "node scripts/test-render-loops.js",
+    "test:renders:quick": "REACT_APP_TEST_DURATION=10000 node scripts/test-render-loops.js",
+    "test:responsive": "node scripts/test-responsive-fix.js",
+    "test:debug": "node scripts/test-final-debug.js",
+    "test:headless": "node scripts/test-renders-headless.js",
+    "test:server": "node scripts/test-renders-server.js",
+    "test:quick": "node scripts/test-renders-quick.js",
+    "test:complete": "node scripts/test-renders-complete.js",
+    "test:complete:extended": "node scripts/test-renders-complete-extended.js",
+    "test:edit": "node scripts/test-edit-pages.js",
+    "test:parametres": "node scripts/test-parametres-only.js"
   },
   "eslintConfig": {
     "extends": [
@@ -87,6 +98,7 @@
     "@types/babel__traverse": "^7.20.7",
     "@types/bonjour": "^3.5.13",
     "@types/estree": "^1.0.7",
+    "@welldone-software/why-did-you-render": "^8.0.3",
     "assert": "^2.1.0",
     "babel-plugin-module-resolver": "^4.1.0",
     "browserify-zlib": "^0.2.0",
@@ -95,6 +107,7 @@
     "env-cmd": "^10.1.0",
     "glob": "^11.0.2",
     "https-browserify": "^1.0.0",
+    "madge": "^8.0.0",
     "nth-check": "^2.1.1",
     "path-browserify": "^1.0.1",
     "postcss": "^8.5.3",

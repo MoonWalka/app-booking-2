@@ -56,7 +56,7 @@ const FlexContainer = ({
 };
 
 FlexContainer.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
   direction: PropTypes.oneOf(['row', 'column', 'row-reverse', 'column-reverse']),
   justify: PropTypes.oneOf([
     'flex-start', 'center', 'flex-end', 

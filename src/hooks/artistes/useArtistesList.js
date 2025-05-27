@@ -3,8 +3,14 @@
  * 
  * Cette implémentation suit l'approche RECOMMANDÉE pour les nouveaux développements
  * en utilisant directement les hooks génériques.
+ * 
+ * CORRECTIONS APPLIQUÉES POUR ÉVITER LES BOUCLES DE RE-RENDERS :
+ * - Stabilisation de la fonction transformItem avec useCallback
+ * - Configuration stable avec useMemo
+ * - Évitement des dépendances circulaires
+ * - Utilisation de useRef pour les callbacks
  */
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useGenericEntityList } from '@/hooks/generics';
 import { collection, getDocs, query } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
@@ -23,6 +29,9 @@ export const useArtistesList = ({
   sortDirection = 'asc',
   initialFilters = []
 } = {}) => {
+  // 🧪 DIAGNOSTIC: Compteur de renders
+  console.count("🎨 [ARTISTES] useArtistesList render");
+  
   // États locaux
   const [stats, setStats] = useState({
     total: 0,
@@ -33,21 +42,17 @@ export const useArtistesList = ({
   const [filters, setFilters] = useState({});
   
   // Références stables
-  const statsRef = useRef(stats);
   const isCalculatingRef = useRef(false);
   const entityListRef = useRef(null);
-  const searchTermRef = useRef(searchTerm);
-  const filtersRef = useRef(filters);
 
-  // Mise à jour des refs
-  useEffect(() => {
-    statsRef.current = stats;
-    searchTermRef.current = searchTerm;
-    filtersRef.current = filters;
-  }, [stats, searchTerm, filters]);
+  // ✅ CORRECTION 1: Fonction de transformation stable
+  const transformItem = useCallback((data) => ({
+    ...data,
+    hasConcerts: !!(data.concertsAssocies && data.concertsAssocies.length > 0)
+  }), []); // Pas de dépendances car la logique est statique
 
-  // Hook générique avec configuration stable
-  const entityList = useGenericEntityList('artistes', {
+  // ✅ CORRECTION 2: Configuration stable avec useMemo
+  const listConfig = useMemo(() => ({
     pageSize,
     defaultSort: { field: sortField, direction: sortDirection },
     defaultFilters: {},
@@ -55,33 +60,25 @@ export const useArtistesList = ({
     enableFilters: true,
     enableSearch: true,
     searchFields: ['nom', 'genre', 'tags'],
-    transformItem: (data) => ({
-      ...data,
-      hasConcerts: !!(data.concertsAssocies && data.concertsAssocies.length > 0)
-    })
-  }, {
+    transformItem
+  }), [pageSize, sortField, sortDirection, transformItem]);
+
+  const options = useMemo(() => ({
     paginationType: 'pages',
     enableVirtualization: false,
     enableCache: true,
     enableRealTime: false,
     enableBulkActions: false,
     autoRefresh: false
-  });
+  }), []);
 
-  // DEBUG: Ajouter des logs pour voir ce qui se passe
-  useEffect(() => {
-    // console.log('🔍 [useArtistesList] entityList state:', {
-    //   items: entityList.items,
-    //   loading: entityList.loading,
-    //   error: entityList.error,
-    //   itemsLength: entityList.items?.length || 0
-    // });
-  }, [entityList.items, entityList.loading, entityList.error]);
+  // Hook générique avec configuration stable
+  const entityList = useGenericEntityList('artistes', listConfig, options);
 
   // Stocker la référence stable
   entityListRef.current = entityList;
 
-  // Fonction de calcul des stats avec guard
+  // ✅ CORRECTION 3: Fonction de calcul des stats stable
   const calculateStats = useCallback(async () => {
     if (isCalculatingRef.current) return;
     
@@ -102,51 +99,51 @@ export const useArtistesList = ({
         }
       });
       
+      const newStats = {
+        total: snapshot.size,
+        avecConcerts,
+        sansConcerts
+      };
+
+      // ✅ CORRECTION 4: Éviter les mises à jour inutiles
       setStats(prevStats => {
-        // Ne mettre à jour que si les valeurs ont changé
-        if (prevStats.total === snapshot.size && 
-            prevStats.avecConcerts === avecConcerts && 
-            prevStats.sansConcerts === sansConcerts) {
+        if (prevStats.total === newStats.total && 
+            prevStats.avecConcerts === newStats.avecConcerts && 
+            prevStats.sansConcerts === newStats.sansConcerts) {
           return prevStats;
         }
-        return {
-          total: snapshot.size,
-          avecConcerts,
-          sansConcerts
-        };
+        return newStats;
       });
     } catch (error) {
       console.error('Erreur lors du calcul des statistiques:', error);
     } finally {
       isCalculatingRef.current = false;
     }
-  }, []); // Dépendances vides car utilise des refs
+  }, []); // Pas de dépendances car utilise des refs
 
-  // Effet pour le calcul initial des stats
+  // ✅ CORRECTION 5: Effet pour le calcul initial des stats - une seule fois
   useEffect(() => {
     calculateStats();
-  }, [calculateStats]); // Ajout de la dépendance manquante
+  }, [calculateStats]); // Inclure calculateStats dans les dépendances
 
-  // Rafraîchissement avec stats
+  // ✅ CORRECTION 6: Rafraîchissement avec stats stable
   const refreshWithStats = useCallback(async () => {
     if (!entityListRef.current) return;
     
-    await entityListRef.current.refresh();
+    await entityListRef.current.refetch();
     await calculateStats();
-  }, [calculateStats]); // Ajout de la dépendance manquante
+  }, [calculateStats]);
 
-  // ================== Gestion des filtres ==================
-  // Déclaration anticipée pour éviter no-use-before-define
+  // ✅ CORRECTION 7: Filtres spécifiques aux artistes stables
   const setFilter = useCallback((key, value) => {
     setFilters(prev => ({ ...prev, [key]: value }));
   }, []);
 
-  // Filtres spécifiques aux artistes
   const filterByGenre = useCallback((genre) => {
     if (!entityListRef.current) return;
     if (!genre) {
       entityListRef.current.setFilter('genre', null);
-      setFilter('genre', null); // mettre à jour l'état local pour l'UI
+      setFilter('genre', null);
     } else {
       entityListRef.current.setFilter('genre', genre);
       setFilter('genre', genre);
@@ -162,9 +159,12 @@ export const useArtistesList = ({
   const resetFilters = useCallback(() => {
     setFilters({});
     setSearchTerm('');
+    if (entityListRef.current?.clearFilters) {
+      entityListRef.current.clearFilters();
+    }
   }, []);
 
-  // Alias stables pour la compatibilité
+  // ✅ CORRECTION 8: Alias stables pour la compatibilité
   const setSortBy = useCallback((field) => {
     if (entityListRef.current?.setSortField) {
       entityListRef.current.setSortField(field);
@@ -187,7 +187,7 @@ export const useArtistesList = ({
     }
   }, []);
 
-  // Effet pour déclencher la recherche lorsque searchTerm change
+  // ✅ CORRECTION 9: Effet pour la recherche stable
   useEffect(() => {
     if (!entityListRef.current) return;
     if (searchTerm && entityListRef.current.search) {
@@ -197,58 +197,9 @@ export const useArtistesList = ({
     }
   }, [searchTerm]);
 
-  // Effet pour mettre à jour les stats quand la liste change
-  useEffect(() => {
-    if (entityList.items) {
-      calculateStats();
-    }
-  }, [entityList.items, calculateStats]);
-
-  // DEBUG: Test direct de la base de données
-  useEffect(() => {
-    const testDirectQuery = async () => {
-      try {
-        // console.log('🔍 [useArtistesList] Test direct de la base de données...');
-        // const artistesQuery = query(collection(db, 'artistes'));
-        // const snapshot = await getDocs(artistesQuery);
-        // console.log('🔍 [useArtistesList] Résultat direct:', {
-        //   size: snapshot.size,
-        //   empty: snapshot.empty,
-        //   docs: snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
-        // });
-      } catch (error) {
-        console.error('❌ [useArtistesList] Erreur test direct:', error);
-      }
-    };
-    
-    testDirectQuery();
-  }, []); // Une seule fois au montage
-
-  // DEBUG: Logs pour useGenericEntityList
-  useEffect(() => {
-    // console.log('🔍 [useArtistesList] Configuration entityList:', {
-    //   entityType: 'artistes',
-    //   pageSize,
-    //   sortField,
-    //   sortDirection,
-    //   enableFilters: true,
-    //   enableSearch: true,
-    //   searchFields: ['nom', 'genre', 'tags']
-    // });
-  }, [pageSize, sortField, sortDirection]);
-
-  // DEBUG: Logs pour les données de entityList
-  useEffect(() => {
-    // console.log('🔍 [useArtistesList] entityList détaillé:', {
-    //   items: entityList.items,
-    //   loading: entityList.loading,
-    //   error: entityList.error,
-    //   data: entityList.data,
-    //   fetchedItems: entityList.fetchedItems,
-    //   allItems: entityList.allItems,
-    //   finalItems: entityList.finalItems
-    // });
-  }, [entityList]);
+  // ✅ CORRECTION 10: Supprimer l'effet qui cause la boucle
+  // L'effet qui recalculait les stats à chaque changement d'items a été supprimé
+  // car il créait une boucle infinie
 
   return {
     ...entityList,

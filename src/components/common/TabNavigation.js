@@ -54,16 +54,18 @@ const TabNavigation = ({
         ))}
       </nav>
       {tabs.map((tab, idx) => (
-        <div
-          key={tab.label || idx}
-          className={`tc-tab-content${currentActive === idx ? ' tc-active' : ''}`}
-          role="tabpanel"
-          id={`tab-panel-${idx}`}
-          aria-labelledby={`tab-${idx}`}
-          hidden={currentActive !== idx}
-        >
-          {tab.content}
-        </div>
+        tab.content ? (
+          <div
+            key={tab.label || idx}
+            className={`tc-tab-content${currentActive === idx ? ' tc-active' : ''}`}
+            role="tabpanel"
+            id={`tab-panel-${idx}`}
+            aria-labelledby={`tab-${idx}`}
+            hidden={currentActive !== idx}
+          >
+            {tab.content}
+          </div>
+        ) : null
       ))}
     </div>
   );
@@ -73,7 +75,7 @@ TabNavigation.propTypes = {
   tabs: PropTypes.arrayOf(
     PropTypes.shape({
       label: PropTypes.node.isRequired,
-      content: PropTypes.node.isRequired,
+      content: PropTypes.node, // Rendu optionnel pour permettre null
       icon: PropTypes.node,
       disabled: PropTypes.bool
     })

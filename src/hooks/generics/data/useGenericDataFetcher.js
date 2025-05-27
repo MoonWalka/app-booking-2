@@ -5,9 +5,15 @@
  * @author TourCraft Team
  * @since 2024
  * @phase Phase 2 - Généralisation - Semaine 2
+ * 
+ * CORRECTIONS APPLIQUÉES POUR ÉVITER LES BOUCLES DE RE-RENDERS :
+ * - Stabilisation des objets de configuration avec useMemo
+ * - Mémoïsation des callbacks avec useCallback et dépendances stables
+ * - Utilisation de useRef pour les callbacks onData et onError
+ * - Évitement des mises à jour directes des références dans les dépendances
  */
 
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { db } from '@/services/firebase-service';
 import { 
   collection, 
@@ -76,28 +82,43 @@ import {
  * @replaces useDataFetcher, useEntityLoader, useCollectionLoader
  */
 const useGenericDataFetcher = (entityType, fetchConfig = {}, options = {}) => {
-  const {
-    mode = 'collection', // 'single' | 'collection'
-    id = null, // Pour mode 'single'
-    filters = {},
-    orderBy: orderByConfig = null,
-    limit: limitCount = null,
-    cacheKey = null,
-    onData,
-    onError,
-    transformData = null
-  } = fetchConfig;
-  
-  const {
-    enableCache = true,
-    cacheTTL = 5 * 60 * 1000, // 5 minutes par défaut
-    enableRealTime = false,
-    enableRetry = true,
-    maxRetries = 3,
-    retryDelay = 1000,
-    autoFetch = true,
-    enableStaleWhileRevalidate = true
-  } = options;
+  // ✅ CORRECTION 1: Stabiliser la configuration avec useMemo
+  const stableFetchConfig = useMemo(() => ({
+    mode: fetchConfig.mode || 'collection',
+    id: fetchConfig.id || null,
+    filters: fetchConfig.filters || {},
+    orderBy: fetchConfig.orderBy || null,
+    limit: fetchConfig.limit || null,
+    cacheKey: fetchConfig.cacheKey || null,
+    // onData, onError, transformData seront gérées séparément
+  }), [
+    fetchConfig.mode,
+    fetchConfig.id,
+    fetchConfig.filters,
+    fetchConfig.orderBy,
+    fetchConfig.limit,
+    fetchConfig.cacheKey
+  ]);
+
+  const stableOptions = useMemo(() => ({
+    enableCache: options.enableCache !== false,
+    cacheTTL: options.cacheTTL || 5 * 60 * 1000,
+    enableRealTime: options.enableRealTime || false,
+    enableRetry: options.enableRetry !== false,
+    maxRetries: options.maxRetries || 3,
+    retryDelay: options.retryDelay || 1000,
+    autoFetch: options.autoFetch !== false,
+    enableStaleWhileRevalidate: options.enableStaleWhileRevalidate !== false
+  }), [
+    options.enableCache,
+    options.cacheTTL,
+    options.enableRealTime,
+    options.enableRetry,
+    options.maxRetries,
+    options.retryDelay,
+    options.autoFetch,
+    options.enableStaleWhileRevalidate
+  ]);
   
   // États de base
   const [data, setData] = useState(null);
@@ -113,56 +134,62 @@ const useGenericDataFetcher = (entityType, fetchConfig = {}, options = {}) => {
   const retryTimeoutRef = useRef(null);
   const abortControllerRef = useRef(null);
   
-  // Références pour stabiliser les fonctions
-  const onDataRef = useRef(onData);
-  const onErrorRef = useRef(onError);
-  const transformDataRef = useRef(transformData);
+  // ✅ CORRECTION 2: Références stables pour les callbacks
+  const callbacksRef = useRef({
+    onData: fetchConfig.onData,
+    onError: fetchConfig.onError,
+    transformData: fetchConfig.transformData
+  });
+
+  // ✅ CORRECTION 3: Mettre à jour les callbacks uniquement quand nécessaire
+  useEffect(() => {
+    callbacksRef.current = {
+      onData: fetchConfig.onData,
+      onError: fetchConfig.onError,
+      transformData: fetchConfig.transformData
+    };
+  }, [fetchConfig.onData, fetchConfig.onError, fetchConfig.transformData]);
   
-  // Mettre à jour les références
-  onDataRef.current = onData;
-  onErrorRef.current = onError;
-  transformDataRef.current = transformData;
-  
-  // Génération de la clé de cache
+  // ✅ CORRECTION 4: Génération de la clé de cache stable
   const generateCacheKey = useCallback(() => {
-    if (cacheKey) return cacheKey;
+    if (stableFetchConfig.cacheKey) return stableFetchConfig.cacheKey;
     
-    const baseKey = `${entityType}_${mode}`;
-    if (mode === 'single') {
-      return `${baseKey}_${id}`;
+    const baseKey = `${entityType}_${stableFetchConfig.mode}`;
+    if (stableFetchConfig.mode === 'single') {
+      return `${baseKey}_${stableFetchConfig.id}`;
     }
     
-    const filtersKey = Object.keys(filters).length > 0 ? 
-      `_${JSON.stringify(filters)}` : '';
-    const orderKey = orderByConfig ? 
-      `_${orderByConfig.field}_${orderByConfig.direction}` : '';
-    const limitKey = limitCount ? `_limit${limitCount}` : '';
+    const filtersKey = Object.keys(stableFetchConfig.filters).length > 0 ? 
+      `_${JSON.stringify(stableFetchConfig.filters)}` : '';
+    const orderKey = stableFetchConfig.orderBy ? 
+      `_${stableFetchConfig.orderBy.field}_${stableFetchConfig.orderBy.direction}` : '';
+    const limitKey = stableFetchConfig.limit ? `_limit${stableFetchConfig.limit}` : '';
     
     return `${baseKey}${filtersKey}${orderKey}${limitKey}`;
-  }, [entityType, mode, id, filters, orderByConfig, limitCount, cacheKey]);
+  }, [entityType, stableFetchConfig]);
   
-  // Gestion du cache
+  // ✅ CORRECTION 5: Gestion du cache stable
   const getCachedData = useCallback(() => {
-    if (!enableCache) return null;
+    if (!stableOptions.enableCache) return null;
     
     const key = generateCacheKey();
     const cached = cacheRef.current.get(key);
     
     if (cached) {
-      const isExpired = Date.now() - cached.timestamp > cacheTTL;
+      const isExpired = Date.now() - cached.timestamp > stableOptions.cacheTTL;
       if (!isExpired) {
         return cached.data;
-      } else if (enableStaleWhileRevalidate) {
+      } else if (stableOptions.enableStaleWhileRevalidate) {
         setIsStale(true);
-        return cached.data; // Retourner les données obsolètes en attendant
+        return cached.data;
       }
     }
     
     return null;
-  }, [enableCache, generateCacheKey, cacheTTL, enableStaleWhileRevalidate]);
+  }, [stableOptions.enableCache, stableOptions.cacheTTL, stableOptions.enableStaleWhileRevalidate, generateCacheKey]);
   
   const setCachedData = useCallback((newData) => {
-    if (!enableCache) return;
+    if (!stableOptions.enableCache) return;
     
     const key = generateCacheKey();
     cacheRef.current.set(key, {
@@ -170,7 +197,7 @@ const useGenericDataFetcher = (entityType, fetchConfig = {}, options = {}) => {
       timestamp: Date.now()
     });
     setIsStale(false);
-  }, [enableCache, generateCacheKey]);
+  }, [stableOptions.enableCache, generateCacheKey]);
   
   const invalidateCache = useCallback((specificKey = null) => {
     if (specificKey) {
@@ -182,13 +209,13 @@ const useGenericDataFetcher = (entityType, fetchConfig = {}, options = {}) => {
     setIsStale(false);
   }, [generateCacheKey]);
   
-  // Construction de la requête Firebase
+  // ✅ CORRECTION 6: Construction de la requête Firebase stable
   const buildQuery = useCallback(() => {
-    if (mode === 'single') {
-      if (!id) {
+    if (stableFetchConfig.mode === 'single') {
+      if (!stableFetchConfig.id) {
         throw new Error('ID requis pour le mode single');
       }
-      return doc(db, entityType, id);
+      return doc(db, entityType, stableFetchConfig.id);
     }
     
     // Mode collection
@@ -196,13 +223,11 @@ const useGenericDataFetcher = (entityType, fetchConfig = {}, options = {}) => {
     const constraints = [];
     
     // Filtres
-    Object.entries(filters).forEach(([field, value]) => {
+    Object.entries(stableFetchConfig.filters).forEach(([field, value]) => {
       if (value !== undefined && value !== null && value !== '') {
         if (Array.isArray(value)) {
-          // Pour les filtres de type "in"
           constraints.push(where(field, 'in', value));
         } else if (typeof value === 'object' && value.operator) {
-          // Pour les filtres avec opérateurs personnalisés
           constraints.push(where(field, value.operator, value.value));
         } else {
           constraints.push(where(field, '==', value));
@@ -211,13 +236,13 @@ const useGenericDataFetcher = (entityType, fetchConfig = {}, options = {}) => {
     });
     
     // Tri
-    if (orderByConfig) {
-      constraints.push(orderBy(orderByConfig.field, orderByConfig.direction || 'asc'));
+    if (stableFetchConfig.orderBy) {
+      constraints.push(orderBy(stableFetchConfig.orderBy.field, stableFetchConfig.orderBy.direction || 'asc'));
     }
     
     // Limite
-    if (limitCount) {
-      constraints.push(limit(limitCount));
+    if (stableFetchConfig.limit) {
+      constraints.push(limit(stableFetchConfig.limit));
     }
     
     if (constraints.length > 0) {
@@ -225,26 +250,28 @@ const useGenericDataFetcher = (entityType, fetchConfig = {}, options = {}) => {
     }
     
     return q;
-  }, [mode, id, entityType, filters, orderByConfig, limitCount]);
+  }, [entityType, stableFetchConfig]);
   
-  // Transformation des données
+  // ✅ CORRECTION 7: Transformation des données stable
   const processData = useCallback((rawData) => {
     let processedData = rawData;
     
     // Transformation personnalisée
-    if (transformDataRef.current && typeof transformDataRef.current === 'function') {
-      processedData = transformDataRef.current(processedData);
+    const transformFn = callbacksRef.current.transformData;
+    if (transformFn && typeof transformFn === 'function') {
+      processedData = transformFn(processedData);
     }
     
     // Callback de données
-    if (onDataRef.current) {
-      onDataRef.current(processedData);
+    const onDataFn = callbacksRef.current.onData;
+    if (onDataFn) {
+      onDataFn(processedData);
     }
     
     return processedData;
-  }, []); // CORRECTION: Pas de dépendances car on utilise les refs
+  }, []); // Pas de dépendances car utilise des refs
   
-  // Fonction de récupération principale
+  // ✅ CORRECTION 8: Fonction de récupération principale stable
   const fetchData = useCallback(async (useCache = true) => {
     // Vérifier le cache d'abord
     if (useCache) {
@@ -269,7 +296,7 @@ const useGenericDataFetcher = (entityType, fetchConfig = {}, options = {}) => {
       const q = buildQuery();
       let result;
       
-      if (mode === 'single') {
+      if (stableFetchConfig.mode === 'single') {
         const docSnap = await getDoc(q);
         if (docSnap.exists()) {
           result = { id: docSnap.id, ...docSnap.data() };
@@ -300,19 +327,20 @@ const useGenericDataFetcher = (entityType, fetchConfig = {}, options = {}) => {
         const errorMessage = `Erreur lors de la récupération ${entityType}: ${err.message}`;
         setError(errorMessage);
         
-        if (onErrorRef.current) {
-          onErrorRef.current(err);
+        const onErrorFn = callbacksRef.current.onError;
+        if (onErrorFn) {
+          onErrorFn(err);
         }
         
         console.error('❌', errorMessage, err);
         
         // Mécanisme de retry
-        if (enableRetry && retryCount < maxRetries) {
+        if (stableOptions.enableRetry && retryCount < stableOptions.maxRetries) {
           setRetryCount(prev => prev + 1);
           
           retryTimeoutRef.current = setTimeout(() => {
-            fetchData(false); // Ne pas utiliser le cache lors du retry
-          }, retryDelay * Math.pow(2, retryCount)); // Backoff exponentiel
+            fetchData(false);
+          }, stableOptions.retryDelay * Math.pow(2, retryCount));
         }
       }
       
@@ -324,19 +352,19 @@ const useGenericDataFetcher = (entityType, fetchConfig = {}, options = {}) => {
     getCachedData,
     isStale,
     buildQuery,
-    mode,
+    stableFetchConfig.mode,
     entityType,
     processData,
     setCachedData,
-    enableRetry,
-    retryCount,
-    maxRetries,
-    retryDelay
-  ]); // CORRECTION: Retirer onError car on utilise onErrorRef
+    stableOptions.enableRetry,
+    stableOptions.maxRetries,
+    stableOptions.retryDelay,
+    retryCount
+  ]);
   
-  // Configuration de l'écoute en temps réel
+  // ✅ CORRECTION 9: Configuration de l'écoute en temps réel stable
   const setupRealTimeListener = useCallback(() => {
-    if (!enableRealTime) return;
+    if (!stableOptions.enableRealTime) return;
     
     try {
       const q = buildQuery();
@@ -345,7 +373,7 @@ const useGenericDataFetcher = (entityType, fetchConfig = {}, options = {}) => {
         (snapshot) => {
           let result;
           
-          if (mode === 'single') {
+          if (stableFetchConfig.mode === 'single') {
             if (snapshot.exists()) {
               result = { id: snapshot.id, ...snapshot.data() };
             } else {
@@ -369,8 +397,9 @@ const useGenericDataFetcher = (entityType, fetchConfig = {}, options = {}) => {
           const errorMessage = `Erreur temps réel ${entityType}: ${err.message}`;
           setError(errorMessage);
           
-          if (onErrorRef.current) {
-            onErrorRef.current(err);
+          const onErrorFn = callbacksRef.current.onError;
+          if (onErrorFn) {
+            onErrorFn(err);
           }
           
           console.error('❌', errorMessage, err);
@@ -382,61 +411,56 @@ const useGenericDataFetcher = (entityType, fetchConfig = {}, options = {}) => {
     } catch (err) {
       console.error('❌ Erreur configuration temps réel:', err);
     }
-  }, [enableRealTime, buildQuery, mode, entityType, processData, setCachedData]); // CORRECTION: Retirer onError car on utilise onErrorRef
+  }, [stableOptions.enableRealTime, buildQuery, stableFetchConfig.mode, entityType, processData, setCachedData]);
   
-  // Références stables pour les fonctions
-  const fetchDataRef = useRef();
-  const setupRealTimeListenerRef = useRef();
-  
-  // Assigner les fonctions aux références
-  fetchDataRef.current = fetchData;
-  setupRealTimeListenerRef.current = setupRealTimeListener;
-  
-  // Fonction de re-récupération
+  // ✅ CORRECTION 10: Fonction de re-récupération stable
   const refetch = useCallback(() => {
     invalidateCache();
-    return fetchDataRef.current(false);
-  }, [invalidateCache]);
+    return fetchData(false);
+  }, [invalidateCache, fetchData]);
   
-  // Effet de récupération automatique
+  // ✅ CORRECTION 11: Effet de récupération automatique optimisé
   useEffect(() => {
-    if (autoFetch && fetchDataRef.current) {
-      fetchDataRef.current();
+    if (stableOptions.autoFetch) {
+      fetchData();
     }
     
-    if (enableRealTime && setupRealTimeListenerRef.current) {
-      setupRealTimeListenerRef.current();
+    if (stableOptions.enableRealTime) {
+      setupRealTimeListener();
     }
     
     return () => {
       // Nettoyage
       if (unsubscribeRef.current) {
         unsubscribeRef.current();
+        unsubscribeRef.current = null;
       }
       if (retryTimeoutRef.current) {
         clearTimeout(retryTimeoutRef.current);
+        retryTimeoutRef.current = null;
       }
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
+        abortControllerRef.current = null;
       }
     };
-  }, [autoFetch, enableRealTime]); // CORRECTION: Utiliser les refs pour éviter les boucles
+  }, [stableOptions.autoFetch, stableOptions.enableRealTime, fetchData, setupRealTimeListener]);
   
-  // Effet de vérification de fraîcheur des données
+  // ✅ CORRECTION 12: Effet de vérification de fraîcheur des données optimisé
   useEffect(() => {
-    if (!enableCache || !lastFetch) return;
+    if (!stableOptions.enableCache || !lastFetch) return;
     
     const checkStaleData = () => {
       const timeSinceLastFetch = Date.now() - lastFetch.getTime();
-      if (timeSinceLastFetch > cacheTTL) {
+      if (timeSinceLastFetch > stableOptions.cacheTTL) {
         setIsStale(true);
       }
     };
     
-    const interval = setInterval(checkStaleData, cacheTTL / 4); // Vérifier 4 fois par période TTL
+    const interval = setInterval(checkStaleData, stableOptions.cacheTTL / 4);
     
     return () => clearInterval(interval);
-  }, [enableCache, lastFetch, cacheTTL]);
+  }, [stableOptions.enableCache, stableOptions.cacheTTL, lastFetch]);
   
   return {
     // Données

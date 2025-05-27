@@ -52,7 +52,7 @@ const ConcertsList = () => {
     hasContract,
     getContractStatus
   } = useConcertListData();
-  console.timeEnd('⏱️ Initialisation hooks ConcertListData');
+  console.timeEnd('⏱️ Initialisation hooks ConcertsList');
 
   console.time('⏱️ Initialisation ConcertFilters');
   const {

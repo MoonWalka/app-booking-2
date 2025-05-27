@@ -1,57 +1,74 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useNavigate, useLocation } from 'react-router-dom';
-import ParametresEntreprise from '../components/parametres/ParametresEntreprise';
-// Imports avec chemins modifiés de la branche refacto-structure-scriptshell - pour implémentation future
-// import ParametresGeneraux from '@components/parametres/ParametresGeneraux'; 
- //import ParametresCompte from '@components/parametres/ParametresCompte';
-import ParametresGeneraux from '../components/parametres/ParametresGeneraux';
-import ParametresCompte from '../components/parametres/ParametresCompte';
-import ParametresNotifications from '../components/parametres/ParametresNotifications';
-// Imports avec chemins modifiés de la branche refacto-structure-scriptshell - pour implémentation future
-// import ParametresApparence from '@components/parametres/ParametresApparence'; 
-import ParametresApparence from '../components/parametres/ParametresApparence';
-import ParametresExport from '../components/parametres/ParametresExport';
-import ContratTemplatesPage from '@pages/contratTemplatesPage'; // Ajustez le chemin selon votre structure
-import ContratTemplatesEditPage from '@pages/contratTemplatesEditPage'; // Ajustez le chemin selon votre structure
-import SyncManager from '../components/parametres/sync/SyncManager'; // Import du nouveau composant
+import ParametresEntreprise from '../components/parametres/ParametresEntrepriseSimple';
+import ParametresGeneraux from '../components/parametres/ParametresGenerauxSimple';
+import ParametresCompte from '../components/parametres/ParametresCompteSimple';
+import {
+  ParametresNotificationsSimple as ParametresNotifications,
+  ParametresApparenceSimple as ParametresApparence,
+  ParametresExportSimple as ParametresExport,
+  SyncManagerSimple as SyncManager
+} from '../components/parametres/ParametresSimples';
 import TabNavigation from '../components/common/TabNavigation';
-
-// Import du style global de la branche refacto-structure-scriptshell - pour implémentation future
 import '@styles/index.css';
-// Note: Vous devrez vérifier que le dossier @styles existe et contient un fichier index.css,
-// sinon créez ce dossier et ce fichier avec les styles appropriés.
+
+// import ContratTemplatesPage from '@pages/contratTemplatesPage'; // Ajustez le chemin selon votre structure
+// import ContratTemplatesEditPage from '@pages/contratTemplatesEditPage'; // Ajustez le chemin selon votre structure
+
+// Composants simplifiés temporaires pour les contrats
+const ContratTemplatesPage = () => (
+  <div>
+    <h3>Modèles de contrats (Version Simplifiée)</h3>
+    <p>Gestion des modèles de contrats - Fonctionnalité en cours de développement.</p>
+  </div>
+);
+
+const ContratTemplatesEditPage = () => (
+  <div>
+    <h3>Édition de modèle de contrat (Version Simplifiée)</h3>
+    <p>Édition de modèle de contrat - Fonctionnalité en cours de développement.</p>
+  </div>
+);
 
 const ParametresPage = () => {
   const [activeTab, setActiveTab] = useState('entreprise');
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Déterminer l'onglet actif en fonction de l'URL
+  // Déterminer l'onglet actif en fonction de l'URL (sans déclencher de navigation)
   useEffect(() => {
     const path = location.pathname;
+    let newActiveTab = 'entreprise'; // valeur par défaut
+    
     if (path.includes('/parametres/contrats')) {
-      setActiveTab('contrats');
+      newActiveTab = 'contrats';
     } else if (path.includes('/parametres/compte')) {
-      setActiveTab('compte');
+      newActiveTab = 'compte';
     } else if (path.includes('/parametres/notifications')) {
-      setActiveTab('notifications');
+      newActiveTab = 'notifications';
     } else if (path.includes('/parametres/apparence')) {
-      setActiveTab('apparence');
+      newActiveTab = 'apparence';
     } else if (path.includes('/parametres/export')) {
-      setActiveTab('export');
+      newActiveTab = 'export';
     } else if (path.includes('/parametres/sync')) {
-      setActiveTab('sync');
+      newActiveTab = 'sync';
     } else if (path.includes('/parametres/generaux')) {
-      setActiveTab('generaux');
+      newActiveTab = 'generaux';
     } else if (path.includes('/parametres/entreprise') || path === '/parametres') {
-      setActiveTab('entreprise');
+      newActiveTab = 'entreprise';
     }
-  }, [location]);
+    
+    // Ne mettre à jour que si l'onglet a vraiment changé
+    if (newActiveTab !== activeTab) {
+      setActiveTab(newActiveTab);
+    }
+  }, [location.pathname, activeTab]);
 
-  // Gestionnaire pour le changement d'onglet
-  const handleTabChange = (tab) => {
-    setActiveTab(tab);
+  // Gestionnaire pour le changement d'onglet (navigation uniquement) - Stabilisé avec useCallback
+  const handleTabChange = useCallback((tab) => {
+    // Ne naviguer que si l'onglet est différent de l'actuel
+    if (tab === activeTab) return;
     
     // Naviguer vers la bonne route en fonction de l'onglet sélectionné
     switch(tab) {
@@ -83,7 +100,7 @@ const ParametresPage = () => {
         navigate('/parametres');
         break;
     }
-  };
+  }, [activeTab, navigate]);
 
   const renderActiveComponent = () => {
     // Si l'URL contient un ID de contrat, c'est l'édition d'un modèle de contrat
@@ -114,7 +131,8 @@ const ParametresPage = () => {
     }
   };
 
-  const tabList = [
+  // Stabilisation de la liste des onglets avec useMemo
+  const tabList = useMemo(() => [
     { label: 'Entreprise', key: 'entreprise' },
     { label: 'Paramètres généraux', key: 'generaux' },
     { label: 'Compte utilisateur', key: 'compte' },
@@ -123,8 +141,9 @@ const ParametresPage = () => {
     { label: 'Modèles de contrats', key: 'contrats' },
     { label: 'Export et sauvegarde', key: 'export' },
     { label: 'Synchronisation des données', key: 'sync' }
-  ];
-  const tabIndex = tabList.findIndex(tab => tab.key === activeTab);
+  ], []);
+  
+  const tabIndex = useMemo(() => tabList.findIndex(tab => tab.key === activeTab), [tabList, activeTab]);
 
   return (
     <Container fluid className="p-4">

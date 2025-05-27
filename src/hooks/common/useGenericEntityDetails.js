@@ -60,6 +60,16 @@ const useGenericEntityDetails = ({
   cacheEnabled = true,       // Activer le cache pour ce hook
   cacheTTL                   // TTL personnalisé pour ce hook (en ms)
 }) => {
+  // ✅ DEBUG: Tracer les appels du hook
+  // console.log('[DEBUG][useGenericEntityDetails] Hook called with:', {
+  //   entityType,
+  //   id,
+  //   initialMode,
+  //   realtime,
+  //   cacheEnabled,
+  //   timestamp: Date.now()
+  // });
+  
   // debugLog('Hook exécuté !', 'trace', 'useGenericEntityDetails');
   
   // Enregistrer l'instance avec le tracker à la place de la variable globale
@@ -79,6 +89,14 @@ const useGenericEntityDetails = ({
   const [entity, setEntity] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  // ✅ DEBUG: Tracer les changements d'état
+  // console.log('[DEBUG][useGenericEntityDetails] State changed:', {
+  //   hasEntity: !!entity,
+  //   loading,
+  //   hasError: !!error,
+  //   timestamp: Date.now()
+  // });
   
   // États d'édition
   const [isEditing, setIsEditing] = useState(initialMode === 'edit');

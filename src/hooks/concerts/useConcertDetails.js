@@ -59,7 +59,8 @@ const useConcertDetails = (id, locationParam) => {
     {
       name: 'lieu',
       collection: 'lieux',
-      idField: 'lieuId',
+      idField: 'lieuId',  // Champ principal
+      alternativeIdFields: ['lieu'], // Champs alternatifs pour compatibilité
       nameField: 'lieuNom',
       type: 'one-to-one',
       essential: true // Le lieu est essentiel pour l'affichage du concert
@@ -67,7 +68,8 @@ const useConcertDetails = (id, locationParam) => {
     {
       name: 'programmateur',
       collection: 'programmateurs',
-      idField: 'programmateurId',
+      idField: 'programmateurId',  // Champ principal
+      alternativeIdFields: ['programmateur'], // Champs alternatifs pour compatibilité
       nameField: 'programmateurNom',
       type: 'one-to-one',
       essential: true // Le programmateur est essentiel pour l'affichage du concert
@@ -76,6 +78,7 @@ const useConcertDetails = (id, locationParam) => {
       name: 'artiste',
       collection: 'artistes',
       idField: 'artisteId',
+      alternativeIdFields: ['artiste'], // Champs alternatifs pour compatibilité
       nameField: 'artisteNom',
       type: 'one-to-one',
       essential: false // L'artiste peut être chargé à la demande
@@ -84,6 +87,7 @@ const useConcertDetails = (id, locationParam) => {
       name: 'structure',
       collection: 'structures',
       idField: 'structureId',
+      alternativeIdFields: ['structure'], // Champs alternatifs pour compatibilité
       nameField: 'structureNom',
       type: 'one-to-one',
       essential: false // La structure peut être chargée à la demande
@@ -794,6 +798,17 @@ const useConcertDetails = (id, locationParam) => {
     isLoading: genericDetails?.loading || false, 
     isSubmitting: genericDetails?.isSubmitting || false,
     error: genericDetails?.error || null,
+    
+    // Debug logs
+    _debug: (() => {
+      console.log(`[useConcertDetails] Retour du hook pour concert ${id}:`);
+      console.log(`  - concert:`, genericDetails?.entity);
+      console.log(`  - lieu:`, genericDetails?.relatedData?.lieu);
+      console.log(`  - programmateur:`, genericDetails?.relatedData?.programmateur);
+      console.log(`  - loading:`, genericDetails?.loading);
+      console.log(`  - genericDetails:`, genericDetails);
+      return true;
+    })(),
     
     // Données du formulaire
     formData: genericDetails?.formData || {},

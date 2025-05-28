@@ -397,13 +397,29 @@ const useGenericEntityDetails = ({
   
   // Fonction pour charger une entité liée spécifique
   const loadRelatedEntity = useCallback(async (relatedConfig, entityData) => {
-    const { name, collection: relatedCollection, idField: relatedIdField, type = 'one-to-one' } = relatedConfig;
+    const { name, collection: relatedCollection, idField: relatedIdField, alternativeIdFields = [], type = 'one-to-one' } = relatedConfig;
+    
+    // Chercher l'ID dans le champ principal ou les champs alternatifs
+    let entityId = entityData[relatedIdField];
+    
+    // Si pas trouvé dans le champ principal, chercher dans les champs alternatifs
+    if (!entityId && alternativeIdFields.length > 0) {
+      for (const altField of alternativeIdFields) {
+        if (entityData[altField]) {
+          entityId = entityData[altField];
+          debugLog(`[LOAD_RELATED] ID trouvé dans champ alternatif ${altField}: ${entityId}`, 'info', 'useGenericEntityDetails');
+          break;
+        }
+      }
+    }
     
     // Si l'identifiant de l'entité liée n'existe pas dans l'entité principale, retourner null
-    if (!entityData[relatedIdField]) {
-      debugLog(`❌ LOAD_RELATED: Pas d'ID pour l'entité liée ${name}`, 'warn', 'useGenericEntityDetails');
+    if (!entityId) {
+      debugLog(`❌ LOAD_RELATED: Pas d'ID pour l'entité liée ${name} - Champs vérifiés: ${relatedIdField}, ${alternativeIdFields.join(', ')}`, 'warn', 'useGenericEntityDetails');
       return type === 'one-to-many' ? [] : null;
     }
+    
+    debugLog(`✅ LOAD_RELATED: ID trouvé pour ${name}: ${entityId}`, 'info', 'useGenericEntityDetails');
     
     try {
       let result;
@@ -416,9 +432,9 @@ const useGenericEntityDetails = ({
         result = queryResult;
       } else if (type === 'one-to-many') {
         // Charger plusieurs entités liées
-        const relatedIds = Array.isArray(entityData[relatedIdField]) 
-          ? entityData[relatedIdField]
-          : [entityData[relatedIdField]];
+        const relatedIds = Array.isArray(entityId) 
+          ? entityId
+          : [entityId];
           
         // Vérifier le cache d'abord
         const cachedResults = [];
@@ -461,7 +477,7 @@ const useGenericEntityDetails = ({
         result = results.filter(Boolean);
       } else {
         // Charger une seule entité liée
-        const relId = entityData[relatedIdField];
+        const relId = entityId;
         
         // Vérifier le cache d'abord
         if (cacheEnabled) {

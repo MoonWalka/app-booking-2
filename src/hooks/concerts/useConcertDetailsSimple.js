@@ -42,38 +42,80 @@ const useConcertDetailsSimple = (id) => {
     setError(null);
     
     try {
+      console.log(`[useConcertDetailsSimple] Chargement du concert ${concertId}`);
+      
       // Charger le concert principal
       const concertRef = doc(db, 'concerts', concertId);
       const concertSnap = await getDoc(concertRef);
       
       if (!concertSnap.exists()) {
+        console.error(`[useConcertDetailsSimple] Concert ${concertId} non trouvé`);
         setError('Concert non trouvé');
         setLoading(false);
         return;
       }
       
       const concertData = { id: concertSnap.id, ...concertSnap.data() };
+      console.log(`[useConcertDetailsSimple] Concert chargé:`, concertData);
+      console.log(`[useConcertDetailsSimple] lieuId: ${concertData.lieuId}, programmateurId: ${concertData.programmateurId}`);
+      console.log(`[useConcertDetailsSimple] Tous les champs du concert:`, Object.keys(concertData));
       setConcert(concertData);
       
       // Charger les entités liées en parallèle
       const promises = [];
       
       if (concertData.lieuId) {
+        console.log(`[useConcertDetailsSimple] Chargement du lieu ${concertData.lieuId}`);
         promises.push(
           getDoc(doc(db, 'lieux', concertData.lieuId))
-            .then(snap => snap.exists() ? { id: snap.id, ...snap.data() } : null)
-            .then(data => setLieu(data))
-            .catch(() => setLieu(null))
+            .then(snap => {
+              if (snap.exists()) {
+                const lieuData = { id: snap.id, ...snap.data() };
+                console.log(`[useConcertDetailsSimple] Lieu chargé:`, lieuData);
+                setLieu(lieuData);
+                return lieuData;
+              } else {
+                console.warn(`[useConcertDetailsSimple] Lieu ${concertData.lieuId} non trouvé`);
+                setLieu(null);
+                return null;
+              }
+            })
+            .catch(err => {
+              console.error(`[useConcertDetailsSimple] Erreur chargement lieu:`, err);
+              setLieu(null);
+              return null;
+            })
         );
+      } else {
+        console.log(`[useConcertDetailsSimple] Aucun lieuId dans le concert`);
+        setLieu(null);
       }
       
       if (concertData.programmateurId) {
+        console.log(`[useConcertDetailsSimple] Chargement du programmateur ${concertData.programmateurId}`);
         promises.push(
           getDoc(doc(db, 'programmateurs', concertData.programmateurId))
-            .then(snap => snap.exists() ? { id: snap.id, ...snap.data() } : null)
-            .then(data => setProgrammateur(data))
-            .catch(() => setProgrammateur(null))
+            .then(snap => {
+              if (snap.exists()) {
+                const progData = { id: snap.id, ...snap.data() };
+                console.log(`[useConcertDetailsSimple] Programmateur chargé:`, progData);
+                setProgrammateur(progData);
+                return progData;
+              } else {
+                console.warn(`[useConcertDetailsSimple] Programmateur ${concertData.programmateurId} non trouvé`);
+                setProgrammateur(null);
+                return null;
+              }
+            })
+            .catch(err => {
+              console.error(`[useConcertDetailsSimple] Erreur chargement programmateur:`, err);
+              setProgrammateur(null);
+              return null;
+            })
         );
+      } else {
+        console.log(`[useConcertDetailsSimple] Aucun programmateurId dans le concert`);
+        setProgrammateur(null);
       }
       
       if (concertData.artisteId) {
@@ -208,7 +250,16 @@ const useConcertDetailsSimple = (id) => {
     ...stableCallbacks,
     
     // Utilitaires
-    ...stableUtils
+    ...stableUtils,
+    
+    // Debug: afficher les données retournées
+    _debugReturn: (() => {
+      console.log(`[useConcertDetailsSimple] RETOUR - concert:`, stableData.concert);
+      console.log(`[useConcertDetailsSimple] RETOUR - lieu:`, stableData.lieu);
+      console.log(`[useConcertDetailsSimple] RETOUR - programmateur:`, stableData.programmateur);
+      console.log(`[useConcertDetailsSimple] RETOUR - loading:`, stableData.loading);
+      return true;
+    })()
   }), [stableData, stableCallbacks, stableUtils]);
 };
 

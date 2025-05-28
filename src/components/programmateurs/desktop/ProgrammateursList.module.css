@@ -546,3 +546,11 @@
     }
   }
   
+  .filtersContainer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: var(--tc-space-4);
+    margin-bottom: var(--tc-space-4);
+  }
+  

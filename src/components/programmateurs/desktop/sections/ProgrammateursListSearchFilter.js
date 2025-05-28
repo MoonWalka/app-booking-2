@@ -34,7 +34,7 @@ const ProgrammateursListSearchFilter = ({
   }, []);
 
   return (
-    <div className={styles.searchFilterRow}>
+    <div className={styles.filtersContainer}>
       <div className={styles.searchCol}>
         <div className={styles.searchBox}>
           <i className={`bi bi-search ${styles.searchIcon}`}></i>

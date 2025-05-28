@@ -51,7 +51,7 @@
   border: 1px solid var(--tc-border-input);
   border-radius: 0 0 var(--tc-radius-sm) var(--tc-radius-sm);
   box-shadow: var(--tc-shadow-md);
-  z-index: var(--tc-z-index-dropdown);
+  z-index: var(--tc-z-index-tooltip); /* Utilisation de la variable tooltip qui est la plus élevée (1030) */
   margin-top: -1px;
 }
 

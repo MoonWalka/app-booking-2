@@ -84,22 +84,13 @@ export const useEntitySearch = (options) => {
           where('date', '==', searchTerm),
           limit(maxResults)
         );
-      } else if (searchField === 'nom' || searchField.endsWith('Lowercase')) {
-        // Recherche avec préfixe pour les champs de type nom
-        const queryField = searchField === 'nom' ? 'nomLowercase' : searchField;
-        searchQuery = query(
-          entitiesRef,
-          where(queryField, '>=', termLower),
-          where(queryField, '<=', termLower + '\uf8ff'),
-          orderBy(queryField),
-          limit(maxResults)
-        );
       } else {
-        // Recherche générale ordonnée par date de création décroissante
+        // Pour une recherche plus large, récupérer plus de résultats et filtrer localement
+        // Cela permet de trouver "chez tutu" même en tapant "tutu"
         searchQuery = query(
           entitiesRef,
           orderBy('createdAt', 'desc'),
-          limit(maxResults * 2) // Récupérer plus de résultats pour permettre le filtrage local
+          limit(maxResults * 5) // Récupérer 5x plus pour permettre un bon filtrage
         );
       }
       
@@ -109,13 +100,12 @@ export const useEntitySearch = (options) => {
         ...doc.data()
       }));
       
-      // Filtrage local pour les requêtes non spécifiques
-      if (!isDateFormat && !(searchField === 'nom' || searchField.endsWith('Lowercase'))) {
+      // Filtrage local pour toutes les requêtes non-date
+      if (!isDateFormat) {
         entitiesData = entitiesData.filter(entity => {
-          // Recherche dans le champ principal
-          if (entity[searchField] && 
-              typeof entity[searchField] === 'string' &&
-              entity[searchField].toLowerCase().includes(termLower)) {
+          // Recherche dans le nom (insensible à la casse)
+          const entityName = entity.nom || entity.titre || '';
+          if (entityName.toLowerCase().includes(termLower)) {
             return true;
           }
           
@@ -127,7 +117,21 @@ export const useEntitySearch = (options) => {
           );
         });
         
-        // Limiter aux maxResults après filtrage
+        // Trier les résultats pour mettre ceux qui commencent par le terme en premier
+        entitiesData.sort((a, b) => {
+          const aName = (a.nom || a.titre || '').toLowerCase();
+          const bName = (b.nom || b.titre || '').toLowerCase();
+          const aStartsWith = aName.startsWith(termLower);
+          const bStartsWith = bName.startsWith(termLower);
+          
+          if (aStartsWith && !bStartsWith) return -1;
+          if (!aStartsWith && bStartsWith) return 1;
+          
+          // Si les deux commencent ou ne commencent pas par le terme, trier alphabétiquement
+          return aName.localeCompare(bName);
+        });
+        
+        // Limiter aux maxResults après filtrage et tri
         entitiesData = entitiesData.slice(0, maxResults);
       }
       
@@ -172,6 +176,13 @@ export const useEntitySearch = (options) => {
       }
     };
   }, [searchTerm]); // Retiré entityType et performSearch des dépendances
+
+  // Nouvel effet pour réinitialiser quand entityType change
+  useEffect(() => {
+    setResults([]);
+    setShowResults(false);
+    setSelectedEntity(null);
+  }, [entityType]);
 
   // Gestionnaire pour les clics en dehors du dropdown
   useEffect(() => {

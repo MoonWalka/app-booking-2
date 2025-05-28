@@ -24,6 +24,15 @@
   flex-direction: column;
 }
 
+/* Modificateur pour les cartes avec dropdowns */
+.cardWithDropdown {
+  overflow: visible;
+}
+
+.cardWithDropdown .cardBody {
+  overflow: visible;
+}
+
 .cardHoverable:hover {
   transform: translateY(-3px);
   box-shadow: var(--tc-shadow-md);
@@ -39,6 +48,32 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+/* Headers colorés par type de section */
+:global(.lieu) .cardIcon {
+  color: var(--tc-color-info);
+}
+
+:global(.artiste) .cardIcon {
+  color: var(--tc-color-artiste);
+}
+
+:global(.programmateur) .cardIcon {
+  color: var(--tc-color-programmateur);
+}
+
+:global(.info) .cardIcon {
+  color: var(--tc-color-success);
+}
+
+:global(.notes) .cardIcon {
+  color: var(--tc-color-warning-dark);
+}
+
+/* Headers obligatoires */
+:global(.required).cardHeader {
+  border-bottom: 2px solid var(--tc-color-primary);
 }
 
 .headerTitleSection {

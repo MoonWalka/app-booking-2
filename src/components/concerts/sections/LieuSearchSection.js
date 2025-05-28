@@ -41,6 +41,9 @@ const LieuSearchSection = React.memo(({
       title="Lieu"
       icon={<i className="bi bi-geo-alt"></i>}
       isEditing={true}
+      hasDropdown={true}
+      className="lieu-section"
+      headerClassName="lieu required"
     >
       <div className={styles.cardBody} ref={lieuDropdownRef}>
         {console.log('[LieuSearchSection] selectedLieu à ce rendu :', selectedLieu)}

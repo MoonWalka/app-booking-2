@@ -38,6 +38,9 @@ const ArtisteSearchSection = ({
       title="Artiste"
       icon={<i className="bi bi-music-note-beamed"></i>}
       isEditing={true}
+      hasDropdown={true}
+      className="artiste-section"
+      headerClassName="artiste required"
     >
       <div className={styles.cardBody} ref={artisteDropdownRef}>
         {!selectedArtiste ? (

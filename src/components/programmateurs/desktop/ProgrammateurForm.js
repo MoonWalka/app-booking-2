@@ -161,7 +161,7 @@ const ProgrammateurForm = () => {
           onEdit={() => {}}
           onSave={handleSaveWithNotification}
           onCancel={handleCancelWithNotification}
-          onDelete={handleDeleteClick}
+          onDelete={() => handleDeleteClick(programmateur)}
           isSubmitting={isSubmitting}
           canSave={true}
           navigateToList={() => navigate('/programmateurs')}

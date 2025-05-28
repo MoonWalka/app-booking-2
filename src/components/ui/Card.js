@@ -12,6 +12,7 @@ import styles from './Card.module.css';
  * @param {string} [props.title] - Titre de la carte
  * @param {ReactNode} [props.icon] - Icône à afficher dans l'en-tête
  * @param {string} [props.className] - Classes CSS additionnelles
+ * @param {string} [props.headerClassName] - Classes CSS additionnelles pour le header
  * @param {boolean} [props.isEditing=false] - Indique si la carte est en mode édition
  * @param {boolean} [props.isHoverable=true] - Indique si la carte doit avoir une animation au survol
  * @param {string} [props.variant] - Variante de la carte (primary, success, warning, danger)
@@ -21,12 +22,14 @@ import styles from './Card.module.css';
  * @param {boolean} [props.collapsible=false] - Indique si la carte peut être réduite/agrandie
  * @param {boolean} [props.defaultCollapsed=false] - État initial de la carte (réduite ou non)
  * @param {Function} [props.onCollapseToggle] - Fonction appelée lors du changement d'état de réduction
+ * @param {boolean} [props.hasDropdown=false] - Indique si la carte contient des dropdowns (désactive overflow:hidden)
  */
 const Card = ({
   children,
   title,
   icon,
   className = '',
+  headerClassName = '',
   isEditing = false,
   isHoverable = true,
   variant,
@@ -36,6 +39,7 @@ const Card = ({
   collapsible = false,
   defaultCollapsed = false,
   onCollapseToggle,
+  hasDropdown = false,
   ...rest
 }) => {
   // Déterminer les classes CSS à appliquer
@@ -44,6 +48,7 @@ const Card = ({
     {
       [styles.cardEditing]: isEditing,
       [styles.cardHoverable]: isHoverable && !isEditing,
+      [styles.cardWithDropdown]: hasDropdown,
       [styles[`card${variant?.charAt(0).toUpperCase() + variant?.slice(1) || ''}`]]: variant
     },
     'tc-card',
@@ -71,7 +76,7 @@ const Card = ({
       {...rest}
     >
       {(title || icon || headerActions || collapsible) && (
-        <BootstrapCard.Header className={classNames(styles.cardHeader, 'tc-card-header')}>
+        <BootstrapCard.Header className={classNames(styles.cardHeader, headerClassName, 'tc-card-header')}>
           <div className={styles.headerTitleSection}>
             {icon && <span className={styles.cardIcon}>{icon}</span>}
             {title && <BootstrapCard.Title className={styles.cardTitle}>{title}</BootstrapCard.Title>}
@@ -110,6 +115,7 @@ Card.propTypes = {
   title: PropTypes.string,
   icon: PropTypes.node,
   className: PropTypes.string,
+  headerClassName: PropTypes.string,
   isEditing: PropTypes.bool,
   isHoverable: PropTypes.bool,
   variant: PropTypes.string,
@@ -118,7 +124,8 @@ Card.propTypes = {
   onClick: PropTypes.func,
   collapsible: PropTypes.bool,
   defaultCollapsed: PropTypes.bool,
-  onCollapseToggle: PropTypes.func
+  onCollapseToggle: PropTypes.func,
+  hasDropdown: PropTypes.bool
 };
 
 // Sous-composants pour une API cohérente

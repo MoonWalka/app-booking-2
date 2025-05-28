@@ -14,6 +14,11 @@
   position: relative;
 }
 
+/* Override pour permettre au dropdown de dépasser de la carte */
+.cardBody {
+  overflow: visible !important;
+}
+
 .formLabel {
   display: block;
   margin-bottom: var(--tc-color-primary);

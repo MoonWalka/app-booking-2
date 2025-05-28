@@ -38,6 +38,9 @@ const ProgrammateurSearchSection = ({
       title="Programmateur"
       icon={<i className="bi bi-person"></i>}
       isEditing={true}
+      hasDropdown={true}
+      className="programmateur-section"
+      headerClassName="programmateur"
     >
       <div className={styles.cardBody} ref={progDropdownRef}>
         {!selectedProgrammateur ? (

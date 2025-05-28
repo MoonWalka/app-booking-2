@@ -1,10 +1,10 @@
 /*
  * Styles pour ConcertForm
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Dernière mise à jour: 30 décembre 2024
  */
 
-/* Styles pour ConcertForm - extraits des fichiers CSS globaux */
+/* Styles pour ConcertForm - optimisés pour une meilleure UX */
 
 /* 
  * Container principal - utilisation des styles unifiés 
@@ -13,7 +13,7 @@
  */
 .deskConcertFormContainer, .concertFormContainer {
   padding: var(--tc-space-4);
-  background-color: var(--tc-bg-default);
+  background-color: var(--tc-bg-subtle);
   width: 100%;
 }
 
@@ -27,16 +27,18 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--tc-space-6);
+  margin-bottom: var(--tc-space-4);
   flex-wrap: wrap;
+  padding-bottom: var(--tc-space-3);
+  border-bottom: 1px solid var(--tc-color-gray-200);
 }
 
-/* Titre moderne */
+/* Titre moderne avec meilleur contraste */
 .modernTitle {
-  font-size: var(--tc-font-size-xl);
+  font-size: var(--tc-font-size-2xl);
   font-weight: var(--tc-font-weight-bold);
   color: var(--tc-color-primary);
-  margin-bottom: var(--tc-space-2);
+  margin-bottom: var(--tc-space-1);
 }
 
 /* Container du fil d'Ariane */
@@ -45,33 +47,40 @@
   align-items: center;
   gap: var(--tc-space-2);
   font-size: var(--tc-font-size-sm);
+  color: var(--tc-text-muted);
 }
 
 /* Élément du fil d'Ariane */
 .breadcrumbItem {
-  color: var(--tc-text-default);
+  color: var(--tc-text-muted);
   cursor: pointer;
+  transition: color 0.2s ease;
 }
 
 .breadcrumbItem:hover {
-  text-decoration: underline;
-}
-
-.breadcrumbItem.active {
-  color: var(--tc-text-secondary);
-  cursor: default;
-}
-
-.breadcrumbItem.active:hover {
+  color: var(--tc-color-primary);
   text-decoration: none;
 }
 
-/* Boutons d'action */
+.breadcrumbItem.active {
+  color: var(--tc-color-primary);
+  font-weight: var(--tc-font-weight-medium);
+  cursor: default;
+}
+
+/* Séparateur de fil d'Ariane */
+.breadcrumbItem:not(:last-child)::after {
+  content: '/';
+  margin: 0 var(--tc-space-2);
+  color: var(--tc-color-gray-400);
+}
+
+/* Boutons d'action avec meilleur alignement */
 .actionButtons {
   display: flex;
   flex-wrap: wrap;
   gap: var(--tc-space-2);
-  margin-bottom: var(--tc-space-6);
+  margin-bottom: var(--tc-space-4);
   justify-content: flex-start;
   align-items: center;
   width: 100%;
@@ -85,13 +94,19 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: var(--tc-transition-base);
-  font-weight: var(--tc-font-weight-semibold);
+  transition: all 0.2s ease;
+  font-weight: var(--tc-font-weight-medium);
+  box-shadow: var(--tc-shadow-sm);
+}
+
+.actionBtn:hover {
+  box-shadow: var(--tc-shadow-md);
+  transform: translateY(-1px);
 }
 
 /* Formulaire moderne - utilisation des styles unifiés */
 .deskModernForm, .modernForm {
-  margin-top: var(--tc-space-4);
+  margin-top: var(--tc-space-2);
   background-color: transparent;
   display: flex;
   flex-direction: column;
@@ -99,126 +114,145 @@
 }
 
 .deskModernForm {
-  margin-top: var(--tc-space-4);
+  margin-top: var(--tc-space-2);
   background-color: transparent;
   display: flex;
   flex-direction: column;
   gap: var(--tc-space-4);
 }
 
-/* Carte de formulaire */
+/* Carte de formulaire améliorée */
 .formCard {
   background-color: var(--tc-color-white);
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: var(--tc-space-6);
-  overflow: hidden;
+  border-radius: var(--tc-radius-lg);
+  border: 1px solid var(--tc-color-gray-200);
+  box-shadow: var(--tc-shadow-sm);
+  margin-bottom: var(--tc-space-4);
+  overflow: visible; /* Pour les dropdowns */
+  transition: all 0.2s ease;
 }
 
-.formCard {
-  background-color: var(--tc-color-white);
-  border-radius: var(--tc-radius-base);
-  box-shadow: var(--tc-shadow-base);
-  margin-bottom: var(--tc-space-6);
-  overflow: hidden;
+.formCard:hover {
+  box-shadow: var(--tc-shadow-md);
 }
 
+/* Header de carte amélioré */
 .cardHeader {
+  background-color: var(--tc-color-gray-50);
+  padding: var(--tc-space-3) var(--tc-space-4);
+  border-bottom: 2px solid transparent;
   display: flex;
   align-items: center;
-  background-color: var(--tc-bg-default);
-  padding: var(--tc-space-4);
-  border-bottom: 1px solid var(--tc-color-gray-200);
+  transition: all 0.2s ease;
 }
 
-.cardHeader {
-  background-color: var(--tc-color-gray-100);
-  padding: var(--tc-space-4) var(--tc-space-4);
-  border-bottom: var(--tc-border-width) solid var(--tc-border-default);
-  display: flex;
-  align-items: center;
+/* Sections obligatoires avec indicateur visuel */
+.cardHeader.required {
+  border-bottom-color: var(--tc-color-primary);
 }
 
+/* Icônes colorées par type de section */
 .cardHeader i {
-  margin-right: var(--tc-space-2);
-  color: var(--tc-color-primary);
+  margin-right: var(--tc-space-3);
+  font-size: var(--tc-font-size-lg);
+  transition: color 0.2s ease;
+}
+
+/* Couleurs spécifiques pour chaque type */
+.cardHeader.lieu i {
+  color: var(--tc-color-info);
+}
+
+.cardHeader.artiste i {
+  color: var(--tc-color-artiste);
+}
+
+.cardHeader.programmateur i {
+  color: var(--tc-color-programmateur);
+}
+
+.cardHeader.info i {
+  color: var(--tc-color-success);
+}
+
+.cardHeader.notes i {
+  color: var(--tc-color-warning-dark);
 }
 
 .cardHeader h3 {
+  margin: 0;
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-semibold);
-  margin: 0;
+  color: var(--tc-text-default);
   flex-grow: 1;
 }
 
-.cardHeader h3 {
-  margin: 0;
-  font-size: 1.25rem;
-  font-weight: var(--tc-font-weight-bold);
-  color: var(--tc-text-default);
-}
-
-.cardBody {
-  padding: var(--tc-space-6);
+/* Badge obligatoire */
+.requiredBadge {
+  display: inline-block;
+  background-color: var(--tc-color-error-light);
+  color: var(--tc-color-error-dark);
+  font-size: var(--tc-font-size-xs);
+  padding: 2px 8px;
+  border-radius: var(--tc-radius-sm);
+  margin-left: var(--tc-space-2);
+  font-weight: var(--tc-font-weight-medium);
 }
 
 .cardBody {
   padding: var(--tc-space-4);
 }
 
-/* Champs de formulaire */
+/* Champs de formulaire améliorés */
 .formGroup {
-  margin-bottom: var(--tc-space-4);
+  margin-bottom: var(--tc-space-3);
 }
 
 .errorAlert {
-  margin-bottom: var(--tc-space-6);
-}
-
-.formGroup {
   margin-bottom: var(--tc-space-4);
+  border-radius: var(--tc-radius-md);
 }
 
 .formLabel {
   display: block;
   margin-bottom: var(--tc-space-2);
-  font-weight: var(--tc-font-weight-semibold);
-}
-
-.formLabel {
-  display: block;
-  margin-bottom: var(--tc-space-1);
   font-weight: var(--tc-font-weight-medium);
   color: var(--tc-text-default);
+  font-size: var(--tc-font-size-sm);
 }
 
 .required {
   color: var(--tc-color-error);
   margin-left: var(--tc-space-1);
+  font-weight: var(--tc-font-weight-bold);
 }
 
 .formControl {
   display: block;
   width: 100%;
-  padding: var(--tc-space-2);
-  font-size: 1rem;
+  padding: var(--tc-space-2) var(--tc-space-3);
+  font-size: var(--tc-font-size-base);
   line-height: 1.5;
   color: var(--tc-text-default);
   background-color: var(--tc-color-white);
-  border: 1px solid var(--tc-input-border-color);
-  border-radius: var(--tc-radius-sm);
-  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+  border: 1px solid var(--tc-color-gray-300);
+  border-radius: var(--tc-radius-md);
+  transition: all 0.2s ease;
 }
 
 .formControl::placeholder {
-  color: var(--tc-text-placeholder);
-  opacity: 1;
+  color: var(--tc-text-muted);
+  opacity: 0.8;
+}
+
+.formControl:hover {
+  border-color: var(--tc-color-gray-400);
 }
 
 .formControl:focus {
   border-color: var(--tc-color-primary);
   outline: 0;
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  box-shadow: 0 0 0 3px rgba(33, 53, 71, 0.1);
 }
 
 .formSelect {
@@ -288,27 +322,39 @@
   color: var(--tc-text-muted);
 }
 
-/* Recherche de lieu/programmateur/artiste */
+/* Recherche de lieu/programmateur/artiste améliorée */
 .lieuSearchContainer,
 .programmateurSearchContainer,
 .artisteSearchContainer {
   position: relative;
+  margin-bottom: var(--tc-space-3);
 }
 
-.lieuSearchContainer,
-.programmateurSearchContainer,
-.artisteSearchContainer {
-  position: relative;
-  margin-bottom: var(--tc-space-4);
-}
-
+/* États de sélection avec style moderne */
 .selectedLieu,
 .selectedProgrammateur,
 .selectedArtiste {
-  border: 1px solid var(--tc-color-gray-300);
-  border-radius: 6px;
-  padding: var(--tc-space-6);
+  background-color: var(--tc-color-gray-50);
+  border: 2px solid var(--tc-color-primary-light);
+  border-radius: var(--tc-radius-md);
+  padding: var(--tc-space-3);
   margin-bottom: var(--tc-space-2);
+  position: relative;
+  transition: all 0.2s ease;
+  animation: selectPulse 0.3s ease;
+}
+
+@keyframes selectPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.01); }
+  100% { transform: scale(1); }
+}
+
+.selectedLieu:hover,
+.selectedProgrammateur:hover,
+.selectedArtiste:hover {
+  box-shadow: var(--tc-shadow-sm);
+  border-color: var(--tc-color-primary);
 }
 
 .lieuCard,

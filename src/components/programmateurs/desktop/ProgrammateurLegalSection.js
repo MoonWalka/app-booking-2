@@ -80,8 +80,8 @@ const ProgrammateurLegalSection = ({
           onSubmit={handleSubmit}
           enableReinitialize
         >
-          {({ values, errors, touched, handleChange: formikHandleChange, handleBlur, handleSubmit, isSubmitting }) => (
-            <Form noValidate onSubmit={handleSubmit}>
+          {({ values, errors, touched, handleChange: formikHandleChange, handleBlur, isSubmitting }) => (
+            <div>
               <Row>
                 <Col md={6}>
                   <Form.Group className="mb-3">
@@ -252,7 +252,7 @@ const ProgrammateurLegalSection = ({
                   </Form.Group>
                 </Col>
               </Row>
-            </Form>
+            </div>
           )}
         </Formik>
       ) : (

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { db, query, where, collection, getDocs, doc, getDoc } from '@/services/firebase-service';
 import Button from '@/components/ui/Button';
@@ -7,6 +7,7 @@ import styles from './ProgrammateurLieuxSection.module.css';
 
 /**
  * Composant pour afficher les lieux associés à un programmateur
+ * Version corrigée anti-boucles infinies
  * @param {Object} props - Propriétés du composant
  * @param {Object} props.programmateur - Données du programmateur
  * @param {Array} props.lieux - Lieux déjà chargés (optionnel, fournis par le parent)
@@ -16,144 +17,143 @@ import styles from './ProgrammateurLieuxSection.module.css';
 const ProgrammateurLieuxSection = ({ 
   programmateur, 
   lieux: lieuxProp = [], 
-  isEditMode = false, // Renommé pour cohérence
+  isEditMode = false,
   formData = {},
   onChange = () => {},
   showCardWrapper = true 
 }) => {
-  // Alias pour compatibilité
+  // 🔒 PROTECTION ANTI-BOUCLES: Références stables
+  const renderCountRef = useRef(0);
+  const lastProgrammateurIdRef = useRef(null);
+  const loadingStartedRef = useRef(false);
+  const lieuxPropRef = useRef(lieuxProp);
+  const programmateurRef = useRef(programmateur);
+  
+  // ✅ STABILISATION: Mettre à jour les références sans déclencher de re-render
+  useEffect(() => {
+    lieuxPropRef.current = lieuxProp;
+  }, [lieuxProp]);
+  
+  useEffect(() => {
+    programmateurRef.current = programmateur;
+  }, [programmateur]);
+  
   const isEditing = isEditMode;
   const [loading, setLoading] = useState(true);
   const [localLieux, setLocalLieux] = useState([]);
   
-  // LOGS DE DIAGNOSTIC: Vérifier si les props lieux sont reçues correctement
+  // ✅ OPTIMISATION: Logs de diagnostic seulement si changement réel
   useEffect(() => {
-    console.log(`[DIAGNOSTIC] ProgrammateurLieuxSection - Prop lieux reçue:`, {
-      programmateur: programmateur?.id,
-      lieuxPropPresent: lieuxProp !== undefined && lieuxProp !== null,
-      lieuxPropLength: lieuxProp?.length || 0,
-      lieuxPropIds: lieuxProp?.map(lieu => lieu.id || 'no-id') || []
-    });
-  }, [programmateur, lieuxProp]);
+    renderCountRef.current++;
+    const programmateurId = programmateur?.id;
+    const currentLieuxProp = lieuxPropRef.current;
+    
+    // Log seulement si l'ID a vraiment changé
+    if (programmateurId !== lastProgrammateurIdRef.current) {
+      console.log(`[DIAGNOSTIC] ProgrammateurLieuxSection - Nouveau programmateur #${renderCountRef.current}:`, {
+        programmateur: programmateurId,
+        lieuxPropPresent: currentLieuxProp !== undefined && currentLieuxProp !== null,
+        lieuxPropLength: currentLieuxProp?.length || 0,
+        lieuxPropIds: currentLieuxProp?.map(lieu => lieu.id || 'no-id') || []
+      });
+      lastProgrammateurIdRef.current = programmateurId;
+    }
+  }, [programmateur?.id]); // ✅ Dépendance stable, lieuxProp via ref
   
-  // NOUVEAU: Mémoriser les validations pour optimiser les performances - Finalisation intelligente
-  const hasValidLieuxInProp = useMemo(() => 
-    Array.isArray(lieuxProp) && lieuxProp.length > 0, 
-    [lieuxProp]
-  );
+  // ✅ STABILISATION: Logique simple et directe pour éviter les boucles
+  const hasValidLieuxInProp = lieuxProp && Array.isArray(lieuxProp) && lieuxProp.length > 0;
   
-  const hasValidLocalLieux = useMemo(() => 
-    Array.isArray(localLieux) && localLieux.length > 0, 
-    [localLieux]
-  );
+  // ✅ STABILISATION: Source de lieux avec logique directe
+  const lieux = hasValidLieuxInProp ? lieuxProp : localLieux;
   
-  // NOUVEAU: Mémoriser la source de lieux active pour éviter recalculs
-  const lieux = useMemo(() => 
-    hasValidLieuxInProp ? lieuxProp : localLieux, 
-    [hasValidLieuxInProp, lieuxProp, localLieux]
-  );
-  
-  const hasLieux = useMemo(() => 
-    lieux?.length > 0, 
-    [lieux]
-  );
+  const hasLieux = lieux && lieux.length > 0; // ✅ Simplifié pour éviter useMemo problématique
 
-  // LOGS DE DIAGNOSTIC: Vérifier quelle source de lieux est utilisée
-  useEffect(() => {
-    console.log(`[DIAGNOSTIC] ProgrammateurLieuxSection - Source de lieux utilisée:`, {
-      source: hasValidLieuxInProp ? 'lieuxProp' : 'localLieux',
-      lieuxFinal: lieux?.length || 0,
-      hasLieux,
-      hasValidLieuxInProp,
-      hasValidLocalLieux,
-      // NOUVEAU: Métadonnées de diagnostic avancées
-      timestamp: new Date().toISOString(),
-      cacheStatus: hasValidLieuxInProp ? 'using-prop' : 'using-local'
-    });
-  }, [lieuxProp, localLieux, lieux, hasLieux, hasValidLieuxInProp, hasValidLocalLieux]);
+  // ✅ STABILISATION: Function de chargement stable
+  const loadLieux = useCallback(async (programmateurData) => {
+    if (!programmateurData?.id || loadingStartedRef.current) return;
+    
+    loadingStartedRef.current = true;
+    setLoading(true);
+    
+    try {
+      console.log(`[DIAGNOSTIC] ProgrammateurLieuxSection - Chargement local des lieux pour ${programmateurData.id}`);
+      
+      // Vérifier d'abord si le programmateur a des lieuxIds ou lieuxAssocies
+      if (programmateurData.lieuxIds?.length > 0 || programmateurData.lieuxAssocies?.length > 0) {
+        const lieuxIds = programmateurData.lieuxIds || programmateurData.lieuxAssocies || [];
+        
+        // Récupérer les détails complets pour chaque ID de lieu
+        const lieuxPromises = lieuxIds.map(lieuId => {
+          const id = typeof lieuId === 'object' ? lieuId.id : lieuId;
+          return getDoc(doc(db, 'lieux', id))
+            .then(docSnapshot => {
+              if (docSnapshot.exists()) {
+                return { id: docSnapshot.id, ...docSnapshot.data() };
+              }
+              return null;
+            })
+            .catch(err => {
+              console.error(`[ERROR] Erreur lors du chargement du lieu ${id}:`, err);
+              return null;
+            });
+        });
+        
+        const lieuxResults = await Promise.all(lieuxPromises);
+        const newLieux = lieuxResults.filter(lieu => lieu !== null);
+        
+        console.log(`[DIAGNOSTIC] ProgrammateurLieuxSection - ${newLieux.length} lieux chargés depuis lieuxIds/lieuxAssocies pour ${programmateurData.id}`, {
+          lieuxIds: newLieux.map(lieu => lieu.id)
+        });
+        
+        setLocalLieux(newLieux);
+      } else {
+        // Méthodes de requête alternatives
+        let lieuxQuery = query(
+          collection(db, 'lieux'),
+          where('programmateurs', 'array-contains', programmateurData.id)
+        );
+        let querySnapshot = await getDocs(lieuxQuery);
+        let newLieux = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        
+        if (newLieux.length === 0) {
+          lieuxQuery = query(
+            collection(db, 'lieux'),
+            where('programmateurId', '==', programmateurData.id)
+          );
+          querySnapshot = await getDocs(lieuxQuery);
+          newLieux = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        }
+        
+        setLocalLieux(newLieux);
+      }
+    } catch (error) {
+      console.error('[ERROR] ProgrammateurLieuxSection - Erreur lors du chargement des lieux:', error);
+    } finally {
+      setLoading(false);
+      loadingStartedRef.current = false;
+    }
+  }, []); // ✅ Fonction stable sans dépendances
 
+  // ✅ EFFET ULTRA-OPTIMISÉ: Conditions strictes pour éviter la boucle
   useEffect(() => {
-    // FIX: Ne pas charger les lieux si lieuxProp est un tableau valide et non vide
+    // 🔒 PROTECTION: Si lieuxProp est valide, pas de chargement
     if (hasValidLieuxInProp) {
       setLoading(false);
+      loadingStartedRef.current = false;
       return;
     }
 
-    const loadLieux = async () => {
-      setLoading(true);
-      try {
-        if (programmateur && programmateur.id) {
-          console.log(`[DIAGNOSTIC] ProgrammateurLieuxSection - Chargement local des lieux pour ${programmateur.id}`, {
-            programmateur: programmateur
-          });
-          
-          // Vérifier d'abord si le programmateur a des lieuxIds ou lieuxAssocies
-          if (programmateur.lieuxIds?.length > 0 || programmateur.lieuxAssocies?.length > 0) {
-            const lieuxIds = programmateur.lieuxIds || programmateur.lieuxAssocies || [];
-            
-            // Récupérer les détails complets pour chaque ID de lieu
-            const lieuxPromises = lieuxIds.map(lieuId => {
-              // Si c'est déjà un objet avec un ID, on utilise directement l'ID
-              const id = typeof lieuId === 'object' ? lieuId.id : lieuId;
-              return getDoc(doc(db, 'lieux', id))
-                .then(docSnapshot => {
-                  if (docSnapshot.exists()) {
-                    return { id: docSnapshot.id, ...docSnapshot.data() };
-                  }
-                  return null;
-                })
-                .catch(err => {
-                  console.error(`[ERROR] Erreur lors du chargement du lieu ${id}:`, err);
-                  return null;
-                });
-            });
-            
-            const lieuxResults = await Promise.all(lieuxPromises);
-            const newLieux = lieuxResults.filter(lieu => lieu !== null);
-            
-            console.log(`[DIAGNOSTIC] ProgrammateurLieuxSection - ${newLieux.length} lieux chargés depuis lieuxIds/lieuxAssocies pour ${programmateur.id}`, {
-              lieuxIds: newLieux.map(lieu => lieu.id)
-            });
-            
-            setLocalLieux(newLieux);
-          } else {
-            // Essayer plusieurs méthodes de requête si aucun lieuxIds n'est trouvé
-            
-            // Méthode 1: Chercher les lieux qui ont ce programmateur dans un tableau 'programmateurs'
-            let lieuxQuery = query(
-              collection(db, 'lieux'),
-              where('programmateurs', 'array-contains', programmateur.id)
-            );
-            let querySnapshot = await getDocs(lieuxQuery);
-            let newLieux = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            
-            // Méthode 2: Si aucun résultat, chercher par programmateurId
-            if (newLieux.length === 0) {
-              lieuxQuery = query(
-                collection(db, 'lieux'),
-                where('programmateurId', '==', programmateur.id)
-              );
-              querySnapshot = await getDocs(lieuxQuery);
-              newLieux = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            }
-            
-            console.log(`[DIAGNOSTIC] ProgrammateurLieuxSection - ${newLieux.length} lieux chargés par requête inverse pour ${programmateur.id}`, {
-              lieuxIds: newLieux.map(lieu => lieu.id),
-              méthodeUtilisée: newLieux.length > 0 ? (querySnapshot.query._query.filters[0].field.segments[1] === 'programmateurs' ? 'array-contains' : 'programmateurId') : 'aucune'
-            });
-            
-            setLocalLieux(newLieux);
-          }
-        }
-      } catch (error) {
-        console.error('[DIAGNOSTIC] ProgrammateurLieuxSection - Erreur lors du chargement des lieux:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    // 🔒 PROTECTION: Charger seulement si programmateur valide et pas déjà en cours
+    const currentProgrammateur = programmateurRef.current;
+    if (currentProgrammateur?.id && !loadingStartedRef.current) {
+      loadLieux(currentProgrammateur);
+    }
+  }, [programmateur?.id, hasValidLieuxInProp, loadLieux]); // ✅ Dépendances minimales et stables
 
-    loadLieux();
-  }, [programmateur, lieuxProp, hasValidLieuxInProp]);
+  // ✅ RÉINITIALISATION: Reset loading flag si programmateur change
+  useEffect(() => {
+    loadingStartedRef.current = false;
+  }, [programmateur?.id]);
 
   // Contenu principal de la section
   const sectionContent = (

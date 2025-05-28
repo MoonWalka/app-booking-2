@@ -68,7 +68,7 @@ const ContratDetailsPage = () => {
       console.log(`[ContratDetailsPage] Traitement du paramètre preview=${previewParam}`);
       
       // Ouvrir automatiquement l'aperçu selon le paramètre
-      togglePdfViewer();
+        togglePdfViewer();
       
       // Définir le type d'aperçu selon le paramètre
       if (previewParam === 'web') {

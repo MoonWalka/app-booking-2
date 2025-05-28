@@ -13,34 +13,61 @@ import useConcertAssociations from '@/hooks/concerts/useConcertAssociations';
 
 // Import des utilitaires
 import { formatDate, formatMontant, isDatePassed, copyToClipboard, getCacheKey } from '@/utils/formatters';
+import { debugLog } from '@/utils/logUtils';
 
 /**
- * Hook optimisé pour les détails de concert
- * Suit les directives de standardisation et utilise directement useGenericEntityDetails
+ * Hook pour gérer les détails et l'édition d'un concert
+ * Version ultra-optimisée anti-boucles infinies
  * 
  * @param {string} id - ID du concert
- * @param {object} locationParam - Objet location de React Router (optionnel)
+ * @param {object} locationParam - Paramètre de location (optionnel)
  * @returns {object} - API du hook
  */
 const useConcertDetails = (id, locationParam) => {
+  
+  // 🔒 PROTECTION ANTI-BOUCLES: Références et compteurs stables
+  const renderCountRef = useRef(0);
+  const lastPropsHashRef = useRef('');
+  const stableRefsRef = useRef({});
   
   const navigate = useNavigate();
   const locationData = useLocation();
   const location = locationParam || locationData;
   
-  // Détecter le mode édition basé sur l'URL
-  const isEditMode = location.pathname.includes('/edit');
+  // 🔒 STABILISATION: Props hash pour détecter les vrais changements
+  const propsHash = useMemo(() => {
+    return JSON.stringify({
+      id,
+      pathname: location?.pathname,
+      isEditMode: location?.pathname?.includes('/edit')
+    });
+  }, [id, location?.pathname]);
+
+  // 🔒 PROTECTION: Détecter et logger seulement les vrais changements
+  useEffect(() => {
+    renderCountRef.current++;
+    
+    if (propsHash !== lastPropsHashRef.current) {
+      debugLog(`[useConcertDetails] Retour du hook pour concert ${id}:`, 'info', 'useConcertDetails');
+      debugLog(`  - concert: ${stableRefsRef.current.concert ? 'PRÉSENT' : 'NULL'}`, 'debug', 'useConcertDetails');
+      debugLog(`  - lieu: ${stableRefsRef.current.lieu ? 'PRÉSENT' : 'NULL'}`, 'debug', 'useConcertDetails');
+      debugLog(`  - programmateur: ${stableRefsRef.current.programmateur ? 'PRÉSENT' : 'NULL'}`, 'debug', 'useConcertDetails');
+      debugLog(`  - loading: ${stableRefsRef.current.loading}`, 'debug', 'useConcertDetails');
+      debugLog(`  - genericDetails: ${stableRefsRef.current.genericDetails ? 'PRÉSENT' : 'NULL'}`, 'debug', 'useConcertDetails');
+      
+      lastPropsHashRef.current = propsHash;
+    }
+  }, [propsHash, id]);
   
-  // ✅ DEBUG: Tracer les appels du hook
-  // console.log('[DEBUG][useConcertDetails] Hook called with:', {
-  //   id,
-  //   isEditMode,
-  //   pathname: location.pathname,
-  //   timestamp: Date.now()
-  // });
+  // Détecter le mode édition basé sur l'URL de manière stable
+  const isEditMode = useMemo(() => {
+    return location?.pathname?.includes('/edit') || false;
+  }, [location?.pathname]);
   
-  // États spécifiques au concert qui ne sont pas gérés par le hook générique
-  const [cacheKey, setCacheKey] = useState(getCacheKey(id)); // NOUVEAU: Cache intelligent finalisé
+  debugLog(`[ConcertView][${id}] RENDU EN MODE ${isEditMode ? 'ÉDITION' : 'VISUALISATION'}.`, 'info', 'ConcertView');
+  
+  // 🔒 STABILISATION: États spécifiques avec valeurs par défaut stables
+  const [cacheKey, setCacheKey] = useState(() => getCacheKey(id));
   const [initialProgrammateurId, setInitialProgrammateurId] = useState(null);
   const [initialArtisteId, setInitialArtisteId] = useState(null);
   const [initialStructureId, setInitialStructureId] = useState(null);
@@ -49,9 +76,9 @@ const useConcertDetails = (id, locationParam) => {
   // Guard pour éviter la double exécution des effets en StrictMode
   const bidirectionalUpdatesRef = useRef(false);
   
-  // Hooks personnalisés spécifiques aux concerts
+  // 🔒 STABILISATION: Hooks secondaires avec configurations stables
   const concertForms = useConcertFormsManagement(id);
-  const concertStatus = useConcertStatus(); // NOUVEAU: Système de statuts avancé finalisé
+  const concertStatus = useConcertStatus();
   const concertAssociations = useConcertAssociations();
   
   // Configuration pour les entités liées - Stabilisée avec useMemo
@@ -203,16 +230,14 @@ const useConcertDetails = (id, locationParam) => {
 
   const genericDetails = useGenericEntityDetails(genericDetailsConfig);
   
-  // ✅ DEBUG: Tracer les changements de genericDetails
-  // console.log('[DEBUG][useConcertDetails] genericDetails changed:', {
-  //   hasEntity: !!genericDetails?.entity,
-  //   loading: genericDetails?.loading,
-  //   error: !!genericDetails?.error,
-  //   timestamp: Date.now()
-  // });
-  
-  // debugLog(`📊 CONCERT_DETAILS: genericDetails retourné - entity: ${genericDetails?.entity ? 'PRÉSENT' : 'NULL'}, loading: ${genericDetails?.loading}, error: ${genericDetails?.error ? 'PRÉSENT' : 'NULL'}`, 'info', 'useConcertDetails');
-  // debugLog(`📊 CONCERT_DETAILS: Détail entity: ${JSON.stringify(genericDetails?.entity)}`, 'debug', 'useConcertDetails');
+  // Log de debug pour vérifier que l'entité est correctement chargée
+  useEffect(() => {
+    if (genericDetails && genericDetails.entity) {
+      debugLog(`[useConcertDetails] Entité chargée: ${genericDetails.entity.id}`, 'debug', 'useConcertDetails');
+    } else if (!genericDetails?.loading) {
+      debugLog(`[useConcertDetails] Entité non disponible après chargement`, 'warn', 'useConcertDetails');
+    }
+  }, [genericDetails]);
   
   // Fonction pour gérer les mises à jour des relations bidirectionnelles - STABILISÉE
   const handleBidirectionalUpdatesRef = useRef();
@@ -616,27 +641,12 @@ const useConcertDetails = (id, locationParam) => {
     }
   }, [location, concertForms]);
 
-  // Log de debug pour vérifier que l'entité est correctement chargée
-  useEffect(() => {
-    if (genericDetails && genericDetails.entity) {
-      // console.log("[useConcertDetails] Entité chargée:", {
-      //   id: genericDetails.entity.id,
-      //   titre: genericDetails.entity.titre,
-      //   date: genericDetails.entity.date,
-      //   isLoading: genericDetails.loading,
-      //   isEditing: genericDetails.isEditing
-      // });
-    } else if (!genericDetails?.loading) {
-      // console.warn("[useConcertDetails] Entité non disponible après chargement");
-    }
-  }, [genericDetails]);
-
   // Ajout log pour la suppression
   const handleDeleteClick = useCallback(() => {
     if (genericDetails.handleDelete) {
       genericDetails.handleDelete();
     } else {
-      // console.warn('[LOG][useConcertDetails] genericDetails.handleDelete est undefined');
+      debugLog('[useConcertDetails] genericDetails.handleDelete est undefined', 'warn', 'useConcertDetails');
     }
   }, [genericDetails]);
   
@@ -787,88 +797,120 @@ const useConcertDetails = (id, locationParam) => {
     };
   }, [genericDetails, concertForms, concertStatus, getStatusInfo, generateNextSteps, generateRecommendations]);
 
-  return {
-    // Données principales du hook générique
-    concert: genericDetails?.entity || null,
-    lieu: genericDetails?.relatedData?.lieu || null,
-    programmateur: genericDetails?.relatedData?.programmateur || null,
-    artiste: genericDetails?.relatedData?.artiste || null,
-    structure: genericDetails?.relatedData?.structure || null,
-    loading: genericDetails?.loading || genericDetails?.isLoading || false, // Pour compatibilité
-    isLoading: genericDetails?.loading || false, 
-    isSubmitting: genericDetails?.isSubmitting || false,
-    error: genericDetails?.error || null,
+  // 🔒 MISE À JOUR: Références stables pour le diagnostic
+  const returnData = useMemo(() => {
+    const concert = genericDetails?.entity || null;
+    const lieu = genericDetails?.relatedData?.lieu || null;
+    const programmateur = genericDetails?.relatedData?.programmateur || null;
+    const loading = genericDetails?.loading || genericDetails?.isLoading || false;
     
-    // Données du formulaire
-    formData: genericDetails?.formData || {},
-    isEditMode: isEditMode,
-    
-    // Données des formulaires spécifiques aux concerts
-    concertFormData: concertForms?.formData || null,
-    formDataStatus: concertForms?.formDataStatus || null,
-    showFormGenerator: concertForms?.showFormGenerator || false,
-    setShowFormGenerator: concertForms?.setShowFormGenerator || (() => {}),
-    generatedFormLink: concertForms?.generatedFormLink || '',
-    setGeneratedFormLink: concertForms?.setGeneratedFormLink || (() => {}),
-    
-    // Fonctions de gestion génériques
-    handleChange: genericDetails?.handleChange || (() => {}),
-    handleSave: genericDetails?.handleSubmit || (() => {}),
-    handleDelete: genericDetails?.handleDelete || (() => {}),
-    handleSubmit: handleSubmitWithRelations,
-    validateForm: (formData) => validateConcertFormRef.current(formData),
+    // Mettre à jour les références stables pour le diagnostic
+    stableRefsRef.current = {
+      concert,
+      lieu,
+      programmateur,
+      loading,
+      genericDetails: !!genericDetails
+    };
+
+    return {
+      // Données principales du hook générique
+      concert,
+      lieu,
+      programmateur,
+      artiste: genericDetails?.relatedData?.artiste || null,
+      structure: genericDetails?.relatedData?.structure || null,
+      loading,
+      isLoading: genericDetails?.loading || false, 
+      isSubmitting: genericDetails?.isSubmitting || false,
+      error: genericDetails?.error || null,
+      
+      // Données du formulaire
+      formData: genericDetails?.formData || {},
+      isEditMode: isEditMode,
+      
+      // Données des formulaires spécifiques aux concerts
+      concertFormData: concertForms?.formData || null,
+      formDataStatus: concertForms?.formDataStatus || null,
+      showFormGenerator: concertForms?.showFormGenerator || false,
+      setShowFormGenerator: concertForms?.setShowFormGenerator || (() => {}),
+      generatedFormLink: concertForms?.generatedFormLink || '',
+      setGeneratedFormLink: concertForms?.setGeneratedFormLink || (() => {}),
+      
+      // Fonctions de gestion génériques
+      handleChange: genericDetails?.handleChange || (() => {}),
+      handleSave: genericDetails?.handleSubmit || (() => {}),
+      handleDelete: genericDetails?.handleDelete || (() => {}),
+      handleSubmit: handleSubmitWithRelations,
+      validateForm: (formData) => validateConcertFormRef.current(formData),
+      handleCancel,
+      
+      // Fonctions spécifiques aux concerts
+      handleFormGenerated: concertForms?.handleFormGenerated || (() => {}),
+      validateProgrammatorForm: concertForms?.validateForm || (() => {}),
+      refreshConcert,
+      getStatusInfo,
+      
+      // Fonctions utilitaires
+      copyToClipboard,
+      formatDate,
+      formatMontant,
+      isDatePassed,
+      
+      // Fonctions pour la gestion des entités liées
+      setLieu: (lieu) => genericDetails?.setRelatedEntity('lieu', lieu),
+      setProgrammateur: (prog) => genericDetails?.setRelatedEntity('programmateur', prog),
+      setArtiste: (artiste) => genericDetails?.setRelatedEntity('artiste', artiste),
+      setStructure: (structure) => genericDetails?.setRelatedEntity('structure', structure),
+      
+      // Recherche d'entités (compatibilité avec les anciens hooks)
+      lieuSearch: {
+        selectedEntity: genericDetails?.relatedData?.lieu || null,
+        setSelectedEntity: (lieu) => genericDetails?.setRelatedEntity('lieu', lieu),
+        setSearchTerm: () => {} // Stub pour compatibilité
+      },
+      programmateurSearch: {
+        selectedEntity: genericDetails?.relatedData?.programmateur || null,
+        setSelectedEntity: (prog) => genericDetails?.setRelatedEntity('programmateur', prog),
+        setSearchTerm: () => {} // Stub pour compatibilité
+      },
+      artisteSearch: {
+        selectedEntity: genericDetails?.relatedData?.artiste || null,
+        setSelectedEntity: (artiste) => genericDetails?.setRelatedEntity('artiste', artiste),
+        setSearchTerm: () => {} // Stub pour compatibilité
+      },
+      structureSearch: {
+        selectedEntity: genericDetails?.relatedData?.structure || null,
+        setSelectedEntity: (structure) => genericDetails?.setRelatedEntity('structure', structure),
+        setSearchTerm: () => {} // Stub pour compatibilité
+      },
+      handleDeleteClick,
+      
+      // Fonctions avancées de gestion des statuts
+      getAdvancedStatusInfo,
+      generateNextSteps,
+      generateRecommendations,
+      
+      // Données de statut enrichies
+      statusAnalysis: concertStatus,
+      formStatusDetails: concertForms?.formDataStatus || null,
+    };
+  }, [
+    genericDetails,
+    isEditMode,
+    concertForms,
+    handleSubmitWithRelations,
     handleCancel,
-    
-    // Fonctions spécifiques aux concerts
-    handleFormGenerated: concertForms?.handleFormGenerated || (() => {}),
-    validateProgrammatorForm: concertForms?.validateForm || (() => {}),
     refreshConcert,
     getStatusInfo,
-    
-    // Fonctions utilitaires
-    copyToClipboard,
-    formatDate,
-    formatMontant,
-    isDatePassed,
-    
-    // Fonctions pour la gestion des entités liées
-    setLieu: (lieu) => genericDetails?.setRelatedEntity('lieu', lieu),
-    setProgrammateur: (prog) => genericDetails?.setRelatedEntity('programmateur', prog),
-    setArtiste: (artiste) => genericDetails?.setRelatedEntity('artiste', artiste),
-    setStructure: (structure) => genericDetails?.setRelatedEntity('structure', structure),
-    
-    // Recherche d'entités (compatibilité avec les anciens hooks)
-    lieuSearch: {
-      selectedEntity: genericDetails?.relatedData?.lieu || null,
-      setSelectedEntity: (lieu) => genericDetails?.setRelatedEntity('lieu', lieu),
-      setSearchTerm: () => {} // Stub pour compatibilité
-    },
-    programmateurSearch: {
-      selectedEntity: genericDetails?.relatedData?.programmateur || null,
-      setSelectedEntity: (prog) => genericDetails?.setRelatedEntity('programmateur', prog),
-      setSearchTerm: () => {} // Stub pour compatibilité
-    },
-    artisteSearch: {
-      selectedEntity: genericDetails?.relatedData?.artiste || null,
-      setSelectedEntity: (artiste) => genericDetails?.setRelatedEntity('artiste', artiste),
-      setSearchTerm: () => {} // Stub pour compatibilité
-    },
-    structureSearch: {
-      selectedEntity: genericDetails?.relatedData?.structure || null,
-      setSelectedEntity: (structure) => genericDetails?.setRelatedEntity('structure', structure),
-      setSearchTerm: () => {} // Stub pour compatibilité
-    },
     handleDeleteClick,
-    
-    // NOUVEAU: Fonctions avancées de gestion des statuts
     getAdvancedStatusInfo,
     generateNextSteps,
     generateRecommendations,
-    
-    // NOUVEAU: Données de statut enrichies
-    statusAnalysis: concertStatus,
-    formStatusDetails: concertForms?.formDataStatus || null,
-  };
+    concertStatus
+  ]);
+
+  return returnData;
 };
 
 export default useConcertDetails;

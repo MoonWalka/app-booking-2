@@ -76,9 +76,11 @@ export const useConcertForm = (concertId) => {
     
     showSuccessToast(message);
     
-    // Ne navigue plus automatiquement après sauvegarde pour rester dans /:id/edit
-    // (Supprimez ou ajustez la redirection si nécessaire)
-  }, [isNewConcert]);
+    // Redirection automatique vers la liste des concerts après sauvegarde
+    setTimeout(() => {
+      navigate('/concerts');
+    }, 1500); // Délai de 1.5 secondes pour permettre à l'utilisateur de voir le message
+  }, [isNewConcert, navigate]);
 
   const onErrorCallback = useCallback((error) => {
     

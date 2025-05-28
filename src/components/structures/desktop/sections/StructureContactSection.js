@@ -11,6 +11,16 @@ import styles from './StructureContactSection.module.css';
 const StructureContactSection = ({ structure, formatValue }) => {
   if (!structure) return null;
   
+  // Fonction helper pour formater les valeurs simplement
+  const formatSimpleValue = (value) => {
+    if (formatValue && typeof formatValue === 'function') {
+      // Si formatValue attend 2 paramètres, on utilise le second paramètre
+      return formatValue('default', value);
+    }
+    // Sinon on fait un formatage simple
+    return value !== undefined && value !== null && value !== '' ? value : 'Non spécifié';
+  };
+  
   return (
     <div className={styles.detailsCard}>
       <div className={styles.cardHeader}>
@@ -22,13 +32,13 @@ const StructureContactSection = ({ structure, formatValue }) => {
           <div className="col-md-6">
             <div className={styles.infoGroup}>
               <div className={styles.infoLabel}>Nom</div>
-              <div className={styles.infoValue}>{formatValue(structure.contact?.nom)}</div>
+              <div className={styles.infoValue}>{formatSimpleValue(structure.contact?.nom)}</div>
             </div>
           </div>
           <div className="col-md-6">
             <div className={styles.infoGroup}>
               <div className={styles.infoLabel}>Fonction</div>
-              <div className={styles.infoValue}>{formatValue(structure.contact?.fonction)}</div>
+              <div className={styles.infoValue}>{formatSimpleValue(structure.contact?.fonction)}</div>
             </div>
           </div>
         </div>

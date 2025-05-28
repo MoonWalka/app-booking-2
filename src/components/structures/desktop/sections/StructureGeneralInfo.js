@@ -13,6 +13,16 @@ import Card from '@/components/ui/Card';
 const StructureGeneralInfo = ({ structure, formatValue }) => {
   if (!structure) return null;
   
+  // Fonction helper pour formater les valeurs simplement
+  const formatSimpleValue = (value) => {
+    if (formatValue && typeof formatValue === 'function') {
+      // Si formatValue attend 2 paramètres, on utilise le second paramètre
+      return formatValue('default', value);
+    }
+    // Sinon on fait un formatage simple
+    return value !== undefined && value !== null && value !== '' ? value : 'Non spécifié';
+  };
+  
   return (
     <Card
       title="Informations de base"
@@ -23,13 +33,13 @@ const StructureGeneralInfo = ({ structure, formatValue }) => {
         <div className="col-md-6">
           <div className={styles.infoGroup}>
             <div className={styles.infoLabel}>Nom</div>
-            <div className={styles.infoValue}>{formatValue(structure.nom)}</div>
+            <div className={styles.infoValue}>{formatSimpleValue(structure.nom)}</div>
           </div>
         </div>
         <div className="col-md-6">
           <div className={styles.infoGroup}>
             <div className={styles.infoLabel}>Raison sociale</div>
-            <div className={styles.infoValue}>{formatValue(structure.raisonSociale)}</div>
+            <div className={styles.infoValue}>{formatSimpleValue(structure.raisonSociale)}</div>
           </div>
         </div>
       </div>
@@ -45,7 +55,7 @@ const StructureGeneralInfo = ({ structure, formatValue }) => {
         <div className="col-md-6">
           <div className={styles.infoGroup}>
             <div className={styles.infoLabel}>SIRET</div>
-            <div className={styles.infoValue}>{formatValue(structure.siret)}</div>
+            <div className={styles.infoValue}>{formatSimpleValue(structure.siret)}</div>
           </div>
         </div>
       </div>
@@ -53,7 +63,7 @@ const StructureGeneralInfo = ({ structure, formatValue }) => {
         <div className="col-md-6">
           <div className={styles.infoGroup}>
             <div className={styles.infoLabel}>TVA Intracommunautaire</div>
-            <div className={styles.infoValue}>{formatValue(structure.tva)}</div>
+            <div className={styles.infoValue}>{formatSimpleValue(structure.tva)}</div>
           </div>
         </div>
       </div>

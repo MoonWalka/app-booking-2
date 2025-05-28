@@ -11,6 +11,7 @@ import { useMemo } from 'react';
  * @returns {Object} - Données et fonctions pour afficher l'adresse
  */
 export const useStructureAddressSection = ({ structure, formatValue }) => {
+  
   // Préparer les données de contact avec des liens - en respectant la règle des hooks
   const contactLinks = useMemo(() => {
     if (!structure) return null;
@@ -39,11 +40,19 @@ export const useStructureAddressSection = ({ structure, formatValue }) => {
   const addressData = useMemo(() => {
     if (!structure) return null;
     
+    // Fonction locale pour éviter les problèmes de dépendances
+    const localFormatValue = (value) => {
+      if (formatValue && typeof formatValue === 'function') {
+        return formatValue('default', value);
+      }
+      return value !== undefined && value !== null && value !== '' ? value : 'Non spécifié';
+    };
+    
     return {
-      adresse: formatValue(structure.adresse),
-      codePostal: formatValue(structure.codePostal),
-      ville: formatValue(structure.ville),
-      pays: formatValue(structure.pays)
+      adresse: localFormatValue(structure.adresse),
+      codePostal: localFormatValue(structure.codePostal),
+      ville: localFormatValue(structure.ville),
+      pays: localFormatValue(structure.pays)
     };
   }, [structure, formatValue]);
 

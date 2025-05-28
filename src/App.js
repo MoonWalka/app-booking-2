@@ -35,6 +35,8 @@ import UnifiedDebugDashboard from '@/components/debug/UnifiedDebugDashboard';
 import TestParametresVersions from './pages/TestParametresVersions';
 // Import du ProfilerMonitor pour le suivi des performances
 import ProfilerMonitor from './components/debug/ProfilerMonitor';
+import ProgrammateurReferencesDebug from '@/components/debug/ProgrammateurReferencesDebug';
+import StructuresAuditDebug from '@/components/debug/StructuresAuditDebug';
 
 // Import de l'outil de diagnostic en mode développement uniquement
 if (process.env.NODE_ENV === 'development') {
@@ -361,8 +363,12 @@ function App() {
                     {/* Route pour la validation des formulaires */}
                     <Route path="/formulaire/validation/:id" element={<PrivateRoute><FormResponsePage /></PrivateRoute>} />
                     
+                    {/* Debug routes - à supprimer après utilisation */}
+                    <Route path="/debug/programmateur-references" element={<ProgrammateurReferencesDebug />} />
+                    <Route path="/debug/structures-audit" element={<StructuresAuditDebug />} />
+                    
                     {/* Redirection par défaut */}
-                    <Route path="*" element={<Navigate to="/" />} />
+                    <Route path="*" element={<Navigate to="/concerts" replace />} />
                   </Route>
                 </Routes>
               </Suspense>

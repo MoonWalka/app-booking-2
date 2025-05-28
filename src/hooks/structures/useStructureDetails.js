@@ -166,6 +166,17 @@ const useStructureDetails = (id) => {
     formData: detailsHook.formData,
     hasChanges: detailsHook.isDirty,
     
+    // Fonction de formatage des valeurs
+    formatValue: detailsHook.formatValue || ((field, value) => {
+      switch (field) {
+        case 'createdAt':
+        case 'updatedAt':
+          return value ? new Date(value).toLocaleDateString() : 'Non spécifié';
+        default:
+          return value !== undefined && value !== null && value !== '' ? value : 'Non spécifié';
+      }
+    }),
+    
     // Accès simplifié aux entités liées
     programmateurs: detailsHook.relatedData?.programmateurs || [],
     loadingProgrammateurs: detailsHook.loadingRelated?.programmateurs || false,

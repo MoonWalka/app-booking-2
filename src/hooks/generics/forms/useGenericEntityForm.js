@@ -32,6 +32,7 @@ const useGenericEntityForm = (formConfig = {}, options = {}) => {
     entityId = null,
     initialData = {},
     validationRules = {},
+    validateForm: customValidateForm = null,
     onSubmit,
     onSuccess,
     onError,
@@ -251,9 +252,32 @@ const useGenericEntityForm = (formConfig = {}, options = {}) => {
     setIsSubmitting(true);
     
     try {
-      if (enableValidation && validateFormRef.current) {
+      if (enableValidation) {
         console.log("[useGenericEntityForm] Validation en cours...");
-        const validationResult = await validateFormRef.current();
+        let validationResult;
+        
+        // Utiliser customValidateForm si fourni, sinon utiliser la validation générique
+        if (customValidateForm && typeof customValidateForm === 'function') {
+          console.log("[useGenericEntityForm] Utilisation de customValidateForm");
+          validationResult = await customValidateForm(formData);
+          // Si customValidateForm retourne simplement un booléen ou des erreurs
+          if (typeof validationResult === 'boolean') {
+            validationResult = { isValid: validationResult, errors: {} };
+          } else if (validationResult && !validationResult.hasOwnProperty('isValid')) {
+            // Si c'est un objet d'erreurs directement
+            validationResult = { 
+              isValid: Object.keys(validationResult).length === 0, 
+              errors: validationResult 
+            };
+          }
+        } else if (validateFormRef.current) {
+          console.log("[useGenericEntityForm] Utilisation de validateForm générique");
+          validationResult = await validateFormRef.current();
+        } else {
+          console.log("[useGenericEntityForm] Pas de validation disponible, passage autorisé");
+          validationResult = { isValid: true, errors: {} };
+        }
+        
         console.log("[useGenericEntityForm] Résultat validation:", validationResult);
         if (!validationResult.isValid) {
           console.log("[useGenericEntityForm] Validation échouée, erreurs:", validationResult.errors);

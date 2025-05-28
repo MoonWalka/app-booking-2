@@ -64,7 +64,6 @@ const ConcertFormActions = ({ id, isSubmitting, onDelete, onSubmit, onCancel, na
             type="submit"
             variant="primary"
             disabled={isSubmitting}
-            onClick={onSubmit}
           >
             {isSubmitting ? (
               <>

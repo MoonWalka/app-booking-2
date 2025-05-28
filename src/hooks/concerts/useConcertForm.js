@@ -276,6 +276,23 @@ export const useConcertForm = (concertId) => {
     }
   }, [formHook]);
 
+  // Wrapper pour handleSubmit avec logs détaillés
+  const handleSubmitWithLogs = useCallback(async (e) => {
+    console.log("[useConcertForm] handleSubmit appelé");
+    console.log("[useConcertForm] formData actuel:", formHook.formData);
+    console.log("[useConcertForm] isNewConcert:", isNewConcert);
+    console.log("[useConcertForm] generatedId:", generatedIdRef.current);
+    
+    try {
+      const result = await formHook.handleSubmit(e);
+      console.log("[useConcertForm] Résultat handleSubmit:", result);
+      return result;
+    } catch (error) {
+      console.error("[useConcertForm] Erreur dans handleSubmit:", error);
+      throw error;
+    }
+  }, [formHook, isNewConcert]);
+
   // Enrichir formData avec l'id de l'entité pour exposer concert.id
   const concertDataWithId = { ...formHook.formData, id: formHook.entityId };
   
@@ -284,6 +301,8 @@ export const useConcertForm = (concertId) => {
     ...formHook,
     // Remplacer handleChange par notre version avec logs détaillés
     handleChange: handleChangeWithLogs,
+    // Remplacer handleSubmit par notre version avec logs
+    handleSubmit: handleSubmitWithLogs,
     // Propriétés et méthodes spécifiques aux concerts
     handleArtisteChange,
     handleLieuChange,

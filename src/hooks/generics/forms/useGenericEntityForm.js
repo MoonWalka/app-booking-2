@@ -242,22 +242,34 @@ const useGenericEntityForm = (formConfig = {}, options = {}) => {
   const handleSubmit = useCallback(async (event) => {
     if (event) event.preventDefault();
     if (!isMountedRef.current) return false;
+    
+    console.log("[useGenericEntityForm] handleSubmit appelé");
+    console.log("[useGenericEntityForm] formData:", formData);
+    console.log("[useGenericEntityForm] entityId:", entityId);
+    console.log("[useGenericEntityForm] enableValidation:", enableValidation);
+    
     setIsSubmitting(true);
     
     try {
       if (enableValidation && validateFormRef.current) {
+        console.log("[useGenericEntityForm] Validation en cours...");
         const validationResult = await validateFormRef.current();
+        console.log("[useGenericEntityForm] Résultat validation:", validationResult);
         if (!validationResult.isValid) {
+          console.log("[useGenericEntityForm] Validation échouée, erreurs:", validationResult.errors);
           if (isMountedRef.current) setIsSubmitting(false);
           return false;
         }
       }
       
       const processedData = processFormData(formData);
+      console.log("[useGenericEntityForm] Données transformées:", processedData);
       
       if (onSubmitRef.current) {
+        console.log("[useGenericEntityForm] Appel onSubmit callback");
         const result = await onSubmitRef.current(processedData);
         if (result === false) {
+          console.log("[useGenericEntityForm] onSubmit a retourné false");
           if (isMountedRef.current) setIsSubmitting(false);
           return false;
         }
@@ -265,14 +277,18 @@ const useGenericEntityForm = (formConfig = {}, options = {}) => {
       
       let result;
       if (entityId && updateRef.current) {
+        console.log("[useGenericEntityForm] Mode UPDATE, entityId:", entityId);
         result = await updateRef.current(entityId, processedData);
       } else if (createRef.current) {
         const idToCreate = configGenerateId ? configGenerateId() : undefined;
+        console.log("[useGenericEntityForm] Mode CREATE, idToCreate:", idToCreate);
         result = await createRef.current(processedData, idToCreate);
       }
+      console.log("[useGenericEntityForm] Résultat final:", result);
       return result;
     } catch (error) {
-      console.error('[UGEF] Erreur soumission:', error);
+      console.error('[useGenericEntityForm] Erreur soumission:', error);
+      console.error('[useGenericEntityForm] Stack trace:', error.stack);
       return false;
     } finally {
       if (isMountedRef.current) setIsSubmitting(false);

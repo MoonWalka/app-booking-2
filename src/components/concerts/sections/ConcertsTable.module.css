@@ -14,12 +14,12 @@
  * ------------------
  */
 .tableContainer {
-  background-color: var(--tc-bg-default);
-  border-radius: var(--tc-radius-base);
-  box-shadow: var(--tc-shadow-sm);
-  overflow-x: auto;
-  margin-top: var(--tc-space-4);
-  border: 1px solid var(--tc-border-default);
+  background-color: white;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 /* 
@@ -178,6 +178,25 @@
   .tableContainer {
     overflow-x: auto;
   }
+  
+  .title {
+    font-size: 0.875rem;
+  }
+  
+  .artistName,
+  .locationCity {
+    font-size: 0.6875rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .tableContainer {
+    border-radius: 0;
+    margin-left: -1rem;
+    margin-right: -1rem;
+    border-left: none;
+    border-right: none;
+  }
 }
 
 .searchBox {
@@ -258,4 +277,33 @@
     margin-left: 0;
     margin-top: var(--tc-space-1);
   }
+}
+
+/* =============================
+   STYLES POUR LES CELLULES
+   ============================= */
+.title {
+  font-weight: 600;
+  color: #111827;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.artistName {
+  font-size: 0.75rem;
+  color: #6b7280;
+  display: block;
+}
+
+.locationName {
+  font-weight: 500;
+  color: #374151;
+  display: block;
+  margin-bottom: 0.125rem;
+}
+
+.locationCity {
+  font-size: 0.75rem;
+  color: #6b7280;
+  display: block;
 }

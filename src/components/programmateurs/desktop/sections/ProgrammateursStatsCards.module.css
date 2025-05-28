@@ -1,5 +1,5 @@
 /*
- * Styles pour ConcertsStatsCards.module.css
+ * Styles pour ProgrammateursStatsCards.module.css
  * Harmonisé avec la maquette TourCraft
  * Dernière mise à jour: 20 mai 2025
  */
@@ -53,14 +53,14 @@
   color: #3b82f6;
 }
 
-.aVenir .statIcon {
+.actifs .statIcon {
   background-color: rgba(34, 197, 94, 0.1);
   color: #22c55e;
 }
 
-.passes .statIcon {
-  background-color: rgba(107, 114, 128, 0.1);
-  color: #6b7280;
+.inactifs .statIcon {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
 }
 
 /* =============================

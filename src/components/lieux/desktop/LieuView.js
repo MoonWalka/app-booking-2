@@ -40,14 +40,12 @@ const LieuView = ({ id: propId }) => {
   // Hook pour les détails en mode lecture seule
   const {
     lieu,
-    programmateur,
     loading,
     isLoading,
     isSubmitting,
     error,
     isDeleting,
     showDeleteModal,
-    loadingRelated,
     handleEdit, // Navigation vers LieuForm
     handleDeleteClick,
     handleCloseDeleteModal,
@@ -149,12 +147,6 @@ const LieuView = ({ id: propId }) => {
           onChange={() => {}}
           updateCoordinates={() => {}}
         />
-        <LieuInfoSection 
-          lieu={lieu}
-          isEditMode={false}
-          formData={{}}
-          onChange={() => {}}
-        />
         <LieuContactSection 
           lieu={lieu} 
           isEditMode={false}
@@ -163,12 +155,16 @@ const LieuView = ({ id: propId }) => {
         />
         <LieuOrganizerSection
           isEditMode={false}
-          programmateur={programmateur}
-          loadingProgrammateur={loadingRelated?.programmateur}
           lieu={lieu}
           formData={{}}
           onChange={() => {}}
           onProgrammateurChange={() => {}}
+        />
+        <LieuInfoSection 
+          lieu={lieu}
+          isEditMode={false}
+          formData={{}}
+          onChange={() => {}}
         />
         <LieuConcertsSection 
           lieu={lieu} 

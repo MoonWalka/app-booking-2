@@ -1,6 +1,6 @@
 /*
  * Styles pour Badge.module.css
- * Standardisé selon le Guide de Style CSS de TourCraft
+ * Harmonisé avec la maquette TourCraft
  * Dernière mise à jour: 20 mai 2025
  */
 
@@ -12,18 +12,12 @@
    BADGE - CLASSE DE BASE
    ============================= */
 .badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--tc-space-1) var(--tc-space-2);
-  font-size: var(--tc-font-size-xs);
-  font-weight: var(--tc-font-weight-semibold);
-  line-height: 1;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: baseline;
-  border-radius: var(--tc-radius-sm);
-  transition: var(--tc-transition-base);
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.2;
 }
 
 /* =============================
@@ -36,34 +30,29 @@
 /* =============================
    VARIANTES DE COULEUR
    ============================= */
-.primary {
-  background-color: var(--tc-color-primary);
-  color: var(--tc-text-light);
+.blue {
+  background-color: rgba(33, 150, 243, 0.1);
+  color: #2196f3;
 }
 
-.secondary {
-  background-color: var(--tc-color-secondary);
-  color: var(--tc-text-light);
+.green {
+  background-color: rgba(76, 175, 80, 0.1);
+  color: #43a047;
 }
 
-.success {
-  background-color: var(--tc-color-success);
-  color: var(--tc-text-light);
+.yellow {
+  background-color: rgba(255, 193, 7, 0.1);
+  color: #ffa000;
 }
 
-.warning {
-  background-color: var(--tc-color-warning);
-  color: var(--tc-text-default);
+.red {
+  background-color: rgba(244, 67, 54, 0.1);
+  color: #e53935;
 }
 
-.danger {
-  background-color: var(--tc-color-error);
-  color: var(--tc-text-light);
-}
-
-.info {
-  background-color: var(--tc-color-info);
-  color: var(--tc-text-light);
+.gray {
+  background-color: rgba(158, 158, 158, 0.1);
+  color: #9e9e9e;
 }
 
 /* =============================

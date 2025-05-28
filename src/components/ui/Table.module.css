@@ -1,37 +1,43 @@
+/*
+ * Styles pour Table.module.css
+ * Harmonisé avec la maquette TourCraft
+ * Dernière mise à jour: 20 mai 2025
+ */
+
 .table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  border-top: none !important;
-}
-
-.table th,
-.table td {
-  padding: var(--tc-space-2);
-  border-bottom: 1px solid var(--tc-table-border-color);
-  text-align: left;
 }
 
 .table th {
-  background-color: var(--tc-color-primary) !important;
-  font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-color-white);
-  border-top: none !important;
+  background-color: #f8f9fa;
+  font-weight: 600;
+  text-align: left;
+  padding: 12px 15px;
+  border-bottom: 1px solid #e5e7eb;
+  color: #555;
+  font-size: 0.875rem;
 }
 
-.table th:first-child {
-  border-top-left-radius: 0 !important;
-}
-.table th:last-child {
-  border-top-right-radius: 0 !important;
+.table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #e5e7eb;
+  vertical-align: middle;
+  font-size: 0.875rem;
 }
 
 .table tbody tr:hover {
-  background-color: var(--tc-bg-hover);
+  background-color: rgba(0, 0, 0, 0.01);
 }
 
 .sortableHeader {
   cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.sortableHeader:hover {
+  background-color: #e9ecef;
 }
 
 .headerContent {
@@ -40,6 +46,30 @@
   justify-content: space-between;
 }
 
+.headerContent i {
+  margin-left: 0.5rem;
+  font-size: 0.75rem;
+}
+
 .clickableRow {
   cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.clickableRow:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* Style pour les cellules vides */
+.table tbody tr td.empty-state {
+  text-align: center;
+  padding: 2rem;
+  color: #6b7280;
+}
+
+.table tbody tr td.empty-state i {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  display: block;
+  color: #d1d5db;
 } 

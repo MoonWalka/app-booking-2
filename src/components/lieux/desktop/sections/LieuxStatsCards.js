@@ -3,6 +3,7 @@ import styles from './LieuxStatsCards.module.css';
 
 /**
  * Component to display statistics about venues in card format
+ * Harmonisé avec la maquette TourCraft
  */
 const LieuxStatsCards = ({ stats }) => {
   return (
@@ -12,8 +13,8 @@ const LieuxStatsCards = ({ stats }) => {
           <i className="bi bi-geo-alt"></i>
         </div>
         <div className={styles.statContent}>
-          <div className={styles.statValue}>{stats.total}</div>
           <div className={styles.statLabel}>Total des lieux</div>
+          <div className={styles.statValue}>{stats.total}</div>
         </div>
       </div>
       
@@ -22,8 +23,8 @@ const LieuxStatsCards = ({ stats }) => {
           <i className="bi bi-music-note-beamed"></i>
         </div>
         <div className={styles.statContent}>
-          <div className={styles.statValue}>{stats.avecConcerts}</div>
           <div className={styles.statLabel}>Avec concerts</div>
+          <div className={styles.statValue}>{stats.avecConcerts}</div>
         </div>
       </div>
       
@@ -32,8 +33,8 @@ const LieuxStatsCards = ({ stats }) => {
           <i className="bi bi-x-circle"></i>
         </div>
         <div className={styles.statContent}>
-          <div className={styles.statValue}>{stats.sansConcerts}</div>
           <div className={styles.statLabel}>Sans concerts</div>
+          <div className={styles.statValue}>{stats.sansConcerts}</div>
         </div>
       </div>
       
@@ -43,8 +44,8 @@ const LieuxStatsCards = ({ stats }) => {
             <i className="bi bi-ticket-perforated"></i>
           </div>
           <div className={styles.statContent}>
-            <div className={styles.statValue}>{stats.festivals}</div>
             <div className={styles.statLabel}>Festivals</div>
+            <div className={styles.statValue}>{stats.festivals}</div>
           </div>
         </div>
       )}
@@ -55,8 +56,8 @@ const LieuxStatsCards = ({ stats }) => {
             <i className="bi bi-building"></i>
           </div>
           <div className={styles.statContent}>
-            <div className={styles.statValue}>{stats.salles}</div>
             <div className={styles.statLabel}>Salles</div>
+            <div className={styles.statValue}>{stats.salles}</div>
           </div>
         </div>
       )}

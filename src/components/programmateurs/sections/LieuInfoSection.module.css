@@ -187,3 +187,14 @@
     align-self: flex-end;
   }
 }
+
+/* =============================
+   NOUVELLE STRUCTURE AVEC CARD
+   ============================= */
+.sectionCard {
+  margin-bottom: var(--tc-space-4);
+}
+
+/* =============================
+   CARTE DE FORMULAIRE (LEGACY)
+   ============================= */

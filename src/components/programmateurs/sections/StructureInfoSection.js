@@ -1,5 +1,6 @@
 import React from 'react';
 import { Form, Row, Col } from 'react-bootstrap';
+import Card from '@components/ui/Card';
 import styles from './StructureInfoSection.module.css';
 
 /**
@@ -9,7 +10,8 @@ const StructureInfoSection = ({
   formik = {}, // Valeur par défaut pour éviter les erreurs
   touched = {}, 
   errors = {}, 
-  isReadOnly = false 
+  isReadOnly = false,
+  showCardWrapper = true // Nouvelle prop pour la flexibilité
 }) => {
   // S'assurer que formik.values existe, sinon initialiser avec une structure vide
   const formikValues = formik.values || { 
@@ -30,10 +32,9 @@ const StructureInfoSection = ({
   const touchedStructure = touched?.structure || {};
   const errorsStructure = errors?.structure || {};
 
-  return (
-    <div className={styles.structureInfoSection}>
-      <h4 className={styles.sectionTitle}>Informations sur la structure</h4>
-      
+  // Contenu du formulaire réutilisable
+  const formContent = (
+    <div>
       <Row>
         <Col md={6}>
           <Form.Group className="mb-3">
@@ -178,6 +179,28 @@ const StructureInfoSection = ({
         value={(formikValues.structureId || '')}
       />
     </div>
+  );
+
+  // Version sans carte (pour usage dans des wrappers)
+  if (!showCardWrapper) {
+    return (
+      <div className={styles.structureInfoSection}>
+        <h4 className={styles.sectionTitle}>Informations sur la structure</h4>
+        {formContent}
+      </div>
+    );
+  }
+
+  // Version avec carte (pour usage standalone)
+  return (
+    <Card
+      title="Informations sur la structure"
+      icon={<i className="bi bi-building"></i>}
+      variant="primary"
+      className={styles.sectionCard}
+    >
+      {formContent}
+    </Card>
   );
 };
 

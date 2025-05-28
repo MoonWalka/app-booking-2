@@ -265,3 +265,14 @@
     margin-top: var(--tc-space-2);
   }
 }
+
+/* =============================
+   NOUVELLE STRUCTURE AVEC CARD
+   ============================= */
+.sectionCard {
+  margin-bottom: var(--tc-space-4);
+}
+
+/* =============================
+   STRUCTURE SECTION (LEGACY)
+   ============================= */

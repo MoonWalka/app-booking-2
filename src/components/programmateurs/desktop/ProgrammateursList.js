@@ -83,6 +83,11 @@ const ProgrammateursList = ({ onNavigateToDetails }) => {
     ) || filterStructure;
   };
 
+  // Calculer le nombre de filtres avancés actifs
+  const activeFiltersCount = () => {
+    return Object.keys(searchFilters).filter(key => searchFilters[key] && searchFilters[key] !== '' && searchFilters[key] !== 'all').length + (filterStructure ? 1 : 0);
+  };
+
   useEffect(() => {
     const handleKeyDown = (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
@@ -231,37 +236,12 @@ const ProgrammateursList = ({ onNavigateToDetails }) => {
           sortOption={sortOption}
           setSortOption={setSortOption}
           structures={structures}
+          showAdvancedFilters={showAdvancedFilters}
+          setShowAdvancedFilters={setShowAdvancedFilters}
+          hasActiveAdvancedFilters={hasActiveAdvancedFilters}
+          handleResetAdvancedFilters={handleResetAdvancedFilters}
+          activeFiltersCount={activeFiltersCount()}
         />
-        
-        {/* Boutons pour filtres avancés */}
-        <div className={styles.advancedFiltersToggle}>
-          <button
-            type="button"
-            className={`${styles.toggleButton} ${showAdvancedFilters ? styles.active : ''}`}
-            onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
-          >
-            <i className="bi bi-funnel me-2"></i>
-            Filtres avancés
-            {hasActiveAdvancedFilters() && (
-              <span className={styles.activeFiltersBadge}>
-                {Object.keys(searchFilters).filter(key => searchFilters[key] && searchFilters[key] !== '').length + (filterStructure ? 1 : 0)}
-              </span>
-            )}
-            <i className={`bi ${showAdvancedFilters ? 'bi-chevron-up' : 'bi-chevron-down'} ms-2`}></i>
-          </button>
-          
-          {hasActiveAdvancedFilters() && (
-            <button
-              type="button"
-              className={styles.resetFiltersButton}
-              onClick={handleResetAdvancedFilters}
-              title="Réinitialiser tous les filtres"
-            >
-              <i className="bi bi-x-circle me-1"></i>
-              Réinitialiser
-            </button>
-          )}
-        </div>
         
         {/* Panel des filtres avancés */}
         {showAdvancedFilters && (

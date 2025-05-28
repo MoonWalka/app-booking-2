@@ -199,7 +199,7 @@ const useGenericEntityDetails = ({
     } else {
       debugLog(`⏭️ ID_CHANGE_EFFECT: Pas de changement d'ID, effet ignoré`, 'debug', 'useGenericEntityDetails');
     }
-  }, [id, entityType, collectionName, safeSetState]);
+  }, [id, entityType, collectionName]);
   
   // Callback pour recevoir les données de l'abonnement Firestore
   const handleSubscriptionData = useCallback((data) => {
@@ -229,14 +229,14 @@ const useGenericEntityDetails = ({
     }
     // loadAllRelatedEntities est stable grâce à useCallback, exemption pour éviter dépendance circulaire
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [transformData, cacheEnabled, cache, id, entityType, autoLoadRelated, safeSetState]);
+  }, [transformData, cacheEnabled, cache, id, entityType, autoLoadRelated]);
   
   // Callback pour gérer les erreurs de l'abonnement
   const handleSubscriptionError = useCallback((err) => {
     if (!instanceRef.current.isMounted) return;
     safeSetState(setError, { message: `Erreur lors du chargement des données: ${err.message}` });
     safeSetState(setLoading, false);
-  }, [safeSetState]);
+  }, []);
   
   // Utiliser le hook d'abonnement Firestore si le mode realtime est activé
   const subscription = useFirestoreSubscription({
@@ -393,7 +393,7 @@ const useGenericEntityDetails = ({
       instanceRef.current.currentlyFetching = false;
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, collectionName, entityType, idField, transformData, autoLoadRelated, realtime, safeSetState, cacheEnabled, cache]);
+  }, [id, collectionName, entityType, idField, transformData, autoLoadRelated, realtime, cacheEnabled, cache]);
   
   // Fonction pour charger une entité liée spécifique
   const loadRelatedEntity = useCallback(async (relatedConfig, entityData) => {
@@ -523,7 +523,6 @@ const useGenericEntityDetails = ({
     relatedEntities.forEach(rel => {
       loadingStates[rel.name] = true;
     });
-    safeSetState(setLoadingRelated, loadingStates);
     
     // Créer un objet pour stocker les entités liées
     const relatedEntitiesData = {};
@@ -591,7 +590,7 @@ const useGenericEntityDetails = ({
     } catch (err) {
       debugLog(`Erreur globale lors du chargement des entités liées: ${err}`, 'error', 'useGenericEntityDetails');
     }
-  }, [relatedEntities, entityType, id, safeSetState, cacheEnabled, cache, loadRelatedEntity]);
+  }, [relatedEntities, entityType, id, cacheEnabled, cache, loadRelatedEntity]);
   
   // Fonction pour charger une entité liée par son ID
   const loadRelatedEntityById = useCallback(async (name, id) => {
@@ -651,7 +650,7 @@ const useGenericEntityDetails = ({
     } finally {
       safeSetState(setLoadingRelated, prev => ({ ...prev, [name]: false }));
     }
-  }, [relatedEntities, safeSetState, cacheEnabled, cache]);
+  }, [relatedEntities, cacheEnabled, cache]);
   
   // SUPPRIMÉ: toggleEditMode - remplacé par la navigation vers des formulaires séparés
   // Les entités utilisent maintenant le pattern vue/formulaire séparé avec navigation
@@ -878,7 +877,7 @@ const useGenericEntityDetails = ({
     if (cacheEnabled) cache.remove(id);
     safeSetState(setError, null);
     refresh();
-  }, [entityType, id, cacheEnabled, cache, safeSetState, refresh]);
+  }, [entityType, id, cacheEnabled, cache, refresh]);
   
   // Chargement initial de l'entité - Compatible StrictMode
   useEffect(() => {

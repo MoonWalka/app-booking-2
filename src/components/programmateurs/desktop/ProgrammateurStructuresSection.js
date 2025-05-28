@@ -8,7 +8,7 @@ import Card from '../../../components/ui/Card';
 /**
  * Composant pour afficher la structure associée à un programmateur
  * @param {Object} props - Propriétés du composant
- * @param {Object} props.programmateur - Données du programmateur avec structureCache et structureId
+ * @param {Object} props.programmateur - Données du programmateur avec structureId
  * @param {Object} props.structure - Données complètes de la structure (optionnel, si fourni par le parent)
  * @param {boolean} props.showCardWrapper - Indique si la structure de carte doit être affichée
  */
@@ -19,15 +19,15 @@ const ProgrammateurStructuresSection = ({ programmateur, structure: structurePro
   // Si le parent a fourni la structure, on l'utilise directement
   const structure = structureProp || localStructure;
   
-  // Données à afficher : priorité à la structure complète, puis au cache, puis valeurs par défaut
+  // Données à afficher : priorité à la structure complète, puis valeurs par défaut
   const structureData = {
     id: structure?.id || programmateur?.structureId,
-    raisonSociale: structure?.raisonSociale || programmateur?.structureCache?.raisonSociale || "Structure associée",
-    type: structure?.type || programmateur?.structureCache?.type,
-    ville: structure?.ville || programmateur?.structureCache?.ville
+    raisonSociale: structure?.raisonSociale || "Structure associée",
+    type: structure?.type,
+    ville: structure?.ville
   };
 
-  // Est-ce que nous avons une vraie structure (avec ID) ou juste des données en cache
+  // Est-ce que nous avons une vraie structure (avec ID)
   const hasRealStructure = !!programmateur?.structureId;
 
   useEffect(() => {

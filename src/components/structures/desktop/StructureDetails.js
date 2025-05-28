@@ -35,8 +35,9 @@ const StructureDetails = () => {
   const {
     deleting,
     showDeleteModal,
-    setShowDeleteModal,
-    handleDelete
+    handleDeleteClick,
+    handleCloseDeleteModal,
+    handleConfirmDelete
   } = useDeleteStructure(() => {
     // Callback après suppression réussie
     navigate('/structures');
@@ -63,18 +64,13 @@ const StructureDetails = () => {
     );
   }
 
-  // Handle structure deletion
-  const confirmDelete = () => {
-    handleDelete(structure);
-  };
-
   return (
     <div className={styles.detailsContainer}>
       {/* Structure Header with Actions */}
       <StructureHeader 
         structure={structure} 
         onEdit={() => navigate(`/structures/${id}/edit`)} 
-        onDelete={() => setShowDeleteModal(true)}
+        onDelete={() => handleDeleteClick(structure)}
         navigateToList={() => navigate('/structures')}
       />
 
@@ -110,8 +106,8 @@ const StructureDetails = () => {
       {/* Confirmation Modal for Structure Deletion */}
       <StructureDeleteModal
         show={showDeleteModal}
-        onClose={() => setShowDeleteModal(false)}
-        onConfirm={confirmDelete}
+        onClose={handleCloseDeleteModal}
+        onConfirm={handleConfirmDelete}
         isDeleting={deleting}
         structure={structure}
       />

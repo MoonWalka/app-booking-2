@@ -38,12 +38,12 @@ const StructuresList = () => {
     setError(null);
 
     try {
-      let q = query(collection(db, 'structures'), orderBy('nom'), limit(20));
+      let q = query(collection(db, 'structures'), orderBy('__name__'), limit(20));
 
       if (lastVisible) {
         q = query(
           collection(db, 'structures'),
-          orderBy('nom'),
+          orderBy('__name__'),
           startAfter(lastVisible),
           limit(20)
         );

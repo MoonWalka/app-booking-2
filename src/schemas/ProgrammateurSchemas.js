@@ -1,37 +1,8 @@
 import * as Yup from 'yup';
 
 /**
- * Schéma de validation pour la section structureCache d'un programmateur
- * Utilisé pour valider les informations de la structure associée
- */
-export const StructureCacheSchema = Yup.object().shape({
-  raisonSociale: Yup.string()
-    .max(100, 'La raison sociale ne peut pas dépasser 100 caractères')
-    .required('La raison sociale est requise'),
-  type: Yup.string()
-    .oneOf(['association', 'sarl', 'eurl', 'sas', 'collectivite', 'autre'], 'Type de structure non valide')
-    .required('Le type de structure est requis'),
-  adresse: Yup.string()
-    .max(200, 'L\'adresse ne peut pas dépasser 200 caractères'),
-  codePostal: Yup.string()
-    .matches(/^[0-9]{5}$/, 'Le code postal doit contenir 5 chiffres')
-    .nullable(),
-  ville: Yup.string()
-    .max(100, 'La ville ne peut pas dépasser 100 caractères'),
-  pays: Yup.string()
-    .default('France')
-    .max(100, 'Le pays ne peut pas dépasser 100 caractères'),
-  siret: Yup.string()
-    .matches(/^[0-9]{14}$/, 'Le numéro SIRET doit contenir 14 chiffres')
-    .nullable(),
-  tva: Yup.string()
-    .max(20, 'Le numéro de TVA ne peut pas dépasser 20 caractères')
-    .nullable(),
-});
-
-/**
  * Schéma complet pour un programmateur
- * Inclut les informations personnelles et les informations de structure
+ * Utilise maintenant structureId au lieu de structureCache (approche moderne)
  */
 export const ProgrammateurSchema = Yup.object().shape({
   nom: Yup.string()
@@ -49,8 +20,7 @@ export const ProgrammateurSchema = Yup.object().shape({
   fonction: Yup.string()
     .max(100, 'La fonction ne peut pas dépasser 100 caractères')
     .nullable(),
-  structureId: Yup.string().nullable(),
-  structureCache: StructureCacheSchema.nullable(),
+  structureId: Yup.string().nullable(), // Référence vers une structure séparée
   adresse: Yup.string()
     .max(200, 'L\'adresse ne peut pas dépasser 200 caractères')
     .nullable(),
@@ -72,19 +42,9 @@ export const ProgrammateurSchema = Yup.object().shape({
     .nullable(),
 });
 
-/**
- * Schéma spécifique pour la section légale d'un programmateur
- * Utilisé pour valider uniquement les informations légales (structure)
- */
-export const ProgrammateurLegalSectionSchema = Yup.object().shape({
-  structureCache: StructureCacheSchema
-});
-
 // Export par défaut avec nom de variable
 const programmateurSchemas = {
-  ProgrammateurSchema,
-  StructureCacheSchema,
-  ProgrammateurLegalSectionSchema
+  ProgrammateurSchema
 };
 
 export default programmateurSchemas;

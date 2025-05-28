@@ -17,7 +17,6 @@ import useDeleteProgrammateur from '@/hooks/programmateurs/useDeleteProgrammateu
 // Import section components
 import { ProgrammateurHeader } from './sections/ProgrammateurHeader';
 import ProgrammateurContactSection from './sections/ProgrammateurContactSection';
-import ProgrammateurLegalSectionWrapper from './sections/ProgrammateurLegalSectionWrapper';
 import ProgrammateurStructureSection from './sections/ProgrammateurStructureSection';
 import ProgrammateurLieuxSectionWrapper from './sections/ProgrammateurLieuxSectionWrapper';
 import ProgrammateurConcertsSectionWrapper from './sections/ProgrammateurConcertsSectionWrapper';
@@ -170,14 +169,6 @@ const ProgrammateurForm = () => {
         {/* Sections empilées verticalement en mode édition */}
         <div className={styles.sectionsStack}>
           <ProgrammateurContactSection 
-            programmateur={programmateur}
-            isEditMode={true}
-            formData={formData}
-            onChange={handleChange}
-            errors={{}}
-          />
-          
-          <ProgrammateurLegalSectionWrapper
             programmateur={programmateur}
             isEditMode={true}
             formData={formData}

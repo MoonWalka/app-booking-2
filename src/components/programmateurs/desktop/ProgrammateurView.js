@@ -5,7 +5,6 @@ import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import FlexContainer from '@/components/ui/FlexContainer';
 import { ProgrammateurHeader } from './sections/ProgrammateurHeader';
 import ProgrammateurContactSection from './ProgrammateurContactSection';
-import ProgrammateurLegalSection from './ProgrammateurLegalSection';
 import ProgrammateurConcertsSection from './ProgrammateurConcertsSection';
 import ProgrammateurStructuresSection from './ProgrammateurStructuresSection';
 import ProgrammateurLieuxSection from './ProgrammateurLieuxSection';
@@ -37,10 +36,9 @@ const ProgrammateurView = ({
   console.log('[TRACE-UNIQUE][ProgrammateurView] programmateur:', programmateur);
   console.log('[TRACE-UNIQUE][ProgrammateurView] structure:', structure);
   
-  // État local pour contrôler l'affichage des sections
+  // État local pour contrôler l'affichage des sections - suppression de legalVisible
   const [sections, setSections] = useState({
     contactVisible: true,
-    legalVisible: true,
     structureVisible: true,
     lieuxVisible: true,
     concertsVisible: true
@@ -117,40 +115,6 @@ const ProgrammateurView = ({
             {sections.contactVisible && (
               <Card.Body>
                 <ProgrammateurContactSection
-                  programmateur={programmateur}
-                  isEditing={false}
-                  formatValue={formatValue}
-                  showCardWrapper={false} // Ajout d'une prop pour ne pas utiliser le wrapper de carte
-                />
-              </Card.Body>
-            )}
-          </Card>
-
-          {/* Section Informations Légales - structure de carte unique */}
-          <Card className="mb-4">
-            <Card.Header className="bg-primary text-white">
-              <FlexContainer justify="space-between" align="center">
-                <h5 className="mb-0">
-                  <i className="bi bi-file-earmark-text me-2"></i>
-                  Informations légales
-                </h5>
-                <Button 
-                  variant="link" 
-                  className="p-0 text-white" 
-                  onClick={() => toggleSection('legalVisible')}
-                >
-                  {sections.legalVisible ? (
-                    <i className="bi bi-chevron-up"></i>
-                  ) : (
-                    <i className="bi bi-chevron-down"></i>
-                  )}
-                </Button>
-              </FlexContainer>
-            </Card.Header>
-            
-            {sections.legalVisible && (
-              <Card.Body>
-                <ProgrammateurLegalSection
                   programmateur={programmateur}
                   isEditing={false}
                   formatValue={formatValue}

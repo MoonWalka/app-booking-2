@@ -1,5 +1,5 @@
 // src/hooks/structures/useDeleteStructure.js
-import { useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useGenericEntityDelete } from '@/hooks/common';
 import { showSuccessToast, showErrorToast } from '@/utils/toasts';
 
@@ -11,15 +11,17 @@ import { showSuccessToast, showErrorToast } from '@/utils/toasts';
  * @returns {Object} États et méthodes pour gérer la suppression
  */
 const useDeleteStructure = (onDeleteSuccess) => {
+  // État local pour gérer le modal de suppression
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [structureToDelete, setStructureToDelete] = useState(null);
+
   // Utiliser le hook générique avec configuration spécifique aux structures
   const {
     isDeleting,
     hasRelatedEntities,
     relatedEntitiesDetails,
     handleDelete,
-    checkRelatedEntities,
-    showConfirmationDialog,
-    closeConfirmationDialog
+    checkRelatedEntities
   } = useGenericEntityDelete({
     entityType: 'structure',
     collectionName: 'structures',
@@ -52,6 +54,8 @@ const useDeleteStructure = (onDeleteSuccess) => {
     // Callbacks
     onSuccess: (id) => {
       showSuccessToast('La structure a été supprimée avec succès');
+      setShowDeleteModal(false);
+      setStructureToDelete(null);
       if (onDeleteSuccess) onDeleteSuccess(id);
     },
     onError: (error) => {
@@ -59,18 +63,42 @@ const useDeleteStructure = (onDeleteSuccess) => {
       showErrorToast(`Erreur lors de la suppression: ${error.message}`);
     },
     
-    // Configuration avancée
-    cleanupBeforeDelete: async (id, db) => {
-      // Nettoyage avant suppression - Aucune action supplémentaire requise
-      // car la vérification des entités liées est gérée par le hook générique
-      return true;
-    },
-    validateBeforeDelete: true, // Valider les entités liées avant suppression
-    showConfirmation: true,     // Montrer un dialogue de confirmation
-    cacheResults: false         // Ne pas mettre en cache les résultats de validation
+    // Configuration avancée - Désactiver la confirmation automatique car on utilise le modal
+    showConfirmation: false,  // On gère la confirmation via le modal
+    validateBeforeDelete: true,
+    cacheResults: false
   });
 
-  // Fonction adaptée pour la suppression d'une structure spécifique
+  // Fonction pour ouvrir le modal de suppression
+  const handleDeleteClick = useCallback((structure) => {
+    if (!structure) return;
+    
+    setStructureToDelete(structure);
+    setShowDeleteModal(true);
+  }, []);
+
+  // Fonction pour fermer le modal
+  const handleCloseDeleteModal = useCallback(() => {
+    setShowDeleteModal(false);
+    setStructureToDelete(null);
+  }, []);
+
+  // Fonction pour confirmer la suppression
+  const handleConfirmDelete = useCallback(async () => {
+    if (!structureToDelete) return;
+    
+    const structureId = typeof structureToDelete === 'object' ? structureToDelete.id : structureToDelete;
+    
+    if (!structureId) {
+      showErrorToast('ID de structure manquant, impossible de supprimer');
+      return;
+    }
+    
+    // Appeler le handleDelete du hook générique
+    await handleDelete(structureId);
+  }, [structureToDelete, handleDelete]);
+
+  // Fonction adaptée pour la suppression d'une structure spécifique (rétrocompatibilité)
   const handleDeleteStructure = useCallback((structure) => {
     if (!structure) return Promise.reject(new Error('Structure non définie'));
     
@@ -108,19 +136,21 @@ const useDeleteStructure = (onDeleteSuccess) => {
     hasRelatedEntities,
     relatedEntitiesDetails,
     
+    // État du modal
+    showDeleteModal,
+    setShowDeleteModal,
+    structureToDelete,
+    
     // Pour compatibilité avec l'ancienne API
     deleting: isDeleting,
-    showDeleteModal: hasRelatedEntities,
-    setShowDeleteModal: showConfirmationDialog,
     
     // Actions
     handleDelete: handleDeleteStructure,
+    handleDeleteClick,
+    handleCloseDeleteModal,
+    handleConfirmDelete,
     handleDeleteStructure,
-    canDeleteStructure,
-    
-    // Gestion du dialogue de confirmation
-    showConfirmationDialog,
-    closeConfirmationDialog
+    canDeleteStructure
   };
 };
 

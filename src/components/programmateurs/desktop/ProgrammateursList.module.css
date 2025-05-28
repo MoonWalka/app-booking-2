@@ -145,7 +145,6 @@
     border-radius: var(--tc-radius-base);
     padding: var(--tc-space-1) var(--tc-space-2);
     width: 100%;
-    max-width: 600px;
     box-shadow: var(--tc-shadow-xs);
   }
   

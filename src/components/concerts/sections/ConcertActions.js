@@ -21,6 +21,56 @@ const ConcertActions = ({
   const contractButtonVariant = getContractButtonVariant ? getContractButtonVariant(concert, hasContract, contractStatus) : 'primary';
   const contractButtonTooltip = getContractTooltip ? getContractTooltip(concert, hasContract, contractStatus) : 'Action contrat';
   
+  // Fonction pour déterminer le statut du formulaire
+  const getFormStatus = () => {
+    if (!concert.programmateurId) {
+      return { status: 'no_programmateur', icon: 'bi-person-x', class: 'disabled', tooltip: 'Aucun programmateur associé' };
+    }
+    
+    if (hasUnvalidatedForm) {
+      return { status: 'to_validate', icon: 'bi-check2-circle', class: 'toValidate', tooltip: 'Formulaire à valider' };
+    }
+    
+    if (hasForm) {
+      // Vérifier si le formulaire est validé
+      if (concert.formValidated) {
+        return { status: 'validated', icon: 'bi-check-circle-fill', class: 'validated', tooltip: 'Formulaire validé' };
+      } else {
+        return { status: 'filled', icon: 'bi-file-text-fill', class: 'filled', tooltip: 'Formulaire rempli' };
+      }
+    }
+    
+    if (concert.statut === 'contact') {
+      return { status: 'to_send', icon: 'bi-envelope', class: 'toSend', tooltip: 'Envoyer formulaire' };
+    }
+    
+    return { status: 'not_sent', icon: 'bi-envelope-plus', class: 'notSent', tooltip: 'Formulaire non envoyé' };
+  };
+  
+  const formStatus = getFormStatus();
+  
+  // Fonction pour gérer le clic sur le bouton formulaire
+  const handleFormClick = (e) => {
+    e.stopPropagation();
+    
+    switch (formStatus.status) {
+      case 'to_send':
+        handleSendForm(concert.id);
+        break;
+      case 'to_validate':
+      case 'filled':
+      case 'validated':
+        handleViewForm(concert.id);
+        break;
+      case 'no_programmateur':
+      case 'not_sent':
+      default:
+        // Rediriger vers l'édition du concert pour ajouter un programmateur
+        window.location.href = `/concerts/${concert.id}/edit`;
+        break;
+    }
+  };
+  
   return (
     <div className={styles.actionsContainer} onClick={(e) => e.stopPropagation()}>
       {/* View Concert Button */}
@@ -35,45 +85,15 @@ const ConcertActions = ({
         <i className="bi bi-eye"></i>
       </button>
       
-      {/* Form Actions */}
-      {concert.statut === 'contact' && concert.programmateurId && !hasForm && (
-        <button 
-          className={`${styles.actionButton} ${styles.formButton}`}
-          onClick={(e) => {
-            e.stopPropagation();
-            handleSendForm(concert.id);
-          }}
-          title="Envoyer formulaire"
-        >
-          <i className="bi bi-envelope"></i>
-        </button>
-      )}
-      
-      {hasUnvalidatedForm && (
-        <button 
-          className={`${styles.actionButton} ${styles.formButton}`}
-          onClick={(e) => {
-            e.stopPropagation();
-            handleViewForm(concert.id);
-          }}
-          title="Formulaire à valider"
-        >
-          <i className="bi bi-check2-circle"></i>
-        </button>
-      )}
-      
-      {hasForm && !hasUnvalidatedForm && (
-        <button 
-          className={`${styles.actionButton} ${styles.formButton}`}
-          onClick={(e) => {
-            e.stopPropagation();
-            handleViewForm(concert.id);
-          }}
-          title="Voir formulaire"
-        >
-          <i className="bi bi-file-text"></i>
-        </button>
-      )}
+      {/* Form Button - Toujours affiché avec statut différent */}
+      <button 
+        className={`${styles.actionButton} ${styles.formButton} ${styles[formStatus.class]}`}
+        onClick={handleFormClick}
+        title={formStatus.tooltip}
+        disabled={formStatus.status === 'no_programmateur'}
+      >
+        <i className={formStatus.icon}></i>
+      </button>
       
       {/* Contract Actions avec styling dynamique sophistiqué */}
       {!hasContract && (

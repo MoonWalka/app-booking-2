@@ -85,6 +85,93 @@
 }
 
 /* =============================
+   STATUTS DU BOUTON FORMULAIRE
+   ============================= */
+
+/* Formulaire non envoyé */
+.formButton.notSent {
+  background-color: rgba(108, 117, 125, 0.1);
+  color: #6c757d;
+}
+
+.formButton.notSent:hover {
+  background-color: rgba(108, 117, 125, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Formulaire à envoyer */
+.formButton.toSend {
+  background-color: rgba(13, 110, 253, 0.1);
+  color: #0d6efd;
+}
+
+.formButton.toSend:hover {
+  background-color: rgba(13, 110, 253, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Formulaire rempli */
+.formButton.filled {
+  background-color: rgba(255, 193, 7, 0.1);
+  color: #ffc107;
+}
+
+.formButton.filled:hover {
+  background-color: rgba(255, 193, 7, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Formulaire à valider */
+.formButton.toValidate {
+  background-color: rgba(255, 193, 7, 0.15);
+  color: #ff8c00;
+  animation: pulse 2s infinite;
+}
+
+.formButton.toValidate:hover {
+  background-color: rgba(255, 193, 7, 0.25);
+  transform: translateY(-1px);
+  animation: none;
+}
+
+/* Formulaire validé */
+.formButton.validated {
+  background-color: rgba(25, 135, 84, 0.1);
+  color: #198754;
+}
+
+.formButton.validated:hover {
+  background-color: rgba(25, 135, 84, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Bouton désactivé (pas de programmateur) */
+.formButton.disabled {
+  background-color: rgba(108, 117, 125, 0.05);
+  color: #adb5bd;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.formButton.disabled:hover {
+  background-color: rgba(108, 117, 125, 0.05);
+  transform: none;
+}
+
+/* Animation pulse pour les formulaires à valider */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 6px rgba(255, 193, 7, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 193, 7, 0);
+  }
+}
+
+/* =============================
    VARIANTS DYNAMIQUES DE BOUTONS DE CONTRAT (NOUVEAU)
    ============================= */
 .variant-primary {

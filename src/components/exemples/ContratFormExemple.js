@@ -22,7 +22,7 @@ const ContratFormExemple = () => {
   // Utilisation du hook optimisé
   const {
     // États du formulaire
-    formData,
+    // formData, // Les données sont accessibles via les objets spécifiques (contrat, concert, etc.)
     formErrors,
     isLoading,
     isSaving,
@@ -32,7 +32,7 @@ const ContratFormExemple = () => {
     resetForm,
     
     // Fonctions de sauvegarde
-    saveForm,
+    // saveForm, // Utiliser validateAndSave à la place
     validateAndSave,
     
     // Propriétés spécifiques au contrat
@@ -43,7 +43,7 @@ const ContratFormExemple = () => {
     artiste,
     
     // Gestion des relations
-    updateConcert,
+    // updateConcert, // TODO: Implémenter la fonctionnalité de mise à jour du concert
     updateStructure,
     updateArtiste,
     
@@ -64,9 +64,9 @@ const ContratFormExemple = () => {
     isSendingForSignature,
     
     // Vérifications et états supplémentaires
-    hasRequiredFields,
+    // hasRequiredFields, // TODO: Utiliser pour la validation du formulaire
     canGeneratePdf,
-    statutContrat
+    // statutContrat // TODO: Utiliser pour afficher le statut détaillé
   } = useContratForm(id);
   
   // Fonctions de gestion des onglets

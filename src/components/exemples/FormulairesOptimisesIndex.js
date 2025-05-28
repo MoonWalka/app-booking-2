@@ -121,7 +121,7 @@ const FormulairesOptimisesIndex = () => {
       <Card className="mb-4">
         <div className="row">
           <div className="col-md-8">
-            <div className={styles.formGroup}>
+            <div className="form-group">
               <label htmlFor="searchExamples">Rechercher des exemples</label>
               <div className="input-group">
                 <div className="input-group-prepend">
@@ -131,7 +131,7 @@ const FormulairesOptimisesIndex = () => {
                 </div>
                 <input
                   type="text"
-                  className={styles.formField}
+                  className="form-control"
                   id="searchExamples"
                   placeholder="Rechercher par nom, description ou tag..."
                   value={searchTerm}
@@ -141,10 +141,10 @@ const FormulairesOptimisesIndex = () => {
             </div>
           </div>
           <div className="col-md-4">
-            <div className={styles.formGroup}>
+            <div className="form-group">
               <label htmlFor="filterCategory">Filtrer par catégorie</label>
               <select
-                className={styles.formField}
+                className="form-control"
                 id="filterCategory"
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}

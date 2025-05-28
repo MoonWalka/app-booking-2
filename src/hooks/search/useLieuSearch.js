@@ -1,6 +1,5 @@
-import { useState, useCallback, useEffect } from 'react';
-import useGenericEntitySearch from '../common/useGenericEntitySearch';
-import { useLieuSearch } from '@/hooks/lieux/useLieuSearch';
+import { useEffect } from 'react';
+import { useLieuSearch as useLieuSearchOptimized } from '@/hooks/lieux/useLieuSearch';
 import { debugLog } from '@/utils/logUtils';
 
 /**
@@ -22,7 +21,7 @@ const useLieuSearch = (initialTerm = '') => {
   }, []);
   
   // Utiliser directement la version optimisée
-  return useLieuSearch({ initialSearchTerm: initialTerm });
+  return useLieuSearchOptimized({ initialSearchTerm: initialTerm });
 };
 
 export default useLieuSearch;

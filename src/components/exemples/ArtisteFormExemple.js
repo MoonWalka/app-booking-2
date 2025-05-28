@@ -27,7 +27,6 @@ const ArtisteFormExemple = () => {
   // Utilisation du hook optimisé
   const {
     // États du formulaire
-    formData,
     formErrors,
     isSubmitting,
     isLoading,

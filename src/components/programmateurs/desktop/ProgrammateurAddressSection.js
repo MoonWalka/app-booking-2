@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Button from '@ui/Button';
 import Card from '@/components/ui/Card';
-import useAdresseValidation from '@/hooks/common/useAddressSearch';
 import styles from './ProgrammateurAddressSection.module.css';
 import { useAdresseValidation as useAdresseValidationProgrammateur } from '@/hooks/programmateurs';
 
@@ -26,8 +25,7 @@ const ProgrammateurAddressSection = ({
     suggestions,
     validationMessage,
     validateAdresse,
-    selectSuggestion,
-    formatFullAddress
+    selectSuggestion
   } = useAdresseValidationProgrammateur(adresseData);
 
   // Check address validity

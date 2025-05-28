@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useAddressSearch } from '@/hooks/common';
 import styles from './AddressInput.module.css';
@@ -36,7 +36,6 @@ const AddressInput = ({
     showResults,
     isSearching,
     dropdownRef,
-    handleSearch,
     handleSelectAddress,
   } = useAddressSearch();
 
@@ -48,7 +47,7 @@ const AddressInput = ({
     if (value && !searchTerm && !isActive) {
       setSearchTerm(value);
     }
-  }, [value, searchTerm, isActive]);
+  }, [value, searchTerm, isActive, setSearchTerm]);
 
   // Gérer la sélection d'une adresse
   const handleSelect = (address) => {

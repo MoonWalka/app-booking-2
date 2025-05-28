@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {  collection, getDocs, query, where, orderBy, limit, startAfter  } from '@/services/firebase-service';
 import { db } from '../../services/firebase-service';
@@ -116,6 +116,7 @@ const ListWithFilters = ({
   // Chargement initial
   useEffect(() => {
     loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entityType, filters, sort, pageSize]);
 
   // Changement de tri

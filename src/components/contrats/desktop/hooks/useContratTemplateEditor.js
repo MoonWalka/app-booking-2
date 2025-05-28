@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 /**
@@ -135,6 +135,7 @@ export const useContratTemplateEditor = (template, onSave, isModalContext, onClo
     if (typeof template.logoUrl !== 'undefined' && template.logoUrl !== logoUrl) setLogoUrl(template.logoUrl);
     if (typeof template.titleTemplate !== 'undefined' && template.titleTemplate !== titleTemplate) setTitleTemplate(template.titleTemplate);
     if (typeof template.signatureTemplate !== 'undefined' && template.signatureTemplate !== signatureTemplate) setSignatureTemplate(template.signatureTemplate);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [template]);
   
   return {

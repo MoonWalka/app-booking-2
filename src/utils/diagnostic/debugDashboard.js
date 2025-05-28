@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Card, Badge, Button, Alert, Collapse, Table, ProgressBar } from 'react-bootstrap';
+import { Card, Badge, Button, Alert, Table } from 'react-bootstrap';
 
 /**
  * Hook pour détecter les re-renders excessifs
@@ -40,7 +40,7 @@ const useRenderTracker = (componentName, threshold = 10) => {
     }, 5000);
     
     return () => clearTimeout(resetTimer);
-  });
+  }, [threshold, componentName]);
   
   return {
     renderCount: renderCount.current,
@@ -145,7 +145,7 @@ const useLogMonitor = () => {
     };
   }, []);
   
-  return logStats;
+  return { logStats, setLogStats };
 };
 
 /**
@@ -154,7 +154,7 @@ const useLogMonitor = () => {
 const DebugDashboard = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [activeTab, setActiveTab] = useState('renders');
-  const logStats = useLogMonitor();
+  const { logStats, setLogStats } = useLogMonitor();
   const dashboardRenderTracker = useRenderTracker('DebugDashboard', 5);
   
   // Statistiques des logs excessifs
@@ -167,7 +167,7 @@ const DebugDashboard = () => {
   
   const clearLogStats = useCallback(() => {
     setLogStats({});
-  }, []);
+  }, [setLogStats]);
   
   if (!isVisible) {
     return (

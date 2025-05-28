@@ -1,5 +1,6 @@
 import React from 'react';
-import { useResponsive } from '@/hooks/common';
+// TODO: Réimporter quand on réactivera le mode mobile
+// import { useResponsive } from '@/hooks/common';
 import styles from './ContratVariable.module.css';
 
 /**

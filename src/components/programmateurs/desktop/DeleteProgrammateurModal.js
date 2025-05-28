@@ -1,19 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useDeleteProgrammateur } from '@/hooks/programmateurs';
 import Button from '@ui/Button';
 import styles from './DeleteProgrammateurModal.module.css';
-import { useDeleteProgrammateur } from '../../contexts/DeleteProgrammateurContext';
 
-const DeleteProgrammateurModal = ({ programmateur, handleDelete }) => {
+const DeleteProgrammateurModal = ({ programmateurId, programmateur, onDeleteSuccess }) => {
   const {
     showDeleteModal,
     isDeleting,
     handleConfirmDelete,
     handleCancelDelete
-  } = useDeleteProgrammateur({ id: programmateur.id, onDeleteSuccess: handleDelete });
-  
-  const openModal = () => {
-    showDeleteModal();
-  };
+  } = useDeleteProgrammateur({ id: programmateurId, onDeleteSuccess });
   
   const closeModal = () => {
     handleCancelDelete();

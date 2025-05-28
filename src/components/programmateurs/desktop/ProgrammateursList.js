@@ -9,7 +9,6 @@ import ProgrammateursListHeader from './sections/ProgrammateursListHeader';
 import ProgrammateursStatsCards from './sections/ProgrammateursStatsCards';
 import ProgrammateursListSearchFilter from './sections/ProgrammateursListSearchFilter';
 import ProgrammateursListEmptyState from './sections/ProgrammateursListEmptyState';
-import { collection, getDocs } from '@/services/firebase-service';
 
 const ProgrammateursList = ({ onNavigateToDetails }) => {
   const navigate = useNavigate();
@@ -37,20 +36,6 @@ const ProgrammateursList = ({ onNavigateToDetails }) => {
   });
   
   const searchInputRef = React.useRef(null);
-
-  // Chargement de toutes les structures pour le filtre
-  const [structures, setStructures] = useState([]);
-  useEffect(() => {
-    const fetchStructures = async () => {
-      try {
-        const snapshot = await getDocs(collection('structures'));
-        setStructures(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-      } catch (e) {
-        setStructures([]);
-      }
-    };
-    fetchStructures();
-  }, []);
 
   // Filtres avancés
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);

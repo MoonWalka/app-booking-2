@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
 /**
  * Composant exemple démontrant l'utilisation de useStructureForm
  * 
@@ -7,8 +9,11 @@
  */
 
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useStructureForm } from '@/hooks/structures';
+import Card from '@/components/ui/Card';
+import FormField from '@/components/ui/FormField';
+import '@styles/index.css';
 import styles from './StructureFormExemple.module.css';
 
 /**
@@ -16,6 +21,7 @@ import styles from './StructureFormExemple.module.css';
  */
 const StructureFormExemple = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   
   // Utilisation du hook optimisé
   const {

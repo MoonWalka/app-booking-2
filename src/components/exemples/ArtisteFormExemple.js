@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
 /**
  * Composant exemple démontrant l'utilisation de useArtisteForm
  * 

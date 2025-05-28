@@ -9,37 +9,6 @@ import FormField from '@/components/ui/FormField';
 // et importent '@styles/index.css' au lieu d'un fichier CSS spécifique
 // Assurez-vous que ces dépendances sont installées et que le hook useAuth est implémenté
 
-// Styles personnalisés pour la page de connexion
-const loginPageStyles = `
-  .login-container {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  }
-  .login-card {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    padding: 2rem;
-    width: 100%;
-    max-width: 400px;
-  }
-  .login-header {
-    text-align: center;
-    margin-bottom: 2rem;
-  }
-  .login-header h1 {
-    color: #333;
-    margin-bottom: 0.5rem;
-  }
-  .login-header p {
-    color: #666;
-    margin: 0;
-  }
-`;
-
 const LoginPage = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');

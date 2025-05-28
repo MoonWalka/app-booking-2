@@ -9,10 +9,10 @@
    ============================= */
 .lieuxContainer {
   padding: var(--tc-space-4);
-  background-color: var(--tc-bg-color-light);
-  border-radius: var(--tc-radius-base);
-  box-shadow: var(--tc-shadow-base);
-  border: 1px solid var(--tc-border-default);
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
 }
 
 /* =============================

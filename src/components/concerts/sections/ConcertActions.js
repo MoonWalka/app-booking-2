@@ -7,18 +7,11 @@ const ConcertActions = ({
   hasUnvalidatedForm,
   hasContract,
   contractStatus,
-  getContractButtonVariant,
-  getContractTooltip,
-  handleViewConcert,
   handleSendForm,
   handleViewForm,
   handleGenerateContract,
   handleViewContract
 }) => {
-  
-  // Calculer le variant et tooltip pour les boutons de contrat
-  const contractButtonVariant = getContractButtonVariant ? getContractButtonVariant(concert, hasContract, contractStatus) : 'primary';
-  const contractButtonTooltip = getContractTooltip ? getContractTooltip(concert, hasContract, contractStatus) : 'Action contrat';
   
   // Fonction pour déterminer le statut du formulaire
   const getFormStatus = () => {

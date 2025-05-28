@@ -53,10 +53,6 @@ const ProgrammateursList = ({ onNavigateToDetails }) => {
   }, []);
 
   // Filtres avancés
-  const [filterStructure, setFilterStructure] = useState('');
-  const [sortOption, setSortOption] = useState('nom-asc');
-
-  // Filtres avancés sophistiqués (hook)
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
 
   // Gestion des filtres avancés avec le hook sophistiqué
@@ -72,7 +68,6 @@ const ProgrammateursList = ({ onNavigateToDetails }) => {
   // Reset des filtres avancés
   const handleResetAdvancedFilters = () => {
     setSearchFilters({});
-    setFilterStructure('');
     handleSearch(searchTerm, {});
   };
 
@@ -80,12 +75,12 @@ const ProgrammateursList = ({ onNavigateToDetails }) => {
   const hasActiveAdvancedFilters = () => {
     return Object.keys(searchFilters).some(key => 
       searchFilters[key] && searchFilters[key] !== '' && searchFilters[key] !== 'all'
-    ) || filterStructure;
+    );
   };
 
   // Calculer le nombre de filtres avancés actifs
   const activeFiltersCount = () => {
-    return Object.keys(searchFilters).filter(key => searchFilters[key] && searchFilters[key] !== '' && searchFilters[key] !== 'all').length + (filterStructure ? 1 : 0);
+    return Object.keys(searchFilters).filter(key => searchFilters[key] && searchFilters[key] !== '' && searchFilters[key] !== 'all').length;
   };
 
   useEffect(() => {
@@ -195,12 +190,10 @@ const ProgrammateursList = ({ onNavigateToDetails }) => {
   // Filtrage et tri harmonisés
   const filteredProgrammateurs = programmateurs
     .filter(p =>
-      (!searchTerm || (p.nom + ' ' + (p.prenom || '')).toLowerCase().includes(searchTerm.toLowerCase())) &&
-      (!filterStructure || (p.structure && String(p.structure.id) === String(filterStructure)))
+      (!searchTerm || (p.nom + ' ' + (p.prenom || '')).toLowerCase().includes(searchTerm.toLowerCase()))
     )
     .sort((a, b) => {
-      if (sortOption === 'nom-asc') return a.nom.localeCompare(b.nom);
-      if (sortOption === 'nom-desc') return b.nom.localeCompare(a.nom);
+      if (sortField === 'nom') return a.nom.localeCompare(b.nom);
       return 0;
     });
 
@@ -231,11 +224,6 @@ const ProgrammateursList = ({ onNavigateToDetails }) => {
           setSearchTerm={setSearchTerm}
           filteredCount={filteredProgrammateurs.length}
           totalCount={programmateurs.length}
-          filterStructure={filterStructure}
-          setFilterStructure={setFilterStructure}
-          sortOption={sortOption}
-          setSortOption={setSortOption}
-          structures={structures}
           showAdvancedFilters={showAdvancedFilters}
           setShowAdvancedFilters={setShowAdvancedFilters}
           hasActiveAdvancedFilters={hasActiveAdvancedFilters}

@@ -59,25 +59,6 @@ const ProgrammateursListSearchFilter = ({
         </div>
       </div>
       <div className={styles.filtersCol}>
-        <Form.Select
-          value={filterStructure}
-          onChange={e => setFilterStructure(e.target.value)}
-          className={styles.filterSelect}
-        >
-          <option value="">Toutes les structures</option>
-          {structures && structures.map(s => (
-            <option key={s.id} value={s.id}>{s.nom}</option>
-          ))}
-        </Form.Select>
-        <Form.Select
-          value={sortOption}
-          onChange={e => setSortOption(e.target.value)}
-          className={styles.filterSelect}
-        >
-          <option value="nom-asc">Nom A-Z</option>
-          <option value="nom-desc">Nom Z-A</option>
-        </Form.Select>
-        
         <button
           type="button"
           className={`${styles.toggleButton} ${showAdvancedFilters ? styles.active : ''}`}

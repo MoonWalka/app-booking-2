@@ -309,39 +309,60 @@
   .actionButtons {
     display: flex;
     gap: var(--tc-space-2);
+    justify-content: flex-end;
   }
   
   .actionButton {
-    border: none;
-    background: transparent;
-    color: var(--tc-text-secondary);
-    font-size: 1.1rem;
-    padding: var(--tc-space-2);
-    border-radius: var(--tc-radius-base);
-    width: 32px;
-    height: 32px;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    transition: all var(--tc-transition-fast);
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    border: none;
     cursor: pointer;
+    font-size: 0.875rem;
   }
   
-  .actionButton:hover {
-    background: var(--tc-color-primary-light);
-    color: var(--tc-color-primary);
-    transform: translateY(-1px);
+  /* Bouton Voir (bleu) */
+  .actionButton:nth-child(1) {
+    background-color: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+  }
+  
+  .actionButton:nth-child(1):hover {
+    background-color: rgba(59, 130, 246, 0.2);
+  }
+  
+  /* Bouton Éditer (vert) */
+  .actionButton:nth-child(2) {
+    background-color: rgba(34, 197, 94, 0.1);
+    color: #22c55e;
+  }
+  
+  .actionButton:nth-child(2):hover {
+    background-color: rgba(34, 197, 94, 0.2);
+  }
+  
+  /* Bouton Supprimer (rouge) */
+  .actionButton:nth-child(3) {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+  }
+  
+  .actionButton:nth-child(3):hover {
+    background-color: rgba(239, 68, 68, 0.2);
   }
   
   .actionButton:disabled {
     opacity: 0.5;
     cursor: not-allowed;
-    transform: none;
   }
   
   .actionButton:disabled:hover {
-    background: transparent;
-    color: var(--tc-text-secondary);
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
   }
   
   /* =============================
@@ -566,8 +587,13 @@
     }
     
     .actionButtons {
-      flex-direction: column;
-      gap: var(--tc-space-2);
+      gap: 0.25rem;
+    }
+    
+    .actionButton {
+      width: 32px;
+      height: 32px;
+      font-size: 0.75rem;
     }
     
     .statCard {

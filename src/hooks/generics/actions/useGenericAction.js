@@ -19,6 +19,7 @@ import {
   getDocs,
   getDoc,
   addDoc,
+  setDoc,
   updateDoc,
   deleteDoc,
   startAfter
@@ -109,8 +110,8 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
       
       let result;
       if (customId) {
-        // Création avec ID personnalisé
-        await updateDoc(doc(db, entityType, customId), entityData);
+        // Création avec ID personnalisé - utiliser setDoc pour créer un nouveau document
+        await setDoc(doc(db, entityType, customId), entityData);
         result = { id: customId, ...entityData };
       } else {
         // Création avec ID auto-généré

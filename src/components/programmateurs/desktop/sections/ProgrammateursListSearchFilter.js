@@ -22,6 +22,7 @@ const ProgrammateursListSearchFilter = ({ searchTerm, setSearchTerm, filteredCou
     <div className={styles.searchFilterRow}>
       <div className={styles.searchCol}>
         <div className={styles.searchBox}>
+          <i className={`bi bi-search ${styles.searchIcon}`}></i>
           <Form.Control
             ref={searchInputRef}
             className={styles.searchInput}

@@ -3,8 +3,10 @@ import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { collection, getDocs, query, orderBy, where } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
-import { Table, Badge, Button, Container, Row, Col, Card } from 'react-bootstrap';
+import { Container, Row, Col, Card } from 'react-bootstrap';
 import FlexContainer from '@/components/ui/FlexContainer';
+import Button from '@/components/ui/Button';
+import ContratsTable from '@/components/contrats/sections/ContratsTable';
 import ContratGenerationPage from '@pages/ContratGenerationPage.js';
 import ContratDetailsPage from '@pages/ContratDetailsPage.js';
 // Imports directs au lieu de lazy - SUPPRIMÉS: imports non utilisés
@@ -72,34 +74,6 @@ const ContratsPage = () => {
     fetchContrats();
   }, []);
 
-  const formatDate = (dateValue) => {
-    if (!dateValue) return '-';
-    
-    try {
-      if (dateValue.seconds) {
-        return new Date(dateValue.seconds * 1000).toLocaleDateString('fr-FR');
-      }
-      
-      return new Date(dateValue).toLocaleDateString('fr-FR');
-    } catch (error) {
-      console.error('Erreur de formatage de date:', error);
-      return '-';
-    }
-  };
-
-  const getStatusBadge = (status) => {
-    switch (status) {
-      case 'signed':
-        return <Badge bg="success">Signé</Badge>;
-      case 'sent':
-        return <Badge bg="info">Envoyé</Badge>;
-      case 'generated':
-        return <Badge bg="warning">Généré</Badge>;
-      default:
-        return <Badge bg="secondary">Inconnu</Badge>;
-    }
-  };
-
   return (
     <Container fluid className="p-4">
       <Row className="mb-4">
@@ -142,64 +116,7 @@ const ContratsPage = () => {
           </Card.Body>
         </Card>
       ) : (
-        <Card className="border-0 shadow-sm">
-          <Card.Body className="p-0">
-            <Table hover responsive className="mb-0">
-              <thead className="bg-light">
-                <tr>
-                  <th className="ps-3" style={{ width: '12%' }}>Date</th>
-                  <th style={{ width: '25%' }}>Concert</th>
-                  <th style={{ width: '20%' }}>Lieu</th>
-                  <th style={{ width: '20%' }}>Programmateur</th>
-                  <th style={{ width: '10%' }}>Statut</th>
-                  <th className="pe-3" style={{ width: '13%' }}>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {contrats.map(contrat => (
-                  <tr 
-                    key={contrat.id} 
-                    onClick={() => navigate(`/contrats/${contrat.id}`)}
-                    style={{ cursor: 'pointer' }}
-                    className="contrat-row"
-                  >
-                    <td className="align-middle ps-3">{formatDate(contrat.dateGeneration)}</td>
-                    <td className="align-middle fw-medium">{contrat.concert?.titre || 'N/A'}</td>
-                    <td className="align-middle">
-                      {contrat.concert?.lieuNom ? (
-                        <FlexContainer align="center">
-                          <i className="bi bi-geo-alt text-muted me-2"></i>
-                          {contrat.concert.lieuNom}
-                        </FlexContainer>
-                      ) : 'N/A'}
-                    </td>
-                    <td className="align-middle">
-                      {contrat.concert?.programmateurNom ? (
-                        <FlexContainer align="center">
-                          <i className="bi bi-person text-muted me-2"></i>
-                          {contrat.concert.programmateurNom}
-                        </FlexContainer>
-                      ) : 'N/A'}
-                    </td>
-                    <td className="align-middle">{getStatusBadge(contrat.status)}</td>
-                    <td className="align-middle pe-3">
-                      <Button 
-                        variant="outline-primary" 
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigate(`/contrats/${contrat.id}`);
-                        }}
-                      >
-                        <i className="bi bi-eye me-1"></i> Voir
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          </Card.Body>
-        </Card>
+        <ContratsTable contrats={contrats} />
       )}
 
       <Routes>

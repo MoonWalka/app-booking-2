@@ -1,33 +1,44 @@
 import React from 'react';
 import styles from './ConcertsStatsCards.module.css';
 
-const cards = [
-  { key: 'total', label: 'Total des concerts', icon: <i className="bi bi-music-note-beamed"></i>, colorType: 'primary' },
-  { key: 'aVenir', label: 'À venir', icon: <i className="bi bi-calendar-event"></i>, colorType: 'success' },
-  { key: 'passes', label: 'Passés', icon: <i className="bi bi-calendar-check"></i>, colorType: 'muted' },
-];
-
-const ConcertsStatsCards = ({ stats }) => (
-  <div className={styles.statsCards}>
-    {cards.map(card => (
-      <div 
-        className={styles.statCard} 
-        key={card.key} 
-        data-color={card.colorType}
-      >
-        <span 
-          className={styles.statIcon}
-          data-color={card.colorType}
-        >
-          {card.icon}
-        </span>
-        <div className={styles.statText}>
-          <span className={styles.statValue}>{stats[card.key] || 0}</span>
-          <span className={styles.statLabel}>{card.label}</span>
+/**
+ * Component to display statistics about concerts in card format
+ * Harmonisé avec la maquette TourCraft
+ */
+const ConcertsStatsCards = ({ stats }) => {
+  return (
+    <div className={styles.statsContainer}>
+      <div className={`${styles.statCard} ${styles.total}`}>
+        <div className={styles.statIcon}>
+          <i className="bi bi-music-note-beamed"></i>
+        </div>
+        <div className={styles.statContent}>
+          <div className={styles.statLabel}>Total des concerts</div>
+          <div className={styles.statValue}>{stats.total || 0}</div>
         </div>
       </div>
-    ))}
-  </div>
-);
+      
+      <div className={`${styles.statCard} ${styles.aVenir}`}>
+        <div className={styles.statIcon}>
+          <i className="bi bi-calendar-event"></i>
+        </div>
+        <div className={styles.statContent}>
+          <div className={styles.statLabel}>À venir</div>
+          <div className={styles.statValue}>{stats.aVenir || 0}</div>
+        </div>
+      </div>
+      
+      <div className={`${styles.statCard} ${styles.passes}`}>
+        <div className={styles.statIcon}>
+          <i className="bi bi-calendar-check"></i>
+        </div>
+        <div className={styles.statContent}>
+          <div className={styles.statLabel}>Passés</div>
+          <div className={styles.statValue}>{stats.passes || 0}</div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default ConcertsStatsCards; 

@@ -22,14 +22,12 @@ const LieuxListSearchFilter = ({
   return (
     <div className={styles.searchFilterContainer}>
       <div className={styles.searchBar}>
-        <div className="input-group">
-          <span className="input-group-text">
-            <i className="bi bi-search"></i>
-          </span>
+        <div className={styles.searchBox}>
+          <i className={`bi bi-search ${styles.searchIcon}`}></i>
           <input
             ref={searchInputRef}
             type="text"
-            className={`${styles.formField} ${styles.searchInput}`}
+            className={styles.searchInput}
             placeholder="Rechercher un lieu par nom, ville, adresse... (Ctrl+F)"
             value={typeof searchTerm === "string" || typeof searchTerm === "number" ? searchTerm : ""}
             onChange={(e) => setSearchTerm(e.target.value)}

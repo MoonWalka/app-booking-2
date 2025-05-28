@@ -1,6 +1,6 @@
 /*
  * Styles pour LieuxStatsCards.module.css
- * Standardisé selon le Guide de Style CSS de TourCraft
+ * Harmonisé avec la maquette TourCraft
  * Dernière mise à jour: 20 mai 2025
  */
 
@@ -8,70 +8,69 @@
    CONTENEUR DE STATISTIQUES
    ============================= */
 .statsContainer {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--tc-space-4);
-  margin-bottom: var(--tc-space-6);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 /* =============================
    CARTE DE STATISTIQUE
    ============================= */
 .statCard {
-  flex: 1;
-  min-width: 150px;
-  background-color: var(--tc-bg-default);
-  border-radius: var(--tc-radius-base);
-  box-shadow: var(--tc-shadow-sm);
-  padding: var(--tc-space-4);
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1rem;
   display: flex;
   align-items: center;
-  gap: var(--tc-space-4);
-  transition: var(--tc-transition-base);
-  border: 1px solid var(--tc-border-default);
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .statCard:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--tc-shadow-base);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
 }
 
 /* =============================
    ICÔNE DE STATISTIQUE
    ============================= */
 .statIcon {
-  width: 48px;
-  height: 48px;
-  border-radius: var(--tc-radius-base);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--tc-font-size-xl);
+  font-size: 1.25rem;
+  margin-right: 0.75rem;
+  flex-shrink: 0;
 }
 
 .total .statIcon {
-  background-color: rgba(var(--tc-color-primary-rgb), 0.1);
-  color: var(--tc-color-primary);
+  background-color: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
 }
 
 .avecConcerts .statIcon {
-  background-color: rgba(var(--tc-success-color-rgb), 0.1);
-  color: var(--tc-color-success);
+  background-color: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
 }
 
 .sansConcerts .statIcon {
-  background-color: rgba(var(--tc-color-secondary-rgb), 0.1);
-  color: var(--tc-color-secondary);
+  background-color: rgba(107, 114, 128, 0.1);
+  color: #6b7280;
 }
 
 .festivals .statIcon {
-  background-color: rgba(var(--tc-danger-color-rgb), 0.1);
-  color: var(--tc-color-error);
+  background-color: rgba(168, 85, 247, 0.1);
+  color: #a855f7;
 }
 
 .salles .statIcon {
-  background-color: rgba(var(--tc-warning-color-rgb), 0.1);
-  color: var(--tc-color-warning);
+  background-color: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
 }
 
 /* =============================
@@ -80,58 +79,54 @@
 .statContent {
   display: flex;
   flex-direction: column;
-}
-
-.statValue {
-  font-size: var(--tc-font-size-xl);
-  font-weight: var(--tc-font-weight-semibold);
-  line-height: 1.2;
-  color: var(--tc-text-default);
+  flex-grow: 1;
 }
 
 .statLabel {
-  font-size: var(--tc-font-size-sm);
-  color: var(--tc-color-gray-600);
-  margin-top: var(--tc-space-1);
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+}
+
+.statValue {
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #111827;
 }
 
 /* =============================
    RESPONSIVE DESIGN
    ============================= */
-@media (max-width: var(--tc-breakpoint-lg)) {
+@media (max-width: 768px) {
   .statsContainer {
-    gap: var(--tc-space-2);
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.75rem;
   }
 
   .statCard {
-    padding: var(--tc-space-2);
-    gap: var(--tc-space-2);
+    padding: 0.75rem;
   }
   
   .statIcon {
-    width: 40px;
-    height: 40px;
-    font-size: var(--tc-font-size-lg);
-  }
-}
-
-@media (max-width: var(--tc-breakpoint-md)) {
-  .statsContainer {
-    flex-wrap: wrap;
-  }
-
-  .statCard {
-    flex-basis: calc(50% - var(--tc-space-2));
-    min-width: 140px;
+    width: 36px;
+    height: 36px;
+    font-size: 1.125rem;
+    margin-right: 0.5rem;
   }
   
   .statValue {
-    font-size: var(--tc-font-size-lg);
+    font-size: 1.125rem;
+  }
+  
+  .statLabel {
+    font-size: 0.8125rem;
   }
 }
 
-@media (max-width: var(--tc-breakpoint-sm)) {
-  .statCard {
-    flex-basis: 100%;
+@media (max-width: 480px) {
+  .statsContainer {
+    grid-template-columns: 1fr;
   }
 }

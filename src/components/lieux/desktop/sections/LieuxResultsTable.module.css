@@ -1,6 +1,6 @@
 /*
  * Styles pour LieuxResultsTable.module.css
- * Standardisé selon le Guide de Style CSS de TourCraft
+ * Harmonisé avec la maquette TourCraft
  * Dernière mise à jour: 20 mai 2025
  */
 
@@ -8,12 +8,84 @@
    CONTENEUR DE TABLEAU
    ============================= */
 .tableContainer {
-  overflow-x: auto;
-  margin-bottom: var(--tc-space-4);
-  border-radius: var(--tc-radius-base);
-  box-shadow: var(--tc-shadow-sm);
-  background-color: var(--tc-bg-default);
-  border: 1px solid var(--tc-border-default);
+  background-color: white;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* =============================
+   BADGES ET ÉLÉMENTS VISUELS
+   ============================= */
+.villeBadge {
+  color: #374151;
+  font-weight: 500;
+}
+
+.concertCount {
+  display: inline-flex;
+  align-items: center;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.concertCount i {
+  color: #3b82f6;
+  margin-right: 0.25rem;
+}
+
+/* =============================
+   BOUTONS D'ACTION
+   ============================= */
+.actionButtons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.actionButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+/* Bouton Voir (bleu) */
+.actionButton:nth-child(1) {
+  background-color: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+}
+
+.actionButton:nth-child(1):hover {
+  background-color: rgba(59, 130, 246, 0.2);
+}
+
+/* Bouton Éditer (vert) */
+.actionButton:nth-child(2) {
+  background-color: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+}
+
+.actionButton:nth-child(2):hover {
+  background-color: rgba(34, 197, 94, 0.2);
+}
+
+/* Bouton Supprimer (rouge) */
+.actionButton:nth-child(3) {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.actionButton:nth-child(3):hover {
+  background-color: rgba(239, 68, 68, 0.2);
 }
 
 /* =============================
@@ -148,6 +220,28 @@
 /* =============================
    RESPONSIVE DESIGN
    ============================= */
+@media (max-width: 768px) {
+  .actionButtons {
+    gap: 0.25rem;
+  }
+  
+  .actionButton {
+    width: 32px;
+    height: 32px;
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .tableContainer {
+    border-radius: 0;
+    margin-left: -1rem;
+    margin-right: -1rem;
+    border-left: none;
+    border-right: none;
+  }
+}
+
 @media (max-width: var(--tc-breakpoint-lg)) {
   .colType, .colCapacity {
     display: none;

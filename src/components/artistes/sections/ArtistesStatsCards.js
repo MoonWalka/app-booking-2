@@ -1,61 +1,42 @@
 // src/components/artistes/sections/ArtistesStatsCards.js
 import React from 'react';
-import FlexContainer from '@/components/ui/FlexContainer';
 import styles from './ArtistesStatsCards.module.css';
-import Card from '@/components/ui/Card';
 
 /**
- * Component to display artist statistics cards
- * @param {Object} props - Component props
- * @param {Object} props.stats - Statistics object with total, avecConcerts, and sansConcerts counts
+ * Component to display statistics about artistes in card format
+ * Harmonisé avec la maquette TourCraft
  */
 const ArtistesStatsCards = ({ stats }) => {
-  // Création d'une carte statistique réutilisable
-  const StatCard = ({ value, label, icon, color }) => {
-    return (
-      <Card
-        className={`${styles.statsCard} h-100 border-0 shadow-sm`}
-        variant={color}
-        isHoverable={false}
-      >
-        <FlexContainer align="center">
-          <div className={`${styles.statsIcon} text-${color} me-3`}>
-            <i className={`bi bi-${icon} fs-2`}></i>
-          </div>
-          <div>
-            <h3 className={`stats-value fw-bold mb-1 text-${color}`}>{value}</h3>
-            <div className="stats-label text-muted">{label}</div>
-          </div>
-        </FlexContainer>
-      </Card>
-    );
-  };
-
   return (
-    <div className="row mb-4">
-      <div className="col-lg-4 mb-3 mb-lg-0">
-        <StatCard
-          value={stats.total}
-          label="Total artistes"
-          icon="people-fill"
-          color="primary"
-        />
+    <div className={styles.statsContainer}>
+      <div className={`${styles.statCard} ${styles.total}`}>
+        <div className={styles.statIcon}>
+          <i className="bi bi-people-fill"></i>
+        </div>
+        <div className={styles.statContent}>
+          <div className={styles.statLabel}>Total artistes</div>
+          <div className={styles.statValue}>{stats.total}</div>
+        </div>
       </div>
-      <div className="col-lg-4 mb-3 mb-lg-0">
-        <StatCard
-          value={stats.avecConcerts}
-          label="Avec concerts"
-          icon="calendar-check"
-          color="success"
-        />
+      
+      <div className={`${styles.statCard} ${styles.avecConcerts}`}>
+        <div className={styles.statIcon}>
+          <i className="bi bi-calendar-check"></i>
+        </div>
+        <div className={styles.statContent}>
+          <div className={styles.statLabel}>Avec concerts</div>
+          <div className={styles.statValue}>{stats.avecConcerts}</div>
+        </div>
       </div>
-      <div className="col-lg-4">
-        <StatCard
-          value={stats.sansConcerts}
-          label="Sans concerts"
-          icon="calendar-x"
-          color="warning"
-        />
+      
+      <div className={`${styles.statCard} ${styles.sansConcerts}`}>
+        <div className={styles.statIcon}>
+          <i className="bi bi-calendar-x"></i>
+        </div>
+        <div className={styles.statContent}>
+          <div className={styles.statLabel}>Sans concerts</div>
+          <div className={styles.statValue}>{stats.sansConcerts}</div>
+        </div>
       </div>
     </div>
   );

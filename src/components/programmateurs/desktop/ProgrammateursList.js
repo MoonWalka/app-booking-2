@@ -25,14 +25,18 @@ const ProgrammateursList = ({ onNavigateToDetails }) => {
     sortField,
     setSortField,
     sortDirection,
-    setSortDirection
+    setSortDirection,
+    setProgrammateurs
   } = useProgrammateurSearch();
   
   const { 
     handleDelete: handleDeleteProgrammateur,
     isDeleting
-  } = useDeleteProgrammateur(() => {
-    resetSearch();
+  } = useDeleteProgrammateur((deletedId) => {
+    // Supprimer le programmateur de la liste locale
+    setProgrammateurs(prevProgrammateurs => 
+      prevProgrammateurs.filter(p => p.id !== deletedId)
+    );
   });
   
   const searchInputRef = React.useRef(null);

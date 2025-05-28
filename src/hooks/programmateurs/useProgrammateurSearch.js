@@ -198,6 +198,9 @@ export const useProgrammateurSearch = ({
     handleCreateProgrammateur,
     navigateToProgrammateurDetails,
     
+    // Fonction pour mettre à jour la liste (nécessaire pour la suppression)
+    setProgrammateurs: setAllProgrammateurs,
+    
     // Aliases pour compatibilité
     results: filteredAndSortedProgrammateurs,
     isSearching: isLoading,

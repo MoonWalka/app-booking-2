@@ -6,7 +6,7 @@ import { db } from '@/services/firebase-service';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import FlexContainer from '@/components/ui/FlexContainer';
 import Button from '@/components/ui/Button';
-import ContratsTable from '@/components/contrats/sections/ContratsTable';
+import ContratsTable from '../components/contrats/sections/ContratsTable';
 import ContratGenerationPage from '@pages/ContratGenerationPage.js';
 import ContratDetailsPage from '@pages/ContratDetailsPage.js';
 // Imports directs au lieu de lazy - SUPPRIMÉS: imports non utilisés

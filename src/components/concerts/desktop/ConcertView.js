@@ -7,7 +7,7 @@ import styles from './ConcertView.module.css';
 
 // Import des hooks personnalisés
 import { useConcertDetails } from '@/hooks/concerts';
-import useConcertDetailsSimple from '@/hooks/concerts/useConcertDetailsSimple';
+import useConcertDetailsSimple from '../../../hooks/concerts/useConcertDetailsSimple';
 import { useConcertStatus } from '@/hooks/concerts';
 import { useLieuSearch } from '@/hooks/lieux/useLieuSearch';
 import { useProgrammateurSearch } from '@/hooks/programmateurs/useProgrammateurSearch';

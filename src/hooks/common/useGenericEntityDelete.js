@@ -2,7 +2,7 @@
 import { useState, useCallback } from 'react';
 import { doc, deleteDoc, getDoc, collection, query, where, getDocs } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
-import { toast } from 'react-toastify';
+import { showSuccessToast, showErrorToast } from '@/utils/toasts';
 import { debugLog } from '@/utils/logUtils';
 
 /**
@@ -78,7 +78,7 @@ const useGenericEntityDelete = (options) => {
           const hasRelation = await relation.check(entityData);
           if (hasRelation) {
             const errorMessage = message || `Impossible de supprimer : ${entityType} utilisé ailleurs`;
-            toast.error(errorMessage);
+            showErrorToast(errorMessage);
             
             debugLog(`Relation trouvée via méthode personnalisée: ${errorMessage}`, 'warn', 'useGenericEntityDelete');
             
@@ -147,7 +147,7 @@ const useGenericEntityDelete = (options) => {
               
               debugLog(`${count} références trouvées dans ${relatedCollection}`, 'warn', 'useGenericEntityDelete');
               
-              toast.error(errorMessage);
+              showErrorToast(errorMessage);
               
               // Pour le premier document lié trouvé, afficher des détails plus spécifiques
               if (relation.detailsField && relatedDocs.length > 0) {
@@ -157,7 +157,7 @@ const useGenericEntityDelete = (options) => {
                 debugLog(`Entités liées: ${details.join(', ')}${relatedDocs.length > 3 ? '...' : ''}`, 'info', 'useGenericEntityDelete');
                 
                 const detailsMessage = `Utilisé par: ${details.join(', ')}${relatedDocs.length > 3 ? '...' : ''}`;
-                toast.info(detailsMessage);
+                showErrorToast(detailsMessage);
               }
               
               relatedDetails.push({
@@ -183,7 +183,7 @@ const useGenericEntityDelete = (options) => {
       debugLog(`Erreur lors de la vérification des entités liées: ${error.message}`, 'error', 'useGenericEntityDelete');
       
       if (onError) onError(error);
-      toast.error(`Erreur lors de la vérification des dépendances: ${error.message}`);
+      showErrorToast(`Erreur lors de la vérification des dépendances: ${error.message}`);
       return false;
     }
   }, [relatedEntities, entityType, collectionName, onError]);
@@ -227,7 +227,7 @@ const useGenericEntityDelete = (options) => {
       await deleteDoc(entityRef);
       
       // Notification de succès
-      toast.success(`${entityType.charAt(0).toUpperCase() + entityType.slice(1)} supprimé avec succès`);
+      showSuccessToast(`${entityType.charAt(0).toUpperCase() + entityType.slice(1)} supprimé avec succès`);
       
       // Appeler le callback de succès si fourni
       if (onSuccess) {
@@ -240,7 +240,7 @@ const useGenericEntityDelete = (options) => {
       console.error('[LOG][useGenericEntityDelete] Erreur lors de la suppression', error);
       
       // Notification d'erreur
-      toast.error(`Erreur lors de la suppression: ${error.message}`);
+      showErrorToast(`Erreur lors de la suppression: ${error.message}`);
       
       // Appeler le callback d'erreur si fourni
       if (onError) {

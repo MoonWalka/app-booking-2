@@ -1,127 +1,125 @@
 // src/hooks/programmateurs/useDeleteProgrammateur.js
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useGenericEntityDelete } from '@/hooks/common';
-import { toast } from 'react-toastify';
-import { debugLog } from '@/utils/logUtils';
+import { showSuccessToast, showErrorToast } from '@/utils/toasts';
 
 /**
  * Hook optimisé pour la suppression des programmateurs
- * Utilise le hook générique useGenericEntityDelete avec une modale de confirmation
+ * Version améliorée utilisant le hook générique useGenericEntityDelete
  * 
- * @param {Function} onSuccess - Callback appelé après une suppression réussie
- * @returns {Object} - État et méthodes pour gérer la suppression de programmateurs
+ * @param {Function} onDeleteSuccess - Callback appelé après suppression réussie
+ * @returns {Object} États et méthodes pour gérer la suppression
  */
-const useDeleteProgrammateur = (onSuccess) => {
-  // État pour la modale de confirmation
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [programmateurToDelete, setProgrammateurToDelete] = useState(null);
-
-  // Utiliser le hook générique avec une configuration spécifique aux programmateurs
-  const deleteHook = useGenericEntityDelete({
+const useDeleteProgrammateur = (onDeleteSuccess) => {
+  // Utiliser le hook générique avec configuration spécifique aux programmateurs
+  const {
+    isDeleting,
+    hasRelatedEntities,
+    relatedEntitiesDetails,
+    handleDelete,
+    checkRelatedEntities,
+    showConfirmationDialog,
+    closeConfirmationDialog
+  } = useGenericEntityDelete({
     entityType: 'programmateur',
     collectionName: 'programmateurs',
     
-    // Désactiver la confirmation automatique pour utiliser notre modale
-    showConfirmation: false,
+    // Messages personnalisés
+    confirmationTitle: 'Supprimer ce programmateur',
+    confirmationMessage: 'Êtes-vous sûr de vouloir supprimer ce programmateur ? Cette action est irréversible.',
+    successMessage: 'Le programmateur a été supprimé avec succès',
     
-    // Vérification des entités liées
+    // Entités liées à vérifier
     relatedEntities: [
-      {
-        collection: 'lieux',
-        field: 'programmateurId',
-        referenceType: 'direct',
-        message: 'Ce programmateur est associé à un ou plusieurs lieux et ne peut pas être supprimé.',
-        detailsField: 'nom'
-      },
       {
         collection: 'concerts',
         field: 'programmateurId',
         referenceType: 'direct',
-        message: 'Ce programmateur est associé à un ou plusieurs concerts et ne peut pas être supprimé.',
-        detailsField: 'titre'
+        message: 'Ce programmateur ne peut pas être supprimé car il a des concerts associés.',
+        detailsField: 'titre',
+        detailsLimit: 5
+      },
+      {
+        collection: 'lieux',
+        field: 'programmateurId',
+        referenceType: 'direct',
+        message: 'Ce programmateur ne peut pas être supprimé car il est associé à des lieux.',
+        detailsField: 'nom',
+        detailsLimit: 5
       },
       {
         collection: 'structures',
         field: 'programmateurIds',
         referenceType: 'array',
-        message: 'Ce programmateur est associé à une ou plusieurs structures et ne peut pas être supprimé.',
-        detailsField: 'raisonSociale'
+        message: 'Ce programmateur ne peut pas être supprimé car il est associé à des structures.',
+        detailsField: 'raisonSociale',
+        detailsLimit: 5
       }
     ],
     
     // Callbacks
-    onSuccess: (programmateurId) => {
-      debugLog(`Programmateur supprimé avec succès: ${programmateurId}`, 'info', 'useDeleteProgrammateur');
-      toast.success('Le programmateur a été supprimé avec succès');
-      
-      // Fermer la modale
-      setShowDeleteModal(false);
-      setProgrammateurToDelete(null);
-      
-      // Exécuter le callback personnalisé si fourni
-      if (onSuccess && typeof onSuccess === 'function') {
-        onSuccess(programmateurId);
-      }
+    onSuccess: (id) => {
+      showSuccessToast('Le programmateur a été supprimé avec succès');
+      if (onDeleteSuccess) onDeleteSuccess(id);
     },
     onError: (error) => {
-      debugLog(`Erreur lors de la suppression du programmateur: ${error.message}`, 'error', 'useDeleteProgrammateur');
-      toast.error(`Erreur lors de la suppression: ${error.message}`);
-    }
+      console.error('[useDeleteProgrammateur] Erreur de suppression:', error);
+      showErrorToast(`Erreur lors de la suppression: ${error.message}`);
+    },
+    
+    // Configuration avancée
+    validateBeforeDelete: true, // Valider les entités liées avant suppression
+    showConfirmation: true,     // Montrer un dialogue de confirmation
+    cacheResults: false         // Ne pas mettre en cache les résultats de validation
   });
 
-  // Gérer le clic sur le bouton supprimer (ouvre la modale)
-  const handleDeleteClick = useCallback((programmateurData) => {
-    debugLog(`Ouverture de la modale de suppression pour le programmateur ${programmateurData?.id || 'inconnu'}`, 'debug', 'useDeleteProgrammateur');
-    setProgrammateurToDelete(programmateurData);
-    setShowDeleteModal(true);
-  }, []);
-
-  // Fermer la modale de suppression
-  const handleCloseDeleteModal = useCallback(() => {
-    debugLog('Fermeture de la modale de suppression', 'debug', 'useDeleteProgrammateur');
-    setShowDeleteModal(false);
-    setProgrammateurToDelete(null);
-  }, []);
-
-  // Confirmer la suppression
-  const handleConfirmDelete = useCallback(async () => {
-    if (!programmateurToDelete?.id) {
-      debugLog('Aucun programmateur sélectionné pour suppression', 'warn', 'useDeleteProgrammateur');
-      return false;
+  // Fonction adaptée avec meilleure gestion des erreurs
+  const handleDeleteProgrammateur = useCallback((id, event) => {
+    if (event) event.stopPropagation();
+    
+    // Vérifications de sécurité
+    if (!id) {
+      showErrorToast('ID du programmateur manquant, impossible de supprimer');
+      return Promise.reject(new Error('ID manquant'));
     }
+    
+    return handleDelete(id);
+  }, [handleDelete]);
 
-    debugLog(`Confirmation de suppression du programmateur ${programmateurToDelete.id}`, 'info', 'useDeleteProgrammateur');
-    return await deleteHook.handleDelete(programmateurToDelete.id);
-  }, [programmateurToDelete, deleteHook]);
+  // Fonction pour vérifier si un programmateur peut être supprimé sans effectuer la suppression
+  const canDeleteProgrammateur = useCallback(async (id) => {
+    if (!id) return { canDelete: false, reason: 'ID manquant' };
+    
+    try {
+      const result = await checkRelatedEntities(id);
+      return { 
+        canDelete: !result.hasRelatedEntities, 
+        reason: result.hasRelatedEntities ? result.message : null,
+        details: result.relatedEntitiesDetails 
+      };
+    } catch (error) {
+      console.error('[useDeleteProgrammateur] Erreur de vérification:', error);
+      return { canDelete: false, reason: error.message };
+    }
+  }, [checkRelatedEntities]);
 
-  // Fonction utilitaire pour supprimer un programmateur spécifique (legacy)
-  const handleDeleteProgrammateur = useCallback((programmateurId, event) => {
-    debugLog(`Tentative de suppression du programmateur ${programmateurId}`, 'debug', 'useDeleteProgrammateur');
-    return deleteHook.handleDelete(programmateurId, event);
-  }, [deleteHook]);
-
-  // Renvoyer une API adaptée aux composants qui utilisent ce hook
   return {
-    // État de la modale
-    showDeleteModal,
-    programmateurToDelete,
+    // État
+    isDeleting,
+    hasRelatedEntities,
+    relatedEntitiesDetails,
     
-    // Exposer les propriétés et méthodes du hook générique
-    isDeleting: deleteHook.isDeleting,
-    hasRelatedEntities: deleteHook.hasRelatedEntities,
-    relatedEntitiesDetails: deleteHook.relatedEntitiesDetails,
-    
-    // Méthodes pour la gestion de la modale
-    handleDeleteClick,
-    handleCloseDeleteModal,
-    handleConfirmDelete,
-    
-    // Méthodes spécifiques aux programmateurs
-    handleDelete: handleDeleteProgrammateur,
+    // Actions
+    handleDeleteProgrammateur,
+    canDeleteProgrammateur,
     
     // Alias pour compatibilité avec le code existant
-    deleting: deleteHook.isDeleting,
-    checkRelatedEntities: deleteHook.checkRelatedEntities
+    handleDelete: handleDeleteProgrammateur,
+    deleting: isDeleting,
+    
+    // Gestion du dialogue de confirmation
+    showConfirmationDialog,
+    closeConfirmationDialog
   };
 };
 

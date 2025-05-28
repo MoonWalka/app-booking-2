@@ -172,6 +172,67 @@
 }
 
 /* =============================
+   STATUTS DU BOUTON CONTRAT
+   ============================= */
+
+/* Contrat non généré */
+.contractButton.notGenerated {
+  background-color: rgba(108, 117, 125, 0.1);
+  color: #6c757d;
+}
+
+.contractButton.notGenerated:hover {
+  background-color: rgba(108, 117, 125, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Contrat généré */
+.contractButton.generated {
+  background-color: rgba(255, 193, 7, 0.1);
+  color: #ffc107;
+}
+
+.contractButton.generated:hover {
+  background-color: rgba(255, 193, 7, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Contrat envoyé */
+.contractButton.sent {
+  background-color: rgba(13, 110, 253, 0.1);
+  color: #0d6efd;
+}
+
+.contractButton.sent:hover {
+  background-color: rgba(13, 110, 253, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Contrat signé */
+.contractButton.signed {
+  background-color: rgba(25, 135, 84, 0.1);
+  color: #198754;
+}
+
+.contractButton.signed:hover {
+  background-color: rgba(25, 135, 84, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Bouton désactivé (pas de programmateur) */
+.contractButton.disabled {
+  background-color: rgba(108, 117, 125, 0.05);
+  color: #adb5bd;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.contractButton.disabled:hover {
+  background-color: rgba(108, 117, 125, 0.05);
+  transform: none;
+}
+
+/* =============================
    VARIANTS DYNAMIQUES DE BOUTONS DE CONTRAT (NOUVEAU)
    ============================= */
 .variant-primary {

@@ -49,6 +49,30 @@ const ConcertActions = ({
   
   const formStatus = getFormStatus();
   
+  // Fonction pour déterminer le statut du contrat
+  const getContractStatus = () => {
+    if (!hasContract) {
+      // Vérifier si on peut générer un contrat (besoin d'un programmateur au minimum)
+      if (!concert.programmateurId) {
+        return { status: 'no_programmateur', icon: 'bi-person-x', class: 'disabled', tooltip: 'Aucun programmateur associé' };
+      }
+      return { status: 'not_generated', icon: 'bi-file-earmark-plus', class: 'notGenerated', tooltip: 'Générer contrat' };
+    }
+    
+    // Si on a un contrat, vérifier son statut
+    switch (contractStatus) {
+      case 'signed':
+        return { status: 'signed', icon: 'bi-file-earmark-check-fill', class: 'signed', tooltip: 'Contrat signé' };
+      case 'sent':
+        return { status: 'sent', icon: 'bi-file-earmark-arrow-up', class: 'sent', tooltip: 'Contrat envoyé' };
+      case 'generated':
+      default:
+        return { status: 'generated', icon: 'bi-file-earmark-text', class: 'generated', tooltip: 'Contrat généré' };
+    }
+  };
+  
+  const contractStatusInfo = getContractStatus();
+  
   // Fonction pour gérer le clic sur le bouton formulaire
   const handleFormClick = (e) => {
     e.stopPropagation();
@@ -64,6 +88,27 @@ const ConcertActions = ({
         break;
       case 'no_programmateur':
       case 'not_sent':
+      default:
+        // Rediriger vers l'édition du concert pour ajouter un programmateur
+        window.location.href = `/concerts/${concert.id}/edit`;
+        break;
+    }
+  };
+  
+  // Fonction pour gérer le clic sur le bouton contrat
+  const handleContractClick = (e) => {
+    e.stopPropagation();
+    
+    switch (contractStatusInfo.status) {
+      case 'not_generated':
+        handleGenerateContract(concert.id);
+        break;
+      case 'generated':
+      case 'sent':
+      case 'signed':
+        handleViewContract(concert.id);
+        break;
+      case 'no_programmateur':
       default:
         // Rediriger vers l'édition du concert pour ajouter un programmateur
         window.location.href = `/concerts/${concert.id}/edit`;
@@ -95,38 +140,15 @@ const ConcertActions = ({
         <i className={formStatus.icon}></i>
       </button>
       
-      {/* Contract Actions avec styling dynamique sophistiqué */}
-      {!hasContract && (
-        <button 
-          className={`${styles.actionButton} ${styles.contractButton} ${styles[`variant-${contractButtonVariant}`]}`}
-          onClick={(e) => {
-            e.stopPropagation();
-            handleGenerateContract(concert.id);
-          }}
-          title={contractButtonTooltip}
-        >
-          <i className="bi bi-file-earmark-plus"></i>
-        </button>
-      )}
-      
-      {hasContract && (
-        <button 
-          className={`${styles.actionButton} ${styles.contractButton} ${styles[`variant-${contractButtonVariant}`]}`}
-          onClick={(e) => {
-            e.stopPropagation();
-            handleViewContract(concert.id);
-          }}
-          title={contractButtonTooltip}
-        >
-          {contractStatus === 'signed' ? (
-            <i className="bi bi-file-earmark-check text-success"></i>
-          ) : contractStatus === 'pending' ? (
-            <i className="bi bi-file-earmark-arrow-up text-warning"></i>
-          ) : (
-            <i className="bi bi-file-earmark-text"></i>
-          )}
-        </button>
-      )}
+      {/* Contract Button - Toujours affiché avec statut différent */}
+      <button 
+        className={`${styles.actionButton} ${styles.contractButton} ${styles[contractStatusInfo.class]}`}
+        onClick={handleContractClick}
+        title={contractStatusInfo.tooltip}
+        disabled={contractStatusInfo.status === 'no_programmateur'}
+      >
+        <i className={contractStatusInfo.icon}></i>
+      </button>
       
       {/* Edit Concert Button */}
       <Link 

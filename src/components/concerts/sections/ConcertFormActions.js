@@ -64,6 +64,12 @@ const ConcertFormActions = ({ id, isSubmitting, onDelete, onSubmit, onCancel, na
             type="submit"
             variant="primary"
             disabled={isSubmitting}
+            onClick={(e) => {
+              console.log("[ConcertFormActions] Bouton Enregistrer cliqué!");
+              console.log("[ConcertFormActions] Type du bouton:", e.target.type);
+              console.log("[ConcertFormActions] Le bouton est dans un form:", !!e.target.closest('form'));
+              // Ne pas appeler preventDefault pour laisser le submit se faire
+            }}
           >
             {isSubmitting ? (
               <>

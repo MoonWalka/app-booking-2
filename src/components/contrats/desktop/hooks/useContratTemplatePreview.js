@@ -1,5 +1,3 @@
-import { useState, useEffect } from 'react';
-
 /**
  * Hook personnalisé pour gérer la logique de prévisualisation du modèle de contrat
  */
@@ -170,12 +168,9 @@ export const useContratTemplatePreview = (
   // Fonction pour générer l'aperçu multi-page pour l'iframe
   const generateMultiPagePreviewHtml = () => {
     // Déterminer le nombre de pages nécessaires
-    let pageCount = 1;
     const explicitBreaks = (bodyContent.match(/\[SAUT_DE_PAGE\]/g) || []).length;
     
     if (explicitBreaks > 0) {
-      pageCount = explicitBreaks + 1;
-      
       // Diviser le contenu par les sauts de page
       const contentByPage = bodyContent.split('[SAUT_DE_PAGE]');
       

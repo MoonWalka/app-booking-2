@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 
 /**
  * Hook personnalisé pour gérer l'état du formulaire d'édition de modèle de contrat

@@ -199,7 +199,7 @@ const useGenericEntityDetails = ({
     } else {
       debugLog(`⏭️ ID_CHANGE_EFFECT: Pas de changement d'ID, effet ignoré`, 'debug', 'useGenericEntityDetails');
     }
-  }, [id, entityType, collectionName]);
+  }, [id, entityType, collectionName, safeSetState]);
   
   // Callback pour recevoir les données de l'abonnement Firestore
   const handleSubscriptionData = useCallback((data) => {
@@ -229,14 +229,14 @@ const useGenericEntityDetails = ({
     }
     // loadAllRelatedEntities est stable grâce à useCallback, exemption pour éviter dépendance circulaire
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [transformData, cacheEnabled, cache, id, entityType, autoLoadRelated]);
+  }, [transformData, cacheEnabled, cache, id, entityType, autoLoadRelated, safeSetState]);
   
   // Callback pour gérer les erreurs de l'abonnement
   const handleSubscriptionError = useCallback((err) => {
     if (!instanceRef.current.isMounted) return;
     safeSetState(setError, { message: `Erreur lors du chargement des données: ${err.message}` });
     safeSetState(setLoading, false);
-  }, []);
+  }, [safeSetState]);
   
   // Utiliser le hook d'abonnement Firestore si le mode realtime est activé
   const subscription = useFirestoreSubscription({
@@ -590,7 +590,7 @@ const useGenericEntityDetails = ({
     } catch (err) {
       debugLog(`Erreur globale lors du chargement des entités liées: ${err}`, 'error', 'useGenericEntityDetails');
     }
-  }, [relatedEntities, entityType, id, cacheEnabled, cache, loadRelatedEntity]);
+  }, [relatedEntities, entityType, id, cacheEnabled, cache, loadRelatedEntity, safeSetState]);
   
   // Fonction pour charger une entité liée par son ID
   const loadRelatedEntityById = useCallback(async (name, id) => {
@@ -650,7 +650,7 @@ const useGenericEntityDetails = ({
     } finally {
       safeSetState(setLoadingRelated, prev => ({ ...prev, [name]: false }));
     }
-  }, [relatedEntities, cacheEnabled, cache]);
+  }, [relatedEntities, cacheEnabled, cache, safeSetState]);
   
   // SUPPRIMÉ: toggleEditMode - remplacé par la navigation vers des formulaires séparés
   // Les entités utilisent maintenant le pattern vue/formulaire séparé avec navigation
@@ -877,7 +877,7 @@ const useGenericEntityDetails = ({
     if (cacheEnabled) cache.remove(id);
     safeSetState(setError, null);
     refresh();
-  }, [entityType, id, cacheEnabled, cache, refresh]);
+  }, [entityType, id, cacheEnabled, cache, refresh, safeSetState]);
   
   // Chargement initial de l'entité - Compatible StrictMode
   useEffect(() => {

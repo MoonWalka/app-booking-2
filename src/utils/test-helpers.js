@@ -12,15 +12,12 @@ import { act } from '@testing-library/react-hooks';
  * 
  * @param {Object} options - Options pour configurer le comportement d'attente
  * @param {number} options.timeout - Délai maximum d'attente en millisecondes (défaut: 1000ms)
- * @param {number} options.interval - Intervalle de vérification en millisecondes (défaut: 50ms)
  * @returns {Promise<void>} Promise qui se résout quand le hook est mis à jour
  */
 export const waitForHookToUpdate = async (options = {}) => {
-  const { timeout = 1000, interval = 50 } = options;
+  const { timeout = 1000 } = options;
   
   return new Promise((resolve, reject) => {
-    const startTime = Date.now();
-    
     // Résoudre immédiatement pour le premier cycle de render
     setTimeout(() => {
       act(() => {

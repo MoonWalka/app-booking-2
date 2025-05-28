@@ -19,30 +19,9 @@ const StructureFormExemple = () => {
   
   // Utilisation du hook optimisé
   const {
-    // États du formulaire
-    formData,
-    formErrors,
+    isSubmitting,
     isLoading,
-    isSaving,
-    
-    // Fonctions de modification des données
-    updateFormData,
-    updateContactInfo,
-    resetForm,
-    
-    // Fonctions de sauvegarde et validation
-    saveForm,
-    validateAndSave,
-    validateHtmlForm,
-    
-    // Propriétés spécifiques à la structure (raccourcis pour une meilleure DX)
-    isNewStructure,
-    structure,
-    contact,
-    getFormattedAddress,
-    
-    // Gestion des erreurs et de l'annulation
-    handleCancel
+    updateFormData
   } = useStructureForm(id);
   
   // Gestion du formulaire

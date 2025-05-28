@@ -351,7 +351,7 @@ export const ProgrammateurTrace = {
 // Activer le diagnostic par défaut
 configureDiagnostic({ verbose: false, enabled: true });
 
-export default {
+const programmateurDiagnostic = {
   configureDiagnostic,
   traceComponentMount,
   traceHookInit,
@@ -361,3 +361,5 @@ export default {
   traceRender,
   ProgrammateurTrace
 };
+
+export default programmateurDiagnostic;

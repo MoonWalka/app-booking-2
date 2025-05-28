@@ -15,7 +15,7 @@ const useTemplateEditor = (initialTemplate, onSave) => {
   const [signatureContent, setSignatureContent] = useState('');
   const [paperSize, setPaperSize] = useState('a4');
   const [margins, setMargins] = useState({ top: 20, right: 20, bottom: 20, left: 20 });
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isSaveSuccess, setIsSaveSuccess] = useState(false);
   const [error, setError] = useState(null);

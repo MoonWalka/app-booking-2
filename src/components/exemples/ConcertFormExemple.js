@@ -6,10 +6,12 @@
  * qui prévoit la suppression des hooks spécifiques d'ici novembre 2025.
  */
 
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useConcertForm } from '@/hooks/concerts';
-import { format } from 'date-fns';
+import Card from '@/components/ui/Card';
+import FormField from '@/components/ui/FormField';
+import '@styles/index.css';
 import styles from './ConcertFormExemple.module.css';
 
 /**
@@ -17,52 +19,14 @@ import styles from './ConcertFormExemple.module.css';
  */
 const ConcertFormExemple = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   
   // Utilisation du hook optimisé
   const {
-    // États du formulaire
-    formData,
-    formErrors,
+    isSubmitting,
     isLoading,
-    isSaving,
-    
-    // Fonctions de modification des données
     updateFormData,
-    resetForm,
-    
-    // Fonctions de sauvegarde
-    saveForm,
-    validateAndSave,
-    
-    // Propriétés spécifiques au concert
-    isNewConcert,
-    concert,
-    
-    // Fonctions spécifiques au concert
-    setDateConcert,
-    setHeureConcert,
-    dateConcertFormatted,
-    heureConcertFormatted,
-    updateImageAffiche,
-    
-    // Gestion de l'artiste
-    artiste,
-    updateArtiste,
-    
-    // Gestion du lieu
-    lieu,
-    updateLieu,
-    
-    // Gestion des styles musicaux
-    stylesMusicaux,
-    addStyleMusical,
-    removeStyleMusical,
-    
-    // Gestion des partenaires
-    partenaires,
-    addPartenaire,
-    removePartenaire,
-    updatePartenaire
+    saveForm
   } = useConcertForm(id);
   
   // Fonction pour gérer les soumissions

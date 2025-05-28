@@ -1,35 +1,32 @@
 import React, { useState } from 'react';
 import Button from '@ui/Button';
 import styles from './DeleteProgrammateurModal.module.css';
+import { useDeleteProgrammateur } from '../../contexts/DeleteProgrammateurContext';
 
 const DeleteProgrammateurModal = ({ programmateur, handleDelete }) => {
-  const [showModal, setShowModal] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
+  const {
+    showDeleteModal,
+    isDeleting,
+    handleConfirmDelete,
+    handleCancelDelete
+  } = useDeleteProgrammateur({ id: programmateur.id, onDeleteSuccess: handleDelete });
   
   const openModal = () => {
-    setShowModal(true);
+    showDeleteModal();
   };
   
   const closeModal = () => {
-    setShowModal(false);
+    handleCancelDelete();
   };
   
   const confirmDelete = async () => {
-    setIsDeleting(true);
-    try {
-      await handleDelete();
-      // Navigate will be handled in the handleDelete function
-    } catch (error) {
-      console.error('Error in delete confirmation:', error);
-      setIsDeleting(false);
-      closeModal();
-    }
+    handleConfirmDelete();
   };
   
   // Modal is mounted but only shown when showModal is true
   return (
     <>
-      {showModal && (
+      {showDeleteModal && (
         <div className={styles.modalBackdrop}>
           <div className={styles.modalContent}>
             <div className={styles.modalHeader}>

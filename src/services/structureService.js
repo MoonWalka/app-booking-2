@@ -80,8 +80,6 @@ export async function searchStructures(searchTerm, maxResults = 10) {
   }
 
   try {
-    const searchTermLower = searchTerm.toLowerCase();
-    
     // Recherche par nom/raison sociale
     const q = query(
       collection(db, 'structures'),

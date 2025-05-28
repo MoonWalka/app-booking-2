@@ -1,21 +1,13 @@
 // src/pages/ContratsPage.js
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { collection, getDocs, query, orderBy, where } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import FlexContainer from '@/components/ui/FlexContainer';
 import Button from '@/components/ui/Button';
 import ContratsTable from '../components/contrats/sections/ContratsTable';
-import ContratGenerationPage from '@pages/ContratGenerationPage.js';
-import ContratDetailsPage from '@pages/ContratDetailsPage.js';
-// Imports directs au lieu de lazy - SUPPRIMÉS: imports non utilisés
 import '@styles/index.css';
-
-// Charger les composants de manière dynamique pour éviter les dépendances circulaires
-// LAZY LOADING DÉSACTIVÉ:
-// const ContratTemplatesPage = React.lazy(() => import('@pages/contratTemplatesPage.js'));
-// const ContratTemplatesEditPage = React.lazy(() => import('@pages/contratTemplatesEditPage.js'));
 
 const ContratsPage = () => {
   const [contrats, setContrats] = useState([]);
@@ -49,6 +41,51 @@ const ContratsPage = () => {
                   id: concertDoc.docs[0].id,
                   ...concertDoc.docs[0].data()
                 };
+                
+                // 🔧 CORRECTION: Charger les noms des entités liées si manquants
+                const promises = [];
+                
+                // Charger le nom du lieu si manquant
+                if (concertData.lieuId && !concertData.lieuNom) {
+                  promises.push(
+                    getDocs(query(collection(db, 'lieux'), where('__name__', '==', concertData.lieuId)))
+                      .then(snapshot => {
+                        if (!snapshot.empty) {
+                          concertData.lieuNom = snapshot.docs[0].data().nom;
+                        }
+                      })
+                      .catch(err => console.error('Erreur chargement lieu:', err))
+                  );
+                }
+                
+                // Charger le nom du programmateur si manquant
+                if (concertData.programmateurId && !concertData.programmateurNom) {
+                  promises.push(
+                    getDocs(query(collection(db, 'programmateurs'), where('__name__', '==', concertData.programmateurId)))
+                      .then(snapshot => {
+                        if (!snapshot.empty) {
+                          concertData.programmateurNom = snapshot.docs[0].data().nom;
+                        }
+                      })
+                      .catch(err => console.error('Erreur chargement programmateur:', err))
+                  );
+                }
+                
+                // Charger le nom de l'artiste si manquant
+                if (concertData.artisteId && !concertData.artisteNom) {
+                  promises.push(
+                    getDocs(query(collection(db, 'artistes'), where('__name__', '==', concertData.artisteId)))
+                      .then(snapshot => {
+                        if (!snapshot.empty) {
+                          concertData.artisteNom = snapshot.docs[0].data().nom;
+                        }
+                      })
+                      .catch(err => console.error('Erreur chargement artiste:', err))
+                  );
+                }
+                
+                // Attendre que tous les chargements soient terminés
+                await Promise.all(promises);
               }
             } catch (err) {
               console.error('Erreur lors de la récupération du concert:', err);
@@ -118,11 +155,6 @@ const ContratsPage = () => {
       ) : (
         <ContratsTable contrats={contrats} />
       )}
-
-      <Routes>
-        <Route path="/generate/:id" element={<ContratGenerationPage />} />
-        <Route path="/:id" element={<ContratDetailsPage />} />
-      </Routes>
     </Container>
   );
 };

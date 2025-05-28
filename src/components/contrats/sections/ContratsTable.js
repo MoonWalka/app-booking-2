@@ -110,6 +110,13 @@ const ContratsTable = ({ contrats }) => {
       </button>
       <button 
         className={styles.actionButton}
+        onClick={() => navigate(`/contrats/${contrat.id}?preview=web`)} 
+        title="Aperçu web"
+      >
+        <i className="bi bi-globe"></i>
+      </button>
+      <button 
+        className={styles.actionButton}
         onClick={() => navigate(`/contrats/${contrat.id}/edit`)} 
         title="Éditer le contrat"
       >

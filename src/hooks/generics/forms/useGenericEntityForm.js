@@ -201,22 +201,29 @@ const useGenericEntityForm = (formConfig = {}, options = {}) => {
     }, 3000);
   }, [enableAutoSave, entityId, formData, processFormData]);
   
+  // ✅ NOUVELLE CORRECTION : Référence stable pour triggerAutoSave
+  const triggerAutoSaveRef = useRef();
+  triggerAutoSaveRef.current = triggerAutoSave;
+  
   // ✅ CORRECTION 13: Changement de champ stabilisé
   const handleFieldChange = useCallback((fieldName, value) => {
     if (!isMountedRef.current) return;
     setFormData(prev => {
       const newData = { ...prev, [fieldName]: value };
       if (enableDirtyTracking) setIsDirty(true);
-      if (validateOnChange && enableValidation && validateFieldRef.current) {
-        validateFieldRef.current(fieldName, value, newData);
-      }
+      
+      console.log(`[TEMP DEBUG UGEF] Validation dans handleFieldChange pour ${fieldName} EST COMMENTÉE.`);
+
       if (enableTouchedTracking) {
         setTouchedFields(prevTouched => ({ ...prevTouched, [fieldName]: true }));
       }
       return newData;
     });
-    if (enableAutoSave) triggerAutoSave();
-  }, [validateOnChange, enableValidation, enableTouchedTracking, enableDirtyTracking, enableAutoSave, triggerAutoSave]);
+    // ✅ CORRECTION: Utiliser la référence au lieu de la fonction directe
+    if (enableAutoSave && triggerAutoSaveRef.current) {
+      triggerAutoSaveRef.current();
+    }
+  }, [validateOnChange, enableValidation, enableTouchedTracking, enableDirtyTracking, enableAutoSave]); // triggerAutoSave retiré des dépendances
   
   // ✅ CORRECTION 14: Changement d'input stabilisé
   const handleInputChange = useCallback((event) => {

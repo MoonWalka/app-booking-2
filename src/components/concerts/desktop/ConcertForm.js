@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect, Profiler } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Alert from '@/components/ui/Alert';
 import styles from './ConcertForm.module.css';
@@ -18,6 +18,38 @@ import ArtisteSearchSection from '../sections/ArtisteSearchSection';
 import NotesSection from '../sections/NotesSection';
 import DeleteConfirmModal from '../sections/DeleteConfirmModal';
 
+// Importer la fonction d'enregistrement des données
+import { recordProfilerData } from '@/components/debug/ProfilerMonitor';
+
+// Compteur pour ConcertFormDesktop
+const concertFormRenderCounts = {};
+
+// Fonction de callback pour le Profiler
+const onRenderCallback = (
+  id, // l'identifiant "id" du Profiler
+  phase, // soit "mount" soit "update"
+  actualDuration, // temps passé à faire le rendu
+  baseDuration, // temps estimé sans mémoïsation
+  startTime, // quand React a commencé
+  commitTime, // quand React a appliqué
+) => {
+  console.log(`🎭 Profiler [${id}]:`, {
+    phase,
+    actualDuration: `${actualDuration.toFixed(2)}ms`,
+    baseDuration: `${baseDuration.toFixed(2)}ms`,
+    startTime: `${startTime.toFixed(2)}ms`,
+    commitTime: `${commitTime.toFixed(2)}ms`,
+  });
+  
+  // Enregistrer les données pour le monitoring
+  recordProfilerData(id, phase, actualDuration);
+  
+  // Alerte si le temps de rendu est anormalement élevé
+  if (actualDuration > 50) {
+    console.warn(`⚠️ Rendu lent détecté dans ${id}: ${actualDuration.toFixed(2)}ms`);
+  }
+};
+
 /**
  * ConcertForm - Composant desktop pour le formulaire de concert
  * Version refactorisée avec des sous-composants et des hooks personnalisés
@@ -27,14 +59,8 @@ const ConcertFormDesktop = () => {
   const navigate = useNavigate();
   const isNewConcert = id === 'nouveau';
   
-  // Log pour déboguer l'ID passé et le mode édition/création
-  console.log(`[ConcertFormDesktop] id=${id}, isNewConcert=${isNewConcert}`);
-  console.log("[ConcertForm] Monté. ID depuis useParams:", id);
-  console.log("[ConcertForm] isNewConcert (basé sur useParams id === 'nouveau'):", isNewConcert, "ID actuel:", id);
-
   // Hook optimisé pour gérer état, chargement, soumission
   const formHook = useConcertForm(id);
-  console.log("[ConcertForm] Hook useConcertForm initialisé. ID passé au hook:", id);
   
   // Hook optimisé pour gérer la suppression
   const {
@@ -59,20 +85,21 @@ const ConcertFormDesktop = () => {
     loadRelatedEntity
   } = formHook;
 
-  console.log("[ConcertForm] Données du hook: loading:", loading, "formData:", formData, 
-    "concert:", concert, "concert ID:", concert?.id);
-
   // Gestion programmateur via optimized hook
-  const handleProgrammateurChange = (prog) => {
+  const handleProgrammateurChange = useCallback((prog) => {
     if (prog) {
       updateFormData(prev => ({ ...prev, programmateurId: prog.id, programmateurNom: prog.nom }));
       loadRelatedEntity('programmateur', prog.id);
     } else {
       updateFormData(prev => ({ ...prev, programmateurId: null, programmateurNom: '' }));
     }
-  };
+  }, [updateFormData, loadRelatedEntity]);
 
-  // Recherche de lieux
+  const removeLieu = useCallback(() => {
+    handleLieuChange(null);
+  }, [handleLieuChange]);
+
+  // RESTAURER la déstructuration pour useEntitySearch (lieux)
   const {
     searchTerm: lieuSearchTerm,
     setSearchTerm: setLieuSearchTerm,
@@ -88,11 +115,6 @@ const ConcertFormDesktop = () => {
     additionalSearchFields: ['ville', 'codePostal'],
     maxResults: 10
   });
-
-  const removeLieu = () => {
-    handleLieuChange(null);
-    console.log('[ConcertFormDesktop] Lieu supprimé, selectedLieu est maintenant null');
-  };
 
   // Recherche de programmateurs
   const {
@@ -132,9 +154,28 @@ const ConcertFormDesktop = () => {
   const [showDeleteConfirm, setShowDeleteConfirm] = React.useState(false);
 
   // Gérer les notes
-  const handleNotesChange = (newNotes) => {
+  const handleNotesChange = useCallback((newNotes) => {
     handleChange({ target: { name: 'notes', value: newNotes } });
-  };
+  }, [handleChange]);
+
+  // DÉFINIR LES CALLBACKS DE SUPPRESSION ICI
+  const handleRemoveProgrammateurCallback = useCallback(() => {
+    handleProgrammateurChange(null);
+  }, [handleProgrammateurChange]);
+
+  const handleRemoveArtisteCallback = useCallback(() => {
+    handleArtisteChange(null);
+  }, [handleArtisteChange]);
+
+  // useEffect pour compter les rendus de ConcertFormDesktop
+  useEffect(() => {
+    const currentId = id || 'form';
+    if (!concertFormRenderCounts[currentId]) {
+      concertFormRenderCounts[currentId] = 0;
+    }
+    concertFormRenderCounts[currentId]++;
+    console.log(`⚛️ [ConcertFormDesktop RENDER] ID: ${currentId}, Count: ${concertFormRenderCounts[currentId]}`);
+  }); // Pas de dépendances pour se déclencher à chaque rendu
 
   // Afficher l'indicateur de chargement si en cours de chargement
   if (loading) {
@@ -148,120 +189,128 @@ const ConcertFormDesktop = () => {
     );
   }
 
-  console.log("[ConcertForm] Rendu. ID:", id, "isNewConcert (variable locale):", isNewConcert, "formData:", formData);
-  
   return (
-    <div className={styles.deskConcertFormContainer}>
-      {/* Affichage d'une erreur de validation */}
-      {formHook.error && (
-        <Alert variant="danger" className={styles.errorAlert}>
-          {formHook.error}
-        </Alert>
-      )}
-      
-      {/* En-tête du formulaire */}
-      <ConcertFormHeader 
-        id={id} 
-        formData={formData} 
-        navigate={navigate} 
-      />
-      
-      {/* Actions en haut du formulaire */}
-      <ConcertFormActions
-        id={id}
-        isSubmitting={isSubmitting || isDeleting}
-        onDelete={id !== 'nouveau' ? () => setShowDeleteConfirm(true) : undefined}
-        onCancel={handleCancel}
-        navigate={navigate}
-        position="top"
-      />
-      
-      <form onSubmit={(e) => {
-        console.log("[ConcertForm] Soumission du formulaire. ID:", id, "formData:", formData);
-        handleSubmit(e);
-      }} className={styles.deskModernForm}>
-        {/* Section d'informations principales */}
-        <ConcertInfoSection 
-          formData={formData}
-          onChange={handleChange}
-          formErrors={formHook.formErrors}
-        />
+    <Profiler id="ConcertFormDesktop-Root" onRender={onRenderCallback}>
+      <div className={styles.deskConcertFormContainer} style={{ backgroundColor: 'lightblue' }}>
+        {formHook.error && (
+          <Alert variant="danger" className={styles.errorAlert}>
+            {formHook.error}
+          </Alert>
+        )}
         
-        {/* Section de recherche de lieu */}
-        <LieuSearchSection 
-          lieuSearchTerm={lieuSearchTerm}
-          setLieuSearchTerm={setLieuSearchTerm}
-          lieuResults={lieuResults}
-          showLieuResults={showLieuResults}
-          setShowLieuResults={setShowLieuResults}
-          isSearchingLieux={isSearchingLieux}
-          lieuDropdownRef={lieuDropdownRef}
-          selectedLieu={formData.lieuId ? lieu : null}
-          handleSelectLieu={handleLieuChange}
-          handleRemoveLieu={removeLieu}
-          handleCreateLieu={handleCreateLieu}
-        />
+        <Profiler id="ConcertForm-Header" onRender={onRenderCallback}>
+          <ConcertFormHeader 
+            id={id} 
+            formData={formData} 
+            navigate={navigate} 
+          />
+        </Profiler>
         
-        {/* Section de recherche de programmateur */}
-        <ProgrammateurSearchSection 
-          progSearchTerm={progSearchTerm}
-          setProgSearchTerm={setProgSearchTerm}
-          progResults={progResults}
-          showProgResults={showProgResults}
-          setShowProgResults={setShowProgResults}
-          isSearchingProgs={isSearchingProgs}
-          progDropdownRef={progDropdownRef}
-          selectedProgrammateur={formData.programmateurId ? programmateur : null}
-          handleSelectProgrammateur={handleProgrammateurChange}
-          handleRemoveProgrammateur={() => handleProgrammateurChange(null)}
-          handleCreateProgrammateur={handleCreateProgrammateur}
-        />
-        {/* Section de recherche d'artiste */}
-        <ArtisteSearchSection 
-          artisteSearchTerm={artisteSearchTerm}
-          setArtisteSearchTerm={setArtisteSearchTerm}
-          artisteResults={artisteResults}
-          showArtisteResults={showArtisteResults}
-          setShowArtisteResults={setShowArtisteResults}
-          isSearchingArtistes={isSearchingArtistes}
-          artisteDropdownRef={artisteDropdownRef}
-          selectedArtiste={formData.artisteId ? artiste : null}
-          handleSelectArtiste={handleArtisteChange}
-          handleRemoveArtiste={() => handleArtisteChange(null)}
-          handleCreateArtiste={handleCreateArtiste}
-        />
+        <Profiler id="ConcertForm-Actions-Top" onRender={onRenderCallback}>
+          <ConcertFormActions
+            id={id}
+            isSubmitting={isSubmitting || isDeleting}
+            onDelete={id !== 'nouveau' ? () => setShowDeleteConfirm(true) : undefined}
+            onCancel={handleCancel}
+            navigate={navigate}
+            position="top"
+          />
+        </Profiler>
         
-        {/* Section des notes */}
-        <NotesSection 
-          notes={formData.notes}
-          onChange={handleNotesChange}
-        />
+        <form onSubmit={(e) => {
+          console.log("[ConcertForm] Soumission du formulaire. ID:", id, "formData:", formData);
+          handleSubmit(e);
+        }} className={styles.deskModernForm}>
+          
+          <Profiler id="ConcertForm-InfoSection" onRender={onRenderCallback}>
+            <ConcertInfoSection 
+              formData={formData}
+              onChange={handleChange}
+              formErrors={formHook.formErrors}
+            />
+          </Profiler>
+          
+          <Profiler id="ConcertForm-LieuSearch" onRender={onRenderCallback}>
+            <LieuSearchSection 
+              lieuSearchTerm={lieuSearchTerm}
+              setLieuSearchTerm={setLieuSearchTerm}
+              lieuResults={lieuResults}
+              showLieuResults={showLieuResults}
+              setShowLieuResults={setShowLieuResults}
+              isSearchingLieux={isSearchingLieux}
+              lieuDropdownRef={lieuDropdownRef}
+              selectedLieu={formData.lieuId ? lieu : null}
+              handleSelectLieu={handleLieuChange}
+              handleRemoveLieu={removeLieu}
+              handleCreateLieu={handleCreateLieu}
+            />
+          </Profiler>
+          
+          <Profiler id="ConcertForm-ProgrammateurSearch" onRender={onRenderCallback}>
+            <ProgrammateurSearchSection 
+              progSearchTerm={progSearchTerm}
+              setProgSearchTerm={setProgSearchTerm}
+              progResults={progResults}
+              showProgResults={showProgResults}
+              setShowProgResults={setShowProgResults}
+              isSearchingProgs={isSearchingProgs}
+              progDropdownRef={progDropdownRef}
+              selectedProgrammateur={formData.programmateurId ? programmateur : null}
+              handleSelectProgrammateur={handleProgrammateurChange}
+              handleRemoveProgrammateur={handleRemoveProgrammateurCallback}
+              handleCreateProgrammateur={handleCreateProgrammateur}
+            />
+          </Profiler>
+          
+          <Profiler id="ConcertForm-ArtisteSearch" onRender={onRenderCallback}>
+            <ArtisteSearchSection 
+              artisteSearchTerm={artisteSearchTerm}
+              setArtisteSearchTerm={setArtisteSearchTerm}
+              artisteResults={artisteResults}
+              showArtisteResults={showArtisteResults}
+              setShowArtisteResults={setShowArtisteResults}
+              isSearchingArtistes={isSearchingArtistes}
+              artisteDropdownRef={artisteDropdownRef}
+              selectedArtiste={formData.artisteId ? artiste : null}
+              handleSelectArtiste={handleArtisteChange}
+              handleRemoveArtiste={handleRemoveArtisteCallback}
+              handleCreateArtiste={handleCreateArtiste}
+            />
+          </Profiler>
+          
+          <Profiler id="ConcertForm-Notes" onRender={onRenderCallback}>
+            <NotesSection 
+              notes={formData.notes}
+              onChange={handleNotesChange}
+            />
+          </Profiler>
+          
+          <Profiler id="ConcertForm-Actions-Bottom" onRender={onRenderCallback}>
+            <ConcertFormActions
+              id={id}
+              isSubmitting={isSubmitting || isDeleting}
+              onDelete={id !== 'nouveau' ? () => setShowDeleteConfirm(true) : undefined}
+              onSubmit={handleSubmit}
+              onCancel={handleCancel}
+              navigate={navigate}
+              position="bottom"
+            />
+          </Profiler>
+        </form>
         
-        {/* Actions en bas du formulaire */}
-        <ConcertFormActions
-          id={id}
-          isSubmitting={isSubmitting || isDeleting}
-          onDelete={id !== 'nouveau' ? () => setShowDeleteConfirm(true) : undefined}
-          onSubmit={handleSubmit}
-          onCancel={handleCancel}
-          navigate={navigate}
-          position="bottom"
-        />
-      </form>
-      
-      {/* Modal de confirmation de suppression */}
-      {showDeleteConfirm && (
-        <DeleteConfirmModal
-          isSubmitting={isSubmitting || isDeleting}
-          onCancel={() => setShowDeleteConfirm(false)}
-          onConfirm={() => {
-            console.log('[ConcertForm] Appel de handleDeleteConcert avec ID:', id);
-            handleDeleteConcert(id);
-            setShowDeleteConfirm(false);
-          }}
-        />
-      )}
-    </div>
+        {showDeleteConfirm && (
+          <DeleteConfirmModal
+            isSubmitting={isSubmitting || isDeleting}
+            onCancel={() => setShowDeleteConfirm(false)}
+            onConfirm={() => {
+              console.log('[ConcertForm] Appel de handleDeleteConcert avec ID:', id);
+              handleDeleteConcert(id);
+              setShowDeleteConfirm(false);
+            }}
+          />
+        )}
+      </div>
+    </Profiler>
   );
 };
 

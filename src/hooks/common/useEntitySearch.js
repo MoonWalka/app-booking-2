@@ -25,8 +25,8 @@ import {
  * @param {Function} options.customSearchFunction - Fonction personnalisée pour la recherche (optionnel)
  */
 export const useEntitySearch = (options) => {
-  console.log('=== useEntitySearch CALLED ===');
-  console.log('options:', options);
+  // console.log('=== useEntitySearch CALLED ===');
+  // console.log('options:', options);
   
   const {
     entityType, 
@@ -39,7 +39,7 @@ export const useEntitySearch = (options) => {
     customSearchFunction = null
   } = options;
 
-  console.log('Parsed options:', { entityType, searchField, onSelect: !!onSelect });
+  // console.log('Parsed options:', { entityType, searchField, onSelect: !!onSelect });
 
   // États de base pour la recherche
   const [searchTerm, setSearchTerm] = useState('');
@@ -48,7 +48,7 @@ export const useEntitySearch = (options) => {
   const [showResults, setShowResults] = useState(false);
   const [selectedEntity, setSelectedEntity] = useState(null);
   
-  console.log('Hook states initialized - setSearchTerm type:', typeof setSearchTerm);
+  // console.log('Hook states initialized - setSearchTerm type:', typeof setSearchTerm);
   
   // Références pour la gestion du debounce et du dropdown
   const searchTimeoutRef = useRef(null);
@@ -146,6 +146,10 @@ export const useEntitySearch = (options) => {
     }
   }, [searchTerm, entityType, customSearchFunction, searchField, maxResults, additionalSearchFields, filterResults]);
 
+  // Référence stable pour performSearch
+  const performSearchRef = useRef();
+  performSearchRef.current = performSearch;
+
   // Effet pour déclencher la recherche avec debounce - NOUVEAU: Dépendance performSearch ajoutée
   useEffect(() => {
     if (!searchTerm.trim()) {
@@ -159,7 +163,7 @@ export const useEntitySearch = (options) => {
     
     // Debounce de 300ms
     searchTimeoutRef.current = setTimeout(() => {
-      performSearch();
+      performSearchRef.current(); // Utiliser la ref au lieu de la fonction directe
     }, 300);
     
     return () => {
@@ -167,7 +171,7 @@ export const useEntitySearch = (options) => {
         clearTimeout(searchTimeoutRef.current);
       }
     };
-  }, [searchTerm, entityType, performSearch]); // NOUVEAU: performSearch ajouté aux dépendances
+  }, [searchTerm]); // Retiré entityType et performSearch des dépendances
 
   // Gestionnaire pour les clics en dehors du dropdown
   useEffect(() => {
@@ -332,7 +336,7 @@ export const useEntitySearch = (options) => {
     }
   };
 
-  console.log('=== useEntitySearch RETURNING ===');
+  // console.log('=== useEntitySearch RETURNING ===');
   const returnValue = {
     searchTerm,
     setSearchTerm,
@@ -348,9 +352,9 @@ export const useEntitySearch = (options) => {
     performSearch,
     dropdownRef
   };
-  console.log('Return value:', returnValue);
-  console.log('setSearchTerm in return:', typeof setSearchTerm, setSearchTerm);
-  console.log('===================================');
+  // console.log('Return value:', returnValue);
+  // console.log('setSearchTerm in return:', typeof setSearchTerm, setSearchTerm);
+  // console.log('===================================');
 
   return returnValue;
 };

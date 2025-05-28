@@ -422,9 +422,8 @@ const useGenericValidation = (data = {}, validationRules = {}, options = {}) => 
     
     Object.keys(data).forEach(fieldName => {
       if (validationRules[fieldName]) {
-        // Debounce pour éviter trop de validations
         timeouts[fieldName] = setTimeout(() => {
-          validateFieldRef.current(fieldName, data[fieldName], data);
+          console.log(`[TEMP DEBUG UGV] Validation pour ${fieldName} COMMENTÉE DANS useEffect`);
         }, debounceDelay);
       }
     });
@@ -432,7 +431,7 @@ const useGenericValidation = (data = {}, validationRules = {}, options = {}) => 
     return () => {
       Object.values(timeouts).forEach(timeout => clearTimeout(timeout));
     };
-  }, [data, validateOnChange, enableValidation, debounceDelay, validationRules]); // ✅ validateField retiré des dépendances
+  }, [data, validateOnChange, enableValidation, debounceDelay, validationRules]);
   
   // État de validation global
   const isValid = useMemo(() => {

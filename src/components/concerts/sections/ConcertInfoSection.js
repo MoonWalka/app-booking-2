@@ -9,7 +9,10 @@ import CardSection from '@/components/ui/CardSection';
  * @param {Object} props.formData - Les données du formulaire
  * @param {Function} props.onChange - Fonction pour gérer les changements de valeur
  */
-const ConcertInfoSection = ({ formData, onChange }) => {
+const ConcertInfoSection = React.memo(({ formData, onChange, formErrors }) => {
+  // LOG pour vérifier les re-renders de cette section
+  console.log('[ConcertInfoSection] Rendered. formData.titre:', formData?.titre);
+
   // Handler to update only 'titre'
   const handleTitreChange = (e) => {
     onChange({ target: { name: 'titre', value: e.target.value } });
@@ -92,6 +95,6 @@ const ConcertInfoSection = ({ formData, onChange }) => {
       </div>
     </CardSection>
   );
-};
+});
 
 export default ConcertInfoSection;

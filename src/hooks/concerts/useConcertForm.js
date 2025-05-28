@@ -89,6 +89,15 @@ export const useConcertForm = (concertId) => {
     showErrorToast(message);
   }, [isNewConcert]);
   
+  // Références stables pour les callbacks
+  const onSuccessCallbackRef = useRef();
+  const onErrorCallbackRef = useRef();
+  const transformConcertDataRef = useRef();
+  
+  onSuccessCallbackRef.current = onSuccessCallback;
+  onErrorCallbackRef.current = onErrorCallback;
+  transformConcertDataRef.current = transformConcertData;
+  
   // Utilisation directe du hook générique avec configuration spécifique aux concerts
   const formOptions = useMemo(() => ({
     entityType: 'concerts',
@@ -111,9 +120,9 @@ export const useConcertForm = (concertId) => {
       contacts: []
     },
     validateForm: validateConcertForm,
-    transformData: transformConcertData,
-    onSuccess: onSuccessCallback,
-    onError: onErrorCallback,
+    transformData: (...args) => transformConcertDataRef.current(...args),
+    onSuccess: (...args) => onSuccessCallbackRef.current(...args),
+    onError: (...args) => onErrorCallbackRef.current(...args),
     // Pour un nouveau concert, on fournit uniquement la fonction de génération d'ID
     // qui sera utilisée au moment de la sauvegarde
     generateId: isNewConcert ? () => generatedIdRef.current : undefined,
@@ -122,9 +131,17 @@ export const useConcertForm = (concertId) => {
       { name: 'artiste', collection: 'artistes', idField: 'artisteId' },
       { name: 'programmateur', collection: 'programmateurs', idField: 'programmateurId' }
     ]
-  }), [isNewConcert, concertId, onSuccessCallback, onErrorCallback, transformConcertData]);
+  }), [isNewConcert, concertId]);
   
-  const formHook = useGenericEntityForm(formOptions);
+  // TEMPORAIRE: Désactiver l'auto-save pour éviter les re-renders
+  const formOptionsWithoutAutoSave = useMemo(() => ({
+    enableAutoSave: false, // ⚠️ DÉSACTIVÉ TEMPORAIREMENT - À réactiver après tests
+    enableValidation: true,
+    validateOnChange: true, // ✅ RÉACTIVÉ - Impact faible sur les performances
+    validateOnBlur: true
+  }), []);
+  
+  const formHook = useGenericEntityForm(formOptions, formOptionsWithoutAutoSave);
   
   console.log('[useConcertForm] after useGenericEntityForm hook:', {
     loading: formHook.loading,

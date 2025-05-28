@@ -33,6 +33,8 @@ import ConcertDetails from '@/components/concerts/ConcertDetails';
 // Import du dashboard de debug unifié (uniquement en développement)
 import UnifiedDebugDashboard from '@/components/debug/UnifiedDebugDashboard';
 import TestParametresVersions from '@/pages/TestParametresVersions';
+// Import du ProfilerMonitor pour le suivi des performances
+import ProfilerMonitor from '@/components/debug/ProfilerMonitor';
 
 // Import de l'outil de diagnostic en mode développement uniquement
 if (process.env.NODE_ENV === 'development') {
@@ -337,6 +339,7 @@ function App() {
                 </Routes>
               </Suspense>
               {process.env.NODE_ENV === 'development' && <UnifiedDebugDashboard />}
+              {process.env.NODE_ENV === 'development' && <ProfilerMonitor />}
             </ModalProvider>
           </ParametresProvider>
         </AuthProvider>

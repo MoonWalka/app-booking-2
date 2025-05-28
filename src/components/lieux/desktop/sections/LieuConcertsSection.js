@@ -151,7 +151,7 @@ const LieuConcertsSection = ({ lieu, isEditing }) => {
       ) : error ? (
         <div className={`${styles.concertItem} ${styles.error}`}>
           <Alert variant="warning" className="m-0 p-3">
-            {error}
+            {typeof error === 'string' ? error : (error?.message || 'Une erreur est survenue')}
           </Alert>
         </div>
       ) : concerts.length > 0 ? (

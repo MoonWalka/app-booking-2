@@ -284,7 +284,7 @@ const LieuOrganizerSection = ({
                 </div>
               ) : (
                 <Alert variant="warning">
-                  Le programmateur associé (ID: {safeLieu.programmateurId}) n'a pas pu être chargé ou n'existe plus.
+                  Le programmateur associé (ID: {String(safeLieu.programmateurId || 'inconnu')}) n'a pas pu être chargé ou n'existe plus.
                 </Alert>
               )
             ) : (

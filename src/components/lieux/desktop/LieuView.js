@@ -78,10 +78,12 @@ const LieuView = ({ id: propId }) => {
 
   // If error, show an error message
   if (error) {
+    // CORRECTION: error est un objet avec une propriété message
+    const errorMessage = typeof error === 'string' ? error : (error?.message || 'Une erreur est survenue');
     return (
       <div className={styles.errorContainer}>
-        <ErrorMessage variant="danger" icon="exclamation-triangle-fill">
-          {error.message || error}
+        <ErrorMessage variant="danger">
+          {errorMessage}
         </ErrorMessage>
         <Button 
           variant="primary" 
@@ -98,7 +100,7 @@ const LieuView = ({ id: propId }) => {
   if (!lieu && !loading && !isLoading) {
     return (
       <div className={styles.errorContainer}>
-        <ErrorMessage variant="warning" icon="exclamation-triangle-fill">
+        <ErrorMessage variant="warning">
           Ce lieu n'existe pas ou n'a pas pu être chargé.
         </ErrorMessage>
         <Button 

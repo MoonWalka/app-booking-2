@@ -1,32 +1,43 @@
 /*
- * Styles pour StatusWithInfo
- * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 5 mai 2025
+ * Styles pour StatusWithInfo.module.css
+ * Harmonisé avec la maquette TourCraft
+ * Dernière mise à jour: 20 mai 2025
  */
 
+.statusBadgeContainer {
+  display: inline-block;
+}
+
 .statusBadge {
-  padding: var(--tc-space-3) var(--tc-space-2);
-  font-weight: var(--tc-font-weight-medium);
-  letter-spacing: 0.2px;
+  /* Le style de base est géré par le composant Badge */
+}
+
+.badgeContent {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
 }
 
 .statusIcon {
-  font-size: var(--tc-font-size-sm);
+  font-size: 0.75rem;
+  line-height: 1;
 }
 
 .additionalInfo {
-  font-size: var(--tc-font-size-xs);
+  font-size: 0.6875rem;
   opacity: 0.8;
-  margin-left: var(--tc-space-1);
+  margin-left: 0.25rem;
 }
 
-/* Styles responsive standardisés */
-@media (max-width: 576px) {
-  .statusBadge {
-    padding: var(--tc-space-1) var(--tc-color-primary);
+/* =============================
+   RESPONSIVE DESIGN
+   ============================= */
+@media (max-width: 768px) {
+  .statusIcon {
+    font-size: 0.6875rem;
   }
   
-  .statusIcon {
-    font-size: var(--tc-font-size-xs);
+  .additionalInfo {
+    font-size: 0.625rem;
   }
 }

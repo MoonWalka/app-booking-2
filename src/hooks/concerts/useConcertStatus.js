@@ -48,7 +48,7 @@ const useConcertStatus = (options = {}) => {
       contact: {
         icon: '📞',
         label: 'Contact établi',
-        variant: 'info',
+        variant: 'blue',
         step: 1,
         tooltip: 'Premier contact établi avec l\'artiste',
         category: 'progress',
@@ -57,7 +57,7 @@ const useConcertStatus = (options = {}) => {
       preaccord: {
         icon: '✅',
         label: 'Pré-accord',
-        variant: 'primary',
+        variant: 'blue',
         step: 2,
         tooltip: 'Accord de principe obtenu',
         category: 'progress',
@@ -66,7 +66,7 @@ const useConcertStatus = (options = {}) => {
       contrat: {
         icon: '📄',
         label: 'Contrat signé',
-        variant: 'success',
+        variant: 'green',
         step: 3,
         tooltip: 'Contrat officiel signé',
         category: 'progress',
@@ -75,7 +75,7 @@ const useConcertStatus = (options = {}) => {
       confirme: {
         icon: '🎯',
         label: 'Confirmé',
-        variant: 'success',
+        variant: 'green',
         step: 4,
         tooltip: 'Concert confirmé et planifié',
         category: 'progress',
@@ -84,7 +84,7 @@ const useConcertStatus = (options = {}) => {
       annule: {
         icon: '❌',
         label: 'Annulé',
-        variant: 'danger',
+        variant: 'red',
         step: 0,
         tooltip: 'Concert annulé',
         category: 'cancel',
@@ -93,7 +93,7 @@ const useConcertStatus = (options = {}) => {
       reporte: {
         icon: '📅',
         label: 'Reporté',
-        variant: 'warning',
+        variant: 'yellow',
         step: 0,
         tooltip: 'Concert reporté à une date ultérieure',
         category: 'postponed',
@@ -138,7 +138,7 @@ const useConcertStatus = (options = {}) => {
         return {
           message: 'Statut du concert non défini',
           action: 'define_concert_status',
-          variant: 'warning'
+          variant: 'yellow'
         };
       }
       
@@ -147,7 +147,7 @@ const useConcertStatus = (options = {}) => {
         return {
           message: `Statut inconnu: ${status}`,
           action: 'fix_concert_status',
-          variant: 'danger'
+          variant: 'red'
         };
       }
       

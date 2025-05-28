@@ -33,9 +33,6 @@ const LieuSearchSection = React.memo(({
   handleRemoveLieu,
   handleCreateLieu
 }) => {
-  // LOG pour vérifier les re-renders de cette section
-  console.log('[LieuSearchSection] Rendered. lieuSearchTerm:', lieuSearchTerm, 'SelectedLieu:', selectedLieu?.nom);
-
   return (
     <CardSection
       title="Lieu"
@@ -46,7 +43,6 @@ const LieuSearchSection = React.memo(({
       headerClassName="lieu required"
     >
       <div className={styles.cardBody} ref={lieuDropdownRef}>
-        {console.log('[LieuSearchSection] selectedLieu à ce rendu :', selectedLieu)}
         {!selectedLieu ? (
           <>
             <label className={styles.formLabel}>Rechercher un lieu</label>

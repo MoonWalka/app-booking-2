@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, Profiler } from 'react';
+import React, { useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Alert from '@/components/ui/Alert';
 import styles from './ConcertForm.module.css';
@@ -18,37 +18,7 @@ import ArtisteSearchSection from '../sections/ArtisteSearchSection';
 import NotesSection from '../sections/NotesSection';
 import DeleteConfirmModal from '../sections/DeleteConfirmModal';
 
-// Importer la fonction d'enregistrement des données
-import { recordProfilerData } from '@/components/debug/ProfilerMonitor';
 
-// Compteur pour ConcertFormDesktop
-const concertFormRenderCounts = {};
-
-// Fonction de callback pour le Profiler
-const onRenderCallback = (
-  id, // l'identifiant "id" du Profiler
-  phase, // soit "mount" soit "update"
-  actualDuration, // temps passé à faire le rendu
-  baseDuration, // temps estimé sans mémoïsation
-  startTime, // quand React a commencé
-  commitTime, // quand React a appliqué
-) => {
-  console.log(`🎭 Profiler [${id}]:`, {
-    phase,
-    actualDuration: `${actualDuration.toFixed(2)}ms`,
-    baseDuration: `${baseDuration.toFixed(2)}ms`,
-    startTime: `${startTime.toFixed(2)}ms`,
-    commitTime: `${commitTime.toFixed(2)}ms`,
-  });
-  
-  // Enregistrer les données pour le monitoring
-  recordProfilerData(id, phase, actualDuration);
-  
-  // Alerte si le temps de rendu est anormalement élevé
-  if (actualDuration > 50) {
-    console.warn(`⚠️ Rendu lent détecté dans ${id}: ${actualDuration.toFixed(2)}ms`);
-  }
-};
 
 /**
  * ConcertForm - Composant desktop pour le formulaire de concert
@@ -167,15 +137,7 @@ const ConcertFormDesktop = () => {
     handleArtisteChange(null);
   }, [handleArtisteChange]);
 
-  // useEffect pour compter les rendus de ConcertFormDesktop
-  useEffect(() => {
-    const currentId = id || 'form';
-    if (!concertFormRenderCounts[currentId]) {
-      concertFormRenderCounts[currentId] = 0;
-    }
-    concertFormRenderCounts[currentId]++;
-    console.log(`⚛️ [ConcertFormDesktop RENDER] ID: ${currentId}, Count: ${concertFormRenderCounts[currentId]}`);
-  }); // Pas de dépendances pour se déclencher à chaque rendu
+
 
   // Afficher l'indicateur de chargement si en cours de chargement
   if (loading) {
@@ -190,48 +152,40 @@ const ConcertFormDesktop = () => {
   }
 
   return (
-    <Profiler id="ConcertFormDesktop-Root" onRender={onRenderCallback}>
-      <div className={styles.deskConcertFormContainer} style={{ backgroundColor: 'lightblue' }}>
-        {formHook.error && (
-          <Alert variant="danger" className={styles.errorAlert}>
-            {formHook.error}
-          </Alert>
-        )}
-        
-        <Profiler id="ConcertForm-Header" onRender={onRenderCallback}>
-          <ConcertFormHeader 
-            id={id} 
-            formData={formData} 
-            navigate={navigate} 
-          />
-        </Profiler>
-        
-        <Profiler id="ConcertForm-Actions-Top" onRender={onRenderCallback}>
-          <ConcertFormActions
-            id={id}
-            isSubmitting={isSubmitting || isDeleting}
-            onDelete={id !== 'nouveau' ? () => setShowDeleteConfirm(true) : undefined}
-            onCancel={handleCancel}
-            navigate={navigate}
-            position="top"
-          />
-        </Profiler>
+    <div className={styles.deskConcertFormContainer}>
+      {formHook.error && (
+        <Alert variant="danger" className={styles.errorAlert}>
+          {formHook.error}
+        </Alert>
+      )}
+      
+      <ConcertFormHeader 
+        id={id} 
+        formData={formData} 
+        navigate={navigate} 
+      />
+      
+      <ConcertFormActions
+        id={id}
+        isSubmitting={isSubmitting || isDeleting}
+        onDelete={id !== 'nouveau' ? () => setShowDeleteConfirm(true) : undefined}
+        onCancel={handleCancel}
+        navigate={navigate}
+        position="top"
+      />
         
         <form onSubmit={(e) => {
           console.log("[ConcertForm] Soumission du formulaire. ID:", id, "formData:", formData);
           handleSubmit(e);
         }} className={styles.deskModernForm}>
           
-          <Profiler id="ConcertForm-InfoSection" onRender={onRenderCallback}>
-            <ConcertInfoSection 
-              formData={formData}
-              onChange={handleChange}
-              formErrors={formHook.formErrors}
-            />
-          </Profiler>
+          <ConcertInfoSection 
+            formData={formData}
+            onChange={handleChange}
+            formErrors={formHook.formErrors}
+          />
           
-          <Profiler id="ConcertForm-LieuSearch" onRender={onRenderCallback}>
-            <LieuSearchSection 
+          <LieuSearchSection 
               lieuSearchTerm={lieuSearchTerm}
               setLieuSearchTerm={setLieuSearchTerm}
               lieuResults={lieuResults}
@@ -244,10 +198,8 @@ const ConcertFormDesktop = () => {
               handleRemoveLieu={removeLieu}
               handleCreateLieu={handleCreateLieu}
             />
-          </Profiler>
           
-          <Profiler id="ConcertForm-ProgrammateurSearch" onRender={onRenderCallback}>
-            <ProgrammateurSearchSection 
+          <ProgrammateurSearchSection 
               progSearchTerm={progSearchTerm}
               setProgSearchTerm={setProgSearchTerm}
               progResults={progResults}
@@ -260,10 +212,8 @@ const ConcertFormDesktop = () => {
               handleRemoveProgrammateur={handleRemoveProgrammateurCallback}
               handleCreateProgrammateur={handleCreateProgrammateur}
             />
-          </Profiler>
           
-          <Profiler id="ConcertForm-ArtisteSearch" onRender={onRenderCallback}>
-            <ArtisteSearchSection 
+          <ArtisteSearchSection 
               artisteSearchTerm={artisteSearchTerm}
               setArtisteSearchTerm={setArtisteSearchTerm}
               artisteResults={artisteResults}
@@ -276,17 +226,13 @@ const ConcertFormDesktop = () => {
               handleRemoveArtiste={handleRemoveArtisteCallback}
               handleCreateArtiste={handleCreateArtiste}
             />
-          </Profiler>
           
-          <Profiler id="ConcertForm-Notes" onRender={onRenderCallback}>
-            <NotesSection 
-              notes={formData.notes}
-              onChange={handleNotesChange}
-            />
-          </Profiler>
+          <NotesSection 
+            notes={formData.notes}
+            onChange={handleNotesChange}
+          />
           
-          <Profiler id="ConcertForm-Actions-Bottom" onRender={onRenderCallback}>
-            <ConcertFormActions
+          <ConcertFormActions
               id={id}
               isSubmitting={isSubmitting || isDeleting}
               onDelete={id !== 'nouveau' ? () => setShowDeleteConfirm(true) : undefined}
@@ -295,7 +241,6 @@ const ConcertFormDesktop = () => {
               navigate={navigate}
               position="bottom"
             />
-          </Profiler>
         </form>
         
         {showDeleteConfirm && (
@@ -310,7 +255,6 @@ const ConcertFormDesktop = () => {
           />
         )}
       </div>
-    </Profiler>
   );
 };
 

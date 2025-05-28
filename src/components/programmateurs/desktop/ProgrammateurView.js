@@ -1,7 +1,7 @@
 // src/components/programmateurs/desktop/ProgrammateurView.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Card, Button } from 'react-bootstrap';
+import { Card, Button } from 'react-bootstrap';
 import FlexContainer from '@/components/ui/FlexContainer';
 import { ProgrammateurHeader } from './sections/ProgrammateurHeader';
 import ProgrammateurContactSection from './ProgrammateurContactSection';
@@ -72,7 +72,7 @@ const ProgrammateurView = ({
   };
   
   return (
-    <Container className={styles.programmateurDetails}>
+    <div className={styles.programmateurDetails}>
       {/* Header avec ProgrammateurHeader en mode lecture */}
       <ProgrammateurHeader 
         programmateur={programmateur}
@@ -88,8 +88,8 @@ const ProgrammateurView = ({
       />
       
       {/* Disposition en une seule colonne */}
-      <Row>
-        <Col>
+      <div>
+        <div>
           {/* Section Contact - structure de carte unique */}
           <Card className="mb-4">
             <Card.Header className="bg-primary text-white">
@@ -223,9 +223,9 @@ const ProgrammateurView = ({
               </Card.Body>
             )}
           </Card>
-        </Col>
-      </Row>
-    </Container>
+        </div>
+      </div>
+    </div>
   );
 };
 

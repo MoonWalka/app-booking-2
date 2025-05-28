@@ -13,13 +13,14 @@
  */
 .deskConcertFormContainer, .concertFormContainer {
   padding: var(--tc-space-4);
-  background-color: var(--tc-bg-subtle);
+  background-color: transparent;
   width: 100%;
 }
 
 .deskConcertFormContainer {
   width: 100%;
   padding: var(--tc-space-4);
+  background-color: transparent;
 }
 
 /* En-tête du formulaire */

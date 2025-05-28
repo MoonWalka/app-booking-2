@@ -7,15 +7,13 @@ import '@styles/index.css';
 
 const LieuxPage = () => {
   return (
-    <div className="lieux-page p-3 p-lg-4">
-      <div className="container-fluid px-0">
-        <Routes>
-          <Route path="/" element={<LieuxList />} />
-          <Route path="/nouveau" element={<LieuForm />} />
-          <Route path="/:id" element={<LieuDetails />} />
-          <Route path="/:id/edit" element={<LieuForm />} />
-        </Routes>
-      </div>
+    <div className="lieux-page">
+      <Routes>
+        <Route path="/" element={<LieuxList />} />
+        <Route path="/nouveau" element={<LieuForm />} />
+        <Route path="/:id" element={<LieuDetails />} />
+        <Route path="/:id/edit" element={<LieuForm />} />
+      </Routes>
     </div>
   );
 };

@@ -149,6 +149,7 @@
 
 .programmateurDetails {
   padding: var(--tc-space-6) 0;
+  background-color: transparent;
 }
 
 .header {

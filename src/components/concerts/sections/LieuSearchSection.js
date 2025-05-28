@@ -20,7 +20,7 @@ import CardSection from '@/components/ui/CardSection';
  * @param {Function} props.handleRemoveLieu - Fonction pour désélectionner le lieu
  * @param {Function} props.handleCreateLieu - Fonction pour créer un nouveau lieu
  */
-const LieuSearchSection = ({ 
+const LieuSearchSection = React.memo(({ 
   lieuSearchTerm, 
   setLieuSearchTerm,
   lieuResults,
@@ -33,6 +33,9 @@ const LieuSearchSection = ({
   handleRemoveLieu,
   handleCreateLieu
 }) => {
+  // LOG pour vérifier les re-renders de cette section
+  console.log('[LieuSearchSection] Rendered. lieuSearchTerm:', lieuSearchTerm, 'SelectedLieu:', selectedLieu?.nom);
+
   return (
     <CardSection
       title="Lieu"
@@ -91,6 +94,6 @@ const LieuSearchSection = ({
       </div>
     </CardSection>
   );
-};
+});
 
 export default LieuSearchSection;

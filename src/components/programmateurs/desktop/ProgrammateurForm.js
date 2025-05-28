@@ -158,6 +158,7 @@ const ProgrammateurForm = () => {
           programmateur={programmateur}
           isEditMode={true}
           isNewFromUrl={isNewFromUrl}
+          onEdit={() => {}}
           onSave={handleSaveWithNotification}
           onCancel={handleCancelWithNotification}
           onDelete={handleDeleteClick}

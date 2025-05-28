@@ -4,13 +4,16 @@ import FlexContainer from '@components/ui/FlexContainer';
 import styles from './ProgrammateurHeader.module.css';
 
 /**
- * ProgrammateurHeader - En-tête du formulaire de programmateur
- * Affiche le titre et les boutons d'action (Enregistrer, Annuler, Supprimer)
+ * ProgrammateurHeader - En-tête du programmateur
+ * Logique conditionnelle comme LieuHeader : 
+ * - Mode lecture : Retour + Modifier
+ * - Mode édition : Enregistrer + Supprimer + Annuler
  */
 export const ProgrammateurHeader = ({
   programmateur,
   isEditMode,
   isNewFromUrl,
+  onEdit,
   onSave,
   onCancel,
   onDelete,
@@ -52,58 +55,75 @@ export const ProgrammateurHeader = ({
           )}
         </div>
 
-        {/* Boutons d'action */}
+        {/* Boutons d'action - Logique conditionnelle comme LieuHeader */}
         <div className={styles.actionsSection}>
           <FlexContainer gap="sm">
-            {/* Bouton Retour */}
-            <Button
-              variant="outline-secondary"
-              onClick={navigateToList}
-              disabled={isSubmitting}
-              iconStart="arrow-left"
-            >
-              Retour
-            </Button>
+            {isEditMode ? (
+              // Boutons en mode édition
+              <>
+                <Button
+                  variant="success"
+                  onClick={onSave}
+                  disabled={isSubmitting || !canSave}
+                  iconStart={isSubmitting ? null : "check-lg"}
+                  type="submit"
+                  className={styles.actionBtn}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                      Enregistrement...
+                    </>
+                  ) : (
+                    'Enregistrer'
+                  )}
+                </Button>
 
-            {/* Bouton Supprimer (seulement en mode édition) */}
-            {!isNewFromUrl && (
-              <Button
-                variant="outline-danger"
-                onClick={onDelete}
-                disabled={isSubmitting}
-                iconStart="trash"
-              >
-                Supprimer
-              </Button>
+                {/* Bouton Supprimer (seulement si ce n'est pas un nouveau programmateur) */}
+                {!isNewFromUrl && (
+                  <Button
+                    variant="danger"
+                    onClick={onDelete}
+                    disabled={isSubmitting}
+                    iconStart="trash"
+                    className={styles.actionBtn}
+                  >
+                    Supprimer
+                  </Button>
+                )}
+
+                <Button
+                  variant="secondary"
+                  onClick={onCancel}
+                  disabled={isSubmitting}
+                  iconStart="x-lg"
+                  className={styles.actionBtn}
+                >
+                  Annuler
+                </Button>
+              </>
+            ) : (
+              // Boutons en mode lecture
+              <>
+                <Button
+                  variant="secondary"
+                  onClick={navigateToList}
+                  iconStart="arrow-left"
+                  className={styles.actionBtn}
+                >
+                  Retour
+                </Button>
+
+                <Button
+                  variant="outline-primary"
+                  onClick={onEdit}
+                  iconStart="pencil"
+                  className={styles.actionBtn}
+                >
+                  Modifier
+                </Button>
+              </>
             )}
-
-            {/* Bouton Annuler */}
-            <Button
-              variant="outline-secondary"
-              onClick={onCancel}
-              disabled={isSubmitting}
-              iconStart="x-lg"
-            >
-              Annuler
-            </Button>
-
-            {/* Bouton Enregistrer */}
-            <Button
-              variant="primary"
-              onClick={onSave}
-              disabled={isSubmitting || !canSave}
-              iconStart={isSubmitting ? null : "check-lg"}
-              type="submit"
-            >
-              {isSubmitting ? (
-                <>
-                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                  Enregistrement...
-                </>
-              ) : (
-                'Enregistrer'
-              )}
-            </Button>
           </FlexContainer>
         </div>
       </FlexContainer>

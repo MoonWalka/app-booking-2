@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import FlexContainer from '@/components/ui/FlexContainer';
+import { ProgrammateurHeader } from './sections/ProgrammateurHeader';
 import ProgrammateurContactSection from './ProgrammateurContactSection';
 import ProgrammateurLegalSection from './ProgrammateurLegalSection';
 import ProgrammateurConcertsSection from './ProgrammateurConcertsSection';
@@ -74,36 +75,19 @@ const ProgrammateurView = ({
   
   return (
     <Container className={styles.programmateurDetails}>
-      {/* En-tête avec titre et actions */}
-      <Card className="mb-4 bg-light">
-        <Card.Body>
-          <FlexContainer justify="space-between" align="center">
-            <div>
-              <h2 className="mb-0">
-                {programmateur.nom || 'Sans nom'} 
-                {programmateur.fonction && <span className="text-muted fs-5"> ({programmateur.fonction})</span>}
-              </h2>
-            </div>
-            <div>
-              <Button 
-                variant="outline-primary" 
-                onClick={handleEditClick}
-                className="me-2"
-              >
-                <i className="bi bi-pencil me-2"></i>
-                Modifier
-              </Button>
-              <Button 
-                variant="outline-danger" 
-                onClick={() => handleDelete(programmateur.id)}
-              >
-                <i className="bi bi-trash me-2"></i>
-                Supprimer
-              </Button>
-            </div>
-          </FlexContainer>
-        </Card.Body>
-      </Card>
+      {/* Header avec ProgrammateurHeader en mode lecture */}
+      <ProgrammateurHeader 
+        programmateur={programmateur}
+        isEditMode={false}
+        isNewFromUrl={false}
+        onEdit={handleEditClick}
+        onSave={() => {}}
+        onCancel={() => {}}
+        onDelete={() => handleDelete(programmateur.id)}
+        isSubmitting={false}
+        canSave={false}
+        navigateToList={() => navigate('/programmateurs')}
+      />
       
       {/* Disposition en une seule colonne */}
       <Row>

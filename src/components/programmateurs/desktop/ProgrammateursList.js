@@ -218,103 +218,101 @@ const ProgrammateursList = ({ onNavigateToDetails }) => {
       {stats && <ProgrammateursStatsCards stats={stats} />}
 
       {/* Search and filter controls avec filtres avancés sophistiqués */}
-      <div className={styles.searchAndFiltersContainer}>
-        <ProgrammateursListSearchFilter 
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          filteredCount={filteredProgrammateurs.length}
-          totalCount={programmateurs.length}
-          showAdvancedFilters={showAdvancedFilters}
-          setShowAdvancedFilters={setShowAdvancedFilters}
-          hasActiveAdvancedFilters={hasActiveAdvancedFilters}
-          handleResetAdvancedFilters={handleResetAdvancedFilters}
-          activeFiltersCount={activeFiltersCount()}
-        />
-        
-        {/* Panel des filtres avancés */}
-        {showAdvancedFilters && (
-          <div className={styles.advancedFiltersPanel}>
-            <div className={styles.filtersGrid}>
-              {/* Filtre par statut d'activité */}
-              <div className={styles.filterGroup}>
-                <label className={styles.filterLabel}>Statut d'activité</label>
-                <select
-                  className={styles.filterSelect}
-                  value={searchFilters.actif || 'all'}
-                  onChange={(e) => handleAdvancedFilterChange('actif', e.target.value)}
-                >
-                  <option value="all">Tous</option>
-                  <option value="true">Actifs</option>
-                  <option value="false">Inactifs</option>
-                </select>
-              </div>
-              
-              {/* Filtre par présence d'email */}
-              <div className={styles.filterGroup}>
-                <label className={styles.filterLabel}>Contact email</label>
-                <select
-                  className={styles.filterSelect}
-                  value={searchFilters.hasEmail || 'all'}
-                  onChange={(e) => handleAdvancedFilterChange('hasEmail', e.target.value)}
-                >
-                  <option value="all">Tous</option>
-                  <option value="true">Avec email</option>
-                  <option value="false">Sans email</option>
-                </select>
-              </div>
-              
-              {/* Filtre par présence de téléphone */}
-              <div className={styles.filterGroup}>
-                <label className={styles.filterLabel}>Contact téléphone</label>
-                <select
-                  className={styles.filterSelect}
-                  value={searchFilters.hasTelephone || 'all'}
-                  onChange={(e) => handleAdvancedFilterChange('hasTelephone', e.target.value)}
-                >
-                  <option value="all">Tous</option>
-                  <option value="true">Avec téléphone</option>
-                  <option value="false">Sans téléphone</option>
-                </select>
-              </div>
-              
-              {/* Filtre par fonction */}
-              <div className={styles.filterGroup}>
-                <label className={styles.filterLabel}>Fonction</label>
-                <input
-                  type="text"
-                  className={styles.filterInput}
-                  placeholder="Ex: Directeur, Manager..."
-                  value={searchFilters.fonction || ''}
-                  onChange={(e) => handleAdvancedFilterChange('fonction', e.target.value)}
-                />
-              </div>
-              
-              {/* Filtre par ville */}
-              <div className={styles.filterGroup}>
-                <label className={styles.filterLabel}>Ville</label>
-                <input
-                  type="text"
-                  className={styles.filterInput}
-                  placeholder="Ex: Paris, Lyon..."
-                  value={searchFilters.ville || ''}
-                  onChange={(e) => handleAdvancedFilterChange('ville', e.target.value)}
-                />
-              </div>
-              
-              {/* Filtre par date de création */}
-              <div className={styles.filterGroup}>
-                <label className={styles.filterLabel}>Créé après</label>
-                <input
-                  type="date"
-                  className={styles.filterInput}
-                  value={searchFilters.dateCreationApres || ''}
-                  onChange={(e) => handleAdvancedFilterChange('dateCreationApres', e.target.value)}
-                />
-              </div>
+      <ProgrammateursListSearchFilter 
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        filteredCount={filteredProgrammateurs.length}
+        totalCount={programmateurs.length}
+        showAdvancedFilters={showAdvancedFilters}
+        setShowAdvancedFilters={setShowAdvancedFilters}
+        hasActiveAdvancedFilters={hasActiveAdvancedFilters}
+        handleResetAdvancedFilters={handleResetAdvancedFilters}
+        activeFiltersCount={activeFiltersCount()}
+      />
+      
+      {/* Panel des filtres avancés */}
+      {showAdvancedFilters && (
+        <div className={styles.advancedFiltersPanel}>
+          <div className={styles.filtersGrid}>
+            {/* Filtre par statut d'activité */}
+            <div className={styles.filterGroup}>
+              <label className={styles.filterLabel}>Statut d'activité</label>
+              <select
+                className={styles.filterSelect}
+                value={searchFilters.actif || 'all'}
+                onChange={(e) => handleAdvancedFilterChange('actif', e.target.value)}
+              >
+                <option value="all">Tous</option>
+                <option value="true">Actifs</option>
+                <option value="false">Inactifs</option>
+              </select>
+            </div>
+            
+            {/* Filtre par présence d'email */}
+            <div className={styles.filterGroup}>
+              <label className={styles.filterLabel}>Contact email</label>
+              <select
+                className={styles.filterSelect}
+                value={searchFilters.hasEmail || 'all'}
+                onChange={(e) => handleAdvancedFilterChange('hasEmail', e.target.value)}
+              >
+                <option value="all">Tous</option>
+                <option value="true">Avec email</option>
+                <option value="false">Sans email</option>
+              </select>
+            </div>
+            
+            {/* Filtre par présence de téléphone */}
+            <div className={styles.filterGroup}>
+              <label className={styles.filterLabel}>Contact téléphone</label>
+              <select
+                className={styles.filterSelect}
+                value={searchFilters.hasTelephone || 'all'}
+                onChange={(e) => handleAdvancedFilterChange('hasTelephone', e.target.value)}
+              >
+                <option value="all">Tous</option>
+                <option value="true">Avec téléphone</option>
+                <option value="false">Sans téléphone</option>
+              </select>
+            </div>
+            
+            {/* Filtre par fonction */}
+            <div className={styles.filterGroup}>
+              <label className={styles.filterLabel}>Fonction</label>
+              <input
+                type="text"
+                className={styles.filterInput}
+                placeholder="Ex: Directeur, Manager..."
+                value={searchFilters.fonction || ''}
+                onChange={(e) => handleAdvancedFilterChange('fonction', e.target.value)}
+              />
+            </div>
+            
+            {/* Filtre par ville */}
+            <div className={styles.filterGroup}>
+              <label className={styles.filterLabel}>Ville</label>
+              <input
+                type="text"
+                className={styles.filterInput}
+                placeholder="Ex: Paris, Lyon..."
+                value={searchFilters.ville || ''}
+                onChange={(e) => handleAdvancedFilterChange('ville', e.target.value)}
+              />
+            </div>
+            
+            {/* Filtre par date de création */}
+            <div className={styles.filterGroup}>
+              <label className={styles.filterLabel}>Créé après</label>
+              <input
+                type="date"
+                className={styles.filterInput}
+                value={searchFilters.dateCreationApres || ''}
+                onChange={(e) => handleAdvancedFilterChange('dateCreationApres', e.target.value)}
+              />
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Table or empty state */}
       {filteredProgrammateurs.length > 0 ? (

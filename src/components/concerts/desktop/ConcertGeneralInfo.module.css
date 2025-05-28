@@ -7,7 +7,7 @@
 /* Styles pour le composant ConcertGeneralInfo */
 
 .formCard {
-  background-color: var(--tc-bg-color-light);
+  background-color: var(--tc-color-white);
   border-radius: var(--tc-radius-base);
   box-shadow: var(--tc-shadow-sm);
   margin-bottom: var(--tc-space-6);

@@ -24,22 +24,6 @@
   cursor: pointer;
 }
 
-.viewButton {
-  color: var(--tc-color-info);
-}
-
-.viewButton:hover {
-  background-color: rgba(var(--tc-info-color-rgb), 0.1);
-}
-
-.editButton {
-  color: var(--tc-color-success);
-}
-
-.editButton:hover {
-  background-color: rgba(var(--tc-success-color-rgb), 0.1);
-}
-
 .deleteButton {
   color: var(--tc-color-error);
 }

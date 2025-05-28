@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import styles from './ConcertActions.module.css';
 
 const ConcertActions = ({ 
@@ -118,18 +117,6 @@ const ConcertActions = ({
   
   return (
     <div className={styles.actionsContainer} onClick={(e) => e.stopPropagation()}>
-      {/* View Concert Button */}
-      <button 
-        className={`${styles.actionButton} ${styles.viewButton}`}
-        onClick={(e) => {
-          e.stopPropagation();
-          handleViewConcert(concert.id);
-        }}
-        title="Voir les détails"
-      >
-        <i className="bi bi-eye"></i>
-      </button>
-      
       {/* Form Button - Toujours affiché avec statut différent */}
       <button 
         className={`${styles.actionButton} ${styles.formButton} ${styles[formStatus.class]}`}
@@ -149,16 +136,6 @@ const ConcertActions = ({
       >
         <i className={contractStatusInfo.icon}></i>
       </button>
-      
-      {/* Edit Concert Button */}
-      <Link 
-        to={`/concerts/${concert.id}/edit`}
-        className={`${styles.actionButton} ${styles.editButton}`}
-        onClick={(e) => e.stopPropagation()}
-        title="Modifier"
-      >
-        <i className="bi bi-pencil"></i>
-      </Link>
     </div>
   );
 };

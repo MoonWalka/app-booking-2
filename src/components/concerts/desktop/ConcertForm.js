@@ -158,19 +158,13 @@ const ConcertFormDesktop = () => {
       <ConcertFormHeader 
         id={id} 
         formData={formData} 
-        navigate={navigate} 
-      />
-      
-      <ConcertFormActions
-        id={id}
-        isSubmitting={isSubmitting || isDeleting}
+        navigate={navigate}
+        isSubmitting={isSubmitting}
         onDelete={id !== 'nouveau' ? () => setShowDeleteConfirm(true) : undefined}
         onCancel={handleCancel}
-        navigate={navigate}
-        position="top"
       />
-        
-        <form onSubmit={(e) => {
+      
+        <form id="concertForm" onSubmit={(e) => {
           console.log("[ConcertForm] Soumission du formulaire. ID:", id, "formData:", formData);
           handleSubmit(e);
         }} className={styles.deskModernForm}>

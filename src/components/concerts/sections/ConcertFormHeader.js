@@ -1,5 +1,5 @@
 import React from 'react';
-import Button from '@ui/Button';
+import ConcertFormActions from './ConcertFormActions';
 import styles from './ConcertFormHeader.module.css';
 
 /**
@@ -14,69 +14,22 @@ import styles from './ConcertFormHeader.module.css';
  * @param {Function} props.onCancel - Fonction de rappel pour l'annulation
  */
 const ConcertFormHeader = ({ id, formData, navigate, isSubmitting, onDelete, onCancel }) => {
-  const isNewConcert = id === 'nouveau';
-  
-  const handleCancel = () => {
-    if (typeof onCancel === 'function') {
-      onCancel();
-    } else {
-      navigate('/concerts');
-    }
-  };
-  
   return (
     <div className={styles.detailsHeaderContainer}>
       <div className={styles.titleContainer}>
         <h2 className={styles.pageTitle}>
-          {isNewConcert ? 'Ajouter un concert' : 'Modifier le concert'}
+          {id === 'nouveau' ? 'Ajouter un concert' : 'Modifier le concert'}
         </h2>
       </div>
       
-      <div className={styles.actionButtons}>
-        <Button
-          type="button"
-          variant="outline-secondary"
-          className={styles.actionBtn}
-          onClick={handleCancel}
-          disabled={isSubmitting}
-        >
-          <i className="bi bi-arrow-left me-2"></i>
-          Retour
-        </Button>
-        
-        {!isNewConcert && (
-          <Button
-            type="button"
-            variant="outline-danger"
-            className={styles.actionBtn}
-            onClick={onDelete}
-            disabled={isSubmitting}
-          >
-            <i className="bi bi-trash me-2"></i>
-            Supprimer
-          </Button>
-        )}
-        
-        <Button
-          type="submit"
-          form="concertForm"
-          variant="primary"
-          className={styles.actionBtn}
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? (
-            <>
-              <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-              Enregistrement...
-            </>
-          ) : (
-            <>
-              <i className="bi bi-check-circle me-2"></i>
-              Enregistrer
-            </>
-          )}
-        </Button>
-      </div>
+      <ConcertFormActions
+        id={id}
+        isSubmitting={isSubmitting}
+        onDelete={onDelete}
+        onCancel={onCancel}
+        navigate={navigate}
+        position="top"
+      />
     </div>
   );
 };

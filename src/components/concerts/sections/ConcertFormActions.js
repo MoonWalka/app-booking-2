@@ -18,8 +18,8 @@ const ConcertFormActions = ({ id, isSubmitting, onDelete, onSubmit, onCancel, na
   const isNewConcert = id === 'nouveau';
   
   // Déterminer si nous devons afficher tous les boutons ou juste certains en fonction de la position
-  const showSaveButton = position === 'bottom';
-  const showDeleteButton = !isNewConcert;
+  const showSaveButton = true; // Toujours afficher le bouton Enregistrer (haut et bas)
+  const showDeleteButton = !isNewConcert && position === 'top'; // Supprimer seulement depuis le haut
   
   // Utiliser la fonction onCancel si elle est fournie, sinon utiliser une navigation par défaut
   const handleCancel = () => {
@@ -62,6 +62,7 @@ const ConcertFormActions = ({ id, isSubmitting, onDelete, onSubmit, onCancel, na
         <div className={styles.rightButtons}>
           <Button
             type="submit"
+            form="concertForm"
             variant="primary"
             disabled={isSubmitting}
             onClick={(e) => {

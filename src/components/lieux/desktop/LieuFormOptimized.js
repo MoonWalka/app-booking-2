@@ -5,6 +5,7 @@ import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import ErrorMessage from '@/components/ui/ErrorMessage';
 import SectionTitle from '@/components/ui/SectionTitle';
 import Button from '@ui/Button';
+import styles from './LieuForm.module.css';
 
 /**
  * Formulaire de lieu optimisé utilisant le hook basé sur useGenericEntityForm
@@ -21,9 +22,7 @@ const LieuFormOptimized = ({ lieuId }) => {
     error,
     formErrors,
     addEquipement,
-    removeEquipement,
-    programmateur,
-    handleSelectRelatedEntity
+    removeEquipement
   } = useLieuForm(lieuId);
 
   // Affichage du chargement

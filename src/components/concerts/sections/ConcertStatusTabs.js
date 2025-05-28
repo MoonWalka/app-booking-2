@@ -17,14 +17,11 @@ const ConcertStatusTabs = ({ statusFilter, setStatusFilter, statusDetailsMap }) 
   return (
     <div className={styles.sectionNav}>
       {tabs.map(tab => (
-        <a
+        <button
           key={tab.id}
-          href="#"
+          type="button"
           className={`${styles.sectionNavLink} ${statusFilter === tab.id ? styles.active : ''}`}
-          onClick={(e) => {
-            e.preventDefault();
-            setStatusFilter(tab.id);
-          }}
+          onClick={() => setStatusFilter(tab.id)}
         >
           {tab.label}
           {statusDetailsMap && statusDetailsMap[tab.id] && (
@@ -32,7 +29,7 @@ const ConcertStatusTabs = ({ statusFilter, setStatusFilter, statusDetailsMap }) 
               {statusDetailsMap[tab.id].count || 0}
             </span>
           )}
-        </a>
+        </button>
       ))}
     </div>
   );

@@ -76,7 +76,7 @@ export const analyzeTemplates = async () => {
  * Exécutez d'abord analyzeTemplates() pour identifier les problèmes
  */
 export const cleanupAllTemplates = async () => {
-  if (!confirm("⚠️ Cette opération va modifier vos templates de contrat en base de données. Continuer?")) {
+  if (!window.confirm("⚠️ Cette opération va modifier vos templates de contrat en base de données. Continuer?")) {
     console.log("Opération annulée.");
     return;
   }

@@ -1,4 +1,4 @@
-import { db } from '@/services/firebase-service';
+import { db, doc, deleteDoc } from '@/services/firebase-service';
 
 export const handleDelete = async (collection, id, confirmMessage = 'Êtes-vous sûr de vouloir supprimer cet élément ?') => {
   if (window.confirm(confirmMessage)) {

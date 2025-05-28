@@ -4,12 +4,12 @@ import { Link } from 'react-router-dom';
 import FlexContainer from '@/components/ui/FlexContainer';
 
 // Importer les styles de test
-import '@styles/index.css';;
+import '@styles/index.css';
 
 // Composants UI à tester
 import Card from '../../components/ui/Card';
 import Badge from '../../components/ui/Badge';
-import Button as TCButton from '../../components/ui/Button';
+import TCButton from '../../components/ui/Button';
 import InfoPanel from '../../components/ui/InfoPanel';
 import Spinner from '../../components/ui/Spinner';
 

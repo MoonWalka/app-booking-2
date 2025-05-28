@@ -130,13 +130,15 @@ export const useArtisteForm = (artisteId) => {
     }
   }, [formHook.formData, setMembres]);
   
-  // Gestion des membres du groupe
-  const ajouterMembre = useCallback((nom) => {
-    if (!nom || !nom.trim()) return;
+  // Fonction pour gérer les membres
+  const ajouterMembre = useCallback((membre) => {
+    if (!membre || !membre.trim()) return;
     
-    const nouveauMembre = nom.trim();
-    setMembres(prev => [...prev, nouveauMembre]);
-  }, []);
+    formHook.setFormData(prev => ({
+      ...prev,
+      membres: [...(prev.membres || []), membre.trim()]
+    }));
+  }, [formHook]);
   
   const supprimerMembre = useCallback((index) => {
     setMembres(prev => prev.filter((_, i) => i !== index));

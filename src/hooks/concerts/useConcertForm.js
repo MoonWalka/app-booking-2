@@ -161,16 +161,17 @@ export const useConcertForm = (concertId) => {
   const handleArtisteChange = useCallback((artiste) => {
     
     if (artiste) {
-      formHook.updateFormData(prev => ({
+      formHook.setFormData(prev => ({
         ...prev,
         artisteId: artiste.id,
         artisteNom: artiste.nom
       }));
       
-      // Charger les détails de l'artiste dans les données liées
-      formHook.loadRelatedEntity('artiste', artiste.id);
+      // TODO: Charger les détails de l'artiste dans les données liées
+      // Note: loadRelatedEntity n'existe pas dans useGenericEntityForm
+      // formHook.loadRelatedEntity('artiste', artiste.id);
     } else {
-      formHook.updateFormData(prev => ({
+      formHook.setFormData(prev => ({
         ...prev,
         artisteId: null,
         artisteNom: ''
@@ -182,17 +183,18 @@ export const useConcertForm = (concertId) => {
   const handleLieuChange = useCallback((lieu) => {
     
     if (lieu) {
-      formHook.updateFormData(prev => ({
+      formHook.setFormData(prev => ({
         ...prev,
         lieuId: lieu.id,
         lieuNom: lieu.nom,
         ville: lieu?.adresse?.ville || ''
       }));
       
-      // Charger les détails du lieu dans les données liées
-      formHook.loadRelatedEntity('lieu', lieu.id);
+      // TODO: Charger les détails du lieu dans les données liées
+      // Note: loadRelatedEntity n'existe pas dans useGenericEntityForm
+      // formHook.loadRelatedEntity('lieu', lieu.id);
     } else {
-      formHook.updateFormData(prev => ({
+      formHook.setFormData(prev => ({
         ...prev,
         lieuId: null,
         lieuNom: '',
@@ -205,7 +207,7 @@ export const useConcertForm = (concertId) => {
   const handleAddContact = useCallback((contact) => {
     if (!contact.nom || !contact.email) return;
     
-    formHook.updateFormData(prev => ({
+    formHook.setFormData(prev => ({
       ...prev,
       contacts: [...(prev.contacts || []), contact]
     }));
@@ -213,7 +215,7 @@ export const useConcertForm = (concertId) => {
 
   // Gérer la suppression d'un contact
   const handleRemoveContact = useCallback((index) => {
-    formHook.updateFormData(prev => ({
+    formHook.setFormData(prev => ({
       ...prev,
       contacts: prev.contacts.filter((_, i) => i !== index)
     }));
@@ -257,7 +259,7 @@ export const useConcertForm = (concertId) => {
       } else {
         // Fallback : mettre à jour directement les données avec updateFormData
         console.warn("[useConcertForm] handleChange non défini, utilisation de updateFormData à la place");
-        formHook.updateFormData(prev => ({ 
+        formHook.setFormData(prev => ({ 
           ...prev, 
           [name]: fieldValue 
         }));
@@ -267,7 +269,7 @@ export const useConcertForm = (concertId) => {
       console.error("[useConcertForm] Erreur dans handleChange:", error);
       console.warn("[useConcertForm] Tentative de mise à jour avec updateFormData");
       
-      formHook.updateFormData(prev => ({ 
+      formHook.setFormData(prev => ({ 
         ...prev, 
         [name]: fieldValue 
       }));
@@ -291,9 +293,10 @@ export const useConcertForm = (concertId) => {
     isNewConcert,
     // Exposer les données du concert enrichies avec l'id pour la DX
     concert: concertDataWithId,
-    lieu: formHook.relatedData?.lieu,
-    artiste: formHook.relatedData?.artiste,
-    programmateur: formHook.relatedData?.programmateur
+    // TODO: Gérer les entités liées différemment car relatedData n'existe pas dans useGenericEntityForm
+    lieu: null,
+    artiste: null,
+    programmateur: null
   };
 };
 

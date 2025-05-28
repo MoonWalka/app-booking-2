@@ -149,9 +149,9 @@ export const useStructureForm = (structureId) => {
   
   // Extension du hook avec des fonctionnalités spécifiques aux structures
   
-  // Gestion des données de contact
+  // Méthode pour mettre à jour les informations du contact principal
   const updateContactInfo = useCallback((field, value) => {
-    formHook.updateFormData(prev => ({
+    formHook.setFormData(prev => ({
       ...prev,
       contact: {
         ...prev.contact,

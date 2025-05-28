@@ -168,16 +168,17 @@ export const useProgrammateurForm = (programmateurId) => {
   // Fonction pour sélectionner/désélectionner la structure
   const handleSelectStructure = useCallback((structure) => {
     if (structure) {
-      formHook.updateFormData(prev => ({
+      formHook.setFormData(prev => ({
         ...prev,
         structureId: structure.id,
-        structureNom: structure.raisonSociale || structure.nom
+        structureNom: structure.nom || structure.raisonSociale
       }));
       
-      // Charger les détails de la structure dans les données liées
-      formHook.loadRelatedEntity('structure', structure.id);
+      // TODO: Charger les détails de la structure dans les données liées
+      // Note: loadRelatedEntity n'existe pas dans useGenericEntityForm
+      // formHook.loadRelatedEntity('structure', structure.id);
     } else {
-      formHook.updateFormData(prev => ({
+      formHook.setFormData(prev => ({
         ...prev,
         structureId: '',
         structureNom: ''
@@ -214,9 +215,9 @@ export const useProgrammateurForm = (programmateurId) => {
     }
   }, [navigate, isNewProgrammateur, actualProgrammateurId]);
   
-  // Fonctions pour mettre à jour des objets imbriqués
+  // Méthode pour mettre à jour les champs imbriqués du contact
   const updateContact = useCallback((field, value) => {
-    formHook.updateFormData(prev => ({
+    formHook.setFormData(prev => ({
       ...prev,
       contact: {
         ...prev.contact,
@@ -225,8 +226,9 @@ export const useProgrammateurForm = (programmateurId) => {
     }));
   }, [formHook]);
   
+  // Méthode pour mettre à jour les champs imbriqués de la structure
   const updateStructure = useCallback((field, value) => {
-    formHook.updateFormData(prev => ({
+    formHook.setFormData(prev => ({
       ...prev,
       structure: {
         ...prev.structure,
@@ -234,6 +236,9 @@ export const useProgrammateurForm = (programmateurId) => {
       }
     }));
   }, [formHook]);
+  
+  // Enrichir formData avec l'id de l'entité pour exposer programmateur.id
+  const programmateurDataWithId = { ...formHook.formData, id: formHook.entityId };
   
   // Retourner le hook générique enrichi de fonctionnalités spécifiques
   return {
@@ -247,10 +252,11 @@ export const useProgrammateurForm = (programmateurId) => {
     updateStructure,
     handleCancel, // Ajout de la fonction handleCancel
     // Raccourcis pour une meilleure DX
-    programmateur: formHook.formData,
+    programmateur: programmateurDataWithId,
     contact: formHook.formData?.contact || {},
-    structure: formHook.relatedData?.structure,
-    selectedStructure: formHook.relatedData?.structure
+    // TODO: Gérer les entités liées différemment car relatedData n'existe pas dans useGenericEntityForm
+    structure: null,
+    selectedStructure: null
   };
 };
 

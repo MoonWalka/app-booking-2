@@ -1,6 +1,5 @@
 import React from 'react';
 import { Form } from 'react-bootstrap';
-import ConcertSearchBar from '@/components/concerts/sections/ConcertSearchBar';
 import styles from '../ProgrammateursList.module.css';
 
 const ProgrammateursListSearchFilter = ({ 
@@ -19,18 +18,45 @@ const ProgrammateursListSearchFilter = ({
   handleResetAdvancedFilters,
   activeFiltersCount
 }) => {
-  // On utilise ConcertSearchBar pour la searchbar uniquement
+  const searchInputRef = React.useRef(null);
+
+  React.useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+        e.preventDefault();
+        if (searchInputRef.current) {
+          searchInputRef.current.focus();
+        }
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   return (
     <div className={styles.searchFilterRow}>
       <div className={styles.searchCol}>
-        <ConcertSearchBar
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          filteredCount={filteredCount}
-          totalCount={totalCount}
-          // On ne passe pas les props de statuts, donc le bouton filtre ne s'affichera pas
-          placeholder="Rechercher un programmateur..."
-        />
+        <div className={styles.searchBox}>
+          <i className={`bi bi-search ${styles.searchIcon}`}></i>
+          <input
+            ref={searchInputRef}
+            type="text"
+            className={styles.searchInput}
+            placeholder="Rechercher un programmateur..."
+            value={searchTerm || ''}
+            onChange={e => setSearchTerm(e.target.value)}
+          />
+          {searchTerm && (
+            <button
+              type="button"
+              className={styles.clearSearch}
+              aria-label="Effacer la recherche"
+              onClick={() => setSearchTerm('')}
+            >
+              <i className="bi bi-x-lg"></i>
+            </button>
+          )}
+        </div>
       </div>
       <div className={styles.filtersCol}>
         <Form.Select

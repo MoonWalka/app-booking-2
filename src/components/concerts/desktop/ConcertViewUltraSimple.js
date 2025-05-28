@@ -17,6 +17,9 @@ import DeleteConcertModal from './DeleteConcertModal';
  * Version ULTRA-SIMPLIFIÉE de ConcertView
  * ZÉRO re-render garanti - Aucun hook générique
  * MÉTHODOLOGIE SÉCURISÉE : Approche minimaliste documentée
+ * 
+ * ⚠️ FICHIER DE BACKUP - Conservé en cas de régression des re-renders
+ * Version active : ConcertView.js (version robuste)
  */
 const ConcertViewUltraSimple = memo(({ id: propId }) => {
   const { id: urlId } = useParams();
@@ -27,26 +30,85 @@ const ConcertViewUltraSimple = memo(({ id: propId }) => {
 
   // États ultra-simples
   const [concert, setConcert] = useState(null);
+  const [lieu, setLieu] = useState(null);
+  const [programmateur, setProgrammateur] = useState(null);
+  const [artiste, setArtiste] = useState(null);
+  const [structure, setStructure] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  // Chargement des données - ULTRA-SIMPLE
+  // Chargement des données - ULTRA-SIMPLE avec entités liées
   useEffect(() => {
     if (!id) return;
 
-    const loadConcert = async () => {
+    const loadConcertAndRelatedData = async () => {
       try {
         setLoading(true);
         setError(null);
         
+        // Charger le concert principal
         const concertDoc = await getDoc(doc(db, 'concerts', id));
         
-        if (concertDoc.exists()) {
-          setConcert({ id: concertDoc.id, ...concertDoc.data() });
-        } else {
+        if (!concertDoc.exists()) {
           setError('Concert non trouvé');
+          setLoading(false);
+          return;
         }
+
+        const concertData = { id: concertDoc.id, ...concertDoc.data() };
+        setConcert(concertData);
+
+        // Charger les entités liées en parallèle
+        const promises = [];
+
+        // Charger le lieu si lieuId existe
+        if (concertData.lieuId) {
+          promises.push(
+            getDoc(doc(db, 'lieux', concertData.lieuId))
+              .then(snap => snap.exists() ? { id: snap.id, ...snap.data() } : null)
+              .then(data => {
+                setLieu(data);
+              })
+              .catch(() => setLieu(null))
+          );
+        }
+
+        // Charger le programmateur si programmateurId existe
+        if (concertData.programmateurId) {
+          promises.push(
+            getDoc(doc(db, 'programmateurs', concertData.programmateurId))
+              .then(snap => snap.exists() ? { id: snap.id, ...snap.data() } : null)
+              .then(data => {
+                setProgrammateur(data);
+              })
+              .catch(() => setProgrammateur(null))
+          );
+        }
+
+        // Charger l'artiste si artisteId existe
+        if (concertData.artisteId) {
+          promises.push(
+            getDoc(doc(db, 'artistes', concertData.artisteId))
+              .then(snap => snap.exists() ? { id: snap.id, ...snap.data() } : null)
+              .then(data => setArtiste(data))
+              .catch(() => setArtiste(null))
+          );
+        }
+
+        // Charger la structure si structureId existe
+        if (concertData.structureId) {
+          promises.push(
+            getDoc(doc(db, 'structures', concertData.structureId))
+              .then(snap => snap.exists() ? { id: snap.id, ...snap.data() } : null)
+              .then(data => setStructure(data))
+              .catch(() => setStructure(null))
+          );
+        }
+
+        // Attendre toutes les entités liées
+        await Promise.all(promises);
+        
       } catch (err) {
         console.error('Erreur lors du chargement du concert:', err);
         setError('Erreur lors du chargement du concert');
@@ -55,7 +117,7 @@ const ConcertViewUltraSimple = memo(({ id: propId }) => {
       }
     };
 
-    loadConcert();
+    loadConcertAndRelatedData();
   }, [id]);
 
   // Callbacks ultra-stables
@@ -183,19 +245,19 @@ const ConcertViewUltraSimple = memo(({ id: propId }) => {
           formatMontant={formatMontant}
           isDatePassed={isDatePassed}
           statusInfo={statusInfo}
-          artiste={emptyEntities.artiste}
+          artiste={artiste}
           formDataStatus={{}}
         />
 
         {/* Lieu */}
         <ConcertLocationSection 
           concertId={id}
-          lieu={emptyEntities.lieu}
+          lieu={lieu}
           isEditMode={false}
           formData={{}}
           onChange={() => {}}
           navigateToLieuDetails={(lieuId) => navigate(`/lieux/${lieuId}`)}
-          selectedLieu={emptyEntities.lieu}
+          selectedLieu={lieu}
           lieuSearchTerm={emptySearchObjects.lieu.searchTerm}
           setLieuSearchTerm={emptySearchObjects.lieu.setSearchTerm}
           showLieuResults={emptySearchObjects.lieu.showResults}
@@ -209,7 +271,7 @@ const ConcertViewUltraSimple = memo(({ id: propId }) => {
         {/* Programmateur */}
         <ConcertOrganizerSection 
           concertId={id}
-          programmateur={emptyEntities.programmateur}
+          programmateur={programmateur}
           isEditMode={false}
           formData={{}}
           onChange={() => {}}
@@ -222,7 +284,7 @@ const ConcertViewUltraSimple = memo(({ id: propId }) => {
           copyToClipboard={() => {}}
           formatDate={formatDate}
           concert={concert}
-          selectedProgrammateur={emptyEntities.programmateur}
+          selectedProgrammateur={programmateur}
           progSearchTerm={emptySearchObjects.programmateur.searchTerm}
           setProgSearchTerm={emptySearchObjects.programmateur.setSearchTerm}
           showProgResults={emptySearchObjects.programmateur.showResults}
@@ -236,7 +298,7 @@ const ConcertViewUltraSimple = memo(({ id: propId }) => {
         {/* Structure */}
         <ConcertStructureSection 
           concertId={id}
-          structure={emptyEntities.structure}
+          structure={structure}
           isEditMode={false}
           formData={{}}
           onChange={() => {}}
@@ -244,15 +306,15 @@ const ConcertViewUltraSimple = memo(({ id: propId }) => {
         />
 
         {/* Artiste - seulement si présent */}
-        {emptyEntities.artiste && (
+        {artiste && (
           <ConcertArtistSection 
             concertId={id}
-            artiste={emptyEntities.artiste}
+            artiste={artiste}
             isEditMode={false}
             formData={{}}
             onChange={() => {}}
             navigateToArtisteDetails={(artisteId) => navigate(`/artistes/${artisteId}`)}
-            selectedArtiste={emptyEntities.artiste}
+            selectedArtiste={artiste}
             artisteSearchTerm={emptySearchObjects.artiste.searchTerm}
             setArtisteSearchTerm={emptySearchObjects.artiste.setSearchTerm}
             showArtisteResults={emptySearchObjects.artiste.showResults}

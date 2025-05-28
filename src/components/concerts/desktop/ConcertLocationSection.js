@@ -35,10 +35,6 @@ const ConcertLocationSection = ({
   // Déterminer si on est en mode recherche fonctionnel
   const hasSearchFunctionality = !!propSetLieuSearchTerm;
 
-  // Debug logs
-  console.log(`[ConcertLocationSection] concertId: ${concertId}, lieu:`, lieu);
-  console.log(`[ConcertLocationSection] isEditMode: ${isEditMode}, selectedLieu:`, selectedLieu);
-
   return (
     <CardSection
       title={isEditMode ? 'Lieu *' : 'Lieu'}

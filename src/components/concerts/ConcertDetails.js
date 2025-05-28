@@ -11,7 +11,8 @@ import ConcertsMobileView from './mobile/ConcertView';
 /**
  * Composant conteneur pour les détails d'un concert
  * Utilise le hook useResponsive pour afficher soit la version desktop, soit la version mobile
- * MÉTHODOLOGIE SÉCURISÉE : Utilise ConcertViewUltraSimple en mode visualisation pour 0 re-render
+ * RETOUR TEMPORAIRE À LA VERSION ULTRA-SIMPLE : Boucle infinie détectée dans la version robuste
+ * TODO: Corriger les re-renders dans useConcertDetails avant de revenir à la version robuste
  */
 const ConcertDetails = () => {
   const { id } = useParams();
@@ -29,7 +30,7 @@ const ConcertDetails = () => {
     return <ConcertsMobileView id={id} />;
   }
   
-  // Desktop : utiliser la version ultra-simple en mode visualisation
+  // Desktop : utiliser la version ultra-simple temporairement (boucle infinie dans la version robuste)
   return isEditMode ? (
     <ConcertsDesktopView id={id} />
   ) : (

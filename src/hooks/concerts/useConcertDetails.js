@@ -799,17 +799,6 @@ const useConcertDetails = (id, locationParam) => {
     isSubmitting: genericDetails?.isSubmitting || false,
     error: genericDetails?.error || null,
     
-    // Debug logs
-    _debug: (() => {
-      console.log(`[useConcertDetails] Retour du hook pour concert ${id}:`);
-      console.log(`  - concert:`, genericDetails?.entity);
-      console.log(`  - lieu:`, genericDetails?.relatedData?.lieu);
-      console.log(`  - programmateur:`, genericDetails?.relatedData?.programmateur);
-      console.log(`  - loading:`, genericDetails?.loading);
-      console.log(`  - genericDetails:`, genericDetails);
-      return true;
-    })(),
-    
     // Données du formulaire
     formData: genericDetails?.formData || {},
     isEditMode: isEditMode,

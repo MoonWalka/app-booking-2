@@ -35,10 +35,6 @@ const ConcertOrganizerSection = ({
 }) => {
   const progDropdownRef = useRef(null);
 
-  // Debug logs
-  console.log(`[ConcertOrganizerSection] concertId: ${concertId}, programmateur:`, programmateur);
-  console.log(`[ConcertOrganizerSection] isEditMode: ${isEditMode}, selectedProgrammateur:`, selectedProgrammateur);
-
   return (
     <CardSection
       title="Programmateur"

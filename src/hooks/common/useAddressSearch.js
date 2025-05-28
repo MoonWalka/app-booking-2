@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import useLocationIQ from './useLocationIQ';
+import { useLocationIQ } from './useLocationIQ';
 
 /**
  * useAddressSearch - Hook personnalisé consolidé pour gérer la recherche et la sélection d'adresses

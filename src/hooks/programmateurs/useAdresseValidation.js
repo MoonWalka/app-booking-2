@@ -8,7 +8,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { useLocationIQ } from '@/hooks/common/useLocationIQ';
+import { useLocationIQ } from '@/hooks/common';
 
 /**
  * Hook de validation et géocodage d'adresses avec suggestions automatiques

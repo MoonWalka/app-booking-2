@@ -21,7 +21,6 @@ const ProgrammateursList = ({ onNavigateToDetails }) => {
     searchFilters,
     setSearchFilters,
     handleSearch,
-    resetSearch,
     sortField,
     setSortField,
     sortDirection,

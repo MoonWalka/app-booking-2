@@ -239,6 +239,10 @@ const useGenericEntityForm = (formConfig = {}, options = {}) => {
     }
   }, [validateOnBlur, enableValidation, formData]);
   
+  // ✅ CORRECTION: Référence stable pour customValidateForm
+  const customValidateFormRef = useRef(customValidateForm);
+  customValidateFormRef.current = customValidateForm;
+  
   // ✅ CORRECTION 16: Soumission stabilisée
   const handleSubmit = useCallback(async (event) => {
     if (event) event.preventDefault();
@@ -257,9 +261,9 @@ const useGenericEntityForm = (formConfig = {}, options = {}) => {
         let validationResult;
         
         // Utiliser customValidateForm si fourni, sinon utiliser la validation générique
-        if (customValidateForm && typeof customValidateForm === 'function') {
+        if (customValidateFormRef.current && typeof customValidateFormRef.current === 'function') {
           console.log("[useGenericEntityForm] Utilisation de customValidateForm");
-          validationResult = await customValidateForm(formData);
+          validationResult = await customValidateFormRef.current(formData);
           // Si customValidateForm retourne simplement un booléen ou des erreurs
           if (typeof validationResult === 'boolean') {
             validationResult = { isValid: validationResult, errors: {} };

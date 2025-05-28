@@ -45,7 +45,7 @@ const useDeleteProgrammateur = (onSuccess) => {
         field: 'programmateurIds',
         referenceType: 'array',
         message: 'Ce programmateur est associé à une ou plusieurs structures et ne peut pas être supprimé.',
-        detailsField: 'nom'
+        detailsField: 'raisonSociale'
       }
     ],
     

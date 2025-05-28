@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { useProgrammateurSearch, useDeleteProgrammateur } from '@/hooks/programmateurs';
 import Spinner from '@/components/common/Spinner';
 import Alert from '@/components/ui/Alert';
@@ -147,40 +146,37 @@ const ProgrammateursList = ({ onNavigateToDetails }) => {
   // Actions par ligne
   const renderActions = (row) => (
     <div className={styles.actionButtons}>
-      <OverlayTrigger placement="top" overlay={<Tooltip>Voir les détails</Tooltip>}>
-        <button 
-          className={`${styles.actionButton} ${styles.viewButton}`} 
-          onClick={(e) => {
-            e.stopPropagation();
-            onNavigateToDetails(row.id);
-          }}
-        >
-          <i className="bi bi-eye"></i>
-        </button>
-      </OverlayTrigger>
-      <OverlayTrigger placement="top" overlay={<Tooltip>Modifier</Tooltip>}>
-        <button 
-          className={`${styles.actionButton} ${styles.editButton}`} 
-          onClick={(e) => {
-            e.stopPropagation();
-            navigate(`/programmateurs/${row.id}/edit`);
-          }}
-        >
-          <i className="bi bi-pencil"></i>
-        </button>
-      </OverlayTrigger>
-      <OverlayTrigger placement="top" overlay={<Tooltip>Supprimer</Tooltip>}>
-        <button 
-          className={`${styles.actionButton} ${styles.deleteButton}`} 
-          onClick={(e) => {
-            e.stopPropagation();
-            handleDeleteProgrammateur(row.id);
-          }} 
-          disabled={isDeleting}
-        >
-          <i className="bi bi-trash"></i>
-        </button>
-      </OverlayTrigger>
+      <button 
+        className={styles.actionButton}
+        onClick={(e) => {
+          e.stopPropagation();
+          onNavigateToDetails(row.id);
+        }}
+        title="Voir les détails"
+      >
+        <i className="bi bi-eye"></i>
+      </button>
+      <button 
+        className={styles.actionButton}
+        onClick={(e) => {
+          e.stopPropagation();
+          navigate(`/programmateurs/${row.id}/edit`);
+        }}
+        title="Modifier"
+      >
+        <i className="bi bi-pencil"></i>
+      </button>
+      <button 
+        className={styles.actionButton}
+        onClick={(e) => {
+          e.stopPropagation();
+          handleDeleteProgrammateur(row.id);
+        }} 
+        disabled={isDeleting}
+        title="Supprimer"
+      >
+        <i className="bi bi-trash"></i>
+      </button>
     </div>
   );
 

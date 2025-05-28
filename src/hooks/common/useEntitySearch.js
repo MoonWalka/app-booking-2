@@ -148,7 +148,7 @@ export const useEntitySearch = (options) => {
     } finally {
       setIsSearching(false);
     }
-  }, [searchTerm, entityType, customSearchFunction, searchField, maxResults, additionalSearchFields, filterResults]);
+  }, [searchTerm, entityType, customSearchFunction, maxResults, additionalSearchFields, filterResults]);
 
   // Référence stable pour performSearch
   const performSearchRef = useRef();

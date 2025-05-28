@@ -223,7 +223,7 @@ const useGenericEntityForm = (formConfig = {}, options = {}) => {
     if (enableAutoSave && triggerAutoSaveRef.current) {
       triggerAutoSaveRef.current();
     }
-  }, [validateOnChange, enableValidation, enableTouchedTracking, enableDirtyTracking, enableAutoSave]); // triggerAutoSave retiré des dépendances
+  }, [enableTouchedTracking, enableDirtyTracking, enableAutoSave]); // triggerAutoSave retiré des dépendances
   
   // ✅ CORRECTION 14: Changement d'input stabilisé
   const handleInputChange = useCallback((event) => {

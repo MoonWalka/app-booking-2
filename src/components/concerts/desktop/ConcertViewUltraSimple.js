@@ -161,14 +161,6 @@ const ConcertViewUltraSimple = memo(({ id: propId }) => {
     }
   };
 
-  // Objets vides pour les entités liées (mode visualisation uniquement)
-  const emptyEntities = useMemo(() => ({
-    lieu: null,
-    programmateur: null,
-    artiste: null,
-    structure: null
-  }), []);
-
   // Objets vides pour les hooks de recherche
   const emptySearchObjects = useMemo(() => {
     const emptySearch = {

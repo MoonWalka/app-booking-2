@@ -27,7 +27,6 @@ import DeleteConfirmModal from '../sections/DeleteConfirmModal';
 const ConcertFormDesktop = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const isNewConcert = id === 'nouveau';
   
   // Hook optimisé pour gérer état, chargement, soumission
   const formHook = useConcertForm(id);
@@ -45,7 +44,6 @@ const ConcertFormDesktop = () => {
     handleSubmit,
     handleCancel,
     isSubmitting,
-    concert,
     lieu,
     artiste,
     programmateur,

@@ -54,7 +54,7 @@ export const ProgrammateurHeader = ({
 
         {/* Boutons d'action */}
         <div className={styles.actionsSection}>
-          <FlexContainer gap="2">
+          <FlexContainer gap="sm">
             {/* Bouton Retour */}
             <Button
               variant="outline-secondary"

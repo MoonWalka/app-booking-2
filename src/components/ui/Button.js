@@ -27,11 +27,18 @@ const Button = ({
   type = 'button',
   disabled = false,
   icon = null,
+  iconStart = null,
   iconPosition = 'left',
   iconOnly = false,
   tooltip = '',
   ...rest
 }) => {
+  // ✅ CORRECTION: Utiliser iconStart comme alias de icon s'il est fourni
+  const finalIcon = iconStart || icon;
+  
+  // ✅ CORRECTION: Exclure iconStart des props DOM
+  const { iconStart: excludedIconStart, ...domProps } = rest;
+
   // Fonction pour convertir correctement les noms de variantes contenant des tirets en noms de classes CSS
   const getVariantClassName = (variant) => {
     if (variant.includes('-')) {
@@ -54,18 +61,18 @@ const Button = ({
 
   // Préparer le contenu du bouton avec l'icône si nécessaire
   const buttonContent = iconOnly ? (
-    icon
-  ) : icon ? (
+    finalIcon
+  ) : finalIcon ? (
     <span className={styles.buttonContent}>
       {iconPosition === 'left' && (
         <span className={styles.iconWrapper}>
-          {icon}
+          {finalIcon}
         </span>
       )}
       <span className={styles.textContent}>{children}</span>
       {iconPosition === 'right' && (
         <span className={styles.iconWrapper}>
-          {icon}
+          {finalIcon}
         </span>
       )}
     </span>
@@ -90,7 +97,7 @@ const Button = ({
             if (onClick) onClick(e);
           }}
           disabled={disabled}
-          {...rest}
+          {...domProps}
         >
           {buttonContent}
         </button>
@@ -106,7 +113,7 @@ const Button = ({
         if (onClick) onClick(e);
       }}
       disabled={disabled}
-      {...rest}
+      {...domProps}
     >
       {buttonContent}
     </button>
@@ -122,6 +129,7 @@ Button.propTypes = {
   type: PropTypes.string,
   disabled: PropTypes.bool,
   icon: PropTypes.node,
+  iconStart: PropTypes.node,
   iconPosition: PropTypes.oneOf(['left', 'right']),
   iconOnly: PropTypes.bool,
   tooltip: PropTypes.string

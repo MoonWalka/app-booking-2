@@ -17,9 +17,16 @@ const CompanySearchSection = ({
   const [searchType, setSearchType] = useState('siret');
 
   const handleSearch = (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     if (searchTerm.trim()) {
       searchCompany(searchTerm, searchType);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSearch();
     }
   };
 
@@ -38,7 +45,7 @@ const CompanySearchSection = ({
       <div className={styles.cardBody}>
         {!selectedCompany && (
           <>
-            <Form onSubmit={handleSearch}>
+            <div>
               <div className={styles.searchContainer}>
                 <Form.Group className={styles.searchTypeGroup}>
                   <Form.Check
@@ -69,11 +76,13 @@ const CompanySearchSection = ({
                     placeholder={searchType === 'siret' ? "Entrez un numéro SIRET" : "Entrez une raison sociale"}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
+                    onKeyPress={handleKeyPress}
                     className={styles.searchInput}
                   />
                   <Button 
-                    type="submit" 
+                    type="button"
                     variant="primary"
+                    onClick={handleSearch}
                     disabled={isSearching || !searchTerm.trim()}
                     className={styles.searchButton}
                   >
@@ -85,7 +94,7 @@ const CompanySearchSection = ({
                   </Button>
                 </div>
               </div>
-            </Form>
+            </div>
 
             {companyResults && companyResults.length > 0 && (
               <div className={styles.resultsContainer}>

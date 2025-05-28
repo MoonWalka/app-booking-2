@@ -5,7 +5,8 @@ import SelectedEntityCard from './SelectedEntityCard';
 import CardSection from '@/components/ui/CardSection';
 
 /**
- * ArtisteSearchSection - Section de recherche et sélection d'artiste
+ * ArtisteSearchSection - Section de recherche et sélection d'artiste(s)
+ * Permet d'ajouter plusieurs artistes sous forme de liste
  * 
  * @param {Object} props - Les propriétés du composant
  * @param {string} props.artisteSearchTerm - Terme de recherche pour l'artiste
@@ -33,9 +34,41 @@ const ArtisteSearchSection = ({
   handleRemoveArtiste,
   handleCreateArtiste
 }) => {
+  // État local pour gérer la liste des artistes
+  const [artistesList, setArtistesList] = React.useState([]);
+  const [showAddArtiste, setShowAddArtiste] = React.useState(true);
+  
+  // Fonction pour ajouter un artiste à la liste
+  const handleAddArtisteToList = (artiste) => {
+    if (artiste && !artistesList.find(a => a.id === artiste.id)) {
+      setArtistesList([...artistesList, artiste]);
+      setArtisteSearchTerm('');
+      setShowAddArtiste(false);
+      // Toujours garder le premier artiste comme selectedArtiste pour la compatibilité
+      if (artistesList.length === 0) {
+        handleSelectArtiste(artiste);
+      }
+    }
+  };
+  
+  // Fonction pour retirer un artiste de la liste
+  const handleRemoveArtisteFromList = (artisteId) => {
+    const updatedList = artistesList.filter(a => a.id !== artisteId);
+    setArtistesList(updatedList);
+    // Si on retire l'artiste principal, mettre à jour
+    if (selectedArtiste && selectedArtiste.id === artisteId) {
+      if (updatedList.length > 0) {
+        handleSelectArtiste(updatedList[0]);
+      } else {
+        handleRemoveArtiste();
+        setShowAddArtiste(true);
+      }
+    }
+  };
+  
   return (
     <CardSection
-      title="Artiste"
+      title="Artiste(s)"
       icon={<i className="bi bi-music-note-beamed"></i>}
       isEditing={true}
       hasDropdown={true}
@@ -43,9 +76,64 @@ const ArtisteSearchSection = ({
       headerClassName="artiste required"
     >
       <div className={styles.cardBody} ref={artisteDropdownRef}>
-        {!selectedArtiste ? (
+        {/* Afficher la liste des artistes ajoutés */}
+        {artistesList.length > 0 && (
           <>
-            <label className={styles.formLabel}>Rechercher un artiste</label>
+            <label className={styles.formLabel}>
+              {artistesList.length === 1 ? 'Artiste sélectionné' : `${artistesList.length} artistes sélectionnés`}
+            </label>
+            <div className={styles.artistesList}>
+              {artistesList.map((artiste, index) => (
+                <div key={artiste.id} className={styles.artisteItem}>
+                  <SelectedEntityCard
+                    entity={artiste}
+                    entityType="artiste"
+                    onRemove={() => handleRemoveArtisteFromList(artiste.id)}
+                    primaryField="nom"
+                    secondaryFields={[
+                      { 
+                        icon: "bi-music-note", 
+                        value: artiste.genre 
+                      },
+                      { 
+                        icon: "bi-people", 
+                        value: artiste.nbMembres,
+                        prefix: "Membres: ",
+                        suffix: artiste.nbMembres > 1 ? " personnes" : " personne"
+                      },
+                      { 
+                        icon: "bi-envelope", 
+                        value: artiste.email
+                      }
+                    ]}
+                  />
+                  {index === 0 && artistesList.length > 1 && (
+                    <span className={styles.principalBadge}>Principal</span>
+                  )}
+                </div>
+              ))}
+            </div>
+            
+            {/* Bouton pour ajouter un autre artiste */}
+            {!showAddArtiste && (
+              <button
+                type="button"
+                className={styles.addAnotherButton}
+                onClick={() => setShowAddArtiste(true)}
+              >
+                <i className="bi bi-plus-circle"></i>
+                Ajouter un autre artiste
+              </button>
+            )}
+          </>
+        )}
+        
+        {/* Formulaire de recherche/ajout */}
+        {(artistesList.length === 0 || showAddArtiste) && (
+          <>
+            <label className={styles.formLabel}>
+              {artistesList.length === 0 ? 'Rechercher un artiste' : 'Ajouter un autre artiste'}
+            </label>
             <SearchDropdown
               searchTerm={artisteSearchTerm}
               setSearchTerm={setArtisteSearchTerm}
@@ -54,8 +142,8 @@ const ArtisteSearchSection = ({
               setShowResults={setShowArtisteResults}
               isSearching={isSearchingArtistes}
               placeholder="Rechercher un artiste par nom..."
-              onSelect={handleSelectArtiste}
-              onCreate={handleCreateArtiste}
+              onSelect={handleAddArtisteToList}
+              onCreate={() => handleCreateArtiste(handleAddArtisteToList)}
               createButtonText="Nouvel artiste"
               emptyResultsText="Aucun artiste trouvé"
               entityType="artiste"
@@ -63,32 +151,19 @@ const ArtisteSearchSection = ({
             <small className={styles.formHelpText}>
               Tapez au moins 2 caractères pour rechercher un artiste par nom.
             </small>
-          </>
-        ) : (
-          <>
-            <label className={styles.formLabel}>Artiste sélectionné</label>
-            <SelectedEntityCard
-              entity={selectedArtiste}
-              entityType="artiste"
-              onRemove={handleRemoveArtiste}
-              primaryField="nom"
-              secondaryFields={[
-                { 
-                  icon: "bi-music-note", 
-                  value: selectedArtiste.genre 
-                },
-                { 
-                  icon: "bi-people", 
-                  value: selectedArtiste.nbMembres,
-                  prefix: "Membres: ",
-                  suffix: selectedArtiste.nbMembres > 1 ? " personnes" : " personne"
-                },
-                { 
-                  icon: "bi-envelope", 
-                  value: selectedArtiste.email
-                }
-              ]}
-            />
+            
+            {showAddArtiste && artistesList.length > 0 && (
+              <button
+                type="button"
+                className={styles.cancelAddButton}
+                onClick={() => {
+                  setShowAddArtiste(false);
+                  setArtisteSearchTerm('');
+                }}
+              >
+                Annuler
+              </button>
+            )}
           </>
         )}
       </div>

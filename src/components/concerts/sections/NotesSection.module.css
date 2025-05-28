@@ -75,3 +75,45 @@
   color: var(--tc-text-muted);
   font-size: var(--tc-font-size-sm);
 }
+
+/* Styles pour les champs de formulaire */
+.formLabel {
+  display: block;
+  margin-bottom: var(--tc-space-2);
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-text-default);
+  font-size: var(--tc-font-size-sm);
+}
+
+.formField {
+  width: 100%;
+  padding: var(--tc-space-2) var(--tc-space-3);
+  font-size: var(--tc-font-size-base);
+  line-height: 1.5;
+  color: var(--tc-text-default);
+  background-color: var(--tc-color-white);
+  border: 1px solid var(--tc-color-gray-300);
+  border-radius: var(--tc-radius-md);
+  transition: all 0.2s ease;
+}
+
+.formField:hover {
+  border-color: var(--tc-color-gray-400);
+}
+
+.formField:focus {
+  border-color: var(--tc-color-primary);
+  outline: 0;
+  box-shadow: 0 0 0 3px rgba(33, 53, 71, 0.1);
+}
+
+.notesTextarea {
+  min-height: 120px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.notesTextarea::placeholder {
+  color: var(--tc-text-muted);
+  opacity: 0.8;
+}

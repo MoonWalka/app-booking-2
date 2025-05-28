@@ -5,7 +5,8 @@ import SelectedEntityCard from './SelectedEntityCard';
 import CardSection from '@/components/ui/CardSection';
 
 /**
- * ProgrammateurSearchSection - Section de recherche et sélection de programmateur
+ * ProgrammateurSearchSection - Section de recherche et sélection de programmateur(s)
+ * Permet d'ajouter plusieurs programmateurs sous forme de liste
  * 
  * @param {Object} props - Les propriétés du composant
  * @param {string} props.progSearchTerm - Terme de recherche pour le programmateur
@@ -33,9 +34,41 @@ const ProgrammateurSearchSection = ({
   handleRemoveProgrammateur,
   handleCreateProgrammateur
 }) => {
+  // État local pour gérer la liste des programmateurs
+  const [programmateursList, setProgrammateursList] = React.useState([]);
+  const [showAddProgrammateur, setShowAddProgrammateur] = React.useState(true);
+  
+  // Fonction pour ajouter un programmateur à la liste
+  const handleAddProgrammateurToList = (programmateur) => {
+    if (programmateur && !programmateursList.find(p => p.id === programmateur.id)) {
+      setProgrammateursList([...programmateursList, programmateur]);
+      setProgSearchTerm('');
+      setShowAddProgrammateur(false);
+      // Toujours garder le premier programmateur comme selectedProgrammateur pour la compatibilité
+      if (programmateursList.length === 0) {
+        handleSelectProgrammateur(programmateur);
+      }
+    }
+  };
+  
+  // Fonction pour retirer un programmateur de la liste
+  const handleRemoveProgrammateurFromList = (programmateurId) => {
+    const updatedList = programmateursList.filter(p => p.id !== programmateurId);
+    setProgrammateursList(updatedList);
+    // Si on retire le programmateur principal, mettre à jour
+    if (selectedProgrammateur && selectedProgrammateur.id === programmateurId) {
+      if (updatedList.length > 0) {
+        handleSelectProgrammateur(updatedList[0]);
+      } else {
+        handleRemoveProgrammateur();
+        setShowAddProgrammateur(true);
+      }
+    }
+  };
+  
   return (
     <CardSection
-      title="Programmateur"
+      title="Programmateur(s)"
       icon={<i className="bi bi-person"></i>}
       isEditing={true}
       hasDropdown={true}
@@ -43,9 +76,62 @@ const ProgrammateurSearchSection = ({
       headerClassName="programmateur"
     >
       <div className={styles.cardBody} ref={progDropdownRef}>
-        {!selectedProgrammateur ? (
+        {/* Afficher la liste des programmateurs ajoutés */}
+        {programmateursList.length > 0 && (
           <>
-            <label className={styles.formLabel}>Rechercher un programmateur</label>
+            <label className={styles.formLabel}>
+              {programmateursList.length === 1 ? 'Programmateur sélectionné' : `${programmateursList.length} programmateurs sélectionnés`}
+            </label>
+            <div className={styles.programmateursList}>
+              {programmateursList.map((programmateur, index) => (
+                <div key={programmateur.id} className={styles.programmateurItem}>
+                  <SelectedEntityCard
+                    entity={programmateur}
+                    entityType="programmateur"
+                    onRemove={() => handleRemoveProgrammateurFromList(programmateur.id)}
+                    primaryField="nom"
+                    secondaryFields={[
+                      { 
+                        icon: "bi-building", 
+                        value: programmateur.structure 
+                      },
+                      { 
+                        icon: "bi-envelope", 
+                        value: programmateur.email 
+                      },
+                      { 
+                        icon: "bi-telephone", 
+                        value: programmateur.telephone 
+                      }
+                    ]}
+                  />
+                  {index === 0 && programmateursList.length > 1 && (
+                    <span className={styles.principalBadge}>Principal</span>
+                  )}
+                </div>
+              ))}
+            </div>
+            
+            {/* Bouton pour ajouter un autre programmateur */}
+            {!showAddProgrammateur && (
+              <button
+                type="button"
+                className={styles.addAnotherButton}
+                onClick={() => setShowAddProgrammateur(true)}
+              >
+                <i className="bi bi-plus-circle"></i>
+                Ajouter un autre programmateur
+              </button>
+            )}
+          </>
+        )}
+        
+        {/* Formulaire de recherche/ajout */}
+        {(programmateursList.length === 0 || showAddProgrammateur) && (
+          <>
+            <label className={styles.formLabel}>
+              {programmateursList.length === 0 ? 'Rechercher un programmateur' : 'Ajouter un autre programmateur'}
+            </label>
             <SearchDropdown
               searchTerm={progSearchTerm}
               setSearchTerm={setProgSearchTerm}
@@ -54,8 +140,8 @@ const ProgrammateurSearchSection = ({
               setShowResults={setShowProgResults}
               isSearching={isSearchingProgs}
               placeholder="Rechercher un programmateur par nom..."
-              onSelect={handleSelectProgrammateur}
-              onCreate={handleCreateProgrammateur}
+              onSelect={handleAddProgrammateurToList}
+              onCreate={() => handleCreateProgrammateur(handleAddProgrammateurToList)}
               createButtonText="Nouveau programmateur"
               emptyResultsText="Aucun programmateur trouvé"
               entityType="programmateur"
@@ -63,30 +149,19 @@ const ProgrammateurSearchSection = ({
             <small className={styles.formHelpText}>
               Tapez au moins 2 caractères pour rechercher un programmateur par nom.
             </small>
-          </>
-        ) : (
-          <>
-            <label className={styles.formLabel}>Programmateur sélectionné</label>
-            <SelectedEntityCard
-              entity={selectedProgrammateur}
-              entityType="programmateur"
-              onRemove={handleRemoveProgrammateur}
-              primaryField="nom"
-              secondaryFields={[
-                { 
-                  icon: "bi-building", 
-                  value: selectedProgrammateur.structure 
-                },
-                { 
-                  icon: "bi-envelope", 
-                  value: selectedProgrammateur.email 
-                },
-                { 
-                  icon: "bi-telephone", 
-                  value: selectedProgrammateur.telephone 
-                }
-              ]}
-            />
+            
+            {showAddProgrammateur && programmateursList.length > 0 && (
+              <button
+                type="button"
+                className={styles.cancelAddButton}
+                onClick={() => {
+                  setShowAddProgrammateur(false);
+                  setProgSearchTerm('');
+                }}
+              >
+                Annuler
+              </button>
+            )}
           </>
         )}
       </div>

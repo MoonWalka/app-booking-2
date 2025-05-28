@@ -5,20 +5,8 @@ import SelectedEntityCard from './SelectedEntityCard';
 import CardSection from '@/components/ui/CardSection';
 
 /**
- * LieuSearchSection - Section de recherche et sélection de lieu
- * 
- * @param {Object} props - Les propriétés du composant
- * @param {string} props.lieuSearchTerm - Terme de recherche pour le lieu
- * @param {Function} props.setLieuSearchTerm - Fonction pour mettre à jour le terme de recherche
- * @param {Array} props.lieuResults - Résultats de la recherche de lieux
- * @param {boolean} props.showLieuResults - Indique si les résultats doivent être affichés
- * @param {Function} props.setShowLieuResults - Fonction pour contrôler l'affichage des résultats
- * @param {boolean} props.isSearchingLieux - Indique si une recherche est en cours
- * @param {Object} props.lieuDropdownRef - Référence pour gérer le clic en dehors du dropdown
- * @param {Object} props.selectedLieu - Lieu sélectionné
- * @param {Function} props.handleSelectLieu - Fonction pour sélectionner un lieu
- * @param {Function} props.handleRemoveLieu - Fonction pour désélectionner le lieu
- * @param {Function} props.handleCreateLieu - Fonction pour créer un nouveau lieu
+ * LieuSearchSection - Section de recherche et sélection de lieu(x)
+ * Permet d'ajouter plusieurs lieux sous forme de liste
  */
 const LieuSearchSection = React.memo(({ 
   lieuSearchTerm, 
@@ -33,9 +21,41 @@ const LieuSearchSection = React.memo(({
   handleRemoveLieu,
   handleCreateLieu
 }) => {
+  // État local pour gérer la liste des lieux
+  const [lieuxList, setLieuxList] = React.useState([]);
+  const [showAddLieu, setShowAddLieu] = React.useState(true);
+  
+  // Fonction pour ajouter un lieu à la liste
+  const handleAddLieuToList = (lieu) => {
+    if (lieu && !lieuxList.find(l => l.id === lieu.id)) {
+      setLieuxList([...lieuxList, lieu]);
+      setLieuSearchTerm('');
+      setShowAddLieu(false);
+      // Toujours garder le premier lieu comme selectedLieu pour la compatibilité
+      if (lieuxList.length === 0) {
+        handleSelectLieu(lieu);
+      }
+    }
+  };
+  
+  // Fonction pour retirer un lieu de la liste
+  const handleRemoveLieuFromList = (lieuId) => {
+    const updatedList = lieuxList.filter(l => l.id !== lieuId);
+    setLieuxList(updatedList);
+    // Si on retire le lieu principal, mettre à jour
+    if (selectedLieu && selectedLieu.id === lieuId) {
+      if (updatedList.length > 0) {
+        handleSelectLieu(updatedList[0]);
+      } else {
+        handleRemoveLieu();
+        setShowAddLieu(true);
+      }
+    }
+  };
+  
   return (
     <CardSection
-      title="Lieu"
+      title="Lieu(x)"
       icon={<i className="bi bi-geo-alt"></i>}
       isEditing={true}
       hasDropdown={true}
@@ -43,9 +63,63 @@ const LieuSearchSection = React.memo(({
       headerClassName="lieu required"
     >
       <div className={styles.cardBody} ref={lieuDropdownRef}>
-        {!selectedLieu ? (
+        {/* Afficher la liste des lieux ajoutés */}
+        {lieuxList.length > 0 && (
           <>
-            <label className={styles.formLabel}>Rechercher un lieu</label>
+            <label className={styles.formLabel}>
+              {lieuxList.length === 1 ? 'Lieu sélectionné' : `${lieuxList.length} lieux sélectionnés`}
+            </label>
+            <div className={styles.lieuxList}>
+              {lieuxList.map((lieu, index) => (
+                <div key={lieu.id} className={styles.lieuItem}>
+                  <SelectedEntityCard
+                    entity={lieu}
+                    entityType="lieu"
+                    onRemove={() => handleRemoveLieuFromList(lieu.id)}
+                    primaryField="nom"
+                    secondaryFields={[
+                      { 
+                        icon: "bi-geo-alt-fill", 
+                        value: lieu.adresse, 
+                        suffix: lieu.codePostal && lieu.ville
+                          ? `, ${lieu.codePostal} ${lieu.ville}`
+                          : ''
+                      },
+                      { 
+                        icon: "bi-people-fill", 
+                        prefix: "Capacité: ", 
+                        value: lieu.capacite || 'Non spécifiée',
+                        suffix: lieu.capacite ? " personnes" : ""
+                      }
+                    ]}
+                  />
+                  {index === 0 && lieuxList.length > 1 && (
+                    <span className={styles.principalBadge}>Principal</span>
+                  )}
+                </div>
+              ))}
+            </div>
+            
+            {/* Bouton pour ajouter un autre lieu */}
+            {!showAddLieu && (
+              <button
+                type="button"
+                className={styles.addAnotherButton}
+                onClick={() => setShowAddLieu(true)}
+              >
+                <i className="bi bi-plus-circle"></i>
+                Ajouter un autre lieu
+              </button>
+            )}
+          </>
+        )}
+        
+        {/* Formulaire de recherche/ajout */}
+        {(lieuxList.length === 0 || showAddLieu) && (
+          <>
+            <label className={styles.formLabel}>
+              {lieuxList.length === 0 ? 'Rechercher un lieu' : 'Ajouter un autre lieu'}
+            </label>
             <SearchDropdown
               searchTerm={lieuSearchTerm}
               setSearchTerm={setLieuSearchTerm}
@@ -54,8 +128,8 @@ const LieuSearchSection = React.memo(({
               setShowResults={setShowLieuResults}
               isSearching={isSearchingLieux}
               placeholder="Rechercher un lieu par nom..."
-              onSelect={handleSelectLieu}
-              onCreate={() => handleCreateLieu(lieuSearchTerm, handleSelectLieu)}
+              onSelect={handleAddLieuToList}
+              onCreate={() => handleCreateLieu(handleAddLieuToList)}
               createButtonText="Nouveau lieu"
               emptyResultsText="Aucun lieu trouvé"
               entityType="lieu"
@@ -63,31 +137,19 @@ const LieuSearchSection = React.memo(({
             <small className={styles.formHelpText}>
               Tapez au moins 2 caractères pour rechercher un lieu par nom.
             </small>
-          </>
-        ) : (
-          <>
-            <label className={styles.formLabel}>Lieu sélectionné</label>
-            <SelectedEntityCard
-              entity={selectedLieu}
-              entityType="lieu"
-              onRemove={handleRemoveLieu}
-              primaryField="nom"
-              secondaryFields={[
-                { 
-                  icon: "bi-geo-alt-fill", 
-                  value: selectedLieu.adresse, 
-                  suffix: selectedLieu.codePostal && selectedLieu.ville
-                    ? `, ${selectedLieu.codePostal} ${selectedLieu.ville}`
-                    : ''
-                },
-                { 
-                  icon: "bi-people-fill", 
-                  prefix: "Capacité: ", 
-                  value: selectedLieu.capacite || 'Non spécifiée',
-                  suffix: selectedLieu.capacite ? " personnes" : ""
-                }
-              ]}
-            />
+            
+            {showAddLieu && lieuxList.length > 0 && (
+              <button
+                type="button"
+                className={styles.cancelAddButton}
+                onClick={() => {
+                  setShowAddLieu(false);
+                  setLieuSearchTerm('');
+                }}
+              >
+                Annuler
+              </button>
+            )}
           </>
         )}
       </div>

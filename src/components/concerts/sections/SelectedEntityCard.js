@@ -19,6 +19,36 @@ const SelectedEntityCard = ({
   primaryField = 'nom',
   secondaryFields = []
 }) => {
+  const [showNewBadge, setShowNewBadge] = React.useState(false);
+  const [prevEntityId, setPrevEntityId] = React.useState(null);
+  
+  // Effet pour afficher le badge "Nouveau" lors de l'ajout d'une nouvelle entité
+  React.useEffect(() => {
+    if (entity && entity.id !== prevEntityId) {
+      // Vérifier si l'entité a été créée récemment (dans les 2 dernières minutes)
+      const createdAt = entity.createdAt;
+      const isNewEntity = createdAt && 
+        (createdAt.seconds ? 
+          // Format Firestore Timestamp
+          (Date.now() - createdAt.seconds * 1000) < 120000 :
+          // Format Date
+          (Date.now() - new Date(createdAt).getTime()) < 120000
+        );
+      
+      if (isNewEntity) {
+        setShowNewBadge(true);
+        // Masquer le badge après 5 secondes
+        const timer = setTimeout(() => {
+          setShowNewBadge(false);
+        }, 5000);
+        
+        return () => clearTimeout(timer);
+      }
+      
+      setPrevEntityId(entity.id);
+    }
+  }, [entity, prevEntityId]);
+  
   if (!entity) return null;
   
   // Déterminer l'icône en fonction du type d'entité
@@ -28,14 +58,17 @@ const SelectedEntityCard = ({
   if (entityType === 'artiste') entityIcon = 'bi-music-note-beamed';
 
   return (
-    <div className={styles.entityCard}>
+    <div className={`${styles.entityCard} ${styles[`entityCard--${entityType}`]}`}>
       <div className={styles.entityHeader}>
         <div className={styles.entityTitle}>
-          <div className={styles.entityIcon}>
+          <div className={`${styles.entityIcon} ${styles[`entityIcon--${entityType}`]}`}>
             <i className={`bi ${entityIcon}`}></i>
           </div>
           <h4 className={styles.entityName}>
             {entity[primaryField]}
+            {showNewBadge && (
+              <span className={`${styles.newBadge} ${styles[`newBadge--${entityType}`]}`}>Nouveau</span>
+            )}
           </h4>
         </div>
         

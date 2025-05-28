@@ -49,19 +49,17 @@ const ConcertFormDesktop = () => {
     programmateur,
     handleLieuChange,
     handleArtisteChange,
-    updateFormData,
-    loadRelatedEntity
+    setFormData
   } = formHook;
 
   // Gestion programmateur via optimized hook
   const handleProgrammateurChange = useCallback((prog) => {
     if (prog) {
-      updateFormData(prev => ({ ...prev, programmateurId: prog.id, programmateurNom: prog.nom }));
-      loadRelatedEntity('programmateur', prog.id);
+      setFormData(prev => ({ ...prev, programmateurId: prog.id, programmateurNom: prog.nom }));
     } else {
-      updateFormData(prev => ({ ...prev, programmateurId: null, programmateurNom: '' }));
+      setFormData(prev => ({ ...prev, programmateurId: null, programmateurNom: '' }));
     }
-  }, [updateFormData, loadRelatedEntity]);
+  }, [setFormData]);
 
   const removeLieu = useCallback(() => {
     handleLieuChange(null);

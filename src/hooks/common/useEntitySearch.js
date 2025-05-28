@@ -220,11 +220,23 @@ export const useEntitySearch = (options) => {
   };
 
   // Fonction pour créer une nouvelle entité
-  const handleCreate = async (additionalData = {}) => {
+  const handleCreate = async (callbackOrAdditionalData = {}, additionalData = {}) => {
+    // Gérer les paramètres - si le premier paramètre est une fonction, c'est le callback
+    let callback = null;
+    let entityAdditionalData = {};
+    
+    if (typeof callbackOrAdditionalData === 'function') {
+      callback = callbackOrAdditionalData;
+      entityAdditionalData = additionalData;
+    } else {
+      entityAdditionalData = callbackOrAdditionalData;
+    }
+    
     console.log(`[DEBUG][useEntitySearch] handleCreate appelé pour ${entityType}`, {
       allowCreate,
       searchTerm,
-      additionalData
+      callback: !!callback,
+      entityAdditionalData
     });
     
     if (!allowCreate) {
@@ -246,7 +258,7 @@ export const useEntitySearch = (options) => {
         nomLowercase: searchTerm.trim().toLowerCase(),
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
-        ...additionalData
+        ...entityAdditionalData
       };
       
       
@@ -259,7 +271,7 @@ export const useEntitySearch = (options) => {
             codePostal: '',
             ville: '',
             capacite: '',
-            ...additionalData
+            ...entityAdditionalData
           };
           break;
         case 'programmateurs':
@@ -269,7 +281,7 @@ export const useEntitySearch = (options) => {
             telephone: '',
             structure: '',
             concertsAssocies: [],
-            ...additionalData
+            ...entityAdditionalData
           };
           break;
         case 'artistes':
@@ -284,9 +296,9 @@ export const useEntitySearch = (options) => {
               siteWeb: '',
               instagram: '',
               facebook: '',
-              ...additionalData.contacts
+              ...entityAdditionalData.contacts
             },
-            ...additionalData
+            ...entityAdditionalData
           };
           break;
         case 'concerts':
@@ -298,7 +310,7 @@ export const useEntitySearch = (options) => {
             lieuNom: null,
             artisteId: null,
             artisteNom: null,
-            ...additionalData
+            ...entityAdditionalData
           };
           break;
         case 'structures':
@@ -309,7 +321,7 @@ export const useEntitySearch = (options) => {
             ville: '',
             siren: '',
             siret: '',
-            ...additionalData
+            ...entityAdditionalData
           };
           break;
         default:
@@ -334,9 +346,99 @@ export const useEntitySearch = (options) => {
       setSelectedEntity(newEntityWithId);
       setShowResults(false);
       
-      if (onSelect) {
+      // Si un callback est fourni, l'appeler avec l'entité créée
+      if (callback) {
+        callback(newEntityWithId);
+      } else if (onSelect) {
         onSelect(newEntityWithId);
       }
+      
+      // Afficher une alerte de succès
+      const entityName = entityType.slice(0, -1); // Enlever le 's' pour avoir le singulier
+      const entityNameDisplay = entityName.charAt(0).toUpperCase() + entityName.slice(1);
+      const alertMessage = `✅ ${entityNameDisplay} "${searchTerm.trim()}" ajouté avec succès !`;
+      
+      // Définir les couleurs selon le type d'entité
+      let backgroundColor = '#28a745'; // Vert par défaut
+      let icon = 'bi-check-circle-fill';
+      
+      switch (entityType) {
+        case 'lieux':
+          backgroundColor = '#17a2b8'; // Bleu info
+          icon = 'bi-geo-alt-fill';
+          break;
+        case 'programmateurs':
+          backgroundColor = '#6f42c1'; // Violet
+          icon = 'bi-person-fill';
+          break;
+        case 'artistes':
+          backgroundColor = '#fd7e14'; // Orange
+          icon = 'bi-music-note-beamed';
+          break;
+        case 'structures':
+          backgroundColor = '#20c997'; // Teal
+          icon = 'bi-building';
+          break;
+        default:
+          break;
+      }
+      
+      // Créer et afficher l'alerte temporaire
+      const alertDiv = document.createElement('div');
+      alertDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background-color: ${backgroundColor};
+        color: white;
+        padding: 16px 24px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 9999;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        animation: slideIn 0.3s ease-out;
+      `;
+      alertDiv.innerHTML = `<i class="bi ${icon}"></i> ${alertMessage}`;
+      
+      // Ajouter l'animation CSS
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes slideIn {
+          from {
+            transform: translateX(100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(0);
+            opacity: 1;
+          }
+        }
+        @keyframes slideOut {
+          from {
+            transform: translateX(0);
+            opacity: 1;
+          }
+          to {
+            transform: translateX(100%);
+            opacity: 0;
+          }
+        }
+      `;
+      document.head.appendChild(style);
+      
+      document.body.appendChild(alertDiv);
+      
+      // Retirer l'alerte après 3 secondes
+      setTimeout(() => {
+        alertDiv.style.animation = 'slideOut 0.3s ease-in forwards';
+        setTimeout(() => {
+          document.body.removeChild(alertDiv);
+          document.head.removeChild(style);
+        }, 300);
+      }, 3000);
       
       return newEntityWithId;
     } catch (error) {

@@ -65,7 +65,7 @@ export const ProgrammateurHeader = ({
                   variant="success"
                   onClick={onSave}
                   disabled={isSubmitting || !canSave}
-                  iconStart={isSubmitting ? null : "check-lg"}
+                  icon={isSubmitting ? null : <i className="bi bi-check-circle"></i>}
                   type="submit"
                   className={styles.actionBtn}
                 >
@@ -85,7 +85,7 @@ export const ProgrammateurHeader = ({
                     variant="danger"
                     onClick={onDelete}
                     disabled={isSubmitting}
-                    iconStart="trash"
+                    icon={<i className="bi bi-trash"></i>}
                     className={styles.actionBtn}
                   >
                     Supprimer
@@ -96,7 +96,7 @@ export const ProgrammateurHeader = ({
                   variant="secondary"
                   onClick={onCancel}
                   disabled={isSubmitting}
-                  iconStart="x-lg"
+                  icon={<i className="bi bi-x-circle"></i>}
                   className={styles.actionBtn}
                 >
                   Annuler
@@ -108,7 +108,7 @@ export const ProgrammateurHeader = ({
                 <Button
                   variant="secondary"
                   onClick={navigateToList}
-                  iconStart="arrow-left"
+                  icon={<i className="bi bi-arrow-left"></i>}
                   className={styles.actionBtn}
                 >
                   Retour
@@ -117,7 +117,7 @@ export const ProgrammateurHeader = ({
                 <Button
                   variant="outline-primary"
                   onClick={onEdit}
-                  iconStart="pencil"
+                  icon={<i className="bi bi-pencil"></i>}
                   className={styles.actionBtn}
                 >
                   Modifier

@@ -278,10 +278,13 @@ export const useConcertForm = (concertId) => {
 
   // Wrapper pour handleSubmit avec logs détaillés
   const handleSubmitWithLogs = useCallback(async (e) => {
-    console.log("[useConcertForm] handleSubmit appelé");
+    console.log("[useConcertForm] handleSubmitWithLogs appelé");
+    console.log("[useConcertForm] Event:", e);
     console.log("[useConcertForm] formData actuel:", formHook.formData);
     console.log("[useConcertForm] isNewConcert:", isNewConcert);
     console.log("[useConcertForm] generatedId:", generatedIdRef.current);
+    console.log("[useConcertForm] formHook.handleSubmit existe:", !!formHook.handleSubmit);
+    console.log("[useConcertForm] Type de formHook.handleSubmit:", typeof formHook.handleSubmit);
     
     try {
       const result = await formHook.handleSubmit(e);
@@ -289,6 +292,7 @@ export const useConcertForm = (concertId) => {
       return result;
     } catch (error) {
       console.error("[useConcertForm] Erreur dans handleSubmit:", error);
+      console.error("[useConcertForm] Stack trace:", error.stack);
       throw error;
     }
   }, [formHook, isNewConcert]);

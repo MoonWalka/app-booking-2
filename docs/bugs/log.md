@@ -1,217 +1,102 @@
-[Warning] Timer "⏱️ Initialisation hooks ConcertsList" already exists (bundle.js, line 312978)
-[Log] 🔄 Initialisation du hook useConcertListData (bundle.js, line 383739)
-[Debug] ⏱️ Initialisation états useConcertListData: 0.161ms (bundle.js, line 363588)
-[Warning] Timer "⏱️ Initialisation hooks ConcertListData" does not exist (bundle.js, line 312991)
-[Debug] ⏱️ Initialisation ConcertFilters: 0.026ms (bundle.js, line 313001)
-[Warning] Timer "⏱️ Initialisation hooks ConcertsList" already exists (bundle.js, line 312978)
-[Log] 🔄 Initialisation du hook useConcertListData (bundle.js, line 383739)
-[Debug] ⏱️ Initialisation états useConcertListData: 0.090ms (bundle.js, line 363588)
-[Warning] Timer "⏱️ Initialisation hooks ConcertListData" does not exist (bundle.js, line 312991)
-[Debug] ⏱️ Initialisation ConcertFilters: 0.019ms (bundle.js, line 313001)
-[Log] ⏱️ Début du montage ConcertsList: – 124375 (bundle.js, line 312971)
-[Log] 🔄 Effet initial - déclenchement du premier chargement (bundle.js, line 383739)
-[Log] 📥 Chargement de concerts (première page)... (bundle.js, line 383779)
-[Log] ⏱️ Durée de vie du composant ConcertsList: – 1 – "ms" (bundle.js, line 312973)
-[Log] ⏱️ Début du montage ConcertsList: – 124376 (bundle.js, line 312971)
-[Warning] Timer "⏱️ Initialisation hooks ConcertsList" already exists (bundle.js, line 312978)
-[Log] 🔄 Initialisation du hook useConcertListData (bundle.js, line 383739)
-[Debug] ⏱️ Initialisation états useConcertListData: 0.063ms (bundle.js, line 363588)
-[Warning] Timer "⏱️ Initialisation hooks ConcertListData" does not exist (bundle.js, line 312991)
-[Debug] ⏱️ Initialisation ConcertFilters: 0.011ms (bundle.js, line 313001)
-[Warning] Timer "⏱️ Initialisation hooks ConcertsList" already exists (bundle.js, line 312978)
-[Log] 🔄 Initialisation du hook useConcertListData (bundle.js, line 383739)
-[Debug] ⏱️ Initialisation états useConcertListData: 0.055ms (bundle.js, line 363588)
-[Warning] Timer "⏱️ Initialisation hooks ConcertListData" does not exist (bundle.js, line 312991)
-[Debug] ⏱️ Initialisation ConcertFilters: 0.008ms (bundle.js, line 313001)
-[Warning] Timer "⏱️ Initialisation hooks ConcertsList" already exists (bundle.js, line 312978)
-[Log] 🔄 Initialisation du hook useConcertListData (bundle.js, line 383739)
-[Debug] ⏱️ Initialisation états useConcertListData: 0.066ms (bundle.js, line 363588)
-[Warning] Timer "⏱️ Initialisation hooks ConcertListData" does not exist (bundle.js, line 312991)
-[Debug] ⏱️ Initialisation ConcertFilters: 0.010ms (bundle.js, line 313001)
-[Warning] Timer "⏱️ Initialisation hooks ConcertsList" already exists (bundle.js, line 312978)
-[Log] 🔄 Initialisation du hook useConcertListData (bundle.js, line 383739)
-[Debug] ⏱️ Initialisation états useConcertListData: 0.033ms (bundle.js, line 363588)
-[Warning] Timer "⏱️ Initialisation hooks ConcertListData" does not exist (bundle.js, line 312991)
-[Debug] ⏱️ Initialisation ConcertFilters: 0.004ms (bundle.js, line 313001)
-[Log] 📥 Chargement de batch lieux (2 items)... (bundle.js, line 383779)
-[Log] 📥 Chargement de batch programmateurs (2 items)... (bundle.js, line 383779)
-[Warning] Timer "⏱️ Initialisation hooks ConcertsList" already exists (bundle.js, line 312978)
-[Log] 🔄 Initialisation du hook useConcertListData (bundle.js, line 383739)
-[Debug] ⏱️ Initialisation états useConcertListData: 0.069ms (bundle.js, line 363588)
-[Warning] Timer "⏱️ Initialisation hooks ConcertListData" does not exist (bundle.js, line 312991)
-[Debug] ⏱️ Initialisation ConcertFilters: 0.009ms (bundle.js, line 313001)
-[Warning] Timer "⏱️ Initialisation hooks ConcertsList" already exists (bundle.js, line 312978)
-[Log] 🔄 Initialisation du hook useConcertListData (bundle.js, line 383739)
-[Debug] ⏱️ Initialisation états useConcertListData: 0.084ms (bundle.js, line 363588)
-[Warning] Timer "⏱️ Initialisation hooks ConcertListData" does not exist (bundle.js, line 312991)
-[Debug] ⏱️ Initialisation ConcertFilters: 0.026ms (bundle.js, line 313001)
-[Log] ⏱️ Durée de vie du composant ConcertsList: – 295 – "ms" (bundle.js, line 312973)
-[Log] [CACHE HYBRIDE] Stockage lieux_nsFf2RdsRQqWIEB9tc4m (bundle.js, line 383739)
-[Log] [CACHE HYBRIDE] Stockage lieux_uWeWFXovfIWtR9ZBdWmG (bundle.js, line 383739)
-[Log] 🕒 Requête batch lieux: 196.00ms – {count: 2, cached: 0, fetched: 2} (bundle.js, line 383762)
-[Log] [CACHE HYBRIDE] Stockage programmateurs_IaXMEVGLdBCAhoKHpOpw (bundle.js, line 383739)
-[Log] [CACHE HYBRIDE] Stockage programmateurs_wH1GzFXf6W0GIFczbQyG (bundle.js, line 383739)
-[Log] 🕒 Requête batch programmateurs: 203.00ms – {count: 2, cached: 0, fetched: 2} (bundle.js, line 383762)
-[Log] 📥 Chargement de formulaires et contrats... (bundle.js, line 383779)
-[Log] 🕒 Requête formulaires et contrats: 337.00ms – {} (bundle.js, line 383762)
-[Log] ✅ Chargement terminé en 643.00ms pour concerts (première page) (bundle.js, line 383793)
-[Debug] ⏱️ Premier chargement des concerts: 642.918ms (bundle.js, line 363952)
-[Log] 🕒 Temps total initialisation hook: 650.00ms – {} (bundle.js, line 383762)
-[Error] Warning: Cannot update a component (`UnifiedDebugDashboard`) while rendering a different component (`Routes`). To locate the bad setState() call inside `Routes`, follow the stack trace as described in https://reactjs.org/link/setstate-in-render
-Routes@http://localhost:3000/static/js/bundle.js:279820:12
-div
-Container@http://localhost:3000/static/js/bundle.js:216050:11
-ContratsPage@http://localhost:3000/static/js/bundle.js:378595:82
-RenderedRoute@http://localhost:3000/static/js/bundle.js:279087:11
-Routes@http://localhost:3000/static/js/bundle.js:279820:12
-Suspense
-PrivateRoute@http://localhost:3000/static/js/bundle.js:298696:11
-RenderedRoute@http://localhost:3000/static/js/bundle.js:279087:11
-Outlet@http://localhost:3000/static/js/bundle.js:279731:25
-main
-div
-DesktopLayout@http://localhost:3000/static/js/bundle.js:307030:11
-Layout@http://localhost:3000/static/js/bundle.js:305432:88
-RenderedRoute@http://localhost:3000/static/js/bundle.js:279087:11
-Routes@http://localhost:3000/static/js/bundle.js:279820:12
-Suspense
-ModalProvider@http://localhost:3000/static/js/bundle.js:355025:11
-ParametresProvider@http://localhost:3000/static/js/bundle.js:355206:11
-AuthProvider@http://localhost:3000/static/js/bundle.js:354803:11
-Router@http://localhost:3000/static/js/bundle.js:279759:12
-BrowserRouter@http://localhost:3000/static/js/bundle.js:277656:12
-ErrorBoundary@http://localhost:3000/static/js/bundle.js:298583:10
-App
-	(fonction anonyme) (bundle.js:329942)
-	printWarning (bundle.js:222914)
-	error (bundle.js:222891)
-	warnAboutRenderPhaseUpdatesInDEV (bundle.js:246596)
-	scheduleUpdateOnFiber (bundle.js:244890)
-	dispatchSetState (bundle.js:237336)
-	(fonction anonyme) (bundle.js:329678)
-	(fonction anonyme) (bundle.js:329949)
-	warning (bundle.js:100056)
-	warningOnce (bundle.js:279494)
-	useRoutesImpl (bundle.js:278929)
-	renderWithHooks (bundle.js:236308)
-	mountIndeterminateComponent (bundle.js:240279)
-	beginWork$1 (bundle.js:246541)
-	performUnitOfWork (bundle.js:245811)
-	workLoopSync (bundle.js:245734)
-	renderRootSync (bundle.js:245707)
-	performSyncWorkOnRoot (bundle.js:245399)
-	flushSyncCallbacks (bundle.js:233401)
-	(fonction anonyme) (bundle.js:245031)
-[Warning] You rendered descendant <Routes> (or called `useRoutes()`) at "/contrats/" (under <Route path="">) but the parent route path has no trailing "*". This means if you navigate deeper, the parent won't match anymore and therefore the child routes will never render. (bundle.js, line 329951)
-
-Please change the parent <Route path=""> to <Route path="/*">.
-[Warning] Timer "⏱️ Initialisation hooks ConcertsList" already exists (bundle.js, line 312978)
-[Log] 🔄 Initialisation du hook useConcertListData (bundle.js, line 383739)
-[Debug] ⏱️ Initialisation états useConcertListData: 0.217ms (bundle.js, line 363588)
-[Warning] Timer "⏱️ Initialisation hooks ConcertListData" does not exist (bundle.js, line 312991)
-[Debug] ⏱️ Initialisation ConcertFilters: 0.022ms (bundle.js, line 313001)
-[Warning] Timer "⏱️ Initialisation hooks ConcertsList" already exists (bundle.js, line 312978)
-[Log] 🔄 Initialisation du hook useConcertListData (bundle.js, line 383739)
-[Debug] ⏱️ Initialisation états useConcertListData: 0.106ms (bundle.js, line 363588)
-[Warning] Timer "⏱️ Initialisation hooks ConcertListData" does not exist (bundle.js, line 312991)
-[Debug] ⏱️ Initialisation ConcertFilters: 0.009ms (bundle.js, line 313001)
-[Log] ⏱️ Début du montage ConcertsList: – 139426.00000000003 (bundle.js, line 312971)
-[Log] 🔄 Effet initial - déclenchement du premier chargement (bundle.js, line 383739)
-[Log] 📥 Chargement de concerts (première page)... (bundle.js, line 383779)
-[Log] ⏱️ Durée de vie du composant ConcertsList: – 0.9999999999708962 – "ms" (bundle.js, line 312973)
-[Log] ⏱️ Début du montage ConcertsList: – 139427 (bundle.js, line 312971)
-[Warning] Timer "⏱️ Initialisation hooks ConcertsList" already exists (bundle.js, line 312978)
-[Log] 🔄 Initialisation du hook useConcertListData (bundle.js, line 383739)
-[Debug] ⏱️ Initialisation états useConcertListData: 0.099ms (bundle.js, line 363588)
-[Warning] Timer "⏱️ Initialisation hooks ConcertListData" does not exist (bundle.js, line 312991)
-[Debug] ⏱️ Initialisation ConcertFilters: 0.009ms (bundle.js, line 313001)
-[Warning] Timer "⏱️ Initialisation hooks ConcertsList" already exists (bundle.js, line 312978)
-[Log] 🔄 Initialisation du hook useConcertListData (bundle.js, line 383739)
-[Debug] ⏱️ Initialisation états useConcertListData: 0.059ms (bundle.js, line 363588)
-[Warning] Timer "⏱️ Initialisation hooks ConcertListData" does not exist (bundle.js, line 312991)
-[Debug] ⏱️ Initialisation ConcertFilters: 0.005ms (bundle.js, line 313001)
-[Warning] Timer "⏱️ Initialisation hooks ConcertsList" already exists (bundle.js, line 312978)
-[Log] 🔄 Initialisation du hook useConcertListData (bundle.js, line 383739)
-[Debug] ⏱️ Initialisation états useConcertListData: 0.069ms (bundle.js, line 363588)
-[Warning] Timer "⏱️ Initialisation hooks ConcertListData" does not exist (bundle.js, line 312991)
-[Debug] ⏱️ Initialisation ConcertFilters: 0.006ms (bundle.js, line 313001)
-[Warning] Timer "⏱️ Initialisation hooks ConcertsList" already exists (bundle.js, line 312978)
-[Log] 🔄 Initialisation du hook useConcertListData (bundle.js, line 383739)
-[Debug] ⏱️ Initialisation états useConcertListData: 0.048ms (bundle.js, line 363588)
-[Warning] Timer "⏱️ Initialisation hooks ConcertListData" does not exist (bundle.js, line 312991)
-[Debug] ⏱️ Initialisation ConcertFilters: 0.004ms (bundle.js, line 313001)
-[Log] [CACHE HYBRIDE] Tous les lieux trouvés en cache (2 items) (bundle.js, line 383739)
-[Log] [CACHE HYBRIDE] Tous les programmateurs trouvés en cache (2 items) (bundle.js, line 383739)
-[Log] 📥 Chargement de formulaires et contrats... (bundle.js, line 383779)
-[Warning] Timer "⏱️ Initialisation hooks ConcertsList" already exists (bundle.js, line 312978)
-[Log] 🔄 Initialisation du hook useConcertListData (bundle.js, line 383739)
-[Debug] ⏱️ Initialisation états useConcertListData: 0.062ms (bundle.js, line 363588)
-[Warning] Timer "⏱️ Initialisation hooks ConcertListData" does not exist (bundle.js, line 312991)
-[Debug] ⏱️ Initialisation ConcertFilters: 0.007ms (bundle.js, line 313001)
-[Warning] Timer "⏱️ Initialisation hooks ConcertsList" already exists (bundle.js, line 312978)
-[Log] 🔄 Initialisation du hook useConcertListData (bundle.js, line 383739)
-[Debug] ⏱️ Initialisation états useConcertListData: 0.044ms (bundle.js, line 363588)
-[Warning] Timer "⏱️ Initialisation hooks ConcertListData" does not exist (bundle.js, line 312991)
-[Debug] ⏱️ Initialisation ConcertFilters: 0.003ms (bundle.js, line 313001)
-[Log] Concerts initiaux: 2, Filtrés: 0 (bundle.js, line 313007)
-[Debug] ⏱️ Filtrage des concerts: 0.049ms (bundle.js, line 313008)
-[Warning] Timer "⏱️ Initialisation hooks ConcertsList" already exists (bundle.js, line 312978)
-[Log] 🔄 Initialisation du hook useConcertListData (bundle.js, line 383739)
-[Debug] ⏱️ Initialisation états useConcertListData: 0.049ms (bundle.js, line 363588)
-[Warning] Timer "⏱️ Initialisation hooks ConcertListData" does not exist (bundle.js, line 312991)
-[Debug] ⏱️ Initialisation ConcertFilters: 0.004ms (bundle.js, line 313001)
-[Warning] Timer "⏱️ Initialisation hooks ConcertsList" already exists (bundle.js, line 312978)
-[Log] 🔄 Initialisation du hook useConcertListData (bundle.js, line 383739)
-[Debug] ⏱️ Initialisation états useConcertListData: 0.039ms (bundle.js, line 363588)
-[Warning] Timer "⏱️ Initialisation hooks ConcertListData" does not exist (bundle.js, line 312991)
-[Debug] ⏱️ Initialisation ConcertFilters: 0.002ms (bundle.js, line 313001)
-[Log] Concerts initiaux: 2, Filtrés: 2 (bundle.js, line 313007)
-[Debug] ⏱️ Filtrage des concerts: 0.040ms (bundle.js, line 313008)
-[Warning] Timer "⏱️ Initialisation hooks ConcertsList" already exists (bundle.js, line 312978)
-[Log] 🔄 Initialisation du hook useConcertListData (bundle.js, line 383739)
-[Debug] ⏱️ Initialisation états useConcertListData: 0.100ms (bundle.js, line 363588)
-[Warning] Timer "⏱️ Initialisation hooks ConcertListData" does not exist (bundle.js, line 312991)
-[Debug] ⏱️ Initialisation ConcertFilters: 0.009ms (bundle.js, line 313001)
-[Warning] Timer "⏱️ Initialisation hooks ConcertsList" already exists (bundle.js, line 312978)
-[Log] 🔄 Initialisation du hook useConcertListData (bundle.js, line 383739)
-[Debug] ⏱️ Initialisation états useConcertListData: 0.062ms (bundle.js, line 363588)
-[Warning] Timer "⏱️ Initialisation hooks ConcertListData" does not exist (bundle.js, line 312991)
-[Debug] ⏱️ Initialisation ConcertFilters: 0.005ms (bundle.js, line 313001)
-[Log] 🕒 Requête formulaires et contrats: 312.00ms – {} (bundle.js, line 383762)
-[Log] ✅ Chargement terminé en 424.00ms pour concerts (première page) (bundle.js, line 383793)
-[Debug] ⏱️ Premier chargement des concerts: 424.125ms (bundle.js, line 363952)
-[Log] 🕒 Temps total initialisation hook: 427.00ms – {} (bundle.js, line 383762)
-[Warning] Timer "⏱️ Initialisation hooks ConcertsList" already exists (bundle.js, line 312978)
-[Log] 🔄 Initialisation du hook useConcertListData (bundle.js, line 383739)
-[Debug] ⏱️ Initialisation états useConcertListData: 0.064ms (bundle.js, line 363588)
-[Warning] Timer "⏱️ Initialisation hooks ConcertListData" does not exist (bundle.js, line 312991)
-[Debug] ⏱️ Initialisation ConcertFilters: 0.008ms (bundle.js, line 313001)
-[Warning] Timer "⏱️ Initialisation hooks ConcertsList" already exists (bundle.js, line 312978)
-[Log] 🔄 Initialisation du hook useConcertListData (bundle.js, line 383739)
-[Debug] ⏱️ Initialisation états useConcertListData: 0.057ms (bundle.js, line 363588)
-[Warning] Timer "⏱️ Initialisation hooks ConcertListData" does not exist (bundle.js, line 312991)
-[Debug] ⏱️ Initialisation ConcertFilters: 0.004ms (bundle.js, line 313001)
-[Debug] ⏱️ Rendu ConcertsTable: 0.054ms (bundle.js, line 320064)
-[Info] [INFO] [useGenericEntityDetails] useGenericEntityDetails #1 initialisé pour concert:con-1747960488398-mwb0vm – "" (bundle.js, line 385491)
-[Info] [INFO] [useGenericEntityDetails] useGenericEntityDetails #2 initialisé pour concert:con-1747960488398-mwb0vm – "" (bundle.js, line 385491)
-[Log] ⏱️ Durée de vie du composant ConcertsList: – 1422 – "ms" (bundle.js, line 312973)
-[Debug] ⏱️ Rendu ConcertsTable: 984.491ms (bundle.js, line 320064)
-[Info] [INFO] [useGenericEntityDetails] Réinitialisation des états pour nouvel ID: concert:con-1747960488398-mwb0vm – "" (bundle.js, line 385491)
-[Log] [LOG useEffect:chargement initial] id: – "con-1747960488398-mwb0vm" – "entityType:" – "concert" (bundle.js, line 360028)
-[Info] [INFO] [useGenericEntityDetails] Chargement initial pour concert:con-1747960488398-mwb0vm – "" (bundle.js, line 385491)
-[Log] Entrée dans fetchEntity (bundle.js, line 359421)
-[Info] [INFO] [useGenericEntityDetails] Requête ponctuelle pour concert:con-1747960488398-mwb0vm – "" (bundle.js, line 385491)
-[Info] [INFO] [useGenericEntityDetails] Démontage du hook pour concert:con-1747960488398-mwb0vm – "" (bundle.js, line 385491)
-[Log] [LOG useEffect:chargement initial] id: – "con-1747960488398-mwb0vm" – "entityType:" – "concert" (bundle.js, line 360028)
-[Info] [INFO] [useGenericEntityDetails] Chargement initial pour concert:con-1747960488398-mwb0vm – "" (bundle.js, line 385491)
-[Log] Entrée dans fetchEntity (bundle.js, line 359421)
-[Info] [INFO] [useGenericEntityDetails] Requête déjà en cours pour concert:con-1747960488398-mwb0vm, ignoré – "" (bundle.js, line 385491)
-[Info] [INFO] [useGenericEntityDetails] useGenericEntityDetails #2 initialisé pour concert:con-1747960488398-mwb0vm – "" (bundle.js, line 385491)
-[Info] [INFO] [useGenericEntityDetails] useGenericEntityDetails #2 initialisé pour concert:con-1747960488398-mwb0vm – "" (bundle.js, line 385491)
-[Log] [LOG useEffect:chargement initial] id: – "con-1747960488398-mwb0vm" – "entityType:" – "concert" (bundle.js, line 360028)
-[Info] [INFO] [useGenericEntityDetails] useGenericEntityDetails #2 initialisé pour concert:con-1747960488398-mwb0vm – "" (bundle.js, line 385491)
-[Info] [INFO] [useGenericEntityDetails] useGenericEntityDetails #2 initialisé pour concert:con-1747960488398-mwb0vm – "" (bundle.js, line 385491)
-[Log] [LOG useEffect:chargement initial] id: – "con-1747960488398-mwb0vm" – "entityType:" – "concert" (bundle.js, line 360028)
-[Info] [INFO] [useGenericEntityDetails] useGenericEntityDetails #2 initialisé pour concert:con-1747960488398-mwb0vm – "" (bundle.js, line 385491)
-[Info] [INFO] [useGenericEntityDetails] useGenericEntityDetails #2 initialisé pour concert:con-1747960488398-mwb0vm – "" (bundle.js, line 385491)
-[Log] [LOG useEffect:chargement initial] id: – "con-1747960488398-mwb0vm" – "entityType:" – "concert" (bundle.js, line 360028)
+[Log] [TEMP DEBUG UGEF] Validation dans handleFieldChange pour titre EST COMMENTÉE. (main.f14b0f96f5297846248d.hot-update.js, line 245)
+[Info] [INFO] [useConcertForm] Initialisation du formulaire de concert optimisé: nouveau concert – "" (bundle.js, line 437617)
+[Log] ConcertFormDesktop (bundle.js, line 110367)
+[Log]  (2) (bundle.js, line 110326)
+{ConcertFormDesktop: function}Object"Re-rendered because of hook changes:"
+[Log] [hook useState result].titre (bundle.js, line 110338)
+[Log] different objects. (more info at http://bit.ly/wdyr3) (bundle.js, line 110339)
+[Log]  (3) (bundle.js, line 110340)
+{prev .titre: "test"}Object"!=="{next .titre: "tes"}Object
+[Log] [hook useState result] (bundle.js, line 110338)
+[Log] different objects. (more info at http://bit.ly/wdyr3) (bundle.js, line 110339)
+[Log]  (3) (bundle.js, line 110340)
+{prev : Object}Object"!=="{next : Object}Object
+[Log] ConcertFormDesktop (bundle.js, line 110367)
+[Log]  (2) (bundle.js, line 110326)
+{ConcertFormDesktop: function}Object"Re-rendered because of hook changes:"
+[Log] [hook useState result] (bundle.js, line 110338)
+[Log] different objects that are equal by value. (more info at http://bit.ly/wdyr3) (bundle.js, line 110339)
+[Log]  (3) (bundle.js, line 110340)
+{prev : {titre: true, date: true, montant: true}}Object"!=="{next : {titre: true, date: true, montant: true}}Object
+[Log] {For detailed diff, right click the following fn, save as global, and run: : function}Object (bundle.js, line 110342)
+[Log] [useConcertForm] after useGenericEntityForm hook: – {loading: null, data: Object, error: null, …} (bundle.js, line 412501)
+{loading: null, data: Object, error: null, entityId: null, isNew: undefined}Object
+[Log] [useConcertForm] Retourne. formData: (11) (bundle.js, line 412592)
+{titre: "tes", date: "2025-05-24", heure: "", statut: "planifié", lieuId: "", …}
+"loading:"
+null
+"isNewConcert (variable du hook):"
+true
+"concertId:"
+"nouveau"
+"entityId utilisé:"
+null
+"handleChange fourni:"
+"✓"
+[Log] [ConcertInfoSection] Rendered. formData.titre: – "tes" (bundle.js, line 353348)
+[Info] [INFO] [useConcertForm] Initialisation du formulaire de concert optimisé: nouveau concert – "" (bundle.js, line 437617)
+[Log] [TEMP DEBUG UGEF] Validation dans handleFieldChange pour titre EST COMMENTÉE. (main.f14b0f96f5297846248d.hot-update.js, line 245)
+[Log] ConcertFormDesktop (bundle.js, line 110367)
+[Log]  (2) (bundle.js, line 110326)
+{ConcertFormDesktop: function}Object"Re-rendered because of hook changes:"
+[Log] [hook useState result].titre (bundle.js, line 110338)
+[Log] different objects. (more info at http://bit.ly/wdyr3) (bundle.js, line 110339)
+[Log]  (3) (bundle.js, line 110340)
+{prev .titre: "tes"}Object"!=="{next .titre: "test"}Object
+[Log] [hook useState result] (bundle.js, line 110338)
+[Log] different objects. (more info at http://bit.ly/wdyr3) (bundle.js, line 110339)
+[Log]  (3) (bundle.js, line 110340)
+{prev : Object}Object"!=="{next : Object}Object
+[Log] ConcertFormDesktop (bundle.js, line 110367)
+[Log]  (2) (bundle.js, line 110326)
+{ConcertFormDesktop: function}Object"Re-rendered because of hook changes:"
+[Log] [hook useState result] (bundle.js, line 110338)
+[Log] different objects that are equal by value. (more info at http://bit.ly/wdyr3) (bundle.js, line 110339)
+[Log]  (3) (bundle.js, line 110340)
+{prev : {titre: true, date: true, montant: true}}Object"!=="{next : {titre: true, date: true, montant: true}}Object
+[Log] {For detailed diff, right click the following fn, save as global, and run: : function}Object (bundle.js, line 110342)
+[Log] [useConcertForm] after useGenericEntityForm hook: – {loading: null, data: Object, error: null, …} (bundle.js, line 412501)
+{loading: null, data: Object, error: null, entityId: null, isNew: undefined}Object
+[Log] [useConcertForm] Retourne. formData: (11) (bundle.js, line 412592)
+{titre: "test", date: "2025-05-24", heure: "", statut: "planifié", lieuId: "", …}
+"loading:"
+null
+"isNewConcert (variable du hook):"
+true
+"concertId:"
+"nouveau"
+"entityId utilisé:"
+null
+"handleChange fourni:"
+"✓"
+[Info] [INFO] [useConcertForm] Initialisation du formulaire de concert optimisé: nouveau concert – "" (bundle.js, line 437617)
+[Log] [useConcertForm] after useGenericEntityForm hook: – {loading: null, data: Object, error: null, …} (bundle.js, line 412501)
+{loading: null, data: Object, error: null, entityId: null, isNew: undefined}Object
+[Log] [useConcertForm] Retourne. formData: (11) (bundle.js, line 412592)
+{titre: "test", date: "2025-05-24", heure: "", statut: "planifié", lieuId: "", …}
+"loading:"
+null
+"isNewConcert (variable du hook):"
+true
+"concertId:"
+"nouveau"
+"entityId utilisé:"
+null
+"handleChange fourni:"
+"✓"
+[Log] [ConcertInfoSection] Rendered. formData.titre: – "test" (bundle.js, line 353348)
+[Info] [INFO] [useConcertForm] Initialisation du formulaire de concert optimisé: nouveau concert – "" (bundle.js, line 437617)
+[Log] [useConcertForm] after useGenericEntityForm hook: – {loading: null, data: Object, error: null, …} (bundle.js, line 412501)
+{loading: null, data: Object, error: null, entityId: null, isNew: undefined}Object
+[Log] [useConcertForm] Retourne. formData: (11) (bundle.js, line 412592)
+{titre: "test", date: "2025-05-24", heure: "", statut: "planifié", lieuId: "", …}
+"loading:"
+null
+"isNewConcert (variable du hook):"
+true
+"concertId:"
+"nouveau"
+"entityId utilisé:"
+null
+"handleChange fourni:"
+"✓"

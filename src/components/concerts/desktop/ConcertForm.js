@@ -232,7 +232,6 @@ const ConcertFormDesktop = () => {
               id={id}
               isSubmitting={isSubmitting || isDeleting}
               onDelete={id !== 'nouveau' ? () => setShowDeleteConfirm(true) : undefined}
-              onSubmit={handleSubmit}
               onCancel={handleCancel}
               navigate={navigate}
               position="bottom"

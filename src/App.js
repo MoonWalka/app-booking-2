@@ -273,7 +273,7 @@ function App() {
                     } />
                     
                     {/* Routes pour les contrats */}
-                    <Route path="/contrats/*" element={
+                    <Route path="/contrats" element={
                       <PrivateRoute>
                         <Suspense fallback={
                           <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
@@ -285,11 +285,39 @@ function App() {
                             </div>
                           </FlexContainer>
                         }>
-                          <Routes>
-                            <Route index element={<ContratsPage />} />
-                            <Route path="generate/:concertId" element={<ContratGenerationPage />} />
-                            <Route path=":contratId" element={<ContratDetailsPage />} />
-                          </Routes>
+                          <ContratsPage />
+                        </Suspense>
+                      </PrivateRoute>
+                    } />
+                    <Route path="/contrats/generate/:concertId" element={
+                      <PrivateRoute>
+                        <Suspense fallback={
+                          <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
+                            <div className="text-center">
+                              <div className="spinner-border text-primary" role="status">
+                                <span className="visually-hidden">Chargement de la page...</span>
+                              </div>
+                              <p className="mt-2">Chargement de la page...</p>
+                            </div>
+                          </FlexContainer>
+                        }>
+                          <ContratGenerationPage />
+                        </Suspense>
+                      </PrivateRoute>
+                    } />
+                    <Route path="/contrats/:contratId" element={
+                      <PrivateRoute>
+                        <Suspense fallback={
+                          <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
+                            <div className="text-center">
+                              <div className="spinner-border text-primary" role="status">
+                                <span className="visually-hidden">Chargement de la page...</span>
+                              </div>
+                              <p className="mt-2">Chargement de la page...</p>
+                            </div>
+                          </FlexContainer>
+                        }>
+                          <ContratDetailsPage />
                         </Suspense>
                       </PrivateRoute>
                     } />

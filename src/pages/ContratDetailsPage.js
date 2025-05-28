@@ -1,6 +1,6 @@
 // src/pages/ContratDetailsPage.js
-import React from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { Alert, Spinner } from 'react-bootstrap';
 import ContratPDFWrapper from '@/components/contrats/ContratPDFWrapper';
 import styles from './ContratDetailsPage.module.css';
@@ -19,8 +19,9 @@ import ContratPdfViewer from '@/components/contrats/sections/ContratPdfViewer';
 import ContratVariablesCard from '@/components/contrats/sections/ContratVariablesCard';
 
 const ContratDetailsPage = () => {
-  const { id } = useParams();
+  const { contratId } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   
   // Use custom hooks to handle data fetching and logic
   const{ 
@@ -34,7 +35,7 @@ const ContratDetailsPage = () => {
     loading, 
     error,
     setContrat
-  } = useContratDetails(id);
+  } = useContratDetails(contratId);
   
   // Hook for handling contract actions (mark as sent, signed, delete)
   const {
@@ -43,7 +44,7 @@ const ContratDetailsPage = () => {
     handleDeleteContrat,
     actionError,
     isActionLoading
-  } = useContratActions(id, contrat, setContrat);
+  } = useContratActions(contratId, contrat, setContrat);
 
   // Hook for PDF preview functionality
   const {
@@ -57,6 +58,43 @@ const ContratDetailsPage = () => {
     generatePDFPreview,
     handleDownloadPdf
   } = usePdfPreview();
+
+  // Gérer les paramètres de requête pour l'aperçu automatique
+  useEffect(() => {
+    const previewParam = searchParams.get('preview');
+    
+    // ✅ CORRECTION: Ajouter une protection contre les exécutions multiples
+    if (previewParam && !loading && contrat && !showPdfViewer) {
+      console.log(`[ContratDetailsPage] Traitement du paramètre preview=${previewParam}`);
+      
+      // Ouvrir automatiquement l'aperçu selon le paramètre
+      togglePdfViewer();
+      
+      // Définir le type d'aperçu selon le paramètre
+      if (previewParam === 'web') {
+        console.log('[ContratDetailsPage] Activation de l\'aperçu HTML');
+        setPreviewType('html');
+      } else if (previewParam === 'pdf') {
+        console.log('[ContratDetailsPage] Activation de l\'aperçu PDF');
+        setPreviewType('pdf');
+        // Générer automatiquement l'aperçu PDF
+        setTimeout(() => {
+          generatePDFPreview(ContratPDFWrapper, {
+            contrat,
+            concert,
+            template,
+            programmateur,
+            lieu,
+            artiste,
+            entreprise
+          });
+        }, 500);
+      }
+      
+      // Nettoyer l'URL après traitement
+      navigate(`/contrats/${contratId}`, { replace: true });
+    }
+  }, [searchParams, loading, contrat, showPdfViewer, contratId, navigate, togglePdfViewer, setPreviewType, generatePDFPreview, concert, template, programmateur, lieu, artiste, entreprise]);
 
   // Prepare data for PDF generation
   const pdfData = {

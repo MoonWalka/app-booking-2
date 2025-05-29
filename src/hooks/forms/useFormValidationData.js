@@ -204,13 +204,15 @@ const useFormValidationData = (concertId) => {
           
           if (linksSnapshot.empty) {
             console.error("Aucun formulaire trouvé pour ce concert");
-            setError("Aucun formulaire n'a été soumis pour ce concert.");
+            // Ne pas mettre d'erreur, laisser formData à null pour afficher le FormGenerator
+            setFormData(null);
             setLoading(false);
             return;
           }
           
           console.log("Lien trouvé, mais aucune soumission");
-          setError("Un lien de formulaire a été généré mais le programmateur n'a pas encore soumis de réponse.");
+          // Ne pas mettre d'erreur, laisser formData à null pour afficher le FormGenerator
+          setFormData(null);
           setLoading(false);
           return;
         }

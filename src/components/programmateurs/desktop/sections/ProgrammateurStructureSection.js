@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Card from '@components/ui/Card';
 import CompanySearchSection from '../../sections/CompanySearchSection';
 import StructureInfoSection from '../../sections/StructureInfoSection';
@@ -20,9 +20,34 @@ const ProgrammateurStructureSection = ({
   formatValue,
   errors
 }) => {
+  // État pour gérer le mode (recherche ou manuel)
+  const [inputMode, setInputMode] = useState('search');
+  // État pour l'entreprise sélectionnée (pour l'affichage)
+  const [selectedCompany, setSelectedCompany] = useState(null);
+
+  // Handler pour changer de mode
+  const handleInputModeChange = (mode) => {
+    setInputMode(mode);
+    if (mode === 'manual') {
+      // Si on passe en mode manuel, on efface la sélection d'entreprise
+      setSelectedCompany(null);
+      // Et on peut effacer les champs de structure si souhaité
+      // onStructureChange(null);
+    }
+  };
+
+  // Handler pour sélectionner une entreprise 
+  const handleSelectCompany = (company) => {
+    setSelectedCompany(company);
+    // Appeler le handler original qui met à jour le formulaire
+    if (companySearch.handleSelectCompany) {
+      companySearch.handleSelectCompany(company);
+    }
+  };
+
   const renderEditMode = () => (
     <div className={styles.editContent}>
-      {/* Options de recherche d'entreprise */}
+      {/* Options de recherche d'entreprise avec mode selector */}
       <CompanySearchSection 
         searchType={companySearch.searchType}
         setSearchType={companySearch.setSearchType}
@@ -30,23 +55,29 @@ const ProgrammateurStructureSection = ({
         setSearchTerm={companySearch.setSearchTerm}
         searchResults={companySearch.searchResults}
         isSearchingCompany={companySearch.isSearchingCompany}
-        handleSelectCompany={companySearch.handleSelectCompany}
+        handleSelectCompany={handleSelectCompany}
         searchCompany={companySearch.searchCompany}
+        inputMode={inputMode}
+        onInputModeChange={handleInputModeChange}
+        selectedCompany={selectedCompany}
       />
       
-      {/* Formulaire de structure juridique */}
-      <StructureInfoSection 
-        formData={formData}
-        handleChange={onChange}
-        errors={errors}
-        addressSuggestions={addressSearch.addressSuggestions} 
-        isSearchingAddress={addressSearch.isSearchingAddress}
-        addressFieldActive={addressSearch.addressFieldActive}
-        setAddressFieldActive={addressSearch.setAddressFieldActive}
-        handleSelectAddress={addressSearch.handleSelectAddress}
-        structure={structure}
-        formatValue={formatValue}
-      />
+      {/* Formulaire de structure juridique - affiché seulement en mode manuel */}
+      {inputMode === 'manual' && (
+        <StructureInfoSection 
+          formData={formData}
+          handleChange={onChange}
+          errors={errors}
+          addressSuggestions={addressSearch.addressSuggestions} 
+          isSearchingAddress={addressSearch.isSearchingAddress}
+          addressFieldActive={addressSearch.addressFieldActive}
+          setAddressFieldActive={addressSearch.setAddressFieldActive}
+          handleSelectAddress={addressSearch.handleSelectAddress}
+          structure={structure}
+          formatValue={formatValue}
+          showCardWrapper={false}
+        />
+      )}
     </div>
   );
 

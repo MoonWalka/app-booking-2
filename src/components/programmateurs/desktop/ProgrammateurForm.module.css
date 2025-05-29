@@ -7,9 +7,9 @@
 /* ProgrammateurForm.module.css - Standardisé selon LieuView */
 .formContainer {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: var(--tc-space-4);
+  padding: var(--tc-space-6);
 }
 
 .spinnerContainer {
@@ -31,24 +31,25 @@
 .sectionsStack {
   display: flex;
   flex-direction: column;
-  gap: var(--tc-space-4);
+  gap: var(--tc-space-6);
 }
 
 .formCard {
   background-color: var(--tc-color-white);
-  border-radius: var(--tc-radius-base);
+  border-radius: var(--tc-radius-lg);
   box-shadow: var(--tc-shadow-base);
-  margin-bottom: var(--tc-space-4);
+  margin-bottom: var(--tc-space-6);
   overflow: hidden;
+  border: 1px solid var(--tc-border-color-light);
 }
 
 .cardHeader {
   background-color: var(--tc-color-gray-100);
-  padding: var(--tc-space-3);
+  padding: var(--tc-space-4);
   border-bottom: 1px solid var(--tc-color-gray-300);
   display: flex;
   align-items: center;
-  gap: var(--tc-space-2);
+  gap: var(--tc-space-3);
 }
 
 .cardIcon {
@@ -61,7 +62,7 @@
 
 .cardTitle {
   margin: 0;
-  font-size: var(--tc-font-size-lg);
+  font-size: var(--tc-font-size-xl);
   font-weight: var(--tc-font-weight-semibold);
   flex-grow: 1;
   color: var(--tc-text-default);
@@ -70,24 +71,25 @@
 
 .cardHeader h3 {
   margin: 0;
-  font-size: var(--tc-font-size-lg);
+  font-size: var(--tc-font-size-xl);
   font-weight: var(--tc-font-weight-semibold);
   color: var(--tc-text-default);
 }
 
 .cardBody {
-  padding: var(--tc-space-3);
+  padding: var(--tc-space-5);
 }
 
 .formGroup {
-  margin-bottom: var(--tc-space-3);
+  margin-bottom: var(--tc-space-4);
 }
 
 .formLabel {
   display: block;
-  margin-bottom: var(--tc-space-1);
+  margin-bottom: var(--tc-space-2);
   font-weight: var(--tc-font-weight-medium);
   color: var(--tc-text-default);
+  font-size: var(--tc-font-size-base);
 }
 
 .requiredField {
@@ -175,50 +177,93 @@
 }
 
 /* Support responsive */
+@media (max-width: 1200px) {
+  .formContainer {
+    max-width: 100%;
+    padding: var(--tc-space-4);
+  }
+  
+  .sectionsStack {
+    gap: var(--tc-space-4);
+  }
+  
+  .cardBody {
+    padding: var(--tc-space-4);
+  }
+}
+
 @media (max-width: 768px) {
+  .formContainer {
+    padding: var(--tc-space-3);
+  }
+  
   .formCard {
-    border-radius: var(--tc-radius-sm);
+    border-radius: var(--tc-radius-base);
     margin-bottom: var(--tc-space-4);
   }
   
   .cardHeader {
-    padding: var(--tc-space-2) var(--tc-space-4);
+    padding: var(--tc-space-3);
+    gap: var(--tc-space-2);
+  }
+  
+  .cardTitle {
+    font-size: var(--tc-font-size-lg);
   }
   
   .cardBody {
-    padding: var(--tc-space-2);
+    padding: var(--tc-space-3);
+  }
+  
+  .formGroup {
+    margin-bottom: var(--tc-space-3);
   }
   
   .formActions {
     flex-direction: column;
-    gap: var(--tc-space-2);
+    gap: var(--tc-space-3);
   }
   
   .formActions button {
     width: 100%;
   }
+  
+  .sectionsStack {
+    gap: var(--tc-space-4);
+  }
 }
 
 @media (max-width: 576px) {
+  .formContainer {
+    padding: var(--tc-space-2);
+  }
+  
   .cardIcon {
-    width: 24px;
-    height: 24px;
-    font-size: 1rem;
+    font-size: var(--tc-font-size-lg);
   }
-  
+
   .cardHeader h3 {
-    font-size: 1.1rem;
+    font-size: var(--tc-font-size-base);
   }
-  
+
+  .cardTitle {
+    font-size: var(--tc-font-size-base);
+  }
+
+  .cardBody {
+    padding: var(--tc-space-2);
+  }
+
   .searchButtonsGroup {
     flex-direction: column;
   }
-  
+
   .searchButton {
     width: 100%;
+    justify-content: center;
   }
-  
+
   .searchOptionsContainer {
-    padding: var(--tc-space-2);
+    padding: var(--tc-space-3);
   }
 }

@@ -79,10 +79,16 @@ const ConcertActions = ({
         handleViewForm(concert.id);
         break;
       case 'no_programmateur':
-      case 'not_sent':
-      default:
         // Rediriger vers l'édition du concert pour ajouter un programmateur
         window.location.href = `/concerts/${concert.id}/edit`;
+        break;
+      case 'not_sent':
+        // Aller à la page de gestion du formulaire pour générer un lien
+        handleSendForm(concert.id);
+        break;
+      default:
+        // Par défaut, aller à la page de gestion du formulaire
+        handleSendForm(concert.id);
         break;
     }
   };

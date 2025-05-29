@@ -7,28 +7,33 @@ import styles from './StructureInfoSection.module.css';
  * StructureInfoSection - Section contenant les informations sur la structure du programmateur
  */
 const StructureInfoSection = ({ 
-  formik = {}, // Valeur par défaut pour éviter les erreurs
+  formik = null, // Support Formik (rétrocompatibilité)
+  formData = null, // Support hook useProgrammateurForm
+  handleChange = null, // Handler pour useProgrammateurForm
   touched = {}, 
   errors = {}, 
   isReadOnly = false,
   showCardWrapper = true // Nouvelle prop pour la flexibilité
 }) => {
-  // S'assurer que formik.values existe, sinon initialiser avec une structure vide
-  const formikValues = formik.values || { 
-    structure: { 
-      raisonSociale: '',
-      type: '',
-      adresse: '',
-      codePostal: '',
-      ville: '',
-      siret: '',
-      tva: ''
-    },
-    structureId: ''
-  };
+  // Déterminer le mode (Formik vs Hook)
+  const isFormikMode = formik && formik.values;
+  
+  // Valeurs selon le mode
+  const values = isFormikMode 
+    ? (formik.values || { structure: {}, structureId: '' })
+    : (formData || { structure: {}, structureId: '' });
+    
+  // Handler selon le mode  
+  const onChange = isFormikMode 
+    ? (formik.handleChange || (() => {}))
+    : (handleChange || (() => {}));
+    
+  const onBlur = isFormikMode 
+    ? (formik.handleBlur || (() => {}))
+    : (() => {});
 
   // Accéder aux valeurs de structure de manière sécurisée
-  const structureValues = formikValues.structure || {};
+  const structureValues = values.structure || {};
   const touchedStructure = touched?.structure || {};
   const errorsStructure = errors?.structure || {};
 
@@ -44,8 +49,8 @@ const StructureInfoSection = ({
               name="structure.raisonSociale"
               type="text"
               value={structureValues.raisonSociale || ''}
-              onChange={formik.handleChange || (() => {})}
-              onBlur={formik.handleBlur || (() => {})}
+              onChange={onChange}
+              onBlur={onBlur}
               isInvalid={touchedStructure.raisonSociale && errorsStructure.raisonSociale}
               disabled={isReadOnly}
               placeholder="Nom de la structure"
@@ -64,8 +69,8 @@ const StructureInfoSection = ({
               id="structureType"
               name="structure.type"
               value={structureValues.type || ''}
-              onChange={formik.handleChange || (() => {})}
-              onBlur={formik.handleBlur || (() => {})}
+              onChange={onChange}
+              onBlur={onBlur}
               disabled={isReadOnly}
               className={styles.formInput}
             >
@@ -90,8 +95,8 @@ const StructureInfoSection = ({
               name="structure.adresse"
               type="text"
               value={structureValues.adresse || ''}
-              onChange={formik.handleChange || (() => {})}
-              onBlur={formik.handleBlur || (() => {})}
+              onChange={onChange}
+              onBlur={onBlur}
               disabled={isReadOnly}
               placeholder="Adresse de la structure"
               className={styles.formInput}
@@ -109,8 +114,8 @@ const StructureInfoSection = ({
               name="structure.codePostal"
               type="text"
               value={structureValues.codePostal || ''}
-              onChange={formik.handleChange || (() => {})}
-              onBlur={formik.handleBlur || (() => {})}
+              onChange={onChange}
+              onBlur={onBlur}
               disabled={isReadOnly}
               placeholder="Code postal"
               className={styles.formInput}
@@ -126,8 +131,8 @@ const StructureInfoSection = ({
               name="structure.ville"
               type="text"
               value={structureValues.ville || ''}
-              onChange={formik.handleChange || (() => {})}
-              onBlur={formik.handleBlur || (() => {})}
+              onChange={onChange}
+              onBlur={onBlur}
               disabled={isReadOnly}
               placeholder="Ville"
               className={styles.formInput}
@@ -145,8 +150,8 @@ const StructureInfoSection = ({
               name="structure.siret"
               type="text"
               value={structureValues.siret || ''}
-              onChange={formik.handleChange || (() => {})}
-              onBlur={formik.handleBlur || (() => {})}
+              onChange={onChange}
+              onBlur={onBlur}
               disabled={isReadOnly}
               placeholder="Numéro SIRET"
               className={styles.formInput}
@@ -162,8 +167,8 @@ const StructureInfoSection = ({
               name="structure.tva"
               type="text"
               value={structureValues.tva || ''}
-              onChange={formik.handleChange || (() => {})}
-              onBlur={formik.handleBlur || (() => {})}
+              onChange={onChange}
+              onBlur={onBlur}
               disabled={isReadOnly}
               placeholder="Numéro de TVA"
               className={styles.formInput}
@@ -176,7 +181,7 @@ const StructureInfoSection = ({
       <input 
         type="hidden" 
         name="structureId" 
-        value={(formikValues.structureId || '')}
+        value={(values.structureId || '')}
       />
     </div>
   );

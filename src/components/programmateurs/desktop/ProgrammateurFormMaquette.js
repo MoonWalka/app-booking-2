@@ -77,7 +77,7 @@ const ProgrammateurFormMaquette = () => {
     }
   }, []);
 
-  // Hooks de recherche
+  // �� TEST: Réactivation des deux hooks pour confirmer le problème avec useLieuSearch
   const companySearch = useCompanySearch({
     onCompanySelect: handleCompanySelect
   });
@@ -91,6 +91,16 @@ const ProgrammateurFormMaquette = () => {
   const [concertSearchTerm, setConcertSearchTerm] = useState('');
   const [concertSearchResults, setConcertSearchResults] = useState([]);
   const [isSearchingConcerts, setIsSearchingConcerts] = useState(false);
+  const [shouldClearSearch, setShouldClearSearch] = useState(false);
+
+  // Effet pour nettoyer la recherche quand un concert est ajouté
+  useEffect(() => {
+    if (shouldClearSearch) {
+      setConcertSearchTerm('');
+      setConcertSearchResults([]);
+      setShouldClearSearch(false);
+    }
+  }, [shouldClearSearch]);
 
   // Fonction pour charger les lieux et concerts associés
   const loadAssociations = useCallback(async (programmateur) => {
@@ -287,8 +297,8 @@ const ProgrammateurFormMaquette = () => {
       setConcertsAssocies(prev => {
         // Vérifier la duplication à l'intérieur du setter
         if (!prev.find(c => c.id === concert.id)) {
-          setConcertSearchTerm('');
-          setConcertSearchResults([]);
+          // ✅ Utiliser un flag pour déclencher le nettoyage
+          setShouldClearSearch(true);
           toast.success(`Concert "${concert.titre}" ajouté`);
           return [...prev, concert];
         }

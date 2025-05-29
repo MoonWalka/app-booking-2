@@ -237,6 +237,39 @@ export const useProgrammateurForm = (programmateurId) => {
     }));
   }, [formHook]);
   
+  // Fonction pour gérer les changements de structure principale (utilisée par useCompanySearch)
+  const handleStructureChange = useCallback((company) => {
+    if (company) {
+      formHook.setFormData(prev => ({
+        ...prev,
+        structureId: company.id || '',
+        structure: {
+          ...prev.structure,
+          raisonSociale: company.nom || company.raisonSociale || '',
+          siret: company.siret || '',
+          adresse: company.adresse || '',
+          codePostal: company.codePostal || '',
+          ville: company.ville || '',
+          type: company.statutJuridique || prev.structure?.type || ''
+        }
+      }));
+    } else {
+      formHook.setFormData(prev => ({
+        ...prev,
+        structureId: '',
+        structure: {
+          ...prev.structure,
+          raisonSociale: '',
+          siret: '',
+          adresse: '',
+          codePostal: '',
+          ville: '',
+          type: ''
+        }
+      }));
+    }
+  }, [formHook]);
+  
   // Enrichir formData avec l'id de l'entité pour exposer programmateur.id
   const programmateurDataWithId = { ...formHook.formData, id: formHook.entityId };
   
@@ -256,7 +289,8 @@ export const useProgrammateurForm = (programmateurId) => {
     contact: formHook.formData?.contact || {},
     // TODO: Gérer les entités liées différemment car relatedData n'existe pas dans useGenericEntityForm
     structure: null,
-    selectedStructure: null
+    selectedStructure: null,
+    handleStructureChange
   };
 };
 

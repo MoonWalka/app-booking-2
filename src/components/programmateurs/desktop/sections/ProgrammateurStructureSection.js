@@ -31,6 +31,7 @@ const ProgrammateurStructureSection = ({
         searchResults={companySearch.searchResults}
         isSearchingCompany={companySearch.isSearchingCompany}
         handleSelectCompany={companySearch.handleSelectCompany}
+        searchCompany={companySearch.searchCompany}
       />
       
       {/* Formulaire de structure juridique */}

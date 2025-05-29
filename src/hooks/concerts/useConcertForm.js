@@ -80,12 +80,9 @@ export const useConcertForm = (concertId) => {
       console.log("[useConcertForm] Affichage du message de succès:", message);
       showSuccessToast(message);
       
-      // Redirection automatique vers la liste des concerts après sauvegarde
-      console.log("[useConcertForm] Programmation de la redirection dans 1.5s");
-      setTimeout(() => {
-        console.log("[useConcertForm] Exécution de la redirection vers /concerts");
-        navigate('/concerts');
-      }, 1500); // Délai de 1.5 secondes pour permettre à l'utilisateur de voir le message
+      // Redirection immédiate vers la liste des concerts après sauvegarde
+      console.log("[useConcertForm] Redirection immédiate vers /concerts");
+      navigate('/concerts');
     }
   }, [navigate]);
 

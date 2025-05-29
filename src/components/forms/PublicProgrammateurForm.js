@@ -64,11 +64,11 @@ const PublicProgrammateurForm = ({
       
       let apiUrl;
       if (isSiret) {
-        // Recherche par SIRET
-        apiUrl = `https://entreprise.data.gouv.fr/api/sirene/v1/siret/${siretSearch.replace(/\s/g, '')}`;
+        // Recherche par SIRET via l'Annuaire des Entreprises
+        apiUrl = `https://recherche-entreprises.api.gouv.fr/search?siret=${siretSearch.replace(/\s/g, '')}`;
       } else {
-        // Recherche par nom (utiliser l'API de recherche)
-        apiUrl = `https://entreprise.data.gouv.fr/api/sirene/v1/full_text/${encodeURIComponent(siretSearch)}`;
+        // Recherche par nom via l'Annuaire des Entreprises
+        apiUrl = `https://recherche-entreprises.api.gouv.fr/search?q=${encodeURIComponent(siretSearch)}&per_page=1`;
       }
 
       const response = await fetch(apiUrl);
@@ -79,24 +79,29 @@ const PublicProgrammateurForm = ({
 
       const data = await response.json();
       
-      let entreprise;
-      if (isSiret) {
-        entreprise = data.etablissement || data;
-      } else {
-        // Prendre le premier résultat de la recherche textuelle
-        entreprise = data.etablissements?.[0] || data.etablissement;
+      // Vérifier qu'on a des résultats
+      if (!data.results || data.results.length === 0) {
+        throw new Error('Aucune entreprise trouvée');
       }
+
+      // Prendre le premier résultat
+      const entreprise = data.results[0];
 
       if (!entreprise) {
         throw new Error('Aucune entreprise trouvée');
       }
 
-      // Extraire les informations utiles
-      const nom = entreprise.unite_legale?.denomination || 
-                  entreprise.denomination_usuelle_etablissement ||
-                  `${entreprise.unite_legale?.prenom_1 || ''} ${entreprise.unite_legale?.nom || ''}`.trim();
+      // Extraire les informations utiles de l'API Annuaire des Entreprises
+      const nom = entreprise.nom_complet || 
+                  entreprise.nom_raison_sociale ||
+                  entreprise.denomination ||
+                  `${entreprise.prenom || ''} ${entreprise.nom || ''}`.trim();
 
-      const adresse = `${entreprise.numero_voie_etablissement || ''} ${entreprise.type_voie_etablissement || ''} ${entreprise.libelle_voie_etablissement || ''}`.trim();
+      // Construire l'adresse à partir des champs disponibles
+      const numeroVoie = entreprise.numero_voie || '';
+      const typeVoie = entreprise.type_voie || '';
+      const libelleVoie = entreprise.libelle_voie || '';
+      const adresse = `${numeroVoie} ${typeVoie} ${libelleVoie}`.trim();
       
       // Mettre à jour le formulaire avec les données trouvées
       setFormData(prev => ({
@@ -104,8 +109,8 @@ const PublicProgrammateurForm = ({
         structureNom: nom,
         structureSiret: entreprise.siret,
         structureAdresse: adresse,
-        structureCodePostal: entreprise.code_postal_etablissement || '',
-        structureVille: entreprise.libelle_commune_etablissement || ''
+        structureCodePostal: entreprise.code_postal || '',
+        structureVille: entreprise.libelle_commune || ''
       }));
 
       setSiretResults({

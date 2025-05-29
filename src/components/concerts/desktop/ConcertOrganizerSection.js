@@ -195,10 +195,21 @@ const ConcertOrganizerSection = ({
                 <div className="mb-3">
                   <div className="fw-bold">Adresse:</div>
                   <div>
-                    {programmateur.adresse ? (
+                    {programmateur.adresse || programmateur.structureAdresse ? (
                       <>
-                        <div>{programmateur.adresse}</div>
-                        <div>{programmateur.codePostal} {programmateur.ville}</div>
+                        {typeof programmateur.adresse === 'string' ? (
+                          <>
+                            <div>{programmateur.adresse}</div>
+                            <div>{programmateur.codePostal} {programmateur.ville}</div>
+                          </>
+                        ) : programmateur.structureAdresse ? (
+                          <>
+                            <div>{programmateur.structureAdresse}</div>
+                            <div>{programmateur.codePostal} {programmateur.ville}</div>
+                          </>
+                        ) : (
+                          <span className="text-muted">Non spécifiée</span>
+                        )}
                       </>
                     ) : (
                       <span className="text-muted">Non spécifiée</span>

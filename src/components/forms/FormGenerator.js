@@ -71,6 +71,20 @@ const FormGenerator = ({ concertId, programmateurId, onFormGenerated }) => {
   const generateForm = async () => {
     setLoading(true);
     try {
+      // Récupérer l'email du programmateur si disponible
+      let emailToStore = '';
+      if (programmateurId) {
+        try {
+          const progDoc = await getDoc(doc(db, 'programmateurs', programmateurId));
+          if (progDoc.exists()) {
+            const progData = progDoc.data();
+            emailToStore = progData.email || progData.contact?.email || '';
+          }
+        } catch (error) {
+          console.error('Erreur lors de la récupération du programmateur:', error);
+        }
+      }
+      
       // Générer un token unique
       const token = uuidv4();
       
@@ -83,6 +97,7 @@ const FormGenerator = ({ concertId, programmateurId, onFormGenerated }) => {
       const formRef = await addDoc(collection(db, 'formLinks'), {
         concertId,
         programmateurId: programmateurId || null,
+        programmateurEmail: emailToStore, // Stocker l'email du programmateur
         token,
         createdAt: serverTimestamp(),
         expiryDate,

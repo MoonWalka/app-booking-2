@@ -81,60 +81,106 @@ const FormSubmissionViewer = ({ submissionId, onValidate }) => {
         </div>
       </Card>
 
-      {/* Données du programmateur */}
-      <Card title="Informations du programmateur" className="mb-4">
-        <div className="row">
-          <div className="col-md-6">
-            <h5>Contact</h5>
-            {submission.programmateurData?.contact && (
+      {/* Données du signataire */}
+      <Card title="Informations du signataire du contrat" className="mb-4">
+        {submission.signataireData ? (
+          <div className="row">
+            <div className="col-md-6">
               <dl>
                 <dt>Nom</dt>
-                <dd>{submission.programmateurData.contact.nom || 'N/A'}</dd>
+                <dd>{submission.signataireData.nom || 'N/A'}</dd>
                 <dt>Prénom</dt>
-                <dd>{submission.programmateurData.contact.prenom || 'N/A'}</dd>
-                <dt>Email</dt>
-                <dd>{submission.programmateurData.contact.email || 'N/A'}</dd>
-                <dt>Téléphone</dt>
-                <dd>{submission.programmateurData.contact.telephone || 'N/A'}</dd>
-                <dt>Fonction</dt>
-                <dd>{submission.programmateurData.contact.fonction || 'N/A'}</dd>
+                <dd>{submission.signataireData.prenom || 'N/A'}</dd>
+                <dt>Fonction / Qualité</dt>
+                <dd>{submission.signataireData.fonction || 'N/A'}</dd>
               </dl>
-            )}
-          </div>
-          <div className="col-md-6">
-            <h5>Structure</h5>
-            {submission.programmateurData?.structure && (
+            </div>
+            <div className="col-md-6">
               <dl>
-                <dt>Raison sociale</dt>
-                <dd>{submission.programmateurData.structure.raisonSociale || submission.programmateurData.structure.nom || 'N/A'}</dd>
-                <dt>SIRET</dt>
-                <dd>{submission.programmateurData.structure.siret || 'N/A'}</dd>
-                <dt>Type</dt>
-                <dd>{submission.programmateurData.structure.type || 'N/A'}</dd>
-                <dt>Adresse</dt>
-                <dd>
-                  {submission.programmateurData.structure.adresse || ''}<br />
-                  {submission.programmateurData.structure.codePostal} {submission.programmateurData.structure.ville}
-                </dd>
+                <dt>Email</dt>
+                <dd>{submission.signataireData.email || 'Non renseigné'}</dd>
+                <dt>Téléphone</dt>
+                <dd>{submission.signataireData.telephone || 'Non renseigné'}</dd>
               </dl>
-            )}
+            </div>
           </div>
-        </div>
+        ) : (
+          // Rétrocompatibilité avec l'ancienne structure
+          submission.programmateurData?.contact && (
+            <div className="row">
+              <div className="col-md-6">
+                <h5>Contact</h5>
+                <dl>
+                  <dt>Nom</dt>
+                  <dd>{submission.programmateurData.contact.nom || 'N/A'}</dd>
+                  <dt>Prénom</dt>
+                  <dd>{submission.programmateurData.contact.prenom || 'N/A'}</dd>
+                  <dt>Email</dt>
+                  <dd>{submission.programmateurData.contact.email || 'N/A'}</dd>
+                  <dt>Téléphone</dt>
+                  <dd>{submission.programmateurData.contact.telephone || 'N/A'}</dd>
+                  <dt>Fonction</dt>
+                  <dd>{submission.programmateurData.contact.fonction || 'N/A'}</dd>
+                </dl>
+              </div>
+              <div className="col-md-6">
+                <h5>Structure</h5>
+                {submission.programmateurData?.structure && (
+                  <dl>
+                    <dt>Raison sociale</dt>
+                    <dd>{submission.programmateurData.structure.raisonSociale || submission.programmateurData.structure.nom || 'N/A'}</dd>
+                    <dt>SIRET</dt>
+                    <dd>{submission.programmateurData.structure.siret || 'N/A'}</dd>
+                    <dt>Type</dt>
+                    <dd>{submission.programmateurData.structure.type || 'N/A'}</dd>
+                    <dt>Adresse</dt>
+                    <dd>
+                      {submission.programmateurData.structure.adresse || ''}<br />
+                      {submission.programmateurData.structure.codePostal} {submission.programmateurData.structure.ville}
+                    </dd>
+                  </dl>
+                )}
+              </div>
+            </div>
+          )
+        )}
       </Card>
 
-      {/* Données du lieu si présentes */}
-      {submission.lieuData && Object.keys(submission.lieuData).length > 0 && (
-        <Card title="Informations du lieu" className="mb-4">
+      {/* Données du lieu */}
+      <Card title="Adresse du lieu de l'événement" className="mb-4">
+        {submission.lieuData && (
           <dl>
-            <dt>Nom</dt>
-            <dd>{submission.lieuData.nom || 'N/A'}</dd>
             <dt>Adresse</dt>
             <dd>
-              {submission.lieuData.adresse || ''}<br />
+              {submission.lieuData.adresse || 'N/A'}<br />
               {submission.lieuData.codePostal} {submission.lieuData.ville}
+              {submission.lieuData.pays && submission.lieuData.pays !== 'France' && `, ${submission.lieuData.pays}`}
             </dd>
-            <dt>Capacité</dt>
-            <dd>{submission.lieuData.capacite || 'N/A'}</dd>
+          </dl>
+        )}
+      </Card>
+
+      {/* Données de la structure si présentes */}
+      {submission.structureData && (
+        <Card title="Informations de la structure" className="mb-4">
+          <dl>
+            <dt>Nom / Raison sociale</dt>
+            <dd>{submission.structureData.nom || 'N/A'}</dd>
+            {submission.structureData.siret && (
+              <>
+                <dt>SIRET</dt>
+                <dd>{submission.structureData.siret}</dd>
+              </>
+            )}
+            {submission.structureData.adresse && (
+              <>
+                <dt>Adresse de la structure</dt>
+                <dd>
+                  {submission.structureData.adresse}<br />
+                  {submission.structureData.codePostal} {submission.structureData.ville}
+                </dd>
+              </>
+            )}
           </dl>
         </Card>
       )}

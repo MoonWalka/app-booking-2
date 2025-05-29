@@ -168,14 +168,29 @@ const ConcertStructureSection = ({
                 <div className="mb-3">
                   <div className="fw-bold">Adresse:</div>
                   <div>
-                    {structure.adresse ? (
+                    {structure.adresse || structure.adresseLieu ? (
                       <>
-                        <div>{structure.adresse}</div>
-                        <div>
-                          {[structure.codePostal, structure.ville]
-                            .filter(Boolean)
-                            .join(' ')}
-                        </div>
+                        {typeof structure.adresse === 'string' ? (
+                          <>
+                            <div>{structure.adresse}</div>
+                            <div>
+                              {[structure.codePostal, structure.ville]
+                                .filter(Boolean)
+                                .join(' ')}
+                            </div>
+                          </>
+                        ) : structure.adresseLieu && typeof structure.adresseLieu === 'object' ? (
+                          <>
+                            <div>{structure.adresseLieu.adresse || ''}</div>
+                            <div>
+                              {[structure.adresseLieu.codePostal, structure.adresseLieu.ville]
+                                .filter(Boolean)
+                                .join(' ')}
+                            </div>
+                          </>
+                        ) : (
+                          <span className="text-muted">Non spécifiée</span>
+                        )}
                       </>
                     ) : (
                       <span className="text-muted">Non spécifiée</span>

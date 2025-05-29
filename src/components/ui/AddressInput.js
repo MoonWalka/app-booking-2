@@ -89,8 +89,11 @@ const AddressInput = ({
       });
     }
 
-    // Gérer la sélection via le hook
+    // Gérer la sélection via le hook (ferme automatiquement le dropdown)
     handleSelectAddress(address);
+    
+    // Force la fermeture du dropdown et la perte de focus
+    setIsActive(false);
   };
 
   return (
@@ -126,10 +129,6 @@ const AddressInput = ({
           </span>
         )}
       </div>
-      
-      <small className={styles.helpText}>
-        Commencez à taper pour voir des suggestions d'adresses
-      </small>
       
       {/* Suggestions d'adresse */}
       {showResults && addressResults.length > 0 && (

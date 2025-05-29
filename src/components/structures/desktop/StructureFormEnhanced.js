@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { doc, getDoc, updateDoc, addDoc, collection, deleteDoc, query, where, getDocs } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, addDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import LoadingSpinner from '@components/ui/LoadingSpinner';
 import ErrorMessage from '@components/ui/ErrorMessage';
+import AddressInput from '@components/ui/AddressInput';
 import useCompanySearch from '@/hooks/common/useCompanySearch';
 import styles from './StructureFormEnhanced.module.css';
 
@@ -21,8 +22,6 @@ const StructureFormEnhanced = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
   
   // Détecter le mode "nouveau" via l'URL
   const isNewFromUrl = location.pathname.endsWith('/nouveau');
@@ -34,36 +33,54 @@ const StructureFormEnhanced = () => {
     type: '',
     siret: '',
     tva: '',
-    adresse: '',
-    codePostal: '',
-    ville: '',
-    pays: 'France',
     telephone: '',
     email: '',
     siteWeb: '',
     notes: ''
   });
 
+  // Adresse du lieu (séparée des infos structure)
+  const [adresseLieu, setAdresseLieu] = useState({
+    adresse: '',
+    codePostal: '',
+    ville: '',
+    pays: 'France'
+  });
+
+  // Informations du signataire du contrat
+  const [signataire, setSignataire] = useState({
+    prenom: '',
+    nom: '',
+    fonction: '',
+    email: '',
+    telephone: ''
+  });
+
   // État pour les associations
   const [programmateursAssocies, setProgrammateursAssocies] = useState([]);
   const [concertsAssocies, setConcertsAssocies] = useState([]);
-  const [contratsAssocies, setContratsAssocies] = useState([]);
+  const [contratsAssocies] = useState([]);
   const [lieuxAssocies, setLieuxAssocies] = useState([]);
-  const [loadingAssociations, setLoadingAssociations] = useState(false);
 
   // Callback mémorisé pour la sélection de structure via recherche
   const handleCompanySelect = useCallback((company) => {
     if (company) {
       setFormData(prev => ({
         ...prev,
-        nom: company.nom || '',
-        raisonSociale: company.nom || '',
-        siret: company.siret || '',
-        adresse: company.adresse || '',
-        codePostal: company.codePostal || '',
-        ville: company.ville || '',
+        nom: String(company.nom || ''),
+        raisonSociale: String(company.nom || ''),
+        siret: String(company.siret || ''),
         type: company.statutJuridique ? 'entreprise' : prev.type
       }));
+
+      // Remplir l'adresse du lieu avec les données de l'entreprise
+      setAdresseLieu({
+        adresse: String(company.adresse || ''),
+        codePostal: String(company.codePostal || ''),
+        ville: String(company.ville || ''),
+        pays: 'France'
+      });
+
       toast.success('Informations de la structure importées');
     }
   }, []);
@@ -76,21 +93,17 @@ const StructureFormEnhanced = () => {
   // États pour la recherche de programmateurs
   const [programmateurSearchTerm, setProgrammateurSearchTerm] = useState('');
   const [programmateurSearchResults, setProgrammateurSearchResults] = useState([]);
-  const [isSearchingProgrammateurs, setIsSearchingProgrammateurs] = useState(false);
 
   // États pour la recherche de concerts
   const [concertSearchTerm, setConcertSearchTerm] = useState('');
   const [concertSearchResults, setConcertSearchResults] = useState([]);
-  const [isSearchingConcerts, setIsSearchingConcerts] = useState(false);
 
   // États pour la recherche de lieux
   const [lieuSearchTerm, setLieuSearchTerm] = useState('');
   const [lieuSearchResults, setLieuSearchResults] = useState([]);
-  const [isSearchingLieux, setIsSearchingLieux] = useState(false);
 
   // Fonction pour charger les associations
   const loadAssociations = useCallback(async (structure) => {
-    setLoadingAssociations(true);
     try {
       // Charger les programmateurs associés
       if (structure.programmateursIds?.length > 0) {
@@ -126,8 +139,6 @@ const StructureFormEnhanced = () => {
       
     } catch (error) {
       console.error('Erreur lors du chargement des associations:', error);
-    } finally {
-      setLoadingAssociations(false);
     }
   }, []);
 
@@ -153,14 +164,27 @@ const StructureFormEnhanced = () => {
             type: data.type || '',
             siret: data.siret || '',
             tva: data.tva || '',
-            adresse: data.adresse || '',
-            codePostal: data.codePostal || '',
-            ville: data.ville || '',
-            pays: data.pays || 'France',
             telephone: data.telephone || '',
             email: data.email || '',
             siteWeb: data.siteWeb || '',
             notes: data.notes || ''
+          });
+
+          // Charger l'adresse du lieu
+          setAdresseLieu({
+            adresse: data.adresseLieu?.adresse || data.adresse || '',
+            codePostal: data.adresseLieu?.codePostal || data.codePostal || '',
+            ville: data.adresseLieu?.ville || data.ville || '',
+            pays: data.adresseLieu?.pays || data.pays || 'France'
+          });
+
+          // Charger les infos du signataire
+          setSignataire({
+            prenom: data.signataire?.prenom || '',
+            nom: data.signataire?.nom || '',
+            fonction: data.signataire?.fonction || '',
+            email: data.signataire?.email || data.email || '',
+            telephone: data.signataire?.telephone || data.telephone || ''
           });
 
           // Charger les associations
@@ -178,6 +202,22 @@ const StructureFormEnhanced = () => {
 
     loadStructure();
   }, [id, isNewFromUrl, loadAssociations]);
+
+  // Effet pour préremplir les infos du signataire avec le premier programmateur associé
+  useEffect(() => {
+    if (programmateursAssocies.length > 0 && 
+        (!signataire.prenom && !signataire.nom && !signataire.fonction)) {
+      const programmateur = programmateursAssocies[0];
+      setSignataire(prev => ({
+        ...prev,
+        prenom: programmateur.contact?.prenom || '',
+        nom: programmateur.contact?.nom || programmateur.nom || '',
+        fonction: programmateur.contact?.fonction || programmateur.fonction || '',
+        email: programmateur.contact?.email || programmateur.email || '',
+        telephone: programmateur.contact?.telephone || programmateur.telephone || ''
+      }));
+    }
+  }, [programmateursAssocies, signataire.prenom, signataire.nom, signataire.fonction]);
 
   // Gestionnaire de changement des champs
   const handleChange = (e) => {
@@ -199,6 +239,42 @@ const StructureFormEnhanced = () => {
     }));
   };
 
+  // Gestionnaire de changement pour l'adresse du lieu
+  const handleAdresseLieuChange = (e) => {
+    const { name, value } = e.target;
+    setAdresseLieu(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  // Gestionnaire de changement pour les infos du signataire
+  const handleSignataireChange = (e) => {
+    const { name, value } = e.target;
+    
+    let processedValue = value;
+    
+    if (name === 'telephone') {
+      // Téléphone : formater automatiquement
+      processedValue = formatPhoneNumber(value);
+    }
+    
+    setSignataire(prev => ({
+      ...prev,
+      [name]: processedValue
+    }));
+  };
+
+  // Callback pour quand une adresse complète est sélectionnée via autocomplétion
+  const handleAddressSelected = useCallback((addressData) => {
+    setAdresseLieu({
+      adresse: addressData.adresse || '',
+      codePostal: addressData.codePostal || '',
+      ville: addressData.ville || '',
+      pays: addressData.pays || 'France'
+    });
+  }, []);
+
   // Utilitaire de formatage téléphone français
   const formatPhoneNumber = (phone) => {
     const cleanPhone = phone.replace(/\D/g, '');
@@ -219,9 +295,26 @@ const StructureFormEnhanced = () => {
     if (!formData.type) {
       errors.push('Le type de structure est obligatoire');
     }
+
+    // Validation des champs du signataire obligatoires
+    if (!signataire.prenom.trim()) {
+      errors.push('Le prénom du signataire est obligatoire');
+    }
+
+    if (!signataire.nom.trim()) {
+      errors.push('Le nom du signataire est obligatoire');
+    }
+
+    if (!signataire.fonction.trim()) {
+      errors.push('La fonction du signataire est obligatoire');
+    }
     
     if (formData.email.trim() && !/^\S+@\S+\.\S+$/.test(formData.email)) {
       errors.push('Format d\'email invalide');
+    }
+
+    if (signataire.email.trim() && !/^\S+@\S+\.\S+$/.test(signataire.email)) {
+      errors.push('Format d\'email du signataire invalide');
     }
     
     if (formData.siret.trim() && formData.siret.length !== 14) {
@@ -238,7 +331,6 @@ const StructureFormEnhanced = () => {
       return;
     }
 
-    setIsSearchingProgrammateurs(true);
     try {
       const q = query(
         collection(db, 'programmateurs'),
@@ -256,8 +348,6 @@ const StructureFormEnhanced = () => {
       ));
     } catch (error) {
       console.error('Erreur recherche programmateurs:', error);
-    } finally {
-      setIsSearchingProgrammateurs(false);
     }
   }, [programmateursAssocies]);
 
@@ -267,7 +357,6 @@ const StructureFormEnhanced = () => {
       return;
     }
 
-    setIsSearchingConcerts(true);
     try {
       const q = query(
         collection(db, 'concerts'),
@@ -285,8 +374,6 @@ const StructureFormEnhanced = () => {
       ));
     } catch (error) {
       console.error('Erreur recherche concerts:', error);
-    } finally {
-      setIsSearchingConcerts(false);
     }
   }, [concertsAssocies]);
 
@@ -296,7 +383,6 @@ const StructureFormEnhanced = () => {
       return;
     }
 
-    setIsSearchingLieux(true);
     try {
       const q = query(
         collection(db, 'lieux'),
@@ -314,8 +400,6 @@ const StructureFormEnhanced = () => {
       ));
     } catch (error) {
       console.error('Erreur recherche lieux:', error);
-    } finally {
-      setIsSearchingLieux(false);
     }
   }, [lieuxAssocies]);
 
@@ -356,6 +440,8 @@ const StructureFormEnhanced = () => {
     try {
       const structureData = {
         ...formData,
+        adresseLieu,
+        signataire,
         programmateursIds: programmateursAssocies.map(p => p.id),
         concertsIds: concertsAssocies.map(c => c.id),
         lieuxIds: lieuxAssocies.map(l => l.id),
@@ -588,22 +674,21 @@ const StructureFormEnhanced = () => {
               </div>
             </div>
 
-            {/* Section Coordonnées */}
+            {/* Section Adresse du lieu */}
             <div className={styles.formSection}>
               <div className={styles.sectionCard}>
                 <div className={styles.sectionHeader}>
                   <i className="bi bi-geo-alt section-icon"></i>
-                  <h3 className={styles.sectionTitle}>Coordonnées</h3>
+                  <h3 className={styles.sectionTitle}>Adresse du lieu</h3>
                 </div>
                 <div className={styles.sectionBody}>
                   <div className={styles.formGroup}>
-                    <label className={styles.formLabel}>Adresse</label>
-                    <input 
-                      type="text" 
-                      className={styles.formControl}
-                      name="adresse"
-                      value={formData.adresse}
-                      onChange={handleChange}
+                    <AddressInput
+                      label="Adresse"
+                      value={adresseLieu.adresse}
+                      onChange={(e) => setAdresseLieu(prev => ({ ...prev, adresse: e.target.value }))}
+                      onAddressSelected={handleAddressSelected}
+                      placeholder="Commencez à taper pour rechercher une adresse..."
                     />
                   </div>
                   
@@ -614,8 +699,8 @@ const StructureFormEnhanced = () => {
                         type="text" 
                         className={styles.formControl}
                         name="codePostal"
-                        value={formData.codePostal}
-                        onChange={handleChange}
+                        value={adresseLieu.codePostal}
+                        onChange={handleAdresseLieuChange}
                       />
                     </div>
                     <div className={styles.formGroup}>
@@ -624,12 +709,34 @@ const StructureFormEnhanced = () => {
                         type="text" 
                         className={styles.formControl}
                         name="ville"
-                        value={formData.ville}
-                        onChange={handleChange}
+                        value={adresseLieu.ville}
+                        onChange={handleAdresseLieuChange}
                       />
                     </div>
                   </div>
 
+                  <div className={styles.formGroup}>
+                    <label className={styles.formLabel}>Pays</label>
+                    <input 
+                      type="text" 
+                      className={styles.formControl}
+                      name="pays"
+                      value={adresseLieu.pays}
+                      onChange={handleAdresseLieuChange}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Section Coordonnées de contact */}
+            <div className={styles.formSection}>
+              <div className={styles.sectionCard}>
+                <div className={styles.sectionHeader}>
+                  <i className="bi bi-telephone section-icon"></i>
+                  <h3 className={styles.sectionTitle}>Coordonnées de contact</h3>
+                </div>
+                <div className={styles.sectionBody}>
                   <div className={styles.formRow}>
                     <div className={styles.formGroup}>
                       <label className={styles.formLabel}>Téléphone</label>
@@ -663,6 +770,91 @@ const StructureFormEnhanced = () => {
                       onChange={handleChange}
                       placeholder="https://..."
                     />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Section Informations du signataire du contrat */}
+            <div className={styles.formSection}>
+              <div className={styles.sectionCard}>
+                <div className={styles.sectionHeader}>
+                  <i className="bi bi-person-check section-icon"></i>
+                  <h3 className={styles.sectionTitle}>Informations du signataire du contrat</h3>
+                </div>
+                <div className={styles.sectionBody}>
+                  <div className={styles.formHelp}>
+                    <i className="bi bi-info-circle"></i>
+                    Ces informations seront utilisées pour générer le contrat. Merci de renseigner le représentant légal ou la personne habilitée à signer pour la structure.
+                  </div>
+                  
+                  <div className={styles.formRow}>
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel}>
+                        Prénom <span className={styles.required}>*</span>
+                      </label>
+                      <input 
+                        type="text" 
+                        className={styles.formControl}
+                        name="prenom"
+                        value={signataire.prenom}
+                        onChange={handleSignataireChange}
+                        required 
+                      />
+                    </div>
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel}>
+                        Nom <span className={styles.required}>*</span>
+                      </label>
+                      <input 
+                        type="text" 
+                        className={styles.formControl}
+                        name="nom"
+                        value={signataire.nom}
+                        onChange={handleSignataireChange}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className={styles.formGroup}>
+                    <label className={styles.formLabel}>
+                      Fonction / Qualité <span className={styles.required}>*</span>
+                    </label>
+                    <input 
+                      type="text" 
+                      className={styles.formControl}
+                      name="fonction"
+                      value={signataire.fonction}
+                      onChange={handleSignataireChange}
+                      placeholder="Ex: Directeur, Président, Responsable..."
+                      required
+                    />
+                  </div>
+                  
+                  <div className={styles.formRow}>
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel}>Email (facultatif)</label>
+                      <input 
+                        type="email" 
+                        className={styles.formControl}
+                        name="email"
+                        value={signataire.email}
+                        onChange={handleSignataireChange}
+                        placeholder="Email du signataire"
+                      />
+                    </div>
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel}>Téléphone (facultatif)</label>
+                      <input 
+                        type="tel" 
+                        className={styles.formControl}
+                        name="telephone"
+                        value={signataire.telephone}
+                        onChange={handleSignataireChange}
+                        placeholder="Téléphone du signataire"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>

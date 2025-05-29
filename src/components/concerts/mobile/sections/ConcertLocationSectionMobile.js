@@ -74,7 +74,13 @@ const ConcertLocationSectionMobile = ({
                         >
                           <div className={styles.resultName}>{result.nom}</div>
                           <div className={styles.resultAddress}>
-                            {result.adresse?.ville}, {result.adresse?.codePostal}
+                            {result.ville && result.codePostal ? 
+                              `${result.ville}, ${result.codePostal}` :
+                              (result.adresse && typeof result.adresse === 'string' ? 
+                                result.adresse : 
+                                'Adresse non spécifiée'
+                              )
+                            }
                           </div>
                         </ListGroup.Item>
                       ))}
@@ -102,12 +108,12 @@ const ConcertLocationSectionMobile = ({
                     <Card.Body>
                       <h5 className={styles.lieuName}>{selectedLieu.nom}</h5>
                       <div className={styles.lieuAddress}>
-                        {selectedLieu.adresse?.rue && (
-                          <div>{selectedLieu.adresse.rue}</div>
+                        {selectedLieu.adresse && typeof selectedLieu.adresse === 'string' && (
+                          <div>{selectedLieu.adresse}</div>
                         )}
-                        {selectedLieu.adresse?.codePostal && selectedLieu.adresse?.ville && (
+                        {selectedLieu.codePostal && selectedLieu.ville && (
                           <div>
-                            {selectedLieu.adresse.codePostal} {selectedLieu.adresse.ville}
+                            {selectedLieu.codePostal} {selectedLieu.ville}
                           </div>
                         )}
                       </div>
@@ -153,10 +159,10 @@ const ConcertLocationSectionMobile = ({
                 <div className={styles.lieuAddress}>
                   <i className="bi bi-geo-alt me-2"></i>
                   <div>
-                    {lieu.adresse.rue && <div>{lieu.adresse.rue}</div>}
-                    {lieu.adresse.codePostal && lieu.adresse.ville && (
+                    {typeof lieu.adresse === 'string' && <div>{lieu.adresse}</div>}
+                    {lieu.codePostal && lieu.ville && (
                       <div>
-                        {lieu.adresse.codePostal} {lieu.adresse.ville}
+                        {lieu.codePostal} {lieu.ville}
                       </div>
                     )}
                   </div>

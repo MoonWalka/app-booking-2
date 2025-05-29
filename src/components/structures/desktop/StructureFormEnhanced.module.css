@@ -119,6 +119,26 @@
   margin-bottom: 20px;
 }
 
+.formHelp {
+  background-color: #e3f2fd;
+  border-left: 4px solid #00b4d8;
+  padding: 15px 20px;
+  margin-bottom: 25px;
+  border-radius: 8px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 14px;
+  color: #0277bd;
+  line-height: 1.4;
+}
+
+.formHelp i {
+  font-size: 18px;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
 .formLabel {
   display: block;
   font-size: 14px;

@@ -1,31 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import { collection, addDoc, updateDoc, doc, serverTimestamp, getDoc } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
+import AddressInput from '@/components/ui/AddressInput';
 import styles from '@/pages/FormResponsePage.module.css';
 
 const PublicProgrammateurForm = ({ 
   token, 
   concertId, 
   formLinkId, 
-  onSubmitSuccess 
+  onSubmitSuccess,
+  programmateurEmail // Email du programmateur passé si disponible
 }) => {
-  // États du formulaire
+  // États du formulaire restructuré
   const [formData, setFormData] = useState({
-    // Contact personnel
-    nom: '',
-    prenom: '',
-    email: '',
-    telephone: '',
-    adresse: '',
-    codePostal: '',
-    ville: '',
+    // Adresse du lieu (prioritaire)
+    lieuAdresse: '',
+    lieuCodePostal: '',
+    lieuVille: '',
+    lieuPays: 'France',
     
-    // Structure (optionnel via SIRET)
+    // Informations de la structure (optionnel)
     structureNom: '',
     structureSiret: '',
     structureAdresse: '',
     structureCodePostal: '',
-    structureVille: ''
+    structureVille: '',
+    
+    // Informations du signataire du contrat
+    signataireNom: '',
+    signatairePrenom: '',
+    signataireFonction: '', // Qualité/fonction du signataire
+    signataireEmail: programmateurEmail || '', // Prérempli si disponible
+    signataireTelephone: '' // Facultatif
   });
 
   // États pour la recherche SIRET
@@ -46,11 +52,19 @@ const PublicProgrammateurForm = ({
       if (!formLinkId) return;
 
       try {
-        // Récupérer les données du lien de formulaire pour vérifier s'il y a une soumission existante
+        // Récupérer les données du lien de formulaire
         const formLinkDoc = await getDoc(doc(db, 'formLinks', formLinkId));
         
         if (formLinkDoc.exists()) {
           const formLinkData = formLinkDoc.data();
+          
+          // Préremplir l'email si disponible dans les données du lien
+          if (formLinkData.programmateurEmail) {
+            setFormData(prev => ({
+              ...prev,
+              signataireEmail: prev.signataireEmail || formLinkData.programmateurEmail
+            }));
+          }
           
           // Si le formulaire a déjà été complété, récupérer les données
           if (formLinkData.completed && formLinkData.submissionId) {
@@ -60,30 +74,32 @@ const PublicProgrammateurForm = ({
               const submissionData = submissionDoc.data();
               
               // Pré-remplir le formulaire avec les données existantes
-              if (submissionData.programmateurData) {
-                const { contact, structure } = submissionData.programmateurData;
-                
+              if (submissionData.lieuData || submissionData.signataireData || submissionData.structureData) {
                 setFormData({
-                  // Données du contact
-                  nom: contact?.nom || '',
-                  prenom: contact?.prenom || '',
-                  email: contact?.email || '',
-                  telephone: contact?.telephone || '',
-                  adresse: contact?.adresse || '',
-                  codePostal: contact?.codePostal || '',
-                  ville: contact?.ville || '',
+                  // Données du lieu
+                  lieuAdresse: submissionData.lieuData?.adresse || '',
+                  lieuCodePostal: submissionData.lieuData?.codePostal || '',
+                  lieuVille: submissionData.lieuData?.ville || '',
+                  lieuPays: submissionData.lieuData?.pays || 'France',
                   
                   // Données de la structure
-                  structureNom: structure?.raisonSociale || structure?.nom || '',  // Support ancien et nouveau format
-                  structureSiret: structure?.siret || '',
-                  structureAdresse: structure?.adresse || '',
-                  structureCodePostal: structure?.codePostal || '',
-                  structureVille: structure?.ville || ''
+                  structureNom: submissionData.structureData?.nom || '',
+                  structureSiret: submissionData.structureData?.siret || '',
+                  structureAdresse: submissionData.structureData?.adresse || '',
+                  structureCodePostal: submissionData.structureData?.codePostal || '',
+                  structureVille: submissionData.structureData?.ville || '',
+                  
+                  // Données du signataire
+                  signataireNom: submissionData.signataireData?.nom || '',
+                  signatairePrenom: submissionData.signataireData?.prenom || '',
+                  signataireFonction: submissionData.signataireData?.fonction || '',
+                  signataireEmail: submissionData.signataireData?.email || formLinkData.programmateurEmail || '',
+                  signataireTelephone: submissionData.signataireData?.telephone || ''
                 });
 
-                // Pré-remplir aussi le champ de recherche SIRET
-                if (structure?.raisonSociale || structure?.nom) {
-                  setSiretSearch(structure.raisonSociale || structure.nom);
+                // Pré-remplir aussi le champ de recherche SIRET si disponible
+                if (submissionData.structureData?.nom) {
+                  setSiretSearch(submissionData.structureData.nom);
                 }
               }
             }
@@ -103,6 +119,17 @@ const PublicProgrammateurForm = ({
     setFormData(prev => ({
       ...prev,
       [name]: value
+    }));
+  };
+
+  // Callback pour quand une adresse est sélectionnée via l'autocomplétion
+  const handleAddressSelected = (addressData) => {
+    setFormData(prev => ({
+      ...prev,
+      lieuAdresse: addressData.adresse || '',
+      lieuCodePostal: addressData.codePostal || '',
+      lieuVille: addressData.ville || '',
+      lieuPays: addressData.pays || 'France'
     }));
   };
 
@@ -212,18 +239,28 @@ const PublicProgrammateurForm = ({
   const validateForm = () => {
     const errors = [];
     
-    if (!formData.nom.trim()) errors.push('Le nom est obligatoire');
-    if (!formData.prenom.trim()) errors.push('Le prénom est obligatoire');
-    if (!formData.email.trim()) errors.push('L\'email est obligatoire');
-    if (!formData.telephone.trim()) errors.push('Le téléphone est obligatoire');
-    if (!formData.adresse.trim()) errors.push('L\'adresse est obligatoire');
-    if (!formData.codePostal.trim()) errors.push('Le code postal est obligatoire');
-    if (!formData.ville.trim()) errors.push('La ville est obligatoire');
-
-    // Validation email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (formData.email && !emailRegex.test(formData.email)) {
-      errors.push('Format d\'email invalide');
+    // Validation adresse du lieu
+    if (!formData.lieuAdresse.trim()) errors.push('L\'adresse du lieu est obligatoire');
+    if (!formData.lieuCodePostal.trim()) errors.push('Le code postal du lieu est obligatoire');
+    if (!formData.lieuVille.trim()) errors.push('La ville du lieu est obligatoire');
+    
+    // Validation structure (obligatoire)
+    if (!formData.structureNom.trim()) errors.push('Le nom de la structure est obligatoire');
+    if (!formData.structureAdresse.trim()) errors.push('L\'adresse de la structure est obligatoire');
+    if (!formData.structureCodePostal.trim()) errors.push('Le code postal de la structure est obligatoire');
+    if (!formData.structureVille.trim()) errors.push('La ville de la structure est obligatoire');
+    
+    // Validation signataire
+    if (!formData.signataireNom.trim()) errors.push('Le nom du signataire est obligatoire');
+    if (!formData.signatairePrenom.trim()) errors.push('Le prénom du signataire est obligatoire');
+    if (!formData.signataireFonction.trim()) errors.push('La fonction du signataire est obligatoire');
+    
+    // Validation email si renseigné
+    if (formData.signataireEmail) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.signataireEmail)) {
+        errors.push('Format d\'email invalide');
+      }
     }
 
     return errors;
@@ -253,37 +290,34 @@ const PublicProgrammateurForm = ({
         submittedAt: serverTimestamp(),
         status: 'pending',
         
-        // Données du programmateur organisées clairement
-        programmateurData: {
-          // CONTACT PERSONNEL (personne physique)
-          contact: {
-            nom: formData.nom,
-            prenom: formData.prenom,
-            email: formData.email,
-            telephone: formData.telephone,
-            adresse: formData.adresse,
-            codePostal: formData.codePostal,
-            ville: formData.ville
-          },
-          
-          // STRUCTURE/ENTREPRISE (personne morale) - optionnel
-          structure: formData.structureNom ? {
-            raisonSociale: formData.structureNom,  // Clarification : c'est la raison sociale
-            siret: formData.structureSiret,
-            adresse: formData.structureAdresse,
-            codePostal: formData.structureCodePostal,
-            ville: formData.structureVille
-          } : null
+        // DONNÉES DU LIEU (prioritaire)
+        lieuData: {
+          adresse: formData.lieuAdresse,
+          codePostal: formData.lieuCodePostal,
+          ville: formData.lieuVille,
+          pays: formData.lieuPays
+        },
+        
+        // DONNÉES DE LA STRUCTURE (obligatoire)
+        structureData: {
+          nom: formData.structureNom,
+          siret: formData.structureSiret,
+          adresse: formData.structureAdresse,
+          codePostal: formData.structureCodePostal,
+          ville: formData.structureVille
+        },
+        
+        // DONNÉES DU SIGNATAIRE DU CONTRAT
+        signataireData: {
+          nom: formData.signataireNom,
+          prenom: formData.signatairePrenom,
+          fonction: formData.signataireFonction,
+          email: formData.signataireEmail || null, // Facultatif
+          telephone: formData.signataireTelephone || null // Facultatif
         },
         
         // Données brutes pour compatibilité
-        rawData: formData,
-        
-        // Informations sur la recherche SIRET pour traçabilité
-        siretSearchData: {
-          searchTerm: siretSearch,
-          autoCompleted: !!formData.structureNom
-        }
+        rawData: formData
       };
 
       // Créer le document dans formSubmissions
@@ -322,46 +356,106 @@ const PublicProgrammateurForm = ({
 
   return (
     <form onSubmit={handleSubmit}>
-      {/* Outil de recherche SIRET */}
-      <div className={styles.siretSection}>
-        <h4>
-          <i className="bi bi-building"></i>
-          Recherche entreprise (optionnel)
-        </h4>
+      {/* Section Adresse du lieu */}
+      <div className={styles.sectionHeader}>
+        <h3>
+          <i className="bi bi-geo-alt"></i>
+          Adresse du lieu de l'événement
+        </h3>
         <p className={styles.formSubtitle}>
-          Recherchez votre entreprise par SIRET ou raison sociale pour pré-remplir automatiquement les informations.
+          Veuillez indiquer l'adresse exacte où se déroulera l'événement.
         </p>
-        
-        <div className={styles.siretSearchGroup}>
+      </div>
+      
+      <div className={styles.formSection}>
+        <div className={styles.formGroup}>
+          <AddressInput
+            label="Adresse du lieu *"
+            value={formData.lieuAdresse}
+            onChange={(e) => setFormData(prev => ({ ...prev, lieuAdresse: e.target.value }))}
+            onAddressSelected={handleAddressSelected}
+            placeholder="Commencez à taper pour rechercher une adresse..."
+            required
+          />
+        </div>
+
+        <div className={styles.formGrid}>
+          <div className={styles.formGroup}>
+            <label htmlFor="lieuCodePostal" className={styles.formLabel}>Code postal *</label>
+            <input
+              type="text"
+              id="lieuCodePostal"
+              name="lieuCodePostal"
+              className={styles.formControl}
+              placeholder="75000"
+              value={formData.lieuCodePostal}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <label htmlFor="lieuVille" className={styles.formLabel}>Ville *</label>
+            <input
+              type="text"
+              id="lieuVille"
+              name="lieuVille"
+              className={styles.formControl}
+              placeholder="Paris"
+              value={formData.lieuVille}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Section Recherche Structure */}
+      <div className={styles.sectionHeader} style={{ marginTop: '2rem' }}>
+        <h3>
+          <i className="bi bi-building"></i>
+          Informations de votre structure
+        </h3>
+        <p className={styles.formSubtitle}>
+          Recherchez votre entreprise/association par SIRET ou nom pour pré-remplir automatiquement, ou remplissez manuellement.
+        </p>
+      </div>
+      
+      <div className={styles.formSection}>
+        <div className={styles.formGroup}>
+          <label htmlFor="siretSearch" className={styles.formLabel}>Recherche par SIRET ou nom</label>
           <input
             type="text"
-            className={`${styles.formControl} ${styles.siretInput}`}
-            placeholder="Numéro SIRET ou raison sociale"
+            id="siretSearch"
+            className={styles.formControl}
+            placeholder="Numéro SIRET, nom ou raison sociale"
             value={siretSearch}
             onChange={handleSiretInputChange}
             onBlur={handleInputBlur}
           />
           {siretLoading && (
-            <div className={styles.siretLoading}>
+            <div className={styles.siretLoading} style={{ marginTop: '8px', fontSize: '14px', color: '#666' }}>
               <span className={styles.loadingSpinner}></span>
-              Recherche...
+              Recherche en cours...
             </div>
           )}
         </div>
 
         {/* Menu déroulant des résultats */}
         {showDropdown && siretResults.length > 0 && (
-          <div className={styles.siretResults}>
+          <div className={styles.siretResults} style={{ marginBottom: '20px' }}>
             {siretResults.map((entreprise) => (
               <div
                 key={entreprise.siren}
                 className={styles.siretResultItem}
                 onClick={() => handleSelectEntreprise(entreprise)}
+                style={{ cursor: 'pointer', padding: '12px', border: '1px solid #ddd', borderBottom: 'none', backgroundColor: '#f8f9fa' }}
+                onMouseEnter={(e) => e.target.style.backgroundColor = '#e9ecef'}
+                onMouseLeave={(e) => e.target.style.backgroundColor = '#f8f9fa'}
               >
-                <div className={styles.siretResultName}>
+                <div style={{ fontWeight: '600', marginBottom: '4px' }}>
                   {entreprise.nom_complet || entreprise.nom_raison_sociale || entreprise.denomination}
                 </div>
-                <div className={styles.siretResultDetails}>
+                <div style={{ fontSize: '13px', color: '#666' }}>
                   SIRET: {entreprise.siege?.siret || entreprise.siren} | {entreprise.siege?.libelle_commune || ''}
                 </div>
               </div>
@@ -371,210 +465,183 @@ const PublicProgrammateurForm = ({
 
         {/* Message d'erreur */}
         {siretError && (
-          <div className={styles.siretError}>
-            <i className="bi bi-exclamation-circle"></i>
-            {siretError}
+          <div style={{ color: '#dc3545', fontSize: '14px', marginBottom: '15px' }}>
+            <i className="bi bi-exclamation-circle"></i> {siretError}
           </div>
         )}
-      </div>
 
-      {/* Informations personnelles */}
-      <h4 style={{ marginTop: 'var(--tc-space-4)', marginBottom: 'var(--tc-space-4)', color: 'var(--tc-color-primary)' }}>
-        Vos informations personnelles (contact)
-      </h4>
-      
-      <div className={styles.formGrid}>
-        <div className={styles.formGroup}>
-          <label htmlFor="nom" className={styles.formLabel}>Votre nom *</label>
-          <input
-            type="text"
-            id="nom"
-            name="nom"
-            className={styles.formControl}
-            placeholder="Votre nom"
-            value={formData.nom}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div className={styles.formGroup}>
-          <label htmlFor="prenom" className={styles.formLabel}>Votre prénom *</label>
-          <input
-            type="text"
-            id="prenom"
-            name="prenom"
-            className={styles.formControl}
-            placeholder="Votre prénom"
-            value={formData.prenom}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-      </div>
-
-      <div className={styles.formGrid}>
-        <div className={styles.formGroup}>
-          <label htmlFor="email" className={styles.formLabel}>Votre email *</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            className={styles.formControl}
-            placeholder="votre@email.com"
-            value={formData.email}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div className={styles.formGroup}>
-          <label htmlFor="telephone" className={styles.formLabel}>Votre téléphone *</label>
-          <input
-            type="tel"
-            id="telephone"
-            name="telephone"
-            className={styles.formControl}
-            placeholder="06 12 34 56 78"
-            value={formData.telephone}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-      </div>
-
-      <div className={styles.formGroup}>
-        <label htmlFor="adresse" className={styles.formLabel}>Votre adresse *</label>
-        <input
-          type="text"
-          id="adresse"
-          name="adresse"
-          className={styles.formControl}
-          placeholder="Numéro et nom de rue"
-          value={formData.adresse}
-          onChange={handleInputChange}
-          required
-        />
-      </div>
-
-      <div className={styles.formGrid}>
-        <div className={styles.formGroup}>
-          <label htmlFor="codePostal" className={styles.formLabel}>Votre code postal *</label>
-          <input
-            type="text"
-            id="codePostal"
-            name="codePostal"
-            className={styles.formControl}
-            placeholder="75000"
-            value={formData.codePostal}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div className={styles.formGroup}>
-          <label htmlFor="ville" className={styles.formLabel}>Votre ville *</label>
-          <input
-            type="text"
-            id="ville"
-            name="ville"
-            className={styles.formControl}
-            placeholder="Votre ville"
-            value={formData.ville}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-      </div>
-
-      {/* Informations structure (si trouvées via SIRET) */}
-      {formData.structureNom && (
-        <>
-          <h4 style={{ marginTop: 'var(--tc-space-6)', marginBottom: 'var(--tc-space-4)', color: 'var(--tc-color-primary)' }}>
-            Informations de votre structure/entreprise
-          </h4>
-          
-          <div className={styles.formGrid}>
-            <div className={styles.formGroup}>
-              <label htmlFor="structureNom" className={styles.formLabel}>Raison sociale de l'entreprise</label>
-              <input
-                type="text"
-                id="structureNom"
-                name="structureNom"
-                className={styles.formControl}
-                value={formData.structureNom}
-                onChange={handleInputChange}
-                readOnly
-              />
-            </div>
-            <div className={styles.formGroup}>
-              <label htmlFor="structureSiret" className={styles.formLabel}>SIRET de l'entreprise</label>
-              <input
-                type="text"
-                id="structureSiret"
-                name="structureSiret"
-                className={styles.formControl}
-                value={formData.structureSiret}
-                onChange={handleInputChange}
-                readOnly
-              />
-            </div>
-          </div>
-
+        {/* Champs de structure (pré-remplis ou saisissables manuellement) */}
+        <div className={styles.formGrid}>
           <div className={styles.formGroup}>
-            <label htmlFor="structureAdresse" className={styles.formLabel}>Adresse de l'entreprise</label>
+            <label htmlFor="structureNom" className={styles.formLabel}>Nom / Raison sociale *</label>
             <input
               type="text"
-              id="structureAdresse"
-              name="structureAdresse"
+              id="structureNom"
+              name="structureNom"
               className={styles.formControl}
-              value={formData.structureAdresse}
+              placeholder="Nom de votre structure"
+              value={formData.structureNom}
               onChange={handleInputChange}
-              readOnly
+              required
             />
           </div>
-
-          <div className={styles.formGrid}>
-            <div className={styles.formGroup}>
-              <label htmlFor="structureCodePostal" className={styles.formLabel}>Code postal de l'entreprise</label>
-              <input
-                type="text"
-                id="structureCodePostal"
-                name="structureCodePostal"
-                className={styles.formControl}
-                value={formData.structureCodePostal}
-                onChange={handleInputChange}
-                readOnly
-              />
-            </div>
-            <div className={styles.formGroup}>
-              <label htmlFor="structureVille" className={styles.formLabel}>Ville de l'entreprise</label>
-              <input
-                type="text"
-                id="structureVille"
-                name="structureVille"
-                className={styles.formControl}
-                value={formData.structureVille}
-                onChange={handleInputChange}
-                readOnly
-              />
-            </div>
+          <div className={styles.formGroup}>
+            <label htmlFor="structureSiret" className={styles.formLabel}>SIRET</label>
+            <input
+              type="text"
+              id="structureSiret"
+              name="structureSiret"
+              className={styles.formControl}
+              placeholder="14 chiffres"
+              value={formData.structureSiret}
+              onChange={handleInputChange}
+            />
           </div>
-        </>
-      )}
+        </div>
 
-      {/* Erreur de soumission */}
+        <div className={styles.formGroup}>
+          <label htmlFor="structureAdresse" className={styles.formLabel}>Adresse de la structure *</label>
+          <input
+            type="text"
+            id="structureAdresse"
+            name="structureAdresse"
+            className={styles.formControl}
+            placeholder="Adresse de votre structure"
+            value={formData.structureAdresse}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+
+        <div className={styles.formGrid}>
+          <div className={styles.formGroup}>
+            <label htmlFor="structureCodePostal" className={styles.formLabel}>Code postal *</label>
+            <input
+              type="text"
+              id="structureCodePostal"
+              name="structureCodePostal"
+              className={styles.formControl}
+              placeholder="75000"
+              value={formData.structureCodePostal}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <label htmlFor="structureVille" className={styles.formLabel}>Ville *</label>
+            <input
+              type="text"
+              id="structureVille"
+              name="structureVille"
+              className={styles.formControl}
+              placeholder="Ville"
+              value={formData.structureVille}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Section Informations du signataire du contrat */}
+      <div className={styles.sectionHeader} style={{ marginTop: '2rem' }}>
+        <h3>
+          <i className="bi bi-person-check"></i>
+          Informations du signataire du contrat
+        </h3>
+      
+      </div>
+      
+      <div className={styles.formSection}>
+        <div className={styles.formGrid}>
+          <div className={styles.formGroup}>
+            <label htmlFor="signatairePrenom" className={styles.formLabel}>Prénom *</label>
+            <input
+              type="text"
+              id="signatairePrenom"
+              name="signatairePrenom"
+              className={styles.formControl}
+              placeholder="Prénom du signataire"
+              value={formData.signatairePrenom}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <label htmlFor="signataireNom" className={styles.formLabel}>Nom *</label>
+            <input
+              type="text"
+              id="signataireNom"
+              name="signataireNom"
+              className={styles.formControl}
+              placeholder="Nom du signataire"
+              value={formData.signataireNom}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+        </div>
+
+        <div className={styles.formGroup}>
+          <label htmlFor="signataireFonction" className={styles.formLabel}>Fonction / Qualité *</label>
+          <input
+            type="text"
+            id="signataireFonction"
+            name="signataireFonction"
+            className={styles.formControl}
+            placeholder="Ex: Directeur, Président, Responsable programmation..."
+            value={formData.signataireFonction}
+            onChange={handleInputChange}
+            required
+          />
+         
+        </div>
+
+        <div className={styles.formGrid}>
+          <div className={styles.formGroup}>
+            <label htmlFor="signataireEmail" className={styles.formLabel}>
+              Email {formData.signataireEmail && '(prérempli)'}
+            </label>
+            <input
+              type="email"
+              id="signataireEmail"
+              name="signataireEmail"
+              className={styles.formControl}
+              placeholder="email@exemple.com"
+              value={formData.signataireEmail}
+              onChange={handleInputChange}
+            />
+           
+          </div>
+          <div className={styles.formGroup}>
+            <label htmlFor="signataireTelephone" className={styles.formLabel}>Téléphone</label>
+            <input
+              type="tel"
+              id="signataireTelephone"
+              name="signataireTelephone"
+              className={styles.formControl}
+              placeholder="06 12 34 56 78"
+              value={formData.signataireTelephone}
+              onChange={handleInputChange}
+            />
+         
+          </div>
+        </div>
+      </div>
+
+      {/* Messages d'erreur */}
       {submitError && (
-        <div className={`${styles.alertPanel} ${styles.alertDanger}`}>
-          <p>
-            <i className="bi bi-exclamation-triangle"></i>
-            {submitError}
-          </p>
+        <div className={styles.errorMessage}>
+          <i className="bi bi-exclamation-circle"></i>
+          {submitError}
         </div>
       )}
 
       {/* Bouton de soumission */}
-      <div className={styles.submitSection}>
+      <div className={styles.formActions}>
         <button
           type="submit"
-          className={styles.btnPrimary}
+          className={`${styles.tcBtn} ${styles.tcBtnPrimary}`}
           disabled={isSubmitting}
         >
           {isSubmitting ? (
@@ -585,7 +652,7 @@ const PublicProgrammateurForm = ({
           ) : (
             <>
               <i className="bi bi-send"></i>
-              Envoyer le formulaire
+              Envoyer les informations
             </>
           )}
         </button>

@@ -31,6 +31,7 @@ const FormResponsePage = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [formLinkId, setFormLinkId] = useState(null);
+  const [programmateurEmail, setProgrammateurEmail] = useState('');
   const [concert, setConcert] = useState(null);
   const [lieu, setLieu] = useState(null);
   const [error, setError] = useState(null);
@@ -111,6 +112,11 @@ const FormResponsePage = () => {
           const formDoc = formsSnapshot.docs[0];
           const formLinkData = formDoc.data();
           setFormLinkId(formDoc.id);
+          
+          // Récupérer l'email du programmateur depuis formLinkData
+          if (formLinkData.programmateurEmail) {
+            setProgrammateurEmail(formLinkData.programmateurEmail);
+          }
           
           console.log("Données du lien trouvées:", formLinkData);
           
@@ -289,6 +295,7 @@ const FormResponsePage = () => {
               token={token} 
               concertId={concertId} 
               formLinkId={formLinkId} 
+              programmateurEmail={programmateurEmail}
               onSubmitSuccess={() => setCompleted(true)}
             />
           </div>

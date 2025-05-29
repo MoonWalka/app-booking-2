@@ -48,38 +48,90 @@ const ProgrammateurFormMaquette = () => {
   const [concertsAssocies, setConcertsAssocies] = useState([]);
   const [loadingAssociations, setLoadingAssociations] = useState(false);
 
+  // Callback mémorisé pour la sélection de structure
+  const handleCompanySelect = useCallback((company) => {
+    if (company) {
+      setFormData(prev => ({
+        ...prev,
+        structureNom: company.nom || '',
+        structureSiret: company.siret || '',
+        structureAdresse: company.adresse || '',
+        structureCodePostal: company.codePostal || '',
+        structureVille: company.ville || '',
+        structureType: company.statutJuridique || ''
+      }));
+    }
+  }, []);
+
+  // Callback mémorisé pour la sélection de lieu
+  const handleLieuSelect = useCallback((lieu) => {
+    if (lieu && !lieuxAssocies.find(l => l.id === lieu.id)) {
+      setLieuxAssocies(prev => [...prev, lieu]);
+      toast.success(`Lieu "${lieu.nom}" ajouté`);
+    }
+  }, [lieuxAssocies]);
+
   // Hooks de recherche
   const companySearch = useCompanySearch({
-    onCompanySelect: (company) => {
-      if (company) {
-        setFormData(prev => ({
-          ...prev,
-          structureNom: company.nom || '',
-          structureSiret: company.siret || '',
-          structureAdresse: company.adresse || '',
-          structureCodePostal: company.codePostal || '',
-          structureVille: company.ville || '',
-          structureType: company.statutJuridique || ''
-        }));
-      }
-    }
+    onCompanySelect: handleCompanySelect
   });
 
   const lieuSearch = useLieuSearch({
     maxResults: 10,
-    onSelect: (lieu) => {
-      if (lieu && !lieuxAssocies.find(l => l.id === lieu.id)) {
-        setLieuxAssocies(prev => [...prev, lieu]);
-        lieuSearch.clearSearch();
-        toast.success(`Lieu "${lieu.nom}" ajouté`);
-      }
-    }
+    onSelect: handleLieuSelect
   });
 
   // États pour la recherche de concerts simples
   const [concertSearchTerm, setConcertSearchTerm] = useState('');
   const [concertSearchResults, setConcertSearchResults] = useState([]);
   const [isSearchingConcerts, setIsSearchingConcerts] = useState(false);
+
+  // Fonction pour charger les lieux et concerts associés
+  const loadAssociations = useCallback(async (programmateur) => {
+    setLoadingAssociations(true);
+    try {
+      // Charger les lieux associés
+      if (programmateur.lieuxIds?.length > 0 || programmateur.lieuxAssocies?.length > 0) {
+        const lieuxIds = programmateur.lieuxIds || programmateur.lieuxAssocies || [];
+        const lieuxPromises = lieuxIds.map(async (lieuRef) => {
+          const lieuId = typeof lieuRef === 'object' ? lieuRef.id : lieuRef;
+          const lieuDoc = await getDoc(doc(db, 'lieux', lieuId));
+          return lieuDoc.exists() ? { id: lieuDoc.id, ...lieuDoc.data() } : null;
+        });
+        const lieux = (await Promise.all(lieuxPromises)).filter(lieu => lieu !== null);
+        setLieuxAssocies(lieux);
+      } else {
+        // Recherche par référence inverse
+        const lieuxQuery = query(collection(db, 'lieux'), where('programmateurId', '==', programmateur.id));
+        const lieuxSnapshot = await getDocs(lieuxQuery);
+        const lieux = lieuxSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setLieuxAssocies(lieux);
+      }
+
+      // Charger les concerts associés
+      if (programmateur.concertsIds?.length > 0 || programmateur.concertsAssocies?.length > 0) {
+        const concertsIds = programmateur.concertsIds || programmateur.concertsAssocies || [];
+        const concertsPromises = concertsIds.map(async (concertRef) => {
+          const concertId = typeof concertRef === 'object' ? concertRef.id : concertRef;
+          const concertDoc = await getDoc(doc(db, 'concerts', concertId));
+          return concertDoc.exists() ? { id: concertDoc.id, ...concertDoc.data() } : null;
+        });
+        const concerts = (await Promise.all(concertsPromises)).filter(concert => concert !== null);
+        setConcertsAssocies(concerts);
+      } else {
+        // Recherche par référence inverse
+        const concertsQuery = query(collection(db, 'concerts'), where('programmateurId', '==', programmateur.id));
+        const concertsSnapshot = await getDocs(concertsQuery);
+        const concerts = concertsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setConcertsAssocies(concerts);
+      }
+
+    } catch (error) {
+      console.error('Erreur lors du chargement des associations:', error);
+    } finally {
+      setLoadingAssociations(false);
+    }
+  }, []);
 
   // Chargement des données du programmateur
   useEffect(() => {
@@ -125,54 +177,7 @@ const ProgrammateurFormMaquette = () => {
     };
 
     loadProgrammateur();
-  }, [id, isNewFromUrl]);
-
-  // Fonction pour charger les lieux et concerts associés
-  const loadAssociations = async (programmateur) => {
-    setLoadingAssociations(true);
-    try {
-      // Charger les lieux associés
-      if (programmateur.lieuxIds?.length > 0 || programmateur.lieuxAssocies?.length > 0) {
-        const lieuxIds = programmateur.lieuxIds || programmateur.lieuxAssocies || [];
-        const lieuxPromises = lieuxIds.map(async (lieuRef) => {
-          const lieuId = typeof lieuRef === 'object' ? lieuRef.id : lieuRef;
-          const lieuDoc = await getDoc(doc(db, 'lieux', lieuId));
-          return lieuDoc.exists() ? { id: lieuDoc.id, ...lieuDoc.data() } : null;
-        });
-        const lieux = (await Promise.all(lieuxPromises)).filter(lieu => lieu !== null);
-        setLieuxAssocies(lieux);
-      } else {
-        // Recherche par référence inverse
-        const lieuxQuery = query(collection(db, 'lieux'), where('programmateurId', '==', programmateur.id));
-        const lieuxSnapshot = await getDocs(lieuxQuery);
-        const lieux = lieuxSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setLieuxAssocies(lieux);
-      }
-
-      // Charger les concerts associés
-      if (programmateur.concertsIds?.length > 0 || programmateur.concertsAssocies?.length > 0) {
-        const concertsIds = programmateur.concertsIds || programmateur.concertsAssocies || [];
-        const concertsPromises = concertsIds.map(async (concertRef) => {
-          const concertId = typeof concertRef === 'object' ? concertRef.id : concertRef;
-          const concertDoc = await getDoc(doc(db, 'concerts', concertId));
-          return concertDoc.exists() ? { id: concertDoc.id, ...concertDoc.data() } : null;
-        });
-        const concerts = (await Promise.all(concertsPromises)).filter(concert => concert !== null);
-        setConcertsAssocies(concerts);
-      } else {
-        // Recherche par référence inverse
-        const concertsQuery = query(collection(db, 'concerts'), where('programmateurId', '==', programmateur.id));
-        const concertsSnapshot = await getDocs(concertsQuery);
-        const concerts = concertsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setConcertsAssocies(concerts);
-      }
-
-    } catch (error) {
-      console.error('Erreur lors du chargement des associations:', error);
-    } finally {
-      setLoadingAssociations(false);
-    }
-  };
+  }, [id, isNewFromUrl, loadAssociations]);
 
   // Gestionnaire de changement des champs avec validation automatique SIRET
   const handleChange = (e) => {
@@ -260,25 +265,25 @@ const ProgrammateurFormMaquette = () => {
   };
 
   // Fonctions de gestion des lieux associés
-  const handleRemoveLieu = (lieuId) => {
+  const handleRemoveLieu = useCallback((lieuId) => {
     setLieuxAssocies(prev => prev.filter(lieu => lieu.id !== lieuId));
     toast.info('Lieu retiré de la liste');
-  };
+  }, []);
 
   // Fonctions de gestion des concerts associés
-  const handleRemoveConcert = (concertId) => {
+  const handleRemoveConcert = useCallback((concertId) => {
     setConcertsAssocies(prev => prev.filter(concert => concert.id !== concertId));
     toast.info('Concert retiré de la liste');
-  };
+  }, []);
 
-  const handleSelectConcertFromSearch = (concert) => {
+  const handleSelectConcertFromSearch = useCallback((concert) => {
     if (concert && !concertsAssocies.find(c => c.id === concert.id)) {
       setConcertsAssocies(prev => [...prev, concert]);
       setConcertSearchTerm('');
       setConcertSearchResults([]);
       toast.success(`Concert "${concert.titre}" ajouté`);
     }
-  };
+  }, [concertsAssocies]);
 
   // Fonction de recherche de concerts simplifiée
   const searchConcerts = useCallback(async (searchTerm) => {
@@ -300,19 +305,14 @@ const ProgrammateurFormMaquette = () => {
         ...doc.data()
       }));
       
-      // Filtrer les concerts déjà associés
-      const filteredConcerts = concerts.filter(concert => 
-        !concertsAssocies.find(c => c.id === concert.id)
-      );
-      
-      setConcertSearchResults(filteredConcerts);
+      setConcertSearchResults(concerts);
     } catch (error) {
       console.error('Erreur lors de la recherche de concerts:', error);
       setConcertSearchResults([]);
     } finally {
       setIsSearchingConcerts(false);
     }
-  }, [concertsAssocies]);
+  }, []);
 
   // Effet pour la recherche de concerts avec debounce
   useEffect(() => {
@@ -322,6 +322,11 @@ const ProgrammateurFormMaquette = () => {
 
     return () => clearTimeout(timeoutId);
   }, [concertSearchTerm, searchConcerts]);
+
+  // Filtrer les concerts dans le rendu pour éviter la dépendance dans searchConcerts
+  const filteredConcertResults = concertSearchResults.filter(concert => 
+    !concertsAssocies.find(c => c.id === concert.id)
+  );
 
   // Gestionnaire de sauvegarde
   const handleSave = async (e) => {
@@ -900,9 +905,9 @@ const ProgrammateurFormMaquette = () => {
                     </div>
 
                     {/* Résultats de recherche de concerts */}
-                    {concertSearchResults.length > 0 && (
+                    {filteredConcertResults.length > 0 && (
                       <div className={styles.searchResults}>
-                        {concertSearchResults.map((concert) => (
+                        {filteredConcertResults.map((concert) => (
                           <div
                             key={concert.id}
                             className={styles.searchResultItem}

@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { collection, query, where, getDocs, getDoc, doc, updateDoc, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
-import { useLocationIQ } from '@/hooks/common/useLocationIQ';
 import ProgrammateurForm from '@/components/programmateurs/ProgrammateurForm';
 import '@/styles/formPublic.css';
 
@@ -37,7 +36,6 @@ const FormResponsePage = () => {
   const [error, setError] = useState(null);
   const [expired, setExpired] = useState(false);
   const [completed, setCompleted] = useState(false);
-  const [formData, setFormData] = useState(null); // Pour la validation admin
 
   // États pour l'édition des informations du lieu
   const [lieuFormData, setLieuFormData] = useState({
@@ -47,14 +45,6 @@ const FormResponsePage = () => {
     ville: '',
     capacite: ''
   });
-
-  // Variables pour l'autocomplétion d'adresse (gardées pour cohérence avec maquette)
-  const addressTimeoutRef = useRef(null);
-  const addressInputRef = useRef(null);
-  const suggestionsRef = useRef(null);
-
-  // Hook LocationIQ (gardé pour cohérence avec maquette même si non utilisé actuellement)
-  const { isLoading: isApiLoading, searchAddress } = useLocationIQ();
 
   // Déterminer si nous sommes en mode public ou en mode admin
   const isPublicForm = !!concertId && !!token;
@@ -73,114 +63,6 @@ const FormResponsePage = () => {
     }
   }, [lieu]);
 
-  // Effets pour la recherche d'adresse et gestionnaires (gardés en commentaire pour cohérence avec maquette)
-  /*
-  // Effet pour la recherche d'adresse
-  useEffect(() => {
-    // Nettoyer le timeout précédent
-    if (addressTimeoutRef.current) {
-      clearTimeout(addressTimeoutRef.current);
-    }
-    
-    const handleSearch = async () => {
-      if (!lieuFormData.adresse || lieuFormData.adresse.length < 3 || isApiLoading) {
-        setAddressSuggestions([]);
-        return;
-      }
-      
-      setIsSearchingAddress(true);
-      
-      try {
-        // Appeler la fonction du hook
-        const results = await searchAddress(lieuFormData.adresse);
-        setAddressSuggestions(results || []);
-      } catch (error) {
-        console.error("Erreur lors de la recherche:", error);
-        setAddressSuggestions([]);
-      } finally {
-        setIsSearchingAddress(false);
-      }
-    };
-    
-    // N'effectuer la recherche que si l'adresse a au moins 3 caractères
-    if (lieuFormData.adresse && lieuFormData.adresse.length >= 3 && !isApiLoading) {
-      addressTimeoutRef.current = setTimeout(handleSearch, 300);
-    } else {
-      setAddressSuggestions([]);
-    }
-    
-    return () => {
-      if (addressTimeoutRef.current) {
-        clearTimeout(addressTimeoutRef.current);
-      }
-    };
-  }, [lieuFormData.adresse, isApiLoading, searchAddress]);
-
-  // Gestionnaire de clic extérieur pour fermer la liste des suggestions d'adresse
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (suggestionsRef.current && !suggestionsRef.current.contains(event.target) && 
-          addressInputRef.current && !addressInputRef.current.contains(event.target)) {
-        setAddressSuggestions([]);
-      }
-    };
-    
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  // Sélectionner une adresse parmi les suggestions
-  const handleSelectAddress = (address) => {
-    let codePostal = '';
-    let ville = '';
-    let adresse = '';
-    
-    // Extraire les composants d'adresse
-    if (address.address) {
-      // Extraire le code postal
-      codePostal = address.address.postcode || '';
-      
-      // Extraire la ville
-      ville = address.address.city || address.address.town || address.address.village || '';
-      
-      // Construire l'adresse de rue
-      const houseNumber = address.address.house_number || '';
-      const road = address.address.road || '';
-      adresse = `${houseNumber} ${road}`.trim();
-    }
-    
-    // Mettre à jour le formulaire du lieu avec les informations d'adresse
-    setLieuFormData(prev => ({
-      ...prev,
-      adresse: adresse || address.display_name.split(',')[0],
-      codePostal,
-      ville
-    }));
-    
-    // Fermer les suggestions
-    setAddressSuggestions([]);
-  };
-
- // Fonction pour sauvegarder les modifications du lieu
-const saveLieuChanges = () => {
-  // Créer un nouvel objet lieu avec les nouvelles valeurs
-  const updatedLieu = {
-    ...lieu,
-    ...lieuFormData,
-    // Assurez-vous que capacite est un nombre
-    capacite: lieuFormData.capacite ? parseInt(lieuFormData.capacite, 10) : null
-  };
-  
-  // Mettre à jour l'état local
-  setLieu(updatedLieu);
-  
-  // Fermer l'édition
-  setEditingConcertInfo(false);
-};
-*/
-
   useEffect(() => {
     // En mode validation admin (route /formulaire/validation/:id)
     if (isAdminValidation) {
@@ -194,7 +76,6 @@ const saveLieuChanges = () => {
           const submissionDoc = await getDoc(doc(db, 'formSubmissions', id));
           if (submissionDoc.exists()) {
             const submissionData = submissionDoc.data();
-            setFormData(submissionData);
             
             // Récupérer le concert associé
             if (submissionData.concertId) {
@@ -251,7 +132,6 @@ const saveLieuChanges = () => {
           
           const formDoc = formsSnapshot.docs[0];
           const formLinkData = formDoc.data();
-          setFormData(formLinkData);
           setFormLinkId(formDoc.id);
           
           console.log("Données du lien trouvées:", formLinkData);

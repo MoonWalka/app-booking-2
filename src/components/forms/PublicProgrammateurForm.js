@@ -59,17 +59,8 @@ const PublicProgrammateurForm = ({
     setSiretResults(null);
 
     try {
-      // Déterminer si c'est un SIRET (14 chiffres) ou une raison sociale
-      const isSiret = /^\d{14}$/.test(siretSearch.replace(/\s/g, ''));
-      
-      let apiUrl;
-      if (isSiret) {
-        // Recherche par SIRET via l'Annuaire des Entreprises
-        apiUrl = `https://recherche-entreprises.api.gouv.fr/search?siret=${siretSearch.replace(/\s/g, '')}`;
-      } else {
-        // Recherche par nom via l'Annuaire des Entreprises
-        apiUrl = `https://recherche-entreprises.api.gouv.fr/search?q=${encodeURIComponent(siretSearch)}&per_page=1`;
-      }
+      // Utiliser le paramètre 'q' pour tous les types de recherche (SIRET ou nom)
+      const apiUrl = `https://recherche-entreprises.api.gouv.fr/search?q=${encodeURIComponent(siretSearch.trim())}&per_page=1`;
 
       const response = await fetch(apiUrl);
       
@@ -97,20 +88,21 @@ const PublicProgrammateurForm = ({
                   entreprise.denomination ||
                   `${entreprise.prenom || ''} ${entreprise.nom || ''}`.trim();
 
-      // Construire l'adresse à partir des champs disponibles
-      const numeroVoie = entreprise.numero_voie || '';
-      const typeVoie = entreprise.type_voie || '';
-      const libelleVoie = entreprise.libelle_voie || '';
+      // Utiliser les informations du siège pour l'adresse
+      const siege = entreprise.siege || {};
+      const numeroVoie = siege.numero_voie || '';
+      const typeVoie = siege.type_voie || '';
+      const libelleVoie = siege.libelle_voie || '';
       const adresse = `${numeroVoie} ${typeVoie} ${libelleVoie}`.trim();
       
       // Mettre à jour le formulaire avec les données trouvées
       setFormData(prev => ({
         ...prev,
         structureNom: nom,
-        structureSiret: entreprise.siret,
-        structureAdresse: adresse,
-        structureCodePostal: entreprise.code_postal || '',
-        structureVille: entreprise.libelle_commune || ''
+        structureSiret: siege.siret || entreprise.siren,
+        structureAdresse: adresse || siege.adresse || '',
+        structureCodePostal: siege.code_postal || '',
+        structureVille: siege.libelle_commune || ''
       }));
 
       setSiretResults({

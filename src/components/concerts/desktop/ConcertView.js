@@ -244,12 +244,28 @@ const ConcertView = memo(({ id: propId }) => {
         />
       )}
       {showFormGenerator && (
-        <FormGenerator
-          concert={concert}
-          programmateur={programmateur}
-          onFormGenerated={handleFormGenerated}
-          onClose={() => setShowFormGenerator(false)}
-        />
+        <div className={styles.formGeneratorOverlay}>
+          <div className={styles.formGeneratorModal}>
+            <button 
+              className={styles.closeButton}
+              onClick={() => setShowFormGenerator(false)}
+              aria-label="Fermer"
+            >
+              <i className="bi bi-x-lg"></i>
+            </button>
+            <FormGenerator
+              concertId={id}
+              programmateurId={programmateur?.id}
+              onFormGenerated={(formLinkId, formUrl) => {
+                setGeneratedFormLink(formUrl);
+                if (handleFormGenerated) {
+                  handleFormGenerated(formLinkId, formUrl);
+                }
+                // Ne pas fermer automatiquement le FormGenerator pour permettre à l'utilisateur de copier le lien
+              }}
+            />
+          </div>
+        </div>
       )}
       <DeleteConcertModal
         show={showDeleteConfirm}

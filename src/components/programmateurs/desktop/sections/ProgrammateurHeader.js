@@ -1,13 +1,9 @@
 import React from 'react';
-import Button from '@components/ui/Button';
-import FlexContainer from '@components/ui/FlexContainer';
-import styles from './ProgrammateurHeader.module.css';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * ProgrammateurHeader - En-tête du programmateur
- * Logique conditionnelle comme LieuHeader : 
- * - Mode lecture : Retour + Modifier
- * - Mode édition : Enregistrer + Supprimer + Annuler
+ * Adapté du style maquette concert details (sans breadcrumb)
  */
 export const ProgrammateurHeader = ({
   programmateur,
@@ -21,6 +17,8 @@ export const ProgrammateurHeader = ({
   canSave,
   navigateToList
 }) => {
+  const navigate = useNavigate();
+
   const getTitle = () => {
     if (isNewFromUrl) {
       return 'Nouveau programmateur';
@@ -41,92 +39,90 @@ export const ProgrammateurHeader = ({
   };
 
   return (
-    <div className={styles.headerContainer}>
-      <FlexContainer justify="space-between" align="center" className={styles.headerContent}>
-        {/* Titre et informations */}
-        <div className={styles.titleSection}>
-          <div className={styles.title}>
-            {getTitle()}
-          </div>
-          {getSubtitle() && (
-            <p className={styles.subtitle}>
-              {getSubtitle()}
-            </p>
-          )}
-        </div>
+    <div className="details-header-container">
+      <div className="title-container">
+        {/* Titre principal - adapté de la maquette */}
+        <h1 className="modern-title">
+          {getTitle()}
+        </h1>
+        {getSubtitle() && (
+          <p style={{ 
+            color: 'var(--tc-text-secondary)', 
+            fontSize: 'var(--tc-font-size-lg)',
+            margin: 0,
+            marginTop: 'var(--tc-space-1)'
+          }}>
+            {getSubtitle()}
+          </p>
+        )}
+      </div>
 
-        {/* Boutons d'action - Logique conditionnelle comme LieuHeader */}
-        <div className={styles.actionsSection}>
-          <FlexContainer gap="sm">
-            {isEditMode ? (
-              // Boutons en mode édition
-              <>
-                <Button
-                  variant="success"
-                  onClick={onSave}
-                  disabled={isSubmitting || !canSave}
-                  icon={isSubmitting ? null : <i className="bi bi-check-circle"></i>}
-                  type="submit"
-                  className={styles.actionBtn}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                      Enregistrement...
-                    </>
-                  ) : (
-                    'Enregistrer'
-                  )}
-                </Button>
+      {/* Boutons d'action - adapté de la maquette */}
+      <div className="action-buttons">
+        {isEditMode ? (
+          <>
+            {/* Boutons en mode édition */}
+            <button
+              type="button"
+              className="tc-btn tc-btn-primary"
+              onClick={onSave}
+              disabled={isSubmitting || !canSave}
+            >
+              {isSubmitting ? (
+                <>
+                  <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  <span>Enregistrement...</span>
+                </>
+              ) : (
+                <>
+                  <i className="bi bi-check-circle"></i>
+                  <span>Enregistrer</span>
+                </>
+              )}
+            </button>
 
-                {/* Bouton Supprimer (seulement si ce n'est pas un nouveau programmateur) */}
-                {!isNewFromUrl && (
-                  <Button
-                    variant="danger"
-                    onClick={onDelete}
-                    disabled={isSubmitting}
-                    icon={<i className="bi bi-trash"></i>}
-                    className={styles.actionBtn}
-                  >
-                    Supprimer
-                  </Button>
-                )}
-
-                <Button
-                  variant="secondary"
-                  onClick={onCancel}
-                  disabled={isSubmitting}
-                  icon={<i className="bi bi-x-circle"></i>}
-                  className={styles.actionBtn}
-                >
-                  Annuler
-                </Button>
-              </>
-            ) : (
-              // Boutons en mode lecture
-              <>
-                <Button
-                  variant="secondary"
-                  onClick={navigateToList}
-                  icon={<i className="bi bi-arrow-left"></i>}
-                  className={styles.actionBtn}
-                >
-                  Retour
-                </Button>
-
-                <Button
-                  variant="outline-primary"
-                  onClick={onEdit}
-                  icon={<i className="bi bi-pencil"></i>}
-                  className={styles.actionBtn}
-                >
-                  Modifier
-                </Button>
-              </>
+            {/* Bouton Supprimer (seulement si ce n'est pas un nouveau programmateur) */}
+            {!isNewFromUrl && (
+              <button
+                className="tc-btn tc-btn-outline-danger"
+                onClick={onDelete}
+                disabled={isSubmitting}
+              >
+                <i className="bi bi-trash"></i>
+                <span>Supprimer</span>
+              </button>
             )}
-          </FlexContainer>
-        </div>
-      </FlexContainer>
+
+            <button
+              className="tc-btn tc-btn-outline-secondary"
+              onClick={onCancel}
+              disabled={isSubmitting}
+            >
+              <i className="bi bi-x-circle"></i>
+              <span>Annuler</span>
+            </button>
+          </>
+        ) : (
+          <>
+            {/* Boutons en mode lecture - selon la maquette */}
+            <button 
+              onClick={navigateToList || (() => navigate('/programmateurs'))} 
+              className="tc-btn tc-btn-outline-secondary"
+            >
+              <i className="bi bi-arrow-left"></i>
+              <span>Retour</span>
+            </button>
+
+            <button
+              onClick={onEdit}
+              className="tc-btn tc-btn-outline-primary"
+            >
+              <i className="bi bi-pencil"></i>
+              <span>Modifier</span>
+            </button>
+          </>
+        )}
+      </div>
     </div>
   );
 }; 

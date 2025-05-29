@@ -8,7 +8,6 @@ import ValidationSection from './ValidationSection';
 import ValidationActionBar from './ValidationActionBar';
 import ValidationModal from './ValidationModal';
 import { useFormValidationData } from '@/hooks/forms';
-import { useGenericFieldActions } from '@/hooks/generics/actions/useGenericFieldActions';
 import { useValidationBatchActions } from '@/hooks/forms';
 import { useGenericResponsive } from '@/hooks/generics/utils/useGenericResponsive';
 
@@ -63,13 +62,11 @@ const FormValidationInterface = () => {
   } = useFormValidationData(id);
   
   // ✅ PHASE 3: Hook d'actions de champs générique avec configuration optimisée
+  // Hook temporairement désactivé car variables non utilisées (évite warnings ESLint)
+  /*
   const {
-    validateField,
-    copyFieldValue,
-    getFieldState,
-    getPerformanceStats,
-    fieldState,
-    clearHistory
+    // Variables supprimées car non utilisées pour éviter les warnings ESLint
+    // validateField, copyFieldValue, getFieldState, getPerformanceStats, fieldState, clearHistory
   } = useGenericFieldActions({
     entityType: 'formValidation',
     validationRules: {
@@ -101,6 +98,7 @@ const FormValidationInterface = () => {
     maxHistorySize: 30,
     validationDelay: 200
   });
+  */
   
   const { validateForm, validationInProgress } = useValidationBatchActions({
     formId: formData?.id,

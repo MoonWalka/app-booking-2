@@ -1,12 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import styles from './ConcertHeader.module.css';
-import Button from '@/components/ui/Button';
 
 /**
  * Composant d'en-tête pour la page de détails d'un concert
- * Affiche le titre, le fil d'Ariane et les boutons d'action
- * Adapté de la maquette concertdetail.md
+ * Affiche le titre et les boutons d'action
+ * Adapté de la maquette concertdetail.md (sans breadcrumb)
  */
 const ConcertHeader = ({ 
   concert, 
@@ -25,28 +23,6 @@ const ConcertHeader = ({
   return (
     <div className="details-header-container">
       <div className="title-container">
-        {/* Breadcrumb navigation - adapté de la maquette */}
-        <div className="breadcrumb-container">
-          <i className="bi bi-house"></i>
-          <span 
-            onClick={() => navigate('/dashboard')} 
-            style={{ cursor: 'pointer' }}
-          >
-            Accueil
-          </span>
-          <i className="bi bi-chevron-right"></i>
-          <span 
-            onClick={() => navigate('/concerts')} 
-            style={{ cursor: 'pointer' }}
-          >
-            Concerts
-          </span>
-          <i className="bi bi-chevron-right"></i>
-          <span className="text-muted">
-            {concert?.titre || `Concert du ${formatDate(concert?.date)}`}
-          </span>
-        </div>
-        
         {/* Titre principal - adapté de la maquette */}
         <h1 className="modern-title">
           {concert?.titre || `Concert du ${formatDate(concert?.date)}`}

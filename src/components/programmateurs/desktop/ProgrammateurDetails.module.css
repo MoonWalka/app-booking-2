@@ -1,73 +1,258 @@
 /*
- * Styles pour ProgrammateurDetails
+ * Styles pour ProgrammateurDetails - Adapté du style concert details maquette
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Dernière mise à jour: 29 Mai 2025
  */
 
-/* Complément de styles pour ProgrammateurDetails */
+/* Container principal - adapté de la maquette concerts */
+.programmateurDetails {
+  background-color: var(--tc-bg-white);
+  border-radius: var(--tc-radius-base);
+  box-shadow: var(--tc-shadow-base);
+  border: 1px solid var(--tc-border-light);
+  padding: var(--tc-space-4);
+  margin: var(--tc-space-4);
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: var(--tc-font-sans);
+  color: var(--tc-text-default);
+  line-height: var(--tc-line-height-normal);
+}
 
+/* Styles globaux pour les sections (utilisés par les composants enfants) */
+:global(.form-card) {
+  background-color: var(--tc-card-bg-color);
+  border-radius: var(--tc-card-border-radius);
+  box-shadow: var(--tc-card-shadow-medium);
+  margin-bottom: var(--tc-space-6);
+  overflow: hidden;
+  border: 1px solid var(--tc-card-border-color);
+}
+
+:global(.card-header) {
+  display: flex;
+  align-items: center;
+  background-color: var(--tc-card-header-bg-color);
+  padding: var(--tc-space-4);
+  border-bottom: 1px solid var(--tc-border-light);
+}
+
+:global(.card-header i) {
+  margin-right: var(--tc-space-2);
+  color: var(--tc-color-primary);
+  font-size: var(--tc-font-size-lg);
+}
+
+:global(.card-header h3) {
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
+  margin: 0;
+  flex-grow: 1;
+  color: var(--tc-card-header-text);
+}
+
+:global(.card-header-action) {
+  margin-left: auto;
+}
+
+:global(.card-body) {
+  padding: var(--tc-space-6);
+}
+
+/* Header styles - adapté de la maquette */
+:global(.details-header-container) {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--tc-space-6);
+  gap: var(--tc-space-4);
+  padding-bottom: var(--tc-space-4);
+  border-bottom: 2px solid var(--tc-border-light);
+}
+
+:global(.title-container) {
+  flex: 1;
+  min-width: 0;
+}
+
+:global(.modern-title) {
+  font-size: var(--tc-font-size-2xl);
+  font-weight: var(--tc-font-weight-bold);
+  color: var(--tc-color-primary);
+  margin: 0;
+  margin-bottom: var(--tc-space-2);
+  line-height: var(--tc-line-height-tight);
+}
+
+:global(.action-buttons) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tc-space-2);
+  align-items: flex-start;
+  flex-shrink: 0;
+}
+
+/* Styles pour les boutons - adapté de la maquette */
+:global(.tc-btn) {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tc-space-1);
+  padding: var(--tc-space-2) var(--tc-space-4);
+  border-radius: var(--tc-radius-base);
+  font-weight: var(--tc-font-weight-medium);
+  text-decoration: none;
+  transition: var(--tc-transition-base);
+  border: 1px solid transparent;
+  min-height: 40px;
+  justify-content: center;
+  font-size: var(--tc-font-size-base);
+  cursor: pointer;
+}
+
+:global(.tc-btn-primary) {
+  background-color: var(--tc-color-primary);
+  color: var(--tc-color-white);
+  border-color: var(--tc-color-primary);
+}
+
+:global(.tc-btn-primary:hover) {
+  background-color: var(--tc-color-primary-dark);
+  border-color: var(--tc-color-primary-dark);
+  color: var(--tc-color-white);
+  text-decoration: none;
+}
+
+:global(.tc-btn-outline-primary) {
+  background-color: transparent;
+  color: var(--tc-color-primary);
+  border-color: var(--tc-color-primary);
+}
+
+:global(.tc-btn-outline-primary:hover) {
+  background-color: var(--tc-color-primary);
+  color: var(--tc-color-white);
+  text-decoration: none;
+}
+
+:global(.tc-btn-outline-secondary) {
+  background-color: transparent;
+  color: var(--tc-color-gray-600);
+  border-color: var(--tc-color-gray-300);
+}
+
+:global(.tc-btn-outline-secondary:hover) {
+  background-color: var(--tc-color-gray-100);
+  color: var(--tc-color-gray-700);
+  text-decoration: none;
+}
+
+:global(.tc-btn-sm) {
+  padding: var(--tc-space-1) var(--tc-space-3);
+  font-size: var(--tc-font-size-sm);
+  min-height: 32px;
+}
+
+/* Liens et interactions - adapté de la maquette */
+:global(.contact-link) {
+  color: var(--tc-color-primary);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tc-space-1);
+  transition: var(--tc-transition-base);
+}
+
+:global(.contact-link:hover) {
+  color: var(--tc-color-primary-dark);
+  text-decoration: underline;
+}
+
+/* Notes content - adapté de la maquette */
+:global(.notes-content) {
+  background-color: var(--tc-bg-subtle);
+  border: 1px solid var(--tc-border-light);
+  border-radius: var(--tc-radius-base);
+  padding: var(--tc-space-3);
+  white-space: pre-line;
+  color: var(--tc-text-secondary);
+  font-size: var(--tc-font-size-base);
+  line-height: var(--tc-line-height-normal);
+}
+
+/* Status et badges - adapté de la maquette */
+:global(.status-display) {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-2);
+}
+
+:global(.badge) {
+  padding: var(--tc-space-1) var(--tc-space-2);
+  border-radius: var(--tc-radius-sm);
+  font-size: var(--tc-font-size-xs);
+  font-weight: var(--tc-font-weight-semibold);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tc-space-1);
+}
+
+/* Responsive mobile - adapté de la maquette */
+@media (max-width: 768px) {
+  .programmateurDetails {
+    margin: var(--tc-space-2);
+    padding: var(--tc-space-3);
+  }
+
+  :global(.details-header-container) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  :global(.action-buttons) {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  :global(.tc-btn) {
+    flex: 1;
+    min-width: 0;
+  }
+
+  :global(.card-body) {
+    padding: var(--tc-space-4);
+  }
+
+  :global(.modern-title) {
+    font-size: var(--tc-font-size-xl);
+  }
+}
+
+/* Print styles pour l'export PDF - adapté de la maquette */
+@media print {
+  .programmateurDetails {
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 20px !important;
+  }
+  
+  :global(.form-card) {
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+    break-inside: avoid;
+    margin-bottom: 20px !important;
+  }
+}
+
+/* Styles hérités pour compatibilité */
 .container {
   width: 100%;
   padding: var(--tc-space-6);
 }
 
-.cardWrapper {
-  margin-bottom: var(--tc-space-6);
-  border-radius: var(--tc-radius-lg);
-  box-shadow: var(--tc-shadow-base);
-  background-color: var(--tc-bg-default);
-  overflow: hidden;
-}
-
-.cardHeader {
-  display: flex;
-  align-items: center;
-  gap: var(--tc-space-2);
-  padding: var(--tc-space-4) var(--tc-space-6);
-  background-color: var(--tc-bg-light);
-  border-bottom: var(--tc-border-width) solid var(--tc-border-light);
-}
-
-.cardBody {
-  padding: var(--tc-space-6);
-}
-
-.cardLabel {
-  display: block;
-  font-weight: var(--tc-font-weight-medium);
-  margin-bottom: var(--tc-space-2);
-  color: var(--tc-text-secondary);
-}
-
-.cardValueCode {
-  font-family: var(--tc-font-mono);
-  letter-spacing: 0.5px;
-}
-
 .formSection {
   margin-bottom: var(--tc-space-6);
-}
-
-.breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: var(--tc-space-2);
-  margin-bottom: var(--tc-space-2);
-  font-size: var(--tc-font-size-sm);
-}
-
-.breadcrumbItem {
-  color: var(--tc-text-secondary);
-  text-decoration: none;
-}
-
-.breadcrumbItem:hover {
-  color: var(--tc-color-primary);
-  text-decoration: underline;
-}
-
-.breadcrumbDivider {
-  color: var(--tc-text-tertiary);
 }
 
 .listGroup {
@@ -110,12 +295,6 @@
   background-color: var(--tc-bg-light);
 }
 
-.dropdownItemText {
-  display: flex;
-  align-items: center;
-  gap: var(--tc-space-2);
-}
-
 .optionalText {
   font-size: var(--tc-font-size-xs);
   color: var(--tc-text-tertiary);
@@ -133,38 +312,59 @@
   gap: var(--tc-space-2);
 }
 
-.alertIcon {
-  font-size: var(--tc-font-size-lg);
-  color: var(--tc-color-info);
+.cardWrapper {
+  margin-bottom: var(--tc-space-6);
+  border-radius: var(--tc-radius-lg);
+  box-shadow: var(--tc-shadow-base);
+  background-color: var(--tc-bg-default);
+  overflow: hidden;
 }
 
-.formActions {
+.cardHeader {
   display: flex;
-  justify-content: flex-end;
-  gap: var(--tc-space-2);
-  margin-top: var(--tc-space-8);
-  padding-top: var(--tc-space-6);
-  border-top: var(--tc-border-width) solid var(--tc-border-light);
-}
-
-.programmateurDetails {
-  padding: var(--tc-space-6) 0;
-  background-color: transparent;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--tc-space-8);
-  padding-bottom: var(--tc-space-4);
+  gap: var(--tc-space-2);
+  padding: var(--tc-space-4) var(--tc-space-6);
+  background-color: var(--tc-bg-light);
   border-bottom: var(--tc-border-width) solid var(--tc-border-light);
 }
 
-.header h2 {
-  margin: 0;
-  font-size: var(--tc-font-size-xl);
-  color: var(--tc-text-dark);
+.cardBody {
+  padding: var(--tc-space-6);
+}
+
+.cardLabel {
+  display: block;
+  font-weight: var(--tc-font-weight-medium);
+  margin-bottom: var(--tc-space-2);
+  color: var(--tc-text-secondary);
+}
+
+.cardValueCode {
+  font-family: var(--tc-font-mono);
+  letter-spacing: 0.5px;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-2);
+  margin-bottom: var(--tc-space-2);
+  font-size: var(--tc-font-size-sm);
+}
+
+.breadcrumbItem {
+  color: var(--tc-text-secondary);
+  text-decoration: none;
+}
+
+.breadcrumbItem:hover {
+  color: var(--tc-color-primary);
+  text-decoration: underline;
+}
+
+.breadcrumbDivider {
+  color: var(--tc-text-tertiary);
 }
 
 .fonction {

@@ -60,7 +60,7 @@ const useConcertDelete = (onDeleteSuccess) => {
     
     // Configuration avancée
     validateBeforeDelete: true,
-    showConfirmation: true,
+    showConfirmation: false,
     cacheResults: false
   });
 

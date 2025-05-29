@@ -113,26 +113,36 @@ const FormValidationInterface = () => {
   const handleValidateField = (category, fieldName, value) => {
     const fieldPath = `${category}.${fieldName}`;
     
-    // Utiliser la validation générique avec tracking
-    validateField(fieldPath, value, false);
+    // CORRECTION: Ne plus utiliser validateField du hook générique pour éviter le conflit d'état
+    // validateField(fieldPath, value, false);
     
-    // Maintenir la compatibilité avec l'ancien système
+    // Utiliser uniquement l'état local validatedFields pour éviter les conflits
     setValidatedFields(prev => ({
       ...prev,
       [fieldPath]: value
     }));
+
+    // Log pour le développement
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`Champ validé ${fieldPath}:`, value);
+    }
   };
 
   // ✅ PHASE 3: Fonction de copie enrichie avec le hook générique
   const copyFormValueToFinal = (fieldPath, formValue) => {
-    // Utiliser la copie générique avec tracking
-    copyFieldValue(fieldPath, formValue);
+    // CORRECTION: Ne plus utiliser copyFieldValue du hook générique pour éviter le conflit d'état
+    // copyFieldValue(fieldPath, formValue);
     
-    // Maintenir la compatibilité avec l'ancien système
+    // Utiliser uniquement l'état local validatedFields pour éviter les conflits
     setValidatedFields(prev => ({
       ...prev,
       [fieldPath]: formValue
     }));
+
+    // Log pour le développement
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`Valeur copiée pour ${fieldPath}:`, formValue);
+    }
   };
 
   // Handle validation confirmation
@@ -141,16 +151,19 @@ const FormValidationInterface = () => {
     if (success) {
       setShowConfirmModal(false);
       
-      // ✅ PHASE 3: Effacer l'historique après validation réussie
-      clearHistory();
+      // ✅ CORRECTION: Plus besoin d'effacer l'historique du hook générique
+      // clearHistory();
     }
   };
 
   // Handle validation request
   const handleValidateRequest = () => {
-    // ✅ PHASE 3: Afficher les statistiques de performance en développement
+    // ✅ CORRECTION: Afficher les statistiques locales en développement au lieu du hook générique
     if (process.env.NODE_ENV === 'development') {
-      const stats = getPerformanceStats();
+      const stats = {
+        totalFields: Object.keys(validatedFields).length,
+        validFields: Object.values(validatedFields).filter(value => value && value.trim() !== '').length
+      };
       console.log('Statistiques de validation:', stats);
     }
     
@@ -224,7 +237,7 @@ const FormValidationInterface = () => {
       {(isAlreadyValidated || validated) && (
         <ValidationSummary 
           isMobile={isMobile}
-          performanceStats={getPerformanceStats()}
+          performanceStats={{}}
         />
       )}
       
@@ -251,9 +264,6 @@ const FormValidationInterface = () => {
         isValidated={isAlreadyValidated || validated}
         isMobile={isMobile}
         isTablet={isTablet}
-        // ✅ PHASE 3: Nouvelles props avec état des champs
-        fieldState={fieldState}
-        getFieldState={getFieldState}
       />
       
       {/* Contact information */}
@@ -270,9 +280,6 @@ const FormValidationInterface = () => {
         isValidated={isAlreadyValidated || validated}
         isMobile={isMobile}
         isTablet={isTablet}
-        // ✅ PHASE 3: Nouvelles props avec état des champs
-        fieldState={fieldState}
-        getFieldState={getFieldState}
       />
       
       {/* Structure information */}
@@ -290,9 +297,6 @@ const FormValidationInterface = () => {
         structureFieldsMapping={true}
         isMobile={isMobile}
         isTablet={isTablet}
-        // ✅ PHASE 3: Nouvelles props avec état des champs
-        fieldState={fieldState}
-        getFieldState={getFieldState}
       />
       
       {/* Validation buttons */}
@@ -301,10 +305,10 @@ const FormValidationInterface = () => {
           onValidate={handleValidateRequest}
           isValidating={validationInProgress}
           isMobile={isMobile}
-          // ✅ PHASE 3: Nouvelles props avec statistiques
-          validationStats={getPerformanceStats()}
-          totalFields={Object.keys(fieldState.values).length}
-          validFields={Object.values(fieldState.validationStatus).filter(status => status === 'valid').length}
+          // ✅ CORRECTION: Utiliser des valeurs calculées localement au lieu du hook générique
+          validationStats={{}}
+          totalFields={Object.keys(validatedFields).length}
+          validFields={Object.values(validatedFields).filter(value => value && value.trim() !== '').length}
         />
       )}
 
@@ -317,12 +321,12 @@ const FormValidationInterface = () => {
         message="Êtes-vous sûr de vouloir valider ce formulaire ? Les données validées seront enregistrées dans la fiche du concert, du lieu et du programmateur."
         isProcessing={validationInProgress}
         isMobile={isMobile}
-        // ✅ PHASE 3: Nouvelles props avec informations détaillées
+        // ✅ CORRECTION: Utiliser des valeurs calculées localement au lieu du hook générique
         validationSummary={{
-          totalFields: Object.keys(fieldState.values).length,
-          validFields: Object.values(fieldState.validationStatus).filter(status => status === 'valid').length,
-          invalidFields: Object.values(fieldState.validationStatus).filter(status => status === 'invalid').length,
-          performanceStats: getPerformanceStats()
+          totalFields: Object.keys(validatedFields).length,
+          validFields: Object.values(validatedFields).filter(value => value && value.trim() !== '').length,
+          invalidFields: 0,
+          performanceStats: {}
         }}
       />
     </div>

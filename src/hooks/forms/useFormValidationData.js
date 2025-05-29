@@ -162,11 +162,14 @@ const useFormValidationData = (concertId) => {
       console.log("Concert trouvé:", concertData);
       setConcert(concertData);
       
+      // Variable locale pour les données du lieu (éviter la dépendance cyclique)
+      let lieuData = null;
+      
       // Récupérer les données du lieu si existant
       if (concertData.lieuId) {
         const lieuDoc = await getDoc(doc(db, 'lieux', concertData.lieuId));
         if (lieuDoc.exists()) {
-          const lieuData = {
+          lieuData = {
             id: lieuDoc.id,
             ...lieuDoc.data()
           };
@@ -259,10 +262,10 @@ const useFormValidationData = (concertId) => {
         // Création des valeurs initiales à partir des données existantes
         const initialValues = {};
         
-        // Si un lieu existe, initialiser avec ses données en priorité
-        if (lieu) {
+        // Si un lieu existe, initialiser avec ses données en priorité (utiliser lieuData local)
+        if (lieuData) {
           lieuFields.forEach(field => {
-            initialValues[`lieu.${field.id}`] = lieu[field.id] || '';
+            initialValues[`lieu.${field.id}`] = lieuData[field.id] || '';
           });
         }
         
@@ -326,7 +329,7 @@ const useFormValidationData = (concertId) => {
       setError(`Impossible de charger les données du formulaire: ${err.message}`);
       setLoading(false);
     }
-  }, [concertId, lieu]);
+  }, [concertId]);
 
   useEffect(() => {
     if (concertId) {

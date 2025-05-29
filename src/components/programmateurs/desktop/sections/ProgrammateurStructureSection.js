@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Card from '@components/ui/Card';
 import CompanySearchSection from '../../sections/CompanySearchSection';
 import StructureInfoSection from '../../sections/StructureInfoSection';

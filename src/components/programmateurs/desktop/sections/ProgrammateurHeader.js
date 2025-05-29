@@ -45,9 +45,9 @@ export const ProgrammateurHeader = ({
       <FlexContainer justify="space-between" align="center" className={styles.headerContent}>
         {/* Titre et informations */}
         <div className={styles.titleSection}>
-          <h1 className={styles.title}>
+          <div className={styles.title}>
             {getTitle()}
-          </h1>
+          </div>
           {getSubtitle() && (
             <p className={styles.subtitle}>
               {getSubtitle()}

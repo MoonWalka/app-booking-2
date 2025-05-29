@@ -115,7 +115,7 @@ const ProgrammateurView = () => {
       </FlexContainer>
       
       {/* Titre */}
-      <h1 className="h4 mb-3">{programmateur.nom}</h1>
+      <div className="h4 mb-3">{programmateur.nom}</div>
       {programmateur.fonction && (
         <Badge bg="light" text="dark" className="mb-3">
           {programmateur.fonction}

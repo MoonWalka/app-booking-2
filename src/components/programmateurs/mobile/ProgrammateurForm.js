@@ -425,12 +425,7 @@ const ProgrammateurFormMobile = ({
   return (
     <div className={styles.programmateursFormMobile}>
       <div className={styles.mobileFormHeader}>
-        <h1>
-          {isPublicMode 
-            ? 'Vos informations' 
-            : (programmateurId !== 'nouveau' ? 'Modifier le programmateur' : 'Nouveau programmateur')
-          }
-        </h1>
+        {/* Remplacer ou supprimer le <h1> selon le contexte */}
       </div>
       
       <StepNavigation 

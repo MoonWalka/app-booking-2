@@ -62,25 +62,32 @@ export const useConcertForm = (concertId) => {
   }, []);
   
   // Callbacks pour les opérations réussies ou en erreur
-  // Empêcher l'exécution sur le succès initial (chargement des données)
-  const hasSubmittedRef = useRef(false);
-  const onSuccessCallback = useCallback((savedId, savedData) => {
-    if (!hasSubmittedRef.current) {
-      hasSubmittedRef.current = true;
+  const onSuccessCallback = useCallback((savedId, savedData, action) => {
+    console.log("[useConcertForm] onSuccessCallback appelé", { savedId, savedData, action });
+    
+    // Si c'est un chargement initial (getById), on ne fait rien
+    if (action === 'getById' || action === 'load') {
+      console.log("[useConcertForm] Action de chargement, on ignore");
       return;
     }
     
-    const message = isNewConcert
-      ? `Le concert ${savedData.titre || ''} a été créé avec succès`
-      : `Le concert ${savedData.titre || ''} a été mis à jour avec succès`;
-    
-    showSuccessToast(message);
-    
-    // Redirection automatique vers la liste des concerts après sauvegarde
-    setTimeout(() => {
-      navigate('/concerts');
-    }, 1500); // Délai de 1.5 secondes pour permettre à l'utilisateur de voir le message
-  }, [isNewConcert, navigate]);
+    // Si c'est une création ou mise à jour, on affiche le message et on redirige
+    if (action === 'create' || action === 'update') {
+      const message = action === 'create'
+        ? `Le concert ${savedData.titre || ''} a été créé avec succès`
+        : `Le concert ${savedData.titre || ''} a été mis à jour avec succès`;
+      
+      console.log("[useConcertForm] Affichage du message de succès:", message);
+      showSuccessToast(message);
+      
+      // Redirection automatique vers la liste des concerts après sauvegarde
+      console.log("[useConcertForm] Programmation de la redirection dans 1.5s");
+      setTimeout(() => {
+        console.log("[useConcertForm] Exécution de la redirection vers /concerts");
+        navigate('/concerts');
+      }, 1500); // Délai de 1.5 secondes pour permettre à l'utilisateur de voir le message
+    }
+  }, [navigate]);
 
   const onErrorCallback = useCallback((error) => {
     

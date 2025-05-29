@@ -77,34 +77,24 @@ const ProgrammateurFormMaquette = () => {
     }
   }, []);
 
-  // 🔥 TEST: Réactivation des deux hooks pour confirmer le problème avec useLieuSearch
+  // Hooks de recherche avec corrections appliquées
   const companySearch = useCompanySearch({
     onCompanySelect: handleCompanySelect
   });
 
-  // ✅ SOLUTION: Utilisation du hook corrigé sans boucles infinies
+  // Hook de recherche de lieux optimisé sans boucles infinies
   const lieuSearch = useLieuSearchFixed({
     maxResults: 10,
     onSelect: handleLieuSelect
   });
   
-  // 🔥 PROBLÈME IDENTIFIÉ: useLieuSearch a des dépendances instables
-  // const lieuSearch = useLieuSearch({
-  //   maxResults: 10,
-  //   onSelect: handleLieuSelect
-  // });
-
   // États pour la recherche de concerts simples
   const [concertSearchTerm, setConcertSearchTerm] = useState('');
   const [concertSearchResults, setConcertSearchResults] = useState([]);
   const [isSearchingConcerts, setIsSearchingConcerts] = useState(false);
   
-  // 🔍 DEBUG: Tracer les renders
-  console.count('🎨 [ProgrammateurFormMaquette] Render count');
-  
   // Fonction pour charger les lieux et concerts associés
   const loadAssociations = useCallback(async (programmateur) => {
-    console.log('🔍 [DEBUG] loadAssociations appelée');
     setLoadingAssociations(true);
     try {
       // Charger les lieux associés
@@ -465,8 +455,6 @@ const ProgrammateurFormMaquette = () => {
       </div>
     );
   }
-
-  console.log('🎨 [ProgrammateurFormMaquette] Rendering with maquette style');
 
   return (
     <div className={styles.pageWrapper}>

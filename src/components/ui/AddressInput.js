@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useAddressSearch } from '@/hooks/common';
 import styles from './AddressInput.module.css';
@@ -14,7 +14,6 @@ import styles from './AddressInput.module.css';
  * @param {boolean} props.required - Indique si le champ est obligatoire
  * @param {string} props.placeholder - Texte d'aide dans le champ
  * @param {Function} props.onAddressSelected - Callback appelé quand une adresse est sélectionnée
- * @param {Object} props.address - Adresse complète sélectionnée (avec tous les détails)
  * @param {string} props.className - Classes CSS additionnelles
  */
 const AddressInput = ({
@@ -25,7 +24,6 @@ const AddressInput = ({
   required = false,
   placeholder = 'Commencez à taper pour rechercher une adresse',
   onAddressSelected = null,
-  address = null,
   className = '',
 }) => {
   // Utiliser le hook pour la recherche d'adresse
@@ -39,15 +37,11 @@ const AddressInput = ({
     handleSelectAddress,
   } = useAddressSearch();
 
-  // État pour suivre si l'input est actif
-  const [isActive, setIsActive] = useState(false);
-
   // Mettre à jour le terme de recherche quand la valeur externe change
   useEffect(() => {
-    if (value && !searchTerm && !isActive) {
-      setSearchTerm(value);
-    }
-  }, [value, searchTerm, isActive, setSearchTerm]);
+    setSearchTerm(value);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]); // setSearchTerm est stable (useState) - l'ajouter créerait une boucle infinie
 
   // Gérer la sélection d'une adresse
   const handleSelect = (address) => {
@@ -66,12 +60,21 @@ const AddressInput = ({
       country = address.address.country || 'France';
     }
 
+    // Adresse complète à afficher
+    const fullAddress = street || address.display_name.split(',')[0];
+
+    // Fermer le dropdown IMMÉDIATEMENT via le hook
+    handleSelectAddress(address);
+    
+    // Mettre à jour le terme de recherche local APRÈS fermeture
+    setSearchTerm(fullAddress);
+
     // Mettre à jour l'input avec la rue
     if (onChange) {
       onChange({
         target: {
           name,
-          value: street || address.display_name.split(',')[0]
+          value: fullAddress
         }
       });
     }
@@ -79,7 +82,7 @@ const AddressInput = ({
     // Si un callback est fourni, l'appeler avec toutes les informations d'adresse
     if (onAddressSelected) {
       onAddressSelected({
-        adresse: street,
+        adresse: fullAddress,
         codePostal: postalCode,
         ville: city,
         pays: country,
@@ -88,12 +91,6 @@ const AddressInput = ({
         display_name: address.display_name
       });
     }
-
-    // Gérer la sélection via le hook (ferme automatiquement le dropdown)
-    handleSelectAddress(address);
-    
-    // Force la fermeture du dropdown et la perte de focus
-    setIsActive(false);
   };
 
   return (
@@ -116,8 +113,6 @@ const AddressInput = ({
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder={placeholder}
-          onFocus={() => setIsActive(true)}
-          onBlur={() => setTimeout(() => setIsActive(false), 200)}
           autoComplete="off"
         />
         
@@ -178,7 +173,6 @@ AddressInput.propTypes = {
   required: PropTypes.bool,
   placeholder: PropTypes.string,
   onAddressSelected: PropTypes.func,
-  address: PropTypes.object,
   className: PropTypes.string,
 };
 

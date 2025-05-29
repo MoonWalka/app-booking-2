@@ -7,8 +7,7 @@ const FieldValidationRow = ({
   formValue,
   finalValue,
   onCopyValue,
-  onValueChange,
-  isDisabled = false
+  onValueChange
 }) => {
   return (
     <tr className={styles.row}>
@@ -26,7 +25,7 @@ const FieldValidationRow = ({
           className={styles.copyButton}
           onClick={() => onCopyValue && onCopyValue(formValue)}
           title="Copier vers valeur finale"
-          disabled={isDisabled || !onCopyValue}
+          disabled={!onCopyValue || !formValue}
         >
           ➡️
         </button>
@@ -37,7 +36,7 @@ const FieldValidationRow = ({
           className={styles.finalValueInput}
           value={finalValue || ''}
           onChange={(e) => onValueChange && onValueChange(e.target.value)}
-          disabled={isDisabled || !onValueChange}
+          disabled={!onValueChange}
         />
       </td>
     </tr>

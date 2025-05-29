@@ -81,7 +81,7 @@ const ValidationSection = ({
                 <th className={styles.columnForm}>Valeur du formulaire</th>
                 <th className={styles.columnAction}>
                   {/* Bouton pour copier toutes les valeurs */}
-                  {onCopyValue && !isValidated && (
+                  {onCopyValue && (
                     <button
                       className={styles.copyAllButton}
                       onClick={() => {
@@ -93,24 +93,31 @@ const ValidationSection = ({
                           if (category === 'lieu') {
                             formValue = formData ? formData[field.id] || '' : '';
                           } else if (category === 'contact') {
-                            if (formData && formData.contact && typeof formData.contact === 'object') {
-                              formValue = formData.contact[field.id] || '';
-                            } else {
-                              formValue = formData ? formData[field.id] || '' : '';
+                            if (formData && typeof formData === 'object') {
+                              if (formData.contact && typeof formData.contact === 'object') {
+                                formValue = formData.contact[field.id] || '';
+                              } else {
+                                formValue = formData[field.id] || '';
+                              }
                             }
                           } else if (category === 'structure' && structureFieldsMapping) {
                             if (field.id === 'raisonSociale') {
-                              if (formData && formData.structure && typeof formData.structure === 'object') {
-                                formValue = formData.structure.raisonSociale || '';
-                              } else {
-                                formValue = formData ? formData.structure || '' : '';
+                              if (formData && typeof formData === 'object') {
+                                if (formData.structure && typeof formData.structure === 'object') {
+                                  formValue = formData.structure.raisonSociale || '';
+                                } else if (formData.nom) {
+                                  formValue = formData.nom || '';
+                                } else {
+                                  formValue = formData.structure || '';
+                                }
                               }
                             } else if (['type', 'adresse', 'codePostal', 'ville', 'pays', 'siret', 'tva'].includes(field.id)) {
-                              if (formData && formData.structure && typeof formData.structure === 'object') {
-                                formValue = formData.structure[field.id] || '';
-                              } else {
-                                const fieldKey = `structure${field.id.charAt(0).toUpperCase() + field.id.slice(1)}`;
-                                formValue = formData ? formData[fieldKey] || formData[field.id] || '' : '';
+                              if (formData && typeof formData === 'object') {
+                                if (formData.structure && typeof formData.structure === 'object') {
+                                  formValue = formData.structure[field.id] || '';
+                                } else {
+                                  formValue = formData[field.id] || '';
+                                }
                               }
                             } else {
                               formValue = formData ? formData[field.id] || '' : '';
@@ -146,30 +153,43 @@ const ValidationSection = ({
                   formValue = formData ? formData[field.id] || '' : '';
                 } else if (category === 'contact') {
                   existingValue = existingData ? existingData[field.id] || '' : '';
-                  // Pour formData, on peut avoir les données dans .contact ou directement
-                  if (formData && formData.contact && typeof formData.contact === 'object') {
-                    formValue = formData.contact[field.id] || '';
-                  } else {
-                    formValue = formData ? formData[field.id] || '' : '';
+                  // Pour formData, on peut avoir les données directement (nouveau format)
+                  // ou dans .contact (ancien format)
+                  if (formData && typeof formData === 'object') {
+                    // Si formData a une propriété contact (ancien format)
+                    if (formData.contact && typeof formData.contact === 'object') {
+                      formValue = formData.contact[field.id] || '';
+                    } else {
+                      // Sinon c'est le nouveau format direct (signataireData)
+                      formValue = formData[field.id] || '';
+                    }
                   }
                 } else if (category === 'structure' && structureFieldsMapping) {
                   // Special case for structure fields that have different mappings
                   if (field.id === 'raisonSociale') {
                     existingValue = existingData ? existingData.structure || '' : '';
-                    // Pour formData, on doit chercher dans la structure imbriquée
-                    if (formData && formData.structure && typeof formData.structure === 'object') {
-                      formValue = formData.structure.raisonSociale || '';
-                    } else {
-                      formValue = formData ? formData.structure || '' : '';
+                    // Pour le nouveau format, structureData a un champ 'nom' qui correspond à 'raisonSociale'
+                    if (formData && typeof formData === 'object') {
+                      if (formData.structure && typeof formData.structure === 'object') {
+                        formValue = formData.structure.raisonSociale || '';
+                      } else if (formData.nom) {
+                        // Nouveau format : structureData.nom → raisonSociale
+                        formValue = formData.nom || '';
+                      } else {
+                        formValue = formData.structure || '';
+                      }
                     }
                   } else if (['type', 'adresse', 'codePostal', 'ville', 'pays', 'siret', 'tva'].includes(field.id)) {
                     const fieldKey = `structure${field.id.charAt(0).toUpperCase() + field.id.slice(1)}`;
                     existingValue = existingData ? existingData[fieldKey] || '' : '';
-                    // Pour formData, chercher dans l'objet structure
-                    if (formData && formData.structure && typeof formData.structure === 'object') {
-                      formValue = formData.structure[field.id] || '';
-                    } else {
-                      formValue = formData ? formData[fieldKey] || formData[field.id] || '' : '';
+                    // Pour formData, chercher dans l'objet structure ou directement
+                    if (formData && typeof formData === 'object') {
+                      if (formData.structure && typeof formData.structure === 'object') {
+                        formValue = formData.structure[field.id] || '';
+                      } else {
+                        // Nouveau format : les champs sont directement dans structureData
+                        formValue = formData[field.id] || '';
+                      }
                     }
                   } else {
                     existingValue = existingData ? existingData[field.id] || '' : '';

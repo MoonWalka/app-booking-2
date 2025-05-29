@@ -195,7 +195,7 @@ const FormValidationInterface = () => {
         fields={contactFields}
         category="contact"
         existingData={programmateur}
-        formData={formData.programmateurData || formData.data}
+        formData={formData.signataireData || formData.programmateurData || formData.data}
         validatedFields={validatedFields}
         onValidateField={handleValidateField}
         onCopyValue={copyFormValueToFinal}
@@ -209,7 +209,7 @@ const FormValidationInterface = () => {
         fields={structureFields}
         category="structure"
         existingData={programmateur}
-        formData={formData.programmateurData || formData.data}
+        formData={formData.structureData || formData.programmateurData || formData.data}
         validatedFields={validatedFields}
         onValidateField={handleValidateField}
         onCopyValue={copyFormValueToFinal}

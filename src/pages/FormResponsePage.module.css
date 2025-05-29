@@ -5,7 +5,7 @@
  * Basé sur maquette formpubli.md avec variables TourCraft
  */
 
-/* TourCraft Design System Variables - Identique à la maquette formpubli.md */
+/* TourCraft Design System Variables */
 :root {
   /* Couleurs principales TourCraft */
   --tc-color-primary: #213547;
@@ -141,7 +141,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Layout principal - identique à la maquette */
+/* Layout principal */
 .formIsolatedContainer {
   display: flex;
   flex-direction: column;
@@ -178,13 +178,8 @@ body {
   background-color: var(--tc-bg-light);
 }
 
-.formContainer {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
 /* États de chargement */
-.loadingContainer {
+.loadingState {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -219,61 +214,54 @@ body {
   100% { transform: rotate(360deg); }
 }
 
-/* Alertes */
-.alert {
-  padding: var(--tc-space-4);
+/* Panneaux d'alerte */
+.alertPanel {
+  padding: var(--tc-space-6);
   margin-bottom: var(--tc-space-6);
-  border-radius: var(--tc-radius-base);
-  border: 1px solid transparent;
-  display: flex;
-  align-items: flex-start;
-  gap: var(--tc-space-2);
+  border-radius: var(--tc-radius-lg);
+  text-align: center;
+  box-shadow: var(--tc-shadow-base);
+}
+
+.alertPanel h3 {
+  margin-bottom: var(--tc-space-3);
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
+}
+
+.alertPanel p {
+  margin-bottom: var(--tc-space-4);
+  color: inherit;
 }
 
 .alertSuccess {
   background-color: var(--tc-bg-success);
-  border-color: var(--tc-color-success-light);
+  border: 1px solid var(--tc-color-success-light);
   color: var(--tc-color-success-dark);
 }
 
 .alertWarning {
   background-color: var(--tc-bg-warning);
-  border-color: var(--tc-color-warning-light);
+  border: 1px solid var(--tc-color-warning-light);
   color: var(--tc-color-warning-dark);
 }
 
 .alertDanger {
   background-color: var(--tc-bg-error);
-  border-color: var(--tc-color-error-light);
+  border: 1px solid var(--tc-color-error-light);
   color: var(--tc-color-error-dark);
 }
 
-.alertInfo {
-  background-color: var(--tc-bg-info);
-  border-color: var(--tc-color-info-light);
-  color: var(--tc-color-info-dark);
+/* Titre de page */
+.pageTitle {
+  font-size: var(--tc-font-size-2xl);
+  font-weight: var(--tc-font-weight-bold);
+  color: var(--tc-color-primary);
+  text-align: center;
+  margin-bottom: var(--tc-space-8);
 }
 
-.alertIcon {
-  font-size: var(--tc-font-size-lg);
-  margin-top: 2px;
-}
-
-.alertContent h3 {
-  margin-bottom: var(--tc-space-2);
-  font-weight: var(--tc-font-weight-semibold);
-}
-
-/* CARTES - Style exact de la maquette formpubli.md */
-.card {
-  background-color: var(--tc-bg-card);
-  border-radius: var(--tc-radius-lg);
-  box-shadow: var(--tc-shadow-base);
-  margin-bottom: var(--tc-space-6);
-  overflow: hidden;
-  border: 1px solid var(--tc-border-light);
-}
-
+/* Cartes TourCraft */
 .tcCard {
   background-color: var(--tc-bg-card);
   border-radius: var(--tc-radius-lg);
@@ -283,7 +271,6 @@ body {
   border: 1px solid var(--tc-border-light);
 }
 
-.cardHeader,
 .tcCardHeader {
   background-color: var(--tc-bg-subtle);
   padding: var(--tc-space-4);
@@ -293,13 +280,11 @@ body {
   gap: var(--tc-space-2);
 }
 
-.cardHeader i,
 .tcCardHeader i {
   font-size: var(--tc-font-size-lg);
   color: var(--tc-color-primary);
 }
 
-.cardHeader h3,
 .tcCardHeader h3 {
   margin: 0;
   font-size: var(--tc-font-size-lg);
@@ -307,38 +292,12 @@ body {
   color: var(--tc-text-default);
 }
 
-.cardBody,
 .tcCardBody {
   padding: var(--tc-space-6);
 }
 
-/* Headers de sections avec style maquette */
-.sectionHeader {
-  margin-bottom: var(--tc-space-4);
-}
-
-.sectionHeader h3 {
-  display: flex;
-  align-items: center;
-  gap: var(--tc-space-2);
-  font-size: var(--tc-font-size-lg);
-  font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-color-primary);
-  margin-bottom: var(--tc-space-2);
-}
-
-.sectionHeader h3 i {
-  font-size: var(--tc-font-size-lg);
-}
-
-.formSubtitle {
-  color: var(--tc-text-secondary);
-  font-size: var(--tc-font-size-sm);
-  margin: 0;
-}
-
-/* Sections transformées en cartes avec headers */
-.formSection {
+/* Nouveau style pour les cartes avec headers séparés (comme la maquette) */
+.card {
   background-color: var(--tc-bg-card);
   border-radius: var(--tc-radius-lg);
   box-shadow: var(--tc-shadow-base);
@@ -347,8 +306,7 @@ body {
   border: 1px solid var(--tc-border-light);
 }
 
-/* Headers pour les sections de formulaire */
-.formSectionHeader {
+.cardHeader {
   background-color: var(--tc-bg-subtle);
   padding: var(--tc-space-4);
   border-bottom: 1px solid var(--tc-border-light);
@@ -357,47 +315,54 @@ body {
   gap: var(--tc-space-2);
 }
 
-.formSectionHeader i {
+.cardHeader i {
   font-size: var(--tc-font-size-lg);
   color: var(--tc-color-primary);
 }
 
-.formSectionHeader h3 {
+.cardHeader h3 {
   margin: 0;
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-semibold);
   color: var(--tc-text-default);
 }
 
-.formSectionBody {
+.cardBody {
   padding: var(--tc-space-6);
 }
 
-/* Informations du concert */
+/* Grille d'informations du concert */
 .concertInfoGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: var(--tc-space-4);
 }
 
-.infoItem {
+.concertInfoItem {
   display: flex;
   flex-direction: column;
   gap: var(--tc-space-1);
 }
 
-.infoLabel {
+.concertInfoLabel {
   font-weight: var(--tc-font-weight-semibold);
   color: var(--tc-text-secondary);
   font-size: var(--tc-font-size-sm);
 }
 
-.infoValue {
+.concertInfoValue {
   color: var(--tc-text-default);
   font-size: var(--tc-font-size-base);
 }
 
-/* Formulaire */
+/* Subtitle du formulaire */
+.formSubtitle {
+  color: var(--tc-text-secondary);
+  font-size: var(--tc-font-size-sm);
+  margin: 0 0 var(--tc-space-4) 0;
+}
+
+/* Groupes de formulaire */
 .formGroup {
   margin-bottom: var(--tc-space-4);
 }
@@ -436,13 +401,16 @@ body {
   color: var(--tc-text-placeholder);
 }
 
-.formHelp {
+/* Recherche SIRET (déjà géré dans votre code) */
+.siretLoading {
+  margin-top: var(--tc-space-2);
+  font-size: var(--tc-font-size-sm);
   color: var(--tc-text-muted);
-  font-size: var(--tc-font-size-xs);
-  margin-top: var(--tc-space-1);
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-2);
 }
 
-/* SIRET Search Results */
 .siretResults {
   position: relative;
   background: var(--tc-bg-card);
@@ -452,6 +420,7 @@ body {
   max-height: 300px;
   overflow-y: auto;
   z-index: 1000;
+  margin-bottom: var(--tc-space-4);
 }
 
 .siretResultItem {
@@ -459,6 +428,7 @@ body {
   border-bottom: 1px solid var(--tc-border-light);
   cursor: pointer;
   transition: background-color var(--tc-transition-fast);
+  background-color: var(--tc-bg-subtle);
 }
 
 .siretResultItem:last-child {
@@ -469,74 +439,7 @@ body {
   background-color: var(--tc-bg-hover);
 }
 
-.siretResultName {
-  font-weight: var(--tc-font-weight-semibold);
-  margin-bottom: var(--tc-space-1);
-}
-
-.siretResultDetails {
-  font-size: var(--tc-font-size-sm);
-  color: var(--tc-text-muted);
-}
-
-/* Address suggestions */
-.addressSuggestions {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background: var(--tc-bg-card);
-  border: 1px solid var(--tc-border-input);
-  border-top: none;
-  border-radius: 0 0 var(--tc-radius-base) var(--tc-radius-base);
-  box-shadow: var(--tc-shadow-md);
-  max-height: 200px;
-  overflow-y: auto;
-  z-index: 1000;
-}
-
-.addressSuggestion {
-  padding: var(--tc-space-2) var(--tc-space-3);
-  cursor: pointer;
-  border-bottom: 1px solid var(--tc-border-ultralight);
-  transition: background-color var(--tc-transition-fast);
-}
-
-.addressSuggestion:last-child {
-  border-bottom: none;
-}
-
-.addressSuggestion:hover {
-  background-color: var(--tc-bg-hover);
-}
-
-/* Boutons */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--tc-space-2);
-  padding: var(--tc-space-3) var(--tc-space-6);
-  border: none;
-  border-radius: var(--tc-radius-base);
-  font-size: var(--tc-font-size-base);
-  font-weight: var(--tc-font-weight-medium);
-  text-decoration: none;
-  cursor: pointer;
-  transition: all var(--tc-transition-fast);
-  justify-content: center;
-}
-
-.btnPrimary {
-  background-color: var(--tc-color-primary);
-  color: var(--tc-text-light);
-}
-
-.btnPrimary:hover:not(:disabled) {
-  background-color: var(--tc-color-primary-hover);
-  transform: translateY(-1px);
-  box-shadow: var(--tc-shadow-md);
-}
-
+/* Boutons TourCraft */
 .tcBtn {
   display: inline-flex;
   align-items: center;
@@ -550,7 +453,6 @@ body {
   cursor: pointer;
   transition: all var(--tc-transition-fast);
   justify-content: center;
-  font-family: var(--tc-font-sans);
 }
 
 .tcBtnPrimary {
@@ -564,18 +466,12 @@ body {
   box-shadow: var(--tc-shadow-md);
 }
 
-.btn:disabled,
 .tcBtn:disabled {
   background-color: var(--tc-color-gray-300);
   color: var(--tc-color-gray-500);
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
-}
-
-.btnLarge {
-  padding: var(--tc-space-4) var(--tc-space-8);
-  font-size: var(--tc-font-size-lg);
 }
 
 /* Actions de formulaire */
@@ -601,6 +497,30 @@ body {
   gap: var(--tc-space-2);
 }
 
+/* Notice légale */
+.legalNotice {
+  background-color: var(--tc-bg-info);
+  color: var(--tc-color-info-dark);
+  padding: var(--tc-space-4);
+  border-radius: var(--tc-radius-base);
+  border: 1px solid var(--tc-color-info-light);
+  margin-top: var(--tc-space-8);
+  font-size: var(--tc-font-size-sm);
+  line-height: 1.6;
+}
+
+.legalNotice p {
+  margin: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--tc-space-2);
+}
+
+.legalNotice i {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
 /* Footer */
 .formFooter {
   padding: var(--tc-space-6) var(--tc-space-8);
@@ -614,21 +534,6 @@ body {
   color: var(--tc-text-muted);
   font-size: var(--tc-font-size-sm);
   line-height: 1.6;
-}
-
-/* États interactifs */
-.formStateHidden {
-  display: none;
-}
-
-.formStateVisible {
-  display: block;
-  animation: fadeIn 0.3s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Position relative pour les dropdowns */
@@ -657,189 +562,13 @@ body {
     margin-top: var(--tc-space-6);
   }
 
-  .formSection,
-  .formSectionBody {
+  .card,
+  .tcCard {
+    margin-bottom: var(--tc-space-4);
+  }
+
+  .cardBody,
+  .tcCardBody {
     padding: var(--tc-space-4);
   }
-}
-
-/* Utilitaires */
-.textCenter {
-  text-align: center;
-}
-
-.mb4 {
-  margin-bottom: var(--tc-space-4);
-}
-
-.mt3 {
-  margin-top: var(--tc-space-3);
-}
-
-.fwBold {
-  font-weight: var(--tc-font-weight-bold);
-}
-
-.textMuted {
-  color: var(--tc-text-muted);
-}
-
-/* States spécifiques */
-.loadingState {
-  text-align: center;
-  padding: var(--tc-space-8);
-}
-
-.alertPanel {
-  padding: var(--tc-space-6);
-  border-radius: var(--tc-radius-lg);
-  margin-bottom: var(--tc-space-6);
-  border: 1px solid;
-  display: flex;
-  align-items: flex-start;
-  gap: var(--tc-space-2);
-}
-
-.alertPanel h3 {
-  margin-top: 0;
-  margin-bottom: var(--tc-space-2);
-  font-size: var(--tc-font-size-lg);
-  font-weight: var(--tc-font-weight-semibold);
-}
-
-.alertPanel p {
-  margin-bottom: var(--tc-space-4);
-  line-height: 1.6;
-}
-
-/* SIRET spécifique */
-.siretSection {
-  background-color: var(--tc-bg-subtle);
-  padding: var(--tc-space-4);
-  border-radius: var(--tc-radius-base);
-  margin-bottom: var(--tc-space-5);
-  border: 1px solid var(--tc-border-light);
-  position: relative;
-}
-
-.siretSection h4 {
-  margin: 0 0 var(--tc-space-3) 0;
-  font-size: var(--tc-font-size-lg);
-  font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-color-primary);
-  display: flex;
-  align-items: center;
-  gap: var(--tc-space-2);
-}
-
-.siretSearchGroup {
-  position: relative;
-  margin-bottom: var(--tc-space-3);
-}
-
-.siretInput {
-  width: 100%;
-}
-
-.siretLoading {
-  position: absolute;
-  right: var(--tc-space-3);
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  align-items: center;
-  gap: var(--tc-space-2);
-  color: var(--tc-text-muted);
-  font-size: var(--tc-font-size-sm);
-  z-index: 10;
-}
-
-.siretError {
-  color: var(--tc-color-error);
-  font-size: var(--tc-font-size-sm);
-  margin-top: var(--tc-space-2);
-  display: flex;
-  align-items: center;
-  gap: var(--tc-space-1);
-}
-
-.siretError i {
-  font-size: var(--tc-font-size-base);
-}
-
-.btnSecondary {
-  background-color: var(--tc-color-secondary);
-  border-color: var(--tc-color-secondary);
-  color: var(--tc-text-light);
-  padding: var(--tc-space-3) var(--tc-space-4);
-  font-size: var(--tc-font-size-sm);
-  font-weight: var(--tc-font-weight-medium);
-  border-radius: var(--tc-radius-base);
-  transition: var(--tc-transition-base);
-  border: none;
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.btnSecondary:hover:not(:disabled) {
-  background-color: var(--tc-color-secondary-dark);
-  border-color: var(--tc-color-secondary-dark);
-}
-
-.btnSecondary:disabled {
-  background-color: var(--tc-color-gray-400);
-  cursor: not-allowed;
-}
-
-.submitSection {
-  text-align: center;
-  margin-top: var(--tc-space-8);
-  padding-top: var(--tc-space-4);
-  border-top: 1px solid var(--tc-border-light);
-}
-
-/* Classes supplémentaires pour compatibilité */
-.pageTitle {
-  text-align: center;
-  margin-bottom: var(--tc-space-6);
-  color: var(--tc-color-primary);
-  font-size: var(--tc-font-size-2xl);
-  font-weight: var(--tc-font-weight-bold);
-}
-
-.concertInfoItem {
-  text-align: center;
-}
-
-.concertInfoLabel {
-  font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-muted);
-  font-size: var(--tc-font-size-sm);
-  margin-bottom: var(--tc-space-1);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.concertInfoValue {
-  font-size: var(--tc-font-size-lg);
-  font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-color-primary);
-}
-
-.legalNotice {
-  background-color: var(--tc-color-gray-50);
-  padding: var(--tc-space-4);
-  border-radius: var(--tc-radius-base);
-  border-left: 4px solid var(--tc-color-info);
-  margin-top: var(--tc-space-6);
-}
-
-.legalNotice p {
-  margin: 0;
-  font-size: var(--tc-font-size-sm);
-  color: var(--tc-text-muted);
-  line-height: 1.6;
-  display: flex;
-  align-items: flex-start;
-  gap: var(--tc-space-2);
 } 

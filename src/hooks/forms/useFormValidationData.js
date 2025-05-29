@@ -279,6 +279,18 @@ const useFormValidationData = (concertId) => {
           });
         }
         
+        // NOUVEAU : Les données du formulaire public NE SONT PAS mises dans initialValues
+        // Elles restent dans formDocData pour être affichées dans "Valeur du formulaire"
+        if (formDocData.signataireData) {
+          console.log("Données signataire trouvées dans la soumission:", formDocData.signataireData);
+          // PAS de mapping vers initialValues - les données restent dans formDocData
+        }
+        
+        if (formDocData.structureData) {
+          console.log("Données structure trouvées dans la soumission:", formDocData.structureData);
+          // PAS de mapping vers initialValues - les données restent dans formDocData
+        }
+        
         // Récupérer les données existantes du programmateur (s'il existe)
         if (formDocData.programmId) {
           try {

@@ -31,11 +31,12 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
       // 2. GESTION DU CONTACT/PROGRAMMATEUR
       // ==========================================
       
-      // Séparer les champs par catégorie
+      // Séparer les champs par catégorie - SUPPORT DES DEUX FORMATS
       const contactFields = {};
       const structureFields = {};
       const lieuFields = {};
       
+      // ANCIEN FORMAT : champs avec préfixes (contact., structure., lieu.)
       Object.entries(validatedFields).forEach(([fieldPath, value]) => {
         const [category, field] = fieldPath.split('.');
         
@@ -48,7 +49,49 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
         }
       });
 
-      let programmId = formData.programmId;
+      // NOUVEAU FORMAT : données structurées du formulaire public
+      // Si pas de champs préfixés mais des données structurées, les utiliser
+      if (Object.keys(contactFields).length === 0 && formData.signataireData) {
+        // Mapper signataireData vers contactFields
+        const signataire = formData.signataireData;
+        if (signataire.nom) contactFields.nom = signataire.nom;
+        if (signataire.prenom) contactFields.prenom = signataire.prenom;
+        if (signataire.email) contactFields.email = signataire.email;
+        if (signataire.telephone) contactFields.telephone = signataire.telephone;
+        if (signataire.fonction) contactFields.fonction = signataire.fonction;
+        
+        console.log("Données signataire mappées vers contact:", contactFields);
+      }
+
+      if (Object.keys(structureFields).length === 0 && formData.structureData) {
+        // Mapper structureData vers structureFields
+        const structure = formData.structureData;
+        if (structure.nom) structureFields.nom = structure.nom;
+        if (structure.siret) structureFields.siret = structure.siret;
+        if (structure.adresse) structureFields.adresse = structure.adresse;
+        if (structure.codePostal) structureFields.codePostal = structure.codePostal;
+        if (structure.ville) structureFields.ville = structure.ville;
+        
+        console.log("Données structure mappées:", structureFields);
+      }
+
+      if (Object.keys(lieuFields).length === 0 && formData.lieuData) {
+        // Mapper lieuData vers lieuFields
+        const lieu = formData.lieuData;
+        if (lieu.adresse) lieuFields.adresse = lieu.adresse;
+        if (lieu.codePostal) lieuFields.codePostal = lieu.codePostal;
+        if (lieu.ville) lieuFields.ville = lieu.ville;
+        if (lieu.pays) lieuFields.pays = lieu.pays;
+        
+        console.log("Données lieu mappées:", lieuFields);
+      }
+
+      // Récupérer les données du concert pour vérifier s'il a déjà un programmateur
+      const concertDoc = await getDoc(doc(db, 'concerts', concertId));
+      const concertData = concertDoc.data();
+      
+      // Utiliser le programmateur existant du concert en priorité
+      let programmId = concertData.programmateurId || formData.programmId;
       let structureId = null;
       
       // Gestion du programmateur (contact)
@@ -61,7 +104,7 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
           };
           
           await updateDoc(doc(db, 'programmateurs', programmId), programmUpdateData);
-          console.log("Programmateur mis à jour avec les données de contact:", programmUpdateData);
+          console.log("Programmateur existant mis à jour avec les données de contact:", programmUpdateData);
         } else {
           // Création nouveau programmateur avec SEULEMENT les données de contact
           const newProgrammateurData = {
@@ -182,10 +225,6 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
       // ==========================================
       // 4. GESTION DU LIEU (COMME AVANT)
       // ==========================================
-      
-      // Récupérer les données du concert à jour
-      const concertDoc = await getDoc(doc(db, 'concerts', concertId));
-      const concertData = concertDoc.data();
       
       if (concertData.lieuId && Object.keys(lieuFields).length > 0) {
         // Mise à jour lieu existant

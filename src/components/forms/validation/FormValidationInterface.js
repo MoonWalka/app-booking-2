@@ -9,6 +9,7 @@ import { useValidationBatchActions } from '@/hooks/forms';
 // Import components
 import Button from '@ui/Button';
 import Alert from '@ui/Alert';
+import FormGenerator from '@/components/forms/FormGenerator';
 import FormHeader from './FormHeader';
 import ValidationSummary from './ValidationSummary';
 import ValidationSection from './ValidationSection';
@@ -19,6 +20,7 @@ const FormValidationInterface = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showFormGenerator, setShowFormGenerator] = useState(false);
   
   // Use the custom hooks to manage data and actions
   const {
@@ -94,20 +96,39 @@ const FormValidationInterface = () => {
     );
   }
 
-  // Not found state
+  // Not found state - show FormGenerator instead
   if (!formData || !concert) {
     return (
-      <div className="not-found-container text-center my-5">
-        <Alert variant="warning">
-          Formulaire non trouvé.
+      <div className="form-generation-container container mt-4">
+        <FormHeader 
+          concertId={id}
+          isValidated={false}
+          navigate={navigate}
+        />
+        
+        <Alert variant="info" className="mb-4">
+          <i className="bi bi-info-circle me-2"></i>
+          Aucun formulaire n'a encore été envoyé pour ce concert.
         </Alert>
-        <Button 
-          variant="primary"
-          className="mt-3"
-          onClick={() => navigate(`/concerts/${id}`)}
-        >
-          Retour à la fiche concert
-        </Button>
+        
+        <FormGenerator
+          concertId={id}
+          programmateurId={concert?.programmateurId}
+          onFormGenerated={(formLinkId, formUrl) => {
+            // Optionnel : afficher un message de succès
+            console.log('Formulaire généré avec succès:', formUrl);
+          }}
+        />
+        
+        <div className="mt-4">
+          <Button 
+            variant="outline-secondary"
+            onClick={() => navigate(`/concerts/${id}`)}
+          >
+            <i className="bi bi-arrow-left me-2"></i>
+            Retour à la fiche concert
+          </Button>
+        </div>
       </div>
     );
   }
@@ -121,6 +142,42 @@ const FormValidationInterface = () => {
         isValidated={isAlreadyValidated || validated}
         navigate={navigate}
       />
+      
+      {/* Bouton pour générer un nouveau lien */}
+      {!showFormGenerator && (
+        <div className="mb-3">
+          <Button
+            variant="outline-primary"
+            size="sm"
+            onClick={() => setShowFormGenerator(true)}
+          >
+            <i className="bi bi-link-45deg me-2"></i>
+            Générer un nouveau lien de formulaire
+          </Button>
+        </div>
+      )}
+      
+      {/* Affichage du FormGenerator si demandé */}
+      {showFormGenerator && (
+        <div className="mb-4">
+          <FormGenerator
+            concertId={id}
+            programmateurId={concert?.programmateurId}
+            onFormGenerated={(formLinkId, formUrl) => {
+              console.log('Nouveau formulaire généré:', formUrl);
+              // Optionnel : rafraîchir les données
+            }}
+          />
+          <Button
+            variant="outline-secondary"
+            size="sm"
+            className="mt-2"
+            onClick={() => setShowFormGenerator(false)}
+          >
+            Masquer le générateur
+          </Button>
+        </div>
+      )}
       
       {(isAlreadyValidated || validated) && (
         <ValidationSummary />

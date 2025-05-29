@@ -16,9 +16,9 @@ export const useConcertActions = () => {
     navigate(`/concerts/${concertId}/form`);
   };
   
-  // Function to send a form
+  // Function to send a form (navigate to form management page)
   const handleSendForm = (concertId) => {
-    navigate(`/concerts/${concertId}?openFormGenerator=true`);
+    navigate(`/concerts/${concertId}/form`);
   };
   
   // Function to navigate to contract page

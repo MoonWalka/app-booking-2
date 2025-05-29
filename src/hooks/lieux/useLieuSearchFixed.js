@@ -96,6 +96,11 @@ export const useLieuSearchFixed = ({
     handleCreateLieu,
     navigateToLieuDetails,
     
+    // ✅ CORRECTION: Exposer les méthodes attendues par le composant
+    search: searchHook.refreshSearch, // search() -> refreshSearch
+    showResults: searchHook.showDropdown, // showResults -> showDropdown
+    searchResults: searchHook.results, // Assurer que searchResults est bien exposé
+    
     // Aliases pour compatibilité
     searchLieux: searchHook.refreshSearch,
     resetSearch: searchHook.clearSearch,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Form, Button, Spinner } from 'react-bootstrap';
 import Card from '@components/ui/Card';
 import styles from './CompanySearchSection.module.css';

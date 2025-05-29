@@ -4,7 +4,7 @@ import { collection, query, where, getDocs, getDoc, doc, updateDoc, addDoc, serv
 import { db } from '@/services/firebase-service';
 import { useLocationIQ } from '@/hooks/common/useLocationIQ';
 import ProgrammateurForm from '@/components/programmateurs/ProgrammateurForm';
-import '@/style/formPublic.css';
+import '@/styles/formPublic.css';
 
 // Composant pour le layout public du formulaire
 const PublicFormLayout = ({ children }) => {
@@ -31,16 +31,15 @@ const FormResponsePage = () => {
   const { concertId, token, id } = useParams(); // Récupérer concertId, token ou id
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [formData, setFormData] = useState(null);
   const [formLinkId, setFormLinkId] = useState(null);
   const [concert, setConcert] = useState(null);
   const [lieu, setLieu] = useState(null);
   const [error, setError] = useState(null);
   const [expired, setExpired] = useState(false);
   const [completed, setCompleted] = useState(false);
+  const [formData, setFormData] = useState(null); // Pour la validation admin
 
   // États pour l'édition des informations du lieu
-  const [editingConcertInfo, setEditingConcertInfo] = useState(false);
   const [lieuFormData, setLieuFormData] = useState({
     nom: '',
     adresse: '',
@@ -49,15 +48,13 @@ const FormResponsePage = () => {
     capacite: ''
   });
 
-  // Variables pour l'autocomplétion d'adresse
-  const [addressSuggestions, setAddressSuggestions] = useState([]);
-  const [isSearchingAddress, setIsSearchingAddress] = useState(false);
+  // Variables pour l'autocomplétion d'adresse (gardées pour cohérence avec maquette)
   const addressTimeoutRef = useRef(null);
   const addressInputRef = useRef(null);
   const suggestionsRef = useRef(null);
 
-  // Utilisation du hook LocationIQ pour l'autocomplétion d'adresse
-  const { isLoading: isApiLoading, error: apiError, searchAddress } = useLocationIQ();
+  // Hook LocationIQ (gardé pour cohérence avec maquette même si non utilisé actuellement)
+  const { isLoading: isApiLoading, searchAddress } = useLocationIQ();
 
   // Déterminer si nous sommes en mode public ou en mode admin
   const isPublicForm = !!concertId && !!token;
@@ -76,6 +73,8 @@ const FormResponsePage = () => {
     }
   }, [lieu]);
 
+  // Effets pour la recherche d'adresse et gestionnaires (gardés en commentaire pour cohérence avec maquette)
+  /*
   // Effet pour la recherche d'adresse
   useEffect(() => {
     // Nettoyer le timeout précédent
@@ -180,6 +179,7 @@ const saveLieuChanges = () => {
   // Fermer l'édition
   setEditingConcertInfo(false);
 };
+*/
 
   useEffect(() => {
     // En mode validation admin (route /formulaire/validation/:id)

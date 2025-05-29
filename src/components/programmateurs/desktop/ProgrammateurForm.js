@@ -2,6 +2,8 @@ import React from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { db } from '@/services/firebase-service';
+import { collection, addDoc, updateDoc, doc, serverTimestamp } from 'firebase/firestore';
 
 // Import des composants UI standardisés
 import LoadingSpinner from '@components/ui/LoadingSpinner';
@@ -131,12 +133,60 @@ const ProgrammateurForm = ({
   const handlePublicSubmit = async (e) => {
     e.preventDefault();
     
-    // Ici, on créerait une formSubmission au lieu de modifier un programmateur
-    // Cette logique devra être implémentée selon votre structure de données
-    console.log('Soumission publique:', { token, concertId, formLinkId, formData });
-    
-    // TODO: Implémenter la création de formSubmission
-    // await createFormSubmission(token, concertId, formLinkId, formData);
+    try {
+      console.log('Soumission publique:', { token, concertId, formLinkId, formData });
+      
+      // Créer la soumission de formulaire
+      const submissionData = {
+        // Métadonnées
+        concertId,
+        formLinkId,
+        token,
+        submittedAt: serverTimestamp(),
+        status: 'pending', // pending, validated, rejected
+        
+        // Données du programmateur
+        programmateurData: {
+          contact: formData.contact || {},
+          structure: formData.structure || {},
+          structureId: formData.structureId || null
+        },
+        
+        // Données du lieu si modifiées
+        lieuData: initialLieuData || {},
+        
+        // Données brutes complètes pour référence
+        rawData: formData
+      };
+      
+      // Créer le document dans formSubmissions
+      const submissionRef = await addDoc(collection(db, 'formSubmissions'), submissionData);
+      
+      console.log('Soumission créée avec ID:', submissionRef.id);
+      
+      // Marquer le lien de formulaire comme complété
+      if (formLinkId) {
+        await updateDoc(doc(db, 'formLinks', formLinkId), {
+          completed: true,
+          completedAt: serverTimestamp(),
+          submissionId: submissionRef.id
+        });
+      }
+      
+      // Optionnel : mettre à jour le concert avec la référence de soumission
+      await updateDoc(doc(db, 'concerts', concertId), {
+        lastFormSubmissionId: submissionRef.id,
+        hasFormSubmission: true,
+        updatedAt: serverTimestamp()
+      });
+      
+      console.log('Formulaire soumis avec succès');
+      return submissionRef.id;
+      
+    } catch (error) {
+      console.error('Erreur lors de la soumission du formulaire:', error);
+      throw error;
+    }
   };
 
   const handleCancelWithNotification = () => {

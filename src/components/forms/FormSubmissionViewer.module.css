@@ -1,0 +1,51 @@
+/* FormSubmissionViewer.module.css */
+
+.submissionViewer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--tc-space-4);
+}
+
+.submissionViewer dl {
+  margin-bottom: 0;
+}
+
+.submissionViewer dt {
+  font-weight: var(--tc-font-weight-bold);
+  color: var(--tc-text-default);
+  margin-bottom: var(--tc-space-1);
+}
+
+.submissionViewer dd {
+  color: var(--tc-text-muted);
+  margin-bottom: var(--tc-space-3);
+  margin-left: 0;
+}
+
+.submissionViewer h5 {
+  color: var(--tc-color-primary);
+  margin-bottom: var(--tc-space-3);
+  font-weight: var(--tc-font-weight-semibold);
+}
+
+.badge {
+  padding: var(--tc-space-1) var(--tc-space-2);
+  border-radius: var(--tc-radius-sm);
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-medium);
+}
+
+.bg-warning {
+  background-color: var(--tc-warning-color);
+  color: var(--tc-color-white);
+}
+
+.bg-success {
+  background-color: var(--tc-success-color);
+  color: var(--tc-color-white);
+}
+
+.bg-danger {
+  background-color: var(--tc-danger-color);
+  color: var(--tc-color-white);
+} 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { Suspense } from 'react';
 import '@styles/index.css';
 import { 
   BrowserRouter as Router, 
@@ -6,7 +6,7 @@ import {
   Route, 
   Navigate
 } from 'react-router-dom';
-import { AuthProvider, useAuth } from '@/context/AuthContext';
+import { AuthProvider } from '@/context/AuthContext';
 import { ParametresProvider } from '@/context/ParametresContext';
 import { ModalProvider } from '@/context/ModalContext'; // Import du nouveau ModalProvider
 import FlexContainer from '@/components/ui/FlexContainer';
@@ -38,9 +38,19 @@ import ProfilerMonitor from './components/debug/ProfilerMonitor';
 import ProgrammateurReferencesDebug from '@/components/debug/ProgrammateurReferencesDebug';
 import StructuresAuditDebug from '@/components/debug/StructuresAuditDebug';
 
+// 🔍 DIAGNOSTIC BOUCLE : Import du composant AuthDebug
+import AuthDebug from '@/components/debug/AuthDebug';
+
+// 🔒 SÉCURITÉ : Import du PrivateRoute sécurisé
+import PrivateRoute from '@/components/auth/PrivateRoute';
+import LoginPage from '@/pages/LoginPage';
+
 // 🔧 CONTRÔLE DES OUTILS DE DIAGNOSTIC
 // Changer cette valeur à true pour réactiver les outils de diagnostic
 const SHOW_DIAGNOSTIC_TOOLS = false;
+
+// 🔍 DIAGNOSTIC BOUCLE : Activer temporairement le debug auth
+const SHOW_AUTH_DEBUG = false; // 🔧 Masqué après validation - Réactivable si besoin
 
 // Import de l'outil de diagnostic en mode développement uniquement
 if (process.env.NODE_ENV === 'development') {
@@ -124,43 +134,6 @@ class ErrorBoundary extends React.Component {
   }
 }
 
-// Composant de protection des routes simplifié
-function PrivateRoute({ children }) {
-  const { currentUser, loading } = useAuth();
-  const [redirecting, setRedirecting] = useState(false);
-  
-  // 🎯 SIMPLIFICATION : Logique de redirection simplifiée
-  useEffect(() => {
-    if (!loading && !currentUser && !redirecting) {
-      // Délai court pour éviter les redirections trop rapides
-      const timer = setTimeout(() => {
-        setRedirecting(true);
-      }, 100);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [currentUser, loading, redirecting]);
-  
-  if (loading) {
-    return (
-      <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
-        <div className="text-center">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Vérification de l'authentification...</span>
-          </div>
-          <p className="mt-2">Vérification de l'authentification...</p>
-        </div>
-      </FlexContainer>
-    );
-  }
-  
-  if (redirecting) {
-    return <Navigate to="/login" replace />;
-  }
-  
-  return currentUser ? children : null;
-}
-
 function App() {
   // Définition des futures flags pour stabiliser React Router
   // Ces flags réduisent les rechargements intempestifs
@@ -190,6 +163,10 @@ function App() {
                 <Routes>
                   <Route path="/test-buttons" element={<TestButtons />} />
                   <Route path="/test-parametres-versions" element={<TestParametresVersions />} />
+                  
+                  {/* 🔒 SÉCURITÉ : Route publique de connexion */}
+                  <Route path="/login" element={<LoginPage />} />
+                  
                   {/* Routes publiques pour les formulaires */}
                   <Route path="/formulaire/:concertId/:token" element={<FormResponsePage />} />
                   
@@ -378,6 +355,8 @@ function App() {
               </Suspense>
               {process.env.NODE_ENV === 'development' && SHOW_DIAGNOSTIC_TOOLS && <UnifiedDebugDashboard />}
               {process.env.NODE_ENV === 'development' && SHOW_DIAGNOSTIC_TOOLS && <ProfilerMonitor />}
+              {/* 🔍 DIAGNOSTIC BOUCLE : Affichage temporaire du debug auth */}
+              {process.env.NODE_ENV === 'development' && SHOW_AUTH_DEBUG && <AuthDebug />}
             </ModalProvider>
           </ParametresProvider>
         </AuthProvider>

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '@/services/firebase-service';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import Alert from '@/components/ui/Alert';
@@ -22,82 +24,57 @@ const LoginPage = () => {
     setError('');
 
     try {
-      // Simulation d'authentification
-      if (email === 'test@example.com' && password === 'password') {
-        // Redirection vers le dashboard après connexion réussie
-        navigate('/');
-      } else {
-        setError('Email ou mot de passe incorrect');
-      }
+      // 🔒 SÉCURITÉ : Authentification Firebase sécurisée
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      
+      console.log('✅ Connexion réussie pour:', user.email);
+      
+      // Redirection vers le dashboard après connexion réussie
+      navigate('/');
+      
     } catch (error) {
-      setError('Une erreur est survenue lors de la connexion');
-      console.error('Erreur de connexion:', error);
+      console.error('❌ Erreur de connexion:', error);
+      
+      // Gestion sécurisée des erreurs d'authentification
+      let errorMessage = 'Une erreur est survenue lors de la connexion';
+      
+      switch (error.code) {
+        case 'auth/user-not-found':
+          errorMessage = 'Aucun compte trouvé avec cet email';
+          break;
+        case 'auth/wrong-password':
+          errorMessage = 'Mot de passe incorrect';
+          break;
+        case 'auth/invalid-email':
+          errorMessage = 'Format d\'email invalide';
+          break;
+        case 'auth/user-disabled':
+          errorMessage = 'Ce compte a été désactivé';
+          break;
+        case 'auth/too-many-requests':
+          errorMessage = 'Trop de tentatives échouées. Réessayez plus tard';
+          break;
+        case 'auth/network-request-failed':
+          errorMessage = 'Problème de connexion réseau';
+          break;
+        default:
+          errorMessage = 'Identifiants invalides';
+      }
+      
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
-  // Version React Bootstrap de la branche refacto-structure-scriptshell - pour implémentation future
-  /*
-  return (
-    <Container className="mt-5">
-      <Row className="justify-content-center">
-        <Col md={6}>
-          <Card>
-            <Card.Header className="bg-primary text-white">
-              <h4 className="mb-0">Connexion</h4>
-            </Card.Header>
-            <Card.Body>
-              {error && <Alert variant="danger">{error}</Alert>}
-              <Form onSubmit={handleSubmit}>
-                <Form.Group className="mb-3" controlId="email">
-                  <Form.Label>Email</Form.Label>
-                  <Form.Control
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="password">
-                  <Form.Label>Mot de passe</Form.Label>
-                  <Form.Control
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-                </Form.Group>
-                <div className="d-grid">
-                  <Button
-                    type="submit"
-                    variant="primary"
-                    disabled={loading}
-                  >
-                    {loading ? 'Connexion en cours...' : 'Se connecter'}
-                  </Button>
-                </div>
-              </Form>
-              <div className="mt-3 text-center">
-                <small className="text-muted">
-                  Pour les tests, utilisez: test@example.com / password
-                </small>
-              </div>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-    </Container>
-  );
-  */
-  
-  // Version avec les composants standardisés TourCraft
+  // 🎨 Interface sécurisée - AUCUN identifiant de test affiché
   return (
     <div className="container">
       <div className="row justify-content-center mt-5">
         <div className="col-md-6">
           <Card 
-            title="Connexion"
+            title="Connexion Sécurisée"
             variant="primary"
           >
             {error && (
@@ -116,6 +93,7 @@ const LoginPage = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 placeholder="votre@email.com"
+                autoComplete="email"
               />
               
               <FormField
@@ -127,6 +105,7 @@ const LoginPage = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 placeholder="Votre mot de passe"
+                autoComplete="current-password"
               />
               
               <div className="d-grid">
@@ -134,7 +113,7 @@ const LoginPage = () => {
                   type="submit"
                   variant="primary"
                   disabled={loading}
-                  icon={loading ? null : <i className="bi bi-key"></i>}
+                  icon={loading ? null : <i className="bi bi-shield-lock"></i>}
                   className="w-100"
                 >
                   {loading ? 'Connexion en cours...' : 'Se connecter'}
@@ -142,9 +121,10 @@ const LoginPage = () => {
               </div>
             </form>
             
+            {/* 🔒 SÉCURITÉ : Plus d'identifiants de test affichés */}
             <div className="mt-3 text-center">
               <small className="text-muted">
-                Pour les tests, utilisez: test@example.com / password
+                🔒 Connexion sécurisée avec Firebase Authentication
               </small>
             </div>
           </Card>

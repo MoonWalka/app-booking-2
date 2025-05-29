@@ -1,0 +1,176 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // 🚨 RÈGLE PAR DÉFAUT : TOUT INTERDIT SAUF EXCEPTIONS EXPLICITES
+    match /{document=**} {
+      allow read, write: if false;
+    }
+    
+    // 🎵 CONCERTS : Lecture publique pour affichage, écriture authentifiée
+    match /concerts/{concertId} {
+      allow read: if true; // Lecture publique pour l'affichage des concerts
+      
+      allow create: if request.auth != null && 
+                      validateConcertData(request.resource.data) &&
+                      request.resource.data.createdBy == request.auth.uid;
+      
+      allow update: if request.auth != null && 
+                      validateConcertData(request.resource.data) &&
+                      (resource.data.createdBy == request.auth.uid || 
+                       isAdmin(request.auth.uid));
+      
+      allow delete: if request.auth != null && 
+                      (resource.data.createdBy == request.auth.uid || 
+                       isAdmin(request.auth.uid));
+    }
+    
+    // 👥 UTILISATEURS : Accès privé strict
+    match /users/{userId} {
+      allow read, write: if request.auth != null && 
+                           request.auth.uid == userId;
+      
+      allow create: if request.auth != null && 
+                      request.auth.uid == userId &&
+                      validateUserData(request.resource.data);
+    }
+    
+    // 🎭 PROGRAMMATEURS : Authentification obligatoire
+    match /programmateurs/{progId} {
+      allow read: if request.auth != null;
+      
+      allow create: if request.auth != null && 
+                      validateProgrammateurData(request.resource.data) &&
+                      request.resource.data.createdBy == request.auth.uid;
+      
+      allow update: if request.auth != null && 
+                      validateProgrammateurData(request.resource.data) &&
+                      (resource.data.createdBy == request.auth.uid || 
+                       isAdmin(request.auth.uid));
+      
+      allow delete: if request.auth != null && 
+                      (resource.data.createdBy == request.auth.uid || 
+                       isAdmin(request.auth.uid));
+    }
+    
+    // 🎤 ARTISTES : Authentification obligatoire
+    match /artistes/{artisteId} {
+      allow read: if request.auth != null;
+      
+      allow create: if request.auth != null && 
+                      validateArtisteData(request.resource.data) &&
+                      request.resource.data.createdBy == request.auth.uid;
+      
+      allow update: if request.auth != null && 
+                      validateArtisteData(request.resource.data) &&
+                      (resource.data.createdBy == request.auth.uid || 
+                       isAdmin(request.auth.uid));
+      
+      allow delete: if request.auth != null && 
+                      (resource.data.createdBy == request.auth.uid || 
+                       isAdmin(request.auth.uid));
+    }
+    
+    // 🏟️ LIEUX : Authentification obligatoire
+    match /lieux/{lieuId} {
+      allow read: if request.auth != null;
+      
+      allow create: if request.auth != null && 
+                      validateLieuData(request.resource.data) &&
+                      request.resource.data.createdBy == request.auth.uid;
+      
+      allow update: if request.auth != null && 
+                      validateLieuData(request.resource.data) &&
+                      (resource.data.createdBy == request.auth.uid || 
+                       isAdmin(request.auth.uid));
+      
+      allow delete: if request.auth != null && 
+                      (resource.data.createdBy == request.auth.uid || 
+                       isAdmin(request.auth.uid));
+    }
+    
+    // 📝 FORMULAIRES : Gestion des liens et réponses de formulaires
+    match /formLinks/{linkId} {
+      allow read: if true; // Lecture publique pour accès au formulaire
+      allow create: if request.auth != null && 
+                      request.resource.data.createdBy == request.auth.uid;
+      allow update, delete: if request.auth != null && 
+                              resource.data.createdBy == request.auth.uid;
+    }
+    
+    match /formResponses/{responseId} {
+      allow create: if true; // Création publique pour soumission de formulaire
+      allow read, update, delete: if request.auth != null && 
+                                     (resource.data.createdBy == request.auth.uid || 
+                                      isAdmin(request.auth.uid));
+    }
+    
+    // 🔧 LOGS et AUDIT : Accès admin uniquement
+    match /logs/{logId} {
+      allow read, write: if request.auth != null && isAdmin(request.auth.uid);
+    }
+    
+    match /audit/{auditId} {
+      allow read, write: if request.auth != null && isAdmin(request.auth.uid);
+    }
+  }
+  
+  // 🛡️ FONCTIONS DE VALIDATION ET SÉCURITÉ
+  
+  // Vérifier si un utilisateur est admin
+  function isAdmin(uid) {
+    return exists(/databases/$(database)/documents/users/$(uid)) &&
+           get(/databases/$(database)/documents/users/$(uid)).data.role == 'admin';
+  }
+  
+  // Validation des données de concert
+  function validateConcertData(data) {
+    return data.keys().hasAll(['titre', 'dateCreation']) &&
+           data.titre is string &&
+           data.titre.size() > 0 &&
+           data.titre.size() <= 200 &&
+           data.dateCreation is timestamp &&
+           (!('status' in data) || data.status in ['contact', 'preaccord', 'contrat', 'acompte', 'solde', 'annule']);
+  }
+  
+  // Validation des données de programmateur
+  function validateProgrammateurData(data) {
+    return data.keys().hasAll(['nom', 'contact']) &&
+           data.nom is string &&
+           data.nom.size() > 0 &&
+           data.nom.size() <= 100 &&
+           data.contact is map &&
+           data.contact.keys().hasAll(['email']) &&
+           data.contact.email is string &&
+           data.contact.email.matches('.*@.*\\..*');
+  }
+  
+  // Validation des données d'artiste
+  function validateArtisteData(data) {
+    return data.keys().hasAll(['nom']) &&
+           data.nom is string &&
+           data.nom.size() > 0 &&
+           data.nom.size() <= 100;
+  }
+  
+  // Validation des données de lieu
+  function validateLieuData(data) {
+    return data.keys().hasAll(['nom', 'ville']) &&
+           data.nom is string &&
+           data.nom.size() > 0 &&
+           data.nom.size() <= 100 &&
+           data.ville is string &&
+           data.ville.size() > 0 &&
+           data.ville.size() <= 100;
+  }
+  
+  // Validation des données utilisateur
+  function validateUserData(data) {
+    return data.keys().hasAll(['email', 'createdAt']) &&
+           data.email is string &&
+           data.email.matches('.*@.*\\..*') &&
+           data.createdAt is timestamp &&
+           (!('role' in data) || data.role in ['user', 'admin']);
+  }
+} 

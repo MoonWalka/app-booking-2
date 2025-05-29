@@ -239,8 +239,6 @@ export const useProgrammateurForm = (programmateurId) => {
   
   // Fonction pour gérer les changements de structure principale (utilisée par useCompanySearch)
   const handleStructureChange = useCallback((company) => {
-    console.log('[DEBUG] handleStructureChange appelé avec:', company);
-    
     if (company) {
       const structureData = {
         raisonSociale: company.nom || company.raisonSociale || '',
@@ -251,8 +249,6 @@ export const useProgrammateurForm = (programmateurId) => {
         type: company.statutJuridique || ''
       };
       
-      console.log('[DEBUG] Nouvelles données structure:', structureData);
-      
       formHook.setFormData(prev => ({
         ...prev,
         structureId: company.id || '',
@@ -262,7 +258,6 @@ export const useProgrammateurForm = (programmateurId) => {
         }
       }));
     } else {
-      console.log('[DEBUG] Remise à zéro des données structure');
       formHook.setFormData(prev => ({
         ...prev,
         structureId: '',

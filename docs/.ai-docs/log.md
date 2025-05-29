@@ -1,115 +1,281 @@
-[Log] [DEBUG][ProgrammateurDetails] APRES imports (bundle.js, line 387187)
-[Log] [UEF] Hook useEntrepriseForm importé (bundle.js, line 427074)
-[Log]  (bundle.js, line 405281)
-📊 Pour utiliser l'outil de diagnostic de performance:
-1. Démarrer: performanceDiagnostic.start()
-2. Naviguer vers la page Concerts et interagir avec l'application
-3. Arrêter et voir le rapport: performanceDiagnostic.stop()
-
-[Warning] ⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition. (bundle.js, line 316598)
-[Warning] ⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath. (bundle.js, line 316598)
-[Info] [INFO] [useGenericEntityDetails] 🚀 INIT: useGenericEntityDetails #1 initialisé pour concert:con-1748478427366-7jpzsj – "" (bundle.js, line 438598)
-[Info] [INFO] [useGenericEntityDetails] 🚀 INIT: useGenericEntityDetails #1 initialisé pour formSubmission:null – "" (bundle.js, line 438598)
-[Info] [INFO] [useGenericEntityDetails] 🔄 ID_CHANGE_EFFECT: Changement d'ID détecté - null → con-1748478427366-7jpzsj – "" (bundle.js, line 438598)
-[Info] [INFO] [useGenericEntityDetails] ✅ ID_CHANGE_EFFECT: Réinitialisation terminée pour concert:con-1748478427366-7jpzsj – "" (bundle.js, line 438598)
-[Info] [INFO] [useGenericEntityDetails] 🚀 INITIAL_LOAD_EFFECT: Début effet chargement initial – "" (bundle.js, line 438598)
-[Info] [INFO] [useGenericEntityDetails] 🔄 INITIAL_LOAD_EFFECT: Démarrage chargement pour concert:con-1748478427366-7jpzsj – "" (bundle.js, line 438598)
-[Info] [INFO] [useGenericEntityDetails] 🔥 INITIAL_LOAD_EFFECT: Mode normal, appel de fetchEntity – "" (bundle.js, line 438598)
-[Info] [INFO] [useGenericEntityDetails] 🚀 FETCH_ENTITY: Début fetchEntity pour concert:con-1748478427366-7jpzsj – "" (bundle.js, line 438598)
-[Info] [INFO] [useGenericEntityDetails] 🔥 FETCH_ENTITY: Début requête Firestore pour concert:con-1748478427366-7jpzsj – "" (bundle.js, line 438598)
-[Log] Validation du token: – "953911e7-98c8-4042-a44d-e937e60208d7" – "pour le concert:" – "con-1748478427366-7jpzsj" (bundle.js, line 417866)
-[Info] [INFO] [useGenericEntityDetails] 🚀 INITIAL_LOAD_EFFECT: Début effet chargement initial – "" (bundle.js, line 438598)
-[Info] [INFO] [useGenericEntityDetails] 🚀 INIT: useGenericEntityDetails #1 initialisé pour concert:con-1748478427366-7jpzsj – "" (bundle.js, line 438598)
-[Info] [INFO] [useGenericEntityDetails] 🚀 INIT: useGenericEntityDetails #1 initialisé pour formSubmission:null – "" (bundle.js, line 438598)
-[Info] [INFO] [useGenericEntityDetails] 🚀 INIT: useGenericEntityDetails #1 initialisé pour concert:con-1748478427366-7jpzsj – "" (bundle.js, line 438598)
-[Info] [INFO] [useGenericEntityDetails] 🚀 INIT: useGenericEntityDetails #1 initialisé pour formSubmission:null – "" (bundle.js, line 438598)
-[Info] [INFO] [useGenericEntityDetails] 📄 FETCH_ENTITY: getDoc terminé - exists: true – "" (bundle.js, line 438598)
-[Info] [INFO] [useGenericEntityDetails] ✅ FETCH_ENTITY: Document existe, traitement des données – "" (bundle.js, line 438598)
-[Info] [INFO] [useGenericEntityDetails] 🎯 FETCH_ENTITY: Avant safeSetState(setEntity) - isMounted: true – "" (bundle.js, line 438598)
-[Info] [INFO] [useGenericEntityDetails] ✅ FETCH_ENTITY: Données entity définies avec succès – "" (bundle.js, line 438598)
-[Info] [INFO] [useGenericEntityDetails] ✅ FETCH_ENTITY: Terminé avec succès – "" (bundle.js, line 438598)
-[Log] Données du lien trouvées: – {createdAt: Timestamp, programmateurId: "3zyw8Uxzkd2SUWPOURBu", expiryDate: Timestamp, …} (bundle.js, line 417882)
-{createdAt: Timestamp, programmateurId: "3zyw8Uxzkd2SUWPOURBu", expiryDate: Timestamp, token: "953911e7-98c8-4042-a44d-e937e60208d7", completed: false, …}Object
-[Log] Token validé avec succès, chargement du concert: – "con-1748478427366-7jpzsj" (bundle.js, line 417919)
-[Info] [INFO] [useGenericEntityDetails] 🚀 INIT: useGenericEntityDetails #1 initialisé pour concert:con-1748478427366-7jpzsj – "" (bundle.js, line 438598)
-[Info] [INFO] [useGenericEntityDetails] 🚀 INIT: useGenericEntityDetails #1 initialisé pour formSubmission:null – "" (bundle.js, line 438598)
-[Info] [INFO] [useGenericEntityDetails] 🚀 INIT: useGenericEntityDetails #1 initialisé pour concert:con-1748478427366-7jpzsj – "" (bundle.js, line 438598)
-[Info] [INFO] [useGenericEntityDetails] 🚀 INIT: useGenericEntityDetails #1 initialisé pour formSubmission:null – "" (bundle.js, line 438598)
-[Error] The above error occurred in the <input> component:
-
-input
+[Warning] 55340 console messages are not shown.
+[Log] [DEBUG] handleStructureChange appelé avec: – Object (bundle.js, line 426699)
+Object
+[Log] [DEBUG] Nouvelles données structure: – Object (bundle.js, line 426709)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - formData.structure: – Object (bundle.js, line 389844)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - selectedCompany actuel: – Object (bundle.js, line 389845)
+Object
+[Log] [DEBUG] handleStructureChange appelé avec: – Object (bundle.js, line 426699)
+Object
+[Log] [DEBUG] Nouvelles données structure: – Object (bundle.js, line 426709)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - formData.structure: – Object (bundle.js, line 389844)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - selectedCompany actuel: – Object (bundle.js, line 389845)
+Object
+[Log] [DEBUG] handleStructureChange appelé avec: – Object (bundle.js, line 426699)
+Object
+[Log] [DEBUG] Nouvelles données structure: – Object (bundle.js, line 426709)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - formData.structure: – Object (bundle.js, line 389844)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - selectedCompany actuel: – Object (bundle.js, line 389845)
+Object
+[Log] [DEBUG] handleStructureChange appelé avec: – Object (bundle.js, line 426699)
+Object
+[Log] [DEBUG] Nouvelles données structure: – Object (bundle.js, line 426709)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - formData.structure: – Object (bundle.js, line 389844)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - selectedCompany actuel: – Object (bundle.js, line 389845)
+Object
+[Log] [DEBUG] handleStructureChange appelé avec: – Object (bundle.js, line 426699)
+Object
+[Log] [DEBUG] Nouvelles données structure: – Object (bundle.js, line 426709)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - formData.structure: – Object (bundle.js, line 389844)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - selectedCompany actuel: – Object (bundle.js, line 389845)
+Object
+[Log] [DEBUG] handleStructureChange appelé avec: – Object (bundle.js, line 426699)
+Object
+[Log] [DEBUG] Nouvelles données structure: – Object (bundle.js, line 426709)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - formData.structure: – Object (bundle.js, line 389844)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - selectedCompany actuel: – Object (bundle.js, line 389845)
+Object
+[Log] [DEBUG] handleStructureChange appelé avec: – Object (bundle.js, line 426699)
+Object
+[Log] [DEBUG] Nouvelles données structure: – Object (bundle.js, line 426709)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - formData.structure: – Object (bundle.js, line 389844)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - selectedCompany actuel: – Object (bundle.js, line 389845)
+Object
+[Log] [DEBUG] handleStructureChange appelé avec: – Object (bundle.js, line 426699)
+Object
+[Log] [DEBUG] Nouvelles données structure: – Object (bundle.js, line 426709)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - formData.structure: – Object (bundle.js, line 389844)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - selectedCompany actuel: – Object (bundle.js, line 389845)
+Object
+[Log] [DEBUG] handleStructureChange appelé avec: – Object (bundle.js, line 426699)
+Object
+[Log] [DEBUG] Nouvelles données structure: – Object (bundle.js, line 426709)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - formData.structure: – Object (bundle.js, line 389844)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - selectedCompany actuel: – Object (bundle.js, line 389845)
+Object
+[Log] [DEBUG] handleStructureChange appelé avec: – Object (bundle.js, line 426699)
+Object
+[Log] [DEBUG] Nouvelles données structure: – Object (bundle.js, line 426709)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - formData.structure: – Object (bundle.js, line 389844)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - selectedCompany actuel: – Object (bundle.js, line 389845)
+Object
+[Log] [DEBUG] handleStructureChange appelé avec: – Object (bundle.js, line 426699)
+Object
+[Log] [DEBUG] Nouvelles données structure: – Object (bundle.js, line 426709)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - formData.structure: – Object (bundle.js, line 389844)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - selectedCompany actuel: – Object (bundle.js, line 389845)
+Object
+[Log] [DEBUG] handleStructureChange appelé avec: – Object (bundle.js, line 426699)
+Object
+[Log] [DEBUG] Nouvelles données structure: – Object (bundle.js, line 426709)
+Object
+[Error] Warning: Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.
+ProgrammateurForm@http://localhost:3000/static/js/bundle.js:385726:8
+ProgrammateurForm@http://localhost:3000/static/js/bundle.js:384376:130
 div
 div
-FormField@http://localhost:3000/static/js/bundle.js:403717:7
-div
-div
-div
-form
-ProgrammateurPublicForm@http://localhost:3000/static/js/bundle.js:367380:8
-div
-CardBody@http://localhost:3000/static/js/bundle.js:252017:12
-div
-Card@http://localhost:3000/static/js/bundle.js:251957:11
-Card@http://localhost:3000/static/js/bundle.js:402977:11
-FormContentWrapper@http://localhost:3000/static/js/bundle.js:366262:8
-div
-PublicFormContainer@http://localhost:3000/static/js/bundle.js:368063:10
 main
 div
-PublicFormLayout@http://localhost:3000/static/js/bundle.js:368358:11
-FormResponsePage@http://localhost:3000/static/js/bundle.js:432778:66
-RenderedRoute@http://localhost:3000/static/js/bundle.js:316184:11
-Routes@http://localhost:3000/static/js/bundle.js:316917:12
+PublicFormLayout@http://localhost:3000/static/js/bundle.js:430183:76
+FormResponsePage@http://localhost:3000/static/js/bundle.js:430239:66
+RenderedRoute@http://localhost:3000/static/js/bundle.js:316102:61
+Routes@http://localhost:3000/static/js/bundle.js:316835:19
 Suspense
-ModalProvider@http://localhost:3000/static/js/bundle.js:404781:11
-ParametresProvider@http://localhost:3000/static/js/bundle.js:404962:11
-AuthProvider@http://localhost:3000/static/js/bundle.js:404559:11
-Router@http://localhost:3000/static/js/bundle.js:316856:12
-BrowserRouter@http://localhost:3000/static/js/bundle.js:314753:12
-ErrorBoundary@http://localhost:3000/static/js/bundle.js:333179:10
+ModalProvider@http://localhost:3000/static/js/bundle.js:402164:6
+ParametresProvider@http://localhost:3000/static/js/bundle.js:402345:6
+AuthProvider@http://localhost:3000/static/js/bundle.js:401942:6
+Router@http://localhost:3000/static/js/bundle.js:316769:68
+BrowserRouter@http://localhost:3000/static/js/bundle.js:314668:11
+ErrorBoundary@http://localhost:3000/static/js/bundle.js:333096:10
 App
+	printWarning (bundle.js:259958)
+	error (bundle.js:259935)
+	checkForNestedUpdates (bundle.js:283483)
+	scheduleUpdateOnFiber (bundle.js:281915)
+	dispatchSetState (bundle.js:274380)
+	(fonction anonyme) (bundle.js:426710)
+	onCompanySelect (bundle.js:385768)
+	(fonction anonyme) (bundle.js:404997)
+	commitHookEffectListMount (bundle.js:279938)
+	commitPassiveMountOnFiber (bundle.js:281431)
+	commitPassiveMountEffects_complete (bundle.js:281403)
+	commitPassiveMountEffects_begin (bundle.js:281393)
+	commitPassiveMountEffects (bundle.js:281383)
+	flushPassiveEffectsImpl (bundle.js:283266)
+	flushPassiveEffects (bundle.js:283219)
+	(fonction anonyme) (bundle.js:283034)
+	workLoop (bundle.js:285974)
+	flushWork (bundle.js:285952)
+	performWorkUntilDeadline (bundle.js:286189)
+	(fonction anonyme) (bundle.js:121832)
+	run (bundle.js:121809)
+	eventListener (bundle.js:121818)
+[Log] [DEBUG] ProgrammateurStructureSection - formData.structure: – Object (bundle.js, line 389844)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - selectedCompany actuel: – Object (bundle.js, line 389845)
+Object
+[Log] [DEBUG] handleStructureChange appelé avec: – Object (bundle.js, line 426699)
+Object
+[Log] [DEBUG] Nouvelles données structure: – Object (bundle.js, line 426709)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - formData.structure: – Object (bundle.js, line 389844)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - selectedCompany actuel: – Object (bundle.js, line 389845)
+Object
+[Log] [DEBUG] handleStructureChange appelé avec: – Object (bundle.js, line 426699)
+Object
+[Log] [DEBUG] Nouvelles données structure: – Object (bundle.js, line 426709)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - formData.structure: – Object (bundle.js, line 389844)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - selectedCompany actuel: – Object (bundle.js, line 389845)
+Object
+[Log] [DEBUG] handleStructureChange appelé avec: – Object (bundle.js, line 426699)
+Object
+[Log] [DEBUG] Nouvelles données structure: – Object (bundle.js, line 426709)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - formData.structure: – Object (bundle.js, line 389844)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - selectedCompany actuel: – Object (bundle.js, line 389845)
+Object
+[Log] [DEBUG] handleStructureChange appelé avec: – Object (bundle.js, line 426699)
+Object
+[Log] [DEBUG] Nouvelles données structure: – Object (bundle.js, line 426709)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - formData.structure: – Object (bundle.js, line 389844)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - selectedCompany actuel: – Object (bundle.js, line 389845)
+Object
+[Log] [DEBUG] handleStructureChange appelé avec: – Object (bundle.js, line 426699)
+Object
+[Log] [DEBUG] Nouvelles données structure: – Object (bundle.js, line 426709)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - formData.structure: – Object (bundle.js, line 389844)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - selectedCompany actuel: – Object (bundle.js, line 389845)
+Object
+[Log] [DEBUG] handleStructureChange appelé avec: – Object (bundle.js, line 426699)
+Object
+[Log] [DEBUG] Nouvelles données structure: – Object (bundle.js, line 426709)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - formData.structure: – Object (bundle.js, line 389844)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - selectedCompany actuel: – Object (bundle.js, line 389845)
+Object
+[Log] [DEBUG] handleStructureChange appelé avec: – Object (bundle.js, line 426699)
+Object
+[Log] [DEBUG] Nouvelles données structure: – Object (bundle.js, line 426709)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - formData.structure: – Object (bundle.js, line 389844)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - selectedCompany actuel: – Object (bundle.js, line 389845)
+Object
+[Log] [DEBUG] handleStructureChange appelé avec: – Object (bundle.js, line 426699)
+Object
+[Log] [DEBUG] Nouvelles données structure: – Object (bundle.js, line 426709)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - formData.structure: – Object (bundle.js, line 389844)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - selectedCompany actuel: – Object (bundle.js, line 389845)
+Object
+[Log] [DEBUG] handleStructureChange appelé avec: – Object (bundle.js, line 426699)
+Object
+[Log] [DEBUG] Nouvelles données structure: – Object (bundle.js, line 426709)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - formData.structure: – Object (bundle.js, line 389844)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - selectedCompany actuel: – Object (bundle.js, line 389845)
+Object
+[Log] [DEBUG] handleStructureChange appelé avec: – Object (bundle.js, line 426699)
+Object
+[Log] [DEBUG] Nouvelles données structure: – Object (bundle.js, line 426709)
+Object
+[Log] Soumission publique: – Object (bundle.js, line 385834)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - formData.structure: – Object (bundle.js, line 389844)
+Object
+[Log] [DEBUG] ProgrammateurStructureSection - selectedCompany actuel: – Object (bundle.js, line 389845)
+Object
+[Log] [DEBUG] handleStructureChange appelé avec: – Object (bundle.js, line 426699)
+Object
+[Log] [DEBUG] Nouvelles données structure: – Object (bundle.js, line 426709)
+Object
+> Élément sélectionné
 
-React will try to recreate this component tree from scratch using the error boundary you provided, ErrorBoundary.
-	logCapturedError (bundle.js:276216)
-	callback (bundle.js:276267)
-	callCallback (bundle.js:273046)
-	commitUpdateQueue (bundle.js:273064)
-	commitLayoutEffectOnFiber (bundle.js:280206)
-	commitLayoutMountEffects_complete (bundle.js:281320)
-	commitLayoutEffects_begin (bundle.js:281309)
-	commitLayoutEffects (bundle.js:281255)
-	commitRootImpl (bundle.js:283164)
-	commitRoot (bundle.js:283044)
-	finishConcurrentRender (bundle.js:282364)
-	performConcurrentWorkOnRoot (bundle.js:282292)
-	workLoop (bundle.js:286057)
-	flushWork (bundle.js:286035)
-	performWorkUntilDeadline (bundle.js:286272)
+
+
+
+
+[Log] Concert trouvé: – {id: "con-1748478427366-7jpzsj", updatedAt: Timestamp, artisteId: "", …} (bundle.js, line 415919)
+{id: "con-1748478427366-7jpzsj", updatedAt: Timestamp, artisteId: "", prix: 9000, programmateurNom: "lolo", …}Object
+[Log] Recherche dans formSubmissions par concertId (bundle.js, line 415943)
+[Log] Aucune soumission trouvée, recherche dans formLinks (bundle.js, line 415948)
+[Log] Lien trouvé, mais aucune soumission (bundle.js, line 415959)
+[Error] Warning: Failed prop type: The prop `onChange` is marked as required in `FormField`, but its value is `undefined`.
+FormField@http://localhost:3000/static/js/bundle.js:401098:7
+FormGenerator@http://localhost:3000/static/js/bundle.js:365065:12
+div
+FormValidationInterface@http://localhost:3000/static/js/bundle.js:366126:67
+RenderedRoute@http://localhost:3000/static/js/bundle.js:316101:11
+Routes@http://localhost:3000/static/js/bundle.js:316834:12
+div
+ConcertsPage@http://localhost:3000/static/js/bundle.js:428441:81
+Suspense
+PrivateRoute@http://localhost:3000/static/js/bundle.js:333209:11
+RenderedRoute@http://localhost:3000/static/js/bundle.js:316101:11
+Outlet@http://localhost:3000/static/js/bundle.js:316745:25
+main
+div
+DesktopLayout@http://localhost:3000/static/js/bundle.js:341336:11
+Layout@http://localhost:3000/static/js/bundle.js:339737:88
+RenderedRoute@http://localhost:3000/static/js/bundle.js:316101:11
+Routes@http://localhost:3000/static/js/bundle.js:316834:12
+Suspense
+ModalProvider@http://localhost:3000/static/js/bundle.js:402162:11
+ParametresProvider@http://localhost:3000/static/js/bundle.js:402343:11
+AuthProvider@http://localhost:3000/static/js/bundle.js:401940:11
+Router@http://localhost:3000/static/js/bundle.js:316773:12
+BrowserRouter@http://localhost:3000/static/js/bundle.js:314670:12
+ErrorBoundary@http://localhost:3000/static/js/bundle.js:333096:10
+App
+	printWarning (bundle.js:318865)
+	error (bundle.js:318842)
+	checkPropTypes (bundle.js:319327)
+	validatePropTypes (bundle.js:319791)
+	jsxWithValidation (bundle.js:319904)
+	FormGenerator (bundle.js:365288:95)
+	renderWithHooks (bundle.js:273352)
+	updateFunctionComponent (bundle.js:276919)
+	beginWork$1 (bundle.js:283585)
+	performUnitOfWork (bundle.js:282855)
+	workLoopSync (bundle.js:282778)
+	renderRootSync (bundle.js:282751)
+	performConcurrentWorkOnRoot (bundle.js:282146:93)
+	workLoop (bundle.js:285974)
+	flushWork (bundle.js:285952)
+	performWorkUntilDeadline (bundle.js:286189)
 	(fonction anonyme) (bundle.js:121832)
 	run (bundle.js:121809)
 	eventListener (bundle.js:121818)
-[Error] Erreur capturée par ErrorBoundary: (2)
-Error: input is a void element tag and must neither have `children` nor use `dangerouslySetInnerHTML`. — react-dom.development.js:2942
-{componentStack: "↵input↵div↵div↵FormField@http://localhost:3000/sta…/localhost:3000/static/js/bundle.js:333179:10↵App"}
-	componentDidCatch (bundle.js:333195)
-	callback (bundle.js:276278)
-	callCallback (bundle.js:273046)
-	commitUpdateQueue (bundle.js:273064)
-	commitLayoutEffectOnFiber (bundle.js:280206)
-	commitLayoutMountEffects_complete (bundle.js:281320)
-	commitLayoutEffects_begin (bundle.js:281309)
-	commitLayoutEffects (bundle.js:281255)
-	commitRootImpl (bundle.js:283164)
-	commitRoot (bundle.js:283044)
-	finishConcurrentRender (bundle.js:282364)
-	performConcurrentWorkOnRoot (bundle.js:282292)
-	workLoop (bundle.js:286057)
-	flushWork (bundle.js:286035)
-	performWorkUntilDeadline (bundle.js:286272)
-	(fonction anonyme) (bundle.js:121832)
-	run (bundle.js:121809)
-	eventListener (bundle.js:121818)
-[Info] [INFO] [useGenericEntityDetails] 🧹 CLEANUP: Début démontage du hook pour concert:con-1748478427366-7jpzsj – "" (bundle.js, line 438598)
-[Info] [INFO] [useGenericEntityDetails] ✅ CLEANUP: Démontage terminé pour concert:con-1748478427366-7jpzsj – "" (bundle.js, line 438598)
-[Info] [INFO] [useGenericEntityDetails] 🧹 CLEANUP: Début démontage du hook pour formSubmission:null – "" (bundle.js, line 438598)
-[Info] [INFO] [useGenericEntityDetails] ✅ CLEANUP: Démontage terminé pour formSubmission:null – "" (bundle.js, line 438598)

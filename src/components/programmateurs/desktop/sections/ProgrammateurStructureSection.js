@@ -27,12 +27,12 @@ const ProgrammateurStructureSection = ({
 
   // Synchroniser selectedCompany avec les données du formulaire
   useEffect(() => {
-    console.log('[DEBUG] ProgrammateurStructureSection - formData.structure:', formData?.structure);
-    console.log('[DEBUG] ProgrammateurStructureSection - selectedCompany actuel:', selectedCompany);
-    
     // Si les données de structure sont remplies et qu'on n'a pas de selectedCompany,
     // cela signifie qu'une entreprise a été sélectionnée via l'API
-    if (formData?.structure && formData.structure.siret && formData.structure.raisonSociale && !selectedCompany) {
+    const hasStructureData = formData?.structure?.siret && formData?.structure?.raisonSociale;
+    const hasSelectedCompany = selectedCompany && selectedCompany.siret;
+    
+    if (hasStructureData && !hasSelectedCompany) {
       const companyFromFormData = {
         id: formData.structureId || '',
         nom: formData.structure.raisonSociale,
@@ -43,11 +43,15 @@ const ProgrammateurStructureSection = ({
         statutJuridique: formData.structure.type || ''
       };
       
-      console.log('[DEBUG] ProgrammateurStructureSection - Reconstruction selectedCompany:', companyFromFormData);
       setSelectedCompany(companyFromFormData);
       setInputMode('search'); // S'assurer qu'on est en mode recherche
     }
-  }, [formData?.structure, selectedCompany]);
+    
+    // Si on n'a plus de données structure mais qu'on a encore selectedCompany, on le supprime
+    if (!hasStructureData && hasSelectedCompany) {
+      setSelectedCompany(null);
+    }
+  }, [formData?.structure?.siret, formData?.structure?.raisonSociale, formData?.structureId]); // Dépendances spécifiques
 
   // Handler pour changer de mode
   const handleInputModeChange = (mode) => {

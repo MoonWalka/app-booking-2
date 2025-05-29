@@ -67,8 +67,10 @@ const ProgrammateurForm = ({
   } = useProgrammateurForm(programmateurId);
 
   // Hooks pour la recherche d'entreprise et d'adresses
-  const companySearch = useCompanySearch((company) => {
-    handleStructureChange(company);
+  const companySearch = useCompanySearch({
+    onCompanySelect: (company) => {
+      handleStructureChange(company);
+    }
   });
 
   const addressSearch = useAddressSearch(

@@ -43,7 +43,7 @@ const ParametresEntrepriseRobuste = () => {
     searchResults,
     isSearching,
     searchResultsRef
-  } = useCompanySearch();
+  } = useCompanySearch({});
 
   // ✅ Hook de recherche d'adresse (déjà stable)
   const addressSearch = useAddressSearch({

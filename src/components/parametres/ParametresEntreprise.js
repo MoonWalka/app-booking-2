@@ -38,7 +38,7 @@ const ParametresEntreprise = () => {
     searchResults,
     isSearching,
     searchResultsRef
-  } = useCompanySearch();
+  } = useCompanySearch({});
 
   // Address search hook - mise à jour pour utiliser le format d'options
   const addressSearch = useAddressSearch({

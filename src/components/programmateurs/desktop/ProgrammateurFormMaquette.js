@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { doc, getDoc, updateDoc, addDoc, collection, deleteDoc, query, where, getDocs } from 'firebase/firestore';
@@ -65,11 +65,17 @@ const ProgrammateurFormMaquette = () => {
 
   // Callback mémorisé pour la sélection de lieu
   const handleLieuSelect = useCallback((lieu) => {
-    if (lieu && !lieuxAssocies.find(l => l.id === lieu.id)) {
-      setLieuxAssocies(prev => [...prev, lieu]);
-      toast.success(`Lieu "${lieu.nom}" ajouté`);
+    if (lieu) {
+      setLieuxAssocies(prev => {
+        // Vérifier la duplication à l'intérieur du setter
+        if (!prev.find(l => l.id === lieu.id)) {
+          toast.success(`Lieu "${lieu.nom}" ajouté`);
+          return [...prev, lieu];
+        }
+        return prev;
+      });
     }
-  }, [lieuxAssocies]);
+  }, []);
 
   // Hooks de recherche
   const companySearch = useCompanySearch({
@@ -277,13 +283,19 @@ const ProgrammateurFormMaquette = () => {
   }, []);
 
   const handleSelectConcertFromSearch = useCallback((concert) => {
-    if (concert && !concertsAssocies.find(c => c.id === concert.id)) {
-      setConcertsAssocies(prev => [...prev, concert]);
-      setConcertSearchTerm('');
-      setConcertSearchResults([]);
-      toast.success(`Concert "${concert.titre}" ajouté`);
+    if (concert) {
+      setConcertsAssocies(prev => {
+        // Vérifier la duplication à l'intérieur du setter
+        if (!prev.find(c => c.id === concert.id)) {
+          setConcertSearchTerm('');
+          setConcertSearchResults([]);
+          toast.success(`Concert "${concert.titre}" ajouté`);
+          return [...prev, concert];
+        }
+        return prev;
+      });
     }
-  }, [concertsAssocies]);
+  }, []);
 
   // Fonction de recherche de concerts simplifiée
   const searchConcerts = useCallback(async (searchTerm) => {
@@ -324,8 +336,11 @@ const ProgrammateurFormMaquette = () => {
   }, [concertSearchTerm, searchConcerts]);
 
   // Filtrer les concerts dans le rendu pour éviter la dépendance dans searchConcerts
-  const filteredConcertResults = concertSearchResults.filter(concert => 
-    !concertsAssocies.find(c => c.id === concert.id)
+  const filteredConcertResults = useMemo(() => 
+    concertSearchResults.filter(concert => 
+      !concertsAssocies.find(c => c.id === concert.id)
+    ),
+    [concertSearchResults, concertsAssocies]
   );
 
   // Gestionnaire de sauvegarde

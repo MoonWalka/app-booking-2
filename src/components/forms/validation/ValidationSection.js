@@ -89,22 +89,49 @@ const ValidationSection = ({
                 let existingValue = '';
                 let formValue = '';
                 
+                // Debug temporaire
+                if (category === 'structure' && field.id === 'raisonSociale') {
+                  console.log('[DEBUG ValidationSection] Structure data:', {
+                    category,
+                    fieldId: field.id,
+                    formData,
+                    existingData,
+                    'formData.structure': formData?.structure,
+                    'typeof formData.structure': typeof formData?.structure
+                  });
+                }
+                
                 // Adapt field access based on the category
                 if (category === 'lieu') {
                   existingValue = existingData ? existingData[field.id] || '' : '';
                   formValue = formData ? formData[field.id] || '' : '';
                 } else if (category === 'contact') {
                   existingValue = existingData ? existingData[field.id] || '' : '';
-                  formValue = formData ? formData[field.id] || '' : '';
+                  // Pour formData, on peut avoir les données dans .contact ou directement
+                  if (formData && formData.contact && typeof formData.contact === 'object') {
+                    formValue = formData.contact[field.id] || '';
+                  } else {
+                    formValue = formData ? formData[field.id] || '' : '';
+                  }
                 } else if (category === 'structure' && structureFieldsMapping) {
                   // Special case for structure fields that have different mappings
                   if (field.id === 'raisonSociale') {
                     existingValue = existingData ? existingData.structure || '' : '';
-                    formValue = formData ? formData.structure || '' : '';
-                  } else if (['type', 'adresse', 'codePostal', 'ville', 'pays'].includes(field.id)) {
+                    // Pour formData, on doit chercher dans la structure imbriquée
+                    if (formData && formData.structure && typeof formData.structure === 'object') {
+                      formValue = formData.structure.raisonSociale || '';
+                    } else {
+                      formValue = formData ? formData.structure || '' : '';
+                    }
+                  } else if (['type', 'adresse', 'codePostal', 'ville', 'pays', 'siret', 'tva'].includes(field.id)) {
                     const fieldKey = `structure${field.id.charAt(0).toUpperCase() + field.id.slice(1)}`;
                     existingValue = existingData ? existingData[fieldKey] || '' : '';
-                    formValue = formData ? formData[fieldKey] || formData[field.id] || '' : '';
+                    // Pour formData, chercher dans l'objet structure
+                    if (formData && formData.structure && typeof formData.structure === 'object') {
+                      formValue = formData.structure[field.id] || '';
+                    } else {
+                      formValue = formData ? formData[fieldKey] || formData[field.id] || '' : '';
+                    }
                   } else {
                     existingValue = existingData ? existingData[field.id] || '' : '';
                     formValue = formData ? formData[field.id] || '' : '';

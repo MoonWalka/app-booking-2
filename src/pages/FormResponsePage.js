@@ -11,7 +11,7 @@ const PublicFormLayout = ({ children }) => {
     <div className={styles.formIsolatedContainer}>
       <header className={styles.formHeader}>
         <div className={styles.formLogo}>
-          <h2>Label Musical</h2>
+          <h2>TourCraft</h2>
         </div>
       </header>
       
@@ -20,7 +20,7 @@ const PublicFormLayout = ({ children }) => {
       </main>
       
       <footer className={styles.formFooter}>
-        <p>© {new Date().getFullYear()} Label Musical - Formulaire sécurisé</p>
+        <p>© {new Date().getFullYear()} TourCraft - Formulaire sécurisé</p>
       </footer>
     </div>
   );

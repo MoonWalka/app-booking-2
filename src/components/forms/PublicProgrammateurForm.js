@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { collection, addDoc, updateDoc, doc, serverTimestamp } from 'firebase/firestore';
+import React, { useState, useEffect } from 'react';
+import { collection, addDoc, updateDoc, doc, serverTimestamp, getDoc } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import styles from '@/pages/FormResponsePage.module.css';
 
@@ -39,6 +39,63 @@ const PublicProgrammateurForm = ({
   // États de soumission
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
+
+  // Charger les données existantes si le formulaire a déjà été soumis
+  useEffect(() => {
+    const loadExistingData = async () => {
+      if (!formLinkId) return;
+
+      try {
+        // Récupérer les données du lien de formulaire pour vérifier s'il y a une soumission existante
+        const formLinkDoc = await getDoc(doc(db, 'formLinks', formLinkId));
+        
+        if (formLinkDoc.exists()) {
+          const formLinkData = formLinkDoc.data();
+          
+          // Si le formulaire a déjà été complété, récupérer les données
+          if (formLinkData.completed && formLinkData.submissionId) {
+            const submissionDoc = await getDoc(doc(db, 'formSubmissions', formLinkData.submissionId));
+            
+            if (submissionDoc.exists()) {
+              const submissionData = submissionDoc.data();
+              
+              // Pré-remplir le formulaire avec les données existantes
+              if (submissionData.programmateurData) {
+                const { contact, structure } = submissionData.programmateurData;
+                
+                setFormData({
+                  // Données du contact
+                  nom: contact?.nom || '',
+                  prenom: contact?.prenom || '',
+                  email: contact?.email || '',
+                  telephone: contact?.telephone || '',
+                  adresse: contact?.adresse || '',
+                  codePostal: contact?.codePostal || '',
+                  ville: contact?.ville || '',
+                  
+                  // Données de la structure
+                  structureNom: structure?.raisonSociale || structure?.nom || '',  // Support ancien et nouveau format
+                  structureSiret: structure?.siret || '',
+                  structureAdresse: structure?.adresse || '',
+                  structureCodePostal: structure?.codePostal || '',
+                  structureVille: structure?.ville || ''
+                });
+
+                // Pré-remplir aussi le champ de recherche SIRET
+                if (structure?.raisonSociale || structure?.nom) {
+                  setSiretSearch(structure.raisonSociale || structure.nom);
+                }
+              }
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Erreur lors du chargement des données existantes:', error);
+      }
+    };
+
+    loadExistingData();
+  }, [formLinkId]);
 
   // Gestion des changements de champ
   const handleInputChange = (e) => {
@@ -187,7 +244,7 @@ const PublicProgrammateurForm = ({
     setSubmitError('');
 
     try {
-      // Créer la soumission de formulaire
+      // Créer la soumission de formulaire avec structure claire
       const submissionData = {
         // Métadonnées
         concertId,
@@ -196,8 +253,9 @@ const PublicProgrammateurForm = ({
         submittedAt: serverTimestamp(),
         status: 'pending',
         
-        // Données du programmateur
+        // Données du programmateur organisées clairement
         programmateurData: {
+          // CONTACT PERSONNEL (personne physique)
           contact: {
             nom: formData.nom,
             prenom: formData.prenom,
@@ -207,8 +265,10 @@ const PublicProgrammateurForm = ({
             codePostal: formData.codePostal,
             ville: formData.ville
           },
+          
+          // STRUCTURE/ENTREPRISE (personne morale) - optionnel
           structure: formData.structureNom ? {
-            nom: formData.structureNom,
+            raisonSociale: formData.structureNom,  // Clarification : c'est la raison sociale
             siret: formData.structureSiret,
             adresse: formData.structureAdresse,
             codePostal: formData.structureCodePostal,
@@ -216,8 +276,14 @@ const PublicProgrammateurForm = ({
           } : null
         },
         
-        // Données brutes complètes
-        rawData: formData
+        // Données brutes pour compatibilité
+        rawData: formData,
+        
+        // Informations sur la recherche SIRET pour traçabilité
+        siretSearchData: {
+          searchTerm: siretSearch,
+          autoCompleted: !!formData.structureNom
+        }
       };
 
       // Créer le document dans formSubmissions
@@ -313,9 +379,13 @@ const PublicProgrammateurForm = ({
       </div>
 
       {/* Informations personnelles */}
+      <h4 style={{ marginTop: 'var(--tc-space-4)', marginBottom: 'var(--tc-space-4)', color: 'var(--tc-color-primary)' }}>
+        Vos informations personnelles (contact)
+      </h4>
+      
       <div className={styles.formGrid}>
         <div className={styles.formGroup}>
-          <label htmlFor="nom" className={styles.formLabel}>Nom *</label>
+          <label htmlFor="nom" className={styles.formLabel}>Votre nom *</label>
           <input
             type="text"
             id="nom"
@@ -328,7 +398,7 @@ const PublicProgrammateurForm = ({
           />
         </div>
         <div className={styles.formGroup}>
-          <label htmlFor="prenom" className={styles.formLabel}>Prénom *</label>
+          <label htmlFor="prenom" className={styles.formLabel}>Votre prénom *</label>
           <input
             type="text"
             id="prenom"
@@ -344,7 +414,7 @@ const PublicProgrammateurForm = ({
 
       <div className={styles.formGrid}>
         <div className={styles.formGroup}>
-          <label htmlFor="email" className={styles.formLabel}>Email *</label>
+          <label htmlFor="email" className={styles.formLabel}>Votre email *</label>
           <input
             type="email"
             id="email"
@@ -357,7 +427,7 @@ const PublicProgrammateurForm = ({
           />
         </div>
         <div className={styles.formGroup}>
-          <label htmlFor="telephone" className={styles.formLabel}>Téléphone *</label>
+          <label htmlFor="telephone" className={styles.formLabel}>Votre téléphone *</label>
           <input
             type="tel"
             id="telephone"
@@ -372,7 +442,7 @@ const PublicProgrammateurForm = ({
       </div>
 
       <div className={styles.formGroup}>
-        <label htmlFor="adresse" className={styles.formLabel}>Adresse *</label>
+        <label htmlFor="adresse" className={styles.formLabel}>Votre adresse *</label>
         <input
           type="text"
           id="adresse"
@@ -387,7 +457,7 @@ const PublicProgrammateurForm = ({
 
       <div className={styles.formGrid}>
         <div className={styles.formGroup}>
-          <label htmlFor="codePostal" className={styles.formLabel}>Code postal *</label>
+          <label htmlFor="codePostal" className={styles.formLabel}>Votre code postal *</label>
           <input
             type="text"
             id="codePostal"
@@ -400,7 +470,7 @@ const PublicProgrammateurForm = ({
           />
         </div>
         <div className={styles.formGroup}>
-          <label htmlFor="ville" className={styles.formLabel}>Ville *</label>
+          <label htmlFor="ville" className={styles.formLabel}>Votre ville *</label>
           <input
             type="text"
             id="ville"
@@ -418,12 +488,12 @@ const PublicProgrammateurForm = ({
       {formData.structureNom && (
         <>
           <h4 style={{ marginTop: 'var(--tc-space-6)', marginBottom: 'var(--tc-space-4)', color: 'var(--tc-color-primary)' }}>
-            Informations de votre structure
+            Informations de votre structure/entreprise
           </h4>
           
           <div className={styles.formGrid}>
             <div className={styles.formGroup}>
-              <label htmlFor="structureNom" className={styles.formLabel}>Nom de la structure</label>
+              <label htmlFor="structureNom" className={styles.formLabel}>Raison sociale de l'entreprise</label>
               <input
                 type="text"
                 id="structureNom"
@@ -435,7 +505,7 @@ const PublicProgrammateurForm = ({
               />
             </div>
             <div className={styles.formGroup}>
-              <label htmlFor="structureSiret" className={styles.formLabel}>SIRET</label>
+              <label htmlFor="structureSiret" className={styles.formLabel}>SIRET de l'entreprise</label>
               <input
                 type="text"
                 id="structureSiret"
@@ -449,7 +519,7 @@ const PublicProgrammateurForm = ({
           </div>
 
           <div className={styles.formGroup}>
-            <label htmlFor="structureAdresse" className={styles.formLabel}>Adresse de la structure</label>
+            <label htmlFor="structureAdresse" className={styles.formLabel}>Adresse de l'entreprise</label>
             <input
               type="text"
               id="structureAdresse"
@@ -463,7 +533,7 @@ const PublicProgrammateurForm = ({
 
           <div className={styles.formGrid}>
             <div className={styles.formGroup}>
-              <label htmlFor="structureCodePostal" className={styles.formLabel}>Code postal</label>
+              <label htmlFor="structureCodePostal" className={styles.formLabel}>Code postal de l'entreprise</label>
               <input
                 type="text"
                 id="structureCodePostal"
@@ -475,7 +545,7 @@ const PublicProgrammateurForm = ({
               />
             </div>
             <div className={styles.formGroup}>
-              <label htmlFor="structureVille" className={styles.formLabel}>Ville</label>
+              <label htmlFor="structureVille" className={styles.formLabel}>Ville de l'entreprise</label>
               <input
                 type="text"
                 id="structureVille"

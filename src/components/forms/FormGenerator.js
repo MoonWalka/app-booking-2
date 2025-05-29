@@ -202,6 +202,7 @@ const FormGenerator = ({ concertId, programmateurId, onFormGenerated }) => {
               type="text"
               value={formLink}
               readOnly
+              onChange={() => {}}
               className={styles.linkInput}
             />
             <Button

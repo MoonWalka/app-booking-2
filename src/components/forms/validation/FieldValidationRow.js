@@ -24,9 +24,9 @@ const FieldValidationRow = ({
       <td className={styles.actionCell}>
         <button 
           className={styles.copyButton}
-          onClick={() => onCopyValue(formValue)}
+          onClick={() => onCopyValue && onCopyValue(formValue)}
           title="Copier vers valeur finale"
-          disabled={isDisabled}
+          disabled={isDisabled || !onCopyValue}
         >
           ➡️
         </button>
@@ -36,8 +36,8 @@ const FieldValidationRow = ({
           type="text"
           className={styles.finalValueInput}
           value={finalValue || ''}
-          onChange={(e) => onValueChange(e.target.value)}
-          disabled={isDisabled}
+          onChange={(e) => onValueChange && onValueChange(e.target.value)}
+          disabled={isDisabled || !onValueChange}
         />
       </td>
     </tr>

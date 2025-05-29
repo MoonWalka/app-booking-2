@@ -89,18 +89,6 @@ const ValidationSection = ({
                 let existingValue = '';
                 let formValue = '';
                 
-                // Debug temporaire
-                if (category === 'structure' && field.id === 'raisonSociale') {
-                  console.log('[DEBUG ValidationSection] Structure data:', {
-                    category,
-                    fieldId: field.id,
-                    formData,
-                    existingData,
-                    'formData.structure': formData?.structure,
-                    'typeof formData.structure': typeof formData?.structure
-                  });
-                }
-                
                 // Adapt field access based on the category
                 if (category === 'lieu') {
                   existingValue = existingData ? existingData[field.id] || '' : '';

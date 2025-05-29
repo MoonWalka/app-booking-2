@@ -312,17 +312,31 @@ const AddressStep = ({ data, onNext, onBack }) => {
 };
 
 // Composant principal du formulaire
-const ProgrammateurFormMobile = () => {
+const ProgrammateurFormMobile = ({ 
+  // Props pour le mode public
+  token,
+  concertId,
+  formLinkId,
+  initialLieuData,
+  onSubmitSuccess
+}) => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(!!id && id !== 'nouveau');
+  
+  // Détecter le mode public vs normal
+  const isPublicMode = !!(token && concertId);
+  
+  // En mode public, on n'utilise pas l'ID de l'URL
+  const programmateurId = isPublicMode ? null : id;
+  
+  const [loading, setLoading] = useState(!!programmateurId && programmateurId !== 'nouveau');
   const [initialData, setInitialData] = useState({});
   
   useEffect(() => {
     const fetchProgrammateur = async () => {
-      if (id && id !== 'nouveau') {
+      if (programmateurId && programmateurId !== 'nouveau') {
         try {
-          const progDoc = await getDoc(doc(db, 'programmateurs', id));
+          const progDoc = await getDoc(doc(db, 'programmateurs', programmateurId));
           if (progDoc.exists()) {
             setInitialData(progDoc.data());
           }
@@ -337,28 +351,41 @@ const ProgrammateurFormMobile = () => {
     };
     
     fetchProgrammateur();
-  }, [id]);
+  }, [programmateurId]);
   
   const handleComplete = async (data) => {
     try {
-      // Fusionner les données de toutes les étapes
-      const programmateur = {
-        ...data,
-        nomLowercase: data.nom.toLowerCase(), // Pour faciliter les recherches
-        updatedAt: serverTimestamp()
-      };
-      
-      if (id && id !== 'nouveau') {
-        // Mise à jour d'un programmateur existant
-        await setDoc(doc(db, 'programmateurs', id), programmateur, { merge: true });
+      if (isPublicMode) {
+        // Mode public : créer une soumission de formulaire
+        console.log('Soumission publique (mobile):', { token, concertId, formLinkId, data });
+        
+        // TODO: Implémenter la création de formSubmission
+        // await createFormSubmission(token, concertId, formLinkId, data);
+        
+        // Appeler le callback de succès
+        if (onSubmitSuccess) {
+          onSubmitSuccess();
+        }
       } else {
-        // Création d'un nouveau programmateur
-        programmateur.createdAt = serverTimestamp();
-        const newProgRef = doc(collection(db, 'programmateurs'));
-        await setDoc(newProgRef, programmateur);
+        // Mode normal : enregistrer le programmateur
+        const programmateur = {
+          ...data,
+          nomLowercase: data.nom.toLowerCase(), // Pour faciliter les recherches
+          updatedAt: serverTimestamp()
+        };
+        
+        if (programmateurId && programmateurId !== 'nouveau') {
+          // Mise à jour d'un programmateur existant
+          await setDoc(doc(db, 'programmateurs', programmateurId), programmateur, { merge: true });
+        } else {
+          // Création d'un nouveau programmateur
+          programmateur.createdAt = serverTimestamp();
+          const newProgRef = doc(collection(db, 'programmateurs'));
+          await setDoc(newProgRef, programmateur);
+        }
+        
+        navigate('/programmateurs');
       }
-      
-      navigate('/programmateurs');
     } catch (error) {
       console.error('Erreur lors de l\'enregistrement du programmateur:', error);
       alert('Une erreur est survenue lors de l\'enregistrement du programmateur.');
@@ -366,7 +393,12 @@ const ProgrammateurFormMobile = () => {
   };
   
   const handleCancel = () => {
-    navigate('/programmateurs');
+    if (isPublicMode) {
+      // En mode public, on ne fait rien ou on peut rappeler onSubmitSuccess
+      // avec un flag d'annulation si nécessaire
+    } else {
+      navigate('/programmateurs');
+    }
   };
   
   if (loading) {
@@ -383,16 +415,22 @@ const ProgrammateurFormMobile = () => {
       title: 'Structure', 
       component: StructureStep 
     },
-    { 
+    // En mode public, on peut ne pas afficher l'étape adresse si non nécessaire
+    ...(!isPublicMode ? [{ 
       title: 'Adresse', 
       component: AddressStep 
-    }
+    }] : [])
   ];
   
   return (
     <div className={styles.programmateursFormMobile}>
       <div className={styles.mobileFormHeader}>
-        <h1>{id !== 'nouveau' ? 'Modifier le programmateur' : 'Nouveau programmateur'}</h1>
+        <h1>
+          {isPublicMode 
+            ? 'Vos informations' 
+            : (programmateurId !== 'nouveau' ? 'Modifier le programmateur' : 'Nouveau programmateur')
+          }
+        </h1>
       </div>
       
       <StepNavigation 

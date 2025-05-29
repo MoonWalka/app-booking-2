@@ -27,15 +27,28 @@ import styles from './ProgrammateurForm.module.css';
 
 /**
  * ProgrammateurForm component - displays a programmer's details in edit mode
- * Utilise la même structure que LieuView mais en mode édition
+ * Peut fonctionner en mode normal (édition) ou en mode public (soumission de formulaire)
  */
-const ProgrammateurForm = () => {
+const ProgrammateurForm = ({ 
+  // Props pour le mode public
+  token,
+  concertId,
+  formLinkId,
+  initialLieuData,
+  onSubmitSuccess
+}) => {
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
   
-  // Détecter le mode "nouveau" via l'URL
-  const isNewFromUrl = location.pathname.endsWith('/nouveau');
+  // Détecter le mode public vs normal
+  const isPublicMode = !!(token && concertId);
+  
+  // En mode public, on n'utilise pas l'ID de l'URL
+  const programmateurId = isPublicMode ? null : id;
+  
+  // Détecter le mode "nouveau" via l'URL (seulement en mode normal)
+  const isNewFromUrl = !isPublicMode && location.pathname.endsWith('/nouveau');
 
   // MIGRATION: Utilisation du hook optimisé
   const{ 
@@ -51,7 +64,7 @@ const ProgrammateurForm = () => {
     formatValue,
     handleStructureChange,
     handleCancel: hookHandleCancel
-  } = useProgrammateurForm(id);
+  } = useProgrammateurForm(programmateurId);
 
   // Hooks pour la recherche d'entreprise et d'adresses
   const companySearch = useCompanySearch((company) => {
@@ -65,29 +78,46 @@ const ProgrammateurForm = () => {
     () => {}
   );
   
-  // Hook de suppression optimisé
+  // Hook de suppression optimisé (seulement en mode normal)
+  const deleteHook = useDeleteProgrammateur(() => navigate('/programmateurs'));
   const {
     isDeleting,
     showDeleteModal,
     handleDeleteClick,
     handleCloseDeleteModal,
     handleConfirmDelete
-  } = useDeleteProgrammateur(() => navigate('/programmateurs'));
+  } = isPublicMode ? {} : deleteHook;
 
-  // Information sur les concerts associés
-  const hasAssociatedConcerts = programmateur?.concertsAssocies?.length > 0 || false;
+  // Information sur les concerts associés (seulement en mode normal)
+  const hasAssociatedConcerts = !isPublicMode && (programmateur?.concertsAssocies?.length > 0 || false);
 
   // Handlers avec notifications
   const handleSaveWithNotification = async (e) => {
     try {
-      await handleSubmit(e);
-      toast.success('Programmateur enregistré avec succès !', {
-        position: 'top-right',
-        autoClose: 3000,
-        hideProgressBar: true,
-      });
+      if (isPublicMode) {
+        // Mode public : créer une soumission de formulaire
+        await handlePublicSubmit(e);
+        toast.success('Formulaire envoyé avec succès !', {
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: true,
+        });
+        // Appeler le callback de succès
+        if (onSubmitSuccess) {
+          onSubmitSuccess();
+        }
+      } else {
+        // Mode normal : enregistrer le programmateur
+        await handleSubmit(e);
+        toast.success('Programmateur enregistré avec succès !', {
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: true,
+        });
+      }
     } catch (error) {
-      toast.error('Erreur lors de l\'enregistrement', {
+      const message = isPublicMode ? 'Erreur lors de l\'envoi du formulaire' : 'Erreur lors de l\'enregistrement';
+      toast.error(message, {
         position: 'top-right',
         autoClose: 3000,
         hideProgressBar: true,
@@ -95,17 +125,40 @@ const ProgrammateurForm = () => {
     }
   };
 
-  const handleCancelWithNotification = () => {
-    toast.info('Édition annulée', {
-      position: 'top-right',
-      autoClose: 2000,
-      hideProgressBar: true,
-    });
-    hookHandleCancel();
+  // Fonction pour gérer la soumission en mode public
+  const handlePublicSubmit = async (e) => {
+    e.preventDefault();
+    
+    // Ici, on créerait une formSubmission au lieu de modifier un programmateur
+    // Cette logique devra être implémentée selon votre structure de données
+    console.log('Soumission publique:', { token, concertId, formLinkId, formData });
+    
+    // TODO: Implémenter la création de formSubmission
+    // await createFormSubmission(token, concertId, formLinkId, formData);
   };
 
+  const handleCancelWithNotification = () => {
+    if (isPublicMode) {
+      // En mode public, on ne fait rien ou on peut rappeler onSubmitSuccess avec un flag d'annulation
+      toast.info('Formulaire annulé', {
+        position: 'top-right',
+        autoClose: 2000,
+        hideProgressBar: true,
+      });
+    } else {
+      // Mode normal
+      toast.info('Édition annulée', {
+        position: 'top-right',
+        autoClose: 2000,
+        hideProgressBar: true,
+      });
+      hookHandleCancel();
+    }
+  };
+
+  // En mode public, on n'affiche pas les erreurs et chargements de la même façon
   // If loading, show a spinner
-  if (loading) {
+  if (loading && !isPublicMode) {
     return (
       <div className={styles.spinnerContainer}>
         <LoadingSpinner variant="primary" message="Chargement du programmateur..." />
@@ -113,8 +166,8 @@ const ProgrammateurForm = () => {
     );
   }
 
-  // If error, show an error message
-  if (error) {
+  // If error, show an error message (seulement en mode normal)
+  if (error && !isPublicMode) {
     return (
       <div className={styles.errorContainer}>
         <ErrorMessage variant="danger" icon="exclamation-triangle-fill">
@@ -131,8 +184,8 @@ const ProgrammateurForm = () => {
     );
   }
 
-  // If no programmateur and not creating new one
-  if (!programmateur && !isNewFromUrl && !loading) {
+  // If no programmateur and not creating new one (seulement en mode normal)
+  if (!programmateur && !isNewFromUrl && !loading && !isPublicMode) {
     return (
       <div className={styles.errorContainer}>
         <ErrorMessage variant="warning" icon="exclamation-triangle-fill">
@@ -152,19 +205,21 @@ const ProgrammateurForm = () => {
   return (
     <form onSubmit={handleSaveWithNotification}>
       <div className={styles.formContainer}>
-        {/* Header with title and action buttons */}
-        <ProgrammateurHeader 
-          programmateur={programmateur}
-          isEditMode={true}
-          isNewFromUrl={isNewFromUrl}
-          onEdit={() => {}}
-          onSave={handleSaveWithNotification}
-          onCancel={handleCancelWithNotification}
-          onDelete={() => handleDeleteClick(programmateur)}
-          isSubmitting={isSubmitting}
-          canSave={true}
-          navigateToList={() => navigate('/programmateurs')}
-        />
+        {/* Header with title and action buttons - seulement en mode normal */}
+        {!isPublicMode && (
+          <ProgrammateurHeader 
+            programmateur={programmateur}
+            isEditMode={true}
+            isNewFromUrl={isNewFromUrl}
+            onEdit={() => {}}
+            onSave={handleSaveWithNotification}
+            onCancel={handleCancelWithNotification}
+            onDelete={() => handleDeleteClick(programmateur)}
+            isSubmitting={isSubmitting}
+            canSave={true}
+            navigateToList={() => navigate('/programmateurs')}
+          />
+        )}
 
         {/* Sections empilées verticalement en mode édition */}
         <div className={styles.sectionsStack}>
@@ -189,29 +244,50 @@ const ProgrammateurForm = () => {
             errors={{}}
           />
           
-          <ProgrammateurLieuxSectionWrapper
-            programmateur={programmateur}
-            isEditMode={true}
-            formData={formData}
-            onChange={handleChange}
-          />
+          {/* Sections lieux et concerts seulement en mode normal */}
+          {!isPublicMode && (
+            <>
+              <ProgrammateurLieuxSectionWrapper
+                programmateur={programmateur}
+                isEditMode={true}
+                formData={formData}
+                onChange={handleChange}
+              />
+              
+              <ProgrammateurConcertsSectionWrapper
+                programmateur={programmateur}
+                isEditMode={true}
+                concertsAssocies={programmateur?.concertsAssocies || []}
+              />
+            </>
+          )}
           
-          <ProgrammateurConcertsSectionWrapper
-            programmateur={programmateur}
-            isEditMode={true}
-            concertsAssocies={programmateur?.concertsAssocies || []}
-          />
+          {/* En mode public, ajouter un bouton de soumission */}
+          {isPublicMode && (
+            <div className="mt-4 text-center">
+              <Button 
+                type="submit"
+                variant="primary"
+                disabled={isSubmitting}
+                iconStart={isSubmitting ? "spinner" : "check"}
+              >
+                {isSubmitting ? 'Envoi en cours...' : 'Envoyer le formulaire'}
+              </Button>
+            </div>
+          )}
         </div>
 
-        {/* Delete confirmation modal */}
-        <DeleteProgrammateurModal
-          show={showDeleteModal}
-          onClose={handleCloseDeleteModal}
-          onConfirm={handleConfirmDelete}
-          programmateur={programmateur}
-          isDeleting={isDeleting}
-          hasAssociatedConcerts={hasAssociatedConcerts}
-        />
+        {/* Delete confirmation modal - seulement en mode normal */}
+        {!isPublicMode && (
+          <DeleteProgrammateurModal
+            show={showDeleteModal}
+            onClose={handleCloseDeleteModal}
+            onConfirm={handleConfirmDelete}
+            programmateur={programmateur}
+            isDeleting={isDeleting}
+            hasAssociatedConcerts={hasAssociatedConcerts}
+          />
+        )}
       </div>
     </form>
   );

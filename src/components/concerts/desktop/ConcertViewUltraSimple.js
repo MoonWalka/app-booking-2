@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo, memo } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { doc, getDoc, db } from '@/services/firebase-service';
 import { Alert } from 'react-bootstrap';
+import FormGenerator from '@/components/forms/FormGenerator';
 import styles from './ConcertView.module.css';
 
 // Import des composants
@@ -24,6 +25,7 @@ import DeleteConcertModal from './DeleteConcertModal';
 const ConcertViewUltraSimple = memo(({ id: propId }) => {
   const { id: urlId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   
   // Utiliser l'ID passé en prop s'il existe, sinon utiliser l'ID de l'URL
   const id = propId || urlId;
@@ -37,6 +39,8 @@ const ConcertViewUltraSimple = memo(({ id: propId }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showFormGenerator, setShowFormGenerator] = useState(false);
+  const [generatedFormLink, setGeneratedFormLink] = useState('');
 
   // Chargement des données - ULTRA-SIMPLE avec entités liées
   useEffect(() => {
@@ -120,6 +124,15 @@ const ConcertViewUltraSimple = memo(({ id: propId }) => {
     loadConcertAndRelatedData();
   }, [id]);
 
+  // Gestion du paramètre URL pour ouvrir le générateur de formulaire
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const shouldOpenFormGenerator = queryParams.get('openFormGenerator') === 'true';
+    if (shouldOpenFormGenerator) {
+      setShowFormGenerator(true);
+    }
+  }, [location.search]);
+
   // Callbacks ultra-stables
   const callbacks = useMemo(() => ({
     handleEdit: () => navigate(`/concerts/${id}/edit`),
@@ -159,6 +172,17 @@ const ConcertViewUltraSimple = memo(({ id: propId }) => {
     } catch {
       return false;
     }
+  };
+
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text)
+      .then(() => {
+        alert('Lien copié dans le presse-papiers !');
+      })
+      .catch(err => {
+        console.error('Erreur lors de la copie :', err);
+        alert('Erreur lors de la copie du lien');
+      });
   };
 
   // Objets vides pour les hooks de recherche
@@ -268,12 +292,12 @@ const ConcertViewUltraSimple = memo(({ id: propId }) => {
           formData={{}}
           onChange={() => {}}
           navigateToProgrammateurDetails={(progId) => navigate(`/programmateurs/${progId}`)}
-          showFormGenerator={false}
-          setShowFormGenerator={() => {}}
-          generatedFormLink=""
-          setGeneratedFormLink={() => {}}
+          showFormGenerator={showFormGenerator}
+          setShowFormGenerator={setShowFormGenerator}
+          generatedFormLink={generatedFormLink}
+          setGeneratedFormLink={setGeneratedFormLink}
           handleFormGenerated={() => {}}
-          copyToClipboard={() => {}}
+          copyToClipboard={copyToClipboard}
           formatDate={formatDate}
           concert={concert}
           selectedProgrammateur={programmateur}
@@ -318,6 +342,29 @@ const ConcertViewUltraSimple = memo(({ id: propId }) => {
           />
         )}
       </>
+
+      {/* Générateur de formulaire */}
+      {showFormGenerator && (
+        <div className={styles.formGeneratorOverlay}>
+          <div className={styles.formGeneratorModal}>
+            <button 
+              className={styles.closeButton}
+              onClick={() => setShowFormGenerator(false)}
+              aria-label="Fermer"
+            >
+              <i className="bi bi-x-lg"></i>
+            </button>
+            <FormGenerator
+              concertId={id}
+              programmateurId={programmateur?.id}
+              onFormGenerated={(formLinkId, formUrl) => {
+                setGeneratedFormLink(formUrl);
+                // Ne pas fermer automatiquement le FormGenerator pour permettre à l'utilisateur de copier le lien
+              }}
+            />
+          </div>
+        </div>
+      )}
 
       {/* Modale de confirmation de suppression */}
       <DeleteConcertModal

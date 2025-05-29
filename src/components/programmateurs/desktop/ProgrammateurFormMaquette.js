@@ -6,7 +6,7 @@ import { db } from '@/services/firebase-service';
 import LoadingSpinner from '@components/ui/LoadingSpinner';
 import ErrorMessage from '@components/ui/ErrorMessage';
 import useCompanySearch from '@/hooks/common/useCompanySearch';
-import useLieuSearch from '@/hooks/lieux/useLieuSearch';
+import useLieuSearchFixed from '@/hooks/lieux/useLieuSearchFixed';
 import styles from './ProgrammateurFormMaquette.module.css';
 
 /**
@@ -77,33 +77,34 @@ const ProgrammateurFormMaquette = () => {
     }
   }, []);
 
-  // �� TEST: Réactivation des deux hooks pour confirmer le problème avec useLieuSearch
+  // 🔥 TEST: Réactivation des deux hooks pour confirmer le problème avec useLieuSearch
   const companySearch = useCompanySearch({
     onCompanySelect: handleCompanySelect
   });
 
-  const lieuSearch = useLieuSearch({
+  // ✅ SOLUTION: Utilisation du hook corrigé sans boucles infinies
+  const lieuSearch = useLieuSearchFixed({
     maxResults: 10,
     onSelect: handleLieuSelect
   });
+  
+  // 🔥 PROBLÈME IDENTIFIÉ: useLieuSearch a des dépendances instables
+  // const lieuSearch = useLieuSearch({
+  //   maxResults: 10,
+  //   onSelect: handleLieuSelect
+  // });
 
   // États pour la recherche de concerts simples
   const [concertSearchTerm, setConcertSearchTerm] = useState('');
   const [concertSearchResults, setConcertSearchResults] = useState([]);
   const [isSearchingConcerts, setIsSearchingConcerts] = useState(false);
-  const [shouldClearSearch, setShouldClearSearch] = useState(false);
-
-  // Effet pour nettoyer la recherche quand un concert est ajouté
-  useEffect(() => {
-    if (shouldClearSearch) {
-      setConcertSearchTerm('');
-      setConcertSearchResults([]);
-      setShouldClearSearch(false);
-    }
-  }, [shouldClearSearch]);
-
+  
+  // 🔍 DEBUG: Tracer les renders
+  console.count('🎨 [ProgrammateurFormMaquette] Render count');
+  
   // Fonction pour charger les lieux et concerts associés
   const loadAssociations = useCallback(async (programmateur) => {
+    console.log('🔍 [DEBUG] loadAssociations appelée');
     setLoadingAssociations(true);
     try {
       // Charger les lieux associés
@@ -297,13 +298,14 @@ const ProgrammateurFormMaquette = () => {
       setConcertsAssocies(prev => {
         // Vérifier la duplication à l'intérieur du setter
         if (!prev.find(c => c.id === concert.id)) {
-          // ✅ Utiliser un flag pour déclencher le nettoyage
-          setShouldClearSearch(true);
           toast.success(`Concert "${concert.titre}" ajouté`);
           return [...prev, concert];
         }
         return prev;
       });
+      // ✅ Nettoyer APRÈS le setState, pas dedans
+      setConcertSearchTerm('');
+      setConcertSearchResults([]);
     }
   }, []);
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Card from '@components/ui/Card';
 import CompanySearchSection from '../../sections/CompanySearchSection';
 import StructureInfoSection from '../../sections/StructureInfoSection';
@@ -22,43 +22,52 @@ const ProgrammateurStructureSection = ({
 }) => {
   // État pour gérer le mode (recherche ou manuel)
   const [inputMode, setInputMode] = useState('search');
-  // État pour l'entreprise sélectionnée (pour l'affichage)
-  const [selectedCompany, setSelectedCompany] = useState(null);
+  // État pour gérer si l'utilisateur a manuellement désélectionné l'entreprise
+  const [hasManuallyCleared, setHasManuallyCleared] = useState(false);
 
-  // Synchroniser selectedCompany avec les données du formulaire
-  useEffect(() => {
-    // Si les données de structure sont remplies et qu'on n'a pas de selectedCompany,
-    // cela signifie qu'une entreprise a été sélectionnée via l'API
+  // Dériver selectedCompany directement des données du formulaire
+  const selectedCompany = useMemo(() => {
     const hasStructureData = formData?.structure?.siret && formData?.structure?.raisonSociale;
-    const hasSelectedCompany = selectedCompany && selectedCompany.siret;
     
-    if (hasStructureData && !hasSelectedCompany) {
-      const companyFromFormData = {
-        id: formData.structureId || '',
-        nom: formData.structure.raisonSociale,
-        siret: formData.structure.siret,
-        adresse: formData.structure.adresse || '',
-        codePostal: formData.structure.codePostal || '',
-        ville: formData.structure.ville || '',
-        statutJuridique: formData.structure.type || ''
-      };
-      
-      setSelectedCompany(companyFromFormData);
-      setInputMode('search'); // S'assurer qu'on est en mode recherche
+    // Si l'utilisateur a manuellement effacé ou si pas de données, retourner null
+    if (hasManuallyCleared || !hasStructureData) {
+      return null;
     }
     
-    // Si on n'a plus de données structure mais qu'on a encore selectedCompany, on le supprime
-    if (!hasStructureData && hasSelectedCompany) {
-      setSelectedCompany(null);
+    // Sinon, créer l'objet company depuis les données du formulaire
+    return {
+      id: formData.structureId || '',
+      nom: formData.structure.raisonSociale,
+      siret: formData.structure.siret,
+      adresse: formData.structure.adresse || '',
+      codePostal: formData.structure.codePostal || '',
+      ville: formData.structure.ville || '',
+      statutJuridique: formData.structure.type || ''
+    };
+  }, [
+    formData?.structure?.siret, 
+    formData?.structure?.raisonSociale, 
+    formData?.structure?.adresse,
+    formData?.structure?.codePostal,
+    formData?.structure?.ville,
+    formData?.structure?.type,
+    formData?.structureId,
+    hasManuallyCleared
+  ]);
+
+  // Réinitialiser hasManuallyCleared quand les données changent
+  useEffect(() => {
+    if (formData?.structure?.siret && formData?.structure?.raisonSociale) {
+      setHasManuallyCleared(false);
     }
-  }, [formData?.structure?.siret, formData?.structure?.raisonSociale, formData?.structureId]); // Dépendances spécifiques
+  }, [formData?.structure?.siret, formData?.structure?.raisonSociale]);
 
   // Handler pour changer de mode
   const handleInputModeChange = (mode) => {
     setInputMode(mode);
     if (mode === 'manual') {
       // Si on passe en mode manuel, on efface la sélection d'entreprise
-      setSelectedCompany(null);
+      setHasManuallyCleared(true);
       // Et on efface les champs de structure
       if (onStructureChange) {
         onStructureChange(null);
@@ -70,7 +79,7 @@ const ProgrammateurStructureSection = ({
   const handleSelectCompany = (company) => {
     if (company === null) {
       // Si on "désélectionne" (bouton "changer"), on remet en mode recherche vide
-      setSelectedCompany(null);
+      setHasManuallyCleared(true);
       setInputMode('search');
       // Effacer les données du formulaire
       if (onStructureChange) {
@@ -78,7 +87,7 @@ const ProgrammateurStructureSection = ({
       }
     } else {
       // Sélection d'une nouvelle entreprise
-      setSelectedCompany(company);
+      setHasManuallyCleared(false);
       setInputMode('search'); // S'assurer qu'on reste en mode recherche
     }
     

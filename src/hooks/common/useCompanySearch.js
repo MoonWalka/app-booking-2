@@ -71,15 +71,16 @@ const useCompanySearch = (options = {}) => {
           : '';
         
         return {
-          siret: company.siege?.siret || '',
-          siren: company.siren || '',
-          nom: company.nom_complet || company.nom_raison_sociale || '',
-          adresse: adresseComplete.trim(),
-          codePostal: siege?.code_postal || '',
-          ville: siege?.libelle_commune || '',
-          codeAPE: company.activite_principale?.code || '',
-          libelleAPE: company.activite_principale?.libelle || '',
-          statutJuridique: company.nature_juridique?.libelle || '',
+          siret: String(company.siege?.siret || ''),
+          siren: String(company.siren || ''),
+          nom: String(company.nom_complet || company.nom_raison_sociale || ''),
+          adresse: String(adresseComplete.trim()),
+          codePostal: String(siege?.code_postal || ''),
+          ville: String(siege?.libelle_commune || ''),
+          pays: 'France', // Toujours une chaîne
+          codeAPE: String(company.activite_principale?.code || ''),
+          libelleAPE: String(company.activite_principale?.libelle || ''),
+          statutJuridique: String(company.nature_juridique?.libelle || ''),
           active: company.etat_administratif === 'A'
         };
       }) : [];

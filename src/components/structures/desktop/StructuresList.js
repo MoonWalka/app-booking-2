@@ -186,9 +186,9 @@ const StructuresList = () => {
     <div className={styles.listContainer}>
       <div className={styles.header}>
         <h2 className={styles.title}>Structures</h2>
-        <Link to="/structures/new" className={styles.addButton}>
+        <Link to="/structures/nouveau" className={styles.addButton}>
           <i className="bi bi-plus-circle"></i>
-          Ajouter une structure
+          Nouvelle Structure
         </Link>
       </div>
 
@@ -263,9 +263,9 @@ const StructuresList = () => {
                 Réinitialiser les filtres
               </Button>
             ) : (
-              <Button as={Link} to="/structures/new" variant="primary">
+              <Button as={Link} to="/structures/nouveau" variant="primary">
                 <i className="bi bi-plus-circle me-2"></i>
-                Créer ma première structure
+                Nouvelle Structure
               </Button>
             )}
           </div>

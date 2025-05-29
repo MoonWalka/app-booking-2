@@ -120,7 +120,7 @@ const ValidationSection = ({
                           }
                           
                           // Copier la valeur si elle existe
-                          if (formValue) {
+                          if (formValue && onCopyValue) {
                             onCopyValue(fieldPath, formValue);
                           }
                         });
@@ -188,8 +188,8 @@ const ValidationSection = ({
                     existingValue={existingValue}
                     formValue={formValue}
                     finalValue={validatedFields[fieldPath] || ''}
-                    onCopyValue={(value) => onCopyValue(fieldPath, value)}
-                    onValueChange={(value) => onValidateField(category, field.id, value)}
+                    onCopyValue={onCopyValue ? (value) => onCopyValue(fieldPath, value) : null}
+                    onValueChange={onValidateField ? (value) => onValidateField(category, field.id, value) : null}
                     isDisabled={isValidated}
                   />
                 );

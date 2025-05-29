@@ -217,13 +217,12 @@ const FormValidationInterface = () => {
         structureFieldsMapping={true}
       />
       
-      {/* Validation buttons */}
-      {!isAlreadyValidated && !validated && (
-        <ValidationActionBar
-          onValidate={handleValidateRequest}
-          isValidating={validationInProgress}
-        />
-      )}
+      {/* Validation buttons - Toujours visibles pour permettre les modifications */}
+      <ValidationActionBar
+        onValidate={handleValidateRequest}
+        isValidating={validationInProgress}
+        isAlreadyValidated={isAlreadyValidated || validated}
+      />
 
       {/* Confirmation modal */}
       <ValidationModal

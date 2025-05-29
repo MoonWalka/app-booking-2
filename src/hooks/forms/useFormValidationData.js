@@ -262,22 +262,9 @@ const useFormValidationData = (concertId) => {
         // Création des valeurs initiales à partir des données existantes
         const initialValues = {};
         
-        // Si un lieu existe, initialiser avec ses données en priorité (utiliser lieuData local)
-        if (lieuData) {
-          lieuFields.forEach(field => {
-            initialValues[`lieu.${field.id}`] = lieuData[field.id] || '';
-          });
-        }
-        
-        // Si la soumission contient des données de lieu, les prendre en compte après
-        if (formDocData.lieuData) {
-          console.log("Données de lieu trouvées dans la soumission:", formDocData.lieuData);
-          lieuFields.forEach(field => {
-            if (formDocData.lieuData[field.id]) {
-              initialValues[`lieu.${field.id}`] = formDocData.lieuData[field.id];
-            }
-          });
-        }
+        // NOUVEAU : Les données du lieu NE SONT PAS automatiquement mises dans initialValues
+        // Elles seront affichées dans "Valeur existante" et "Valeur du formulaire"
+        // L'utilisateur choisira de copier ou non
         
         // NOUVEAU : Les données du formulaire public NE SONT PAS mises dans initialValues
         // Elles restent dans formDocData pour être affichées dans "Valeur du formulaire"
@@ -291,35 +278,38 @@ const useFormValidationData = (concertId) => {
           // PAS de mapping vers initialValues - les données restent dans formDocData
         }
         
+        if (formDocData.lieuData) {
+          console.log("Données de lieu trouvées dans la soumission:", formDocData.lieuData);
+          // PAS de mapping vers initialValues - les données restent dans formDocData
+        }
+        
         // Récupérer les données existantes du programmateur (s'il existe)
-        if (formDocData.programmId) {
+        // D'abord essayer avec programmId de la soumission, sinon utiliser programmateurId du concert
+        const programmateurIdToUse = formDocData.programmId || concertData.programmateurId;
+        
+        if (programmateurIdToUse) {
           try {
-            const progDoc = await getDoc(doc(db, 'programmateurs', formDocData.programmId));
+            const progDoc = await getDoc(doc(db, 'programmateurs', programmateurIdToUse));
             if (progDoc.exists()) {
               // Définir les données existantes du programmateur
-              const programmData = progDoc.data();
+              const programmData = {
+                id: progDoc.id,
+                ...progDoc.data()
+              };
               setProgrammateur(programmData);
+              console.log("Programmateur trouvé:", programmData);
               
-              // Initialiser les champs de contact avec les valeurs existantes
-              contactFields.forEach(field => {
-                initialValues[`contact.${field.id}`] = programmData[field.id] || '';
-              });
-              
-              // Initialiser les champs de structure avec les valeurs existantes
-              structureFields.forEach(field => {
-                if (field.id === 'raisonSociale') {
-                  initialValues[`structure.${field.id}`] = programmData.structure || '';
-                } else if (['type', 'adresse', 'codePostal', 'ville', 'pays'].includes(field.id)) {
-                  const fieldKey = `structure${field.id.charAt(0).toUpperCase() + field.id.slice(1)}`;
-                  initialValues[`structure.${field.id}`] = programmData[fieldKey] || '';
-                } else {
-                  initialValues[`structure.${field.id}`] = programmData[field.id] || '';
-                }
-              });
+              // NE PAS initialiser automatiquement les champs validés
+              // Les données existantes seront affichées dans "Valeur existante"
+              // L'utilisateur choisira de copier ou non depuis "Valeur du formulaire"
+            } else {
+              console.log("Programmateur non trouvé avec ID:", programmateurIdToUse);
             }
           } catch (error) {
             console.error("Erreur lors de la récupération des données du programmateur:", error);
           }
+        } else {
+          console.log("Aucun programmateur lié à ce concert ou formulaire");
         }
         
         // Si la soumission a déjà été validée, utiliser les champs validés existants

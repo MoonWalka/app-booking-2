@@ -32,6 +32,7 @@ const AddressInput = ({
     setSearchTerm,
     addressResults,
     showResults,
+    setShowResults,
     isSearching,
     dropdownRef,
     handleSelectAddress,
@@ -45,6 +46,9 @@ const AddressInput = ({
 
   // Gérer la sélection d'une adresse
   const handleSelect = (address) => {
+    // Fermer le dropdown IMMÉDIATEMENT
+    setShowResults(false);
+    
     // Extraire les informations d'adresse
     let street = '';
     let postalCode = '';
@@ -63,13 +67,7 @@ const AddressInput = ({
     // Adresse complète à afficher
     const fullAddress = street || address.display_name.split(',')[0];
 
-    // Fermer le dropdown IMMÉDIATEMENT via le hook
-    handleSelectAddress(address);
-    
-    // Mettre à jour le terme de recherche local APRÈS fermeture
-    setSearchTerm(fullAddress);
-
-    // Mettre à jour l'input avec la rue
+    // Mettre à jour l'input avec la rue AVANT d'appeler handleSelectAddress
     if (onChange) {
       onChange({
         target: {
@@ -78,6 +76,12 @@ const AddressInput = ({
         }
       });
     }
+    
+    // Mettre à jour le terme de recherche local
+    setSearchTerm(fullAddress);
+
+    // Appeler handleSelectAddress du hook (qui fermera aussi le dropdown)
+    handleSelectAddress(address);
 
     // Si un callback est fourni, l'appeler avec toutes les informations d'adresse
     if (onAddressSelected) {

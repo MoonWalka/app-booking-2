@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './ValidationActionBar.module.css';
 
-const ValidationActionBar = ({ onValidate, isValidating }) => {
+const ValidationActionBar = ({ onValidate, isValidating, isAlreadyValidated = false }) => {
   return (
     <div className={styles.container}>
       <div className={styles.content}>
@@ -18,7 +18,9 @@ const ValidationActionBar = ({ onValidate, isValidating }) => {
           ) : (
             <>
               <i className={`bi bi-check-circle ${styles.icon}`}></i>
-              Valider et enregistrer les modifications
+              {isAlreadyValidated 
+                ? 'Mettre à jour les données validées' 
+                : 'Valider et enregistrer les modifications'}
             </>
           )}
         </button>

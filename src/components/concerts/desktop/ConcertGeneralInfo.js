@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from './ConcertGeneralInfo.module.css';
-import CardSection from '@/components/ui/CardSection';
 
 /**
  * Composant d'informations générales d'un concert
+ * Adapté de la maquette concertdetail.md
  */
 const ConcertGeneralInfo = ({
   concert,
@@ -19,13 +19,12 @@ const ConcertGeneralInfo = ({
   formDataStatus
 }) => {
   return (
-    <CardSection
-      title="Informations générales"
-      icon={<i className="bi bi-info-circle"></i>}
-      isEditing={isEditMode}
-      className={styles.formCard}
-    >
-      <div className={styles.cardBody}>
+    <div className="form-card">
+      <div className="card-header">
+        <i className="bi bi-info-circle"></i>
+        <h3>Informations générales</h3>
+      </div>
+      <div className="card-body">
         {isEditMode ? (
           <>
             <div className={styles.formGroup}>
@@ -110,77 +109,76 @@ const ConcertGeneralInfo = ({
           <>
             <div className="row">
               <div className="col-md-6">
-                <div className="mb-3">
-                  <div className="fw-bold">Titre:</div>
-                  <div>{concert.titre || "Sans titre"}</div>
+                <div className="mb-4">
+                  <div className="fw-bold mb-1">Titre:</div>
+                  <div>{concert?.titre || "Sans titre"}</div>
                 </div>
-                <div className="mb-3">
-                  <div className="fw-bold">Date:</div>
-                  <div className={isDatePassed(concert.date) ? "text-muted" : ""}>
-                    {formatDate(concert.date)}
-                    {isDatePassed(concert.date) && <span className="badge bg-secondary ms-2">Passé</span>}
+                <div className="mb-4">
+                  <div className="fw-bold mb-1">Date:</div>
+                  <div className={isDatePassed(concert?.date) ? "text-muted" : ""}>
+                    {formatDate(concert?.date)}
+                    {isDatePassed(concert?.date) && <span className="badge bg-secondary ms-2">Passé</span>}
                   </div>
                 </div>
-                <div className="mb-3">
-                  <div className="fw-bold">Montant:</div>
-                  <div>{formatMontant(concert.montant)}</div>
+                <div className="mb-4">
+                  <div className="fw-bold mb-1">Montant:</div>
+                  <div>{formatMontant(concert?.montant)}</div>
                 </div>
               </div>
               <div className="col-md-6">
-                <div className="mb-3">
-                  <div className="fw-bold">Artiste:</div>
+                <div className="mb-4">
+                  <div className="fw-bold mb-1">Artiste:</div>
                   <div>
                     {artiste ? (
                       <Link to={`/artistes/${artiste.id}`} className="artiste-link">
-                        <i className="bi bi-music-note me-1"></i>
+                        <i className="bi bi-music-note"></i>
                         {artiste.nom}
                       </Link>
                     ) : (
-                      concert.artisteNom ? concert.artisteNom : <span className="text-muted">Non spécifié</span>
+                      concert?.artisteNom ? concert.artisteNom : <span className="text-muted">Non spécifié</span>
                     )}
                   </div>
                 </div>
-                <div className="mb-3">
-                  <div className="fw-bold">Statut:</div>
-                  <div className={styles.statusDisplay}>
+                <div className="mb-4">
+                  <div className="fw-bold mb-1">Statut:</div>
+                  <div className="status-display">
                     <span className={`badge ${
-                      concert.statut === 'contrat' ? 'bg-success' :
-                      concert.statut === 'preaccord' ? 'bg-primary' :
-                      concert.statut === 'acompte' ? 'bg-warning' :
-                      concert.statut === 'solde' ? 'bg-info' :
-                      concert.statut === 'annule' ? 'bg-danger' :
+                      concert?.statut === 'contrat' ? 'bg-success' :
+                      concert?.statut === 'preaccord' ? 'bg-primary' :
+                      concert?.statut === 'acompte' ? 'bg-warning' :
+                      concert?.statut === 'solde' ? 'bg-info' :
+                      concert?.statut === 'annule' ? 'bg-danger' :
                       'bg-secondary'
-                    } me-2`}>
-                      {concert.statut || 'Non défini'}
+                    }`}>
+                      {concert?.statut === 'contrat' ? 'Contrat' :
+                       concert?.statut === 'preaccord' ? 'Pré-accord' :
+                       concert?.statut === 'acompte' ? 'Acompte' :
+                       concert?.statut === 'solde' ? 'Soldé' :
+                       concert?.statut === 'annule' ? 'Annulé' :
+                       concert?.statut || 'Non défini'}
                     </span>
-                    {statusInfo.actionNeeded && (
-                      <div className={styles.actionNeeded}>
-                        <i className="bi bi-exclamation-circle text-warning me-1"></i>
-                        {statusInfo.message}
-                      </div>
-                    )}
                   </div>
                 </div>
-                <div className="mb-3">
-                  <div className="fw-bold">Formulaire:</div>
+                <div className="mb-4">
+                  <div className="fw-bold mb-1">Formulaire:</div>
                   <div>
                     {!formDataStatus ? (
-                      <span className="badge bg-warning me-2">
+                      <span className="badge bg-warning">
                         <i className="bi bi-exclamation-triangle me-1"></i>
                         Non envoyé
                       </span>
                     ) : formDataStatus === 'validated' ? (
-                      <span className="badge bg-success me-2">
+                      <span className="badge bg-success">
                         <i className="bi bi-check-circle me-1"></i>
                         Formulaire validé
                       </span>
                     ) : formDataStatus === 'filled' ? (
-                      <span className="badge bg-info me-2">
+                      <span className="badge bg-info">
                         <i className="bi bi-hourglass-split me-1"></i>
                         Formulaire rempli, à valider
                       </span>
                     ) : (
-                      <span className="badge bg-primary me-2">
+                      <span className="badge bg-primary">
                         <i className="bi bi-envelope me-1"></i>
                         Formulaire envoyé
                       </span>
@@ -190,12 +188,12 @@ const ConcertGeneralInfo = ({
               </div>
             </div>
             
-            {concert.notes && (
+            {concert?.notes && (
               <div className="row mt-3">
                 <div className="col-12">
                   <div className="mb-3">
-                    <div className="fw-bold">Notes:</div>
-                    <div className={`mt-2 p-2 bg-light rounded ${styles.notesContent}`}>
+                    <div className="fw-bold mb-2">Notes:</div>
+                    <div className="notes-content">
                       {concert.notes}
                     </div>
                   </div>
@@ -205,7 +203,7 @@ const ConcertGeneralInfo = ({
           </>
         )}
       </div>
-    </CardSection>
+    </div>
   );
 };
 

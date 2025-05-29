@@ -1,10 +1,12 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './ConcertHeader.module.css';
 import Button from '@/components/ui/Button';
 
 /**
  * Composant d'en-tête pour la page de détails d'un concert
  * Affiche le titre, le fil d'Ariane et les boutons d'action
+ * Adapté de la maquette concertdetail.md
  */
 const ConcertHeader = ({ 
   concert, 
@@ -18,76 +20,97 @@ const ConcertHeader = ({
   formatDate,
   navigateToList
 }) => {
+  const navigate = useNavigate();
+
   return (
-    <div className={styles.detailsHeaderContainer}>
-      <div className={styles.titleContainer}>
-        <h2 className={styles.modernTitle}>
-          {concert.titre || `Concert du ${formatDate(concert.date)}`}
-        </h2>
+    <div className="details-header-container">
+      <div className="title-container">
+        {/* Breadcrumb navigation - adapté de la maquette */}
+        <div className="breadcrumb-container">
+          <i className="bi bi-house"></i>
+          <span 
+            onClick={() => navigate('/dashboard')} 
+            style={{ cursor: 'pointer' }}
+          >
+            Accueil
+          </span>
+          <i className="bi bi-chevron-right"></i>
+          <span 
+            onClick={() => navigate('/concerts')} 
+            style={{ cursor: 'pointer' }}
+          >
+            Concerts
+          </span>
+          <i className="bi bi-chevron-right"></i>
+          <span className="text-muted">
+            {concert?.titre || `Concert du ${formatDate(concert?.date)}`}
+          </span>
+        </div>
+        
+        {/* Titre principal - adapté de la maquette */}
+        <h1 className="modern-title">
+          {concert?.titre || `Concert du ${formatDate(concert?.date)}`}
+        </h1>
       </div>
 
-      <div className={styles.actionButtons}>
+      {/* Boutons d'action - adapté de la maquette */}
+      <div className="action-buttons">
         {isEditMode ? (
           <>
             {/* Boutons en mode édition */}
-            <Button
+            <button
               type="button"
-              variant="primary"
-              className={`tc-btn-primary ${styles.actionBtn}`}
+              className="tc-btn tc-btn-primary"
               onClick={onSave}
               disabled={isSubmitting || !canSave}
             >
               {isSubmitting ? (
                 <>
-                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                  <span className="btn-text">Enregistrement...</span>
+                  <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  <span>Enregistrement...</span>
                 </>
               ) : (
                 <>
-                  <i className="bi bi-check-circle me-2"></i>
-                  <span className="btn-text">Enregistrer</span>
+                  <i className="bi bi-check-circle"></i>
+                  <span>Enregistrer</span>
                 </>
               )}
-            </Button>
+            </button>
             
-            <Button 
+            <button 
               onClick={onCancel} 
-              variant="outline-secondary"
-              className={`tc-btn-outline-secondary ${styles.actionBtn}`}
+              className="tc-btn tc-btn-outline-secondary"
             >
-              <i className="bi bi-x-circle me-2"></i>
-              <span className="btn-text">Annuler</span>
-            </Button>
+              <i className="bi bi-x-circle"></i>
+              <span>Annuler</span>
+            </button>
             
-            <Button 
+            <button 
               onClick={onDelete} 
-              variant="outline-danger"
-              className={`tc-btn-outline-danger ${styles.actionBtn}`}
+              className="tc-btn tc-btn-outline-danger"
             >
-              <i className="bi bi-trash me-2"></i>
-              <span className="btn-text">Supprimer</span>
-            </Button>
+              <i className="bi bi-trash"></i>
+              <span>Supprimer</span>
+            </button>
           </>
         ) : (
           <>
-            {/* Boutons en mode affichage */}
-            <Button 
-              onClick={navigateToList} 
-              variant="outline-secondary"
-              className={`tc-btn-outline-secondary ${styles.actionBtn}`}
+            {/* Boutons en mode affichage - selon la maquette */}
+            <button 
+              onClick={navigateToList || (() => navigate('/concerts'))} 
+              className="tc-btn tc-btn-outline-secondary"
             >
-              <i className="bi bi-arrow-left me-2"></i>
-              <span className="btn-text">Retour</span>
-            </Button>
+              <i className="bi bi-arrow-left"></i>
+              <span>Retour</span>
+            </button>
             
-            <Button
+            <button
               onClick={onEdit}
-              variant="outline-primary"
-              className={`tc-btn-outline-primary ${styles.actionBtn}`}
+              className="tc-btn tc-btn-outline-primary"
             >
-              <i className="bi bi-pencil me-2"></i>
-              <span className="btn-text">Modifier</span>
-            </Button>
+              <i className="bi bi-pencil"></i>
+              <span>Modifier</span>
+            </button>
           </>
         )}
       </div>

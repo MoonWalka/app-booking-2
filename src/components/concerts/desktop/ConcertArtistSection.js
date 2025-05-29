@@ -1,13 +1,11 @@
 import React, { useRef } from 'react';
-import FlexContainer from '@/components/ui/FlexContainer';
 import styles from './ConcertArtistSection.module.css';
 import Button from '@/components/ui/Button';
 import Alert from '@/components/ui/Alert';
-import CardSection from '@/components/ui/CardSection';
 
 /**
  * Composant pour la section Artiste du détail d'un concert
- * Affiche les informations de l'artiste et permet de les modifier en mode édition
+ * Adapté de la maquette concertdetail.md
  */
 const ConcertArtistSection = ({
   concertId,
@@ -27,23 +25,23 @@ const ConcertArtistSection = ({
   const artisteDropdownRef = useRef(null);
 
   return (
-    <CardSection
-      title="Artiste"
-      icon={<i className="bi bi-music-note"></i>}
-      headerActions={artiste && !isEditMode ? (
-        <Button
-          onClick={() => navigateToArtisteDetails(artiste.id)}
-          variant="outline-primary"
-          size="sm"
-          className={`tc-btn-outline-primary btn-sm ${styles.cardHeaderAction}`}
-        >
-          <i className="bi bi-eye"></i>
-          <span>Voir détails</span>
-        </Button>
-      ) : null}
-      className={styles.formCard}
-    >
-      <div className={styles.cardBody}>
+    <div className="form-card">
+      <div className="card-header">
+        <i className="bi bi-music-note"></i>
+        <h3>Artiste</h3>
+        {artiste && !isEditMode && (
+          <div className="card-header-action">
+            <button
+              onClick={() => navigateToArtisteDetails(artiste.id)}
+              className="tc-btn tc-btn-outline-primary tc-btn-sm"
+            >
+              <i className="bi bi-eye"></i>
+              <span>Voir détails</span>
+            </button>
+          </div>
+        )}
+      </div>
+      <div className="card-body">
         {isEditMode ? (
           <div className={styles.formGroup} ref={artisteDropdownRef}>
             <label className={styles.formLabel}>Associer un artiste</label>
@@ -142,36 +140,38 @@ const ConcertArtistSection = ({
                   <div className="fw-bold">Nom:</div>
                   <div>{artiste.nom}</div>
                 </div>
-                {artiste.genre && (
-                  <div className="mb-3">
-                    <div className="fw-bold">Genre:</div>
-                    <div>{artiste.genre}</div>
-                  </div>
-                )}
+                <div className="mb-3">
+                  <div className="fw-bold">Genre:</div>
+                  <div>{artiste.genre || 'Non spécifié'}</div>
+                </div>
               </div>
               <div className="col-md-6">
-                {artiste.contacts?.email && (
-                  <div className="mb-3">
-                    <div className="fw-bold">Email:</div>
-                    <div>
-                      <a href={`mailto:${artiste.contacts.email}`} className={styles.contactLink}>
-                        <i className="bi bi-envelope me-1"></i>
-                        {artiste.contacts.email}
+                <div className="mb-3">
+                  <div className="fw-bold">Email:</div>
+                  <div>
+                    {artiste.contacts?.email || artiste.email ? (
+                      <a href={`mailto:${artiste.contacts?.email || artiste.email}`} className="contact-link">
+                        <i className="bi bi-envelope"></i>
+                        {artiste.contacts?.email || artiste.email}
                       </a>
-                    </div>
+                    ) : (
+                      <span className="text-muted">Non spécifié</span>
+                    )}
                   </div>
-                )}
-                {artiste.contacts?.telephone && (
-                  <div className="mb-3">
-                    <div className="fw-bold">Téléphone:</div>
-                    <div>
-                      <a href={`tel:${artiste.contacts.telephone}`} className={styles.contactLink}>
-                        <i className="bi bi-telephone me-1"></i>
-                        {artiste.contacts.telephone}
+                </div>
+                <div className="mb-3">
+                  <div className="fw-bold">Téléphone:</div>
+                  <div>
+                    {artiste.contacts?.telephone || artiste.telephone ? (
+                      <a href={`tel:${artiste.contacts?.telephone || artiste.telephone}`} className="contact-link">
+                        <i className="bi bi-telephone"></i>
+                        {artiste.contacts?.telephone || artiste.telephone}
                       </a>
-                    </div>
+                    ) : (
+                      <span className="text-muted">Non spécifié</span>
+                    )}
                   </div>
-                )}
+                </div>
               </div>
             </div>
             
@@ -179,8 +179,8 @@ const ConcertArtistSection = ({
               <div className="row mt-3">
                 <div className="col-12">
                   <div className="mb-3">
-                    <div className="fw-bold">Description:</div>
-                    <div className="mt-2 p-2 bg-light rounded">
+                    <div className="fw-bold mb-2">Description:</div>
+                    <div className="notes-content">
                       {artiste.description}
                     </div>
                   </div>
@@ -192,12 +192,14 @@ const ConcertArtistSection = ({
               <div className="row mt-3">
                 <div className="col-12">
                   <div className="mb-3">
-                    <div className="fw-bold">Membres:</div>
-                    <ul className="list-group mt-2">
+                    <div className="fw-bold mb-2">Membres:</div>
+                    <ul className="list-group">
                       {artiste.membres.map((membre, index) => (
-                        <li key={index} className="list-group-item">
+                        <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
                           {membre.nom}
-                          {membre.role && <span className="text-muted ms-2">({membre.role})</span>}
+                          {membre.role && (
+                            <span className="badge bg-primary rounded-pill">{membre.role}</span>
+                          )}
                         </li>
                       ))}
                     </ul>
@@ -206,44 +208,47 @@ const ConcertArtistSection = ({
               </div>
             )}
             
-            {/* Réseaux sociaux */}
+            {/* Réseaux sociaux - adapté de la maquette */}
             {(artiste.contacts?.siteWeb || 
               artiste.contacts?.instagram || 
               artiste.contacts?.facebook) && (
-              <div className="mt-3">
+              <div className="mt-4">
                 <div className="fw-bold mb-2">Réseaux sociaux:</div>
-                <FlexContainer gap="sm">
-                  {artiste.contacts.siteWeb && (
-                    <a href={artiste.contacts.siteWeb} 
+                <div className="social-links">
+                  {artiste.contacts?.siteWeb && (
+                    <a 
+                      href={artiste.contacts.siteWeb} 
                       target="_blank" 
                       rel="noopener noreferrer" 
-                      className="tc-btn-outline-secondary btn-sm"
+                      className="social-link social-link-website"
                     >
                       <i className="bi bi-globe"></i>
-                      <span className="ms-1">Site web</span>
+                      <span>Site web</span>
                     </a>
                   )}
-                  {artiste.contacts.instagram && (
-                    <a href={artiste.contacts.instagram} 
+                  {artiste.contacts?.instagram && (
+                    <a 
+                      href={artiste.contacts.instagram} 
                       target="_blank" 
                       rel="noopener noreferrer" 
-                      className="tc-btn-outline-danger btn-sm"
+                      className="social-link social-link-instagram"
                     >
                       <i className="bi bi-instagram"></i>
-                      <span className="ms-1">Instagram</span>
+                      <span>Instagram</span>
                     </a>
                   )}
-                  {artiste.contacts.facebook && (
-                    <a href={artiste.contacts.facebook} 
+                  {artiste.contacts?.facebook && (
+                    <a 
+                      href={artiste.contacts.facebook} 
                       target="_blank" 
                       rel="noopener noreferrer" 
-                      className="tc-btn-outline-primary btn-sm"
+                      className="social-link social-link-facebook"
                     >
                       <i className="bi bi-facebook"></i>
-                      <span className="ms-1">Facebook</span>
+                      <span>Facebook</span>
                     </a>
                   )}
-                </FlexContainer>
+                </div>
               </div>
             )}
           </>
@@ -253,7 +258,7 @@ const ConcertArtistSection = ({
           </Alert>
         )}
       </div>
-    </CardSection>
+    </div>
   );
 };
 

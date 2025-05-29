@@ -2,11 +2,10 @@ import React, { useRef, useState } from 'react';
 import styles from './ConcertLocationSection.module.css';
 import Button from '@/components/ui/Button';
 import Alert from '@/components/ui/Alert';
-import CardSection from '@/components/ui/CardSection';
 
 /**
  * Composant pour la section Lieu du détail d'un concert
- * Affiche les informations du lieu et permet de les modifier en mode édition
+ * Adapté de la maquette concertdetail.md
  */
 const ConcertLocationSection = ({
   concertId,
@@ -36,23 +35,23 @@ const ConcertLocationSection = ({
   const hasSearchFunctionality = !!propSetLieuSearchTerm;
 
   return (
-    <CardSection
-      title={isEditMode ? 'Lieu *' : 'Lieu'}
-      icon={<i className="bi bi-geo-alt"></i>}
-      headerActions={lieu && !isEditMode ? (
-        <Button
-          onClick={() => navigateToLieuDetails(lieu.id)}
-          variant="outline-primary"
-          size="sm"
-          className={`tc-btn-outline-primary btn-sm ${styles.cardHeaderAction}`}
-        >
-          <i className="bi bi-eye"></i>
-          <span>Voir détails</span>
-        </Button>
-      ) : null}
-      className={styles.formCard}
-    >
-      <div className={styles.cardBody}>
+    <div className="form-card">
+      <div className="card-header">
+        <i className="bi bi-geo-alt"></i>
+        <h3>{isEditMode ? 'Lieu *' : 'Lieu'}</h3>
+        {lieu && !isEditMode && (
+          <div className="card-header-action">
+            <button
+              onClick={() => navigateToLieuDetails(lieu.id)}
+              className="tc-btn tc-btn-outline-primary tc-btn-sm"
+            >
+              <i className="bi bi-eye"></i>
+              <span>Voir détails</span>
+            </button>
+          </div>
+        )}
+      </div>
+      <div className="card-body">
         {isEditMode ? (
           <div className={styles.formGroup} ref={lieuDropdownRef}>
             <label className={styles.formLabel}>Rechercher un lieu</label>
@@ -175,22 +174,44 @@ const ConcertLocationSection = ({
                 </div>
                 <div className="mb-3">
                   <div className="fw-bold">Adresse:</div>
-                  <div>{lieu.adresse}</div>
+                  <div>
+                    <div>{lieu.adresse}</div>
+                    <div>{lieu.codePostal} {lieu.ville}</div>
+                  </div>
                 </div>
               </div>
               <div className="col-md-6">
                 <div className="mb-3">
-                  <div className="fw-bold">Ville:</div>
-                  <div>{lieu.codePostal} {lieu.ville}</div>
+                  <div className="fw-bold">Capacité:</div>
+                  <div>{lieu.capacite ? `${lieu.capacite} personnes` : 'Non spécifiée'}</div>
                 </div>
-                {lieu.capacite && (
-                  <div className="mb-3">
-                    <div className="fw-bold">Capacité:</div>
-                    <div>{lieu.capacite} personnes</div>
+                <div className="mb-3">
+                  <div className="fw-bold">Contact:</div>
+                  <div>
+                    {lieu.email && (
+                      <div>
+                        <a href={`mailto:${lieu.email}`} className="contact-link">
+                          <i className="bi bi-envelope"></i>
+                          {lieu.email}
+                        </a>
+                      </div>
+                    )}
+                    {lieu.telephone && (
+                      <div className="mt-1">
+                        <a href={`tel:${lieu.telephone}`} className="contact-link">
+                          <i className="bi bi-telephone"></i>
+                          {lieu.telephone}
+                        </a>
+                      </div>
+                    )}
+                    {!lieu.email && !lieu.telephone && (
+                      <span className="text-muted">Non spécifié</span>
+                    )}
                   </div>
-                )}
+                </div>
               </div>
             </div>
+            
             {/* Intégration de la carte Google Maps */}
             <div className="mt-3">
               <div className={`mb-3 ${styles.mapContainer}`}>
@@ -209,10 +230,10 @@ const ConcertLocationSection = ({
                 href={`https://maps.google.com/maps?q=${encodeURIComponent(`${lieu.adresse}, ${lieu.codePostal} ${lieu.ville}`)}`}
                 target="_blank"
                 rel="noopener noreferrer" 
-                className="tc-btn-outline-info btn-sm"
+                className="tc-btn tc-btn-outline-secondary tc-btn-sm"
               >
-                <i className="bi bi-map me-1"></i>
-                Voir en plein écran
+                <i className="bi bi-map"></i>
+                <span>Voir en plein écran</span>
               </a>
             </div>
           </>
@@ -222,7 +243,7 @@ const ConcertLocationSection = ({
           </Alert>
         )}
       </div>
-    </CardSection>
+    </div>
   );
 };
 

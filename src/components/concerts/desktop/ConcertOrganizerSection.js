@@ -3,11 +3,10 @@ import FlexContainer from '@/components/ui/FlexContainer';
 import styles from './ConcertOrganizerSection.module.css';
 import Button from '@/components/ui/Button';
 import Alert from '@/components/ui/Alert';
-import CardSection from '@/components/ui/CardSection';
 
 /**
  * Composant pour la section Programmateur du détail d'un concert
- * Affiche les informations du programmateur et permet de les modifier en mode édition
+ * Adapté de la maquette concertdetail.md
  */
 const ConcertOrganizerSection = ({
   concertId,
@@ -36,23 +35,23 @@ const ConcertOrganizerSection = ({
   const progDropdownRef = useRef(null);
 
   return (
-    <CardSection
-      title="Programmateur"
-      icon={<i className="bi bi-person-badge"></i>}
-      headerActions={programmateur && !isEditMode ? (
-        <Button
-          onClick={() => navigateToProgrammateurDetails(programmateur.id)}
-          variant="outline-primary"
-          size="sm"
-          className={`tc-btn-outline-primary btn-sm ${styles.cardHeaderAction}`}
-        >
-          <i className="bi bi-eye"></i>
-          <span>Voir détails</span>
-        </Button>
-      ) : null}
-      className={styles.formCard}
-    >
-      <div className={styles.cardBody}>
+    <div className="form-card">
+      <div className="card-header">
+        <i className="bi bi-person-badge"></i>
+        <h3>Programmateur</h3>
+        {programmateur && !isEditMode && (
+          <div className="card-header-action">
+            <button
+              onClick={() => navigateToProgrammateurDetails(programmateur.id)}
+              className="tc-btn tc-btn-outline-primary tc-btn-sm"
+            >
+              <i className="bi bi-eye"></i>
+              <span>Voir détails</span>
+            </button>
+          </div>
+        )}
+      </div>
+      <div className="card-body">
         {isEditMode ? (
           <div className={styles.formGroup} ref={progDropdownRef}>
             <label className={styles.formLabel}>Associer un programmateur</label>
@@ -159,38 +158,53 @@ const ConcertOrganizerSection = ({
               <div className="col-md-6">
                 <div className="mb-3">
                   <div className="fw-bold">Nom:</div>
-                  <div>{programmateur.nom}</div>
+                  <div>{programmateur.prenom ? `${programmateur.prenom} ${programmateur.nom}` : programmateur.nom}</div>
                 </div>
-                {programmateur.structure && (
-                  <div className="mb-3">
-                    <div className="fw-bold">Structure:</div>
-                    <div>{programmateur.structure}</div>
-                  </div>
-                )}
-              </div>
-              <div className="col-md-6">
-                {programmateur.email && (
-                  <div className="mb-3">
-                    <div className="fw-bold">Email:</div>
-                    <div>
-                      <a href={`mailto:${programmateur.email}`} className={styles.contactLink}>
-                        <i className="bi bi-envelope me-1"></i>
+                <div className="mb-3">
+                  <div className="fw-bold">Structure:</div>
+                  <div>{programmateur.structure || programmateur.structureNom || 'Non spécifiée'}</div>
+                </div>
+                <div className="mb-3">
+                  <div className="fw-bold">Email:</div>
+                  <div>
+                    {programmateur.email ? (
+                      <a href={`mailto:${programmateur.email}`} className="contact-link">
+                        <i className="bi bi-envelope"></i>
                         {programmateur.email}
                       </a>
-                    </div>
+                    ) : (
+                      <span className="text-muted">Non spécifié</span>
+                    )}
                   </div>
-                )}
-                {programmateur.telephone && (
-                  <div className="mb-3">
-                    <div className="fw-bold">Téléphone:</div>
-                    <div>
-                      <a href={`tel:${programmateur.telephone}`} className={styles.contactLink}>
-                        <i className="bi bi-telephone me-1"></i>
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="mb-3">
+                  <div className="fw-bold">Téléphone:</div>
+                  <div>
+                    {programmateur.telephone ? (
+                      <a href={`tel:${programmateur.telephone}`} className="contact-link">
+                        <i className="bi bi-telephone"></i>
                         {programmateur.telephone}
                       </a>
-                    </div>
+                    ) : (
+                      <span className="text-muted">Non spécifié</span>
+                    )}
                   </div>
-                )}
+                </div>
+                <div className="mb-3">
+                  <div className="fw-bold">Adresse:</div>
+                  <div>
+                    {programmateur.adresse ? (
+                      <>
+                        <div>{programmateur.adresse}</div>
+                        <div>{programmateur.codePostal} {programmateur.ville}</div>
+                      </>
+                    ) : (
+                      <span className="text-muted">Non spécifiée</span>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -276,7 +290,7 @@ const ConcertOrganizerSection = ({
           </Alert>
         )}
       </div>
-    </CardSection>
+    </div>
   );
 };
 

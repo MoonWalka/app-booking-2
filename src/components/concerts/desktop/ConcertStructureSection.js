@@ -2,11 +2,10 @@ import React, { useRef } from 'react';
 import styles from './ConcertStructureSection.module.css';
 import Button from '@/components/ui/Button';
 import Alert from '@/components/ui/Alert';
-import CardSection from '@/components/ui/CardSection';
 
 /**
  * Composant pour la section Structure du détail d'un concert
- * Affiche les informations de la structure et permet de les modifier en mode édition
+ * Adapté de la maquette concertdetail.md
  */
 const ConcertStructureSection = ({
   concertId,
@@ -26,23 +25,23 @@ const ConcertStructureSection = ({
   const structureDropdownRef = useRef(null);
 
   return (
-    <CardSection
-      title="Structure"
-      icon={<i className="bi bi-building"></i>}
-      headerActions={structure && !isEditMode ? (
-        <Button
-          onClick={() => navigateToStructureDetails(structure.id)}
-          variant="outline-primary"
-          size="sm"
-          className={`tc-btn-outline-primary btn-sm ${styles.cardHeaderAction}`}
-        >
-          <i className="bi bi-eye"></i>
-          <span>Voir détails</span>
-        </Button>
-      ) : null}
-      className={styles.formCard}
-    >
-      <div className={styles.cardBody}>
+    <div className="form-card">
+      <div className="card-header">
+        <i className="bi bi-building"></i>
+        <h3>Structure</h3>
+        {structure && !isEditMode && (
+          <div className="card-header-action">
+            <button
+              onClick={() => navigateToStructureDetails(structure.id)}
+              className="tc-btn tc-btn-outline-primary tc-btn-sm"
+            >
+              <i className="bi bi-eye"></i>
+              <span>Voir détails</span>
+            </button>
+          </div>
+        )}
+      </div>
+      <div className="card-body">
         {isEditMode ? (
           <div className={styles.formGroup} ref={structureDropdownRef}>
             <label className={styles.formLabel}>Associer une structure</label>
@@ -156,57 +155,59 @@ const ConcertStructureSection = ({
                   <div className="fw-bold">Nom:</div>
                   <div>{structure.nom || structure.raisonSociale || 'Sans nom'}</div>
                 </div>
-                {structure.type && (
-                  <div className="mb-3">
-                    <div className="fw-bold">Type:</div>
-                    <div>{structure.type}</div>
-                  </div>
-                )}
-                {structure.siret && (
-                  <div className="mb-3">
-                    <div className="fw-bold">SIRET:</div>
-                    <div>{structure.siret}</div>
-                  </div>
-                )}
+                <div className="mb-3">
+                  <div className="fw-bold">Type:</div>
+                  <div>{structure.type || 'Non spécifié'}</div>
+                </div>
+                <div className="mb-3">
+                  <div className="fw-bold">SIRET:</div>
+                  <div>{structure.siret || 'Non spécifié'}</div>
+                </div>
               </div>
               <div className="col-md-6">
-                {structure.adresse && (
-                  <div className="mb-3">
-                    <div className="fw-bold">Adresse:</div>
-                    <div>
-                      {structure.adresse}
-                      {structure.codePostal || structure.ville ? (
+                <div className="mb-3">
+                  <div className="fw-bold">Adresse:</div>
+                  <div>
+                    {structure.adresse ? (
+                      <>
+                        <div>{structure.adresse}</div>
                         <div>
                           {[structure.codePostal, structure.ville]
                             .filter(Boolean)
                             .join(' ')}
                         </div>
-                      ) : null}
-                    </div>
+                      </>
+                    ) : (
+                      <span className="text-muted">Non spécifiée</span>
+                    )}
                   </div>
-                )}
-                {structure.email && (
-                  <div className="mb-3">
-                    <div className="fw-bold">Email:</div>
-                    <div>
-                      <a href={`mailto:${structure.email}`} className={styles.contactLink}>
-                        <i className="bi bi-envelope me-1"></i>
+                </div>
+                <div className="mb-3">
+                  <div className="fw-bold">Email:</div>
+                  <div>
+                    {structure.email ? (
+                      <a href={`mailto:${structure.email}`} className="contact-link">
+                        <i className="bi bi-envelope"></i>
                         {structure.email}
                       </a>
-                    </div>
+                    ) : (
+                      <span className="text-muted">Non spécifié</span>
+                    )}
                   </div>
-                )}
-                {structure.telephone && (
-                  <div className="mb-3">
-                    <div className="fw-bold">Téléphone:</div>
-                    <div>
-                      <a href={`tel:${structure.telephone}`} className={styles.contactLink}>
-                        <i className="bi bi-telephone me-1"></i>
+                </div>
+                <div className="mb-3">
+                  <div className="fw-bold">Téléphone:</div>
+                  <div>
+                    {structure.telephone ? (
+                      <a href={`tel:${structure.telephone}`} className="contact-link">
+                        <i className="bi bi-telephone"></i>
                         {structure.telephone}
                       </a>
-                    </div>
+                    ) : (
+                      <span className="text-muted">Non spécifié</span>
+                    )}
                   </div>
-                )}
+                </div>
               </div>
             </div>
           </>
@@ -216,7 +217,7 @@ const ConcertStructureSection = ({
           </Alert>
         )}
       </div>
-    </CardSection>
+    </div>
   );
 };
 

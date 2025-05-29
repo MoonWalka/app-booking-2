@@ -1,0 +1,398 @@
+/*
+ * Styles pour FormResponsePage - Formulaire Public
+ * Guide CSS TourCraft v3.0 - Phase 2 Optimisé
+ * Dernière mise à jour: 29 mai 2025
+ * Basé sur maquette formpubli.md avec variables TourCraft
+ */
+
+/* Layout principal isolé */
+.formIsolatedContainer {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--tc-bg-default);
+  max-width: 1200px;
+  margin: 0 auto;
+  box-shadow: var(--tc-shadow-lg);
+  font-family: var(--tc-font-sans);
+}
+
+/* Header */
+.formHeader {
+  background-color: var(--tc-color-primary);
+  padding: var(--tc-space-4) var(--tc-space-8);
+  border-bottom: 1px solid var(--tc-border-light);
+  box-shadow: var(--tc-shadow-sm);
+}
+
+.formLogo h2 {
+  margin: 0;
+  color: var(--tc-text-light);
+  text-align: center;
+  font-size: var(--tc-font-size-xl);
+  font-weight: var(--tc-font-weight-bold);
+}
+
+/* Contenu principal */
+.formContent {
+  flex-grow: 1;
+  padding: var(--tc-space-8);
+  background-color: var(--tc-bg-light);
+}
+
+/* Footer */
+.formFooter {
+  padding: var(--tc-space-4) var(--tc-space-8);
+  background-color: var(--tc-color-gray-50);
+  border-top: 1px solid var(--tc-border-light);
+  text-align: center;
+  color: var(--tc-text-muted);
+  font-size: var(--tc-font-size-sm);
+}
+
+.formFooter p {
+  margin: 0;
+}
+
+/* Titre principal */
+.pageTitle {
+  text-align: center;
+  margin-bottom: var(--tc-space-6);
+  color: var(--tc-color-primary);
+  font-size: var(--tc-font-size-2xl);
+  font-weight: var(--tc-font-weight-bold);
+}
+
+/* Cards */
+.tcCard {
+  background-color: var(--tc-bg-card);
+  border-radius: var(--tc-radius-lg);
+  box-shadow: var(--tc-shadow-base);
+  margin-bottom: var(--tc-space-6);
+  overflow: hidden;
+  border: 1px solid var(--tc-border-light);
+}
+
+.tcCardHeader {
+  background-color: var(--tc-color-gray-50);
+  padding: var(--tc-space-4);
+  border-bottom: 1px solid var(--tc-border-light);
+  display: flex;
+  align-items: center;
+}
+
+.tcCardHeader i {
+  font-size: var(--tc-font-size-lg);
+  margin-right: var(--tc-space-2);
+  color: var(--tc-color-primary);
+}
+
+.tcCardHeader h3 {
+  margin: 0;
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-default);
+}
+
+.tcCardBody {
+  padding: var(--tc-space-6);
+}
+
+/* Informations concert */
+.concertInfoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--tc-space-4);
+}
+
+.concertInfoItem {
+  text-align: center;
+}
+
+.concertInfoLabel {
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-muted);
+  font-size: var(--tc-font-size-sm);
+  margin-bottom: var(--tc-space-1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.concertInfoValue {
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-color-primary);
+}
+
+/* Formulaire */
+.formGroup {
+  margin-bottom: var(--tc-space-5);
+}
+
+.formLabel {
+  display: block;
+  margin-bottom: var(--tc-space-2);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-default);
+  font-size: var(--tc-font-size-sm);
+}
+
+.formControl {
+  width: 100%;
+  padding: var(--tc-space-3) var(--tc-space-4);
+  border: 1px solid var(--tc-border-input);
+  border-radius: var(--tc-radius-base);
+  font-size: var(--tc-font-size-base);
+  background-color: var(--tc-bg-input);
+  transition: var(--tc-transition-base);
+  font-family: var(--tc-font-sans);
+}
+
+.formControl:focus {
+  outline: none;
+  border-color: var(--tc-color-primary);
+  box-shadow: var(--tc-shadow-focus);
+}
+
+.formControl::placeholder {
+  color: var(--tc-text-placeholder);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--tc-space-4);
+}
+
+/* Boutons */
+.btnPrimary {
+  background-color: var(--tc-color-primary);
+  border-color: var(--tc-color-primary);
+  color: var(--tc-text-light);
+  padding: var(--tc-space-3) var(--tc-space-6);
+  font-size: var(--tc-font-size-base);
+  font-weight: var(--tc-font-weight-medium);
+  border-radius: var(--tc-radius-base);
+  transition: var(--tc-transition-base);
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tc-space-2);
+}
+
+.btnPrimary:hover:not(:disabled) {
+  background-color: var(--tc-color-primary-hover);
+  border-color: var(--tc-color-primary-hover);
+  color: var(--tc-text-light);
+}
+
+.btnPrimary:disabled {
+  background-color: var(--tc-color-gray-400);
+  border-color: var(--tc-color-gray-400);
+  cursor: not-allowed;
+}
+
+/* Texte d'aide */
+.formSubtitle {
+  color: var(--tc-text-secondary);
+  margin-bottom: var(--tc-space-4);
+  font-size: var(--tc-font-size-base);
+}
+
+.legalNotice {
+  background-color: var(--tc-color-gray-50);
+  padding: var(--tc-space-4);
+  border-radius: var(--tc-radius-base);
+  border-left: 4px solid var(--tc-color-info);
+  margin-top: var(--tc-space-6);
+}
+
+.legalNotice p {
+  margin: 0;
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-text-muted);
+  line-height: 1.6;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--tc-space-2);
+}
+
+/* Spinner de chargement */
+.loadingSpinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--tc-color-gray-300);
+  border-radius: 50%;
+  border-top-color: var(--tc-text-light);
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* États du formulaire */
+.loadingState {
+  text-align: center;
+  padding: var(--tc-space-8);
+}
+
+.loadingState .spinner {
+  width: 3rem;
+  height: 3rem;
+  border: 0.25rem solid var(--tc-color-gray-300);
+  border-top-color: var(--tc-color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto var(--tc-space-4);
+}
+
+.alertPanel {
+  padding: var(--tc-space-6);
+  border-radius: var(--tc-radius-lg);
+  margin-bottom: var(--tc-space-6);
+  border: 1px solid;
+}
+
+.alertDanger {
+  background-color: rgba(244, 67, 54, 0.1);
+  border-color: rgba(244, 67, 54, 0.2);
+  color: var(--tc-color-error);
+}
+
+.alertWarning {
+  background-color: rgba(255, 193, 7, 0.1);
+  border-color: rgba(255, 193, 7, 0.2);
+  color: var(--tc-color-warning-dark);
+}
+
+.alertSuccess {
+  background-color: rgba(76, 175, 80, 0.1);
+  border-color: rgba(76, 175, 80, 0.2);
+  color: var(--tc-color-success-dark);
+}
+
+.alertPanel h3 {
+  margin-top: 0;
+  margin-bottom: var(--tc-space-2);
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
+}
+
+.alertPanel p {
+  margin-bottom: var(--tc-space-4);
+  line-height: 1.6;
+}
+
+/* Outil SIRET */
+.siretSection {
+  background-color: var(--tc-bg-subtle);
+  padding: var(--tc-space-4);
+  border-radius: var(--tc-radius-base);
+  margin-bottom: var(--tc-space-5);
+  border: 1px solid var(--tc-border-light);
+}
+
+.siretSection h4 {
+  margin: 0 0 var(--tc-space-3) 0;
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-color-primary);
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-2);
+}
+
+.siretSearchGroup {
+  display: flex;
+  gap: var(--tc-space-2);
+  margin-bottom: var(--tc-space-3);
+}
+
+.siretInput {
+  flex: 1;
+}
+
+.btnSecondary {
+  background-color: var(--tc-color-secondary);
+  border-color: var(--tc-color-secondary);
+  color: var(--tc-text-light);
+  padding: var(--tc-space-3) var(--tc-space-4);
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-medium);
+  border-radius: var(--tc-radius-base);
+  transition: var(--tc-transition-base);
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btnSecondary:hover:not(:disabled) {
+  background-color: var(--tc-color-secondary-dark);
+  border-color: var(--tc-color-secondary-dark);
+}
+
+.btnSecondary:disabled {
+  background-color: var(--tc-color-gray-400);
+  cursor: not-allowed;
+}
+
+.siretResults {
+  background-color: var(--tc-bg-white);
+  border: 1px solid var(--tc-border-light);
+  border-radius: var(--tc-radius-base);
+  padding: var(--tc-space-3);
+  font-size: var(--tc-font-size-sm);
+}
+
+.siretSuccess {
+  color: var(--tc-color-success-dark);
+}
+
+.siretError {
+  color: var(--tc-color-error);
+}
+
+/* Bouton de soumission centré */
+.submitSection {
+  text-align: center;
+  margin-top: var(--tc-space-8);
+  padding-top: var(--tc-space-4);
+  border-top: 1px solid var(--tc-border-light);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .formContent {
+    padding: var(--tc-space-4);
+  }
+  
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .concertInfoGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .siretSearchGroup {
+    flex-direction: column;
+  }
+  
+  .formHeader,
+  .formFooter {
+    padding: var(--tc-space-4);
+  }
+}
+
+@media (max-width: 576px) {
+  .tcCardBody {
+    padding: var(--tc-space-4);
+  }
+  
+  .pageTitle {
+    font-size: var(--tc-font-size-xl);
+  }
+} 

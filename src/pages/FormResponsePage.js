@@ -2,24 +2,24 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
-import ProgrammateurForm from '@/components/programmateurs/ProgrammateurForm';
-import '@/styles/formPublic.css';
+import PublicProgrammateurForm from '@/components/forms/PublicProgrammateurForm';
+import styles from './FormResponsePage.module.css';
 
-// Composant pour le layout public du formulaire
+// Composant pour le layout public du formulaire selon la maquette
 const PublicFormLayout = ({ children }) => {
   return (
-    <div className="form-isolated-container">
-      <header className="form-header">
-        <div className="form-logo">
+    <div className={styles.formIsolatedContainer}>
+      <header className={styles.formHeader}>
+        <div className={styles.formLogo}>
           <h2>Label Musical</h2>
         </div>
       </header>
       
-      <main className="form-content">
+      <main className={styles.formContent}>
         {children}
       </main>
       
-      <footer className="form-footer">
+      <footer className={styles.formFooter}>
         <p>© {new Date().getFullYear()} Label Musical - Formulaire sécurisé</p>
       </footer>
     </div>
@@ -37,31 +37,9 @@ const FormResponsePage = () => {
   const [expired, setExpired] = useState(false);
   const [completed, setCompleted] = useState(false);
 
-  // États pour l'édition des informations du lieu
-  const [lieuFormData, setLieuFormData] = useState({
-    nom: '',
-    adresse: '',
-    codePostal: '',
-    ville: '',
-    capacite: ''
-  });
-
   // Déterminer si nous sommes en mode public ou en mode admin
   const isPublicForm = !!concertId && !!token;
   const isAdminValidation = !!id;
-
-  // Initialiser les données du lieu quand elles sont chargées
-  useEffect(() => {
-    if (lieu) {
-      setLieuFormData({
-        nom: lieu.nom || '',
-        adresse: lieu.adresse || '',
-        codePostal: lieu.codePostal || '',
-        ville: lieu.ville || '',
-        capacite: lieu.capacite || ''
-      });
-    }
-  }, [lieu]);
 
   useEffect(() => {
     // En mode validation admin (route /formulaire/validation/:id)
@@ -220,113 +198,114 @@ const FormResponsePage = () => {
     return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(montant);
   };
 
-// Contenu pour le formulaire public
-const renderPublicForm = () => {
-  if (loading) {
-    return (
-      <div className="text-center my-5">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Chargement du formulaire...</span>
+  // Contenu pour le formulaire public selon la maquette
+  const renderPublicForm = () => {
+    if (loading) {
+      return (
+        <div className={styles.loadingState}>
+          <div className="spinner"></div>
+          <p>Chargement du formulaire...</p>
         </div>
-        <p className="mt-3">Chargement du formulaire...</p>
-      </div>
-    );
-  }
+      );
+    }
 
-  if (error) {
+    if (error) {
+      return (
+        <div className={`${styles.alertPanel} ${styles.alertDanger}`}>
+          <h3>Erreur</h3>
+          <p>{error}</p>
+        </div>
+      );
+    }
+
+    if (expired) {
+      return (
+        <div className={`${styles.alertPanel} ${styles.alertWarning}`}>
+          <h3>Lien expiré</h3>
+          <p>Ce lien de formulaire a expiré. Veuillez contacter l'organisateur pour obtenir un nouveau lien.</p>
+        </div>
+      );
+    }
+
+    if (completed) {
+      return (
+        <div className={`${styles.alertPanel} ${styles.alertSuccess}`}>
+          <h3>Formulaire déjà complété</h3>
+          <p>Vous avez déjà complété ce formulaire. Merci pour votre participation.</p>
+          <button 
+            className={styles.btnPrimary}
+            onClick={() => setCompleted(false)}
+          >
+            <i className="bi bi-pencil-square"></i>
+            Modifier vos informations
+          </button>
+        </div>
+      );
+    }
+
     return (
-      <div className="alert alert-danger">
-        <h3>Erreur</h3>
-        <p>{error}</p>
-      </div>
-    );
-  }
+      <>
+        {/* Titre principal selon la maquette */}
+        <h1 className={styles.pageTitle}>Formulaire Programmateur</h1>
 
-  if (expired) {
-    return (
-      <div className="alert alert-warning">
-        <h3>Lien expiré</h3>
-        <p>Ce lien de formulaire a expiré. Veuillez contacter l'organisateur pour obtenir un nouveau lien.</p>
-      </div>
-    );
-  }
-
-  if (completed) {
-    return (
-      <div className="alert alert-success">
-        <h3>Formulaire déjà complété</h3>
-        <p>Vous avez déjà complété ce formulaire. Merci pour votre participation.</p>
-        <button 
-          className="btn btn-primary mt-3"
-          onClick={() => setCompleted(false)} // Permet de revenir au formulaire
-        >
-          <i className="bi bi-pencil-square me-2"></i>
-          Modifier vos informations
-        </button>
-      </div>
-    );
-  }
-  
-
-  return (
-    <>
-      <div className="form-header">
-        <h1>Formulaire programmateur</h1>
-      </div>
-      
-      {concert && (
-        <div className="concert-info card mb-4">
-          <div className="card-header">
-            <h3>Informations sur le concert</h3>
-          </div>
-          
-          {/* Affichage des informations du concert - toujours visible */}
-          <div className="card-body">
-            <div className="row">
-              <div className="col-md-4">
-                <div className="fw-bold">Date</div>
-                <div>{formatDate(concert.date)}</div>
-              </div>
-              <div className="col-md-4">
-                <div className="fw-bold">Lieu</div>
-                <div>{lieu?.nom || 'Non spécifié'}</div>
-              </div>
-              <div className="col-md-4">
-                <div className="fw-bold">Montant</div>
-                <div>{formatMontant(concert.montant)}</div>
+        {/* Informations du concert selon la maquette */}
+        {concert && (
+          <div className={styles.tcCard}>
+            <div className={styles.tcCardHeader}>
+              <i className="bi bi-calendar-event"></i>
+              <h3>Informations sur le concert</h3>
+            </div>
+            <div className={styles.tcCardBody}>
+              <div className={styles.concertInfoGrid}>
+                <div className={styles.concertInfoItem}>
+                  <div className={styles.concertInfoLabel}>Date</div>
+                  <div className={styles.concertInfoValue}>{formatDate(concert.date)}</div>
+                </div>
+                <div className={styles.concertInfoItem}>
+                  <div className={styles.concertInfoLabel}>Lieu</div>
+                  <div className={styles.concertInfoValue}>{lieu?.nom || 'Non spécifié'}</div>
+                </div>
+                <div className={styles.concertInfoItem}>
+                  <div className={styles.concertInfoLabel}>Montant</div>
+                  <div className={styles.concertInfoValue}>{formatMontant(concert.montant)}</div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
-      
-      <div className="form-content card">
-        <div className="card-header">
-          <h3>Vos informations</h3>
-        </div>
-        <div className="card-body">
-          <p>Veuillez remplir le formulaire ci-dessous avec vos informations de contact.</p>
-          <ProgrammateurForm 
-            token={token} 
-            concertId={concertId} 
-            formLinkId={formLinkId} 
-            initialLieuData={lieuFormData}
-            onSubmitSuccess={() => setCompleted(true)}
-          />
-        </div>
-      </div>
-      
-      <div className="form-footer mt-4">
-        <p className="text-muted text-center">
-          Les informations recueillies sur ce formulaire sont enregistrées dans un fichier informatisé 
-          à des fins de gestion des concerts. Conformément à la loi « informatique et libertés », 
-          vous pouvez exercer votre droit d'accès aux données vous concernant et les faire rectifier.
-        </p>
-      </div>
-    </>
-  );
-};
+        )}
 
+        {/* Formulaire de contact selon la maquette */}
+        <div className={styles.tcCard}>
+          <div className={styles.tcCardHeader}>
+            <i className="bi bi-person-lines-fill"></i>
+            <h3>Vos informations de contact</h3>
+          </div>
+          <div className={styles.tcCardBody}>
+            <p className={styles.formSubtitle}>
+              Veuillez remplir le formulaire ci-dessous avec vos informations de contact.
+            </p>
+            
+            <PublicProgrammateurForm 
+              token={token} 
+              concertId={concertId} 
+              formLinkId={formLinkId} 
+              onSubmitSuccess={() => setCompleted(true)}
+            />
+          </div>
+        </div>
+
+        {/* Notice légale selon la maquette */}
+        <div className={styles.legalNotice}>
+          <p>
+            <i className="bi bi-info-circle"></i>
+            Les informations recueillies sur ce formulaire sont enregistrées dans un fichier informatisé 
+            à des fins de gestion des concerts. Conformément à la loi « informatique et libertés », 
+            vous pouvez exercer votre droit d'accès aux données vous concernant et les faire rectifier.
+          </p>
+        </div>
+      </>
+    );
+  };
 
   // Contenu pour l'interface admin de validation
   const renderAdminValidation = () => {

@@ -1,0 +1,262 @@
+/*
+ * Styles pour LoginPage
+ * Guide CSS TourCraft v3.0 - Phase 2 Optimisé
+ * Dernière mise à jour: 29 mai 2025
+ * Basé sur maquette auth.md avec variables TourCraft
+ */
+
+/* Page complète centrée */
+.loginPage {
+  font-family: var(--tc-font-sans);
+  background-color: var(--tc-bg-light);
+  color: var(--tc-text-default);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loginContainer {
+  width: 100%;
+  max-width: 480px;
+  padding: var(--tc-space-4);
+}
+
+/* En-tête avec logo */
+.loginHeader {
+  text-align: center;
+  margin-bottom: var(--tc-space-8);
+  animation: fadeIn 0.8s ease-out;
+}
+
+.loginLogo {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, var(--tc-color-primary), var(--tc-color-secondary));
+  border-radius: var(--tc-radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--tc-space-4);
+  box-shadow: var(--tc-shadow-md);
+}
+
+.loginLogo i {
+  font-size: 2.5rem;
+  color: var(--tc-bg-white);
+}
+
+.loginTitle {
+  font-size: var(--tc-font-size-2xl);
+  font-weight: var(--tc-font-weight-bold);
+  color: var(--tc-color-primary);
+  margin-bottom: var(--tc-space-2);
+}
+
+.loginSubtitle {
+  font-size: var(--tc-font-size-base);
+  color: var(--tc-text-secondary);
+  margin-bottom: 0;
+}
+
+/* Carte de connexion */
+.loginCard {
+  background: var(--tc-bg-white);
+  border-radius: var(--tc-radius-lg);
+  box-shadow: var(--tc-shadow-lg);
+  border: 1px solid var(--tc-border-light);
+  padding: var(--tc-space-8);
+  margin-bottom: var(--tc-space-6);
+  animation: fadeIn 1s ease-out 0.2s both;
+}
+
+/* Formulaire */
+.formGroup {
+  margin-bottom: var(--tc-space-6);
+}
+
+.formLabel {
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-default);
+  margin-bottom: var(--tc-space-2);
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-1);
+}
+
+.inputGroup {
+  position: relative;
+}
+
+.inputIcon {
+  position: absolute;
+  left: var(--tc-space-4);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--tc-text-muted);
+  font-size: var(--tc-font-size-lg);
+  z-index: 1;
+}
+
+.formControl {
+  background-color: var(--tc-bg-white);
+  border: 1px solid var(--tc-border-light);
+  border-radius: var(--tc-radius-base);
+  padding: var(--tc-space-3) var(--tc-space-4);
+  font-size: var(--tc-font-size-base);
+  font-family: var(--tc-font-sans);
+  width: 100%;
+  height: 48px;
+  transition: all var(--tc-transition-base);
+}
+
+.formControl.withIcon {
+  padding-left: calc(var(--tc-space-4) + 1.5rem + var(--tc-space-2));
+}
+
+.formControl:focus {
+  outline: none;
+  border-color: var(--tc-color-primary);
+  box-shadow: var(--tc-shadow-focus);
+}
+
+.formControl::placeholder {
+  color: var(--tc-text-muted);
+}
+
+/* Bouton de connexion */
+.loginButton {
+  background: linear-gradient(135deg, var(--tc-color-primary), var(--tc-color-primary-light));
+  border: none;
+  border-radius: var(--tc-radius-base);
+  padding: var(--tc-space-3) var(--tc-space-6);
+  font-size: var(--tc-font-size-base);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-bg-white);
+  cursor: pointer;
+  transition: all var(--tc-transition-base);
+  width: 100%;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--tc-space-2);
+  box-shadow: var(--tc-shadow-sm);
+}
+
+.loginButton:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--tc-color-primary-dark), var(--tc-color-primary));
+  transform: translateY(-1px);
+  box-shadow: var(--tc-shadow-md);
+}
+
+.loginButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.loginButton.success {
+  background: linear-gradient(135deg, var(--tc-color-success), #66bb6a);
+}
+
+/* États de chargement */
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Alerte d'erreur */
+.alert {
+  border-radius: var(--tc-radius-base);
+  padding: var(--tc-space-4);
+  margin-bottom: var(--tc-space-4);
+  border: 1px solid;
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-2);
+}
+
+.alertDanger {
+  background-color: rgba(244, 67, 54, 0.1);
+  border-color: rgba(244, 67, 54, 0.2);
+  color: var(--tc-color-error);
+}
+
+/* Informations de sécurité */
+.securityInfo {
+  text-align: center;
+  margin-top: var(--tc-space-6);
+  padding: var(--tc-space-4);
+  background: var(--tc-bg-subtle);
+  border-radius: var(--tc-radius-base);
+  border: 1px solid var(--tc-border-light);
+  animation: fadeIn 1.2s ease-out 0.4s both;
+}
+
+.securityInfo p {
+  margin: 0;
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--tc-space-2);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fadeIn {
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* Responsive Design */
+@media (max-width: 576px) {
+  .loginContainer {
+    padding: var(--tc-space-2);
+  }
+  
+  .loginCard {
+    padding: var(--tc-space-6);
+    margin: var(--tc-space-2);
+  }
+  
+  .loginTitle {
+    font-size: var(--tc-font-size-xl);
+  }
+}
+
+/* Animation d'entrée progressive */
+.loginHeader {
+  animation: fadeIn 0.8s ease-out;
+}
+
+.loginCard {
+  animation: fadeIn 1s ease-out 0.2s both;
+}
+
+.securityInfo {
+  animation: fadeIn 1.2s ease-out 0.4s both;
+} 

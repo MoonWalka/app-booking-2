@@ -5,7 +5,143 @@
  * Basé sur maquette formpubli.md avec variables TourCraft
  */
 
-/* Layout principal isolé */
+/* TourCraft Design System Variables - Identique à la maquette formpubli.md */
+:root {
+  /* Couleurs principales TourCraft */
+  --tc-color-primary: #213547;
+  --tc-color-primary-light: #2d4a63;
+  --tc-color-primary-dark: #1a2b3a;
+  --tc-color-primary-hover: #1a2b3a;
+  --tc-color-secondary: #1e88e5;
+  --tc-color-secondary-light: #64b5f6;
+  --tc-color-secondary-dark: #1565c0;
+  --tc-color-accent: #4db6ac;
+
+  /* Couleurs de statut */
+  --tc-color-success: #4caf50;
+  --tc-color-success-light: #81c784;
+  --tc-color-success-dark: #388e3c;
+  --tc-color-warning: #ffc107;
+  --tc-color-warning-light: #ffecb3;
+  --tc-color-warning-dark: #f57c00;
+  --tc-color-error: #f44336;
+  --tc-color-error-light: #ef5350;
+  --tc-color-error-dark: #d32f2f;
+  --tc-color-info: #2196f3;
+  --tc-color-info-light: #64b5f6;
+  --tc-color-info-dark: #1976d2;
+
+  /* Couleurs neutres */
+  --tc-color-white: #ffffff;
+  --tc-color-black: #000000;
+  --tc-color-gray-50: #f9fafb;
+  --tc-color-gray-100: #f3f4f6;
+  --tc-color-gray-200: #e5e7eb;
+  --tc-color-gray-300: #d1d5db;
+  --tc-color-gray-400: #9ca3af;
+  --tc-color-gray-500: #6b7280;
+  --tc-color-gray-600: #4b5563;
+  --tc-color-gray-700: #374151;
+  --tc-color-gray-800: #1f2937;
+  --tc-color-gray-900: #111827;
+
+  /* Couleurs de fond */
+  --tc-bg-default: #ffffff;
+  --tc-bg-light: #f5f7f9;
+  --tc-bg-body: #f9fafb;
+  --tc-bg-sidebar: var(--tc-color-primary);
+  --tc-bg-hover: #f8f9fa;
+  --tc-bg-overlay: rgba(0, 0, 0, 0.5);
+  --tc-bg-card: #ffffff;
+  --tc-bg-surface: #ffffff;
+  --tc-bg-subtle: #f8f9fa;
+  --tc-bg-input: #ffffff;
+
+  /* Couleurs de fond par statut */
+  --tc-bg-success: #e8f5e8;
+  --tc-bg-warning: #fff3cd;
+  --tc-bg-error: #fdeaea;
+  --tc-bg-info: #e3f2fd;
+
+  /* Couleurs de texte */
+  --tc-text-default: #333333;
+  --tc-text-secondary: #555555;
+  --tc-text-muted: #888888;
+  --tc-text-light: #ffffff;
+  --tc-text-primary: var(--tc-color-primary);
+  --tc-text-link: var(--tc-color-primary);
+  --tc-text-tertiary: #999999;
+  --tc-text-placeholder: #aaaaaa;
+  --tc-text-dark: #222222;
+
+  /* Couleurs de bordures */
+  --tc-border-default: #e0e0e0;
+  --tc-border-light: #dee2e6;
+  --tc-border-primary: var(--tc-color-primary);
+  --tc-border-ultralight: #f0f0f0;
+  --tc-border-input: #d1d5db;
+
+  /* Typographie */
+  --tc-font-sans: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --tc-font-size-xs: 0.75rem;
+  --tc-font-size-sm: 0.875rem;
+  --tc-font-size-base: 1rem;
+  --tc-font-size-md: 1rem;
+  --tc-font-size-lg: 1.125rem;
+  --tc-font-size-xl: 1.5rem;
+  --tc-font-size-2xl: 2rem;
+  --tc-font-weight-normal: 400;
+  --tc-font-weight-medium: 500;
+  --tc-font-weight-semibold: 600;
+  --tc-font-weight-bold: 700;
+  --tc-line-height-normal: 1.5;
+
+  /* Espacements */
+  --tc-space-1: 0.25rem;
+  --tc-space-2: 0.5rem;
+  --tc-space-3: 0.75rem;
+  --tc-space-4: 1rem;
+  --tc-space-5: 1.25rem;
+  --tc-space-6: 1.5rem;
+  --tc-space-8: 2rem;
+  --tc-space-10: 2.5rem;
+
+  /* Effets */
+  --tc-shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+  --tc-shadow-base: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --tc-shadow-md: 0 4px 8px rgba(0,0,0,0.1);
+  --tc-shadow-lg: 0 8px 16px rgba(0,0,0,0.1);
+  --tc-shadow-focus: 0 0 0 3px rgba(33, 53, 71, 0.1);
+
+  /* Border-radius */
+  --tc-radius-sm: 0.25rem;
+  --tc-radius-base: 0.375rem;
+  --tc-radius-md: 0.5rem;
+  --tc-radius-lg: 0.75rem;
+
+  /* Transitions */
+  --tc-transition-fast: 150ms ease;
+  --tc-transition-base: 300ms ease;
+}
+
+/* Reset et base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--tc-font-sans);
+  font-size: var(--tc-font-size-base);
+  line-height: var(--tc-line-height-normal);
+  color: var(--tc-text-default);
+  background-color: var(--tc-bg-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Layout principal - identique à la maquette */
 .formIsolatedContainer {
   display: flex;
   flex-direction: column;
@@ -14,21 +150,23 @@
   max-width: 1200px;
   margin: 0 auto;
   box-shadow: var(--tc-shadow-lg);
-  font-family: var(--tc-font-sans);
 }
 
 /* Header */
 .formHeader {
   background-color: var(--tc-color-primary);
   padding: var(--tc-space-4) var(--tc-space-8);
-  border-bottom: 1px solid var(--tc-border-light);
+  border-bottom: 1px solid var(--tc-border-default);
   box-shadow: var(--tc-shadow-sm);
+}
+
+.formLogo {
+  text-align: center;
 }
 
 .formLogo h2 {
   margin: 0;
   color: var(--tc-text-light);
-  text-align: center;
   font-size: var(--tc-font-size-xl);
   font-weight: var(--tc-font-weight-bold);
 }
@@ -40,30 +178,102 @@
   background-color: var(--tc-bg-light);
 }
 
-/* Footer */
-.formFooter {
-  padding: var(--tc-space-4) var(--tc-space-8);
-  background-color: var(--tc-color-gray-50);
-  border-top: 1px solid var(--tc-border-light);
-  text-align: center;
-  color: var(--tc-text-muted);
-  font-size: var(--tc-font-size-sm);
+.formContainer {
+  max-width: 800px;
+  margin: 0 auto;
 }
 
-.formFooter p {
-  margin: 0;
+/* États de chargement */
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--tc-space-10);
+  text-align: center;
 }
 
-/* Titre principal */
-.pageTitle {
-  text-align: center;
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--tc-color-gray-200);
+  border-left: 4px solid var(--tc-color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: var(--tc-space-4);
+}
+
+.loadingSpinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--tc-color-gray-300);
+  border-left: 2px solid var(--tc-color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: var(--tc-space-2);
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Alertes */
+.alert {
+  padding: var(--tc-space-4);
   margin-bottom: var(--tc-space-6);
-  color: var(--tc-color-primary);
-  font-size: var(--tc-font-size-2xl);
-  font-weight: var(--tc-font-weight-bold);
+  border-radius: var(--tc-radius-base);
+  border: 1px solid transparent;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--tc-space-2);
 }
 
-/* Cards */
+.alertSuccess {
+  background-color: var(--tc-bg-success);
+  border-color: var(--tc-color-success-light);
+  color: var(--tc-color-success-dark);
+}
+
+.alertWarning {
+  background-color: var(--tc-bg-warning);
+  border-color: var(--tc-color-warning-light);
+  color: var(--tc-color-warning-dark);
+}
+
+.alertDanger {
+  background-color: var(--tc-bg-error);
+  border-color: var(--tc-color-error-light);
+  color: var(--tc-color-error-dark);
+}
+
+.alertInfo {
+  background-color: var(--tc-bg-info);
+  border-color: var(--tc-color-info-light);
+  color: var(--tc-color-info-dark);
+}
+
+.alertIcon {
+  font-size: var(--tc-font-size-lg);
+  margin-top: 2px;
+}
+
+.alertContent h3 {
+  margin-bottom: var(--tc-space-2);
+  font-weight: var(--tc-font-weight-semibold);
+}
+
+/* CARTES - Style exact de la maquette formpubli.md */
+.card {
+  background-color: var(--tc-bg-card);
+  border-radius: var(--tc-radius-lg);
+  box-shadow: var(--tc-shadow-base);
+  margin-bottom: var(--tc-space-6);
+  overflow: hidden;
+  border: 1px solid var(--tc-border-light);
+}
+
 .tcCard {
   background-color: var(--tc-bg-card);
   border-radius: var(--tc-radius-lg);
@@ -73,20 +283,23 @@
   border: 1px solid var(--tc-border-light);
 }
 
+.cardHeader,
 .tcCardHeader {
-  background-color: var(--tc-color-gray-50);
+  background-color: var(--tc-bg-subtle);
   padding: var(--tc-space-4);
   border-bottom: 1px solid var(--tc-border-light);
   display: flex;
   align-items: center;
+  gap: var(--tc-space-2);
 }
 
+.cardHeader i,
 .tcCardHeader i {
   font-size: var(--tc-font-size-lg);
-  margin-right: var(--tc-space-2);
   color: var(--tc-color-primary);
 }
 
+.cardHeader h3,
 .tcCardHeader h3 {
   margin: 0;
   font-size: var(--tc-font-size-lg);
@@ -94,58 +307,123 @@
   color: var(--tc-text-default);
 }
 
+.cardBody,
 .tcCardBody {
   padding: var(--tc-space-6);
 }
 
-/* Informations concert */
+/* Headers de sections avec style maquette */
+.sectionHeader {
+  margin-bottom: var(--tc-space-4);
+}
+
+.sectionHeader h3 {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-2);
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-color-primary);
+  margin-bottom: var(--tc-space-2);
+}
+
+.sectionHeader h3 i {
+  font-size: var(--tc-font-size-lg);
+}
+
+.formSubtitle {
+  color: var(--tc-text-secondary);
+  font-size: var(--tc-font-size-sm);
+  margin: 0;
+}
+
+/* Sections transformées en cartes avec headers */
+.formSection {
+  background-color: var(--tc-bg-card);
+  border-radius: var(--tc-radius-lg);
+  box-shadow: var(--tc-shadow-base);
+  margin-bottom: var(--tc-space-6);
+  overflow: hidden;
+  border: 1px solid var(--tc-border-light);
+}
+
+/* Headers pour les sections de formulaire */
+.formSectionHeader {
+  background-color: var(--tc-bg-subtle);
+  padding: var(--tc-space-4);
+  border-bottom: 1px solid var(--tc-border-light);
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-2);
+}
+
+.formSectionHeader i {
+  font-size: var(--tc-font-size-lg);
+  color: var(--tc-color-primary);
+}
+
+.formSectionHeader h3 {
+  margin: 0;
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-default);
+}
+
+.formSectionBody {
+  padding: var(--tc-space-6);
+}
+
+/* Informations du concert */
 .concertInfoGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: var(--tc-space-4);
 }
 
-.concertInfoItem {
-  text-align: center;
+.infoItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-space-1);
 }
 
-.concertInfoLabel {
+.infoLabel {
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-muted);
+  color: var(--tc-text-secondary);
   font-size: var(--tc-font-size-sm);
-  margin-bottom: var(--tc-space-1);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
-.concertInfoValue {
-  font-size: var(--tc-font-size-lg);
-  font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-color-primary);
+.infoValue {
+  color: var(--tc-text-default);
+  font-size: var(--tc-font-size-base);
 }
 
 /* Formulaire */
 .formGroup {
-  margin-bottom: var(--tc-space-5);
+  margin-bottom: var(--tc-space-4);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--tc-space-4);
 }
 
 .formLabel {
   display: block;
-  margin-bottom: var(--tc-space-2);
+  margin-bottom: var(--tc-space-1);
   font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-default);
+  color: var(--tc-text-secondary);
   font-size: var(--tc-font-size-sm);
 }
 
 .formControl {
   width: 100%;
-  padding: var(--tc-space-3) var(--tc-space-4);
+  padding: var(--tc-space-2) var(--tc-space-3);
   border: 1px solid var(--tc-border-input);
   border-radius: var(--tc-radius-base);
   font-size: var(--tc-font-size-base);
   background-color: var(--tc-bg-input);
-  transition: var(--tc-transition-base);
-  font-family: var(--tc-font-sans);
+  transition: all var(--tc-transition-fast);
 }
 
 .formControl:focus {
@@ -158,95 +436,258 @@
   color: var(--tc-text-placeholder);
 }
 
-.formGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: var(--tc-space-4);
+.formHelp {
+  color: var(--tc-text-muted);
+  font-size: var(--tc-font-size-xs);
+  margin-top: var(--tc-space-1);
+}
+
+/* SIRET Search Results */
+.siretResults {
+  position: relative;
+  background: var(--tc-bg-card);
+  border: 1px solid var(--tc-border-input);
+  border-radius: var(--tc-radius-base);
+  box-shadow: var(--tc-shadow-md);
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.siretResultItem {
+  padding: var(--tc-space-3);
+  border-bottom: 1px solid var(--tc-border-light);
+  cursor: pointer;
+  transition: background-color var(--tc-transition-fast);
+}
+
+.siretResultItem:last-child {
+  border-bottom: none;
+}
+
+.siretResultItem:hover {
+  background-color: var(--tc-bg-hover);
+}
+
+.siretResultName {
+  font-weight: var(--tc-font-weight-semibold);
+  margin-bottom: var(--tc-space-1);
+}
+
+.siretResultDetails {
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-text-muted);
+}
+
+/* Address suggestions */
+.addressSuggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--tc-bg-card);
+  border: 1px solid var(--tc-border-input);
+  border-top: none;
+  border-radius: 0 0 var(--tc-radius-base) var(--tc-radius-base);
+  box-shadow: var(--tc-shadow-md);
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.addressSuggestion {
+  padding: var(--tc-space-2) var(--tc-space-3);
+  cursor: pointer;
+  border-bottom: 1px solid var(--tc-border-ultralight);
+  transition: background-color var(--tc-transition-fast);
+}
+
+.addressSuggestion:last-child {
+  border-bottom: none;
+}
+
+.addressSuggestion:hover {
+  background-color: var(--tc-bg-hover);
 }
 
 /* Boutons */
-.btnPrimary {
-  background-color: var(--tc-color-primary);
-  border-color: var(--tc-color-primary);
-  color: var(--tc-text-light);
-  padding: var(--tc-space-3) var(--tc-space-6);
-  font-size: var(--tc-font-size-base);
-  font-weight: var(--tc-font-weight-medium);
-  border-radius: var(--tc-radius-base);
-  transition: var(--tc-transition-base);
-  border: none;
-  cursor: pointer;
+.btn {
   display: inline-flex;
   align-items: center;
   gap: var(--tc-space-2);
+  padding: var(--tc-space-3) var(--tc-space-6);
+  border: none;
+  border-radius: var(--tc-radius-base);
+  font-size: var(--tc-font-size-base);
+  font-weight: var(--tc-font-weight-medium);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--tc-transition-fast);
+  justify-content: center;
+}
+
+.btnPrimary {
+  background-color: var(--tc-color-primary);
+  color: var(--tc-text-light);
 }
 
 .btnPrimary:hover:not(:disabled) {
   background-color: var(--tc-color-primary-hover);
-  border-color: var(--tc-color-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--tc-shadow-md);
+}
+
+.tcBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tc-space-2);
+  padding: var(--tc-space-3) var(--tc-space-6);
+  border: none;
+  border-radius: var(--tc-radius-base);
+  font-size: var(--tc-font-size-base);
+  font-weight: var(--tc-font-weight-medium);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--tc-transition-fast);
+  justify-content: center;
+  font-family: var(--tc-font-sans);
+}
+
+.tcBtnPrimary {
+  background-color: var(--tc-color-primary);
   color: var(--tc-text-light);
 }
 
-.btnPrimary:disabled {
-  background-color: var(--tc-color-gray-400);
-  border-color: var(--tc-color-gray-400);
+.tcBtnPrimary:hover:not(:disabled) {
+  background-color: var(--tc-color-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--tc-shadow-md);
+}
+
+.btn:disabled,
+.tcBtn:disabled {
+  background-color: var(--tc-color-gray-300);
+  color: var(--tc-color-gray-500);
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
-/* Texte d'aide */
-.formSubtitle {
-  color: var(--tc-text-secondary);
-  margin-bottom: var(--tc-space-4);
-  font-size: var(--tc-font-size-base);
+.btnLarge {
+  padding: var(--tc-space-4) var(--tc-space-8);
+  font-size: var(--tc-font-size-lg);
 }
 
-.legalNotice {
-  background-color: var(--tc-color-gray-50);
-  padding: var(--tc-space-4);
-  border-radius: var(--tc-radius-base);
-  border-left: 4px solid var(--tc-color-info);
-  margin-top: var(--tc-space-6);
-}
-
-.legalNotice p {
-  margin: 0;
-  font-size: var(--tc-font-size-sm);
-  color: var(--tc-text-muted);
-  line-height: 1.6;
+/* Actions de formulaire */
+.formActions {
+  margin-top: var(--tc-space-8);
+  text-align: center;
   display: flex;
-  align-items: flex-start;
+  flex-direction: column;
+  gap: var(--tc-space-4);
+  align-items: center;
+}
+
+/* Messages d'erreur */
+.errorMessage {
+  background-color: var(--tc-bg-error);
+  color: var(--tc-color-error-dark);
+  padding: var(--tc-space-3);
+  border-radius: var(--tc-radius-base);
+  border: 1px solid var(--tc-color-error-light);
+  margin-bottom: var(--tc-space-4);
+  display: flex;
+  align-items: center;
   gap: var(--tc-space-2);
 }
 
-/* Spinner de chargement */
-.loadingSpinner {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  border: 2px solid var(--tc-color-gray-300);
-  border-radius: 50%;
-  border-top-color: var(--tc-text-light);
-  animation: spin 1s ease-in-out infinite;
+/* Footer */
+.formFooter {
+  padding: var(--tc-space-6) var(--tc-space-8);
+  background-color: var(--tc-bg-subtle);
+  border-top: 1px solid var(--tc-border-light);
+  text-align: center;
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
+.formFooter p {
+  margin: 0;
+  color: var(--tc-text-muted);
+  font-size: var(--tc-font-size-sm);
+  line-height: 1.6;
 }
 
-/* États du formulaire */
+/* États interactifs */
+.formStateHidden {
+  display: none;
+}
+
+.formStateVisible {
+  display: block;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Position relative pour les dropdowns */
+.positionRelative {
+  position: relative;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .formHeader,
+  .formContent,
+  .formFooter {
+    padding-left: var(--tc-space-4);
+    padding-right: var(--tc-space-4);
+  }
+
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .concertInfoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .formActions {
+    margin-top: var(--tc-space-6);
+  }
+
+  .formSection,
+  .formSectionBody {
+    padding: var(--tc-space-4);
+  }
+}
+
+/* Utilitaires */
+.textCenter {
+  text-align: center;
+}
+
+.mb4 {
+  margin-bottom: var(--tc-space-4);
+}
+
+.mt3 {
+  margin-top: var(--tc-space-3);
+}
+
+.fwBold {
+  font-weight: var(--tc-font-weight-bold);
+}
+
+.textMuted {
+  color: var(--tc-text-muted);
+}
+
+/* States spécifiques */
 .loadingState {
   text-align: center;
   padding: var(--tc-space-8);
-}
-
-.loadingState .spinner {
-  width: 3rem;
-  height: 3rem;
-  border: 0.25rem solid var(--tc-color-gray-300);
-  border-top-color: var(--tc-color-primary);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 0 auto var(--tc-space-4);
 }
 
 .alertPanel {
@@ -254,24 +695,9 @@
   border-radius: var(--tc-radius-lg);
   margin-bottom: var(--tc-space-6);
   border: 1px solid;
-}
-
-.alertDanger {
-  background-color: rgba(244, 67, 54, 0.1);
-  border-color: rgba(244, 67, 54, 0.2);
-  color: var(--tc-color-error);
-}
-
-.alertWarning {
-  background-color: rgba(255, 193, 7, 0.1);
-  border-color: rgba(255, 193, 7, 0.2);
-  color: var(--tc-color-warning-dark);
-}
-
-.alertSuccess {
-  background-color: rgba(76, 175, 80, 0.1);
-  border-color: rgba(76, 175, 80, 0.2);
-  color: var(--tc-color-success-dark);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--tc-space-2);
 }
 
 .alertPanel h3 {
@@ -286,7 +712,7 @@
   line-height: 1.6;
 }
 
-/* Outil SIRET */
+/* SIRET spécifique */
 .siretSection {
   background-color: var(--tc-bg-subtle);
   padding: var(--tc-space-4);
@@ -328,48 +754,6 @@
   z-index: 10;
 }
 
-.siretResults {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background-color: var(--tc-bg-white);
-  border: 1px solid var(--tc-border-light);
-  border-top: none;
-  border-radius: 0 0 var(--tc-radius-base) var(--tc-radius-base);
-  max-height: 200px;
-  overflow-y: auto;
-  z-index: 1000;
-  box-shadow: var(--tc-shadow-base);
-}
-
-.siretResultItem {
-  padding: var(--tc-space-3) var(--tc-space-4);
-  cursor: pointer;
-  border-bottom: 1px solid var(--tc-border-light);
-  transition: var(--tc-transition-base);
-}
-
-.siretResultItem:hover {
-  background-color: var(--tc-color-gray-50);
-}
-
-.siretResultItem:last-child {
-  border-bottom: none;
-}
-
-.siretResultName {
-  font-size: var(--tc-font-size-base);
-  font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-text-default);
-  margin-bottom: var(--tc-space-1);
-}
-
-.siretResultDetails {
-  font-size: var(--tc-font-size-sm);
-  color: var(--tc-text-muted);
-}
-
 .siretError {
   color: var(--tc-color-error);
   font-size: var(--tc-font-size-sm);
@@ -407,7 +791,6 @@
   cursor: not-allowed;
 }
 
-/* Bouton de soumission centré */
 .submitSection {
   text-align: center;
   margin-top: var(--tc-space-8);
@@ -415,36 +798,48 @@
   border-top: 1px solid var(--tc-border-light);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .formContent {
-    padding: var(--tc-space-4);
-  }
-  
-  .formGrid {
-    grid-template-columns: 1fr;
-  }
-  
-  .concertInfoGrid {
-    grid-template-columns: 1fr;
-  }
-  
-  .siretSearchGroup {
-    flex-direction: column;
-  }
-  
-  .formHeader,
-  .formFooter {
-    padding: var(--tc-space-4);
-  }
+/* Classes supplémentaires pour compatibilité */
+.pageTitle {
+  text-align: center;
+  margin-bottom: var(--tc-space-6);
+  color: var(--tc-color-primary);
+  font-size: var(--tc-font-size-2xl);
+  font-weight: var(--tc-font-weight-bold);
 }
 
-@media (max-width: 576px) {
-  .tcCardBody {
-    padding: var(--tc-space-4);
-  }
-  
-  .pageTitle {
-    font-size: var(--tc-font-size-xl);
-  }
+.concertInfoItem {
+  text-align: center;
+}
+
+.concertInfoLabel {
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-muted);
+  font-size: var(--tc-font-size-sm);
+  margin-bottom: var(--tc-space-1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.concertInfoValue {
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-color-primary);
+}
+
+.legalNotice {
+  background-color: var(--tc-color-gray-50);
+  padding: var(--tc-space-4);
+  border-radius: var(--tc-radius-base);
+  border-left: 4px solid var(--tc-color-info);
+  margin-top: var(--tc-space-6);
+}
+
+.legalNotice p {
+  margin: 0;
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-text-muted);
+  line-height: 1.6;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--tc-space-2);
 } 

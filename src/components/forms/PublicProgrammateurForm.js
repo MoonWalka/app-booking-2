@@ -357,274 +357,269 @@ const PublicProgrammateurForm = ({
   return (
     <form onSubmit={handleSubmit}>
       {/* Section Adresse du lieu */}
-      <div className={styles.sectionHeader}>
-        <h3>
+      <div className={styles.card}>
+        <div className={styles.cardHeader}>
           <i className="bi bi-geo-alt"></i>
-          Adresse du lieu de l'événement
-        </h3>
-        <p className={styles.formSubtitle}>
-          Veuillez indiquer l'adresse exacte où se déroulera l'événement.
-        </p>
-      </div>
-      
-      <div className={styles.formSection}>
-        <div className={styles.formGroup}>
-          <AddressInput
-            label="Adresse du lieu *"
-            value={formData.lieuAdresse}
-            onChange={(e) => setFormData(prev => ({ ...prev, lieuAdresse: e.target.value }))}
-            onAddressSelected={handleAddressSelected}
-            placeholder="Commencez à taper pour rechercher une adresse..."
-            required
-          />
+          <h3>Adresse du lieu de l'événement</h3>
         </div>
-
-        <div className={styles.formGrid}>
+        <div className={styles.cardBody}>
+          <p className={styles.formSubtitle}>
+            Veuillez indiquer l'adresse exacte où se déroulera l'événement.
+          </p>
+          
           <div className={styles.formGroup}>
-            <label htmlFor="lieuCodePostal" className={styles.formLabel}>Code postal *</label>
-            <input
-              type="text"
-              id="lieuCodePostal"
-              name="lieuCodePostal"
-              className={styles.formControl}
-              placeholder="75000"
-              value={formData.lieuCodePostal}
-              onChange={handleInputChange}
+            <AddressInput
+              label="Adresse du lieu *"
+              value={formData.lieuAdresse}
+              onChange={(e) => setFormData(prev => ({ ...prev, lieuAdresse: e.target.value }))}
+              onAddressSelected={handleAddressSelected}
+              placeholder="Commencez à taper pour rechercher une adresse..."
               required
             />
           </div>
-          <div className={styles.formGroup}>
-            <label htmlFor="lieuVille" className={styles.formLabel}>Ville *</label>
-            <input
-              type="text"
-              id="lieuVille"
-              name="lieuVille"
-              className={styles.formControl}
-              placeholder="Paris"
-              value={formData.lieuVille}
-              onChange={handleInputChange}
-              required
-            />
+
+          <div className={styles.formGrid}>
+            <div className={styles.formGroup}>
+              <label htmlFor="lieuCodePostal" className={styles.formLabel}>Code postal *</label>
+              <input
+                type="text"
+                id="lieuCodePostal"
+                name="lieuCodePostal"
+                className={styles.formControl}
+                placeholder="75000"
+                value={formData.lieuCodePostal}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="lieuVille" className={styles.formLabel}>Ville *</label>
+              <input
+                type="text"
+                id="lieuVille"
+                name="lieuVille"
+                className={styles.formControl}
+                placeholder="Paris"
+                value={formData.lieuVille}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
           </div>
         </div>
       </div>
 
       {/* Section Recherche Structure */}
-      <div className={styles.sectionHeader} style={{ marginTop: '2rem' }}>
-        <h3>
+      <div className={styles.card}>
+        <div className={styles.cardHeader}>
           <i className="bi bi-building"></i>
-          Informations de votre structure
-        </h3>
-        <p className={styles.formSubtitle}>
-          Recherchez votre entreprise/association par SIRET ou nom pour pré-remplir automatiquement, ou remplissez manuellement.
-        </p>
-      </div>
-      
-      <div className={styles.formSection}>
-        <div className={styles.formGroup}>
-          <label htmlFor="siretSearch" className={styles.formLabel}>Recherche par SIRET ou nom</label>
-          <input
-            type="text"
-            id="siretSearch"
-            className={styles.formControl}
-            placeholder="Numéro SIRET, nom ou raison sociale"
-            value={siretSearch}
-            onChange={handleSiretInputChange}
-            onBlur={handleInputBlur}
-          />
-          {siretLoading && (
-            <div className={styles.siretLoading} style={{ marginTop: '8px', fontSize: '14px', color: '#666' }}>
-              <span className={styles.loadingSpinner}></span>
-              Recherche en cours...
+          <h3>Informations de votre structure</h3>
+        </div>
+        <div className={styles.cardBody}>
+          <p className={styles.formSubtitle}>
+            Recherchez votre entreprise/association par SIRET ou nom pour pré-remplir automatiquement, ou remplissez manuellement.
+          </p>
+          
+          <div className={styles.formGroup}>
+            <label htmlFor="siretSearch" className={styles.formLabel}>Recherche par SIRET ou nom</label>
+            <input
+              type="text"
+              id="siretSearch"
+              className={styles.formControl}
+              placeholder="Numéro SIRET, nom ou raison sociale"
+              value={siretSearch}
+              onChange={handleSiretInputChange}
+              onBlur={handleInputBlur}
+            />
+            {siretLoading && (
+              <div className={styles.siretLoading} style={{ marginTop: '8px', fontSize: '14px', color: '#666' }}>
+                <span className={styles.loadingSpinner}></span>
+                Recherche en cours...
+              </div>
+            )}
+          </div>
+
+          {/* Menu déroulant des résultats */}
+          {showDropdown && siretResults.length > 0 && (
+            <div className={styles.siretResults} style={{ marginBottom: '20px' }}>
+              {siretResults.map((entreprise) => (
+                <div
+                  key={entreprise.siren}
+                  className={styles.siretResultItem}
+                  onClick={() => handleSelectEntreprise(entreprise)}
+                  style={{ cursor: 'pointer', padding: '12px', border: '1px solid #ddd', borderBottom: 'none', backgroundColor: '#f8f9fa' }}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = '#e9ecef'}
+                  onMouseLeave={(e) => e.target.style.backgroundColor = '#f8f9fa'}
+                >
+                  <div style={{ fontWeight: '600', marginBottom: '4px' }}>
+                    {entreprise.nom_complet || entreprise.nom_raison_sociale || entreprise.denomination}
+                  </div>
+                  <div style={{ fontSize: '13px', color: '#666' }}>
+                    SIRET: {entreprise.siege?.siret || entreprise.siren} | {entreprise.siege?.libelle_commune || ''}
+                  </div>
+                </div>
+              ))}
             </div>
           )}
-        </div>
 
-        {/* Menu déroulant des résultats */}
-        {showDropdown && siretResults.length > 0 && (
-          <div className={styles.siretResults} style={{ marginBottom: '20px' }}>
-            {siretResults.map((entreprise) => (
-              <div
-                key={entreprise.siren}
-                className={styles.siretResultItem}
-                onClick={() => handleSelectEntreprise(entreprise)}
-                style={{ cursor: 'pointer', padding: '12px', border: '1px solid #ddd', borderBottom: 'none', backgroundColor: '#f8f9fa' }}
-                onMouseEnter={(e) => e.target.style.backgroundColor = '#e9ecef'}
-                onMouseLeave={(e) => e.target.style.backgroundColor = '#f8f9fa'}
-              >
-                <div style={{ fontWeight: '600', marginBottom: '4px' }}>
-                  {entreprise.nom_complet || entreprise.nom_raison_sociale || entreprise.denomination}
-                </div>
-                <div style={{ fontSize: '13px', color: '#666' }}>
-                  SIRET: {entreprise.siege?.siret || entreprise.siren} | {entreprise.siege?.libelle_commune || ''}
-                </div>
-              </div>
-            ))}
+          {/* Message d'erreur */}
+          {siretError && (
+            <div style={{ color: '#dc3545', fontSize: '14px', marginBottom: '15px' }}>
+              <i className="bi bi-exclamation-circle"></i> {siretError}
+            </div>
+          )}
+
+          {/* Champs de structure (pré-remplis ou saisissables manuellement) */}
+          <div className={styles.formGrid}>
+            <div className={styles.formGroup}>
+              <label htmlFor="structureNom" className={styles.formLabel}>Nom / Raison sociale *</label>
+              <input
+                type="text"
+                id="structureNom"
+                name="structureNom"
+                className={styles.formControl}
+                placeholder="Nom de votre structure"
+                value={formData.structureNom}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="structureSiret" className={styles.formLabel}>SIRET</label>
+              <input
+                type="text"
+                id="structureSiret"
+                name="structureSiret"
+                className={styles.formControl}
+                placeholder="14 chiffres"
+                value={formData.structureSiret}
+                onChange={handleInputChange}
+              />
+            </div>
           </div>
-        )}
 
-        {/* Message d'erreur */}
-        {siretError && (
-          <div style={{ color: '#dc3545', fontSize: '14px', marginBottom: '15px' }}>
-            <i className="bi bi-exclamation-circle"></i> {siretError}
-          </div>
-        )}
-
-        {/* Champs de structure (pré-remplis ou saisissables manuellement) */}
-        <div className={styles.formGrid}>
           <div className={styles.formGroup}>
-            <label htmlFor="structureNom" className={styles.formLabel}>Nom / Raison sociale *</label>
+            <label htmlFor="structureAdresse" className={styles.formLabel}>Adresse de la structure *</label>
             <input
               type="text"
-              id="structureNom"
-              name="structureNom"
+              id="structureAdresse"
+              name="structureAdresse"
               className={styles.formControl}
-              placeholder="Nom de votre structure"
-              value={formData.structureNom}
+              placeholder="Adresse de votre structure"
+              value={formData.structureAdresse}
               onChange={handleInputChange}
               required
             />
           </div>
-          <div className={styles.formGroup}>
-            <label htmlFor="structureSiret" className={styles.formLabel}>SIRET</label>
-            <input
-              type="text"
-              id="structureSiret"
-              name="structureSiret"
-              className={styles.formControl}
-              placeholder="14 chiffres"
-              value={formData.structureSiret}
-              onChange={handleInputChange}
-            />
-          </div>
-        </div>
 
-        <div className={styles.formGroup}>
-          <label htmlFor="structureAdresse" className={styles.formLabel}>Adresse de la structure *</label>
-          <input
-            type="text"
-            id="structureAdresse"
-            name="structureAdresse"
-            className={styles.formControl}
-            placeholder="Adresse de votre structure"
-            value={formData.structureAdresse}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-
-        <div className={styles.formGrid}>
-          <div className={styles.formGroup}>
-            <label htmlFor="structureCodePostal" className={styles.formLabel}>Code postal *</label>
-            <input
-              type="text"
-              id="structureCodePostal"
-              name="structureCodePostal"
-              className={styles.formControl}
-              placeholder="75000"
-              value={formData.structureCodePostal}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
-          <div className={styles.formGroup}>
-            <label htmlFor="structureVille" className={styles.formLabel}>Ville *</label>
-            <input
-              type="text"
-              id="structureVille"
-              name="structureVille"
-              className={styles.formControl}
-              placeholder="Ville"
-              value={formData.structureVille}
-              onChange={handleInputChange}
-              required
-            />
+          <div className={styles.formGrid}>
+            <div className={styles.formGroup}>
+              <label htmlFor="structureCodePostal" className={styles.formLabel}>Code postal *</label>
+              <input
+                type="text"
+                id="structureCodePostal"
+                name="structureCodePostal"
+                className={styles.formControl}
+                placeholder="75000"
+                value={formData.structureCodePostal}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="structureVille" className={styles.formLabel}>Ville *</label>
+              <input
+                type="text"
+                id="structureVille"
+                name="structureVille"
+                className={styles.formControl}
+                placeholder="Ville"
+                value={formData.structureVille}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
           </div>
         </div>
       </div>
 
       {/* Section Informations du signataire du contrat */}
-      <div className={styles.sectionHeader} style={{ marginTop: '2rem' }}>
-        <h3>
+      <div className={styles.card}>
+        <div className={styles.cardHeader}>
           <i className="bi bi-person-check"></i>
-          Informations du signataire du contrat
-        </h3>
-      
-      </div>
-      
-      <div className={styles.formSection}>
-        <div className={styles.formGrid}>
+          <h3>Informations du signataire du contrat</h3>
+        </div>
+        <div className={styles.cardBody}>
+          <div className={styles.formGrid}>
+            <div className={styles.formGroup}>
+              <label htmlFor="signatairePrenom" className={styles.formLabel}>Prénom *</label>
+              <input
+                type="text"
+                id="signatairePrenom"
+                name="signatairePrenom"
+                className={styles.formControl}
+                placeholder="Prénom du signataire"
+                value={formData.signatairePrenom}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="signataireNom" className={styles.formLabel}>Nom *</label>
+              <input
+                type="text"
+                id="signataireNom"
+                name="signataireNom"
+                className={styles.formControl}
+                placeholder="Nom du signataire"
+                value={formData.signataireNom}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+          </div>
+
           <div className={styles.formGroup}>
-            <label htmlFor="signatairePrenom" className={styles.formLabel}>Prénom *</label>
+            <label htmlFor="signataireFonction" className={styles.formLabel}>Fonction / Qualité *</label>
             <input
               type="text"
-              id="signatairePrenom"
-              name="signatairePrenom"
+              id="signataireFonction"
+              name="signataireFonction"
               className={styles.formControl}
-              placeholder="Prénom du signataire"
-              value={formData.signatairePrenom}
+              placeholder="Ex: Directeur, Président, Responsable programmation..."
+              value={formData.signataireFonction}
               onChange={handleInputChange}
               required
             />
           </div>
-          <div className={styles.formGroup}>
-            <label htmlFor="signataireNom" className={styles.formLabel}>Nom *</label>
-            <input
-              type="text"
-              id="signataireNom"
-              name="signataireNom"
-              className={styles.formControl}
-              placeholder="Nom du signataire"
-              value={formData.signataireNom}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
-        </div>
 
-        <div className={styles.formGroup}>
-          <label htmlFor="signataireFonction" className={styles.formLabel}>Fonction / Qualité *</label>
-          <input
-            type="text"
-            id="signataireFonction"
-            name="signataireFonction"
-            className={styles.formControl}
-            placeholder="Ex: Directeur, Président, Responsable programmation..."
-            value={formData.signataireFonction}
-            onChange={handleInputChange}
-            required
-          />
-         
-        </div>
-
-        <div className={styles.formGrid}>
-          <div className={styles.formGroup}>
-            <label htmlFor="signataireEmail" className={styles.formLabel}>
-              Email {formData.signataireEmail && '(prérempli)'}
-            </label>
-            <input
-              type="email"
-              id="signataireEmail"
-              name="signataireEmail"
-              className={styles.formControl}
-              placeholder="email@exemple.com"
-              value={formData.signataireEmail}
-              onChange={handleInputChange}
-            />
-           
-          </div>
-          <div className={styles.formGroup}>
-            <label htmlFor="signataireTelephone" className={styles.formLabel}>Téléphone</label>
-            <input
-              type="tel"
-              id="signataireTelephone"
-              name="signataireTelephone"
-              className={styles.formControl}
-              placeholder="06 12 34 56 78"
-              value={formData.signataireTelephone}
-              onChange={handleInputChange}
-            />
-         
+          <div className={styles.formGrid}>
+            <div className={styles.formGroup}>
+              <label htmlFor="signataireEmail" className={styles.formLabel}>
+                Email {formData.signataireEmail && '(prérempli)'}
+              </label>
+              <input
+                type="email"
+                id="signataireEmail"
+                name="signataireEmail"
+                className={styles.formControl}
+                placeholder="email@exemple.com"
+                value={formData.signataireEmail}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="signataireTelephone" className={styles.formLabel}>Téléphone</label>
+              <input
+                type="tel"
+                id="signataireTelephone"
+                name="signataireTelephone"
+                className={styles.formControl}
+                placeholder="06 12 34 56 78"
+                value={formData.signataireTelephone}
+                onChange={handleInputChange}
+              />
+            </div>
           </div>
         </div>
       </div>

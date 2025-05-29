@@ -106,7 +106,7 @@ const FormSubmissionViewer = ({ submissionId, onValidate }) => {
             {submission.programmateurData?.structure && (
               <dl>
                 <dt>Raison sociale</dt>
-                <dd>{submission.programmateurData.structure.raisonSociale || 'N/A'}</dd>
+                <dd>{submission.programmateurData.structure.raisonSociale || submission.programmateurData.structure.nom || 'N/A'}</dd>
                 <dt>SIRET</dt>
                 <dd>{submission.programmateurData.structure.siret || 'N/A'}</dd>
                 <dt>Type</dt>

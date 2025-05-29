@@ -31,8 +31,10 @@ const PublicProgrammateurForm = ({
   // États pour la recherche SIRET
   const [siretSearch, setSiretSearch] = useState('');
   const [siretLoading, setSiretLoading] = useState(false);
-  const [siretResults, setSiretResults] = useState(null);
+  const [siretResults, setSiretResults] = useState([]);
   const [siretError, setSiretError] = useState('');
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [searchTimeout, setSearchTimeout] = useState(null);
 
   // États de soumission
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -47,80 +49,106 @@ const PublicProgrammateurForm = ({
     }));
   };
 
-  // Recherche SIRET via API
-  const handleSiretSearch = async () => {
-    if (!siretSearch.trim()) {
-      setSiretError('Veuillez saisir un numéro SIRET ou une raison sociale');
+  // Recherche automatique avec debounce
+  const handleSiretInputChange = (e) => {
+    const value = e.target.value;
+    setSiretSearch(value);
+    
+    // Clear previous timeout
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
+    }
+    
+    if (value.trim().length < 3) {
+      setSiretResults([]);
+      setShowDropdown(false);
+      setSiretError('');
       return;
     }
+    
+    // Debounce search
+    const timeout = setTimeout(() => {
+      performSiretSearch(value.trim());
+    }, 300);
+    
+    setSearchTimeout(timeout);
+  };
 
+  // Recherche SIRET via API
+  const performSiretSearch = async (searchTerm) => {
     setSiretLoading(true);
     setSiretError('');
-    setSiretResults(null);
+    setSiretResults([]);
 
     try {
-      // Utiliser le paramètre 'q' pour tous les types de recherche (SIRET ou nom)
-      const apiUrl = `https://recherche-entreprises.api.gouv.fr/search?q=${encodeURIComponent(siretSearch.trim())}&per_page=1`;
+      const apiUrl = `https://recherche-entreprises.api.gouv.fr/search?q=${encodeURIComponent(searchTerm)}&per_page=5`;
 
       const response = await fetch(apiUrl);
       
       if (!response.ok) {
-        throw new Error('Entreprise non trouvée');
+        throw new Error('Erreur de recherche');
       }
 
       const data = await response.json();
       
-      // Vérifier qu'on a des résultats
-      if (!data.results || data.results.length === 0) {
-        throw new Error('Aucune entreprise trouvée');
+      if (data.results && data.results.length > 0) {
+        setSiretResults(data.results);
+        setShowDropdown(true);
+      } else {
+        setSiretResults([]);
+        setShowDropdown(false);
+        setSiretError('Aucune entreprise trouvée');
       }
-
-      // Prendre le premier résultat
-      const entreprise = data.results[0];
-
-      if (!entreprise) {
-        throw new Error('Aucune entreprise trouvée');
-      }
-
-      // Extraire les informations utiles de l'API Annuaire des Entreprises
-      const nom = entreprise.nom_complet || 
-                  entreprise.nom_raison_sociale ||
-                  entreprise.denomination ||
-                  `${entreprise.prenom || ''} ${entreprise.nom || ''}`.trim();
-
-      // Utiliser les informations du siège pour l'adresse
-      const siege = entreprise.siege || {};
-      const numeroVoie = siege.numero_voie || '';
-      const typeVoie = siege.type_voie || '';
-      const libelleVoie = siege.libelle_voie || '';
-      const adresse = `${numeroVoie} ${typeVoie} ${libelleVoie}`.trim();
-      
-      // Mettre à jour le formulaire avec les données trouvées
-      setFormData(prev => ({
-        ...prev,
-        structureNom: nom,
-        structureSiret: siege.siret || entreprise.siren,
-        structureAdresse: adresse || siege.adresse || '',
-        structureCodePostal: siege.code_postal || '',
-        structureVille: siege.libelle_commune || ''
-      }));
-
-      setSiretResults({
-        success: true,
-        message: `Entreprise trouvée : ${nom}`,
-        data: entreprise
-      });
 
     } catch (error) {
       console.error('Erreur recherche SIRET:', error);
-      setSiretError(error.message || 'Erreur lors de la recherche');
-      setSiretResults({
-        success: false,
-        message: 'Entreprise non trouvée. Vous pouvez continuer en remplissant manuellement.'
-      });
+      setSiretError('Erreur lors de la recherche');
+      setSiretResults([]);
+      setShowDropdown(false);
     } finally {
       setSiretLoading(false);
     }
+  };
+
+  // Sélection d'une entreprise dans le dropdown
+  const handleSelectEntreprise = (entreprise) => {
+    const nom = entreprise.nom_complet || 
+                entreprise.nom_raison_sociale ||
+                entreprise.denomination ||
+                `${entreprise.prenom || ''} ${entreprise.nom || ''}`.trim();
+
+    // Utiliser les informations du siège pour l'adresse
+    const siege = entreprise.siege || {};
+    const numeroVoie = siege.numero_voie || '';
+    const typeVoie = siege.type_voie || '';
+    const libelleVoie = siege.libelle_voie || '';
+    const adresse = `${numeroVoie} ${typeVoie} ${libelleVoie}`.trim();
+    
+    // Mettre à jour le formulaire avec les données sélectionnées
+    setFormData(prev => ({
+      ...prev,
+      structureNom: nom,
+      structureSiret: siege.siret || entreprise.siren,
+      structureAdresse: adresse || siege.adresse || '',
+      structureCodePostal: siege.code_postal || '',
+      structureVille: siege.libelle_commune || ''
+    }));
+
+    // Mettre à jour le champ de recherche avec le nom sélectionné
+    setSiretSearch(nom);
+    
+    // Fermer le dropdown
+    setShowDropdown(false);
+    setSiretResults([]);
+    setSiretError('');
+  };
+
+  // Fermer le dropdown quand on clique ailleurs
+  const handleInputBlur = () => {
+    // Delay pour permettre le clic sur un élément du dropdown
+    setTimeout(() => {
+      setShowDropdown(false);
+    }, 200);
   };
 
   // Validation du formulaire
@@ -244,38 +272,40 @@ const PublicProgrammateurForm = ({
             className={`${styles.formControl} ${styles.siretInput}`}
             placeholder="Numéro SIRET ou raison sociale"
             value={siretSearch}
-            onChange={(e) => setSiretSearch(e.target.value)}
+            onChange={handleSiretInputChange}
+            onBlur={handleInputBlur}
           />
-          <button
-            type="button"
-            className={styles.btnSecondary}
-            onClick={handleSiretSearch}
-            disabled={siretLoading}
-          >
-            {siretLoading ? (
-              <>
-                <span className={styles.loadingSpinner}></span>
-                Recherche...
-              </>
-            ) : (
-              <>
-                <i className="bi bi-search"></i>
-                Rechercher
-              </>
-            )}
-          </button>
+          {siretLoading && (
+            <div className={styles.siretLoading}>
+              <span className={styles.loadingSpinner}></span>
+              Recherche...
+            </div>
+          )}
         </div>
 
-        {/* Résultats de la recherche SIRET */}
-        {siretResults && (
-          <div className={`${styles.siretResults} ${siretResults.success ? styles.siretSuccess : ''}`}>
-            <i className={`bi bi-${siretResults.success ? 'check-circle' : 'info-circle'}`}></i>
-            {siretResults.message}
+        {/* Menu déroulant des résultats */}
+        {showDropdown && siretResults.length > 0 && (
+          <div className={styles.siretResults}>
+            {siretResults.map((entreprise) => (
+              <div
+                key={entreprise.siren}
+                className={styles.siretResultItem}
+                onClick={() => handleSelectEntreprise(entreprise)}
+              >
+                <div className={styles.siretResultName}>
+                  {entreprise.nom_complet || entreprise.nom_raison_sociale || entreprise.denomination}
+                </div>
+                <div className={styles.siretResultDetails}>
+                  SIRET: {entreprise.siege?.siret || entreprise.siren} | {entreprise.siege?.libelle_commune || ''}
+                </div>
+              </div>
+            ))}
           </div>
         )}
 
+        {/* Message d'erreur */}
         {siretError && (
-          <div className={`${styles.siretResults} ${styles.siretError}`}>
+          <div className={styles.siretError}>
             <i className="bi bi-exclamation-circle"></i>
             {siretError}
           </div>

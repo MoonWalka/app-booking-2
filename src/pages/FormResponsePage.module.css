@@ -293,6 +293,7 @@
   border-radius: var(--tc-radius-base);
   margin-bottom: var(--tc-space-5);
   border: 1px solid var(--tc-border-light);
+  position: relative;
 }
 
 .siretSection h4 {
@@ -306,13 +307,80 @@
 }
 
 .siretSearchGroup {
-  display: flex;
-  gap: var(--tc-space-2);
+  position: relative;
   margin-bottom: var(--tc-space-3);
 }
 
 .siretInput {
-  flex: 1;
+  width: 100%;
+}
+
+.siretLoading {
+  position: absolute;
+  right: var(--tc-space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-2);
+  color: var(--tc-text-muted);
+  font-size: var(--tc-font-size-sm);
+  z-index: 10;
+}
+
+.siretResults {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: var(--tc-bg-white);
+  border: 1px solid var(--tc-border-light);
+  border-top: none;
+  border-radius: 0 0 var(--tc-radius-base) var(--tc-radius-base);
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: var(--tc-shadow-base);
+}
+
+.siretResultItem {
+  padding: var(--tc-space-3) var(--tc-space-4);
+  cursor: pointer;
+  border-bottom: 1px solid var(--tc-border-light);
+  transition: var(--tc-transition-base);
+}
+
+.siretResultItem:hover {
+  background-color: var(--tc-color-gray-50);
+}
+
+.siretResultItem:last-child {
+  border-bottom: none;
+}
+
+.siretResultName {
+  font-size: var(--tc-font-size-base);
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-text-default);
+  margin-bottom: var(--tc-space-1);
+}
+
+.siretResultDetails {
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-text-muted);
+}
+
+.siretError {
+  color: var(--tc-color-error);
+  font-size: var(--tc-font-size-sm);
+  margin-top: var(--tc-space-2);
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-1);
+}
+
+.siretError i {
+  font-size: var(--tc-font-size-base);
 }
 
 .btnSecondary {
@@ -337,22 +405,6 @@
 .btnSecondary:disabled {
   background-color: var(--tc-color-gray-400);
   cursor: not-allowed;
-}
-
-.siretResults {
-  background-color: var(--tc-bg-white);
-  border: 1px solid var(--tc-border-light);
-  border-radius: var(--tc-radius-base);
-  padding: var(--tc-space-3);
-  font-size: var(--tc-font-size-sm);
-}
-
-.siretSuccess {
-  color: var(--tc-color-success-dark);
-}
-
-.siretError {
-  color: var(--tc-color-error);
 }
 
 /* Bouton de soumission centré */

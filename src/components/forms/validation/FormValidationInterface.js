@@ -3,7 +3,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 
 // Import custom hooks
 import { useFormValidationData } from '@/hooks/forms';
-import { useFieldActions } from '@/hooks/forms';
 import { useValidationBatchActions } from '@/hooks/forms';
 
 // Import components
@@ -20,7 +19,6 @@ const FormValidationInterface = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [showFormGenerator, setShowFormGenerator] = useState(false);
   
   // Use the custom hooks to manage data and actions
   const {
@@ -39,11 +37,21 @@ const FormValidationInterface = () => {
     lieuFields
   } = useFormValidationData(id);
   
-  // Hook for field validation actions
-  const { handleValidateField, copyFormValueToFinal } = useFieldActions(
-    validatedFields,
-    setValidatedFields
-  );
+  // Fonctions pour gérer la validation des champs - SIMPLIFIÉ
+  const handleValidateField = (category, fieldId, value) => {
+    const fieldPath = `${category}.${fieldId}`;
+    setValidatedFields(prev => ({
+      ...prev,
+      [fieldPath]: value
+    }));
+  };
+  
+  const copyFormValueToFinal = (fieldPath, formValue) => {
+    setValidatedFields(prev => ({
+      ...prev,
+      [fieldPath]: formValue
+    }));
+  };
   
   // Hook for batch validation actions
   const { validateForm, validationInProgress } = useValidationBatchActions({
@@ -143,41 +151,17 @@ const FormValidationInterface = () => {
         navigate={navigate}
       />
       
-      {/* Bouton pour générer un nouveau lien */}
-      {!showFormGenerator && (
-        <div className="mb-3">
-          <Button
-            variant="outline-primary"
-            size="sm"
-            onClick={() => setShowFormGenerator(true)}
-          >
-            <i className="bi bi-link-45deg me-2"></i>
-            Générer un nouveau lien de formulaire
-          </Button>
-        </div>
-      )}
-      
-      {/* Affichage du FormGenerator si demandé */}
-      {showFormGenerator && (
-        <div className="mb-4">
-          <FormGenerator
-            concertId={id}
-            programmateurId={concert?.programmateurId}
-            onFormGenerated={(formLinkId, formUrl) => {
-              console.log('Nouveau formulaire généré:', formUrl);
-              // Optionnel : rafraîchir les données
-            }}
-          />
-          <Button
-            variant="outline-secondary"
-            size="sm"
-            className="mt-2"
-            onClick={() => setShowFormGenerator(false)}
-          >
-            Masquer le générateur
-          </Button>
-        </div>
-      )}
+      {/* Affichage du FormGenerator par défaut pour montrer le lien existant - MODIFIÉ */}
+      <div className="mb-4">
+        <FormGenerator
+          concertId={id}
+          programmateurId={concert?.programmateurId}
+          onFormGenerated={(formLinkId, formUrl) => {
+            console.log('Nouveau formulaire généré:', formUrl);
+            // Optionnel : rafraîchir les données
+          }}
+        />
+      </div>
       
       {(isAlreadyValidated || validated) && (
         <ValidationSummary />

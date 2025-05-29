@@ -1,7 +1,7 @@
 // src/hooks/lieux/useLieuDelete.js
 import { useCallback } from 'react';
 import { useGenericEntityDelete } from '@/hooks/common';
-import { showSuccessToast, showErrorToast } from '@/utils/toasts';
+import { showErrorToast } from '@/utils/toasts';
 
 /**
  * Hook optimisé pour gérer la suppression des lieux
@@ -58,7 +58,6 @@ const useLieuDelete = (onDeleteSuccess) => {
     
     // Callbacks
     onSuccess: (id) => {
-      showSuccessToast('Le lieu a été supprimé avec succès');
       if (onDeleteSuccess) onDeleteSuccess(id);
     },
     onError: (error) => {

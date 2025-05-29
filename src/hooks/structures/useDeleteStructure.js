@@ -1,7 +1,7 @@
 // src/hooks/structures/useDeleteStructure.js
 import { useState, useCallback } from 'react';
 import { useGenericEntityDelete } from '@/hooks/common';
-import { showSuccessToast, showErrorToast } from '@/utils/toasts';
+import { showErrorToast } from '@/utils/toasts';
 
 /**
  * Hook optimisé pour la suppression des structures
@@ -53,7 +53,6 @@ const useDeleteStructure = (onDeleteSuccess) => {
     
     // Callbacks
     onSuccess: (id) => {
-      showSuccessToast('La structure a été supprimée avec succès');
       setShowDeleteModal(false);
       setStructureToDelete(null);
       if (onDeleteSuccess) onDeleteSuccess(id);

@@ -73,8 +73,8 @@ const ProgrammateurContactSection = ({
             </Form.Label>
             <Form.Control
               type="text"
-              name="nom"
-              value={formData.nom || ''}
+              name="contact.nom"
+              value={formData.contact?.nom || ''}
               onChange={onChange}
               isInvalid={!!errors.nom}
               required
@@ -91,8 +91,8 @@ const ProgrammateurContactSection = ({
             </Form.Label>
             <Form.Control
               type="text"
-              name="prenom"
-              value={formData.prenom || ''}
+              name="contact.prenom"
+              value={formData.contact?.prenom || ''}
               onChange={onChange}
               isInvalid={!!errors.prenom}
               required
@@ -110,8 +110,8 @@ const ProgrammateurContactSection = ({
         </Form.Label>
         <Form.Control
           type="text"
-          name="fonction"
-          value={formData.fonction || ''}
+          name="contact.fonction"
+          value={formData.contact?.fonction || ''}
           onChange={onChange}
           placeholder="Ex: Directeur artistique, Responsable programmation..."
         />
@@ -123,8 +123,8 @@ const ProgrammateurContactSection = ({
             <Form.Label className={styles.formLabel}>Email</Form.Label>
             <Form.Control
               type="email"
-              name="email"
-              value={formData.email || ''}
+              name="contact.email"
+              value={formData.contact?.email || ''}
               onChange={onChange}
               isInvalid={!!errors.email}
             />
@@ -141,8 +141,8 @@ const ProgrammateurContactSection = ({
             <Form.Label className={styles.formLabel}>Téléphone</Form.Label>
             <Form.Control
               type="tel"
-              name="telephone"
-              value={formData.telephone || ''}
+              name="contact.telephone"
+              value={formData.contact?.telephone || ''}
               onChange={onChange}
             />
           </Form.Group>

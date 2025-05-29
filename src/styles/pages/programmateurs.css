@@ -6,6 +6,15 @@
  */
 
 /* =============================
+   WRAPPER PRINCIPAL DE LA PAGE
+   ============================= */
+.programmateurs-page {
+  /* Assure une cohérence avec les autres pages (lieux, concerts) */
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* =============================
    VARIABLES SPÉCIFIQUES PROGRAMMATEURS
    ============================= */
 :root {

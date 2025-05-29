@@ -210,11 +210,27 @@ const useGenericEntityForm = (formConfig = {}, options = {}) => {
   const triggerAutoSaveRef = useRef();
   triggerAutoSaveRef.current = triggerAutoSave;
   
-  // ✅ CORRECTION 13: Changement de champ stabilisé
+  // ✅ CORRECTION 13: Changement de champ stabilisé avec support des champs imbriqués
   const handleFieldChange = useCallback((fieldName, value) => {
     if (!isMountedRef.current) return;
     setFormData(prev => {
-      const newData = { ...prev, [fieldName]: value };
+      let newData;
+      
+      // Gérer les champs imbriqués (par exemple: contact.email)
+      if (fieldName.includes('.')) {
+        const [parent, child] = fieldName.split('.');
+        newData = {
+          ...prev,
+          [parent]: {
+            ...prev[parent],
+            [child]: value
+          }
+        };
+      } else {
+        // Champ simple
+        newData = { ...prev, [fieldName]: value };
+      }
+      
       if (enableDirtyTracking) setIsDirty(true);
       
       console.log(`[TEMP DEBUG UGEF] Validation dans handleFieldChange pour ${fieldName} EST COMMENTÉE.`);

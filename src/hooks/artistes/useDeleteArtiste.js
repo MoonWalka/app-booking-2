@@ -1,7 +1,7 @@
 // src/hooks/artistes/useDeleteArtiste.js
 import { useCallback } from 'react';
 import { useGenericEntityDelete } from '@/hooks/common';
-import { showSuccessToast, showErrorToast } from '@/utils/toasts';
+import { showErrorToast } from '@/utils/toasts';
 
 /**
  * Hook optimisé pour la suppression des artistes
@@ -51,7 +51,6 @@ const useDeleteArtiste = (onDeleteSuccess) => {
     
     // Callbacks
     onSuccess: (id) => {
-      showSuccessToast('L\'artiste a été supprimé avec succès');
       if (onDeleteSuccess) onDeleteSuccess(id);
     },
     onError: (error) => {

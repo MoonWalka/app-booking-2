@@ -6,7 +6,7 @@ import ProgrammateurForm from '@/components/programmateurs/ProgrammateurForm';
 
 const ProgrammateursPage = () => {
   return (
-    <div>
+    <div className="programmateurs-page">
       <Routes>
         <Route path="/" element={<ProgrammateursList />} />
         <Route path="/nouveau" element={<ProgrammateurForm />} />

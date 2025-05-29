@@ -175,13 +175,33 @@ const ProgrammateursList = ({ onNavigateToDetails }) => {
     inactifs: programmateurs.filter(p => p.actif === false).length,
   };
 
-  // Filtrage et tri harmonisés
+  // Filtrage et tri harmonisés - CORRIGÉ avec vérifications de sécurité
   const filteredProgrammateurs = programmateurs
-    .filter(p =>
-      (!searchTerm || (p.nom + ' ' + (p.prenom || '')).toLowerCase().includes(searchTerm.toLowerCase()))
-    )
+    .filter(p => {
+      // Vérifier que l'objet programmateur est valide
+      if (!p || typeof p !== 'object') return false;
+      
+      // Filtrage par terme de recherche
+      if (!searchTerm) return true;
+      
+      const searchTermLower = searchTerm.toLowerCase();
+      const nomComplet = `${p.nom || ''} ${p.prenom || ''}`.toLowerCase();
+      
+      return nomComplet.includes(searchTermLower);
+    })
     .sort((a, b) => {
-      if (sortField === 'nom') return a.nom.localeCompare(b.nom);
+      // Vérifications de sécurité pour le tri
+      if (!a || !b) return 0;
+      
+      if (sortField === 'nom') {
+        const nomA = a.nom || '';
+        const nomB = b.nom || '';
+        
+        return sortDirection === 'asc' 
+          ? nomA.localeCompare(nomB)
+          : nomB.localeCompare(nomA);
+      }
+      
       return 0;
     });
 

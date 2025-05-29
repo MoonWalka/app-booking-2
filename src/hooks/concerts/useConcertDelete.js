@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useGenericEntityDelete } from '@/hooks/common';
-import { showSuccessToast, showErrorToast } from '@/utils/toasts';
+import { showErrorToast } from '@/utils/toasts';
 
 /**
  * Hook optimisé pour gérer la suppression des concerts
@@ -50,7 +50,6 @@ const useConcertDelete = (onDeleteSuccess) => {
     
     // Callbacks
     onSuccess: (id) => {
-      showSuccessToast('Le concert a été supprimé avec succès');
       if (onDeleteSuccess) onDeleteSuccess(id);
     },
     onError: (error) => {

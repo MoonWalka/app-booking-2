@@ -79,7 +79,58 @@ const ValidationSection = ({
                 <th className={styles.columnField}>Champ</th>
                 <th className={styles.columnExisting}>Valeur existante</th>
                 <th className={styles.columnForm}>Valeur du formulaire</th>
-                <th className={styles.columnAction}></th>
+                <th className={styles.columnAction}>
+                  {/* Bouton pour copier toutes les valeurs */}
+                  {onCopyValue && !isValidated && (
+                    <button
+                      className={styles.copyAllButton}
+                      onClick={() => {
+                        fields.forEach(field => {
+                          const fieldPath = `${category}.${field.id}`;
+                          let formValue = '';
+                          
+                          // Utiliser la même logique que dans le map ci-dessous
+                          if (category === 'lieu') {
+                            formValue = formData ? formData[field.id] || '' : '';
+                          } else if (category === 'contact') {
+                            if (formData && formData.contact && typeof formData.contact === 'object') {
+                              formValue = formData.contact[field.id] || '';
+                            } else {
+                              formValue = formData ? formData[field.id] || '' : '';
+                            }
+                          } else if (category === 'structure' && structureFieldsMapping) {
+                            if (field.id === 'raisonSociale') {
+                              if (formData && formData.structure && typeof formData.structure === 'object') {
+                                formValue = formData.structure.raisonSociale || '';
+                              } else {
+                                formValue = formData ? formData.structure || '' : '';
+                              }
+                            } else if (['type', 'adresse', 'codePostal', 'ville', 'pays', 'siret', 'tva'].includes(field.id)) {
+                              if (formData && formData.structure && typeof formData.structure === 'object') {
+                                formValue = formData.structure[field.id] || '';
+                              } else {
+                                const fieldKey = `structure${field.id.charAt(0).toUpperCase() + field.id.slice(1)}`;
+                                formValue = formData ? formData[fieldKey] || formData[field.id] || '' : '';
+                              }
+                            } else {
+                              formValue = formData ? formData[field.id] || '' : '';
+                            }
+                          } else {
+                            formValue = formData && formData[field.id] ? formData[field.id] : '';
+                          }
+                          
+                          // Copier la valeur si elle existe
+                          if (formValue) {
+                            onCopyValue(fieldPath, formValue);
+                          }
+                        });
+                      }}
+                      title="Copier toutes les valeurs du formulaire"
+                    >
+                      ⏬ Tout copier
+                    </button>
+                  )}
+                </th>
                 <th className={styles.columnFinal}>Valeur finale</th>
               </tr>
             </thead>

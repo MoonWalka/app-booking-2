@@ -454,8 +454,11 @@ export const useConcertListData = () => {
 
   // Fonction pour vérifier si un concert a un formulaire associé
   const hasForm = useCallback((concertId) => {
+    const concert = concerts.find(c => c.id === concertId);
     return concertsWithForms.includes(concertId) || 
-           concerts.find(c => c.id === concertId)?.formId !== undefined;
+           concert?.formId !== undefined ||
+           concert?.hasFormSubmission === true ||
+           concert?.lastFormSubmissionId !== undefined;
   }, [concerts, concertsWithForms]);
 
   // Fonction pour vérifier si un concert a un formulaire non validé

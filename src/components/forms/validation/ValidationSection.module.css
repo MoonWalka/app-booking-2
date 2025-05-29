@@ -106,6 +106,7 @@
 
 .columnAction {
   width: 10%;
+  text-align: center;
 }
 
 .columnFinal {
@@ -133,6 +134,26 @@
 
 .infoValue {
   font-family: var(--tc-font-monospace);
+}
+
+.copyAllButton {
+  background-color: var(--tc-color-primary);
+  color: var(--tc-text-light);
+  border: none;
+  padding: var(--tc-space-1) var(--tc-space-2);
+  border-radius: var(--tc-radius-sm);
+  font-size: var(--tc-font-size-sm);
+  cursor: pointer;
+  transition: all var(--tc-transition-default);
+}
+
+.copyAllButton:hover {
+  background-color: var(--tc-primary-color-dark);
+  transform: translateY(-1px);
+}
+
+.copyAllButton:active {
+  transform: translateY(0);
 }
 
 /* Responsive adaptations */

@@ -119,10 +119,14 @@ const useGenericEntityForm = (formConfig = {}, options = {}) => {
     onSuccess: (data, action) => {
       if (!isMountedRef.current) return;
       if (action === 'create' || action === 'update') {
+        console.log("[useGenericEntityForm] onSuccess appelé dans useGenericAction", { data, action });
         setAutoSaveStatus('saved');
         setIsDirty(false);
         setOriginalData(formData);
-        if (onSuccessRef.current) onSuccessRef.current(data, action);
+        if (onSuccessRef.current) {
+          console.log("[useGenericEntityForm] Appel de onSuccessRef.current");
+          onSuccessRef.current(data, action);
+        }
         if (resetOnSuccess) handleResetRef.current();
         if (redirectOnSuccess) navigate(redirectOnSuccess.replace(':id', data.id));
       }

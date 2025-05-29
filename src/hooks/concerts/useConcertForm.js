@@ -62,8 +62,8 @@ export const useConcertForm = (concertId) => {
   }, []);
   
   // Callbacks pour les opérations réussies ou en erreur
-  const onSuccessCallback = useCallback((savedId, savedData, action) => {
-    console.log("[useConcertForm] onSuccessCallback appelé", { savedId, savedData, action });
+  const onSuccessCallback = useCallback((data, action) => {
+    console.log("[useConcertForm] onSuccessCallback appelé", { data, action });
     
     // Si c'est un chargement initial (getById), on ne fait rien
     if (action === 'getById' || action === 'load') {
@@ -74,8 +74,8 @@ export const useConcertForm = (concertId) => {
     // Si c'est une création ou mise à jour, on affiche le message et on redirige
     if (action === 'create' || action === 'update') {
       const message = action === 'create'
-        ? `Le concert ${savedData.titre || ''} a été créé avec succès`
-        : `Le concert ${savedData.titre || ''} a été mis à jour avec succès`;
+        ? `Le concert ${data.titre || ''} a été créé avec succès`
+        : `Le concert ${data.titre || ''} a été mis à jour avec succès`;
       
       console.log("[useConcertForm] Affichage du message de succès:", message);
       showSuccessToast(message);

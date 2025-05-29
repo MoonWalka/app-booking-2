@@ -23,6 +23,10 @@ import ConcertsStatsCards from '@/components/concerts/sections/ConcertsStatsCard
 // Import styles
 import styles from './ConcertsList.module.css';
 
+// 🔧 CONTRÔLE DES OUTILS DE DIAGNOSTIC
+// Changer cette valeur à true pour réactiver les outils de diagnostic
+const SHOW_DIAGNOSTIC_TOOLS = false;
+
 /**
  * ConcertsList component displays a filterable, searchable list of concerts
  * with pagination support
@@ -119,11 +123,15 @@ const ConcertsList = () => {
   return (
     <div className={styles.tableContainer}>
       {/* Moniteurs de performance en mode développement */}
-      <PerformanceMonitor enabled={process.env.NODE_ENV === 'development'} />
-      <UnifiedDebugDashboard enabled={process.env.NODE_ENV === 'development'} />
+      {SHOW_DIAGNOSTIC_TOOLS && (
+        <>
+          <PerformanceMonitor enabled={process.env.NODE_ENV === 'development'} />
+          <UnifiedDebugDashboard enabled={process.env.NODE_ENV === 'development'} />
+        </>
+      )}
       
       {/* Bouton de diagnostic (visible uniquement en développement) */}
-      {process.env.NODE_ENV === 'development' && (
+      {process.env.NODE_ENV === 'development' && SHOW_DIAGNOSTIC_TOOLS && (
         <div className={styles.debugButtonContainer}>
           <button 
             onClick={activateDiagnostic}

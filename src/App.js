@@ -38,6 +38,10 @@ import ProfilerMonitor from './components/debug/ProfilerMonitor';
 import ProgrammateurReferencesDebug from '@/components/debug/ProgrammateurReferencesDebug';
 import StructuresAuditDebug from '@/components/debug/StructuresAuditDebug';
 
+// 🔧 CONTRÔLE DES OUTILS DE DIAGNOSTIC
+// Changer cette valeur à true pour réactiver les outils de diagnostic
+const SHOW_DIAGNOSTIC_TOOLS = false;
+
 // Import de l'outil de diagnostic en mode développement uniquement
 if (process.env.NODE_ENV === 'development') {
   import('./diagnostic').catch(err => console.error('Erreur lors du chargement du diagnostic:', err));
@@ -372,8 +376,8 @@ function App() {
                   </Route>
                 </Routes>
               </Suspense>
-              {process.env.NODE_ENV === 'development' && <UnifiedDebugDashboard />}
-              {process.env.NODE_ENV === 'development' && <ProfilerMonitor />}
+              {process.env.NODE_ENV === 'development' && SHOW_DIAGNOSTIC_TOOLS && <UnifiedDebugDashboard />}
+              {process.env.NODE_ENV === 'development' && SHOW_DIAGNOSTIC_TOOLS && <ProfilerMonitor />}
             </ModalProvider>
           </ParametresProvider>
         </AuthProvider>

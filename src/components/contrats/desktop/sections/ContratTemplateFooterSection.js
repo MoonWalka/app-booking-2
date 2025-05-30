@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 import CollapsibleSection from './CollapsibleSection';
-import VariablesPanel from './VariablesPanel';
 import styles from './ContratTemplateFooterSection.module.css';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -18,11 +17,6 @@ const ContratTemplateFooterSection = ({
   setFooterTopMargin,
   footerCollapsed,
   toggleCollapse,
-  footerVarsOpen,
-  footerVarsRef,
-  headerFooterVariables,
-  toggleDropdown,
-  insertVariable,
   previewMode
 }) => {
   const quillRef = useRef();
@@ -78,14 +72,6 @@ const ContratTemplateFooterSection = ({
         <div className={styles.editorContainer}>
           <div className={styles.editorHeader}>
             <label htmlFor="footerContent">Contenu du pied de page</label>
-            <VariablesPanel
-              variables={headerFooterVariables}
-              targetId="footerContent"
-              buttonRef={footerVarsRef}
-              onSelectVariable={(variable, targetId) => 
-                insertVariable(variable, targetId)
-              }
-            />
           </div>
           
           {/* Dans un cas réel, on utiliserait ReactQuill ici */}

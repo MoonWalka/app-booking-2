@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 import CollapsibleSection from './CollapsibleSection';
-import VariablesPanel from './VariablesPanel';
 import Button from '@ui/Button';
 import styles from './ContratTemplateHeaderSection.module.css';
 import ReactQuill from 'react-quill';
@@ -22,11 +21,6 @@ const ContratTemplateHeaderSection = ({
   handleRemoveLogo,
   headerCollapsed,
   toggleCollapse,
-  headerVarsOpen,
-  headerVarsRef,
-  headerFooterVariables,
-  toggleDropdown,
-  insertVariable,
   previewMode
 }) => {
   const quillRef = useRef();
@@ -119,14 +113,6 @@ const ContratTemplateHeaderSection = ({
         <div className={styles.editorContainer}>
           <div className={styles.editorHeader}>
             <label htmlFor="headerContent">Contenu de l'en-tête</label>
-            <VariablesPanel
-              variables={headerFooterVariables}
-              targetId="headerContent"
-              buttonRef={headerVarsRef}
-              onSelectVariable={(variable, targetId) => 
-                insertVariable(variable, targetId)
-              }
-            />
           </div>
           
           {/* Dans un cas réel, on utiliserait ReactQuill ici */}

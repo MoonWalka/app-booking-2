@@ -115,6 +115,27 @@ const formatSafeDate = (dateValue, formatString = "dd/MM/yyyy") => {
  * Prépare toutes les variables pour le remplacement dans le contrat
  */
 const prepareContractVariables = (safeData) => {
+  // Fonction helper pour convertir un montant en lettres
+  const montantEnLettres = (montant) => {
+    if (!montant) return 'Non spécifié';
+    const montantNum = parseFloat(montant);
+    if (isNaN(montantNum)) return 'Non spécifié';
+    
+    // Conversion simple pour l'instant
+    // Une vraie implémentation nécessiterait une librairie spécialisée
+    const parties = montantNum.toFixed(2).split('.');
+    const euros = parseInt(parties[0]);
+    const centimes = parseInt(parties[1]);
+    
+    // Conversion basique - à améliorer avec une vraie librairie
+    let resultat = `${euros} euro${euros > 1 ? 's' : ''}`;
+    if (centimes > 0) {
+      resultat += ` et ${centimes} centime${centimes > 1 ? 's' : ''}`;
+    }
+    
+    return resultat;
+  };
+  
   return {
     // Variables programmateur
     'programmateur_nom': safeData.programmateur.nom || 'Non spécifié',
@@ -124,6 +145,9 @@ const prepareContractVariables = (safeData) => {
     'programmateur_telephone': safeData.programmateur.telephone || 'Non spécifié',
     'programmateur_adresse': safeData.programmateur.adresse || 'Non spécifiée',
     'programmateur_siret': safeData.programmateur.siret || 'Non spécifié',
+    'programmateur_numero_intracommunautaire': safeData.programmateur.numeroIntracommunautaire || safeData.programmateur.numero_intracommunautaire || 'Non spécifié',
+    'programmateur_representant': safeData.programmateur.representant || safeData.programmateur.nom || 'Non spécifié',
+    'programmateur_qualite_representant': safeData.programmateur.qualiteRepresentant || safeData.programmateur.qualite_representant || safeData.programmateur.fonction || 'Non spécifiée',
     
     // Variables artiste
     'artiste_nom': safeData.artiste.nom || 'Non spécifié',
@@ -137,11 +161,12 @@ const prepareContractVariables = (safeData) => {
     'concert_montant': safeData.concert.montant 
       ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(safeData.concert.montant) 
       : 'Non spécifié',
+    'concert_montant_lettres': montantEnLettres(safeData.concert.montant),
     
     // Variables lieu
     'lieu_nom': safeData.lieu.nom || 'Non spécifié',
     'lieu_adresse': safeData.lieu.adresse || 'Non spécifiée',
-    'lieu_code_postal': safeData.lieu.codePostal || 'Non spécifié',
+    'lieu_code_postal': safeData.lieu.codePostal || safeData.lieu.code_postal || 'Non spécifié',
     'lieu_ville': safeData.lieu.ville || 'Non spécifiée',
     'lieu_capacite': safeData.lieu.capacite || 'Non spécifiée',
     

@@ -349,24 +349,78 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
   // Fonction pour préparer les variables du contrat
   const prepareContractVariables = () => {
     console.log("Préparation des variables du contrat");
+    
+    // Fonction helper pour convertir un montant en lettres
+    const montantEnLettres = (montant) => {
+      // Fonction simplifiée, à améliorer pour une conversion complète
+      if (!montant) return 'Non spécifié';
+      const montantNum = parseFloat(montant);
+      if (isNaN(montantNum)) return 'Non spécifié';
+      
+      // Pour l'instant, on retourne une version simple
+      // Une vraie implémentation nécessiterait une librairie de conversion nombre->lettres
+      return `${montantNum.toFixed(2).replace('.', ' euros ')} euros`;
+    };
+    
     return {
+      // Variables programmateur
+      programmateur_nom: programmateur?.nom || 'Non spécifié',
+      programmateur_prenom: programmateur?.prenom || '',
+      programmateur_structure: programmateur?.structure || 'Non spécifiée',
+      programmateur_email: programmateur?.email || 'Non spécifié',
+      programmateur_telephone: programmateur?.telephone || 'Non spécifié',
+      programmateur_siret: programmateur?.siret || 'Non spécifié',
+      programmateur_adresse: programmateur?.adresse || 'Non spécifiée',
+      programmateur_numero_intracommunautaire: programmateur?.numeroIntracommunautaire || programmateur?.numero_intracommunautaire || 'Non spécifié',
+      programmateur_representant: programmateur?.representant || programmateur?.nom || 'Non spécifié',
+      programmateur_qualite_representant: programmateur?.qualiteRepresentant || programmateur?.qualite_representant || programmateur?.fonction || 'Non spécifiée',
+      
+      // Variables artiste
+      artiste_nom: artiste?.nom || 'Non spécifié',
+      artiste_genre: artiste?.genre || 'Non spécifié',
+      artiste_contact: artiste?.contact || 'Non spécifié',
+      
+      // Variables concert
+      concert_titre: concert?.titre || 'Non spécifié',
+      concert_date: concert?.date ? new Date(concert.date.seconds * 1000).toLocaleDateString('fr-FR') : 'Non spécifiée',
+      concert_heure: concert?.heure || 'Non spécifiée',
+      concert_montant: concert?.montant 
+        ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(concert.montant)
+        : 'Non spécifié',
+      concert_montant_lettres: montantEnLettres(concert?.montant),
+      
+      // Variables lieu
+      lieu_nom: lieu?.nom || 'Non spécifié',
+      lieu_adresse: lieu?.adresse || 'Non spécifiée',
+      lieu_code_postal: lieu?.codePostal || lieu?.code_postal || 'Non spécifié',
+      lieu_ville: lieu?.ville || 'Non spécifiée',
+      lieu_capacite: lieu?.capacite || 'Non spécifiée',
+      
+      // Variables de date
+      date_jour: new Date().getDate().toString(),
+      date_mois: new Date().toLocaleDateString('fr-FR', { month: 'long' }),
+      date_annee: new Date().getFullYear().toString(),
+      date_complete: new Date().toLocaleDateString('fr-FR', { 
+        day: 'numeric', 
+        month: 'long', 
+        year: 'numeric' 
+      }),
+      
+      // Variables anciennes pour compatibilité (à supprimer plus tard)
       nomProgrammateur: programmateur?.nom || 'Non spécifié',
       prenomProgrammateur: programmateur?.prenom || '',
       adresseProgrammateur: programmateur?.adresse || 'Non spécifiée',
       emailProgrammateur: programmateur?.email || 'Non spécifié',
       telephoneProgrammateur: programmateur?.telephone || 'Non spécifié',
       structureProgrammateur: programmateur?.structure || 'Non spécifiée',
-      
       nomLieu: lieu?.nom || 'Non spécifié',
       adresseLieu: lieu?.adresse || 'Non spécifiée',
       capaciteLieu: lieu?.capacite || 'Non spécifiée',
       villeLieu: lieu?.ville || 'Non spécifiée',
       codePostalLieu: lieu?.codePostal || 'Non spécifié',
-      
       nomArtiste: artiste?.nom || 'Non spécifié',
       genreArtiste: artiste?.genre || 'Non spécifié',
       contactArtiste: artiste?.contact || 'Non spécifié',
-      
       titreConcert: concert?.titre || 'Non spécifié',
       dateConcert: concert?.date ? new Date(concert.date.seconds * 1000).toLocaleDateString('fr-FR') : 'Non spécifiée',
       heureConcert: concert?.heure || 'Non spécifiée',

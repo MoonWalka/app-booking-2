@@ -6,8 +6,13 @@
  */
 export const bodyVariables = [
   "programmateur_nom", "programmateur_structure", "programmateur_email", "programmateur_siret",
+  "programmateur_numero_intracommunautaire",
+  "programmateur_adresse",
+  "programmateur_representant",
+  "programmateur_qualite_representant",
   "artiste_nom", "artiste_genre",
   "concert_titre", "concert_date", "concert_montant",
+  "concert_montant_lettres",
   "lieu_nom", "lieu_adresse", "lieu_code_postal", "lieu_ville", "lieu_capacite",
   "date_jour", "date_mois", "date_annee", "date_complete"
 ];
@@ -17,7 +22,12 @@ export const bodyVariables = [
  * Sous-ensemble des variables complètes, adapté pour ces sections
  */
 export const headerFooterVariables = [
-  "programmateur_nom", "programmateur_structure", "programmateur_email", "programmateur_siret", "artiste_nom"
+  "programmateur_nom", "programmateur_structure", "programmateur_email", "programmateur_siret",
+  "programmateur_numero_intracommunautaire",
+  "programmateur_adresse",
+  "programmateur_representant",
+  "programmateur_qualite_representant",
+  "artiste_nom"
 ];
 
 /**
@@ -26,6 +36,8 @@ export const headerFooterVariables = [
  */
 export const signatureVariables = [
   "programmateur_nom", "programmateur_structure", "artiste_nom", "lieu_ville",
+  "programmateur_representant",
+  "programmateur_qualite_representant",
   "date_jour", "date_mois", "date_annee", "date_complete"
 ];
 
@@ -56,11 +68,16 @@ export const replaceVariablesWithMockData = (content) => {
     .replace(/{programmateur_structure}/g, 'Association Culturelle XYZ')
     .replace(/{programmateur_email}/g, 'contact@asso-xyz.fr')
     .replace(/{programmateur_siret}/g, '123 456 789 00012')
+    .replace(/{programmateur_numero_intracommunautaire}/g, 'FR12345678901')
+    .replace(/{programmateur_adresse}/g, '456 Rue des Spectacles, 75002 Paris')
+    .replace(/{programmateur_representant}/g, 'Marie Martin')
+    .replace(/{programmateur_qualite_representant}/g, 'Présidente')
     .replace(/{artiste_nom}/g, 'Les Rockeurs du Dimanche')
     .replace(/{artiste_genre}/g, 'Rock Alternatif')
     .replace(/{concert_titre}/g, 'Concert de printemps')
     .replace(/{concert_date}/g, '15/05/2025')
     .replace(/{concert_montant}/g, '800')
+    .replace(/{concert_montant_lettres}/g, 'Huit cents euros')
     .replace(/{lieu_nom}/g, 'Salle des fêtes')
     .replace(/{lieu_adresse}/g, '123 rue Principale')
     .replace(/{lieu_code_postal}/g, '75001')

@@ -4,7 +4,7 @@ import Alert from '@/components/ui/Alert';
 import styles from './ConcertForm.module.css';
 
 // Hooks personnalisés
-import useConcertForm from '@/hooks/concerts/useConcertForm';
+import useConcertFormWithRelations from '@/hooks/concerts/useConcertFormWithRelations';
 import useConcertDelete from '@/hooks/concerts/useConcertDelete';
 import { useEntitySearch } from '@/hooks/common';
 
@@ -28,8 +28,8 @@ const ConcertFormDesktop = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   
-  // Hook optimisé pour gérer état, chargement, soumission
-  const formHook = useConcertForm(id);
+  // Hook optimisé pour gérer état, chargement, soumission avec relations
+  const formHook = useConcertFormWithRelations(id);
   
   // Hook optimisé pour gérer la suppression
   const {
@@ -49,17 +49,8 @@ const ConcertFormDesktop = () => {
     programmateur,
     handleLieuChange,
     handleArtisteChange,
-    setFormData
+    handleProgrammateurChange
   } = formHook;
-
-  // Gestion programmateur via optimized hook
-  const handleProgrammateurChange = useCallback((prog) => {
-    if (prog) {
-      setFormData(prev => ({ ...prev, programmateurId: prog.id, programmateurNom: prog.nom }));
-    } else {
-      setFormData(prev => ({ ...prev, programmateurId: null, programmateurNom: '' }));
-    }
-  }, [setFormData]);
 
   const removeLieu = useCallback(() => {
     handleLieuChange(null);
@@ -183,7 +174,7 @@ const ConcertFormDesktop = () => {
               setShowLieuResults={setShowLieuResults}
               isSearchingLieux={isSearchingLieux}
               lieuDropdownRef={lieuDropdownRef}
-              selectedLieu={formData.lieuId ? lieu : null}
+              selectedLieu={lieu || (formData.lieuId ? { id: formData.lieuId, nom: formData.lieuNom || 'Lieu sélectionné' } : null)}
               handleSelectLieu={handleLieuChange}
               handleRemoveLieu={removeLieu}
               handleCreateLieu={handleCreateLieu}
@@ -197,7 +188,7 @@ const ConcertFormDesktop = () => {
               setShowProgResults={setShowProgResults}
               isSearchingProgs={isSearchingProgs}
               progDropdownRef={progDropdownRef}
-              selectedProgrammateur={formData.programmateurId ? programmateur : null}
+              selectedProgrammateur={programmateur || (formData.programmateurId ? { id: formData.programmateurId, nom: formData.programmateurNom || 'Programmateur sélectionné' } : null)}
               handleSelectProgrammateur={handleProgrammateurChange}
               handleRemoveProgrammateur={handleRemoveProgrammateurCallback}
               handleCreateProgrammateur={handleCreateProgrammateur}
@@ -211,7 +202,7 @@ const ConcertFormDesktop = () => {
               setShowArtisteResults={setShowArtisteResults}
               isSearchingArtistes={isSearchingArtistes}
               artisteDropdownRef={artisteDropdownRef}
-              selectedArtiste={formData.artisteId ? artiste : null}
+              selectedArtiste={artiste || (formData.artisteId ? { id: formData.artisteId, nom: formData.artisteNom || 'Artiste sélectionné' } : null)}
               handleSelectArtiste={handleArtisteChange}
               handleRemoveArtiste={handleRemoveArtisteCallback}
               handleCreateArtiste={handleCreateArtiste}

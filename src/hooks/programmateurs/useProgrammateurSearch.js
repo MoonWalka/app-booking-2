@@ -8,7 +8,7 @@
 import { useCallback, useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 // import { useGenericEntitySearch } from '@/hooks/common'; // Retiré car non utilisé dans cette version simplifiée
-import { collection, getDocs, db } from '@/services/firebase-service';
+import { collection, getDocs, db, doc, getDoc } from '@/services/firebase-service';
 import { debugLog } from '@/utils/logUtils';
 
 /**
@@ -54,7 +54,7 @@ export const useProgrammateurSearch = ({
   const [searchFilters, setSearchFilters] = useState({});
   const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
   
-  // 🔧 FIX: Chargement initial simple et direct
+  // 🔧 FIX: Chargement initial avec structures associées
   useEffect(() => {
     const loadProgrammateurs = async () => {
       if (allProgrammateurs.length > 0) return; // Éviter les rechargements
@@ -64,15 +64,35 @@ export const useProgrammateurSearch = ({
         debugLog('[useProgrammateurSearch] Chargement des programmateurs', 'info');
         
         const snapshot = await getDocs(collection(db, 'programmateurs'));
-        const programmateurs = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data(),
-          // Format d'affichage standardisé
-          displayName: doc.data().nom ? 
-            `${doc.data().prenom || ''} ${doc.data().nom}${doc.data().structure ? ` (${doc.data().structure})` : ''}` : 
-            'Programmateur sans nom',
-          fullName: `${doc.data().prenom || ''} ${doc.data().nom || ''}`
-        }));
+        const programmateurs = await Promise.all(
+          snapshot.docs.map(async (docSnap) => {
+            const data = docSnap.data();
+            let structureData = null;
+            
+            // Charger la structure si elle existe
+            if (data.structureId) {
+              try {
+                const structureDoc = await getDoc(doc(db, 'structures', data.structureId));
+                if (structureDoc.exists()) {
+                  structureData = { id: structureDoc.id, ...structureDoc.data() };
+                }
+              } catch (err) {
+                console.error(`Erreur lors du chargement de la structure ${data.structureId}:`, err);
+              }
+            }
+            
+            return {
+              id: docSnap.id,
+              ...data,
+              structure: structureData,
+              // Format d'affichage standardisé
+              displayName: data.nom ? 
+                `${data.prenom || ''} ${data.nom}${structureData ? ` (${structureData.nom})` : ''}` : 
+                'Programmateur sans nom',
+              fullName: `${data.prenom || ''} ${data.nom || ''}`
+            };
+          })
+        );
         
         setAllProgrammateurs(programmateurs);
         debugLog(`[useProgrammateurSearch] ${programmateurs.length} programmateurs chargés`, 'info');

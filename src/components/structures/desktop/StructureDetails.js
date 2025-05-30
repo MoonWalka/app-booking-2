@@ -11,6 +11,7 @@ import StructureGeneralInfo from './sections/StructureGeneralInfo';
 import StructureContactSection from './sections/StructureContactSection';
 import StructureAddressSection from './sections/StructureAddressSection';
 import StructureAssociationsSection from './sections/StructureAssociationsSection';
+import StructureConcertsSection from './sections/StructureConcertsSection';
 import StructureNotesSection from './sections/StructureNotesSection';
 import StructureDeleteModal from './sections/StructureDeleteModal';
 
@@ -29,6 +30,8 @@ const StructureDetails = () => {
     error,
     programmateurs,
     loadingProgrammateurs,
+    concerts,
+    loadingConcerts,
     formatValue
   } = useStructureDetails(id);
   
@@ -97,6 +100,12 @@ const StructureDetails = () => {
         <StructureAssociationsSection 
           programmateurs={programmateurs}
           loadingProgrammateurs={loadingProgrammateurs} 
+        />
+
+        {/* Associated Concerts Section */}
+        <StructureConcertsSection 
+          concerts={concerts}
+          loadingConcerts={loadingConcerts} 
         />
 
         {/* Notes Section - if present */}

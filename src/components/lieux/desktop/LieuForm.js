@@ -17,10 +17,14 @@ import LieuAddressSection from './sections/LieuAddressSection';
 import LieuOrganizerSection from './sections/LieuOrganizerSection';
 import LieuContactSection from './sections/LieuContactSection';
 import LieuInfoSection from './sections/LieuInfoSection';
+import DeleteLieuModal from './sections/DeleteLieuModal';
 
 const LieuForm = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  
+  // État local pour gérer la modal de suppression
+  const [showDeleteModal, setShowDeleteModal] = React.useState(false);
   
   // MIGRATION: Utilisation du hook optimisé
   const {
@@ -40,6 +44,22 @@ const LieuForm = () => {
     handleDeleteLieu
   } = useLieuDelete(() => navigate('/lieux'));
 
+  // Fonction pour ouvrir la modal
+  const handleOpenDeleteModal = React.useCallback(() => {
+    setShowDeleteModal(true);
+  }, []);
+
+  // Fonction pour fermer la modal
+  const handleCloseDeleteModal = React.useCallback(() => {
+    setShowDeleteModal(false);
+  }, []);
+
+  // Fonction pour confirmer la suppression
+  const handleConfirmDelete = React.useCallback(async () => {
+    await handleDeleteLieu(id);
+    setShowDeleteModal(false);
+  }, [handleDeleteLieu, id]);
+
   if (loading && id !== 'nouveau') {
     return <Spinner message="Chargement du lieu..." contentOnly={true} />;
   }
@@ -54,7 +74,7 @@ const LieuForm = () => {
         navigate={navigate}
         isSubmitting={submitting || loading || isDeleting}
         onSave={handleSubmit}
-        onDelete={id !== 'nouveau' ? () => handleDeleteLieu(id) : undefined}
+        onDelete={id !== 'nouveau' ? handleOpenDeleteModal : undefined}
         canSave={true}
       />
 
@@ -110,6 +130,16 @@ const LieuForm = () => {
           )}
         </div>
       </form>
+
+      {/* Delete confirmation modal */}
+      <DeleteLieuModal
+        show={showDeleteModal}
+        onClose={handleCloseDeleteModal}
+        onConfirm={handleConfirmDelete}
+        lieu={lieu}
+        isDeleting={isDeleting}
+        hasAssociatedConcerts={false}
+      />
     </div>
   );
 };

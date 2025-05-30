@@ -60,6 +60,14 @@ const useStructureDetails = (id) => {
         idField: 'lieuxAssocies',
         type: 'one-to-many',
         essential: false // Les lieux peuvent être chargés à la demande
+      },
+      {
+        name: 'concerts',
+        collection: 'concerts',
+        type: 'query',
+        queryField: 'structureId',
+        queryValue: id,
+        essential: true // Les concerts sont importants pour l'affichage
       }
     ],
     
@@ -181,7 +189,9 @@ const useStructureDetails = (id) => {
     programmateurs: detailsHook.relatedData?.programmateurs || [],
     loadingProgrammateurs: detailsHook.loadingRelated?.programmateurs || false,
     lieux: detailsHook.relatedData?.lieux || [],
-    loadingLieux: detailsHook.loadingRelated?.lieux || false
+    loadingLieux: detailsHook.loadingRelated?.lieux || false,
+    concerts: detailsHook.relatedData?.concerts || [],
+    loadingConcerts: detailsHook.loadingRelated?.concerts || false
   };
 };
 

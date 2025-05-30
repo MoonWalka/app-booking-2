@@ -463,9 +463,19 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
       programmateur_email: programmateur?.email || 'Non spécifié',
       programmateur_telephone: programmateur?.telephone || 'Non spécifié',
       programmateur_siret: structureData?.siret || programmateur?.siret || 'Non spécifié',
-      programmateur_adresse: structureData?.adresse ? 
-        `${structureData.adresse.adresse || ''} ${structureData.adresse.codePostal || ''} ${structureData.adresse.ville || ''}`.trim() 
-        : programmateur?.adresse || 'Non spécifiée',
+      programmateur_adresse: (() => {
+        // Si on a une structure avec des données d'adresse
+        if (structureData?.adresseLieu && typeof structureData.adresseLieu === 'object') {
+          const addr = structureData.adresseLieu;
+          return `${addr.adresse || ''} ${addr.codePostal || ''} ${addr.ville || ''}`.trim() || 'Non spécifiée';
+        }
+        // Si l'adresse est directement une chaîne dans structureData
+        else if (structureData?.adresse && typeof structureData.adresse === 'string') {
+          return structureData.adresse;
+        }
+        // Sinon utiliser l'adresse du programmateur
+        return programmateur?.adresse || 'Non spécifiée';
+      })(),
       programmateur_numero_intracommunautaire: structureData?.numeroIntracommunautaire || programmateur?.numeroIntracommunautaire || programmateur?.numero_intracommunautaire || 'Non spécifié',
       programmateur_representant: programmateur?.representant || programmateur?.nom || 'Non spécifié',
       programmateur_qualite_representant: programmateur?.qualiteRepresentant || programmateur?.qualite_representant || programmateur?.fonction || 'Non spécifiée',

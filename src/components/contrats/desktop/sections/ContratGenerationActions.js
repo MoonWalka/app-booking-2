@@ -1,5 +1,5 @@
 // src/components/contrats/desktop/sections/ContratGenerationActions.js
-import React from 'react';
+import React, { useState } from 'react';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import { useNavigate } from 'react-router-dom';
 import Button from '@ui/Button';
@@ -19,10 +19,75 @@ const ContratGenerationActions = ({
   pdfUrl,
   setPdfUrl,
   saveGeneratedContract,
-  showSuccess
+  showSuccess,
+  prepareContractVariables
 }) => {
   const navigate = useNavigate();
+  const [showPreview, setShowPreview] = useState(false);
+  const [editableContent, setEditableContent] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+  const [readyToGenerate, setReadyToGenerate] = useState(false);
+  
   const isValid = validateDataBeforeGeneration();
+
+  // Fonction pour remplacer les variables dans le template
+  const replaceVariables = (content, variables) => {
+    if (!content) return '';
+    
+    let processedContent = content;
+    Object.entries(variables).forEach(([key, value]) => {
+      const regex = new RegExp(`\\[${key}\\]`, 'g');
+      processedContent = processedContent.replace(regex, value || '');
+    });
+    return processedContent;
+  };
+
+  // Générer l'aperçu HTML
+  const handleGeneratePreview = () => {
+    if (!isValid) return;
+    
+    const variables = prepareContractVariables ? prepareContractVariables() : {};
+    
+    // Combiner tous les contenus du template
+    let fullContent = '';
+    
+    if (selectedTemplate.headerContent) {
+      fullContent += `<div class="contract-header">${selectedTemplate.headerContent}</div>`;
+    }
+    
+    if (selectedTemplate.titleTemplate) {
+      fullContent += `<h1 class="contract-title">${selectedTemplate.titleTemplate}</h1>`;
+    }
+    
+    if (selectedTemplate.dateTemplate) {
+      fullContent += `<div class="contract-date">${selectedTemplate.dateTemplate}</div>`;
+    }
+    
+    fullContent += `<div class="contract-body">${selectedTemplate.bodyContent}</div>`;
+    
+    if (selectedTemplate.signatureTemplate) {
+      fullContent += `<div class="contract-signature">${selectedTemplate.signatureTemplate}</div>`;
+    }
+    
+    if (selectedTemplate.footerContent) {
+      fullContent += `<div class="contract-footer">${selectedTemplate.footerContent}</div>`;
+    }
+    
+    // Remplacer toutes les variables
+    const processedContent = replaceVariables(fullContent, variables);
+    setEditableContent(processedContent);
+    setShowPreview(true);
+  };
+
+  // Activer/désactiver le mode édition
+  const toggleEdit = () => {
+    setIsEditing(!isEditing);
+  };
+
+  // Préparer pour la génération finale
+  const handlePrepareGeneration = () => {
+    setReadyToGenerate(true);
+  };
 
   return (
     <div className={styles.actionsContainer}>
@@ -32,8 +97,87 @@ const ContratGenerationActions = ({
         </Alert>
       )}
       
-      <div className={styles.buttonsContainer}>
-        {isValid ? (
+      {/* Étape 1: Générer l'aperçu */}
+      {!showPreview && (
+        <div className={styles.buttonsContainer}>
+          {isValid ? (
+            <Button 
+              variant="primary"
+              onClick={handleGeneratePreview}
+            >
+              <i className="bi bi-eye me-2"></i>
+              Générer l'aperçu
+            </Button>
+          ) : (
+            <Button variant="warning" disabled>
+              <i className="bi bi-exclamation-triangle me-2"></i>
+              Sélectionnez un modèle pour continuer
+            </Button>
+          )}
+        </div>
+      )}
+
+      {/* Étape 2: Aperçu et édition */}
+      {showPreview && !readyToGenerate && (
+        <div className={styles.previewContainer}>
+          <div className={styles.previewHeader}>
+            <h5>Aperçu du contrat</h5>
+            <div className={styles.previewActions}>
+              <Button 
+                variant="outline-secondary" 
+                size="sm"
+                onClick={toggleEdit}
+              >
+                <i className={`bi ${isEditing ? 'bi-check' : 'bi-pencil'} me-2`}></i>
+                {isEditing ? 'Valider les modifications' : 'Modifier'}
+              </Button>
+            </div>
+          </div>
+          
+          <div className={styles.previewContent}>
+            {isEditing ? (
+              <div 
+                className={styles.editableContent}
+                contentEditable
+                dangerouslySetInnerHTML={{ __html: editableContent }}
+                onBlur={(e) => setEditableContent(e.currentTarget.innerHTML)}
+                suppressContentEditableWarning={true}
+              />
+            ) : (
+              <div 
+                className={styles.previewHtml}
+                dangerouslySetInnerHTML={{ __html: editableContent }}
+              />
+            )}
+          </div>
+
+          <div className={styles.previewFooter}>
+            <Button 
+              variant="outline-secondary"
+              onClick={() => {
+                setShowPreview(false);
+                setIsEditing(false);
+              }}
+            >
+              <i className="bi bi-arrow-left me-2"></i>
+              Retour au choix du modèle
+            </Button>
+            
+            <Button 
+              variant="success"
+              onClick={handlePrepareGeneration}
+              disabled={isEditing}
+            >
+              <i className="bi bi-check-circle me-2"></i>
+              Valider et générer le PDF
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {/* Étape 3: Génération du PDF */}
+      {readyToGenerate && (
+        <div className={styles.buttonsContainer}>
           <PDFDownloadLink
             document={
               <ContratPDFWrapper 
@@ -44,6 +188,7 @@ const ContratGenerationActions = ({
                 artisteData={artiste}
                 lieuData={lieu}
                 entrepriseInfo={entrepriseInfo}
+                editedContent={editableContent}
               />
             }
             fileName={`Contrat_${concert.titre || 'Concert'}.pdf`}
@@ -64,7 +209,7 @@ const ContratGenerationActions = ({
                 return (
                   <>
                     <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                    Préparation du PDF...
+                    Génération du PDF en cours...
                   </>
                 );
               }
@@ -90,29 +235,13 @@ const ContratGenerationActions = ({
               return (
                 <>
                   <i className="bi bi-file-pdf me-2"></i>
-                  {contratId ? "Régénérer et télécharger" : "Générer et télécharger"}
+                  PDF généré avec succès !
                 </>
               );
             }}
           </PDFDownloadLink>
-        ) : (
-          <Button variant="warning" disabled>
-            <i className="bi bi-exclamation-triangle me-2"></i>
-            Données insuffisantes pour générer le contrat
-          </Button>
-        )}
-        
-        {contratId && (
-          <Button 
-            variant="outline-info" 
-            className="ms-2"
-            onClick={() => navigate(`/contrats/${contratId}`)}
-          >
-            <i className="bi bi-eye me-2"></i>
-            Voir le contrat généré
-          </Button>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

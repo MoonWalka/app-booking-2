@@ -5,38 +5,184 @@
  */
 
 .actionsContainer {
-  margin-top: var(--tc-space-4);
+  margin-top: 20px;
 }
 
 .buttonsContainer {
   display: flex;
-  gap: var(--tc-space-3);
-  margin-top: var(--tc-space-3);
-  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
 }
 
 /* Style pour le bouton de téléchargement PDF */
 .pdfDownloadButton {
+  background-color: #28a745;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
   display: inline-flex;
   align-items: center;
-  padding: var(--tc-space-2) var(--tc-space-3);
-  background-color: var(--tc-color-primary);
-  color: white;
-  text-decoration: none;
-  border-radius: var(--tc-radius-base);
-  font-weight: 500;
-  transition: background-color 0.2s ease;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .pdfDownloadButton:hover {
-  background-color: var(--tc-primary-color-dark);
+  background-color: #218838;
   color: white;
-  text-decoration: none;
 }
 
-.pdfDownloadButton:focus {
-  outline: 2px solid var(--tc-color-primary);
-  outline-offset: 2px;
+/* Styles pour l'aperçu du contrat */
+.previewContainer {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  margin-top: 20px;
+  overflow: hidden;
+}
+
+.previewHeader {
+  background-color: #e9ecef;
+  padding: 15px 20px;
+  border-bottom: 1px solid #dee2e6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.previewHeader h5 {
+  margin: 0;
+  color: #495057;
+}
+
+.previewActions {
+  display: flex;
+  gap: 10px;
+}
+
+.previewContent {
+  background-color: white;
+  margin: 20px;
+  padding: 40px;
+  min-height: 400px;
+  max-height: 600px;
+  overflow-y: auto;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+/* Styles pour l'affichage HTML */
+.previewHtml {
+  font-family: 'Times New Roman', serif;
+  font-size: 14px;
+  line-height: 1.8;
+  color: #333;
+}
+
+.previewHtml h1, .previewHtml h2, .previewHtml h3, .previewHtml h4 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.previewHtml p {
+  margin-bottom: 10px;
+  text-align: justify;
+}
+
+.previewHtml ul, .previewHtml ol {
+  margin-left: 20px;
+  margin-bottom: 10px;
+}
+
+/* Styles pour l'éditeur */
+.editableContent {
+  font-family: 'Times New Roman', serif;
+  font-size: 14px;
+  line-height: 1.8;
+  color: #333;
+  min-height: 400px;
+  padding: 10px;
+  border: 2px dashed #0d6efd;
+  background-color: #f8f9fa;
+  outline: none;
+}
+
+.editableContent:focus {
+  background-color: white;
+  border-color: #0a58ca;
+}
+
+/* Styles spécifiques pour les sections du contrat */
+.previewHtml .contract-header,
+.editableContent .contract-header {
+  text-align: center;
+  margin-bottom: 30px;
+  font-weight: bold;
+}
+
+.previewHtml .contract-title,
+.editableContent .contract-title {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  margin: 30px 0;
+  text-transform: uppercase;
+}
+
+.previewHtml .contract-date,
+.editableContent .contract-date {
+  text-align: right;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+.previewHtml .contract-body,
+.editableContent .contract-body {
+  text-align: justify;
+}
+
+.previewHtml .contract-signature,
+.editableContent .contract-signature {
+  margin-top: 50px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.previewHtml .contract-footer,
+.editableContent .contract-footer {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #dee2e6;
+  font-size: 12px;
+  text-align: center;
+  color: #6c757d;
+}
+
+.previewFooter {
+  padding: 20px;
+  background-color: #e9ecef;
+  border-top: 1px solid #dee2e6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Animation de chargement */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.previewContainer {
+  animation: fadeIn 0.3s ease-out;
 }
 
 /* Styles responsive standardisés */

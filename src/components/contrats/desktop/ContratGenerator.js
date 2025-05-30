@@ -39,7 +39,8 @@ const ContratGenerator = ({ concert, programmateur, artiste, lieu }) => {
     toggleDebugInfo,
     resetAlerts,
     showSuccess,
-    setPdfUrl
+    setPdfUrl,
+    prepareContractVariables
   } = useContratGenerator(concert, programmateur, artiste, lieu);
 
   if (loading) {
@@ -102,6 +103,7 @@ const ContratGenerator = ({ concert, programmateur, artiste, lieu }) => {
                 setPdfUrl={setPdfUrl}
                 saveGeneratedContract={saveGeneratedContract}
                 showSuccess={showSuccess}
+                prepareContractVariables={prepareContractVariables}
               />
             </div>
           </>

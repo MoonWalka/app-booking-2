@@ -363,6 +363,15 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
     };
     
     return {
+      // Variables entreprise
+      nom_entreprise: entrepriseInfo?.nom || 'Non spécifié',
+      adresse_entreprise: entrepriseInfo?.adresse || 'Non spécifiée',
+      siret_entreprise: entrepriseInfo?.siret || 'Non spécifié',
+      telephone_entreprise: entrepriseInfo?.telephone || 'Non spécifié',
+      email_entreprise: entrepriseInfo?.email || 'Non spécifié',
+      representant_entreprise: entrepriseInfo?.representant || 'Non spécifié',
+      fonction_representant: entrepriseInfo?.fonctionRepresentant || 'Non spécifiée',
+      
       // Variables programmateur
       programmateur_nom: programmateur?.nom || 'Non spécifié',
       programmateur_prenom: programmateur?.prenom || '',

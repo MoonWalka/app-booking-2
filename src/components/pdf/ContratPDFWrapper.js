@@ -137,6 +137,15 @@ const prepareContractVariables = (safeData) => {
   };
   
   return {
+    // Variables entreprise
+    'nom_entreprise': safeData.entreprise.nom || 'Non spécifié',
+    'adresse_entreprise': safeData.entreprise.adresse || 'Non spécifiée',
+    'siret_entreprise': safeData.entreprise.siret || 'Non spécifié',
+    'telephone_entreprise': safeData.entreprise.telephone || 'Non spécifié',
+    'email_entreprise': safeData.entreprise.email || 'Non spécifié',
+    'representant_entreprise': safeData.entreprise.representant || 'Non spécifié',
+    'fonction_representant': safeData.entreprise.fonctionRepresentant || 'Non spécifiée',
+    
     // Variables programmateur
     'programmateur_nom': safeData.programmateur.nom || 'Non spécifié',
     'programmateur_prenom': safeData.programmateur.prenom || '',
@@ -191,8 +200,9 @@ const replaceVariables = (content, variables) => {
   
   // Remplacer toutes les variables possibles
   Object.entries(variables).forEach(([key, value]) => {
-    const regex = new RegExp(`{${key}}`, 'g');
-    processedContent = processedContent.replace(regex, value);
+    // Utiliser des crochets carrés au lieu des accolades
+    const regex = new RegExp(`\\[${key}\\]`, 'g');
+    processedContent = processedContent.replace(regex, value || '');
   });
   
   return processedContent;
@@ -216,9 +226,45 @@ const processPageBreaks = (htmlContent) => {
  * @param {Object} data - Les données du contrat
  * @param {String} title - Titre par défaut
  * @param {Boolean} forPreview - Si vrai, adapte le HTML pour l'aperçu navigateur
+ * @param {String} editedContent - Contenu édité manuellement (optionnel)
  * @returns {String} - Le HTML complet du contrat
  */
-const getContratHTML = (data, title = 'Contrat', forPreview = false) => {
+const getContratHTML = (data, title = 'Contrat', forPreview = false, editedContent = null) => {
+  // Si on a du contenu édité, l'utiliser directement
+  if (editedContent) {
+    // Construire le HTML avec le contenu édité
+    let htmlContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <title>${title}</title>
+        <!-- Style externe contrat-print.css appliqué via Puppeteer -->
+      </head>
+      <body class="contrat-print-mode">
+    `;
+
+    if (forPreview) {
+      htmlContent += `<div class="contrat-container">`;
+      htmlContent += `<div class="preview-note">Aperçu du contrat - La mise en page sera identique au téléchargement PDF final</div>`;
+    }
+
+    // Ajouter directement le contenu édité
+    htmlContent += editedContent;
+
+    if (forPreview) {
+      htmlContent += `</div>`; // Fermer .contrat-container
+    }
+
+    htmlContent += `
+      </body>
+      </html>
+    `;
+
+    return htmlContent;
+  }
+  
+  // Sinon, utiliser le processus normal
   // Sécuriser les données
   const safeData = createSafeData(data);
   
@@ -297,12 +343,13 @@ const getContratHTML = (data, title = 'Contrat', forPreview = false) => {
  * 
  * @param {string} title - Titre du document
  * @param {object} data - Données nécessaires à la génération du PDF
+ * @param {string} editedContent - Contenu édité manuellement (optionnel)
  * @returns {Promise<Blob>} - Le blob PDF généré
  */
-const generatePuppeteerPdf = async (title, data) => {
+const generatePuppeteerPdf = async (title, data, editedContent = null) => {
   try {
-    // Utiliser la fonction commune pour générer le HTML
-    const htmlContent = getContratHTML(data, title);
+    // Utiliser la fonction commune pour générer le HTML avec le contenu édité si fourni
+    const htmlContent = getContratHTML(data, title, false, editedContent);
     
     // Récupérer les données sécurisées pour les options
     const safeData = createSafeData(data);
@@ -444,7 +491,8 @@ const ContratPDFWrapper = ({
   programmateurData, 
   artisteData, 
   lieuData, 
-  entrepriseInfo 
+  entrepriseInfo,
+  editedContent 
 }) => {
   // Pour la prévisualisation simplifiée, on continue à utiliser react-pdf
   // Ce rendu sera remplacé par l'aperçu HTML dans la page de détails
@@ -460,6 +508,12 @@ const ContratPDFWrapper = ({
     lieu: lieuData || {},
     entreprise: entrepriseInfo || {}
   };
+  
+  // Stocker editedContent dans une variable accessible aux méthodes statiques
+  // (Cette approche n'est pas idéale mais nécessaire avec PDFDownloadLink)
+  if (editedContent) {
+    ContratPDFWrapper._lastEditedContent = editedContent;
+  }
 
   return (
     <Document>
@@ -470,7 +524,7 @@ const ContratPDFWrapper = ({
             Utilisez l'aperçu HTML pour un rendu plus fidèle.
           </Text>
           
-          {effectiveTemplate.logoUrl && (
+          {effectiveTemplate && effectiveTemplate.logoUrl && (
             <Image src={effectiveTemplate.logoUrl} style={pdfStyles.logoImage} />
           )}
           
@@ -492,8 +546,18 @@ const ContratPDFWrapper = ({
   );
 };
 
-// Ajouter les méthodes pour être utilisées par les composants parents
-ContratPDFWrapper.generatePuppeteerPdf = generatePuppeteerPdf;
+// Variable statique pour stocker le contenu édité
+ContratPDFWrapper._lastEditedContent = null;
+
+// Modifier les méthodes statiques pour utiliser le contenu édité
+const originalGeneratePuppeteerPdf = generatePuppeteerPdf;
+ContratPDFWrapper.generatePuppeteerPdf = async (title, data) => {
+  const editedContent = ContratPDFWrapper._lastEditedContent;
+  ContratPDFWrapper._lastEditedContent = null; // Réinitialiser après utilisation
+  return originalGeneratePuppeteerPdf(title, data, editedContent);
+};
+
+// Ajouter les autres méthodes pour être utilisées par les composants parents
 ContratPDFWrapper.generatePDFPreview = generatePDFPreview;
 ContratPDFWrapper.getContratHTML = getContratHTML;
 ContratPDFWrapper.HTMLPreview = ContratHTMLPreview;

@@ -93,17 +93,17 @@ const useContratTemplateEditor = (template, onSave, isModalContext, onClose, nav
   const [logoUrl, setLogoUrl] = useState(template?.logoUrl || '');
   
   // Nouveaux états pour les éléments hardcodés
-  const [titleTemplate, setTitleTemplate] = useState(template?.titleTemplate || 'Contrat - {concert_titre}');
+  const [titleTemplate, setTitleTemplate] = useState(template?.titleTemplate || 'Contrat - [concert_titre]');
   const [signatureTemplate, setSignatureTemplate] = useState(template?.signatureTemplate || 
     `<div style="display: flex; justify-content: space-between; margin-top: 30px;">
       <div style="width: 45%;">
         <div style="margin-bottom: 50px;"><strong>Pour l'Organisateur:</strong></div>
-        <div>{programmateur_nom}</div>
+        <div>[programmateur_nom]</div>
         <div style="border-top: 1px solid #000; margin-top: 5px;"></div>
       </div>
       <div style="width: 45%;">
         <div style="margin-bottom: 50px;"><strong>Pour l'Artiste:</strong></div>
-        <div>{artiste_nom}</div>
+        <div>[artiste_nom]</div>
         <div style="border-top: 1px solid #000; margin-top: 5px;"></div>
       </div>
     </div>`
@@ -124,17 +124,17 @@ const useContratTemplateEditor = (template, onSave, isModalContext, onClose, nav
       setFooterHeight(template.footerHeight || 15);
       setFooterTopMargin(template.footerTopMargin || 10);
       setLogoUrl(template.logoUrl || '');
-      setTitleTemplate(template.titleTemplate || 'Contrat - {concert_titre}');
+      setTitleTemplate(template.titleTemplate || 'Contrat - [concert_titre]');
       setSignatureTemplate(template.signatureTemplate || 
         `<div style="display: flex; justify-content: space-between; margin-top: 30px;">
           <div style="width: 45%;">
             <div style="margin-bottom: 50px;"><strong>Pour l'Organisateur:</strong></div>
-            <div>{programmateur_nom}</div>
+            <div>[programmateur_nom]</div>
             <div style="border-top: 1px solid #000; margin-top: 5px;"></div>
           </div>
           <div style="width: 45%;">
             <div style="margin-bottom: 50px;"><strong>Pour l'Artiste:</strong></div>
-            <div>{artiste_nom}</div>
+            <div>[artiste_nom]</div>
             <div style="border-top: 1px solid #000; margin-top: 5px;"></div>
           </div>
         </div>`
@@ -158,7 +158,7 @@ const useContratTemplateEditor = (template, onSave, isModalContext, onClose, nav
     }
 
     if (quillEditor) {
-      const variableText = `{${variable}}`;
+      const variableText = `[${variable}]`;
       const selection = window.getSelection();
       let range;
       if (selection.rangeCount > 0 && quillEditor.contains(selection.focusNode)) {
@@ -178,11 +178,11 @@ const useContratTemplateEditor = (template, onSave, isModalContext, onClose, nav
       quillEditor.focus();
       const inputEvent = new Event('input', { bubbles: true, cancelable: true });
       quillEditor.dispatchEvent(inputEvent);
-      console.log(`Variable {${variable}} insérée dans ${targetId}`);
+      console.log(`Variable [${variable}] insérée dans ${targetId}`);
       return;
     }
 
-    const variableText = `{${variable}}`;
+    const variableText = `[${variable}]`;
     switch (targetId) {
       case 'bodyContent':
         setBodyContent(prev => (prev || '') + variableText);
@@ -203,7 +203,7 @@ const useContratTemplateEditor = (template, onSave, isModalContext, onClose, nav
         console.warn(`TargetId ${targetId} non reconnu pour l'insertion de variable`);
         break;
     }
-    console.log(`Variable {${variable}} insérée via setter dans ${targetId}`);
+    console.log(`Variable [${variable}] insérée via setter dans ${targetId}`);
   };
 
   // Fonction pour uploader un logo

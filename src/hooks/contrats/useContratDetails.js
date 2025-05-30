@@ -29,6 +29,30 @@ const useContratDetails = (contratId) => {
       collection: 'contratTemplates', 
       idField: 'templateId',
       type: 'one-to-one'
+    },
+    { 
+      name: 'programmateur', 
+      collection: 'programmateurs', 
+      idField: 'programmateurId',
+      type: 'custom-query'
+    },
+    { 
+      name: 'lieu', 
+      collection: 'lieux', 
+      idField: 'lieuId',
+      type: 'custom-query'
+    },
+    { 
+      name: 'artiste', 
+      collection: 'artistes', 
+      idField: 'artisteId',
+      type: 'custom-query'
+    },
+    { 
+      name: 'entreprise', 
+      collection: 'parametres', 
+      idField: 'entrepriseId',
+      type: 'custom-query'
     }
   ];
   
@@ -226,6 +250,7 @@ const useContratDetails = (contratId) => {
     
     // Configuration des entités liées
     relatedEntities,
+    autoLoadRelated: true,
     customQueries,
     
     // Transformateurs et formatage

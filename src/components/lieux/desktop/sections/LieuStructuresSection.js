@@ -9,7 +9,9 @@ import {
   query, 
   collection, 
   getDocs, 
-  limit 
+  getDoc,
+  limit,
+  where
 } from 'firebase/firestore';
 import { Spinner } from 'react-bootstrap';
 import Button from '@ui/Button';
@@ -36,25 +38,23 @@ export const LieuStructuresSection = ({ lieu, isEditing = false }) => {
       
       setLoading(true);
       try {
-        // Si le lieu a des structures associées
-        if (lieu.structuresIds && lieu.structuresIds.length > 0) {
-          // Query pour récupérer toutes les structures associées
-          const structuresPromises = lieu.structuresIds.map(structureId => 
-            doc(db, 'structures', structureId).get()
-          );
-          
-          const structureDocs = await Promise.all(structuresPromises);
-          const structuresData = structureDocs
-            .filter(doc => doc.exists())
-            .map(doc => ({
-              id: doc.id,
-              ...doc.data()
-            }));
-          
-          setStructures(structuresData);
-        } else {
-          setStructures([]);
-        }
+        // Requête pour trouver les structures qui ont ce lieu dans leur tableau lieuxAssocies
+        const q = query(
+          collection(db, 'structures'),
+          where('lieuxAssocies', 'array-contains', lieu.id)
+        );
+        
+        const querySnapshot = await getDocs(q);
+        const structuresData = [];
+        
+        querySnapshot.forEach((doc) => {
+          structuresData.push({
+            id: doc.id,
+            ...doc.data()
+          });
+        });
+        
+        setStructures(structuresData);
       } catch (error) {
         console.error('Erreur lors de la récupération des structures:', error);
       } finally {
@@ -100,7 +100,7 @@ export const LieuStructuresSection = ({ lieu, isEditing = false }) => {
         
         // Filtrer les structures déjà associées
         const filteredResults = results.filter(result => 
-          !lieu.structuresIds || !lieu.structuresIds.includes(result.id)
+          !structures.some(s => s.id === result.id)
         );
         
         setSearchResults(filteredResults);
@@ -118,7 +118,7 @@ export const LieuStructuresSection = ({ lieu, isEditing = false }) => {
     }, 300);
 
     return () => clearTimeout(timeoutId);
-  }, [searchTerm, lieu]);
+  }, [searchTerm, structures]);
 
   // Gestionnaire de clic extérieur pour fermer la liste déroulante
   useEffect(() => {
@@ -139,10 +139,10 @@ export const LieuStructuresSection = ({ lieu, isEditing = false }) => {
   // Sélectionner une structure
   const handleSelectStructure = async (structure) => {
     try {
-      // Mettre à jour le document du lieu avec la nouvelle structure
-      const lieuRef = doc(db, 'lieux', lieu.id);
-      await updateDoc(lieuRef, {
-        structuresIds: arrayUnion(structure.id)
+      // Mettre à jour le document de la structure pour ajouter ce lieu
+      const structureRef = doc(db, 'structures', structure.id);
+      await updateDoc(structureRef, {
+        lieuxAssocies: arrayUnion(lieu.id)
       });
       
       // Mettre à jour l'UI
@@ -157,10 +157,10 @@ export const LieuStructuresSection = ({ lieu, isEditing = false }) => {
   // Supprimer l'association avec une structure
   const handleRemoveStructure = async (structureId) => {
     try {
-      // Mettre à jour le document du lieu en supprimant la structure
-      const lieuRef = doc(db, 'lieux', lieu.id);
-      await updateDoc(lieuRef, {
-        structuresIds: arrayRemove(structureId)
+      // Mettre à jour le document de la structure pour retirer ce lieu
+      const structureRef = doc(db, 'structures', structureId);
+      await updateDoc(structureRef, {
+        lieuxAssocies: arrayRemove(lieu.id)
       });
       
       // Mettre à jour l'UI

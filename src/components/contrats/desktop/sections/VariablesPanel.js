@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styles from './VariablesPanel.module.css';
 
 /**
@@ -22,47 +22,6 @@ const VariablesPanel = ({
   
   // Références pour la gestion de clic à l'extérieur (logique du hook)
   const panelRef = useRef(null);
-
-  // Variables pré-définies intégrées du hook useVariablesDropdown - NOUVEAU: Mémorisées pour optimisation
-  const predefinedVariables = useMemo(() => ({
-    body: [
-      { label: "Nom du programmateur", value: "programmateur_nom" },
-      { label: "Structure du programmateur", value: "programmateur_structure" },
-      { label: "Email du programmateur", value: "programmateur_email" },
-      { label: "SIRET du programmateur", value: "programmateur_siret" },
-      { label: "Nom de l'artiste", value: "artiste_nom" },
-      { label: "Genre de l'artiste", value: "artiste_genre" },
-      { label: "Titre du concert", value: "concert_titre" },
-      { label: "Date du concert", value: "concert_date" },
-      { label: "Montant du concert", value: "concert_montant" },
-      { label: "Nom du lieu", value: "lieu_nom" },
-      { label: "Adresse du lieu", value: "lieu_adresse" },
-      { label: "Code postal du lieu", value: "lieu_code_postal" },
-      { label: "Ville du lieu", value: "lieu_ville" },
-      { label: "Capacité du lieu", value: "lieu_capacite" },
-      { label: "Jour actuel", value: "date_jour" },
-      { label: "Mois actuel", value: "date_mois" },
-      { label: "Année actuelle", value: "date_annee" },
-      { label: "Date complète", value: "date_complete" }
-    ],
-    headerFooter: [
-      { label: "Nom du programmateur", value: "programmateur_nom" },
-      { label: "Structure du programmateur", value: "programmateur_structure" },
-      { label: "Email du programmateur", value: "programmateur_email" },
-      { label: "SIRET du programmateur", value: "programmateur_siret" },
-      { label: "Nom de l'artiste", value: "artiste_nom" }
-    ],
-    signature: [
-      { label: "Nom du programmateur", value: "programmateur_nom" },
-      { label: "Structure du programmateur", value: "programmateur_structure" },
-      { label: "Nom de l'artiste", value: "artiste_nom" },
-      { label: "Ville du lieu", value: "lieu_ville" },
-      { label: "Jour actuel", value: "date_jour" },
-      { label: "Mois actuel", value: "date_mois" },
-      { label: "Année actuelle", value: "date_annee" },
-      { label: "Date complète", value: "date_complete" }
-    ]
-  }), []); // Mémorisé sans dépendances car les variables sont statiques
 
   // Catégories de variables
   const categories = [
@@ -92,35 +51,81 @@ const VariablesPanel = ({
     };
   }, [isVisible, buttonRef]);
 
-  // NOUVEAU: Mémoriser getAllVariables pour éviter des recalculs inutiles - Finalisation intelligente
-  const getAllVariables = useCallback(() => {
-    const customVars = variables || [];
-    const predefined = selectedCategory === 'all' 
-      ? [...predefinedVariables.body, ...predefinedVariables.headerFooter, ...predefinedVariables.signature]
-        .filter((item, index, arr) => arr.findIndex(i => i.value === item.value) === index) // dédoublonner
-      : predefinedVariables[selectedCategory] || [];
-    
-    // NOUVEAU: Ajouter cache de métadonnées pour optimisation avancée
-    const allVars = [...customVars, ...predefined];
-    
-    // NOUVEAU: Ajouter statistiques de variables pour interface améliorée
-    const stats = {
-      total: allVars.length,
-      custom: customVars.length,
-      predefined: predefined.length,
-      category: selectedCategory,
-      lastUpdate: Date.now()
-    };
-    
-    // Attacher les métadonnées pour un usage ultérieur
-    allVars._metadata = stats;
-    
-    return allVars;
-  }, [variables, selectedCategory, predefinedVariables]);
-
   // Filtrer les variables selon le terme de recherche et la catégorie
   useEffect(() => {
-    const allVars = getAllVariables();
+    // Calculer directement les variables prédéfinies selon la catégorie
+    const customVars = variables || [];
+    let predefined = [];
+    
+    if (selectedCategory === 'all') {
+      // Combiner toutes les catégories et dédoublonner
+      const allPredefined = [
+        { label: "Nom du programmateur", value: "programmateur_nom" },
+        { label: "Structure du programmateur", value: "programmateur_structure" },
+        { label: "Email du programmateur", value: "programmateur_email" },
+        { label: "SIRET du programmateur", value: "programmateur_siret" },
+        { label: "Nom de l'artiste", value: "artiste_nom" },
+        { label: "Genre de l'artiste", value: "artiste_genre" },
+        { label: "Titre du concert", value: "concert_titre" },
+        { label: "Date du concert", value: "concert_date" },
+        { label: "Montant du concert", value: "concert_montant" },
+        { label: "Nom du lieu", value: "lieu_nom" },
+        { label: "Adresse du lieu", value: "lieu_adresse" },
+        { label: "Code postal du lieu", value: "lieu_code_postal" },
+        { label: "Ville du lieu", value: "lieu_ville" },
+        { label: "Capacité du lieu", value: "lieu_capacite" },
+        { label: "Jour actuel", value: "date_jour" },
+        { label: "Mois actuel", value: "date_mois" },
+        { label: "Année actuelle", value: "date_annee" },
+        { label: "Date complète", value: "date_complete" }
+      ];
+      // Dédoublonner
+      predefined = allPredefined.filter((item, index, arr) => 
+        arr.findIndex(i => i.value === item.value) === index
+      );
+    } else if (selectedCategory === 'body') {
+      predefined = [
+        { label: "Nom du programmateur", value: "programmateur_nom" },
+        { label: "Structure du programmateur", value: "programmateur_structure" },
+        { label: "Email du programmateur", value: "programmateur_email" },
+        { label: "SIRET du programmateur", value: "programmateur_siret" },
+        { label: "Nom de l'artiste", value: "artiste_nom" },
+        { label: "Genre de l'artiste", value: "artiste_genre" },
+        { label: "Titre du concert", value: "concert_titre" },
+        { label: "Date du concert", value: "concert_date" },
+        { label: "Montant du concert", value: "concert_montant" },
+        { label: "Nom du lieu", value: "lieu_nom" },
+        { label: "Adresse du lieu", value: "lieu_adresse" },
+        { label: "Code postal du lieu", value: "lieu_code_postal" },
+        { label: "Ville du lieu", value: "lieu_ville" },
+        { label: "Capacité du lieu", value: "lieu_capacite" },
+        { label: "Jour actuel", value: "date_jour" },
+        { label: "Mois actuel", value: "date_mois" },
+        { label: "Année actuelle", value: "date_annee" },
+        { label: "Date complète", value: "date_complete" }
+      ];
+    } else if (selectedCategory === 'headerFooter') {
+      predefined = [
+        { label: "Nom du programmateur", value: "programmateur_nom" },
+        { label: "Structure du programmateur", value: "programmateur_structure" },
+        { label: "Email du programmateur", value: "programmateur_email" },
+        { label: "SIRET du programmateur", value: "programmateur_siret" },
+        { label: "Nom de l'artiste", value: "artiste_nom" }
+      ];
+    } else if (selectedCategory === 'signature') {
+      predefined = [
+        { label: "Nom du programmateur", value: "programmateur_nom" },
+        { label: "Structure du programmateur", value: "programmateur_structure" },
+        { label: "Nom de l'artiste", value: "artiste_nom" },
+        { label: "Ville du lieu", value: "lieu_ville" },
+        { label: "Jour actuel", value: "date_jour" },
+        { label: "Mois actuel", value: "date_mois" },
+        { label: "Année actuelle", value: "date_annee" },
+        { label: "Date complète", value: "date_complete" }
+      ];
+    }
+    
+    const allVars = [...customVars, ...predefined];
     
     if (!searchTerm.trim()) {
       setFilteredVariables(allVars);
@@ -133,18 +138,9 @@ const VariablesPanel = ({
         );
       });
       
-      // NOUVEAU: Copier les métadonnées vers les résultats filtrés
-      if (allVars._metadata) {
-        filtered._metadata = {
-          ...allVars._metadata,
-          filtered: filtered.length,
-          searchTerm: searchTerm
-        };
-      }
-      
       setFilteredVariables(filtered);
     }
-  }, [searchTerm, variables, selectedCategory, getAllVariables]); // NOUVEAU: Dépendance corrigée
+  }, [searchTerm, variables, selectedCategory]); // Dépendances stables sans objets complexes
 
   const handleTogglePanel = () => {
     setIsVisible(!isVisible);
@@ -201,6 +197,80 @@ const VariablesPanel = ({
 
   const handleClearSearch = () => {
     setSearchTerm('');
+  };
+
+  // Fonction simple pour obtenir toutes les variables (utilisée dans le render)
+  const getAllVariables = () => {
+    const customVars = variables || [];
+    let predefined = [];
+    
+    if (selectedCategory === 'all') {
+      const allPredefined = [
+        { label: "Nom du programmateur", value: "programmateur_nom" },
+        { label: "Structure du programmateur", value: "programmateur_structure" },
+        { label: "Email du programmateur", value: "programmateur_email" },
+        { label: "SIRET du programmateur", value: "programmateur_siret" },
+        { label: "Nom de l'artiste", value: "artiste_nom" },
+        { label: "Genre de l'artiste", value: "artiste_genre" },
+        { label: "Titre du concert", value: "concert_titre" },
+        { label: "Date du concert", value: "concert_date" },
+        { label: "Montant du concert", value: "concert_montant" },
+        { label: "Nom du lieu", value: "lieu_nom" },
+        { label: "Adresse du lieu", value: "lieu_adresse" },
+        { label: "Code postal du lieu", value: "lieu_code_postal" },
+        { label: "Ville du lieu", value: "lieu_ville" },
+        { label: "Capacité du lieu", value: "lieu_capacite" },
+        { label: "Jour actuel", value: "date_jour" },
+        { label: "Mois actuel", value: "date_mois" },
+        { label: "Année actuelle", value: "date_annee" },
+        { label: "Date complète", value: "date_complete" }
+      ];
+      predefined = allPredefined.filter((item, index, arr) => 
+        arr.findIndex(i => i.value === item.value) === index
+      );
+    } else if (selectedCategory === 'body') {
+      predefined = [
+        { label: "Nom du programmateur", value: "programmateur_nom" },
+        { label: "Structure du programmateur", value: "programmateur_structure" },
+        { label: "Email du programmateur", value: "programmateur_email" },
+        { label: "SIRET du programmateur", value: "programmateur_siret" },
+        { label: "Nom de l'artiste", value: "artiste_nom" },
+        { label: "Genre de l'artiste", value: "artiste_genre" },
+        { label: "Titre du concert", value: "concert_titre" },
+        { label: "Date du concert", value: "concert_date" },
+        { label: "Montant du concert", value: "concert_montant" },
+        { label: "Nom du lieu", value: "lieu_nom" },
+        { label: "Adresse du lieu", value: "lieu_adresse" },
+        { label: "Code postal du lieu", value: "lieu_code_postal" },
+        { label: "Ville du lieu", value: "lieu_ville" },
+        { label: "Capacité du lieu", value: "lieu_capacite" },
+        { label: "Jour actuel", value: "date_jour" },
+        { label: "Mois actuel", value: "date_mois" },
+        { label: "Année actuelle", value: "date_annee" },
+        { label: "Date complète", value: "date_complete" }
+      ];
+    } else if (selectedCategory === 'headerFooter') {
+      predefined = [
+        { label: "Nom du programmateur", value: "programmateur_nom" },
+        { label: "Structure du programmateur", value: "programmateur_structure" },
+        { label: "Email du programmateur", value: "programmateur_email" },
+        { label: "SIRET du programmateur", value: "programmateur_siret" },
+        { label: "Nom de l'artiste", value: "artiste_nom" }
+      ];
+    } else if (selectedCategory === 'signature') {
+      predefined = [
+        { label: "Nom du programmateur", value: "programmateur_nom" },
+        { label: "Structure du programmateur", value: "programmateur_structure" },
+        { label: "Nom de l'artiste", value: "artiste_nom" },
+        { label: "Ville du lieu", value: "lieu_ville" },
+        { label: "Jour actuel", value: "date_jour" },
+        { label: "Mois actuel", value: "date_mois" },
+        { label: "Année actuelle", value: "date_annee" },
+        { label: "Date complète", value: "date_complete" }
+      ];
+    }
+    
+    return [...customVars, ...predefined];
   };
 
   const allVariables = getAllVariables();

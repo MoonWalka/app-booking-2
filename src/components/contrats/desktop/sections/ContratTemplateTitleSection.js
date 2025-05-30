@@ -1,6 +1,5 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import CollapsibleSection from './CollapsibleSection';
-import VariablesPanel from './VariablesPanel';
 import styles from './ContratTemplateTitleSection.module.css';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -13,23 +12,9 @@ const ContratTemplateTitleSection = ({
   titleTemplate,
   setTitleTemplate,
   titleCollapsed,
-  toggleCollapse,
-  signatureVariables,
-  signatureVarsOpen,
-  signatureVarsRef,
-  toggleDropdown,
-  insertVariable
+  toggleCollapse
 }) => {
   const quillRef = useRef();
-
-  useEffect(() => {
-    if (quillRef.current) {
-      const editor = quillRef.current.getEditor();
-      if (editor && titleTemplate !== editor.root.innerHTML) {
-        editor.root.innerHTML = titleTemplate || '';
-      }
-    }
-  }, [titleTemplate]);
 
   return (
     <CollapsibleSection
@@ -39,21 +24,12 @@ const ContratTemplateTitleSection = ({
     >
       <div className={styles.titleSectionContent}>
         <p className={styles.sectionInfo}>
-          Le titre du contrat apparaîtra en haut de la première page. 
-          Vous pouvez utiliser des variables pour personnaliser le titre automatiquement.
+          Le titre du contrat apparaîtra en haut de la première page.
         </p>
         
         <div className={styles.formGroup}>
           <div className={styles.inputActions}>
             <label htmlFor="titleTemplate">Format du titre</label>
-            <VariablesPanel
-              variables={signatureVariables}
-              targetId="titleTemplate"
-              buttonRef={signatureVarsRef}
-              onSelectVariable={(variable, targetId) => 
-                insertVariable(variable, targetId)
-              }
-            />
           </div>
           
           <ReactQuill
@@ -63,7 +39,7 @@ const ContratTemplateTitleSection = ({
             value={titleTemplate}
             onChange={setTitleTemplate}
             modules={CompactToolbarModule}
-            placeholder="Ex: Contrat de prestation - {concert_titre}"
+            placeholder="Ex: Contrat de prestation"
             theme="snow"
           />
           

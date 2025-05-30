@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 import CollapsibleSection from './CollapsibleSection';
-import VariablesPanel from './VariablesPanel';
 import styles from './ContratTemplateSignatureSection.module.css';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -14,11 +13,6 @@ const ContratTemplateSignatureSection = ({
   setSignatureTemplate,
   signatureCollapsed,
   toggleCollapse,
-  signatureVariables,
-  signatureVarsOpen,
-  signatureVarsRef,
-  toggleDropdown,
-  insertVariable,
   previewMode
 }) => {
   const quillRef = useRef();
@@ -41,20 +35,11 @@ const ContratTemplateSignatureSection = ({
       <div className={styles.signatureSectionContent}>
         <p className={styles.sectionInfo}>
           Cette section apparaîtra à la fin de votre contrat et contiendra les zones de signature.
-          Utilisez les variables pour personnaliser automatiquement les noms et fonctions des signataires.
         </p>
         
         <div className={styles.editorContainer}>
           <div className={styles.editorHeader}>
             <label htmlFor="signatureTemplate">Format de la section de signature</label>
-            <VariablesPanel
-              variables={signatureVariables}
-              targetId="signatureTemplate"
-              buttonRef={signatureVarsRef}
-              onSelectVariable={(variable, targetId) => 
-                insertVariable(variable, targetId)
-              }
-            />
           </div>
           
           {/* Dans un cas réel, on utiliserait ReactQuill ici */}
@@ -75,11 +60,11 @@ const ContratTemplateSignatureSection = ({
           <h5 className={styles.tipsTitle}>Modèle de signature recommandé</h5>
           
           <pre className={styles.signatureExample}>
-{`Fait à {lieu_nom}, le {date_signature}
+{`Fait à [lieu], le [date]
 
-Pour {programmateur_structure_nom},               Pour {artiste_structure_nom},
-{programmateur_nom}                               {artiste_representant}
-{programmateur_fonction}                          {artiste_representant_fonction}`}
+Pour l'Organisateur,                    Pour l'Artiste,
+[Nom]                                   [Nom]
+[Fonction]                              [Fonction]`}
           </pre>
           
           <p className={styles.tipText}>

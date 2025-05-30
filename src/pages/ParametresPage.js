@@ -11,23 +11,9 @@ import SyncManager from '../components/parametres/sync/SyncManager';
 import TabNavigation from '../components/common/TabNavigation';
 import '@styles/index.css';
 
-// import ContratTemplatesPage from '@pages/contratTemplatesPage'; // Ajustez le chemin selon votre structure
-// import ContratTemplatesEditPage from '@pages/contratTemplatesEditPage'; // Ajustez le chemin selon votre structure
-
-// Composants simplifiés temporaires pour les contrats
-const ContratTemplatesPage = () => (
-  <div>
-    <h3>Modèles de contrats (Version Simplifiée)</h3>
-    <p>Gestion des modèles de contrats - Fonctionnalité en cours de développement.</p>
-  </div>
-);
-
-const ContratTemplatesEditPage = () => (
-  <div>
-    <h3>Édition de modèle de contrat (Version Simplifiée)</h3>
-    <p>Édition de modèle de contrat - Fonctionnalité en cours de développement.</p>
-  </div>
-);
+// Import des vraies pages de modèles de contrats
+import ContratTemplatesPage from './contratTemplatesPage';
+import ContratTemplatesEditPage from './contratTemplatesEditPage';
 
 const ParametresPage = () => {
   const [activeTab, setActiveTab] = useState('entreprise');

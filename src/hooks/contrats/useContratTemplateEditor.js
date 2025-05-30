@@ -1,5 +1,5 @@
 // hooks/contrats/useContratTemplateEditor.js
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 // Import pour le module saut de page Quill
 import '@/components/contrats/QuillPageBreakModule';
 
@@ -62,19 +62,22 @@ const useContratTemplateEditor = (template, onSave, isModalContext, onClose, nav
     "date_jour", "date_mois", "date_annee", "date_complete"
   ];
 
-  // Variables formatées pour les nouveaux composants
-  const bodyVariables = createVariablesMap(bodyVariablesRaw);
-  const headerFooterVariables = createVariablesMap(headerFooterVariablesRaw);
-  const signatureVariables = createVariablesMap(signatureVariablesRaw);
+  // Variables formatées pour les nouveaux composants - Mémorisées pour éviter les recréations
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const bodyVariables = useMemo(() => createVariablesMap(bodyVariablesRaw), []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const headerFooterVariables = useMemo(() => createVariablesMap(headerFooterVariablesRaw), []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const signatureVariables = useMemo(() => createVariablesMap(signatureVariablesRaw), []);
 
-  // Définition des types de modèles pour le select
-  const templateTypes = [
+  // Définition des types de modèles pour le select - Mémorisé aussi
+  const templateTypes = useMemo(() => [
     { value: 'session', label: 'Session standard' },
     { value: 'co-realisation', label: 'Co-réalisation' },
     { value: 'dates-multiples', label: 'Dates multiples' },
     { value: 'residence', label: 'Résidence artistique' },
     { value: 'atelier', label: 'Atelier / Workshop' }
-  ];
+  ], []);
   
   // États pour le modèle
   const [name, setName] = useState(template?.name || 'Nouveau modèle');
@@ -130,7 +133,8 @@ const useContratTemplateEditor = (template, onSave, isModalContext, onClose, nav
   
   // Synchroniser les états locaux quand le template change
   useEffect(() => {
-    if (template) {
+    // Éviter de re-synchroniser si les valeurs sont déjà identiques
+    if (template && template.id) { // S'assurer que le template a un id
       console.log("🔄 Synchronisation des états avec le template:", template);
       setName(template.name || 'Nouveau modèle');
       setIsDefault(template.isDefault || false);
@@ -159,7 +163,8 @@ const useContratTemplateEditor = (template, onSave, isModalContext, onClose, nav
         </div>`
       );
     }
-  }, [template]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [template?.id]); // Dépendre uniquement de l'id du template
 
   // Gestion du clic à l'extérieur pour fermer les dropdowns
   useEffect(() => {

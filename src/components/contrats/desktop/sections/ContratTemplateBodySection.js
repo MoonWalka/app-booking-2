@@ -11,10 +11,7 @@ import { CompactToolbarModule } from '@/components/contrats/QuillPageBreakModule
 const ContratTemplateBodySection = ({
   bodyContent,
   setBodyContent,
-  bodyVarsOpen,
-  bodyVarsRef,
   bodyVariables,
-  toggleDropdown,
   insertVariable,
   previewMode
 }) => {
@@ -47,7 +44,6 @@ const ContratTemplateBodySection = ({
           <VariablesPanel
             variables={bodyVariables}
             targetId="bodyContent"
-            buttonRef={bodyVarsRef}
             onSelectVariable={(variable, targetId) => 
               insertVariable(variable, targetId)
             }

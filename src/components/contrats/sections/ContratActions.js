@@ -24,6 +24,7 @@ const ContratActions = ({
         <Button 
           variant="primary" 
           onClick={onPdfViewerToggle}
+          disabled={isLoading}
         >
           <i className="bi bi-eye"></i>
           Aperçu PDF
@@ -33,6 +34,7 @@ const ContratActions = ({
           <Button 
             variant="warning" 
             onClick={onSendContrat}
+            disabled={isLoading}
           >
             <i className="bi bi-send"></i>
             Envoyer
@@ -43,6 +45,7 @@ const ContratActions = ({
           <Button 
             variant="success" 
             onClick={onMarkAsSigned}
+            disabled={isLoading}
           >
             <i className="bi bi-check-circle"></i>
             Marquer comme signé
@@ -55,7 +58,7 @@ const ContratActions = ({
             onClick={onDownloadPdf}
             disabled={isLoading}
           >
-            {isLoading ? (
+            {isLoading && !contrat?.status ? (
               <>
                 <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                 Préparation...
@@ -69,9 +72,22 @@ const ContratActions = ({
           </Button>
         )}
         
+        {contrat && (
+          <Button 
+            variant="danger" 
+            onClick={onDeleteContrat}
+            disabled={isLoading}
+            className="ms-auto"
+          >
+            <i className="bi bi-trash"></i>
+            Supprimer
+          </Button>
+        )}
+        
         <Button 
           variant="outline-secondary" 
           onClick={onNavigateBack}
+          disabled={isLoading}
         >
           <i className="bi bi-arrow-left"></i>
           Retour

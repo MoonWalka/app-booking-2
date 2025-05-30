@@ -1,7 +1,7 @@
 // src/pages/ContratDetailsPage.js
 import React, { useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
-import { Alert, Spinner } from 'react-bootstrap';
+import { Alert, Spinner, Modal, Button } from 'react-bootstrap';
 import ContratPDFWrapper from '@/components/contrats/ContratPDFWrapper';
 import styles from './ContratDetailsPage.module.css';
 
@@ -34,7 +34,12 @@ const ContratDetailsPage = () => {
     entreprise, 
     loading, 
     error,
-    setContrat
+    setContrat,
+    handleDelete,
+    showDeleteModal,
+    isDeleting,
+    handleConfirmDelete,
+    handleCancelDelete
   } = useContratDetails(contratId);
 
   // Debug logs pour voir les données récupérées
@@ -54,7 +59,6 @@ const ContratDetailsPage = () => {
   const {
     handleSendContrat,
     handleMarkAsSigned, 
-    handleDeleteContrat,
     actionError,
     isActionLoading
   } = useContratActions(contratId, contrat, setContrat);
@@ -184,12 +188,12 @@ const ContratDetailsPage = () => {
         contrat={contrat}
         template={template}
         concert={concert}
-        isLoading={isActionLoading}
+        isLoading={isActionLoading || isDeleting}
         onPdfViewerToggle={togglePdfViewer}
         onSendContrat={handleSendContrat}
         onMarkAsSigned={handleMarkAsSigned}
         onDownloadPdf={handleDownload}
-        onDeleteContrat={handleDeleteContrat}
+        onDeleteContrat={handleDelete}
         onNavigateBack={handleNavigateBack}
       />
 
@@ -236,6 +240,32 @@ const ContratDetailsPage = () => {
             onGeneratePreview={handleGeneratePreview}
           />
         </>
+      )}
+
+      {/* Modale de confirmation de suppression (gérée par useGenericEntityDetails) */}
+      {showDeleteModal && contrat && (
+        <Modal show={showDeleteModal} onHide={handleCancelDelete} centered>
+          <Modal.Header closeButton>
+            <Modal.Title>Confirmer la suppression</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <p>Êtes-vous sûr de vouloir supprimer le contrat pour "{contrat.nom || concert?.titre || 'ce contrat'}" ?</p>
+            <p className="text-danger">Cette action est irréversible.</p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleCancelDelete} disabled={isDeleting}>
+              Annuler
+            </Button>
+            <Button variant="danger" onClick={handleConfirmDelete} disabled={isDeleting}>
+              {isDeleting ? (
+                <>
+                  <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
+                  Suppression...
+                </>
+              ) : 'Supprimer'}
+            </Button>
+          </Modal.Footer>
+        </Modal>
       )}
     </div>
   );

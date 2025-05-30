@@ -147,13 +147,11 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
                 />
                 
                 {/* Corps du contrat */}
+                {console.log('[ContratTemplateEditor] bodyVariables transmis à la section :', editor.bodyVariables)}
                 <ContratTemplateBodySection
                   bodyContent={editor.bodyContent}
                   setBodyContent={editor.setBodyContent}
-                  bodyVarsOpen={editor.bodyVarsOpen}
                   bodyVariables={editor.bodyVariables}
-                  bodyVarsRef={editor.bodyVarsRef}
-                  toggleDropdown={() => editor.toggleVariablesMenu('bodyContent')}
                   insertVariable={editor.insertVariable}
                   editorRef={bodyEditorRef}
                   previewMode={editor.previewMode}
@@ -165,11 +163,7 @@ const ContratTemplateEditor = ({ template, onSave, isModalContext, onClose }) =>
                   setSignatureTemplate={editor.setSignatureTemplate}
                   signatureCollapsed={editor.signatureCollapsed}
                   toggleCollapse={editor.toggleCollapse}
-                  signatureVarsOpen={editor.signatureVarsOpen}
-                  signatureVariables={editor.signatureVariables}
-                  signatureVarsRef={editor.signatureVarsRef}
-                  toggleVariablesMenu={editor.toggleVariablesMenu}
-                  insertVariable={editor.insertVariable}
+                  previewMode={editor.previewMode}
                 />
                 
                 {/* En-tête du contrat */}

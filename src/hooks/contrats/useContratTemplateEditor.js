@@ -1,7 +1,14 @@
 // hooks/contrats/useContratTemplateEditor.js
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 // Import pour le module saut de page Quill
 import '@/components/contrats/QuillPageBreakModule';
+// Importer les variables depuis la source de vérité
+import { 
+  bodyVariables as bodyVariablesSource, 
+  headerFooterVariables as headerFooterVariablesSource, 
+  signatureVariables as signatureVariablesSource,
+  templateTypes as templateTypesSource // Importer aussi les types de template
+} from './contractVariables'; 
 
 /**
  * Hook personnalisé pour gérer l'état et la logique de l'éditeur de modèles de contrat
@@ -18,66 +25,49 @@ const useContratTemplateEditor = (template, onSave, isModalContext, onClose, nav
   // Fonction utilitaire pour transformer les variables en format complet
   const createVariablesMap = (variables) => {
     const labelsMap = {
-      "programmateur_nom": "Nom du programmateur",
-      "programmateur_structure": "Structure du programmateur", 
-      "programmateur_email": "Email du programmateur",
-      "programmateur_siret": "SIRET du programmateur",
+      // Programmateur
+      "programmateur_nom": "Nom du contact (Programmateur)",
+      "programmateur_structure": "Structure (Programmateur)", 
+      "programmateur_email": "Email (Programmateur)",
+      "programmateur_siret": "SIRET (Programmateur)",
+      "programmateur_numero_intracommunautaire": "N° TVA Intracom. (Programmateur)",
+      "programmateur_adresse": "Adresse (Programmateur)",
+      "programmateur_representant": "Représentant Légal (Programmateur)",
+      "programmateur_qualite_representant": "Qualité du Représentant (Programmateur)",
+      // Artiste
       "artiste_nom": "Nom de l'artiste",
       "artiste_genre": "Genre musical",
-      "concert_titre": "Titre du concert",
+      // Concert
+      "concert_titre": "Titre du concert/événement",
       "concert_date": "Date du concert",
-      "concert_montant": "Montant du contrat",
+      "concert_montant": "Montant du contrat (chiffres)",
+      "concert_montant_lettres": "Montant du contrat (lettres)",
+      // Lieu
       "lieu_nom": "Nom du lieu",
       "lieu_adresse": "Adresse du lieu",
-      "lieu_code_postal": "Code postal",
-      "lieu_ville": "Ville",
+      "lieu_code_postal": "Code postal (Lieu)",
+      "lieu_ville": "Ville (Lieu)",
       "lieu_capacite": "Capacité du lieu",
-      "date_jour": "Jour (format numérique)",
-      "date_mois": "Mois (format texte)",
-      "date_annee": "Année",
-      "date_complete": "Date complète"
+      // Dates générales
+      "date_jour": "Jour actuel (numérique)",
+      "date_mois": "Mois actuel (texte)",
+      "date_annee": "Année actuelle",
+      "date_complete": "Date actuelle complète"
     };
     
     return variables.map(variable => ({
       value: variable,
-      label: labelsMap[variable] || variable
+      label: labelsMap[variable] || variable.replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase()) // Fallback label
     }));
   };
 
-  // Définition des variables disponibles
-  const bodyVariablesRaw = [
-    "programmateur_nom", "programmateur_structure", "programmateur_email", "programmateur_siret",
-    "artiste_nom", "artiste_genre",
-    "concert_titre", "concert_date", "concert_montant",
-    "lieu_nom", "lieu_adresse", "lieu_code_postal", "lieu_ville", "lieu_capacite",
-    "date_jour", "date_mois", "date_annee", "date_complete"
-  ];
+  // Utiliser les variables importées de la source de vérité
+  const bodyVariables = useMemo(() => createVariablesMap(bodyVariablesSource), []);
+  const headerFooterVariables = useMemo(() => createVariablesMap(headerFooterVariablesSource), []);
+  const signatureVariables = useMemo(() => createVariablesMap(signatureVariablesSource), []);
 
-  const headerFooterVariablesRaw = [
-    "programmateur_nom", "programmateur_structure", "programmateur_email", "programmateur_siret", "artiste_nom"
-  ];
-
-  const signatureVariablesRaw = [
-    "programmateur_nom", "programmateur_structure", "artiste_nom", "lieu_ville",
-    "date_jour", "date_mois", "date_annee", "date_complete"
-  ];
-
-  // Variables formatées pour les nouveaux composants - Mémorisées pour éviter les recréations
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const bodyVariables = useMemo(() => createVariablesMap(bodyVariablesRaw), []);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const headerFooterVariables = useMemo(() => createVariablesMap(headerFooterVariablesRaw), []);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const signatureVariables = useMemo(() => createVariablesMap(signatureVariablesRaw), []);
-
-  // Définition des types de modèles pour le select - Mémorisé aussi
-  const templateTypes = useMemo(() => [
-    { value: 'session', label: 'Session standard' },
-    { value: 'co-realisation', label: 'Co-réalisation' },
-    { value: 'dates-multiples', label: 'Dates multiples' },
-    { value: 'residence', label: 'Résidence artistique' },
-    { value: 'atelier', label: 'Atelier / Workshop' }
-  ], []);
+  // Utiliser les types de template importés
+  const templateTypes = useMemo(() => templateTypesSource, []);
   
   // États pour le modèle
   const [name, setName] = useState(template?.name || 'Nouveau modèle');
@@ -91,18 +81,6 @@ const useContratTemplateEditor = (template, onSave, isModalContext, onClose, nav
   const [headerCollapsed, setHeaderCollapsed] = useState(false);
   const [footerCollapsed, setFooterCollapsed] = useState(false);
   const [signatureCollapsed, setSignatureCollapsed] = useState(false);
-  
-  // États pour les menus dropdown des variables
-  const [headerVarsOpen, setHeaderVarsOpen] = useState(false);
-  const [bodyVarsOpen, setBodyVarsOpen] = useState(false);
-  const [footerVarsOpen, setFooterVarsOpen] = useState(false);
-  const [signatureVarsOpen, setSignatureVarsOpen] = useState(false);
-  
-  // Référence pour fermer les dropdowns au clic à l'extérieur
-  const headerVarsRef = useRef(null);
-  const bodyVarsRef = useRef(null);
-  const footerVarsRef = useRef(null);
-  const signatureVarsRef = useRef(null);
   
   // États pour le contenu du contrat
   const [bodyContent, setBodyContent] = useState(template?.bodyContent || '');
@@ -133,8 +111,7 @@ const useContratTemplateEditor = (template, onSave, isModalContext, onClose, nav
   
   // Synchroniser les états locaux quand le template change
   useEffect(() => {
-    // Éviter de re-synchroniser si les valeurs sont déjà identiques
-    if (template && template.id) { // S'assurer que le template a un id
+    if (template && template.id) {
       console.log("🔄 Synchronisation des états avec le template:", template);
       setName(template.name || 'Nouveau modèle');
       setIsDefault(template.isDefault || false);
@@ -163,42 +140,16 @@ const useContratTemplateEditor = (template, onSave, isModalContext, onClose, nav
         </div>`
       );
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [template?.id]); // Dépendre uniquement de l'id du template
-
-  // Gestion du clic à l'extérieur pour fermer les dropdowns
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (headerVarsRef.current && !headerVarsRef.current.contains(event.target)) {
-        setHeaderVarsOpen(false);
-      }
-      if (bodyVarsRef.current && !bodyVarsRef.current.contains(event.target)) {
-        setBodyVarsOpen(false);
-      }
-      if (footerVarsRef.current && !footerVarsRef.current.contains(event.target)) {
-        setFooterVarsOpen(false);
-      }
-      if (signatureVarsRef.current && !signatureVarsRef.current.contains(event.target)) {
-        setSignatureVarsOpen(false);
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+  }, [template]);
 
   // Fonction pour insérer une variable dans ReactQuill
   const insertVariable = (variable, targetId) => {
-    // Chercher le conteneur ReactQuill par ID
     const container = document.getElementById(targetId);
     if (!container) {
       console.warn(`Élément avec ID ${targetId} non trouvé`);
       return;
     }
 
-    // Chercher l'éditeur Quill dans le conteneur ou ses enfants
     let quillEditor = null;
     if (container.classList.contains('ql-editor')) {
       quillEditor = container;
@@ -207,9 +158,7 @@ const useContratTemplateEditor = (template, onSave, isModalContext, onClose, nav
     }
 
     if (quillEditor) {
-      // Insertion directe dans ReactQuill
       const variableText = `{${variable}}`;
-      // Obtenir la position actuelle du curseur ou ajouter à la fin
       const selection = window.getSelection();
       let range;
       if (selection.rangeCount > 0 && quillEditor.contains(selection.focusNode)) {
@@ -217,7 +166,7 @@ const useContratTemplateEditor = (template, onSave, isModalContext, onClose, nav
       } else {
         range = document.createRange();
         range.selectNodeContents(quillEditor);
-        range.collapse(false); // fin du contenu
+        range.collapse(false);
       }
       range.deleteContents();
       const textNode = document.createTextNode(variableText);
@@ -233,7 +182,6 @@ const useContratTemplateEditor = (template, onSave, isModalContext, onClose, nav
       return;
     }
 
-    // Fallback : Si ce n'est pas ReactQuill, utiliser les setters d'état (ajout à la fin)
     const variableText = `{${variable}}`;
     switch (targetId) {
       case 'bodyContent':
@@ -258,32 +206,10 @@ const useContratTemplateEditor = (template, onSave, isModalContext, onClose, nav
     console.log(`Variable {${variable}} insérée via setter dans ${targetId}`);
   };
 
-  // Fonction pour gérer l'ouverture/fermeture des menus variables
-  const toggleVariablesMenu = (targetId) => {
-    switch (targetId) {
-      case 'headerContent':
-        setHeaderVarsOpen(!headerVarsOpen);
-        break;
-      case 'bodyContent':
-        setBodyVarsOpen(!bodyVarsOpen);
-        break;
-      case 'footerContent':
-        setFooterVarsOpen(!footerVarsOpen);
-        break;
-      case 'signatureTemplate':
-        setSignatureVarsOpen(!signatureVarsOpen);
-        break;
-      default:
-        break;
-    }
-  };
-
   // Fonction pour uploader un logo
   const handleLogoUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
-      // Pour une implémentation réelle, vous auriez besoin d'uploader ce fichier vers Firebase Storage
-      // et d'obtenir l'URL de téléchargement
       const reader = new FileReader();
       reader.onload = (e) => {
         setLogoUrl(e.target.result);
@@ -333,7 +259,6 @@ const useContratTemplateEditor = (template, onSave, isModalContext, onClose, nav
       return;
     }
     
-    // Préparer les données dans le nouveau format
     const modelData = {
       ...(template && template.id ? { id: template.id } : {}),
       name,
@@ -355,33 +280,20 @@ const useContratTemplateEditor = (template, onSave, isModalContext, onClose, nav
     onSave(modelData);
   };
 
-  // Fonction pour estimer approximativement la quantité de pages nécessaires
   const countEstimatedPages = (content, hasTitle = true, hasSignature = true) => {
     if (!content) return 1;
-    
-    // Compter les sauts de page explicites
     const explicitBreaks = (content.match(/\[SAUT_DE_PAGE\]/g) || []).length;
-    
-    // Si des sauts de page sont définis, on utilise ce nombre + 1
     if (explicitBreaks > 0) {
       return explicitBreaks + 1;
     }
-    
-    // Estimation très approximative basée sur le nombre de caractères
-    // Une page A4 standard contient environ 3000 caractères (avec marges et taille de police standard)
     const contentLength = content.length;
-    
-    // Tenir compte de l'espace pris par le titre et la signature
     let totalLength = contentLength;
-    if (hasTitle) totalLength += 200; // Espace approximatif du titre
-    if (hasSignature) totalLength += 500; // Espace approximatif de la signature
-    
+    if (hasTitle) totalLength += 200;
+    if (hasSignature) totalLength += 500;
     const estimatedPages = Math.max(1, Math.ceil(totalLength / 3000));
-    
     return estimatedPages;
   };
 
-  // Configuration des modules pour les éditeurs ReactQuill (avec bouton saut de page)
   const editorModules = {
     toolbar: [
       [{ 'header': [1, 2, 3, false] }],
@@ -391,7 +303,7 @@ const useContratTemplateEditor = (template, onSave, isModalContext, onClose, nav
       [{ 'size': ['small', false, 'large', 'huge'] }],
       [{ 'color': [] }, { 'background': [] }],
       [{ 'align': [] }],
-      ['pagebreak'], // Bouton saut de page
+      ['pagebreak'],
       ['link', 'clean']
     ],
     handlers: {
@@ -404,9 +316,7 @@ const useContratTemplateEditor = (template, onSave, isModalContext, onClose, nav
     }
   };
 
-  // Retourner tous les états et fonctions nécessaires pour le composant
   return {
-    // États
     name,
     setName,
     isDefault,
@@ -417,26 +327,10 @@ const useContratTemplateEditor = (template, onSave, isModalContext, onClose, nav
     setPreviewMode,
     showGuide,
     setShowGuide,
-    
-    // États des sections repliables
     titleCollapsed,
     headerCollapsed,
     footerCollapsed,
     signatureCollapsed,
-    
-    // États des menus dropdown
-    headerVarsOpen,
-    bodyVarsOpen,
-    footerVarsOpen,
-    signatureVarsOpen,
-    
-    // Références pour les menus dropdown
-    headerVarsRef,
-    bodyVarsRef,
-    footerVarsRef,
-    signatureVarsRef,
-    
-    // États du contenu du contrat
     bodyContent,
     setBodyContent,
     headerContent,
@@ -452,30 +346,21 @@ const useContratTemplateEditor = (template, onSave, isModalContext, onClose, nav
     footerTopMargin,
     setFooterTopMargin,
     logoUrl,
-    
-    // États pour les éléments spécifiques
     titleTemplate,
     setTitleTemplate,
     signatureTemplate,
     setSignatureTemplate,
-    
-    // Constantes
     bodyVariables,
     headerFooterVariables,
     signatureVariables,
     templateTypes,
-    
-    // Fonctions
     insertVariable,
-    toggleVariablesMenu,
     handleLogoUpload,
     handleRemoveLogo,
     handleCancel,
     toggleCollapse,
     handleSave,
     countEstimatedPages,
-    
-    // Configuration
     editorModules
   };
 };

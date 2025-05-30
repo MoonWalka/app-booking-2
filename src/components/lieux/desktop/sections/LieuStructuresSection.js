@@ -9,7 +9,6 @@ import {
   query, 
   collection, 
   getDocs, 
-  getDoc,
   limit,
   where
 } from 'firebase/firestore';

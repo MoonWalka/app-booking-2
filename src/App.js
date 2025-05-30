@@ -8,7 +8,7 @@ import {
 } from 'react-router-dom';
 import { AuthProvider } from '@/context/AuthContext';
 import { ParametresProvider } from '@/context/ParametresContext';
-import { ModalProvider } from '@/context/ModalContext'; // Import du nouveau ModalProvider
+import { ModalProvider } from '@/context/ModalContext';
 import FlexContainer from '@/components/ui/FlexContainer';
 import Layout from '@/components/common/Layout';
 import DashboardPage from '@/pages/DashboardPage';
@@ -25,77 +25,61 @@ import FormResponsePage from '@/pages/FormResponsePage';
 import ContratGenerationPage from '@/pages/ContratGenerationPage';
 import ContratDetailsPage from '@/pages/ContratDetailsPage';
 import StructuresPage from '@/pages/StructuresPage';
-import RouterStabilizer from '@/utils/RouterStabilizer'; // Réactivé après correction
+import RouterStabilizer from '@/utils/RouterStabilizer';
 import ProgrammateursList from '@/components/programmateurs/ProgrammateursList';
 import ConcertFormWrapper from '@/components/concerts/ConcertForm';
 import ConcertsList from '@/components/concerts/ConcertsList';
 import ConcertDetails from '@/components/concerts/ConcertDetails';
-// Import du dashboard de debug unifié (uniquement en développement)
 import UnifiedDebugDashboard from '@/components/debug/UnifiedDebugDashboard';
 import TestParametresVersions from './pages/TestParametresVersions';
 import CreateDefaultTemplate from './pages/CreateDefaultTemplate';
 import TestContractError from './pages/TestContractError';
-// Import du ProfilerMonitor pour le suivi des performances
 import ProfilerMonitor from './components/debug/ProfilerMonitor';
 import ProgrammateurReferencesDebug from '@/components/debug/ProgrammateurReferencesDebug';
 import StructuresAuditDebug from '@/components/debug/StructuresAuditDebug';
-
-// 🔍 DIAGNOSTIC BOUCLE : Import du composant AuthDebug
 import AuthDebug from '@/components/debug/AuthDebug';
-
-// 🔒 SÉCURITÉ : Import du PrivateRoute sécurisé
 import PrivateRoute from '@/components/auth/PrivateRoute';
 import LoginPage from '@/pages/LoginPage';
 
-// 🔧 CONTRÔLE DES OUTILS DE DIAGNOSTIC
-// Changer cette valeur à true pour réactiver les outils de diagnostic
 const SHOW_DIAGNOSTIC_TOOLS = false;
+const SHOW_AUTH_DEBUG = false;
 
-// 🔍 DIAGNOSTIC BOUCLE : Activer temporairement le debug auth
-const SHOW_AUTH_DEBUG = false; // 🔧 Masqué après validation - Réactivable si besoin
-
-// Import de l'outil de diagnostic en mode développement uniquement
 if (process.env.NODE_ENV === 'development') {
   import('./diagnostic').catch(err => console.error('Erreur lors du chargement du diagnostic:', err));
   import('./utils/debugMode').catch(err => console.error('Erreur lors du chargement du mode debug:', err));
 }
 
-// Import et exécution du script de peuplement pour le mode local
 if (process.env.REACT_APP_MODE === 'local') {
   import('./utils/seedEmulator').then(({ seedEmulator }) => {
-    // Attendre un peu que l'émulateur soit initialisé
     setTimeout(() => {
       seedEmulator().catch(err => console.error('Erreur lors du peuplement de l\'émulateur:', err));
     }, 2000);
   }).catch(err => console.error('Erreur lors du chargement du script de peuplement:', err));
 }
 
-// Import de l'utilitaire de correction
-import './utils/fixNumeroIntracommunautaire';
+if (process.env.NODE_ENV === 'development') {
+  import('./utils/fixNumeroIntracommunautaire').catch(err => 
+    console.error('Erreur lors du chargement de l\'utilitaire de correction:', err)
+  );
+}
 
-// Composant ErrorBoundary pour capturer les erreurs de chargement
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
     this.state = { hasError: false, errorInfo: null };
-    // Nombre de tentatives de rechargement
     this.retryCount = 0;
   }
 
   static getDerivedStateFromError(error) {
-    // Mettre à jour l'état pour afficher l'UI de repli
     return { hasError: true };
   }
 
   componentDidCatch(error, errorInfo) {
-    // Vous pouvez aussi enregistrer l'erreur dans un service de rapports d'erreurs
     console.error("Erreur capturée par ErrorBoundary:", error, errorInfo);
     this.setState({ errorInfo });
     
-    // Si c'est une erreur de chargement de chunk, on peut essayer de recharger
     if (error.name === 'ChunkLoadError' && this.retryCount < 2) {
       this.retryCount++;
-      // Attendre un peu avant de recharger pour éviter les boucles
       setTimeout(() => {
         window.location.reload();
       }, 2000);
@@ -104,7 +88,6 @@ class ErrorBoundary extends React.Component {
 
   render() {
     if (this.state.hasError) {
-      // Si le compteur de tentatives est < 2, afficher un message de rechargement
       if (this.retryCount < 2) {
         return (
           <div className="error-container">
@@ -114,7 +97,6 @@ class ErrorBoundary extends React.Component {
           </div>
         );
       }
-      // Sinon afficher un message d'erreur permanent
       return (
         <div className="error-container">
           <h2>Une erreur est survenue</h2>
@@ -140,11 +122,9 @@ class ErrorBoundary extends React.Component {
 }
 
 function App() {
-  // Définition des futures flags pour stabiliser React Router
-  // Ces flags réduisent les rechargements intempestifs
   window.REACT_ROUTER_FUTURE = {
-    v7_startTransition: true,  // Utilise React.startTransition pour les mises à jour d'état
-    v7_relativeSplatPath: true // Améliore la résolution des chemins
+    v7_startTransition: true,
+    v7_relativeSplatPath: true
   };
 
   return (
@@ -152,8 +132,7 @@ function App() {
       <Router>
         <AuthProvider>
           <ParametresProvider>
-            <ModalProvider> {/* Ajout du ModalProvider */}
-              {/* 🔧 FIX: RouterStabilizer réactivé après correction */}
+            <ModalProvider>
               <RouterStabilizer />
               <Suspense fallback={
                 <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
@@ -171,17 +150,13 @@ function App() {
                   <Route path="/create-default-template" element={<CreateDefaultTemplate />} />
                   <Route path="/test-contract-error" element={<TestContractError />} />
                   
-                  {/* 🔒 SÉCURITÉ : Route publique de connexion */}
                   <Route path="/login" element={<LoginPage />} />
                   
-                  {/* Routes publiques pour les formulaires */}
                   <Route path="/formulaire/:concertId/:token" element={<FormResponsePage />} />
                   
-                  {/* Routes protégées avec Layout */}
                   <Route element={<Layout />}>
                     <Route path="/" element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
                     
-                    {/* Routes pour les concerts */}
                     <Route path="/concerts/*" element={
                       <PrivateRoute>
                         <Suspense fallback={
@@ -203,7 +178,6 @@ function App() {
                       <Route path=":id/edit" element={<ConcertFormWrapper />} />
                     </Route>
                     
-                    {/* Routes pour les programmateurs */}
                     <Route path="/programmateurs/*" element={
                       <PrivateRoute>
                         <Suspense fallback={
@@ -226,7 +200,6 @@ function App() {
                       <Route path=":id" element={<ProgrammateurDetails />} />
                     </Route>
                     
-                    {/* Routes pour les lieux */}
                     <Route path="/lieux/*" element={
                       <PrivateRoute>
                         <Suspense fallback={
@@ -244,7 +217,6 @@ function App() {
                       </PrivateRoute>
                     } />
                     
-                    {/* Routes pour les structures */}
                     <Route path="/structures/*" element={
                       <PrivateRoute>
                         <Suspense fallback={
@@ -262,7 +234,6 @@ function App() {
                       </PrivateRoute>
                     } />
                     
-                    {/* Routes pour les contrats */}
                     <Route path="/contrats" element={
                       <PrivateRoute>
                         <Suspense fallback={
@@ -312,7 +283,6 @@ function App() {
                       </PrivateRoute>
                     } />
                     
-                    {/* Routes pour les artistes */}
                     <Route path="/artistes/*" element={
                       <PrivateRoute>
                         <Suspense fallback={
@@ -330,7 +300,6 @@ function App() {
                       </PrivateRoute>
                     } />
                     
-                    {/* Routes pour les paramètres */}
                     <Route path="/parametres/*" element={
                       <PrivateRoute>
                         <Suspense fallback={
@@ -348,21 +317,17 @@ function App() {
                       </PrivateRoute>
                     } />
                     
-                    {/* Route pour la validation des formulaires */}
                     <Route path="/formulaire/validation/:id" element={<PrivateRoute><FormResponsePage /></PrivateRoute>} />
                     
-                    {/* Debug routes - à supprimer après utilisation */}
                     <Route path="/debug/programmateur-references" element={<ProgrammateurReferencesDebug />} />
                     <Route path="/debug/structures-audit" element={<StructuresAuditDebug />} />
                     
-                    {/* Redirection par défaut */}
                     <Route path="*" element={<Navigate to="/concerts" replace />} />
                   </Route>
                 </Routes>
               </Suspense>
               {process.env.NODE_ENV === 'development' && SHOW_DIAGNOSTIC_TOOLS && <UnifiedDebugDashboard />}
               {process.env.NODE_ENV === 'development' && SHOW_DIAGNOSTIC_TOOLS && <ProfilerMonitor />}
-              {/* 🔍 DIAGNOSTIC BOUCLE : Affichage temporaire du debug auth */}
               {process.env.NODE_ENV === 'development' && SHOW_AUTH_DEBUG && <AuthDebug />}
             </ModalProvider>
           </ParametresProvider>
@@ -372,4 +337,4 @@ function App() {
   );
 }
 
-export default App;
+export default App; 

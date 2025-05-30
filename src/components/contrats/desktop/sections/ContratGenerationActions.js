@@ -1,6 +1,7 @@
 // src/components/contrats/desktop/sections/ContratGenerationActions.js
 import React from 'react';
 import { PDFDownloadLink } from '@react-pdf/renderer';
+import { useNavigate } from 'react-router-dom';
 import Button from '@ui/Button';
 import Alert from '@ui/Alert';
 import styles from './ContratGenerationActions.module.css';
@@ -20,6 +21,7 @@ const ContratGenerationActions = ({
   saveGeneratedContract,
   showSuccess
 }) => {
+  const navigate = useNavigate();
   const isValid = validateDataBeforeGeneration();
 
   return (
@@ -74,6 +76,11 @@ const ContratGenerationActions = ({
                   .then(id => {
                     console.log(`Contrat sauvegardé avec l'ID: ${id}`);
                     showSuccess();
+                    
+                    // Rediriger automatiquement vers la page du contrat après un court délai
+                    setTimeout(() => {
+                      navigate(`/contrats/${id}`);
+                    }, 1500);
                   })
                   .catch(err => {
                     console.error('Erreur de sauvegarde:', err);
@@ -99,7 +106,7 @@ const ContratGenerationActions = ({
           <Button 
             variant="outline-info" 
             className="ms-2"
-            onClick={() => window.location.href = `/contrats/${contratId}`}
+            onClick={() => navigate(`/contrats/${contratId}`)}
           >
             <i className="bi bi-eye me-2"></i>
             Voir le contrat généré

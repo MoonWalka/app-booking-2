@@ -43,34 +43,28 @@
 }
 
 /* Mini-panel fixe */
+.variablesPanelContainer {
+  position: static;
+  display: block;
+  width: 100%;
+}
+
 .panel {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
-  z-index: 1000;
-  width: 380px;
-  max-height: 500px;
+  position: static;
+  top: unset;
+  left: unset;
+  z-index: auto;
+  width: 100%;
+  max-width: 100%;
+  box-shadow: none;
+  border: 1px solid var(--tc-color-gray-200);
+  margin-top: 12px;
   background: white;
   border-radius: 8px;
-  box-shadow: 
-    0 10px 25px rgba(0, 0, 0, 0.1),
-    0 4px 6px rgba(0, 0, 0, 0.05);
-  border: 1px solid var(--tc-color-gray-200);
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  animation: slideIn 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  animation: none;
 }
 
 /* En-tête du panel */

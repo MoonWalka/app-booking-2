@@ -48,11 +48,34 @@ export const useStructureAddressSection = ({ structure, formatValue }) => {
       return value !== undefined && value !== null && value !== '' ? value : 'Non spécifié';
     };
     
+    // Gérer le cas où structure.adresse est un objet
+    let adresse, codePostal, ville, pays;
+    
+    if (structure.adresse && typeof structure.adresse === 'object') {
+      // Si adresse est un objet avec les propriétés adresse, codePostal, ville, pays
+      adresse = structure.adresse.adresse;
+      codePostal = structure.adresse.codePostal;
+      ville = structure.adresse.ville;
+      pays = structure.adresse.pays;
+    } else if (structure.adresseLieu && typeof structure.adresseLieu === 'object') {
+      // Si on a un objet adresseLieu
+      adresse = structure.adresseLieu.adresse;
+      codePostal = structure.adresseLieu.codePostal;
+      ville = structure.adresseLieu.ville;
+      pays = structure.adresseLieu.pays;
+    } else {
+      // Sinon utiliser les propriétés directes
+      adresse = structure.adresse;
+      codePostal = structure.codePostal;
+      ville = structure.ville;
+      pays = structure.pays;
+    }
+    
     return {
-      adresse: localFormatValue(structure.adresse),
-      codePostal: localFormatValue(structure.codePostal),
-      ville: localFormatValue(structure.ville),
-      pays: localFormatValue(structure.pays)
+      adresse: localFormatValue(adresse),
+      codePostal: localFormatValue(codePostal),
+      ville: localFormatValue(ville),
+      pays: localFormatValue(pays)
     };
   }, [structure, formatValue]);
 

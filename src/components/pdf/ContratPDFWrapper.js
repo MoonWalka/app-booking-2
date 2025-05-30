@@ -48,8 +48,18 @@ const pdfStyles = StyleSheet.create({
  * @returns {Object} - Objet sécurisé contre les valeurs nulles/undefined
  */
 const createSafeData = (data) => {
+  // Support des deux formats de données possibles
   const { 
-    template, 
+    // Format 1 : Depuis ContratDetailsPage
+    template,
+    contrat,
+    concert, 
+    programmateur, 
+    artiste, 
+    lieu, 
+    entreprise,
+    
+    // Format 2 : Ancien format
     contratData, 
     concertData, 
     programmateurData, 
@@ -59,17 +69,20 @@ const createSafeData = (data) => {
   } = data;
 
   // Utiliser la snapshot du template si disponible
-  const effectiveTemplate = contratData?.templateSnapshot || template;
+  const effectiveTemplate = contrat?.templateSnapshot || contratData?.templateSnapshot || template;
   
   // Sécuriser contre les valeurs nulles ou undefined
   const safeData = {
     template: effectiveTemplate,
-    concert: concertData || {},
-    programmateur: programmateurData || {},
-    artiste: artisteData || {},
-    lieu: lieuData || {},
-    entreprise: entrepriseInfo || {}
+    concert: concert || concertData || {},
+    programmateur: programmateur || programmateurData || {},
+    artiste: artiste || artisteData || {},
+    lieu: lieu || lieuData || {},
+    entreprise: entreprise || entrepriseInfo || {}
   };
+
+  console.log('[DEBUG ContratPDFWrapper] createSafeData input:', data);
+  console.log('[DEBUG ContratPDFWrapper] createSafeData output:', safeData);
 
   return safeData;
 };
@@ -115,69 +128,129 @@ const formatSafeDate = (dateValue, formatString = "dd/MM/yyyy") => {
  * Prépare toutes les variables pour le remplacement dans le contrat
  */
 const prepareContractVariables = (safeData) => {
+  console.log('[DEBUG ContratPDFWrapper] prepareContractVariables input:', safeData);
+  
   // Fonction helper pour convertir un montant en lettres
   const montantEnLettres = (montant) => {
     if (!montant) return 'Non spécifié';
     const montantNum = parseFloat(montant);
     if (isNaN(montantNum)) return 'Non spécifié';
     
-    // Conversion simple pour l'instant
-    // Une vraie implémentation nécessiterait une librairie spécialisée
-    const parties = montantNum.toFixed(2).split('.');
-    const euros = parseInt(parties[0]);
-    const centimes = parseInt(parties[1]);
+    // Fonction de conversion nombre vers lettres en français
+    const unites = ['', 'un', 'deux', 'trois', 'quatre', 'cinq', 'six', 'sept', 'huit', 'neuf'];
+    const dizaines = ['', '', 'vingt', 'trente', 'quarante', 'cinquante', 'soixante', 'soixante', 'quatre-vingt', 'quatre-vingt'];
+    const teens = ['dix', 'onze', 'douze', 'treize', 'quatorze', 'quinze', 'seize', 'dix-sept', 'dix-huit', 'dix-neuf'];
     
-    // Conversion basique - à améliorer avec une vraie librairie
-    let resultat = `${euros} euro${euros > 1 ? 's' : ''}`;
-    if (centimes > 0) {
-      resultat += ` et ${centimes} centime${centimes > 1 ? 's' : ''}`;
+    const convertirNombreEnLettres = (nombre) => {
+      if (nombre === 0) return 'zéro';
+      if (nombre < 0) return 'moins ' + convertirNombreEnLettres(-nombre);
+      
+      let resultat = '';
+      
+      // Milliers
+      if (nombre >= 1000) {
+        const milliers = Math.floor(nombre / 1000);
+        if (milliers === 1) {
+          resultat += 'mille ';
+        } else {
+          resultat += convertirNombreEnLettres(milliers) + ' mille ';
+        }
+        nombre = nombre % 1000;
+      }
+      
+      // Centaines
+      if (nombre >= 100) {
+        const centaines = Math.floor(nombre / 100);
+        if (centaines === 1) {
+          resultat += 'cent ';
+        } else {
+          resultat += unites[centaines] + ' cent' + (nombre % 100 === 0 && centaines > 1 ? 's ' : ' ');
+        }
+        nombre = nombre % 100;
+      }
+      
+      // Dizaines et unités
+      if (nombre >= 20) {
+        const dizaine = Math.floor(nombre / 10);
+        const unite = nombre % 10;
+        
+        if (dizaine === 7 || dizaine === 9) {
+          resultat += dizaines[dizaine] + '-' + teens[unite] + ' ';
+        } else {
+          resultat += dizaines[dizaine];
+          if (unite === 1 && dizaine !== 8) {
+            resultat += ' et un ';
+          } else if (unite > 0) {
+            resultat += '-' + unites[unite] + ' ';
+          } else {
+            resultat += ' ';
+          }
+        }
+      } else if (nombre >= 10) {
+        resultat += teens[nombre - 10] + ' ';
+      } else if (nombre > 0) {
+        resultat += unites[nombre] + ' ';
+      }
+      
+      return resultat.trim();
+    };
+    
+    // Séparer la partie entière et décimale
+    const partieEntiere = Math.floor(montantNum);
+    const partieDecimale = Math.round((montantNum - partieEntiere) * 100);
+    
+    let resultat = convertirNombreEnLettres(partieEntiere) + ' euro' + (partieEntiere > 1 ? 's' : '');
+    
+    if (partieDecimale > 0) {
+      resultat += ' et ' + convertirNombreEnLettres(partieDecimale) + ' centime' + (partieDecimale > 1 ? 's' : '');
     }
     
-    return resultat;
+    // Mettre la première lettre en majuscule
+    return resultat.charAt(0).toUpperCase() + resultat.slice(1);
   };
   
-  return {
+  const variables = {
     // Variables entreprise
-    'nom_entreprise': safeData.entreprise.nom || 'Non spécifié',
-    'adresse_entreprise': safeData.entreprise.adresse || 'Non spécifiée',
-    'siret_entreprise': safeData.entreprise.siret || 'Non spécifié',
-    'telephone_entreprise': safeData.entreprise.telephone || 'Non spécifié',
-    'email_entreprise': safeData.entreprise.email || 'Non spécifié',
-    'representant_entreprise': safeData.entreprise.representant || 'Non spécifié',
-    'fonction_representant': safeData.entreprise.fonctionRepresentant || 'Non spécifiée',
+    'nom_entreprise': safeData.entreprise?.nom || 'Non spécifié',
+    'adresse_entreprise': safeData.entreprise?.adresse || 'Non spécifiée',
+    'siret_entreprise': safeData.entreprise?.siret || 'Non spécifié',
+    'telephone_entreprise': safeData.entreprise?.telephone || 'Non spécifié',
+    'email_entreprise': safeData.entreprise?.email || 'Non spécifié',
+    'representant_entreprise': safeData.entreprise?.representant || 'Non spécifié',
+    'fonction_representant': safeData.entreprise?.fonctionRepresentant || 'Non spécifiée',
     
     // Variables programmateur
-    'programmateur_nom': safeData.programmateur.nom || 'Non spécifié',
-    'programmateur_prenom': safeData.programmateur.prenom || '',
-    'programmateur_structure': safeData.programmateur.structure || 'Non spécifiée',
-    'programmateur_email': safeData.programmateur.email || 'Non spécifié',
-    'programmateur_telephone': safeData.programmateur.telephone || 'Non spécifié',
-    'programmateur_adresse': safeData.programmateur.adresse || 'Non spécifiée',
-    'programmateur_siret': safeData.programmateur.siret || 'Non spécifié',
-    'programmateur_numero_intracommunautaire': safeData.programmateur.numeroIntracommunautaire || safeData.programmateur.numero_intracommunautaire || 'Non spécifié',
-    'programmateur_representant': safeData.programmateur.representant || safeData.programmateur.nom || 'Non spécifié',
-    'programmateur_qualite_representant': safeData.programmateur.qualiteRepresentant || safeData.programmateur.qualite_representant || safeData.programmateur.fonction || 'Non spécifiée',
+    'programmateur_nom': safeData.programmateur?.nom || 'Non spécifié',
+    'programmateur_prenom': safeData.programmateur?.prenom || '',
+    'programmateur_structure': safeData.programmateur?.structure || 'Non spécifiée',
+    'programmateur_email': safeData.programmateur?.email || 'Non spécifié',
+    'programmateur_telephone': safeData.programmateur?.telephone || 'Non spécifié',
+    'programmateur_adresse': safeData.programmateur?.adresse || 'Non spécifiée',
+    'programmateur_siret': safeData.programmateur?.siret || 'Non spécifié',
+    'programmateur_numero_intracommunautaire': safeData.programmateur?.numeroIntracommunautaire || safeData.programmateur?.numero_intracommunautaire || 'Non spécifié',
+    'programmateur_representant': safeData.programmateur?.representant || safeData.programmateur?.nom || 'Non spécifié',
+    'programmateur_qualite_representant': safeData.programmateur?.qualiteRepresentant || safeData.programmateur?.qualite_representant || safeData.programmateur?.fonction || 'Non spécifiée',
     
     // Variables artiste
-    'artiste_nom': safeData.artiste.nom || 'Non spécifié',
-    'artiste_genre': safeData.artiste.genre || 'Non spécifié',
-    'artiste_contact': safeData.artiste.contact || 'Non spécifié',
+    'artiste_nom': safeData.artiste?.nom || 'Non spécifié',
+    'artiste_genre': safeData.artiste?.genre || 'Non spécifié',
+    'artiste_contact': safeData.artiste?.contact || 'Non spécifié',
     
     // Variables concert
-    'concert_titre': safeData.concert.titre || 'Non spécifié',
-    'concert_date': formatSafeDate(safeData.concert.date),
-    'concert_heure': safeData.concert.heure || 'Non spécifiée',
-    'concert_montant': safeData.concert.montant 
+    'concert_titre': safeData.concert?.titre || 'Non spécifié',
+    'concert_date': formatSafeDate(safeData.concert?.date),
+    'concert_heure': safeData.concert?.heure || 'Non spécifiée',
+    'concert_montant': safeData.concert?.montant 
       ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(safeData.concert.montant) 
       : 'Non spécifié',
-    'concert_montant_lettres': montantEnLettres(safeData.concert.montant),
+    'concert_montant_lettres': montantEnLettres(safeData.concert?.montant),
     
     // Variables lieu
-    'lieu_nom': safeData.lieu.nom || 'Non spécifié',
-    'lieu_adresse': safeData.lieu.adresse || 'Non spécifiée',
-    'lieu_code_postal': safeData.lieu.codePostal || safeData.lieu.code_postal || 'Non spécifié',
-    'lieu_ville': safeData.lieu.ville || 'Non spécifiée',
-    'lieu_capacite': safeData.lieu.capacite || 'Non spécifiée',
+    'lieu_nom': safeData.lieu?.nom || 'Non spécifié',
+    'lieu_adresse': safeData.lieu?.adresse || 'Non spécifiée',
+    'lieu_code_postal': safeData.lieu?.codePostal || safeData.lieu?.code_postal || 'Non spécifié',
+    'lieu_ville': safeData.lieu?.ville || 'Non spécifiée',
+    'lieu_capacite': safeData.lieu?.capacite || 'Non spécifiée',
     
     // Variables de date
     'date_jour': format(new Date(), "dd", { locale: fr }),
@@ -186,8 +259,12 @@ const prepareContractVariables = (safeData) => {
     'date_complete': format(new Date(), "dd MMMM yyyy", { locale: fr }),
     
     // Ajouter le type de template comme variable
-    'templateType': getTemplateTypeLabel(safeData.template.type || 'session')
+    'templateType': getTemplateTypeLabel(safeData.template?.type || 'session')
   };
+  
+  console.log('[DEBUG ContratPDFWrapper] prepareContractVariables output:', variables);
+  
+  return variables;
 };
 
 /**

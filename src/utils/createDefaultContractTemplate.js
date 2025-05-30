@@ -133,7 +133,14 @@ Ci-après dénommé "<strong>L'ORGANISATEUR</strong>"</p>
     return docRef.id;
   } catch (error) {
     console.error('Erreur lors de la création du modèle par défaut:', error);
-    throw error;
+    // S'assurer que l'erreur lancée est une instance Error avec un message string
+    if (error instanceof Error) {
+      throw error;
+    } else if (error?.message) {
+      throw new Error(error.message);
+    } else {
+      throw new Error('Erreur inconnue lors de la création du modèle');
+    }
   }
 };
 
@@ -150,6 +157,7 @@ export const ensureDefaultTemplate = async () => {
     return null;
   } catch (error) {
     console.error('Erreur lors de la vérification des modèles:', error);
+    // Ne pas propager l'erreur pour éviter de casser le flux
     return null;
   }
 }; 

@@ -4,44 +4,9 @@ import styles from '@/pages/ContratDetailsPage.module.css';
 import { formatDateFr } from '@/utils/dateUtils';
 
 /**
- * Header component for contract details page with title, metadata and status badge
+ * Header component for contract details page with title and metadata
  */
 const ContratHeader = ({ contrat, concert, artiste, lieu }) => {
-  const getStatusBadge = () => {
-    if (!contrat) return null;
-    
-    const statusConfig = {
-      signed: { 
-        class: 'signed', 
-        icon: 'bi-check-circle', 
-        label: 'Signé' 
-      },
-      sent: { 
-        class: 'sent', 
-        icon: 'bi-send', 
-        label: 'Envoyé' 
-      },
-      generated: { 
-        class: 'generated', 
-        icon: 'bi-file-earmark-text', 
-        label: 'Généré' 
-      }
-    };
-    
-    const config = statusConfig[contrat.status] || { 
-      class: 'generated', 
-      icon: 'bi-question-circle', 
-      label: 'Inconnu' 
-    };
-    
-    return (
-      <div className={`${styles.statusBadge} ${styles[config.class]}`}>
-        <i className={`bi ${config.icon}`}></i>
-        {config.label}
-      </div>
-    );
-  };
-
   // Formater la date de création
   const creationDate = contrat?.dateGeneration 
     ? formatDateFr(contrat.dateGeneration) 
@@ -75,7 +40,6 @@ const ContratHeader = ({ contrat, concert, artiste, lieu }) => {
           )}
         </div>
       </div>
-      {getStatusBadge()}
     </div>
   );
 };

@@ -36,56 +36,132 @@ const useContratDetails = (contratId) => {
   const customQueries = {
     // Requête personnalisée pour charger le programmateur via le concert
     programmateur: async (contratData) => {
-      if (!contratData.concertId) return null;
+      console.log('[DEBUG] Chargement programmateur pour contrat:', contratData);
+      
+      if (!contratData.concertId) {
+        console.log('[DEBUG] Pas de concertId dans le contrat');
+        return null;
+      }
       
       try {
         // Récupérer d'abord le concert
+        console.log('[DEBUG] Récupération du concert:', contratData.concertId);
         const concertDoc = await getDoc(doc(db, 'concerts', contratData.concertId));
-        if (!concertDoc.exists() || !concertDoc.data().programmateurId) return null;
+        
+        if (!concertDoc.exists()) {
+          console.log('[DEBUG] Concert non trouvé');
+          return null;
+        }
+        
+        const concertData = concertDoc.data();
+        console.log('[DEBUG] Données du concert:', concertData);
+        
+        if (!concertData.programmateurId) {
+          console.log('[DEBUG] Pas de programmateurId dans le concert');
+          return null;
+        }
         
         // Récupérer ensuite le programmateur
-        const progDoc = await getDoc(doc(db, 'programmateurs', concertDoc.data().programmateurId));
-        if (!progDoc.exists()) return null;
+        console.log('[DEBUG] Récupération du programmateur:', concertData.programmateurId);
+        const progDoc = await getDoc(doc(db, 'programmateurs', concertData.programmateurId));
         
-        return { id: progDoc.id, ...progDoc.data() };
+        if (!progDoc.exists()) {
+          console.log('[DEBUG] Programmateur non trouvé');
+          return null;
+        }
+        
+        const programmateurData = { id: progDoc.id, ...progDoc.data() };
+        console.log('[DEBUG] Données du programmateur:', programmateurData);
+        
+        return programmateurData;
       } catch (err) {
-        console.error('Erreur lors du chargement du programmateur:', err);
+        console.error('[DEBUG] Erreur lors du chargement du programmateur:', err);
         return null;
       }
     },
     
     // Requête personnalisée pour charger le lieu via le concert
     lieu: async (contratData) => {
-      if (!contratData.concertId) return null;
+      console.log('[DEBUG] Chargement lieu pour contrat:', contratData);
+      
+      if (!contratData.concertId) {
+        console.log('[DEBUG] Pas de concertId dans le contrat');
+        return null;
+      }
       
       try {
         const concertDoc = await getDoc(doc(db, 'concerts', contratData.concertId));
-        if (!concertDoc.exists() || !concertDoc.data().lieuId) return null;
         
-        const lieuDoc = await getDoc(doc(db, 'lieux', concertDoc.data().lieuId));
-        if (!lieuDoc.exists()) return null;
+        if (!concertDoc.exists()) {
+          console.log('[DEBUG] Concert non trouvé pour le lieu');
+          return null;
+        }
         
-        return { id: lieuDoc.id, ...lieuDoc.data() };
+        const concertData = concertDoc.data();
+        console.log('[DEBUG] Données du concert pour lieu:', concertData);
+        
+        if (!concertData.lieuId) {
+          console.log('[DEBUG] Pas de lieuId dans le concert');
+          return null;
+        }
+        
+        console.log('[DEBUG] Récupération du lieu:', concertData.lieuId);
+        const lieuDoc = await getDoc(doc(db, 'lieux', concertData.lieuId));
+        
+        if (!lieuDoc.exists()) {
+          console.log('[DEBUG] Lieu non trouvé');
+          return null;
+        }
+        
+        const lieuData = { id: lieuDoc.id, ...lieuDoc.data() };
+        console.log('[DEBUG] Données du lieu:', lieuData);
+        
+        return lieuData;
       } catch (err) {
-        console.error('Erreur lors du chargement du lieu:', err);
+        console.error('[DEBUG] Erreur lors du chargement du lieu:', err);
         return null;
       }
     },
     
     // Requête personnalisée pour charger l'artiste via le concert
     artiste: async (contratData) => {
-      if (!contratData.concertId) return null;
+      console.log('[DEBUG] Chargement artiste pour contrat:', contratData);
+      
+      if (!contratData.concertId) {
+        console.log('[DEBUG] Pas de concertId dans le contrat');
+        return null;
+      }
       
       try {
         const concertDoc = await getDoc(doc(db, 'concerts', contratData.concertId));
-        if (!concertDoc.exists() || !concertDoc.data().artisteId) return null;
         
-        const artisteDoc = await getDoc(doc(db, 'artistes', concertDoc.data().artisteId));
-        if (!artisteDoc.exists()) return null;
+        if (!concertDoc.exists()) {
+          console.log('[DEBUG] Concert non trouvé pour artiste');
+          return null;
+        }
         
-        return { id: artisteDoc.id, ...artisteDoc.data() };
+        const concertData = concertDoc.data();
+        console.log('[DEBUG] Données du concert pour artiste:', concertData);
+        
+        if (!concertData.artisteId) {
+          console.log('[DEBUG] Pas d\'artisteId dans le concert');
+          return null;
+        }
+        
+        console.log('[DEBUG] Récupération de l\'artiste:', concertData.artisteId);
+        const artisteDoc = await getDoc(doc(db, 'artistes', concertData.artisteId));
+        
+        if (!artisteDoc.exists()) {
+          console.log('[DEBUG] Artiste non trouvé');
+          return null;
+        }
+        
+        const artisteData = { id: artisteDoc.id, ...artisteDoc.data() };
+        console.log('[DEBUG] Données de l\'artiste:', artisteData);
+        
+        return artisteData;
       } catch (err) {
-        console.error('Erreur lors du chargement de l\'artiste:', err);
+        console.error('[DEBUG] Erreur lors du chargement de l\'artiste:', err);
         return null;
       }
     },

@@ -7,10 +7,22 @@ import { formatDateFr } from '@/utils/dateUtils';
  * Component displaying contract and concert information
  */
 const ContratInfoCard = ({ contrat, concert, template, lieu, artiste, programmateur }) => {
+  // Logs de debug pour voir les données reçues
+  console.log('[DEBUG ContratInfoCard] Props reçues:', {
+    contrat,
+    concert,
+    template,
+    lieu,
+    artiste,
+    programmateur
+  });
+
   // Obtenir le montant formaté
   const montant = concert?.montant 
     ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(concert.montant)
     : 'Non spécifié';
+
+  console.log('[DEBUG ContratInfoCard] Montant calculé:', montant, 'concert?.montant:', concert?.montant);
 
   // Formatage de la date et heure du spectacle
   const dateSpectacle = concert?.date && concert?.heure
@@ -19,10 +31,14 @@ const ContratInfoCard = ({ contrat, concert, template, lieu, artiste, programmat
     ? formatDateFr(concert.date)
     : 'Non spécifiée';
 
+  console.log('[DEBUG ContratInfoCard] Date spectacle calculée:', dateSpectacle, 'concert?.date:', concert?.date, 'concert?.heure:', concert?.heure);
+
   // Lieu complet avec ville si disponible
   const lieuComplet = lieu?.nom && lieu?.ville
     ? `${lieu.nom} - ${lieu.ville}`
     : lieu?.nom || concert?.lieuNom || 'Non spécifié';
+
+  console.log('[DEBUG ContratInfoCard] Lieu complet calculé:', lieuComplet, 'lieu:', lieu, 'concert?.lieuNom:', concert?.lieuNom);
 
   // Badge de statut intégré
   const getStatusBadge = () => {
@@ -58,6 +74,39 @@ const ContratInfoCard = ({ contrat, concert, template, lieu, artiste, programmat
     );
   };
 
+  // Formatage du programmateur avec nom complet et structure
+  const formatProgrammateur = () => {
+    console.log('[DEBUG ContratInfoCard] formatProgrammateur - programmateur:', programmateur, 'concert?.programmateurNom:', concert?.programmateurNom);
+    
+    if (!programmateur && !concert?.programmateurNom) {
+      return 'Non spécifié';
+    }
+
+    // Si on a les données complètes du programmateur
+    if (programmateur) {
+      const nomComplet = programmateur.prenom && programmateur.nom 
+        ? `${programmateur.prenom} ${programmateur.nom}`
+        : programmateur.nom || 'Nom non spécifié';
+
+      // Chercher la structure dans différents endroits possibles
+      const structure = programmateur.structureCache?.raisonSociale 
+        || programmateur.structure?.nom 
+        || programmateur.structure 
+        || null;
+
+      console.log('[DEBUG ContratInfoCard] nomComplet:', nomComplet, 'structure:', structure);
+
+      if (structure) {
+        return `${nomComplet} (${structure})`;
+      } else {
+        return nomComplet;
+      }
+    }
+
+    // Fallback sur les données du concert
+    return concert.programmateurNom;
+  };
+
   return (
     <div className={styles.infoCard}>
       <div className={styles.cardHeader}>
@@ -88,9 +137,7 @@ const ContratInfoCard = ({ contrat, concert, template, lieu, artiste, programmat
           </div>
           <div className={styles.infoItem}>
             <div className={styles.infoLabel}>Programmateur</div>
-            <div className={styles.infoValue}>
-              {programmateur?.structure || programmateur?.nom || concert?.programmateurNom || 'Non spécifié'}
-            </div>
+            <div className={styles.infoValue}>{formatProgrammateur()}</div>
           </div>
           <div className={styles.infoItem}>
             <div className={styles.infoLabel}>Montant</div>

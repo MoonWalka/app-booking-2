@@ -399,6 +399,12 @@ const useGenericEntityDetails = ({
   const loadRelatedEntity = useCallback(async (relatedConfig, entityData) => {
     const { name, collection: relatedCollection, idField: relatedIdField, alternativeIdFields = [], type = 'one-to-one' } = relatedConfig;
     
+    console.log(`[DEBUG loadRelatedEntity] Début chargement pour ${name}`, {
+      relatedConfig,
+      entityData,
+      customQueries: Object.keys(customQueries || {})
+    });
+    
     // Chercher l'ID dans le champ principal ou les champs alternatifs
     let entityId = entityData[relatedIdField];
     
@@ -426,11 +432,15 @@ const useGenericEntityDetails = ({
       
       // Vérifier s'il y a une requête personnalisée pour cette entité
       if (customQueries && customQueries[name]) {
+        console.log(`[DEBUG loadRelatedEntity] Utilisation customQuery pour ${name}`);
         debugLog(`🔍 LOAD_RELATED: Utilisation de la requête personnalisée pour ${name}`, 'debug', 'useGenericEntityDetails');
         const customQuery = customQueries[name];
+        console.log(`[DEBUG loadRelatedEntity] Appel customQuery pour ${name} avec:`, entityData);
         const queryResult = await customQuery(entityData);
+        console.log(`[DEBUG loadRelatedEntity] Résultat customQuery pour ${name}:`, queryResult);
         result = queryResult;
       } else if (type === 'one-to-many') {
+        console.log(`[DEBUG loadRelatedEntity] Chargement one-to-many standard pour ${name}`);
         // Charger plusieurs entités liées
         const relatedIds = Array.isArray(entityId) 
           ? entityId
@@ -476,39 +486,45 @@ const useGenericEntityDetails = ({
         
         result = results.filter(Boolean);
       } else {
+        console.log(`[DEBUG loadRelatedEntity] Chargement one-to-one standard pour ${name}`);
         // Charger une seule entité liée
-        const relId = entityId;
         
         // Vérifier le cache d'abord
         if (cacheEnabled) {
-          const cachedItem = cache.get(`related:${name}:${relId}`);
+          const cachedItem = cache.get(`related:${name}:${entityId}`);
           if (cachedItem) {
             debugLog(`✅ LOAD_RELATED: Entité liée ${name} trouvée en cache`, 'info', 'useGenericEntityDetails');
             return cachedItem;
           }
         }
         
-        // Si pas en cache, charger depuis Firestore
-        const docRef = doc(db, relatedCollection, relId);
+        // Charger depuis Firestore
+        const docRef = doc(db, relatedCollection, entityId);
         const docSnap = await getDoc(docRef);
         
         if (docSnap.exists()) {
-          result = { [relatedIdField]: docSnap.id, ...docSnap.data() };
+          const data = { [relatedIdField]: docSnap.id, ...docSnap.data() };
+          
+          // Mettre en cache
           if (cacheEnabled) {
-            cache.set(`related:${name}:${relId}`, result);
+            cache.set(`related:${name}:${entityId}`, data);
           }
+          
+          result = data;
         } else {
-          debugLog(`❌ LOAD_RELATED: Entité liée ${name} non trouvée`, 'warn', 'useGenericEntityDetails');
           result = null;
         }
       }
       
+      console.log(`[DEBUG loadRelatedEntity] Résultat final pour ${name}:`, result);
+      debugLog(`✅ LOAD_RELATED: Entité liée ${name} chargée avec succès`, 'info', 'useGenericEntityDetails');
       return result;
-    } catch (error) {
-      debugLog(`❌ LOAD_RELATED: Erreur lors du chargement de l'entité liée ${name}: ${error}`, 'error', 'useGenericEntityDetails');
+    } catch (err) {
+      console.error(`[DEBUG loadRelatedEntity] Erreur pour ${name}:`, err);
+      debugLog(`❌ LOAD_RELATED: Erreur lors du chargement de l'entité liée ${name}: ${err}`, 'error', 'useGenericEntityDetails');
       return type === 'one-to-many' ? [] : null;
     }
-  }, [cacheEnabled, cache, customQueries]);
+  }, [customQueries, cacheEnabled, cache]);
   
   // Fonction pour charger toutes les entités liées
   const loadAllRelatedEntities = useCallback(async (entityData) => {

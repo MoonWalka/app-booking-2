@@ -36,6 +36,19 @@ const ContratDetailsPage = () => {
     error,
     setContrat
   } = useContratDetails(contratId);
+
+  // Debug logs pour voir les données récupérées
+  console.log('[DEBUG ContratDetailsPage] Données récupérées:', {
+    contrat,
+    concert,
+    template,
+    programmateur,
+    lieu,
+    artiste,
+    entreprise,
+    loading,
+    error
+  });
   
   // Hook for handling contract actions (mark as sent, signed, delete)
   const {

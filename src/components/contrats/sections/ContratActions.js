@@ -1,9 +1,7 @@
 // src/components/contrats/sections/ContratActions.js
 import React from 'react';
-import { Button } from 'react-bootstrap';
-import { FaEnvelope, FaFileSignature } from 'react-icons/fa';
-import FlexContainer from '@/components/ui/FlexContainer';
-import styles from './ContratActions.module.css';
+import Button from '@/components/ui/Button';
+import styles from '@/pages/ContratDetailsPage.module.css';
 
 /**
  * Component for contract action buttons (send, sign, delete, etc)
@@ -21,62 +19,64 @@ const ContratActions = ({
   onNavigateBack
 }) => {
   return (
-    <div className={styles.actionsContainer}>
-      <FlexContainer gap="sm">
+    <div className={styles.contratActions}>
+      <div className={styles.actionsRow}>
         <Button 
           variant="primary" 
           onClick={onPdfViewerToggle}
         >
-          <i className="bi bi-eye me-1"></i> Afficher le contrat
+          <i className="bi bi-eye"></i>
+          Aperçu PDF
         </Button>
+        
+        {contrat?.status === 'generated' && (
+          <Button 
+            variant="warning" 
+            onClick={onSendContrat}
+          >
+            <i className="bi bi-send"></i>
+            Envoyer
+          </Button>
+        )}
+        
+        {contrat?.status === 'sent' && (
+          <Button 
+            variant="success" 
+            onClick={onMarkAsSigned}
+          >
+            <i className="bi bi-check-circle"></i>
+            Marquer comme signé
+          </Button>
+        )}
         
         {template && concert && (
           <Button
-            variant="success"
+            variant="secondary"
             onClick={onDownloadPdf}
             disabled={isLoading}
           >
             {isLoading ? (
               <>
-                <span className="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                 Préparation...
               </>
             ) : (
               <>
-                <i className="bi bi-file-pdf me-1"></i> Télécharger PDF
+                <i className="bi bi-download"></i>
+                Télécharger PDF
               </>
             )}
           </Button>
         )}
         
-        {contrat?.status === 'generated' && (
-          <Button variant="info" onClick={onSendContrat}>
-            <FaEnvelope className="me-1" /> Marquer comme envoyé
-          </Button>
-        )}
-        
-        {contrat?.status === 'sent' && (
-          <Button variant="success" onClick={onMarkAsSigned}>
-            <FaFileSignature className="me-1" /> Marquer comme signé
-          </Button>
-        )}
-        
-        {/* Bouton Supprimer */}
-        <Button 
-          variant="danger" 
-          onClick={onDeleteContrat}
-        >
-          <i className="bi bi-trash me-1"></i> Supprimer
-        </Button>
-        
-        {/* Bouton de retour */}
         <Button 
           variant="outline-secondary" 
           onClick={onNavigateBack}
         >
-          <i className="bi bi-arrow-left me-1"></i> Retour aux contrats
+          <i className="bi bi-arrow-left"></i>
+          Retour
         </Button>
-      </FlexContainer>
+      </div>
     </div>
   );
 };

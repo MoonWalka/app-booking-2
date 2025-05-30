@@ -158,69 +158,72 @@ const ContratDetailsPage = () => {
 
   return (
     <div className={styles.container}>
-      <div className="row">
-        <div className="col-12">
-          {/* Contract Header */}
-          <ContratHeader contrat={contrat} />
+      {/* Contract Header */}
+      <ContratHeader 
+        contrat={contrat} 
+        concert={concert}
+        artiste={artiste}
+        lieu={lieu}
+      />
 
-          {/* Action buttons */}
-          <ContratActions 
-            contrat={contrat}
-            template={template}
-            concert={concert}
-            isLoading={isActionLoading}
-            onPdfViewerToggle={togglePdfViewer}
-            onSendContrat={handleSendContrat}
-            onMarkAsSigned={handleMarkAsSigned}
-            onDownloadPdf={handleDownload}
-            onDeleteContrat={handleDeleteContrat}
-            onNavigateBack={handleNavigateBack}
+      {/* Action buttons */}
+      <ContratActions 
+        contrat={contrat}
+        template={template}
+        concert={concert}
+        isLoading={isActionLoading}
+        onPdfViewerToggle={togglePdfViewer}
+        onSendContrat={handleSendContrat}
+        onMarkAsSigned={handleMarkAsSigned}
+        onDownloadPdf={handleDownload}
+        onDeleteContrat={handleDeleteContrat}
+        onNavigateBack={handleNavigateBack}
+      />
+
+      {/* Display action errors if any */}
+      {actionError && (
+        <Alert variant="danger" className="mb-4">
+          {actionError}
+        </Alert>
+      )}
+
+      {/* Contract information card */}
+      <ContratInfoCard 
+        contrat={contrat}
+        concert={concert}
+        template={template}
+        lieu={lieu}
+        artiste={artiste}
+        programmateur={programmateur}
+      />
+
+      {/* Variables card - collapsible */}
+      <ContratVariablesCard contrat={contrat} />
+
+      {/* PDF viewer section */}
+      {showPdfViewer && (
+        <>
+          {/* Tab navigation for different preview types */}
+          <ContratPdfTabs 
+            activeTab={previewType}
+            onTabSelect={setPreviewType}
+            isGenerating={isGeneratingPdfPreview}
+            hasPdfPreview={!!pdfPreviewUrl}
+            onGeneratePdf={handleGeneratePreview}
           />
 
-          {/* Display action errors if any */}
-          {actionError && (
-            <Alert variant="danger" className="mb-4">
-              {actionError}
-            </Alert>
-          )}
-
-          {/* Contract information card */}
-          <ContratInfoCard 
-            contrat={contrat}
-            concert={concert}
-            template={template}
-            lieu={lieu}
+          {/* PDF content viewer */}
+          <ContratPdfViewer 
+            previewType={previewType}
+            forwardedRef={pdfViewerRef}
+            pdfData={pdfData}
+            ContratPDFWrapper={ContratPDFWrapper}
+            isGeneratingPdfPreview={isGeneratingPdfPreview}
+            pdfPreviewUrl={pdfPreviewUrl}
+            onGeneratePreview={handleGeneratePreview}
           />
-
-          {/* Variables card - collapsible */}
-          <ContratVariablesCard contrat={contrat} />
-
-          {/* PDF viewer section */}
-          {showPdfViewer && (
-            <>
-              {/* Tab navigation for different preview types */}
-              <ContratPdfTabs 
-                activeTab={previewType}
-                onTabSelect={setPreviewType}
-                isGenerating={isGeneratingPdfPreview}
-                hasPdfPreview={!!pdfPreviewUrl}
-                onGeneratePdf={handleGeneratePreview}
-              />
-
-              {/* PDF content viewer */}
-              <ContratPdfViewer 
-                previewType={previewType}
-                forwardedRef={pdfViewerRef}
-                pdfData={pdfData}
-                ContratPDFWrapper={ContratPDFWrapper}
-                isGeneratingPdfPreview={isGeneratingPdfPreview}
-                pdfPreviewUrl={pdfPreviewUrl}
-                onGeneratePreview={handleGeneratePreview}
-              />
-            </>
-          )}
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 };

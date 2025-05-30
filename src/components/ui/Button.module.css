@@ -84,6 +84,31 @@
   text-decoration: none;
 }
 
+.btnWarning {
+  background-color: var(--tc-color-warning);
+  border-color: var(--tc-color-warning);
+  color: var(--tc-color-warning-dark);
+}
+
+.btnWarning:hover {
+  background-color: var(--tc-color-warning-dark);
+  border-color: var(--tc-color-warning-dark);
+  color: var(--tc-text-light);
+  text-decoration: none;
+}
+
+.btnInfo {
+  background-color: var(--tc-color-info);
+  border-color: var(--tc-color-info);
+  color: var(--tc-text-light);
+}
+
+.btnInfo:hover {
+  background-color: var(--tc-color-info-dark);
+  border-color: var(--tc-color-info-dark);
+  text-decoration: none;
+}
+
 /* =============================
    VARIANTES OUTLINE
    ============================= */

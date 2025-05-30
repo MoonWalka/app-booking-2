@@ -1,22 +1,309 @@
 /*
  * Styles pour ContratDetailsPage
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Adapté de la maquette contratdetail.md
  */
 
-/* ContratDetailsPage.module.css */
+/* Container principal */
 .container {
-  padding: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--tc-space-6);
 }
 
+/* États de chargement et d'erreur */
 .loadingContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 5rem;
+  padding: var(--tc-space-10);
+  text-align: center;
 }
 
 .errorContainer {
-  padding: 1.5rem;
+  padding: var(--tc-space-6);
+}
+
+/* Header du contrat */
+.contratHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--tc-space-6);
+  gap: var(--tc-space-4);
+}
+
+.contratTitleSection {
+  flex: 1;
+}
+
+.contratTitle {
+  font-size: var(--tc-font-size-2xl);
+  font-weight: var(--tc-font-weight-bold);
+  color: var(--tc-color-primary);
+  margin-bottom: var(--tc-space-2);
+}
+
+.contratMeta {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-4);
+  color: var(--tc-text-muted);
+  font-size: var(--tc-font-size-sm);
+}
+
+.contratMeta span {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-1);
+}
+
+/* Badge de statut */
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tc-space-1);
+  padding: var(--tc-space-1) var(--tc-space-3);
+  border-radius: var(--tc-radius-base);
+  font-size: var(--tc-font-size-xs);
+  font-weight: var(--tc-font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.statusBadge.generated {
+  background-color: var(--tc-bg-warning);
+  color: var(--tc-color-warning-dark);
+}
+
+.statusBadge.sent {
+  background-color: var(--tc-bg-info);
+  color: var(--tc-color-info-dark);
+}
+
+.statusBadge.signed {
+  background-color: var(--tc-bg-success);
+  color: var(--tc-color-success-dark);
+}
+
+/* Section d'actions */
+.contratActions {
+  background-color: var(--tc-bg-card);
+  border: 1px solid var(--tc-border-light);
+  border-radius: var(--tc-radius-lg);
+  padding: var(--tc-space-4);
+  margin-bottom: var(--tc-space-6);
+  box-shadow: var(--tc-shadow-base);
+}
+
+.actionsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tc-space-3);
+  align-items: center;
+}
+
+/* Cartes d'information */
+.infoCard {
+  background-color: var(--tc-bg-card);
+  border: 1px solid var(--tc-border-light);
+  border-radius: var(--tc-radius-lg);
+  margin-bottom: var(--tc-space-6);
+  box-shadow: var(--tc-shadow-base);
+  overflow: hidden;
+}
+
+.cardHeader {
+  background-color: var(--tc-bg-subtle);
+  padding: var(--tc-space-4);
+  border-bottom: 1px solid var(--tc-border-light);
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-2);
+}
+
+.cardHeader h3 {
+  margin: 0;
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-default);
+  flex: 1;
+}
+
+.cardHeader i {
+  font-size: var(--tc-font-size-lg);
+  color: var(--tc-color-primary);
+}
+
+.cardBody {
+  padding: var(--tc-space-6);
+}
+
+/* Grilles d'informations */
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--tc-space-4);
+}
+
+.infoItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-space-1);
+}
+
+.infoLabel {
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-secondary);
+  font-size: var(--tc-font-size-sm);
+}
+
+.infoValue {
+  color: var(--tc-text-default);
+  font-size: var(--tc-font-size-base);
+}
+
+/* Section variables */
+.variablesSection {
+  margin-top: var(--tc-space-4);
+}
+
+.variablesToggle {
+  background: none;
+  border: none;
+  color: var(--tc-color-primary);
+  font-size: var(--tc-font-size-sm);
+  cursor: pointer;
+  padding: var(--tc-space-2) 0;
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-1);
+}
+
+.variablesToggle:hover {
+  text-decoration: underline;
+}
+
+.variablesContent {
+  display: none;
+  margin-top: var(--tc-space-3);
+  padding: var(--tc-space-4);
+  background-color: var(--tc-bg-subtle);
+  border-radius: var(--tc-radius-base);
+}
+
+.variablesContent.show {
+  display: block;
+}
+
+.variableItem {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--tc-space-2) 0;
+  border-bottom: 1px solid var(--tc-border-ultralight);
+}
+
+.variableItem:last-child {
+  border-bottom: none;
+}
+
+.variableName {
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-text-secondary);
+}
+
+.variableValue {
+  color: var(--tc-text-default);
+  font-family: monospace;
+}
+
+/* Onglets PDF */
+.pdfTabs {
+  display: flex;
+  border-bottom: 1px solid var(--tc-border-light);
+  margin-bottom: var(--tc-space-4);
+  background-color: var(--tc-bg-card);
+  border-radius: var(--tc-radius-lg) var(--tc-radius-lg) 0 0;
+  overflow: hidden;
+}
+
+.pdfTab {
+  padding: var(--tc-space-3) var(--tc-space-6);
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  color: var(--tc-text-muted);
+  font-weight: var(--tc-font-weight-medium);
+  transition: all var(--tc-transition-fast);
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-2);
+}
+
+.pdfTab:hover {
+  background-color: var(--tc-bg-hover);
+  color: var(--tc-text-default);
+}
+
+.pdfTab.active {
+  color: var(--tc-color-primary);
+  border-bottom-color: var(--tc-color-primary);
+  background-color: var(--tc-bg-light);
+}
+
+.pdfTab:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Visualiseur PDF */
+.pdfViewer {
+  background-color: var(--tc-bg-card);
+  border: 1px solid var(--tc-border-light);
+  border-radius: 0 0 var(--tc-radius-lg) var(--tc-radius-lg);
+  min-height: 600px;
+  padding: var(--tc-space-6);
+  box-shadow: var(--tc-shadow-base);
+}
+
+.pdfContent {
+  background-color: var(--tc-bg-default);
+  border: 1px solid var(--tc-border-light);
+  border-radius: var(--tc-radius-base);
+  padding: var(--tc-space-8);
+  min-height: 500px;
+  font-size: var(--tc-font-size-sm);
+  line-height: 1.6;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: var(--tc-space-4);
+  }
+
+  .contratHeader {
+    flex-direction: column;
+    gap: var(--tc-space-3);
+  }
+
+  .actionsRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .actionsRow button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .infoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .cardBody {
+    padding: var(--tc-space-4);
+  }
 }

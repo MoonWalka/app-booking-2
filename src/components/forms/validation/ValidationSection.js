@@ -111,7 +111,7 @@ const ValidationSection = ({
                                   formValue = formData.structure || '';
                                 }
                               }
-                            } else if (['type', 'adresse', 'codePostal', 'ville', 'pays', 'siret', 'tva'].includes(field.id)) {
+                            } else if (['type', 'adresse', 'codePostal', 'ville', 'pays', 'siret', 'tva', 'numeroIntracommunautaire'].includes(field.id)) {
                               if (formData && typeof formData === 'object') {
                                 if (formData.structure && typeof formData.structure === 'object') {
                                   formValue = formData.structure[field.id] || '';
@@ -179,7 +179,7 @@ const ValidationSection = ({
                         formValue = formData.structure || '';
                       }
                     }
-                  } else if (['type', 'adresse', 'codePostal', 'ville', 'pays', 'siret', 'tva'].includes(field.id)) {
+                  } else if (['type', 'adresse', 'codePostal', 'ville', 'pays', 'siret', 'tva', 'numeroIntracommunautaire'].includes(field.id)) {
                     const fieldKey = `structure${field.id.charAt(0).toUpperCase() + field.id.slice(1)}`;
                     existingValue = existingData ? existingData[fieldKey] || '' : '';
                     // Pour formData, chercher dans l'objet structure ou directement

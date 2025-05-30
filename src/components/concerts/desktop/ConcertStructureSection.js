@@ -127,6 +127,11 @@ const ConcertStructureSection = ({
                           <i className="bi bi-card-text"></i> SIRET: {selectedStructure.siret}
                         </span>
                       )}
+                      {selectedStructure.numeroIntracommunautaire && (
+                        <span className={styles.structureTva}>
+                          <i className="bi bi-briefcase"></i> TVA: {selectedStructure.numeroIntracommunautaire}
+                        </span>
+                      )}
                     </div>
                   </div>
                   <Button 
@@ -162,6 +167,10 @@ const ConcertStructureSection = ({
                 <div className="mb-3">
                   <div className="fw-bold">SIRET:</div>
                   <div>{structure.siret || 'Non spécifié'}</div>
+                </div>
+                <div className="mb-3">
+                  <div className="fw-bold">N° TVA Intracommunautaire:</div>
+                  <div>{structure.numeroIntracommunautaire || 'Non spécifié'}</div>
                 </div>
               </div>
               <div className="col-md-6">

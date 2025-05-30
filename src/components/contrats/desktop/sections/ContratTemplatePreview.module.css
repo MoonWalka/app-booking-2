@@ -6,16 +6,20 @@
 
 .templatePreview {
   margin-bottom: 1.5rem;
-  padding: 0.75rem;
+  padding: 0;
   border: 1px solid var(--tc-color-gray-200);
   border-radius: 4px;
   background-color: var(--tc-color-gray-50);
+  overflow: hidden;
 }
 
 .previewHeader {
-  margin-bottom: 1.25rem;
-  border-bottom: 1px solid var(--tc-color-gray-100);
-  padding-bottom: 0.75rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--tc-color-gray-200);
+  background-color: var(--tc-bg-card);
 }
 
 .previewHeader h3 {
@@ -25,8 +29,70 @@
   color: var(--tc-color-gray-700);
 }
 
+.previewTitle {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--tc-text-default);
+}
+
+.collapseButton {
+  background: none;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--tc-color-gray-600);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.collapseButton:hover {
+  background-color: var(--tc-color-gray-100);
+  color: var(--tc-color-primary);
+}
+
+.collapseButton:focus {
+  outline: 2px solid var(--tc-color-primary);
+  outline-offset: 2px;
+}
+
 .previewContent {
+  padding: 0.75rem;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.templateSectionPreview {
+  margin-bottom: 1rem;
   padding: 0.5rem;
+  border-left: 3px solid var(--tc-color-gray-300);
+  background-color: var(--tc-bg-card);
+  border-radius: 0 4px 4px 0;
+}
+
+.templateSectionPreview:last-child {
+  margin-bottom: 0;
+}
+
+.sectionLabel {
+  font-weight: 600;
+  color: var(--tc-color-gray-700);
+  margin-bottom: 0.25rem;
+  font-size: 0.875rem;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .multiPagePreviewWrapper {

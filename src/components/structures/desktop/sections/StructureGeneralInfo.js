@@ -66,6 +66,12 @@ const StructureGeneralInfo = ({ structure, formatValue }) => {
             <div className={styles.infoValue}>{formatSimpleValue(structure.tva)}</div>
           </div>
         </div>
+        <div className="col-md-6">
+          <div className={styles.infoGroup}>
+            <div className={styles.infoLabel}>N° TVA Intracommunautaire</div>
+            <div className={styles.infoValue}>{formatSimpleValue(structure.numeroIntracommunautaire)}</div>
+          </div>
+        </div>
       </div>
     </Card>
   );

@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, lazy, useEffect, useState } from 'react';
 import '@styles/index.css';
 import { 
   BrowserRouter as Router, 
@@ -69,6 +69,9 @@ if (process.env.REACT_APP_MODE === 'local') {
     }, 2000);
   }).catch(err => console.error('Erreur lors du chargement du script de peuplement:', err));
 }
+
+// Import de l'utilitaire de correction
+import './utils/fixNumeroIntracommunautaire';
 
 // Composant ErrorBoundary pour capturer les erreurs de chargement
 class ErrorBoundary extends React.Component {

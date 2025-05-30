@@ -206,6 +206,7 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
   const [pdfUrl, setPdfUrl] = useState(null);
   const [entrepriseInfo, setEntrepriseInfo] = useState(null);
   const [contratId, setContratId] = useState(null);
+  const [structureData, setStructureData] = useState(null);
   
   // États pour la gestion d'erreur et le succès
   const [errorMessage, setErrorMessage] = useState('');
@@ -285,6 +286,22 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
           console.warn("Informations d'entreprise non trouvées");
         }
         
+        // Charger les données de structure du programmateur si disponible
+        if (programmateur?.structureId) {
+          console.log("Chargement de la structure du programmateur:", programmateur.structureId);
+          try {
+            const structureDoc = await getDoc(doc(db, 'structures', programmateur.structureId));
+            if (structureDoc.exists()) {
+              console.log("Structure trouvée, données:", structureDoc.data());
+              setStructureData(structureDoc.data());
+            } else {
+              console.warn("Structure non trouvée avec l'ID:", programmateur.structureId);
+            }
+          } catch (structureError) {
+            console.error("Erreur lors du chargement de la structure:", structureError);
+          }
+        }
+        
         // Vérifier si un contrat existe déjà pour ce concert
         if (concert?.id) {
           console.log("Recherche d'un contrat existant pour le concert:", concert.id);
@@ -331,7 +348,7 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
     };
 
     fetchData();
-  }, [concert?.id]);
+  }, [concert?.id, programmateur?.structureId]);
   
   // Mettre à jour le modèle sélectionné quand l'ID change
   useEffect(() => {
@@ -352,14 +369,81 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
     
     // Fonction helper pour convertir un montant en lettres
     const montantEnLettres = (montant) => {
-      // Fonction simplifiée, à améliorer pour une conversion complète
       if (!montant) return 'Non spécifié';
       const montantNum = parseFloat(montant);
       if (isNaN(montantNum)) return 'Non spécifié';
       
-      // Pour l'instant, on retourne une version simple
-      // Une vraie implémentation nécessiterait une librairie de conversion nombre->lettres
-      return `${montantNum.toFixed(2).replace('.', ' euros ')} euros`;
+      // Fonction de conversion nombre vers lettres en français
+      const unites = ['', 'un', 'deux', 'trois', 'quatre', 'cinq', 'six', 'sept', 'huit', 'neuf'];
+      const dizaines = ['', '', 'vingt', 'trente', 'quarante', 'cinquante', 'soixante', 'soixante', 'quatre-vingt', 'quatre-vingt'];
+      const teens = ['dix', 'onze', 'douze', 'treize', 'quatorze', 'quinze', 'seize', 'dix-sept', 'dix-huit', 'dix-neuf'];
+      
+      const convertirNombreEnLettres = (nombre) => {
+        if (nombre === 0) return 'zéro';
+        if (nombre < 0) return 'moins ' + convertirNombreEnLettres(-nombre);
+        
+        let resultat = '';
+        
+        // Milliers
+        if (nombre >= 1000) {
+          const milliers = Math.floor(nombre / 1000);
+          if (milliers === 1) {
+            resultat += 'mille ';
+          } else {
+            resultat += convertirNombreEnLettres(milliers) + ' mille ';
+          }
+          nombre = nombre % 1000;
+        }
+        
+        // Centaines
+        if (nombre >= 100) {
+          const centaines = Math.floor(nombre / 100);
+          if (centaines === 1) {
+            resultat += 'cent ';
+          } else {
+            resultat += unites[centaines] + ' cent' + (nombre % 100 === 0 && centaines > 1 ? 's ' : ' ');
+          }
+          nombre = nombre % 100;
+        }
+        
+        // Dizaines et unités
+        if (nombre >= 20) {
+          const dizaine = Math.floor(nombre / 10);
+          const unite = nombre % 10;
+          
+          if (dizaine === 7 || dizaine === 9) {
+            resultat += dizaines[dizaine] + '-' + teens[unite] + ' ';
+          } else {
+            resultat += dizaines[dizaine];
+            if (unite === 1 && dizaine !== 8) {
+              resultat += ' et un ';
+            } else if (unite > 0) {
+              resultat += '-' + unites[unite] + ' ';
+            } else {
+              resultat += ' ';
+            }
+          }
+        } else if (nombre >= 10) {
+          resultat += teens[nombre - 10] + ' ';
+        } else if (nombre > 0) {
+          resultat += unites[nombre] + ' ';
+        }
+        
+        return resultat.trim();
+      };
+      
+      // Séparer la partie entière et décimale
+      const partieEntiere = Math.floor(montantNum);
+      const partieDecimale = Math.round((montantNum - partieEntiere) * 100);
+      
+      let resultat = convertirNombreEnLettres(partieEntiere) + ' euro' + (partieEntiere > 1 ? 's' : '');
+      
+      if (partieDecimale > 0) {
+        resultat += ' et ' + convertirNombreEnLettres(partieDecimale) + ' centime' + (partieDecimale > 1 ? 's' : '');
+      }
+      
+      // Mettre la première lettre en majuscule
+      return resultat.charAt(0).toUpperCase() + resultat.slice(1);
     };
     
     return {
@@ -375,12 +459,14 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
       // Variables programmateur
       programmateur_nom: programmateur?.nom || 'Non spécifié',
       programmateur_prenom: programmateur?.prenom || '',
-      programmateur_structure: programmateur?.structure || 'Non spécifiée',
+      programmateur_structure: structureData?.nom || programmateur?.structure || 'Non spécifiée',
       programmateur_email: programmateur?.email || 'Non spécifié',
       programmateur_telephone: programmateur?.telephone || 'Non spécifié',
-      programmateur_siret: programmateur?.siret || 'Non spécifié',
-      programmateur_adresse: programmateur?.adresse || 'Non spécifiée',
-      programmateur_numero_intracommunautaire: programmateur?.numeroIntracommunautaire || programmateur?.numero_intracommunautaire || 'Non spécifié',
+      programmateur_siret: structureData?.siret || programmateur?.siret || 'Non spécifié',
+      programmateur_adresse: structureData?.adresse ? 
+        `${structureData.adresse.adresse || ''} ${structureData.adresse.codePostal || ''} ${structureData.adresse.ville || ''}`.trim() 
+        : programmateur?.adresse || 'Non spécifiée',
+      programmateur_numero_intracommunautaire: structureData?.numeroIntracommunautaire || programmateur?.numeroIntracommunautaire || programmateur?.numero_intracommunautaire || 'Non spécifié',
       programmateur_representant: programmateur?.representant || programmateur?.nom || 'Non spécifié',
       programmateur_qualite_representant: programmateur?.qualiteRepresentant || programmateur?.qualite_representant || programmateur?.fonction || 'Non spécifiée',
       
@@ -391,7 +477,38 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
       
       // Variables concert
       concert_titre: concert?.titre || 'Non spécifié',
-      concert_date: concert?.date ? new Date(concert.date.seconds * 1000).toLocaleDateString('fr-FR') : 'Non spécifiée',
+      concert_date: (() => {
+        if (!concert?.date) return 'Non spécifiée';
+        
+        // Gérer différents formats de date possibles
+        let dateObj;
+        
+        // Si c'est un timestamp Firestore
+        if (concert.date.seconds) {
+          dateObj = new Date(concert.date.seconds * 1000);
+        } 
+        // Si c'est une string de date
+        else if (typeof concert.date === 'string') {
+          dateObj = new Date(concert.date);
+        }
+        // Si c'est déjà un objet Date
+        else if (concert.date instanceof Date) {
+          dateObj = concert.date;
+        }
+        // Si c'est un timestamp numérique
+        else if (typeof concert.date === 'number') {
+          dateObj = new Date(concert.date);
+        } else {
+          return 'Non spécifiée';
+        }
+        
+        // Vérifier que la date est valide
+        if (isNaN(dateObj.getTime())) {
+          return 'Non spécifiée';
+        }
+        
+        return dateObj.toLocaleDateString('fr-FR');
+      })(),
       concert_heure: concert?.heure || 'Non spécifiée',
       concert_montant: concert?.montant 
         ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(concert.montant)
@@ -431,7 +548,38 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
       genreArtiste: artiste?.genre || 'Non spécifié',
       contactArtiste: artiste?.contact || 'Non spécifié',
       titreConcert: concert?.titre || 'Non spécifié',
-      dateConcert: concert?.date ? new Date(concert.date.seconds * 1000).toLocaleDateString('fr-FR') : 'Non spécifiée',
+      dateConcert: (() => {
+        if (!concert?.date) return 'Non spécifiée';
+        
+        // Gérer différents formats de date possibles
+        let dateObj;
+        
+        // Si c'est un timestamp Firestore
+        if (concert.date.seconds) {
+          dateObj = new Date(concert.date.seconds * 1000);
+        } 
+        // Si c'est une string de date
+        else if (typeof concert.date === 'string') {
+          dateObj = new Date(concert.date);
+        }
+        // Si c'est déjà un objet Date
+        else if (concert.date instanceof Date) {
+          dateObj = concert.date;
+        }
+        // Si c'est un timestamp numérique
+        else if (typeof concert.date === 'number') {
+          dateObj = new Date(concert.date);
+        } else {
+          return 'Non spécifiée';
+        }
+        
+        // Vérifier que la date est valide
+        if (isNaN(dateObj.getTime())) {
+          return 'Non spécifiée';
+        }
+        
+        return dateObj.toLocaleDateString('fr-FR');
+      })(),
       heureConcert: concert?.heure || 'Non spécifiée',
       montantConcert: concert?.montant 
         ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(concert.montant)

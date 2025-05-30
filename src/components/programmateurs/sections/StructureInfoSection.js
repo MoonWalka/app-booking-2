@@ -177,6 +177,25 @@ const StructureInfoSection = ({
         </Col>
       </Row>
       
+      <Row>
+        <Col md={6}>
+          <Form.Group className="mb-3">
+            <Form.Label htmlFor="structureNumeroIntracommunautaire">N° TVA Intracommunautaire</Form.Label>
+            <Form.Control
+              id="structureNumeroIntracommunautaire"
+              name="structure.numeroIntracommunautaire"
+              type="text"
+              value={structureValues.numeroIntracommunautaire || ''}
+              onChange={onChange}
+              onBlur={onBlur}
+              disabled={isReadOnly}
+              placeholder="Ex: FR12345678901"
+              className={styles.formInput}
+            />
+          </Form.Group>
+        </Col>
+      </Row>
+      
       {/* Champ caché pour stocker l'ID de structure */}
       <input 
         type="hidden" 

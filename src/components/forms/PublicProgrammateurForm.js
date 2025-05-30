@@ -25,6 +25,7 @@ const PublicProgrammateurForm = ({
     structureAdresse: '',
     structureCodePostal: '',
     structureVille: '',
+    structureNumeroIntracommunautaire: '',
     
     // Informations du signataire du contrat
     signataireNom: '',
@@ -88,6 +89,7 @@ const PublicProgrammateurForm = ({
                   structureAdresse: submissionData.structureData?.adresse || '',
                   structureCodePostal: submissionData.structureData?.codePostal || '',
                   structureVille: submissionData.structureData?.ville || '',
+                  structureNumeroIntracommunautaire: submissionData.structureData?.numeroIntracommunautaire || '',
                   
                   // Données du signataire
                   signataireNom: submissionData.signataireData?.nom || '',
@@ -215,7 +217,8 @@ const PublicProgrammateurForm = ({
       structureSiret: siege.siret || entreprise.siren,
       structureAdresse: adresse || siege.adresse || '',
       structureCodePostal: siege.code_postal || '',
-      structureVille: siege.libelle_commune || ''
+      structureVille: siege.libelle_commune || '',
+      structureNumeroIntracommunautaire: siege.numeroIntracommunautaire || ''
     }));
 
     // Mettre à jour le champ de recherche avec le nom sélectionné
@@ -304,7 +307,8 @@ const PublicProgrammateurForm = ({
           siret: formData.structureSiret,
           adresse: formData.structureAdresse,
           codePostal: formData.structureCodePostal,
-          ville: formData.structureVille
+          ville: formData.structureVille,
+          numeroIntracommunautaire: formData.structureNumeroIntracommunautaire
         },
         
         // DONNÉES DU SIGNATAIRE DU CONTRAT
@@ -496,6 +500,19 @@ const PublicProgrammateurForm = ({
                 onChange={handleInputChange}
               />
             </div>
+          </div>
+
+          <div className={styles.formGroup}>
+            <label htmlFor="structureNumeroIntracommunautaire" className={styles.formLabel}>N° TVA Intracommunautaire</label>
+            <input
+              type="text"
+              id="structureNumeroIntracommunautaire"
+              name="structureNumeroIntracommunautaire"
+              className={styles.formControl}
+              placeholder="Ex: FR12345678901"
+              value={formData.structureNumeroIntracommunautaire}
+              onChange={handleInputChange}
+            />
           </div>
 
           <div className={styles.formGroup}>

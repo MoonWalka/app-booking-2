@@ -71,6 +71,7 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
         if (structure.adresse) structureFields.adresse = structure.adresse;
         if (structure.codePostal) structureFields.codePostal = structure.codePostal;
         if (structure.ville) structureFields.ville = structure.ville;
+        if (structure.numeroIntracommunautaire) structureFields.numeroIntracommunautaire = structure.numeroIntracommunautaire;
         
         console.log("Données structure mappées:", structureFields);
       }
@@ -146,6 +147,7 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
             pays: structureFields.pays || 'France'
           },
           tva: structureFields.tva || '',
+          numeroIntracommunautaire: structureFields.numeroIntracommunautaire || '',
           // Initialiser les associations
           programmateursAssocies: []
         };

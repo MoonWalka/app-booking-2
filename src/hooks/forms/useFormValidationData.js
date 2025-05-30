@@ -33,7 +33,8 @@ const structureFields = [
   { id: 'codePostal', label: 'Code postal' },
   { id: 'ville', label: 'Ville' },
   { id: 'pays', label: 'Pays' },
-  { id: 'siret', label: 'SIRET' }
+  { id: 'siret', label: 'SIRET' },
+  { id: 'numeroIntracommunautaire', label: 'N° TVA Intracommunautaire' }
 ];
 
 /**

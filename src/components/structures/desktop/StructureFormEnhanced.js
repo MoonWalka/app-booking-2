@@ -36,7 +36,8 @@ const StructureFormEnhanced = () => {
     telephone: '',
     email: '',
     siteWeb: '',
-    notes: ''
+    notes: '',
+    numeroIntracommunautaire: ''
   });
 
   // Adresse du lieu (séparée des infos structure)
@@ -167,7 +168,8 @@ const StructureFormEnhanced = () => {
             telephone: data.telephone || '',
             email: data.email || '',
             siteWeb: data.siteWeb || '',
-            notes: data.notes || ''
+            notes: data.notes || '',
+            numeroIntracommunautaire: data.numeroIntracommunautaire || ''
           });
 
           // Charger l'adresse du lieu
@@ -667,6 +669,17 @@ const StructureFormEnhanced = () => {
                         name="tva"
                         value={formData.tva}
                         onChange={handleChange}
+                      />
+                    </div>
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel}>N° TVA Intracommunautaire</label>
+                      <input 
+                        type="text" 
+                        className={styles.formControl}
+                        name="numeroIntracommunautaire"
+                        value={formData.numeroIntracommunautaire}
+                        onChange={handleChange}
+                        placeholder="Ex: FR12345678901"
                       />
                     </div>
                   </div>

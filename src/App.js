@@ -33,6 +33,7 @@ import ConcertDetails from '@/components/concerts/ConcertDetails';
 // Import du dashboard de debug unifié (uniquement en développement)
 import UnifiedDebugDashboard from '@/components/debug/UnifiedDebugDashboard';
 import TestParametresVersions from './pages/TestParametresVersions';
+import CreateDefaultTemplate from './pages/CreateDefaultTemplate';
 // Import du ProfilerMonitor pour le suivi des performances
 import ProfilerMonitor from './components/debug/ProfilerMonitor';
 import ProgrammateurReferencesDebug from '@/components/debug/ProgrammateurReferencesDebug';
@@ -163,6 +164,7 @@ function App() {
                 <Routes>
                   <Route path="/test-buttons" element={<TestButtons />} />
                   <Route path="/test-parametres-versions" element={<TestParametresVersions />} />
+                  <Route path="/create-default-template" element={<CreateDefaultTemplate />} />
                   
                   {/* 🔒 SÉCURITÉ : Route publique de connexion */}
                   <Route path="/login" element={<LoginPage />} />

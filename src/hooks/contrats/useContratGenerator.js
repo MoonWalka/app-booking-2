@@ -195,6 +195,7 @@ import {
   updateDoc,
   serverTimestamp
 } from '@/services/firebase-service';
+import { ensureDefaultTemplate } from '@/utils/createDefaultContractTemplate';
 
 export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
   const [templates, setTemplates] = useState([]);
@@ -243,6 +244,10 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
       
       try {
         console.log("Début du chargement des données pour la génération de contrat");
+        
+        // Vérifier et créer un modèle par défaut si nécessaire
+        await ensureDefaultTemplate();
+        
         // Récupérer les modèles de contrat
         const templatesQuery = query(
           collection(db, 'contratTemplates'), 
@@ -316,7 +321,9 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
         }
       } catch (error) {
         console.error('Erreur lors de la récupération des données:', error);
-        setErrorMessage(`Erreur lors du chargement des données: ${error.message}`);
+        // S'assurer que le message d'erreur est une chaîne
+        const errorMsg = error?.message || error?.toString() || 'Erreur inconnue lors du chargement des données';
+        setErrorMessage(`Erreur lors du chargement des données: ${errorMsg}`);
         setShowErrorAlert(true);
       } finally {
         setLoading(false);
@@ -451,7 +458,9 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
       console.error('Code d\'erreur:', error.code);
       console.error('Stack trace:', error.stack);
       
-      setErrorMessage(`Erreur lors de la sauvegarde du contrat: ${error.message}`);
+      // S'assurer que le message d'erreur est une chaîne
+      const errorMsg = error?.message || error?.toString() || 'Erreur inconnue lors de la sauvegarde';
+      setErrorMessage(`Erreur lors de la sauvegarde du contrat: ${errorMsg}`);
       setShowErrorAlert(true);
       throw error;
     } finally {

@@ -134,11 +134,16 @@ const ContratDetailsPage = () => {
 
   // Error state
   if (error || !contrat) {
+    // Extraire le message d'erreur de l'objet error
+    const errorMessage = typeof error === 'string' 
+      ? error 
+      : error?.message || "Ce contrat n'existe pas ou n'a pas pu être chargé";
+      
     return (
       <div className={styles.errorContainer}>
         <Alert variant="danger">
           <Alert.Heading>Erreur</Alert.Heading>
-          <p>{error || "Ce contrat n'existe pas ou n'a pas pu être chargé"}</p>
+          <p>{errorMessage}</p>
         </Alert>
         <button 
           className="tc-btn tc-btn-primary"

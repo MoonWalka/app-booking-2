@@ -1,6 +1,6 @@
 // src/components/contrats/desktop/sections/ContratAlerts.js
 import React from 'react';
-import { Alert } from 'react-bootstrap';
+import Alert from '@/components/ui/Alert';
 import styles from './ContratAlerts.module.css';
 
 const ContratAlerts = ({
@@ -9,18 +9,31 @@ const ContratAlerts = ({
   showSuccessAlert,
   resetAlerts
 }) => {
+  // S'assurer que errorMessage est toujours une chaîne
+  const safeErrorMessage = typeof errorMessage === 'string' 
+    ? errorMessage 
+    : errorMessage?.message || errorMessage?.toString() || 'Une erreur est survenue';
+
   return (
     <div className={styles.alertsContainer}>
       {showErrorAlert && (
-        <Alert variant="danger" onClose={resetAlerts} dismissible>
-          <i className="bi bi-exclamation-triangle-fill me-2"></i>
-          {errorMessage}
+        <Alert 
+          variant="danger" 
+          dismissible 
+          onDismiss={resetAlerts}
+          icon={<i className="bi bi-exclamation-triangle-fill"></i>}
+        >
+          {safeErrorMessage}
         </Alert>
       )}
       
       {showSuccessAlert && (
-        <Alert variant="success" onClose={resetAlerts} dismissible>
-          <i className="bi bi-check-circle-fill me-2"></i>
+        <Alert 
+          variant="success" 
+          dismissible 
+          onDismiss={resetAlerts}
+          icon={<i className="bi bi-check-circle-fill"></i>}
+        >
           Contrat généré et sauvegardé avec succès !
         </Alert>
       )}

@@ -72,7 +72,9 @@ const ContratGenerationPage = () => {
 
       } catch (error) {
         console.error('Erreur lors de la récupération des données:', error);
-        setError('Erreur lors de la récupération des données');
+        // S'assurer que l'erreur est une chaîne
+        const errorMessage = error?.message || error?.toString() || 'Erreur lors de la récupération des données';
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }

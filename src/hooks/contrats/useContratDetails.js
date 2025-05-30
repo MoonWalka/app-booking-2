@@ -22,37 +22,43 @@ const useContratDetails = (contratId) => {
       name: 'concert', 
       collection: 'concerts', 
       idField: 'concertId',
-      type: 'one-to-one'
+      type: 'one-to-one',
+      essential: true
     },
     { 
       name: 'template', 
       collection: 'contratTemplates', 
       idField: 'templateId',
-      type: 'one-to-one'
+      type: 'one-to-one',
+      essential: true
     },
     { 
       name: 'programmateur', 
       collection: 'programmateurs', 
       idField: 'programmateurId',
-      type: 'custom-query'
+      type: 'custom-query',
+      essential: true
     },
     { 
       name: 'lieu', 
       collection: 'lieux', 
       idField: 'lieuId',
-      type: 'custom-query'
+      type: 'custom-query',
+      essential: true
     },
     { 
       name: 'artiste', 
       collection: 'artistes', 
       idField: 'artisteId',
-      type: 'custom-query'
+      type: 'custom-query',
+      essential: true
     },
     { 
       name: 'entreprise', 
       collection: 'parametres', 
       idField: 'entrepriseId',
-      type: 'custom-query'
+      type: 'custom-query',
+      essential: true
     }
   ];
   

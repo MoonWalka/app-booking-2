@@ -7,6 +7,7 @@ const ConcertActions = ({
   hasUnvalidatedForm,
   hasContract,
   contractStatus,
+  contractData,
   handleSendForm,
   handleViewForm,
   handleGenerateContract,
@@ -104,7 +105,13 @@ const ConcertActions = ({
       case 'generated':
       case 'sent':
       case 'signed':
-        handleViewContract(concert.id);
+        // Utiliser l'ID du contrat depuis contractData
+        if (contractData && contractData.id) {
+          handleViewContract(contractData.id);
+        } else {
+          // Fallback si pas d'ID de contrat (ne devrait pas arriver)
+          console.error('ID du contrat non trouvé pour le concert:', concert.id);
+        }
         break;
       case 'no_programmateur':
       default:

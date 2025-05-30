@@ -54,7 +54,8 @@ const ConcertsList = () => {
     hasForm, 
     hasUnvalidatedForm, 
     hasContract,
-    getContractStatus
+    getContractStatus,
+    concertsWithContracts
   } = useConcertListData();
   console.timeEnd('⏱️ Initialisation hooks ConcertsList');
 
@@ -167,6 +168,7 @@ const ConcertsList = () => {
             hasUnvalidatedForm={hasUnvalidatedForm}
             hasContract={hasContract}
             getContractStatus={getContractStatus}
+            concertsWithContracts={concertsWithContracts}
             getContractButtonVariant={getContractButtonVariant}
             getContractTooltip={getContractTooltip}
             isDatePassed={isDatePassed}

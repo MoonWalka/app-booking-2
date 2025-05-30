@@ -13,6 +13,7 @@ const ConcertsTable = memo(({
   hasUnvalidatedForm,
   hasContract,
   getContractStatus,
+  concertsWithContracts,
   isDatePassed,
   handleViewConcert,
   handleSendForm,
@@ -132,6 +133,7 @@ const ConcertsTable = memo(({
       hasUnvalidatedForm={hasUnvalidatedForm ? hasUnvalidatedForm(row.id) : false}
       hasContract={hasContract ? hasContract(row.id) : false}
       contractStatus={getContractStatus ? getContractStatus(row.id) : null}
+      contractData={concertsWithContracts ? concertsWithContracts[row.id] : null}
       getContractButtonVariant={getContractButtonVariant}
       getContractTooltip={getContractTooltip}
       handleViewConcert={handleViewConcert}

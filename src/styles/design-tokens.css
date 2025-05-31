@@ -1,0 +1,212 @@
+/**
+ * Design Tokens - Système de design unifié TourCraft
+ * 
+ * Ces variables CSS définissent le langage visuel de l'application
+ * et doivent être utilisées partout pour assurer la cohérence
+ */
+
+:root {
+  /* ===== COULEURS ===== */
+  
+  /* Couleurs primaires */
+  --color-primary: #007bff;
+  --color-primary-light: #4da3ff;
+  --color-primary-dark: #0056b3;
+  --color-primary-rgb: 0, 123, 255;
+  
+  /* Couleurs secondaires */
+  --color-secondary: #6c757d;
+  --color-secondary-light: #95a0a9;
+  --color-secondary-dark: #495057;
+  --color-secondary-rgb: 108, 117, 125;
+  
+  /* Couleurs d'état */
+  --color-success: #28a745;
+  --color-success-light: #48c665;
+  --color-success-dark: #1e7e34;
+  
+  --color-danger: #dc3545;
+  --color-danger-light: #e4606d;
+  --color-danger-dark: #bd2130;
+  
+  --color-warning: #ffc107;
+  --color-warning-light: #ffcd39;
+  --color-warning-dark: #d39e00;
+  
+  --color-info: #17a2b8;
+  --color-info-light: #3ab8ce;
+  --color-info-dark: #117a8b;
+  
+  /* Couleurs neutres */
+  --color-white: #ffffff;
+  --color-gray-50: #f8f9fa;
+  --color-gray-100: #f1f3f5;
+  --color-gray-200: #e9ecef;
+  --color-gray-300: #dee2e6;
+  --color-gray-400: #ced4da;
+  --color-gray-500: #adb5bd;
+  --color-gray-600: #6c757d;
+  --color-gray-700: #495057;
+  --color-gray-800: #343a40;
+  --color-gray-900: #212529;
+  --color-black: #000000;
+  
+  /* Couleurs de texte */
+  --color-text-primary: var(--color-gray-900);
+  --color-text-secondary: var(--color-gray-600);
+  --color-text-muted: var(--color-gray-500);
+  --color-text-inverse: var(--color-white);
+  
+  /* Couleurs de fond */
+  --color-bg-primary: var(--color-white);
+  --color-bg-secondary: var(--color-gray-50);
+  --color-bg-tertiary: var(--color-gray-100);
+  
+  /* ===== TYPOGRAPHIE ===== */
+  
+  /* Familles de polices */
+  --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-family-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  
+  /* Tailles de police */
+  --font-size-xs: 0.75rem;    /* 12px */
+  --font-size-sm: 0.875rem;   /* 14px */
+  --font-size-base: 1rem;     /* 16px */
+  --font-size-lg: 1.125rem;   /* 18px */
+  --font-size-xl: 1.25rem;    /* 20px */
+  --font-size-2xl: 1.5rem;    /* 24px */
+  --font-size-3xl: 1.875rem;  /* 30px */
+  --font-size-4xl: 2.25rem;   /* 36px */
+  
+  /* Poids de police */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  /* Hauteurs de ligne */
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+  
+  /* ===== ESPACEMENTS ===== */
+  
+  --spacing-0: 0;
+  --spacing-1: 0.25rem;   /* 4px */
+  --spacing-2: 0.5rem;    /* 8px */
+  --spacing-3: 0.75rem;   /* 12px */
+  --spacing-4: 1rem;      /* 16px */
+  --spacing-5: 1.25rem;   /* 20px */
+  --spacing-6: 1.5rem;    /* 24px */
+  --spacing-8: 2rem;      /* 32px */
+  --spacing-10: 2.5rem;   /* 40px */
+  --spacing-12: 3rem;     /* 48px */
+  --spacing-16: 4rem;     /* 64px */
+  
+  /* ===== BORDURES ===== */
+  
+  /* Largeurs */
+  --border-width-0: 0;
+  --border-width-1: 1px;
+  --border-width-2: 2px;
+  --border-width-4: 4px;
+  
+  /* Rayons */
+  --border-radius-none: 0;
+  --border-radius-sm: 0.25rem;
+  --border-radius-base: 0.375rem;
+  --border-radius-md: 0.5rem;
+  --border-radius-lg: 0.75rem;
+  --border-radius-xl: 1rem;
+  --border-radius-full: 9999px;
+  
+  /* Couleur par défaut */
+  --border-color: var(--color-gray-300);
+  
+  /* ===== OMBRES ===== */
+  
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-base: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  
+  /* ===== TRANSITIONS ===== */
+  
+  --transition-fast: 150ms ease-in-out;
+  --transition-base: 250ms ease-in-out;
+  --transition-slow: 350ms ease-in-out;
+  
+  /* ===== Z-INDEX ===== */
+  
+  --z-index-dropdown: 1000;
+  --z-index-sticky: 1020;
+  --z-index-fixed: 1030;
+  --z-index-modal-backdrop: 1040;
+  --z-index-modal: 1050;
+  --z-index-popover: 1060;
+  --z-index-tooltip: 1070;
+  
+  /* ===== BREAKPOINTS ===== */
+  
+  --breakpoint-xs: 0;
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+  
+  /* ===== CONTENEURS ===== */
+  
+  --container-xs: 100%;
+  --container-sm: 540px;
+  --container-md: 720px;
+  --container-lg: 960px;
+  --container-xl: 1140px;
+  --container-2xl: 1320px;
+  
+  /* ===== COMPOSANTS SPÉCIFIQUES ===== */
+  
+  /* Boutons */
+  --button-padding-x: var(--spacing-4);
+  --button-padding-y: var(--spacing-2);
+  --button-font-size: var(--font-size-base);
+  --button-font-weight: var(--font-weight-medium);
+  --button-border-radius: var(--border-radius-base);
+  --button-transition: all var(--transition-fast);
+  
+  /* Cards */
+  --card-padding: var(--spacing-6);
+  --card-border-radius: var(--border-radius-lg);
+  --card-shadow: var(--shadow-base);
+  --card-bg: var(--color-white);
+  --card-border-color: var(--color-gray-200);
+  
+  /* Formulaires */
+  --input-padding-x: var(--spacing-3);
+  --input-padding-y: var(--spacing-2);
+  --input-border-radius: var(--border-radius-base);
+  --input-border-color: var(--color-gray-400);
+  --input-focus-border-color: var(--color-primary);
+  --input-bg: var(--color-white);
+  
+  /* Tables */
+  --table-cell-padding: var(--spacing-3);
+  --table-border-color: var(--color-gray-200);
+  --table-hover-bg: var(--color-gray-50);
+  --table-striped-bg: var(--color-gray-50);
+}
+
+/* ===== MODE SOMBRE (optionnel) ===== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Redéfinir les couleurs pour le mode sombre */
+    --color-text-primary: var(--color-gray-100);
+    --color-text-secondary: var(--color-gray-400);
+    --color-bg-primary: var(--color-gray-900);
+    --color-bg-secondary: var(--color-gray-800);
+    --border-color: var(--color-gray-700);
+  }
+}

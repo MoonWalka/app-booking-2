@@ -1,0 +1,126 @@
+/**
+ * Styles spécifiques pour StructuresListUnified
+ * Complètent les styles du composant ResponsiveList
+ */
+
+.structuresList {
+  /* Classe racine pour la liste des structures */
+}
+
+/* ===== CELLULE NOM ===== */
+.nameCell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.nameCell strong {
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.typeBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--spacing-1) var(--spacing-2);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--border-radius-full);
+  text-transform: capitalize;
+  width: fit-content;
+}
+
+/* Variantes des badges de type */
+.typeassociation {
+  background-color: rgba(23, 162, 184, 0.1);
+  color: var(--color-info);
+  border: var(--border-width-1) solid rgba(23, 162, 184, 0.2);
+}
+
+.typeentreprise {
+  background-color: rgba(40, 167, 69, 0.1);
+  color: var(--color-success);
+  border: var(--border-width-1) solid rgba(40, 167, 69, 0.2);
+}
+
+.typeadministration {
+  background-color: rgba(255, 193, 7, 0.1);
+  color: var(--color-warning);
+  border: var(--border-width-1) solid rgba(255, 193, 7, 0.2);
+}
+
+.typecollectivite {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: var(--color-danger);
+  border: var(--border-width-1) solid rgba(220, 53, 69, 0.2);
+}
+
+.typeautre {
+  background-color: rgba(108, 117, 125, 0.1);
+  color: var(--color-secondary);
+  border: var(--border-width-1) solid rgba(108, 117, 125, 0.2);
+}
+
+/* ===== ACTIONS ===== */
+.actions {
+  display: flex;
+  gap: var(--spacing-2);
+  justify-content: flex-end;
+}
+
+.actionButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: var(--border-radius-base);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-size: var(--font-size-sm);
+}
+
+.actionButtonEdit {
+  background-color: rgba(0, 123, 255, 0.1);
+  color: var(--color-primary);
+}
+
+.actionButtonEdit:hover {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  transform: scale(1.05);
+}
+
+.actionButtonDelete {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: var(--color-danger);
+}
+
+.actionButtonDelete:hover {
+  background-color: var(--color-danger);
+  color: var(--color-white);
+  transform: scale(1.05);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .nameCell {
+    gap: var(--spacing-2);
+  }
+  
+  .typeBadge {
+    align-self: flex-start;
+  }
+  
+  .actions {
+    justify-content: center;
+    gap: var(--spacing-3);
+  }
+  
+  .actionButton {
+    width: 40px;
+    height: 40px;
+    font-size: var(--font-size-base);
+  }
+}

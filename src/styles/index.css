@@ -15,6 +15,7 @@
 
 /* Base - Ordre important: d'abord le reset, puis les couleurs, puis les variables */
 @import '@styles/base/reset.css';
+@import '@styles/design-tokens.css';  /* Nouveau système de design unifié */
 @import '@styles/base/colors.css';  /* Définition des couleurs centralisées */
 @import '@styles/base/variables.css'; /* Variables globales faisant référence aux couleurs */
 

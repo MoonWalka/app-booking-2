@@ -1,0 +1,373 @@
+/**
+ * Styles pour le Dashboard migré
+ * Utilise uniquement le nouveau système de design tokens
+ * Aucune dépendance Bootstrap
+ */
+
+.container {
+  max-width: var(--container-xl);
+  margin: 0 auto;
+  padding: var(--spacing-6) var(--spacing-4);
+}
+
+.title {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-8);
+}
+
+/* ===== STATS CARDS ===== */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-6);
+  margin-bottom: var(--spacing-10);
+}
+
+.statCard {
+  background: var(--color-white);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-6);
+  box-shadow: var(--shadow-base);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  position: relative;
+  overflow: hidden;
+}
+
+.statCard:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.statCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  transition: height var(--transition-base);
+}
+
+.statCard:hover::before {
+  height: 100%;
+  opacity: 0.1;
+}
+
+/* Variantes de couleur pour les stats */
+.statCardPrimary::before { background-color: var(--color-primary); }
+.statCardSuccess::before { background-color: var(--color-success); }
+.statCardInfo::before { background-color: var(--color-info); }
+.statCardWarning::before { background-color: var(--color-warning); }
+
+.statIcon {
+  font-size: var(--font-size-4xl);
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--border-radius-full);
+  background-color: var(--color-gray-100);
+  flex-shrink: 0;
+}
+
+.statCardPrimary .statIcon { color: var(--color-primary); background-color: rgba(0, 123, 255, 0.1); }
+.statCardSuccess .statIcon { color: var(--color-success); background-color: rgba(40, 167, 69, 0.1); }
+.statCardInfo .statIcon { color: var(--color-info); background-color: rgba(23, 162, 184, 0.1); }
+.statCardWarning .statIcon { color: var(--color-warning); background-color: rgba(255, 193, 7, 0.1); }
+
+.statContent {
+  flex: 1;
+  position: relative;
+  z-index: 1;
+}
+
+.statValue {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+  margin: 0;
+}
+
+.statCardPrimary .statValue { color: var(--color-primary); }
+.statCardSuccess .statValue { color: var(--color-success); }
+.statCardInfo .statValue { color: var(--color-info); }
+.statCardWarning .statValue { color: var(--color-warning); }
+
+.statLabel {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: var(--spacing-2) 0 0;
+}
+
+.statSubLabel {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+/* ===== CONTENT GRID ===== */
+.contentGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: var(--spacing-6);
+  margin-bottom: var(--spacing-10);
+}
+
+.contentCard {
+  background: var(--color-white);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-base);
+  overflow: hidden;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-5) var(--spacing-6);
+  border-bottom: var(--border-width-1) solid var(--color-gray-200);
+}
+
+.cardTitle {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.linkButton {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  padding: var(--spacing-2) var(--spacing-3);
+  border-radius: var(--border-radius-base);
+  transition: all var(--transition-fast);
+}
+
+.linkButton:hover {
+  background-color: var(--color-gray-100);
+}
+
+.cardBody {
+  padding: var(--spacing-6);
+}
+
+/* Concerts List */
+.concertsList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.concertItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-3) 0;
+  border-bottom: var(--border-width-1) solid var(--color-gray-100);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.concertItem:last-child {
+  border-bottom: none;
+}
+
+.concertItem:hover {
+  padding-left: var(--spacing-2);
+}
+
+.concertInfo {
+  flex: 1;
+}
+
+.concertTitle {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-1);
+}
+
+.concertDetails {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.concertDate {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-primary);
+  background-color: var(--color-gray-100);
+  padding: var(--spacing-1) var(--spacing-3);
+  border-radius: var(--border-radius-full);
+}
+
+/* Activity List */
+.activityList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.activityItem {
+  display: flex;
+  gap: var(--spacing-3);
+  padding: var(--spacing-3) 0;
+  border-bottom: var(--border-width-1) solid var(--color-gray-100);
+}
+
+.activityItem:last-child {
+  border-bottom: none;
+}
+
+.activityIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--border-radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.activityIconlieu {
+  background-color: rgba(23, 162, 184, 0.1);
+  color: var(--color-info);
+}
+
+.activityIconprogrammateur {
+  background-color: rgba(40, 167, 69, 0.1);
+  color: var(--color-success);
+}
+
+.activityContent {
+  flex: 1;
+}
+
+.activityText {
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-1);
+}
+
+.activityTime {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.emptyMessage {
+  text-align: center;
+  color: var(--color-text-muted);
+  padding: var(--spacing-8) 0;
+  font-style: italic;
+}
+
+/* ===== QUICK ACTIONS ===== */
+.quickActions {
+  margin-bottom: var(--spacing-10);
+}
+
+.sectionTitle {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-4);
+}
+
+.actionButtons {
+  display: flex;
+  gap: var(--spacing-4);
+  flex-wrap: wrap;
+}
+
+.actionButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-3) var(--spacing-5);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  border: none;
+  border-radius: var(--border-radius-base);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+}
+
+.actionButton i {
+  font-size: var(--font-size-lg);
+}
+
+.actionButtonPrimary {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+}
+
+.actionButtonPrimary:hover {
+  background-color: var(--color-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.actionButtonSecondary {
+  background-color: var(--color-secondary);
+  color: var(--color-white);
+}
+
+.actionButtonSecondary:hover {
+  background-color: var(--color-secondary-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.actionButtonInfo {
+  background-color: var(--color-info);
+  color: var(--color-white);
+}
+
+.actionButtonInfo:hover {
+  background-color: var(--color-info-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .container {
+    padding: var(--spacing-4) var(--spacing-3);
+  }
+  
+  .title {
+    font-size: var(--font-size-2xl);
+  }
+  
+  .statsGrid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-4);
+  }
+  
+  .contentGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .actionButtons {
+    flex-direction: column;
+  }
+  
+  .actionButton {
+    width: 100%;
+    justify-content: center;
+  }
+}

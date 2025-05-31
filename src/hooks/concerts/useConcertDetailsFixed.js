@@ -158,6 +158,7 @@ const useConcertDetailsFixed = (id, locationParam) => {
       
       updateBidirectional();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     isInitialLoadComplete,
     relatedEntitiesLoaded,
@@ -176,7 +177,7 @@ const useConcertDetailsFixed = (id, locationParam) => {
   
   // Gestion de la suppression
   const handleDelete = useCallback(async () => {
-    if (!genericDetails.handleDelete) return false;
+    if (!genericDetails?.handleDelete) return false;
     
     try {
       const result = await genericDetails.handleDelete();
@@ -189,7 +190,8 @@ const useConcertDetailsFixed = (id, locationParam) => {
       console.error('[useConcertDetailsFixed] Erreur suppression:', error);
       return false;
     }
-  }, [genericDetails.handleDelete, navigate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [genericDetails?.handleDelete, navigate]);
   
   // API stabilisée du hook
   const stableApi = useMemo(() => ({

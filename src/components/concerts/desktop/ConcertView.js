@@ -15,8 +15,8 @@ import useArtisteSearch from '@/hooks/artistes/useArtisteSearch';
 // Import des composants
 import ConcertHeader from './ConcertHeader';
 import ConcertGeneralInfo from './ConcertGeneralInfo';
-import ConcertLocationSection from './ConcertLocationSection';
-import ConcertOrganizerSection from './ConcertOrganizerSection';
+import ConcertLocationSectionDebug from './ConcertLocationSectionDebug';
+import ConcertOrganizerSectionFixed from './ConcertOrganizerSectionFixed';
 import ConcertArtistSection from './ConcertArtistSection';
 import ConcertStructureSection from './ConcertStructureSection';
 import ConfirmationModal from '@/components/ui/ConfirmationModal';
@@ -87,18 +87,47 @@ const ConcertView = memo(({ id: propId }) => {
   
   const searchObjects = useMemo(() => {
     if (isEditMode) {
+      // En mode édition, mapper correctement les méthodes des hooks
       return {
-        lieu: lieuSearchHook || {},
-        programmateur: programmateurSearchHook || {},
-        artiste: artisteSearchHook || {}
+        lieu: {
+          ...lieuSearchHook,
+          // Mapper setLieu vers handleLieuSelect pour compatibilité
+          handleLieuSelect: lieuSearchHook?.setLieu || lieuSearchHook?.handleLieuSelect || (() => {}),
+          setSelectedEntity: lieuSearchHook?.setLieu || lieuSearchHook?.setSelectedEntity || (() => {})
+        },
+        programmateur: {
+          ...programmateurSearchHook,
+          // Mapper les méthodes pour compatibilité
+          handleProgrammateurSelect: programmateurSearchHook?.setProgrammateur || programmateurSearchHook?.handleProgrammateurSelect || (() => {}),
+          setSelectedEntity: programmateurSearchHook?.setProgrammateur || programmateurSearchHook?.setSelectedEntity || (() => {})
+        },
+        artiste: {
+          ...artisteSearchHook,
+          // Mapper les méthodes pour compatibilité
+          handleArtisteSelect: artisteSearchHook?.setArtiste || artisteSearchHook?.handleArtisteSelect || (() => {}),
+          setSelectedEntity: artisteSearchHook?.setArtiste || artisteSearchHook?.setSelectedEntity || (() => {})
+        }
       };
     } else {
-      const emptySearch = {
-        searchTerm: '', setSearchTerm: () => {}, showResults: false, results: [],
-        isSearching: false, handleLieuSelect: () => {}, setSelectedEntity: () => {},
-        handleCreateLieu: () => navigate('/lieux/nouveau')
+      // En mode lecture, créer des objets minimaux
+      const createReadOnlySearch = (type) => ({
+        searchTerm: '', 
+        setSearchTerm: () => {}, 
+        showResults: false, 
+        results: [],
+        isSearching: false, 
+        handleLieuSelect: () => {},
+        setSelectedEntity: () => {},
+        handleCreateLieu: () => {},
+        handleCreateProgrammateur: type === 'programmateur' ? () => navigate('/programmateurs/nouveau') : () => {},
+        handleCreateArtiste: type === 'artiste' ? () => navigate('/artistes/nouveau') : () => {}
+      });
+      
+      return { 
+        lieu: createReadOnlySearch('lieu'), 
+        programmateur: createReadOnlySearch('programmateur'), 
+        artiste: createReadOnlySearch('artiste') 
       };
-      return { lieu: emptySearch, programmateur: emptySearch, artiste: emptySearch };
     }
   }, [isEditMode, lieuSearchHook, programmateurSearchHook, artisteSearchHook, navigate]);
 
@@ -170,7 +199,7 @@ const ConcertView = memo(({ id: propId }) => {
         artiste={artiste}
         formDataStatus={formDataStatus}
       />
-      <ConcertLocationSection 
+      <ConcertLocationSectionDebug 
         concertId={id}
         lieu={lieu}
         isEditMode={isEditMode}
@@ -187,7 +216,7 @@ const ConcertView = memo(({ id: propId }) => {
         handleRemoveLieu={() => callbacksRef.current.setLieu && callbacksRef.current.setLieu(null)}
         handleCreateLieu={navigationCallbacks.handleCreateLieu}
       />
-      <ConcertOrganizerSection 
+      <ConcertOrganizerSectionFixed 
         concertId={id}
         programmateur={programmateur}
         isEditMode={isEditMode}
@@ -203,12 +232,12 @@ const ConcertView = memo(({ id: propId }) => {
         formatDate={formatDate}
         concert={concert}
         selectedProgrammateur={programmateur}
-        progSearchTerm={searchObjects.programmateur.searchTerm}
-        setProgSearchTerm={searchObjects.programmateur.setSearchTerm}
-        showProgResults={searchObjects.programmateur.showResults}
-        progResults={searchObjects.programmateur.results}
-        isSearchingProgs={searchObjects.programmateur.isSearching}
-        handleSelectProgrammateur={searchObjects.programmateur.setProgrammateur || searchObjects.programmateur.setSelectedEntity}
+        programmateurSearchTerm={searchObjects.programmateur.searchTerm}
+        setProgrammateurSearchTerm={searchObjects.programmateur.setSearchTerm}
+        showProgrammateurResults={searchObjects.programmateur.showResults}
+        programmateurResults={searchObjects.programmateur.results}
+        isSearchingProgrammateurs={searchObjects.programmateur.isSearching}
+        handleSelectProgrammateur={searchObjects.programmateur.setSelectedEntity}
         handleRemoveProgrammateur={() => callbacksRef.current.setProgrammateur && callbacksRef.current.setProgrammateur(null)}
         handleCreateProgrammateur={navigationCallbacks.handleCreateProgrammateur}
       />

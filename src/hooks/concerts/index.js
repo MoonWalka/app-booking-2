@@ -6,7 +6,8 @@
 // ========== HOOKS DE COMPATIBILITÉ (DÉPRÉCIÉS) ==========
 // Ces hooks sont maintenus pour la compatibilité mais seront supprimés en novembre 2025
 
-export { default as useConcertForm } from './useConcertForm';
+// export { default as useConcertForm } from './useConcertForm'; // Version avec problème d'affichage
+export { default as useConcertForm } from './useConcertFormFixed'; // Version corrigée
 
 // export { default as useConcertDetails } from './useConcertDetails'; // Version avec boucles infinies
 export { default as useConcertDetails } from './useConcertDetailsFixed'; // Version corrigée

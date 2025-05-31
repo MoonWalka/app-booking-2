@@ -25,6 +25,15 @@ const LieuSearchSection = React.memo(({
   const [lieuxList, setLieuxList] = React.useState([]);
   const [showAddLieu, setShowAddLieu] = React.useState(true);
   
+  // Synchroniser avec le lieu sélectionné passé en prop
+  React.useEffect(() => {
+    if (selectedLieu && !lieuxList.find(l => l.id === selectedLieu.id)) {
+      setLieuxList([selectedLieu]);
+      setShowAddLieu(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedLieu?.id]);
+  
   // Fonction pour ajouter un lieu à la liste
   const handleAddLieuToList = (lieu) => {
     if (lieu && !lieuxList.find(l => l.id === lieu.id)) {

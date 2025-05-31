@@ -38,6 +38,15 @@ const ProgrammateurSearchSection = ({
   const [programmateursList, setProgrammateursList] = React.useState([]);
   const [showAddProgrammateur, setShowAddProgrammateur] = React.useState(true);
   
+  // Synchroniser avec le programmateur sélectionné passé en prop
+  React.useEffect(() => {
+    if (selectedProgrammateur && !programmateursList.find(p => p.id === selectedProgrammateur.id)) {
+      setProgrammateursList([selectedProgrammateur]);
+      setShowAddProgrammateur(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedProgrammateur?.id]);
+  
   // Fonction pour ajouter un programmateur à la liste
   const handleAddProgrammateurToList = (programmateur) => {
     if (programmateur && !programmateursList.find(p => p.id === programmateur.id)) {

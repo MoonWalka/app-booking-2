@@ -1,5 +1,5 @@
 // components/contrats/ContratTemplateEditorSimple.js
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -20,6 +20,44 @@ const ContratTemplateEditorSimple = ({ template, onSave, onClose, isModalContext
   const [showVariables, setShowVariables] = useState(false);
   
   const editorRef = useRef();
+
+  // Debug: Log template data au chargement
+  console.log('🔄 ContratTemplateEditorSimple init:', {
+    templateId: template?.id,
+    templateName: template?.name,
+    templateType: template?.templateType,
+    bodyContentLength: template?.bodyContent?.length,
+    isModalContext,
+    hasTemplate: !!template
+  });
+
+  // Réinitialiser les champs quand un nouveau template est passé
+  useEffect(() => {
+    console.log('🔄 Template prop changed:', {
+      templateId: template?.id,
+      templateName: template?.name,
+      bodyContentLength: template?.bodyContent?.length
+    });
+    
+    setName(template?.name || '');
+    setTemplateType(template?.templateType || 'cession');
+    setContent(template?.bodyContent || '');
+  }, [template]);
+
+  // 🔧 PATCH IMPÉRATIF REACTQUILL - Solution éprouvée pour bug de synchronisation
+  // Force la synchronisation du DOM Quill avec l'état React
+  useEffect(() => {
+    if (editorRef.current && content !== undefined) {
+      const editor = editorRef.current.getEditor();
+      if (editor && content !== editor.root.innerHTML) {
+        console.log('🔧 ReactQuill sync: forçage du contenu dans le DOM', {
+          contentLength: content?.length,
+          editorContentLength: editor.root.innerHTML?.length
+        });
+        editor.root.innerHTML = content || '';
+      }
+    }
+  }, [content]);
 
 
   // Types de contrats disponibles
@@ -78,7 +116,7 @@ const ContratTemplateEditorSimple = ({ template, onSave, onClose, isModalContext
   const formats = [
     'header', 'font', 'size',
     'bold', 'italic', 'underline', 'strike', 'blockquote',
-    'list', 'bullet', 'indent',
+    'list', 'indent',
     'link', 'image', 'color', 'background',
     'align', 'script', 'direction', 'code-block'
   ];
@@ -99,27 +137,42 @@ const ContratTemplateEditorSimple = ({ template, onSave, onClose, isModalContext
     
     try {
       const templateData = {
+        // Conserver l'ID si on modifie un modèle existant
+        ...(template?.id ? { id: template.id } : {}),
         name: name.trim(),
         templateType,
         bodyContent: content,
         // Garder la structure existante pour la compatibilité
-        headerContent: '',
-        footerContent: '',
-        titleTemplate: '',
-        signatureTemplate: '',
+        headerContent: template?.headerContent || '',
+        footerContent: template?.footerContent || '',
+        titleTemplate: template?.titleTemplate || '',
+        signatureTemplate: template?.signatureTemplate || '',
         isDefault: template?.isDefault || false,
         // Métadonnées
         updatedAt: new Date().toISOString(),
         ...(template?.id ? {} : { createdAt: new Date().toISOString() })
       };
 
+      console.log('💾 Sauvegarde du modèle:', {
+        id: templateData.id,
+        name: templateData.name,
+        templateType: templateData.templateType,
+        bodyContentLength: templateData.bodyContent.length,
+        isModalContext,
+        hasExistingTemplate: !!template?.id
+      });
+
       await onSave(templateData);
       
-      if (onClose) {
+      console.log('✅ Modèle sauvegardé avec succès');
+      
+      // En mode page seulement, fermer automatiquement
+      if (!isModalContext && onClose) {
         onClose();
       }
+      
     } catch (error) {
-      console.error('Erreur lors de la sauvegarde:', error);
+      console.error('❌ Erreur lors de la sauvegarde:', error);
       alert('Erreur lors de la sauvegarde du modèle');
     } finally {
       setIsSaving(false);
@@ -370,6 +423,7 @@ const ContratTemplateEditorSimple = ({ template, onSave, onClose, isModalContext
           <div className={styles.editorContainer}>
             <ReactQuill
               ref={editorRef}
+              key={template?.id || 'new'} // Force remount when template changes
               theme="snow"
               value={content}
               onChange={setContent}

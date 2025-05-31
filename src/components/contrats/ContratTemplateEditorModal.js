@@ -27,10 +27,28 @@ const ContratTemplateEditorModal = ({
   if (!isOpen) return null;
 
   // Fonction pour gérer la sauvegarde (affiche une bannière de succès)
-  const handleSave = (modelData) => {
-    onSave(modelData);
-    setShowSuccess(true);
-    console.log("💾 Sauvegarde effectuée avec succès");
+  const handleSave = async (modelData) => {
+    try {
+      console.log("💾 Modal: Début sauvegarde", {
+        templateId: template?.id,
+        modelName: modelData.name,
+        bodyContentLength: modelData.bodyContent?.length
+      });
+      
+      await onSave(modelData);
+      
+      console.log("✅ Modal: Sauvegarde réussie");
+      setShowSuccess(true);
+      
+      // Auto-fermer la bannière après 5 secondes
+      setTimeout(() => {
+        setShowSuccess(false);
+      }, 5000);
+      
+    } catch (error) {
+      console.error("❌ Modal: Erreur sauvegarde", error);
+      // Le composant enfant gère déjà l'alerte d'erreur
+    }
   };
 
   // Utiliser createPortal pour rendre la modale directement dans le body

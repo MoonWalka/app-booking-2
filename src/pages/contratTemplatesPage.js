@@ -1,6 +1,6 @@
 // src/pages/contratTemplatesPage.js - MODIFIÉ
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { db, collection, getDocs, doc, deleteDoc, query, orderBy, addDoc, updateDoc, serverTimestamp } from '@/services/firebase-service';
+import { db, collection, getDocs, getDoc, doc, deleteDoc, query, orderBy, addDoc, updateDoc, serverTimestamp } from '@/services/firebase-service';
 import '@styles/index.css';
 import { Button, Badge, Alert } from 'react-bootstrap';
 import Table from '@/components/ui/Table';
@@ -103,8 +103,30 @@ const ContratTemplatesPage = () => {
   }, []); // 🔧 CORRECTION: Pas de dépendance templates
 
   // 🔧 SOLUTION: Mémoriser les fonctions pour éviter les re-créations
-  const handleEditTemplate = useCallback((template) => {
-    setCurrentTemplate(template);
+  const handleEditTemplate = useCallback(async (template) => {
+    console.log('🔄 Edition template - Récupération depuis la DB:', template.id);
+    setCurrentTemplate(null); // Clear d'abord pour forcer le reload
+    
+    try {
+      // Récupérer les données fraîches depuis la base de données
+      const templateDoc = await getDoc(doc(db, 'contratTemplates', template.id));
+      if (templateDoc.exists()) {
+        const freshTemplate = { id: templateDoc.id, ...templateDoc.data() };
+        console.log('✅ Template frais récupéré:', {
+          id: freshTemplate.id,
+          name: freshTemplate.name,
+          bodyContentLength: freshTemplate.bodyContent?.length
+        });
+        setCurrentTemplate(freshTemplate);
+      } else {
+        console.warn('⚠️ Template non trouvé en DB, utilisation cache local');
+        setCurrentTemplate(template);
+      }
+    } catch (error) {
+      console.error('❌ Erreur récupération template:', error);
+      setCurrentTemplate(template); // Fallback vers les données locales
+    }
+    
     setIsNewTemplate(false);
     setShowEditorModal(true);
   }, []);
@@ -144,13 +166,37 @@ const ContratTemplatesPage = () => {
     setShowEditorModal(true);
   }, []);
   
-  const handleCloseEditor = useCallback(() => {
+  // Fonction pour rafraîchir la liste des templates depuis la DB
+  const refreshTemplatesList = useCallback(async () => {
+    console.log('🔄 Rafraîchissement liste templates depuis DB');
+    try {
+      const templatesQuery = query(
+        collection(db, 'contratTemplates'), 
+        orderBy('updatedAt', 'desc')
+      );
+      const templatesSnapshot = await getDocs(templatesQuery);
+      const templatesList = templatesSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setTemplates(templatesList);
+      console.log('✅ Liste templates rafraîchie:', templatesList.length, 'templates');
+    } catch (error) {
+      console.error('❌ Erreur rafraîchissement templates:', error);
+    }
+  }, []);
+
+  const handleCloseEditor = useCallback(async () => {
     setShowEditorModal(false);
+    
+    // Rafraîchir la liste des templates depuis la DB après fermeture
+    await refreshTemplatesList();
+    
     // Attendre que la transition de fermeture soit terminée avant de réinitialiser
     setTimeout(() => {
       setCurrentTemplate(null);
     }, 300);
-  }, []);
+  }, [refreshTemplatesList]);
   
   const handleSaveTemplate = useCallback(async (templateData) => {
     // CORRECTION: Vérifier le flag de désactivation de la sauvegarde automatique

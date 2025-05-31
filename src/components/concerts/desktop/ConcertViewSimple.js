@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Alert } from 'react-bootstrap';
 import { useConcertDetailsSimple } from '@/hooks/concerts';
@@ -45,12 +45,17 @@ const ConcertViewSimple = React.memo(() => {
     formDataStatus
   } = useConcertDetailsSimple(id);
 
-  // Hooks de recherche simplifiés
+  // Hooks de recherche - appelés directement, pas dans useMemo
+  const lieuSearch = useLieuSearch();
+  const programmateurSearch = useProgrammateurSearch();
+  const artisteSearch = useArtisteSearch();
+
+  // Objets de recherche regroupés
   const searchObjects = useMemo(() => ({
-    lieu: useLieuSearch(),
-    programmateur: useProgrammateurSearch(),
-    artiste: useArtisteSearch()
-  }), []);
+    lieu: lieuSearch,
+    programmateur: programmateurSearch,
+    artiste: artisteSearch
+  }), [lieuSearch, programmateurSearch, artisteSearch]);
 
   // Gestionnaire de suppression directe
   const handleDirectDelete = useCallback(() => {

@@ -75,7 +75,17 @@ export const OrganizationProvider = ({ children }) => {
       }
       
       if (defaultOrg) {
-        await switchOrganization(defaultOrg.id);
+        // Définir l'organisation directement ici au lieu d'appeler switchOrganization
+        console.log('🔄 Définition de l\'organisation par défaut:', defaultOrg.id);
+        setCurrentOrganization(defaultOrg.id);
+        setCurrentOrg(defaultOrg);
+        
+        // Émettre l'événement
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('organizationChanged', { 
+            detail: { organizationId: defaultOrg.id, organization: defaultOrg } 
+          }));
+        }
       } else {
         setCurrentOrg(null);
         clearCurrentOrganization();

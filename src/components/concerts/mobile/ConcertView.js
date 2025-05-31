@@ -1,12 +1,11 @@
 // src/components/concerts/mobile/ConcertView.js
-import React, { useState } from 'react';
+import React from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { Alert } from 'react-bootstrap';
 import styles from './ConcertView.module.css';
 
 // Import des hooks
-import { useConcertDetails, useConcertStatus } from '@hooks/concerts';
-import { useConcertForm } from '@hooks/concerts';
+import { useConcertDetails } from '@hooks/concerts';
 import useConcertDelete from '@hooks/concerts/useConcertDelete';
 
 // Import des composants
@@ -39,34 +38,26 @@ const ConcertView = () => {
   } = useConcertDelete(() => navigate('/concerts'));
   
   // Utilisation des hooks personnalisés
-  const{
+  const {
     concert,
     lieu,
     programmateur,
     artiste,
     structure,
     loading,
-    isSubmitting,
     formData,
-    handleEdit,
     copyToClipboard,
     formatDate,
     formatMontant,
     isDatePassed,
-    getStatusInfo
-  } = useConcertDetails(id, location);
-
-  const{
+    getStatusInfo,
     formDataStatus,
     showFormGenerator,
     setShowFormGenerator,
     generatedFormLink,
     setGeneratedFormLink,
     handleFormGenerated
-  } = useConcertForm(id, programmateur?.id);
-  
-  // Utiliser directement le hook de statut pour éviter la duplication de code
-  const { getStatusInfo: getStatusFromHook } = useConcertStatus();
+  } = useConcertDetails(id, location);
 
   // Gestionnaire de suppression directe
   const handleDirectDelete = () => {
@@ -74,6 +65,11 @@ const ConcertView = () => {
       console.log('[ConcertViewMobile] Suppression directe du concert:', id);
       handleDeleteConcert(id);
     }
+  };
+
+  // Gestionnaire d'édition
+  const handleEdit = () => {
+    navigate(`/concerts/${id}/edit`);
   };
 
   if (loading) {
@@ -93,8 +89,8 @@ const ConcertView = () => {
     return <Alert variant="danger">Concert non trouvé</Alert>;
   }
 
-  // Utiliser soit getStatusInfo du hook useConcertDetails ou du hook useConcertStatus
-  const statusInfo = getStatusInfo ? getStatusInfo() : getStatusFromHook(concert.statut, concert, formData);
+  // Utiliser getStatusInfo du hook
+  const statusInfo = getStatusInfo();
 
   return (
     <div className={styles.concertViewContainer}>

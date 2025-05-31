@@ -1,20 +1,18 @@
 import { useState, useEffect, useCallback } from 'react';
 import { 
-  getOrgCollection, 
-  getDocs, 
-  query, 
-  where, 
-  orderBy, 
+  collection,
+  query,
+  where,
+  orderBy,
   limit,
   onSnapshot,
-  doc,
-  getDoc,
-  setDoc,
+  addDoc,
   updateDoc,
   deleteDoc,
-  addDoc,
-  getOrgDoc
-} from '@/services/firebase-service';
+  getDoc,
+  doc
+} from 'firebase/firestore';
+import { db } from '@/services/firebase-service';
 import { useOrganization } from '@/context/OrganizationContext';
 
 /**
@@ -49,7 +47,7 @@ export const useMultiOrgQuery = (collectionName, options = {}) => {
       setLoading(true);
       setError(null);
 
-      const orgCollection = getOrgCollection(collectionName);
+      const orgCollection = collection(db, collectionName);
       let q = query(orgCollection);
 
       // Appliquer les filtres
@@ -69,19 +67,26 @@ export const useMultiOrgQuery = (collectionName, options = {}) => {
         q = query(q, limit(limitCount));
       }
 
-      const snapshot = await getDocs(q);
-      const results = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
+      onSnapshot(q, 
+        (snapshot) => {
+          const results = snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          }));
+          setData(results);
+          setLoading(false);
+        },
+        (err) => {
+          console.error('❌ Erreur écoute temps réel:', err);
+          setError(err.message);
+          setLoading(false);
+        }
+      );
 
-      setData(results);
     } catch (err) {
       console.error('❌ Erreur lors du chargement des données:', err);
       setError(err.message);
       setData([]);
-    } finally {
-      setLoading(false);
     }
   }, [currentOrg, collectionName, filters, orderByField, orderDirection, limitCount]);
 
@@ -92,7 +97,7 @@ export const useMultiOrgQuery = (collectionName, options = {}) => {
       return;
     }
 
-    const orgCollection = getOrgCollection(collectionName);
+    const orgCollection = collection(db, collectionName);
     let q = query(orgCollection);
 
     // Appliquer les filtres pour l'écoute en temps réel
@@ -158,7 +163,7 @@ export const useMultiOrgDocument = (collectionName, documentId) => {
         setLoading(true);
         setError(null);
 
-        const docRef = getOrgDoc(collectionName, documentId);
+        const docRef = doc(db, collectionName, documentId);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
@@ -198,7 +203,7 @@ export const useMultiOrgMutation = (collectionName) => {
     setError(null);
 
     try {
-      const orgCollection = getOrgCollection(collectionName);
+      const orgCollection = collection(db, collectionName);
       const docRef = await addDoc(orgCollection, {
         ...data,
         organizationId: currentOrg.id,
@@ -225,10 +230,11 @@ export const useMultiOrgMutation = (collectionName) => {
     setError(null);
 
     try {
-      const docRef = getOrgDoc(collectionName, documentId);
+      const docRef = doc(db, collectionName, documentId);
       await updateDoc(docRef, {
         ...data,
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        organizationId: currentOrg.id
       });
     } catch (err) {
       console.error('❌ Erreur lors de la mise à jour:', err);
@@ -248,7 +254,7 @@ export const useMultiOrgMutation = (collectionName) => {
     setError(null);
 
     try {
-      const docRef = getOrgDoc(collectionName, documentId);
+      const docRef = doc(db, collectionName, documentId);
       await deleteDoc(docRef);
     } catch (err) {
       console.error('❌ Erreur lors de la suppression:', err);

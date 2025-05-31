@@ -33,3 +33,6 @@ export { default as useConcertDetailsSimple } from './useConcertDetailsSimple';
 export { default as useConcertDetailsUltraSimple } from './useConcertDetailsUltraSimple';
 export { default as useConcertFormWithRelations } from './useConcertFormWithRelations';
 export { default as useConcertFormsManagement } from './useConcertFormsManagement';
+
+// Hook simplifié pour la liste
+export { useConcertListSimplified } from './useConcertListSimplified';

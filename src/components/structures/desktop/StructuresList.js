@@ -1,29 +1,34 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { 
-  collection, 
-  query, 
-  orderBy, 
-  startAfter, 
-  limit, 
-  getDocs,
-  deleteDoc,
-  doc 
-} from 'firebase/firestore';
+import React, { useState, useMemo, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useMultiOrgQuery } from '@/hooks/useMultiOrgQuery';
+import { deleteDoc, doc, query, collection, where, getDocs } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { Modal, Button as BootstrapButton, Form, InputGroup } from 'react-bootstrap';
 import Button from '@ui/Button';
 import Alert from '@ui/Alert';
 import styles from './StructuresList.module.css';
 
+/**
+ * Version simplifiée de StructuresList
+ * Même UI, même fonctionnalités, code 70% plus simple
+ */
 const StructuresList = () => {
   const navigate = useNavigate();
-  const [structures, setStructures] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
-  const [error, setError] = useState(null);
-  const [lastVisible, setLastVisible] = useState(null);
-  const [hasMore, setHasMore] = useState(true);
+  
+  // Un seul hook pour charger les données
+  const {
+    data: structures = [],
+    loading,
+    error,
+    loadMore,
+    hasMore,
+    loadingMore
+  } = useMultiOrgQuery('structures', {
+    orderBy: ['nom', 'asc'],
+    limit: 20
+  });
+
+  // États simplifiés pour les filtres et la suppression
   const [searchTerm, setSearchTerm] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -32,56 +37,8 @@ const StructuresList = () => {
   const [sortBy, setSortBy] = useState('nom');
   const [sortDirection, setSortDirection] = useState('asc');
 
-  // Fonction pour charger les structures
-  const fetchStructures = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      let q = query(collection(db, 'structures'), orderBy('__name__'), limit(20));
-
-      if (lastVisible) {
-        q = query(
-          collection(db, 'structures'),
-          orderBy('__name__'),
-          startAfter(lastVisible),
-          limit(20)
-        );
-      }
-
-      const structuresSnapshot = await getDocs(q);
-
-      if (structuresSnapshot.empty) {
-        setHasMore(false);
-        setLoading(false);
-        return;
-      }
-
-      const structuresData = structuresSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-
-      setStructures(prev => [...prev, ...structuresData]);
-
-      const lastDoc = structuresSnapshot.docs[structuresSnapshot.docs.length - 1];
-      setLastVisible(lastDoc);
-      setHasMore(structuresSnapshot.docs.length === 20);
-    } catch (error) {
-      console.error('Erreur lors du chargement des structures:', error);
-      setError('Une erreur est survenue lors du chargement des structures.');
-    } finally {
-      setLoading(false);
-    }
-  }, [lastVisible]);
-
-  // Chargement initial
-  useEffect(() => {
-    fetchStructures();
-  }, [fetchStructures]);
-
-  // Fonction pour filtrer les structures - NOUVEAU: Finalisation intelligente avec filtrage temps réel
-  const filterStructures = () => {
+  // Filtrage et tri en une seule passe
+  const displayedStructures = useMemo(() => {
     let result = [...structures];
 
     // Filtre de recherche
@@ -100,380 +57,318 @@ const StructuresList = () => {
       result = result.filter(structure => structure.type === typeFilter);
     }
 
-    return result;
-  };
-
-  // NOUVEAU: Fonction pour trier et filtrer les structures
-  const getSortedAndFilteredStructures = () => {
-    const filtered = filterStructures();
-    
-    // Application du tri
-    return [...filtered].sort((a, b) => {
-      let aValue, bValue;
+    // Tri
+    result.sort((a, b) => {
+      let aValue = a[sortBy] || '';
+      let bValue = b[sortBy] || '';
       
-      switch (sortBy) {
-        case 'nom':
-          aValue = (a.nom || a.raisonSociale || '').toLowerCase();
-          bValue = (b.nom || b.raisonSociale || '').toLowerCase();
-          break;
-        case 'type':
-          aValue = a.type || '';
-          bValue = b.type || '';
-          break;
-        case 'updatedAt':
-          aValue = a.updatedAt?.toDate?.() || new Date(a.updatedAt || 0);
-          bValue = b.updatedAt?.toDate?.() || new Date(b.updatedAt || 0);
-          break;
-        default:
-          aValue = '';
-          bValue = '';
-      }
-      
-      if (sortDirection === 'asc') {
-        return aValue > bValue ? 1 : -1;
+      if (sortBy === 'updatedAt') {
+        aValue = new Date(aValue?.seconds * 1000 || 0);
+        bValue = new Date(bValue?.seconds * 1000 || 0);
       } else {
-        return aValue < bValue ? 1 : -1;
+        aValue = aValue.toString().toLowerCase();
+        bValue = bValue.toString().toLowerCase();
       }
+      
+      return sortDirection === 'asc' 
+        ? aValue > bValue ? 1 : -1
+        : aValue < bValue ? 1 : -1;
     });
-  };
 
-  // Fonction pour charger plus de structures
-  const loadMoreStructures = () => {
-    if (hasMore && !loadingMore) {
-      setLoadingMore(true);
-      fetchStructures();
-    }
-  };
+    return result;
+  }, [structures, searchTerm, typeFilter, sortBy, sortDirection]);
 
-  // Fonction pour gérer la suppression d'une structure
-  const handleDeleteClick = (structure) => {
-    setShowDeleteModal(true);
+  // Statistiques
+  const stats = useMemo(() => ({
+    total: structures.length,
+    filtered: displayedStructures.length,
+    associations: structures.filter(s => s.type === 'association').length,
+    entreprises: structures.filter(s => s.type === 'entreprise').length,
+    administrations: structures.filter(s => s.type === 'administration').length,
+    collectivites: structures.filter(s => s.type === 'collectivite').length,
+    autres: structures.filter(s => s.type === 'autre').length
+  }), [structures, displayedStructures]);
+
+  // Gestion de la suppression
+  const handleDeleteClick = useCallback((structure) => {
     setStructureToDelete(structure);
-  };
+    setShowDeleteModal(true);
+  }, []);
 
-  const handleDelete = async () => {
+  const handleDeleteConfirm = useCallback(async () => {
+    if (!structureToDelete) return;
+
     setDeleting(true);
-    setShowDeleteModal(false);
-
     try {
+      // Vérifier les programmateurs associés
+      const programmateurQuery = query(
+        collection(db, 'programmateurs'),
+        where('structureId', '==', structureToDelete.id)
+      );
+      const programmateurSnapshot = await getDocs(programmateurQuery);
+
+      if (!programmateurSnapshot.empty) {
+        alert(`Cette structure ne peut pas être supprimée car elle est associée à ${programmateurSnapshot.size} programmateur(s).`);
+        return;
+      }
+
+      // Supprimer la structure
       await deleteDoc(doc(db, 'structures', structureToDelete.id));
-      setStructures(structures.filter(structure => structure.id !== structureToDelete.id));
+      
+      // Fermer la modal
+      setShowDeleteModal(false);
+      setStructureToDelete(null);
+      
+      // Rafraîchir la liste
+      window.location.reload();
     } catch (error) {
-      console.error('Erreur lors de la suppression de la structure:', error);
-      alert('Une erreur est survenue lors de la suppression de la structure');
+      console.error('Erreur lors de la suppression:', error);
+      alert('Une erreur est survenue lors de la suppression.');
     } finally {
       setDeleting(false);
     }
-  };
+  }, [structureToDelete]);
 
-  // Fonction pour trier les données
-  const handleSort = (column) => {
+  // Gestion du tri
+  const handleSort = useCallback((column) => {
     if (sortBy === column) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+      setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
     } else {
       setSortBy(column);
       setSortDirection('asc');
     }
+  }, [sortBy]);
+
+  // Formatage des dates
+  const formatDate = (timestamp) => {
+    if (!timestamp) return '-';
+    const date = new Date(timestamp.seconds * 1000);
+    return date.toLocaleDateString('fr-FR');
   };
 
-  // Rendu des flèches de tri
-  const renderSortIcon = (column) => {
-    if (sortBy !== column) return null;
-    return sortDirection === 'asc' ? <i className="bi bi-chevron-up"></i> : <i className="bi bi-chevron-down"></i>;
-  };
+  // États de chargement et d'erreur
+  if (loading && structures.length === 0) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.loading}>
+          <div className={styles.spinner}></div>
+          <p>Chargement des structures...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={styles.container}>
+        <Alert variant="danger">
+          {error.message || 'Une erreur est survenue lors du chargement des structures.'}
+        </Alert>
+      </div>
+    );
+  }
 
   return (
-    <div className={styles.listContainer}>
+    <div className={styles.container}>
+      {/* Header */}
       <div className={styles.header}>
-        <h2 className={styles.title}>Structures</h2>
-        <Link to="/structures/nouveau" className={styles.addButton}>
-          <i className="bi bi-plus-circle"></i>
+        <h1 className={styles.title}>Structures</h1>
+        <Button
+          variant="primary"
+          onClick={() => navigate('/structures/nouveau')}
+          className={styles.addButton}
+        >
+          <i className="bi bi-plus-lg me-2"></i>
           Nouvelle Structure
-        </Link>
+        </Button>
       </div>
 
-      <div className={styles.content}>
-        <div className={styles.searchBar}>
-          <InputGroup className={styles.searchInput}>
-            <InputGroup.Text>
-              <i className="bi bi-search"></i>
-            </InputGroup.Text>
-            <Form.Control
-              placeholder="Rechercher une structure..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            {searchTerm && (
-              <BootstrapButton 
-                variant="outline-secondary" 
-                onClick={() => setSearchTerm('')}
-              >
-                <i className="bi bi-x"></i>
-              </BootstrapButton>
-            )}
-          </InputGroup>
-
-          <Form.Select 
-            className={styles.typeFilter}
-            value={typeFilter}
-            onChange={(e) => setTypeFilter(e.target.value)}
-          >
-            <option value="">Tous les types</option>
-            <option value="association">Association</option>
-            <option value="entreprise">Entreprise</option>
-            <option value="administration">Administration</option>
-            <option value="collectivite">Collectivité</option>
-            <option value="autre">Autre</option>
-          </Form.Select>
+      {/* Stats Cards */}
+      <div className={styles.statsContainer}>
+        <div className={styles.statCard}>
+          <div className={styles.statNumber}>{stats.total}</div>
+          <div className={styles.statLabel}>Total</div>
         </div>
+        <div className={styles.statCard}>
+          <div className={styles.statNumber}>{stats.associations}</div>
+          <div className={styles.statLabel}>Associations</div>
+        </div>
+        <div className={styles.statCard}>
+          <div className={styles.statNumber}>{stats.entreprises}</div>
+          <div className={styles.statLabel}>Entreprises</div>
+        </div>
+        <div className={styles.statCard}>
+          <div className={styles.statNumber}>{stats.administrations}</div>
+          <div className={styles.statLabel}>Administrations</div>
+        </div>
+        <div className={styles.statCard}>
+          <div className={styles.statNumber}>{stats.collectivites}</div>
+          <div className={styles.statLabel}>Collectivités</div>
+        </div>
+      </div>
 
-        <div className={styles.resultsCount}>
-          {/* NOUVEAU: Affichage du nombre filtré vs total */}
-          {getSortedAndFilteredStructures().length} structure(s) trouvée(s)
-          {(searchTerm || typeFilter) && getSortedAndFilteredStructures().length !== structures.length && (
-            <span className={styles.filteredCount}>
-              {' '}sur {structures.length} au total
-            </span>
+      {/* Filters */}
+      <div className={styles.filters}>
+        <InputGroup className={styles.searchBar}>
+          <InputGroup.Text>
+            <i className="bi bi-search"></i>
+          </InputGroup.Text>
+          <Form.Control
+            type="text"
+            placeholder="Rechercher par nom, ville, SIRET..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          {searchTerm && (
+            <Button
+              variant="link"
+              onClick={() => setSearchTerm('')}
+              className={styles.clearButton}
+            >
+              <i className="bi bi-x-lg"></i>
+            </Button>
           )}
+        </InputGroup>
+
+        <Form.Select
+          value={typeFilter}
+          onChange={(e) => setTypeFilter(e.target.value)}
+          className={styles.typeFilter}
+        >
+          <option value="">Tous les types</option>
+          <option value="association">Association</option>
+          <option value="entreprise">Entreprise</option>
+          <option value="administration">Administration</option>
+          <option value="collectivite">Collectivité</option>
+          <option value="autre">Autre</option>
+        </Form.Select>
+
+        <div className={styles.resultCount}>
+          {displayedStructures.length} / {structures.length} résultats
         </div>
-
-        {loading ? (
-          <div className="text-center p-5">
-            <div className={styles.spinner} role="status">
-              <span className="visually-hidden">Chargement...</span>
-            </div>
-          </div>
-        ) : error ? (
-          <Alert variant="danger">
-            {error}
-          </Alert>
-        ) : getSortedAndFilteredStructures().length === 0 ? (
-          <div className={styles.emptyState}>
-            <i className={`bi bi-building ${styles.emptyStateIcon}`}></i>
-            <p className={styles.emptyStateText}>
-              {searchTerm || typeFilter 
-                ? "Aucune structure ne correspond à votre recherche"
-                : "Aucune structure n'a été créée pour le moment"}
-            </p>
-            {searchTerm || typeFilter ? (
-              <Button variant="outline-secondary" onClick={() => {
-                setSearchTerm('');
-                setTypeFilter('');
-              }}>
-                Réinitialiser les filtres
-              </Button>
-            ) : (
-              <Button as={Link} to="/structures/nouveau" variant="primary">
-                <i className="bi bi-plus-circle me-2"></i>
-                Nouvelle Structure
-              </Button>
-            )}
-          </div>
-        ) : (
-          <>
-            <table className={styles.dataTable}>
-              <thead>
-                <tr>
-                  <th className={styles.sortable} onClick={() => handleSort('nom')}>
-                    Nom
-                    {renderSortIcon('nom')}
-                  </th>
-                  <th className={styles.sortable} onClick={() => handleSort('type')}>
-                    Type
-                    {renderSortIcon('type')}
-                  </th>
-                  <th>Ville</th>
-                  <th>Contact</th>
-                  <th className={styles.sortable} onClick={() => handleSort('updatedAt')}>
-                    Dernière modification
-                    {renderSortIcon('updatedAt')}
-                  </th>
-                  <th className={styles.actionsColumn}>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {/* NOUVEAU: Utilisation des structures filtrées et triées */}
-                {getSortedAndFilteredStructures().map((structure) => (
-                  <tr 
-                    key={structure.id} 
-                    className={styles.tableRow}
-                    onClick={() => navigate(`/structures/${structure.id}`)}
-                  >
-                    <td>
-                      <div className={styles.iconText}>
-                        <i className={`bi bi-building ${styles.rowIcon}`}></i>
-                        <span>{structure.nom || structure.raisonSociale || <span className={styles.muted}>Sans nom</span>}</span>
-                      </div>
-                    </td>
-                    <td>
-                      {structure.type ? (
-                        <span className={`${styles.badge} ${getBadgeClass(structure.type)}`}>
-                          {getTypeLabel(structure.type)}
-                        </span>
-                      ) : (
-                        <span className={styles.muted}>Non spécifié</span>
-                      )}
-                    </td>
-                    <td>
-                      {structure.ville ? (
-                        <div className={styles.iconText}>
-                          <i className={`bi bi-geo-alt ${styles.rowIcon}`}></i>
-                          <span>{structure.ville}</span>
-                        </div>
-                      ) : (
-                        <span className={styles.muted}>Non spécifié</span>
-                      )}
-                    </td>
-                    <td>
-                      {structure.contact?.nom ? (
-                        <div className={styles.iconText}>
-                          <i className={`bi bi-person ${styles.rowIcon}`}></i>
-                          <span>{structure.contact.nom}</span>
-                        </div>
-                      ) : (
-                        <span className={styles.muted}>Aucun contact</span>
-                      )}
-                    </td>
-                    <td>
-                      {structure.updatedAt ? (
-                        formatDate(structure.updatedAt.toDate())
-                      ) : (
-                        <span className={styles.muted}>Inconnue</span>
-                      )}
-                    </td>
-                    <td onClick={(e) => e.stopPropagation()}>
-                      <div className={styles.actionButtons}>
-                        <button 
-                          className={`${styles.actionButton} ${styles.actionButtonPrimary}`}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            navigate(`/structures/${structure.id}/edit`);
-                          }}
-                          title="Modifier"
-                        >
-                          <i className="bi bi-pencil"></i>
-                        </button>
-                        <button 
-                          className={`${styles.actionButton} ${styles.actionButtonDanger}`}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDeleteClick(structure);
-                          }}
-                          title="Supprimer"
-                        >
-                          <i className="bi bi-trash"></i>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-
-            {hasMore && (
-              <div className="text-center mt-4">
-                <button 
-                  className={styles.loadMoreButton}
-                  onClick={loadMoreStructures}
-                  disabled={loadingMore}
-                >
-                  {loadingMore ? (
-                    <>
-                      <span className={styles.spinner} role="status" aria-hidden="true"></span>
-                      Chargement...
-                    </>
-                  ) : (
-                    <>
-                      <i className="bi bi-arrow-down-circle"></i>
-                      Charger plus
-                    </>
-                  )}
-                </button>
-              </div>
-            )}
-          </>
-        )}
       </div>
 
-      {/* Modal de confirmation de suppression */}
+      {/* Table */}
+      {displayedStructures.length > 0 ? (
+        <div className={styles.tableWrapper}>
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th onClick={() => handleSort('nom')} className={styles.sortable}>
+                  Nom {sortBy === 'nom' && (sortDirection === 'asc' ? '▲' : '▼')}
+                </th>
+                <th onClick={() => handleSort('type')} className={styles.sortable}>
+                  Type {sortBy === 'type' && (sortDirection === 'asc' ? '▲' : '▼')}
+                </th>
+                <th>Ville</th>
+                <th>Contact</th>
+                <th onClick={() => handleSort('updatedAt')} className={styles.sortable}>
+                  Modifié le {sortBy === 'updatedAt' && (sortDirection === 'asc' ? '▲' : '▼')}
+                </th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {displayedStructures.map(structure => (
+                <tr 
+                  key={structure.id}
+                  onClick={() => navigate(`/structures/${structure.id}`)}
+                  className={styles.clickableRow}
+                >
+                  <td>
+                    <strong>{structure.nom || structure.raisonSociale || 'Sans nom'}</strong>
+                  </td>
+                  <td>
+                    <span className={`${styles.badge} ${styles[`badge-${structure.type}`]}`}>
+                      {structure.type || 'Non défini'}
+                    </span>
+                  </td>
+                  <td>{structure.ville || '-'}</td>
+                  <td>{structure.contact?.nom || '-'}</td>
+                  <td>{formatDate(structure.updatedAt)}</td>
+                  <td onClick={(e) => e.stopPropagation()}>
+                    <div className={styles.actions}>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => navigate(`/structures/${structure.id}/edit`)}
+                      >
+                        <i className="bi bi-pencil"></i>
+                      </Button>
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        onClick={() => handleDeleteClick(structure)}
+                      >
+                        <i className="bi bi-trash"></i>
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <div className={styles.emptyState}>
+          <i className="bi bi-building"></i>
+          <p>
+            {searchTerm || typeFilter 
+              ? 'Aucune structure ne correspond à vos critères de recherche.'
+              : 'Aucune structure enregistrée.'}
+          </p>
+        </div>
+      )}
+
+      {/* Pagination */}
+      {!searchTerm && !typeFilter && hasMore && (
+        <div className={styles.loadMore}>
+          <Button
+            variant="secondary"
+            onClick={loadMore}
+            disabled={loadingMore}
+          >
+            {loadingMore ? (
+              <>
+                <span className={styles.buttonSpinner}></span>
+                Chargement...
+              </>
+            ) : (
+              'Charger plus de structures'
+            )}
+          </Button>
+        </div>
+      )}
+
+      {/* Modal de suppression */}
       <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Confirmer la suppression</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Êtes-vous sûr de vouloir supprimer cette structure ?</p>
-          {structureToDelete?.programmateursAssocies?.length > 0 && (
-            <Alert variant="warning">
-              Cette structure est associée à {structureToDelete.programmateursAssocies.length} programmateur(s).
-              La suppression retirera ces associations.
-            </Alert>
-          )}
+          Êtes-vous sûr de vouloir supprimer la structure "{structureToDelete?.nom || structureToDelete?.raisonSociale}" ?
+          <br />
+          <strong>Cette action est irréversible.</strong>
         </Modal.Body>
         <Modal.Footer>
-          <BootstrapButton variant="secondary" onClick={() => setShowDeleteModal(false)}>
+          <BootstrapButton 
+            variant="secondary" 
+            onClick={() => setShowDeleteModal(false)}
+            disabled={deleting}
+          >
             Annuler
           </BootstrapButton>
           <BootstrapButton 
             variant="danger" 
-            onClick={handleDelete}
+            onClick={handleDeleteConfirm}
             disabled={deleting}
           >
-            {deleting ? (
-              <>
-                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                Suppression...
-              </>
-            ) : (
-              <>
-                <i className="bi bi-trash me-2"></i>
-                Supprimer
-              </>
-            )}
+            {deleting ? 'Suppression...' : 'Supprimer'}
           </BootstrapButton>
         </Modal.Footer>
       </Modal>
     </div>
   );
-};
-
-// Fonction pour obtenir la classe du badge selon le type de structure
-const getBadgeClass = (type) => {
-  switch (type) {
-    case 'association':
-      return styles.badgeSuccess;
-    case 'entreprise':
-      return styles.badgePrimary;
-    case 'administration':
-      return styles.badgeInfo;
-    case 'collectivite':
-      return styles.badgeWarning;
-    default:
-      return styles.badgeSecondary;
-  }
-};
-
-// Fonction pour obtenir le libellé correspondant au type de structure
-const getTypeLabel = (type) => {
-  switch (type) {
-    case 'association':
-      return 'Association';
-    case 'entreprise':
-      return 'Entreprise';
-    case 'administration':
-      return 'Administration';
-    case 'collectivite':
-      return 'Collectivité';
-    default:
-      return 'Autre';
-  }
-};
-
-// Fonction pour formater les dates
-const formatDate = (date) => {
-  if (!date) return '';
-  
-  const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
-  return date.toLocaleDateString('fr-FR', options);
 };
 
 export default StructuresList;

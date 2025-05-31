@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Alert } from 'react-bootstrap';
 import { useConcertDetailsUltraSimple } from '@/hooks/concerts';

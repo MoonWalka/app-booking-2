@@ -19,6 +19,7 @@ import styles from './ListWithFilters.module.css';
  * @param {boolean} props.showRefresh - Afficher le bouton de rafraîchissement
  * @param {Array} props.filterOptions - Options de filtres 
  *    [{id, label, field, type, options, placeholder}]
+ * @param {Function} props.renderActions - Fonction pour rendre les actions par ligne
  * @return {JSX.Element} Composant de liste avec filtres
  */
 const ListWithFilters = ({
@@ -32,6 +33,7 @@ const ListWithFilters = ({
   pageSize = 10,
   showRefresh = true,
   filterOptions = [],
+  renderActions,
 }) => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -318,12 +320,17 @@ const ListWithFilters = ({
                   </div>
                 </th>
               ))}
+              {renderActions && (
+                <th className={styles.tableHeader} style={{ width: '120px' }}>
+                  Actions
+                </th>
+              )}
             </tr>
           </thead>
           <tbody>
             {items.length === 0 ? (
               <tr>
-                <td colSpan={columns.length} className={styles.noData}>
+                <td colSpan={columns.length + (renderActions ? 1 : 0)} className={styles.noData}>
                   {loading ? (
                     <div className={styles.loading}>
                       <i className="bi bi-hourglass-split"></i>
@@ -352,6 +359,14 @@ const ListWithFilters = ({
                       {renderColumnValue(item, column)}
                     </td>
                   ))}
+                  {renderActions && (
+                    <td 
+                      className={styles.tableCell} 
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {renderActions(item)}
+                    </td>
+                  )}
                 </tr>
               ))
             )}
@@ -417,6 +432,7 @@ ListWithFilters.propTypes = {
       placeholder: PropTypes.string,
     })
   ),
+  renderActions: PropTypes.func,
 };
 
 export default ListWithFilters;

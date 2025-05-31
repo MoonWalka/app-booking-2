@@ -1,0 +1,277 @@
+/*
+ * Styles pour EntityEmptyState
+ * État vide générique pour toutes les listes d'entités
+ * Dernière mise à jour: 31 mai 2025
+ */
+
+@import '@styles/base/variables.css';
+
+/* =============================
+   CONTAINER PRINCIPAL
+   ============================= */
+.emptyStateContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  padding: var(--tc-space-8);
+  background-color: var(--tc-bg-default);
+  border-radius: var(--tc-radius-lg);
+  border: 2px dashed var(--tc-border-light);
+  margin: var(--tc-space-6) 0;
+}
+
+.contentWrapper {
+  text-align: center;
+  max-width: 480px;
+  width: 100%;
+}
+
+/* =============================
+   ILLUSTRATION
+   ============================= */
+.illustrationContainer {
+  margin-bottom: var(--tc-space-6);
+  position: relative;
+}
+
+.defaultIllustration {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 120px;
+  background-color: var(--tc-bg-light);
+  border-radius: var(--tc-radius-full);
+  border: 3px solid var(--tc-border-light);
+}
+
+.emptyIcon {
+  font-size: 3rem;
+  color: var(--tc-text-muted);
+  transition: var(--tc-transition-base);
+}
+
+.searchOverlay {
+  position: absolute;
+  bottom: -8px;
+  right: -8px;
+  font-size: 1.5rem;
+  color: var(--tc-color-primary);
+  background-color: var(--tc-bg-default);
+  border-radius: var(--tc-radius-full);
+  padding: var(--tc-space-1);
+  border: 2px solid var(--tc-bg-default);
+}
+
+/* =============================
+   CONTENU TEXTUEL
+   ============================= */
+.textContent {
+  margin-bottom: var(--tc-space-6);
+}
+
+.title {
+  font-size: var(--tc-font-size-xl);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-default);
+  margin: 0 0 var(--tc-space-3) 0;
+  line-height: 1.4;
+}
+
+.message {
+  font-size: var(--tc-font-size-md);
+  color: var(--tc-text-muted);
+  line-height: 1.6;
+  margin: 0;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* =============================
+   ACTIONS
+   ============================= */
+.actionsContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--tc-space-3);
+}
+
+.defaultActions,
+.searchActions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--tc-space-3);
+  width: 100%;
+}
+
+.addButton {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-2);
+  font-weight: var(--tc-font-weight-semibold);
+  min-width: 200px;
+  justify-content: center;
+}
+
+.clearSearchButton {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-2);
+  font-weight: var(--tc-font-weight-medium);
+}
+
+.customActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tc-space-2);
+  justify-content: center;
+}
+
+/* =============================
+   EFFETS HOVER
+   ============================= */
+.emptyStateContainer:hover .emptyIcon {
+  color: var(--tc-color-primary);
+  transform: scale(1.05);
+}
+
+.emptyStateContainer:hover .defaultIllustration {
+  border-color: var(--tc-color-primary);
+  background-color: var(--tc-color-primary-light);
+}
+
+/* =============================
+   RESPONSIVE DESIGN
+   ============================= */
+@media (max-width: var(--tc-breakpoint-md)) {
+  .emptyStateContainer {
+    min-height: 300px;
+    padding: var(--tc-space-6);
+    margin: var(--tc-space-4) 0;
+  }
+
+  .defaultIllustration {
+    width: 100px;
+    height: 100px;
+  }
+
+  .emptyIcon {
+    font-size: 2.5rem;
+  }
+
+  .title {
+    font-size: var(--tc-font-size-lg);
+  }
+
+  .message {
+    font-size: var(--tc-font-size-md);
+  }
+
+  .defaultActions,
+  .searchActions {
+    gap: var(--tc-space-2);
+  }
+
+  .addButton,
+  .clearSearchButton {
+    width: 100%;
+    min-height: 48px;
+    font-size: var(--tc-font-size-md);
+  }
+
+  .customActions {
+    width: 100%;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: var(--tc-breakpoint-sm)) {
+  .emptyStateContainer {
+    min-height: 250px;
+    padding: var(--tc-space-4);
+    margin: var(--tc-space-3) 0;
+  }
+
+  .defaultIllustration {
+    width: 80px;
+    height: 80px;
+  }
+
+  .emptyIcon {
+    font-size: 2rem;
+  }
+
+  .searchOverlay {
+    font-size: 1.2rem;
+  }
+
+  .title {
+    font-size: var(--tc-font-size-md);
+  }
+
+  .message {
+    font-size: var(--tc-font-size-sm);
+  }
+
+  .addButton,
+  .clearSearchButton {
+    min-height: 44px;
+  }
+}
+
+/* =============================
+   VARIANTES
+   ============================= */
+.emptyStateContainer.compact {
+  min-height: 200px;
+  padding: var(--tc-space-4);
+}
+
+.emptyStateContainer.compact .defaultIllustration {
+  width: 60px;
+  height: 60px;
+}
+
+.emptyStateContainer.compact .emptyIcon {
+  font-size: 1.5rem;
+}
+
+.emptyStateContainer.compact .title {
+  font-size: var(--tc-font-size-md);
+}
+
+.emptyStateContainer.compact .message {
+  font-size: var(--tc-font-size-sm);
+}
+
+/* =============================
+   THÈMES
+   ============================= */
+.emptyStateContainer.search {
+  border-color: var(--tc-color-warning);
+  background-color: var(--tc-bg-warning);
+}
+
+.emptyStateContainer.search .defaultIllustration {
+  background-color: var(--tc-color-warning-light);
+  border-color: var(--tc-color-warning);
+}
+
+.emptyStateContainer.error {
+  border-color: var(--tc-color-error);
+  background-color: var(--tc-bg-error);
+}
+
+.emptyStateContainer.error .defaultIllustration {
+  background-color: var(--tc-color-error-light);
+  border-color: var(--tc-color-error);
+}
+
+.emptyStateContainer.error .emptyIcon {
+  color: var(--tc-color-error);
+}

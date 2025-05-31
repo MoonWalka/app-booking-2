@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Spinner from '@/components/common/Spinner';
 import Button from '@/components/ui/Button';
-import DeleteLieuModal from '@/components/lieux/desktop/sections/DeleteLieuModal';
+import ConfirmationModal from '@/components/ui/ConfirmationModal';
 import { toast } from 'react-toastify';
 
 // Migration vers les hooks optimisés maintenant disponibles
@@ -376,13 +376,17 @@ const LieuxMobileList = () => {
       )}
 
       {/* Modal de suppression */}
-      <DeleteLieuModal
+      <ConfirmationModal
         show={showDeleteModal}
-        onClose={handleCloseDeleteModal}
+        onHide={handleCloseDeleteModal}
         onConfirm={handleConfirmDelete}
-        lieu={lieuToDelete}
-        isDeleting={isDeleting}
-        hasAssociatedConcerts={false}
+        title="Supprimer le lieu"
+        message="Êtes-vous sûr de vouloir supprimer définitivement ce lieu ?"
+        entityName={lieuToDelete?.nom}
+        confirmText="Supprimer définitivement"
+        cancelText="Annuler"
+        variant="danger"
+        isLoading={isDeleting}
       />
     </div>
   );

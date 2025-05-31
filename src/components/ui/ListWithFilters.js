@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {  collection, getDocs, query, where, orderBy, limit, startAfter  } from '@/services/firebase-service';
 import { db } from '../../services/firebase-service';
 import { useResponsive } from '@/hooks/common';
+import StatsCards from './StatsCards';
 import styles from './ListWithFilters.module.css';
 
 /**
@@ -21,6 +22,10 @@ import styles from './ListWithFilters.module.css';
  * @param {Array} props.filterOptions - Options de filtres 
  *    [{id, label, field, type, options, placeholder}]
  * @param {Function} props.renderActions - Fonction pour rendre les actions par ligne
+ * @param {Function} props.calculateStats - Fonction pour calculer les statistiques
+ * @param {boolean} props.showStats - Afficher les cartes de statistiques
+ * @param {boolean} props.showAdvancedFilters - Activer les filtres avancés
+ * @param {Array} props.advancedFilterOptions - Options de filtres avancés
  * @return {JSX.Element} Composant de liste avec filtres
  */
 const ListWithFilters = ({
@@ -35,6 +40,10 @@ const ListWithFilters = ({
   showRefresh = true,
   filterOptions = [],
   renderActions,
+  calculateStats,
+  showStats = false,
+  showAdvancedFilters = false,
+  advancedFilterOptions = [],
 }) => {
   const { isMobile } = useResponsive();
   const [items, setItems] = useState([]);
@@ -45,6 +54,8 @@ const ListWithFilters = ({
   const [hasMore, setHasMore] = useState(false);
   const [filterValues, setFilterValues] = useState({});
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [showAdvancedFiltersPanel, setShowAdvancedFiltersPanel] = useState(false);
+  const [advancedFilterValues, setAdvancedFilterValues] = useState({});
 
   // Configuration des filtres
   useEffect(() => {
@@ -184,6 +195,41 @@ const ListWithFilters = ({
     }));
   };
 
+  // Gestion des filtres avancés
+  const handleAdvancedFilterChange = (filterId, value) => {
+    setAdvancedFilterValues(prev => ({
+      ...prev,
+      [filterId]: value,
+    }));
+  };
+
+  const handleAdvancedFilterApply = () => {
+    const newFilters = { ...filters };
+    
+    // Ajouter les filtres avancés aux filtres existants
+    Object.entries(advancedFilterValues).forEach(([filterId, value]) => {
+      const filterOption = advancedFilterOptions.find(opt => opt.id === filterId);
+      
+      if (filterOption && value !== '') {
+        newFilters[filterOption.field] = value;
+      }
+    });
+    
+    setFilters(newFilters);
+    setLastDoc(null);
+  };
+
+  const handleAdvancedFilterReset = () => {
+    setAdvancedFilterValues({});
+    // Retirer les filtres avancés des filtres appliqués
+    const newFilters = { ...filters };
+    advancedFilterOptions.forEach(option => {
+      delete newFilters[option.field];
+    });
+    setFilters(newFilters);
+    setLastDoc(null);
+  };
+
   // Gestion du clic sur une ligne
   const handleRowClick = (item) => {
     if (onRowClick) {
@@ -272,6 +318,11 @@ const ListWithFilters = ({
         </div>
       </div>
       
+      {/* Stats cards */}
+      {showStats && calculateStats && (
+        <StatsCards stats={calculateStats(items)} />
+      )}
+      
       {filterOptions.length > 0 && (
         <>
           {isMobile && (
@@ -346,8 +397,89 @@ const ListWithFilters = ({
                   Réinitialiser
                 </button>
               )}
+              {showAdvancedFilters && (
+                <button 
+                  className={styles.advancedFiltersButton} 
+                  onClick={() => setShowAdvancedFiltersPanel(!showAdvancedFiltersPanel)}
+                >
+                  <i className={`bi ${showAdvancedFiltersPanel ? 'bi-funnel-fill' : 'bi-funnel'}`}></i>
+                  Filtres avancés
+                  {Object.keys(advancedFilterValues).filter(key => advancedFilterValues[key] && advancedFilterValues[key] !== '').length > 0 && (
+                    <span className={styles.filterBadge}>
+                      {Object.keys(advancedFilterValues).filter(key => advancedFilterValues[key] && advancedFilterValues[key] !== '').length}
+                    </span>
+                  )}
+                </button>
+              )}
             </div>
           </div>
+          
+          {/* Panel des filtres avancés */}
+          {showAdvancedFilters && showAdvancedFiltersPanel && (
+            <div className={styles.advancedFiltersPanel}>
+              <div className={styles.advancedFiltersGrid}>
+                {advancedFilterOptions.map((filter) => (
+                  <div key={filter.id} className={styles.advancedFilterItem}>
+                    <label className={styles.filterLabel}>{filter.label}</label>
+                    
+                    {filter.type === 'select' && (
+                      <select
+                        className={styles.filterSelect}
+                        value={advancedFilterValues[filter.id] || ''}
+                        onChange={(e) => handleAdvancedFilterChange(filter.id, e.target.value)}
+                      >
+                        <option value="">{filter.placeholder || 'Tous'}</option>
+                        {filter.options.map((option) => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                    )}
+                    
+                    {filter.type === 'text' && (
+                      <input
+                        type="text"
+                        className={styles.filterInput}
+                        value={advancedFilterValues[filter.id] || ''}
+                        onChange={(e) => handleAdvancedFilterChange(filter.id, e.target.value)}
+                        placeholder={filter.placeholder || 'Rechercher...'}
+                      />
+                    )}
+                    
+                    {filter.type === 'boolean' && (
+                      <select
+                        className={styles.filterSelect}
+                        value={advancedFilterValues[filter.id] || ''}
+                        onChange={(e) => handleAdvancedFilterChange(filter.id, e.target.value)}
+                      >
+                        <option value="">Tous</option>
+                        <option value="true">Oui</option>
+                        <option value="false">Non</option>
+                      </select>
+                    )}
+                  </div>
+                ))}
+              </div>
+              
+              <div className={styles.advancedFilterActions}>
+                <button 
+                  className={styles.applyButton} 
+                  onClick={handleAdvancedFilterApply}
+                >
+                  Appliquer les filtres avancés
+                </button>
+                {Object.keys(advancedFilterValues).some(key => advancedFilterValues[key] && advancedFilterValues[key] !== '') && (
+                  <button 
+                    className={styles.resetButton} 
+                    onClick={handleAdvancedFilterReset}
+                  >
+                    Réinitialiser
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
         </>
       )}
       
@@ -514,6 +646,24 @@ ListWithFilters.propTypes = {
     })
   ),
   renderActions: PropTypes.func,
+  calculateStats: PropTypes.func,
+  showStats: PropTypes.bool,
+  showAdvancedFilters: PropTypes.bool,
+  advancedFilterOptions: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+      field: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['text', 'select', 'boolean']).isRequired,
+      options: PropTypes.arrayOf(
+        PropTypes.shape({
+          value: PropTypes.string.isRequired,
+          label: PropTypes.string.isRequired,
+        })
+      ),
+      placeholder: PropTypes.string,
+    })
+  ),
 };
 
 export default ListWithFilters;

@@ -17,7 +17,7 @@ import LieuAddressSection from './sections/LieuAddressSection';
 import LieuOrganizerSection from './sections/LieuOrganizerSection';
 import LieuContactSection from './sections/LieuContactSection';
 import LieuInfoSection from './sections/LieuInfoSection';
-import DeleteLieuModal from './sections/DeleteLieuModal';
+import ConfirmationModal from '@/components/ui/ConfirmationModal';
 
 const LieuForm = () => {
   const navigate = useNavigate();
@@ -132,13 +132,17 @@ const LieuForm = () => {
       </form>
 
       {/* Delete confirmation modal */}
-      <DeleteLieuModal
+      <ConfirmationModal
         show={showDeleteModal}
-        onClose={handleCloseDeleteModal}
+        onHide={handleCloseDeleteModal}
         onConfirm={handleConfirmDelete}
-        lieu={lieu}
-        isDeleting={isDeleting}
-        hasAssociatedConcerts={false}
+        title="Supprimer le lieu"
+        message="Êtes-vous sûr de vouloir supprimer définitivement ce lieu ?"
+        entityName={lieu.nom}
+        confirmText="Supprimer définitivement"
+        cancelText="Annuler"
+        variant="danger"
+        isLoading={isDeleting}
       />
     </div>
   );

@@ -352,4 +352,44 @@
     --tc-color-concert-light: #1e1b3a;     /* Variante sombre */
     --tc-color-programmateur: #a855f7;     /* Violet programmateurs plus clair */
     --tc-color-programmateur-light: #2d1b3d; /* Variante sombre */
-} 
+
+    /* ===== COULEURS ÉTENDUES (NUANCES) ===== */
+    /* Primary shades */
+    --tc-color-primary-50: #e8eef4;
+    --tc-color-primary-100: #c5d4e3;
+    --tc-color-primary-200: #9eb8d0;
+    --tc-color-primary-700: var(--tc-color-primary-dark);
+    
+    /* Success shades */
+    --tc-color-success-50: #e8f5e9;
+    --tc-color-success-100: #c8e6c9;
+    --tc-color-success-700: var(--tc-color-success-dark);
+    
+    /* Warning shades */
+    --tc-color-warning-50: #fffde7;
+    --tc-color-warning-100: #fff9c4;
+    --tc-color-warning-700: var(--tc-color-warning-dark);
+    
+    /* Danger/Error shades */
+    --tc-color-danger-50: #ffebee;
+    --tc-color-danger-100: #ffcdd2;
+    --tc-color-danger-700: var(--tc-color-error-dark);
+    
+    /* Info shades */
+    --tc-color-info-50: #e3f2fd;
+    --tc-color-info-100: #bbdefb;
+    --tc-color-info-700: var(--tc-color-info-dark);
+    
+    /* ===== VARIABLES DE TRANSITION MANQUANTES ===== */
+    --tc-transition-short: 150ms ease;
+    --tc-transition-duration: 200ms;
+    
+    /* ===== ALIAS SUPPLÉMENTAIRES ===== */
+    --tc-bg-secondary: #f8f9fa;
+    --tc-bg-tertiary: #f1f3f5;
+    --tc-border-subtle: #e9ecef;
+    --tc-border-strong: #dee2e6;
+    --tc-border-hover: var(--tc-color-primary-200);
+    --tc-bg-hover: #f8f9fa;
+    --tc-text-tertiary: #999999;
+}

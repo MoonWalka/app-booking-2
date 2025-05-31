@@ -19,7 +19,7 @@ import ConcertLocationSection from './ConcertLocationSection';
 import ConcertOrganizerSection from './ConcertOrganizerSection';
 import ConcertArtistSection from './ConcertArtistSection';
 import ConcertStructureSection from './ConcertStructureSection';
-import DeleteConcertModal from './DeleteConcertModal';
+import ConfirmationModal from '@/components/ui/ConfirmationModal';
 
 /**
  * Composant de vue des détails d'un concert - Version Desktop ULTRA-OPTIMISÉE
@@ -263,14 +263,19 @@ const ConcertView = memo(({ id: propId }) => {
           </div>
         </div>
       )}
-      <DeleteConcertModal
+      <ConfirmationModal
         show={showDeleteConfirm}
         onHide={stableCallbacks.handleCloseDeleteModal}
         onConfirm={() => {
           handleDelete();
           setShowDeleteConfirm(false);
         }}
-        concertTitle={concert?.titre}
+        title="Supprimer le concert"
+        message="Êtes-vous sûr de vouloir supprimer définitivement ce concert ?"
+        entityName={concert?.titre}
+        variant="danger"
+        confirmText="Supprimer définitivement"
+        cancelText="Annuler"
       />
     </div>
   );

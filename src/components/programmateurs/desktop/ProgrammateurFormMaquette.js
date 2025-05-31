@@ -7,7 +7,7 @@ import LoadingSpinner from '@components/ui/LoadingSpinner';
 import ErrorMessage from '@components/ui/ErrorMessage';
 import useCompanySearch from '@/hooks/common/useCompanySearch';
 import useLieuSearchFixed from '@/hooks/lieux/useLieuSearchFixed';
-import DeleteProgrammateurModal from './sections/DeleteProgrammateurModal';
+import ConfirmationModal from '@/components/ui/ConfirmationModal';
 import styles from './ProgrammateurFormMaquette.module.css';
 
 /**
@@ -1022,13 +1022,18 @@ const ProgrammateurFormMaquette = () => {
       </form>
 
       {/* Modal de suppression utilisant le composant dédié */}
-      <DeleteProgrammateurModal
+      <ConfirmationModal
         show={showDeleteModal}
-        onClose={handleCloseDeleteModal}
+        onHide={handleCloseDeleteModal}
         onConfirm={handleConfirmDelete}
-        programmateur={{ nom: formData.nom, prenom: formData.prenom }}
-        isDeleting={isDeleting}
-        hasAssociatedConcerts={concertsAssocies.length > 0}
+        title="Supprimer le programmateur"
+        message="Êtes-vous sûr de vouloir supprimer définitivement ce programmateur ?"
+        entityName={`${formData.prenom} ${formData.nom}`}
+        variant="danger"
+        confirmText="Supprimer définitivement"
+        cancelText="Annuler"
+        isLoading={isDeleting}
+        warnings={concertsAssocies.length > 0 ? ['Ce programmateur a des concerts associés. Ils seront également affectés.'] : undefined}
       />
     </div>
   );

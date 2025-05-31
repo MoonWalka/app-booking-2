@@ -16,7 +16,7 @@ import LieuSearchSection from '../sections/LieuSearchSection';
 import ProgrammateurSearchSection from '../sections/ProgrammateurSearchSection';
 import ArtisteSearchSection from '../sections/ArtisteSearchSection';
 import NotesSection from '../sections/NotesSection';
-import DeleteConfirmModal from '../sections/DeleteConfirmModal';
+import ConfirmationModal from '@/components/ui/ConfirmationModal';
 
 
 
@@ -223,17 +223,22 @@ const ConcertFormDesktop = () => {
             />
         </form>
         
-        {showDeleteConfirm && (
-          <DeleteConfirmModal
-            isSubmitting={isSubmitting || isDeleting}
-            onCancel={() => setShowDeleteConfirm(false)}
-            onConfirm={() => {
-              console.log('[ConcertForm] Appel de handleDeleteConcert avec ID:', id);
-              handleDeleteConcert(id);
-              setShowDeleteConfirm(false);
-            }}
-          />
-        )}
+        <ConfirmationModal
+          show={showDeleteConfirm}
+          onHide={() => setShowDeleteConfirm(false)}
+          onConfirm={() => {
+            console.log('[ConcertForm] Appel de handleDeleteConcert avec ID:', id);
+            handleDeleteConcert(id);
+            setShowDeleteConfirm(false);
+          }}
+          title="Supprimer le concert"
+          message="Êtes-vous sûr de vouloir supprimer définitivement ce concert ?"
+          entityName={formData.nom}
+          confirmText="Supprimer définitivement"
+          cancelText="Annuler"
+          variant="danger"
+          isLoading={isSubmitting || isDeleting}
+        />
       </div>
   );
 };

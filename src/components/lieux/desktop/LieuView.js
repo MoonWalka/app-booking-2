@@ -21,7 +21,7 @@ import LieuContactSection from './sections/LieuContactSection';
 import LieuInfoSection from './sections/LieuInfoSection';
 import { LieuConcertsSection } from './sections/LieuConcertsSection';
 import { LieuStructuresSection } from './sections/LieuStructuresSection';
-import DeleteLieuModal from './sections/DeleteLieuModal';
+import ConfirmationModal from '@/components/ui/ConfirmationModal';
 
 // Import des styles CSS Module
 import styles from './LieuDetails.module.css';
@@ -177,13 +177,20 @@ const LieuView = ({ id: propId }) => {
       </div>
 
       {/* Delete confirmation modal */}
-      <DeleteLieuModal
+      <ConfirmationModal
         show={showDeleteModal}
-        onClose={handleCloseDeleteModal}
+        onHide={handleCloseDeleteModal}
         onConfirm={handleConfirmDelete}
-        lieu={lieu}
-        isDeleting={isDeleting}
-        hasAssociatedConcerts={hasAssociatedConcerts}
+        title="Supprimer le lieu"
+        message="Êtes-vous sûr de vouloir supprimer définitivement ce lieu ?"
+        entityName={lieu.nom}
+        confirmText="Supprimer définitivement"
+        cancelText="Annuler"
+        variant="danger"
+        isLoading={isDeleting}
+        warningItems={hasAssociatedConcerts ? [
+          `Ce lieu a des concerts associés. La suppression du lieu n'entraîne pas la suppression des concerts, mais les concerts associés perdront leur référence de lieu.`
+        ] : []}
       />
     </div>
   );

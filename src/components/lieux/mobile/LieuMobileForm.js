@@ -4,7 +4,7 @@ import Spinner from '@/components/common/Spinner';
 import Button from '@/components/ui/Button';
 import FormField from '@/components/ui/FormField';
 import FlexContainer from '@/components/ui/FlexContainer';
-import DeleteLieuModal from '@/components/lieux/desktop/sections/DeleteLieuModal';
+import ConfirmationModal from '@/components/ui/ConfirmationModal';
 import { toast } from 'react-toastify';
 
 // MIGRATION: Utilisation du hook optimisé au lieu du hook complet
@@ -452,13 +452,17 @@ const LieuMobileForm = () => {
       </form>
 
       {/* Modal de suppression */}
-      <DeleteLieuModal
+      <ConfirmationModal
         show={showDeleteModal}
-        onClose={handleCloseDeleteModal}
+        onHide={handleCloseDeleteModal}
         onConfirm={handleConfirmDelete}
-        lieu={lieu}
-        isDeleting={isDeleting}
-        hasAssociatedConcerts={false}
+        title="Supprimer le lieu"
+        message="Êtes-vous sûr de vouloir supprimer définitivement ce lieu ?"
+        entityName={lieu.nom}
+        confirmText="Supprimer définitivement"
+        cancelText="Annuler"
+        variant="danger"
+        isLoading={isDeleting}
       />
     </div>
   );

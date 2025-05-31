@@ -22,7 +22,7 @@ import ProgrammateurContactSection from './sections/ProgrammateurContactSection'
 import ProgrammateurStructureSection from './sections/ProgrammateurStructureSection';
 import ProgrammateurLieuxSectionWrapper from './sections/ProgrammateurLieuxSectionWrapper';
 import ProgrammateurConcertsSectionWrapper from './sections/ProgrammateurConcertsSectionWrapper';
-import DeleteProgrammateurModal from './sections/DeleteProgrammateurModal';
+import ConfirmationModal from '@/components/ui/ConfirmationModal';
 
 // Import des styles CSS Module
 import styles from './ProgrammateurForm.module.css';
@@ -331,13 +331,18 @@ const ProgrammateurForm = ({
 
         {/* Delete confirmation modal - seulement en mode normal */}
         {!isPublicMode && (
-          <DeleteProgrammateurModal
+          <ConfirmationModal
             show={showDeleteModal}
-            onClose={handleCloseDeleteModal}
+            onHide={handleCloseDeleteModal}
             onConfirm={handleConfirmDelete}
-            programmateur={programmateur}
-            isDeleting={isDeleting}
-            hasAssociatedConcerts={hasAssociatedConcerts}
+            title="Supprimer le programmateur"
+            message="Êtes-vous sûr de vouloir supprimer définitivement ce programmateur ?"
+            entityName={programmateur?.nom || programmateur?.prenom}
+            variant="danger"
+            confirmText="Supprimer définitivement"
+            cancelText="Annuler"
+            isLoading={isDeleting}
+            warnings={hasAssociatedConcerts ? ['Ce programmateur a des concerts associés. Ils seront également affectés.'] : undefined}
           />
         )}
       </div>

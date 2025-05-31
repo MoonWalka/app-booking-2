@@ -13,7 +13,7 @@ import StructureAddressSection from './sections/StructureAddressSection';
 import StructureAssociationsSection from './sections/StructureAssociationsSection';
 import StructureConcertsSection from './sections/StructureConcertsSection';
 import StructureNotesSection from './sections/StructureNotesSection';
-import StructureDeleteModal from './sections/StructureDeleteModal';
+import ConfirmationModal from '@/components/ui/ConfirmationModal';
 
 /**
  * Component for displaying structure details
@@ -113,12 +113,17 @@ const StructureDetails = () => {
       </div>
 
       {/* Confirmation Modal for Structure Deletion */}
-      <StructureDeleteModal
+      <ConfirmationModal
         show={showDeleteModal}
-        onClose={handleCloseDeleteModal}
+        onHide={handleCloseDeleteModal}
         onConfirm={handleConfirmDelete}
-        isDeleting={deleting}
-        structure={structure}
+        title="Supprimer la structure"
+        message="Êtes-vous sûr de vouloir supprimer définitivement cette structure ?"
+        entityName={structure?.nom}
+        variant="danger"
+        confirmText="Supprimer définitivement"
+        cancelText="Annuler"
+        isLoading={deleting}
       />
     </div>
   );

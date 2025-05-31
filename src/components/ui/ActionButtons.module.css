@@ -1,0 +1,121 @@
+/* ActionButtons.module.css */
+
+/* Conteneur des boutons d'action */
+.actionButtons {
+  display: flex;
+  gap: var(--tc-space-2);
+  align-items: center;
+}
+
+/* Style de base des boutons d'action */
+.actionButton {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--tc-radius-md);
+  background-color: transparent;
+  color: var(--tc-text-secondary);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--tc-font-size-md);
+  transition: all var(--tc-transition-fast);
+  position: relative;
+}
+
+.actionButton:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--tc-shadow-sm);
+}
+
+.actionButton:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.actionButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Variantes de couleur */
+.actionButton.primary {
+  color: var(--tc-color-primary);
+}
+
+.actionButton.primary:hover {
+  background-color: var(--tc-color-primary-50);
+  border-color: var(--tc-color-primary-200);
+  color: var(--tc-color-primary-700);
+}
+
+.actionButton.secondary {
+  color: var(--tc-color-gray-600);
+}
+
+.actionButton.secondary:hover {
+  background-color: var(--tc-color-gray-50);
+  border-color: var(--tc-color-gray-300);
+  color: var(--tc-color-gray-700);
+}
+
+.actionButton.danger {
+  color: var(--tc-color-danger);
+}
+
+.actionButton.danger:hover {
+  background-color: var(--tc-color-danger-50);
+  border-color: var(--tc-color-danger-200);
+  color: var(--tc-color-danger-700);
+}
+
+/* Bouton d'ajout */
+.addButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tc-space-2);
+  padding: var(--tc-space-2) var(--tc-space-4);
+  background-color: var(--tc-color-primary);
+  color: var(--tc-color-white);
+  border: 2px solid var(--tc-color-primary);
+  border-radius: var(--tc-radius-lg);
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-medium);
+  cursor: pointer;
+  transition: all var(--tc-transition-normal);
+  text-decoration: none;
+  line-height: 1.5;
+  min-height: 40px;
+}
+
+.addButton:hover {
+  background-color: var(--tc-color-primary-700);
+  border-color: var(--tc-color-primary-700);
+  transform: translateY(-1px);
+  box-shadow: var(--tc-shadow-md);
+}
+
+.addButton:active {
+  transform: translateY(0);
+  box-shadow: var(--tc-shadow-sm);
+}
+
+.addButton i {
+  font-size: var(--tc-font-size-lg);
+}
+
+/* Responsive */
+@media (max-width: var(--tc-breakpoint-sm)) {
+  .actionButton {
+    width: 40px;
+    height: 40px;
+    font-size: var(--tc-font-size-lg);
+  }
+  
+  .addButton {
+    padding: var(--tc-space-3) var(--tc-space-4);
+    min-height: 44px;
+  }
+}

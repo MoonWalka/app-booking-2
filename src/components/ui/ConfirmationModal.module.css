@@ -1,0 +1,224 @@
+/*
+ * Styles pour ConfirmationModal
+ * Modal générique de confirmation pour toutes les entités
+ * Dernière mise à jour: 31 mai 2025
+ */
+
+@import '@styles/base/variables.css';
+
+/* =============================
+   MODAL PRINCIPALE
+   ============================= */
+.confirmationModal :global(.modal-content) {
+  border: none;
+  border-radius: var(--tc-radius-lg);
+  box-shadow: var(--tc-shadow-modal);
+  overflow: hidden;
+}
+
+/* =============================
+   HEADER
+   ============================= */
+.modalHeader {
+  background-color: var(--tc-bg-light);
+  border-bottom: 2px solid var(--tc-border-light);
+  padding: var(--tc-space-4) var(--tc-space-6);
+}
+
+.modalTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-2);
+  margin: 0;
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-default);
+}
+
+.titleIcon {
+  font-size: var(--tc-font-size-xl);
+}
+
+.icon--danger {
+  color: var(--tc-color-error);
+}
+
+.icon--warning {
+  color: var(--tc-color-warning);
+}
+
+.icon--primary {
+  color: var(--tc-color-primary);
+}
+
+/* =============================
+   BODY
+   ============================= */
+.modalBody {
+  padding: var(--tc-space-6);
+  background-color: var(--tc-bg-default);
+}
+
+.messageContainer {
+  text-align: center;
+}
+
+.mainMessage {
+  font-size: var(--tc-font-size-md);
+  color: var(--tc-text-default);
+  line-height: 1.6;
+  margin-bottom: var(--tc-space-4);
+}
+
+.entityName {
+  color: var(--tc-color-primary);
+  font-weight: var(--tc-font-weight-semibold);
+}
+
+/* =============================
+   WARNINGS
+   ============================= */
+.warningsContainer {
+  background-color: var(--tc-bg-warning);
+  border: 1px solid var(--tc-color-warning);
+  border-radius: var(--tc-radius-md);
+  padding: var(--tc-space-4);
+  margin-top: var(--tc-space-4);
+  text-align: left;
+}
+
+.warningHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-2);
+  margin-bottom: var(--tc-space-2);
+}
+
+.warningTitle {
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-color-warning-dark);
+  font-size: var(--tc-font-size-sm);
+}
+
+.warningList {
+  margin: 0;
+  padding-left: var(--tc-space-4);
+  color: var(--tc-text-warning);
+}
+
+.warningItem {
+  margin-bottom: var(--tc-space-1);
+  font-size: var(--tc-font-size-sm);
+  line-height: 1.5;
+}
+
+.warningItem:last-child {
+  margin-bottom: 0;
+}
+
+/* =============================
+   CONTENU PERSONNALISÉ
+   ============================= */
+.customContent {
+  margin-top: var(--tc-space-4);
+  padding-top: var(--tc-space-4);
+  border-top: 1px solid var(--tc-border-light);
+}
+
+/* =============================
+   FOOTER
+   ============================= */
+.modalFooter {
+  background-color: var(--tc-bg-light);
+  border-top: 1px solid var(--tc-border-light);
+  padding: var(--tc-space-4) var(--tc-space-6);
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--tc-space-3);
+}
+
+.cancelButton,
+.confirmButton {
+  min-width: 100px;
+  font-weight: var(--tc-font-weight-medium);
+  padding: var(--tc-space-2) var(--tc-space-4);
+  transition: var(--tc-transition-base);
+}
+
+.loadingSpinner {
+  display: inline-flex;
+  align-items: center;
+  margin-right: var(--tc-space-2);
+}
+
+.loadingSpinner i {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* =============================
+   RESPONSIVE MOBILE
+   ============================= */
+@media (max-width: var(--tc-breakpoint-md)) {
+  .confirmationModal :global(.modal-dialog) {
+    margin: var(--tc-space-4);
+    max-width: calc(100% - var(--tc-space-8));
+  }
+
+  .modalHeader,
+  .modalBody,
+  .modalFooter {
+    padding: var(--tc-space-4);
+  }
+
+  .modalTitle {
+    font-size: var(--tc-font-size-md);
+  }
+
+  .titleIcon {
+    font-size: var(--tc-font-size-lg);
+  }
+
+  .modalFooter {
+    flex-direction: column-reverse;
+    gap: var(--tc-space-2);
+  }
+
+  .cancelButton,
+  .confirmButton {
+    width: 100%;
+    min-height: 48px;
+    font-size: var(--tc-font-size-md);
+  }
+
+  .mainMessage {
+    font-size: var(--tc-font-size-md);
+    text-align: left;
+  }
+
+  .warningsContainer {
+    padding: var(--tc-space-3);
+  }
+}
+
+@media (max-width: var(--tc-breakpoint-sm)) {
+  .confirmationModal :global(.modal-dialog) {
+    margin: var(--tc-space-2);
+    max-width: calc(100% - var(--tc-space-4));
+  }
+
+  .modalHeader,
+  .modalBody,
+  .modalFooter {
+    padding: var(--tc-space-3);
+  }
+
+  .cancelButton,
+  .confirmButton {
+    min-height: 44px;
+  }
+}

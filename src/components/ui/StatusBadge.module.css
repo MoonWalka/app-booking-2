@@ -1,0 +1,129 @@
+/* StatusBadge.module.css */
+
+/* Style de base pour tous les badges */
+.badge {
+  display: inline-block;
+  padding: var(--tc-space-1) var(--tc-space-3);
+  border-radius: var(--tc-radius-full);
+  font-weight: var(--tc-font-weight-medium);
+  line-height: 1.2;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border: 1px solid transparent;
+  transition: all var(--tc-transition-fast);
+}
+
+/* Tailles */
+.xs {
+  font-size: var(--tc-font-size-xs);
+  padding: 2px var(--tc-space-2);
+}
+
+.sm {
+  font-size: var(--tc-font-size-xs);
+  padding: var(--tc-space-1) var(--tc-space-2);
+}
+
+.md {
+  font-size: var(--tc-font-size-sm);
+  padding: var(--tc-space-2) var(--tc-space-3);
+}
+
+.lg {
+  font-size: var(--tc-font-size-sm);
+  padding: var(--tc-space-2) var(--tc-space-4);
+}
+
+/* Variantes de couleur */
+.default {
+  background-color: var(--tc-color-gray-200);
+  color: var(--tc-color-gray-700);
+  border-color: var(--tc-color-gray-300);
+}
+
+.primary {
+  background-color: var(--tc-color-primary-100);
+  color: var(--tc-color-primary-700);
+  border-color: var(--tc-color-primary-200);
+}
+
+.secondary {
+  background-color: var(--tc-color-gray-100);
+  color: var(--tc-color-gray-700);
+  border-color: var(--tc-color-gray-200);
+}
+
+.success {
+  background-color: var(--tc-color-success-100);
+  color: var(--tc-color-success-700);
+  border-color: var(--tc-color-success-200);
+}
+
+.warning {
+  background-color: var(--tc-color-warning-100);
+  color: var(--tc-color-warning-700);
+  border-color: var(--tc-color-warning-200);
+}
+
+.danger {
+  background-color: var(--tc-color-danger-100);
+  color: var(--tc-color-danger-700);
+  border-color: var(--tc-color-danger-200);
+}
+
+.info {
+  background-color: var(--tc-color-info-100);
+  color: var(--tc-color-info-700);
+  border-color: var(--tc-color-info-200);
+}
+
+/* Effets de survol */
+.badge:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--tc-shadow-sm);
+}
+
+/* États actifs */
+.badge:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* Variantes solides (optionnel) */
+.badge.solid {
+  border: none;
+}
+
+.solid.primary {
+  background-color: var(--tc-color-primary);
+  color: var(--tc-color-white);
+}
+
+.solid.success {
+  background-color: var(--tc-color-success);
+  color: var(--tc-color-white);
+}
+
+.solid.warning {
+  background-color: var(--tc-color-warning);
+  color: var(--tc-color-white);
+}
+
+.solid.danger {
+  background-color: var(--tc-color-danger);
+  color: var(--tc-color-white);
+}
+
+.solid.info {
+  background-color: var(--tc-color-info);
+  color: var(--tc-color-white);
+}
+
+/* Responsive */
+@media (max-width: var(--tc-breakpoint-sm)) {
+  .badge {
+    font-size: var(--tc-font-size-xs);
+    padding: var(--tc-space-1) var(--tc-space-2);
+  }
+}

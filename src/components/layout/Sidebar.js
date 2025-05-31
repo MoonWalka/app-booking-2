@@ -43,6 +43,12 @@ const Sidebar = () => {
             </Link>
           </li>
           <li>
+            <Link to="/structures" className={window.location.pathname.includes('/structures') ? styles.active : ''}>
+              <i className="bi bi-building"></i>
+              Structures
+            </Link>
+          </li>
+          <li>
             <Link to="/contrats" className={window.location.pathname.includes('/contrats') ? styles.active : ''}>
               <i className="bi bi-file-earmark-text"></i>
               Contrats

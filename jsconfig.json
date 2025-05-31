@@ -9,6 +9,7 @@
       "@styles/*": ["src/styles/*"],
       "@services/*": ["src/services/*"],
       "@pages/*": ["src/pages/*"],
+      "@ui/*": ["src/components/ui/*"],
       "@/*": ["src/*"]
     },
     "checkJs": false,

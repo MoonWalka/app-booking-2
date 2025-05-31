@@ -13,20 +13,21 @@ import styles from './StructuresList.module.css';
  * Même UI, même fonctionnalités, code 70% plus simple
  */
 const StructuresList = () => {
+  console.log('🏗️ StructuresList: Composant en cours de rendu');
   const navigate = useNavigate();
   
   // Un seul hook pour charger les données
   const {
     data: structures = [],
     loading,
-    error,
-    loadMore,
-    hasMore,
-    loadingMore
+    error
   } = useMultiOrgQuery('structures', {
-    orderBy: ['nom', 'asc'],
-    limit: 20
+    orderByField: 'nom',
+    orderDirection: 'asc',
+    limitCount: 20
   });
+  
+  console.log('🏗️ StructuresList: État du hook', { structures: structures.length, loading, error });
 
   // États simplifiés pour les filtres et la suppression
   const [searchTerm, setSearchTerm] = useState('');
@@ -320,25 +321,7 @@ const StructuresList = () => {
         </div>
       )}
 
-      {/* Pagination */}
-      {!searchTerm && !typeFilter && hasMore && (
-        <div className={styles.loadMore}>
-          <Button
-            variant="secondary"
-            onClick={loadMore}
-            disabled={loadingMore}
-          >
-            {loadingMore ? (
-              <>
-                <span className={styles.buttonSpinner}></span>
-                Chargement...
-              </>
-            ) : (
-              'Charger plus de structures'
-            )}
-          </Button>
-        </div>
-      )}
+      {/* Pagination désactivée temporairement - useMultiOrgQuery ne supporte pas encore la pagination */}
 
       {/* Modal de suppression */}
       <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>

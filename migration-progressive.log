@@ -1,5 +1,0 @@
-Mon May 26 00:58:27 CEST 2025: Sauvegarde group1-critical créée dans backup/css/migration-progressive/group1-critical-20250526-005827
-Mon May 26 00:58:28 CEST 2025: --tc-primary-color → --tc-color-primary (     427 →      427 occurrences)
-Mon May 26 00:58:28 CEST 2025: --tc-bg-color → --tc-bg-default (     125 →      125 occurrences)
-Mon May 26 00:58:28 CEST 2025: --tc-text-color → --tc-text-default (     315 →      315 occurrences)
-Mon May 26 00:58:29 CEST 2025: --tc-border-color → --tc-border-default (     385 →      385 occurrences)

@@ -14,7 +14,6 @@ import FlexContainer from '@/components/ui/FlexContainer';
 import Layout from '@/components/common/Layout';
 import DashboardPage from '@/pages/DashboardPage';
 import ConcertsPage from '@/pages/ConcertsPage';
-import TestButtons from '@/components/debug';
 import ProgrammateursPage from '@/pages/ProgrammateursPage';
 import ProgrammateurDetails from '@/components/programmateurs/ProgrammateurDetails';
 import ProgrammateurForm from '@/components/programmateurs/ProgrammateurForm';
@@ -31,24 +30,13 @@ import ProgrammateursList from '@/components/programmateurs/ProgrammateursList';
 import ConcertFormWrapper from '@/components/concerts/ConcertForm';
 import ConcertsList from '@/components/concerts/ConcertsList';
 import ConcertDetails from '@/components/concerts/ConcertDetails';
-import UnifiedDebugDashboard from '@/components/debug/UnifiedDebugDashboard';
-import TestParametresVersions from './pages/TestParametresVersions';
 import CreateDefaultTemplate from './pages/CreateDefaultTemplate';
-import TestContractError from './pages/TestContractError';
-import ProfilerMonitor from './components/debug/ProfilerMonitor';
-import ProgrammateurReferencesDebug from '@/components/debug/ProgrammateurReferencesDebug';
-import StructuresAuditDebug from '@/components/debug/StructuresAuditDebug';
-import AuthDebug from '@/components/debug/AuthDebug';
 import PrivateRoute from '@/components/auth/PrivateRoute';
 import LoginPage from '@/pages/LoginPage';
 import MigrationPage from '@/pages/admin/MigrationPage';
 
-const SHOW_DIAGNOSTIC_TOOLS = false;
-const SHOW_AUTH_DEBUG = false;
 
 if (process.env.NODE_ENV === 'development') {
-  import('./diagnostic').catch(err => console.error('Erreur lors du chargement du diagnostic:', err));
-  import('./utils/debugMode').catch(err => console.error('Erreur lors du chargement du mode debug:', err));
 }
 
 if (process.env.REACT_APP_MODE === 'local') {
@@ -148,10 +136,7 @@ function App() {
                   </FlexContainer>
                 }>
                   <Routes>
-                    <Route path="/test-buttons" element={<TestButtons />} />
-                    <Route path="/test-parametres-versions" element={<TestParametresVersions />} />
                     <Route path="/create-default-template" element={<CreateDefaultTemplate />} />
-                    <Route path="/test-contract-error" element={<TestContractError />} />
                     
                     <Route path="/login" element={<LoginPage />} />
                     
@@ -322,8 +307,6 @@ function App() {
                           
                           <Route path="/formulaire/validation/:id" element={<PrivateRoute><FormResponsePage /></PrivateRoute>} />
                           
-                          <Route path="/debug/programmateur-references" element={<ProgrammateurReferencesDebug />} />
-                          <Route path="/debug/structures-audit" element={<StructuresAuditDebug />} />
                           
                       <Route path="/admin/migration" element={
                         <PrivateRoute adminOnly={true}>
@@ -346,9 +329,6 @@ function App() {
                         </Route>
                       </Routes>
                     </Suspense>
-                    {process.env.NODE_ENV === 'development' && SHOW_DIAGNOSTIC_TOOLS && <UnifiedDebugDashboard />}
-                    {process.env.NODE_ENV === 'development' && SHOW_DIAGNOSTIC_TOOLS && <ProfilerMonitor />}
-                    {process.env.NODE_ENV === 'development' && SHOW_AUTH_DEBUG && <AuthDebug />}
                   </ModalProvider>
                 </ParametresProvider>
               </OrganizationProvider>

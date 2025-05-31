@@ -9,14 +9,11 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-// Import du service de diagnostic de performance
-import './diagnostic';
 
 // Import des polyfills pour la compatibilité
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
-// Configuration de why-did-you-render pour le diagnostic des re-renders
 if (process.env.NODE_ENV === 'development') {
   const whyDidYouRender = require('@welldone-software/why-did-you-render');
   const ReactForWDYR = require('react');

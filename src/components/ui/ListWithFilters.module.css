@@ -111,22 +111,49 @@
   box-shadow: var(--tc-shadow-sm);
 }
 
+/* Bouton toggle des filtres */
+.filterToggleButton {
+  background-color: transparent;
+  border: 1px solid var(--tc-border-default);
+  color: var(--tc-text-secondary);
+  border-radius: var(--tc-radius-md);
+  padding: var(--tc-space-2) var(--tc-space-3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-2);
+  transition: var(--tc-transition-fast);
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-medium);
+}
+
+.filterToggleButton:hover {
+  background-color: var(--tc-bg-hover);
+  color: var(--tc-color-primary);
+  border-color: var(--tc-border-hover);
+}
+
+.filterToggleButton i {
+  font-size: var(--tc-font-size-sm);
+}
+
 /* =============================
    FILTRES
    ============================= */
 .filtersContainer {
-  margin-bottom: var(--tc-space-6);
-  padding: var(--tc-space-4);
-  background-color: var(--tc-color-primary-50);
-  border-radius: var(--tc-radius-base);
-  border: 1px solid var(--tc-color-primary-200);
+  margin-bottom: var(--tc-space-4);
+  padding: var(--tc-space-3);
+  background-color: transparent;
+  border-radius: var(--tc-radius-md);
+  border: 1px solid var(--tc-border-subtle, #e5e7eb);
 }
 
 .filters {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--tc-space-4);
-  margin-bottom: var(--tc-space-4);
+  align-items: end;
+  gap: var(--tc-space-3);
+  margin-bottom: 0;
 }
 
 .filterItem {
@@ -144,53 +171,55 @@
 .filterInput, 
 .filterSelect {
   width: 100%;
-  padding: var(--tc-space-2);
-  border: 1px solid var(--tc-color-gray-400);
-  border-radius: var(--tc-radius-base);
+  padding: var(--tc-space-2) var(--tc-space-3);
+  border: 1px solid var(--tc-border-default, #d1d5db);
+  border-radius: var(--tc-radius-md);
   font-size: var(--tc-font-size-sm);
   color: var(--tc-text-default);
-  background-color: var(--tc-bg-default);
-  transition: var(--tc-transition-base);
+  background-color: white;
+  transition: all 0.2s ease;
 }
 
 .filterInput:focus,
 .filterSelect:focus {
-  border-color: var(--tc-color-primary);
+  border-color: var(--tc-color-primary, #3b82f6);
   outline: none;
-  box-shadow: var(--tc-shadow-focus);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1), 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .filterActions {
   display: flex;
-  justify-content: flex-end;
   gap: var(--tc-space-2);
+  flex-shrink: 0;
 }
 
 .applyButton {
-  background-color: var(--tc-color-primary);
-  color: var(--tc-text-light);
-  border: none;
-  border-radius: var(--tc-radius-base);
-  padding: var(--tc-space-2) var(--tc-space-4);
+  background-color: var(--tc-color-neutral-100, #f3f4f6);
+  color: var(--tc-text-default, #374151);
+  border: 1px solid var(--tc-border-default, #d1d5db);
+  border-radius: var(--tc-radius-md);
+  padding: var(--tc-space-2) var(--tc-space-3);
   cursor: pointer;
   font-size: var(--tc-font-size-sm);
-  font-weight: var(--tc-font-weight-medium);
-  transition: var(--tc-transition-base);
+  font-weight: var(--tc-font-weight-normal);
+  transition: all 0.2s ease;
 }
 
 .applyButton:hover {
-  background-color: var(--tc-color-primary-dark);
+  background-color: var(--tc-color-neutral-200, #e5e7eb);
+  border-color: var(--tc-color-neutral-300, #d1d5db);
 }
 
 .resetButton {
-  background-color: transparent;
-  border: 1px solid var(--tc-color-gray-400);
-  color: var(--tc-color-gray-600);
-  border-radius: var(--tc-radius-base);
+  background-color: white;
+  border: 1px solid var(--tc-border-default, #d1d5db);
+  color: var(--tc-text-secondary, #6b7280);
+  border-radius: var(--tc-radius-md);
   padding: var(--tc-space-2) var(--tc-space-4);
   cursor: pointer;
   font-size: var(--tc-font-size-sm);
-  transition: var(--tc-transition-base);
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .resetButton:hover {

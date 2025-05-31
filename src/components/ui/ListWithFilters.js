@@ -108,6 +108,7 @@ const ListWithFilters = ({
   const [lastDoc, setLastDoc] = useState(null);
   const [hasMore, setHasMore] = useState(false);
   const [filterValues, setFilterValues] = useState({});
+  const [showFilters, setShowFilters] = useState(false);
 
   // Synchronisation avec les données externes
   useEffect(() => {
@@ -389,6 +390,30 @@ const ListWithFilters = ({
       <div className={styles.header}>
         <h1 className={styles.title}>{title}</h1>
         <div className={styles.actionsWrapper}>
+          {filterOptions.length > 0 && (
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className={styles.filterToggleButton}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '8px 12px',
+                border: '1px solid #d1d5db',
+                borderRadius: '6px',
+                backgroundColor: 'transparent',
+                color: '#6b7280',
+                cursor: 'pointer'
+              }}
+              title="Filtres"
+            >
+              <i className="bi bi-funnel"></i>
+              Filtres
+              {Object.keys(filters).length > 0 && (
+                <span className={styles.filterBadge}>{Object.keys(filters).length}</span>
+              )}
+            </button>
+          )}
           {showRefresh && (
             <button
               onClick={handleRefresh}
@@ -407,8 +432,8 @@ const ListWithFilters = ({
         <StatsCards stats={calculateStats(items)} />
       )}
 
-      {/* Filtres basiques */}
-      {filterOptions.length > 0 && (
+      {/* Filtres déroulants */}
+      {filterOptions.length > 0 && showFilters && (
         <div className={styles.filtersContainer}>
           <div className={styles.filters}>
             {filterOptions.map(option => (
@@ -438,14 +463,14 @@ const ListWithFilters = ({
                 )}
               </div>
             ))}
-          </div>
-          <div className={styles.filterActions}>
-            <button onClick={resetFilters} className={styles.resetButton}>
-              <i className="bi bi-x-circle"></i> Effacer
-            </button>
-            <button onClick={applyFilters} className={styles.applyButton}>
-              <i className="bi bi-funnel"></i> Appliquer
-            </button>
+            <div className={styles.filterActions}>
+              <button onClick={resetFilters} className={styles.resetButton}>
+                <i className="bi bi-x-circle"></i> Effacer
+              </button>
+              <button onClick={applyFilters} className={styles.applyButton}>
+                <i className="bi bi-funnel"></i> Appliquer
+              </button>
+            </div>
           </div>
         </div>
       )}

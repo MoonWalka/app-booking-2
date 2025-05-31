@@ -6,7 +6,7 @@ import { replaceVariablesWithMockData } from '@/hooks/contrats/contractVariables
  * Composant d'aperçu du modèle de contrat
  */
 const ContratTemplatePreview = ({ selectedTemplate }) => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
 
   if (!selectedTemplate) {
     return null;
@@ -18,16 +18,23 @@ const ContratTemplatePreview = ({ selectedTemplate }) => {
   
   return (
     <div className={styles.templatePreview}>
-      <div className={styles.previewHeader}>
+      <div 
+        className={styles.previewHeader}
+        onClick={toggleCollapse}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            toggleCollapse();
+          }
+        }}
+        title={isCollapsed ? "Cliquer pour afficher l'aperçu du modèle" : "Cliquer pour masquer l'aperçu du modèle"}
+      >
         <h6 className={styles.previewTitle}>Aperçu du modèle</h6>
-        <button
-          type="button"
-          className={styles.collapseButton}
-          onClick={toggleCollapse}
-          title={isCollapsed ? "Étendre l'aperçu" : "Réduire l'aperçu"}
-        >
+        <div className={styles.collapseButton}>
           <i className={`bi ${isCollapsed ? 'bi-chevron-down' : 'bi-chevron-up'}`}></i>
-        </button>
+        </div>
       </div>
       
       {!isCollapsed && (

@@ -37,9 +37,54 @@ export const useMultiOrgQuery = (collectionName, options = {}) => {
 
   const fetchData = useCallback(async () => {
     if (!currentOrg) {
-      console.log('⚠️ Pas d\'organisation sélectionnée, pas de chargement des données');
-      setData([]);
-      setLoading(false);
+      console.log('⚠️ Pas d\'organisation sélectionnée, utilisation des données globales');
+      
+      try {
+        setLoading(true);
+        setError(null);
+
+        const globalCollection = collection(db, collectionName);
+        let q = query(globalCollection);
+
+        // Appliquer les filtres
+        filters.forEach(filter => {
+          if (filter.field && filter.operator && filter.value !== undefined) {
+            q = query(q, where(filter.field, filter.operator, filter.value));
+          }
+        });
+
+        // Appliquer le tri
+        if (orderByField) {
+          q = query(q, orderBy(orderByField, orderDirection));
+        }
+
+        // Appliquer la limite
+        if (limitCount) {
+          q = query(q, limit(limitCount));
+        }
+
+        onSnapshot(q, 
+          (snapshot) => {
+            const results = snapshot.docs.map(doc => ({
+              id: doc.id,
+              ...doc.data(),
+              _source: 'global'
+            }));
+            setData(results);
+            setLoading(false);
+          },
+          (err) => {
+            console.error('❌ Erreur écoute temps réel global:', err);
+            setError(err.message);
+            setLoading(false);
+          }
+        );
+      } catch (err) {
+        console.error('❌ Erreur lors du chargement des données globales:', err);
+        setError(err.message);
+        setData([]);
+        setLoading(false);
+      }
       return;
     }
 
@@ -47,46 +92,176 @@ export const useMultiOrgQuery = (collectionName, options = {}) => {
       setLoading(true);
       setError(null);
 
-      const orgCollection = collection(db, collectionName);
-      let q = query(orgCollection);
+      // 1. Tentative avec collection organisationnelle
+      const orgCollectionName = `${collectionName}_org_${currentOrg.id}`;
+      console.log(`📁 Tentative hook multi-org: ${orgCollectionName}`);
+
+      const orgCollection = collection(db, orgCollectionName);
+      let orgQuery = query(orgCollection);
 
       // Appliquer les filtres
       filters.forEach(filter => {
         if (filter.field && filter.operator && filter.value !== undefined) {
-          q = query(q, where(filter.field, filter.operator, filter.value));
+          orgQuery = query(orgQuery, where(filter.field, filter.operator, filter.value));
         }
       });
 
       // Appliquer le tri
       if (orderByField) {
-        q = query(q, orderBy(orderByField, orderDirection));
+        orgQuery = query(orgQuery, orderBy(orderByField, orderDirection));
       }
 
       // Appliquer la limite
       if (limitCount) {
-        q = query(q, limit(limitCount));
+        orgQuery = query(orgQuery, limit(limitCount));
       }
 
-      onSnapshot(q, 
-        (snapshot) => {
-          const results = snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-          }));
-          setData(results);
-          setLoading(false);
-        },
-        (err) => {
-          console.error('❌ Erreur écoute temps réel:', err);
-          setError(err.message);
-          setLoading(false);
-        }
-      );
+      // Tester d'abord si la collection organisationnelle existe et a des données
+      const testSnapshot = await new Promise((resolve, reject) => {
+        const unsubscribe = onSnapshot(orgQuery, 
+          (snapshot) => {
+            unsubscribe(); // Arrêter l'écoute test
+            resolve(snapshot);
+          },
+          (err) => {
+            unsubscribe();
+            reject(err);
+          }
+        );
+      });
 
-    } catch (err) {
-      console.error('❌ Erreur lors du chargement des données:', err);
-      setError(err.message);
-      setData([]);
+      if (testSnapshot.docs.length > 0) {
+        console.log(`✅ Collection organisationnelle trouvée: ${testSnapshot.docs.length} éléments`);
+        
+        // Utiliser la collection organisationnelle
+        onSnapshot(orgQuery, 
+          (snapshot) => {
+            const results = snapshot.docs.map(doc => ({
+              id: doc.id,
+              ...doc.data(),
+              _source: 'organizational'
+            }));
+            setData(results);
+            setLoading(false);
+          },
+          (err) => {
+            console.error('❌ Erreur écoute organisationnelle:', err);
+            setError(err.message);
+            setLoading(false);
+          }
+        );
+      } else {
+        throw new Error('Collection organisationnelle vide');
+      }
+
+    } catch (orgError) {
+      console.log(`🔄 Fallback vers collection standard: ${collectionName}`);
+      
+      try {
+        // 2. Fallback vers collection standard avec filtre organizationId
+        const standardCollection = collection(db, collectionName);
+        let fallbackQuery = query(standardCollection);
+
+        // Ajouter le filtre organizationId
+        fallbackQuery = query(fallbackQuery, where('organizationId', '==', currentOrg.id));
+
+        // Appliquer les autres filtres
+        filters.forEach(filter => {
+          if (filter.field && filter.operator && filter.value !== undefined) {
+            fallbackQuery = query(fallbackQuery, where(filter.field, filter.operator, filter.value));
+          }
+        });
+
+        // Appliquer le tri
+        if (orderByField) {
+          fallbackQuery = query(fallbackQuery, orderBy(orderByField, orderDirection));
+        }
+
+        // Appliquer la limite
+        if (limitCount) {
+          fallbackQuery = query(fallbackQuery, limit(limitCount));
+        }
+
+        // Tester avec filtre organizationId
+        const testFilteredSnapshot = await new Promise((resolve, reject) => {
+          const unsubscribe = onSnapshot(fallbackQuery, 
+            (snapshot) => {
+              unsubscribe();
+              resolve(snapshot);
+            },
+            (err) => {
+              unsubscribe();
+              reject(err);
+            }
+          );
+        });
+
+        if (testFilteredSnapshot.docs.length > 0) {
+          console.log(`✅ Collection standard avec filtre org: ${testFilteredSnapshot.docs.length} éléments`);
+          
+          onSnapshot(fallbackQuery, 
+            (snapshot) => {
+              const results = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data(),
+                _source: 'standard-filtered'
+              }));
+              setData(results);
+              setLoading(false);
+            },
+            (err) => {
+              console.error('❌ Erreur écoute standard filtrée:', err);
+              setError(err.message);
+              setLoading(false);
+            }
+          );
+        } else {
+          throw new Error('Collection standard filtrée vide');
+        }
+
+      } catch (filteredError) {
+        console.log(`🔄 Fallback final vers toutes les données standard`);
+        
+        // 3. Fallback final vers toutes les données (compatibilité legacy)
+        const legacyCollection = collection(db, collectionName);
+        let legacyQuery = query(legacyCollection);
+
+        // Appliquer seulement les filtres utilisateur (pas organizationId)
+        filters.forEach(filter => {
+          if (filter.field && filter.operator && filter.value !== undefined) {
+            legacyQuery = query(legacyQuery, where(filter.field, filter.operator, filter.value));
+          }
+        });
+
+        // Appliquer le tri
+        if (orderByField) {
+          legacyQuery = query(legacyQuery, orderBy(orderByField, orderDirection));
+        }
+
+        // Appliquer la limite
+        if (limitCount) {
+          legacyQuery = query(legacyQuery, limit(limitCount));
+        }
+
+        onSnapshot(legacyQuery, 
+          (snapshot) => {
+            const results = snapshot.docs.map(doc => ({
+              id: doc.id,
+              ...doc.data(),
+              _source: 'legacy'
+            }));
+            console.log(`📊 Données legacy chargées: ${results.length} éléments`);
+            setData(results);
+            setLoading(false);
+          },
+          (err) => {
+            console.error('❌ Erreur écoute legacy:', err);
+            setError(err.message);
+            setData([]);
+            setLoading(false);
+          }
+        );
+      }
     }
   }, [currentOrg, collectionName, filters, orderByField, orderDirection, limitCount]);
 

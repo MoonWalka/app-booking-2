@@ -5,7 +5,7 @@ const sampleConcerts = [
   {
     id: 'concert-1',
     titre: 'Concert Test 1',
-    date: '2024-12-25',
+    dateEvenement: '2024-12-25T20:00:00.000Z',
     montant: 1500,
     statut: 'contact',
     lieuId: 'lieu-1',
@@ -20,7 +20,7 @@ const sampleConcerts = [
   {
     id: 'concert-2',
     titre: 'Concert Test 2',
-    date: '2024-12-30',
+    dateEvenement: '2024-12-30T21:00:00.000Z',
     montant: 2000,
     statut: 'preaccord',
     lieuId: 'lieu-2',

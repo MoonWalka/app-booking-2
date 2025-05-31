@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import {  collection, getDocs, query, where, orderBy, limit, startAfter  } from '@/services/firebase-service';
 import { db } from '../../services/firebase-service';
@@ -7,26 +7,8 @@ import StatsCards from './StatsCards';
 import styles from './ListWithFilters.module.css';
 
 /**
- * Composant générique pour afficher des listes avec filtres, tri et pagination
- * 
- * @param {Object} props - Propriétés du composant
- * @param {string} props.entityType - Type d'entité (artistes, programmateurs, etc.)
- * @param {string} props.title - Titre de la liste
- * @param {Array} props.columns - Configuration des colonnes [{id, label, field, sortable, width, render}]
- * @param {Object} props.filters - Filtres initiaux {field: value, ...}
- * @param {Object} props.sort - Tri initial {field, direction}
- * @param {React.ReactNode} props.actions - Actions personnalisées à afficher en haut
- * @param {Function} props.onRowClick - Fonction appelée lors du clic sur une ligne
- * @param {number} props.pageSize - Nombre d'éléments par page (défaut: 10)
- * @param {boolean} props.showRefresh - Afficher le bouton de rafraîchissement
- * @param {Array} props.filterOptions - Options de filtres 
- *    [{id, label, field, type, options, placeholder}]
- * @param {Function} props.renderActions - Fonction pour rendre les actions par ligne
- * @param {Function} props.calculateStats - Fonction pour calculer les statistiques
- * @param {boolean} props.showStats - Afficher les cartes de statistiques
- * @param {boolean} props.showAdvancedFilters - Activer les filtres avancés
- * @param {Array} props.advancedFilterOptions - Options de filtres avancés
- * @return {JSX.Element} Composant de liste avec filtres
+ * Version simplifiée de ListWithFilters qui utilise les collections standard Firebase
+ * (pas de système multi-organisation)
  */
 const ListWithFilters = ({
   entityType,
@@ -44,38 +26,69 @@ const ListWithFilters = ({
   showStats = false,
   showAdvancedFilters = false,
   advancedFilterOptions = [],
+  // Props pour données externes (hooks spécialisés)
+  initialData = null,
+  loading: externalLoading = null,
+  error: externalError = null,
+  onRefresh: externalOnRefresh = null,
 }) => {
   const { isMobile } = useResponsive();
-  const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [items, setItems] = useState(initialData || []);
+  const [loading, setLoading] = useState(externalLoading !== null ? externalLoading : true);
+  const [error, setError] = useState(externalError);
   const [filters, setFilters] = useState(initialFilters);
-  const [sort, setSort] = useState(initialSort);
+  const [sort, setSortState] = useState(initialSort);
   const [lastDoc, setLastDoc] = useState(null);
   const [hasMore, setHasMore] = useState(false);
   const [filterValues, setFilterValues] = useState({});
-  const [showMobileFilters, setShowMobileFilters] = useState(false);
-  const [showAdvancedFiltersPanel, setShowAdvancedFiltersPanel] = useState(false);
-  const [advancedFilterValues, setAdvancedFilterValues] = useState({});
 
-  // Configuration des filtres
+  // Synchronisation avec les données externes
+  useEffect(() => {
+    if (initialData !== null) {
+      setItems(initialData);
+    }
+  }, [initialData]);
+
+  useEffect(() => {
+    if (externalLoading !== null) {
+      setLoading(externalLoading);
+    }
+  }, [externalLoading]);
+
+  useEffect(() => {
+    if (externalError !== null) {
+      setError(externalError);
+    }
+  }, [externalError]);
+
+  // Initialisation des valeurs de filtres
   useEffect(() => {
     const initialValues = {};
-    filterOptions.forEach(filter => {
-      if (filters[filter.field] !== undefined) {
-        initialValues[filter.id] = filters[filter.field];
-      } else {
-        initialValues[filter.id] = '';
+    filterOptions.forEach(option => {
+      if (filters[option.field] !== undefined) {
+        initialValues[option.id] = filters[option.field];
       }
     });
     setFilterValues(initialValues);
   }, [filterOptions, filters]);
 
-  // Chargement des données
-  const loadData = async (isLoadMore = false) => {
+  // Chargement des données - VERSION SIMPLIFIÉE
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const loadData = useCallback(async (isLoadMore = false) => {
+    // Si des données externes sont fournies, ne pas charger depuis Firebase
+    if (initialData !== null) {
+      console.log('📦 Utilisation des données externes (hooks spécialisés)');
+      return;
+    }
+
     setLoading(true);
     
     try {
-      const collectionRef = collection(db, entityType);
+      // Utiliser directement la collection standard
+      const collectionName = entityType;
+      console.log(`📁 Chargement de la collection: ${collectionName}`);
+      
+      const collectionRef = collection(db, collectionName);
       
       // Construction de la requête
       let q = collectionRef;
@@ -92,8 +105,19 @@ const ListWithFilters = ({
         }
       }
       
-      // Tri
-      q = query(q, orderBy(sort.field, sort.direction));
+      // Tri avec gestion d'erreur
+      try {
+        q = query(q, orderBy(sort.field, sort.direction));
+      } catch (sortError) {
+        console.warn(`⚠️ Impossible de trier par ${sort.field}, utilisation du tri par défaut:`, sortError);
+        // Fallback sur createdAt si le champ de tri n'existe pas
+        try {
+          q = query(q, orderBy('createdAt', 'desc'));
+        } catch (fallbackError) {
+          console.warn('⚠️ Pas de tri appliqué:', fallbackError);
+          // Continuer sans tri si aucun champ ne fonctionne
+        }
+      }
       
       // Pagination
       if (isLoadMore && lastDoc) {
@@ -102,507 +126,301 @@ const ListWithFilters = ({
         q = query(q, limit(pageSize));
       }
       
-      // Exécution de la requête
       const querySnapshot = await getDocs(q);
       
-      // Gestion de la pagination
-      const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
-      setLastDoc(lastVisible);
-      setHasMore(querySnapshot.docs.length === pageSize);
+      console.log(`✅ Données chargées: ${querySnapshot.docs.length} éléments`);
       
-      // Transformation des documents
+      // Diagnostic détaillé pour les concerts
+      if (entityType === 'concerts') {
+        console.log('🎭 === DIAGNOSTIC CONCERTS ===');
+        console.log('📋 Collection interrogée:', collectionName);
+        console.log('🔍 Filtres appliqués:', filters);
+        console.log('📊 Tri:', sort);
+        console.log('📝 Documents trouvés:', querySnapshot.docs.length);
+        
+        if (querySnapshot.docs.length > 0) {
+          const firstDoc = querySnapshot.docs[0].data();
+          console.log('📄 Premier document exemple:', {
+            id: querySnapshot.docs[0].id,
+            titre: firstDoc.titre,
+            dateEvenement: firstDoc.dateEvenement,
+            date: firstDoc.date,
+            fields: Object.keys(firstDoc)
+          });
+        }
+        
+        // Test rapide: compter TOUS les concerts sans filtre
+        const allConcertsRef = collection(db, 'concerts');
+        const allSnapshot = await getDocs(allConcertsRef);
+        console.log('🔢 TOTAL concerts dans Firebase:', allSnapshot.docs.length);
+      }
+      
       const loadedItems = querySnapshot.docs.map(doc => ({
         id: doc.id,
-        ...doc.data(),
+        ...doc.data()
       }));
       
-      // Mise à jour des items
       if (isLoadMore) {
         setItems(prev => [...prev, ...loadedItems]);
       } else {
         setItems(loadedItems);
       }
-    } catch (error) {
-      console.error(`Erreur lors du chargement des ${entityType}:`, error);
+      
+      // Gestion pagination
+      const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+      setLastDoc(lastVisible);
+      setHasMore(querySnapshot.docs.length === pageSize);
+      
+      setError(null);
+    } catch (err) {
+      console.error('❌ Erreur chargement données:', err);
+      setError(err.message);
     } finally {
       setLoading(false);
     }
-  };
-
-  // Chargement initial
-  useEffect(() => {
-    loadData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entityType, filters, sort, pageSize]);
 
-  // Changement de tri
-  const handleSort = (field) => {
-    if (sort.field === field) {
-      // Inversion du tri sur la même colonne
-      setSort({
-        field,
-        direction: sort.direction === 'asc' ? 'desc' : 'asc',
-      });
+  // Recharger les données quand les paramètres changent
+  useEffect(() => {
+    setLastDoc(null); // Reset pagination when parameters change
+    loadData();
+  }, [loadData]);
+
+  // Gestion du rafraîchissement
+  const handleRefresh = () => {
+    if (externalOnRefresh) {
+      externalOnRefresh();
     } else {
-      // Nouvelle colonne, tri par défaut
-      setSort({
-        field,
-        direction: 'asc',
-      });
+      loadData();
     }
   };
 
-  // Application des filtres
-  const handleFilterApply = () => {
-    const appliedFilters = {};
-    
-    // Transformation des valeurs de filtres en filtres appliqués
-    Object.entries(filterValues).forEach(([filterId, value]) => {
-      const filterOption = filterOptions.find(opt => opt.id === filterId);
-      
-      if (filterOption && value !== '') {
-        appliedFilters[filterOption.field] = value;
-      }
-    });
-    
-    setFilters(appliedFilters);
-    setLastDoc(null); // Réinitialisation de la pagination
+  // Gestion du tri
+  const handleSort = (field) => {
+    const newDirection = sort.field === field && sort.direction === 'asc' ? 'desc' : 'asc';
+    setSortState({ field, direction: newDirection });
   };
 
-  // Réinitialisation des filtres
-  const handleFilterReset = () => {
+  // Gestion des filtres
+  const handleFilterChange = (filterId, value) => {
+    setFilterValues(prev => ({ ...prev, [filterId]: value }));
+  };
+
+  const applyFilters = () => {
+    const newFilters = {};
+    filterOptions.forEach(option => {
+      const value = filterValues[option.id];
+      if (value !== undefined && value !== '') {
+        newFilters[option.field] = value;
+      }
+    });
+    setFilters(newFilters);
+  };
+
+  const resetFilters = () => {
     setFilterValues({});
     setFilters({});
-    setLastDoc(null);
   };
 
-  // Chargement de plus d'éléments
-  const handleLoadMore = () => {
-    loadData(true);
-  };
-
-  // Rafraîchissement des données
-  const handleRefresh = () => {
-    setLastDoc(null);
-    loadData();
-  };
-
-  // Changement de valeur de filtre
-  const handleFilterChange = (filterId, value) => {
-    setFilterValues(prev => ({
-      ...prev,
-      [filterId]: value,
-    }));
-  };
-
-  // Gestion des filtres avancés
-  const handleAdvancedFilterChange = (filterId, value) => {
-    setAdvancedFilterValues(prev => ({
-      ...prev,
-      [filterId]: value,
-    }));
-  };
-
-  const handleAdvancedFilterApply = () => {
-    const newFilters = { ...filters };
-    
-    // Ajouter les filtres avancés aux filtres existants
-    Object.entries(advancedFilterValues).forEach(([filterId, value]) => {
-      const filterOption = advancedFilterOptions.find(opt => opt.id === filterId);
-      
-      if (filterOption && value !== '') {
-        newFilters[filterOption.field] = value;
-      }
-    });
-    
-    setFilters(newFilters);
-    setLastDoc(null);
-  };
-
-  const handleAdvancedFilterReset = () => {
-    setAdvancedFilterValues({});
-    // Retirer les filtres avancés des filtres appliqués
-    const newFilters = { ...filters };
-    advancedFilterOptions.forEach(option => {
-      delete newFilters[option.field];
-    });
-    setFilters(newFilters);
-    setLastDoc(null);
-  };
-
-  // Gestion du clic sur une ligne
-  const handleRowClick = (item) => {
-    if (onRowClick) {
-      onRowClick(item);
-    }
-  };
-
-  // Rendu des colonnes
-  const renderColumnValue = (item, column) => {
-    if (column.render) {
-      return column.render(item);
-    }
-    
-    if (!column.field) {
-      return '';
-    }
-    
-    const value = column.field.split('.').reduce((obj, key) => 
-      obj ? obj[key] : undefined, item);
-      
-    return value || '';
-  };
-
-  // Déterminer si des filtres sont appliqués
-  const hasActiveFilters = Object.values(filters).some(value => 
-    value !== undefined && value !== '');
-
-  // Fonction pour rendre une carte mobile
-  const renderMobileCard = (item) => {
-    // Utiliser les 2-3 premières colonnes pour l'affichage principal
-    const mainColumns = columns.slice(0, 3);
-    const titleColumn = columns[0];
-    const titleValue = renderColumnValue(item, titleColumn);
-
-    return (
-      <div 
-        key={item.id} 
-        className={styles.mobileCard}
-        onClick={() => handleRowClick(item)}
-      >
-        <div className={styles.mobileCardHeader}>
-          <h3 className={styles.mobileCardTitle}>{titleValue}</h3>
-          {renderActions && (
-            <div 
-              className={styles.mobileCardActions}
-              onClick={(e) => e.stopPropagation()}
+  // Rendu du tableau desktop
+  const renderDesktopTable = () => (
+    <div className={styles.tableWrapper}>
+      <table className={styles.table}>
+        <thead>
+          <tr>
+            {columns.map(column => (
+              <th
+                key={column.id}
+                className={column.sortable ? styles.sortable : ''}
+                onClick={column.sortable ? () => handleSort(column.field) : undefined}
+                style={{ width: column.width }}
+              >
+                <div className={styles.headerContent}>
+                  <span>{column.label}</span>
+                  {column.sortable && sort.field === column.field && (
+                    <i className={`bi bi-arrow-${sort.direction === 'asc' ? 'up' : 'down'} ${styles.sortIcon}`}></i>
+                  )}
+                </div>
+              </th>
+            ))}
+            {renderActions && <th style={{ width: '120px' }}>Actions</th>}
+          </tr>
+        </thead>
+        <tbody>
+          {items.map(item => (
+            <tr
+              key={item.id}
+              className={styles.tableRow}
+              onClick={onRowClick ? () => onRowClick(item) : undefined}
+              style={{ cursor: onRowClick ? 'pointer' : 'default' }}
             >
-              {renderActions(item)}
-            </div>
-          )}
-        </div>
-        
-        <div className={styles.mobileCardContent}>
-          {mainColumns.slice(1).map((column) => (
-            <div key={column.id} className={styles.mobileCardField}>
-              <div className={styles.mobileCardFieldLabel}>
-                {column.label}
-              </div>
-              <div className={styles.mobileCardFieldValue}>
-                {renderColumnValue(item, column)}
-              </div>
-            </div>
+              {columns.map(column => (
+                <td key={column.id} className={styles.tableCell}>
+                  {column.render ? column.render(item) : item[column.field] || '-'}
+                </td>
+              ))}
+              {renderActions && (
+                <td className={styles.tableCell}>
+                  {renderActions(item)}
+                </td>
+              )}
+            </tr>
           ))}
+        </tbody>
+      </table>
+    </div>
+  );
+
+  // Rendu des cartes mobiles
+  const renderMobileCards = () => (
+    <div className={styles.mobileCardsContainer}>
+      {items.map(item => (
+        <div
+          key={item.id}
+          className={styles.mobileCard}
+          onClick={onRowClick ? () => onRowClick(item) : undefined}
+        >
+          <div className={styles.mobileCardHeader}>
+            <h3 className={styles.mobileCardTitle}>
+              {columns[0]?.render ? columns[0].render(item) : item[columns[0]?.field] || 'Sans titre'}
+            </h3>
+            {renderActions && (
+              <div className={styles.mobileCardActions}>
+                {renderActions(item)}
+              </div>
+            )}
+          </div>
+          <div className={styles.mobileCardContent}>
+            {columns.slice(1, 5).map(column => (
+              <div key={column.id} className={styles.mobileCardField}>
+                <span className={styles.mobileCardFieldLabel}>{column.label}</span>
+                <span className={styles.mobileCardFieldValue}>
+                  {column.render ? column.render(item) : item[column.field] || '-'}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
+  if (loading && items.length === 0) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.loading}>
+          <div className={styles.spinner} />
+          <span>Chargement...</span>
         </div>
       </div>
     );
-  };
+  }
+
+  if (error) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.error}>
+          <i className="bi bi-exclamation-triangle"></i>
+          <span>Erreur: {error}</span>
+          <button onClick={handleRefresh} className={styles.retryButton}>
+            Réessayer
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.container}>
+      {/* En-tête */}
       <div className={styles.header}>
-        {title && <h2 className={styles.title}>{title}</h2>}
-        
+        <h1 className={styles.title}>{title}</h1>
         <div className={styles.actionsWrapper}>
-          {actions}
-          
           {showRefresh && (
-            <button 
-              className={styles.refreshButton} 
+            <button
               onClick={handleRefresh}
-              title="Rafraîchir"
+              className={styles.refreshButton}
+              title="Actualiser"
             >
               <i className="bi bi-arrow-clockwise"></i>
             </button>
           )}
+          {actions}
         </div>
       </div>
-      
-      {/* Stats cards */}
+
+      {/* Statistiques */}
       {showStats && calculateStats && (
         <StatsCards stats={calculateStats(items)} />
       )}
-      
+
+      {/* Filtres basiques */}
       {filterOptions.length > 0 && (
-        <>
-          {isMobile && (
-            <button
-              className={styles.mobileFiltersToggle}
-              onClick={() => setShowMobileFilters(!showMobileFilters)}
-            >
-              <i className={`bi ${showMobileFilters ? 'bi-funnel-fill' : 'bi-funnel'}`}></i>
-              {showMobileFilters ? 'Masquer les filtres' : 'Afficher les filtres'}
-              {hasActiveFilters && <i className="bi bi-dot" style={{ color: 'orange' }}></i>}
-            </button>
-          )}
-          
-          <div 
-            className={styles.filtersContainer}
-            style={isMobile ? { display: showMobileFilters ? 'block' : 'none' } : {}}
-          >
-            <div className={styles.filters}>
-              {filterOptions.map((filter) => (
-                <div key={filter.id} className={styles.filterItem}>
-                  <label className={styles.filterLabel}>{filter.label}</label>
-                  
-                  {filter.type === 'select' && (
-                    <select
-                      className={styles.filterSelect}
-                      value={filterValues[filter.id] || ''}
-                      onChange={(e) => handleFilterChange(filter.id, e.target.value)}
-                    >
-                      <option value="">{filter.placeholder || 'Tous'}</option>
-                      {filter.options.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                  )}
-                  
-                  {filter.type === 'text' && (
-                    <input
-                      type="text"
-                      className={styles.filterInput}
-                      value={filterValues[filter.id] || ''}
-                      onChange={(e) => handleFilterChange(filter.id, e.target.value)}
-                      placeholder={filter.placeholder || 'Rechercher...'}
-                    />
-                  )}
-                  
-                  {filter.type === 'date' && (
-                    <input
-                      type="date"
-                      className={styles.filterInput}
-                      value={filterValues[filter.id] || ''}
-                      onChange={(e) => handleFilterChange(filter.id, e.target.value)}
-                    />
-                  )}
-                </div>
-              ))}
-            </div>
-            
-            <div className={styles.filterActions}>
-              <button 
-                className={styles.applyButton} 
-                onClick={handleFilterApply}
-              >
-                Appliquer
-              </button>
-              {hasActiveFilters && (
-                <button 
-                  className={styles.resetButton} 
-                  onClick={handleFilterReset}
-                >
-                  Réinitialiser
-                </button>
-              )}
-              {showAdvancedFilters && (
-                <button 
-                  className={styles.advancedFiltersButton} 
-                  onClick={() => setShowAdvancedFiltersPanel(!showAdvancedFiltersPanel)}
-                >
-                  <i className={`bi ${showAdvancedFiltersPanel ? 'bi-funnel-fill' : 'bi-funnel'}`}></i>
-                  Filtres avancés
-                  {Object.keys(advancedFilterValues).filter(key => advancedFilterValues[key] && advancedFilterValues[key] !== '').length > 0 && (
-                    <span className={styles.filterBadge}>
-                      {Object.keys(advancedFilterValues).filter(key => advancedFilterValues[key] && advancedFilterValues[key] !== '').length}
-                    </span>
-                  )}
-                </button>
-              )}
-            </div>
-          </div>
-          
-          {/* Panel des filtres avancés */}
-          {showAdvancedFilters && showAdvancedFiltersPanel && (
-            <div className={styles.advancedFiltersPanel}>
-              <div className={styles.advancedFiltersGrid}>
-                {advancedFilterOptions.map((filter) => (
-                  <div key={filter.id} className={styles.advancedFilterItem}>
-                    <label className={styles.filterLabel}>{filter.label}</label>
-                    
-                    {filter.type === 'select' && (
-                      <select
-                        className={styles.filterSelect}
-                        value={advancedFilterValues[filter.id] || ''}
-                        onChange={(e) => handleAdvancedFilterChange(filter.id, e.target.value)}
-                      >
-                        <option value="">{filter.placeholder || 'Tous'}</option>
-                        {filter.options.map((option) => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
-                          </option>
-                        ))}
-                      </select>
-                    )}
-                    
-                    {filter.type === 'text' && (
-                      <input
-                        type="text"
-                        className={styles.filterInput}
-                        value={advancedFilterValues[filter.id] || ''}
-                        onChange={(e) => handleAdvancedFilterChange(filter.id, e.target.value)}
-                        placeholder={filter.placeholder || 'Rechercher...'}
-                      />
-                    )}
-                    
-                    {filter.type === 'boolean' && (
-                      <select
-                        className={styles.filterSelect}
-                        value={advancedFilterValues[filter.id] || ''}
-                        onChange={(e) => handleAdvancedFilterChange(filter.id, e.target.value)}
-                      >
-                        <option value="">Tous</option>
-                        <option value="true">Oui</option>
-                        <option value="false">Non</option>
-                      </select>
-                    )}
-                  </div>
-                ))}
-              </div>
-              
-              <div className={styles.advancedFilterActions}>
-                <button 
-                  className={styles.applyButton} 
-                  onClick={handleAdvancedFilterApply}
-                >
-                  Appliquer les filtres avancés
-                </button>
-                {Object.keys(advancedFilterValues).some(key => advancedFilterValues[key] && advancedFilterValues[key] !== '') && (
-                  <button 
-                    className={styles.resetButton} 
-                    onClick={handleAdvancedFilterReset}
+        <div className={styles.filtersContainer}>
+          <div className={styles.filters}>
+            {filterOptions.map(option => (
+              <div key={option.id} className={styles.filterItem}>
+                <label className={styles.filterLabel}>{option.label}</label>
+                {option.type === 'select' ? (
+                  <select
+                    className={styles.filterSelect}
+                    value={filterValues[option.id] || ''}
+                    onChange={(e) => handleFilterChange(option.id, e.target.value)}
                   >
-                    Réinitialiser
-                  </button>
+                    <option value="">{option.placeholder || 'Tous'}</option>
+                    {option.options?.map(opt => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <input
+                    type={option.type || 'text'}
+                    className={styles.filterInput}
+                    placeholder={option.placeholder}
+                    value={filterValues[option.id] || ''}
+                    onChange={(e) => handleFilterChange(option.id, e.target.value)}
+                  />
                 )}
               </div>
+            ))}
+          </div>
+          <div className={styles.filterActions}>
+            <button onClick={resetFilters} className={styles.resetButton}>
+              <i className="bi bi-x-circle"></i> Effacer
+            </button>
+            <button onClick={applyFilters} className={styles.applyButton}>
+              <i className="bi bi-funnel"></i> Appliquer
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Contenu principal */}
+      {items.length === 0 ? (
+        <div className={styles.noData}>
+          <i className="bi bi-inbox"></i>
+          <span>Aucune donnée trouvée</span>
+        </div>
+      ) : (
+        <>
+          {isMobile ? renderMobileCards() : renderDesktopTable()}
+          
+          {/* Pagination */}
+          {hasMore && (
+            <div className={styles.loadMoreContainer}>
+              <button
+                onClick={() => loadData(true)}
+                className={styles.loadMoreButton}
+                disabled={loading}
+              >
+                {loading ? 'Chargement...' : 'Charger plus'}
+              </button>
             </div>
           )}
         </>
-      )}
-      
-      <div className={styles.tableWrapper}>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              {columns.map((column) => (
-                <th 
-                  key={column.id} 
-                  className={`${styles.tableHeader} ${column.sortable ? styles.sortable : ''}`}
-                  style={{ '--column-width': column.width || 'auto' }}
-                  onClick={() => column.sortable && handleSort(column.field)}
-                >
-                  <div className={styles.headerContent}>
-                    <span>{column.label}</span>
-                    {column.sortable && (
-                      <div className={styles.sortIcon}>
-                        {sort.field === column.field ? (
-                          sort.direction === 'asc' ? (
-                            <i className="bi bi-caret-up-fill"></i>
-                          ) : (
-                            <i className="bi bi-caret-down-fill"></i>
-                          )
-                        ) : (
-                          <i className="bi bi-caret-down"></i>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </th>
-              ))}
-              {renderActions && (
-                <th className={styles.tableHeader} style={{ width: '120px' }}>
-                  Actions
-                </th>
-              )}
-            </tr>
-          </thead>
-          <tbody>
-            {items.length === 0 ? (
-              <tr>
-                <td colSpan={columns.length + (renderActions ? 1 : 0)} className={styles.noData}>
-                  {loading ? (
-                    <div className={styles.loading}>
-                      <i className="bi bi-hourglass-split"></i>
-                      <span>Chargement...</span>
-                    </div>
-                  ) : (
-                    <div className={styles.noResults}>
-                      <i className="bi bi-search"></i>
-                      <span>Aucun résultat trouvé</span>
-                    </div>
-                  )}
-                </td>
-              </tr>
-            ) : (
-              items.map((item) => (
-                <tr 
-                  key={item.id} 
-                  className={styles.tableRow}
-                  onClick={() => handleRowClick(item)}
-                >
-                  {columns.map((column) => (
-                    <td 
-                      key={`${item.id}-${column.id}`} 
-                      className={styles.tableCell}
-                    >
-                      {renderColumnValue(item, column)}
-                    </td>
-                  ))}
-                  {renderActions && (
-                    <td 
-                      className={styles.tableCell} 
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      {renderActions(item)}
-                    </td>
-                  )}
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
-      
-      {/* Conteneur des cartes mobiles */}
-      <div className={styles.mobileCardsContainer}>
-        {items.length === 0 ? (
-          <div className={styles.noData}>
-            {loading ? (
-              <div className={styles.loading}>
-                <i className="bi bi-hourglass-split"></i>
-                <span>Chargement...</span>
-              </div>
-            ) : (
-              <div className={styles.noResults}>
-                <i className="bi bi-search"></i>
-                <span>Aucun résultat trouvé</span>
-              </div>
-            )}
-          </div>
-        ) : (
-          items.map((item) => renderMobileCard(item))
-        )}
-      </div>
-      
-      {hasMore && !loading && (
-        <div className={styles.loadMoreContainer}>
-          <button 
-            className={styles.loadMoreButton} 
-            onClick={handleLoadMore}
-          >
-            Charger plus
-          </button>
-        </div>
-      )}
-      
-      {loading && items.length > 0 && (
-        <div className={styles.loadingMoreContainer}>
-          <i className="bi bi-hourglass-split"></i>
-          <span>Chargement...</span>
-        </div>
       )}
     </div>
   );
@@ -610,60 +428,25 @@ const ListWithFilters = ({
 
 ListWithFilters.propTypes = {
   entityType: PropTypes.string.isRequired,
-  title: PropTypes.string,
-  columns: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      label: PropTypes.string.isRequired,
-      field: PropTypes.string,
-      sortable: PropTypes.bool,
-      width: PropTypes.string,
-      render: PropTypes.func,
-    })
-  ).isRequired,
+  title: PropTypes.string.isRequired,
+  columns: PropTypes.array.isRequired,
   filters: PropTypes.object,
-  sort: PropTypes.shape({
-    field: PropTypes.string,
-    direction: PropTypes.oneOf(['asc', 'desc']),
-  }),
+  sort: PropTypes.object,
   actions: PropTypes.node,
   onRowClick: PropTypes.func,
   pageSize: PropTypes.number,
   showRefresh: PropTypes.bool,
-  filterOptions: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      label: PropTypes.string.isRequired,
-      field: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['text', 'select', 'date']).isRequired,
-      options: PropTypes.arrayOf(
-        PropTypes.shape({
-          value: PropTypes.string.isRequired,
-          label: PropTypes.string.isRequired,
-        })
-      ),
-      placeholder: PropTypes.string,
-    })
-  ),
+  filterOptions: PropTypes.array,
   renderActions: PropTypes.func,
   calculateStats: PropTypes.func,
   showStats: PropTypes.bool,
   showAdvancedFilters: PropTypes.bool,
-  advancedFilterOptions: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      label: PropTypes.string.isRequired,
-      field: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['text', 'select', 'boolean']).isRequired,
-      options: PropTypes.arrayOf(
-        PropTypes.shape({
-          value: PropTypes.string.isRequired,
-          label: PropTypes.string.isRequired,
-        })
-      ),
-      placeholder: PropTypes.string,
-    })
-  ),
+  advancedFilterOptions: PropTypes.array,
+  // Props pour données externes
+  initialData: PropTypes.array,
+  loading: PropTypes.bool,
+  error: PropTypes.string,
+  onRefresh: PropTypes.func,
 };
 
 export default ListWithFilters;

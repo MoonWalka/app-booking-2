@@ -1,10 +1,16 @@
 // src/components/concerts/ConcertsList.js
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ListWithFilters from '@/components/ui/ListWithFilters';
-import { ActionButtons, AddButton } from '@/components/ui/ActionButtons';
+import { AddButton } from '@/components/ui/ActionButtons';
 import StatusBadge from '@/components/ui/StatusBadge';
-import { useConcertDelete } from '@/hooks/concerts';
+// import { useConcertDelete } from '@/hooks/concerts'; // Pour extension future
+import { useConcertListData } from '@/hooks/concerts/useConcertListData';
+import { useConcertActions } from '@/hooks/concerts/useConcertActions';
+import useConcertStatus from '@/hooks/concerts/useConcertStatus';
+import { useOrganization } from '@/context/OrganizationContext';
+import { diagnosticConcerts, diagnosticDemoData } from '@/utils/concertsDiagnostic';
+import ConcertsDiagnostic from '@/components/debug/ConcertsDiagnostic';
 
 /**
  * Liste unifiée des concerts utilisant le composant générique ListWithFilters
@@ -12,7 +18,80 @@ import { useConcertDelete } from '@/hooks/concerts';
  */
 function ConcertsList() {
   const navigate = useNavigate();
-  const { handleDelete } = useConcertDelete();
+  // const { handleDelete } = useConcertDelete(); // Pas utilisé pour l'instant
+  const { currentOrg } = useOrganization();
+  
+  // Hooks spécialisés pour la logique métier des concerts
+  const {
+    concerts,
+    loading,
+    error,
+    hasForm,
+    hasUnvalidatedForm,
+    hasContract,
+    getContractStatus: getContractStatusFromHook,
+    refreshData
+  } = useConcertListData();
+  
+  const {
+    handleViewConcert,
+    handleViewForm,
+    handleSendForm,
+    handleViewContract,
+    handleGenerateContract
+  } = useConcertActions();
+  
+  const {
+    getStatusDetails,
+    getStatusMessage
+  } = useConcertStatus();
+
+  // Diagnostic au montage du composant
+  useEffect(() => {
+    const runDiagnostic = async () => {
+      console.log('🎭 === DIAGNOSTIC CONCERTS LIST ===');
+      console.log('Organisation courante:', currentOrg);
+      console.log('Configuration tri:', { field: 'dateEvenement', direction: 'desc' });
+      await diagnosticConcerts();
+      await diagnosticDemoData();
+      
+      // Diagnostic manuel disponible dans la console
+      window.diagnosticConcertsManuel = async () => {
+        const { collection, getDocs } = await import('../../services/firebase-service');
+        const { db } = await import('../../services/firebase-service');
+        
+        console.log('🔍 === DIAGNOSTIC MANUEL CONCERTS ===');
+        
+        try {
+          const concertsRef = collection(db, 'concerts');
+          const snapshot = await getDocs(concertsRef);
+          
+          console.log('📊 Total concerts dans Firebase:', snapshot.docs.length);
+          
+          snapshot.docs.forEach((doc, index) => {
+            const data = doc.data();
+            console.log(`📄 Concert ${index + 1}:`, {
+              id: doc.id,
+              titre: data.titre,
+              date: data.date,
+              dateEvenement: data.dateEvenement,
+              createdAt: data.createdAt,
+              programmateurId: data.programmateurId,
+              allFields: Object.keys(data).sort()
+            });
+          });
+          
+          return snapshot.docs.length;
+        } catch (error) {
+          console.error('❌ Erreur lors du diagnostic:', error);
+          return 0;
+        }
+      };
+      
+      console.log('💡 Diagnostic manuel disponible: window.diagnosticConcertsManuel()');
+    };
+    runDiagnostic();
+  }, [currentOrg]);
 
   // Configuration des colonnes pour les concerts
   const columns = [
@@ -26,12 +105,12 @@ function ConcertsList() {
     {
       id: 'date',
       label: 'Date',
-      field: 'dateEvenement',
+      field: 'date',
       sortable: true,
       width: '15%',
       render: (concert) => {
-        if (!concert.dateEvenement) return '-';
-        const date = new Date(concert.dateEvenement);
+        if (!concert.date) return '-';
+        const date = new Date(concert.date);
         return date.toLocaleDateString('fr-FR');
       },
     },
@@ -58,16 +137,13 @@ function ConcertsList() {
       sortable: true,
       width: '15%',
       render: (concert) => {
-        const statut = concert.statut || 'brouillon';
-        const labels = {
-          brouillon: 'Brouillon',
-          confirme: 'Confirmé',
-          annule: 'Annulé',
-          reporte: 'Reporté'
-        };
+        const statut = concert.statut || concert.status || 'contact';
+        const statusDetails = getStatusDetails(concert);
+        const statusMessage = getStatusMessage(concert);
+        
         return (
-          <StatusBadge status={statut}>
-            {labels[statut] || 'Brouillon'}
+          <StatusBadge status={statut} variant={statusDetails?.variant || 'secondary'}>
+            {statusDetails?.icon} {statusMessage?.message || statusDetails?.label || 'Contact'}
           </StatusBadge>
         );
       },
@@ -90,10 +166,12 @@ function ConcertsList() {
       type: 'select',
       placeholder: 'Tous les statuts',
       options: [
-        { value: 'brouillon', label: 'Brouillon' },
-        { value: 'confirme', label: 'Confirmé' },
-        { value: 'annule', label: 'Annulé' },
-        { value: 'reporte', label: 'Reporté' },
+        { value: 'contact', label: '📞 Contact établi' },
+        { value: 'preaccord', label: '✅ Pré-accord' },
+        { value: 'contrat', label: '📄 Contrat signé' },
+        { value: 'confirme', label: '🎯 Confirmé' },
+        { value: 'annule', label: '❌ Annulé' },
+        { value: 'reporte', label: '📅 Reporté' },
       ],
     },
     {
@@ -162,37 +240,49 @@ function ConcertsList() {
   // Fonction de calcul des statistiques
   const calculateStats = (items) => {
     const total = items.length;
-    const now = new Date();
+    // const now = new Date(); // Pour extension future
     
     // Stats par statut
     const statutCount = {
-      brouillon: 0,
+      contact: 0,
+      preaccord: 0,
+      contrat: 0,
       confirme: 0,
       annule: 0,
       reporte: 0
     };
     
-    // Stats temporelles
-    let aVenir = 0;
-    let ceMois = 0;
+    // Stats métier
+    let avecFormulaire = 0;
+    let avecContrat = 0;
+    // let aVenir = 0; // Pour extension future
+    // let ceMois = 0; // Pour extension future
     
     items.forEach(concert => {
       // Statuts
-      const statut = concert.statut || 'brouillon';
+      const statut = concert.statut || concert.status || 'contact';
       if (statutCount[statut] !== undefined) {
         statutCount[statut]++;
       }
       
-      // Dates
-      if (concert.dateEvenement) {
-        const date = new Date(concert.dateEvenement);
-        if (date >= now) {
-          aVenir++;
-          if (date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear()) {
-            ceMois++;
-          }
-        }
+      // Formulaires et contrats
+      if (hasForm(concert.id)) {
+        avecFormulaire++;
       }
+      if (hasContract(concert.id)) {
+        avecContrat++;
+      }
+      
+      // Dates (pour extension future)
+      // if (concert.date) {
+      //   const date = new Date(concert.date);
+      //   if (date >= now) {
+      //     aVenir++;
+      //     if (date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear()) {
+      //       ceMois++;
+      //     }
+      //   }
+      // }
     });
     
     return [
@@ -212,32 +302,196 @@ function ConcertsList() {
         subtext: `${Math.round((statutCount.confirme / total) * 100) || 0}%`
       },
       {
-        id: 'avenir',
-        label: 'À venir',
-        value: aVenir,
-        icon: 'bi bi-calendar-plus',
+        id: 'formulaires',
+        label: 'Avec formulaire',
+        value: avecFormulaire,
+        icon: 'bi bi-file-earmark-text',
         variant: 'info',
-        subtext: `${ceMois} ce mois`
+        subtext: `${Math.round((avecFormulaire / total) * 100) || 0}%`
       },
       {
-        id: 'annules',
-        label: 'Annulés/Reportés',
-        value: statutCount.annule + statutCount.reporte,
-        icon: 'bi bi-x-circle',
+        id: 'contrats',
+        label: 'Avec contrat',
+        value: avecContrat,
+        icon: 'bi bi-file-earmark-check',
         variant: 'warning',
-        subtext: `${statutCount.annule}/${statutCount.reporte}`
+        subtext: `${Math.round((avecContrat / total) * 100) || 0}%`
       }
     ];
   };
 
-  // Actions sur les lignes
-  const renderActions = (concert) => (
-    <ActionButtons
-      onView={() => navigate(`/concerts/${concert.id}`)}
-      onEdit={() => navigate(`/concerts/${concert.id}/edit`)}
-      onDelete={() => handleDelete(concert.id)}
-    />
-  );
+  // Actions spécifiques aux concerts (formulaires et contrats)
+  const renderActions = (concert) => {
+    // Logique métier des formulaires
+    const getFormStatus = () => {
+      if (!concert.programmateurId) {
+        return { 
+          status: 'no_programmateur', 
+          icon: 'bi-person-x', 
+          color: '#6c757d', 
+          tooltip: 'Aucun programmateur associé',
+          disabled: true,
+          action: null
+        };
+      }
+      
+      if (hasForm(concert.id)) {
+        if (hasUnvalidatedForm(concert.id)) {
+          return {
+            status: 'to_validate',
+            icon: 'bi-exclamation-triangle',
+            color: '#ffc107',
+            tooltip: 'Formulaire à valider',
+            disabled: false,
+            action: () => handleViewForm(concert.id)
+          };
+        } else {
+          return {
+            status: 'validated',
+            icon: 'bi-check-circle',
+            color: '#28a745',
+            tooltip: 'Formulaire validé',
+            disabled: false,
+            action: () => handleViewForm(concert.id)
+          };
+        }
+      } else {
+        return {
+          status: 'to_send',
+          icon: 'bi-envelope',
+          color: '#007bff',
+          tooltip: 'Envoyer formulaire au programmateur',
+          disabled: false,
+          action: () => handleSendForm(concert.id)
+        };
+      }
+    };
+
+    // Logique métier des contrats
+    const getContractStatus = () => {
+      if (!concert.programmateurId) {
+        return { 
+          status: 'no_programmateur', 
+          icon: 'bi-person-x', 
+          color: '#6c757d', 
+          tooltip: 'Aucun programmateur associé',
+          disabled: true,
+          action: null
+        };
+      }
+      
+      if (hasContract(concert.id)) {
+        const contractStatusValue = getContractStatusFromHook(concert.id);
+        
+        switch (contractStatusValue) {
+          case 'generated':
+            return {
+              status: 'generated',
+              icon: 'bi-file-earmark',
+              color: '#17a2b8',
+              tooltip: 'Contrat généré',
+              disabled: false,
+              action: () => handleViewContract(concert.id)
+            };
+          case 'sent':
+            return {
+              status: 'sent',
+              icon: 'bi-send',
+              color: '#ffc107',
+              tooltip: 'Contrat envoyé',
+              disabled: false,
+              action: () => handleViewContract(concert.id)
+            };
+          case 'signed':
+            return {
+              status: 'signed',
+              icon: 'bi-check-circle',
+              color: '#28a745',
+              tooltip: 'Contrat signé',
+              disabled: false,
+              action: () => handleViewContract(concert.id)
+            };
+          default:
+            return {
+              status: 'view',
+              icon: 'bi-eye',
+              color: '#6c757d',
+              tooltip: 'Voir contrat',
+              disabled: false,
+              action: () => handleViewContract(concert.id)
+            };
+        }
+      } else {
+        return {
+          status: 'not_generated',
+          icon: 'bi-file-earmark-plus',
+          color: '#28a745',
+          tooltip: 'Générer contrat',
+          disabled: false,
+          action: () => handleGenerateContract(concert.id)
+        };
+      }
+    };
+
+    const formStatus = getFormStatus();
+    const contractStatus = getContractStatus();
+
+    const handleFormClick = (e) => {
+      e.stopPropagation();
+      if (formStatus.action && !formStatus.disabled) {
+        formStatus.action();
+      }
+    };
+
+    const handleContractClick = (e) => {
+      e.stopPropagation();
+      if (contractStatus.action && !contractStatus.disabled) {
+        contractStatus.action();
+      }
+    };
+
+    return (
+      <div style={{ display: 'flex', gap: '8px' }} onClick={(e) => e.stopPropagation()}>
+        {/* Bouton Formulaire */}
+        <button 
+          style={{
+            padding: '6px 12px',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: formStatus.disabled ? 'not-allowed' : 'pointer',
+            backgroundColor: formStatus.color,
+            color: 'white',
+            fontSize: '12px',
+            opacity: formStatus.disabled ? 0.6 : 1
+          }}
+          onClick={handleFormClick}
+          title={formStatus.tooltip}
+          disabled={formStatus.disabled}
+        >
+          <i className={formStatus.icon}></i> Formulaire
+        </button>
+        
+        {/* Bouton Contrat */}
+        <button 
+          style={{
+            padding: '6px 12px',
+            border: 'none', 
+            borderRadius: '4px',
+            cursor: contractStatus.disabled ? 'not-allowed' : 'pointer',
+            backgroundColor: contractStatus.color,
+            color: 'white',
+            fontSize: '12px',
+            opacity: contractStatus.disabled ? 0.6 : 1
+          }}
+          onClick={handleContractClick}
+          title={contractStatus.tooltip}
+          disabled={contractStatus.disabled}
+        >
+          <i className={contractStatus.icon}></i> Contrat
+        </button>
+      </div>
+    );
+  };
 
   // Actions de l'en-tête
   const headerActions = (
@@ -249,26 +503,34 @@ function ConcertsList() {
 
   // Gestion du clic sur une ligne
   const handleRowClick = (concert) => {
-    navigate(`/concerts/${concert.id}`);
+    handleViewConcert(concert.id);
   };
 
   return (
-    <ListWithFilters
-      entityType="concerts"
-      title="Gestion des Concerts"
-      columns={columns}
-      filterOptions={filterOptions}
-      sort={{ field: 'dateEvenement', direction: 'desc' }}
-      actions={headerActions}
-      onRowClick={handleRowClick}
-      renderActions={renderActions}
-      pageSize={20}
-      showRefresh={true}
-      showStats={true}
-      calculateStats={calculateStats}
-      showAdvancedFilters={true}
-      advancedFilterOptions={advancedFilterOptions}
-    />
+    <>
+      {process.env.NODE_ENV === 'development' && <ConcertsDiagnostic />}
+      <ListWithFilters
+        entityType="concerts"
+        title="Gestion des Concerts"
+        columns={columns}
+        filterOptions={filterOptions}
+        sort={{ field: 'date', direction: 'desc' }}
+        actions={headerActions}
+        onRowClick={handleRowClick}
+        renderActions={renderActions}
+        pageSize={20}
+        showRefresh={true}
+        showStats={true}
+        calculateStats={calculateStats}
+        showAdvancedFilters={true}
+        advancedFilterOptions={advancedFilterOptions}
+        // Données et état depuis les hooks spécialisés
+        initialData={concerts}
+        loading={loading}
+        error={error}
+        onRefresh={refreshData}
+      />
+    </>
   );
 }
 

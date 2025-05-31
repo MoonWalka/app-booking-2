@@ -8,7 +8,8 @@
 
 export { default as useConcertForm } from './useConcertForm';
 
-export { default as useConcertDetails } from './useConcertDetails';
+// export { default as useConcertDetails } from './useConcertDetails'; // Version avec boucles infinies
+export { default as useConcertDetails } from './useConcertDetailsFixed'; // Version corrigée
 
 
 // Supprimer cette exportation redondante
@@ -29,7 +30,7 @@ export { default as useFormSubmission } from './useFormSubmission';
 // Exports pour la gestion de la suppression de concerts
 export { default as useConcertDelete } from './useConcertDelete';
 
-export { default as useConcertDetailsUltraSimple } from './useConcertDetailsUltraSimple';
+// export { default as useConcertDetailsUltraSimple } from './useConcertDetailsUltraSimple'; // Supprimé - Plus nécessaire
 export { default as useConcertFormWithRelations } from './useConcertFormWithRelations';
 export { default as useConcertFormsManagement } from './useConcertFormsManagement';
 

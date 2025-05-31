@@ -17,9 +17,7 @@ const useDeleteProgrammateur = (onDeleteSuccess) => {
     hasRelatedEntities,
     relatedEntitiesDetails,
     handleDelete,
-    checkRelatedEntities,
-    showConfirmationDialog,
-    closeConfirmationDialog
+    checkRelatedEntities
   } = useGenericEntityDelete({
     entityType: 'programmateur',
     collectionName: 'programmateurs',
@@ -27,7 +25,6 @@ const useDeleteProgrammateur = (onDeleteSuccess) => {
     // Messages personnalisés
     confirmationTitle: 'Supprimer ce programmateur',
     confirmationMessage: 'Êtes-vous sûr de vouloir supprimer ce programmateur ? Cette action est irréversible.',
-    successMessage: 'Le programmateur a été supprimé avec succès',
     
     // Entités liées à vérifier
     relatedEntities: [
@@ -114,11 +111,7 @@ const useDeleteProgrammateur = (onDeleteSuccess) => {
     
     // Alias pour compatibilité avec le code existant
     handleDelete: handleDeleteProgrammateur,
-    deleting: isDeleting,
-    
-    // Gestion du dialogue de confirmation
-    showConfirmationDialog,
-    closeConfirmationDialog
+    deleting: isDeleting
   };
 };
 

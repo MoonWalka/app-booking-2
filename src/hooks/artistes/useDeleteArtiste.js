@@ -17,9 +17,7 @@ const useDeleteArtiste = (onDeleteSuccess) => {
     hasRelatedEntities,
     relatedEntitiesDetails,
     handleDelete,
-    checkRelatedEntities,
-    showConfirmationDialog,
-    closeConfirmationDialog
+    checkRelatedEntities
   } = useGenericEntityDelete({
     entityType: 'artiste',
     collectionName: 'artistes',
@@ -27,7 +25,6 @@ const useDeleteArtiste = (onDeleteSuccess) => {
     // Messages personnalisés
     confirmationTitle: 'Supprimer cet artiste',
     confirmationMessage: 'Êtes-vous sûr de vouloir supprimer cet artiste ? Cette action est irréversible.',
-    successMessage: 'L\'artiste a été supprimé avec succès',
     
     // Entités liées à vérifier
     relatedEntities: [
@@ -109,17 +106,11 @@ const useDeleteArtiste = (onDeleteSuccess) => {
     
     // Pour compatibilité avec l'ancienne API
     deleting: isDeleting,
-    showDeleteModal: hasRelatedEntities,
-    setShowDeleteModal: showConfirmationDialog,
     
     // Actions
     handleDelete: handleDeleteArtiste,
     handleDeleteArtiste,
-    canDeleteArtiste,
-    
-    // Gestion du dialogue de confirmation
-    showConfirmationDialog,
-    closeConfirmationDialog
+    canDeleteArtiste
   };
 };
 

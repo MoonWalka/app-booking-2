@@ -29,7 +29,6 @@ const useDeleteStructure = (onDeleteSuccess) => {
     // Messages personnalisés
     confirmationTitle: 'Supprimer cette structure',
     confirmationMessage: 'Êtes-vous sûr de vouloir supprimer cette structure ? Cette action est irréversible.',
-    successMessage: 'La structure a été supprimée avec succès',
     
     // Entités liées à vérifier
     relatedEntities: [

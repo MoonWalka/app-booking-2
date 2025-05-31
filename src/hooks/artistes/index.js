@@ -31,5 +31,5 @@ export { default as useArtisteForm } from './useArtisteForm';
 export { default as useDeleteArtiste } from './useDeleteArtiste';
 
 // Export des hooks utilitaires supplémentaires
-export { default as useHandleDeleteArtist } from './useHandleDeleteArtist';
+// export { default as useHandleDeleteArtist } from './useHandleDeleteArtist'; // Supprimé - utiliser useDeleteArtiste
 export { default as useSearchAndFilter } from './useSearchAndFilter';

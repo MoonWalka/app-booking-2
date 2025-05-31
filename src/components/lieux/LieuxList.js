@@ -14,7 +14,7 @@ import { useLieuDelete } from '@/hooks/lieux';
  */
 function LieuxList() {
   const navigate = useNavigate();
-  const { handleDelete } = useLieuDelete();
+  const { handleDeleteLieu } = useLieuDelete();
 
   // Configuration des colonnes pour les lieux
   const columns = [
@@ -119,7 +119,7 @@ function LieuxList() {
       <Button
         variant="danger"
         size="sm"
-        onClick={() => handleDelete(lieu.id)}
+        onClick={() => handleDeleteLieu(lieu.id)}
         title="Supprimer"
       >
         <i className="bi bi-trash"></i>

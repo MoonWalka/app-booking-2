@@ -17,9 +17,7 @@ const useLieuDelete = (onDeleteSuccess) => {
     hasRelatedEntities,
     relatedEntitiesDetails,
     handleDelete,
-    checkRelatedEntities,
-    showConfirmationDialog,
-    closeConfirmationDialog
+    checkRelatedEntities
   } = useGenericEntityDelete({
     entityType: 'lieu',
     collectionName: 'lieux',
@@ -27,7 +25,6 @@ const useLieuDelete = (onDeleteSuccess) => {
     // Configuration des messages
     confirmationTitle: 'Supprimer ce lieu',
     confirmationMessage: 'Êtes-vous sûr de vouloir supprimer ce lieu ? Cette action est irréversible.',
-    successMessage: 'Le lieu a été supprimé avec succès',
     
     // Entités liées à vérifier
     relatedEntities: [
@@ -109,11 +106,7 @@ const useLieuDelete = (onDeleteSuccess) => {
     
     // Actions
     handleDeleteLieu,
-    canDeleteLieu,
-    
-    // Gestion du dialogue de confirmation
-    showConfirmationDialog,
-    closeConfirmationDialog
+    canDeleteLieu
   };
 };
 

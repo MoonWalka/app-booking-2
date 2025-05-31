@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
 import { useGenericEntityDelete } from '@/hooks/common';
-import { showSuccessToast } from '@/utils/toasts';
 
 /**
  * Hook optimisé pour la suppression des concerts
@@ -19,12 +18,8 @@ const useConcertDelete = (onDeleteSuccess) => {
     entityType: 'concert',
     collectionName: 'concerts',
     
-    // Messages personnalisés
-    successMessage: 'Le concert a été supprimé avec succès',
-    
     // Callbacks
     onSuccess: (id) => {
-      showSuccessToast('Concert supprimé avec succès');
       if (onDeleteSuccess) onDeleteSuccess(id);
     },
     onError: (error) => {

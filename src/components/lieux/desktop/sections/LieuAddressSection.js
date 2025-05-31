@@ -173,25 +173,57 @@ const LieuAddressSection = ({ lieu, isEditing = false, handleChange, addressSear
         </>
       )}
 
-      {hasCoordinates && (
+      {/* Section carte - Affichage conditionnel */}
+      {lieu?.adresse && lieu?.ville && (
         <div className={styles.mapContainer}>
-          <MapContainer 
-            center={mapPosition} 
-            zoom={13} 
-            scrollWheelZoom={false}
-            className={styles.leafletMapComponent}
-          >
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            />
-            <Marker position={mapPosition} />
-          </MapContainer>
-          
-          <div className={styles.coordinatesDisplay}>
-            <span>Latitude: {lieu.latitude}</span>
-            <span>Longitude: {lieu.longitude}</span>
-          </div>
+          {hasCoordinates ? (
+            // Carte Leaflet avec coordonnées précises
+            <>
+              <MapContainer 
+                center={mapPosition} 
+                zoom={13} 
+                scrollWheelZoom={false}
+                className={styles.leafletMapComponent}
+              >
+                <TileLayer
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                />
+                <Marker position={mapPosition} />
+              </MapContainer>
+              
+              <div className={styles.coordinatesDisplay}>
+                <span>Latitude: {lieu.latitude}</span>
+                <span>Longitude: {lieu.longitude}</span>
+              </div>
+            </>
+          ) : (
+            // Iframe Google Maps avec adresse (comme dans les concerts)
+            <>
+              <iframe 
+                title={`Carte de localisation de ${lieu.nom || 'ce lieu'} - ${lieu.adresse}, ${lieu.codePostal} ${lieu.ville}`}
+                src={`https://maps.google.com/maps?q=${encodeURIComponent(`${lieu.adresse}, ${lieu.codePostal} ${lieu.ville}`)}&z=13&output=embed`}
+                width="100%" 
+                height="250" 
+                style={{ border: 0, borderRadius: '8px' }}
+                allowFullScreen="" 
+                loading="lazy" 
+                referrerPolicy="no-referrer-when-downgrade"
+              ></iframe>
+              
+              <div className={styles.mapActions} style={{ marginTop: '10px' }}>
+                <a 
+                  href={`https://maps.google.com/maps?q=${encodeURIComponent(`${lieu.adresse}, ${lieu.codePostal} ${lieu.ville}`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-sm btn-outline-primary"
+                >
+                  <i className="bi bi-map me-1"></i>
+                  Voir en plein écran
+                </a>
+              </div>
+            </>
+          )}
         </div>
       )}
     </Card>

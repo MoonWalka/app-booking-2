@@ -290,6 +290,32 @@
   font-family: var(--tc-font-family-mono);
 }
 
+.noMapContainer {
+  margin-top: var(--tc-space-6);
+  padding: var(--tc-space-6);
+  background-color: var(--tc-color-gray-50);
+  border: 1px solid var(--tc-color-gray-200);
+  border-radius: var(--tc-radius-base);
+  text-align: center;
+}
+
+.noMapMessage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--tc-space-3);
+}
+
+.noMapMessage i {
+  font-size: 2rem;
+  color: var(--tc-color-gray-400);
+}
+
+.noMapMessage p {
+  margin: 0;
+  color: var(--tc-text-secondary);
+}
+
 /* =============================
    PROGRAMMATEUR SÉLECTIONNÉ
    ============================= */

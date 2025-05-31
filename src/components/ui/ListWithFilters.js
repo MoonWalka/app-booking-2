@@ -130,31 +130,6 @@ const ListWithFilters = ({
       
       console.log(`✅ Données chargées: ${querySnapshot.docs.length} éléments`);
       
-      // Diagnostic détaillé pour les concerts
-      if (entityType === 'concerts') {
-        console.log('🎭 === DIAGNOSTIC CONCERTS ===');
-        console.log('📋 Collection interrogée:', collectionName);
-        console.log('🔍 Filtres appliqués:', filters);
-        console.log('📊 Tri:', sort);
-        console.log('📝 Documents trouvés:', querySnapshot.docs.length);
-        
-        if (querySnapshot.docs.length > 0) {
-          const firstDoc = querySnapshot.docs[0].data();
-          console.log('📄 Premier document exemple:', {
-            id: querySnapshot.docs[0].id,
-            titre: firstDoc.titre,
-            dateEvenement: firstDoc.dateEvenement,
-            date: firstDoc.date,
-            fields: Object.keys(firstDoc)
-          });
-        }
-        
-        // Test rapide: compter TOUS les concerts sans filtre
-        const allConcertsRef = collection(db, 'concerts');
-        const allSnapshot = await getDocs(allConcertsRef);
-        console.log('🔢 TOTAL concerts dans Firebase:', allSnapshot.docs.length);
-      }
-      
       const loadedItems = querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()

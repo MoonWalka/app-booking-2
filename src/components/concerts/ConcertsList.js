@@ -1,5 +1,5 @@
 // src/components/concerts/ConcertsList.js
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import ListWithFilters from '@/components/ui/ListWithFilters';
 import { AddButton } from '@/components/ui/ActionButtons';
@@ -8,9 +8,9 @@ import StatusBadge from '@/components/ui/StatusBadge';
 import { useConcertListData } from '@/hooks/concerts/useConcertListData';
 import { useConcertActions } from '@/hooks/concerts/useConcertActions';
 import useConcertStatus from '@/hooks/concerts/useConcertStatus';
-import { useOrganization } from '@/context/OrganizationContext';
-import { diagnosticConcerts, diagnosticDemoData } from '@/utils/concertsDiagnostic';
-import ConcertsDiagnostic from '@/components/debug/ConcertsDiagnostic';
+// import { useOrganization } from '@/context/OrganizationContext'; // Pas utilisé pour l'instant
+// import { diagnosticConcerts, diagnosticDemoData } from '@/utils/concertsDiagnostic';
+// import ConcertsDiagnostic from '@/components/debug/ConcertsDiagnostic';
 
 /**
  * Liste unifiée des concerts utilisant le composant générique ListWithFilters
@@ -19,7 +19,7 @@ import ConcertsDiagnostic from '@/components/debug/ConcertsDiagnostic';
 function ConcertsList() {
   const navigate = useNavigate();
   // const { handleDelete } = useConcertDelete(); // Pas utilisé pour l'instant
-  const { currentOrg } = useOrganization();
+  // const { currentOrg } = useOrganization(); // Pas utilisé pour l'instant
   
   // Hooks spécialisés pour la logique métier des concerts
   const {
@@ -46,52 +46,10 @@ function ConcertsList() {
     getStatusMessage
   } = useConcertStatus();
 
-  // Diagnostic au montage du composant
-  useEffect(() => {
-    const runDiagnostic = async () => {
-      console.log('🎭 === DIAGNOSTIC CONCERTS LIST ===');
-      console.log('Organisation courante:', currentOrg);
-      console.log('Configuration tri:', { field: 'dateEvenement', direction: 'desc' });
-      await diagnosticConcerts();
-      await diagnosticDemoData();
-      
-      // Diagnostic manuel disponible dans la console
-      window.diagnosticConcertsManuel = async () => {
-        const { collection, getDocs } = await import('../../services/firebase-service');
-        const { db } = await import('../../services/firebase-service');
-        
-        console.log('🔍 === DIAGNOSTIC MANUEL CONCERTS ===');
-        
-        try {
-          const concertsRef = collection(db, 'concerts');
-          const snapshot = await getDocs(concertsRef);
-          
-          console.log('📊 Total concerts dans Firebase:', snapshot.docs.length);
-          
-          snapshot.docs.forEach((doc, index) => {
-            const data = doc.data();
-            console.log(`📄 Concert ${index + 1}:`, {
-              id: doc.id,
-              titre: data.titre,
-              date: data.date,
-              dateEvenement: data.dateEvenement,
-              createdAt: data.createdAt,
-              programmateurId: data.programmateurId,
-              allFields: Object.keys(data).sort()
-            });
-          });
-          
-          return snapshot.docs.length;
-        } catch (error) {
-          console.error('❌ Erreur lors du diagnostic:', error);
-          return 0;
-        }
-      };
-      
-      console.log('💡 Diagnostic manuel disponible: window.diagnosticConcertsManuel()');
-    };
-    runDiagnostic();
-  }, [currentOrg]);
+  // Diagnostic désactivé - problème résolu
+  // useEffect(() => {
+  //   console.log('🎭 Concerts list initialized with specialized hooks');
+  // }, []);
 
   // Configuration des colonnes pour les concerts
   const columns = [
@@ -507,9 +465,7 @@ function ConcertsList() {
   };
 
   return (
-    <>
-      {process.env.NODE_ENV === 'development' && <ConcertsDiagnostic />}
-      <ListWithFilters
+    <ListWithFilters
         entityType="concerts"
         title="Gestion des Concerts"
         columns={columns}
@@ -530,7 +486,6 @@ function ConcertsList() {
         error={error}
         onRefresh={refreshData}
       />
-    </>
   );
 }
 

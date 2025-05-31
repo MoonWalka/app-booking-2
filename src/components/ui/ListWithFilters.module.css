@@ -4,6 +4,9 @@
  * Dernière mise à jour: 20 mai 2025
  */
 
+/* Import des variables CSS TourCraft */
+@import '@/styles/base/variables.css';
+
 /* =============================
    CONTENEUR PRINCIPAL
    ============================= */
@@ -201,7 +204,7 @@
    ============================= */
 .tableWrapper {
   overflow-x: auto;
-  margin: var(--tc-space-6);
+  margin: 0;
   border-radius: var(--tc-radius-lg);
   border: 1px solid var(--tc-border-default);
   box-shadow: var(--tc-shadow-sm);
@@ -212,6 +215,25 @@
   width: 100%;
   border-collapse: collapse;
   background-color: var(--tc-bg-default);
+  font-size: var(--tc-font-size-sm);
+  margin: 0;
+}
+
+.table th {
+  background: linear-gradient(135deg, var(--tc-color-neutral-50) 0%, var(--tc-color-neutral-100) 100%);
+  border-bottom: 2px solid var(--tc-border-default);
+  padding: var(--tc-space-3) var(--tc-space-4);
+  text-align: left;
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-secondary);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-right: 1px solid var(--tc-border-subtle);
+}
+
+.table th:last-child {
+  border-right: none;
 }
 
 .tableHeader {
@@ -242,12 +264,31 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
+  font-weight: var(--tc-font-weight-semibold, 600);
+  font-size: var(--tc-font-size-sm, 0.875rem);
+  color: var(--tc-text-secondary, #6b7280);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+}
+
+.headerContent span {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-1);
 }
 
 .sortIcon {
-  margin-left: var(--tc-space-2);
+  margin-left: var(--tc-space-1);
   font-size: var(--tc-font-size-xs);
-  color: var(--tc-color-primary);
+  color: var(--tc-color-primary-600);
+  opacity: 0.8;
+  transition: opacity var(--tc-transition-fast);
+}
+
+.sortable:hover .sortIcon {
+  opacity: 1;
 }
 
 .tableRow {
@@ -272,6 +313,12 @@
   font-size: var(--tc-font-size-sm);
   vertical-align: middle;
   transition: color var(--tc-transition-fast);
+  border-right: 1px solid var(--tc-border-subtle);
+  border-bottom: 1px solid var(--tc-border-subtle);
+}
+
+.tableCell:last-child {
+  border-right: none;
 }
 
 .tableCell:first-child {

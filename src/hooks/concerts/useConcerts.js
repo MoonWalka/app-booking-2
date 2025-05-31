@@ -8,8 +8,8 @@ import { db } from '@/services/firebase-service';
 export const useConcerts = (options = {}) => {
   const {
     sortField = 'dateEvenement',
-    sortDirection = 'desc',
-    filters = {}
+    sortDirection = 'desc'
+    // filters = {} // Pas utilisé pour l'instant
   } = options;
 
   const [concerts, setConcerts] = useState([]);

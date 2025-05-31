@@ -34,6 +34,73 @@ const ListWithFilters = ({
 }) => {
   const { isMobile } = useResponsive();
   const [items, setItems] = useState(initialData || []);
+
+  // Fonction utilitaire pour déterminer la classe CSS selon le type de données
+  const getCellClass = (column, value) => {
+    const field = column.field?.toLowerCase() || '';
+    const label = column.label?.toLowerCase() || '';
+    
+    // Détection du type basée sur le nom du champ ou de la colonne
+    if (field.includes('montant') || field.includes('prix') || field.includes('cout') || 
+        label.includes('montant') || label.includes('prix') || label.includes('€')) {
+      return `${styles.tableCell} ${styles.cellNumber}`;
+    }
+    
+    if (field.includes('date') || field.includes('created') || field.includes('updated') ||
+        label.includes('date')) {
+      return `${styles.tableCell} ${styles.cellDate}`;
+    }
+    
+    if (field.includes('email') || field.includes('mail') || 
+        (typeof value === 'string' && value.includes('@'))) {
+      return `${styles.tableCell} ${styles.cellEmail}`;
+    }
+    
+    if (field.includes('telephone') || field.includes('phone') || field.includes('tel') ||
+        label.includes('téléphone') || label.includes('phone')) {
+      return `${styles.tableCell} ${styles.cellPhone}`;
+    }
+    
+    if (field.includes('statut') || field.includes('status') || field.includes('etat') ||
+        label.includes('statut') || label.includes('status')) {
+      return `${styles.tableCell} ${styles.cellStatus}`;
+    }
+    
+    // Par défaut, texte normal
+    return `${styles.tableCell} ${styles.cellText}`;
+  };
+
+  // Fonction pour l'alignement des en-têtes
+  const getHeaderClass = (column) => {
+    const field = column.field?.toLowerCase() || '';
+    const label = column.label?.toLowerCase() || '';
+    
+    if (field.includes('montant') || field.includes('prix') || field.includes('cout') || 
+        label.includes('montant') || label.includes('prix') || label.includes('€')) {
+      return styles.headerNumber;
+    }
+    
+    if (field.includes('date') || field.includes('created') || field.includes('updated') ||
+        label.includes('date')) {
+      return styles.headerDate;
+    }
+    
+    if (field.includes('email') || field.includes('mail')) {
+      return styles.headerEmail;
+    }
+    
+    if (field.includes('telephone') || field.includes('phone') || field.includes('tel') ||
+        label.includes('téléphone') || label.includes('phone')) {
+      return styles.headerPhone;
+    }
+    
+    if (field.includes('statut') || field.includes('status') || field.includes('etat') ||
+        label.includes('statut') || label.includes('status')) {
+      return styles.headerStatus;
+    }
+    
+    return styles.headerText;
+  };
   const [loading, setLoading] = useState(externalLoading !== null ? externalLoading : true);
   const [error, setError] = useState(externalError);
   const [filters, setFilters] = useState(initialFilters);
@@ -207,7 +274,7 @@ const ListWithFilters = ({
             {columns.map(column => (
               <th
                 key={column.id}
-                className={column.sortable ? styles.sortable : ''}
+                className={`${column.sortable ? styles.sortable : ''} ${getHeaderClass(column)}`}
                 onClick={column.sortable ? () => handleSort(column.field) : undefined}
                 style={{ width: column.width }}
               >
@@ -219,7 +286,7 @@ const ListWithFilters = ({
                 </div>
               </th>
             ))}
-            {renderActions && <th style={{ width: '120px' }}>Actions</th>}
+            {renderActions && <th className={styles.headerActions} style={{ width: '120px' }}>Actions</th>}
           </tr>
         </thead>
         <tbody>
@@ -230,13 +297,16 @@ const ListWithFilters = ({
               onClick={onRowClick ? () => onRowClick(item) : undefined}
               style={{ cursor: onRowClick ? 'pointer' : 'default' }}
             >
-              {columns.map(column => (
-                <td key={column.id} className={styles.tableCell}>
-                  {column.render ? column.render(item) : item[column.field] || '-'}
-                </td>
-              ))}
+              {columns.map(column => {
+                const value = item[column.field];
+                return (
+                  <td key={column.id} className={getCellClass(column, value)}>
+                    {column.render ? column.render(item) : value || '-'}
+                  </td>
+                );
+              })}
               {renderActions && (
-                <td className={styles.tableCell}>
+                <td className={`${styles.tableCell} ${styles.cellActions}`}>
                   {renderActions(item)}
                 </td>
               )}

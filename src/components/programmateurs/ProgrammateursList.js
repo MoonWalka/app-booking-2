@@ -1,5 +1,5 @@
 // src/components/programmateurs/ProgrammateursList.js
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ListWithFilters from '@/components/ui/ListWithFilters';
 import { ActionButtons } from '@/components/ui/ActionButtons';
@@ -12,7 +12,14 @@ import { useDeleteProgrammateur } from '@/hooks/programmateurs';
  */
 function ProgrammateursList() {
   const navigate = useNavigate();
-  const { handleDelete } = useDeleteProgrammateur();
+  const [refreshKey, setRefreshKey] = useState(0);
+  
+  // Callback appelé après suppression réussie pour actualiser la liste
+  const onDeleteSuccess = () => {
+    setRefreshKey(prev => prev + 1); // Force le re-render de ListWithFilters
+  };
+  
+  const { handleDelete } = useDeleteProgrammateur(onDeleteSuccess);
 
   // Configuration des colonnes pour les programmateurs
   const columns = [
@@ -193,6 +200,7 @@ function ProgrammateursList() {
 
   return (
     <ListWithFilters
+      key={refreshKey}
       entityType="programmateurs"
       title="Gestion des Programmateurs"
       columns={columns}

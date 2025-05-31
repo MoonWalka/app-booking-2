@@ -215,21 +215,25 @@
   width: 100%;
   border-collapse: collapse;
   background-color: var(--tc-bg-default);
-  font-size: var(--tc-font-size-sm);
+  font-size: var(--tc-font-size-base); /* 16px au lieu de 14px */
   margin: 0;
+  line-height: 1.5; /* Améliore la lisibilité */
 }
 
 .table th {
   background: linear-gradient(135deg, var(--tc-color-neutral-50) 0%, var(--tc-color-neutral-100) 100%);
   border-bottom: 2px solid var(--tc-border-default);
-  padding: var(--tc-space-3) var(--tc-space-4);
-  text-align: left;
-  font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-secondary);
+  padding: var(--tc-space-4) var(--tc-space-4); /* Plus d'espace vertical */
+  text-align: center; /* Centre par défaut, peut être surchargé par les classes spécifiques */
+  font-weight: var(--tc-font-weight-bold); /* Plus visible */
+  color: var(--tc-text-default); /* Meilleur contraste */
+  font-size: var(--tc-font-size-sm); /* En-têtes restent plus petits */
   position: sticky;
   top: 0;
   z-index: 10;
   border-right: 1px solid var(--tc-border-subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .table th:last-child {
@@ -237,7 +241,7 @@
 }
 
 .tableHeader {
-  text-align: left;
+  text-align: center;
   padding: var(--tc-space-3) var(--tc-space-4);
   background: linear-gradient(to bottom, var(--tc-bg-secondary) 0%, var(--tc-bg-tertiary) 100%);
   border-bottom: 2px solid var(--tc-border-strong);
@@ -263,7 +267,7 @@
 .headerContent {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   width: 100%;
   font-weight: var(--tc-font-weight-semibold, 600);
   font-size: var(--tc-font-size-sm, 0.875rem);
@@ -308,13 +312,15 @@
 }
 
 .tableCell {
-  padding: var(--tc-space-3) var(--tc-space-4);
-  color: var(--tc-text-secondary);
-  font-size: var(--tc-font-size-sm);
+  padding: var(--tc-space-4) var(--tc-space-4); /* Plus d'espace pour la lisibilité */
+  color: var(--tc-text-default); /* Meilleur contraste */
+  font-size: var(--tc-font-size-base); /* Taille normale */
   vertical-align: middle;
   transition: color var(--tc-transition-fast);
   border-right: 1px solid var(--tc-border-subtle);
   border-bottom: 1px solid var(--tc-border-subtle);
+  min-height: 56px; /* Hauteur minimum pour la lisibilité */
+  line-height: 1.4;
 }
 
 .tableCell:last-child {
@@ -699,4 +705,95 @@
   .advancedFilterActions button {
     width: 100%;
   }
+}
+
+/* =============================
+   ALIGNEMENT INTELLIGENT DES DONNÉES
+   ============================= */
+
+/* Texte principal (noms, titres) - aligné au centre avec emphasis */
+.cellText {
+  text-align: center;
+  font-weight: var(--tc-font-weight-medium);
+}
+
+/* Nombres et montants - alignés à droite */
+.cellNumber {
+  text-align: right;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+  font-weight: var(--tc-font-weight-medium);
+}
+
+/* Dates - centrées */
+.cellDate {
+  text-align: center;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+}
+
+/* Emails - alignés au centre, fonte mono */
+.cellEmail {
+  text-align: center;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+  font-size: var(--tc-font-size-sm);
+}
+
+/* Téléphones - alignés au centre, fonte mono */
+.cellPhone {
+  text-align: center;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+  font-size: var(--tc-font-size-sm);
+}
+
+/* Actions - centrées */
+.cellActions {
+  text-align: center;
+  padding: var(--tc-space-2) var(--tc-space-3);
+}
+
+/* Statuts/badges - centrés */
+.cellStatus {
+  text-align: center;
+}
+
+/* Classes pour les en-têtes avec alignement intelligent */
+.headerText { text-align: center; }
+.headerNumber { text-align: right; }
+.headerDate { text-align: center; }
+.headerEmail { text-align: center; }
+.headerPhone { text-align: center; }
+.headerActions { text-align: center; }
+.headerStatus { text-align: center; }
+
+/* =============================
+   LIGNES ALTERNÉES (ZEBRA STRIPING)
+   ============================= */
+.tableRow:nth-child(even) {
+  background-color: var(--tc-bg-subtle, #f9fafb);
+}
+
+.tableRow:nth-child(odd) {
+  background-color: var(--tc-bg-default, #ffffff);
+}
+
+.tableRow:hover {
+  background-color: var(--tc-bg-hover, #f3f4f6) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+/* =============================
+   AMÉLIORATION DE LA LISIBILITÉ
+   ============================= */
+
+/* Première colonne (nom/titre) - plus visible */
+.tableCell:first-child {
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-default);
+  background-color: rgba(var(--tc-color-primary-rgb, 59, 130, 246), 0.02);
+}
+
+/* Amélioration du hover des cellules */
+.tableRow:hover .tableCell:first-child {
+  background-color: rgba(var(--tc-color-primary-rgb, 59, 130, 246), 0.05);
+  color: var(--tc-color-primary);
 }

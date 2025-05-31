@@ -32,6 +32,7 @@
 @import '@styles/components/navigation.css'; /* Styles de navigation (étapes, onglets, pagination, fil d'Ariane) */
 @import '@styles/components/spinner.css';
 @import '@styles/components/tables.css';
+@import '@styles/components/mobile-optimizations.css';
 
 /* Pages */
 @import '@styles/pages/artistes.css';

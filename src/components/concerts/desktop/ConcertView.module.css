@@ -96,19 +96,161 @@
   }
 }
 
-/* Responsive design - adapté de la maquette */
-@media (max-width: 768px) {
+/* =============================
+   OPTIMISATIONS MOBILE COMPLÈTES
+   ============================= */
+@media (max-width: var(--tc-breakpoint-md)) {
   .concertViewContainer {
-    margin: var(--tc-space-2);
+    margin: 0;
     padding: var(--tc-space-3);
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
+    background-color: var(--tc-bg-default);
+    min-height: 100vh;
   }
 
+  /* Loading optimisé mobile */
+  .loadingContainer {
+    min-height: 50vh;
+    padding: var(--tc-space-6);
+  }
+
+  .loadingContainer p {
+    font-size: var(--tc-font-size-md);
+    margin-top: var(--tc-space-3);
+  }
+
+  /* Modal mobile plein écran */
   .formGeneratorOverlay {
-    padding: var(--tc-space-2);
+    padding: 0;
+    background-color: rgba(0, 0, 0, 0.8);
   }
 
   .formGeneratorModal {
-    max-height: 95vh;
+    margin: 0;
+    border-radius: 0;
+    max-height: 100vh;
+    height: 100vh;
+    max-width: 100%;
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .closeButton {
+    top: var(--tc-space-3);
+    right: var(--tc-space-3);
+    font-size: var(--tc-font-size-xl);
+    padding: var(--tc-space-2);
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: var(--tc-radius-full);
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Cartes optimisées mobile */
+  :global(.form-card) {
+    margin-bottom: var(--tc-space-4);
+    border-radius: var(--tc-radius-md);
+    box-shadow: var(--tc-shadow-sm);
+    border: 1px solid var(--tc-border-light);
+  }
+
+  :global(.card-header) {
+    padding: var(--tc-space-4);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--tc-space-2);
+  }
+
+  :global(.card-header h3) {
+    font-size: var(--tc-font-size-lg);
+    font-weight: var(--tc-font-weight-bold);
+    line-height: 1.3;
+  }
+
+  :global(.card-header i) {
+    font-size: var(--tc-font-size-xl);
+    margin-bottom: var(--tc-space-1);
+  }
+
+  :global(.card-header-action) {
+    margin-left: 0;
+    width: 100%;
+    display: flex;
+    gap: var(--tc-space-2);
+    margin-top: var(--tc-space-2);
+  }
+
+  /* Contenu des cartes mobile */
+  :global(.card-body) {
+    padding: var(--tc-space-4);
+  }
+
+  :global(.card-body .row) {
+    margin: 0;
+    gap: var(--tc-space-3);
+  }
+
+  :global(.card-body .col) {
+    padding: 0;
+    flex: 1 1 100%;
+  }
+
+  /* Badges et statuts mobiles */
+  :global(.badge) {
+    font-size: var(--tc-font-size-sm);
+    padding: var(--tc-space-2) var(--tc-space-3);
+    border-radius: var(--tc-radius-md);
+  }
+
+  /* Boutons d'action mobiles */
+  :global(.btn-group-mobile) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--tc-space-2);
+    width: 100%;
+  }
+
+  :global(.btn-group-mobile .btn) {
+    width: 100%;
+    min-height: 48px;
+    justify-content: center;
+    font-size: var(--tc-font-size-md);
+  }
+}
+
+@media (max-width: var(--tc-breakpoint-sm)) {
+  .concertViewContainer {
+    padding: var(--tc-space-2);
+  }
+
+  :global(.form-card) {
+    margin-bottom: var(--tc-space-3);
+  }
+
+  :global(.card-header) {
+    padding: var(--tc-space-3);
+  }
+
+  :global(.card-body) {
+    padding: var(--tc-space-3);
+  }
+
+  :global(.card-header h3) {
+    font-size: var(--tc-font-size-md);
+  }
+
+  .closeButton {
+    min-width: 40px;
+    min-height: 40px;
+    top: var(--tc-space-2);
+    right: var(--tc-space-2);
   }
 }
 

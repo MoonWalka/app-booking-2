@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {  collection, getDocs, query, where, orderBy, limit, startAfter  } from '@/services/firebase-service';
 import { db } from '../../services/firebase-service';
+import { useResponsive } from '@/hooks/common';
 import styles from './ListWithFilters.module.css';
 
 /**
@@ -35,6 +36,7 @@ const ListWithFilters = ({
   filterOptions = [],
   renderActions,
 }) => {
+  const { isMobile } = useResponsive();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState(initialFilters);
@@ -42,6 +44,7 @@ const ListWithFilters = ({
   const [lastDoc, setLastDoc] = useState(null);
   const [hasMore, setHasMore] = useState(false);
   const [filterValues, setFilterValues] = useState({});
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   // Configuration des filtres
   useEffect(() => {
@@ -208,6 +211,47 @@ const ListWithFilters = ({
   const hasActiveFilters = Object.values(filters).some(value => 
     value !== undefined && value !== '');
 
+  // Fonction pour rendre une carte mobile
+  const renderMobileCard = (item) => {
+    // Utiliser les 2-3 premières colonnes pour l'affichage principal
+    const mainColumns = columns.slice(0, 3);
+    const titleColumn = columns[0];
+    const titleValue = renderColumnValue(item, titleColumn);
+
+    return (
+      <div 
+        key={item.id} 
+        className={styles.mobileCard}
+        onClick={() => handleRowClick(item)}
+      >
+        <div className={styles.mobileCardHeader}>
+          <h3 className={styles.mobileCardTitle}>{titleValue}</h3>
+          {renderActions && (
+            <div 
+              className={styles.mobileCardActions}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {renderActions(item)}
+            </div>
+          )}
+        </div>
+        
+        <div className={styles.mobileCardContent}>
+          {mainColumns.slice(1).map((column) => (
+            <div key={column.id} className={styles.mobileCardField}>
+              <div className={styles.mobileCardFieldLabel}>
+                {column.label}
+              </div>
+              <div className={styles.mobileCardFieldValue}>
+                {renderColumnValue(item, column)}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -229,66 +273,82 @@ const ListWithFilters = ({
       </div>
       
       {filterOptions.length > 0 && (
-        <div className={styles.filtersContainer}>
-          <div className={styles.filters}>
-            {filterOptions.map((filter) => (
-              <div key={filter.id} className={styles.filterItem}>
-                <label className={styles.filterLabel}>{filter.label}</label>
-                
-                {filter.type === 'select' && (
-                  <select
-                    className={styles.filterSelect}
-                    value={filterValues[filter.id] || ''}
-                    onChange={(e) => handleFilterChange(filter.id, e.target.value)}
-                  >
-                    <option value="">{filter.placeholder || 'Tous'}</option>
-                    {filter.options.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                )}
-                
-                {filter.type === 'text' && (
-                  <input
-                    type="text"
-                    className={styles.filterInput}
-                    value={filterValues[filter.id] || ''}
-                    onChange={(e) => handleFilterChange(filter.id, e.target.value)}
-                    placeholder={filter.placeholder || 'Rechercher...'}
-                  />
-                )}
-                
-                {filter.type === 'date' && (
-                  <input
-                    type="date"
-                    className={styles.filterInput}
-                    value={filterValues[filter.id] || ''}
-                    onChange={(e) => handleFilterChange(filter.id, e.target.value)}
-                  />
-                )}
-              </div>
-            ))}
-          </div>
-          
-          <div className={styles.filterActions}>
-            <button 
-              className={styles.applyButton} 
-              onClick={handleFilterApply}
+        <>
+          {isMobile && (
+            <button
+              className={styles.mobileFiltersToggle}
+              onClick={() => setShowMobileFilters(!showMobileFilters)}
             >
-              Appliquer
+              <i className={`bi ${showMobileFilters ? 'bi-funnel-fill' : 'bi-funnel'}`}></i>
+              {showMobileFilters ? 'Masquer les filtres' : 'Afficher les filtres'}
+              {hasActiveFilters && <i className="bi bi-dot" style={{ color: 'orange' }}></i>}
             </button>
-            {hasActiveFilters && (
+          )}
+          
+          <div 
+            className={styles.filtersContainer}
+            style={isMobile ? { display: showMobileFilters ? 'block' : 'none' } : {}}
+          >
+            <div className={styles.filters}>
+              {filterOptions.map((filter) => (
+                <div key={filter.id} className={styles.filterItem}>
+                  <label className={styles.filterLabel}>{filter.label}</label>
+                  
+                  {filter.type === 'select' && (
+                    <select
+                      className={styles.filterSelect}
+                      value={filterValues[filter.id] || ''}
+                      onChange={(e) => handleFilterChange(filter.id, e.target.value)}
+                    >
+                      <option value="">{filter.placeholder || 'Tous'}</option>
+                      {filter.options.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                  
+                  {filter.type === 'text' && (
+                    <input
+                      type="text"
+                      className={styles.filterInput}
+                      value={filterValues[filter.id] || ''}
+                      onChange={(e) => handleFilterChange(filter.id, e.target.value)}
+                      placeholder={filter.placeholder || 'Rechercher...'}
+                    />
+                  )}
+                  
+                  {filter.type === 'date' && (
+                    <input
+                      type="date"
+                      className={styles.filterInput}
+                      value={filterValues[filter.id] || ''}
+                      onChange={(e) => handleFilterChange(filter.id, e.target.value)}
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+            
+            <div className={styles.filterActions}>
               <button 
-                className={styles.resetButton} 
-                onClick={handleFilterReset}
+                className={styles.applyButton} 
+                onClick={handleFilterApply}
               >
-                Réinitialiser
+                Appliquer
               </button>
-            )}
+              {hasActiveFilters && (
+                <button 
+                  className={styles.resetButton} 
+                  onClick={handleFilterReset}
+                >
+                  Réinitialiser
+                </button>
+              )}
+            </div>
           </div>
-        </div>
+        </>
       )}
       
       <div className={styles.tableWrapper}>
@@ -372,6 +432,27 @@ const ListWithFilters = ({
             )}
           </tbody>
         </table>
+      </div>
+      
+      {/* Conteneur des cartes mobiles */}
+      <div className={styles.mobileCardsContainer}>
+        {items.length === 0 ? (
+          <div className={styles.noData}>
+            {loading ? (
+              <div className={styles.loading}>
+                <i className="bi bi-hourglass-split"></i>
+                <span>Chargement...</span>
+              </div>
+            ) : (
+              <div className={styles.noResults}>
+                <i className="bi bi-search"></i>
+                <span>Aucun résultat trouvé</span>
+              </div>
+            )}
+          </div>
+        ) : (
+          items.map((item) => renderMobileCard(item))
+        )}
       </div>
       
       {hasMore && !loading && (

@@ -191,21 +191,92 @@ select.formField {
 }
 
 /* =============================
-   RESPONSIVE DESIGN
+   RESPONSIVE DESIGN OPTIMISÉ MOBILE
    ============================= */
-@media (max-width: var(--tc-breakpoint-sm)) {
+@media (max-width: var(--tc-breakpoint-md)) {
+  .formFieldContainer {
+    margin-bottom: var(--tc-space-5);
+  }
+
+  .formLabel {
+    font-size: var(--tc-font-size-md);
+    margin-bottom: var(--tc-space-2);
+    font-weight: var(--tc-font-weight-semibold);
+  }
+
+  .formField {
+    padding: var(--tc-space-3) var(--tc-space-4);
+    font-size: var(--tc-font-size-md);
+    min-height: 48px; /* Touch target optimisé */
+    border-radius: var(--tc-radius-md);
+    border-width: 2px; /* Bordure plus visible sur mobile */
+  }
+
   .formField--lg {
-    padding: var(--tc-space-2) var(--tc-space-4);
-    font-size: var(--tc-font-size-base);
-    height: 44px;
+    padding: var(--tc-space-4) var(--tc-space-4);
+    font-size: var(--tc-font-size-lg);
+    min-height: 56px;
   }
   
   .formField--md {
-    height: 40px;
+    min-height: 48px;
   }
   
   .formField--sm {
-    height: 36px;
+    min-height: 44px;
+    padding: var(--tc-space-2) var(--tc-space-3);
+  }
+
+  /* Textarea mobile */
+  .formField[type="textarea"],
+  textarea.formField {
+    min-height: 120px; /* Plus de hauteur sur mobile */
+    line-height: 1.6;
+  }
+
+  /* Select mobile */
+  select.formField {
+    background-size: 20px 16px; /* Flèche plus grande */
+    padding-right: calc(var(--tc-space-4) + 24px);
+  }
+
+  /* Messages d'erreur mobiles */
+  .errorMessage {
+    font-size: var(--tc-font-size-md);
+    margin-top: var(--tc-space-2);
+    padding: var(--tc-space-2);
+    background-color: var(--tc-bg-error);
+    border-radius: var(--tc-radius-sm);
+    border-left: 4px solid var(--tc-color-error);
+  }
+
+  /* Texte d'aide mobile */
+  .helpText {
+    font-size: var(--tc-font-size-md);
+    margin-top: var(--tc-space-2);
+    line-height: 1.5;
+  }
+
+  /* Focus amélioré pour mobile */
+  .formField:focus {
+    border-width: 3px;
+    box-shadow: 0 0 0 2px rgba(var(--tc-primary-color-rgb), 0.2);
+    transform: scale(1.01); /* Léger zoom pour feedback tactile */
+  }
+}
+
+@media (max-width: var(--tc-breakpoint-sm)) {
+  .formFieldContainer {
+    margin-bottom: var(--tc-space-4);
+  }
+
+  .formField {
+    font-size: var(--tc-font-size-md);
+    min-height: 44px; /* iOS minimum touch target */
+  }
+
+  .formField--lg {
+    min-height: 52px;
   }
 }
 

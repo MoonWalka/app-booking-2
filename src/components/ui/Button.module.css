@@ -274,14 +274,93 @@
 }
 
 /* =============================
-   AJUSTEMENTS POUR PETITS ÉCRANS
+   OPTIMISATIONS MOBILE
    ============================= */
-@media (max-width: var(--tc-breakpoint-sm)) {
+@media (max-width: var(--tc-breakpoint-md)) {
   .btn {
-    padding: var(--tc-space-2) var(--tc-space-4);
+    padding: var(--tc-space-3) var(--tc-space-4);
+    font-size: var(--tc-font-size-md);
+    min-height: 48px; /* Touch target optimisé */
+    border-radius: var(--tc-radius-md);
+    font-weight: var(--tc-font-weight-semibold);
+    transition: var(--tc-transition-short);
+  }
+
+  .btnSm {
+    padding: var(--tc-space-2) var(--tc-space-3);
+    font-size: var(--tc-font-size-sm);
+    min-height: 44px;
+    border-radius: var(--tc-radius-sm);
   }
   
   .btnLg {
     padding: var(--tc-space-4) var(--tc-space-6);
+    font-size: var(--tc-font-size-lg);
+    min-height: 56px;
+    border-radius: var(--tc-radius-lg);
+  }
+
+  /* Feedback tactile amélioré */
+  .btn:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+
+  /* Boutons pleine largeur sur mobile pour formulaires */
+  .btnBlock {
+    margin-bottom: var(--tc-space-3);
+  }
+
+  /* Icônes plus grandes sur mobile */
+  .iconWrapper {
+    font-size: var(--tc-font-size-lg);
+  }
+
+  .iconOnly {
+    min-width: 48px;
+    min-height: 48px;
+    padding: var(--tc-space-3);
+  }
+
+  .btnSm.iconOnly {
+    min-width: 44px;
+    min-height: 44px;
+    padding: var(--tc-space-2);
+  }
+
+  .btnLg.iconOnly {
+    min-width: 56px;
+    min-height: 56px;
+    padding: var(--tc-space-4);
+  }
+
+  /* Hover désactivé sur mobile (tactile uniquement) */
+  .btn:hover {
+    background-color: initial;
+    border-color: initial;
+    color: initial;
+  }
+
+  /* Focus amélioré pour navigation au clavier sur mobile */
+  .btn:focus-visible {
+    outline: 3px solid var(--tc-color-primary);
+    outline-offset: 2px;
+  }
+}
+
+@media (max-width: var(--tc-breakpoint-sm)) {
+  .btn {
+    min-height: 44px; /* iOS minimum touch target */
+    font-size: var(--tc-font-size-md);
+  }
+  
+  .btnLg {
+    min-height: 52px;
+    padding: var(--tc-space-3) var(--tc-space-5);
+  }
+
+  .iconOnly {
+    min-width: 44px;
+    min-height: 44px;
   }
 }

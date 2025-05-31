@@ -7,7 +7,6 @@ import styles from './ConcertView.module.css';
 
 // Import des hooks personnalisés
 import { useConcertDetails } from '@/hooks/concerts';
-import useConcertDetailsSimple from '../../../hooks/concerts/useConcertDetailsSimple';
 import { useConcertStatus } from '@/hooks/concerts';
 import { useLieuSearch } from '@/hooks/lieux/useLieuSearch';
 import { useProgrammateurSearch } from '@/hooks/programmateurs/useProgrammateurSearch';
@@ -59,10 +58,7 @@ const ConcertView = memo(({ id: propId }) => {
     artiste: { onSelect: callbacksRef.current.onSelectArtiste, maxResults: 10 }
   }), []);
   
-  const detailsHookComplex = useConcertDetails(id);
-  const detailsHookSimple = useConcertDetailsSimple(id);
-  
-  const detailsHook = isEditMode ? detailsHookComplex : detailsHookSimple;
+  const detailsHook = useConcertDetails(id);
   
   const concertStatus = useConcertStatus();
   const lieuSearchHook = useLieuSearch(searchConfig.lieu);

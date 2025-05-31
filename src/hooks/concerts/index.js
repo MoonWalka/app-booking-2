@@ -29,7 +29,6 @@ export { default as useFormSubmission } from './useFormSubmission';
 // Exports pour la gestion de la suppression de concerts
 export { default as useConcertDelete } from './useConcertDelete';
 
-export { default as useConcertDetailsSimple } from './useConcertDetailsSimple';
 export { default as useConcertDetailsUltraSimple } from './useConcertDetailsUltraSimple';
 export { default as useConcertFormWithRelations } from './useConcertFormWithRelations';
 export { default as useConcertFormsManagement } from './useConcertFormsManagement';

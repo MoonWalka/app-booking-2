@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ListWithFilters from '@/components/ui/ListWithFilters';
-import Button from '@/components/ui/Button';
+import { ActionButtons } from '@/components/ui/ActionButtons';
 import AddButton from '@/components/ui/AddButton';
 import { useLieuDelete } from '@/hooks/lieux';
 
@@ -22,6 +22,68 @@ function LieuxList() {
   };
   
   const { handleDeleteLieu } = useLieuDelete(onDeleteSuccess);
+
+  // Fonction de calcul des statistiques pour les lieux
+  const calculateStats = (items) => {
+    const total = items.length;
+    
+    // Compter les lieux avec des concerts (approximation basée sur les données disponibles)
+    const avecConcerts = items.filter(lieu => 
+      lieu.concertsCount > 0 || lieu.lastConcertDate || lieu.totalConcerts
+    ).length;
+    
+    // Répartition par type
+    const typeCount = items.reduce((acc, lieu) => {
+      const type = lieu.type || 'non_defini';
+      acc[type] = (acc[type] || 0) + 1;
+      return acc;
+    }, {});
+    
+    const typePopulaire = Object.entries(typeCount).sort((a, b) => b[1] - a[1])[0];
+    
+    // Statut démarchage (basé sur des champs potentiels)
+    const demarches = items.filter(lieu => 
+      lieu.statut === 'contacte' || 
+      lieu.dateContact || 
+      lieu.formulaireEnvoye || 
+      lieu.statut === 'en_cours' ||
+      lieu.statut === 'valide'
+    ).length;
+    
+    return [
+      {
+        id: 'total',
+        label: 'Total Lieux',
+        value: total,
+        icon: 'bi bi-geo-alt',
+        variant: 'primary'
+      },
+      {
+        id: 'avec_concerts',
+        label: 'Avec concerts',
+        value: avecConcerts,
+        icon: 'bi bi-music-note-beamed',
+        variant: 'success',
+        subtext: `${Math.round((avecConcerts / total) * 100) || 0}%`
+      },
+      {
+        id: 'type_populaire',
+        label: 'Type principal',
+        value: typePopulaire ? typePopulaire[0] : 'N/A',
+        icon: 'bi bi-building',
+        variant: 'info',
+        subtext: typePopulaire ? `${typePopulaire[1]} lieux` : ''
+      },
+      {
+        id: 'demarches',
+        label: 'Démarchés',
+        value: demarches,
+        icon: 'bi bi-envelope-check',
+        variant: 'warning',
+        subtext: `${Math.round((demarches / total) * 100) || 0}%`
+      }
+    ];
+  };
 
   // Configuration des colonnes pour les lieux
   const columns = [
@@ -106,32 +168,11 @@ function LieuxList() {
 
   // Actions sur les lignes
   const renderActions = (lieu) => (
-    <div style={{ display: 'flex', gap: '8px' }}>
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => navigate(`/lieux/${lieu.id}`)}
-        title="Voir les détails"
-      >
-        <i className="bi bi-eye"></i>
-      </Button>
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => navigate(`/lieux/${lieu.id}/edit`)}
-        title="Modifier"
-      >
-        <i className="bi bi-pencil"></i>
-      </Button>
-      <Button
-        variant="danger"
-        size="sm"
-        onClick={() => handleDeleteLieu(lieu.id)}
-        title="Supprimer"
-      >
-        <i className="bi bi-trash"></i>
-      </Button>
-    </div>
+    <ActionButtons
+      onView={() => navigate(`/lieux/${lieu.id}`)}
+      onEdit={() => navigate(`/lieux/${lieu.id}/edit`)}
+      onDelete={() => handleDeleteLieu(lieu.id)}
+    />
   );
 
   // Actions de l'en-tête
@@ -160,6 +201,8 @@ function LieuxList() {
       renderActions={renderActions}
       pageSize={20}
       showRefresh={true}
+      showStats={true}
+      calculateStats={calculateStats}
     />
   );
 }

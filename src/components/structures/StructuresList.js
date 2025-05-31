@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ListWithFilters from '@/components/ui/ListWithFilters';
-import Button from '@/components/ui/Button';
+import { ActionButtons } from '@/components/ui/ActionButtons';
 import AddButton from '@/components/ui/AddButton';
 import { useDeleteStructure } from '@/hooks/structures';
 
@@ -20,6 +20,60 @@ function StructuresList() {
   };
   
   const { handleDelete } = useDeleteStructure(onDeleteSuccess);
+
+  // Fonction de calcul des statistiques pour les structures
+  const calculateStats = (items) => {
+    const total = items.length;
+    
+    // Répartition par type
+    const typeCount = items.reduce((acc, structure) => {
+      const type = structure.type || 'non_defini';
+      acc[type] = (acc[type] || 0) + 1;
+      return acc;
+    }, {});
+    
+    const typePopulaire = Object.entries(typeCount).sort((a, b) => b[1] - a[1])[0];
+    
+    // Structures avec SIRET
+    const avecSiret = items.filter(structure => structure.siret && structure.siret.trim()).length;
+    
+    // Structures avec contact email
+    const avecEmail = items.filter(structure => structure.email && structure.email.trim()).length;
+    
+    return [
+      {
+        id: 'total',
+        label: 'Total Structures',
+        value: total,
+        icon: 'bi bi-building',
+        variant: 'primary'
+      },
+      {
+        id: 'type_principal',
+        label: 'Type principal',
+        value: typePopulaire ? typePopulaire[0] : 'N/A',
+        icon: 'bi bi-diagram-3',
+        variant: 'info',
+        subtext: typePopulaire ? `${typePopulaire[1]} structures` : ''
+      },
+      {
+        id: 'avec_siret',
+        label: 'Avec SIRET',
+        value: avecSiret,
+        icon: 'bi bi-card-checklist',
+        variant: 'success',
+        subtext: `${Math.round((avecSiret / total) * 100) || 0}%`
+      },
+      {
+        id: 'avec_email',
+        label: 'Avec email',
+        value: avecEmail,
+        icon: 'bi bi-envelope',
+        variant: 'warning',
+        subtext: `${Math.round((avecEmail / total) * 100) || 0}%`
+      }
+    ];
+  };
 
   // Configuration des colonnes pour les structures
   const columns = [
@@ -100,32 +154,11 @@ function StructuresList() {
 
   // Actions sur les lignes
   const renderActions = (structure) => (
-    <div style={{ display: 'flex', gap: '8px' }}>
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => navigate(`/structures/${structure.id}`)}
-        title="Voir les détails"
-      >
-        <i className="bi bi-eye"></i>
-      </Button>
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => navigate(`/structures/${structure.id}/edit`)}
-        title="Modifier"
-      >
-        <i className="bi bi-pencil"></i>
-      </Button>
-      <Button
-        variant="danger"
-        size="sm"
-        onClick={() => handleDelete(structure.id)}
-        title="Supprimer"
-      >
-        <i className="bi bi-trash"></i>
-      </Button>
-    </div>
+    <ActionButtons
+      onView={() => navigate(`/structures/${structure.id}`)}
+      onEdit={() => navigate(`/structures/${structure.id}/edit`)}
+      onDelete={() => handleDelete(structure.id)}
+    />
   );
 
   // Actions de l'en-tête
@@ -154,6 +187,8 @@ function StructuresList() {
       renderActions={renderActions}
       pageSize={20}
       showRefresh={true}
+      showStats={true}
+      calculateStats={calculateStats}
     />
   );
 }

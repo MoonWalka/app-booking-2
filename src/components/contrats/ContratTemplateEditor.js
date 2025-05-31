@@ -1,44 +1,30 @@
 // src/components/contrats/ContratTemplateEditor.js
 import React from 'react';
-import { useResponsive } from '@/hooks/common';
-import DesktopContratTemplateEditor from './desktop/ContratTemplateEditor';
+import PropTypes from 'prop-types';
+import ContratTemplateEditorSimple from './ContratTemplateEditorSimple';
 
 /**
- * Wrapper responsive pour l'éditeur de modèles de contrats
- * Note: Pour le moment, seule la version desktop est implémentée
+ * Éditeur de modèles de contrats simplifié
+ * Interface épurée avec seulement le nom, type et éditeur de contenu
  */
 function ContratTemplateEditor(props) {
   console.log("ContratTemplateEditor rendu avec props:", props);
-  const { isModal, ...otherProps } = props;
-  const { isMobile } = useResponsive();
   
-  // Adapter l'interface selon le type d'appareil (NOUVEAU)
-  const getResponsiveConfig = () => {
-    if (isMobile) {
-      return {
-        isModalContext: true, // Forcer le mode modal sur mobile pour une meilleure UX
-        compactMode: true,
-        showFullscreen: true
-      };
-    }
-    return {
-      isModalContext: isModal === true,
-      compactMode: false,
-      showFullscreen: false
-    };
-  };
-
-  const responsiveConfig = getResponsiveConfig();
-  
-  // Pour l'instant, utiliser la version desktop dans tous les cas
-  // avec des propriétés adaptées au type d'appareil
-  return (
-    <DesktopContratTemplateEditor 
-      {...otherProps} 
-      {...responsiveConfig}
-      isMobileDevice={isMobile}
-    />
-  );
+  // Utiliser directement la version simplifiée
+  return <ContratTemplateEditorSimple {...props} />;
 }
+
+ContratTemplateEditor.propTypes = {
+  template: PropTypes.shape({
+    id: PropTypes.string,
+    name: PropTypes.string,
+    templateType: PropTypes.string,
+    bodyContent: PropTypes.string,
+    isDefault: PropTypes.bool
+  }),
+  onSave: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+  isModalContext: PropTypes.bool
+};
 
 export default ContratTemplateEditor;

@@ -377,11 +377,26 @@ function ConcertsList() {
             };
         }
       } else {
+        // Pas de contrat généré - couleur selon le statut du formulaire
+        const formExists = hasForm(concert.id);
+        const formUnvalidated = hasUnvalidatedForm(concert.id);
+        
+        let color, tooltip;
+        if (formExists && !formUnvalidated) {
+          // Formulaire envoyé/validé mais contrat pas encore généré
+          color = '#ffc107'; // Jaune/orange
+          tooltip = 'Formulaire prêt - Générer contrat';
+        } else {
+          // Aucun formulaire ou formulaire en cours
+          color = '#6c757d'; // Gris neutre
+          tooltip = 'Générer contrat';
+        }
+        
         return {
           status: 'not_generated',
           icon: 'bi-file-earmark-plus',
-          color: '#28a745',
-          tooltip: 'Générer contrat',
+          color: color,
+          tooltip: tooltip,
           disabled: false,
           action: () => handleGenerateContract(concert.id)
         };

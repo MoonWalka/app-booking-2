@@ -25,38 +25,42 @@
   background: var(--tc-color-white);
   border-radius: 8px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.25);
-  max-width: 98vw;
-  width: 98vw;
+  max-width: 85vw;
+  width: 85vw;
   min-width: 320px;
-  max-height: 95vh;
-  height: 100%; /* Ajouté pour permettre le flex et le scroll interne */
-  overflow: hidden; /* Empêche le double scroll */
+  max-height: 85vh;
+  height: 85vh;
+  overflow: hidden;
   padding: 0;
   display: flex;
   flex-direction: column;
-  margin: 3vh 0; /* Ajoute de l'espace en haut et en bas */
+  margin: 7.5vh auto;
 }
 
 @media (max-width: 992px) {
   .modalContent {
-    max-width: 99vw;
-    width: 99vw;
+    max-width: 90vw;
+    width: 90vw;
     min-width: 0;
-    margin: 2vh 0;
+    margin: 5vh auto;
     border-radius: 6px;
+    height: 90vh;
+    max-height: 90vh;
   }
 }
 
 @media (max-width: 576px) {
   .modalContent {
-    max-width: 100vw;
-    width: 100vw;
+    max-width: 95vw;
+    width: 95vw;
     min-width: 0;
-    margin: 1vh 0;
-    border-radius: 0;
-    /* Ajoute un padding interne minimum pour éviter que le contenu ne touche les bords */
-    padding-left: 8px;
-    padding-right: 8px;
+    margin: 2.5vh auto;
+    border-radius: 6px;
+    height: 95vh;
+    max-height: 95vh;
+    /* Padding minimal pour éviter que le contenu touche les bords */
+    padding-left: 6px;
+    padding-right: 6px;
   }
 }
 

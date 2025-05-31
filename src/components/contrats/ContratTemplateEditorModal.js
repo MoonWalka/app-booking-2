@@ -1,7 +1,8 @@
 // src/components/contrats/ContratTemplateEditorModal.js
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
-import ContratTemplateEditor from './desktop/ContratTemplateEditor';
+import ContratTemplateEditor from './ContratTemplateEditor';
 import styles from './ContratTemplateEditorModal.module.css';
 
 
@@ -69,6 +70,19 @@ const ContratTemplateEditorModal = ({
     </div>,
     document.body
   );
+};
+
+ContratTemplateEditorModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  template: PropTypes.shape({
+    id: PropTypes.string,
+    name: PropTypes.string,
+    templateType: PropTypes.string,
+    bodyContent: PropTypes.string,
+    isDefault: PropTypes.bool
+  }),
+  onSave: PropTypes.func.isRequired
 };
 
 export default ContratTemplateEditorModal;

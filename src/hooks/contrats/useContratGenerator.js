@@ -663,8 +663,20 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
       const variables = prepareContractVariables();
       console.log("Variables préparées:", variables);
       
+      // Fonction utilitaire pour nettoyer les valeurs undefined
+      const cleanFirestoreData = (obj) => {
+        const cleaned = {};
+        Object.keys(obj).forEach(key => {
+          const value = obj[key];
+          if (value !== undefined) {
+            cleaned[key] = value === '' ? null : value;
+          }
+        });
+        return cleaned;
+      };
+
       // Créer une "snapshot" complète du template utilisé
-      const templateSnapshot = {
+      const templateSnapshotRaw = {
         id: selectedTemplate.id,
         name: selectedTemplate.name,
         version: Date.now(), // Ajouter un timestamp comme version
@@ -685,6 +697,9 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
         logoUrl: selectedTemplate.logoUrl,
         type: selectedTemplate.type
       };
+
+      // Nettoyer les valeurs undefined pour Firestore
+      const templateSnapshot = cleanFirestoreData(templateSnapshotRaw);
       
       console.log("Snapshot du template créée:", templateSnapshot);
       

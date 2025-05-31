@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { Alert, Spinner, Modal, Button } from 'react-bootstrap';
-import ContratPDFWrapper from '@/components/contrats/ContratPDFWrapper';
+import ContratPDFWrapper from '@/components/pdf/ContratPDFWrapper';
 import styles from './ContratDetailsPage.module.css';
 
 // Import custom hooks

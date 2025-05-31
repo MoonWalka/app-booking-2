@@ -82,14 +82,8 @@ const Button = ({
 
   // Si une infobulle est fournie et que c'est un bouton avec icône uniquement
   if (tooltip && iconOnly) {
-    // Importer dynamiquement react-bootstrap pour éviter les problèmes de dépendances
-    const { OverlayTrigger, Tooltip } = require('react-bootstrap');
-    
     return (
-      <OverlayTrigger
-        placement="top"
-        overlay={<Tooltip>{tooltip}</Tooltip>}
-      >
+      <div className={styles.tooltipWrapper} title={tooltip}>
         <button
           type={type}
           className={buttonClasses}
@@ -101,7 +95,7 @@ const Button = ({
         >
           {buttonContent}
         </button>
-      </OverlayTrigger>
+      </div>
     );
   }
 

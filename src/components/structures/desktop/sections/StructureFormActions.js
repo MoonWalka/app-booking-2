@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from 'react-bootstrap';
+import Button from '../../../ui/Button';
 import styles from './StructureFormActions.module.css';
 
 /**
@@ -17,7 +17,7 @@ const StructureFormActions = ({ isEditMode, submitting, handleCancel, onDelete, 
   return (
     <div className={styles.formActions}>
       <Button
-        variant="outline-secondary"
+        variant="outline"
         className={styles.cancelButton}
         onClick={handleCancel}
         disabled={submitting}
@@ -27,7 +27,7 @@ const StructureFormActions = ({ isEditMode, submitting, handleCancel, onDelete, 
       </Button>
       {isEditMode && onDelete && (
         <Button
-          variant="outline-danger"
+          variant="danger"
           className={styles.cancelButton}
           onClick={onDelete}
           disabled={submitting || isDeleting}

@@ -173,7 +173,6 @@ function ConcertsList() {
     };
     
     // Stats temporelles
-    let passes = 0;
     let aVenir = 0;
     let ceMois = 0;
     
@@ -187,9 +186,7 @@ function ConcertsList() {
       // Dates
       if (concert.dateEvenement) {
         const date = new Date(concert.dateEvenement);
-        if (date < now) {
-          passes++;
-        } else {
+        if (date >= now) {
           aVenir++;
           if (date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear()) {
             ceMois++;

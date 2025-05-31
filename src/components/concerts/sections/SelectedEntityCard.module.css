@@ -38,7 +38,7 @@
   left: 0;
   width: 4px;
   height: 100%;
-  background: linear-gradient(to bottom, #28a745, #20c997);
+  background: linear-gradient(to bottom, var(--tc-color-success-500), var(--tc-color-success-400));
   animation: slideDown 0.6s ease-out;
 }
 
@@ -62,7 +62,7 @@
   align-items: center;
   padding: 0.75rem 1rem;
   border-bottom: 1px solid var(--tc-color-gray-100);
-  background-color: rgba(40, 167, 69, 0.05);
+  background-color: var(--tc-color-success-50);
 }
 
 .entityTitle {
@@ -74,8 +74,8 @@
 .entityIcon {
   width: 32px;
   height: 32px;
-  background-color: rgba(40, 167, 69, 0.15);
-  color: #28a745;
+  background-color: var(--tc-color-success-100);
+  color: var(--tc-color-success-600);
   border-radius: 6px;
   display: flex;
   align-items: center;
@@ -102,8 +102,8 @@
 
 /* Badge "Nouveau" temporaire */
 .newBadge {
-  background-color: #28a745;
-  color: white;
+  background-color: var(--tc-color-success-500);
+  color: var(--tc-text-light);
   font-size: 0.7rem;
   padding: 2px 8px;
   border-radius: 12px;
@@ -180,74 +180,74 @@
    Styles spécifiques par type d'entité
    ======================================== */
 
-/* Lieux - Bleu info */
+/* Lieux - Bleu info harmonisé */
 .entityCard--lieu::before {
-  background: linear-gradient(to bottom, #17a2b8, #138496);
+  background: linear-gradient(to bottom, var(--tc-color-info-500), var(--tc-color-info-600));
 }
 
 .entityCard--lieu .entityHeader {
-  background-color: rgba(23, 162, 184, 0.05);
+  background-color: var(--tc-color-info-50);
 }
 
 .entityIcon--lieu {
-  background-color: rgba(23, 162, 184, 0.15) !important;
-  color: #17a2b8 !important;
+  background-color: var(--tc-color-info-100) !important;
+  color: var(--tc-color-info-600) !important;
 }
 
 .newBadge--lieu {
-  background-color: #17a2b8 !important;
+  background-color: var(--tc-color-info-500) !important;
 }
 
-/* Programmateurs - Violet */
+/* Programmateurs - Violet harmonisé */
 .entityCard--programmateur::before {
-  background: linear-gradient(to bottom, #6f42c1, #5a32a3);
+  background: linear-gradient(to bottom, var(--tc-color-programmateur), var(--tc-color-programmateur-light));
 }
 
 .entityCard--programmateur .entityHeader {
-  background-color: rgba(111, 66, 193, 0.05);
+  background-color: var(--tc-color-programmateur-light);
 }
 
 .entityIcon--programmateur {
-  background-color: rgba(111, 66, 193, 0.15) !important;
-  color: #6f42c1 !important;
+  background-color: var(--tc-color-programmateur-light) !important;
+  color: var(--tc-color-programmateur) !important;
 }
 
 .newBadge--programmateur {
-  background-color: #6f42c1 !important;
+  background-color: var(--tc-color-programmateur) !important;
 }
 
-/* Artistes - Orange */
+/* Artistes - Orange harmonisé */
 .entityCard--artiste::before {
-  background: linear-gradient(to bottom, #fd7e14, #dc6502);
+  background: linear-gradient(to bottom, var(--tc-color-artiste), var(--tc-color-artiste-light));
 }
 
 .entityCard--artiste .entityHeader {
-  background-color: rgba(253, 126, 20, 0.05);
+  background-color: var(--tc-color-artiste-light);
 }
 
 .entityIcon--artiste {
-  background-color: rgba(253, 126, 20, 0.15) !important;
-  color: #fd7e14 !important;
+  background-color: var(--tc-color-artiste-light) !important;
+  color: var(--tc-color-artiste) !important;
 }
 
 .newBadge--artiste {
-  background-color: #fd7e14 !important;
+  background-color: var(--tc-color-artiste) !important;
 }
 
-/* Structures - Teal */
+/* Structures - Teal harmonisé */
 .entityCard--structure::before {
-  background: linear-gradient(to bottom, #20c997, #17a085);
+  background: linear-gradient(to bottom, var(--tc-color-secondary), var(--tc-color-secondary-dark));
 }
 
 .entityCard--structure .entityHeader {
-  background-color: rgba(32, 201, 151, 0.05);
+  background-color: var(--tc-color-secondary-light);
 }
 
 .entityIcon--structure {
-  background-color: rgba(32, 201, 151, 0.15) !important;
-  color: #20c997 !important;
+  background-color: var(--tc-color-secondary-light) !important;
+  color: var(--tc-color-secondary) !important;
 }
 
 .newBadge--structure {
-  background-color: #20c997 !important;
+  background-color: var(--tc-color-secondary) !important;
 }

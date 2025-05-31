@@ -119,7 +119,6 @@ function ArtistesList() {
   const calculateStats = (items) => {
     const total = items.length;
     const actifs = items.filter(a => a.status === 'active').length;
-    const inactifs = items.filter(a => a.status === 'inactive').length;
     const avecContact = items.filter(a => a.email || a.telephone).length;
     
     // Compter les genres musicaux

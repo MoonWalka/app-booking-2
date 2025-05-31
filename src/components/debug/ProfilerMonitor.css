@@ -2,10 +2,10 @@
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background-color: #1a1a1a;
-  color: #fff;
+  background-color: var(--tc-color-gray-800);
+  color: var(--tc-color-white);
   border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 20px var(--tc-primary-color-30);
   z-index: 9999;
   max-width: 600px;
   font-family: monospace;
@@ -22,9 +22,9 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 15px;
-  background-color: #2a2a2a;
+  background-color: var(--tc-color-gray-700);
   border-radius: 8px 8px 0 0;
-  border-bottom: 1px solid #3a3a3a;
+  border-bottom: 1px solid var(--tc-color-gray-600);
 }
 
 .profiler-header h3 {
@@ -41,7 +41,7 @@
 .profiler-controls button {
   background: none;
   border: none;
-  color: #fff;
+  color: var(--tc-color-white);
   cursor: pointer;
   font-size: 16px;
   padding: 2px 6px;
@@ -50,7 +50,7 @@
 }
 
 .profiler-controls button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--tc-hover-overlay-light);
 }
 
 .profiler-content {
@@ -61,7 +61,7 @@
 
 .no-data {
   text-align: center;
-  color: #666;
+  color: var(--tc-color-gray-500);
   padding: 20px;
   margin: 0;
 }
@@ -74,7 +74,7 @@
 }
 
 .stat-card {
-  background-color: #2a2a2a;
+  background-color: var(--tc-color-gray-700);
   border-radius: 6px;
   padding: 10px;
   border: 2px solid transparent;
@@ -98,38 +98,38 @@
 }
 
 .stat-row span {
-  color: #999;
+  color: var(--tc-color-gray-400);
 }
 
 .stat-row strong {
-  color: #fff;
+  color: var(--tc-color-white);
 }
 
 .stat-card.ok {
-  border-color: #4caf50;
+  border-color: var(--tc-color-success);
 }
 
 .stat-card.ok h4 {
-  color: #4caf50;
+  color: var(--tc-color-success);
 }
 
 .stat-card.warning {
-  border-color: #ff9800;
-  background-color: rgba(255, 152, 0, 0.1);
+  border-color: var(--tc-color-warning);
+  background-color: var(--tc-warning-color-10);
 }
 
 .stat-card.warning h4 {
-  color: #ff9800;
+  color: var(--tc-color-warning);
 }
 
 .stat-card.critical {
-  border-color: #f44336;
-  background-color: rgba(244, 67, 54, 0.1);
+  border-color: var(--tc-color-error);
+  background-color: var(--tc-danger-color-10);
   animation: pulse 2s infinite;
 }
 
 .stat-card.critical h4 {
-  color: #f44336;
+  color: var(--tc-color-error);
 }
 
 @keyframes pulse {
@@ -149,7 +149,7 @@
   justify-content: center;
   gap: 15px;
   padding-top: 10px;
-  border-top: 1px solid #3a3a3a;
+  border-top: 1px solid var(--tc-color-gray-600);
   font-size: 11px;
 }
 
@@ -160,15 +160,15 @@
 }
 
 .legend-item.ok {
-  color: #4caf50;
+  color: var(--tc-color-success);
 }
 
 .legend-item.warning {
-  color: #ff9800;
+  color: var(--tc-color-warning);
 }
 
 .legend-item.critical {
-  color: #f44336;
+  color: var(--tc-color-error);
 }
 
 /* Scrollbar personnalisée */
@@ -177,14 +177,14 @@
 }
 
 .profiler-content::-webkit-scrollbar-track {
-  background: #1a1a1a;
+  background: var(--tc-color-gray-800);
 }
 
 .profiler-content::-webkit-scrollbar-thumb {
-  background: #444;
+  background: var(--tc-color-gray-600);
   border-radius: 3px;
 }
 
 .profiler-content::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: var(--tc-color-gray-500);
 } 

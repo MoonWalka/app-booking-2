@@ -68,7 +68,7 @@ const EntityEmptyState = ({
             <div className={styles.defaultIllustration}>
               <i className={`${icon} ${styles.emptyIcon}`}></i>
               {searchTerm && (
-                <i className="bi bi-search ${styles.searchOverlay}"></i>
+                <i className={`bi bi-search ${styles.searchOverlay}`}></i>
               )}
             </div>
           )}

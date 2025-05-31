@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Card as BootstrapCard } from 'react-bootstrap';
+// Migration: Utiliser div natif au lieu de BootstrapCard
 import classNames from 'classnames';
 import styles from './Card.module.css';
 
@@ -70,16 +70,16 @@ const Card = ({
   };
 
   return (
-    <BootstrapCard 
+    <div 
       className={cardClassNames}
       onClick={handleClick}
       {...rest}
     >
       {(title || icon || headerActions || collapsible) && (
-        <BootstrapCard.Header className={classNames(styles.cardHeader, headerClassName, 'tc-card-header')}>
+        <div className={classNames(styles.cardHeader, headerClassName, 'tc-card-header')}>
           <div className={styles.headerTitleSection}>
             {icon && <span className={styles.cardIcon}>{icon}</span>}
-            {title && <BootstrapCard.Title className={styles.cardTitle}>{title}</BootstrapCard.Title>}
+            {title && <h4 className={styles.cardTitle}>{title}</h4>}
           </div>
           
           {(collapsible || headerActions) && (
@@ -92,21 +92,21 @@ const Card = ({
               {headerActions}
             </div>
           )}
-        </BootstrapCard.Header>
+        </div>
       )}
 
       {!isCollapsed && (
-        <BootstrapCard.Body className={classNames(styles.cardBody, 'tc-card-body')}>
+        <div className={classNames(styles.cardBody, 'tc-card-body')}>
           {children}
-        </BootstrapCard.Body>
+        </div>
       )}
 
       {footerContent && (
-        <BootstrapCard.Footer className={classNames(styles.cardFooter, 'tc-card-footer')}>
+        <div className={classNames(styles.cardFooter, 'tc-card-footer')}>
           {footerContent}
-        </BootstrapCard.Footer>
+        </div>
       )}
-    </BootstrapCard>
+    </div>
   );
 };
 
@@ -128,11 +128,6 @@ Card.propTypes = {
   hasDropdown: PropTypes.bool
 };
 
-// Sous-composants pour une API cohérente
-Card.Body = BootstrapCard.Body;
-Card.Title = BootstrapCard.Title;
-Card.Text = BootstrapCard.Text;
-Card.Header = BootstrapCard.Header;
-Card.Footer = BootstrapCard.Footer;
+// Composant Card natif TourCraft - Plus de dépendance Bootstrap
 
 export default Card;

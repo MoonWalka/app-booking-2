@@ -11,24 +11,24 @@
 }
 
 .table th {
-  background-color: #f8f9fa;
+  background-color: var(--tc-color-gray-50);
   font-weight: 600;
   text-align: left;
   padding: 12px 15px;
-  border-bottom: 1px solid #e5e7eb;
-  color: #555;
+  border-bottom: 1px solid var(--tc-color-gray-200);
+  color: var(--tc-color-gray-600);
   font-size: 0.875rem;
 }
 
 .table td {
   padding: 12px 15px;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--tc-color-gray-200);
   vertical-align: middle;
   font-size: 0.875rem;
 }
 
 .table tbody tr:hover {
-  background-color: rgba(0, 0, 0, 0.01);
+  background-color: var(--tc-color-gray-50);
 }
 
 .sortableHeader {
@@ -37,7 +37,7 @@
 }
 
 .sortableHeader:hover {
-  background-color: #e9ecef;
+  background-color: var(--tc-color-gray-100);
 }
 
 .headerContent {

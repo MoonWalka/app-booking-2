@@ -56,25 +56,25 @@
 
 .success {
   background-color: var(--tc-color-success-100);
-  color: var(--tc-color-success-700);
+  color: var(--tc-success-text-contrast);
   border-color: var(--tc-color-success-200);
 }
 
 .warning {
   background-color: var(--tc-color-warning-100);
-  color: var(--tc-color-warning-700);
+  color: var(--tc-warning-text-contrast);
   border-color: var(--tc-color-warning-200);
 }
 
 .danger {
   background-color: var(--tc-color-danger-100);
-  color: var(--tc-color-danger-700);
+  color: var(--tc-error-text-contrast);
   border-color: var(--tc-color-danger-200);
 }
 
 .info {
   background-color: var(--tc-color-info-100);
-  color: var(--tc-color-info-700);
+  color: var(--tc-info-text-contrast);
   border-color: var(--tc-color-info-200);
 }
 

@@ -1,0 +1,181 @@
+/* Form Components - TourCraft */
+
+.form {
+  margin: 0;
+}
+
+.formGroup {
+  margin-bottom: var(--tc-space-4);
+}
+
+.formControl {
+  display: block;
+  width: 100%;
+  padding: var(--tc-space-2) var(--tc-space-3);
+  font-size: var(--tc-font-size-base);
+  font-weight: var(--tc-font-weight-normal);
+  line-height: var(--tc-line-height-normal);
+  color: var(--tc-text-default);
+  background-color: var(--tc-bg-input);
+  background-clip: padding-box;
+  border: 1px solid var(--tc-border-input);
+  border-radius: var(--tc-radius-base);
+  transition: border-color var(--tc-transition-fast), box-shadow var(--tc-transition-fast);
+}
+
+.formControl:focus {
+  color: var(--tc-text-default);
+  background-color: var(--tc-bg-input);
+  border-color: var(--tc-focus-border);
+  outline: 0;
+  box-shadow: var(--tc-focus-shadow);
+}
+
+.formControl::placeholder {
+  color: var(--tc-text-placeholder);
+  opacity: 1;
+}
+
+.formControl:disabled,
+.formControl[readonly] {
+  background-color: var(--tc-bg-subtle);
+  opacity: 1;
+}
+
+.formLabel {
+  display: inline-block;
+  margin-bottom: var(--tc-space-2);
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-text-default);
+}
+
+.formText {
+  display: block;
+  margin-top: var(--tc-space-1);
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-text-secondary);
+}
+
+.textMuted {
+  color: var(--tc-text-muted) !important;
+}
+
+/* États de validation */
+.formControl.isValid {
+  border-color: var(--tc-success-border);
+}
+
+.formControl.isValid:focus {
+  border-color: var(--tc-success-border);
+  box-shadow: 0 0 0 0.2rem hsla(142, 36%, 45%, 0.25);
+}
+
+.formControl.isInvalid {
+  border-color: var(--tc-danger-border);
+}
+
+.formControl.isInvalid:focus {
+  border-color: var(--tc-danger-border);
+  box-shadow: 0 0 0 0.2rem hsla(0, 36%, 45%, 0.25);
+}
+
+/* Textarea */
+textarea.formControl {
+  height: auto;
+  resize: vertical;
+}
+
+/* Select */
+select.formControl {
+  word-wrap: normal;
+}
+
+select.formControl:focus::-ms-value {
+  color: var(--tc-text-default);
+  background-color: var(--tc-bg-input);
+}
+
+/* File input */
+input[type="file"].formControl {
+  overflow: hidden;
+}
+
+input[type="file"].formControl:not(:disabled):not([readonly]) {
+  cursor: pointer;
+}
+
+/* Range input */
+input[type="range"].formControl {
+  width: 100%;
+  height: 1.4rem;
+  padding: 0;
+  background-color: transparent;
+  appearance: none;
+}
+
+input[type="range"].formControl:focus {
+  outline: 0;
+}
+
+input[type="range"].formControl:focus::-webkit-slider-thumb {
+  box-shadow: 0 0 0 1px var(--tc-bg-body), var(--tc-focus-shadow);
+}
+
+input[type="range"].formControl:focus::-moz-range-thumb {
+  box-shadow: 0 0 0 1px var(--tc-bg-body), var(--tc-focus-shadow);
+}
+
+input[type="range"].formControl::-moz-focus-outer {
+  border: 0;
+}
+
+input[type="range"].formControl::-webkit-slider-thumb {
+  width: 1rem;
+  height: 1rem;
+  margin-top: -0.25rem;
+  background-color: var(--tc-color-primary);
+  border: 0;
+  border-radius: 1rem;
+  box-shadow: 0 0.1rem 0.25rem rgba(0, 0, 0, 0.1);
+  transition: background-color var(--tc-transition-fast), border-color var(--tc-transition-fast), box-shadow var(--tc-transition-fast);
+  appearance: none;
+}
+
+input[type="range"].formControl::-webkit-slider-thumb:active {
+  background-color: var(--tc-color-primary-light);
+}
+
+input[type="range"].formControl::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 0.5rem;
+  color: transparent;
+  cursor: pointer;
+  background-color: var(--tc-color-gray-200);
+  border-color: transparent;
+  border-radius: 1rem;
+}
+
+input[type="range"].formControl::-moz-range-thumb {
+  width: 1rem;
+  height: 1rem;
+  background-color: var(--tc-color-primary);
+  border: 0;
+  border-radius: 1rem;
+  box-shadow: 0 0.1rem 0.25rem rgba(0, 0, 0, 0.1);
+  transition: background-color var(--tc-transition-fast), border-color var(--tc-transition-fast), box-shadow var(--tc-transition-fast);
+  appearance: none;
+}
+
+input[type="range"].formControl::-moz-range-thumb:active {
+  background-color: var(--tc-color-primary-light);
+}
+
+input[type="range"].formControl::-moz-range-track {
+  width: 100%;
+  height: 0.5rem;
+  color: transparent;
+  cursor: pointer;
+  background-color: var(--tc-color-gray-200);
+  border-color: transparent;
+  border-radius: 1rem;
+}

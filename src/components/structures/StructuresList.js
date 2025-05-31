@@ -2,6 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import ListWithFilters from '@/components/ui/ListWithFilters';
+import Button from '@/components/ui/Button';
 import { useDeleteStructure } from '@/hooks/structures';
 
 /**
@@ -92,38 +93,41 @@ function StructuresList() {
   // Actions sur les lignes
   const renderActions = (structure) => (
     <div style={{ display: 'flex', gap: '8px' }}>
-      <button
-        className="btn btn-sm btn-outline-primary"
+      <Button
+        variant="outline"
+        size="sm"
         onClick={() => navigate(`/structures/${structure.id}`)}
         title="Voir les détails"
       >
         <i className="bi bi-eye"></i>
-      </button>
-      <button
-        className="btn btn-sm btn-outline-secondary"
+      </Button>
+      <Button
+        variant="outline"
+        size="sm"
         onClick={() => navigate(`/structures/${structure.id}/edit`)}
         title="Modifier"
       >
         <i className="bi bi-pencil"></i>
-      </button>
-      <button
-        className="btn btn-sm btn-outline-danger"
+      </Button>
+      <Button
+        variant="danger"
+        size="sm"
         onClick={() => handleDelete(structure.id)}
         title="Supprimer"
       >
         <i className="bi bi-trash"></i>
-      </button>
+      </Button>
     </div>
   );
 
   // Actions de l'en-tête
   const headerActions = (
-    <button
-      className="btn btn-primary"
+    <Button
+      variant="primary"
       onClick={() => navigate('/structures/nouveau')}
     >
       <i className="bi bi-plus"></i> Nouvelle structure
-    </button>
+    </Button>
   );
 
   // Gestion du clic sur une ligne

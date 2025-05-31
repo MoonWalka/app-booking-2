@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { collection, getDocs, orderBy, query } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
+import Button from '../ui/Button';
+import Badge from '../ui/Badge';
 
 /**
  * Version ultra-simplifiée de StructuresList pour test
@@ -52,7 +54,7 @@ const StructuresListSimple = () => {
     return (
       <div style={{ padding: '20px' }}>
         <h1>Structures</h1>
-        <div style={{ color: 'red', background: '#ffe6e6', padding: '10px', borderRadius: '4px' }}>
+        <div style={{ color: 'var(--tc-color-error-600)', background: 'var(--tc-color-error-100)', padding: '10px', borderRadius: '4px' }}>
           Erreur: {error}
         </div>
       </div>
@@ -63,43 +65,36 @@ const StructuresListSimple = () => {
     <div style={{ padding: '20px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
         <h1>Structures ({structures.length})</h1>
-        <button 
+        <Button 
+          variant="primary"
           onClick={() => navigate('/structures/nouveau')}
-          style={{ 
-            background: '#007bff', 
-            color: 'white', 
-            border: 'none', 
-            padding: '8px 16px', 
-            borderRadius: '4px',
-            cursor: 'pointer'
-          }}
         >
           + Nouvelle Structure
-        </button>
+        </Button>
       </div>
 
       {structures.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
+        <div style={{ textAlign: 'center', padding: '40px', color: 'var(--tc-color-gray-600)' }}>
           Aucune structure trouvée
         </div>
       ) : (
-        <div style={{ background: 'white', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+        <div style={{ background: 'var(--tc-bg-white)', borderRadius: '8px', overflow: 'hidden', boxShadow: 'var(--tc-shadow-md)' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead style={{ background: '#f8f9fa' }}>
+            <thead style={{ background: 'var(--tc-color-gray-50)' }}>
               <tr>
-                <th style={{ padding: '12px', textAlign: 'left', borderBottom: '1px solid #dee2e6' }}>
+                <th style={{ padding: '12px', textAlign: 'left', borderBottom: '1px solid var(--tc-color-gray-200)' }}>
                   Nom
                 </th>
-                <th style={{ padding: '12px', textAlign: 'left', borderBottom: '1px solid #dee2e6' }}>
+                <th style={{ padding: '12px', textAlign: 'left', borderBottom: '1px solid var(--tc-color-gray-200)' }}>
                   Type
                 </th>
-                <th style={{ padding: '12px', textAlign: 'left', borderBottom: '1px solid #dee2e6' }}>
+                <th style={{ padding: '12px', textAlign: 'left', borderBottom: '1px solid var(--tc-color-gray-200)' }}>
                   Ville
                 </th>
-                <th style={{ padding: '12px', textAlign: 'left', borderBottom: '1px solid #dee2e6' }}>
+                <th style={{ padding: '12px', textAlign: 'left', borderBottom: '1px solid var(--tc-color-gray-200)' }}>
                   Contact
                 </th>
-                <th style={{ padding: '12px', textAlign: 'left', borderBottom: '1px solid #dee2e6' }}>
+                <th style={{ padding: '12px', textAlign: 'left', borderBottom: '1px solid var(--tc-color-gray-200)' }}>
                   Actions
                 </th>
               </tr>
@@ -111,65 +106,46 @@ const StructuresListSimple = () => {
                   style={{ cursor: 'pointer' }}
                   onClick={() => navigate(`/structures/${structure.id}`)}
                 >
-                  <td style={{ padding: '12px', borderBottom: '1px solid #f1f3f5' }}>
+                  <td style={{ padding: '12px', borderBottom: '1px solid var(--tc-color-gray-100)' }}>
                     <strong>{structure.nom || structure.raisonSociale || 'Sans nom'}</strong>
                   </td>
-                  <td style={{ padding: '12px', borderBottom: '1px solid #f1f3f5' }}>
-                    <span style={{ 
-                      background: '#e3f2fd', 
-                      color: '#1976d2', 
-                      padding: '2px 8px', 
-                      borderRadius: '12px', 
-                      fontSize: '12px' 
-                    }}>
+                  <td style={{ padding: '12px', borderBottom: '1px solid var(--tc-color-gray-100)' }}>
+                    <Badge variant="blue" size="sm">
                       {structure.type || 'Non défini'}
-                    </span>
+                    </Badge>
                   </td>
-                  <td style={{ padding: '12px', borderBottom: '1px solid #f1f3f5' }}>
+                  <td style={{ padding: '12px', borderBottom: '1px solid var(--tc-color-gray-100)' }}>
                     {structure.adresse?.ville || structure.ville || '-'}
                   </td>
-                  <td style={{ padding: '12px', borderBottom: '1px solid #f1f3f5' }}>
+                  <td style={{ padding: '12px', borderBottom: '1px solid var(--tc-color-gray-100)' }}>
                     {structure.contact?.nom || '-'}
                   </td>
-                  <td style={{ padding: '12px', borderBottom: '1px solid #f1f3f5' }}>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate(`/structures/${structure.id}/edit`);
-                      }}
-                      style={{
-                        background: '#28a745',
-                        color: 'white',
-                        border: 'none',
-                        padding: '4px 8px',
-                        borderRadius: '4px',
-                        fontSize: '12px',
-                        cursor: 'pointer',
-                        marginRight: '8px'
-                      }}
-                    >
-                      Modifier
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (window.confirm(`Supprimer ${structure.nom || structure.raisonSociale} ?`)) {
-                          // TODO: Implémenter la suppression
-                          alert('Suppression non implémentée dans cette version de test');
-                        }
-                      }}
-                      style={{
-                        background: '#dc3545',
-                        color: 'white',
-                        border: 'none',
-                        padding: '4px 8px',
-                        borderRadius: '4px',
-                        fontSize: '12px',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      Supprimer
-                    </button>
+                  <td style={{ padding: '12px', borderBottom: '1px solid var(--tc-color-gray-100)' }}>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/structures/${structure.id}/edit`);
+                        }}
+                      >
+                        Modifier
+                      </Button>
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (window.confirm(`Supprimer ${structure.nom || structure.raisonSociale} ?`)) {
+                            // TODO: Implémenter la suppression
+                            alert('Suppression non implémentée dans cette version de test');
+                          }
+                        }}
+                      >
+                        Supprimer
+                      </Button>
+                    </div>
                   </td>
                 </tr>
               ))}

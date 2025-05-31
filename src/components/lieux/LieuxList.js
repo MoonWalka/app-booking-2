@@ -3,6 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import ListWithFilters from '@/components/ui/ListWithFilters';
 import Button from '@/components/ui/Button';
+import AddButton from '@/components/ui/AddButton';
 import { useLieuDelete } from '@/hooks/lieux';
 
 /**
@@ -128,12 +129,10 @@ function LieuxList() {
 
   // Actions de l'en-tête
   const headerActions = (
-    <Button
-      variant="primary"
+    <AddButton
       onClick={() => navigate('/lieux/nouveau')}
-    >
-      <i className="bi bi-plus"></i> Nouveau lieu
-    </Button>
+      label="Nouveau lieu"
+    />
   );
 
   // Gestion du clic sur une ligne

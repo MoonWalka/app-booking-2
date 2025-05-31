@@ -110,20 +110,53 @@
 }
 
 /* =============================
-   RESPONSIVE
+   MODE MOBILE
+   ============================= */
+.addButton--mobile {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  padding: 0;
+  border-radius: 50%;
+  justify-content: center;
+  position: fixed;
+  bottom: var(--tc-space-4);
+  right: var(--tc-space-4);
+  z-index: 1000;
+  box-shadow: var(--tc-shadow-lg);
+  gap: 0;
+}
+
+.addButton--mobile:hover {
+  transform: scale(1.1);
+  box-shadow: var(--tc-shadow-xl);
+}
+
+.addButton--mobile i {
+  font-size: var(--tc-font-size-lg);
+  font-weight: bold;
+}
+
+.addButtonText {
+  margin-left: var(--tc-space-1);
+}
+
+/* =============================
+   RESPONSIVE (Desktop)
    ============================= */
 @media (max-width: 576px) {
-  .addButton {
+  /* Les styles mobiles sont gérés par la classe --mobile */
+  .addButton:not(.addButton--mobile) {
     width: 100%;
     justify-content: center;
     padding: var(--tc-space-3) var(--tc-space-4);
   }
   
-  .addButton--sm {
+  .addButton--sm:not(.addButton--mobile) {
     padding: var(--tc-space-2) var(--tc-space-3);
   }
   
-  .addButton--lg {
+  .addButton--lg:not(.addButton--mobile) {
     padding: var(--tc-space-4) var(--tc-space-6);
   }
 }

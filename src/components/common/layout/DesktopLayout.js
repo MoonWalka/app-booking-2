@@ -133,22 +133,7 @@ function DesktopLayout({ children }) {
           </div>
         </nav>
 
-        {/* Bottom Navigation Mobile */}
-        <nav className={layoutStyles.bottomNav}>
-          {navItems.slice(0, 5).map((item) => (
-            <NavLink 
-              key={item.to}
-              to={item.to} 
-              end={item.end}
-              className={({ isActive }) => 
-                `${layoutStyles.bottomNavItem} ${isActive ? layoutStyles.bottomNavActive : ''}`
-              }
-            >
-              <i className={`bi ${item.icon}`}></i>
-              <span className={layoutStyles.bottomNavLabel}>{item.label}</span>
-            </NavLink>
-          ))}
-        </nav>
+        {/* Bottom Navigation Mobile - Supprimée pour utiliser les boutons flottants */}
 
         {/* Contenu principal mobile */}
         <main className={`${layoutStyles.content} ${layoutStyles.mobileContent} ${

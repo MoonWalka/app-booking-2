@@ -2,7 +2,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import ListWithFilters from '@/components/ui/ListWithFilters';
-import { ActionButtons, AddButton } from '@/components/ui/ActionButtons';
+import { ActionButtons } from '@/components/ui/ActionButtons';
+import AddButton from '@/components/ui/AddButton';
 import { useDeleteProgrammateur } from '@/hooks/programmateurs';
 
 /**

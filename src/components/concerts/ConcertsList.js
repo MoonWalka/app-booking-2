@@ -2,7 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import ListWithFilters from '@/components/ui/ListWithFilters';
-import { AddButton } from '@/components/ui/ActionButtons';
+import AddButton from '@/components/ui/AddButton';
 import StatusBadge from '@/components/ui/StatusBadge';
 // import { useConcertDelete } from '@/hooks/concerts'; // Pour extension future
 import { useConcertListData } from '@/hooks/concerts/useConcertListData';

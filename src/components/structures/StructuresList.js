@@ -3,6 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import ListWithFilters from '@/components/ui/ListWithFilters';
 import Button from '@/components/ui/Button';
+import AddButton from '@/components/ui/AddButton';
 import { useDeleteStructure } from '@/hooks/structures';
 
 /**
@@ -122,12 +123,10 @@ function StructuresList() {
 
   // Actions de l'en-tête
   const headerActions = (
-    <Button
-      variant="primary"
+    <AddButton
       onClick={() => navigate('/structures/nouveau')}
-    >
-      <i className="bi bi-plus"></i> Nouvelle structure
-    </Button>
+      buttonText="Nouvelle structure"
+    />
   );
 
   // Gestion du clic sur une ligne

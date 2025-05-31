@@ -10,8 +10,8 @@ const OrganizationSelector = ({ className = '' }) => {
     loading 
   } = useOrganization();
 
-  // Ne pas afficher si l'utilisateur n'a qu'une seule organisation
-  if (!userOrgs || userOrgs.length <= 1) {
+  // Si l'utilisateur n'a pas d'organisations
+  if (!userOrgs || userOrgs.length === 0) {
     return null;
   }
 
@@ -34,6 +34,30 @@ const OrganizationSelector = ({ className = '' }) => {
     );
   }
 
+  // Si une seule organisation, afficher en lecture seule
+  if (userOrgs.length === 1) {
+    const org = userOrgs[0];
+    return (
+      <div className={`organization-selector ${className}`}>
+        <div className="d-flex align-items-center">
+          <i className="bi bi-building me-2"></i>
+          <span className="text-light fw-medium">
+            {org.name}
+            {org.userRole === 'owner' && ' (Propriétaire)'}
+            {org.userRole === 'admin' && ' (Admin)'}
+          </span>
+        </div>
+        
+        {org && (
+          <small className="text-muted d-block mt-1">
+            {org.settings?.timezone || 'Europe/Paris'} • {org.settings?.currency || 'EUR'}
+          </small>
+        )}
+      </div>
+    );
+  }
+
+  // Plusieurs organisations, afficher le sélecteur
   return (
     <div className={`organization-selector ${className}`}>
       <div className="d-flex align-items-center">

@@ -10,7 +10,10 @@ export const ActionButtons = ({ onView, onEdit, onDelete, disabled = false }) =>
       {onView && (
         <button
           className={`${styles.actionButton} ${styles.primary}`}
-          onClick={onView}
+          onClick={(e) => {
+            e.stopPropagation();
+            onView();
+          }}
           title="Voir les détails"
           disabled={disabled}
         >
@@ -20,7 +23,10 @@ export const ActionButtons = ({ onView, onEdit, onDelete, disabled = false }) =>
       {onEdit && (
         <button
           className={`${styles.actionButton} ${styles.secondary}`}
-          onClick={onEdit}
+          onClick={(e) => {
+            e.stopPropagation();
+            onEdit();
+          }}
           title="Modifier"
           disabled={disabled}
         >
@@ -30,7 +36,10 @@ export const ActionButtons = ({ onView, onEdit, onDelete, disabled = false }) =>
       {onDelete && (
         <button
           className={`${styles.actionButton} ${styles.danger}`}
-          onClick={onDelete}
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete();
+          }}
           title="Supprimer"
           disabled={disabled}
         >

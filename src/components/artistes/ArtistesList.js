@@ -1,5 +1,5 @@
 // src/components/artistes/ArtistesList.js
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ListWithFilters from '@/components/ui/ListWithFilters';
 import { ActionButtons } from '@/components/ui/ActionButtons';
@@ -12,7 +12,14 @@ import { useDeleteArtiste } from '@/hooks/artistes';
  */
 function ArtistesList() {
   const navigate = useNavigate();
-  const { handleDelete } = useDeleteArtiste();
+  const [refreshKey, setRefreshKey] = useState(0);
+  
+  // Callback appelé après suppression réussie pour actualiser la liste
+  const onDeleteSuccess = () => {
+    setRefreshKey(prev => prev + 1); // Force le re-render de ListWithFilters
+  };
+  
+  const { handleDelete } = useDeleteArtiste(onDeleteSuccess);
 
   // Configuration des colonnes pour les artistes
   const columns = [
@@ -191,6 +198,7 @@ function ArtistesList() {
 
   return (
     <ListWithFilters
+      key={refreshKey}
       entityType="artistes"
       title="Gestion des Artistes"
       columns={columns}

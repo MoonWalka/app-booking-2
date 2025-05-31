@@ -1,5 +1,5 @@
 // src/components/structures/StructuresList.js
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ListWithFilters from '@/components/ui/ListWithFilters';
 import Button from '@/components/ui/Button';
@@ -12,7 +12,14 @@ import { useDeleteStructure } from '@/hooks/structures';
  */
 function StructuresList() {
   const navigate = useNavigate();
-  const { handleDelete } = useDeleteStructure();
+  const [refreshKey, setRefreshKey] = useState(0);
+  
+  // Callback appelé après suppression réussie pour actualiser la liste
+  const onDeleteSuccess = () => {
+    setRefreshKey(prev => prev + 1); // Force le re-render de ListWithFilters
+  };
+  
+  const { handleDelete } = useDeleteStructure(onDeleteSuccess);
 
   // Configuration des colonnes pour les structures
   const columns = [
@@ -136,6 +143,7 @@ function StructuresList() {
 
   return (
     <ListWithFilters
+      key={refreshKey}
       entityType="structures"
       title="Gestion des Structures"
       columns={columns}

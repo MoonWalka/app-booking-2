@@ -1,5 +1,5 @@
 // src/components/lieux/LieuxList.js
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ListWithFilters from '@/components/ui/ListWithFilters';
 import Button from '@/components/ui/Button';
@@ -14,7 +14,14 @@ import { useLieuDelete } from '@/hooks/lieux';
  */
 function LieuxList() {
   const navigate = useNavigate();
-  const { handleDeleteLieu } = useLieuDelete();
+  const [refreshKey, setRefreshKey] = useState(0);
+  
+  // Callback appelé après suppression réussie pour actualiser la liste
+  const onDeleteSuccess = () => {
+    setRefreshKey(prev => prev + 1); // Force le re-render de ListWithFilters
+  };
+  
+  const { handleDeleteLieu } = useLieuDelete(onDeleteSuccess);
 
   // Configuration des colonnes pour les lieux
   const columns = [
@@ -142,6 +149,7 @@ function LieuxList() {
 
   return (
     <ListWithFilters
+      key={refreshKey}
       entityType="lieux"
       title="Gestion des Lieux"
       columns={columns}

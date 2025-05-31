@@ -227,7 +227,7 @@ describe('PersistenceService - Tests Complets', () => {
     });
   });
 
-  describe('⚠️ Gestion d'Erreurs', () => {
+  describe('⚠️ Gestion d\'Erreurs', () => {
     
     test('Erreur JSON.parse - Récupération gracieuse', () => {
       // Simuler des données corrompues
@@ -253,7 +253,7 @@ describe('PersistenceService - Tests Complets', () => {
       expect(result).toBe(false);
     });
   });
-});
+
 
 describe('🎣 Hook usePersistence', () => {
   
@@ -280,6 +280,8 @@ describe('🎣 Hook usePersistence', () => {
     expect(typeof persistence.getStats).toBe('function');
     expect(typeof persistence.cleanup).toBe('function');
   });
+});
+
 });
 
 describe('🔗 Intégration avec UtilityCache', () => {

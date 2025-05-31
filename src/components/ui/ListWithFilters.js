@@ -249,28 +249,35 @@ const ListWithFilters = ({
 
   // Rendu des cartes mobiles
   const renderMobileCards = () => (
-    <div className={styles.mobileCardsContainer}>
+    <div style={{ display: 'block', width: '100%' }}>
       {items.map(item => (
         <div
           key={item.id}
-          className={styles.mobileCard}
+          style={{
+            backgroundColor: 'white',
+            border: '1px solid #ddd',
+            borderRadius: '8px',
+            padding: '16px',
+            margin: '12px 0',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+          }}
           onClick={onRowClick ? () => onRowClick(item) : undefined}
         >
-          <div className={styles.mobileCardHeader}>
-            <h3 className={styles.mobileCardTitle}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <h3 style={{ margin: '0 0 8px 0', fontSize: '18px' }}>
               {columns[0]?.render ? columns[0].render(item) : item[columns[0]?.field] || 'Sans titre'}
             </h3>
             {renderActions && (
-              <div className={styles.mobileCardActions}>
+              <div style={{ marginLeft: '12px' }}>
                 {renderActions(item)}
               </div>
             )}
           </div>
-          <div className={styles.mobileCardContent}>
-            {columns.slice(1, 5).map(column => (
-              <div key={column.id} className={styles.mobileCardField}>
-                <span className={styles.mobileCardFieldLabel}>{column.label}</span>
-                <span className={styles.mobileCardFieldValue}>
+          <div style={{ marginTop: '8px' }}>
+            {columns.slice(1, 4).map(column => (
+              <div key={column.id} style={{ marginBottom: '4px', fontSize: '14px' }}>
+                <span style={{ fontWeight: '500', color: '#666' }}>{column.label}: </span>
+                <span>
                   {column.render ? column.render(item) : item[column.field] || '-'}
                 </span>
               </div>

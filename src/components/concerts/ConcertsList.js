@@ -46,10 +46,6 @@ function ConcertsList() {
     getStatusMessage
   } = useConcertStatus();
 
-  // Diagnostic désactivé - problème résolu
-  // useEffect(() => {
-  //   console.log('🎭 Concerts list initialized with specialized hooks');
-  // }, []);
 
   // Configuration des colonnes pour les concerts
   const columns = [
@@ -99,8 +95,9 @@ function ConcertsList() {
         const statusDetails = getStatusDetails(concert);
         const statusMessage = getStatusMessage(concert);
         
+        const validVariant = statusDetails?.variant === 'light' ? 'secondary' : (statusDetails?.variant || 'secondary');
         return (
-          <StatusBadge status={statut} variant={statusDetails?.variant || 'secondary'}>
+          <StatusBadge status={statut} variant={validVariant}>
             {statusDetails?.icon} {statusMessage?.message || statusDetails?.label || 'Contact'}
           </StatusBadge>
         );

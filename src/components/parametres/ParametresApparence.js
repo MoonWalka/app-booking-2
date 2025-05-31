@@ -3,15 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Card from '@components/ui/Card';
 import Button from '@components/ui/Button';
 import ErrorMessage from '@components/ui/ErrorMessage';
-// Import des composants React Bootstrap
-import { Form, Row, Col } from 'react-bootstrap';
-
-/* 
- * Note: les importations ont été mises à jour le 20/05/2025
- * Les anciens imports de @ui/... ont été remplacés par:
- * 1. @components/ui/... pour les composants UI personnalisés TourCraft
- * 2. react-bootstrap pour les composants de formulaire standards
- */
+import FormField from '@components/ui/FormField';
 
 // Import de votre CSS module
 import styles from './ParametresApparence.module.css';
@@ -108,124 +100,129 @@ const ParametresApparence = () => {
   }
 
   return (
-    <Card className={styles.card}>
-      <Card.Header className={styles.cardHeader}>
-        <Card.Title className={styles.cardTitle}>Apparence</Card.Title>
-      </Card.Header>
-      <Card.Body className={styles.cardBody}>
-        {success && <ErrorMessage variant="success" className={styles.successAlert}>{success}</ErrorMessage>}
-        
-        <Form onSubmit={handleSubmit} className={styles.form}>
-          <Row>
-            <Col md={6}>
-              <Form.Group className={styles.formGroup}>
-                <Form.Label className={styles.formLabel}>Thème</Form.Label>
-                <Form.Select
-                  name="theme"
-                  value={localState.theme}
-                  onChange={handleChange}
-                  className={styles.formControl}
-                >
+    <Card 
+      title="Apparence"
+      icon={<i className="bi bi-palette"></i>}
+      className={styles.card}
+    >
+      {success && (
+        <ErrorMessage variant="success" className={styles.successAlert}>
+          {success}
+        </ErrorMessage>
+      )}
+      
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <div className={styles.formGrid}>
+          <div className={styles.formColumn}>
+            <FormField
+              type="select"
+              label="Thème"
+              name="theme"
+              value={localState.theme}
+              onChange={handleChange}
+              className={styles.formControl}
+            >
               <option value="light">Clair</option>
               <option value="dark">Sombre</option>
               <option value="system">Système</option>
-            </Form.Select>
-          </Form.Group>
-            </Col>
-            
-            <Col md={6}>
-              <Form.Group className={styles.formGroup}>
-                <Form.Label className={styles.formLabel}>Couleur principale</Form.Label>
-                <div className={styles.colorPreviewContainer}>
-                  <div 
-                    id="colorPreview" 
-                    className={styles.colorPreview} 
-                    style={{ '--preview-color': localState.couleurPrincipale }}
-                  />
-                  <Form.Control
-                    type="color"
-                    name="couleurPrincipale"
-                    value={localState.couleurPrincipale}
-                    onChange={handleChange}
-                    className={styles.colorPicker}
-                  />
-                  <Form.Control
-                    type="text"
-                    value={localState.couleurPrincipale}
-                    onChange={handleChange}
-                    name="couleurPrincipale"
-                    pattern="^#[0-9A-Fa-f]{6}$"
-                    className={styles.colorInput}
-                  />
-                </div>
-              </Form.Group>
-            </Col>
-          </Row>
+            </FormField>
 
-          <Row>
-            <Col md={6}>
-              <Form.Group className={styles.formGroup}>
-                <Form.Label className={styles.formLabel}>Taille de police (px)</Form.Label>
-                <div className={styles.fontSizeContainer}>
-                  <Form.Range
-                    name="taillePolicePx"
-                    value={localState.taillePolicePx}
-                    onChange={handleChange}
-                    min="12"
-                    max="24"
-                    step="1"
-                    className={styles.fontSizeSlider}
-                  />
-                  <span className={styles.fontSizeValue}>{localState.taillePolicePx}px</span>
-                </div>
-              </Form.Group>
-            </Col>
-            
-            <Col md={6}>
-              <Form.Group className={styles.formGroup}>
-                <Form.Label className={styles.formLabel}>Position du menu</Form.Label>
-                <Form.Select
-                  name="menuPosition"
-                  value={localState.menuPosition}
+            <div className={styles.formGroup}>
+              <label className={styles.formLabel}>Taille de police</label>
+              <div className={styles.fontSizeContainer}>
+                <input
+                  type="range"
+                  name="taillePolicePx"
+                  value={localState.taillePolicePx}
                   onChange={handleChange}
-                  className={styles.formControl}
-                >
-                  <option value="left">Gauche</option>
-                  <option value="top">Haut</option>
-                </Form.Select>
-              </Form.Group>
-            </Col>
-          </Row>
+                  min="12"
+                  max="24"
+                  step="1"
+                  className={styles.fontSizeSlider}
+                />
+                <span className={styles.fontSizeValue}>{localState.taillePolicePx}px</span>
+              </div>
+              <span className={styles.helpText}>Ajuster la taille du texte dans l'interface</span>
+            </div>
+          </div>
 
-          <Form.Group className={styles.formGroup}>
-            <Form.Check 
-              type="switch"
-              id="animations"
-              label="Animations"
-              name="animations"
-              checked={localState.animations}
+          <div className={styles.formColumn}>
+            <div className={styles.formGroup}>
+              <label className={styles.formLabel}>Couleur principale</label>
+              <div className={styles.colorPreviewContainer}>
+                <div 
+                  className={styles.colorPreview} 
+                  style={{ backgroundColor: localState.couleurPrincipale }}
+                />
+                <input
+                  type="color"
+                  name="couleurPrincipale"
+                  value={localState.couleurPrincipale}
+                  onChange={handleChange}
+                  className={styles.colorPicker}
+                />
+                <input
+                  type="text"
+                  value={localState.couleurPrincipale}
+                  onChange={handleChange}
+                  name="couleurPrincipale"
+                  pattern="^#[0-9A-Fa-f]{6}$"
+                  className={styles.colorInput}
+                  placeholder="#1e3a5f"
+                />
+              </div>
+              <span className={styles.helpText}>Personnaliser la couleur d'accent de l'application</span>
+            </div>
+
+            <FormField
+              type="select"
+              label="Position du menu"
+              name="menuPosition"
+              value={localState.menuPosition}
               onChange={handleChange}
-              className={styles.formCheck}
-            />
-            <Form.Text className={styles.formText}>
+              className={styles.formControl}
+            >
+              <option value="left">Gauche</option>
+              <option value="top">Haut</option>
+            </FormField>
+          </div>
+        </div>
+
+        <div className={styles.switchSection}>
+          <div className={styles.switchGroup}>
+            <label className={styles.switchLabel}>
+              <input
+                type="checkbox"
+                name="animations"
+                checked={localState.animations}
+                onChange={handleChange}
+                className={styles.switch}
+              />
+              <span className={styles.switchSlider}></span>
+              <span className={styles.switchText}>Animations</span>
+            </label>
+            <span className={styles.helpText}>
               Activer/désactiver les animations de l'interface
-            </Form.Text>
-          </Form.Group>
+            </span>
+          </div>
 
-          <Form.Group className={styles.formGroup}>
-            <Form.Check 
-              type="switch"
-              id="compactMode"
-              label="Mode compact"
-              name="compactMode"
-              checked={localState.compactMode}
-              onChange={handleChange}
-              className={styles.formCheck}
-            />
-            <Form.Text className={styles.formText}>
+          <div className={styles.switchGroup}>
+            <label className={styles.switchLabel}>
+              <input
+                type="checkbox"
+                name="compactMode"
+                checked={localState.compactMode}
+                onChange={handleChange}
+                className={styles.switch}
+              />
+              <span className={styles.switchSlider}></span>
+              <span className={styles.switchText}>Mode compact</span>
+            </label>
+            <span className={styles.helpText}>
               Réduire l'espacement entre les éléments
-            </Form.Text>
-          </Form.Group>
+            </span>
+          </div>
+        </div>
 
           <div className={styles.actionButtons}>
             <div className={styles.resetButtonsGroup}>
@@ -252,8 +249,7 @@ const ParametresApparence = () => {
               Enregistrer les préférences
             </Button>
           </div>
-        </Form>
-      </Card.Body>
+        </form>
     </Card>
   );
 };

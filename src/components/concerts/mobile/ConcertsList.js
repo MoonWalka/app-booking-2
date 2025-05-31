@@ -1,13 +1,12 @@
 // src/components/concerts/mobile/ConcertsList.js
-import React from 'react';
-import UnderConstruction from '@/components/common/UnderConstruction';
+import ConcertsListMain from '../ConcertsList';
 
 /**
  * Version mobile de la liste des concerts
- * Actuellement affiche un message "en construction"
+ * Utilise le composant principal qui est déjà responsive avec ListWithFilters
  */
-const ConcertsList = () => {
-  return <UnderConstruction />;
+const ConcertsList = (props) => {
+  return <ConcertsListMain {...props} />;
 };
 
 export default ConcertsList;

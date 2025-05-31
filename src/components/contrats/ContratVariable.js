@@ -22,7 +22,7 @@ const ContratVariable = ({ name, description, onInsert }) => {
         role="button" 
         tabIndex={0}
       >
-        <div className={styles.variableName}>{`[${name}]`}</div>
+        <div className={styles.variableName}>{`{${name}}`}</div>
         <div className={styles.variableDescription}>{description}</div>
       </div>
     );
@@ -37,7 +37,7 @@ const ContratVariable = ({ name, description, onInsert }) => {
         onClick={() => onInsert(name)}
       >
         <div>
-          <span className={styles.variableName}>{`[${name}]`}</span>
+          <span className={styles.variableName}>{`{${name}}`}</span>
           <small className={styles.variableDescription}>{description}</small>
         </div>
         <i className="bi bi-plus-circle-dotted"></i>

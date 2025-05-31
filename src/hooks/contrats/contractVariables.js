@@ -200,7 +200,9 @@ export const templateTypes = [
 export const replaceVariablesWithMockData = (content) => {
   if (!content) return '';
   
+  // Support des deux formats : {variable} et [variable]
   return content
+    // Format avec accolades
     .replace(/{programmateur_nom}/g, 'Jean Dupont')
     .replace(/{programmateur_structure}/g, 'Association Culturelle XYZ')
     .replace(/{programmateur_email}/g, 'contact@asso-xyz.fr')
@@ -223,5 +225,47 @@ export const replaceVariablesWithMockData = (content) => {
     .replace(/{date_jour}/g, '30')
     .replace(/{date_mois}/g, '04')
     .replace(/{date_annee}/g, '2025')
-    .replace(/{date_complete}/g, '30/04/2025');
+    .replace(/{date_complete}/g, '30/04/2025')
+    // Variables structure
+    .replace(/{structure_nom}/g, 'Association Culturelle XYZ')
+    .replace(/{structure_siret}/g, '987 654 321 00098')
+    .replace(/{structure_adresse}/g, '789 Avenue des Arts')
+    .replace(/{structure_code_postal}/g, '75003')
+    .replace(/{structure_ville}/g, 'Paris')
+    .replace(/{structure_email}/g, 'structure@asso-xyz.fr')
+    .replace(/{structure_telephone}/g, '01 23 45 67 89')
+    .replace(/{structure_type}/g, 'Association')
+    // Format avec crochets (pour compatibilité)
+    .replace(/\[programmateur_nom\]/g, 'Jean Dupont')
+    .replace(/\[programmateur_structure\]/g, 'Association Culturelle XYZ')
+    .replace(/\[programmateur_email\]/g, 'contact@asso-xyz.fr')
+    .replace(/\[programmateur_siret\]/g, '123 456 789 00012')
+    .replace(/\[programmateur_numero_intracommunautaire\]/g, 'FR12345678901')
+    .replace(/\[programmateur_adresse\]/g, '456 Rue des Spectacles, 75002 Paris')
+    .replace(/\[programmateur_representant\]/g, 'Marie Martin')
+    .replace(/\[programmateur_qualite_representant\]/g, 'Présidente')
+    .replace(/\[artiste_nom\]/g, 'Les Rockeurs du Dimanche')
+    .replace(/\[artiste_genre\]/g, 'Rock Alternatif')
+    .replace(/\[concert_titre\]/g, 'Concert de printemps')
+    .replace(/\[concert_date\]/g, '15/05/2025')
+    .replace(/\[concert_montant\]/g, '800')
+    .replace(/\[concert_montant_lettres\]/g, 'Huit cents euros')
+    .replace(/\[lieu_nom\]/g, 'Salle des fêtes')
+    .replace(/\[lieu_adresse\]/g, '123 rue Principale')
+    .replace(/\[lieu_code_postal\]/g, '75001')
+    .replace(/\[lieu_ville\]/g, 'Paris')
+    .replace(/\[lieu_capacite\]/g, '200')
+    .replace(/\[date_jour\]/g, '30')
+    .replace(/\[date_mois\]/g, '04')
+    .replace(/\[date_annee\]/g, '2025')
+    .replace(/\[date_complete\]/g, '30/04/2025')
+    // Variables structure avec crochets
+    .replace(/\[structure_nom\]/g, 'Association Culturelle XYZ')
+    .replace(/\[structure_siret\]/g, '987 654 321 00098')
+    .replace(/\[structure_adresse\]/g, '789 Avenue des Arts')
+    .replace(/\[structure_code_postal\]/g, '75003')
+    .replace(/\[structure_ville\]/g, 'Paris')
+    .replace(/\[structure_email\]/g, 'structure@asso-xyz.fr')
+    .replace(/\[structure_telephone\]/g, '01 23 45 67 89')
+    .replace(/\[structure_type\]/g, 'Association');
 };

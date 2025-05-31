@@ -34,11 +34,39 @@ const ContratGenerationActions = ({
   const replaceVariables = (content, variables) => {
     if (!content) return '';
     
-    let processedContent = content;
-    Object.entries(variables).forEach(([key, value]) => {
-      const regex = new RegExp(`\\[${key}\\]`, 'g');
-      processedContent = processedContent.replace(regex, value || '');
+    console.log('🔄 Remplacement des variables:', {
+      contentLength: content.length,
+      variablesCount: Object.keys(variables).length,
+      sampleVariables: Object.entries(variables).slice(0, 5)
     });
+    
+    let processedContent = content;
+    let replacementCount = 0;
+    
+    Object.entries(variables).forEach(([key, value]) => {
+      // Support des deux formats : {variable} et [variable]
+      // D'abord essayer avec les accolades
+      const regexCurly = new RegExp(`\\{${key}\\}`, 'g');
+      const beforeCurly = processedContent.length;
+      processedContent = processedContent.replace(regexCurly, value || '');
+      
+      if (beforeCurly !== processedContent.length) {
+        replacementCount++;
+        console.log(`✅ Remplacé {${key}} par "${value}"`);
+      }
+      
+      // Ensuite essayer avec les crochets (pour compatibilité)
+      const regexSquare = new RegExp(`\\[${key}\\]`, 'g');
+      const beforeSquare = processedContent.length;
+      processedContent = processedContent.replace(regexSquare, value || '');
+      
+      if (beforeSquare !== processedContent.length) {
+        replacementCount++;
+        console.log(`✅ Remplacé [${key}] par "${value}"`);
+      }
+    });
+    
+    console.log(`📊 Total remplacements: ${replacementCount}`);
     return processedContent;
   };
 
@@ -47,9 +75,17 @@ const ContratGenerationActions = ({
     if (!isValid) return;
     
     const variables = prepareContractVariables ? prepareContractVariables() : {};
+    console.log('📋 Variables préparées:', variables);
     
     // Combiner tous les contenus du template
     let fullContent = '';
+    
+    // Debug: Vérifier le contenu brut
+    console.log('📄 Contenu brut du template:', {
+      bodyContentSample: selectedTemplate.bodyContent?.substring(0, 200),
+      hasSquareBrackets: selectedTemplate.bodyContent?.includes('['),
+      hasCurlyBraces: selectedTemplate.bodyContent?.includes('{')
+    });
     
     if (selectedTemplate.headerContent) {
       fullContent += `<div class="contract-header">${selectedTemplate.headerContent}</div>`;

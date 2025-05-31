@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from './ContratTemplatePreview.module.css';
+import { replaceVariablesWithMockData } from '@/hooks/contrats/contractVariables';
 
 /**
  * Composant d'aperçu du modèle de contrat
@@ -34,7 +35,7 @@ const ContratTemplatePreview = ({ selectedTemplate }) => {
           <div className={styles.templateSectionPreview}>
             <div className={styles.sectionLabel}>En-tête :</div>
             {selectedTemplate.headerContent ? (
-              <div dangerouslySetInnerHTML={{ __html: selectedTemplate.headerContent }} />
+              <div dangerouslySetInnerHTML={{ __html: replaceVariablesWithMockData(selectedTemplate.headerContent) }} />
             ) : (
               <span className="text-muted">(Aucun en-tête)</span>
             )}
@@ -42,7 +43,7 @@ const ContratTemplatePreview = ({ selectedTemplate }) => {
           <div className={styles.templateSectionPreview}>
             <div className={styles.sectionLabel}>Corps :</div>
             {selectedTemplate.bodyContent ? (
-              <div dangerouslySetInnerHTML={{ __html: selectedTemplate.bodyContent }} />
+              <div dangerouslySetInnerHTML={{ __html: replaceVariablesWithMockData(selectedTemplate.bodyContent) }} />
             ) : (
               <span className="text-danger">(Aucun contenu principal)</span>
             )}
@@ -50,7 +51,7 @@ const ContratTemplatePreview = ({ selectedTemplate }) => {
           <div className={styles.templateSectionPreview}>
             <div className={styles.sectionLabel}>Pied de page :</div>
             {selectedTemplate.footerContent ? (
-              <div dangerouslySetInnerHTML={{ __html: selectedTemplate.footerContent }} />
+              <div dangerouslySetInnerHTML={{ __html: replaceVariablesWithMockData(selectedTemplate.footerContent) }} />
             ) : (
               <span className="text-muted">(Aucun pied de page)</span>
             )}
@@ -58,7 +59,7 @@ const ContratTemplatePreview = ({ selectedTemplate }) => {
           <div className={styles.templateSectionPreview}>
             <div className={styles.sectionLabel}>Signature :</div>
             {selectedTemplate.signatureTemplate ? (
-              <div dangerouslySetInnerHTML={{ __html: selectedTemplate.signatureTemplate }} />
+              <div dangerouslySetInnerHTML={{ __html: replaceVariablesWithMockData(selectedTemplate.signatureTemplate) }} />
             ) : (
               <span className="text-muted">(Aucune section signature)</span>
             )}

@@ -292,8 +292,21 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
           try {
             const structureDoc = await getDoc(doc(db, 'structures', programmateur.structureId));
             if (structureDoc.exists()) {
-              console.log("Structure trouvée, données:", structureDoc.data());
-              setStructureData(structureDoc.data());
+              const data = structureDoc.data();
+              console.log("Structure trouvée, données complètes:", data);
+              console.log("🏢 Structure - Champs disponibles:", {
+                nom: data.nom,
+                raisonSociale: data.raisonSociale,
+                adresse: data.adresse,
+                codePostal: data.codePostal,
+                ville: data.ville,
+                pays: data.pays,
+                siret: data.siret,
+                email: data.email,
+                telephone: data.telephone,
+                type: data.type
+              });
+              setStructureData(data);
             } else {
               console.warn("Structure non trouvée avec l'ID:", programmateur.structureId);
             }
@@ -363,6 +376,18 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
     setSelectedTemplateId(e.target.value);
   };
   
+  // Fonction utilitaire pour sécuriser les valeurs
+  const safeStringValue = (value, fallback = 'Non spécifié') => {
+    if (value === null || value === undefined) return fallback;
+    if (typeof value === 'string') return value;
+    if (typeof value === 'number') return value.toString();
+    if (typeof value === 'object') {
+      console.warn('⚠️ Tentative d\'affichage d\'un objet comme string:', value);
+      return fallback;
+    }
+    return String(value);
+  };
+
   // Fonction pour préparer les variables du contrat
   const prepareContractVariables = () => {
     console.log("Préparation des variables du contrat");
@@ -531,6 +556,38 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
       lieu_code_postal: lieu?.codePostal || lieu?.code_postal || 'Non spécifié',
       lieu_ville: lieu?.ville || 'Non spécifiée',
       lieu_capacite: lieu?.capacite || 'Non spécifiée',
+      
+      // Variables structure
+      structure_nom: safeStringValue(structureData?.nom || structureData?.raisonSociale || programmateur?.structure, 'Non spécifiée'),
+      structure_siret: safeStringValue(structureData?.siret, 'Non spécifié'),
+      structure_adresse: (() => {
+        // L'adresse est un objet avec {adresse, codePostal, ville, pays}
+        if (structureData?.adresse && typeof structureData.adresse === 'object') {
+          return safeStringValue(structureData.adresse.adresse, 'Non spécifiée');
+        }
+        return safeStringValue(structureData?.adresse, 'Non spécifiée');
+      })(),
+      structure_code_postal: (() => {
+        if (structureData?.adresse && typeof structureData.adresse === 'object') {
+          return safeStringValue(structureData.adresse.codePostal, 'Non spécifié');
+        }
+        return safeStringValue(structureData?.codePostal, 'Non spécifié');
+      })(),
+      structure_ville: (() => {
+        if (structureData?.adresse && typeof structureData.adresse === 'object') {
+          return safeStringValue(structureData.adresse.ville, 'Non spécifiée');
+        }
+        return safeStringValue(structureData?.ville, 'Non spécifiée');
+      })(),
+      structure_pays: (() => {
+        if (structureData?.adresse && typeof structureData.adresse === 'object') {
+          return safeStringValue(structureData.adresse.pays, 'France');
+        }
+        return safeStringValue(structureData?.pays, 'France');
+      })(),
+      structure_email: safeStringValue(structureData?.email, 'Non spécifié'),
+      structure_telephone: safeStringValue(structureData?.telephone, 'Non spécifié'),
+      structure_type: safeStringValue(structureData?.type, 'Non spécifié'),
       
       // Variables de date
       date_jour: new Date().getDate().toString(),

@@ -252,6 +252,38 @@ const prepareContractVariables = (safeData) => {
     'lieu_ville': safeData.lieu?.ville || 'Non spécifiée',
     'lieu_capacite': safeData.lieu?.capacite || 'Non spécifiée',
     
+    // Variables structure (utiliser les données du programmateur si pas de structure séparée)
+    'structure_nom': safeData.structure?.nom || safeData.structure?.raisonSociale || safeData.programmateur?.structure || 'Non spécifiée',
+    'structure_siret': safeData.structure?.siret || safeData.programmateur?.siret || 'Non spécifié',
+    'structure_adresse': (() => {
+      // L'adresse peut être un objet avec {adresse, codePostal, ville, pays}
+      if (safeData.structure?.adresse && typeof safeData.structure.adresse === 'object') {
+        return safeData.structure.adresse.adresse || 'Non spécifiée';
+      }
+      return safeData.structure?.adresse || safeData.programmateur?.adresse || 'Non spécifiée';
+    })(),
+    'structure_code_postal': (() => {
+      if (safeData.structure?.adresse && typeof safeData.structure.adresse === 'object') {
+        return safeData.structure.adresse.codePostal || 'Non spécifié';
+      }
+      return safeData.structure?.codePostal || 'Non spécifié';
+    })(),
+    'structure_ville': (() => {
+      if (safeData.structure?.adresse && typeof safeData.structure.adresse === 'object') {
+        return safeData.structure.adresse.ville || 'Non spécifiée';
+      }
+      return safeData.structure?.ville || 'Non spécifiée';
+    })(),
+    'structure_pays': (() => {
+      if (safeData.structure?.adresse && typeof safeData.structure.adresse === 'object') {
+        return safeData.structure.adresse.pays || 'France';
+      }
+      return safeData.structure?.pays || 'France';
+    })(),
+    'structure_email': safeData.structure?.email || 'Non spécifié',
+    'structure_telephone': safeData.structure?.telephone || 'Non spécifié',
+    'structure_type': safeData.structure?.type || 'Non spécifié',
+    
     // Variables de date
     'date_jour': format(new Date(), "dd", { locale: fr }),
     'date_mois': format(new Date(), "MMMM", { locale: fr }),
@@ -273,14 +305,38 @@ const prepareContractVariables = (safeData) => {
 const replaceVariables = (content, variables) => {
   if (!content) return '';
   
+  console.log('🔄 [PDF] Remplacement des variables:', {
+    contentLength: content.length,
+    variablesCount: Object.keys(variables).length,
+    sampleVariables: Object.entries(variables).slice(0, 5)
+  });
+  
   let processedContent = content;
+  let replacementCount = 0;
   
   // Remplacer toutes les variables possibles
   Object.entries(variables).forEach(([key, value]) => {
-    // Utiliser des crochets carrés au lieu des accolades
-    const regex = new RegExp(`\\[${key}\\]`, 'g');
-    processedContent = processedContent.replace(regex, value || '');
+    // Support des deux formats : {variable} et [variable]
+    // D'abord essayer avec les accolades
+    const regexCurly = new RegExp(`\\{${key}\\}`, 'g');
+    const beforeCurly = processedContent.length;
+    processedContent = processedContent.replace(regexCurly, value || '');
+    
+    if (beforeCurly !== processedContent.length) {
+      replacementCount++;
+    }
+    
+    // Ensuite essayer avec les crochets (pour compatibilité)
+    const regexSquare = new RegExp(`\\[${key}\\]`, 'g');
+    const beforeSquare = processedContent.length;
+    processedContent = processedContent.replace(regexSquare, value || '');
+    
+    if (beforeSquare !== processedContent.length) {
+      replacementCount++;
+    }
   });
+  
+  console.log(`📊 [PDF] Total remplacements: ${replacementCount}`);
   
   return processedContent;
 };

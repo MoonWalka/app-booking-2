@@ -81,8 +81,28 @@ export const usePdfPreview = () => {
         return;
       }
 
-      // Générer un titre pour le PDF
-      const pdfTitle = `Contrat_${data.concert?.titre || 'Concert'}_${new Date().toISOString().slice(0, 10)}`;
+      // Générer un titre au format "nom_du_concert date_du_concert"
+      const concertName = data.concert?.titre || 'Concert';
+      let concertDate = '';
+      
+      if (data.concert?.date) {
+        // Gérer les différents formats de date
+        let dateObj;
+        if (typeof data.concert.date === 'string') {
+          dateObj = new Date(data.concert.date);
+        } else if (data.concert.date.seconds) {
+          // Timestamp Firestore
+          dateObj = new Date(data.concert.date.seconds * 1000);
+        } else {
+          dateObj = new Date(data.concert.date);
+        }
+        
+        if (!isNaN(dateObj.getTime())) {
+          concertDate = dateObj.toLocaleDateString('fr-FR');
+        }
+      }
+      
+      const pdfTitle = concertDate ? `${concertName} ${concertDate}` : concertName;
       console.log('[DEBUG] Titre du PDF:', pdfTitle);
       
       // Appeler la méthode statique du wrapper pour générer le PDF avec Puppeteer

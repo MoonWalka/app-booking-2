@@ -363,6 +363,14 @@ const processPageBreaks = (htmlContent) => {
  * @returns {String} - Le HTML complet du contrat
  */
 const getContratHTML = (data, title = 'Contrat', forPreview = false, editedContent = null) => {
+  // Créer un titre personnalisé au format "nom_du_concert date_du_concert" dès le début
+  const safeData = createSafeData(data);
+  const customTitle = (() => {
+    const concertName = safeData.concert?.titre || 'Concert';
+    const concertDate = safeData.concert?.date ? formatSafeDate(safeData.concert.date, "dd/MM/yyyy") : '';
+    return concertDate ? `${concertName} ${concertDate}` : concertName;
+  })();
+
   // Si on a du contenu édité, l'utiliser directement
   if (editedContent) {
     // Construire le HTML avec le contenu édité
@@ -371,8 +379,41 @@ const getContratHTML = (data, title = 'Contrat', forPreview = false, editedConte
       <html>
       <head>
         <meta charset="UTF-8">
-        <title>${title}</title>
-        <!-- Style externe contrat-print.css appliqué via Puppeteer -->
+        <title>${customTitle}</title>
+        <style>
+          /* Styles critiques pour l'aperçu web */
+          body.contrat-print-mode {
+            font-family: 'Times New Roman', serif;
+            font-size: 12pt;
+            line-height: 1.4;
+            color: #000000;
+            background-color: white;
+            margin: 20px;
+            padding: 0;
+          }
+          .contrat-print-mode .preview-note {
+            background-color: #e3f2fd;
+            color: #1976d2;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin: 0 0 20px 0;
+            font-size: 11pt;
+            border-left: 4px solid #1976d2;
+          }
+          .contrat-print-mode h1, .contrat-print-mode h2, .contrat-print-mode h3 {
+            margin-top: 1.5em;
+            margin-bottom: 0.75em;
+            font-weight: bold;
+          }
+          .contrat-print-mode p {
+            margin-bottom: 0.75em;
+          }
+          @media print {
+            .contrat-print-mode .preview-note {
+              display: none !important;
+            }
+          }
+        </style>
       </head>
       <body class="contrat-print-mode">
     `;
@@ -382,7 +423,12 @@ const getContratHTML = (data, title = 'Contrat', forPreview = false, editedConte
       htmlContent += `<div class="preview-note">Aperçu du contrat - La mise en page sera identique au téléchargement PDF final</div>`;
     }
 
-    // Ajouter directement le contenu édité
+    // Ajouter le titre principal visible en premier
+    htmlContent += `<div class="contract-title" style="text-align: center; margin-bottom: 30px;">
+      <h1 style="font-size: 18pt; font-weight: bold; margin: 0; color: #000;">${customTitle}</h1>
+    </div>`;
+
+    // Ajouter directement le contenu édité (sans titre intégré)
     htmlContent += editedContent;
 
     if (forPreview) {
@@ -398,9 +444,6 @@ const getContratHTML = (data, title = 'Contrat', forPreview = false, editedConte
   }
   
   // Sinon, utiliser le processus normal
-  // Sécuriser les données
-  const safeData = createSafeData(data);
-  
   // Préparer les variables pour le remplacement
   const variables = prepareContractVariables(safeData);
   
@@ -409,8 +452,8 @@ const getContratHTML = (data, title = 'Contrat', forPreview = false, editedConte
   const bodyContent = replaceVariables(safeData.template.bodyContent || '', variables);
   const footerContent = replaceVariables(safeData.template.footerContent || '', variables);
   const signatureContent = replaceVariables(safeData.template.signatureTemplate || '', variables);
-  // Conserver titleContent pour les métadonnées du document, mais ne pas l'afficher
-  const titleContent = replaceVariables(safeData.template.titleTemplate || title, variables);
+  // Utiliser le titre personnalisé
+  const titleContent = customTitle;
   
   // Traitement des sauts de page pour l'aperçu
   let bodyContentProcessed = forPreview ? processPageBreaks(bodyContent) : bodyContent;
@@ -422,7 +465,40 @@ const getContratHTML = (data, title = 'Contrat', forPreview = false, editedConte
     <head>
       <meta charset="UTF-8">
       <title>${titleContent}</title>
-      <!-- Style externe contrat-print.css appliqué via Puppeteer -->
+      <style>
+        /* Styles critiques pour l'aperçu web */
+        body.contrat-print-mode {
+          font-family: 'Times New Roman', serif;
+          font-size: 12pt;
+          line-height: 1.4;
+          color: #000000;
+          background-color: white;
+          margin: 20px;
+          padding: 0;
+        }
+        .contrat-print-mode .preview-note {
+          background-color: #e3f2fd;
+          color: #1976d2;
+          padding: 8px 12px;
+          border-radius: 4px;
+          margin: 0 0 20px 0;
+          font-size: 11pt;
+          border-left: 4px solid #1976d2;
+        }
+        .contrat-print-mode h1, .contrat-print-mode h2, .contrat-print-mode h3 {
+          margin-top: 1.5em;
+          margin-bottom: 0.75em;
+          font-weight: bold;
+        }
+        .contrat-print-mode p {
+          margin-bottom: 0.75em;
+        }
+        @media print {
+          .contrat-print-mode .preview-note {
+            display: none !important;
+          }
+        }
+      </style>
     </head>
     <body class="contrat-print-mode">
   `;
@@ -432,7 +508,12 @@ const getContratHTML = (data, title = 'Contrat', forPreview = false, editedConte
     htmlContent += `<div class="preview-note">Aperçu du contrat - La mise en page sera identique au téléchargement PDF final</div>`;
   }
 
-  // Ajouter l'en-tête si défini
+  // Ajouter le titre principal visible en premier
+  htmlContent += `<div class="contract-title" style="text-align: center; margin-bottom: 30px;">
+    <h1 style="font-size: 18pt; font-weight: bold; margin: 0; color: #000;">${titleContent}</h1>
+  </div>`;
+
+  // Ajouter l'en-tête si défini (sans titre intégré)
   if (headerContent) {
     htmlContent += `<div class="header">`;
     if (safeData.template.logoUrl) {

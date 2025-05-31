@@ -330,6 +330,18 @@ body.contrat-print-mode {
   page-break-after: always;
 }
 
+/* ===== TITRE DU DOCUMENT ===== */
+.contrat-print-mode .document-title {
+  font-size: 20pt;
+  font-weight: bold;
+  text-align: center;
+  margin: 1em 0 1.5em 0;
+  color: #000000;
+  page-break-after: avoid;
+  border-bottom: 2px solid #000000;
+  padding-bottom: 0.5em;
+}
+
 /* ===== ÉLÉMENTS D'INTERFACE À MASQUER ===== */
 .contrat-print-mode .preview-note, 
 .contrat-print-mode .page-break::after,

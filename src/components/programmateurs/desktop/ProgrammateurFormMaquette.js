@@ -7,6 +7,7 @@ import LoadingSpinner from '@components/ui/LoadingSpinner';
 import ErrorMessage from '@components/ui/ErrorMessage';
 import useCompanySearch from '@/hooks/common/useCompanySearch';
 import useLieuSearchFixed from '@/hooks/lieux/useLieuSearchFixed';
+import DeleteProgrammateurModal from './sections/DeleteProgrammateurModal';
 import styles from './ProgrammateurFormMaquette.module.css';
 
 /**
@@ -1020,105 +1021,15 @@ const ProgrammateurFormMaquette = () => {
         </div>
       </form>
 
-      {/* Modal de suppression */}
-      {showDeleteModal && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0,0,0,0.5)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 1000
-        }}>
-          <div style={{
-            backgroundColor: 'white',
-            padding: '30px',
-            borderRadius: '12px',
-            maxWidth: '450px',
-            width: '90%',
-            boxShadow: '0 10px 25px rgba(0,0,0,0.15)'
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
-              <i className="bi bi-exclamation-triangle" style={{ 
-                color: '#f44336', 
-                fontSize: '24px', 
-                marginRight: '12px' 
-              }}></i>
-              <h3 style={{ margin: 0, color: '#213547' }}>
-                Confirmer la suppression
-              </h3>
-            </div>
-            
-            <p style={{ marginBottom: '25px', lineHeight: '1.5' }}>
-              Êtes-vous sûr de vouloir supprimer le programmateur <strong>{formData.prenom} {formData.nom}</strong> ?
-              <br />
-              <span style={{ color: '#f44336', fontSize: '14px' }}>
-                Cette action est irréversible.
-              </span>
-            </p>
-            
-            <div style={{ 
-              display: 'flex', 
-              gap: '12px', 
-              justifyContent: 'flex-end' 
-            }}>
-              <button 
-                onClick={handleCloseDeleteModal}
-                disabled={isDeleting}
-                style={{
-                  padding: '8px 20px',
-                  border: '1px solid #6b7280',
-                  backgroundColor: 'transparent',
-                  color: '#6b7280',
-                  borderRadius: '6px',
-                  cursor: 'pointer'
-                }}
-              >
-                Annuler
-              </button>
-              <button 
-                onClick={handleConfirmDelete}
-                disabled={isDeleting}
-                style={{
-                  padding: '8px 20px',
-                  border: 'none',
-                  backgroundColor: '#f44336',
-                  color: 'white',
-                  borderRadius: '6px',
-                  cursor: isDeleting ? 'not-allowed' : 'pointer',
-                  opacity: isDeleting ? 0.6 : 1,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px'
-                }}
-              >
-                {isDeleting ? (
-                  <>
-                    <div style={{
-                      width: '16px',
-                      height: '16px',
-                      border: '2px solid white',
-                      borderTopColor: 'transparent',
-                      borderRadius: '50%',
-                      animation: 'spin 1s linear infinite'
-                    }}></div>
-                    Suppression...
-                  </>
-                ) : (
-                  <>
-                    <i className="bi bi-trash"></i>
-                    Supprimer
-                  </>
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Modal de suppression utilisant le composant dédié */}
+      <DeleteProgrammateurModal
+        show={showDeleteModal}
+        onClose={handleCloseDeleteModal}
+        onConfirm={handleConfirmDelete}
+        programmateur={{ nom: formData.nom, prenom: formData.prenom }}
+        isDeleting={isDeleting}
+        hasAssociatedConcerts={concertsAssocies.length > 0}
+      />
     </div>
   );
 };

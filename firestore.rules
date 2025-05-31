@@ -8,6 +8,109 @@ service cloud.firestore {
       allow read, write: if false;
     }
     
+    // 🏢 ORGANISATIONS : Gestion des organisations
+    match /organizations/{orgId} {
+      // Lecture autorisée si l'utilisateur est membre
+      allow read: if request.auth != null && 
+                    request.auth.uid in resource.data.members;
+      
+      // Création par n'importe quel utilisateur authentifié
+      allow create: if request.auth != null &&
+                      validateOrganizationData(request.resource.data) &&
+                      request.resource.data.ownerId == request.auth.uid &&
+                      request.auth.uid in request.resource.data.members &&
+                      request.resource.data.members[request.auth.uid].role == 'owner';
+      
+      // Mise à jour par les admins/propriétaires uniquement
+      allow update: if request.auth != null &&
+                      request.auth.uid in resource.data.members &&
+                      (resource.data.members[request.auth.uid].role == 'owner' ||
+                       resource.data.members[request.auth.uid].role == 'admin') &&
+                      validateOrganizationData(request.resource.data);
+      
+      // Suppression par le propriétaire uniquement
+      allow delete: if request.auth != null &&
+                      request.auth.uid in resource.data.members &&
+                      resource.data.members[request.auth.uid].role == 'owner';
+    }
+    
+    // 👥 INDEX UTILISATEUR-ORGANISATIONS
+    match /user_organizations/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // 📧 INVITATIONS D'ORGANISATION
+    match /organization_invitations/{inviteId} {
+      // Lecture par le destinataire ou les admins de l'organisation
+      allow read: if request.auth != null && 
+                    (resource.data.email == request.auth.token.email ||
+                     isOrgAdmin(resource.data.organizationId, request.auth.uid));
+      
+      // Création par les admins de l'organisation
+      allow create: if request.auth != null &&
+                      isOrgAdmin(request.resource.data.organizationId, request.auth.uid) &&
+                      validateInvitationData(request.resource.data);
+      
+      // Mise à jour par le destinataire (accepter/refuser) ou les admins
+      allow update: if request.auth != null &&
+                      (resource.data.email == request.auth.token.email ||
+                       isOrgAdmin(resource.data.organizationId, request.auth.uid));
+      
+      // Suppression par les admins
+      allow delete: if request.auth != null &&
+                      isOrgAdmin(resource.data.organizationId, request.auth.uid);
+    }
+    
+    // 📂 COLLECTIONS ORGANISATIONNELLES (Pattern générique)
+    match /{collection}_org_{orgId}/{docId} {
+      // Règles génériques pour toutes les collections organisationnelles
+      allow read: if request.auth != null && 
+                    isOrgMember(orgId, request.auth.uid);
+      
+      allow create: if request.auth != null && 
+                      isOrgMember(orgId, request.auth.uid) &&
+                      request.resource.data.organizationId == orgId;
+      
+      allow update: if request.auth != null && 
+                      isOrgMember(orgId, request.auth.uid) &&
+                      request.resource.data.organizationId == orgId;
+      
+      allow delete: if request.auth != null && 
+                      isOrgMember(orgId, request.auth.uid);
+    }
+    
+    // 🎵 CONCERTS ORGANISATIONNELS (règles spécifiques si besoin)
+    match /concerts_org_{orgId}/{concertId} {
+      // Hérite des règles génériques ci-dessus
+      // Ajouter des règles spécifiques si nécessaire
+    }
+    
+    // 👥 PROGRAMMATEURS ORGANISATIONNELS
+    match /programmateurs_org_{orgId}/{progId} {
+      // Hérite des règles génériques
+    }
+    
+    // 🎤 ARTISTES ORGANISATIONNELS
+    match /artistes_org_{orgId}/{artisteId} {
+      // Hérite des règles génériques
+    }
+    
+    // 🏟️ LIEUX ORGANISATIONNELS
+    match /lieux_org_{orgId}/{lieuId} {
+      // Hérite des règles génériques
+    }
+    
+    // 🏢 STRUCTURES ORGANISATIONNELLES
+    match /structures_org_{orgId}/{structureId} {
+      // Hérite des règles génériques
+    }
+    
+    // 📝 CONTRATS ORGANISATIONNELS
+    match /contrats_org_{orgId}/{contratId} {
+      // Hérite des règles génériques
+    }
+    
     // 🎵 CONCERTS : Lecture publique pour affichage, écriture authentifiée
     match /concerts/{concertId} {
       allow read: if true; // Lecture publique pour l'affichage des concerts
@@ -172,5 +275,41 @@ service cloud.firestore {
            data.email.matches('.*@.*\\..*') &&
            data.createdAt is timestamp &&
            (!('role' in data) || data.role in ['user', 'admin']);
+  }
+  
+  // Vérifier si un utilisateur est membre d'une organisation
+  function isOrgMember(orgId, uid) {
+    return exists(/databases/$(database)/documents/organizations/$(orgId)) &&
+           uid in get(/databases/$(database)/documents/organizations/$(orgId)).data.members;
+  }
+  
+  // Vérifier si un utilisateur est admin/owner d'une organisation
+  function isOrgAdmin(orgId, uid) {
+    return exists(/databases/$(database)/documents/organizations/$(orgId)) &&
+           uid in get(/databases/$(database)/documents/organizations/$(orgId)).data.members &&
+           get(/databases/$(database)/documents/organizations/$(orgId)).data.members[uid].role in ['owner', 'admin'];
+  }
+  
+  // Validation des données d'organisation
+  function validateOrganizationData(data) {
+    return data.keys().hasAll(['name', 'ownerId', 'members', 'createdAt', 'isActive']) &&
+           data.name is string &&
+           data.name.size() > 0 &&
+           data.name.size() <= 100 &&
+           data.ownerId is string &&
+           data.members is map &&
+           data.createdAt is timestamp &&
+           data.isActive is bool;
+  }
+  
+  // Validation des données d'invitation
+  function validateInvitationData(data) {
+    return data.keys().hasAll(['organizationId', 'email', 'role', 'status', 'createdAt']) &&
+           data.organizationId is string &&
+           data.email is string &&
+           data.email.matches('.*@.*\\..*') &&
+           data.role in ['member', 'admin'] &&
+           data.status in ['pending', 'accepted', 'rejected', 'expired'] &&
+           data.createdAt is timestamp;
   }
 } 

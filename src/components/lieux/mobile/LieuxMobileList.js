@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Spinner from '@/components/common/Spinner';
 import Button from '@/components/ui/Button';
+import DeleteLieuModal from '@/components/lieux/desktop/sections/DeleteLieuModal';
 import { toast } from 'react-toastify';
 
 // Migration vers les hooks optimisés maintenant disponibles
@@ -16,6 +17,10 @@ import styles from './LieuxList.module.css';
 const LieuxMobileList = () => {
   const navigate = useNavigate();
   
+  // État local pour gérer la modal de suppression
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [lieuToDelete, setLieuToDelete] = useState(null);
+  
   // Use custom hooks to manage data and state
   const { lieux, loading, error, stats, setLieux } = useLieuxQuery();
   const { 
@@ -29,7 +34,7 @@ const LieuxMobileList = () => {
   } = useLieuxFilters(lieux);
 
   // Handle deletion of lieux avec notifications mobiles
-  const { handleDeleteLieu } = useLieuDelete((deletedId) => {
+  const { isDeleting, handleDeleteLieu } = useLieuDelete((deletedId) => {
     // Remove the deleted lieu from the local state
     setLieux(lieux.filter(lieu => lieu.id !== deletedId));
     
@@ -80,14 +85,21 @@ const LieuxMobileList = () => {
 
   const handleDeleteWithConfirmation = (e, lieu) => {
     e.stopPropagation();
-    
-    // Interface de confirmation mobile-friendly
-    const confirmed = window.confirm(
-      `Êtes-vous sûr de vouloir supprimer le lieu "${lieu.nom}" ?\n\nCette action est irréversible.`
-    );
-    
-    if (confirmed) {
-      handleDeleteLieu(lieu.id);
+    setLieuToDelete(lieu);
+    setShowDeleteModal(true);
+  };
+
+  // Gestionnaires pour la modal de suppression
+  const handleCloseDeleteModal = () => {
+    setShowDeleteModal(false);
+    setLieuToDelete(null);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (lieuToDelete) {
+      await handleDeleteLieu(lieuToDelete.id);
+      setShowDeleteModal(false);
+      setLieuToDelete(null);
     }
   };
 
@@ -362,6 +374,16 @@ const LieuxMobileList = () => {
           )}
         </div>
       )}
+
+      {/* Modal de suppression */}
+      <DeleteLieuModal
+        show={showDeleteModal}
+        onClose={handleCloseDeleteModal}
+        onConfirm={handleConfirmDelete}
+        lieu={lieuToDelete}
+        isDeleting={isDeleting}
+        hasAssociatedConcerts={false}
+      />
     </div>
   );
 };

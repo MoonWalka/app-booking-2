@@ -1,0 +1,214 @@
+.onboarding-flow {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.onboarding-step {
+  width: 100%;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Étape de choix */
+.choice-step .choice-card {
+  background: white;
+  border: 2px solid var(--bs-gray-200);
+  border-radius: 1rem;
+  padding: 2.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.choice-step .choice-card:hover {
+  border-color: var(--bs-primary);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.choice-step .choice-icon {
+  font-size: 4rem;
+  color: var(--bs-primary);
+  margin-bottom: 1.5rem;
+}
+
+.choice-step .choice-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--bs-dark);
+}
+
+.choice-step .choice-card p {
+  flex-grow: 1;
+  margin-bottom: 1.5rem;
+}
+
+.choice-step .choice-card .btn {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+}
+
+/* Étapes de formulaire */
+.create-step,
+.join-step {
+  background: white;
+  border-radius: 1rem;
+  padding: 2.5rem;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+}
+
+.create-step h2,
+.join-step h2 {
+  color: var(--bs-dark);
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.create-step .form-label,
+.join-step .form-label {
+  font-weight: 500;
+  color: var(--bs-gray-700);
+  margin-bottom: 0.5rem;
+}
+
+.create-step .form-control,
+.create-step .form-select,
+.join-step .form-control {
+  border: 2px solid var(--bs-gray-200);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.create-step .form-control:focus,
+.create-step .form-select:focus,
+.join-step .form-control:focus {
+  border-color: var(--bs-primary);
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1);
+}
+
+.create-step .form-control-lg,
+.join-step .form-control-lg {
+  font-size: 1.1rem;
+  padding: 1rem 1.25rem;
+}
+
+.create-step textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Boutons */
+.btn-link {
+  text-decoration: none;
+  color: var(--bs-gray-600);
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.btn-link:hover {
+  color: var(--bs-primary);
+}
+
+.btn-link:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Alertes */
+.alert {
+  border-radius: 0.5rem;
+  border: none;
+}
+
+.alert-danger {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: var(--bs-danger);
+}
+
+.alert-info {
+  background-color: rgba(13, 202, 240, 0.1);
+  color: var(--bs-info);
+}
+
+/* Mode sombre */
+@media (prefers-color-scheme: dark) {
+  .choice-step .choice-card,
+  .create-step,
+  .join-step {
+    background: var(--bs-gray-800);
+    color: var(--bs-light);
+  }
+  
+  .choice-step .choice-card {
+    border-color: var(--bs-gray-700);
+  }
+  
+  .choice-step .choice-card:hover {
+    border-color: var(--bs-primary);
+  }
+  
+  .choice-step .choice-card h3,
+  .create-step h2,
+  .join-step h2 {
+    color: var(--bs-light);
+  }
+  
+  .create-step .form-control,
+  .create-step .form-select,
+  .join-step .form-control {
+    background-color: var(--bs-gray-700);
+    border-color: var(--bs-gray-600);
+    color: var(--bs-light);
+  }
+  
+  .create-step .form-label,
+  .join-step .form-label {
+    color: var(--bs-gray-300);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .onboarding-flow {
+    padding: 1rem;
+    min-height: auto;
+  }
+  
+  .choice-step .choice-card {
+    padding: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .choice-step .choice-icon {
+    font-size: 3rem;
+  }
+  
+  .create-step,
+  .join-step {
+    padding: 1.5rem;
+  }
+  
+  .row.g-3 > .col-md-6 {
+    margin-bottom: 1rem;
+  }
+} 

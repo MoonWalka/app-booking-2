@@ -1,6 +1,8 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
+import { useOrganization } from '@/context/OrganizationContext';
+import { OnboardingFlow } from '@/components/organization';
 import Alert from '@/components/ui/Alert';
 
 /**
@@ -8,16 +10,18 @@ import Alert from '@/components/ui/Alert';
  * 
  * Ce composant protège les routes qui nécessitent une authentification.
  * Les utilisateurs non authentifiés sont redirigés vers la page de connexion.
+ * Les utilisateurs sans organisation sont dirigés vers le flux d'onboarding.
  * 
  * 🔧 FIX BOUCLE: Stabilisé pour éviter les redirections infinies
  */
 const PrivateRoute = ({ children, adminOnly = false, fallback = null }) => {
-  const { currentUser, loading, isAuthenticated, isAdmin, initialized } = useAuth();
+  const { currentUser, loading: authLoading, isAuthenticated, isAdmin, initialized } = useAuth();
+  const { loading: orgLoading, needsOnboarding, currentOrg } = useOrganization();
   const location = useLocation();
 
-  // 🔧 FIX BOUCLE: Attendre que l'authentification soit COMPLÈTEMENT initialisée
-  if (!initialized || loading) {
-    console.log('🔄 PrivateRoute - En attente d\'initialisation auth:', { initialized, loading });
+  // 🔧 FIX BOUCLE: Attendre que l'authentification ET l'organisation soient COMPLÈTEMENT initialisées
+  if (!initialized || authLoading || orgLoading) {
+    console.log('🔄 PrivateRoute - En attente d\'initialisation:', { initialized, authLoading, orgLoading });
     return (
       <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '60vh' }}>
         <div className="text-center">
@@ -41,7 +45,9 @@ const PrivateRoute = ({ children, adminOnly = false, fallback = null }) => {
     hasCurrentUser: !!currentUser,
     userUid: currentUser?.uid,
     isUserAuthenticated,
-    initialized
+    initialized,
+    needsOnboarding,
+    hasOrg: !!currentOrg
   });
 
   // 🔧 FIX BOUCLE: Éviter redirection si déjà sur /login
@@ -65,6 +71,19 @@ const PrivateRoute = ({ children, adminOnly = false, fallback = null }) => {
         replace 
       />
     );
+  }
+
+  // 🏢 Vérification si l'utilisateur a besoin du flux d'onboarding
+  if (needsOnboarding) {
+    console.log('🏢 Utilisateur nécessite onboarding - Affichage du flux');
+    
+    const handleOnboardingComplete = (orgId) => {
+      console.log('✅ Onboarding terminé, organisation créée:', orgId);
+      // Recharger la page pour mettre à jour l'état
+      window.location.reload();
+    };
+    
+    return <OnboardingFlow onComplete={handleOnboardingComplete} />;
   }
 
   // 🔧 FIX BOUCLE: Vérification admin STABLE
@@ -99,8 +118,8 @@ const PrivateRoute = ({ children, adminOnly = false, fallback = null }) => {
     );
   }
 
-  // ✅ Utilisateur authentifié avec les bonnes permissions
-  console.log('✅ PrivateRoute - Accès autorisé pour:', currentUser.email, 'vers:', location.pathname);
+  // ✅ Utilisateur authentifié avec les bonnes permissions et une organisation
+  console.log('✅ PrivateRoute - Accès autorisé pour:', currentUser.email, 'vers:', location.pathname, 'Org:', currentOrg?.name);
   
   return children;
 };

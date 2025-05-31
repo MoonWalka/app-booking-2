@@ -24,7 +24,8 @@ import {
   arrayRemove as firestoreArrayRemove,
   onSnapshot as firestoreOnSnapshot, 
   Timestamp as FirebaseTimestamp, 
-  getCountFromServer as firestoreGetCountFromServer
+  getCountFromServer as firestoreGetCountFromServer,
+  writeBatch as firestoreWriteBatch
 } from 'firebase/firestore';
 import { 
   getAuth, signInWithEmailAndPassword,
@@ -230,6 +231,7 @@ export const arrayRemove = IS_LOCAL_MODE ? getDirectMockFunction('arrayRemove') 
 export const Timestamp = IS_LOCAL_MODE ? getDirectMockFunction('Timestamp') : FirebaseTimestamp;
 export const onSnapshot = IS_LOCAL_MODE ? mockOnSnapshot : firestoreOnSnapshot;
 export const getCountFromServer = IS_LOCAL_MODE ? mockGetCountFromServer : firestoreGetCountFromServer;
+export const writeBatch = IS_LOCAL_MODE ? getDirectMockFunction('writeBatch') : firestoreWriteBatch;
 
 // Fonctions Auth
 export { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged };
@@ -243,3 +245,194 @@ export const MODE_LOCAL = IS_LOCAL_MODE;
 // Exports supplémentaires pour maintenir la compatibilité
 export const CURRENT_MODE = IS_LOCAL_MODE ? 'local' : 'production';
 export { IS_LOCAL_MODE };
+
+// =========================
+// MULTI-ORGANISATION
+// =========================
+
+// Variable pour stocker l'ID de l'organisation courante
+let currentOrganizationId = null;
+
+// Définir l'organisation courante
+export const setCurrentOrganization = (orgId) => {
+  currentOrganizationId = orgId;
+  if (typeof localStorage !== 'undefined') {
+    localStorage.setItem('currentOrganizationId', orgId);
+  }
+  console.log('🏢 Organisation courante définie:', orgId);
+};
+
+// Obtenir l'organisation courante
+export const getCurrentOrganization = () => {
+  if (!currentOrganizationId && typeof localStorage !== 'undefined') {
+    currentOrganizationId = localStorage.getItem('currentOrganizationId');
+  }
+  return currentOrganizationId;
+};
+
+// Effacer l'organisation courante
+export const clearCurrentOrganization = () => {
+  currentOrganizationId = null;
+  if (typeof localStorage !== 'undefined') {
+    localStorage.removeItem('currentOrganizationId');
+  }
+};
+
+// Obtenir une collection avec contexte organisationnel
+export const getOrgCollection = (collectionName) => {
+  const orgId = getCurrentOrganization();
+  if (!orgId) {
+    console.warn('⚠️ Aucune organisation sélectionnée pour la collection:', collectionName);
+    throw new Error('Aucune organisation sélectionnée');
+  }
+  
+  const orgCollectionName = `${collectionName}_org_${orgId}`;
+  console.log('📁 Accès à la collection organisationnelle:', orgCollectionName);
+  
+  return collection(db, orgCollectionName);
+};
+
+// Obtenir un document avec contexte organisationnel
+export const getOrgDoc = (collectionName, docId) => {
+  const orgId = getCurrentOrganization();
+  if (!orgId) {
+    throw new Error('Aucune organisation sélectionnée');
+  }
+  
+  const orgCollectionName = `${collectionName}_org_${orgId}`;
+  return doc(db, orgCollectionName, docId);
+};
+
+// Créer une nouvelle organisation
+export const createOrganization = async (orgData, userId) => {
+  console.log('🏢 Création d\'une nouvelle organisation:', orgData.name);
+  
+  try {
+    // Créer l'ID de l'organisation
+    const orgRef = doc(collection(db, 'organizations'));
+    const orgId = orgRef.id;
+    
+    // Préparer les données de l'organisation
+    const organizationData = {
+      ...orgData,
+      slug: orgData.slug || orgData.name.toLowerCase().replace(/[^a-z0-9]/g, '-'),
+      ownerId: userId,
+      members: {
+        [userId]: {
+          role: 'owner',
+          joinedAt: serverTimestamp(),
+          permissions: ['all']
+        }
+      },
+      settings: {
+        timezone: 'Europe/Paris',
+        currency: 'EUR',
+        ...orgData.settings
+      },
+      createdAt: serverTimestamp(),
+      isActive: true
+    };
+    
+    // Créer l'organisation
+    await setDoc(orgRef, organizationData);
+    
+    // Ajouter l'organisation à l'index utilisateur
+    const userOrgRef = doc(db, 'user_organizations', userId);
+    await setDoc(userOrgRef, {
+      organizations: {
+        [orgId]: {
+          role: 'owner',
+          joinedAt: serverTimestamp()
+        }
+      },
+      defaultOrganization: orgId
+    }, { merge: true });
+    
+    console.log('✅ Organisation créée avec succès:', orgId);
+    return orgId;
+  } catch (error) {
+    console.error('❌ Erreur lors de la création de l\'organisation:', error);
+    throw error;
+  }
+};
+
+// Obtenir les organisations d'un utilisateur
+export const getUserOrganizations = async (userId) => {
+  console.log('🔍 Récupération des organisations pour l\'utilisateur:', userId);
+  
+  try {
+    const userOrgDoc = await getDoc(doc(db, 'user_organizations', userId));
+    
+    if (!userOrgDoc.exists()) {
+      console.log('ℹ️ Aucune organisation trouvée pour cet utilisateur');
+      return [];
+    }
+    
+    const userData = userOrgDoc.data();
+    const orgIds = Object.keys(userData.organizations || {});
+    
+    // Récupérer les détails de chaque organisation
+    const orgPromises = orgIds.map(orgId => 
+      getDoc(doc(db, 'organizations', orgId))
+    );
+    
+    const orgDocs = await Promise.all(orgPromises);
+    const organizations = orgDocs
+      .filter(doc => doc.exists())
+      .map(doc => ({ 
+        id: doc.id, 
+        ...doc.data(),
+        userRole: userData.organizations[doc.id].role 
+      }));
+    
+    console.log(`✅ ${organizations.length} organisation(s) trouvée(s)`);
+    return { organizations, defaultOrganization: userData.defaultOrganization };
+  } catch (error) {
+    console.error('❌ Erreur lors de la récupération des organisations:', error);
+    throw error;
+  }
+};
+
+// Inviter un utilisateur dans une organisation
+export const inviteUserToOrganization = async (orgId, email, role = 'member') => {
+  console.log('📧 Invitation d\'un utilisateur:', email, 'dans l\'organisation:', orgId);
+  
+  try {
+    // Ici, nous créerions normalement une invitation
+    // Pour l'instant, nous allons créer une entrée dans une collection d'invitations
+    const invitationRef = doc(collection(db, 'organization_invitations'));
+    
+    await setDoc(invitationRef, {
+      organizationId: orgId,
+      email: email,
+      role: role,
+      status: 'pending',
+      createdAt: serverTimestamp(),
+      expiresAt: Timestamp.fromDate(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)) // 7 jours
+    });
+    
+    console.log('✅ Invitation envoyée avec succès');
+    return invitationRef.id;
+  } catch (error) {
+    console.error('❌ Erreur lors de l\'envoi de l\'invitation:', error);
+    throw error;
+  }
+};
+
+// Mettre à jour les paramètres d'une organisation
+export const updateOrganizationSettings = async (orgId, settings) => {
+  console.log('⚙️ Mise à jour des paramètres de l\'organisation:', orgId);
+  
+  try {
+    const orgRef = doc(db, 'organizations', orgId);
+    await updateDoc(orgRef, {
+      settings: settings,
+      updatedAt: serverTimestamp()
+    });
+    
+    console.log('✅ Paramètres mis à jour avec succès');
+  } catch (error) {
+    console.error('❌ Erreur lors de la mise à jour des paramètres:', error);
+    throw error;
+  }
+};

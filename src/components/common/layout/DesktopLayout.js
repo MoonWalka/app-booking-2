@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import Button from '@ui/Button';
 import { useAuth } from '@/context/AuthContext.js';
+import { OrganizationSelector } from '@/components/organization';
 import { APP_NAME } from '@/config.js';
 import layoutStyles from '@/components/layout/Layout.module.css';
 import sidebarStyles from '@/components/layout/Sidebar.module.css';
@@ -43,6 +44,12 @@ function DesktopLayout({ children }) {
         <div className={sidebarStyles.sidebarHeader}>
           <h3>{APP_NAME}</h3>
         </div>
+        
+        {/* Sélecteur d'organisation */}
+        <div className={sidebarStyles.organizationSelector}>
+          <OrganizationSelector />
+        </div>
+        
         <div className={sidebarStyles.sidebarContent}>
           <ul className={sidebarStyles.navLinks}>
             <li>

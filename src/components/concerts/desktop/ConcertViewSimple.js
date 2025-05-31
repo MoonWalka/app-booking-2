@@ -1,38 +1,39 @@
-import React, { useState, useMemo, memo } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Alert } from 'react-bootstrap';
+import { useConcertDetailsSimple } from '@/hooks/concerts';
+import useConcertDelete from '@/hooks/concerts/useConcertDelete';
+import { useLieuSearch } from '@/hooks/lieux/useLieuSearch';
+import { useProgrammateurSearch } from '@/hooks/programmateurs/useProgrammateurSearch';
+import { useArtisteSearch } from '@/hooks/artistes';
+
 import styles from './ConcertView.module.css';
 
-// Import du hook ultra-minimal
-import useConcertDetailsUltraSimple from '@/hooks/concerts/useConcertDetailsUltraSimple';
-
-// Import des composants
-import ConcertHeader from './ConcertHeader';
-import ConcertGeneralInfo from './ConcertGeneralInfo';
-import ConcertLocationSection from './ConcertLocationSection';
-import ConcertOrganizerSection from './ConcertOrganizerSection';
-import ConcertArtistSection from './ConcertArtistSection';
-import ConcertStructureSection from './ConcertStructureSection';
-import DeleteConcertModal from './DeleteConcertModal';
+// Import sections
+import ConcertHeader from '../sections/ConcertHeader';
+import ConcertGeneralInfo from '../sections/ConcertGeneralInfo';
+import ConcertLocationSection from '../sections/ConcertLocationSection';
+import ConcertOrganizerSection from '../sections/ConcertOrganizerSection';
+import ConcertStructureSection from '../sections/ConcertStructureSection';
+import ConcertArtistSection from '../sections/ConcertArtistSection';
+// SUPPRESSION : Plus besoin de DeleteConcertModal
+// import DeleteConcertModal from './DeleteConcertModal';
 
 /**
- * Composant de vue des détails d'un concert - Version SIMPLE pour VISUALISATION UNIQUEMENT
- * Optimisé pour 0 re-render avec hook ultra-simplifié
+ * ConcertViewSimple - Version simplifiée du composant de vue des détails d'un concert
+ * Mode lecture seule uniquement avec suppression directe
  */
-const ConcertViewSimple = memo(({ id: propId }) => {
-  const { id: urlId } = useParams();
+const ConcertViewSimple = React.memo(() => {
+  const { id } = useParams();
   const navigate = useNavigate();
   
-  // Utiliser l'ID passé en prop s'il existe, sinon utiliser l'ID de l'URL
-  const id = propId || urlId;
+  // Hook de suppression directe
+  const {
+    isDeleting,
+    handleDeleteConcert
+  } = useConcertDelete(() => navigate('/concerts'));
 
-  // État pour la confirmation de suppression
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  
-  // Hook simple pour les données
-  const detailsHook = useConcertDetailsUltraSimple(id);
-  
-  // Extraire les données directement du hook
+  // Hook simplifié pour les détails
   const {
     concert,
     lieu,
@@ -41,69 +42,56 @@ const ConcertViewSimple = memo(({ id: propId }) => {
     structure,
     loading,
     error,
-    formData,
-    getStatusInfo,
-    formatDate,
-    formatMontant,
-    isDatePassed,
-    copyToClipboard
-  } = detailsHook || {};
-  
-  // Callbacks stables pour les actions - ULTRA-STABILISÉS
-  const stableCallbacks = useMemo(() => ({
-    handleEdit: () => {
-      console.log("[🔍 ConcertViewSimple] Clic sur Modifier. Navigation vers la page d'édition");
-      navigate(`/concerts/${id}/edit`);
-    },
-    handleCancel: () => navigate(`/concerts/${id}`),
-    handleOpenDeleteModal: () => {
-      console.log('[LOG][ConcertViewSimple] Ouverture de la modale suppression');
-      setShowDeleteConfirm(true);
-    },
-    handleCloseDeleteModal: () => {
-      console.log('[LOG][ConcertViewSimple] Fermeture de la modale suppression');
-      setShowDeleteConfirm(false);
+    formDataStatus
+  } = useConcertDetailsSimple(id);
+
+  // Hooks de recherche simplifiés
+  const searchObjects = useMemo(() => ({
+    lieu: useLieuSearch(),
+    programmateur: useProgrammateurSearch(),
+    artiste: useArtisteSearch()
+  }), []);
+
+  // Gestionnaire de suppression directe
+  const handleDirectDelete = useCallback(() => {
+    if (id) {
+      console.log('[ConcertViewSimple] Suppression directe du concert:', id);
+      handleDeleteConcert(id);
     }
-  }), [navigate, id]);
-  
-  // Objets vides pour les recherches (mode visualisation uniquement)
-  const searchObjects = useMemo(() => {
-    const createEmptySearch = (createPath) => ({
-      searchTerm: '',
-      setSearchTerm: () => {},
-      showResults: false,
-      results: [],
-      isSearching: false,
-      handleLieuSelect: () => {},
-      setSelectedEntity: () => {},
-      handleCreateLieu: () => navigate(createPath)
-    });
+  }, [id, handleDeleteConcert]);
 
-    return {
-      lieu: createEmptySearch('/lieux/nouveau'),
-      programmateur: createEmptySearch('/programmateurs/nouveau'),
-      artiste: createEmptySearch('/artistes/nouveau')
-    };
-  }, [navigate]);
-
-  // Système de statut intelligent - ULTRA-STABILISÉ
-  const statusInfo = useMemo(() => {
-    if (!getStatusInfo) return {};
-    
-    const basicStatus = getStatusInfo();
-    
-    return {
-      ...basicStatus,
-      statusBadge: basicStatus?.badge,
-      actionButtons: [],
-      urgencyLevel: 'normal'
-    };
-  }, [getStatusInfo]);
-
-  // Gestion d'erreur basique
-  if (!detailsHook) {
-    return <Alert variant="danger">Erreur lors du chargement des données du concert</Alert>;
-  }
+  // Callbacks stabilisés
+  const stableCallbacks = useMemo(() => ({
+    handleEdit: () => navigate(`/concerts/${id}/edit`),
+    handleDelete: handleDirectDelete,
+    navigateToList: () => navigate('/concerts'),
+    handleCloseDeleteModal: () => {}, // Plus utilisé
+    copyToClipboard: (text) => {
+      navigator.clipboard.writeText(text)
+        .then(() => alert('Copié !'))
+        .catch(() => alert('Erreur de copie'));
+    },
+    formatDate: (date) => {
+      if (!date) return 'Date non spécifiée';
+      try {
+        const dateObj = date.seconds ? new Date(date.seconds * 1000) : new Date(date);
+        return dateObj.toLocaleDateString('fr-FR');
+      } catch {
+        return 'Date invalide';
+      }
+    },
+    formatMontant: (montant) => montant ? `${montant}€` : 'Montant non spécifié',
+    isDatePassed: (date) => {
+      if (!date) return false;
+      try {
+        const dateObj = date.seconds ? new Date(date.seconds * 1000) : new Date(date);
+        return dateObj < new Date();
+      } catch {
+        return false;
+      }
+    },
+    getStatusInfo: () => ({ statusBadge: concert?.statut || 'inconnu', actionButtons: [], urgencyLevel: 'normal' })
+  }), [navigate, id, handleDirectDelete, concert]);
 
   if (loading) {
     return (
@@ -127,43 +115,41 @@ const ConcertViewSimple = memo(({ id: propId }) => {
   }
 
   return (
-    <div className={styles.concertViewContainer || 'concert-view-container'}>
-      {/* En-tête avec titre et boutons d'action */}
+    <div className={styles.concertViewContainer}>
+      {/* Header avec titre et boutons d'action */}
       <ConcertHeader 
         concert={concert}
         onEdit={stableCallbacks.handleEdit}
-        onDelete={stableCallbacks.handleOpenDeleteModal}
+        onDelete={stableCallbacks.handleDelete}
         isEditMode={false}
-        formatDate={formatDate}
-        navigateToList={() => navigate('/concerts')}
+        formatDate={stableCallbacks.formatDate}
+        navigateToList={stableCallbacks.navigateToList}
         onSave={() => {}}
-        onCancel={stableCallbacks.handleCancel}
-        isSubmitting={false}
+        onCancel={() => {}}
+        isSubmitting={isDeleting}
         canSave={false}
       />
 
-      {/* Mode vue uniquement */}
+      {/* Sections en mode lecture seule */}
       <>
-        {/* Informations générales */}
         <ConcertGeneralInfo 
           concert={concert}
           isEditMode={false}
-          formData={formData}
+          formData={{}}
           onChange={() => {}}
-          formatDate={formatDate}
-          formatMontant={formatMontant}
-          isDatePassed={isDatePassed}
-          statusInfo={statusInfo}
+          formatDate={stableCallbacks.formatDate}
+          formatMontant={stableCallbacks.formatMontant}
+          isDatePassed={stableCallbacks.isDatePassed}
+          statusInfo={stableCallbacks.getStatusInfo()}
           artiste={artiste}
-          formDataStatus={null}
+          formDataStatus={formDataStatus}
         />
 
-        {/* Lieu */}
         <ConcertLocationSection 
           concertId={id}
           lieu={lieu}
           isEditMode={false}
-          formData={formData}
+          formData={{}}
           onChange={() => {}}
           navigateToLieuDetails={(lieuId) => navigate(`/lieux/${lieuId}`)}
           selectedLieu={lieu}
@@ -177,12 +163,11 @@ const ConcertViewSimple = memo(({ id: propId }) => {
           handleCreateLieu={searchObjects.lieu.handleCreateLieu}
         />
 
-        {/* Programmateur */}
         <ConcertOrganizerSection 
           concertId={id}
           programmateur={programmateur}
           isEditMode={false}
-          formData={formData}
+          formData={{}}
           onChange={() => {}}
           navigateToProgrammateurDetails={(progId) => navigate(`/programmateurs/${progId}`)}
           showFormGenerator={false}
@@ -190,8 +175,8 @@ const ConcertViewSimple = memo(({ id: propId }) => {
           generatedFormLink=""
           setGeneratedFormLink={() => {}}
           handleFormGenerated={() => {}}
-          copyToClipboard={copyToClipboard}
-          formatDate={formatDate}
+          copyToClipboard={stableCallbacks.copyToClipboard}
+          formatDate={stableCallbacks.formatDate}
           concert={concert}
           selectedProgrammateur={programmateur}
           progSearchTerm={searchObjects.programmateur.searchTerm}
@@ -204,23 +189,21 @@ const ConcertViewSimple = memo(({ id: propId }) => {
           handleCreateProgrammateur={searchObjects.programmateur.handleCreateProgrammateur}
         />
 
-        {/* Structure */}
         <ConcertStructureSection 
           concertId={id}
           structure={structure}
           isEditMode={false}
-          formData={formData}
+          formData={{}}
           onChange={() => {}}
           navigateToStructureDetails={(structureId) => navigate(`/structures/${structureId}`)}
         />
 
-        {/* Artiste */}
         {artiste && (
           <ConcertArtistSection 
             concertId={id}
             artiste={artiste}
             isEditMode={false}
-            formData={formData}
+            formData={{}}
             onChange={() => {}}
             navigateToArtisteDetails={(artisteId) => navigate(`/artistes/${artisteId}`)}
             selectedArtiste={artiste}
@@ -236,16 +219,8 @@ const ConcertViewSimple = memo(({ id: propId }) => {
         )}
       </>
 
-      {/* Modale de confirmation de suppression */}
-      <DeleteConcertModal
-        show={showDeleteConfirm}
-        onHide={stableCallbacks.handleCloseDeleteModal}
-        onConfirm={() => {
-          console.log('Suppression non implémentée en mode simple');
-          setShowDeleteConfirm(false);
-        }}
-        concertTitle={concert?.titre}
-      />
+      {/* SUPPRESSION : Plus de modal de confirmation */}
+      {/* Plus besoin de DeleteConcertModal */}
     </div>
   );
 });
@@ -253,4 +228,4 @@ const ConcertViewSimple = memo(({ id: propId }) => {
 // Ajouter un nom d'affichage pour le debugging
 ConcertViewSimple.displayName = 'ConcertViewSimple';
 
-export default ConcertViewSimple; 
+export default ConcertViewSimple;

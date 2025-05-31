@@ -1,152 +1,69 @@
-import React, { useState, useEffect, useMemo, memo } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { doc, getDoc, db } from '@/services/firebase-service';
+import React, { useState, useCallback, useMemo } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Alert } from 'react-bootstrap';
-import FormGenerator from '@/components/forms/FormGenerator';
+import { useConcertDetailsUltraSimple } from '@/hooks/concerts';
+import useConcertDelete from '@/hooks/concerts/useConcertDelete';
+
 import styles from './ConcertView.module.css';
 
-// Import des composants
+// Import sections
 import ConcertHeader from './ConcertHeader';
 import ConcertGeneralInfo from './ConcertGeneralInfo';
 import ConcertLocationSection from './ConcertLocationSection';
 import ConcertOrganizerSection from './ConcertOrganizerSection';
-import ConcertArtistSection from './ConcertArtistSection';
 import ConcertStructureSection from './ConcertStructureSection';
-import DeleteConcertModal from './DeleteConcertModal';
+import ConcertArtistSection from './ConcertArtistSection';
+import FormGenerator from '../../forms/FormGenerator';
+// SUPPRESSION : Plus besoin de DeleteConcertModal
+// import DeleteConcertModal from './DeleteConcertModal';
 
 /**
- * Version ULTRA-SIMPLIFIÉE de ConcertView
- * ZÉRO re-render garanti - Aucun hook générique
- * MÉTHODOLOGIE SÉCURISÉE : Approche minimaliste documentée
- * 
- * ⚠️ FICHIER DE BACKUP - Conservé en cas de régression des re-renders
- * Version active : ConcertView.js (version robuste)
+ * ConcertViewUltraSimple - Version ultra-simplifiée du composant de vue
+ * Mode lecture seule uniquement avec le strict minimum de dépendances
+ * Suppression directe sans modal de confirmation
  */
-const ConcertViewUltraSimple = memo(({ id: propId }) => {
-  const { id: urlId } = useParams();
+const ConcertViewUltraSimple = React.memo(() => {
+  const { id } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
   
-  // Utiliser l'ID passé en prop s'il existe, sinon utiliser l'ID de l'URL
-  const id = propId || urlId;
-
-  // États ultra-simples
-  const [concert, setConcert] = useState(null);
-  const [lieu, setLieu] = useState(null);
-  const [programmateur, setProgrammateur] = useState(null);
-  const [artiste, setArtiste] = useState(null);
-  const [structure, setStructure] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  // États locaux ultra-simples
   const [showFormGenerator, setShowFormGenerator] = useState(false);
   const [generatedFormLink, setGeneratedFormLink] = useState('');
 
-  // Chargement des données - ULTRA-SIMPLE avec entités liées
-  useEffect(() => {
-    if (!id) return;
+  // Hook de suppression directe
+  const {
+    isDeleting,
+    handleDeleteConcert
+  } = useConcertDelete(() => navigate('/concerts'));
 
-    const loadConcertAndRelatedData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        
-        // Charger le concert principal
-        const concertDoc = await getDoc(doc(db, 'concerts', id));
-        
-        if (!concertDoc.exists()) {
-          setError('Concert non trouvé');
-          setLoading(false);
-          return;
-        }
+  // Hook ultra-simplifié pour les détails
+  const {
+    concert,
+    lieu,
+    programmateur,
+    artiste,
+    structure,
+    loading,
+    error
+  } = useConcertDetailsUltraSimple(id);
 
-        const concertData = { id: concertDoc.id, ...concertDoc.data() };
-        setConcert(concertData);
-
-        // Charger les entités liées en parallèle
-        const promises = [];
-
-        // Charger le lieu si lieuId existe
-        if (concertData.lieuId) {
-          promises.push(
-            getDoc(doc(db, 'lieux', concertData.lieuId))
-              .then(snap => snap.exists() ? { id: snap.id, ...snap.data() } : null)
-              .then(data => {
-                setLieu(data);
-              })
-              .catch(() => setLieu(null))
-          );
-        }
-
-        // Charger le programmateur si programmateurId existe
-        if (concertData.programmateurId) {
-          promises.push(
-            getDoc(doc(db, 'programmateurs', concertData.programmateurId))
-              .then(snap => snap.exists() ? { id: snap.id, ...snap.data() } : null)
-              .then(data => {
-                setProgrammateur(data);
-              })
-              .catch(() => setProgrammateur(null))
-          );
-        }
-
-        // Charger l'artiste si artisteId existe
-        if (concertData.artisteId) {
-          promises.push(
-            getDoc(doc(db, 'artistes', concertData.artisteId))
-              .then(snap => snap.exists() ? { id: snap.id, ...snap.data() } : null)
-              .then(data => setArtiste(data))
-              .catch(() => setArtiste(null))
-          );
-        }
-
-        // Charger la structure si structureId existe
-        if (concertData.structureId) {
-          promises.push(
-            getDoc(doc(db, 'structures', concertData.structureId))
-              .then(snap => snap.exists() ? { id: snap.id, ...snap.data() } : null)
-              .then(data => setStructure(data))
-              .catch(() => setStructure(null))
-          );
-        }
-
-        // Attendre toutes les entités liées
-        await Promise.all(promises);
-        
-      } catch (err) {
-        console.error('Erreur lors du chargement du concert:', err);
-        setError('Erreur lors du chargement du concert');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadConcertAndRelatedData();
-  }, [id]);
-
-  // Gestion du paramètre URL pour ouvrir le générateur de formulaire
-  useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    const shouldOpenFormGenerator = queryParams.get('openFormGenerator') === 'true';
-    if (shouldOpenFormGenerator) {
-      setShowFormGenerator(true);
-    }
-  }, [location.search]);
-
-  // Callbacks ultra-stables
+  // Callbacks ultra-stabilisés
   const callbacks = useMemo(() => ({
     handleEdit: () => navigate(`/concerts/${id}/edit`),
-    handleCancel: () => navigate(`/concerts/${id}`),
-    handleOpenDeleteModal: () => setShowDeleteConfirm(true),
-    handleCloseDeleteModal: () => setShowDeleteConfirm(false),
-    navigateToList: () => navigate('/concerts'),
     handleDelete: () => {
-      // Implémentation simple de suppression
-      console.log('Suppression du concert:', id);
-      setShowDeleteConfirm(false);
-      navigate('/concerts');
-    }
-  }), [navigate, id]);
+      if (id) {
+        console.log('[ConcertViewUltraSimple] Suppression directe du concert:', id);
+        handleDeleteConcert(id);
+      }
+    },
+    navigateToList: () => navigate('/concerts'),
+    handleCancel: () => navigate('/concerts'),
+    handleOpenDeleteModal: () => {
+      // Plus utilisé, appel direct de handleDelete
+      callbacks.handleDelete();
+    },
+    handleCloseDeleteModal: () => {}, // Plus utilisé
+  }), [navigate, id, handleDeleteConcert]);
 
   // Fonctions utilitaires ultra-simples
   const formatDate = (date) => {
@@ -239,13 +156,13 @@ const ConcertViewUltraSimple = memo(({ id: propId }) => {
       <ConcertHeader 
         concert={concert}
         onEdit={callbacks.handleEdit}
-        onDelete={callbacks.handleOpenDeleteModal}
+        onDelete={callbacks.handleDelete}
         isEditMode={false}
         formatDate={formatDate}
         navigateToList={callbacks.navigateToList}
         onSave={() => {}}
         onCancel={callbacks.handleCancel}
-        isSubmitting={false}
+        isSubmitting={isDeleting}
         canSave={false}
       />
 
@@ -262,7 +179,7 @@ const ConcertViewUltraSimple = memo(({ id: propId }) => {
           isDatePassed={isDatePassed}
           statusInfo={statusInfo}
           artiste={artiste}
-          formDataStatus={{}}
+          formDataStatus={null}
         />
 
         {/* Lieu */}
@@ -366,13 +283,8 @@ const ConcertViewUltraSimple = memo(({ id: propId }) => {
         </div>
       )}
 
-      {/* Modale de confirmation de suppression */}
-      <DeleteConcertModal
-        show={showDeleteConfirm}
-        onHide={callbacks.handleCloseDeleteModal}
-        onConfirm={callbacks.handleDelete}
-        concertTitle={concert?.titre}
-      />
+      {/* SUPPRESSION : Plus de modal de confirmation */}
+      {/* Plus besoin de DeleteConcertModal */}
     </div>
   );
 });
@@ -380,4 +292,4 @@ const ConcertViewUltraSimple = memo(({ id: propId }) => {
 // Ajouter un nom d'affichage pour le debugging
 ConcertViewUltraSimple.displayName = 'ConcertViewUltraSimple';
 
-export default ConcertViewUltraSimple; 
+export default ConcertViewUltraSimple;

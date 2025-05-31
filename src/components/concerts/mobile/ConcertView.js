@@ -2,23 +2,22 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { Alert } from 'react-bootstrap';
-import FormGenerator from '@/components/forms/FormGenerator';
 import styles from './ConcertView.module.css';
 
-// Import des hooks personnalisés
-import {
-  useConcertDetails,
-  useConcertForm,
-  useConcertStatus
-} from '@/hooks/concerts';
+// Import des hooks
+import { useConcertDetails, useConcertStatus } from '@hooks/concerts';
+import { useConcertForm } from '@hooks/concerts';
+import useConcertDelete from '@hooks/concerts/useConcertDelete';
 
-// Import des composants mobile spécifiques depuis le répertoire sections
+// Import des composants
+import FormGenerator from '../../forms/FormGenerator';
 import ConcertHeaderMobile from './sections/ConcertHeaderMobile';
 import ConcertGeneralInfoMobile from './sections/ConcertGeneralInfoMobile';
 import ConcertLocationSectionMobile from './sections/ConcertLocationSectionMobile';
 import ConcertOrganizerSectionMobile from './sections/ConcertOrganizerSectionMobile';
 import ConcertArtistSectionMobile from './sections/ConcertArtistSectionMobile';
-import DeleteConcertModalMobile from './sections/DeleteConcertModalMobile';
+// SUPPRESSION : Plus besoin de DeleteConcertModalMobile
+// import DeleteConcertModalMobile from './sections/DeleteConcertModalMobile';
 // Pour ConcertStructureSection, utilisez la version desktop si la version mobile n'existe pas encore
 import ConcertStructureSection from '../desktop/ConcertStructureSection';
 
@@ -26,14 +25,18 @@ import ConcertStructureSection from '../desktop/ConcertStructureSection';
  * Composant de vue des détails d'un concert - Version Mobile
  * N'est responsable que de l'affichage et utilise les hooks pour toute la logique
  * Partage la même structure que la version desktop mais avec des composants adaptés pour mobile
+ * Suppression directe sans modal de confirmation
  */
 const ConcertView = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   
-  // État pour la confirmation de suppression
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  // Hook de suppression directe
+  const {
+    isDeleting,
+    handleDeleteConcert
+  } = useConcertDelete(() => navigate('/concerts'));
   
   // Utilisation des hooks personnalisés
   const{
@@ -46,7 +49,6 @@ const ConcertView = () => {
     isSubmitting,
     formData,
     handleEdit,
-    handleDeleteClick,
     copyToClipboard,
     formatDate,
     formatMontant,
@@ -65,6 +67,14 @@ const ConcertView = () => {
   
   // Utiliser directement le hook de statut pour éviter la duplication de code
   const { getStatusInfo: getStatusFromHook } = useConcertStatus();
+
+  // Gestionnaire de suppression directe
+  const handleDirectDelete = () => {
+    if (id) {
+      console.log('[ConcertViewMobile] Suppression directe du concert:', id);
+      handleDeleteConcert(id);
+    }
+  };
 
   if (loading) {
     return (
@@ -92,10 +102,11 @@ const ConcertView = () => {
       <ConcertHeaderMobile 
         concert={concert}
         onEdit={handleEdit}
-        onDelete={() => setShowDeleteConfirm(true)}
+        onDelete={handleDirectDelete}
         isEditMode={false}
         formatDate={formatDate}
         navigateToList={() => navigate('/concerts')}
+        isDeleting={isDeleting}
       />
 
       {/* Mode vue - version mobile */}
@@ -167,20 +178,8 @@ const ConcertView = () => {
         </div>
       )}
 
-      {/* Modale de confirmation de suppression */}
-      <DeleteConcertModalMobile
-        show={showDeleteConfirm}
-        concertNom={concert.titre || formatDate(concert.date)}
-        onClose={() => {
-          console.log('[LOG][ConcertViewMobile] Fermeture de la modal suppression');
-          setShowDeleteConfirm(false);
-        }}
-        onConfirm={() => {
-          console.log('[LOG][ConcertViewMobile] Confirmation suppression');
-          handleDeleteClick();
-        }}
-        isDeleting={isSubmitting}
-      />
+      {/* SUPPRESSION : Plus de modal de confirmation */}
+      {/* Plus besoin de DeleteConcertModalMobile */}
     </div>
   );
 };

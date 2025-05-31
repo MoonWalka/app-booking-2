@@ -31,10 +31,11 @@ const useConcertDelete = (onDeleteSuccess) => {
       console.error('[useConcertDelete] Erreur de suppression:', error);
     },
     
-    // Configuration - pas de confirmation modale
+    // Configuration - pas de confirmation modale, suppression directe
     validateBeforeDelete: false,
     showConfirmation: false,
-    cacheResults: false
+    cacheResults: false,
+    directDelete: true // Suppression immédiate sans modal
   });
 
   // Fonction adaptée pour la suppression directe
@@ -47,7 +48,8 @@ const useConcertDelete = (onDeleteSuccess) => {
       return Promise.reject(new Error('ID manquant'));
     }
     
-    // Effectuer la suppression directement
+    // Effectuer la suppression directement sans confirmation
+    console.log('[useConcertDelete] Suppression directe du concert:', id);
     return genericDelete(id);
   }, [genericDelete]);
 
@@ -64,4 +66,4 @@ const useConcertDelete = (onDeleteSuccess) => {
   };
 };
 
-export default useConcertDelete; 
+export default useConcertDelete;

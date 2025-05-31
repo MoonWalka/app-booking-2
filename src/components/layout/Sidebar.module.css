@@ -49,6 +49,38 @@
 }
 
 /* 
+ * Sélecteur d'organisation
+ * ----------------------
+ * Zone pour sélectionner l'organisation courante
+ */
+.organizationSelector {
+  padding: var(--tc-space-4);
+  border-bottom: var(--tc-border-sidebar);
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Styles spécifiques pour le sélecteur dans le contexte du sidebar */
+.organizationSelector :global(.organization-selector) {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: none;
+  padding: var(--tc-space-3);
+}
+
+.organizationSelector :global(.organization-selector:hover) {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.organizationSelector :global(.form-select) {
+  background-color: rgba(255, 255, 255, 0.9);
+  color: var(--tc-color-primary);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.organizationSelector :global(.bi-building) {
+  color: var(--tc-text-light);
+}
+
+/* 
  * Zone de contenu principal
  * ----------------------
  * Contient les liens de navigation et autres éléments interactifs

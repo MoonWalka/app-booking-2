@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Spinner from '@/components/common/Spinner';
 import Button from '@/components/ui/Button';
 import FormField from '@/components/ui/FormField';
 import FlexContainer from '@/components/ui/FlexContainer';
+import DeleteLieuModal from '@/components/lieux/desktop/sections/DeleteLieuModal';
 import { toast } from 'react-toastify';
 
 // MIGRATION: Utilisation du hook optimisé au lieu du hook complet
@@ -22,6 +23,9 @@ import styles from './LieuForm.module.css';
 const LieuMobileForm = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  
+  // État local pour gérer la modal de suppression
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   
   // MIGRATION: Utilisation du hook optimisé
   const {
@@ -77,13 +81,17 @@ const LieuMobileForm = () => {
   };
 
   const handleDeleteWithConfirmation = () => {
-    const confirmed = window.confirm(
-      `Êtes-vous sûr de vouloir supprimer le lieu "${lieu.nom}" ?\n\nCette action est irréversible.`
-    );
-    
-    if (confirmed) {
-      handleDeleteLieu(id);
-    }
+    setShowDeleteModal(true);
+  };
+
+  // Gestionnaires pour la modal de suppression
+  const handleCloseDeleteModal = () => {
+    setShowDeleteModal(false);
+  };
+
+  const handleConfirmDelete = async () => {
+    await handleDeleteLieu(id);
+    setShowDeleteModal(false);
   };
 
   if (loading && id !== 'nouveau') {
@@ -442,6 +450,16 @@ const LieuMobileForm = () => {
           </div>
         )}
       </form>
+
+      {/* Modal de suppression */}
+      <DeleteLieuModal
+        show={showDeleteModal}
+        onClose={handleCloseDeleteModal}
+        onConfirm={handleConfirmDelete}
+        lieu={lieu}
+        isDeleting={isDeleting}
+        hasAssociatedConcerts={false}
+      />
     </div>
   );
 };

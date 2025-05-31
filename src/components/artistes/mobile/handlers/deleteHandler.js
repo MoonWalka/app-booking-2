@@ -1,15 +1,24 @@
-import { db, doc, deleteDoc } from '@/services/firebase-service';
+import { useDeleteArtiste } from '@/hooks/artistes';
 
-export const handleDelete = async (collection, id, confirmMessage = 'Êtes-vous sûr de vouloir supprimer cet élément ?') => {
-  if (window.confirm(confirmMessage)) {
-    try {
-      const docRef = doc(db, collection, id);
-      await deleteDoc(docRef);
-      return true;
-    } catch (error) {
-      console.error(`Erreur lors de la suppression dans ${collection}:`, error);
-      return false;
-    }
+/**
+ * Handler modernisé pour la suppression d'artistes (mobile)
+ * Utilise le hook useDeleteArtiste qui intègre useGenericEntityDelete
+ * ⚠️ MIGRATION : Ne plus utiliser directement ce handler
+ * Utilisez directement le hook useDeleteArtiste dans vos composants
+ */
+export const handleDelete = async (id) => {
+  console.warn('[deleteHandler] ⚠️ Handler legacy - Utilisez directement useDeleteArtiste dans votre composant');
+  
+  // Pour compatibilité temporaire - créer une instance du hook
+  const { handleDeleteArtiste } = useDeleteArtiste();
+  
+  try {
+    return await handleDeleteArtiste(id);
+  } catch (error) {
+    console.error('Erreur lors de la suppression de l\'artiste:', error);
+    return false;
   }
-  return false;
 };
+
+// Export pour migration
+export { useDeleteArtiste } from '@/hooks/artistes';

@@ -213,6 +213,9 @@ const useGenericEntityDelete = (options) => {
     }
     
     // Demander confirmation si nécessaire
+    // ⚠️ NOTE : window.confirm() utilisé ici par design pour la simplicité
+    // Les composants qui souhaitent utiliser ConfirmationModal peuvent 
+    // désactiver showConfirmation et gérer la confirmation eux-mêmes
     if (showConfirmation && !window.confirm(confirmMessage)) {
       return false;
     }

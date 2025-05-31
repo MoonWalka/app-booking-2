@@ -194,6 +194,73 @@
 }
 
 /* 
+ * ========================================
+ * SIDEBAR MOBILE OPTIMISÉE
+ * ========================================
+ */
+
+/* Sidebar mobile avec slide-in animation */
+.mobileSidebar {
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 1002; /* Au-dessus de l'overlay */
+  width: 280px; /* Largeur fixe pour mobile */
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.mobileOpen {
+  transform: translateX(0);
+}
+
+/* Optimisations pour la sidebar mobile */
+.mobileSidebar .navLinks a {
+  padding: var(--tc-space-3) var(--tc-space-4);
+  font-size: 1rem;
+  min-height: 48px; /* Taille de touch target recommandée */
+  display: flex;
+  align-items: center;
+}
+
+.mobileSidebar .navLinks a i {
+  font-size: 1.3rem;
+  margin-right: var(--tc-space-3);
+  width: 24px; /* Largeur fixe pour l'alignement */
+  text-align: center;
+}
+
+/* Ajustement du header mobile */
+.mobileSidebar .sidebarHeader {
+  padding: var(--tc-space-4);
+  border-bottom: 2px solid var(--tc-border-sidebar);
+}
+
+.mobileSidebar .sidebarHeader h3 {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+/* Sélecteur d'organisation mobile */
+.mobileSidebar .organizationSelector {
+  padding: var(--tc-space-3);
+}
+
+/* Footer mobile simplifié */
+.mobileSidebar .sidebarFooter {
+  padding: var(--tc-space-3);
+  margin-top: auto;
+}
+
+.mobileSidebar .userInfo {
+  text-align: center;
+}
+
+.mobileSidebar .userEmail {
+  font-size: 0.9rem;
+  margin-bottom: var(--tc-space-2);
+  word-break: break-word;
+}
+
+/* 
  * Comportement responsive
  * --------------------
  * ATTENTION: Utilise max-width au lieu de min-width contrairement aux recommandations
@@ -204,7 +271,7 @@
    * Sur les petits écrans, la sidebar est cachée par défaut
    * et apparaît seulement quand elle est activée
    */
-  .sidebar {
+  .sidebar:not(.mobileSidebar) {
     transform: translateX(-100%); /* Cache la sidebar hors de l'écran */
     position: fixed;
   }

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import Button from '@ui/Button';
 import { useAuth } from '@/context/AuthContext.js';
+import { useResponsive } from '@/hooks/common';
 import { OrganizationSelector } from '@/components/organization';
 import { APP_NAME } from '@/config.js';
 import layoutStyles from '@/components/layout/Layout.module.css';
@@ -12,9 +13,12 @@ function DesktopLayout({ children }) {
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const { isMobile } = useResponsive();
   
   // État pour suivre si une transition est en cours
   const [isTransitioning, setIsTransitioning] = useState(false);
+  // État pour la sidebar mobile (hamburger menu)
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   
   // Effet pour gérer les transitions entre les routes
   useEffect(() => {
@@ -38,6 +42,125 @@ function DesktopLayout({ children }) {
     }
   };
 
+  // Navigation items pour réutilisation
+  const navItems = [
+    { to: "/", icon: "bi-speedometer2", label: "Dashboard", end: true },
+    { to: "/concerts", icon: "bi-calendar-event", label: "Concerts" },
+    { to: "/programmateurs", icon: "bi-person-badge", label: "Programmateurs" },
+    { to: "/lieux", icon: "bi-geo-alt", label: "Lieux" },
+    { to: "/structures", icon: "bi-building", label: "Structures" },
+    { to: "/contrats", icon: "bi-file-earmark-text", label: "Contrats" },
+    { to: "/artistes", icon: "bi-music-note-beamed", label: "Artistes" },
+    { to: "/parametres", icon: "bi-gear", label: "Paramètres" }
+  ];
+
+  // Fonction pour fermer la sidebar mobile au clic sur un lien
+  const handleMobileNavClick = () => {
+    if (isMobile) {
+      setIsMobileSidebarOpen(false);
+    }
+  };
+
+  if (isMobile) {
+    return (
+      <div className={layoutStyles.layoutContainer}>
+        {/* Header mobile avec bouton hamburger */}
+        <header className={layoutStyles.mobileHeader}>
+          <button 
+            className={layoutStyles.hamburgerButton}
+            onClick={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
+            aria-label="Menu"
+          >
+            <i className="bi bi-list"></i>
+          </button>
+          <h4 className={layoutStyles.mobileTitle}>{APP_NAME}</h4>
+          <div className={layoutStyles.mobileUserAction}>
+            <Button 
+              onClick={handleLogout} 
+              variant="outline-primary"
+              size="sm"
+            >
+              <i className="bi bi-box-arrow-right"></i>
+            </Button>
+          </div>
+        </header>
+
+        {/* Overlay pour fermer la sidebar */}
+        {isMobileSidebarOpen && (
+          <div 
+            className={layoutStyles.mobileOverlay}
+            onClick={() => setIsMobileSidebarOpen(false)}
+          />
+        )}
+
+        {/* Sidebar mobile (slide-in from left) */}
+        <nav className={`${sidebarStyles.sidebar} ${sidebarStyles.mobileSidebar} ${
+          isMobileSidebarOpen ? sidebarStyles.mobileOpen : ''
+        }`}>
+          <div className={sidebarStyles.sidebarHeader}>
+            <h3>{APP_NAME}</h3>
+          </div>
+          
+          {/* Sélecteur d'organisation */}
+          <div className={sidebarStyles.organizationSelector}>
+            <OrganizationSelector />
+          </div>
+          
+          <div className={sidebarStyles.sidebarContent}>
+            <ul className={sidebarStyles.navLinks}>
+              {navItems.map((item) => (
+                <li key={item.to}>
+                  <NavLink 
+                    to={item.to} 
+                    end={item.end}
+                    className={({ isActive }) => isActive ? sidebarStyles.active : ''}
+                    onClick={handleMobileNavClick}
+                  >
+                    <i className={`bi ${item.icon}`}></i>
+                    <span>{item.label}</span>
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          </div>
+          
+          <div className={sidebarStyles.sidebarFooter}>
+            {currentUser && (
+              <div className={sidebarStyles.userInfo}>
+                <div className={sidebarStyles.userEmail}>{currentUser.email}</div>
+              </div>
+            )}
+          </div>
+        </nav>
+
+        {/* Bottom Navigation Mobile */}
+        <nav className={layoutStyles.bottomNav}>
+          {navItems.slice(0, 5).map((item) => (
+            <NavLink 
+              key={item.to}
+              to={item.to} 
+              end={item.end}
+              className={({ isActive }) => 
+                `${layoutStyles.bottomNavItem} ${isActive ? layoutStyles.bottomNavActive : ''}`
+              }
+            >
+              <i className={`bi ${item.icon}`}></i>
+              <span className={layoutStyles.bottomNavLabel}>{item.label}</span>
+            </NavLink>
+          ))}
+        </nav>
+
+        {/* Contenu principal mobile */}
+        <main className={`${layoutStyles.content} ${layoutStyles.mobileContent} ${
+          isTransitioning ? "router-transition-active" : ""
+        }`}>
+          {children || <Outlet />}
+        </main>
+      </div>
+    );
+  }
+
+  // Layout Desktop (inchangé)
   return (
     <div className={layoutStyles.layoutContainer}>
       <nav className={sidebarStyles.sidebar}>
@@ -52,55 +175,18 @@ function DesktopLayout({ children }) {
         
         <div className={sidebarStyles.sidebarContent}>
           <ul className={sidebarStyles.navLinks}>
-            <li>
-              <NavLink to="/" end className={({ isActive }) => isActive ? sidebarStyles.active : ''}>
-                <i className="bi bi-speedometer2"></i>
-                <span>Dashboard</span>
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/concerts" className={({ isActive }) => isActive ? sidebarStyles.active : ''}>
-                <i className="bi bi-calendar-event"></i>
-                <span>Concerts</span>
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/programmateurs" className={({ isActive }) => isActive ? sidebarStyles.active : ''}>
-                <i className="bi bi-person-badge"></i>
-                <span>Programmateurs</span>
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/lieux" className={({ isActive }) => isActive ? sidebarStyles.active : ''}>
-                <i className="bi bi-geo-alt"></i>
-                <span>Lieux</span>
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/structures" className={({ isActive }) => isActive ? sidebarStyles.active : ''}>
-                <i className="bi bi-building"></i>
-                <span>Structures</span>
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/contrats" className={({ isActive }) => isActive ? sidebarStyles.active : ''}>
-                <i className="bi bi-file-earmark-text"></i>
-                <span>Contrats</span>
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/artistes" className={({ isActive }) => isActive ? sidebarStyles.active : ''}>
-                <i className="bi bi-music-note-beamed"></i>
-                <span>Artistes</span>
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/parametres" className={({ isActive }) => isActive ? sidebarStyles.active : ''}>
-                <i className="bi bi-gear"></i>
-                <span>Paramètres</span>
-              </NavLink>
-            </li>
-            {/* Autres liens de navigation */}
+            {navItems.map((item) => (
+              <li key={item.to}>
+                <NavLink 
+                  to={item.to} 
+                  end={item.end}
+                  className={({ isActive }) => isActive ? sidebarStyles.active : ''}
+                >
+                  <i className={`bi ${item.icon}`}></i>
+                  <span>{item.label}</span>
+                </NavLink>
+              </li>
+            ))}
           </ul>
         </div>
         <div className={sidebarStyles.sidebarFooter}>

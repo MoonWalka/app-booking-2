@@ -4,7 +4,7 @@
  * Dernière mise à jour: 29 Mai 2025
  */
 
-/* Container principal - adapté de la maquette concerts */
+/* Container principal - harmonisé avec LieuDetails (étirable) */
 .programmateurDetails {
   background-color: var(--tc-bg-white);
   border-radius: var(--tc-radius-base);
@@ -12,12 +12,40 @@
   border: 1px solid var(--tc-border-light);
   padding: var(--tc-space-4);
   margin: var(--tc-space-4);
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
+  width: calc(100% - var(--tc-space-8));
   font-family: var(--tc-font-sans);
   color: var(--tc-text-default);
   line-height: var(--tc-line-height-normal);
+}
+
+/* =============================
+   DISPOSITION EN DEUX COLONNES (optionnel)
+   ============================= */
+.twoColumnsLayout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--tc-space-6);
+  margin-top: var(--tc-space-4);
+}
+
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-space-4);
+}
+
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-space-4);
+}
+
+/* STACK VERTICAL DES SECTIONS (par défaut) */
+.sectionsStack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-space-6);
+  margin-top: var(--tc-space-4);
 }
 
 /* Styles globaux pour les sections (utilisés par les composants enfants) */
@@ -197,11 +225,33 @@
   gap: var(--tc-space-1);
 }
 
-/* Responsive mobile - adapté de la maquette */
-@media (max-width: 768px) {
+/* Responsive design - harmonisé avec LieuDetails */
+@media (max-width: var(--tc-breakpoint-lg)) {
+  .twoColumnsLayout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: var(--tc-breakpoint-md)) {
   .programmateurDetails {
-    margin: var(--tc-space-2);
+    margin: 0;
     padding: var(--tc-space-3);
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
+    background-color: var(--tc-bg-default);
+    min-height: 100vh;
+    width: 100%;
+  }
+
+  .twoColumnsLayout {
+    gap: var(--tc-space-4);
+    margin-top: var(--tc-space-2);
+  }
+
+  .sectionsStack {
+    gap: var(--tc-space-4);
+    margin-top: var(--tc-space-2);
   }
 
   :global(.details-header-container) {

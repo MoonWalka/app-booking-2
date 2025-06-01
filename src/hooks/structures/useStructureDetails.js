@@ -45,12 +45,13 @@ const useStructureDetails = (id) => {
       }
     },
     
-    // Configuration des entités liées
+    // Configuration des entités liées avec requêtes personnalisées
     relatedEntities: [
       { 
         name: 'programmateurs', 
         collection: 'programmateurs', 
         idField: 'programmateursAssocies',
+        alternativeIdFields: ['programmateurIds'], // Support de l'ancien et nouveau format
         type: 'one-to-many',
         essential: true // Les programmateurs sont essentiels pour l'affichage de la structure
       },
@@ -64,12 +65,180 @@ const useStructureDetails = (id) => {
       {
         name: 'concerts',
         collection: 'concerts',
-        type: 'query',
-        queryField: 'structureId',
-        queryValue: id,
+        type: 'custom', // Utiliser la customQuery pour une logique plus complexe
         essential: true // Les concerts sont importants pour l'affichage
       }
     ],
+    
+    // Requêtes personnalisées pour gérer les relations complexes
+    customQueries: {
+      programmateurs: async (structureData) => {
+        console.log('[DEBUG useStructureDetails] customQuery programmateurs appelée avec:', structureData);
+        
+        // Importer les services Firebase
+        const { collection, query, where, getDocs, doc, getDoc } = await import('@/services/firebase-service');
+        const { db } = await import('@/services/firebase-service');
+        
+        let programmateurs = [];
+        
+        try {
+          // Méthode 1: Vérifier les IDs directs dans la structure (format actuel et ancien)
+          const programmateurIds = structureData.programmateurIds || structureData.programmateursAssocies || [];
+          
+          if (programmateurIds.length > 0) {
+            console.log('[DEBUG] Chargement programmateurs par IDs directs:', programmateurIds);
+            
+            // Charger chaque programmateur individuellement
+            const programmateurPromises = programmateurIds.map(async (progId) => {
+              try {
+                const progRef = doc(db, 'programmateurs', progId);
+                const progDoc = await getDoc(progRef);
+                
+                if (progDoc.exists()) {
+                  return { id: progDoc.id, ...progDoc.data() };
+                }
+                return null;
+              } catch (error) {
+                console.error(`Erreur chargement programmateur ${progId}:`, error);
+                return null;
+              }
+            });
+            
+            const results = await Promise.all(programmateurPromises);
+            programmateurs = results.filter(Boolean);
+            
+            console.log('[DEBUG] Programmateurs trouvés par IDs directs:', programmateurs.length);
+          }
+          
+          // Méthode 2: Si aucun programmateur trouvé par IDs directs, 
+          // chercher par référence inverse (programmateurs avec structureId)
+          if (programmateurs.length === 0) {
+            console.log('[DEBUG] Recherche par référence inverse (structureId)');
+            
+            const programmateursQuery = query(
+              collection(db, 'programmateurs'),
+              where('structureId', '==', structureData.id)
+            );
+            
+            const querySnapshot = await getDocs(programmateursQuery);
+            
+            querySnapshot.forEach((docSnapshot) => {
+              programmateurs.push({
+                id: docSnapshot.id,
+                ...docSnapshot.data()
+              });
+            });
+            
+            console.log('[DEBUG] Programmateurs trouvés par référence inverse:', programmateurs.length);
+          }
+          
+          console.log('[DEBUG] Total programmateurs retournés:', programmateurs.length);
+          return programmateurs;
+          
+        } catch (error) {
+          console.error('[ERROR] useStructureDetails customQuery programmateurs:', error);
+          return [];
+        }
+      },
+
+      concerts: async (structureData) => {
+        console.log('[DEBUG useStructureDetails] customQuery concerts appelée avec:', structureData);
+        
+        // Importer les services Firebase
+        const { collection, query, where, getDocs, doc, getDoc } = await import('@/services/firebase-service');
+        const { db } = await import('@/services/firebase-service');
+        
+        let concerts = [];
+        
+        try {
+          // Méthode 1: Vérifier les IDs directs dans la structure (si ils existent)
+          const concertIds = structureData.concertIds || structureData.concertsAssocies || [];
+          
+          if (concertIds.length > 0) {
+            console.log('[DEBUG] Chargement concerts par IDs directs:', concertIds);
+            
+            // Charger chaque concert individuellement
+            const concertPromises = concertIds.map(async (concertId) => {
+              try {
+                const concertRef = doc(db, 'concerts', concertId);
+                const concertDoc = await getDoc(concertRef);
+                
+                if (concertDoc.exists()) {
+                  return { id: concertDoc.id, ...concertDoc.data() };
+                }
+                return null;
+              } catch (error) {
+                console.error(`Erreur chargement concert ${concertId}:`, error);
+                return null;
+              }
+            });
+            
+            const results = await Promise.all(concertPromises);
+            concerts = results.filter(Boolean);
+            
+            console.log('[DEBUG] Concerts trouvés par IDs directs:', concerts.length);
+          }
+          
+          // Méthode 2: Chercher par structureId (référence dans le concert)
+          const concertsQuery = query(
+            collection(db, 'concerts'),
+            where('structureId', '==', structureData.id)
+          );
+          
+          const querySnapshot = await getDocs(concertsQuery);
+          
+          querySnapshot.forEach((docSnapshot) => {
+            const concertData = { id: docSnapshot.id, ...docSnapshot.data() };
+            
+            // Éviter les doublons si déjà trouvé par ID direct
+            const existingConcert = concerts.find(c => c.id === concertData.id);
+            if (!existingConcert) {
+              concerts.push(concertData);
+            }
+          });
+          
+          console.log('[DEBUG] Concerts trouvés par structureId:', concerts.length);
+          
+          // Méthode 3: Chercher par programmateur associé (si structure a des programmateurs)
+          // Cette recherche sera fait seulement si les deux premières méthodes n'ont pas trouvé de concerts
+          if (concerts.length === 0) {
+            const programmateurIds = structureData.programmateurIds || structureData.programmateursAssocies || [];
+            
+            if (programmateurIds.length > 0) {
+              console.log('[DEBUG] Recherche concerts via programmateurs associés:', programmateurIds);
+              
+              for (const programmateurId of programmateurIds) {
+                const concertsByProgQuery = query(
+                  collection(db, 'concerts'),
+                  where('programmateurId', '==', programmateurId)
+                );
+                
+                const progConcertsSnapshot = await getDocs(concertsByProgQuery);
+                
+                progConcertsSnapshot.forEach((docSnapshot) => {
+                  const concertData = { id: docSnapshot.id, ...docSnapshot.data() };
+                  
+                  // Éviter les doublons
+                  const existingConcert = concerts.find(c => c.id === concertData.id);
+                  if (!existingConcert) {
+                    concerts.push(concertData);
+                  }
+                });
+              }
+              
+              console.log('[DEBUG] Concerts trouvés via programmateurs:', concerts.length);
+            }
+          }
+          
+          console.log('[DEBUG] Total concerts retournés:', concerts.length);
+          return concerts;
+          
+        } catch (error) {
+          console.error('[ERROR] useStructureDetails customQuery concerts:', error);
+          return [];
+        }
+      }
+    },
     
     // Callbacks pour les opérations
     onSaveSuccess: () => {
@@ -93,9 +262,10 @@ const useStructureDetails = (id) => {
     returnPath: '/structures',
     
     // Options avancées
-    cacheEnabled: false, // Désactiver le cache pour éviter les problèmes de données obsolètes
-    realtime: false,     // Chargement ponctuel plutôt qu'en temps réel
-    useDeleteModal: true // Utiliser un modal pour confirmer la suppression
+    autoLoadRelated: true, // Charger automatiquement les entités liées
+    cacheEnabled: true,    // Activer le cache pour de meilleures performances
+    realtime: false,       // Chargement ponctuel plutôt qu'en temps réel
+    useDeleteModal: true   // Utiliser un modal pour confirmer la suppression
   });
 
   // Fonction pour ajouter un programmateur à la structure

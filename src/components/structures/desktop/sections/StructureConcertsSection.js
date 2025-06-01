@@ -12,6 +12,12 @@ import styles from './StructureConcertsSection.module.css';
  * @param {Boolean} props.loadingConcerts - Whether concerts are currently loading
  */
 const StructureConcertsSection = ({ concerts, loadingConcerts }) => {
+  // Debug temporaire pour analyser les données reçues
+  console.log('[DEBUG StructureConcertsSection] Données reçues:', {
+    concerts,
+    loadingConcerts,
+    nombreConcerts: concerts?.length || 0
+  });
   const formatDate = (date) => {
     if (!date) return 'Date non définie';
     try {
@@ -46,6 +52,10 @@ const StructureConcertsSection = ({ concerts, loadingConcerts }) => {
       <div className={styles.cardHeader}>
         <i className="bi bi-music-note-list me-2"></i>
         <h3>Concerts associés</h3>
+        {/* Debug temporaire : afficher le nombre */}
+        <small style={{ marginLeft: '10px', color: '#666' }}>
+          ({concerts?.length || 0} trouvé{concerts?.length > 1 ? 's' : ''})
+        </small>
       </div>
       <div className={styles.cardBody}>
         {loadingConcerts ? (

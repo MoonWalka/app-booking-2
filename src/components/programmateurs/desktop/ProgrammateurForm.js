@@ -255,8 +255,8 @@ const ProgrammateurForm = ({
   }
 
   return (
-    <form onSubmit={handleSaveWithNotification}>
-      <div className={styles.formContainer}>
+    <div className={styles.formContainer}>
+      <form onSubmit={handleSaveWithNotification}>
         {/* Header with title and action buttons - seulement en mode normal */}
         {!isPublicMode && (
           <ProgrammateurHeader 
@@ -345,8 +345,8 @@ const ProgrammateurForm = ({
             warnings={hasAssociatedConcerts ? ['Ce programmateur a des concerts associés. Ils seront également affectés.'] : undefined}
           />
         )}
-      </div>
-    </form>
+      </form>
+    </div>
   );
 };
 

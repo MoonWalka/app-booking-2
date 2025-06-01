@@ -10,6 +10,7 @@
   padding: var(--tc-space-3);
   background-color: var(--tc-bg-default);
   width: 100%;
+  /* Mobile utilise déjà 100% de la largeur */
 }
 
 .formCard {

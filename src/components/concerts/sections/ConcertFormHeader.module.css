@@ -12,8 +12,10 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: var(--tc-space-4);
+  margin-bottom: var(--tc-space-6);
   gap: var(--tc-space-4);
+  padding-bottom: var(--tc-space-4);
+  border-bottom: 2px solid var(--tc-border-light);
   width: 100%;
 }
 
@@ -23,10 +25,12 @@
 }
 
 .pageTitle {
-  font-size: var(--tc-font-size-xl);
+  font-size: var(--tc-font-size-2xl);
   font-weight: var(--tc-font-weight-bold);
-  color: var(--tc-text-default);
+  color: var(--tc-color-primary);
   margin: 0;
+  margin-bottom: var(--tc-space-2);
+  line-height: var(--tc-line-height-tight);
 }
 
 .actionButtons {

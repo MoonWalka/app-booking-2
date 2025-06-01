@@ -42,13 +42,13 @@ const OrganizationSelector = ({ className = '' }) => {
   const handleCreateOrganization = () => {
     setShowDropdown(false);
     // Rediriger vers la page d'onboarding en mode création
-    window.location.href = '/?action=create';
+    window.location.href = '/onboarding?action=create';
   };
 
   const handleJoinOrganization = () => {
     setShowDropdown(false);
     // Rediriger vers la page d'onboarding en mode rejoindre
-    window.location.href = '/?action=join';
+    window.location.href = '/onboarding?action=join';
   };
 
   if (loading) {

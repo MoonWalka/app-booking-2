@@ -34,6 +34,7 @@ import CreateDefaultTemplate from './pages/CreateDefaultTemplate';
 import PrivateRoute from '@/components/auth/PrivateRoute';
 import LoginPage from '@/pages/LoginPage';
 import MigrationPage from '@/pages/admin/MigrationPage';
+import { OnboardingFlow } from '@/components/organization';
 
 
 if (process.env.NODE_ENV === 'development') {
@@ -139,6 +140,17 @@ function App() {
                     <Route path="/create-default-template" element={<CreateDefaultTemplate />} />
                     
                     <Route path="/login" element={<LoginPage />} />
+                    
+                    <Route path="/onboarding" element={
+                      <PrivateRoute>
+                        <div style={{ padding: '2rem' }}>
+                          <OnboardingFlow onComplete={(orgId) => {
+                            console.log('✅ Organisation créée/rejointe:', orgId);
+                            window.location.href = '/';
+                          }} />
+                        </div>
+                      </PrivateRoute>
+                    } />
                     
                     <Route path="/formulaire/:concertId/:token" element={<FormResponsePage />} />
                     

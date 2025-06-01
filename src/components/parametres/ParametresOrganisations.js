@@ -15,8 +15,7 @@ const ParametresOrganisations = () => {
     userOrgs: organizations, 
     currentOrg, 
     switchOrganization, 
-    needsOnboarding, 
-    loading: orgLoading 
+    needsOnboarding
   } = useOrganization();
   
   const [members, setMembers] = useState([]);
@@ -133,7 +132,7 @@ const ParametresOrganisations = () => {
             <div className="d-flex gap-3 justify-content-center">
               <button 
                 className="btn btn-primary"
-                onClick={() => window.location.href = '/'}
+                onClick={() => window.location.href = '/onboarding?action=create'}
               >
                 <i className="bi bi-plus-circle me-2"></i>
                 Créer une organisation
@@ -141,7 +140,7 @@ const ParametresOrganisations = () => {
               
               <button 
                 className="btn btn-outline-primary"
-                onClick={() => window.location.href = '/'}
+                onClick={() => window.location.href = '/onboarding?action=join'}
               >
                 <i className="bi bi-people me-2"></i>
                 Rejoindre une organisation
@@ -230,7 +229,7 @@ const ParametresOrganisations = () => {
         <div className="mt-3 d-flex gap-2">
           <button
             className="btn btn-primary"
-            onClick={() => window.location.href = '/?action=create'}
+            onClick={() => window.location.href = '/onboarding?action=create'}
           >
             <i className="bi bi-plus-circle me-2"></i>
             Créer une organisation
@@ -238,7 +237,7 @@ const ParametresOrganisations = () => {
           
           <button
             className="btn btn-outline-primary"
-            onClick={() => window.location.href = '/?action=join'}
+            onClick={() => window.location.href = '/onboarding?action=join'}
           >
             <i className="bi bi-people me-2"></i>
             Rejoindre une organisation

@@ -43,13 +43,13 @@ const ProgrammateurView = ({
     concertsVisible: true
   });
   
-  // Gestion du toggle des sections
-  const toggleSection = (sectionName) => {
-    setSections(prev => ({
-      ...prev,
-      [sectionName]: !prev[sectionName]
-    }));
-  };
+  // Gestion du toggle des sections - Commenté car non utilisé actuellement
+  // const toggleSection = (sectionName) => {
+  //   setSections(prev => ({
+  //     ...prev,
+  //     [sectionName]: !prev[sectionName]
+  //   }));
+  // };
   
   if (loading) {
     return <LoadingSpinner message="Chargement du programmateur..." />;

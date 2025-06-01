@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { collection, getDocs, query, orderBy } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
 import { useOrganization } from '@/context/OrganizationContext';
@@ -11,7 +11,7 @@ const ConcertsDiagnostic = () => {
   const [diagnosticResults, setDiagnosticResults] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const runDiagnostic = async () => {
+  const runDiagnostic = useCallback(async () => {
     setLoading(true);
     const results = {
       timestamp: new Date().toISOString(),
@@ -121,11 +121,11 @@ const ConcertsDiagnostic = () => {
 
     setDiagnosticResults(results);
     setLoading(false);
-  };
+  }, [currentOrg]);
 
   useEffect(() => {
     runDiagnostic();
-  }, [currentOrg]);
+  }, [currentOrg, runDiagnostic]);
 
   const getStatusIcon = (status) => {
     switch (status) {

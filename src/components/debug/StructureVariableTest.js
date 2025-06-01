@@ -4,11 +4,8 @@ import {
   collection, 
   query, 
   limit,
-  getDocs,
-  doc,
-  getDoc
+  getDocs
 } from '@/services/firebase-service';
-import { useContratGenerator } from '@/hooks/contrats/useContratGenerator';
 import ContratPDFWrapper from '@/components/pdf/ContratPDFWrapper';
 import Button from '@/components/ui/Button';
 
@@ -82,10 +79,10 @@ const StructureVariableTest = () => {
     console.log('🧪 Test des variables de structure avec:', structure);
     
     // Mettre à jour le programmateur de test avec l'ID de structure
-    const testProgrammateur = {
-      ...mockProgrammateur,
-      structureId: structure.id
-    };
+    // const testProgrammateur = {
+    //   ...mockProgrammateur,
+    //   structureId: structure.id
+    // };
     
     try {
       // Simuler la préparation des variables comme dans useContratGenerator

@@ -1,24 +1,16 @@
-import { useDeleteArtiste } from '@/hooks/artistes';
+/**
+ * Handler legacy pour la suppression d'artistes (mobile)
+ * ⚠️ DEPRECATED : Ce handler est obsolète
+ * Utilisez directement le hook useDeleteArtiste dans vos composants React
+ */
+
+// Export du hook pour migration
+export { useDeleteArtiste } from '@/hooks/artistes';
 
 /**
- * Handler modernisé pour la suppression d'artistes (mobile)
- * Utilise le hook useDeleteArtiste qui intègre useGenericEntityDelete
- * ⚠️ MIGRATION : Ne plus utiliser directement ce handler
- * Utilisez directement le hook useDeleteArtiste dans vos composants
+ * @deprecated Utilisez directement useDeleteArtiste dans votre composant
  */
-export const handleDelete = async (id) => {
-  console.warn('[deleteHandler] ⚠️ Handler legacy - Utilisez directement useDeleteArtiste dans votre composant');
-  
-  // Pour compatibilité temporaire - créer une instance du hook
-  const { handleDeleteArtiste } = useDeleteArtiste();
-  
-  try {
-    return await handleDeleteArtiste(id);
-  } catch (error) {
-    console.error('Erreur lors de la suppression de l\'artiste:', error);
-    return false;
-  }
+export const handleDelete = () => {
+  console.error('[deleteHandler] ❌ DEPRECATED - Utilisez directement useDeleteArtiste dans votre composant React');
+  throw new Error('Handler legacy supprimé - utilisez useDeleteArtiste dans un composant React');
 };
-
-// Export pour migration
-export { useDeleteArtiste } from '@/hooks/artistes';

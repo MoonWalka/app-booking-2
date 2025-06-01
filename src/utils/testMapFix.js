@@ -90,4 +90,6 @@ export const cleanTestCoordinates = async () => {
   }
 };
 
-export default { testMapFix, cleanTestCoordinates };
+const testMapHelper = { testMapFix, cleanTestCoordinates };
+
+export default testMapHelper;

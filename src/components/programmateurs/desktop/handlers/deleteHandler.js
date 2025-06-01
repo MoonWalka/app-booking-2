@@ -1,24 +1,16 @@
-import { useDeleteProgrammateur } from '@/hooks/programmateurs';
+/**
+ * Handler legacy pour la suppression de programmateurs (desktop)
+ * ⚠️ DEPRECATED : Ce handler est obsolète
+ * Utilisez directement le hook useDeleteProgrammateur dans vos composants React
+ */
+
+// Export du hook pour migration
+export { useDeleteProgrammateur } from '@/hooks/programmateurs';
 
 /**
- * Handler modernisé pour la suppression de programmateurs (desktop)
- * Utilise le hook useDeleteProgrammateur qui intègre useGenericEntityDelete
- * ⚠️ MIGRATION : Ne plus utiliser directement ce handler
- * Utilisez directement le hook useDeleteProgrammateur dans vos composants
+ * @deprecated Utilisez directement useDeleteProgrammateur dans votre composant
  */
-export const handleDelete = async (id) => {
-  console.warn('[deleteHandler] ⚠️ Handler legacy - Utilisez directement useDeleteProgrammateur dans votre composant');
-  
-  // Pour compatibilité temporaire - créer une instance du hook
-  const { handleDeleteProgrammateur } = useDeleteProgrammateur();
-  
-  try {
-    return await handleDeleteProgrammateur(id);
-  } catch (error) {
-    console.error('Erreur lors de la suppression du programmateur:', error);
-    return false;
-  }
+export const handleDelete = () => {
+  console.error('[deleteHandler] ❌ DEPRECATED - Utilisez directement useDeleteProgrammateur dans votre composant React');
+  throw new Error('Handler legacy supprimé - utilisez useDeleteProgrammateur dans un composant React');
 };
-
-// Export pour migration
-export { useDeleteProgrammateur } from '@/hooks/programmateurs';

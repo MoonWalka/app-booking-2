@@ -7,8 +7,6 @@ import {
   collection, 
   getDocs, 
   addDoc, 
-  updateDoc, 
-  doc, 
   query, 
   where 
 } from 'firebase/firestore';
@@ -272,9 +270,11 @@ function generateGlobalRecommendations(entities) {
   return recommendations;
 }
 
-export default {
+const dataCompatibilityHelper = {
   checkOrganizationalCollection,
   getDataStatistics,
   migrateToOrganizationalCollections,
   analyzeDataCompatibility
 };
+
+export default dataCompatibilityHelper;

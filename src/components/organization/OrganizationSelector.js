@@ -28,26 +28,26 @@ const OrganizationSelector = ({ className = '', isMobile = false }) => {
     return 'Utilisateur';
   };
 
-  const handleOrganizationChange = async (orgId) => {
+  const handleOrganizationChange = useCallback(async (orgId) => {
     if (orgId && orgId !== currentOrg?.id) {
       await switchOrganization(orgId);
       setShowDropdown(false);
       // Recharger la page pour s'assurer que toutes les données sont mises à jour
       window.location.reload();
     }
-  };
+  }, [currentOrg?.id, switchOrganization]);
 
-  const handleCreateOrganization = () => {
+  const handleCreateOrganization = useCallback(() => {
     setShowDropdown(false);
     // Rediriger vers la page d'onboarding en mode création
     window.location.href = '/onboarding?action=create';
-  };
+  }, []);
 
-  const handleJoinOrganization = () => {
+  const handleJoinOrganization = useCallback(() => {
     setShowDropdown(false);
     // Rediriger vers la page d'onboarding en mode rejoindre
     window.location.href = '/onboarding?action=join';
-  };
+  }, []);
 
   // Gestion de la navigation clavier
   const handleKeyDown = useCallback((event) => {
@@ -149,6 +149,7 @@ const OrganizationSelector = ({ className = '', isMobile = false }) => {
           onKeyDown={handleKeyDown}
           aria-expanded={showDropdown}
           aria-haspopup="listbox"
+          aria-controls="organization-dropdown"
           aria-label="Sélecteur d'organisation et profil utilisateur"
           role="combobox"
         >
@@ -167,6 +168,7 @@ const OrganizationSelector = ({ className = '', isMobile = false }) => {
 
         {showDropdown && (
           <div 
+            id="organization-dropdown"
             className={styles.dropdownMenu}
             role="listbox"
             aria-label="Options d'inscription"
@@ -265,6 +267,7 @@ const OrganizationSelector = ({ className = '', isMobile = false }) => {
         onKeyDown={handleKeyDown}
         aria-expanded={showDropdown}
         aria-haspopup="listbox"
+        aria-controls="organization-dropdown-main"
         aria-label="Sélecteur d'organisation et profil utilisateur"
         role="combobox"
       >
@@ -297,6 +300,7 @@ const OrganizationSelector = ({ className = '', isMobile = false }) => {
 
       {showDropdown && (
         <div 
+          id="organization-dropdown-main"
           className={styles.dropdownMenu}
           role="listbox"
           aria-label="Liste des organisations"

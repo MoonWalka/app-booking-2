@@ -1,24 +1,16 @@
-import { useLieuDelete } from '@/hooks/lieux';
+/**
+ * Handler legacy pour la suppression de lieux (desktop)
+ * ⚠️ DEPRECATED : Ce handler est obsolète
+ * Utilisez directement le hook useLieuDelete dans vos composants React
+ */
+
+// Export du hook pour migration
+export { useLieuDelete } from '@/hooks/lieux';
 
 /**
- * Handler modernisé pour la suppression de lieux (desktop)
- * Utilise le hook useLieuDelete qui intègre useGenericEntityDelete
- * ⚠️ MIGRATION : Ne plus utiliser directement ce handler
- * Utilisez directement le hook useLieuDelete dans vos composants
+ * @deprecated Utilisez directement useLieuDelete dans votre composant
  */
-export const handleDelete = async (id) => {
-  console.warn('[deleteHandler] ⚠️ Handler legacy - Utilisez directement useLieuDelete dans votre composant');
-  
-  // Pour compatibilité temporaire - créer une instance du hook
-  const { handleDeleteLieu } = useLieuDelete();
-  
-  try {
-    return await handleDeleteLieu(id);
-  } catch (error) {
-    console.error('Erreur lors de la suppression du lieu:', error);
-    return false;
-  }
+export const handleDelete = () => {
+  console.error('[deleteHandler] ❌ DEPRECATED - Utilisez directement useLieuDelete dans votre composant React');
+  throw new Error('Handler legacy supprimé - utilisez useLieuDelete dans un composant React');
 };
-
-// Export pour migration
-export { useLieuDelete } from '@/hooks/lieux';

@@ -2,12 +2,11 @@
  * Tableau de bord pour la compatibilité et migration des données multi-organisation
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useOrganization } from '@/context/OrganizationContext';
 import { 
   analyzeDataCompatibility, 
-  migrateToOrganizationalCollections,
-  getDataStatistics 
+  migrateToOrganizationalCollections
 } from '@/utils/dataCompatibilityHelper';
 import styles from './DataCompatibilityDashboard.module.css';
 
@@ -19,7 +18,7 @@ const DataCompatibilityDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
 
   // Charger l'analyse de compatibilité
-  const loadCompatibilityReport = async () => {
+  const loadCompatibilityReport = useCallback(async () => {
     if (!currentOrg) return;
     
     setLoading(true);
@@ -31,7 +30,7 @@ const DataCompatibilityDashboard = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentOrg]);
 
   // Effectuer une migration test
   const performTestMigration = async (entityType) => {
@@ -113,7 +112,7 @@ const DataCompatibilityDashboard = () => {
     if (currentOrg) {
       loadCompatibilityReport();
     }
-  }, [currentOrg]);
+  }, [currentOrg, loadCompatibilityReport]);
 
   // Rendu du statut d'une entité
   const renderEntityStatus = (entityType, entityData) => {

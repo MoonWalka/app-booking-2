@@ -191,4 +191,6 @@ export const addTestCoordinatesToLieux = async () => {
   }
 };
 
-export default { addCoordinatesToLieux, addTestCoordinatesToLieux };
+const lieuxCoordinatesHelper = { addCoordinatesToLieux, addTestCoordinatesToLieux };
+
+export default lieuxCoordinatesHelper;

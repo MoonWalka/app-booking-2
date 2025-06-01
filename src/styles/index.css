@@ -30,6 +30,7 @@
 @import '@styles/components/layout.css';
 @import '@styles/components/modals.css';
 @import '@styles/components/navigation.css'; /* Styles de navigation (étapes, onglets, pagination, fil d'Ariane) */
+@import '@styles/components/quill-editor.css'; /* Styles pour l'éditeur Quill */
 @import '@styles/components/spinner.css';
 @import '@styles/components/tables.css';
 @import '@styles/components/mobile-optimizations.css';

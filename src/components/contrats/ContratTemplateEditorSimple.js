@@ -7,6 +7,8 @@ import Button from '@/components/ui/Button';
 import styles from './ContratTemplateEditorSimple.module.css';
 // Import du module de tailles personnalisées
 import { customSizeConfig } from './QuillCustomSizes';
+// Import du module d'interligne - temporairement désactivé
+// import { lineHeightConfig } from './QuillLineHeight';
 
 /**
  * Éditeur de modèles de contrat simplifié
@@ -96,10 +98,11 @@ const ContratTemplateEditorSimple = ({ template, onSave, onClose, isModalContext
     }
   ];
 
-  // Configuration de l'éditeur Quill avec tailles personnalisées
+  // Configuration de l'éditeur Quill avec tailles personnalisées et nettoyage du collage
   const modules = {
     toolbar: [
       [{ 'size': customSizeConfig.sizes }], // Groupe avec les tailles personnalisées
+      // [{ 'lineheight': lineHeightConfig.values }], // Interligne temporairement désactivé
       ['bold', 'italic', 'underline', 'strike'],
       [{ 'list': 'ordered'}, { 'list': 'bullet' }],
       [{ 'script': 'sub'}, { 'script': 'super' }],
@@ -111,11 +114,15 @@ const ContratTemplateEditorSimple = ({ template, onSave, onClose, isModalContext
       ['clean'],
       ['link', 'image'],
       ['blockquote', 'code-block']
-    ]
+    ],
+    // clipboard: {
+    //   // Clipboard matcher temporairement désactivé - causait des boucles infinies
+    //   matchers: []
+    // }
   };
 
   const formats = [
-    'header', 'font', 'size',
+    'header', 'font', 'size', // 'lineheight', // Temporairement désactivé
     'bold', 'italic', 'underline', 'strike', 'blockquote',
     'list', 'indent',
     'link', 'image', 'color', 'background',
@@ -261,6 +268,115 @@ const ContratTemplateEditorSimple = ({ template, onSave, onClose, isModalContext
       const range = editor.getSelection();
       const index = range ? range.index : editor.getLength();
       editor.insertText(index, variable);
+    }
+  };
+
+  // Importer depuis un fichier
+  const handleFileImport = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    console.log('📁 Import de fichier:', file.name, file.type);
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const fileContent = e.target.result;
+      console.log('📄 Contenu du fichier lu:', fileContent.substring(0, 200) + '...');
+
+      if (editorRef.current) {
+        const editor = editorRef.current.getEditor();
+        
+        // Pour les fichiers TXT et MD, on garde juste le texte brut
+        if (file.name.endsWith('.txt') || file.name.endsWith('.md')) {
+          // Convertir le texte brut en HTML simple
+          const htmlContent = fileContent
+            .split('\n\n')
+            .map(paragraph => {
+              // Ignorer les paragraphes vides
+              if (!paragraph.trim()) return '';
+              // Remplacer les sauts de ligne simples par des <br>
+              return `<p>${paragraph.replace(/\n/g, '<br>')}</p>`;
+            })
+            .filter(p => p) // Enlever les paragraphes vides
+            .join('');
+          
+          console.log('📝 HTML généré:', htmlContent.substring(0, 200) + '...');
+          
+          // Effacer le contenu actuel d'abord
+          editor.setText('');
+          
+          // Utiliser l'API Quill pour insérer le HTML
+          editor.clipboard.dangerouslyPasteHTML(0, htmlContent);
+          
+          // IMPORTANT: Forcer la mise à jour de l'état React
+          setTimeout(() => {
+            const newContent = editor.root.innerHTML;
+            setContent(newContent);
+            console.log('✅ État React mis à jour');
+          }, 100);
+          
+          console.log('✅ Fichier importé avec succès (format texte)');
+        } else {
+          // Pour d'autres formats
+          editor.setText('');
+          editor.clipboard.dangerouslyPasteHTML(0, fileContent);
+          
+          setTimeout(() => {
+            const newContent = editor.root.innerHTML;
+            setContent(newContent);
+          }, 100);
+          
+          console.log('✅ Fichier importé avec succès');
+        }
+      }
+    };
+
+    // Lire comme texte
+    reader.readAsText(file, 'UTF-8');
+    
+    // Réinitialiser l'input pour permettre de réimporter le même fichier
+    event.target.value = '';
+  };
+
+  // Nettoyer l'interligne - Méthode plus robuste pour Google Docs
+  const cleanLineHeight = () => {
+    if (editorRef.current) {
+      const editor = editorRef.current.getEditor();
+      
+      console.log('🧹 Début du nettoyage de l\'interligne...');
+      
+      // Méthode plus propre : utiliser l'API Quill pour modifier le contenu
+      const currentContents = editor.getContents();
+      console.log('📄 Contenu actuel:', currentContents);
+      
+      // Obtenir tout le contenu HTML
+      let htmlContent = editor.root.innerHTML;
+      console.log('🔍 HTML avant nettoyage:', htmlContent.substring(0, 200) + '...');
+      
+      // Nettoyer avec des regex pour être plus précis
+      htmlContent = htmlContent
+        // Supprimer line-height inline
+        .replace(/line-height:\s*[^;]*;?/gi, '')
+        // Supprimer margin inline
+        .replace(/margin(-top|-bottom|-left|-right)?:\s*[^;]*;?/gi, '')
+        // Supprimer padding inline  
+        .replace(/padding(-top|-bottom|-left|-right)?:\s*[^;]*;?/gi, '')
+        // Nettoyer les attributs style vides
+        .replace(/style\s*=\s*["'][\s]*["']/gi, '')
+        .replace(/style\s*=\s*["'];*["']/gi, '')
+        // Supprimer les spans vides de style
+        .replace(/<span[^>]*style\s*=\s*["'][\s]*["'][^>]*>/gi, '<span>')
+        .replace(/<span>([^<]*)<\/span>/gi, '$1');
+      
+      console.log('🔍 HTML après nettoyage:', htmlContent.substring(0, 200) + '...');
+      
+      // Utiliser l'API Quill pour remplacer le contenu
+      editor.clipboard.dangerouslyPasteHTML(0, htmlContent);
+      
+      // Mettre à jour l'état React
+      setContent(htmlContent);
+      
+      console.log('✅ Nettoyage terminé avec l\'API Quill');
     }
   };
 
@@ -413,10 +529,37 @@ const ContratTemplateEditorSimple = ({ template, onSave, onClose, isModalContext
 
         {/* Éditeur de contenu */}
         <div className={styles.editorSection}>
-          <label className={styles.label}>
-            Contenu du modèle *
-          </label>
-          <div className={styles.editorContainer}>
+          <div className={styles.editorHeader}>
+            <label className={styles.label}>
+              Contenu du modèle *
+            </label>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <button
+                type="button"
+                className={styles.cleanButton}
+                onClick={cleanLineHeight}
+                title="Corriger l'interligne après un copier-coller depuis Google Docs"
+              >
+                <i className="bi bi-magic"></i> Corriger l'interligne
+              </button>
+              <input
+                type="file"
+                id="importFile"
+                accept=".txt,.md,.rtf"
+                style={{ display: 'none' }}
+                onChange={handleFileImport}
+              />
+              <button
+                type="button"
+                className={styles.cleanButton}
+                onClick={() => document.getElementById('importFile').click()}
+                title="Importer depuis un fichier (TXT, MD, RTF)"
+              >
+                <i className="bi bi-file-earmark-text"></i> Importer fichier
+              </button>
+            </div>
+          </div>
+          <div className={`${styles.editorContainer} tc-quill-editor-wrapper`}>
             <ReactQuill
               ref={editorRef}
               key={template?.id || 'new'} // Force remount when template changes

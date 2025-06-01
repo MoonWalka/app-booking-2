@@ -420,6 +420,20 @@ const getContratHTML = (data, title = '', forPreview = false, editedContent = nu
           .contrat-print-mode .ql-size-72pt { font-size: 72pt !important; }
           .contrat-print-mode .ql-size-96pt { font-size: 96pt !important; }
           
+          /* Support de l'interligne dans les PDF */
+          .contrat-print-mode [style*="line-height: 1.0"] { line-height: 1.0 !important; }
+          .contrat-print-mode [style*="line-height: 1.1"] { line-height: 1.1 !important; }
+          .contrat-print-mode [style*="line-height: 1.2"] { line-height: 1.2 !important; }
+          .contrat-print-mode [style*="line-height: 1.3"] { line-height: 1.3 !important; }
+          .contrat-print-mode [style*="line-height: 1.4"] { line-height: 1.4 !important; }
+          .contrat-print-mode [style*="line-height: 1.5"] { line-height: 1.5 !important; }
+          .contrat-print-mode [style*="line-height: 1.6"] { line-height: 1.6 !important; }
+          .contrat-print-mode [style*="line-height: 1.8"] { line-height: 1.8 !important; }
+          .contrat-print-mode [style*="line-height: 2.0"] { line-height: 2.0 !important; }
+          .contrat-print-mode [style*="line-height: 2.2"] { line-height: 2.2 !important; }
+          .contrat-print-mode [style*="line-height: 2.5"] { line-height: 2.5 !important; }
+          .contrat-print-mode [style*="line-height: 3.0"] { line-height: 3.0 !important; }
+          
           @media print {
             .contrat-print-mode .preview-note {
               display: none !important;
@@ -515,6 +529,20 @@ const getContratHTML = (data, title = '', forPreview = false, editedContent = nu
         .contrat-print-mode .ql-size-48pt { font-size: 48pt !important; }
         .contrat-print-mode .ql-size-72pt { font-size: 72pt !important; }
         .contrat-print-mode .ql-size-96pt { font-size: 96pt !important; }
+        
+        /* Support de l'interligne dans les PDF */
+        .contrat-print-mode [style*="line-height: 1.0"] { line-height: 1.0 !important; }
+        .contrat-print-mode [style*="line-height: 1.1"] { line-height: 1.1 !important; }
+        .contrat-print-mode [style*="line-height: 1.2"] { line-height: 1.2 !important; }
+        .contrat-print-mode [style*="line-height: 1.3"] { line-height: 1.3 !important; }
+        .contrat-print-mode [style*="line-height: 1.4"] { line-height: 1.4 !important; }
+        .contrat-print-mode [style*="line-height: 1.5"] { line-height: 1.5 !important; }
+        .contrat-print-mode [style*="line-height: 1.6"] { line-height: 1.6 !important; }
+        .contrat-print-mode [style*="line-height: 1.8"] { line-height: 1.8 !important; }
+        .contrat-print-mode [style*="line-height: 2.0"] { line-height: 2.0 !important; }
+        .contrat-print-mode [style*="line-height: 2.2"] { line-height: 2.2 !important; }
+        .contrat-print-mode [style*="line-height: 2.5"] { line-height: 2.5 !important; }
+        .contrat-print-mode [style*="line-height: 3.0"] { line-height: 3.0 !important; }
         
         @media print {
           .contrat-print-mode .preview-note {

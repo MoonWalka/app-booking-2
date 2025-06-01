@@ -551,6 +551,23 @@
   content: attr(data-value) !important;
 }
 
+/* INTERLIGNE : Afficher la vraie valeur dans le menu déroulant */
+.tc-quill-editor-wrapper .ql-snow .ql-picker.ql-lineheight .ql-picker-label[data-value]::before,
+.tc-quill-editor-wrapper .ql-snow .ql-picker.ql-lineheight .ql-picker-item[data-value]::before {
+  content: attr(data-value) !important;
+}
+
+/* Améliorer l'affichage du dropdown interligne */
+.tc-quill-editor-wrapper .ql-picker.ql-lineheight .ql-picker-options {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.tc-quill-editor-wrapper .ql-picker.ql-lineheight .ql-picker-item {
+  padding: var(--tc-space-1) var(--tc-space-2);
+  font-family: var(--tc-font-sans);
+}
+
 /* Améliorer l'affichage du dropdown */
 .tc-quill-editor-wrapper .ql-picker.ql-size .ql-picker-options {
   max-height: 200px;
@@ -563,3 +580,30 @@
 }
 
 /* Plus besoin de règles individuelles - la solution universelle gère tout */
+
+/* ========================================
+   SOLUTION FORCÉE POUR LES INTERLIGNES
+   ======================================== */
+
+/* Forcer l'interligne normal dans tout l'éditeur Quill */
+.tc-quill-editor-wrapper .ql-editor * {
+  line-height: normal !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.tc-quill-editor-wrapper .ql-editor p {
+  margin-bottom: 0 !important;
+  line-height: normal !important;
+}
+
+.tc-quill-editor-wrapper .ql-editor br {
+  line-height: normal !important;
+}
+
+/* Spécifiquement pour les spans de Google Docs */
+.tc-quill-editor-wrapper .ql-editor span {
+  line-height: inherit !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}

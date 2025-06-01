@@ -1,12 +1,12 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import styles from './StructureDetails.module.css';
+import FormHeader from '@/components/ui/FormHeader';
+import Button from '@/components/ui/Button';
 
 // MIGRATION: Utilisation des hooks optimisés au lieu des versions V2/déprécié
 import { useStructureDetails, useDeleteStructure } from '@/hooks/structures';
 
 // Import section components
-import StructureHeader from './sections/StructureHeader';
 import StructureGeneralInfo from './sections/StructureGeneralInfo';
 import StructureContactSection from './sections/StructureContactSection';
 import StructureAddressSection from './sections/StructureAddressSection';
@@ -50,7 +50,7 @@ const StructureDetails = () => {
   if (loading) {
     return (
       <div className="text-center p-5">
-        <div className={styles.spinner} role="status">
+        <div className="spinner-border text-primary" role="status">
           <span className="visually-hidden">Chargement...</span>
         </div>
       </div>
@@ -60,24 +60,50 @@ const StructureDetails = () => {
   // Error state
   if (error) {
     return (
-      <div className={styles.alertInfo}>
+      <div className="alert alert-warning">
         <i className="bi bi-exclamation-triangle"></i>
         {error.message || error}
       </div>
     );
   }
 
-  return (
-    <div className={styles.detailsContainer}>
-      {/* Structure Header with Actions */}
-      <StructureHeader 
-        structure={structure} 
-        onEdit={() => navigate(`/structures/${id}/edit`)} 
-        onDelete={() => handleDeleteClick(structure)}
-        navigateToList={() => navigate('/structures')}
-      />
+  // Note: getTypeLabel supprimé car non utilisé dans la nouvelle architecture
 
-      <div className={styles.detailsContent}>
+  return (
+    <div className="page-wrapper">
+      <div className="form-container">
+        {/* Header harmonisé avec FormHeader */}
+        <FormHeader 
+          title={structure?.nom || structure?.raisonSociale || 'Structure'}
+          icon={<i className="bi bi-building"></i>}
+          subtitle={
+            <span style={{ cursor: 'pointer' }} onClick={() => navigate('/structures')}>
+              ← Retour aux structures
+            </span>
+          }
+          roundedTop={true}
+          actions={[
+            <Button 
+              key="edit"
+              onClick={() => navigate(`/structures/${id}/edit`)} 
+              variant="primary"
+              icon={<i className="bi bi-pencil"></i>}
+            >
+              Modifier
+            </Button>,
+            <Button 
+              key="delete"
+              onClick={() => handleDeleteClick(structure)} 
+              variant="danger"
+              icon={<i className="bi bi-trash"></i>}
+            >
+              Supprimer
+            </Button>
+          ]}
+        />
+
+        <div className="sections-stack"
+             style={{ padding: 'var(--tc-space-6)' }}>
         {/* General Information Section */}
         <StructureGeneralInfo 
           structure={structure} 
@@ -108,8 +134,9 @@ const StructureDetails = () => {
           loadingConcerts={loadingConcerts} 
         />
 
-        {/* Notes Section - if present */}
-        {structure?.notes && <StructureNotesSection notes={structure.notes} />}
+          {/* Notes Section - if present */}
+          {structure?.notes && <StructureNotesSection notes={structure.notes} />}
+        </div>
       </div>
 
       {/* Confirmation Modal for Structure Deletion */}

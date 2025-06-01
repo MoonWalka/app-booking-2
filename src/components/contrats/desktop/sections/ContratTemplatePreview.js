@@ -39,36 +39,15 @@ const ContratTemplatePreview = ({ selectedTemplate }) => {
       
       {!isCollapsed && (
         <div className={styles.previewContent}>
-          <div className={styles.templateSectionPreview}>
-            <div className={styles.sectionLabel}>En-tête :</div>
-            {selectedTemplate.headerContent ? (
-              <div dangerouslySetInnerHTML={{ __html: replaceVariablesWithMockData(selectedTemplate.headerContent) }} />
-            ) : (
-              <span className="text-muted">(Aucun en-tête)</span>
-            )}
-          </div>
-          <div className={styles.templateSectionPreview}>
-            <div className={styles.sectionLabel}>Corps :</div>
+          <div className={`${styles.templateSectionPreview} tc-quill-editor-wrapper`}>
+            <div className={styles.sectionLabel}>Contenu du modèle :</div>
             {selectedTemplate.bodyContent ? (
-              <div dangerouslySetInnerHTML={{ __html: replaceVariablesWithMockData(selectedTemplate.bodyContent) }} />
+              <div 
+                className="ql-editor"
+                dangerouslySetInnerHTML={{ __html: replaceVariablesWithMockData(selectedTemplate.bodyContent) }} 
+              />
             ) : (
-              <span className="text-danger">(Aucun contenu principal)</span>
-            )}
-          </div>
-          <div className={styles.templateSectionPreview}>
-            <div className={styles.sectionLabel}>Pied de page :</div>
-            {selectedTemplate.footerContent ? (
-              <div dangerouslySetInnerHTML={{ __html: replaceVariablesWithMockData(selectedTemplate.footerContent) }} />
-            ) : (
-              <span className="text-muted">(Aucun pied de page)</span>
-            )}
-          </div>
-          <div className={styles.templateSectionPreview}>
-            <div className={styles.sectionLabel}>Signature :</div>
-            {selectedTemplate.signatureTemplate ? (
-              <div dangerouslySetInnerHTML={{ __html: replaceVariablesWithMockData(selectedTemplate.signatureTemplate) }} />
-            ) : (
-              <span className="text-muted">(Aucune section signature)</span>
+              <span className="text-danger">(Aucun contenu dans ce modèle)</span>
             )}
           </div>
         </div>

@@ -93,37 +93,15 @@ const ContratGenerationActions = ({
     const variables = prepareContractVariables ? prepareContractVariables() : {};
     console.log('📋 Variables préparées:', variables);
     
-    // Combiner tous les contenus du template
-    let fullContent = '';
-    
-    // Debug: Vérifier le contenu brut
+    // SYSTÈME UNIFIÉ - Utiliser uniquement bodyContent
     console.log('📄 Contenu brut du template:', {
       bodyContentSample: selectedTemplate.bodyContent?.substring(0, 200),
       hasSquareBrackets: selectedTemplate.bodyContent?.includes('['),
       hasCurlyBraces: selectedTemplate.bodyContent?.includes('{')
     });
     
-    if (selectedTemplate.headerContent) {
-      fullContent += `<div class="contract-header">${selectedTemplate.headerContent}</div>`;
-    }
-    
-    if (selectedTemplate.titleTemplate) {
-      fullContent += `<h1 class="contract-title">${selectedTemplate.titleTemplate}</h1>`;
-    }
-    
-    if (selectedTemplate.dateTemplate) {
-      fullContent += `<div class="contract-date">${selectedTemplate.dateTemplate}</div>`;
-    }
-    
-    fullContent += `<div class="contract-body">${selectedTemplate.bodyContent}</div>`;
-    
-    if (selectedTemplate.signatureTemplate) {
-      fullContent += `<div class="contract-signature">${selectedTemplate.signatureTemplate}</div>`;
-    }
-    
-    if (selectedTemplate.footerContent) {
-      fullContent += `<div class="contract-footer">${selectedTemplate.footerContent}</div>`;
-    }
+    // Utiliser uniquement le contenu unifié (bodyContent)
+    const fullContent = selectedTemplate.bodyContent || '';
     
     // Remplacer toutes les variables
     const processedContent = replaceVariables(fullContent, variables);
@@ -197,9 +175,13 @@ const ContratGenerationActions = ({
               />
             ) : (
               <div 
-                className={styles.previewHtml}
-                dangerouslySetInnerHTML={{ __html: editableContent }}
-              />
+                className={`${styles.previewHtml} tc-quill-editor-wrapper`}
+              >
+                <div 
+                  className="ql-editor"
+                  dangerouslySetInnerHTML={{ __html: editableContent }}
+                />
+              </div>
             )}
           </div>
 

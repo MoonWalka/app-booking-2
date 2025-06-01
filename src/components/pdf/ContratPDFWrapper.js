@@ -378,12 +378,36 @@ const getContratHTML = (data, title = '', forPreview = false, editedContent = nu
           body.contrat-print-mode {
             font-family: 'Times New Roman', serif;
             font-size: 12pt;
-            line-height: 1.4;
+            line-height: normal;
             color: #000000;
             background-color: white;
             margin: 20px;
             padding: 0;
           }
+          
+          /* FORCER LES INTERLIGNES COMME DANS L'ÉDITEUR */
+          .contrat-print-mode * {
+            line-height: normal !important;
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+          }
+          
+          .contrat-print-mode p {
+            margin-bottom: 0 !important;
+            line-height: normal !important;
+          }
+          
+          .contrat-print-mode br {
+            line-height: normal !important;
+          }
+          
+          /* Spécifiquement pour les spans de Google Docs */
+          .contrat-print-mode span {
+            line-height: inherit !important;
+            margin: 0 !important;
+            padding: 0 !important;
+          }
+          
           .contrat-print-mode .preview-note {
             background-color: #e3f2fd;
             color: #1976d2;
@@ -394,12 +418,9 @@ const getContratHTML = (data, title = '', forPreview = false, editedContent = nu
             border-left: 4px solid #1976d2;
           }
           .contrat-print-mode h1, .contrat-print-mode h2, .contrat-print-mode h3 {
-            margin-top: 1.5em;
-            margin-bottom: 0.75em;
+            margin-top: 0.5em;
+            margin-bottom: 0.25em;
             font-weight: bold;
-          }
-          .contrat-print-mode p {
-            margin-bottom: 0.75em;
           }
           
           /* Support des tailles personnalisées dans les PDF */
@@ -488,12 +509,36 @@ const getContratHTML = (data, title = '', forPreview = false, editedContent = nu
         body.contrat-print-mode {
           font-family: 'Times New Roman', serif;
           font-size: 12pt;
-          line-height: 1.4;
+          line-height: normal;
           color: #000000;
           background-color: white;
           margin: 20px;
           padding: 0;
         }
+        
+        /* FORCER LES INTERLIGNES COMME DANS L'ÉDITEUR */
+        .contrat-print-mode * {
+          line-height: normal !important;
+          margin-top: 0 !important;
+          margin-bottom: 0 !important;
+        }
+        
+        .contrat-print-mode p {
+          margin-bottom: 0 !important;
+          line-height: normal !important;
+        }
+        
+        .contrat-print-mode br {
+          line-height: normal !important;
+        }
+        
+        /* Spécifiquement pour les spans de Google Docs */
+        .contrat-print-mode span {
+          line-height: inherit !important;
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+        
         .contrat-print-mode .preview-note {
           background-color: #e3f2fd;
           color: #1976d2;
@@ -504,12 +549,9 @@ const getContratHTML = (data, title = '', forPreview = false, editedContent = nu
           border-left: 4px solid #1976d2;
         }
         .contrat-print-mode h1, .contrat-print-mode h2, .contrat-print-mode h3 {
-          margin-top: 1.5em;
-          margin-bottom: 0.75em;
+          margin-top: 0.5em;
+          margin-bottom: 0.25em;
           font-weight: bold;
-        }
-        .contrat-print-mode p {
-          margin-bottom: 0.75em;
         }
         
         /* Support des tailles personnalisées dans les PDF */

@@ -401,6 +401,25 @@ const getContratHTML = (data, title = '', forPreview = false, editedContent = nu
           .contrat-print-mode p {
             margin-bottom: 0.75em;
           }
+          
+          /* Support des tailles personnalisées dans les PDF */
+          .contrat-print-mode .ql-size-8pt { font-size: 8pt !important; }
+          .contrat-print-mode .ql-size-9pt { font-size: 9pt !important; }
+          .contrat-print-mode .ql-size-10pt { font-size: 10pt !important; }
+          .contrat-print-mode .ql-size-11pt { font-size: 11pt !important; }
+          .contrat-print-mode .ql-size-12pt { font-size: 12pt !important; }
+          .contrat-print-mode .ql-size-14pt { font-size: 14pt !important; }
+          .contrat-print-mode .ql-size-16pt { font-size: 16pt !important; }
+          .contrat-print-mode .ql-size-18pt { font-size: 18pt !important; }
+          .contrat-print-mode .ql-size-20pt { font-size: 20pt !important; }
+          .contrat-print-mode .ql-size-24pt { font-size: 24pt !important; }
+          .contrat-print-mode .ql-size-28pt { font-size: 28pt !important; }
+          .contrat-print-mode .ql-size-32pt { font-size: 32pt !important; }
+          .contrat-print-mode .ql-size-36pt { font-size: 36pt !important; }
+          .contrat-print-mode .ql-size-48pt { font-size: 48pt !important; }
+          .contrat-print-mode .ql-size-72pt { font-size: 72pt !important; }
+          .contrat-print-mode .ql-size-96pt { font-size: 96pt !important; }
+          
           @media print {
             .contrat-print-mode .preview-note {
               display: none !important;
@@ -431,23 +450,20 @@ const getContratHTML = (data, title = '', forPreview = false, editedContent = nu
     return htmlContent;
   }
   
-  // Sinon, utiliser le processus normal
+  // SYSTÈME UNIFIÉ UNIQUEMENT - Utiliser directement bodyContent
   // Préparer les variables pour le remplacement
   const variables = prepareContractVariables(safeData);
   
-  // Remplacer les variables dans tous les contenus du template
-  const headerContent = replaceVariables(safeData.template.headerContent || '', variables);
-  const bodyContent = replaceVariables(safeData.template.bodyContent || '', variables);
-  const footerContent = replaceVariables(safeData.template.footerContent || '', variables);
-  const signatureContent = replaceVariables(safeData.template.signatureTemplate || '', variables);
+  // Utiliser uniquement le contenu unifié du template
+  const content = safeData.template.bodyContent || '';
   
-  // Ignorer le titleTemplate complètement pour éviter qu'il soit ajouté automatiquement
-  // (Protection contre les anciens templates qui ont encore titleTemplate)
+  // Remplacer les variables dans le contenu unifié
+  const processedContent = replaceVariables(content, variables);
   
   // Traitement des sauts de page pour l'aperçu
-  let bodyContentProcessed = forPreview ? processPageBreaks(bodyContent) : bodyContent;
+  const finalContent = forPreview ? processPageBreaks(processedContent) : processedContent;
   
-  // Construire le contenu HTML complet
+  // Construire le HTML complet avec le contenu unifié
   let htmlContent = `
     <!DOCTYPE html>
     <html>
@@ -481,6 +497,25 @@ const getContratHTML = (data, title = '', forPreview = false, editedContent = nu
         .contrat-print-mode p {
           margin-bottom: 0.75em;
         }
+        
+        /* Support des tailles personnalisées dans les PDF */
+        .contrat-print-mode .ql-size-8pt { font-size: 8pt !important; }
+        .contrat-print-mode .ql-size-9pt { font-size: 9pt !important; }
+        .contrat-print-mode .ql-size-10pt { font-size: 10pt !important; }
+        .contrat-print-mode .ql-size-11pt { font-size: 11pt !important; }
+        .contrat-print-mode .ql-size-12pt { font-size: 12pt !important; }
+        .contrat-print-mode .ql-size-14pt { font-size: 14pt !important; }
+        .contrat-print-mode .ql-size-16pt { font-size: 16pt !important; }
+        .contrat-print-mode .ql-size-18pt { font-size: 18pt !important; }
+        .contrat-print-mode .ql-size-20pt { font-size: 20pt !important; }
+        .contrat-print-mode .ql-size-24pt { font-size: 24pt !important; }
+        .contrat-print-mode .ql-size-28pt { font-size: 28pt !important; }
+        .contrat-print-mode .ql-size-32pt { font-size: 32pt !important; }
+        .contrat-print-mode .ql-size-36pt { font-size: 36pt !important; }
+        .contrat-print-mode .ql-size-48pt { font-size: 48pt !important; }
+        .contrat-print-mode .ql-size-72pt { font-size: 72pt !important; }
+        .contrat-print-mode .ql-size-96pt { font-size: 96pt !important; }
+        
         @media print {
           .contrat-print-mode .preview-note {
             display: none !important;
@@ -496,31 +531,8 @@ const getContratHTML = (data, title = '', forPreview = false, editedContent = nu
     htmlContent += `<div class="preview-note">Aperçu du contrat - La mise en page sera identique au téléchargement PDF final</div>`;
   }
 
-  // Ajouter l'en-tête si défini (sans titre intégré)
-  if (headerContent) {
-    htmlContent += `<div class="header">`;
-    if (safeData.template.logoUrl) {
-      htmlContent += `
-        <div class="logo-container">
-          <img src="${safeData.template.logoUrl}" alt="Logo" style={pdfStyles.logoImage} />
-        </div>
-      `;
-    }
-    htmlContent += `<div class="header-content">${headerContent}</div></div>`;
-  }
-
-  // Ajouter le corps du document
-  htmlContent += `<div class="body-content">${bodyContentProcessed}</div>`;
-
-  // Ajouter la signature si définie
-  if (signatureContent) {
-    htmlContent += `<div class="signature-section">${signatureContent}</div>`;
-  }
-
-  // Ajouter le pied de page si défini
-  if (footerContent) {
-    htmlContent += `<div class="footer">${footerContent}</div>`;
-  }
+  // Ajouter directement le contenu unifié (plus de sections séparées)
+  htmlContent += finalContent;
 
   if (forPreview) {
     htmlContent += `</div>`; // Fermer .contrat-container
@@ -548,26 +560,12 @@ const generatePuppeteerPdf = async (title, data, editedContent = null) => {
     // Utiliser la fonction commune pour générer le HTML avec le contenu édité si fourni
     const htmlContent = getContratHTML(data, title, false, editedContent);
     
-    // Récupérer les données sécurisées pour les options
-    const safeData = createSafeData(data);
-    
-    // Options pour la génération PDF
+    // Options pour la génération PDF - Mode unifié (pas d'en-tête/pied de page séparés)
     const options = {
-      displayHeaderFooter: true,
-      headerTemplate: safeData.template.headerContent ? `
-        <div style="; padding: 5px 30px; width: 100%;" class="tc-text-xs">
-          ${replaceVariables(safeData.template.headerContent, prepareContractVariables(safeData))}
-        </div>
-      ` : '',
-      footerTemplate: safeData.template.footerContent ? `
-        <div style="; padding: 5px 30px; width: 100%;" class="tc-text-xs">
-          ${replaceVariables(safeData.template.footerContent, prepareContractVariables(safeData))}
-          <div style="; ;" class="tc-text-xs tc-text-center"><span class="pageNumber"></span> / <span class="totalPages"></span></div>
-        </div>
-      ` : '<div style="; ; padding: 5px 30px; width: 100%;" class="tc-text-xs tc-text-center"><span class="pageNumber"></span> / <span class="totalPages"></span></div>',
+      displayHeaderFooter: false, // Pas d'en-tête/pied de page séparés en mode unifié
       margin: {
-        top: safeData.template.headerContent ? '60px' : '30px',
-        bottom: safeData.template.footerContent ? '60px' : '30px',
+        top: '30px',
+        bottom: '30px', 
         left: '30px',
         right: '30px'
       }
@@ -593,26 +591,12 @@ const generatePDFPreview = async (data, title = 'Apercu_Contrat') => {
     // Utiliser la même fonction que pour la génération finale
     const htmlContent = getContratHTML(data, title);
     
-    // Récupérer les données sécurisées pour les options
-    const safeData = createSafeData(data);
-    
-    // Options pour la génération PDF (mêmes que pour la version finale)
+    // Options pour la génération PDF - Mode unifié (mêmes que pour la version finale)
     const options = {
-      displayHeaderFooter: true,
-      headerTemplate: safeData.template.headerContent ? `
-        <div style="; padding: 5px 30px; width: 100%;" class="tc-text-xs">
-          ${replaceVariables(safeData.template.headerContent, prepareContractVariables(safeData))}
-        </div>
-      ` : '',
-      footerTemplate: safeData.template.footerContent ? `
-        <div style="; padding: 5px 30px; width: 100%;" class="tc-text-xs">
-          ${replaceVariables(safeData.template.footerContent, prepareContractVariables(safeData))}
-          <div style="; ;" class="tc-text-xs tc-text-center"><span class="pageNumber"></span> / <span class="totalPages"></span></div>
-        </div>
-      ` : '<div style="; ; padding: 5px 30px; width: 100%;" class="tc-text-xs tc-text-center"><span class="pageNumber"></span> / <span class="totalPages"></span></div>',
+      displayHeaderFooter: false, // Pas d'en-tête/pied de page séparés en mode unifié
       margin: {
-        top: safeData.template.headerContent ? '60px' : '30px',
-        bottom: safeData.template.footerContent ? '60px' : '30px',
+        top: '30px',
+        bottom: '30px',
         left: '30px',
         right: '30px'
       },

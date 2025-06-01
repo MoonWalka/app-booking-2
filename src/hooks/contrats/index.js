@@ -7,7 +7,6 @@ export { default as useContratDetails } from './useContratDetails';
 
 
 // Exports des hooks liés aux modèles de contrats
-export { default as useContratTemplateEditor } from './useContratTemplateEditor';
 export { default as useContratTemplatePreview } from './useContratTemplatePreview';
 
 // Exports des hooks liés à la génération de contrats

@@ -23,6 +23,7 @@ PageBreakClass.tagName = 'div';
 // Enregistrer le blot personnalisé
 Quill.register(PageBreakClass);
 
+
 // Fonction pour insérer un saut de page
 const insertPageBreak = (quillInstance) => {
   const range = quillInstance.getSelection(true);

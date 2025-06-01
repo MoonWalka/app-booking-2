@@ -5,6 +5,8 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import Button from '@/components/ui/Button';
 import styles from './ContratTemplateEditorSimple.module.css';
+// Import du module de tailles personnalisées
+import { customSizeConfig } from './QuillCustomSizes';
 
 /**
  * Éditeur de modèles de contrat simplifié
@@ -94,16 +96,15 @@ const ContratTemplateEditorSimple = ({ template, onSave, onClose, isModalContext
     }
   ];
 
-  // Configuration de l'éditeur Quill
+  // Configuration de l'éditeur Quill avec tailles personnalisées
   const modules = {
     toolbar: [
-      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+      [{ 'size': customSizeConfig.sizes }], // Groupe avec les tailles personnalisées
       ['bold', 'italic', 'underline', 'strike'],
       [{ 'list': 'ordered'}, { 'list': 'bullet' }],
       [{ 'script': 'sub'}, { 'script': 'super' }],
       [{ 'indent': '-1'}, { 'indent': '+1' }],
       [{ 'direction': 'rtl' }],
-      [{ 'size': ['small', false, 'large', 'huge'] }],
       [{ 'color': [] }, { 'background': [] }],
       [{ 'font': [] }],
       [{ 'align': [] }],
@@ -142,11 +143,6 @@ const ContratTemplateEditorSimple = ({ template, onSave, onClose, isModalContext
         name: name.trim(),
         templateType,
         bodyContent: content,
-        // Garder la structure existante pour la compatibilité
-        headerContent: template?.headerContent || '',
-        footerContent: template?.footerContent || '',
-        titleTemplate: template?.titleTemplate || '',
-        signatureTemplate: template?.signatureTemplate || '',
         isDefault: template?.isDefault || false,
         // Métadonnées
         updatedAt: new Date().toISOString(),

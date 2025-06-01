@@ -491,3 +491,75 @@
     padding: var(--tc-space-2);
   }
 }
+
+/* ========================================
+   TAILLES PERSONNALISÉES POUR CONTRATS
+   ======================================== */
+
+/* Support des tailles personnalisées dans l'éditeur */
+.tc-quill-editor-wrapper .ql-editor .ql-size-8pt,
+.tc-quill-preview .ql-size-8pt { font-size: 8pt !important; }
+
+.tc-quill-editor-wrapper .ql-editor .ql-size-9pt,
+.tc-quill-preview .ql-size-9pt { font-size: 9pt !important; }
+
+.tc-quill-editor-wrapper .ql-editor .ql-size-10pt,
+.tc-quill-preview .ql-size-10pt { font-size: 10pt !important; }
+
+.tc-quill-editor-wrapper .ql-editor .ql-size-11pt,
+.tc-quill-preview .ql-size-11pt { font-size: 11pt !important; }
+
+.tc-quill-editor-wrapper .ql-editor .ql-size-12pt,
+.tc-quill-preview .ql-size-12pt { font-size: 12pt !important; }
+
+.tc-quill-editor-wrapper .ql-editor .ql-size-14pt,
+.tc-quill-preview .ql-size-14pt { font-size: 14pt !important; }
+
+.tc-quill-editor-wrapper .ql-editor .ql-size-16pt,
+.tc-quill-preview .ql-size-16pt { font-size: 16pt !important; }
+
+.tc-quill-editor-wrapper .ql-editor .ql-size-18pt,
+.tc-quill-preview .ql-size-18pt { font-size: 18pt !important; }
+
+.tc-quill-editor-wrapper .ql-editor .ql-size-20pt,
+.tc-quill-preview .ql-size-20pt { font-size: 20pt !important; }
+
+.tc-quill-editor-wrapper .ql-editor .ql-size-24pt,
+.tc-quill-preview .ql-size-24pt { font-size: 24pt !important; }
+
+.tc-quill-editor-wrapper .ql-editor .ql-size-28pt,
+.tc-quill-preview .ql-size-28pt { font-size: 28pt !important; }
+
+.tc-quill-editor-wrapper .ql-editor .ql-size-32pt,
+.tc-quill-preview .ql-size-32pt { font-size: 32pt !important; }
+
+.tc-quill-editor-wrapper .ql-editor .ql-size-36pt,
+.tc-quill-preview .ql-size-36pt { font-size: 36pt !important; }
+
+.tc-quill-editor-wrapper .ql-editor .ql-size-48pt,
+.tc-quill-preview .ql-size-48pt { font-size: 48pt !important; }
+
+.tc-quill-editor-wrapper .ql-editor .ql-size-72pt,
+.tc-quill-preview .ql-size-72pt { font-size: 72pt !important; }
+
+.tc-quill-editor-wrapper .ql-editor .ql-size-96pt,
+.tc-quill-preview .ql-size-96pt { font-size: 96pt !important; }
+
+/* SOLUTION UNIVERSELLE : Afficher la vraie valeur au lieu de "Normal" */
+.tc-quill-editor-wrapper .ql-snow .ql-picker.ql-size .ql-picker-label[data-value]::before,
+.tc-quill-editor-wrapper .ql-snow .ql-picker.ql-size .ql-picker-item[data-value]::before {
+  content: attr(data-value) !important;
+}
+
+/* Améliorer l'affichage du dropdown */
+.tc-quill-editor-wrapper .ql-picker.ql-size .ql-picker-options {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.tc-quill-editor-wrapper .ql-picker.ql-size .ql-picker-item {
+  padding: var(--tc-space-1) var(--tc-space-2);
+  font-family: var(--tc-font-sans);
+}
+
+/* Plus besoin de règles individuelles - la solution universelle gère tout */

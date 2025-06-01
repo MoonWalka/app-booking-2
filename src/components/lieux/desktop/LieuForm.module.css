@@ -5,17 +5,64 @@
  */
 
 /* =============================
-   CONTENEUR PRINCIPAL
+   CONTENEUR PRINCIPAL - HARMONISÉ AVEC PROGRAMMATEUR
    ============================= */
-.lieuFormContainer {
+
+/* Wrapper pour l'ensemble de la page - comme programmateur */
+.pageWrapper {
+  width: calc(100% - var(--tc-space-8));
   margin: var(--tc-space-4);
+  margin-left: var(--tc-space-4);
+  margin-right: var(--tc-space-4);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--tc-bg-light, #f5f7f9);
+  min-height: 100vh;
+}
+
+/* Container principal - comme programmateur */
+.formContainer {
   width: 100%;
+  margin: 0;
+  background: var(--tc-bg-white, #ffffff);
+  border-radius: var(--tc-radius-lg);
+  box-shadow: var(--tc-shadow-base);
+  overflow: hidden;
+  font-family: var(--tc-font-sans);
+  color: var(--tc-text-default, #333333);
+  line-height: var(--tc-line-height-normal);
+  flex: 1;
+}
+
+/* Ancien container pour compatibilité */
+.lieuFormContainer {
+  width: calc(100% - var(--tc-space-8));
+  margin: var(--tc-space-4);
+  margin-left: var(--tc-space-4);
+  margin-right: var(--tc-space-4);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Section body */
+.sectionBody {
+  padding: var(--tc-space-6);
 }
 
 .modernForm {
   display: flex;
   flex-direction: column;
   gap: var(--tc-space-4);
+}
+
+/* STACK VERTICAL DES SECTIONS (par défaut) */
+.sectionsStack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-space-6);
+  margin-top: var(--tc-space-4);
 }
 
 /* =============================
@@ -431,6 +478,7 @@
 
 @media (max-width: var(--tc-breakpoint-sm)) {
   .lieuFormContainer {
+    width: calc(100% - var(--tc-space-4));
     margin: var(--tc-space-2);
   }
   

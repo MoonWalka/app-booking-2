@@ -163,26 +163,30 @@ const ConcertFormDesktop = () => {
   }
 
   return (
-    <div className={styles.deskConcertFormContainer}>
-      {formHook.error && (
-        <Alert variant="danger" className={styles.errorAlert}>
-          {formHook.error}
-        </Alert>
-      )}
-      
-      <ConcertFormHeader 
-        id={id} 
-        formData={formData} 
-        navigate={navigate}
-        isSubmitting={isSubmitting}
-        onDelete={id !== 'nouveau' ? () => setShowDeleteConfirm(true) : undefined}
-        onCancel={handleCancel}
-      />
-      
-        <form id="concertForm" onSubmit={(e) => {
-          console.log("[ConcertForm] Soumission du formulaire. ID:", id, "formData:", formData);
-          handleSubmit(e);
-        }} className={styles.deskModernForm}>
+    <div className={styles.pageWrapper}>
+      <form id="concertForm" onSubmit={(e) => {
+        console.log("[ConcertForm] Soumission du formulaire. ID:", id, "formData:", formData);
+        handleSubmit(e);
+      }}>
+        <div className={styles.formContainer}>
+          {/* Header avec FormHeader et roundedTop */}
+          <ConcertFormHeader 
+            id={id} 
+            formData={formData} 
+            navigate={navigate}
+            isSubmitting={isSubmitting}
+            onDelete={id !== 'nouveau' ? () => setShowDeleteConfirm(true) : undefined}
+            onCancel={handleCancel}
+            roundedTop={true}
+          />
+
+          {formHook.error && (
+            <Alert variant="danger" className={styles.errorAlert}>
+              {formHook.error}
+            </Alert>
+          )}
+
+          <div className={styles.sectionBody}>
           
           <ConcertInfoSection 
             formData={formData}
@@ -259,25 +263,27 @@ const ConcertFormDesktop = () => {
               navigate={navigate}
               position="bottom"
             />
-        </form>
+          </div>
+        </div>
+      </form>
         
-        <ConfirmationModal
-          show={showDeleteConfirm}
-          onHide={() => setShowDeleteConfirm(false)}
-          onConfirm={() => {
-            console.log('[ConcertForm] Appel de handleDeleteConcert avec ID:', id);
-            handleDeleteConcert(id);
-            setShowDeleteConfirm(false);
-          }}
-          title="Supprimer le concert"
-          message="Êtes-vous sûr de vouloir supprimer définitivement ce concert ?"
-          entityName={formData.nom}
-          confirmText="Supprimer définitivement"
-          cancelText="Annuler"
-          variant="danger"
-          isLoading={isSubmitting || isDeleting}
-        />
-      </div>
+      <ConfirmationModal
+        show={showDeleteConfirm}
+        onHide={() => setShowDeleteConfirm(false)}
+        onConfirm={() => {
+          console.log('[ConcertForm] Appel de handleDeleteConcert avec ID:', id);
+          handleDeleteConcert(id);
+          setShowDeleteConfirm(false);
+        }}
+        title="Supprimer le concert"
+        message="Êtes-vous sûr de vouloir supprimer définitivement ce concert ?"
+        entityName={formData.nom}
+        confirmText="Supprimer définitivement"
+        cancelText="Annuler"
+        variant="danger"
+        isLoading={isSubmitting || isDeleting}
+      />
+    </div>
   );
 };
 

@@ -1,44 +1,37 @@
 import React from 'react';
 import { Badge } from 'react-bootstrap';
 import Button from '@/components/ui/Button';
-import styles from './LieuFormHeader.module.css';
+import FormHeader from '@/components/ui/FormHeader';
 
-const LieuFormHeader = ({ id, lieuNom, navigate, lieu, isSubmitting, onSave, onDelete, canSave = true }) => {
+const LieuFormHeader = ({ id, lieuNom, navigate, lieu, isSubmitting, onSave, onDelete, canSave = true, roundedTop = false }) => {
   const isNewLieu = id === 'nouveau';
   const title = isNewLieu ? 'Nouveau lieu' : (lieuNom || 'Lieu');
 
   return (
-    <div className={styles.detailsHeaderContainer}>
-      <div className={styles.titleContainer}>
-        <div className={styles.breadcrumbContainer}>
-          <span 
-            className={styles.breadcrumbItem} 
-            onClick={() => navigate('/lieux')} 
-            role="button" 
-            tabIndex={0}
-          >
-            Lieux
-          </span>
-          <i className="bi bi-chevron-right"></i>
-          <span className={`${styles.breadcrumbItem} ${styles.active}`}>
-            {isNewLieu ? 'Nouveau' : title}
-          </span>
-        </div>
-        <h2 className={styles.modernTitle}>
+    <FormHeader
+      title={
+        <div>
           {title}
           {lieu?.type && (
-            <Badge bg="secondary" className={styles.typeBadge}>
+            <Badge bg="secondary" style={{ marginLeft: '8px', fontSize: '0.7em' }}>
               {lieu.type}
             </Badge>
           )}
-        </h2>
-      </div>
-      
-      <div className={styles.actionButtons}>
+        </div>
+      }
+      icon={<i className="bi bi-geo-alt"></i>}
+      subtitle={
+        <span style={{ cursor: 'pointer' }} onClick={() => navigate('/lieux')}>
+          ← Retour aux lieux
+        </span>
+      }
+      isLoading={isSubmitting}
+      roundedTop={roundedTop}
+      actions={[
         <Button 
+          key="save"
           onClick={onSave} 
           variant="success"
-          className={styles.actionBtn}
           disabled={isSubmitting || !canSave}
           icon={<i className="bi bi-check-circle"></i>}
         >
@@ -50,31 +43,31 @@ const LieuFormHeader = ({ id, lieuNom, navigate, lieu, isSubmitting, onSave, onD
           ) : (
             isNewLieu ? 'Créer' : 'Enregistrer'
           )}
-        </Button>
+        </Button>,
         
-        {!isNewLieu && onDelete && (
+        ...(isNewLieu || !onDelete ? [] : [
           <Button 
+            key="delete"
             onClick={onDelete} 
             variant="danger"
-            className={styles.actionBtn}
             disabled={isSubmitting}
             icon={<i className="bi bi-trash"></i>}
           >
             Supprimer
           </Button>
-        )}
+        ]),
         
         <Button 
+          key="cancel"
           onClick={() => navigate(isNewLieu ? '/lieux' : `/lieux/${id}`)} 
           variant="secondary"
-          className={styles.actionBtn}
           disabled={isSubmitting}
           icon={<i className="bi bi-x-circle"></i>}
         >
           Annuler
         </Button>
-      </div>
-    </div>
+      ]}
+    />
   );
 };
 

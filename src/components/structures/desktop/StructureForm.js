@@ -6,6 +6,7 @@ import { db } from '@/services/firebase-service';
 import LoadingSpinner from '@components/ui/LoadingSpinner';
 import ErrorMessage from '@components/ui/ErrorMessage';
 import AddressInput from '@components/ui/AddressInput';
+import FormHeader from '@/components/ui/FormHeader';
 import useCompanySearch from '@/hooks/common/useCompanySearch';
 import styles from './StructureForm.module.css';
 
@@ -492,14 +493,15 @@ const StructureFormEnhanced = () => {
     <div className={styles.pageWrapper}>
       <form onSubmit={handleSave}>
         <div className={styles.formContainer}>
-          {/* Header */}
-          <div className={styles.formHeader}>
-            <h1 className={styles.headerTitle}>
-              <i className="bi bi-building"></i>
-              {isNewFromUrl ? 'Nouvelle Structure' : 'Modifier Structure'}
-            </h1>
-            <div className={styles.headerActions}>
+          {/* Header avec FormHeader standardisé */}
+          <FormHeader
+            title={isNewFromUrl ? 'Nouvelle Structure' : 'Modifier Structure'}
+            icon={<i className="bi bi-building"></i>}
+            isLoading={isSubmitting}
+            roundedTop={true}
+            actions={[
               <button 
+                key="save"
                 type="submit" 
                 className={`${styles.tcBtn} ${styles.tcBtnPrimary}`}
                 disabled={isSubmitting}
@@ -515,8 +517,9 @@ const StructureFormEnhanced = () => {
                     Enregistrer
                   </>
                 )}
-              </button>
+              </button>,
               <button 
+                key="cancel"
                 type="button" 
                 className={`${styles.tcBtn} ${styles.tcBtnSecondary}`}
                 onClick={() => navigate(isNewFromUrl ? '/structures' : `/structures/${id}`)}
@@ -525,8 +528,8 @@ const StructureFormEnhanced = () => {
                 <i className="bi bi-x-circle"></i>
                 Annuler
               </button>
-            </div>
-          </div>
+            ]}
+          />
 
           <div className={styles.sectionBody}>
             {/* Section Recherche SIRET */}

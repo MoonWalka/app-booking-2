@@ -1,6 +1,6 @@
 import React from 'react';
+import FormHeader from '@/components/ui/FormHeader';
 import ConcertFormActions from './ConcertFormActions';
-import styles from './ConcertFormHeader.module.css';
 
 /**
  * ConcertFormHeader - Composant pour l'en-tête du formulaire de concert
@@ -12,25 +12,27 @@ import styles from './ConcertFormHeader.module.css';
  * @param {boolean} props.isSubmitting - Indique si le formulaire est en cours de soumission
  * @param {Function} props.onDelete - Fonction de rappel pour la suppression
  * @param {Function} props.onCancel - Fonction de rappel pour l'annulation
+ * @param {boolean} props.roundedTop - Indique si le header doit avoir des bordures arrondies en haut
  */
-const ConcertFormHeader = ({ id, formData, navigate, isSubmitting, onDelete, onCancel }) => {
+const ConcertFormHeader = ({ id, formData, navigate, isSubmitting, onDelete, onCancel, roundedTop = false }) => {
   return (
-    <div className={styles.detailsHeaderContainer}>
-      <div className={styles.titleContainer}>
-        <h2 className={styles.pageTitle}>
-          {id === 'nouveau' ? 'Ajouter un concert' : 'Modifier le concert'}
-        </h2>
-      </div>
-      
-      <ConcertFormActions
-        id={id}
-        isSubmitting={isSubmitting}
-        onDelete={onDelete}
-        onCancel={onCancel}
-        navigate={navigate}
-        position="top"
-      />
-    </div>
+    <FormHeader
+      title={id === 'nouveau' ? 'Ajouter un concert' : 'Modifier le concert'}
+      icon={<i className="bi bi-music-note-beamed"></i>}
+      isLoading={isSubmitting}
+      roundedTop={roundedTop}
+      actions={[
+        <ConcertFormActions
+          key="actions"
+          id={id}
+          isSubmitting={isSubmitting}
+          onDelete={onDelete}
+          onCancel={onCancel}
+          navigate={navigate}
+          position="top"
+        />
+      ]}
+    />
   );
 };
 

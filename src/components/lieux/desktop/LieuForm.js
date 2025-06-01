@@ -65,69 +65,74 @@ const LieuForm = () => {
   }
 
   return (
-    <div className={styles.lieuFormContainer}>
-      {/* Header avec le style qui te plaisait */}
-      <LieuFormHeader 
-        id={id} 
-        lieuNom={lieu.nom} 
-        lieu={lieu}
-        navigate={navigate}
-        isSubmitting={submitting || loading || isDeleting}
-        onSave={handleSubmit}
-        onDelete={id !== 'nouveau' ? handleOpenDeleteModal : undefined}
-        canSave={true}
-      />
-
-      <form onSubmit={handleSubmit} className={styles.modernForm}>
-        <div className={styles.sectionsStack}>
-          {/* General information section - Même ordre que LieuDetails */}
-          <LieuGeneralInfo
+    <div className={styles.pageWrapper}>
+      <form onSubmit={handleSubmit}>
+        <div className={styles.formContainer}>
+          {/* Header avec le style qui te plaisait */}
+          <LieuFormHeader 
+            id={id} 
+            lieuNom={lieu.nom} 
             lieu={lieu}
-            formData={lieu}
-            isEditMode={true}
-            onChange={handleChange}
+            navigate={navigate}
+            isSubmitting={submitting || loading || isDeleting}
+            onSave={handleSubmit}
+            onDelete={id !== 'nouveau' ? handleOpenDeleteModal : undefined}
+            canSave={true}
+            roundedTop={true}
           />
 
-          {/* Address section */}
-          <LieuAddressSection 
-            lieu={lieu}
-            isEditing={true}
-            handleChange={handleChange}
-            addressSearch={addressSearch}
-          />
+          <div className={styles.sectionBody}>
+            <div className={styles.sectionsStack}>
+              {/* General information section - Même ordre que LieuDetails */}
+              <LieuGeneralInfo
+                lieu={lieu}
+                formData={lieu}
+                isEditMode={true}
+                onChange={handleChange}
+              />
 
-          {/* Organizer section - Même nom que dans LieuDetails */}
-          <LieuOrganizerSection
-            isEditMode={true}
-            programmateur={programmateurSearch?.selectedEntity}
-            lieu={lieu}
-            formData={lieu}
-            onChange={handleChange}
-            onProgrammateurChange={programmateurSearch?.setSelectedEntity}
-          />
+              {/* Address section */}
+              <LieuAddressSection 
+                lieu={lieu}
+                isEditing={true}
+                handleChange={handleChange}
+                addressSearch={addressSearch}
+              />
 
-          {/* Contact section - Déplacé vers le bas comme dans LieuDetails */}
-          <LieuContactSection 
-            lieu={lieu}
-            contact={lieu.contact} 
-            isEditing={true}
-            handleChange={handleChange} 
-          />
+              {/* Organizer section - Même nom que dans LieuDetails */}
+              <LieuOrganizerSection
+                isEditMode={true}
+                programmateur={programmateurSearch?.selectedEntity}
+                lieu={lieu}
+                formData={lieu}
+                onChange={handleChange}
+                onProgrammateurChange={programmateurSearch?.setSelectedEntity}
+              />
 
-          {/* Additional information section - En bas comme dans LieuDetails */}
-          <LieuInfoSection 
-            lieu={lieu}
-            isEditing={true}
-            handleChange={handleChange}
-          />
+              {/* Contact section - Déplacé vers le bas comme dans LieuDetails */}
+              <LieuContactSection 
+                lieu={lieu}
+                contact={lieu.contact} 
+                isEditing={true}
+                handleChange={handleChange} 
+              />
 
-          {error && (
-            <Alert variant="danger" className="shadow-sm rounded-3 mb-4">
-              <FlexContainer align="center" gap="sm">
-                <div>{error}</div>
-              </FlexContainer>
-            </Alert>
-          )}
+              {/* Additional information section - En bas comme dans LieuDetails */}
+              <LieuInfoSection 
+                lieu={lieu}
+                isEditing={true}
+                handleChange={handleChange}
+              />
+
+              {error && (
+                <Alert variant="danger" className="shadow-sm rounded-3 mb-4">
+                  <FlexContainer align="center" gap="sm">
+                    <div>{error}</div>
+                  </FlexContainer>
+                </Alert>
+              )}
+            </div>
+          </div>
         </div>
       </form>
 

@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { Form, Button, Card, Alert } from 'react-bootstrap';
 import styles from './ParametresCompte.module.css';
 import { useAuth } from '@/context/AuthContext';
-import { updateEmail, updatePassword } from 'firebase/auth';
+import { updateEmail, updatePassword, updateProfile } from 'firebase/auth';
 
 const ParametresCompte = () => {
   const { currentUser } = useAuth();
   const [formData, setFormData] = useState({
+    displayName: currentUser?.displayName || '',
     email: currentUser?.email || '',
     currentPassword: '',
     newPassword: '',
@@ -48,10 +49,19 @@ const ParametresCompte = () => {
         return;
       }
 
+      // Mettre à jour le nom d'affichage
+      if (formData.displayName !== currentUser.displayName) {
+        await updateProfile(currentUser, {
+          displayName: formData.displayName
+        });
+      }
+
+      // Mettre à jour l'email
       if (formData.email !== currentUser.email) {
         await updateEmail(currentUser, formData.email);
       }
 
+      // Mettre à jour le mot de passe
       if (formData.newPassword) {
         await updatePassword(currentUser, formData.newPassword);
       }
@@ -63,6 +73,11 @@ const ParametresCompte = () => {
         newPassword: '',
         confirmPassword: ''
       }));
+      
+      // Recharger la page pour mettre à jour l'affichage du nom dans la sidebar
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     } catch (err) {
       setError('Erreur lors de la mise à jour du compte: ' + err.message);
     } finally {
@@ -78,6 +93,20 @@ const ParametresCompte = () => {
         {success && <Alert variant="success" className={styles.successAlert}>{success}</Alert>}
         
         <Form onSubmit={handleSubmit}>
+          <Form.Group className={styles.formSection}>
+            <Form.Label>Nom d'utilisateur</Form.Label>
+            <Form.Control
+              type="text"
+              name="displayName"
+              value={formData.displayName}
+              onChange={handleChange}
+              placeholder="Votre nom d'affichage"
+            />
+            <Form.Text className="text-muted">
+              Ce nom sera affiché dans l'interface utilisateur
+            </Form.Text>
+          </Form.Group>
+
           <Form.Group className={styles.formSection}>
             <Form.Label>Email</Form.Label>
             <Form.Control
@@ -133,6 +162,7 @@ const ParametresCompte = () => {
               onClick={() => {
                 if (window.confirm('Voulez-vous vraiment réinitialiser le formulaire ?')) {
                   setFormData({
+                    displayName: currentUser?.displayName || '',
                     email: currentUser?.email || '',
                     currentPassword: '',
                     newPassword: '',

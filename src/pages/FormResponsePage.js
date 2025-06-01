@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import PublicProgrammateurForm from '@/components/forms/PublicProgrammateurForm';
+import Card from '@/components/ui/Card';
 import styles from './FormResponsePage.module.css';
 
 // Composant pour le layout public du formulaire selon la maquette
@@ -256,12 +257,10 @@ const FormResponsePage = () => {
 
         {/* Informations du concert selon la maquette */}
         {concert && (
-          <div className={styles.tcCard}>
-            <div className={styles.tcCardHeader}>
-              <i className="bi bi-calendar-event"></i>
-              <h3>Informations sur le concert</h3>
-            </div>
-            <div className={styles.tcCardBody}>
+          <Card 
+            title="Informations sur le concert"
+            icon={<i className="bi bi-calendar-event"></i>}
+          >
               <div className={styles.concertInfoGrid}>
                 <div className={styles.concertInfoItem}>
                   <div className={styles.concertInfoLabel}>Date</div>
@@ -276,17 +275,14 @@ const FormResponsePage = () => {
                   <div className={styles.concertInfoValue}>{formatMontant(concert.montant)}</div>
                 </div>
               </div>
-            </div>
-          </div>
+          </Card>
         )}
 
         {/* Formulaire de contact selon la maquette */}
-        <div className={styles.tcCard}>
-          <div className={styles.tcCardHeader}>
-            <i className="bi bi-person-lines-fill"></i>
-            <h3>Vos informations de contact</h3>
-          </div>
-          <div className={styles.tcCardBody}>
+        <Card 
+          title="Vos informations de contact"
+          icon={<i className="bi bi-person-lines-fill"></i>}
+        >
             <p className={styles.formSubtitle}>
               Veuillez remplir le formulaire ci-dessous avec vos informations de contact.
             </p>
@@ -298,8 +294,7 @@ const FormResponsePage = () => {
               programmateurEmail={programmateurEmail}
               onSubmitSuccess={() => setCompleted(true)}
             />
-          </div>
-        </div>
+        </Card>
 
         {/* Notice légale selon la maquette */}
         <div className={styles.legalNotice}>

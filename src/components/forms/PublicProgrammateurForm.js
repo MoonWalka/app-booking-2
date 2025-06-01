@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { collection, addDoc, updateDoc, doc, serverTimestamp, getDoc } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import AddressInput from '@/components/ui/AddressInput';
+import Card from '@/components/ui/Card';
 import styles from '@/pages/FormResponsePage.module.css';
 
 const PublicProgrammateurForm = ({ 
@@ -361,12 +362,10 @@ const PublicProgrammateurForm = ({
   return (
     <form onSubmit={handleSubmit}>
       {/* Section Adresse du lieu */}
-      <div className={styles.card}>
-        <div className={styles.cardHeader}>
-          <i className="bi bi-geo-alt"></i>
-          <h3>Adresse du lieu de l'événement</h3>
-        </div>
-        <div className={styles.cardBody}>
+      <Card 
+        title="Adresse du lieu de l'événement"
+        icon={<i className="bi bi-geo-alt"></i>}
+      >
           <p className={styles.formSubtitle}>
             Veuillez indiquer l'adresse exacte où se déroulera l'événement.
           </p>
@@ -410,16 +409,13 @@ const PublicProgrammateurForm = ({
               />
             </div>
           </div>
-        </div>
-      </div>
+      </Card>
 
       {/* Section Recherche Structure */}
-      <div className={styles.card}>
-        <div className={styles.cardHeader}>
-          <i className="bi bi-building"></i>
-          <h3>Informations de votre structure</h3>
-        </div>
-        <div className={styles.cardBody}>
+      <Card 
+        title="Informations de votre structure"
+        icon={<i className="bi bi-building"></i>}
+      >
           <p className={styles.formSubtitle}>
             Recherchez votre entreprise/association par SIRET ou nom pour pré-remplir automatiquement, ou remplissez manuellement.
           </p>
@@ -557,16 +553,13 @@ const PublicProgrammateurForm = ({
               />
             </div>
           </div>
-        </div>
-      </div>
+      </Card>
 
       {/* Section Informations du signataire du contrat */}
-      <div className={styles.card}>
-        <div className={styles.cardHeader}>
-          <i className="bi bi-person-check"></i>
-          <h3>Informations du signataire du contrat</h3>
-        </div>
-        <div className={styles.cardBody}>
+      <Card 
+        title="Informations du signataire du contrat"
+        icon={<i className="bi bi-person-check"></i>}
+      >
           <div className={styles.formGrid}>
             <div className={styles.formGroup}>
               <label htmlFor="signatairePrenom" className={styles.formLabel}>Prénom *</label>
@@ -638,8 +631,7 @@ const PublicProgrammateurForm = ({
               />
             </div>
           </div>
-        </div>
-      </div>
+      </Card>
 
       {/* Messages d'erreur */}
       {submitError && (

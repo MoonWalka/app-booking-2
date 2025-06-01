@@ -25,7 +25,8 @@ import {
   onSnapshot as firestoreOnSnapshot, 
   Timestamp as FirebaseTimestamp, 
   getCountFromServer as firestoreGetCountFromServer,
-  writeBatch as firestoreWriteBatch
+  writeBatch as firestoreWriteBatch,
+  deleteField as firestoreDeleteField
 } from 'firebase/firestore';
 import { 
   getAuth, signInWithEmailAndPassword,
@@ -232,6 +233,7 @@ export const Timestamp = IS_LOCAL_MODE ? getDirectMockFunction('Timestamp') : Fi
 export const onSnapshot = IS_LOCAL_MODE ? mockOnSnapshot : firestoreOnSnapshot;
 export const getCountFromServer = IS_LOCAL_MODE ? mockGetCountFromServer : firestoreGetCountFromServer;
 export const writeBatch = IS_LOCAL_MODE ? getDirectMockFunction('writeBatch') : firestoreWriteBatch;
+export const deleteField = IS_LOCAL_MODE ? getDirectMockFunction('deleteField') : firestoreDeleteField;
 
 // Fonctions Auth
 export { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged };
@@ -433,6 +435,231 @@ export const updateOrganizationSettings = async (orgId, settings) => {
     console.log('✅ Paramètres mis à jour avec succès');
   } catch (error) {
     console.error('❌ Erreur lors de la mise à jour des paramètres:', error);
+    throw error;
+  }
+};
+
+// Générer un code d'invitation pour rejoindre une organisation
+export const generateInvitationCode = async (orgId, createdBy, role = 'member', expiresInDays = 7) => {
+  console.log('🎫 Génération d\'un code d\'invitation pour l\'organisation:', orgId);
+  
+  try {
+    // Générer un code unique de 8 caractères
+    const code = Math.random().toString(36).substring(2, 10).toUpperCase();
+    
+    const invitationRef = doc(collection(db, 'organization_invitations'));
+    
+    await setDoc(invitationRef, {
+      code: code,
+      organizationId: orgId,
+      role: role,
+      createdBy: createdBy,
+      status: 'active',
+      maxUses: 10, // Limite d'utilisation du code
+      usedBy: [],
+      createdAt: serverTimestamp(),
+      expiresAt: Timestamp.fromDate(new Date(Date.now() + expiresInDays * 24 * 60 * 60 * 1000))
+    });
+    
+    console.log('✅ Code d\'invitation généré:', code);
+    return code;
+  } catch (error) {
+    console.error('❌ Erreur lors de la génération du code d\'invitation:', error);
+    throw error;
+  }
+};
+
+// Rejoindre une organisation avec un code d'invitation
+export const joinOrganization = async (invitationCode, userId) => {
+  console.log('🔗 Tentative de rejoindre une organisation avec le code:', invitationCode);
+  
+  try {
+    // Rechercher l'invitation par code
+    const invitationsQuery = query(
+      collection(db, 'organization_invitations'),
+      where('code', '==', invitationCode.toUpperCase()),
+      where('status', '==', 'active')
+    );
+    
+    const invitationSnapshot = await getDocs(invitationsQuery);
+    
+    if (invitationSnapshot.empty) {
+      throw new Error('Code d\'invitation invalide ou expiré');
+    }
+    
+    const invitationDoc = invitationSnapshot.docs[0];
+    const invitation = invitationDoc.data();
+    
+    // Vérifier si l'invitation n'est pas expirée
+    if (invitation.expiresAt.toDate() < new Date()) {
+      throw new Error('Ce code d\'invitation a expiré');
+    }
+    
+    // Vérifier si l'utilisateur n'a pas déjà utilisé ce code
+    if (invitation.usedBy && invitation.usedBy.includes(userId)) {
+      throw new Error('Vous avez déjà utilisé ce code d\'invitation');
+    }
+    
+    // Vérifier la limite d'utilisation
+    if (invitation.usedBy && invitation.usedBy.length >= invitation.maxUses) {
+      throw new Error('Ce code d\'invitation a atteint sa limite d\'utilisation');
+    }
+    
+    const orgId = invitation.organizationId;
+    const role = invitation.role;
+    
+    // Vérifier que l'organisation existe
+    const orgDoc = await getDoc(doc(db, 'organizations', orgId));
+    if (!orgDoc.exists()) {
+      throw new Error('Organisation introuvable');
+    }
+    
+    // Vérifier que l'utilisateur n'est pas déjà membre de cette organisation
+    const userOrgDoc = await getDoc(doc(db, 'user_organizations', userId));
+    if (userOrgDoc.exists()) {
+      const userData = userOrgDoc.data();
+      if (userData.organizations && userData.organizations[orgId]) {
+        throw new Error('Vous êtes déjà membre de cette organisation');
+      }
+    }
+    
+    // Ajouter l'utilisateur à l'organisation
+    const orgRef = doc(db, 'organizations', orgId);
+    await updateDoc(orgRef, {
+      [`members.${userId}`]: {
+        role: role,
+        joinedAt: serverTimestamp(),
+        permissions: role === 'admin' ? ['read', 'write', 'delete'] : ['read', 'write']
+      },
+      updatedAt: serverTimestamp()
+    });
+    
+    // Ajouter l'organisation à l'index utilisateur
+    const userOrgRef = doc(db, 'user_organizations', userId);
+    await setDoc(userOrgRef, {
+      organizations: {
+        [orgId]: {
+          role: role,
+          joinedAt: serverTimestamp()
+        }
+      }
+    }, { merge: true });
+    
+    // Marquer l'invitation comme utilisée
+    await updateDoc(invitationDoc.ref, {
+      usedBy: arrayUnion(userId),
+      lastUsedAt: serverTimestamp()
+    });
+    
+    console.log('✅ Utilisateur ajouté à l\'organisation avec succès');
+    return {
+      organizationId: orgId,
+      organizationName: orgDoc.data().name,
+      role: role
+    };
+  } catch (error) {
+    console.error('❌ Erreur lors de la tentative de rejoindre l\'organisation:', error);
+    throw error;
+  }
+};
+
+// Obtenir les membres d'une organisation
+export const getOrganizationMembers = async (orgId) => {
+  console.log('👥 Récupération des membres de l\'organisation:', orgId);
+  
+  try {
+    const orgDoc = await getDoc(doc(db, 'organizations', orgId));
+    
+    if (!orgDoc.exists()) {
+      throw new Error('Organisation introuvable');
+    }
+    
+    const orgData = orgDoc.data();
+    const members = orgData.members || {};
+    
+    // Pour chaque membre, récupérer les informations utilisateur
+    const memberIds = Object.keys(members);
+    const memberPromises = memberIds.map(async (userId) => {
+      try {
+        // En mode local, retourner des données mock
+        if (IS_LOCAL_MODE) {
+          return {
+            id: userId,
+            email: `user-${userId}@example.com`,
+            displayName: `User ${userId}`,
+            role: members[userId].role,
+            joinedAt: members[userId].joinedAt
+          };
+        }
+        
+        // En production, récupérer les vraies données utilisateur
+        // Note: Firebase Auth ne permet pas de récupérer les infos utilisateur par UID
+        // Il faudrait une collection 'users' séparée ou utiliser Firebase Admin SDK
+        return {
+          id: userId,
+          email: 'Email non disponible',
+          displayName: 'Nom non disponible',
+          role: members[userId].role,
+          joinedAt: members[userId].joinedAt
+        };
+      } catch (error) {
+        console.warn('⚠️ Impossible de récupérer les infos pour l\'utilisateur:', userId);
+        return {
+          id: userId,
+          email: 'Email non disponible',
+          displayName: 'Nom non disponible',
+          role: members[userId].role,
+          joinedAt: members[userId].joinedAt
+        };
+      }
+    });
+    
+    const membersData = await Promise.all(memberPromises);
+    console.log(`✅ ${membersData.length} membre(s) trouvé(s)`);
+    return membersData;
+  } catch (error) {
+    console.error('❌ Erreur lors de la récupération des membres:', error);
+    throw error;
+  }
+};
+
+// Quitter une organisation
+export const leaveOrganization = async (orgId, userId) => {
+  console.log('🚪 Quitter l\'organisation:', orgId);
+  
+  try {
+    // Vérifier que l'utilisateur est membre de l'organisation
+    const orgDoc = await getDoc(doc(db, 'organizations', orgId));
+    if (!orgDoc.exists()) {
+      throw new Error('Organisation introuvable');
+    }
+    
+    const orgData = orgDoc.data();
+    if (!orgData.members || !orgData.members[userId]) {
+      throw new Error('Vous n\'êtes pas membre de cette organisation');
+    }
+    
+    // Empêcher le propriétaire de quitter son organisation
+    if (orgData.ownerId === userId) {
+      throw new Error('Le propriétaire ne peut pas quitter son organisation. Transférez d\'abord la propriété ou supprimez l\'organisation.');
+    }
+    
+    // Retirer l'utilisateur de l'organisation
+    const orgRef = doc(db, 'organizations', orgId);
+    await updateDoc(orgRef, {
+      [`members.${userId}`]: deleteField(),
+      updatedAt: serverTimestamp()
+    });
+    
+    // Retirer l'organisation de l'index utilisateur
+    const userOrgRef = doc(db, 'user_organizations', userId);
+    await updateDoc(userOrgRef, {
+      [`organizations.${orgId}`]: deleteField()
+    });
+    
+    console.log('✅ Organisation quittée avec succès');
+  } catch (error) {
+    console.error('❌ Erreur lors de la tentative de quitter l\'organisation:', error);
     throw error;
   }
 };

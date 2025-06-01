@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { createOrganization } from '@/services/firebase-service';
+import { createOrganization, joinOrganization } from '@/services/firebase-service';
 import { useAuth } from '@/context/AuthContext';
 import { useOrganization } from '@/context/OrganizationContext';
 import './OnboardingFlow.css';
@@ -8,7 +8,17 @@ const OnboardingFlow = ({ onComplete }) => {
   const { currentUser } = useAuth();
   const { loadUserOrganizations } = useOrganization();
   
-  const [step, setStep] = useState('choice'); // 'choice', 'create', 'join'
+  // Vérifier les paramètres d'URL pour démarrer directement sur la bonne étape
+  const urlParams = new URLSearchParams(window.location.search);
+  const action = urlParams.get('action');
+  
+  const getInitialStep = () => {
+    if (action === 'create') return 'create';
+    if (action === 'join') return 'join';
+    return 'choice';
+  };
+  
+  const [step, setStep] = useState(getInitialStep()); // 'choice', 'create', 'join'
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   
@@ -59,11 +69,18 @@ const OnboardingFlow = ({ onComplete }) => {
     setError(null);
     
     try {
-      // TODO: Implémenter la logique pour rejoindre une organisation
       console.log('🔗 Tentative de rejoindre avec le code:', joinData.invitationCode);
       
-      // Pour l'instant, afficher un message
-      setError('La fonctionnalité pour rejoindre une organisation sera bientôt disponible');
+      const result = await joinOrganization(joinData.invitationCode, currentUser.uid);
+      console.log('✅ Organisation rejointe:', result);
+      
+      // Recharger les organisations pour inclure la nouvelle
+      await loadUserOrganizations();
+      
+      // Appeler le callback de complétion si fourni
+      if (onComplete) {
+        onComplete(result.organizationId);
+      }
       
     } catch (error) {
       console.error('❌ Erreur pour rejoindre:', error);

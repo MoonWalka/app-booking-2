@@ -8,6 +8,7 @@ import ErrorMessage from '@components/ui/ErrorMessage';
 import useCompanySearch from '@/hooks/common/useCompanySearch';
 import useLieuSearchFixed from '@/hooks/lieux/useLieuSearchFixed';
 import ConfirmationModal from '@/components/ui/ConfirmationModal';
+import FormHeader from '@/components/ui/FormHeader';
 import styles from './ProgrammateurFormMaquette.module.css';
 
 /**
@@ -461,14 +462,15 @@ const ProgrammateurFormMaquette = () => {
     <div className={styles.pageWrapper}>
       <form onSubmit={handleSave}>
         <div className={styles.formContainer}>
-          {/* Header - Style maquette */}
-          <div className={styles.formHeader}>
-            <h1 className={styles.headerTitle}>
-              <i className="bi bi-person-badge"></i>
-              {isNewFromUrl ? 'Nouveau Programmateur' : 'Modifier Programmateur'}
-            </h1>
-            <div className={styles.headerActions}>
+          {/* Header - Nouveau composant FormHeader */}
+          <FormHeader
+            title={isNewFromUrl ? 'Nouveau Programmateur' : 'Modifier Programmateur'}
+            icon={<i className="bi bi-person-badge"></i>}
+            isLoading={isSubmitting}
+            roundedTop={true}
+            actions={[
               <button 
+                key="save"
                 type="submit" 
                 className={`${styles.tcBtn} ${styles.tcBtnPrimary}`}
                 disabled={isSubmitting}
@@ -484,8 +486,9 @@ const ProgrammateurFormMaquette = () => {
                     Enregistrer
                   </>
                 )}
-              </button>
+              </button>,
               <button 
+                key="cancel"
                 type="button" 
                 className={`${styles.tcBtn} ${styles.tcBtnSecondary}`}
                 onClick={handleCancel}
@@ -493,9 +496,10 @@ const ProgrammateurFormMaquette = () => {
               >
                 <i className="bi bi-x-circle"></i>
                 Annuler
-              </button>
-              {!isNewFromUrl && (
+              </button>,
+              ...(isNewFromUrl ? [] : [
                 <button 
+                  key="delete"
                   type="button" 
                   className={`${styles.tcBtn} ${styles.tcBtnDanger}`}
                   onClick={handleDelete}
@@ -504,9 +508,9 @@ const ProgrammateurFormMaquette = () => {
                   <i className="bi bi-trash"></i>
                   Supprimer
                 </button>
-              )}
-            </div>
-          </div>
+              ])
+            ]}
+          />
 
           <div className={styles.sectionBody}>
             {/* Section Contact */}

@@ -22,13 +22,8 @@ body {
 /* =============================
    COMPOSANTS DE BASE
    ============================= */
-.tc-card {
-  background-color: var(--tc-bg-default);
-  border: 1px solid var(--tc-border-default);
-  box-shadow: var(--tc-shadow-sm);
-  border-radius: var(--tc-radius-base);
-  padding: var(--tc-space-4);
-}
+/* Supprimé : .tc-card écrasait les styles du composant Card
+   Utiliser le composant Card avec ses propres styles module CSS */
 
 .tc-form-control {
   background-color: var(--tc-bg-default);

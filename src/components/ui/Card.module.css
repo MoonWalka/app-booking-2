@@ -14,8 +14,8 @@
 .card {
   background-color: var(--tc-card-bg-color);
   border-radius: var(--tc-card-border-radius);
-  box-shadow: var(--tc-card-shadow-medium);
-  border: 1px solid var(--tc-card-border-color);
+  box-shadow: var(--tc-shadow-base); /* Harmonisé avec ConcertView */
+  border: 1px solid var(--tc-border-light); /* Harmonisé avec ConcertView */
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   overflow: hidden;
   margin-bottom: var(--tc-space-6);
@@ -34,8 +34,8 @@
 }
 
 .cardHoverable:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--tc-shadow-md);
+  transform: translateY(-2px); /* Plus subtil, harmonisé */
+  box-shadow: var(--tc-shadow-hover);
 }
 
 /* =============================
@@ -44,36 +44,38 @@
 .cardHeader {
   display: flex;
   align-items: center;
-  background-color: var(--tc-card-header-bg-color);
+  background-color: var(--tc-color-primary-100); /* Plus visible que primary-50 */
   padding: var(--tc-space-4);
-  border-bottom: 1px solid var(--tc-border-light);
+  border-bottom: 1px solid var(--tc-color-primary-200);
   justify-content: space-between;
+  border-radius: var(--tc-card-border-radius) var(--tc-card-border-radius) 0 0;
 }
 
 /* Headers colorés par type de section */
 :global(.lieu) .cardIcon {
-  color: var(--tc-color-info);
+  color: var(--tc-color-info-600);
 }
 
 :global(.artiste) .cardIcon {
-  color: var(--tc-color-artiste);
+  color: var(--tc-color-secondary-600);
 }
 
 :global(.programmateur) .cardIcon {
-  color: var(--tc-color-programmateur);
+  color: var(--tc-color-primary-600);
 }
 
 :global(.info) .cardIcon {
-  color: var(--tc-color-success);
+  color: var(--tc-color-success-600);
 }
 
 :global(.notes) .cardIcon {
-  color: var(--tc-color-warning-dark);
+  color: var(--tc-color-warning-600);
 }
 
 /* Headers obligatoires */
 :global(.required).cardHeader {
-  border-bottom: 2px solid var(--tc-color-primary);
+  border-bottom: 2px solid var(--tc-color-primary-400);
+  background-color: var(--tc-color-primary-100);
 }
 
 .headerTitleSection {
@@ -162,19 +164,31 @@
 }
 
 .cardEditing .cardHeader {
-  background-color: rgba(var(--tc-color-primary-rgb), 0.1);
+  background-color: var(--tc-color-primary-100); /* Même fond bleu en mode édition */
+  /* Les bords arrondis sont hérités du .cardHeader parent */
 }
 
 /* =============================
    RESPONSIVE DESIGN
    ============================= */
 @media (max-width: var(--tc-breakpoint-md)) {
+  /* Harmonisé avec ConcertView mobile */
+  .card {
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
+    background-color: var(--tc-bg-default);
+    width: 100%;
+  }
+  
   .cardBody {
     padding: var(--tc-space-4);
   }
   
   .cardHeader {
-    padding: var(--tc-space-2) var(--tc-space-4);
+    padding: var(--tc-space-4);
+    border-radius: 0; /* Pas d'arrondis en mobile */
   }
   
   .cardFooter {

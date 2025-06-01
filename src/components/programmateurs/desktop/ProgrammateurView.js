@@ -1,6 +1,7 @@
 // src/components/programmateurs/desktop/ProgrammateurView.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Card from '@/components/ui/Card';
 import { ProgrammateurHeader } from './sections/ProgrammateurHeader';
 import ProgrammateurContactSection from './ProgrammateurContactSection';
 import ProgrammateurConcertsSection from './ProgrammateurConcertsSection';
@@ -88,126 +89,70 @@ const ProgrammateurView = ({
       {/* Sections - style maquette concert details */}
       <div>
         {/* Section Contact - style maquette */}
-        <div className="form-card">
-          <div className="card-header">
-            <i className="bi bi-person-vcard"></i>
-            <h3>Informations de contact</h3>
-            <div className="card-header-action">
-              <button 
-                className="tc-btn tc-btn-outline-secondary tc-btn-sm" 
-                onClick={() => toggleSection('contactVisible')}
-              >
-                {sections.contactVisible ? (
-                  <i className="bi bi-chevron-up"></i>
-                ) : (
-                  <i className="bi bi-chevron-down"></i>
-                )}
-              </button>
-            </div>
-          </div>
-          
-          {sections.contactVisible && (
-            <div className="card-body">
-              <ProgrammateurContactSection
-                programmateur={programmateur}
-                isEditing={false}
-                formatValue={formatValue}
-                showCardWrapper={false}
-              />
-            </div>
-          )}
-        </div>
+        <Card
+          title="Informations de contact"
+          icon={<i className="bi bi-person-vcard"></i>}
+          headerClassName="programmateur"
+          collapsible={true}
+          defaultCollapsed={!sections.contactVisible}
+          onCollapseToggle={(collapsed) => setSections(prev => ({...prev, contactVisible: !collapsed}))}
+        >
+          <ProgrammateurContactSection
+            programmateur={programmateur}
+            isEditing={false}
+            formatValue={formatValue}
+            showCardWrapper={false}
+          />
+        </Card>
         
         {/* Section Structure - style maquette */}
-        <div className="form-card">
-          <div className="card-header">
-            <i className="bi bi-building"></i>
-            <h3>Structure</h3>
-            <div className="card-header-action">
-              <button 
-                className="tc-btn tc-btn-outline-secondary tc-btn-sm" 
-                onClick={() => toggleSection('structureVisible')}
-              >
-                {sections.structureVisible ? (
-                  <i className="bi bi-chevron-up"></i>
-                ) : (
-                  <i className="bi bi-chevron-down"></i>
-                )}
-              </button>
-            </div>
-          </div>
-          
-          {sections.structureVisible && (
-            <div className="card-body">
-              <ProgrammateurStructuresSection 
-                programmateur={programmateur}
-                structure={structure}
-                showCardWrapper={false}
-              />
-            </div>
-          )}
-        </div>
+        <Card
+          title="Structure"
+          icon={<i className="bi bi-building"></i>}
+          headerClassName="programmateur"
+          collapsible={true}
+          defaultCollapsed={!sections.structureVisible}
+          onCollapseToggle={(collapsed) => setSections(prev => ({...prev, structureVisible: !collapsed}))}
+        >
+          <ProgrammateurStructuresSection 
+            programmateur={programmateur}
+            structure={structure}
+            showCardWrapper={false}
+          />
+        </Card>
         
         {/* Section Lieux - style maquette */}
-        <div className="form-card">
-          <div className="card-header">
-            <i className="bi bi-geo-alt"></i>
-            <h3>Lieux associés</h3>
-            <div className="card-header-action">
-              <button 
-                className="tc-btn tc-btn-outline-secondary tc-btn-sm" 
-                onClick={() => toggleSection('lieuxVisible')}
-              >
-                {sections.lieuxVisible ? (
-                  <i className="bi bi-chevron-up"></i>
-                ) : (
-                  <i className="bi bi-chevron-down"></i>
-                )}
-              </button>
-            </div>
-          </div>
-          
-          {sections.lieuxVisible && (
-            <div className="card-body">
-              <ProgrammateurLieuxSection
-                programmateur={programmateur}
-                lieux={lieux}
-                isEditing={false}
-                showCardWrapper={false}
-              />
-            </div>
-          )}
-        </div>
+        <Card
+          title="Lieux associés"
+          icon={<i className="bi bi-geo-alt"></i>}
+          headerClassName="lieu"
+          collapsible={true}
+          defaultCollapsed={!sections.lieuxVisible}
+          onCollapseToggle={(collapsed) => setSections(prev => ({...prev, lieuxVisible: !collapsed}))}
+        >
+          <ProgrammateurLieuxSection
+            programmateur={programmateur}
+            lieux={lieux}
+            isEditing={false}
+            showCardWrapper={false}
+          />
+        </Card>
 
         {/* Section Concerts - style maquette */}
-        <div className="form-card">
-          <div className="card-header">
-            <i className="bi bi-calendar-event"></i>
-            <h3>Concerts associés</h3>
-            <div className="card-header-action">
-              <button 
-                className="tc-btn tc-btn-outline-secondary tc-btn-sm" 
-                onClick={() => toggleSection('concertsVisible')}
-              >
-                {sections.concertsVisible ? (
-                  <i className="bi bi-chevron-up"></i>
-                ) : (
-                  <i className="bi bi-chevron-down"></i>
-                )}
-              </button>
-            </div>
-          </div>
-          
-          {sections.concertsVisible && (
-            <div className="card-body">
-              <ProgrammateurConcertsSection
-                concertsAssocies={concerts || []}
-                isEditing={false}
-                showCardWrapper={false}
-              />
-            </div>
-          )}
-        </div>
+        <Card
+          title="Concerts associés"
+          icon={<i className="bi bi-calendar-event"></i>}
+          headerClassName="info"
+          collapsible={true}
+          defaultCollapsed={!sections.concertsVisible}
+          onCollapseToggle={(collapsed) => setSections(prev => ({...prev, concertsVisible: !collapsed}))}
+        >
+          <ProgrammateurConcertsSection
+            concertsAssocies={concerts || []}
+            isEditing={false}
+            showCardWrapper={false}
+          />
+        </Card>
       </div>
     </div>
   );

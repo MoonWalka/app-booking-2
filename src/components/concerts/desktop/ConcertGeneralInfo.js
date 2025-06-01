@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Card from '@/components/ui/Card';
 import styles from './ConcertGeneralInfo.module.css';
 
 /**
@@ -19,12 +20,12 @@ const ConcertGeneralInfo = ({
   formDataStatus
 }) => {
   return (
-    <div className="form-card">
-      <div className="card-header">
-        <i className="bi bi-info-circle"></i>
-        <h3>Informations générales</h3>
-      </div>
-      <div className="card-body">
+    <Card
+      title="Informations générales"
+      icon={<i className="bi bi-info-circle"></i>}
+      headerClassName="info"
+      isEditing={isEditMode}
+    >
         {isEditMode ? (
           <>
             <div className={styles.formGroup}>
@@ -202,8 +203,7 @@ const ConcertGeneralInfo = ({
             )}
           </>
         )}
-      </div>
-    </div>
+    </Card>
   );
 };
 

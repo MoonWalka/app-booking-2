@@ -51,9 +51,8 @@ const Card = ({
       [styles.cardWithDropdown]: hasDropdown,
       [styles[`card${variant?.charAt(0).toUpperCase() + variant?.slice(1) || ''}`]]: variant
     },
-    'tc-card',
+    // Supprimé 'tc-card' qui écrasait les styles du module
     isEditing ? 'editing' : '',
-    isHoverable && !isEditing ? 'tc-card-hover' : '',
     variant ? `tc-card-${variant}` : '',
     className
   );
@@ -76,10 +75,10 @@ const Card = ({
       {...rest}
     >
       {(title || icon || headerActions || collapsible) && (
-        <div className={classNames(styles.cardHeader, headerClassName, 'tc-card-header')}>
+        <div className={classNames(styles.cardHeader, headerClassName)}>
           <div className={styles.headerTitleSection}>
             {icon && <span className={styles.cardIcon}>{icon}</span>}
-            {title && <h4 className={styles.cardTitle}>{title}</h4>}
+            {title && <h3 className={styles.cardTitle}>{title}</h3>}
           </div>
           
           {(collapsible || headerActions) && (
@@ -96,13 +95,13 @@ const Card = ({
       )}
 
       {!isCollapsed && (
-        <div className={classNames(styles.cardBody, 'tc-card-body')}>
+        <div className={styles.cardBody}>
           {children}
         </div>
       )}
 
       {footerContent && (
-        <div className={classNames(styles.cardFooter, 'tc-card-footer')}>
+        <div className={styles.cardFooter}>
           {footerContent}
         </div>
       )}

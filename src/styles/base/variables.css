@@ -180,8 +180,8 @@
     --tc-card-bg-color: var(--tc-bg-white);
     --tc-card-border-color: var(--tc-border-light);
     --tc-card-border-radius: var(--tc-radius-lg);
-    --tc-card-header-bg-color: var(--tc-bg-light);
-    --tc-card-header-text: var(--tc-text-default);
+    --tc-card-header-bg-color: var(--tc-color-primary-100); /* Plus visible que primary-50 */
+    --tc-card-header-text: var(--tc-color-primary-700);
     --tc-card-footer-bg-color: var(--tc-bg-light);
     --tc-card-shadow-low: var(--tc-shadow-sm);
     --tc-card-shadow-medium: var(--tc-shadow-base);

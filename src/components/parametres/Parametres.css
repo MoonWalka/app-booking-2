@@ -59,14 +59,8 @@
   margin-bottom: var(--tc-space-6);
 }
 
-.cardHeader {
-  padding: var(--tc-space-4);
-  background-color: var(--tc-bg-surface);
-  border-bottom: 1px solid var(--tc-border-default);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
+/* Supprimé : .cardHeader qui écrasait les styles du module Card
+   Utiliser le composant Card ou des classes spécifiques aux paramètres */
 
 .cardTitle {
   margin: 0;

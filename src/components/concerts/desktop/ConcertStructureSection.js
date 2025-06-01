@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import styles from './ConcertStructureSection.module.css';
 import Button from '@/components/ui/Button';
 import Alert from '@/components/ui/Alert';
+import Card from '@/components/ui/Card';
 
 /**
  * Composant pour la section Structure du détail d'un concert
@@ -25,23 +26,21 @@ const ConcertStructureSection = ({
   const structureDropdownRef = useRef(null);
 
   return (
-    <div className="form-card">
-      <div className="card-header">
-        <i className="bi bi-building"></i>
-        <h3>Structure</h3>
-        {structure && !isEditMode && (
-          <div className="card-header-action">
-            <button
-              onClick={() => navigateToStructureDetails(structure.id)}
-              className="tc-btn tc-btn-outline-primary tc-btn-sm"
-            >
-              <i className="bi bi-eye"></i>
-              <span>Voir détails</span>
-            </button>
-          </div>
-        )}
-      </div>
-      <div className="card-body">
+    <Card
+      title="Structure"
+      icon={<i className="bi bi-building"></i>}
+      headerActions={
+        structure && !isEditMode && (
+          <button
+            onClick={() => navigateToStructureDetails(structure.id)}
+            className="tc-btn tc-btn-outline-primary tc-btn-sm"
+          >
+            <i className="bi bi-eye"></i>
+            <span>Voir détails</span>
+          </button>
+        )
+      }
+    >
         {isEditMode ? (
           <div className={styles.formGroup} ref={structureDropdownRef}>
             <label className={styles.formLabel}>Associer une structure</label>
@@ -240,8 +239,7 @@ const ConcertStructureSection = ({
             Aucune structure n'est associée directement à ce concert.
           </Alert>
         )}
-      </div>
-    </div>
+    </Card>
   );
 };
 

@@ -312,9 +312,9 @@
 :global(.card-header) {
   display: flex;
   align-items: center;
-  background-color: var(--tc-card-header-bg-color);
+  background-color: var(--tc-color-primary-100); /* Même fond bleu que Card.module.css */
   padding: var(--tc-space-4);
-  border-bottom: 1px solid var(--tc-border-light);
+  border-bottom: 1px solid var(--tc-color-primary-200);
 }
 
 :global(.card-header i) {

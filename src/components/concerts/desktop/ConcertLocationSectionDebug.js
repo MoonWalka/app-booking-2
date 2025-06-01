@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import styles from './ConcertLocationSection.module.css';
 import Button from '@/components/ui/Button';
 import Alert from '@/components/ui/Alert';
+import Card from '@/components/ui/Card';
 
 /**
  * Version de débogage avec logs pour comprendre le problème
@@ -94,24 +95,21 @@ const ConcertLocationSectionDebug = ({
   };
 
   return (
-    <div className="form-card">
-      <div className="card-header">
-        <i className="bi bi-geo-alt"></i>
-        <h3>{isEditMode ? 'Lieu * (DEBUG)' : 'Lieu (DEBUG)'}</h3>
-        {displayedLieu && !isEditMode && (
-          <div className="card-header-action">
-            <button
-              onClick={() => navigateToLieuDetails(displayedLieu.id)}
-              className="tc-btn tc-btn-outline-primary tc-btn-sm"
-            >
-              <i className="bi bi-eye"></i>
-              <span>Voir détails</span>
-            </button>
-          </div>
-        )}
-      </div>
-      
-      <div className="card-body">
+    <Card
+      title={isEditMode ? 'Lieu * (DEBUG)' : 'Lieu (DEBUG)'}
+      icon={<i className="bi bi-geo-alt"></i>}
+      headerActions={
+        displayedLieu && !isEditMode && (
+          <button
+            onClick={() => navigateToLieuDetails(displayedLieu.id)}
+            className="tc-btn tc-btn-outline-primary tc-btn-sm"
+          >
+            <i className="bi bi-eye"></i>
+            <span>Voir détails</span>
+          </button>
+        )
+      }
+    >
         {isEditMode ? (
           <div className={styles.searchContainer} ref={lieuDropdownRef}>
             {displayedLieu ? (
@@ -222,8 +220,7 @@ const ConcertLocationSectionDebug = ({
             </Alert>
           )
         )}
-      </div>
-    </div>
+    </Card>
   );
 };
 

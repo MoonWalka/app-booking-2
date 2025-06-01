@@ -3,6 +3,7 @@ import FlexContainer from '@/components/ui/FlexContainer';
 import styles from './ConcertOrganizerSection.module.css';
 import Button from '@/components/ui/Button';
 import Alert from '@/components/ui/Alert';
+import Card from '@/components/ui/Card';
 
 /**
  * Composant pour la section Programmateur du détail d'un concert
@@ -35,23 +36,19 @@ const ConcertOrganizerSection = ({
   const progDropdownRef = useRef(null);
 
   return (
-    <div className="form-card">
-      <div className="card-header">
-        <i className="bi bi-person-badge"></i>
-        <h3>Programmateur</h3>
-        {programmateur && !isEditMode && (
-          <div className="card-header-action">
-            <button
-              onClick={() => navigateToProgrammateurDetails(programmateur.id)}
-              className="tc-btn tc-btn-outline-primary tc-btn-sm"
-            >
-              <i className="bi bi-eye"></i>
-              <span>Voir détails</span>
-            </button>
-          </div>
-        )}
-      </div>
-      <div className="card-body">
+    <Card
+      title="Programmateur"
+      icon={<i className="bi bi-person-badge"></i>}
+      headerActions={programmateur && !isEditMode && (
+        <button
+          onClick={() => navigateToProgrammateurDetails(programmateur.id)}
+          className="tc-btn tc-btn-outline-primary tc-btn-sm"
+        >
+          <i className="bi bi-eye"></i>
+          <span>Voir détails</span>
+        </button>
+      )}
+    >
         {isEditMode ? (
           <div className={styles.formGroup} ref={progDropdownRef}>
             <label className={styles.formLabel}>Associer un programmateur</label>
@@ -300,8 +297,7 @@ const ConcertOrganizerSection = ({
             Aucun programmateur n'est associé à ce concert.
           </Alert>
         )}
-      </div>
-    </div>
+    </Card>
   );
 };
 

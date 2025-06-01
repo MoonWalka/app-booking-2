@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import styles from './ConcertOrganizerSection.module.css';
 import Button from '@/components/ui/Button';
 import Alert from '@/components/ui/Alert';
+import Card from '@/components/ui/Card';
 
 /**
  * Section Programmateur du détail d'un concert
@@ -67,24 +68,21 @@ const ConcertOrganizerSectionFixed = ({
   const hasSearchFunctionality = !!propSetProgrammateurSearchTerm;
 
   return (
-    <div className="form-card">
-      <div className="card-header">
-        <i className="bi bi-person-badge"></i>
-        <h3>{isEditMode ? 'Programmateur *' : 'Programmateur'}</h3>
-        {displayedProgrammateur && !isEditMode && (
-          <div className="card-header-action">
-            <button
-              onClick={() => navigateToProgrammateurDetails(displayedProgrammateur.id)}
-              className="tc-btn tc-btn-outline-primary tc-btn-sm"
-            >
-              <i className="bi bi-eye"></i>
-              <span>Voir détails</span>
-            </button>
-          </div>
-        )}
-      </div>
-      
-      <div className="card-body">
+    <Card
+      title={isEditMode ? 'Programmateur *' : 'Programmateur'}
+      icon={<i className="bi bi-person-badge"></i>}
+      headerActions={
+        displayedProgrammateur && !isEditMode && (
+          <button
+            onClick={() => navigateToProgrammateurDetails(displayedProgrammateur.id)}
+            className="tc-btn tc-btn-outline-primary tc-btn-sm"
+          >
+            <i className="bi bi-eye"></i>
+            <span>Voir détails</span>
+          </button>
+        )
+      }
+    >
         {isEditMode ? (
           <div className={styles.searchContainer} ref={programmateurDropdownRef}>
             {displayedProgrammateur ? (
@@ -210,8 +208,7 @@ const ConcertOrganizerSectionFixed = ({
             </Alert>
           )
         )}
-      </div>
-    </div>
+    </Card>
   );
 };
 

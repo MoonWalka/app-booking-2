@@ -26,13 +26,13 @@
 }
 
 .tc-card-header {
-  background-color: var(--tc-bg-default);
+  background-color: var(--tc-color-primary-100); /* Fond bleu harmonisé */
   padding: var(--tc-space-4);
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--tc-space-1);
-  border-bottom: 1px solid var(--tc-border-default);
+  border-bottom: 1px solid var(--tc-color-primary-200);
 }
 
 .tc-card-header-title {

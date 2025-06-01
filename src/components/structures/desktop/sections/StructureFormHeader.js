@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './StructureFormHeader.module.css';
+import FormHeader from '@/components/ui/FormHeader';
 
 /**
  * Header component for structure form
@@ -15,16 +15,16 @@ const StructureFormHeader = ({ id, formData, navigate }) => {
   const title = isEditMode ? `Modifier "${formData.nom}"` : 'Nouvelle structure';
 
   return (
-    <div className={styles.formHeader}>
-      <h2>{title}</h2>
-      <button
-        className={styles.backButton}
-        onClick={() => navigate(isEditMode ? `/structures/${id}` : '/structures')}
-      >
-        <i className="bi bi-arrow-left"></i>
-        Retour
-      </button>
-    </div>
+    <FormHeader
+      title={title}
+      icon={<i className="bi bi-building"></i>}
+      subtitle={
+        <span style={{ cursor: 'pointer' }} onClick={() => navigate(isEditMode ? `/structures/${id}` : '/structures')}>
+          ← Retour aux structures
+        </span>
+      }
+      actions={[]}
+    />
   );
 };
 

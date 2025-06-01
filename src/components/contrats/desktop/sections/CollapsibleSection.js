@@ -1,30 +1,25 @@
 import React from 'react';
-import Button from '@ui/Button';
-import styles from './CollapsibleSection.module.css';
+import Card from '@/components/ui/Card';
 
 /**
  * Composant de section repliable réutilisable
+ * Migré vers le composant Card standardisé avec collapsible
  */
 const CollapsibleSection = ({ title, isCollapsed, toggleCollapse, children }) => {
   return (
-    <div className={styles.card}>
-      <div className={styles.cardHeader}>
-        <h3 className={styles.cardTitle}>{title}</h3>
-        <Button 
-          variant="outline-secondary"
-          size="sm"
-          type="button"
-          onClick={toggleCollapse}
-        >
-          <i className={`bi bi-chevron-${isCollapsed ? 'up' : 'down'}`}></i>
-        </Button>
-      </div>
-      {!isCollapsed && (
-        <div className={styles.cardBody}>
-          {children}
-        </div>
-      )}
-    </div>
+    <Card
+      title={title}
+      collapsible={true}
+      defaultCollapsed={isCollapsed}
+      onCollapseToggle={(collapsed) => {
+        // Inverser la logique car le composant Card utilise collapsed tandis que l'ancien utilisait isCollapsed
+        if (toggleCollapse) {
+          toggleCollapse();
+        }
+      }}
+    >
+      {children}
+    </Card>
   );
 };
 

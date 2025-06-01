@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import styles from './ConcertArtistSection.module.css';
+import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import Alert from '@/components/ui/Alert';
 
@@ -24,24 +25,24 @@ const ConcertArtistSection = ({
 }) => {
   const artisteDropdownRef = useRef(null);
 
+  const headerActions = artiste && !isEditMode ? (
+    <button
+      onClick={() => navigateToArtisteDetails(artiste.id)}
+      className="tc-btn tc-btn-outline-primary tc-btn-sm"
+    >
+      <i className="bi bi-eye"></i>
+      <span>Voir détails</span>
+    </button>
+  ) : null;
+
   return (
-    <div className="form-card">
-      <div className="card-header">
-        <i className="bi bi-music-note"></i>
-        <h3>Artiste</h3>
-        {artiste && !isEditMode && (
-          <div className="card-header-action">
-            <button
-              onClick={() => navigateToArtisteDetails(artiste.id)}
-              className="tc-btn tc-btn-outline-primary tc-btn-sm"
-            >
-              <i className="bi bi-eye"></i>
-              <span>Voir détails</span>
-            </button>
-          </div>
-        )}
-      </div>
-      <div className="card-body">
+    <Card
+      title="Artiste"
+      icon={<i className="bi bi-music-note"></i>}
+      headerClassName="artiste"
+      headerActions={headerActions}
+      isEditing={isEditMode}
+    >
         {isEditMode ? (
           <div className={styles.formGroup} ref={artisteDropdownRef}>
             <label className={styles.formLabel}>Associer un artiste</label>
@@ -257,8 +258,7 @@ const ConcertArtistSection = ({
             Aucun artiste n'est associé à ce concert.
           </Alert>
         )}
-      </div>
-    </div>
+    </Card>
   );
 };
 

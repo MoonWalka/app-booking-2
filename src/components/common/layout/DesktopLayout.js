@@ -101,10 +101,6 @@ function DesktopLayout({ children }) {
             <h3>{APP_NAME}</h3>
           </div>
           
-          {/* Sélecteur d'organisation */}
-          <div className={sidebarStyles.organizationSelector}>
-            <OrganizationSelector />
-          </div>
           
           <div className={sidebarStyles.sidebarContent}>
             <ul className={sidebarStyles.navLinks}>
@@ -127,7 +123,10 @@ function DesktopLayout({ children }) {
           <div className={sidebarStyles.sidebarFooter}>
             {currentUser && (
               <div className={sidebarStyles.userInfo}>
-                <div className={sidebarStyles.userEmail}>{currentUser.email}</div>
+                {/* Sélecteur d'organisation remplacé par un nom d'utilisateur cliquable */}
+                <div className={sidebarStyles.userProfile}>
+                  <OrganizationSelector />
+                </div>
               </div>
             )}
           </div>
@@ -153,10 +152,6 @@ function DesktopLayout({ children }) {
           <h3>{APP_NAME}</h3>
         </div>
         
-        {/* Sélecteur d'organisation */}
-        <div className={sidebarStyles.organizationSelector}>
-          <OrganizationSelector />
-        </div>
         
         <div className={sidebarStyles.sidebarContent}>
           <ul className={sidebarStyles.navLinks}>
@@ -177,11 +172,16 @@ function DesktopLayout({ children }) {
         <div className={sidebarStyles.sidebarFooter}>
           {currentUser && (
             <div className={sidebarStyles.userInfo}>
-              <div className={sidebarStyles.userEmail}>{currentUser.email}</div>
+              {/* Sélecteur d'organisation remplacé par un nom d'utilisateur cliquable */}
+              <div className={sidebarStyles.userProfile}>
+                <OrganizationSelector />
+              </div>
+              
               <Button 
                 onClick={handleLogout} 
                 variant="outline-light"
                 size="sm"
+                className="mt-2 w-100"
               >
                 <i className="bi bi-box-arrow-right me-2"></i>
                 Déconnexion

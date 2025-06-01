@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test des couleurs TourCraft</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .color-box {
+      width: 200px;
+      height: 100px;
+      margin: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      display: inline-block;
+    }
+    .gray-50 {
+      background-color: hsl(202, 8%, 98%);
+    }
+    .primary-50 {
+      background-color: hsl(202, 36%, 96%);
+    }
+    .primary-100 {
+      background-color: hsl(202, 36%, 89%);
+    }
+    .color-value {
+      background: white;
+      padding: 5px;
+      margin-top: 10px;
+      border-radius: 3px;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Comparaison des couleurs</h1>
+  
+  <div class="color-box gray-50">
+    <strong>--tc-color-gray-50</strong>
+    <div class="color-value">hsl(202, 8%, 98%)</div>
+    <div class="color-value">Gris très clair</div>
+  </div>
+  
+  <div class="color-box primary-50">
+    <strong>--tc-color-primary-50</strong>
+    <div class="color-value">hsl(202, 36%, 96%)</div>
+    <div class="color-value">Bleu très clair</div>
+  </div>
+  
+  <div class="color-box primary-100">
+    <strong>--tc-color-primary-100</strong>
+    <div class="color-value">hsl(202, 36%, 89%)</div>
+    <div class="color-value">Bleu clair</div>
+  </div>
+  
+  <p>Note: La différence entre gray-50 (8% saturation) et primary-50 (36% saturation) devrait être visible - le primary-50 devrait avoir une teinte bleutée.</p>
+</body>
+</html>

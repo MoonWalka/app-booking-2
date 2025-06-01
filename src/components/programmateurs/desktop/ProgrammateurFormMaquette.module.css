@@ -9,8 +9,8 @@
 
 /* Container principal - adapté de la maquette */
 .formContainer {
-  max-width: 1200px;
-  margin: var(--tc-space-4) auto;
+  width: 100%;
+  margin: 0;
   background: var(--tc-bg-white, #ffffff);
   border-radius: var(--tc-radius-lg);
   box-shadow: var(--tc-shadow-base);
@@ -18,11 +18,18 @@
   font-family: var(--tc-font-sans);
   color: var(--tc-text-default, #333333);
   line-height: var(--tc-line-height-normal);
+  flex: 1;
 }
 
 /* Wrapper pour l'ensemble de la page */
 .pageWrapper {
-  padding: var(--tc-space-4);
+  width: calc(100% - var(--tc-space-8));
+  margin: var(--tc-space-4);
+  margin-left: var(--tc-space-4);
+  margin-right: var(--tc-space-4);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   background-color: var(--tc-bg-light, #f5f7f9);
   min-height: 100vh;
 }
@@ -370,8 +377,13 @@
 
 /* Responsive mobile */
 @media (max-width: 768px) {
-  .formContainer {
+  .pageWrapper {
+    width: calc(100% - var(--tc-space-4));
     margin: var(--tc-space-2);
+  }
+  
+  .formContainer {
+    margin: 0;
   }
   
   .formHeader {

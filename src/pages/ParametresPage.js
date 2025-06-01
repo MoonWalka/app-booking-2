@@ -7,6 +7,7 @@ import ParametresCompte from '../components/parametres/ParametresCompte';
 import ParametresNotifications from '../components/parametres/ParametresNotifications';
 import ParametresApparence from '../components/parametres/ParametresApparence';
 import ParametresExport from '../components/parametres/ParametresExport';
+import ParametresOrganisations from '../components/parametres/ParametresOrganisations';
 import SyncManager from '../components/parametres/sync/SyncManager';
 import TabNavigation from '../components/common/TabNavigation';
 import '@styles/index.css';
@@ -35,6 +36,8 @@ const ParametresPage = () => {
       newActiveTab = 'apparence';
     } else if (path.includes('/parametres/export')) {
       newActiveTab = 'export';
+    } else if (path.includes('/parametres/organisations')) {
+      newActiveTab = 'organisations';
     } else if (path.includes('/parametres/sync')) {
       newActiveTab = 'sync';
     } else if (path.includes('/parametres/generaux')) {
@@ -71,6 +74,9 @@ const ParametresPage = () => {
       case 'export':
         navigate('/parametres/export');
         break;
+      case 'organisations':
+        navigate('/parametres/organisations');
+        break;
       case 'sync':
         navigate('/parametres/sync');
         break;
@@ -106,6 +112,8 @@ const ParametresPage = () => {
         return <ParametresApparence />;
       case 'export':
         return <ParametresExport />;
+      case 'organisations':
+        return <ParametresOrganisations />;
       case 'sync':
         return <SyncManager />;
       case 'contrats':
@@ -120,6 +128,7 @@ const ParametresPage = () => {
     { label: 'Entreprise', key: 'entreprise' },
     { label: 'Paramètres généraux', key: 'generaux' },
     { label: 'Compte utilisateur', key: 'compte' },
+    { label: 'Organisations', key: 'organisations' },
     { label: 'Notifications', key: 'notifications' },
     { label: 'Apparence', key: 'apparence' },
     { label: 'Modèles de contrats', key: 'contrats' },

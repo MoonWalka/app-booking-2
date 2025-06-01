@@ -33,10 +33,10 @@
   color: var(--tc-text-light);
   cursor: pointer;
   
-  /* Style menu sidebar identique */
+  /* Style menu sidebar identique - dimensions exactes des liens nav */
   display: flex;
   align-items: center;
-  min-height: 40px;
+  /* Pas de min-height fixe - utilise le padding naturel comme les liens nav */
   
   /* Performance optimization */
   will-change: background-color;
@@ -69,8 +69,7 @@
  * ======================================== */
 
 .userAvatar {
-  width: 24px;
-  height: 24px;
+  /* Dimensions identiques aux icônes de navigation */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -78,6 +77,7 @@
   color: var(--tc-text-light);
   flex-shrink: 0;
   margin-right: var(--tc-space-2);
+  /* Pas de width/height fixe - utilise font-size comme les icônes nav */
 }
 
 .userAvatar i {
@@ -140,8 +140,8 @@
   max-height: 80vh;
   overflow: visible;
   
-  /* Style intégré sidebar parfaitement adapté */
-  background-color: rgba(0, 0, 0, 0.1);
+  /* Style intégré sidebar avec fond opaque pour éviter la transparence */
+  background-color: var(--tc-color-primary);
   border: none;
   border-radius: var(--tc-radius-lg) var(--tc-radius-lg) 0 0;
   border-top: 2px solid rgba(255, 255, 255, 0.1);
@@ -430,7 +430,7 @@
 
 @media (prefers-color-scheme: dark) {
   .dropdownMenu {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: var(--tc-color-primary);
     border-top-color: rgba(255, 255, 255, 0.05);
   }
   
@@ -467,9 +467,8 @@
   }
   
   .userAvatar {
-    width: 20px;
-    height: 20px;
     font-size: var(--tc-font-size-base);
+    /* Suppression width/height fixe - cohérent avec la version desktop */
   }
   
   .userName {

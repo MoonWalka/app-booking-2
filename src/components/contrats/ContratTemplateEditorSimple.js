@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import Button from '@/components/ui/Button';
+import UserGuide from './desktop/sections/UserGuide';
 import styles from './ContratTemplateEditorSimple.module.css';
 // Import du module de tailles personnalisées
 import { customSizeConfig } from './QuillCustomSizes';
@@ -22,6 +23,7 @@ const ContratTemplateEditorSimple = ({ template, onSave, onClose, isModalContext
   const [content, setContent] = useState(template?.bodyContent || '');
   const [isSaving, setIsSaving] = useState(false);
   const [showVariables, setShowVariables] = useState(false);
+  const [showGuide, setShowGuide] = useState(false);
   
   const editorRef = useRef();
 
@@ -392,6 +394,14 @@ const ContratTemplateEditorSimple = ({ template, onSave, onClose, isModalContext
             <div className={styles.headerActions}>
               <Button
                 variant="outline"
+                onClick={() => setShowGuide(!showGuide)}
+                title={showGuide ? "Masquer l'aide" : "Afficher l'aide"}
+              >
+                <i className="bi bi-question-circle me-2"></i>
+                {showGuide ? "Masquer l'aide" : "Aide"}
+              </Button>
+              <Button
+                variant="outline"
                 onClick={onClose}
                 disabled={isSaving}
               >
@@ -426,6 +436,14 @@ const ContratTemplateEditorSimple = ({ template, onSave, onClose, isModalContext
                 <i className="bi bi-x-lg"></i>
               </Button>
               <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowGuide(!showGuide)}
+                title={showGuide ? "Masquer l'aide" : "Afficher l'aide"}
+              >
+                <i className="bi bi-question-circle"></i>
+              </Button>
+              <Button
                 variant="primary"
                 size="sm"
                 onClick={handleSave}
@@ -436,6 +454,11 @@ const ContratTemplateEditorSimple = ({ template, onSave, onClose, isModalContext
             </div>
           </div>
         </div>
+      )}
+
+      {/* Guide d'utilisation */}
+      {showGuide && (
+        <UserGuide onClose={() => setShowGuide(false)} />
       )}
 
       {/* Formulaire */}

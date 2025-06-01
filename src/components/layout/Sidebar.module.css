@@ -204,7 +204,9 @@
   transform: translateX(-100%);
   transition: transform 0.3s ease-in-out;
   z-index: 1002; /* Au-dessus de l'overlay */
-  width: 280px; /* Largeur fixe pour mobile */
+  width: 25vw; /* 1/4 de l'écran pour mobile */
+  min-width: 200px; /* Largeur minimale pour lisibilité */
+  max-width: 320px; /* Largeur maximale pour éviter un débordement */
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
 }
 

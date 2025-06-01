@@ -477,6 +477,11 @@ export const useConcertListData = () => {
     return contract ? contract.status : null;
   }, [concertsWithContracts]);
 
+  // Fonction pour obtenir les données complètes d'un contrat
+  const getContractData = useCallback((concertId) => {
+    return concertsWithContracts[concertId] || null;
+  }, [concertsWithContracts]);
+
   return {
     concerts,
     loading,
@@ -498,6 +503,7 @@ export const useConcertListData = () => {
     hasUnvalidatedForm,
     hasContract,
     getContractStatus,
+    getContractData, // Nouvelle fonction pour obtenir les données du contrat
     // NOUVEAU: Fonctions du cache hybride
     getCacheStats,
     clearCache,

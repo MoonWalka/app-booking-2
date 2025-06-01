@@ -30,6 +30,7 @@ function ConcertsList() {
     hasUnvalidatedForm,
     hasContract,
     getContractStatus: getContractStatusFromHook,
+    getContractData,
     refreshData
   } = useConcertListData();
   
@@ -346,7 +347,14 @@ function ConcertsList() {
               color: '#17a2b8',
               tooltip: 'Contrat généré',
               disabled: false,
-              action: () => handleViewContract(concert.id)
+              action: () => {
+                const contractData = getContractData(concert.id);
+                if (contractData && contractData.id) {
+                  handleViewContract(contractData.id);
+                } else {
+                  console.error('ID du contrat non trouvé pour le concert:', concert.id);
+                }
+              }
             };
           case 'sent':
             return {
@@ -355,7 +363,14 @@ function ConcertsList() {
               color: '#ffc107',
               tooltip: 'Contrat envoyé',
               disabled: false,
-              action: () => handleViewContract(concert.id)
+              action: () => {
+                const contractData = getContractData(concert.id);
+                if (contractData && contractData.id) {
+                  handleViewContract(contractData.id);
+                } else {
+                  console.error('ID du contrat non trouvé pour le concert:', concert.id);
+                }
+              }
             };
           case 'signed':
             return {
@@ -364,7 +379,14 @@ function ConcertsList() {
               color: '#28a745',
               tooltip: 'Contrat signé',
               disabled: false,
-              action: () => handleViewContract(concert.id)
+              action: () => {
+                const contractData = getContractData(concert.id);
+                if (contractData && contractData.id) {
+                  handleViewContract(contractData.id);
+                } else {
+                  console.error('ID du contrat non trouvé pour le concert:', concert.id);
+                }
+              }
             };
           default:
             return {
@@ -373,7 +395,14 @@ function ConcertsList() {
               color: '#6c757d',
               tooltip: 'Voir contrat',
               disabled: false,
-              action: () => handleViewContract(concert.id)
+              action: () => {
+                const contractData = getContractData(concert.id);
+                if (contractData && contractData.id) {
+                  handleViewContract(contractData.id);
+                } else {
+                  console.error('ID du contrat non trouvé pour le concert:', concert.id);
+                }
+              }
             };
         }
       } else {

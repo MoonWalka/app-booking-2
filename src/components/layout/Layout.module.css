@@ -180,21 +180,36 @@
   margin-left: 0 !important;
   padding-top: 80px; /* Espace pour le header mobile */
   padding-bottom: var(--tc-space-4); /* Espace réduit sans bottom nav */
-  padding-left: var(--tc-space-4);
-  padding-right: var(--tc-space-4);
+  padding-left: var(--tc-space-3);
+  padding-right: var(--tc-space-3);
   min-height: calc(100vh - 100px); /* Hauteur complète moins header seulement */
+  overflow-x: hidden; /* Prévention débordement horizontal */
+  width: 100%;
+  max-width: 100vw;
+  box-sizing: border-box;
 }
 
 /* Responsive avec points de rupture standardisés */
 @media (max-width: var(--tc-breakpoint-md)) {
   .content {
     margin-left: 0;
-    padding: var(--tc-space-4);
+    padding: var(--tc-space-3);
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
+    box-sizing: border-box;
   }
   
   /* Masquer les éléments non-mobiles */
   .layoutContainer:not(.mobileLayout) .content {
     padding-top: 80px;
     padding-bottom: 90px;
+  }
+  
+  /* Corrections globales pour le container */
+  .layoutContainer {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
   }
 }

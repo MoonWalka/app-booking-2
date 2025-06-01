@@ -34,6 +34,7 @@
 @import '@styles/components/spinner.css';
 @import '@styles/components/tables.css';
 @import '@styles/components/mobile-optimizations.css';
+@import '@styles/components/mobile-viewport-fixes.css';
 
 /* Pages */
 @import '@styles/pages/artistes.css';

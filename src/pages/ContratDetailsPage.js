@@ -17,6 +17,7 @@ import ContratActions from '@/components/contrats/sections/ContratActions';
 import ContratPdfTabs from '@/components/contrats/sections/ContratPdfTabs';
 import ContratPdfViewer from '@/components/contrats/sections/ContratPdfViewer';
 import ContratVariablesCard from '@/components/contrats/sections/ContratVariablesCard';
+import DownloadModal from '@/components/common/DownloadModal';
 
 const ContratDetailsPage = () => {
   const { contratId } = useParams();
@@ -69,6 +70,7 @@ const ContratDetailsPage = () => {
     previewType,
     pdfPreviewUrl,
     isGeneratingPdfPreview,
+    isDownloading,
     pdfViewerRef,
     setPreviewType,
     togglePdfViewer,
@@ -267,6 +269,13 @@ const ContratDetailsPage = () => {
           </Modal.Footer>
         </Modal>
       )}
+
+      {/* Modal de téléchargement */}
+      <DownloadModal 
+        show={isDownloading}
+        title="Téléchargement du contrat"
+        message="Veuillez patienter pendant le téléchargement du contrat PDF..."
+      />
     </div>
   );
 };

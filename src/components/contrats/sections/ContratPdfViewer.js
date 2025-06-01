@@ -24,28 +24,8 @@ const ContratPdfViewer = ({
     entrepriseInfo: pdfData.entreprise
   };
 
-  // Créer le titre au format "nom_du_concert date_du_concert"
-  const createCustomTitle = () => {
-    const concertName = pdfData.concert?.titre || 'Concert';
-    const concertDate = pdfData.concert?.date;
-    
-    if (concertDate) {
-      // Gérer les timestamps Firestore
-      let dateObj;
-      if (concertDate.seconds) {
-        dateObj = new Date(concertDate.seconds * 1000);
-      } else {
-        dateObj = new Date(concertDate);
-      }
-      
-      if (!isNaN(dateObj.getTime())) {
-        const formattedDate = dateObj.toLocaleDateString('fr-FR');
-        return `${concertName} ${formattedDate}`;
-      }
-    }
-    
-    return concertName;
-  };
+  // Utiliser un titre par défaut simple
+  const defaultTitle = 'Contrat';
 
   return (
     <div ref={forwardedRef} className={styles.pdfViewer}>
@@ -53,7 +33,7 @@ const ContratPdfViewer = ({
         <div className={styles.pdfContent}>
           <ContratPDFWrapper.HTMLPreview 
             data={data}
-            title={createCustomTitle()}
+            title={defaultTitle}
           />
         </div>
       )}

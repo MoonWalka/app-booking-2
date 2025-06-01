@@ -1,11 +1,12 @@
 // src/components/contrats/desktop/sections/ContratGenerationActions.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import { useNavigate } from 'react-router-dom';
 import Button from '@ui/Button';
 import Alert from '@ui/Alert';
 import styles from './ContratGenerationActions.module.css';
 import ContratPDFWrapper from '@/components/pdf/ContratPDFWrapper.js';
+import DownloadModal from '@/components/common/DownloadModal';
 
 const ContratGenerationActions = ({
   validateDataBeforeGeneration,
@@ -27,8 +28,23 @@ const ContratGenerationActions = ({
   const [editableContent, setEditableContent] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [readyToGenerate, setReadyToGenerate] = useState(false);
+  const [showDownloadModal, setShowDownloadModal] = useState(false);
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   
   const isValid = validateDataBeforeGeneration();
+
+  // Effect pour gérer l'affichage de la modal de téléchargement
+  useEffect(() => {
+    if (isGeneratingPdf) {
+      setShowDownloadModal(true);
+    } else {
+      // Attendre un délai avant de fermer la modal pour que l'utilisateur voie la réussite
+      const timer = setTimeout(() => {
+        setShowDownloadModal(false);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [isGeneratingPdf]);
 
   // Fonction pour remplacer les variables dans le template
   const replaceVariables = (content, variables) => {
@@ -231,8 +247,14 @@ const ContratGenerationActions = ({
             className={styles.pdfDownloadButton}
           >
             {({ blob, url, loading, error }) => {
+              // Mettre à jour l'état de génération
+              if (loading !== isGeneratingPdf) {
+                setIsGeneratingPdf(loading);
+              }
+
               if (error) {
                 console.error("Erreur lors de la génération du PDF:", error);
+                setIsGeneratingPdf(false);
                 return (
                   <Button variant="danger" disabled>
                     <i className="bi bi-exclamation-triangle me-2"></i>
@@ -243,10 +265,10 @@ const ContratGenerationActions = ({
               
               if (loading) {
                 return (
-                  <>
+                  <Button variant="primary" disabled>
                     <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                     Génération du PDF en cours...
-                  </>
+                  </Button>
                 );
               }
               
@@ -278,6 +300,13 @@ const ContratGenerationActions = ({
           </PDFDownloadLink>
         </div>
       )}
+
+      {/* Modal de téléchargement */}
+      <DownloadModal 
+        show={showDownloadModal}
+        title="Génération du contrat"
+        message="Veuillez patienter pendant la génération et le téléchargement du contrat PDF..."
+      />
     </div>
   );
 };

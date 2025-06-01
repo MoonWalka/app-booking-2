@@ -362,14 +362,8 @@ const processPageBreaks = (htmlContent) => {
  * @param {String} editedContent - Contenu édité manuellement (optionnel)
  * @returns {String} - Le HTML complet du contrat
  */
-const getContratHTML = (data, title = 'Contrat', forPreview = false, editedContent = null) => {
-  // Créer un titre personnalisé au format "nom_du_concert date_du_concert" dès le début
+const getContratHTML = (data, title = '', forPreview = false, editedContent = null) => {
   const safeData = createSafeData(data);
-  const customTitle = (() => {
-    const concertName = safeData.concert?.titre || 'Concert';
-    const concertDate = safeData.concert?.date ? formatSafeDate(safeData.concert.date, "dd/MM/yyyy") : '';
-    return concertDate ? `${concertName} ${concertDate}` : concertName;
-  })();
 
   // Si on a du contenu édité, l'utiliser directement
   if (editedContent) {
@@ -379,7 +373,6 @@ const getContratHTML = (data, title = 'Contrat', forPreview = false, editedConte
       <html>
       <head>
         <meta charset="UTF-8">
-        <title>${customTitle}</title>
         <style>
           /* Styles critiques pour l'aperçu web */
           body.contrat-print-mode {
@@ -423,12 +416,7 @@ const getContratHTML = (data, title = 'Contrat', forPreview = false, editedConte
       htmlContent += `<div class="preview-note">Aperçu du contrat - La mise en page sera identique au téléchargement PDF final</div>`;
     }
 
-    // Ajouter le titre principal visible en premier
-    htmlContent += `<div class="contract-title" style="text-align: center; margin-bottom: 30px;">
-      <h1 style="font-size: 18pt; font-weight: bold; margin: 0; color: #000;">${customTitle}</h1>
-    </div>`;
-
-    // Ajouter directement le contenu édité (sans titre intégré)
+    // Ajouter directement le contenu édité (sans titre ajouté)
     htmlContent += editedContent;
 
     if (forPreview) {
@@ -452,8 +440,9 @@ const getContratHTML = (data, title = 'Contrat', forPreview = false, editedConte
   const bodyContent = replaceVariables(safeData.template.bodyContent || '', variables);
   const footerContent = replaceVariables(safeData.template.footerContent || '', variables);
   const signatureContent = replaceVariables(safeData.template.signatureTemplate || '', variables);
-  // Utiliser le titre personnalisé
-  const titleContent = customTitle;
+  
+  // Ignorer le titleTemplate complètement pour éviter qu'il soit ajouté automatiquement
+  // (Protection contre les anciens templates qui ont encore titleTemplate)
   
   // Traitement des sauts de page pour l'aperçu
   let bodyContentProcessed = forPreview ? processPageBreaks(bodyContent) : bodyContent;
@@ -464,7 +453,6 @@ const getContratHTML = (data, title = 'Contrat', forPreview = false, editedConte
     <html>
     <head>
       <meta charset="UTF-8">
-      <title>${titleContent}</title>
       <style>
         /* Styles critiques pour l'aperçu web */
         body.contrat-print-mode {
@@ -507,11 +495,6 @@ const getContratHTML = (data, title = 'Contrat', forPreview = false, editedConte
     htmlContent += `<div class="contrat-container">`;
     htmlContent += `<div class="preview-note">Aperçu du contrat - La mise en page sera identique au téléchargement PDF final</div>`;
   }
-
-  // Ajouter le titre principal visible en premier
-  htmlContent += `<div class="contract-title" style="text-align: center; margin-bottom: 30px;">
-    <h1 style="font-size: 18pt; font-weight: bold; margin: 0; color: #000;">${titleContent}</h1>
-  </div>`;
 
   // Ajouter l'en-tête si défini (sans titre intégré)
   if (headerContent) {
@@ -605,7 +588,7 @@ const generatePuppeteerPdf = async (title, data, editedContent = null) => {
  * @param {String} title - Titre du document
  * @returns {Promise<String>} - URL du blob PDF pour l'aperçu
  */
-const generatePDFPreview = async (data, title = 'Aperçu Contrat') => {
+const generatePDFPreview = async (data, title = 'Apercu_Contrat') => {
   try {
     // Utiliser la même fonction que pour la génération finale
     const htmlContent = getContratHTML(data, title);
@@ -667,7 +650,7 @@ const generatePDFPreview = async (data, title = 'Aperçu Contrat') => {
  * Composant HTML Preview pour l'aperçu du contrat 
  * Montre exactement le même rendu que le PDF final
  */
-const ContratHTMLPreview = ({ data, title = 'Contrat' }) => {
+const ContratHTMLPreview = ({ data, title = '' }) => {
   const [htmlContent, setHtmlContent] = useState('');
   
   useEffect(() => {

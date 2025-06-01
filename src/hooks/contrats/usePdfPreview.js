@@ -9,6 +9,7 @@ export const usePdfPreview = () => {
   const [previewType, setPreviewType] = useState('html'); // 'html', 'react-pdf' ou 'pdf'
   const [pdfPreviewUrl, setPdfPreviewUrl] = useState(null);
   const [isGeneratingPdfPreview, setIsGeneratingPdfPreview] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
   const pdfViewerRef = useRef(null);
 
   // Toggle the PDF viewer and scroll to it when opened
@@ -46,7 +47,7 @@ export const usePdfPreview = () => {
     try {
       console.log('[DEBUG] Appel de ContratPDFWrapper.generatePDFPreview avec:', data);
       // Utiliser la méthode du ContratPDFWrapper pour générer un aperçu PDF
-      const url = await ContratPDFWrapper.generatePDFPreview(data, "");
+      const url = await ContratPDFWrapper.generatePDFPreview(data, 'Apercu_Contrat');
       console.log('[DEBUG] URL générée:', url);
       setPdfPreviewUrl(url);
       setPreviewType('pdf');
@@ -62,6 +63,7 @@ export const usePdfPreview = () => {
   const handleDownloadPdf = async (ContratPDFWrapper, data) => {
     console.log('[DEBUG] handleDownloadPdf appelé avec les données:', data);
     
+    setIsDownloading(true);
     try {
       if (!data) {
         console.error('Aucune donnée fournie à handleDownloadPdf');
@@ -81,37 +83,23 @@ export const usePdfPreview = () => {
         return;
       }
 
-      // Générer un titre au format "nom_du_concert date_du_concert"
-      const concertName = data.concert?.titre || 'Concert';
-      let concertDate = '';
-      
-      if (data.concert?.date) {
-        // Gérer les différents formats de date
-        let dateObj;
-        if (typeof data.concert.date === 'string') {
-          dateObj = new Date(data.concert.date);
-        } else if (data.concert.date.seconds) {
-          // Timestamp Firestore
-          dateObj = new Date(data.concert.date.seconds * 1000);
-        } else {
-          dateObj = new Date(data.concert.date);
-        }
-        
-        if (!isNaN(dateObj.getTime())) {
-          concertDate = dateObj.toLocaleDateString('fr-FR');
-        }
-      }
-      
-      const pdfTitle = concertDate ? `${concertName} ${concertDate}` : concertName;
+      // Pas de titre par défaut
+      const pdfTitle = '';
       console.log('[DEBUG] Titre du PDF:', pdfTitle);
       
       // Appeler la méthode statique du wrapper pour générer le PDF avec Puppeteer
       console.log('[DEBUG] Appel de ContratPDFWrapper.generatePuppeteerPdf');
       await ContratPDFWrapper.generatePuppeteerPdf(pdfTitle, data);
       // Le téléchargement est géré automatiquement par le service
+      
+      // Attendre un petit délai pour que l'utilisateur voie que c'est terminé
+      setTimeout(() => {
+        setIsDownloading(false);
+      }, 1500);
     } catch (error) {
       console.error('Erreur lors de la génération du PDF:', error);
       alert(`Erreur lors de la génération du PDF: ${error.message}`);
+      setIsDownloading(false);
     }
   };
 
@@ -120,6 +108,7 @@ export const usePdfPreview = () => {
     previewType,
     pdfPreviewUrl,
     isGeneratingPdfPreview,
+    isDownloading,
     pdfViewerRef,
     setPreviewType,
     togglePdfViewer,

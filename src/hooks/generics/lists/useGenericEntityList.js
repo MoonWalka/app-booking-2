@@ -745,7 +745,7 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
   const searchInList = useCallback((searchTerm) => {
     setSearchInListTerm(searchTerm);
     
-    if (!searchTerm.trim()) {
+    if (!searchTerm || typeof searchTerm !== 'string' || !searchTerm.trim()) {
       setSearchInListResults([]);
       return finalItems;
     }

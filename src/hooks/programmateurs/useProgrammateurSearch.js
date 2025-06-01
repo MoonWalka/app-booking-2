@@ -112,7 +112,7 @@ export const useProgrammateurSearch = ({
     let filtered = allProgrammateurs;
     
     // Filtrage par terme de recherche
-    if (searchTerm && searchTerm.trim()) {
+    if (searchTerm && typeof searchTerm === 'string' && searchTerm.trim()) {
       const term = searchTerm.toLowerCase();
       filtered = filtered.filter(p => 
         (p.nom && p.nom.toLowerCase().includes(term)) ||

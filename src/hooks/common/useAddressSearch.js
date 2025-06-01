@@ -82,7 +82,7 @@ const useAddressSearch = (options = {}) => {
     // Détermine le terme de recherche selon le mode d'utilisation
     const query = formData ? formData.adresse : searchTerm;
     
-    if (!query || query.trim().length < 3) {
+    if (!query || typeof query !== 'string' || query.trim().length < 3) {
       setIsSearching(false);
       return;
     }
@@ -105,8 +105,8 @@ const useAddressSearch = (options = {}) => {
       clearTimeout(searchTimeoutRef.current);
     }
 
-    if ((searchTerm && searchTerm.trim().length > 2) || 
-        (formData?.adresse && formData.adresse.trim().length > 2 && addressFieldActive)) {
+    if ((searchTerm && typeof searchTerm === 'string' && searchTerm.trim().length > 2) || 
+        (formData?.adresse && typeof formData.adresse === 'string' && formData.adresse.trim().length > 2 && addressFieldActive)) {
       setIsSearching(true);
       searchTimeoutRef.current = setTimeout(() => {
         handleSearchRef.current();

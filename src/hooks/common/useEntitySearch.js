@@ -66,7 +66,7 @@ export const useEntitySearch = (options) => {
         return;
       }
       
-      const termLower = searchTerm.toLowerCase();
+      const termLower = String(searchTerm).toLowerCase();
       
       // Construction de la requête de base
       const entitiesRef = collection(db, entityType);
@@ -75,7 +75,7 @@ export const useEntitySearch = (options) => {
       let searchQuery;
       
       // Vérifier si le terme de recherche est une date (pour les concerts)
-      const isDateFormat = /^\d{4}-\d{2}-\d{2}$/.test(searchTerm);
+      const isDateFormat = /^\d{4}-\d{2}-\d{2}$/.test(String(searchTerm));
       
       if (isDateFormat && entityType === 'concerts') {
         // Recherche exacte sur le champ date
@@ -156,7 +156,8 @@ export const useEntitySearch = (options) => {
 
   // Effet pour déclencher la recherche avec debounce - NOUVEAU: Dépendance performSearch ajoutée
   useEffect(() => {
-    if (!searchTerm.trim()) {
+    // Vérifier que searchTerm est une string avant d'appeler trim()
+    if (!searchTerm || typeof searchTerm !== 'string' || !searchTerm.trim()) {
       setResults([]);
       setShowResults(false);
       setIsSearching(false);
@@ -201,7 +202,7 @@ export const useEntitySearch = (options) => {
   // Fonction pour sélectionner une entité
   const handleSelect = (entity) => {
     setSelectedEntity(entity);
-    setSearchTerm(entity[searchField] || '');
+    setSearchTerm(String(entity[searchField] || ''));
     setShowResults(false);
     
     if (onSelect) {
@@ -244,7 +245,8 @@ export const useEntitySearch = (options) => {
       return null;
     }
     
-    if (!searchTerm.trim()) {
+    const searchTermString = String(searchTerm || '');
+    if (!searchTermString.trim()) {
       console.error(`[DEBUG][useEntitySearch] Nom vide pour ${entityType}`);
       alert(`Veuillez saisir un nom avant de créer un nouveau ${entityType.slice(0, -1)}.`);
       return null;
@@ -254,8 +256,8 @@ export const useEntitySearch = (options) => {
       
       // Données de base pour chaque type d'entité
       let entityData = {
-        nom: searchTerm.trim(),
-        nomLowercase: searchTerm.trim().toLowerCase(),
+        nom: searchTermString.trim(),
+        nomLowercase: searchTermString.trim().toLowerCase(),
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
         ...entityAdditionalData
@@ -304,7 +306,7 @@ export const useEntitySearch = (options) => {
         case 'concerts':
           entityData = {
             ...entityData,
-            titre: searchTerm.trim(),
+            titre: searchTermString.trim(),
             date: new Date().toISOString().split('T')[0],
             lieuId: null,
             lieuNom: null,
@@ -356,7 +358,7 @@ export const useEntitySearch = (options) => {
       // Afficher une alerte de succès
       const entityName = entityType.slice(0, -1); // Enlever le 's' pour avoir le singulier
       const entityNameDisplay = entityName.charAt(0).toUpperCase() + entityName.slice(1);
-      const alertMessage = `✅ ${entityNameDisplay} "${searchTerm.trim()}" ajouté avec succès !`;
+      const alertMessage = `✅ ${entityNameDisplay} "${searchTermString.trim()}" ajouté avec succès !`;
       
       // Définir les couleurs selon le type d'entité
       let backgroundColor = '#28a745'; // Vert par défaut

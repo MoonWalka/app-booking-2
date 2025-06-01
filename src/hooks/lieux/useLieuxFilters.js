@@ -23,7 +23,7 @@ const useLieuxFilters = (lieux = []) => {
     let filtered = [...lieux];
     
     // Filtrage par terme de recherche
-    if (searchTerm && searchTerm.trim()) {
+    if (searchTerm && typeof searchTerm === 'string' && searchTerm.trim()) {
       const term = searchTerm.toLowerCase().trim();
       filtered = filtered.filter(lieu => {
         return (

@@ -34,7 +34,7 @@ const GenericList = ({
     }
     
     // Appliquer la recherche si un terme est saisi et des champs de recherche sont définis
-    if (searchTerm.trim() !== '' && searchFields.length > 0) {
+    if (searchTerm && typeof searchTerm === 'string' && searchTerm.trim() !== '' && searchFields.length > 0) {
       const term = searchTerm.toLowerCase().trim();
       result = result.filter(item => 
         searchFields.some(field => {

@@ -83,9 +83,55 @@ export const usePdfPreview = () => {
         return;
       }
 
-      // Pas de titre par défaut
-      const pdfTitle = '';
-      console.log('[DEBUG] Titre du PDF:', pdfTitle);
+      // Générer un nom de fichier approprié
+      const generateFileName = () => {
+        const parts = [];
+        
+        // Date du concert au format YYYYMMDD
+        if (data.concert?.date) {
+          const date = data.concert.date.seconds 
+            ? new Date(data.concert.date.seconds * 1000) 
+            : new Date(data.concert.date);
+          const year = date.getFullYear();
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const day = String(date.getDate()).padStart(2, '0');
+          parts.push(`${year}${month}${day}`);
+        }
+        
+        // Nom de l'artiste (nettoyé)
+        if (data.artiste?.nom) {
+          const artisteClean = data.artiste.nom
+            .replace(/[^a-zA-Z0-9À-ÿ\s-]/g, '') // Garder lettres, chiffres, accents, espaces, tirets
+            .replace(/\s+/g, '_') // Remplacer espaces par underscore
+            .substring(0, 30); // Limiter la longueur
+          parts.push(artisteClean);
+        }
+        
+        // Lieu (nettoyé)
+        if (data.lieu?.nom) {
+          const lieuClean = data.lieu.nom
+            .replace(/[^a-zA-Z0-9À-ÿ\s-]/g, '')
+            .replace(/\s+/g, '_')
+            .substring(0, 20);
+          parts.push(lieuClean);
+        }
+        
+        // Type de contrat
+        if (data.template?.templateType) {
+          parts.push(data.template.templateType);
+        }
+        
+        // Si on n'a aucune info, utiliser un nom par défaut
+        if (parts.length === 0) {
+          return 'Contrat';
+        }
+        
+        // Joindre avec des tirets (sans l'extension .pdf car elle est ajoutée par le service)
+        return `Contrat_${parts.join('-')}`;
+      };
+      
+      const pdfTitle = generateFileName();
+      console.log('[DEBUG] Nom du fichier PDF:', pdfTitle);
       
       // Appeler la méthode statique du wrapper pour générer le PDF avec Puppeteer
       console.log('[DEBUG] Appel de ContratPDFWrapper.generatePuppeteerPdf');

@@ -76,12 +76,6 @@ exports.generatePdf = onRequest({
                 padding: 0;
                 margin: 0;
               }
-              .title {
-                font-size: 16pt;
-                font-weight: bold;
-                text-align: center;
-                margin-bottom: 20px;
-              }
               /* Styles pour ReactQuill */
               .ql-align-center, p[style*="text-align: center"] {
                 text-align: center;
@@ -112,7 +106,6 @@ exports.generatePdf = onRequest({
             </style>
           </head>
           <body>
-            ${title ? `<div class="title">${title}</div>` : ''}
             <div class="content">
               ${htmlContent}
             </div>

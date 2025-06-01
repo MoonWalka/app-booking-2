@@ -114,6 +114,53 @@ const ContratGenerationActions = ({
     setIsEditing(!isEditing);
   };
 
+  // Générer un nom de fichier propre pour le PDF
+  const generateFileName = () => {
+    const parts = [];
+    
+    // Date du concert au format YYYYMMDD
+    if (concert.date) {
+      const date = concert.date.seconds 
+        ? new Date(concert.date.seconds * 1000) 
+        : new Date(concert.date);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      parts.push(`${year}${month}${day}`);
+    }
+    
+    // Nom de l'artiste (nettoyé)
+    if (artiste?.nom) {
+      const artisteClean = artiste.nom
+        .replace(/[^a-zA-Z0-9À-ÿ\s-]/g, '') // Garder lettres, chiffres, accents, espaces, tirets
+        .replace(/\s+/g, '_') // Remplacer espaces par underscore
+        .substring(0, 30); // Limiter la longueur
+      parts.push(artisteClean);
+    }
+    
+    // Lieu (nettoyé)
+    if (lieu?.nom) {
+      const lieuClean = lieu.nom
+        .replace(/[^a-zA-Z0-9À-ÿ\s-]/g, '')
+        .replace(/\s+/g, '_')
+        .substring(0, 20);
+      parts.push(lieuClean);
+    }
+    
+    // Type de contrat
+    if (selectedTemplate?.templateType) {
+      parts.push(selectedTemplate.templateType);
+    }
+    
+    // Si on n'a aucune info, utiliser un nom par défaut
+    if (parts.length === 0) {
+      return 'Contrat.pdf';
+    }
+    
+    // Joindre avec des tirets et ajouter l'extension
+    return `Contrat_${parts.join('-')}.pdf`;
+  };
+
   // Préparer pour la génération finale
   const handlePrepareGeneration = () => {
     setReadyToGenerate(true);
@@ -225,7 +272,7 @@ const ContratGenerationActions = ({
                 editedContent={editableContent}
               />
             }
-            fileName={`Contrat_${concert.titre || 'Concert'}.pdf`}
+            fileName={generateFileName()}
             className={styles.pdfDownloadButton}
           >
             {({ blob, url, loading, error }) => {

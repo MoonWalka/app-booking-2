@@ -15,6 +15,7 @@ import ConcertInfoSection from '../sections/ConcertInfoSection';
 import LieuSearchSection from '../sections/LieuSearchSection';
 import ProgrammateurSearchSection from '../sections/ProgrammateurSearchSection';
 import ArtisteSearchSection from '../sections/ArtisteSearchSection';
+import StructureSearchSection from '../sections/StructureSearchSection';
 import NotesSection from '../sections/NotesSection';
 import ConfirmationModal from '@/components/ui/ConfirmationModal';
 
@@ -47,9 +48,11 @@ const ConcertFormDesktop = () => {
     lieu,
     artiste,
     programmateur,
+    structure,
     handleLieuChange,
     handleArtisteChange,
-    handleProgrammateurChange
+    handleProgrammateurChange,
+    handleStructureChange
   } = formHook;
 
   const removeLieu = useCallback(() => {
@@ -107,6 +110,23 @@ const ConcertFormDesktop = () => {
     maxResults: 10
   });
 
+  // Recherche de structures
+  const {
+    searchTerm: structureSearchTerm,
+    setSearchTerm: setStructureSearchTerm,
+    results: structureResults,
+    showResults: showStructureResults,
+    setShowResults: setShowStructureResults,
+    isSearching: isSearchingStructures,
+    dropdownRef: structureDropdownRef,
+    handleCreate: handleCreateStructure
+  } = useEntitySearch({
+    entityType: 'structures',
+    searchField: 'nom',
+    additionalSearchFields: ['raisonSociale', 'siret'],
+    maxResults: 10
+  });
+
   // Gestion de la modale de suppression locale
   const [showDeleteConfirm, setShowDeleteConfirm] = React.useState(false);
 
@@ -123,6 +143,10 @@ const ConcertFormDesktop = () => {
   const handleRemoveArtisteCallback = useCallback(() => {
     handleArtisteChange(null);
   }, [handleArtisteChange]);
+
+  const handleRemoveStructureCallback = useCallback(() => {
+    handleStructureChange(null);
+  }, [handleStructureChange]);
 
 
 
@@ -206,6 +230,20 @@ const ConcertFormDesktop = () => {
               handleSelectArtiste={handleArtisteChange}
               handleRemoveArtiste={handleRemoveArtisteCallback}
               handleCreateArtiste={handleCreateArtiste}
+            />
+          
+          <StructureSearchSection 
+              structureSearchTerm={structureSearchTerm}
+              setStructureSearchTerm={setStructureSearchTerm}
+              structureResults={structureResults}
+              showStructureResults={showStructureResults}
+              setShowStructureResults={setShowStructureResults}
+              isSearchingStructures={isSearchingStructures}
+              structureDropdownRef={structureDropdownRef}
+              selectedStructure={structure || (formData.structureId ? { id: formData.structureId, nom: formData.structureNom || 'Structure sélectionnée' } : null)}
+              handleSelectStructure={handleStructureChange}
+              handleRemoveStructure={handleRemoveStructureCallback}
+              handleCreateStructure={handleCreateStructure}
             />
           
           <NotesSection 

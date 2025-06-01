@@ -116,6 +116,21 @@ export const useConcertFormWithRelations = (concertId) => {
     }
   };
   
+  const handleStructureChange = (newStructure) => {
+    setStructure(newStructure);
+    // Appeler la méthode de base si elle existe
+    if (baseHook.handleStructureChange) {
+      baseHook.handleStructureChange(newStructure);
+    } else {
+      // Sinon, mettre à jour manuellement
+      baseHook.setFormData(prev => ({
+        ...prev,
+        structureId: newStructure?.id || null,
+        structureNom: newStructure?.nom || newStructure?.raisonSociale || ''
+      }));
+    }
+  };
+  
   // Retourner le hook enrichi avec les entités liées
   return {
     ...baseHook,
@@ -123,6 +138,7 @@ export const useConcertFormWithRelations = (concertId) => {
     handleLieuChange,
     handleArtisteChange,
     handleProgrammateurChange,
+    handleStructureChange,
     // Ajouter les entités liées
     lieu,
     artiste,

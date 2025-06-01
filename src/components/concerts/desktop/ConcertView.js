@@ -19,6 +19,7 @@ import ConcertLocationSectionDebug from './ConcertLocationSectionDebug';
 import ConcertOrganizerSectionFixed from './ConcertOrganizerSectionFixed';
 import ConcertArtistSection from './ConcertArtistSection';
 import ConcertStructureSection from './ConcertStructureSection';
+import NotesSection from '../sections/NotesSection';
 import ConfirmationModal from '@/components/ui/ConfirmationModal';
 
 /**
@@ -268,6 +269,11 @@ const ConcertView = memo(({ id: propId }) => {
           handleCreateArtiste={navigationCallbacks.handleCreateArtiste}
         />
       )}
+      <NotesSection 
+        notes={concert?.notes || formData?.notes}
+        onChange={isEditMode ? (newNotes) => handleChange({ target: { name: 'notes', value: newNotes } }) : null}
+        isEditMode={isEditMode}
+      />
       {showFormGenerator && (
         <div className={styles.formGeneratorOverlay}>
           <div className={styles.formGeneratorModal}>

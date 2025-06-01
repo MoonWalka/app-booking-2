@@ -89,8 +89,8 @@ const ConcertView = () => {
     return <Alert variant="danger">Concert non trouvé</Alert>;
   }
 
-  // Utiliser getStatusInfo du hook
-  const statusInfo = getStatusInfo();
+  // Utiliser getStatusInfo du hook avec vérification défensive
+  const statusInfo = getStatusInfo ? getStatusInfo() : {};
 
   return (
     <div className={styles.concertViewContainer}>

@@ -19,6 +19,7 @@ import ConcertArtistSectionMobile from './sections/ConcertArtistSectionMobile';
 // import DeleteConcertModalMobile from './sections/DeleteConcertModalMobile';
 // Pour ConcertStructureSection, utilisez la version desktop si la version mobile n'existe pas encore
 import ConcertStructureSection from '../desktop/ConcertStructureSection';
+import NotesSection from '../sections/NotesSection';
 
 /**
  * Composant de vue des détails d'un concert - Version Mobile
@@ -38,6 +39,9 @@ const ConcertView = () => {
   } = useConcertDelete(() => navigate('/concerts'));
   
   // Utilisation des hooks personnalisés
+  const hookResult = useConcertDetails(id, location);
+  
+  // Destructuration avec valeurs par défaut pour éviter les erreurs
   const {
     concert,
     lieu,
@@ -46,18 +50,18 @@ const ConcertView = () => {
     structure,
     loading,
     formData,
-    copyToClipboard,
-    formatDate,
-    formatMontant,
-    isDatePassed,
-    getStatusInfo,
+    copyToClipboard = () => {},
+    formatDate = (date) => date,
+    formatMontant = (montant) => montant,
+    isDatePassed = () => false,
+    getStatusInfo = () => ({}),
     formDataStatus,
-    showFormGenerator,
-    setShowFormGenerator,
-    generatedFormLink,
-    setGeneratedFormLink,
-    handleFormGenerated
-  } = useConcertDetails(id, location);
+    showFormGenerator = false,
+    setShowFormGenerator = () => {},
+    generatedFormLink = '',
+    setGeneratedFormLink = () => {},
+    handleFormGenerated = () => {}
+  } = hookResult || {};
 
   // Gestionnaire de suppression directe
   const handleDirectDelete = () => {
@@ -89,8 +93,8 @@ const ConcertView = () => {
     return <Alert variant="danger">Concert non trouvé</Alert>;
   }
 
-  // Utiliser getStatusInfo du hook avec vérification défensive
-  const statusInfo = getStatusInfo ? getStatusInfo() : {};
+  // Utiliser getStatusInfo du hook (avec valeur par défaut)
+  const statusInfo = getStatusInfo();
 
   return (
     <div className={styles.concertViewContainer}>
@@ -161,6 +165,12 @@ const ConcertView = () => {
             navigateToArtisteDetails={(artisteId) => navigate(`/artistes/${artisteId}`)}
           />
         )}
+
+        {/* Notes */}
+        <NotesSection 
+          notes={concert?.notes}
+          isEditMode={false}
+        />
       </div>
 
       {/* Composant pour l'envoi de formulaire */}

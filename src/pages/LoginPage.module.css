@@ -117,17 +117,8 @@
   margin-bottom: var(--tc-space-6);
 }
 
-/* Ligne de formulaire pour les champs côte à côte */
-.formRow {
-  display: flex;
-  gap: var(--tc-space-4);
-  margin-bottom: var(--tc-space-6);
-}
-
-.formRow .formGroup {
-  flex: 1;
-  margin-bottom: 0;
-}
+/* Ligne de formulaire pour les champs côte à côte - Plus nécessaire avec un seul champ nom */
+/* .formRow styles supprimés car remplacés par un champ unique */
 
 .formLabel {
   font-size: var(--tc-font-size-sm);
@@ -299,15 +290,7 @@
     font-size: var(--tc-font-size-xl);
   }
   
-  /* Empiler les champs prénom/nom sur mobile */
-  .formRow {
-    flex-direction: column;
-    gap: var(--tc-space-6);
-  }
-  
-  .formRow .formGroup {
-    margin-bottom: var(--tc-space-6);
-  }
+  /* Styles mobile - plus de .formRow nécessaires avec un seul champ nom */
 }
 
 /* Animation d'entrée progressive */

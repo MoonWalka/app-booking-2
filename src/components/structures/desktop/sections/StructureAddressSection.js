@@ -1,4 +1,5 @@
 import React from 'react';
+import Card from '@/components/ui/Card';
 import styles from './StructureAddressSection.module.css';
 import useStructureAddressSection from '../../core/useStructureAddressSection';
 
@@ -19,12 +20,10 @@ const StructureAddressSection = ({ structure, formatValue }) => {
   if (!hasData) return null;
   
   return (
-    <div className={styles.detailsCard}>
-      <div className={styles.cardHeader}>
-        <i className="bi bi-geo-alt me-2"></i>
-        <h3>Coordonnées</h3>
-      </div>
-      <div className={styles.cardBody}>
+    <Card
+      title="Coordonnées"
+      icon={<i className="bi bi-geo-alt"></i>}
+    >
         <div className="row">
           <div className="col-md-12">
             <div className={styles.infoGroup}>
@@ -105,8 +104,7 @@ const StructureAddressSection = ({ structure, formatValue }) => {
             </div>
           </div>
         </div>
-      </div>
-    </div>
+    </Card>
   );
 };
 

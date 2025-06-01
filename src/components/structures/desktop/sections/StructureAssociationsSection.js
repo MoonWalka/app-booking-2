@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Card from '@/components/ui/Card';
 import styles from './StructureAssociationsSection.module.css';
 
 /**
@@ -18,16 +19,18 @@ const StructureAssociationsSection = ({ programmateurs, loadingProgrammateurs })
   });
 
   return (
-    <div className={styles.detailsCard}>
-      <div className={styles.cardHeader}>
-        <i className="bi bi-person-badge me-2"></i>
-        <h3>Programmateurs associés</h3>
-        {/* Debug temporaire : afficher le nombre */}
-        <small style={{ marginLeft: '10px', color: '#666' }}>
-          ({programmateurs?.length || 0} trouvé{programmateurs?.length > 1 ? 's' : ''})
-        </small>
-      </div>
-      <div className={styles.cardBody}>
+    <Card
+      title={
+        <span>
+          Programmateurs associés
+          {/* Debug temporaire : afficher le nombre */}
+          <small style={{ marginLeft: '10px', color: '#666' }}>
+            ({programmateurs?.length || 0} trouvé{programmateurs?.length > 1 ? 's' : ''})
+          </small>
+        </span>
+      }
+      icon={<i className="bi bi-person-badge"></i>}
+    >
         {loadingProgrammateurs ? (
           <div className="text-center p-3">
             <div className={`${styles.spinner} ${styles.spinnerSmall}`} role="status">
@@ -84,8 +87,7 @@ const StructureAssociationsSection = ({ programmateurs, loadingProgrammateurs })
             Aucun programmateur n'est associé à cette structure.
           </div>
         )}
-      </div>
-    </div>
+    </Card>
   );
 };
 

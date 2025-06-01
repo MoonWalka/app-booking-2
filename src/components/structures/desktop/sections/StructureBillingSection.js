@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Row, Col, Alert } from 'react-bootstrap';
+import Card from '@/components/ui/Card';
 import styles from './StructureBillingSection.module.css';
 
 /**
@@ -67,12 +68,10 @@ const StructureBillingSection = ({ formData, handleChange, errors = {} }) => {
   };
 
   return (
-    <div className={styles.formCard}>
-      <div className={styles.cardHeader}>
-        <i className="bi bi-credit-card"></i>
-        <h3>Facturation</h3>
-      </div>
-      <div className={styles.cardBody}>
+    <Card
+      title="Facturation"
+      icon={<i className="bi bi-credit-card"></i>}
+    >
         {/* NOUVEAU: Notification de succès pour la copie d'adresse */}
         {showCopySuccess && (
           <Alert variant="success" className={styles.successAlert}>
@@ -198,8 +197,7 @@ const StructureBillingSection = ({ formData, handleChange, errors = {} }) => {
             </Form.Group>
           </Col>
         </Row>
-      </div>
-    </div>
+    </Card>
   );
 };
 

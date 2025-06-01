@@ -1,4 +1,5 @@
 import React from 'react';
+import Card from '@/components/ui/Card';
 import styles from './StructureContactSection.module.css';
 
 /**
@@ -22,12 +23,10 @@ const StructureContactSection = ({ structure, formatValue }) => {
   };
   
   return (
-    <div className={styles.detailsCard}>
-      <div className={styles.cardHeader}>
-        <i className="bi bi-person me-2"></i>
-        <h3>Contact principal</h3>
-      </div>
-      <div className={styles.cardBody}>
+    <Card
+      title="Contact principal"
+      icon={<i className="bi bi-person"></i>}
+    >
         <div className="row">
           <div className="col-md-6">
             <div className={styles.infoGroup}>
@@ -74,8 +73,7 @@ const StructureContactSection = ({ structure, formatValue }) => {
             </div>
           </div>
         </div>
-      </div>
-    </div>
+    </Card>
   );
 };
 

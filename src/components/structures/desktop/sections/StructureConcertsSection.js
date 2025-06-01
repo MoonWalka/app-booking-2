@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import Card from '@/components/ui/Card';
 import styles from './StructureConcertsSection.module.css';
 
 /**
@@ -48,16 +49,18 @@ const StructureConcertsSection = ({ concerts, loadingConcerts }) => {
   };
 
   return (
-    <div className={styles.detailsCard}>
-      <div className={styles.cardHeader}>
-        <i className="bi bi-music-note-list me-2"></i>
-        <h3>Concerts associés</h3>
-        {/* Debug temporaire : afficher le nombre */}
-        <small style={{ marginLeft: '10px', color: '#666' }}>
-          ({concerts?.length || 0} trouvé{concerts?.length > 1 ? 's' : ''})
-        </small>
-      </div>
-      <div className={styles.cardBody}>
+    <Card
+      title={
+        <span>
+          Concerts associés
+          {/* Debug temporaire : afficher le nombre */}
+          <small style={{ marginLeft: '10px', color: '#666' }}>
+            ({concerts?.length || 0} trouvé{concerts?.length > 1 ? 's' : ''})
+          </small>
+        </span>
+      }
+      icon={<i className="bi bi-music-note-list"></i>}
+    >
         {loadingConcerts ? (
           <div className="text-center p-3">
             <div className={`${styles.spinner} ${styles.spinnerSmall}`} role="status">
@@ -117,8 +120,7 @@ const StructureConcertsSection = ({ concerts, loadingConcerts }) => {
             Aucun concert n'est associé à cette structure.
           </div>
         )}
-      </div>
-    </div>
+    </Card>
   );
 };
 

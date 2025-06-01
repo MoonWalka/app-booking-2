@@ -1,4 +1,5 @@
 import React from 'react';
+import Card from '@/components/ui/Card';
 import styles from './StructureNotesSection.module.css';
 
 /**
@@ -11,19 +12,16 @@ const StructureNotesSection = ({ notes }) => {
   if (!notes) return null;
   
   return (
-    <div className={styles.detailsCard}>
-      <div className={styles.cardHeader}>
-        <i className="bi bi-sticky me-2"></i>
-        <h3>Notes</h3>
-      </div>
-      <div className={styles.cardBody}>
+    <Card
+      title="Notes"
+      icon={<i className="bi bi-sticky"></i>}
+    >
         <div className={styles.notesContent}>
           {notes.split('\n').map((line, index) => (
             <p key={index}>{line}</p>
           ))}
         </div>
-      </div>
-    </div>
+    </Card>
   );
 };
 

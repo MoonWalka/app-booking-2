@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useOrganization } from '@/context/OrganizationContext';
 import { useAuth } from '@/context/AuthContext';
-import './OrganizationSelector.css';
+import styles from './OrganizationSelector.module.css';
 
-const OrganizationSelector = ({ className = '' }) => {
+const OrganizationSelector = ({ className = '', isMobile = false }) => {
   const { currentUser } = useAuth();
   const { 
     currentOrg, 
@@ -13,6 +13,9 @@ const OrganizationSelector = ({ className = '' }) => {
   } = useOrganization();
 
   const [showDropdown, setShowDropdown] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+  const dropdownRef = useRef(null);
+  const buttonRef = useRef(null);
 
   // Obtenir le nom d'utilisateur (displayName ou email sans @domain)
   const getUserDisplayName = () => {
@@ -24,11 +27,6 @@ const OrganizationSelector = ({ className = '' }) => {
     }
     return 'Utilisateur';
   };
-
-  // Si l'utilisateur n'a pas d'organisations
-  if (!userOrgs || userOrgs.length === 0) {
-    return null;
-  }
 
   const handleOrganizationChange = async (orgId) => {
     if (orgId && orgId !== currentOrg?.id) {
@@ -51,11 +49,206 @@ const OrganizationSelector = ({ className = '' }) => {
     window.location.href = '/onboarding?action=join';
   };
 
+  // Gestion de la navigation clavier
+  const handleKeyDown = useCallback((event) => {
+    if (!showDropdown) {
+      if (event.key === 'Enter' || event.key === ' ' || event.key === 'ArrowDown') {
+        event.preventDefault();
+        setShowDropdown(true);
+        setSelectedIndex(0);
+      }
+      return;
+    }
+
+    // Cas première connexion : seulement 2 options (créer/rejoindre)
+    const totalItems = !userOrgs || userOrgs.length === 0 ? 2 : userOrgs.length + 3;
+    
+    switch (event.key) {
+      case 'Escape':
+        event.preventDefault();
+        setShowDropdown(false);
+        setSelectedIndex(-1);
+        buttonRef.current?.focus();
+        break;
+        
+      case 'ArrowDown':
+        event.preventDefault();
+        setSelectedIndex(prev => (prev + 1) % totalItems);
+        break;
+        
+      case 'ArrowUp':
+        event.preventDefault();
+        setSelectedIndex(prev => prev <= 0 ? totalItems - 1 : prev - 1);
+        break;
+        
+      case 'Enter':
+      case ' ':
+        event.preventDefault();
+        // Première connexion : seulement créer/rejoindre
+        if (!userOrgs || userOrgs.length === 0) {
+          if (selectedIndex === 0) {
+            handleCreateOrganization();
+          } else if (selectedIndex === 1) {
+            handleJoinOrganization();
+          }
+        } else {
+          // Utilisateur avec organisations existantes
+          if (userOrgs && selectedIndex >= 0 && selectedIndex < userOrgs.length) {
+            const selectedOrg = userOrgs[selectedIndex];
+            handleOrganizationChange(selectedOrg.id);
+          } else if (selectedIndex === (userOrgs?.length || 0)) {
+            handleCreateOrganization();
+          } else if (selectedIndex === (userOrgs?.length || 0) + 1) {
+            handleJoinOrganization();
+          } else if (selectedIndex === (userOrgs?.length || 0) + 2) {
+            setShowDropdown(false);
+            window.location.href = '/parametres/organisations';
+          }
+        }
+        break;
+        
+      case 'Tab':
+        setShowDropdown(false);
+        setSelectedIndex(-1);
+        break;
+        
+      default:
+        break;
+    }
+  }, [showDropdown, selectedIndex, userOrgs, handleOrganizationChange, handleCreateOrganization, handleJoinOrganization]);
+
+  // Fermeture automatique lors d'un clic extérieur
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+        setSelectedIndex(-1);
+      }
+    };
+
+    if (showDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [showDropdown, handleKeyDown]);
+
+  // Si l'utilisateur n'a pas d'organisations, afficher les options d'inscription
+  if (!userOrgs || userOrgs.length === 0) {
+    return (
+      <div className={`${styles.organizationSelector} ${className}`}>
+        <button
+          ref={buttonRef}
+          className={styles.userProfileButton}
+          type="button"
+          onClick={() => setShowDropdown(!showDropdown)}
+          onKeyDown={handleKeyDown}
+          aria-expanded={showDropdown}
+          aria-haspopup="listbox"
+          aria-label="Sélecteur d'organisation et profil utilisateur"
+          role="combobox"
+        >
+          <div className={styles.userAvatar}>
+            <i className="bi bi-person-plus" aria-hidden="true"></i>
+          </div>
+          
+          <div className={styles.userInfo}>
+            <div className={styles.userName}>
+              {getUserDisplayName()}
+            </div>
+          </div>
+          
+          <i className={`bi bi-chevron-up ${styles.dropdownIcon}`} aria-hidden="true"></i>
+        </button>
+
+        {showDropdown && (
+          <div 
+            className={styles.dropdownMenu}
+            role="listbox"
+            aria-label="Options d'inscription"
+          >
+            {/* Informations utilisateur */}
+            <div className={styles.dropdownHeader}>
+              <div className={styles.userAvatar}>
+                <i className="bi bi-person-plus" aria-hidden="true"></i>
+              </div>
+              <div className={styles.dropdownUserInfo}>
+                <div className={styles.dropdownUserName}>{getUserDisplayName()}</div>
+                <div className={styles.dropdownUserEmail}>{currentUser?.email}</div>
+              </div>
+            </div>
+            
+            <div className={styles.dropdownDivider}></div>
+            
+            {/* Message de bienvenue */}
+            <div className={styles.dropdownSection}>
+              <div className={styles.welcomeMessage}>
+                <i className="bi bi-info-circle" style={{marginRight: '8px', color: 'var(--tc-color-accent)'}}></i>
+                Bienvenue ! Commencez par créer ou rejoindre une organisation.
+              </div>
+            </div>
+            
+            <div className={styles.dropdownDivider}></div>
+            
+            {/* Actions pour créer/rejoindre */}
+            <div className={styles.dropdownSection}>
+              <div className={styles.dropdownSectionTitle}>Premiers pas</div>
+              
+              <button
+                className={styles.dropdownItem}
+                onClick={handleCreateOrganization}
+                data-index={0}
+                tabIndex={selectedIndex === 0 ? 0 : -1}
+              >
+                <div className={styles.itemContent}>
+                  <i className={`bi bi-plus-circle ${styles.itemIcon}`} aria-hidden="true"></i>
+                  <div className={styles.itemInfo}>
+                    <div className={styles.itemTitle}>Créer une organisation</div>
+                    <div className={styles.itemSubtitle}>Configurez votre propre espace de travail</div>
+                  </div>
+                </div>
+              </button>
+              
+              <button
+                className={styles.dropdownItem}
+                onClick={handleJoinOrganization}
+                data-index={1}
+                tabIndex={selectedIndex === 1 ? 0 : -1}
+              >
+                <div className={styles.itemContent}>
+                  <i className={`bi bi-people ${styles.itemIcon}`} aria-hidden="true"></i>
+                  <div className={styles.itemInfo}>
+                    <div className={styles.itemTitle}>Rejoindre une organisation</div>
+                    <div className={styles.itemSubtitle}>Utilisez un code d'invitation existant</div>
+                  </div>
+                </div>
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Overlay pour fermer le dropdown */}
+        {showDropdown && (
+          <div 
+            className={styles.dropdownOverlay}
+            onClick={() => setShowDropdown(false)}
+            aria-hidden="true"
+          />
+        )}
+      </div>
+    );
+  }
+
   if (loading) {
     return (
-      <div className={`organization-selector ${className}`}>
-        <div className="spinner-border spinner-border-sm" role="status">
-          <span className="visually-hidden">Chargement...</span>
+      <div className={`${styles.organizationSelector} ${className}`}>
+        <div className={styles.loadingContainer}>
+          <div className={styles.loadingSpinner} role="status" aria-label="Chargement..."></div>
+          <span className={styles.loadingText}>Chargement...</span>
         </div>
       </div>
     );
@@ -63,129 +256,153 @@ const OrganizationSelector = ({ className = '' }) => {
 
   // Interface utilisateur avec dropdown d'organisations
   return (
-    <div className={`organization-selector user-profile ${className}`}>
-      <div className="dropdown">
-        <button
-          className="btn btn-link text-light p-0 dropdown-toggle user-profile-button"
-          type="button"
-          onClick={() => setShowDropdown(!showDropdown)}
-          style={{ border: 'none', textDecoration: 'none', width: '100%' }}
-        >
-          <div className="d-flex align-items-center">
-            {/* Avatar utilisateur */}
-            <div className="user-avatar me-3">
-              <i className="bi bi-person-circle"></i>
-            </div>
-            
-            <div className="user-info text-start flex-grow-1">
-              {/* Nom d'utilisateur */}
-              <div className="user-name fw-medium">
-                {getUserDisplayName()}
-              </div>
-              
-              {/* Organisation courante */}
-              <small className="text-muted d-block">
-                {currentOrg ? (
-                  <>
-                    <i className="bi bi-building me-1"></i>
-                    {currentOrg.name}
-                    {currentOrg.userRole === 'owner' && ' (Propriétaire)'}
-                    {currentOrg.userRole === 'admin' && ' (Admin)'}
-                  </>
-                ) : (
-                  'Aucune organisation'
-                )}
-              </small>
-            </div>
-            
-            {/* Icône dropdown */}
-            <i className="bi bi-chevron-up ms-2" style={{ fontSize: '0.8rem' }}></i>
+    <div className={`${styles.organizationSelector} ${isMobile ? 'mobile' : ''} ${className}`} ref={dropdownRef}>
+      <button
+        ref={buttonRef}
+        className={styles.userProfileButton}
+        type="button"
+        onClick={() => setShowDropdown(!showDropdown)}
+        onKeyDown={handleKeyDown}
+        aria-expanded={showDropdown}
+        aria-haspopup="listbox"
+        aria-label="Sélecteur d'organisation et profil utilisateur"
+        role="combobox"
+      >
+        <div className={styles.userAvatar}>
+          <i className="bi bi-person-fill" aria-hidden="true"></i>
+        </div>
+        
+        <div className={styles.userInfo}>
+          <div className={styles.userName}>
+            {getUserDisplayName()}
           </div>
-        </button>
+          
+          <div className={styles.organizationInfo}>
+            {currentOrg ? (
+              <>
+                <i className="bi bi-building" aria-hidden="true"></i>
+                <span>{currentOrg.name}</span>
+              </>
+            ) : (
+              <>
+                <i className="bi bi-exclamation-circle" aria-hidden="true"></i>
+                <span>Aucune organisation</span>
+              </>
+            )}
+          </div>
+        </div>
+        
+        <i className={`bi bi-chevron-up ${styles.dropdownIcon}`} aria-hidden="true"></i>
+      </button>
 
-        {showDropdown && (
-          <div className="dropdown-menu dropdown-menu-end show" style={{ minWidth: '280px', bottom: '100%', top: 'auto' }}>
-            {/* Informations utilisateur */}
-            <div className="dropdown-header d-flex align-items-center">
-              <div className="user-avatar me-2">
-                <i className="bi bi-person-circle"></i>
-              </div>
-              <div>
-                <div className="fw-medium">{getUserDisplayName()}</div>
-                <small className="text-muted">{currentUser?.email}</small>
-              </div>
+      {showDropdown && (
+        <div 
+          className={styles.dropdownMenu}
+          role="listbox"
+          aria-label="Liste des organisations"
+        >
+          {/* Informations utilisateur */}
+          <div className={styles.dropdownHeader}>
+            <div className={styles.userAvatar}>
+              <i className="bi bi-person-fill" aria-hidden="true"></i>
             </div>
+            <div className={styles.dropdownUserInfo}>
+              <div className={styles.dropdownUserName}>{getUserDisplayName()}</div>
+              <div className={styles.dropdownUserEmail}>{currentUser?.email}</div>
+            </div>
+          </div>
+          
+          <div className={styles.dropdownDivider}></div>
+          
+          {/* Liste des organisations existantes */}
+          <div className={styles.dropdownSection}>
+            <div className={styles.dropdownSectionTitle}>Mes organisations</div>
             
-            <div className="dropdown-divider"></div>
-            
-            {/* Liste des organisations existantes */}
-            <h6 className="dropdown-header">Mes organisations</h6>
-            
-            {userOrgs.map(org => (
+            {userOrgs.map((org, index) => (
               <button
                 key={org.id}
-                className={`dropdown-item d-flex justify-content-between ${org.id === currentOrg?.id ? 'active' : ''}`}
+                className={`${styles.dropdownItem} ${org.id === currentOrg?.id ? styles.dropdownItemActive : ''}`}
                 onClick={() => handleOrganizationChange(org.id)}
+                role="option"
+                aria-selected={org.id === currentOrg?.id}
+                data-index={index}
+                tabIndex={selectedIndex === index ? 0 : -1}
               >
-                <div>
-                  <div className="fw-medium">
-                    {org.name}
-                    {org.userRole === 'owner' && ' (Propriétaire)'}
-                    {org.userRole === 'admin' && ' (Admin)'}
+                <div className={styles.itemContent}>
+                  <div className={styles.itemInfo}>
+                    <div className={styles.itemTitle}>
+                      {org.name}
+                      {org.userRole === 'owner' && ' (Propriétaire)'}
+                      {org.userRole === 'admin' && ' (Admin)'}
+                    </div>
+                    <div className={styles.itemSubtitle}>
+                      {org.settings?.timezone || 'Europe/Paris'} • {org.settings?.currency || 'EUR'}
+                    </div>
                   </div>
-                  <small className="text-muted">
-                    {org.settings?.timezone || 'Europe/Paris'} • {org.settings?.currency || 'EUR'}
-                  </small>
+                  {org.id === currentOrg?.id && (
+                    <i className={`bi bi-check-circle-fill ${styles.activeIcon}`} aria-hidden="true"></i>
+                  )}
                 </div>
-                {org.id === currentOrg?.id && (
-                  <i className="bi bi-check-circle-fill text-success"></i>
-                )}
               </button>
             ))}
-            
-            <div className="dropdown-divider"></div>
-            
-            {/* Actions pour créer/rejoindre */}
-            <h6 className="dropdown-header">Actions</h6>
+          </div>
+          
+          <div className={styles.dropdownDivider}></div>
+          
+          {/* Actions pour créer/rejoindre */}
+          <div className={styles.dropdownSection}>
+            <div className={styles.dropdownSectionTitle}>Actions</div>
             
             <button
-              className="dropdown-item"
+              className={styles.dropdownItem}
               onClick={handleCreateOrganization}
+              data-index={userOrgs.length}
+              tabIndex={selectedIndex === userOrgs.length ? 0 : -1}
             >
-              <i className="bi bi-plus-circle me-2"></i>
-              Créer une organisation
+              <div className={styles.itemContent}>
+                <i className={`bi bi-plus-circle ${styles.itemIcon}`} aria-hidden="true"></i>
+                <span>Créer une organisation</span>
+              </div>
             </button>
             
             <button
-              className="dropdown-item"
+              className={styles.dropdownItem}
               onClick={handleJoinOrganization}
+              data-index={userOrgs.length + 1}
+              tabIndex={selectedIndex === userOrgs.length + 1 ? 0 : -1}
             >
-              <i className="bi bi-people me-2"></i>
-              Rejoindre une organisation
+              <div className={styles.itemContent}>
+                <i className={`bi bi-people ${styles.itemIcon}`} aria-hidden="true"></i>
+                <span>Rejoindre une organisation</span>
+              </div>
             </button>
             
-            <div className="dropdown-divider"></div>
+            <div className={styles.dropdownDivider}></div>
             
             <button
-              className="dropdown-item"
+              className={styles.dropdownItem}
               onClick={() => {
                 setShowDropdown(false);
                 window.location.href = '/parametres/organisations';
               }}
+              data-index={userOrgs.length + 2}
+              tabIndex={selectedIndex === userOrgs.length + 2 ? 0 : -1}
             >
-              <i className="bi bi-gear me-2"></i>
-              Gérer les organisations
+              <div className={styles.itemContent}>
+                <i className={`bi bi-gear ${styles.itemIcon}`} aria-hidden="true"></i>
+                <span>Gérer les organisations</span>
+              </div>
             </button>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Overlay pour fermer le dropdown */}
       {showDropdown && (
         <div 
-          className="position-fixed top-0 start-0 w-100 h-100"
-          style={{ zIndex: 1000 }}
+          className={styles.dropdownOverlay}
           onClick={() => setShowDropdown(false)}
+          aria-hidden="true"
         />
       )}
     </div>

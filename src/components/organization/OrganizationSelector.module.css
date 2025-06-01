@@ -1,0 +1,551 @@
+/**
+ * OrganizationSelector - Composant de sélection d'organisation utilisateur
+ * Conforme aux standards TourCraft CSS et design system harmonisé
+ * Dernière mise à jour: 1 juin 2025
+ */
+
+/* Import des standards TourCraft */
+@import '@/styles/base/variables.css';
+@import '@/styles/mixins/breakpoints.css';
+
+/* ========================================
+ * CONTAINER PRINCIPAL - INTÉGRÉ SIDEBAR
+ * ======================================== */
+
+.organizationSelector {
+  position: relative;
+  width: 100%;
+  /* Suppression du padding conteneur pour intégration parfaite */
+}
+
+/* ========================================
+ * BOUTON PROFIL UTILISATEUR
+ * ======================================== */
+
+.userProfileButton {
+  width: 100%;
+  text-align: left;
+  padding: var(--tc-space-2) var(--tc-space-6);
+  border-radius: 0;
+  transition: var(--tc-transition-short);
+  background-color: transparent;
+  border: none;
+  color: var(--tc-text-light);
+  cursor: pointer;
+  
+  /* Style menu sidebar identique */
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  
+  /* Performance optimization */
+  will-change: background-color;
+  
+  /* Reset button styles */
+  appearance: none;
+  outline: none;
+  text-decoration: none;
+}
+
+/* États interactifs - Style menu sidebar */
+.userProfileButton:hover {
+  background-color: var(--tc-hover-overlay-light);
+  color: var(--tc-text-light);
+}
+
+.userProfileButton:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.3);
+  outline-offset: -2px;
+}
+
+/* État ouvert - Style menu actif */
+.userProfileButton[aria-expanded="true"] {
+  background-color: var(--tc-active-overlay-light);
+  border-left: 4px solid var(--tc-color-accent);
+}
+
+/* ========================================
+ * AVATAR UTILISATEUR
+ * ======================================== */
+
+.userAvatar {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--tc-font-size-lg);
+  color: var(--tc-text-light);
+  flex-shrink: 0;
+  margin-right: var(--tc-space-2);
+}
+
+.userAvatar i {
+  line-height: 1;
+}
+
+/* ========================================
+ * INFORMATIONS UTILISATEUR
+ * ======================================== */
+
+.userInfo {
+  min-width: 0;
+  flex: 1;
+}
+
+.userName {
+  font-size: var(--tc-font-size-base);
+  line-height: var(--tc-line-height-tight);
+  font-weight: var(--tc-font-weight-normal);
+  color: var(--tc-text-light);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Cache l'info organisation dans le mode menu replié */
+.organizationInfo {
+  display: none;
+}
+
+/* ========================================
+ * ICÔNE DROPDOWN
+ * ======================================== */
+
+.dropdownIcon {
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-text-light);
+  opacity: 0.7;
+  transition: var(--tc-transition-short);
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.userProfileButton[aria-expanded="true"] .dropdownIcon {
+  transform: rotate(180deg);
+  opacity: 1;
+}
+
+/* ========================================
+ * MENU DROPDOWN - INTÉGRÉ DANS LA SIDEBAR
+ * ======================================== */
+
+.dropdownMenu {
+  position: absolute;
+  bottom: 100%;
+  left: calc(-1 * var(--tc-sidebar-width) / 2 + 50%);
+  width: var(--tc-sidebar-width);
+  max-width: calc(var(--tc-sidebar-width) * 1.8);
+  min-width: var(--tc-sidebar-width);
+  max-height: 80vh;
+  overflow: visible;
+  
+  /* Style intégré sidebar parfaitement adapté */
+  background-color: rgba(0, 0, 0, 0.1);
+  border: none;
+  border-radius: var(--tc-radius-lg) var(--tc-radius-lg) 0 0;
+  border-top: 2px solid rgba(255, 255, 255, 0.1);
+  padding: var(--tc-space-3) 0;
+  margin-bottom: var(--tc-space-1);
+  
+  /* Ombre pour bien délimiter */
+  box-shadow: var(--tc-shadow-lg);
+  
+  /* Z-index pour rester dans le contexte sidebar */
+  z-index: 150;
+  
+  /* Animation slide down */
+  animation: slideDownInSidebar 0.25s ease-out;
+  transform-origin: bottom center;
+  
+  /* Performance */
+  will-change: transform, opacity, max-height;
+}
+
+/* Adaptation responsive basée sur la largeur sidebar */
+@media (min-width: var(--tc-breakpoint-lg)) {
+  .dropdownMenu {
+    /* Sur grands écrans : léger débordement contrôlé */
+    left: calc(-1 * var(--tc-sidebar-width) * 0.4 + 50%);
+    width: calc(var(--tc-sidebar-width) * 1.8);
+  }
+}
+
+@keyframes slideDownInSidebar {
+  from {
+    opacity: 0;
+    max-height: 0;
+    transform: scaleY(0);
+  }
+  to {
+    opacity: 1;
+    max-height: 80vh;
+    transform: scaleY(1);
+  }
+}
+
+/* ========================================
+ * HEADER DU DROPDOWN - STYLE SIDEBAR
+ * ======================================== */
+
+.dropdownHeader {
+  padding: var(--tc-space-4) var(--tc-space-6);
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: var(--tc-space-3);
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.dropdownHeader .userAvatar {
+  width: 40px;
+  height: 40px;
+  background-color: rgba(255, 255, 255, 0.15);
+  color: var(--tc-text-light);
+  font-size: var(--tc-font-size-lg);
+}
+
+.dropdownUserInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.dropdownUserName {
+  font-size: var(--tc-font-size-base);
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-text-light);
+  margin-bottom: var(--tc-space-1);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dropdownUserEmail {
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-text-light);
+  opacity: 0.7;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ========================================
+ * SECTIONS DU DROPDOWN - STYLE SIDEBAR ÉLARGI
+ * ======================================== */
+
+.dropdownSection {
+  margin-bottom: var(--tc-space-3);
+}
+
+.dropdownSectionTitle {
+  padding: var(--tc-space-2) var(--tc-space-6) var(--tc-space-1);
+  font-size: var(--tc-font-size-xs);
+  font-weight: var(--tc-font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--tc-letter-spacing-wide);
+  color: var(--tc-text-light);
+  opacity: 0.6;
+}
+
+/* Message de bienvenue pour première connexion */
+.welcomeMessage {
+  padding: var(--tc-space-3) var(--tc-space-6);
+  display: flex;
+  align-items: center;
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-text-light);
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: var(--tc-radius-md);
+  margin: 0 var(--tc-space-3);
+  border-left: 3px solid var(--tc-color-accent);
+  line-height: var(--tc-line-height-relaxed);
+}
+
+/* ========================================
+ * ITEMS DU DROPDOWN - STYLE MENU SIDEBAR
+ * ======================================== */
+
+.dropdownItem {
+  width: 100%;
+  padding: var(--tc-space-3) var(--tc-space-6);
+  margin: 0;
+  border: none;
+  background: none;
+  text-align: left;
+  transition: var(--tc-transition-short);
+  cursor: pointer;
+  position: relative;
+  color: var(--tc-text-light);
+  
+  /* Style menu sidebar élargi */
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  
+  /* Performance */
+  will-change: background-color;
+}
+
+.dropdownItem:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--tc-text-light);
+}
+
+.dropdownItem:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.3);
+  outline-offset: -2px;
+}
+
+/* Item actif (organisation courante) */
+.dropdownItemActive {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: var(--tc-text-light);
+  font-weight: var(--tc-font-weight-medium);
+}
+
+.dropdownItemActive::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 60%;
+  background-color: var(--tc-color-accent);
+  border-radius: 0 var(--tc-radius-sm) var(--tc-radius-sm) 0;
+}
+
+/* ========================================
+ * CONTENU DES ITEMS - STYLE SIDEBAR
+ * ======================================== */
+
+.itemContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--tc-space-2);
+  width: 100%;
+}
+
+.itemInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.itemTitle {
+  font-size: var(--tc-font-size-base);
+  font-weight: var(--tc-font-weight-medium);
+  color: inherit;
+  margin-bottom: var(--tc-space-1);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.itemSubtitle {
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-text-light);
+  opacity: 0.7;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.itemIcon {
+  width: 24px;
+  text-align: center;
+  opacity: 0.7;
+  flex-shrink: 0;
+  transition: var(--tc-transition-short);
+  margin-right: var(--tc-space-3);
+  color: var(--tc-text-light);
+  font-size: var(--tc-font-size-base);
+}
+
+.dropdownItem:hover .itemIcon {
+  opacity: 1;
+}
+
+.activeIcon {
+  color: var(--tc-color-accent);
+  font-size: var(--tc-font-size-base);
+  opacity: 1;
+}
+
+/* ========================================
+ * DIVIDERS - STYLE SIDEBAR
+ * ======================================== */
+
+.dropdownDivider {
+  margin: var(--tc-space-3) var(--tc-space-6);
+  border: 0;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* ========================================
+ * OVERLAY DE FERMETURE - DÉSACTIVÉ POUR SIDEBAR
+ * ======================================== */
+
+.dropdownOverlay {
+  /* Pas d'overlay pour l'intégration sidebar */
+  display: none;
+}
+
+/* ========================================
+ * ÉTATS DE CHARGEMENT
+ * ======================================== */
+
+.loadingContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--tc-space-3);
+}
+
+.loadingSpinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--tc-color-neutral-200);
+  border-top: 2px solid var(--tc-color-primary);
+  border-radius: var(--tc-radius-full);
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loadingText {
+  margin-left: var(--tc-space-2);
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-text-muted);
+}
+
+/* ========================================
+ * MODE SOMBRE - ADAPTÉ SIDEBAR
+ * ======================================== */
+
+@media (prefers-color-scheme: dark) {
+  .dropdownMenu {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-top-color: rgba(255, 255, 255, 0.05);
+  }
+  
+  .dropdownHeader {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-bottom-color: rgba(255, 255, 255, 0.05);
+  }
+  
+  .dropdownHeader .userAvatar {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .dropdownItem:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+  
+  .dropdownItemActive {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .dropdownDivider {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+}
+
+/* ========================================
+ * RESPONSIVE DESIGN - COHÉRENT SIDEBAR
+ * ======================================== */
+
+/* Mobile: adaptation sidebar responsive */
+@media (max-width: var(--tc-breakpoint-md)) {
+  .userProfileButton {
+    padding: var(--tc-space-2) var(--tc-space-4);
+  }
+  
+  .userAvatar {
+    width: 20px;
+    height: 20px;
+    font-size: var(--tc-font-size-base);
+  }
+  
+  .userName {
+    font-size: var(--tc-font-size-sm);
+  }
+  
+  .dropdownMenu {
+    /* Mobile : utilise la largeur dynamique de la sidebar mobile */
+    left: calc(-50vw + 50%);
+    width: 50vw;
+    min-width: 280px;
+    max-width: 400px;
+    max-height: 70vh;
+  }
+  
+  .dropdownItem {
+    padding: var(--tc-space-2) var(--tc-space-4);
+    min-height: 44px; /* Touch target */
+  }
+  
+  .dropdownHeader {
+    padding: var(--tc-space-3) var(--tc-space-4);
+  }
+  
+  .dropdownSectionTitle {
+    padding: var(--tc-space-1) var(--tc-space-4) var(--tc-space-1);
+  }
+  
+  .dropdownDivider {
+    margin: var(--tc-space-2) var(--tc-space-4);
+  }
+}
+
+/* Très petit mobile : adaptation contrainte */
+@media (max-width: var(--tc-breakpoint-sm)) {
+  .dropdownMenu {
+    left: calc(-40vw + 50%);
+    width: 40vw;
+    min-width: 250px;
+    max-width: 300px;
+  }
+}
+
+/* ========================================
+ * ACCESSIBILITÉ
+ * ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .userProfileButton,
+  .userAvatar,
+  .dropdownIcon,
+  .dropdownItem {
+    transition: none;
+  }
+  
+  .dropdownMenu {
+    animation: none;
+  }
+  
+  .userProfileButton:hover {
+    transform: none;
+  }
+  
+  .dropdownItem:hover {
+    transform: none;
+  }
+}
+
+/* Focus visible pour les utilisateurs de clavier */
+@media (any-hover: none) {
+  .userProfileButton:hover {
+    transform: none;
+    box-shadow: none;
+  }
+  
+  .dropdownItem:hover {
+    transform: none;
+  }
+}

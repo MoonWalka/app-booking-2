@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth } from '@/services/firebase-service';
 import styles from './LoginPage.module.css';
 
@@ -12,9 +12,13 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
 
   // Focus automatique sur le premier champ au chargement
   useEffect(() => {
@@ -31,7 +35,7 @@ const LoginPage = () => {
     setSuccess(false);
 
     // Validation client basique
-    if (!email || !password) {
+    if (!email || !password || (isSignUp && (!confirmPassword || !firstName || !lastName))) {
       setError('Veuillez remplir tous les champs');
       setLoading(false);
       return;
@@ -45,28 +49,64 @@ const LoginPage = () => {
       return;
     }
 
+    // Validations spécifiques à l'inscription
+    if (isSignUp) {
+      if (password.length < 6) {
+        setError('Le mot de passe doit contenir au moins 6 caractères');
+        setLoading(false);
+        return;
+      }
+      
+      if (password !== confirmPassword) {
+        setError('Les mots de passe ne correspondent pas');
+        setLoading(false);
+        return;
+      }
+    }
+
     try {
-      // 🔒 SÉCURITÉ : Authentification Firebase sécurisée
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-      
-      console.log('✅ Connexion réussie pour:', user.email);
-      
-      // Afficher le succès avant la redirection
-      setSuccess(true);
-      setLoading(false);
-      
-      // Redirection vers le dashboard après 1 seconde
-      setTimeout(() => {
-        navigate('/');
-      }, 1000);
+      if (isSignUp) {
+        // 🔒 SÉCURITÉ : Création de compte Firebase sécurisée
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        
+        // Mise à jour du profil utilisateur avec le nom
+        await updateProfile(user, {
+          displayName: `${firstName} ${lastName}`
+        });
+        
+        console.log('✅ Inscription réussie pour:', user.email);
+        setSuccess(true);
+        setLoading(false);
+        
+        // Redirection vers l'onboarding après 1 seconde
+        setTimeout(() => {
+          navigate('/onboarding?action=create');
+        }, 1000);
+        
+      } else {
+        // 🔒 SÉCURITÉ : Authentification Firebase sécurisée
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        
+        console.log('✅ Connexion réussie pour:', user.email);
+        
+        // Afficher le succès avant la redirection
+        setSuccess(true);
+        setLoading(false);
+        
+        // Redirection vers le dashboard après 1 seconde
+        setTimeout(() => {
+          navigate('/');
+        }, 1000);
+      }
       
     } catch (error) {
-      console.error('❌ Erreur de connexion:', error);
+      console.error('❌ Erreur:', error);
       setLoading(false);
       
       // Gestion sécurisée des erreurs d'authentification
-      let errorMessage = 'Une erreur est survenue lors de la connexion';
+      let errorMessage = isSignUp ? 'Une erreur est survenue lors de l\'inscription' : 'Une erreur est survenue lors de la connexion';
       
       switch (error.code) {
         case 'auth/user-not-found':
@@ -87,8 +127,14 @@ const LoginPage = () => {
         case 'auth/network-request-failed':
           errorMessage = 'Problème de connexion réseau';
           break;
+        case 'auth/email-already-in-use':
+          errorMessage = 'Un compte existe déjà avec cet email';
+          break;
+        case 'auth/weak-password':
+          errorMessage = 'Le mot de passe est trop faible';
+          break;
         default:
-          errorMessage = 'Identifiants invalides. Veuillez vérifier votre email et mot de passe.';
+          errorMessage = isSignUp ? 'Erreur lors de l\'inscription. Veuillez réessayer.' : 'Identifiants invalides. Veuillez vérifier votre email et mot de passe.';
       }
       
       setError(errorMessage);
@@ -99,6 +145,19 @@ const LoginPage = () => {
   const hideErrorAlert = () => {
     if (error) {
       setError('');
+    }
+  };
+
+  // Basculer entre connexion et inscription
+  const toggleMode = () => {
+    setIsSignUp(!isSignUp);
+    setError('');
+    setSuccess(false);
+    // Vider les champs spécifiques à l'inscription
+    if (isSignUp) {
+      setConfirmPassword('');
+      setFirstName('');
+      setLastName('');
     }
   };
 
@@ -123,6 +182,24 @@ const LoginPage = () => {
           </div>
           <h1 className={styles.loginTitle}>TourCraft</h1>
           <p className={styles.loginSubtitle}>Plateforme de gestion de concerts</p>
+          <div className={styles.modeSelector}>
+            <button
+              type="button"
+              className={`${styles.modeButton} ${!isSignUp ? styles.active : ''}`}
+              onClick={toggleMode}
+              disabled={loading}
+            >
+              Connexion
+            </button>
+            <button
+              type="button"
+              className={`${styles.modeButton} ${isSignUp ? styles.active : ''}`}
+              onClick={toggleMode}
+              disabled={loading}
+            >
+              Inscription
+            </button>
+          </div>
         </div>
 
         {/* Carte de connexion */}
@@ -135,8 +212,59 @@ const LoginPage = () => {
             </div>
           )}
 
-          {/* Formulaire de connexion */}
+          {/* Formulaire de connexion/inscription */}
           <form onSubmit={handleSubmit}>
+            {/* Champs spécifiques à l'inscription */}
+            {isSignUp && (
+              <>
+                <div className={styles.formRow}>
+                  <div className={styles.formGroup}>
+                    <label htmlFor="firstName" className={styles.formLabel}>
+                      <i className="bi bi-person-fill"></i>
+                      Prénom
+                    </label>
+                    <div className={styles.inputGroup}>
+                      <i className={`${styles.inputIcon} bi bi-person`}></i>
+                      <input
+                        type="text"
+                        className={`${styles.formControl} ${styles.withIcon}`}
+                        id="firstName"
+                        name="firstName"
+                        placeholder="Votre prénom"
+                        autoComplete="given-name"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                        onInput={hideErrorAlert}
+                        required
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className={styles.formGroup}>
+                    <label htmlFor="lastName" className={styles.formLabel}>
+                      <i className="bi bi-person-fill"></i>
+                      Nom
+                    </label>
+                    <div className={styles.inputGroup}>
+                      <i className={`${styles.inputIcon} bi bi-person`}></i>
+                      <input
+                        type="text"
+                        className={`${styles.formControl} ${styles.withIcon}`}
+                        id="lastName"
+                        name="lastName"
+                        placeholder="Votre nom"
+                        autoComplete="family-name"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                        onInput={hideErrorAlert}
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+            
             <div className={styles.formGroup}>
               <label htmlFor="email" className={styles.formLabel}>
                 <i className="bi bi-envelope-fill"></i>
@@ -172,8 +300,8 @@ const LoginPage = () => {
                   className={`${styles.formControl} ${styles.withIcon}`}
                   id="password"
                   name="password"
-                  placeholder="Votre mot de passe"
-                  autoComplete="current-password"
+                  placeholder={isSignUp ? "Choisissez un mot de passe (min. 6 caractères)" : "Votre mot de passe"}
+                  autoComplete={isSignUp ? "new-password" : "current-password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   onInput={hideErrorAlert}
@@ -183,6 +311,32 @@ const LoginPage = () => {
               </div>
             </div>
 
+            {/* Confirmation mot de passe pour l'inscription */}
+            {isSignUp && (
+              <div className={styles.formGroup}>
+                <label htmlFor="confirmPassword" className={styles.formLabel}>
+                  <i className="bi bi-shield-lock-fill"></i>
+                  Confirmer le mot de passe
+                </label>
+                <div className={styles.inputGroup}>
+                  <i className={`${styles.inputIcon} bi bi-lock`}></i>
+                  <input
+                    type="password"
+                    className={`${styles.formControl} ${styles.withIcon}`}
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    placeholder="Confirmez votre mot de passe"
+                    autoComplete="new-password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    onInput={hideErrorAlert}
+                    onKeyDown={handleKeyDown}
+                    required
+                  />
+                </div>
+              </div>
+            )}
+
             <button
               type="submit"
               className={`${styles.loginButton} ${success ? styles.success : ''}`}
@@ -191,17 +345,17 @@ const LoginPage = () => {
               {loading ? (
                 <>
                   <div className={styles.spinner}></div>
-                  <span>Connexion en cours...</span>
+                  <span>{isSignUp ? 'Inscription en cours...' : 'Connexion en cours...'}</span>
                 </>
               ) : success ? (
                 <>
                   <i className="bi bi-check-circle-fill"></i>
-                  <span>Connexion réussie !</span>
+                  <span>{isSignUp ? 'Inscription réussie !' : 'Connexion réussie !'}</span>
                 </>
               ) : (
                 <>
-                  <i className="bi bi-shield-lock-fill"></i>
-                  <span>Se connecter</span>
+                  <i className={isSignUp ? "bi bi-person-plus" : "bi bi-shield-lock-fill"}></i>
+                  <span>{isSignUp ? 'Créer mon compte' : 'Se connecter'}</span>
                 </>
               )}
             </button>

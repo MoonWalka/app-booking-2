@@ -58,7 +58,47 @@
 .loginSubtitle {
   font-size: var(--tc-font-size-base);
   color: var(--tc-text-secondary);
+  margin-bottom: var(--tc-space-4);
+}
+
+/* Sélecteur de mode (Connexion/Inscription) */
+.modeSelector {
+  display: flex;
+  background-color: var(--tc-bg-subtle);
+  border-radius: var(--tc-radius-base);
+  padding: var(--tc-space-1);
+  border: 1px solid var(--tc-border-light);
   margin-bottom: 0;
+}
+
+.modeButton {
+  flex: 1;
+  padding: var(--tc-space-2) var(--tc-space-4);
+  background: none;
+  border: none;
+  border-radius: calc(var(--tc-radius-base) - 2px);
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-text-secondary);
+  cursor: pointer;
+  transition: all var(--tc-transition-base);
+}
+
+.modeButton:hover:not(:disabled) {
+  color: var(--tc-color-primary);
+  background-color: rgba(var(--tc-color-primary-rgb), 0.1);
+}
+
+.modeButton.active {
+  background-color: var(--tc-bg-white);
+  color: var(--tc-color-primary);
+  box-shadow: var(--tc-shadow-sm);
+  font-weight: var(--tc-font-weight-semibold);
+}
+
+.modeButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Carte de connexion */
@@ -75,6 +115,18 @@
 /* Formulaire */
 .formGroup {
   margin-bottom: var(--tc-space-6);
+}
+
+/* Ligne de formulaire pour les champs côte à côte */
+.formRow {
+  display: flex;
+  gap: var(--tc-space-4);
+  margin-bottom: var(--tc-space-6);
+}
+
+.formRow .formGroup {
+  flex: 1;
+  margin-bottom: 0;
 }
 
 .formLabel {
@@ -245,6 +297,16 @@
   
   .loginTitle {
     font-size: var(--tc-font-size-xl);
+  }
+  
+  /* Empiler les champs prénom/nom sur mobile */
+  .formRow {
+    flex-direction: column;
+    gap: var(--tc-space-6);
+  }
+  
+  .formRow .formGroup {
+    margin-bottom: var(--tc-space-6);
   }
 }
 

@@ -762,7 +762,7 @@ const ProgrammateurFormMaquette = () => {
                         type="text"
                         className={styles.searchInput}
                         placeholder="Rechercher un lieu par nom ou ville..."
-                        value={lieuSearch.searchTerm}
+                        value={lieuSearch.searchTerm || ''}
                         onChange={(e) => lieuSearch.setSearchTerm(e.target.value)}
                       />
                       <button

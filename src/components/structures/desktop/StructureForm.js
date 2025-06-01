@@ -546,7 +546,7 @@ const StructureFormEnhanced = () => {
                         type="text"
                         className={styles.searchInput}
                         placeholder="Rechercher par nom ou SIRET..."
-                        value={companySearch.searchTerm}
+                        value={companySearch.searchTerm || ''}
                         onChange={(e) => companySearch.setSearchTerm(e.target.value)}
                       />
                       <button

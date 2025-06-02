@@ -1,10 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import FormHeader from '@/components/ui/FormHeader';
+import Button from '@/components/ui/Button';
 
 /**
  * Composant d'en-tête pour la page de détails d'un concert
- * Affiche le titre et les boutons d'action
- * Adapté de la maquette concertdetail.md (sans breadcrumb)
+ * Utilise maintenant FormHeader pour une stylisation cohérente avec la page d'édition
+ * Adapté de la maquette concertdetail.md avec stylisation moderne
  */
 const ConcertHeader = ({ 
   concert, 
@@ -20,77 +22,80 @@ const ConcertHeader = ({
 }) => {
   const navigate = useNavigate();
 
-  return (
-    <div className="details-header-container">
-      <div className="title-container">
-        {/* Titre principal - adapté de la maquette */}
-        <h1 className="modern-title">
-          {concert?.titre || `Concert du ${formatDate(concert?.date)}`}
-        </h1>
-      </div>
+  // Préparer les actions selon le mode
+  const actions = [];
 
-      {/* Boutons d'action - adapté de la maquette */}
-      <div className="action-buttons">
-        {isEditMode ? (
-          <>
-            {/* Boutons en mode édition */}
-            <button
-              type="button"
-              className="tc-btn tc-btn-primary"
-              onClick={onSave}
-              disabled={isSubmitting || !canSave}
-            >
-              {isSubmitting ? (
-                <>
-                  <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                  <span>Enregistrement...</span>
-                </>
-              ) : (
-                <>
-                  <i className="bi bi-check-circle"></i>
-                  <span>Enregistrer</span>
-                </>
-              )}
-            </button>
-            
-            <button 
-              onClick={onCancel} 
-              className="tc-btn tc-btn-outline-secondary"
-            >
-              <i className="bi bi-x-circle"></i>
-              <span>Annuler</span>
-            </button>
-            
-            <button 
-              onClick={onDelete} 
-              className="tc-btn tc-btn-outline-danger"
-            >
-              <i className="bi bi-trash"></i>
-              <span>Supprimer</span>
-            </button>
-          </>
-        ) : (
-          <>
-            {/* Boutons en mode affichage - selon la maquette */}
-            <button 
-              onClick={navigateToList || (() => navigate('/concerts'))} 
-              className="tc-btn tc-btn-outline-secondary"
-            >
-              <i className="bi bi-arrow-left"></i>
-              <span>Retour</span>
-            </button>
-            
-            <button
-              onClick={onEdit}
-              className="tc-btn tc-btn-outline-primary"
-            >
-              <i className="bi bi-pencil"></i>
-              <span>Modifier</span>
-            </button>
-          </>
-        )}
-      </div>
-    </div>
+  if (isEditMode) {
+    // Mode édition - boutons de sauvegarde et annulation
+    actions.push(
+      <Button
+        key="save"
+        variant="primary"
+        onClick={onSave}
+        disabled={isSubmitting || !canSave}
+        loading={isSubmitting}
+        icon={<i className="bi bi-check-circle"></i>}
+      >
+        {isSubmitting ? 'Enregistrement...' : 'Enregistrer'}
+      </Button>
+    );
+
+    actions.push(
+      <Button
+        key="cancel"
+        variant="outline-secondary"
+        onClick={onCancel}
+        icon={<i className="bi bi-x-circle"></i>}
+      >
+        Annuler
+      </Button>
+    );
+
+    if (onDelete) {
+      actions.push(
+        <Button
+          key="delete"
+          variant="outline-danger"
+          onClick={onDelete}
+          icon={<i className="bi bi-trash"></i>}
+        >
+          Supprimer
+        </Button>
+      );
+    }
+  } else {
+    // Mode affichage - boutons de navigation et modification
+    actions.push(
+      <Button
+        key="back"
+        variant="outline-secondary"
+        onClick={navigateToList || (() => navigate('/concerts'))}
+        icon={<i className="bi bi-arrow-left"></i>}
+      >
+        Retour
+      </Button>
+    );
+
+    actions.push(
+      <Button
+        key="edit"
+        variant="outline-primary"
+        onClick={onEdit}
+        icon={<i className="bi bi-pencil"></i>}
+      >
+        Modifier
+      </Button>
+    );
+  }
+
+  return (
+    <FormHeader
+      title={concert?.titre || `Concert du ${formatDate(concert?.date)}`}
+      icon={<i className="bi bi-music-note-beamed"></i>}
+      isLoading={isSubmitting}
+      roundedTop={true}
+      actions={actions}
+    />
   );
 };
 

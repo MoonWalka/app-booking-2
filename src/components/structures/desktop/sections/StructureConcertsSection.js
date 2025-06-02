@@ -50,15 +50,7 @@ const StructureConcertsSection = ({ concerts, loadingConcerts }) => {
 
   return (
     <Card
-      title={
-        <span>
-          Concerts associés
-          {/* Debug temporaire : afficher le nombre */}
-          <small style={{ marginLeft: '10px', color: '#666' }}>
-            ({concerts?.length || 0} trouvé{concerts?.length > 1 ? 's' : ''})
-          </small>
-        </span>
-      }
+      title={`Concerts associés (${concerts?.length || 0})`}
       icon={<i className="bi bi-music-note-list"></i>}
     >
         {loadingConcerts ? (

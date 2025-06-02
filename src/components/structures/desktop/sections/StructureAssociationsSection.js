@@ -20,15 +20,7 @@ const StructureAssociationsSection = ({ programmateurs, loadingProgrammateurs })
 
   return (
     <Card
-      title={
-        <span>
-          Programmateurs associés
-          {/* Debug temporaire : afficher le nombre */}
-          <small style={{ marginLeft: '10px', color: '#666' }}>
-            ({programmateurs?.length || 0} trouvé{programmateurs?.length > 1 ? 's' : ''})
-          </small>
-        </span>
-      }
+      title={`Programmateurs associés (${programmateurs?.length || 0})`}
       icon={<i className="bi bi-person-badge"></i>}
     >
         {loadingProgrammateurs ? (

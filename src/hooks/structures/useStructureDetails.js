@@ -91,7 +91,14 @@ const useStructureDetails = (id) => {
             // Charger chaque programmateur individuellement
             const programmateurPromises = programmateurIds.map(async (progId) => {
               try {
-                const progRef = doc(db, 'programmateurs', progId);
+                // S'assurer que progId est une string
+                const idString = typeof progId === 'object' ? progId.id : progId;
+                if (!idString || typeof idString !== 'string') {
+                  console.error(`ID programmateur invalide:`, progId);
+                  return null;
+                }
+                
+                const progRef = doc(db, 'programmateurs', idString);
                 const progDoc = await getDoc(progRef);
                 
                 if (progDoc.exists()) {
@@ -160,7 +167,14 @@ const useStructureDetails = (id) => {
             // Charger chaque concert individuellement
             const concertPromises = concertIds.map(async (concertId) => {
               try {
-                const concertRef = doc(db, 'concerts', concertId);
+                // S'assurer que concertId est une string
+                const idString = typeof concertId === 'object' ? concertId.id : concertId;
+                if (!idString || typeof idString !== 'string') {
+                  console.error(`ID concert invalide:`, concertId);
+                  return null;
+                }
+                
+                const concertRef = doc(db, 'concerts', idString);
                 const concertDoc = await getDoc(concertRef);
                 
                 if (concertDoc.exists()) {

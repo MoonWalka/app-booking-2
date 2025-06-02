@@ -66,7 +66,18 @@ function ConcertsList() {
       render: (concert) => {
         if (!concert.date) return '-';
         const date = new Date(concert.date);
-        return date.toLocaleDateString('fr-FR');
+        const shortDate = date.toLocaleDateString('fr-FR');
+        const fullDate = date.toLocaleDateString('fr-FR', { 
+          weekday: 'long', 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+        });
+        return (
+          <span title={fullDate}>
+            {shortDate}
+          </span>
+        );
       },
     },
     {

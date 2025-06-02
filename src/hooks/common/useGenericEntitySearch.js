@@ -56,26 +56,41 @@ const useGenericEntitySearch = ({
   sortResultsRef.current = sortResults;
   searchConditionRef.current = searchCondition;
   
-  // 🔧 FIX: Mémoriser la configuration avec TOUTES les dépendances nécessaires
-  const config = useMemo(() => ({
+  // 🔧 FIX: Mémoriser la configuration avec des dépendances stables
+  const configRef = useRef({
     collectionName,
     searchFields: stableSearchFields,
     useLocalSearch,
     preloadData,
     resultLimit
-  }), [
-    collectionName, 
-    stableSearchFields,
-    useLocalSearch, 
-    preloadData,
-    resultLimit
-  ]); // CORRECTION: Retirer les fonctions instables du config
+  });
+  
+  // Mettre à jour le ref seulement si les valeurs changent vraiment
+  useEffect(() => {
+    const hasChanged = 
+      configRef.current.collectionName !== collectionName ||
+      JSON.stringify(configRef.current.searchFields) !== JSON.stringify(stableSearchFields) ||
+      configRef.current.useLocalSearch !== useLocalSearch ||
+      configRef.current.preloadData !== preloadData ||
+      configRef.current.resultLimit !== resultLimit;
+      
+    if (hasChanged) {
+      configRef.current = {
+        collectionName,
+        searchFields: stableSearchFields,
+        useLocalSearch,
+        preloadData,
+        resultLimit
+      };
+    }
+  }, [collectionName, stableSearchFields, useLocalSearch, preloadData, resultLimit]);
   
   // Terme de recherche avec debounce
   const debouncedSearchTerm = useDebounce(searchTerm, debounceTime);
 
-  // 🔧 FIX: Préchargement avec dépendance sur allData.length
+  // 🔧 FIX: Préchargement avec dépendance stable
   useEffect(() => {
+    const config = configRef.current;
     if (!config.useLocalSearch || !config.preloadData || allData.length > 0) {
       return;
     }
@@ -99,20 +114,23 @@ const useGenericEntitySearch = ({
     };
 
     fetchAllData();
-  }, [config.collectionName, config.useLocalSearch, config.preloadData, allData.length]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allData.length]); // Dépendance réduite pour éviter les boucles
 
   // 🔧 FIX: Fonction pour récupérer toute la collection - mémorisée
   const fetchCollection = useCallback(async () => {
+    const config = configRef.current;
     const q = query(collection(db, config.collectionName));
     const querySnapshot = await getDocs(q);
     return querySnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
     }));
-  }, [config.collectionName]);
+  }, []); // Pas de dépendances car on utilise le ref
   
   // 🔧 FIX: Fonction pour rechercher dans Firestore - mémorisée
   const searchFirestore = useCallback(async (term) => {
+    const config = configRef.current;
     const queries = config.searchFields.map(field => {
       return query(
         collection(db, config.collectionName),
@@ -137,7 +155,7 @@ const useGenericEntitySearch = ({
     });
     
     return Array.from(uniqueResults.values());
-  }, [config.collectionName, config.searchFields, config.resultLimit]);
+  }, []); // Pas de dépendances car on utilise le ref
   
   // Fonction utilitaire pour accéder aux propriétés imbriquées
   const getNestedValue = useCallback((obj, path) => {
@@ -153,6 +171,8 @@ const useGenericEntitySearch = ({
 
   // 🔧 FIX: Fonction de recherche stabilisée avec condition correcte
   const performSearch = useCallback(async (term) => {
+    const config = configRef.current;
+    
     // 🔧 FIX: Utiliser la fonction searchCondition du ref
     if (!term || !searchConditionRef.current(term)) {
       setResults([]);
@@ -206,17 +226,20 @@ const useGenericEntitySearch = ({
       setIsSearching(false);
     }
   }, [
-    config,
     allData, 
     fetchCollection, 
     searchFirestore, 
     getNestedValue
-  ]); // Les refs sont stables, pas besoin de les ajouter
+  ]); // Dépendances réduites - config retiré car on utilise le ref
   
   // 🔧 FIX: Effectuer la recherche seulement quand le terme debounced change
+  // Utiliser un ref pour éviter les dépendances instables
+  const performSearchRef = useRef(performSearch);
+  performSearchRef.current = performSearch;
+  
   useEffect(() => {
-    performSearch(debouncedSearchTerm);
-  }, [debouncedSearchTerm, performSearch]);
+    performSearchRef.current(debouncedSearchTerm);
+  }, [debouncedSearchTerm]); // Dépendance unique et stable
 
   // Gérer le changement d'entrée
   const handleInputChange = useCallback((e) => {
@@ -228,11 +251,11 @@ const useGenericEntitySearch = ({
   // Gérer le focus sur l'input
   const handleInputFocus = useCallback(() => {
     setShowDropdown(true);
-    // 🔧 FIX: Utiliser la condition du ref
+    // 🔧 FIX: Utiliser la condition et la fonction du ref
     if (searchTerm && searchConditionRef.current(searchTerm)) {
-      performSearch(searchTerm);
+      performSearchRef.current(searchTerm);
     }
-  }, [searchTerm, performSearch]); // CORRECTION: Retirer config car on utilise les refs
+  }, [searchTerm]); // Dépendance réduite
 
   // Gérer le clic sur un résultat
   const handleResultClick = useCallback((entity) => {
@@ -253,8 +276,8 @@ const useGenericEntitySearch = ({
   
   // Forcer une nouvelle recherche
   const refreshSearch = useCallback(() => {
-    performSearch(searchTerm);
-  }, [searchTerm, performSearch]);
+    performSearchRef.current(searchTerm);
+  }, [searchTerm]);
   
   // Effacer la recherche
   const clearSearch = useCallback(() => {

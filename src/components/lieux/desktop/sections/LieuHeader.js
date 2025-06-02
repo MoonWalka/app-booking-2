@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Badge } from 'react-bootstrap';
 import Button from '@/components/ui/Button';
+import FormHeader from '@/components/ui/FormHeader';
 import styles from './LieuHeader.module.css';
 
 /**
@@ -58,91 +59,78 @@ const LieuHeader = ({
   };
 
   return (
-    <div className={styles.detailsHeaderContainer}>
-      <div className={styles.titleContainer}>
-        <div className={styles.breadcrumbContainer}>
-          <span 
-            className={styles.breadcrumbItem} 
-            onClick={handleNavigateToList} 
-            role="button" 
-            tabIndex={0}
-          >
-            Lieux
-          </span>
-          <i className="bi bi-chevron-right"></i>
-          <span className={`${styles.breadcrumbItem} ${styles.active}`}>
-            {lieu?.nom || 'Lieu'}
-          </span>
-        </div>
-        <h2 className={styles.modernTitle}>
+    <FormHeader
+      title={
+        <div>
           {lieu?.nom || 'Lieu'}
           {lieu?.type && <TypeBadge type={lieu.type} />}
-        </h2>
-      </div>
-      
-      <div className={styles.actionButtons}>
-        {isEditMode ? (
-          <>
-            <Button 
-              onClick={onSave} 
-              variant="success"
-              className={styles.actionBtn}
-              disabled={isSubmitting || !canSave}
-              icon={<i className="bi bi-check-circle"></i>}
-            >
-              {isSubmitting ? (
-                <>
-                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                  Enregistrement...
-                </>
-              ) : (
-                'Enregistrer'
-              )}
-            </Button>
-            
-            <Button 
-              onClick={onDelete} 
-              variant="danger"
-              className={styles.actionBtn}
-              disabled={isSubmitting}
-              icon={<i className="bi bi-trash"></i>}
-            >
-              Supprimer
-            </Button>
-            
-            <Button 
-              onClick={onCancel} 
-              variant="secondary"
-              className={styles.actionBtn}
-              disabled={isSubmitting}
-              icon={<i className="bi bi-x-circle"></i>}
-            >
-              Annuler
-            </Button>
-          </>
-        ) : (
-          <>
-            <Button 
-              onClick={handleNavigateToList} 
-              variant="secondary"
-              className={styles.actionBtn}
-              icon={<i className="bi bi-arrow-left"></i>}
-            >
-              Retour
-            </Button>
-            
-            <Button 
-              onClick={onEdit} 
-              variant="outline-primary"
-              className={styles.actionBtn}
-              icon={<i className="bi bi-pencil"></i>}
-            >
-              Modifier
-            </Button>
-          </>
-        )}
-      </div>
-    </div>
+        </div>
+      }
+      icon={<i className="bi bi-geo-alt"></i>}
+      subtitle={
+        <span style={{ cursor: 'pointer' }} onClick={handleNavigateToList}>
+          ← Retour aux lieux
+        </span>
+      }
+      isLoading={isSubmitting}
+      roundedTop={true}
+      actions={isEditMode ? [
+        <Button 
+          key="save"
+          onClick={onSave} 
+          variant="success"
+          disabled={isSubmitting || !canSave}
+          icon={<i className="bi bi-check-circle"></i>}
+        >
+          {isSubmitting ? (
+            <>
+              <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              Enregistrement...
+            </>
+          ) : (
+            'Enregistrer'
+          )}
+        </Button>,
+        
+        <Button 
+          key="delete"
+          onClick={onDelete} 
+          variant="danger"
+          disabled={isSubmitting}
+          icon={<i className="bi bi-trash"></i>}
+        >
+          Supprimer
+        </Button>,
+        
+        <Button 
+          key="cancel"
+          onClick={onCancel} 
+          variant="secondary"
+          disabled={isSubmitting}
+          icon={<i className="bi bi-x-circle"></i>}
+        >
+          Annuler
+        </Button>
+      ] : [
+        <Button 
+          key="back"
+          onClick={handleNavigateToList} 
+          variant="secondary"
+          icon={<i className="bi bi-arrow-left"></i>}
+        >
+          Retour
+        </Button>,
+        
+        <Button 
+          key="edit"
+          onClick={onEdit} 
+          variant="outline-primary"
+          icon={<i className="bi bi-pencil"></i>}
+        >
+          Modifier
+        </Button>
+      ]}
+    />
   );
 };
 

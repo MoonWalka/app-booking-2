@@ -9,6 +9,7 @@ import useCompanySearch from '@/hooks/common/useCompanySearch';
 import useLieuSearchFixed from '@/hooks/lieux/useLieuSearchFixed';
 import ConfirmationModal from '@/components/ui/ConfirmationModal';
 import FormHeader from '@/components/ui/FormHeader';
+import { mapTerm } from '@/utils/terminologyMapping';
 import styles from './ProgrammateurFormMaquette.module.css';
 
 /**
@@ -221,9 +222,8 @@ const ProgrammateurFormMaquette = () => {
       errors.push('Le nom est obligatoire');
     }
     
-    if (!formData.email.trim()) {
-      errors.push('L\'email est obligatoire');
-    } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
+    // Email facultatif, mais si fourni, doit être valide
+    if (formData.email.trim() && !/^\S+@\S+\.\S+$/.test(formData.email)) {
       errors.push('Format d\'email invalide');
     }
     
@@ -424,7 +424,7 @@ const ProgrammateurFormMaquette = () => {
     try {
       const docRef = doc(db, 'programmateurs', id);
       await deleteDoc(docRef);
-      toast.success('Programmateur supprimé avec succès');
+      toast.success(mapTerm('Programmateur supprimé avec succès'));
       navigate('/programmateurs');
     } catch (error) {
       console.error('Erreur lors de la suppression:', error);
@@ -444,7 +444,7 @@ const ProgrammateurFormMaquette = () => {
   if (loading) {
     return (
       <div className={styles.loadingContainer}>
-        <LoadingSpinner message="Chargement du programmateur..." />
+        <LoadingSpinner message={mapTerm("Chargement du programmateur...")} />
       </div>
     );
   }
@@ -464,7 +464,7 @@ const ProgrammateurFormMaquette = () => {
         <div className={styles.formContainer}>
           {/* Header - Nouveau composant FormHeader */}
           <FormHeader
-            title={isNewFromUrl ? 'Nouveau Programmateur' : 'Modifier Programmateur'}
+            title={isNewFromUrl ? mapTerm('Nouveau Programmateur') : mapTerm('Modifier Programmateur')}
             icon={<i className="bi bi-person-badge"></i>}
             isLoading={isSubmitting}
             roundedTop={true}
@@ -553,7 +553,7 @@ const ProgrammateurFormMaquette = () => {
                   <div className={styles.formRow}>
                     <div className={styles.formGroup}>
                       <label className={styles.formLabel}>
-                        Email <span className={styles.required}>*</span>
+                        Email <span className={styles.optional}>(facultatif)</span>
                       </label>
                       <input 
                         type="email" 

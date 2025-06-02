@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { APP_NAME } from '../../config.js';
+import { mapTerm } from '@/utils/terminologyMapping';
 import styles from './Sidebar.module.css';
 
 const Sidebar = () => {
@@ -27,7 +28,7 @@ const Sidebar = () => {
           <li>
             <Link to="/programmateurs" className={window.location.pathname.includes('/programmateurs') ? styles.active : ''}>
               <i className="bi bi-person-lines-fill"></i>
-              Programmateurs
+              Contacts
             </Link>
           </li>
           <li>

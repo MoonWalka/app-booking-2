@@ -138,6 +138,7 @@ const ConcertView = () => {
           isEditMode={false}
           navigateToProgrammateurDetails={(progId) => navigate(`/programmateurs/${progId}`)}
           formData={formData}
+          formDataStatus={formDataStatus}
           showFormGenerator={showFormGenerator}
           setShowFormGenerator={setShowFormGenerator}
           generatedFormLink={generatedFormLink}

@@ -120,7 +120,9 @@ const ProgrammateurContactSection = ({
       <Row>
         <Col md={6}>
           <Form.Group className={styles.formGroup}>
-            <Form.Label className={styles.formLabel}>Email</Form.Label>
+            <Form.Label className={styles.formLabel}>
+              Email <span className={styles.optional}>(facultatif)</span>
+            </Form.Label>
             <Form.Control
               type="email"
               name="contact.email"
@@ -132,7 +134,7 @@ const ProgrammateurContactSection = ({
               {errors.email}
             </Form.Control.Feedback>
             <Form.Text className="text-muted">
-              Facultatif, mais recommandé pour les communications futures.
+              Recommandé pour les communications futures.
             </Form.Text>
           </Form.Group>
         </Col>

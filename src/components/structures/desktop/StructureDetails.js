@@ -76,13 +76,17 @@ const StructureDetails = () => {
         <FormHeader 
           title={structure?.nom || structure?.raisonSociale || 'Structure'}
           icon={<i className="bi bi-building"></i>}
-          subtitle={
-            <span style={{ cursor: 'pointer' }} onClick={() => navigate('/structures')}>
-              ← Retour aux structures
-            </span>
-          }
+          subtitle="Détails de la structure"
           roundedTop={true}
           actions={[
+            <Button
+              key="back"
+              onClick={() => navigate('/structures')}
+              variant="outline-secondary"
+              size="sm"
+            >
+              <i className="bi bi-arrow-left"></i> Retour
+            </Button>,
             <Button 
               key="edit"
               onClick={() => navigate(`/structures/${id}/edit`)} 

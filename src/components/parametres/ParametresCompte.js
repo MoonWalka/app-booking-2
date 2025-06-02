@@ -3,6 +3,7 @@ import { Form, Button, Card, Alert } from 'react-bootstrap';
 import styles from './ParametresCompte.module.css';
 import { useAuth } from '@/context/AuthContext';
 import { updateEmail, updatePassword, updateProfile } from 'firebase/auth';
+import { auth } from '@/services/firebase-service';
 
 const ParametresCompte = () => {
   const { currentUser } = useAuth();
@@ -49,21 +50,27 @@ const ParametresCompte = () => {
         return;
       }
 
+      // Utiliser l'utilisateur Firebase actuel au lieu du cache
+      const firebaseUser = auth.currentUser;
+      if (!firebaseUser) {
+        throw new Error('Utilisateur non connecté');
+      }
+
       // Mettre à jour le nom d'affichage
       if (formData.displayName !== currentUser.displayName) {
-        await updateProfile(currentUser, {
+        await updateProfile(firebaseUser, {
           displayName: formData.displayName
         });
       }
 
       // Mettre à jour l'email
       if (formData.email !== currentUser.email) {
-        await updateEmail(currentUser, formData.email);
+        await updateEmail(firebaseUser, formData.email);
       }
 
       // Mettre à jour le mot de passe
       if (formData.newPassword) {
-        await updatePassword(currentUser, formData.newPassword);
+        await updatePassword(firebaseUser, formData.newPassword);
       }
 
       setSuccess('Les informations du compte ont été mises à jour avec succès');

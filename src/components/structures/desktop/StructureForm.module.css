@@ -138,18 +138,18 @@ body {
 .pageWrapper {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
   background-color: var(--tc-bg-default);
-  max-width: 1200px;
-  margin: 0 auto;
-  box-shadow: var(--tc-shadow-lg);
+  width: 100%;
+  margin: 0;
 }
 
 /* Container du formulaire */
 .formContainer {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  flex: 1;
+  overflow-y: auto;
 }
 
 /* Header */

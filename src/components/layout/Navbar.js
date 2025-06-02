@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { APP_NAME } from '../../config.js';
+import { mapTerm } from '@/utils/terminologyMapping';
 import styles from './Navbar.module.css';
 
 const Navbar = () => {
@@ -28,7 +29,7 @@ const Navbar = () => {
               <Link className={styles.navLink} to="/concerts">Concerts</Link>
             </li>
             <li className={styles.navItem}>
-              <Link className={styles.navLink} to="/programmateurs">Programmateurs</Link>
+              <Link className={styles.navLink} to="/programmateurs">{mapTerm('Programmateurs')}</Link>
             </li>
             <li className={styles.navItem}>
               <Link className={styles.navLink} to="/lieux">Lieux</Link>

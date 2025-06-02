@@ -1,10 +1,11 @@
 // src/components/contrats/sections/ContratHeader.js
 import React from 'react';
-import styles from '@/pages/ContratDetailsPage.module.css';
+import FormHeader from '@/components/ui/FormHeader';
 import { formatDateFr } from '@/utils/dateUtils';
 
 /**
  * Header component for contract details page with title and metadata
+ * Harmonisé avec FormHeader pour un style cohérent avec les autres entités
  */
 const ContratHeader = ({ contrat, concert, artiste, lieu }) => {
   // Formater la date de création
@@ -17,30 +18,25 @@ const ContratHeader = ({ contrat, concert, artiste, lieu }) => {
     ? `Contrat de Spectacle - ${concert.titre}`
     : 'Contrat de Spectacle';
 
+  // Construire le sous-titre avec les métadonnées
+  const metadataItems = [
+    `Créé le ${creationDate}`,
+    artiste?.nom && artiste.nom,
+    lieu?.nom && lieu.nom
+  ].filter(Boolean);
+
+  const subtitle = metadataItems.join(' • ');
+
+  // Icône spécifique aux contrats
+  const icon = <i className="bi bi-file-earmark-text"></i>;
+
   return (
-    <div className={styles.contratHeader}>
-      <div className={styles.contratTitleSection}>
-        <h1 className={styles.contratTitle}>{contractTitle}</h1>
-        <div className={styles.contratMeta}>
-          <span>
-            <i className="bi bi-calendar3"></i>
-            Créé le {creationDate}
-          </span>
-          {artiste?.nom && (
-            <span>
-              <i className="bi bi-person"></i>
-              {artiste.nom}
-            </span>
-          )}
-          {lieu?.nom && (
-            <span>
-              <i className="bi bi-geo-alt"></i>
-              {lieu.nom}
-            </span>
-          )}
-        </div>
-      </div>
-    </div>
+    <FormHeader
+      title={contractTitle}
+      subtitle={subtitle}
+      icon={icon}
+      roundedTop={true}
+    />
   );
 };
 

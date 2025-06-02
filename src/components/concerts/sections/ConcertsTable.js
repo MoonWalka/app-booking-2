@@ -63,9 +63,22 @@ const ConcertsTable = memo(({
       label: 'Date',
       key: 'date',
       sortable: true,
-      render: (row) => (
-        <span>{formatDateFr(row.date)}</span>
-      )
+      render: (row) => {
+        if (!row.date) return '-';
+        const date = new Date(row.date);
+        const shortDate = formatDateFr(row.date);
+        const fullDate = date.toLocaleDateString('fr-FR', { 
+          weekday: 'long', 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+        });
+        return (
+          <span title={fullDate}>
+            {shortDate}
+          </span>
+        );
+      }
     },
     {
       label: 'Concert',

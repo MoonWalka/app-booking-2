@@ -4,6 +4,7 @@ import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import Button from '@ui/Button';
 import { useAuth } from '../../../context/AuthContext.js';
 import { APP_NAME } from '../../../config.js';
+import { mapTerm } from '@/utils/terminologyMapping';
 // Import redondant supprimé - les styles sont déjà chargés dans App.js
 
 function MobileLayout() {
@@ -76,7 +77,7 @@ function MobileLayout() {
             <li>
               <NavLink to="/programmateurs" onClick={closeMenu}>
                 <i className="bi bi-person-badge"></i>
-                <span>Programmateurs</span>
+                <span>{mapTerm("Programmateurs")}</span>
               </NavLink>
             </li>
             <li>
@@ -144,7 +145,7 @@ function MobileLayout() {
         </NavLink>
         <NavLink to="/programmateurs">
           <i className="bi bi-person-badge"></i>
-          <span>Prog.</span>
+          <span>Cont.</span>
         </NavLink>
         <NavLink to="/artistes">
           <i className="bi bi-music-note-beamed"></i>

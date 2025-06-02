@@ -28,6 +28,14 @@ const ConcertRow = memo(({
   const displayDate = formatDateFr(concert.date);
   const isPastDate = isDatePassed(concert.date);
   
+  // Générer la date complète pour le tooltip
+  const fullDate = concert.date ? new Date(concert.date).toLocaleDateString('fr-FR', { 
+    weekday: 'long', 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  }) : '';
+  
   return (
     <tr 
       className={`${styles.concertRow} ${isPastDate ? styles.pastDate : ''}`} 
@@ -35,7 +43,7 @@ const ConcertRow = memo(({
     >
       <td className={styles.dateColumn}>
         <div className={styles.dateContainer}>
-          <span className={styles.date}>{displayDate}</span>
+          <span className={styles.date} title={fullDate}>{displayDate}</span>
         </div>
       </td>
       

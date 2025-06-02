@@ -3,6 +3,7 @@ import styles from './ConcertOrganizerSection.module.css';
 import Button from '@/components/ui/Button';
 import Alert from '@/components/ui/Alert';
 import Card from '@/components/ui/Card';
+import { mapTerm } from '@/utils/terminologyMapping';
 
 /**
  * Section Programmateur du détail d'un concert
@@ -69,7 +70,7 @@ const ConcertOrganizerSectionFixed = ({
 
   return (
     <Card
-      title={isEditMode ? 'Programmateur *' : 'Programmateur'}
+      title={isEditMode ? mapTerm('Programmateur') + ' *' : mapTerm('Programmateur')}
       icon={<i className="bi bi-person-badge"></i>}
       headerActions={
         displayedProgrammateur && !isEditMode && (
@@ -122,7 +123,7 @@ const ConcertOrganizerSectionFixed = ({
             ) : (
               // Afficher le champ de recherche
               <>
-                <label className="form-label">Rechercher un programmateur</label>
+                <label className="form-label">{mapTerm('Rechercher un programmateur')}</label>
                 <input
                   type="text"
                   className="form-control"
@@ -159,7 +160,7 @@ const ConcertOrganizerSectionFixed = ({
                     ) : (
                       <>
                         <div className={styles.dropdownItem}>
-                          <em>Aucun programmateur trouvé</em>
+                          <em>{mapTerm('Aucun programmateur trouvé')}</em>
                         </div>
                         {handleCreateProgrammateur && (
                           <div 
@@ -167,7 +168,7 @@ const ConcertOrganizerSectionFixed = ({
                             onClick={handleCreateProgrammateur}
                           >
                             <i className="bi bi-plus-circle"></i>
-                            Créer un nouveau programmateur
+                            {mapTerm('Créer un nouveau programmateur')}
                           </div>
                         )}
                       </>
@@ -204,7 +205,7 @@ const ConcertOrganizerSectionFixed = ({
           ) : (
             <Alert variant="info">
               <i className="bi bi-info-circle me-2"></i>
-              Aucun programmateur sélectionné
+              {mapTerm('Aucun programmateur sélectionné')}
             </Alert>
           )
         )}

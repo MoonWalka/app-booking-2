@@ -116,8 +116,8 @@ const useConcertDetails = (id, locationParam) => {
       idField: 'structureId',
       alternativeIdFields: ['structure'], // Champs alternatifs pour compatibilité
       nameField: 'structureNom',
-      type: 'one-to-one',
-      essential: false // La structure peut être chargée à la demande
+      type: 'custom', // CHANGEMENT: Type custom pour charger via le programmateur
+      essential: true // La structure est essentielle pour debug
     }
   ], []); // Pas de dépendances car la configuration est statique
   
@@ -169,7 +169,7 @@ const useConcertDetails = (id, locationParam) => {
     return value;
   }, []);
   
-  // ✅ CORRECTION: Stabiliser les callbacks de succès
+  // ✅ CORRECTION: Stabiliser les callbacks de succès - SANS dépendances instables
   handleSaveSuccessRef.current = useCallback((data) => {
     // Mettre à jour les IDs initiaux pour la prochaine édition
     setInitialProgrammateurId(data.programmateurId || null);
@@ -191,9 +191,13 @@ const useConcertDetails = (id, locationParam) => {
       console.warn('Impossible de déclencher l\'événement de mise à jour', e);
     }
     
-    // Charger les données du formulaire si nécessaire
-    concertForms.fetchFormData(data);
-  }, [id, concertForms]);
+    // Charger les données du formulaire si nécessaire - Utiliser setTimeout pour éviter les boucles
+    setTimeout(() => {
+      if (concertForms?.fetchFormData) {
+        concertForms.fetchFormData(data);
+      }
+    }, 0);
+  }, [id]); // Dépendance réduite - concertForms retiré
   
   handleDeleteSuccessRef.current = useCallback(() => {
     // Notifier les autres composants
@@ -206,28 +210,129 @@ const useConcertDetails = (id, locationParam) => {
     navigate('/concerts');
   }, [id, navigate]);
   
-  // ✅ CORRECTION: Configuration ultra-stable avec références
-  const genericDetailsConfig = useMemo(() => ({
-    entityType: 'concert',
-    collectionName: 'concerts',
-    id,
-    initialMode: isEditMode ? 'edit' : 'view',
-    relatedEntities,
-    autoLoadRelated: true,
-    transformData: (data) => transformConcertDataRef.current(data),
-    validateFormFn: (formData) => validateConcertFormRef.current(formData),
-    formatValue: (field, value) => formatConcertValueRef.current(field, value),
-    checkDeletePermission: async () => true,
-    onSaveSuccess: (data) => handleSaveSuccessRef.current(data),
-    onDeleteSuccess: () => handleDeleteSuccessRef.current(),
-    navigate,
-    returnPath: '/concerts',
-    editPath: `/concerts/${id}/edit`,
-    useDeleteModal: true,
-    disableCache: false,
-    realtime: false
-  }), [id, isEditMode, relatedEntities, navigate]); // Dépendances réduites et stables
+  // ✅ FINAL: Créer les customQueries avec la vraie logique de structure
+  const customQueriesRef = useRef({
+    structure: async (concertData) => {
+      console.log('🏢 Structure customQuery appelée avec concertData:', concertData);
+      debugLog('[useConcertDetails] customQuery structure appelée', 'info', 'useConcertDetails');
+      
+      // D'abord vérifier si le concert a directement un structureId
+      if (concertData.structureId) {
+        try {
+          const { doc, getDoc, db } = await import('@/services/firebase-service');
+          const structureDoc = await getDoc(doc(db, 'structures', concertData.structureId));
+          if (structureDoc.exists()) {
+            const result = { id: structureDoc.id, ...structureDoc.data() };
+            console.log('🏢 Structure trouvée directement:', result);
+            return result;
+          }
+        } catch (err) {
+          console.error('Erreur lors du chargement direct de la structure:', err);
+        }
+      }
+      
+      // Sinon, charger via le programmateur
+      const programmateurId = concertData.programmateurId;
+      if (!programmateurId) {
+        console.log('🏢 Pas de programmateur, pas de structure');
+        debugLog('[useConcertDetails] Pas de programmateur, pas de structure', 'info', 'useConcertDetails');
+        return null;
+      }
+      
+      try {
+        const { doc, getDoc, db } = await import('@/services/firebase-service');
+        const programmateurDoc = await getDoc(doc(db, 'programmateurs', programmateurId));
+        
+        if (!programmateurDoc.exists()) {
+          console.log('🏢 Programmateur non trouvé');
+          debugLog('[useConcertDetails] Programmateur non trouvé', 'warn', 'useConcertDetails');
+          return null;
+        }
+        
+        const programmateurData = programmateurDoc.data();
+        if (!programmateurData.structureId) {
+          console.log('🏢 Programmateur sans structure');
+          debugLog('[useConcertDetails] Programmateur sans structure', 'info', 'useConcertDetails');
+          return null;
+        }
+        
+        // Charger la structure du programmateur
+        const structureDoc = await getDoc(doc(db, 'structures', programmateurData.structureId));
+        if (structureDoc.exists()) {
+          const result = { id: structureDoc.id, ...structureDoc.data() };
+          console.log('🏢 Structure trouvée via programmateur:', result);
+          debugLog('[useConcertDetails] Structure trouvée via programmateur', 'info', 'useConcertDetails');
+          return result;
+        }
+        
+        console.log('🏢 Structure du programmateur non trouvée');
+        return null;
+      } catch (err) {
+        console.error('🏢 Erreur lors du chargement de la structure via programmateur:', err);
+        return null;
+      }
+    },
+    test: async (concertData) => {
+      console.log('🧪 TEST customQuery appelée avec:', concertData);
+      return { id: 'test', nom: 'Test Structure' };
+    }
+  });
+  
+  const customQueriesTest = customQueriesRef.current;
+  
+  console.log('[DEBUG useConcertDetails] CustomQueries définies en dehors useMemo:', customQueriesTest);
+  console.log('[DEBUG useConcertDetails] CustomQueries keys en dehors useMemo:', Object.keys(customQueriesTest));
+  
+  // DEBUG: Forcer l'affichage dans la console avec un titre distinctif
+  console.log('🔍🔍🔍 DIAGNOSTIC useConcertDetails HOOK 🔍🔍🔍');
+  console.log('CustomQueries disponibles:', Object.keys(customQueriesTest));
+  console.log('CustomQueries objet:', customQueriesTest);
 
+  // ✅ CORRECTION: Configuration ultra-stable avec références
+  const genericDetailsConfig = useMemo(() => {
+    console.log('[DEBUG useConcertDetails] DEBUT useMemo, customQueriesTest:', customQueriesTest);
+    
+    const config = {
+      entityType: 'concert',
+      collectionName: 'concerts',
+      id,
+      initialMode: isEditMode ? 'edit' : 'view',
+      relatedEntities,
+      autoLoadRelated: true,
+      transformData: (data) => transformConcertDataRef.current(data),
+      validateFormFn: (formData) => validateConcertFormRef.current(formData),
+      formatValue: (field, value) => formatConcertValueRef.current(field, value),
+      checkDeletePermission: async () => true,
+      onSaveSuccess: (data) => handleSaveSuccessRef.current(data),
+      onDeleteSuccess: () => handleDeleteSuccessRef.current(),
+      navigate,
+      returnPath: '/concerts',
+      editPath: `/concerts/${id}/edit`,
+      useDeleteModal: true,
+      disableCache: false,
+      realtime: false,
+      // TEST: Utiliser les customQueries définies en dehors du useMemo
+      customQueries: customQueriesTest
+    };
+    
+    // DEBUG: Vérifier la configuration avant de la retourner
+    console.log('📋📋📋 CONFIG FINALE useConcertDetails 📋📋📋');
+    console.log('Config entière:', config);
+    console.log('Config.customQueries:', config.customQueries);
+    console.log('Config.customQueries keys:', Object.keys(config.customQueries || {}));
+    console.log('Type de config.customQueries:', typeof config.customQueries);
+    console.log('Config.customQueries === customQueriesTest:', config.customQueries === customQueriesTest);
+    
+    return config;
+  }, [id, isEditMode, relatedEntities, navigate]); // Dépendances réduites et stables
+
+  // DEBUG: Vérifier l'objet de configuration juste avant l'appel
+  console.log('[DEBUG useConcertDetails] AVANT appel useGenericEntityDetails:', {
+    config: genericDetailsConfig,
+    customQueries: genericDetailsConfig?.customQueries,
+    customQueriesKeys: genericDetailsConfig?.customQueries ? Object.keys(genericDetailsConfig.customQueries) : 'undefined'
+  });
+  
   const genericDetails = useGenericEntityDetails(genericDetailsConfig);
   
   // Log de debug pour vérifier que l'entité est correctement chargée
@@ -242,9 +347,14 @@ const useConcertDetails = (id, locationParam) => {
   // Fonction pour gérer les mises à jour des relations bidirectionnelles - STABILISÉE
   const handleBidirectionalUpdatesRef = useRef();
   handleBidirectionalUpdatesRef.current = useCallback(async () => {
-    const { entity, relatedData } = genericDetails || {};
+    // Utiliser les références stables au lieu des props directes
+    const stableDetails = stableGenericDetailsRef.current;
+    const stableAssociations = stableConcertAssociationsRef.current;
     
-    if (!entity || !genericDetails) return;
+    if (!stableDetails?.entity || !stableAssociations) return;
+    
+    const { entity } = stableDetails;
+    const relatedData = genericDetails?.relatedData || {};
     
     try {
       
@@ -254,7 +364,7 @@ const useConcertDetails = (id, locationParam) => {
       // Mise à jour des relations bidirectionnelles
       if (relatedData.programmateur?.id || initialProgrammateurId) {
         updatePromises.push(
-          concertAssociations.updateProgrammateurAssociation(
+          stableAssociations.updateProgrammateurAssociation(
             id,
             entity,
             relatedData.programmateur?.id || null,
@@ -266,7 +376,7 @@ const useConcertDetails = (id, locationParam) => {
       
       if (relatedData.artiste?.id || initialArtisteId) {
         updatePromises.push(
-          concertAssociations.updateArtisteAssociation(
+          stableAssociations.updateArtisteAssociation(
             id,
             entity,
             relatedData.artiste?.id || null,
@@ -278,7 +388,7 @@ const useConcertDetails = (id, locationParam) => {
       
       if (relatedData.structure?.id || initialStructureId) {
         updatePromises.push(
-          concertAssociations.updateStructureAssociation(
+          stableAssociations.updateStructureAssociation(
             id,
             entity,
             relatedData.structure?.id || null,
@@ -291,7 +401,7 @@ const useConcertDetails = (id, locationParam) => {
       // Ajout de la gestion des relations bidirectionnelles pour les lieux
       if (relatedData.lieu?.id || initialLieuId) {
         updatePromises.push(
-          concertAssociations.updateLieuAssociation(
+          stableAssociations.updateLieuAssociation(
             id, 
             entity,
             relatedData.lieu?.id || null,
@@ -306,7 +416,7 @@ const useConcertDetails = (id, locationParam) => {
       console.error("[useConcertDetails] Erreur lors des mises à jour bidirectionnelles:", error);
       throw error; // Propager l'erreur pour la gestion en amont
     }
-  }, [id, genericDetails, initialProgrammateurId, initialArtisteId, initialStructureId, initialLieuId, concertAssociations]);
+  }, [id, initialProgrammateurId, initialArtisteId, initialStructureId, initialLieuId, genericDetails?.relatedData]); // Dépendances réduites
   
   const handleBidirectionalUpdates = useCallback(async () => {
     return handleBidirectionalUpdatesRef.current();
@@ -315,8 +425,10 @@ const useConcertDetails = (id, locationParam) => {
   // Fonction pour récupérer les entités nécessaires aux relations bidirectionnelles - STABILISÉE
   const fetchRelatedEntitiesRef = useRef();
   fetchRelatedEntitiesRef.current = useCallback(async () => {
-    const { entity, relatedData } = genericDetails || {};
-    if (!entity || !genericDetails) return null;
+    const stableDetails = stableGenericDetailsRef.current;
+    if (!stableDetails?.entity) return null;
+    
+    const relatedData = genericDetails?.relatedData || {};
   
     // Charger toutes les entités nécessaires en parallèle
     const promises = [];
@@ -401,7 +513,7 @@ const useConcertDetails = (id, locationParam) => {
     // Attendre que toutes les promesses se terminent
     await Promise.all(promises);
     return results;
-  }, [genericDetails, initialProgrammateurId, initialArtisteId, initialStructureId, initialLieuId]);
+  }, [initialProgrammateurId, initialArtisteId, initialStructureId, initialLieuId, genericDetails?.relatedData]); // Dépendances réduites
   
 
   
@@ -423,9 +535,13 @@ const useConcertDetails = (id, locationParam) => {
   const stableGenericDetailsRef = useRef();
   const stableConcertAssociationsRef = useRef();
   
-  // Stocker les références stables
+  // Stocker les références stables - OPTIMISÉ pour éviter les re-renders
   useEffect(() => {
-    if (genericDetails && genericDetails.entity && !genericDetails.loading) {
+    // Vérifier si les données ont réellement changé avant de mettre à jour
+    const hasEntityChanged = genericDetails?.entity?.id !== stableGenericDetailsRef.current?.entity?.id;
+    const hasLoadingChanged = genericDetails?.loading !== stableGenericDetailsRef.current?.loading;
+    
+    if ((hasEntityChanged || hasLoadingChanged) && genericDetails && genericDetails.entity && !genericDetails.loading) {
       stableGenericDetailsRef.current = {
         entity: genericDetails.entity,
         loading: genericDetails.loading
@@ -440,6 +556,9 @@ const useConcertDetails = (id, locationParam) => {
     }
   }, [concertAssociations]);
 
+  // DÉSACTIVÉ TEMPORAIREMENT : Cet effet cause des boucles infinies
+  // Les mises à jour bidirectionnelles doivent être gérées uniquement lors des actions utilisateur
+  /*
   useEffect(() => {
     // Guard contre l'exécution en double en StrictMode
     if (bidirectionalUpdatesRef.current) return;
@@ -474,6 +593,7 @@ const useConcertDetails = (id, locationParam) => {
       updateBidirectionalRelations();
     }
   }, [id]); // Dépendances ultra-réduites et stables
+  */
   
   // Réinitialiser le guard si l'ID change
   useEffect(() => {

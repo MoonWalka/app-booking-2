@@ -5,6 +5,7 @@ import ListWithFilters from '@/components/ui/ListWithFilters';
 import { ActionButtons } from '@/components/ui/ActionButtons';
 import AddButton from '@/components/ui/AddButton';
 import { useDeleteProgrammateur } from '@/hooks/programmateurs';
+import { mapTerm } from '@/utils/terminologyMapping';
 
 /**
  * Liste unifiée des programmateurs utilisant le composant générique ListWithFilters
@@ -144,7 +145,7 @@ function ProgrammateursList() {
     return [
       {
         id: 'total',
-        label: 'Programmateurs',
+        label: mapTerm('Programmateurs'),
         value: total,
         icon: 'bi bi-people',
         variant: 'primary'
@@ -189,7 +190,7 @@ function ProgrammateursList() {
   const headerActions = (
     <AddButton
       onClick={() => navigate('/programmateurs/nouveau')}
-      label="Nouveau programmateur"
+      label={mapTerm("Nouveau programmateur")}
     />
   );
 
@@ -202,7 +203,7 @@ function ProgrammateursList() {
     <ListWithFilters
       key={refreshKey}
       entityType="programmateurs"
-      title="Gestion des Programmateurs"
+      title={mapTerm("Gestion des Programmateurs")}
       columns={columns}
       filterOptions={filterOptions}
       sort={{ field: 'nom', direction: 'asc' }}

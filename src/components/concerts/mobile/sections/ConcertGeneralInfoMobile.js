@@ -173,10 +173,10 @@ const ConcertGeneralInfoMobile = ({
             )}
 
             {/* État du formulaire (si défini) */}
-            {formDataStatus && (
+            {formDataStatus && formDataStatus.exists && (
               <div className={styles.formStatusIndicator}>
-                <i className={`bi ${formDataStatus.icon} me-1`}></i>
-                {formDataStatus.text}
+                <i className={`bi ${formDataStatus.isValidated ? 'bi-check-circle-fill' : formDataStatus.hasData ? 'bi-hourglass-split' : 'bi-envelope'} me-1`}></i>
+                {formDataStatus.isValidated ? 'Formulaire validé' : formDataStatus.hasData ? `Formulaire rempli (${formDataStatus.completionRate || 0}%)` : 'Formulaire envoyé'}
               </div>
             )}
           </Card.Body>

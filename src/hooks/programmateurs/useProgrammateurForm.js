@@ -45,9 +45,8 @@ export const useProgrammateurForm = (programmateurId) => {
       errors['contact.nom'] = 'Le nom du contact est obligatoire';
     }
     
-    if (!data.contact?.email) {
-      errors['contact.email'] = 'L\'email du contact est obligatoire';
-    } else if (!/^\S+@\S+\.\S+$/.test(data.contact.email)) {
+    // Email facultatif, mais si fourni, doit être valide
+    if (data.contact?.email && !/^\S+@\S+\.\S+$/.test(data.contact.email)) {
       errors['contact.email'] = 'Format d\'email invalide';
     }
     

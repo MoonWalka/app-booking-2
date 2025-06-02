@@ -6,13 +6,16 @@ import { db } from '@/services/firebase-service';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import FlexContainer from '@/components/ui/FlexContainer';
 import Button from '@/components/ui/Button';
-import ContratsTable from '../components/contrats/sections/ContratsTable';
+import Table from '@/components/ui/Table';
+import Badge from '@/components/ui/Badge';
+import { useResponsive } from '@/hooks/common';
 import '@styles/index.css';
 
 const ContratsPage = () => {
   const [contrats, setContrats] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { isMobile } = useResponsive();
 
   useEffect(() => {
     const fetchContrats = async () => {
@@ -153,7 +156,209 @@ const ContratsPage = () => {
           </Card.Body>
         </Card>
       ) : (
-        <ContratsTable contrats={contrats} />
+        <>
+          {isMobile ? (
+            <div className="mobile-list">
+              {contrats.map(contrat => (
+                <Card key={contrat.id} className="mb-3 border-0 shadow-sm">
+                  <Card.Body 
+                    className="p-3" 
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => navigate(`/contrats/${contrat.id}`)}
+                  >
+                    <div className="d-flex justify-content-between align-items-start mb-2">
+                      <div>
+                        <h6 className="mb-1 fw-bold">
+                          {contrat.concert?.titre || 'N/A'}
+                        </h6>
+                        <small className="text-muted">
+                          {contrat.concert?.artisteNom && `${contrat.concert.artisteNom} • `}
+                          {(() => {
+                            if (!contrat.dateGeneration) return '-';
+                            try {
+                              if (contrat.dateGeneration.seconds) {
+                                return new Date(contrat.dateGeneration.seconds * 1000).toLocaleDateString('fr-FR');
+                              }
+                              return new Date(contrat.dateGeneration).toLocaleDateString('fr-FR');
+                            } catch (error) {
+                              return '-';
+                            }
+                          })()}
+                        </small>
+                      </div>
+                      {(() => {
+                        const getStatusBadge = (status) => {
+                          switch (status) {
+                            case 'signed':
+                              return <Badge variant="green">Signé</Badge>;
+                            case 'sent':
+                              return <Badge variant="blue">Envoyé</Badge>;
+                            case 'generated':
+                              return <Badge variant="yellow">Généré</Badge>;
+                            default:
+                              return <Badge variant="gray">Inconnu</Badge>;
+                          }
+                        };
+                        return getStatusBadge(contrat.status);
+                      })()}
+                    </div>
+                    
+                    <div className="small text-muted mb-2">
+                      <i className="bi bi-geo-alt me-1"></i>
+                      {contrat.concert?.lieuNom || 'N/A'}
+                    </div>
+                    
+                    <div className="small text-muted mb-3">
+                      <i className="bi bi-person me-1"></i>
+                      {contrat.concert?.programmateurNom || 'N/A'}
+                    </div>
+                    
+                    <div className="d-flex gap-2" onClick={e => e.stopPropagation()}>
+                      <button 
+                        className="btn btn-sm btn-outline-primary flex-fill"
+                        onClick={() => navigate(`/contrats/${contrat.id}`)}
+                      >
+                        <i className="bi bi-eye"></i>
+                      </button>
+                      <button 
+                        className="btn btn-sm btn-outline-secondary"
+                        onClick={() => navigate(`/contrats/${contrat.id}?preview=web`)}
+                      >
+                        <i className="bi bi-globe"></i>
+                      </button>
+                      <button 
+                        className="btn btn-sm btn-outline-warning"
+                        onClick={() => navigate(`/contrats/${contrat.id}/edit`)}
+                      >
+                        <i className="bi bi-pencil"></i>
+                      </button>
+                      <button 
+                        className="btn btn-sm btn-outline-success"
+                        onClick={() => window.open(`/contrats/${contrat.id}/download`, '_blank')}
+                      >
+                        <i className="bi bi-download"></i>
+                      </button>
+                    </div>
+                  </Card.Body>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <Table
+              columns={[
+                {
+                  label: 'Date',
+                  key: 'dateGeneration',
+                  sortable: true,
+                  render: (contrat) => {
+                    if (!contrat.dateGeneration) return '-';
+                    try {
+                      if (contrat.dateGeneration.seconds) {
+                        return new Date(contrat.dateGeneration.seconds * 1000).toLocaleDateString('fr-FR');
+                      }
+                      return new Date(contrat.dateGeneration).toLocaleDateString('fr-FR');
+                    } catch (error) {
+                      return '-';
+                    }
+                  }
+                },
+                {
+                  label: 'Concert',
+                  key: 'concert.titre',
+                  sortable: true,
+                  render: (contrat) => (
+                    <div>
+                      <div style={{ fontWeight: '500' }}>
+                        {contrat.concert?.titre || 'N/A'}
+                      </div>
+                      {contrat.concert?.artisteNom && (
+                        <div style={{ fontSize: '0.875rem', color: 'var(--tc-color-text-light)' }}>
+                          {contrat.concert.artisteNom}
+                        </div>
+                      )}
+                    </div>
+                  )
+                },
+                {
+                  label: 'Lieu',
+                  key: 'concert.lieuNom',
+                  sortable: true,
+                  render: (contrat) => (
+                    <div>
+                      <i className="bi bi-geo-alt me-2"></i>
+                      {contrat.concert?.lieuNom || 'N/A'}
+                    </div>
+                  )
+                },
+                {
+                  label: 'Programmateur',
+                  key: 'concert.programmateurNom',
+                  sortable: true,
+                  render: (contrat) => (
+                    <div>
+                      <i className="bi bi-person me-2"></i>
+                      {contrat.concert?.programmateurNom || 'N/A'}
+                    </div>
+                  )
+                },
+                {
+                  label: 'Statut',
+                  key: 'status',
+                  sortable: true,
+                  render: (contrat) => {
+                    const getStatusBadge = (status) => {
+                      switch (status) {
+                        case 'signed':
+                          return <Badge variant="green">Signé</Badge>;
+                        case 'sent':
+                          return <Badge variant="blue">Envoyé</Badge>;
+                        case 'generated':
+                          return <Badge variant="yellow">Généré</Badge>;
+                        default:
+                          return <Badge variant="gray">Inconnu</Badge>;
+                      }
+                    };
+                    return getStatusBadge(contrat.status);
+                  }
+                }
+              ]}
+              data={contrats}
+              renderActions={(contrat) => (
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <button 
+                    className="btn btn-sm btn-outline-primary"
+                    onClick={() => navigate(`/contrats/${contrat.id}`)} 
+                    title="Voir le contrat"
+                  >
+                    <i className="bi bi-eye"></i>
+                  </button>
+                  <button 
+                    className="btn btn-sm btn-outline-secondary"
+                    onClick={() => navigate(`/contrats/${contrat.id}?preview=web`)} 
+                    title="Aperçu web"
+                  >
+                    <i className="bi bi-globe"></i>
+                  </button>
+                  <button 
+                    className="btn btn-sm btn-outline-warning"
+                    onClick={() => navigate(`/contrats/${contrat.id}/edit`)} 
+                    title="Éditer le contrat"
+                  >
+                    <i className="bi bi-pencil"></i>
+                  </button>
+                  <button 
+                    className="btn btn-sm btn-outline-success"
+                    onClick={() => window.open(`/contrats/${contrat.id}/download`, '_blank')} 
+                    title="Télécharger"
+                  >
+                    <i className="bi bi-download"></i>
+                  </button>
+                </div>
+              )}
+              onRowClick={(contratId) => navigate(`/contrats/${contratId}`)}
+            />
+          )}
+        </>
       )}
     </Container>
   );

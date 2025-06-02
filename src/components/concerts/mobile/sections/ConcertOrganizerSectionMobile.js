@@ -21,6 +21,7 @@ const ConcertOrganizerSectionMobile = ({
   handleCreateProgrammateur,
   navigateToProgrammateurDetails,
   formData,
+  formDataStatus,
   showFormGenerator,
   setShowFormGenerator,
   generatedFormLink,
@@ -191,18 +192,23 @@ const ConcertOrganizerSectionMobile = ({
                   <div className={styles.formInfo}>
                     <div className={styles.formStatusBadge}>
                       <Badge 
-                        bg={formData.status === 'validated' ? 'success' : 'warning'}
+                        bg={formDataStatus?.isValidated || formData.status === 'validated' ? 'success' : formDataStatus?.hasData ? 'warning' : 'secondary'}
                         className={styles.badge}
                       >
-                        {formData.status === 'validated' ? (
+                        {formDataStatus?.isValidated || formData.status === 'validated' ? (
                           <>
                             <i className="bi bi-check-circle-fill me-1"></i>
                             Validé
                           </>
-                        ) : (
+                        ) : formDataStatus?.hasData ? (
                           <>
                             <i className="bi bi-hourglass-split me-1"></i>
-                            En attente
+                            En attente de validation ({formDataStatus.completionRate || 0}%)
+                          </>
+                        ) : (
+                          <>
+                            <i className="bi bi-envelope me-1"></i>
+                            Envoyé - En attente de réponse
                           </>
                         )}
                       </Badge>
@@ -210,22 +216,22 @@ const ConcertOrganizerSectionMobile = ({
                     
                     <div className={styles.formDetail}>
                       <i className="bi bi-calendar-event me-2"></i>
-                      <span>Envoyé le {formatDate(formData.dateCreation)}</span>
+                      <span>Envoyé le {formatDate(formData.dateCreation || formData.createdAt)}</span>
                     </div>
                     
-                    {formData.dateReponse && (
+                    {(formData.dateReponse || formDataStatus?.lastUpdate) && (
                       <div className={styles.formDetail}>
                         <i className="bi bi-reply me-2"></i>
-                        <span>Répondu le {formatDate(formData.dateReponse)}</span>
+                        <span>Répondu le {formatDate(formData.dateReponse || formDataStatus.lastUpdate)}</span>
                       </div>
                     )}
                     
-                    {formData.status === 'validated' ? (
+                    {formDataStatus?.isValidated || formData.status === 'validated' ? (
                       <div className={styles.formValidated}>
                         <i className="bi bi-check-circle me-1"></i>
                         Formulaire validé et informations intégrées
                       </div>
-                    ) : (
+                    ) : formDataStatus?.hasData ? (
                       <Button
                         variant="outline-primary"
                         size="sm"
@@ -233,8 +239,13 @@ const ConcertOrganizerSectionMobile = ({
                         className={styles.validateButton}
                       >
                         <i className="bi bi-check2-square me-1"></i>
-                        Valider les informations
+                        Valider les informations ({formDataStatus.completionRate || 0}% complété)
                       </Button>
+                    ) : (
+                      <div className={styles.formPending}>
+                        <i className="bi bi-clock me-1"></i>
+                        En attente de réponse du programmateur
+                      </div>
                     )}
                   </div>
                 ) : (

@@ -187,6 +187,13 @@
   color: var(--tc-color-error, #f44336);
 }
 
+.optional {
+  color: var(--tc-text-muted);
+  font-size: 0.85rem;
+  font-weight: normal;
+  margin-left: var(--tc-space-1);
+}
+
 .formControl {
   width: 100%;
   padding: var(--tc-space-3);

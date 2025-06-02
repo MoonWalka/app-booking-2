@@ -15,7 +15,7 @@ import useArtisteSearch from '@/hooks/artistes/useArtisteSearch';
 // Import des composants
 import ConcertHeader from './ConcertHeader';
 import ConcertGeneralInfo from './ConcertGeneralInfo';
-import ConcertLocationSectionDebug from './ConcertLocationSectionDebug';
+import ConcertLocationSectionFixed from './ConcertLocationSectionFixed';
 import ConcertOrganizerSectionFixed from './ConcertOrganizerSectionFixed';
 import ConcertArtistSection from './ConcertArtistSection';
 import ConcertStructureSection from './ConcertStructureSection';
@@ -200,7 +200,7 @@ const ConcertView = memo(({ id: propId }) => {
         artiste={artiste}
         formDataStatus={formDataStatus}
       />
-      <ConcertLocationSectionDebug 
+      <ConcertLocationSectionFixed 
         concertId={id}
         lieu={lieu}
         isEditMode={isEditMode}

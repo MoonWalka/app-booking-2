@@ -182,31 +182,6 @@ const LieuView = () => {
       <div className={styles?.section || "mobile-section mb-4 p-3 border rounded"}>
         <h2 className="h6 mb-3">Contact</h2>
         
-        {lieu.contactNom && (
-          <div className="mb-3">
-            <strong>Nom :</strong> {lieu.contactNom}
-          </div>
-        )}
-        
-        {lieu.contactEmail && (
-          <div className="mb-3">
-            <strong>Email :</strong> 
-            <a href={`mailto:${lieu.contactEmail}`}>{lieu.contactEmail}</a>
-          </div>
-        )}
-        
-        {lieu.contactTelephone && (
-          <div className="mb-3">
-            <strong>Téléphone :</strong> 
-            <a href={`tel:${lieu.contactTelephone}`}>{lieu.contactTelephone}</a>
-          </div>
-        )}
-      </div>
-
-      {/* Programmateur */}
-      <div className={styles?.section || "mobile-section mb-4 p-3 border rounded"}>
-        <h2 className="h6 mb-3">Programmateur</h2>
-        
         {loadingProgrammateur ? (
           <div className="text-center">
             <Spinner variant="primary" size="sm" />

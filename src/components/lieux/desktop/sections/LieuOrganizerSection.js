@@ -4,6 +4,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import Card from '@/components/ui/Card';
 import Alert from '@ui/Alert';
+import { mapTerm } from '@/utils/terminologyMapping';
 import styles from './LieuOrganizerSection.module.css';
 
 /**
@@ -48,7 +49,7 @@ const LieuOrganizerSection = ({ isEditMode, lieu }) => {
   }, [lieu]);
 
   return (
-    <Card title="Programmateur(s)" icon={<i className="bi bi-person-badge"></i>}>
+    <Card title={mapTerm("Programmateur(s)")} icon={<i className="bi bi-person-badge"></i>}>
       <div className={styles.cardBody}>
         {loading ? (
           <div className="text-center py-3">

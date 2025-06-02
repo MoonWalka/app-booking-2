@@ -17,7 +17,6 @@ import { LieuHeader } from './sections/LieuHeader';
 import LieuGeneralInfo from './sections/LieuGeneralInfo';
 import LieuAddressSection from './sections/LieuAddressSection';
 import LieuOrganizerSection from './sections/LieuOrganizerSection';
-import LieuContactSection from './sections/LieuContactSection';
 import LieuInfoSection from './sections/LieuInfoSection';
 import { LieuConcertsSection } from './sections/LieuConcertsSection';
 import { LieuStructuresSection } from './sections/LieuStructuresSection';
@@ -146,12 +145,6 @@ const LieuView = ({ id: propId }) => {
           formData={{}}
           onChange={() => {}}
           updateCoordinates={() => {}}
-        />
-        <LieuContactSection 
-          lieu={lieu} 
-          isEditMode={false}
-          formData={{}}
-          onChange={() => {}}
         />
         <LieuOrganizerSection
           isEditMode={false}

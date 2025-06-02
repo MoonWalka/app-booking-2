@@ -4,7 +4,7 @@ import { db } from '@/services/firebase-service';
 
 const ContactAssociationsDebug = () => {
   const [contacts, setContacts] = useState([]);
-  const [selectedContact, setSelectedContact] = useState(null);
+  const [setSelectedContact] = useState(null);
   const [debugInfo, setDebugInfo] = useState(null);
   const [loading, setLoading] = useState(false);
 

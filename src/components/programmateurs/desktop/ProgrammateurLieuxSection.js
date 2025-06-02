@@ -42,6 +42,14 @@ const ProgrammateurLieuxSection = ({
   const [loading, setLoading] = useState(true);
   const [localLieux, setLocalLieux] = useState([]);
   
+  // ✅ STABILISATION: Logique simple et directe pour éviter les boucles - DÉFINI AVANT useEffect
+  const hasValidLieuxInProp = lieuxProp && Array.isArray(lieuxProp) && lieuxProp.length > 0;
+  
+  // ✅ STABILISATION: Source de lieux avec logique directe - DÉFINI AVANT useEffect
+  const lieux = hasValidLieuxInProp ? lieuxProp : localLieux;
+  
+  const hasLieux = lieux && lieux.length > 0; // ✅ Simplifié pour éviter useMemo problématique
+  
   // ✅ OPTIMISATION: Logs de diagnostic seulement si changement réel
   useEffect(() => {
     renderCountRef.current++;
@@ -58,15 +66,18 @@ const ProgrammateurLieuxSection = ({
       });
       lastProgrammateurIdRef.current = programmateurId;
     }
-  }, [programmateur?.id]); // ✅ Dépendance stable, lieuxProp via ref
-  
-  // ✅ STABILISATION: Logique simple et directe pour éviter les boucles
-  const hasValidLieuxInProp = lieuxProp && Array.isArray(lieuxProp) && lieuxProp.length > 0;
-  
-  // ✅ STABILISATION: Source de lieux avec logique directe
-  const lieux = hasValidLieuxInProp ? lieuxProp : localLieux;
-  
-  const hasLieux = lieux && lieux.length > 0; // ✅ Simplifié pour éviter useMemo problématique
+    
+    // Log every render for debugging
+    console.log(`[DEBUG] ProgrammateurLieuxSection - Current props:`, {
+      lieuxProp,
+      lieuxPropLength: lieuxProp?.length,
+      localLieux,
+      localLieuxLength: localLieux?.length,
+      hasValidLieuxInProp,
+      finalLieux: lieux,
+      finalLieuxLength: lieux?.length
+    });
+  }, [programmateur?.id, lieuxProp, localLieux, hasValidLieuxInProp, lieux]); // ✅ Dépendance stable, lieuxProp via ref
 
   // ✅ STABILISATION: Function de chargement stable
   const loadLieux = useCallback(async (programmateurData) => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { APP_NAME } from '../../config.js';
-import { mapTerm } from '@/utils/terminologyMapping';
+// import { mapTerm } from '@/utils/terminologyMapping'; // Non utilisé dans ce composant
 import styles from './Sidebar.module.css';
 
 const Sidebar = () => {

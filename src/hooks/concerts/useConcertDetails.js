@@ -197,7 +197,7 @@ const useConcertDetails = (id, locationParam) => {
         concertForms.fetchFormData(data);
       }
     }, 0);
-  }, [id]); // Dépendance réduite - concertForms retiré
+  }, [id, concertForms]); // Dépendance concertForms requise pour fetchFormData
   
   handleDeleteSuccessRef.current = useCallback(() => {
     // Notifier les autres composants
@@ -324,7 +324,7 @@ const useConcertDetails = (id, locationParam) => {
     console.log('Config.customQueries === customQueriesTest:', config.customQueries === customQueriesTest);
     
     return config;
-  }, [id, isEditMode, relatedEntities, navigate]); // Dépendances réduites et stables
+  }, [id, isEditMode, relatedEntities, navigate, customQueriesTest]); // Dépendances réduites et stables
 
   // DEBUG: Vérifier l'objet de configuration juste avant l'appel
   console.log('[DEBUG useConcertDetails] AVANT appel useGenericEntityDetails:', {

@@ -28,6 +28,7 @@ import StructuresPage from '@/pages/StructuresPage';
 import RouterStabilizer from '@/utils/RouterStabilizer';
 import ProgrammateursList from '@/components/programmateurs/ProgrammateursList';
 import ConcertFormWrapper from '@/components/concerts/ConcertForm';
+import DiagnosticButton from '@/components/debug/DiagnosticButton';
 import ConcertsList from '@/components/concerts/ConcertsList';
 import ConcertDetails from '@/components/concerts/ConcertDetails';
 import CreateDefaultTemplate from './pages/CreateDefaultTemplate';
@@ -119,14 +120,15 @@ function App() {
   };
 
   return (
-    <ErrorBoundary>
-      <Router>
-        <AuthProvider>
-          <OrganizationProvider>
-            <ParametresProvider>
-              <ModalProvider>
-                <RouterStabilizer />
-                <Suspense fallback={
+    <>
+      <ErrorBoundary>
+        <Router>
+          <AuthProvider>
+            <OrganizationProvider>
+              <ParametresProvider>
+                <ModalProvider>
+                  <RouterStabilizer />
+                  <Suspense fallback={
                   <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
                     <div className="text-center">
                       <div className="spinner-border text-primary" role="status">
@@ -347,7 +349,12 @@ function App() {
             </AuthProvider>
           </Router>
         </ErrorBoundary>
-      );
+        {/* Bouton de diagnostic temporaire */}
+        <div id="diagnostic-button-container">
+          <DiagnosticButton />
+        </div>
+      </>
+    );
     }
 
     export default App; 

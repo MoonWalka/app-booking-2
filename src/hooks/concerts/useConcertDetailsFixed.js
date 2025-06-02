@@ -76,25 +76,103 @@ const useConcertDetailsFixed = (id, locationParam) => {
       idField: 'structureId',
       alternativeIdFields: ['structure'],
       nameField: 'structureNom',
-      type: 'one-to-one',
-      essential: false
+      type: 'custom', // Type custom pour charger via le programmateur
+      essential: true // La structure est essentielle pour debug
     }
   ], []);
   
+  // DEBUG: Log de diagnostic pour useConcertDetailsFixed
+  console.log('🔍🔍🔍 DIAGNOSTIC useConcertDetailsFixed HOOK 🔍🔍🔍');
+  console.log('Hook useConcertDetailsFixed appelé pour ID:', id);
+  console.log('isEditMode:', isEditMode);
+  
   // Configuration pour useGenericEntityDetails
-  const genericDetailsConfig = useMemo(() => ({
-    entityType: 'concert',
-    collectionName: 'concerts',
-    id,
-    relatedEntities,
-    additionalData: {},
-    isEditMode,
-    autoLoadRelated: true,
-    cacheKey,
-    onError: (error) => {
-      console.error('[useConcertDetailsFixed] Erreur:', error);
-    }
-  }), [id, relatedEntities, isEditMode, cacheKey]);
+  const genericDetailsConfig = useMemo(() => {
+    const config = {
+      entityType: 'concert',
+      collectionName: 'concerts',
+      id,
+      relatedEntities,
+      additionalData: {},
+      isEditMode,
+      autoLoadRelated: true,
+      cacheKey,
+      onError: (error) => {
+        console.error('[useConcertDetailsFixed] Erreur:', error);
+      },
+      // Ajouter les customQueries pour la structure
+      customQueries: {
+        structure: async (concertData) => {
+          console.log('🏢 Structure customQuery appelée avec concertData:', concertData);
+          debugLog('[useConcertDetailsFixed] customQuery structure appelée', 'info', 'useConcertDetailsFixed');
+          
+          // D'abord vérifier si le concert a directement un structureId
+          if (concertData.structureId) {
+            try {
+              const { doc, getDoc, db } = await import('@/services/firebase-service');
+              const structureDoc = await getDoc(doc(db, 'structures', concertData.structureId));
+              if (structureDoc.exists()) {
+                const result = { id: structureDoc.id, ...structureDoc.data() };
+                console.log('🏢 Structure trouvée directement:', result);
+                return result;
+              }
+            } catch (err) {
+              console.error('Erreur lors du chargement direct de la structure:', err);
+            }
+          }
+          
+          // Sinon, charger via le programmateur
+          const programmateurId = concertData.programmateurId;
+          if (!programmateurId) {
+            console.log('🏢 Pas de programmateur, pas de structure');
+            debugLog('[useConcertDetailsFixed] Pas de programmateur, pas de structure', 'info', 'useConcertDetailsFixed');
+            return null;
+          }
+          
+          try {
+            const { doc, getDoc, db } = await import('@/services/firebase-service');
+            const programmateurDoc = await getDoc(doc(db, 'programmateurs', programmateurId));
+            
+            if (!programmateurDoc.exists()) {
+              console.log('🏢 Programmateur non trouvé');
+              debugLog('[useConcertDetailsFixed] Programmateur non trouvé', 'warn', 'useConcertDetailsFixed');
+              return null;
+            }
+            
+            const programmateurData = programmateurDoc.data();
+            if (!programmateurData.structureId) {
+              console.log('🏢 Programmateur sans structure');
+              debugLog('[useConcertDetailsFixed] Programmateur sans structure', 'info', 'useConcertDetailsFixed');
+              return null;
+            }
+            
+            // Charger la structure du programmateur
+            const structureDoc = await getDoc(doc(db, 'structures', programmateurData.structureId));
+            if (structureDoc.exists()) {
+              const result = { id: structureDoc.id, ...structureDoc.data() };
+              console.log('🏢 Structure trouvée via programmateur:', result);
+              debugLog('[useConcertDetailsFixed] Structure trouvée via programmateur', 'info', 'useConcertDetailsFixed');
+              return result;
+            }
+            
+            console.log('🏢 Structure du programmateur non trouvée');
+            return null;
+          } catch (err) {
+            console.error('🏢 Erreur lors du chargement de la structure via programmateur:', err);
+            return null;
+          }
+        }
+      }
+    };
+    
+    // DEBUG: Vérifier la configuration avant de la retourner
+    console.log('📋📋📋 CONFIG FINALE useConcertDetailsFixed 📋📋📋');
+    console.log('Config.customQueries:', config.customQueries);
+    console.log('Config.customQueries keys:', Object.keys(config.customQueries || {}));
+    console.log('Type de config.customQueries:', typeof config.customQueries);
+    
+    return config;
+  }, [id, relatedEntities, isEditMode, cacheKey]);
   
   // Hook générique avec configuration stable
   const genericDetails = useGenericEntityDetails(genericDetailsConfig);

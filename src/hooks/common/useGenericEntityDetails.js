@@ -60,6 +60,16 @@ const useGenericEntityDetails = ({
   cacheEnabled = true,       // Activer le cache pour ce hook
   cacheTTL                   // TTL personnalisé pour ce hook (en ms)
 }) => {
+  // DEBUG: Vérifier la réception des customQueries avec style distinctif
+  console.log('🎯🎯🎯 RECEPTION useGenericEntityDetails 🎯🎯🎯');
+  console.log('CustomQueries reçues:', customQueries);
+  console.log('Clés customQueries:', customQueries ? Object.keys(customQueries) : 'undefined');
+  console.log('Type de customQueries:', typeof customQueries);
+  console.log('customQueries === {}:', customQueries === {});
+  console.log('JSON.stringify(customQueries):', JSON.stringify(customQueries));
+  console.log('customQueries est truthy:', !!customQueries);
+  console.log('Object.keys(customQueries).length:', customQueries ? Object.keys(customQueries).length : 'N/A');
+  
   // ✅ DEBUG: Tracer les appels du hook
   // console.log('[DEBUG][useGenericEntityDetails] Hook called with:', {
   //   entityType,
@@ -122,27 +132,43 @@ const useGenericEntityDetails = ({
   });
   
   // Vérification immédiate du cache au montage pour éviter les problèmes de timing
+  // CORRECTION: Supprimer les dépendances instables pour éviter les boucles
+  const initialCacheCheckRef = useRef(false);
+  
   useEffect(() => {
-    if (cacheEnabled && id && !entity) {
+    if (cacheEnabled && id && !initialCacheCheckRef.current) {
+      initialCacheCheckRef.current = true;
       const cachedData = cache.get(id);
       if (cachedData) {
         debugLog(`🚀 IMMEDIATE_CACHE_CHECK: Données trouvées en cache au montage pour ${entityType}:${id}`, 'info', 'useGenericEntityDetails');
         setEntity(cachedData);
         setFormData(cachedData);
         setLoading(false);
-        // Le chargement des entités liées sera déclenché dans un effet séparé
         debugLog(`✅ IMMEDIATE_CACHE_CHECK: États mis à jour depuis le cache`, 'info', 'useGenericEntityDetails');
       }
     }
-  }, [id, entity, cacheEnabled, cache, entityType, autoLoadRelated]);
+  }, [id, cacheEnabled, cache, entityType]); // Dépendances complètes
   
   // Effet dédié pour charger les entités liées une fois que l'entité est disponible
+  // CORRECTION: Utiliser un ref avec l'ID pour éviter les boucles infinies
+  const lastLoadedEntityIdRef = useRef(null);
+  
   useEffect(() => {
-    if (autoLoadRelated && entity && Object.keys(relatedData).length === 0) {
-      loadAllRelatedEntities(entity);
+    // Ne charger les entités liées que si :
+    // - autoLoadRelated est activé
+    // - entity existe avec un ID
+    // - l'ID est différent du dernier chargé (évite les rechargements)
+    if (autoLoadRelated && entity && entity.id && entity.id !== lastLoadedEntityIdRef.current) {
+      debugLog(`🔗 RELATED_ENTITIES_EFFECT: Chargement des entités liées pour ${entityType}:${entity.id}`, 'info', 'useGenericEntityDetails');
+      lastLoadedEntityIdRef.current = entity.id;
+      
+      // Appel asynchrone pour ne pas bloquer le rendu
+      loadAllRelatedEntities(entity).catch(err => {
+        debugLog(`❌ RELATED_ENTITIES_EFFECT: Erreur lors du chargement des entités liées: ${err}`, 'error', 'useGenericEntityDetails');
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [autoLoadRelated, entity, relatedData]);
+  }, [autoLoadRelated, entity?.id, entityType]); // Dépendances minimales et stables
   
   // Fonction sécurisée pour mettre à jour les états uniquement si le composant est monté
   const safeSetState = useCallback((setter, value) => {
@@ -190,6 +216,13 @@ const useGenericEntityDetails = ({
       instanceRef.current.lastId = id;
       instanceRef.current.currentlyFetching = false;
       
+      // Réinitialiser les flags pour le nouvel ID
+      initialCacheCheckRef.current = false;
+      lastLoadedEntityIdRef.current = null;
+      
+      // Nettoyer le set des chargements initiaux pour permettre le nouveau chargement
+      initialLoadCompletedRef.current.clear();
+      
       // Mettre à jour les métadonnées dans le tracker
       InstanceTracker.updateMetadata(instanceRef.current.instanceId, { 
         id, state: 'id-changed', collectionName, entityType 
@@ -219,17 +252,14 @@ const useGenericEntityDetails = ({
       safeSetState(setFormData, transformedData);
       safeSetState(setLoading, false);
       
-      // Charger les entités liées si demandé
-      if (autoLoadRelated) {
-        loadAllRelatedEntities(transformedData);
-      }
+      // Charger les entités liées si demandé - délégué à l'effet dédié
+      // Ceci évite la dépendance circulaire avec loadAllRelatedEntities
     } else {
       safeSetState(setError, { message: `${entityType} non trouvé(e)` });
       safeSetState(setLoading, false);
     }
-    // loadAllRelatedEntities est stable grâce à useCallback, exemption pour éviter dépendance circulaire
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [transformData, cacheEnabled, cache, id, entityType, autoLoadRelated, safeSetState]);
+  }, [transformData, cacheEnabled, cache, id, entityType, safeSetState]);
   
   // Callback pour gérer les erreurs de l'abonnement
   const handleSubscriptionError = useCallback((err) => {
@@ -284,12 +314,7 @@ const useGenericEntityDetails = ({
         safeSetState(setFormData, cachedData);
         safeSetState(setLoading, false);
         
-        // Charger les entités liées si demandé, même avec un cache hit
-        if (autoLoadRelated) {
-          debugLog(`🔗 FETCH_ENTITY: Chargement des entités liées depuis le cache`, 'debug', 'useGenericEntityDetails');
-          loadAllRelatedEntities(cachedData);
-        }
-        
+        // Les entités liées seront chargées par l'effet dédié
         debugLog(`✅ FETCH_ENTITY: Terminé avec succès (cache)`, 'info', 'useGenericEntityDetails');
         return;
       } else {
@@ -364,12 +389,7 @@ const useGenericEntityDetails = ({
         debugLog(`🎯 FETCH_ENTITY: Avant safeSetState(setFormData) - isMounted: ${instanceRef.current.isMounted}`, 'debug', 'useGenericEntityDetails');
         safeSetState(setFormData, transformedData);
         
-        // Charger les entités liées si demandé
-        if (autoLoadRelated) {
-          debugLog(`🔗 FETCH_ENTITY: Chargement des entités liées`, 'debug', 'useGenericEntityDetails');
-          loadAllRelatedEntities(transformedData);
-        }
-        
+        // Les entités liées seront chargées par l'effet dédié
         debugLog(`✅ FETCH_ENTITY: Données entity définies avec succès`, 'info', 'useGenericEntityDetails');
       } else {
         debugLog(`❌ FETCH_ENTITY: Document n'existe pas`, 'warn', 'useGenericEntityDetails');
@@ -393,17 +413,18 @@ const useGenericEntityDetails = ({
       instanceRef.current.currentlyFetching = false;
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, collectionName, entityType, idField, transformData, autoLoadRelated, realtime, cacheEnabled, cache]);
+  }, [id, collectionName, entityType, realtime, cacheEnabled]); // Dépendances réduites et stables
   
   // Fonction pour charger une entité liée spécifique
   const loadRelatedEntity = useCallback(async (relatedConfig, entityData) => {
     const { name, collection: relatedCollection, idField: relatedIdField, alternativeIdFields = [], type = 'one-to-one' } = relatedConfig;
     
-    console.log(`[DEBUG loadRelatedEntity] Début chargement pour ${name}`, {
-      relatedConfig,
-      entityData,
-      customQueries: Object.keys(customQueries || {})
-    });
+    console.log(`🔗🔗🔗 LOAD_RELATED_ENTITY pour ${name} 🔗🔗🔗`);
+    console.log('relatedConfig:', relatedConfig);
+    console.log('entityData:', entityData);
+    console.log('customQueries disponibles:', Object.keys(customQueries || {}));
+    console.log('customQueries objet:', customQueries);
+    console.log('customQuery pour cette entité:', customQueries ? customQueries[name] : 'non disponible');
     
     // Chercher l'ID dans le champ principal ou les champs alternatifs
     let entityId = entityData[relatedIdField];
@@ -419,13 +440,20 @@ const useGenericEntityDetails = ({
       }
     }
     
-    // Si l'identifiant de l'entité liée n'existe pas dans l'entité principale, retourner null
-    if (!entityId) {
+    // Pour les types custom, on peut ne pas avoir d'ID et utiliser la customQuery
+    const isCustomType = type === 'custom';
+    
+    // Si l'identifiant de l'entité liée n'existe pas dans l'entité principale ET qu'il n'y a pas de customQuery, retourner null
+    if (!entityId && (!isCustomType || !customQueries || !customQueries[name])) {
       debugLog(`❌ LOAD_RELATED: Pas d'ID pour l'entité liée ${name} - Champs vérifiés: ${relatedIdField}, ${alternativeIdFields.join(', ')}`, 'warn', 'useGenericEntityDetails');
       return type === 'one-to-many' ? [] : null;
     }
     
-    debugLog(`✅ LOAD_RELATED: ID trouvé pour ${name}: ${entityId}`, 'info', 'useGenericEntityDetails');
+    if (entityId) {
+      debugLog(`✅ LOAD_RELATED: ID trouvé pour ${name}: ${entityId}`, 'info', 'useGenericEntityDetails');
+    } else if (isCustomType) {
+      debugLog(`🔍 LOAD_RELATED: Type custom pour ${name}, utilisation de la customQuery`, 'info', 'useGenericEntityDetails');
+    }
     
     try {
       let result;
@@ -534,6 +562,16 @@ const useGenericEntityDetails = ({
     
     debugLog(`Chargement des entités liées pour ${entityType}:${id}`, 'info', 'useGenericEntityDetails');
     
+    // DEBUG: Log des entités à charger
+    const entitiesToLoad = relatedEntities.map(e => ({ 
+      name: e.name, 
+      type: e.type, 
+      essential: e.essential,
+      hasCustomQuery: !!(customQueries && customQueries[e.name])
+    }));
+    console.log('[DEBUG loadAllRelatedEntities] Entités à charger:', entitiesToLoad);
+    console.log('[DEBUG loadAllRelatedEntities] CustomQueries disponibles:', customQueries ? Object.keys(customQueries) : 'aucune');
+    
     // Initialiser les états de chargement
     const loadingStates = {};
     relatedEntities.forEach(rel => {
@@ -547,13 +585,24 @@ const useGenericEntityDetails = ({
     const essentialEntities = relatedEntities.filter(rel => rel.essential === true);
     const nonEssentialEntities = relatedEntities.filter(rel => rel.essential !== true);
     
+    // ✅ CORRECTION: Séparer les entités custom avec dépendances
+    const customEntitiesWithDependencies = essentialEntities.filter(rel => 
+      rel.type === 'custom' && customQueries && customQueries[rel.name]
+    );
+    const standardEssentialEntities = essentialEntities.filter(rel => 
+      rel.type !== 'custom' || !customQueries || !customQueries[rel.name]
+    );
+    
     try {
-      // Charger d'abord les entités essentielles en parallèle (si configurées comme telles)
-      if (essentialEntities.length > 0) {
-        const essentialResults = await Promise.all(
-          essentialEntities.map(async (relatedEntity) => {
+      // 1. Charger d'abord les entités essentielles standard
+      if (standardEssentialEntities.length > 0) {
+        console.log('[DEBUG loadAllRelatedEntities] Entités essentielles standard à charger:', standardEssentialEntities.map(e => e.name));
+        const standardResults = await Promise.all(
+          standardEssentialEntities.map(async (relatedEntity) => {
             try {
+              console.log(`[DEBUG loadAllRelatedEntities] Début chargement de ${relatedEntity.name}`);
               const data = await loadRelatedEntity(relatedEntity, entityData);
+              console.log(`[DEBUG loadAllRelatedEntities] Résultat pour ${relatedEntity.name}:`, data);
               return { name: relatedEntity.name, data };
             } catch (err) {
               debugLog(`Erreur lors du chargement de l'entité liée ${relatedEntity.name}: ${err}`, 'error', 'useGenericEntityDetails');
@@ -562,9 +611,10 @@ const useGenericEntityDetails = ({
           })
         );
         
-        // Traiter les résultats des entités essentielles
-        essentialResults.forEach(({ name, data }) => {
+        // Traiter les résultats des entités standard
+        standardResults.forEach(({ name, data }) => {
           relatedEntitiesData[name] = data;
+          loadingStates[name] = false;
           
           // Mettre en cache si activé et si les données sont présentes
           if (cacheEnabled && data) {
@@ -578,15 +628,61 @@ const useGenericEntityDetails = ({
               cache.set(`related:${name}:${data.id}`, data);
             }
           }
-          
-          // Marquer comme chargé
-          loadingStates[name] = false;
         });
         
-        // Mettre à jour l'état avec les entités essentielles
+        // Mise à jour intermédiaire des états
         if (instanceRef.current.isMounted) {
-          safeSetState(setRelatedData, relatedEntitiesData);
-          safeSetState(setLoadingRelated, {...loadingStates});
+          safeSetState(setRelatedData, { ...relatedEntitiesData });
+          safeSetState(setLoadingRelated, { ...loadingStates });
+        }
+      }
+      
+      // 2. Charger ensuite les entités custom qui peuvent dépendre des précédentes
+      if (customEntitiesWithDependencies.length > 0) {
+        console.log('[DEBUG loadAllRelatedEntities] Entités custom avec dépendances à charger:', customEntitiesWithDependencies.map(e => e.name));
+        const customResults = await Promise.all(
+          customEntitiesWithDependencies.map(async (relatedEntity) => {
+            try {
+              console.log(`[DEBUG loadAllRelatedEntities] Début chargement custom de ${relatedEntity.name}`);
+              // Passer les données actuelles incluant les entités déjà chargées
+              const enhancedEntityData = {
+                ...entityData,
+                // Ajouter les entités déjà chargées pour les dépendances
+                _loadedRelated: relatedEntitiesData
+              };
+              const data = await loadRelatedEntity(relatedEntity, enhancedEntityData);
+              console.log(`[DEBUG loadAllRelatedEntities] Résultat custom pour ${relatedEntity.name}:`, data);
+              return { name: relatedEntity.name, data };
+            } catch (err) {
+              debugLog(`Erreur lors du chargement de l'entité liée custom ${relatedEntity.name}: ${err}`, 'error', 'useGenericEntityDetails');
+              return { name: relatedEntity.name, data: null };
+            }
+          })
+        );
+        
+        // Traiter les résultats des entités custom
+        customResults.forEach(({ name, data }) => {
+          relatedEntitiesData[name] = data;
+          loadingStates[name] = false;
+          
+          // Mettre en cache si activé et si les données sont présentes
+          if (cacheEnabled && data) {
+            if (Array.isArray(data)) {
+              data.forEach(item => {
+                if (item && item.id) {
+                  cache.set(`related:${name}:${item.id}`, item);
+                }
+              });
+            } else if (data && data.id) {
+              cache.set(`related:${name}:${data.id}`, data);
+            }
+          }
+        });
+        
+        // Mettre à jour l'état final avec toutes les entités essentielles
+        if (instanceRef.current.isMounted) {
+          safeSetState(setRelatedData, { ...relatedEntitiesData });
+          safeSetState(setLoadingRelated, { ...loadingStates });
         }
       }
       
@@ -606,7 +702,8 @@ const useGenericEntityDetails = ({
     } catch (err) {
       debugLog(`Erreur globale lors du chargement des entités liées: ${err}`, 'error', 'useGenericEntityDetails');
     }
-  }, [relatedEntities, entityType, id, cacheEnabled, cache, loadRelatedEntity, safeSetState]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [relatedEntities, entityType, id, cacheEnabled, cache, loadRelatedEntity, safeSetState, customQueries]); // Dépendances complètes
   
   // Fonction pour charger une entité liée par son ID
   const loadRelatedEntityById = useCallback(async (name, id) => {
@@ -896,6 +993,9 @@ const useGenericEntityDetails = ({
   }, [entityType, id, cacheEnabled, cache, refresh, safeSetState]);
   
   // Chargement initial de l'entité - Compatible StrictMode
+  // CORRECTION CRITIQUE: Stabiliser avec un ref pour éviter les boucles infinies
+  const initialLoadCompletedRef = useRef(new Set());
+  
   useEffect(() => {
     debugLog(`🚀 INITIAL_LOAD_EFFECT: Début effet chargement initial`, 'info', 'useGenericEntityDetails');
     
@@ -905,17 +1005,14 @@ const useGenericEntityDetails = ({
       return;
     }
     
-    // Vérifier le cache d'abord (pour éviter les requêtes inutiles en StrictMode)
-    if (cacheEnabled) {
-      const cachedData = cache.get(id);
-      if (cachedData) {
-        debugLog(`✅ INITIAL_LOAD_EFFECT: Données trouvées en cache, pas de fetch nécessaire`, 'info', 'useGenericEntityDetails');
-        setEntity(cachedData);
-        setFormData(cachedData);
-        setLoading(false);
-        return;
-      }
+    // Éviter le chargement multiple du même ID
+    const loadKey = `${id}-${realtime}`;
+    if (initialLoadCompletedRef.current.has(loadKey)) {
+      debugLog(`⏭️ INITIAL_LOAD_EFFECT: Chargement déjà effectué pour ${loadKey}`, 'debug', 'useGenericEntityDetails');
+      return;
     }
+    
+    initialLoadCompletedRef.current.add(loadKey);
     
     debugLog(`🔄 INITIAL_LOAD_EFFECT: Démarrage chargement pour ${entityType}:${id}`, 'info', 'useGenericEntityDetails');
     
@@ -924,12 +1021,14 @@ const useGenericEntityDetails = ({
       debugLog(`🔥 INITIAL_LOAD_EFFECT: Mode normal, appel de fetchEntity`, 'info', 'useGenericEntityDetails');
       fetchEntity().catch((error) => {
         debugLog(`❌ INITIAL_LOAD_EFFECT: Erreur dans fetchEntity: ${error}`, 'error', 'useGenericEntityDetails');
+        // Retirer de la liste des chargements en cas d'erreur pour permettre la réessai
+        initialLoadCompletedRef.current.delete(loadKey);
       });
     } else {
       debugLog(`⏭️ INITIAL_LOAD_EFFECT: Mode realtime activé, pas d'appel fetchEntity`, 'debug', 'useGenericEntityDetails');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, entityType, realtime]); // Suppression de fetchEntity, cacheEnabled, cache pour éviter la boucle infinie
+  }, [id, entityType, realtime]); // Dépendances ultra-minimales
   
   // Gestion des derniers nettoyages au démontage
   useEffect(() => {

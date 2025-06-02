@@ -34,6 +34,11 @@ const ProgrammateurView = ({
   console.log('[TRACE-UNIQUE][ProgrammateurView] error:', error);
   console.log('[TRACE-UNIQUE][ProgrammateurView] programmateur:', programmateur);
   console.log('[TRACE-UNIQUE][ProgrammateurView] structure:', structure);
+  console.log('[TRACE-UNIQUE][ProgrammateurView] lieux:', lieux);
+  console.log('[TRACE-UNIQUE][ProgrammateurView] concerts:', concerts);
+  console.log('[TRACE-UNIQUE][ProgrammateurView] loadingStructure:', loadingStructure);
+  console.log('[TRACE-UNIQUE][ProgrammateurView] loadingLieux:', loadingLieux);
+  console.log('[TRACE-UNIQUE][ProgrammateurView] loadingConcerts:', loadingConcerts);
   
   // État local pour contrôler l'affichage des sections
   const [sections, setSections] = useState({

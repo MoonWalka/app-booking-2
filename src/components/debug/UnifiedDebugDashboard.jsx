@@ -15,6 +15,7 @@ import { useAuth } from '@/context/AuthContext';
 import FirestoreService from '@/services/firestoreService';
 import persistenceService, { CACHE_STRATEGIES } from '@/services/persistenceService';
 import { utilityCache } from '@/utils/networkStabilizer';
+import ContactAssociationsDebug from './ContactAssociationsDebug';
 
 const UnifiedDebugDashboard = () => {
   // États principaux
@@ -915,6 +916,7 @@ const UnifiedDebugDashboard = () => {
           { id: 'cache', label: '📊 Cache', shortLabel: '📊' },
           { id: 'firebase', label: '🔥 Firebase', shortLabel: '🔥' },
           { id: 'tests', label: '🧪 Tests', shortLabel: '🧪' },
+          { id: 'contacts', label: '👥 Contacts', shortLabel: '👥' },
           { id: 'requests', label: '📡 Requêtes', shortLabel: '📡' },
           { id: 'navigation', label: '🧭 Navigation', shortLabel: '🧭' },
           { id: 'navtests', label: '🧪 Nav Tests', shortLabel: '🧪²' },
@@ -1039,6 +1041,13 @@ const UnifiedDebugDashboard = () => {
         )}
 
         {/* Onglet Requêtes */}
+        {/* Onglet Contacts Debug */}
+        {activeTab === 'contacts' && (
+          <div>
+            <ContactAssociationsDebug />
+          </div>
+        )}
+
         {activeTab === 'requests' && (
           <div>
             {/* Requêtes récentes */}

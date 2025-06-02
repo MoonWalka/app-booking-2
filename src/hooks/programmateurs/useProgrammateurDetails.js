@@ -16,6 +16,11 @@ export default function useProgrammateurDetails(id) {
   const [loadingConcerts, setLoadingConcerts] = useState(false);
   const [errorConcerts, setErrorConcerts] = useState(null);
   
+  // État pour la structure associée
+  const [structure, setStructure] = useState(null);
+  const [loadingStructure, setLoadingStructure] = useState(false);
+  const [errorStructure, setErrorStructure] = useState(null);
+  
   const details = useGenericEntityDetails({
     entityType: 'programmateur',
     collectionName: 'programmateurs',
@@ -165,9 +170,51 @@ export default function useProgrammateurDetails(id) {
     fetchConcertsAssocies();
   }, [id, details.entity]);
   
-  return {
+  // Charger la structure associée au programmateur
+  useEffect(() => {
+    const fetchStructureAssociee = async () => {
+      if (!id || !details.entity) return;
+      
+      try {
+        setLoadingStructure(true);
+        
+        console.log(`[DEBUG] useProgrammateurDetails - Programmateur data:`, details.entity);
+        console.log(`[DEBUG] useProgrammateurDetails - structureId:`, details.entity.structureId);
+        
+        // Vérifier si le programmateur a un structureId
+        if (details.entity.structureId) {
+          const structureDoc = await getDoc(doc(db, 'structures', details.entity.structureId));
+          if (structureDoc.exists()) {
+            const structureData = { id: structureDoc.id, ...structureDoc.data() };
+            setStructure(structureData);
+            console.log(`[DIAGNOSTIC] useProgrammateurDetails - Structure trouvée:`, structureData);
+          } else {
+            console.log(`[DIAGNOSTIC] useProgrammateurDetails - Structure ${details.entity.structureId} n'existe pas`);
+            setStructure(null);
+          }
+        } else {
+          console.log(`[DIAGNOSTIC] useProgrammateurDetails - Programmateur sans structureId`);
+          setStructure(null);
+        }
+        
+      } catch (error) {
+        console.error('[ERROR] useProgrammateurDetails - Erreur lors du chargement de la structure:', error);
+        setErrorStructure(error.message);
+        setStructure(null);
+      } finally {
+        setLoadingStructure(false);
+      }
+    };
+    
+    fetchStructureAssociee();
+  }, [id, details.entity]);
+  
+  const hookReturn = {
     ...details,
     programmateur: details.entity, // mapping clé pour compatibilité UI
+    structure,
+    loadingStructure,
+    errorStructure,
     lieux,
     loadingLieux,
     errorLieux,
@@ -177,4 +224,16 @@ export default function useProgrammateurDetails(id) {
     // Pour compatibilité avec le composant existant
     concertsAssocies: concerts
   };
+
+  console.log('[HOOK RETURN] useProgrammateurDetails:', {
+    programmateur: hookReturn.programmateur?.id,
+    structure: hookReturn.structure?.id,
+    lieux: hookReturn.lieux?.length,
+    concerts: hookReturn.concerts?.length,
+    loadingStructure: hookReturn.loadingStructure,
+    loadingLieux: hookReturn.loadingLieux,
+    loadingConcerts: hookReturn.loadingConcerts
+  });
+
+  return hookReturn;
 }

@@ -1,13 +1,11 @@
 // src/components/contacts/desktop/ContactViewModern.js
-import React, { useState, useMemo, memo, useCallback, useRef } from 'react';
+import React, { useState, useMemo, memo } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { Alert } from 'react-bootstrap';
 import styles from './ContactView.module.css';
 
 // Import des hooks personnalisés
 import { useGenericEntityDetails } from '@/hooks/common';
-import { useLieuSearch } from '@/hooks/lieux/useLieuSearch';
-import { useStructureSearch } from '@/hooks/search/useStructureSearch';
 
 // Import des composants sections existants
 import { ContactHeader } from './sections/ContactHeader';
@@ -29,7 +27,6 @@ const ContactViewModern = memo(({ id: propId }) => {
 
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const isEditMode = useMemo(() => location.pathname.includes('/edit'), [location.pathname]);
-  const callbacksRef = useRef({});
 
   // Configuration des relations pour le contact
   const relationsConfig = useMemo(() => [
@@ -72,7 +69,6 @@ const ContactViewModern = memo(({ id: propId }) => {
     loading,
     isSubmitting,
     formData,
-    error,
     handleSave,
     handleChange,
     handleDelete

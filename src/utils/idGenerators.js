@@ -44,7 +44,7 @@ export const generateLieuId = () => {
  * 
  * @returns {string} Identifiant unique formaté
  */
-export const generateProgrammateurId = () => {
+export const generateContactId = () => {
   const timestamp = new Date().getTime();
   const randomStr = Math.random().toString(36).substring(2, 8);
   return `pro-${timestamp}-${randomStr}`;

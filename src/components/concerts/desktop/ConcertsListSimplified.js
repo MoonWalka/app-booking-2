@@ -68,7 +68,7 @@ const ConcertsListSimplified = () => {
           concert.artiste?.nom,
           concert.lieu?.nom,
           concert.lieu?.ville,
-          concert.programmateur?.nom
+          concert.contact?.nom
         ].filter(Boolean).join(' ').toLowerCase();
         
         if (!searchableText.includes(search)) {

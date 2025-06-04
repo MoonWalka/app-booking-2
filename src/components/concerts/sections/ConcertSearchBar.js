@@ -39,7 +39,7 @@ const ConcertSearchBar = ({ searchTerm, setSearchTerm, statusFilter, setStatusFi
         <input
           type="text"
           className={styles.searchInput}
-          placeholder="Rechercher un concert par titre, lieu, programmateur..."
+          placeholder="Rechercher un concert par titre, lieu, contact..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />

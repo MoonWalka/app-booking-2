@@ -173,11 +173,11 @@ function ConcertsList() {
       placeholder: 'Nom de l\'artiste'
     },
     {
-      id: 'programmateur',
-      label: 'Programmateur',
+      id: 'contact',
+      label: 'Contact',
       field: 'contactId',
       type: 'text',
-      placeholder: 'Nom du programmateur'
+      placeholder: 'Nom du contact'
     },
     {
       id: 'contrat',
@@ -293,10 +293,10 @@ function ConcertsList() {
     const getFormStatus = () => {
       if (!concert.contactId) {
         return { 
-          status: 'no_programmateur', 
+          status: 'no_contact', 
           icon: 'bi-person-x', 
           color: '#6c757d', 
-          tooltip: 'Aucun programmateur associé',
+          tooltip: 'Aucun contact associé',
           disabled: true,
           action: null
         };
@@ -327,7 +327,7 @@ function ConcertsList() {
           status: 'to_send',
           icon: 'bi-envelope',
           color: '#007bff',
-          tooltip: 'Envoyer formulaire au programmateur',
+          tooltip: 'Envoyer formulaire au contact',
           disabled: false,
           action: () => handleSendForm(concert.id)
         };
@@ -338,10 +338,10 @@ function ConcertsList() {
     const getContractStatus = () => {
       if (!concert.contactId) {
         return { 
-          status: 'no_programmateur', 
+          status: 'no_contact', 
           icon: 'bi-person-x', 
           color: '#6c757d', 
-          tooltip: 'Aucun programmateur associé',
+          tooltip: 'Aucun contact associé',
           disabled: true,
           action: null
         };

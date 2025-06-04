@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
-import PublicProgrammateurForm from '@/components/forms/PublicProgrammateurForm';
+import PublicContactForm from '@/components/forms/PublicContactForm';
 import Card from '@/components/ui/Card';
 import styles from './FormResponsePage.module.css';
 
@@ -32,7 +32,7 @@ const FormResponsePage = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [formLinkId, setFormLinkId] = useState(null);
-  const [programmateurEmail, setProgrammateurEmail] = useState('');
+  const [contactEmail, setContactEmail] = useState('');
   const [concert, setConcert] = useState(null);
   const [lieu, setLieu] = useState(null);
   const [error, setError] = useState(null);
@@ -114,9 +114,9 @@ const FormResponsePage = () => {
           const formLinkData = formDoc.data();
           setFormLinkId(formDoc.id);
           
-          // Récupérer l'email du programmateur depuis formLinkData
-          if (formLinkData.programmateurEmail) {
-            setProgrammateurEmail(formLinkData.programmateurEmail);
+          // Récupérer l'email du contact depuis formLinkData
+          if (formLinkData.contactEmail || formLinkData.programmateurEmail) {
+            setContactEmail(formLinkData.contactEmail || formLinkData.programmateurEmail);
           }
           
           console.log("Données du lien trouvées:", formLinkData);
@@ -253,7 +253,7 @@ const FormResponsePage = () => {
     return (
       <>
         {/* Titre principal selon la maquette */}
-        <h1 className={styles.pageTitle}>Formulaire Programmateur</h1>
+        <h1 className={styles.pageTitle}>Formulaire Contact</h1>
 
         {/* Informations du concert selon la maquette */}
         {concert && (
@@ -287,11 +287,11 @@ const FormResponsePage = () => {
               Veuillez remplir le formulaire ci-dessous avec vos informations de contact.
             </p>
             
-            <PublicProgrammateurForm 
+            <PublicContactForm 
               token={token} 
               concertId={concertId} 
               formLinkId={formLinkId} 
-              programmateurEmail={programmateurEmail}
+              contactEmail={contactEmail}
               onSubmitSuccess={() => setCompleted(true)}
             />
         </Card>
@@ -339,7 +339,7 @@ const FormResponsePage = () => {
             <h3 className="mb-0">Validation du formulaire</h3>
           </div>
           <div className="card-body">
-            <p>Cette interface vous permet de valider les informations soumises par le programmateur.</p>
+            <p>Cette interface vous permet de valider les informations soumises par le contact.</p>
             
             {/* Affichez ici les données à valider selon votre implémentation */}
             {/* ... */}

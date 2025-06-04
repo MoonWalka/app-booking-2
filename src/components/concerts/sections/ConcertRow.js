@@ -69,7 +69,7 @@ const ConcertRow = memo(({
       </td>
       
       <td className={styles.organizerColumn}>
-        {concert.programmateurNom || 'Non spécifié'}
+        {concert.contactNom || 'Non spécifié'}
       </td>
       
       <td className={styles.statusColumn}>

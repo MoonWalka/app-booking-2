@@ -29,10 +29,8 @@ import RouterStabilizer from '@/utils/RouterStabilizer';
 import ContactsList from '@/components/contacts/ContactsList';
 import ConcertFormWrapper from '@/components/concerts/ConcertForm';
 import DiagnosticButton from '@/components/debug/DiagnosticButton';
-import RefactoringTestButton from '@/components/debug/RefactoringTestButton';
 import ConcertsList from '@/components/concerts/ConcertsList';
 import ConcertDetails from '@/components/concerts/ConcertDetails';
-import ConcertDetailsRefactored from '@/components/concerts/ConcertDetailsRefactored';
 import CreateDefaultTemplate from './pages/CreateDefaultTemplate';
 import PrivateRoute from '@/components/auth/PrivateRoute';
 import LoginPage from '@/pages/LoginPage';
@@ -141,7 +139,6 @@ function App() {
                   </FlexContainer>
                 }>
                   <>
-                    <RefactoringTestButton />
                     <Routes>
                       <Route path="/create-default-template" element={<CreateDefaultTemplate />} />
                     
@@ -181,7 +178,6 @@ function App() {
                       }>
                         <Route index element={<ConcertsList />} />
                         <Route path=":id" element={<ConcertDetails />} />
-                        <Route path=":id/refactored" element={<ConcertDetailsRefactored />} />
                         <Route path=":id/edit" element={<ConcertFormWrapper />} />
                       </Route>
                       

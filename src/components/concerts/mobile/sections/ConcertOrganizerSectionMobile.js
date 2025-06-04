@@ -3,23 +3,23 @@ import { Card, Form, Button, Spinner, ListGroup, Badge } from 'react-bootstrap';
 import styles from './ConcertOrganizerSectionMobile.module.css';
 
 /**
- * Section Organisateur (Programmateur) de la fiche concert pour mobile
+ * Section Organisateur (Contact) de la fiche concert pour mobile
  * Affiche les informations de l'organisateur et gère l'envoi de formulaire
  */
 const ConcertOrganizerSectionMobile = ({
   concertId,
-  programmateur,
+  contact,
   isEditMode,
-  selectedProgrammateur,
-  progSearchTerm,
+  selectedContact,
+  contactSearchTerm,
   setProgSearchTerm,
   showProgResults,
-  progResults,
+  contactResults,
   isSearchingProgs,
-  handleSelectProgrammateur,
-  handleRemoveProgrammateur,
-  handleCreateProgrammateur,
-  navigateToProgrammateurDetails,
+  handleSelectContact,
+  handleRemoveContact,
+  handleCreateContact,
+  navigateToContactDetails,
   formData,
   formDataStatus,
   showFormGenerator,
@@ -39,7 +39,7 @@ const ConcertOrganizerSectionMobile = ({
           <Card.Body>
             <h3 className={styles.sectionTitle}>Organisateur</h3>
 
-            {/* Recherche de programmateur */}
+            {/* Recherche de contact */}
             <div className={styles.searchContainer}>
               <Form.Group>
                 <Form.Label className={styles.formLabel}>
@@ -48,16 +48,16 @@ const ConcertOrganizerSectionMobile = ({
                 <div className={styles.searchInputGroup}>
                   <Form.Control
                     type="text"
-                    value={progSearchTerm}
+                    value={contactSearchTerm}
                     onChange={(e) => setProgSearchTerm(e.target.value)}
                     placeholder="Nom de l'organisateur ou structure"
                     className={styles.searchInput}
                   />
-                  {selectedProgrammateur && (
+                  {selectedContact && (
                     <Button
                       variant="outline-danger"
                       size="sm"
-                      onClick={handleRemoveProgrammateur}
+                      onClick={handleRemoveContact}
                       className={styles.clearButton}
                     >
                       <i className="bi bi-x"></i>
@@ -67,19 +67,19 @@ const ConcertOrganizerSectionMobile = ({
               </Form.Group>
 
               {/* Résultats de recherche */}
-              {showProgResults && progSearchTerm.trim() !== '' && (
+              {showProgResults && contactSearchTerm.trim() !== '' && (
                 <div className={styles.searchResults}>
                   {isSearchingProgs ? (
                     <div className={styles.loadingResults}>
                       <Spinner animation="border" size="sm" /> Recherche...
                     </div>
-                  ) : progResults && progResults.length > 0 ? (
+                  ) : contactResults && contactResults.length > 0 ? (
                     <ListGroup variant="flush" className={styles.resultsList}>
-                      {progResults.map((result) => (
+                      {contactResults.map((result) => (
                         <ListGroup.Item
                           key={result.id}
                           action
-                          onClick={() => handleSelectProgrammateur(result)}
+                          onClick={() => handleSelectContact(result)}
                           className={styles.resultItem}
                         >
                           <div className={styles.resultName}>{result.nom}</div>
@@ -97,9 +97,9 @@ const ConcertOrganizerSectionMobile = ({
                       <Button
                         variant="link"
                         className={styles.createLink}
-                        onClick={() => handleCreateProgrammateur()}
+                        onClick={() => handleCreateContact()}
                       >
-                        Créer un nouveau programmateur
+                        Créer un nouveau contact
                       </Button>
                     </div>
                   )}
@@ -107,27 +107,27 @@ const ConcertOrganizerSectionMobile = ({
               )}
 
               {/* Organisateur sélectionné */}
-              {selectedProgrammateur && (
+              {selectedContact && (
                 <div className={styles.selectedProg}>
                   <Card className={styles.selectedProgCard}>
                     <Card.Body>
-                      <h5 className={styles.progName}>{selectedProgrammateur.nom}</h5>
-                      {selectedProgrammateur.structure && (
+                      <h5 className={styles.progName}>{selectedContact.nom}</h5>
+                      {selectedContact.structure && (
                         <div className={styles.progStructure}>
                           <i className="bi bi-building me-1"></i>
-                          {selectedProgrammateur.structure.nom}
+                          {selectedContact.structure.nom}
                         </div>
                       )}
-                      {selectedProgrammateur.email && (
+                      {selectedContact.email && (
                         <div className={styles.progContact}>
                           <i className="bi bi-envelope me-1"></i>
-                          {selectedProgrammateur.email}
+                          {selectedContact.email}
                         </div>
                       )}
-                      {selectedProgrammateur.telephone && (
+                      {selectedContact.telephone && (
                         <div className={styles.progContact}>
                           <i className="bi bi-telephone me-1"></i>
-                          {selectedProgrammateur.telephone}
+                          {selectedContact.telephone}
                         </div>
                       )}
                     </Card.Body>
@@ -148,14 +148,14 @@ const ConcertOrganizerSectionMobile = ({
         <Card.Body>
           <h3 className={styles.sectionTitle}>Organisateur</h3>
 
-          {programmateur ? (
+          {contact ? (
             <div className={styles.organizerContent}>
               <div className={styles.organizerHeader}>
-                <h4 className={styles.organizerName}>{programmateur.nom}</h4>
+                <h4 className={styles.organizerName}>{contact.nom}</h4>
                 <Button
                   variant="outline-primary"
                   size="sm"
-                  onClick={() => navigateToProgrammateurDetails(programmateur.id)}
+                  onClick={() => navigateToContactDetails(contact.id)}
                   className={styles.organizerDetailsButton}
                 >
                   Voir la fiche
@@ -163,24 +163,24 @@ const ConcertOrganizerSectionMobile = ({
               </div>
 
               {/* Structure */}
-              {programmateur.structure && (
+              {contact.structure && (
                 <div className={styles.organizerDetail}>
                   <i className="bi bi-building me-2"></i>
-                  <span>{programmateur.structure.nom}</span>
+                  <span>{contact.structure.nom}</span>
                 </div>
               )}
 
               {/* Contact */}
-              {programmateur.email && (
+              {contact.email && (
                 <div className={styles.organizerDetail}>
                   <i className="bi bi-envelope me-2"></i>
-                  <span>{programmateur.email}</span>
+                  <span>{contact.email}</span>
                 </div>
               )}
-              {programmateur.telephone && (
+              {contact.telephone && (
                 <div className={styles.organizerDetail}>
                   <i className="bi bi-telephone me-2"></i>
-                  <span>{programmateur.telephone}</span>
+                  <span>{contact.telephone}</span>
                 </div>
               )}
 
@@ -244,7 +244,7 @@ const ConcertOrganizerSectionMobile = ({
                     ) : (
                       <div className={styles.formPending}>
                         <i className="bi bi-clock me-1"></i>
-                        En attente de réponse du programmateur
+                        En attente de réponse du contact
                       </div>
                     )}
                   </div>

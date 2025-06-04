@@ -15,6 +15,10 @@ console.log('[DEBUG][ContactDetails] APRES imports');
  */
 export default function ContactDetails() {
   const { id } = useParams();
+  
+  // 🔍 DEBUG: Log des paramètres
+  console.log('[DEBUG ContactDetails] ID paramètre:', id);
+  
   const {
     contact,
     structure,
@@ -28,6 +32,13 @@ export default function ContactDetails() {
     loadingLieux,
     loadingConcerts
   } = useContactDetails(id);
+  
+  // 🔍 DEBUG: Log des données chargées
+  console.log('[DEBUG ContactDetails] Données:', {
+    contact: contact?.id ? `Contact ${contact.id} - ${contact.nom}` : 'NULL',
+    loading,
+    error: error?.message || 'NULL'
+  });
 
   // Compteur de montages pour tracer le cycle de vie
   React.useEffect(() => {

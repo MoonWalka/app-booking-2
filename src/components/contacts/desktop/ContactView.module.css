@@ -1,0 +1,197 @@
+/*
+ * Styles pour ContactView - Version moderne V2
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 31 Mai 2025
+ */
+
+/* Container principal pour la vue du contact */
+.contactViewContainer {
+  background-color: var(--tc-bg-default);
+  min-height: 100vh;
+  padding: var(--tc-space-4);
+  font-family: var(--tc-font-sans);
+  color: var(--tc-text-default);
+  line-height: var(--tc-line-height-normal);
+}
+
+/* Container de chargement */
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+  background-color: var(--tc-bg-white);
+  border-radius: var(--tc-radius-base);
+  box-shadow: var(--tc-shadow-base);
+  margin: var(--tc-space-4);
+  padding: var(--tc-space-6);
+}
+
+/* Sections empilées verticalement */
+.sectionsStack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-space-6);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Styles pour les cartes de section */
+.sectionCard {
+  background-color: var(--tc-bg-white);
+  border-radius: var(--tc-radius-base);
+  box-shadow: var(--tc-shadow-base);
+  border: 1px solid var(--tc-border-light);
+  overflow: hidden;
+  transition: var(--tc-transition-base);
+}
+
+.sectionCard:hover {
+  box-shadow: var(--tc-shadow-hover);
+}
+
+/* Header de section */
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--tc-bg-subtle);
+  padding: var(--tc-space-4);
+  border-bottom: 1px solid var(--tc-border-light);
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-2);
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-color-primary);
+  margin: 0;
+}
+
+.sectionContent {
+  padding: var(--tc-space-6);
+}
+
+/* Actions section */
+.sectionActions {
+  display: flex;
+  gap: var(--tc-space-2);
+  align-items: center;
+}
+
+/* Grid layout pour les sections qui en ont besoin */
+.twoColumnsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--tc-space-6);
+}
+
+/* Informations d'entité liée */
+.relatedEntityCard {
+  background-color: var(--tc-bg-subtle);
+  border: 1px solid var(--tc-border-light);
+  border-radius: var(--tc-radius-base);
+  padding: var(--tc-space-4);
+  transition: var(--tc-transition-base);
+}
+
+.relatedEntityCard:hover {
+  background-color: var(--tc-bg-light);
+  border-color: var(--tc-color-primary);
+}
+
+.relatedEntityTitle {
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-default);
+  margin-bottom: var(--tc-space-1);
+}
+
+.relatedEntityInfo {
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-text-secondary);
+}
+
+/* État vide */
+.emptyState {
+  text-align: center;
+  padding: var(--tc-space-8);
+  color: var(--tc-text-secondary);
+}
+
+.emptyStateIcon {
+  font-size: 2rem;
+  color: var(--tc-color-gray-400);
+  margin-bottom: var(--tc-space-4);
+}
+
+.emptyStateMessage {
+  font-size: var(--tc-font-size-base);
+  margin-bottom: var(--tc-space-4);
+}
+
+/* Responsive design */
+@media (max-width: var(--tc-breakpoint-lg)) {
+  .twoColumnsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: var(--tc-breakpoint-md)) {
+  .contactViewContainer {
+    padding: var(--tc-space-2);
+  }
+  
+  .sectionsStack {
+    gap: var(--tc-space-4);
+  }
+  
+  .sectionCard {
+    border-radius: var(--tc-radius-sm);
+    margin-left: 0;
+    margin-right: 0;
+  }
+  
+  .sectionContent {
+    padding: var(--tc-space-4);
+  }
+  
+  .sectionHeader {
+    padding: var(--tc-space-3);
+  }
+}
+
+@media (max-width: var(--tc-breakpoint-sm)) {
+  .contactViewContainer {
+    padding: var(--tc-space-1);
+  }
+  
+  .sectionActions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .relatedEntityCard {
+    padding: var(--tc-space-3);
+  }
+}
+
+/* Print styles */
+@media print {
+  .contactViewContainer {
+    background-color: white !important;
+    padding: 0 !important;
+  }
+  
+  .sectionCard {
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+    break-inside: avoid;
+    margin-bottom: 20px !important;
+  }
+  
+  .sectionActions {
+    display: none !important;
+  }
+}

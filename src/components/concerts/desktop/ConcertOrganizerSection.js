@@ -6,23 +6,23 @@ import Alert from '@/components/ui/Alert';
 import Card from '@/components/ui/Card';
 
 /**
- * Composant pour la section Programmateur du détail d'un concert
+ * Composant pour la section Contact du détail d'un concert
  * Adapté de la maquette concertdetail.md
  */
 const ConcertOrganizerSection = ({
   concertId,
-  programmateur,
+  contact,
   isEditMode,
-  selectedProgrammateur,
-  progSearchTerm,
-  setProgSearchTerm,
-  showProgResults,
-  progResults,
-  isSearchingProgs,
-  handleSelectProgrammateur,
-  handleRemoveProgrammateur,
-  handleCreateProgrammateur,
-  navigateToProgrammateurDetails,
+  selectedContact,
+  contactSearchTerm,
+  setContactSearchTerm,
+  showContactResults,
+  contactResults,
+  isSearchingContacts,
+  handleSelectContact,
+  handleRemoveContact,
+  handleCreateContact,
+  navigateToContactDetails,
   formData,
   showFormGenerator,
   setShowFormGenerator,
@@ -33,15 +33,16 @@ const ConcertOrganizerSection = ({
   formatDate,
   concert
 }) => {
-  const progDropdownRef = useRef(null);
+  const contactDropdownRef = useRef(null);
+
 
   return (
     <Card
-      title="Programmateur"
+      title="Contact"
       icon={<i className="bi bi-person-badge"></i>}
-      headerActions={programmateur && !isEditMode && (
+      headerActions={contact && !isEditMode && (
         <button
-          onClick={() => navigateToProgrammateurDetails(programmateur.id)}
+          onClick={() => navigateToContactDetails(contact.id)}
           className="tc-btn tc-btn-outline-primary tc-btn-sm"
         >
           <i className="bi bi-eye"></i>
@@ -50,31 +51,31 @@ const ConcertOrganizerSection = ({
       )}
     >
         {isEditMode ? (
-          <div className={styles.formGroup} ref={progDropdownRef}>
-            <label className={styles.formLabel}>Associer un programmateur</label>
+          <div className={styles.formGroup} ref={contactDropdownRef}>
+            <label className={styles.formLabel}>Associer un contact</label>
             
-            {!selectedProgrammateur ? (
-              <div className={styles.programmateurSearchContainer}>
+            {!selectedContact ? (
+              <div className={styles.contactSearchContainer}>
                 <div className="input-group">
                   <span className="input-group-text"><i className="bi bi-search"></i></span>
                   <input
                     type="text"
                     className={styles.formField}
-                    placeholder="Rechercher un programmateur par nom..."
-                    value={progSearchTerm}
-                    onChange={(e) => setProgSearchTerm(e.target.value)}
+                    placeholder="Rechercher un contact par nom..."
+                    value={contactSearchTerm}
+                    onChange={(e) => setContactSearchTerm(e.target.value)}
                   />
                   <Button
                     type="button"
                     variant="outline-secondary"
                     className="tc-btn-outline-secondary"
-                    onClick={() => handleCreateProgrammateur()}
+                    onClick={() => handleCreateContact()}
                   >
-                    Créer un programmateur
+                    Créer un contact
                   </Button>
                 </div>
                 
-                {isSearchingProgs && (
+                {isSearchingContacts && (
                   <div className="dropdown-menu show w-100">
                     <div className="dropdown-item text-center">
                       <div className="spinner-border spinner-border-sm text-primary" role="status">
@@ -84,49 +85,49 @@ const ConcertOrganizerSection = ({
                   </div>
                 )}
                 
-                {showProgResults && progResults.length > 0 && (
+                {showContactResults && contactResults.length > 0 && (
                   <div className="dropdown-menu show w-100">
-                    {progResults.map(prog => (
+                    {contactResults.map(prog => (
                       <div 
                         key={prog.id} 
-                        className={`dropdown-item ${styles.programmateurItem}`}
-                        onClick={() => handleSelectProgrammateur(prog)}
+                        className={`dropdown-item ${styles.contactItem}`}
+                        onClick={() => handleSelectContact(prog)}
                       >
-                        <div className={styles.programmateurName}>{prog.nom}</div>
-                        <div className={styles.programmateurDetails}>
-                          {prog.structure && <span className={styles.programmateurStructure}>{prog.structure}</span>}
-                          {prog.email && <span className={styles.programmateurContactItem}>{prog.email}</span>}
+                        <div className={styles.contactName}>{prog.nom}</div>
+                        <div className={styles.contactDetails}>
+                          {prog.structure && <span className={styles.contactStructure}>{prog.structure}</span>}
+                          {prog.email && <span className={styles.contactContactItem}>{prog.email}</span>}
                         </div>
                       </div>
                     ))}
                   </div>
                 )}
                 
-                {showProgResults && progResults.length === 0 && !isSearchingProgs && progSearchTerm.length >= 2 && (
+                {showContactResults && contactResults.length === 0 && !isSearchingContacts && contactSearchTerm.length >= 2 && (
                   <div className="dropdown-menu show w-100">
                     <div className="dropdown-item text-center text-muted">
-                      Aucun programmateur trouvé
+                      Aucun contact trouvé
                     </div>
                   </div>
                 )}
               </div>
             ) : (
-              <div className={styles.selectedProgrammateur}>
-                <div className={styles.programmateurCard}>
-                  <div className={styles.programmateurInfo}>
-                    <span className={styles.programmateurName}>{selectedProgrammateur.nom}</span>
-                    {selectedProgrammateur.structure && (
-                      <span className={styles.programmateurStructure}>{selectedProgrammateur.structure}</span>
+              <div className={styles.selectedContact}>
+                <div className={styles.contactCard}>
+                  <div className={styles.contactInfo}>
+                    <span className={styles.contactName}>{selectedContact.nom}</span>
+                    {selectedContact.structure && (
+                      <span className={styles.contactStructure}>{selectedContact.structure}</span>
                     )}
-                    <div className={styles.programmateurContacts}>
-                      {selectedProgrammateur.email && (
-                        <span className={styles.programmateurContactItem}>
-                          <i className="bi bi-envelope"></i> {selectedProgrammateur.email}
+                    <div className={styles.contactContacts}>
+                      {selectedContact.email && (
+                        <span className={styles.contactContactItem}>
+                          <i className="bi bi-envelope"></i> {selectedContact.email}
                         </span>
                       )}
-                      {selectedProgrammateur.telephone && (
-                        <span className={styles.programmateurContactItem}>
-                          <i className="bi bi-telephone"></i> {selectedProgrammateur.telephone}
+                      {selectedContact.telephone && (
+                        <span className={styles.contactContactItem}>
+                          <i className="bi bi-telephone"></i> {selectedContact.telephone}
                         </span>
                       )}
                     </div>
@@ -136,8 +137,8 @@ const ConcertOrganizerSection = ({
                     variant="outline-danger"
                     size="sm"
                     className="tc-btn-outline-danger btn-sm"
-                    onClick={handleRemoveProgrammateur}
-                    aria-label="Supprimer ce programmateur"
+                    onClick={handleRemoveContact}
+                    aria-label="Supprimer ce contact"
                   >
                     <i className="bi bi-x-lg"></i>
                   </Button>
@@ -146,28 +147,28 @@ const ConcertOrganizerSection = ({
             )}
             
             <small className={styles.helpText}>
-              Tapez au moins 2 caractères pour rechercher un programmateur par nom.
+              Tapez au moins 2 caractères pour rechercher un contact par nom.
             </small>
           </div>
-        ) : programmateur ? (
+        ) : contact ? (
           <>
             <div className="row">
               <div className="col-md-6">
                 <div className="mb-3">
                   <div className="fw-bold">Nom:</div>
-                  <div>{programmateur.prenom ? `${programmateur.prenom} ${programmateur.nom}` : programmateur.nom}</div>
+                  <div>{contact.prenom ? `${contact.prenom} ${contact.nom}` : contact.nom}</div>
                 </div>
                 <div className="mb-3">
                   <div className="fw-bold">Structure:</div>
-                  <div>{programmateur.structure || programmateur.structureNom || 'Non spécifiée'}</div>
+                  <div>{contact.structure || contact.structureNom || 'Non spécifiée'}</div>
                 </div>
                 <div className="mb-3">
                   <div className="fw-bold">Email:</div>
                   <div>
-                    {programmateur.email ? (
-                      <a href={`mailto:${programmateur.email}`} className="contact-link">
+                    {contact.email ? (
+                      <a href={`mailto:${contact.email}`} className="contact-link">
                         <i className="bi bi-envelope"></i>
-                        {programmateur.email}
+                        {contact.email}
                       </a>
                     ) : (
                       <span className="text-muted">Non spécifié</span>
@@ -179,10 +180,10 @@ const ConcertOrganizerSection = ({
                 <div className="mb-3">
                   <div className="fw-bold">Téléphone:</div>
                   <div>
-                    {programmateur.telephone ? (
-                      <a href={`tel:${programmateur.telephone}`} className="contact-link">
+                    {contact.telephone ? (
+                      <a href={`tel:${contact.telephone}`} className="contact-link">
                         <i className="bi bi-telephone"></i>
-                        {programmateur.telephone}
+                        {contact.telephone}
                       </a>
                     ) : (
                       <span className="text-muted">Non spécifié</span>
@@ -192,17 +193,17 @@ const ConcertOrganizerSection = ({
                 <div className="mb-3">
                   <div className="fw-bold">Adresse:</div>
                   <div>
-                    {programmateur.adresse || programmateur.structureAdresse ? (
+                    {contact.adresse || contact.structureAdresse ? (
                       <>
-                        {typeof programmateur.adresse === 'string' ? (
+                        {typeof contact.adresse === 'string' ? (
                           <>
-                            <div>{programmateur.adresse}</div>
-                            <div>{programmateur.codePostal} {programmateur.ville}</div>
+                            <div>{contact.adresse}</div>
+                            <div>{contact.codePostal} {contact.ville}</div>
                           </>
-                        ) : programmateur.structureAdresse ? (
+                        ) : contact.structureAdresse ? (
                           <>
-                            <div>{programmateur.structureAdresse}</div>
-                            <div>{programmateur.codePostal} {programmateur.ville}</div>
+                            <div>{contact.structureAdresse}</div>
+                            <div>{contact.codePostal} {contact.ville}</div>
                           </>
                         ) : (
                           <span className="text-muted">Non spécifiée</span>
@@ -231,7 +232,7 @@ const ConcertOrganizerSection = ({
                       Générer un formulaire
                     </Button>
                     <p className="text-muted small mt-2">
-                      Envoyez un formulaire au programmateur pour recueillir les informations nécessaires.
+                      Envoyez un formulaire au contact pour recueillir les informations nécessaires.
                     </p>
                   </div>
                 ) : (
@@ -276,7 +277,7 @@ const ConcertOrganizerSection = ({
                         Ouvrir
                       </a>
 
-                      {formData.status !== 'validated' && formData.programmateurData && (
+                      {formData.status !== 'validated' && formData.contactData && (
                         <Button
                           className="tc-btn-sm tc-btn-outline-success"
                           size="sm"
@@ -294,7 +295,7 @@ const ConcertOrganizerSection = ({
           </>
         ) : (
           <Alert variant="warning">
-            Aucun programmateur n'est associé à ce concert.
+            Aucun contact n'est associé à ce concert.
           </Alert>
         )}
     </Card>

@@ -3,7 +3,6 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import ConcertsList from '@/components/concerts/ConcertsList.js';
 import ConcertForm from '@/components/concerts/ConcertForm/';
 import ConcertDetails from '@/components/concerts/ConcertDetails';
-import ConcertDetailsRefactored from '@/components/concerts/ConcertDetailsRefactored';
 import FormValidationInterface from '@/components/forms/desktop/FormValidationInterface';
 
 
@@ -45,16 +44,6 @@ function ConcertsPage() {
             <React.Profiler id="ConcertForm-edit" onRender={(id, phase) => {
             }}>
               <ConcertForm />
-            </React.Profiler>
-          } 
-        />
-        <Route 
-          path="/:id/refactored" 
-          element={
-            <React.Profiler id="ConcertDetails-refactored" onRender={(id, phase) => {
-              console.log('🎯 Route refactored chargée');
-            }}>
-              <ConcertDetailsRefactored />
             </React.Profiler>
           } 
         />

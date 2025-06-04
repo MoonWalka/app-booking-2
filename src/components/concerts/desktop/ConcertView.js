@@ -160,6 +160,7 @@ const ConcertView = memo(({ id: propId }) => {
     return <Alert variant="danger">Erreur lors du chargement des données de vue du concert.</Alert>;
   }
 
+
   if (loading) {
     return (
       <div className={styles.loadingContainer}>

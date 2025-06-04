@@ -15,7 +15,7 @@ import EntrepriseSubmitActions from './sections/EntrepriseSubmitActions';
 
 /**
  * Company settings component - Allows setting up company information
- * This is a refactored version using custom hooks and component composition
+ * Utilise des hooks personnalisés et une composition de composants
  */
 const ParametresEntreprise = () => {
   // Form state and handlers hook

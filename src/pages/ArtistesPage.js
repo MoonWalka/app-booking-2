@@ -3,7 +3,6 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import ArtistesList from '@/components/artistes/ArtistesList';
 import ArtisteForm from '@/components/artistes/ArtisteForm';
 import ArtisteDetail from '@/components/artistes/ArtisteDetail';
-import ArtisteDetailsRefactored from '@/components/artistes/ArtisteDetailsRefactored';
 
 function ArtistesPage() {
   return (
@@ -12,7 +11,6 @@ function ArtistesPage() {
         <Route path="/" element={<ArtistesList />} />
         <Route path="/nouveau" element={<ArtisteForm />} />
         <Route path="/:id" element={<ArtisteDetail />} />
-        <Route path="/:id/refactored" element={<ArtisteDetailsRefactored />} />
         <Route path="/:id/modifier" element={<ArtisteForm />} />
         <Route path="/:id/edit" element={<ArtisteForm />} />
         <Route path="*" element={<Navigate to="/artistes" replace />} />

@@ -51,14 +51,14 @@
 }
 
 /* Styles pour la liste des programmateurs */
-.programmateursList {
+.contactsList {
   display: flex;
   flex-direction: column;
   gap: 1rem;
   margin-bottom: 1rem;
 }
 
-.programmateurItem {
+.contactItem {
   position: relative;
 }
 

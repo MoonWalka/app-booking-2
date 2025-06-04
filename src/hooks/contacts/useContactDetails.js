@@ -6,6 +6,9 @@ import { collection, query, where, getDocs, doc, getDoc, db } from '@/services/f
  * Hook pour gérer les détails d'un contact en utilisant le hook générique
  */
 export default function useContactDetails(id) {
+  // 🔍 DEBUG: Log du hook
+  console.log('[DEBUG useContactDetails] Hook appelé avec ID:', id);
+  
   // État pour les lieux associés
   const [lieux, setLieux] = useState([]);
   const [loadingLieux, setLoadingLieux] = useState(false);
@@ -32,6 +35,13 @@ export default function useContactDetails(id) {
     navigate: () => {},
     returnPath: '/contacts',
     editPath: '/contacts/:id/edit'
+  });
+  
+  // 🔍 DEBUG: Log des données du hook générique
+  console.log('[DEBUG useContactDetails] Données hook générique:', {
+    entity: details.entity?.id ? `Contact ${details.entity.id}` : 'NULL',
+    loading: details.loading,
+    error: details.error?.message || 'NULL'
   });
   
   // Charger les lieux associés au contact

@@ -7,7 +7,7 @@
  * @param {Object} data - Les données du formulaire à valider
  * @returns {Object} - { isValid, errors } Résultat de la validation
  */
-export const validateProgrammateurForm = (data) => {
+export const validateContactForm = (data) => {
   const errors = {};
   
   // Validation du nom

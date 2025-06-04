@@ -25,6 +25,7 @@ const ConcertStructureSection = ({
 }) => {
   const structureDropdownRef = useRef(null);
 
+
   return (
     <Card
       title="Structure"

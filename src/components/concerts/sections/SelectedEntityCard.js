@@ -6,8 +6,8 @@ import styles from './SelectedEntityCard.module.css';
  * SelectedEntityCard - Composant pour afficher une entité sélectionnée
  * 
  * @param {Object} props - Les propriétés du composant
- * @param {Object} props.entity - L'entité sélectionnée (lieu, programmateur, artiste)
- * @param {string} props.entityType - Type d'entité (lieu, programmateur, artiste)
+ * @param {Object} props.entity - L'entité sélectionnée (lieu, contact, artiste)
+ * @param {string} props.entityType - Type d'entité (lieu, contact, artiste)
  * @param {Function} props.onRemove - Fonction pour supprimer l'entité sélectionnée
  * @param {string} props.primaryField - Champ principal à afficher (nom par défaut)
  * @param {Array} props.secondaryFields - Liste des champs secondaires à afficher
@@ -54,7 +54,7 @@ const SelectedEntityCard = ({
   // Déterminer l'icône en fonction du type d'entité
   let entityIcon = 'bi-box';
   if (entityType === 'lieu') entityIcon = 'bi-geo-alt-fill';
-  if (entityType === 'programmateur') entityIcon = 'bi-person-fill';
+  if (entityType === 'contact') entityIcon = 'bi-person-fill';
   if (entityType === 'artiste') entityIcon = 'bi-music-note-beamed';
 
   return (
@@ -113,14 +113,14 @@ const SelectedEntityCard = ({
               </div>
             )}
             
-            {entityType === 'programmateur' && entity.structure && (
+            {entityType === 'contact' && entity.structure && (
               <div className={styles.detailRow}>
                 <i className="bi bi-building"></i>
                 <span>{entity.structure}</span>
               </div>
             )}
             
-            {entityType === 'programmateur' && entity.email && (
+            {entityType === 'contact' && entity.email && (
               <div className={styles.detailRow}>
                 <i className="bi bi-envelope-fill"></i>
                 <span>{entity.email}</span>
@@ -146,7 +146,7 @@ const SelectedEntityCard = ({
             onClick={() => window.open(`/${entityType}s/${entity.id}`, '_blank')}
           >
             <i className="bi bi-pencil me-1"></i>
-            Éditer {entityType === 'lieu' ? 'ce' : (entityType === 'programmateur' ? 'ce' : 'cet')} {entityType}
+            Éditer {entityType === 'lieu' ? 'ce' : (entityType === 'contact' ? 'ce' : 'cet')} {entityType}
           </Button>
         </div>
       </div>

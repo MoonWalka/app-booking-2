@@ -17,7 +17,7 @@ import styles from './SearchDropdown.module.css';
  * @param {Function} props.onCreate - Fonction appelée pour créer une nouvelle entité
  * @param {string} props.createButtonText - Texte du bouton de création
  * @param {string} props.emptyResultsText - Texte à afficher lorsqu'il n'y a pas de résultats
- * @param {string} props.entityType - Type d'entité recherchée (lieu, programmateur, artiste)
+ * @param {string} props.entityType - Type d'entité recherchée (lieu, contact, artiste)
  * @param {Function} props.onFocus - Fonction appelée lorsque l'input obtient le focus
  */
 const SearchDropdown = ({

@@ -4,7 +4,7 @@ import styles from './FormHeader.module.css';
 
 /**
  * Composant FormHeader - Header standardisé avec gradient bleu pour les formulaires
- * Style inspiré du formulaire programmateur maquette
+ * Style inspiré du formulaire contact maquette
  */
 const FormHeader = ({
   title,

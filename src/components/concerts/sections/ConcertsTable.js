@@ -47,9 +47,9 @@ const ConcertsTable = memo(({
     } else if (sortField === 'lieuNom') {
       valA = a.lieu?.nom || a.lieuNom || '';
       valB = b.lieu?.nom || b.lieuNom || '';
-    } else if (sortField === 'programmateurNom') {
-      valA = a.programmateur?.nom || a.programmateurNom || '';
-      valB = b.programmateur?.nom || b.programmateurNom || '';
+    } else if (sortField === 'contactNom') {
+      valA = a.contact?.nom || a.contactNom || '';
+      valB = b.contact?.nom || b.contactNom || '';
     }
     
     if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
@@ -110,10 +110,10 @@ const ConcertsTable = memo(({
       )
     },
     {
-      label: 'Programmateur',
-      key: 'programmateurNom',
+      label: 'Contact',
+      key: 'contactNom',
       sortable: true,
-      render: (row) => row.programmateur?.nom || row.programmateurNom || 'Non spécifié'
+      render: (row) => row.contact?.nom || row.contactNom || 'Non spécifié'
     },
     {
       label: 'Statut',

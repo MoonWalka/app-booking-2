@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../../services/firebase-service';
 
@@ -27,8 +27,8 @@ const useSafeRelations = (entityType, entityId, depth = 1, options = {}) => {
   const loadedIds = useRef(new Set());
   const loadingPromises = useRef(new Map());
 
-  // Configuration des relations par type d'entité
-  const relationConfigs = {
+  // Configuration des relations par type d'entité (memoized pour performance)
+  const relationConfigs = useMemo(() => ({
     concert: {
       artistes: { collection: 'artistes', field: 'artistesIds', isArray: true, reverseField: 'concertsIds' },
       lieu: { collection: 'lieux', field: 'lieuId', isArray: false },
@@ -50,7 +50,7 @@ const useSafeRelations = (entityType, entityId, depth = 1, options = {}) => {
       contacts: { collection: 'contacts', field: 'contactsIds', isArray: true, reverseField: 'structureId' },
       concerts: { collection: 'concerts', field: 'concertsIds', isArray: true, reverseField: 'structureId' }
     }
-  };
+  }), []);
 
   /**
    * Charge une entité avec protection contre les boucles
@@ -181,7 +181,7 @@ const useSafeRelations = (entityType, entityId, depth = 1, options = {}) => {
     
     loadingPromises.current.set(key, loadPromise);
     return loadPromise;
-  }, [depth, includeRelations, relationTypes, maxRelationsPerType, onRelationLoad]);
+  }, [depth, includeRelations, relationTypes, maxRelationsPerType, onRelationLoad, relationConfigs]);
 
   /**
    * Effet principal pour charger l'entité

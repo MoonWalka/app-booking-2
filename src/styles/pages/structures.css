@@ -108,7 +108,7 @@
   box-shadow: var(--tc-shadow-hover);
 }
 
-/* Badge pour le nombre de programmateurs */
+/* Badge pour le nombre de contacts */
 .tc-badge-mobile {
   position: absolute;
   top: calc(-1 * var(--tc-space-2));
@@ -125,6 +125,6 @@
   padding: 0 var(--tc-space-2);
 }
 
-.tc-badge-programmateurs {
+.tc-badge-contacts {
   background-color: var(--tc-color-success);
 }

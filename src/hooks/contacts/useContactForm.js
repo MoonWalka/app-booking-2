@@ -289,7 +289,7 @@ export const useContactForm = (contactId) => {
     handleCancel, // Ajout de la fonction handleCancel
     // Raccourcis pour une meilleure DX
     contact: contactDataWithId,
-    contact: formHook.formData?.contact || {},
+    contactFormData: formHook.formData?.contact || {},
     // TODO: Gérer les entités liées différemment car relatedData n'existe pas dans useGenericEntityForm
     structure: null,
     selectedStructure: null,

@@ -176,8 +176,8 @@
   padding: var(--tc-space-8) var(--tc-space-4);
 }
 
-/* FORMULAIRE DE PROGRAMMATEUR */
-.tc-programmateur-form {
+/* FORMULAIRE DE CONTACT */
+.tc-contact-form {
   max-width: 800px;
   margin: 0 auto;
 }

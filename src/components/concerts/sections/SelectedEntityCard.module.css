@@ -198,22 +198,22 @@
   background-color: var(--tc-color-info-500) !important;
 }
 
-/* Programmateurs - Violet harmonisé */
-.entityCard--programmateur::before {
-  background: linear-gradient(to bottom, var(--tc-color-programmateur), var(--tc-color-programmateur-light));
+/* Contacts - Violet harmonisé */
+.entityCard--contact::before {
+  background: linear-gradient(to bottom, var(--tc-color-contact), var(--tc-color-contact-light));
 }
 
-.entityCard--programmateur .entityHeader {
-  background-color: var(--tc-color-programmateur-light);
+.entityCard--contact .entityHeader {
+  background-color: var(--tc-color-contact-light);
 }
 
-.entityIcon--programmateur {
-  background-color: var(--tc-color-programmateur-light) !important;
-  color: var(--tc-color-programmateur) !important;
+.entityIcon--contact {
+  background-color: var(--tc-color-contact-light) !important;
+  color: var(--tc-color-contact) !important;
 }
 
-.newBadge--programmateur {
-  background-color: var(--tc-color-programmateur) !important;
+.newBadge--contact {
+  background-color: var(--tc-color-contact) !important;
 }
 
 /* Artistes - Orange harmonisé */
